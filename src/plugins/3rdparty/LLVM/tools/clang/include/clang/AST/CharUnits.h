@@ -26,12 +26,11 @@ namespace clang {
   /// type, CharUnits protects you from accidentally combining operations on
   /// quantities in bit units and character units.
   ///
-  /// It should be noted that characters and bytes are distinct concepts. Bytes
-  /// refer to addressable units of data storage on the target machine, and
-  /// characters are members of a set of elements used for the organization,
-  /// control, or representation of data. According to C99, bytes are allowed
-  /// to exceed characters in size, although currently, clang only supports
-  /// architectures where the two are the same size.
+  /// In both C and C++, an object of type 'char', 'signed char', or 'unsigned
+  /// char' occupies exactly one byte, so 'character unit' and 'byte' refer to
+  /// the same quantity of storage. However, we use the term 'character unit'
+  /// rather than 'byte' to avoid an implication that a character unit is
+  /// exactly 8 bits.
   ///
   /// For portability, never assume that a target character is 8 bits wide. Use
   /// CharUnit values wherever you calculate sizes, offsets, or alignments

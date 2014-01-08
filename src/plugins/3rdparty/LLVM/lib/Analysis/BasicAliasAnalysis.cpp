@@ -142,6 +142,17 @@ static bool isObjectSize(const Value *V, uint64_t Size,
   return ObjectSize != AliasAnalysis::UnknownSize && ObjectSize == Size;
 }
 
+/// isIdentifiedFunctionLocal - Return true if V is umabigously identified
+/// at the function-level. Different IdentifiedFunctionLocals can't alias.
+/// Further, an IdentifiedFunctionLocal can not alias with any function
+/// arguments other than itself, which is not neccessarily true for
+/// IdentifiedObjects.
+static bool isIdentifiedFunctionLocal(const Value *V)
+{
+  return isa<AllocaInst>(V) || isNoAliasCall(V) || isNoAliasArgument(V);
+}
+
+
 //===----------------------------------------------------------------------===//
 // GetElementPtr Instruction Decomposition and Analysis
 //===----------------------------------------------------------------------===//
@@ -302,8 +313,7 @@ DecomposeGEPExpression(const Value *V, int64_t &BaseOffs,
     }
 
     // Don't attempt to analyze GEPs over unsized objects.
-    if (!cast<PointerType>(GEPOp->getOperand(0)->getType())
-        ->getElementType()->isSized())
+    if (!GEPOp->getOperand(0)->getType()->getPointerElementType()->isSized())
       return V;
 
     // If we are lacking DataLayout information, we can't compute the offets of
@@ -316,6 +326,7 @@ DecomposeGEPExpression(const Value *V, int64_t &BaseOffs,
       continue;
     }
 
+    unsigned AS = GEPOp->getPointerAddressSpace();
     // Walk the indices of the GEP, accumulating them into BaseOff/VarIndices.
     gep_type_iterator GTI = gep_type_begin(GEPOp);
     for (User::const_op_iterator I = GEPOp->op_begin()+1,
@@ -343,8 +354,8 @@ DecomposeGEPExpression(const Value *V, int64_t &BaseOffs,
 
       // If the integer type is smaller than the pointer size, it is implicitly
       // sign extended to pointer size.
-      unsigned Width = cast<IntegerType>(Index->getType())->getBitWidth();
-      if (TD->getPointerSizeInBits() > Width)
+      unsigned Width = Index->getType()->getIntegerBitWidth();
+      if (TD->getPointerSizeInBits(AS) > Width)
         Extension = EK_SignExt;
 
       // Use GetLinearExpression to decompose the index into a C1*V+C2 form.
@@ -356,7 +367,6 @@ DecomposeGEPExpression(const Value *V, int64_t &BaseOffs,
       // This gives us an aggregate computation of (C1*Scale)*V + C2*Scale.
       BaseOffs += IndexOffset.getSExtValue()*Scale;
       Scale *= IndexScale.getSExtValue();
-
 
       // If we already had an occurrence of this index variable, merge this
       // scale into it.  For example, we want to handle:
@@ -373,7 +383,7 @@ DecomposeGEPExpression(const Value *V, int64_t &BaseOffs,
 
       // Make sure that we have a scale that makes sense for this target's
       // pointer size.
-      if (unsigned ShiftBits = 64-TD->getPointerSizeInBits()) {
+      if (unsigned ShiftBits = 64 - TD->getPointerSizeInBits(AS)) {
         Scale <<= ShiftBits;
         Scale = (int64_t)Scale >> ShiftBits;
       }
@@ -846,8 +856,8 @@ BasicAliasAnalysis::getModRefInfo(ImmutableCallSite CS,
   return ModRefResult(AliasAnalysis::getModRefInfo(CS, Loc) & Min);
 }
 
-static bool areVarIndicesEqual(SmallVector<VariableGEPIndex, 4> &Indices1,
-                               SmallVector<VariableGEPIndex, 4> &Indices2) {
+static bool areVarIndicesEqual(SmallVectorImpl<VariableGEPIndex> &Indices1,
+                               SmallVectorImpl<VariableGEPIndex> &Indices2) {
   unsigned Size1 = Indices1.size();
   unsigned Size2 = Indices2.size();
 
@@ -1205,10 +1215,10 @@ BasicAliasAnalysis::aliasCheck(const Value *V1, uint64_t V1Size,
         (isa<Constant>(O2) && isIdentifiedObject(O1) && !isa<Constant>(O1)))
       return NoAlias;
 
-    // Arguments can't alias with local allocations or noalias calls
-    // in the same function.
-    if (((isa<Argument>(O1) && (isa<AllocaInst>(O2) || isNoAliasCall(O2))) ||
-         (isa<Argument>(O2) && (isa<AllocaInst>(O1) || isNoAliasCall(O1)))))
+    // Function arguments can't alias with things that are known to be
+    // unambigously identified at the function level.
+    if ((isa<Argument>(O1) && isIdentifiedFunctionLocal(O2)) ||
+        (isa<Argument>(O2) && isIdentifiedFunctionLocal(O1)))
       return NoAlias;
 
     // Most objects can't alias null.

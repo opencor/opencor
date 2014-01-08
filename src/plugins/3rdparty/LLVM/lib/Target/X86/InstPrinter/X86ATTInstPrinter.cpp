@@ -139,8 +139,7 @@ void X86ATTInstPrinter::printPCRelImm(const MCInst *MI, unsigned OpNo,
     const MCConstantExpr *BranchTarget = dyn_cast<MCConstantExpr>(Op.getExpr());
     int64_t Address;
     if (BranchTarget && BranchTarget->EvaluateAsAbsolute(Address)) {
-      O << "0x";
-      O.write_hex(Address);
+      O << formatHex((uint64_t)Address);
     }
     else {
       // Otherwise, just print the expression.
@@ -206,12 +205,28 @@ void X86ATTInstPrinter::printMemReference(const MCInst *MI, unsigned Op,
       unsigned ScaleVal = MI->getOperand(Op+1).getImm();
       if (ScaleVal != 1) {
         O << ','
-	  << markup("<imm:")
+          << markup("<imm:")
           << ScaleVal // never printed in hex.
-	  << markup(">");
+          << markup(">");
       }
     }
     O << ')';
+  }
+
+  O << markup(">");
+}
+
+void X86ATTInstPrinter::printMemOffset(const MCInst *MI, unsigned Op,
+                                       raw_ostream &O) {
+  const MCOperand &DispSpec = MI->getOperand(Op);
+
+  O << markup("<mem:");
+
+  if (DispSpec.isImm()) {
+    O << formatImm(DispSpec.getImm());
+  } else {
+    assert(DispSpec.isExpr() && "non-immediate displacement?");
+    O << *DispSpec.getExpr();
   }
 
   O << markup(">");

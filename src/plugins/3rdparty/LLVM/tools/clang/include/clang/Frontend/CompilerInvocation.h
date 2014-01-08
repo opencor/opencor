@@ -28,18 +28,16 @@
 #include "llvm/ADT/StringRef.h"
 #include <string>
 #include <vector>
-//---OPENCOR--- BEGIN
-#include "llvmglobal.h"
-//---OPENCOR--- END
 
-namespace clang {
-
-class CompilerInvocation;
-class DiagnosticsEngine;
-
-namespace driver {
+namespace llvm {
+namespace opt {
 class ArgList;
 }
+}
+
+namespace clang {
+class CompilerInvocation;
+class DiagnosticsEngine;
 
 /// \brief Fill out Opts based on the options given in Args.
 ///
@@ -48,7 +46,7 @@ class ArgList;
 ///
 /// When errors are encountered, return false and, if Diags is non-null,
 /// report the error(s).
-bool ParseDiagnosticArgs(DiagnosticOptions &Opts, driver::ArgList &Args,
+bool ParseDiagnosticArgs(DiagnosticOptions &Opts, llvm::opt::ArgList &Args,
                          DiagnosticsEngine *Diags = 0);
 
 class CompilerInvocationBase : public RefCountedBase<CompilerInvocation> {
@@ -99,12 +97,7 @@ public:
 /// This class is designed to represent an abstract "invocation" of the
 /// compiler, including data such as the include paths, the code generation
 /// options, the warning flags, and so on.
-/*---OPENCOR---
 class CompilerInvocation : public CompilerInvocationBase {
-*/
-//---OPENCOR--- BEGIN
-class LLVM_EXPORT CompilerInvocation : public CompilerInvocationBase {
-//---OPENCOR--- END
   /// Options controlling the static analyzer.
   AnalyzerOptionsRef AnalyzerOpts;
 

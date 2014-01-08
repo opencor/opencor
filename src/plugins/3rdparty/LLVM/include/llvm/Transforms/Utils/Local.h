@@ -39,6 +39,7 @@ class DataLayout;
 class TargetLibraryInfo;
 class TargetTransformInfo;
 class DIBuilder;
+class AliasAnalysis;
 
 template<typename T> class SmallVectorImpl;
 
@@ -138,6 +139,12 @@ bool EliminateDuplicatePHINodes(BasicBlock *BB);
 bool SimplifyCFG(BasicBlock *BB, const TargetTransformInfo &TTI,
                  const DataLayout *TD = 0);
 
+/// FlatternCFG - This function is used to flatten a CFG.  For
+/// example, it uses parallel-and and parallel-or mode to collapse
+//  if-conditions and merge if-regions with identical statements.
+///
+bool FlattenCFG(BasicBlock *BB, AliasAnalysis *AA = 0);
+
 /// FoldBranchToCommonDest - If this basic block is ONLY a setcc and a branch,
 /// and if a predecessor branches to us and one of our successors, fold the
 /// setcc into the predecessor and use logical operations to pick the right
@@ -179,28 +186,34 @@ static inline unsigned getKnownAlignment(Value *V, const DataLayout *TD = 0) {
 template<typename IRBuilderTy>
 Value *EmitGEPOffset(IRBuilderTy *Builder, const DataLayout &TD, User *GEP,
                      bool NoAssumptions = false) {
-  gep_type_iterator GTI = gep_type_begin(GEP);
-  Type *IntPtrTy = TD.getIntPtrType(GEP->getContext());
+  GEPOperator *GEPOp = cast<GEPOperator>(GEP);
+  Type *IntPtrTy = TD.getIntPtrType(GEP->getType());
   Value *Result = Constant::getNullValue(IntPtrTy);
 
   // If the GEP is inbounds, we know that none of the addressing operations will
   // overflow in an unsigned sense.
-  bool isInBounds = cast<GEPOperator>(GEP)->isInBounds() && !NoAssumptions;
+  bool isInBounds = GEPOp->isInBounds() && !NoAssumptions;
 
   // Build a mask for high order bits.
-  unsigned IntPtrWidth = TD.getPointerSizeInBits();
-  uint64_t PtrSizeMask = ~0ULL >> (64-IntPtrWidth);
+  unsigned IntPtrWidth = IntPtrTy->getScalarType()->getIntegerBitWidth();
+  uint64_t PtrSizeMask = ~0ULL >> (64 - IntPtrWidth);
 
+  gep_type_iterator GTI = gep_type_begin(GEP);
   for (User::op_iterator i = GEP->op_begin() + 1, e = GEP->op_end(); i != e;
        ++i, ++GTI) {
     Value *Op = *i;
     uint64_t Size = TD.getTypeAllocSize(GTI.getIndexedType()) & PtrSizeMask;
-    if (ConstantInt *OpC = dyn_cast<ConstantInt>(Op)) {
-      if (OpC->isZero()) continue;
+    if (Constant *OpC = dyn_cast<Constant>(Op)) {
+      if (OpC->isZeroValue())
+        continue;
 
       // Handle a struct index, which adds its field offset to the pointer.
       if (StructType *STy = dyn_cast<StructType>(*GTI)) {
-        Size = TD.getStructLayout(STy)->getElementOffset(OpC->getZExtValue());
+        if (OpC->getType()->isVectorTy())
+          OpC = OpC->getSplatValue();
+
+        uint64_t OpValue = cast<ConstantInt>(OpC)->getZExtValue();
+        Size = TD.getStructLayout(STy)->getElementOffset(OpValue);
 
         if (Size)
           Result = Builder->CreateAdd(Result, ConstantInt::get(IntPtrTy, Size),

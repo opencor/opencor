@@ -10,12 +10,19 @@
   default:
     assert(0 && "Unknown attribute!");
     break;
+  case attr::ARMInterrupt: {
+    bool isInherited = Record[Idx++];
+    ARMInterruptAttr::InterruptType interrupt(static_cast<ARMInterruptAttr::InterruptType>(Record[Idx++]));
+    New = new (Context) ARMInterruptAttr(Range, Context, interrupt);
+    cast<InheritableAttr>(New)->setInherited(isInherited);
+    break;
+  }
   case attr::AcquiredAfter: {
     bool isInherited = Record[Idx++];
   unsigned argsSize = Record[Idx++];
   SmallVector<Expr *, 4> args;
   args.reserve(argsSize);
-  for (unsigned i = argsSize; i; --i)
+    for (unsigned i = argsSize; i; --i)
     args.push_back(ReadExpr(F));
     New = new (Context) AcquiredAfterAttr(Range, Context, args.data(), argsSize);
     cast<InheritableAttr>(New)->setInherited(isInherited);
@@ -26,17 +33,15 @@
   unsigned argsSize = Record[Idx++];
   SmallVector<Expr *, 4> args;
   args.reserve(argsSize);
-  for (unsigned i = argsSize; i; --i)
+    for (unsigned i = argsSize; i; --i)
     args.push_back(ReadExpr(F));
     New = new (Context) AcquiredBeforeAttr(Range, Context, args.data(), argsSize);
     cast<InheritableAttr>(New)->setInherited(isInherited);
     break;
   }
   case attr::Alias: {
-    bool isInherited = Record[Idx++];
     std::string aliasee= ReadString(Record, Idx);
     New = new (Context) AliasAttr(Range, Context, aliasee);
-    cast<InheritableAttr>(New)->setInherited(isInherited);
     break;
   }
   case attr::AlignMac68k: {
@@ -58,12 +63,14 @@
     break;
   }
   case attr::AllocSize: {
+    bool isInherited = Record[Idx++];
   unsigned argsSize = Record[Idx++];
   SmallVector<unsigned, 4> args;
   args.reserve(argsSize);
-  for (unsigned i = argsSize; i; --i)
+    for (unsigned i = argsSize; i; --i)
     args.push_back(Record[Idx++]);
     New = new (Context) AllocSizeAttr(Range, Context, args.data(), argsSize);
+    cast<InheritableAttr>(New)->setInherited(isInherited);
     break;
   }
   case attr::AlwaysInline: {
@@ -105,6 +112,28 @@
     bool isInherited = Record[Idx++];
     std::string label= ReadString(Record, Idx);
     New = new (Context) AsmLabelAttr(Range, Context, label);
+    cast<InheritableAttr>(New)->setInherited(isInherited);
+    break;
+  }
+  case attr::AssertExclusiveLock: {
+    bool isInherited = Record[Idx++];
+  unsigned argsSize = Record[Idx++];
+  SmallVector<Expr *, 4> args;
+  args.reserve(argsSize);
+    for (unsigned i = argsSize; i; --i)
+    args.push_back(ReadExpr(F));
+    New = new (Context) AssertExclusiveLockAttr(Range, Context, args.data(), argsSize);
+    cast<InheritableAttr>(New)->setInherited(isInherited);
+    break;
+  }
+  case attr::AssertSharedLock: {
+    bool isInherited = Record[Idx++];
+  unsigned argsSize = Record[Idx++];
+  SmallVector<Expr *, 4> args;
+  args.reserve(argsSize);
+    for (unsigned i = argsSize; i; --i)
+    args.push_back(ReadExpr(F));
+    New = new (Context) AssertSharedLockAttr(Range, Context, args.data(), argsSize);
     cast<InheritableAttr>(New)->setInherited(isInherited);
     break;
   }
@@ -213,6 +242,17 @@
     cast<InheritableAttr>(New)->setInherited(isInherited);
     break;
   }
+  case attr::CallableWhen: {
+    bool isInherited = Record[Idx++];
+    unsigned callableStateSize = Record[Idx++];
+    SmallVector<CallableWhenAttr::ConsumedState, 4> callableState;
+    callableState.reserve(callableStateSize);
+    for (unsigned i = callableStateSize; i; --i)
+      callableState.push_back(static_cast<CallableWhenAttr::ConsumedState>(Record[Idx++]));
+    New = new (Context) CallableWhenAttr(Range, Context, callableState.data(), callableStateSize);
+    cast<InheritableAttr>(New)->setInherited(isInherited);
+    break;
+  }
   case attr::CarriesDependency: {
     bool isInherited = Record[Idx++];
     New = new (Context) CarriesDependencyAttr(Range, Context);
@@ -251,6 +291,13 @@
     cast<InheritableAttr>(New)->setInherited(isInherited);
     break;
   }
+  case attr::Consumable: {
+    bool isInherited = Record[Idx++];
+    ConsumableAttr::ConsumedState defaultState(static_cast<ConsumableAttr::ConsumedState>(Record[Idx++]));
+    New = new (Context) ConsumableAttr(Range, Context, defaultState);
+    cast<InheritableAttr>(New)->setInherited(isInherited);
+    break;
+  }
   case attr::DLLExport: {
     bool isInherited = Record[Idx++];
     New = new (Context) DLLExportAttr(Range, Context);
@@ -277,19 +324,12 @@
     cast<InheritableAttr>(New)->setInherited(isInherited);
     break;
   }
-  case attr::Endian: {
-    bool isInherited = Record[Idx++];
-    IdentifierInfo * platform = GetIdentifierInfo(F, Record, Idx);
-    New = new (Context) EndianAttr(Range, Context, platform);
-    cast<InheritableAttr>(New)->setInherited(isInherited);
-    break;
-  }
   case attr::ExclusiveLockFunction: {
     bool isInherited = Record[Idx++];
   unsigned argsSize = Record[Idx++];
   SmallVector<Expr *, 4> args;
   args.reserve(argsSize);
-  for (unsigned i = argsSize; i; --i)
+    for (unsigned i = argsSize; i; --i)
     args.push_back(ReadExpr(F));
     New = new (Context) ExclusiveLockFunctionAttr(Range, Context, args.data(), argsSize);
     cast<InheritableAttr>(New)->setInherited(isInherited);
@@ -300,7 +340,7 @@
   unsigned argsSize = Record[Idx++];
   SmallVector<Expr *, 4> args;
   args.reserve(argsSize);
-  for (unsigned i = argsSize; i; --i)
+    for (unsigned i = argsSize; i; --i)
     args.push_back(ReadExpr(F));
     New = new (Context) ExclusiveLocksRequiredAttr(Range, Context, args.data(), argsSize);
     cast<InheritableAttr>(New)->setInherited(isInherited);
@@ -312,7 +352,7 @@
   unsigned argsSize = Record[Idx++];
   SmallVector<Expr *, 4> args;
   args.reserve(argsSize);
-  for (unsigned i = argsSize; i; --i)
+    for (unsigned i = argsSize; i; --i)
     args.push_back(ReadExpr(F));
     New = new (Context) ExclusiveTrylockFunctionAttr(Range, Context, successValue, args.data(), argsSize);
     cast<InheritableAttr>(New)->setInherited(isInherited);
@@ -342,7 +382,7 @@
   }
   case attr::Format: {
     bool isInherited = Record[Idx++];
-    std::string type= ReadString(Record, Idx);
+    IdentifierInfo * type = GetIdentifierInfo(F, Record, Idx);
     int formatIdx = Record[Idx++];
     int firstArg = Record[Idx++];
     New = new (Context) FormatAttr(Range, Context, type, formatIdx, firstArg);
@@ -395,9 +435,8 @@
   }
   case attr::IBOutletCollection: {
     bool isInherited = Record[Idx++];
-    QualType interface = getLocalType(F, Record[Idx++]);
-    SourceLocation interfaceLoc = ReadSourceLocation(F, Record, Idx);
-    New = new (Context) IBOutletCollectionAttr(Range, Context, interface, interfaceLoc);
+    TypeSourceInfo * interface = GetTypeSourceInfo(F, Record, Idx);
+    New = new (Context) IBOutletCollectionAttr(Range, Context, interface);
     cast<InheritableAttr>(New)->setInherited(isInherited);
     break;
   }
@@ -432,21 +471,15 @@
   unsigned argsSize = Record[Idx++];
   SmallVector<Expr *, 4> args;
   args.reserve(argsSize);
-  for (unsigned i = argsSize; i; --i)
+    for (unsigned i = argsSize; i; --i)
     args.push_back(ReadExpr(F));
     New = new (Context) LocksExcludedAttr(Range, Context, args.data(), argsSize);
     cast<InheritableAttr>(New)->setInherited(isInherited);
     break;
   }
-  case attr::MBlazeInterruptHandler: {
+  case attr::MSABI: {
     bool isInherited = Record[Idx++];
-    New = new (Context) MBlazeInterruptHandlerAttr(Range, Context);
-    cast<InheritableAttr>(New)->setInherited(isInherited);
-    break;
-  }
-  case attr::MBlazeSaveVolatiles: {
-    bool isInherited = Record[Idx++];
-    New = new (Context) MBlazeSaveVolatilesAttr(Range, Context);
+    New = new (Context) MSABIAttr(Range, Context);
     cast<InheritableAttr>(New)->setInherited(isInherited);
     break;
   }
@@ -488,8 +521,9 @@
     cast<InheritableAttr>(New)->setInherited(isInherited);
     break;
   }
-  case attr::MsProperty: {
-    New = new (Context) MsPropertyAttr(Range, Context);
+  case attr::Mode: {
+    IdentifierInfo * mode = GetIdentifierInfo(F, Record, Idx);
+    New = new (Context) ModeAttr(Range, Context, mode);
     break;
   }
   case attr::MsStruct: {
@@ -618,9 +652,16 @@
   unsigned argsSize = Record[Idx++];
   SmallVector<unsigned, 4> args;
   args.reserve(argsSize);
-  for (unsigned i = argsSize; i; --i)
+    for (unsigned i = argsSize; i; --i)
     args.push_back(Record[Idx++]);
     New = new (Context) NonNullAttr(Range, Context, args.data(), argsSize);
+    cast<InheritableAttr>(New)->setInherited(isInherited);
+    break;
+  }
+  case attr::ObjCBridge: {
+    bool isInherited = Record[Idx++];
+    IdentifierInfo * bridgedType = GetIdentifierInfo(F, Record, Idx);
+    New = new (Context) ObjCBridgeAttr(Range, Context, bridgedType);
     cast<InheritableAttr>(New)->setInherited(isInherited);
     break;
   }
@@ -644,7 +685,9 @@
     break;
   }
   case attr::ObjCPreciseLifetime: {
+    bool isInherited = Record[Idx++];
     New = new (Context) ObjCPreciseLifetimeAttr(Range, Context);
+    cast<InheritableAttr>(New)->setInherited(isInherited);
     break;
   }
   case attr::ObjCRequiresPropertyDefs: {
@@ -660,11 +703,15 @@
     break;
   }
   case attr::ObjCReturnsInnerPointer: {
+    bool isInherited = Record[Idx++];
     New = new (Context) ObjCReturnsInnerPointerAttr(Range, Context);
+    cast<InheritableAttr>(New)->setInherited(isInherited);
     break;
   }
   case attr::ObjCRootClass: {
+    bool isInherited = Record[Idx++];
     New = new (Context) ObjCRootClassAttr(Range, Context);
+    cast<InheritableAttr>(New)->setInherited(isInherited);
     break;
   }
   case attr::OpenCLImageAccess: {
@@ -673,7 +720,9 @@
     break;
   }
   case attr::OpenCLKernel: {
+    bool isInherited = Record[Idx++];
     New = new (Context) OpenCLKernelAttr(Range, Context);
+    cast<InheritableAttr>(New)->setInherited(isInherited);
     break;
   }
   case attr::Overloadable: {
@@ -693,7 +742,7 @@
   unsigned argsSize = Record[Idx++];
   SmallVector<unsigned, 4> args;
   args.reserve(argsSize);
-  for (unsigned i = argsSize; i; --i)
+    for (unsigned i = argsSize; i; --i)
     args.push_back(Record[Idx++]);
     New = new (Context) OwnershipAttr(Range, Context, ownKind, module, args.data(), argsSize);
     cast<InheritableAttr>(New)->setInherited(isInherited);
@@ -702,6 +751,13 @@
   case attr::Packed: {
     bool isInherited = Record[Idx++];
     New = new (Context) PackedAttr(Range, Context);
+    cast<InheritableAttr>(New)->setInherited(isInherited);
+    break;
+  }
+  case attr::ParamTypestate: {
+    bool isInherited = Record[Idx++];
+    ParamTypestateAttr::ConsumedState paramState(static_cast<ParamTypestateAttr::ConsumedState>(Record[Idx++]));
+    New = new (Context) ParamTypestateAttr(Range, Context, paramState);
     cast<InheritableAttr>(New)->setInherited(isInherited);
     break;
   }
@@ -737,18 +793,6 @@
     cast<InheritableAttr>(New)->setInherited(isInherited);
     break;
   }
-  case attr::Ptr32: {
-    bool isInherited = Record[Idx++];
-    New = new (Context) Ptr32Attr(Range, Context);
-    cast<InheritableAttr>(New)->setInherited(isInherited);
-    break;
-  }
-  case attr::Ptr64: {
-    bool isInherited = Record[Idx++];
-    New = new (Context) Ptr64Attr(Range, Context);
-    cast<InheritableAttr>(New)->setInherited(isInherited);
-    break;
-  }
   case attr::Pure: {
     bool isInherited = Record[Idx++];
     New = new (Context) PureAttr(Range, Context);
@@ -771,6 +815,13 @@
     cast<InheritableAttr>(New)->setInherited(isInherited);
     break;
   }
+  case attr::ReturnTypestate: {
+    bool isInherited = Record[Idx++];
+    ReturnTypestateAttr::ConsumedState state(static_cast<ReturnTypestateAttr::ConsumedState>(Record[Idx++]));
+    New = new (Context) ReturnTypestateAttr(Range, Context, state);
+    cast<InheritableAttr>(New)->setInherited(isInherited);
+    break;
+  }
   case attr::ReturnsTwice: {
     bool isInherited = Record[Idx++];
     New = new (Context) ReturnsTwiceAttr(Range, Context);
@@ -790,6 +841,12 @@
     cast<InheritableAttr>(New)->setInherited(isInherited);
     break;
   }
+  case attr::SelectAny: {
+    bool isInherited = Record[Idx++];
+    New = new (Context) SelectAnyAttr(Range, Context);
+    cast<InheritableAttr>(New)->setInherited(isInherited);
+    break;
+  }
   case attr::Sentinel: {
     bool isInherited = Record[Idx++];
     int sentinel = Record[Idx++];
@@ -798,12 +855,19 @@
     cast<InheritableAttr>(New)->setInherited(isInherited);
     break;
   }
+  case attr::SetTypestate: {
+    bool isInherited = Record[Idx++];
+    SetTypestateAttr::ConsumedState newState(static_cast<SetTypestateAttr::ConsumedState>(Record[Idx++]));
+    New = new (Context) SetTypestateAttr(Range, Context, newState);
+    cast<InheritableAttr>(New)->setInherited(isInherited);
+    break;
+  }
   case attr::SharedLockFunction: {
     bool isInherited = Record[Idx++];
   unsigned argsSize = Record[Idx++];
   SmallVector<Expr *, 4> args;
   args.reserve(argsSize);
-  for (unsigned i = argsSize; i; --i)
+    for (unsigned i = argsSize; i; --i)
     args.push_back(ReadExpr(F));
     New = new (Context) SharedLockFunctionAttr(Range, Context, args.data(), argsSize);
     cast<InheritableAttr>(New)->setInherited(isInherited);
@@ -814,7 +878,7 @@
   unsigned argsSize = Record[Idx++];
   SmallVector<Expr *, 4> args;
   args.reserve(argsSize);
-  for (unsigned i = argsSize; i; --i)
+    for (unsigned i = argsSize; i; --i)
     args.push_back(ReadExpr(F));
     New = new (Context) SharedLocksRequiredAttr(Range, Context, args.data(), argsSize);
     cast<InheritableAttr>(New)->setInherited(isInherited);
@@ -826,7 +890,7 @@
   unsigned argsSize = Record[Idx++];
   SmallVector<Expr *, 4> args;
   args.reserve(argsSize);
-  for (unsigned i = argsSize; i; --i)
+    for (unsigned i = argsSize; i; --i)
     args.push_back(ReadExpr(F));
     New = new (Context) SharedTrylockFunctionAttr(Range, Context, successValue, args.data(), argsSize);
     cast<InheritableAttr>(New)->setInherited(isInherited);
@@ -844,10 +908,23 @@
     cast<InheritableAttr>(New)->setInherited(isInherited);
     break;
   }
+  case attr::SysVABI: {
+    bool isInherited = Record[Idx++];
+    New = new (Context) SysVABIAttr(Range, Context);
+    cast<InheritableAttr>(New)->setInherited(isInherited);
+    break;
+  }
   case attr::TLSModel: {
     bool isInherited = Record[Idx++];
     std::string model= ReadString(Record, Idx);
     New = new (Context) TLSModelAttr(Range, Context, model);
+    cast<InheritableAttr>(New)->setInherited(isInherited);
+    break;
+  }
+  case attr::TestTypestate: {
+    bool isInherited = Record[Idx++];
+    TestTypestateAttr::ConsumedState testState(static_cast<TestTypestateAttr::ConsumedState>(Record[Idx++]));
+    New = new (Context) TestTypestateAttr(Range, Context, testState);
     cast<InheritableAttr>(New)->setInherited(isInherited);
     break;
   }
@@ -866,7 +943,7 @@
   case attr::TypeTagForDatatype: {
     bool isInherited = Record[Idx++];
     IdentifierInfo * argumentKind = GetIdentifierInfo(F, Record, Idx);
-    QualType matchingCType = getLocalType(F, Record[Idx++]);
+    TypeSourceInfo * matchingCType = GetTypeSourceInfo(F, Record, Idx);
     bool layoutCompatible = Record[Idx++];
     bool mustBeNull = Record[Idx++];
     New = new (Context) TypeTagForDatatypeAttr(Range, Context, argumentKind, matchingCType, layoutCompatible, mustBeNull);
@@ -892,7 +969,7 @@
   unsigned argsSize = Record[Idx++];
   SmallVector<Expr *, 4> args;
   args.reserve(argsSize);
-  for (unsigned i = argsSize; i; --i)
+    for (unsigned i = argsSize; i; --i)
     args.push_back(ReadExpr(F));
     New = new (Context) UnlockFunctionAttr(Range, Context, args.data(), argsSize);
     cast<InheritableAttr>(New)->setInherited(isInherited);
@@ -931,9 +1008,8 @@
   }
   case attr::VecTypeHint: {
     bool isInherited = Record[Idx++];
-    QualType typeHint = getLocalType(F, Record[Idx++]);
-    SourceLocation typeLoc = ReadSourceLocation(F, Record, Idx);
-    New = new (Context) VecTypeHintAttr(Range, Context, typeHint, typeLoc);
+    TypeSourceInfo * typeHint = GetTypeSourceInfo(F, Record, Idx);
+    New = new (Context) VecTypeHintAttr(Range, Context, typeHint);
     cast<InheritableAttr>(New)->setInherited(isInherited);
     break;
   }
@@ -947,6 +1023,12 @@
     bool isInherited = Record[Idx++];
     VisibilityAttr::VisibilityType visibility(static_cast<VisibilityAttr::VisibilityType>(Record[Idx++]));
     New = new (Context) VisibilityAttr(Range, Context, visibility);
+    cast<InheritableAttr>(New)->setInherited(isInherited);
+    break;
+  }
+  case attr::WarnUnused: {
+    bool isInherited = Record[Idx++];
+    New = new (Context) WarnUnusedAttr(Range, Context);
     cast<InheritableAttr>(New)->setInherited(isInherited);
     break;
   }
@@ -970,7 +1052,8 @@
   }
   case attr::WeakRef: {
     bool isInherited = Record[Idx++];
-    New = new (Context) WeakRefAttr(Range, Context);
+    std::string aliasee= ReadString(Record, Idx);
+    New = new (Context) WeakRefAttr(Range, Context, aliasee);
     cast<InheritableAttr>(New)->setInherited(isInherited);
     break;
   }

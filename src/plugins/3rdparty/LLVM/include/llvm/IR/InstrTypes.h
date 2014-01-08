@@ -531,6 +531,12 @@ public:
     Type *DestTy ///< The Type to which the value should be cast.
   );
 
+  /// @brief Check whether a bitcast between these types is valid
+  static bool isBitCastable(
+    Type *SrcTy, ///< The Type from which the value should be cast.
+    Type *DestTy ///< The Type to which the value should be cast.
+  );
+
   /// Returns the opcode necessary to cast Val into Ty using usual casting
   /// rules.
   /// @brief Infer the opcode for cast operand and type
@@ -568,7 +574,7 @@ public:
     Instruction::CastOps Opcode,  ///< Opcode of cast
     Type *SrcTy,   ///< SrcTy of cast
     Type *DstTy,   ///< DstTy of cast
-    Type *IntPtrTy ///< Integer type corresponding to Ptr types, or null
+    Type *IntPtrTy ///< Integer type corresponding to Ptr types
   );
 
   /// @brief Determine if this cast is a no-op cast.

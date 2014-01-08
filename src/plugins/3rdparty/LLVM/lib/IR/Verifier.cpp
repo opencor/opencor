@@ -53,8 +53,10 @@
 #include "llvm/ADT/StringExtras.h"
 #include "llvm/Analysis/Dominators.h"
 #include "llvm/Assembly/Writer.h"
+#include "llvm/DebugInfo.h"
 #include "llvm/IR/CallingConv.h"
 #include "llvm/IR/Constants.h"
+#include "llvm/IR/DataLayout.h"
 #include "llvm/IR/DerivedTypes.h"
 #include "llvm/IR/InlineAsm.h"
 #include "llvm/IR/IntrinsicInst.h"
@@ -66,6 +68,7 @@
 #include "llvm/PassManager.h"
 #include "llvm/Support/CFG.h"
 #include "llvm/Support/CallSite.h"
+#include "llvm/Support/CommandLine.h"
 #include "llvm/Support/ConstantRange.h"
 #include "llvm/Support/Debug.h"
 #include "llvm/Support/ErrorHandling.h"
@@ -73,6 +76,9 @@
 #include <algorithm>
 #include <cstdarg>
 using namespace llvm;
+
+static cl::opt<bool> DisableDebugInfoVerifier("disable-debug-info-verifier",
+                                              cl::init(true));
 
 namespace {  // Anonymous namespace for class
   struct PreVerifier : public FunctionPass {
@@ -123,6 +129,7 @@ namespace {
     Module *Mod;          // Module we are verifying right now
     LLVMContext *Context; // Context within which we are verifying
     DominatorTree *DT;    // Dominator Tree, caution can be null!
+    const DataLayout *DL;
 
     std::string Messages;
     raw_string_ostream MessagesStr;
@@ -142,21 +149,26 @@ namespace {
     /// the same personality function.
     const Value *PersonalityFn;
 
+    /// Finder keeps track of all debug info MDNodes in a Module.
+    DebugInfoFinder Finder;
+
     Verifier()
       : FunctionPass(ID), Broken(false),
-        action(AbortProcessAction), Mod(0), Context(0), DT(0),
+        action(AbortProcessAction), Mod(0), Context(0), DT(0), DL(0),
         MessagesStr(Messages), PersonalityFn(0) {
       initializeVerifierPass(*PassRegistry::getPassRegistry());
     }
     explicit Verifier(VerifierFailureAction ctn)
       : FunctionPass(ID), Broken(false), action(ctn), Mod(0),
-        Context(0), DT(0), MessagesStr(Messages), PersonalityFn(0) {
+        Context(0), DT(0), DL(0), MessagesStr(Messages), PersonalityFn(0) {
       initializeVerifierPass(*PassRegistry::getPassRegistry());
     }
 
     bool doInitialization(Module &M) {
       Mod = &M;
       Context = &M.getContext();
+
+      DL = getAnalysisIfAvailable<DataLayout>();
 
       // We must abort before returning back to the pass manager, or else the
       // pass manager may try to run other passes on the broken module.
@@ -170,9 +182,14 @@ namespace {
       Mod = F.getParent();
       if (!Context) Context = &F.getContext();
 
+      Finder.reset();
       visit(F);
       InstsInThisBlock.clear();
       PersonalityFn = 0;
+
+      if (!DisableDebugInfoVerifier)
+        // Verify Debug Info.
+        verifyDebugInfo();
 
       // We must abort before returning back to the pass manager, or else the
       // pass manager may try to run other passes on the broken module.
@@ -201,6 +218,14 @@ namespace {
         visitNamedMDNode(*I);
 
       visitModuleFlags(M);
+      visitModuleIdents(M);
+
+      if (!DisableDebugInfoVerifier) {
+        Finder.reset();
+        Finder.processModule(M);
+        // Verify Debug Info.
+        verifyDebugInfo();
+      }
 
       // If the module is broken, abort at this time.
       return abortIfBroken();
@@ -242,6 +267,7 @@ namespace {
     void visitGlobalAlias(GlobalAlias &GA);
     void visitNamedMDNode(NamedMDNode &NMD);
     void visitMDNode(MDNode &MD, Function *F);
+    void visitModuleIdents(Module &M);
     void visitModuleFlags(Module &M);
     void visitModuleFlag(MDNode *Op, DenseMap<MDString*, MDNode*> &SeenIDs,
                          SmallVectorImpl<MDNode*> &Requirements);
@@ -263,6 +289,7 @@ namespace {
     void visitIntToPtrInst(IntToPtrInst &I);
     void visitPtrToIntInst(PtrToIntInst &I);
     void visitBitCastInst(BitCastInst &I);
+    void visitAddrSpaceCastInst(AddrSpaceCastInst &I);
     void visitPHINode(PHINode &PN);
     void visitBinaryOperator(BinaryOperator &B);
     void visitICmpInst(ICmpInst &IC);
@@ -301,6 +328,8 @@ namespace {
     bool VerifyIntrinsicType(Type *Ty,
                              ArrayRef<Intrinsic::IITDescriptor> &Infos,
                              SmallVectorImpl<Type*> &ArgTys);
+    bool VerifyIntrinsicIsVarArg(bool isVarArg,
+                                 ArrayRef<Intrinsic::IITDescriptor> &Infos);
     bool VerifyAttributeCount(AttributeSet Attrs, unsigned Params);
     void VerifyAttributeTypes(AttributeSet Attrs, unsigned Idx,
                               bool isFunction, const Value *V);
@@ -308,6 +337,11 @@ namespace {
                               bool isReturnValue, const Value *V);
     void VerifyFunctionAttrs(FunctionType *FT, AttributeSet Attrs,
                              const Value *V);
+
+    void VerifyBitcastType(const Value *V, Type *DestTy, Type *SrcTy);
+    void VerifyConstantExprBitcastType(const ConstantExpr *CE);
+
+    void verifyDebugInfo();
 
     void WriteValue(const Value *V) {
       if (!V) return;
@@ -406,10 +440,6 @@ void Verifier::visitGlobalValue(GlobalValue &GV) {
     Assert1(GVar && GVar->getType()->getElementType()->isArrayTy(),
             "Only global arrays can have appending linkage!", GVar);
   }
-
-  Assert1(!GV.hasLinkOnceODRAutoHideLinkage() || GV.hasDefaultVisibility(),
-          "linkonce_odr_auto_hide can only have default visibility!",
-          &GV);
 }
 
 void Verifier::visitGlobalVariable(GlobalVariable &GV) {
@@ -450,7 +480,7 @@ void Verifier::visitGlobalVariable(GlobalVariable &GV) {
   }
 
   if (GV.hasName() && (GV.getName() == "llvm.used" ||
-                       GV.getName() == "llvm.compiler_used")) {
+                       GV.getName() == "llvm.compiler.used")) {
     Assert1(!GV.hasInitializer() || GV.hasAppendingLinkage(),
             "invalid linkage for intrinsic global variable", &GV);
     Type *GVType = GV.getType()->getElementType();
@@ -463,13 +493,40 @@ void Verifier::visitGlobalVariable(GlobalVariable &GV) {
         Assert1(InitArray, "wrong initalizer for intrinsic global variable",
                 Init);
         for (unsigned i = 0, e = InitArray->getNumOperands(); i != e; ++i) {
-          Value *V = Init->getOperand(i)->stripPointerCasts();
-          // stripPointerCasts strips aliases, so we only need to check for
-          // variables and functions.
-          Assert1(isa<GlobalVariable>(V) || isa<Function>(V),
-                  "invalid llvm.used member", V);
+          Value *V = Init->getOperand(i)->stripPointerCastsNoFollowAliases();
+          Assert1(
+              isa<GlobalVariable>(V) || isa<Function>(V) || isa<GlobalAlias>(V),
+              "invalid llvm.used member", V);
+          Assert1(V->hasName(), "members of llvm.used must be named", V);
         }
       }
+    }
+  }
+
+  if (!GV.hasInitializer()) {
+    visitGlobalValue(GV);
+    return;
+  }
+
+  // Walk any aggregate initializers looking for bitcasts between address spaces
+  SmallPtrSet<const Value *, 4> Visited;
+  SmallVector<const Value *, 4> WorkStack;
+  WorkStack.push_back(cast<Value>(GV.getInitializer()));
+
+  while (!WorkStack.empty()) {
+    const Value *V = WorkStack.pop_back_val();
+    if (!Visited.insert(V))
+      continue;
+
+    if (const User *U = dyn_cast<User>(V)) {
+      for (unsigned I = 0, N = U->getNumOperands(); I != N; ++I)
+        WorkStack.push_back(U->getOperand(I));
+    }
+
+    if (const ConstantExpr *CE = dyn_cast<ConstantExpr>(V)) {
+      VerifyConstantExprBitcastType(CE);
+      if (Broken)
+        return;
     }
   }
 
@@ -479,8 +536,7 @@ void Verifier::visitGlobalVariable(GlobalVariable &GV) {
 void Verifier::visitGlobalAlias(GlobalAlias &GA) {
   Assert1(!GA.getName().empty(),
           "Alias name cannot be empty!", &GA);
-  Assert1(GA.hasExternalLinkage() || GA.hasLocalLinkage() ||
-          GA.hasWeakLinkage(),
+  Assert1(GlobalAlias::isValidLinkage(GA.getLinkage()),
           "Alias should have external or external weak linkage!", &GA);
   Assert1(GA.getAliasee(),
           "Aliasee cannot be NULL!", &GA);
@@ -488,18 +544,29 @@ void Verifier::visitGlobalAlias(GlobalAlias &GA) {
           "Alias and aliasee types should match!", &GA);
   Assert1(!GA.hasUnnamedAddr(), "Alias cannot have unnamed_addr!", &GA);
 
-  if (!isa<GlobalValue>(GA.getAliasee())) {
-    const ConstantExpr *CE = dyn_cast<ConstantExpr>(GA.getAliasee());
+  Constant *Aliasee = GA.getAliasee();
+
+  if (!isa<GlobalValue>(Aliasee)) {
+    ConstantExpr *CE = dyn_cast<ConstantExpr>(Aliasee);
     Assert1(CE &&
             (CE->getOpcode() == Instruction::BitCast ||
              CE->getOpcode() == Instruction::GetElementPtr) &&
             isa<GlobalValue>(CE->getOperand(0)),
             "Aliasee should be either GlobalValue or bitcast of GlobalValue",
             &GA);
+
+    if (CE->getOpcode() == Instruction::BitCast) {
+      unsigned SrcAS = CE->getOperand(0)->getType()->getPointerAddressSpace();
+      unsigned DstAS = CE->getType()->getPointerAddressSpace();
+
+      Assert1(SrcAS == DstAS,
+              "Alias bitcasts cannot be between different address spaces",
+              &GA);
+    }
   }
 
-  const GlobalValue* Aliasee = GA.resolveAliasedGlobal(/*stopOnWeak*/ false);
-  Assert1(Aliasee,
+  const GlobalValue* Resolved = GA.resolveAliasedGlobal(/*stopOnWeak*/ false);
+  Assert1(Resolved,
           "Aliasing chain should end with function or global variable", &GA);
 
   visitGlobalValue(GA);
@@ -550,6 +617,24 @@ void Verifier::visitMDNode(MDNode &MD, Function *F) {
 
     Assert2(ActualF == F, "function-local metadata used in wrong function",
             &MD, Op);
+  }
+}
+
+void Verifier::visitModuleIdents(Module &M) {
+  const NamedMDNode *Idents = M.getNamedMetadata("llvm.ident");
+  if (!Idents)
+    return;
+
+  // llvm.ident takes a list of metadata entry. Each entry has only one string.
+  // Scan each llvm.ident entry and make sure that this requirement is met.
+  for (unsigned i = 0, e = Idents->getNumOperands(); i != e; ++i) {
+    const MDNode *N = Idents->getOperand(i);
+    Assert1(N->getNumOperands() == 1,
+            "incorrect number of operands in llvm.ident metadata", N);
+    Assert1(isa<MDString>(N->getOperand(0)),
+            ("invalid value for llvm.ident metadata entry operand"
+             "(the operand should be a string)"),
+            N->getOperand(0));
   }
 }
 
@@ -654,7 +739,7 @@ void Verifier::visitModuleFlag(MDNode *Op, DenseMap<MDString*, MDNode*>&SeenIDs,
 }
 
 void Verifier::VerifyAttributeTypes(AttributeSet Attrs, unsigned Idx,
-                                    bool isFunction, const Value* V) {
+                                    bool isFunction, const Value *V) {
   unsigned Slot = ~0U;
   for (unsigned I = 0, E = Attrs.getNumSlots(); I != E; ++I)
     if (Attrs.getSlotIndex(I) == Idx) {
@@ -671,8 +756,6 @@ void Verifier::VerifyAttributeTypes(AttributeSet Attrs, unsigned Idx,
 
     if (I->getKindAsEnum() == Attribute::NoReturn ||
         I->getKindAsEnum() == Attribute::NoUnwind ||
-        I->getKindAsEnum() == Attribute::ReadNone ||
-        I->getKindAsEnum() == Attribute::ReadOnly ||
         I->getKindAsEnum() == Attribute::NoInline ||
         I->getKindAsEnum() == Attribute::AlwaysInline ||
         I->getKindAsEnum() == Attribute::OptimizeForSize ||
@@ -692,15 +775,26 @@ void Verifier::VerifyAttributeTypes(AttributeSet Attrs, unsigned Idx,
         I->getKindAsEnum() == Attribute::SanitizeMemory ||
         I->getKindAsEnum() == Attribute::MinSize ||
         I->getKindAsEnum() == Attribute::NoDuplicate ||
-        I->getKindAsEnum() == Attribute::NoBuiltin) {
-      if (!isFunction)
-          CheckFailed("Attribute '" + I->getKindAsString() +
-                      "' only applies to functions!", V);
-          return;
-    } else if (isFunction) {
-        CheckFailed("Attribute '" + I->getKindAsString() +
-                    "' does not apply to functions!", V);
+        I->getKindAsEnum() == Attribute::Builtin ||
+        I->getKindAsEnum() == Attribute::NoBuiltin ||
+        I->getKindAsEnum() == Attribute::Cold ||
+        I->getKindAsEnum() == Attribute::OptimizeNone) {
+      if (!isFunction) {
+        CheckFailed("Attribute '" + I->getAsString() +
+                    "' only applies to functions!", V);
         return;
+      }
+    } else if (I->getKindAsEnum() == Attribute::ReadOnly ||
+               I->getKindAsEnum() == Attribute::ReadNone) {
+      if (Idx == 0) {
+        CheckFailed("Attribute '" + I->getAsString() +
+                    "' does not apply to function returns");
+        return;
+      }
+    } else if (isFunction) {
+      CheckFailed("Attribute '" + I->getAsString() +
+                  "' does not apply to functions!", V);
+      return;
     }
   }
 }
@@ -830,6 +924,65 @@ void Verifier::VerifyFunctionAttrs(FunctionType *FT, AttributeSet Attrs,
             Attrs.hasAttribute(AttributeSet::FunctionIndex,
                                Attribute::AlwaysInline)),
           "Attributes 'noinline and alwaysinline' are incompatible!", V);
+
+  if (Attrs.hasAttribute(AttributeSet::FunctionIndex,
+                         Attribute::OptimizeNone)) {
+    Assert1(Attrs.hasAttribute(AttributeSet::FunctionIndex,
+                               Attribute::NoInline),
+            "Attribute 'optnone' requires 'noinline'!", V);
+
+    Assert1(!Attrs.hasAttribute(AttributeSet::FunctionIndex,
+                                Attribute::OptimizeForSize),
+            "Attributes 'optsize and optnone' are incompatible!", V);
+
+    Assert1(!Attrs.hasAttribute(AttributeSet::FunctionIndex,
+                                Attribute::MinSize),
+            "Attributes 'minsize and optnone' are incompatible!", V);
+  }
+}
+
+void Verifier::VerifyBitcastType(const Value *V, Type *DestTy, Type *SrcTy) {
+  // Get the size of the types in bits, we'll need this later
+  unsigned SrcBitSize = SrcTy->getPrimitiveSizeInBits();
+  unsigned DestBitSize = DestTy->getPrimitiveSizeInBits();
+
+  // BitCast implies a no-op cast of type only. No bits change.
+  // However, you can't cast pointers to anything but pointers.
+  Assert1(SrcTy->isPointerTy() == DestTy->isPointerTy(),
+          "Bitcast requires both operands to be pointer or neither", V);
+  Assert1(SrcBitSize == DestBitSize,
+          "Bitcast requires types of same width", V);
+
+  // Disallow aggregates.
+  Assert1(!SrcTy->isAggregateType(),
+          "Bitcast operand must not be aggregate", V);
+  Assert1(!DestTy->isAggregateType(),
+          "Bitcast type must not be aggregate", V);
+
+  // Without datalayout, assume all address spaces are the same size.
+  // Don't check if both types are not pointers.
+  // Skip casts between scalars and vectors.
+  if (!DL ||
+      !SrcTy->isPtrOrPtrVectorTy() ||
+      !DestTy->isPtrOrPtrVectorTy() ||
+      SrcTy->isVectorTy() != DestTy->isVectorTy()) {
+    return;
+  }
+
+  unsigned SrcAS = SrcTy->getPointerAddressSpace();
+  unsigned DstAS = DestTy->getPointerAddressSpace();
+
+  Assert1(SrcAS == DstAS,
+          "Bitcasts between pointers of different address spaces is not legal."
+          "Use AddrSpaceCast instead.", V);
+}
+
+void Verifier::VerifyConstantExprBitcastType(const ConstantExpr *CE) {
+  if (CE->getOpcode() == Instruction::BitCast) {
+    Type *SrcTy = CE->getOperand(0)->getType();
+    Type *DstTy = CE->getType();
+    VerifyBitcastType(CE, DstTy, SrcTy);
+  }
 }
 
 bool Verifier::VerifyAttributeCount(AttributeSet Attrs, unsigned Params) {
@@ -875,6 +1028,13 @@ void Verifier::visitFunction(Function &F) {
 
   // Check function attributes.
   VerifyFunctionAttrs(FT, Attrs, &F);
+
+  // On function declarations/definitions, we do not support the builtin
+  // attribute. We do not check this in VerifyFunctionAttrs since that is
+  // checking for Attributes that can/can not ever be on functions.
+  Assert1(!Attrs.hasAttribute(AttributeSet::FunctionIndex,
+                              Attribute::Builtin),
+          "Attribute 'builtin' can only be applied to a callsite.", &F);
 
   // Check that this function meets the restrictions on this calling convention.
   switch (F.getCallingConv()) {
@@ -1032,27 +1192,12 @@ void Verifier::visitSwitchInst(SwitchInst &SI) {
   // Check to make sure that all of the constants in the switch instruction
   // have the same type as the switched-on value.
   Type *SwitchTy = SI.getCondition()->getType();
-  IntegerType *IntTy = cast<IntegerType>(SwitchTy);
-  IntegersSubsetToBB Mapping;
-  std::map<IntegersSubset::Range, unsigned> RangeSetMap;
+  SmallPtrSet<ConstantInt*, 32> Constants;
   for (SwitchInst::CaseIt i = SI.case_begin(), e = SI.case_end(); i != e; ++i) {
-    IntegersSubset CaseRanges = i.getCaseValueEx();
-    for (unsigned ri = 0, rie = CaseRanges.getNumItems(); ri < rie; ++ri) {
-      IntegersSubset::Range r = CaseRanges.getItem(ri);
-      Assert1(((const APInt&)r.getLow()).getBitWidth() == IntTy->getBitWidth(),
-              "Switch constants must all be same type as switch value!", &SI);
-      Assert1(((const APInt&)r.getHigh()).getBitWidth() == IntTy->getBitWidth(),
-              "Switch constants must all be same type as switch value!", &SI);
-      Mapping.add(r);
-      RangeSetMap[r] = i.getCaseIndex();
-    }
-  }
-
-  IntegersSubsetToBB::RangeIterator errItem;
-  if (!Mapping.verify(errItem)) {
-    unsigned CaseIndex = RangeSetMap[errItem->first];
-    SwitchInst::CaseIt i(&SI, CaseIndex);
-    Assert2(false, "Duplicate integer as switch case", &SI, i.getCaseValueEx());
+    Assert1(i.getCaseValue()->getType() == SwitchTy,
+            "Switch constants must all be same type as switch value!", &SI);
+    Assert2(Constants.insert(i.getCaseValue()),
+            "Duplicate integer as switch case", &SI, i.getCaseValue());
   }
 
   visitTerminatorInst(SI);
@@ -1309,26 +1454,25 @@ void Verifier::visitIntToPtrInst(IntToPtrInst &I) {
 }
 
 void Verifier::visitBitCastInst(BitCastInst &I) {
-  // Get the source and destination types
+  Type *SrcTy = I.getOperand(0)->getType();
+  Type *DestTy = I.getType();
+  VerifyBitcastType(&I, DestTy, SrcTy);
+  visitInstruction(I);
+}
+
+void Verifier::visitAddrSpaceCastInst(AddrSpaceCastInst &I) {
   Type *SrcTy = I.getOperand(0)->getType();
   Type *DestTy = I.getType();
 
-  // Get the size of the types in bits, we'll need this later
-  unsigned SrcBitSize = SrcTy->getPrimitiveSizeInBits();
-  unsigned DestBitSize = DestTy->getPrimitiveSizeInBits();
-
-  // BitCast implies a no-op cast of type only. No bits change.
-  // However, you can't cast pointers to anything but pointers.
-  Assert1(SrcTy->isPointerTy() == DestTy->isPointerTy(),
-          "Bitcast requires both operands to be pointer or neither", &I);
-  Assert1(SrcBitSize == DestBitSize, "Bitcast requires types of same width",&I);
-
-  // Disallow aggregates.
-  Assert1(!SrcTy->isAggregateType(),
-          "Bitcast operand must not be aggregate", &I);
-  Assert1(!DestTy->isAggregateType(),
-          "Bitcast type must not be aggregate", &I);
-
+  Assert1(SrcTy->isPtrOrPtrVectorTy(),
+          "AddrSpaceCast source must be a pointer", &I);
+  Assert1(DestTy->isPtrOrPtrVectorTy(),
+          "AddrSpaceCast result must be a pointer", &I);
+  Assert1(SrcTy->getPointerAddressSpace() != DestTy->getPointerAddressSpace(),
+          "AddrSpaceCast must be between different address spaces", &I);
+  if (SrcTy->isVectorTy())
+    Assert1(SrcTy->getVectorNumElements() == DestTy->getVectorNumElements(),
+            "AddrSpaceCast vector pointer number of elements mismatch", &I);
   visitInstruction(I);
 }
 
@@ -1944,6 +2088,27 @@ void Verifier::visitInstruction(Instruction &I) {
       Assert1((i + 1 == e && isa<CallInst>(I)) ||
               (i + 3 == e && isa<InvokeInst>(I)),
               "Cannot take the address of an inline asm!", &I);
+    } else if (ConstantExpr *CE = dyn_cast<ConstantExpr>(I.getOperand(i))) {
+      if (CE->getType()->isPtrOrPtrVectorTy()) {
+        // If we have a ConstantExpr pointer, we need to see if it came from an
+        // illegal bitcast (inttoptr <constant int> )
+        SmallVector<const ConstantExpr *, 4> Stack;
+        SmallPtrSet<const ConstantExpr *, 4> Visited;
+        Stack.push_back(CE);
+
+        while (!Stack.empty()) {
+          const ConstantExpr *V = Stack.pop_back_val();
+          if (!Visited.insert(V))
+            continue;
+
+          VerifyConstantExprBitcastType(V);
+
+          for (unsigned I = 0, N = V->getNumOperands(); I != N; ++I) {
+            if (ConstantExpr *Op = dyn_cast<ConstantExpr>(V->getOperand(I)))
+              Stack.push_back(Op);
+          }
+        }
+      }
     }
   }
 
@@ -1954,7 +2119,7 @@ void Verifier::visitInstruction(Instruction &I) {
     Value *Op0 = MD->getOperand(0);
     if (ConstantFP *CFP0 = dyn_cast_or_null<ConstantFP>(Op0)) {
       APFloat Accuracy = CFP0->getValueAPF();
-      Assert1(Accuracy.isNormal() && !Accuracy.isNegative(),
+      Assert1(Accuracy.isFiniteNonZero() && !Accuracy.isNegative(),
               "fpmath accuracy not a positive number!", &I);
     } else {
       Assert1(false, "invalid fpmath accuracy!", &I);
@@ -1963,6 +2128,11 @@ void Verifier::visitInstruction(Instruction &I) {
 
   MDNode *MD = I.getMetadata(LLVMContext::MD_range);
   Assert1(!MD || isa<LoadInst>(I), "Ranges are only for loads!", &I);
+
+  if (!DisableDebugInfoVerifier) {
+    MD = I.getMetadata(LLVMContext::MD_dbg);
+    Finder.processLocation(*Mod, DILocation(MD));
+  }
 
   InstsInThisBlock.insert(&I);
 }
@@ -1984,6 +2154,7 @@ bool Verifier::VerifyIntrinsicType(Type *Ty,
 
   switch (D.Kind) {
   case IITDescriptor::Void: return !Ty->isVoidTy();
+  case IITDescriptor::VarArg: return true;
   case IITDescriptor::MMX:  return !Ty->isX86_MMXTy();
   case IITDescriptor::Metadata: return !Ty->isMetadataTy();
   case IITDescriptor::Half: return !Ty->isHalfTy();
@@ -2048,6 +2219,33 @@ bool Verifier::VerifyIntrinsicType(Type *Ty,
   llvm_unreachable("unhandled");
 }
 
+/// \brief Verify if the intrinsic has variable arguments.
+/// This method is intended to be called after all the fixed arguments have been
+/// verified first.
+///
+/// This method returns true on error and does not print an error message.
+bool
+Verifier::VerifyIntrinsicIsVarArg(bool isVarArg,
+                                  ArrayRef<Intrinsic::IITDescriptor> &Infos) {
+  using namespace Intrinsic;
+
+  // If there are no descriptors left, then it can't be a vararg.
+  if (Infos.empty())
+    return isVarArg ? true : false;
+
+  // There should be only one descriptor remaining at this point.
+  if (Infos.size() != 1)
+    return true;
+
+  // Check and verify the descriptor.
+  IITDescriptor D = Infos.front();
+  Infos = Infos.slice(1);
+  if (D.Kind == IITDescriptor::VarArg)
+    return isVarArg ? false : true;
+
+  return true;
+}
+
 /// visitIntrinsicFunction - Allow intrinsics to be verified in different ways.
 ///
 void Verifier::visitIntrinsicFunctionCall(Intrinsic::ID ID, CallInst &CI) {
@@ -2058,7 +2256,7 @@ void Verifier::visitIntrinsicFunctionCall(Intrinsic::ID ID, CallInst &CI) {
   // Verify that the intrinsic prototype lines up with what the .td files
   // describe.
   FunctionType *IFTy = IF->getFunctionType();
-  Assert1(!IFTy->isVarArg(), "Intrinsic prototypes are not varargs", IF);
+  bool IsVarArg = IFTy->isVarArg();
 
   SmallVector<Intrinsic::IITDescriptor, 8> Table;
   getIntrinsicInfoTableEntries(ID, Table);
@@ -2070,6 +2268,16 @@ void Verifier::visitIntrinsicFunctionCall(Intrinsic::ID ID, CallInst &CI) {
   for (unsigned i = 0, e = IFTy->getNumParams(); i != e; ++i)
     Assert1(!VerifyIntrinsicType(IFTy->getParamType(i), TableRef, ArgTys),
             "Intrinsic has incorrect argument type!", IF);
+
+  // Verify if the intrinsic call matches the vararg property.
+  if (IsVarArg)
+    Assert1(!VerifyIntrinsicIsVarArg(IsVarArg, TableRef),
+            "Intrinsic was not defined with variable arguments!", IF);
+  else
+    Assert1(!VerifyIntrinsicIsVarArg(IsVarArg, TableRef),
+            "Callsite was not defined with variable arguments!", IF);
+
+  // All descriptors should be absorbed by now.
   Assert1(TableRef.empty(), "Intrinsic has too few arguments!", IF);
 
   // Now that we have the intrinsic ID and the actual argument types (and we
@@ -2100,7 +2308,17 @@ void Verifier::visitIntrinsicFunctionCall(Intrinsic::ID ID, CallInst &CI) {
     MDNode *MD = cast<MDNode>(CI.getArgOperand(0));
     Assert1(MD->getNumOperands() == 1,
                 "invalid llvm.dbg.declare intrinsic call 2", &CI);
+    if (!DisableDebugInfoVerifier)
+      Finder.processDeclare(*Mod, cast<DbgDeclareInst>(&CI));
   } break;
+  case Intrinsic::dbg_value: { //llvm.dbg.value
+    if (!DisableDebugInfoVerifier) {
+      Assert1(CI.getArgOperand(0) && isa<MDNode>(CI.getArgOperand(0)),
+              "invalid llvm.dbg.value intrinsic call 1", &CI);
+      Finder.processValue(*Mod, cast<DbgValueInst>(&CI));
+    }
+    break;
+  }
   case Intrinsic::memcpy:
   case Intrinsic::memmove:
   case Intrinsic::memset:
@@ -2162,6 +2380,28 @@ void Verifier::visitIntrinsicFunctionCall(Intrinsic::ID ID, CallInst &CI) {
   }
 }
 
+void Verifier::verifyDebugInfo() {
+  // Verify Debug Info.
+  if (!DisableDebugInfoVerifier) {
+    for (DebugInfoFinder::iterator I = Finder.compile_unit_begin(),
+         E = Finder.compile_unit_end(); I != E; ++I)
+      Assert1(DICompileUnit(*I).Verify(), "DICompileUnit does not Verify!", *I);
+    for (DebugInfoFinder::iterator I = Finder.subprogram_begin(),
+         E = Finder.subprogram_end(); I != E; ++I)
+      Assert1(DISubprogram(*I).Verify(), "DISubprogram does not Verify!", *I);
+    for (DebugInfoFinder::iterator I = Finder.global_variable_begin(),
+         E = Finder.global_variable_end(); I != E; ++I)
+      Assert1(DIGlobalVariable(*I).Verify(),
+              "DIGlobalVariable does not Verify!", *I);
+    for (DebugInfoFinder::iterator I = Finder.type_begin(),
+         E = Finder.type_end(); I != E; ++I)
+      Assert1(DIType(*I).Verify(), "DIType does not Verify!", *I);
+    for (DebugInfoFinder::iterator I = Finder.scope_begin(),
+         E = Finder.scope_end(); I != E; ++I)
+      Assert1(DIScope(*I).Verify(), "DIScope does not Verify!", *I);
+  }
+}
+
 //===----------------------------------------------------------------------===//
 //  Implement the public interfaces to this file...
 //===----------------------------------------------------------------------===//
@@ -2181,6 +2421,7 @@ bool llvm::verifyFunction(const Function &f, VerifierFailureAction action) {
   FunctionPassManager FPM(F.getParent());
   Verifier *V = new Verifier(action);
   FPM.add(V);
+  FPM.doInitialization();
   FPM.run(F);
   return V->Broken;
 }

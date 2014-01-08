@@ -422,7 +422,7 @@ void LVIValueHandle::deleted() {
       ToErase.push_back(*I);
   }
 
-  for (SmallVector<OverDefinedPairTy, 4>::iterator I = ToErase.begin(),
+  for (SmallVectorImpl<OverDefinedPairTy>::iterator I = ToErase.begin(),
        E = ToErase.end(); I != E; ++I)
     Parent->OverDefinedCache.erase(*I);
 
@@ -445,7 +445,7 @@ void LazyValueInfoCache::eraseBlock(BasicBlock *BB) {
       ToErase.push_back(*I);
   }
 
-  for (SmallVector<OverDefinedPairTy, 4>::iterator I = ToErase.begin(),
+  for (SmallVectorImpl<OverDefinedPairTy>::iterator I = ToErase.begin(),
        E = ToErase.end(); I != E; ++I)
     OverDefinedCache.erase(*I);
 

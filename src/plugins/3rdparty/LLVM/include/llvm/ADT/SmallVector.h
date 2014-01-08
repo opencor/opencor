@@ -25,20 +25,12 @@
 #include <cstring>
 #include <iterator>
 #include <memory>
-//---OPENCOR--- BEGIN
-#include "llvmglobal.h"
-//---OPENCOR--- END
 
 namespace llvm {
 
 /// SmallVectorBase - This is all the non-templated stuff common to all
 /// SmallVectors.
-/*---OPENCOR---
 class SmallVectorBase {
-*/
-//---OPENCOR--- BEGIN
-class LLVM_EXPORT SmallVectorBase {
-//---OPENCOR--- END
 protected:
   void *BeginX, *EndX, *CapacityX;
 
@@ -61,7 +53,7 @@ public:
     return size_t((char*)CapacityX - (char*)BeginX);
   }
 
-  bool empty() const { return BeginX == EndX; }
+  bool LLVM_ATTRIBUTE_UNUSED_RESULT empty() const { return BeginX == EndX; }
 };
 
 template <typename T, unsigned N> struct SmallVectorStorage;
@@ -435,7 +427,7 @@ public:
       this->grow(N);
   }
 
-  T pop_back_val() {
+  T LLVM_ATTRIBUTE_UNUSED_RESULT pop_back_val() {
 #if LLVM_HAS_RVALUE_REFERENCES
     T Result = ::std::move(this->back());
 #else

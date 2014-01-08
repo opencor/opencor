@@ -67,6 +67,9 @@ struct CommandInfo {
   /// a template parameter (\\tparam or an alias).
   unsigned IsTParamCommand : 1;
 
+  /// True if this command is \\throws or an alias.
+  unsigned IsThrowsCommand : 1;
+
   /// True if this command is \\deprecated or an alias.
   unsigned IsDeprecatedCommand : 1;
 
@@ -141,6 +144,8 @@ public:
       return Info;
     llvm_unreachable("the command should be known");
   }
+
+  const CommandInfo *getTypoCorrectCommandInfo(StringRef Typo) const;
 
   const CommandInfo *getCommandInfo(unsigned CommandID) const;
 

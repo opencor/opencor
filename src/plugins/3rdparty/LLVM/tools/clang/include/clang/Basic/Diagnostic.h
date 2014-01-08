@@ -21,13 +21,9 @@
 #include "llvm/ADT/ArrayRef.h"
 #include "llvm/ADT/DenseMap.h"
 #include "llvm/ADT/IntrusiveRefCntPtr.h"
-#include "llvm/ADT/OwningPtr.h"
 #include "llvm/Support/type_traits.h"
 #include <list>
 #include <vector>
-//---OPENCOR--- BEGIN
-#include "llvmglobal.h"
-//---OPENCOR--- END
 
 namespace clang {
   class DiagnosticConsumer;
@@ -132,12 +128,7 @@ public:
 /// as errors" and passes them off to the DiagnosticConsumer for reporting to
 /// the user. DiagnosticsEngine is tied to one translation unit and one
 /// SourceManager.
-/*---OPENCOR---
 class DiagnosticsEngine : public RefCountedBase<DiagnosticsEngine> {
-*/
-//---OPENCOR--- BEGIN
-class LLVM_EXPORT DiagnosticsEngine : public RefCountedBase<DiagnosticsEngine> {
-//---OPENCOR--- END
 public:
   /// \brief The level of the diagnostic, after it has been through mapping.
   enum Level {
@@ -497,6 +488,13 @@ public:
     if (LastDiagLevel == DiagnosticIDs::Fatal)
       FatalErrorOccurred = true;
     LastDiagLevel = DiagnosticIDs::Ignored;
+  }
+
+  /// \brief Determine whether the previous diagnostic was ignored. This can
+  /// be used by clients that want to determine whether notes attached to a
+  /// diagnostic will be suppressed.
+  bool isLastDiagnosticIgnored() const {
+    return LastDiagLevel == DiagnosticIDs::Ignored;
   }
 
   /// \brief Controls whether otherwise-unmapped extension diagnostics are
@@ -991,6 +989,10 @@ public:
   bool hasMaxRanges() const {
     return NumRanges == DiagnosticsEngine::MaxRanges;
   }
+
+  bool hasMaxFixItHints() const {
+    return NumFixits == DiagnosticsEngine::MaxFixItHints;
+  }
 };
 
 inline const DiagnosticBuilder &operator<<(const DiagnosticBuilder &DB,
@@ -1220,7 +1222,7 @@ public:
   ~StoredDiagnostic();
 
   /// \brief Evaluates true when this object stores a diagnostic.
-  operator bool() const { return Message.size() > 0; }
+  LLVM_EXPLICIT operator bool() const { return Message.size() > 0; }
 
   unsigned getID() const { return ID; }
   DiagnosticsEngine::Level getLevel() const { return Level; }
@@ -1251,12 +1253,7 @@ public:
 
 /// \brief Abstract interface, implemented by clients of the front-end, which
 /// formats and prints fully processed diagnostics.
-/*---OPENCOR---
 class DiagnosticConsumer {
-*/
-//---OPENCOR--- BEGIN
-class LLVM_EXPORT DiagnosticConsumer {
-//---OPENCOR--- END
 protected:
   unsigned NumWarnings;       ///< Number of warnings reported
   unsigned NumErrors;         ///< Number of errors reported

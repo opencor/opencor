@@ -162,7 +162,7 @@ namespace llvm {
     }
 
     /// Return true for a valid index.
-    operator bool() const { return isValid(); }
+    LLVM_EXPLICIT operator bool() const { return isValid(); }
 
     /// Print this index to the given raw_ostream.
     void print(raw_ostream &os) const;
@@ -216,6 +216,13 @@ namespace llvm {
     /// Return the distance from this index to the given one.
     int distance(SlotIndex other) const {
       return other.getIndex() - getIndex();
+    }
+
+    /// Return the scaled distance from this index to the given one, where all
+    /// slots on the same instruction have zero distance.
+    int getInstrDistance(SlotIndex other) const {
+      return (other.listEntry()->getIndex() - listEntry()->getIndex())
+        / Slot_Count;
     }
 
     /// isBlock - Returns true if this is a block boundary slot.

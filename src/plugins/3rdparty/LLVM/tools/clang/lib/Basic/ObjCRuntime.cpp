@@ -71,6 +71,7 @@ bool ObjCRuntime::tryParse(StringRef input) {
     kind = ObjCRuntime::GCC;
   } else if (runtimeName == "objfw") {
     kind = ObjCRuntime::ObjFW;
+    Version = VersionTuple(0, 8);
   } else {
     return true;
   }
@@ -81,6 +82,9 @@ bool ObjCRuntime::tryParse(StringRef input) {
     if (Version.tryParse(verString))
       return true;
   }
+
+  if (kind == ObjCRuntime::ObjFW && Version > VersionTuple(0, 8))
+    Version = VersionTuple(0, 8);
 
   return false;
 }

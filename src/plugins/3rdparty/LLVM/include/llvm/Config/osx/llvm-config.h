@@ -26,7 +26,7 @@
 /* #undef LLVM_DATADIR */
 
 /* Target triple LLVM will generate code for by default */
-#define LLVM_DEFAULT_TARGET_TRIPLE "x86_64-apple-darwin12.4.0"
+#define LLVM_DEFAULT_TARGET_TRIPLE "x86_64-apple-darwin13.0.0"
 
 /* Installation directory for documentation */
 /* #undef LLVM_DOCSDIR */
@@ -41,16 +41,13 @@
 #define LLVM_HAS_ATOMICS 1
 
 /* Host triple LLVM will be executed on */
-#define LLVM_HOST_TRIPLE "x86_64-apple-darwin12.4.0"
+#define LLVM_HOST_TRIPLE "x86_64-apple-darwin13.0.0"
 
 /* Installation directory for include files */
 /* #undef LLVM_INCLUDEDIR */
 
 /* Installation directory for .info files */
 /* #undef LLVM_INFODIR */
-
-/* Installation directory for libraries */
-/* #undef LLVM_LIBDIR */
 
 /* Installation directory for man pages */
 /* #undef LLVM_MANDIR */
@@ -122,7 +119,7 @@
 #define LLVM_VERSION_MAJOR 3
 
 /* Minor version of the LLVM API */
-#define LLVM_VERSION_MINOR 3
+#define LLVM_VERSION_MINOR 4
 
 /* Define to 1 if you have the <sanitizer/msan_interface.h> header file. */
 /* #undef HAVE_SANITIZER_MSAN_INTERFACE_H */

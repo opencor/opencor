@@ -49,9 +49,6 @@
 /* Installation directory for .info files */
 /* #undef LLVM_INFODIR */
 
-/* Installation directory for libraries */
-/* #undef LLVM_LIBDIR */
-
 /* Installation directory for man pages */
 /* #undef LLVM_MANDIR */
 
@@ -122,7 +119,7 @@
 #define LLVM_VERSION_MAJOR 3
 
 /* Minor version of the LLVM API */
-#define LLVM_VERSION_MINOR 3
+#define LLVM_VERSION_MINOR 4
 
 /* Define to 1 if you have the <sanitizer/msan_interface.h> header file. */
 /* #undef HAVE_SANITIZER_MSAN_INTERFACE_H */

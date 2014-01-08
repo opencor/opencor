@@ -257,6 +257,12 @@ CXXPSEUDODESTRUCTOREXPR(CXXPseudoDestructorExpr, Expr)
 CXXSCALARVALUEINITEXPR(CXXScalarValueInitExpr, Expr)
 #undef CXXSCALARVALUEINITEXPR
 
+#ifndef CXXSTDINITIALIZERLISTEXPR
+#  define CXXSTDINITIALIZERLISTEXPR(Type, Base) EXPR(Type, Base)
+#endif
+CXXSTDINITIALIZERLISTEXPR(CXXStdInitializerListExpr, Expr)
+#undef CXXSTDINITIALIZERLISTEXPR
+
 #ifndef CXXTHISEXPR
 #  define CXXTHISEXPR(Type, Base) EXPR(Type, Base)
 #endif
@@ -408,6 +414,12 @@ CHOOSEEXPR(ChooseExpr, Expr)
 #endif
 COMPOUNDLITERALEXPR(CompoundLiteralExpr, Expr)
 #undef COMPOUNDLITERALEXPR
+
+#ifndef CONVERTVECTOREXPR
+#  define CONVERTVECTOREXPR(Type, Base) EXPR(Type, Base)
+#endif
+CONVERTVECTOREXPR(ConvertVectorExpr, Expr)
+#undef CONVERTVECTOREXPR
 
 #ifndef DECLREFEXPR
 #  define DECLREFEXPR(Type, Base) EXPR(Type, Base)
@@ -774,6 +786,20 @@ MSDEPENDENTEXISTSSTMT(MSDependentExistsStmt, Stmt)
 #endif
 NULLSTMT(NullStmt, Stmt)
 #undef NULLSTMT
+
+#ifndef OMPEXECUTABLEDIRECTIVE
+#  define OMPEXECUTABLEDIRECTIVE(Type, Base) STMT(Type, Base)
+#endif
+ABSTRACT_STMT(OMPEXECUTABLEDIRECTIVE(OMPExecutableDirective, Stmt))
+#ifndef OMPPARALLELDIRECTIVE
+#  define OMPPARALLELDIRECTIVE(Type, Base) OMPEXECUTABLEDIRECTIVE(Type, Base)
+#endif
+OMPPARALLELDIRECTIVE(OMPParallelDirective, OMPExecutableDirective)
+#undef OMPPARALLELDIRECTIVE
+
+STMT_RANGE(OMPExecutableDirective, OMPParallelDirective, OMPParallelDirective)
+
+#undef OMPEXECUTABLEDIRECTIVE
 
 #ifndef OBJCATCATCHSTMT
 #  define OBJCATCATCHSTMT(Type, Base) STMT(Type, Base)

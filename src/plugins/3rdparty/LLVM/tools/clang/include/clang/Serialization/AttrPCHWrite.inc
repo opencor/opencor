@@ -10,6 +10,12 @@
   default:
     llvm_unreachable("Unknown attribute kind!");
     break;
+  case attr::ARMInterrupt: {
+    const ARMInterruptAttr *SA = cast<ARMInterruptAttr>(A);
+    Record.push_back(SA->isInherited());
+Record.push_back(SA->getInterrupt());
+    break;
+  }
   case attr::AcquiredAfter: {
     const AcquiredAfterAttr *SA = cast<AcquiredAfterAttr>(A);
     Record.push_back(SA->isInherited());
@@ -28,7 +34,6 @@
   }
   case attr::Alias: {
     const AliasAttr *SA = cast<AliasAttr>(A);
-    Record.push_back(SA->isInherited());
     AddString(SA->getAliasee(), Record);
     break;
   }
@@ -49,6 +54,7 @@
   }
   case attr::AllocSize: {
     const AllocSizeAttr *SA = cast<AllocSizeAttr>(A);
+    Record.push_back(SA->isInherited());
     Record.push_back(SA->args_size());
     for (AllocSizeAttr::args_iterator i = SA->args_begin(), e = SA->args_end(); i != e; ++i)
       Record.push_back((*i));
@@ -88,6 +94,22 @@
     const AsmLabelAttr *SA = cast<AsmLabelAttr>(A);
     Record.push_back(SA->isInherited());
     AddString(SA->getLabel(), Record);
+    break;
+  }
+  case attr::AssertExclusiveLock: {
+    const AssertExclusiveLockAttr *SA = cast<AssertExclusiveLockAttr>(A);
+    Record.push_back(SA->isInherited());
+    Record.push_back(SA->args_size());
+    for (AssertExclusiveLockAttr::args_iterator i = SA->args_begin(), e = SA->args_end(); i != e; ++i)
+      AddStmt((*i));
+    break;
+  }
+  case attr::AssertSharedLock: {
+    const AssertSharedLockAttr *SA = cast<AssertSharedLockAttr>(A);
+    Record.push_back(SA->isInherited());
+    Record.push_back(SA->args_size());
+    for (AssertSharedLockAttr::args_iterator i = SA->args_begin(), e = SA->args_end(); i != e; ++i)
+      AddStmt((*i));
     break;
   }
   case attr::Availability: {
@@ -179,6 +201,14 @@ Record.push_back(SA->getType());
     Record.push_back(SA->isInherited());
     break;
   }
+  case attr::CallableWhen: {
+    const CallableWhenAttr *SA = cast<CallableWhenAttr>(A);
+    Record.push_back(SA->isInherited());
+    Record.push_back(SA->callableState_size());
+    for (CallableWhenAttr::callableState_iterator i = SA->callableState_begin(), e = SA->callableState_end(); i != e; ++i)
+      Record.push_back((*i));
+    break;
+  }
   case attr::CarriesDependency: {
     const CarriesDependencyAttr *SA = cast<CarriesDependencyAttr>(A);
     Record.push_back(SA->isInherited());
@@ -211,6 +241,12 @@ Record.push_back(SA->getType());
     Record.push_back(SA->getPriority());
     break;
   }
+  case attr::Consumable: {
+    const ConsumableAttr *SA = cast<ConsumableAttr>(A);
+    Record.push_back(SA->isInherited());
+Record.push_back(SA->getDefaultState());
+    break;
+  }
   case attr::DLLExport: {
     const DLLExportAttr *SA = cast<DLLExportAttr>(A);
     Record.push_back(SA->isInherited());
@@ -231,12 +267,6 @@ Record.push_back(SA->getType());
     const DestructorAttr *SA = cast<DestructorAttr>(A);
     Record.push_back(SA->isInherited());
     Record.push_back(SA->getPriority());
-    break;
-  }
-  case attr::Endian: {
-    const EndianAttr *SA = cast<EndianAttr>(A);
-    Record.push_back(SA->isInherited());
-    AddIdentifierRef(SA->getPlatform(), Record);
     break;
   }
   case attr::ExclusiveLockFunction: {
@@ -285,7 +315,7 @@ Record.push_back(SA->getType());
   case attr::Format: {
     const FormatAttr *SA = cast<FormatAttr>(A);
     Record.push_back(SA->isInherited());
-    AddString(SA->getType(), Record);
+    AddIdentifierRef(SA->getType(), Record);
     Record.push_back(SA->getFormatIdx());
     Record.push_back(SA->getFirstArg());
     break;
@@ -330,8 +360,7 @@ Record.push_back(SA->getType());
   case attr::IBOutletCollection: {
     const IBOutletCollectionAttr *SA = cast<IBOutletCollectionAttr>(A);
     Record.push_back(SA->isInherited());
-    AddTypeRef(SA->getInterface(), Record);
-    AddSourceLocation(SA->getInterfaceLoc(), Record);
+    AddTypeSourceInfo(SA->getInterfaceLoc(), Record);
     break;
   }
   case attr::InitPriority: {
@@ -364,13 +393,8 @@ Record.push_back(SA->getType());
       AddStmt((*i));
     break;
   }
-  case attr::MBlazeInterruptHandler: {
-    const MBlazeInterruptHandlerAttr *SA = cast<MBlazeInterruptHandlerAttr>(A);
-    Record.push_back(SA->isInherited());
-    break;
-  }
-  case attr::MBlazeSaveVolatiles: {
-    const MBlazeSaveVolatilesAttr *SA = cast<MBlazeSaveVolatilesAttr>(A);
+  case attr::MSABI: {
+    const MSABIAttr *SA = cast<MSABIAttr>(A);
     Record.push_back(SA->isInherited());
     break;
   }
@@ -406,7 +430,9 @@ Record.push_back(SA->getType());
     Record.push_back(SA->isInherited());
     break;
   }
-  case attr::MsProperty: {
+  case attr::Mode: {
+    const ModeAttr *SA = cast<ModeAttr>(A);
+    AddIdentifierRef(SA->getMode(), Record);
     break;
   }
   case attr::MsStruct: {
@@ -518,6 +544,12 @@ Record.push_back(SA->getType());
       Record.push_back((*i));
     break;
   }
+  case attr::ObjCBridge: {
+    const ObjCBridgeAttr *SA = cast<ObjCBridgeAttr>(A);
+    Record.push_back(SA->isInherited());
+    AddIdentifierRef(SA->getBridgedType(), Record);
+    break;
+  }
   case attr::ObjCException: {
     const ObjCExceptionAttr *SA = cast<ObjCExceptionAttr>(A);
     Record.push_back(SA->isInherited());
@@ -535,6 +567,8 @@ Record.push_back(SA->getFamily());
     break;
   }
   case attr::ObjCPreciseLifetime: {
+    const ObjCPreciseLifetimeAttr *SA = cast<ObjCPreciseLifetimeAttr>(A);
+    Record.push_back(SA->isInherited());
     break;
   }
   case attr::ObjCRequiresPropertyDefs: {
@@ -548,9 +582,13 @@ Record.push_back(SA->getFamily());
     break;
   }
   case attr::ObjCReturnsInnerPointer: {
+    const ObjCReturnsInnerPointerAttr *SA = cast<ObjCReturnsInnerPointerAttr>(A);
+    Record.push_back(SA->isInherited());
     break;
   }
   case attr::ObjCRootClass: {
+    const ObjCRootClassAttr *SA = cast<ObjCRootClassAttr>(A);
+    Record.push_back(SA->isInherited());
     break;
   }
   case attr::OpenCLImageAccess: {
@@ -559,6 +597,8 @@ Record.push_back(SA->getFamily());
     break;
   }
   case attr::OpenCLKernel: {
+    const OpenCLKernelAttr *SA = cast<OpenCLKernelAttr>(A);
+    Record.push_back(SA->isInherited());
     break;
   }
   case attr::Overloadable: {
@@ -582,6 +622,12 @@ Record.push_back(SA->getOwnKind());
   case attr::Packed: {
     const PackedAttr *SA = cast<PackedAttr>(A);
     Record.push_back(SA->isInherited());
+    break;
+  }
+  case attr::ParamTypestate: {
+    const ParamTypestateAttr *SA = cast<ParamTypestateAttr>(A);
+    Record.push_back(SA->isInherited());
+Record.push_back(SA->getParamState());
     break;
   }
   case attr::Pascal: {
@@ -611,16 +657,6 @@ Record.push_back(SA->getPCS());
     Record.push_back(SA->isInherited());
     break;
   }
-  case attr::Ptr32: {
-    const Ptr32Attr *SA = cast<Ptr32Attr>(A);
-    Record.push_back(SA->isInherited());
-    break;
-  }
-  case attr::Ptr64: {
-    const Ptr64Attr *SA = cast<Ptr64Attr>(A);
-    Record.push_back(SA->isInherited());
-    break;
-  }
   case attr::Pure: {
     const PureAttr *SA = cast<PureAttr>(A);
     Record.push_back(SA->isInherited());
@@ -640,6 +676,12 @@ Record.push_back(SA->getPCS());
     Record.push_back(SA->getZDim());
     break;
   }
+  case attr::ReturnTypestate: {
+    const ReturnTypestateAttr *SA = cast<ReturnTypestateAttr>(A);
+    Record.push_back(SA->isInherited());
+Record.push_back(SA->getState());
+    break;
+  }
   case attr::ReturnsTwice: {
     const ReturnsTwiceAttr *SA = cast<ReturnsTwiceAttr>(A);
     Record.push_back(SA->isInherited());
@@ -656,11 +698,22 @@ Record.push_back(SA->getPCS());
     AddString(SA->getName(), Record);
     break;
   }
+  case attr::SelectAny: {
+    const SelectAnyAttr *SA = cast<SelectAnyAttr>(A);
+    Record.push_back(SA->isInherited());
+    break;
+  }
   case attr::Sentinel: {
     const SentinelAttr *SA = cast<SentinelAttr>(A);
     Record.push_back(SA->isInherited());
     Record.push_back(SA->getSentinel());
     Record.push_back(SA->getNullPos());
+    break;
+  }
+  case attr::SetTypestate: {
+    const SetTypestateAttr *SA = cast<SetTypestateAttr>(A);
+    Record.push_back(SA->isInherited());
+Record.push_back(SA->getNewState());
     break;
   }
   case attr::SharedLockFunction: {
@@ -698,10 +751,21 @@ Record.push_back(SA->getPCS());
     Record.push_back(SA->isInherited());
     break;
   }
+  case attr::SysVABI: {
+    const SysVABIAttr *SA = cast<SysVABIAttr>(A);
+    Record.push_back(SA->isInherited());
+    break;
+  }
   case attr::TLSModel: {
     const TLSModelAttr *SA = cast<TLSModelAttr>(A);
     Record.push_back(SA->isInherited());
     AddString(SA->getModel(), Record);
+    break;
+  }
+  case attr::TestTypestate: {
+    const TestTypestateAttr *SA = cast<TestTypestateAttr>(A);
+    Record.push_back(SA->isInherited());
+Record.push_back(SA->getTestState());
     break;
   }
   case attr::ThisCall: {
@@ -718,7 +782,7 @@ Record.push_back(SA->getPCS());
     const TypeTagForDatatypeAttr *SA = cast<TypeTagForDatatypeAttr>(A);
     Record.push_back(SA->isInherited());
     AddIdentifierRef(SA->getArgumentKind(), Record);
-    AddTypeRef(SA->getMatchingCType(), Record);
+    AddTypeSourceInfo(SA->getMatchingCTypeLoc(), Record);
     Record.push_back(SA->getLayoutCompatible());
     Record.push_back(SA->getMustBeNull());
     break;
@@ -772,8 +836,7 @@ Record.push_back(SA->getVisibility());
   case attr::VecTypeHint: {
     const VecTypeHintAttr *SA = cast<VecTypeHintAttr>(A);
     Record.push_back(SA->isInherited());
-    AddTypeRef(SA->getTypeHint(), Record);
-    AddSourceLocation(SA->getTypeLoc(), Record);
+    AddTypeSourceInfo(SA->getTypeHintLoc(), Record);
     break;
   }
   case attr::VirtualInheritance: {
@@ -785,6 +848,11 @@ Record.push_back(SA->getVisibility());
     const VisibilityAttr *SA = cast<VisibilityAttr>(A);
     Record.push_back(SA->isInherited());
 Record.push_back(SA->getVisibility());
+    break;
+  }
+  case attr::WarnUnused: {
+    const WarnUnusedAttr *SA = cast<WarnUnusedAttr>(A);
+    Record.push_back(SA->isInherited());
     break;
   }
   case attr::WarnUnusedResult: {
@@ -805,6 +873,7 @@ Record.push_back(SA->getVisibility());
   case attr::WeakRef: {
     const WeakRefAttr *SA = cast<WeakRefAttr>(A);
     Record.push_back(SA->isInherited());
+    AddString(SA->getAliasee(), Record);
     break;
   }
   case attr::Win64: {

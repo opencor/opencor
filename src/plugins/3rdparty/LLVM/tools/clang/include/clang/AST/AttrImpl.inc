@@ -6,6 +6,22 @@
 |*                                                                            *|
 \*===----------------------------------------------------------------------===*/
 
+ARMInterruptAttr *ARMInterruptAttr::clone(ASTContext &C) const {
+  return new (C) ARMInterruptAttr(getLocation(), C, interrupt, getSpellingListIndex());
+}
+
+void ARMInterruptAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    break;
+  case 0 : {
+    OS << " __attribute__((interrupt(" << getInterrupt() << ")))";
+    break;
+  }
+}
+}
+
 AcquiredAfterAttr *AcquiredAfterAttr::clone(ASTContext &C) const {
   return new (C) AcquiredAfterAttr(getLocation(), C, args, argsSize, getSpellingListIndex());
 }
@@ -261,6 +277,52 @@ AsmLabelAttr *AsmLabelAttr::clone(ASTContext &C) const {
 }
 
 void AsmLabelAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) const {
+}
+
+AssertExclusiveLockAttr *AssertExclusiveLockAttr::clone(ASTContext &C) const {
+  return new (C) AssertExclusiveLockAttr(getLocation(), C, args, argsSize, getSpellingListIndex());
+}
+
+void AssertExclusiveLockAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    break;
+  case 0 : {
+    OS << " __attribute__((assert_exclusive_lock(";
+  bool isFirst = true;
+  for (AssertExclusiveLockAttr::args_iterator i = args_begin(), e = args_end(); i != e; ++i) {
+    if (isFirst) isFirst = false;
+    else OS << ", ";
+    OS << *i;
+  }
+  OS << ")))";
+    break;
+  }
+}
+}
+
+AssertSharedLockAttr *AssertSharedLockAttr::clone(ASTContext &C) const {
+  return new (C) AssertSharedLockAttr(getLocation(), C, args, argsSize, getSpellingListIndex());
+}
+
+void AssertSharedLockAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    break;
+  case 0 : {
+    OS << " __attribute__((assert_shared_lock(";
+  bool isFirst = true;
+  for (AssertSharedLockAttr::args_iterator i = args_begin(), e = args_end(); i != e; ++i) {
+    if (isFirst) isFirst = false;
+    else OS << ", ";
+    OS << *i;
+  }
+  OS << ")))";
+    break;
+  }
+}
 }
 
 AvailabilityAttr *AvailabilityAttr::clone(ASTContext &C) const {
@@ -540,6 +602,29 @@ void CXX11NoReturnAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Polic
 }
 }
 
+CallableWhenAttr *CallableWhenAttr::clone(ASTContext &C) const {
+  return new (C) CallableWhenAttr(getLocation(), C, callableState, callableStateSize, getSpellingListIndex());
+}
+
+void CallableWhenAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    break;
+  case 0 : {
+    OS << " __attribute__((callable_when(";
+  bool isFirst = true;
+  for (CallableWhenAttr::callableState_iterator i = callableState_begin(), e = callableState_end(); i != e; ++i) {
+    if (isFirst) isFirst = false;
+    else OS << ", ";
+    OS << *i;
+  }
+  OS << ")))";
+    break;
+  }
+}
+}
+
 CarriesDependencyAttr *CarriesDependencyAttr::clone(ASTContext &C) const {
   return new (C) CarriesDependencyAttr(getLocation(), C, getSpellingListIndex());
 }
@@ -645,6 +730,10 @@ void ConstAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) const
     OS << " [[gnu::const]]";
     break;
   }
+  case 3 : {
+    OS << " [[gnu::__const]]";
+    break;
+  }
 }
 }
 
@@ -663,6 +752,22 @@ void ConstructorAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy)
   }
   case 1 : {
     OS << " [[gnu::constructor(" << getPriority() << ")]]";
+    break;
+  }
+}
+}
+
+ConsumableAttr *ConsumableAttr::clone(ASTContext &C) const {
+  return new (C) ConsumableAttr(getLocation(), C, defaultState, getSpellingListIndex());
+}
+
+void ConsumableAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    break;
+  case 0 : {
+    OS << " __attribute__((consumable(" << getDefaultState() << ")))";
     break;
   }
 }
@@ -717,6 +822,10 @@ void DeprecatedAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) 
     OS << " [[gnu::deprecated(\"" << getMessage() << "\")]]";
     break;
   }
+  case 2 : {
+    OS << " [[deprecated(\"" << getMessage() << "\")]]";
+    break;
+  }
 }
 }
 
@@ -735,22 +844,6 @@ void DestructorAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) 
   }
   case 1 : {
     OS << " [[gnu::destructor(" << getPriority() << ")]]";
-    break;
-  }
-}
-}
-
-EndianAttr *EndianAttr::clone(ASTContext &C) const {
-  return new (C) EndianAttr(getLocation(), C, platform, getSpellingListIndex());
-}
-
-void EndianAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) const {
-  switch (SpellingListIndex) {
-  default:
-    llvm_unreachable("Unknown attribute spelling!");
-    break;
-  case 0 : {
-    OS << " __attribute__((endian(" << getPlatform()->getName() << ")))";
     break;
   }
 }
@@ -874,6 +967,19 @@ FinalAttr *FinalAttr::clone(ASTContext &C) const {
 }
 
 void FinalAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    break;
+  case 0 : {
+    OS << " final";
+    break;
+  }
+  case 1 : {
+    OS << " sealed";
+    break;
+  }
+}
 }
 
 ForceInlineAttr *ForceInlineAttr::clone(ASTContext &C) const {
@@ -893,7 +999,7 @@ void ForceInlineAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy)
 }
 
 FormatAttr *FormatAttr::clone(ASTContext &C) const {
-  return new (C) FormatAttr(getLocation(), C, getType(), formatIdx, firstArg, getSpellingListIndex());
+  return new (C) FormatAttr(getLocation(), C, type, formatIdx, firstArg, getSpellingListIndex());
 }
 
 void FormatAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) const {
@@ -902,11 +1008,11 @@ void FormatAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) cons
     llvm_unreachable("Unknown attribute spelling!");
     break;
   case 0 : {
-    OS << " __attribute__((format(\"" << getType() << "\", " << getFormatIdx() << ", " << getFirstArg() << ")))";
+    OS << " __attribute__((format(" << getType()->getName() << ", " << getFormatIdx() << ", " << getFirstArg() << ")))";
     break;
   }
   case 1 : {
-    OS << " [[gnu::format(\"" << getType() << "\", " << getFormatIdx() << ", " << getFirstArg() << ")]]";
+    OS << " [[gnu::format(" << getType()->getName() << ", " << getFormatIdx() << ", " << getFirstArg() << ")]]";
     break;
   }
 }
@@ -1037,7 +1143,7 @@ void IBOutletAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) co
 }
 
 IBOutletCollectionAttr *IBOutletCollectionAttr::clone(ASTContext &C) const {
-  return new (C) IBOutletCollectionAttr(getLocation(), C, interface, interfaceLoc, getSpellingListIndex());
+  return new (C) IBOutletCollectionAttr(getLocation(), C, interface, getSpellingListIndex());
 }
 
 void IBOutletCollectionAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) const {
@@ -1046,7 +1152,7 @@ void IBOutletCollectionAttr::printPretty(raw_ostream &OS, const PrintingPolicy &
     llvm_unreachable("Unknown attribute spelling!");
     break;
   case 0 : {
-    OS << " __attribute__((iboutletcollection(" << getInterface().getAsString() << ", " << getInterfaceLoc().getRawEncoding() << ")))";
+    OS << " __attribute__((iboutletcollection(" << getInterface().getAsString() << ")))";
     break;
   }
 }
@@ -1139,18 +1245,24 @@ void LocksExcludedAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Polic
 }
 }
 
-MBlazeInterruptHandlerAttr *MBlazeInterruptHandlerAttr::clone(ASTContext &C) const {
-  return new (C) MBlazeInterruptHandlerAttr(getLocation(), C, getSpellingListIndex());
+MSABIAttr *MSABIAttr::clone(ASTContext &C) const {
+  return new (C) MSABIAttr(getLocation(), C, getSpellingListIndex());
 }
 
-void MBlazeInterruptHandlerAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) const {
+void MSABIAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    break;
+  case 0 : {
+    OS << " __attribute__((ms_abi))";
+    break;
+  }
+  case 1 : {
+    OS << " [[gnu::ms_abi]]";
+    break;
+  }
 }
-
-MBlazeSaveVolatilesAttr *MBlazeSaveVolatilesAttr::clone(ASTContext &C) const {
-  return new (C) MBlazeSaveVolatilesAttr(getLocation(), C, getSpellingListIndex());
-}
-
-void MBlazeSaveVolatilesAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) const {
 }
 
 MSP430InterruptAttr *MSP430InterruptAttr::clone(ASTContext &C) const {
@@ -1243,17 +1355,21 @@ void Mips16Attr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) cons
 }
 }
 
-MsPropertyAttr *MsPropertyAttr::clone(ASTContext &C) const {
-  return new (C) MsPropertyAttr(getLocation(), C, getSpellingListIndex());
+ModeAttr *ModeAttr::clone(ASTContext &C) const {
+  return new (C) ModeAttr(getLocation(), C, mode, getSpellingListIndex());
 }
 
-void MsPropertyAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) const {
+void ModeAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) const {
   switch (SpellingListIndex) {
   default:
     llvm_unreachable("Unknown attribute spelling!");
     break;
   case 0 : {
-    OS << " __declspec(property)";
+    OS << " __attribute__((mode(" << getMode()->getName() << ")))";
+    break;
+  }
+  case 1 : {
+    OS << " [[gnu::mode(" << getMode()->getName() << ")]]";
     break;
   }
 }
@@ -1540,6 +1656,14 @@ void NoSanitizeAddressAttr::printPretty(raw_ostream &OS, const PrintingPolicy &P
     OS << " __attribute__((no_sanitize_address))";
     break;
   }
+  case 2 : {
+    OS << " [[gnu::no_address_safety_analysis]]";
+    break;
+  }
+  case 3 : {
+    OS << " [[gnu::no_sanitize_address]]";
+    break;
+  }
 }
 }
 
@@ -1640,6 +1764,22 @@ void NonNullAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) con
     OS << *i;
   }
   OS << ")]]";
+    break;
+  }
+}
+}
+
+ObjCBridgeAttr *ObjCBridgeAttr::clone(ASTContext &C) const {
+  return new (C) ObjCBridgeAttr(getLocation(), C, bridgedType, getSpellingListIndex());
+}
+
+void ObjCBridgeAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    break;
+  case 0 : {
+    OS << " __attribute__((objc_bridge(" << getBridgedType()->getName() << ")))";
     break;
   }
 }
@@ -1897,6 +2037,22 @@ void PackedAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) cons
 }
 }
 
+ParamTypestateAttr *ParamTypestateAttr::clone(ASTContext &C) const {
+  return new (C) ParamTypestateAttr(getLocation(), C, paramState, getSpellingListIndex());
+}
+
+void ParamTypestateAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    break;
+  case 0 : {
+    OS << " __attribute__((param_typestate(" << getParamState() << ")))";
+    break;
+  }
+}
+}
+
 PascalAttr *PascalAttr::clone(ASTContext &C) const {
   return new (C) PascalAttr(getLocation(), C, getSpellingListIndex());
 }
@@ -1989,38 +2145,6 @@ void PtGuardedVarAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy
 }
 }
 
-Ptr32Attr *Ptr32Attr::clone(ASTContext &C) const {
-  return new (C) Ptr32Attr(getLocation(), C, getSpellingListIndex());
-}
-
-void Ptr32Attr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) const {
-  switch (SpellingListIndex) {
-  default:
-    llvm_unreachable("Unknown attribute spelling!");
-    break;
-  case 0 : {
-    OS << " __ptr32";
-    break;
-  }
-}
-}
-
-Ptr64Attr *Ptr64Attr::clone(ASTContext &C) const {
-  return new (C) Ptr64Attr(getLocation(), C, getSpellingListIndex());
-}
-
-void Ptr64Attr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) const {
-  switch (SpellingListIndex) {
-  default:
-    llvm_unreachable("Unknown attribute spelling!");
-    break;
-  case 0 : {
-    OS << " __ptr64";
-    break;
-  }
-}
-}
-
 PureAttr *PureAttr::clone(ASTContext &C) const {
   return new (C) PureAttr(getLocation(), C, getSpellingListIndex());
 }
@@ -2072,6 +2196,22 @@ void ReqdWorkGroupSizeAttr::printPretty(raw_ostream &OS, const PrintingPolicy &P
     break;
   case 0 : {
     OS << " __attribute__((reqd_work_group_size(" << getXDim() << ", " << getYDim() << ", " << getZDim() << ")))";
+    break;
+  }
+}
+}
+
+ReturnTypestateAttr *ReturnTypestateAttr::clone(ASTContext &C) const {
+  return new (C) ReturnTypestateAttr(getLocation(), C, state, getSpellingListIndex());
+}
+
+void ReturnTypestateAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    break;
+  case 0 : {
+    OS << " __attribute__((return_typestate(" << getState() << ")))";
     break;
   }
 }
@@ -2133,6 +2273,22 @@ void SectionAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) con
 }
 }
 
+SelectAnyAttr *SelectAnyAttr::clone(ASTContext &C) const {
+  return new (C) SelectAnyAttr(getLocation(), C, getSpellingListIndex());
+}
+
+void SelectAnyAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    break;
+  case 0 : {
+    OS << " __declspec(selectany)";
+    break;
+  }
+}
+}
+
 SentinelAttr *SentinelAttr::clone(ASTContext &C) const {
   return new (C) SentinelAttr(getLocation(), C, sentinel, nullPos, getSpellingListIndex());
 }
@@ -2148,6 +2304,22 @@ void SentinelAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) co
   }
   case 1 : {
     OS << " [[gnu::sentinel(" << getSentinel() << ", " << getNullPos() << ")]]";
+    break;
+  }
+}
+}
+
+SetTypestateAttr *SetTypestateAttr::clone(ASTContext &C) const {
+  return new (C) SetTypestateAttr(getLocation(), C, newState, getSpellingListIndex());
+}
+
+void SetTypestateAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    break;
+  case 0 : {
+    OS << " __attribute__((set_typestate(" << getNewState() << ")))";
     break;
   }
 }
@@ -2266,6 +2438,26 @@ void StdCallAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) con
 }
 }
 
+SysVABIAttr *SysVABIAttr::clone(ASTContext &C) const {
+  return new (C) SysVABIAttr(getLocation(), C, getSpellingListIndex());
+}
+
+void SysVABIAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    break;
+  case 0 : {
+    OS << " __attribute__((sysv_abi))";
+    break;
+  }
+  case 1 : {
+    OS << " [[gnu::sysv_abi]]";
+    break;
+  }
+}
+}
+
 TLSModelAttr *TLSModelAttr::clone(ASTContext &C) const {
   return new (C) TLSModelAttr(getLocation(), C, getModel(), getSpellingListIndex());
 }
@@ -2281,6 +2473,22 @@ void TLSModelAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) co
   }
   case 1 : {
     OS << " [[gnu::tls_model(\"" << getModel() << "\")]]";
+    break;
+  }
+}
+}
+
+TestTypestateAttr *TestTypestateAttr::clone(ASTContext &C) const {
+  return new (C) TestTypestateAttr(getLocation(), C, testState, getSpellingListIndex());
+}
+
+void TestTypestateAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    break;
+  case 0 : {
+    OS << " __attribute__((test_typestate(" << getTestState() << ")))";
     break;
   }
 }
@@ -2489,7 +2697,7 @@ void VecReturnAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) c
 }
 
 VecTypeHintAttr *VecTypeHintAttr::clone(ASTContext &C) const {
-  return new (C) VecTypeHintAttr(getLocation(), C, typeHint, typeLoc, getSpellingListIndex());
+  return new (C) VecTypeHintAttr(getLocation(), C, typeHint, getSpellingListIndex());
 }
 
 void VecTypeHintAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) const {
@@ -2498,7 +2706,7 @@ void VecTypeHintAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy)
     llvm_unreachable("Unknown attribute spelling!");
     break;
   case 0 : {
-    OS << " __attribute__((vec_type_hint(" << getTypeHint().getAsString() << ", " << getTypeLoc().getRawEncoding() << ")))";
+    OS << " __attribute__((vec_type_hint(" << getTypeHint().getAsString() << ")))";
     break;
   }
 }
@@ -2535,6 +2743,22 @@ void VisibilityAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) 
   }
   case 1 : {
     OS << " [[gnu::visibility(" << getVisibility() << ")]]";
+    break;
+  }
+}
+}
+
+WarnUnusedAttr *WarnUnusedAttr::clone(ASTContext &C) const {
+  return new (C) WarnUnusedAttr(getLocation(), C, getSpellingListIndex());
+}
+
+void WarnUnusedAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) const {
+  switch (SpellingListIndex) {
+  default:
+    llvm_unreachable("Unknown attribute spelling!");
+    break;
+  case 0 : {
+    OS << " __attribute__((warn_unused))";
     break;
   }
 }
@@ -2601,7 +2825,7 @@ void WeakImportAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) 
 }
 
 WeakRefAttr *WeakRefAttr::clone(ASTContext &C) const {
-  return new (C) WeakRefAttr(getLocation(), C, getSpellingListIndex());
+  return new (C) WeakRefAttr(getLocation(), C, getAliasee(), getSpellingListIndex());
 }
 
 void WeakRefAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) const {
@@ -2610,11 +2834,11 @@ void WeakRefAttr::printPretty(raw_ostream &OS, const PrintingPolicy &Policy) con
     llvm_unreachable("Unknown attribute spelling!");
     break;
   case 0 : {
-    OS << " __attribute__((weakref))";
+    OS << " __attribute__((weakref(\"" << getAliasee() << "\")))";
     break;
   }
   case 1 : {
-    OS << " [[gnu::weakref]]";
+    OS << " [[gnu::weakref(\"" << getAliasee() << "\")]]";
     break;
   }
 }

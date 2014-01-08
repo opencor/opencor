@@ -1,4 +1,4 @@
-//===-- ConstantFolding.h - Fold instructions into constants --------------===//
+//===-- ConstantFolding.h - Fold instructions into constants ----*- C++ -*-===//
 //
 //                     The LLVM Compiler Infrastructure
 //

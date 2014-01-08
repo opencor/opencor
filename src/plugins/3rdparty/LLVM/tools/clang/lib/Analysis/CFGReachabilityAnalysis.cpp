@@ -52,8 +52,7 @@ void CFGReverseBlockReachabilityAnalysis::mapReachability(const CFGBlock *Dst) {
   bool firstRun = true;
 
   while (!worklist.empty()) {
-    const CFGBlock *block = worklist.back();
-    worklist.pop_back();
+    const CFGBlock *block = worklist.pop_back_val();
 
     if (visited[block->getBlockID()])
       continue;

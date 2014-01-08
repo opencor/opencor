@@ -8,6 +8,8 @@
 
 .Case("acquired_after", 1)
 .Case("acquired_before", 1)
+.Case("assert_exclusive_lock", 1)
+.Case("assert_shared_lock", 1)
 .Case("exclusive_lock_function", 1)
 .Case("exclusive_locks_required", 1)
 .Case("exclusive_trylock_function", 1)

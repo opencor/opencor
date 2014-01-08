@@ -11,6 +11,11 @@
   default:
     llvm_unreachable("Unknown attribute kind!");
     break;
+  case AT_ARMInterrupt : {
+    if (Name == "interrupt" && SyntaxUsed == 0 && Scope == "")
+        return 0;
+    break;
+  }
   case AT_AcquiredAfter : {
     if (Name == "acquired_after" && SyntaxUsed == 0 && Scope == "")
         return 0;
@@ -80,6 +85,16 @@
         return 0;
     if (Name == "pointer_with_type_tag" && SyntaxUsed == 0 && Scope == "")
         return 1;
+    break;
+  }
+  case AT_AssertExclusiveLock : {
+    if (Name == "assert_exclusive_lock" && SyntaxUsed == 0 && Scope == "")
+        return 0;
+    break;
+  }
+  case AT_AssertSharedLock : {
+    if (Name == "assert_shared_lock" && SyntaxUsed == 0 && Scope == "")
+        return 0;
     break;
   }
   case AT_Availability : {
@@ -165,6 +180,11 @@
         return 1;
     break;
   }
+  case AT_CallableWhen : {
+    if (Name == "callable_when" && SyntaxUsed == 0 && Scope == "")
+        return 0;
+    break;
+  }
   case AT_CarriesDependency : {
     if (Name == "carries_dependency" && SyntaxUsed == 0 && Scope == "")
         return 0;
@@ -202,6 +222,8 @@
         return 1;
     if (Name == "const" && SyntaxUsed == 1 && Scope == "gnu")
         return 2;
+    if (Name == "__const" && SyntaxUsed == 1 && Scope == "gnu")
+        return 3;
     break;
   }
   case AT_Constructor : {
@@ -209,6 +231,11 @@
         return 0;
     if (Name == "constructor" && SyntaxUsed == 1 && Scope == "gnu")
         return 1;
+    break;
+  }
+  case AT_Consumable : {
+    if (Name == "consumable" && SyntaxUsed == 0 && Scope == "")
+        return 0;
     break;
   }
   case AT_DLLExport : {
@@ -226,6 +253,8 @@
         return 0;
     if (Name == "deprecated" && SyntaxUsed == 1 && Scope == "gnu")
         return 1;
+    if (Name == "deprecated" && SyntaxUsed == 1 && Scope == "")
+        return 2;
     break;
   }
   case AT_Destructor : {
@@ -233,11 +262,6 @@
         return 0;
     if (Name == "destructor" && SyntaxUsed == 1 && Scope == "gnu")
         return 1;
-    break;
-  }
-  case AT_Endian : {
-    if (Name == "endian" && SyntaxUsed == 0 && Scope == "")
-        return 0;
     break;
   }
   case AT_ExclusiveLockFunction : {
@@ -359,6 +383,13 @@
         return 0;
     break;
   }
+  case AT_MSABI : {
+    if (Name == "ms_abi" && SyntaxUsed == 0 && Scope == "")
+        return 0;
+    if (Name == "ms_abi" && SyntaxUsed == 1 && Scope == "gnu")
+        return 1;
+    break;
+  }
   case AT_Malloc : {
     if (Name == "malloc" && SyntaxUsed == 0 && Scope == "")
         return 0;
@@ -390,11 +421,6 @@
         return 0;
     if (Name == "mode" && SyntaxUsed == 1 && Scope == "gnu")
         return 1;
-    break;
-  }
-  case AT_MsProperty : {
-    if (Name == "property" && SyntaxUsed == 2 && Scope == "")
-        return 0;
     break;
   }
   case AT_MsStruct : {
@@ -499,6 +525,10 @@
         return 0;
     if (Name == "no_sanitize_address" && SyntaxUsed == 0 && Scope == "")
         return 1;
+    if (Name == "no_address_safety_analysis" && SyntaxUsed == 1 && Scope == "gnu")
+        return 2;
+    if (Name == "no_sanitize_address" && SyntaxUsed == 1 && Scope == "gnu")
+        return 3;
     break;
   }
   case AT_NoSanitizeMemory : {
@@ -528,6 +558,11 @@
         return 0;
     if (Name == "nonnull" && SyntaxUsed == 1 && Scope == "gnu")
         return 1;
+    break;
+  }
+  case AT_ObjCBridge : {
+    if (Name == "objc_bridge" && SyntaxUsed == 0 && Scope == "")
+        return 0;
     break;
   }
   case AT_ObjCException : {
@@ -597,13 +632,13 @@
         return 0;
     break;
   }
-  case AT_ownership_holds:
+  case AT_ownership_holds: 
     Index = 0;
   break;
-  case AT_ownership_returns:
+  case AT_ownership_returns: 
     Index = 1;
   break;
-  case AT_ownership_takes:
+  case AT_ownership_takes: 
     Index = 2;
   break;
   case AT_Packed : {
@@ -611,6 +646,11 @@
         return 0;
     if (Name == "packed" && SyntaxUsed == 1 && Scope == "gnu")
         return 1;
+    break;
+  }
+  case AT_ParamTypestate : {
+    if (Name == "param_typestate" && SyntaxUsed == 0 && Scope == "")
+        return 0;
     break;
   }
   case AT_Pascal : {
@@ -673,11 +713,21 @@
         return 0;
     break;
   }
+  case AT_ReturnTypestate : {
+    if (Name == "return_typestate" && SyntaxUsed == 0 && Scope == "")
+        return 0;
+    break;
+  }
   case AT_ReturnsTwice : {
     if (Name == "returns_twice" && SyntaxUsed == 0 && Scope == "")
         return 0;
     if (Name == "returns_twice" && SyntaxUsed == 1 && Scope == "gnu")
         return 1;
+    break;
+  }
+  case AT_SPtr : {
+    if (Name == "__sptr" && SyntaxUsed == 3 && Scope == "")
+        return 0;
     break;
   }
   case AT_ScopedLockable : {
@@ -692,11 +742,21 @@
         return 1;
     break;
   }
+  case AT_SelectAny : {
+    if (Name == "selectany" && SyntaxUsed == 2 && Scope == "")
+        return 0;
+    break;
+  }
   case AT_Sentinel : {
     if (Name == "sentinel" && SyntaxUsed == 0 && Scope == "")
         return 0;
     if (Name == "sentinel" && SyntaxUsed == 1 && Scope == "gnu")
         return 1;
+    break;
+  }
+  case AT_SetTypestate : {
+    if (Name == "set_typestate" && SyntaxUsed == 0 && Scope == "")
+        return 0;
     break;
   }
   case AT_SharedLockFunction : {
@@ -730,11 +790,23 @@
         return 3;
     break;
   }
+  case AT_SysVABI : {
+    if (Name == "sysv_abi" && SyntaxUsed == 0 && Scope == "")
+        return 0;
+    if (Name == "sysv_abi" && SyntaxUsed == 1 && Scope == "gnu")
+        return 1;
+    break;
+  }
   case AT_TLSModel : {
     if (Name == "tls_model" && SyntaxUsed == 0 && Scope == "")
         return 0;
     if (Name == "tls_model" && SyntaxUsed == 1 && Scope == "gnu")
         return 1;
+    break;
+  }
+  case AT_TestTypestate : {
+    if (Name == "test_typestate" && SyntaxUsed == 0 && Scope == "")
+        return 0;
     break;
   }
   case AT_ThisCall : {
@@ -765,6 +837,11 @@
         return 0;
     if (Name == "type_visibility" && SyntaxUsed == 1 && Scope == "clang")
         return 1;
+    break;
+  }
+  case AT_UPtr : {
+    if (Name == "__uptr" && SyntaxUsed == 3 && Scope == "")
+        return 0;
     break;
   }
   case AT_Unavailable : {
@@ -826,6 +903,11 @@
         return 0;
     if (Name == "visibility" && SyntaxUsed == 1 && Scope == "gnu")
         return 1;
+    break;
+  }
+  case AT_WarnUnused : {
+    if (Name == "warn_unused" && SyntaxUsed == 0 && Scope == "")
+        return 0;
     break;
   }
   case AT_WarnUnusedResult : {

@@ -22,7 +22,6 @@
 #include "llvm/Analysis/DominatorInternals.h"
 #include "llvm/Analysis/Dominators.h"
 #include "llvm/Analysis/InstructionSimplify.h"
-#include "llvm/Analysis/ProfileInfo.h"
 #include "llvm/Assembly/Writer.h"
 #include "llvm/IR/Constants.h"
 #include "llvm/IR/DataLayout.h"
@@ -76,10 +75,10 @@ namespace {
   class CodeGenPrepare : public FunctionPass {
     /// TLI - Keep a pointer of a TargetLowering to consult for determining
     /// transformation profitability.
+    const TargetMachine *TM;
     const TargetLowering *TLI;
     const TargetLibraryInfo *TLInfo;
     DominatorTree *DT;
-    ProfileInfo *PFI;
 
     /// CurInstIterator - As we scan instructions optimizing them, this is the
     /// next instruction to optimize.  Xforms that can invalidate this should
@@ -100,8 +99,8 @@ namespace {
 
   public:
     static char ID; // Pass identification, replacement for typeid
-    explicit CodeGenPrepare(const TargetLowering *tli = 0)
-      : FunctionPass(ID), TLI(tli) {
+    explicit CodeGenPrepare(const TargetMachine *TM = 0)
+      : FunctionPass(ID), TM(TM), TLI(0) {
         initializeCodeGenPreparePass(*PassRegistry::getPassRegistry());
       }
     bool runOnFunction(Function &F);
@@ -110,7 +109,6 @@ namespace {
 
     virtual void getAnalysisUsage(AnalysisUsage &AU) const {
       AU.addPreserved<DominatorTree>();
-      AU.addPreserved<ProfileInfo>();
       AU.addRequired<TargetLibraryInfo>();
     }
 
@@ -139,17 +137,17 @@ INITIALIZE_PASS_DEPENDENCY(TargetLibraryInfo)
 INITIALIZE_PASS_END(CodeGenPrepare, "codegenprepare",
                 "Optimize for code generation", false, false)
 
-FunctionPass *llvm::createCodeGenPreparePass(const TargetLowering *TLI) {
-  return new CodeGenPrepare(TLI);
+FunctionPass *llvm::createCodeGenPreparePass(const TargetMachine *TM) {
+  return new CodeGenPrepare(TM);
 }
 
 bool CodeGenPrepare::runOnFunction(Function &F) {
   bool EverMadeChange = false;
 
   ModifiedDT = false;
+  if (TM) TLI = TM->getTargetLowering();
   TLInfo = &getAnalysis<TargetLibraryInfo>();
   DT = getAnalysisIfAvailable<DominatorTree>();
-  PFI = getAnalysisIfAvailable<ProfileInfo>();
   OptSize = F.getAttributes().hasAttribute(AttributeSet::FunctionIndex,
                                            Attribute::OptimizeForSize);
 
@@ -439,10 +437,6 @@ void CodeGenPrepare::EliminateMostlyEmptyBlock(BasicBlock *BB) {
     BasicBlock *NewIDom = DT->findNearestCommonDominator(BBIDom, DestBBIDom);
     DT->changeImmediateDominator(DestBB, NewIDom);
     DT->eraseNode(BB);
-  }
-  if (PFI) {
-    PFI->replaceAllUses(BB, DestBB);
-    PFI->removeEdge(ProfileInfo::getEdge(BB, DestBB));
   }
   BB->eraseFromParent();
   ++NumBlocksElim;
@@ -838,10 +832,12 @@ struct ExtAddrMode : public TargetLowering::AddrMode {
   }
 };
 
+#ifndef NDEBUG
 static inline raw_ostream &operator<<(raw_ostream &OS, const ExtAddrMode &AM) {
   AM.print(OS);
   return OS;
 }
+#endif
 
 void ExtAddrMode::print(raw_ostream &OS) const {
   bool NeedPlus = false;
@@ -866,7 +862,6 @@ void ExtAddrMode::print(raw_ostream &OS) const {
     OS << (NeedPlus ? " + " : "")
        << Scale << "*";
     WriteAsOperand(OS, ScaledReg, /*PrintType=*/false);
-    NeedPlus = true;
   }
 
   OS << ']';
@@ -1034,7 +1029,7 @@ bool AddressingModeMatcher::MatchOperationAddr(User *AddrInst, unsigned Opcode,
   case Instruction::IntToPtr:
     // This inttoptr is a no-op if the integer type is pointer sized.
     if (TLI.getValueType(AddrInst->getOperand(0)->getType()) ==
-        TLI.getPointerTy())
+        TLI.getPointerTy(AddrInst->getType()->getPointerAddressSpace()))
       return MatchAddr(AddrInst->getOperand(0), Depth);
     return false;
   case Instruction::BitCast:
@@ -1417,8 +1412,7 @@ IsProfitableToFoldIntoAddressingMode(Instruction *I, ExtAddrMode &AMBefore,
     Value *Address = User->getOperand(OpNo);
     if (!Address->getType()->isPointerTy())
       return false;
-    Type *AddressAccessTy =
-      cast<PointerType>(Address->getType())->getElementType();
+    Type *AddressAccessTy = Address->getType()->getPointerElementType();
 
     // Do a match against the root of this address, ignoring profitability. This
     // will tell us if the addressing mode for the memory operation will
@@ -1572,9 +1566,7 @@ bool CodeGenPrepare::OptimizeMemoryInst(Instruction *MemoryInst, Value *Addr,
   } else {
     DEBUG(dbgs() << "CGP: SINKING nonlocal addrmode: " << AddrMode << " for "
                  << *MemoryInst);
-    Type *IntPtrTy =
-          TLI->getDataLayout()->getIntPtrType(AccessTy->getContext());
-
+    Type *IntPtrTy = TLI->getDataLayout()->getIntPtrType(Addr->getType());
     Value *Result = 0;
 
     // Start with the base register. Do this first so that subsequent address
@@ -1893,7 +1885,8 @@ bool CodeGenPrepare::OptimizeInst(Instruction *I) {
     // It is possible for very late stage optimizations (such as SimplifyCFG)
     // to introduce PHI nodes too late to be cleaned up.  If we detect such a
     // trivial PHI, go ahead and zap it here.
-    if (Value *V = SimplifyInstruction(P)) {
+    if (Value *V = SimplifyInstruction(P, TLI ? TLI->getDataLayout() : 0,
+                                       TLInfo, DT)) {
       P->replaceAllUsesWith(V);
       P->eraseFromParent();
       ++NumPHIsElim;

@@ -23,9 +23,6 @@
 #include <list>
 #include <string>
 #include <utility>
-//---OPENCOR--- BEGIN
-#include "llvmglobal.h"
-//---OPENCOR--- END
 
 namespace llvm {
 class raw_fd_ostream;
@@ -67,12 +64,7 @@ class TargetInfo;
 /// in to the compiler instance for everything. When possible, utility functions
 /// come in two forms; a short form that reuses the CompilerInstance objects,
 /// and a long form that takes explicit instances of any required objects.
-/*---OPENCOR---
 class CompilerInstance : public ModuleLoader {
-*/
-//---OPENCOR--- BEGIN
-class LLVM_EXPORT CompilerInstance : public ModuleLoader {
-//---OPENCOR--- END
   /// The options used in this compiler instance.
   IntrusiveRefCntPtr<CompilerInvocation> Invocation;
 
@@ -408,7 +400,7 @@ public:
   /// @name ASTConsumer
   /// {
 
-  bool hasASTConsumer() const { return Consumer != 0; }
+  bool hasASTConsumer() const { return Consumer.isValid(); }
 
   ASTConsumer &getASTConsumer() const {
     assert(Consumer && "Compiler instance has no AST consumer!");
@@ -426,7 +418,7 @@ public:
   /// }
   /// @name Semantic analysis
   /// {
-  bool hasSema() const { return TheSema != 0; }
+  bool hasSema() const { return TheSema.isValid(); }
 
   Sema &getSema() const {
     assert(TheSema && "Compiler instance has no Sema object!");
@@ -446,7 +438,9 @@ public:
   /// @name Code Completion
   /// {
 
-  bool hasCodeCompletionConsumer() const { return CompletionConsumer != 0; }
+  bool hasCodeCompletionConsumer() const {
+    return CompletionConsumer.isValid();
+  }
 
   CodeCompleteConsumer &getCodeCompletionConsumer() const {
     assert(CompletionConsumer &&
@@ -468,7 +462,7 @@ public:
   /// @name Frontend timer
   /// {
 
-  bool hasFrontendTimer() const { return FrontendTimer != 0; }
+  bool hasFrontendTimer() const { return FrontendTimer.isValid(); }
 
   llvm::Timer &getFrontendTimer() const {
     assert(FrontendTimer && "Compiler instance has no frontend timer!");
@@ -602,10 +596,10 @@ public:
   /// \return - Null on error.
   llvm::raw_fd_ostream *
   createOutputFile(StringRef OutputPath,
-                   bool Binary = true, bool RemoveFileOnSignal = true,
-                   StringRef BaseInput = "",
-                   StringRef Extension = "",
-                   bool UseTemporary = false,
+                   bool Binary, bool RemoveFileOnSignal,
+                   StringRef BaseInput,
+                   StringRef Extension,
+                   bool UseTemporary,
                    bool CreateMissingDirectories = false);
 
   /// Create a new output file, optionally deriving the output path name.
@@ -635,13 +629,13 @@ public:
   /// will be stored here on success.
   static llvm::raw_fd_ostream *
   createOutputFile(StringRef OutputPath, std::string &Error,
-                   bool Binary = true, bool RemoveFileOnSignal = true,
-                   StringRef BaseInput = "",
-                   StringRef Extension = "",
-                   bool UseTemporary = false,
-                   bool CreateMissingDirectories = false,
-                   std::string *ResultPathName = 0,
-                   std::string *TempPathName = 0);
+                   bool Binary, bool RemoveFileOnSignal,
+                   StringRef BaseInput,
+                   StringRef Extension,
+                   bool UseTemporary,
+                   bool CreateMissingDirectories,
+                   std::string *ResultPathName,
+                   std::string *TempPathName);
 
   /// }
   /// @name Initialization Utility Methods
@@ -674,6 +668,10 @@ public:
                                  Module::NameVisibilityKind Visibility,
                                  SourceLocation ImportLoc,
                                  bool Complain);
+
+  bool hadModuleLoaderFatalFailure() const {
+    return ModuleLoader::HadFatalFailure;
+  }
 
 };
 

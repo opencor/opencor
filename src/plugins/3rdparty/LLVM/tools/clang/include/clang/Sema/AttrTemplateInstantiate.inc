@@ -14,6 +14,10 @@ Attr *instantiateTemplateAttribute(const Attr *At, ASTContext &C, Sema &S,
   switch (At->getKind()) {
     default:
       break;
+    case attr::ARMInterrupt: {
+      const ARMInterruptAttr *A = cast<ARMInterruptAttr>(At);
+      return A->clone(C);
+    }
     case attr::AcquiredAfter: {
       const AcquiredAfterAttr *A = cast<AcquiredAfterAttr>(At);
       Expr * *tempInstArgs = new (C, 16) Expr *[A->args_size()];
@@ -84,6 +88,36 @@ Attr *instantiateTemplateAttribute(const Attr *At, ASTContext &C, Sema &S,
       const AsmLabelAttr *A = cast<AsmLabelAttr>(At);
       return A->clone(C);
     }
+    case attr::AssertExclusiveLock: {
+      const AssertExclusiveLockAttr *A = cast<AssertExclusiveLockAttr>(At);
+      Expr * *tempInstArgs = new (C, 16) Expr *[A->args_size()];
+      {
+        EnterExpressionEvaluationContext Unevaluated(S, Sema::Unevaluated);
+        Expr * *TI = tempInstArgs;
+        Expr * *I = A->args_begin();
+        Expr * *E = A->args_end();
+        for (; I != E; ++I, ++TI) {
+          ExprResult Result = S.SubstExpr(*I, TemplateArgs);
+          *TI = Result.takeAs<Expr>();
+        }
+      }
+      return new (C) AssertExclusiveLockAttr(A->getLocation(), C, tempInstArgs, A->args_size());
+    }
+    case attr::AssertSharedLock: {
+      const AssertSharedLockAttr *A = cast<AssertSharedLockAttr>(At);
+      Expr * *tempInstArgs = new (C, 16) Expr *[A->args_size()];
+      {
+        EnterExpressionEvaluationContext Unevaluated(S, Sema::Unevaluated);
+        Expr * *TI = tempInstArgs;
+        Expr * *I = A->args_begin();
+        Expr * *E = A->args_end();
+        for (; I != E; ++I, ++TI) {
+          ExprResult Result = S.SubstExpr(*I, TemplateArgs);
+          *TI = Result.takeAs<Expr>();
+        }
+      }
+      return new (C) AssertSharedLockAttr(A->getLocation(), C, tempInstArgs, A->args_size());
+    }
     case attr::Availability: {
       const AvailabilityAttr *A = cast<AvailabilityAttr>(At);
       return A->clone(C);
@@ -148,6 +182,10 @@ Attr *instantiateTemplateAttribute(const Attr *At, ASTContext &C, Sema &S,
       const CXX11NoReturnAttr *A = cast<CXX11NoReturnAttr>(At);
       return A->clone(C);
     }
+    case attr::CallableWhen: {
+      const CallableWhenAttr *A = cast<CallableWhenAttr>(At);
+      return A->clone(C);
+    }
     case attr::CarriesDependency: {
       const CarriesDependencyAttr *A = cast<CarriesDependencyAttr>(At);
       return A->clone(C);
@@ -172,6 +210,10 @@ Attr *instantiateTemplateAttribute(const Attr *At, ASTContext &C, Sema &S,
       const ConstructorAttr *A = cast<ConstructorAttr>(At);
       return A->clone(C);
     }
+    case attr::Consumable: {
+      const ConsumableAttr *A = cast<ConsumableAttr>(At);
+      return A->clone(C);
+    }
     case attr::DLLExport: {
       const DLLExportAttr *A = cast<DLLExportAttr>(At);
       return A->clone(C);
@@ -186,10 +228,6 @@ Attr *instantiateTemplateAttribute(const Attr *At, ASTContext &C, Sema &S,
     }
     case attr::Destructor: {
       const DestructorAttr *A = cast<DestructorAttr>(At);
-      return A->clone(C);
-    }
-    case attr::Endian: {
-      const EndianAttr *A = cast<EndianAttr>(At);
       return A->clone(C);
     }
     case attr::ExclusiveLockFunction: {
@@ -338,12 +376,8 @@ Attr *instantiateTemplateAttribute(const Attr *At, ASTContext &C, Sema &S,
       }
       return new (C) LocksExcludedAttr(A->getLocation(), C, tempInstArgs, A->args_size());
     }
-    case attr::MBlazeInterruptHandler: {
-      const MBlazeInterruptHandlerAttr *A = cast<MBlazeInterruptHandlerAttr>(At);
-      return A->clone(C);
-    }
-    case attr::MBlazeSaveVolatiles: {
-      const MBlazeSaveVolatilesAttr *A = cast<MBlazeSaveVolatilesAttr>(At);
+    case attr::MSABI: {
+      const MSABIAttr *A = cast<MSABIAttr>(At);
       return A->clone(C);
     }
     case attr::MSP430Interrupt: {
@@ -370,8 +404,8 @@ Attr *instantiateTemplateAttribute(const Attr *At, ASTContext &C, Sema &S,
       const Mips16Attr *A = cast<Mips16Attr>(At);
       return A->clone(C);
     }
-    case attr::MsProperty: {
-      const MsPropertyAttr *A = cast<MsPropertyAttr>(At);
+    case attr::Mode: {
+      const ModeAttr *A = cast<ModeAttr>(At);
       return A->clone(C);
     }
     case attr::MsStruct: {
@@ -458,6 +492,10 @@ Attr *instantiateTemplateAttribute(const Attr *At, ASTContext &C, Sema &S,
       const NonNullAttr *A = cast<NonNullAttr>(At);
       return A->clone(C);
     }
+    case attr::ObjCBridge: {
+      const ObjCBridgeAttr *A = cast<ObjCBridgeAttr>(At);
+      return A->clone(C);
+    }
     case attr::ObjCException: {
       const ObjCExceptionAttr *A = cast<ObjCExceptionAttr>(At);
       return A->clone(C);
@@ -514,6 +552,10 @@ Attr *instantiateTemplateAttribute(const Attr *At, ASTContext &C, Sema &S,
       const PackedAttr *A = cast<PackedAttr>(At);
       return A->clone(C);
     }
+    case attr::ParamTypestate: {
+      const ParamTypestateAttr *A = cast<ParamTypestateAttr>(At);
+      return A->clone(C);
+    }
     case attr::Pascal: {
       const PascalAttr *A = cast<PascalAttr>(At);
       return A->clone(C);
@@ -540,14 +582,6 @@ Attr *instantiateTemplateAttribute(const Attr *At, ASTContext &C, Sema &S,
       const PtGuardedVarAttr *A = cast<PtGuardedVarAttr>(At);
       return A->clone(C);
     }
-    case attr::Ptr32: {
-      const Ptr32Attr *A = cast<Ptr32Attr>(At);
-      return A->clone(C);
-    }
-    case attr::Ptr64: {
-      const Ptr64Attr *A = cast<Ptr64Attr>(At);
-      return A->clone(C);
-    }
     case attr::Pure: {
       const PureAttr *A = cast<PureAttr>(At);
       return A->clone(C);
@@ -558,6 +592,10 @@ Attr *instantiateTemplateAttribute(const Attr *At, ASTContext &C, Sema &S,
     }
     case attr::ReqdWorkGroupSize: {
       const ReqdWorkGroupSizeAttr *A = cast<ReqdWorkGroupSizeAttr>(At);
+      return A->clone(C);
+    }
+    case attr::ReturnTypestate: {
+      const ReturnTypestateAttr *A = cast<ReturnTypestateAttr>(At);
       return A->clone(C);
     }
     case attr::ReturnsTwice: {
@@ -572,8 +610,16 @@ Attr *instantiateTemplateAttribute(const Attr *At, ASTContext &C, Sema &S,
       const SectionAttr *A = cast<SectionAttr>(At);
       return A->clone(C);
     }
+    case attr::SelectAny: {
+      const SelectAnyAttr *A = cast<SelectAnyAttr>(At);
+      return A->clone(C);
+    }
     case attr::Sentinel: {
       const SentinelAttr *A = cast<SentinelAttr>(At);
+      return A->clone(C);
+    }
+    case attr::SetTypestate: {
+      const SetTypestateAttr *A = cast<SetTypestateAttr>(At);
       return A->clone(C);
     }
     case attr::SharedLockFunction: {
@@ -635,8 +681,16 @@ Attr *instantiateTemplateAttribute(const Attr *At, ASTContext &C, Sema &S,
       const StdCallAttr *A = cast<StdCallAttr>(At);
       return A->clone(C);
     }
+    case attr::SysVABI: {
+      const SysVABIAttr *A = cast<SysVABIAttr>(At);
+      return A->clone(C);
+    }
     case attr::TLSModel: {
       const TLSModelAttr *A = cast<TLSModelAttr>(At);
+      return A->clone(C);
+    }
+    case attr::TestTypestate: {
+      const TestTypestateAttr *A = cast<TestTypestateAttr>(At);
       return A->clone(C);
     }
     case attr::ThisCall: {
@@ -703,6 +757,10 @@ Attr *instantiateTemplateAttribute(const Attr *At, ASTContext &C, Sema &S,
     }
     case attr::Visibility: {
       return NULL;
+    }
+    case attr::WarnUnused: {
+      const WarnUnusedAttr *A = cast<WarnUnusedAttr>(At);
+      return A->clone(C);
     }
     case attr::WarnUnusedResult: {
       const WarnUnusedResultAttr *A = cast<WarnUnusedResultAttr>(At);

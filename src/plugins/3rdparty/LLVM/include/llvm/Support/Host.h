@@ -16,18 +16,15 @@
 
 #include "llvm/ADT/StringMap.h"
 
-#if defined(__linux__)
+#if defined(__linux__) || defined(__GNU__)
 #include <endian.h>
 #else
-#ifndef LLVM_ON_WIN32
+#if !defined(BYTE_ORDER) && !defined(LLVM_ON_WIN32)
 #include <machine/endian.h>
 #endif
 #endif
 
 #include <string>
-//---OPENCOR--- BEGIN
-#include "llvmglobal.h"
-//---OPENCOR--- END
 
 namespace llvm {
 namespace sys {
@@ -51,12 +48,7 @@ namespace sys {
 
   /// getProcessTriple() - Return an appropriate target triple for generating
   /// code to be loaded into the current process, e.g. when using the JIT.
-/*---OPENCOR---
   std::string getProcessTriple();
-*/
-//---OPENCOR--- BEGIN
-  std::string LLVM_EXPORT getProcessTriple();
-//---OPENCOR--- END
 
   /// getHostCPUName - Get the LLVM name for the host CPU. The particular format
   /// of the name is target dependent, and suitable for passing as -mcpu to the
