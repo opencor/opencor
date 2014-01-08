@@ -610,14 +610,11 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
                 #       but we need a solution that works for all possible
                 #       tests, hence they are included...
 
+                SET(CORE_SOURCES_MOC)
+
                 IF(WIN32)
-                    SET(CORE_SOURCES_MOC)
                     SET(CORE_SOURCES)
                 ELSE()
-                    SET(CORE_SOURCES_MOC
-                        ../../misc/Core/src/dockwidget.h
-                    )
-
                     SET(CORE_SOURCES
                         ../../misc/Core/src/cliutils.cpp
                         ../../misc/Core/src/commonwidget.cpp

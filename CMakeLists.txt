@@ -84,15 +84,19 @@ SET(RESOURCES
 )
 
 # Various include directories
+# Note: the OpenCOR executable uses bits of the Core plugin, hence we include
+#       its directory so that we can build OpenCOR without any plugin, should we
+#       ever want/need to do that...
 
 INCLUDE_DIRECTORIES(
     src/comp
     src/misc
     src/plugins
+    src/plugins/misc/Core/src
 )
 
 # Update the translation (.ts) files and generate the language (.qm) files
-# which will later on be embedded in the executable as resources
+# which will later on be embedded in the OpenCOR executable as resources
 
 UPDATE_LANGUAGE_FILES(${PROJECT_NAME} FALSE)
 
@@ -314,7 +318,7 @@ IF(APPLE)
                        COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SOURCE_DIR}/distrib/osx/qt.conf
                                                         ${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME}.app/Contents/Resources/qt.conf)
 
-    # Clean up our main executable
+    # Clean up the OpenCOR executable
 
     IF(APPLE)
         SET(COMMON_QT_LIBRARIES_EXTRAS QtMacExtras)
