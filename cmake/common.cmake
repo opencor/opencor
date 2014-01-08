@@ -310,7 +310,6 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
     SET(QT_LIBRARIES)
     SET(EXTERNAL_BINARIES_DIR)
     SET(EXTERNAL_BINARIES)
-    SET(EXTERNAL_LIBRARIES)
     SET(TESTS)
 
     # Analyse the extra parameters
@@ -360,10 +359,8 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
             SET(TYPE_OF_PARAMETER 10)
         ELSEIF("${PARAMETER}" STREQUAL "EXTERNAL_BINARIES")
             SET(TYPE_OF_PARAMETER 11)
-        ELSEIF("${PARAMETER}" STREQUAL "EXTERNAL_LIBRARIES")
-            SET(TYPE_OF_PARAMETER 12)
         ELSEIF("${PARAMETER}" STREQUAL "TESTS")
-            SET(TYPE_OF_PARAMETER 13)
+            SET(TYPE_OF_PARAMETER 12)
         ELSE()
             # Not one of the headers, so add the parameter to the corresponding
             # set
@@ -391,8 +388,6 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
             ELSEIF(${TYPE_OF_PARAMETER} EQUAL 11)
                 LIST(APPEND EXTERNAL_BINARIES ${PARAMETER})
             ELSEIF(${TYPE_OF_PARAMETER} EQUAL 12)
-                LIST(APPEND EXTERNAL_LIBRARIES ${PARAMETER})
-            ELSEIF(${TYPE_OF_PARAMETER} EQUAL 13)
                 LIST(APPEND TESTS ${PARAMETER})
             ENDIF()
         ENDIF()
@@ -498,14 +493,6 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
             )
         ENDFOREACH()
     ENDIF()
-
-    # External libraries
-
-    FOREACH(EXTERNAL_LIBRARY ${EXTERNAL_LIBRARIES})
-        TARGET_LINK_LIBRARIES(${PROJECT_NAME}
-            ${EXTERNAL_LIBRARY}
-        )
-    ENDFOREACH()
 
     # Location of our plugin
 
@@ -693,14 +680,6 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
                         )
                     ENDFOREACH()
                 ENDIF()
-
-                # External libraries
-
-                FOREACH(EXTERNAL_LIBRARY ${EXTERNAL_LIBRARIES})
-                    TARGET_LINK_LIBRARIES(${TEST_NAME}
-                        ${EXTERNAL_LIBRARY}
-                    )
-                ENDFOREACH()
 
                 # Copy the test to our tests directory
                 # Note: DEST_TESTS_DIR is defined in our main CMake file...
