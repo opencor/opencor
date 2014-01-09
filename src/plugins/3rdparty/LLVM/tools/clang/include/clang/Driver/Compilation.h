@@ -14,6 +14,9 @@
 #include "clang/Driver/Util.h"
 #include "llvm/ADT/DenseMap.h"
 #include "llvm/Support/Path.h"
+//---OPENCOR--- BEGIN
+#include "llvmglobal.h"
+//---OPENCOR--- END
 
 namespace llvm {
 namespace opt {
@@ -31,7 +34,12 @@ namespace driver {
 
 /// Compilation - A set of tasks to perform for a single driver
 /// invocation.
+/*---OPENCOR---
 class Compilation {
+*/
+//---OPENCOR--- BEGIN
+class LLVM_EXPORT Compilation {
+//---OPENCOR--- END
   /// The driver we were created by.
   const Driver &TheDriver;
 

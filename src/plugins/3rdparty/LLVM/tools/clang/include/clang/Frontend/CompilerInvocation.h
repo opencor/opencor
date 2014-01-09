@@ -28,6 +28,9 @@
 #include "llvm/ADT/StringRef.h"
 #include <string>
 #include <vector>
+//---OPENCOR--- BEGIN
+#include "llvmglobal.h"
+//---OPENCOR--- END
 
 namespace llvm {
 namespace opt {
@@ -97,7 +100,12 @@ public:
 /// This class is designed to represent an abstract "invocation" of the
 /// compiler, including data such as the include paths, the code generation
 /// options, the warning flags, and so on.
+/*---OPENCOR---
 class CompilerInvocation : public CompilerInvocationBase {
+*/
+//---OPENCOR--- BEGIN
+class LLVM_EXPORT CompilerInvocation : public CompilerInvocationBase {
+//---OPENCOR--- END
   /// Options controlling the static analyzer.
   AnalyzerOptionsRef AnalyzerOpts;
 
