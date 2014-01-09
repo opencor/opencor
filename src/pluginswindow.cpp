@@ -36,6 +36,7 @@ specific language governing permissions and limitations under the License.
 #include <QPushButton>
 #include <QSettings>
 #include <QStandardItemModel>
+#include <Qt>
 #include <QUrl>
 
 //==============================================================================
@@ -507,18 +508,21 @@ void PluginsWindow::updatePluginsSelectedState(QStandardItem *pItem,
     // In case we un/select a category, then go through its selectable plugins
     // and un/select them accordingly
 
-    if (pItem && !pItem->parent())
+    if (pItem && !pItem->parent()) {
+        Qt::CheckState newCheckState = (pItem->checkState() == Qt::Unchecked)?Qt::Unchecked:Qt::Checked;
+
         for (int i = 0, iMax = pItem->rowCount(); i < iMax; ++i) {
             QStandardItem *pluginItem = pItem->child(i);
 
-            if (pluginItem->isCheckable())
-                pluginItem->setCheckState(pItem->checkState());
+            if (mSelectablePluginItems.contains(pluginItem))
+                pluginItem->setCheckState(newCheckState);
         }
+    }
 
     // Update the selected state of all our unselectable plugins
 
     foreach (QStandardItem *unselectablePluginItem, mUnselectablePluginItems) {
-        // First, reset the selected state of our unaselectable plugin
+        // First, reset the selected state of our unselectable plugin
 
         unselectablePluginItem->setCheckState(Qt::Unchecked);
 
