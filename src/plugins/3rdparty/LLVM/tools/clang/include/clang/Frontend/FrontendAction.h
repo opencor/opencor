@@ -25,6 +25,9 @@
 #include "llvm/ADT/StringRef.h"
 #include <string>
 #include <vector>
+//---OPENCOR--- BEGIN
+#include "llvmglobal.h"
+//---OPENCOR--- END
 
 namespace clang {
 class ASTConsumer;
@@ -33,7 +36,12 @@ class ASTUnit;
 class CompilerInstance;
 
 /// Abstract base class for actions which can be performed by the frontend.
+/*---OPENCOR---
 class FrontendAction {
+*/
+//---OPENCOR--- BEGIN
+class LLVM_EXPORT FrontendAction {
+//---OPENCOR--- END
   FrontendInputFile CurrentInput;
   OwningPtr<ASTUnit> CurrentASTUnit;
   CompilerInstance *Instance;

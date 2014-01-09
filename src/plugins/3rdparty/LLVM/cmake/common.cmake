@@ -23,9 +23,9 @@ MACRO(RETRIEVE_LLVM_SETTINGS)
 
     IF(WIN32)
         SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /wd4244")
-        SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4138 /wd4244 /wd4291 /wd4351 /wd4355 /wd4551 /wd4624 /wd4722")
-        # Note: on Windows, some warnings get generated. Yet, we have nothing to
-        #       do with them, so...
+        SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4138 /wd4180 /wd4244 /wd4291 /wd4351 /wd4355 /wd4551 /wd4624 /wd4722")
+        # Note: some warnings get generated. Yet, we have nothing to do with
+        #       them, so...
     ENDIF()
 ENDMACRO()
 
