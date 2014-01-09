@@ -5,7 +5,7 @@
 /distrib/windows/x86/msvcp100.dll
 /distrib/windows/x86/ssleay32.dll
 
-/src/plugins/3rdparty/LLVM/bin/**/*
+/src/plugins/**/bin/**/*
 
 /src/plugins/3rdparty/LLVM/include/llvm/Config/config.h
 /src/plugins/3rdparty/LLVM/include/llvm/Config/llvm-config.h
@@ -13,9 +13,5 @@
 /src/plugins/3rdparty/LLVM/include/llvm/Support/DataTypes.h
 
 /src/plugins/3rdparty/LLVM/lib/Target/X86/X86GenAsmMatcher.inc
-/src/plugins/3rdparty/LLVM/lib/Target/X86/X86GenDAGISel.inc
-/src/plugins/3rdparty/LLVM/lib/Target/X86/X86GenRegisterInfo.inc
-
-/src/plugins/api/CellMLAPI/bin/**/*
 
 /windows/CMakeLists.txt.user
