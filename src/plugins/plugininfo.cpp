@@ -31,7 +31,7 @@ PluginInfo::PluginInfo(const Category &pCategory,
                        const QStringList &pDependencies,
                        const Descriptions &pDescriptions) :
     mCategory(pCategory),
-    mManageable(false),
+    mSelectable(false),
     mDependencies(pDependencies),
     mFullDependencies(QStringList()),
     mDescriptions(pDescriptions)
@@ -49,20 +49,20 @@ PluginInfo::Category PluginInfo::category() const
 
 //==============================================================================
 
-bool PluginInfo::isManageable() const
+bool PluginInfo::isSelectable() const
 {
     // Return the plugin's manageability
 
-    return mManageable;
+    return mSelectable;
 }
 
 //==============================================================================
 
-void PluginInfo::setManageable(const bool &pManageable)
+void PluginInfo::setSelectable(const bool &pSelectable)
 {
-    // Set whether the plugin is manageable
+    // Set whether the plugin is selectable
 
-    mManageable = pManageable;
+    mSelectable = pSelectable;
 }
 
 //==============================================================================

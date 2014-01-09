@@ -86,8 +86,8 @@ private:
     QStandardItemModel *mModel;
     PluginItemDelegate *mPluginItemDelegate;
 
-    QList<QStandardItem *> mManageablePluginItems;
-    QList<QStandardItem *> mUnmanageablePluginItems;
+    QList<QStandardItem *> mSelectablePluginItems;
+    QList<QStandardItem *> mUnselectablePluginItems;
 
     QMap<QString, bool> mInitialLoadingStates;
 

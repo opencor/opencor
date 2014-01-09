@@ -112,34 +112,34 @@ PluginManager::PluginManager(QCoreApplication *pApp, const bool &pGuiMode) :
 
     neededPlugins.removeDuplicates();
 
-    // Determine which of our available plugins, if any, are manageable, i.e.
+    // Determine which of our available plugins, if any, are selectable, i.e.
     // not used by any other plugin
 
-    QStringList manageablePlugins = QStringList();
+    QStringList selectablePlugins = QStringList();
 
     foreach (const QString &validPlugin, validPlugins)
         if (!neededPlugins.contains(validPlugin)) {
-            pluginsInfo.value(validPlugin)->setManageable(true);
+            pluginsInfo.value(validPlugin)->setSelectable(true);
 
-            manageablePlugins << validPlugin;
+            selectablePlugins << validPlugin;
         }
 
     // Determine which plugins are needed or wanted
-    // Note: unmanageable plugins (e.g. the QScintilla plugin) don't get loaded
+    // Note: unselectable plugins (e.g. the QScintilla plugin) don't get loaded
     //       by default, but the situation is obviously different if such a
     //       plugin is needed by another plugin (e.g. the Viewer plugin requires
-    //       the Qwt plugin), in which case the unmanageable plugin must be
+    //       the Qwt plugin), in which case the unselectable plugin must be
     //       loaded...
 
     QStringList wantedPlugins = QStringList();
     neededPlugins = QStringList();
 
-    foreach (const QString &manageablePlugin, manageablePlugins)
-        if ((pGuiMode && Plugin::load(manageablePlugin)) || !pGuiMode) {
+    foreach (const QString &selectablePlugin, selectablePlugins)
+        if ((pGuiMode && Plugin::load(selectablePlugin)) || !pGuiMode) {
             // We are in GUI mode and the user wants to load the plugin, or we
             // are not in GUI mode, so retrieve and keep track of the plugin's
             // dependencies
-            // Note: in non-GUI mode (i.e. CLI mode), a manageable plugin gets
+            // Note: in non-GUI mode (i.e. CLI mode), a selectable plugin gets
             //       automatically loaded no matter what, thus making sure that
             //       the CLI version of OpenCOR has access to all the plugins.
             //       The drawback with this approach is that non-CLI capable
@@ -152,11 +152,11 @@ PluginManager::PluginManager(QCoreApplication *pApp, const bool &pGuiMode) :
             //       to load all the plugins and then deal with only those that
             //       support the CLI interface...
 
-            neededPlugins << pluginsInfo.value(manageablePlugin)->fullDependencies();
+            neededPlugins << pluginsInfo.value(selectablePlugin)->fullDependencies();
 
             // Also keep track of the plugin itself
 
-            wantedPlugins << manageablePlugin;
+            wantedPlugins << selectablePlugin;
         }
 
     // Remove possible duplicates in our list of needed plugins

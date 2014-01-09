@@ -90,8 +90,8 @@ PluginsWindow::PluginsWindow(PluginManager *pPluginManager,
     mGui(new Ui::PluginsWindow),
     mMainWindow(pMainWindow),
     mPluginManager(pPluginManager),
-    mManageablePluginItems(QList<QStandardItem *>()),
-    mUnmanageablePluginItems(QList<QStandardItem *>())
+    mSelectablePluginItems(QList<QStandardItem *>()),
+    mUnselectablePluginItems(QList<QStandardItem *>())
 {
     // Set up the GUI
 
@@ -170,13 +170,13 @@ PluginsWindow::PluginsWindow(PluginManager *pPluginManager,
                                                           QIcon(":/oxygen/actions/edit-delete.png"),
                                                       plugin->name());
 
-        // Only manageable plugins and plugins that are of the right type are
+        // Only selectable plugins and plugins that are of the right type are
         // checkable
 
         PluginInfo *pluginInfo = plugin->info();
 
         if (pluginInfo) {
-            pluginItem->setCheckable(pluginInfo->isManageable());
+            pluginItem->setCheckable(pluginInfo->isSelectable());
 
             if (pluginItem->isCheckable()) {
                 // Retrieve the loading state of the plugin
@@ -185,15 +185,15 @@ PluginsWindow::PluginsWindow(PluginManager *pPluginManager,
                                               Qt::Checked:
                                               Qt::Unchecked);
 
-                // We are dealing with a manageable plugin, so add it to our list of
-                // manageable plugins
+                // We are dealing with a selectable plugin, so add it to our
+                // list of selectable plugins
 
-                mManageablePluginItems << pluginItem;
+                mSelectablePluginItems << pluginItem;
             } else {
-                // We are dealing with an unmanageable plugin, so add it to our list
-                // of unmanageable plugins
+                // We are dealing with an unselectable plugin, so add it to our
+                // list of unselectable plugins
 
-                mUnmanageablePluginItems << pluginItem;
+                mUnselectablePluginItems << pluginItem;
             }
 
             // Add the plugin to the right category
@@ -203,13 +203,13 @@ PluginsWindow::PluginsWindow(PluginManager *pPluginManager,
             // We are not actually dealing with a plugin, so add it to the
             // Miscellaneous category
 
-            mUnmanageablePluginItems << pluginItem;
+            mUnselectablePluginItems << pluginItem;
 
             mPluginCategories.value(PluginInfo::Miscellaneous)->appendRow(pluginItem);
         }
     }
 
-    // Make a category checkable if it contains manageable plugins and hide it,
+    // Make a category checkable if it contains selectable plugins and hide it,
     // if it doesn't contain any plugin
 
     foreach (QStandardItem *categoryItem, mPluginCategories) {
@@ -318,7 +318,7 @@ void PluginsWindow::loadSettings(QSettings *pSettings)
     mGui->selectablePluginsCheckBox->setChecked(pSettings->value(SettingsShowOnlySelectablePlugins,
                                                                  true).toBool());
 
-    // Show/hide our unmanageable plugins
+    // Show/hide our unselectable plugins
 
     on_selectablePluginsCheckBox_toggled(mGui->selectablePluginsCheckBox->isChecked());
 }
@@ -504,7 +504,7 @@ void PluginsWindow::updatePluginsSelectedState(QStandardItem *pItem,
 
     mGui->pluginsTreeView->setUpdatesEnabled(false);
 
-    // In case we un/select a category, then go through its manageable plugins
+    // In case we un/select a category, then go through its selectable plugins
     // and un/select them accordingly
 
     if (pItem && !pItem->parent())
@@ -515,65 +515,65 @@ void PluginsWindow::updatePluginsSelectedState(QStandardItem *pItem,
                 pluginItem->setCheckState(pItem->checkState());
         }
 
-    // Update the selected state of all our unmanageable plugins
+    // Update the selected state of all our unselectable plugins
 
-    foreach (QStandardItem *unmanageablePluginItem, mUnmanageablePluginItems) {
-        // First, reset the selected state of our unamanageable plugin
+    foreach (QStandardItem *unselectablePluginItem, mUnselectablePluginItems) {
+        // First, reset the selected state of our unaselectable plugin
 
-        unmanageablePluginItem->setCheckState(Qt::Unchecked);
+        unselectablePluginItem->setCheckState(Qt::Unchecked);
 
-        // Next, go through our manageable plugins and check whether one of them
-        // needs our unmanageable plugin
+        // Next, go through our selectable plugins and check whether one of them
+        // needs our unselectable plugin
 
-        foreach (QStandardItem *manageablePluginItem, mManageablePluginItems)
-            if (manageablePluginItem->checkState() == Qt::Checked) {
-                // The manageable plugin is selected, so go through its plugin
+        foreach (QStandardItem *selectablePluginItem, mSelectablePluginItems)
+            if (selectablePluginItem->checkState() == Qt::Checked) {
+                // The selectable plugin is selected, so go through its plugin
                 // dependencies and check whether one of them is our
-                // unmanageable plugin
+                // unselectable plugin
 
                 foreach (const QString &requiredPlugin,
-                         mPluginManager->plugin(manageablePluginItem->text())->info()->fullDependencies())
-                    if (!requiredPlugin.compare(unmanageablePluginItem->text())) {
-                        // The manageable plugin requires our unamanageable
+                         mPluginManager->plugin(selectablePluginItem->text())->info()->fullDependencies())
+                    if (!requiredPlugin.compare(unselectablePluginItem->text())) {
+                        // The selectable plugin requires our unselectable
                         // plugin, so...
 
-                        unmanageablePluginItem->setCheckState(Qt::Checked);
+                        unselectablePluginItem->setCheckState(Qt::Checked);
 
                         break;
                     }
 
-                if (unmanageablePluginItem->checkState() == Qt::Checked)
+                if (unselectablePluginItem->checkState() == Qt::Checked)
                     break;
             }
     }
 
     // Update the selected state of all our categories which have at least one
-    // manageable plugin
+    // selectable plugin
 
     foreach (QStandardItem *categoryItem, mPluginCategories) {
         int nbOfPlugins = categoryItem->rowCount();
 
         if (nbOfPlugins) {
-            int nbOfManageablePlugins = 0;
-            int nbOfUnmanageablePlugins = 0;
-            int nbOfSelectedManageablePlugins = 0;
+            int nbOfSelectablePlugins = 0;
+            int nbOfUnselectablePlugins = 0;
+            int nbOfSelectedSelectablePlugins = 0;
 
             for (int i = 0; i < nbOfPlugins; ++i) {
                 QStandardItem *pluginItem = categoryItem->child(i);
 
                 if (pluginItem->isCheckable()) {
-                    ++nbOfManageablePlugins;
+                    ++nbOfSelectablePlugins;
 
                     if (pluginItem->checkState() == Qt::Checked)
-                        ++nbOfSelectedManageablePlugins;
+                        ++nbOfSelectedSelectablePlugins;
                 } else {
-                    ++nbOfUnmanageablePlugins;
+                    ++nbOfUnselectablePlugins;
                 }
             }
 
-            if (nbOfPlugins != nbOfUnmanageablePlugins)
-                categoryItem->setCheckState(nbOfSelectedManageablePlugins?
-                                                (nbOfSelectedManageablePlugins == nbOfManageablePlugins)?
+            if (nbOfPlugins != nbOfUnselectablePlugins)
+                categoryItem->setCheckState(nbOfSelectedSelectablePlugins?
+                                                (nbOfSelectedSelectablePlugins == nbOfSelectablePlugins)?
                                                     Qt::Checked:
                                                     Qt::PartiallyChecked:
                                                 Qt::Unchecked);
@@ -591,13 +591,13 @@ void PluginsWindow::updatePluginsSelectedState(QStandardItem *pItem,
         // loading state of the plugins
 
         foreach (QStandardItem *plugin,
-                 mManageablePluginItems+mUnmanageablePluginItems)
+                 mSelectablePluginItems+mUnselectablePluginItems)
             mInitialLoadingStates.insert(plugin->text(),
                                          plugin->checkState() == Qt::Checked);
 
     bool buttonsEnabled = false;
 
-    foreach (QStandardItem *plugin, mManageablePluginItems+mUnmanageablePluginItems)
+    foreach (QStandardItem *plugin, mSelectablePluginItems+mUnselectablePluginItems)
         if (   mInitialLoadingStates.value(plugin->text())
             != (plugin->checkState() == Qt::Checked)) {
             // The loading state of the plugin has changed, so...
@@ -630,11 +630,11 @@ void PluginsWindow::openLink(const QString &pLink) const
 
 void PluginsWindow::on_buttonBox_accepted()
 {
-    // Keep track of the loading state of the various manageable plugins
+    // Keep track of the loading state of the various selectable plugins
 
-    foreach (QStandardItem *manageablePluginItem, mManageablePluginItems)
-        Plugin::setLoad(manageablePluginItem->text(),
-                        manageablePluginItem->checkState() == Qt::Checked);
+    foreach (QStandardItem *selectablePluginItem, mSelectablePluginItems)
+        Plugin::setLoad(selectablePluginItem->text(),
+                        selectablePluginItem->checkState() == Qt::Checked);
 
     // Confirm that we accepted the changes
 
@@ -691,11 +691,11 @@ void PluginsWindow::newPluginCategory(const PluginInfo::Category &pCategory,
 
 void PluginsWindow::on_selectablePluginsCheckBox_toggled(bool pChecked)
 {
-    // Show/hide our unmanageable plugins
+    // Show/hide our unselectable plugins
 
-    foreach (QStandardItem *unmanageablePluginItem, mUnmanageablePluginItems)
-        mGui->pluginsTreeView->setRowHidden(unmanageablePluginItem->row(),
-                                            unmanageablePluginItem->parent()->index(), pChecked);
+    foreach (QStandardItem *unselectablePluginItem, mUnselectablePluginItems)
+        mGui->pluginsTreeView->setRowHidden(unselectablePluginItem->row(),
+                                            unselectablePluginItem->parent()->index(), pChecked);
 
     // Show/hide our categories, based on whether they contain visible plugins
 

@@ -108,9 +108,9 @@ Plugin::Plugin(const QString &pFileName, PluginInfo *pInfo,
             }
         } else {
             // The plugin is not to be loaded, which means that it is either not
-            // wanted or not needed, depending on whether it is manageable
+            // wanted or not needed, depending on whether it is selectable
 
-            if (pInfo->isManageable())
+            if (pInfo->isSelectable())
                 mStatus = NotWanted;
             else
                 mStatus = NotNeeded;

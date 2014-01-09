@@ -77,8 +77,8 @@ public:
 
     Category category() const;
 
-    bool isManageable() const;
-    void setManageable(const bool &pManageable);
+    bool isSelectable() const;
+    void setSelectable(const bool &pSelectable);
 
     QStringList dependencies() const;
     QStringList fullDependencies() const;
@@ -90,7 +90,7 @@ public:
 private:
     Category mCategory;
 
-    bool mManageable;
+    bool mSelectable;
 
     QStringList mDependencies;
     QStringList mFullDependencies;
