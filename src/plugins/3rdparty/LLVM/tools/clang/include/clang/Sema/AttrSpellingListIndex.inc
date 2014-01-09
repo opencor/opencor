@@ -632,13 +632,13 @@
         return 0;
     break;
   }
-  case AT_ownership_holds: 
+  case AT_ownership_holds:
     Index = 0;
   break;
-  case AT_ownership_returns: 
+  case AT_ownership_returns:
     Index = 1;
   break;
-  case AT_ownership_takes: 
+  case AT_ownership_takes:
     Index = 2;
   break;
   case AT_Packed : {
