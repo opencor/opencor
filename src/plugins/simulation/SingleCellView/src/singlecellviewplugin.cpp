@@ -43,7 +43,7 @@ PLUGININFO_FUNC SingleCellViewPluginInfo()
     descriptions.insert("en", QString::fromUtf8("a plugin to run single cell simulations."));
     descriptions.insert("fr", QString::fromUtf8("une extension pour exécuter des simulations unicellulaires."));
 
-    return new PluginInfo(PluginInfo::Simulation,
+    return new PluginInfo(PluginInfo::Simulation, true,
                           QStringList() << "CellMLSupport" << "Qwt",
                           descriptions);
 }

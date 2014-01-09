@@ -71,14 +71,13 @@ public:
         Widget
     };
 
-    explicit PluginInfo(const Category &pCategory,
+    explicit PluginInfo(const Category &pCategory, const bool &pSelectable,
                         const QStringList &pDependencies,
                         const Descriptions &pDescriptions);
 
     Category category() const;
 
     bool isSelectable() const;
-    void setSelectable(const bool &pSelectable);
 
     QStringList dependencies() const;
     QStringList fullDependencies() const;

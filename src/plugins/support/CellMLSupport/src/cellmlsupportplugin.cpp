@@ -41,7 +41,7 @@ PLUGININFO_FUNC CellMLSupportPluginInfo()
     descriptions.insert("en", QString::fromUtf8("a plugin to support <a href=\"http://www.cellml.org/\">CellML</a>."));
     descriptions.insert("fr", QString::fromUtf8("une extension pour supporter <a href=\"http://www.cellml.org/\">CellML</a>."));
 
-    return new PluginInfo(PluginInfo::Support,
+    return new PluginInfo(PluginInfo::Support, false,
                           QStringList() << "Core" << "CellMLAPI" << "Compiler" << "CoreSolver",
                           descriptions);
 }

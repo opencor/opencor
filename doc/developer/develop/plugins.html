@@ -106,9 +106,10 @@ class LLVMPlugin : public QObject
         </p>
 
         <ul>
-            <li><strong>Category:</strong> plugins are grouped in different categories. These are only meant to improve user experience and therefore have no effects on the plugin itself.</li>
-            <li><strong>Dependencies:</strong> some plugins may depend on other plugins. OpenCOR must therefore know about them, so that it can make sure that they get loaded in the correct order.</li>
-            <li><strong>Descriptions:</strong> a short description of the plugin in various languages.</li>
+            <li><strong>Category:</strong> category under which the plugin is to be listed (this is only meant to improve user experience and therefore has no effects on the plugin itself).</li>
+            <li><strong>Selectable:</strong> whether the plugin can be selected (by the user for loading upon starting OpenCOR).</li>
+            <li><strong>Dependencies:</strong> other plugins on which the plugin depends (only direct dependencies need to be listed).</li>
+            <li><strong>Descriptions:</strong> description of the plugin in various languages.</li>
         </ul>
 
         <p>
@@ -135,7 +136,7 @@ class LLVMPlugin : public QObject
     descriptions.insert("en", QString::fromUtf8("the core plugin."));
     descriptions.insert("fr", QString::fromUtf8("l'extension de base."));
 
-    return new PluginInfo(PluginInfo::Miscellaneous,
+    return new PluginInfo(PluginInfo::Miscellaneous, false,
                           QStringList(),
                           descriptions);
 }</pre>

@@ -35,7 +35,7 @@ PLUGININFO_FUNC QScintillaSupportPluginInfo()
     descriptions.insert("en", QString::fromUtf8("a plugin to support <a href=\"http://www.riverbankcomputing.co.uk/software/qscintilla/\">QScintilla</a>."));
     descriptions.insert("fr", QString::fromUtf8("une extension pour supporter <a href=\"http://www.riverbankcomputing.co.uk/software/qscintilla/\">QScintilla</a>."));
 
-    return new PluginInfo(PluginInfo::Support,
+    return new PluginInfo(PluginInfo::Support, false,
                           QStringList() << "Core" << "QScintilla",
                           descriptions);
 }

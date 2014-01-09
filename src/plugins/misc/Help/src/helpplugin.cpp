@@ -41,7 +41,7 @@ PLUGININFO_FUNC HelpPluginInfo()
     descriptions.insert("en", QString::fromUtf8("a plugin to provide help."));
     descriptions.insert("fr", QString::fromUtf8("une extension pour fournir de l'aide."));
 
-    return new PluginInfo(PluginInfo::Miscellaneous,
+    return new PluginInfo(PluginInfo::Miscellaneous, true,
                           QStringList() << "Core",
                           descriptions);
 }

@@ -76,20 +76,20 @@ PluginManager::PluginManager(QCoreApplication *pApp, const bool &pGuiMode) :
     foreach (const QFileInfo &file, fileInfoList)
         fileNames << QDir::toNativeSeparators(file.canonicalFilePath());
 
-    // Determine which plugins, if any, are needed by others
+    // Determine which plugins, if any, are needed by others and which, if any,
+    // are selectable
 
     QMap<QString, PluginInfo *> pluginsInfo = QMap<QString, PluginInfo *>();
     QMap<QString, QString> pluginsError = QMap<QString, QString>();
 
-    QStringList validPlugins = QStringList();
-    QStringList neededPlugins = QStringList();
+    QStringList selectablePlugins = QStringList();
 
     foreach (const QString &fileName, fileNames) {
         QString pluginError;
         PluginInfo *pluginInfo = Plugin::info(fileName, pluginError);
         // Note: if there is some plugin information, then it will get owned by
-        //       the plugin itself and it will therefore be its responsibility
-        //       to delete it (see Plugin::~Plugin())...
+        //       the plugin itself. So, it's the plugin's responsibility to
+        //       delete it (see Plugin::~Plugin())...
         QString pluginName = Plugin::name(fileName);
 
         pluginsInfo.insert(pluginName, pluginInfo);
@@ -102,55 +102,39 @@ PluginManager::PluginManager(QCoreApplication *pApp, const bool &pGuiMode) :
 
             pluginInfo->setFullDependencies(pluginFullDependencies);
 
-            neededPlugins << pluginFullDependencies;
+            // Keep track of the plugin itself, should it be selectable
 
-            // Keep track of the plugin itself
-
-            validPlugins << pluginName;
+            if (pluginInfo->isSelectable())
+                selectablePlugins << pluginName;
         }
     }
 
-    neededPlugins.removeDuplicates();
-
-    // Determine which of our available plugins, if any, are selectable, i.e.
-    // not used by any other plugin
-
-    QStringList selectablePlugins = QStringList();
-
-    foreach (const QString &validPlugin, validPlugins)
-        if (!neededPlugins.contains(validPlugin)) {
-            pluginsInfo.value(validPlugin)->setSelectable(true);
-
-            selectablePlugins << validPlugin;
-        }
-
-    // Determine which plugins are needed or wanted
+    // Determine which plugins, if any, are needed or wanted
     // Note: unselectable plugins (e.g. the QScintilla plugin) don't get loaded
     //       by default, but the situation is obviously different if such a
-    //       plugin is needed by another plugin (e.g. the Viewer plugin requires
-    //       the Qwt plugin), in which case the unselectable plugin must be
-    //       loaded...
+    //       plugin is needed by another plugin (e.g. the RawView plugin
+    //       indirectly requires the QScintilla plugin to be loaded), in which
+    //       case the unselectable plugin must be loaded...
 
+    QStringList neededPlugins = QStringList();
     QStringList wantedPlugins = QStringList();
-    neededPlugins = QStringList();
 
     foreach (const QString &selectablePlugin, selectablePlugins)
         if ((pGuiMode && Plugin::load(selectablePlugin)) || !pGuiMode) {
             // We are in GUI mode and the user wants to load the plugin, or we
-            // are not in GUI mode, so retrieve and keep track of the plugin's
-            // dependencies
-            // Note: in non-GUI mode (i.e. CLI mode), a selectable plugin gets
-            //       automatically loaded no matter what, thus making sure that
-            //       the CLI version of OpenCOR has access to all the plugins.
-            //       The drawback with this approach is that non-CLI capable
-            //       plugins will also be loaded, but there is not much we can
-            //       do about it. Actually, we could have a boolean in the
-            //       plugin information to tell us whether a plugin is
-            //       CLI-capable, but this is error-prone (i.e. what would
-            //       happen if the developer of a CLI-capable plugin was to
-            //       forget to turn that flag on?). So, in the end, it's better
-            //       to load all the plugins and then deal with only those that
-            //       support the CLI interface...
+            // are not in GUI mode (i.e. CLI mode), so retrieve and keep track
+            // of the plugin's dependencies
+            // Note: in CLI mode, a selectable plugin gets automatically loaded
+            //       no matter what, making sure that the CLI version of OpenCOR
+            //       has access to all the plugins. The drawback with this
+            //       approach is that non-CLI capable plugins will also be
+            //       loaded, but there is not much we can do about it. Actually,
+            //       we could have a boolean in the plugin information to tell
+            //       us whether a plugin is CLI-capable, but this is error-prone
+            //       (indeed, what would happen if the developer of a
+            //       CLI-capable plugin was to forget to turn that flag on?).
+            //       So, in the end, it's better to load all the plugins and
+            //       then deal with only those that support the CLI interface...
 
             neededPlugins << pluginsInfo.value(selectablePlugin)->fullDependencies();
 
@@ -170,13 +154,17 @@ PluginManager::PluginManager(QCoreApplication *pApp, const bool &pGuiMode) :
     QStringList plugins = neededPlugins+wantedPlugins;
     QStringList pluginFileNames = QStringList();
 
+    plugins.removeDuplicates();
+    // Note: we shouldn't have to remove duplicates, but better be safe than
+    //       sorry (indeed, a selectable plugin may be (wrongly) needed by
+    //       another plugin)...
+
     foreach (const QString &plugin, plugins)
         pluginFileNames << Plugin::fileName(mPluginsDir, plugin);
 
-    // If we are dealing with the GUI version of ourselves, then we want to know
-    // about all the plugins, including the ones that are not to be loaded (so
-    // that we can refer to them, in the plugins window, as either not wanted or
-    // not needed)
+    // If we are in GUI mode, then we want to know about all the plugins,
+    // including the ones that are not to be loaded (so that we can refer to
+    // them, in the plugins window, as either not wanted or not needed)
 
     if (pGuiMode) {
         pluginFileNames << fileNames;
@@ -184,7 +172,7 @@ PluginManager::PluginManager(QCoreApplication *pApp, const bool &pGuiMode) :
         pluginFileNames.removeDuplicates();
     }
 
-    // Deal with all the plugins we found
+    // Deal with all the plugins we need and want
 
     foreach (const QString &pluginFileName, pluginFileNames) {
         QString pluginName = Plugin::name(pluginFileName);
