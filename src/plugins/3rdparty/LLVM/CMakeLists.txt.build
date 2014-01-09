@@ -283,8 +283,8 @@ ADD_PLUGIN(LLVM
 #        lib/ExecutionEngine/IntelJITEvents/jitprofiling.c
 # Note: we don't need the above, but we leave them so we know about them next
 #       time we update LLVM. Indeed, Intel JIT API support is only available on
-#       Linux and Windows, and it requires additional stuff that may or not be
-#       present on the build machine, so...
+#       Linux and Windows, and it requires additional features that may or not
+#       be present on the build machine, so...
 
         lib/ExecutionEngine/Interpreter/Execution.cpp
         lib/ExecutionEngine/Interpreter/ExternalFunctions.cpp
@@ -301,8 +301,8 @@ ADD_PLUGIN(LLVM
 #        lib/ExecutionEngine/OProfileJIT/OProfileWrapper.cpp
 # Note: we don't need the above, but we leave them so we know about them next
 #       time we update LLVM. Indeed, OProfile support is only available on
-#       Linux, and it requires additional stuff that may or not be present on
-#       the build machine, so...
+#       Linux, and it requires additional features that may or not be present
+#       on the build machine, so...
 
         lib/ExecutionEngine/RuntimeDyld/GDBRegistrar.cpp
         lib/ExecutionEngine/RuntimeDyld/RuntimeDyld.cpp

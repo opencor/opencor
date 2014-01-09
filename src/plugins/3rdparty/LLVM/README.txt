@@ -19,4 +19,5 @@ Note #1: configuration files were generated using CMake (on Windows, we also nee
            cmake ..   OR   cmake -G "NMake Makefiles" ..
            make       OR   jom
        From there, the configuration files were manually copied over and can be found in the windows, linux and osx folders of various folders.
-Note #2: OpencOR is currently supported on Windows, Linux and OS X, so we only need to target X86 at this stage.
+Note #2: HAVE_TERMINFO and HAVE_ZLIB_H must not be set, and LLVM_ENABLE_ZLIB must be set to 0 in [LLVM]/include/llvm/Config/config.h on all three platforms. To do anything else will requires additional features that may or not be present on the build machine.
+Note #3: OpencOR is currently supported on Windows, Linux and OS X, so we only need to target X86 at this stage.
