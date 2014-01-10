@@ -81,6 +81,8 @@ public:
 
     void handleArguments(const QString &pArguments);
 
+    void showSelf();
+
 protected:
     virtual void changeEvent(QEvent *pEvent);
     virtual void closeEvent(QCloseEvent *pEvent);
@@ -125,8 +127,6 @@ private:
                         QAction *pAction);
 
     void handleAction(const QUrl &pUrl);
-
-    void showSelf();
 
     void showEnableActions(const QList<QAction *> &pActions);
 

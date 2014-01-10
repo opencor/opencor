@@ -147,9 +147,15 @@ int main(int pArgC, char *pArgV[])
 
     win->show();
 
-    // Get rid of our splash screen once our main window is displayed
+    // Get rid of our splash screen once our main window is visible
 
     splashScreen->finish(win);
+
+    // Make sure that our main window is in the foreground
+    // Note: indeed, on Linux, to show our splash screen may result in our main
+    //       window being shown in the background, so...
+
+    win->showSelf();
 
     // Execute the application
 
