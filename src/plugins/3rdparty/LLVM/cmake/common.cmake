@@ -2,30 +2,28 @@ MACRO(RETRIEVE_LLVM_SETTINGS)
     # Retrieve some LLVM settings
 
     IF(WIN32)
+        SET(LLVM_DEFINITIONS)
+    ELSE()
         SET(LLVM_DEFINITIONS
-            _SCL_SECURE_NO_WARNINGS
-            # Note: this is required to build LLVM in debug mode...
+            __STDC_CONSTANT_MACROS
+            __STDC_LIMIT_MACROS
         )
-    ELSEIF(NOT APPLE)
-        SET(LLVM_DEFINITIONS
-            __STDC_FORMAT_MACROS
-            # Note: this is required to address a couple of issues with PRIx64
-            #       in [LLVM]/lib/CodeGen/AsmPrinter/AsmPrinter.cpp...
-        )
+
+        IF(NOT APPLE)
+            LIST(APPEND LLVM_DEFINITIONS
+                __STDC_FORMAT_MACROS
+                # Note: this is to address a couple of issues with PRIx64 in
+                #       [LLVM]/lib/CodeGen/AsmPrinter/AsmPrinter.cpp...
+            )
+        ENDIF()
     ENDIF()
 
-    LIST(APPEND LLVM_DEFINITIONS
-        __STDC_CONSTANT_MACROS
-        __STDC_LIMIT_MACROS
-    )
-
     # Ignore some warnings on Windows
+    # Note: we have nothing to do with them, so...
 
     IF(WIN32)
         SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /wd4244")
-        SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4138 /wd4180 /wd4244 /wd4291 /wd4351 /wd4355 /wd4551 /wd4624 /wd4722")
-        # Note: some warnings get generated, but we have nothing to do with
-        #       them, so...
+        SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4244 /wd4355 /wd4291 /wd4351 /wd4624 /wd4996")
     ENDIF()
 ENDMACRO()
 
