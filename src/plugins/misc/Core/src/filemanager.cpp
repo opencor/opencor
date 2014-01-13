@@ -25,6 +25,9 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include <QDir>
+#include <QFile>
+#include <QFileDevice>
+#include <QFileInfo>
 #include <QTimer>
 
 //==============================================================================
@@ -198,6 +201,46 @@ void FileManager::setModified(const QString &pFileName, const bool &pModified)
 
 //==============================================================================
 
+bool FileManager::isLocked(const QString &pFileName) const
+{
+    // Return whether the given file, if it is being managed, is locked
+
+    QString nativeFileName = nativeCanonicalFileName(pFileName);
+
+    if (isManaged(nativeFileName))
+        return !QFileInfo(nativeFileName).isWritable();
+    else
+        return false;
+}
+
+//==============================================================================
+
+void FileManager::setLocked(const QString &pFileName, const bool &pLocked)
+{
+    // Set the locked status of the given file, should it be managed
+
+    QString nativeFileName = nativeCanonicalFileName(pFileName);
+
+    if (isManaged(nativeFileName)) {
+        // We are dealing with a managed file, so we can check its locked status
+        // and update it, if necessary, and then let people know about its new
+        // status
+
+        if (pLocked == isLocked(nativeFileName))
+            return;
+
+        QFileDevice::Permissions newPermissions = QFile::permissions(nativeFileName);
+
+        newPermissions ^= QFileDevice::WriteOwner;
+        newPermissions ^= QFileDevice::WriteUser;
+
+        if (QFile::setPermissions(nativeFileName, newPermissions))
+            emit fileLocked(nativeFileName, pLocked);
+    }
+}
+
+//==============================================================================
+
 void FileManager::reload(const QString &pFileName)
 {
     // Make sure that the given file is managed
@@ -254,9 +297,9 @@ int FileManager::count() const
 
 void FileManager::checkFiles()
 {
-    // Check our various files
+    // Check our various files, as well as their locked status
 
-    foreach (File *file, mFiles)
+    foreach (File *file, mFiles) {
         switch (file->check()) {
             case File::Changed:
                 // The file has changed, so let people know about it
@@ -275,6 +318,9 @@ void FileManager::checkFiles()
 
                 ;
         }
+
+        emit fileLocked(file->fileName(), isLocked(file->fileName()));
+    }
 }
 
 //==============================================================================

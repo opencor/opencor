@@ -81,6 +81,9 @@ public:
 
     bool isModified(const QString &pFileName) const;
 
+    bool isLocked(const QString &pFileName) const;
+    void setLocked(const QString &pFileName, const bool &pLocked);
+
     void reload(const QString &pFileName);
 
     Status rename(const QString &pOldFileName, const QString &pNewFileName);
@@ -98,6 +101,7 @@ Q_SIGNALS:
     void fileChanged(const QString &pFileName);
     void fileDeleted(const QString &pFileName);
 
+    void fileLocked(const QString &pFileName, const bool &pLocked);
     void fileModified(const QString &pFileName, const bool &pModified);
 
     void fileReloaded(const QString &pFileName);

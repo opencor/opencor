@@ -632,8 +632,10 @@ qDebug(">>> CentralWidget::duplicateFile(): to be done...");
 
 void CentralWidget::toggleLockedFile()
 {
-//---GRY--- TO BE DONE...
-qDebug(">>> CentralWidget::toggleLockedFile(): to be done...");
+    FileManager *fileManagerInstance = FileManager::instance();
+    QString fileName = mFileNames[mFileTabs->currentIndex()];
+
+    fileManagerInstance->setLocked(fileName, !fileManagerInstance->isLocked(fileName));
 }
 
 //==============================================================================
