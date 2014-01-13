@@ -491,6 +491,18 @@ void CentralWidget::setSupportedFileTypes(const FileTypes &pSupportedFileTypes)
 
 //==============================================================================
 
+QString CentralWidget::currentFileName() const
+{
+    // Return the current file name, if any
+
+    if (mFileTabs->currentIndex() != -1)
+        return mFileNames[mFileTabs->currentIndex()];
+    else
+        return QString();
+}
+
+//==============================================================================
+
 void CentralWidget::openFile(const QString &pFileName)
 {
     if (!mModeTabs->count() || !QFileInfo(pFileName).exists())

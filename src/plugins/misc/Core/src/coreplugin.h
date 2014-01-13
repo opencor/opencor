@@ -101,6 +101,8 @@ private Q_SLOTS:
     void openRecentFile();
 
     void clearReopenSubMenu();
+
+    void fileLocked(const QString &pFileName, const bool &pLocked);
 };
 
 //==============================================================================

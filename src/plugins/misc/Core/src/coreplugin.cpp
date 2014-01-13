@@ -23,6 +23,7 @@ specific language governing permissions and limitations under the License.
 #include "centralwidget.h"
 #include "coreplugin.h"
 #include "fileinterface.h"
+#include "filemanager.h"
 #include "guiutils.h"
 #include "organisationwidget.h"
 #include "plugin.h"
@@ -214,6 +215,11 @@ void CorePlugin::initialize()
 
     connect(mFileClearReopenSubMenuAction, SIGNAL(triggered()),
             this, SLOT(clearReopenSubMenu()));
+
+    // A connection related to our Locked menu item
+
+    connect(FileManager::instance(), SIGNAL(fileLocked(const QString &, const bool &)),
+            this, SLOT(fileLocked(const QString &, const bool &)));
 
     // Set our settings
 
@@ -730,6 +736,16 @@ void CorePlugin::clearReopenSubMenu()
     mRecentFileNames.clear();
 
     updateFileReopenMenu();
+}
+
+//==============================================================================
+
+void CorePlugin::fileLocked(const QString &pFileName, const bool &pLocked)
+{
+    // Update the checked state of our Locked menu, if needed
+
+    if (!pFileName.compare(mCentralWidget->currentFileName()))
+        mFileLockedAction->setChecked(pLocked);
 }
 
 //==============================================================================

@@ -116,6 +116,8 @@ public:
                         const bool &pMovable = false,
                         const bool &pTabsClosable = false);
 
+    QString currentFileName() const;
+
     void openFile(const QString &pFileName);
     void openFiles(const QStringList &pFileNames);
 

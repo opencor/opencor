@@ -94,11 +94,12 @@ FileManager::Status FileManager::manage(const QString &pFileName)
             return AlreadyManaged;
         } else {
             // The file isn't already managed, so add it to our list of managed
-            // files
+            // files and let people know about its locked status
 
             mFiles << new File(nativeFileName);
 
             emit fileManaged(nativeFileName);
+            emit fileLocked(nativeFileName, isLocked(nativeFileName));
 
             return Added;
         }
