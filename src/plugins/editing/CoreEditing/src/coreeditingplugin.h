@@ -81,17 +81,22 @@ private:
 
     QAction *mEditUndoAction;
     QAction *mEditRedoAction;
+
     QAction *mEditCutAction;
     QAction *mEditCopyAction;
     QAction *mEditPasteAction;
     QAction *mEditDeleteAction;
+
     QAction *mEditFindAction;
     QAction *mEditFindNextAction;
     QAction *mEditPreviousAction;
     QAction *mEditReplaceAction;
+
     QAction *mEditSelectAllAction;
 
     QScintillaSupport::QScintillaWidget *mEditor;
+
+    QString mFileName;
 
     void updateUndoRedoActions();
     void updateSelectAllAction();
@@ -103,6 +108,8 @@ private Q_SLOTS:
     void doRedo();
 
     void doSelectAll();
+
+    void fileLocked(const QString &pFileName, const bool &pLocked);
 };
 
 //==============================================================================

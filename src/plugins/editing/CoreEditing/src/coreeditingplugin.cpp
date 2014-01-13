@@ -21,6 +21,7 @@ specific language governing permissions and limitations under the License.
 
 #include "coreeditingplugin.h"
 #include "editinginterface.h"
+#include "filemanager.h"
 #include "guiutils.h"
 
 //==============================================================================
@@ -53,7 +54,8 @@ PLUGININFO_FUNC CoreEditingPluginInfo()
 //==============================================================================
 
 CoreEditingPlugin::CoreEditingPlugin() :
-    mEditor(0)
+    mEditor(0),
+    mFileName(QString())
 {
 }
 
@@ -124,6 +126,11 @@ void CoreEditingPlugin::initialize()
 */
     mEditMenu->addSeparator();
     mEditMenu->addAction(mEditSelectAllAction);
+
+    // A connection related to the locked status of a file
+
+    connect(Core::FileManager::instance(), SIGNAL(fileLocked(const QString &, const bool &)),
+            this, SLOT(fileLocked(const QString &, const bool &)));
 
     // Set our settings
 
@@ -213,7 +220,9 @@ void CoreEditingPlugin::changeEvent(QEvent *pEvent)
 
 void CoreEditingPlugin::updateGui(Plugin *pViewPlugin, const QString &pFileName)
 {
-    Q_UNUSED(pFileName);
+    // Keep track of the file name
+
+    mFileName = pFileName;
 
     // Show/enable or hide/disable various actions, depending on whether the
     // view plugin handles the editing interface
@@ -317,10 +326,13 @@ void CoreEditingPlugin::updateGui(Plugin *pViewPlugin, const QString &pFileName)
         updateUndoRedoActions();
         updateSelectAllAction();
 
-        mEditCutAction->setEnabled(mEditor->hasSelectedText());
-        mEditCopyAction->setEnabled(mEditor->hasSelectedText());
+        bool notLockedAndHasSelectedText =    !Core::FileManager::instance()->isLocked(mFileName)
+                                           &&  mEditor->hasSelectedText();
+
+        mEditCutAction->setEnabled(notLockedAndHasSelectedText);
+        mEditCopyAction->setEnabled(notLockedAndHasSelectedText);
         clipboardDataChanged();
-        mEditDeleteAction->setEnabled(mEditor->hasSelectedText());
+        mEditDeleteAction->setEnabled(notLockedAndHasSelectedText);
     } else {
         mEditUndoAction->setEnabled(false);
         mEditRedoAction->setEnabled(false);
@@ -529,7 +541,9 @@ void CoreEditingPlugin::clipboardDataChanged()
 {
     // Enable our paste action if the clipboard contains some text
 
-    mEditPasteAction->setEnabled(QApplication::clipboard()->text().size());
+    mEditPasteAction->setEnabled(    mEditor
+                                 && !Core::FileManager::instance()->isLocked(mFileName)
+                                 && QApplication::clipboard()->text().size());
 }
 
 //==============================================================================
@@ -538,8 +552,11 @@ void CoreEditingPlugin::updateUndoRedoActions()
 {
     // Update our undo/redo actions
 
-    mEditUndoAction->setEnabled(mEditor->isUndoAvailable());
-    mEditRedoAction->setEnabled(mEditor->isRedoAvailable());
+    bool editorAndNotLocked =     mEditor
+                              && !Core::FileManager::instance()->isLocked(mFileName);
+
+    mEditUndoAction->setEnabled(editorAndNotLocked && mEditor->isUndoAvailable());
+    mEditRedoAction->setEnabled(editorAndNotLocked && mEditor->isRedoAvailable());
 }
 
 //==============================================================================
@@ -582,6 +599,33 @@ void CoreEditingPlugin::doSelectAll()
     mEditor->selectAll();
 
     updateSelectAllAction();
+}
+
+//==============================================================================
+
+void CoreEditingPlugin::fileLocked(const QString &pFileName,
+                                   const bool &pLocked)
+{
+    // Update some actions and make our editor read-only or writable, if needed
+
+    if (!pFileName.compare(mFileName)) {
+        // Update some actions
+
+        updateUndoRedoActions();
+
+        bool notLockedAndHasSelectedText =    !pLocked
+                                           &&  mEditor
+                                           &&  mEditor->hasSelectedText();
+
+        mEditCutAction->setEnabled(notLockedAndHasSelectedText);
+        clipboardDataChanged();
+        mEditDeleteAction->setEnabled(notLockedAndHasSelectedText);
+
+        // Make our editor read-only or writable
+
+        if (mEditor)
+            mEditor->setReadOnly(pLocked);
+    }
 }
 
 //==============================================================================
