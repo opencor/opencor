@@ -439,7 +439,13 @@ void CoreEditingPlugin::fileOpened(const QString &pFileName)
 {
     Q_UNUSED(pFileName);
 
-    // We don't handle this interface...
+    // Update the current editor's background
+    // Note: originally, we were only relying on fileLocked() to do this for us,
+    //       but then because we only check files every second, there used to be
+    //       a slight delay in the updating of a background for a locked file
+    //       being just opened, so...
+
+    updateEditorBackground();
 }
 
 //==============================================================================
@@ -603,6 +609,19 @@ void CoreEditingPlugin::doSelectAll()
 
 //==============================================================================
 
+void CoreEditingPlugin::updateEditorBackground()
+{
+    // Update the current editor's background, based on whether the current file
+    // is locked
+
+    QColor backgroundColor = Core::FileManager::instance()->isLocked(mFileName)?Core::lockedColor(Core::baseColor()):Core::baseColor();
+
+    for (int i = 0; i < QsciScintillaBase::STYLE_MAX; ++i)
+        mEditor->SendScintilla(QsciScintillaBase::SCI_STYLESETBACK, i, backgroundColor);
+}
+
+//==============================================================================
+
 void CoreEditingPlugin::fileLocked(const QString &pFileName,
                                    const bool &pLocked)
 {
@@ -623,8 +642,11 @@ void CoreEditingPlugin::fileLocked(const QString &pFileName,
 
         // Make our editor read-only or writable
 
-        if (mEditor)
+        if (mEditor) {
             mEditor->setReadOnly(pLocked);
+
+            updateEditorBackground();
+        }
     }
 }
 

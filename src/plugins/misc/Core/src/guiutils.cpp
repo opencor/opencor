@@ -375,6 +375,28 @@ QColor windowColor()
 
 //==============================================================================
 
+QColor lockedColor(const QColor &pColor)
+{
+    // Return the resulting locked version of the given colour
+
+    int r = pColor.red();
+    int g = pColor.green();
+    int b = pColor.blue();
+
+    static const int lr = 255;
+    static const int lg = 0;
+    static const int lb = 0;
+
+    static const double alpha = 0.05;
+    static const double oneMinusAlpha = 1.0-alpha;
+
+    return QColor(alpha*lr+oneMinusAlpha*r,
+                  alpha*lg+oneMinusAlpha*g,
+                  alpha*lb+oneMinusAlpha*b);
+}
+
+//==============================================================================
+
 }   // namespace Core
 }   // namespace OpenCOR
 

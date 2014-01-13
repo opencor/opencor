@@ -101,6 +101,8 @@ private:
     void updateUndoRedoActions();
     void updateSelectAllAction();
 
+    void updateEditorBackground();
+
 private Q_SLOTS:
     void clipboardDataChanged();
 

@@ -93,6 +93,8 @@ QColor CORE_EXPORT borderColor();
 QColor CORE_EXPORT highlightColor();
 QColor CORE_EXPORT windowColor();
 
+QColor CORE_EXPORT lockedColor(const QColor &pColor);
+
 //==============================================================================
 
 }   // namespace Core
