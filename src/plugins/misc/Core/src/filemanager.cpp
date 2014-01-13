@@ -94,12 +94,11 @@ FileManager::Status FileManager::manage(const QString &pFileName)
             return AlreadyManaged;
         } else {
             // The file isn't already managed, so add it to our list of managed
-            // files and let people know about its locked status
+            // files, let people know about it being now managed
 
             mFiles << new File(nativeFileName);
 
             emit fileManaged(nativeFileName);
-            emit fileLocked(nativeFileName, isLocked(nativeFileName));
 
             return Added;
         }
@@ -291,8 +290,7 @@ int FileManager::count() const
 
 void FileManager::checkFiles()
 {
-    // Check our various files, as well as their locked status, should it be
-    // different
+    // Check our various files, as well as their locked status
 
     foreach (File *file, mFiles) {
         switch (file->check()) {
@@ -316,7 +314,8 @@ void FileManager::checkFiles()
 
         bool isFileLocked = isLocked(file->fileName());
 
-        if (isFileLocked != mLockedFiles.value(file->fileName(), false)) {
+        if (    (isFileLocked != mLockedFiles.value(file->fileName(), false))
+            || !mLockedFiles.contains(file->fileName())) {
             emit fileLocked(file->fileName(), isFileLocked);
 
             mLockedFiles.insert(file->fileName(), isFileLocked);
