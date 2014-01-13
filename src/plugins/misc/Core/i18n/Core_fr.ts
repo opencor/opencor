@@ -63,6 +63,26 @@
         <source>Sorry, but the &lt;strong&gt;%1&lt;/strong&gt; view could not save &lt;strong&gt;%2&lt;/strong&gt;.</source>
         <translation>Désolé, mais la vue &lt;strong&gt;%1&lt;/strong&gt; n&apos;a pas pu sauvegarder &lt;strong&gt;%2&lt;/strong&gt;.</translation>
     </message>
+    <message>
+        <source>Unlock File</source>
+        <translation>Dévérouiller Fichier</translation>
+    </message>
+    <message>
+        <source>Lock File</source>
+        <translation>Vérouiller Fichier</translation>
+    </message>
+    <message>
+        <source>Sorry, but &lt;strong&gt;%1&lt;/strong&gt; could not be %2.</source>
+        <translation>Désolé, mais &lt;strong&gt;%1&lt;/strong&gt; n&apos;a pas pu être %2.</translation>
+    </message>
+    <message>
+        <source>unlocked</source>
+        <translation>dévérouillé</translation>
+    </message>
+    <message>
+        <source>locked</source>
+        <translation>vérouillé</translation>
+    </message>
 </context>
 <context>
     <name>OpenCOR::Core::CorePlugin</name>

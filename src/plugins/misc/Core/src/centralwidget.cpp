@@ -649,7 +649,9 @@ void CentralWidget::toggleLockedFile()
     FileManager *fileManagerInstance = FileManager::instance();
     QString fileName = mFileNames[mFileTabs->currentIndex()];
 
-    fileManagerInstance->setLocked(fileName, !fileManagerInstance->isLocked(fileName));
+    if (fileManagerInstance->setLocked(fileName, !fileManagerInstance->isLocked(fileName)) == FileManager::LockedNotSet)
+        QMessageBox::warning(mMainWindow, fileManagerInstance->isLocked(fileName)?tr("Unlock File"):tr("Lock File"),
+                             tr("Sorry, but <strong>%1</strong> could not be %2.").arg(fileName, fileManagerInstance->isLocked(fileName)?tr("unlocked"):tr("locked")));
 }
 
 //==============================================================================

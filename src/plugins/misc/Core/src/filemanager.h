@@ -63,10 +63,16 @@ public:
         Removed,
         NotManaged,
 
-        // Miscellaneous
+        // As a result of updating the locked status of a file
+
+        LockedNotNeeded,
+        LockedSet,
+        LockedNotSet,
+
+        // As a result of renaming a file
 
         Renamed,
-        NotNeeded
+        RenamingNotNeeded
     };
 
     explicit FileManager(const int &pTimerInterval = 1000);
@@ -82,7 +88,7 @@ public:
     bool isModified(const QString &pFileName) const;
 
     bool isLocked(const QString &pFileName) const;
-    void setLocked(const QString &pFileName, const bool &pLocked);
+    Status setLocked(const QString &pFileName, const bool &pLocked);
 
     void reload(const QString &pFileName);
 

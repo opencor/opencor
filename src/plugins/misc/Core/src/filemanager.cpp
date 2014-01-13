@@ -216,7 +216,7 @@ bool FileManager::isLocked(const QString &pFileName) const
 
 //==============================================================================
 
-void FileManager::setLocked(const QString &pFileName, const bool &pLocked)
+FileManager::Status FileManager::setLocked(const QString &pFileName, const bool &pLocked)
 {
     // Set the locked status of the given file, should it be managed
 
@@ -228,7 +228,7 @@ void FileManager::setLocked(const QString &pFileName, const bool &pLocked)
         // status
 
         if (pLocked == isLocked(nativeFileName))
-            return;
+            return LockedNotNeeded;
 
         QFileDevice::Permissions newPermissions = QFile::permissions(nativeFileName);
 
@@ -251,8 +251,15 @@ void FileManager::setLocked(const QString &pFileName, const bool &pLocked)
             newPermissions |= QFileDevice::WriteUser;
         }
 
-        if (QFile::setPermissions(nativeFileName, newPermissions))
+        if (QFile::setPermissions(nativeFileName, newPermissions)) {
             emit fileLocked(nativeFileName, pLocked);
+
+            return LockedSet;
+        } else {
+            return LockedNotSet;
+        }
+    } else {
+        return NotManaged;
     }
 }
 
@@ -281,7 +288,7 @@ FileManager::Status FileManager::rename(const QString &pOldFileName,
     QString newNativeFileName = nativeCanonicalFileName(pNewFileName);
 
     if (!newNativeFileName.compare(oldNativeFileName))
-        return NotNeeded;
+        return RenamingNotNeeded;
 
     // Make sure that the given 'old' file is managed
 
