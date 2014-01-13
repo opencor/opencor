@@ -234,6 +234,19 @@ void QScintillaWidget::dragEnterEvent(QDragEnterEvent *pEvent)
 
 //==============================================================================
 
+bool QScintillaWidget::event(QEvent *pEvent)
+{
+    // Bypass QsciScintilla's handling of event()
+    // Note: indeed, QsciScintilla handles some shortcuts (e.g. Ctrl+L), which
+    //       we don't want it to handle (e.g. Ctrl+L is used by QsciScintilla to
+    //       delete the current line while OpenCOR uses it to (un)lock the
+    //       current file), so...
+
+    return QsciScintillaBase::event(pEvent);
+}
+
+//==============================================================================
+
 void QScintillaWidget::keyPressEvent(QKeyEvent *pEvent)
 {
     // Reset the font size, if needed

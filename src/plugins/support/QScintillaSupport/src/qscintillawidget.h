@@ -64,6 +64,7 @@ public:
 protected:
     virtual void contextMenuEvent(QContextMenuEvent *pEvent);
     virtual void dragEnterEvent(QDragEnterEvent *pEvent);
+    virtual bool event(QEvent *pEvent);
     virtual void keyPressEvent(QKeyEvent *pEvent);
     virtual void wheelEvent(QWheelEvent *pEvent);
 
