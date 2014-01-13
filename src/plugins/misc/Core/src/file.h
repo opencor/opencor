@@ -37,9 +37,17 @@ class File
 {
 public:
     enum Status {
+        // As a result of checking a file
+
         Changed,
         Unchanged,
-        Deleted
+        Deleted,
+
+        // As a result of setting the locked status of a file
+
+        LockedNotNeeded,
+        LockedSet,
+        LockedNotSet
     };
 
     explicit File(const QString &pFileName);
@@ -51,6 +59,9 @@ public:
 
     bool isModified() const;
     void setModified(const bool &pModified);
+
+    bool isLocked() const;
+    Status  setLocked(const bool &pLocked);
 
 private:
     QString mFileName;

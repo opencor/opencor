@@ -29,6 +29,8 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#include <QList>
+#include <QMap>
 #include <QObject>
 
 //==============================================================================
@@ -99,6 +101,7 @@ public:
 private:
     QTimer *mTimer;
     QList<File *> mFiles;
+    QMap<QString, bool> mLockedFiles;
 
 Q_SIGNALS:
     void fileManaged(const QString &pFileName);

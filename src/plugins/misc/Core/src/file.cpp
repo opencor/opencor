@@ -25,6 +25,8 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include <QCryptographicHash>
+#include <QFile>
+#include <QFileDevice>
 #include <QFileInfo>
 #include <QTextStream>
 
@@ -142,6 +144,51 @@ void File::setModified(const bool &pModified)
     // changed
 
     mSha1 = sha1();
+}
+
+//==============================================================================
+
+bool File::isLocked() const
+{
+    // Return whether the file is locked
+
+    return !QFileInfo(mFileName).isWritable();
+}
+
+//==============================================================================
+
+File::Status File::setLocked(const bool &pLocked)
+{
+    // Set the locked status of the file
+
+    if (pLocked == isLocked())
+        return LockedNotNeeded;
+
+    QFileDevice::Permissions newPermissions = QFile::permissions(mFileName);
+
+    if (pLocked) {
+        if (newPermissions & QFileDevice::WriteOwner)
+            newPermissions ^= QFileDevice::WriteOwner;
+
+        if (newPermissions & QFileDevice::WriteGroup)
+            newPermissions ^= QFileDevice::WriteGroup;
+
+        if (newPermissions & QFileDevice::WriteOther)
+            newPermissions ^= QFileDevice::WriteOther;
+
+        if (newPermissions & QFileDevice::WriteUser)
+            newPermissions ^= QFileDevice::WriteUser;
+    } else {
+        newPermissions |= QFileDevice::WriteOwner;
+        newPermissions |= QFileDevice::WriteGroup;
+        newPermissions |= QFileDevice::WriteOther;
+        newPermissions |= QFileDevice::WriteUser;
+    }
+
+    if (QFile::setPermissions(mFileName, newPermissions))
+        return LockedSet;
+    else
+        return LockedNotSet;
 }
 
 //==============================================================================
