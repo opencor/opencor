@@ -231,24 +231,24 @@ void FileManager::setLocked(const QString &pFileName, const bool &pLocked)
 
         QFileDevice::Permissions newPermissions = QFile::permissions(nativeFileName);
 
-    if (pLocked) {
-        if (newPermissions & QFileDevice::WriteOwner)
-            newPermissions ^= QFileDevice::WriteOwner;
+        if (pLocked) {
+            if (newPermissions & QFileDevice::WriteOwner)
+                newPermissions ^= QFileDevice::WriteOwner;
 
-        if (newPermissions & QFileDevice::WriteGroup)
-            newPermissions ^= QFileDevice::WriteGroup;
+            if (newPermissions & QFileDevice::WriteGroup)
+                newPermissions ^= QFileDevice::WriteGroup;
 
-        if (newPermissions & QFileDevice::WriteOther)
-            newPermissions ^= QFileDevice::WriteOther;
+            if (newPermissions & QFileDevice::WriteOther)
+                newPermissions ^= QFileDevice::WriteOther;
 
-        if (newPermissions & QFileDevice::WriteUser)
-            newPermissions ^= QFileDevice::WriteUser;
-    } else {
-        newPermissions |= QFileDevice::WriteOwner;
-        newPermissions |= QFileDevice::WriteGroup;
-        newPermissions |= QFileDevice::WriteOther;
-        newPermissions |= QFileDevice::WriteUser;
-    }
+            if (newPermissions & QFileDevice::WriteUser)
+                newPermissions ^= QFileDevice::WriteUser;
+        } else {
+            newPermissions |= QFileDevice::WriteOwner;
+            newPermissions |= QFileDevice::WriteGroup;
+            newPermissions |= QFileDevice::WriteOther;
+            newPermissions |= QFileDevice::WriteUser;
+        }
 
         if (QFile::setPermissions(nativeFileName, newPermissions))
             emit fileLocked(nativeFileName, pLocked);
