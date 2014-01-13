@@ -45,10 +45,10 @@ namespace Core {
 
 //==============================================================================
 
-static const auto SettingsBorderColor    = QStringLiteral("BorderColor");
 static const auto SettingsBaseColor      = QStringLiteral("BaseColor");
-static const auto SettingsWindowColor    = QStringLiteral("WindowColor");
+static const auto SettingsBorderColor    = QStringLiteral("BorderColor");
 static const auto SettingsHighlightColor = QStringLiteral("HighlightColor");
+static const auto SettingsWindowColor    = QStringLiteral("WindowColor");
 
 //==============================================================================
 
@@ -88,10 +88,10 @@ QLabel CORE_EXPORT * newLabel(const QString &pText, QWidget *pParent = 0);
 
 void CORE_EXPORT showEnableAction(QAction *pAction, const bool &pShowEnable);
 
-QColor CORE_EXPORT borderColor();
 QColor CORE_EXPORT baseColor();
-QColor CORE_EXPORT windowColor();
+QColor CORE_EXPORT borderColor();
 QColor CORE_EXPORT highlightColor();
+QColor CORE_EXPORT windowColor();
 
 //==============================================================================
 

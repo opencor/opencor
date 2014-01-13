@@ -331,17 +331,6 @@ QColor specificColor(const QString &pColor)
 
 //==============================================================================
 
-QColor borderColor()
-{
-    // Return the border colour
-    // Note: we retrieve it from our settings, which is updated by our plugin
-    //       itself (see CorePlugin::retrieveBorderColor())...
-
-    return specificColor(SettingsBorderColor);
-}
-
-//==============================================================================
-
 QColor baseColor()
 {
     // Return the base colour
@@ -353,13 +342,13 @@ QColor baseColor()
 
 //==============================================================================
 
-QColor windowColor()
+QColor borderColor()
 {
-    // Return the window colour
+    // Return the border colour
     // Note: we retrieve it from our settings, which is updated by our plugin
-    //       itself (see CorePlugin::changeEvent())...
+    //       itself (see CorePlugin::retrieveBorderColor())...
 
-    return specificColor(SettingsWindowColor);
+    return specificColor(SettingsBorderColor);
 }
 
 //==============================================================================
@@ -371,6 +360,17 @@ QColor highlightColor()
     //       itself (see CorePlugin::changeEvent())...
 
     return specificColor(SettingsHighlightColor);
+}
+
+//==============================================================================
+
+QColor windowColor()
+{
+    // Return the window colour
+    // Note: we retrieve it from our settings, which is updated by our plugin
+    //       itself (see CorePlugin::changeEvent())...
+
+    return specificColor(SettingsWindowColor);
 }
 
 //==============================================================================
