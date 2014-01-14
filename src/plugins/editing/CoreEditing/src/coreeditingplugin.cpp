@@ -351,6 +351,10 @@ void CoreEditingPlugin::updateGui(Plugin *pViewPlugin, const QString &pFileName)
 
         mEditSelectAllAction->setEnabled(false);
     }
+
+    // Update the editor's background
+
+    updateEditorBackground();
 }
 
 //==============================================================================
@@ -439,13 +443,7 @@ void CoreEditingPlugin::fileOpened(const QString &pFileName)
 {
     Q_UNUSED(pFileName);
 
-    // Update the current editor's background
-    // Note: originally, we were only relying on fileLocked() to do this for us,
-    //       but then because we only check files every second, there used to be
-    //       a slight delay in the updating of a background for a locked file
-    //       being just opened, so...
-
-    updateEditorBackground();
+    // We don't handle this interface...
 }
 
 //==============================================================================
@@ -611,6 +609,11 @@ void CoreEditingPlugin::doSelectAll()
 
 void CoreEditingPlugin::updateEditorBackground()
 {
+    // Make sure that we have an editor
+
+    if (!mEditor)
+        return;
+
     // Update the current editor's background, based on whether the current file
     // is locked
 
