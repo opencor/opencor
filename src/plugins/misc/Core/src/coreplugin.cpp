@@ -745,10 +745,12 @@ void CorePlugin::clearReopenSubMenu()
 
 void CorePlugin::fileModified(const QString &pFileName, const bool &pModified)
 {
-    // Update the enabled state of our Locked menu, if needed
+    // Enable/disable our Duplicate and Locked menus, if needed
 
-    if (!pFileName.compare(mCentralWidget->currentFileName()))
+    if (!pFileName.compare(mCentralWidget->currentFileName())) {
+        mFileDuplicateAction->setEnabled(!pModified);
         mFileLockedAction->setEnabled(!pModified);
+    }
 }
 
 //==============================================================================
