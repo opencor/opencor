@@ -5,7 +5,7 @@
 /distrib/windows/x86/msvcp100.dll
 /distrib/windows/x86/ssleay32.dll
 
-/src/plugins/**/bin/**/*
+/src/plugins/*/*/bin/
 
 /src/plugins/3rdparty/LLVM/include/llvm/Config/config.h
 /src/plugins/3rdparty/LLVM/include/llvm/Config/llvm-config.h
