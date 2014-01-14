@@ -36,6 +36,10 @@ namespace OpenCOR {
 
 //==============================================================================
 
+class EditingInterface;
+
+//==============================================================================
+
 namespace QScintillaSupport {
     class QScintillaWidget;
 }   // namespace QScintillaSupport
@@ -75,6 +79,8 @@ public:
 #include "i18ninterface.inl"
 
 private:
+    EditingInterface *mEditingInterface;
+
     QAction *mFileNewFileAction;
 
     QMenu *mEditMenu;
