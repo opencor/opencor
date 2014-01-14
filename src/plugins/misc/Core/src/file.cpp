@@ -170,18 +170,22 @@ File::Status File::setLocked(const bool &pLocked)
         if (newPermissions & QFileDevice::WriteOwner)
             newPermissions ^= QFileDevice::WriteOwner;
 
+#ifdef Q_OS_WIN
         if (newPermissions & QFileDevice::WriteGroup)
             newPermissions ^= QFileDevice::WriteGroup;
 
         if (newPermissions & QFileDevice::WriteOther)
             newPermissions ^= QFileDevice::WriteOther;
+#endif
 
         if (newPermissions & QFileDevice::WriteUser)
             newPermissions ^= QFileDevice::WriteUser;
     } else {
         newPermissions |= QFileDevice::WriteOwner;
+#ifdef Q_OS_WIN
         newPermissions |= QFileDevice::WriteGroup;
         newPermissions |= QFileDevice::WriteOther;
+#endif
         newPermissions |= QFileDevice::WriteUser;
     }
 
