@@ -1080,8 +1080,8 @@ MACRO(RETRIEVE_BINARY_FILE DIRNAME FILENAME SHA1_VALUE)
         FILE(DOWNLOAD "http://www.opencor.ws/binaries/${DIRNAME}/${COMPRESSED_FILENAME}" ${REAL_COMPRESSED_FILENAME}
              SHOW_PROGRESS STATUS STATUS)
 
-        # Uncompress the file, should we have managed to retrieve its
-        # uncompressed version
+        # Uncompress the compressed version of the file, should we have managed
+        # to retrieve it
 
         LIST(GET STATUS 0 STATUS_CODE)
 
@@ -1090,6 +1090,10 @@ MACRO(RETRIEVE_BINARY_FILE DIRNAME FILENAME SHA1_VALUE)
                             WORKING_DIRECTORY ${REAL_DIRNAME} OUTPUT_QUIET)
             FILE(REMOVE ${REAL_COMPRESSED_FILENAME})
         ELSE()
+            FILE(REMOVE ${REAL_COMPRESSED_FILENAME})
+            # Note: this is in case we had an HTTP error of sorts, in which case
+            #       we would end up with an empty file...
+
             MESSAGE(FATAL_ERROR "The compressed version of the file could not be retrieved...")
         ENDIF()
 
