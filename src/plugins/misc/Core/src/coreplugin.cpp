@@ -217,8 +217,10 @@ void CorePlugin::initialize()
     connect(mFileClearReopenSubMenuAction, SIGNAL(triggered()),
             this, SLOT(clearReopenSubMenu()));
 
-    // A connection related to our Locked menu item
+    // A couple of connections related to our Locked menu item
 
+    connect(FileManager::instance(), SIGNAL(fileModified(const QString &, const bool &)),
+            this, SLOT(fileModified(const QString &, const bool &)));
     connect(FileManager::instance(), SIGNAL(fileLocked(const QString &, const bool &)),
             this, SLOT(fileLocked(const QString &, const bool &)));
 
@@ -737,6 +739,16 @@ void CorePlugin::clearReopenSubMenu()
     mRecentFileNames.clear();
 
     updateFileReopenMenu();
+}
+
+//==============================================================================
+
+void CorePlugin::fileModified(const QString &pFileName, const bool &pModified)
+{
+    // Update the enabled state of our Locked menu, if needed
+
+    if (!pFileName.compare(mCentralWidget->currentFileName()))
+        mFileLockedAction->setEnabled(!pModified);
 }
 
 //==============================================================================

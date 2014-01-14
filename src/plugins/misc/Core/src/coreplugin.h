@@ -102,6 +102,7 @@ private Q_SLOTS:
 
     void clearReopenSubMenu();
 
+    void fileModified(const QString &pFileName, const bool &pModified);
     void fileLocked(const QString &pFileName, const bool &pLocked);
 };
 
