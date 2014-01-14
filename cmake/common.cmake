@@ -1075,14 +1075,13 @@ MACRO(RETRIEVE_BINARY_FILE DIRNAME FILENAME SHA1_VALUE)
         # We retrieve the compressed version of the file
 
         SET(COMPRESSED_FILENAME ${FILENAME}.tar.gz)
+        SET(REAL_COMPRESSED_FILENAME ${REAL_DIRNAME}/${COMPRESSED_FILENAME})
 
-        FILE(DOWNLOAD "http://www.opencor.ws/binaries/${DIRNAME}/${COMPRESSED_FILENAME}" ${REAL_DIRNAME}/${COMPRESSED_FILENAME}
+        FILE(DOWNLOAD "http://www.opencor.ws/binaries/${DIRNAME}/${COMPRESSED_FILENAME}" ${REAL_COMPRESSED_FILENAME}
              SHOW_PROGRESS)
 
         # Uncompress the file, should we have managed to retrieve its
         # uncompressed version
-
-        SET(REAL_COMPRESSED_FILENAME ${REAL_DIRNAME}/${COMPRESSED_FILENAME})
 
         IF(EXISTS ${REAL_COMPRESSED_FILENAME})
             EXECUTE_PROCESS(COMMAND ${CMAKE_COMMAND} -E tar zxvf ${REAL_COMPRESSED_FILENAME}
