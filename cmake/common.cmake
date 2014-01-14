@@ -1078,12 +1078,14 @@ MACRO(RETRIEVE_BINARY_FILE DIRNAME FILENAME SHA1_VALUE)
         SET(REAL_COMPRESSED_FILENAME ${REAL_DIRNAME}/${COMPRESSED_FILENAME})
 
         FILE(DOWNLOAD "http://www.opencor.ws/binaries/${DIRNAME}/${COMPRESSED_FILENAME}" ${REAL_COMPRESSED_FILENAME}
-             SHOW_PROGRESS)
+             SHOW_PROGRESS STATUS STATUS)
 
         # Uncompress the file, should we have managed to retrieve its
         # uncompressed version
 
-        IF(EXISTS ${REAL_COMPRESSED_FILENAME})
+        LIST(GET STATUS 0 STATUS_CODE)
+
+        IF(${STATUS_CODE} EQUAL 0)
             EXECUTE_PROCESS(COMMAND ${CMAKE_COMMAND} -E tar zxvf ${REAL_COMPRESSED_FILENAME}
                             WORKING_DIRECTORY ${REAL_DIRNAME} OUTPUT_QUIET)
             FILE(REMOVE ${REAL_COMPRESSED_FILENAME})
@@ -1103,6 +1105,8 @@ MACRO(RETRIEVE_BINARY_FILE DIRNAME FILENAME SHA1_VALUE)
                 MESSAGE(FATAL_ERROR "The file does not have the expected SHA-1 value...")
             ENDIF()
         ELSE()
+            FILE(REMOVE ${REAL_COMPRESSED_FILENAME})
+
             MESSAGE(FATAL_ERROR "The file could not be uncompressed...")
         ENDIF()
     ENDIF()
