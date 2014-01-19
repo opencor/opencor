@@ -279,6 +279,27 @@ FileManager::Status FileManager::rename(const QString &pOldFileName,
 
 //==============================================================================
 
+FileManager::Status FileManager::duplicate(const QString &pFileName)
+{
+    // Make sure that the given file is managed
+
+    QString nativeFileName = nativeCanonicalFileName(pFileName);
+    File *file = isManaged(nativeFileName);
+
+    if (file) {
+        // The file is managed, so we can duplicate it and let people know about
+        // it
+
+//---GRY---        emit fileDuplicated(oldNativeFileName, newNativeFileName);
+
+        return Duplicated;
+    } else {
+        return NotManaged;
+    }
+}
+
+//==============================================================================
+
 int FileManager::count() const
 {
     // Return the number of files currently being managed

@@ -74,7 +74,11 @@ public:
         // As a result of renaming a file
 
         Renamed,
-        RenamingNotNeeded
+        RenamingNotNeeded,
+
+        // As a result of duplicating a file
+
+        Duplicated
     };
 
     explicit FileManager(const int &pTimerInterval = 1000);
@@ -95,6 +99,7 @@ public:
     void reload(const QString &pFileName);
 
     Status rename(const QString &pOldFileName, const QString &pNewFileName);
+    Status duplicate(const QString &pFileName);
 
     int count() const;
 
@@ -116,6 +121,7 @@ Q_SIGNALS:
     void fileReloaded(const QString &pFileName);
 
     void fileRenamed(const QString &pOldFileName, const QString &pNewFileName);
+    void fileDuplicated(const QString &pFileName);
 
 public Q_SLOTS:
     void setModified(const QString &pFileName, const bool &pModified);

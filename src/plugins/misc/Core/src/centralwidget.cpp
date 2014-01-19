@@ -636,8 +636,20 @@ void CentralWidget::reloadFile(const int &pIndex)
 
 void CentralWidget::duplicateFile()
 {
-//---GRY--- TO BE DONE...
-qDebug(">>> CentralWidget::duplicateFile(): to be done...");
+    // Ask our file manager to duplicate the current file
+
+    QString fileName = mFileNames[mFileTabs->currentIndex()];
+#ifdef QT_DEBUG
+    FileManager::Status duplicateStatus =
+#endif
+    FileManager::instance()->duplicate(fileName);
+
+    // Make sure that the file has indeed been renamed
+
+#ifdef QT_DEBUG
+    if (duplicateStatus != FileManager::Duplicated)
+        qFatal("FATAL ERROR | %s:%d: '%s' did not get duplicated", __FILE__, __LINE__, qPrintable(fileName));
+#endif
 }
 
 //==============================================================================
