@@ -40,6 +40,7 @@ namespace Core {
 File::File(const QString &pFileName) :
     mFileName(nativeCanonicalFileName(pFileName)),
     mSha1(sha1()),
+    mNew(pFileName.isEmpty()),
     mModified(false)
 {
 }
@@ -121,6 +122,15 @@ QString File::sha1() const
 
         return QString();
     }
+}
+
+//==============================================================================
+
+bool File::isNew() const
+{
+    // Return whether the file is new
+
+    return mNew;
 }
 
 //==============================================================================
