@@ -28,15 +28,15 @@
 
 void QsciScintillaBase::inputMethodEvent(QInputMethodEvent *event)
 {
+    // Do nothing if it appears to be a non-event.  This can sometimes happen
+    // (but why?) on losing focus.
+    if (event->commitString().isEmpty() && event->preeditString().isEmpty() && event->replacementLength() == 0)
+        return;
+
     ScintillaBytes bytes;
 
-    bool isGettingInput = !event->commitString().isEmpty() ||
-            event->preeditString() != preeditString ||
-            event->replacementLength() > 0;
-
-    if (isGettingInput)
-        sci->ClearSelection();
-
+    // Clear the current selection.
+    sci->ClearSelection();
     if (preeditPos >= 0)
         sci->SetSelection(preeditPos, preeditPos);
 
