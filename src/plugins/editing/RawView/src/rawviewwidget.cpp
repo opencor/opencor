@@ -19,6 +19,7 @@ specific language governing permissions and limitations under the License.
 // Raw view widget
 //==============================================================================
 
+#include "filemanager.h"
 #include "rawviewwidget.h"
 
 //==============================================================================
@@ -50,22 +51,15 @@ void RawViewWidget::fileReloaded()
 
     QFile file(mFileName);
     QString fileContents = QString();
-    bool fileIsReadOnly = false;
 
     if (file.open(QIODevice::ReadOnly|QIODevice::Text)) {
-        // We could open the file, so retrieve its contents and whether it can
-        // be written to
-
         fileContents = QTextStream(&file).readAll();
-        fileIsReadOnly = !(QFileInfo(mFileName).isWritable());
-
-        // We are done with the file, so close it
 
         file.close();
     }
 
     setContents(fileContents);
-    setReadOnly(fileIsReadOnly);
+    setReadOnly(!Core::FileManager::instance()->isLocked(mFileName));
 }
 
 //==============================================================================

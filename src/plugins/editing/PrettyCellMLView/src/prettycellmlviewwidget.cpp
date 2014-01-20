@@ -20,6 +20,7 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include "borderedwidget.h"
+#include "filemanager.h"
 #include "guiutils.h"
 #include "qscintillawidget.h"
 #include "prettycellmlviewwidget.h"
@@ -163,22 +164,15 @@ void PrettyCellmlViewWidget::initialize(const QString &pFileName)
 
         QFile file(pFileName);
         QString fileContents = QString();
-        bool fileIsReadOnly = false;
 
         if (file.open(QIODevice::ReadOnly|QIODevice::Text)) {
-            // We could open the file, so retrieve its contents and whether it
-            // can be written to
-
             fileContents = QTextStream(&file).readAll();
-            fileIsReadOnly = !(QFileInfo(pFileName).isWritable());
-
-            // We are done with the file, so close it
 
             file.close();
         }
 
         QScintillaSupport::QScintillaWidget *editor = new QScintillaSupport::QScintillaWidget(fileContents,
-                                                                                              fileIsReadOnly,
+                                                                                              !Core::FileManager::instance()->isLocked(pFileName),
                                                                                               new QsciLexerXML(this),
                                                                                               parentWidget());
 
