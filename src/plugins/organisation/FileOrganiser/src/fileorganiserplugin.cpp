@@ -240,6 +240,28 @@ void FileOrganiserPlugin::fileOpened(const QString &pFileName)
 
 //==============================================================================
 
+void FileOrganiserPlugin::fileLocked(const QString &pFileName,
+                                     const bool &pLocked)
+{
+    Q_UNUSED(pFileName);
+    Q_UNUSED(pLocked);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void FileOrganiserPlugin::fileModified(const QString &pFileName,
+                                       const bool &pModified)
+{
+    Q_UNUSED(pFileName);
+    Q_UNUSED(pModified);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
 void FileOrganiserPlugin::fileReloaded(const QString &pFileName)
 {
     Q_UNUSED(pFileName);

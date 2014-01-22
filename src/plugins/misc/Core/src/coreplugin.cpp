@@ -217,13 +217,6 @@ void CorePlugin::initialize()
     connect(mFileClearReopenSubMenuAction, SIGNAL(triggered()),
             this, SLOT(clearReopenSubMenu()));
 
-    // A couple of connections related to our Locked menu item
-
-    connect(FileManager::instance(), SIGNAL(fileModified(const QString &, const bool &)),
-            this, SLOT(fileModified(const QString &, const bool &)));
-    connect(FileManager::instance(), SIGNAL(fileLocked(const QString &, const bool &)),
-            this, SLOT(fileLocked(const QString &, const bool &)));
-
     // Set our settings
 
     mGuiSettings->addMenuAction(GuiMenuActionSettings::File, mFileOpenAction);
@@ -487,6 +480,28 @@ void CorePlugin::fileOpened(const QString &pFileName)
 
 //==============================================================================
 
+void CorePlugin::fileLocked(const QString &pFileName, const bool &pLocked)
+{
+    // Update the checked state of our Locked menu, if needed
+
+    if (!pFileName.compare(mCentralWidget->currentFileName()))
+        mFileLockedAction->setChecked(pLocked);
+}
+
+//==============================================================================
+
+void CorePlugin::fileModified(const QString &pFileName, const bool &pModified)
+{
+    // Enable/disable our Duplicate and Locked menus, if needed
+
+    if (!pFileName.compare(mCentralWidget->currentFileName())) {
+        mFileDuplicateAction->setEnabled(!pModified);
+        mFileLockedAction->setEnabled(!pModified);
+    }
+}
+
+//==============================================================================
+
 void CorePlugin::fileReloaded(const QString &pFileName)
 {
     Q_UNUSED(pFileName);
@@ -739,28 +754,6 @@ void CorePlugin::clearReopenSubMenu()
     mRecentFileNames.clear();
 
     updateFileReopenMenu();
-}
-
-//==============================================================================
-
-void CorePlugin::fileModified(const QString &pFileName, const bool &pModified)
-{
-    // Enable/disable our Duplicate and Locked menus, if needed
-
-    if (!pFileName.compare(mCentralWidget->currentFileName())) {
-        mFileDuplicateAction->setEnabled(!pModified);
-        mFileLockedAction->setEnabled(!pModified);
-    }
-}
-
-//==============================================================================
-
-void CorePlugin::fileLocked(const QString &pFileName, const bool &pLocked)
-{
-    // Update the checked state of our Locked menu, if needed
-
-    if (!pFileName.compare(mCentralWidget->currentFileName()))
-        mFileLockedAction->setChecked(pLocked);
 }
 
 //==============================================================================

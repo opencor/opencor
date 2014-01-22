@@ -204,6 +204,13 @@ CentralWidget::CentralWidget(QMainWindow *pMainWindow) :
     foreach (CentralWidgetMode *mode, mModes)
         mGui->layout->addWidget(mode->views());
 
+    // A couple of connections to handle changes to a file
+
+    connect(FileManager::instance(), SIGNAL(fileLocked(const QString &, const bool &)),
+            this, SLOT(fileLocked(const QString &, const bool &)));
+    connect(FileManager::instance(), SIGNAL(fileModified(const QString &, const bool &)),
+            this, SLOT(fileModified(const QString &, const bool &)));
+
     // Some connections to handle our files tab bar
 
     connect(mFileTabs, SIGNAL(currentChanged(int)),
@@ -1458,15 +1465,44 @@ void CentralWidget::updateModifiedSettings()
 
 //==============================================================================
 
-void CentralWidget::fileReloaded(const QString &pFileName)
+void CentralWidget::fileLocked(const QString &pFileName,
+                               const bool &pLocked)
 {
-    // Let our plugins know about the file having been reloaded, but only if
-    // they already have a view for it
+    // Let our plugins know about the file having had its locked status changed
 
     foreach (Plugin *plugin, mLoadedPlugins) {
         GuiInterface *guiInterface = qobject_cast<GuiInterface *>(plugin->instance());
 
-        if (guiInterface && guiInterface->hasViewWidget(pFileName))
+        if (guiInterface)
+            guiInterface->fileLocked(pFileName, pLocked);
+    }
+}
+
+//==============================================================================
+
+void CentralWidget::fileModified(const QString &pFileName,
+                                 const bool &pModified)
+{
+    // Let our plugins know about the file having been modified
+
+    foreach (Plugin *plugin, mLoadedPlugins) {
+        GuiInterface *guiInterface = qobject_cast<GuiInterface *>(plugin->instance());
+
+        if (guiInterface)
+            guiInterface->fileModified(pFileName, pModified);
+    }
+}
+
+//==============================================================================
+
+void CentralWidget::fileReloaded(const QString &pFileName)
+{
+    // Let our plugins know about the file having been reloaded
+
+    foreach (Plugin *plugin, mLoadedPlugins) {
+        GuiInterface *guiInterface = qobject_cast<GuiInterface *>(plugin->instance());
+
+        if (guiInterface)
             guiInterface->fileReloaded(pFileName);
     }
 }

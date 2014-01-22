@@ -212,6 +212,9 @@ private Q_SLOTS:
 
     void updateModifiedSettings();
 
+    void fileLocked(const QString &pFileName, const bool &pLocked);
+    void fileModified(const QString &pFileName, const bool &pModified);
+
     void fileReloaded(const QString &pFileName);
 
     void fileRenamed(const QString &pOldFileName, const QString &pNewFileName);

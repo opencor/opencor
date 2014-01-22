@@ -116,8 +116,6 @@ private Q_SLOTS:
     void doRedo();
 
     void doSelectAll();
-
-    void fileLocked(const QString &pFileName, const bool &pLocked);
 };
 
 //==============================================================================

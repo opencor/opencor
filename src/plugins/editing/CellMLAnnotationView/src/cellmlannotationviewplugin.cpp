@@ -398,6 +398,28 @@ void CellMLAnnotationViewPlugin::fileOpened(const QString &pFileName)
 
 //==============================================================================
 
+void CellMLAnnotationViewPlugin::fileLocked(const QString &pFileName,
+                                            const bool &pLocked)
+{
+    Q_UNUSED(pFileName);
+    Q_UNUSED(pLocked);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void CellMLAnnotationViewPlugin::fileModified(const QString &pFileName,
+                                              const bool &pModified)
+{
+    Q_UNUSED(pFileName);
+    Q_UNUSED(pModified);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
 void CellMLAnnotationViewPlugin::fileReloaded(const QString &pFileName)
 {
     // The given file has been reloaded, so let its corresponding view widget

@@ -275,6 +275,28 @@ void PrettyCellMLViewPlugin::fileOpened(const QString &pFileName)
 
 //==============================================================================
 
+void PrettyCellMLViewPlugin::fileLocked(const QString &pFileName,
+                                        const bool &pLocked)
+{
+    Q_UNUSED(pFileName);
+    Q_UNUSED(pLocked);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void PrettyCellMLViewPlugin::fileModified(const QString &pFileName,
+                                          const bool &pModified)
+{
+    Q_UNUSED(pFileName);
+    Q_UNUSED(pModified);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
 void PrettyCellMLViewPlugin::fileReloaded(const QString &pFileName)
 {
     // The given file has been reloaded, so let its corresponding view widget

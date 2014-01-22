@@ -128,11 +128,6 @@ void CoreEditingPlugin::initialize()
     mEditMenu->addSeparator();
     mEditMenu->addAction(mEditSelectAllAction);
 
-    // A connection related to the locked status of a file
-
-    connect(Core::FileManager::instance(), SIGNAL(fileLocked(const QString &, const bool &)),
-            this, SLOT(fileLocked(const QString &, const bool &)));
-
     // Set our settings
 
     mGuiSettings->addMenuAction(GuiMenuActionSettings::FileNew, mFileNewFileAction);
@@ -455,6 +450,47 @@ void CoreEditingPlugin::fileOpened(const QString &pFileName)
 
 //==============================================================================
 
+void CoreEditingPlugin::fileLocked(const QString &pFileName,
+                                   const bool &pLocked)
+{
+    // Update some actions and make our editor read-only or writable, if needed
+
+    if (mEditingInterface && !pFileName.compare(mFileName)) {
+        // Update some actions
+
+        updateUndoRedoActions();
+
+        bool notLockedAndHasSelectedText =    !pLocked
+                                           &&  mEditor
+                                           &&  mEditor->hasSelectedText();
+
+        mEditCutAction->setEnabled(notLockedAndHasSelectedText);
+        clipboardDataChanged();
+        mEditDeleteAction->setEnabled(notLockedAndHasSelectedText);
+
+        // Make our editor read-only or writable
+
+        if (mEditor) {
+            mEditor->setReadOnly(pLocked);
+
+            updateEditorBackground();
+        }
+    }
+}
+
+//==============================================================================
+
+void CoreEditingPlugin::fileModified(const QString &pFileName,
+                                     const bool &pModified)
+{
+    Q_UNUSED(pFileName);
+    Q_UNUSED(pModified);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
 void CoreEditingPlugin::fileReloaded(const QString &pFileName)
 {
     Q_UNUSED(pFileName);
@@ -634,36 +670,6 @@ void CoreEditingPlugin::updateEditorBackground()
 
         for (int i = 0; i < QsciScintillaBase::STYLE_MAX; ++i)
             mEditor->SendScintilla(QsciScintillaBase::SCI_STYLESETBACK, i, backgroundColor);
-    }
-}
-
-//==============================================================================
-
-void CoreEditingPlugin::fileLocked(const QString &pFileName,
-                                   const bool &pLocked)
-{
-    // Update some actions and make our editor read-only or writable, if needed
-
-    if (mEditingInterface && !pFileName.compare(mFileName)) {
-        // Update some actions
-
-        updateUndoRedoActions();
-
-        bool notLockedAndHasSelectedText =    !pLocked
-                                           &&  mEditor
-                                           &&  mEditor->hasSelectedText();
-
-        mEditCutAction->setEnabled(notLockedAndHasSelectedText);
-        clipboardDataChanged();
-        mEditDeleteAction->setEnabled(notLockedAndHasSelectedText);
-
-        // Make our editor read-only or writable
-
-        if (mEditor) {
-            mEditor->setReadOnly(pLocked);
-
-            updateEditorBackground();
-        }
     }
 }
 

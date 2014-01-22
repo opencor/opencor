@@ -312,6 +312,28 @@ void CellMLToolsPlugin::fileOpened(const QString &pFileName)
 
 //==============================================================================
 
+void CellMLToolsPlugin::fileLocked(const QString &pFileName,
+                                   const bool &pLocked)
+{
+    Q_UNUSED(pFileName);
+    Q_UNUSED(pLocked);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void CellMLToolsPlugin::fileModified(const QString &pFileName,
+                                     const bool &pModified)
+{
+    Q_UNUSED(pFileName);
+    Q_UNUSED(pModified);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
 void CellMLToolsPlugin::fileReloaded(const QString &pFileName)
 {
     Q_UNUSED(pFileName);
