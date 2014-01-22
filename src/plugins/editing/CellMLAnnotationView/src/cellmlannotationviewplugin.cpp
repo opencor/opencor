@@ -401,10 +401,12 @@ void CellMLAnnotationViewPlugin::fileOpened(const QString &pFileName)
 void CellMLAnnotationViewPlugin::fileLocked(const QString &pFileName,
                                             const bool &pLocked)
 {
-    Q_UNUSED(pFileName);
     Q_UNUSED(pLocked);
 
-    // We don't handle this interface...
+    // Retranslate ourselves since some messages may be locked-dependent
+
+    if (mViewWidgets.value(pFileName))
+        retranslateUi();
 }
 
 //==============================================================================
