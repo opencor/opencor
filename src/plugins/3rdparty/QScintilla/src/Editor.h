@@ -47,7 +47,7 @@ public:
 
 /**
  * When platform has a way to generate an event before painting,
- * accumulate needed styling range and other work items in
+ * accumulate needed styling range and other work items in 
  * WorkNeeded to avoid unnecessary work inside paint handler
  */
 class WorkNeeded {
@@ -119,7 +119,7 @@ public:
 	}
 private:
 	void FixSelectionForClipboard() {
-		// To avoid truncating the contents of the clipboard when pasted where the
+		// To avoid truncating the contents of the clipboard when pasted where the 
 		// clipboard contains NUL characters, replace NUL characters by spaces.
 		std::replace(s.begin(), s.end(), '\0', ' ');
 	}

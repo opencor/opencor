@@ -119,8 +119,10 @@ QVariant QsciScintillaBase::inputMethodQuery(Qt::InputMethodQuery query) const
     int line = SendScintilla(SCI_LINEFROMPOSITION, pos);
 
     switch (query) {
+#if QT_VERSION >= 0x050000
         case Qt::ImHints:
             return QWidget::inputMethodQuery(query);
+#endif
 
         case Qt::ImMicroFocus:
         {

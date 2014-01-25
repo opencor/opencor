@@ -1,9 +1,9 @@
 // This module implements the "official" low-level API.
 //
 // Copyright (c) 2014 Riverbank Computing Limited <info@riverbankcomputing.com>
-//
+// 
 // This file is part of QScintilla.
-//
+// 
 // This file may be used under the terms of the GNU General Public
 // License versions 2.0 or 3.0 as published by the Free Software
 // Foundation and appearing in the files LICENSE.GPL2 and LICENSE.GPL3
@@ -15,10 +15,10 @@
 // certain additional rights. These rights are described in the Riverbank
 // GPL Exception version 1.1, which can be found in the file
 // GPL_EXCEPTION.txt in this package.
-//
+// 
 // If you are unsure which license is appropriate for your use, please
 // contact the sales department at sales@riverbankcomputing.com.
-//
+// 
 // This file is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING THE
 // WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
 
@@ -106,9 +106,11 @@ QsciScintillaBase::QsciScintillaBase(QWidget *parent)
     setFocusPolicy(Qt::WheelFocus);
     setAttribute(Qt::WA_KeyCompression);
     setAttribute(Qt::WA_InputMethodEnabled);
-#if QT_VERSION >= 0x040600
+#if QT_VERSION >= 0x050000
     setInputMethodHints(
             Qt::ImhNoAutoUppercase|Qt::ImhNoPredictiveText|Qt::ImhMultiLine);
+#elif QT_VERSION >= 0x040600
+    setInputMethodHints(Qt::ImhNoAutoUppercase|Qt::ImhNoPredictiveText);
 #endif
 
     viewport()->setBackgroundRole(QPalette::Base);
@@ -335,7 +337,18 @@ void QsciScintillaBase::focusInEvent(QFocusEvent *e)
 // Re-implemented to tell the widget it has lost the focus.
 void QsciScintillaBase::focusOutEvent(QFocusEvent *e)
 {
-    sci->SetFocusState(false);
+    // Only tell Scintilla we have lost focus if the new active window isn't
+    // our auto-completion list.  This is probably only an issue on Linux and
+    // there are still problems because subsequent focus out events don't
+    // always seem to get generated (at least with Qt5).
+
+    if (e->reason() == Qt::ActiveWindowFocusReason)
+    {
+        QWidget *aw = QApplication::activeWindow();
+
+        if (!aw || aw->parent() != this || !aw->inherits("QsciSciListBox"))
+            sci->SetFocusState(false);
+    }
 
     QAbstractScrollArea::focusOutEvent(e);
 }

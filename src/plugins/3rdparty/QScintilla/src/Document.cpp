@@ -1892,7 +1892,7 @@ void SCI_METHOD Document::DecorationFillRange(int position, int value, int fillL
 
 bool Document::AddWatcher(DocWatcher *watcher, void *userData) {
 	WatcherWithUserData wwud(watcher, userData);
-	std::vector<WatcherWithUserData>::iterator it =
+	std::vector<WatcherWithUserData>::iterator it = 
 		std::find(watchers.begin(), watchers.end(), wwud);
 	if (it != watchers.end())
 		return false;
@@ -1901,7 +1901,7 @@ bool Document::AddWatcher(DocWatcher *watcher, void *userData) {
 }
 
 bool Document::RemoveWatcher(DocWatcher *watcher, void *userData) {
-	std::vector<WatcherWithUserData>::iterator it =
+	std::vector<WatcherWithUserData>::iterator it = 
 		std::find(watchers.begin(), watchers.end(), WatcherWithUserData(watcher, userData));
 	if (it != watchers.end()) {
 		watchers.erase(it);
