@@ -388,6 +388,20 @@ void CellmlAnnotationViewMetadataDetailsWidget::updateMetadataEditDetails()
 
 //==============================================================================
 
+void CellmlAnnotationViewMetadataDetailsWidget::fileLocked(const bool &pLocked)
+{
+    // Let our metadata view details widget know that the file has been
+    // un/locked
+    // Note: we don't need to let our metadata edit details widget know about it
+    //       since it will automatically update itself as part of our plugin
+    //       retranslating itself (see CellMLAnnotationViewPlugin::fileLocked(),
+    //       CellmlAnnotationViewMetadataEditDetailsWidget::retranslateUi())...
+
+    mMetadataViewDetails->fileLocked(pLocked);
+}
+
+//==============================================================================
+
 void CellmlAnnotationViewMetadataDetailsWidget::fileReloaded()
 {
     // Let our metadata edit details widget know that the file has been reloaded

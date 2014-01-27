@@ -403,10 +403,17 @@ void CellMLAnnotationViewPlugin::fileLocked(const QString &pFileName,
 {
     Q_UNUSED(pLocked);
 
-    // Retranslate ourselves since some messages may be locked-dependent
+    // The given file has been un/locked, so retranslate ourselves (since some
+    // messages may be locked-dependent) and let its corresponding view widget
+    // know about it
 
-    if (mViewWidgets.value(pFileName))
+    CellmlAnnotationViewWidget *viewWidget = mViewWidgets.value(pFileName);
+
+    if (viewWidget) {
         retranslateUi();
+
+        viewWidget->fileLocked(pLocked);
+    }
 }
 
 //==============================================================================

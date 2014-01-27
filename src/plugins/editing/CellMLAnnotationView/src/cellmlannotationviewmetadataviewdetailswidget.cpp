@@ -122,6 +122,17 @@ CellmlAnnotationViewMetadataNormalViewDetailsWidget * CellmlAnnotationViewMetada
 
 //==============================================================================
 
+void CellmlAnnotationViewMetadataViewDetailsWidget::fileLocked(const bool &pLocked)
+{
+    // Let our normal view know that the file has been reloaded
+    // Note: we don't need to let our raw view know about it since it only
+    //       presents raw information to the user...
+
+    mNormalView->fileLocked(pLocked);
+}
+
+//==============================================================================
+
 }   // namespace CellMLAnnotationView
 }   // namespace OpenCOR
 

@@ -89,6 +89,7 @@ public:
                                       const QString &pId,
                                       const bool &pRetranslate);
 
+    void fileLocked(const bool &pLocked);
     void fileReloaded();
 
 private:

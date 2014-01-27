@@ -21,6 +21,7 @@ specific language governing permissions and limitations under the License.
 
 #include "cellmlannotationviewmetadatanormalviewdetailswidget.h"
 #include "cellmlannotationviewwidget.h"
+#include "filemanager.h"
 #include "guiutils.h"
 
 //==============================================================================
@@ -32,6 +33,7 @@ specific language governing permissions and limitations under the License.
 #include <QClipboard>
 #include <QGridLayout>
 #include <QLabel>
+#include <QLayoutItem>
 #include <QMenu>
 #include <QPushButton>
 #include <QRegularExpression>
@@ -59,7 +61,8 @@ CellmlAnnotationViewMetadataNormalViewDetailsWidget::CellmlAnnotationViewMetadat
     mVerticalScrollBarPosition(0),
     mNeighbourRow(0),
     mRdfTriplesMapping(QMap<QObject *, CellMLSupport::CellmlFileRdfTriple *>()),
-    mCurrentResourceOrIdLabel(0)
+    mCurrentResourceOrIdLabel(0),
+    mRemoveButtons(QList<QPushButton *>())
 {
     // Set up the GUI
 
@@ -126,6 +129,7 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::updateGui(iface::cellm
     //       this unfortunately results in some very bad flickering on OS X.
     //       This can, however, be addressed using a stacked widget, so...
 
+    // Prevent ourselves from being updated (to avoid flickering)
 
     setUpdatesEnabled(false);
 
@@ -174,6 +178,10 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::updateGui(iface::cellm
                                                 Qt::AlignCenter,
                                                 newGridWidget),
                                  0, 3);
+
+        // Remove our tracking of all the remove buttons
+
+        mRemoveButtons.clear();
 
         // Add the RDF triples information to our layout
         // Note: for the RDF triple's subject, we try to remove the CellML
@@ -245,6 +253,7 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::updateGui(iface::cellm
             //          QAction to it, but a QToolButton doesn't look quite
             //          the same as a QPushButton on some platforms, so...
 
+            removeButton->setEnabled(!Core::FileManager::instance()->isLocked(mCellmlFile->fileName()));
             removeButton->setIcon(QIcon(":/oxygen/actions/list-remove.png"));
             removeButton->setStatusTip(tr("Remove the term"));
             removeButton->setToolTip(tr("Remove"));
@@ -256,6 +265,10 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::updateGui(iface::cellm
                     this, SLOT(removeRdfTriple()));
 
             newGridLayout->addWidget(removeButton, row, 3, Qt::AlignCenter);
+
+            // Keep track of the remove button
+
+            mRemoveButtons << removeButton;
 
             // Keep track of the very first resource id and update the last one
 
@@ -368,6 +381,17 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::addRdfTriple(CellMLSup
     // Update the GUI to reflect the addition of the given RDF triple
 
     updateGui(mElement, QString(), No, mLookupInformation);
+}
+
+//==============================================================================
+
+void CellmlAnnotationViewMetadataNormalViewDetailsWidget::fileLocked(const bool &pLocked)
+{
+    // The file has been un/locked, so we need to enable/disable all the remove
+    // buttons, if any
+
+    foreach (QPushButton *removeButton, mRemoveButtons)
+        removeButton->setEnabled(!pLocked);
 }
 
 //==============================================================================

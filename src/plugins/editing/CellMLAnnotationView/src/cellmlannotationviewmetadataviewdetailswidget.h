@@ -68,6 +68,8 @@ public:
     CellmlAnnotationViewMetadataRawViewDetailsWidget *rawView() const;
     CellmlAnnotationViewMetadataNormalViewDetailsWidget *normalView() const;
 
+    void fileLocked(const bool &pLocked);
+
 private:
     CellmlAnnotationViewMetadataRawViewDetailsWidget *mRawView;
     CellmlAnnotationViewMetadataNormalViewDetailsWidget *mNormalView;

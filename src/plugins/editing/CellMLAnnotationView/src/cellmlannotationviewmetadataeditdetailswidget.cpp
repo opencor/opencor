@@ -25,6 +25,7 @@ specific language governing permissions and limitations under the License.
 #include "cellmlannotationviewwidget.h"
 #include "cellmlfilerdftriple.h"
 #include "cliutils.h"
+#include "filemanager.h"
 #include "guiutils.h"
 #include "treeviewwidget.h"
 
@@ -181,20 +182,31 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(iface::cellml_api:
 
     mElement = pElement;
 
-    // Update the add term button, depending on whether the direct term is
-    // already associated with the CellML element
+    // Enable/disable some of our user fields
+
+    bool locked = Core::FileManager::instance()->isLocked(mCellmlFile->fileName());
+
+    mQualifierValue->setEnabled(!locked);
+    mLookupQualifierButton->setEnabled(!locked);
+
+    mTermValue->setEnabled(!locked);
+
+    // Enable/disable our add term button, depending on whether the direct term
+    // is already associated with the CellML element
 
     if (mTermIsDirect) {
         QStringList termInformation = mTerm.split("/");
 
         if (mQualifierIndex < CellMLSupport::CellmlFileRdfTriple::LastBioQualifier)
-            mAddTermButton->setEnabled(!mCellmlFile->rdfTripleExists(mElement,
-                                                                     CellMLSupport::CellmlFileRdfTriple::BioQualifier(mQualifierIndex+1),
-                                                                     termInformation[0], termInformation[1]));
+            mAddTermButton->setEnabled(   !locked
+                                       && !mCellmlFile->rdfTripleExists(mElement,
+                                                                        CellMLSupport::CellmlFileRdfTriple::BioQualifier(mQualifierIndex+1),
+                                                                        termInformation[0], termInformation[1]));
         else
-            mAddTermButton->setEnabled(!mCellmlFile->rdfTripleExists(mElement,
-                                                                     CellMLSupport::CellmlFileRdfTriple::ModelQualifier(mQualifierIndex-CellMLSupport::CellmlFileRdfTriple::LastBioQualifier+1),
-                                                                     termInformation[0], termInformation[1]));
+            mAddTermButton->setEnabled(   !locked
+                                       && !mCellmlFile->rdfTripleExists(mElement,
+                                                                        CellMLSupport::CellmlFileRdfTriple::ModelQualifier(mQualifierIndex-CellMLSupport::CellmlFileRdfTriple::LastBioQualifier+1),
+                                                                        termInformation[0], termInformation[1]));
     } else {
         mAddTermButton->setEnabled(false);
     }
@@ -213,13 +225,15 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(iface::cellml_api:
         Item item = mItemsMapping.value(addButton);
 
         if (mQualifierIndex < CellMLSupport::CellmlFileRdfTriple::LastBioQualifier)
-            addButton->setEnabled(!mCellmlFile->rdfTripleExists(mElement,
-                                                                CellMLSupport::CellmlFileRdfTriple::BioQualifier(mQualifierIndex+1),
-                                                                item.resource, item.id));
+            addButton->setEnabled(   !locked
+                                  && !mCellmlFile->rdfTripleExists(mElement,
+                                                                   CellMLSupport::CellmlFileRdfTriple::BioQualifier(mQualifierIndex+1),
+                                                                   item.resource, item.id));
         else
-            addButton->setEnabled(!mCellmlFile->rdfTripleExists(mElement,
-                                                                CellMLSupport::CellmlFileRdfTriple::ModelQualifier(mQualifierIndex-CellMLSupport::CellmlFileRdfTriple::LastBioQualifier+1),
-                                                                item.resource, item.id));
+            addButton->setEnabled(   !locked
+                                  && !mCellmlFile->rdfTripleExists(mElement,
+                                                                   CellMLSupport::CellmlFileRdfTriple::ModelQualifier(mQualifierIndex-CellMLSupport::CellmlFileRdfTriple::LastBioQualifier+1),
+                                                                   item.resource, item.id));
     }
 }
 

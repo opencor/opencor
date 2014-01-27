@@ -21,6 +21,7 @@ specific language governing permissions and limitations under the License.
 
 #include "cellmlannotationviewcellmllistwidget.h"
 #include "cellmlannotationviewwidget.h"
+#include "filemanager.h"
 #include "treeviewwidget.h"
 
 //==============================================================================
@@ -879,11 +880,13 @@ void CellmlAnnotationViewCellmlListWidget::showCustomContextMenu(const QPoint &p
 
         // Update the enabled status of our actions
 
+        bool locked = Core::FileManager::instance()->isLocked(mCellmlFile->fileName());
+
         mGui->actionExpandAll->setEnabled(posItem->hasChildren() && !indexIsAllExpanded(mTreeViewWidget->currentIndex()));
         mGui->actionCollapseAll->setEnabled(posItem->hasChildren() && mTreeViewWidget->isExpanded(mTreeViewWidget->currentIndex()));
 
-        mGui->actionRemoveCurrentMetadata->setEnabled(!posItem->isCategory() && mCellmlFile->rdfTriples(posItem->element()).count());
-        mGui->actionRemoveAllMetadata->setEnabled(!posItem->isCategory() && mCellmlFile->rdfTriples().count());
+        mGui->actionRemoveCurrentMetadata->setEnabled(!locked && !posItem->isCategory() && mCellmlFile->rdfTriples(posItem->element()).count());
+        mGui->actionRemoveAllMetadata->setEnabled(!locked && !posItem->isCategory() && mCellmlFile->rdfTriples().count());
 
         mGui->actionOpenImport->setEnabled(posItem->type() == CellmlAnnotationViewCellmlElementItem::Import);
 
