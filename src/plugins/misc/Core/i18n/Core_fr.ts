@@ -72,8 +72,8 @@
         <translation>Vérouiller Fichier</translation>
     </message>
     <message>
-        <source>Sorry, but &lt;strong&gt;%1&lt;/strong&gt; could not be %2.</source>
-        <translation>Désolé, mais &lt;strong&gt;%1&lt;/strong&gt; n&apos;a pas pu être %2.</translation>
+        <source>Sorry, but &lt;strong&gt;%1&lt;/strong&gt; could not be %2%3.</source>
+        <translation>Désolé, mais &lt;strong&gt;%1&lt;/strong&gt; n&apos;a pas pu être %2%3.</translation>
     </message>
     <message>
         <source>unlocked</source>
@@ -82,6 +82,10 @@
     <message>
         <source>locked</source>
         <translation>vérouillé</translation>
+    </message>
+    <message>
+        <source>it is not readable</source>
+        <translation>il n&apos;est pas lisible</translation>
     </message>
 </context>
 <context>

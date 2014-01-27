@@ -169,7 +169,10 @@ bool File::isLocked() const
 
 File::Status File::setLocked(const bool &pLocked)
 {
-    // Set the locked status of the file
+    // Set the locked status of the file, but only if it is readable
+
+    if (!QFileInfo(mFileName).isReadable())
+        return LockedNotReadable;
 
     if (pLocked == isLocked())
         return LockedNotNeeded;

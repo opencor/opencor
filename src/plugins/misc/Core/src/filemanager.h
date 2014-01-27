@@ -67,6 +67,7 @@ public:
 
         // As a result of updating the locked status of a file
 
+        LockedNotReadable,
         LockedNotNeeded,
         LockedSet,
         LockedNotSet,

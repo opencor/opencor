@@ -221,6 +221,8 @@ FileManager::Status FileManager::setLocked(const QString &pFileName,
         if (status == File::LockedSet)
             emit fileLocked(nativeFileName, pLocked);
 
+        if (status == File::LockedNotReadable)
+            return LockedNotReadable;
         if (status == File::LockedNotNeeded)
             return LockedNotNeeded;
         else if (status == File::LockedSet)
