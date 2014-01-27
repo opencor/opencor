@@ -43,7 +43,6 @@ namespace Ui {
 class QGridLayout;
 class QLabel;
 class QMenu;
-class QPushButton;
 class QStackedWidget;
 
 //==============================================================================
@@ -92,8 +91,6 @@ public:
 
     void addRdfTriple(CellMLSupport::CellmlFileRdfTriple *pRdfTriple);
 
-    void fileLocked(const bool &pLocked);
-
 private:
     CellMLSupport::CellmlFile *mCellmlFile;
 
@@ -119,8 +116,6 @@ private:
     QLabel *mCurrentResourceOrIdLabel;
 
     QMenu *mCustomContextMenu;
-
-    QList<QPushButton *> mRemoveButtons;
 
     void genericLookup(const QString &pRdfTripleInformation = QString(),
                        const Type &pType = No,

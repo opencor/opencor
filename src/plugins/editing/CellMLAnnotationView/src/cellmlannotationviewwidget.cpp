@@ -405,19 +405,6 @@ void CellmlAnnotationViewWidget::addRdfTriple(CellMLSupport::CellmlFileRdfTriple
 
 //==============================================================================
 
-void CellmlAnnotationViewWidget::fileLocked(const bool &pLocked)
-{
-    // Let our metadata details widgets know that the file has been un/locked
-    // Note: we don't need to let our CellML list details widget know about it
-    //       since only showing the context menu requires knowing whether the
-    //       current file is locked, information which it retrieves when
-    //       creating the context menu...
-
-    mMetadataDetails->fileLocked(pLocked);
-}
-
-//==============================================================================
-
 void CellmlAnnotationViewWidget::fileReloaded()
 {
     // Let our CellML list and metadata details widgets know that the file has

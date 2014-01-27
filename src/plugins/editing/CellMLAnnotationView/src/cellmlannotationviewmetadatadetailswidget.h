@@ -78,7 +78,6 @@ public:
     CellmlAnnotationViewMetadataEditDetailsWidget * metadataEditDetails() const;
     CellmlAnnotationViewMetadataViewDetailsWidget * metadataViewDetails() const;
 
-    void fileLocked(const bool &pLocked);
     void fileReloaded();
 
 private:

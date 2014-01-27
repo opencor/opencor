@@ -61,8 +61,7 @@ CellmlAnnotationViewMetadataNormalViewDetailsWidget::CellmlAnnotationViewMetadat
     mVerticalScrollBarPosition(0),
     mNeighbourRow(0),
     mRdfTriplesMapping(QMap<QObject *, CellMLSupport::CellmlFileRdfTriple *>()),
-    mCurrentResourceOrIdLabel(0),
-    mRemoveButtons(QList<QPushButton *>())
+    mCurrentResourceOrIdLabel(0)
 {
     // Set up the GUI
 
@@ -179,10 +178,6 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::updateGui(iface::cellm
                                                 newGridWidget),
                                  0, 3);
 
-        // Remove our tracking of all the remove buttons
-
-        mRemoveButtons.clear();
-
         // Add the RDF triples information to our layout
         // Note: for the RDF triple's subject, we try to remove the CellML
         //       file's URI base, thus only leaving the equivalent of a CellML
@@ -265,10 +260,6 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::updateGui(iface::cellm
                     this, SLOT(removeRdfTriple()));
 
             newGridLayout->addWidget(removeButton, row, 3, Qt::AlignCenter);
-
-            // Keep track of the remove button
-
-            mRemoveButtons << removeButton;
 
             // Keep track of the very first resource id and update the last one
 
@@ -381,17 +372,6 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::addRdfTriple(CellMLSup
     // Update the GUI to reflect the addition of the given RDF triple
 
     updateGui(mElement, QString(), No, mLookupInformation);
-}
-
-//==============================================================================
-
-void CellmlAnnotationViewMetadataNormalViewDetailsWidget::fileLocked(const bool &pLocked)
-{
-    // The file has been un/locked, so we need to enable/disable all the remove
-    // buttons, if any
-
-    foreach (QPushButton *removeButton, mRemoveButtons)
-        removeButton->setEnabled(!pLocked);
 }
 
 //==============================================================================
