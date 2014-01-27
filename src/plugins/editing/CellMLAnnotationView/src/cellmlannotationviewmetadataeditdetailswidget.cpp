@@ -626,7 +626,9 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateItemsGui(const Items &
 
         QString labelText;
 
-        if (mTerm.isEmpty()) {
+        if (Core::FileManager::instance()->isLocked(mCellmlFile->fileName())) {
+            labelText = QString();
+        } else if (mTerm.isEmpty()) {
             labelText = tr("Please enter a term to search above...");
         } else if (pLookupTerm) {
             labelText = tr("Please wait while we are retrieving possible terms for <strong>%1</strong>...").arg(mTerm);
