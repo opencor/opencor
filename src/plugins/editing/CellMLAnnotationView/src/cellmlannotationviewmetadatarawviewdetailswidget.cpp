@@ -71,7 +71,7 @@ void CellmlAnnotationViewMetadataRawViewDetailsWidget::updateGui(iface::cellml_a
     if (!pElement)
         return;
 
-    // Prevent ourselves from being updated (to avoid any flickering)
+    // Prevent ourselves from being updated (to avoid flickering)
 
     setUpdatesEnabled(false);
 

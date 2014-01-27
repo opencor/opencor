@@ -316,7 +316,7 @@ void SingleCellViewInformationParametersWidget::populateModel(CellMLSupport::Cel
     if (!mPropertyEditor)
         return;
 
-    // Prevent ourselves from being updated (to avoid any flickering)
+    // Prevent ourselves from being updated (to avoid flickering)
 
     mPropertyEditor->setUpdatesEnabled(false);
 

@@ -339,7 +339,7 @@ void SingleCellViewInformationGraphsWidget::addGraph(SingleCellViewGraphPanelPlo
     if (!mPropertyEditor)
         return;
 
-    // Prevent ourselves from being updated (to avoid any flickering)
+    // Prevent ourselves from being updated (to avoid flickering)
 
     mPropertyEditor->setUpdatesEnabled(false);
 
@@ -405,7 +405,7 @@ void SingleCellViewInformationGraphsWidget::removeGraphs(SingleCellViewGraphPane
     if (!mPropertyEditor)
         return;
 
-    // Prevent ourselves from being updated (to avoid any flickering)
+    // Prevent ourselves from being updated (to avoid flickering)
 
     mPropertyEditor->setUpdatesEnabled(false);
 

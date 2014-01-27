@@ -126,7 +126,6 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::updateGui(iface::cellm
     //       this unfortunately results in some very bad flickering on OS X.
     //       This can, however, be addressed using a stacked widget, so...
 
-    // Prevent ourselves from being updated (to avoid any flickering)
 
     setUpdatesEnabled(false);
 

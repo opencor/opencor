@@ -235,7 +235,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(const Items &pItem
     //       but this unfortunately results in some very bad flickering on OS X.
     //       This can, however, be addressed using a stacked widget, so...
 
-    // Prevent ourselves from being updated (to avoid any flickering)
+    // Prevent ourselves from being updated (to avoid flickering)
 
     setUpdatesEnabled(false);
 
@@ -476,7 +476,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateItemsGui(const Items &
 {
     Q_ASSERT(mItemsScrollArea);
 
-    // Prevent ourselves from being updated (to avoid any flickering)
+    // Prevent ourselves from being updated (to avoid flickering)
 
     setUpdatesEnabled(false);
 
