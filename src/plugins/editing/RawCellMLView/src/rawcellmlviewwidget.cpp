@@ -172,7 +172,7 @@ void RawCellmlViewWidget::initialize(const QString &pFileName)
         }
 
         QScintillaSupport::QScintillaWidget *editor = new QScintillaSupport::QScintillaWidget(fileContents,
-                                                                                              !Core::FileManager::instance()->isLocked(pFileName),
+                                                                                              !Core::FileManager::instance()->isReadableAndWritable(pFileName),
                                                                                               new QsciLexerXML(this),
                                                                                               parentWidget());
 

@@ -480,12 +480,12 @@ void CorePlugin::fileOpened(const QString &pFileName)
 
 //==============================================================================
 
-void CorePlugin::fileLocked(const QString &pFileName, const bool &pLocked)
+void CorePlugin::filePermissionsChanged(const QString &pFileName)
 {
     // Update the checked state of our Locked menu, if needed
 
     if (!pFileName.compare(mCentralWidget->currentFileName()))
-        mFileLockedAction->setChecked(pLocked);
+        mFileLockedAction->setChecked(Core::FileManager::instance()->isLocked(pFileName));
 }
 
 //==============================================================================

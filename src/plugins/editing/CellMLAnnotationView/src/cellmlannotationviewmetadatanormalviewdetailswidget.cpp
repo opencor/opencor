@@ -248,7 +248,7 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::updateGui(iface::cellm
             //          QAction to it, but a QToolButton doesn't look quite
             //          the same as a QPushButton on some platforms, so...
 
-            removeButton->setEnabled(!Core::FileManager::instance()->isLocked(mCellmlFile->fileName()));
+            removeButton->setEnabled(Core::FileManager::instance()->isReadableAndWritable(mCellmlFile->fileName()));
             removeButton->setIcon(QIcon(":/oxygen/actions/list-remove.png"));
             removeButton->setStatusTip(tr("Remove the term"));
             removeButton->setToolTip(tr("Remove"));

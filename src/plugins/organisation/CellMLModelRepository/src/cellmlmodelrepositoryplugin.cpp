@@ -239,11 +239,9 @@ void CellMLModelRepositoryPlugin::fileOpened(const QString &pFileName)
 
 //==============================================================================
 
-void CellMLModelRepositoryPlugin::fileLocked(const QString &pFileName,
-                                             const bool &pLocked)
+void CellMLModelRepositoryPlugin::filePermissionsChanged(const QString &pFileName)
 {
     Q_UNUSED(pFileName);
-    Q_UNUSED(pLocked);
 
     // We don't handle this interface...
 }

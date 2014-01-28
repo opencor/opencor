@@ -312,11 +312,9 @@ void CellMLToolsPlugin::fileOpened(const QString &pFileName)
 
 //==============================================================================
 
-void CellMLToolsPlugin::fileLocked(const QString &pFileName,
-                                   const bool &pLocked)
+void CellMLToolsPlugin::filePermissionsChanged(const QString &pFileName)
 {
     Q_UNUSED(pFileName);
-    Q_UNUSED(pLocked);
 
     // We don't handle this interface...
 }

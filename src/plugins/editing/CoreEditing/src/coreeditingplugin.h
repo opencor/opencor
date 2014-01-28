@@ -104,16 +104,21 @@ private:
 
     QString mFileName;
 
-    void updateUndoRedoActions();
-    void updateSelectAllAction();
-
     void updateEditorBackground();
 
 private Q_SLOTS:
     void clipboardDataChanged();
 
+    void updateUndoRedoActions();
+    void updateEditingActions();
+    void updateSelectAllAction();
+
     void doUndo();
     void doRedo();
+
+    void doCut();
+    void doPaste();
+    void doDelete();
 
     void doSelectAll();
 };

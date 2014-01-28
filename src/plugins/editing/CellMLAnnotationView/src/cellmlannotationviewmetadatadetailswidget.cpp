@@ -210,11 +210,11 @@ void CellmlAnnotationViewMetadataDetailsWidget::retranslateUi()
 
     // Retranslate our unsupported metadata message
 
-    QString extraMessage = Core::FileManager::instance()->isLocked(mCellmlFile->fileName())?
-                               QString():
+    QString extraMessage = Core::FileManager::instance()->isReadableAndWritable(mCellmlFile->fileName())?
                                "    <p>"
                                "        <small><em>("+tr("Please click <a href=\"here\">here</a> if you want to remove the existing metadata.")+")</em></small>"
-                               "    </p>";
+                               "    </p>":
+                               QString();
 
 
     mUnsupportedMetadataMessage->setMessage( "<div align=center>"

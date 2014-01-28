@@ -240,10 +240,9 @@ void HelpPlugin::fileOpened(const QString &pFileName)
 
 //==============================================================================
 
-void HelpPlugin::fileLocked(const QString &pFileName, const bool &pLocked)
+void HelpPlugin::filePermissionsChanged(const QString &pFileName)
 {
     Q_UNUSED(pFileName);
-    Q_UNUSED(pLocked);
 
     // We don't handle this interface...
 }

@@ -67,7 +67,6 @@ public:
 
         // As a result of updating the locked status of a file
 
-        LockedNotReadable,
         LockedNotNeeded,
         LockedSet,
         LockedNotSet,
@@ -94,6 +93,10 @@ public:
 
     bool isModified(const QString &pFileName) const;
 
+    bool isReadable(const QString &pFileName) const;
+    bool isWritable(const QString &pFileName) const;
+    bool isReadableAndWritable(const QString &pFileName) const;
+
     bool isLocked(const QString &pFileName) const;
     Status setLocked(const QString &pFileName, const bool &pLocked);
 
@@ -107,7 +110,8 @@ public:
 private:
     QTimer *mTimer;
     QList<File *> mFiles;
-    QMap<QString, bool> mLockedFiles;
+    QMap<QString, bool> mFilesReadable;
+    QMap<QString, bool> mFilesWritable;
 
 Q_SIGNALS:
     void fileManaged(const QString &pFileName);
@@ -116,7 +120,7 @@ Q_SIGNALS:
     void fileChanged(const QString &pFileName);
     void fileDeleted(const QString &pFileName);
 
-    void fileLocked(const QString &pFileName, const bool &pLocked);
+    void filePermissionsChanged(const QString &pFileName);
     void fileModified(const QString &pFileName, const bool &pModified);
 
     void fileReloaded(const QString &pFileName);

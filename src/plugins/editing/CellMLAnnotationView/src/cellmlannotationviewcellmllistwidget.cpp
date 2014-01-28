@@ -880,13 +880,13 @@ void CellmlAnnotationViewCellmlListWidget::showCustomContextMenu(const QPoint &p
 
         // Update the enabled status of our actions
 
-        bool locked = Core::FileManager::instance()->isLocked(mCellmlFile->fileName());
+        bool fileReadableAndWritable = Core::FileManager::instance()->isReadableAndWritable(mCellmlFile->fileName());
 
         mGui->actionExpandAll->setEnabled(posItem->hasChildren() && !indexIsAllExpanded(mTreeViewWidget->currentIndex()));
         mGui->actionCollapseAll->setEnabled(posItem->hasChildren() && mTreeViewWidget->isExpanded(mTreeViewWidget->currentIndex()));
 
-        mGui->actionRemoveCurrentMetadata->setEnabled(!locked && !posItem->isCategory() && mCellmlFile->rdfTriples(posItem->element()).count());
-        mGui->actionRemoveAllMetadata->setEnabled(!locked && !posItem->isCategory() && mCellmlFile->rdfTriples().count());
+        mGui->actionRemoveCurrentMetadata->setEnabled(fileReadableAndWritable && !posItem->isCategory() && mCellmlFile->rdfTriples(posItem->element()).count());
+        mGui->actionRemoveAllMetadata->setEnabled(fileReadableAndWritable && !posItem->isCategory() && mCellmlFile->rdfTriples().count());
 
         mGui->actionOpenImport->setEnabled(posItem->type() == CellmlAnnotationViewCellmlElementItem::Import);
 

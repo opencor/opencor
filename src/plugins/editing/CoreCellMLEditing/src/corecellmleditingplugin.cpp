@@ -243,11 +243,9 @@ void CoreCellMLEditingPlugin::fileOpened(const QString &pFileName)
 
 //==============================================================================
 
-void CoreCellMLEditingPlugin::fileLocked(const QString &pFileName,
-                                         const bool &pLocked)
+void CoreCellMLEditingPlugin::filePermissionsChanged(const QString &pFileName)
 {
     Q_UNUSED(pFileName);
-    Q_UNUSED(pLocked);
 
     // We don't handle this interface...
 }

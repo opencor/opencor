@@ -37,7 +37,8 @@ namespace Core {
 
 FileManager::FileManager(const int &pTimerInterval) :
     mFiles(QList<File *>()),
-    mLockedFiles(QMap<QString, bool>())
+    mFilesReadable(QMap<QString, bool>()),
+    mFilesWritable(QMap<QString, bool>())
 {
     // Create our timer
 
@@ -193,6 +194,44 @@ void FileManager::setModified(const QString &pFileName, const bool &pModified)
 
 //==============================================================================
 
+bool FileManager::isReadable(const QString &pFileName) const
+{
+    // Return whether the given file, if it is being managed, is readable
+
+    File *file = isManaged(nativeCanonicalFileName(pFileName));
+
+    if (file)
+        return file->isReadable();
+    else
+        return false;
+}
+
+//==============================================================================
+
+bool FileManager::isWritable(const QString &pFileName) const
+{
+    // Return whether the given file, if it is being managed, is writable
+
+    File *file = isManaged(nativeCanonicalFileName(pFileName));
+
+    if (file)
+        return file->isWritable();
+    else
+        return false;
+}
+
+//==============================================================================
+
+bool FileManager::isReadableAndWritable(const QString &pFileName) const
+{
+    // Return whether the given file, if it is being managed, is readable and
+    // writable
+
+    return isReadable(pFileName) && isWritable(pFileName);
+}
+
+//==============================================================================
+
 bool FileManager::isLocked(const QString &pFileName) const
 {
     // Return whether the given file, if it is being managed, is locked
@@ -219,10 +258,8 @@ FileManager::Status FileManager::setLocked(const QString &pFileName,
         File::Status status = file->setLocked(pLocked);
 
         if (status == File::LockedSet)
-            emit fileLocked(nativeFileName, pLocked);
+            emit filePermissionsChanged(nativeFileName);
 
-        if (status == File::LockedNotReadable)
-            return LockedNotReadable;
         if (status == File::LockedNotNeeded)
             return LockedNotNeeded;
         else if (status == File::LockedSet)
@@ -335,13 +372,17 @@ void FileManager::checkFiles()
                 ;
         }
 
-        bool isFileLocked = isLocked(file->fileName());
+        bool fileReadable = isLocked(file->fileName());
+        bool fileWritable = isLocked(file->fileName());
 
-        if (    (isFileLocked != mLockedFiles.value(file->fileName(), false))
-            || !mLockedFiles.contains(file->fileName())) {
-            emit fileLocked(file->fileName(), isFileLocked);
+        if (    (fileReadable != mFilesReadable.value(file->fileName(), false))
+            ||  (fileWritable != mFilesWritable.value(file->fileName(), false))
+            || !(   mFilesReadable.contains(file->fileName())
+                 && mFilesWritable.contains(file->fileName()))) {
+            emit filePermissionsChanged(file->fileName());
 
-            mLockedFiles.insert(file->fileName(), isFileLocked);
+            mFilesReadable.insert(file->fileName(), fileReadable);
+            mFilesWritable.insert(file->fileName(), fileWritable);
         }
     }
 }

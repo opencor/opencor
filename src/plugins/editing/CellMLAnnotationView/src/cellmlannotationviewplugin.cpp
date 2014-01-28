@@ -398,11 +398,8 @@ void CellMLAnnotationViewPlugin::fileOpened(const QString &pFileName)
 
 //==============================================================================
 
-void CellMLAnnotationViewPlugin::fileLocked(const QString &pFileName,
-                                            const bool &pLocked)
+void CellMLAnnotationViewPlugin::filePermissionsChanged(const QString &pFileName)
 {
-    Q_UNUSED(pLocked);
-
     // The given file has been un/locked, so retranslate ourselves (since some
     // messages may be locked-dependent)
     // Note: our plugin is such that retranslating it will update the GUI (since

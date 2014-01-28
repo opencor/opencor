@@ -23,7 +23,7 @@
                           const QString &pNewFileName) PURE;
 
     virtual void fileOpened(const QString &pFileName) PURE;
-    virtual void fileLocked(const QString &pFileName, const bool &pLocked) PURE;
+    virtual void filePermissionsChanged(const QString &pFileName) PURE;
     virtual void fileModified(const QString &pFileName,
                               const bool &pModified) PURE;
     virtual void fileReloaded(const QString &pFileName) PURE;

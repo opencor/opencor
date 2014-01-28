@@ -158,6 +158,33 @@ void File::setModified(const bool &pModified)
 
 //==============================================================================
 
+bool File::isReadable() const
+{
+    // Return whether the file is readable
+
+    return QFileInfo(mFileName).isReadable();
+}
+
+//==============================================================================
+
+bool File::isWritable() const
+{
+    // Return whether the file is writable
+
+    return QFileInfo(mFileName).isWritable();
+}
+
+//==============================================================================
+
+bool File::isReadableAndWritable() const
+{
+    // Return whether the file is readable and writable
+
+    return isReadable() && isWritable();
+}
+
+//==============================================================================
+
 bool File::isLocked() const
 {
     // Return whether the file is locked
@@ -170,9 +197,6 @@ bool File::isLocked() const
 File::Status File::setLocked(const bool &pLocked)
 {
     // Set the locked status of the file, but only if it is readable
-
-    if (!QFileInfo(mFileName).isReadable())
-        return LockedNotReadable;
 
     if (pLocked == isLocked())
         return LockedNotNeeded;

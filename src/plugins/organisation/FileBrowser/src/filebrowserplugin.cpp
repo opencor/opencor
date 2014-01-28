@@ -239,11 +239,9 @@ void FileBrowserPlugin::fileOpened(const QString &pFileName)
 
 //==============================================================================
 
-void FileBrowserPlugin::fileLocked(const QString &pFileName,
-                                   const bool &pLocked)
+void FileBrowserPlugin::filePermissionsChanged(const QString &pFileName)
 {
     Q_UNUSED(pFileName);
-    Q_UNUSED(pLocked);
 
     // We don't handle this interface...
 }

@@ -276,11 +276,9 @@ void SingleCellViewPlugin::fileOpened(const QString &pFileName)
 
 //==============================================================================
 
-void SingleCellViewPlugin::fileLocked(const QString &pFileName,
-                                      const bool &pLocked)
+void SingleCellViewPlugin::filePermissionsChanged(const QString &pFileName)
 {
     Q_UNUSED(pFileName);
-    Q_UNUSED(pLocked);
 
     // We don't handle this interface...
 }

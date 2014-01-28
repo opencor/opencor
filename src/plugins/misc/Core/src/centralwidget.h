@@ -212,7 +212,7 @@ private Q_SLOTS:
 
     void updateModifiedSettings();
 
-    void fileLocked(const QString &pFileName, const bool &pLocked);
+    void filePermissionsChanged(const QString &pFileName);
     void fileModified(const QString &pFileName, const bool &pModified);
 
     void fileReloaded(const QString &pFileName);

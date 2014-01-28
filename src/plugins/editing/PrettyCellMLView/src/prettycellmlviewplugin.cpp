@@ -275,11 +275,9 @@ void PrettyCellMLViewPlugin::fileOpened(const QString &pFileName)
 
 //==============================================================================
 
-void PrettyCellMLViewPlugin::fileLocked(const QString &pFileName,
-                                        const bool &pLocked)
+void PrettyCellMLViewPlugin::filePermissionsChanged(const QString &pFileName)
 {
     Q_UNUSED(pFileName);
-    Q_UNUSED(pLocked);
 
     // We don't handle this interface...
 }

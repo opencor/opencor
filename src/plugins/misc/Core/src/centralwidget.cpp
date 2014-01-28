@@ -206,8 +206,8 @@ CentralWidget::CentralWidget(QMainWindow *pMainWindow) :
 
     // A couple of connections to handle changes to a file
 
-    connect(FileManager::instance(), SIGNAL(fileLocked(const QString &, const bool &)),
-            this, SLOT(fileLocked(const QString &, const bool &)));
+    connect(FileManager::instance(), SIGNAL(filePermissionsChanged(const QString &)),
+            this, SLOT(filePermissionsChanged(const QString &)));
     connect(FileManager::instance(), SIGNAL(fileModified(const QString &, const bool &)),
             this, SLOT(fileModified(const QString &, const bool &)));
 
@@ -667,16 +667,11 @@ void CentralWidget::toggleLockedFile()
 
     FileManager *fileManagerInstance = FileManager::instance();
     QString fileName = mFileNames[mFileTabs->currentIndex()];
+    bool fileLocked = fileManagerInstance->isLocked(fileName);
 
-    FileManager::Status fileStatus = fileManagerInstance->setLocked(fileName, !fileManagerInstance->isLocked(fileName));
-
-    if (   (fileStatus == FileManager::LockedNotReadable)
-        || (fileStatus == FileManager::LockedNotSet)) {
-        QMessageBox::warning(mMainWindow, fileManagerInstance->isLocked(fileName)?tr("Unlock File"):tr("Lock File"),
-                             tr("Sorry, but <strong>%1</strong> could not be %2%3.").arg(fileName,
-                                                                                         fileManagerInstance->isLocked(fileName)?tr("unlocked"):tr("locked"),
-                                                                                         (fileStatus == FileManager::LockedNotReadable)?" ("+tr("it is not readable")+")":QString()));
-    }
+    if (fileManagerInstance->setLocked(fileName, !fileLocked) == FileManager::LockedNotSet)
+        QMessageBox::warning(mMainWindow, fileLocked?tr("Unlock File"):tr("Lock File"),
+                             tr("Sorry, but <strong>%1</strong> could not be %2.").arg(fileName, fileLocked?tr("unlocked"):tr("locked")));
 }
 
 //==============================================================================
@@ -1471,8 +1466,7 @@ void CentralWidget::updateModifiedSettings()
 
 //==============================================================================
 
-void CentralWidget::fileLocked(const QString &pFileName,
-                               const bool &pLocked)
+void CentralWidget::filePermissionsChanged(const QString &pFileName)
 {
     // Let our plugins know about the file having had its locked status changed
 
@@ -1480,7 +1474,7 @@ void CentralWidget::fileLocked(const QString &pFileName,
         GuiInterface *guiInterface = qobject_cast<GuiInterface *>(plugin->instance());
 
         if (guiInterface)
-            guiInterface->fileLocked(pFileName, pLocked);
+            guiInterface->filePermissionsChanged(pFileName);
     }
 }
 

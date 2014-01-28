@@ -45,7 +45,6 @@ public:
 
         // As a result of setting the locked status of a file
 
-        LockedNotReadable,
         LockedNotNeeded,
         LockedSet,
         LockedNotSet
@@ -62,6 +61,10 @@ public:
 
     bool isModified() const;
     void setModified(const bool &pModified);
+
+    bool isReadable() const;
+    bool isWritable() const;
+    bool isReadableAndWritable() const;
 
     bool isLocked() const;
     Status  setLocked(const bool &pLocked);

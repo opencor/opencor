@@ -275,11 +275,9 @@ void RawCellMLViewPlugin::fileOpened(const QString &pFileName)
 
 //==============================================================================
 
-void RawCellMLViewPlugin::fileLocked(const QString &pFileName,
-                                     const bool &pLocked)
+void RawCellMLViewPlugin::filePermissionsChanged(const QString &pFileName)
 {
     Q_UNUSED(pFileName);
-    Q_UNUSED(pLocked);
 
     // We don't handle this interface...
 }

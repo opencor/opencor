@@ -298,11 +298,9 @@ void RawViewPlugin::fileOpened(const QString &pFileName)
 
 //==============================================================================
 
-void RawViewPlugin::fileLocked(const QString &pFileName,
-                               const bool &pLocked)
+void RawViewPlugin::filePermissionsChanged(const QString &pFileName)
 {
     Q_UNUSED(pFileName);
-    Q_UNUSED(pLocked);
 
     // We don't handle this interface...
 }

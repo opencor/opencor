@@ -59,7 +59,7 @@ void RawViewWidget::fileReloaded()
     }
 
     setContents(fileContents);
-    setReadOnly(!Core::FileManager::instance()->isLocked(mFileName));
+    setReadOnly(!Core::FileManager::instance()->isReadableAndWritable(mFileName));
 }
 
 //==============================================================================

@@ -252,19 +252,11 @@ void CoreEditingPlugin::updateGui(Plugin *pViewPlugin, const QString &pFileName)
 
         if (mEditor && pFileName.compare(mFileName)) {
             disconnect(mEditor, SIGNAL(canUndo(const bool &)),
-                       mEditUndoAction, SLOT(setEnabled(bool)));
-            disconnect(mEditor, SIGNAL(canRedo(const bool &)),
-                       mEditRedoAction, SLOT(setEnabled(bool)));
-
+                       this, SLOT(updateUndoRedoActions()));
             disconnect(mEditor, SIGNAL(copyAvailable(bool)),
-                       mEditCutAction, SLOT(setEnabled(bool)));
-            disconnect(mEditor, SIGNAL(copyAvailable(bool)),
-                       mEditCopyAction, SLOT(setEnabled(bool)));
-            disconnect(mEditor, SIGNAL(copyAvailable(bool)),
-                       mEditDeleteAction, SLOT(setEnabled(bool)));
-
+                       this, SLOT(updateEditingActions()));
             disconnect(mEditor, SIGNAL(canSelectAll(const bool &)),
-                       mEditSelectAllAction, SLOT(setEnabled(bool)));
+                       this, SLOT(updateSelectAllAction()));
 
             disconnect(mEditUndoAction, SIGNAL(triggered()),
                        this, SLOT(doUndo()));
@@ -272,13 +264,13 @@ void CoreEditingPlugin::updateGui(Plugin *pViewPlugin, const QString &pFileName)
                        this, SLOT(doRedo()));
 
             disconnect(mEditCutAction, SIGNAL(triggered()),
-                       mEditor, SLOT(cut()));
+                       this, SLOT(doCut()));
             disconnect(mEditCopyAction, SIGNAL(triggered()),
                        mEditor, SLOT(copy()));
             disconnect(mEditPasteAction, SIGNAL(triggered()),
-                       mEditor, SLOT(paste()));
+                       this, SLOT(doPaste()));
             disconnect(mEditDeleteAction, SIGNAL(triggered()),
-                       mEditor, SLOT(delete_selection()));
+                       this, SLOT(doDelete()));
 
             disconnect(mEditSelectAllAction, SIGNAL(triggered()),
                        this, SLOT(doSelectAll()));
@@ -293,19 +285,11 @@ void CoreEditingPlugin::updateGui(Plugin *pViewPlugin, const QString &pFileName)
             mEditor->setContextMenu(mEditMenu->actions());
 
             connect(mEditor, SIGNAL(canUndo(const bool &)),
-                    mEditUndoAction, SLOT(setEnabled(bool)));
-            connect(mEditor, SIGNAL(canRedo(const bool &)),
-                    mEditRedoAction, SLOT(setEnabled(bool)));
-
+                    this, SLOT(updateUndoRedoActions()));
             connect(mEditor, SIGNAL(copyAvailable(bool)),
-                    mEditCutAction, SLOT(setEnabled(bool)));
-            connect(mEditor, SIGNAL(copyAvailable(bool)),
-                    mEditCopyAction, SLOT(setEnabled(bool)));
-            connect(mEditor, SIGNAL(copyAvailable(bool)),
-                    mEditDeleteAction, SLOT(setEnabled(bool)));
-
+                    this, SLOT(updateEditingActions()));
             connect(mEditor, SIGNAL(canSelectAll(const bool &)),
-                    mEditSelectAllAction, SLOT(setEnabled(bool)));
+                    this, SLOT(updateSelectAllAction()));
 
             connect(mEditUndoAction, SIGNAL(triggered()),
                     this, SLOT(doUndo()));
@@ -313,27 +297,20 @@ void CoreEditingPlugin::updateGui(Plugin *pViewPlugin, const QString &pFileName)
                     this, SLOT(doRedo()));
 
             connect(mEditCutAction, SIGNAL(triggered()),
-                    mEditor, SLOT(cut()));
+                    this, SLOT(doCut()));
             connect(mEditCopyAction, SIGNAL(triggered()),
                     mEditor, SLOT(copy()));
             connect(mEditPasteAction, SIGNAL(triggered()),
-                    mEditor, SLOT(paste()));
+                    this, SLOT(doPaste()));
             connect(mEditDeleteAction, SIGNAL(triggered()),
-                    mEditor, SLOT(delete_selection()));
+                    this, SLOT(doDelete()));
 
             connect(mEditSelectAllAction, SIGNAL(triggered()),
                     this, SLOT(doSelectAll()));
 
             updateUndoRedoActions();
+            updateEditingActions();
             updateSelectAllAction();
-
-            bool notLockedAndHasSelectedText =    !Core::FileManager::instance()->isLocked(pFileName)
-                                               &&  mEditor->hasSelectedText();
-
-            mEditCutAction->setEnabled(notLockedAndHasSelectedText);
-            mEditCopyAction->setEnabled(notLockedAndHasSelectedText);
-            clipboardDataChanged();
-            mEditDeleteAction->setEnabled(notLockedAndHasSelectedText);
         } else {
             mEditUndoAction->setEnabled(false);
             mEditRedoAction->setEnabled(false);
@@ -450,8 +427,7 @@ void CoreEditingPlugin::fileOpened(const QString &pFileName)
 
 //==============================================================================
 
-void CoreEditingPlugin::fileLocked(const QString &pFileName,
-                                   const bool &pLocked)
+void CoreEditingPlugin::filePermissionsChanged(const QString &pFileName)
 {
     // Update some actions and make our editor read-only or writable, if needed
 
@@ -459,19 +435,13 @@ void CoreEditingPlugin::fileLocked(const QString &pFileName,
         // Update some actions
 
         updateUndoRedoActions();
-
-        bool notLockedAndHasSelectedText =    !pLocked
-                                           &&  mEditor
-                                           &&  mEditor->hasSelectedText();
-
-        mEditCutAction->setEnabled(notLockedAndHasSelectedText);
-        clipboardDataChanged();
-        mEditDeleteAction->setEnabled(notLockedAndHasSelectedText);
+        updateEditingActions();
+        updateSelectAllAction();
 
         // Make our editor read-only or writable
 
         if (mEditor) {
-            mEditor->setReadOnly(pLocked);
+            mEditor->setReadOnly(!Core::FileManager::instance()->isReadableAndWritable(pFileName));
 
             updateEditorBackground();
         }
@@ -589,8 +559,8 @@ void CoreEditingPlugin::clipboardDataChanged()
     // Enable our paste action if the clipboard contains some text
 
     if (mEditingInterface)
-        mEditPasteAction->setEnabled(    mEditor
-                                     && !Core::FileManager::instance()->isLocked(mFileName)
+        mEditPasteAction->setEnabled(   mEditor
+                                     && Core::FileManager::instance()->isReadableAndWritable(mFileName)
                                      && QApplication::clipboard()->text().size());
 }
 
@@ -601,11 +571,29 @@ void CoreEditingPlugin::updateUndoRedoActions()
     // Update our undo/redo actions
 
     if (mEditingInterface) {
-        bool editorAndNotLocked =     mEditor
-                                  && !Core::FileManager::instance()->isLocked(mFileName);
+        bool editorAndFileReadableAndWritable =    mEditor
+                                                && Core::FileManager::instance()->isReadableAndWritable(mFileName);
 
-        mEditUndoAction->setEnabled(editorAndNotLocked && mEditor->isUndoAvailable());
-        mEditRedoAction->setEnabled(editorAndNotLocked && mEditor->isRedoAvailable());
+        mEditUndoAction->setEnabled(editorAndFileReadableAndWritable && mEditor->isUndoAvailable());
+        mEditRedoAction->setEnabled(editorAndFileReadableAndWritable && mEditor->isRedoAvailable());
+    }
+}
+
+//==============================================================================
+
+void CoreEditingPlugin::updateEditingActions()
+{
+    // Update our editing actions
+
+    if (mEditingInterface) {
+        bool editorAndHasSelectedText =    mEditor
+                                        && mEditor->hasSelectedText();
+        bool fileReadableOrWritable = Core::FileManager::instance()->isReadableAndWritable(mFileName);
+
+        mEditCutAction->setEnabled(editorAndHasSelectedText && fileReadableOrWritable);
+        mEditCopyAction->setEnabled(editorAndHasSelectedText);
+        clipboardDataChanged();
+        mEditDeleteAction->setEnabled(editorAndHasSelectedText && fileReadableOrWritable);
     }
 }
 
@@ -615,8 +603,9 @@ void CoreEditingPlugin::updateSelectAllAction()
 {
     // Update our select all action
 
-    if (mEditingInterface && mEditor)
-        mEditSelectAllAction->setEnabled(mEditor->isSelectAllAvailable());
+    if (mEditingInterface)
+        mEditSelectAllAction->setEnabled(   mEditor
+                                         && mEditor->isSelectAllAvailable());
 }
 
 //==============================================================================
@@ -647,6 +636,45 @@ void CoreEditingPlugin::doRedo()
 
 //==============================================================================
 
+void CoreEditingPlugin::doCut()
+{
+    // Cut the text and update our undo/redo actions
+
+    if (mEditingInterface && mEditor) {
+        mEditor->cut();
+
+        updateUndoRedoActions();
+    }
+}
+
+//==============================================================================
+
+void CoreEditingPlugin::doPaste()
+{
+    // Paste the text and update our undo/redo actions
+
+    if (mEditingInterface && mEditor) {
+        mEditor->paste();
+
+        updateUndoRedoActions();
+    }
+}
+
+//==============================================================================
+
+void CoreEditingPlugin::doDelete()
+{
+    // Delete the text and update our undo/redo actions
+
+    if (mEditingInterface && mEditor) {
+        mEditor->SendScintilla(QsciScintillaBase::SCI_CLEAR);
+
+        updateUndoRedoActions();
+    }
+}
+
+//==============================================================================
+
 void CoreEditingPlugin::doSelectAll()
 {
     // Select all the text and update our select all action
@@ -666,7 +694,7 @@ void CoreEditingPlugin::updateEditorBackground()
     // is locked
 
     if (mEditingInterface && mEditor) {
-        QColor backgroundColor = Core::FileManager::instance()->isLocked(mFileName)?Core::lockedColor(Core::baseColor()):Core::baseColor();
+        QColor backgroundColor = Core::FileManager::instance()->isReadableAndWritable(mFileName)?Core::baseColor():Core::lockedColor(Core::baseColor());
 
         for (int i = 0; i < QsciScintillaBase::STYLE_MAX; ++i)
             mEditor->SendScintilla(QsciScintillaBase::SCI_STYLESETBACK, i, backgroundColor);
