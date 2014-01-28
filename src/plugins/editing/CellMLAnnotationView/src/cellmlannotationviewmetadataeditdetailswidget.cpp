@@ -164,19 +164,15 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::retranslateUi()
 
     mGui->retranslateUi(this);
 
-    // For the rest of our GUI, it's easier to just update it, so...
+    // For the rest of our GUI, it's easier to just update it
 
     updateGui(mItems, mErrorMessage, mLookupTerm, mItemsVerticalScrollBarPosition, true);
-
-    // Update the enabled state of our various add buttons
-
-    updateGui(mElement, false);
 }
 
 //==============================================================================
 
 void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(iface::cellml_api::CellMLElement *pElement,
-                                                              const bool &pUpdateItemsGui)
+                                                              const bool &pResetItemsGui)
 {
     // Keep track of the CellML element
 
@@ -211,30 +207,31 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(iface::cellml_api:
         mAddTermButton->setEnabled(false);
     }
 
-    // Update our items' GUI, if required
+    // Reset our items' GUI, if needed
 
-    if (pUpdateItemsGui)
+    if (pResetItemsGui)
         updateItemsGui(Items(), QString(), !mTermIsDirect);
 
     // Enable or disable the add buttons for our retrieved terms, depending on
     // whether they are already associated with the CellML element
 
-    for (int row = 0; mGridLayout->itemAtPosition(++row, 0);) {
-        QPushButton *addButton = qobject_cast<QPushButton *>(mGridLayout->itemAtPosition(row, 3)->widget());
+    if (mGridLayout)
+        for (int row = 0; mGridLayout->itemAtPosition(++row, 0);) {
+            QPushButton *addButton = qobject_cast<QPushButton *>(mGridLayout->itemAtPosition(row, 3)->widget());
 
-        Item item = mItemsMapping.value(addButton);
+            Item item = mItemsMapping.value(addButton);
 
-        if (mQualifierIndex < CellMLSupport::CellmlFileRdfTriple::LastBioQualifier)
-            addButton->setEnabled(    fileReadableAndWritable
-                                  && !mCellmlFile->rdfTripleExists(mElement,
-                                                                   CellMLSupport::CellmlFileRdfTriple::BioQualifier(mQualifierIndex+1),
-                                                                   item.resource, item.id));
-        else
-            addButton->setEnabled(    fileReadableAndWritable
-                                  && !mCellmlFile->rdfTripleExists(mElement,
-                                                                   CellMLSupport::CellmlFileRdfTriple::ModelQualifier(mQualifierIndex-CellMLSupport::CellmlFileRdfTriple::LastBioQualifier+1),
-                                                                   item.resource, item.id));
-    }
+            if (mQualifierIndex < CellMLSupport::CellmlFileRdfTriple::LastBioQualifier)
+                addButton->setEnabled(    fileReadableAndWritable
+                                      && !mCellmlFile->rdfTripleExists(mElement,
+                                                                       CellMLSupport::CellmlFileRdfTriple::BioQualifier(mQualifierIndex+1),
+                                                                       item.resource, item.id));
+            else
+                addButton->setEnabled(    fileReadableAndWritable
+                                      && !mCellmlFile->rdfTripleExists(mElement,
+                                                                       CellMLSupport::CellmlFileRdfTriple::ModelQualifier(mQualifierIndex-CellMLSupport::CellmlFileRdfTriple::LastBioQualifier+1),
+                                                                       item.resource, item.id));
+        }
 }
 
 //==============================================================================
@@ -268,8 +265,6 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(const Items &pItem
     QFormLayout *newFormLayout = new QFormLayout(newFormWidget);
 
     newFormWidget->setLayout(newFormLayout);
-
-    // Add our qualifier field
 
     // Create a widget which will contain both our qualifier value widget and a
     // button to look up the qualifier
@@ -461,6 +456,10 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(const Items &pItem
 
     mGridWidget = 0;   // Note: this will be set by our
     mGridLayout = 0;   //       other updateGui() function...
+
+    // Update the enabled state of our various add buttons
+
+    updateGui(mElement, false);
 
     // Allow ourselves to be updated again
 
