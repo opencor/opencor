@@ -116,19 +116,19 @@ void CommonWidget::drawBorder(const bool &pDockedTop, const bool &pDockedLeft,
 
         painter.setPen(newPen);
 
-        bool isDocked = !dockWidget->isFloating();
+        bool dockWidgetDocked = !dockWidget->isFloating();
         QRect border = widget->rect();
 
-        if ((pDockedTop && isDocked) || (pFloatingTop && !isDocked))
+        if ((pDockedTop && dockWidgetDocked) || (pFloatingTop && !dockWidgetDocked))
             painter.drawLine(border.topLeft(), border.topRight());
 
-        if ((pDockedLeft && isDocked) || (pFloatingLeft && !isDocked))
+        if ((pDockedLeft && dockWidgetDocked) || (pFloatingLeft && !dockWidgetDocked))
             painter.drawLine(border.topLeft(), border.bottomLeft());
 
-        if ((pDockedBottom && isDocked) || (pFloatingBottom && !isDocked))
+        if ((pDockedBottom && dockWidgetDocked) || (pFloatingBottom && !dockWidgetDocked))
             painter.drawLine(border.bottomLeft(), border.bottomRight());
 
-        if ((pDockedRight && isDocked) || (pFloatingRight && !isDocked))
+        if ((pDockedRight && dockWidgetDocked) || (pFloatingRight && !dockWidgetDocked))
             painter.drawLine(border.topRight(), border.bottomRight());
     }
 }
