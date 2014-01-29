@@ -126,27 +126,6 @@ QScintillaWidget::QScintillaWidget(const QString &pContents,
 
 //==============================================================================
 
-QScintillaWidget::QScintillaWidget(const QString &pContents,
-                                   const bool &pReadOnly, QWidget *pParent) :
-    QsciScintilla(pParent)
-{
-    // Construct our object
-
-    constructor(pContents, pReadOnly);
-}
-
-//==============================================================================
-
-QScintillaWidget::QScintillaWidget(QsciLexer *pLexer, QWidget *pParent) :
-    QsciScintilla(pParent)
-{
-    // Construct our object
-
-    constructor(QString(), false, pLexer);
-}
-
-//==============================================================================
-
 QScintillaWidget::QScintillaWidget(QWidget *pParent) :
     QsciScintilla(pParent)
 {
