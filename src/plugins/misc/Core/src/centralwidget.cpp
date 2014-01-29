@@ -510,6 +510,19 @@ QString CentralWidget::currentFileName() const
 
 //==============================================================================
 
+void CentralWidget::updateFileTab(const int &pIndex)
+{
+    // Update the text and icon to be used for the given file tab
+
+    FileManager *fileManagerInstance = FileManager::instance();
+
+    mFileTabs->setTabText(pIndex,  QFileInfo(mFileNames[pIndex]).fileName()
+                                  +(fileManagerInstance->isModified(mFileNames[pIndex])?"*":QString()));
+    mFileTabs->setTabIcon(pIndex, fileManagerInstance->isLocked(mFileNames[pIndex])?QIcon(":/oxygen/status/object-locked.png"):QIcon());
+}
+
+//==============================================================================
+
 void CentralWidget::openFile(const QString &pFileName)
 {
     if (!mModeTabs->count() || !QFileInfo(pFileName).exists())
@@ -542,11 +555,12 @@ void CentralWidget::openFile(const QString &pFileName)
     //          connections and therefore some events triggering updateGui() to
     //          be called when the tool tip has not yet been assigned, so...
 
-    QFileInfo fileInfo = nativeFileName;
     int fileTabIndex = mFileTabs->currentIndex()+1;
 
     mFileNames.insert(fileTabIndex, nativeFileName);
-    mFileTabs->insertTab(fileTabIndex, fileInfo.fileName());
+    mFileTabs->insertTab(fileTabIndex, QString());
+
+    updateFileTab(fileTabIndex);
 
     mFileTabs->setTabToolTip(fileTabIndex, nativeFileName);
 
@@ -1417,31 +1431,15 @@ void CentralWidget::fileDeleted(const QString &pFileName)
 void CentralWidget::updateModifiedSettings()
 {
     // Enable or disable the Mode and Views tabs, depending on whether one or
-    // several files have been modified, and update the tab text if necessary
+    // several files have been modified, and update the tab text
 
-    FileManager *fileManagerInstance = FileManager::instance();
     int nbOfModifiedFiles = 0;
 
     for (int i = 0, iMax = mFileTabs->count(); i < iMax; ++i) {
-        QString tabText = mFileTabs->tabText(i);
+        updateFileTab(i);
 
-        if (fileManagerInstance->isModified(mFileNames[i])) {
-            // The current file has been modified, so the Mode and Views tabs
-            // should be disabled
-
+        if (FileManager::instance()->isModified(mFileNames[i]))
             ++nbOfModifiedFiles;
-
-            // Update the tab text, if needed
-
-            if (!tabText.endsWith("*"))
-                mFileTabs->setTabText(i, tabText+"*");
-        } else {
-            // The current file isn't modified, so update its tab text, if
-            // needed
-
-            if (tabText.endsWith("*"))
-                mFileTabs->setTabText(i, tabText.remove("*"));
-        }
     }
 
     // Enable/disable the Editing mode's View tabs, in case some files have been
@@ -1459,7 +1457,7 @@ void CentralWidget::updateModifiedSettings()
     // Let people know that we can save at least one file
 
     emit canSave(mFileTabs->count()?
-                     fileManagerInstance->isModified(mFileNames[mFileTabs->currentIndex()]):
+                     FileManager::instance()->isModified(mFileNames[mFileTabs->currentIndex()]):
                      false);
     emit canSaveAll(nbOfModifiedFiles);
 }
@@ -1468,7 +1466,16 @@ void CentralWidget::updateModifiedSettings()
 
 void CentralWidget::filePermissionsChanged(const QString &pFileName)
 {
-    // Let our plugins know about the file having had its locked status changed
+    // Update the tab text for the given file
+
+    for (int i = 0, iMax = mFileNames.count(); i < iMax; ++i)
+        if (!pFileName.compare(mFileNames[i])) {
+            updateFileTab(i);
+
+            break;
+        }
+
+    // Let our plugins know about the file having had its permissions changed
 
     foreach (Plugin *plugin, mLoadedPlugins) {
         GuiInterface *guiInterface = qobject_cast<GuiInterface *>(plugin->instance());
@@ -1543,8 +1550,14 @@ void CentralWidget::updateFileTabIcons()
     if (mPlugin) {
         GuiInterface *guiInterface = qobject_cast<GuiInterface *>(mPlugin->instance());
 
-        for (int i = 0, iMax = mFileTabs->count(); i < iMax; ++i)
-            mFileTabs->setTabIcon(i, guiInterface->fileTabIcon(mFileNames[i]));
+        for (int i = 0, iMax = mFileTabs->count(); i < iMax; ++i) {
+            QIcon tabIcon = guiInterface->fileTabIcon(mFileNames[i]);
+
+            if (tabIcon.isNull())
+                updateFileTab(i);
+            else
+                mFileTabs->setTabIcon(i, tabIcon);
+        }
     }
 }
 
@@ -1568,7 +1581,10 @@ void CentralWidget::updateFileTabIcon(const QString &pViewName,
                 // This is the file tab for which we want to update the icon, so
                 // do it and leave
 
-                mFileTabs->setTabIcon(i, pIcon);
+                if (pIcon.isNull())
+                    updateFileTab(i);
+                else
+                    mFileTabs->setTabIcon(i, pIcon);
 
                 return;
             }

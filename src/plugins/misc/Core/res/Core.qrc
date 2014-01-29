@@ -13,6 +13,7 @@
         <file>oxygen/actions/go-previous.png</file>
         <file>oxygen/mimetypes/application-x-zerosize.png</file>
         <file>oxygen/places/document-multiple.png</file>
+        <file>oxygen/status/object-locked.png</file>
         <file alias="Core_blankIcon">blank.png</file>
         <file alias="Core_logo">logo.png</file>
         <file alias="Core_fr">../../../../../build/Core_fr.qm</file>

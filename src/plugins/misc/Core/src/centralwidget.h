@@ -186,6 +186,8 @@ private:
 
     bool canCloseFile(const int &pIndex);
 
+    void updateFileTab(const int &pIndex);
+
 Q_SIGNALS:
     void guiUpdated(Plugin *pViewPlugin, const QString &pFileName);
 
