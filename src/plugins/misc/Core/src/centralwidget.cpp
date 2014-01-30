@@ -665,7 +665,7 @@ void CentralWidget::duplicateFile()
 #endif
     FileManager::instance()->duplicate(fileName);
 
-    // Make sure that the file has indeed been renamed
+    // Make sure that the file has indeed been duplicated
 
 #ifdef QT_DEBUG
     if (duplicateStatus != FileManager::Duplicated)
