@@ -24,9 +24,11 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#include <QApplication>
 #include <QDir>
 #include <QFile>
 #include <QFileInfo>
+#include <QTemporaryFile>
 #include <QTextStream>
 #include <QTimer>
 
@@ -337,15 +339,30 @@ FileManager::Status FileManager::duplicate(const QString &pFileName)
 
             file.close();
 
-            // Now, we can create a new (temporary) file, which contents will be
-            // that of our given file
+            // Now, we can create a new file, which contents will be that of our
+            // given file
 
-qDebug("%s", qPrintable(fileContents));
-//            QTemporaryFile tempFile(QDir::tempPath()+QDir::separator()+QFileInfo(qApp->applicationFilePath()).baseName()+"_XXXXXX.c");
+            QTemporaryFile duplicatedFile(QDir::tempPath()+QDir::separator()+QFileInfo(qApp->applicationFilePath()).baseName()+"_XXXXXX."+QFileInfo(pFileName).completeSuffix());
 
-//---GRY---            emit fileDuplicated(oldNativeFileName, newNativeFileName);
+            if (duplicatedFile.open()) {
+                duplicatedFile.setAutoRemove(false);
+                // Note: by default, a temporary file is to autoremove itself,
+                //       but we clearly don't want that here...
 
-            return Duplicated;
+                QTextStream duplicatedFileOut(&duplicatedFile);
+
+                duplicatedFileOut << fileContents;
+
+                duplicatedFile.close();
+
+                // Let people know that we have duplicated a file
+
+                emit fileDuplicated(duplicatedFile.fileName());
+
+                return Duplicated;
+            } else {
+                return NotDuplicated;
+            }
         } else {
             return NotDuplicated;
         }
