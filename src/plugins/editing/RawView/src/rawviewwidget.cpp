@@ -52,7 +52,7 @@ void RawViewWidget::fileReloaded()
     QFile file(mFileName);
     QString fileContents = QString();
 
-    if (file.open(QIODevice::ReadOnly|QIODevice::Text)) {
+    if (file.open(QIODevice::ReadOnly)) {
         fileContents = QTextStream(&file).readAll();
 
         file.close();

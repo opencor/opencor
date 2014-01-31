@@ -40,12 +40,15 @@ QStringList fileContents(const QString &pFileName)
     QString contents = QString();
 
     if (file.open(QIODevice::ReadOnly|QIODevice::Text)) {
+        // Note: QIODevice::Text ensures that end-of-line terminators are
+        //       converted to "\n", which is exactly what we want...
+
         contents = QTextStream(&file).readAll();
 
         file.close();
     }
 
-    return contents.replace("\r", "").split("\n");
+    return contents.split("\n");
 }
 
 //==============================================================================
