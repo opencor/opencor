@@ -78,7 +78,8 @@ public:
 
         // As a result of duplicating a file
 
-        Duplicated
+        Duplicated,
+        NotDuplicated
     };
 
     explicit FileManager(const int &pTimerInterval = 1000);

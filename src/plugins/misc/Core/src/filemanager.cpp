@@ -25,7 +25,9 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include <QDir>
+#include <QFile>
 #include <QFileInfo>
+#include <QTextStream>
 #include <QTimer>
 
 //==============================================================================
@@ -326,12 +328,27 @@ FileManager::Status FileManager::duplicate(const QString &pFileName)
     File *file = isManaged(nativeFileName);
 
     if (file) {
-        // The file is managed, so we can duplicate it and let people know about
-        // it
+        // The file is managed, so retrieve its contents
 
-//---GRY---        emit fileDuplicated(oldNativeFileName, newNativeFileName);
+        QFile file(pFileName);
 
-        return Duplicated;
+        if (file.open(QIODevice::ReadOnly|QIODevice::Text)) {
+            QString fileContents = QTextStream(&file).readAll();
+
+            file.close();
+
+            // Now, we can create a new (temporary) file with the contents of
+            // our given file
+
+qDebug("%s", qPrintable(fileContents));
+//            QTemporaryFile tempFile(QDir::tempPath()+QDir::separator()+QFileInfo(qApp->applicationFilePath()).baseName()+"_XXXXXX.c");
+
+//---GRY---            emit fileDuplicated(oldNativeFileName, newNativeFileName);
+
+            return Duplicated;
+        } else {
+            return NotDuplicated;
+        }
     } else {
         return NotManaged;
     }
