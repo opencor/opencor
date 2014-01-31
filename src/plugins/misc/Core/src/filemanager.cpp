@@ -337,8 +337,8 @@ FileManager::Status FileManager::duplicate(const QString &pFileName)
 
             file.close();
 
-            // Now, we can create a new (temporary) file with the contents of
-            // our given file
+            // Now, we can create a new (temporary) file, which contents will be
+            // that of our given file
 
 qDebug("%s", qPrintable(fileContents));
 //            QTemporaryFile tempFile(QDir::tempPath()+QDir::separator()+QFileInfo(qApp->applicationFilePath()).baseName()+"_XXXXXX.c");
