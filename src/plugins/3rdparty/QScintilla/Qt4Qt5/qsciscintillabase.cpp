@@ -375,7 +375,7 @@ void QsciScintillaBase::handleSelection()
 // Handle key presses.
 void QsciScintillaBase::keyPressEvent(QKeyEvent *e)
 {
-    unsigned key, modifiers = 0;
+    int modifiers = 0;
 
     if (e->modifiers() & Qt::ShiftModifier)
         modifiers |= SCMOD_SHIFT;
@@ -389,7 +389,42 @@ void QsciScintillaBase::keyPressEvent(QKeyEvent *e)
     if (e->modifiers() & Qt::MetaModifier)
         modifiers |= SCMOD_META;
 
-    switch (e->key())
+    int key = commandKey(e->key(), modifiers);
+
+    if (key)
+    {
+        bool consumed = false;
+
+        sci->KeyDownWithModifiers(key, modifiers, &consumed);
+
+        if (consumed)
+        {
+            e->accept();
+            return;
+        }
+    }
+
+    QString text = e->text();
+
+    if (!text.isEmpty() && text[0].isPrint())
+    {
+        ScintillaBytes bytes = textAsBytes(text);
+        sci->AddCharUTF(bytes.data(), bytes.length());
+        e->accept();
+    }
+    else
+    {
+        QAbstractScrollArea::keyPressEvent(e);
+    }
+}
+
+
+// Map a Qt key to a valid Scintilla command key, or 0 if none.
+int QsciScintillaBase::commandKey(int qt_key, int &modifiers)
+{
+    int key;
+
+    switch (qt_key)
     {
     case Qt::Key_Down:
         key = SCK_DOWN;
@@ -467,34 +502,11 @@ void QsciScintillaBase::keyPressEvent(QKeyEvent *e)
         break;
 
     default:
-        key = e->key();
+        if ((key = qt_key) > 0x7f)
+            key = 0;
     }
 
-    if (key)
-    {
-        bool consumed = false;
-
-        sci->KeyDownWithModifiers(key, modifiers, &consumed);
-
-        if (consumed)
-        {
-            e->accept();
-            return;
-        }
-    }
-
-    QString text = e->text();
-
-    if (!text.isEmpty() && text[0].isPrint())
-    {
-        ScintillaBytes bytes = textAsBytes(text);
-        sci->AddCharUTF(bytes.data(), bytes.length());
-        e->accept();
-    }
-    else
-    {
-        QAbstractScrollArea::keyPressEvent(e);
-    }
+    return key;
 }
 
 

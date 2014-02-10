@@ -3841,6 +3841,9 @@ void QsciScintilla::showUserList(int id, const QStringList &list)
 void QsciScintilla::handleUserListSelection(const char *text, int id)
 {
     emit userListActivated(id, QString(text));
+
+    // Make sure the editor hasn't been deactivated as a side effect.
+    activateWindow();
 }
 
 

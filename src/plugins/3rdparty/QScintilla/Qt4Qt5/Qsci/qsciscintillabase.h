@@ -3163,6 +3163,9 @@ public:
     void *SendScintillaPtrResult(unsigned int msg) const;
 
 
+    //! \internal
+    static int commandKey(int qt_key, int &modifiers);
+
 signals:
     //! This signal is emitted when text is selected or de-selected.
     //! \a yes is true if text has been selected and false if text has been
