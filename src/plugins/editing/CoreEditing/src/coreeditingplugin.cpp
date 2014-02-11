@@ -579,7 +579,8 @@ void CoreEditingPlugin::updateUndoRedoActions()
         mEditUndoAction->setEnabled(editorAndFileReadableAndWritable && mEditor->isUndoAvailable());
         mEditRedoAction->setEnabled(editorAndFileReadableAndWritable && mEditor->isRedoAvailable());
 
-        fileManagerInstance->setModified(mFileName, mEditor->isUndoAvailable());
+        fileManagerInstance->setModified(mFileName,
+                                         mEditor && mEditor->isUndoAvailable());
     }
 }
 
