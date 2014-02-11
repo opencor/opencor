@@ -206,14 +206,16 @@ CentralWidget::CentralWidget(QMainWindow *pMainWindow) :
 
     // A connection to handle the case where a file was duplicated
 
-    connect(FileManager::instance(), SIGNAL(fileDuplicated(const QString &)),
+    FileManager *fileManagerInstance = FileManager::instance();
+
+    connect(fileManagerInstance, SIGNAL(fileDuplicated(const QString &)),
             this, SLOT(fileDuplicated(const QString &)));
 
     // Some connections to handle changes to a file
 
-    connect(FileManager::instance(), SIGNAL(filePermissionsChanged(const QString &)),
+    connect(fileManagerInstance, SIGNAL(filePermissionsChanged(const QString &)),
             this, SLOT(filePermissionsChanged(const QString &)));
-    connect(FileManager::instance(), SIGNAL(fileModified(const QString &, const bool &)),
+    connect(fileManagerInstance, SIGNAL(fileModified(const QString &, const bool &)),
             this, SLOT(fileModified(const QString &, const bool &)));
 
     // Some connections to handle our files tab bar
@@ -1450,12 +1452,13 @@ void CentralWidget::updateModifiedSettings()
     // Enable or disable the Mode and Views tabs, depending on whether one or
     // several files have been modified, and update the tab text
 
+    FileManager *fileManagerInstance = FileManager::instance();
     int nbOfModifiedFiles = 0;
 
     for (int i = 0, iMax = mFileTabs->count(); i < iMax; ++i) {
         updateFileTab(i);
 
-        if (FileManager::instance()->isModified(mFileNames[i]))
+        if (fileManagerInstance->isModified(mFileNames[i]))
             ++nbOfModifiedFiles;
     }
 
@@ -1474,7 +1477,7 @@ void CentralWidget::updateModifiedSettings()
     // Let people know that we can save at least one file
 
     emit canSave(mFileTabs->count()?
-                     FileManager::instance()->isModified(mFileNames[mFileTabs->currentIndex()]):
+                     fileManagerInstance->isModified(mFileNames[mFileTabs->currentIndex()]):
                      false);
     emit canSaveAll(nbOfModifiedFiles);
 }
