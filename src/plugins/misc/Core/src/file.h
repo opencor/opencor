@@ -50,7 +50,7 @@ public:
         LockedNotSet
     };
 
-    explicit File(const QString &pFileName = QString());
+    explicit File(const QString &pFileName, const bool &pNew);
 
     QString fileName() const;
     void setFileName(const QString &pFileName);
@@ -58,6 +58,8 @@ public:
     Status check();
 
     bool isNew() const;
+
+    int newIndex() const;
 
     bool isModified() const;
     void setModified(const bool &pModified);
@@ -73,7 +75,8 @@ private:
     QString mFileName;
     QString mSha1;
 
-    bool mNew;
+    int mNewIndex;
+
     bool mModified;
 
     QString sha1() const;

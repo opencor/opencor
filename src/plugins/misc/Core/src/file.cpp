@@ -37,12 +37,14 @@ namespace Core {
 
 //==============================================================================
 
-File::File(const QString &pFileName) :
+File::File(const QString &pFileName, const bool &pNew) :
     mFileName(nativeCanonicalFileName(pFileName)),
     mSha1(sha1()),
-    mNew(pFileName.isEmpty()),
     mModified(false)
 {
+    static int newIndex = 0;
+
+    mNewIndex = pNew?++newIndex:0;
 }
 
 //==============================================================================
@@ -130,7 +132,16 @@ bool File::isNew() const
 {
     // Return whether the file is new
 
-    return mNew;
+    return mNewIndex != 0;
+}
+
+//==============================================================================
+
+int File::newIndex() const
+{
+    // Return the file's new index
+
+    return mNewIndex;
 }
 
 //==============================================================================

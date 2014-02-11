@@ -118,7 +118,7 @@ public:
 
     QString currentFileName() const;
 
-    void openFile(const QString &pFileName);
+    void openFile(const QString &pFileName, const bool &pNew = false);
     void openFiles(const QStringList &pFileNames);
 
     bool canClose();

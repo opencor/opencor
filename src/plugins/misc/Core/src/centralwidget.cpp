@@ -463,7 +463,12 @@ void CentralWidget::settingsLoaded(const Plugins &pLoadedPlugins)
 
 void CentralWidget::retranslateUi()
 {
-    // Retranslate the modes tab bar
+    // Retranslate our files tab bar, in case some files are new
+
+    for (int i = 0, iMax = mFileTabs->count(); i < iMax; ++i)
+        updateFileTab(i);
+
+    // Retranslate our modes tab bar
 
     mModeTabs->setTabText(modeTabIndex(GuiViewSettings::Editing),
                           tr("Editing"));
@@ -518,15 +523,22 @@ void CentralWidget::updateFileTab(const int &pIndex)
     // Update the text and icon to be used for the given file tab
 
     FileManager *fileManagerInstance = FileManager::instance();
+    bool fileIsNew = fileManagerInstance->isNew(mFileNames[pIndex]);
 
-    mFileTabs->setTabText(pIndex,  QFileInfo(mFileNames[pIndex]).fileName()
-                                  +(fileManagerInstance->isModified(mFileNames[pIndex])?"*":QString()));
-    mFileTabs->setTabIcon(pIndex, fileManagerInstance->isLocked(mFileNames[pIndex])?QIcon(":/oxygen/status/object-locked.png"):QIcon());
+    mFileTabs->setTabText(pIndex, fileIsNew?
+                                      tr("File")+" #"+QString::number(fileManagerInstance->newIndex(mFileNames[pIndex]))+"*":
+                                      QFileInfo(mFileNames[pIndex]).fileName()+(fileManagerInstance->isModified(mFileNames[pIndex])?"*":QString()));
+    mFileTabs->setTabToolTip(pIndex, fileIsNew?
+                                         mFileTabs->tabText(pIndex):
+                                         mFileNames[pIndex]);
+    mFileTabs->setTabIcon(pIndex, fileManagerInstance->isLocked(mFileNames[pIndex])?
+                                      QIcon(":/oxygen/status/object-locked.png"):
+                                      QIcon());
 }
 
 //==============================================================================
 
-void CentralWidget::openFile(const QString &pFileName)
+void CentralWidget::openFile(const QString &pFileName, const bool &pNew)
 {
     if (!mModeTabs->count() || !QFileInfo(pFileName).exists())
         // No modes are available or the file doesn't exist, so...
@@ -544,12 +556,12 @@ void CentralWidget::openFile(const QString &pFileName)
 
     // Register the file with our file manager
 
-    FileManager::instance()->manage(nativeFileName);
+    FileManager::instance()->manage(nativeFileName, pNew);
 
     // Create a new tab, insert it just after the current tab, set the full name
     // of the file as the tool tip for the new tab, and make the new tab the
     // current one
-    // Note #1: mFileNames is, for example, used to retrieve the name of a file
+    // Note #1: mFileNames is, for example, used to retrieve the name of a file,
     //          which we want to close (see CentralWidget::closeFile()), so we
     //          must make sure that the order of its contents matches that of
     //          the tabs...
@@ -564,8 +576,6 @@ void CentralWidget::openFile(const QString &pFileName)
     mFileTabs->insertTab(fileTabIndex, QString());
 
     updateFileTab(fileTabIndex);
-
-    mFileTabs->setTabToolTip(fileTabIndex, nativeFileName);
 
     mFileTabs->setCurrentIndex(fileTabIndex);
 
@@ -1548,8 +1558,9 @@ void CentralWidget::fileRenamed(const QString &pOldFileName,
 
 void CentralWidget::fileDuplicated(const QString &pFileName)
 {
-//---GRY--- TO BE DONE...
-qDebug(">>> fileDuplicated: %s", qPrintable(pFileName));
+    // A file got duplicated, so open it making sure that we consider it as new
+
+    openFile(pFileName, true);
 }
 
 //==============================================================================

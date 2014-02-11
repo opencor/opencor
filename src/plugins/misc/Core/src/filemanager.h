@@ -87,10 +87,14 @@ public:
 
     static FileManager * instance();
 
-    Status manage(const QString &pFileName);
+    Status manage(const QString &pFileName, const bool &pNew = false);
     Status unmanage(const QString &pFileName);
 
     File * isManaged(const QString &pFileName) const;
+
+    bool isNew(const QString &pFileName) const;
+
+    int newIndex(const QString &pFileName) const;
 
     bool isModified(const QString &pFileName) const;
 

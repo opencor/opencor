@@ -86,7 +86,8 @@ FileManager * FileManager::instance()
 
 //==============================================================================
 
-FileManager::Status FileManager::manage(const QString &pFileName)
+FileManager::Status FileManager::manage(const QString &pFileName,
+                                        const bool &pNew)
 {
     // Manage the given file, should it not be already managed
 
@@ -101,7 +102,7 @@ FileManager::Status FileManager::manage(const QString &pFileName)
             // The file isn't already managed, so add it to our list of managed
             // files, let people know about it being now managed
 
-            mFiles << new File(nativeFileName);
+            mFiles << new File(nativeFileName, pNew);
 
             emit fileManaged(nativeFileName);
 
@@ -164,6 +165,34 @@ File * FileManager::isManaged(const QString &pFileName) const
     // The file couldn't be found meaning it's not managed
 
     return 0;
+}
+
+//==============================================================================
+
+bool FileManager::isNew(const QString &pFileName) const
+{
+    // Return whether the given file, if it is being managed, is new
+
+    File *file = isManaged(nativeCanonicalFileName(pFileName));
+
+    if (file)
+        return file->isNew();
+    else
+        return false;
+}
+
+//==============================================================================
+
+int FileManager::newIndex(const QString &pFileName) const
+{
+    // Return the given file's new index, if it is being managed
+
+    File *file = isManaged(nativeCanonicalFileName(pFileName));
+
+    if (file)
+        return file->newIndex();
+    else
+        return 0;
 }
 
 //==============================================================================

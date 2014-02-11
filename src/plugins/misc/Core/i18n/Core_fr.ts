@@ -83,6 +83,10 @@
         <source>locked</source>
         <translation>vérouillé</translation>
     </message>
+    <message>
+        <source>File</source>
+        <translation>Fichier</translation>
+    </message>
 </context>
 <context>
     <name>OpenCOR::Core::CorePlugin</name>
