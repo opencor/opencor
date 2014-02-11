@@ -150,7 +150,7 @@ bool File::isModified() const
 {
     // Return whether the file has been modified
 
-    return mModified;
+    return isNew() || mModified;
 }
 
 //==============================================================================

@@ -520,14 +520,18 @@ QString CentralWidget::currentFileName() const
 
 void CentralWidget::updateFileTab(const int &pIndex)
 {
-    // Update the text and icon to be used for the given file tab
+    // Update the text, tool tip and icon to be used for the given file tab
 
     FileManager *fileManagerInstance = FileManager::instance();
     bool fileIsNew = fileManagerInstance->isNew(mFileNames[pIndex]);
+    QString tabText = fileIsNew?
+                          tr("File")+" #"+QString::number(fileManagerInstance->newIndex(mFileNames[pIndex])):
+                          QFileInfo(mFileNames[pIndex]).fileName();
 
-    mFileTabs->setTabText(pIndex, fileIsNew?
-                                      tr("File")+" #"+QString::number(fileManagerInstance->newIndex(mFileNames[pIndex]))+"*":
-                                      QFileInfo(mFileNames[pIndex]).fileName()+(fileManagerInstance->isModified(mFileNames[pIndex])?"*":QString()));
+    if (fileManagerInstance->isModified(mFileNames[pIndex]))
+        tabText += "*";
+
+    mFileTabs->setTabText(pIndex, tabText);
     mFileTabs->setTabToolTip(pIndex, fileIsNew?
                                          mFileTabs->tabText(pIndex):
                                          mFileNames[pIndex]);
