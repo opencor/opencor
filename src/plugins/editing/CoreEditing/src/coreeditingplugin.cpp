@@ -568,14 +568,18 @@ void CoreEditingPlugin::clipboardDataChanged()
 
 void CoreEditingPlugin::updateUndoRedoActions()
 {
-    // Update our undo/redo actions
+    // Update our undo/redo actions, and update the modified state of the
+    // current file (since it can be determined by whether we can undo)
 
     if (mEditingInterface) {
+        Core::FileManager *fileManagerInstance = Core::FileManager::instance();
         bool editorAndFileReadableAndWritable =    mEditor
-                                                && Core::FileManager::instance()->isReadableAndWritable(mFileName);
+                                                && fileManagerInstance->isReadableAndWritable(mFileName);
 
         mEditUndoAction->setEnabled(editorAndFileReadableAndWritable && mEditor->isUndoAvailable());
         mEditRedoAction->setEnabled(editorAndFileReadableAndWritable && mEditor->isRedoAvailable());
+
+        fileManagerInstance->setModified(mFileName, mEditor->isUndoAvailable());
     }
 }
 
