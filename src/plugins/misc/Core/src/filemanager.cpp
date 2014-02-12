@@ -362,13 +362,9 @@ FileManager::Status FileManager::duplicate(const QString &pFileName)
     if (file) {
         // The file is managed, so retrieve its contents
 
-        QFile file(pFileName);
+        QString fileContents;
 
-        if (file.open(QIODevice::ReadOnly)) {
-            QString fileContents = file.readAll();
-
-            file.close();
-
+        if (Core::readTextFromFile(pFileName, fileContents)) {
             // Now, we can create a new file, which contents will be that of our
             // given file
 

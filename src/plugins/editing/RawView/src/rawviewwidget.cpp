@@ -52,7 +52,7 @@ void RawViewWidget::fileReloaded()
 
     QString fileContents;
 
-    Core::readStringFromFile(mFileName, fileContents);
+    Core::readTextFromFile(mFileName, fileContents);
 
     setContents(fileContents);
     setReadOnly(!Core::FileManager::instance()->isReadableAndWritable(mFileName));

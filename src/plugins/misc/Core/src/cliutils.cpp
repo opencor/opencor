@@ -342,16 +342,16 @@ bool writeResourceToFile(const QString &pFilename, const QString &pResource)
 
 //==============================================================================
 
-bool readStringFromFile(const QString &pFileName, QString &pString)
+bool readTextFromFile(const QString &pFileName, QString &pText)
 {
     // Read the contents of the file, which file name is given, as a string
 
     QFile file(pFileName);
 
-    pString = QString();
+    pText = QString();
 
     if (file.open(QIODevice::ReadOnly)) {
-        pString = file.readAll();
+        pText = file.readAll();
 
         file.close();
 

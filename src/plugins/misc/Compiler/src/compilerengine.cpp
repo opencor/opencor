@@ -150,9 +150,7 @@ bool CompilerEngine::compileCode(const QString &pCode)
 
     // Save the code in our temporary file
 
-    QTextStream out(&file);
-
-    out << pCode;
+    file.write(pCode.toUtf8());
 
     file.close();
 

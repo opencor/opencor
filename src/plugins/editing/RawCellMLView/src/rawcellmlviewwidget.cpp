@@ -165,7 +165,7 @@ void RawCellmlViewWidget::initialize(const QString &pFileName)
 
         QString fileContents;
 
-        Core::readStringFromFile(pFileName, fileContents);
+        Core::readTextFromFile(pFileName, fileContents);
 
         QScintillaSupport::QScintillaWidget *editor = new QScintillaSupport::QScintillaWidget(fileContents,
                                                                                               !Core::FileManager::instance()->isReadableAndWritable(pFileName),
