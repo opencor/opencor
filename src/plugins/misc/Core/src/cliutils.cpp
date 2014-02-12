@@ -309,7 +309,7 @@ QByteArray resourceAsByteArray(const QString &pResource)
 
 //==============================================================================
 
-bool saveResourceAs(const QString &pResource, const QString &pFilename)
+bool writeResourceToFile(const QString &pFilename, const QString &pResource)
 {
     if (QResource(pResource).isValid()) {
         // The resource exists, so write a file with name pFilename and which

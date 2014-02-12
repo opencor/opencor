@@ -64,8 +64,8 @@ QString CORE_EXPORT sizeAsString(const double &pSize,
                                  const int &pPrecision = 1);
 
 QByteArray CORE_EXPORT resourceAsByteArray(const QString &pResource);
-bool CORE_EXPORT saveResourceAs(const QString &pResource,
-                                const QString &pFilename);
+bool CORE_EXPORT writeResourceToFile(const QString &pFilename,
+                                     const QString &pResource);
 
 void CORE_EXPORT * globalInstance(const QString &pObjectName,
                                   void *pDefaultGlobalInstance);

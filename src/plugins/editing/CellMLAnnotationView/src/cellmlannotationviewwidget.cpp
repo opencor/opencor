@@ -38,6 +38,7 @@ specific language governing permissions and limitations under the License.
 
 #include <QComboBox>
 #include <QFile>
+#include <QIODevice>
 #include <QLineEdit>
 #include <QPushButton>
 #include <QWebView>

@@ -24,6 +24,14 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#include <QFile>
+#include <QIODevice>
+#include <QPluginLoader>
+#include <QProcess>
+#include <QTextStream>
+
+//==============================================================================
+
 #include <QtTest/QtTest>
 
 //==============================================================================
