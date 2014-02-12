@@ -758,16 +758,7 @@ bool CentralWidget::saveFile(const int &pIndex, const bool &pNeedNewFileName)
         if (fileModified) {
             // The file has been modified, so ask the current view to save it
 
-            if (guiInterface->saveFile(oldFileName, newFileName)) {
-                // Let all our plugins know about the file having been saved
-
-                foreach (Plugin *plugin, mLoadedPlugins) {
-                    GuiInterface *otherGuiInterface = qobject_cast<GuiInterface *>(plugin->instance());
-
-                    if (otherGuiInterface)
-                        otherGuiInterface->fileSaved(newFileName);
-                }
-            } else {
+            if (!guiInterface->saveFile(oldFileName, newFileName)) {
                 // The file couldn't be saved, so...
 
                 QMessageBox::warning(mMainWindow, tr("Save File"),
@@ -809,6 +800,11 @@ bool CentralWidget::saveFile(const int &pIndex, const bool &pNeedNewFileName)
                 qFatal("FATAL ERROR | %s:%d: '%s' did not get renamed to '%s'", __FILE__, __LINE__, qPrintable(oldFileName), qPrintable(newFileName));
 #endif
         }
+
+        // Let people know that the file has been saved, if needed, by
+        // pretending that it was reloaded
+
+        fileReloaded(newFileName);
 
         // Update our modified settings
 
