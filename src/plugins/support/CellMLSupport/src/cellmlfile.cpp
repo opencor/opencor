@@ -27,6 +27,7 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include <QFile>
+#include <QIODevice>
 #include <QStringList>
 #include <QTextStream>
 #include <QUrl>
@@ -258,7 +259,7 @@ bool CellmlFile::save(const QString &pNewFileName)
 
     QFile file(newFileName);
 
-    if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+    if (!file.open(QIODevice::WriteOnly)) {
         // The file can't be opened, so...
 
         file.remove();

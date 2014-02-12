@@ -31,6 +31,7 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include <QFile>
+#include <QIODevice>
 #include <QTextStream>
 
 //==============================================================================
@@ -860,7 +861,7 @@ bool SingleCellViewSimulationResults::exportToCsv(const QString &pFileName) cons
 
     QFile file(pFileName);
 
-    if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+    if (!file.open(QIODevice::WriteOnly)) {
         // The file can't be opened, so...
 
         file.remove();

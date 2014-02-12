@@ -24,6 +24,7 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include <QFile>
+#include <QIODevice>
 #include <QTextStream>
 
 //==============================================================================
@@ -67,7 +68,7 @@ bool CellmlFileExporter::saveModel(iface::cellml_api::Model *pModel,
 
     QFile file(pFileName);
 
-    if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+    if (!file.open(QIODevice::WriteOnly)) {
         file.remove();
 
         return false;

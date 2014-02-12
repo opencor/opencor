@@ -24,7 +24,10 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#include <QByteArray>
+#include <QIODevice>
 #include <QMimeData>
+#include <QModelIndex>
 #include <QUrl>
 
 //==============================================================================

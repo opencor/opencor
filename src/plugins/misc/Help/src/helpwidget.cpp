@@ -27,7 +27,9 @@ specific language governing permissions and limitations under the License.
 #include <QAction>
 #include <QDesktopServices>
 #include <QDir>
+#include <QFile>
 #include <QHelpEngine>
+#include <QIODevice>
 #include <QMouseEvent>
 #include <QSettings>
 #include <QTimer>

@@ -28,6 +28,7 @@ specific language governing permissions and limitations under the License.
 #include <QDir>
 #include <QFile>
 #include <QFileInfo>
+#include <QIODevice>
 #include <QTemporaryFile>
 #include <QTextStream>
 #include <QTimer>

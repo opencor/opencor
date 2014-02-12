@@ -25,6 +25,7 @@ specific language governing permissions and limitations under the License.
 
 #include <QDesktopServices>
 #include <QFile>
+#include <QIODevice>
 #include <QPaintEvent>
 
 //==============================================================================
