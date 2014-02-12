@@ -511,15 +511,6 @@ void CorePlugin::fileReloaded(const QString &pFileName)
 
 //==============================================================================
 
-void CorePlugin::fileSaved(const QString &pFileName)
-{
-    Q_UNUSED(pFileName);
-
-    // We don't handle this interface...
-}
-
-//==============================================================================
-
 void CorePlugin::fileRenamed(const QString &pOldFileName,
                              const QString &pNewFileName)
 {

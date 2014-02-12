@@ -307,15 +307,6 @@ void SingleCellViewPlugin::fileReloaded(const QString &pFileName)
 
 //==============================================================================
 
-void SingleCellViewPlugin::fileSaved(const QString &pFileName)
-{
-    Q_UNUSED(pFileName);
-
-    // We don't handle this interface...
-}
-
-//==============================================================================
-
 void SingleCellViewPlugin::fileRenamed(const QString &pOldFileName,
                                        const QString &pNewFileName)
 {

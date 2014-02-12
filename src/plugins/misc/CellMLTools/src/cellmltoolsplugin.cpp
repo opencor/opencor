@@ -341,15 +341,6 @@ void CellMLToolsPlugin::fileReloaded(const QString &pFileName)
 
 //==============================================================================
 
-void CellMLToolsPlugin::fileSaved(const QString &pFileName)
-{
-    Q_UNUSED(pFileName);
-
-    // We don't handle this interface...
-}
-
-//==============================================================================
-
 void CellMLToolsPlugin::fileRenamed(const QString &pOldFileName,
                                     const QString &pNewFileName)
 {

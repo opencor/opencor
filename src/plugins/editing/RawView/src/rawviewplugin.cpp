@@ -331,15 +331,6 @@ void RawViewPlugin::fileReloaded(const QString &pFileName)
 
 //==============================================================================
 
-void RawViewPlugin::fileSaved(const QString &pFileName)
-{
-    Q_UNUSED(pFileName);
-
-    // We don't handle this interface...
-}
-
-//==============================================================================
-
 void RawViewPlugin::fileRenamed(const QString &pOldFileName,
                                 const QString &pNewFileName)
 {

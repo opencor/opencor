@@ -272,15 +272,6 @@ void CoreCellMLEditingPlugin::fileReloaded(const QString &pFileName)
 
 //==============================================================================
 
-void CoreCellMLEditingPlugin::fileSaved(const QString &pFileName)
-{
-    Q_UNUSED(pFileName);
-
-    // We don't handle this interface...
-}
-
-//==============================================================================
-
 void CoreCellMLEditingPlugin::fileRenamed(const QString &pOldFileName,
                                           const QString &pNewFileName)
 {

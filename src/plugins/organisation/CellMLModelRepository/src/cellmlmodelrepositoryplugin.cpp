@@ -268,15 +268,6 @@ void CellMLModelRepositoryPlugin::fileReloaded(const QString &pFileName)
 
 //==============================================================================
 
-void CellMLModelRepositoryPlugin::fileSaved(const QString &pFileName)
-{
-    Q_UNUSED(pFileName);
-
-    // We don't handle this interface...
-}
-
-//==============================================================================
-
 void CellMLModelRepositoryPlugin::fileRenamed(const QString &pOldFileName,
                                               const QString &pNewFileName)
 {

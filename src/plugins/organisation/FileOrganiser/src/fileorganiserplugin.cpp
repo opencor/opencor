@@ -269,15 +269,6 @@ void FileOrganiserPlugin::fileReloaded(const QString &pFileName)
 
 //==============================================================================
 
-void FileOrganiserPlugin::fileSaved(const QString &pFileName)
-{
-    Q_UNUSED(pFileName);
-
-    // We don't handle this interface...
-}
-
-//==============================================================================
-
 void FileOrganiserPlugin::fileRenamed(const QString &pOldFileName,
                                       const QString &pNewFileName)
 {

@@ -306,15 +306,6 @@ void RawCellMLViewPlugin::fileReloaded(const QString &pFileName)
 
 //==============================================================================
 
-void RawCellMLViewPlugin::fileSaved(const QString &pFileName)
-{
-    Q_UNUSED(pFileName);
-
-    // We don't handle this interface...
-}
-
-//==============================================================================
-
 void RawCellMLViewPlugin::fileRenamed(const QString &pOldFileName,
                                       const QString &pNewFileName)
 {

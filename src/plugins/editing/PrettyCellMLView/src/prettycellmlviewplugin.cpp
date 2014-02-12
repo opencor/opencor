@@ -306,15 +306,6 @@ void PrettyCellMLViewPlugin::fileReloaded(const QString &pFileName)
 
 //==============================================================================
 
-void PrettyCellMLViewPlugin::fileSaved(const QString &pFileName)
-{
-    Q_UNUSED(pFileName);
-
-    // We don't handle this interface...
-}
-
-//==============================================================================
-
 void PrettyCellMLViewPlugin::fileRenamed(const QString &pOldFileName,
                                          const QString &pNewFileName)
 {
