@@ -51,7 +51,7 @@ QStringList fileContents(const QString &pFileName)
         // Note: QIODevice::Text ensures that end-of-line terminators are
         //       converted to "\n", which is exactly what we want...
 
-        contents = QTextStream(&file).readAll();
+        contents = file.readAll();
 
         file.close();
     }

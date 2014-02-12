@@ -120,7 +120,7 @@ HelpNetworkAccessManager::HelpNetworkAccessManager(QHelpEngine *pHelpEngine,
 
     helpWidgetErrorFile.open(QIODevice::ReadOnly);
 
-    mErrorMessageTemplate = QString(helpWidgetErrorFile.readAll());
+    mErrorMessageTemplate = helpWidgetErrorFile.readAll();
 
     helpWidgetErrorFile.close();
 }

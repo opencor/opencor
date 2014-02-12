@@ -71,7 +71,7 @@ CellmlModelRepositoryWidget::CellmlModelRepositoryWidget(QWidget *pParent) :
 
     cellmlModelRepositoryWidgetOutputFile.open(QIODevice::ReadOnly);
 
-    mOutputTemplate = QString(cellmlModelRepositoryWidgetOutputFile.readAll());
+    mOutputTemplate = cellmlModelRepositoryWidgetOutputFile.readAll();
 
     cellmlModelRepositoryWidgetOutputFile.close();
 

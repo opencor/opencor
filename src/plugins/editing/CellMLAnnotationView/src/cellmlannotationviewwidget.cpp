@@ -71,8 +71,8 @@ CellmlAnnotationViewWidget::CellmlAnnotationViewWidget(CellMLAnnotationViewPlugi
     modelQualifierFile.open(QIODevice::ReadOnly);
     biologyQualifierFile.open(QIODevice::ReadOnly);
 
-    mModelQualifierSvg   = QString(modelQualifierFile.readAll());
-    mBiologyQualifierSvg = QString(biologyQualifierFile.readAll());
+    mModelQualifierSvg   = modelQualifierFile.readAll();
+    mBiologyQualifierSvg = biologyQualifierFile.readAll();
 
     modelQualifierFile.close();
     biologyQualifierFile.close();
@@ -83,7 +83,7 @@ CellmlAnnotationViewWidget::CellmlAnnotationViewWidget(CellMLAnnotationViewPlugi
 
     qualifierInformationFile.open(QIODevice::ReadOnly);
 
-    mQualifierInformationTemplate = QString(qualifierInformationFile.readAll());
+    mQualifierInformationTemplate = qualifierInformationFile.readAll();
 
     qualifierInformationFile.close();
 

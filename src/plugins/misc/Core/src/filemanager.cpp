@@ -365,7 +365,7 @@ FileManager::Status FileManager::duplicate(const QString &pFileName)
         QFile file(pFileName);
 
         if (file.open(QIODevice::ReadOnly)) {
-            QString fileContents = QTextStream(&file).readAll();
+            QString fileContents = file.readAll();
 
             file.close();
 
