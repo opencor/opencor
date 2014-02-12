@@ -28,6 +28,7 @@ specific language governing permissions and limitations under the License.
 #include <QDate>
 #include <QDir>
 #include <QFile>
+#include <QIODevice>
 #include <QProcess>
 #include <QResource>
 #include <QSettings>
@@ -316,7 +317,7 @@ bool saveResourceAs(const QString &pResource, const QString &pFilename)
 
         QFile file(pFilename);
 
-        if (file.open(QIODevice::ReadWrite)) {
+        if (file.open(QIODevice::WriteOnly)) {
             QByteArray resource = resourceAsByteArray(pResource);
             bool res;
 

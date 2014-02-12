@@ -25,7 +25,10 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include <QCoreApplication>
+#include <QFile>
 #include <QFileInfo>
+#include <QIODevice>
+#include <QString>
 
 //==============================================================================
 
