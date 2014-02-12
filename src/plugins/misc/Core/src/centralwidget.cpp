@@ -715,12 +715,13 @@ bool CentralWidget::saveFile(const int &pIndex, const bool &pNeedNewFileName)
 
     // Make sure that we have a file name
 
+    FileManager *fileManagerInstance = FileManager::instance();
     QString oldFileName = mFileNames[pIndex];
     QString newFileName = oldFileName;
     bool hasNewFileName = false;
     GuiInterface *guiInterface = qobject_cast<GuiInterface *>(mPlugin->instance());
 
-    if (pNeedNewFileName || newFileName.isEmpty()) {
+    if (pNeedNewFileName || fileManagerInstance->isNew(oldFileName)) {
         // Either we want to save the file under a new name or we are dealing
         // with a new file, so we ask the user for a file name based on the MIME
         // types supported by our current view
@@ -751,13 +752,10 @@ bool CentralWidget::saveFile(const int &pIndex, const bool &pNeedNewFileName)
     // Try to save the file in case it has been modified or it needs a new file
     // name (either as a result of a save as or because the file was new)
 
-    FileManager *fileManagerInstance = FileManager::instance();
+    bool fileModified = fileManagerInstance->isModified(oldFileName);
 
-    if (fileManagerInstance->isModified(oldFileName) || hasNewFileName) {
-        // Physically save the file in case it has been modified, or make a
-        // physical copy of it
-
-        if (fileManagerInstance->isModified(oldFileName)) {
+    if (fileModified || hasNewFileName) {
+        if (fileModified) {
             // The file has been modified, so ask the current view to save it
 
             if (guiInterface->saveFile(oldFileName, newFileName)) {
@@ -780,7 +778,7 @@ bool CentralWidget::saveFile(const int &pIndex, const bool &pNeedNewFileName)
         } else {
             // The file hasn't been modified, so we just need to make a physical
             // copy of it
-            // Note: there may already be a file which name is that of the one
+            // Note: there may already be a file, which name is that of the one
             //       we want to use, so remove it (if no such file exists, then
             //       nothing will happen, so we are fine)...
 
