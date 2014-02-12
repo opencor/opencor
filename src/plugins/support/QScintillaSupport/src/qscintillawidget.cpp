@@ -166,6 +166,15 @@ void QScintillaWidget::setContextMenu(const QList<QAction *> &pContextMenuAction
 
 //==============================================================================
 
+QString QScintillaWidget::contents() const
+{
+    // Return our contents
+
+    return text();
+}
+
+//==============================================================================
+
 void QScintillaWidget::setContents(const QString &pContents)
 {
     // Set our contents

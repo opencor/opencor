@@ -68,6 +68,8 @@ bool CORE_EXPORT writeResourceToFile(const QString &pFilename,
                                      const QString &pResource);
 
 bool CORE_EXPORT readTextFromFile(const QString &pFileName, QString &pText);
+bool CORE_EXPORT writeTextToFile(const QString &pFilename,
+                                 const QString &pText);
 
 void CORE_EXPORT * globalInstance(const QString &pObjectName,
                                   void *pDefaultGlobalInstance);

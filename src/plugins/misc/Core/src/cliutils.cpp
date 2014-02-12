@@ -363,6 +363,31 @@ bool readTextFromFile(const QString &pFileName, QString &pText)
 
 //==============================================================================
 
+bool writeTextToFile(const QString &pFilename, const QString &pText)
+{
+    // Write the given string to a file with the given file name
+
+    QFile file(pFilename);
+
+    if (file.open(QIODevice::WriteOnly)) {
+        bool res = file.write(pText.toUtf8()) != -1;
+
+        file.close();
+
+        // Remove the newly created file in case the string couldn't be written
+        // to it
+
+        if (!res)
+            file.remove();
+
+        return res;
+    } else {
+        return false;
+    }
+}
+
+//==============================================================================
+
 void * globalInstance(const QString &pObjectName, void *pDefaultGlobalInstance)
 {
     // Retrieve the 'global' instance of an object

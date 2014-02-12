@@ -54,6 +54,7 @@ public:
     QMenu * contextMenu() const;
     void setContextMenu(const QList<QAction *> &pContextMenuActions);
 
+    QString contents() const;
     void setContents(const QString &pContents);
 
     bool isSelectAllAvailable() const;
