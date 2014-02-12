@@ -20,6 +20,7 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include "borderedwidget.h"
+#include "cliutils.h"
 #include "filemanager.h"
 #include "guiutils.h"
 #include "qscintillawidget.h"
@@ -162,14 +163,9 @@ void RawCellmlViewWidget::initialize(const QString &pFileName)
         // No editor exists for the given CellML file, so create and set up a
         // Scintilla editor with an XML lexer associated with it
 
-        QFile file(pFileName);
-        QString fileContents = QString();
+        QString fileContents;
 
-        if (file.open(QIODevice::ReadOnly)) {
-            fileContents = QTextStream(&file).readAll();
-
-            file.close();
-        }
+        Core::readStringFromFile(pFileName, fileContents);
 
         QScintillaSupport::QScintillaWidget *editor = new QScintillaSupport::QScintillaWidget(fileContents,
                                                                                               !Core::FileManager::instance()->isReadableAndWritable(pFileName),

@@ -67,6 +67,8 @@ QByteArray CORE_EXPORT resourceAsByteArray(const QString &pResource);
 bool CORE_EXPORT writeResourceToFile(const QString &pFilename,
                                      const QString &pResource);
 
+bool CORE_EXPORT readStringFromFile(const QString &pFileName, QString &pString);
+
 void CORE_EXPORT * globalInstance(const QString &pObjectName,
                                   void *pDefaultGlobalInstance);
 

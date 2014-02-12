@@ -105,24 +105,23 @@ File::Status File::check()
 
 QString File::sha1() const
 {
-    // Compute the SHA-1 value for the file, if it still exists
+    // Compute the SHA-1 value for the file, if it still exists and can be
+    // opened
 
     if (QFileInfo(mFileName).exists()) {
-        // The file still exists, so we can go ahead and compute its SHA-1 value
-
         QFile file(mFileName);
 
-        file.open(QIODevice::ReadOnly);
+        if (file.open(QIODevice::ReadOnly)) {
+            QString res = QCryptographicHash::hash(QString(file.readAll()).toUtf8(),
+                                                   QCryptographicHash::Sha1).toHex();
 
-        QString res = QCryptographicHash::hash(QString(file.readAll()).toUtf8(),
-                                               QCryptographicHash::Sha1).toHex();
+            file.close();
 
-        file.close();
-
-        return res;
+            return res;
+        } else {
+            return QString();
+        }
     } else {
-        // The file doesn't exist anymore, so...
-
         return QString();
     }
 }

@@ -342,6 +342,27 @@ bool writeResourceToFile(const QString &pFilename, const QString &pResource)
 
 //==============================================================================
 
+bool readStringFromFile(const QString &pFileName, QString &pString)
+{
+    // Read the contents of the file, which file name is given, as a string
+
+    QFile file(pFileName);
+
+    pString = QString();
+
+    if (file.open(QIODevice::ReadOnly)) {
+        pString = file.readAll();
+
+        file.close();
+
+        return true;
+    } else {
+        return false;
+    }
+}
+
+//==============================================================================
+
 void * globalInstance(const QString &pObjectName, void *pDefaultGlobalInstance)
 {
     // Retrieve the 'global' instance of an object

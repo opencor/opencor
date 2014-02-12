@@ -19,6 +19,7 @@ specific language governing permissions and limitations under the License.
 // Raw view widget
 //==============================================================================
 
+#include "cliutils.h"
 #include "filemanager.h"
 #include "rawviewwidget.h"
 
@@ -49,14 +50,9 @@ void RawViewWidget::fileReloaded()
 {
     // The given file has been reloaded, so reload it
 
-    QFile file(mFileName);
-    QString fileContents = QString();
+    QString fileContents;
 
-    if (file.open(QIODevice::ReadOnly)) {
-        fileContents = QTextStream(&file).readAll();
-
-        file.close();
-    }
+    Core::readStringFromFile(mFileName, fileContents);
 
     setContents(fileContents);
     setReadOnly(!Core::FileManager::instance()->isReadableAndWritable(mFileName));
