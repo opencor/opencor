@@ -57,6 +57,8 @@ public:
 
     Status check();
 
+    void reset();
+
     bool isNew() const;
 
     int newIndex() const;

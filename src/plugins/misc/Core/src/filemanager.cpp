@@ -170,6 +170,37 @@ File * FileManager::isManaged(const QString &pFileName) const
 
 //==============================================================================
 
+void FileManager::freeze()
+{
+    // Freeze ourselves by stopping our timer
+
+    mTimer->stop();
+}
+
+//==============================================================================
+
+void FileManager::unfreeze()
+{
+    // Unfreeze ourselves by (re)starting our timer
+
+    mTimer->start();
+}
+
+//==============================================================================
+
+void FileManager::reset(const QString &pFileName)
+{
+    // Reset the given file, should it be managed
+
+    QString nativeFileName = nativeCanonicalFileName(pFileName);
+    File *file = isManaged(nativeFileName);
+
+    if (file)
+        file->reset();
+}
+
+//==============================================================================
+
 bool FileManager::isNew(const QString &pFileName) const
 {
     // Return whether the given file, if it is being managed, is new
@@ -337,8 +368,7 @@ FileManager::Status FileManager::rename(const QString &pOldFileName,
     File *file = isManaged(oldNativeFileName);
 
     if (file) {
-        // The 'old' file is managed, so we can rename it and let people know
-        // about it
+        // The 'old' file is managed, so rename it and let people know about it
 
         file->setFileName(newNativeFileName);
 
@@ -410,7 +440,8 @@ int FileManager::count() const
 
 void FileManager::checkFiles()
 {
-    // Check our various files, as well as their locked status
+    // Check our various files, as well as their locked status, but only if they
+    // are not being ignored
 
     foreach (File *file, mFiles) {
         switch (file->check()) {

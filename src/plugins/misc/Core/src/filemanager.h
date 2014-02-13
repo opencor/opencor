@@ -92,6 +92,11 @@ public:
 
     File * isManaged(const QString &pFileName) const;
 
+    void freeze();
+    void unfreeze();
+
+    void reset(const QString &pFileName);
+
     bool isNew(const QString &pFileName) const;
 
     int newIndex(const QString &pFileName) const;

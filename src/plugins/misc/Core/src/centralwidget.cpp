@@ -757,19 +757,23 @@ bool CentralWidget::saveFile(const int &pIndex, const bool &pNeedNewFileName)
     bool fileModified = fileManagerInstance->isModified(oldFileName);
 
     if (fileModified || hasNewFileName) {
+        // Freeze the file manager so that it doesn't check for changes in files
+        // Note: indeed, otherwise we will get told that the current file has
+        //       changed and we will be asked whether we want to reload it...
+
+        fileManagerInstance->freeze();
+
         if (fileModified) {
             // The file has been modified, so ask the current view to save it
-            // Note: we must temporarily stop managing the file otherwise we
-            //       will get told that it has changed and we will be asked
-            //       whether we want to reload it...
-
-            fileManagerInstance->unmanage(oldFileName);
 
             bool fileSaved = guiInterface->saveFile(oldFileName, newFileName);
 
-            fileManagerInstance->manage(newFileName);
+            if (fileSaved) {
+                // The file has been saved, so ask our file manager to reset its
+                // settings
 
-            if (!fileSaved) {
+                fileManagerInstance->reset(oldFileName);
+            } else {
                 // The file couldn't be saved, so...
 
                 QMessageBox::warning(mMainWindow, tr("Save File"),
@@ -792,7 +796,11 @@ bool CentralWidget::saveFile(const int &pIndex, const bool &pNeedNewFileName)
 
                 return false;
             }
+        }
 
+        // Update its file name, if needed
+
+        if (hasNewFileName) {
             // Ask our file manager to rename the file
 
 #ifdef QT_DEBUG
@@ -816,6 +824,10 @@ bool CentralWidget::saveFile(const int &pIndex, const bool &pNeedNewFileName)
         // Update our modified settings
 
         updateModifiedSettings();
+
+        // Unfreeze the file manager
+
+        fileManagerInstance->unfreeze();
 
         // Everything went fine, so...
 

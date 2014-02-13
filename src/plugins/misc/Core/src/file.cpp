@@ -39,10 +39,14 @@ namespace Core {
 //==============================================================================
 
 File::File(const QString &pFileName, const bool &pNew) :
-    mFileName(nativeCanonicalFileName(pFileName)),
-    mSha1(sha1()),
-    mModified(false)
+    mFileName(nativeCanonicalFileName(pFileName))
 {
+    // Initialise ourselves by 'resetting' ourselves
+
+    reset();
+
+    // Set our index, in case we are a new file
+
     static int newIndex = 0;
 
     mNewIndex = pNew?++newIndex:0;
@@ -64,11 +68,6 @@ void File::setFileName(const QString &pFileName)
     // Set the new file name of the file
 
     mFileName = pFileName;
-
-    // Also update our SHA-1 value in case the physical state of our file has
-    // changed
-
-    mSha1 = sha1();
 }
 
 //==============================================================================
@@ -128,6 +127,17 @@ QString File::sha1() const
 
 //==============================================================================
 
+void File::reset()
+{
+    // Reset our modified state and SHA-1 value
+
+    mSha1 = sha1();
+
+    mModified = false;
+}
+
+//==============================================================================
+
 bool File::isNew() const
 {
     // Return whether the file is new
@@ -160,11 +170,6 @@ void File::setModified(const bool &pModified)
     // Set the modified status of the file
 
     mModified = pModified;
-
-    // Also update our SHA-1 value in case the physical state of our file has
-    // changed
-
-    mSha1 = sha1();
 }
 
 //==============================================================================
