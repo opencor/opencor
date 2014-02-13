@@ -19,6 +19,7 @@ specific language governing permissions and limitations under the License.
 // RawView plugin
 //==============================================================================
 
+#include "cliutils.h"
 #include "rawviewplugin.h"
 #include "rawviewwidget.h"
 
@@ -279,12 +280,15 @@ QIcon RawViewPlugin::fileTabIcon(const QString &pFileName) const
 bool RawViewPlugin::saveFile(const QString &pOldFileName,
                              const QString &pNewFileName)
 {
-    Q_UNUSED(pOldFileName);
-    Q_UNUSED(pNewFileName);
+    // Ask the given file's corresponding view widget to save its contents
 
-    // We don't handle this interface...
+    RawViewWidget *viewWidget = mViewWidgets.value(pOldFileName);
+    bool res = Core::writeTextToFile(pNewFileName, viewWidget->contents());
 
-    return false;
+    if (res)
+        viewWidget->resetUndoHistory();
+
+    return res;
 }
 
 //==============================================================================

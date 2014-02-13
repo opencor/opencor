@@ -217,7 +217,8 @@ private Q_SLOTS:
     void filePermissionsChanged(const QString &pFileName);
     void fileModified(const QString &pFileName, const bool &pModified);
 
-    void fileReloaded(const QString &pFileName);
+    void fileReloaded(const QString &pFileName,
+                      const bool &pSkipCurrentPlugin = false);
 
     void fileRenamed(const QString &pOldFileName, const QString &pNewFileName);
     void fileDuplicated(const QString &pFileName);

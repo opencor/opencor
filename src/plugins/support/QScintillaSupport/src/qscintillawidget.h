@@ -59,6 +59,8 @@ public:
 
     bool isSelectAllAvailable() const;
 
+    void resetUndoHistory();
+
 protected:
     virtual void contextMenuEvent(QContextMenuEvent *pEvent);
     virtual void dragEnterEvent(QDragEnterEvent *pEvent);

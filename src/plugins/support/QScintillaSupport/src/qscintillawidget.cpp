@@ -193,6 +193,15 @@ bool QScintillaWidget::isSelectAllAvailable() const
 
 //==============================================================================
 
+void QScintillaWidget::resetUndoHistory()
+{
+    // Reset our undo history
+
+    SendScintilla(SCI_EMPTYUNDOBUFFER);
+}
+
+//==============================================================================
+
 void QScintillaWidget::contextMenuEvent(QContextMenuEvent *pEvent)
 {
     // Show our context menu or QsciScintilla's one, if we don't have one

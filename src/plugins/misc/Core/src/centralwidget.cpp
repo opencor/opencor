@@ -34,6 +34,7 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include <QDragEnterEvent>
+#include <QFile>
 #include <QFileInfo>
 #include <QLabel>
 #include <QMainWindow>
@@ -525,19 +526,20 @@ void CentralWidget::updateFileTab(const int &pIndex)
     // Update the text, tool tip and icon to be used for the given file tab
 
     FileManager *fileManagerInstance = FileManager::instance();
-    bool fileIsNew = fileManagerInstance->isNew(mFileNames[pIndex]);
+    QString fileName = mFileNames[pIndex];
+    bool fileIsNew = fileManagerInstance->isNew(fileName);
     QString tabText = fileIsNew?
-                          tr("File")+" #"+QString::number(fileManagerInstance->newIndex(mFileNames[pIndex])):
-                          QFileInfo(mFileNames[pIndex]).fileName();
+                          tr("File")+" #"+QString::number(fileManagerInstance->newIndex(fileName)):
+                          QFileInfo(fileName).fileName();
 
-    if (fileManagerInstance->isModified(mFileNames[pIndex]))
+    if (fileManagerInstance->isModified(fileName))
         tabText += "*";
 
     mFileTabs->setTabText(pIndex, tabText);
     mFileTabs->setTabToolTip(pIndex, fileIsNew?
                                          mFileTabs->tabText(pIndex):
-                                         mFileNames[pIndex]);
-    mFileTabs->setTabIcon(pIndex, fileManagerInstance->isLocked(mFileNames[pIndex])?
+                                         fileName);
+    mFileTabs->setTabIcon(pIndex, fileManagerInstance->isLocked(fileName)?
                                       QIcon(":/oxygen/status/object-locked.png"):
                                       QIcon());
 }
@@ -757,8 +759,17 @@ bool CentralWidget::saveFile(const int &pIndex, const bool &pNeedNewFileName)
     if (fileModified || hasNewFileName) {
         if (fileModified) {
             // The file has been modified, so ask the current view to save it
+            // Note: we must temporarily stop managing the file otherwise we
+            //       will get told that it has changed and we will be asked
+            //       whether we want to reload it...
 
-            if (!guiInterface->saveFile(oldFileName, newFileName)) {
+            fileManagerInstance->unmanage(oldFileName);
+
+            bool fileSaved = guiInterface->saveFile(oldFileName, newFileName);
+
+            fileManagerInstance->manage(newFileName);
+
+            if (!fileSaved) {
                 // The file couldn't be saved, so...
 
                 QMessageBox::warning(mMainWindow, tr("Save File"),
@@ -781,11 +792,7 @@ bool CentralWidget::saveFile(const int &pIndex, const bool &pNeedNewFileName)
 
                 return false;
             }
-        }
 
-        // Update its file name, if needed
-
-        if (hasNewFileName) {
             // Ask our file manager to rename the file
 
 #ifdef QT_DEBUG
@@ -804,7 +811,7 @@ bool CentralWidget::saveFile(const int &pIndex, const bool &pNeedNewFileName)
         // Let people know that the file has been saved, if needed, by
         // pretending that it was reloaded
 
-        fileReloaded(newFileName);
+        fileReloaded(newFileName, true);
 
         // Update our modified settings
 
@@ -1516,16 +1523,18 @@ void CentralWidget::fileModified(const QString &pFileName,
 
 //==============================================================================
 
-void CentralWidget::fileReloaded(const QString &pFileName)
+void CentralWidget::fileReloaded(const QString &pFileName,
+                                 const bool &pSkipCurrentPlugin)
 {
     // Let our plugins know about the file having been reloaded
 
-    foreach (Plugin *plugin, mLoadedPlugins) {
-        GuiInterface *guiInterface = qobject_cast<GuiInterface *>(plugin->instance());
+    foreach (Plugin *plugin, mLoadedPlugins)
+        if (!pSkipCurrentPlugin || (plugin != mPlugin)) {
+            GuiInterface *guiInterface = qobject_cast<GuiInterface *>(plugin->instance());
 
-        if (guiInterface)
-            guiInterface->fileReloaded(pFileName);
-    }
+            if (guiInterface)
+                guiInterface->fileReloaded(pFileName);
+        }
 }
 
 //==============================================================================
