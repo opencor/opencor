@@ -47,9 +47,11 @@ File::File(const QString &pFileName, const bool &pNew) :
 
     // Set our index, in case we are a new file
 
-    static int newIndex = 0;
+    if (pNew) {
+        static int newIndex = 0;
 
-    mNewIndex = pNew?++newIndex:0;
+        mNewIndex = ++newIndex;
+    }
 }
 
 //==============================================================================
@@ -129,9 +131,11 @@ QString File::sha1() const
 
 void File::reset()
 {
-    // Reset our modified state and SHA-1 value
+    // Reset our modified state, new index and SHA-1 value
 
     mSha1 = sha1();
+
+    mNewIndex = 0;
 
     mModified = false;
 }
