@@ -749,7 +749,9 @@ bool CentralWidget::saveFile(const int &pIndex, const bool &pNeedNewFileName)
                                       +" (*."+supportedFileType.fileExtension()+")";
             }
 
-        newFileName = Core::getSaveFileName(tr("Save File"), newFileName, supportedFileTypes);
+        newFileName = Core::getSaveFileName(tr("Save File"),
+                                            fileIsNew?mFileTabs->tabToolTip(pIndex):newFileName,
+                                            supportedFileTypes);
 
         // Make sure that a new file name was retrieved
 
@@ -906,14 +908,15 @@ void CentralWidget::nextFile()
 
 bool CentralWidget::canCloseFile(const int &pIndex)
 {
+    FileManager *fileManagerInstance = FileManager::instance();
     QString fileName = mFileNames[pIndex];
 
-    if (FileManager::instance()->isModified(fileName))
+    if (fileManagerInstance->isModified(fileName))
         // The current file is modified, so ask the user whether to save it or
         // ignore it
 
         switch (QMessageBox::question(mMainWindow, qApp->applicationName(),
-                                      tr("<strong>%1</strong> has been modified. Do you want to save it before closing it?").arg(fileName),
+                                      tr("<strong>%1</strong> has been modified. Do you want to save it before closing it?").arg(fileManagerInstance->isNew(fileName)?mFileTabs->tabToolTip(pIndex):fileName),
                                       QMessageBox::Yes|QMessageBox::No|QMessageBox::Cancel,
                                       QMessageBox::Yes)) {
         case QMessageBox::Yes:
