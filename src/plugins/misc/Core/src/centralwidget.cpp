@@ -544,13 +544,8 @@ void CentralWidget::updateFileTab(const int &pIndex)
                           tr("File")+" #"+QString::number(fileManagerInstance->newIndex(fileName)):
                           QFileInfo(fileName).fileName();
 
-    if (fileManagerInstance->isModified(fileName))
-        tabText += "*";
-
-    mFileTabs->setTabText(pIndex, tabText);
-    mFileTabs->setTabToolTip(pIndex, fileIsNew?
-                                         mFileTabs->tabText(pIndex):
-                                         fileName);
+    mFileTabs->setTabText(pIndex, tabText+(fileManagerInstance->isModified(fileName)?"*":QString()));
+    mFileTabs->setTabToolTip(pIndex, fileIsNew?tabText:fileName);
     mFileTabs->setTabIcon(pIndex, fileManagerInstance->isLocked(fileName)?
                                       QIcon(":/oxygen/status/object-locked.png"):
                                       QIcon());
