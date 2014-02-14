@@ -21,6 +21,7 @@ specific language governing permissions and limitations under the License.
 
 #include "cellmlfilemanager.h"
 #include "cellmlsupportplugin.h"
+#include "cliutils.h"
 #include "rawcellmlviewplugin.h"
 #include "rawcellmlviewwidget.h"
 
@@ -256,12 +257,19 @@ QIcon RawCellMLViewPlugin::fileTabIcon(const QString &pFileName) const
 bool RawCellMLViewPlugin::saveFile(const QString &pOldFileName,
                                    const QString &pNewFileName)
 {
-    Q_UNUSED(pOldFileName);
-    Q_UNUSED(pNewFileName);
+    // Ask the given file's corresponding view widget to save its contents
 
-    // We don't handle this interface...
+    if (viewWidget(pOldFileName)) {
+        QScintillaSupport::QScintillaWidget *editor = mViewWidget->editor(pOldFileName);
+        bool res = Core::writeTextToFile(pNewFileName, editor->contents());
 
-    return false;
+        if (res)
+            editor->resetUndoHistory();
+
+        return res;
+    } else {
+        return false;
+    }
 }
 
 //==============================================================================
