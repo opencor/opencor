@@ -537,7 +537,10 @@ void CorePlugin::fileClosed(const QString &pFileName)
     // Reopen sub-menu
     // Note: the most recent file is to be shown first...
 
-    if (!Core::FileManager::instance()->isNew(pFileName)) {
+    Core::FileManager *fileManagerInstance = Core::FileManager::instance();
+
+    if (    fileManagerInstance->isManaged(pFileName)
+        && !fileManagerInstance->isNew(pFileName)) {
         mRecentFileNames.prepend(pFileName);
 
         while (mRecentFileNames.count() > 10)
