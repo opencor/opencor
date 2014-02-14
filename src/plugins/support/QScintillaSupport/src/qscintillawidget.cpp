@@ -198,6 +198,9 @@ void QScintillaWidget::resetUndoHistory()
     // Reset our undo history
 
     SendScintilla(SCI_EMPTYUNDOBUFFER);
+
+    mCanUndo = false;
+    mCanRedo = false;
 }
 
 //==============================================================================
