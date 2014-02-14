@@ -732,10 +732,11 @@ bool CentralWidget::saveFile(const int &pIndex, const bool &pNeedNewFileName)
     FileManager *fileManagerInstance = FileManager::instance();
     QString oldFileName = mFileNames[pIndex];
     QString newFileName = oldFileName;
+    bool fileIsNew = fileManagerInstance->isNew(oldFileName);
     bool hasNewFileName = false;
     GuiInterface *guiInterface = qobject_cast<GuiInterface *>(mPlugin->instance());
 
-    if (pNeedNewFileName || fileManagerInstance->isNew(oldFileName)) {
+    if (pNeedNewFileName || fileIsNew) {
         // Either we want to save the file under a new name or we are dealing
         // with a new file, so we ask the user for a file name based on the MIME
         // types supported by our current view
