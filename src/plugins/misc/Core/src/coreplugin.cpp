@@ -532,16 +532,20 @@ void CorePlugin::fileRenamed(const QString &pOldFileName,
 
 void CorePlugin::fileClosed(const QString &pFileName)
 {
-    // Add the file to our list of recent files (making sure that we don't end
-    // up with more than 10 recent file names) and update our Reopen sub-menu
+    // Add, if necessary (i.e. the file wasn't a new file that didn't get
+    // saved), the file to our list of recent files (making sure that we don't
+    // end up with more than 10 recent file names) and update our Reopen
+    // sub-menu
     // Note: the most recent file is to be shown first...
 
-    mRecentFileNames.prepend(pFileName);
+    if (!Core::FileManager::instance()->isNew(pFileName)) {
+        mRecentFileNames.prepend(pFileName);
 
-    while (mRecentFileNames.count() > 10)
-        mRecentFileNames.removeLast();
+        while (mRecentFileNames.count() > 10)
+            mRecentFileNames.removeLast();
 
-    updateFileReopenMenu();
+        updateFileReopenMenu();
+    }
 }
 
 //==============================================================================

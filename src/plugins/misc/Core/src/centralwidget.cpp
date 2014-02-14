@@ -972,10 +972,6 @@ bool CentralWidget::closeFile(const int &pIndex, const bool &pForceClosing)
             }
         }
 
-        // Unregister the file from our file manager
-
-        FileManager::instance()->unmanage(fileName);
-
         // Let our plugins know about the file having just been closed
 
         foreach (Plugin *plugin, mLoadedPlugins) {
@@ -984,6 +980,10 @@ bool CentralWidget::closeFile(const int &pIndex, const bool &pForceClosing)
             if (guiInterface)
                 guiInterface->fileClosed(fileName);
         }
+
+        // Unregister the file from our file manager
+
+        FileManager::instance()->unmanage(fileName);
 
         // Update our modified settings
 
