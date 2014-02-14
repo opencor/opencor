@@ -56,6 +56,18 @@ File::File(const QString &pFileName, const bool &pNew) :
 
 //==============================================================================
 
+File::~File()
+{
+    // Delete our corresponding physical file, in case we refer to a new file
+    // (in which case our corresponding phsyical file was supposed to be a
+    // temporary file, so...)
+
+    if (isNew())
+        QFile::remove(mFileName);
+}
+
+//==============================================================================
+
 QString File::fileName() const
 {
     // Return the file name of the file

@@ -51,6 +51,7 @@ public:
     };
 
     explicit File(const QString &pFileName, const bool &pNew);
+    ~File();
 
     QString fileName() const;
     void setFileName(const QString &pFileName);

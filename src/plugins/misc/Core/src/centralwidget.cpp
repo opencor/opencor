@@ -828,6 +828,11 @@ bool CentralWidget::saveFile(const int &pIndex, const bool &pNeedNewFileName)
 #endif
         }
 
+        // Delete the 'old' file, if it was a new one that got saved
+
+        if (fileIsNew)
+            QFile::remove(oldFileName);
+
         // Let people know that the file has been saved, if needed, by
         // pretending that it was reloaded
 
