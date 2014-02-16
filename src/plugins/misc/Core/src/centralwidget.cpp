@@ -960,16 +960,20 @@ bool CentralWidget::closeFile(const int &pIndex, const bool &pForceClosing)
     int realIndex = (pIndex < 0)?mFileTabs->currentIndex():pIndex;
 
     if (realIndex != -1) {
-        // There is a file currently opened, so first retrieve its file name
-
-        QString fileName = mFileNames[realIndex];
-
-        // Check whether the file can be closed
+        // There is a file currently opened, so check whether the file can be
+        // closed
+        // Note: this may involve saving the file (possibly under a new name),
+        //       hence we must retrieve the file name after making sure that the
+        //       file can be closed...
 
         if (!closingAllFiles && !pForceClosing && !canCloseFile(realIndex))
             // The file cannot be closed, so...
 
             return false;
+
+        // Retrieve the file name
+
+        QString fileName = mFileNames[realIndex];
 
         // Next, we must close the tab
 
