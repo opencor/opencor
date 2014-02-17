@@ -340,12 +340,14 @@ void RawViewPlugin::fileRenamed(const QString &pOldFileName,
 {
     // Update our view widgets mapping
 
-    mViewWidgets.insert(pNewFileName, mViewWidgets.value(pOldFileName));
+    RawViewWidget *viewWidget = mViewWidgets.value(pOldFileName);
+
+    mViewWidgets.insert(pNewFileName, viewWidget);
     mViewWidgets.remove(pOldFileName);
 
     // Also ask the given file's corresponding view widget to update its name
 
-    mViewWidgets.value(pNewFileName)->fileRenamed(pNewFileName);
+    viewWidget->fileRenamed(pNewFileName);
 }
 
 //==============================================================================
