@@ -297,11 +297,9 @@ void PrettyCellMLViewPlugin::fileModified(const QString &pFileName,
 
 void PrettyCellMLViewPlugin::fileReloaded(const QString &pFileName)
 {
-    // The given file has been reloaded, so let its corresponding view widget
-    // know about it
+    // The given file has been reloaded, so let our view widget know about it
 
-    if (viewWidget(pFileName))
-        mViewWidget->fileReloaded(pFileName);
+    mViewWidget->fileReloaded(pFileName);
 }
 
 //==============================================================================

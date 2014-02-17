@@ -259,17 +259,13 @@ bool RawCellMLViewPlugin::saveFile(const QString &pOldFileName,
 {
     // Ask the given file's corresponding view widget to save its contents
 
-    if (viewWidget(pOldFileName)) {
-        QScintillaSupport::QScintillaWidget *editor = mViewWidget->editor(pOldFileName);
-        bool res = Core::writeTextToFile(pNewFileName, editor->contents());
+    QScintillaSupport::QScintillaWidget *editor = mViewWidget->editor(pOldFileName);
+    bool res = Core::writeTextToFile(pNewFileName, editor->contents());
 
-        if (res)
-            editor->resetUndoHistory();
+    if (res)
+        editor->resetUndoHistory();
 
-        return res;
-    } else {
-        return false;
-    }
+    return res;
 }
 
 //==============================================================================
@@ -305,11 +301,9 @@ void RawCellMLViewPlugin::fileModified(const QString &pFileName,
 
 void RawCellMLViewPlugin::fileReloaded(const QString &pFileName)
 {
-    // The given file has been reloaded, so let its corresponding view widget
-    // know about it
+    // The given file has been reloaded, so let our view widget know about it
 
-    if (viewWidget(pFileName))
-        mViewWidget->fileReloaded(pFileName);
+    mViewWidget->fileReloaded(pFileName);
 }
 
 //==============================================================================
