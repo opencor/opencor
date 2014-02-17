@@ -1615,7 +1615,6 @@ void CentralWidget::fileDuplicated(const QString &pFileName)
 
 //==============================================================================
 
-            QIcon tabIcon = guiInterface->fileTabIcon(mFileNames[i]);
 void CentralWidget::updateFileTabIcon(const QString &pViewName,
                                       const QString &pFileName,
                                       const QIcon &pIcon)
@@ -1652,6 +1651,7 @@ void CentralWidget::updateFileTabIcons()
     if (mPlugin) {
         GuiInterface *guiInterface = qobject_cast<GuiInterface *>(mPlugin->instance());
 
+        for (int i = 0, iMax = mFileTabs->count(); i < iMax; ++i) {
             QIcon tabIcon = guiInterface->fileTabIcon(mFileNames[i]);
 
             if (tabIcon.isNull())
