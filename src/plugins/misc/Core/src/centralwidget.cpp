@@ -127,9 +127,9 @@ CentralWidget::CentralWidget(QMainWindow *pMainWindow) :
     mGui(new Ui::CentralWidget),
     mStatus(Starting),
     mLoadedPlugins(Plugins()),
+    mPlugin(0),
     mSupportedFileTypes(FileTypes()),
-    mFileNames(QStringList()),
-    mPlugin(0)
+    mFileNames(QStringList())
 {
     // Set up the GUI
 
