@@ -439,10 +439,14 @@ void CellMLAnnotationViewPlugin::fileReloaded(const QString &pFileName)
 void CellMLAnnotationViewPlugin::fileRenamed(const QString &pOldFileName,
                                              const QString &pNewFileName)
 {
-    // Update our view widgets mapping
+    // A file has been renamed, so update our view widgets mapping
 
-    mViewWidgets.insert(pNewFileName, mViewWidgets.value(pOldFileName));
-    mViewWidgets.remove(pOldFileName);
+    CellmlAnnotationViewWidget *viewWidget = mViewWidgets.value(pOldFileName);
+
+    if (viewWidget) {
+        mViewWidgets.insert(pNewFileName, viewWidget);
+        mViewWidgets.remove(pOldFileName);
+    }
 }
 
 //==============================================================================
