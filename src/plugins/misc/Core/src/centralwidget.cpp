@@ -1660,6 +1660,14 @@ void CentralWidget::fileRenamed(const QString &pOldFileName,
 
             mFileNames[i] = pNewFileName;
 
+            // Update the model and view indexes
+
+            mModeIndexes.insert(pNewFileName, mModeIndexes.value(pOldFileName));
+            mViewIndexes.insert(pNewFileName, mViewIndexes.value(pOldFileName));
+
+            mModeIndexes.remove(pOldFileName);
+            mViewIndexes.remove(pOldFileName);
+
             // Update the file tab
 
             mFileTabs->setTabText(i, QFileInfo(pNewFileName).fileName());
