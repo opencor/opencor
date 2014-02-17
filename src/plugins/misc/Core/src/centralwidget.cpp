@@ -465,6 +465,12 @@ void CentralWidget::settingsLoaded(const Plugins &pLoadedPlugins)
 
     mStatus = Idling;
 
+    // Keep track of the mode and view of the current file
+    // Note: this is needed in case no information about the mode/view for the
+    //       current file were retrieved from the settings
+
+    keepTrackOfModeView();
+
     // Update the GUI
 
     updateGui();
@@ -1271,6 +1277,9 @@ void CentralWidget::updateModeView()
 {
     // Update the mode and view, if any, for the current file
 
+    if (mStatus != Idling)
+        return;
+
     int fileTabIndex = mFileTabs->currentIndex();
 
     if (fileTabIndex != -1) {
@@ -1279,6 +1288,8 @@ void CentralWidget::updateModeView()
         int fileViewTabIndex = mViewIndexes.value(fileName, -1);
 
         if (fileModeTabIndex != -1) {
+            mStatus = UpdatingModeView;
+
             mModeTabs->setCurrentIndex(fileModeTabIndex);
 
             if (fileModeTabIndex == modeTabIndex(GuiViewSettings::Editing))
@@ -1287,6 +1298,19 @@ void CentralWidget::updateModeView()
                 mModes.value(GuiViewSettings::Simulation)->views()->setCurrentIndex(fileViewTabIndex);
             else
                 mModes.value(GuiViewSettings::Analysis)->views()->setCurrentIndex(fileViewTabIndex);
+
+            mStatus = Idling;
+        } else {
+            // We don't have any track of the mode and view for the current
+            // file, so keep some
+            // Note: indeed, say that we switch to file XXX, don't switch modes
+            //       and/or views, and then switch to file YYY. From there, say
+            //       that we switch modes and/or views, and switch back to file
+            //       XXX. At this stage the mode and view for file XXX will be
+            //       that of file YYY while it should have been the ones before
+            //       we switched to file YYY...
+
+            keepTrackOfModeView();
         }
     }
 }
@@ -1295,7 +1319,10 @@ void CentralWidget::updateModeView()
 
 void CentralWidget::keepTrackOfModeView()
 {
-    // Keep track of the the mode and view of the current file
+    // Keep track of the mode and view of the current file
+
+    if (mStatus != Idling)
+        return;
 
     int fileTabIndex = mFileTabs->currentIndex();
 
@@ -1632,6 +1659,8 @@ void CentralWidget::fileRenamed(const QString &pOldFileName,
             // Update our internal copy of the file name
 
             mFileNames[i] = pNewFileName;
+
+            // Update the file tab
 
             mFileTabs->setTabText(i, QFileInfo(pNewFileName).fileName());
             mFileTabs->setTabToolTip(i, pNewFileName);

@@ -132,6 +132,7 @@ private:
     enum Status {
         Starting,
         Idling,
+        UpdatingModeView,
         UpdatingGui,
         Stopping
     };
