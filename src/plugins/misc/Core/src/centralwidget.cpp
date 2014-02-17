@@ -347,7 +347,7 @@ void CentralWidget::loadSettings(QSettings *pSettings)
 
     // Some connections to handle an internal change in the status of a file
     // Note: we do it here for the same reason as above (see the note for the
-    //       connections to handle an internal change in the status of a
+    //       connections to handle an external change in the status of a
     //       file)...
 
     connect(fileManagerInstance, SIGNAL(fileModified(const QString &, const bool &)),
@@ -1625,16 +1625,18 @@ void CentralWidget::fileReloaded(const QString &pFileName)
 void CentralWidget::fileRenamed(const QString &pOldFileName,
                                 const QString &pNewFileName)
 {
-    // Update our file names and tabs
+    // A file has been renamed, so update various things
 
     for (int i = 0, iMax = mFileNames.count(); i < iMax; ++i)
         if (!mFileNames[i].compare(pOldFileName)) {
+            // Update our internal copy of the file name
+
             mFileNames[i] = pNewFileName;
 
             mFileTabs->setTabText(i, QFileInfo(pNewFileName).fileName());
             mFileTabs->setTabToolTip(i, pNewFileName);
 
-            // Let our plugins know about the file having been renamed
+            // Let our plugins know about a file having been renamed
 
             foreach (Plugin *plugin, mLoadedPlugins) {
                 GuiInterface *guiInterface = qobject_cast<GuiInterface *>(plugin->instance());
