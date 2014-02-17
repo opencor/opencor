@@ -77,20 +77,20 @@ public:
     CellmlFileRdfTriples rdfTriples(iface::cellml_api::CellMLElement *pElement) const;
 
     bool rdfTripleExists(iface::cellml_api::CellMLElement *pElement,
-                         const CellMLSupport::CellmlFileRdfTriple::ModelQualifier &pModelQualifier,
+                         const CellmlFileRdfTriple::ModelQualifier &pModelQualifier,
                          const QString &pResource, const QString &pId) const;
     bool rdfTripleExists(iface::cellml_api::CellMLElement *pElement,
-                         const CellMLSupport::CellmlFileRdfTriple::BioQualifier &pBioQualifier,
+                         const CellmlFileRdfTriple::BioQualifier &pBioQualifier,
                          const QString &pResource, const QString &pId) const;
 
-    CellMLSupport::CellmlFileRdfTriple * addRdfTriple(iface::cellml_api::CellMLElement *pElement,
-                                                      const CellMLSupport::CellmlFileRdfTriple::ModelQualifier &pModelQualifier,
-                                                      const QString &pResource,
-                                                      const QString &pId);
-    CellMLSupport::CellmlFileRdfTriple * addRdfTriple(iface::cellml_api::CellMLElement *pElement,
-                                                      const CellMLSupport::CellmlFileRdfTriple::BioQualifier &pBioQualifier,
-                                                      const QString &pResource,
-                                                      const QString &pId);
+    CellmlFileRdfTriple * addRdfTriple(iface::cellml_api::CellMLElement *pElement,
+                                       const CellmlFileRdfTriple::ModelQualifier &pModelQualifier,
+                                       const QString &pResource,
+                                       const QString &pId);
+    CellmlFileRdfTriple * addRdfTriple(iface::cellml_api::CellMLElement *pElement,
+                                       const CellmlFileRdfTriple::BioQualifier &pBioQualifier,
+                                       const QString &pResource,
+                                       const QString &pId);
 
     QString uriBase() const;
 

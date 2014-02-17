@@ -554,26 +554,26 @@ bool CellmlFile::rdfTripleExists(iface::cellml_api::CellMLElement *pElement,
 //==============================================================================
 
 bool CellmlFile::rdfTripleExists(iface::cellml_api::CellMLElement *pElement,
-                                 const CellMLSupport::CellmlFileRdfTriple::ModelQualifier &pModelQualifier,
+                                 const CellmlFileRdfTriple::ModelQualifier &pModelQualifier,
                                  const QString &pResource, const QString &pId) const
 {
     // Call our generic rdfTripleExists() function
 
     return rdfTripleExists(pElement,
-                           CellMLSupport::CellmlFileRdfTriple::modelQualifierAsString(pModelQualifier),
+                           CellmlFileRdfTriple::modelQualifierAsString(pModelQualifier),
                            pResource, pId);
 }
 
 //==============================================================================
 
 bool CellmlFile::rdfTripleExists(iface::cellml_api::CellMLElement *pElement,
-                                 const CellMLSupport::CellmlFileRdfTriple::BioQualifier &pBioQualifier,
+                                 const CellmlFileRdfTriple::BioQualifier &pBioQualifier,
                                  const QString &pResource, const QString &pId) const
 {
     // Call our generic rdfTripleExists() function
 
     return rdfTripleExists(pElement,
-                           CellMLSupport::CellmlFileRdfTriple::bioQualifierAsString(pBioQualifier),
+                           CellmlFileRdfTriple::bioQualifierAsString(pBioQualifier),
                            pResource, pId);
 }
 
@@ -627,28 +627,28 @@ QString CellmlFile::rdfTripleSubject(iface::cellml_api::CellMLElement *pElement)
 
 //==============================================================================
 
-CellMLSupport::CellmlFileRdfTriple * CellmlFile::addRdfTriple(iface::cellml_api::CellMLElement *pElement,
-                                                              const CellMLSupport::CellmlFileRdfTriple::ModelQualifier &pModelQualifier,
+CellmlFileRdfTriple * CellmlFile::addRdfTriple(iface::cellml_api::CellMLElement *pElement,
+                                                              const CellmlFileRdfTriple::ModelQualifier &pModelQualifier,
                                                               const QString &pResource,
                                                               const QString &pId)
 {
     // Add an RDF triple to our CellML file
 
-    return mRdfTriples.add(new CellMLSupport::CellmlFileRdfTriple(this, rdfTripleSubject(pElement),
-                                                                  pModelQualifier, pResource, pId));
+    return mRdfTriples.add(new CellmlFileRdfTriple(this, rdfTripleSubject(pElement),
+                                                   pModelQualifier, pResource, pId));
 }
 
 //==============================================================================
 
-CellMLSupport::CellmlFileRdfTriple * CellmlFile::addRdfTriple(iface::cellml_api::CellMLElement *pElement,
-                                                              const CellMLSupport::CellmlFileRdfTriple::BioQualifier &pBioQualifier,
-                                                              const QString &pResource,
-                                                              const QString &pId)
+CellmlFileRdfTriple * CellmlFile::addRdfTriple(iface::cellml_api::CellMLElement *pElement,
+                                               const CellmlFileRdfTriple::BioQualifier &pBioQualifier,
+                                               const QString &pResource,
+                                               const QString &pId)
 {
     // Add an RDF Triple to our CellML file
 
-    return mRdfTriples.add(new CellMLSupport::CellmlFileRdfTriple(this, rdfTripleSubject(pElement),
-                                                                  pBioQualifier, pResource, pId));
+    return mRdfTriples.add(new CellmlFileRdfTriple(this, rdfTripleSubject(pElement),
+                                                   pBioQualifier, pResource, pId));
 }
 
 //==============================================================================
