@@ -263,6 +263,21 @@ void RawCellmlViewWidget::fileReloaded(const QString &pFileName)
 
 //==============================================================================
 
+void RawCellmlViewWidget::fileRenamed(const QString &pOldFileName,
+                                      const QString &pNewFileName)
+{
+    // The given file has been renamed, so update our bordered editors mapping
+
+    Core::BorderedWidget *borderedEditor = mBorderedEditors.value(pOldFileName);
+
+    if (borderedEditor) {
+        mBorderedEditors.insert(pNewFileName, borderedEditor);
+        mBorderedEditors.remove(pOldFileName);
+    }
+}
+
+//==============================================================================
+
 QScintillaSupport::QScintillaWidget * RawCellmlViewWidget::editor(const QString &pFileName) const
 {
     // Return the requested editor

@@ -82,6 +82,7 @@ public:
     void finalize(const QString &pFileName);
 
     void fileReloaded(const QString &pFileName);
+    void fileRenamed(const QString &pOldFileName, const QString &pNewFileName);
 
     QScintillaSupport::QScintillaWidget * editor(const QString &pFileName) const;
 

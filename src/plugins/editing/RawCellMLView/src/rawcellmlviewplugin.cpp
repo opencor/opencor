@@ -311,10 +311,9 @@ void RawCellMLViewPlugin::fileReloaded(const QString &pFileName)
 void RawCellMLViewPlugin::fileRenamed(const QString &pOldFileName,
                                       const QString &pNewFileName)
 {
-    Q_UNUSED(pOldFileName);
-    Q_UNUSED(pNewFileName);
+    // The given file has been renamed, so let our view widget know about it
 
-    // We don't handle this interface...
+    mViewWidget->fileRenamed(pOldFileName, pNewFileName);
 }
 
 //==============================================================================
