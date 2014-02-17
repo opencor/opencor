@@ -234,9 +234,9 @@ private Q_SLOTS:
 
     void moveFile(const int &pFromIndex, const int &pToIndex);
 
-    void updateFileTabIcons();
     void updateFileTabIcon(const QString &pViewName, const QString &pFileName,
                            const QIcon &pIcon);
+    void updateFileTabIcons();
 };
 
 //==============================================================================
