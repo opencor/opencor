@@ -148,6 +148,9 @@ private:
     QTabBar *mModeTabs;
     QTabBar *mFileTabs;
 
+    QMap<QString, int> mModeIndexes;
+    QMap<QString, int> mViewIndexes;
+
     FileTypes mSupportedFileTypes;
 
     QStringList mFileNames;
@@ -196,6 +199,9 @@ Q_SIGNALS:
     void atLeastTwoFiles(const bool &pAtLeastTwoFiles);
 
 private Q_SLOTS:
+    void updateModeView();
+    void keepTrackOfModeView();
+
     void updateGui();
 
     void openFile();

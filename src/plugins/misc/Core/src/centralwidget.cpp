@@ -128,6 +128,8 @@ CentralWidget::CentralWidget(QMainWindow *pMainWindow) :
     mStatus(Starting),
     mLoadedPlugins(Plugins()),
     mPlugin(0),
+    mModeIndexes(QMap<QString, int>()),
+    mViewIndexes(QMap<QString, int>()),
     mSupportedFileTypes(FileTypes()),
     mFileNames(QStringList())
 {
@@ -222,6 +224,8 @@ CentralWidget::CentralWidget(QMainWindow *pMainWindow) :
     // Some connections to handle our files tab bar
 
     connect(mFileTabs, SIGNAL(currentChanged(int)),
+            this, SLOT(updateModeView()));
+    connect(mFileTabs, SIGNAL(currentChanged(int)),
             this, SLOT(updateGui()));
     connect(mFileTabs, SIGNAL(tabMoved(int, int)),
             this, SLOT(moveFile(const int &, const int &)));
@@ -231,6 +235,8 @@ CentralWidget::CentralWidget(QMainWindow *pMainWindow) :
     // A connection to handle our modes tab bar
 
     connect(mModeTabs, SIGNAL(currentChanged(int)),
+            this, SLOT(keepTrackOfModeView()));
+    connect(mModeTabs, SIGNAL(currentChanged(int)),
             this, SLOT(updateGui()));
     connect(mModeTabs, SIGNAL(currentChanged(int)),
             this, SLOT(updateFileTabIcons()));
@@ -238,6 +244,8 @@ CentralWidget::CentralWidget(QMainWindow *pMainWindow) :
     // Some connections to handle our mode views tab bar
 
     foreach (CentralWidgetMode *mode, mModes) {
+        connect(mode->views(), SIGNAL(currentChanged(int)),
+                this, SLOT(keepTrackOfModeView()));
         connect(mode->views(), SIGNAL(currentChanged(int)),
                 this, SLOT(updateGui()));
         connect(mode->views(), SIGNAL(currentChanged(int)),
@@ -1255,6 +1263,55 @@ void CentralWidget::updateModeGui(const GuiViewSettings::Mode &pMode)
 
     if (modeActive)
         mPlugin = mode->viewPlugins()->value(mode->views()->currentIndex());
+}
+
+//==============================================================================
+
+void CentralWidget::updateModeView()
+{
+    // Update the mode and view, if any, for the current file
+
+    int fileTabIndex = mFileTabs->currentIndex();
+
+    if (fileTabIndex != -1) {
+        QString fileName = mFileNames[mFileTabs->currentIndex()];
+        int fileModeTabIndex = mModeIndexes.value(fileName, -1);
+        int fileViewTabIndex = mViewIndexes.value(fileName, -1);
+
+        if (fileModeTabIndex != -1) {
+            mModeTabs->setCurrentIndex(fileModeTabIndex);
+
+            if (fileModeTabIndex == modeTabIndex(GuiViewSettings::Editing))
+                mModes.value(GuiViewSettings::Editing)->views()->setCurrentIndex(fileViewTabIndex);
+            else if (fileModeTabIndex == modeTabIndex(GuiViewSettings::Simulation))
+                mModes.value(GuiViewSettings::Simulation)->views()->setCurrentIndex(fileViewTabIndex);
+            else
+                mModes.value(GuiViewSettings::Analysis)->views()->setCurrentIndex(fileViewTabIndex);
+        }
+    }
+}
+
+//==============================================================================
+
+void CentralWidget::keepTrackOfModeView()
+{
+    // Keep track of the the mode and view of the current file
+
+    int fileTabIndex = mFileTabs->currentIndex();
+
+    if (fileTabIndex != -1) {
+        QString fileName = mFileNames[fileTabIndex];
+        int fileModeTabIndex = mModeTabs->currentIndex();
+
+        mModeIndexes.insert(fileName, fileModeTabIndex);
+
+        if (fileModeTabIndex == modeTabIndex(GuiViewSettings::Editing))
+            mViewIndexes.insert(fileName, mModes.value(GuiViewSettings::Editing)->views()->currentIndex());
+        else if (fileModeTabIndex == modeTabIndex(GuiViewSettings::Simulation))
+            mViewIndexes.insert(fileName, mModes.value(GuiViewSettings::Simulation)->views()->currentIndex());
+        else
+            mViewIndexes.insert(fileName, mModes.value(GuiViewSettings::Analysis)->views()->currentIndex());
+    }
 }
 
 //==============================================================================
