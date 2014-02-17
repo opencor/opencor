@@ -176,8 +176,6 @@ private:
 
     void updateModeGui(const GuiViewSettings::Mode &pMode);
 
-    QString modeViewName(const GuiViewSettings::Mode &pMode);
-
     void updateNoViewMsg();
 
     bool activateFile(const QString &pFileName);

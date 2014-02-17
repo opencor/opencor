@@ -1392,37 +1392,25 @@ QTabBar * CentralWidget::newTabBar(const QTabBar::Shape &pShape,
 
 //==============================================================================
 
-QString CentralWidget::modeViewName(const GuiViewSettings::Mode &pMode)
-{
-    // Return the name of the mode's current view
-
-    CentralWidgetMode *mode = mModes.value(pMode);
-    int modeViewsCrtIndex = mode->views()->currentIndex();
-
-    return qobject_cast<GuiInterface *>(mode->viewPlugins()->value(modeViewsCrtIndex)->instance())->viewName();
-}
-
-//==============================================================================
-
 void CentralWidget::updateNoViewMsg()
 {
     // Customise our no view widget so that it shows a relevant warning message
 
-    QString viewName;
     int modeTabsCrtIndex = mModeTabs->currentIndex();
+    GuiViewSettings::Mode modeType;
 
-    if (modeTabsCrtIndex == -1)
-        // There is no tab, so...
-
-        return;
-    else if (modeTabsCrtIndex == modeTabIndex(GuiViewSettings::Editing))
-        viewName = modeViewName(GuiViewSettings::Editing);
+    if (modeTabsCrtIndex == modeTabIndex(GuiViewSettings::Editing))
+        modeType = GuiViewSettings::Editing;
     else if (modeTabsCrtIndex == modeTabIndex(GuiViewSettings::Simulation))
-        viewName = modeViewName(GuiViewSettings::Simulation);
+        modeType = GuiViewSettings::Simulation;
+    else if (modeTabsCrtIndex == modeTabIndex(GuiViewSettings::Analysis))
+        modeType = GuiViewSettings::Analysis;
     else
-        viewName = modeViewName(GuiViewSettings::Analysis);
+        return;
 
-    mNoViewMsg->setMessage(tr("Sorry, but the <strong>%1</strong> view does not support this type of file...").arg(viewName));
+    CentralWidgetMode *mode = mModes.value(modeType);
+
+    mNoViewMsg->setMessage(tr("Sorry, but the <strong>%1</strong> view does not support this type of file...").arg(qobject_cast<GuiInterface *>(mode->viewPlugins()->value(mode->views()->currentIndex())->instance())->viewName()));
 }
 
 //==============================================================================
