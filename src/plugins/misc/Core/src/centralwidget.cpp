@@ -1397,18 +1397,16 @@ void CentralWidget::updateNoViewMsg()
     // Customise our no view widget so that it shows a relevant warning message
 
     int modeTabsCrtIndex = mModeTabs->currentIndex();
-    GuiViewSettings::Mode modeType;
+    CentralWidgetMode *mode = 0;
 
     if (modeTabsCrtIndex == modeTabIndex(GuiViewSettings::Editing))
-        modeType = GuiViewSettings::Editing;
+        mode = mModes.value(GuiViewSettings::Editing);
     else if (modeTabsCrtIndex == modeTabIndex(GuiViewSettings::Simulation))
-        modeType = GuiViewSettings::Simulation;
+        mode = mModes.value(GuiViewSettings::Simulation);
     else if (modeTabsCrtIndex == modeTabIndex(GuiViewSettings::Analysis))
-        modeType = GuiViewSettings::Analysis;
+        mode = mModes.value(GuiViewSettings::Analysis);
     else
         return;
-
-    CentralWidgetMode *mode = mModes.value(modeType);
 
     mNoViewMsg->setMessage(tr("Sorry, but the <strong>%1</strong> view does not support this type of file...").arg(qobject_cast<GuiInterface *>(mode->viewPlugins()->value(mode->views()->currentIndex())->instance())->viewName()));
 }
