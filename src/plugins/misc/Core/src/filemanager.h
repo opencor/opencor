@@ -92,8 +92,8 @@ public:
 
     File * isManaged(const QString &pFileName) const;
 
-    void freeze();
-    void unfreeze();
+    bool isActive() const;
+    void setActive(const bool &pActive);
 
     void reset(const QString &pFileName);
 

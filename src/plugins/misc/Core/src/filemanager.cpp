@@ -170,20 +170,25 @@ File * FileManager::isManaged(const QString &pFileName) const
 
 //==============================================================================
 
-void FileManager::freeze()
+bool FileManager::isActive() const
 {
-    // Freeze ourselves by stopping our timer
+    // Return whether we are active
 
-    mTimer->stop();
+    return mTimer->isActive();
 }
 
 //==============================================================================
 
-void FileManager::unfreeze()
+void FileManager::setActive(const bool &pActive)
 {
-    // Unfreeze ourselves by (re)starting our timer
+    // Make ourselves in/active
 
-    mTimer->start();
+    if (pActive != isActive()) {
+        if (pActive)
+            mTimer->start();
+        else
+            mTimer->stop();
+    }
 }
 
 //==============================================================================

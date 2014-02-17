@@ -767,11 +767,12 @@ bool CentralWidget::saveFile(const int &pIndex, const bool &pNeedNewFileName)
     bool fileModified = fileManagerInstance->isModified(oldFileName);
 
     if (fileModified || hasNewFileName) {
-        // Freeze the file manager so that it doesn't check for changes in files
+        // Inactivate our file manager so that it doesn't check for changes in
+        // files
         // Note: indeed, otherwise we will get told that the current file has
         //       changed and we will be asked whether we want to reload it...
 
-        fileManagerInstance->freeze();
+        fileManagerInstance->setActive(false);
 
         if (fileModified) {
             // The file has been modified, so ask the current view to save it
@@ -831,18 +832,18 @@ bool CentralWidget::saveFile(const int &pIndex, const bool &pNeedNewFileName)
         if (fileIsNew)
             QFile::remove(oldFileName);
 
-        // Let people know that the file has been saved, if needed, by
-        // pretending that it was reloaded
+        // Let people know that the file has been saved, if needed, by reloading
+        // it
 
-        fileReloaded(newFileName, true);
+        reloadFile(pIndex);
 
         // Update our modified settings
 
         updateModifiedSettings();
 
-        // Unfreeze the file manager
+        // Re-activate our file manager
 
-        fileManagerInstance->unfreeze();
+        fileManagerInstance->setActive(true);
 
         // Everything went fine, so...
 
@@ -1555,13 +1556,20 @@ void CentralWidget::fileModified(const QString &pFileName,
 
 //==============================================================================
 
-void CentralWidget::fileReloaded(const QString &pFileName,
-                                 const bool &pSkipCurrentPlugin)
+void CentralWidget::fileReloaded(const QString &pFileName)
 {
-    // Let our plugins know about the file having been reloaded
+    // Let our plugins know about the file having been reloaded, but ignore the
+    // current plugin if our file manager is inactive
+    // Note: indeed, if our file manager is inactive, then it means that we are
+    //       saving the file (see saveFile()), hence we don't need and don't
+    //       want (since it may mess up our current view; e.g. the caret of a
+    //       QScintilla-based view will get moved back to its original position)
+    //       our current plugin to reload it...
+
+    FileManager *fileManagerInstance = FileManager::instance();
 
     foreach (Plugin *plugin, mLoadedPlugins)
-        if (!pSkipCurrentPlugin || (plugin != mPlugin)) {
+        if (fileManagerInstance->isActive() || (plugin != mPlugin)) {
             GuiInterface *guiInterface = qobject_cast<GuiInterface *>(plugin->instance());
 
             if (guiInterface)
