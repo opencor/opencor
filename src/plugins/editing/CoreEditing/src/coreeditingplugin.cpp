@@ -244,8 +244,8 @@ void CoreEditingPlugin::updateGui(Plugin *pViewPlugin, const QString &pFileName)
     // plugin handle the editing interface
 
     if (mEditingInterface) {
-        // Reset our previous editor, but only if the given file is different
-        // from the one associated with our previous editor
+        // Reset our previous editor's connections, but only if the given file
+        // name is different from the one associated with our previous editor
         // Note: indeed, it may happen that when reloading a file, an editing
         //       view plugin delete the editor for the old version of the file
         //       and create a new one for the new version, so...
@@ -473,19 +473,22 @@ void CoreEditingPlugin::fileReloaded(const QString &pFileName)
 void CoreEditingPlugin::fileRenamed(const QString &pOldFileName,
                                     const QString &pNewFileName)
 {
-    Q_UNUSED(pOldFileName);
-    Q_UNUSED(pNewFileName);
+    // A file has been renamed, so update our internals, if needed
 
-    // We don't handle this interface...
+    if (!pOldFileName.compare(mFileName))
+        mFileName = pNewFileName;
 }
 
 //==============================================================================
 
 void CoreEditingPlugin::fileClosed(const QString &pFileName)
 {
-    Q_UNUSED(pFileName);
+    // A file has been closed, so update our internals, if needed
 
-    // We don't handle this interface...
+    if (!pFileName.compare(mFileName)) {
+        mEditor = 0;
+        mFileName = QString();
+    }
 }
 
 //==============================================================================
