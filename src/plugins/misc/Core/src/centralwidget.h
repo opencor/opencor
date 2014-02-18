@@ -144,7 +144,6 @@ private:
     Status mStatus;
 
     Plugins mLoadedPlugins;
-    Plugin *mPlugin;
 
     QTabBar *mModeTabs;
     QTabBar *mFileTabs;
@@ -164,14 +163,15 @@ private:
 
     QMap<GuiViewSettings::Mode, CentralWidgetMode *> mModes;
 
+    Plugin * viewPlugin(const int &pIndex) const;
+    Plugin * viewPlugin(const QString &pFileName) const;
+
     int modeTabIndex(const GuiViewSettings::Mode &pMode) const;
 
     void addMode(const GuiViewSettings::Mode &pMode);
 
     void addModeView(Plugin *pPlugin, GuiViewSettings *pSettings,
                      const GuiViewSettings::Mode &pMode);
-
-    void updateModeGui(const GuiViewSettings::Mode &pMode);
 
     void updateNoViewMsg();
 

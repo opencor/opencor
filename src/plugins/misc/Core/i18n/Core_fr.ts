@@ -40,12 +40,8 @@
         <translation>&lt;strong&gt;%1&lt;/strong&gt; a été modifié. Voulez-vous le sauvegarder avant de le fermer ?</translation>
     </message>
     <message>
-        <source>A file is being edited, so switching editing views is not possible for now</source>
-        <translation>Un fichier est en train d&apos;être édité, il n&apos;est donc pas possible de changer de vue d&apos;édition pour le moment</translation>
-    </message>
-    <message>
-        <source>Several files are being edited, so switching editing views is not possible for now</source>
-        <translation>Plusieurs fichiers sont en train d&apos;être édités, donc changer de vues d&apos;édition n&apos;est pas possible pour le moment</translation>
+        <source>The file is being edited, so switching views is not possible for now</source>
+        <translation>Le fichier est en train d&apos;être édité, il n&apos;est donc pas possible de changer de vue pour le moment</translation>
     </message>
     <message>
         <source>&lt;strong&gt;%1&lt;/strong&gt; does not exist anymore. Do you want to close it?</source>
