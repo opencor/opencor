@@ -369,21 +369,22 @@ void CentralWidget::loadSettings(QSettings *pSettings)
 
     // Retrieve and open the files that were previously opened
 
-    QStringList files;
+    QStringList fileNames;
 
-    files = pSettings->value(SettingsFileNames).toStringList();
+    fileNames = pSettings->value(SettingsFileNames).toStringList();
 
-    openFiles(files);
+    openFiles(fileNames);
 
     // Retrieve the current file
 
-    if (files.count())
+    if (fileNames.count())
         // There is at least one file, so we can try to activate one of them
         // Note: the qMin() call is in case the previously selected file was a
         //       new file (in which case it will have been removed from our list
         //       of current files)...
 
-        activateFile(files[qMin(pSettings->value(SettingsCurrentFileName).toInt(), files.count()-1)]);
+        activateFile(fileNames[qMin(pSettings->value(SettingsCurrentFileName).toInt(),
+                                    fileNames.count()-1)]);
 
     // Retrieve the currently active mode and views
     // Note: if no current mode or view can be retrieved, then we use whatever
@@ -467,7 +468,7 @@ void CentralWidget::settingsLoaded(const Plugins &pLoadedPlugins)
 
     // Keep track of the mode and view of the current file
     // Note: this is needed in case no information about the mode/view for the
-    //       current file were retrieved from the settings
+    //       current file was retrieved from the settings
 
     keepTrackOfModeView();
 
