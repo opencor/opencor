@@ -168,20 +168,12 @@ private:
 
     void addMode(const GuiViewSettings::Mode &pMode);
 
-    void loadModeSettings(QSettings *pSettings,
-                          const GuiViewSettings::Mode &pCurrentMode,
-                          const GuiViewSettings::Mode &pMode);
-    void saveModeSettings(QSettings *pSettings,
-                          const GuiViewSettings::Mode &pMode) const;
-
     void addModeView(Plugin *pPlugin, GuiViewSettings *pSettings,
                      const GuiViewSettings::Mode &pMode);
 
     void updateModeGui(const GuiViewSettings::Mode &pMode);
 
     void updateNoViewMsg();
-
-    bool activateFile(const QString &pFileName);
 
     bool saveFile(const int &pIndex, const bool &pNeedNewFileName = false);
 

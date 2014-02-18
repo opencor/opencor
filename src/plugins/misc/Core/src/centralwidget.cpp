@@ -282,49 +282,10 @@ CentralWidget::~CentralWidget()
 
 //==============================================================================
 
-static const auto SettingsFileNames          = QStringLiteral("FileNames");
-static const auto SettingsCurrentFileName    = QStringLiteral("CurrentFileName");
-static const auto SettingsCurrentMode        = QStringLiteral("CurrentMode");
-static const auto SettingsCurrentViewForMode = QStringLiteral("CurrentViewForMode");
-
-//==============================================================================
-
-void CentralWidget::loadModeSettings(QSettings *pSettings,
-                                     const GuiViewSettings::Mode &pCurrentMode,
-                                     const GuiViewSettings::Mode &pMode)
-{
-    // Select the given mode, if it is the currently active one
-
-    if (pCurrentMode == pMode) {
-        int currentModeTabIndex = modeTabIndex(pCurrentMode);
-
-        if (currentModeTabIndex != -1) {
-            // A valid current mode was retrieved, so select it
-
-            mModeTabs->setCurrentIndex(currentModeTabIndex);
-
-            // Activate the window so that we can then give the focus to the
-            // current view
-
-            activateWindow();
-        }
-    }
-
-    // Retrieve the currently active view for the given mode
-
-    QString modeViewName = pSettings->value(SettingsCurrentViewForMode+QString::number(pMode)).toString();
-    CentralWidgetMode *mode = mModes.value(pMode);
-    QTabBar *modeViews = mode->views();
-
-    for (int i = 0, iMax = modeViews->count(); i < iMax; ++i)
-        if (!mode->viewPlugins()->value(i)->name().compare(modeViewName)) {
-            // A valid current mode view was retrieved, so select it
-
-            modeViews->setCurrentIndex(i);
-
-            break;
-        }
-}
+static const auto SettingsFileNames   = QStringLiteral("FileNames");
+static const auto SettingsCurrentFile = QStringLiteral("CurrentFile");
+static const auto SettingsFileMode    = QStringLiteral("FileMode%1");
+static const auto SettingsFileView    = QStringLiteral("FileView%1");
 
 //==============================================================================
 
@@ -369,57 +330,35 @@ void CentralWidget::loadSettings(QSettings *pSettings)
 
     // Retrieve and open the files that were previously opened
 
-    QStringList fileNames;
-
-    fileNames = pSettings->value(SettingsFileNames).toStringList();
+    QStringList fileNames = pSettings->value(SettingsFileNames).toStringList();
 
     openFiles(fileNames);
 
-    // Retrieve the current file
+    // Retrieve the modes and views of our different files
 
-    if (fileNames.count())
-        // There is at least one file, so we can try to activate one of them
-        // Note: the qMin() call is in case the previously selected file was a
-        //       new file (in which case it will have been removed from our list
-        //       of current files)...
+    for (int i = 0, iMax = mFileNames.count(); i < iMax; ++i) {
+        int modeIndex = pSettings->value(SettingsFileMode.arg(i), -1).toInt();
+        int viewIndex = pSettings->value(SettingsFileView.arg(i), -1).toInt();
 
-        activateFile(fileNames[qMin(pSettings->value(SettingsCurrentFileName).toInt(),
-                                    fileNames.count()-1)]);
+        if ((modeIndex != -1) && (viewIndex != -1)) {
+            QString fileName = mFileNames[i];
 
-    // Retrieve the currently active mode and views
-    // Note: if no current mode or view can be retrieved, then we use whatever
-    //       mode or view we are in...
+            mModeIndexes.insert(fileName, modeIndex);
+            mViewIndexes.insert(fileName, viewIndex);
+        }
+    }
 
-    GuiViewSettings::Mode currentMode = (GuiViewSettings::Mode) pSettings->value(SettingsCurrentMode).toInt();
+    // Select the previously selected file, if any
 
-    loadModeSettings(pSettings, currentMode, GuiViewSettings::Editing);
-    loadModeSettings(pSettings, currentMode, GuiViewSettings::Simulation);
-    loadModeSettings(pSettings, currentMode, GuiViewSettings::Analysis);
+    if (mFileNames.count())
+        mFileTabs->setCurrentIndex(qMin(qMax(pSettings->value(SettingsCurrentFile, -1).toInt(), 0), mFileNames.count()-1));
+        // Note: the calls to qMin() and qMax() are in case there was either no
+        //       previously selected file or that file got deleted in between...
 
     // Retrieve the active directory
 
     setActiveDirectory(pSettings->value(SettingsActiveDirectory,
                                         QDir::homePath()).toString());
-}
-
-//==============================================================================
-
-void CentralWidget::saveModeSettings(QSettings *pSettings,
-                                     const GuiViewSettings::Mode &pMode) const
-{
-    // Keep track of the mode, should it be the currently active one
-
-    if (mModeTabs->currentIndex() == modeTabIndex(pMode))
-        pSettings->setValue(SettingsCurrentMode, pMode);
-
-    // Keep track of the currently active view for the given mode
-
-    CentralWidgetMode *mode = mModes.value(pMode);
-    Plugin *plugin = mode->viewPlugins()->value(mode->views()->currentIndex());
-
-    if (plugin)
-        pSettings->setValue(SettingsCurrentViewForMode+QString::number(pMode),
-                            plugin->name());
 }
 
 //==============================================================================
@@ -437,15 +376,40 @@ void CentralWidget::saveSettings(QSettings *pSettings) const
 
     pSettings->setValue(SettingsFileNames, fileNames);
 
+    // Keep track of the modes and views of our different files
+
+    for (int i = 0, iMax = fileNames.count(); i < iMax; ++i) {
+        QString fileName = fileNames[i];
+        int modeIndex = mModeIndexes.value(fileName, -1);
+        int viewIndex = mViewIndexes.value(fileName, -1);
+
+        if ((modeIndex != -1) && (viewIndex != -1)) {
+            pSettings->setValue(SettingsFileMode.arg(i), modeIndex);
+            pSettings->setValue(SettingsFileView.arg(i), viewIndex);
+        }
+    }
+
     // Keep track of the currently selected file
+    // Note: we don't rely on mFileTabs->currentIndex() since it may refer to a
+    //       new file, which we will have skipped above...
 
-    pSettings->setValue(SettingsCurrentFileName, mFileTabs->currentIndex());
+    bool hasCurrentFile = false;
 
-    // Keep track of the currently active mode and views
+    if (fileNames.count()) {
+        QString fileName = mFileNames[mFileTabs->currentIndex()];
 
-    saveModeSettings(pSettings, GuiViewSettings::Editing);
-    saveModeSettings(pSettings, GuiViewSettings::Simulation);
-    saveModeSettings(pSettings, GuiViewSettings::Analysis);
+        for (int i = 0, iMax = fileNames.count(); i < iMax; ++i)
+            if (!fileName.compare(fileNames[i])) {
+                pSettings->setValue(SettingsCurrentFile, i);
+
+                hasCurrentFile = true;
+
+                break;
+            }
+    }
+
+    if (!hasCurrentFile)
+        pSettings->setValue(SettingsCurrentFile, -1);
 
     // Keep track of the active directory
 
@@ -463,6 +427,13 @@ void CentralWidget::settingsLoaded(const Plugins &pLoadedPlugins)
     // Update our status now that our plugins  are fully ready
 
     mStatus = Idling;
+
+    // Make sure that the mode and view of the current file are correct
+    // Note: indeed, when loading the settings, we select the previously
+    //       selected file, if any, but because our status is Starting, we don't
+    //       get to update the mode and view, so we do it here instead...
+
+    updateModeView();
 
     // Keep track of the mode and view of the current file
     // Note: this is needed in case no information about the mode/view for the
@@ -575,14 +546,16 @@ void CentralWidget::openFile(const QString &pFileName, const bool &pNew)
 
         return;
 
-    // Check whether the file is already opened
+    // Check whether the file is already opened and, if so, select it and leave
 
     QString nativeFileName = nativeCanonicalFileName(pFileName);
 
-    if (activateFile(nativeFileName))
-        // The file is already opened and, if anything, got selected, so...
+    for (int i = 0, iMax = mFileNames.count(); i < iMax; ++i)
+        if (!mFileNames[i].compare(nativeFileName)) {
+            mFileTabs->setCurrentIndex(i);
 
-        return;
+            return;
+        }
 
     // Register the file with our file manager
 
@@ -1049,30 +1022,6 @@ void CentralWidget::closeAllFiles(const bool &pForceClosing)
     // Close all the files
 
     while (closeFile(-2, pForceClosing)) {}
-}
-
-//==============================================================================
-
-bool CentralWidget::activateFile(const QString &pFileName)
-{
-    // Go through the different tabs and check whether one of them corresponds
-    // to the requested file
-
-    for (int i = 0, iMax = mFileNames.count(); i < iMax; ++i)
-        if (!mFileNames[i].compare(pFileName)) {
-            // We have found the file, so set the current index to that of its
-            // tab
-
-            mFileTabs->setCurrentIndex(i);
-
-            // Everything went fine, so...
-
-            return true;
-        }
-
-    // We couldn't find the file, so...
-
-    return false;
 }
 
 //==============================================================================
