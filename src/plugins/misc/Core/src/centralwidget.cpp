@@ -964,9 +964,15 @@ bool CentralWidget::closeFile(const int &pIndex, const bool &pForceClosing)
 
         QString fileName = mFileNames[realIndex];
 
-        // Next, we must close the tab
+        // Update some of our internals
 
         mFileNames.removeAt(realIndex);
+
+        mModeIndexes.remove(fileName);
+        mViewIndexes.remove(fileName);
+
+        // Remove the file tab
+
         mFileTabs->removeTab(realIndex);
 
         // Ask our view plugins to remove the corresponding view for the file
