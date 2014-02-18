@@ -1434,14 +1434,14 @@ void CentralWidget::updateNoViewMsg()
 {
     // Customise our no view widget so that it shows a relevant warning message
 
-    int modeTabsCrtIndex = mModeTabs->currentIndex();
+    int fileModeTabIndex = mModeTabs->currentIndex();
     CentralWidgetMode *mode = 0;
 
-    if (modeTabsCrtIndex == modeTabIndex(GuiViewSettings::Editing))
+    if (fileModeTabIndex == modeTabIndex(GuiViewSettings::Editing))
         mode = mModes.value(GuiViewSettings::Editing);
-    else if (modeTabsCrtIndex == modeTabIndex(GuiViewSettings::Simulation))
+    else if (fileModeTabIndex == modeTabIndex(GuiViewSettings::Simulation))
         mode = mModes.value(GuiViewSettings::Simulation);
-    else if (modeTabsCrtIndex == modeTabIndex(GuiViewSettings::Analysis))
+    else if (fileModeTabIndex == modeTabIndex(GuiViewSettings::Analysis))
         mode = mModes.value(GuiViewSettings::Analysis);
     else
         return;
