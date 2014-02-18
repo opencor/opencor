@@ -426,7 +426,7 @@ void CentralWidget::saveModeSettings(QSettings *pSettings,
 
 void CentralWidget::saveSettings(QSettings *pSettings) const
 {
-    // Only keep track of files that are not new
+    // Keep track of the files that are opened, skipping new files
 
     FileManager *fileManagerInstance = FileManager::instance();
     QStringList fileNames = QStringList();
@@ -435,11 +435,9 @@ void CentralWidget::saveSettings(QSettings *pSettings) const
         if (!fileManagerInstance->isNew(fileName))
             fileNames << fileName;
 
-    // Keep track of the files that are opened
-
     pSettings->setValue(SettingsFileNames, fileNames);
 
-    // Keep track of the current file
+    // Keep track of the currently selected file
 
     pSettings->setValue(SettingsCurrentFileName, mFileTabs->currentIndex());
 
@@ -540,8 +538,10 @@ QString CentralWidget::currentFileName() const
 {
     // Return the current file name, if any
 
-    if (mFileTabs->currentIndex() != -1)
-        return mFileNames[mFileTabs->currentIndex()];
+    int fileTabIndex = mFileTabs->currentIndex();
+
+    if (fileTabIndex != -1)
+        return mFileNames[fileTabIndex];
     else
         return QString();
 }
@@ -666,7 +666,7 @@ void CentralWidget::reloadFile(const int &pIndex)
     // Ask our file manager to reload the file, but only if it isn't modified or
     // the user wants to ignore current modifications
 
-    int realIndex = (pIndex < 0)?mFileTabs->currentIndex():pIndex;
+    int realIndex = (pIndex == -1)?mFileTabs->currentIndex():pIndex;
 
     if (realIndex != -1) {
         bool doReloadFile = true;
@@ -702,7 +702,7 @@ void CentralWidget::duplicateFile()
 {
     // Ask our file manager to duplicate the current file
 
-    QString fileName = mFileNames[mFileTabs->currentIndex()];
+    QString fileName = currentFileName();
 #ifdef QT_DEBUG
     FileManager::Status duplicateStatus =
 #endif
@@ -723,7 +723,7 @@ void CentralWidget::toggleLockedFile()
     // Ask our file manager to toggle the locked state of the current file
 
     FileManager *fileManagerInstance = FileManager::instance();
-    QString fileName = mFileNames[mFileTabs->currentIndex()];
+    QString fileName = currentFileName();
     bool fileLocked = fileManagerInstance->isLocked(fileName);
 
     if (fileManagerInstance->setLocked(fileName, !fileLocked) == FileManager::LockedNotSet)
@@ -966,7 +966,7 @@ bool CentralWidget::closeFile(const int &pIndex, const bool &pForceClosing)
     // Close the file at the given tab index or the current tab index, if no tab
     // index is provided, and then return the name of the file that was closed,
     // if any
-    // Note: pIndex can take the following values:
+    // Note: pIndex can take one of the following values:
     //        - 0+: the index of the file to close;
     //        - -1: the current file is to be closed; and
     //        - -2: same as -1, except that we come here with the intention of
@@ -1281,10 +1281,9 @@ void CentralWidget::updateModeView()
     if (mStatus != Idling)
         return;
 
-    int fileTabIndex = mFileTabs->currentIndex();
+    QString fileName = currentFileName();
 
-    if (fileTabIndex != -1) {
-        QString fileName = mFileNames[mFileTabs->currentIndex()];
+    if (!fileName.isEmpty()) {
         int fileModeTabIndex = mModeIndexes.value(fileName, -1);
         int fileViewTabIndex = mViewIndexes.value(fileName, -1);
 
@@ -1325,10 +1324,9 @@ void CentralWidget::keepTrackOfModeView()
     if (mStatus != Idling)
         return;
 
-    int fileTabIndex = mFileTabs->currentIndex();
+    QString fileName = currentFileName();
 
-    if (fileTabIndex != -1) {
-        QString fileName = mFileNames[fileTabIndex];
+    if (!fileName.isEmpty()) {
         int fileModeTabIndex = mModeTabs->currentIndex();
 
         mModeIndexes.insert(fileName, fileModeTabIndex);
@@ -1368,16 +1366,16 @@ void CentralWidget::updateGui()
     // Ask the GUI interface for the widget to use for the current file (should
     // there be one)
 
-    int fileTabsCrtIndex = mFileTabs->currentIndex();
+    QString fileName = currentFileName();
     GuiInterface *guiInterface = mPlugin?qobject_cast<GuiInterface *>(mPlugin->instance()):0;
     QWidget *newView;
 
-    if (fileTabsCrtIndex == -1) {
+    if (fileName.isEmpty()) {
         newView = mLogoView;
     } else {
         // There is a current file, so retrieve its view
 
-        newView = guiInterface?guiInterface->viewWidget(mFileNames[fileTabsCrtIndex]):0;
+        newView = guiInterface?guiInterface->viewWidget(fileName):0;
 
         if (newView) {
             // We have a view for the current file, so create a connection
@@ -1406,7 +1404,7 @@ void CentralWidget::updateGui()
 
     // Let people know that we are about to update the GUI
 
-    emit guiUpdated(mPlugin, (fileTabsCrtIndex == -1)?QString():mFileNames[fileTabsCrtIndex]);
+    emit guiUpdated(mPlugin, fileName);
 
     // Replace the current view with the new one
     // Note: the order in which the adding and removing (as well as the
@@ -1582,7 +1580,7 @@ void CentralWidget::updateModifiedSettings()
     // Let people know that we can save at least one file
 
     emit canSave(mFileTabs->count()?
-                     fileManagerInstance->isModified(mFileNames[mFileTabs->currentIndex()]):
+                     fileManagerInstance->isModified(currentFileName()):
                      false);
     emit canSaveAll(nbOfModifiedFiles);
 }
