@@ -62,6 +62,7 @@ public:
     void resetUndoHistory();
 
 protected:
+    virtual void changeEvent(QEvent *pEvent);
     virtual void contextMenuEvent(QContextMenuEvent *pEvent);
     virtual void dragEnterEvent(QDragEnterEvent *pEvent);
     virtual bool event(QEvent *pEvent);
@@ -81,6 +82,8 @@ private:
     void constructor(const QString &pContents = QString(),
                      const bool &pReadOnly = false,
                      QsciLexer *pLexer = 0);
+
+    void updateColors();
 
 Q_SIGNALS:
     void canUndo(const bool &pCanUndo);

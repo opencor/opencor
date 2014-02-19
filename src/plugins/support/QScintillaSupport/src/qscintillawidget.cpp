@@ -20,6 +20,7 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include "filemanager.h"
+#include "guiutils.h"
 #include "qscintillawidget.h"
 
 //==============================================================================
@@ -86,6 +87,14 @@ void QScintillaWidget::constructor(const QString &pContents,
 
     setContents(pContents);
     setReadOnly(pReadOnly);
+
+    // Show the caret line
+
+    setCaretLineVisible(true);
+
+    // Initialise our colours by 'updating' them
+
+    updateColors();
 
     // Empty context menu by default
 
@@ -205,6 +214,20 @@ void QScintillaWidget::resetUndoHistory()
 
 //==============================================================================
 
+void QScintillaWidget::changeEvent(QEvent *pEvent)
+{
+    // Default handling of the event
+
+    QsciScintilla::changeEvent(pEvent);
+
+    // Check whether the palette has changed and if so then update our colors
+
+    if (pEvent->type() == QEvent::PaletteChange)
+        updateColors();
+}
+
+//==============================================================================
+
 void QScintillaWidget::contextMenuEvent(QContextMenuEvent *pEvent)
 {
     // Show our context menu or QsciScintilla's one, if we don't have one
@@ -314,6 +337,23 @@ void QScintillaWidget::checkCanSelectAll()
 
         emit canSelectAll(mCanSelectAll);
     }
+}
+
+//==============================================================================
+
+void QScintillaWidget::updateColors()
+{
+    // Compute and set the background colour of our caret line
+
+    static double OneThird = 1.0/3.0;
+
+    QColor whiteColor = Qt::white;
+    QColor highlightColor = Core::highlightColor();
+
+    setCaretLineBackgroundColor(QColor(OneThird*(2*whiteColor.red()+highlightColor.red()),
+                                       OneThird*(2*whiteColor.green()+highlightColor.green()),
+                                       OneThird*(2*whiteColor.blue()+highlightColor.blue()),
+                                       OneThird*(2*whiteColor.alpha()+highlightColor.alpha())));
 }
 
 //==============================================================================
