@@ -706,8 +706,8 @@ void CorePlugin::retrieveColors()
 
     settings.beginGroup(SettingsGlobal);
         settings.setValue(SettingsBaseColor, qApp->palette().color(QPalette::Base));
-        settings.setValue(SettingsWindowColor, qApp->palette().color(QPalette::Window));
         settings.setValue(SettingsHighlightColor, qApp->palette().color(QPalette::Highlight));
+        settings.setValue(SettingsWindowColor, qApp->palette().color(QPalette::Window));
     settings.endGroup();
 }
 
