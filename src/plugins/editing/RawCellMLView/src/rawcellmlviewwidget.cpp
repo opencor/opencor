@@ -282,7 +282,7 @@ QScintillaSupport::QScintillaWidget * RawCellmlViewWidget::editor(const QString 
 {
     // Return the requested editor
 
-    Core::BorderedWidget *borderedEditor  = mBorderedEditors.value(pFileName);
+    Core::BorderedWidget *borderedEditor = mBorderedEditors.value(pFileName);
 
     return borderedEditor?qobject_cast<QScintillaSupport::QScintillaWidget *>(borderedEditor->widget()):0;
 }
