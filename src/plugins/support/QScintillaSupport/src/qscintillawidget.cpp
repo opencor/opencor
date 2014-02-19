@@ -345,15 +345,21 @@ void QScintillaWidget::updateColors()
 {
     // Compute and set the background colour of our caret line
 
-    static double OneThird = 1.0/3.0;
+    static const qreal Threshold = 0.875;
 
-    QColor whiteColor = Qt::white;
-    QColor highlightColor = Core::highlightColor();
+    QColor caretLineBackgroundColor = Core::highlightColor();
 
-    setCaretLineBackgroundColor(QColor(OneThird*(2*whiteColor.red()+highlightColor.red()),
-                                       OneThird*(2*whiteColor.green()+highlightColor.green()),
-                                       OneThird*(2*whiteColor.blue()+highlightColor.blue()),
-                                       OneThird*(2*whiteColor.alpha()+highlightColor.alpha())));
+    qreal r = caretLineBackgroundColor.redF();
+    qreal g = caretLineBackgroundColor.greenF();
+    qreal b = caretLineBackgroundColor.blueF();
+
+    while ((r < Threshold) || (g < Threshold) || (b < Threshold)) {
+        r = 0.5*(r+1.0);
+        g = 0.5*(g+1.0);
+        b = 0.5*(b+1.0);
+    }
+
+    setCaretLineBackgroundColor(qRgba(r*255, g*255, b*255, caretLineBackgroundColor.alpha()));
 }
 
 //==============================================================================
