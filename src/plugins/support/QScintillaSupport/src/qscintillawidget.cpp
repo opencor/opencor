@@ -119,6 +119,11 @@ void QScintillaWidget::constructor(const QString &pContents,
             this, SLOT(checkCanSelectAll()));
     connect(this, SIGNAL(SCN_MODIFIED(int, int, const char *, int, int, int, int, int, int, int)),
             this, SLOT(checkCanSelectAll()));
+
+    // Keep track of the change in the cursor position
+
+    connect(this, SIGNAL(cursorPositionChanged(int, int)),
+            this, SLOT(cursorPositionChanged(const int &, const int &)));
 }
 
 //==============================================================================
@@ -360,6 +365,15 @@ void QScintillaWidget::updateColors()
     }
 
     setCaretLineBackgroundColor(qRgba(r*255, g*255, b*255, caretLineBackgroundColor.alpha()));
+}
+
+//==============================================================================
+
+void QScintillaWidget::cursorPositionChanged(const int &pLine,
+                                             const int &pColumn)
+{
+//---GRY---
+    qDebug(">>> Line: %d, Col: %d", pLine+1, pColumn+1);
 }
 
 //==============================================================================
