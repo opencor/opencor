@@ -21,6 +21,7 @@ specific language governing permissions and limitations under the License.
 
 #include "cliutils.h"
 #include "filemanager.h"
+#include "qscintillawidget.h"
 #include "rawviewwidget.h"
 
 //==============================================================================
