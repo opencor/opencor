@@ -29,6 +29,10 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#include <QMap>
+
+//==============================================================================
+
 namespace Ui {
     class RawViewWidget;
 }
@@ -45,20 +49,32 @@ class RawViewWidget : public Core::ViewWidget
     Q_OBJECT
 
 public:
-    explicit RawViewWidget(const QString &pFileName, QWidget *pParent = 0);
+    explicit RawViewWidget(QWidget *pParent = 0);
     ~RawViewWidget();
 
-    QScintillaSupport::QScintillaWidget * editor() const;
+    virtual void loadSettings(QSettings *pSettings);
+    virtual void saveSettings(QSettings *pSettings) const;
 
-    void fileReloaded();
-    void fileRenamed(const QString &pFileName);
+    bool contains(const QString &pFileName) const;
+
+    void initialize(const QString &pFileName);
+    void finalize(const QString &pFileName);
+
+    void fileReloaded(const QString &pFileName);
+    void fileRenamed(const QString &pOldFileName, const QString &pNewFileName);
+
+    QScintillaSupport::QScintillaWidget * editor(const QString &pFileName) const;
 
 private:
     Ui::RawViewWidget *mGui;
 
-    QString mFileName;
-
     QScintillaSupport::QScintillaWidget *mEditor;
+    QMap<QString, QScintillaSupport::QScintillaWidget *> mEditors;
+
+    int mEditorZoomLevel;
+
+private Q_SLOTS:
+    void editorZoomLevelChanged();
 };
 
 //==============================================================================

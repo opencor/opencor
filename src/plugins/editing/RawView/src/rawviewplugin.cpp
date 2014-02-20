@@ -49,23 +49,11 @@ PLUGININFO_FUNC RawViewPluginInfo()
 
 //==============================================================================
 
-RawViewPlugin::RawViewPlugin() :
-    mViewWidgets(QMap<QString, RawViewWidget *>()),
-    mEditorZoomLevel(0)
+RawViewPlugin::RawViewPlugin()
 {
     // Set our settings
 
     mGuiSettings->setView(GuiViewSettings::Editing, QStringList());
-}
-
-//==============================================================================
-
-RawViewPlugin::~RawViewPlugin()
-{
-    // Delete our view widgets
-
-    foreach (QWidget *viewWidget, mViewWidgets)
-        delete viewWidget;
 }
 
 //==============================================================================
@@ -74,7 +62,14 @@ RawViewPlugin::~RawViewPlugin()
 
 void RawViewPlugin::initialize()
 {
-    // We don't handle this interface...
+    // Create our generic raw view widget
+
+    mViewWidget = new RawViewWidget(mMainWindow);
+
+    // Hide our generic raw view widget since it may not initially be shown in
+    // our central widget
+
+    mViewWidget->setVisible(false);
 }
 
 //==============================================================================
@@ -95,29 +90,20 @@ void RawViewPlugin::initialized(const Plugins &pLoadedPlugins)
 
 //==============================================================================
 
-static const auto SettingsRawViewWidget                = QStringLiteral("RawViewWidget");
-static const auto SettingsRawViewWidgetEditorZoomLevel = QStringLiteral("EditorZoomLevel");
-
-//==============================================================================
-
 void RawViewPlugin::loadSettings(QSettings *pSettings)
 {
-    // Retrieve the zoom level of our editors
+    // Retrieve our generic raw view widget settings
 
-    pSettings->beginGroup(SettingsRawViewWidget);
-        mEditorZoomLevel = pSettings->value(SettingsRawViewWidgetEditorZoomLevel, 0).toInt();
-    pSettings->endGroup();
+    loadViewSettings(pSettings, mViewWidget);
 }
 
 //==============================================================================
 
 void RawViewPlugin::saveSettings(QSettings *pSettings) const
 {
-    // Keep track of the zoom level of our editors
+    // Retrieve our generic raw view widget settings
 
-    pSettings->beginGroup(SettingsRawViewWidget);
-        pSettings->setValue(SettingsRawViewWidgetEditorZoomLevel, mEditorZoomLevel);
-    pSettings->endGroup();
+    saveViewSettings(pSettings, mViewWidget);
 }
 
 //==============================================================================
@@ -155,7 +141,7 @@ QScintillaSupport::QScintillaWidget * RawViewPlugin::editor(const QString &pFile
 {
     // Return the requested editor
 
-    return mViewWidgets.value(pFileName)->editor();
+    return mViewWidget->editor(pFileName);
 }
 
 //==============================================================================
@@ -197,9 +183,9 @@ void RawViewPlugin::finalizeView()
 
 bool RawViewPlugin::hasViewWidget(const QString &pFileName)
 {
-    // Return whether we have a view widget associated with the given file
+    // Return whether we know about the given file
 
-    return mViewWidgets.value(pFileName);
+    return mViewWidget->contains(pFileName);;
 }
 
 //==============================================================================
@@ -207,52 +193,24 @@ bool RawViewPlugin::hasViewWidget(const QString &pFileName)
 QWidget * RawViewPlugin::viewWidget(const QString &pFileName,
                                     const bool &pCreate)
 {
-    // Retrieve from our list the view widget associated with the file name
+    // Update our generic raw view widget using the given file
 
-    RawViewWidget *res = mViewWidgets.value(pFileName);
+    if (pCreate) {
+        mViewWidget->initialize(pFileName);
 
-    // Create a new view widget, if none could be retrieved
-
-    if (!res && pCreate) {
-        res = new RawViewWidget(pFileName, mMainWindow);
-
-        // Keep track of changes to its zoom level
-
-        connect(res->editor(), SIGNAL(SCN_ZOOM()),
-                this, SLOT(editorZoomLevelChanged()));
-
-        // Keep track of our new view widget
-
-        mViewWidgets.insert(pFileName, res);
+        return mViewWidget;
+    } else {
+        return 0;
     }
-
-    // Set/update the view widget's zoom level
-
-    if (res)
-        res->editor()->zoomTo(mEditorZoomLevel);
-
-    // Return our view widget
-
-    return res;
 }
 
 //==============================================================================
 
 void RawViewPlugin::removeViewWidget(const QString &pFileName)
 {
-    // Remove the view widget from our list, should there be one for the given
-    // file name
+    // Ask our generic raw view widget to finalise the given file
 
-    RawViewWidget *viewWidget = mViewWidgets.value(pFileName);
-
-    if (viewWidget) {
-        // There is a view widget for the given file name, so delete it and
-        // remove it from our list
-
-        delete viewWidget;
-
-        mViewWidgets.remove(pFileName);
-    }
+    mViewWidget->finalize(pFileName);
 }
 
 //==============================================================================
@@ -280,13 +238,13 @@ QIcon RawViewPlugin::fileTabIcon(const QString &pFileName) const
 bool RawViewPlugin::saveFile(const QString &pOldFileName,
                              const QString &pNewFileName)
 {
-    // Ask the given file's corresponding view widget to save its contents
+    // Ask our generic raw view widget to save the given file
 
-    RawViewWidget *viewWidget = mViewWidgets.value(pOldFileName);
-    bool res = Core::writeTextToFile(pNewFileName, viewWidget->editor()->contents());
+    QScintillaSupport::QScintillaWidget *editor = mViewWidget->editor(pOldFileName);
+    bool res = Core::writeTextToFile(pNewFileName, editor->contents());
 
     if (res)
-        viewWidget->editor()->resetUndoHistory();
+        editor->resetUndoHistory();
 
     return res;
 }
@@ -324,13 +282,9 @@ void RawViewPlugin::fileModified(const QString &pFileName,
 
 void RawViewPlugin::fileReloaded(const QString &pFileName)
 {
-    // The given file has been reloaded, so let its corresponding view widget
-    // know about it
+    // The given file has been reloaded, so let our view widget know about it
 
-    RawViewWidget *viewWidget = mViewWidgets.value(pFileName);
-
-    if (viewWidget)
-        viewWidget->fileReloaded();
+    mViewWidget->fileReloaded(pFileName);
 }
 
 //==============================================================================
@@ -338,18 +292,9 @@ void RawViewPlugin::fileReloaded(const QString &pFileName)
 void RawViewPlugin::fileRenamed(const QString &pOldFileName,
                                 const QString &pNewFileName)
 {
-    // A file has been renamed, so update our view widgets mapping
+    // The given file has been renamed, so let our view widget know about it
 
-    RawViewWidget *viewWidget = mViewWidgets.value(pOldFileName);
-
-    if (viewWidget) {
-        mViewWidgets.insert(pNewFileName, viewWidget);
-        mViewWidgets.remove(pOldFileName);
-
-        // Also ask the view widget to update its name
-
-        viewWidget->fileRenamed(pNewFileName);
-    }
+    mViewWidget->fileRenamed(pOldFileName, pNewFileName);
 }
 
 //==============================================================================
@@ -377,18 +322,6 @@ bool RawViewPlugin::canClose()
 void RawViewPlugin::retranslateUi()
 {
     // We don't handle this interface...
-}
-
-//==============================================================================
-// Plugin specific
-//==============================================================================
-
-void RawViewPlugin::editorZoomLevelChanged()
-{
-    // One of our view widgets had its zoom level changed, so keep track of the
-    // new zoom level
-
-    mEditorZoomLevel = qobject_cast<QScintillaSupport::QScintillaWidget *>(sender())->SendScintilla(QsciScintillaBase::SCI_GETZOOM);
 }
 
 //==============================================================================

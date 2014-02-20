@@ -60,7 +60,6 @@ class RawViewPlugin : public QObject, public CoreInterface,
 
 public:
     explicit RawViewPlugin();
-    ~RawViewPlugin();
 
 #include "coreinterface.inl"
 #include "editinginterface.inl"
@@ -68,12 +67,7 @@ public:
 #include "i18ninterface.inl"
 
 private:
-    QMap<QString, RawViewWidget *> mViewWidgets;
-
-    int mEditorZoomLevel;
-
-private Q_SLOTS:
-    void editorZoomLevelChanged();
+    RawViewWidget *mViewWidget;
 };
 
 //==============================================================================
