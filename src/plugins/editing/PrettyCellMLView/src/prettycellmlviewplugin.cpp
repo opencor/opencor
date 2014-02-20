@@ -226,7 +226,8 @@ void PrettyCellMLViewPlugin::removeViewWidget(const QString &pFileName)
     if (!CellMLSupport::CellmlFileManager::instance()->cellmlFile(pFileName))
         return;
 
-    // Ask our generic view widget to finalise the given file
+    // Ask our generic pretty CellML view widget to finalise the given CellML
+    // file
 
     mViewWidget->finalize(pFileName);
 }
