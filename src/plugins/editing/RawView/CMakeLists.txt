@@ -19,6 +19,8 @@ ADD_PLUGIN(RawView
     HEADERS_MOC
         src/rawviewplugin.h
         src/rawviewwidget.h
+    UIS
+        src/rawviewwidget.ui
     INCLUDE_DIRS
         src
     PLUGINS

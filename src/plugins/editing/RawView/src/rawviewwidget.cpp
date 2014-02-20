@@ -25,7 +25,12 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#include "ui_rawviewwidget.h"
+
+//==============================================================================
+
 #include <QFileInfo>
+#include <QLayout>
 #include <QTextStream>
 
 //==============================================================================
@@ -36,12 +41,40 @@ namespace RawView {
 //==============================================================================
 
 RawViewWidget::RawViewWidget(const QString &pFileName, QWidget *pParent) :
-    QScintillaWidget(pParent),
-    mFileName(pFileName)
+    ViewWidget(pParent),
+    mGui(new Ui::RawViewWidget),
+    mFileName(pFileName),
+    mEditor(new QScintillaSupport::QScintillaWidget(this))
 {
+    // Set up the GUI
+
+    mGui->setupUi(this);
+
+    // Populate ourselves with our editor
+
+    layout()->addWidget(mEditor);
+
     // Customise ourselves by 'reloading' our file
 
     fileReloaded();
+}
+
+//==============================================================================
+
+RawViewWidget::~RawViewWidget()
+{
+    // Delete the GUI
+
+    delete mGui;
+}
+
+//==============================================================================
+
+QScintillaSupport::QScintillaWidget * RawViewWidget::editor() const
+{
+    // Return our editor
+
+    return mEditor;
 }
 
 //==============================================================================
@@ -54,8 +87,8 @@ void RawViewWidget::fileReloaded()
 
     Core::readTextFromFile(mFileName, fileContents);
 
-    setContents(fileContents);
-    setReadOnly(!Core::FileManager::instance()->isReadableAndWritable(mFileName));
+    mEditor->setContents(fileContents);
+    mEditor->setReadOnly(!Core::FileManager::instance()->isReadableAndWritable(mFileName));
 }
 
 //==============================================================================

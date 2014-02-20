@@ -25,6 +25,13 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include "qscintillawidget.h"
+#include "viewwidget.h"
+
+//==============================================================================
+
+namespace Ui {
+    class RawViewWidget;
+}
 
 //==============================================================================
 
@@ -33,18 +40,25 @@ namespace RawView {
 
 //==============================================================================
 
-class RawViewWidget : public QScintillaSupport::QScintillaWidget
+class RawViewWidget : public Core::ViewWidget
 {
     Q_OBJECT
 
 public:
     explicit RawViewWidget(const QString &pFileName, QWidget *pParent = 0);
+    ~RawViewWidget();
+
+    QScintillaSupport::QScintillaWidget * editor() const;
 
     void fileReloaded();
     void fileRenamed(const QString &pFileName);
 
 private:
+    Ui::RawViewWidget *mGui;
+
     QString mFileName;
+
+    QScintillaSupport::QScintillaWidget *mEditor;
 };
 
 //==============================================================================

@@ -155,7 +155,7 @@ QScintillaSupport::QScintillaWidget * RawViewPlugin::editor(const QString &pFile
 {
     // Return the requested editor
 
-    return mViewWidgets.value(pFileName);
+    return mViewWidgets.value(pFileName)->editor();
 }
 
 //==============================================================================
@@ -218,7 +218,7 @@ QWidget * RawViewPlugin::viewWidget(const QString &pFileName,
 
         // Keep track of changes to its zoom level
 
-        connect(res, SIGNAL(SCN_ZOOM()),
+        connect(res->editor(), SIGNAL(SCN_ZOOM()),
                 this, SLOT(editorZoomLevelChanged()));
 
         // Keep track of our new view widget
@@ -229,7 +229,7 @@ QWidget * RawViewPlugin::viewWidget(const QString &pFileName,
     // Set/update the view widget's zoom level
 
     if (res)
-        res->zoomTo(mEditorZoomLevel);
+        res->editor()->zoomTo(mEditorZoomLevel);
 
     // Return our view widget
 
@@ -283,10 +283,10 @@ bool RawViewPlugin::saveFile(const QString &pOldFileName,
     // Ask the given file's corresponding view widget to save its contents
 
     RawViewWidget *viewWidget = mViewWidgets.value(pOldFileName);
-    bool res = Core::writeTextToFile(pNewFileName, viewWidget->contents());
+    bool res = Core::writeTextToFile(pNewFileName, viewWidget->editor()->contents());
 
     if (res)
-        viewWidget->resetUndoHistory();
+        viewWidget->editor()->resetUndoHistory();
 
     return res;
 }
@@ -388,7 +388,7 @@ void RawViewPlugin::editorZoomLevelChanged()
     // One of our view widgets had its zoom level changed, so keep track of the
     // new zoom level
 
-    mEditorZoomLevel = qobject_cast<RawViewWidget *>(sender())->SendScintilla(QsciScintillaBase::SCI_GETZOOM);
+    mEditorZoomLevel = qobject_cast<QScintillaSupport::QScintillaWidget *>(sender())->SendScintilla(QsciScintillaBase::SCI_GETZOOM);
 }
 
 //==============================================================================
