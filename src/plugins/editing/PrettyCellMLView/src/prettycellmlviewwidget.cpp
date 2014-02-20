@@ -190,9 +190,7 @@ void PrettyCellmlViewWidget::initialize(const QString &pFileName)
 
     QList<int> newSizes = QList<int>() << mBorderedViewerHeight;
 
-    for (int i = 1, iMax = count(); i < iMax; ++i) {
-        Core::BorderedWidget *borderedEditor = qobject_cast<Core::BorderedWidget *>(widget(i));
-
+    foreach (Core::BorderedWidget *borderedEditor, mBorderedEditors)
         if (borderedEditor == mBorderedEditor) {
             // This is the editor we are after, so show it, set/update its size
             // and zoom level
@@ -211,15 +209,14 @@ void PrettyCellmlViewWidget::initialize(const QString &pFileName)
 
             newSizes << 0;
         }
-    }
 
     setSizes(newSizes);
 
     // Set the pretty CellML view widget's focus proxy to our 'new' editor and
     // make sure that it immediately gets the focus
-    // Note: if we were not to immediately give our 'new' editor the focus,
-    //       then the central widget would give the focus to our 'old' editor
-    //       (see CentralWidget::updateGui()), so...
+    // Note: if we were not to immediately give our 'new' editor the focus, then
+    //       the central widget would give the focus to our 'old' editor (see
+    //       CentralWidget::updateGui()), so...
 
     setFocusProxy(mBorderedEditor->widget());
 
@@ -301,8 +298,8 @@ void PrettyCellmlViewWidget::splitterMoved()
 
 void PrettyCellmlViewWidget::editorZoomLevelChanged()
 {
-    // One of our view widgets had its zoom level changed, so keep track of the
-    // new zoom level
+    // One of our editors had its zoom level changed, so keep track of the new
+    // zoom level
 
     mEditorZoomLevel = qobject_cast<QScintillaSupport::QScintillaWidget *>(sender())->SendScintilla(QsciScintillaBase::SCI_GETZOOM);
 }
