@@ -101,8 +101,8 @@ private:
     int mEditorZoomLevel;
 
 private Q_SLOTS:
-    void editorZoomLevelChanged();
     void splitterMoved();
+    void editorZoomLevelChanged();
 };
 
 //==============================================================================

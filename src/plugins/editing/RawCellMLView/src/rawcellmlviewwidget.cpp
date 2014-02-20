@@ -289,16 +289,6 @@ QScintillaSupport::QScintillaWidget * RawCellmlViewWidget::editor(const QString 
 
 //==============================================================================
 
-void RawCellmlViewWidget::editorZoomLevelChanged()
-{
-    // One of our view widgets had its zoom level changed, so keep track of the
-    // new zoom level
-
-    mEditorZoomLevel = qobject_cast<QScintillaSupport::QScintillaWidget *>(sender())->SendScintilla(QsciScintillaBase::SCI_GETZOOM);
-}
-
-//==============================================================================
-
 void RawCellmlViewWidget::splitterMoved()
 {
     // The splitter has moved, so keep track of the viewer and editor's new
@@ -306,6 +296,16 @@ void RawCellmlViewWidget::splitterMoved()
 
     mBorderedViewerHeight = mBorderedViewer->height();
     mBorderedEditorHeight = mBorderedEditor->height();
+}
+
+//==============================================================================
+
+void RawCellmlViewWidget::editorZoomLevelChanged()
+{
+    // One of our view widgets had its zoom level changed, so keep track of the
+    // new zoom level
+
+    mEditorZoomLevel = qobject_cast<QScintillaSupport::QScintillaWidget *>(sender())->SendScintilla(QsciScintillaBase::SCI_GETZOOM);
 }
 
 //==============================================================================

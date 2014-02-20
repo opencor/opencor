@@ -288,16 +288,6 @@ QScintillaSupport::QScintillaWidget * PrettyCellmlViewWidget::editor(const QStri
 
 //==============================================================================
 
-void PrettyCellmlViewWidget::editorZoomLevelChanged()
-{
-    // One of our view widgets had its zoom level changed, so keep track of the
-    // new zoom level
-
-    mEditorZoomLevel = qobject_cast<QScintillaSupport::QScintillaWidget *>(sender())->SendScintilla(QsciScintillaBase::SCI_GETZOOM);
-}
-
-//==============================================================================
-
 void PrettyCellmlViewWidget::splitterMoved()
 {
     // The splitter has moved, so keep track of the viewer and editor's new
@@ -305,6 +295,16 @@ void PrettyCellmlViewWidget::splitterMoved()
 
     mBorderedViewerHeight = mBorderedViewer->height();
     mBorderedEditorHeight = mBorderedEditor->height();
+}
+
+//==============================================================================
+
+void PrettyCellmlViewWidget::editorZoomLevelChanged()
+{
+    // One of our view widgets had its zoom level changed, so keep track of the
+    // new zoom level
+
+    mEditorZoomLevel = qobject_cast<QScintillaSupport::QScintillaWidget *>(sender())->SendScintilla(QsciScintillaBase::SCI_GETZOOM);
 }
 
 //==============================================================================
