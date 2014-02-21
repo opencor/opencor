@@ -52,7 +52,7 @@ SingleCellViewGraphPanelsWidget::SingleCellViewGraphPanelsWidget(QWidget *pParen
     //       work fine even when we are not visible (which happens when a CellML
     //       file cannot be run for some reason or another)...
 
-    connect(this, SIGNAL(splitterMoved(int,int)),
+    connect(this, SIGNAL(splitterMoved(int, int)),
             this, SLOT(splitterMoved()));
 }
 

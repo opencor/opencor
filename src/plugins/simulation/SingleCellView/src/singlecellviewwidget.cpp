@@ -190,7 +190,7 @@ SingleCellViewWidget::SingleCellViewWidget(SingleCellViewPlugin *pPluginParent,
 
     mSplitterWidget = new QSplitter(Qt::Vertical, this);
 
-    connect(mSplitterWidget, SIGNAL(splitterMoved(int,int)),
+    connect(mSplitterWidget, SIGNAL(splitterMoved(int, int)),
             this, SLOT(splitterWidgetMoved()));
 
     // Create our contents widget

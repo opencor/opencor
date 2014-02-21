@@ -114,7 +114,7 @@ CellmlAnnotationViewWidget::CellmlAnnotationViewWidget(CellMLAnnotationViewPlugi
 
     // Keep track of our splitter being moved
 
-    connect(this, SIGNAL(splitterMoved(int,int)),
+    connect(this, SIGNAL(splitterMoved(int, int)),
             this, SLOT(emitSplitterMoved()));
 
     // A connection to let our details widget know that we want to see the

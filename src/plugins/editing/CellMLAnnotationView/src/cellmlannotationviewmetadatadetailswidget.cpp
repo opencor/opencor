@@ -164,7 +164,7 @@ CellmlAnnotationViewMetadataDetailsWidget::CellmlAnnotationViewMetadataDetailsWi
 
     // Keep track of our splitter being moved
 
-    connect(mSplitter, SIGNAL(splitterMoved(int,int)),
+    connect(mSplitter, SIGNAL(splitterMoved(int, int)),
             this, SLOT(emitSplitterMoved()));
 
     // Add our unsupported metadata message widget and splitter widget to our

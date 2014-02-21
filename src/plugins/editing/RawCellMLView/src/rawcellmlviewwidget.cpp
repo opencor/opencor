@@ -65,7 +65,7 @@ RawCellmlViewWidget::RawCellmlViewWidget(QWidget *pParent) :
 
     // Keep track of our sizes when moving the splitter
 
-    connect(this, SIGNAL(splitterMoved(int,int)),
+    connect(this, SIGNAL(splitterMoved(int, int)),
             this, SLOT(splitterMoved()));
 
     // Create our viewer
