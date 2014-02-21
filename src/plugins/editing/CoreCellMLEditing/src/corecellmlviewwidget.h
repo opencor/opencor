@@ -24,18 +24,18 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-#include "commonwidget.h"
-
-//==============================================================================
-
-#include <QMap>
 #include <QSplitter>
+#include <QString>
 
 //==============================================================================
 
 namespace Ui {
     class CoreCellmlViewWidget;
 }
+
+//==============================================================================
+
+class QsciLexer;
 
 //==============================================================================
 
@@ -55,53 +55,38 @@ namespace QScintillaSupport {
 
 //==============================================================================
 
-namespace Viewer {
-    class ViewerWidget;
-}   // namespace Viewer
-
-//==============================================================================
-
 namespace CoreCellMLEditing {
 
 //==============================================================================
 
-class CoreCellmlViewWidget : public QSplitter, public Core::CommonWidget
+class CoreCellmlViewWidget : public QSplitter
 {
     Q_OBJECT
 
 public:
-    explicit CoreCellmlViewWidget(QWidget *pParent = 0);
+    explicit CoreCellmlViewWidget(const QString &pFileName, QsciLexer *pLexer,
+                                  QWidget *pParent = 0);
     ~CoreCellmlViewWidget();
 
-    virtual void loadSettings(QSettings *pSettings);
-    virtual void saveSettings(QSettings *pSettings) const;
+    void fileReloaded();
+    void fileRenamed(const QString &pFileName);
 
-    bool contains(const QString &pFileName) const;
-
-    void initialize(const QString &pFileName);
-    void finalize(const QString &pFileName);
-
-    void fileReloaded(const QString &pFileName);
-    void fileRenamed(const QString &pOldFileName, const QString &pNewFileName);
-
-    QScintillaSupport::QScintillaWidget * editor(const QString &pFileName) const;
+    QScintillaSupport::QScintillaWidget * editor() const;
 
 private:
     Ui::CoreCellmlViewWidget *mGui;
 
+    QString mFileName;
+
     Core::BorderedWidget *mBorderedViewer;
-    Viewer::ViewerWidget *mViewer;
 
     Core::BorderedWidget *mBorderedEditor;
-    QMap<QString, Core::BorderedWidget *> mBorderedEditors;
+    QScintillaSupport::QScintillaWidget *mEditor;
 
-    int mBorderedViewerHeight;
-    int mBorderedEditorHeight;
-
-    int mEditorZoomLevel;
+Q_SIGNALS:
+    void editorZoomLevelChanged(const int &pEditorZoomLevel);
 
 private Q_SLOTS:
-    void splitterMoved();
     void editorZoomLevelChanged();
 };
 
