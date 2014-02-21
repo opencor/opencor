@@ -75,7 +75,7 @@ CoreCellmlEditingWidget::CoreCellmlEditingWidget(const QString &pFileName,
     // Keep track of changes to our editor's zoom level
 
     connect(mEditor, SIGNAL(SCN_ZOOM()),
-            this, SIGNAL(editorZoomLevelChanged()));
+            this, SLOT(editorZoomLevelChanged()));
 
     // Add the bordered viewer and editor to ourselves
 
