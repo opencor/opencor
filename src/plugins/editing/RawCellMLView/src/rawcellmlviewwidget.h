@@ -44,7 +44,7 @@ namespace OpenCOR {
 
 namespace CoreCellMLEditing {
     class CoreCellmlEditingWidget;
-}   // namespace QScintillaSupport
+}   // namespace CoreCellMLEditing
 
 //==============================================================================
 
