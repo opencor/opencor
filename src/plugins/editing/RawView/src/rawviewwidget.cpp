@@ -132,9 +132,9 @@ void RawViewWidget::initialize(const QString &pFileName)
             // This is the editor we are after, so show it and set/update its
             // zoom level
 
-            editor->show();
-
             editor->zoomTo(mEditorZoomLevel);
+
+            editor->show();
         } else {
             // Not the editor we are after, so hide it
 
