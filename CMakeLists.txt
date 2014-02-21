@@ -177,12 +177,14 @@ SET(PLUGINS
     support/CellMLSupport
     support/QScintillaSupport
 
+    # Plugins that extend some third-party libraries
+
+    widget/Viewer
+
     # Plugins that have dependencies on others
 
     editing/CoreCellMLEditing
     editing/CoreEditing
-
-    widget/Viewer
 
     # Selectable plugins
 

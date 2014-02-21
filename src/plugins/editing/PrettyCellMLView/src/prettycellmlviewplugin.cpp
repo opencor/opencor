@@ -43,7 +43,7 @@ PLUGININFO_FUNC PrettyCellMLViewPluginInfo()
     descriptions.insert("fr", QString::fromUtf8("une extension pour éditer des fichiers <a href=\"http://www.cellml.org/\">CellML</a> à l'aide d'un éditeur XML."));
 
     return new PluginInfo(PluginInfo::Editing, true,
-                          QStringList() << "CoreCellMLEditing" << "Viewer",
+                          QStringList() << "CoreCellMLEditing",
                           descriptions);
 }
 
