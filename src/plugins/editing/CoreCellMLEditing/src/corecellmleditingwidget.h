@@ -24,6 +24,10 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#include "corecellmleditingglobal.h"
+
+//==============================================================================
+
 #include <QSplitter>
 #include <QString>
 
@@ -59,7 +63,7 @@ namespace CoreCellMLEditing {
 
 //==============================================================================
 
-class CoreCellmlEditingWidget : public QSplitter
+class CORECELLMLEDITING_EXPORT CoreCellmlEditingWidget : public QSplitter
 {
     Q_OBJECT
 
