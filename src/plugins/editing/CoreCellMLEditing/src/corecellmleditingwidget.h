@@ -64,20 +64,15 @@ class CoreCellmlEditingWidget : public QSplitter
     Q_OBJECT
 
 public:
-    explicit CoreCellmlEditingWidget(const QString &pFileName,
-                                     QsciLexer *pLexer,
+    explicit CoreCellmlEditingWidget(const QString &pContents,
+                                     const bool &pReadOnly, QsciLexer *pLexer,
                                      QWidget *pParent = 0);
     ~CoreCellmlEditingWidget();
-
-    void fileReloaded();
-    void fileRenamed(const QString &pFileName);
 
     QScintillaSupport::QScintillaWidget * editor() const;
 
 private:
     Ui::CoreCellmlEditingWidget *mGui;
-
-    QString mFileName;
 
     Core::BorderedWidget *mBorderedViewer;
 

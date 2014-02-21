@@ -45,12 +45,12 @@ namespace CoreCellMLEditing {
 
 //==============================================================================
 
-CoreCellmlEditingWidget::CoreCellmlEditingWidget(const QString &pFileName,
+CoreCellmlEditingWidget::CoreCellmlEditingWidget(const QString &pContents,
+                                                 const bool &pReadOnly,
                                                  QsciLexer *pLexer,
                                                  QWidget *pParent) :
     QSplitter(pParent),
-    mGui(new Ui::CoreCellmlEditingWidget),
-    mFileName(pFileName)
+    mGui(new Ui::CoreCellmlEditingWidget)
 {
     // Set up the GUI
 
@@ -61,14 +61,10 @@ CoreCellmlEditingWidget::CoreCellmlEditingWidget(const QString &pFileName,
     mBorderedViewer = new Core::BorderedWidget(new Viewer::ViewerWidget(this),
                                                false, false, true, false);
 
-    // Create and customise our bordered editor with the given lexer
+    // Create our bordered editor
 
-    mEditor = new QScintillaSupport::QScintillaWidget(QString(),
-                                                      !Core::FileManager::instance()->isReadableAndWritable(pFileName),
+    mEditor = new QScintillaSupport::QScintillaWidget(pContents, pReadOnly,
                                                       pLexer, this);
-
-    fileReloaded();
-
     mBorderedEditor = new Core::BorderedWidget(mEditor,
                                                true, false, false, false);
 
@@ -89,28 +85,6 @@ CoreCellmlEditingWidget::~CoreCellmlEditingWidget()
     // Delete the GUI
 
     delete mGui;
-}
-
-//==============================================================================
-
-void CoreCellmlEditingWidget::fileReloaded()
-{
-    // The file has been reloaded, so update the contents of our editor
-
-    QString fileContents;
-
-    Core::readTextFromFile(mFileName, fileContents);
-
-    mEditor->setContents(fileContents);
-}
-
-//==============================================================================
-
-void CoreCellmlEditingWidget::fileRenamed(const QString &pFileName)
-{
-    // The file has been renamed, so update ourselves
-
-    mFileName = pFileName;
 }
 
 //==============================================================================
