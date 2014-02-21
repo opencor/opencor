@@ -1215,9 +1215,13 @@ Plugin * CentralWidget::viewPlugin(const int &pIndex) const
 {
     // Return the view plugin associated with the file, which index is given
 
-    CentralWidgetMode *mode = mModes.value(GuiViewSettings::Mode(mModeIndexes.value(mFileNames[pIndex])));
+    if (pIndex != -1) {
+        CentralWidgetMode *mode = mModes.value(GuiViewSettings::Mode(mModeIndexes.value(mFileNames[pIndex])));
 
-    return mode?mode->viewPlugins()->value(mode->views()->currentIndex()):0;
+        return mode?mode->viewPlugins()->value(mode->views()->currentIndex()):0;
+    } else {
+        return 0;
+    }
 }
 
 //==============================================================================
