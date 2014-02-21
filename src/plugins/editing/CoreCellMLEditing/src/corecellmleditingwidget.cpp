@@ -72,11 +72,6 @@ CoreCellmlEditingWidget::CoreCellmlEditingWidget(const QString &pFileName,
     mBorderedEditor = new Core::BorderedWidget(mEditor,
                                                true, false, false, false);
 
-    // Keep track of changes to our editor's zoom level
-
-    connect(mEditor, SIGNAL(SCN_ZOOM()),
-            this, SLOT(editorZoomLevelChanged()));
-
     // Add the bordered viewer and editor to ourselves
 
     addWidget(mBorderedViewer);
@@ -125,16 +120,6 @@ QScintillaSupport::QScintillaWidget * CoreCellmlEditingWidget::editor() const
     // Return our editor
 
     return mEditor;
-}
-
-//==============================================================================
-
-void CoreCellmlEditingWidget::editorZoomLevelChanged()
-{
-    // One of our editors had its zoom level changed, so keep track of the new
-    // zoom level
-
-    emit editorZoomLevelChanged(qobject_cast<QScintillaSupport::QScintillaWidget *>(sender())->SendScintilla(QsciScintillaBase::SCI_GETZOOM));
 }
 
 //==============================================================================

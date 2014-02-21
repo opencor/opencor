@@ -83,12 +83,6 @@ private:
 
     Core::BorderedWidget *mBorderedEditor;
     QScintillaSupport::QScintillaWidget *mEditor;
-
-Q_SIGNALS:
-    void editorZoomLevelChanged(const int &pEditorZoomLevel);
-
-private Q_SLOTS:
-    void editorZoomLevelChanged();
 };
 
 //==============================================================================
