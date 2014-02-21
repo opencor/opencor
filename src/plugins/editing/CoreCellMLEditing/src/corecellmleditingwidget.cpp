@@ -16,12 +16,12 @@ specific language governing permissions and limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// Core CellML view widget
+// Core CellML editing widget
 //==============================================================================
 
 #include "borderedwidget.h"
 #include "cliutils.h"
-#include "corecellmlviewwidget.h"
+#include "corecellmleditingwidget.h"
 #include "filemanager.h"
 #include "guiutils.h"
 #include "qscintillawidget.h"
@@ -29,7 +29,7 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-#include "ui_corecellmlviewwidget.h"
+#include "ui_corecellmleditingwidget.h"
 
 //==============================================================================
 
@@ -45,11 +45,11 @@ namespace CoreCellMLEditing {
 
 //==============================================================================
 
-CoreCellmlViewWidget::CoreCellmlViewWidget(const QString &pFileName,
-                                           QsciLexer *pLexer,
-                                           QWidget *pParent) :
+CoreCellmlEditingWidget::CoreCellmlEditingWidget(const QString &pFileName,
+                                                 QsciLexer *pLexer,
+                                                 QWidget *pParent) :
     QSplitter(pParent),
-    mGui(new Ui::CoreCellmlViewWidget),
+    mGui(new Ui::CoreCellmlEditingWidget),
     mFileName(pFileName)
 {
     // Set up the GUI
@@ -63,19 +63,18 @@ CoreCellmlViewWidget::CoreCellmlViewWidget(const QString &pFileName,
 
     // Create and customise our bordered editor with the given lexer
 
-    QScintillaSupport::QScintillaWidget *editor = new QScintillaSupport::QScintillaWidget(QString(),
-                                                                                          !Core::FileManager::instance()->isReadableAndWritable(pFileName),
-                                                                                          pLexer,
-                                                                                          this);
+    mEditor = new QScintillaSupport::QScintillaWidget(QString(),
+                                                      !Core::FileManager::instance()->isReadableAndWritable(pFileName),
+                                                      pLexer, this);
 
     fileReloaded();
 
-    mBorderedEditor = new Core::BorderedWidget(editor,
+    mBorderedEditor = new Core::BorderedWidget(mEditor,
                                                true, false, false, false);
 
     // Keep track of changes to our editor's zoom level
 
-    connect(editor, SIGNAL(SCN_ZOOM()),
+    connect(mEditor, SIGNAL(SCN_ZOOM()),
             this, SIGNAL(editorZoomLevelChanged()));
 
     // Add the bordered viewer and editor to ourselves
@@ -85,12 +84,12 @@ CoreCellmlViewWidget::CoreCellmlViewWidget(const QString &pFileName,
 
     // Set our focus proxy to our editor
 
-    setFocusProxy(editor);
+    setFocusProxy(mEditor);
 }
 
 //==============================================================================
 
-CoreCellmlViewWidget::~CoreCellmlViewWidget()
+CoreCellmlEditingWidget::~CoreCellmlEditingWidget()
 {
     // Delete the GUI
 
@@ -99,7 +98,7 @@ CoreCellmlViewWidget::~CoreCellmlViewWidget()
 
 //==============================================================================
 
-void CoreCellmlViewWidget::fileReloaded()
+void CoreCellmlEditingWidget::fileReloaded()
 {
     // The file has been reloaded, so update the contents of our editor
 
@@ -112,7 +111,7 @@ void CoreCellmlViewWidget::fileReloaded()
 
 //==============================================================================
 
-void CoreCellmlViewWidget::fileRenamed(const QString &pFileName)
+void CoreCellmlEditingWidget::fileRenamed(const QString &pFileName)
 {
     // The file has been renamed, so update ourselves
 
@@ -121,7 +120,7 @@ void CoreCellmlViewWidget::fileRenamed(const QString &pFileName)
 
 //==============================================================================
 
-QScintillaSupport::QScintillaWidget * CoreCellmlViewWidget::editor() const
+QScintillaSupport::QScintillaWidget * CoreCellmlEditingWidget::editor() const
 {
     // Return our editor
 
@@ -130,7 +129,7 @@ QScintillaSupport::QScintillaWidget * CoreCellmlViewWidget::editor() const
 
 //==============================================================================
 
-void CoreCellmlViewWidget::editorZoomLevelChanged()
+void CoreCellmlEditingWidget::editorZoomLevelChanged()
 {
     // One of our editors had its zoom level changed, so keep track of the new
     // zoom level

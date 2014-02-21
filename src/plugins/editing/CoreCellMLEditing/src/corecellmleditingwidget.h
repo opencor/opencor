@@ -16,11 +16,11 @@ specific language governing permissions and limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// Core CellML view widget
+// Core CellML editing widget
 //==============================================================================
 
-#ifndef CORECELLMLVIEWWIDGET_H
-#define CORECELLMLVIEWWIDGET_H
+#ifndef CORECELLMLEDITINGWIDGET_H
+#define CORECELLMLEDITINGWIDGET_H
 
 //==============================================================================
 
@@ -30,7 +30,7 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 namespace Ui {
-    class CoreCellmlViewWidget;
+    class CoreCellmlEditingWidget;
 }
 
 //==============================================================================
@@ -59,14 +59,15 @@ namespace CoreCellMLEditing {
 
 //==============================================================================
 
-class CoreCellmlViewWidget : public QSplitter
+class CoreCellmlEditingWidget : public QSplitter
 {
     Q_OBJECT
 
 public:
-    explicit CoreCellmlViewWidget(const QString &pFileName, QsciLexer *pLexer,
-                                  QWidget *pParent = 0);
-    ~CoreCellmlViewWidget();
+    explicit CoreCellmlEditingWidget(const QString &pFileName,
+                                     QsciLexer *pLexer,
+                                     QWidget *pParent = 0);
+    ~CoreCellmlEditingWidget();
 
     void fileReloaded();
     void fileRenamed(const QString &pFileName);
@@ -74,7 +75,7 @@ public:
     QScintillaSupport::QScintillaWidget * editor() const;
 
 private:
-    Ui::CoreCellmlViewWidget *mGui;
+    Ui::CoreCellmlEditingWidget *mGui;
 
     QString mFileName;
 

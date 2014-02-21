@@ -103,8 +103,7 @@ void RawViewWidget::initialize(const QString &pFileName)
     mEditor = mEditors.value(pFileName);
 
     if (!mEditor) {
-        // No editor exists for the given file, so create and set up a Scintilla
-        // editor
+        // No editor exists for the given file, so create and set up a one
 
         QString fileContents;
 
@@ -112,8 +111,7 @@ void RawViewWidget::initialize(const QString &pFileName)
 
         mEditor = new QScintillaSupport::QScintillaWidget(fileContents,
                                                           !Core::FileManager::instance()->isReadableAndWritable(pFileName),
-                                                          0,
-                                                          parentWidget());
+                                                          0, parentWidget());
 
         // Keep track of changes to our editor's zoom level
 
@@ -143,8 +141,8 @@ void RawViewWidget::initialize(const QString &pFileName)
             editor->hide();
         }
 
-    // Set the raw view widget's focus proxy to our 'new' editor and make sure
-    // that it immediately gets the focus
+    // Set our focus proxy to our 'new' editor and make sure that the latter
+    // immediately gets the focus
     // Note: if we were not to immediately give our 'new' editor the focus, then
     //       the central widget would give the focus to our 'old' editor (see
     //       CentralWidget::updateGui()), so...

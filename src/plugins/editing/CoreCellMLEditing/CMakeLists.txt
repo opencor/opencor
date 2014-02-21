@@ -17,15 +17,15 @@ ADD_PLUGIN(CoreCellMLEditing
         ../../pluginmanager.cpp
 
         src/corecellmleditingplugin.cpp
-        src/corecellmlviewwidget.cpp
+        src/corecellmleditingwidget.cpp
     HEADERS_MOC
         ../../plugin.h
         ../../pluginmanager.h
 
         src/corecellmleditingplugin.h
-        src/corecellmlviewwidget.h
+        src/corecellmleditingwidget.h
     UIS
-        src/corecellmlviewwidget.ui
+        src/corecellmleditingwidget.ui
     INCLUDE_DIRS
         src
     PLUGINS
