@@ -24,12 +24,11 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-#include "commonwidget.h"
+#include "viewwidget.h"
 
 //==============================================================================
 
 #include <QMap>
-#include <QSplitter>
 
 //==============================================================================
 
@@ -43,9 +42,9 @@ namespace OpenCOR {
 
 //==============================================================================
 
-namespace Core {
-    class BorderedWidget;
-}   // namespace Core
+namespace CoreCellMLEditing {
+    class CoreCellmlEditingWidget;
+}   // namespace QScintillaSupport
 
 //==============================================================================
 
@@ -55,17 +54,11 @@ namespace QScintillaSupport {
 
 //==============================================================================
 
-namespace Viewer {
-    class ViewerWidget;
-}   // namespace Viewer
-
-//==============================================================================
-
 namespace RawCellMLView {
 
 //==============================================================================
 
-class RawCellmlViewWidget : public QSplitter, public Core::CommonWidget
+class RawCellmlViewWidget : public Core::ViewWidget
 {
     Q_OBJECT
 
@@ -89,15 +82,10 @@ public:
 private:
     Ui::RawCellmlViewWidget *mGui;
 
-    Core::BorderedWidget *mBorderedViewer;
-    Viewer::ViewerWidget *mViewer;
+    CoreCellMLEditing::CoreCellmlEditingWidget *mEditingWidget;
+    QMap<QString, CoreCellMLEditing::CoreCellmlEditingWidget *> mEditingWidgets;
 
-    Core::BorderedWidget *mBorderedEditor;
-    QMap<QString, Core::BorderedWidget *> mBorderedEditors;
-
-    int mBorderedViewerHeight;
-    int mBorderedEditorHeight;
-
+    QList<int> mEditingWidgetSizes;
     int mEditorZoomLevel;
 
 private Q_SLOTS:

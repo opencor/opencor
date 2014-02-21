@@ -14,18 +14,17 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 
 *******************************************************************************/
+#include <QDebug>
 
 //==============================================================================
 // Raw CellML view widget
 //==============================================================================
 
-#include "borderedwidget.h"
 #include "cliutils.h"
+#include "corecellmleditingwidget.h"
 #include "filemanager.h"
-#include "guiutils.h"
 #include "qscintillawidget.h"
 #include "rawcellmlviewwidget.h"
-#include "viewerwidget.h"
 
 //==============================================================================
 
@@ -35,8 +34,13 @@ specific language governing permissions and limitations under the License.
 
 #include <QDesktopWidget>
 #include <QFileInfo>
+#include <QLayout>
 #include <QSettings>
-#include <QSplitter>
+#include <QVariant>
+
+//==============================================================================
+
+#include <qmetatype.h>
 
 //==============================================================================
 
@@ -50,33 +54,16 @@ namespace RawCellMLView {
 //==============================================================================
 
 RawCellmlViewWidget::RawCellmlViewWidget(QWidget *pParent) :
-    QSplitter(pParent),
-    CommonWidget(pParent),
+    ViewWidget(pParent),
     mGui(new Ui::RawCellmlViewWidget),
-    mBorderedEditor(0),
-    mBorderedEditors(QMap<QString, Core::BorderedWidget *>()),
-    mBorderedViewerHeight(0),
-    mBorderedEditorHeight(0),
+    mEditingWidget(0),
+    mEditingWidgets(QMap<QString, CoreCellMLEditing::CoreCellmlEditingWidget *>()),
+    mEditingWidgetSizes(QList<int>()),
     mEditorZoomLevel(0)
 {
     // Set up the GUI
 
     mGui->setupUi(this);
-
-    // Keep track of our sizes when moving the splitter
-
-    connect(this, SIGNAL(splitterMoved(int, int)),
-            this, SLOT(splitterMoved()));
-
-    // Create our viewer
-
-    mViewer = new Viewer::ViewerWidget(this);
-    mBorderedViewer = new Core::BorderedWidget(mViewer,
-                                               false, false, true, false);
-
-    // Add the bordered viewer to ourselves
-
-    addWidget(mBorderedViewer);
 }
 
 //==============================================================================
@@ -90,16 +77,14 @@ RawCellmlViewWidget::~RawCellmlViewWidget()
 
 //==============================================================================
 
-static const auto SettingsBorderedViewerHeight = QStringLiteral("BorderedViewerHeight");
-static const auto SettingsBorderedEditorHeight = QStringLiteral("BorderedEditorHeight");
-static const auto SettingsEditorZoomLevel      = QStringLiteral("EditorZoomLevel");
+static const auto SettingsEditingWidgetSizes = QStringLiteral("EditingWidgetSizes");
+static const auto SettingsEditorZoomLevel    = QStringLiteral("EditorZoomLevel");
 
 //==============================================================================
 
 void RawCellmlViewWidget::loadSettings(QSettings *pSettings)
 {
-    // Retrieve the bordered viewer's and editor's height, as well as the
-    // editor's zoom level
+    // Retrieve the editing widget's sizes and the editor's zoom level
     // Note #1: the viewer's default height is 19% of the desktop's height while
     //          that of the editor is as big as it can be...
     // Note #2: because the editor's default height is much bigger than that of
@@ -107,11 +92,12 @@ void RawCellmlViewWidget::loadSettings(QSettings *pSettings)
     //          effectively be less than 19% of the desktop's height, but that
     //          doesn't matter at all...
 
-    mBorderedViewerHeight = pSettings->value(SettingsBorderedViewerHeight,
-                                             0.19*qApp->desktop()->screenGeometry().height()).toInt();
-    mBorderedEditorHeight = pSettings->value(SettingsBorderedEditorHeight,
-                                             qApp->desktop()->screenGeometry().height()).toInt();
+    qRegisterMetaTypeStreamOperators< QList<int> >("QList<int>");
 
+    QVariant defaultEditingWidgetSizes = QVariant::fromValue< QList<int> >(QList<int>() << 0.19*qApp->desktop()->screenGeometry().height()
+                                                                                        << qApp->desktop()->screenGeometry().height());
+
+    mEditingWidgetSizes = pSettings->value(SettingsEditingWidgetSizes, defaultEditingWidgetSizes).value< QList<int> >();
     mEditorZoomLevel = pSettings->value(SettingsEditorZoomLevel, 0).toInt();
 }
 
@@ -119,24 +105,9 @@ void RawCellmlViewWidget::loadSettings(QSettings *pSettings)
 
 void RawCellmlViewWidget::saveSettings(QSettings *pSettings) const
 {
-    // Keep track of the bordered viewer's and editor's height, as well as the
-    // editor's zoom level
-    // Note #1: we must also keep track of the editor's height because when
-    //          loading our settings (see above), the widget doesn't yet have a
-    //          'proper' height, so we couldn't simply assume that the editor's
-    //          initial height is this widget's height minus the viewer's
-    //          initial height, so...
-    // Note #2: we rely on mBorderedViewerHeight and mBorderedEditorHeight
-    //          rather than directly calling the height() method of the viewer
-    //          and of the editor, respectively since it may happen that the
-    //          user exits OpenCOR without ever having switched to the raw
-    //          CellML view, in which case we couldn't retrieve the viewer and
-    //          editor's height which in turn would result in OpenCOR crashing,
-    //          so...
+    // Keep track of the editing widget's sizes and the editor's zoom level
 
-    pSettings->setValue(SettingsBorderedViewerHeight, mBorderedViewerHeight);
-    pSettings->setValue(SettingsBorderedEditorHeight, mBorderedEditorHeight);
-
+    pSettings->setValue(SettingsEditingWidgetSizes, QVariant::fromValue< QList<int> >(mEditingWidgetSizes));
     pSettings->setValue(SettingsEditorZoomLevel, mEditorZoomLevel);
 }
 
@@ -144,104 +115,95 @@ void RawCellmlViewWidget::saveSettings(QSettings *pSettings) const
 
 bool RawCellmlViewWidget::contains(const QString &pFileName) const
 {
-    // Return whether we know about the given CellML file, i.e. whether we have
-    // an editor for it
+    // Return whether we know about the given file, i.e. whether we have an
+    // editing widget for it
 
-    return mBorderedEditors.value(pFileName);
+    return mEditingWidgets.value(pFileName);
 }
 
 //==============================================================================
 
 void RawCellmlViewWidget::initialize(const QString &pFileName)
 {
-    // Retrieve the editor associated with the given CellML file, if any
+    // Retrieve the editing widget associated with the given file, if any
 
-    mBorderedEditor = mBorderedEditors.value(pFileName);
+    mEditingWidget = mEditingWidgets.value(pFileName);
 
-    if (!mBorderedEditor) {
-        // No editor exists for the given CellML file, so create and set up a
-        // Scintilla editor with an XML lexer associated with it
+    if (!mEditingWidget) {
+        // No editing widget exists for the given file, so create and set up one
 
         QString fileContents;
 
         Core::readTextFromFile(pFileName, fileContents);
 
-        QScintillaSupport::QScintillaWidget *editor = new QScintillaSupport::QScintillaWidget(fileContents,
-                                                                                              !Core::FileManager::instance()->isReadableAndWritable(pFileName),
-                                                                                              new QsciLexerXML(this),
-                                                                                              parentWidget());
+        mEditingWidget = new CoreCellMLEditing::CoreCellmlEditingWidget(fileContents,
+                                                                        !Core::FileManager::instance()->isReadableAndWritable(pFileName),
+                                                                        new QsciLexerXML(this),
+                                                                        parentWidget());
 
-        mBorderedEditor = new Core::BorderedWidget(editor,
-                                                   true, false, false, false);
+        // Keep track of our editing widget's sizes when moving the splitter and
+        // of changes to our editor's zoom level
 
-        // Keep track of changes to our editor's zoom level
+        connect(mEditingWidget, SIGNAL(splitterMoved(int, int)),
+                this, SLOT(splitterMoved()));
 
-        connect(editor, SIGNAL(SCN_ZOOM()),
+        connect(mEditingWidget->editor(), SIGNAL(SCN_ZOOM()),
                 this, SLOT(editorZoomLevelChanged()));
 
-        // Keep track of our bordered editor and add it to ourselves
+        // Keep track of our editing widget and add it to ourselves
 
-        mBorderedEditors.insert(pFileName, mBorderedEditor);
+        mEditingWidgets.insert(pFileName, mEditingWidget);
 
-        addWidget(mBorderedEditor);
+        layout()->addWidget(mEditingWidget);
     }
 
-    // Show/hide our bordered editors and adjust our sizes
+    // Show/hide our editing widgets and adjust our sizes
 
-    QList<int> newSizes = QList<int>() << mBorderedViewerHeight;
+    foreach (CoreCellMLEditing::CoreCellmlEditingWidget *editingWidget, mEditingWidgets)
+        if (editingWidget == mEditingWidget) {
+            // This is the editing widget we are after, so show it and
+            // set/update its size and zoom level
 
-    foreach (Core::BorderedWidget *borderedEditor, mBorderedEditors)
-        if (borderedEditor == mBorderedEditor) {
-            // This is the editor we are after, so show it, set/update its size
-            // and zoom level
+            editingWidget->setSizes(mEditingWidgetSizes);
+            editingWidget->editor()->zoomTo(mEditorZoomLevel);
 
-            borderedEditor->show();
-
-            newSizes << mBorderedEditorHeight;
-
-            qobject_cast<QScintillaSupport::QScintillaWidget *>(borderedEditor->widget())->zoomTo(mEditorZoomLevel);
+            editingWidget->show();
         } else {
-            // Not the editor we are after, so hide it and set its size
-            // Note: theoretically speaking, we could set its size to whatever
-            //       value we want since it's anyway hidden...
+            // Not the editing widget we are after, so hide it
 
-            borderedEditor->hide();
-
-            newSizes << 0;
+            editingWidget->hide();
         }
 
-    setSizes(newSizes);
+    // Set our focus proxy to our 'new' editing widget and make sure that the
+    // latter immediately gets the focus
+    // Note: if we were not to immediately give our 'new' editing widget the
+    //       focus, then the central widget would give the focus to our 'old'
+    //       editing widget (see CentralWidget::updateGui()), so...
 
-    // Set the raw CellML view widget's focus proxy to our 'new' editor and
-    // make sure that it immediately gets the focus
-    // Note: if we were not to immediately give our 'new' editor the focus, then
-    //       the central widget would give the focus to our 'old' editor (see
-    //       CentralWidget::updateGui()), so...
+    setFocusProxy(mEditingWidget->editor());
 
-    setFocusProxy(mBorderedEditor->widget());
-
-    mBorderedEditor->widget()->setFocus();
+    mEditingWidget->editor()->setFocus();
 }
 
 //==============================================================================
 
 void RawCellmlViewWidget::finalize(const QString &pFileName)
 {
-    // Remove the bordered editor, should there be one for the given CellML file
+    // Remove the editing widget, should there be one for the given file
 
-    Core::BorderedWidget *borderedEditor  = mBorderedEditors.value(pFileName);
+    CoreCellMLEditing::CoreCellmlEditingWidget *editingWidget  = mEditingWidgets.value(pFileName);
 
-    if (borderedEditor) {
-        // There is a bordered editor for the given file name, so delete it and
-        // remove it from our list
+    if (editingWidget) {
+        // There is an editor for the given file name, so delete it and remove
+        // it from our list
 
-        delete borderedEditor;
+        delete editingWidget;
 
-        mBorderedEditors.remove(pFileName);
+        mEditingWidgets.remove(pFileName);
 
-        // Reset our memory of the current bordered editor
+        // Reset our memory of the current editor
 
-        mBorderedEditor = 0;
+        mEditingWidget = 0;
     }
 }
 
@@ -262,13 +224,13 @@ void RawCellmlViewWidget::fileReloaded(const QString &pFileName)
 void RawCellmlViewWidget::fileRenamed(const QString &pOldFileName,
                                       const QString &pNewFileName)
 {
-    // The given file has been renamed, so update our bordered editors mapping
+    // The given file has been renamed, so update our editing widgets mapping
 
-    Core::BorderedWidget *borderedEditor = mBorderedEditors.value(pOldFileName);
+    CoreCellMLEditing::CoreCellmlEditingWidget *editingWidget = mEditingWidgets.value(pOldFileName);
 
-    if (borderedEditor) {
-        mBorderedEditors.insert(pNewFileName, borderedEditor);
-        mBorderedEditors.remove(pOldFileName);
+    if (editingWidget) {
+        mEditingWidgets.insert(pNewFileName, editingWidget);
+        mEditingWidgets.remove(pOldFileName);
     }
 }
 
@@ -278,20 +240,18 @@ QScintillaSupport::QScintillaWidget * RawCellmlViewWidget::editor(const QString 
 {
     // Return the requested editor
 
-    Core::BorderedWidget *borderedEditor = mBorderedEditors.value(pFileName);
+    CoreCellMLEditing::CoreCellmlEditingWidget *editingWidget = mEditingWidgets.value(pFileName);
 
-    return borderedEditor?qobject_cast<QScintillaSupport::QScintillaWidget *>(borderedEditor->widget()):0;
+    return editingWidget?editingWidget->editor():0;
 }
 
 //==============================================================================
 
 void RawCellmlViewWidget::splitterMoved()
 {
-    // The splitter has moved, so keep track of the viewer and editor's new
-    // height
+    // The splitter has moved, so keep track of the editing widget's sizes
 
-    mBorderedViewerHeight = mBorderedViewer->height();
-    mBorderedEditorHeight = mBorderedEditor->height();
+    mEditingWidgetSizes = qobject_cast<CoreCellMLEditing::CoreCellmlEditingWidget *>(sender())->sizes();
 }
 
 //==============================================================================
