@@ -94,6 +94,8 @@ void CellMLAnnotationViewPlugin::finalize()
 
 void CellMLAnnotationViewPlugin::initialized(const Plugins &pLoadedPlugins)
 {
+    Q_UNUSED(pLoadedPlugins);
+
     // We don't handle this interface...
 }
 
