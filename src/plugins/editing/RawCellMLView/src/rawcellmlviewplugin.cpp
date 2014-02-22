@@ -94,7 +94,7 @@ void RawCellMLViewPlugin::initialized(const Plugins &pLoadedPlugins)
 
 void RawCellMLViewPlugin::loadSettings(QSettings *pSettings)
 {
-    // Retrieve our generic raw CellML view widget settings
+    // Retrieve our raw CellML view widget settings
 
     loadViewSettings(pSettings, mViewWidget);
 }
@@ -103,7 +103,7 @@ void RawCellMLViewPlugin::loadSettings(QSettings *pSettings)
 
 void RawCellMLViewPlugin::saveSettings(QSettings *pSettings) const
 {
-    // Retrieve our generic raw CellML view widget settings
+    // Keep track of our raw CellML view widget settings
 
     saveViewSettings(pSettings, mViewWidget);
 }

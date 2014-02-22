@@ -117,7 +117,7 @@ void SingleCellViewPlugin::loadSettings(QSettings *pSettings)
 
 void SingleCellViewPlugin::saveSettings(QSettings *pSettings) const
 {
-    // Retrieve our single cell view settings
+    // Keep track of our single cell view settings
 
     saveViewSettings(pSettings, mViewWidget);
 }

@@ -92,7 +92,7 @@ void RawViewPlugin::initialized(const Plugins &pLoadedPlugins)
 
 void RawViewPlugin::loadSettings(QSettings *pSettings)
 {
-    // Retrieve our generic raw view widget settings
+    // Retrieve our raw view widget settings
 
     loadViewSettings(pSettings, mViewWidget);
 }
@@ -101,7 +101,7 @@ void RawViewPlugin::loadSettings(QSettings *pSettings)
 
 void RawViewPlugin::saveSettings(QSettings *pSettings) const
 {
-    // Retrieve our generic raw view widget settings
+    // Keep track of our raw view widget settings
 
     saveViewSettings(pSettings, mViewWidget);
 }

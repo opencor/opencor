@@ -93,7 +93,7 @@ void PrettyCellMLViewPlugin::initialized(const Plugins &pLoadedPlugins)
 
 void PrettyCellMLViewPlugin::loadSettings(QSettings *pSettings)
 {
-    // Retrieve our generic pretty CellML view widget settings
+    // Retrieve our pretty CellML view widget settings
 
     loadViewSettings(pSettings, mViewWidget);
 }
@@ -102,7 +102,7 @@ void PrettyCellMLViewPlugin::loadSettings(QSettings *pSettings)
 
 void PrettyCellMLViewPlugin::saveSettings(QSettings *pSettings) const
 {
-    // Retrieve our generic pretty CellML view widget settings
+    // Keep track of our generic pretty CellML view widget settings
 
     saveViewSettings(pSettings, mViewWidget);
 }
