@@ -114,7 +114,7 @@ void SingleCellViewInformationGraphsWidget::retranslateUi()
 
 //==============================================================================
 
-static const auto SettingsColumnWidth = QStringLiteral("ColumnWidth%1");
+static const auto SettingsColumnWidths = QStringLiteral("ColumnWidths");
 
 //==============================================================================
 
@@ -122,10 +122,11 @@ void SingleCellViewInformationGraphsWidget::loadSettings(QSettings *pSettings)
 {
     // Retrieve the width of each column of our property editors
 
-    for (int i = 0, iMax = mColumnWidths.size(); i < iMax; ++i)
-        mColumnWidths[i] = pSettings->value(SettingsColumnWidth.arg(i),
-                                            mColumnWidths.at(i)).toInt();
+    qRegisterMetaTypeStreamOperators< QList<int> >("QList<int>");
 
+    QVariant defaultColumnWidths = QVariant::fromValue< QList<int> >(mColumnWidths);
+
+    mColumnWidths = pSettings->value(SettingsColumnWidths, defaultColumnWidths).value< QList<int> >();
 }
 
 //==============================================================================
@@ -134,8 +135,7 @@ void SingleCellViewInformationGraphsWidget::saveSettings(QSettings *pSettings) c
 {
     // Keep track of the width of each column of our current property editor
 
-    for (int i = 0, iMax = mColumnWidths.size(); i < iMax; ++i)
-        pSettings->setValue(SettingsColumnWidth.arg(i), mColumnWidths.at(i));
+    pSettings->setValue(SettingsColumnWidths, QVariant::fromValue< QList<int> >(mColumnWidths));
 }
 
 //==============================================================================
