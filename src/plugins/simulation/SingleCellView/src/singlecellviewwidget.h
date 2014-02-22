@@ -146,7 +146,6 @@ private:
     QLabel *mDelayValueWidget;
 
     QSplitter *mSplitterWidget;
-    QList<int> mSplitterWidgetSizes;
 
     SingleCellViewContentsWidget *mContentsWidget;
 
@@ -230,8 +229,6 @@ private Q_SLOTS:
                          const ErrorType &pErrorType = General);
 
     void simulationDataModified(const bool &pIsModified);
-
-    void splitterWidgetMoved();
 
     void simulationPropertyChanged(Core::Property *pProperty);
     void solversPropertyChanged(Core::Property *pProperty);
