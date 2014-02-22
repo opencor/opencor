@@ -79,16 +79,19 @@ void SingleCellViewGraphPanelsWidget::loadSettings(QSettings *pSettings)
 
     emit removeGraphPanelsEnabled(false);
 
-    // Retrieve and set the size of each graph panel, as well as create the
-    // corresponding number of graphs
+    // Retrieve the number of graph panels and create the corresponding number
+    // of graphs
+    // Note: we don't assign the value of SettingsGraphPanelSizes directly to
+    //       mSplitterSizes because adding a graph panel will reset it. So,
+    //       instead, we assign the value to splitterSizes, which we then use to
+    //       properly initialise mSplitterSizes...
 
     qRegisterMetaTypeStreamOperators< QList<int> >("QList<int>");
 
     QVariant defaultGraphPanelSizes = QVariant::fromValue< QList<int> >(QList<int>());
 
-    mSplitterSizes = pSettings->value(SettingsGraphPanelSizes, defaultGraphPanelSizes).value< QList<int> >();
-
-    int graphPanelsCount = mSplitterSizes.count();
+    QList<int> splitterSizes = pSettings->value(SettingsGraphPanelSizes, defaultGraphPanelSizes).value< QList<int> >();
+    int graphPanelsCount = splitterSizes.count();
 
     if (!graphPanelsCount)
         // For some reason, the settings for the number of graph panels to be
@@ -98,6 +101,10 @@ void SingleCellViewGraphPanelsWidget::loadSettings(QSettings *pSettings)
 
     for (int i = 0; i < graphPanelsCount; ++i)
         addGraphPanel();
+
+    // Retrieve and set the size of each graph panel
+
+    mSplitterSizes = splitterSizes;
 
     setSizes(mSplitterSizes);
 }
