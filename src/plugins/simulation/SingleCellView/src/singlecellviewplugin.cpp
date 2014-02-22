@@ -339,7 +339,7 @@ bool SingleCellViewPlugin::canClose()
 
 void SingleCellViewPlugin::retranslateUi()
 {
-    // Retranslate our single cell view
+    // Retranslate our single cell view widget
 
     mViewWidget->retranslateUi();
 }
