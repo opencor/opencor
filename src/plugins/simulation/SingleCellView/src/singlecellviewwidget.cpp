@@ -93,6 +93,7 @@ SingleCellViewWidget::SingleCellViewWidget(SingleCellViewPlugin *pPluginParent,
     mProgresses(QMap<QString, int>()),
     mResets(QMap<QString, bool>()),
     mDelays(QMap<QString, int>()),
+    mSplitterWidgetSizes(QList<int>()),
     mRunActionEnabled(true),
     mOldSimulationResultsSizes(QMap<SingleCellViewSimulation *, qulonglong>()),
     mCheckResultsSimulations(QList<SingleCellViewSimulation *>()),
@@ -182,12 +183,15 @@ SingleCellViewWidget::SingleCellViewWidget(SingleCellViewPlugin *pPluginParent,
 
     mGui->layout->addWidget(mInvalidModelMessageWidget);
 
-    // Create our splitter widget
+    // Create our splitter widget and keep track of its movement
     // Note: we need to keep track of its movement so that saveSettings() can
     //       work fine even when mContentsWidget is not visible (which happens
     //       when a CellML file cannot be run for some reason or another)...
 
     mSplitterWidget = new QSplitter(Qt::Vertical, this);
+
+    connect(mSplitterWidget, SIGNAL(splitterMoved(int, int)),
+            this, SLOT(splitterWidgetMoved()));
 
     // Create our contents widget
 
@@ -371,10 +375,11 @@ void SingleCellViewWidget::loadSettings(QSettings *pSettings)
     qRegisterMetaTypeStreamOperators< QList<int> >("QList<int>");
 
     QVariant defaultSizes = QVariant::fromValue< QList<int> >(QList<int>());
-    QList<int> sizes = pSettings->value(SettingsSizes, defaultSizes).value< QList<int> >();
 
-    if (sizes.count())
-        mSplitterWidget->setSizes(sizes);
+    mSplitterWidgetSizes = pSettings->value(SettingsSizes, defaultSizes).value< QList<int> >();
+
+    if (mSplitterWidgetSizes.count())
+        mSplitterWidget->setSizes(mSplitterWidgetSizes);
 
     // Retrieve the settings of our contents widget
 
@@ -389,7 +394,7 @@ void SingleCellViewWidget::saveSettings(QSettings *pSettings) const
 {
     // Keep track of our splitter sizes
 
-    pSettings->setValue(SettingsSizes, QVariant::fromValue< QList<int> >(mSplitterWidget->sizes()));
+    pSettings->setValue(SettingsSizes, QVariant::fromValue< QList<int> >(mSplitterWidgetSizes));
 
     // Keep track of the settings of our contents widget
 
@@ -1397,6 +1402,15 @@ void SingleCellViewWidget::simulationDataModified(const bool &pIsModified)
 
     if (qobject_cast<SingleCellViewSimulationData *>(sender()) == mSimulation->data())
         mGui->actionResetModelParameters->setEnabled(pIsModified);
+}
+
+//==============================================================================
+
+void SingleCellViewWidget::splitterWidgetMoved()
+{
+    // Our splitter has been moved, so keep track of its new sizes
+
+    mSplitterWidgetSizes = mSplitterWidget->sizes();
 }
 
 //==============================================================================

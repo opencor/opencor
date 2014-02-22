@@ -39,8 +39,17 @@ namespace SingleCellView {
 
 SingleCellViewContentsWidget::SingleCellViewContentsWidget(QWidget *pParent) :
     QSplitter(pParent),
-    CommonWidget(pParent)
+    CommonWidget(pParent),
+    mSplitterSizes(QList<int>())
 {
+    // Keep track of our movement
+    // Note: we need to keep track of our movement so that saveSettings() can
+    //       work fine even when we are not visible (which happens when a CellML
+    //       file cannot be run for some reason or another)...
+
+    connect(this, SIGNAL(splitterMoved(int, int)),
+            this, SLOT(splitterMoved()));
+
     // Create our information widget
 
     mInformationWidget = new SingleCellViewInformationWidget(this);
@@ -90,7 +99,9 @@ void SingleCellViewContentsWidget::loadSettings(QSettings *pSettings)
     QVariant defaultSizes = QVariant::fromValue< QList<int> >(QList<int>() << 0.25*qApp->desktop()->screenGeometry().width()
                                                                            << 0.75*qApp->desktop()->screenGeometry().width());
 
-    setSizes(pSettings->value(SettingsContentsSizes, defaultSizes).value< QList<int> >());
+    mSplitterSizes = pSettings->value(SettingsContentsSizes, defaultSizes).value< QList<int> >();
+
+    setSizes(mSplitterSizes);
 
     // Retrieve the settings of our information and graph panels widgets
 
@@ -109,7 +120,7 @@ void SingleCellViewContentsWidget::saveSettings(QSettings *pSettings) const
 {
     // Keep track of our sizes
 
-    pSettings->setValue(SettingsContentsSizes, QVariant::fromValue< QList<int> >(sizes()));
+    pSettings->setValue(SettingsContentsSizes, QVariant::fromValue< QList<int> >(mSplitterSizes));
 
     // Keep track of the settings of our information and graph panels widgets
 
@@ -138,6 +149,15 @@ SingleCellViewGraphPanelsWidget * SingleCellViewContentsWidget::graphPanelsWidge
     // Return our graph panels widget
 
     return mGraphPanelsWidget;
+}
+
+//==============================================================================
+
+void SingleCellViewContentsWidget::splitterMoved()
+{
+    // Our splitter has been moved, so keep track of its new sizes
+
+    mSplitterSizes = sizes();
 }
 
 //==============================================================================

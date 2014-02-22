@@ -58,8 +58,13 @@ public:
     SingleCellViewGraphPanelsWidget * graphPanelsWidget();
 
 private:
+    QList<int> mSplitterSizes;
+
     SingleCellViewInformationWidget *mInformationWidget;
     SingleCellViewGraphPanelsWidget *mGraphPanelsWidget;
+
+private Q_SLOTS:
+    void splitterMoved();
 };
 
 //==============================================================================
