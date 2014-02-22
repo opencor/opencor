@@ -189,11 +189,6 @@ void SingleCellViewPlugin::finalizeView()
 
 bool SingleCellViewPlugin::hasViewWidget(const QString &pFileName)
 {
-    // Make sure that we are dealing with a CellML file
-
-    if (!CellMLSupport::CellmlFileManager::instance()->cellmlFile(pFileName))
-        return false;
-
     // Return whether we know about the given CellML file
 
     return mViewWidget->contains(pFileName);;
@@ -225,11 +220,6 @@ QWidget * SingleCellViewPlugin::viewWidget(const QString &pFileName,
 
 void SingleCellViewPlugin::removeViewWidget(const QString &pFileName)
 {
-    // Make sure that we are dealing with a CellML file
-
-    if (!CellMLSupport::CellmlFileManager::instance()->cellmlFile(pFileName))
-        return;
-
     // Ask our view widget to finalise the given CellML file
 
     mViewWidget->finalize(pFileName);
@@ -259,6 +249,9 @@ bool SingleCellViewPlugin::saveFile(const QString &pOldFileName,
                                     const QString &pNewFileName)
 {
     // Make sure that we are dealing with a CellML file
+    // Note: we can't modify a CellML file using this view, hence the below is
+    //       only for the case where the user wants to save a CellML under a new
+    //       name...
 
     CellMLSupport::CellmlFile *cellmlFile = CellMLSupport::CellmlFileManager::instance()->cellmlFile(pOldFileName);
 
