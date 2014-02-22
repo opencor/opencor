@@ -1471,8 +1471,11 @@ void MainWindow::resetAll()
         // restart OpenCOR (indeed, a restart will ensure that the various dock
         // windows are, for instance, properly reset with regards to their
         // dimensions)
+        // Note: mSettings->clear() won't delete the "OpenCOR" key (since it's
+        //       the 'root' of mSettings), so instead we create a 'new'
+        //       QSettings object to clear our "OpenCOR" key...
 
-        mSettings->clear();
+        QSettings(OpenCOR::SettingsOrganization, OpenCOR::SettingsApplication).clear();
 
         // Restart OpenCOR without first saving its settings
 
