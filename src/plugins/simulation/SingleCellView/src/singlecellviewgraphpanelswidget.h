@@ -71,7 +71,7 @@ public:
     void removeAllGraphPanels();
 
 private:
-    QList<int> mSplitterSizes;
+    QList<int> mGraphPanelSizes;
 
     QMap<QString, SingleCellViewGraphPanelWidget *> mActiveGraphPanels;
     SingleCellViewGraphPanelWidget *mActiveGraphPanel;
