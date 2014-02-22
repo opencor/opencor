@@ -38,7 +38,7 @@ namespace SingleCellView {
 SingleCellViewGraphPanelsWidget::SingleCellViewGraphPanelsWidget(QWidget *pParent) :
     QSplitter(pParent),
     CommonWidget(pParent),
-    mGraphPanelSizes(QList<int>()),
+    mSplitterSizes(QList<int>()),
     mActiveGraphPanels(QMap<QString, SingleCellViewGraphPanelWidget *>()),
     mActiveGraphPanel(0),
     mPlotsRects(QMap<QString, QMap<SingleCellViewGraphPanelPlotWidget *, QRectF> >())
@@ -86,9 +86,9 @@ void SingleCellViewGraphPanelsWidget::loadSettings(QSettings *pSettings)
 
     QVariant defaultGraphPanelSizes = QVariant::fromValue< QList<int> >(QList<int>());
 
-    mGraphPanelSizes = pSettings->value(SettingsGraphPanelSizes, defaultGraphPanelSizes).value< QList<int> >();
+    mSplitterSizes = pSettings->value(SettingsGraphPanelSizes, defaultGraphPanelSizes).value< QList<int> >();
 
-    int graphPanelsCount = mGraphPanelSizes.count();
+    int graphPanelsCount = mSplitterSizes.count();
 
     if (!graphPanelsCount)
         // For some reason, the settings for the number of graph panels to be
@@ -99,7 +99,7 @@ void SingleCellViewGraphPanelsWidget::loadSettings(QSettings *pSettings)
     for (int i = 0; i < graphPanelsCount; ++i)
         addGraphPanel();
 
-    setSizes(mGraphPanelSizes);
+    setSizes(mSplitterSizes);
 }
 
 //==============================================================================
@@ -108,7 +108,7 @@ void SingleCellViewGraphPanelsWidget::saveSettings(QSettings *pSettings) const
 {
     // Keep track of the size of each graph panel
 
-    pSettings->setValue(SettingsGraphPanelSizes, QVariant::fromValue< QList<int> >(mGraphPanelSizes));
+    pSettings->setValue(SettingsGraphPanelSizes, QVariant::fromValue< QList<int> >(mSplitterSizes));
 }
 
 //==============================================================================
@@ -351,7 +351,7 @@ void SingleCellViewGraphPanelsWidget::splitterMoved()
 {
     // Our splitter has been moved, so keep track of its new sizes
 
-    mGraphPanelSizes = sizes();
+    mSplitterSizes = sizes();
 }
 
 //==============================================================================
