@@ -64,12 +64,12 @@ RawCellMLViewPlugin::RawCellMLViewPlugin()
 
 void RawCellMLViewPlugin::initialize()
 {
-    // Create our generic raw CellML view widget
+    // Create our raw CellML view widget
 
     mViewWidget = new RawCellmlViewWidget(mMainWindow);
 
-    // Hide our generic raw CellML view widget since it may not initially be
-    // shown in our central widget
+    // Hide our raw CellML view widget since it may not initially be shown in
+    // our central widget
 
     mViewWidget->setVisible(false);
 }
@@ -206,8 +206,8 @@ QWidget * RawCellMLViewPlugin::viewWidget(const QString &pFileName,
     if (!CellMLSupport::CellmlFileManager::instance()->cellmlFile(pFileName))
         return 0;
 
-    // We are dealing with a CellML file, so update our generic raw CellML view
-    // widget using the given CellML file
+    // We are dealing with a CellML file, so update our raw CellML view widget
+    // using the given CellML file
 
     if (pCreate) {
         mViewWidget->initialize(pFileName);
@@ -227,7 +227,7 @@ void RawCellMLViewPlugin::removeViewWidget(const QString &pFileName)
     if (!CellMLSupport::CellmlFileManager::instance()->cellmlFile(pFileName))
         return;
 
-    // Ask our generic raw CellML view widget to finalise the given CellML file
+    // Ask our raw CellML view widget to finalise the given CellML file
 
     mViewWidget->finalize(pFileName);
 }
@@ -257,7 +257,7 @@ QIcon RawCellMLViewPlugin::fileTabIcon(const QString &pFileName) const
 bool RawCellMLViewPlugin::saveFile(const QString &pOldFileName,
                                    const QString &pNewFileName)
 {
-    // Ask our generic raw CellML view widget to save the given file
+    // Ask our raw CellML view widget to save the given file
 
     QScintillaSupport::QScintillaWidget *editor = mViewWidget->editor(pOldFileName);
     bool res = Core::writeTextToFile(pNewFileName, editor->contents());

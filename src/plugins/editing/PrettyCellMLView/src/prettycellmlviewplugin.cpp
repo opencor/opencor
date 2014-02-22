@@ -63,12 +63,12 @@ PrettyCellMLViewPlugin::PrettyCellMLViewPlugin()
 
 void PrettyCellMLViewPlugin::initialize()
 {
-    // Create our generic pretty CellML view widget
+    // Create our pretty CellML view widget
 
     mViewWidget = new PrettyCellmlViewWidget(mMainWindow);
 
-    // Hide our generic pretty CellML view widget since it may not initially be
-    // shown in our central widget
+    // Hide our pretty CellML view widget since it may not initially be shown in
+    // our central widget
 
     mViewWidget->setVisible(false);
 }
@@ -205,8 +205,8 @@ QWidget * PrettyCellMLViewPlugin::viewWidget(const QString &pFileName,
     if (!CellMLSupport::CellmlFileManager::instance()->cellmlFile(pFileName))
         return 0;
 
-    // We are dealing with a CellML file, so update our generic pretty CellML
-    // view widget using the given CellML file
+    // We are dealing with a CellML file, so update our pretty CellML view
+    // widget using the given CellML file
 
     if (pCreate) {
         mViewWidget->initialize(pFileName);
@@ -226,8 +226,7 @@ void PrettyCellMLViewPlugin::removeViewWidget(const QString &pFileName)
     if (!CellMLSupport::CellmlFileManager::instance()->cellmlFile(pFileName))
         return;
 
-    // Ask our generic pretty CellML view widget to finalise the given CellML
-    // file
+    // Ask our pretty CellML view widget to finalise the given CellML file
 
     mViewWidget->finalize(pFileName);
 }

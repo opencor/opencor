@@ -62,12 +62,12 @@ RawViewPlugin::RawViewPlugin()
 
 void RawViewPlugin::initialize()
 {
-    // Create our generic raw view widget
+    // Create our raw view widget
 
     mViewWidget = new RawViewWidget(mMainWindow);
 
-    // Hide our generic raw view widget since it may not initially be shown in
-    // our central widget
+    // Hide our raw view widget since it may not initially be shown in our
+    // central widget
 
     mViewWidget->setVisible(false);
 }
@@ -193,7 +193,7 @@ bool RawViewPlugin::hasViewWidget(const QString &pFileName)
 QWidget * RawViewPlugin::viewWidget(const QString &pFileName,
                                     const bool &pCreate)
 {
-    // Update our generic raw view widget using the given file
+    // Update our raw view widget using the given file
 
     if (pCreate) {
         mViewWidget->initialize(pFileName);
@@ -208,7 +208,7 @@ QWidget * RawViewPlugin::viewWidget(const QString &pFileName,
 
 void RawViewPlugin::removeViewWidget(const QString &pFileName)
 {
-    // Ask our generic raw view widget to finalise the given file
+    // Ask our raw view widget to finalise the given file
 
     mViewWidget->finalize(pFileName);
 }
@@ -238,7 +238,7 @@ QIcon RawViewPlugin::fileTabIcon(const QString &pFileName) const
 bool RawViewPlugin::saveFile(const QString &pOldFileName,
                              const QString &pNewFileName)
 {
-    // Ask our generic raw view widget to save the given file
+    // Ask our raw view widget to save the given file
 
     QScintillaSupport::QScintillaWidget *editor = mViewWidget->editor(pOldFileName);
     bool res = Core::writeTextToFile(pNewFileName, editor->contents());
