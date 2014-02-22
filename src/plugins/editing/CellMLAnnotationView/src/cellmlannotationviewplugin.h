@@ -37,20 +37,6 @@ class QSettings;
 
 namespace OpenCOR {
 
-//==============================================================================
-
-namespace CoreEditing {
-    class CoreEditingPlugin;
-}   // namespace CoreEditing
-
-//==============================================================================
-
-namespace CoreCellMLEditing {
-    class CoreCellMLEditingPlugin;
-}   // namespace CoreCellMLEditing
-
-//==============================================================================
-
 namespace CellMLAnnotationView {
 
 //==============================================================================
@@ -87,9 +73,6 @@ private:
     QList<int> mMetadataDetailsWidgetSizes;
 
     QMap<QString, CellmlAnnotationViewWidget *> mViewWidgets;
-
-    CoreEditing::CoreEditingPlugin *mCoreEditingPlugin;
-    CoreCellMLEditing::CoreCellMLEditingPlugin *mCoreCellmlEditingPlugin;
 
 private Q_SLOTS:
     void splitterMoved(const QList<int> &pSizes);
