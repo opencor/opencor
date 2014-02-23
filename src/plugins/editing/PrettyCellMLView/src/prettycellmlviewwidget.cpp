@@ -32,7 +32,6 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include <QDesktopWidget>
-#include <QFileInfo>
 #include <QLayout>
 #include <QSettings>
 #include <QVariant>
@@ -129,7 +128,7 @@ void PrettyCellmlViewWidget::initialize(const QString &pFileName)
     mEditingWidget = mEditingWidgets.value(pFileName);
 
     if (!mEditingWidget) {
-        // No editing widget exists for the given file, so create and set up one
+        // No editing widget exists for the given file, so create one
 
         QString fileContents;
 

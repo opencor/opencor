@@ -30,7 +30,6 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-#include <QFileInfo>
 #include <QLayout>
 #include <QSettings>
 
@@ -103,7 +102,7 @@ void RawViewWidget::initialize(const QString &pFileName)
     mEditor = mEditors.value(pFileName);
 
     if (!mEditor) {
-        // No editor exists for the given file, so create and set up a one
+        // No editor exists for the given file, so create one
 
         QString fileContents;
 
