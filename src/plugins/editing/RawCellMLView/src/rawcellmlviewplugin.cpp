@@ -188,7 +188,7 @@ bool RawCellMLViewPlugin::hasViewWidget(const QString &pFileName)
 {
     // Return whether we know about the given CellML file
 
-    return mViewWidget->contains(pFileName);;
+    return mViewWidget->contains(pFileName);
 }
 
 //==============================================================================
