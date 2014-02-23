@@ -160,8 +160,8 @@ void RawCellmlViewWidget::initialize(const QString &pFileName)
 
     foreach (CoreCellMLEditing::CoreCellmlEditingWidget *editingWidget, mEditingWidgets)
         if (editingWidget == mEditingWidget) {
-            // This is the editing widget we are after, so show it and
-            // set/update its size and zoom level
+            // This is the editing widget we are after, so show it and update
+            // its size and zoom level
 
             editingWidget->setSizes(mEditingWidgetSizes);
             editingWidget->editor()->zoomTo(mEditorZoomLevel);

@@ -129,8 +129,8 @@ void RawViewWidget::initialize(const QString &pFileName)
 
     foreach (QScintillaSupport::QScintillaWidget *editor, mEditors)
         if (editor == mEditor) {
-            // This is the editor we are after, so show it and set/update its
-            // zoom level
+            // This is the editor we are after, so show it and update its zoom
+            // level
 
             editor->zoomTo(mEditorZoomLevel);
 
