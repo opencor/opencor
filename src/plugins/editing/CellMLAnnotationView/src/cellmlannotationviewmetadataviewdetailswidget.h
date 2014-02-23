@@ -45,9 +45,9 @@ namespace CellMLAnnotationView {
 
 //==============================================================================
 
+class CellmlAnnotationViewEditingWidget;
 class CellmlAnnotationViewMetadataNormalViewDetailsWidget;
 class CellmlAnnotationViewMetadataRawViewDetailsWidget;
-class CellmlAnnotationViewWidget;
 
 //==============================================================================
 
@@ -57,7 +57,7 @@ class CellmlAnnotationViewMetadataViewDetailsWidget : public QStackedWidget,
     Q_OBJECT
 
 public:
-    explicit CellmlAnnotationViewMetadataViewDetailsWidget(CellmlAnnotationViewWidget *pParent);
+    explicit CellmlAnnotationViewMetadataViewDetailsWidget(CellmlAnnotationViewEditingWidget *pParent);
 
     virtual void retranslateUi();
 

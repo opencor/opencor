@@ -24,13 +24,11 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-#include "cellmlfile.h"
-#include "commonwidget.h"
+#include "viewwidget.h"
 
 //==============================================================================
 
 #include <QMap>
-#include <QSplitter>
 
 //==============================================================================
 
@@ -40,82 +38,54 @@ namespace Ui {
 
 //==============================================================================
 
-class QComboBox;
-class QLabel;
-class QLineEdit;
-class QPushButton;
-class QWebView;
-
-//==============================================================================
-
 namespace OpenCOR {
 namespace CellMLAnnotationView {
 
 //==============================================================================
 
-class CellmlAnnotationViewCellmlListWidget;
-class CellmlAnnotationViewMetadataDetailsWidget;
+class CellmlAnnotationViewEditingWidget;
 class CellMLAnnotationViewPlugin;
 
 //==============================================================================
 
-class CellmlAnnotationViewWidget : public QSplitter, public Core::CommonWidget
+class CellmlAnnotationViewWidget : public Core::ViewWidget
 {
     Q_OBJECT
 
 public:
     explicit CellmlAnnotationViewWidget(CellMLAnnotationViewPlugin *pPluginParent,
-                                        const QString &pFileName,
                                         QWidget *pParent = 0);
     ~CellmlAnnotationViewWidget();
 
+    virtual void loadSettings(QSettings *pSettings);
+    virtual void saveSettings(QSettings *pSettings) const;
+
     virtual void retranslateUi();
 
-    QString pluginViewName() const;
+    bool contains(const QString &pFileName) const;
 
-    CellMLSupport::CellmlFile * cellmlFile() const;
+    void initialize(const QString &pFileName);
+    void finalize(const QString &pFileName);
 
-    CellmlAnnotationViewCellmlListWidget * cellmlList() const;
-    CellmlAnnotationViewMetadataDetailsWidget * metadataDetails() const;
+    void fileReloaded(const QString &pFileName);
+    void fileRenamed(const QString &pOldFileName, const QString &pNewFileName);
 
-    void updateWebViewerWithQualifierDetails(QWebView *pWebView,
-                                             const QString &pQualifier,
-                                             const bool &pRetranslate);
-    void updateWebViewerWithResourceDetails(QWebView *pWebView,
-                                            const QString &pResource,
-                                            const bool &pRetranslate);
-    void updateWebViewerWithIdDetails(QWebView *pWebView,
-                                      const QString &pResource,
-                                      const QString &pId,
-                                      const bool &pRetranslate);
-
-    void fileReloaded();
+    CellmlAnnotationViewEditingWidget * editingWidget(const QString &pFileName) const;
 
 private:
     Ui::CellmlAnnotationViewWidget *mGui;
 
     CellMLAnnotationViewPlugin *mPluginParent;
 
-    CellMLSupport::CellmlFile *mCellmlFile;
+    CellmlAnnotationViewEditingWidget *mEditingWidget;
+    QMap<QString, CellmlAnnotationViewEditingWidget *> mEditingWidgets;
 
-    CellmlAnnotationViewCellmlListWidget *mCellmlList;
-    CellmlAnnotationViewMetadataDetailsWidget *mMetadataDetails;
-
-    QString mModelQualifierSvg;
-    QString mBiologyQualifierSvg;
-
-    QString mQualifierInformationTemplate;
-
-    QMap<QWebView *, QUrl> oldWebViewUrls;
-
-Q_SIGNALS:
-    void splitterMoved(const QList<int> &pSizes);
+    QList<int> mEditingWidgetSizes;
+    QList<int> mMetadataDetailsWidgetSizes;
 
 private Q_SLOTS:
-    void updateSizes(const QList<int> &pSizes);
-    void emitSplitterMoved();
-
-    void addRdfTriple(CellMLSupport::CellmlFileRdfTriple *pRdfTriple) const;
+    void editingWidgetSplitterMoved(const QList<int> &pSizes);
+    void metadataDetailsWidgetSplitterMoved(const QList<int> &pSizes);
 };
 
 //==============================================================================

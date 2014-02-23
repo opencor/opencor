@@ -59,7 +59,7 @@ namespace CellMLAnnotationView {
 
 //==============================================================================
 
-class CellmlAnnotationViewWidget;
+class CellmlAnnotationViewEditingWidget;
 
 //==============================================================================
 
@@ -69,7 +69,7 @@ class CellmlAnnotationViewMetadataEditDetailsWidget : public QScrollArea,
     Q_OBJECT
 
 public:
-    explicit CellmlAnnotationViewMetadataEditDetailsWidget(CellmlAnnotationViewWidget *pParent);
+    explicit CellmlAnnotationViewMetadataEditDetailsWidget(CellmlAnnotationViewEditingWidget *pParent);
     ~CellmlAnnotationViewMetadataEditDetailsWidget();
 
     virtual void retranslateUi();
@@ -95,7 +95,7 @@ private:
 
     typedef QList<Item> Items;
 
-    CellmlAnnotationViewWidget *mParent;
+    CellmlAnnotationViewEditingWidget *mParent;
 
     Ui::CellmlAnnotationViewMetadataEditDetailsWidget *mGui;
 

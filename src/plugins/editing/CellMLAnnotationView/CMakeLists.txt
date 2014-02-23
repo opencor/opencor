@@ -16,6 +16,7 @@ ADD_PLUGIN(CellMLAnnotationView
         ../../pluginmanager.cpp
 
         src/cellmlannotationviewcellmllistwidget.cpp
+        src/cellmlannotationvieweditingwidget.cpp
         src/cellmlannotationviewmetadatadetailswidget.cpp
         src/cellmlannotationviewmetadataeditdetailswidget.cpp
         src/cellmlannotationviewmetadatanormalviewdetailswidget.cpp
@@ -28,6 +29,7 @@ ADD_PLUGIN(CellMLAnnotationView
         ../../pluginmanager.h
 
         src/cellmlannotationviewcellmllistwidget.h
+        src/cellmlannotationvieweditingwidget.h
         src/cellmlannotationviewmetadatadetailswidget.h
         src/cellmlannotationviewmetadataeditdetailswidget.h
         src/cellmlannotationviewmetadatanormalviewdetailswidget.h
@@ -37,6 +39,7 @@ ADD_PLUGIN(CellMLAnnotationView
         src/cellmlannotationviewwidget.h
     UIS
         src/cellmlannotationviewcellmllistwidget.ui
+        src/cellmlannotationvieweditingwidget.ui
         src/cellmlannotationviewmetadatadetailswidget.ui
         src/cellmlannotationviewmetadataeditdetailswidget.ui
         src/cellmlannotationviewmetadatanormalviewdetailswidget.ui

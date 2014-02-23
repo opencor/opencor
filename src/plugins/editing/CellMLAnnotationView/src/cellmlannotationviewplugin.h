@@ -36,7 +36,6 @@ class QSettings;
 //==============================================================================
 
 namespace OpenCOR {
-
 namespace CellMLAnnotationView {
 
 //==============================================================================
@@ -62,21 +61,13 @@ class CellMLAnnotationViewPlugin : public QObject, public CoreInterface,
 
 public:
     explicit CellMLAnnotationViewPlugin();
-    ~CellMLAnnotationViewPlugin();
 
 #include "coreinterface.inl"
 #include "guiinterface.inl"
 #include "i18ninterface.inl"
 
 private:
-    QList<int> mSizes;
-    QList<int> mMetadataDetailsWidgetSizes;
-
-    QMap<QString, CellmlAnnotationViewWidget *> mViewWidgets;
-
-private Q_SLOTS:
-    void splitterMoved(const QList<int> &pSizes);
-    void metadataDetailsWidgetSplitterMoved(const QList<int> &pSizes);
+    CellmlAnnotationViewWidget *mViewWidget;
 };
 
 //==============================================================================

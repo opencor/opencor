@@ -21,8 +21,8 @@ specific language governing permissions and limitations under the License.
 
 #include "borderedwidget.h"
 #include "cellmlannotationviewcellmllistwidget.h"
+#include "cellmlannotationvieweditingwidget.h"
 #include "cellmlannotationviewmetadataeditdetailswidget.h"
-#include "cellmlannotationviewwidget.h"
 #include "cellmlfilerdftriple.h"
 #include "cliutils.h"
 #include "filemanager.h"
@@ -83,7 +83,7 @@ bool CellmlAnnotationViewMetadataEditDetailsWidget::Item::operator<(const Item &
 
 //==============================================================================
 
-CellmlAnnotationViewMetadataEditDetailsWidget::CellmlAnnotationViewMetadataEditDetailsWidget(CellmlAnnotationViewWidget *pParent) :
+CellmlAnnotationViewMetadataEditDetailsWidget::CellmlAnnotationViewMetadataEditDetailsWidget(CellmlAnnotationViewEditingWidget *pParent) :
     QScrollArea(pParent),
     CommonWidget(pParent),
     mParent(pParent),

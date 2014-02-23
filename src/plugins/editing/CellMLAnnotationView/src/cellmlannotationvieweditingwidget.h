@@ -16,113 +16,106 @@ specific language governing permissions and limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// CellML annotation view metadata details widget
+// CellML annotation view editing widget
 //==============================================================================
 
-#ifndef CELLMLANNOTATIONVIEWMETADATADETAILSWIDGET_H
-#define CELLMLANNOTATIONVIEWMETADATADETAILSWIDGET_H
+#ifndef CELLMLANNOTATIONVIEWEDITINGWIDGET_H
+#define CELLMLANNOTATIONVIEWEDITINGWIDGET_H
 
 //==============================================================================
 
 #include "cellmlfile.h"
-#include "widget.h"
+#include "commonwidget.h"
 
 //==============================================================================
 
-class QSplitter;
-class QWebView;
+#include <QMap>
+#include <QSplitter>
 
 //==============================================================================
 
 namespace Ui {
-    class CellmlAnnotationViewMetadataDetailsWidget;
+    class CellmlAnnotationViewEditingWidget;
 }
 
 //==============================================================================
 
+class QComboBox;
+class QLabel;
+class QLineEdit;
+class QPushButton;
+class QWebView;
+
+//==============================================================================
+
 namespace OpenCOR {
-
-//==============================================================================
-
-namespace Core {
-    class BorderedWidget;
-    class UserMessageWidget;
-}   // namespace Core
-
-//==============================================================================
-
 namespace CellMLAnnotationView {
 
 //==============================================================================
 
-class CellmlAnnotationViewEditingWidget;
-class CellmlAnnotationViewMetadataEditDetailsWidget;
-class CellmlAnnotationViewMetadataViewDetailsWidget;
+class CellmlAnnotationViewCellmlListWidget;
+class CellmlAnnotationViewMetadataDetailsWidget;
+class CellMLAnnotationViewPlugin;
 
 //==============================================================================
 
-class CellmlAnnotationViewMetadataDetailsWidget : public Core::Widget
+class CellmlAnnotationViewEditingWidget : public QSplitter,
+                                          public Core::CommonWidget
 {
     Q_OBJECT
 
 public:
-    explicit CellmlAnnotationViewMetadataDetailsWidget(CellmlAnnotationViewEditingWidget *pParent);
-    ~CellmlAnnotationViewMetadataDetailsWidget();
+    explicit CellmlAnnotationViewEditingWidget(CellMLAnnotationViewPlugin *pPluginParent,
+                                               const QString &pFileName,
+                                               QWidget *pParent = 0);
+    ~CellmlAnnotationViewEditingWidget();
 
     virtual void retranslateUi();
 
-    void addRdfTriple(CellMLSupport::CellmlFileRdfTriple *pRdfTriple);
+    QString pluginViewName() const;
 
-    QSplitter * splitter() const;
+    CellMLSupport::CellmlFile * cellmlFile() const;
 
-    CellmlAnnotationViewMetadataEditDetailsWidget * metadataEditDetails() const;
-    CellmlAnnotationViewMetadataViewDetailsWidget * metadataViewDetails() const;
+    CellmlAnnotationViewCellmlListWidget * cellmlList() const;
+    CellmlAnnotationViewMetadataDetailsWidget * metadataDetails() const;
+
+    void updateWebViewerWithQualifierDetails(QWebView *pWebView,
+                                             const QString &pQualifier,
+                                             const bool &pRetranslate);
+    void updateWebViewerWithResourceDetails(QWebView *pWebView,
+                                            const QString &pResource,
+                                            const bool &pRetranslate);
+    void updateWebViewerWithIdDetails(QWebView *pWebView,
+                                      const QString &pResource,
+                                      const QString &pId,
+                                      const bool &pRetranslate);
 
     void fileReloaded();
 
 private:
-    CellmlAnnotationViewEditingWidget *mParent;
+    Ui::CellmlAnnotationViewEditingWidget *mGui;
 
-    Ui::CellmlAnnotationViewMetadataDetailsWidget *mGui;
-
-    Core::BorderedWidget *mBorderedCategoryMessage;
-    Core::UserMessageWidget *mCategoryMessage;
-
-    Core::BorderedWidget *mBorderedUnsupportedMetadataMessage;
-    Core::UserMessageWidget *mUnsupportedMetadataMessage;
-
-    QSplitter *mSplitter;
-
-    Core::BorderedWidget *mBorderedMetadataEditDetails;
-    Core::BorderedWidget *mBorderedMetadataViewDetails;
-    Core::BorderedWidget *mBorderedWebView;
-
-    CellmlAnnotationViewMetadataEditDetailsWidget *mMetadataEditDetails;
-    CellmlAnnotationViewMetadataViewDetailsWidget *mMetadataViewDetails;
-    QWebView *mWebView;
+    CellMLAnnotationViewPlugin *mPluginParent;
 
     CellMLSupport::CellmlFile *mCellmlFile;
 
-    ObjRef<iface::cellml_api::CellMLElement> mElement;
+    CellmlAnnotationViewCellmlListWidget *mCellmlList;
+    CellmlAnnotationViewMetadataDetailsWidget *mMetadataDetails;
+
+    QString mModelQualifierSvg;
+    QString mBiologyQualifierSvg;
+
+    QString mQualifierInformationTemplate;
+
+    QMap<QWebView *, QUrl> oldWebViewUrls;
 
 Q_SIGNALS:
     void splitterMoved(const QList<int> &pSizes);
 
-public Q_SLOTS:
-    void updateGui(iface::cellml_api::CellMLElement *pElement);
-
 private Q_SLOTS:
     void emitSplitterMoved();
 
-    void lookupQualifier(const QString &pQualifier, const bool &pRetranslate);
-    void lookupResource(const QString &pResource, const bool &pRetranslate);
-    void lookupId(const QString &pResource, const QString &pId,
-                  const bool &pRetranslate);
-    void lookupNothing();
-
-    void removeAllMetadata();
-
-    void updateMetadataEditDetails();
+    void addRdfTriple(CellMLSupport::CellmlFileRdfTriple *pRdfTriple) const;
 };
 
 //==============================================================================

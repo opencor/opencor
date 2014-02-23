@@ -20,11 +20,11 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include "borderedwidget.h"
+#include "cellmlannotationvieweditingwidget.h"
 #include "cellmlannotationviewmetadatanormalviewdetailswidget.h"
 #include "cellmlannotationviewmetadatadetailswidget.h"
 #include "cellmlannotationviewmetadataeditdetailswidget.h"
 #include "cellmlannotationviewmetadataviewdetailswidget.h"
-#include "cellmlannotationviewwidget.h"
 #include "filemanager.h"
 #include "usermessagewidget.h"
 
@@ -44,7 +44,7 @@ namespace CellMLAnnotationView {
 
 //==============================================================================
 
-CellmlAnnotationViewMetadataDetailsWidget::CellmlAnnotationViewMetadataDetailsWidget(CellmlAnnotationViewWidget *pParent) :
+CellmlAnnotationViewMetadataDetailsWidget::CellmlAnnotationViewMetadataDetailsWidget(CellmlAnnotationViewEditingWidget *pParent) :
     Widget(pParent),
     mParent(pParent),
     mGui(new Ui::CellmlAnnotationViewMetadataDetailsWidget),
@@ -277,16 +277,6 @@ void CellmlAnnotationViewMetadataDetailsWidget::addRdfTriple(CellMLSupport::Cell
     // Add the given RDF triple to our metadata view details
 
     mMetadataViewDetails->addRdfTriple(pRdfTriple);
-}
-
-//==============================================================================
-
-void CellmlAnnotationViewMetadataDetailsWidget::updateSizes(const QList<int> &pSizes)
-{
-    // The splitter of another CellmlAnnotationViewMetadataDetailsWidget object
-    // has been moved, so update our sizes
-
-    mSplitter->setSizes(pSizes);
 }
 
 //==============================================================================

@@ -20,7 +20,7 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include "cellmlannotationviewcellmllistwidget.h"
-#include "cellmlannotationviewwidget.h"
+#include "cellmlannotationvieweditingwidget.h"
 #include "filemanager.h"
 #include "treeviewwidget.h"
 
@@ -316,7 +316,7 @@ iface::cellml_api::CellMLElement * CellmlAnnotationViewCellmlElementItem::elemen
 
 //==============================================================================
 
-CellmlAnnotationViewCellmlListWidget::CellmlAnnotationViewCellmlListWidget(CellmlAnnotationViewWidget *pParent) :
+CellmlAnnotationViewCellmlListWidget::CellmlAnnotationViewCellmlListWidget(CellmlAnnotationViewEditingWidget *pParent) :
     Widget(pParent),
     mCellmlFile(pParent->cellmlFile()),
     mGui(new Ui::CellmlAnnotationViewCellmlListWidget)
@@ -369,8 +369,8 @@ CellmlAnnotationViewCellmlListWidget::CellmlAnnotationViewCellmlListWidget(Cellm
     // Initialise our tree view widget
     // Note: we don't want to select first item of our tree view widget just yet
     //       since we need a connection between ourselves and the metadata
-    //       details widget to be set first (see
-    //       CellmlAnnotationViewWidget::CellmlAnnotationViewWidget)...
+    //       details widget to be set first (see the constructor for
+    //       CellmlAnnotationViewEditingWidget)...
 
     initializeTreeViewWidget(false);
 

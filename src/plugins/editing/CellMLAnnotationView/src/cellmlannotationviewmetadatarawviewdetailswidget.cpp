@@ -19,8 +19,8 @@ specific language governing permissions and limitations under the License.
 // CellML annotation view metadata raw view details widget
 //==============================================================================
 
+#include "cellmlannotationvieweditingwidget.h"
 #include "cellmlannotationviewmetadatarawviewdetailswidget.h"
-#include "cellmlannotationviewwidget.h"
 
 //==============================================================================
 
@@ -33,7 +33,7 @@ namespace CellMLAnnotationView {
 
 //==============================================================================
 
-CellmlAnnotationViewMetadataRawViewDetailsWidget::CellmlAnnotationViewMetadataRawViewDetailsWidget(CellmlAnnotationViewWidget *pParent) :
+CellmlAnnotationViewMetadataRawViewDetailsWidget::CellmlAnnotationViewMetadataRawViewDetailsWidget(CellmlAnnotationViewEditingWidget *pParent) :
     TreeViewWidget(pParent),
     mCellmlFile(pParent->cellmlFile())
 {

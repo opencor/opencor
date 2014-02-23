@@ -19,10 +19,10 @@ specific language governing permissions and limitations under the License.
 // CellML annotation view metadata view details widget
 //==============================================================================
 
+#include "cellmlannotationvieweditingwidget.h"
 #include "cellmlannotationviewmetadatanormalviewdetailswidget.h"
 #include "cellmlannotationviewmetadatarawviewdetailswidget.h"
 #include "cellmlannotationviewmetadataviewdetailswidget.h"
-#include "cellmlannotationviewwidget.h"
 
 //==============================================================================
 
@@ -31,7 +31,7 @@ namespace CellMLAnnotationView {
 
 //==============================================================================
 
-CellmlAnnotationViewMetadataViewDetailsWidget::CellmlAnnotationViewMetadataViewDetailsWidget(CellmlAnnotationViewWidget *pParent) :
+CellmlAnnotationViewMetadataViewDetailsWidget::CellmlAnnotationViewMetadataViewDetailsWidget(CellmlAnnotationViewEditingWidget *pParent) :
     QStackedWidget(pParent),
     CommonWidget(pParent),
     mCellmlFile(pParent->cellmlFile())

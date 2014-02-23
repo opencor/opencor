@@ -19,8 +19,8 @@ specific language governing permissions and limitations under the License.
 // CellML annotation view metadata normal view details widget
 //==============================================================================
 
+#include "cellmlannotationvieweditingwidget.h"
 #include "cellmlannotationviewmetadatanormalviewdetailswidget.h"
-#include "cellmlannotationviewwidget.h"
 #include "filemanager.h"
 #include "guiutils.h"
 
@@ -47,7 +47,7 @@ namespace CellMLAnnotationView {
 
 //==============================================================================
 
-CellmlAnnotationViewMetadataNormalViewDetailsWidget::CellmlAnnotationViewMetadataNormalViewDetailsWidget(CellmlAnnotationViewWidget *pParent) :
+CellmlAnnotationViewMetadataNormalViewDetailsWidget::CellmlAnnotationViewMetadataNormalViewDetailsWidget(CellmlAnnotationViewEditingWidget *pParent) :
     QScrollArea(pParent),
     CommonWidget(pParent),
     mCellmlFile(pParent->cellmlFile()),

@@ -52,7 +52,7 @@ namespace CellMLAnnotationView {
 
 //==============================================================================
 
-class CellmlAnnotationViewWidget;
+class CellmlAnnotationViewEditingWidget;
 
 //==============================================================================
 
@@ -77,7 +77,7 @@ private:
     };
 
 public:
-    explicit CellmlAnnotationViewMetadataNormalViewDetailsWidget(CellmlAnnotationViewWidget *pParent);
+    explicit CellmlAnnotationViewMetadataNormalViewDetailsWidget(CellmlAnnotationViewEditingWidget *pParent);
     ~CellmlAnnotationViewMetadataNormalViewDetailsWidget();
 
     virtual void retranslateUi();

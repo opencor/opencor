@@ -55,7 +55,7 @@ namespace CellMLAnnotationView {
 
 //==============================================================================
 
-class CellmlAnnotationViewWidget;
+class CellmlAnnotationViewEditingWidget;
 
 //==============================================================================
 
@@ -124,7 +124,7 @@ class CellmlAnnotationViewCellmlListWidget : public Core::Widget
     Q_OBJECT
 
 public:
-    explicit CellmlAnnotationViewCellmlListWidget(CellmlAnnotationViewWidget *pParent);
+    explicit CellmlAnnotationViewCellmlListWidget(CellmlAnnotationViewEditingWidget *pParent);
     ~CellmlAnnotationViewCellmlListWidget();
 
     virtual void retranslateUi();
