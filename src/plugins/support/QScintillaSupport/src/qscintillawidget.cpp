@@ -103,6 +103,21 @@ QScintillaWidget::QScintillaWidget(const QString &pContents,
 
     updateColors();
 
+    // Clear some key mappings inherited from QsciScintilla
+    // Note #1: indeed, QsciScintilla handles some shortcuts (e.g. Ctrl+L),
+    //          which we don't want to see handled (e.g. Ctrl+L is used by
+    //          QsciScintilla to delete the current line while OpenCOR uses it
+    //          to (un)lock the current file), so...
+    // Note #2: even though we are clearing those key mappings, we must also
+    //          bypass QsciScintilla's handling of event() (see below). Indeed,
+    //          not to do so would mean that if, for example, the user was to
+    //          press Ctrl+L, then nothing would happen while we would have
+    //          expected the current file to be (un)locked...
+
+    SendScintilla(SCI_CLEARCMDKEY, (SCMOD_CTRL << 16)+'D');
+    SendScintilla(SCI_CLEARCMDKEY, (SCMOD_CTRL << 16)+'L');
+    SendScintilla(SCI_CLEARCMDKEY, (SCMOD_CTRL << 16)+(SCMOD_SHIFT << 16)+'L');
+
     // Empty context menu by default
 
     mContextMenu = new QMenu(this);
@@ -269,10 +284,8 @@ void QScintillaWidget::dragEnterEvent(QDragEnterEvent *pEvent)
 bool QScintillaWidget::event(QEvent *pEvent)
 {
     // Bypass QsciScintilla's handling of event()
-    // Note: indeed, QsciScintilla handles some shortcuts (e.g. Ctrl+L), which
-    //       we don't want it to handle (e.g. Ctrl+L is used by QsciScintilla to
-    //       delete the current line while OpenCOR uses it to (un)lock the
-    //       current file), so...
+    // Note: see the note on the clearing of some key mappings in the contructor
+    //       above...
 
     return QsciScintillaBase::event(pEvent);
 }

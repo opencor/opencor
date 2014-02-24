@@ -492,11 +492,15 @@ void CorePlugin::filePermissionsChanged(const QString &pFileName)
 
 void CorePlugin::fileModified(const QString &pFileName, const bool &pModified)
 {
-    // Enable/disable our Duplicate and Locked menus, if needed
+    // Enable/disable some of our actions, if needed
 
     if (!pFileName.compare(mCentralWidget->currentFileName())) {
-        mFileDuplicateAction->setEnabled(!pModified);
-        mFileLockedAction->setEnabled(!pModified);
+        bool fileIsNew = Core::FileManager::instance()->isNew(pFileName);
+        bool fileIsNewOrModified = fileIsNew || pModified;
+
+        mFileReloadAction->setEnabled(!fileIsNew);
+        mFileDuplicateAction->setEnabled(!fileIsNewOrModified);
+        mFileLockedAction->setEnabled(!fileIsNewOrModified);
     }
 }
 

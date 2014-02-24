@@ -97,11 +97,11 @@ public:
 
     void reset(const QString &pFileName);
 
-    bool isNew(const QString &pFileName) const;
-
     int newIndex(const QString &pFileName) const;
 
+    bool isNew(const QString &pFileName) const;
     bool isModified(const QString &pFileName) const;
+    bool isNewOrModified(const QString &pFileName) const;
 
     bool isReadable(const QString &pFileName) const;
     bool isWritable(const QString &pFileName) const;

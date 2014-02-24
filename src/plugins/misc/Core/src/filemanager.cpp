@@ -206,20 +206,6 @@ void FileManager::reset(const QString &pFileName)
 
 //==============================================================================
 
-bool FileManager::isNew(const QString &pFileName) const
-{
-    // Return whether the given file, if it is being managed, is new
-
-    File *file = isManaged(nativeCanonicalFileName(pFileName));
-
-    if (file)
-        return file->isNew();
-    else
-        return false;
-}
-
-//==============================================================================
-
 int FileManager::newIndex(const QString &pFileName) const
 {
     // Return the given file's new index, if it is being managed
@@ -234,6 +220,20 @@ int FileManager::newIndex(const QString &pFileName) const
 
 //==============================================================================
 
+bool FileManager::isNew(const QString &pFileName) const
+{
+    // Return whether the given file, if it is being managed, is new
+
+    File *file = isManaged(nativeCanonicalFileName(pFileName));
+
+    if (file)
+        return file->isNew();
+    else
+        return false;
+}
+
+//==============================================================================
+
 bool FileManager::isModified(const QString &pFileName) const
 {
     // Return whether the given file, if it is being managed, has been modified
@@ -244,6 +244,15 @@ bool FileManager::isModified(const QString &pFileName) const
         return file->isModified();
     else
         return false;
+}
+
+//==============================================================================
+
+bool FileManager::isNewOrModified(const QString &pFileName) const
+{
+    // Return whether the given file is new or modified
+
+    return isNew(pFileName) || isModified(pFileName);
 }
 
 //==============================================================================

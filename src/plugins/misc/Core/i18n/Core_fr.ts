@@ -36,8 +36,16 @@
         <translation>Désolé, mais &lt;strong&gt;%1&lt;/strong&gt; n&apos;a pas pu être sauvegardé.</translation>
     </message>
     <message>
+        <source>&lt;strong&gt;%1&lt;/strong&gt; is new. Do you want to save it before closing it?</source>
+        <translation>&lt;strong&gt;%1&lt;/strong&gt; est nouveau. Voulez-vous le sauvegarder avant de le fermer ?</translation>
+    </message>
+    <message>
         <source>&lt;strong&gt;%1&lt;/strong&gt; has been modified. Do you want to save it before closing it?</source>
         <translation>&lt;strong&gt;%1&lt;/strong&gt; a été modifié. Voulez-vous le sauvegarder avant de le fermer ?</translation>
+    </message>
+    <message>
+        <source>The file is new, so switching views is not possible for now</source>
+        <translation>Le fichier est nouveau, il n&apos;est donc pas possible de changer de vue pour le moment</translation>
     </message>
     <message>
         <source>The file is being edited, so switching views is not possible for now</source>

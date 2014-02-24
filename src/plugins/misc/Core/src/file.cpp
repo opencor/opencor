@@ -176,7 +176,7 @@ bool File::isModified() const
 {
     // Return whether the file has been modified
 
-    return isNew() || mModified;
+    return mModified;
 }
 
 //==============================================================================

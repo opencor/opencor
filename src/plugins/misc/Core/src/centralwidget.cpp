@@ -530,7 +530,7 @@ void CentralWidget::updateFileTab(const int &pIndex)
                           tr("File")+" #"+QString::number(fileManagerInstance->newIndex(fileName)):
                           QFileInfo(fileName).fileName();
 
-    mFileTabs->setTabText(pIndex, tabText+(fileManagerInstance->isModified(fileName)?"*":QString()));
+    mFileTabs->setTabText(pIndex, tabText+(fileManagerInstance->isNewOrModified(fileName)?"*":QString()));
     mFileTabs->setTabToolTip(pIndex, fileIsNew?tabText:fileName);
     mFileTabs->setTabIcon(pIndex, fileManagerInstance->isLocked(fileName)?
                                       QIcon(":/oxygen/status/object-locked.png"):
@@ -752,9 +752,9 @@ bool CentralWidget::saveFile(const int &pIndex, const bool &pNeedNewFileName)
     // Try to save the file in case it has been modified or it needs a new file
     // name (either as a result of a save as or because the file was new)
 
-    bool fileModified = fileManagerInstance->isModified(oldFileName);
+    bool fileIsModified = fileManagerInstance->isModified(oldFileName);
 
-    if (fileModified || hasNewFileName) {
+    if (fileIsModified || hasNewFileName) {
         // Inactivate our file manager so that it doesn't check for changes in
         // files
         // Note: indeed, otherwise we will get told that the current file has
@@ -762,7 +762,7 @@ bool CentralWidget::saveFile(const int &pIndex, const bool &pNeedNewFileName)
 
         fileManagerInstance->setActive(false);
 
-        if (fileModified) {
+        if (fileIsModified) {
             // The file has been modified, so ask the current view to save it
 
             bool fileSaved = guiInterface->saveFile(oldFileName, newFileName);
@@ -900,12 +900,14 @@ bool CentralWidget::canCloseFile(const int &pIndex)
     FileManager *fileManagerInstance = FileManager::instance();
     QString fileName = mFileNames[pIndex];
 
-    if (fileManagerInstance->isModified(fileName))
+    if (fileManagerInstance->isNewOrModified(fileName))
         // The current file is modified, so ask the user whether to save it or
         // ignore it
 
         switch (QMessageBox::question(mMainWindow, qApp->applicationName(),
-                                      tr("<strong>%1</strong> has been modified. Do you want to save it before closing it?").arg(fileManagerInstance->isNew(fileName)?mFileTabs->tabToolTip(pIndex):fileName),
+                                      fileManagerInstance->isNew(fileName)?
+                                          tr("<strong>%1</strong> is new. Do you want to save it before closing it?").arg(mFileTabs->tabToolTip(pIndex)):
+                                          tr("<strong>%1</strong> has been modified. Do you want to save it before closing it?").arg(fileName),
                                       QMessageBox::Yes|QMessageBox::No|QMessageBox::Cancel,
                                       QMessageBox::Yes)) {
         case QMessageBox::Yes:
@@ -1530,13 +1532,13 @@ void CentralWidget::updateModifiedSettings()
     // Update all our file tabs and determine the number of modified files
 
     FileManager *fileManagerInstance = FileManager::instance();
-    int nbOfModifiedFiles = 0;
+    int nbOfNewOrModifiedFiles = 0;
 
     for (int i = 0, iMax = mFileTabs->count(); i < iMax; ++i) {
         updateFileTab(i);
 
-        if (fileManagerInstance->isModified(mFileNames[i]))
-            ++nbOfModifiedFiles;
+        if (fileManagerInstance->isNewOrModified(mFileNames[i]))
+            ++nbOfNewOrModifiedFiles;
     }
 
     // Reset the enabled state and tool tip of all View tabs
@@ -1562,19 +1564,22 @@ void CentralWidget::updateModifiedSettings()
         views = mModes.value(GuiViewSettings::Analysis)->views();
 
 
-    bool fileIsModified = mFileTabs->count()?
-                              fileManagerInstance->isModified(mFileNames[mFileTabs->currentIndex()]):
-                              false;
+    QString fileName = mFileTabs->count()?
+                           mFileNames[mFileTabs->currentIndex()]:
+                           QString();
+    bool fileIsNewOrModified = fileManagerInstance->isNewOrModified(fileName);
 
-    if (fileIsModified) {
+    if (fileIsNewOrModified) {
         views->setEnabled(false);
-        views->setToolTip(tr("The file is being edited, so switching views is not possible for now"));
+        views->setToolTip(fileManagerInstance->isNew(fileName)?
+                              tr("The file is new, so switching views is not possible for now"):
+                              tr("The file is being edited, so switching views is not possible for now"));
     }
 
     // Let people know whether we can save the current file and/or all files
 
-    emit canSave(fileIsModified);
-    emit canSaveAll(nbOfModifiedFiles);
+    emit canSave(fileIsNewOrModified);
+    emit canSaveAll(nbOfNewOrModifiedFiles);
 }
 
 //==============================================================================
