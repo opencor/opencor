@@ -78,9 +78,6 @@ private:
 
     bool mCanSelectAll;
 
-    void constructor(const QString &pContents = QString(),
-                     const bool &pReadOnly = false,
-                     QsciLexer *pLexer = 0);
 
     void updateColors();
 
