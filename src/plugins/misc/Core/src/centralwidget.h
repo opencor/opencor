@@ -163,6 +163,8 @@ private:
 
     QMap<GuiViewSettings::Mode, CentralWidgetMode *> mModes;
 
+    QList<QWidget *> mStatusBarWidgets;
+
     Plugin * viewPlugin(const int &pIndex) const;
     Plugin * viewPlugin(const QString &pFileName) const;
 
@@ -233,6 +235,8 @@ private Q_SLOTS:
     void updateFileTabIcon(const QString &pViewName, const QString &pFileName,
                            const QIcon &pIcon);
     void updateFileTabIcons();
+
+    void updateStatusBar(QList<QWidget *> pWidgets);
 };
 
 //==============================================================================

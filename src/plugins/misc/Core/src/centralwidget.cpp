@@ -42,6 +42,7 @@ specific language governing permissions and limitations under the License.
 #include <QMimeData>
 #include <QSettings>
 #include <QStackedWidget>
+#include <QStatusBar>
 #include <QUrl>
 
 //==============================================================================
@@ -130,7 +131,8 @@ CentralWidget::CentralWidget(QMainWindow *pMainWindow) :
     mModeIndexes(QMap<QString, int>()),
     mViewIndexes(QMap<QString, int>()),
     mSupportedFileTypes(FileTypes()),
-    mFileNames(QStringList())
+    mFileNames(QStringList()),
+    mStatusBarWidgets(QList<QWidget *>())
 {
     // Set up the GUI
 
@@ -1347,20 +1349,23 @@ void CentralWidget::updateGui()
         newView = guiInterface?guiInterface->viewWidget(fileName):0;
 
         if (newView) {
-            // We have a view for the current file, so create a connection
-            // (should it be be of the right type) to keep track of any request
-            // for a change in its corresponding file tab icon
-            // Note: we pass Qt::UniqueConnection in our call to connect() to
-            //       ensure that we don't have several identical connections
+            // We have a view for the current file, so create some connections
+            // for it, should it be be of the right type
+            // Note: we pass Qt::UniqueConnection in all our calls to connect()
+            //       to ensure that we don't have several identical connections
             //       (something that might happen if we were to switch views and
             //       back)...
 
             ViewWidget *newViewWidget = dynamic_cast<ViewWidget *>(newView);
 
-            if (newViewWidget)
+            if (newViewWidget) {
                 connect(newViewWidget, SIGNAL(updateFileTabIcon(const QString &, const QString &, const QIcon &)),
                         this, SLOT(updateFileTabIcon(const QString &, const QString &, const QIcon &)),
                         Qt::UniqueConnection);
+                connect(newViewWidget, SIGNAL(updateStatusBar(QList<QWidget *>)),
+                        this, SLOT(updateStatusBar(QList<QWidget *>)),
+                        Qt::UniqueConnection);
+            }
         } else {
             // The interface doesn't have a view for the current file, so use
             // our no-view widget instead and update its message
@@ -1724,6 +1729,24 @@ void CentralWidget::updateFileTabIcons()
             updateFileTab(i);
         else
             mFileTabs->setTabIcon(i, tabIcon);
+    }
+}
+
+//==============================================================================
+
+void CentralWidget::updateStatusBar(QList<QWidget *> pWidgets)
+{
+    // Remove (hide) all existing status bar widgets
+
+    foreach (QWidget *statusBarWidget, mStatusBarWidgets)
+        mMainWindow->statusBar()->removeWidget(statusBarWidget);
+
+    // Add and show the given status bar widgets
+
+    foreach (QWidget *widget, pWidgets) {
+        mMainWindow->statusBar()->addWidget(widget);
+
+        widget->show();
     }
 }
 

@@ -44,6 +44,7 @@ public:
 Q_SIGNALS:
     void updateFileTabIcon(const QString &pViewName, const QString &pFileName,
                            const QIcon &pIcon);
+    void updateStatusBar(QList<QWidget *> pWidgets);
 };
 
 //==============================================================================
