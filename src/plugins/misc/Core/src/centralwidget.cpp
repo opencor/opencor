@@ -131,8 +131,7 @@ CentralWidget::CentralWidget(QMainWindow *pMainWindow) :
     mModeIndexes(QMap<QString, int>()),
     mViewIndexes(QMap<QString, int>()),
     mSupportedFileTypes(FileTypes()),
-    mFileNames(QStringList()),
-    mStatusBarWidgets(QSet<QWidget *>())
+    mFileNames(QStringList())
 {
     // Set up the GUI
 
@@ -1740,20 +1739,21 @@ void CentralWidget::updateStatusBarWidgets(QList<QWidget *> pWidgets)
 {
     // Remove (hide) our existing status bar widgets
 
-    foreach (QWidget *statusBarWidget, mStatusBarWidgets)
+    static QList<QWidget *> statusBarWidgets = QList<QWidget *>();
+
+    foreach (QWidget *statusBarWidget, statusBarWidgets)
         mMainWindow->statusBar()->removeWidget(statusBarWidget);
 
-    // Add and show the given status bar widgets
+    // Add and show the given status bar widgets, and keep track of them
+
+    statusBarWidgets.clear();
 
     foreach (QWidget *widget, pWidgets) {
         mMainWindow->statusBar()->addWidget(widget);
 
         widget->show();
 
-        mStatusBarWidgets << widget;
-        // Note: mStatusBarWidgets is a QSet (as opposed to a QList), so it
-        //       cannot have duplicates, hence we don't need to check whether
-        //       widget is already in mStatusBarWidgets...
+        statusBarWidgets << widget;
     }
 }
 

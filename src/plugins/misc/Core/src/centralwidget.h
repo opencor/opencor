@@ -32,7 +32,6 @@ specific language governing permissions and limitations under the License.
 
 #include <QDir>
 #include <QMap>
-#include <QSet>
 #include <QTabBar>
 
 //==============================================================================
@@ -163,8 +162,6 @@ private:
     UserMessageWidget *mNoViewMsg;
 
     QMap<GuiViewSettings::Mode, CentralWidgetMode *> mModes;
-
-    QSet<QWidget *> mStatusBarWidgets;
 
     Plugin * viewPlugin(const int &pIndex) const;
     Plugin * viewPlugin(const QString &pFileName) const;
