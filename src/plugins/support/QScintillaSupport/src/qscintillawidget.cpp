@@ -26,6 +26,7 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include <QDragEnterEvent>
+#include <QLabel>
 #include <QMenu>
 #include <QMimeData>
 
@@ -43,7 +44,11 @@ namespace QScintillaSupport {
 QScintillaWidget::QScintillaWidget(const QString &pContents,
                                    const bool &pReadOnly,
                                    QsciLexer *pLexer, QWidget *pParent) :
-    QsciScintilla(pParent)
+    QsciScintilla(pParent),
+    mCanUndo(false),
+    mCanRedo(false),
+    mCanSelectAll(false),
+    mOverwriteMode(false)
 {
     // Remove the frame around our Scintilla editor
 
@@ -102,14 +107,15 @@ QScintillaWidget::QScintillaWidget(const QString &pContents,
 
     mContextMenu = new QMenu(this);
 
-    // Can't undo/redo by default
+    // Create our two labels to show our cursor position and editing mode
 
-    mCanUndo = false;
-    mCanRedo = false;
+    mCursorPositionWidget = new QLabel(this);
+    mEditingModeWidget = new QLabel(this);
 
-    // Can't select all the text by default
+    // Keep track of the change to the UI
 
-    mCanSelectAll = false;
+    connect(this, SIGNAL(SCN_UPDATEUI(int)),
+            this, SLOT(updateUi()));
 
     // Keep track of changes to our editor that may affect our ability to select
     // all of its text
@@ -121,6 +127,11 @@ QScintillaWidget::QScintillaWidget(const QString &pContents,
             this, SLOT(checkCanSelectAll()));
     connect(this, SIGNAL(SCN_MODIFIED(int, int, const char *, int, int, int, int, int, int, int)),
             this, SLOT(checkCanSelectAll()));
+
+    // Keep track of the change in the cursor position
+
+    connect(this, SIGNAL(cursorPositionChanged(int, int)),
+            this, SLOT(cursorPositionChanged(const int &, const int &)));
 }
 
 //==============================================================================
@@ -190,6 +201,24 @@ void QScintillaWidget::resetUndoHistory()
 
     mCanUndo = false;
     mCanRedo = false;
+}
+
+//==============================================================================
+
+QLabel * QScintillaWidget::cursorPositionWidget() const
+{
+    // Return our cursort position widget
+
+    return mCursorPositionWidget;
+}
+
+//==============================================================================
+
+QLabel * QScintillaWidget::editingModeWidget() const
+{
+    // Return our editing mode widget
+
+    return mEditingModeWidget;
 }
 
 //==============================================================================
@@ -306,6 +335,22 @@ void QScintillaWidget::wheelEvent(QWheelEvent *pEvent)
 
 //==============================================================================
 
+void QScintillaWidget::updateUi()
+{
+    // Update our editing mode, if needed
+
+    bool newOverwriteMode = overwriteMode();
+
+    if (   (newOverwriteMode != mOverwriteMode)
+        || mEditingModeWidget->text().isEmpty()) {
+        mOverwriteMode = newOverwriteMode;
+
+        mEditingModeWidget->setText(mOverwriteMode?"OVR":"INS");
+    }
+}
+
+//==============================================================================
+
 void QScintillaWidget::checkCanSelectAll()
 {
     // Check whether we can select all the text
@@ -340,6 +385,17 @@ void QScintillaWidget::updateColors()
     }
 
     setCaretLineBackgroundColor(qRgba(r*255, g*255, b*255, caretLineBackgroundColor.alpha()));
+}
+
+//==============================================================================
+
+void QScintillaWidget::cursorPositionChanged(const int &pLine,
+                                             const int &pColumn)
+{
+    // Update our cursor position
+
+    mCursorPositionWidget->setText(QString("Line: %1, Col: %2").arg(QString::number(pLine+1),
+                                                                    QString::number(pColumn+1)));
 }
 
 //==============================================================================

@@ -132,7 +132,7 @@ CentralWidget::CentralWidget(QMainWindow *pMainWindow) :
     mViewIndexes(QMap<QString, int>()),
     mSupportedFileTypes(FileTypes()),
     mFileNames(QStringList()),
-    mStatusBarWidgets(QList<QWidget *>())
+    mStatusBarWidgets(QSet<QWidget *>())
 {
     // Set up the GUI
 
@@ -1349,8 +1349,9 @@ void CentralWidget::updateGui()
         newView = guiInterface?guiInterface->viewWidget(fileName):0;
 
         if (newView) {
-            // We have a view for the current file, so create some connections
-            // for it, should it be be of the right type
+            // We have a view for the current file, so update our status bar
+            // widgets, and also create a connection for it, should it be be of
+            // the right type
             // Note: we pass Qt::UniqueConnection in all our calls to connect()
             //       to ensure that we don't have several identical connections
             //       (something that might happen if we were to switch views and
@@ -1362,9 +1363,10 @@ void CentralWidget::updateGui()
                 connect(newViewWidget, SIGNAL(updateFileTabIcon(const QString &, const QString &, const QIcon &)),
                         this, SLOT(updateFileTabIcon(const QString &, const QString &, const QIcon &)),
                         Qt::UniqueConnection);
-                connect(newViewWidget, SIGNAL(updateStatusBar(QList<QWidget *>)),
-                        this, SLOT(updateStatusBar(QList<QWidget *>)),
-                        Qt::UniqueConnection);
+
+                updateStatusBarWidgets(newViewWidget->statusBarWidgets());
+            } else {
+                updateStatusBarWidgets(QList<QWidget *>());
             }
         } else {
             // The interface doesn't have a view for the current file, so use
@@ -1734,9 +1736,9 @@ void CentralWidget::updateFileTabIcons()
 
 //==============================================================================
 
-void CentralWidget::updateStatusBar(QList<QWidget *> pWidgets)
+void CentralWidget::updateStatusBarWidgets(QList<QWidget *> pWidgets)
 {
-    // Remove (hide) all existing status bar widgets
+    // Remove (hide) our existing status bar widgets
 
     foreach (QWidget *statusBarWidget, mStatusBarWidgets)
         mMainWindow->statusBar()->removeWidget(statusBarWidget);
@@ -1747,6 +1749,11 @@ void CentralWidget::updateStatusBar(QList<QWidget *> pWidgets)
         mMainWindow->statusBar()->addWidget(widget);
 
         widget->show();
+
+        mStatusBarWidgets << widget;
+        // Note: mStatusBarWidgets is a QSet (as opposed to a QList), so it
+        //       cannot have duplicates, hence we don't need to check whether
+        //       widget is already in mStatusBarWidgets...
     }
 }
 

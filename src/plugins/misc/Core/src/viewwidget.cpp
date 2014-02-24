@@ -35,6 +35,15 @@ ViewWidget::ViewWidget(QWidget *pParent) :
 
 //==============================================================================
 
+QList<QWidget *> ViewWidget::statusBarWidgets() const
+{
+    // No status bar widgets by default
+
+    return QList<QWidget *>();
+}
+
+//==============================================================================
+
 }   // namespace Core
 }   // namespace OpenCOR
 

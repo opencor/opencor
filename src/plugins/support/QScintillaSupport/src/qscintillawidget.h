@@ -36,6 +36,10 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+class QLabel;
+
+//==============================================================================
+
 namespace OpenCOR {
 namespace QScintillaSupport {
 
@@ -60,6 +64,9 @@ public:
 
     void resetUndoHistory();
 
+    QLabel * cursorPositionWidget() const;
+    QLabel * editingModeWidget() const;
+
 protected:
     virtual void changeEvent(QEvent *pEvent);
     virtual void contextMenuEvent(QContextMenuEvent *pEvent);
@@ -78,6 +85,10 @@ private:
 
     bool mCanSelectAll;
 
+    bool mOverwriteMode;
+
+    QLabel *mCursorPositionWidget;
+    QLabel *mEditingModeWidget;
 
     void updateColors();
 
@@ -88,7 +99,11 @@ Q_SIGNALS:
     void canSelectAll(const bool &pCanSelectAll);
 
 private Q_SLOTS:
+    void updateUi();
+
     void checkCanSelectAll();
+
+    void cursorPositionChanged(const int &pLine, const int &pColumn);
 };
 
 //==============================================================================

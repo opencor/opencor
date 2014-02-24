@@ -32,6 +32,7 @@ specific language governing permissions and limitations under the License.
 
 #include <QDir>
 #include <QMap>
+#include <QSet>
 #include <QTabBar>
 
 //==============================================================================
@@ -163,7 +164,7 @@ private:
 
     QMap<GuiViewSettings::Mode, CentralWidgetMode *> mModes;
 
-    QList<QWidget *> mStatusBarWidgets;
+    QSet<QWidget *> mStatusBarWidgets;
 
     Plugin * viewPlugin(const int &pIndex) const;
     Plugin * viewPlugin(const QString &pFileName) const;
@@ -182,6 +183,8 @@ private:
     bool canCloseFile(const int &pIndex);
 
     void updateFileTab(const int &pIndex);
+
+    void updateStatusBarWidgets(QList<QWidget *> pWidgets);
 
 Q_SIGNALS:
     void guiUpdated(Plugin *pViewPlugin, const QString &pFileName);
@@ -235,8 +238,6 @@ private Q_SLOTS:
     void updateFileTabIcon(const QString &pViewName, const QString &pFileName,
                            const QIcon &pIcon);
     void updateFileTabIcons();
-
-    void updateStatusBar(QList<QWidget *> pWidgets);
 };
 
 //==============================================================================

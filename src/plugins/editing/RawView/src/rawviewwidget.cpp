@@ -30,6 +30,7 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#include <QLabel>
 #include <QLayout>
 #include <QSettings>
 
@@ -207,6 +208,19 @@ QScintillaSupport::QScintillaWidget * RawViewWidget::editor(const QString &pFile
     // Return the requested editor
 
     return mEditors.value(pFileName);
+}
+
+//==============================================================================
+
+QList<QWidget *> RawViewWidget::statusBarWidgets() const
+{
+    // Return our status bar widgets
+
+    if (mEditor)
+        return QList<QWidget *>() << mEditor->cursorPositionWidget()
+                                  << mEditor->editingModeWidget();
+    else
+        return QList<QWidget *>();
 }
 
 //==============================================================================
