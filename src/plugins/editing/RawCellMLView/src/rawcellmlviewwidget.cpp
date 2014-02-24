@@ -32,6 +32,7 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include <QDesktopWidget>
+#include <QLabel>
 #include <QLayout>
 #include <QSettings>
 #include <QVariant>
@@ -241,6 +242,19 @@ QScintillaSupport::QScintillaWidget * RawCellmlViewWidget::editor(const QString 
     CoreCellMLEditing::CoreCellmlEditingWidget *editingWidget = mEditingWidgets.value(pFileName);
 
     return editingWidget?editingWidget->editor():0;
+}
+
+//==============================================================================
+
+QList<QWidget *> RawCellmlViewWidget::statusBarWidgets() const
+{
+    // Return our status bar widgets
+
+    if (mEditingWidget)
+        return QList<QWidget *>() << mEditingWidget->editor()->cursorPositionWidget()
+                                  << mEditingWidget->editor()->editingModeWidget();
+    else
+        return QList<QWidget *>();
 }
 
 //==============================================================================

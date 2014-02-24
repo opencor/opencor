@@ -79,6 +79,8 @@ public:
 
     QScintillaSupport::QScintillaWidget * editor(const QString &pFileName) const;
 
+    virtual QList<QWidget *> statusBarWidgets() const;
+
 private:
     Ui::PrettyCellmlViewWidget *mGui;
 
