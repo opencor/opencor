@@ -92,8 +92,6 @@ Q_SIGNALS:
 
 private Q_SLOTS:
     void checkCanSelectAll();
-
-    void cursorPositionChanged(const int &pLine, const int &pColumn);
 };
 
 //==============================================================================
