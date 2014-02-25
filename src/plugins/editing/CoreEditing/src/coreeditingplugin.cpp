@@ -613,11 +613,9 @@ void CoreEditingPlugin::doUndo()
 {
     // Undo the last action and update our undo/redo actions
 
-    if (mEditingInterface && mEditor) {
-        mEditor->undo();
+    mEditor->undo();
 
-        updateUndoRedoActions();
-    }
+    updateUndoRedoActions();
 }
 
 //==============================================================================
@@ -626,11 +624,9 @@ void CoreEditingPlugin::doRedo()
 {
     // Redo the last action and update our undo/redo actions
 
-    if (mEditingInterface && mEditor) {
-        mEditor->redo();
+    mEditor->redo();
 
-        updateUndoRedoActions();
-    }
+    updateUndoRedoActions();
 }
 
 //==============================================================================
@@ -639,11 +635,9 @@ void CoreEditingPlugin::doCut()
 {
     // Cut the text and update our undo/redo actions
 
-    if (mEditingInterface && mEditor) {
-        mEditor->cut();
+    mEditor->cut();
 
-        updateUndoRedoActions();
-    }
+    updateUndoRedoActions();
 }
 
 //==============================================================================
@@ -652,11 +646,9 @@ void CoreEditingPlugin::doPaste()
 {
     // Paste the text and update our undo/redo actions
 
-    if (mEditingInterface && mEditor) {
-        mEditor->paste();
+    mEditor->paste();
 
-        updateUndoRedoActions();
-    }
+    updateUndoRedoActions();
 }
 
 //==============================================================================
@@ -665,11 +657,9 @@ void CoreEditingPlugin::doDelete()
 {
     // Delete the text and update our undo/redo actions
 
-    if (mEditingInterface && mEditor) {
-        mEditor->SendScintilla(QsciScintillaBase::SCI_CLEAR);
+    mEditor->SendScintilla(QsciScintillaBase::SCI_CLEAR);
 
-        updateUndoRedoActions();
-    }
+    updateUndoRedoActions();
 }
 
 //==============================================================================
@@ -678,11 +668,9 @@ void CoreEditingPlugin::doSelectAll()
 {
     // Select all the text and update our select all action
 
-    if (mEditingInterface && mEditor) {
-        mEditor->selectAll();
+    mEditor->selectAll();
 
-        updateSelectAllAction();
-    }
+    updateSelectAllAction();
 }
 
 //==============================================================================
@@ -692,12 +680,10 @@ void CoreEditingPlugin::updateEditorBackground()
     // Update the current editor's background, based on whether the current file
     // is locked
 
-    if (mEditingInterface && mEditor) {
-        QColor backgroundColor = Core::FileManager::instance()->isReadableAndWritable(mFileName)?Core::baseColor():Core::lockedColor(Core::baseColor());
+    QColor backgroundColor = Core::FileManager::instance()->isReadableAndWritable(mFileName)?Core::baseColor():Core::lockedColor(Core::baseColor());
 
-        for (int i = 0; i < QsciScintillaBase::STYLE_MAX; ++i)
-            mEditor->SendScintilla(QsciScintillaBase::SCI_STYLESETBACK, i, backgroundColor);
-    }
+    for (int i = 0; i < QsciScintillaBase::STYLE_MAX; ++i)
+        mEditor->SendScintilla(QsciScintillaBase::SCI_STYLESETBACK, i, backgroundColor);
 }
 
 //==============================================================================
