@@ -167,7 +167,7 @@ mGui->actionPreferences->setVisible(false);
 
 #if defined(Q_OS_WIN) || defined(Q_OS_LINUX)
     // Note: normally, we would be using QKeySequence::Quit, but we want to
-    //       support both Alt+F4 and Ctrl+Q on Windows and Linux while it the
+    //       support both Alt+F4 and Ctrl+Q on Windows and Linux, and the
     //       default key sequence doesn't, so...
 
     mGui->actionQuit->setShortcuts(QList<QKeySequence>()
