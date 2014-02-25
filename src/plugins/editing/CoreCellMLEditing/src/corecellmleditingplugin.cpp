@@ -146,7 +146,7 @@ void CoreCellMLEditingPlugin::updateGui(Plugin *pViewPlugin,
     // Show/enable or hide/disable various actions, depending on whether the
     // view plugin handles the CellML editing interface
 
-    CellmlEditingInterface *cellmlEditingInterface = qobject_cast<CellmlEditingInterface *>(pViewPlugin->instance());
+    CellmlEditingInterface *cellmlEditingInterface = pViewPlugin?qobject_cast<CellmlEditingInterface *>(pViewPlugin->instance()):0;
 
     Core::showEnableAction(mFileNewCellml1_0FileAction, cellmlEditingInterface);
     Core::showEnableAction(mFileNewCellml1_1FileAction, cellmlEditingInterface);

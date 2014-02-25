@@ -1329,11 +1329,6 @@ void MainWindow::showEnableActions(const QList<QAction *> &pActions)
 
 void MainWindow::updateGui(Plugin *pViewPlugin, const QString &pFileName)
 {
-    // Make sure that we have a view plugin
-
-    if (!pViewPlugin)
-        return;
-
     // We come here as a result of our central widget having updated its GUI,
     // meaning that a new view or file has been selected, so we may need to
     // enable/disable and/or show/hide some menus/actions/etc.
@@ -1361,7 +1356,7 @@ void MainWindow::updateGui(Plugin *pViewPlugin, const QString &pFileName)
         // Ask our new view plugin to initialise its view
         // Note: see its GuiInterface::finalizeView() counterpart above...
 
-        GuiInterface *guiInterface = qobject_cast<GuiInterface *>(mViewPlugin->instance());
+        GuiInterface *guiInterface = mViewPlugin?qobject_cast<GuiInterface *>(mViewPlugin->instance()):0;
 
         if (guiInterface)
             guiInterface->initializeView();
@@ -1392,7 +1387,7 @@ void MainWindow::updateGui(Plugin *pViewPlugin, const QString &pFileName)
         GuiInterface *guiInterface = qobject_cast<GuiInterface *>(plugin->instance());
 
         if (guiInterface)
-            guiInterface->updateGui(pViewPlugin, pFileName);
+            guiInterface->updateGui(mViewPlugin, pFileName);
     }
 
     // Go through our different menus and show/hide them, depending on whether

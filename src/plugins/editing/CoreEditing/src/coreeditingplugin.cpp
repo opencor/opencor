@@ -219,7 +219,7 @@ void CoreEditingPlugin::updateGui(Plugin *pViewPlugin, const QString &pFileName)
     // Show/enable or hide/disable various actions, depending on whether the
     // view plugin handles the editing interface
 
-    mEditingInterface = qobject_cast<EditingInterface *>(pViewPlugin->instance());
+    mEditingInterface = pViewPlugin?qobject_cast<EditingInterface *>(pViewPlugin->instance()):0;
 
     Core::showEnableAction(mFileNewFileAction, mEditingInterface);
 
