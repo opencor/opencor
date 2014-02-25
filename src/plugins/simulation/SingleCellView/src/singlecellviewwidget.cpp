@@ -55,6 +55,7 @@ specific language governing permissions and limitations under the License.
 #include <QLabel>
 #include <QMenu>
 #include <QMessageBox>
+#include <QMetaType>
 #include <QPainter>
 #include <QScrollBar>
 #include <QSettings>
@@ -372,11 +373,11 @@ void SingleCellViewWidget::loadSettings(QSettings *pSettings)
 {
     // Retrieve and set the sizes of our splitter
 
-    qRegisterMetaTypeStreamOperators< QList<int> >("QList<int>");
+    qRegisterMetaTypeStreamOperators<QList<int>>("QList<int>");
 
-    QVariant defaultSizes = QVariant::fromValue< QList<int> >(QList<int>());
+    QVariant defaultSizes = QVariant::fromValue<QList<int>>(QList<int>());
 
-    mSplitterWidgetSizes = pSettings->value(SettingsSizes, defaultSizes).value< QList<int> >();
+    mSplitterWidgetSizes = pSettings->value(SettingsSizes, defaultSizes).value<QList<int>>();
 
     if (mSplitterWidgetSizes.count())
         mSplitterWidget->setSizes(mSplitterWidgetSizes);
@@ -394,7 +395,7 @@ void SingleCellViewWidget::saveSettings(QSettings *pSettings) const
 {
     // Keep track of our splitter sizes
 
-    pSettings->setValue(SettingsSizes, QVariant::fromValue< QList<int> >(mSplitterWidgetSizes));
+    pSettings->setValue(SettingsSizes, QVariant::fromValue<QList<int>>(mSplitterWidgetSizes));
 
     // Keep track of the settings of our contents widget
 

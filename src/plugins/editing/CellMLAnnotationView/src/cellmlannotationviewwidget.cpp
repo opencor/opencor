@@ -32,12 +32,9 @@ specific language governing permissions and limitations under the License.
 
 #include <QDesktopWidget>
 #include <QLayout>
+#include <QMetaType>
 #include <QSettings>
 #include <QVariant>
-
-//==============================================================================
-
-#include <qmetatype.h>
 
 //==============================================================================
 
@@ -85,16 +82,16 @@ void CellmlAnnotationViewWidget::loadSettings(QSettings *pSettings)
     //       some information between the different instances, so we have to do
     //       it here instead...
 
-    qRegisterMetaTypeStreamOperators< QList<int> >("QList<int>");
+    qRegisterMetaTypeStreamOperators<QList<int>>("QList<int>");
 
-    QVariant defaultEditingWidgetSizes = QVariant::fromValue< QList<int> >(QList<int>() << 0.25*qApp->desktop()->screenGeometry().width()
-                                                                                        << 0.75*qApp->desktop()->screenGeometry().width());
-    QVariant defaultMetadataDetailsWidgetSizes = QVariant::fromValue< QList<int> >(QList<int>() << 0.25*qApp->desktop()->screenGeometry().height()
-                                                                                                << 0.25*qApp->desktop()->screenGeometry().height()
-                                                                                                << 0.50*qApp->desktop()->screenGeometry().height());
+    QVariant defaultEditingWidgetSizes = QVariant::fromValue<QList<int>>(QList<int>() << 0.25*qApp->desktop()->screenGeometry().width()
+                                                                                      << 0.75*qApp->desktop()->screenGeometry().width());
+    QVariant defaultMetadataDetailsWidgetSizes = QVariant::fromValue<QList<int>>(QList<int>() << 0.25*qApp->desktop()->screenGeometry().height()
+                                                                                              << 0.25*qApp->desktop()->screenGeometry().height()
+                                                                                              << 0.50*qApp->desktop()->screenGeometry().height());
 
-    mEditingWidgetSizes = pSettings->value(SettingsCellmlAnnotationViewEditingWidgetSizes, defaultEditingWidgetSizes).value< QList<int> >();
-    mMetadataDetailsWidgetSizes = pSettings->value(SettingsCellmlAnnotationViewMetadataDetailsWidgetSizes, defaultMetadataDetailsWidgetSizes).value< QList<int> >();
+    mEditingWidgetSizes = pSettings->value(SettingsCellmlAnnotationViewEditingWidgetSizes, defaultEditingWidgetSizes).value<QList<int>>();
+    mMetadataDetailsWidgetSizes = pSettings->value(SettingsCellmlAnnotationViewMetadataDetailsWidgetSizes, defaultMetadataDetailsWidgetSizes).value<QList<int>>();
 }
 
 //==============================================================================
@@ -103,8 +100,8 @@ void CellmlAnnotationViewWidget::saveSettings(QSettings *pSettings) const
 {
     // Keep track of the sizes of our editing widget and of its metadata details
 
-    pSettings->setValue(SettingsCellmlAnnotationViewEditingWidgetSizes, QVariant::fromValue< QList<int> >(mEditingWidgetSizes));
-    pSettings->setValue(SettingsCellmlAnnotationViewMetadataDetailsWidgetSizes, QVariant::fromValue< QList<int> >(mMetadataDetailsWidgetSizes));
+    pSettings->setValue(SettingsCellmlAnnotationViewEditingWidgetSizes, QVariant::fromValue<QList<int>>(mEditingWidgetSizes));
+    pSettings->setValue(SettingsCellmlAnnotationViewMetadataDetailsWidgetSizes, QVariant::fromValue<QList<int>>(mMetadataDetailsWidgetSizes));
 }
 
 //==============================================================================

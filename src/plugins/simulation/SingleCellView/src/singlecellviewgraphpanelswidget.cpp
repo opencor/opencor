@@ -26,6 +26,7 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include <QSettings>
+#include <QMetaType>
 #include <QWheelEvent>
 
 //==============================================================================
@@ -86,11 +87,11 @@ void SingleCellViewGraphPanelsWidget::loadSettings(QSettings *pSettings)
     //       instead, we assign the value to splitterSizes, which we then use to
     //       properly initialise mSplitterSizes...
 
-    qRegisterMetaTypeStreamOperators< QList<int> >("QList<int>");
+    qRegisterMetaTypeStreamOperators<QList<int>>("QList<int>");
 
-    QVariant defaultGraphPanelSizes = QVariant::fromValue< QList<int> >(QList<int>());
+    QVariant defaultGraphPanelSizes = QVariant::fromValue<QList<int>>(QList<int>());
 
-    QList<int> splitterSizes = pSettings->value(SettingsGraphPanelSizes, defaultGraphPanelSizes).value< QList<int> >();
+    QList<int> splitterSizes = pSettings->value(SettingsGraphPanelSizes, defaultGraphPanelSizes).value<QList<int>>();
     int graphPanelsCount = splitterSizes.count();
 
     if (!graphPanelsCount)
@@ -115,7 +116,7 @@ void SingleCellViewGraphPanelsWidget::saveSettings(QSettings *pSettings) const
 {
     // Keep track of the size of each graph panel
 
-    pSettings->setValue(SettingsGraphPanelSizes, QVariant::fromValue< QList<int> >(mSplitterSizes));
+    pSettings->setValue(SettingsGraphPanelSizes, QVariant::fromValue<QList<int>>(mSplitterSizes));
 }
 
 //==============================================================================

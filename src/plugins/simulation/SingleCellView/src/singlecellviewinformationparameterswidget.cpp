@@ -29,6 +29,7 @@ specific language governing permissions and limitations under the License.
 
 #include <QHeaderView>
 #include <QMenu>
+#include <QMetaType>
 #include <QSettings>
 
 //==============================================================================
@@ -98,11 +99,11 @@ void SingleCellViewInformationParametersWidget::loadSettings(QSettings *pSetting
 {
     // Retrieve the width of each column of our property editors
 
-    qRegisterMetaTypeStreamOperators< QList<int> >("QList<int>");
+    qRegisterMetaTypeStreamOperators<QList<int>>("QList<int>");
 
-    QVariant defaultColumnWidths = QVariant::fromValue< QList<int> >(mColumnWidths);
+    QVariant defaultColumnWidths = QVariant::fromValue<QList<int>>(mColumnWidths);
 
-    mColumnWidths = pSettings->value(SettingsColumnWidths, defaultColumnWidths).value< QList<int> >();
+    mColumnWidths = pSettings->value(SettingsColumnWidths, defaultColumnWidths).value<QList<int>>();
 }
 
 //==============================================================================
@@ -111,7 +112,7 @@ void SingleCellViewInformationParametersWidget::saveSettings(QSettings *pSetting
 {
     // Keep track of the width of each column of our current property editor
 
-    pSettings->setValue(SettingsColumnWidths, QVariant::fromValue< QList<int> >(mColumnWidths));
+    pSettings->setValue(SettingsColumnWidths, QVariant::fromValue<QList<int>>(mColumnWidths));
 }
 
 //==============================================================================

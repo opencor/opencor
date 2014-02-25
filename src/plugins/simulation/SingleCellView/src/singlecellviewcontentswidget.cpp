@@ -28,6 +28,7 @@ specific language governing permissions and limitations under the License.
 
 #include <QApplication>
 #include <QDesktopWidget>
+#include <QMetaType>
 #include <QSettings>
 
 //==============================================================================
@@ -94,12 +95,12 @@ void SingleCellViewContentsWidget::loadSettings(QSettings *pSettings)
 {
     // Retrieve and set our sizes
 
-    qRegisterMetaTypeStreamOperators< QList<int> >("QList<int>");
+    qRegisterMetaTypeStreamOperators<QList<int>>("QList<int>");
 
-    QVariant defaultSizes = QVariant::fromValue< QList<int> >(QList<int>() << 0.25*qApp->desktop()->screenGeometry().width()
-                                                                           << 0.75*qApp->desktop()->screenGeometry().width());
+    QVariant defaultSizes = QVariant::fromValue<QList<int>>(QList<int>() << 0.25*qApp->desktop()->screenGeometry().width()
+                                                                         << 0.75*qApp->desktop()->screenGeometry().width());
 
-    mSplitterSizes = pSettings->value(SettingsContentsSizes, defaultSizes).value< QList<int> >();
+    mSplitterSizes = pSettings->value(SettingsContentsSizes, defaultSizes).value<QList<int>>();
 
     setSizes(mSplitterSizes);
 
@@ -120,7 +121,7 @@ void SingleCellViewContentsWidget::saveSettings(QSettings *pSettings) const
 {
     // Keep track of our sizes
 
-    pSettings->setValue(SettingsContentsSizes, QVariant::fromValue< QList<int> >(mSplitterSizes));
+    pSettings->setValue(SettingsContentsSizes, QVariant::fromValue<QList<int>>(mSplitterSizes));
 
     // Keep track of the settings of our information and graph panels widgets
 

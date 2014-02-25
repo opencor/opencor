@@ -34,12 +34,9 @@ specific language governing permissions and limitations under the License.
 #include <QDesktopWidget>
 #include <QLabel>
 #include <QLayout>
+#include <QMetaType>
 #include <QSettings>
 #include <QVariant>
-
-//==============================================================================
-
-#include <qmetatype.h>
 
 //==============================================================================
 
@@ -91,12 +88,12 @@ void PrettyCellmlViewWidget::loadSettings(QSettings *pSettings)
     //          effectively be less than 19% of the desktop's height, but that
     //          doesn't matter at all...
 
-    qRegisterMetaTypeStreamOperators< QList<int> >("QList<int>");
+    qRegisterMetaTypeStreamOperators<QList<int>>("QList<int>");
 
-    QVariant defaultEditingWidgetSizes = QVariant::fromValue< QList<int> >(QList<int>() << 0.19*qApp->desktop()->screenGeometry().height()
-                                                                                        << qApp->desktop()->screenGeometry().height());
+    QVariant defaultEditingWidgetSizes = QVariant::fromValue<QList<int>>(QList<int>() << 0.19*qApp->desktop()->screenGeometry().height()
+                                                                                      << qApp->desktop()->screenGeometry().height());
 
-    mEditingWidgetSizes = pSettings->value(SettingsEditingWidgetSizes, defaultEditingWidgetSizes).value< QList<int> >();
+    mEditingWidgetSizes = pSettings->value(SettingsEditingWidgetSizes, defaultEditingWidgetSizes).value<QList<int>>();
     mEditorZoomLevel = pSettings->value(SettingsEditorZoomLevel, 0).toInt();
 }
 
@@ -106,7 +103,7 @@ void PrettyCellmlViewWidget::saveSettings(QSettings *pSettings) const
 {
     // Keep track of the editing widget's sizes and the editor's zoom level
 
-    pSettings->setValue(SettingsEditingWidgetSizes, QVariant::fromValue< QList<int> >(mEditingWidgetSizes));
+    pSettings->setValue(SettingsEditingWidgetSizes, QVariant::fromValue<QList<int>>(mEditingWidgetSizes));
     pSettings->setValue(SettingsEditorZoomLevel, mEditorZoomLevel);
 }
 
