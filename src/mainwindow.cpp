@@ -116,11 +116,8 @@ MainWindow::MainWindow(SharedTools::QtSingleApplication *pApp) :
     //       used in, for example, the about box...
 
     mGui->setupUi(this);
-//---GRY--- BEGIN
-// THIS IS TEMPORARY, I.E. WHILE WE DON'T FULLY SUPPORT USER PREFERENCES...
-mGui->actionPreferences->setEnabled(false);
-mGui->actionPreferences->setVisible(false);
-//---GRY--- END
+//---GRY--- DISABLED UNTIL WE ACTUALLY SUPPORT USER PREFERENCES...
+Core::showEnableAction(mGui->actionPreferences, false);
 
     // Set the role of some of our menu items, so that OS X can move them into
     // the application menu
@@ -269,8 +266,7 @@ mGui->actionPreferences->setVisible(false);
     // Show/hide and enable/disable the docked widgets action depending on
     // whether there are dock widgets
 
-    mGui->actionDockedWidgets->setEnabled(dockWidgets.size());
-    mGui->actionDockedWidgets->setVisible(dockWidgets.size());
+    Core::showEnableAction(mGui->actionDockedWidgets, dockWidgets.size());
 
     // Retrieve the user settings from the previous session, if any
 

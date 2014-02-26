@@ -211,8 +211,7 @@ void CellMLToolsPlugin::updateGui(Plugin *pViewPlugin, const QString &pFileName)
     mExportToCellml11Action->setEnabled(   cellmlFile && cellmlFile->model()
                                         && QString::fromStdWString(cellmlFile->model()->cellmlVersion()).compare(CellMLSupport::Cellml_1_1));
 //---GRY--- DISABLED UNTIL WE ACTUALLY SUPPORT EXPORT TO CellML 1.1...
-mExportToCellml11Action->setEnabled(false);
-mExportToCellml11Action->setVisible(false);
+Core::showEnableAction(mExportToCellml11Action, false);
 
     // Keep track of the file name
 
