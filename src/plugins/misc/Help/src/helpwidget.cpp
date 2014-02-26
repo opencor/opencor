@@ -488,22 +488,10 @@ void HelpWidget::documentChanged()
 
     QAction *action = qobject_cast<QAction *>(sender());
 
-    if (action) {
-        // The QObject casting was successful, so we can carry on
-
-        if (action == pageAction(QWebPage::Back)) {
-            // The current action is to tell us whether the previous help
-            // document is available, so send a signal to let the user know
-            // about it
-
-            emit backEnabled(action->isEnabled());
-        } else if (action == pageAction(QWebPage::Forward)) {
-            // The current action is to tell us whether the next help document
-            // is available, so send a signal to let the user know about it
-
-            emit forwardEnabled(action->isEnabled());
-        }
-    }
+    if (action == pageAction(QWebPage::Back))
+        emit backEnabled(action->isEnabled());
+    else if (action == pageAction(QWebPage::Forward))
+        emit forwardEnabled(action->isEnabled());
 }
 
 //==============================================================================

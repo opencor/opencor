@@ -24,7 +24,6 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-#include <QAction>
 #include <QMainWindow>
 
 //==============================================================================
@@ -72,6 +71,7 @@ void HelpPlugin::initialize()
 
 void HelpPlugin::finalize()
 {
+    // We don't handle this interface...
 }
 
 //==============================================================================
