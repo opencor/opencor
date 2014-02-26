@@ -49,6 +49,30 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+QIntList qVariantListToIntList(const QVariantList &pVariantList)
+{
+    QIntList res = QIntList();
+
+    foreach (const QVariant &variant, pVariantList)
+        res << variant.toInt();
+
+    return res;
+}
+
+//==============================================================================
+
+QVariantList qIntListToVariantList(const QIntList &pIntList)
+{
+    QVariantList res = QVariantList();
+
+    foreach (const int &nb, pIntList)
+        res << nb;
+
+    return res;
+}
+
+//==============================================================================
+
 namespace OpenCOR {
 namespace Core {
 

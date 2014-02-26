@@ -50,8 +50,8 @@ CellmlAnnotationViewWidget::CellmlAnnotationViewWidget(CellMLAnnotationViewPlugi
     mPluginParent(pPluginParent),
     mEditingWidget(0),
     mEditingWidgets(QMap<QString, CellmlAnnotationViewEditingWidget *>()),
-    mEditingWidgetSizes(QList<int>()),
-    mMetadataDetailsWidgetSizes(QList<int>())
+    mEditingWidgetSizes(QIntList()),
+    mMetadataDetailsWidgetSizes(QIntList())
 {
     // Set up the GUI
 
@@ -82,16 +82,14 @@ void CellmlAnnotationViewWidget::loadSettings(QSettings *pSettings)
     //       some information between the different instances, so we have to do
     //       it here instead...
 
-    qRegisterMetaTypeStreamOperators<QList<int>>("QList<int>");
+    QVariantList defaultEditingWidgetSizes = QVariantList() << 0.25*qApp->desktop()->screenGeometry().width()
+                                                            << 0.75*qApp->desktop()->screenGeometry().width();
+    QVariantList defaultMetadataDetailsWidgetSizes = QVariantList() << 0.25*qApp->desktop()->screenGeometry().height()
+                                                                    << 0.25*qApp->desktop()->screenGeometry().height()
+                                                                    << 0.50*qApp->desktop()->screenGeometry().height();
 
-    QVariant defaultEditingWidgetSizes = QVariant::fromValue<QList<int>>(QList<int>() << 0.25*qApp->desktop()->screenGeometry().width()
-                                                                                      << 0.75*qApp->desktop()->screenGeometry().width());
-    QVariant defaultMetadataDetailsWidgetSizes = QVariant::fromValue<QList<int>>(QList<int>() << 0.25*qApp->desktop()->screenGeometry().height()
-                                                                                              << 0.25*qApp->desktop()->screenGeometry().height()
-                                                                                              << 0.50*qApp->desktop()->screenGeometry().height());
-
-    mEditingWidgetSizes = pSettings->value(SettingsCellmlAnnotationViewEditingWidgetSizes, defaultEditingWidgetSizes).value<QList<int>>();
-    mMetadataDetailsWidgetSizes = pSettings->value(SettingsCellmlAnnotationViewMetadataDetailsWidgetSizes, defaultMetadataDetailsWidgetSizes).value<QList<int>>();
+    mEditingWidgetSizes = qVariantListToIntList(pSettings->value(SettingsCellmlAnnotationViewEditingWidgetSizes, defaultEditingWidgetSizes).toList());
+    mMetadataDetailsWidgetSizes = qVariantListToIntList(pSettings->value(SettingsCellmlAnnotationViewMetadataDetailsWidgetSizes, defaultMetadataDetailsWidgetSizes).toList());
 }
 
 //==============================================================================
@@ -100,8 +98,8 @@ void CellmlAnnotationViewWidget::saveSettings(QSettings *pSettings) const
 {
     // Keep track of the sizes of our editing widget and of its metadata details
 
-    pSettings->setValue(SettingsCellmlAnnotationViewEditingWidgetSizes, QVariant::fromValue<QList<int>>(mEditingWidgetSizes));
-    pSettings->setValue(SettingsCellmlAnnotationViewMetadataDetailsWidgetSizes, QVariant::fromValue<QList<int>>(mMetadataDetailsWidgetSizes));
+    pSettings->setValue(SettingsCellmlAnnotationViewEditingWidgetSizes, qIntListToVariantList(mEditingWidgetSizes));
+    pSettings->setValue(SettingsCellmlAnnotationViewMetadataDetailsWidgetSizes, qIntListToVariantList(mMetadataDetailsWidgetSizes));
 }
 
 //==============================================================================
@@ -140,11 +138,11 @@ void CellmlAnnotationViewWidget::initialize(const QString &pFileName)
         // Keep track of the sizes of our editing widget and those of its
         // metadata details
 
-        connect(mEditingWidget, SIGNAL(splitterMoved(const QList<int> &)),
-                this, SLOT(editingWidgetSplitterMoved(const QList<int> &)));
+        connect(mEditingWidget, SIGNAL(splitterMoved(const QIntList &)),
+                this, SLOT(editingWidgetSplitterMoved(const QIntList &)));
 
-        connect(mEditingWidget->metadataDetails(), SIGNAL(splitterMoved(const QList<int> &)),
-                this, SLOT(metadataDetailsWidgetSplitterMoved(const QList<int> &)));
+        connect(mEditingWidget->metadataDetails(), SIGNAL(splitterMoved(const QIntList &)),
+                this, SLOT(metadataDetailsWidgetSplitterMoved(const QIntList &)));
 
         // Keep track of our editing widget and add it to ourselves
 
@@ -241,7 +239,7 @@ CellmlAnnotationViewEditingWidget * CellmlAnnotationViewWidget::editingWidget(co
 
 //==============================================================================
 
-void CellmlAnnotationViewWidget::editingWidgetSplitterMoved(const QList<int> &pSizes)
+void CellmlAnnotationViewWidget::editingWidgetSplitterMoved(const QIntList &pSizes)
 {
     // The splitter of our editing widget has moved, so keep track of its new
     // sizes
@@ -251,7 +249,7 @@ void CellmlAnnotationViewWidget::editingWidgetSplitterMoved(const QList<int> &pS
 
 //==============================================================================
 
-void CellmlAnnotationViewWidget::metadataDetailsWidgetSplitterMoved(const QList<int> &pSizes)
+void CellmlAnnotationViewWidget::metadataDetailsWidgetSplitterMoved(const QIntList &pSizes)
 {
     // The splitter of our editing widget's metadata details has moved, so keep
     // track of its new sizes

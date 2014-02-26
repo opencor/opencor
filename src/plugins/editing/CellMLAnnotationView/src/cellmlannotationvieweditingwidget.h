@@ -25,6 +25,7 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include "cellmlfile.h"
+#include "cliutils.h"
 #include "commonwidget.h"
 
 //==============================================================================
@@ -110,7 +111,7 @@ private:
     QMap<QWebView *, QUrl> oldWebViewUrls;
 
 Q_SIGNALS:
-    void splitterMoved(const QList<int> &pSizes);
+    void splitterMoved(const QIntList &pSizes);
 
 private Q_SLOTS:
     void emitSplitterMoved();

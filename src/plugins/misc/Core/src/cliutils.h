@@ -30,6 +30,16 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include <QByteArray>
+#include <QMetaType>
+
+//==============================================================================
+
+typedef QList<int> QIntList;
+
+//==============================================================================
+
+QIntList CORE_EXPORT qVariantListToIntList(const QVariantList &pVariantList);
+QVariantList CORE_EXPORT qIntListToVariantList(const QIntList &pIntList);
 
 //==============================================================================
 

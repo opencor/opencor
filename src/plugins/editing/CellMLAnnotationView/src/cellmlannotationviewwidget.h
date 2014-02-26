@@ -24,6 +24,7 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#include "cliutils.h"
 #include "viewwidget.h"
 
 //==============================================================================
@@ -80,12 +81,12 @@ private:
     CellmlAnnotationViewEditingWidget *mEditingWidget;
     QMap<QString, CellmlAnnotationViewEditingWidget *> mEditingWidgets;
 
-    QList<int> mEditingWidgetSizes;
-    QList<int> mMetadataDetailsWidgetSizes;
+    QIntList mEditingWidgetSizes;
+    QIntList mMetadataDetailsWidgetSizes;
 
 private Q_SLOTS:
-    void editingWidgetSplitterMoved(const QList<int> &pSizes);
-    void metadataDetailsWidgetSplitterMoved(const QList<int> &pSizes);
+    void editingWidgetSplitterMoved(const QIntList &pSizes);
+    void metadataDetailsWidgetSplitterMoved(const QIntList &pSizes);
 };
 
 //==============================================================================
