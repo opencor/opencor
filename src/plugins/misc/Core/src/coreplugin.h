@@ -94,6 +94,8 @@ private:
 
     void updateFileReopenMenu();
 
+    void updateNewModifiedSensitiveActions();
+
     void retrieveBorderColor();
     void retrieveColors();
 

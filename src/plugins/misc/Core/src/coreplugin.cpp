@@ -186,15 +186,6 @@ void CorePlugin::initialize()
 
     // Some connections to update the enabled state of our various actions
 
-    connect(mCentralWidget, SIGNAL(atLeastOneFile(const bool &)),
-            mFileReloadAction, SLOT(setEnabled(bool)));
-
-    connect(mCentralWidget, SIGNAL(atLeastOneFile(const bool &)),
-            mFileDuplicateAction, SLOT(setEnabled(bool)));
-
-    connect(mCentralWidget, SIGNAL(atLeastOneFile(const bool &)),
-            mFileLockedAction, SLOT(setEnabled(bool)));
-
     connect(mCentralWidget, SIGNAL(canSave(const bool &)),
             mFileSaveAction, SLOT(setEnabled(bool)));
     connect(mCentralWidget, SIGNAL(canSaveAs(const bool &)),
@@ -383,7 +374,9 @@ void CorePlugin::updateGui(Plugin *pViewPlugin, const QString &pFileName)
     Q_UNUSED(pViewPlugin);
     Q_UNUSED(pFileName);
 
-    // We don't handle this interface...
+    // Update our new/modified sensitive actions
+
+    updateNewModifiedSensitiveActions();
 }
 
 //==============================================================================
@@ -492,16 +485,12 @@ void CorePlugin::filePermissionsChanged(const QString &pFileName)
 
 void CorePlugin::fileModified(const QString &pFileName, const bool &pModified)
 {
-    // Enable/disable some of our actions, if needed
+    Q_UNUSED(pModified);
 
-    if (!pFileName.compare(mCentralWidget->currentFileName())) {
-        bool fileIsNew = Core::FileManager::instance()->isNew(pFileName);
-        bool fileIsNewOrModified = fileIsNew || pModified;
+    // Update our new/modified sensitive actions, if needed
 
-        mFileReloadAction->setEnabled(!fileIsNew);
-        mFileDuplicateAction->setEnabled(!fileIsNewOrModified);
-        mFileLockedAction->setEnabled(!fileIsNewOrModified);
-    }
+    if (!pFileName.compare(mCentralWidget->currentFileName()))
+        updateNewModifiedSensitiveActions();
 }
 
 //==============================================================================
@@ -650,6 +639,31 @@ void CorePlugin::updateFileReopenMenu()
     // recent file names
 
     mFileClearReopenSubMenuAction->setEnabled(!mRecentFileNames.isEmpty());
+}
+
+//==============================================================================
+
+void CorePlugin::updateNewModifiedSensitiveActions()
+{
+    // Update our actions are sensitive to the fact that a file may be modified
+    // and even possibly new
+
+    QString fileName = mCentralWidget->currentFileName();
+
+    if (!fileName.isEmpty()) {
+        Core::FileManager *fileManagerInstance = Core::FileManager::instance();
+        bool fileIsNew = fileManagerInstance->isNew(fileName);
+        bool fileIsNewOrModified =    fileIsNew
+                                   || fileManagerInstance->isModified(fileName);
+
+        mFileReloadAction->setEnabled(!fileIsNew);
+        mFileDuplicateAction->setEnabled(!fileIsNewOrModified);
+        mFileLockedAction->setEnabled(!fileIsNewOrModified);
+    } else {
+        mFileReloadAction->setEnabled(false);
+        mFileDuplicateAction->setEnabled(false);
+        mFileLockedAction->setEnabled(false);
+    }
 }
 
 //==============================================================================
