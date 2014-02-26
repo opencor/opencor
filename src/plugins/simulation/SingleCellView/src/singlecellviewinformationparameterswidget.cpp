@@ -99,11 +99,7 @@ void SingleCellViewInformationParametersWidget::loadSettings(QSettings *pSetting
 {
     // Retrieve the width of each column of our property editors
 
-    qRegisterMetaTypeStreamOperators<QIntList>("QIntList");
-
-    QVariant defaultColumnWidths = QVariant::fromValue<QIntList>(mColumnWidths);
-
-    mColumnWidths = pSettings->value(SettingsColumnWidths, defaultColumnWidths).value<QIntList>();
+    mColumnWidths = qVariantListToIntList(pSettings->value(SettingsColumnWidths, qIntListToVariantList(mColumnWidths)).toList());
 }
 
 //==============================================================================
@@ -112,7 +108,7 @@ void SingleCellViewInformationParametersWidget::saveSettings(QSettings *pSetting
 {
     // Keep track of the width of each column of our current property editor
 
-    pSettings->setValue(SettingsColumnWidths, QVariant::fromValue<QIntList>(mColumnWidths));
+    pSettings->setValue(SettingsColumnWidths, qIntListToVariantList(mColumnWidths));
 }
 
 //==============================================================================

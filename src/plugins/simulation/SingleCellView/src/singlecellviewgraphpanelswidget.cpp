@@ -87,11 +87,7 @@ void SingleCellViewGraphPanelsWidget::loadSettings(QSettings *pSettings)
     //       instead, we assign the value to splitterSizes, which we then use to
     //       properly initialise mSplitterSizes...
 
-    qRegisterMetaTypeStreamOperators<QIntList>("QIntList");
-
-    QVariant defaultGraphPanelSizes = QVariant::fromValue<QIntList>(QIntList());
-
-    QIntList splitterSizes = pSettings->value(SettingsGraphPanelSizes, defaultGraphPanelSizes).value<QIntList>();
+    QIntList splitterSizes = qVariantListToIntList(pSettings->value(SettingsGraphPanelSizes).toList());
     int graphPanelsCount = splitterSizes.count();
 
     if (!graphPanelsCount)
@@ -116,7 +112,7 @@ void SingleCellViewGraphPanelsWidget::saveSettings(QSettings *pSettings) const
 {
     // Keep track of the size of each graph panel
 
-    pSettings->setValue(SettingsGraphPanelSizes, QVariant::fromValue<QIntList>(mSplitterSizes));
+    pSettings->setValue(SettingsGraphPanelSizes, qIntListToVariantList(mSplitterSizes));
 }
 
 //==============================================================================

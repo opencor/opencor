@@ -372,11 +372,7 @@ void SingleCellViewWidget::loadSettings(QSettings *pSettings)
 {
     // Retrieve and set the sizes of our splitter
 
-    qRegisterMetaTypeStreamOperators<QIntList>("QIntList");
-
-    QVariant defaultSizes = QVariant::fromValue<QIntList>(QIntList());
-
-    mSplitterWidgetSizes = pSettings->value(SettingsSizes, defaultSizes).value<QIntList>();
+    mSplitterWidgetSizes = qVariantListToIntList(pSettings->value(SettingsSizes).toList());
 
     if (mSplitterWidgetSizes.count())
         mSplitterWidget->setSizes(mSplitterWidgetSizes);
@@ -394,7 +390,7 @@ void SingleCellViewWidget::saveSettings(QSettings *pSettings) const
 {
     // Keep track of our splitter sizes
 
-    pSettings->setValue(SettingsSizes, QVariant::fromValue<QIntList>(mSplitterWidgetSizes));
+    pSettings->setValue(SettingsSizes, qIntListToVariantList(mSplitterWidgetSizes));
 
     // Keep track of the settings of our contents widget
 
