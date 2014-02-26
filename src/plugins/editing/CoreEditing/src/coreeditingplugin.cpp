@@ -265,7 +265,7 @@ void CoreEditingPlugin::updateGui(Plugin *pViewPlugin, const QString &pFileName)
             disconnect(mEditCutAction, SIGNAL(triggered()),
                        this, SLOT(doCut()));
             disconnect(mEditCopyAction, SIGNAL(triggered()),
-                       mEditor, SLOT(copy()));
+                       this, SLOT(doCopy()));
             disconnect(mEditPasteAction, SIGNAL(triggered()),
                        this, SLOT(doPaste()));
             disconnect(mEditDeleteAction, SIGNAL(triggered()),
@@ -298,7 +298,7 @@ void CoreEditingPlugin::updateGui(Plugin *pViewPlugin, const QString &pFileName)
             connect(mEditCutAction, SIGNAL(triggered()),
                     this, SLOT(doCut()));
             connect(mEditCopyAction, SIGNAL(triggered()),
-                    mEditor, SLOT(copy()));
+                    this, SLOT(doCopy()));
             connect(mEditPasteAction, SIGNAL(triggered()),
                     this, SLOT(doPaste()));
             connect(mEditDeleteAction, SIGNAL(triggered()),
@@ -610,7 +610,11 @@ void CoreEditingPlugin::updateSelectAllAction()
 
 void CoreEditingPlugin::doUndo()
 {
-    // Undo the last action and update our undo/redo actions
+    // Undo the last action and update our undo/redo actions, should there be an
+    // editor
+
+    if (!mEditor)
+        return;
 
     mEditor->undo();
 
@@ -621,7 +625,11 @@ void CoreEditingPlugin::doUndo()
 
 void CoreEditingPlugin::doRedo()
 {
-    // Redo the last action and update our undo/redo actions
+    // Redo the last action and update our undo/redo actions, should there be an
+    // editor
+
+    if (!mEditor)
+        return;
 
     mEditor->redo();
 
@@ -632,7 +640,10 @@ void CoreEditingPlugin::doRedo()
 
 void CoreEditingPlugin::doCut()
 {
-    // Cut the text and update our undo/redo actions
+    // Cut the text and update our undo/redo actions, should there be an editor
+
+    if (!mEditor)
+        return;
 
     mEditor->cut();
 
@@ -641,9 +652,25 @@ void CoreEditingPlugin::doCut()
 
 //==============================================================================
 
+void CoreEditingPlugin::doCopy()
+{
+    // Copy the text and update our undo/redo actions, should there be an editor
+
+    if (!mEditor)
+        return;
+
+    mEditor->copy();
+}
+
+//==============================================================================
+
 void CoreEditingPlugin::doPaste()
 {
-    // Paste the text and update our undo/redo actions
+    // Paste the text and update our undo/redo actions, should there be an
+    // editor
+
+    if (!mEditor)
+        return;
 
     mEditor->paste();
 
@@ -654,7 +681,11 @@ void CoreEditingPlugin::doPaste()
 
 void CoreEditingPlugin::doDelete()
 {
-    // Delete the text and update our undo/redo actions
+    // Delete the text and update our undo/redo actions, should there be an
+    // editor
+
+    if (!mEditor)
+        return;
 
     mEditor->SendScintilla(QsciScintillaBase::SCI_CLEAR);
 
@@ -665,7 +696,11 @@ void CoreEditingPlugin::doDelete()
 
 void CoreEditingPlugin::doSelectAll()
 {
-    // Select all the text and update our select all action
+    // Select all the text and update our select all action, should there be an
+    // editor
+
+    if (!mEditor)
+        return;
 
     mEditor->selectAll();
 

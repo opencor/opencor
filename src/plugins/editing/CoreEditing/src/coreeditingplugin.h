@@ -117,6 +117,7 @@ private Q_SLOTS:
     void doRedo();
 
     void doCut();
+    void doCopy();
     void doPaste();
     void doDelete();
 
