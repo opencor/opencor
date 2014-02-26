@@ -21,7 +21,6 @@ specific language governing permissions and limitations under the License.
 
 #include "cellmlfilemanager.h"
 #include "cellmlfileruntime.h"
-#include "cliutils.h"
 #include "guiutils.h"
 #include "progressbarwidget.h"
 #include "propertyeditorwidget.h"
@@ -94,7 +93,7 @@ SingleCellViewWidget::SingleCellViewWidget(SingleCellViewPlugin *pPluginParent,
     mProgresses(QMap<QString, int>()),
     mResets(QMap<QString, bool>()),
     mDelays(QMap<QString, int>()),
-    mSplitterWidgetSizes(QList<int>()),
+    mSplitterWidgetSizes(QIntList()),
     mRunActionEnabled(true),
     mOldSimulationResultsSizes(QMap<SingleCellViewSimulation *, qulonglong>()),
     mCheckResultsSimulations(QList<SingleCellViewSimulation *>()),
@@ -300,7 +299,7 @@ SingleCellViewWidget::SingleCellViewWidget(SingleCellViewPlugin *pPluginParent,
     mSplitterWidget->addWidget(mContentsWidget);
     mSplitterWidget->addWidget(simulationOutputWidget);
 
-    mSplitterWidget->setSizes(QList<int>() << qApp->desktop()->screenGeometry().height() << 1);
+    mSplitterWidget->setSizes(QIntList() << qApp->desktop()->screenGeometry().height() << 1);
 
     mGui->layout->addWidget(mSplitterWidget);
 
@@ -373,11 +372,11 @@ void SingleCellViewWidget::loadSettings(QSettings *pSettings)
 {
     // Retrieve and set the sizes of our splitter
 
-    qRegisterMetaTypeStreamOperators<QList<int>>("QList<int>");
+    qRegisterMetaTypeStreamOperators<QIntList>("QIntList");
 
-    QVariant defaultSizes = QVariant::fromValue<QList<int>>(QList<int>());
+    QVariant defaultSizes = QVariant::fromValue<QIntList>(QIntList());
 
-    mSplitterWidgetSizes = pSettings->value(SettingsSizes, defaultSizes).value<QList<int>>();
+    mSplitterWidgetSizes = pSettings->value(SettingsSizes, defaultSizes).value<QIntList>();
 
     if (mSplitterWidgetSizes.count())
         mSplitterWidget->setSizes(mSplitterWidgetSizes);
@@ -395,7 +394,7 @@ void SingleCellViewWidget::saveSettings(QSettings *pSettings) const
 {
     // Keep track of our splitter sizes
 
-    pSettings->setValue(SettingsSizes, QVariant::fromValue<QList<int>>(mSplitterWidgetSizes));
+    pSettings->setValue(SettingsSizes, QVariant::fromValue<QIntList>(mSplitterWidgetSizes));
 
     // Keep track of the settings of our contents widget
 

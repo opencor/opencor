@@ -24,6 +24,7 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#include "cliutils.h"
 #include "commonwidget.h"
 
 //==============================================================================
@@ -95,7 +96,7 @@ private:
     QMap<Core::Property *, CellMLSupport::CellmlFileRuntimeParameter *> mParameters;
     QMap<QAction *, CellMLSupport::CellmlFileRuntimeParameter *> mParameterActions;
 
-    QList<int> mColumnWidths;
+    QIntList mColumnWidths;
 
     QString mFileName;
 

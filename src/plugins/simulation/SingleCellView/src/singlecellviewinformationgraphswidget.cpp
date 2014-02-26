@@ -57,7 +57,7 @@ SingleCellViewInformationGraphsWidget::SingleCellViewInformationGraphsWidget(QWi
     mGraphProperties(QMap<SingleCellViewGraphPanelPlotGraph *, Core::Property *>()),
     mContextMenus(QMap<QString, QMenu *>()),
     mParameterActions(QMap<QAction *, CellMLSupport::CellmlFileRuntimeParameter *>()),
-    mColumnWidths(QList<int>()),
+    mColumnWidths(QIntList()),
     mFileNames(QStringList()),
     mFileName(QString()),
     mRuntimes(QMap<QString, CellMLSupport::CellmlFileRuntime *>()),
@@ -123,11 +123,11 @@ void SingleCellViewInformationGraphsWidget::loadSettings(QSettings *pSettings)
 {
     // Retrieve the width of each column of our property editors
 
-    qRegisterMetaTypeStreamOperators<QList<int>>("QList<int>");
+    qRegisterMetaTypeStreamOperators<QIntList>("QIntList");
 
-    QVariant defaultColumnWidths = QVariant::fromValue<QList<int>>(mColumnWidths);
+    QVariant defaultColumnWidths = QVariant::fromValue<QIntList>(mColumnWidths);
 
-    mColumnWidths = pSettings->value(SettingsColumnWidths, defaultColumnWidths).value<QList<int>>();
+    mColumnWidths = pSettings->value(SettingsColumnWidths, defaultColumnWidths).value<QIntList>();
 }
 
 //==============================================================================
@@ -136,7 +136,7 @@ void SingleCellViewInformationGraphsWidget::saveSettings(QSettings *pSettings) c
 {
     // Keep track of the width of each column of our current property editor
 
-    pSettings->setValue(SettingsColumnWidths, QVariant::fromValue<QList<int>>(mColumnWidths));
+    pSettings->setValue(SettingsColumnWidths, QVariant::fromValue<QIntList>(mColumnWidths));
 }
 
 //==============================================================================

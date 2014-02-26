@@ -19,7 +19,6 @@ specific language governing permissions and limitations under the License.
 // Raw CellML view widget
 //==============================================================================
 
-#include "cliutils.h"
 #include "corecellmleditingwidget.h"
 #include "filemanager.h"
 #include "qscintillawidget.h"
@@ -54,7 +53,7 @@ RawCellmlViewWidget::RawCellmlViewWidget(QWidget *pParent) :
     mGui(new Ui::RawCellmlViewWidget),
     mEditingWidget(0),
     mEditingWidgets(QMap<QString, CoreCellMLEditing::CoreCellmlEditingWidget *>()),
-    mEditingWidgetSizes(QList<int>()),
+    mEditingWidgetSizes(QIntList()),
     mEditorZoomLevel(0)
 {
     // Set up the GUI
@@ -88,12 +87,12 @@ void RawCellmlViewWidget::loadSettings(QSettings *pSettings)
     //          effectively be less than 19% of the desktop's height, but that
     //          doesn't matter at all...
 
-    qRegisterMetaTypeStreamOperators<QList<int>>("QList<int>");
+    qRegisterMetaTypeStreamOperators<QIntList>("QIntList");
 
-    QVariant defaultEditingWidgetSizes = QVariant::fromValue<QList<int>>(QList<int>() << 0.19*qApp->desktop()->screenGeometry().height()
-                                                                                      << qApp->desktop()->screenGeometry().height());
+    QVariant defaultEditingWidgetSizes = QVariant::fromValue<QIntList>(QIntList() << 0.19*qApp->desktop()->screenGeometry().height()
+                                                                                  << qApp->desktop()->screenGeometry().height());
 
-    mEditingWidgetSizes = pSettings->value(SettingsEditingWidgetSizes, defaultEditingWidgetSizes).value<QList<int>>();
+    mEditingWidgetSizes = pSettings->value(SettingsEditingWidgetSizes, defaultEditingWidgetSizes).value<QIntList>();
     mEditorZoomLevel = pSettings->value(SettingsEditorZoomLevel, 0).toInt();
 }
 
@@ -103,7 +102,7 @@ void RawCellmlViewWidget::saveSettings(QSettings *pSettings) const
 {
     // Keep track of the editing widget's sizes and the editor's zoom level
 
-    pSettings->setValue(SettingsEditingWidgetSizes, QVariant::fromValue<QList<int>>(mEditingWidgetSizes));
+    pSettings->setValue(SettingsEditingWidgetSizes, QVariant::fromValue<QIntList>(mEditingWidgetSizes));
     pSettings->setValue(SettingsEditorZoomLevel, mEditorZoomLevel);
 }
 

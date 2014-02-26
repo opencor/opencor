@@ -24,6 +24,7 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#include "cliutils.h"
 #include "viewwidget.h"
 
 //==============================================================================
@@ -87,7 +88,7 @@ private:
     CoreCellMLEditing::CoreCellmlEditingWidget *mEditingWidget;
     QMap<QString, CoreCellMLEditing::CoreCellmlEditingWidget *> mEditingWidgets;
 
-    QList<int> mEditingWidgetSizes;
+    QIntList mEditingWidgetSizes;
     int mEditorZoomLevel;
 
 private Q_SLOTS:

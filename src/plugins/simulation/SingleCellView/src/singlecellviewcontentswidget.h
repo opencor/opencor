@@ -24,6 +24,7 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#include "cliutils.h"
 #include "commonwidget.h"
 
 //==============================================================================
@@ -58,7 +59,7 @@ public:
     SingleCellViewGraphPanelsWidget * graphPanelsWidget();
 
 private:
-    QList<int> mSplitterSizes;
+    QIntList mSplitterSizes;
 
     SingleCellViewInformationWidget *mInformationWidget;
     SingleCellViewGraphPanelsWidget *mGraphPanelsWidget;

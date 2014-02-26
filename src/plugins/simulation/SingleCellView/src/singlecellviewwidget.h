@@ -25,6 +25,7 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include "cellmlfileruntime.h"
+#include "cliutils.h"
 #include "solverinterface.h"
 #include "viewwidget.h"
 
@@ -146,7 +147,7 @@ private:
     QLabel *mDelayValueWidget;
 
     QSplitter *mSplitterWidget;
-    QList<int> mSplitterWidgetSizes;
+    QIntList mSplitterWidgetSizes;
 
     SingleCellViewContentsWidget *mContentsWidget;
 

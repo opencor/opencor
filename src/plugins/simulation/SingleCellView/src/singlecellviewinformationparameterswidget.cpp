@@ -46,7 +46,7 @@ SingleCellViewInformationParametersWidget::SingleCellViewInformationParametersWi
     mContextMenus(QMap<QString, QMenu *>()),
     mParameters(QMap<Core::Property *, CellMLSupport::CellmlFileRuntimeParameter *>()),
     mParameterActions(QMap<QAction *, CellMLSupport::CellmlFileRuntimeParameter *>()),
-    mColumnWidths(QList<int>()),
+    mColumnWidths(QIntList()),
     mFileName(QString()),
     mSimulation(0)
 {
@@ -99,11 +99,11 @@ void SingleCellViewInformationParametersWidget::loadSettings(QSettings *pSetting
 {
     // Retrieve the width of each column of our property editors
 
-    qRegisterMetaTypeStreamOperators<QList<int>>("QList<int>");
+    qRegisterMetaTypeStreamOperators<QIntList>("QIntList");
 
-    QVariant defaultColumnWidths = QVariant::fromValue<QList<int>>(mColumnWidths);
+    QVariant defaultColumnWidths = QVariant::fromValue<QIntList>(mColumnWidths);
 
-    mColumnWidths = pSettings->value(SettingsColumnWidths, defaultColumnWidths).value<QList<int>>();
+    mColumnWidths = pSettings->value(SettingsColumnWidths, defaultColumnWidths).value<QIntList>();
 }
 
 //==============================================================================
@@ -112,7 +112,7 @@ void SingleCellViewInformationParametersWidget::saveSettings(QSettings *pSetting
 {
     // Keep track of the width of each column of our current property editor
 
-    pSettings->setValue(SettingsColumnWidths, QVariant::fromValue<QList<int>>(mColumnWidths));
+    pSettings->setValue(SettingsColumnWidths, QVariant::fromValue<QIntList>(mColumnWidths));
 }
 
 //==============================================================================

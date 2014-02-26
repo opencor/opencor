@@ -24,6 +24,7 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#include "cliutils.h"
 #include "commonwidget.h"
 
 //==============================================================================
@@ -71,7 +72,7 @@ public:
     void removeAllGraphPanels();
 
 private:
-    QList<int> mSplitterSizes;
+    QIntList mSplitterSizes;
 
     QMap<QString, SingleCellViewGraphPanelWidget *> mActiveGraphPanels;
     SingleCellViewGraphPanelWidget *mActiveGraphPanel;
