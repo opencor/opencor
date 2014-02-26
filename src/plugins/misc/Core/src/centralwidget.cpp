@@ -636,35 +636,38 @@ void CentralWidget::openFile()
 
 void CentralWidget::reloadFile(const int &pIndex)
 {
-    // Ask our file manager to reload the file, but only if it isn't modified or
-    // the user wants to ignore current modifications
+    // Ask our file manager to reload the file, but only if it isn't new and if
+    // the user wants (in case the file has been modified)
 
     int realIndex = (pIndex == -1)?mFileTabs->currentIndex():pIndex;
 
     if (realIndex != -1) {
-        bool doReloadFile = true;
-
         FileManager *fileManagerInstance = FileManager::instance();
         QString fileName = mFileNames[realIndex];
 
-        if (fileManagerInstance->isModified(fileName))
-            // The current file is modified, so ask the user whether s/he still
-            // wants to reload it
+        if (!fileManagerInstance->isNew(fileName)) {
+            bool doReloadFile = true;
 
-            doReloadFile = QMessageBox::question(mMainWindow, qApp->applicationName(),
-                                                 tr("<strong>%1</strong> has been modified. Do you still want to reload it?").arg(fileName),
-                                                 QMessageBox::Yes|QMessageBox::No,
-                                                 QMessageBox::Yes) == QMessageBox::Yes;
+            if (fileManagerInstance->isModified(fileName))
+                // The current file is modified, so ask the user whether s/he
+                // still wants to reload it
 
-        // Reload the file, if needed, and consider it as non-modified anymore
-        // (in case it was before)
-        // Note: by making the file non-modified anymore, we clearly assume that
-        //       all view plugins do their job properly and update their GUI...
+                doReloadFile = QMessageBox::question(mMainWindow, qApp->applicationName(),
+                                                     tr("<strong>%1</strong> has been modified. Do you still want to reload it?").arg(fileName),
+                                                     QMessageBox::Yes|QMessageBox::No,
+                                                     QMessageBox::Yes) == QMessageBox::Yes;
 
-        if (doReloadFile) {
-            fileManagerInstance->reload(fileName);
+            // Reload the file, if needed, and consider it as non-modified
+            // anymore (in case it was before)
+            // Note: by making the file non-modified anymore, we clearly assume
+            //       that all view plugins do their job properly and update
+            //       their GUI...
 
-            fileManagerInstance->setModified(fileName, false);
+            if (doReloadFile) {
+                fileManagerInstance->reload(fileName);
+
+                fileManagerInstance->setModified(fileName, false);
+            }
         }
     }
 }
@@ -673,13 +676,20 @@ void CentralWidget::reloadFile(const int &pIndex)
 
 void CentralWidget::duplicateFile()
 {
-    // Ask our file manager to duplicate the current file
+    // Make sure that the file is neither new nor modified
 
     QString fileName = currentFileName();
+    FileManager *fileManagerInstance = FileManager::instance();
+
+    if (fileManagerInstance->isNewOrModified(fileName))
+        return;
+
+    // Ask our file manager to duplicate the current file
+
 #ifdef QT_DEBUG
     FileManager::Status duplicateStatus =
 #endif
-    FileManager::instance()->duplicate(fileName);
+    fileManagerInstance->duplicate(fileName);
 
     // Make sure that the file has indeed been duplicated
 
@@ -693,10 +703,16 @@ void CentralWidget::duplicateFile()
 
 void CentralWidget::toggleLockedFile()
 {
+    // Make sure that the file is neither new nor modified
+
+    QString fileName = currentFileName();
+    FileManager *fileManagerInstance = FileManager::instance();
+
+    if (fileManagerInstance->isNewOrModified(fileName))
+        return;
+
     // Ask our file manager to toggle the locked state of the current file
 
-    FileManager *fileManagerInstance = FileManager::instance();
-    QString fileName = currentFileName();
     bool fileLocked = fileManagerInstance->isLocked(fileName);
 
     if (fileManagerInstance->setLocked(fileName, !fileLocked) == FileManager::LockedNotSet)
@@ -708,7 +724,10 @@ void CentralWidget::toggleLockedFile()
 
 bool CentralWidget::saveFile(const int &pIndex, const bool &pNeedNewFileName)
 {
-    // Save the file, under a new name if needed
+    // Make sure that we have a valid index
+
+    if ((pIndex < 0) || (pIndex >= mFileNames.count()))
+        return false;
 
     // Make sure that we have a file name
 
@@ -877,9 +896,10 @@ void CentralWidget::previousFile()
 {
     // Select the previous file
 
-    mFileTabs->setCurrentIndex(mFileTabs->currentIndex()?
-                                   mFileTabs->currentIndex()-1:
-                                   mFileTabs->count()-1);
+    if (mFileTabs->count())
+        mFileTabs->setCurrentIndex(mFileTabs->currentIndex()?
+                                       mFileTabs->currentIndex()-1:
+                                       mFileTabs->count()-1);
 }
 
 //==============================================================================
@@ -888,9 +908,10 @@ void CentralWidget::nextFile()
 {
     // Select the next file
 
-    mFileTabs->setCurrentIndex((mFileTabs->currentIndex() == mFileTabs->count()-1)?
-                                   0:
-                                   mFileTabs->currentIndex()+1);
+    if (mFileTabs->count())
+        mFileTabs->setCurrentIndex((mFileTabs->currentIndex() == mFileTabs->count()-1)?
+                                       0:
+                                       mFileTabs->currentIndex()+1);
 }
 
 //==============================================================================
