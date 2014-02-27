@@ -366,6 +366,29 @@ void FileManager::reload(const QString &pFileName)
 
 //==============================================================================
 
+FileManager::Status FileManager::create()
+{
+    // Create a new file
+
+    QTemporaryFile createdFile(QDir::tempPath()+QDir::separator()+QFileInfo(qApp->applicationFilePath()).baseName()+"_XXXXXX.tmp");
+
+    if (createdFile.open()) {
+        createdFile.setAutoRemove(false);
+        // Note: by default, a temporary file is to autoremove itself, but we
+        //       clearly don't want that here...
+
+        // Let people know that we have created a file
+
+        emit fileCreated(createdFile.fileName());
+
+        return Created;
+    } else {
+        return NotCreated;
+    }
+}
+
+//==============================================================================
+
 FileManager::Status FileManager::rename(const QString &pOldFileName,
                                         const QString &pNewFileName)
 {

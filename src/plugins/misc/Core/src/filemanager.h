@@ -71,6 +71,11 @@ public:
         LockedSet,
         LockedNotSet,
 
+        // As a result of creating a file
+
+        Created,
+        NotCreated,
+
         // As a result of renaming a file
 
         Renamed,
@@ -112,6 +117,7 @@ public:
 
     void reload(const QString &pFileName);
 
+    Status create();
     Status rename(const QString &pOldFileName, const QString &pNewFileName);
     Status duplicate(const QString &pFileName);
 
@@ -135,6 +141,7 @@ Q_SIGNALS:
 
     void fileReloaded(const QString &pFileName);
 
+    void fileCreated(const QString &pFileName);
     void fileRenamed(const QString &pOldFileName, const QString &pNewFileName);
     void fileDuplicated(const QString &pFileName);
 

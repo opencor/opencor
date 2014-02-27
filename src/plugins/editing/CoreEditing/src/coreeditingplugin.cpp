@@ -140,6 +140,9 @@ void CoreEditingPlugin::initialize()
 
     // Some connections to handle our different editing actions
 
+    connect(mFileNewFileAction, SIGNAL(triggered()),
+            this, SLOT(newFile()));
+
     connect(mEditUndoAction, SIGNAL(triggered()),
             this, SLOT(doUndo()));
     connect(mEditRedoAction, SIGNAL(triggered()),
@@ -575,6 +578,26 @@ void CoreEditingPlugin::updateSelectAllAction()
     if (mEditingInterface)
         mEditSelectAllAction->setEnabled(   mEditor
                                          && mEditor->isSelectAllAvailable());
+}
+
+//==============================================================================
+
+void CoreEditingPlugin::newFile()
+{
+    // Ask our file manager to duplicate the current file
+
+    Core::FileManager *fileManagerInstance = Core::FileManager::instance();
+#ifdef QT_DEBUG
+    Core::FileManager::Status createStatus =
+#endif
+    fileManagerInstance->create();
+
+    // Make sure that the file has indeed been duplicated
+
+#ifdef QT_DEBUG
+    if (createStatus != Core::FileManager::Created)
+        qFatal("FATAL ERROR | %s:%d: the file did not get created", __FILE__, __LINE__);
+#endif
 }
 
 //==============================================================================

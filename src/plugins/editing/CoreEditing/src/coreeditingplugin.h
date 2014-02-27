@@ -113,6 +113,8 @@ private Q_SLOTS:
     void updateEditingActions();
     void updateSelectAllAction();
 
+    void newFile();
+
     void doUndo();
     void doRedo();
 
