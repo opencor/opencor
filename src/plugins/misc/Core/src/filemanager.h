@@ -117,7 +117,7 @@ public:
 
     void reload(const QString &pFileName);
 
-    Status create();
+    Status create(const QString &pContents = QString());
     Status rename(const QString &pOldFileName, const QString &pNewFileName);
     Status duplicate(const QString &pFileName);
 

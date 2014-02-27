@@ -366,7 +366,7 @@ void FileManager::reload(const QString &pFileName)
 
 //==============================================================================
 
-FileManager::Status FileManager::create()
+FileManager::Status FileManager::create(const QString &pContents)
 {
     // Create a new file
 
@@ -376,6 +376,12 @@ FileManager::Status FileManager::create()
         createdFile.setAutoRemove(false);
         // Note: by default, a temporary file is to autoremove itself, but we
         //       clearly don't want that here...
+
+        QTextStream createdFileOut(&createdFile);
+
+        createdFileOut << pContents;
+
+        createdFile.close();
 
         // Let people know that we have created a file
 
