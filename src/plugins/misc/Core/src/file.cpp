@@ -84,6 +84,12 @@ bool File::setFileName(const QString &pFileName)
     if (pFileName.compare(mFileName)) {
         mFileName = pFileName;
 
+        mSha1 = sha1();
+        // Note: we will typically set a new file name when a file has been
+        //       saved under a new name, and depending on it was done, the SHA-1
+        //       value of the file may end up being different, hence we need to
+        //       recompute it, just to be on the safe side...
+
         return true;
     } else {
         return false;
