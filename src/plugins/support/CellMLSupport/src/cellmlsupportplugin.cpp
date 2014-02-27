@@ -21,6 +21,7 @@ specific language governing permissions and limitations under the License.
 
 #include "cellmlfilemanager.h"
 #include "cellmlsupportplugin.h"
+#include "filemanager.h"
 
 //==============================================================================
 
@@ -174,8 +175,14 @@ bool isCellmlFile(const QString &pFileName)
 
         return true;
 
-    // The file doesn't have the 'correct' file extension, so quickly check its
-    // contents
+    // The file doesn't have the 'correct' file extension, so check whether it's
+    // a new file
+
+    if (Core::FileManager::instance()->isNew(pFileName))
+        return true;
+
+    // The file neither has the 'correct' file extension nor is a new file, so
+    // quickly check its contents
 
     QFile file(pFileName);
 
