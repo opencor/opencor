@@ -25,6 +25,7 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#include <QAction>
 #include <QMainWindow>
 
 //==============================================================================
@@ -61,6 +62,13 @@ void CoreCellMLEditingPlugin::initialize()
 
     mGuiSettings->addMenuAction(GuiMenuActionSettings::FileNew, mFileNewCellml1_0FileAction);
     mGuiSettings->addMenuAction(GuiMenuActionSettings::FileNew, mFileNewCellml1_1FileAction);
+
+    // Some connections to handle our different editing actions
+
+    connect(mFileNewCellml1_0FileAction, SIGNAL(triggered()),
+            this, SLOT(newCellml1_0File()));
+    connect(mFileNewCellml1_1FileAction, SIGNAL(triggered()),
+            this, SLOT(newCellml1_1File()));
 }
 
 //==============================================================================
@@ -310,6 +318,24 @@ void CoreCellMLEditingPlugin::retranslateUi()
                       tr("Create a new CellML 1.0 file"));
     retranslateAction(mFileNewCellml1_1FileAction, tr("CellML 1.1 File"),
                       tr("Create a new CellML 1.1 file"));
+}
+
+//==============================================================================
+// Plugin specific
+//==============================================================================
+
+void CoreCellMLEditingPlugin::newCellml1_0File()
+{
+//---GRY--- TO BE DONE...
+qDebug(">>> Creating a new CellML 1.0 file...");
+}
+
+//==============================================================================
+
+void CoreCellMLEditingPlugin::newCellml1_1File()
+{
+//---GRY--- TO BE DONE...
+qDebug(">>> Creating a new CellML 1.1 file...");
 }
 
 //==============================================================================

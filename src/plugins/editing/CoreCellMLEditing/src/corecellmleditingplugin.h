@@ -62,6 +62,10 @@ public:
 private:
     QAction *mFileNewCellml1_0FileAction;
     QAction *mFileNewCellml1_1FileAction;
+
+private Q_SLOTS:
+    void newCellml1_0File();
+    void newCellml1_1File();
 };
 
 //==============================================================================
