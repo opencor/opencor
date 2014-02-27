@@ -44,7 +44,7 @@ PLUGININFO_FUNC CellMLAnnotationViewPluginInfo()
     descriptions.insert("fr", QString::fromUtf8("une extension pour annoter des fichiers CellML."));
 
     return new PluginInfo(PluginInfo::Editing, true,
-                          QStringList() << "CellMLSupport",
+                          QStringList() << "CoreCellMLEditing",
                           descriptions);
 }
 
@@ -133,6 +133,20 @@ void CellMLAnnotationViewPlugin::handleAction(const QUrl &pUrl)
     Q_UNUSED(pUrl);
 
     // We don't handle this interface...
+}
+
+//==============================================================================
+// Editing interface
+//==============================================================================
+
+QScintillaSupport::QScintillaWidget * CellMLAnnotationViewPlugin::editor(const QString &pFileName) const
+{
+    Q_UNUSED(pFileName);
+
+    // Return the requested editor, i.e. nothing since we don't have an editor
+    // as such
+
+    return 0;
 }
 
 //==============================================================================

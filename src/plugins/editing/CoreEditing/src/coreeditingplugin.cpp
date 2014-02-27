@@ -215,32 +215,10 @@ void CoreEditingPlugin::changeEvent(QEvent *pEvent)
 
 void CoreEditingPlugin::updateGui(Plugin *pViewPlugin, const QString &pFileName)
 {
-    // Show/enable or hide/disable various actions, depending on whether the
-    // view plugin handles the editing interface
-
-    mEditingInterface = pViewPlugin?qobject_cast<EditingInterface *>(pViewPlugin->instance()):0;
-
-    Core::showEnableAction(mFileNewFileAction, mEditingInterface);
-
-    Core::showEnableAction(mEditUndoAction, mEditingInterface);
-    Core::showEnableAction(mEditRedoAction, mEditingInterface);
-
-    Core::showEnableAction(mEditCutAction, mEditingInterface);
-    Core::showEnableAction(mEditCopyAction, mEditingInterface);
-    Core::showEnableAction(mEditPasteAction, mEditingInterface);
-    Core::showEnableAction(mEditDeleteAction, mEditingInterface);
-
-/*---GRY---
-    Core::showEnableAction(mEditFindAction, mEditingInterface);
-    Core::showEnableAction(mEditFindNextAction, mEditingInterface);
-    Core::showEnableAction(mEditPreviousAction, mEditingInterface);
-    Core::showEnableAction(mEditReplaceAction, mEditingInterface);
-*/
-
-    Core::showEnableAction(mEditSelectAllAction, mEditingInterface);
-
     // Reset our previous editor and set up our new one, should the current
     // plugin handle the editing interface
+
+    mEditingInterface = pViewPlugin?qobject_cast<EditingInterface *>(pViewPlugin->instance()):0;
 
     if (mEditingInterface) {
         // Reset our previous editor's connections, but only if the given file
@@ -310,29 +288,36 @@ void CoreEditingPlugin::updateGui(Plugin *pViewPlugin, const QString &pFileName)
             updateUndoRedoActions();
             updateEditingActions();
             updateSelectAllAction();
-        } else {
-            mEditUndoAction->setEnabled(false);
-            mEditRedoAction->setEnabled(false);
-
-            mEditCutAction->setEnabled(false);
-            mEditCopyAction->setEnabled(false);
-            mEditPasteAction->setEnabled(false);
-            mEditDeleteAction->setEnabled(false);
-
-/*---GRY---
-            mEditFindAction->setEnabled(false);
-            mEditFindNextAction->setEnabled(false);
-            mEditPreviousAction->setEnabled(false);
-            mEditReplaceAction->setEnabled(false);
-*/
-
-            mEditSelectAllAction->setEnabled(false);
         }
 
         // Update our new editor's background
 
         updateEditorBackground();
     }
+
+    // Show/enable or hide/disable various actions, depending on whether the
+    // view plugin handles the editing interface
+
+    bool hasEditingInterfaceAndEditor = mEditingInterface && mEditor;
+
+    Core::showEnableAction(mFileNewFileAction, mEditingInterface);
+
+    Core::showEnableAction(mEditUndoAction, hasEditingInterfaceAndEditor);
+    Core::showEnableAction(mEditRedoAction, hasEditingInterfaceAndEditor);
+
+    Core::showEnableAction(mEditCutAction, hasEditingInterfaceAndEditor);
+    Core::showEnableAction(mEditCopyAction, hasEditingInterfaceAndEditor);
+    Core::showEnableAction(mEditPasteAction, hasEditingInterfaceAndEditor);
+    Core::showEnableAction(mEditDeleteAction, hasEditingInterfaceAndEditor);
+
+/*---GRY---
+    Core::showEnableAction(mEditFindAction, hasEditingInterfaceAndEditor);
+    Core::showEnableAction(mEditFindNextAction, hasEditingInterfaceAndEditor);
+    Core::showEnableAction(mEditPreviousAction, hasEditingInterfaceAndEditor);
+    Core::showEnableAction(mEditReplaceAction, hasEditingInterfaceAndEditor);
+*/
+
+    Core::showEnableAction(mEditSelectAllAction, hasEditingInterfaceAndEditor);
 }
 
 //==============================================================================
@@ -714,10 +699,12 @@ void CoreEditingPlugin::updateEditorBackground()
     // Update the current editor's background, based on whether the current file
     // is locked
 
-    QColor backgroundColor = Core::FileManager::instance()->isReadableAndWritable(mFileName)?Core::baseColor():Core::lockedColor(Core::baseColor());
+    if (mEditor) {
+        QColor backgroundColor = Core::FileManager::instance()->isReadableAndWritable(mFileName)?Core::baseColor():Core::lockedColor(Core::baseColor());
 
-    for (int i = 0; i < QsciScintillaBase::STYLE_MAX; ++i)
-        mEditor->SendScintilla(QsciScintillaBase::SCI_STYLESETBACK, i, backgroundColor);
+        for (int i = 0; i < QsciScintillaBase::STYLE_MAX; ++i)
+            mEditor->SendScintilla(QsciScintillaBase::SCI_STYLESETBACK, i, backgroundColor);
+    }
 }
 
 //==============================================================================
