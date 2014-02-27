@@ -783,8 +783,9 @@ bool CentralWidget::saveFile(const int &pIndex, const bool &pNeedNewFileName)
 
         fileManagerInstance->setActive(false);
 
-        if (fileIsModified) {
-            // The file has been modified, so ask the current view to save it
+        if (fileIsNew || fileIsModified) {
+            // The file is or has been modified, so ask the current view to save
+            // it
 
             bool fileSaved = guiInterface->saveFile(oldFileName, newFileName);
 
