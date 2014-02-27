@@ -217,8 +217,8 @@ private Q_SLOTS:
 
     void fileReloaded(const QString &pFileName);
 
+    void fileCreatedOrDuplicated(const QString &pFileName);
     void fileRenamed(const QString &pOldFileName, const QString &pNewFileName);
-    void fileDuplicated(const QString &pFileName);
 
     void saveFile();
     void saveFileAs();

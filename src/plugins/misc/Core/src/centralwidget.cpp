@@ -207,12 +207,14 @@ CentralWidget::CentralWidget(QMainWindow *pMainWindow) :
     foreach (CentralWidgetMode *mode, mModes)
         mGui->layout->addWidget(mode->views());
 
-    // A connection to handle the case where a file was duplicated
+    // A connection to handle the case where a file was created or duplicated
 
     FileManager *fileManagerInstance = FileManager::instance();
 
+    connect(fileManagerInstance, SIGNAL(fileCreated(const QString &)),
+            this, SLOT(fileCreatedOrDuplicated(const QString &)));
     connect(fileManagerInstance, SIGNAL(fileDuplicated(const QString &)),
-            this, SLOT(fileDuplicated(const QString &)));
+            this, SLOT(fileCreatedOrDuplicated(const QString &)));
 
     // Some connections to handle changes to a file
 
@@ -1667,6 +1669,16 @@ void CentralWidget::fileReloaded(const QString &pFileName)
 
 //==============================================================================
 
+void CentralWidget::fileCreatedOrDuplicated(const QString &pFileName)
+{
+    // A file got created or duplicated, so open it making sure that we consider
+    // it as new
+
+    openFile(pFileName, true);
+}
+
+//==============================================================================
+
 void CentralWidget::fileRenamed(const QString &pOldFileName,
                                 const QString &pNewFileName)
 {
@@ -1702,15 +1714,6 @@ void CentralWidget::fileRenamed(const QString &pOldFileName,
 
             break;
         }
-}
-
-//==============================================================================
-
-void CentralWidget::fileDuplicated(const QString &pFileName)
-{
-    // A file got duplicated, so open it making sure that we consider it as new
-
-    openFile(pFileName, true);
 }
 
 //==============================================================================
