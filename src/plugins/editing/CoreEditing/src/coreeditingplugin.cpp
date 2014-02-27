@@ -273,11 +273,9 @@ void CoreEditingPlugin::updateGui(Plugin *pViewPlugin, const QString &pFileName)
             updateUndoAndRedoActions();
             updateEditingActions();
             updateSelectAllAction();
+
+            updateEditorBackground();
         }
-
-        // Update our new editor's background
-
-        updateEditorBackground();
     }
 
     // Show/enable or hide/disable various actions, depending on whether the
