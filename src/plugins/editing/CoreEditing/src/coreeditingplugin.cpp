@@ -596,7 +596,7 @@ void CoreEditingPlugin::newFile()
 
 #ifdef QT_DEBUG
     if (createStatus != Core::FileManager::Created)
-        qFatal("FATAL ERROR | %s:%d: the file did not get created", __FILE__, __LINE__);
+        qFatal("FATAL ERROR | %s:%d: the file was not created", __FILE__, __LINE__);
 #endif
 }
 
