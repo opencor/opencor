@@ -44,10 +44,10 @@ ADD_PLUGIN(CellMLAnnotationView
         src/cellmlannotationviewmetadataeditdetailswidget.ui
         src/cellmlannotationviewmetadatanormalviewdetailswidget.ui
         src/cellmlannotationviewwidget.ui
-    DEFINITIONS
-        ${LLVM_DEFINITIONS}
     INCLUDE_DIRS
         src
+    DEFINITIONS
+        ${LLVM_DEFINITIONS}
     PLUGINS
         CellMLAPI
         CellMLSupport

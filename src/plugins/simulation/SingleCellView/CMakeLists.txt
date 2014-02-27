@@ -52,11 +52,11 @@ ADD_PLUGIN(SingleCellView
         src/singlecellviewinformationgraphswidget.ui
         src/singlecellviewinformationwidget.ui
         src/singlecellviewwidget.ui
+    INCLUDE_DIRS
+        src
     DEFINITIONS
         ${LLVM_DEFINITIONS}
         QWT_DLL
-    INCLUDE_DIRS
-        src
     PLUGINS
         CellMLAPI
         CellMLSupport

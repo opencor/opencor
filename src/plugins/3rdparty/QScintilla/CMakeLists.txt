@@ -88,15 +88,15 @@ ADD_PLUGIN(QScintilla
         Qt4Qt5/Qsci/qsciscintillabase.h
 
         src/qscintillaplugin.h
-    DEFINITIONS
-        QSCINTILLA_MAKE_DLL
-        SCINTILLA_QT
-        SCI_LEXER
     INCLUDE_DIRS
         include
         lexlib
         Qt4Qt5
         src
+    DEFINITIONS
+        QSCINTILLA_MAKE_DLL
+        SCINTILLA_QT
+        SCI_LEXER
     QT_MODULES
         ${QT_MODULES_EXTRAS}
         Widgets
