@@ -109,7 +109,7 @@ private:
 private Q_SLOTS:
     void clipboardDataChanged();
 
-    void updateUndoRedoActions();
+    void updateUndoAndRedoActions();
     void updateEditingActions();
     void updateSelectAllAction();
 

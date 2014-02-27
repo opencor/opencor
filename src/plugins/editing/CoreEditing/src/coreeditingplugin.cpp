@@ -137,6 +137,25 @@ void CoreEditingPlugin::initialize()
 
     connect(QApplication::clipboard(), SIGNAL(dataChanged()),
             this, SLOT(clipboardDataChanged()));
+
+    // Some connections to handle our different editing actions
+
+    connect(mEditUndoAction, SIGNAL(triggered()),
+            this, SLOT(doUndo()));
+    connect(mEditRedoAction, SIGNAL(triggered()),
+            this, SLOT(doRedo()));
+
+    connect(mEditCutAction, SIGNAL(triggered()),
+            this, SLOT(doCut()));
+    connect(mEditCopyAction, SIGNAL(triggered()),
+            this, SLOT(doCopy()));
+    connect(mEditPasteAction, SIGNAL(triggered()),
+            this, SLOT(doPaste()));
+    connect(mEditDeleteAction, SIGNAL(triggered()),
+            this, SLOT(doDelete()));
+
+    connect(mEditSelectAllAction, SIGNAL(triggered()),
+            this, SLOT(doSelectAll()));
 }
 
 //==============================================================================
@@ -229,31 +248,14 @@ void CoreEditingPlugin::updateGui(Plugin *pViewPlugin, const QString &pFileName)
 
         if (mEditor && pFileName.compare(mFileName)) {
             disconnect(mEditor, SIGNAL(canUndo(const bool &)),
-                       this, SLOT(updateUndoRedoActions()));
+                       this, SLOT(updateUndoAndRedoActions()));
             disconnect(mEditor, SIGNAL(copyAvailable(bool)),
                        this, SLOT(updateEditingActions()));
             disconnect(mEditor, SIGNAL(canSelectAll(const bool &)),
                        this, SLOT(updateSelectAllAction()));
-
-            disconnect(mEditUndoAction, SIGNAL(triggered()),
-                       this, SLOT(doUndo()));
-            disconnect(mEditRedoAction, SIGNAL(triggered()),
-                       this, SLOT(doRedo()));
-
-            disconnect(mEditCutAction, SIGNAL(triggered()),
-                       this, SLOT(doCut()));
-            disconnect(mEditCopyAction, SIGNAL(triggered()),
-                       this, SLOT(doCopy()));
-            disconnect(mEditPasteAction, SIGNAL(triggered()),
-                       this, SLOT(doPaste()));
-            disconnect(mEditDeleteAction, SIGNAL(triggered()),
-                       this, SLOT(doDelete()));
-
-            disconnect(mEditSelectAllAction, SIGNAL(triggered()),
-                       this, SLOT(doSelectAll()));
         }
 
-        // Set up our new editor
+        // Set up our 'new' editor
 
         mEditor = mEditingInterface?mEditingInterface->editor(pFileName):0;
         mFileName = pFileName;
@@ -262,30 +264,13 @@ void CoreEditingPlugin::updateGui(Plugin *pViewPlugin, const QString &pFileName)
             mEditor->setContextMenu(mEditMenu->actions());
 
             connect(mEditor, SIGNAL(canUndo(const bool &)),
-                    this, SLOT(updateUndoRedoActions()));
+                    this, SLOT(updateUndoAndRedoActions()));
             connect(mEditor, SIGNAL(copyAvailable(bool)),
                     this, SLOT(updateEditingActions()));
             connect(mEditor, SIGNAL(canSelectAll(const bool &)),
                     this, SLOT(updateSelectAllAction()));
 
-            connect(mEditUndoAction, SIGNAL(triggered()),
-                    this, SLOT(doUndo()));
-            connect(mEditRedoAction, SIGNAL(triggered()),
-                    this, SLOT(doRedo()));
-
-            connect(mEditCutAction, SIGNAL(triggered()),
-                    this, SLOT(doCut()));
-            connect(mEditCopyAction, SIGNAL(triggered()),
-                    this, SLOT(doCopy()));
-            connect(mEditPasteAction, SIGNAL(triggered()),
-                    this, SLOT(doPaste()));
-            connect(mEditDeleteAction, SIGNAL(triggered()),
-                    this, SLOT(doDelete()));
-
-            connect(mEditSelectAllAction, SIGNAL(triggered()),
-                    this, SLOT(doSelectAll()));
-
-            updateUndoRedoActions();
+            updateUndoAndRedoActions();
             updateEditingActions();
             updateSelectAllAction();
         }
@@ -418,7 +403,7 @@ void CoreEditingPlugin::filePermissionsChanged(const QString &pFileName)
     if (mEditingInterface && !pFileName.compare(mFileName)) {
         // Update some actions
 
-        updateUndoRedoActions();
+        updateUndoAndRedoActions();
         updateEditingActions();
         updateSelectAllAction();
 
@@ -544,7 +529,7 @@ void CoreEditingPlugin::clipboardDataChanged()
 
 //==============================================================================
 
-void CoreEditingPlugin::updateUndoRedoActions()
+void CoreEditingPlugin::updateUndoAndRedoActions()
 {
     // Update our undo/redo actions, and update the modified state of the
     // current file (since it can be determined by whether we can undo)
@@ -603,7 +588,7 @@ void CoreEditingPlugin::doUndo()
 
     mEditor->undo();
 
-    updateUndoRedoActions();
+    updateUndoAndRedoActions();
 }
 
 //==============================================================================
@@ -618,7 +603,7 @@ void CoreEditingPlugin::doRedo()
 
     mEditor->redo();
 
-    updateUndoRedoActions();
+    updateUndoAndRedoActions();
 }
 
 //==============================================================================
@@ -632,7 +617,7 @@ void CoreEditingPlugin::doCut()
 
     mEditor->cut();
 
-    updateUndoRedoActions();
+    updateUndoAndRedoActions();
 }
 
 //==============================================================================
@@ -659,7 +644,7 @@ void CoreEditingPlugin::doPaste()
 
     mEditor->paste();
 
-    updateUndoRedoActions();
+    updateUndoAndRedoActions();
 }
 
 //==============================================================================
@@ -674,7 +659,7 @@ void CoreEditingPlugin::doDelete()
 
     mEditor->SendScintilla(QsciScintillaBase::SCI_CLEAR);
 
-    updateUndoRedoActions();
+    updateUndoAndRedoActions();
 }
 
 //==============================================================================
