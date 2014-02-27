@@ -584,7 +584,7 @@ void CoreEditingPlugin::updateSelectAllAction()
 
 void CoreEditingPlugin::newFile()
 {
-    // Ask our file manager to duplicate the current file
+    // Ask our file manager to create a new file
 
     Core::FileManager *fileManagerInstance = Core::FileManager::instance();
 #ifdef QT_DEBUG
@@ -592,7 +592,7 @@ void CoreEditingPlugin::newFile()
 #endif
     fileManagerInstance->create();
 
-    // Make sure that the file has indeed been duplicated
+    // Make sure that the file has indeed been created
 
 #ifdef QT_DEBUG
     if (createStatus != Core::FileManager::Created)
