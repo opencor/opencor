@@ -240,13 +240,9 @@ void CoreEditingPlugin::updateGui(Plugin *pViewPlugin, const QString &pFileName)
     mEditingInterface = pViewPlugin?qobject_cast<EditingInterface *>(pViewPlugin->instance()):0;
 
     if (mEditingInterface) {
-        // Reset our previous editor's connections, but only if the given file
-        // name is different from the one associated with our previous editor
-        // Note: indeed, it may happen that when reloading a file, an editing
-        //       view plugin delete the editor for the old version of the file
-        //       and create a new one for the new version, so...
+        // Reset our previous editor's connections
 
-        if (mEditor && pFileName.compare(mFileName)) {
+        if (mEditor) {
             disconnect(mEditor, SIGNAL(canUndo(const bool &)),
                        this, SLOT(updateUndoAndRedoActions()));
             disconnect(mEditor, SIGNAL(copyAvailable(bool)),
@@ -255,10 +251,12 @@ void CoreEditingPlugin::updateGui(Plugin *pViewPlugin, const QString &pFileName)
                        this, SLOT(updateSelectAllAction()));
         }
 
-        // Set up our 'new' editor
+        // Retrieve our new editor
 
         mEditor = mEditingInterface?mEditingInterface->editor(pFileName):0;
         mFileName = pFileName;
+
+        // Set our new editor's context menu, connections and background
 
         if (mEditor) {
             mEditor->setContextMenu(mEditMenu->actions());
@@ -269,10 +267,6 @@ void CoreEditingPlugin::updateGui(Plugin *pViewPlugin, const QString &pFileName)
                     this, SLOT(updateEditingActions()));
             connect(mEditor, SIGNAL(canSelectAll(const bool &)),
                     this, SLOT(updateSelectAllAction()));
-
-            updateUndoAndRedoActions();
-            updateEditingActions();
-            updateSelectAllAction();
 
             updateEditorBackground();
         }
@@ -301,6 +295,15 @@ void CoreEditingPlugin::updateGui(Plugin *pViewPlugin, const QString &pFileName)
 */
 
     Core::showEnableAction(mEditSelectAllAction, hasEditingInterfaceAndEditor);
+
+    // Enable/disable some of our actions, if we have both an editing interface
+    // and an editor
+
+    if (hasEditingInterfaceAndEditor) {
+        updateUndoAndRedoActions();
+        updateEditingActions();
+        updateSelectAllAction();
+    }
 }
 
 //==============================================================================
