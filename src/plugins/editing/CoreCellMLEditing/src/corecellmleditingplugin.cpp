@@ -21,6 +21,7 @@ specific language governing permissions and limitations under the License.
 
 #include "cellmleditinginterface.h"
 #include "corecellmleditingplugin.h"
+#include "filemanager.h"
 #include "guiutils.h"
 
 //==============================================================================
@@ -324,18 +325,62 @@ void CoreCellMLEditingPlugin::retranslateUi()
 // Plugin specific
 //==============================================================================
 
+void CoreCellMLEditingPlugin::newCellmlFile(const CellMLSupport::CellmlFile::Version &pVersion)
+{
+    // Determine some version-specific information
+
+    QString version = QString();
+    QString modelName = QString();
+
+    switch (pVersion) {
+    case CellMLSupport::CellmlFile::Cellml_1_1:
+        version = "1.1";
+
+        modelName = "new_cellml_1_1_model";
+
+        break;
+    default:   // CellMLSupport::CellmlFile::Cellml_1_0
+        version = "1.0";
+
+        modelName = "new_cellml_1_0_model";
+    }
+
+    // Ask our file manager to create a new file
+
+    QString fileContents = "<?xml version=\"1.0\"?>\n"
+                           "<model xmlns=\"http://www.cellml.org/cellml/%1#\" name=\"%2\">\n"
+                           "    <!-- Your code goes here -->\n"
+                           "</model>\n";
+    Core::FileManager *fileManagerInstance = Core::FileManager::instance();
+#ifdef QT_DEBUG
+    Core::FileManager::Status createStatus =
+#endif
+    fileManagerInstance->create(fileContents.arg(version, modelName));
+
+    // Make sure that the file has indeed been created
+
+#ifdef QT_DEBUG
+    if (createStatus != Core::FileManager::Created)
+        qFatal("FATAL ERROR | %s:%d: the file was not created", __FILE__, __LINE__);
+#endif
+}
+
+//==============================================================================
+
 void CoreCellMLEditingPlugin::newCellml1_0File()
 {
-//---GRY--- TO BE DONE...
-qDebug(">>> Creating a new CellML 1.0 file...");
+    // Create a new CellML 1.0 file
+
+    newCellmlFile(CellMLSupport::CellmlFile::Cellml_1_0);
 }
 
 //==============================================================================
 
 void CoreCellMLEditingPlugin::newCellml1_1File()
 {
-//---GRY--- TO BE DONE...
-qDebug(">>> Creating a new CellML 1.1 file...");
+    // Create a new CellML 1.1 file
+
+    newCellmlFile(CellMLSupport::CellmlFile::Cellml_1_1);
 }
 
 //==============================================================================

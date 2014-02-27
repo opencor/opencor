@@ -383,17 +383,17 @@ void CellMLToolsPlugin::retranslateUi()
 // Plugin specific
 //==============================================================================
 
-void CellMLToolsPlugin::exportTo(const CellMLSupport::CellmlFile::Format &pFormat)
+void CellMLToolsPlugin::exportTo(const CellMLSupport::CellmlFile::Version &pVersion)
 {
     // Ask for the name of the file that will contain the export
 
     QString format;
     QString fileTypes;
 
-    switch (pFormat) {
+    switch (pVersion) {
     case CellMLSupport::CellmlFile::Cellml_1_1:
     default:   // CellMLSupport::CellmlFile::Cellml_1_0
-        if (pFormat == CellMLSupport::CellmlFile::Cellml_1_0)
+        if (pVersion == CellMLSupport::CellmlFile::Cellml_1_0)
             format = "CellML 1.0";
         else
             format = "CellML 1.1";
@@ -417,7 +417,7 @@ void CellMLToolsPlugin::exportTo(const CellMLSupport::CellmlFile::Format &pForma
 
     CellMLSupport::CellmlFile *cellmlFile = CellMLSupport::CellmlFileManager::instance()->cellmlFile(mFileName);
 
-    if (!cellmlFile->exportTo(fileName, pFormat)) {
+    if (!cellmlFile->exportTo(fileName, pVersion)) {
         CellMLSupport::CellmlFileIssues issues = cellmlFile->issues();
         QString errorMessage = QString();
 

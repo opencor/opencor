@@ -45,7 +45,7 @@ class CELLMLSUPPORT_EXPORT CellmlFile : public QObject
     Q_OBJECT
 
 public:
-    enum Format {
+    enum Version {
         Cellml_1_0,
         Cellml_1_1
     };
@@ -94,7 +94,7 @@ public:
 
     QString uriBase() const;
 
-    bool exportTo(const QString &pFileName, const Format &pFormat);
+    bool exportTo(const QString &pFileName, const Version &pVersion);
 
 private:
     QString mFileName;

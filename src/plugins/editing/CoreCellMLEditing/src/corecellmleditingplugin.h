@@ -24,6 +24,7 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#include "cellmlfile.h"
 #include "corecellmleditingglobal.h"
 #include "coreinterface.h"
 #include "guiinterface.h"
@@ -62,6 +63,8 @@ public:
 private:
     QAction *mFileNewCellml1_0FileAction;
     QAction *mFileNewCellml1_1FileAction;
+
+    void newCellmlFile(const CellMLSupport::CellmlFile::Version &pVersion);
 
 private Q_SLOTS:
     void newCellml1_0File();

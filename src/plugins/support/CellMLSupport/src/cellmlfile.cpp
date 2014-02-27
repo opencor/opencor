@@ -662,14 +662,14 @@ QString CellmlFile::uriBase() const
 
 //==============================================================================
 
-bool CellmlFile::exportTo(const QString &pFileName, const Format &pFormat)
+bool CellmlFile::exportTo(const QString &pFileName, const Version &pVersion)
 {
     // Export the model to the required format, after loading it if necessary
 
     if (load()) {
         // Check that it actually makes sense to export the model
 
-        switch (pFormat) {
+        switch (pVersion) {
         case Cellml_1_1: {
             // To export to CellML 1.1, the model must be in a non CellML 1.1
             // format
@@ -697,7 +697,7 @@ bool CellmlFile::exportTo(const QString &pFileName, const Format &pFormat)
 
         // Do the actual export
 
-        switch (pFormat) {
+        switch (pVersion) {
         case Cellml_1_1: {
             CellmlFileCellml11Exporter exporter(mModel, pFileName);
 
