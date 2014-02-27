@@ -54,7 +54,7 @@ public:
     ~File();
 
     QString fileName() const;
-    void setFileName(const QString &pFileName);
+    bool setFileName(const QString &pFileName);
 
     Status check();
 
@@ -65,7 +65,7 @@ public:
     int newIndex() const;
 
     bool isModified() const;
-    void setModified(const bool &pModified);
+    bool setModified(const bool &pModified);
 
     bool isReadable() const;
     bool isWritable() const;

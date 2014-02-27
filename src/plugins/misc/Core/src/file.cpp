@@ -77,11 +77,17 @@ QString File::fileName() const
 
 //==============================================================================
 
-void File::setFileName(const QString &pFileName)
+bool File::setFileName(const QString &pFileName)
 {
     // Set the new file name of the file
 
-    mFileName = pFileName;
+    if (pFileName.compare(mFileName)) {
+        mFileName = pFileName;
+
+        return true;
+    } else {
+        return false;
+    }
 }
 
 //==============================================================================
@@ -181,11 +187,17 @@ bool File::isModified() const
 
 //==============================================================================
 
-void File::setModified(const bool &pModified)
+bool File::setModified(const bool &pModified)
 {
     // Set the modified status of the file
 
-    mModified = pModified;
+    if (pModified != mModified) {
+        mModified = pModified;
+
+        return true;
+    } else {
+        return false;
+    }
 }
 
 //==============================================================================
