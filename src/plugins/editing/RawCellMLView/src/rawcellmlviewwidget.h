@@ -91,10 +91,6 @@ private:
     QIntList mEditingWidgetSizes;
     int mEditorZoomLevel;
 
-    int findText(QScintillaSupport::QScintillaWidget *pEditor,
-                 const int &pStartPosition, const int &pEndPosition,
-                 const QByteArray &pText);
-
 private Q_SLOTS:
     void splitterMoved();
 

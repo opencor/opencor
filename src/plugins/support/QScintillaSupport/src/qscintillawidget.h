@@ -57,8 +57,16 @@ public:
     QMenu * contextMenu() const;
     void setContextMenu(const QList<QAction *> &pContextMenuActions);
 
+    int currentPosition() const;
+
     QString contents() const;
     void setContents(const QString &pContents);
+
+    int contentsSize() const;
+
+    int findTextInRange(const int &pStartRange, const int &pEndRange,
+                        const QString &pText,
+                        const bool &pCaseSensitive = true);
 
     bool isSelectAllAvailable() const;
 

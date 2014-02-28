@@ -181,6 +181,15 @@ void QScintillaWidget::setContextMenu(const QList<QAction *> &pContextMenuAction
 
 //==============================================================================
 
+int QScintillaWidget::currentPosition() const
+{
+    // Return our current position
+
+    return SendScintilla(SCI_GETCURRENTPOS);
+}
+
+//==============================================================================
+
 QString QScintillaWidget::contents() const
 {
     // Return our contents
@@ -195,6 +204,35 @@ void QScintillaWidget::setContents(const QString &pContents)
     // Set our contents
 
     setText(pContents);
+}
+
+//==============================================================================
+
+int QScintillaWidget::contentsSize() const
+{
+    // Return the size of our contents
+
+    return SendScintilla(SCI_GETLENGTH);
+}
+
+//==============================================================================
+
+int QScintillaWidget::findTextInRange(const int &pStartRange,
+                                      const int &pEndRange,
+                                      const QString &pText,
+                                      const bool &pCaseSensitive)
+{
+    // Find and return the position, if any, of the given text within the given
+    // range
+
+    SendScintilla(SCI_SETSEARCHFLAGS, pCaseSensitive?SCFIND_MATCHCASE:0);
+
+    SendScintilla(SCI_SETTARGETSTART, pStartRange);
+    SendScintilla(SCI_SETTARGETEND, pEndRange);
+
+    QByteArray text = pText.toUtf8();
+
+    return SendScintilla(SCI_SEARCHINTARGET, text.length(), text.constData());
 }
 
 //==============================================================================

@@ -275,39 +275,21 @@ void RawCellmlViewWidget::editorZoomLevelChanged()
 
 //==============================================================================
 
-int RawCellmlViewWidget::findText(QScintillaSupport::QScintillaWidget *pEditor,
-                                  const int &pStartPosition,
-                                  const int &pEndPosition,
-                                  const QByteArray &pText)
-{
-    pEditor->SendScintilla(QsciScintillaBase::SCI_SETTARGETSTART, pStartPosition);
-    pEditor->SendScintilla(QsciScintillaBase::SCI_SETTARGETEND, pEndPosition);
-
-    return pEditor->SendScintilla(QsciScintillaBase::SCI_SEARCHINTARGET,
-                                  pText.length(), pText.constData());
-}
-
-//==============================================================================
-
 void RawCellmlViewWidget::cursorPositionChanged()
 {
     // The cursor has moved, so retrieve the new mathematical equation, if any,
     // around our current position
 qDebug("---------");
 
-    static const QByteArray StartMathTag = QByteArray("<math ");
-    static const QByteArray EndMathTag = QByteArray("</math>");
+    static const QString StartMathTag = "<math ";
+    static const QByteArray EndMathTag = "</math>";
 
     QScintillaSupport::QScintillaWidget *editor = mEditingWidget->editor();
-    int contentsLength = editor->SendScintilla(QsciScintillaBase::SCI_GETLENGTH);
-    int crtPos = editor->SendScintilla(QsciScintillaBase::SCI_GETCURRENTPOS);
+    int crtPos = editor->currentPosition();
 
-    editor->SendScintilla(QsciScintillaBase::SCI_SETSEARCHFLAGS,
-                          QsciScintillaBase::SCFIND_MATCHCASE);
-
-    int crtStartMathTagPos = findText(editor, crtPos+StartMathTag.length(), 0, StartMathTag);
-    int prevEndMathTagPos = findText(editor, crtPos, 0, EndMathTag);
-    int crtEndMathTagPos = findText(editor, crtPos-EndMathTag.length()+1, contentsLength, EndMathTag);
+    int crtStartMathTagPos = editor->findTextInRange(crtPos+StartMathTag.length(), 0, StartMathTag);
+    int prevEndMathTagPos = editor->findTextInRange(crtPos, 0, EndMathTag);
+    int crtEndMathTagPos = editor->findTextInRange(crtPos-EndMathTag.length()+1, editor->contentsSize(), EndMathTag);
 
     bool foundMathBlock = true;
 
