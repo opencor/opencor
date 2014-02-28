@@ -93,7 +93,9 @@ private:
 
 private Q_SLOTS:
     void splitterMoved();
+
     void editorZoomLevelChanged();
+    void cursorPositionChanged(const int &pLine, const int &pColumn);
 };
 
 //==============================================================================

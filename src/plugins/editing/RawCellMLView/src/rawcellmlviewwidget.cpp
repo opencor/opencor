@@ -143,6 +143,9 @@ void RawCellmlViewWidget::initialize(const QString &pFileName)
         connect(mEditingWidget->editor(), SIGNAL(SCN_ZOOM()),
                 this, SLOT(editorZoomLevelChanged()));
 
+        connect(mEditingWidget->editor(), SIGNAL(cursorPositionChanged(int, int)),
+                this, SLOT(cursorPositionChanged(const int &, const int &)));
+
         // Keep track of our editing widget and add it to ourselves
 
         mEditingWidgets.insert(pFileName, mEditingWidget);
@@ -268,6 +271,16 @@ void RawCellmlViewWidget::editorZoomLevelChanged()
     // zoom level
 
     mEditorZoomLevel = qobject_cast<QScintillaSupport::QScintillaWidget *>(sender())->SendScintilla(QsciScintillaBase::SCI_GETZOOM);
+}
+
+//==============================================================================
+
+void RawCellmlViewWidget::cursorPositionChanged(const int &pLine,
+                                                const int &pColumn)
+{
+    // The cursor has moved, so retrieve the 'new' mathematical equation, if any
+
+qDebug(">>> Line: %d, Col: %d", pLine+1, pColumn+1);
 }
 
 //==============================================================================
