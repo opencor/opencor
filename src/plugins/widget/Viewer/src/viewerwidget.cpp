@@ -85,6 +85,10 @@ void ViewerWidget::setContents(const QString &pContents)
 
     mOneOverMathmlDocumentWidth  = 1.0/mathmlDocumentSize.width();
     mOneOverMathmlDocumentHeight = 1.0/mathmlDocumentSize.height();
+
+    // Update ourselves
+
+    update();
 }
 
 //==============================================================================
@@ -107,9 +111,9 @@ void ViewerWidget::setOptimiseFontSize(const bool &pOptimiseFontSize)
 
     mOptimiseFontSize = pOptimiseFontSize;
 
-    // Repaint ourselves
+    // Update ourselves
 
-    repaint();
+    update();
 }
 
 //==============================================================================
