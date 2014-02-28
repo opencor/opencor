@@ -922,12 +922,6 @@ void FileOrganiserWidget::addFile(const QString &pFileName,
             // than is visible
 
             resizeToContents();
-        } else {
-            // The file is already owned by newParentItem, so just repaint the
-            // widget to make sure that the dragging & dropping overlay
-            // disappears
-
-            repaint();
         }
     }
 }

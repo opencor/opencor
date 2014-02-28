@@ -293,7 +293,7 @@ void SingleCellViewGraphPanelPlotOverlayWidget::setPoint(const QPoint &pPoint)
 
     mPoint = pPoint;
 
-    repaint();
+    update();
 }
 
 //==============================================================================
@@ -688,11 +688,11 @@ SingleCellViewGraphPanelPlotWidget::Action SingleCellViewGraphPanelPlotWidget::a
 
 void SingleCellViewGraphPanelPlotWidget::resetAction()
 {
-    // Reset our action and our overlay widget, by repainting it
+    // Reset our action and our overlay widget, by updating it
 
     mAction = None;
 
-    mOverlayWidget->repaint();
+    mOverlayWidget->update();
 }
 
 //==============================================================================
