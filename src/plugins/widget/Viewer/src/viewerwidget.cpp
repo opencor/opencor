@@ -44,41 +44,42 @@ ViewerWidget::ViewerWidget(QWidget *pParent) :
     mMathmlDocument(QwtMathMLDocument()),
     mOneOverMathmlDocumentWidth(0),
     mOneOverMathmlDocumentHeight(0),
+    mContents(QString()),
     mOptimiseFontSize(true)
 {
 }
 
 //==============================================================================
 
-QString ViewerWidget::content() const
+QString ViewerWidget::contents() const
 {
-    // Return our content
+    // Return our contents
 
-    return mContent;
+    return mContents;
 }
 
 //==============================================================================
 
-void ViewerWidget::setContent(const QString &pContent)
+void ViewerWidget::setContents(const QString &pContents)
 {
-    // Set our content
+    // Set our contents
 
-    if (!pContent.compare(mContent))
+    if (!pContents.compare(mContents))
         return;
 
-    // Keep track of our content
+    // Keep track of our contents
 
-    mContent = pContent;
+    mContents = pContents;
 
-    // Determine (the inverse of) the size of our content when rendered using a
+    // Determine (the inverse of) the size of our contents when rendered using a
     // font size of 100 points
-    // Note: when setting the content, QwtMathMLDocument recomputes its layout.
-    //       Now, because we want the content to be rendered as optimally as
+    // Note: when setting the contents, QwtMathMLDocument recomputes its layout.
+    //       Now, because we want the contents to be rendered as optimally as
     //       possible, we use a big font size, so that when we actually need to
-    //       render the content (see paintEvent()), we can do so optimally...
+    //       render the contents (see paintEvent()), we can do so optimally...
 
     mMathmlDocument.setBaseFontPointSize(100);
-    mMathmlDocument.setContent(mContent);
+    mMathmlDocument.setContent(mContents);
 
     QSizeF mathmlDocumentSize = mMathmlDocument.size();
 
@@ -126,10 +127,10 @@ void ViewerWidget::paintEvent(QPaintEvent *pEvent)
 
     // Customise our MathML document
     // Note: to go for 100% of the 'optimal' font size might result in the edges
-    //       of the content being clipped on Windows (compared to Linux and OS
-    //       X) or in some cases on Linux and OS X (e.g. if the content includes
-    //       a square root), hence we go for 75% of the 'optimal' font size
-    //       instead...
+    //       of the contents being clipped on Windows (compared to Linux and OS
+    //       X) or in some cases on Linux and OS X (e.g. if the contents
+    //       includes a square root), hence we go for 75% of the 'optimal' font
+    //       size instead...
 
     mMathmlDocument.setBackgroundColor(backgroundColor);
     mMathmlDocument.setForegroundColor(QColor(palette().color(QPalette::Text)));
@@ -139,7 +140,7 @@ void ViewerWidget::paintEvent(QPaintEvent *pEvent)
                                                               mOneOverMathmlDocumentHeight*height())):
                                              font().pointSize());
 
-    // Render our content
+    // Render our contents
 
     QSizeF mathmlDocumentSize = mMathmlDocument.size();
 

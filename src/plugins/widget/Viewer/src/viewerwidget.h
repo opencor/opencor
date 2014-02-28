@@ -45,8 +45,8 @@ class VIEWER_EXPORT ViewerWidget : public Core::Widget
 public:
     explicit ViewerWidget(QWidget *pParent = 0);
 
-    QString content() const;
-    void setContent(const QString &pContent);
+    QString contents() const;
+    void setContents(const QString &pContents);
 
     bool optimiseFontSize() const;
     void setOptimiseFontSize(const bool &pOptimiseFontSize);
@@ -63,7 +63,7 @@ private:
     double mOneOverMathmlDocumentWidth;
     double mOneOverMathmlDocumentHeight;
 
-    QString mContent;
+    QString mContents;
     bool mOptimiseFontSize;
 };
 
