@@ -315,7 +315,7 @@ qDebug("---------");
     else
         qDebug(">>> No math block found...");
 
-    mEditingWidget->viewer()->setContent(mathBlock);
+    mEditingWidget->viewer()->setContents(mathBlock);
 }
 
 //==============================================================================
