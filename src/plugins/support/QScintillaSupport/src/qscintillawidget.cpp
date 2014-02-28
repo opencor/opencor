@@ -217,6 +217,32 @@ int QScintillaWidget::contentsSize() const
 
 //==============================================================================
 
+QString QScintillaWidget::textInRange(const int &pStartRange,
+                                      const int &pEndRange) const
+{
+    // Retrieve and return the text in the given range, making sure that the
+    // given range makes sense
+
+    int maxRange = contentsSize();
+
+    if (   (pStartRange < 0) || (pStartRange >= maxRange)
+        || (pEndRange < 0) || (pEndRange >= maxRange)
+        || (pStartRange >= pEndRange))
+        return QString();
+
+    char *text = new char[pEndRange-pStartRange+1];
+
+    SendScintilla(SCI_GETTEXTRANGE, pStartRange, pEndRange, text);
+
+    QString res = QString(text);
+
+    delete[] text;
+
+    return res;
+}
+
+//==============================================================================
+
 int QScintillaWidget::findTextInRange(const int &pStartRange,
                                       const int &pEndRange,
                                       const QString &pText,

@@ -305,7 +305,8 @@ qDebug("---------");
     }
 
     if (foundMathBlock)
-        qDebug(">>> Math block found...");
+        qDebug(">>> Math block found:\n%s",
+               qPrintable(editor->textInRange(crtStartMathTagPos, crtEndMathTagPos+EndMathTag.length())));
     else
         qDebug(">>> No math block found...");
 }

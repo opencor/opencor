@@ -64,6 +64,7 @@ public:
 
     int contentsSize() const;
 
+    QString textInRange(const int &pStartRange, const int &pEndRange) const;
     int findTextInRange(const int &pStartRange, const int &pEndRange,
                         const QString &pText,
                         const bool &pCaseSensitive = true) const;
