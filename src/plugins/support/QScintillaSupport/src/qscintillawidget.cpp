@@ -220,7 +220,7 @@ int QScintillaWidget::contentsSize() const
 int QScintillaWidget::findTextInRange(const int &pStartRange,
                                       const int &pEndRange,
                                       const QString &pText,
-                                      const bool &pCaseSensitive)
+                                      const bool &pCaseSensitive) const
 {
     // Find and return the position, if any, of the given text within the given
     // range

@@ -66,7 +66,7 @@ public:
 
     int findTextInRange(const int &pStartRange, const int &pEndRange,
                         const QString &pText,
-                        const bool &pCaseSensitive = true);
+                        const bool &pCaseSensitive = true) const;
 
     bool isSelectAllAvailable() const;
 
