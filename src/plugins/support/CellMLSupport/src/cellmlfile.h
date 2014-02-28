@@ -72,6 +72,7 @@ public:
     CellmlFileRuntime * runtime();
 
     QString fileName() const;
+    void setFileName(const QString &pFileName);
 
     CellmlFileRdfTriples & rdfTriples();
     CellmlFileRdfTriples rdfTriples(iface::cellml_api::CellMLElement *pElement) const;

@@ -134,8 +134,15 @@ void CellmlFileManager::renameFile(const QString &pOldFileName,
 {
     // The file has been renamed, so we need to update our CellML files mapping
 
-    mCellmlFiles.insert(pNewFileName, mCellmlFiles.value(pOldFileName));
+    CellmlFile *crtCellmlFile = cellmlFile(pOldFileName);
+
+    mCellmlFiles.insert(pNewFileName, crtCellmlFile);
     mCellmlFiles.remove(pOldFileName);
+
+    // We also need to ensure that our CellML file object has its file name
+    // updated
+
+    crtCellmlFile->setFileName(pNewFileName);
 }
 
 //==============================================================================

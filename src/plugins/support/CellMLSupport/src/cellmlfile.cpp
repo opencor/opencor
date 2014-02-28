@@ -504,6 +504,15 @@ QString CellmlFile::fileName() const
 
 //==============================================================================
 
+void CellmlFile::setFileName(const QString &pFileName)
+{
+    // Set the CellML file's file name
+
+    mFileName = pFileName;
+}
+
+//==============================================================================
+
 CellmlFileRdfTriples & CellmlFile::rdfTriples()
 {
     // Return all the RDF triples associated with the CellML file
