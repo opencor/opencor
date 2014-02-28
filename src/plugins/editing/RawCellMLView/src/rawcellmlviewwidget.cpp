@@ -23,6 +23,7 @@ specific language governing permissions and limitations under the License.
 #include "filemanager.h"
 #include "qscintillawidget.h"
 #include "rawcellmlviewwidget.h"
+#include "viewerwidget.h"
 
 //==============================================================================
 
@@ -304,11 +305,17 @@ qDebug("---------");
         foundMathBlock = false;
     }
 
+    QString mathBlock = QString();
+
     if (foundMathBlock)
-        qDebug(">>> Math block found:\n%s",
-               qPrintable(editor->textInRange(crtStartMathTagPos, crtEndMathTagPos+EndMathTag.length())));
+        mathBlock = editor->textInRange(crtStartMathTagPos, crtEndMathTagPos+EndMathTag.length());
+
+    if (mathBlock.length())
+        qDebug(">>> Math block found:\n%s", qPrintable(mathBlock));
     else
         qDebug(">>> No math block found...");
+
+    mEditingWidget->viewer()->setContent(mathBlock);
 }
 
 //==============================================================================

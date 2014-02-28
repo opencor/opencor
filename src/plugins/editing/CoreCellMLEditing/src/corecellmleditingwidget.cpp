@@ -58,7 +58,8 @@ CoreCellmlEditingWidget::CoreCellmlEditingWidget(const QString &pContents,
 
     // Create our bordered viewer
 
-    mBorderedViewer = new Core::BorderedWidget(new Viewer::ViewerWidget(this),
+    mViewer = new Viewer::ViewerWidget(this);
+    mBorderedViewer = new Core::BorderedWidget(mViewer,
                                                false, false, true, false);
 
     // Create our bordered editor
@@ -85,6 +86,15 @@ CoreCellmlEditingWidget::~CoreCellmlEditingWidget()
     // Delete the GUI
 
     delete mGui;
+}
+
+//==============================================================================
+
+Viewer::ViewerWidget * CoreCellmlEditingWidget::viewer() const
+{
+    // Return our viewer
+
+    return mViewer;
 }
 
 //==============================================================================

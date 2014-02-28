@@ -59,6 +59,12 @@ namespace QScintillaSupport {
 
 //==============================================================================
 
+namespace Viewer {
+    class ViewerWidget;
+}   // namespace QScintillaSupport
+
+//==============================================================================
+
 namespace CoreCellMLEditing {
 
 //==============================================================================
@@ -73,12 +79,14 @@ public:
                                      QWidget *pParent = 0);
     ~CoreCellmlEditingWidget();
 
+    Viewer::ViewerWidget * viewer() const;
     QScintillaSupport::QScintillaWidget * editor() const;
 
 private:
     Ui::CoreCellmlEditingWidget *mGui;
 
     Core::BorderedWidget *mBorderedViewer;
+    Viewer::ViewerWidget *mViewer;
 
     Core::BorderedWidget *mBorderedEditor;
     QScintillaSupport::QScintillaWidget *mEditor;
