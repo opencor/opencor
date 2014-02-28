@@ -91,11 +91,15 @@ private:
     QIntList mEditingWidgetSizes;
     int mEditorZoomLevel;
 
+    int findText(QScintillaSupport::QScintillaWidget *pEditor,
+                 const int &pStartPosition, const int &pEndPosition,
+                 const QByteArray &pText);
+
 private Q_SLOTS:
     void splitterMoved();
 
     void editorZoomLevelChanged();
-    void cursorPositionChanged(const int &pLine, const int &pColumn);
+    void cursorPositionChanged();
 };
 
 //==============================================================================

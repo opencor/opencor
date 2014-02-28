@@ -144,7 +144,7 @@ void RawCellmlViewWidget::initialize(const QString &pFileName)
                 this, SLOT(editorZoomLevelChanged()));
 
         connect(mEditingWidget->editor(), SIGNAL(cursorPositionChanged(int, int)),
-                this, SLOT(cursorPositionChanged(const int &, const int &)));
+                this, SLOT(cursorPositionChanged()));
 
         // Keep track of our editing widget and add it to ourselves
 
@@ -275,12 +275,57 @@ void RawCellmlViewWidget::editorZoomLevelChanged()
 
 //==============================================================================
 
-void RawCellmlViewWidget::cursorPositionChanged(const int &pLine,
-                                                const int &pColumn)
+int RawCellmlViewWidget::findText(QScintillaSupport::QScintillaWidget *pEditor,
+                                  const int &pStartPosition,
+                                  const int &pEndPosition,
+                                  const QByteArray &pText)
 {
-    // The cursor has moved, so retrieve the 'new' mathematical equation, if any
+    pEditor->SendScintilla(QsciScintillaBase::SCI_SETTARGETSTART, pStartPosition);
+    pEditor->SendScintilla(QsciScintillaBase::SCI_SETTARGETEND, pEndPosition);
 
-qDebug(">>> Line: %d, Col: %d", pLine+1, pColumn+1);
+    return pEditor->SendScintilla(QsciScintillaBase::SCI_SEARCHINTARGET,
+                                  pText.length(), pText.constData());
+}
+
+//==============================================================================
+
+void RawCellmlViewWidget::cursorPositionChanged()
+{
+    // The cursor has moved, so retrieve the new mathematical equation, if any,
+    // around our current position
+qDebug("---------");
+
+    static const QByteArray StartMathTag = QByteArray("<math ");
+    static const QByteArray EndMathTag = QByteArray("</math>");
+
+    QScintillaSupport::QScintillaWidget *editor = mEditingWidget->editor();
+    int contentsLength = editor->SendScintilla(QsciScintillaBase::SCI_GETLENGTH);
+    int crtPos = editor->SendScintilla(QsciScintillaBase::SCI_GETCURRENTPOS);
+
+    editor->SendScintilla(QsciScintillaBase::SCI_SETSEARCHFLAGS,
+                          QsciScintillaBase::SCFIND_MATCHCASE);
+
+    int crtStartMathTagPos = findText(editor, crtPos+StartMathTag.length(), 0, StartMathTag);
+    int prevEndMathTagPos = findText(editor, crtPos, 0, EndMathTag);
+    int crtEndMathTagPos = findText(editor, crtPos-EndMathTag.length()+1, contentsLength, EndMathTag);
+
+    bool foundMathBlock = true;
+
+    if (   (crtStartMathTagPos >= 0) && (crtEndMathTagPos >= 0)
+        && (crtStartMathTagPos <= crtPos)
+        && (crtPos <= crtEndMathTagPos+EndMathTag.length()-1)) {
+        if (   (prevEndMathTagPos >= 0)
+            && (prevEndMathTagPos > crtStartMathTagPos)
+            && (prevEndMathTagPos < crtPos))
+            foundMathBlock = false;
+    } else {
+        foundMathBlock = false;
+    }
+
+    if (foundMathBlock)
+        qDebug(">>> Math block found...");
+    else
+        qDebug(">>> No math block found...");
 }
 
 //==============================================================================
