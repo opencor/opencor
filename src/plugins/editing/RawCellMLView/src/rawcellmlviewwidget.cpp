@@ -24,6 +24,7 @@ specific language governing permissions and limitations under the License.
 #include "qscintillawidget.h"
 #include "rawcellmlviewwidget.h"
 #include "viewerwidget.h"
+#include "xsltransformation.h"
 
 //==============================================================================
 
@@ -280,6 +281,7 @@ void RawCellmlViewWidget::cursorPositionChanged()
 {
     // The cursor has moved, so retrieve the new mathematical equation, if any,
     // around our current position
+//---GRY---
 qDebug("---------");
 
     static const QString StartMathTag = "<math ";
@@ -292,7 +294,7 @@ qDebug("---------");
     int prevEndMathTagPos = editor->findTextInRange(crtPos, 0, EndMathTag);
     int crtEndMathTagPos = editor->findTextInRange(crtPos-EndMathTag.length()+1, editor->contentsSize(), EndMathTag);
 
-    bool foundMathBlock = true;
+    bool foundMathmlBlock = true;
 
     if (   (crtStartMathTagPos >= 0) && (crtEndMathTagPos >= 0)
         && (crtStartMathTagPos <= crtPos)
@@ -300,22 +302,29 @@ qDebug("---------");
         if (   (prevEndMathTagPos >= 0)
             && (prevEndMathTagPos > crtStartMathTagPos)
             && (prevEndMathTagPos < crtPos))
-            foundMathBlock = false;
+            foundMathmlBlock = false;
     } else {
-        foundMathBlock = false;
+        foundMathmlBlock = false;
     }
 
-    QString mathBlock = QString();
+    QString presentationMathml = QString();
 
-    if (foundMathBlock)
-        mathBlock = editor->textInRange(crtStartMathTagPos, crtEndMathTagPos+EndMathTag.length());
+    if (foundMathmlBlock) {
+        QString contentMathml = editor->textInRange(crtStartMathTagPos, crtEndMathTagPos+EndMathTag.length());
 
-    if (mathBlock.length())
-        qDebug(">>> Math block found:\n%s", qPrintable(mathBlock));
-    else
-        qDebug(">>> No math block found...");
+        qDebug(">>> Content MathML found:\n%s", qPrintable(contentMathml));
 
-    mEditingWidget->viewer()->setContents(mathBlock);
+        // Convert our content MathML to presentation MathML
+
+        presentationMathml = Core::contentMathmlToPresentationMathml(contentMathml);
+
+        if (presentationMathml.length())
+            qDebug(">>> Corresponding presentation MathML:\n%s", qPrintable(presentationMathml));
+    } else {
+        qDebug(">>> No content MathML found...");
+    }
+
+    mEditingWidget->viewer()->setContents(presentationMathml);
 }
 
 //==============================================================================

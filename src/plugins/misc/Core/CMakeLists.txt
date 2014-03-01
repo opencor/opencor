@@ -44,6 +44,7 @@ ADD_PLUGIN(Core
         src/usermessagewidget.cpp
         src/viewwidget.cpp
         src/widget.cpp
+        src/xsltransformation.cpp
     HEADERS_MOC
         ../../../3rdparty/QtSingleApplication/src/qtlocalpeer.h
         ../../../3rdparty/QtSingleApplication/src/qtsingleapplication.h
@@ -65,6 +66,7 @@ ADD_PLUGIN(Core
         src/usermessagewidget.h
         src/viewwidget.h
         src/widget.h
+        src/xsltransformation.h
     UIS
         src/centralwidget.ui
     INCLUDE_DIRS
@@ -72,6 +74,7 @@ ADD_PLUGIN(Core
     QT_MODULES
         Network
         Widgets
+        XmlPatterns
     QT_LIBRARIES
         QtCore
         QtGui

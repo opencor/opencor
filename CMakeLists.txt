@@ -255,6 +255,7 @@ QT5_USE_MODULES(${PROJECT_NAME}
     WebKitWidgets
     Widgets
     Xml
+    XmlPatterns
 )
 
 IF(WIN32)
