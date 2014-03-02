@@ -24,7 +24,7 @@ specific language governing permissions and limitations under the License.
 #include "qscintillawidget.h"
 #include "rawcellmlviewwidget.h"
 #include "viewerwidget.h"
-#include "xsltransformation.h"
+#include "xsltransformer.h"
 
 //==============================================================================
 

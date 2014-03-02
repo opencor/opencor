@@ -20,7 +20,7 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include "cliutils.h"
-#include "xsltransformation.h"
+#include "xsltransformer.h"
 
 //==============================================================================
 
@@ -53,8 +53,7 @@ protected:
 
 //==============================================================================
 
-XslTransformation::XslTransformation(const QString &pInput,
-                                     const QString &pXsl) :
+XslTransformer::XslTransformer(const QString &pInput, const QString &pXsl) :
     QObject(),
     mInput(pInput),
     mXsl(pXsl),
@@ -86,7 +85,7 @@ XslTransformation::XslTransformation(const QString &pInput,
 
 //==============================================================================
 
-bool XslTransformation::outputReady() const
+bool XslTransformer::outputReady() const
 {
     // Return whether our output is ready
 
@@ -95,7 +94,7 @@ bool XslTransformation::outputReady() const
 
 //==============================================================================
 
-QString XslTransformation::output() const
+QString XslTransformer::output() const
 {
     // Return the result of our XSL transformation
 
@@ -104,7 +103,7 @@ QString XslTransformation::output() const
 
 //==============================================================================
 
-void XslTransformation::doTransformation()
+void XslTransformer::doTransformation()
 {
     // Create and customise our XML query object
 
@@ -130,15 +129,14 @@ void XslTransformation::doTransformation()
 
 //==============================================================================
 
-QString XslTransformation::transform(const QString &pInput,
-                                     const QString &pXsl)
+QString XslTransformer::transform(const QString &pInput, const QString &pXsl)
 {
-    XslTransformation xslTransformation(pInput, pXsl);
+    XslTransformer xslTransformer(pInput, pXsl);
 
-    while (!xslTransformation.outputReady())
+    while (!xslTransformer.outputReady())
         doNothing(1);
 
-    return xslTransformation.output();
+    return xslTransformer.output();
 }
 
 //==============================================================================
@@ -149,7 +147,7 @@ QString contentMathmlToPresentationMathml(const QString &pContentMathml)
 
     static const QString CtopXsl = resourceAsByteArray(":/ctop.xsl");
 
-    return XslTransformation::transform(pContentMathml, CtopXsl);
+    return XslTransformer::transform(pContentMathml, CtopXsl);
 }
 
 //==============================================================================

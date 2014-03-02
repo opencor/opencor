@@ -19,8 +19,8 @@ specific language governing permissions and limitations under the License.
 // XSL transformation
 //==============================================================================
 
-#ifndef XSLTRANSFORMATION_H
-#define XSLTRANSFORMATION_H
+#ifndef XSLTRANSFORMER_H
+#define XSLTRANSFORMER_H
 
 //==============================================================================
 
@@ -41,12 +41,12 @@ class DummyMessageHandler;
 
 //==============================================================================
 
-class CORE_EXPORT XslTransformation : public QObject
+class CORE_EXPORT XslTransformer : public QObject
 {
     Q_OBJECT
 
 public:
-    explicit XslTransformation(const QString &pInput, const QString &pXsl);
+    explicit XslTransformer(const QString &pInput, const QString &pXsl);
 
     bool outputReady() const;
     QString output() const;
