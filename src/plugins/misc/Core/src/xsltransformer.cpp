@@ -61,6 +61,9 @@ XslTransformer::XslTransformer(const QString &pInput, const QString &pXsl) :
     mOutput(QString())
 {
     // Create our thread
+    // Note: XSL transformation requires using a QXmlQuery object. Howwever,
+    //       QXmlQuery is not thread-safe, hence we create a thread and move
+    //       ourselves to it...
 
     mThread = new QThread();
 
