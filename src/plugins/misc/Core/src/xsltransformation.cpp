@@ -147,8 +147,9 @@ QString contentMathmlToPresentationMathml(const QString &pContentMathml)
 {
     // Transform the given content MathML to presentation MathML and return it
 
-    return XslTransformation::transform(pContentMathml,
-                                        resourceAsByteArray(":/ctop.xsl"));
+    static const QString CtopXsl = resourceAsByteArray(":/ctop.xsl");
+
+    return XslTransformation::transform(pContentMathml, CtopXsl);
 }
 
 //==============================================================================
