@@ -965,6 +965,8 @@ SingleCellViewSimulation::~SingleCellViewSimulation()
 
     // Delete some internal objects
 
+    delete mWorker;
+
     delete mResults;
     delete mData;
 }
