@@ -91,6 +91,8 @@ private:
     QIntList mEditingWidgetSizes;
     int mEditorZoomLevel;
 
+    QString mContentMathml;
+
 private Q_SLOTS:
     void splitterMoved();
 

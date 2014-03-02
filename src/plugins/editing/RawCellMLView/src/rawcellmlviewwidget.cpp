@@ -56,7 +56,8 @@ RawCellmlViewWidget::RawCellmlViewWidget(QWidget *pParent) :
     mEditingWidget(0),
     mEditingWidgets(QMap<QString, CoreCellMLEditing::CoreCellmlEditingWidget *>()),
     mEditingWidgetSizes(QIntList()),
-    mEditorZoomLevel(0)
+    mEditorZoomLevel(0),
+    mContentMathml(QString())
 {
     // Set up the GUI
 
@@ -310,18 +311,34 @@ qDebug("---------");
     QString presentationMathml = QString();
 
     if (foundMathmlBlock) {
-        QString contentMathml = editor->textInRange(crtStartMathTagPos, crtEndMathTagPos+EndMathTag.length());
+        // Retrieve and clean up the content MathML
+
+        QString contentMathml = editor->textInRange(crtStartMathTagPos, crtEndMathTagPos+EndMathTag.length()).simplified().replace("> <", "><");
 
         qDebug(">>> Content MathML found:\n%s", qPrintable(contentMathml));
 
-        // Convert our content MathML to presentation MathML
+        // Check whether the current content MathML is the same as the previous
+        // one
 
-        presentationMathml = Core::contentMathmlToPresentationMathml(contentMathml);
+        if (!contentMathml.compare(mContentMathml)) {
+            // It's the same, so leave
 
-        if (presentationMathml.length())
-            qDebug(">>> Corresponding presentation MathML:\n%s", qPrintable(presentationMathml));
+            return;
+        } else {
+            // It's a different one, so keep track of it and convert our new
+            // content MathML to presentation MathML
+
+            mContentMathml = contentMathml;
+
+            presentationMathml = Core::contentMathmlToPresentationMathml(contentMathml);
+
+            if (presentationMathml.length())
+                qDebug(">>> Corresponding presentation MathML:\n%s", qPrintable(presentationMathml));
+        }
     } else {
         qDebug(">>> No content MathML found...");
+
+        mContentMathml = QString();
     }
 
     mEditingWidget->viewer()->setContents(presentationMathml);
