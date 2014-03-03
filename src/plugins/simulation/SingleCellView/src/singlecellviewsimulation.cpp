@@ -605,7 +605,7 @@ bool SingleCellViewSimulationResults::createArrays()
 
     try {
         mPoints = new double[simulationSize];
-    } catch(...) {
+    } catch (...) {
         return false;
     }
 
@@ -615,7 +615,7 @@ bool SingleCellViewSimulationResults::createArrays()
         mConstants = new double*[mRuntime->constantsCount()];
 
         memset(mConstants, 0, mRuntime->constantsCount()*CoreSolver::SizeOfDoublePointer);
-    } catch(...) {
+    } catch (...) {
         deleteArrays();
 
         return false;
@@ -624,7 +624,7 @@ bool SingleCellViewSimulationResults::createArrays()
     for (int i = 0, iMax = mRuntime->constantsCount(); i < iMax; ++i)
         try {
             mConstants[i] = new double[simulationSize];
-        } catch(...) {
+        } catch (...) {
             deleteArrays();
 
             return false;
@@ -636,7 +636,7 @@ bool SingleCellViewSimulationResults::createArrays()
         mRates = new double*[mRuntime->ratesCount()];
 
         memset(mRates, 0, mRuntime->ratesCount()*CoreSolver::SizeOfDoublePointer);
-    } catch(...) {
+    } catch (...) {
         deleteArrays();
 
         return false;
@@ -645,7 +645,7 @@ bool SingleCellViewSimulationResults::createArrays()
     for (int i = 0, iMax = mRuntime->ratesCount(); i < iMax; ++i)
         try {
             mRates[i] = new double[simulationSize];
-        } catch(...) {
+        } catch (...) {
             deleteArrays();
 
             return false;
@@ -657,7 +657,7 @@ bool SingleCellViewSimulationResults::createArrays()
         mStates = new double*[mRuntime->statesCount()];
 
         memset(mStates, 0, mRuntime->statesCount()*CoreSolver::SizeOfDoublePointer);
-    } catch(...) {
+    } catch (...) {
         deleteArrays();
 
         return false;
@@ -666,7 +666,7 @@ bool SingleCellViewSimulationResults::createArrays()
     for (int i = 0, iMax = mRuntime->statesCount(); i < iMax; ++i)
         try {
             mStates[i] = new double[simulationSize];
-        } catch(...) {
+        } catch (...) {
             deleteArrays();
 
             return false;
@@ -678,7 +678,7 @@ bool SingleCellViewSimulationResults::createArrays()
         mAlgebraic = new double*[mRuntime->algebraicCount()];
 
         memset(mAlgebraic, 0, mRuntime->algebraicCount()*CoreSolver::SizeOfDoublePointer);
-    } catch(...) {
+    } catch (...) {
         deleteArrays();
 
         return false;
@@ -687,7 +687,7 @@ bool SingleCellViewSimulationResults::createArrays()
     for (int i = 0, iMax = mRuntime->algebraicCount(); i < iMax; ++i)
         try {
             mAlgebraic[i] = new double[simulationSize];
-        } catch(...) {
+        } catch (...) {
             deleteArrays();
 
             return false;
