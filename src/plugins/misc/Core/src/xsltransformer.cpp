@@ -25,6 +25,7 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include <QAbstractMessageHandler>
+#include <QMutex>
 #include <QThread>
 #include <QXmlQuery>
 
@@ -53,14 +54,42 @@ protected:
 
 //==============================================================================
 
-XslTransformer::XslTransformer(const QString &pInput, const QString &pXsl) :
-    QObject(),
+XslTransformerJob::XslTransformerJob(const QString &pInput,
+                                     const QString &pXsl) :
     mInput(pInput),
     mXsl(pXsl)
 {
+}
+
+//==============================================================================
+
+QString XslTransformerJob::input() const
+{
+    // Return our input
+
+    return mInput;
+}
+
+//==============================================================================
+
+QString XslTransformerJob::xsl() const
+{
+    // Return our XSL
+
+    return mXsl;
+}
+
+//==============================================================================
+
+XslTransformer::XslTransformer() :
+    QObject(),
+    mPaused(true),
+    mStopped(false),
+    mJobs(QList<XslTransformerJob *>())
+{
     // Create our thread
-    // Note: XSL transformation requires using a QXmlQuery object. Howwever,
-    //       QXmlQuery is not thread-safe, so we create a thread and move
+    // Note: XSL transformation requires using a QXmlQuery object, which is
+    //       inherently not thread-safe. So, we create a thread and move
     //       ourselves to it...
 
     mThread = new QThread();
@@ -82,39 +111,117 @@ XslTransformer::XslTransformer(const QString &pInput, const QString &pXsl) :
 
 //==============================================================================
 
-void XslTransformer::doTransformation()
+XslTransformer::~XslTransformer()
 {
-    // Do the transformation by starting our thread
+    // Finish things with our thread, if needed
 
-    mThread->start();
+    if (mThread->isRunning()) {
+        // Ask our thread to stop
+
+        if (mPaused)
+            mPausedCondition.wakeOne();
+
+        mStopped = true;
+
+        // Ask our thread to quit and wait for it to do so
+
+        mThread->quit();
+        mThread->wait();
+    }
+
+    // Delete some internal ojbects
+    // Note: this is just in case we were asked to stop before we had time do
+    //       all our XSL transformations...
+
+    foreach (XslTransformerJob *job, mJobs)
+        delete job;
+}
+
+//==============================================================================
+
+void XslTransformer::transform(const QString &pInput, const QString &pXsl)
+{
+    // Add a new job to our list
+
+    mJobs << new XslTransformerJob(pInput, pXsl);
+
+    // Start/resume our thread
+
+    if (mThread->isRunning()) {
+        // Our thread is already running, so resume it in case it's pausing
+
+        if (mPaused)
+            mPausedCondition.wakeOne();
+    } else {
+        // Our thread hasn't been started yet, so start it
+
+        mThread->start();
+    }
 }
 
 //==============================================================================
 
 void XslTransformer::started()
 {
-    // Create and customise our XML query object
+    // Create our XML query object
 
     QXmlQuery *xmlQuery = new QXmlQuery(QXmlQuery::XSLT20);
     DummyMessageHandler *dummyMessageHandler = new DummyMessageHandler();
 
     xmlQuery->setMessageHandler(dummyMessageHandler);
 
-    xmlQuery->setFocus(mInput);
-    xmlQuery->setQuery(mXsl);
+    // Do our XSL transformations
 
-    // Do the XSL tranformation
+    QMutex pausedMutex;
 
-    QString output;
+    while (!mStopped) {
+        // Carry out our different jobs
 
-    xmlQuery->evaluateTo(&output);
+        while (mJobs.count() && !mStopped) {
+            // Retrieve the first job in our list
+
+            XslTransformerJob *job = mJobs.first();
+
+            mJobs.removeFirst();
+
+            // Customise our XML query object
+
+            xmlQuery->setFocus(job->input());
+            xmlQuery->setQuery(job->xsl());
+
+            // Do the XSL transformation
+
+            QString output;
+
+            if (!xmlQuery->evaluateTo(&output))
+                output = QString();
+
+            // Let people know that an XSL transformation has been performed
+
+            emit done(job->input(), output);
+
+            // We are done with our job, so...
+
+            delete job;
+        }
+
+        // Pause ourselves, unless we have been asked to stop
+
+        if (!mStopped) {
+            mPaused = true;
+
+            pausedMutex.lock();
+                mPausedCondition.wait(&pausedMutex);
+            pausedMutex.unlock();
+
+            mPaused = false;
+        }
+    }
 
     // We are done
 
     delete xmlQuery;
     delete dummyMessageHandler;
-
-    emit done(mInput, output);
 }
 
 //==============================================================================

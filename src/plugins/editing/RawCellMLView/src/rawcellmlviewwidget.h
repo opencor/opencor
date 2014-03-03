@@ -100,7 +100,7 @@ private:
     QString mContentMathml;
     QMap<QString, QString> mPresentationMathmls;
 
-    QList<Core::XslTransformer *> mXslTransformers;
+    Core::XslTransformer *mXslTransformer;
 
 private Q_SLOTS:
     void splitterMoved();

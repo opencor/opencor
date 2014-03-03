@@ -28,7 +28,10 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#include <QList>
 #include <QObject>
+#include <QString>
+#include <QWaitCondition>
 
 //==============================================================================
 
@@ -41,20 +44,40 @@ class DummyMessageHandler;
 
 //==============================================================================
 
+class XslTransformerJob
+{
+public:
+    explicit XslTransformerJob(const QString &pInput, const QString &pXsl);
+
+    QString input() const;
+    QString xsl() const;
+
+private:
+    QString mInput;
+    QString mXsl;
+};
+
+//==============================================================================
+
 class CORE_EXPORT XslTransformer : public QObject
 {
     Q_OBJECT
 
 public:
-    explicit XslTransformer(const QString &pInput, const QString &pXsl);
+    explicit XslTransformer();
+    ~XslTransformer();
 
-    void doTransformation();
+    void transform(const QString &pInput, const QString &pXsl);
 
 private:
     QThread *mThread;
 
-    QString mInput;
-    QString mXsl;
+    bool mPaused;
+    bool mStopped;
+
+    QWaitCondition mPausedCondition;
+
+    QList<XslTransformerJob *> mJobs;
 
 Q_SIGNALS:
     void done(const QString &pInput, const QString &pOutput);

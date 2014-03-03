@@ -58,12 +58,19 @@ RawCellmlViewWidget::RawCellmlViewWidget(QWidget *pParent) :
     mEditingWidgetSizes(QIntList()),
     mEditorZoomLevel(0),
     mContentMathml(QString()),
-    mPresentationMathmls(QMap<QString, QString>()),
-    mXslTransformers(QList<Core::XslTransformer *>())
+    mPresentationMathmls(QMap<QString, QString>())
 {
     // Set up the GUI
 
     mGui->setupUi(this);
+
+    // Create our XSL transformer and create a connection to retrieve the result
+    // of its XSL transformations
+
+    mXslTransformer = new Core::XslTransformer();
+
+    connect(mXslTransformer, SIGNAL(done(const QString &, const QString &)),
+            this, SLOT(xslTransformationDone(const QString &, const QString &)));
 }
 
 //==============================================================================
@@ -76,8 +83,7 @@ RawCellmlViewWidget::~RawCellmlViewWidget()
 
     // Delete some internal objects
 
-    foreach (Core::XslTransformer *xslTransformer, mXslTransformers)
-        delete xslTransformer;
+    delete mXslTransformer;
 }
 
 //==============================================================================
@@ -345,14 +351,7 @@ qDebug("---------");
 
                 static const QString CtopXsl = Core::resourceAsByteArray(":/ctop.xsl");
 
-                Core::XslTransformer *xslTransformer = new Core::XslTransformer(contentMathml, CtopXsl);
-
-                connect(xslTransformer, SIGNAL(done(const QString &, const QString &)),
-                        this, SLOT(xslTransformationDone(const QString &, const QString &)));
-
-                xslTransformer->doTransformation();
-
-                mXslTransformers << xslTransformer;
+                mXslTransformer->transform(contentMathml, CtopXsl);
             }
         }
     } else {
@@ -378,10 +377,6 @@ void RawCellmlViewWidget::xslTransformationDone(const QString &pInput,
 
     if (pOutput.length())
         qDebug(">>> Corresponding presentation MathML:\n%s", qPrintable(pOutput));
-
-    // Remove our track of the XSL transformer
-
-    mXslTransformers.removeOne(qobject_cast<Core::XslTransformer *>(sender()));
 }
 
 //==============================================================================
