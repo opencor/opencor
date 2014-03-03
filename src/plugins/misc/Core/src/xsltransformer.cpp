@@ -82,7 +82,6 @@ QString XslTransformerJob::xsl() const
 //==============================================================================
 
 XslTransformer::XslTransformer() :
-    QObject(),
     mPaused(true),
     mStopped(false),
     mJobs(QList<XslTransformerJob *>())

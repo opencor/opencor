@@ -407,7 +407,6 @@ Property * PropertyItem::owner() const
 //==============================================================================
 
 Property::Property(const Type &pType, PropertyEditorWidget *pParent) :
-    QObject(pParent),
     mOwner(pParent),
     mType(pType),
     mId(QString()),
