@@ -354,9 +354,9 @@ void SingleCellViewSimulationWorker::started()
             if (mSimulation->delay() && !mStopped)
                 Core::doNothing(100*mSimulation->delay());
 
-            // Check whether we should be paused
+            // Pause ourselves, if (really) needed
 
-            if (mPaused) {
+            if (mPaused && !mStopped) {
                 // We should be paused, so stop our timer
 
                 elapsedTime += timer.elapsed();
@@ -384,9 +384,9 @@ void SingleCellViewSimulationWorker::started()
                 timer.restart();
             }
 
-            // Reinitialise our solver, if needed
+            // Reinitialise our solver, if (really) needed
 
-            if (mReset) {
+            if (mReset && !mStopped) {
                 if (odeSolver)
                     odeSolver->initialize(mCurrentPoint,
                                           mRuntime->statesCount(),
