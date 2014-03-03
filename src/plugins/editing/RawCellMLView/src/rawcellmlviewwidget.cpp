@@ -57,7 +57,9 @@ RawCellmlViewWidget::RawCellmlViewWidget(QWidget *pParent) :
     mEditingWidgets(QMap<QString, CoreCellMLEditing::CoreCellmlEditingWidget *>()),
     mEditingWidgetSizes(QIntList()),
     mEditorZoomLevel(0),
-    mContentMathml(QString())
+    mContentMathml(QString()),
+    mPresentationMathmls(QMap<QString, QString>()),
+    mXslTransformers(QList<Core::XslTransformer *>())
 {
     // Set up the GUI
 
@@ -71,6 +73,11 @@ RawCellmlViewWidget::~RawCellmlViewWidget()
     // Delete the GUI
 
     delete mGui;
+
+    // Delete some internal objects
+
+    foreach (Core::XslTransformer *xslTransformer, mXslTransformers)
+        delete xslTransformer;
 }
 
 //==============================================================================
@@ -308,8 +315,6 @@ qDebug("---------");
         foundMathmlBlock = false;
     }
 
-    QString presentationMathml = QString();
-
     if (foundMathmlBlock) {
         // Retrieve and clean up the content MathML
 
@@ -325,23 +330,58 @@ qDebug("---------");
 
             return;
         } else {
-            // It's a different one, so keep track of it and convert our new
-            // content MathML to presentation MathML
+            // It's a different one, so keep track of it and check whether we
+            // have already retrieved its presentation MathML counterpart
 
             mContentMathml = contentMathml;
 
-            presentationMathml = Core::contentMathmlToPresentationMathml(contentMathml);
+            QString presentationMathml = mPresentationMathmls.value(mContentMathml);
 
-            if (presentationMathml.length())
-                qDebug(">>> Corresponding presentation MathML:\n%s", qPrintable(presentationMathml));
+            if (!presentationMathml.isEmpty()) {
+                mEditingWidget->viewer()->setContents(presentationMathml);
+            } else {
+                // We haven't already retrieved its presentation MathML
+                // counterpart, so do it now
+
+                static const QString CtopXsl = Core::resourceAsByteArray(":/ctop.xsl");
+
+                Core::XslTransformer *xslTransformer = new Core::XslTransformer(contentMathml, CtopXsl);
+
+                connect(xslTransformer, SIGNAL(done(const QString &, const QString &)),
+                        this, SLOT(xslTransformationDone(const QString &, const QString &)));
+
+                xslTransformer->doTransformation();
+
+                mXslTransformers << xslTransformer;
+            }
         }
     } else {
         qDebug(">>> No content MathML found...");
 
         mContentMathml = QString();
-    }
 
-    mEditingWidget->viewer()->setContents(presentationMathml);
+        mEditingWidget->viewer()->setContents(QString());
+    }
+}
+
+//==============================================================================
+
+void RawCellmlViewWidget::xslTransformationDone(const QString &pInput,
+                                                const QString &pOutput)
+{
+    // The XSL transformation is done, so update our viewer and keep track of
+    // the presentation MathML
+
+    mEditingWidget->viewer()->setContents(pOutput);
+
+    mPresentationMathmls.insert(pInput, pOutput);
+
+    if (pOutput.length())
+        qDebug(">>> Corresponding presentation MathML:\n%s", qPrintable(pOutput));
+
+    // Remove our track of the XSL transformer
+
+    mXslTransformers.removeOne(qobject_cast<Core::XslTransformer *>(sender()));
 }
 
 //==============================================================================

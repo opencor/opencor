@@ -56,13 +56,11 @@ protected:
 XslTransformer::XslTransformer(const QString &pInput, const QString &pXsl) :
     QObject(),
     mInput(pInput),
-    mXsl(pXsl),
-    mOutputReady(false),
-    mOutput(QString())
+    mXsl(pXsl)
 {
     // Create our thread
     // Note: XSL transformation requires using a QXmlQuery object. Howwever,
-    //       QXmlQuery is not thread-safe, hence we create a thread and move
+    //       QXmlQuery is not thread-safe, so we create a thread and move
     //       ourselves to it...
 
     mThread = new QThread();
@@ -74,39 +72,26 @@ XslTransformer::XslTransformer(const QString &pInput, const QString &pXsl) :
     // Create a few connections
 
     connect(mThread, SIGNAL(started()),
-            this, SLOT(doTransformation()));
+            this, SLOT(started()));
 
     connect(mThread, SIGNAL(finished()),
             mThread, SLOT(deleteLater()));
     connect(mThread, SIGNAL(finished()),
             this, SLOT(deleteLater()));
+}
 
-    // Start our thread, i.e. do our transformation
+//==============================================================================
+
+void XslTransformer::doTransformation()
+{
+    // Do the transformation by starting our thread
 
     mThread->start();
 }
 
 //==============================================================================
 
-bool XslTransformer::outputReady() const
-{
-    // Return whether our output is ready
-
-    return mOutputReady;
-}
-
-//==============================================================================
-
-QString XslTransformer::output() const
-{
-    // Return the result of our XSL transformation
-
-    return mOutput;
-}
-
-//==============================================================================
-
-void XslTransformer::doTransformation()
+void XslTransformer::started()
 {
     // Create and customise our XML query object
 
@@ -120,37 +105,16 @@ void XslTransformer::doTransformation()
 
     // Do the XSL tranformation
 
-    xmlQuery->evaluateTo(&mOutput);
+    QString output;
+
+    xmlQuery->evaluateTo(&output);
 
     // We are done
 
     delete xmlQuery;
     delete dummyMessageHandler;
 
-    mOutputReady = true;
-}
-
-//==============================================================================
-
-QString XslTransformer::transform(const QString &pInput, const QString &pXsl)
-{
-    XslTransformer xslTransformer(pInput, pXsl);
-
-    while (!xslTransformer.outputReady())
-        doNothing(1);
-
-    return xslTransformer.output();
-}
-
-//==============================================================================
-
-QString contentMathmlToPresentationMathml(const QString &pContentMathml)
-{
-    // Transform the given content MathML to presentation MathML and return it
-
-    static const QString CtopXsl = resourceAsByteArray(":/ctop.xsl");
-
-    return XslTransformer::transform(pContentMathml, CtopXsl);
+    emit done(mInput, output);
 }
 
 //==============================================================================

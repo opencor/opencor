@@ -43,6 +43,12 @@ namespace OpenCOR {
 
 //==============================================================================
 
+namespace Core {
+    class XslTransformer;
+}   // namespace Core
+
+//==============================================================================
+
 namespace CoreCellMLEditing {
     class CoreCellmlEditingWidget;
 }   // namespace CoreCellMLEditing
@@ -92,12 +98,17 @@ private:
     int mEditorZoomLevel;
 
     QString mContentMathml;
+    QMap<QString, QString> mPresentationMathmls;
+
+    QList<Core::XslTransformer *> mXslTransformers;
 
 private Q_SLOTS:
     void splitterMoved();
 
     void editorZoomLevelChanged();
     void cursorPositionChanged();
+
+    void xslTransformationDone(const QString &pInput, const QString &pOutput);
 };
 
 //==============================================================================

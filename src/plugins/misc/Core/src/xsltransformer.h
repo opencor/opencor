@@ -48,10 +48,7 @@ class CORE_EXPORT XslTransformer : public QObject
 public:
     explicit XslTransformer(const QString &pInput, const QString &pXsl);
 
-    bool outputReady() const;
-    QString output() const;
-
-    static QString transform(const QString &pInput, const QString &pXsl);
+    void doTransformation();
 
 private:
     QThread *mThread;
@@ -59,16 +56,12 @@ private:
     QString mInput;
     QString mXsl;
 
-    bool mOutputReady;
-    QString mOutput;
+Q_SIGNALS:
+    void done(const QString &pInput, const QString &pOutput);
 
 private Q_SLOTS:
-    void doTransformation();
+    void started();
 };
-
-//==============================================================================
-
-QString CORE_EXPORT contentMathmlToPresentationMathml(const QString &pContentMathml);
 
 //==============================================================================
 

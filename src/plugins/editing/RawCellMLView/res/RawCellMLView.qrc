@@ -1,5 +1,6 @@
 <RCC>
     <qresource prefix="/">
+        <file>ctop.xsl</file>
         <file alias="RawCellMLView_fr">../../../../../build/RawCellMLView_fr.qm</file>
     </qresource>
 </RCC>
