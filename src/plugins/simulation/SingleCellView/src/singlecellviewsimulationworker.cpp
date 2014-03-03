@@ -492,11 +492,11 @@ bool SingleCellViewSimulationWorker::stop()
     // Check that we are either running or paused
 
     if (isRunning() || isPaused()) {
-        // Ask ourselves to stop
+        // Ask our thread to stop
 
         mStopped = true;
 
-        // Resume ourselves, if needed
+        // Resume our thread, if needed
 
         if (isPaused())
             mPausedCondition.wakeOne();
