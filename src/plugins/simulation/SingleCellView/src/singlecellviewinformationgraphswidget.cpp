@@ -49,6 +49,7 @@ namespace SingleCellView {
 
 SingleCellViewInformationGraphsWidget::SingleCellViewInformationGraphsWidget(QWidget *pParent) :
     QStackedWidget(pParent),
+    Core::CommonWidget(pParent),
     mGui(new Ui::SingleCellViewInformationGraphsWidget),
     mGraphPanels(QMap<Core::PropertyEditorWidget *, SingleCellViewGraphPanelWidget *>()),
     mPropertyEditors(QMap<SingleCellViewGraphPanelWidget *, Core::PropertyEditorWidget *>()),

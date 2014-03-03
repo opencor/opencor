@@ -64,7 +64,7 @@ class PrettyCellmlViewWidget : public Core::ViewWidget
     Q_OBJECT
 
 public:
-    explicit PrettyCellmlViewWidget(QWidget *pParent = 0);
+    explicit PrettyCellmlViewWidget(QWidget *pParent);
     ~PrettyCellmlViewWidget();
 
     virtual void loadSettings(QSettings *pSettings);

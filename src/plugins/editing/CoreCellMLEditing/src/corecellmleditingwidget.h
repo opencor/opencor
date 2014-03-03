@@ -76,7 +76,7 @@ class CORECELLMLEDITING_EXPORT CoreCellmlEditingWidget : public QSplitter
 public:
     explicit CoreCellmlEditingWidget(const QString &pContents,
                                      const bool &pReadOnly, QsciLexer *pLexer,
-                                     QWidget *pParent = 0);
+                                     QWidget *pParent);
     ~CoreCellmlEditingWidget();
 
     Viewer::ViewerWidget * viewer() const;

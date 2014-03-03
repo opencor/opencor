@@ -73,7 +73,7 @@ class SingleCellViewInformationSolversWidget : public Core::PropertyEditorWidget
     Q_OBJECT
 
 public:
-    explicit SingleCellViewInformationSolversWidget(QWidget *pParent = 0);
+    explicit SingleCellViewInformationSolversWidget(QWidget *pParent);
     ~SingleCellViewInformationSolversWidget();
 
     virtual void retranslateUi();

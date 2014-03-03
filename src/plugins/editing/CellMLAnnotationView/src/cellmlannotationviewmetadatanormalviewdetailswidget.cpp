@@ -49,7 +49,7 @@ namespace CellMLAnnotationView {
 
 CellmlAnnotationViewMetadataNormalViewDetailsWidget::CellmlAnnotationViewMetadataNormalViewDetailsWidget(CellmlAnnotationViewEditingWidget *pParent) :
     QScrollArea(pParent),
-    CommonWidget(pParent),
+    Core::CommonWidget(pParent),
     mCellmlFile(pParent->cellmlFile()),
     mGui(new Ui::CellmlAnnotationViewMetadataNormalViewDetailsWidget),
     mGridWidget(0),

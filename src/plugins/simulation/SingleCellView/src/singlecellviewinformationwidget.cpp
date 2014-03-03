@@ -44,7 +44,7 @@ namespace SingleCellView {
 
 SingleCellViewInformationWidget::SingleCellViewInformationWidget(QWidget *pParent) :
     QScrollArea(pParent),
-    CommonWidget(pParent),
+    Core::CommonWidget(pParent),
     mGui(new Ui::SingleCellViewInformationWidget)
 {
     // Set up the GUI

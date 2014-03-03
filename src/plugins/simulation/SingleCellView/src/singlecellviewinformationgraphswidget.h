@@ -82,7 +82,7 @@ class SingleCellViewInformationGraphsWidget : public QStackedWidget,
     Q_OBJECT
 
 public:
-    explicit SingleCellViewInformationGraphsWidget(QWidget *pParent = 0);
+    explicit SingleCellViewInformationGraphsWidget(QWidget *pParent);
 
     virtual void retranslateUi();
 

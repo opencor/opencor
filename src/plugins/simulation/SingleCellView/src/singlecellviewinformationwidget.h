@@ -65,7 +65,7 @@ class SingleCellViewInformationWidget : public QScrollArea,
     Q_OBJECT
 
 public:
-    explicit SingleCellViewInformationWidget(QWidget *pParent = 0);
+    explicit SingleCellViewInformationWidget(QWidget *pParent);
     ~SingleCellViewInformationWidget();
 
     virtual void retranslateUi();

@@ -42,7 +42,7 @@ class CORE_EXPORT ToolBarWidget : public QToolBar
     Q_OBJECT
 
 public:
-    explicit ToolBarWidget(QWidget *pParent = 0);
+    explicit ToolBarWidget(QWidget *pParent);
 };
 
 //==============================================================================

@@ -73,7 +73,7 @@ class SingleCellViewInformationParametersWidget : public QStackedWidget,
     Q_OBJECT
 
 public:
-    explicit SingleCellViewInformationParametersWidget(QWidget *pParent = 0);
+    explicit SingleCellViewInformationParametersWidget(QWidget *pParent);
 
     virtual void retranslateUi();
 

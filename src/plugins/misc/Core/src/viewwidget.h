@@ -39,7 +39,7 @@ class CORE_EXPORT ViewWidget : public Widget
     Q_OBJECT
 
 public:
-    explicit ViewWidget(QWidget *pParent = 0);
+    explicit ViewWidget(QWidget *pParent);
 
     virtual QList<QWidget *> statusBarWidgets() const;
 

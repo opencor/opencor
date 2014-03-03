@@ -40,7 +40,7 @@ class FileOrganiserWidget : public Core::TreeViewWidget
     Q_OBJECT
 
 public:
-    explicit FileOrganiserWidget(QWidget *pParent = 0);
+    explicit FileOrganiserWidget(QWidget *pParent);
     ~FileOrganiserWidget();
 
     virtual void loadSettings(QSettings *pSettings);

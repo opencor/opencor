@@ -43,7 +43,7 @@ class CORE_EXPORT TreeViewWidget : public QTreeView, public CommonWidget
     Q_OBJECT
 
 public:
-    explicit TreeViewWidget(QWidget *pParent = 0);
+    explicit TreeViewWidget(QWidget *pParent);
 
     void resizeColumnsToContents();
 

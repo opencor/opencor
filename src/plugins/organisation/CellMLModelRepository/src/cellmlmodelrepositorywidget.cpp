@@ -37,7 +37,7 @@ namespace CellMLModelRepository {
 
 CellmlModelRepositoryWidget::CellmlModelRepositoryWidget(QWidget *pParent) :
     QWebView(pParent),
-    CommonWidget(pParent)
+    Core::CommonWidget(pParent)
 {
     // Add a small margin to the widget, so that no visual trace of the border
     // drawn by drawBorderIfDocked is left when scrolling

@@ -43,7 +43,7 @@ class CORE_EXPORT ProgressBarWidget : public Widget
     Q_OBJECT
 
 public:
-    explicit ProgressBarWidget(QWidget *pParent = 0);
+    explicit ProgressBarWidget(QWidget *pParent);
 
     void setValue(const double &pValue);
 

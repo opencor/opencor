@@ -54,7 +54,7 @@ class TextEditorWidget : public QLineEdit
     Q_OBJECT
 
 public:
-    explicit TextEditorWidget(QWidget *pParent = 0);
+    explicit TextEditorWidget(QWidget *pParent);
 
 protected:
     virtual void keyPressEvent(QKeyEvent *pEvent);
@@ -71,7 +71,7 @@ class IntegerEditorWidget : public TextEditorWidget
     Q_OBJECT
 
 public:
-    explicit IntegerEditorWidget(QWidget *pParent = 0);
+    explicit IntegerEditorWidget(QWidget *pParent);
 };
 
 //==============================================================================
@@ -81,7 +81,7 @@ class DoubleEditorWidget : public TextEditorWidget
     Q_OBJECT
 
 public:
-    explicit DoubleEditorWidget(QWidget *pParent = 0);
+    explicit DoubleEditorWidget(QWidget *pParent);
 };
 
 //==============================================================================
@@ -91,7 +91,7 @@ class ListEditorWidget : public QComboBox
     Q_OBJECT
 
 public:
-    explicit ListEditorWidget(QWidget *pParent = 0);
+    explicit ListEditorWidget(QWidget *pParent);
 
 protected:
     virtual void keyPressEvent(QKeyEvent *pEvent);
@@ -325,10 +325,10 @@ class CORE_EXPORT PropertyEditorWidget : public TreeViewWidget
 public:
     explicit PropertyEditorWidget(const bool &pShowUnits,
                                   const bool &pAutoUpdateHeight,
-                                  QWidget *pParent = 0);
+                                  QWidget *pParent);
     explicit PropertyEditorWidget(const bool &pAutoUpdateHeight,
-                                  QWidget *pParent = 0);
-    explicit PropertyEditorWidget(QWidget *pParent = 0);
+                                  QWidget *pParent);
+    explicit PropertyEditorWidget(QWidget *pParent);
     ~PropertyEditorWidget();
 
     virtual void retranslateUi();

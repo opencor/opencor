@@ -85,7 +85,7 @@ bool CellmlAnnotationViewMetadataEditDetailsWidget::Item::operator<(const Item &
 
 CellmlAnnotationViewMetadataEditDetailsWidget::CellmlAnnotationViewMetadataEditDetailsWidget(CellmlAnnotationViewEditingWidget *pParent) :
     QScrollArea(pParent),
-    CommonWidget(pParent),
+    Core::CommonWidget(pParent),
     mParent(pParent),
     mGui(new Ui::CellmlAnnotationViewMetadataEditDetailsWidget),
     mMainWidget(0),

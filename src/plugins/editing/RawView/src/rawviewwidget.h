@@ -57,7 +57,7 @@ class RawViewWidget : public Core::ViewWidget
     Q_OBJECT
 
 public:
-    explicit RawViewWidget(QWidget *pParent = 0);
+    explicit RawViewWidget(QWidget *pParent);
     ~RawViewWidget();
 
     virtual void loadSettings(QSettings *pSettings);

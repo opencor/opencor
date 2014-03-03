@@ -459,7 +459,7 @@ static const double DefMaxAxis = 1000.0;
 
 SingleCellViewGraphPanelPlotWidget::SingleCellViewGraphPanelPlotWidget(QWidget *pParent) :
     QwtPlot(pParent),
-    CommonWidget(pParent),
+    Core::CommonWidget(pParent),
     mGui(new Ui::SingleCellViewGraphPanelPlotWidget),
     mGraphs(QList<SingleCellViewGraphPanelPlotGraph *>()),
     mAction(None),

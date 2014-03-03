@@ -55,7 +55,7 @@ class CellmlAnnotationViewWidget : public Core::ViewWidget
 
 public:
     explicit CellmlAnnotationViewWidget(CellMLAnnotationViewPlugin *pPluginParent,
-                                        QWidget *pParent = 0);
+                                        QWidget *pParent);
     ~CellmlAnnotationViewWidget();
 
     virtual void loadSettings(QSettings *pSettings);

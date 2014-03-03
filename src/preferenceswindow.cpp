@@ -34,7 +34,7 @@ namespace OpenCOR {
 
 PreferencesWindow::PreferencesWindow(MainWindow *pMainWindow) :
     QDialog(pMainWindow),
-    CommonWidget(pMainWindow),
+    Core::CommonWidget(pMainWindow),
     mGui(new Ui::PreferencesWindow)
 {
     // Set up the GUI

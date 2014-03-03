@@ -100,7 +100,7 @@ class SingleCellViewGraphPanelPlotWidget;
 class SingleCellViewGraphPanelPlotOverlayWidget : public QWidget
 {
 public:
-    explicit SingleCellViewGraphPanelPlotOverlayWidget(SingleCellViewGraphPanelPlotWidget *pParent = 0);
+    explicit SingleCellViewGraphPanelPlotOverlayWidget(SingleCellViewGraphPanelPlotWidget *pParent);
 
     void setOriginPoint(const QPoint &pOriginPoint);
     void setPoint(const QPoint &pPoint);
@@ -150,7 +150,7 @@ class SingleCellViewGraphPanelPlotWidget : public QwtPlot,
     friend class SingleCellViewGraphPanelPlotOverlayWidget;
 
 public:
-    explicit SingleCellViewGraphPanelPlotWidget(QWidget *pParent = 0);
+    explicit SingleCellViewGraphPanelPlotWidget(QWidget *pParent);
     ~SingleCellViewGraphPanelPlotWidget();
 
     virtual void retranslateUi();

@@ -51,7 +51,7 @@ class QSCINTILLASUPPORT_EXPORT QScintillaWidget : public QsciScintilla
 
 public:
     explicit QScintillaWidget(const QString &pContents, const bool &pReadOnly,
-                              QsciLexer *pLexer, QWidget *pParent = 0);
+                              QsciLexer *pLexer, QWidget *pParent);
     ~QScintillaWidget();
 
     QMenu * contextMenu() const;

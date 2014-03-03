@@ -57,7 +57,7 @@ class SingleCellViewGraphPanelWidget : public Core::Widget
     Q_OBJECT
 
 public:
-    explicit SingleCellViewGraphPanelWidget(QWidget *pParent = 0);
+    explicit SingleCellViewGraphPanelWidget(QWidget *pParent);
     ~SingleCellViewGraphPanelWidget();
 
     virtual void retranslateUi();

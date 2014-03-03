@@ -54,7 +54,7 @@ CellmlAnnotationViewEditingWidget::CellmlAnnotationViewEditingWidget(CellMLAnnot
                                                                      const QString &pFileName,
                                                                      QWidget *pParent) :
     QSplitter(pParent),
-    CommonWidget(pParent),
+    Core::CommonWidget(pParent),
     mGui(new Ui::CellmlAnnotationViewEditingWidget),
     mPluginParent(pPluginParent),
     oldWebViewUrls(QMap<QWebView *, QUrl>())

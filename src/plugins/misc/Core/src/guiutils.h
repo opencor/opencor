@@ -61,30 +61,26 @@ QString CORE_EXPORT getSaveFileName(const QString &pCaption,
 void CORE_EXPORT setFocusTo(QWidget *pWidget);
 
 QFrame CORE_EXPORT * newLineWidget(const bool &pHorizontal,
-                                   const QColor &pColor,
-                                   QWidget *pParent = 0);
-QFrame CORE_EXPORT * newLineWidget(const bool &pHorizontal,
-                                   QWidget *pParent = 0);
-QFrame CORE_EXPORT * newLineWidget(const QColor &pColor,
-                                   QWidget *pParent = 0);
-QFrame CORE_EXPORT * newLineWidget(QWidget *pParent = 0);
+                                   const QColor &pColor, QWidget *pParent);
+QFrame CORE_EXPORT * newLineWidget(const bool &pHorizontal, QWidget *pParent);
+QFrame CORE_EXPORT * newLineWidget(const QColor &pColor, QWidget *pParent);
+QFrame CORE_EXPORT * newLineWidget(QWidget *pParent);
 
 QLabel CORE_EXPORT * newLabel(const QString &pText,
                               const double &pFontPercentage,
                               const bool &pBold, const bool &pItalic,
                               const Qt::Alignment &pAlignment,
-                              QWidget *pParent = 0);
+                              QWidget *pParent);
 QLabel CORE_EXPORT * newLabel(const QString &pText,
                               const double &pFontPercentage,
                               const bool &pBold, const bool &pItalic,
-                              QWidget *pParent = 0);
+                              QWidget *pParent);
 QLabel CORE_EXPORT * newLabel(const QString &pText,
                               const double &pFontPercentage,
-                              const bool &pBold, QWidget *pParent = 0);
+                              const bool &pBold, QWidget *pParent);
 QLabel CORE_EXPORT * newLabel(const QString &pText,
-                              const double &pFontPercentage,
-                              QWidget *pParent = 0);
-QLabel CORE_EXPORT * newLabel(const QString &pText, QWidget *pParent = 0);
+                              const double &pFontPercentage, QWidget *pParent);
+QLabel CORE_EXPORT * newLabel(const QString &pText, QWidget *pParent);
 
 void CORE_EXPORT showEnableAction(QAction *pAction, const bool &pShowEnable);
 

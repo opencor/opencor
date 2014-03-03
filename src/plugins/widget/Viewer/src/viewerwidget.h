@@ -43,7 +43,7 @@ class VIEWER_EXPORT ViewerWidget : public Core::Widget
     Q_OBJECT
 
 public:
-    explicit ViewerWidget(QWidget *pParent = 0);
+    explicit ViewerWidget(QWidget *pParent);
 
     QString contents() const;
     void setContents(const QString &pContents);

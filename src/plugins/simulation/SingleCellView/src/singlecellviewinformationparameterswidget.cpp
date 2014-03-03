@@ -41,6 +41,7 @@ namespace SingleCellView {
 
 SingleCellViewInformationParametersWidget::SingleCellViewInformationParametersWidget(QWidget *pParent) :
     QStackedWidget(pParent),
+    Core::CommonWidget(pParent),
     mPropertyEditors(QMap<QString, Core::PropertyEditorWidget *>()),
     mPropertyEditor(0),
     mContextMenus(QMap<QString, QMenu *>()),

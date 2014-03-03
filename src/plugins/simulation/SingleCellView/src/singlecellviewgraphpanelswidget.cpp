@@ -38,7 +38,7 @@ namespace SingleCellView {
 
 SingleCellViewGraphPanelsWidget::SingleCellViewGraphPanelsWidget(QWidget *pParent) :
     QSplitter(pParent),
-    CommonWidget(pParent),
+    Core::CommonWidget(pParent),
     mSplitterSizes(QIntList()),
     mActiveGraphPanels(QMap<QString, SingleCellViewGraphPanelWidget *>()),
     mActiveGraphPanel(0),

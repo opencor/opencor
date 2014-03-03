@@ -51,7 +51,7 @@ namespace Core {
 class CORE_EXPORT CommonWidget
 {
 public:
-    explicit CommonWidget(QWidget *pParent = 0);
+    explicit CommonWidget(QWidget *pParent);
 
     virtual void loadSettings(QSettings *pSettings);
     virtual void saveSettings(QSettings *pSettings) const;

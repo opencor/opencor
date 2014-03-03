@@ -70,7 +70,7 @@ class RawCellmlViewWidget : public Core::ViewWidget
     Q_OBJECT
 
 public:
-    explicit RawCellmlViewWidget(QWidget *pParent = 0);
+    explicit RawCellmlViewWidget(QWidget *pParent);
     ~RawCellmlViewWidget();
 
     virtual void loadSettings(QSettings *pSettings);

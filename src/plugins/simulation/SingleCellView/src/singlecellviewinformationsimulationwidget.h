@@ -51,7 +51,7 @@ class SingleCellViewInformationSimulationWidget : public Core::PropertyEditorWid
     Q_OBJECT
 
 public:
-    explicit SingleCellViewInformationSimulationWidget(QWidget *pParent = 0);
+    explicit SingleCellViewInformationSimulationWidget(QWidget *pParent);
     ~SingleCellViewInformationSimulationWidget();
 
     virtual void retranslateUi();

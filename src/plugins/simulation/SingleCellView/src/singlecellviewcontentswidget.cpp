@@ -41,7 +41,7 @@ namespace SingleCellView {
 
 SingleCellViewContentsWidget::SingleCellViewContentsWidget(QWidget *pParent) :
     QSplitter(pParent),
-    CommonWidget(pParent),
+    Core::CommonWidget(pParent),
     mSplitterSizes(QIntList())
 {
     // Keep track of our movement

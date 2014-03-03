@@ -52,7 +52,7 @@ class SingleCellViewGraphPanelsWidget : public QSplitter,
     Q_OBJECT
 
 public:
-    explicit SingleCellViewGraphPanelsWidget(QWidget *pParent = 0);
+    explicit SingleCellViewGraphPanelsWidget(QWidget *pParent);
 
     virtual void retranslateUi();
 

@@ -89,7 +89,7 @@ class SingleCellViewWidget : public Core::ViewWidget
 
 public:
     explicit SingleCellViewWidget(SingleCellViewPlugin *pPluginParent,
-                                  QWidget *pParent = 0);
+                                  QWidget *pParent);
     ~SingleCellViewWidget();
 
     virtual void retranslateUi();

@@ -43,8 +43,8 @@ class CORE_EXPORT Widget : public QWidget, public CommonWidget
     Q_OBJECT
 
 public:
-    explicit Widget(const QSize &pSizeHint, QWidget *pParent = 0);
-    explicit Widget(QWidget *pParent = 0);
+    explicit Widget(const QSize &pSizeHint, QWidget *pParent);
+    explicit Widget(QWidget *pParent);
 
 protected:
     virtual QSize sizeHint() const;

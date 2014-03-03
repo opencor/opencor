@@ -53,7 +53,7 @@ class FileBrowserWindow : public Core::OrganisationWidget
     Q_OBJECT
 
 public:
-    explicit FileBrowserWindow(QWidget *pParent = 0);
+    explicit FileBrowserWindow(QWidget *pParent);
     ~FileBrowserWindow();
 
     virtual void retranslateUi();

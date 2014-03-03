@@ -53,7 +53,7 @@ class CollapsibleHeaderTitleWidget : public QLabel
     Q_OBJECT
 
 public:
-    explicit CollapsibleHeaderTitleWidget(QWidget *pParent = 0);
+    explicit CollapsibleHeaderTitleWidget(QWidget *pParent);
 
 protected:
     virtual void mouseDoubleClickEvent(QMouseEvent *pEvent);
@@ -70,7 +70,7 @@ class CollapsibleHeaderWidget : public QWidget
 
 public:
     explicit CollapsibleHeaderWidget(const QColor &pSeparatorColor,
-                                     QWidget *pParent = 0);
+                                     QWidget *pParent);
 
     void setFirstHeader(const bool &pFirstHeader);
     void setLastHeader(const bool &pFirstHeader);
@@ -108,9 +108,8 @@ class CORE_EXPORT CollapsibleWidget : public Widget
     Q_OBJECT
 
 public:
-    explicit CollapsibleWidget(const QColor &pSeparatorColor,
-                               QWidget *pParent = 0);
-    explicit CollapsibleWidget(QWidget *pParent = 0);
+    explicit CollapsibleWidget(const QColor &pSeparatorColor, QWidget *pParent);
+    explicit CollapsibleWidget(QWidget *pParent);
 
     virtual void loadSettings(QSettings *pSettings);
     virtual void saveSettings(QSettings *pSettings) const;

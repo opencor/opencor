@@ -48,7 +48,7 @@ class SingleCellViewContentsWidget : public QSplitter, public Core::CommonWidget
     Q_OBJECT
 
 public:
-    explicit SingleCellViewContentsWidget(QWidget *pParent = 0);
+    explicit SingleCellViewContentsWidget(QWidget *pParent);
 
     virtual void retranslateUi();
 

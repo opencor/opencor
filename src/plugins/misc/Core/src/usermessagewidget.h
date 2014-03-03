@@ -43,8 +43,8 @@ class CORE_EXPORT UserMessageWidget : public QLabel
 
 public:
     explicit UserMessageWidget(const QString &pIcon, const QString &pMessage,
-                               QWidget *pParent = 0);
-    explicit UserMessageWidget(const QString &pIcon, QWidget *pParent = 0);
+                               QWidget *pParent);
+    explicit UserMessageWidget(const QString &pIcon, QWidget *pParent);
 
     void setIcon(const QString &pIcon);
     void setMessage(const QString &pMessage);
