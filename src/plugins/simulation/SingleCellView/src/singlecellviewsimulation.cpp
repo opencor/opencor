@@ -959,13 +959,13 @@ SingleCellViewSimulation::SingleCellViewSimulation(const QString &pFileName,
 
 SingleCellViewSimulation::~SingleCellViewSimulation()
 {
-    // Stop our worker (just in case...)
+    // Stop our worker
+    // Note: we don't need to delete mWorker since it will be done as part of
+    //       its being stopped...
 
     stop();
 
     // Delete some internal objects
-
-    delete mWorker;
 
     delete mResults;
     delete mData;
