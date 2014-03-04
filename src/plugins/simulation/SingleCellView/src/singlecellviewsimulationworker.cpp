@@ -119,11 +119,15 @@ double SingleCellViewSimulationWorker::progress() const
 
 bool SingleCellViewSimulationWorker::run()
 {
-    // Start our thread
+    // Start our thread, but only if we are not already running
 
-    mThread->start();
+    if (!mThread->isRunning()) {
+        mThread->start();
 
-    return true;
+        return true;
+    } else {
+        return false;
+    }
 }
 
 //==============================================================================
