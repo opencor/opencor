@@ -78,7 +78,7 @@ private:
 
     QWaitCondition mPausedCondition;
 
-    QList<XslTransformerJob *> mJobs;
+    QList<XslTransformerJob> mJobs;
 
 Q_SIGNALS:
     void done(const QString &pInput, const QString &pOutput);

@@ -84,7 +84,7 @@ QString XslTransformerJob::xsl() const
 XslTransformer::XslTransformer() :
     mPaused(false),
     mStopped(false),
-    mJobs(QList<XslTransformerJob *>())
+    mJobs(QList<XslTransformerJob>())
 {
     // Create our thread
     // Note: XSL transformation requires using a QXmlQuery object, which is
@@ -114,7 +114,7 @@ void XslTransformer::transform(const QString &pInput, const QString &pXsl)
 {
     // Add a new job to our list
 
-    mJobs << new XslTransformerJob(pInput, pXsl);
+    mJobs << XslTransformerJob(pInput, pXsl);
 
     // Start/resume our thread, if needed
 
@@ -172,14 +172,14 @@ void XslTransformer::started()
         while (mJobs.count() && !mStopped) {
             // Retrieve the first job in our list
 
-            XslTransformerJob *job = mJobs.first();
+            XslTransformerJob job = mJobs.first();
 
             mJobs.removeFirst();
 
             // Customise our XML query object
 
-            xmlQuery->setFocus(job->input());
-            xmlQuery->setQuery(job->xsl());
+            xmlQuery->setFocus(job.input());
+            xmlQuery->setQuery(job.xsl());
 
             // Do the XSL transformation
 
@@ -190,11 +190,7 @@ void XslTransformer::started()
 
             // Let people know that an XSL transformation has been performed
 
-            emit done(job->input(), output);
-
-            // We are done with our job, so...
-
-            delete job;
+            emit done(job.input(), output);
         }
 
         // Pause ourselves, unless we have been asked to stop
@@ -216,11 +212,6 @@ void XslTransformer::started()
 
     delete xmlQuery;
     delete dummyMessageHandler;
-
-qDebug(">>> Nb of jobs: %d", mJobs.count());
-
-    foreach (XslTransformerJob *job, mJobs)
-        delete job;
 }
 
 //==============================================================================
