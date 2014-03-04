@@ -197,9 +197,9 @@ bool isCellmlFile(const QString &pFileName)
 
     bool res = false;
 
-    xml.readNext();
-
     while (!xml.atEnd()) {
+        xml.readNext();
+
         if (xml.isStartElement()) {
             // This is our root element, so for the file to be considered a
             // CellML file it should be a model element in either the CellML 1.0
@@ -216,8 +216,6 @@ bool isCellmlFile(const QString &pFileName)
 
             break;
         }
-
-        xml.readNext();
     }
 
     file.close();
