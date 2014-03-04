@@ -304,8 +304,6 @@ void RawCellmlViewWidget::cursorPositionChanged()
 
     // Retrieve the new mathematical equation, if any, around our current
     // position
-//---GRY---
-qDebug("---------");
 
     static const QString StartMathTag = "<math ";
     static const QByteArray EndMathTag = "</math>";
@@ -335,7 +333,7 @@ qDebug("---------");
 
         QString contentMathml = editor->textInRange(crtStartMathTagPos, crtEndMathTagPos+EndMathTag.length()).simplified().replace("> <", "><");
 
-        qDebug(">>> Content MathML found:\n%s", qPrintable(contentMathml));
+        qDebug("---GRY---\nContent MathML found:\n%s", qPrintable(contentMathml));
 
         // Check whether the current content MathML is the same as the previous
         // one
@@ -364,8 +362,6 @@ qDebug("---------");
             }
         }
     } else {
-        qDebug(">>> No content MathML found...");
-
         mContentMathml = QString();
 
         mEditingWidget->viewer()->setContents(QString());
@@ -391,7 +387,7 @@ void RawCellmlViewWidget::xslTransformationDone(const QString &pInput,
     mPresentationMathmls.insert(pInput, pOutput);
 
     if (pOutput.length())
-        qDebug(">>> Corresponding presentation MathML:\n%s", qPrintable(pOutput));
+        qDebug("---GRY---\nCorresponding presentation MathML:\n%s", qPrintable(pOutput));
 }
 
 //==============================================================================
