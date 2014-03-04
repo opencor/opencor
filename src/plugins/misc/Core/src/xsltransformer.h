@@ -65,9 +65,10 @@ class CORE_EXPORT XslTransformer : public QObject
 
 public:
     explicit XslTransformer();
-    ~XslTransformer();
 
     void transform(const QString &pInput, const QString &pXsl);
+
+    void stop();
 
 private:
     QThread *mThread;

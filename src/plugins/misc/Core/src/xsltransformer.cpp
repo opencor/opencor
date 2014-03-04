@@ -82,7 +82,7 @@ QString XslTransformerJob::xsl() const
 //==============================================================================
 
 XslTransformer::XslTransformer() :
-    mPaused(true),
+    mPaused(false),
     mStopped(false),
     mJobs(QList<XslTransformerJob *>())
 {
@@ -110,51 +110,44 @@ XslTransformer::XslTransformer() :
 
 //==============================================================================
 
-XslTransformer::~XslTransformer()
-{
-    // Finish things with our thread, if needed
-
-    if (mThread->isRunning()) {
-        // Ask our thread to stop
-
-        if (mPaused)
-            mPausedCondition.wakeOne();
-
-        mStopped = true;
-
-        // Ask our thread to quit and wait for it to do so
-
-        mThread->quit();
-        mThread->wait();
-    }
-
-    // Delete some internal ojbects
-    // Note: this is just in case we were asked to stop before we had time do
-    //       all our XSL transformations...
-
-    foreach (XslTransformerJob *job, mJobs)
-        delete job;
-}
-
-//==============================================================================
-
 void XslTransformer::transform(const QString &pInput, const QString &pXsl)
 {
     // Add a new job to our list
 
     mJobs << new XslTransformerJob(pInput, pXsl);
 
-    // Start/resume our thread
+    // Start/resume our thread, if needed
 
-    if (mThread->isRunning()) {
-        // Our thread is already running, so resume it in case it's pausing
+    if (!mThread->isRunning()) {
+        mThread->start();
+    } else {
+        // Resume our thread, if needed
 
         if (mPaused)
             mPausedCondition.wakeOne();
-    } else {
-        // Our thread hasn't been started yet, so start it
+    }
+}
 
-        mThread->start();
+//==============================================================================
+
+void XslTransformer::stop()
+{
+    // Shutdown our thread, if needed
+
+    if (mThread->isRunning()) {
+        // Ask our thread to stop
+
+        mStopped = true;
+
+        // Resume our thread, if needed
+
+        if (mPaused)
+            mPausedCondition.wakeOne();
+
+        // Ask our thread to quit and wait for it to do so
+
+        mThread->quit();
+        mThread->wait();
     }
 }
 
@@ -217,10 +210,17 @@ void XslTransformer::started()
         }
     }
 
-    // We are done
+    // We are done, so clean up after ourselves
+    // Note: we clean up our remaining jobs in case we were asked to stop before
+    //       we had time to carry them out...
 
     delete xmlQuery;
     delete dummyMessageHandler;
+
+qDebug(">>> Nb of jobs: %d", mJobs.count());
+
+    foreach (XslTransformerJob *job, mJobs)
+        delete job;
 }
 
 //==============================================================================
