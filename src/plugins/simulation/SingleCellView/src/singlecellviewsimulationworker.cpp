@@ -128,6 +128,84 @@ bool SingleCellViewSimulationWorker::run()
 
 //==============================================================================
 
+bool SingleCellViewSimulationWorker::pause()
+{
+    // Pause ourselves, but only if we are currently running
+
+    if (isRunning()) {
+        // Ask ourselves to pause
+
+        mPaused = true;
+
+        return true;
+    } else {
+        return false;
+    }
+}
+
+//==============================================================================
+
+bool SingleCellViewSimulationWorker::resume()
+{
+    // Resume ourselves, but only if are currently paused
+
+    if (isPaused()) {
+        // Ask ourselves to resume
+
+        mPausedCondition.wakeOne();
+
+        return true;
+    } else {
+        return false;
+    }
+}
+
+//==============================================================================
+
+bool SingleCellViewSimulationWorker::stop()
+{
+    // Check that we are either running or paused
+
+    if (isRunning() || isPaused()) {
+        // Ask our thread to stop
+
+        mStopped = true;
+
+        // Resume our thread, if needed
+
+        if (isPaused())
+            mPausedCondition.wakeOne();
+
+        // Ask our thread to quit and wait for it to do so
+
+        mThread->quit();
+        mThread->wait();
+
+        return true;
+    } else {
+        return false;
+    }
+}
+
+//==============================================================================
+
+bool SingleCellViewSimulationWorker::reset()
+{
+    // Check that we are either running or paused
+
+    if (isRunning() || isPaused()) {
+        // Ask ourselves to reinitialise our solver
+
+        mReset = true;
+
+        return true;
+    } else {
+        return false;
+    }
+}
+
+//==============================================================================
+
 void SingleCellViewSimulationWorker::started()
 {
     // Let people know that we are running
@@ -439,84 +517,6 @@ void SingleCellViewSimulationWorker::started()
     // Let people know that we are done and give them the elapsed time
 
     emit finished(elapsedTime);
-}
-
-//==============================================================================
-
-bool SingleCellViewSimulationWorker::pause()
-{
-    // Pause ourselves, but only if we are currently running
-
-    if (isRunning()) {
-        // Ask ourselves to pause
-
-        mPaused = true;
-
-        return true;
-    } else {
-        return false;
-    }
-}
-
-//==============================================================================
-
-bool SingleCellViewSimulationWorker::resume()
-{
-    // Resume ourselves, but only if are currently paused
-
-    if (isPaused()) {
-        // Ask ourselves to resume
-
-        mPausedCondition.wakeOne();
-
-        return true;
-    } else {
-        return false;
-    }
-}
-
-//==============================================================================
-
-bool SingleCellViewSimulationWorker::stop()
-{
-    // Check that we are either running or paused
-
-    if (isRunning() || isPaused()) {
-        // Ask our thread to stop
-
-        mStopped = true;
-
-        // Resume our thread, if needed
-
-        if (isPaused())
-            mPausedCondition.wakeOne();
-
-        // Ask our thread to quit and wait for it to do so
-
-        mThread->quit();
-        mThread->wait();
-
-        return true;
-    } else {
-        return false;
-    }
-}
-
-//==============================================================================
-
-bool SingleCellViewSimulationWorker::reset()
-{
-    // Check that we are either running or paused
-
-    if (isRunning() || isPaused()) {
-        // Ask ourselves to reinitialise our solver
-
-        mReset = true;
-
-        return true;
-    } else {
-        return false;
-    }
 }
 
 //==============================================================================
