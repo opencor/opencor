@@ -213,9 +213,10 @@ void RawCellmlViewWidget::finalize(const QString &pFileName)
 
         mEditingWidgets.remove(pFileName);
 
-        // Reset our memory of the current editor
+        // Reset our memory of the current editor, if needed
 
-        mEditingWidget = 0;
+        if (editingWidget == mEditingWidget)
+            mEditingWidget = 0;
     }
 }
 
@@ -293,8 +294,14 @@ void RawCellmlViewWidget::editorZoomLevelChanged()
 
 void RawCellmlViewWidget::cursorPositionChanged()
 {
-    // The cursor has moved, so retrieve the new mathematical equation, if any,
-    // around our current position
+    // Make sure that we still have an editing widget (i.e. it hasn't been
+    // closed since the signal was emitted)
+
+    if (!mEditingWidget)
+        return;
+
+    // Retrieve the new mathematical equation, if any, around our current
+    // position
 //---GRY---
 qDebug("---------");
 
@@ -368,6 +375,12 @@ qDebug("---------");
 void RawCellmlViewWidget::xslTransformationDone(const QString &pInput,
                                                 const QString &pOutput)
 {
+    // Make sure that we still have an editing widget (i.e. it hasn't been
+    // closed since the signal was emitted)
+
+    if (!mEditingWidget)
+        return;
+
     // The XSL transformation is done, so update our viewer and keep track of
     // the presentation MathML
 

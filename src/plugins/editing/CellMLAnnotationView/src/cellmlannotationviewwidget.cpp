@@ -195,9 +195,10 @@ void CellmlAnnotationViewWidget::finalize(const QString &pFileName)
 
         mEditingWidgets.remove(pFileName);
 
-        // Reset our memory of the current editor
+        // Reset our memory of the current editor, if needed
 
-        mEditingWidget = 0;
+        if (editingWidget == mEditingWidget)
+            mEditingWidget = 0;
     }
 }
 

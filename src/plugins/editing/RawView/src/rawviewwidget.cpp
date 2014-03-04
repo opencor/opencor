@@ -168,9 +168,10 @@ void RawViewWidget::finalize(const QString &pFileName)
 
         mEditors.remove(pFileName);
 
-        // Reset our memory of the current editor
+        // Reset our memory of the current editor, if needed
 
-        mEditor = 0;
+        if (editor == mEditor)
+            mEditor = 0;
     }
 }
 
