@@ -110,6 +110,8 @@ Q_SIGNALS:
 private Q_SLOTS:
     void updateUi();
 
+    void updateCanUndoAndCanRedo();
+
     void checkCanSelectAll();
 
     void cursorPositionChanged(const int &pLine, const int &pColumn);

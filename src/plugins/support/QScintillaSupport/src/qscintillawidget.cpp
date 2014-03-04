@@ -132,6 +132,11 @@ QScintillaWidget::QScintillaWidget(const QString &pContents,
     connect(this, SIGNAL(SCN_UPDATEUI(int)),
             this, SLOT(updateUi()));
 
+    // Keep track of whether we can undo/redo
+
+    connect(this, SIGNAL(textChanged()),
+            this, SLOT(updateCanUndoAndCanRedo()));
+
     // Keep track of changes to our editor that may affect our ability to select
     // all of its text
     // Note: we use the SCN_MODIFIED() signal rather than the textChanged()
@@ -364,30 +369,12 @@ void QScintillaWidget::keyPressEvent(QKeyEvent *pEvent)
         &&  (pEvent->modifiers() & Qt::ControlModifier)
         && !(pEvent->modifiers() & Qt::AltModifier)
         && !(pEvent->modifiers() & Qt::MetaModifier)
-        &&  (pEvent->key() == Qt::Key_0)) {
+        &&  (pEvent->key() == Qt::Key_0))
         zoomTo(0);
-    } else {
+    else
         // Default handling of the event
 
         QsciScintilla::keyPressEvent(pEvent);
-
-        // Check whether the undo/redo is possible
-
-        bool newCanUndo = isUndoAvailable();
-        bool newCanRedo = isRedoAvailable();
-
-        if (newCanUndo != mCanUndo) {
-            mCanUndo = newCanUndo;
-
-            emit canUndo(mCanUndo);
-        }
-
-        if (newCanRedo != mCanRedo) {
-            mCanRedo = newCanRedo;
-
-            emit canRedo(mCanRedo);
-        }
-    }
 }
 
 //==============================================================================
@@ -423,6 +410,28 @@ void QScintillaWidget::updateUi()
         mOverwriteMode = newOverwriteMode;
 
         mEditingModeWidget->setText(mOverwriteMode?"OVR":"INS");
+    }
+}
+
+//==============================================================================
+
+void QScintillaWidget::updateCanUndoAndCanRedo()
+{
+    // Check whether undoing/redoing is possible
+
+    bool newCanUndo = isUndoAvailable();
+    bool newCanRedo = isRedoAvailable();
+
+    if (newCanUndo != mCanUndo) {
+        mCanUndo = newCanUndo;
+
+        emit canUndo(mCanUndo);
+    }
+
+    if (newCanRedo != mCanRedo) {
+        mCanRedo = newCanRedo;
+
+        emit canRedo(mCanRedo);
     }
 }
 
