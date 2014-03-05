@@ -282,14 +282,10 @@ QString RawCellmlViewWidget::cleanUpMathml(const QString &pMathml) const
 
     QDomDocument domDocument;
 
-    if (!domDocument.setContent(pMathml))
+    if (domDocument.setContent(pMathml))
+        return domDocument.toString(-1);
+    else
         return QString();
-
-    QDomNode domNode = domDocument.documentElement();
-
-    cleanUpMathml(domNode);
-
-    return domDocument.toString(-1);
 }
 
 //==============================================================================
