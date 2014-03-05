@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/">
+        <file alias="Viewer_warning">oxygen/status/task-attention.png</file>
+    </qresource>
+</RCC>

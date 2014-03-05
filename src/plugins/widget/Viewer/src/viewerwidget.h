@@ -48,6 +48,9 @@ public:
     QString contents() const;
     void setContents(const QString &pContents);
 
+    bool validContents() const;
+    void setValidContents(const bool &pValidContents);
+
     bool optimiseFontSize() const;
     void setOptimiseFontSize(const bool &pOptimiseFontSize);
 
@@ -64,6 +67,8 @@ private:
     double mOneOverMathmlDocumentHeight;
 
     QString mContents;
+    bool mValidContents;
+
     bool mOptimiseFontSize;
 };
 

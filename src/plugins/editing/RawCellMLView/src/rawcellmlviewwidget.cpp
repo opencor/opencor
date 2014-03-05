@@ -376,40 +376,46 @@ void RawCellmlViewWidget::updateViewer()
     }
 
     if (foundMathmlBlock) {
-        // Retrieve and clean up the content MathML
+        // Retrieve and clean up the Content MathML
 
-        QString contentMathml = editor->textInRange(crtStartMathTagPos, crtEndMathTagPos+EndMathTag.length());
+        QString contentMathml = cleanUpMathml(editor->textInRange(crtStartMathTagPos, crtEndMathTagPos+EndMathTag.length()));
 
-        qDebug("---GRY---\nContent MathML found:\n%s", qPrintable(contentMathml));
+qDebug("---GRY---\nContent MathML found:\n%s", qPrintable(editor->textInRange(crtStartMathTagPos, crtEndMathTagPos+EndMathTag.length())));
+qDebug("---GRY---\nClean Content MathML:\n%s", qPrintable(contentMathml));
 
-        contentMathml = cleanUpMathml(contentMathml);
+        // Make sure that we have a valid Content MathML
+        // Note: indeed, our unclean Content MathML may not be valid, in which
+        //       case cleaning it up will result in an empty string...
 
-        qDebug("---GRY---\nCleaned up Content MathML:\n%s", qPrintable(contentMathml));
+        if (contentMathml.isEmpty()) {
+            mContentMathml = QString();
 
-        // Check whether the current content MathML is the same as the previous
-        // one
-
-        if (!contentMathml.compare(mContentMathml)) {
-            // It's the same, so leave
-
-            return;
+            mEditingWidget->viewer()->setValidContents(false);
         } else {
-            // It's a different one, so keep track of it and check whether we
-            // have already retrieved its presentation MathML counterpart
+            // Check whether our Content MathML is the same as our previous one
 
-            mContentMathml = contentMathml;
+            if (!contentMathml.compare(mContentMathml)) {
+                // It's the same, so leave
 
-            QString presentationMathml = mPresentationMathmls.value(mContentMathml);
-
-            if (!presentationMathml.isEmpty()) {
-                mEditingWidget->viewer()->setContents(presentationMathml);
+                return;
             } else {
-                // We haven't already retrieved its presentation MathML
-                // counterpart, so do it now
+                // It's a different one, so keep track of it and check whether
+                // we have already retrieved its Presentation MathML counterpart
 
-                static const QString CtopXsl = Core::resourceAsByteArray(":/web-xslt/ctop.xsl");
+                mContentMathml = contentMathml;
 
-                mXslTransformer->transform(contentMathml, CtopXsl);
+                QString presentationMathml = mPresentationMathmls.value(mContentMathml);
+
+                if (!presentationMathml.isEmpty()) {
+                    mEditingWidget->viewer()->setContents(presentationMathml);
+                } else {
+                    // We haven't already retrieved its Presentation MathML
+                    // counterpart, so do it now
+
+                    static const QString CtopXsl = Core::resourceAsByteArray(":/web-xslt/ctop.xsl");
+
+                    mXslTransformer->transform(contentMathml, CtopXsl);
+                }
             }
         }
     } else {
@@ -431,14 +437,14 @@ void RawCellmlViewWidget::xslTransformationDone(const QString &pInput,
         return;
 
     // The XSL transformation is done, so update our viewer and keep track of
-    // the presentation MathML
+    // the Presentation MathML
 
     mEditingWidget->viewer()->setContents(pOutput);
 
     mPresentationMathmls.insert(pInput, pOutput);
 
     if (pOutput.length())
-        qDebug("---GRY---\nCorresponding presentation MathML:\n%s", qPrintable(pOutput));
+        qDebug("---GRY---\nCorresponding Presentation MathML:\n%s", qPrintable(pOutput));
 }
 
 //==============================================================================
