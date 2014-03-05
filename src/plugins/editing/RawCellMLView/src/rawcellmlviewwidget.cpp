@@ -33,7 +33,6 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include <QDesktopWidget>
-#include <QDomDocument>
 #include <QLabel>
 #include <QLayout>
 #include <QMetaType>
@@ -276,17 +275,47 @@ QList<QWidget *> RawCellmlViewWidget::statusBarWidgets() const
 
 //==============================================================================
 
+void RawCellmlViewWidget::cleanUpMathml(const QDomNode &pDomNode) const
+{
+    // Go through the node's children and remove all unrecognisable attributes
+
+    for (int i = 0, iMax = pDomNode.childNodes().count(); i < iMax; ++i) {
+        QDomNode domNode = pDomNode.childNodes().at(i);
+        QDomNamedNodeMap domNodeAttributes = domNode.attributes();
+
+        QStringList attributeNames = QStringList();
+
+        for (int j = 0, jMax = domNodeAttributes.count(); j < jMax; ++j) {
+            QString attributeName = domNodeAttributes.item(j).nodeName();
+
+            if (attributeName.contains(":"))
+                attributeNames << attributeName;
+        }
+
+        foreach (const QString &attributeName, attributeNames)
+            domNodeAttributes.removeNamedItem(attributeName);
+
+        cleanUpMathml(domNode);
+    }
+}
+
+//==============================================================================
+
 QString RawCellmlViewWidget::cleanUpMathml(const QString &pMathml) const
 {
-    // Clean up the given XML string by retrieving its DOM representation and
-    // converting it back to a string with no whitespaces
+    // Clean up the given XML string by going through its DOM representation
 
     QDomDocument domDocument;
 
-    if (domDocument.setContent(pMathml))
+    if (domDocument.setContent(pMathml)) {
+        QDomNode domNode = domDocument.documentElement();
+
+        cleanUpMathml(domNode);
+
         return domDocument.toString(-1);
-    else
+    } else {
         return QString();
+    }
 }
 
 //==============================================================================

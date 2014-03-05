@@ -29,6 +29,7 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#include <QDomDocument>
 #include <QMap>
 
 //==============================================================================
@@ -102,6 +103,7 @@ private:
 
     Core::XslTransformer *mXslTransformer;
 
+    void cleanUpMathml(const QDomNode &pDomNode) const;
     QString cleanUpMathml(const QString &pMathml) const;
 
 private Q_SLOTS:
