@@ -275,12 +275,8 @@ QList<QWidget *> RawCellmlViewWidget::statusBarWidgets() const
 
 //==============================================================================
 
-//==============================================================================
-
 QString RawCellmlViewWidget::cleanUpMathml(const QString &pMathml) const
 {
-    // Clean up the given XML string by going through its DOM representation and
-    // removing all unrecognisable attributes
     // Clean up the given XML string by retrieving its DOM representation and
     // converting it back to a string with no whitespaces
 
@@ -295,6 +291,8 @@ QString RawCellmlViewWidget::cleanUpMathml(const QString &pMathml) const
 
     return domDocument.toString(-1);
 }
+
+//==============================================================================
 
 void RawCellmlViewWidget::splitterMoved()
 {
