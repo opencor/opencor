@@ -192,6 +192,16 @@ void ViewerWidget::paintEvent(QPaintEvent *pEvent)
         // Our contents is not valid, so render a warning icon
 
         QIcon icon = QIcon(":Viewer_warning");
+        double rectWidth = rect.width();
+        double rectHeight = rect.height();
+        QSize iconSize = icon.availableSizes().first();
+        double scale = qMin(rectWidth/iconSize.width(), rectHeight/iconSize.height());
+
+        painter.translate(-0.5*rectWidth, -0.5*rectHeight);
+        painter.scale(scale, scale);
+        painter.translate(0.5*rectWidth/scale, 0.5*rectHeight/scale);
+
+        rect.setSize(QSizeF(rectWidth/scale, rectHeight/scale));
 
         icon.paint(&painter, rect.toRect());
     }
