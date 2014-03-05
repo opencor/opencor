@@ -161,8 +161,10 @@ void RawCellmlViewWidget::initialize(const QString &pFileName)
         connect(mEditingWidget->editor(), SIGNAL(SCN_ZOOM()),
                 this, SLOT(editorZoomLevelChanged()));
 
+        connect(mEditingWidget->editor(), SIGNAL(textChanged()),
+                this, SLOT(updateViewer()));
         connect(mEditingWidget->editor(), SIGNAL(cursorPositionChanged(int, int)),
-                this, SLOT(cursorPositionChanged()));
+                this, SLOT(updateViewer()));
 
         // Keep track of our editing widget and add it to ourselves
 
@@ -339,7 +341,7 @@ void RawCellmlViewWidget::editorZoomLevelChanged()
 
 //==============================================================================
 
-void RawCellmlViewWidget::cursorPositionChanged()
+void RawCellmlViewWidget::updateViewer()
 {
     // Make sure that we still have an editing widget (i.e. it hasn't been
     // closed since the signal was emitted)

@@ -110,7 +110,8 @@ private Q_SLOTS:
     void splitterMoved();
 
     void editorZoomLevelChanged();
-    void cursorPositionChanged();
+
+    void updateViewer();
 
     void xslTransformationDone(const QString &pInput, const QString &pOutput);
 };
