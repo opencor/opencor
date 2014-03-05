@@ -275,6 +275,27 @@ QList<QWidget *> RawCellmlViewWidget::statusBarWidgets() const
 
 //==============================================================================
 
+//==============================================================================
+
+QString RawCellmlViewWidget::cleanUpMathml(const QString &pMathml) const
+{
+    // Clean up the given XML string by going through its DOM representation and
+    // removing all unrecognisable attributes
+    // Clean up the given XML string by retrieving its DOM representation and
+    // converting it back to a string with no whitespaces
+
+    QDomDocument domDocument;
+
+    if (!domDocument.setContent(pMathml))
+        return QString();
+
+    QDomNode domNode = domDocument.documentElement();
+
+    cleanUpMathml(domNode);
+
+    return domDocument.toString(-1);
+}
+
 void RawCellmlViewWidget::splitterMoved()
 {
     // The splitter has moved, so keep track of the editing widget's sizes
@@ -331,9 +352,13 @@ void RawCellmlViewWidget::cursorPositionChanged()
     if (foundMathmlBlock) {
         // Retrieve and clean up the content MathML
 
-        QString contentMathml = editor->textInRange(crtStartMathTagPos, crtEndMathTagPos+EndMathTag.length()).simplified().replace("> <", "><");
+        QString contentMathml = editor->textInRange(crtStartMathTagPos, crtEndMathTagPos+EndMathTag.length());
 
         qDebug("---GRY---\nContent MathML found:\n%s", qPrintable(contentMathml));
+
+        contentMathml = cleanUpMathml(contentMathml);
+
+        qDebug("---GRY---\nCleaned up Content MathML:\n%s", qPrintable(contentMathml));
 
         // Check whether the current content MathML is the same as the previous
         // one
