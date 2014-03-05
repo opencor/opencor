@@ -154,11 +154,16 @@ void ViewerWidget::setOptimiseFontSize(const bool &pOptimiseFontSize)
 
 void ViewerWidget::paintEvent(QPaintEvent *pEvent)
 {
-    QPainter painter(this);
+    // Make sure that we have a width and height
+
+    QRectF rect = pEvent->rect();
+
+    if (!rect.width() || !rect.height())
+        return;
 
     // Clear our background
 
-    QRectF rect = pEvent->rect();
+    QPainter painter(this);
     QColor backgroundColor = QColor(palette().color(QPalette::Base));
 
     painter.fillRect(rect, backgroundColor);
@@ -189,21 +194,36 @@ void ViewerWidget::paintEvent(QPaintEvent *pEvent)
         mMathmlDocument.paint(&painter, QPointF(0.5*(rect.width()-mathmlDocumentSize.width()),
                                                 0.5*(rect.height()-mathmlDocumentSize.height())));
     } else {
-        // Our contents is not valid, so render a warning icon
+        // Our contents is not valid, so render a stretched warning icon in our
+        // center
 
         QIcon icon = QIcon(":Viewer_warning");
-        double rectWidth = rect.width();
-        double rectHeight = rect.height();
         QSize iconSize = icon.availableSizes().first();
-        double scale = qMin(rectWidth/iconSize.width(), rectHeight/iconSize.height());
 
-        painter.translate(-0.5*rectWidth, -0.5*rectHeight);
-        painter.scale(scale, scale);
-        painter.translate(0.5*rectWidth/scale, 0.5*rectHeight/scale);
+        int painterRectWidth = iconSize.width();
+        int painterRectHeight = iconSize.height();
 
-        rect.setSize(QSizeF(rectWidth/scale, rectHeight/scale));
+        if (rect.width() < rect.height())
+            painterRectHeight *= rect.height()/rect.width();
+        else
+            painterRectWidth *= rect.width()/rect.height();
 
-        icon.paint(&painter, rect.toRect());
+        if (painterRectHeight % 2)
+            ++painterRectHeight;
+
+        if (painterRectWidth % 2)
+            ++painterRectWidth;
+
+        QRect painterRect = QRect(0, 0, painterRectWidth, painterRectHeight);
+        // Note: both painterRectWidth and painterRectHeight have even values.
+        //       This ensures that when we get resized, then the warning icon
+        //       remains nicely centered (while it would otherwise shifts to the
+        //       left/right or top/bottom, depending on our width or height,
+        //       respectively...
+
+        painter.setWindow(painterRect);
+
+        icon.paint(&painter, painterRect);
     }
 
     // Accept the event
