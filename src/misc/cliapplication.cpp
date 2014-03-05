@@ -158,7 +158,7 @@ void CliApplication::plugins()
     else
         std::cout << "The following plugins are loaded:" << std::endl;
 
-    foreach (const QString pluginInfo, pluginsInfo)
+    foreach (const QString &pluginInfo, pluginsInfo)
         std::cout << " - " << qPrintable(pluginInfo) << std::endl;
 }
 
@@ -264,7 +264,7 @@ bool CliApplication::run(int *pRes)
 
     QStringList commandArguments = QStringList();
 
-    foreach (const QString argument, mApp->arguments())
+    foreach (const QString &argument, mApp->arguments())
         if (!argument.compare("-h") || !argument.compare("--help")) {
             helpOption = true;
         } else if (!argument.compare("-a") || !argument.compare("--about")) {

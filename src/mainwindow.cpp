@@ -905,7 +905,7 @@ void MainWindow::reorderViewMenu(QMenu *pViewMenu)
     //       of the menu, so since we do it in the right order, we end up with
     //       the menu items being properly ordered...
 
-    foreach (const QString menuItemTitle, menuItemTitles)
+    foreach (const QString &menuItemTitle, menuItemTitles)
         pViewMenu->addAction(menuItemActions.value(menuItemTitle));
 }
 
