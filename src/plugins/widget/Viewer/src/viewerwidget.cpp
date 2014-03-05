@@ -69,18 +69,21 @@ void ViewerWidget::setContents(const QString &pContents)
     if (!pContents.compare(mContents))
         return;
 
-    // Determine (the inverse of) the size of our contents when rendered using a
-    // font size of 100 points
-    // Note: when setting the contents, QwtMathMLDocument recomputes its layout.
-    //       Now, because we want the contents to be rendered as optimally as
-    //       possible, we use a big font size, so that when we actually need to
-    //       render the contents (see paintEvent()), we can do so optimally...
-
-    mMathmlDocument.setBaseFontPointSize(100);
+    // Try to set our contents to our MathML document
 
     if (mMathmlDocument.setContent(pContents)) {
         mContents = pContents;
         mValidContents = true;
+
+        // Determine (the inverse of) the size of our contents when rendered
+        // using a font size of 100 points
+        // Note: when setting the contents, QwtMathMLDocument recomputes its
+        //       layout. Now, because we want the contents to be rendered as
+        //       optimally as possible, we use a big font size, so that when we
+        //       actually need to render the contents (see paintEvent()), we can
+        //       do so optimally...
+
+        mMathmlDocument.setBaseFontPointSize(100);
 
         QSizeF mathmlDocumentSize = mMathmlDocument.size();
 
@@ -88,7 +91,7 @@ void ViewerWidget::setContents(const QString &pContents)
         mOneOverMathmlDocumentHeight = 1.0/mathmlDocumentSize.height();
     } else {
         mContents = QString();
-        mValidContents = false;
+        mValidContents = pContents.isEmpty();
     }
 
     // Update ourselves
