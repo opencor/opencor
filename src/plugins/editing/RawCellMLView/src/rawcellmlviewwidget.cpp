@@ -405,7 +405,7 @@ void RawCellmlViewWidget::cursorPositionChanged()
                 // We haven't already retrieved its presentation MathML
                 // counterpart, so do it now
 
-                static const QString CtopXsl = Core::resourceAsByteArray(":/ctop.xsl");
+                static const QString CtopXsl = Core::resourceAsByteArray(":/web-xslt/ctop.xsl");
 
                 mXslTransformer->transform(contentMathml, CtopXsl);
             }
