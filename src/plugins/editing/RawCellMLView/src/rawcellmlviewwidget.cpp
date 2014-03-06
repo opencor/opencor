@@ -440,16 +440,6 @@ void RawCellmlViewWidget::xslTransformationDone(const QString &pInput,
 
     QString presentationMathml = cleanXml(pOutput);
 
-    // Clean our Presentation MathML even further
-    // Note: indeed, the clean Presentation MathML still contains things that
-    //       will prevent our viewer from properly, if at all, displaying it.
-    //       This is because the XSLT stylesheet we use to transform Content
-    //       MathML to Presentation MathML generates some weird Presentation
-    //       MathML, so...
-
-    presentationMathml = presentationMathml.replace("<mi><mrow><mi>", "<mi>")
-                                           .replace("</mi></mrow></mi>", "</mi>");
-
     qDebug("---GRY---\nPresentation MathML:\n%s", qPrintable(pOutput));
     qDebug("---GRY---\nClean Presentation MathML:\n%s", qPrintable(presentationMathml));
 

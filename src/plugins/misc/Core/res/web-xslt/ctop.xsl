@@ -1114,7 +1114,7 @@ Or the Apache 2, MIT or MPL 1.1 or MPL 2.0 licences.
 
 <!-- 4.4.5.6 bvar -->
 <xsl:template match="bvar">
- <mi><xsl:apply-templates/></mi>
+ <xsl:apply-templates/>
  <xsl:if test="following-sibling::bvar"><mo>,</mo></xsl:if>
 </xsl:template>
 
