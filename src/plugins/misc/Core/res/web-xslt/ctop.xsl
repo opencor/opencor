@@ -2094,4 +2094,3 @@ match="m:apply[*[1][self::m:determinant]][*[2][self::m:matrix]]" priority="2">
 </xsl:template>
 
 </xsl:stylesheet>
-
