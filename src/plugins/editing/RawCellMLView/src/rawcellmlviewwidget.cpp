@@ -436,19 +436,14 @@ void RawCellmlViewWidget::xslTransformationDone(const QString &pInput,
     if (!mEditingWidget)
         return;
 
-    // An XSL transformation was performed, so clean it up
-
-    QString presentationMathml = cleanXml(pOutput);
-
-    qDebug("---GRY---\nPresentation MathML:\n%s", qPrintable(pOutput));
-    qDebug("---GRY---\nClean Presentation MathML:\n%s", qPrintable(presentationMathml));
-
     // The XSL transformation is done, so update our viewer and keep track of
     // the Presentation MathML
 
-    mEditingWidget->viewer()->setContents(presentationMathml);
+    qDebug("---GRY---\nPresentation MathML:\n%s", qPrintable(pOutput));
 
-    mPresentationMathmls.insert(pInput, presentationMathml);
+    mEditingWidget->viewer()->setContents(pOutput);
+
+    mPresentationMathmls.insert(pInput, pOutput);
 }
 
 //==============================================================================
