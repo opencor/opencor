@@ -277,7 +277,7 @@ QList<QWidget *> RawCellmlViewWidget::statusBarWidgets() const
 
 //==============================================================================
 
-void RawCellmlViewWidget::cleanUpMathml(const QDomNode &pDomNode) const
+void RawCellmlViewWidget::cleanXml(const QDomNode &pDomNode) const
 {
     // Go through the node's children and remove all unrecognisable attributes
 
@@ -297,13 +297,13 @@ void RawCellmlViewWidget::cleanUpMathml(const QDomNode &pDomNode) const
         foreach (const QString &attributeName, attributeNames)
             domNodeAttributes.removeNamedItem(attributeName);
 
-        cleanUpMathml(domNode);
+        cleanXml(domNode);
     }
 }
 
 //==============================================================================
 
-QString RawCellmlViewWidget::cleanUpMathml(const QString &pMathml) const
+QString RawCellmlViewWidget::cleanXml(const QString &pMathml) const
 {
     // Clean up the given XML string by going through its DOM representation
 
@@ -312,7 +312,7 @@ QString RawCellmlViewWidget::cleanUpMathml(const QString &pMathml) const
     if (domDocument.setContent(pMathml)) {
         QDomNode domNode = domDocument.documentElement();
 
-        cleanUpMathml(domNode);
+        cleanXml(domNode);
 
         return domDocument.toString(-1);
     } else {
@@ -378,7 +378,7 @@ void RawCellmlViewWidget::updateViewer()
     if (foundMathmlBlock) {
         // Retrieve and clean up the Content MathML
 
-        QString contentMathml = cleanUpMathml(editor->textInRange(crtStartMathTagPos, crtEndMathTagPos+EndMathTag.length()));
+        QString contentMathml = cleanXml(editor->textInRange(crtStartMathTagPos, crtEndMathTagPos+EndMathTag.length()));
 
 qDebug("---GRY---\nContent MathML found:\n%s", qPrintable(editor->textInRange(crtStartMathTagPos, crtEndMathTagPos+EndMathTag.length())));
 qDebug("---GRY---\nClean Content MathML:\n%s", qPrintable(contentMathml));
@@ -436,15 +436,31 @@ void RawCellmlViewWidget::xslTransformationDone(const QString &pInput,
     if (!mEditingWidget)
         return;
 
+    // An XSL transformation was performed, so clean it up
+
+    QString presentationMathml = cleanXml(pOutput);
+
+    // Clean our Presentation MathML even further
+    // Note: indeed, the clean Presentation MathML still contains things that
+    //       will prevent our viewer from properly, if at all, displaying it.
+    //       This is because the XSLT stylesheet we use to transform Content
+    //       MathML to Presentation MathML adds unnecessary bits and even
+    //       generates some weird Presentation MathML, so...
+
+    presentationMathml = presentationMathml.replace("<m:", "<")
+                                           .replace("</m:", "</")
+                                           .replace("<mi><mrow><mi>", "<mi>")
+                                           .replace("</mi></mrow></mi>", "</mi>");
+
+    qDebug("---GRY---\nPresentation MathML:\n%s", qPrintable(pOutput));
+    qDebug("---GRY---\nClean Presentation MathML:\n%s", qPrintable(presentationMathml));
+
     // The XSL transformation is done, so update our viewer and keep track of
     // the Presentation MathML
 
-    mEditingWidget->viewer()->setContents(pOutput);
+    mEditingWidget->viewer()->setContents(presentationMathml);
 
-    mPresentationMathmls.insert(pInput, pOutput);
-
-    if (pOutput.length())
-        qDebug("---GRY---\nCorresponding Presentation MathML:\n%s", qPrintable(pOutput));
+    mPresentationMathmls.insert(pInput, presentationMathml);
 }
 
 //==============================================================================
