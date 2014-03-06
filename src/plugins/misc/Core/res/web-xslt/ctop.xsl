@@ -418,12 +418,14 @@ Or the Apache 2, MIT or MPL 1.1 or MPL 2.0 licences.
 <!-- 4.4.3.3 divide -->
 <xsl:template match="apply[*[1][self::divide]]
                                 |apply[*[1][self::csymbol='divide']]">
-  <xsl:param name="p" select="0"/>
-<xsl:call-template name="binary">
-  <xsl:with-param name="mo"><mo>/</mo></xsl:with-param>
-  <xsl:with-param name="p" select="$p"/>
-  <xsl:with-param name="this-p" select="3"/>
-</xsl:call-template>
+<mfrac>
+  <mrow>
+    <xsl:apply-templates select="*[position()!=last()]"/>
+  </mrow>
+  <mrow>
+    <xsl:apply-templates select="*[last()]"/>
+  </mrow>
+</mfrac>
 </xsl:template>
 
 
