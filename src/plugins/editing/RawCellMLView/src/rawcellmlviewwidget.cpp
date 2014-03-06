@@ -277,7 +277,7 @@ QList<QWidget *> RawCellmlViewWidget::statusBarWidgets() const
 
 //==============================================================================
 
-void RawCellmlViewWidget::cleanXml(const QDomNode &pDomNode) const
+void RawCellmlViewWidget::cleanUpXml(const QDomNode &pDomNode) const
 {
     // Go through the node's children and remove all unrecognisable attributes
 
@@ -297,13 +297,13 @@ void RawCellmlViewWidget::cleanXml(const QDomNode &pDomNode) const
         foreach (const QString &attributeName, attributeNames)
             domNodeAttributes.removeNamedItem(attributeName);
 
-        cleanXml(domNode);
+        cleanUpXml(domNode);
     }
 }
 
 //==============================================================================
 
-QString RawCellmlViewWidget::cleanXml(const QString &pMathml) const
+QString RawCellmlViewWidget::cleanUpXml(const QString &pMathml) const
 {
     // Clean up the given XML string by going through its DOM representation
 
@@ -312,7 +312,7 @@ QString RawCellmlViewWidget::cleanXml(const QString &pMathml) const
     if (domDocument.setContent(pMathml)) {
         QDomNode domNode = domDocument.documentElement();
 
-        cleanXml(domNode);
+        cleanUpXml(domNode);
 
         return domDocument.toString(-1);
     } else {
@@ -378,7 +378,7 @@ void RawCellmlViewWidget::updateViewer()
     if (foundMathmlBlock) {
         // Retrieve and clean up the Content MathML
 
-        QString contentMathml = cleanXml(editor->textInRange(crtStartMathTagPos, crtEndMathTagPos+EndMathTag.length()));
+        QString contentMathml = cleanUpXml(editor->textInRange(crtStartMathTagPos, crtEndMathTagPos+EndMathTag.length()));
 
 qDebug("---GRY---\nContent MathML found:\n%s", qPrintable(editor->textInRange(crtStartMathTagPos, crtEndMathTagPos+EndMathTag.length())));
 qDebug("---GRY---\nClean Content MathML:\n%s", qPrintable(contentMathml));

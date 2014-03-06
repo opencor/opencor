@@ -103,8 +103,8 @@ private:
 
     Core::XslTransformer *mXslTransformer;
 
-    void cleanXml(const QDomNode &pDomNode) const;
-    QString cleanXml(const QString &pMathml) const;
+    void cleanUpXml(const QDomNode &pDomNode) const;
+    QString cleanUpXml(const QString &pMathml) const;
 
 private Q_SLOTS:
     void splitterMoved();
