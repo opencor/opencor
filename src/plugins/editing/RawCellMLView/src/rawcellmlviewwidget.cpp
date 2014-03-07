@@ -502,7 +502,6 @@ void RawCellmlViewWidget::xslTransformationDone(const QString &pInput,
 
     // The XSL transformation is done, so update our viewer and keep track of
     // the Presentation MathML
-qDebug(">>> %s", qPrintable(pOutput));
 
     mEditingWidget->viewer()->setContents(pOutput);
 
