@@ -307,6 +307,22 @@ QLabel * QScintillaWidget::editingModeWidget() const
 
 //==============================================================================
 
+QString QScintillaWidget::eolString() const
+{
+    // Return the end of line we use
+
+    switch (eolMode()) {
+    case EolUnix:
+        return "\n";
+    case EolMac:
+        return "\r";
+    default:   // EolWindows
+        return "\r\n";
+    }
+}
+
+//==============================================================================
+
 void QScintillaWidget::changeEvent(QEvent *pEvent)
 {
     // Default handling of the event

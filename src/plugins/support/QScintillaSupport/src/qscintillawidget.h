@@ -76,6 +76,8 @@ public:
     QLabel * cursorPositionWidget() const;
     QLabel * editingModeWidget() const;
 
+    QString eolString() const;
+
 protected:
     virtual void changeEvent(QEvent *pEvent);
     virtual void contextMenuEvent(QContextMenuEvent *pEvent);
