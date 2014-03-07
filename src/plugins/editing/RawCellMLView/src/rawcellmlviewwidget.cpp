@@ -305,7 +305,7 @@ void RawCellmlViewWidget::cleanUpXml(const QDomNode &pDomNode) const
 
 QString RawCellmlViewWidget::cleanUpXml(const QString &pMathml) const
 {
-    // Clean up the given XML string by going through its DOM representation
+    // Clean up and return the given XML string
 
     QDomDocument domDocument;
 
