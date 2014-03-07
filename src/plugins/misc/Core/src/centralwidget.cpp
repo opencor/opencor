@@ -1478,21 +1478,31 @@ QTabBar * CentralWidget::newTabBar(const QTabBar::Shape &pShape,
 
 void CentralWidget::updateNoViewMsg()
 {
-    // Customise our no view widget so that it shows a relevant warning message
+    // Customise, if possible, our no view widget so that it shows a relevant
+    // warning message
 
     int fileModeTabIndex = mModeTabs->currentIndex();
-    CentralWidgetMode *mode = 0;
 
-    if (fileModeTabIndex == modeTabIndex(GuiViewSettings::Editing))
-        mode = mModes.value(GuiViewSettings::Editing);
-    else if (fileModeTabIndex == modeTabIndex(GuiViewSettings::Simulation))
-        mode = mModes.value(GuiViewSettings::Simulation);
-    else if (fileModeTabIndex == modeTabIndex(GuiViewSettings::Analysis))
-        mode = mModes.value(GuiViewSettings::Analysis);
-    else
+    if (fileModeTabIndex == -1) {
+        // There are no modes (and therefore no views) available, so leave
+
         return;
+    } else {
+        CentralWidgetMode *mode = 0;
 
-    mNoViewMsg->setMessage(tr("Sorry, but the <strong>%1</strong> view does not support this type of file...").arg(qobject_cast<GuiInterface *>(mode->viewPlugins()->value(mode->views()->currentIndex())->instance())->viewName()));
+        if (fileModeTabIndex == modeTabIndex(GuiViewSettings::Editing))
+            mode = mModes.value(GuiViewSettings::Editing);
+        else if (fileModeTabIndex == modeTabIndex(GuiViewSettings::Simulation))
+            mode = mModes.value(GuiViewSettings::Simulation);
+        else if (fileModeTabIndex == modeTabIndex(GuiViewSettings::Analysis))
+            mode = mModes.value(GuiViewSettings::Analysis);
+        else
+            // Unknown mode, so...
+
+            return;
+
+        mNoViewMsg->setMessage(tr("Sorry, but the <strong>%1</strong> view does not support this type of file...").arg(qobject_cast<GuiInterface *>(mode->viewPlugins()->value(mode->views()->currentIndex())->instance())->viewName()));
+    }
 }
 
 //==============================================================================
