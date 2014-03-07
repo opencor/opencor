@@ -57,8 +57,8 @@ RawCellmlViewWidget::RawCellmlViewWidget(QWidget *pParent) :
     mEditingWidgets(QMap<QString, CoreCellMLEditing::CoreCellmlEditingWidget *>()),
     mEditingWidgetSizes(QIntList()),
     mEditorZoomLevel(0),
-    mContentMathml(QString()),
-    mPresentationMathmls(QMap<QString, QString>())
+    mContentMathmlEquation(QString()),
+    mPresentationMathmlEquations(QMap<QString, QString>())
 {
     // Set up the GUI
 
@@ -322,6 +322,67 @@ QString RawCellmlViewWidget::cleanUpXml(const QString &pMathml) const
 
 //==============================================================================
 
+QString RawCellmlViewWidget::retrieveContentMathmlEquation(const QString &pContentMathmlBlock,
+                                                           const int &pPosition) const
+{
+    // Retrieve a DOM representation of the given Content MathML block
+
+    QDomDocument domDocument;
+
+    if (domDocument.setContent(pContentMathmlBlock)) {
+        // If our DOM representation contains zero or one child node, then we
+        // simply return its string representation
+
+        QDomNode domNode = domDocument.documentElement();
+
+        if (domNode.childNodes().count() <= 1)
+            return domDocument.toString(-1);
+
+        // Determine the line and column values of the given position within the
+        // given Content MathML block
+
+        QString eolString = mEditingWidget->editor()->eolString();
+        int line = pContentMathmlBlock.left(pPosition).count(eolString)+1;
+        int column = pPosition-((pPosition >= eolString.length())?pContentMathmlBlock.lastIndexOf(eolString, pPosition-eolString.length()):-1);
+
+        // Go through the different child nodes of our DOM representation and
+        // determine (based on our line and column values) to which one we
+        // 'belong'
+
+        QDomNode prevChildNode = domNode.firstChild();
+
+        while (domNode.childNodes().count() != 1) {
+            QDomNode childNode = prevChildNode.nextSibling();
+            int childNodeLine = childNode.lineNumber();
+            int childNodeColumn = childNode.columnNumber()-childNode.nodeName().length()-1;
+
+            if (   ((line == childNodeLine) && (column >= childNodeColumn))
+                || (line > childNodeLine)) {
+                domNode.removeChild(prevChildNode);
+
+                prevChildNode = childNode;
+            } else {
+                while (domNode.childNodes().count() != 1)
+                    domNode.removeChild(domNode.lastChild());
+
+                break;
+            }
+        }
+
+        // At this stage, our DOM document contains only the equation we are
+        // after, so all we now need to do is return its string representation
+
+        return domDocument.toString(-1);
+    } else {
+        // No DOM representation of the given Content MathML block could be
+        // retrieved, so...
+
+        return QString();
+    }
+}
+
+//==============================================================================
+
 void RawCellmlViewWidget::splitterMoved()
 {
     // The splitter has moved, so keep track of the editing widget's sizes
@@ -376,50 +437,53 @@ void RawCellmlViewWidget::updateViewer()
     }
 
     if (foundMathmlBlock) {
-        // Retrieve and clean up the Content MathML
+        // Retrieve the Content MathML block
 
-        QString contentMathml = cleanUpXml(editor->textInRange(crtStartMathTagPos, crtEndMathTagPos+EndMathTag.length()));
+        QString contentMathmlBlock = editor->textInRange(crtStartMathTagPos, crtEndMathTagPos+EndMathTag.length());
 
-qDebug("---GRY---\nContent MathML found:\n%s", qPrintable(editor->textInRange(crtStartMathTagPos, crtEndMathTagPos+EndMathTag.length())));
-qDebug("---GRY---\nClean Content MathML:\n%s", qPrintable(contentMathml));
-
-        // Make sure that we have a valid Content MathML
-        // Note: indeed, our unclean Content MathML may not be valid, in which
+        // Make sure that we have a valid Content MathML block
+        // Note: indeed, our Content MathML block may not be valid, in which
         //       case cleaning it up will result in an empty string...
 
-        if (contentMathml.isEmpty()) {
-            mContentMathml = QString();
+        if (cleanUpXml(contentMathmlBlock).isEmpty()) {
+            mContentMathmlEquation = QString();
 
             mEditingWidget->viewer()->setValidContents(false);
         } else {
-            // Check whether our Content MathML is the same as our previous one
+            // A Content MathML block contains 0+ child nodes, so extract and
+            // clean up the one, if any, at our current position
 
-            if (!contentMathml.compare(mContentMathml)) {
+            QString contentMathmlEquation = cleanUpXml(retrieveContentMathmlEquation(contentMathmlBlock, crtPos-crtStartMathTagPos));
+
+            // Check whether our Content MathML equation is the same as our
+            // previous one
+
+            if (!contentMathmlEquation.compare(mContentMathmlEquation)) {
                 // It's the same, so leave
 
                 return;
             } else {
                 // It's a different one, so keep track of it and check whether
-                // we have already retrieved its Presentation MathML counterpart
+                // we have already retrieved its Presentation MathML version
 
-                mContentMathml = contentMathml;
+                mContentMathmlEquation = contentMathmlEquation;
 
-                QString presentationMathml = mPresentationMathmls.value(mContentMathml);
+                QString presentationMathmlEquation = mPresentationMathmlEquations.value(mContentMathmlEquation);
 
-                if (!presentationMathml.isEmpty()) {
-                    mEditingWidget->viewer()->setContents(presentationMathml);
+                if (!presentationMathmlEquation.isEmpty()) {
+                    mEditingWidget->viewer()->setContents(presentationMathmlEquation);
                 } else {
                     // We haven't already retrieved its Presentation MathML
-                    // counterpart, so do it now
+                    // version, so do it now
 
                     static const QString CtopXsl = Core::resourceAsByteArray(":/web-xslt/ctop.xsl");
 
-                    mXslTransformer->transform(contentMathml, CtopXsl);
+                    mXslTransformer->transform(contentMathmlEquation, CtopXsl);
                 }
             }
         }
     } else {
-        mContentMathml = QString();
+        mContentMathmlEquation = QString();
 
         mEditingWidget->viewer()->setContents(QString());
     }
@@ -438,12 +502,11 @@ void RawCellmlViewWidget::xslTransformationDone(const QString &pInput,
 
     // The XSL transformation is done, so update our viewer and keep track of
     // the Presentation MathML
-
-    qDebug("---GRY---\nPresentation MathML:\n%s", qPrintable(pOutput));
+qDebug(">>> %s", qPrintable(pOutput));
 
     mEditingWidget->viewer()->setContents(pOutput);
 
-    mPresentationMathmls.insert(pInput, pOutput);
+    mPresentationMathmlEquations.insert(pInput, pOutput);
 }
 
 //==============================================================================

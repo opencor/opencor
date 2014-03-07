@@ -98,13 +98,16 @@ private:
     QIntList mEditingWidgetSizes;
     int mEditorZoomLevel;
 
-    QString mContentMathml;
-    QMap<QString, QString> mPresentationMathmls;
+    QString mContentMathmlEquation;
+    QMap<QString, QString> mPresentationMathmlEquations;
 
     Core::XslTransformer *mXslTransformer;
 
     void cleanUpXml(const QDomNode &pDomNode) const;
     QString cleanUpXml(const QString &pMathml) const;
+
+    QString retrieveContentMathmlEquation(const QString &pContentMathmlBlock,
+                                          const int &pPosition) const;
 
 private Q_SLOTS:
     void splitterMoved();
