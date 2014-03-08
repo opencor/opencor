@@ -581,12 +581,7 @@ Or the Apache 2, MIT or MPL 1.1 or MPL 2.0 licences.
   <xsl:if test="$p &gt; 3"><mo>(</mo></xsl:if>
   <xsl:for-each select="*[position()&gt;1]">
    <xsl:if test="position() &gt; 1">
-    <mo>
-    <xsl:choose>
-      <xsl:when test="self::cn">&#215;<!-- times --></xsl:when>
-      <xsl:otherwise>&#8290;<!--invisible times--></xsl:otherwise>
-    </xsl:choose>
-    </mo>
+    <mo>&#183;<!-- middle dot --></mo>
    </xsl:if>
    <xsl:if test="position()&gt;= $first">
    <xsl:apply-templates select=".">
