@@ -420,9 +420,20 @@ void SurfaceImpl::AlphaRectangle(PRectangle rc, int cornerSize,
 {
     Q_ASSERT(painter);
 
+    QColor outline_colour = convertQColor(outline, alphaOutline);
+    QColor fill_colour = convertQColor(fill, alphaFill);
+
+    // There was a report of Qt seeming to ignore the alpha value of the pen so
+    // so we disable the pen if the outline and fill colours are the same.
+    if (outline_colour == fill_colour)
+        painter->setPen(Qt::NoPen);
+    else
+        painter->setPen(outline_colour);
+
+    painter->setBrush(fill_colour);
+
     const int radius = (cornerSize ? 25 : 0);
 
-    painter->setBrush(convertQColor(fill, alphaFill));
     painter->drawRoundRect(
             QRectF(rc.left, rc.top, rc.right - rc.left, rc.bottom - rc.top),
             radius, radius);
