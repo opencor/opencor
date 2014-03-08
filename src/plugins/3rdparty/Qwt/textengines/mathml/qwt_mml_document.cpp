@@ -2651,6 +2651,7 @@ qreal QwtMmlMoNode::lspace() const
             || ( parent()->nodeType() != MrowNode
                  && parent()->nodeType() != MfencedNode
                  && parent()->nodeType() != UnknownNode )
+            || previousSibling() == 0
             || ( previousSibling() == 0 && nextSibling() == 0 ) )
         return 0.0;
     else
@@ -2664,6 +2665,7 @@ qreal QwtMmlMoNode::rspace() const
             || ( parent()->nodeType() != MrowNode
                  && parent()->nodeType() != MfencedNode
                  && parent()->nodeType() != UnknownNode )
+            || nextSibling() == 0
             || ( previousSibling() == 0 && nextSibling() == 0 ) )
         return 0.0;
     else
