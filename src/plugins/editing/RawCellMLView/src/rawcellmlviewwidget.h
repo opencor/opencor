@@ -98,7 +98,6 @@ private:
     QIntList mEditingWidgetSizes;
     int mEditorZoomLevel;
 
-    QString mContentMathmlEquation;
     QMap<QString, QString> mPresentationMathmlEquations;
 
     Core::XslTransformer *mXslTransformer;

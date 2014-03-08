@@ -57,7 +57,6 @@ RawCellmlViewWidget::RawCellmlViewWidget(QWidget *pParent) :
     mEditingWidgets(QMap<QString, CoreCellMLEditing::CoreCellmlEditingWidget *>()),
     mEditingWidgetSizes(QIntList()),
     mEditorZoomLevel(0),
-    mContentMathmlEquation(QString()),
     mPresentationMathmlEquations(QMap<QString, QString>())
 {
     // Set up the GUI
@@ -446,8 +445,6 @@ void RawCellmlViewWidget::updateViewer()
         //       case cleaning it up will result in an empty string...
 
         if (cleanUpXml(contentMathmlBlock).isEmpty()) {
-            mContentMathmlEquation = QString();
-
             mEditingWidget->viewer()->setValidContents(false);
         } else {
             // A Content MathML block contains 0+ child nodes, so extract and
@@ -458,17 +455,15 @@ void RawCellmlViewWidget::updateViewer()
             // Check whether our Content MathML equation is the same as our
             // previous one
 
-            if (!contentMathmlEquation.compare(mContentMathmlEquation)) {
+            if (!contentMathmlEquation.compare(mEditingWidget->viewer()->contents())) {
                 // It's the same, so leave
 
                 return;
             } else {
-                // It's a different one, so keep track of it and check whether
-                // we have already retrieved its Presentation MathML version
+                // It's a different one, so check whether we have already
+                // retrieved its Presentation MathML version
 
-                mContentMathmlEquation = contentMathmlEquation;
-
-                QString presentationMathmlEquation = mPresentationMathmlEquations.value(mContentMathmlEquation);
+                QString presentationMathmlEquation = mPresentationMathmlEquations.value(contentMathmlEquation);
 
                 if (!presentationMathmlEquation.isEmpty()) {
                     mEditingWidget->viewer()->setContents(presentationMathmlEquation);
@@ -483,8 +478,6 @@ void RawCellmlViewWidget::updateViewer()
             }
         }
     } else {
-        mContentMathmlEquation = QString();
-
         mEditingWidget->viewer()->setContents(QString());
     }
 }
