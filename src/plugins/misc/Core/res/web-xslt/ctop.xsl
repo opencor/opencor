@@ -134,7 +134,7 @@ Or the Apache 2, MIT or MPL 1.1 or MPL 2.0 licences.
 <!-- 4.4.1.1 ci -->
 
 <xsl:template match="ci/text()">
- <mi><xsl:value-of select="."/></mi>
+ <mi fontstyle="italic"><xsl:value-of select="."/></mi>
 </xsl:template>
 
 <xsl:template match="ci">
@@ -950,16 +950,16 @@ Or the Apache 2, MIT or MPL 1.1 or MPL 2.0 licences.
  <mfrac>
  <xsl:choose>
  <xsl:when test="bvar/degree">
- <mrow><msup><mi>d</mi><xsl:apply-templates select="bvar/degree/node()"/></msup>
+ <mrow><msup><mi fontstyle="normal">d</mi><xsl:apply-templates select="bvar/degree/node()"/></msup>
      <xsl:apply-templates select="*[last()]"/></mrow>
- <mrow><mi>d</mi><msup><xsl:apply-templates
+ <mrow><mi fontstyle="normal">d</mi><msup><xsl:apply-templates
  select="bvar/node()"/><xsl:apply-templates
  select="bvar/degree/node()"/></msup>
 </mrow>
 </xsl:when>
 <xsl:otherwise>
- <mrow><mi>d</mi><xsl:apply-templates select="*[last()]"/></mrow>
- <mrow><mi>d</mi><xsl:apply-templates select="bvar"/></mrow>
+ <mrow><mi fontstyle="normal">d</mi><xsl:apply-templates select="*[last()]"/></mrow>
+ <mrow><mi fontstyle="normal">d</mi><xsl:apply-templates select="bvar"/></mrow>
 </xsl:otherwise>
  </xsl:choose>
  </mfrac>

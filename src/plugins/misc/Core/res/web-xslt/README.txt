@@ -81,3 +81,6 @@ which doesn't get rendered as expected using our Viewer plugin and this for two 
 Also, the divide element gets translated as <mrow>...</mrow><mo>/</mo><mrow>...</mrow> while, ideally, it would get translated as <mfrac><mrow>...</mrow><mrow>...</mrow></mfrac>.
 
 All of these issues are addressed in this new version of ctop.xsl. For information, the divide element issue was addressed using the solution provided by Wikiwide on 9 June 2013 (see https://addons.mozilla.org/en-US/firefox/addon/mathml-ctop/).
+
+Another additional improvement is:
+ - Improvements to the way some mi elements are rendered (see https://github.com/opencor/opencor/issues/297).
