@@ -99,6 +99,14 @@ QScintillaWidget::QScintillaWidget(const QString &pContents,
 
     setCaretLineVisible(true);
 
+    // Force the use of UNIX EOL mode
+    // Note: by default QScintilla will use EolWindows on Windows and EolUnix on
+    //       Linux and OS X. However, the fact that it uses EolWindows on
+    //       Windows can cause problems on that platform with files not using a
+    //       a Windows EOL mode, so...
+
+    setEolMode(EolUnix);
+
     // Initialise our colours by 'updating' them
 
     updateColors();
