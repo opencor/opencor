@@ -81,6 +81,9 @@ private:
 
     QAction *mOptimiseFontSizeAction;
 
+Q_SIGNALS:
+    void optimiseFontSizeChanged(const bool &pEnabled);
+
 private Q_SLOTS:
     void showCustomContextMenu(const QPoint &pPosition) const;
 };

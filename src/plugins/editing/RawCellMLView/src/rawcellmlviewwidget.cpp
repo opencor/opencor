@@ -57,6 +57,7 @@ RawCellmlViewWidget::RawCellmlViewWidget(QWidget *pParent) :
     mEditingWidgets(QMap<QString, CoreCellMLEditing::CoreCellmlEditingWidget *>()),
     mEditingWidgetSizes(QIntList()),
     mEditorZoomLevel(0),
+    mViewerOptimiseFontSizeEnabled(true),
     mPresentationMathmlEquations(QMap<QString, QString>())
 {
     // Set up the GUI
@@ -89,8 +90,9 @@ RawCellmlViewWidget::~RawCellmlViewWidget()
 
 //==============================================================================
 
-static const auto SettingsEditingWidgetSizes = QStringLiteral("EditingWidgetSizes");
-static const auto SettingsEditorZoomLevel    = QStringLiteral("EditorZoomLevel");
+static const auto SettingsEditingWidgetSizes            = QStringLiteral("EditingWidgetSizes");
+static const auto SettingsEditorZoomLevel               = QStringLiteral("EditorZoomLevel");
+static const auto SettingsViewerOptimiseFontSizeEnabled = QStringLiteral("ViewerOptimiseFontSizeEnabled");
 
 //==============================================================================
 
@@ -109,6 +111,10 @@ void RawCellmlViewWidget::loadSettings(QSettings *pSettings)
 
     mEditingWidgetSizes = qVariantListToIntList(pSettings->value(SettingsEditingWidgetSizes, defaultEditingWidgetSizes).toList());
     mEditorZoomLevel = pSettings->value(SettingsEditorZoomLevel, 0).toInt();
+
+    // Retrieve the editing widget's viewer settings
+
+    mViewerOptimiseFontSizeEnabled = pSettings->value(SettingsViewerOptimiseFontSizeEnabled, true).toBool();
 }
 
 //==============================================================================
@@ -119,6 +125,10 @@ void RawCellmlViewWidget::saveSettings(QSettings *pSettings) const
 
     pSettings->setValue(SettingsEditingWidgetSizes, qIntListToVariantList(mEditingWidgetSizes));
     pSettings->setValue(SettingsEditorZoomLevel, mEditorZoomLevel);
+
+    // Keep track of the editing widget's viewer settings
+
+    pSettings->setValue(SettingsViewerOptimiseFontSizeEnabled, mViewerOptimiseFontSizeEnabled);
 }
 
 //==============================================================================
@@ -175,12 +185,21 @@ void RawCellmlViewWidget::initialize(const QString &pFileName)
         connect(mEditingWidget->editor(), SIGNAL(cursorPositionChanged(int, int)),
                 this, SLOT(updateViewer()));
 
+        // Keep track of our editing widget's viewer settings
+
+        connect(mEditingWidget->viewer(), SIGNAL(optimiseFontSizeChanged(const bool &)),
+                this, SLOT(optimiseFontSizeChanged(const bool &)));
+
         // Keep track of our editing widget and add it to ourselves
 
         mEditingWidgets.insert(pFileName, mEditingWidget);
 
         layout()->addWidget(mEditingWidget);
     }
+
+    // Set our current editing widget's viewer settings
+
+    mEditingWidget->viewer()->setOptimiseFontSize(mViewerOptimiseFontSizeEnabled);
 
     // Show/hide our editing widgets and adjust our sizes
 
@@ -490,6 +509,15 @@ void RawCellmlViewWidget::updateViewer()
     } else {
         mEditingWidget->viewer()->setContents(QString());
     }
+}
+
+//==============================================================================
+
+void RawCellmlViewWidget::optimiseFontSizeChanged(const bool &pEnabled)
+{
+    // Keep track of our editing widget's viewer settings
+
+    mViewerOptimiseFontSizeEnabled = pEnabled;
 }
 
 //==============================================================================

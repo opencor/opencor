@@ -100,6 +100,8 @@ private:
     QIntList mEditingWidgetSizes;
     int mEditorZoomLevel;
 
+    bool mViewerOptimiseFontSizeEnabled;
+
     QMap<QString, QString> mPresentationMathmlEquations;
 
     Core::XslTransformer *mXslTransformer;
@@ -112,10 +114,11 @@ private:
 
 private Q_SLOTS:
     void splitterMoved();
-
     void editorZoomLevelChanged();
 
     void updateViewer();
+
+    void optimiseFontSizeChanged(const bool &pEnabled);
 
     void xslTransformationDone(const QString &pInput, const QString &pOutput);
 };

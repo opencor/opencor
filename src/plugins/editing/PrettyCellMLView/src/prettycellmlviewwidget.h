@@ -93,9 +93,13 @@ private:
     QIntList mEditingWidgetSizes;
     int mEditorZoomLevel;
 
+    bool mViewerOptimiseFontSizeEnabled;
+
 private Q_SLOTS:
     void splitterMoved();
     void editorZoomLevelChanged();
+
+    void optimiseFontSizeChanged(const bool &pEnabled);
 };
 
 //==============================================================================

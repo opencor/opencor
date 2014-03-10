@@ -69,6 +69,8 @@ ViewerWidget::ViewerWidget(QWidget *pParent) :
 
     connect(mOptimiseFontSizeAction, SIGNAL(triggered()),
             this, SLOT(update()));
+    connect(mOptimiseFontSizeAction, SIGNAL(toggled(bool)),
+            this, SIGNAL(optimiseFontSizeChanged(const bool &)));
 
     // We want a context menu
 
@@ -188,6 +190,10 @@ void ViewerWidget::setOptimiseFontSize(const bool &pOptimiseFontSize)
     // Update ourselves
 
     update();
+
+    // Let people know about the new value
+
+    emit optimiseFontSizeChanged(mOptimiseFontSizeAction->isChecked());
 }
 
 //==============================================================================

@@ -23,6 +23,7 @@ specific language governing permissions and limitations under the License.
 #include "filemanager.h"
 #include "qscintillawidget.h"
 #include "prettycellmlviewwidget.h"
+#include "viewerwidget.h"
 
 //==============================================================================
 
@@ -54,7 +55,8 @@ PrettyCellmlViewWidget::PrettyCellmlViewWidget(QWidget *pParent) :
     mEditingWidget(0),
     mEditingWidgets(QMap<QString, CoreCellMLEditing::CoreCellmlEditingWidget *>()),
     mEditingWidgetSizes(QIntList()),
-    mEditorZoomLevel(0)
+    mEditorZoomLevel(0),
+    mViewerOptimiseFontSizeEnabled(true)
 {
     // Set up the GUI
 
@@ -72,8 +74,9 @@ PrettyCellmlViewWidget::~PrettyCellmlViewWidget()
 
 //==============================================================================
 
-static const auto SettingsEditingWidgetSizes = QStringLiteral("EditingWidgetSizes");
-static const auto SettingsEditorZoomLevel    = QStringLiteral("EditorZoomLevel");
+static const auto SettingsEditingWidgetSizes            = QStringLiteral("EditingWidgetSizes");
+static const auto SettingsEditorZoomLevel               = QStringLiteral("EditorZoomLevel");
+static const auto SettingsViewerOptimiseFontSizeEnabled = QStringLiteral("ViewerOptimiseFontSizeEnabled");
 
 //==============================================================================
 
@@ -92,6 +95,10 @@ void PrettyCellmlViewWidget::loadSettings(QSettings *pSettings)
 
     mEditingWidgetSizes = qVariantListToIntList(pSettings->value(SettingsEditingWidgetSizes, defaultEditingWidgetSizes).toList());
     mEditorZoomLevel = pSettings->value(SettingsEditorZoomLevel, 0).toInt();
+
+    // Retrieve the editing widget's viewer settings
+
+    mViewerOptimiseFontSizeEnabled = pSettings->value(SettingsViewerOptimiseFontSizeEnabled, true).toBool();
 }
 
 //==============================================================================
@@ -102,6 +109,10 @@ void PrettyCellmlViewWidget::saveSettings(QSettings *pSettings) const
 
     pSettings->setValue(SettingsEditingWidgetSizes, qIntListToVariantList(mEditingWidgetSizes));
     pSettings->setValue(SettingsEditorZoomLevel, mEditorZoomLevel);
+
+    // Keep track of the editing widget's viewer settings
+
+    pSettings->setValue(SettingsViewerOptimiseFontSizeEnabled, mViewerOptimiseFontSizeEnabled);
 }
 
 //==============================================================================
@@ -153,12 +164,21 @@ void PrettyCellmlViewWidget::initialize(const QString &pFileName)
         connect(mEditingWidget->editor(), SIGNAL(SCN_ZOOM()),
                 this, SLOT(editorZoomLevelChanged()));
 
+        // Keep track of our editing widget's viewer settings
+
+        connect(mEditingWidget->viewer(), SIGNAL(optimiseFontSizeChanged(const bool &)),
+                this, SLOT(optimiseFontSizeChanged(const bool &)));
+
         // Keep track of our editing widget and add it to ourselves
 
         mEditingWidgets.insert(pFileName, mEditingWidget);
 
         layout()->addWidget(mEditingWidget);
     }
+
+    // Set our current editing widget's viewer settings
+
+    mEditingWidget->viewer()->setOptimiseFontSize(mViewerOptimiseFontSizeEnabled);
 
     // Show/hide our editing widgets and adjust our sizes
 
@@ -279,6 +299,15 @@ void PrettyCellmlViewWidget::editorZoomLevelChanged()
     // zoom level
 
     mEditorZoomLevel = qobject_cast<QScintillaSupport::QScintillaWidget *>(sender())->SendScintilla(QsciScintillaBase::SCI_GETZOOM);
+}
+
+//==============================================================================
+
+void PrettyCellmlViewWidget::optimiseFontSizeChanged(const bool &pEnabled)
+{
+    // Keep track of our editing widget's viewer settings
+
+    mViewerOptimiseFontSizeEnabled = pEnabled;
 }
 
 //==============================================================================
