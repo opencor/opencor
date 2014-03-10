@@ -24,7 +24,6 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-#include <QCryptographicHash>
 #include <QFile>
 #include <QFileDevice>
 #include <QFileInfo>
@@ -136,8 +135,7 @@ QString File::sha1() const
     QString fileContents;
 
     if (Core::readTextFromFile(mFileName, fileContents))
-        return QCryptographicHash::hash(QString(fileContents).toUtf8(),
-                                        QCryptographicHash::Sha1).toHex();
+        return Core::sha1(fileContents);
     else
         return QString();
 }

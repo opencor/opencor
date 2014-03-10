@@ -25,6 +25,7 @@ specific language governing permissions and limitations under the License.
 
 #include <QChar>
 #include <QCoreApplication>
+#include <QCryptographicHash>
 #include <QDate>
 #include <QDir>
 #include <QFile>
@@ -302,6 +303,16 @@ qulonglong freeMemory()
 #endif
 
     return res;
+}
+
+//==============================================================================
+
+QString sha1(const QString &pText)
+{
+    // Return the SHA-1 value of the given text
+
+    return QCryptographicHash::hash(pText.toUtf8(),
+                                    QCryptographicHash::Sha1).toHex();
 }
 
 //==============================================================================

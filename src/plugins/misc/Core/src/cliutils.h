@@ -72,6 +72,8 @@ qulonglong CORE_EXPORT freeMemory();
 QString CORE_EXPORT sizeAsString(const double &pSize,
                                  const int &pPrecision = 1);
 
+QString CORE_EXPORT sha1(const QString &pText);
+
 QByteArray CORE_EXPORT resourceAsByteArray(const QString &pResource);
 bool CORE_EXPORT writeResourceToFile(const QString &pFilename,
                                      const QString &pResource);
