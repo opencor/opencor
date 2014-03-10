@@ -326,7 +326,9 @@ bool PrettyCellMLViewPlugin::canClose()
 
 void PrettyCellMLViewPlugin::retranslateUi()
 {
-    // We don't handle this interface...
+    // Retranslate our view widget
+
+    mViewWidget->retranslateUi();
 }
 
 //==============================================================================

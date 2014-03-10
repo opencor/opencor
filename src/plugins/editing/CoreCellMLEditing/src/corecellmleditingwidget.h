@@ -24,6 +24,7 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#include "commonwidget.h"
 #include "corecellmleditingglobal.h"
 
 //==============================================================================
@@ -69,7 +70,8 @@ namespace CoreCellMLEditing {
 
 //==============================================================================
 
-class CORECELLMLEDITING_EXPORT CoreCellmlEditingWidget : public QSplitter
+class CORECELLMLEDITING_EXPORT CoreCellmlEditingWidget : public QSplitter,
+                                                         public Core::CommonWidget
 {
     Q_OBJECT
 
@@ -78,6 +80,8 @@ public:
                                      const bool &pReadOnly, QsciLexer *pLexer,
                                      QWidget *pParent);
     ~CoreCellmlEditingWidget();
+
+    virtual void retranslateUi();
 
     Viewer::ViewerWidget * viewer() const;
     QScintillaSupport::QScintillaWidget * editor() const;

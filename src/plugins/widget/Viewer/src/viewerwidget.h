@@ -33,6 +33,10 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+class QMenu;
+
+//==============================================================================
+
 namespace OpenCOR {
 namespace Viewer {
 
@@ -44,6 +48,8 @@ class VIEWER_EXPORT ViewerWidget : public Core::Widget
 
 public:
     explicit ViewerWidget(QWidget *pParent);
+
+    virtual void retranslateUi();
 
     QString contents() const;
     void setContents(const QString &pContents);
@@ -70,6 +76,13 @@ private:
     bool mValidContents;
 
     bool mOptimiseFontSize;
+
+    QMenu *mContextMenu;
+
+    QAction *mOptimiseFontSizeAction;
+
+private Q_SLOTS:
+    void showCustomContextMenu(const QPoint &pPosition) const;
 };
 
 //==============================================================================

@@ -19,14 +19,23 @@ specific language governing permissions and limitations under the License.
 // Viewer widget
 //==============================================================================
 
+#include "guiinterface.h"
 #include "viewerwidget.h"
 
 //==============================================================================
 
+#include <Qt>
+
+//==============================================================================
+
+#include <QAction>
+#include <QCursor>
 #include <QIcon>
+#include <QMenu>
 #include <QPainter>
 #include <QPaintEvent>
 #include <QPalette>
+#include <QPoint>
 #include <QRectF>
 
 //==============================================================================
@@ -46,9 +55,40 @@ ViewerWidget::ViewerWidget(QWidget *pParent) :
     mOneOverMathmlDocumentWidth(0),
     mOneOverMathmlDocumentHeight(0),
     mContents(QString()),
-    mValidContents(true),
-    mOptimiseFontSize(true)
+    mValidContents(true)
 {
+    // Create our context menu
+
+    mContextMenu = new QMenu(this);
+
+    mOptimiseFontSizeAction = GuiInterface::newAction(this, true);
+
+    mOptimiseFontSizeAction->setChecked(true);
+
+    mContextMenu->addAction(mOptimiseFontSizeAction);
+
+    connect(mOptimiseFontSizeAction, SIGNAL(triggered()),
+            this, SLOT(update()));
+
+    // We want a context menu
+
+    setContextMenuPolicy(Qt::CustomContextMenu);
+
+    connect(this, SIGNAL(customContextMenuRequested(const QPoint &)),
+            this, SLOT(showCustomContextMenu(const QPoint &)));
+
+    // Retranslate ourselves, so that our action is properly set
+
+    retranslateUi();
+}
+
+//==============================================================================
+
+void ViewerWidget::retranslateUi()
+{
+    // Retranslate our actions
+
+    mOptimiseFontSizeAction->setText(tr("Optimise Font Size"));
 }
 
 //==============================================================================
@@ -131,7 +171,7 @@ bool ViewerWidget::optimiseFontSize() const
 {
     // Return whether we optimise our font size
 
-    return mOptimiseFontSize;
+    return mOptimiseFontSizeAction->isChecked();
 }
 
 //==============================================================================
@@ -140,10 +180,10 @@ void ViewerWidget::setOptimiseFontSize(const bool &pOptimiseFontSize)
 {
     // Keep track of whether we should optimise our font size
 
-    if (pOptimiseFontSize == mOptimiseFontSize)
+    if (pOptimiseFontSize == mOptimiseFontSizeAction->isChecked())
         return;
 
-    mOptimiseFontSize = pOptimiseFontSize;
+    mOptimiseFontSizeAction->setChecked(pOptimiseFontSize);
 
     // Update ourselves
 
@@ -182,7 +222,7 @@ void ViewerWidget::paintEvent(QPaintEvent *pEvent)
         mMathmlDocument.setBackgroundColor(backgroundColor);
         mMathmlDocument.setForegroundColor(QColor(palette().color(QPalette::Text)));
 
-        mMathmlDocument.setBaseFontPointSize(mOptimiseFontSize?
+        mMathmlDocument.setBaseFontPointSize(mOptimiseFontSizeAction->isChecked()?
                                                  qRound(75.0*qMin(mOneOverMathmlDocumentWidth*width(),
                                                                   mOneOverMathmlDocumentHeight*height())):
                                                  font().pointSize());
@@ -249,6 +289,17 @@ QSize ViewerWidget::sizeHint() const
     //       on it, to have a decent size when docked to the main window...
 
     return defaultSize(0.1);
+}
+
+//==============================================================================
+
+void ViewerWidget::showCustomContextMenu(const QPoint &pPosition) const
+{
+    Q_UNUSED(pPosition);
+
+    // Show our custom context menu
+
+    mContextMenu->exec(QCursor::pos());
 }
 
 //==============================================================================

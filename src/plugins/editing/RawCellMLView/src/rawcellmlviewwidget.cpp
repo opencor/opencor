@@ -123,6 +123,16 @@ void RawCellmlViewWidget::saveSettings(QSettings *pSettings) const
 
 //==============================================================================
 
+void RawCellmlViewWidget::retranslateUi()
+{
+    // Retranslate all our editing widgets
+
+    foreach (CoreCellMLEditing::CoreCellmlEditingWidget *editingWidget, mEditingWidgets)
+        editingWidget->retranslateUi();
+}
+
+//==============================================================================
+
 bool RawCellmlViewWidget::contains(const QString &pFileName) const
 {
     // Return whether we know about the given file, i.e. whether we have an

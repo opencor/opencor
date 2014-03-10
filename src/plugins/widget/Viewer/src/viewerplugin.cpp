@@ -41,6 +41,15 @@ PLUGININFO_FUNC ViewerPluginInfo()
 }
 
 //==============================================================================
+// I18n interface
+//==============================================================================
+
+void ViewerPlugin::retranslateUi()
+{
+    // We don't handle this interface...
+}
+
+//==============================================================================
 
 }   // namespace Viewer
 }   // namespace OpenCOR

@@ -106,6 +106,16 @@ void PrettyCellmlViewWidget::saveSettings(QSettings *pSettings) const
 
 //==============================================================================
 
+void PrettyCellmlViewWidget::retranslateUi()
+{
+    // Retranslate all our editing widgets
+
+    foreach (CoreCellMLEditing::CoreCellmlEditingWidget *editingWidget, mEditingWidgets)
+        editingWidget->retranslateUi();
+}
+
+//==============================================================================
+
 bool PrettyCellmlViewWidget::contains(const QString &pFileName) const
 {
     // Return whether we know about the given file, i.e. whether we have an

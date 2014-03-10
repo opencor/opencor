@@ -50,6 +50,7 @@ CoreCellmlEditingWidget::CoreCellmlEditingWidget(const QString &pContents,
                                                  QsciLexer *pLexer,
                                                  QWidget *pParent) :
     QSplitter(pParent),
+    Core::CommonWidget(pParent),
     mGui(new Ui::CoreCellmlEditingWidget)
 {
     // Set up the GUI
@@ -86,6 +87,15 @@ CoreCellmlEditingWidget::~CoreCellmlEditingWidget()
     // Delete the GUI
 
     delete mGui;
+}
+
+//==============================================================================
+
+void CoreCellmlEditingWidget::retranslateUi()
+{
+    // Retranslate our viewer
+
+    mViewer->retranslateUi();
 }
 
 //==============================================================================

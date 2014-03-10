@@ -330,7 +330,9 @@ bool RawCellMLViewPlugin::canClose()
 
 void RawCellMLViewPlugin::retranslateUi()
 {
-    // We don't handle this interface...
+    // Retranslate our view widget
+
+    mViewWidget->retranslateUi();
 }
 
 //==============================================================================
