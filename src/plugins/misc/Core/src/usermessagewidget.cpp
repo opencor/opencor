@@ -23,6 +23,16 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#include <Qt>
+
+//==============================================================================
+
+#include <QFont>
+#include <QSizePolicy>
+#include <QWidget>
+
+//==============================================================================
+
 namespace OpenCOR {
 namespace Core {
 

@@ -30,10 +30,15 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#include <Qt>
+
+//==============================================================================
+
 #include <QClipboard>
 #include <QDir>
 #include <QHelpEngine>
 #include <QMenu>
+#include <QPoint>
 #include <QPrintDialog>
 #include <QPrinter>
 #include <QSettings>

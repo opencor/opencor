@@ -25,11 +25,16 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#include <Qt>
+
+//==============================================================================
+
 #include <QAction>
 #include <QApplication>
 #include <QColor>
 #include <QDate>
 #include <QFileDialog>
+#include <QFont>
 #include <QFrame>
 #include <QLabel>
 #include <QMessageBox>

@@ -30,9 +30,14 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#include <Qt>
+
+//==============================================================================
+
 #include <QDir>
 #include <QFileInfo>
 #include <QMenu>
+#include <QPoint>
 #include <QStandardItemModel>
 
 //==============================================================================

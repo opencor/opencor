@@ -30,6 +30,10 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#include <Qt>
+
+//==============================================================================
+
 #include <QClipboard>
 #include <QJsonDocument>
 #include <QJsonObject>
@@ -37,6 +41,7 @@ specific language governing permissions and limitations under the License.
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
 #include <QNetworkRequest>
+#include <QPoint>
 #include <QRegularExpression>
 
 //==============================================================================
