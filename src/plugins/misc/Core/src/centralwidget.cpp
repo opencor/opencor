@@ -1491,16 +1491,14 @@ void CentralWidget::updateNoViewMsg()
 
         return;
     } else {
-        CentralWidgetMode *mode = 0;
+        CentralWidgetMode *mode;
 
-        if (fileModeTabIndex == modeTabIndex(GuiViewSettings::Editing))
-            mode = mModes.value(GuiViewSettings::Editing);
-        else if (fileModeTabIndex == modeTabIndex(GuiViewSettings::Simulation))
+        if (fileModeTabIndex == modeTabIndex(GuiViewSettings::Simulation))
             mode = mModes.value(GuiViewSettings::Simulation);
         else if (fileModeTabIndex == modeTabIndex(GuiViewSettings::Analysis))
             mode = mModes.value(GuiViewSettings::Analysis);
         else
-            // Unknown mode, so...
+            mode = mModes.value(GuiViewSettings::Editing);
 
             return;
 
@@ -1591,14 +1589,14 @@ void CentralWidget::updateModifiedSettings()
     // been modified
 
     int fileModeTabIndex = mModeTabs->currentIndex();
-    QTabBar *modeViews = 0;
+    QTabBar *modeViews;
 
-    if (fileModeTabIndex == modeTabIndex(GuiViewSettings::Editing))
-        modeViews = mModes.value(GuiViewSettings::Editing)->views();
-    else if (fileModeTabIndex == modeTabIndex(GuiViewSettings::Simulation))
+    if (fileModeTabIndex == modeTabIndex(GuiViewSettings::Simulation))
         modeViews = mModes.value(GuiViewSettings::Simulation)->views();
     else if (fileModeTabIndex == modeTabIndex(GuiViewSettings::Analysis))
         modeViews = mModes.value(GuiViewSettings::Analysis)->views();
+    else
+        modeViews = mModes.value(GuiViewSettings::Editing)->views();
 
     QString fileName = mFileTabs->count()?
                            mFileNames[mFileTabs->currentIndex()]:
