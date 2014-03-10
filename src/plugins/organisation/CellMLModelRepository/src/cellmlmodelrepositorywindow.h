@@ -79,7 +79,7 @@ private:
 
     bool mModelListRequested;
 
-    QMenu *mCustomContextMenu;
+    QMenu *mContextMenu;
 
     void outputModelList(const QStringList &pModelList);
 

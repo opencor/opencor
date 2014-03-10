@@ -66,7 +66,7 @@ private:
 
     FileBrowserWidget *mFileBrowserWidget;
 
-    QMenu *mCustomContextMenu;
+    QMenu *mContextMenu;
 
 private Q_SLOTS:
     void on_actionHome_triggered();

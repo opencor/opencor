@@ -148,7 +148,7 @@ private:
 
     QLabel *mCurrentResourceOrIdLabel;
 
-    QMenu *mCustomContextMenu;
+    QMenu *mContextMenu;
 
     void updateGui(const Items &pItems, const QString &pErrorMessage,
                    const bool &pLookupTerm,

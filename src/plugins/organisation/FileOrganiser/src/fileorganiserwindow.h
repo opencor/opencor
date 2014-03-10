@@ -69,7 +69,7 @@ private:
 
     FileOrganiserWidget *mFileOrganiserWidget;
 
-    QMenu *mCustomContextMenu;
+    QMenu *mContextMenu;
 
 private Q_SLOTS:
     void on_actionNew_triggered();

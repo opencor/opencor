@@ -105,23 +105,23 @@ HelpWindow::HelpWindow(QWidget *pParent) :
 
     mGui->layout->addWidget(mHelpWidget);
 
-    // Create and populate our custom context menu
+    // Create and populate our context menu
 
-    mCustomContextMenu = new QMenu(this);
+    mContextMenu = new QMenu(this);
 
-    mCustomContextMenu->addAction(mGui->actionHome);
-    mCustomContextMenu->addSeparator();
-    mCustomContextMenu->addAction(mGui->actionBack);
-    mCustomContextMenu->addAction(mGui->actionForward);
-    mCustomContextMenu->addSeparator();
-    mCustomContextMenu->addAction(mGui->actionCopy);
-    mCustomContextMenu->addSeparator();
-    mCustomContextMenu->addAction(mGui->actionNormalSize);
-    mCustomContextMenu->addSeparator();
-    mCustomContextMenu->addAction(mGui->actionZoomIn);
-    mCustomContextMenu->addAction(mGui->actionZoomOut);
-    mCustomContextMenu->addSeparator();
-    mCustomContextMenu->addAction(mGui->actionPrint);
+    mContextMenu->addAction(mGui->actionHome);
+    mContextMenu->addSeparator();
+    mContextMenu->addAction(mGui->actionBack);
+    mContextMenu->addAction(mGui->actionForward);
+    mContextMenu->addSeparator();
+    mContextMenu->addAction(mGui->actionCopy);
+    mContextMenu->addSeparator();
+    mContextMenu->addAction(mGui->actionNormalSize);
+    mContextMenu->addSeparator();
+    mContextMenu->addAction(mGui->actionZoomIn);
+    mContextMenu->addAction(mGui->actionZoomOut);
+    mContextMenu->addSeparator();
+    mContextMenu->addAction(mGui->actionPrint);
 
     // We want our own context menu for the help widget (indeed, we don't want
     // the default one which has the reload menu item and not the other actions
@@ -288,10 +288,10 @@ void HelpWindow::showCustomContextMenu(const QPoint &pPosition) const
 {
     Q_UNUSED(pPosition);
 
-    // Show our custom context menu which items match the contents of our tool
-    // bar widget
+    // Show our context menu which items match the contents of our tool bar
+    // widget
 
-    mCustomContextMenu->exec(QCursor::pos());
+    mContextMenu->exec(QCursor::pos());
 }
 
 //==============================================================================

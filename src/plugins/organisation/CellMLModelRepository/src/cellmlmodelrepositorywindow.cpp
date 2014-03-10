@@ -70,11 +70,11 @@ CellmlModelRepositoryWindow::CellmlModelRepositoryWindow(QWidget *pParent) :
 
     mGui->dockWidgetContents->layout()->addWidget(mCellmlModelRepositoryWidget);
 
-    // Create and populate our custom context menu
+    // Create and populate our context menu
 
-    mCustomContextMenu = new QMenu(this);
+    mContextMenu = new QMenu(this);
 
-    mCustomContextMenu->addAction(mGui->actionCopy);
+    mContextMenu->addAction(mGui->actionCopy);
 
     // We want our own context menu for the help widget (indeed, we don't want
     // the default one which has the reload menu item and not the other actions
@@ -306,9 +306,9 @@ void CellmlModelRepositoryWindow::showCustomContextMenu(const QPoint &pPosition)
 {
     Q_UNUSED(pPosition);
 
-    // Show our custom context menu for our CellML Models Repository widget
+    // Show our context menu for our CellML Models Repository widget
 
-    mCustomContextMenu->exec(QCursor::pos());
+    mContextMenu->exec(QCursor::pos());
 }
 
 //==============================================================================

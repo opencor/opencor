@@ -74,11 +74,11 @@ FileBrowserWindow::FileBrowserWindow(QWidget *pParent) :
 
     mGui->layout->addWidget(mFileBrowserWidget);
 
-    // Create and populate our custom context menu
+    // Create and populate our context menu
 
-    mCustomContextMenu = new QMenu(this);
+    mContextMenu = new QMenu(this);
 
-    mCustomContextMenu->addAction(mGui->actionHome);
+    mContextMenu->addAction(mGui->actionHome);
 
     // We want our own context menu for the file organiser widget
 
@@ -193,10 +193,10 @@ void FileBrowserWindow::showCustomContextMenu(const QPoint &pPosition) const
 {
     Q_UNUSED(pPosition);
 
-    // Show our custom context menu which items match the contents of our tool
-    // bar widget
+    // Show our context menu which items match the contents of our tool bar
+    // widget
 
-    mCustomContextMenu->exec(QCursor::pos());
+    mContextMenu->exec(QCursor::pos());
 }
 
 //==============================================================================

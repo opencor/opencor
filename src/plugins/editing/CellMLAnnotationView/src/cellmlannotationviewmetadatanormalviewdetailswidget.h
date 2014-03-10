@@ -115,7 +115,7 @@ private:
 
     QLabel *mCurrentResourceOrIdLabel;
 
-    QMenu *mCustomContextMenu;
+    QMenu *mContextMenu;
 
     void genericLookup(const QString &pRdfTripleInformation = QString(),
                        const Type &pType = No,

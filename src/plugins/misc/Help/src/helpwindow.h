@@ -72,7 +72,7 @@ private:
     QString mQchFileName;
     QString mQhcFileName;
 
-    QMenu *mCustomContextMenu;
+    QMenu *mContextMenu;
 
 private Q_SLOTS:
     void on_actionHome_triggered();

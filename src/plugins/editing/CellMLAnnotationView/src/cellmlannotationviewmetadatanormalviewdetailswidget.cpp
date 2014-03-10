@@ -86,11 +86,11 @@ CellmlAnnotationViewMetadataNormalViewDetailsWidget::CellmlAnnotationViewMetadat
     connect(verticalScrollBar(), SIGNAL(sliderMoved(int)),
             this, SLOT(trackVerticalScrollBarPosition(const int &)));
 
-    // Create and populate our custom context menu
+    // Create and populate our context menu
 
-    mCustomContextMenu = new QMenu(this);
+    mContextMenu = new QMenu(this);
 
-    mCustomContextMenu->addAction(mGui->actionCopy);
+    mContextMenu->addAction(mGui->actionCopy);
 }
 
 //==============================================================================
@@ -678,10 +678,10 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::showCustomContextMenu(
 
     mCurrentResourceOrIdLabel = qobject_cast<QLabel *>(qApp->widgetAt(QCursor::pos()));
 
-    // Should our custom context menu to allow the copying of the URL of the
-    // resource or id
+    // Should our context menu to allow the copying of the URL of the resource
+    // or id
 
-    mCustomContextMenu->exec(QCursor::pos());
+    mContextMenu->exec(QCursor::pos());
 }
 
 //==============================================================================
