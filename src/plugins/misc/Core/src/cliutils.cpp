@@ -372,8 +372,6 @@ bool readTextFromFile(const QString &pFileName, QString &pText)
 
     QFile file(pFileName);
 
-    pText = QString();
-
     if (file.open(QIODevice::ReadOnly)) {
         pText = file.readAll();
 
@@ -381,6 +379,8 @@ bool readTextFromFile(const QString &pFileName, QString &pText)
 
         return true;
     } else {
+        pText = QString();
+
         return false;
     }
 }
