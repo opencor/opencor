@@ -19,7 +19,6 @@ specific language governing permissions and limitations under the License.
 // Viewer widget
 //==============================================================================
 
-#include "guiinterface.h"
 #include "viewerwidget.h"
 
 //==============================================================================
@@ -61,8 +60,9 @@ ViewerWidget::ViewerWidget(QWidget *pParent) :
 
     mContextMenu = new QMenu(this);
 
-    mOptimiseFontSizeAction = GuiInterface::newAction(this, true);
+    mOptimiseFontSizeAction = new QAction(this);
 
+    mOptimiseFontSizeAction->setCheckable(true);
     mOptimiseFontSizeAction->setChecked(true);
 
     mContextMenu->addAction(mOptimiseFontSizeAction);
