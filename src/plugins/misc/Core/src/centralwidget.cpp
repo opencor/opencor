@@ -339,12 +339,13 @@ void CentralWidget::loadSettings(QSettings *pSettings)
     // Retrieve the modes and views of our different files
 
     for (int i = 0, iMax = mFileNames.count(); i < iMax; ++i) {
-        int modeIndex = pSettings->value(SettingsFileMode.arg(i), -1).toInt();
-        int viewIndex = pSettings->value(SettingsFileView.arg(i), -1).toInt();
+        QString fileName = mFileNames[i];
+        QString fileNameSha1 = Core::sha1(fileName);
+
+        int modeIndex = pSettings->value(SettingsFileMode.arg(fileNameSha1), -1).toInt();
+        int viewIndex = pSettings->value(SettingsFileView.arg(fileNameSha1), -1).toInt();
 
         if ((modeIndex != -1) && (viewIndex != -1)) {
-            QString fileName = mFileNames[i];
-
             mModeIndexes.insert(fileName, modeIndex);
             mViewIndexes.insert(fileName, viewIndex);
         }
@@ -386,8 +387,10 @@ void CentralWidget::saveSettings(QSettings *pSettings) const
         int viewIndex = mViewIndexes.value(fileName, -1);
 
         if ((modeIndex != -1) && (viewIndex != -1)) {
-            pSettings->setValue(SettingsFileMode.arg(i), modeIndex);
-            pSettings->setValue(SettingsFileView.arg(i), viewIndex);
+            QString fileNameSha1 = Core::sha1(fileName);
+
+            pSettings->setValue(SettingsFileMode.arg(fileNameSha1), modeIndex);
+            pSettings->setValue(SettingsFileView.arg(fileNameSha1), viewIndex);
         }
     }
 
