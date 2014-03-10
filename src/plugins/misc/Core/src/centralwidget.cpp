@@ -1581,25 +1581,24 @@ void CentralWidget::updateModifiedSettings()
     // Reset the enabled state and tool tip of all View tabs
 
     foreach (CentralWidgetMode *mode, mModes) {
-        QTabBar *views = mode->views();
+        QTabBar *modeViews = mode->views();
 
-        views->setEnabled(true);
-        views->setToolTip(QString());
+        modeViews->setEnabled(true);
+        modeViews->setToolTip(QString());
     }
 
     // Enable/disable the current mode's View tabs, in case the current file has
     // been modified
 
     int fileModeTabIndex = mModeTabs->currentIndex();
-    QTabBar *views = 0;
+    QTabBar *modeViews = 0;
 
     if (fileModeTabIndex == modeTabIndex(GuiViewSettings::Editing))
-        views = mModes.value(GuiViewSettings::Editing)->views();
+        modeViews = mModes.value(GuiViewSettings::Editing)->views();
     else if (fileModeTabIndex == modeTabIndex(GuiViewSettings::Simulation))
-        views = mModes.value(GuiViewSettings::Simulation)->views();
+        modeViews = mModes.value(GuiViewSettings::Simulation)->views();
     else if (fileModeTabIndex == modeTabIndex(GuiViewSettings::Analysis))
-        views = mModes.value(GuiViewSettings::Analysis)->views();
-
+        modeViews = mModes.value(GuiViewSettings::Analysis)->views();
 
     QString fileName = mFileTabs->count()?
                            mFileNames[mFileTabs->currentIndex()]:
@@ -1607,10 +1606,10 @@ void CentralWidget::updateModifiedSettings()
     bool fileIsNewOrModified = fileManagerInstance->isNewOrModified(fileName);
 
     if (fileIsNewOrModified) {
-        views->setEnabled(false);
-        views->setToolTip(fileManagerInstance->isNew(fileName)?
-                              tr("The file is new, so switching views is not possible for now"):
-                              tr("The file is being edited, so switching views is not possible for now"));
+        modeViews->setEnabled(false);
+        modeViews->setToolTip(fileManagerInstance->isNew(fileName)?
+                                  tr("The file is new, so switching views is not possible for now"):
+                                  tr("The file is being edited, so switching views is not possible for now"));
     }
 
     // Let people know whether we can save the current file and/or all files
