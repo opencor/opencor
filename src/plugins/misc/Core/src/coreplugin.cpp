@@ -428,6 +428,15 @@ void CorePlugin::removeViewWidget(const QString &pFileName)
 
 //==============================================================================
 
+QString CorePlugin::viewRawName() const
+{
+    // We don't handle this interface...
+
+    return QString();
+}
+
+//==============================================================================
+
 QString CorePlugin::viewName() const
 {
     // We don't handle this interface...

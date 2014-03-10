@@ -198,6 +198,15 @@ void FileOrganiserPlugin::removeViewWidget(const QString &pFileName)
 
 //==============================================================================
 
+QString FileOrganiserPlugin::viewRawName() const
+{
+    // We don't handle this interface...
+
+    return QString();
+}
+
+//==============================================================================
+
 QString FileOrganiserPlugin::viewName() const
 {
     // We don't handle this interface...

@@ -209,6 +209,15 @@ void CoreCellMLEditingPlugin::removeViewWidget(const QString &pFileName)
 
 //==============================================================================
 
+QString CoreCellMLEditingPlugin::viewRawName() const
+{
+    // We don't handle this interface...
+
+    return QString();
+}
+
+//==============================================================================
+
 QString CoreCellMLEditingPlugin::viewName() const
 {
     // We don't handle this interface...

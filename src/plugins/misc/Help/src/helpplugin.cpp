@@ -198,6 +198,15 @@ void HelpPlugin::removeViewWidget(const QString &pFileName)
 
 //==============================================================================
 
+QString HelpPlugin::viewRawName() const
+{
+    // We don't handle this interface...
+
+    return QString();
+}
+
+//==============================================================================
+
 QString HelpPlugin::viewName() const
 {
     // We don't handle this interface...
