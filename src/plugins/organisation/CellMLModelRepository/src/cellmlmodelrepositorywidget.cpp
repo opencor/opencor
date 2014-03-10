@@ -20,11 +20,11 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include "cellmlmodelrepositorywidget.h"
+#include "cliutils.h"
 
 //==============================================================================
 
 #include <QDesktopServices>
-#include <QFile>
 #include <QIODevice>
 #include <QPaintEvent>
 
@@ -67,13 +67,7 @@ CellmlModelRepositoryWidget::CellmlModelRepositoryWidget(QWidget *pParent) :
 
     // Retrieve the output template
 
-    QFile cellmlModelRepositoryWidgetOutputFile(":CellMLModelRepository_output");
-
-    cellmlModelRepositoryWidgetOutputFile.open(QIODevice::ReadOnly);
-
-    mOutputTemplate = cellmlModelRepositoryWidgetOutputFile.readAll();
-
-    cellmlModelRepositoryWidgetOutputFile.close();
+    Core::readTextFromFile(":CellMLModelRepository_output", mOutputTemplate);
 
     // Let people know that there is nothing to copy initially
 

@@ -133,22 +133,13 @@ QString File::sha1() const
     // Compute the SHA-1 value for the file, if it still exists and can be
     // opened
 
-    if (QFileInfo(mFileName).exists()) {
-        QFile file(mFileName);
+    QString fileContents;
 
-        if (file.open(QIODevice::ReadOnly)) {
-            QString res = QCryptographicHash::hash(QString(file.readAll()).toUtf8(),
-                                                   QCryptographicHash::Sha1).toHex();
-
-            file.close();
-
-            return res;
-        } else {
-            return QString();
-        }
-    } else {
+    if (Core::readTextFromFile(mFileName, fileContents))
+        return QCryptographicHash::hash(QString(fileContents).toUtf8(),
+                                        QCryptographicHash::Sha1).toHex();
+    else
         return QString();
-    }
 }
 
 //==============================================================================

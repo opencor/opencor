@@ -27,7 +27,6 @@ specific language governing permissions and limitations under the License.
 #include <QAction>
 #include <QDesktopServices>
 #include <QDir>
-#include <QFile>
 #include <QHelpEngine>
 #include <QIODevice>
 #include <QMouseEvent>
@@ -116,13 +115,7 @@ HelpNetworkAccessManager::HelpNetworkAccessManager(QHelpEngine *pHelpEngine,
 {
     // Retrieve the error message template
 
-    QFile helpWidgetErrorFile(":Help_helpWidgetErrorHtml");
-
-    helpWidgetErrorFile.open(QIODevice::ReadOnly);
-
-    mErrorMessageTemplate = helpWidgetErrorFile.readAll();
-
-    helpWidgetErrorFile.close();
+    Core::readTextFromFile(":Help_helpWidgetErrorHtml", mErrorMessageTemplate);
 }
 
 //==============================================================================

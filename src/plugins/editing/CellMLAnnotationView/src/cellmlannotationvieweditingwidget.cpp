@@ -28,6 +28,7 @@ specific language governing permissions and limitations under the License.
 #include "cellmlannotationviewmetadataviewdetailswidget.h"
 #include "cellmlannotationviewplugin.h"
 #include "cellmlfilemanager.h"
+#include "cliutils.h"
 #include "treeviewwidget.h"
 
 //==============================================================================
@@ -37,7 +38,6 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include <QComboBox>
-#include <QFile>
 #include <QIODevice>
 #include <QLineEdit>
 #include <QPushButton>
@@ -65,27 +65,12 @@ CellmlAnnotationViewEditingWidget::CellmlAnnotationViewEditingWidget(CellMLAnnot
 
     // Retrieve some SVG diagrams
 
-    QFile modelQualifierFile(":CellMLAnnotationView_modelQualifier");
-    QFile biologyQualifierFile(":CellMLAnnotationView_biologyQualifier");
-
-    modelQualifierFile.open(QIODevice::ReadOnly);
-    biologyQualifierFile.open(QIODevice::ReadOnly);
-
-    mModelQualifierSvg   = modelQualifierFile.readAll();
-    mBiologyQualifierSvg = biologyQualifierFile.readAll();
-
-    modelQualifierFile.close();
-    biologyQualifierFile.close();
+    Core::readTextFromFile(":CellMLAnnotationView_modelQualifier", mModelQualifierSvg);
+    Core::readTextFromFile(":CellMLAnnotationView_biologyQualifier", mBiologyQualifierSvg);
 
     // Retrieve our output template
 
-    QFile qualifierInformationFile(":CellMLAnnotationView_qualifierInformation");
-
-    qualifierInformationFile.open(QIODevice::ReadOnly);
-
-    mQualifierInformationTemplate = qualifierInformationFile.readAll();
-
-    qualifierInformationFile.close();
+    Core::readTextFromFile(":CellMLAnnotationView_qualifierInformation", mQualifierInformationTemplate);
 
     // Retrieve and load, in case it's necessary, the requested CellML file
 
