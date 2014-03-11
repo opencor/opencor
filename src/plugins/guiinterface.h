@@ -100,10 +100,18 @@ private:
 
 //==============================================================================
 
+static const auto ModeUnknown    = QStringLiteral("Unknown");
+static const auto ModeEditing    = QStringLiteral("Editing");
+static const auto ModeSimulation = QStringLiteral("Simulation");
+static const auto ModeAnalysis   = QStringLiteral("Analysis");
+
+//==============================================================================
+
 class GuiViewSettings
 {
 public:
     enum Mode {
+        Unknown,
         Editing,
         Simulation,
         Analysis
@@ -113,6 +121,9 @@ public:
 
     Mode mode() const;
     QStringList mimeTypes() const;
+
+    static QString modeAsString(const Mode &pMode);
+    static Mode modeFromString(const QString &pMode);
 
 private:
     Mode mMode;

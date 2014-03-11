@@ -139,6 +139,40 @@ QStringList GuiViewSettings::mimeTypes() const
 
 //==============================================================================
 
+QString GuiViewSettings::modeAsString(const GuiViewSettings::Mode &pMode)
+{
+    // Return the mode corresponding to the given mode string
+
+    switch (pMode) {
+    case GuiViewSettings::Editing:
+        return ModeEditing;
+    case GuiViewSettings::Simulation:
+        return ModeSimulation;
+    case GuiViewSettings::Analysis:
+        return ModeAnalysis;
+    default:   // GuiViewSettings::Unknown
+        return ModeUnknown;
+    }
+}
+
+//==============================================================================
+
+GuiViewSettings::Mode GuiViewSettings::modeFromString(const QString &pMode)
+{
+    // Return the mode string corresponding to the given mode
+
+    if (!pMode.compare(ModeEditing))
+        return GuiViewSettings::Editing;
+    else if (!pMode.compare(ModeSimulation))
+        return GuiViewSettings::Simulation;
+    else if (!pMode.compare(ModeAnalysis))
+        return GuiViewSettings::Analysis;
+    else
+        return GuiViewSettings::Unknown;
+}
+
+//==============================================================================
+
 GuiWindowSettings::GuiWindowSettings(const Qt::DockWidgetArea &pDefaultDockArea,
                                      Core::DockWidget *pWindow,
                                      const GuiWindowSettings::Type &pType,
