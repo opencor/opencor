@@ -1143,17 +1143,9 @@ void CentralWidget::addView(Plugin *pPlugin, GuiViewSettings *pSettings)
         mModes.value(mode)->setEnabled(true);
     }
 
-    // Add the requested view to the mode's views tab bar and associate the
-    // plugin with the new tab index
-    // Note: the simulation mode doesn't have and need a views tab bar, since it
-    //       should have only one view
+    // Add the requested view to the mode's views tab bar
 
-    if (mode == GuiViewSettings::Editing)
-        addModeView(pPlugin, pSettings, GuiViewSettings::Editing);
-    else if (mode == GuiViewSettings::Simulation)
-        addModeView(pPlugin, pSettings, GuiViewSettings::Simulation);
-    else
-        addModeView(pPlugin, pSettings, GuiViewSettings::Analysis);
+    addModeView(pPlugin, pSettings, mode);
 }
 
 //==============================================================================
