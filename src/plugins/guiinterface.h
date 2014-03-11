@@ -27,6 +27,7 @@ specific language governing permissions and limitations under the License.
 #include <QIcon>
 #include <QList>
 #include <QKeySequence>
+#include <QString>
 
 //==============================================================================
 
@@ -173,8 +174,7 @@ public:
     void setCentralWidget(Core::CentralWidget *pCentralWidget);
     void addWindow(const Qt::DockWidgetArea &pDefaultDockArea,
                    Core::DockWidget *pWindow,
-                   const GuiWindowSettings::Type &pType,
-                   QAction *pAction);
+                   const GuiWindowSettings::Type &pType, QAction *pAction);
     void setView(const GuiViewSettings::Mode &pMode,
                  const QStringList &pMimeTypes);
 
