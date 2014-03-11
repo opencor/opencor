@@ -227,15 +227,6 @@ void SingleCellViewPlugin::removeViewWidget(const QString &pFileName)
 
 //==============================================================================
 
-QString SingleCellViewPlugin::viewRawName() const
-{
-    // Return our single cell view's raw name
-
-    return "Single Cell";
-}
-
-//==============================================================================
-
 QString SingleCellViewPlugin::viewName() const
 {
     // Return our single cell view's name

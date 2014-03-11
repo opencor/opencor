@@ -227,15 +227,6 @@ void CellMLAnnotationViewPlugin::removeViewWidget(const QString &pFileName)
 
 //==============================================================================
 
-QString CellMLAnnotationViewPlugin::viewRawName() const
-{
-    // Return our CellML annotation view's raw name
-
-    return "CellML Annotation";
-}
-
-//==============================================================================
-
 QString CellMLAnnotationViewPlugin::viewName() const
 {
     // Return our CellML annotation view's name

@@ -223,15 +223,6 @@ void PrettyCellMLViewPlugin::removeViewWidget(const QString &pFileName)
 
 //==============================================================================
 
-QString PrettyCellMLViewPlugin::viewRawName() const
-{
-    // Return our pretty CellML view's raw name
-
-    return "Pretty CellML";
-}
-
-//==============================================================================
-
 QString PrettyCellMLViewPlugin::viewName() const
 {
     // Return our pretty CellML view's name

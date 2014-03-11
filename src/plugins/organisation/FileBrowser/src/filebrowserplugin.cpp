@@ -197,15 +197,6 @@ void FileBrowserPlugin::removeViewWidget(const QString &pFileName)
 
 //==============================================================================
 
-QString FileBrowserPlugin::viewRawName() const
-{
-    // We don't handle this interface...
-
-    return QString();
-}
-
-//==============================================================================
-
 QString FileBrowserPlugin::viewName() const
 {
     // We don't handle this interface...

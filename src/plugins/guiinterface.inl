@@ -15,7 +15,6 @@
     virtual QWidget * viewWidget(const QString &pFileName,
                                  const bool &pCreate = true) PURE;
     virtual void removeViewWidget(const QString &pFileName) PURE;
-    virtual QString viewRawName() const PURE;
     virtual QString viewName() const PURE;
 
     virtual QIcon fileTabIcon(const QString &pFileName) const PURE;

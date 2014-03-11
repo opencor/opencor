@@ -267,15 +267,6 @@ void CellMLToolsPlugin::removeViewWidget(const QString &pFileName)
 
 //==============================================================================
 
-QString CellMLToolsPlugin::viewRawName() const
-{
-    // We don't handle this interface...
-
-    return QString();
-}
-
-//==============================================================================
-
 QString CellMLToolsPlugin::viewName() const
 {
     // We don't handle this interface...
