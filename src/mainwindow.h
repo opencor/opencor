@@ -123,7 +123,7 @@ private:
     void reorderViewMenu(QMenu *pViewMenu);
     void reorderViewMenus();
 
-    void updateViewMenu(const GuiWindowSettings::GuiWindowSettingsType &pMenuType,
+    void updateViewMenu(const GuiWindowSettings::Type &pMenuType,
                         QAction *pAction);
 
     void handleAction(const QUrl &pUrl);

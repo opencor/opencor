@@ -923,7 +923,7 @@ void MainWindow::reorderViewMenus()
 
 //==============================================================================
 
-void MainWindow::updateViewMenu(const GuiWindowSettings::GuiWindowSettingsType &pMenuType,
+void MainWindow::updateViewMenu(const GuiWindowSettings::Type &pMenuType,
                                 QAction *pAction)
 {
     // Check whether we need to insert a separator before the docked widgets

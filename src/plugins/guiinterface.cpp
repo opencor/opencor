@@ -38,7 +38,7 @@ namespace OpenCOR {
 
 //==============================================================================
 
-GuiMenuSettings::GuiMenuSettings(const GuiMenuSettingsType &pType,
+GuiMenuSettings::GuiMenuSettings(const GuiMenuSettings::Type &pType,
                                  QMenu *pMenu) :
     mType(pType),
     mAction(0),
@@ -48,7 +48,7 @@ GuiMenuSettings::GuiMenuSettings(const GuiMenuSettingsType &pType,
 
 //==============================================================================
 
-GuiMenuSettings::GuiMenuSettings(const GuiMenuSettingsType &pType,
+GuiMenuSettings::GuiMenuSettings(const GuiMenuSettings::Type &pType,
                                  QAction *pAction, QMenu *pMenu) :
     mType(pType),
     mAction(pAction),
@@ -58,7 +58,7 @@ GuiMenuSettings::GuiMenuSettings(const GuiMenuSettingsType &pType,
 
 //==============================================================================
 
-GuiMenuSettings::GuiMenuSettingsType GuiMenuSettings::type() const
+GuiMenuSettings::Type GuiMenuSettings::type() const
 {
     // Return the menu's type
 
@@ -85,7 +85,7 @@ QMenu * GuiMenuSettings::menu() const
 
 //==============================================================================
 
-GuiMenuActionSettings::GuiMenuActionSettings(const GuiMenuActionSettingsType &pType,
+GuiMenuActionSettings::GuiMenuActionSettings(const GuiMenuActionSettings::Type &pType,
                                              QAction *pAction) :
     mType(pType),
     mAction(pAction)
@@ -94,7 +94,7 @@ GuiMenuActionSettings::GuiMenuActionSettings(const GuiMenuActionSettingsType &pT
 
 //==============================================================================
 
-GuiMenuActionSettings::GuiMenuActionSettingsType GuiMenuActionSettings::type() const
+GuiMenuActionSettings::Type GuiMenuActionSettings::type() const
 {
     // Return the action's type
 
@@ -141,7 +141,7 @@ QStringList GuiViewSettings::mimeTypes() const
 
 GuiWindowSettings::GuiWindowSettings(const Qt::DockWidgetArea &pDefaultDockArea,
                                      Core::DockWidget *pWindow,
-                                     const GuiWindowSettingsType &pType,
+                                     const GuiWindowSettings::Type &pType,
                                      QAction *pAction) :
     mDefaultDockArea(pDefaultDockArea),
     mWindow(pWindow),
@@ -170,7 +170,7 @@ Core::DockWidget * GuiWindowSettings::window() const
 
 //==============================================================================
 
-GuiWindowSettings::GuiWindowSettingsType GuiWindowSettings::type() const
+GuiWindowSettings::Type GuiWindowSettings::type() const
 {
     // Return the action's type
 
@@ -217,8 +217,7 @@ GuiSettings::~GuiSettings()
 
 //==============================================================================
 
-void GuiSettings::addMenu(const GuiMenuSettings::GuiMenuSettingsType &pType,
-                          QMenu *pMenu)
+void GuiSettings::addMenu(const GuiMenuSettings::Type &pType, QMenu *pMenu)
 {
     // Add a menu to our list
 
@@ -227,8 +226,8 @@ void GuiSettings::addMenu(const GuiMenuSettings::GuiMenuSettingsType &pType,
 
 //==============================================================================
 
-void GuiSettings::addMenu(const GuiMenuSettings::GuiMenuSettingsType &pType,
-                          QAction *pAction, QMenu *pMenu)
+void GuiSettings::addMenu(const GuiMenuSettings::Type &pType, QAction *pAction,
+                          QMenu *pMenu)
 {
     // Add a menu to our list
 
@@ -237,7 +236,7 @@ void GuiSettings::addMenu(const GuiMenuSettings::GuiMenuSettingsType &pType,
 
 //==============================================================================
 
-void GuiSettings::addMenuAction(const GuiMenuActionSettings::GuiMenuActionSettingsType &pType,
+void GuiSettings::addMenuAction(const GuiMenuActionSettings::Type &pType,
                                 QAction *pAction)
 {
     // Add a menu action to our list
@@ -259,7 +258,7 @@ void GuiSettings::setCentralWidget(Core::CentralWidget *pCentralWidget)
 
 void GuiSettings::addWindow(const Qt::DockWidgetArea &pDefaultDockArea,
                             Core::DockWidget *pWindow,
-                            const GuiWindowSettings::GuiWindowSettingsType &pType,
+                            const GuiWindowSettings::Type &pType,
                             QAction *pAction)
 {
     // Add a window to our list

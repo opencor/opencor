@@ -59,21 +59,20 @@ namespace Core {
 class GuiMenuSettings
 {
 public:
-    enum GuiMenuSettingsType {
+    enum Type {
         File,
         View
     };
 
-    explicit GuiMenuSettings(const GuiMenuSettingsType &pType, QMenu *pMenu);
-    explicit GuiMenuSettings(const GuiMenuSettingsType &pType, QAction *pAction,
-                             QMenu *pMenu);
+    explicit GuiMenuSettings(const Type &pType, QMenu *pMenu);
+    explicit GuiMenuSettings(const Type &pType, QAction *pAction, QMenu *pMenu);
 
-    GuiMenuSettingsType type() const;
+    Type type() const;
     QAction * action() const;
     QMenu * menu() const;
 
 private:
-    GuiMenuSettingsType mType;
+    Type mType;
     QAction *mAction;
     QMenu *mMenu;
 };
@@ -83,20 +82,19 @@ private:
 class GuiMenuActionSettings
 {
 public:
-    enum GuiMenuActionSettingsType {
+    enum Type {
         File,
         FileNew,
         Tools
     };
 
-    explicit GuiMenuActionSettings(const GuiMenuActionSettingsType &pType,
-                                   QAction *pAction);
+    explicit GuiMenuActionSettings(const Type &pType, QAction *pAction);
 
-    GuiMenuActionSettingsType type() const;
+    Type type() const;
     QAction * action() const;
 
 private:
-    GuiMenuActionSettingsType mType;
+    Type mType;
     QAction *mAction;
 };
 
@@ -126,26 +124,25 @@ private:
 class GuiWindowSettings
 {
 public:
-    enum GuiWindowSettingsType {
+    enum Type {
         Organisation,
         Editing,
         Help
     };
 
     explicit GuiWindowSettings(const Qt::DockWidgetArea &pDefaultDockArea,
-                               Core::DockWidget *pWindow,
-                               const GuiWindowSettingsType &pType,
+                               Core::DockWidget *pWindow, const Type &pType,
                                QAction *pAction);
 
     Qt::DockWidgetArea defaultDockArea() const;
     Core::DockWidget * window() const;
-    GuiWindowSettingsType type() const;
+    Type type() const;
     QAction * action() const;
 
 private:
     Qt::DockWidgetArea mDefaultDockArea;
     Core::DockWidget *mWindow;
-    GuiWindowSettingsType mType;
+    Type mType;
     QAction *mAction;
 };
 
@@ -157,16 +154,15 @@ public:
     explicit GuiSettings();
     ~GuiSettings();
 
-    void addMenu(const GuiMenuSettings::GuiMenuSettingsType &pType,
+    void addMenu(const GuiMenuSettings::Type &pType, QMenu *pMenu);
+    void addMenu(const GuiMenuSettings::Type &pType, QAction *pAction,
                  QMenu *pMenu);
-    void addMenu(const GuiMenuSettings::GuiMenuSettingsType &pType,
-                 QAction *pAction, QMenu *pMenu);
-    void addMenuAction(const GuiMenuActionSettings::GuiMenuActionSettingsType &pType,
+    void addMenuAction(const GuiMenuActionSettings::Type &pType,
                        QAction *pAction = 0);
     void setCentralWidget(Core::CentralWidget *pCentralWidget);
     void addWindow(const Qt::DockWidgetArea &pDefaultDockArea,
                    Core::DockWidget *pWindow,
-                   const GuiWindowSettings::GuiWindowSettingsType &pType,
+                   const GuiWindowSettings::Type &pType,
                    QAction *pAction);
     void setView(const GuiViewSettings::Mode &pMode,
                  const QStringList &pMimeTypes);
