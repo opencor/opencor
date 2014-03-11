@@ -131,7 +131,8 @@ CentralWidget::CentralWidget(QMainWindow *pMainWindow) :
     mModeIndexes(QMap<QString, int>()),
     mViewIndexes(QMap<QString, int>()),
     mSupportedFileTypes(FileTypes()),
-    mFileNames(QStringList())
+    mFileNames(QStringList()),
+    mModes(QMap<GuiViewSettings::Mode, CentralWidgetMode *>())
 {
     // Set up the GUI
 
@@ -146,8 +147,6 @@ CentralWidget::CentralWidget(QMainWindow *pMainWindow) :
     mModeTabs = newTabBar(QTabBar::RoundedWest);
 
     // Create our modes
-
-    mModes = QMap<GuiViewSettings::Mode, CentralWidgetMode *>();
 
     mModes.insert(GuiViewSettings::Editing, new CentralWidgetMode(this));
     mModes.insert(GuiViewSettings::Simulation, new CentralWidgetMode(this));
