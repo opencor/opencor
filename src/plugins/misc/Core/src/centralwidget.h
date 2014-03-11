@@ -168,9 +168,6 @@ private:
 
     int modeTabIndex(const GuiViewSettings::Mode &pMode) const;
 
-    void addModeView(Plugin *pPlugin, GuiViewSettings *pSettings,
-                     const GuiViewSettings::Mode &pMode);
-
     void updateNoViewMsg();
 
     bool saveFile(const int &pIndex, const bool &pNeedNewFileName = false);

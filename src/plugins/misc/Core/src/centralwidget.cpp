@@ -1115,20 +1115,6 @@ int CentralWidget::modeTabIndex(const GuiViewSettings::Mode &pMode) const
 
 //==============================================================================
 
-void CentralWidget::addModeView(Plugin *pPlugin, GuiViewSettings *pSettings,
-                                const GuiViewSettings::Mode &pMode)
-{
-    // Add a mode view
-
-    CentralWidgetMode *mode = mModes.value(pMode);
-    int modeViewTabIndex = mode->views()->addTab(QString());
-
-    mode->viewPlugins()->insert(modeViewTabIndex, pPlugin);
-    mode->viewSettings()->insert(modeViewTabIndex, pSettings);
-}
-
-//==============================================================================
-
 void CentralWidget::addView(Plugin *pPlugin, GuiViewSettings *pSettings)
 {
     // Make sure that our list of required modes is up to date
@@ -1145,7 +1131,11 @@ void CentralWidget::addView(Plugin *pPlugin, GuiViewSettings *pSettings)
 
     // Add the requested view to the mode's views tab bar
 
-    addModeView(pPlugin, pSettings, mode);
+    CentralWidgetMode *mode = mModes.value(mode);
+    int modeViewTabIndex = mode->views()->addTab(QString());
+
+    mode->viewPlugins()->insert(modeViewTabIndex, pPlugin);
+    mode->viewSettings()->insert(modeViewTabIndex, pSettings);
 }
 
 //==============================================================================
