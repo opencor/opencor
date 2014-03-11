@@ -168,8 +168,6 @@ private:
 
     int modeTabIndex(const GuiViewSettings::Mode &pMode) const;
 
-    void addMode(const GuiViewSettings::Mode &pMode);
-
     void addModeView(Plugin *pPlugin, GuiViewSettings *pSettings,
                      const GuiViewSettings::Mode &pMode);
 

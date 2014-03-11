@@ -274,8 +274,8 @@ CentralWidget::~CentralWidget()
 
     // Delete our various modes
 
-    foreach (CentralWidgetMode *mMode, mModes)
-        delete mMode;
+    foreach (CentralWidgetMode *mode, mModes)
+        delete mode;
 
     // Delete the GUI
 
@@ -1116,19 +1116,6 @@ int CentralWidget::modeTabIndex(const GuiViewSettings::Mode &pMode) const
 
 //==============================================================================
 
-void CentralWidget::addMode(const GuiViewSettings::Mode &pMode)
-{
-    if (!mModes.value(pMode)->isEnabled()) {
-        // There is no tab for the mode, so add one
-
-        mModeTabs->addTab(QString());
-
-        mModes.value(pMode)->setEnabled(true);
-    }
-}
-
-//==============================================================================
-
 void CentralWidget::addModeView(Plugin *pPlugin, GuiViewSettings *pSettings,
                                 const GuiViewSettings::Mode &pMode)
 {
@@ -1149,7 +1136,13 @@ void CentralWidget::addView(Plugin *pPlugin, GuiViewSettings *pSettings)
 
     GuiViewSettings::Mode mode = pSettings->mode();
 
-    addMode(mode);
+    if (!mModes.value(mode)->isEnabled()) {
+        // There is no tab for the mode, so add one
+
+        mModeTabs->addTab(QString());
+
+        mModes.value(mode)->setEnabled(true);
+    }
 
     // Add the requested view to the mode's views tab bar and associate the
     // plugin with the new tab index
