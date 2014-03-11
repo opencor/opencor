@@ -1484,8 +1484,6 @@ void CentralWidget::updateNoViewMsg()
         else
             mode = mModes.value(GuiViewSettings::Editing);
 
-            return;
-
         mNoViewMsg->setMessage(tr("Sorry, but the <strong>%1</strong> view does not support this type of file...").arg(qobject_cast<GuiInterface *>(mode->viewPlugins()->value(mode->views()->currentIndex())->instance())->viewName()));
     }
 }
