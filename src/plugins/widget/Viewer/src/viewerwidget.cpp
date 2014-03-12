@@ -29,6 +29,7 @@ specific language governing permissions and limitations under the License.
 
 #include <QAction>
 #include <QCursor>
+#include <QDomDocument>
 #include <QIcon>
 #include <QMenu>
 #include <QPainter>
@@ -123,9 +124,10 @@ void ViewerWidget::setContents(const QString &pContents)
         mContents = pContents;
         mError = false;
 
-        // Do digit grouping, if requested
+        // Process and reset our contents, shoudl we want to do digit grouping
 
-//---GRY--- TO BE DONE...
+        if (digitGrouping())
+            mMathmlDocument.setContent(processedContents());
 
         // Determine (the inverse of) the size of our contents when rendered
         // using a font size of 100 points
@@ -348,6 +350,84 @@ QAction * ViewerWidget::newAction(QObject *pParent)
     res->setChecked(true);
 
     return res;
+}
+
+//==============================================================================
+
+void ViewerWidget::processNode(const QDomNode &pDomNode) const
+{
+    // Go through the node's children and process them
+
+    for (int i = 0, iMax = pDomNode.childNodes().count(); i < iMax; ++i) {
+        QDomNode domNode = pDomNode.childNodes().at(i);
+
+        // Check whether we want to do digit grouping and whether the node's
+        // parent is an mn element
+
+        if (digitGrouping() && !domNode.parentNode().nodeName().compare("mn")) {
+            // We want to do digit grouping and whether the node's parent is an
+            // mn element, so check whether the value of that element is a valid
+            // number
+
+            bool domNodeValueValid;
+            QString domNodeValue = domNode.nodeValue();
+
+            domNodeValue.toDouble(&domNodeValueValid);
+
+            if (domNodeValueValid) {
+                // The number is valid, so do digit grouping on it
+
+                int decimalPointPos = domNodeValue.indexOf(".");
+
+                if (decimalPointPos != -1) {
+                    QString beforeDecimalPoint = domNodeValue.left(decimalPointPos);
+                    domNodeValue = domNodeValue.right(domNodeValue.length()-decimalPointPos);
+                    bool maybeDigit = true;
+                    int nbOfDigits = -1;
+
+                    for (int i = beforeDecimalPoint.length()-1; i >= 0; --i) {
+                        if (maybeDigit && beforeDecimalPoint[i].isDigit()) {
+                            if (++nbOfDigits == 3) {
+                                domNodeValue = ","+domNodeValue;
+
+                                nbOfDigits = 0;
+                            }
+                        } else {
+                            maybeDigit = false;
+                        }
+
+                        domNodeValue = beforeDecimalPoint[i]+domNodeValue;
+                    }
+
+                    domNode.setNodeValue(domNodeValue);
+                }
+            }
+        }
+
+        processNode(domNode);
+    }
+}
+
+//==============================================================================
+
+QString ViewerWidget::processedContents() const
+{
+    // Process and return our processed contents
+
+    QDomDocument domDocument;
+
+    if (domDocument.setContent(mContents)) {
+        QDomNode domNode = domDocument.documentElement();
+
+        processNode(domNode);
+
+        return domDocument.toString(-1);
+    } else {
+        // We should never reach this point (since we should only come here if
+        // our contents is valid), but better be safe than sorry...
+
+        return QString();
+    }
 }
 
 //==============================================================================

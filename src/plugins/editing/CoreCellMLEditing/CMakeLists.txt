@@ -46,6 +46,7 @@ ADD_PLUGIN(CoreCellMLEditing
         ${LLVM_BINARY_PLUGIN}
     QT_MODULES
         Widgets
+        Xml
     QT_LIBRARIES
         ${QT_LIBRARIES_EXTRAS}
         QtConcurrent

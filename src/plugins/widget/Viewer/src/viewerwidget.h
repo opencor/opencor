@@ -29,6 +29,10 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#include <QDomNode>
+
+//==============================================================================
+
 #include "qwt_mml_document.h"
 
 //==============================================================================
@@ -84,6 +88,9 @@ private:
     QAction *mDigitGroupingAction;
 
     QAction * newAction(QObject *pParent);
+
+    void processNode(const QDomNode &pDomNode) const;
+    QString processedContents() const;
 
 Q_SIGNALS:
     void optimiseFontSizeChanged(const bool &pEnabled);
