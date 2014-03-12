@@ -54,7 +54,7 @@ ViewerWidget::ViewerWidget(QWidget *pParent) :
     mOneOverMathmlDocumentWidth(0),
     mOneOverMathmlDocumentHeight(0),
     mContents(QString()),
-    mValidContents(true)
+    mError(false)
 {
     // Create our context menu
 
@@ -115,7 +115,7 @@ void ViewerWidget::setContents(const QString &pContents)
 
     if (mMathmlDocument.setContent(pContents)) {
         mContents = pContents;
-        mValidContents = true;
+        mError = false;
 
         // Determine (the inverse of) the size of our contents when rendered
         // using a font size of 100 points
@@ -133,7 +133,7 @@ void ViewerWidget::setContents(const QString &pContents)
         mOneOverMathmlDocumentHeight = 1.0/mathmlDocumentSize.height();
     } else {
         mContents = QString();
-        mValidContents = pContents.isEmpty();
+        mError = pContents.size();
     }
 
     // Update ourselves
@@ -143,24 +143,24 @@ void ViewerWidget::setContents(const QString &pContents)
 
 //==============================================================================
 
-bool ViewerWidget::validContents() const
+bool ViewerWidget::error() const
 {
-    // Return whether our contents is valid
+    // Return whether there is an error
 
-    return mValidContents;
+    return mError;
 }
 
 //==============================================================================
 
-void ViewerWidget::setValidContents(const bool &pValidContents)
+void ViewerWidget::setError(const bool &pError)
 {
-    // Keep track of whether our contents is valid
+    // Keep track of whether there is an error
 
-    if (pValidContents == mValidContents)
+    if (pError == mError)
         return;
 
     mContents = QString();
-    mValidContents = pValidContents;
+    mError = pError;
 
     // Update ourselves
 
@@ -217,31 +217,9 @@ void ViewerWidget::paintEvent(QPaintEvent *pEvent)
     // Render our contents or show a warning sign, depending on whether our
     // contents is valid
 
-    if (mValidContents) {
-        // Customise our MathML document
-        // Note: to go for 100% of the 'optimal' font size might result in the
-        //       edges of the contents being clipped on Windows (compared to
-        //       Linux and OS X) or in some cases on Linux and OS X (e.g. if the
-        //       contents includes a square root), hence we go for 75% of the
-        //       'optimal' font size instead...
-
-        mMathmlDocument.setBackgroundColor(backgroundColor);
-        mMathmlDocument.setForegroundColor(QColor(palette().color(QPalette::Text)));
-
-        mMathmlDocument.setBaseFontPointSize(mOptimiseFontSizeAction->isChecked()?
-                                                 qRound(75.0*qMin(mOneOverMathmlDocumentWidth*width(),
-                                                                  mOneOverMathmlDocumentHeight*height())):
-                                                 font().pointSize());
-
-        // Render our contents
-
-        QSizeF mathmlDocumentSize = mMathmlDocument.size();
-
-        mMathmlDocument.paint(&painter, QPointF(0.5*(rect.width()-mathmlDocumentSize.width()),
-                                                0.5*(rect.height()-mathmlDocumentSize.height())));
-    } else {
-        // Our contents is not valid, so render a stretched warning icon in our
-        // center
+    if (mError) {
+        // We want to show that there is an error, so render a stretched warning
+        // icon in our center
 
         QIcon icon = QIcon(":Viewer_warning");
         QSize iconSize = icon.availableSizes().first();
@@ -270,6 +248,28 @@ void ViewerWidget::paintEvent(QPaintEvent *pEvent)
         painter.setWindow(painterRect);
 
         icon.paint(&painter, painterRect);
+    } else {
+        // Customise our MathML document
+        // Note: to go for 100% of the 'optimal' font size might result in the
+        //       edges of the contents being clipped on Windows (compared to
+        //       Linux and OS X) or in some cases on Linux and OS X (e.g. if the
+        //       contents includes a square root), hence we go for 75% of the
+        //       'optimal' font size instead...
+
+        mMathmlDocument.setBackgroundColor(backgroundColor);
+        mMathmlDocument.setForegroundColor(QColor(palette().color(QPalette::Text)));
+
+        mMathmlDocument.setBaseFontPointSize(mOptimiseFontSizeAction->isChecked()?
+                                                 qRound(75.0*qMin(mOneOverMathmlDocumentWidth*width(),
+                                                                  mOneOverMathmlDocumentHeight*height())):
+                                                 font().pointSize());
+
+        // Render our contents
+
+        QSizeF mathmlDocumentSize = mMathmlDocument.size();
+
+        mMathmlDocument.paint(&painter, QPointF(0.5*(rect.width()-mathmlDocumentSize.width()),
+                                                0.5*(rect.height()-mathmlDocumentSize.height())));
     }
 
     // Accept the event
