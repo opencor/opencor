@@ -63,8 +63,13 @@ ViewerWidget::ViewerWidget(QWidget *pParent) :
     mOptimiseFontSizeAction = newAction(this);
     mDigitGroupingAction = newAction(this);
 
+    connect(mOptimiseFontSizeAction, SIGNAL(triggered()),
+            this, SLOT(update()));
     connect(mOptimiseFontSizeAction, SIGNAL(toggled(bool)),
             this, SIGNAL(optimiseFontSizeChanged(const bool &)));
+
+    connect(mDigitGroupingAction, SIGNAL(triggered()),
+            this, SLOT(updateContents()));
     connect(mDigitGroupingAction, SIGNAL(toggled(bool)),
             this, SIGNAL(digitGroupingChanged(const bool &)));
 
@@ -117,6 +122,10 @@ void ViewerWidget::setContents(const QString &pContents)
     if (mMathmlDocument.setContent(pContents)) {
         mContents = pContents;
         mError = false;
+
+        // Do digit grouping, if requested
+
+//---GRY--- TO BE DONE...
 
         // Determine (the inverse of) the size of our contents when rendered
         // using a font size of 100 points
@@ -338,9 +347,6 @@ QAction * ViewerWidget::newAction(QObject *pParent)
     res->setCheckable(true);
     res->setChecked(true);
 
-    connect(res, SIGNAL(triggered()),
-            this, SLOT(update()));
-
     return res;
 }
 
@@ -353,6 +359,19 @@ void ViewerWidget::showCustomContextMenu(const QPoint &pPosition) const
     // Show our custom context menu
 
     mContextMenu->exec(QCursor::pos());
+}
+
+//==============================================================================
+
+void ViewerWidget::updateContents()
+{
+    // Update our contents and therefore ourselves (through setContents())
+
+    QString contents = mContents;
+
+    mContents = QString();
+
+    setContents(contents);
 }
 
 //==============================================================================

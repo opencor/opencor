@@ -91,6 +91,8 @@ Q_SIGNALS:
 
 private Q_SLOTS:
     void showCustomContextMenu(const QPoint &pPosition) const;
+
+    void updateContents();
 };
 
 //==============================================================================
