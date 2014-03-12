@@ -33,6 +33,7 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include <QDesktopWidget>
+#include <QDomDocument>
 #include <QLabel>
 #include <QLayout>
 #include <QMetaType>

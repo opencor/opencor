@@ -29,7 +29,7 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-#include <QDomDocument>
+#include <QDomNode>
 #include <QMap>
 
 //==============================================================================
