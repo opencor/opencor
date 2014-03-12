@@ -101,6 +101,7 @@ private:
     int mEditorZoomLevel;
 
     bool mViewerOptimiseFontSizeEnabled;
+    bool mViewerDigitGroupingEnabled;
 
     QMap<QString, QString> mPresentationMathmlEquations;
 
@@ -119,6 +120,7 @@ private Q_SLOTS:
     void updateViewer();
 
     void optimiseFontSizeChanged(const bool &pEnabled);
+    void digitGroupingChanged(const bool &pEnabled);
 
     void xslTransformationDone(const QString &pInput, const QString &pOutput);
 };

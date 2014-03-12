@@ -7,5 +7,9 @@
         <source>Optimise Font Size</source>
         <translation>Optimiser Taille Fonte</translation>
     </message>
+    <message>
+        <source>Digit Grouping</source>
+        <translation>Groupement Chiffres</translation>
+    </message>
 </context>
 </TS>

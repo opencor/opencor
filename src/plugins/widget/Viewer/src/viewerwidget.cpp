@@ -60,17 +60,17 @@ ViewerWidget::ViewerWidget(QWidget *pParent) :
 
     mContextMenu = new QMenu(this);
 
-    mOptimiseFontSizeAction = new QAction(this);
+    mOptimiseFontSizeAction = newAction(this);
+    mDigitGroupingAction = newAction(this);
 
-    mOptimiseFontSizeAction->setCheckable(true);
-    mOptimiseFontSizeAction->setChecked(true);
-
-    mContextMenu->addAction(mOptimiseFontSizeAction);
-
-    connect(mOptimiseFontSizeAction, SIGNAL(triggered()),
-            this, SLOT(update()));
     connect(mOptimiseFontSizeAction, SIGNAL(toggled(bool)),
             this, SIGNAL(optimiseFontSizeChanged(const bool &)));
+    connect(mDigitGroupingAction, SIGNAL(toggled(bool)),
+            this, SIGNAL(digitGroupingChanged(const bool &)));
+
+    mContextMenu->addAction(mOptimiseFontSizeAction);
+    mContextMenu->addSeparator();
+    mContextMenu->addAction(mDigitGroupingAction);
 
     // We want a context menu
 
@@ -91,6 +91,7 @@ void ViewerWidget::retranslateUi()
     // Retranslate our actions
 
     mOptimiseFontSizeAction->setText(tr("Optimise Font Size"));
+    mDigitGroupingAction->setText(tr("Digit Grouping"));
 }
 
 //==============================================================================
@@ -182,14 +183,43 @@ void ViewerWidget::setOptimiseFontSize(const bool &pOptimiseFontSize)
 {
     // Keep track of whether we should optimise our font size
 
-    if (pOptimiseFontSize == mOptimiseFontSizeAction->isChecked())
+    if (pOptimiseFontSize == optimiseFontSize())
         return;
 
     mOptimiseFontSizeAction->setChecked(pOptimiseFontSize);
 
     // Let people know about the new value
 
-    emit optimiseFontSizeChanged(mOptimiseFontSizeAction->isChecked());
+    emit optimiseFontSizeChanged(pOptimiseFontSize);
+
+    // Update ourselves
+
+    update();
+}
+
+//==============================================================================
+
+bool ViewerWidget::digitGrouping() const
+{
+    // Return whether we do digit grouping
+
+    return mDigitGroupingAction->isChecked();
+}
+
+//==============================================================================
+
+void ViewerWidget::setDigitGrouping(const bool &pDigitGrouping)
+{
+    // Keep track of whether we do digit grouping
+
+    if (pDigitGrouping == digitGrouping())
+        return;
+
+    mDigitGroupingAction->setChecked(pDigitGrouping);
+
+    // Let people know about the new value
+
+    emit digitGroupingChanged(pDigitGrouping);
 
     // Update ourselves
 
@@ -295,6 +325,23 @@ QSize ViewerWidget::sizeHint() const
     //       on it, to have a decent size when docked to the main window...
 
     return defaultSize(0.1);
+}
+
+//==============================================================================
+
+QAction * ViewerWidget::newAction(QObject *pParent)
+{
+    // Create and return a checkable and checked action
+
+    QAction *res = new QAction(pParent);
+
+    res->setCheckable(true);
+    res->setChecked(true);
+
+    connect(res, SIGNAL(triggered()),
+            this, SLOT(update()));
+
+    return res;
 }
 
 //==============================================================================

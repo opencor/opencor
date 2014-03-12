@@ -60,6 +60,9 @@ public:
     bool optimiseFontSize() const;
     void setOptimiseFontSize(const bool &pOptimiseFontSize);
 
+    bool digitGrouping() const;
+    void setDigitGrouping(const bool &pDigitGrouping);
+
 protected:
     virtual void paintEvent(QPaintEvent *pEvent);
 
@@ -75,13 +78,16 @@ private:
     QString mContents;
     bool mError;
 
-
     QMenu *mContextMenu;
 
     QAction *mOptimiseFontSizeAction;
+    QAction *mDigitGroupingAction;
+
+    QAction * newAction(QObject *pParent);
 
 Q_SIGNALS:
     void optimiseFontSizeChanged(const bool &pEnabled);
+    void digitGroupingChanged(const bool &pEnabled);
 
 private Q_SLOTS:
     void showCustomContextMenu(const QPoint &pPosition) const;

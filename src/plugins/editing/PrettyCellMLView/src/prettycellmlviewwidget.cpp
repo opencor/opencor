@@ -56,7 +56,8 @@ PrettyCellmlViewWidget::PrettyCellmlViewWidget(QWidget *pParent) :
     mEditingWidgets(QMap<QString, CoreCellMLEditing::CoreCellmlEditingWidget *>()),
     mEditingWidgetSizes(QIntList()),
     mEditorZoomLevel(0),
-    mViewerOptimiseFontSizeEnabled(true)
+    mViewerOptimiseFontSizeEnabled(true),
+    mViewerDigitGroupingEnabled(true)
 {
     // Set up the GUI
 
@@ -77,6 +78,7 @@ PrettyCellmlViewWidget::~PrettyCellmlViewWidget()
 static const auto SettingsEditingWidgetSizes            = QStringLiteral("EditingWidgetSizes");
 static const auto SettingsEditorZoomLevel               = QStringLiteral("EditorZoomLevel");
 static const auto SettingsViewerOptimiseFontSizeEnabled = QStringLiteral("ViewerOptimiseFontSizeEnabled");
+static const auto SettingsViewerDigitGroupingEnabled    = QStringLiteral("ViewerDigitGroupingEnabled");
 
 //==============================================================================
 
@@ -99,6 +101,7 @@ void PrettyCellmlViewWidget::loadSettings(QSettings *pSettings)
     // Retrieve the editing widget's viewer settings
 
     mViewerOptimiseFontSizeEnabled = pSettings->value(SettingsViewerOptimiseFontSizeEnabled, true).toBool();
+    mViewerDigitGroupingEnabled = pSettings->value(SettingsViewerDigitGroupingEnabled, true).toBool();
 }
 
 //==============================================================================
@@ -113,6 +116,7 @@ void PrettyCellmlViewWidget::saveSettings(QSettings *pSettings) const
     // Keep track of the editing widget's viewer settings
 
     pSettings->setValue(SettingsViewerOptimiseFontSizeEnabled, mViewerOptimiseFontSizeEnabled);
+    pSettings->setValue(SettingsViewerDigitGroupingEnabled, mViewerDigitGroupingEnabled);
 }
 
 //==============================================================================
@@ -168,6 +172,8 @@ void PrettyCellmlViewWidget::initialize(const QString &pFileName)
 
         connect(mEditingWidget->viewer(), SIGNAL(optimiseFontSizeChanged(const bool &)),
                 this, SLOT(optimiseFontSizeChanged(const bool &)));
+        connect(mEditingWidget->viewer(), SIGNAL(digitGroupingChanged(const bool &)),
+                this, SLOT(digitGroupingChanged(const bool &)));
 
         // Keep track of our editing widget and add it to ourselves
 
@@ -179,6 +185,7 @@ void PrettyCellmlViewWidget::initialize(const QString &pFileName)
     // Set our current editing widget's viewer settings
 
     mEditingWidget->viewer()->setOptimiseFontSize(mViewerOptimiseFontSizeEnabled);
+    mEditingWidget->viewer()->setDigitGrouping(mViewerDigitGroupingEnabled);
 
     // Show/hide our editing widgets and adjust our sizes
 
@@ -308,6 +315,15 @@ void PrettyCellmlViewWidget::optimiseFontSizeChanged(const bool &pEnabled)
     // Keep track of our editing widget's viewer settings
 
     mViewerOptimiseFontSizeEnabled = pEnabled;
+}
+
+//==============================================================================
+
+void PrettyCellmlViewWidget::digitGroupingChanged(const bool &pEnabled)
+{
+    // Keep track of our editing widget's viewer settings
+
+    mViewerDigitGroupingEnabled = pEnabled;
 }
 
 //==============================================================================

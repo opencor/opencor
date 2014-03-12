@@ -94,12 +94,14 @@ private:
     int mEditorZoomLevel;
 
     bool mViewerOptimiseFontSizeEnabled;
+    bool mViewerDigitGroupingEnabled;
 
 private Q_SLOTS:
     void splitterMoved();
     void editorZoomLevelChanged();
 
     void optimiseFontSizeChanged(const bool &pEnabled);
+    void digitGroupingChanged(const bool &pEnabled);
 };
 
 //==============================================================================
