@@ -90,11 +90,13 @@ int main(int pArgC, char *pArgV[])
 
     // Show our splash screen
 
+#ifndef QT_DEBUG
     OpenCOR::SplashScreenWindow *splashScreen = new OpenCOR::SplashScreenWindow();
 
     splashScreen->show();
 
     app->processEvents();
+#endif
 
     // Send a message (containing the arguments that were passed to this
     // instance of OpenCOR minus the first argument since it corresponds to the
@@ -149,7 +151,9 @@ int main(int pArgC, char *pArgV[])
 
     // Get rid of our splash screen once our main window is visible
 
+#ifndef QT_DEBUG
     splashScreen->finish(win);
+#endif
 
     // Make sure that our main window is in the foreground
     // Note: indeed, on Linux, to show our splash screen may result in our main
