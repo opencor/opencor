@@ -75,7 +75,6 @@ private:
     QString mContents;
     bool mError;
 
-    bool mOptimiseFontSize;
 
     QMenu *mContextMenu;
 
