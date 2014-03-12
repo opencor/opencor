@@ -187,13 +187,13 @@ void ViewerWidget::setOptimiseFontSize(const bool &pOptimiseFontSize)
 
     mOptimiseFontSizeAction->setChecked(pOptimiseFontSize);
 
-    // Update ourselves
-
-    update();
-
     // Let people know about the new value
 
     emit optimiseFontSizeChanged(mOptimiseFontSizeAction->isChecked());
+
+    // Update ourselves
+
+    update();
 }
 
 //==============================================================================
