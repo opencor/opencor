@@ -77,7 +77,7 @@ public:
     bool isEnabled() const;
     void setEnabled(const bool &pEnabled);
 
-    QTabBar * views() const;
+    QTabBar * viewTabs() const;
 
     CentralWidgetViewPlugins * viewPlugins() const;
     CentralWidgetViewSettings * viewSettings() const;
@@ -85,7 +85,7 @@ public:
 private:
     bool mEnabled;
 
-    QTabBar *mViews;
+    QTabBar *mViewTabs;
 
     CentralWidgetViewPlugins *mViewPlugins;
     CentralWidgetViewSettings *mViewSettings;
@@ -132,7 +132,6 @@ private:
     enum Status {
         Starting,
         Idling,
-        UpdatingModeView,
         UpdatingGui,
         Stopping
     };
@@ -148,8 +147,11 @@ private:
     QTabBar *mModeTabs;
     QTabBar *mFileTabs;
 
-    QMap<QString, int> mModeIndexes;
-    QMap<QString, int> mViewIndexes;
+    QMap<int, GuiViewSettings::Mode> mModeTabIndexModes;
+    QMap<GuiViewSettings::Mode, int> mModeModeTabIndexes;
+
+    QMap<QString, int> mFileModeTabIndexes;
+    QMap<QString, QMap<int, int>> mFileModeViewTabIndexes;
 
     FileTypes mSupportedFileTypes;
 
@@ -165,8 +167,6 @@ private:
 
     Plugin * viewPlugin(const int &pIndex) const;
     Plugin * viewPlugin(const QString &pFileName) const;
-
-    int modeTabIndex(const GuiViewSettings::Mode &pMode) const;
 
     void updateNoViewMsg();
 
@@ -189,9 +189,6 @@ Q_SIGNALS:
     void atLeastTwoFiles(const bool &pAtLeastTwoFiles);
 
 private Q_SLOTS:
-    void updateModeView();
-    void keepTrackOfModeView();
-
     void updateGui();
 
     void openFile();

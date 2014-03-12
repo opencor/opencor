@@ -57,7 +57,7 @@ CentralWidgetMode::CentralWidgetMode(CentralWidget *pOwner) :
 {
     // Initialise a few internal objects
 
-    mViews = pOwner->newTabBar(QTabBar::RoundedEast);
+    mViewTabs = pOwner->newTabBar(QTabBar::RoundedEast);
 
     mViewPlugins  = new CentralWidgetViewPlugins();
     mViewSettings = new CentralWidgetViewSettings();
@@ -72,7 +72,7 @@ CentralWidgetMode::~CentralWidgetMode()
     delete mViewSettings;
     delete mViewPlugins;
 
-    delete mViews;
+    delete mViewTabs;
 }
 
 //==============================================================================
@@ -95,11 +95,11 @@ void CentralWidgetMode::setEnabled(const bool &pEnabled)
 
 //==============================================================================
 
-QTabBar * CentralWidgetMode::views() const
+QTabBar * CentralWidgetMode::viewTabs() const
 {
-    // Return the mode's views
+    // Return the mode's view tabs
 
-    return mViews;
+    return mViewTabs;
 }
 
 //==============================================================================
@@ -128,8 +128,10 @@ CentralWidget::CentralWidget(QMainWindow *pMainWindow) :
     mGui(new Ui::CentralWidget),
     mStatus(Starting),
     mLoadedPlugins(Plugins()),
-    mModeIndexes(QMap<QString, int>()),
-    mViewIndexes(QMap<QString, int>()),
+    mModeTabIndexModes(QMap<int, GuiViewSettings::Mode>()),
+    mModeModeTabIndexes(QMap<GuiViewSettings::Mode, int>()),
+    mFileModeTabIndexes(QMap<QString, int>()),
+    mFileModeViewTabIndexes(QMap<QString, QMap<int, int>>()),
     mSupportedFileTypes(FileTypes()),
     mFileNames(QStringList()),
     mModes(QMap<GuiViewSettings::Mode, CentralWidgetMode *>())
@@ -204,7 +206,7 @@ CentralWidget::CentralWidget(QMainWindow *pMainWindow) :
     mGui->layout->addWidget(centralWidget);
 
     foreach (CentralWidgetMode *mode, mModes)
-        mGui->layout->addWidget(mode->views());
+        mGui->layout->addWidget(mode->viewTabs());
 
     // A connection to handle the case where a file was created or duplicated
 
@@ -225,8 +227,6 @@ CentralWidget::CentralWidget(QMainWindow *pMainWindow) :
     // Some connections to handle our files tab bar
 
     connect(mFileTabs, SIGNAL(currentChanged(int)),
-            this, SLOT(updateModeView()));
-    connect(mFileTabs, SIGNAL(currentChanged(int)),
             this, SLOT(updateGui()));
     connect(mFileTabs, SIGNAL(tabMoved(int, int)),
             this, SLOT(moveFile(const int &, const int &)));
@@ -236,8 +236,6 @@ CentralWidget::CentralWidget(QMainWindow *pMainWindow) :
     // A connection to handle our modes tab bar
 
     connect(mModeTabs, SIGNAL(currentChanged(int)),
-            this, SLOT(keepTrackOfModeView()));
-    connect(mModeTabs, SIGNAL(currentChanged(int)),
             this, SLOT(updateGui()));
     connect(mModeTabs, SIGNAL(currentChanged(int)),
             this, SLOT(updateFileTabIcons()));
@@ -245,11 +243,9 @@ CentralWidget::CentralWidget(QMainWindow *pMainWindow) :
     // Some connections to handle our mode views tab bar
 
     foreach (CentralWidgetMode *mode, mModes) {
-        connect(mode->views(), SIGNAL(currentChanged(int)),
-                this, SLOT(keepTrackOfModeView()));
-        connect(mode->views(), SIGNAL(currentChanged(int)),
+        connect(mode->viewTabs(), SIGNAL(currentChanged(int)),
                 this, SLOT(updateGui()));
-        connect(mode->views(), SIGNAL(currentChanged(int)),
+        connect(mode->viewTabs(), SIGNAL(currentChanged(int)),
                 this, SLOT(updateFileTabIcons()));
     }
 }
@@ -283,10 +279,10 @@ CentralWidget::~CentralWidget()
 
 //==============================================================================
 
-static const auto SettingsFileNames   = QStringLiteral("FileNames");
-static const auto SettingsCurrentFile = QStringLiteral("CurrentFile");
-static const auto SettingsFileMode    = QStringLiteral("FileMode%1");
-static const auto SettingsFileView    = QStringLiteral("FileView%1");
+static const auto SettingsFileNames       = QStringLiteral("FileNames");
+static const auto SettingsCurrentFileName = QStringLiteral("CurrentFileName");
+static const auto SettingsFileMode        = QStringLiteral("FileMode%1");
+static const auto SettingsFileModeView    = QStringLiteral("FileModeView%1%2");
 
 //==============================================================================
 
@@ -337,25 +333,43 @@ void CentralWidget::loadSettings(QSettings *pSettings)
 
     // Retrieve the modes and views of our different files
 
-    for (int i = 0, iMax = mFileNames.count(); i < iMax; ++i) {
-        QString fileName = mFileNames[i];
-        QString fileNameSha1 = Core::sha1(fileName);
+    foreach (const QString &fileName, mFileNames) {
+        GuiViewSettings::Mode fileMode = GuiViewSettings::modeFromString(pSettings->value(SettingsFileMode.arg(fileName)).toString());
 
-        int modeIndex = pSettings->value(SettingsFileMode.arg(fileNameSha1), -1).toInt();
-        int viewIndex = pSettings->value(SettingsFileView.arg(fileNameSha1), -1).toInt();
+        if (fileMode != GuiViewSettings::Unknown)
+            mFileModeTabIndexes.insert(fileName, mModeModeTabIndexes.value(fileMode));
 
-        if ((modeIndex != -1) && (viewIndex != -1)) {
-            mModeIndexes.insert(fileName, modeIndex);
-            mViewIndexes.insert(fileName, viewIndex);
+        QMap<int, int> modeViewTabIndexes = mFileModeViewTabIndexes.value(fileName);
+
+        for (int i = 0, iMax = mModeTabs->count(); i < iMax; ++i) {
+            fileMode = mModeTabIndexModes.value(i);
+
+            QString viewPluginName = pSettings->value(SettingsFileModeView.arg(fileName, GuiViewSettings::modeAsString(fileMode))).toString();
+            CentralWidgetViewPlugins *viewPlugins = mModes.value(fileMode)->viewPlugins();
+
+            for (int j = 0, jMax = viewPlugins->count(); j < jMax; ++j)
+                if (!viewPluginName.compare(viewPlugins->value(j)->name())) {
+                    modeViewTabIndexes.insert(i, j);
+
+                    break;
+                }
         }
+
+        mFileModeViewTabIndexes.insert(fileName, modeViewTabIndexes);
     }
 
-    // Select the previously selected file, if any
+    // Select the previously selected file, if it still exists, by pretending to
+    // open it (which, in turn, will select the file)
 
-    if (mFileNames.count())
-        mFileTabs->setCurrentIndex(qMin(qMax(pSettings->value(SettingsCurrentFile, -1).toInt(), 0), mFileNames.count()-1));
-        // Note: the calls to qMin() and qMax() are in case there was either no
-        //       previously selected file or that file got deleted in between...
+    QString fileName = pSettings->value(SettingsCurrentFileName).toString();
+
+    if (QFileInfo(fileName).exists())
+        openFile(fileName);
+    else
+        // The previously selected file doesn't exist anymore, so select the
+        // first file (otherwise the last file will be selected)
+
+        mFileTabs->setCurrentIndex(0);
 
     // Retrieve the active directory
 
@@ -380,16 +394,17 @@ void CentralWidget::saveSettings(QSettings *pSettings) const
 
     // Keep track of the modes and views of our different files
 
-    for (int i = 0, iMax = fileNames.count(); i < iMax; ++i) {
-        QString fileName = fileNames[i];
-        int modeIndex = mModeIndexes.value(fileName, -1);
-        int viewIndex = mViewIndexes.value(fileName, -1);
+    foreach (const QString &fileName, fileNames) {
+        pSettings->setValue(SettingsFileMode.arg(fileName),
+                            GuiViewSettings::modeAsString(mModeTabIndexModes.value(mFileModeTabIndexes.value(fileName))));
 
-        if ((modeIndex != -1) && (viewIndex != -1)) {
-            QString fileNameSha1 = Core::sha1(fileName);
+        QMap<int, int> modeViewTabIndexes = mFileModeViewTabIndexes.value(fileName);
 
-            pSettings->setValue(SettingsFileMode.arg(fileNameSha1), modeIndex);
-            pSettings->setValue(SettingsFileView.arg(fileNameSha1), viewIndex);
+        for (int i = 0, iMax = mModeTabs->count(); i < iMax; ++i) {
+            GuiViewSettings::Mode fileMode = mModeTabIndexModes.value(i);
+
+            pSettings->setValue(SettingsFileModeView.arg(fileName, GuiViewSettings::modeAsString(fileMode)),
+                                mModes.value(fileMode)->viewPlugins()->value(modeViewTabIndexes.value(i))->name());
         }
     }
 
@@ -402,18 +417,15 @@ void CentralWidget::saveSettings(QSettings *pSettings) const
     if (fileNames.count()) {
         QString fileName = mFileNames[mFileTabs->currentIndex()];
 
-        for (int i = 0, iMax = fileNames.count(); i < iMax; ++i)
-            if (!fileName.compare(fileNames[i])) {
-                pSettings->setValue(SettingsCurrentFile, i);
+        if (fileNames.contains(fileName)) {
+            pSettings->setValue(SettingsCurrentFileName, fileName);
 
-                hasCurrentFile = true;
-
-                break;
-            }
+            hasCurrentFile = true;
+        }
     }
 
     if (!hasCurrentFile)
-        pSettings->setValue(SettingsCurrentFile, -1);
+        pSettings->setValue(SettingsCurrentFileName, QString());
 
     // Keep track of the active directory
 
@@ -431,19 +443,6 @@ void CentralWidget::settingsLoaded(const Plugins &pLoadedPlugins)
     // Update our status now that our plugins  are fully ready
 
     mStatus = Idling;
-
-    // Make sure that the mode and view of the current file are correct
-    // Note: indeed, when loading the settings, we select the previously
-    //       selected file, if any, but because our status is Starting, we don't
-    //       get to update the mode and view, so we do it here instead...
-
-    updateModeView();
-
-    // Keep track of the mode and view of the current file
-    // Note: this is needed in case no information about the mode/view for the
-    //       current file was retrieved from the settings
-
-    keepTrackOfModeView();
 
     // Update the GUI
 
@@ -473,20 +472,20 @@ void CentralWidget::retranslateUi()
 
     // Retranslate our modes tab bar
 
-    mModeTabs->setTabText(modeTabIndex(GuiViewSettings::Editing),
+    mModeTabs->setTabText(mModeModeTabIndexes.value(GuiViewSettings::Editing, -1),
                           tr("Editing"));
-    mModeTabs->setTabText(modeTabIndex(GuiViewSettings::Simulation),
+    mModeTabs->setTabText(mModeModeTabIndexes.value(GuiViewSettings::Simulation, -1),
                           tr("Simulation"));
-    mModeTabs->setTabText(modeTabIndex(GuiViewSettings::Analysis),
+    mModeTabs->setTabText(mModeModeTabIndexes.value(GuiViewSettings::Analysis, -1),
                           tr("Analysis"));
 
     // Retranslate our mode views tab bar
 
     foreach (CentralWidgetMode *mode, mModes) {
-        QTabBar *modeViews = mode->views();
+        QTabBar *viewTabs = mode->viewTabs();
 
-        for (int i = 0, iMax = modeViews->count(); i < iMax; ++i)
-            modeViews->setTabText(i, qobject_cast<GuiInterface *>(mode->viewPlugins()->value(i)->instance())->viewName());
+        for (int i = 0, iMax = viewTabs->count(); i < iMax; ++i)
+            viewTabs->setTabText(i, qobject_cast<GuiInterface *>(mode->viewPlugins()->value(i)->instance())->viewName());
     }
 
     // Retranslate our modified settings, if needed
@@ -996,8 +995,8 @@ bool CentralWidget::closeFile(const int &pIndex, const bool &pForceClosing)
 
         mFileNames.removeAt(realIndex);
 
-        mModeIndexes.remove(fileName);
-        mViewIndexes.remove(fileName);
+        mFileModeTabIndexes.remove(fileName);
+        mFileModeViewTabIndexes.remove(fileName);
 
         // Remove the file tab
 
@@ -1085,54 +1084,29 @@ bool CentralWidget::canClose()
 
 //==============================================================================
 
-int CentralWidget::modeTabIndex(const GuiViewSettings::Mode &pMode) const
-{
-    // Return the tab index of the requested mode
-
-    switch (pMode) {
-    case GuiViewSettings::Simulation:
-        // If the simulation mode exists, then it has to be the first or second
-        // tab, depending on whether the editing mode exists
-
-        return  mModes.value(pMode)->isEnabled()?
-                     mModes.value(GuiViewSettings::Editing)->isEnabled()?1:0
-                    :-1;
-    case GuiViewSettings::Analysis:
-        // If the analysis mode exists, then it has to be the first, second or
-        // third tab, depending on whether the editing and/or simulation modes
-        // exist
-
-        return  mModes.value(pMode)->isEnabled()?
-                      (mModes.value(GuiViewSettings::Editing)->isEnabled()?1:0)
-                     +(mModes.value(GuiViewSettings::Simulation)->isEnabled()?1:0)
-                    :-1;
-    default:   // GuiViewSettings::Editing
-        // If the editing mode exists, then it has to be the first tab
-
-        return mModes.value(pMode)->isEnabled()?0:-1;
-    }
-}
-
-//==============================================================================
-
 void CentralWidget::addView(Plugin *pPlugin, GuiViewSettings *pSettings)
 {
     // Make sure that our list of required modes is up to date
 
-    GuiViewSettings::Mode mode = pSettings->mode();
+    GuiViewSettings::Mode settingsMode = pSettings->mode();
 
-    if (!mModes.value(mode)->isEnabled()) {
-        // There is no tab for the mode, so add one
+    if (!mModes.value(settingsMode)->isEnabled()) {
+        // There is no tab for the mode, so add one and enable it
 
-        mModeTabs->addTab(QString());
+        int tabIndex = mModeTabs->addTab(QString());
 
-        mModes.value(mode)->setEnabled(true);
+        mModes.value(settingsMode)->setEnabled(true);
+
+        // Keep track of the correspondance mode type/index
+
+        mModeTabIndexModes.insert(tabIndex, settingsMode);
+        mModeModeTabIndexes.insert(settingsMode, tabIndex);
     }
 
     // Add the requested view to the mode's views tab bar
 
-    CentralWidgetMode *mode = mModes.value(mode);
-    int modeViewTabIndex = mode->views()->addTab(QString());
+    CentralWidgetMode *mode = mModes.value(settingsMode);
+    int modeViewTabIndex = mode->viewTabs()->addTab(QString());
 
     mode->viewPlugins()->insert(modeViewTabIndex, pPlugin);
     mode->viewSettings()->insert(modeViewTabIndex, pSettings);
@@ -1220,9 +1194,9 @@ Plugin * CentralWidget::viewPlugin(const int &pIndex) const
     // Return the view plugin associated with the file, which index is given
 
     if (pIndex != -1) {
-        CentralWidgetMode *mode = mModes.value(GuiViewSettings::Mode(mModeIndexes.value(mFileNames[pIndex])));
+        CentralWidgetMode *mode = mModes.value(mModeTabIndexModes.value(mFileModeTabIndexes.value(mFileNames[pIndex])));
 
-        return mode?mode->viewPlugins()->value(mode->views()->currentIndex()):0;
+        return mode->viewPlugins()->value(mode->viewTabs()->currentIndex());
     } else {
         return 0;
     }
@@ -1235,81 +1209,10 @@ Plugin * CentralWidget::viewPlugin(const QString &pFileName) const
     // Return the view plugin associated with the file, which file name is given
 
     for (int i = 0, iMax = mFileNames.count(); i < iMax; ++i)
-        if (!pFileName.compare(mFileNames[i])) {
-            CentralWidgetMode *mode = mModes.value(GuiViewSettings::Mode(mModeIndexes.value(mFileNames[i])));
-
-            return mode?mode->viewPlugins()->value(mode->views()->currentIndex()):0;
-        }
+        if (!pFileName.compare(mFileNames[i]))
+            return viewPlugin(i);
 
     return 0;
-}
-
-//==============================================================================
-
-void CentralWidget::updateModeView()
-{
-    // Update the mode and view, if any, for the current file
-
-    if (mStatus != Idling)
-        return;
-
-    QString fileName = currentFileName();
-
-    if (!fileName.isEmpty()) {
-        int fileModeTabIndex = mModeIndexes.value(fileName, -1);
-        int fileViewTabIndex = mViewIndexes.value(fileName, -1);
-
-        if (fileModeTabIndex != -1) {
-            mStatus = UpdatingModeView;
-
-            mModeTabs->setCurrentIndex(fileModeTabIndex);
-
-            if (fileModeTabIndex == modeTabIndex(GuiViewSettings::Editing))
-                mModes.value(GuiViewSettings::Editing)->views()->setCurrentIndex(fileViewTabIndex);
-            else if (fileModeTabIndex == modeTabIndex(GuiViewSettings::Simulation))
-                mModes.value(GuiViewSettings::Simulation)->views()->setCurrentIndex(fileViewTabIndex);
-            else
-                mModes.value(GuiViewSettings::Analysis)->views()->setCurrentIndex(fileViewTabIndex);
-
-            mStatus = Idling;
-        } else {
-            // We don't have any track of the mode and view for the current
-            // file, so keep some
-            // Note: indeed, say that we switch to file XXX, don't switch modes
-            //       and/or views, and then switch to file YYY. From there, say
-            //       that we switch modes and/or views, and switch back to file
-            //       XXX. At this stage the mode and view for file XXX will be
-            //       that of file YYY while it should have been the ones before
-            //       we switched to file YYY...
-
-            keepTrackOfModeView();
-        }
-    }
-}
-
-//==============================================================================
-
-void CentralWidget::keepTrackOfModeView()
-{
-    // Keep track of the mode and view of the current file
-
-    if (mStatus != Idling)
-        return;
-
-    QString fileName = currentFileName();
-
-    if (!fileName.isEmpty()) {
-        int fileModeTabIndex = mModeTabs->currentIndex();
-
-        mModeIndexes.insert(fileName, fileModeTabIndex);
-
-        if (fileModeTabIndex == modeTabIndex(GuiViewSettings::Editing))
-            mViewIndexes.insert(fileName, mModes.value(GuiViewSettings::Editing)->views()->currentIndex());
-        else if (fileModeTabIndex == modeTabIndex(GuiViewSettings::Simulation))
-            mViewIndexes.insert(fileName, mModes.value(GuiViewSettings::Simulation)->views()->currentIndex());
-        else
-            mViewIndexes.insert(fileName, mModes.value(GuiViewSettings::Analysis)->views()->currentIndex());
-    }
 }
 
 //==============================================================================
@@ -1326,19 +1229,73 @@ void CentralWidget::updateGui()
 
     mStatus = UpdatingGui;
 
+    // Determine whether we are here as a result of changing files, modes or
+    // views
+
+    bool changedFiles = sender() == mFileTabs;
+    bool changedModes = sender() == mModeTabs;
+    bool changedViews = false;
+
+    foreach (CentralWidgetMode *mode, mModes.values())
+        if (sender() == mode->viewTabs()) {
+            changedViews = true;
+
+            break;
+        }
+
+    bool directCall = !changedFiles && !changedModes && !changedViews;
+
+    // Set or keep track of the mode and view for the current file
+
+    QString fileName = currentFileName();
+
+    if (!fileName.isEmpty()) {
+        int fileModeTabIndex = mFileModeTabIndexes.value(fileName, -1);
+
+        // Set the mode and view for the current file, should we know them and
+        // should we be changing files or coming here directly, or set the view
+        // for the current file, should we be changing modes
+
+        if (((fileModeTabIndex != -1) && (changedFiles || directCall)) || changedModes) {
+            if (changedModes)
+                fileModeTabIndex = mModeTabs->currentIndex();
+            else
+                mModeTabs->setCurrentIndex(fileModeTabIndex);
+
+            CentralWidgetMode *mode = mModes.value(mModeTabIndexModes.value(fileModeTabIndex));
+            QMap<int, int> modeViewTabIndexes = mFileModeViewTabIndexes.value(fileName);
+
+            mode->viewTabs()->setCurrentIndex(modeViewTabIndexes.value(fileModeTabIndex));
+        }
+
+        // Keep track of the mode and view for the current file, should we not
+        // have any track of them or should we be changing modes or views
+
+        if ((fileModeTabIndex == -1) || changedModes || changedViews) {
+            fileModeTabIndex = mModeTabs->currentIndex();
+
+            mFileModeTabIndexes.insert(fileName, fileModeTabIndex);
+
+            QMap<int, int> modeViewTabIndexes = mFileModeViewTabIndexes.value(fileName);
+            GuiViewSettings::Mode fileMode = mModeTabIndexModes.value(fileModeTabIndex);
+
+            modeViewTabIndexes.insert(fileModeTabIndex, mModes.value(fileMode)->viewTabs()->currentIndex());
+            mFileModeViewTabIndexes.insert(fileName, modeViewTabIndexes);
+        }
+    }
+
     // Show/hide the editing, simulation and analysis modes' corresponding views
     // tab, as needed, and retrieve the corresponding view plugin
 
     int fileModeTabIndex = mModeTabs->currentIndex();
 
-    mModes.value(GuiViewSettings::Editing)->views()->setVisible(fileModeTabIndex == modeTabIndex(GuiViewSettings::Editing));
-    mModes.value(GuiViewSettings::Simulation)->views()->setVisible(fileModeTabIndex == modeTabIndex(GuiViewSettings::Simulation));
-    mModes.value(GuiViewSettings::Analysis)->views()->setVisible(fileModeTabIndex == modeTabIndex(GuiViewSettings::Analysis));
+    mModes.value(GuiViewSettings::Editing)->viewTabs()->setVisible(fileModeTabIndex == mModeModeTabIndexes.value(GuiViewSettings::Editing));
+    mModes.value(GuiViewSettings::Simulation)->viewTabs()->setVisible(fileModeTabIndex == mModeModeTabIndexes.value(GuiViewSettings::Simulation));
+    mModes.value(GuiViewSettings::Analysis)->viewTabs()->setVisible(fileModeTabIndex == mModeModeTabIndexes.value(GuiViewSettings::Analysis));
 
     // Ask the GUI interface for the widget to use for the current file (should
     // there be one)
 
-    QString fileName = currentFileName();
     Plugin *fileViewPlugin = viewPlugin(mFileTabs->currentIndex());
     GuiInterface *guiInterface = fileViewPlugin?qobject_cast<GuiInterface *>(fileViewPlugin->instance()):0;
     QWidget *newView;
@@ -1465,16 +1422,9 @@ void CentralWidget::updateNoViewMsg()
 
         return;
     } else {
-        CentralWidgetMode *mode;
+        CentralWidgetMode *mode = mModes.value(mModeTabIndexModes.value(fileModeTabIndex));
 
-        if (fileModeTabIndex == modeTabIndex(GuiViewSettings::Simulation))
-            mode = mModes.value(GuiViewSettings::Simulation);
-        else if (fileModeTabIndex == modeTabIndex(GuiViewSettings::Analysis))
-            mode = mModes.value(GuiViewSettings::Analysis);
-        else
-            mode = mModes.value(GuiViewSettings::Editing);
-
-        mNoViewMsg->setMessage(tr("Sorry, but the <strong>%1</strong> view does not support this type of file...").arg(qobject_cast<GuiInterface *>(mode->viewPlugins()->value(mode->views()->currentIndex())->instance())->viewName()));
+        mNoViewMsg->setMessage(tr("Sorry, but the <strong>%1</strong> view does not support this type of file...").arg(qobject_cast<GuiInterface *>(mode->viewPlugins()->value(mode->viewTabs()->currentIndex())->instance())->viewName()));
     }
 }
 
@@ -1548,27 +1498,17 @@ void CentralWidget::updateModifiedSettings()
             ++nbOfNewOrModifiedFiles;
     }
 
-    // Reset the enabled state and tool tip of all View tabs
+    // Reset the enabled state and tool tip of all our View tabs
 
     foreach (CentralWidgetMode *mode, mModes) {
-        QTabBar *modeViews = mode->views();
+        QTabBar *viewTabs = mode->viewTabs();
 
-        modeViews->setEnabled(true);
-        modeViews->setToolTip(QString());
+        viewTabs->setEnabled(true);
+        viewTabs->setToolTip(QString());
     }
 
     // Enable/disable the current mode's View tabs, in case the current file has
     // been modified
-
-    int fileModeTabIndex = mModeTabs->currentIndex();
-    QTabBar *modeViews;
-
-    if (fileModeTabIndex == modeTabIndex(GuiViewSettings::Simulation))
-        modeViews = mModes.value(GuiViewSettings::Simulation)->views();
-    else if (fileModeTabIndex == modeTabIndex(GuiViewSettings::Analysis))
-        modeViews = mModes.value(GuiViewSettings::Analysis)->views();
-    else
-        modeViews = mModes.value(GuiViewSettings::Editing)->views();
 
     QString fileName = mFileTabs->count()?
                            mFileNames[mFileTabs->currentIndex()]:
@@ -1576,10 +1516,12 @@ void CentralWidget::updateModifiedSettings()
     bool fileIsNewOrModified = fileManagerInstance->isNewOrModified(fileName);
 
     if (fileIsNewOrModified) {
-        modeViews->setEnabled(false);
-        modeViews->setToolTip(fileManagerInstance->isNew(fileName)?
-                                  tr("The file is new, so switching views is not possible for now"):
-                                  tr("The file is being edited, so switching views is not possible for now"));
+        QTabBar *viewTabs = mModes.value(mModeTabIndexModes.value(mModeTabs->currentIndex()))->viewTabs();
+
+        viewTabs->setEnabled(false);
+        viewTabs->setToolTip(fileManagerInstance->isNew(fileName)?
+                                 tr("The file is new, so switching views is not possible for now"):
+                                 tr("The file is being edited, so switching views is not possible for now"));
     }
 
     // Let people know whether we can save the current file and/or all files
@@ -1673,13 +1615,13 @@ void CentralWidget::fileRenamed(const QString &pOldFileName,
 
             mFileNames[i] = pNewFileName;
 
-            // Update the model and view indexes
+            // Update the model and view raw names
 
-            mModeIndexes.insert(pNewFileName, mModeIndexes.value(pOldFileName));
-            mViewIndexes.insert(pNewFileName, mViewIndexes.value(pOldFileName));
+            mFileModeTabIndexes.insert(pNewFileName, mFileModeTabIndexes.value(pOldFileName));
+            mFileModeViewTabIndexes.insert(pNewFileName, mFileModeViewTabIndexes.value(pOldFileName));
 
-            mModeIndexes.remove(pOldFileName);
-            mViewIndexes.remove(pOldFileName);
+            mFileModeTabIndexes.remove(pOldFileName);
+            mFileModeViewTabIndexes.remove(pOldFileName);
 
             // Update the file tab
 
