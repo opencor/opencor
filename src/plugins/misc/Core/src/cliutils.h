@@ -29,7 +29,10 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#include <QAbstractMessageHandler>
 #include <QByteArray>
+#include <QSourceLocation>
+#include <QUrl>
 
 //==============================================================================
 
@@ -95,6 +98,16 @@ QString CORE_EXPORT formatErrorMessage(const QString &pErrorMessage);
 QString CORE_EXPORT nonDiacriticString(const QString &pString);
 
 void CORE_EXPORT doNothing(const int &pMax);
+
+//==============================================================================
+
+class CORE_EXPORT DummyMessageHandler : public QAbstractMessageHandler
+{
+protected:
+    virtual void handleMessage(QtMsgType pType, const QString &pDescription,
+                               const QUrl &pIdentifier,
+                               const QSourceLocation &pSourceLocation);
+};
 
 //==============================================================================
 

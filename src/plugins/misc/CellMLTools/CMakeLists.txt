@@ -37,6 +37,7 @@ ADD_PLUGIN(CellMLTools
         ${LLVM_BINARY_PLUGIN}
     QT_MODULES
         Widgets
+        XmlPatterns
     QT_LIBRARIES
         QtCore
         QtGui

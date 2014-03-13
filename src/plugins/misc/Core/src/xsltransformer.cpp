@@ -24,7 +24,6 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-#include <QAbstractMessageHandler>
 #include <QMutex>
 #include <QThread>
 #include <QXmlQuery>
@@ -33,24 +32,6 @@ specific language governing permissions and limitations under the License.
 
 namespace OpenCOR {
 namespace Core {
-
-//==============================================================================
-
-class DummyMessageHandler : public QAbstractMessageHandler
-{
-protected:
-    virtual void handleMessage(QtMsgType pType, const QString &pDescription,
-                               const QUrl &pIdentifier,
-                               const QSourceLocation &pSourceLocation)
-    {
-        Q_UNUSED(pType);
-        Q_UNUSED(pDescription);
-        Q_UNUSED(pIdentifier);
-        Q_UNUSED(pSourceLocation);
-
-        // We ignore the message...
-    }
-};
 
 //==============================================================================
 
@@ -157,10 +138,10 @@ void XslTransformer::started()
 {
     // Create our XML query object
 
-    QXmlQuery *xmlQuery = new QXmlQuery(QXmlQuery::XSLT20);
-    DummyMessageHandler *dummyMessageHandler = new DummyMessageHandler();
+    QXmlQuery xmlQuery(QXmlQuery::XSLT20);
+    DummyMessageHandler dummyMessageHandler;
 
-    xmlQuery->setMessageHandler(dummyMessageHandler);
+    xmlQuery.setMessageHandler(&dummyMessageHandler);
 
     // Do our XSL transformations
 
@@ -178,14 +159,14 @@ void XslTransformer::started()
 
             // Customise our XML query object
 
-            xmlQuery->setFocus(job.input());
-            xmlQuery->setQuery(job.xsl());
+            xmlQuery.setFocus(job.input());
+            xmlQuery.setQuery(job.xsl());
 
             // Do the XSL transformation
 
             QString output;
 
-            if (!xmlQuery->evaluateTo(&output))
+            if (!xmlQuery.evaluateTo(&output))
                 output = QString();
 
             // Let people know that an XSL transformation has been performed
@@ -205,13 +186,6 @@ void XslTransformer::started()
             mPaused = false;
         }
     }
-
-    // We are done, so clean up after ourselves
-    // Note: we clean up our remaining jobs in case we were asked to stop before
-    //       we had time to carry them out...
-
-    delete xmlQuery;
-    delete dummyMessageHandler;
 }
 
 //==============================================================================

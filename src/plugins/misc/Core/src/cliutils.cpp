@@ -581,6 +581,21 @@ void doNothing(const int &pMax)
 
 //==============================================================================
 
+void DummyMessageHandler::handleMessage(QtMsgType pType,
+                                        const QString &pDescription,
+                                        const QUrl &pIdentifier,
+                                        const QSourceLocation &pSourceLocation)
+{
+    Q_UNUSED(pType);
+    Q_UNUSED(pDescription);
+    Q_UNUSED(pIdentifier);
+    Q_UNUSED(pSourceLocation);
+
+    // We ignore the message...
+}
+
+//==============================================================================
+
 }   // namespace Core
 }   // namespace OpenCOR
 

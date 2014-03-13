@@ -47,6 +47,7 @@ ADD_PLUGIN(PrettyCellMLView
     QT_MODULES
         Widgets
         Xml
+        XmlPatterns
     QT_LIBRARIES
         ${QT_LIBRARIES_EXTRAS}
         QtConcurrent

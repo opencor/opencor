@@ -69,6 +69,7 @@ ADD_PLUGIN(SingleCellView
         ${LLVM_BINARY_PLUGIN}
     QT_MODULES
         Widgets
+        XmlPatterns
     QT_LIBRARIES
         QtConcurrent
         QtCore

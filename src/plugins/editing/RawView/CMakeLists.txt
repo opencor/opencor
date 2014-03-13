@@ -29,6 +29,7 @@ ADD_PLUGIN(RawView
         QScintillaSupport
     QT_MODULES
         Widgets
+        XmlPatterns
     QT_LIBRARIES
         ${QT_LIBRARIES_EXTRAS}
         QtCore

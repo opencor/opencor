@@ -30,6 +30,7 @@ ADD_PLUGIN(Help
         Help
         Network
         WebKitWidgets
+        XmlPatterns
     QT_LIBRARIES
         QtCore
         QtGui
