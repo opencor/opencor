@@ -125,7 +125,7 @@ void ViewerWidget::setContents(const QString &pContents)
     if (mMathmlDocument.setContent(pContents)) {
         mError = false;
 
-        // Process and reset our contents, shoudl we want to do digit grouping
+        // Process and reset our contents, if needed
 
         if (digitGrouping())
             mMathmlDocument.setContent(processedContents());
