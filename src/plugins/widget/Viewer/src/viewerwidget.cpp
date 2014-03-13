@@ -120,8 +120,9 @@ void ViewerWidget::setContents(const QString &pContents)
 
     // Try to set our contents to our MathML document
 
+    mContents = pContents;
+
     if (mMathmlDocument.setContent(pContents)) {
-        mContents = pContents;
         mError = false;
 
         // Process and reset our contents, shoudl we want to do digit grouping
@@ -144,7 +145,6 @@ void ViewerWidget::setContents(const QString &pContents)
         mOneOverMathmlDocumentWidth  = 1.0/mathmlDocumentSize.width();
         mOneOverMathmlDocumentHeight = 1.0/mathmlDocumentSize.height();
     } else {
-        mContents = QString();
         mError = pContents.size();
     }
 
@@ -413,6 +413,9 @@ void ViewerWidget::processNode(const QDomNode &pDomNode) const
 QString ViewerWidget::processedContents() const
 {
     // Process and return our processed contents
+
+    if (mContents.isEmpty())
+        return QString();
 
     QDomDocument domDocument;
 
