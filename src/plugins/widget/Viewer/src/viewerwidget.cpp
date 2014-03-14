@@ -37,6 +37,7 @@ specific language governing permissions and limitations under the License.
 #include <QPalette>
 #include <QPoint>
 #include <QRectF>
+#include <QRegularExpression>
 
 //==============================================================================
 
@@ -451,6 +452,13 @@ qDebug(">>> Original value: %s", qPrintable(domChildNodeValue));
 
             if (subscripts()) {
 qDebug(">>> With subscripts: %s", qPrintable(domChildNodeValue));
+                // Remove leading, trailing and duplicate underscores
+
+                domChildNodeValue.remove(QRegularExpression("^_+"));
+                domChildNodeValue.remove(QRegularExpression("_+$"));
+                domChildNodeValue.replace(QRegularExpression("_+"), "_");
+
+                domNode.firstChild().setNodeValue(domChildNodeValue);
             }
 
             if (greekSymbols()) {
