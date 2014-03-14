@@ -63,6 +63,7 @@ ViewerWidget::ViewerWidget(QWidget *pParent) :
 
     mOptimiseFontSizeAction = newAction(this);
     mDigitGroupingAction = newAction(this);
+    mGreekSymbolsAction = newAction(this);
 
     connect(mOptimiseFontSizeAction, SIGNAL(triggered()),
             this, SLOT(update()));
@@ -74,9 +75,15 @@ ViewerWidget::ViewerWidget(QWidget *pParent) :
     connect(mDigitGroupingAction, SIGNAL(toggled(bool)),
             this, SIGNAL(digitGroupingChanged(const bool &)));
 
+    connect(mGreekSymbolsAction, SIGNAL(triggered()),
+            this, SLOT(updateContents()));
+    connect(mGreekSymbolsAction, SIGNAL(toggled(bool)),
+            this, SIGNAL(greekSymbolsChanged(const bool &)));
+
     mContextMenu->addAction(mOptimiseFontSizeAction);
     mContextMenu->addSeparator();
     mContextMenu->addAction(mDigitGroupingAction);
+    mContextMenu->addAction(mGreekSymbolsAction);
 
     // We want a context menu
 
@@ -98,6 +105,7 @@ void ViewerWidget::retranslateUi()
 
     mOptimiseFontSizeAction->setText(tr("Optimise Font Size"));
     mDigitGroupingAction->setText(tr("Digit Grouping"));
+    mGreekSymbolsAction->setText(tr("Greek Symbols"));
 }
 
 //==============================================================================
@@ -127,7 +135,7 @@ void ViewerWidget::setContents(const QString &pContents)
 
         // Process and reset our contents, if needed
 
-        if (digitGrouping())
+        if (digitGrouping() || greekSymbols())
             mMathmlDocument.setContent(processedContents());
 
         // Determine (the inverse of) the size of our contents when rendered
@@ -231,6 +239,35 @@ void ViewerWidget::setDigitGrouping(const bool &pDigitGrouping)
     // Let people know about the new value
 
     emit digitGroupingChanged(pDigitGrouping);
+
+    // Update ourselves
+
+    update();
+}
+
+//==============================================================================
+
+bool ViewerWidget::greekSymbols() const
+{
+    // Return whether we use Greek symbols
+
+    return mGreekSymbolsAction->isChecked();
+}
+
+//==============================================================================
+
+void ViewerWidget::setGreekSymbols(const bool &pGreekSymbols)
+{
+    // Keep track of whether we use Greek symbols
+
+    if (pGreekSymbols == greekSymbols())
+        return;
+
+    mGreekSymbolsAction->setChecked(pGreekSymbols);
+
+    // Let people know about the new value
+
+    emit greekSymbolsChanged(pGreekSymbols);
 
     // Update ourselves
 

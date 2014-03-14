@@ -11,5 +11,9 @@
         <source>Digit Grouping</source>
         <translation>Groupement Chiffres</translation>
     </message>
+    <message>
+        <source>Greek Symbols</source>
+        <translation>Symboles Grecs</translation>
+    </message>
 </context>
 </TS>

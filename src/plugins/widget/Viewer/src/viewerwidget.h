@@ -67,6 +67,9 @@ public:
     bool digitGrouping() const;
     void setDigitGrouping(const bool &pDigitGrouping);
 
+    bool greekSymbols() const;
+    void setGreekSymbols(const bool &pGreekSymbols);
+
 protected:
     virtual void paintEvent(QPaintEvent *pEvent);
 
@@ -86,6 +89,7 @@ private:
 
     QAction *mOptimiseFontSizeAction;
     QAction *mDigitGroupingAction;
+    QAction *mGreekSymbolsAction;
 
     QAction * newAction(QObject *pParent);
 
@@ -95,6 +99,7 @@ private:
 Q_SIGNALS:
     void optimiseFontSizeChanged(const bool &pEnabled);
     void digitGroupingChanged(const bool &pEnabled);
+    void greekSymbolsChanged(const bool &pEnabled);
 
 private Q_SLOTS:
     void showCustomContextMenu(const QPoint &pPosition) const;
