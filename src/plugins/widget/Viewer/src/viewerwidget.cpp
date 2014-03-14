@@ -433,52 +433,64 @@ void ViewerWidget::processNode(const QDomNode &pDomNode) const
     // Go through the node's children and process them
 
     for (int i = 0, iMax = pDomNode.childNodes().count(); i < iMax; ++i) {
+        bool processDomNode = true;
         QDomNode domNode = pDomNode.childNodes().at(i);
 
         // Check whether we want to use Greek symbols and/or subscripts and
-        // whether the node's parent is an mi element with only one child of
-        // type text
+        // whether the current node is an mi element with only one child of type
+        // text
 
-        bool lonelyTextNode =    (domNode.parentNode().childNodes().count() == 1)
-                              && (domNode.nodeType() == QDomNode::TextNode);
+        bool lonelyChildTextNode =    (domNode.childNodes().count() == 1)
+                                   && (domNode.firstChild().nodeType() == QDomNode::TextNode);
 
-        if (    (subscripts() || greekSymbols()) && lonelyTextNode
-            && !domNode.parentNode().nodeName().compare("mi")) {
-            QString domNodeValue = domNode.nodeValue();
-qDebug(">>> domNodeValue: %s", qPrintable(domNodeValue));
+        if (    (subscripts() || greekSymbols()) && lonelyChildTextNode
+            && !domNode.nodeName().compare("mi")) {
+            QString domChildNodeValue = domNode.firstChild().nodeValue();
+qDebug("---------");
+qDebug(">>> Original value: %s", qPrintable(domChildNodeValue));
+
+            if (subscripts()) {
+qDebug(">>> With subscripts: %s", qPrintable(domChildNodeValue));
+            }
+
+            if (greekSymbols()) {
+qDebug(">>> With Greek symbols: %s", qPrintable(domChildNodeValue));
+            }
+
+            processDomNode = false;
         }
 
-        // Check whether we want to do digit grouping and whether the node's
-        // parent is an mn element with only one child of type text
+        // Check whether we want to do digit grouping and whether the current
+        // node is an mn element with only one child of type text
 
-        if (    digitGrouping() && lonelyTextNode
-            && !domNode.parentNode().nodeName().compare("mn")) {
-            // We want to do digit grouping and whether the node's parent is an
-            // mn element, so check whether the value of that element is a valid
+        if (    digitGrouping() && lonelyChildTextNode
+            && !domNode.nodeName().compare("mn")) {
+            // We want to do digit grouping and the current node is an mn
+            // element, so check whether the value of its child is a valid
             // number
 
-            bool domNodeValueValid;
-            QString domNodeValue = domNode.nodeValue();
+            bool domChildNodeValueValid;
+            QString domChildNodeValue = domNode.firstChild().nodeValue();
 
-            domNodeValue.toDouble(&domNodeValueValid);
+            domChildNodeValue.toDouble(&domChildNodeValueValid);
 
-            if (domNodeValueValid) {
+            if (domChildNodeValueValid) {
                 // The number is valid, so do digit grouping on it
 
-                int exponentPos = domNodeValue.indexOf("e", 0, Qt::CaseInsensitive);
-                int decimalPointPos = domNodeValue.indexOf(".");
+                int exponentPos = domChildNodeValue.indexOf("e", 0, Qt::CaseInsensitive);
+                int decimalPointPos = domChildNodeValue.indexOf(".");
 
                 if (   (decimalPointPos != -1)
                     && ((exponentPos == -1) || (decimalPointPos < exponentPos))) {
-                    QString beforeDecimalPoint = domNodeValue.left(decimalPointPos);
-                    domNodeValue = domNodeValue.right(domNodeValue.length()-decimalPointPos);
+                    QString beforeDecimalPoint = domChildNodeValue.left(decimalPointPos);
+                    domChildNodeValue = domChildNodeValue.right(domChildNodeValue.length()-decimalPointPos);
                     bool maybeDigit = true;
                     int nbOfDigits = -1;
 
                     for (int i = beforeDecimalPoint.length()-1; i >= 0; --i) {
                         if (maybeDigit && beforeDecimalPoint[i].isDigit()) {
                             if (++nbOfDigits == 3) {
-                                domNodeValue = ","+domNodeValue;
+                                domChildNodeValue = ","+domChildNodeValue;
 
                                 nbOfDigits = 0;
                             }
@@ -486,15 +498,20 @@ qDebug(">>> domNodeValue: %s", qPrintable(domNodeValue));
                             maybeDigit = false;
                         }
 
-                        domNodeValue = beforeDecimalPoint[i]+domNodeValue;
+                        domChildNodeValue = beforeDecimalPoint[i]+domChildNodeValue;
                     }
 
-                    domNode.setNodeValue(domNodeValue);
+                    domNode.firstChild().setNodeValue(domChildNodeValue);
                 }
             }
+
+            processDomNode = false;
         }
 
-        processNode(domNode);
+        // Process the current node itself
+
+        if (processDomNode)
+            processNode(domNode);
     }
 }
 
