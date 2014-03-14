@@ -97,6 +97,8 @@ private:
 
     QAction * newAction(QObject *pParent);
 
+    QDomNode newMiNode(const QDomNode &pDomNode, const QString &pValue) const;
+
     void processNode(const QDomNode &pDomNode) const;
     QString processedContents() const;
 
