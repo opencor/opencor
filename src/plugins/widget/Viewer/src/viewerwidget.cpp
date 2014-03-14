@@ -436,12 +436,13 @@ void ViewerWidget::processNode(const QDomNode &pDomNode) const
         QDomNode domNode = pDomNode.childNodes().at(i);
 
         // Check whether we want to use Greek symbols and/or subscripts and
-        // whether the node's parent is an mi element
+        // whether the node's parent is an mi element with only one child of
+        // type text
 
-        if (    (subscripts() || greekSymbols())
         bool lonelyTextNode =    (domNode.parentNode().childNodes().count() == 1)
                               && (domNode.nodeType() == QDomNode::TextNode);
 
+        if (    (subscripts() || greekSymbols()) && lonelyTextNode
             && !domNode.parentNode().nodeName().compare("mi")) {
             QString domNodeValue = domNode.nodeValue();
 qDebug(">>> domNodeValue: %s", qPrintable(domNodeValue));
