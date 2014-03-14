@@ -439,15 +439,19 @@ void ViewerWidget::processNode(const QDomNode &pDomNode) const
         // whether the node's parent is an mi element
 
         if (    (subscripts() || greekSymbols())
+        bool lonelyTextNode =    (domNode.parentNode().childNodes().count() == 1)
+                              && (domNode.nodeType() == QDomNode::TextNode);
+
             && !domNode.parentNode().nodeName().compare("mi")) {
             QString domNodeValue = domNode.nodeValue();
 qDebug(">>> domNodeValue: %s", qPrintable(domNodeValue));
         }
 
         // Check whether we want to do digit grouping and whether the node's
-        // parent is an mn element
+        // parent is an mn element with only one child of type text
 
-        if (digitGrouping() && !domNode.parentNode().nodeName().compare("mn")) {
+        if (    digitGrouping() && lonelyTextNode
+            && !domNode.parentNode().nodeName().compare("mn")) {
             // We want to do digit grouping and whether the node's parent is an
             // mn element, so check whether the value of that element is a valid
             // number
