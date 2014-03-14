@@ -64,11 +64,14 @@ public:
     bool optimiseFontSize() const;
     void setOptimiseFontSize(const bool &pOptimiseFontSize);
 
-    bool digitGrouping() const;
-    void setDigitGrouping(const bool &pDigitGrouping);
+    bool subscripts() const;
+    void setSubscripts(const bool &pSubscripts);
 
     bool greekSymbols() const;
     void setGreekSymbols(const bool &pGreekSymbols);
+
+    bool digitGrouping() const;
+    void setDigitGrouping(const bool &pDigitGrouping);
 
 protected:
     virtual void paintEvent(QPaintEvent *pEvent);
@@ -88,8 +91,9 @@ private:
     QMenu *mContextMenu;
 
     QAction *mOptimiseFontSizeAction;
-    QAction *mDigitGroupingAction;
+    QAction *mSubscriptsAction;
     QAction *mGreekSymbolsAction;
+    QAction *mDigitGroupingAction;
 
     QAction * newAction(QObject *pParent);
 
@@ -98,8 +102,9 @@ private:
 
 Q_SIGNALS:
     void optimiseFontSizeChanged(const bool &pEnabled);
-    void digitGroupingChanged(const bool &pEnabled);
+    void subscriptsChanged(const bool &pEnabled);
     void greekSymbolsChanged(const bool &pEnabled);
+    void digitGroupingChanged(const bool &pEnabled);
 
 private Q_SLOTS:
     void showCustomContextMenu(const QPoint &pPosition) const;

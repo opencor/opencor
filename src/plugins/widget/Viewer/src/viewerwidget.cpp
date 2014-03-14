@@ -62,28 +62,35 @@ ViewerWidget::ViewerWidget(QWidget *pParent) :
     mContextMenu = new QMenu(this);
 
     mOptimiseFontSizeAction = newAction(this);
-    mDigitGroupingAction = newAction(this);
+    mSubscriptsAction = newAction(this);
     mGreekSymbolsAction = newAction(this);
+    mDigitGroupingAction = newAction(this);
 
     connect(mOptimiseFontSizeAction, SIGNAL(triggered()),
             this, SLOT(update()));
     connect(mOptimiseFontSizeAction, SIGNAL(toggled(bool)),
             this, SIGNAL(optimiseFontSizeChanged(const bool &)));
 
-    connect(mDigitGroupingAction, SIGNAL(triggered()),
+    connect(mSubscriptsAction, SIGNAL(triggered()),
             this, SLOT(updateContents()));
-    connect(mDigitGroupingAction, SIGNAL(toggled(bool)),
-            this, SIGNAL(digitGroupingChanged(const bool &)));
+    connect(mSubscriptsAction, SIGNAL(toggled(bool)),
+            this, SIGNAL(subscriptsChanged(const bool &)));
 
     connect(mGreekSymbolsAction, SIGNAL(triggered()),
             this, SLOT(updateContents()));
     connect(mGreekSymbolsAction, SIGNAL(toggled(bool)),
             this, SIGNAL(greekSymbolsChanged(const bool &)));
 
+    connect(mDigitGroupingAction, SIGNAL(triggered()),
+            this, SLOT(updateContents()));
+    connect(mDigitGroupingAction, SIGNAL(toggled(bool)),
+            this, SIGNAL(digitGroupingChanged(const bool &)));
+
     mContextMenu->addAction(mOptimiseFontSizeAction);
     mContextMenu->addSeparator();
-    mContextMenu->addAction(mDigitGroupingAction);
+    mContextMenu->addAction(mSubscriptsAction);
     mContextMenu->addAction(mGreekSymbolsAction);
+    mContextMenu->addAction(mDigitGroupingAction);
 
     // We want a context menu
 
@@ -104,8 +111,9 @@ void ViewerWidget::retranslateUi()
     // Retranslate our actions
 
     mOptimiseFontSizeAction->setText(tr("Optimise Font Size"));
-    mDigitGroupingAction->setText(tr("Digit Grouping"));
+    mSubscriptsAction->setText(tr("Subscripts"));
     mGreekSymbolsAction->setText(tr("Greek Symbols"));
+    mDigitGroupingAction->setText(tr("Digit Grouping"));
 }
 
 //==============================================================================
@@ -135,7 +143,7 @@ void ViewerWidget::setContents(const QString &pContents)
 
         // Process and reset our contents, if needed
 
-        if (digitGrouping() || greekSymbols())
+        if (subscripts() || greekSymbols() || digitGrouping())
             mMathmlDocument.setContent(processedContents());
 
         // Determine (the inverse of) the size of our contents when rendered
@@ -218,27 +226,27 @@ void ViewerWidget::setOptimiseFontSize(const bool &pOptimiseFontSize)
 
 //==============================================================================
 
-bool ViewerWidget::digitGrouping() const
+bool ViewerWidget::subscripts() const
 {
-    // Return whether we do digit grouping
+    // Return whether we use subscripts
 
-    return mDigitGroupingAction->isChecked();
+    return mSubscriptsAction->isChecked();
 }
 
 //==============================================================================
 
-void ViewerWidget::setDigitGrouping(const bool &pDigitGrouping)
+void ViewerWidget::setSubscripts(const bool &pSubscripts)
 {
-    // Keep track of whether we do digit grouping
+    // Keep track of whether we use subscripts
 
-    if (pDigitGrouping == digitGrouping())
+    if (pSubscripts == subscripts())
         return;
 
-    mDigitGroupingAction->setChecked(pDigitGrouping);
+    mSubscriptsAction->setChecked(pSubscripts);
 
     // Let people know about the new value
 
-    emit digitGroupingChanged(pDigitGrouping);
+    emit subscriptsChanged(pSubscripts);
 
     // Update ourselves
 
@@ -268,6 +276,35 @@ void ViewerWidget::setGreekSymbols(const bool &pGreekSymbols)
     // Let people know about the new value
 
     emit greekSymbolsChanged(pGreekSymbols);
+
+    // Update ourselves
+
+    update();
+}
+
+//==============================================================================
+
+bool ViewerWidget::digitGrouping() const
+{
+    // Return whether we do digit grouping
+
+    return mDigitGroupingAction->isChecked();
+}
+
+//==============================================================================
+
+void ViewerWidget::setDigitGrouping(const bool &pDigitGrouping)
+{
+    // Keep track of whether we do digit grouping
+
+    if (pDigitGrouping == digitGrouping())
+        return;
+
+    mDigitGroupingAction->setChecked(pDigitGrouping);
+
+    // Let people know about the new value
+
+    emit digitGroupingChanged(pDigitGrouping);
 
     // Update ourselves
 
@@ -397,6 +434,15 @@ void ViewerWidget::processNode(const QDomNode &pDomNode) const
 
     for (int i = 0, iMax = pDomNode.childNodes().count(); i < iMax; ++i) {
         QDomNode domNode = pDomNode.childNodes().at(i);
+
+        // Check whether we want to use Greek symbols and/or subscripts and
+        // whether the node's parent is an mi element
+
+        if (    (subscripts() || greekSymbols())
+            && !domNode.parentNode().nodeName().compare("mi")) {
+            QString domNodeValue = domNode.nodeValue();
+qDebug(">>> domNodeValue: %s", qPrintable(domNodeValue));
+        }
 
         // Check whether we want to do digit grouping and whether the node's
         // parent is an mn element

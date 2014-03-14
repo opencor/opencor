@@ -15,5 +15,9 @@
         <source>Greek Symbols</source>
         <translation>Symboles Grecs</translation>
     </message>
+    <message>
+        <source>Subscripts</source>
+        <translation>Indices</translation>
+    </message>
 </context>
 </TS>
