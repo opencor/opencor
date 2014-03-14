@@ -514,8 +514,8 @@ void ViewerWidget::processNode(const QDomNode &pDomNode) const
                 QString domChildNodeValue = domNode.firstChild().nodeValue();
 
                 if (subscripts()) {
-                    // We want to use subscripts, so remove leading, trailing
-                    // and duplicate underscores
+                    // We want to use subscripts (and maybe also Greek symbols),
+                    // so remove leading, trailing and duplicate underscores
 
                     domChildNodeValue.remove(QRegularExpression("^_+"));
                     domChildNodeValue.remove(QRegularExpression("_+$"));
@@ -526,8 +526,10 @@ void ViewerWidget::processNode(const QDomNode &pDomNode) const
 
                     QStringList domChildNodeSubValues = domChildNodeValue.split("_");
 
-                    // Create a new node that is going to contain the
-                    // subscripted version of our current node
+                    // Create a new node that is going to contain the subscript
+                    // version of our current node
+                    // Note: our calls to newMiNode() will handle the case where
+                    //       we want to use Greek symbols...
 
                     int domChildNodeSubValuesCount = domChildNodeSubValues.count();
 
@@ -621,12 +623,8 @@ QString ViewerWidget::processedContents() const
 
     if (domDocument.setContent(mContents)) {
         QDomNode domNode = domDocument.documentElement();
-QString original = domDocument.toString(-1);
 
         processNode(domNode);
-qDebug("=========");
-qDebug(">>> Old: %s", qPrintable(original));
-qDebug(">>> New: %s", qPrintable(domDocument.toString(-1)));
 
         return domDocument.toString(-1);
     } else {
