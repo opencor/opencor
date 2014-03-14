@@ -57,6 +57,7 @@ PrettyCellmlViewWidget::PrettyCellmlViewWidget(QWidget *pParent) :
     mEditingWidgetSizes(QIntList()),
     mEditorZoomLevel(0),
     mViewerOptimiseFontSizeEnabled(true),
+    mViewerSubscriptsEnabled(true),
     mViewerGreekSymbolsEnabled(true),
     mViewerDigitGroupingEnabled(true)
 {
@@ -79,6 +80,7 @@ PrettyCellmlViewWidget::~PrettyCellmlViewWidget()
 static const auto SettingsEditingWidgetSizes            = QStringLiteral("EditingWidgetSizes");
 static const auto SettingsEditorZoomLevel               = QStringLiteral("EditorZoomLevel");
 static const auto SettingsViewerOptimiseFontSizeEnabled = QStringLiteral("ViewerOptimiseFontSizeEnabled");
+static const auto SettingsViewerSubscriptsEnabled       = QStringLiteral("ViewerSubscriptsEnabled");
 static const auto SettingsViewerGreekSymbolsEnabled     = QStringLiteral("ViewerGreekSymbolsEnabled");
 static const auto SettingsViewerDigitGroupingEnabled    = QStringLiteral("ViewerDigitGroupingEnabled");
 
@@ -103,6 +105,7 @@ void PrettyCellmlViewWidget::loadSettings(QSettings *pSettings)
     // Retrieve the editing widget's viewer settings
 
     mViewerOptimiseFontSizeEnabled = pSettings->value(SettingsViewerOptimiseFontSizeEnabled, true).toBool();
+    mViewerSubscriptsEnabled = pSettings->value(SettingsViewerSubscriptsEnabled, true).toBool();
     mViewerGreekSymbolsEnabled = pSettings->value(SettingsViewerGreekSymbolsEnabled, true).toBool();
     mViewerDigitGroupingEnabled = pSettings->value(SettingsViewerDigitGroupingEnabled, true).toBool();
 }
@@ -119,6 +122,7 @@ void PrettyCellmlViewWidget::saveSettings(QSettings *pSettings) const
     // Keep track of the editing widget's viewer settings
 
     pSettings->setValue(SettingsViewerOptimiseFontSizeEnabled, mViewerOptimiseFontSizeEnabled);
+    pSettings->setValue(SettingsViewerSubscriptsEnabled, mViewerSubscriptsEnabled);
     pSettings->setValue(SettingsViewerGreekSymbolsEnabled, mViewerGreekSymbolsEnabled);
     pSettings->setValue(SettingsViewerDigitGroupingEnabled, mViewerDigitGroupingEnabled);
 }
@@ -176,6 +180,8 @@ void PrettyCellmlViewWidget::initialize(const QString &pFileName)
 
         connect(mEditingWidget->viewer(), SIGNAL(optimiseFontSizeChanged(const bool &)),
                 this, SLOT(optimiseFontSizeChanged(const bool &)));
+        connect(mEditingWidget->viewer(), SIGNAL(subscriptsChanged(const bool &)),
+                this, SLOT(subscriptsChanged(const bool &)));
         connect(mEditingWidget->viewer(), SIGNAL(greekSymbolsChanged(const bool &)),
                 this, SLOT(greekSymbolsChanged(const bool &)));
         connect(mEditingWidget->viewer(), SIGNAL(digitGroupingChanged(const bool &)),
@@ -191,6 +197,7 @@ void PrettyCellmlViewWidget::initialize(const QString &pFileName)
     // Set our current editing widget's viewer settings
 
     mEditingWidget->viewer()->setOptimiseFontSize(mViewerOptimiseFontSizeEnabled);
+    mEditingWidget->viewer()->setSubscripts(mViewerSubscriptsEnabled);
     mEditingWidget->viewer()->setGreekSymbols(mViewerGreekSymbolsEnabled);
     mEditingWidget->viewer()->setDigitGrouping(mViewerDigitGroupingEnabled);
 
@@ -322,6 +329,15 @@ void PrettyCellmlViewWidget::optimiseFontSizeChanged(const bool &pEnabled)
     // Keep track of our editing widget's viewer settings
 
     mViewerOptimiseFontSizeEnabled = pEnabled;
+}
+
+//==============================================================================
+
+void PrettyCellmlViewWidget::subscriptsChanged(const bool &pEnabled)
+{
+    // Keep track of our editing widget's viewer settings
+
+    mViewerSubscriptsEnabled = pEnabled;
 }
 
 //==============================================================================

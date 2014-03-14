@@ -94,6 +94,7 @@ private:
     int mEditorZoomLevel;
 
     bool mViewerOptimiseFontSizeEnabled;
+    bool mViewerSubscriptsEnabled;
     bool mViewerGreekSymbolsEnabled;
     bool mViewerDigitGroupingEnabled;
 
@@ -102,6 +103,7 @@ private Q_SLOTS:
     void editorZoomLevelChanged();
 
     void optimiseFontSizeChanged(const bool &pEnabled);
+    void subscriptsChanged(const bool &pEnabled);
     void greekSymbolsChanged(const bool &pEnabled);
     void digitGroupingChanged(const bool &pEnabled);
 };
