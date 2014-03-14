@@ -377,9 +377,11 @@ void ViewerWidget::processNode(const QDomNode &pDomNode) const
             if (domNodeValueValid) {
                 // The number is valid, so do digit grouping on it
 
+                int exponentPos = domNodeValue.indexOf("e", 0, Qt::CaseInsensitive);
                 int decimalPointPos = domNodeValue.indexOf(".");
 
-                if (decimalPointPos != -1) {
+                if (   (decimalPointPos != -1)
+                    && ((exponentPos == -1) || (decimalPointPos < exponentPos))) {
                     QString beforeDecimalPoint = domNodeValue.left(decimalPointPos);
                     domNodeValue = domNodeValue.right(domNodeValue.length()-decimalPointPos);
                     bool maybeDigit = true;
