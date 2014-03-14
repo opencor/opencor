@@ -554,6 +554,36 @@ void ViewerWidget::processNode(const QDomNode &pDomNode) const
                         domNode.parentNode().replaceChild(newDomNode, domNode);
                     }
                 } else if (greekSymbols()) {
+                    // We want to use Greek symbols, so go through the value of
+                    // the child node (from the end) and replace whatever can be
+                    // replaced with Greek symbols
+                    // Note: we start from the end because it makes the
+                    //       algorithm (since replacing a string of character
+                    //       with a Greek symbol will shorten the value of our
+                    //       child node)...
+
+                    int fromPos = domChildNodeValue.size();
+                    int startPos;
+                    int endPos;
+                    QString domChildNodeSubValue;
+
+                    while (fromPos != -1) {
+                        endPos = domChildNodeValue.lastIndexOf(QRegularExpression("[^_]"), fromPos);
+
+                        if (endPos != -1) {
+                            startPos = domChildNodeValue.lastIndexOf(QRegularExpression("_"), endPos);
+
+                            domChildNodeSubValue = domChildNodeValue.mid(startPos+1, endPos-startPos);
+
+                            domChildNodeValue.replace(startPos+1, endPos-startPos, greekSymbolize(domChildNodeSubValue));
+
+                            fromPos = startPos;
+                        } else {
+                            fromPos = -1;
+                        }
+                    }
+
+                    domNode.firstChild().setNodeValue(domChildNodeValue);
                 }
 
                 processDomNode = false;
