@@ -102,6 +102,7 @@ private:
 
     bool mViewerOptimiseFontSizeEnabled;
     bool mViewerDigitGroupingEnabled;
+    bool mViewerGreekSymbolsEnabled;
 
     QMap<QString, QString> mPresentationMathmlEquations;
 
@@ -121,6 +122,7 @@ private Q_SLOTS:
 
     void optimiseFontSizeChanged(const bool &pEnabled);
     void digitGroupingChanged(const bool &pEnabled);
+    void greekSymbolsChanged(const bool &pEnabled);
 
     void xslTransformationDone(const QString &pInput, const QString &pOutput);
 };

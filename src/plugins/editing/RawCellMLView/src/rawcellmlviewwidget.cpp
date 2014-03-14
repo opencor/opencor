@@ -60,6 +60,7 @@ RawCellmlViewWidget::RawCellmlViewWidget(QWidget *pParent) :
     mEditorZoomLevel(0),
     mViewerOptimiseFontSizeEnabled(true),
     mViewerDigitGroupingEnabled(true),
+    mViewerGreekSymbolsEnabled(true),
     mPresentationMathmlEquations(QMap<QString, QString>())
 {
     // Set up the GUI
@@ -96,6 +97,7 @@ static const auto SettingsEditingWidgetSizes            = QStringLiteral("Editin
 static const auto SettingsEditorZoomLevel               = QStringLiteral("EditorZoomLevel");
 static const auto SettingsViewerOptimiseFontSizeEnabled = QStringLiteral("ViewerOptimiseFontSizeEnabled");
 static const auto SettingsViewerDigitGroupingEnabled    = QStringLiteral("ViewerDigitGroupingEnabled");
+static const auto SettingsViewerGreekSymbolsEnabled     = QStringLiteral("ViewerGreekSymbolsEnabled");
 
 //==============================================================================
 
@@ -119,6 +121,7 @@ void RawCellmlViewWidget::loadSettings(QSettings *pSettings)
 
     mViewerOptimiseFontSizeEnabled = pSettings->value(SettingsViewerOptimiseFontSizeEnabled, true).toBool();
     mViewerDigitGroupingEnabled = pSettings->value(SettingsViewerDigitGroupingEnabled, true).toBool();
+    mViewerGreekSymbolsEnabled = pSettings->value(SettingsViewerGreekSymbolsEnabled, true).toBool();
 }
 
 //==============================================================================
@@ -134,6 +137,7 @@ void RawCellmlViewWidget::saveSettings(QSettings *pSettings) const
 
     pSettings->setValue(SettingsViewerOptimiseFontSizeEnabled, mViewerOptimiseFontSizeEnabled);
     pSettings->setValue(SettingsViewerDigitGroupingEnabled, mViewerDigitGroupingEnabled);
+    pSettings->setValue(SettingsViewerGreekSymbolsEnabled, mViewerGreekSymbolsEnabled);
 }
 
 //==============================================================================
@@ -196,6 +200,8 @@ void RawCellmlViewWidget::initialize(const QString &pFileName)
                 this, SLOT(optimiseFontSizeChanged(const bool &)));
         connect(mEditingWidget->viewer(), SIGNAL(digitGroupingChanged(const bool &)),
                 this, SLOT(digitGroupingChanged(const bool &)));
+        connect(mEditingWidget->viewer(), SIGNAL(greekSymbolsChanged(const bool &)),
+                this, SLOT(greekSymbolsChanged(const bool &)));
 
         // Keep track of our editing widget and add it to ourselves
 
@@ -208,6 +214,7 @@ void RawCellmlViewWidget::initialize(const QString &pFileName)
 
     mEditingWidget->viewer()->setOptimiseFontSize(mViewerOptimiseFontSizeEnabled);
     mEditingWidget->viewer()->setDigitGrouping(mViewerDigitGroupingEnabled);
+    mEditingWidget->viewer()->setGreekSymbols(mViewerGreekSymbolsEnabled);
 
     // Show/hide our editing widgets and adjust our sizes
 
@@ -535,6 +542,15 @@ void RawCellmlViewWidget::digitGroupingChanged(const bool &pEnabled)
     // Keep track of our editing widget's viewer settings
 
     mViewerDigitGroupingEnabled = pEnabled;
+}
+
+//==============================================================================
+
+void RawCellmlViewWidget::greekSymbolsChanged(const bool &pEnabled)
+{
+    // Keep track of our editing widget's viewer settings
+
+    mViewerGreekSymbolsEnabled = pEnabled;
 }
 
 //==============================================================================

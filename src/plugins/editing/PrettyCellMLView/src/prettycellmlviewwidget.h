@@ -95,6 +95,7 @@ private:
 
     bool mViewerOptimiseFontSizeEnabled;
     bool mViewerDigitGroupingEnabled;
+    bool mViewerGreekSymbolsEnabled;
 
 private Q_SLOTS:
     void splitterMoved();
@@ -102,6 +103,7 @@ private Q_SLOTS:
 
     void optimiseFontSizeChanged(const bool &pEnabled);
     void digitGroupingChanged(const bool &pEnabled);
+    void greekSymbolsChanged(const bool &pEnabled);
 };
 
 //==============================================================================
