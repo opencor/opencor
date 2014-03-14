@@ -58,6 +58,7 @@ ADD_EXECUTABLE(${PROJECT_NAME}
 
 QT5_USE_MODULES(${PROJECT_NAME}
     Core
+    XmlPatterns
 )
 
 # Additional linker settings
