@@ -31,6 +31,7 @@ specific language governing permissions and limitations under the License.
 #include <QCursor>
 #include <QDomDocument>
 #include <QIcon>
+#include <QMap>
 #include <QMenu>
 #include <QPainter>
 #include <QPaintEvent>
@@ -50,6 +51,10 @@ namespace Viewer {
 
 //==============================================================================
 
+static QMap<QString, QString> GreekSymbols;
+
+//==============================================================================
+
 ViewerWidget::ViewerWidget(QWidget *pParent) :
     Widget(pParent),
     mMathmlDocument(QwtMathMLDocument()),
@@ -58,6 +63,35 @@ ViewerWidget::ViewerWidget(QWidget *pParent) :
     mContents(QString()),
     mError(false)
 {
+    // Populate our table of Greek symbols, if needed
+
+    if (GreekSymbols.isEmpty()) {
+        GreekSymbols.insert("alpha", "α");
+        GreekSymbols.insert("beta", "β");
+        GreekSymbols.insert("gamma", "γ");
+        GreekSymbols.insert("delta", "δ");
+        GreekSymbols.insert("epsilon", "ε");
+        GreekSymbols.insert("zeta", "ζ");
+        GreekSymbols.insert("eta", "η");
+        GreekSymbols.insert("theta", "θ");
+        GreekSymbols.insert("iota", "ι");
+        GreekSymbols.insert("kappa", "κ");
+        GreekSymbols.insert("lambda", "λ");
+        GreekSymbols.insert("mu", "μ");
+        GreekSymbols.insert("nu", "ν");
+        GreekSymbols.insert("xi", "ξ");
+        GreekSymbols.insert("omicron", "ο");
+        GreekSymbols.insert("pi", "π");
+        GreekSymbols.insert("rho", "ρ");
+        GreekSymbols.insert("sigma", "σ");
+        GreekSymbols.insert("tau", "τ");
+        GreekSymbols.insert("upsilon", "υ");
+        GreekSymbols.insert("phi", "φ");
+        GreekSymbols.insert("chi", "χ");
+        GreekSymbols.insert("psi", "ψ");
+        GreekSymbols.insert("omega", "ω");
+    }
+
     // Create our context menu
 
     mContextMenu = new QMenu(this);
@@ -429,6 +463,15 @@ QAction * ViewerWidget::newAction(QObject *pParent)
 
 //==============================================================================
 
+QString ViewerWidget::greekSymbolize(const QString &pValue) const
+{
+    // Convert the given value into a Greek symbol, if possible
+
+    return GreekSymbols.value(pValue.toLower(), pValue);
+}
+
+//==============================================================================
+
 QDomNode ViewerWidget::newMiNode(const QDomNode &pDomNode,
                                  const QString &pValue) const
 {
@@ -439,7 +482,7 @@ QDomNode ViewerWidget::newMiNode(const QDomNode &pDomNode,
 
     res.setAttribute("mathvariant", "italic");
 
-    res.appendChild(pDomNode.ownerDocument().createTextNode(pValue));
+    res.appendChild(pDomNode.ownerDocument().createTextNode(greekSymbols()?greekSymbolize(pValue):pValue));
 
     return res;
 }
