@@ -94,16 +94,16 @@ private:
     int mEditorZoomLevel;
 
     bool mViewerOptimiseFontSizeEnabled;
-    bool mViewerDigitGroupingEnabled;
     bool mViewerGreekSymbolsEnabled;
+    bool mViewerDigitGroupingEnabled;
 
 private Q_SLOTS:
     void splitterMoved();
     void editorZoomLevelChanged();
 
     void optimiseFontSizeChanged(const bool &pEnabled);
-    void digitGroupingChanged(const bool &pEnabled);
     void greekSymbolsChanged(const bool &pEnabled);
+    void digitGroupingChanged(const bool &pEnabled);
 };
 
 //==============================================================================
