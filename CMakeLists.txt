@@ -189,7 +189,7 @@ SET(PLUGINS
     # Selectable plugins
 
     editing/CellMLAnnotationView
-#    editing/PrettyCellMLView
+    editing/PrettyCellMLView
     editing/RawCellMLView
     editing/RawView
 
