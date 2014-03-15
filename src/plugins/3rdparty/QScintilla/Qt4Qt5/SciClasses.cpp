@@ -66,6 +66,7 @@ void QsciSciCallTip::paintEvent(QPaintEvent *)
     QPainter p(this);
 
     surfaceWindow->Init(&p);
+    surfaceWindow->SetUnicodeMode(sci->CodePage() == SC_CP_UTF8);
     sci->ct.PaintCT(surfaceWindow);
 
     delete surfaceWindow;
