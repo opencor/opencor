@@ -36,4 +36,5 @@ ADD_PLUGIN(CoreEditing
         QtGui
         QtNetwork
         QtWidgets
+        QtXmlPatterns
 )

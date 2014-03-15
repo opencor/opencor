@@ -47,4 +47,5 @@ ADD_PLUGIN(Help
         QtWebKit
         QtWebKitWidgets
         QtWidgets
+        QtXmlPatterns
 )

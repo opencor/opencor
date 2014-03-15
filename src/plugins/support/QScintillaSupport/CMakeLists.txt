@@ -33,4 +33,5 @@ ADD_PLUGIN(QScintillaSupport
         QtGui
         QtNetwork
         QtWidgets
+        QtXmlPatterns
 )

@@ -39,4 +39,5 @@ ADD_PLUGIN(CellMLModelRepository
         QtWebKit
         QtWebKitWidgets
         QtWidgets
+        QtXmlPatterns
 )

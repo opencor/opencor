@@ -30,4 +30,5 @@ ADD_PLUGIN(FileBrowser
         QtGui
         QtNetwork
         QtWidgets
+        QtXmlPatterns
 )

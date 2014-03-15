@@ -75,6 +75,7 @@ ADD_PLUGIN(CellMLAnnotationView
         QtWebKit
         QtWebKitWidgets
         QtWidgets
+        QtXmlPatterns
     EXTERNAL_BINARIES
         ${CELLML_API_EXTERNAL_BINARIES}
 )

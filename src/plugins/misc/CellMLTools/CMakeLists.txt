@@ -43,6 +43,7 @@ ADD_PLUGIN(CellMLTools
         QtGui
         QtNetwork
         QtWidgets
+        QtXmlPatterns
     EXTERNAL_BINARIES
         ${CELLML_API_EXTERNAL_BINARIES}
     TESTS

@@ -80,4 +80,5 @@ ADD_PLUGIN(Core
         QtGui
         QtNetwork
         QtWidgets
+        QtXmlPatterns
 )

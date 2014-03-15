@@ -32,4 +32,5 @@ ADD_PLUGIN(Viewer
         QtSvg
         QtWidgets
         QtXml
+        QtXmlPatterns
 )

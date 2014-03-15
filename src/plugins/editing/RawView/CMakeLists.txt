@@ -36,4 +36,5 @@ ADD_PLUGIN(RawView
         QtGui
         QtNetwork
         QtWidgets
+        QtXmlPatterns
 )

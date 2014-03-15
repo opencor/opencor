@@ -59,6 +59,7 @@ ADD_PLUGIN(RawCellMLView
         QtSvg
         QtWidgets
         QtXml
+        QtXmlPatterns
     EXTERNAL_BINARIES
         ${CELLML_API_EXTERNAL_BINARIES}
 )
