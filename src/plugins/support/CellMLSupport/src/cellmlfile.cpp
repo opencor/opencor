@@ -22,6 +22,7 @@ specific language governing permissions and limitations under the License.
 #include "cellmlfile.h"
 #include "cellmlfilecellml10exporter.h"
 #include "cellmlfilecellml11exporter.h"
+#include "cliutils.h"
 #include "filemanager.h"
 
 //==============================================================================
@@ -65,7 +66,7 @@ namespace CellMLSupport {
 //==============================================================================
 
 CellmlFile::CellmlFile(const QString &pFileName) :
-    mFileName(pFileName),
+    mFileName(Core::nativeCanonicalFileName(pFileName)),
     mModel(0),
     mRdfApiRepresentation(0),
     mRdfDataSource(0),
