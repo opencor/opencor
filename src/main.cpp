@@ -41,7 +41,7 @@ specific language governing permissions and limitations under the License.
 
 void removeGlobalInstances()
 {
-    // Remove all the 'global' information shared among OpenCOR and the
+    // Remove all the 'global' information shared between OpenCOR and its
     // different plugins
 
     QSettings(OpenCOR::SettingsOrganization, OpenCOR::SettingsApplication).remove("Global");
@@ -58,7 +58,7 @@ int main(int pArgC, char *pArgV[])
 
     removeGlobalInstances();
 
-    // Create the application
+    // Create our application
 
     SharedTools::QtSingleApplication *app = new SharedTools::QtSingleApplication(QFileInfo(pArgV[0]).baseName(),
                                                                                  pArgC, pArgV);
@@ -104,11 +104,11 @@ int main(int pArgC, char *pArgV[])
 #endif
 
     // Send a message (containing the arguments that were passed to this
-    // instance of OpenCOR minus the first argument since it corresponds to the
-    // full path to the executable which we are not interested in) to the
-    // 'official' instance of OpenCOR, should there be one. If there is no
-    // 'official' instance of OpenCOR, then just carry on as normal, otherwise
-    // exit since we only want one instance of OpenCOR at any given time
+    // instance of OpenCOR minus the first one since it corresponds to the full
+    // path to our executable, which we are not interested in) to our 'official'
+    // instance of OpenCOR, should there be one. If there is no none, then just
+    // carry on as normal, otherwise exit since we want only one instance of
+    // OpenCOR at any given time
 
     QStringList appArguments = app->arguments();
 
@@ -132,20 +132,20 @@ int main(int pArgC, char *pArgV[])
                         +QDir::separator()+"plugins");
 #endif
 
-    // Create the main window
+    // Create our main window
 
     OpenCOR::MainWindow *win = new OpenCOR::MainWindow(app);
 
-    // Keep track of the main window (required by QtSingleApplication so that it
+    // Keep track of our main window (required by QtSingleApplication so that it
     // can do what it's supposed to be doing)
 
     app->setActivationWindow(win);
 
-    // Handle the arguments
+    // Handle our arguments
 
     win->handleArguments(arguments);
 
-    // Show the main window
+    // Show our main window
 
     win->show();
 
@@ -161,17 +161,17 @@ int main(int pArgC, char *pArgV[])
 
     win->showSelf();
 
-    // Execute the application
+    // Execute our application
 
     res = app->exec();
 
-    // Keep track of the application file and directory paths (in case we need
+    // Keep track of our application file and directory paths (in case we need
     // to restart OpenCOR)
 
     QString appFilePath = app->applicationFilePath();
     QString appDirPath  = app->applicationDirPath();
 
-    // Delete the main window
+    // Delete our main window
 
     delete win;
 
@@ -194,21 +194,21 @@ int main(int pArgC, char *pArgV[])
     QWebSettings::clearMemoryCaches();
 #endif
 
-    // Delete the application
+    // Delete our application
 
     delete app;
 
-    // We are done with the execution of the application, so now the question is
+    // We are done with the execution of our application, so now the question is
     // whether we need to restart
     // Note: we do this here rather than 'within' the GUI because once we have
     //       launched a new instance of OpenCOR, we want this instance of
     //       OpenCOR to finish as soon as possible which will be the case here
     //       since all that remains to be done is to return the result of the
-    //       execution of the application...
+    //       execution of our application...
 
     if (res == OpenCOR::NeedRestart)
-        // Restart OpenCOR, but without providing any of the argument with which
-        // OpenCOR was originally started, since we want to reset everything
+        // Restart OpenCOR, but without providing any of the arguments that were
+        // originally passed to us since we want to reset everything
 
         QProcess::startDetached(appFilePath, QStringList(), appDirPath);
 
