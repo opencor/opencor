@@ -39,7 +39,7 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-void removeInstances()
+void removeGlobalInstances()
 {
     // Remove all the 'global' information shared among OpenCOR and the
     // different plugins
@@ -52,6 +52,11 @@ void removeInstances()
 int main(int pArgC, char *pArgV[])
 {
     int res;
+
+    // Remove all 'global' instances, in case OpenCOR previously crashed or
+    // something (and therefore didn't remove all of them before quitting)
+
+    removeGlobalInstances();
 
     // Create the application
 
@@ -127,11 +132,6 @@ int main(int pArgC, char *pArgV[])
                         +QDir::separator()+"plugins");
 #endif
 
-    // Remove all 'global' instances, in case OpenCOR previously crashed or
-    // something (and therefore didn't remove all of them before quitting)
-
-    removeInstances();
-
     // Create the main window
 
     OpenCOR::MainWindow *win = new OpenCOR::MainWindow(app);
@@ -178,7 +178,7 @@ int main(int pArgC, char *pArgV[])
     // Remove all 'global' instances that were created and used during this
     // session
 
-    removeInstances();
+    removeGlobalInstances();
 
     // If we use QtWebKit, and QWebPage in particular, then leak messages will
     // get generated on Windows when leaving OpenCOR. This is because an object
