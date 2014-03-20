@@ -11,10 +11,10 @@
    </rect>
   </property>
   <layout class="QHBoxLayout" name="layout">
-   <property name="spacing">
+   <property name="margin">
     <number>0</number>
    </property>
-   <property name="margin">
+   <property name="spacing">
     <number>0</number>
    </property>
   </layout>

@@ -37,16 +37,7 @@
        <item>
         <widget class="QWidget" name="detailsWidget" native="true">
          <layout class="QFormLayout" name="detailsFormLayout">
-          <property name="leftMargin">
-           <number>0</number>
-          </property>
-          <property name="topMargin">
-           <number>0</number>
-          </property>
-          <property name="rightMargin">
-           <number>0</number>
-          </property>
-          <property name="bottomMargin">
+          <property name="spacing">
            <number>0</number>
           </property>
           <item row="0" column="0">
