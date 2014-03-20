@@ -33,6 +33,7 @@ specific language governing permissions and limitations under the License.
 #include <QFileInfo>
 #include <QPointer>
 #include <QProcess>
+#include <QSettings>
 
 //==============================================================================
 
