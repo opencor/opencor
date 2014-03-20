@@ -179,6 +179,7 @@ SET(PLUGINS
 
     # Plugins that extend some third-party libraries
 
+    widget/Editor
     widget/Viewer
 
     # Plugins that have dependencies on others
