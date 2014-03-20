@@ -123,9 +123,6 @@ int main(int pArgC, char *pArgV[])
 
         delete app;
 
-        removeGlobalInstances();
-
-
         return 0;
     }
 
@@ -205,6 +202,11 @@ int main(int pArgC, char *pArgV[])
     // Delete our application
 
     delete app;
+
+    // Remove all 'global' instances that were created and used during this
+    // session
+
+    removeGlobalInstances();
 
     // We are done with the execution of our application, so now the question is
     // whether we need to restart

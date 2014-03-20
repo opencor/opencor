@@ -36,6 +36,16 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+void removeGlobalInstances()
+{
+    // Remove all the 'global' information shared between OpenCOR and its
+    // different plugins
+
+    QSettings(OpenCOR::SettingsOrganization, OpenCOR::SettingsApplication).remove("Global");
+}
+
+//==============================================================================
+
 void error(QCoreApplication *pApp, const QString &pMsg)
 {
     std::cout << qPrintable(OpenCOR::Core::version(pApp)) << std::endl;
@@ -47,7 +57,12 @@ void error(QCoreApplication *pApp, const QString &pMsg)
 
 int main(int pArgC, char *pArgV[])
 {
-    // Create the application
+    // Remove all 'global' instances, in case OpenCOR previously crashed or
+    // something (and therefore didn't remove all of them before quitting)
+
+    removeGlobalInstances();
+
+    // Create our application
 
     QCoreApplication *app = new QCoreApplication(pArgC, pArgV);
 
@@ -92,6 +107,11 @@ int main(int pArgC, char *pArgV[])
     // Release some memory
 
     delete app;
+
+    // Remove all 'global' instances that were created and used during this
+    // session
+
+    removeGlobalInstances();
 
     // We are done, so...
 
