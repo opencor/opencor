@@ -59,7 +59,7 @@ void Tests::cliCellmlExportTests()
 {
     // Export a CellML 1.1 file to CellML 1.0
 
-    QString inFileName = QFileInfo("../src/plugins/misc/CellMLTools/tests/data/experiments/periodic-stimulus.xml").canonicalFilePath();
+    QString inFileName = "../src/plugins/misc/CellMLTools/tests/data/experiments/periodic-stimulus.xml";
     QString outFileName = "actual.out";
 
     QStringList a = OpenCOR::runCli(QStringList() << "-c" << "CellMLTools::export" << inFileName << outFileName << "cellml_1_0");

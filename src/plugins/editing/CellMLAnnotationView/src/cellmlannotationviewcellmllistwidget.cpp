@@ -21,6 +21,7 @@ specific language governing permissions and limitations under the License.
 
 #include "cellmlannotationviewcellmllistwidget.h"
 #include "cellmlannotationvieweditingwidget.h"
+#include "cliutils.h"
 #include "filemanager.h"
 #include "treeviewwidget.h"
 
@@ -1063,7 +1064,7 @@ void CellmlAnnotationViewCellmlListWidget::on_actionOpenImport_triggered()
 {
     // Ask OpenCOR to open the imported file
 
-    static_cast<SharedTools::QtSingleApplication *>(qApp)->handleAction("gui://openFile/"+QFileInfo(QFileInfo(mCellmlFile->fileName()).canonicalPath()+QDir::separator()+currentCellmlElementItem()->text()).canonicalFilePath());
+    static_cast<SharedTools::QtSingleApplication *>(qApp)->handleAction("gui://openFile/"+Core::nativeCanonicalFileName(QFileInfo(mCellmlFile->fileName()).canonicalPath()+QDir::separator()+currentCellmlElementItem()->text()));
 }
 
 //==============================================================================
