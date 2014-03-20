@@ -164,15 +164,6 @@ QScintillaWidget::QScintillaWidget(const QString &pContents,
 
 //==============================================================================
 
-QScintillaWidget::~QScintillaWidget()
-{
-    // Delete some internal objects
-
-    delete mContextMenu;
-}
-
-//==============================================================================
-
 QMenu * QScintillaWidget::contextMenu() const
 {
     // Return our context menu

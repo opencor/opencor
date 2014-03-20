@@ -29,6 +29,7 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include <QFont>
+#include <QString>
 
 //==============================================================================
 
@@ -37,6 +38,7 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 class QLabel;
+class QMenu;
 
 //==============================================================================
 
@@ -52,7 +54,6 @@ class QSCINTILLASUPPORT_EXPORT QScintillaWidget : public QsciScintilla
 public:
     explicit QScintillaWidget(const QString &pContents, const bool &pReadOnly,
                               QsciLexer *pLexer, QWidget *pParent);
-    ~QScintillaWidget();
 
     QMenu * contextMenu() const;
     void setContextMenu(const QList<QAction *> &pContextMenuActions);
