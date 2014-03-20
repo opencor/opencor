@@ -51,8 +51,6 @@ void removeGlobalInstances()
 
 int main(int pArgC, char *pArgV[])
 {
-    int res;
-
     // Remove all 'global' instances, in case OpenCOR previously crashed or
     // something (and therefore didn't remove all of them before quitting)
 
@@ -67,9 +65,6 @@ int main(int pArgC, char *pArgV[])
 
     OpenCOR::initApplication(app);
 
-#if defined(Q_OS_WIN)
-    // Do nothing...
-#elif defined(Q_OS_LINUX) || defined(Q_OS_MAC)
     // Try to run OpenCOR as a CLI application
     // Note: in the case of Windows, we have two binaries (.com and .exe which
     //       are for the CLI and GUI versions of OpenCOR, respectively). This
@@ -82,10 +77,17 @@ int main(int pArgC, char *pArgV[])
     //       hence the ../windows/main.cpp file which is used to generate the
     //       CLI version of OpenCOR...
 
+#if defined(Q_OS_WIN)
+    // Do nothing...
+#elif defined(Q_OS_LINUX) || defined(Q_OS_MAC)
+    int res;
+
     if (OpenCOR::cliApplication(app, &res)) {
         // OpenCOR was run as a CLI application, so...
 
         delete app;
+
+        removeGlobalInstances();
 
         return res;
     }
@@ -120,6 +122,9 @@ int main(int pArgC, char *pArgV[])
         app->sendMessage(arguments);
 
         delete app;
+
+        removeGlobalInstances();
+
 
         return 0;
     }
@@ -163,6 +168,9 @@ int main(int pArgC, char *pArgV[])
 
     // Execute our application
 
+#ifdef Q_OS_WIN
+    int
+#endif
     res = app->exec();
 
     // Keep track of our application file and directory paths (in case we need
