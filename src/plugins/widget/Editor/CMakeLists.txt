@@ -19,8 +19,6 @@ ADD_PLUGIN(Editor
         src/editorplugin.h
     UIS
         src/editorwidget.ui
-    DEFINITIONS
-        QSCINTILLA_DLL
     INCLUDE_DIRS
         src
     PLUGINS
