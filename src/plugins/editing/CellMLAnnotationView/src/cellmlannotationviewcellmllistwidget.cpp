@@ -334,7 +334,7 @@ CellmlAnnotationViewCellmlListWidget::CellmlAnnotationViewCellmlListWidget(Cellm
     // Create and customise our tree view widget which will contain all of the
     // imports, units, components, groups and connections from a CellML file
 
-    mTreeViewWidget = new Core::TreeViewWidget(pParent);
+    mTreeViewWidget = new Core::TreeViewWidget(this);
     mModel          = new QStandardItemModel(mTreeViewWidget);
     mItemDelegate   = new CellmlAnnotationViewCellmlElementItemDelegate();
 

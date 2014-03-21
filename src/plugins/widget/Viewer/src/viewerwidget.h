@@ -95,7 +95,7 @@ private:
     QAction *mGreekSymbolsAction;
     QAction *mDigitGroupingAction;
 
-    QAction * newAction(QObject *pParent);
+    QAction * newAction();
 
     QString greekSymbolize(const QString &pValue) const;
 

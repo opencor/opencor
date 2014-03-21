@@ -178,8 +178,7 @@ SingleCellViewWidget::SingleCellViewWidget(SingleCellViewPlugin *pPluginParent,
 
     // Create and add our invalid simulation message widget
 
-    mInvalidModelMessageWidget = new Core::UserMessageWidget(":/oxygen/actions/help-about.png",
-                                                             pParent);
+    mInvalidModelMessageWidget = new Core::UserMessageWidget(":/oxygen/actions/help-about.png", this);
 
     mGui->layout->addWidget(mInvalidModelMessageWidget);
 

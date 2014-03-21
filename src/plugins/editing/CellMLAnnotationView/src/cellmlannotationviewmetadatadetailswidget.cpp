@@ -61,8 +61,7 @@ CellmlAnnotationViewMetadataDetailsWidget::CellmlAnnotationViewMetadataDetailsWi
 
     // Create our unsupported metadata message widget
 
-    mCategoryMessage = new Core::UserMessageWidget(":/oxygen/actions/help-about.png",
-                                                   pParent);
+    mCategoryMessage = new Core::UserMessageWidget(":/oxygen/actions/help-about.png", this);
     mBorderedCategoryMessage = new Core::BorderedWidget(mCategoryMessage,
                                                         false, true, true, false);
 
@@ -71,8 +70,7 @@ CellmlAnnotationViewMetadataDetailsWidget::CellmlAnnotationViewMetadataDetailsWi
 
     // Create our unsupported metadata message widget
 
-    mUnsupportedMetadataMessage = new Core::UserMessageWidget(":/oxygen/actions/help-about.png",
-                                                              pParent);
+    mUnsupportedMetadataMessage = new Core::UserMessageWidget(":/oxygen/actions/help-about.png", this);
     mBorderedUnsupportedMetadataMessage = new Core::BorderedWidget(mUnsupportedMetadataMessage,
                                                                    false, true, true, false);
 
@@ -81,13 +79,13 @@ CellmlAnnotationViewMetadataDetailsWidget::CellmlAnnotationViewMetadataDetailsWi
 
     // Create our splitter widget
 
-    mSplitter = new QSplitter(Qt::Vertical, pParent);
+    mSplitter = new QSplitter(Qt::Vertical, this);
 
     // Create our details widgets
 
     mMetadataEditDetails = new CellmlAnnotationViewMetadataEditDetailsWidget(pParent);
     mMetadataViewDetails = new CellmlAnnotationViewMetadataViewDetailsWidget(pParent);
-    mWebView             = new QWebView(pParent);
+    mWebView             = new QWebView(this);
 
     mWebView->setAcceptDrops(false);
     mWebView->setContextMenuPolicy(Qt::NoContextMenu);

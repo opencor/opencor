@@ -96,10 +96,10 @@ ViewerWidget::ViewerWidget(QWidget *pParent) :
 
     mContextMenu = new QMenu(this);
 
-    mOptimiseFontSizeAction = newAction(this);
-    mSubscriptsAction = newAction(this);
-    mGreekSymbolsAction = newAction(this);
-    mDigitGroupingAction = newAction(this);
+    mOptimiseFontSizeAction = newAction();
+    mSubscriptsAction = newAction();
+    mGreekSymbolsAction = newAction();
+    mDigitGroupingAction = newAction();
 
     connect(mOptimiseFontSizeAction, SIGNAL(triggered()),
             this, SLOT(update()));
@@ -449,11 +449,11 @@ QSize ViewerWidget::sizeHint() const
 
 //==============================================================================
 
-QAction * ViewerWidget::newAction(QObject *pParent)
+QAction * ViewerWidget::newAction()
 {
     // Create and return a checkable and checked action
 
-    QAction *res = new QAction(pParent);
+    QAction *res = new QAction(this);
 
     res->setCheckable(true);
     res->setChecked(true);
