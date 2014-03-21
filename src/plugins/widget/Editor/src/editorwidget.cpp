@@ -20,6 +20,7 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include "editorwidget.h"
+#include "qscintillawidget.h"
 
 //==============================================================================
 
@@ -32,10 +33,15 @@ namespace Editor {
 
 //==============================================================================
 
-EditorWidget::EditorWidget(QWidget *pParent) :
+EditorWidget::EditorWidget(const QString &pContents, const bool &pReadOnly,
+                           QsciLexer *pLexer, QWidget *pParent) :
     QWidget(pParent),
     mGui(new Ui::EditorWidget)
 {
+    // Create our editor
+
+    mEditor = new QScintillaSupport::QScintillaWidget(pContents, pReadOnly,
+                                                      pLexer, this);
 }
 
 //==============================================================================

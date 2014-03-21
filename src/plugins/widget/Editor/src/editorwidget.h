@@ -28,11 +28,12 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#include <QString>
 #include <QWidget>
 
 //==============================================================================
 
-class QsciScintilla;
+class QsciLexer;
 
 //==============================================================================
 
@@ -43,6 +44,15 @@ namespace Ui {
 //==============================================================================
 
 namespace OpenCOR {
+
+//==============================================================================
+
+namespace QScintillaSupport {
+    class QScintillaWidget;
+}   // namespace QScintillaSupport
+
+//==============================================================================
+
 namespace Editor {
 
 //==============================================================================
@@ -52,10 +62,13 @@ class EDITOR_EXPORT EditorWidget : public QWidget
     Q_OBJECT
 
 public:
-    explicit EditorWidget(QWidget *pParent);
+    explicit EditorWidget(const QString &pContents, const bool &pReadOnly,
+                          QsciLexer *pLexer, QWidget *pParent);
 
 private:
     Ui::EditorWidget *mGui;
+
+    QScintillaSupport::QScintillaWidget *mEditor;
 };
 
 //==============================================================================
