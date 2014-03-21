@@ -137,7 +137,7 @@ void RawViewPlugin::handleAction(const QUrl &pUrl)
 // Editing interface
 //==============================================================================
 
-QScintillaSupport::QScintillaWidget * RawViewPlugin::editor(const QString &pFileName) const
+Editor::EditorWidget * RawViewPlugin::editor(const QString &pFileName) const
 {
     // Return the requested editor
 
@@ -240,7 +240,7 @@ bool RawViewPlugin::saveFile(const QString &pOldFileName,
 {
     // Ask our raw view widget to save the given file
 
-    QScintillaSupport::QScintillaWidget *editor = mViewWidget->editor(pOldFileName);
+    Editor::EditorWidget *editor = mViewWidget->editor(pOldFileName);
     bool res = Core::writeTextToFile(pNewFileName, editor->contents());
 
     if (res)

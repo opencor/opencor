@@ -37,6 +37,7 @@ ADD_PLUGIN(CoreCellMLEditing
         ${LLVM_DEFINITIONS}
     PLUGINS
         Core
+        Editor
         ${LLVM_PLUGIN}
         QScintilla
         QScintillaSupport

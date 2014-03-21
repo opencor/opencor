@@ -139,7 +139,7 @@ void RawCellMLViewPlugin::handleAction(const QUrl &pUrl)
 // Editing interface
 //==============================================================================
 
-QScintillaSupport::QScintillaWidget * RawCellMLViewPlugin::editor(const QString &pFileName) const
+Editor::EditorWidget * RawCellMLViewPlugin::editor(const QString &pFileName) const
 {
     // Return the requested editor
 
@@ -249,7 +249,7 @@ bool RawCellMLViewPlugin::saveFile(const QString &pOldFileName,
 {
     // Ask our raw CellML view widget to save the given file
 
-    QScintillaSupport::QScintillaWidget *editor = mViewWidget->editor(pOldFileName);
+    Editor::EditorWidget *editor = mViewWidget->editor(pOldFileName);
     bool res = Core::writeTextToFile(pNewFileName, editor->contents());
 
     if (res)

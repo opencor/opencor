@@ -42,9 +42,9 @@ namespace OpenCOR {
 
 //==============================================================================
 
-namespace QScintillaSupport {
-    class QScintillaWidget;
-}   // namespace QScintillaSupport
+namespace Editor {
+    class EditorWidget;
+}   // namespace Editor
 
 //==============================================================================
 
@@ -71,20 +71,20 @@ public:
     void fileReloaded(const QString &pFileName);
     void fileRenamed(const QString &pOldFileName, const QString &pNewFileName);
 
-    QScintillaSupport::QScintillaWidget * editor(const QString &pFileName) const;
+    Editor::EditorWidget * editor(const QString &pFileName) const;
 
     virtual QList<QWidget *> statusBarWidgets() const;
 
 private:
     Ui::RawViewWidget *mGui;
 
-    QScintillaSupport::QScintillaWidget *mEditor;
-    QMap<QString, QScintillaSupport::QScintillaWidget *> mEditors;
+    Editor::EditorWidget *mEditor;
+    QMap<QString, Editor::EditorWidget *> mEditors;
 
     int mEditorZoomLevel;
 
 private Q_SLOTS:
-    void editorZoomLevelChanged();
+    void editorZoomLevelChanged(const int &pZoomLevel);
 };
 
 //==============================================================================

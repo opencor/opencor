@@ -20,8 +20,8 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include "corecellmleditingwidget.h"
+#include "editorwidget.h"
 #include "filemanager.h"
-#include "qscintillawidget.h"
 #include "rawcellmlviewwidget.h"
 #include "viewerwidget.h"
 #include "xsltransformer.h"
@@ -190,12 +190,12 @@ void RawCellmlViewWidget::initialize(const QString &pFileName)
         connect(mEditingWidget, SIGNAL(splitterMoved(int, int)),
                 this, SLOT(splitterMoved()));
 
-        connect(mEditingWidget->editor(), SIGNAL(SCN_ZOOM()),
-                this, SLOT(editorZoomLevelChanged()));
+        connect(mEditingWidget->editor(), SIGNAL(zoomLevelChanged(const int &)),
+                this, SLOT(editorZoomLevelChanged(const int &)));
 
         connect(mEditingWidget->editor(), SIGNAL(textChanged()),
                 this, SLOT(updateViewer()));
-        connect(mEditingWidget->editor(), SIGNAL(cursorPositionChanged(int, int)),
+        connect(mEditingWidget->editor(), SIGNAL(cursorPositionChanged(const int &, const int &)),
                 this, SLOT(updateViewer()));
 
         // Keep track of our editing widget's viewer settings
@@ -231,7 +231,7 @@ void RawCellmlViewWidget::initialize(const QString &pFileName)
             // its size and zoom level
 
             editingWidget->setSizes(mEditingWidgetSizes);
-            editingWidget->editor()->zoomTo(mEditorZoomLevel);
+            editingWidget->editor()->setZoomLevel(mEditorZoomLevel);
 
             editingWidget->show();
         } else {
@@ -303,7 +303,7 @@ void RawCellmlViewWidget::fileRenamed(const QString &pOldFileName,
 
 //==============================================================================
 
-QScintillaSupport::QScintillaWidget * RawCellmlViewWidget::editor(const QString &pFileName) const
+Editor::EditorWidget * RawCellmlViewWidget::editor(const QString &pFileName) const
 {
     // Return the requested editor
 
@@ -442,12 +442,12 @@ void RawCellmlViewWidget::splitterMoved()
 
 //==============================================================================
 
-void RawCellmlViewWidget::editorZoomLevelChanged()
+void RawCellmlViewWidget::editorZoomLevelChanged(const int &pZoomLevel)
 {
     // One of our editors had its zoom level changed, so keep track of the new
     // zoom level
 
-    mEditorZoomLevel = qobject_cast<QScintillaSupport::QScintillaWidget *>(sender())->SendScintilla(QsciScintillaBase::SCI_GETZOOM);
+    mEditorZoomLevel = pZoomLevel;
 }
 
 //==============================================================================
@@ -466,7 +466,7 @@ void RawCellmlViewWidget::updateViewer()
     static const QString StartMathTag = "<math ";
     static const QByteArray EndMathTag = "</math>";
 
-    QScintillaSupport::QScintillaWidget *editor = mEditingWidget->editor();
+    Editor::EditorWidget *editor = mEditingWidget->editor();
     int crtPos = editor->currentPosition();
 
     int crtStartMathTagPos = editor->findTextInRange(crtPos+StartMathTag.length(), 0, StartMathTag);

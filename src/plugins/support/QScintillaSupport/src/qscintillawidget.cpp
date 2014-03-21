@@ -276,6 +276,15 @@ bool QScintillaWidget::isSelectAllAvailable() const
 
 //==============================================================================
 
+void QScintillaWidget::del()
+{
+    // Delete the selected text, if any
+
+    SendScintilla(QsciScintillaBase::SCI_CLEAR);
+}
+
+//==============================================================================
+
 void QScintillaWidget::resetUndoHistory()
 {
     // Reset our undo history
@@ -318,6 +327,35 @@ QString QScintillaWidget::eolString() const
     default:   // EolWindows
         return "\r\n";
     }
+}
+
+//==============================================================================
+
+void QScintillaWidget::setBackgroundColor(const int &pStyle,
+                                          const QColor &pBackgroundColor)
+{
+    // Set the background color for the given style
+
+    SendScintilla(QsciScintillaBase::SCI_STYLESETBACK, pStyle, pBackgroundColor);
+}
+
+//==============================================================================
+
+void QScintillaWidget::setForegroundColor(const int &pStyle,
+                                          const QColor &pForegroundColor)
+{
+    // Set the foreground color for the given style
+
+    SendScintilla(QsciScintillaBase::SCI_STYLESETFORE, pStyle, pForegroundColor);
+}
+
+//==============================================================================
+
+int QScintillaWidget::zoomLevel() const
+{
+    // Return our zoom level
+
+    return SendScintilla(QsciScintillaBase::SCI_GETZOOM);
 }
 
 //==============================================================================

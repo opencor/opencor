@@ -26,6 +26,7 @@ ADD_PLUGIN(CoreEditing
         src
     PLUGINS
         Core
+        Editor
         QScintilla
         QScintillaSupport
     QT_MODULES

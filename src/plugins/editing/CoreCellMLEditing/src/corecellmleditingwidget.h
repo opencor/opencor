@@ -54,9 +54,9 @@ namespace Core {
 
 //==============================================================================
 
-namespace QScintillaSupport {
-    class QScintillaWidget;
-}   // namespace QScintillaSupport
+namespace Editor {
+    class EditorWidget;
+}   // namespace Editor
 
 //==============================================================================
 
@@ -84,7 +84,7 @@ public:
     virtual void retranslateUi();
 
     Viewer::ViewerWidget * viewer() const;
-    QScintillaSupport::QScintillaWidget * editor() const;
+    Editor::EditorWidget * editor() const;
 
 private:
     Ui::CoreCellmlEditingWidget *mGui;
@@ -93,7 +93,7 @@ private:
     Viewer::ViewerWidget *mViewer;
 
     Core::BorderedWidget *mBorderedEditor;
-    QScintillaSupport::QScintillaWidget *mEditor;
+    Editor::EditorWidget *mEditor;
 };
 
 //==============================================================================

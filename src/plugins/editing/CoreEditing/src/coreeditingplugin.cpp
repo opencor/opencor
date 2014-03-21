@@ -21,8 +21,10 @@ specific language governing permissions and limitations under the License.
 
 #include "coreeditingplugin.h"
 #include "editinginterface.h"
+#include "editorwidget.h"
 #include "filemanager.h"
 #include "guiutils.h"
+#include "qscintillawidget.h"
 
 //==============================================================================
 
@@ -681,7 +683,7 @@ void CoreEditingPlugin::doDelete()
     if (!mEditor)
         return;
 
-    mEditor->SendScintilla(QsciScintillaBase::SCI_CLEAR);
+    mEditor->del();
 
     updateUndoAndRedoActions();
 }
@@ -712,7 +714,7 @@ void CoreEditingPlugin::updateEditorBackground()
         QColor backgroundColor = Core::FileManager::instance()->isReadableAndWritable(mFileName)?Core::baseColor():Core::lockedColor(Core::baseColor());
 
         for (int i = 0; i < QsciScintillaBase::STYLE_MAX; ++i)
-            mEditor->SendScintilla(QsciScintillaBase::SCI_STYLESETBACK, i, backgroundColor);
+            mEditor->setBackgroundColor(i, backgroundColor);
     }
 }
 

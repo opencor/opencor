@@ -40,9 +40,9 @@ class EditingInterface;
 
 //==============================================================================
 
-namespace QScintillaSupport {
-    class QScintillaWidget;
-}   // namespace QScintillaSupport
+namespace Editor {
+    class EditorWidget;
+}   // namespace Editor
 
 //==============================================================================
 
@@ -100,7 +100,7 @@ private:
 
     QAction *mEditSelectAllAction;
 
-    QScintillaSupport::QScintillaWidget *mEditor;
+    Editor::EditorWidget *mEditor;
 
     QString mFileName;
 

@@ -56,9 +56,9 @@ namespace CoreCellMLEditing {
 
 //==============================================================================
 
-namespace QScintillaSupport {
-    class QScintillaWidget;
-}   // namespace QScintillaSupport
+namespace Editor {
+    class EditorWidget;
+}   // namespace Editor
 
 //==============================================================================
 
@@ -87,7 +87,7 @@ public:
     void fileReloaded(const QString &pFileName);
     void fileRenamed(const QString &pOldFileName, const QString &pNewFileName);
 
-    QScintillaSupport::QScintillaWidget * editor(const QString &pFileName) const;
+    Editor::EditorWidget * editor(const QString &pFileName) const;
 
     virtual QList<QWidget *> statusBarWidgets() const;
 
@@ -117,7 +117,7 @@ private:
 
 private Q_SLOTS:
     void splitterMoved();
-    void editorZoomLevelChanged();
+    void editorZoomLevelChanged(const int &pZoomLevel);
 
     void updateViewer();
 

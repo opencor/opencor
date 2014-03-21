@@ -72,12 +72,19 @@ public:
 
     bool isSelectAllAvailable() const;
 
+    void del();
+
     void resetUndoHistory();
 
     QLabel * cursorPositionWidget() const;
     QLabel * editingModeWidget() const;
 
     QString eolString() const;
+
+    void setBackgroundColor(const int &pStyle, const QColor &pBackgroundColor);
+    void setForegroundColor(const int &pStyle, const QColor &pForegroundColor);
+
+    int zoomLevel() const;
 
 protected:
     virtual void changeEvent(QEvent *pEvent);

@@ -25,6 +25,7 @@ ADD_PLUGIN(RawView
         src
     PLUGINS
         Core
+        Editor
         QScintilla
         QScintillaSupport
     QT_MODULES

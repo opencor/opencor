@@ -20,8 +20,8 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include "cliutils.h"
+#include "editorwidget.h"
 #include "filemanager.h"
-#include "qscintillawidget.h"
 #include "rawviewwidget.h"
 
 //==============================================================================
@@ -45,7 +45,7 @@ RawViewWidget::RawViewWidget(QWidget *pParent) :
     ViewWidget(pParent),
     mGui(new Ui::RawViewWidget),
     mEditor(0),
-    mEditors(QMap<QString, QScintillaSupport::QScintillaWidget *>()),
+    mEditors(QMap<QString, Editor::EditorWidget *>()),
     mEditorZoomLevel(0)
 {
     // Set up the GUI
@@ -109,14 +109,14 @@ void RawViewWidget::initialize(const QString &pFileName)
 
         Core::readTextFromFile(pFileName, fileContents);
 
-        mEditor = new QScintillaSupport::QScintillaWidget(fileContents,
-                                                          !Core::FileManager::instance()->isReadableAndWritable(pFileName),
-                                                          0, parentWidget());
+        mEditor = new Editor::EditorWidget(fileContents,
+                                           !Core::FileManager::instance()->isReadableAndWritable(pFileName),
+                                           0, parentWidget());
 
         // Keep track of changes to our editor's zoom level
 
-        connect(mEditor, SIGNAL(SCN_ZOOM()),
-                this, SLOT(editorZoomLevelChanged()));
+        connect(mEditor, SIGNAL(zoomLevelChanged(const int &)),
+                this, SLOT(editorZoomLevelChanged(const int &)));
 
         // Keep track of our editor and add it to ourselves
 
@@ -127,12 +127,12 @@ void RawViewWidget::initialize(const QString &pFileName)
 
     // Show/hide our editors and adjust our sizes
 
-    foreach (QScintillaSupport::QScintillaWidget *editor, mEditors)
+    foreach (Editor::EditorWidget *editor, mEditors)
         if (editor == mEditor) {
             // This is the editor we are after, so show it and update its zoom
             // level
 
-            editor->zoomTo(mEditorZoomLevel);
+            editor->setZoomLevel(mEditorZoomLevel);
 
             editor->show();
         } else {
@@ -158,7 +158,7 @@ void RawViewWidget::finalize(const QString &pFileName)
 {
     // Remove the editor, should there be one for the given file
 
-    QScintillaSupport::QScintillaWidget *editor  = mEditors.value(pFileName);
+    Editor::EditorWidget *editor  = mEditors.value(pFileName);
 
     if (editor) {
         // There is an editor for the given file name, so delete it and remove
@@ -194,7 +194,7 @@ void RawViewWidget::fileRenamed(const QString &pOldFileName,
 {
     // The given file has been renamed, so update our editors mapping
 
-    QScintillaSupport::QScintillaWidget *editor = mEditors.value(pOldFileName);
+    Editor::EditorWidget *editor = mEditors.value(pOldFileName);
 
     if (editor) {
         mEditors.insert(pNewFileName, editor);
@@ -204,7 +204,7 @@ void RawViewWidget::fileRenamed(const QString &pOldFileName,
 
 //==============================================================================
 
-QScintillaSupport::QScintillaWidget * RawViewWidget::editor(const QString &pFileName) const
+Editor::EditorWidget * RawViewWidget::editor(const QString &pFileName) const
 {
     // Return the requested editor
 
@@ -226,12 +226,12 @@ QList<QWidget *> RawViewWidget::statusBarWidgets() const
 
 //==============================================================================
 
-void RawViewWidget::editorZoomLevelChanged()
+void RawViewWidget::editorZoomLevelChanged(const int &pZoomLevel)
 {
     // One of our editors had its zoom level changed, so keep track of the new
     // zoom level
 
-    mEditorZoomLevel = qobject_cast<QScintillaSupport::QScintillaWidget *>(sender())->SendScintilla(QsciScintillaBase::SCI_GETZOOM);
+    mEditorZoomLevel = pZoomLevel;
 }
 
 //==============================================================================

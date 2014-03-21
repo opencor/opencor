@@ -28,8 +28,14 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#include <QColor>
 #include <QString>
 #include <QWidget>
+
+//==============================================================================
+
+class QLabel;
+class QMenu;
 
 //==============================================================================
 
@@ -65,10 +71,76 @@ public:
     explicit EditorWidget(const QString &pContents, const bool &pReadOnly,
                           QsciLexer *pLexer, QWidget *pParent);
 
+    QMenu * contextMenu() const;
+    void setContextMenu(const QList<QAction *> &pContextMenuActions);
+
+    int currentPosition() const;
+
+    QString contents() const;
+    void setContents(const QString &pContents);
+
+    int contentsSize() const;
+
+    bool isReadOnly() const;
+    void setReadOnly(const bool &pReadOnly);
+
+    bool hasSelectedText() const;
+    QString selectedText() const;
+
+    QString textInRange(const int &pStartRange, const int &pEndRange) const;
+    int findTextInRange(const int &pStartRange, const int &pEndRange,
+                        const QString &pText,
+                        const bool &pCaseSensitive = true) const;
+
+    bool isUndoAvailable() const;
+    bool isRedoAvailable() const;
+
+    bool isSelectAllAvailable() const;
+
+    void cut();
+    void copy();
+    void paste();
+    void del();
+
+    void undo();
+    void redo();
+
+    void selectAll();
+
+    void resetUndoHistory();
+
+    QLabel * cursorPositionWidget() const;
+    QLabel * editingModeWidget() const;
+
+    QString eolString() const;
+
+    void setBackgroundColor(const int &pStyle, const QColor &pBackgroundColor);
+    void setForegroundColor(const int &pStyle, const QColor &pForegroundColor);
+
+    int zoomLevel() const;
+    void setZoomLevel(const int &pZoomLevel);
+
 private:
     Ui::EditorWidget *mGui;
 
     QScintillaSupport::QScintillaWidget *mEditor;
+
+Q_SIGNALS:
+    void zoomLevelChanged(const int &pZoomLevel);
+
+    void cursorPositionChanged(const int &pRow, const int &pColumn);
+
+    void textChanged();
+
+    void copyAvailable(const bool &pCopyAvailable);
+
+    void canUndo(const bool &pCanUndo);
+    void canRedo(const bool &pCanRedo);
+
+    void canSelectAll(const bool &pCanSelectAll);
+
+private Q_SLOTS:
+    void zoomLevelChanged();
 };
 
 //==============================================================================

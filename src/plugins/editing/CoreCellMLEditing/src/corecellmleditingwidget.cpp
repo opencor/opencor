@@ -22,9 +22,9 @@ specific language governing permissions and limitations under the License.
 #include "borderedwidget.h"
 #include "cliutils.h"
 #include "corecellmleditingwidget.h"
+#include "editorwidget.h"
 #include "filemanager.h"
 #include "guiutils.h"
-#include "qscintillawidget.h"
 #include "viewerwidget.h"
 
 //==============================================================================
@@ -65,8 +65,7 @@ CoreCellmlEditingWidget::CoreCellmlEditingWidget(const QString &pContents,
 
     // Create our bordered editor
 
-    mEditor = new QScintillaSupport::QScintillaWidget(pContents, pReadOnly,
-                                                      pLexer, this);
+    mEditor = new Editor::EditorWidget(pContents, pReadOnly, pLexer, this);
     mBorderedEditor = new Core::BorderedWidget(mEditor,
                                                true, false, false, false);
 
@@ -109,7 +108,7 @@ Viewer::ViewerWidget * CoreCellmlEditingWidget::viewer() const
 
 //==============================================================================
 
-QScintillaSupport::QScintillaWidget * CoreCellmlEditingWidget::editor() const
+Editor::EditorWidget * CoreCellmlEditingWidget::editor() const
 {
     // Return our editor
 

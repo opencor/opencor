@@ -25,6 +25,7 @@ ADD_PLUGIN(Editor
         src
     PLUGINS
         Core
+        QScintilla
         QScintillaSupport
     QT_MODULES
         Network

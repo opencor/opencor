@@ -139,7 +139,7 @@ void CellMLAnnotationViewPlugin::handleAction(const QUrl &pUrl)
 // Editing interface
 //==============================================================================
 
-QScintillaSupport::QScintillaWidget * CellMLAnnotationViewPlugin::editor(const QString &pFileName) const
+Editor::EditorWidget * CellMLAnnotationViewPlugin::editor(const QString &pFileName) const
 {
     Q_UNUSED(pFileName);
 

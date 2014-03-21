@@ -138,7 +138,7 @@ void PrettyCellMLViewPlugin::handleAction(const QUrl &pUrl)
 // Editing interface
 //==============================================================================
 
-QScintillaSupport::QScintillaWidget * PrettyCellMLViewPlugin::editor(const QString &pFileName) const
+Editor::EditorWidget * PrettyCellMLViewPlugin::editor(const QString &pFileName) const
 {
     // Return the requested editor
 
