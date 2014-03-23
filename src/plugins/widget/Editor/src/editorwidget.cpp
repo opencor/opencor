@@ -76,6 +76,10 @@ EditorWidget::EditorWidget(const QString &pContents, const bool &pReadOnly,
     // Add our editor to our layout
 
     mGui->layout->addWidget(mEditor);
+
+    // Make our editor our focus proxy
+
+    setFocusProxy(mEditor);
 }
 
 //==============================================================================

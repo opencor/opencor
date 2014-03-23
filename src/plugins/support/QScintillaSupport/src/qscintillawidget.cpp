@@ -25,6 +25,10 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#include <Qt>
+
+//==============================================================================
+
 #include <QDragEnterEvent>
 #include <QLabel>
 #include <QMenu>
