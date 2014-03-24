@@ -63,6 +63,8 @@ public:
     virtual void loadSettings(QSettings *pSettings);
     virtual void saveSettings(QSettings *pSettings) const;
 
+    virtual void retranslateUi();
+
     bool contains(const QString &pFileName) const;
 
     void initialize(const QString &pFileName);

@@ -86,6 +86,16 @@ void RawViewWidget::saveSettings(QSettings *pSettings) const
 
 //==============================================================================
 
+void RawViewWidget::retranslateUi()
+{
+    // Retranslate our viewer and editor
+
+    if (mEditor)
+        mEditor->retranslateUi();
+}
+
+//==============================================================================
+
 bool RawViewWidget::contains(const QString &pFileName) const
 {
     // Return whether we know about the given file, i.e. whether we have an

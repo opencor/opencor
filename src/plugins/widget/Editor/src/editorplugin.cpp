@@ -41,6 +41,15 @@ PLUGININFO_FUNC EditorPluginInfo()
 }
 
 //==============================================================================
+// I18n interface
+//==============================================================================
+
+void EditorPlugin::retranslateUi()
+{
+    // We don't handle this interface...
+}
+
+//==============================================================================
 
 }   // namespace Editor
 }   // namespace OpenCOR

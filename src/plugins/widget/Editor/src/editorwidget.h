@@ -25,15 +25,17 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include "editorglobal.h"
+#include "widget.h"
 
 //==============================================================================
 
 #include <QColor>
 #include <QString>
-#include <QWidget>
 
 //==============================================================================
 
+class QAction;
+class QFrame;
 class QLabel;
 class QMenu;
 
@@ -63,13 +65,15 @@ namespace Editor {
 
 //==============================================================================
 
-class EDITOR_EXPORT EditorWidget : public QWidget
+class EDITOR_EXPORT EditorWidget : public Core::Widget
 {
     Q_OBJECT
 
 public:
     explicit EditorWidget(const QString &pContents, const bool &pReadOnly,
                           QsciLexer *pLexer, QWidget *pParent);
+
+    virtual void retranslateUi();
 
     QMenu * contextMenu() const;
     void setContextMenu(const QList<QAction *> &pContextMenuActions);
@@ -124,6 +128,13 @@ private:
     Ui::EditorWidget *mGui;
 
     QScintillaSupport::QScintillaWidget *mEditor;
+    QFrame *mSeparator;
+    QWidget *mFindReplace;
+
+    QLabel *mFindLabel;
+
+    void showFindReplace();
+    void hideFindReplace();
 
 Q_SIGNALS:
     void zoomLevelChanged(const int &pZoomLevel);

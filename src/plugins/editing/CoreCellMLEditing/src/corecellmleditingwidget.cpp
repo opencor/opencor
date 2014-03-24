@@ -92,9 +92,10 @@ CoreCellmlEditingWidget::~CoreCellmlEditingWidget()
 
 void CoreCellmlEditingWidget::retranslateUi()
 {
-    // Retranslate our viewer
+    // Retranslate our viewer and editor
 
     mViewer->retranslateUi();
+    mEditor->retranslateUi();
 }
 
 //==============================================================================

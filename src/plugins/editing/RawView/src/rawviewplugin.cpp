@@ -321,7 +321,9 @@ bool RawViewPlugin::canClose()
 
 void RawViewPlugin::retranslateUi()
 {
-    // We don't handle this interface...
+    // Retranslate our view widget
+
+    mViewWidget->retranslateUi();
 }
 
 //==============================================================================

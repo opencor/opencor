@@ -48,7 +48,7 @@ PLUGININFO_FUNC CoreEditingPluginInfo()
     descriptions.insert("fr", QString::fromUtf8("l'extension d'édition de base."));
 
     return new PluginInfo(PluginInfo::Editing, false,
-                          QStringList() << "QScintillaSupport",
+                          QStringList() << "Editor",
                           descriptions);
 }
 

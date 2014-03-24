@@ -20,6 +20,7 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include "editorwidget.h"
+#include "guiutils.h"
 #include "qscintillawidget.h"
 
 //==============================================================================
@@ -28,6 +29,14 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#include <Qt>
+
+//==============================================================================
+
+#include <QFrame>
+#include <QKeyEvent>
+#include <QLabel>
+#include <QLayout>
 #include <QVBoxLayout>
 
 //==============================================================================
@@ -39,7 +48,7 @@ namespace Editor {
 
 EditorWidget::EditorWidget(const QString &pContents, const bool &pReadOnly,
                            QsciLexer *pLexer, QWidget *pParent) :
-    QWidget(pParent),
+    Core::Widget(pParent),
     mGui(new Ui::EditorWidget)
 {
     // Set up the GUI
@@ -73,13 +82,47 @@ EditorWidget::EditorWidget(const QString &pContents, const bool &pReadOnly,
     connect(mEditor, SIGNAL(canSelectAll(const bool &)),
             this, SIGNAL(canSelectAll(const bool &)));
 
-    // Add our editor to our layout
+    // Create our find/replace widget
+
+    mSeparator = Core::newLineWidget(this);
+    mFindReplace = new QWidget(this);
+
+    mFindReplace->setLayout(new QVBoxLayout(mFindReplace));
+
+    mFindReplace->layout()->setMargin(0);
+    mFindReplace->layout()->setSpacing(0);
+
+    mFindLabel = new QLabel(mFindReplace);
+
+    mFindReplace->layout()->addWidget(mFindLabel);
+
+    // Add our editor and find/replace widgets to our layout
 
     mGui->layout->addWidget(mEditor);
+    mGui->layout->addWidget(mSeparator);
+    mGui->layout->addWidget(mFindReplace);
 
     // Make our editor our focus proxy
 
     setFocusProxy(mEditor);
+
+    // Retranslate ourselves, so our find/replace widget is properly set
+
+    retranslateUi();
+
+    // Initially hide our find/replace widget
+
+//---GRY---
+//    hideFindReplace();
+}
+
+//==============================================================================
+
+void EditorWidget::retranslateUi()
+{
+    // Retranslate our find/replace widget
+
+    mFindLabel->setText(tr("Find:"));
 }
 
 //==============================================================================
@@ -357,6 +400,26 @@ void EditorWidget::setZoomLevel(const int &pZoomLevel)
     // Set the zoom level of our editor
 
     return mEditor->zoomTo(pZoomLevel);
+}
+
+//==============================================================================
+
+void EditorWidget::showFindReplace()
+{
+    // Show our find/replace widget
+
+    mSeparator->setVisible(true);
+    mFindReplace->setVisible(true);
+}
+
+//==============================================================================
+
+void EditorWidget::hideFindReplace()
+{
+    // Hide our find/replace widget
+
+    mSeparator->setVisible(false);
+    mFindReplace->setVisible(false);
 }
 
 //==============================================================================
