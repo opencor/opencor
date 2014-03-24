@@ -121,6 +121,8 @@ Q_SIGNALS:
 
     void canSelectAll(const bool &pCanSelectAll);
 
+    void keyPressed(QKeyEvent *pEvent, bool &pHandled);
+
 private Q_SLOTS:
     void updateUi();
 

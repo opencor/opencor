@@ -82,6 +82,11 @@ EditorWidget::EditorWidget(const QString &pContents, const bool &pReadOnly,
     connect(mEditor, SIGNAL(canSelectAll(const bool &)),
             this, SIGNAL(canSelectAll(const bool &)));
 
+    // Keep track of whenever a key is being pressed in our editor
+
+    connect(mEditor, SIGNAL(keyPressed(QKeyEvent *, bool &)),
+            this, SLOT(keyPressed(QKeyEvent *, bool &)));
+
     // Create our find/replace widget
 
     mSeparator = Core::newLineWidget(this);
@@ -112,8 +117,7 @@ EditorWidget::EditorWidget(const QString &pContents, const bool &pReadOnly,
 
     // Initially hide our find/replace widget
 
-//---GRY---
-//    hideFindReplace();
+    hideFindReplace();
 }
 
 //==============================================================================
@@ -429,6 +433,33 @@ void EditorWidget::zoomLevelChanged()
     // Let people know that the zoom level has changed
 
     emit zoomLevelChanged(zoomLevel());
+}
+
+//==============================================================================
+
+void EditorWidget::keyPressed(QKeyEvent *pEvent, bool &pHandled)
+{
+    // Show/hide our find/replace widget, if needed
+
+    if (   !(pEvent->modifiers() & Qt::ShiftModifier)
+        &&  (pEvent->modifiers() & Qt::ControlModifier)
+        && !(pEvent->modifiers() & Qt::AltModifier)
+        && !(pEvent->modifiers() & Qt::MetaModifier)
+        &&  (pEvent->key() == Qt::Key_F)) {
+        showFindReplace();
+
+        pHandled = true;
+    } else if (   !(pEvent->modifiers() & Qt::ShiftModifier)
+               && !(pEvent->modifiers() & Qt::ControlModifier)
+               && !(pEvent->modifiers() & Qt::AltModifier)
+               && !(pEvent->modifiers() & Qt::MetaModifier)
+               &&  (pEvent->key() == Qt::Key_Escape)) {
+        hideFindReplace();
+
+        pHandled = true;
+    } else {
+        pHandled = false;
+    }
 }
 
 //==============================================================================

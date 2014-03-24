@@ -152,6 +152,8 @@ Q_SIGNALS:
 
 private Q_SLOTS:
     void zoomLevelChanged();
+
+    void keyPressed(QKeyEvent *pEvent, bool &pHandled);
 };
 
 //==============================================================================

@@ -420,18 +420,28 @@ bool QScintillaWidget::event(QEvent *pEvent)
 
 void QScintillaWidget::keyPressEvent(QKeyEvent *pEvent)
 {
-    // Reset the font size, if needed
+    // Let people know that a key has been pressed
 
-    if (   !(pEvent->modifiers() & Qt::ShiftModifier)
-        &&  (pEvent->modifiers() & Qt::ControlModifier)
-        && !(pEvent->modifiers() & Qt::AltModifier)
-        && !(pEvent->modifiers() & Qt::MetaModifier)
-        &&  (pEvent->key() == Qt::Key_0))
-        zoomTo(0);
-    else
-        // Default handling of the event
+    bool handled = false;
 
-        QsciScintilla::keyPressEvent(pEvent);
+    emit keyPressed(pEvent, handled);
+
+    // Carry on as normal, if the event wasn't handled
+
+    if (!handled) {
+        // Reset the font size, if needed
+
+        if (   !(pEvent->modifiers() & Qt::ShiftModifier)
+            &&  (pEvent->modifiers() & Qt::ControlModifier)
+            && !(pEvent->modifiers() & Qt::AltModifier)
+            && !(pEvent->modifiers() & Qt::MetaModifier)
+            &&  (pEvent->key() == Qt::Key_0))
+            zoomTo(0);
+        else
+            // Default handling of the event
+
+            QsciScintilla::keyPressEvent(pEvent);
+    }
 }
 
 //==============================================================================
