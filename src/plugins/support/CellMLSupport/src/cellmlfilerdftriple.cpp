@@ -522,7 +522,13 @@ bool CellmlFileRdfTriple::decodeTerm(const QString &pTerm, QString &pResource,
 void CellmlFileRdfTriples::recursiveContains(CellmlFileRdfTriples &pRdfTriples,
                                              CellmlFileRdfTriple *pRdfTriple) const
 {
-    // Add pRdfTriple to pRdfTriples
+    // Add pRdfTriple to pRdfTriples, but only if it's not already part of
+    // pRdfTriples
+    // Note: indeed, a given RDF triple may be referenced more than once, so...
+
+    foreach (CellmlFileRdfTriple *rdfTriple, pRdfTriples)
+        if (pRdfTriple == rdfTriple)
+            return;
 
     pRdfTriples << pRdfTriple;
 
