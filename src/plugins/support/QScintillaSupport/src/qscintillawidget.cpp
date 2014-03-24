@@ -428,19 +428,28 @@ void QScintillaWidget::keyPressEvent(QKeyEvent *pEvent)
 
     // Carry on as normal, if the event wasn't handled
 
-    if (!handled) {
+    if (handled) {
+        // Accept the event
+
+        pEvent->accept();
+    } else {
         // Reset the font size, if needed
 
         if (   !(pEvent->modifiers() & Qt::ShiftModifier)
             &&  (pEvent->modifiers() & Qt::ControlModifier)
             && !(pEvent->modifiers() & Qt::AltModifier)
             && !(pEvent->modifiers() & Qt::MetaModifier)
-            &&  (pEvent->key() == Qt::Key_0))
+            &&  (pEvent->key() == Qt::Key_0)) {
             zoomTo(0);
-        else
+
+            // Accept the event
+
+            pEvent->accept();
+        } else {
             // Default handling of the event
 
             QsciScintilla::keyPressEvent(pEvent);
+        }
     }
 }
 
