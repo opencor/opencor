@@ -94,7 +94,7 @@ QScintillaWidget::QScintillaWidget(const QString &pContents,
         setFont(mFont);
     }
 
-    // Set the contents of our Scintilla editor and its read-only property
+    // Set the contents of our Scintilla editor and its read-only state
 
     setContents(pContents);
     setReadOnly(pReadOnly);
@@ -106,8 +106,8 @@ QScintillaWidget::QScintillaWidget(const QString &pContents,
     // Force the use of UNIX EOL mode
     // Note: by default QScintilla will use EolWindows on Windows and EolUnix on
     //       Linux and OS X. However, the fact that it uses EolWindows on
-    //       Windows can cause problems on that platform with files not using a
-    //       a Windows EOL mode, so...
+    //       Windows can cause problems on that platform, this with files not
+    //       using a a Windows EOL mode, so...
 
     setEolMode(EolUnix);
 
@@ -118,8 +118,8 @@ QScintillaWidget::QScintillaWidget(const QString &pContents,
     // Clear some key mappings inherited from QsciScintilla
     // Note #1: indeed, QsciScintilla handles some shortcuts (e.g. Ctrl+L),
     //          which we don't want to see handled (e.g. Ctrl+L is used by
-    //          QsciScintilla to delete the current line while OpenCOR uses it
-    //          to (un)lock the current file), so...
+    //          QsciScintilla to delete the current line while we want OpenCOR
+    //          to be able to use it to (un)lock the current file), so...
     // Note #2: even though we are clearing those key mappings, we must also
     //          bypass QsciScintilla's handling of event() (see below). Indeed,
     //          not to do so would mean that if, for example, the user was to
