@@ -218,7 +218,6 @@ void CellmlAnnotationViewMetadataDetailsWidget::retranslateUi()
                                "    </p>":
                                QString();
 
-
     mUnsupportedMetadataMessage->setMessage( "<div align=center>"
                                              "    <p>"
                                              "        "+tr("Sorry, but the <strong>%1</strong> view does not support this type of metadata...").arg(mParent->pluginViewName())
