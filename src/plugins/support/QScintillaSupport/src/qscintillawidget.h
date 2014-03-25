@@ -39,6 +39,7 @@ specific language governing permissions and limitations under the License.
 
 class QContextMenuEvent;
 class QDragEnterEvent;
+class QFocusEvent;
 class QKeyEvent;
 class QLabel;
 class QMenu;
@@ -95,6 +96,8 @@ protected:
     virtual void contextMenuEvent(QContextMenuEvent *pEvent);
     virtual void dragEnterEvent(QDragEnterEvent *pEvent);
     virtual bool event(QEvent *pEvent);
+    virtual void focusInEvent(QFocusEvent *pEvent);
+    virtual void focusOutEvent(QFocusEvent *pEvent);
     virtual void keyPressEvent(QKeyEvent *pEvent);
     virtual void wheelEvent(QWheelEvent *pEvent);
 

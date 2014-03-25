@@ -418,6 +418,32 @@ bool QScintillaWidget::event(QEvent *pEvent)
 
 //==============================================================================
 
+void QScintillaWidget::focusInEvent(QFocusEvent *pEvent)
+{
+    // We are getting the focus, so make sure that our caret is visible
+
+    setCaretWidth(1);
+
+    // Default handling of the event
+
+    QsciScintilla::focusInEvent(pEvent);
+}
+
+//==============================================================================
+
+void QScintillaWidget::focusOutEvent(QFocusEvent *pEvent)
+{
+    // We are losing the focus, so hide our caret
+
+    setCaretWidth(0);
+
+    // Default handling of the event
+
+    QsciScintilla::focusOutEvent(pEvent);
+}
+
+//==============================================================================
+
 void QScintillaWidget::keyPressEvent(QKeyEvent *pEvent)
 {
     // Let people know that a key has been pressed

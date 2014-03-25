@@ -27,6 +27,7 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#include <QKeyEvent>
 #include <QGridLayout>
 #include <QLabel>
 #include <QTextEdit>
@@ -79,6 +80,28 @@ void EditorFindReplaceWidget::retranslateUi()
 
     mFindLabel->setText(tr("Find:"));
     mReplaceLabel->setText(tr("Replace:"));
+}
+
+//==============================================================================
+
+void EditorFindReplaceWidget::keyPressEvent(QKeyEvent *pEvent)
+{
+    // Let people know that a key has been pressed
+
+    bool handled = false;
+
+    emit keyPressed(pEvent, handled);
+
+    // Carry on as normal, if the event wasn't handled
+
+    if (handled)
+        // Accept the event
+
+        pEvent->accept();
+    else
+        // Default handling of the event
+
+        QWidget::keyPressEvent(pEvent);
 }
 
 //==============================================================================

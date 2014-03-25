@@ -59,6 +59,9 @@ public:
 
     virtual void retranslateUi();
 
+protected:
+    virtual void keyPressEvent(QKeyEvent *pEvent);
+
 private:
     Ui::EditorFindReplaceWidget *mGui;
 
@@ -67,6 +70,9 @@ private:
 
     QLabel *mReplaceLabel;
     QTextEdit *mReplaceEdit;
+
+Q_SIGNALS:
+    void keyPressed(QKeyEvent *pEvent, bool &pHandled);
 };
 
 //==============================================================================

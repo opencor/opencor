@@ -56,10 +56,12 @@ EditorWidget::EditorWidget(const QString &pContents, const bool &pReadOnly,
 
     mGui->setupUi(this);
 
-    // Create our editor
+    // Create our editor and find/replace widget
 
     mEditor = new QScintillaSupport::QScintillaWidget(pContents, pReadOnly,
                                                       pLexer, this);
+    mSeparator = Core::newLineWidget(this);
+    mFindReplace = new EditorFindReplaceWidget(this);
 
     // Forward some signals that are emitted by our editor
 
@@ -83,15 +85,13 @@ EditorWidget::EditorWidget(const QString &pContents, const bool &pReadOnly,
     connect(mEditor, SIGNAL(canSelectAll(const bool &)),
             this, SIGNAL(canSelectAll(const bool &)));
 
-    // Keep track of whenever a key is being pressed in our editor
+    // Keep track of whenever a key is being pressed in our editor our
+    // find/replace widget
 
     connect(mEditor, SIGNAL(keyPressed(QKeyEvent *, bool &)),
             this, SLOT(keyPressed(QKeyEvent *, bool &)));
-
-    // Create our find/replace widget
-
-    mSeparator = Core::newLineWidget(this);
-    mFindReplace = new EditorFindReplaceWidget(this);
+    connect(mFindReplace, SIGNAL(keyPressed(QKeyEvent *, bool &)),
+            this, SLOT(keyPressed(QKeyEvent *, bool &)));
 
     // Add our editor and find/replace widgets to our layout
 
@@ -406,6 +406,10 @@ void EditorWidget::showFindReplace()
 
     mSeparator->setVisible(true);
     mFindReplace->setVisible(true);
+
+    // Give the focus to our find/replace widget and hide our editor's caret
+
+    mFindReplace->setFocus();
 }
 
 //==============================================================================
@@ -416,6 +420,10 @@ void EditorWidget::hideFindReplace()
 
     mSeparator->setVisible(false);
     mFindReplace->setVisible(false);
+
+    // Give the focus (back) to our editor and show its caret
+
+    mEditor->setFocus();
 }
 
 //==============================================================================
@@ -433,7 +441,8 @@ void EditorWidget::keyPressed(QKeyEvent *pEvent, bool &pHandled)
 {
     // Show/hide our find/replace widget, if needed
 
-    if (   !(pEvent->modifiers() & Qt::ShiftModifier)
+    if (    (sender() == mEditor)
+        && !(pEvent->modifiers() & Qt::ShiftModifier)
         &&  (pEvent->modifiers() & Qt::ControlModifier)
         && !(pEvent->modifiers() & Qt::AltModifier)
         && !(pEvent->modifiers() & Qt::MetaModifier)
