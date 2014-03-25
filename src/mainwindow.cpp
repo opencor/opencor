@@ -43,6 +43,10 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#include <Qt>
+
+//==============================================================================
+
 #include <QAction>
 #include <QCloseEvent>
 #include <QDesktopServices>
