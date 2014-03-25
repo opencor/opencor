@@ -63,6 +63,11 @@ EditorWidget::EditorWidget(const QString &pContents, const bool &pReadOnly,
     mSeparator = Core::newLineWidget(this);
     mFindReplace = new EditorFindReplaceWidget(this);
 
+    // Disable the focus policy on our editor so that tabbing only works within
+    // our find/replace widget
+
+    mEditor->setFocusPolicy(Qt::NoFocus);
+
     // Forward some signals that are emitted by our editor
 
     connect(mEditor, SIGNAL(SCN_ZOOM()),
