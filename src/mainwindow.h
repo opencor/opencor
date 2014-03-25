@@ -150,8 +150,6 @@ private Q_SLOTS:
 
     void updateDockWidgetsVisibility();
 
-    void resumeFromFullScreen();
-
     void resetAll();
 };
 

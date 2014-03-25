@@ -1448,16 +1448,6 @@ void MainWindow::updateDockWidgetsVisibility()
 
 //==============================================================================
 
-void MainWindow::resumeFromFullScreen()
-{
-    // Resume from full screen mode, if appropriate
-
-    if (isFullScreen())
-        on_actionFullScreen_triggered();
-}
-
-//==============================================================================
-
 void MainWindow::resetAll()
 {
     if (QMessageBox::question(this, qApp->applicationName(),
