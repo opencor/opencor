@@ -525,8 +525,11 @@ void GuiInterface::loadViewSettings(QSettings *pSettings, QObject *pView)
 {
     // Retrieve the view's settings
 
-    pSettings->beginGroup(qobject_cast<QWidget *>(pView)->objectName());
-        dynamic_cast<Core::CommonWidget *>(pView)->loadSettings(pSettings);
+    pSettings->beginGroup(pView->objectName());
+        Core::CommonWidget *viewWidget = dynamic_cast<Core::CommonWidget *>(pView);
+
+        if (viewWidget)
+            viewWidget->loadSettings(pSettings);
     pSettings->endGroup();
 }
 
@@ -536,8 +539,11 @@ void GuiInterface::saveViewSettings(QSettings *pSettings, QObject *pView) const
 {
     // Keep track of the view's settings
 
-    pSettings->beginGroup(qobject_cast<QWidget *>(pView)->objectName());
-        dynamic_cast<Core::CommonWidget *>(pView)->saveSettings(pSettings);
+    pSettings->beginGroup(pView->objectName());
+        Core::CommonWidget *viewWidget = dynamic_cast<Core::CommonWidget *>(pView);
+
+        if (viewWidget)
+            viewWidget->saveSettings(pSettings);
     pSettings->endGroup();
 }
 
