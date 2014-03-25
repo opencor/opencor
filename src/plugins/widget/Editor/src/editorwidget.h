@@ -65,6 +65,10 @@ namespace Editor {
 
 //==============================================================================
 
+class EditorFindReplaceWidget;
+
+//==============================================================================
+
 class EDITOR_EXPORT EditorWidget : public Core::Widget
 {
     Q_OBJECT
@@ -129,9 +133,7 @@ private:
 
     QScintillaSupport::QScintillaWidget *mEditor;
     QFrame *mSeparator;
-    QWidget *mFindReplace;
-
-    QLabel *mFindLabel;
+    EditorFindReplaceWidget *mFindReplace;
 
     void showFindReplace();
     void hideFindReplace();

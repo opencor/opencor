@@ -19,6 +19,7 @@ specific language governing permissions and limitations under the License.
 // Editor widget
 //==============================================================================
 
+#include "editorfindreplacewidget.h"
 #include "editorwidget.h"
 #include "guiutils.h"
 #include "qscintillawidget.h"
@@ -90,16 +91,7 @@ EditorWidget::EditorWidget(const QString &pContents, const bool &pReadOnly,
     // Create our find/replace widget
 
     mSeparator = Core::newLineWidget(this);
-    mFindReplace = new QWidget(this);
-
-    mFindReplace->setLayout(new QVBoxLayout(mFindReplace));
-
-    mFindReplace->layout()->setMargin(0);
-    mFindReplace->layout()->setSpacing(0);
-
-    mFindLabel = new QLabel(mFindReplace);
-
-    mFindReplace->layout()->addWidget(mFindLabel);
+    mFindReplace = new EditorFindReplaceWidget(this);
 
     // Add our editor and find/replace widgets to our layout
 
@@ -126,7 +118,7 @@ void EditorWidget::retranslateUi()
 {
     // Retranslate our find/replace widget
 
-    mFindLabel->setText(tr("Find:"));
+    mFindReplace->retranslateUi();
 }
 
 //==============================================================================

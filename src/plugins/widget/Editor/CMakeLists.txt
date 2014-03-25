@@ -13,12 +13,15 @@ ADD_PLUGIN(Editor
         ../../i18ninterface.cpp
         ../../plugininfo.cpp
 
+        src/editorfindreplacewidget.cpp
         src/editorwidget.cpp
         src/editorplugin.cpp
     HEADERS_MOC
+        src/editorfindreplacewidget.h
         src/editorwidget.h
         src/editorplugin.h
     UIS
+        src/editorfindreplacewidget.ui
         src/editorwidget.ui
     INCLUDE_DIRS
         src
