@@ -25,6 +25,10 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#include <Qt>
+
+//==============================================================================
+
 #include <QSettings>
 #include <QMetaType>
 #include <QWheelEvent>

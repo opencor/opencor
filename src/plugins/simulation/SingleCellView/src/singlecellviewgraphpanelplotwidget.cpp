@@ -23,6 +23,11 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#include <Qt>
+#include <QtNumeric>
+
+//==============================================================================
+
 #include <QApplication>
 #include <QClipboard>
 #include <QCursor>
@@ -31,10 +36,6 @@ specific language governing permissions and limitations under the License.
 #include <QMenu>
 #include <QMouseEvent>
 #include <QPainter>
-
-//==============================================================================
-
-#include <QtNumeric>
 
 //==============================================================================
 

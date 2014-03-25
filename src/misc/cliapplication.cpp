@@ -30,6 +30,10 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#include <Qt>
+
+//==============================================================================
+
 #include <QCoreApplication>
 #include <QXmlStreamReader>
 
