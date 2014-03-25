@@ -55,7 +55,7 @@ EditorFindReplaceWidget::EditorFindReplaceWidget(QWidget *pParent) :
     mReplaceLabel = new QLabel(this);
     mReplaceEdit = new QTextEdit(this);
 
-    // Add our editor and find/replace widgets to our layout
+    // Add our contents to our layout
 
     mGui->layout->addWidget(mFindLabel, 0, 0);
     mGui->layout->addWidget(mFindEdit, 0, 1);
