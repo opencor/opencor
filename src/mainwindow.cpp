@@ -188,10 +188,12 @@ Core::showEnableAction(mGui->actionPreferences, false);
     new QShortcut(QKeySequence("Ctrl+M"),
                   this, SLOT(showMinimized()));
 
-    // And another special shortcut to have OpenCOR resume from full screen mode
-
-    new QShortcut(Qt::Key_Escape,
-                  this, SLOT(resumeFromFullScreen()));
+    // Note: we used to have a shortcut (the Escape key) to have OpenCOR resume
+    //       from full screen mode, but this conflicted with EditorWidget where
+    //       the Escape key is used to hide the find/replace widget. So, we
+    //       decided to remove the shortcut. In the end, we are actually being
+    //       consistent with other editing tools such as Qt Creator and
+    //       TextWrangler...
 #endif
 
     mGui->actionFullScreen->setShortcut(QKeySequence::FullScreen);
