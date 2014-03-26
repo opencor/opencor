@@ -543,11 +543,9 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::removeRdfTriple()
 {
     // Retrieve the RDF triple associated with the remove button
 
-    QObject *removeButton = sender();
+    CellMLSupport::CellmlFileRdfTriple *rdfTriple = mRdfTriplesMapping.value(sender());
 
-    CellMLSupport::CellmlFileRdfTriple *rdfTriple = mRdfTriplesMapping.value(removeButton);
-
-    mRdfTriplesMapping.remove(removeButton);
+    mRdfTriplesMapping.remove(sender());
 
     // Remove the RDF triple from the CellML file and from our set of RDF
     // triples this widget uses
@@ -574,7 +572,7 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::removeRdfTriple()
             break;
         }
 
-        if (item->widget() == removeButton)
+        if (item->widget() == sender())
             // This is the row we want to remove
 
             row = i;
