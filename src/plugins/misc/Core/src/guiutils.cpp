@@ -42,32 +42,8 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-#include <qmath.h>
-
-//==============================================================================
-
 namespace OpenCOR {
 namespace Core {
-
-//==============================================================================
-
-QString sizeAsString(const double &pSize, const int &pPrecision)
-{
-    // Note: pSize is a double rather than a qulonglong, in case we need to
-    //       convert an insane size...
-
-    QString units[9] = { QObject::tr("B"), QObject::tr("KB"), QObject::tr("MB"),
-                         QObject::tr("GB"), QObject::tr("TB"), QObject::tr("PB"),
-                         QObject::tr("EB"), QObject::tr("ZB"), QObject::tr("YB") };
-
-    int i = qFloor(log(pSize)/log(1024.0));
-    double fileSize = pSize/qPow(1024.0, i);
-    double scaling = qPow(10.0, pPrecision);
-
-    fileSize = ceil(scaling*fileSize)/scaling;
-
-    return QString::number(fileSize)+" "+units[i];
-}
 
 //==============================================================================
 
