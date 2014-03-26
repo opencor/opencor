@@ -321,12 +321,12 @@ QString sizeAsString(const double &pSize, const int &pPrecision)
                          QObject::tr("EB"), QObject::tr("ZB"), QObject::tr("YB") };
 
     int i = qFloor(log(pSize)/log(1024.0));
-    double fileSize = pSize/qPow(1024.0, i);
+    double size = pSize/qPow(1024.0, i);
     double scaling = qPow(10.0, pPrecision);
 
-    fileSize = ceil(scaling*fileSize)/scaling;
+    size = round(scaling*size)/scaling;
 
-    return QString::number(fileSize)+" "+units[i];
+    return QString::number(size)+" "+units[i];
 }
 
 //==============================================================================

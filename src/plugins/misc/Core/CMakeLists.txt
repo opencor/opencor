@@ -81,4 +81,6 @@ ADD_PLUGIN(Core
         QtNetwork
         QtWidgets
         QtXmlPatterns
+    TESTS
+        tests
 )
