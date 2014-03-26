@@ -27,10 +27,14 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#include <Qt>
+
+//==============================================================================
+
 #include <QKeyEvent>
 #include <QGridLayout>
 #include <QLabel>
-#include <QTextEdit>
+#include <QLineEdit>
 
 //==============================================================================
 
@@ -47,42 +51,25 @@ EditorFindReplaceWidget::EditorFindReplaceWidget(QWidget *pParent) :
 
     mGui->setupUi(this);
 
-    // Create our contents
-
-    mFindLabel = new QLabel(this);
-    mFindEdit = new QTextEdit(this);
-
-    mReplaceLabel = new QLabel(this);
-    mReplaceEdit = new QTextEdit(this);
-
-    mFindEdit->setTabChangesFocus(true);
-    mReplaceEdit->setTabChangesFocus(true);
-
-    // Add our contents to our layout
-
-    mGui->layout->addWidget(mFindLabel, 0, 0);
-    mGui->layout->addWidget(mFindEdit, 0, 1);
-
-    mGui->layout->addWidget(mReplaceLabel, 1, 0);
-    mGui->layout->addWidget(mReplaceEdit, 1, 1);
+#ifdef Q_OS_MAC
+    mGui->findEdit->setAttribute(Qt::WA_MacShowFocusRect, 0);
+    mGui->replaceEdit->setAttribute(Qt::WA_MacShowFocusRect, 0);
+    // Note: the above remove the focus border since it messes up the look of
+    //       our edit widgets...
+#endif
 
     // Make our find edit widget our focus proxy
 
-    setFocusProxy(mFindEdit);
-
-    // Retranslate ourselves, so our various widgets are properly set
-
-    retranslateUi();
+    setFocusProxy(mGui->findEdit);
 }
 
 //==============================================================================
 
 void EditorFindReplaceWidget::retranslateUi()
 {
-    // Retranslate our find/replace widget
+    // Retranslate our GUI
 
-    mFindLabel->setText(tr("Find:"));
-    mReplaceLabel->setText(tr("Replace:"));
+    mGui->retranslateUi(this);
 }
 
 //==============================================================================

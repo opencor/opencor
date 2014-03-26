@@ -2,14 +2,14 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="fr_FR" sourcelanguage="en_GB">
 <context>
-    <name>OpenCOR::Editor::EditorFindReplaceWidget</name>
-    <message>
-        <source>Find:</source>
-        <translation>Trouver :</translation>
-    </message>
+    <name>EditorFindReplaceWidget</name>
     <message>
         <source>Replace:</source>
         <translation>Remplacer :</translation>
+    </message>
+    <message>
+        <source>Find:</source>
+        <translation>Trouver :</translation>
     </message>
 </context>
 </TS>

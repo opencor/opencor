@@ -65,12 +65,6 @@ protected:
 private:
     Ui::EditorFindReplaceWidget *mGui;
 
-    QLabel *mFindLabel;
-    QTextEdit *mFindEdit;
-
-    QLabel *mReplaceLabel;
-    QTextEdit *mReplaceEdit;
-
 Q_SIGNALS:
     void keyPressed(QKeyEvent *pEvent, bool &pHandled);
 };
