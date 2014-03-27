@@ -77,6 +77,15 @@ QString CORE_EXPORT sizeAsString(const double &pSize,
 
 QString CORE_EXPORT sha1(const QString &pText);
 
+void CORE_EXPORT stringPositionAsLineColumn(const QString &pString,
+                                            const QString &pEol,
+                                            const int &pPosition, int &pLine,
+                                            int &pColumn);
+void CORE_EXPORT stringLineColumnAsPosition(const QString &pString,
+                                            const QString &pEol,
+                                            const int &pLine,
+                                            const int &pColumn, int &pPosition);
+
 QByteArray CORE_EXPORT resourceAsByteArray(const QString &pResource);
 bool CORE_EXPORT writeResourceToFile(const QString &pFilename,
                                      const QString &pResource);

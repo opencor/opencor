@@ -61,6 +61,101 @@ void Tests::sizeAsStringTests()
 
 //==============================================================================
 
+void Tests::sha1Tests()
+{
+    // Test the sha1() method
+
+    QCOMPARE(OpenCOR::Core::sha1("This is just for testing..."),
+             QString("5f1f59774939bacbd8da99fa2c68ff1b78d4cd01"));
+    QCOMPARE(OpenCOR::Core::sha1("5f1f59774939bacbd8da99fa2c68ff1b78d4cd01"),
+             QString("3b673e33930f46151cbc58c04226eb3d66571cc1"));
+    QCOMPARE(OpenCOR::Core::sha1("3b673e33930f46151cbc58c04226eb3d66571cc1"),
+             QString("0ca7a40ecd1bae83526e70b40b5614986b7a0b61"));
+}
+
+//==============================================================================
+
+static const auto String = QStringLiteral("1\n11\n121\n1331\n14641");
+static const auto Eol = QStringLiteral("\n");
+
+//==============================================================================
+
+void Tests::stringPositionAsLineColumnTests()
+{
+    // Test the stringPositionAsLineColumn() method
+
+    int line;
+    int column;
+
+    OpenCOR::Core::stringPositionAsLineColumn(String, Eol, -1, line, column);
+
+    QCOMPARE(line, -1);
+    QCOMPARE(column, -1);
+
+    OpenCOR::Core::stringPositionAsLineColumn(String, Eol, String.length(), line, column);
+
+    QCOMPARE(line, -1);
+    QCOMPARE(column, -1);
+
+    OpenCOR::Core::stringPositionAsLineColumn(String, Eol, 0, line, column);
+
+    QCOMPARE(line, 1);
+    QCOMPARE(column, 1);
+
+    OpenCOR::Core::stringPositionAsLineColumn(String, Eol, String.length()-1, line, column);
+
+    QCOMPARE(line, 5);
+    QCOMPARE(column, 5);
+
+    OpenCOR::Core::stringPositionAsLineColumn(String, Eol, 7, line, column);
+
+    QCOMPARE(line, 3);
+    QCOMPARE(column, 3);
+}
+
+//==============================================================================
+
+void Tests::stringLineColumnAsPositionTests()
+{
+    // Test the stringLineColumnAsPosition() method
+
+    int position;
+
+    OpenCOR::Core::stringLineColumnAsPosition(String, Eol, 0, 0, position);
+
+    QCOMPARE(position, -1);
+
+    OpenCOR::Core::stringLineColumnAsPosition(String, Eol, 1, 0, position);
+
+    QCOMPARE(position, -1);
+
+    OpenCOR::Core::stringLineColumnAsPosition(String, Eol, 0, 1, position);
+
+    QCOMPARE(position, -1);
+
+    OpenCOR::Core::stringLineColumnAsPosition(String, Eol, 13, 1, position);
+
+    QCOMPARE(position, -1);
+
+    OpenCOR::Core::stringLineColumnAsPosition(String, Eol, 1, 13, position);
+
+    QCOMPARE(position, -1);
+
+    OpenCOR::Core::stringLineColumnAsPosition(String, Eol, 1, 1, position);
+
+    QCOMPARE(position, 0);
+
+    OpenCOR::Core::stringLineColumnAsPosition(String, Eol, 5, 5, position);
+
+    QCOMPARE(position, String.length()-1);
+
+    OpenCOR::Core::stringLineColumnAsPosition(String, Eol, 3, 3, position);
+
+    QCOMPARE(position, 7);
+}
+
+//==============================================================================
+
 QTEST_MAIN(Tests)
 
 //==============================================================================

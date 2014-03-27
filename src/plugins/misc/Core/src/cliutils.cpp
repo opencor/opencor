@@ -341,6 +341,70 @@ QString sha1(const QString &pText)
 
 //==============================================================================
 
+void stringPositionAsLineColumn(const QString &pString, const QString &pEol,
+                                const int &pPosition, int &pLine, int &pColumn)
+{
+    // Determine the line and column values of the given position within the
+    // given string using the given end of line
+
+    if ((pPosition < 0) || (pPosition >= pString.length())) {
+        // Invalid position values
+
+        pLine = -1;
+        pColumn = -1;
+    } else {
+        pLine = pString.left(pPosition).count(pEol)+1;
+        pColumn = pPosition-((pPosition >= pEol.length())?pString.lastIndexOf(pEol, pPosition-pEol.length()):-1);
+    }
+}
+
+//==============================================================================
+
+void stringLineColumnAsPosition(const QString &pString, const QString &pEol,
+                                const int &pLine, const int &pColumn,
+                                int &pPosition)
+{
+    // Determine the position value of the given line and column within the
+    // given string using the given end of line
+
+    if ((pLine < 1) || (pColumn < 1)) {
+        // Invalid line and/or colunn values
+
+        pPosition = -1;
+    } else {
+        pPosition = 0;
+
+        for (int i = 1; i < pLine; ++i) {
+            int pos = pString.indexOf(pEol, pPosition);
+
+            if (pos == -1) {
+                // Invalid line value
+
+                pPosition = -1;
+
+                return;
+            } else {
+                pPosition = pos+pEol.length();
+            }
+        }
+
+        pPosition += pColumn-1;
+
+        // Make sure that the column value is actually valid by trying to
+        // retrieve the line and column values from our computed position
+
+        int testLine;
+        int testColumn;
+
+        stringPositionAsLineColumn(pString, pEol, pPosition, testLine, testColumn);
+
+        if ((testLine != pLine) || (testColumn != pColumn))
+            pPosition = -1;
+    }
+}
+
+//==============================================================================
+
 QByteArray resourceAsByteArray(const QString &pResource)
 {
     // Retrieve a resource as a QByteArray
