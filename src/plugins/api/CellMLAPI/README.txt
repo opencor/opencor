@@ -19,9 +19,11 @@ From there, using cmake-gui on Windows or ccmake on Linux / OS X, you need to:
        ===> CMAKE_CXX_FLAGS=-std=c++0x -stdlib=libc++
  - Update the installation destination so that, upon 'installation', we have a ready to use version of the CellML API binaries (this is particularly useful on OS X since the 'installation' will result in 'clean' binaries):
     ===> CMAKE_INSTALL_PREFIX=<InstallationDestination>
- - Enable the AnnoTools, CCGS, CeVAS, CUSES, MaLaES, RDF and VACSS services:
+ - Enable the AnnoTools, CCGS, CeLEDS, CeLEDSExporter, CeVAS, CUSES, MaLaES, RDF and VACSS services:
     ===> ENABLE_ANNOTOOLS=ON
     ===> ENABLE_CCGS=ON
+    ===> ENABLE_CELEDS=ON
+    ===> ENABLE_CELEDS_EXPORTER=ON
     ===> ENABLE_CEVAS=ON
     ===> ENABLE_CUSES=ON
     ===> ENABLE_MALAES=ON
