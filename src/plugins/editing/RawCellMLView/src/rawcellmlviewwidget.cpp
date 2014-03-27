@@ -388,13 +388,6 @@ QString RawCellmlViewWidget::retrieveContentMathmlEquation(const QString &pConte
         if (domNode.childNodes().count() <= 1)
             return domDocument.toString(-1);
 
-        // Determine the line and column values of the given position within the
-        // given Content MathML block
-
-        QString eolString = mEditingWidget->editor()->eolString();
-        int line = pContentMathmlBlock.left(pPosition).count(eolString)+1;
-        int column = pPosition-((pPosition >= eolString.length())?pContentMathmlBlock.lastIndexOf(eolString, pPosition-eolString.length()):-1);
-
         // Go through the different child nodes of our DOM representation and
         // determine (based on our line and column values) to which one we
         // 'belong'
@@ -402,12 +395,28 @@ QString RawCellmlViewWidget::retrieveContentMathmlEquation(const QString &pConte
         QDomNode prevChildNode = domNode.firstChild();
 
         while (domNode.childNodes().count() != 1) {
-            QDomNode childNode = prevChildNode.nextSibling();
-            int childNodeLine = childNode.lineNumber();
-            int childNodeColumn = childNode.columnNumber()-childNode.nodeName().length()-1;
+            // Retrieve the position of the current child node
+            // Note: it needs to be corrected since the line and column numbers
+            //       we are getting for the current child node correspond to the
+            //       position of ">" in, say, "<apply ...>", while we need the
+            //       position of "<"...
 
-            if (   ((line == childNodeLine) && (column >= childNodeColumn))
-                || (line > childNodeLine)) {
+            QDomNode childNode = prevChildNode.nextSibling();
+            int childNodePosition;
+
+            Core::stringLineColumnAsPosition(pContentMathmlBlock,
+                                             mEditingWidget->editor()->eolString(),
+                                             childNode.lineNumber(),
+                                             childNode.columnNumber(),
+                                             childNodePosition);
+
+            childNodePosition = pContentMathmlBlock.lastIndexOf("<"+childNode.nodeName(), childNodePosition);
+
+            // Check where we are with respect to the position of the current
+            // child node and remove the previous node or all the subsequent
+            // ones, depending on the case
+
+            if (pPosition >= childNodePosition) {
                 domNode.removeChild(prevChildNode);
 
                 prevChildNode = childNode;
