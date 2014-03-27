@@ -597,8 +597,6 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
                 #       but we need a solution that works for all possible
                 #       tests, hence they are included...
 
-                SET(CORE_SOURCES_MOC)
-
                 IF(WIN32)
                     SET(CORE_SOURCES)
                 ELSE()
@@ -612,8 +610,6 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
                 QT5_WRAP_CPP(TEST_SOURCES_MOC
                     ../../plugin.h
                     ../../pluginmanager.h
-
-                    ${CORE_SOURCES_MOC}
 
                     ${HEADERS_MOC}
                     ${TEST_HEADER_MOC_FILE}

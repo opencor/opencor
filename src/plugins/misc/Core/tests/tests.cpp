@@ -45,18 +45,18 @@ void Tests::sizeAsStringTests()
 {
     // Test the sizeAsString() method
 
-    QCOMPARE(OpenCOR::Core::sizeAsString(256*pow(1024, 0)), QString("256 B"));
-    QCOMPARE(OpenCOR::Core::sizeAsString(256*pow(1024, 1)), QString("256 KB"));
-    QCOMPARE(OpenCOR::Core::sizeAsString(256*pow(1024, 2)), QString("256 MB"));
-    QCOMPARE(OpenCOR::Core::sizeAsString(256*pow(1024, 3)), QString("256 GB"));
-    QCOMPARE(OpenCOR::Core::sizeAsString(256*pow(1024, 4)), QString("256 TB"));
-    QCOMPARE(OpenCOR::Core::sizeAsString(256*pow(1024, 5)), QString("256 PB"));
-    QCOMPARE(OpenCOR::Core::sizeAsString(256*pow(1024, 6)), QString("256 EB"));
-    QCOMPARE(OpenCOR::Core::sizeAsString(256*pow(1024, 7)), QString("256 ZB"));
-    QCOMPARE(OpenCOR::Core::sizeAsString(256*pow(1024, 8)), QString("256 YB"));
+    QCOMPARE(OpenCOR::Core::sizeAsString(256*qPow(1024, 0)), QString("256 B"));
+    QCOMPARE(OpenCOR::Core::sizeAsString(256*qPow(1024, 1)), QString("256 KB"));
+    QCOMPARE(OpenCOR::Core::sizeAsString(256*qPow(1024, 2)), QString("256 MB"));
+    QCOMPARE(OpenCOR::Core::sizeAsString(256*qPow(1024, 3)), QString("256 GB"));
+    QCOMPARE(OpenCOR::Core::sizeAsString(256*qPow(1024, 4)), QString("256 TB"));
+    QCOMPARE(OpenCOR::Core::sizeAsString(256*qPow(1024, 5)), QString("256 PB"));
+    QCOMPARE(OpenCOR::Core::sizeAsString(256*qPow(1024, 6)), QString("256 EB"));
+    QCOMPARE(OpenCOR::Core::sizeAsString(256*qPow(1024, 7)), QString("256 ZB"));
+    QCOMPARE(OpenCOR::Core::sizeAsString(256*qPow(1024, 8)), QString("256 YB"));
 
-    QCOMPARE(OpenCOR::Core::sizeAsString(256.256*pow(1024, 2)), QString("256.3 MB"));
-    QCOMPARE(OpenCOR::Core::sizeAsString(256.256*pow(1024, 2), 3), QString("256.256 MB"));
+    QCOMPARE(OpenCOR::Core::sizeAsString(256.256*qPow(1024, 2)), QString("256.3 MB"));
+    QCOMPARE(OpenCOR::Core::sizeAsString(256.256*qPow(1024, 2), 3), QString("256.256 MB"));
 }
 
 //==============================================================================

@@ -324,7 +324,7 @@ QString sizeAsString(const double &pSize, const int &pPrecision)
     double size = pSize/qPow(1024.0, i);
     double scaling = qPow(10.0, pPrecision);
 
-    size = round(scaling*size)/scaling;
+    size = qRound(scaling*size)/scaling;
 
     return QString::number(size)+" "+units[i];
 }
