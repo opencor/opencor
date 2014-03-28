@@ -52,6 +52,8 @@ static const auto SettingsWindowColor    = QStringLiteral("WindowColor");
 
 //==============================================================================
 
+QString CORE_EXPORT getOpenFileName(const QString &pCaption,
+                                    const QString &pFilter);
 QStringList CORE_EXPORT getOpenFileNames(const QString &pCaption,
                                          const QString &pFilter);
 QString CORE_EXPORT getSaveFileName(const QString &pCaption,

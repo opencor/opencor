@@ -413,7 +413,7 @@ void CellMLToolsPlugin::exportTo(const CellMLSupport::CellmlFile::Version &pVers
         fileTypes +=  fileType.description()+" (*."+fileType.fileExtension()+")";
     }
 
-    QString fileName = Core::getSaveFileName(tr("CellML file export to %1").arg(format), mFileName, fileTypes);
+    QString fileName = Core::getSaveFileName(tr("Export CellML File To %1").arg(format), mFileName, fileTypes);
 
     // Make sure that we have a file name or leave, if not
 
@@ -433,7 +433,7 @@ void CellMLToolsPlugin::exportTo(const CellMLSupport::CellmlFile::Version &pVers
             // Note: if there are 'issues', then there can be only one of them
             //       following a CellML export...
 
-        QMessageBox::warning(mMainWindow, tr("CellML file export to %1").arg(format),
+        QMessageBox::warning(mMainWindow, tr("Export CellML File To %1").arg(format),
                              tr("Sorry, but <strong>%1</strong> could not be exported to <strong>%2</strong>%3.").arg(fileName, format, errorMessage));
     }
 }
@@ -460,7 +460,14 @@ void CellMLToolsPlugin::exportToCellml11()
 
 void CellMLToolsPlugin::exportToUserFormat()
 {
-    // Export the current file to some user format
+    // Ask for the name of the file that contains the format description
+
+    QString formatFileName = Core::getOpenFileName(tr("Select User Format File"), "Format File (*.xml)");
+
+    // Make sure that we have a file name or leave, if not
+
+    if (formatFileName.isEmpty())
+        return;
 
 //---GRY--- TO BE DONE...
 }

@@ -28,16 +28,20 @@
         <translation>Exporter Fichier CellML Vers</translation>
     </message>
     <message>
-        <source>CellML file export to %1</source>
-        <translation>Exporter fichier CellML vers %1</translation>
-    </message>
-    <message>
         <source>User Format...</source>
         <translation>Format Utilisateur...</translation>
     </message>
     <message>
         <source>Export the CellML file to some user format</source>
         <translation>Exporter le fichier CellML vers un format utilisateur</translation>
+    </message>
+    <message>
+        <source>Export CellML File To %1</source>
+        <translation>Exporter Fichier CellML Vers %1</translation>
+    </message>
+    <message>
+        <source>Select User Format File</source>
+        <translation>Sélectionner Fichier Format Utilisateur</translation>
     </message>
 </context>
 </TS>

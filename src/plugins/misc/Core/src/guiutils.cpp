@@ -34,6 +34,7 @@ specific language governing permissions and limitations under the License.
 #include <QColor>
 #include <QDate>
 #include <QFileDialog>
+#include <QFileInfo>
 #include <QFont>
 #include <QFrame>
 #include <QLabel>
@@ -47,22 +48,42 @@ namespace Core {
 
 //==============================================================================
 
+QString getOpenFileName(const QString &pCaption, const QString &pFilter)
+{
+    // Retrieve and return one open file name
+
+    QString res = QFileDialog::getOpenFileName(qApp->activeWindow(),
+                                               pCaption, activeDirectory(),
+                                               pFilter);
+
+    if (res.size())
+        // We have retrieved a file name, so keep track of the folder in which
+        // it is
+
+        setActiveDirectory(QFileInfo(res).path());
+
+    // Return the file name
+
+    return res;
+}
+
+//==============================================================================
+
 QStringList getOpenFileNames(const QString &pCaption, const QString &pFilter)
 {
     // Retrieve and return one or several open file names
 
     QStringList res = QFileDialog::getOpenFileNames(qApp->activeWindow(),
-                                                    pCaption,
-                                                    activeDirectory(),
+                                                    pCaption, activeDirectory(),
                                                     pFilter);
 
     if (res.count())
-        // We have retrieve at least one open file name, so we can keep track of
-        // the folder in which it is
+        // We have retrieved at least one file name, so keep track of the folder
+        // in which it is
         // Note #1: we use the last open file name to determine the folder that
         //          is to be remembered since on Windows 7, at least, it's
         //          possible to search for files from within the file dialog
-        //          box, the last open file name should be the one we are
+        //          box, and the last file name should be the one we are most
         //          'interested' in...
         // Note #2: this doesn't, unfortunately, address the case where the user
         //          goes to a directory and then closes the file dialog box
@@ -75,7 +96,7 @@ QStringList getOpenFileNames(const QString &pCaption, const QString &pFilter)
 
         setActiveDirectory(QFileInfo(res[res.count()-1]).path());
 
-    // Return the open file name(s)
+    // Return the file name(s)
 
     return res;
 }
