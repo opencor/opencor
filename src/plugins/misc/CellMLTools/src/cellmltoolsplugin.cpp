@@ -94,8 +94,12 @@ void CellMLToolsPlugin::initialize()
     mExportToCellml10Action = newAction(mMainWindow);
     mExportToCellml11Action = newAction(mMainWindow);
 
+    mExportToUserFormatAction = newAction(mMainWindow);
+
     mCellmlFileExportToMenu->addAction(mExportToCellml10Action);
     mCellmlFileExportToMenu->addAction(mExportToCellml11Action);
+    mCellmlFileExportToMenu->addSeparator();
+    mCellmlFileExportToMenu->addAction(mExportToUserFormatAction);
 
     // Some connections to handle our different Tools | Export To actions
 
@@ -103,6 +107,9 @@ void CellMLToolsPlugin::initialize()
             this, SLOT(exportToCellml10()));
     connect(mExportToCellml11Action, SIGNAL(triggered()),
             this, SLOT(exportToCellml11()));
+
+    connect(mExportToUserFormatAction, SIGNAL(triggered()),
+            this, SLOT(exportToUserFormat()));
 
     // Set our settings
 
@@ -212,6 +219,8 @@ void CellMLToolsPlugin::updateGui(Plugin *pViewPlugin, const QString &pFileName)
                                         && QString::fromStdWString(cellmlFile->model()->cellmlVersion()).compare(CellMLSupport::Cellml_1_1));
 //---GRY--- DISABLED UNTIL WE ACTUALLY SUPPORT EXPORT TO CellML 1.1...
 Core::showEnableAction(mExportToCellml11Action, false);
+
+    mExportToUserFormatAction->setEnabled(cellmlFile && cellmlFile->model());
 
     // Keep track of the file name
 
@@ -377,6 +386,8 @@ void CellMLToolsPlugin::retranslateUi()
 
     retranslateAction(mExportToCellml10Action, tr("CellML 1.0..."), tr("Export the CellML file to CellML 1.0"));
     retranslateAction(mExportToCellml11Action, tr("CellML 1.1..."), tr("Export the CellML file to CellML 1.1"));
+
+    retranslateAction(mExportToUserFormatAction, tr("User Format..."), tr("Export the CellML file to some user format"));
 }
 
 //==============================================================================
@@ -443,6 +454,15 @@ void CellMLToolsPlugin::exportToCellml11()
     // Export the current file to CellML 1.1
 
     exportTo(CellMLSupport::CellmlFile::Cellml_1_1);
+}
+
+//==============================================================================
+
+void CellMLToolsPlugin::exportToUserFormat()
+{
+    // Export the current file to some user format
+
+//---GRY--- TO BE DONE...
 }
 
 //==============================================================================

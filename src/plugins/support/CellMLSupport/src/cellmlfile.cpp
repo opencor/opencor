@@ -190,6 +190,8 @@ bool CellmlFile::load()
             // Something went wrong with the full instantiation of the imports,
             // so...
 
+            mModel = 0;
+
             mIssues << CellmlFileIssue(CellmlFileIssue::Error,
                                        tr("the imports could not be fully instantiated"));
 

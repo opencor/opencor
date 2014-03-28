@@ -31,5 +31,13 @@
         <source>CellML file export to %1</source>
         <translation>Exporter fichier CellML vers %1</translation>
     </message>
+    <message>
+        <source>User Format...</source>
+        <translation>Format Utilisateur...</translation>
+    </message>
+    <message>
+        <source>Export the CellML file to some user format</source>
+        <translation>Exporter le fichier CellML vers un format utilisateur</translation>
+    </message>
 </context>
 </TS>
