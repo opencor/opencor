@@ -440,15 +440,6 @@ void CellMLToolsPlugin::exportTo(const CellMLSupport::CellmlFile::Version &pVers
 
 //==============================================================================
 
-void CellMLToolsPlugin::exportTo(const QString &pFormatFileName)
-{
-Q_UNUSED(pFormatFileName);
-
-//---GRY--- TO BE DONE...
-}
-
-//==============================================================================
-
 void CellMLToolsPlugin::exportToCellml10()
 {
     // Export the current file to CellML 1.0

@@ -12,11 +12,15 @@
     <name>OpenCOR::CellMLSupport::CellmlFile</name>
     <message>
         <source>the model could not be loaded (%1)</source>
-        <translation>le modèle n&apos;a pas pu être chargé (%1)</translation>
+        <translation>le modèle n&apos;a pas pu être lu (%1)</translation>
     </message>
     <message>
         <source>the imports could not be fully instantiated</source>
         <translation>les importations n&apos;ont pas pu être complètement instanciées</translation>
+    </message>
+    <message>
+        <source>the format file could not be loaded</source>
+        <translation>le fichier de format n&apos;a pas pu être lu</translation>
     </message>
 </context>
 <context>

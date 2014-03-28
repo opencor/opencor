@@ -28,6 +28,7 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include <QFile>
+#include <QFileInfo>
 #include <QIODevice>
 #include <QStringList>
 #include <QTextStream>
@@ -53,8 +54,10 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#include "IfaceCeLEDSExporter.hxx"
 #include "IfaceVACSS.hxx"
 
+#include "CeLEDSExporterBootstrap.hpp"
 #include "CellMLBootstrap.hpp"
 #include "VACSSBootstrap.hpp"
 
@@ -679,6 +682,10 @@ bool CellmlFile::exportTo(const QString &pFileName, const Version &pVersion)
     // Export the model to the required format, after loading it if necessary
 
     if (load()) {
+        // Reset any issues that we may have found before
+
+        mIssues.clear();
+
         // Check that it actually makes sense to export the model
 
         switch (pVersion) {
@@ -702,10 +709,6 @@ bool CellmlFile::exportTo(const QString &pFileName, const Version &pVersion)
 
                 return false;
         }
-
-        // Reset any issues that we may have found before
-
-        mIssues.clear();
 
         // Do the actual export
 
@@ -740,12 +743,38 @@ bool CellmlFile::exportTo(const QString &pFileName, const Version &pVersion)
 bool CellmlFile::exportTo(const QString &pFileName,
                           const QString &pFormatFileName)
 {
-Q_UNUSED(pFileName);
-Q_UNUSED(pFormatFileName);
+    // Export the model to the required format, after loading it if necessary
 
-//---GRY--- TO BE DONE...
+    if (load()) {
+        // Reset any issues that we may have found before
 
-    return false;
+        mIssues.clear();
+
+        // Check that the format file actually exists
+
+        if (!QFileInfo(pFormatFileName).exists())
+            return false;
+
+        // Do the actual export
+
+        ObjRef<iface::cellml_services::CeLEDSExporterBootstrap> celedsExporterBootstrap = CreateCeLEDSExporterBootstrap();
+        ObjRef<iface::cellml_services::CodeExporter> codeExporter = celedsExporterBootstrap->createExporter(pFormatFileName.toStdWString());
+
+        if (celedsExporterBootstrap->loadError().length()) {
+            mIssues << CellmlFileIssue(CellmlFileIssue::Error,
+                                       tr("the format file could not be loaded"));
+
+            return false;
+        }
+
+        Core::writeTextToFile(pFileName, QString::fromStdWString(codeExporter->generateCode(mModel)));
+
+        return true;
+    } else {
+        // The file couldn't be loaded, so...
+
+        return false;
+    }
 }
 
 //==============================================================================

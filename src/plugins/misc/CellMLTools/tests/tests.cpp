@@ -59,21 +59,31 @@ void Tests::cliCellmlExportTests()
 
     QString inFileName = "../src/plugins/misc/CellMLTools/tests/data/experiments/periodic-stimulus.xml";
     QString outFileName = "actual.out";
+    QString format = "cellml_1_0";
 
-    QCOMPARE(OpenCOR::runCli(QStringList() << "-c" << "CellMLTools::export" << inFileName << outFileName << "cellml_1_0"),
+    QCOMPARE(OpenCOR::runCli(QStringList() << "-c" << "CellMLTools::export" << inFileName << outFileName << format),
              QString());
     QCOMPARE(OpenCOR::fileContents(outFileName),
              OpenCOR::fileContents("../src/plugins/misc/CellMLTools/tests/data/cellml_1_0_export.out"));
 
     // Try to export a non-existing CellML file to CellML 1.0
 
-    QCOMPARE(OpenCOR::runCli(QStringList() << "-c" << "CellMLTools::export" << "non_existing_input_file" << outFileName << "cellml_1_0"),
+    QCOMPARE(OpenCOR::runCli(QStringList() << "-c" << "CellMLTools::export" << "non_existing_input_file" << outFileName << format),
              OpenCOR::fileContents("../src/plugins/misc/CellMLTools/tests/data/input_file_not_found.out"));
 
     // Try to export to a user format, which file description doesn't exist
 
     QCOMPARE(OpenCOR::runCli(QStringList() << "-c" << "CellMLTools::export" << inFileName << outFileName << "non_existing_format_file"),
              OpenCOR::fileContents("../src/plugins/misc/CellMLTools/tests/data/format_file_not_found.out"));
+
+    // Try to export to a user format, which file description exists
+
+    QString formatFileName = "../src/plugins/misc/CellMLTools/tests/data/user_format.xml";
+
+    QCOMPARE(OpenCOR::runCli(QStringList() << "-c" << "CellMLTools::export" << inFileName << outFileName << formatFileName),
+             QString());
+    QCOMPARE(OpenCOR::fileContents(outFileName),
+             OpenCOR::fileContents("../src/plugins/misc/CellMLTools/tests/data/user_format_export.out"));
 }
 
 //==============================================================================

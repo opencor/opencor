@@ -1,0 +1,327 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<language
+  xmlns="http://www.cellml.org/CeLEDS/1.0#"
+  xmlns:mal="http://www.cellml.org/CeLEDS/MaLaES/1.0#"
+  xmlns:ccgs="http://www.cellml.org/CeLEDS/CCGS/1.0#">
+
+<title>MATLAB</title>
+
+<mal:dictionary>
+  <mal:mapping keyname="opengroup">(</mal:mapping>
+  <mal:mapping keyname="closegroup">)</mal:mapping>
+  <mal:mapping keyname="abs" precedence="H">abs(#expr1)</mal:mapping>
+  <mal:mapping keyname="and" precedence="700">#exprs[&amp;]</mal:mapping>
+  <mal:mapping keyname="arccos" precedence="H">acos(#expr1)</mal:mapping>
+  <mal:mapping keyname="arccosh" precedence="H">acosh(#expr1)</mal:mapping>
+  <mal:mapping keyname="arccot" precedence="H">acot(#expr1)</mal:mapping>
+  <mal:mapping keyname="arccoth" precedence="H">acoth(#expr1)</mal:mapping>
+  <mal:mapping keyname="arccsc" precedence="H">acsc(#expr1)</mal:mapping>
+  <mal:mapping keyname="arccsch" precedence="H">acsch(#expr1)</mal:mapping>
+  <mal:mapping keyname="arcsec" precedence="H">asec(#expr1)</mal:mapping>
+  <mal:mapping keyname="arcsech" precedence="H">asech(#expr1)</mal:mapping>
+  <mal:mapping keyname="arcsin" precedence="H">asin(#expr1)</mal:mapping>
+  <mal:mapping keyname="arcsinh" precedence="H">asinh(#expr1)</mal:mapping>
+  <mal:mapping keyname="arctan" precedence="H">atan(#expr1)</mal:mapping>
+  <mal:mapping keyname="arctanh" precedence="H">atanh(#expr1)</mal:mapping>
+  <mal:mapping keyname="ceiling" precedence="H">ceil(#expr1)</mal:mapping>
+  <mal:mapping keyname="cos" precedence="H">cos(#expr1)</mal:mapping>
+  <mal:mapping keyname="cosh" precedence="H">cosh(#expr1)</mal:mapping>
+  <mal:mapping keyname="cot" precedence="H">cot(#expr1)</mal:mapping>
+  <mal:mapping keyname="coth" precedence="H">coth(#expr1)</mal:mapping>
+  <mal:mapping keyname="csc" precedence="H">csc(#expr1)</mal:mapping>
+  <mal:mapping keyname="csch" precedence="H">csch(#expr1)</mal:mapping>
+  <mal:mapping keyname="diff">#lookupDiffVariable</mal:mapping>
+  <mal:mapping keyname="divide" precedence="900">#expr1./#expr2</mal:mapping>
+  <mal:mapping keyname="eq" precedence="750">#exprs[==]</mal:mapping>
+  <mal:mapping keyname="exp" precedence="H">exp(#expr1)</mal:mapping>
+  <mal:mapping keyname="factorial" precedence="H">factorial(#expr1)</mal:mapping>
+  <mal:mapping keyname="factorof" precedence="750(995)">mod(#expr1, #expr2) == 0</mal:mapping>
+  <mal:mapping keyname="floor" precedence="H">floor(#expr1)</mal:mapping>
+  <mal:mapping keyname="gcd" precedence="H">gcd_multi([#exprs[, ]])</mal:mapping>
+  <mal:mapping keyname="geq" precedence="750">#exprs[&gt;=]</mal:mapping>
+  <mal:mapping keyname="gt" precedence="750">#exprs[&gt;]</mal:mapping>
+  <mal:mapping keyname="implies" precedence="650(950)"> ~#expr1 || #expr2</mal:mapping>
+  <mal:mapping keyname="int" precedence="H">defint(func#unique1, BOUND, CONSTANTS, RATES, VARIABLES, #bvarIndex)#supplement double func#unique1(double* BOUND, double* CONSTANTS, double* RATES, double* VARIABLES) { return #expr1; }</mal:mapping>
+  <mal:mapping keyname="lcm" precedence="H">lcm_multi([#exprs[, ]])</mal:mapping>
+  <mal:mapping keyname="leq" precedence="750">#exprs[&lt;=]</mal:mapping>
+  <mal:mapping keyname="ln" precedence="H">log(#expr1)</mal:mapping>
+  <mal:mapping keyname="log" precedence="H">arbitrary_log(#expr1, #logbase)</mal:mapping>
+  <mal:mapping keyname="lt" precedence="750">#exprs[&lt;]</mal:mapping>
+  <mal:mapping keyname="max" precedence="H">max([utilOnes.*(#exprs[), utilOnes.*( ])],[],2)</mal:mapping>
+  <mal:mapping keyname="min" precedence="H">min([utilOnes.*(#exprs[), utilOnes.*( ])],[],2)</mal:mapping>
+  <mal:mapping keyname="minus" precedence="850">#expr1 - #expr2</mal:mapping>
+  <mal:mapping keyname="neq" precedence="750">#expr1 ~= #expr2</mal:mapping>
+  <mal:mapping keyname="not" precedence="950">~#expr1</mal:mapping>
+  <mal:mapping keyname="or" precedence="650">#exprs[||]</mal:mapping>
+  <mal:mapping keyname="plus" precedence="850">#exprs[+]</mal:mapping>
+  <mal:mapping keyname="power" precedence="H">power(#expr1, #expr2)</mal:mapping>
+  <mal:mapping keyname="quotient" precedence="999(900)"> floor(#expr1 ./ #expr2)</mal:mapping>
+  <mal:mapping keyname="rem" precedence="H"> rem(#expr1, #expr2)</mal:mapping>
+  <mal:mapping keyname="root" precedence="999(900)">power(#expr1, 1.0 ./ #degree)</mal:mapping>
+  <mal:mapping keyname="sec" precedence="H">sec(#expr1)</mal:mapping>
+  <mal:mapping keyname="sech" precedence="H">sech(#expr1)</mal:mapping>
+  <mal:mapping keyname="sin" precedence="H"> sin(#expr1)</mal:mapping>
+  <mal:mapping keyname="sinh" precedence="H"> sinh(#expr1)</mal:mapping>
+  <mal:mapping keyname="tan" precedence="H"> tan(#expr1)</mal:mapping>
+  <mal:mapping keyname="tanh" precedence="H"> tanh(#expr1)</mal:mapping>
+  <mal:mapping keyname="times" precedence="900"> #exprs[.*]</mal:mapping>
+  <mal:mapping keyname="unary_minus" precedence="950"> - #expr1</mal:mapping>
+  <mal:mapping keyname="units_conversion" precedence="850(900)">#expr1.*#expr2 + #expr3</mal:mapping>
+  <mal:mapping keyname="units_conversion_factor" precedence="900">#expr1.*#expr2</mal:mapping>
+  <mal:mapping keyname="units_conversion_offset" precedence="850">#expr1+#expr2</mal:mapping>
+  <mal:mapping keyname="xor" precedence="H">xor(#expr1 , #expr2)</mal:mapping>
+  <mal:mapping keyname="piecewise_first_case" precedence="H">piecewise({#expr1, #expr2 </mal:mapping>
+  <mal:mapping keyname="piecewise_extra_case" precedence="H">, #expr1, #expr2 </mal:mapping>
+  <mal:mapping keyname="piecewise_otherwise" precedence="H">}, #expr1)</mal:mapping>
+  <mal:mapping keyname="piecewise_no_otherwise" precedence="H">}, NaN)</mal:mapping>
+  <mal:mapping keyname="pi" precedence="999"> pi</mal:mapping>
+  <mal:mapping keyname="eulergamma" precedence="999">0.577215664901533</mal:mapping>
+  <mal:mapping keyname="infinity" precedence="999"> Inf</mal:mapping>
+</mal:dictionary>
+
+<ccgs:dictionary>
+  <ccgs:mapping keyname="constantPattern">CONSTANTS(:,%)</ccgs:mapping>
+  <ccgs:mapping keyname="stateVariableNamePattern">STATES(:,%)</ccgs:mapping>
+  <ccgs:mapping keyname="algebraicVariableNamePattern">ALGEBRAIC(:,%)</ccgs:mapping>
+  <ccgs:mapping keyname="rateNamePattern">RATES(:,%)</ccgs:mapping>
+  <ccgs:mapping keyname="voiPattern">VOI</ccgs:mapping>
+  <ccgs:mapping keyname="arrayOffset">1</ccgs:mapping>
+  <ccgs:mapping keyname="assignPattern">    &lt;LHS&gt; = &lt;RHS&gt;;
+</ccgs:mapping>
+  <ccgs:mapping keyname="assignConstantPattern">    &lt;LHS&gt; = &lt;RHS&gt;;
+</ccgs:mapping>
+  <ccgs:mapping keyname="solvePattern"><![CDATA[    [CONSTANTS, STATES, ALGEBRAIC] = rootfind_<ID>(VOI, CONSTANTS, STATES, ALGEBRAIC);
+<SUP>% Functions required for solving differential algebraic equation
+function [CONSTANTS, STATES, ALGEBRAIC] = rootfind_<ID>(VOI, CONSTANTS_IN, STATES_IN, ALGEBRAIC_IN)
+    CONSTANTS = CONSTANTS_IN;
+    STATES = STATES_IN;
+    ALGEBRAIC = ALGEBRAIC_IN;
+    global initialGuess_<ID>;
+    if (length(initialGuess_<ID>) ~= 1), initialGuess_<ID> = <IV>;, end
+    options = optimset('Display', 'off', 'TolX', 1E-6);
+    if length(VOI) == 1
+        residualfn = @(algebraicCandidate)residualSN_<ID>(algebraicCandidate, ALGEBRAIC, VOI, CONSTANTS, STATES);
+        <VAR> = fsolve(residualfn, initialGuess_<ID>, options);
+        initialGuess_<ID> = <VAR>;
+    else
+        SET_<VAR> = logical(1);
+        for i=1:length(VOI)
+            residualfn = @(algebraicCandidate)residualSN_<ID>(algebraicCandidate, ALGEBRAIC(i,:), VOI(i), CONSTANTS, STATES(i,:));
+            TEMP_<VAR> = fsolve(residualfn, initialGuess_<ID>, options);
+            ALGEBRAIC(i,SET_ALGEBRAIC) = TEMP_ALGEBRAIC(SET_ALGEBRAIC);
+            initialGuess_<ID> = TEMP_<VAR>;
+        end
+    end
+end
+
+function resid = residualSN_<ID>(algebraicCandidate, ALGEBRAIC, VOI, CONSTANTS, STATES)
+    <VAR> = algebraicCandidate;
+    resid = (<LHS>) - (<RHS>);
+end
+
+]]></ccgs:mapping>
+  <ccgs:mapping keyname="solveNLSystemPattern"><![CDATA[    [CONSTANTS, STATES, ALGEBRAIC] = rootfind_<ID>(VOI, CONSTANTS, STATES, ALGEBRAIC);
+<SUP>% Functions required for solving differential algebraic equation
+function [CONSTANTS, STATES, ALGEBRAIC] = rootfind_<ID>(VOI, CONSTANTS_IN, STATES_IN, ALGEBRAIC_IN)
+    ALGEBRAIC = ALGEBRAIC_IN;
+    CONSTANTS = CONSTANTS_IN;
+    STATES = STATES_IN;
+    global initialGuess_<ID>;
+    if (length(initialGuess_<ID>) ~= <COUNT>), initialGuess_<ID> = [<EQUATIONS><IV><JOIN>,</EQUATIONS>];, end
+    options = optimset('Display', 'off', 'TolX', 1E-6);
+    if length(VOI) == 1
+        residualfn = @(algebraicCandidate)residualSN_<ID>(algebraicCandidate, ALGEBRAIC, VOI, CONSTANTS, STATES);
+        soln = fsolve(residualfn, initialGuess_<ID>, options);
+        initialGuess_<ID> = soln;
+        <EQUATIONS><VAR> = soln(<INDEX>);<JOIN>
+        </EQUATIONS>
+    else
+        <EQUATIONS>SET_<VAR> = logical(1);<JOIN>
+        </EQUATIONS>
+        for i=1:length(VOI)
+            residualfn = @(algebraicCandidate)residualSN_<ID>(algebraicCandidate, ALGEBRAIC(i,:), VOI(i), CONSTANTS, STATES(i,:));
+            soln = fsolve(residualfn, initialGuess_<ID>, options);
+            initialGuess_<ID> = soln;
+            <EQUATIONS>TEMP_<VAR> = soln(<INDEX>);<JOIN>
+            </EQUATIONS>
+            ALGEBRAIC(i,SET_ALGEBRAIC) = TEMP_ALGEBRAIC(SET_ALGEBRAIC);
+        end
+    end
+end
+
+function resid = residualSN_<ID>(algebraicCandidate, ALGEBRAIC, VOI, CONSTANTS, STATES)
+    <EQUATIONS><VAR> = algebraicCandidate(<INDEX>);<JOIN>
+    </EQUATIONS>
+    <EQUATIONS>resid(<INDEX>) = <EXPR>;<JOIN>
+    </EQUATIONS>
+end
+
+]]></ccgs:mapping>
+</ccgs:dictionary>
+
+<dictionary>
+  <mapping keyname="preAlgebraicCount">
+function [VOI, STATES, ALGEBRAIC, CONSTANTS] = mainFunction()
+    % This is the "main function".  In Matlab, things work best if you rename this function to match the filename.
+   [VOI, STATES, ALGEBRAIC, CONSTANTS] = solveModel();
+end
+
+function [algebraicVariableCount] = getAlgebraicVariableCount() 
+    % Used later when setting a global variable with the number of algebraic variables.
+    % Note: This is not the "main method".  
+    algebraicVariableCount =</mapping>
+<mapping keyname="postAlgebraicCount">;
+end
+</mapping>
+  <mapping keyname="preStateCount">% There are a total of </mapping>
+  <mapping keyname="postStateCount"> entries in each of the rate and state variable arrays.
+</mapping>
+  <mapping keyname="preConstantCount">% There are a total of </mapping>
+  <mapping keyname="postConstantCount"> entries in the constant variable array.
+%
+</mapping>
+  <mapping keyname="topSection" solverparameters="true"><![CDATA[
+function [VOI, STATES, ALGEBRAIC, CONSTANTS] = solveModel()
+    % Create ALGEBRAIC of correct size
+    global algebraicVariableCount;  algebraicVariableCount = getAlgebraicVariableCount();
+    % Initialise constants and state variables
+    [INIT_STATES, CONSTANTS] = initConsts;
+
+    % Set timespan to solve over 
+    tspan = [<RANGESTART>, <RANGEEND>];
+
+    % Set numerical accuracy options for ODE solver
+    options = odeset('RelTol', <RELTOL>, 'AbsTol', <ABSTOL>, 'MaxStep', <MAXSTEP>);
+
+    % Solve model with ODE solver
+    [VOI, STATES] = ode15s(@(VOI, STATES)computeRates(VOI, STATES, CONSTANTS), tspan, INIT_STATES, options);
+
+    % Compute algebraic variables
+    [RATES, ALGEBRAIC] = computeRates(VOI, STATES, CONSTANTS);
+    ALGEBRAIC = computeAlgebraic(ALGEBRAIC, CONSTANTS, STATES, VOI);
+
+    % Plot state variables against variable of integration
+    [LEGEND_STATES, LEGEND_ALGEBRAIC, LEGEND_VOI, LEGEND_CONSTANTS] = createLegends();
+    figure();
+    plot(VOI, STATES);
+    xlabel(LEGEND_VOI);
+    l = legend(LEGEND_STATES);
+    set(l,'Interpreter','none');
+end
+
+]]></mapping>
+  <mapping keyname="preInitConsts">function [STATES, CONSTANTS] = initConsts()
+    VOI = 0; CONSTANTS = []; STATES = []; ALGEBRAIC = [];
+</mapping>
+  <mapping keyname="postInitConsts">    if (isempty(STATES)), warning('Initial values for states not set');, end
+end
+
+</mapping>
+  <mapping keyname="preRates">function [RATES, ALGEBRAIC] = computeRates(VOI, STATES, CONSTANTS)
+    global algebraicVariableCount;
+    statesSize = size(STATES);
+    statesColumnCount = statesSize(2);
+    if ( statesColumnCount == 1)
+        STATES = STATES';
+        ALGEBRAIC = zeros(1, algebraicVariableCount);
+        utilOnes = 1;
+    else
+        statesRowCount = statesSize(1);
+        ALGEBRAIC = zeros(statesRowCount, algebraicVariableCount);
+        RATES = zeros(statesRowCount, statesColumnCount);
+        utilOnes = ones(statesRowCount, 1);
+    end
+</mapping>
+  <mapping keyname="postRates">   RATES = RATES';
+end
+
+</mapping>
+  <mapping keyname="preVariables">% Calculate algebraic variables
+function ALGEBRAIC = computeAlgebraic(ALGEBRAIC, CONSTANTS, STATES, VOI)
+    statesSize = size(STATES);
+    statesColumnCount = statesSize(2);
+    if ( statesColumnCount == 1)
+        STATES = STATES';
+        utilOnes = 1;
+    else
+        statesRowCount = statesSize(1);
+        utilOnes = ones(statesRowCount, 1);
+    end
+</mapping>
+  <mapping keyname="postVariables">end
+
+</mapping>
+  <mapping keyname="endSection">% Pad out or shorten strings to a set length
+function strout = strpad(strin)
+    req_length = 160;
+    insize = size(strin,2);
+    if insize > req_length
+        strout = strin(1:req_length);
+    else
+        strout = [strin, blanks(req_length - insize)];
+    end
+end
+
+</mapping>
+  <mapping keyname="preVarList">function [LEGEND_STATES, LEGEND_ALGEBRAIC, LEGEND_VOI, LEGEND_CONSTANTS] = createLegends()
+    LEGEND_STATES = ''; LEGEND_ALGEBRAIC = ''; LEGEND_VOI = ''; LEGEND_CONSTANTS = '';
+</mapping>
+  <mapping keyname="postVarList">    LEGEND_STATES  = LEGEND_STATES';
+    LEGEND_ALGEBRAIC = LEGEND_ALGEBRAIC';
+    LEGEND_RATES = LEGEND_RATES';
+    LEGEND_CONSTANTS = LEGEND_CONSTANTS';
+end
+
+</mapping>
+  <mapping keyname="varListA">    LEGEND_</mapping>
+  <mapping keyname="varListB"> = strpad('</mapping>
+  <mapping keyname="varListC">');</mapping>
+</dictionary>
+
+<extrafunctions>
+  <function searchname="piecewise"><![CDATA[% Compute result of a piecewise function
+function x = piecewise(cases, default)
+    set = [0];
+    for i = 1:2:length(cases)
+        if (length(cases{i+1}) == 1)
+            x(cases{i} & ~set,:) = cases{i+1};
+        else
+            x(cases{i} & ~set,:) = cases{i+1}(cases{i} & ~set);
+        end
+        set = set | cases{i};
+        if(set), break, end
+    end
+    if (length(default) == 1)
+        x(~set,:) = default;
+    else
+        x(~set,:) = default(~set);
+    end
+end
+
+]]></function>
+  <function searchname="arbitrary_log"><![CDATA[% Compute a logarithm to any base" +
+function x = arbitrary_log(a, base)
+    x = log(a) ./ log(base);
+end
+
+]]></function>
+  <function searchname="lcm_multi"><![CDATA[% Least common multiple
+function m = lcm_multi(x)
+    m = x(1);
+    for (i = 1:size(x,2))
+        if(x(i) ~= 0), m = m./gcd(m,x(i)).*x(i);, end
+    end
+end
+
+]]></function>
+  <function searchname="gcd_multi"><![CDATA[% Greatest common divisor
+function d = gcd_multi(x)
+    d = 0;
+    for (i = 1:size(x,2)), d = gcd(d, x(:,i));, end
+end
+
+]]></function>
+</extrafunctions>
+
+</language>
