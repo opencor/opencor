@@ -9,9 +9,9 @@ before_install:
     && sudo apt-add-repository -y ppa:beineri/opt-qt521
     && sudo apt-get -qq update
     && sudo apt-get -qq install cmake
-    && wget http://www.cmake.org/files/v2.8/cmake-2.8.12.1.tar.gz
-    && tar -xzf cmake-2.8.12.1.tar.gz
-    && cd cmake-2.8.12.1
+    && wget http://www.cmake.org/files/v2.8/cmake-2.8.12.2.tar.gz
+    && tar -xzf cmake-2.8.12.2.tar.gz
+    && cd cmake-2.8.12.2
     && mkdir build
     && cd build
     && cmake -DCMAKE_INSTALL_PREFIX=/usr ..
