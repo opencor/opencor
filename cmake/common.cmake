@@ -587,32 +587,18 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
         FOREACH(TEST ${TESTS})
             SET(TEST_NAME ${PLUGIN_NAME}_${TEST})
 
-            SET(TEST_SOURCE_FILE tests/${TEST}.cpp)
-            SET(TEST_HEADER_MOC_FILE tests/${TEST}.h)
+            SET(TEST_SOURCE tests/${TEST}.cpp)
+            SET(TEST_HEADER_MOC tests/${TEST}.h)
 
-            IF(    EXISTS ${PROJECT_SOURCE_DIR}/${TEST_SOURCE_FILE}
-               AND EXISTS ${PROJECT_SOURCE_DIR}/${TEST_HEADER_MOC_FILE})
+            IF(    EXISTS ${PROJECT_SOURCE_DIR}/${TEST_SOURCE}
+               AND EXISTS ${PROJECT_SOURCE_DIR}/${TEST_HEADER_MOC})
                 # The test exists, so build it
-                # Note: some features (e.g. the interfaces) may not be needed,
-                #       but we need a solution that works for all possible
-                #       tests, hence they are included...
-
-                IF(WIN32)
-                    SET(CORE_SOURCES)
-                ELSE()
-                    SET(CORE_SOURCES
-                        ../../misc/Core/src/cliutils.cpp
-                        ../../misc/Core/src/commonwidget.cpp
-                        ../../misc/Core/src/guiutils.cpp
-                    )
-                ENDIF()
 
                 QT5_WRAP_CPP(TEST_SOURCES_MOC
                     ../../plugin.h
                     ../../pluginmanager.h
 
-                    ${HEADERS_MOC}
-                    ${TEST_HEADER_MOC_FILE}
+                    ${TEST_HEADER_MOC}
                 )
 
                 IF(ENABLE_TRAVIS_CI)
@@ -622,17 +608,16 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
                 ADD_EXECUTABLE(${TEST_NAME}
                     ../../../../tests/testsutils.cpp
 
-                    ../../fileinterface.cpp
-                    ../../guiinterface.cpp
-                    ../../i18ninterface.cpp
                     ../../plugin.cpp
                     ../../plugininfo.cpp
                     ../../pluginmanager.cpp
-                    ../../solverinterface.cpp
 
-                    ${CORE_SOURCES}
+                    ${SOURCES}
+                    ${SOURCES_MOC}
+                    ${SOURCES_UIS}
+                    ${SOURCES_RCS}
 
-                    ${TEST_SOURCE_FILE}
+                    ${TEST_SOURCE}
                     ${TEST_SOURCES_MOC}
                 )
 
