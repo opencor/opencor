@@ -33,7 +33,7 @@ namespace OpenCOR {
 
 //==============================================================================
 
-QStringList fileContents(const QString &pFileName)
+QString fileContents(const QString &pFileName)
 {
     // Read and return the contents of the given file
 
@@ -49,12 +49,12 @@ QStringList fileContents(const QString &pFileName)
         file.close();
     }
 
-    return contents.split("\n");
+    return contents;
 }
 
 //==============================================================================
 
-QStringList runCli(const QStringList pArguments)
+QString runCli(const QStringList pArguments)
 {
     // Execute the CLI version of OpenCOR (passing to it the given arguments)
     // and return the output it has generated, if any
@@ -86,7 +86,7 @@ QStringList runCli(const QStringList pArguments)
     while (process.waitForReadyRead())
         output += process.readAll();
 
-    return output.replace("\r", "").split("\n");
+    return output.replace("\r", "");
 }
 
 //==============================================================================

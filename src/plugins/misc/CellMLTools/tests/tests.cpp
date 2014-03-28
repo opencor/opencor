@@ -35,22 +35,20 @@ void Tests::cliHelpTests()
 {
     // Ask for the plugin's help
 
-    QStringList a = OpenCOR::runCli(QStringList() << "-c" << "CellMLTools");
-    QStringList b = OpenCOR::fileContents("../src/plugins/misc/CellMLTools/tests/data/help.out");
+    QString help = OpenCOR::fileContents("../src/plugins/misc/CellMLTools/tests/data/help.out");
 
-    QCOMPARE(a, b);
+    QCOMPARE(OpenCOR::runCli(QStringList() << "-c" << "CellMLTools"),
+             help);
 
     // Ask for the plugin's help
 
-    a = OpenCOR::runCli(QStringList() << "-c" << "CellMLTools::help");
-
-    QCOMPARE(a, b);
+    QCOMPARE(OpenCOR::runCli(QStringList() << "-c" << "CellMLTools::help"),
+             help);
 
     // Try an unknown command, resulting in the help being shown
 
-    a = OpenCOR::runCli(QStringList() << "-c" << "CellMLTools::unknown");
-
-    QCOMPARE(a, b);
+    QCOMPARE(OpenCOR::runCli(QStringList() << "-c" << "CellMLTools::unknown"),
+             help);
 }
 
 //==============================================================================
@@ -62,29 +60,20 @@ void Tests::cliCellmlExportTests()
     QString inFileName = "../src/plugins/misc/CellMLTools/tests/data/experiments/periodic-stimulus.xml";
     QString outFileName = "actual.out";
 
-    QStringList a = OpenCOR::runCli(QStringList() << "-c" << "CellMLTools::export" << inFileName << outFileName << "cellml_1_0");
-    QStringList b = QStringList() << QString();
-
-    QCOMPARE(a, b);
-
-    a = OpenCOR::fileContents(outFileName);
-    b = OpenCOR::fileContents("../src/plugins/misc/CellMLTools/tests/data/cellml_1_0_export.out");
-
-    QCOMPARE(a, b);
+    QCOMPARE(OpenCOR::runCli(QStringList() << "-c" << "CellMLTools::export" << inFileName << outFileName << "cellml_1_0"),
+             QString());
+    QCOMPARE(OpenCOR::fileContents(outFileName),
+             OpenCOR::fileContents("../src/plugins/misc/CellMLTools/tests/data/cellml_1_0_export.out"));
 
     // Try to export a non-existing CellML file to CellML 1.0
 
-    a = OpenCOR::runCli(QStringList() << "-c" << "CellMLTools::export" << "non_existing_file" << outFileName << "cellml_1_0");
-    b = OpenCOR::fileContents("../src/plugins/misc/CellMLTools/tests/data/file_not_found.out");
+    QCOMPARE(OpenCOR::runCli(QStringList() << "-c" << "CellMLTools::export" << "non_existing_input_file" << outFileName << "cellml_1_0"),
+             OpenCOR::fileContents("../src/plugins/misc/CellMLTools/tests/data/input_file_not_found.out"));
 
-    QCOMPARE(a, b);
+    // Try to export to a user format, which file description doesn't exist
 
-    // Try to export an unknown format
-
-    a = OpenCOR::runCli(QStringList() << "-c" << "CellMLTools::export" << inFileName << outFileName << "unknown_format");
-    b = OpenCOR::fileContents("../src/plugins/misc/CellMLTools/tests/data/help.out");
-
-    QCOMPARE(a, b);
+    QCOMPARE(OpenCOR::runCli(QStringList() << "-c" << "CellMLTools::export" << inFileName << outFileName << "non_existing_format_file"),
+             OpenCOR::fileContents("../src/plugins/misc/CellMLTools/tests/data/format_file_not_found.out"));
 }
 
 //==============================================================================

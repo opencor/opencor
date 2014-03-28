@@ -737,6 +737,19 @@ bool CellmlFile::exportTo(const QString &pFileName, const Version &pVersion)
 
 //==============================================================================
 
+bool CellmlFile::exportTo(const QString &pFileName,
+                          const QString &pFormatFileName)
+{
+Q_UNUSED(pFileName);
+Q_UNUSED(pFormatFileName);
+
+//---GRY--- TO BE DONE...
+
+    return false;
+}
+
+//==============================================================================
+
 }   // namespace CellMLSupport
 }   // namespace OpenCOR
 

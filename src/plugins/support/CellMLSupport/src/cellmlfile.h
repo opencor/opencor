@@ -101,6 +101,7 @@ public:
     QString uriBase() const;
 
     bool exportTo(const QString &pFileName, const Version &pVersion);
+    bool exportTo(const QString &pFileName, const QString &pFormatFileName);
 
 private:
     QString mFileName;

@@ -440,6 +440,15 @@ void CellMLToolsPlugin::exportTo(const CellMLSupport::CellmlFile::Version &pVers
 
 //==============================================================================
 
+void CellMLToolsPlugin::exportTo(const QString &pFormatFileName)
+{
+Q_UNUSED(pFormatFileName);
+
+//---GRY--- TO BE DONE...
+}
+
+//==============================================================================
+
 void CellMLToolsPlugin::exportToCellml10()
 {
     // Export the current file to CellML 1.0
@@ -472,8 +481,8 @@ void CellMLToolsPlugin::runHelpCommand()
     std::cout << "Commands supported by CellMLTools:" << std::endl;
     std::cout << " * Display the commands supported by CellMLTools:" << std::endl;
     std::cout << "      help" << std::endl;
-    std::cout << " * Export <in_file> to <out_file> using <format> as the destination format:" << std::endl;
-    std::cout << "      export <in_file> <out_file> <format>" << std::endl;
+    std::cout << " * Export <in_file> to <out_file> using <format> as the destination format or <format_file> as the file describing the destination format:" << std::endl;
+    std::cout << "      export <in_file> <out_file> [<format>|<format_file>]" << std::endl;
     std::cout << "   <format> can take one of the following values:" << std::endl;
     std::cout << "      cellml_1_0: to export a CellML 1.1 file to CellML 1.0" << std::endl;
 }
@@ -485,30 +494,15 @@ int CellMLToolsPlugin::runExportCommand(const QStringList &pArguments)
     // Export an existing file to another file using a given format as the
     // destination format
 
-    // Make sure that we have three arguments and that the given format is
-    // valid
-
-    bool validArguments = true;
+    // Make sure that we have the correct number of arguments
 
     if (pArguments.count() != 3) {
-        validArguments = false;
-    } else {
-        QString format = pArguments.at(2);
-
-        if (format.compare("cellml_1_0"))
-            validArguments = false;
-    }
-
-    // Confirm that we have valid arguments
-
-    if (!validArguments) {
         runHelpCommand();
 
         return -1;
     }
 
-    // Make sure that the input file exists and that it is a valid non CellML
-    // 1.0 file
+    // Make sure that the input file exists and is a valid CellML file
 
     QString errorMessage = QString();
     QString inFileName = pArguments.at(0);
@@ -520,16 +514,42 @@ int CellMLToolsPlugin::runExportCommand(const QStringList &pArguments)
         errorMessage = "Sorry, but the input file is not a CellML file.";
     else if (!inCellmlFile->load())
         errorMessage = "Sorry, but a problem occurred while loading the input file.";
-    else if (!QString::fromStdWString(inCellmlFile->model()->cellmlVersion()).compare(CellMLSupport::Cellml_1_0))
-        errorMessage = "Sorry, but the input file is already a CellML 1.0 file.";
+    else {
+        // Check the type of export the user wants
 
-    // Our input file is a valid non CellML 1.0 file, so we can export it to
-    // CellML 1.0
+        QString formatOrFormatFileName = pArguments.at(2);
+        bool wantExportToUserFormat = formatOrFormatFileName.compare("cellml_1_0");
 
-    if (    errorMessage.isEmpty()
-        && !inCellmlFile->exportTo(pArguments.at(1), CellMLSupport::CellmlFile::Cellml_1_0)) {
-        errorMessage = "Sorry, but a problem occurred while exporting the input file.";
+        // If we want to export to a CellML 1.0, then make sure that the input
+        // file is not already in that format
+
+        if (    wantExportToUserFormat
+            && !QFileInfo(formatOrFormatFileName).exists()) {
+            errorMessage = "Sorry, but the format file could not be found.";
+        } else if (   !wantExportToUserFormat
+                   && !QString::fromStdWString(inCellmlFile->model()->cellmlVersion()).compare(CellMLSupport::Cellml_1_0)) {
+            errorMessage = "Sorry, but the input file is already a CellML 1.0 file.";
+        } else {
+            // Everything seems to be fine, so attempt the export
+
+            if (   ( wantExportToUserFormat && !inCellmlFile->exportTo(pArguments.at(1), formatOrFormatFileName))
+                || (!wantExportToUserFormat && !inCellmlFile->exportTo(pArguments.at(1), CellMLSupport::CellmlFile::Cellml_1_0))) {
+                errorMessage = "Sorry, but the input file could not be exported";
+
+                CellMLSupport::CellmlFileIssues issues = inCellmlFile->issues();
+
+                if (issues.count())
+                    errorMessage += " ("+issues.first().message()+")";
+                    // Note: if there are 'issues', then there can be only one
+                    //       of them following a CellML export...
+
+                errorMessage += ".";
+            }
+        }
     }
+
+    // We are done (whether the export was successful or not), so delete our
+    // input CellML file
 
     delete inCellmlFile;
 
