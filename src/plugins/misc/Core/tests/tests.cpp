@@ -32,15 +32,6 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-void Tests::initTestCase()
-{
-    // Load the Core plugin
-
-    OpenCOR::loadPlugin("Core");
-}
-
-//==============================================================================
-
 void Tests::sizeAsStringTests()
 {
     // Test the sizeAsString() method

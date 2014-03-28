@@ -53,10 +53,6 @@ static const double BigC = 5.0*7.0*17.0;
 
 void Tests::initTestCase()
 {
-    // Load the Compiler plugin
-
-    OpenCOR::loadPlugin("Compiler");
-
     // Create our compiler engine
 
     mCompilerEngine = new OpenCOR::Compiler::CompilerEngine();

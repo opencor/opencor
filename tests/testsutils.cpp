@@ -19,20 +19,13 @@ specific language governing permissions and limitations under the License.
 // Some useful tests-related functions
 //==============================================================================
 
-#include "plugin.h"
 #include "testsutils.h"
 
 //==============================================================================
 
 #include <QFile>
 #include <QIODevice>
-#include <QPluginLoader>
 #include <QProcess>
-#include <QTextStream>
-
-//==============================================================================
-
-#include <QtTest/QtTest>
 
 //==============================================================================
 
@@ -94,23 +87,6 @@ QStringList runCli(const QStringList pArguments)
         output += process.readAll();
 
     return output.replace("\r", "").split("\n");
-}
-
-//==============================================================================
-
-void loadPlugin(const QString &pPluginName)
-{
-    // Load the given plugin
-
-    QStringList plugins = QStringList() << Plugin::fullDependencies(".", pPluginName)
-                                        << pPluginName;
-
-    foreach (const QString &plugin, plugins) {
-        QPluginLoader pluginLoader(QString(PluginPrefix)+plugin+QString(PluginExtension));
-
-        QVERIFY2(pluginLoader.load(),
-                 qPrintable(QString("the %1 plugin could not be loaded").arg(plugin)));
-    }
 }
 
 //==============================================================================
