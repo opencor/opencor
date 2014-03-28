@@ -41,13 +41,6 @@ namespace CellMLSupport {
 
 //==============================================================================
 
-static const auto MathmlNamespace = QStringLiteral("http://www.w3.org/1998/Math/MathML");
-
-static const auto Cellml_1_0_Namespace = QStringLiteral("http://www.cellml.org/cellml/1.0#");
-static const auto Cellml_1_1_Namespace = QStringLiteral("http://www.cellml.org/cellml/1.1#");
-
-//==============================================================================
-
 class CellmlFileCellmlExporter : public CellmlFileExporter
 {
 public:

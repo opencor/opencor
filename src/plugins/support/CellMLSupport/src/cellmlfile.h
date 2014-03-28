@@ -40,6 +40,11 @@ namespace CellMLSupport {
 
 //==============================================================================
 
+static const auto Cellml_1_0_Namespace = QStringLiteral("http://www.cellml.org/cellml/1.0#");
+static const auto Cellml_1_1_Namespace = QStringLiteral("http://www.cellml.org/cellml/1.1#");
+
+//==============================================================================
+
 class CELLMLSUPPORT_EXPORT CellmlFile : public QObject
 {
     Q_OBJECT

@@ -26,6 +26,7 @@ specific language governing permissions and limitations under the License.
 //       Updated code: https://github.com/nickerso/flattenCellML
 //==============================================================================
 
+#include "cellmlfile.h"
 #include "cellmlfilecellml10exporter.h"
 
 //==============================================================================
