@@ -82,8 +82,13 @@ void Tests::cliCellmlExportTests()
 
     QCOMPARE(OpenCOR::runCli(QStringList() << "-c" << "CellMLTools::export" << inFileName << outFileName << formatFileName),
              QString());
+#ifdef Q_OS_WIN
+    QCOMPARE(OpenCOR::fileContents(outFileName),
+             OpenCOR::fileContents("../src/plugins/misc/CellMLTools/tests/data/user_format_export_windows.out"));
+#else
     QCOMPARE(OpenCOR::fileContents(outFileName),
              OpenCOR::fileContents("../src/plugins/misc/CellMLTools/tests/data/user_format_export.out"));
+#endif
 }
 
 //==============================================================================
