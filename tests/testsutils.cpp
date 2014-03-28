@@ -75,9 +75,8 @@ QStringList runCli(const QStringList pArguments)
 
     QStringList defaultArguments = QStringList();
 
-#ifdef TRAVIS_CI
     defaultArguments << "-platform" << "offscreen";
-#endif
+    // Note: this is needed to work fine with Travis CI...
 
     process.start(program, defaultArguments << pArguments);
 
