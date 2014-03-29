@@ -741,7 +741,7 @@ bool CellmlFile::exportTo(const QString &pFileName, const Version &pVersion)
 //==============================================================================
 
 bool CellmlFile::exportTo(const QString &pFileName,
-                          const QString &pFormatFileName)
+                          const QString &pUserDefinedFormatFileName)
 {
     // Export the model to the required format, after loading it if necessary
 
@@ -750,19 +750,19 @@ bool CellmlFile::exportTo(const QString &pFileName,
 
         mIssues.clear();
 
-        // Check that the format file actually exists
+        // Check that the user-defined format file actually exists
 
-        if (!QFileInfo(pFormatFileName).exists())
+        if (!QFileInfo(pUserDefinedFormatFileName).exists())
             return false;
 
         // Do the actual export
 
         ObjRef<iface::cellml_services::CeLEDSExporterBootstrap> celedsExporterBootstrap = CreateCeLEDSExporterBootstrap();
-        ObjRef<iface::cellml_services::CodeExporter> codeExporter = celedsExporterBootstrap->createExporter(pFormatFileName.toStdWString());
+        ObjRef<iface::cellml_services::CodeExporter> codeExporter = celedsExporterBootstrap->createExporter(pUserDefinedFormatFileName.toStdWString());
 
         if (celedsExporterBootstrap->loadError().length()) {
             mIssues << CellmlFileIssue(CellmlFileIssue::Error,
-                                       tr("the format file could not be loaded"));
+                                       tr("the user-defined format file could not be loaded"));
 
             return false;
         }

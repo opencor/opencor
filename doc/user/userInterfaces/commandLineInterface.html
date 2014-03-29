@@ -71,11 +71,12 @@ used to organise, edit, simulate and analyse CellML files.</span>
 <span class="nocode">Commands supported by <a href="../plugins/CellMLTools.html">CellMLTools</a>:
  * Display the commands supported by <a href="../plugins/CellMLTools.html">CellMLTools</a>:
       help
- * Export &lt;in_file&gt; to &lt;out_file&gt; using &lt;format&gt; as the destination format:
-      export &lt;in_file&gt; &lt;out_file&gt; &lt;format&gt;
-   &lt;format&gt; can take one of the following values:
+ * Export &lt;in_file&gt; to &lt;out_file&gt; using &lt;predefined_format&gt; as the destination format or &lt;user_defined_format_file&gt; as the file describing the destination format:
+      export &lt;in_file&gt; &lt;out_file&gt; [&lt;predefined_format&gt;|&lt;user_defined_format_file&gt;]
+   &lt;predefined_format&gt; can take one of the following values:
       cellml_1_0: to export a CellML 1.1 file to CellML 1.0</span>
 $ ./OpenCOR -c CellMLTools::export in.cellml out.cellml cellml_1_0
+$ ./OpenCOR -c CellMLTools::export in.cellml out.txt format.xml
 </pre>
 
         <script type="text/javascript">

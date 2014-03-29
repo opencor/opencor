@@ -71,23 +71,24 @@ void Tests::cliCellmlExportTests()
     QCOMPARE(OpenCOR::runCli(QStringList() << "-c" << "CellMLTools::export" << "non_existing_input_file" << outFileName << format),
              OpenCOR::fileContents("../src/plugins/misc/CellMLTools/tests/data/input_file_not_found.out"));
 
-    // Try to export to a user format, which file description doesn't exist
+    // Try to export to a user-defined format, which file description doesn't
+    // exist
 
-    QCOMPARE(OpenCOR::runCli(QStringList() << "-c" << "CellMLTools::export" << inFileName << outFileName << "non_existing_format_file"),
-             OpenCOR::fileContents("../src/plugins/misc/CellMLTools/tests/data/format_file_not_found.out"));
+    QCOMPARE(OpenCOR::runCli(QStringList() << "-c" << "CellMLTools::export" << inFileName << outFileName << "non_existing_user_defined_format_file"),
+             OpenCOR::fileContents("../src/plugins/misc/CellMLTools/tests/data/user_defined_format_file_not_found.out"));
 
-    // Try to export to a user format, which file description exists
+    // Try to export to a user-defined format, which file description exists
 
-    QString formatFileName = "../src/plugins/misc/CellMLTools/tests/data/user_format.xml";
+    QString userDefinedFormatFileName = "../src/plugins/misc/CellMLTools/tests/data/user_defined_format.xml";
 
-    QCOMPARE(OpenCOR::runCli(QStringList() << "-c" << "CellMLTools::export" << inFileName << outFileName << formatFileName),
+    QCOMPARE(OpenCOR::runCli(QStringList() << "-c" << "CellMLTools::export" << inFileName << outFileName << userDefinedFormatFileName),
              QString());
 #ifdef Q_OS_WIN
     QCOMPARE(OpenCOR::fileContents(outFileName),
-             OpenCOR::fileContents("../src/plugins/misc/CellMLTools/tests/data/user_format_export_windows.out"));
+             OpenCOR::fileContents("../src/plugins/misc/CellMLTools/tests/data/user_defined_format_export_windows.out"));
 #else
     QCOMPARE(OpenCOR::fileContents(outFileName),
-             OpenCOR::fileContents("../src/plugins/misc/CellMLTools/tests/data/user_format_export_nonwindows.out"));
+             OpenCOR::fileContents("../src/plugins/misc/CellMLTools/tests/data/user_defined_format_export_nonwindows.out"));
 #endif
 }
 

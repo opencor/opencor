@@ -94,12 +94,12 @@ void CellMLToolsPlugin::initialize()
     mExportToCellml10Action = newAction(mMainWindow);
     mExportToCellml11Action = newAction(mMainWindow);
 
-    mExportToUserFormatAction = newAction(mMainWindow);
+    mExportToUserDefinedFormatAction = newAction(mMainWindow);
 
     mCellmlFileExportToMenu->addAction(mExportToCellml10Action);
     mCellmlFileExportToMenu->addAction(mExportToCellml11Action);
     mCellmlFileExportToMenu->addSeparator();
-    mCellmlFileExportToMenu->addAction(mExportToUserFormatAction);
+    mCellmlFileExportToMenu->addAction(mExportToUserDefinedFormatAction);
 
     // Some connections to handle our different Tools | Export To actions
 
@@ -108,8 +108,8 @@ void CellMLToolsPlugin::initialize()
     connect(mExportToCellml11Action, SIGNAL(triggered()),
             this, SLOT(exportToCellml11()));
 
-    connect(mExportToUserFormatAction, SIGNAL(triggered()),
-            this, SLOT(exportToUserFormat()));
+    connect(mExportToUserDefinedFormatAction, SIGNAL(triggered()),
+            this, SLOT(exportToUserDefinedFormat()));
 
     // Set our settings
 
@@ -220,7 +220,7 @@ void CellMLToolsPlugin::updateGui(Plugin *pViewPlugin, const QString &pFileName)
 //---GRY--- DISABLED UNTIL WE ACTUALLY SUPPORT EXPORT TO CellML 1.1...
 Core::showEnableAction(mExportToCellml11Action, false);
 
-    mExportToUserFormatAction->setEnabled(cellmlFile && cellmlFile->model());
+    mExportToUserDefinedFormatAction->setEnabled(cellmlFile && cellmlFile->model());
 
     // Keep track of the file name
 
@@ -387,7 +387,7 @@ void CellMLToolsPlugin::retranslateUi()
     retranslateAction(mExportToCellml10Action, tr("CellML 1.0..."), tr("Export the CellML file to CellML 1.0"));
     retranslateAction(mExportToCellml11Action, tr("CellML 1.1..."), tr("Export the CellML file to CellML 1.1"));
 
-    retranslateAction(mExportToUserFormatAction, tr("User Format..."), tr("Export the CellML file to some user format"));
+    retranslateAction(mExportToUserDefinedFormatAction, tr("User-Defined Format..."), tr("Export the CellML file to some user-defined format"));
 }
 
 //==============================================================================
@@ -458,15 +458,15 @@ void CellMLToolsPlugin::exportToCellml11()
 
 //==============================================================================
 
-void CellMLToolsPlugin::exportToUserFormat()
+void CellMLToolsPlugin::exportToUserDefinedFormat()
 {
     // Ask for the name of the file that contains the format description
 
-    QString formatFileName = Core::getOpenFileName(tr("Select User Format File"), "Format File (*.xml)");
+    QString userDefinedFormatFileName = Core::getOpenFileName(tr("Select User-Defined Format File"), "User-Defined Format File (*.xml)");
 
     // Make sure that we have a file name or leave, if not
 
-    if (formatFileName.isEmpty())
+    if (userDefinedFormatFileName.isEmpty())
         return;
 
 //---GRY--- TO BE DONE...
@@ -479,9 +479,9 @@ void CellMLToolsPlugin::runHelpCommand()
     std::cout << "Commands supported by CellMLTools:" << std::endl;
     std::cout << " * Display the commands supported by CellMLTools:" << std::endl;
     std::cout << "      help" << std::endl;
-    std::cout << " * Export <in_file> to <out_file> using <format> as the destination format or <format_file> as the file describing the destination format:" << std::endl;
-    std::cout << "      export <in_file> <out_file> [<format>|<format_file>]" << std::endl;
-    std::cout << "   <format> can take one of the following values:" << std::endl;
+    std::cout << " * Export <in_file> to <out_file> using <predefined_format> as the destination format or <user_defined_format_file> as the file describing the destination format:" << std::endl;
+    std::cout << "      export <in_file> <out_file> [<predefined_format>|<user_defined_format_file>]" << std::endl;
+    std::cout << "   <predefined_format> can take one of the following values:" << std::endl;
     std::cout << "      cellml_1_0: to export a CellML 1.1 file to CellML 1.0" << std::endl;
 }
 
@@ -515,23 +515,23 @@ int CellMLToolsPlugin::runExportCommand(const QStringList &pArguments)
     else {
         // Check the type of export the user wants
 
-        QString formatOrFormatFileName = pArguments.at(2);
-        bool wantExportToUserFormat = formatOrFormatFileName.compare("cellml_1_0");
+        QString predefinedFormatOrUserDefinedFormatFileName = pArguments.at(2);
+        bool wantExportToUserDefinedFormat = predefinedFormatOrUserDefinedFormatFileName.compare("cellml_1_0");
 
         // If we want to export to a CellML 1.0, then make sure that the input
         // file is not already in that format
 
-        if (    wantExportToUserFormat
-            && !QFileInfo(formatOrFormatFileName).exists()) {
-            errorMessage = "Sorry, but the format file could not be found.";
-        } else if (   !wantExportToUserFormat
+        if (    wantExportToUserDefinedFormat
+            && !QFileInfo(predefinedFormatOrUserDefinedFormatFileName).exists()) {
+            errorMessage = "Sorry, but the user-defined format file could not be found.";
+        } else if (   !wantExportToUserDefinedFormat
                    && !QString::fromStdWString(inCellmlFile->model()->cellmlVersion()).compare(CellMLSupport::Cellml_1_0)) {
             errorMessage = "Sorry, but the input file is already a CellML 1.0 file.";
         } else {
             // Everything seems to be fine, so attempt the export
 
-            if (   ( wantExportToUserFormat && !inCellmlFile->exportTo(pArguments.at(1), formatOrFormatFileName))
-                || (!wantExportToUserFormat && !inCellmlFile->exportTo(pArguments.at(1), CellMLSupport::CellmlFile::Cellml_1_0))) {
+            if (   ( wantExportToUserDefinedFormat && !inCellmlFile->exportTo(pArguments.at(1), predefinedFormatOrUserDefinedFormatFileName))
+                || (!wantExportToUserDefinedFormat && !inCellmlFile->exportTo(pArguments.at(1), CellMLSupport::CellmlFile::Cellml_1_0))) {
                 errorMessage = "Sorry, but the input file could not be exported";
 
                 CellMLSupport::CellmlFileIssues issues = inCellmlFile->issues();

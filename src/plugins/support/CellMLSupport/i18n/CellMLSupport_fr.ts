@@ -19,8 +19,8 @@
         <translation>les importations n&apos;ont pas pu être complètement instanciées</translation>
     </message>
     <message>
-        <source>the format file could not be loaded</source>
-        <translation>le fichier de format n&apos;a pas pu être lu</translation>
+        <source>the user-defined format file could not be loaded</source>
+        <translation>le fichier du format défini par l&apos;utilisateur n&apos;a pas pu être lu</translation>
     </message>
 </context>
 <context>

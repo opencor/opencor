@@ -75,7 +75,7 @@ private:
     QAction *mExportToCellml10Action;
     QAction *mExportToCellml11Action;
 
-    QAction *mExportToUserFormatAction;
+    QAction *mExportToUserDefinedFormatAction;
 
     void exportTo(const CellMLSupport::CellmlFile::Version &pVersion);
 
@@ -86,7 +86,7 @@ private Q_SLOTS:
     void exportToCellml10();
     void exportToCellml11();
 
-    void exportToUserFormat();
+    void exportToUserDefinedFormat();
 };
 
 //==============================================================================
