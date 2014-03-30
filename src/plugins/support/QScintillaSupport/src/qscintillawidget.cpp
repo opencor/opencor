@@ -464,13 +464,24 @@ void QScintillaWidget::keyPressEvent(QKeyEvent *pEvent)
         if (   !(pEvent->modifiers() & Qt::ShiftModifier)
             &&  (pEvent->modifiers() & Qt::ControlModifier)
             && !(pEvent->modifiers() & Qt::AltModifier)
-            && !(pEvent->modifiers() & Qt::MetaModifier)
-            &&  (pEvent->key() == Qt::Key_0)) {
-            zoomTo(0);
+            && !(pEvent->modifiers() & Qt::MetaModifier)) {
+            if (pEvent->key() == Qt::Key_0) {
+                zoomTo(0);
 
-            // Accept the event
+                // Accept the event
 
-            pEvent->accept();
+                pEvent->accept();
+            } else if (pEvent->key() == Qt::Key_Equal) {
+                zoomIn();
+
+                // Accept the event
+
+                pEvent->accept();
+            } else {
+                // Default handling of the event
+
+                QsciScintilla::keyPressEvent(pEvent);
+            }
         } else {
             // Default handling of the event
 
