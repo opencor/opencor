@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<language 
+  xmlns="http://www.cellml.org/CeLEDS/1.0#" 
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+  xmlns:mal="http://www.cellml.org/CeLEDS/MaLaES/1.0#" 
+  xmlns:ccgs="http://www.cellml.org/CeLEDS/CCGS/1.0#" 
+  xsi:schemaLocation="http://www.cellml.org/CeLEDS/1.0# ../CeLEDS.xsd">
+
+<title>C</title>
+
+<mal:dictionary>
+  <mal:mapping keyname="opengroup">(</mal:mapping>
+  <mal:mapping keyname="closegroup">)</mal:mapping>
+  <mal:mapping keyname="abs" precedence="H">fabs(#expr1)</mal:mapping>
+  <mal:mapping keyname="and" precedence="20">#exprs[&amp;&amp;]</mal:mapping>
+  <mal:mapping keyname="arccos" precedence="H">acos(#expr1)</mal:mapping>
+  <mal:mapping keyname="arccosh" precedence="H">acosh(#expr1)</mal:mapping>
+  <mal:mapping keyname="arccot" precedence="1000(900)">atan(1.0/#expr1)</mal:mapping>
+  <mal:mapping keyname="arccoth" precedence="1000(900)">atanh(1.0/#expr1)</mal:mapping>
+  <mal:mapping keyname="arccsc" precedence="1000(900)">asin(1/#expr1)</mal:mapping>
+  <mal:mapping keyname="arccsch" precedence="1000(900)">asinh(1/#expr1)</mal:mapping>
+  <mal:mapping keyname="arcsec" precedence="1000(900)">acos(1/#expr1)</mal:mapping>
+  <mal:mapping keyname="arcsech" precedence="1000(900)">acosh(1/#expr1)</mal:mapping>
+  <mal:mapping keyname="arcsin" precedence="H">asin(#expr1)</mal:mapping>
+  <mal:mapping keyname="arcsinh" precedence="H">asinh(#expr1)</mal:mapping>
+  <mal:mapping keyname="arctan" precedence="H">atan(#expr1)</mal:mapping>
+  <mal:mapping keyname="arctanh" precedence="H">atanh(#expr1)</mal:mapping>
+  <mal:mapping keyname="ceiling" precedence="H">ceil(#expr1)</mal:mapping>
+  <mal:mapping keyname="cos" precedence="H">cos(#expr1)</mal:mapping>
+  <mal:mapping keyname="cosh" precedence="H">cosh(#expr1)</mal:mapping>
+  <mal:mapping keyname="cot" precedence="900(0)">1.0/tan(#expr1)</mal:mapping>
+  <mal:mapping keyname="coth" precedence="900(0)">1.0/tanh(#expr1)</mal:mapping>
+  <mal:mapping keyname="csc" precedence="900(0)">1.0/sin(#expr1)</mal:mapping>
+  <mal:mapping keyname="csch" precedence="900(0)">1.0/sinh(#expr1)</mal:mapping>
+  <mal:mapping keyname="diff">#lookupDiffVariable</mal:mapping>
+  <mal:mapping keyname="divide" precedence="900">#expr1/#expr2</mal:mapping>
+  <mal:mapping keyname="eq" precedence="30">#exprs[==]</mal:mapping>
+  <mal:mapping keyname="exp" precedence="H">exp(#expr1)</mal:mapping>
+  <mal:mapping keyname="factorial" precedence="H">factorial(#expr1)</mal:mapping>
+  <mal:mapping keyname="factorof" precedence="30(900)">#expr1 % #expr2 == 0</mal:mapping>
+  <mal:mapping keyname="floor" precedence="H">floor(#expr1)</mal:mapping>
+  <mal:mapping keyname="gcd" precedence="H">gcd_multi(#count, #exprs[, ])</mal:mapping>
+  <mal:mapping keyname="geq" precedence="30">#exprs[&gt;=]</mal:mapping>
+  <mal:mapping keyname="gt" precedence="30">#exprs[&gt;]</mal:mapping>
+  <mal:mapping keyname="implies" precedence="10(950)"> !#expr1 || #expr2</mal:mapping>
+  <mal:mapping keyname="int" precedence="H">int: #prec[H]defint(func#unique1, BOUND, CONSTANTS, RATES, VARIABLES, #lowlimit, #uplimit, #bvarIndex, pret)#supplement double func#unique1(double* BOUND, double* CONSTANTS, double* RATES, double* VARIABLES, int* pret) { return #expr1; }
+</mal:mapping>
+  <mal:mapping keyname="lcm" precedence="H">lcm_multi(#count, #exprs[, ])</mal:mapping>
+  <mal:mapping keyname="leq" precedence="30">#exprs[&lt;=]</mal:mapping>
+  <mal:mapping keyname="ln" precedence="H">log(#expr1)</mal:mapping>
+  <mal:mapping keyname="log" precedence="H">arbitrary_log(#expr1, #logbase)</mal:mapping>
+  <mal:mapping keyname="lt" precedence="30">#exprs[&lt;]</mal:mapping>
+  <mal:mapping keyname="max" precedence="H">multi_max(#count, #exprs[, ])</mal:mapping>
+  <mal:mapping keyname="min" precedence="H">multi_min(#count, #exprs[, ])</mal:mapping>
+  <mal:mapping keyname="minus" precedence="500">#expr1 - #expr2</mal:mapping>
+  <mal:mapping keyname="neq" precedence="30">#expr1 != #expr2</mal:mapping>
+  <mal:mapping keyname="not" precedence="950">!#expr1</mal:mapping>
+  <mal:mapping keyname="or" precedence="10">#exprs[||]</mal:mapping>
+  <mal:mapping keyname="plus" precedence="500">#exprs[+]</mal:mapping>
+  <mal:mapping keyname="power" precedence="H">pow(#expr1, #expr2)</mal:mapping>
+  <mal:mapping keyname="quotient" precedence="900(0)"> (int)(#expr1) / (int)(#expr2)</mal:mapping>
+  <mal:mapping keyname="rem" precedence="900(0)"> (int)(#expr1) % (int)(#expr2)</mal:mapping>
+  <mal:mapping keyname="root" precedence="1000(900)"> pow(#expr1, 1.0 / #degree)</mal:mapping>
+  <mal:mapping keyname="sec" precedence="900(0)">1.0 / cos(#expr1)</mal:mapping>
+  <mal:mapping keyname="sech" precedence="900(0)">1.0 / cosh(#expr1)</mal:mapping>
+  <mal:mapping keyname="sin" precedence="H"> sin(#expr1)</mal:mapping>
+  <mal:mapping keyname="sinh" precedence="H"> sinh(#expr1)</mal:mapping>
+  <mal:mapping keyname="tan" precedence="H"> tan(#expr1)</mal:mapping>
+  <mal:mapping keyname="tanh" precedence="H"> tanh(#expr1)</mal:mapping>
+  <mal:mapping keyname="times" precedence="900"> #exprs[*]</mal:mapping>
+  <mal:mapping keyname="unary_minus" precedence="950">- #expr1</mal:mapping>
+  <mal:mapping keyname="units_conversion" precedence="500(900)">#expr1*#expr2 + #expr3</mal:mapping>
+  <mal:mapping keyname="units_conversion_factor" precedence="900">#expr1*#expr2</mal:mapping>
+  <mal:mapping keyname="units_conversion_offset" precedence="500">#expr1+#expr2</mal:mapping>
+  <mal:mapping keyname="xor" precedence="25(30)"> (#expr1 != 0) ^ (#expr2 != 0)</mal:mapping>
+  <mal:mapping keyname="piecewise_first_case" precedence="1000(5)">(#expr1 ? #expr2 : </mal:mapping>
+  <mal:mapping keyname="piecewise_extra_case" precedence="1000(5)">#expr1 ? #expr2 : </mal:mapping>
+  <mal:mapping keyname="piecewise_otherwise" precedence="1000(5)">#expr1)</mal:mapping>
+  <mal:mapping keyname="piecewise_no_otherwise" precedence="1000(5)">0.0/0.0)</mal:mapping>
+  <mal:mapping keyname="pi" precedence="999"> 3.14159265358979</mal:mapping>
+  <mal:mapping keyname="eulergamma" precedence="999">0.577215664901533</mal:mapping>
+  <mal:mapping keyname="infinity" precedence="900">1.0/0.0</mal:mapping>
+  <mal:mapping keyname="true" precedence="999">1</mal:mapping>
+  <mal:mapping keyname="false" precedence="999">0</mal:mapping>
+</mal:dictionary>
+
+<ccgs:dictionary>
+  <ccgs:mapping keyname="constantPattern">CONSTANTS[%]</ccgs:mapping>
+  <ccgs:mapping keyname="stateVariableNamePattern">STATES[%]</ccgs:mapping>
+  <ccgs:mapping keyname="algebraicVariableNamePattern">ALGEBRAIC[%]</ccgs:mapping>
+  <ccgs:mapping keyname="rateNamePattern">RATES[%]</ccgs:mapping>
+  <ccgs:mapping keyname="voiPattern">VOI</ccgs:mapping>
+  <ccgs:mapping keyname="arrayOffset">0</ccgs:mapping>
+  <ccgs:mapping keyname="assignPattern">&lt;LHS&gt; = &lt;RHS&gt;;
+</ccgs:mapping>
+  <ccgs:mapping keyname="assignConstantPattern">&lt;LHS&gt; = &lt;RHS&gt;;
+</ccgs:mapping>
+  <ccgs:mapping keyname="solvePattern"><![CDATA[rootfind_<ID>(VOI, CONSTANTS, RATES, STATES, ALGEBRAIC, pret);
+<SUP>
+void objfunc_<ID>(double *p, double *hx, int m, int n, void *adata)
+{
+  struct rootfind_info* rfi = (struct rootfind_info*)adata;
+#define VOI rfi->aVOI
+#define CONSTANTS rfi->aCONSTANTS
+#define RATES rfi->aRATES
+#define STATES rfi->aSTATES
+#define ALGEBRAIC rfi->aALGEBRAIC
+#define pret rfi->aPRET
+  <VAR> = *p;
+  *hx = (<LHS>) - (<RHS>);
+#undef VOI
+#undef CONSTANTS
+#undef RATES
+#undef STATES
+#undef ALGEBRAIC
+#undef pret
+}
+void rootfind_<ID>(double VOI, double* CONSTANTS, double* RATES, 
+double* STATES, double* ALGEBRAIC, int* pret)
+{
+  static double val = <IV>;
+  double bp, work[LM_DIF_WORKSZ(1, 1)];
+  struct rootfind_info rfi;
+  rfi.aVOI = VOI;
+  rfi.aCONSTANTS = CONSTANTS;
+  rfi.aRATES = RATES;
+  rfi.aSTATES = STATES;
+  rfi.aALGEBRAIC = ALGEBRAIC;
+  rfi.aPRET = pret;
+  do_levmar(objfunc_<ID>, &val, &bp, work, pret, 1, &rfi);
+  <VAR> = val;
+}
+]]></ccgs:mapping>
+  <ccgs:mapping keyname="solveNLSystemPattern"><![CDATA[rootfind_<ID>(VOI, CONSTANTS, RATES, STATES, ALGEBRAIC, pret);
+<SUP>
+void objfunc_<ID>(double *p, double *hx, int m, int n, void *adata)
+{
+  struct rootfind_info* rfi = (struct rootfind_info*)adata;
+#define VOI rfi->aVOI
+#define CONSTANTS rfi->aCONSTANTS
+#define RATES rfi->aRATES
+#define STATES rfi->aSTATES
+#define ALGEBRAIC rfi->aALGEBRAIC
+#define pret rfi->aPRET
+  <EQUATIONS><VAR> = p[<INDEX>];<JOIN>
+  </EQUATIONS>
+  <EQUATIONS>hx[<INDEX>] = <EXPR>;<JOIN>
+  </EQUATIONS>
+#undef VOI
+#undef CONSTANTS
+#undef RATES
+#undef STATES
+#undef ALGEBRAIC
+#undef pret
+}
+void rootfind_<ID>(double VOI, double* CONSTANTS, double* RATES,
+double* STATES, double* ALGEBRAIC, int* pret)
+{
+  static double p[<COUNT>] = {<EQUATIONS><IV><JOIN>,</EQUATIONS>};
+  double bp[<COUNT>], work[LM_DIF_WORKSZ(<COUNT>, <COUNT>)];
+  struct rootfind_info rfi;
+  rfi.aVOI = VOI;
+  rfi.aCONSTANTS = CONSTANTS;
+  rfi.aRATES = RATES;
+  rfi.aSTATES = STATES;
+  rfi.aALGEBRAIC = ALGEBRAIC;
+  rfi.aPRET = pret;
+  do_levmar(objfunc_<ID>, p, bp, work, pret, <COUNT>, &rfi);
+  <EQUATIONS><VAR> = p[<INDEX>];<JOIN>
+  </EQUATIONS>
+}
+]]></ccgs:mapping>
+  <ccgs:mapping keyname="temporaryVariablePattern">temp%</ccgs:mapping>
+  <ccgs:mapping keyname="declareTemporaryPattern">double %;
+</ccgs:mapping>
+  <ccgs:mapping keyname="conditionalAssignmentPattern"><![CDATA[if (<CONDITION>)
+{
+  <STATEMENT>}
+<CASES>else if (<CONDITION>)
+{
+  <STATEMENT>}
+</CASES>]]></ccgs:mapping>
+</ccgs:dictionary>
+
+<dictionary>
+  <mapping keyname="preAlgebraicCount">/*
+   There are a total of </mapping>
+  <mapping keyname="postAlgebraicCount"> entries in the algebraic variable array.
+</mapping>
+  <mapping keyname="preStateCount">   There are a total of </mapping>
+  <mapping keyname="postStateCount"> entries in each of the rate and state variable arrays.
+</mapping>
+  <mapping keyname="preConstantCount">   There are a total of </mapping>
+  <mapping keyname="postConstantCount"> entries in the constant variable array.
+ */
+</mapping>
+  <mapping keyname="preInitConsts">void
+initConsts(double* CONSTANTS, double* RATES, double *STATES)
+{
+</mapping>
+  <mapping keyname="postInitConsts">}
+</mapping>
+  <mapping keyname="preRates">void
+computeRates(double VOI, double* CONSTANTS, double* RATES, double* STATES, double* ALGEBRAIC)
+{
+</mapping>
+  <mapping keyname="postRates">}
+</mapping>
+  <mapping keyname="preVariables">void
+computeVariables(double VOI, double* CONSTANTS, double* RATES, double* STATES, double* ALGEBRAIC)
+{
+</mapping>
+  <mapping keyname="postVariables">}
+</mapping>
+  <mapping keyname="topSection"></mapping>
+  <mapping keyname="endSection"></mapping>
+  <mapping keyname="preVarList">/*
+</mapping>
+  <mapping keyname="postVarList"> */
+</mapping>
+  <mapping keyname="varListA"> * </mapping>
+  <mapping keyname="varListB"> is </mapping>
+  <mapping keyname="varListC">.</mapping>
+</dictionary>
+
+</language>
