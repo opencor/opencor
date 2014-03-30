@@ -297,6 +297,14 @@ void SingleCellViewGraphPanelsWidget::removeGraphPanel(SingleCellViewGraphPanelW
 
     emit graphPanelRemoved(pGraphPanel);
 
+    // Remove all tracks
+    // Note: mActiveGraphPanel will automatically get updated when another graph
+    //       panel gets selected...
+
+    foreach (const QString &fileName, mActiveGraphPanels.keys())
+        if (mActiveGraphPanels.value(fileName) == pGraphPanel)
+            mActiveGraphPanels.remove(fileName);
+
     // Now, we can delete our graph panel
 
     delete pGraphPanel;
