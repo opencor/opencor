@@ -44,7 +44,7 @@
     <name>OpenCOR::FileBrowser::FileBrowserPlugin</name>
     <message>
         <source>File Browser</source>
-        <translation>Gestionnaire de Fichiers</translation>
+        <translation>Gestionnaire De Fichiers</translation>
     </message>
     <message>
         <source>Show/hide the File Browser window</source>

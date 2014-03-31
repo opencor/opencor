@@ -32,7 +32,7 @@
     <name>OpenCOR::CellMLModelRepository::CellMLModelRepositoryPlugin</name>
     <message>
         <source>CellML Model Repository</source>
-        <translation>Répertoire de Modèles CellML</translation>
+        <translation>Répertoire De Modèles CellML</translation>
     </message>
     <message>
         <source>Show/hide the CellML Model Repository window</source>

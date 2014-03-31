@@ -41,7 +41,7 @@
     </message>
     <message>
         <source>Home &amp;Page</source>
-        <translation>&amp;Page d&apos;Accueil</translation>
+        <translation>&amp;Page D&apos;Accueil</translation>
     </message>
     <message>
         <source>Open the OpenCOR home page</source>
@@ -81,7 +81,7 @@
     </message>
     <message>
         <source>Status &amp;Bar</source>
-        <translation>&amp;Barre d&apos;Etat</translation>
+        <translation>&amp;Barre D&apos;État</translation>
     </message>
     <message>
         <source>Show/hide the status bar</source>

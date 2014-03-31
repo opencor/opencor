@@ -28,7 +28,7 @@
     <name>OpenCOR::FileOrganiser::FileOrganiserPlugin</name>
     <message>
         <source>File Organiser</source>
-        <translation>Organisateur de Fichiers</translation>
+        <translation>Organisateur De Fichiers</translation>
     </message>
     <message>
         <source>Show/hide the File Organiser window</source>
