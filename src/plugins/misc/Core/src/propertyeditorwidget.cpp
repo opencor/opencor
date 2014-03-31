@@ -1116,7 +1116,7 @@ void PropertyEditorWidget::constructor(const bool &pShowUnits,
 
     header()->setSectionsMovable(false);
 
-    // Retranslate ourselves
+    // Retranslate ourselves, so that we are properly initialised
 
     retranslateUi();
 

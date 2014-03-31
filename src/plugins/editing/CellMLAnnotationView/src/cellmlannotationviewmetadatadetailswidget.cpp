@@ -176,7 +176,7 @@ CellmlAnnotationViewMetadataDetailsWidget::CellmlAnnotationViewMetadataDetailsWi
     mGui->layout->addWidget(mBorderedUnsupportedMetadataMessage);
     mGui->layout->addWidget(mSplitter);
 
-    // Some further initialisations which are done as part of retranslating the
+    // Some further initialisations that are done as part of retranslating the
     // GUI (so that they can be updated when changing languages)
 
     retranslateUi();

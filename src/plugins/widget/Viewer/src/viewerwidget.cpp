@@ -134,7 +134,7 @@ ViewerWidget::ViewerWidget(QWidget *pParent) :
     connect(this, SIGNAL(customContextMenuRequested(const QPoint &)),
             this, SLOT(showCustomContextMenu(const QPoint &)));
 
-    // Retranslate ourselves, so that our action is properly set
+    // Retranslate ourselves, so that our actions are properly initialised
 
     retranslateUi();
 }
