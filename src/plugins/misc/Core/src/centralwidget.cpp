@@ -37,10 +37,15 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#include <QDialog>
+#include <QDialogButtonBox>
 #include <QDragEnterEvent>
 #include <QFile>
 #include <QFileInfo>
+#include <QGridLayout>
 #include <QLabel>
+#include <QLayout>
+#include <QLineEdit>
 #include <QMainWindow>
 #include <QMessageBox>
 #include <QMimeData>
@@ -646,6 +651,24 @@ void CentralWidget::openRemoteFile()
 qDebug(">>> CentralWidget::openRemoteFile()...");
 
 //---GRY--- TO BE DONE...
+
+    QDialog *dialog = new QDialog(this);
+    QGridLayout *dialogLayout = new QGridLayout(dialog);
+
+    dialog->setLayout(dialogLayout);
+
+    QLineEdit *urlValue = new QLineEdit(dialog);
+
+    dialogLayout->addWidget(new QLabel(tr("URL:"), dialog), 0, 0);
+    dialogLayout->addWidget(urlValue, 0, 1);
+
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Open|QDialogButtonBox::Cancel, this);
+
+    dialogLayout->addWidget(buttonBox, 1, 0, 1, 2);
+
+    dialogLayout->setSizeConstraint(QLayout::SetFixedSize);
+
+    dialog->exec();
 }
 
 //==============================================================================

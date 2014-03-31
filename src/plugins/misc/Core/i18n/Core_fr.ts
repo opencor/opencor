@@ -91,6 +91,10 @@
         <source>File</source>
         <translation>Fichier</translation>
     </message>
+    <message>
+        <source>URL:</source>
+        <translation>URL :</translation>
+    </message>
 </context>
 <context>
     <name>OpenCOR::Core::CorePlugin</name>
