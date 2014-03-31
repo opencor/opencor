@@ -108,10 +108,6 @@ EditorWidget::EditorWidget(const QString &pContents, const bool &pReadOnly,
 
     setFocusProxy(mEditor);
 
-    // Retranslate ourselves, so our find/replace widget is properly set
-
-    retranslateUi();
-
     // Initially hide our find/replace widget
 
     hideFindReplace();

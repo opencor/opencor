@@ -96,11 +96,6 @@ SingleCellViewInformationWidget::SingleCellViewInformationWidget(QWidget *pParen
     // Add our collapsible widget to our layout
 
     mGui->layout->addWidget(mCollapsibleWidget);
-
-    // Some further initialisations which are done as part of retranslating the
-    // GUI (so that they can be updated when changing languages)
-
-    retranslateUi();
 }
 
 //==============================================================================

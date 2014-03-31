@@ -45,11 +45,6 @@ CellmlAnnotationViewMetadataRawViewDetailsWidget::CellmlAnnotationViewMetadataRa
     setModel(mModel);
     setRootIsDecorated(false);
     setSelectionMode(QAbstractItemView::SingleSelection);
-
-    // Some further initialisations which are done as part of retranslating the
-    // GUI (so that they can be updated when changing languages)
-
-    retranslateUi();
 }
 
 //==============================================================================

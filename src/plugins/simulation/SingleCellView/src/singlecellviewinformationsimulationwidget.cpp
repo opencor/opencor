@@ -48,11 +48,6 @@ SingleCellViewInformationSimulationWidget::SingleCellViewInformationSimulationWi
     mEndingPointProperty->setEditable(true);
     mPointIntervalProperty->setEditable(true);
 
-    // Some further initialisations which are done as part of retranslating the
-    // GUI (so that they can be updated when changing languages)
-
-    retranslateUi();
-
     // Retrieve our default GUI state
 
     mDefaultGuiState = guiState();
