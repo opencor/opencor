@@ -74,6 +74,7 @@ void CorePlugin::initialize()
     mFileOpenAction = newAction(mMainWindow, false,
                                 ":/oxygen/actions/document-open.png",
                                 QKeySequence::Open);
+    mFileOpenRemoteAction = newAction(mMainWindow);
 
     mFileReloadAction = newAction(mMainWindow);
 
@@ -157,6 +158,8 @@ void CorePlugin::initialize()
 
     connect(mFileOpenAction, SIGNAL(triggered()),
             mCentralWidget, SLOT(openFile()));
+    connect(mFileOpenRemoteAction, SIGNAL(triggered()),
+            mCentralWidget, SLOT(openRemoteFile()));
 
     connect(mFileReloadAction, SIGNAL(triggered()),
             mCentralWidget, SLOT(reloadFile()));
@@ -211,6 +214,7 @@ void CorePlugin::initialize()
     // Set our settings
 
     mGuiSettings->addMenuAction(GuiMenuActionSettings::File, mFileOpenAction);
+    mGuiSettings->addMenuAction(GuiMenuActionSettings::File, mFileOpenRemoteAction);
     mGuiSettings->addMenuAction(GuiMenuActionSettings::File, openReloadSeparator);
     mGuiSettings->addMenuAction(GuiMenuActionSettings::File, mFileReloadAction);
     mGuiSettings->addMenuAction(GuiMenuActionSettings::File);
@@ -561,6 +565,7 @@ void CorePlugin::retranslateUi()
     // Retranslate our different File actions
 
     retranslateAction(mFileOpenAction, tr("Open..."), tr("Open a file"));
+    retranslateAction(mFileOpenRemoteAction, tr("Open Remote..."), tr("Open a remote file"));
 
     retranslateAction(mFileReloadAction, tr("Reload"),
                       tr("Reload the current file"));

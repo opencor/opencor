@@ -641,6 +641,15 @@ void CentralWidget::openFile()
 
 //==============================================================================
 
+void CentralWidget::openRemoteFile()
+{
+qDebug(">>> CentralWidget::openRemoteFile()...");
+
+//---GRY--- TO BE DONE...
+}
+
+//==============================================================================
+
 void CentralWidget::reloadFile(const int &pIndex)
 {
     // Ask our file manager to reload the file, but only if it isn't new and if

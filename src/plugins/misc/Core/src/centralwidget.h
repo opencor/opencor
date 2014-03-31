@@ -192,6 +192,7 @@ private Q_SLOTS:
     void updateGui();
 
     void openFile();
+    void openRemoteFile();
 
     void reloadFile(const int &pIndex = -1);
 

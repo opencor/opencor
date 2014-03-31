@@ -68,6 +68,7 @@ private:
     CentralWidget *mCentralWidget;
 
     QAction *mFileOpenAction;
+    QAction *mFileOpenRemoteAction;
 
     QAction *mFileReloadAction;
 

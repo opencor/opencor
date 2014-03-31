@@ -202,6 +202,14 @@
         <source>Toggle the locked state of the current file</source>
         <translation>Basculer l&apos;état vérouillé du fichier actuel</translation>
     </message>
+    <message>
+        <source>Open Remote...</source>
+        <translation>Ouvrir À Distance...</translation>
+    </message>
+    <message>
+        <source>Open a remote file</source>
+        <translation>Ouvrir un fichier à distance</translation>
+    </message>
 </context>
 <context>
     <name>OpenCOR::Core::PropertyEditorWidget</name>
