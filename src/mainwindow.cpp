@@ -670,10 +670,9 @@ void MainWindow::loadSettings()
 
         // Default size and position of the main window
 
-        double ratio = 1.0/13.0;
         QRect desktopGeometry = qApp->desktop()->availableGeometry();
-        int horizSpace = ratio*desktopGeometry.width();
-        int vertSpace  = ratio*desktopGeometry.height();
+        int horizSpace = desktopGeometry.width()/3;
+        int vertSpace  = desktopGeometry.height()/3;
 
         setGeometry(desktopGeometry.left()+horizSpace,
                     desktopGeometry.top()+vertSpace,
