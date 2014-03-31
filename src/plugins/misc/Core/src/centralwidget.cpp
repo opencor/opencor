@@ -261,6 +261,27 @@ CentralWidget::CentralWidget(QMainWindow *pMainWindow) :
         connect(mode->viewTabs(), SIGNAL(currentChanged(int)),
                 this, SLOT(updateFileTabIcons()));
     }
+
+    // Create our remote file dialog
+
+    mRemoteFileDialog = new QDialog(this);
+    QGridLayout *dialogLayout = new QGridLayout(mRemoteFileDialog);
+
+    mRemoteFileDialog->setLayout(dialogLayout);
+
+    QLineEdit *urlValue = new QLineEdit(mRemoteFileDialog);
+    mRemoteFileDialogUrlLabel = new QLabel(mRemoteFileDialog);
+
+    urlValue->setMinimumWidth(qApp->desktop()->availableGeometry().width()/5);
+
+    dialogLayout->addWidget(mRemoteFileDialogUrlLabel, 0, 0);
+    dialogLayout->addWidget(urlValue, 0, 1);
+
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Open|QDialogButtonBox::Cancel, this);
+
+    dialogLayout->addWidget(buttonBox, 1, 0, 1, 2);
+
+    dialogLayout->setSizeConstraint(QLayout::SetFixedSize);
 }
 
 //==============================================================================
@@ -508,6 +529,11 @@ void CentralWidget::retranslateUi()
     // Retranslate our no view widget message
 
     updateNoViewMsg();
+
+    // Retranslate our remote file dialog
+
+    mRemoteFileDialog->setWindowTitle(tr("Open Remote File"));
+    mRemoteFileDialogUrlLabel->setText(tr("URL:"));
 }
 
 //==============================================================================
@@ -656,27 +682,7 @@ qDebug(">>> CentralWidget::openRemoteFile()...");
 
 //---GRY--- TO BE DONE...
 
-    QDialog *dialog = new QDialog(this);
-    QGridLayout *dialogLayout = new QGridLayout(dialog);
-
-    dialog->setLayout(dialogLayout);
-
-    dialog->setWindowTitle(tr("Open Remote File"));
-
-    QLineEdit *urlValue = new QLineEdit(dialog);
-
-    urlValue->setMinimumWidth(qApp->desktop()->availableGeometry().width()/5);
-
-    dialogLayout->addWidget(new QLabel(tr("URL:"), dialog), 0, 0);
-    dialogLayout->addWidget(urlValue, 0, 1);
-
-    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Open|QDialogButtonBox::Cancel, this);
-
-    dialogLayout->addWidget(buttonBox, 1, 0, 1, 2);
-
-    dialogLayout->setSizeConstraint(QLayout::SetFixedSize);
-
-    dialog->exec();
+    mRemoteFileDialog->exec();
 }
 
 //==============================================================================

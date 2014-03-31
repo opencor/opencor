@@ -42,6 +42,7 @@ namespace Ui {
 
 //==============================================================================
 
+class QDialog;
 class QLabel;
 class QStackedWidget;
 
@@ -164,6 +165,9 @@ private:
     UserMessageWidget *mNoViewMsg;
 
     QMap<GuiViewSettings::Mode, CentralWidgetMode *> mModes;
+
+    QDialog *mRemoteFileDialog;
+    QLabel *mRemoteFileDialogUrlLabel;
 
     Plugin * viewPlugin(const int &pIndex) const;
     Plugin * viewPlugin(const QString &pFileName) const;
