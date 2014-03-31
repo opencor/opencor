@@ -43,7 +43,7 @@
   <mal:mapping keyname="gt" precedence="30">#exprs[.GT.]</mal:mapping>
   <mal:mapping keyname="implies" precedence="10(950)"> (.NOT.#expr1 .OR. #expr2)</mal:mapping>
   <mal:mapping keyname="int" precedence="H">defint(func#unique1, BOUND, CONSTS, RATES, VARIABLES, #bvarIndex)
-#supplement      REAL function func#unique1(BOUND,CONSTS, RATES, VARIABLES) 
+#supplement      REAL function func#unique1(BOUND,CONSTS, RATES, VARIABLES)
       func#unique1 = #expr1
       RETURN
       END
@@ -98,14 +98,14 @@
 </ccgs:mapping>
   <ccgs:mapping keyname="solvePattern"><![CDATA[CALL minimize(minfunc_<ID>, CONSTS, VARIABLES, <VAR>)
 <SUP>REAL FUNCTION minfunc_<ID>(CONSTS, VARIABLES)
-            REAL CONSTS(*), VARIABLES(*) 
+            REAL CONSTS(*), VARIABLES(*)
       minfunc_<ID> = abs(<LHS> - <RHS>)
       RETURN
       END
 ]]></ccgs:mapping>
   <ccgs:mapping keyname="solveNLSystemPattern"><![CDATA[CALL minimize(minfunc_<ID>, CONSTS, VARIABLES, <VAR>)
 <SUP>REAL FUNCTION minfunc_<ID>(CONSTS, VARIABLES)
-            REAL CONSTS(*), VARIABLES(*) 
+            REAL CONSTS(*), VARIABLES(*)
       <EQUATIONS>minfunc_<ID>[<INDEX>] = abs(<EXPR>)<JOIN>
       </EQUATIONS>
       RETURN

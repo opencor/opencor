@@ -167,9 +167,9 @@ function [VOI, STATES, ALGEBRAIC, CONSTANTS] = mainFunction()
    [VOI, STATES, ALGEBRAIC, CONSTANTS] = solveModel();
 end
 
-function [algebraicVariableCount] = getAlgebraicVariableCount() 
+function [algebraicVariableCount] = getAlgebraicVariableCount()
     % Used later when setting a global variable with the number of algebraic variables.
-    % Note: This is not the "main method".  
+    % Note: This is not the "main method".
     algebraicVariableCount =</mapping>
 <mapping keyname="postAlgebraicCount">;
 end
@@ -188,7 +188,7 @@ function [VOI, STATES, ALGEBRAIC, CONSTANTS] = solveModel()
     % Initialise constants and state variables
     [INIT_STATES, CONSTANTS] = initConsts;
 
-    % Set timespan to solve over 
+    % Set timespan to solve over
     tspan = [<RANGESTART>, <RANGEEND>];
 
     % Set numerical accuracy options for ODE solver

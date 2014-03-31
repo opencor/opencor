@@ -4,9 +4,9 @@ function [VOI, STATES, ALGEBRAIC, CONSTANTS] = mainFunction()
    [VOI, STATES, ALGEBRAIC, CONSTANTS] = solveModel();
 end
 
-function [algebraicVariableCount] = getAlgebraicVariableCount() 
+function [algebraicVariableCount] = getAlgebraicVariableCount()
     % Used later when setting a global variable with the number of algebraic variables.
-    % Note: This is not the "main method".  
+    % Note: This is not the "main method".
     algebraicVariableCount =13;
 end
 % There are a total of 4 entries in each of the rate and state variable arrays.
@@ -19,7 +19,7 @@ function [VOI, STATES, ALGEBRAIC, CONSTANTS] = solveModel()
     % Initialise constants and state variables
     [INIT_STATES, CONSTANTS] = initConsts;
 
-    % Set timespan to solve over 
+    % Set timespan to solve over
     tspan = [0, 10];
 
     % Set numerical accuracy options for ODE solver

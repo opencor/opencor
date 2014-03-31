@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 
-<language 
-  xmlns="http://www.cellml.org/CeLEDS/1.0#" 
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-  xmlns:mal="http://www.cellml.org/CeLEDS/MaLaES/1.0#" 
-  xmlns:ccgs="http://www.cellml.org/CeLEDS/CCGS/1.0#" 
+<language
+  xmlns="http://www.cellml.org/CeLEDS/1.0#"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:mal="http://www.cellml.org/CeLEDS/MaLaES/1.0#"
+  xmlns:ccgs="http://www.cellml.org/CeLEDS/CCGS/1.0#"
   xsi:schemaLocation="http://www.cellml.org/CeLEDS/1.0# ../CeLEDS.xsd">
 
 <title>C</title>
@@ -116,7 +116,7 @@ void objfunc_<ID>(double *p, double *hx, int m, int n, void *adata)
 #undef ALGEBRAIC
 #undef pret
 }
-void rootfind_<ID>(double VOI, double* CONSTANTS, double* RATES, 
+void rootfind_<ID>(double VOI, double* CONSTANTS, double* RATES,
 double* STATES, double* ALGEBRAIC, int* pret)
 {
   static double val = <IV>;
