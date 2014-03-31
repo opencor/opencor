@@ -34,6 +34,7 @@ specific language governing permissions and limitations under the License.
 #include <QKeyEvent>
 #include <QGridLayout>
 #include <QLabel>
+#include <QLayout>
 #include <QLineEdit>
 
 //==============================================================================
@@ -57,6 +58,11 @@ EditorFindReplaceWidget::EditorFindReplaceWidget(QWidget *pParent) :
     // Note: the above remove the focus border since it messes up the look of
     //       our edit widgets...
 #endif
+
+    // Make sure that we take as little vertical space as possible whilte as
+    // much horizontal space as possible
+
+    mGui->layout->setSizeConstraint(QLayout::SetMaximumSize);
 
     // Make our find edit widget our focus proxy
 
