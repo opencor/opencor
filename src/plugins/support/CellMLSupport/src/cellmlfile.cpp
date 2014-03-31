@@ -27,6 +27,7 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#include <QDomDocument>
 #include <QFile>
 #include <QFileInfo>
 #include <QIODevice>
@@ -752,13 +753,39 @@ bool CellmlFile::exportTo(const QString &pFileName,
 
         // Check that the user-defined format file actually exists
 
-        if (!QFileInfo(pUserDefinedFormatFileName).exists())
+        if (!QFileInfo(pUserDefinedFormatFileName).exists()){
+            mIssues << CellmlFileIssue(CellmlFileIssue::Error,
+                                       tr("the user-defined format file does not exist"));
+
             return false;
+        }
+
+        // Make sure that the user-defined format file is valid XML
+        // Note: you would normally expect CeLEDSExporter to check this, but all
+        //       it does in case of an invalid XML file is crash, so...
+
+        QString userDefinedFormatFileContents;
+
+        if (!Core::readTextFromFile(pUserDefinedFormatFileName, userDefinedFormatFileContents)) {
+            mIssues << CellmlFileIssue(CellmlFileIssue::Error,
+                                       tr("the user-defined format file could not be read"));
+
+            return false;
+        }
+
+        QDomDocument domDocument;
+
+        if (!domDocument.setContent(userDefinedFormatFileContents)) {
+            mIssues << CellmlFileIssue(CellmlFileIssue::Error,
+                                       tr("the user-defined format file is not a valid XML file"));
+
+            return false;
+        }
 
         // Do the actual export
 
         ObjRef<iface::cellml_services::CeLEDSExporterBootstrap> celedsExporterBootstrap = CreateCeLEDSExporterBootstrap();
-        ObjRef<iface::cellml_services::CodeExporter> codeExporter = celedsExporterBootstrap->createExporter(pUserDefinedFormatFileName.toStdWString());
+        ObjRef<iface::cellml_services::CodeExporter> codeExporter = celedsExporterBootstrap->createExporterFromText(userDefinedFormatFileContents.toStdWString());
 
         if (celedsExporterBootstrap->loadError().length()) {
             mIssues << CellmlFileIssue(CellmlFileIssue::Error,

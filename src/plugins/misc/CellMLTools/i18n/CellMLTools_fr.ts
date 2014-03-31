@@ -43,5 +43,21 @@
         <source>Select User-Defined Format File</source>
         <translation>Sélectionner Fichier Format Défini Par L&apos;Utilisateur</translation>
     </message>
+    <message>
+        <source>Export CellML File To User-Defined Format</source>
+        <translation>Exporter Fichier CellML Vers Fichier Format Défini Par L&apos;Utilisateur</translation>
+    </message>
+    <message>
+        <source>Sorry, but &lt;strong&gt;%1&lt;/strong&gt; could not be exported to the user-defined format described in &lt;strong&gt;%2&lt;/strong&gt;%3.</source>
+        <translation>Désolé, mais &lt;strong&gt;%1&lt;/strong&gt; n&apos;a pas pu être exporté vers le format défini par l&apos;utilisateur décrit dans &lt;strong&gt;%2&lt;/strong&gt;%3.</translation>
+    </message>
+    <message>
+        <source>User-Defined Format File (*.xml)</source>
+        <translation>Fichier Format Défini Par L&apos;Utilisateur (*.xml)</translation>
+    </message>
+    <message>
+        <source>All Files</source>
+        <translation>Tous Fichiers</translation>
+    </message>
 </context>
 </TS>
