@@ -74,7 +74,8 @@ void CorePlugin::initialize()
     mFileOpenAction = newAction(mMainWindow, false,
                                 ":/oxygen/actions/document-open.png",
                                 QKeySequence::Open);
-    mFileOpenRemoteAction = newAction(mMainWindow);
+    mFileOpenRemoteAction = newAction(mMainWindow, false, QString(),
+                                      QKeySequence(Qt::CTRL|Qt::SHIFT|Qt::Key_O));
 
     mFileReloadAction = newAction(mMainWindow);
 
