@@ -37,6 +37,8 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#include <QApplication>
+#include <QDesktopWidget>
 #include <QDialog>
 #include <QDialogButtonBox>
 #include <QDragEnterEvent>
@@ -49,7 +51,9 @@ specific language governing permissions and limitations under the License.
 #include <QMainWindow>
 #include <QMessageBox>
 #include <QMimeData>
+#include <QRect>
 #include <QSettings>
+#include <QSizePolicy>
 #include <QStackedWidget>
 #include <QStatusBar>
 #include <QUrl>
@@ -657,7 +661,11 @@ qDebug(">>> CentralWidget::openRemoteFile()...");
 
     dialog->setLayout(dialogLayout);
 
+    dialog->setWindowTitle(tr("Open Remote File"));
+
     QLineEdit *urlValue = new QLineEdit(dialog);
+
+    urlValue->setMinimumWidth(qApp->desktop()->availableGeometry().width()/5);
 
     dialogLayout->addWidget(new QLabel(tr("URL:"), dialog), 0, 0);
     dialogLayout->addWidget(urlValue, 0, 1);

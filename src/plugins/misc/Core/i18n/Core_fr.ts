@@ -92,6 +92,10 @@
         <translation>Fichier</translation>
     </message>
     <message>
+        <source>Open Remote File</source>
+        <translation>Ouvrir Fichier À Distance</translation>
+    </message>
+    <message>
         <source>URL:</source>
         <translation>URL :</translation>
     </message>
