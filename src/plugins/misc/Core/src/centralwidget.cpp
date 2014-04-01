@@ -263,25 +263,36 @@ CentralWidget::CentralWidget(QMainWindow *pMainWindow) :
     }
 
     // Create our remote file dialog box
+//---GRY--- THE ORIGINAL PLAN WAS TO HAVE A REGULAR EXPRESSION TO VALIDATE A
+//          URL, BUT IT LOOKS LIKE THERE MIGHT BE AN ISSUE WITH
+//          QRegularExpressionValidator, SO WE SIMPLY ALLOW FREE TEXT FOR NOW
+//          (SEE https://bugreports.qt-project.org/browse/QTBUG-38034)
 
     mRemoteFileDialog = new QDialog(this);
     QGridLayout *dialogLayout = new QGridLayout(mRemoteFileDialog);
 
     mRemoteFileDialog->setLayout(dialogLayout);
 
-    QLineEdit *urlValue = new QLineEdit(mRemoteFileDialog);
     mRemoteFileDialogUrlLabel = new QLabel(mRemoteFileDialog);
+    mRemoteFileDialogUrlValue = new QLineEdit(mRemoteFileDialog);
 
-    urlValue->setMinimumWidth(qApp->desktop()->availableGeometry().width()/5);
+    mRemoteFileDialogUrlValue->setMinimumWidth(qApp->desktop()->availableGeometry().width()/5);
 
     dialogLayout->addWidget(mRemoteFileDialogUrlLabel, 0, 0);
-    dialogLayout->addWidget(urlValue, 0, 1);
+    dialogLayout->addWidget(mRemoteFileDialogUrlValue, 0, 1);
 
     QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Open|QDialogButtonBox::Cancel, this);
 
     dialogLayout->addWidget(buttonBox, 1, 0, 1, 2);
 
     dialogLayout->setSizeConstraint(QLayout::SetFixedSize);
+
+    // Some connections to handle our remote file dialog box
+
+    connect(buttonBox, SIGNAL(accepted()),
+            this, SLOT(doOpenRemoteFile()));
+    connect(buttonBox, SIGNAL(rejected()),
+            this, SLOT(cancelOpenRemoteFile()));
 }
 
 //==============================================================================
@@ -676,11 +687,37 @@ void CentralWidget::openFile()
 
 //==============================================================================
 
-void CentralWidget::openRemoteFile()
+void CentralWidget::doOpenRemoteFile()
 {
-qDebug(">>> CentralWidget::openRemoteFile()...");
+    // Retrieve the URL of the remote file to be opened
+
+    QString url = mRemoteFileDialogUrlValue->text();
+
+qDebug(">>> CentralWidget::doOpenRemoteFile()... %s", qPrintable(url));
+
+    mRemoteFileDialog->accept();
+
+    // Actually open the remote file
 
 //---GRY--- TO BE DONE...
+}
+
+//==============================================================================
+
+void CentralWidget::cancelOpenRemoteFile()
+{
+    // Cancel the opening of a remote file
+
+    mRemoteFileDialog->reject();
+}
+
+//==============================================================================
+
+void CentralWidget::openRemoteFile()
+{
+    // Ask for the URL of the remote file that is to be opened
+
+    mRemoteFileDialogUrlValue->setText(QString());
 
     mRemoteFileDialog->exec();
 }

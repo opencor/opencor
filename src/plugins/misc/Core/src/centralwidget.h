@@ -44,6 +44,7 @@ namespace Ui {
 
 class QDialog;
 class QLabel;
+class QLineEdit;
 class QStackedWidget;
 
 //==============================================================================
@@ -168,6 +169,7 @@ private:
 
     QDialog *mRemoteFileDialog;
     QLabel *mRemoteFileDialogUrlLabel;
+    QLineEdit *mRemoteFileDialogUrlValue;
 
     Plugin * viewPlugin(const int &pIndex) const;
     Plugin * viewPlugin(const QString &pFileName) const;
@@ -196,6 +198,9 @@ private Q_SLOTS:
     void updateGui();
 
     void openFile();
+
+    void doOpenRemoteFile();
+    void cancelOpenRemoteFile();
     void openRemoteFile();
 
     void reloadFile(const int &pIndex = -1);
