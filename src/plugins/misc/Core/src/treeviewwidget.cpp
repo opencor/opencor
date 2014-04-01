@@ -14,6 +14,7 @@ CONDITIONS OF ANY KIND, either express or implied. See the License for the
 specific language governing permissions and limitations under the License.
 
 *******************************************************************************/
+#include <QDebug>
 
 //==============================================================================
 // Enhanced tree view widget
@@ -29,6 +30,7 @@ specific language governing permissions and limitations under the License.
 
 #include <QDrag>
 #include <QHeaderView>
+#include <QModelIndex>
 #include <QMouseEvent>
 #include <QStandardItemModel>
 
@@ -134,8 +136,14 @@ void TreeViewWidget::keyPressEvent(QKeyEvent *pEvent)
 
             QModelIndex currIndex = currentIndex();
 
-            if (isExpanded(currIndex)) {
-                // The current item is expanded, so collapse it
+            if (currIndex.column())
+                // We are not dealing with the (row, 0) item, so...
+
+                currIndex = currIndex.sibling(currIndex.row(), 0);
+
+            if (model()->hasChildren(currIndex) && isExpanded(currIndex)) {
+                // The current item has children and it is expanded, so collapse
+                // it
 
                 setExpanded(currIndex, false);
 
@@ -143,8 +151,8 @@ void TreeViewWidget::keyPressEvent(QKeyEvent *pEvent)
 
                 pEvent->accept();
             } else {
-                // The current item is collapsed, so select its parent, but
-                // only if it has a parent
+                // Either the current item has no children or it is collapsed,
+                // so select its parent, if it has one
 
                 if (currIndex.parent() != QModelIndex()) {
                     setCurrentIndex(currIndex.parent());
@@ -163,6 +171,11 @@ void TreeViewWidget::keyPressEvent(QKeyEvent *pEvent)
             // child, should it have children
 
             QModelIndex currIndex = currentIndex();
+
+            if (currIndex.column())
+                // We are not dealing with the (row, 0) item, so...
+
+                currIndex = currIndex.sibling(currIndex.row(), 0);
 
             if (model()->hasChildren(currIndex)) {
                 if (!isExpanded(currIndex)) {
