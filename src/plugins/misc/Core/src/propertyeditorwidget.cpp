@@ -33,6 +33,7 @@ specific language governing permissions and limitations under the License.
 
 #include <QHeaderView>
 #include <QKeyEvent>
+#include <QRegularExpressionValidator>
 #include <QScrollBar>
 #include <QSettings>
 #include <QStandardItem>
@@ -103,7 +104,7 @@ IntegerEditorWidget::IntegerEditorWidget(QWidget *pParent) :
 {
     // Set a validator which accepts any integer
 
-    setValidator(new QRegExpValidator(QRegExp("^[+-]?[0-9]*$"), this));
+    setValidator(new QRegularExpressionValidator(QRegularExpression("^[+-]?[0-9]*$"), this));
 }
 
 //==============================================================================
@@ -113,7 +114,7 @@ DoubleEditorWidget::DoubleEditorWidget(QWidget *pParent) :
 {
     // Set a validator which accepts any double
 
-    setValidator(new QRegExpValidator(QRegExp("^[+-]?[0-9]*\\.?[0-9]+([eE][+-]?[0-9]+)?$"), this));
+    setValidator(new QRegularExpressionValidator(QRegularExpression("^[+-]?[0-9]*\\.?[0-9]+([eE][+-]?[0-9]+)?$"), this));
 }
 
 //==============================================================================

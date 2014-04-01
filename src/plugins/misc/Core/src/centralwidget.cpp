@@ -262,7 +262,7 @@ CentralWidget::CentralWidget(QMainWindow *pMainWindow) :
                 this, SLOT(updateFileTabIcons()));
     }
 
-    // Create our remote file dialog
+    // Create our remote file dialog box
 
     mRemoteFileDialog = new QDialog(this);
     QGridLayout *dialogLayout = new QGridLayout(mRemoteFileDialog);

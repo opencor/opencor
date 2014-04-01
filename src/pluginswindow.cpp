@@ -32,6 +32,7 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include <QDesktopServices>
+#include <QDialogButtonBox>
 #include <QMessageBox>
 #include <QPushButton>
 #include <QSettings>
