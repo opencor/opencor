@@ -360,7 +360,7 @@ QString PluginsWindow::statusDescription(Plugin *pPlugin) const
             return tr("the plugin could not be loaded due to the %1 plugin being missing or invalid.").arg(pPlugin->statusErrors());
         else
             return tr("the plugin could not be loaded due to missing or invalid plugins:\n%1").arg(pPlugin->statusErrors());
-    default:   // Plugin::UndefinedStatus
+    default:   // Plugin::Undefined
         return tr("the status of the plugin is undefined.");
     }
 }

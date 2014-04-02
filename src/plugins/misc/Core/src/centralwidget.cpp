@@ -142,7 +142,7 @@ CentralWidget::CentralWidget(QMainWindow *pMainWindow) :
     Widget(pMainWindow),
     mMainWindow(pMainWindow),
     mGui(new Ui::CentralWidget),
-    mStatus(Starting),
+    mState(Starting),
     mLoadedPlugins(Plugins()),
     mModeTabIndexModes(QMap<int, GuiViewSettings::Mode>()),
     mModeModeTabIndexes(QMap<GuiViewSettings::Mode, int>()),
@@ -320,7 +320,7 @@ CentralWidget::~CentralWidget()
     // we may get a segmentation fault (should there be a need to switch from
     // one view to another)
 
-    mStatus = Stopping;
+    mState = Stopping;
 
     // Close all the files
     // Note: we force the closing of all the files since canClose() will have
@@ -350,7 +350,7 @@ static const auto SettingsFileModeView    = QStringLiteral("FileModeView%1%2");
 
 void CentralWidget::loadSettings(QSettings *pSettings)
 {
-    // Some connections to handle an external change in the status of a file
+    // Some connections to handle an external change in the state of a file
     // Note: we do it here because we want other plugins to get a chance to
     //       handle our file manager's signals before us. Indeed, in the case of
     //       the CellML file manager for example, we will want the CellML file
@@ -365,10 +365,9 @@ void CentralWidget::loadSettings(QSettings *pSettings)
     connect(fileManagerInstance, SIGNAL(fileDeleted(const QString &)),
             this, SLOT(fileDeleted(const QString &)));
 
-    // Some connections to handle an internal change in the status of a file
+    // Some connections to handle an internal change in the state of a file
     // Note: we do it here for the same reason as above (see the note for the
-    //       connections to handle an external change in the status of a
-    //       file)...
+    //       connections to handle an external change in the state of a file)...
 
     connect(fileManagerInstance, SIGNAL(fileModified(const QString &, const bool &)),
             this, SLOT(updateModifiedSettings()));
@@ -502,9 +501,9 @@ void CentralWidget::settingsLoaded(const Plugins &pLoadedPlugins)
 
     mLoadedPlugins = pLoadedPlugins;
 
-    // Update our status now that our plugins  are fully ready
+    // Update our state now that our plugins  are fully ready
 
-    mStatus = Idling;
+    mState = Idling;
 
     // Update the GUI
 
@@ -1056,7 +1055,7 @@ bool CentralWidget::canCloseFile(const int &pIndex)
 
 bool CentralWidget::closeFile(const int &pIndex, const bool &pForceClosing)
 {
-    if (mStatus == UpdatingGui)
+    if (mState == UpdatingGui)
         // We are updating the GUI, so we can't close the file for now
 
         return false;
@@ -1317,15 +1316,15 @@ Plugin * CentralWidget::viewPlugin(const QString &pFileName) const
 
 void CentralWidget::updateGui()
 {
-    if (mStatus != Idling)
+    if (mState != Idling)
         // We are doing something, so too risky to update the GUI during that
         // time (e.g. things may not be fully initialised)
 
         return;
 
-    // Update our status to reflect the fact that we are updating the GUI
+    // Update our state to reflect the fact that we are updating the GUI
 
-    mStatus = UpdatingGui;
+    mState = UpdatingGui;
 
     // Determine whether we are here as a result of changing files, modes or
     // views
@@ -1477,7 +1476,7 @@ void CentralWidget::updateGui()
 
     // We are done with updating the GUI, so...
 
-    mStatus = Idling;
+    mState = Idling;
 }
 
 //==============================================================================

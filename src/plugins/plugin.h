@@ -72,7 +72,7 @@ class Plugin : public QObject
 
 public:
     enum Status {
-        UndefinedStatus,
+        Undefined,
         NotWanted,
         NotNeeded,
         Loaded,

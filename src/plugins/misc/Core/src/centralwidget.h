@@ -135,7 +135,7 @@ protected:
     virtual void dropEvent(QDropEvent *pEvent);
 
 private:
-    enum Status {
+    enum State {
         Starting,
         Idling,
         UpdatingGui,
@@ -146,7 +146,7 @@ private:
 
     Ui::CentralWidget *mGui;
 
-    Status mStatus;
+    State mState;
 
     Plugins mLoadedPlugins;
 
