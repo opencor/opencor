@@ -127,7 +127,7 @@ public:
 
     void openFile(const QString &pFileName,
                   const File::Type &pType = File::Local,
-                  const QString &pContents = QString());
+                  const QString &pUrl = QString());
     void openFiles(const QStringList &pFileNames);
 
     bool canClose();
@@ -228,7 +228,8 @@ private Q_SLOTS:
 
     void fileReloaded(const QString &pFileName);
 
-    void fileCreatedOrDuplicated(const QString &pFileName);
+    void fileCreated(const QString &pFileName, const QString &pUrl);
+    void fileDuplicated(const QString &pFileName);
     void fileRenamed(const QString &pOldFileName, const QString &pNewFileName);
 
     void saveFile();

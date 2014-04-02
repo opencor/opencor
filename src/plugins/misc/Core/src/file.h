@@ -56,7 +56,8 @@ public:
         LockedNotSet
     };
 
-    explicit File(const QString &pFileName, const Type &pType);
+    explicit File(const QString &pFileName, const Type &pType,
+                  const QString &pUrl);
     ~File();
 
     QString fileName() const;
@@ -70,6 +71,10 @@ public:
 
     int newIndex() const;
 
+    bool isRemote() const;
+
+    QString url() const;
+
     bool isModified() const;
     bool setModified(const bool &pModified);
 
@@ -82,6 +87,7 @@ public:
 
 private:
     QString mFileName;
+    QString mUrl;
     QString mSha1;
 
     int mNewIndex;

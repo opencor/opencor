@@ -37,8 +37,9 @@ namespace Core {
 
 //==============================================================================
 
-File::File(const QString &pFileName, const Type &pType) :
-    mFileName(nativeCanonicalFileName(pFileName))
+File::File(const QString &pFileName, const Type &pType, const QString &pUrl) :
+    mFileName(nativeCanonicalFileName(pFileName)),
+    mUrl(pUrl)
 {
     // Initialise ourselves by 'resetting' ourselves
 
@@ -169,6 +170,24 @@ int File::newIndex() const
     // Return the file's new index
 
     return mNewIndex;
+}
+
+//==============================================================================
+
+bool File::isRemote() const
+{
+    // Return whether the file is a remote one
+
+    return !mUrl.isEmpty();
+}
+
+//==============================================================================
+
+QString File::url() const
+{
+    // Return the file's URL
+
+    return mUrl;
 }
 
 //==============================================================================

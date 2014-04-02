@@ -88,7 +88,8 @@ FileManager * FileManager::instance()
 //==============================================================================
 
 FileManager::Status FileManager::manage(const QString &pFileName,
-                                        const File::Type &pType)
+                                        const File::Type &pType,
+                                        const QString &pUrl)
 {
     // Manage the given file, should it not be already managed
 
@@ -103,7 +104,7 @@ FileManager::Status FileManager::manage(const QString &pFileName,
             // The file isn't already managed, so add it to our list of managed
             // files, let people know about it being now managed
 
-            mFiles << new File(nativeFileName, pType);
+            mFiles << new File(nativeFileName, pType, pUrl);
 
             emit fileManaged(nativeFileName);
 
@@ -220,6 +221,20 @@ int FileManager::newIndex(const QString &pFileName) const
 
 //==============================================================================
 
+QString FileManager::url(const QString &pFileName) const
+{
+    // Return the given file's URL, if it is being managed
+
+    File *file = isManaged(nativeCanonicalFileName(pFileName));
+
+    if (file)
+        return file->url();
+    else
+        return QString();
+}
+
+//==============================================================================
+
 bool FileManager::isNew(const QString &pFileName) const
 {
     // Return whether the given file, if it is being managed, is new
@@ -228,6 +243,20 @@ bool FileManager::isNew(const QString &pFileName) const
 
     if (file)
         return file->isNew();
+    else
+        return false;
+}
+
+//==============================================================================
+
+bool FileManager::isRemote(const QString &pFileName) const
+{
+    // Return whether the given file, if it is being managed, is a remote one
+
+    File *file = isManaged(nativeCanonicalFileName(pFileName));
+
+    if (file)
+        return file->isRemote();
     else
         return false;
 }
@@ -363,7 +392,8 @@ void FileManager::reload(const QString &pFileName)
 
 //==============================================================================
 
-FileManager::Status FileManager::create(const QString &pContents)
+FileManager::Status FileManager::create(const QString &pUrl,
+                                        const QString &pContents)
 {
     // Create a new file
 
@@ -382,7 +412,7 @@ FileManager::Status FileManager::create(const QString &pContents)
 
         // Let people know that we have created a file
 
-        emit fileCreated(createdFile.fileName());
+        emit fileCreated(createdFile.fileName(), pUrl);
 
         return Created;
     } else {

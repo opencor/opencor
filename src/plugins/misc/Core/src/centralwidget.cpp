@@ -228,10 +228,10 @@ CentralWidget::CentralWidget(QMainWindow *pMainWindow) :
 
     FileManager *fileManagerInstance = FileManager::instance();
 
-    connect(fileManagerInstance, SIGNAL(fileCreated(const QString &)),
-            this, SLOT(fileCreatedOrDuplicated(const QString &)));
+    connect(fileManagerInstance, SIGNAL(fileCreated(const QString &, const QString &)),
+            this, SLOT(fileCreated(const QString &, const QString &)));
     connect(fileManagerInstance, SIGNAL(fileDuplicated(const QString &)),
-            this, SLOT(fileCreatedOrDuplicated(const QString &)));
+            this, SLOT(fileDuplicated(const QString &)));
 
     // Some connections to handle changes to a file
 
@@ -609,9 +609,9 @@ void CentralWidget::updateFileTab(const int &pIndex)
 //==============================================================================
 
 void CentralWidget::openFile(const QString &pFileName, const File::Type &pType,
-                             const QString &pContents)
+                             const QString &pUrl)
 {
-    Q_UNUSED(pContents);
+    Q_UNUSED(pUrl);
 
     if (!mModeTabs->count() || !QFileInfo(pFileName).exists())
         // No modes are available or the file doesn't exist, so...
@@ -1695,10 +1695,19 @@ void CentralWidget::fileReloaded(const QString &pFileName)
 
 //==============================================================================
 
-void CentralWidget::fileCreatedOrDuplicated(const QString &pFileName)
+void CentralWidget::fileCreated(const QString &pFileName, const QString &pUrl)
 {
-    // A file got created or duplicated, so open it making sure that we consider
-    // it as new
+    // A file got created, so open it as new if no URL is provided or remote
+    // otherwise
+
+    openFile(pFileName, pUrl.isEmpty()?File::New:File::Remote, pUrl);
+}
+
+//==============================================================================
+
+void CentralWidget::fileDuplicated(const QString &pFileName)
+{
+    // A file got duplicated, so open it as new
 
     openFile(pFileName, File::New);
 }
@@ -1819,9 +1828,22 @@ void CentralWidget::remoteFileDownloaded(QNetworkReply *pNetworkReply)
     // Check whether we were able to retrieve the contents of the remote file
 
     if (pNetworkReply->error() == QNetworkReply::NoError) {
-        // We retrieved the contents of the remote file, so open it
+        // We retrieved the contents of the remote file, so ask our file manager
+        // to create a new remote file
 
-qDebug(">>> Remote file contents:\n%s", qPrintable(pNetworkReply->readAll()));
+        Core::FileManager *fileManagerInstance = Core::FileManager::instance();
+#ifdef QT_DEBUG
+        Core::FileManager::Status createStatus =
+#endif
+        fileManagerInstance->create(pNetworkReply->url().toString(),
+                                    pNetworkReply->readAll());
+
+        // Make sure that the file has indeed been created
+
+#ifdef QT_DEBUG
+        if (createStatus != Core::FileManager::Created)
+            qFatal("FATAL ERROR | %s:%d: the remote file was not created", __FILE__, __LINE__);
+#endif
     } else {
         // We were not able to retrieve the contents of the remote file, so let
         // the user know about it

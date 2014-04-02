@@ -355,7 +355,7 @@ void CoreCellMLEditingPlugin::newCellmlFile(const CellMLSupport::CellmlFile::Ver
 #ifdef QT_DEBUG
     Core::FileManager::Status createStatus =
 #endif
-    fileManagerInstance->create(fileContents.arg(version, modelName));
+    fileManagerInstance->create(QString(), fileContents.arg(version, modelName));
 
     // Make sure that the file has indeed been created
 

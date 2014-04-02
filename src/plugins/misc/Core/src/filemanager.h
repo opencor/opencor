@@ -93,7 +93,8 @@ public:
     static FileManager * instance();
 
     Status manage(const QString &pFileName,
-                  const File::Type &pType = File::Local);
+                  const File::Type &pType = File::Local,
+                  const QString &pUrl = QString());
     Status unmanage(const QString &pFileName);
 
     File * isManaged(const QString &pFileName) const;
@@ -104,8 +105,10 @@ public:
     void reset(const QString &pFileName);
 
     int newIndex(const QString &pFileName) const;
+    QString url(const QString &pFileName) const;
 
     bool isNew(const QString &pFileName) const;
+    bool isRemote(const QString &pFileName) const;
     bool isModified(const QString &pFileName) const;
     bool isNewOrModified(const QString &pFileName) const;
 
@@ -118,7 +121,8 @@ public:
 
     void reload(const QString &pFileName);
 
-    Status create(const QString &pContents = QString());
+    Status create(const QString &pUrl = QString(),
+                  const QString &pContents = QString());
     Status rename(const QString &pOldFileName, const QString &pNewFileName);
     Status duplicate(const QString &pFileName);
 
@@ -142,7 +146,7 @@ Q_SIGNALS:
 
     void fileReloaded(const QString &pFileName);
 
-    void fileCreated(const QString &pFileName);
+    void fileCreated(const QString &pFileName, const QString &pUrl);
     void fileRenamed(const QString &pOldFileName, const QString &pNewFileName);
     void fileDuplicated(const QString &pFileName);
 
