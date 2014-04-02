@@ -51,6 +51,9 @@ specific language governing permissions and limitations under the License.
 #include <QMainWindow>
 #include <QMessageBox>
 #include <QMimeData>
+#include <QNetworkAccessManager>
+#include <QNetworkReply>
+#include <QNetworkRequest>
 #include <QRect>
 #include <QSettings>
 #include <QSizePolicy>
@@ -293,6 +296,21 @@ CentralWidget::CentralWidget(QMainWindow *pMainWindow) :
             this, SLOT(doOpenRemoteFile()));
     connect(buttonBox, SIGNAL(rejected()),
             this, SLOT(cancelOpenRemoteFile()));
+
+    // Create a network access manager so that we can then retrieve the contents
+    // of a remote file
+
+    mNetworkAccessManager = new QNetworkAccessManager(this);
+
+    // Make sure that we get told when the retrieval of our remote file
+    // complete, as well as if there are SSL errors (which would happen if a
+    // website's certificate is invalid, e.g. it has expired)
+
+    connect(mNetworkAccessManager, SIGNAL(finished(QNetworkReply *)),
+            this, SLOT(remoteFileDownloaded(QNetworkReply *)) );
+//    connect(mNetworkAccessManager, SIGNAL(sslErrors(QNetworkReply *, const QList<QSslError> &)),
+//            this, SLOT(networkAccessManagerSslErrors(QNetworkReply *, const QList<QSslError> &)) );
+//---GRY--- TO BE UNCOMMENTED...
 }
 
 //==============================================================================
@@ -689,17 +707,11 @@ void CentralWidget::openFile()
 
 void CentralWidget::doOpenRemoteFile()
 {
-    // Retrieve the URL of the remote file to be opened
+    // Retrieve the contents of the remote file
 
-    QString url = mRemoteFileDialogUrlValue->text();
-
-qDebug(">>> CentralWidget::doOpenRemoteFile()... %s", qPrintable(url));
+    mNetworkAccessManager->get(QNetworkRequest(QUrl(mRemoteFileDialogUrlValue->text())));
 
     mRemoteFileDialog->accept();
-
-    // Actually open the remote file
-
-//---GRY--- TO BE DONE...
 }
 
 //==============================================================================
@@ -1798,6 +1810,40 @@ void CentralWidget::updateStatusBarWidgets(QList<QWidget *> pWidgets)
         statusBarWidgets << widget;
     }
 }
+
+//==============================================================================
+
+void CentralWidget::remoteFileDownloaded(QNetworkReply *pNetworkReply)
+{
+    // Check whether we were able to retrieve the contents of the remote file
+
+    if (pNetworkReply->error() == QNetworkReply::NoError) {
+        // We retrieved the contents of the remote file, so open it
+
+qDebug(">>> Remote file contents:\n%s", qPrintable(pNetworkReply->readAll()));
+    } else {
+        // We were not able to retrieve the contents of the remote file, so let
+        // the user know about it
+
+        QMessageBox::warning(this, tr("Open Remote File"),
+                             tr("Sorry, but <strong>%1</strong> could not be opened (%2).").arg(pNetworkReply->url().toString(), Core::formatErrorMessage(pNetworkReply->errorString(), false)));
+    }
+
+    // Delete (later) the network reply
+
+    pNetworkReply->deleteLater();
+}
+
+//==============================================================================
+
+//void CentralWidget::networkAccessManagerSslErrors(QNetworkReply *pNetworkReply,
+//                                                  const QList<QSslError> &pSslErrors)
+//{
+//    // Ignore the SSL errors since we assume the user knows what s/he is doing
+
+//    pNetworkReply->ignoreSslErrors(pSslErrors);
+//}
+//---GRY--- TO BE UNCOMMENTED...
 
 //==============================================================================
 

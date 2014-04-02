@@ -595,12 +595,12 @@ QString nativeCanonicalFileName(const QString &pFileName)
 
 //==============================================================================
 
-QString formatErrorMessage(const QString &pErrorMessage)
+QString formatErrorMessage(const QString &pErrorMessage, const bool &pDotDotDot)
 {
     static const QString DotDotDot = "...";
 
     if (pErrorMessage.isEmpty())
-        return DotDotDot;
+        return pDotDotDot?DotDotDot:QString();
 
     // Format and return the error message
 
@@ -622,7 +622,7 @@ QString formatErrorMessage(const QString &pErrorMessage)
     while (subsize && (errorMessage[subsize-1] == '.'))
         --subsize;
 
-    return errorMessage.left(subsize)+DotDotDot;
+    return errorMessage.left(subsize)+(pDotDotDot?DotDotDot:QString());
 }
 
 //==============================================================================

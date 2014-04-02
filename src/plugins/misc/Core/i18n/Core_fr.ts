@@ -99,6 +99,10 @@
         <source>URL:</source>
         <translation>URL :</translation>
     </message>
+    <message>
+        <source>Sorry, but &lt;strong&gt;%1&lt;/strong&gt; could not be opened (%2).</source>
+        <translation>Désolé, mais &lt;strong&gt;%1&lt;/strong&gt; n&apos;a pas pu être ouvert (%2).</translation>
+    </message>
 </context>
 <context>
     <name>OpenCOR::Core::CorePlugin</name>
