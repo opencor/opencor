@@ -28,6 +28,7 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include <QMainWindow>
+#include <QSettings>
 
 //==============================================================================
 
@@ -96,7 +97,9 @@ void RawCellMLViewPlugin::loadSettings(QSettings *pSettings)
 {
     // Retrieve our raw CellML view widget settings
 
-    loadViewSettings(pSettings, mViewWidget);
+    pSettings->beginGroup(mViewWidget->objectName());
+        mViewWidget->loadSettings(pSettings);
+    pSettings->endGroup();
 }
 
 //==============================================================================
@@ -105,7 +108,9 @@ void RawCellMLViewPlugin::saveSettings(QSettings *pSettings) const
 {
     // Keep track of our raw CellML view widget settings
 
-    saveViewSettings(pSettings, mViewWidget);
+    pSettings->beginGroup(mViewWidget->objectName());
+        mViewWidget->saveSettings(pSettings);
+    pSettings->endGroup();
 }
 
 //==============================================================================

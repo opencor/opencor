@@ -19,8 +19,6 @@ specific language governing permissions and limitations under the License.
 // GUI interface
 //==============================================================================
 
-#include "centralwidget.h"
-#include "dockwidget.h"
 #include "guiinterface.h"
 
 //==============================================================================
@@ -29,7 +27,6 @@ specific language governing permissions and limitations under the License.
 #include <QApplication>
 #include <QMainWindow>
 #include <QMenu>
-#include <QSettings>
 #include <QToolBar>
 
 //==============================================================================
@@ -174,7 +171,7 @@ GuiViewSettings::Mode GuiViewSettings::modeFromString(const QString &pMode)
 //==============================================================================
 
 GuiWindowSettings::GuiWindowSettings(const Qt::DockWidgetArea &pDefaultDockArea,
-                                     Core::DockWidget *pWindow,
+                                     QWidget *pWindow,
                                      const GuiWindowSettings::Type &pType,
                                      QAction *pAction) :
     mDefaultDockArea(pDefaultDockArea),
@@ -195,7 +192,7 @@ Qt::DockWidgetArea GuiWindowSettings::defaultDockArea() const
 
 //==============================================================================
 
-Core::DockWidget * GuiWindowSettings::window() const
+QWidget * GuiWindowSettings::window() const
 {
     // Return the window itself
 
@@ -281,7 +278,7 @@ void GuiSettings::addMenuAction(const GuiMenuActionSettings::Type &pType,
 
 //==============================================================================
 
-void GuiSettings::setCentralWidget(Core::CentralWidget *pCentralWidget)
+void GuiSettings::setCentralWidget(QWidget *pCentralWidget)
 {
     // Set the central widget to be used
 
@@ -291,14 +288,13 @@ void GuiSettings::setCentralWidget(Core::CentralWidget *pCentralWidget)
 //==============================================================================
 
 void GuiSettings::addWindow(const Qt::DockWidgetArea &pDefaultDockArea,
-                            Core::DockWidget *pWindow,
+                            QWidget *pWindow,
                             const GuiWindowSettings::Type &pType,
                             QAction *pAction)
 {
     // Add a window to our list
 
-    mWindows << new GuiWindowSettings(pDefaultDockArea, pWindow, pType,
-                                      pAction);
+    mWindows << new GuiWindowSettings(pDefaultDockArea, pWindow, pType, pAction);
 }
 
 //==============================================================================
@@ -336,7 +332,7 @@ QList<GuiMenuActionSettings *> GuiSettings::menuActions() const
 
 //==============================================================================
 
-Core::CentralWidget * GuiSettings::centralWidget() const
+QWidget * GuiSettings::centralWidget() const
 {
     // Return the central widget
 
@@ -464,19 +460,6 @@ QAction * GuiInterface::newAction(QWidget *pParent, const bool &pCheckable,
 
 //==============================================================================
 
-void GuiInterface::connectDockWidgetToAction(QDockWidget *pDockWidget,
-                                             QAction *pAction)
-{
-    // Setup the action for the dock widget, so we can show/hide it at will
-
-    QObject::connect(pAction, SIGNAL(triggered(bool)),
-                     pDockWidget, SLOT(setVisible(bool)));
-    QObject::connect(pDockWidget->toggleViewAction(), SIGNAL(toggled(bool)),
-                     pAction, SLOT(setChecked(bool)));
-}
-
-//==============================================================================
-
 void GuiInterface::retranslateMenu(QMenu *pMenu, const QString &pTitle)
 {
     // Retranslate the menu, i.e. retranslate its title
@@ -493,58 +476,6 @@ void GuiInterface::retranslateAction(QAction *pAction, const QString &pText,
 
     pAction->setText(pText);
     pAction->setStatusTip(pStatusTip);
-}
-
-//==============================================================================
-
-void GuiInterface::loadWindowSettings(QSettings *pSettings,
-                                      Core::DockWidget *pWindow)
-{
-    // Retrieve the window's settings
-
-    pSettings->beginGroup(pWindow->objectName());
-        pWindow->loadSettings(pSettings);
-    pSettings->endGroup();
-}
-
-//==============================================================================
-
-void GuiInterface::saveWindowSettings(QSettings *pSettings,
-                                      Core::DockWidget *pWindow) const
-{
-    // Keep track of the window's settings
-
-    pSettings->beginGroup(pWindow->objectName());
-        pWindow->saveSettings(pSettings);
-    pSettings->endGroup();
-}
-
-//==============================================================================
-
-void GuiInterface::loadViewSettings(QSettings *pSettings, QObject *pView)
-{
-    // Retrieve the view's settings
-
-    pSettings->beginGroup(pView->objectName());
-        Core::CommonWidget *viewWidget = dynamic_cast<Core::CommonWidget *>(pView);
-
-        if (viewWidget)
-            viewWidget->loadSettings(pSettings);
-    pSettings->endGroup();
-}
-
-//==============================================================================
-
-void GuiInterface::saveViewSettings(QSettings *pSettings, QObject *pView) const
-{
-    // Keep track of the view's settings
-
-    pSettings->beginGroup(pView->objectName());
-        Core::CommonWidget *viewWidget = dynamic_cast<Core::CommonWidget *>(pView);
-
-        if (viewWidget)
-            viewWidget->saveSettings(pSettings);
-    pSettings->endGroup();
 }
 
 //==============================================================================

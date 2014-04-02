@@ -587,11 +587,11 @@ void MainWindow::initializeGuiPlugin(Plugin *pPlugin, GuiSettings *pGuiSettings)
         if (pGuiSettings->centralWidget()) {
             // We are dealing with the Core plugin, so set our central widget
 
-            setCentralWidget(qobject_cast<QWidget *>(pGuiSettings->centralWidget()));
+            setCentralWidget(pGuiSettings->centralWidget());
 
             // Also keep track of GUI updates in our central widget
 
-            connect(pGuiSettings->centralWidget(), SIGNAL(guiUpdated(Plugin *, const QString &)),
+            connect(static_cast<Core::CentralWidget *>(pGuiSettings->centralWidget()), SIGNAL(guiUpdated(Plugin *, const QString &)),
                     this, SLOT(updateGui(Plugin *, const QString &)));
         }
 
@@ -638,9 +638,12 @@ void MainWindow::initializeGuiPlugin(Plugin *pPlugin, GuiSettings *pGuiSettings)
 
         // Connect the action to the window
 
-        if (doConnectDockWidgetToAction)
-            GuiInterface::connectDockWidgetToAction(dockWidget,
-                                                    windowSettings->action());
+        if (doConnectDockWidgetToAction) {
+            connect(windowSettings->action(), SIGNAL(triggered(bool)),
+                    dockWidget, SLOT(setVisible(bool)));
+            connect(dockWidget->toggleViewAction(), SIGNAL(toggled(bool)),
+                    windowSettings->action(), SLOT(setChecked(bool)));
+        }
     }
 
     // Reorder our various View menus, just in case

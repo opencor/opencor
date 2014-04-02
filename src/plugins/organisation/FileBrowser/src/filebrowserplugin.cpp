@@ -25,6 +25,7 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include <QMainWindow>
+#include <QSettings>
 
 //==============================================================================
 
@@ -88,7 +89,9 @@ void FileBrowserPlugin::loadSettings(QSettings *pSettings)
 {
     // Retrieve our file browser window settings
 
-    loadWindowSettings(pSettings, mFileBrowserWindow);
+    pSettings->beginGroup(mFileBrowserWindow->objectName());
+        mFileBrowserWindow->loadSettings(pSettings);
+    pSettings->endGroup();
 }
 
 //==============================================================================
@@ -97,7 +100,9 @@ void FileBrowserPlugin::saveSettings(QSettings *pSettings) const
 {
     // Keep track of our file browser window settings
 
-    saveWindowSettings(pSettings, mFileBrowserWindow);
+    pSettings->beginGroup(mFileBrowserWindow->objectName());
+        mFileBrowserWindow->saveSettings(pSettings);
+    pSettings->endGroup();
 }
 
 //==============================================================================

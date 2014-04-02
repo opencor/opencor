@@ -94,7 +94,9 @@ void RawViewPlugin::loadSettings(QSettings *pSettings)
 {
     // Retrieve our raw view widget settings
 
-    loadViewSettings(pSettings, mViewWidget);
+    pSettings->beginGroup(mViewWidget->objectName());
+        mViewWidget->loadSettings(pSettings);
+    pSettings->endGroup();
 }
 
 //==============================================================================
@@ -103,7 +105,9 @@ void RawViewPlugin::saveSettings(QSettings *pSettings) const
 {
     // Keep track of our raw view widget settings
 
-    saveViewSettings(pSettings, mViewWidget);
+    pSettings->beginGroup(mViewWidget->objectName());
+        mViewWidget->saveSettings(pSettings);
+    pSettings->endGroup();
 }
 
 //==============================================================================

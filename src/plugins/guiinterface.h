@@ -31,6 +31,7 @@ specific language governing permissions and limitations under the License.
 #include <QIcon>
 #include <QList>
 #include <QKeySequence>
+#include <QObject>
 #include <QString>
 
 //==============================================================================
@@ -51,13 +52,6 @@ namespace OpenCOR {
 //==============================================================================
 
 class Plugin;
-
-//==============================================================================
-
-namespace Core {
-    class CentralWidget;
-    class DockWidget;
-}
 
 //==============================================================================
 
@@ -147,17 +141,17 @@ public:
     };
 
     explicit GuiWindowSettings(const Qt::DockWidgetArea &pDefaultDockArea,
-                               Core::DockWidget *pWindow, const Type &pType,
+                               QWidget *pWindow, const Type &pType,
                                QAction *pAction);
 
     Qt::DockWidgetArea defaultDockArea() const;
-    Core::DockWidget * window() const;
+    QWidget * window() const;
     Type type() const;
     QAction * action() const;
 
 private:
     Qt::DockWidgetArea mDefaultDockArea;
-    Core::DockWidget *mWindow;
+    QWidget *mWindow;
     Type mType;
     QAction *mAction;
 };
@@ -175,24 +169,24 @@ public:
                  QMenu *pMenu);
     void addMenuAction(const GuiMenuActionSettings::Type &pType,
                        QAction *pAction = 0);
-    void setCentralWidget(Core::CentralWidget *pCentralWidget);
+    void setCentralWidget(QWidget *pCentralWidget);
     void addWindow(const Qt::DockWidgetArea &pDefaultDockArea,
-                   Core::DockWidget *pWindow,
-                   const GuiWindowSettings::Type &pType, QAction *pAction);
+                   QWidget *pWindow, const GuiWindowSettings::Type &pType,
+                   QAction *pAction);
     void setView(const GuiViewSettings::Mode &pMode,
                  const QStringList &pMimeTypes);
 
     QList<GuiMenuSettings *> menus() const;
     QList<GuiMenuActionSettings *> menuActions() const;
-    Core::CentralWidget *centralWidget() const;
+    QWidget * centralWidget() const;
     QList<GuiWindowSettings *> windows() const;
     GuiViewSettings * view() const;
 
 private:
     QList<GuiMenuSettings *> mMenus;
     QList<GuiMenuActionSettings *> mMenuActions;
-    Core::CentralWidget *mCentralWidget;
-    GuiViewSettings * mView;
+    QWidget *mCentralWidget;
+    GuiViewSettings *mView;
     QList<GuiWindowSettings *> mWindows;
 };
 
@@ -225,8 +219,6 @@ public:
                                const QString &pIconResource = QString(),
                                const QKeySequence &pKeySequence = QKeySequence());
 
-    static void connectDockWidgetToAction(QDockWidget *pDockWidget, QAction *pAction);
-
     static void retranslateMenu(QMenu *pMenu, const QString &pTitle);
     static void retranslateAction(QAction *pAction, const QString &pText,
                                   const QString &pStatusTip);
@@ -235,14 +227,6 @@ protected:
     QMainWindow *mMainWindow;
 
     GuiSettings *mGuiSettings;
-
-    void loadWindowSettings(QSettings *pSettings,
-                            Core::DockWidget *pWindow);
-    void saveWindowSettings(QSettings *pSettings,
-                            Core::DockWidget *pWindow) const;
-
-    void loadViewSettings(QSettings *pSettings, QObject *pView);
-    void saveViewSettings(QSettings *pSettings, QObject *pView) const;
 
 private:
     void setMainWindow(QMainWindow *pMainWindow);

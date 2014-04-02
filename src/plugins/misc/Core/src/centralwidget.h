@@ -70,6 +70,7 @@ typedef QMap<int, GuiViewSettings *> CentralWidgetViewSettings;
 
 //==============================================================================
 
+class CentralWidget;
 class UserMessageWidget;
 
 //==============================================================================

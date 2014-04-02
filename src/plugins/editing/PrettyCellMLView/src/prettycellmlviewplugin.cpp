@@ -27,6 +27,7 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include <QMainWindow>
+#include <QSettings>
 
 //==============================================================================
 
@@ -95,7 +96,9 @@ void PrettyCellMLViewPlugin::loadSettings(QSettings *pSettings)
 {
     // Retrieve our pretty CellML view widget settings
 
-    loadViewSettings(pSettings, mViewWidget);
+    pSettings->beginGroup(mViewWidget->objectName());
+        mViewWidget->loadSettings(pSettings);
+    pSettings->endGroup();
 }
 
 //==============================================================================
@@ -104,7 +107,9 @@ void PrettyCellMLViewPlugin::saveSettings(QSettings *pSettings) const
 {
     // Keep track of our generic pretty CellML view widget settings
 
-    saveViewSettings(pSettings, mViewWidget);
+    pSettings->beginGroup(mViewWidget->objectName());
+        mViewWidget->saveSettings(pSettings);
+    pSettings->endGroup();
 }
 
 //==============================================================================

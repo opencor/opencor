@@ -25,6 +25,7 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include <QMainWindow>
+#include <QSettings>
 
 //==============================================================================
 
@@ -89,7 +90,9 @@ void HelpPlugin::loadSettings(QSettings *pSettings)
 {
     // Retrieve our help window settings
 
-    loadWindowSettings(pSettings, mHelpWindow);
+    pSettings->beginGroup(mHelpWindow->objectName());
+        mHelpWindow->loadSettings(pSettings);
+    pSettings->endGroup();
 }
 
 //==============================================================================
@@ -98,7 +101,9 @@ void HelpPlugin::saveSettings(QSettings *pSettings) const
 {
     // Keep track of our help window settings
 
-    saveWindowSettings(pSettings, mHelpWindow);
+    pSettings->beginGroup(mHelpWindow->objectName());
+        mHelpWindow->saveSettings(pSettings);
+    pSettings->endGroup();
 }
 
 //==============================================================================

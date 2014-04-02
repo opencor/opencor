@@ -28,6 +28,7 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include <QMainWindow>
+#include <QSettings>
 
 //==============================================================================
 
@@ -110,7 +111,9 @@ void SingleCellViewPlugin::loadSettings(QSettings *pSettings)
 {
     // Retrieve our single cell view settings
 
-    loadViewSettings(pSettings, mViewWidget);
+    pSettings->beginGroup(mViewWidget->objectName());
+        mViewWidget->loadSettings(pSettings);
+    pSettings->endGroup();
 }
 
 //==============================================================================
@@ -119,7 +122,9 @@ void SingleCellViewPlugin::saveSettings(QSettings *pSettings) const
 {
     // Keep track of our single cell view settings
 
-    saveViewSettings(pSettings, mViewWidget);
+    pSettings->beginGroup(mViewWidget->objectName());
+        mViewWidget->saveSettings(pSettings);
+    pSettings->endGroup();
 }
 
 //==============================================================================

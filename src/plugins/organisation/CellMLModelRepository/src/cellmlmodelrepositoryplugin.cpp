@@ -25,6 +25,7 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include <QMainWindow>
+#include <QSettings>
 
 //==============================================================================
 
@@ -89,7 +90,9 @@ void CellMLModelRepositoryPlugin::loadSettings(QSettings *pSettings)
 {
     // Retrieve our CellML Model Repository window settings
 
-    loadWindowSettings(pSettings, mCellmlModelRepositoryWindow);
+    pSettings->beginGroup(mCellmlModelRepositoryWindow->objectName());
+        mCellmlModelRepositoryWindow->loadSettings(pSettings);
+    pSettings->endGroup();
 }
 
 //==============================================================================
@@ -98,7 +101,9 @@ void CellMLModelRepositoryPlugin::saveSettings(QSettings *pSettings) const
 {
     // Keep track of our CellML Model Repository window settings
 
-    saveWindowSettings(pSettings, mCellmlModelRepositoryWindow);
+    pSettings->beginGroup(mCellmlModelRepositoryWindow->objectName());
+        mCellmlModelRepositoryWindow->saveSettings(pSettings);
+    pSettings->endGroup();
 }
 
 //==============================================================================

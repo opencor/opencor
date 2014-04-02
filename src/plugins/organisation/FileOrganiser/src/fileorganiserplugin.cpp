@@ -25,6 +25,7 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include <QMainWindow>
+#include <QSettings>
 
 //==============================================================================
 
@@ -88,7 +89,9 @@ void FileOrganiserPlugin::loadSettings(QSettings *pSettings)
 {
     // Retrieve our file organiser window settings
 
-    loadWindowSettings(pSettings, mFileOrganiserWindow);
+    pSettings->beginGroup(mFileOrganiserWindow->objectName());
+        mFileOrganiserWindow->loadSettings(pSettings);
+    pSettings->endGroup();
 }
 
 //==============================================================================
@@ -97,7 +100,9 @@ void FileOrganiserPlugin::saveSettings(QSettings *pSettings) const
 {
     // Keep track of our file organiser window settings
 
-    saveWindowSettings(pSettings, mFileOrganiserWindow);
+    pSettings->beginGroup(mFileOrganiserWindow->objectName());
+        mFileOrganiserWindow->saveSettings(pSettings);
+    pSettings->endGroup();
 }
 
 //==============================================================================
