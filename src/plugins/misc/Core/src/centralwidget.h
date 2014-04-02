@@ -32,8 +32,7 @@ specific language governing permissions and limitations under the License.
 
 #include <QDir>
 #include <QMap>
-//#include <QSslError>
-//---GRY--- TO BE UNCOMMENTED...
+#include <QSslError>
 #include <QTabBar>
 
 //==============================================================================
@@ -246,9 +245,8 @@ private Q_SLOTS:
     void updateFileTabIcons();
 
     void remoteFileDownloaded(QNetworkReply *pNetworkReply);
-//    void networkAccessManagerSslErrors(QNetworkReply *pNetworkReply,
-//                                       const QList<QSslError> &pSslErrors);
-//---GRY--- TO BE UNCOMMENTED...
+    void networkAccessManagerSslErrors(QNetworkReply *pNetworkReply,
+                                       const QList<QSslError> &pSslErrors);
 };
 
 //==============================================================================

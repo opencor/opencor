@@ -308,9 +308,8 @@ CentralWidget::CentralWidget(QMainWindow *pMainWindow) :
 
     connect(mNetworkAccessManager, SIGNAL(finished(QNetworkReply *)),
             this, SLOT(remoteFileDownloaded(QNetworkReply *)) );
-//    connect(mNetworkAccessManager, SIGNAL(sslErrors(QNetworkReply *, const QList<QSslError> &)),
-//            this, SLOT(networkAccessManagerSslErrors(QNetworkReply *, const QList<QSslError> &)) );
-//---GRY--- TO BE UNCOMMENTED...
+    connect(mNetworkAccessManager, SIGNAL(sslErrors(QNetworkReply *, const QList<QSslError> &)),
+            this, SLOT(networkAccessManagerSslErrors(QNetworkReply *, const QList<QSslError> &)) );
 }
 
 //==============================================================================
@@ -1836,14 +1835,13 @@ qDebug(">>> Remote file contents:\n%s", qPrintable(pNetworkReply->readAll()));
 
 //==============================================================================
 
-//void CentralWidget::networkAccessManagerSslErrors(QNetworkReply *pNetworkReply,
-//                                                  const QList<QSslError> &pSslErrors)
-//{
-//    // Ignore the SSL errors since we assume the user knows what s/he is doing
+void CentralWidget::networkAccessManagerSslErrors(QNetworkReply *pNetworkReply,
+                                                  const QList<QSslError> &pSslErrors)
+{
+    // Ignore the SSL errors since we assume the user knows what s/he is doing
 
-//    pNetworkReply->ignoreSslErrors(pSslErrors);
-//}
-//---GRY--- TO BE UNCOMMENTED...
+    pNetworkReply->ignoreSslErrors(pSslErrors);
+}
 
 //==============================================================================
 
