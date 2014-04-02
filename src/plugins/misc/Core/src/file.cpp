@@ -37,7 +37,7 @@ namespace Core {
 
 //==============================================================================
 
-File::File(const QString &pFileName, const bool &pNew) :
+File::File(const QString &pFileName, const Type &pType) :
     mFileName(nativeCanonicalFileName(pFileName))
 {
     // Initialise ourselves by 'resetting' ourselves
@@ -46,7 +46,7 @@ File::File(const QString &pFileName, const bool &pNew) :
 
     // Set our index, in case we are a new file
 
-    if (pNew) {
+    if (pType == New) {
         static int newIndex = 0;
 
         mNewIndex = ++newIndex;

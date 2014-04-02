@@ -36,6 +36,12 @@ namespace Core {
 class File
 {
 public:
+    enum Type {
+        New,
+        Local,
+        Remote
+    };
+
     enum Status {
         // As a result of checking a file
 
@@ -50,7 +56,7 @@ public:
         LockedNotSet
     };
 
-    explicit File(const QString &pFileName, const bool &pNew);
+    explicit File(const QString &pFileName, const Type &pType);
     ~File();
 
     QString fileName() const;

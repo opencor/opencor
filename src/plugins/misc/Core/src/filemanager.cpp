@@ -88,7 +88,7 @@ FileManager * FileManager::instance()
 //==============================================================================
 
 FileManager::Status FileManager::manage(const QString &pFileName,
-                                        const bool &pNew)
+                                        const File::Type &pType)
 {
     // Manage the given file, should it not be already managed
 
@@ -103,7 +103,7 @@ FileManager::Status FileManager::manage(const QString &pFileName,
             // The file isn't already managed, so add it to our list of managed
             // files, let people know about it being now managed
 
-            mFiles << new File(nativeFileName, pNew);
+            mFiles << new File(nativeFileName, pType);
 
             emit fileManaged(nativeFileName);
 

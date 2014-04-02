@@ -608,8 +608,11 @@ void CentralWidget::updateFileTab(const int &pIndex)
 
 //==============================================================================
 
-void CentralWidget::openFile(const QString &pFileName, const bool &pNew)
+void CentralWidget::openFile(const QString &pFileName, const File::Type &pType,
+                             const QString &pContents)
 {
+    Q_UNUSED(pContents);
+
     if (!mModeTabs->count() || !QFileInfo(pFileName).exists())
         // No modes are available or the file doesn't exist, so...
 
@@ -628,7 +631,7 @@ void CentralWidget::openFile(const QString &pFileName, const bool &pNew)
 
     // Register the file with our file manager
 
-    FileManager::instance()->manage(nativeFileName, pNew);
+    FileManager::instance()->manage(nativeFileName, pType);
 
     // Create a new tab, insert it just after the current tab, set the full name
     // of the file as the tool tip for the new tab, and make the new tab the
@@ -1697,7 +1700,7 @@ void CentralWidget::fileCreatedOrDuplicated(const QString &pFileName)
     // A file got created or duplicated, so open it making sure that we consider
     // it as new
 
-    openFile(pFileName, true);
+    openFile(pFileName, File::New);
 }
 
 //==============================================================================

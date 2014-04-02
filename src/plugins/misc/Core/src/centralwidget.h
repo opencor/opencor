@@ -24,6 +24,7 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#include "file.h"
 #include "fileinterface.h"
 #include "guiinterface.h"
 #include "widget.h"
@@ -124,7 +125,9 @@ public:
 
     QString currentFileName() const;
 
-    void openFile(const QString &pFileName, const bool &pNew = false);
+    void openFile(const QString &pFileName,
+                  const File::Type &pType = File::Local,
+                  const QString &pContents = QString());
     void openFiles(const QStringList &pFileNames);
 
     bool canClose();

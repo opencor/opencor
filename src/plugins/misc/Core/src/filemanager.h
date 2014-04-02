@@ -92,7 +92,8 @@ public:
 
     static FileManager * instance();
 
-    Status manage(const QString &pFileName, const bool &pNew = false);
+    Status manage(const QString &pFileName,
+                  const File::Type &pType = File::Local);
     Status unmanage(const QString &pFileName);
 
     File * isManaged(const QString &pFileName) const;
