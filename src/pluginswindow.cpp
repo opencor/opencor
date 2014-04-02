@@ -628,7 +628,7 @@ void PluginsWindow::openLink(const QString &pLink) const
 {
     // Open the link in the user's browser
 
-    QDesktopServices::openUrl(QUrl::fromUserInput(pLink));
+    QDesktopServices::openUrl(pLink);
 }
 
 //==============================================================================
