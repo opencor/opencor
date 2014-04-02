@@ -595,15 +595,25 @@ void CentralWidget::updateFileTab(const int &pIndex)
     FileManager *fileManagerInstance = FileManager::instance();
     QString fileName = mFileNames[pIndex];
     bool fileIsNew = fileManagerInstance->isNew(fileName);
+    bool fileIsRemote = fileManagerInstance->isRemote(fileName);
+    QString fileUrl = fileManagerInstance->url(fileName);
     QString tabText = fileIsNew?
                           tr("File")+" #"+QString::number(fileManagerInstance->newIndex(fileName)):
-                          QFileInfo(fileName).fileName();
+                          fileIsRemote?
+                              QUrl(fileUrl).fileName():
+                              QFileInfo(fileName).fileName();
 
     mFileTabs->setTabText(pIndex, tabText+(fileManagerInstance->isNewOrModified(fileName)?"*":QString()));
-    mFileTabs->setTabToolTip(pIndex, fileIsNew?tabText:fileName);
-    mFileTabs->setTabIcon(pIndex, fileManagerInstance->isLocked(fileName)?
-                                      QIcon(":/oxygen/status/object-locked.png"):
-                                      QIcon());
+    mFileTabs->setTabToolTip(pIndex, fileIsNew?
+                                         tabText:
+                                         fileIsRemote?
+                                             fileUrl:
+                                             fileName);
+    mFileTabs->setTabIcon(pIndex, fileIsRemote?
+                                      QIcon(":/oxygen/categories/applications-internet.png"):
+                                      fileManagerInstance->isLocked(fileName)?
+                                          QIcon(":/oxygen/status/object-locked.png"):
+                                          QIcon());
 }
 
 //==============================================================================
@@ -611,8 +621,6 @@ void CentralWidget::updateFileTab(const int &pIndex)
 void CentralWidget::openFile(const QString &pFileName, const File::Type &pType,
                              const QString &pUrl)
 {
-    Q_UNUSED(pUrl);
-
     if (!mModeTabs->count() || !QFileInfo(pFileName).exists())
         // No modes are available or the file doesn't exist, so...
 
@@ -631,7 +639,7 @@ void CentralWidget::openFile(const QString &pFileName, const File::Type &pType,
 
     // Register the file with our file manager
 
-    FileManager::instance()->manage(nativeFileName, pType);
+    FileManager::instance()->manage(nativeFileName, pType, pUrl);
 
     // Create a new tab, insert it just after the current tab, set the full name
     // of the file as the tool tip for the new tab, and make the new tab the
@@ -1472,7 +1480,9 @@ void CentralWidget::updateGui()
     // Let people know whether we can save as, as well as whether there is/are
     // at least one/two file/s
 
-    emit canSaveAs(mFileTabs->count() && (newView != mNoViewMsg) && guiInterface);
+    emit canSaveAs(   mFileTabs->count() && (newView != mNoViewMsg)
+                   && !FileManager::instance()->isRemote(fileName)
+                   && guiInterface);
 
     emit atLeastOneFile(mFileTabs->count());
     emit atLeastTwoFiles(mFileTabs->count() > 1);

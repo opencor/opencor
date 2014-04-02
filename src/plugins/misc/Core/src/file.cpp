@@ -229,7 +229,7 @@ bool File::isWritable() const
 {
     // Return whether the file is writable
 
-    return QFileInfo(mFileName).isWritable();
+    return QFileInfo(mFileName).isWritable() && mUrl.isEmpty();
 }
 
 //==============================================================================
@@ -247,7 +247,7 @@ bool File::isLocked() const
 {
     // Return whether the file is locked
 
-    return !QFileInfo(mFileName).isWritable();
+    return !isWritable();
 }
 
 //==============================================================================

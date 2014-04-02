@@ -651,7 +651,7 @@ void CorePlugin::updateFileReopenMenu()
 
 void CorePlugin::updateNewModifiedSensitiveActions()
 {
-    // Update our actions are sensitive to the fact that a file may be modified
+    // Update our actions keeping in mind the fact that a file may be modified
     // and even possibly new
 
     QString fileName = mCentralWidget->currentFileName();
@@ -659,12 +659,13 @@ void CorePlugin::updateNewModifiedSensitiveActions()
     if (!fileName.isEmpty()) {
         Core::FileManager *fileManagerInstance = Core::FileManager::instance();
         bool fileIsNew = fileManagerInstance->isNew(fileName);
-        bool fileIsNewOrModified =    fileIsNew
-                                   || fileManagerInstance->isModified(fileName);
+        bool fileIsNewRemoteOrModified =    fileIsNew
+                                         || fileManagerInstance->isRemote(fileName)
+                                         || fileManagerInstance->isModified(fileName);
 
         mFileReloadAction->setEnabled(!fileIsNew);
-        mFileDuplicateAction->setEnabled(!fileIsNewOrModified);
-        mFileLockedAction->setEnabled(!fileIsNewOrModified);
+        mFileDuplicateAction->setEnabled(!fileIsNewRemoteOrModified);
+        mFileLockedAction->setEnabled(!fileIsNewRemoteOrModified);
     } else {
         mFileReloadAction->setEnabled(false);
         mFileDuplicateAction->setEnabled(false);
