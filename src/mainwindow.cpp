@@ -1144,7 +1144,7 @@ void MainWindow::messageReceived(const QString &pMessage, QObject *pSocket)
 
     // Check whether the passed message corresponds to a GUI action
 
-    QUrl url = pMessage;
+    QUrl url = QUrl::fromUserInput(pMessage);
 
     if (!url.scheme().compare("gui")) {
         // We are dealing with a GUI COR action, so handle it
@@ -1264,7 +1264,7 @@ void MainWindow::on_actionHomePage_triggered()
 {
     // Look up OpenCOR's home page
 
-    QDesktopServices::openUrl(QUrl(OpencorHomePageUrl));
+    QDesktopServices::openUrl(QUrl::fromUserInput(OpencorHomePageUrl));
 }
 
 //==============================================================================

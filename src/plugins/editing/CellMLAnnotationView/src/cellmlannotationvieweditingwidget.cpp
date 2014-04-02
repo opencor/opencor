@@ -332,7 +332,7 @@ void CellmlAnnotationViewEditingWidget::updateWebViewerWithResourceDetails(QWebV
         //       ourselves...
 
         QUrl oldUrl = oldWebViewUrls.value(pWebView);
-        QUrl newUrl = "http://identifiers.org/"+pResource+"/?redirect=true";
+        QUrl newUrl = QUrl::fromUserInput("http://identifiers.org/"+pResource+"/?redirect=true");
         //---GRY--- NOTE THAT redirect=true DOESN'T WORK AT THE MOMENT, SO WE DO
         //          END UP WITH A FRAME, BUT THE identifiers.org GUYS ARE GOING
         //          TO 'FIX' IT, SO WE SHOULD BE READY FOR WHEN IT'S DONE...
@@ -360,7 +360,7 @@ void CellmlAnnotationViewEditingWidget::updateWebViewerWithIdDetails(QWebView *p
         // Note: see comment in updateWebViewerWithResourceDetails()...
 
         QUrl oldUrl = oldWebViewUrls.value(pWebView);
-        QUrl newUrl = "http://identifiers.org/"+pResource+"/"+pId+"?profile=most_reliable&redirect=true";
+        QUrl newUrl = QUrl::fromUserInput("http://identifiers.org/"+pResource+"/"+pId+"?profile=most_reliable&redirect=true");
 
         if (newUrl != oldUrl) {
             oldWebViewUrls.insert(pWebView, newUrl);

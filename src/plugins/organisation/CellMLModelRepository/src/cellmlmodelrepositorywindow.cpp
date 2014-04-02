@@ -224,7 +224,7 @@ void CellmlModelRepositoryWindow::on_refreshButton_clicked()
 
     // Get the list of CellML models
 
-    mNetworkAccessManager->get(QNetworkRequest(QUrl("https://models.physiomeproject.org/cellml/workspace/rest/contents.json")));
+    mNetworkAccessManager->get(QNetworkRequest(QUrl::fromUserInput("https://models.physiomeproject.org/cellml/workspace/rest/contents.json")));
 }
 
 //==============================================================================
