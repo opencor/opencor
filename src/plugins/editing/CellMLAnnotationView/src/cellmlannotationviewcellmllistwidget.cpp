@@ -1064,7 +1064,14 @@ void CellmlAnnotationViewCellmlListWidget::on_actionOpenImport_triggered()
 {
     // Ask OpenCOR to open the imported file
 
-    static_cast<SharedTools::QtSingleApplication *>(qApp)->handleAction("gui://openFile/"+Core::nativeCanonicalFileName(QFileInfo(mCellmlFile->fileName()).canonicalPath()+QDir::separator()+currentCellmlElementItem()->text()));
+    Core::FileManager *fileManagerInstance = Core::FileManager::instance();
+    QUrl url = fileManagerInstance->isRemote(mCellmlFile->fileName())?
+                   fileManagerInstance->url(mCellmlFile->fileName()):
+                   QUrl::fromLocalFile(mCellmlFile->fileName());
+
+    url = url.adjusted(QUrl::RemoveFilename).toString()+currentCellmlElementItem()->text();
+
+    static_cast<SharedTools::QtSingleApplication *>(qApp)->handleAction("gui://openFile/"+url.toString());
 }
 
 //==============================================================================
