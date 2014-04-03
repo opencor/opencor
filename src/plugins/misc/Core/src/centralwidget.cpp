@@ -385,8 +385,9 @@ void CentralWidget::loadSettings(QSettings *pSettings)
     // Retrieve the modes and views of our different files
 
     foreach (const QString &fileName, mFileNames) {
-        QString fileNameOrUrl = fileManagerInstance->isRemote(fileName)?fileManagerInstance->url(fileName):fileName;
-
+        QString fileNameOrUrl = fileManagerInstance->isRemote(fileName)?
+                                    fileManagerInstance->url(fileName):
+                                    fileName;
         GuiViewSettings::Mode fileMode = GuiViewSettings::modeFromString(pSettings->value(SettingsFileMode.arg(fileNameOrUrl)).toString());
 
         if (fileMode != GuiViewSettings::Unknown)
