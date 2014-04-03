@@ -326,11 +326,11 @@ CentralWidget::~CentralWidget()
 
 //==============================================================================
 
-static const auto SettingsFileNames       = QStringLiteral("FileNames");
-static const auto SettingsCurrentFileName = QStringLiteral("CurrentFileName");
-static const auto SettingsFileIsRemote    = QStringLiteral("FileIsRemote%1");
-static const auto SettingsFileMode        = QStringLiteral("FileMode%1");
-static const auto SettingsFileModeView    = QStringLiteral("FileModeView%1%2");
+static const auto SettingsFileNamesOrUrls      = QStringLiteral("FileNamesOrUrls");
+static const auto SettingsCurrentFileNameOrUrl = QStringLiteral("CurrentFileNameOrUrl");
+static const auto SettingsFileIsRemote         = QStringLiteral("FileIsRemote%1");
+static const auto SettingsFileMode             = QStringLiteral("FileMode%1");
+static const auto SettingsFileModeView         = QStringLiteral("FileModeView%1%2");
 
 //==============================================================================
 
@@ -374,28 +374,30 @@ void CentralWidget::loadSettings(QSettings *pSettings)
 
     // Retrieve and open the files that were previously opened
 
-    QStringList fileNames = pSettings->value(SettingsFileNames).toStringList();
+    QStringList fileNamesOrUrls = pSettings->value(SettingsFileNamesOrUrls).toStringList();
 
-    foreach (const QString &fileName, fileNames)
-        if (pSettings->value(SettingsFileIsRemote.arg(fileName)).toBool())
-            openRemoteFile(fileName, false);
+    foreach (const QString &fileNameOrUrl, fileNamesOrUrls)
+        if (pSettings->value(SettingsFileIsRemote.arg(fileNameOrUrl)).toBool())
+            openRemoteFile(fileNameOrUrl, false);
         else
-            openFile(fileName);
+            openFile(fileNameOrUrl);
 
     // Retrieve the modes and views of our different files
 
     foreach (const QString &fileName, mFileNames) {
-        GuiViewSettings::Mode fileMode = GuiViewSettings::modeFromString(pSettings->value(SettingsFileMode.arg(fileName)).toString());
+        QString fileNameOrUrl = fileManagerInstance->isRemote(fileName)?fileManagerInstance->url(fileName):fileName;
+
+        GuiViewSettings::Mode fileMode = GuiViewSettings::modeFromString(pSettings->value(SettingsFileMode.arg(fileNameOrUrl)).toString());
 
         if (fileMode != GuiViewSettings::Unknown)
             mFileModeTabIndexes.insert(fileName, mModeModeTabIndexes.value(fileMode));
 
-        QMap<int, int> modeViewTabIndexes = mFileModeViewTabIndexes.value(fileName);
+        QMap<int, int> modeViewTabIndexes = QMap<int, int>();
 
         for (int i = 0, iMax = mModeTabs->count(); i < iMax; ++i) {
             fileMode = mModeTabIndexModes.value(i);
 
-            QString viewPluginName = pSettings->value(SettingsFileModeView.arg(fileName, GuiViewSettings::modeAsString(fileMode))).toString();
+            QString viewPluginName = pSettings->value(SettingsFileModeView.arg(fileNameOrUrl, GuiViewSettings::modeAsString(fileMode))).toString();
             CentralWidgetViewPlugins *viewPlugins = mModes.value(fileMode)->viewPlugins();
 
             for (int j = 0, jMax = viewPlugins->count(); j < jMax; ++j)
@@ -412,10 +414,10 @@ void CentralWidget::loadSettings(QSettings *pSettings)
     // Select the previously selected file, if it still exists, by pretending to
     // open it (which, in turn, will select the file)
 
-    QString fileName = pSettings->value(SettingsCurrentFileName).toString();
-
-    if (pSettings->value(SettingsFileIsRemote.arg(fileName)).toBool())
-        fileName = mRemoteLocalFileNames.value(fileName);
+    QString fileNameOrUrl = pSettings->value(SettingsCurrentFileNameOrUrl).toString();
+    QString fileName = pSettings->value(SettingsFileIsRemote.arg(fileNameOrUrl)).toBool()?
+                           mRemoteLocalFileNames.value(fileNameOrUrl):
+                           fileNameOrUrl;
 
     if (mFileNames.contains(fileName))
         openFile(fileName);
@@ -435,7 +437,7 @@ void CentralWidget::loadSettings(QSettings *pSettings)
 
 void CentralWidget::saveSettings(QSettings *pSettings) const
 {
-    // Remove possible unneeded settings in the future
+    // Remove all the settings related to previously opened files
 
     static const QString settingsFileIsRemote = SettingsFileIsRemote.arg(QString());
     static const QString settingsFileMode = SettingsFileMode.arg(QString());
@@ -451,6 +453,7 @@ void CentralWidget::saveSettings(QSettings *pSettings) const
 
     FileManager *fileManagerInstance = FileManager::instance();
     QStringList fileNames = QStringList();
+    QStringList fileNamesOrUrls = QStringList();
 
     foreach (const QString &fileName, mFileNames)
         if (!fileManagerInstance->isNew(fileName)) {
@@ -460,19 +463,25 @@ void CentralWidget::saveSettings(QSettings *pSettings) const
             bool fileIsRemote = fileManagerInstance->isRemote(fileName);
 
             if (fileIsRemote)
-                fileNames << fileManagerInstance->url(fileName);
+                fileNamesOrUrls << fileManagerInstance->url(fileName);
             else
-                fileNames << fileName;
+                fileNamesOrUrls << fileName;
 
-            pSettings->setValue(SettingsFileIsRemote.arg(fileNames.last()), fileIsRemote);
+            fileNames << fileName;
+
+            pSettings->setValue(SettingsFileIsRemote.arg(fileNamesOrUrls.last()), fileIsRemote);
         }
 
-    pSettings->setValue(SettingsFileNames, fileNames);
+    pSettings->setValue(SettingsFileNamesOrUrls, fileNamesOrUrls);
 
     // Keep track of the modes and views of our different files
 
     foreach (const QString &fileName, fileNames) {
-        pSettings->setValue(SettingsFileMode.arg(fileName),
+        QString fileNameOrUrl = fileManagerInstance->isRemote(fileName)?
+                                    fileManagerInstance->url(fileName):
+                                    fileName;
+
+        pSettings->setValue(SettingsFileMode.arg(fileNameOrUrl),
                             GuiViewSettings::modeAsString(mModeTabIndexModes.value(mFileModeTabIndexes.value(fileName))));
 
         QMap<int, int> modeViewTabIndexes = mFileModeViewTabIndexes.value(fileName);
@@ -480,7 +489,7 @@ void CentralWidget::saveSettings(QSettings *pSettings) const
         for (int i = 0, iMax = mModeTabs->count(); i < iMax; ++i) {
             GuiViewSettings::Mode fileMode = mModeTabIndexModes.value(i);
 
-            pSettings->setValue(SettingsFileModeView.arg(fileName, GuiViewSettings::modeAsString(fileMode)),
+            pSettings->setValue(SettingsFileModeView.arg(fileNameOrUrl, GuiViewSettings::modeAsString(fileMode)),
                                 mModes.value(fileMode)->viewPlugins()->value(modeViewTabIndexes.value(i))->name());
         }
     }
@@ -493,16 +502,19 @@ void CentralWidget::saveSettings(QSettings *pSettings) const
 
     if (fileNames.count()) {
         QString fileName = mFileNames[mFileTabs->currentIndex()];
+        QString fileNameOrUrl = fileManagerInstance->isRemote(fileName)?
+                                    fileManagerInstance->url(fileName):
+                                    fileName;
 
         if (fileNames.contains(fileName)) {
-            pSettings->setValue(SettingsCurrentFileName, fileName);
+            pSettings->setValue(SettingsCurrentFileNameOrUrl, fileNameOrUrl);
 
             hasCurrentFile = true;
         }
     }
 
     if (!hasCurrentFile)
-        pSettings->setValue(SettingsCurrentFileName, QString());
+        pSettings->setValue(SettingsCurrentFileNameOrUrl, QString());
 
     // Keep track of the active directory
 
