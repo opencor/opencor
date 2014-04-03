@@ -127,6 +127,8 @@ public:
                   const QString &pUrl = QString());
     void openFiles(const QStringList &pFileNames);
 
+    void openRemoteFile(const QString &pUrl, const bool &pShowWarning = true);
+
     bool canClose();
 
 protected:
@@ -181,8 +183,6 @@ private:
     Plugin * viewPlugin(const QString &pFileName) const;
 
     void updateNoViewMsg();
-
-    void openRemoteFile(const QString &pUrl, const bool &pShowWarning = true);
 
     bool saveFile(const int &pIndex, const bool &pNeedNewFileName = false);
 
