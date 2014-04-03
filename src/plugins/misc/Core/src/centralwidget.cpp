@@ -1435,27 +1435,7 @@ void CentralWidget::updateGui()
 
         newView = guiInterface?guiInterface->viewWidget(fileName):0;
 
-        if (newView) {
-            // We have a view for the current file, so update our status bar
-            // widgets, and also create a connection for it, should it be be of
-            // the right type
-            // Note: we pass Qt::UniqueConnection in all our calls to connect()
-            //       to ensure that we don't have several identical connections
-            //       (something that might happen if we were to switch views and
-            //       back)...
-
-            ViewWidget *newViewWidget = dynamic_cast<ViewWidget *>(newView);
-
-            if (newViewWidget) {
-                connect(newViewWidget, SIGNAL(updateFileTabIcon(const QString &, const QString &, const QIcon &)),
-                        this, SLOT(updateFileTabIcon(const QString &, const QString &, const QIcon &)),
-                        Qt::UniqueConnection);
-
-                updateStatusBarWidgets(newViewWidget->statusBarWidgets());
-            } else {
-                updateStatusBarWidgets(QList<QWidget *>());
-            }
-        } else {
+        if (!newView) {
             // The interface doesn't have a view for the current file, so use
             // our no-view widget instead and update its message
 
@@ -1464,6 +1444,32 @@ void CentralWidget::updateGui()
             updateNoViewMsg();
         }
     }
+
+    // Create a connection to update the tab icon for the current file and
+    // update our status bar widgets, but all of this only if we have a proper
+    // view for our current file
+    // Note: we pass Qt::UniqueConnection in our call to connect() so that we
+    //       don't end up with several identical connections (something that
+    //       might happen if we were to switch views and back)...
+
+    ViewWidget *newViewWidget = dynamic_cast<ViewWidget *>(newView);
+
+    if (newViewWidget) {
+        connect(newViewWidget, SIGNAL(updateFileTabIcon(const QString &, const QString &, const QIcon &)),
+                this, SLOT(updateFileTabIcon(const QString &, const QString &, const QIcon &)),
+                Qt::UniqueConnection);
+
+        updateStatusBarWidgets(newViewWidget->statusBarWidgets());
+    } else {
+        updateStatusBarWidgets(QList<QWidget *>());
+    }
+
+    // and also create a connection for it, should it be be of
+    // the right type
+    // Note: we pass Qt::UniqueConnection in all our calls to connect()
+    //       to ensure that we don't have several identical connections
+    //       (something that might happen if we were to switch views and
+    //       back)...
 
     // Let people know that we are about to update the GUI
 
