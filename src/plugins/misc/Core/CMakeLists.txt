@@ -54,6 +54,7 @@ ADD_PLUGIN(Core
 
         src/borderedwidget.h
         src/centralwidget.h
+        src/cliutils.h
         src/collapsiblewidget.h
         src/coreplugin.h
         src/dockwidget.h

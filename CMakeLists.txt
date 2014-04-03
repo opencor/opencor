@@ -69,6 +69,8 @@ SET(HEADERS_MOC
 
     src/plugins/plugin.h
     src/plugins/pluginmanager.h
+
+    src/plugins/misc/Core/src/cliutils.h
 )
 
 SET(UIS
