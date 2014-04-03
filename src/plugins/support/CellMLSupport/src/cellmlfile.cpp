@@ -186,6 +186,15 @@ bool CellmlFile::load()
     // fully instantiated
 
     if (QString::fromStdWString(mModel->cellmlVersion()).compare(CellMLSupport::Cellml_1_0))
+        // First, check whether the CellML file is a remote one and, if so,
+        // change its xmlbase so that it points to the remote location
+
+        if (Core::FileManager::instance()->isRemote(mFileName)) {
+            ObjRef<iface::cellml_api::URI> uri = mModel->xmlBase();
+
+            uri->asText(Core::FileManager::instance()->url(mFileName).toStdWString());
+        }
+
         try {
             mModel->fullyInstantiateImports();
         } catch (...) {
