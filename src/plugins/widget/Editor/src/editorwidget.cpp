@@ -21,6 +21,7 @@ specific language governing permissions and limitations under the License.
 
 #include "editorfindreplacewidget.h"
 #include "editorwidget.h"
+#include "filemanager.h"
 #include "guiutils.h"
 #include "qscintillawidget.h"
 
@@ -58,10 +59,14 @@ EditorWidget::EditorWidget(const QString &pContents, const bool &pReadOnly,
 
     // Create our editor and find/replace widget
 
-    mEditor = new QScintillaSupport::QScintillaWidget(pContents, pReadOnly,
-                                                      pLexer, this);
+    mEditor = new QScintillaSupport::QScintillaWidget(pLexer, this);
     mSeparator = Core::newLineWidget(this);
     mFindReplace = new EditorFindReplaceWidget(this);
+
+    // Set our contents and our read-only state
+
+    setContents(pContents);
+    setReadOnly(pReadOnly);
 
     // Disable the focus policy on our editor so that tabbing only works within
     // our find/replace widget
@@ -192,6 +197,13 @@ void EditorWidget::setReadOnly(const bool &pReadOnly)
     // Set the read-only mode of our editor
 
     mEditor->setReadOnly(pReadOnly);
+
+    // Update our background
+
+    QColor backgroundColor = pReadOnly?Core::lockedColor(Core::baseColor()):Core::baseColor();
+
+    for (int i = 0; i < QsciScintillaBase::STYLE_MAX; ++i)
+        mEditor->setBackgroundColor(i, backgroundColor);
 }
 
 //==============================================================================

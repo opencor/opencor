@@ -45,9 +45,7 @@ namespace QScintillaSupport {
 
 //==============================================================================
 
-QScintillaWidget::QScintillaWidget(const QString &pContents,
-                                   const bool &pReadOnly,
-                                   QsciLexer *pLexer, QWidget *pParent) :
+QScintillaWidget::QScintillaWidget(QsciLexer *pLexer, QWidget *pParent) :
     QsciScintilla(pParent),
     mCanUndo(false),
     mCanRedo(false),
@@ -93,11 +91,6 @@ QScintillaWidget::QScintillaWidget(const QString &pContents,
 
         setFont(mFont);
     }
-
-    // Set the contents of our Scintilla editor and its read-only state
-
-    setContents(pContents);
-    setReadOnly(pReadOnly);
 
     // Show the caret line
 

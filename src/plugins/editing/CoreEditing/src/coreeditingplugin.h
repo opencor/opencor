@@ -104,8 +104,6 @@ private:
 
     QString mFileName;
 
-    void updateEditorBackground();
-
 private Q_SLOTS:
     void clipboardDataChanged();
 

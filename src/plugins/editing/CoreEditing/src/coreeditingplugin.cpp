@@ -24,7 +24,6 @@ specific language governing permissions and limitations under the License.
 #include "editorwidget.h"
 #include "filemanager.h"
 #include "guiutils.h"
-#include "qscintillawidget.h"
 
 //==============================================================================
 
@@ -272,8 +271,6 @@ void CoreEditingPlugin::updateGui(Plugin *pViewPlugin, const QString &pFileName)
                     this, SLOT(updateEditingActions()));
             connect(mEditor, SIGNAL(canSelectAll(const bool &)),
                     this, SLOT(updateSelectAllAction()));
-
-            updateEditorBackground();
         }
     }
 
@@ -415,11 +412,8 @@ void CoreEditingPlugin::filePermissionsChanged(const QString &pFileName)
 
         // Make our editor read-only or writable
 
-        if (mEditor) {
+        if (mEditor)
             mEditor->setReadOnly(!Core::FileManager::instance()->isReadableAndWritable(pFileName));
-
-            updateEditorBackground();
-        }
     }
 }
 
@@ -712,21 +706,6 @@ void CoreEditingPlugin::doSelectAll()
     mEditor->selectAll();
 
     updateSelectAllAction();
-}
-
-//==============================================================================
-
-void CoreEditingPlugin::updateEditorBackground()
-{
-    // Update the current editor's background, based on whether the current file
-    // is locked
-
-    if (mEditor) {
-        QColor backgroundColor = Core::FileManager::instance()->isReadableAndWritable(mFileName)?Core::baseColor():Core::lockedColor(Core::baseColor());
-
-        for (int i = 0; i < QsciScintillaBase::STYLE_MAX; ++i)
-            mEditor->setBackgroundColor(i, backgroundColor);
-    }
 }
 
 //==============================================================================
