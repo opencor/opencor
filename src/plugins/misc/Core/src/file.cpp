@@ -104,8 +104,8 @@ File::Status File::check()
 
     QString newSha1 = sha1();
 
-    if (!newSha1.compare(mSha1)) {
-        // The SHA-1 values are the same, so...
+    if (!newSha1.compare(mSha1) || !mUrl.isEmpty()) {
+        // The SHA-1 values are the same or we are a remote file, so...
 
         return File::Unchanged;
     } else {
