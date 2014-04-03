@@ -28,13 +28,18 @@ specific language governing permissions and limitations under the License.
 #include <QCryptographicHash>
 #include <QDate>
 #include <QDir>
+#include <QEventLoop>
 #include <QFile>
 #include <QIODevice>
+#include <QNetworkAccessManager>
+#include <QNetworkReply>
+#include <QNetworkRequest>
 #include <QProcess>
 #include <QResource>
 #include <QSettings>
 #include <QString>
 #include <QStringList>
+#include <QTimer>
 
 //==============================================================================
 
@@ -80,6 +85,84 @@ QVariantList qIntListToVariantList(const QIntList &pIntList)
 
 namespace OpenCOR {
 namespace Core {
+
+//==============================================================================
+
+void DummyMessageHandler::handleMessage(QtMsgType pType,
+                                        const QString &pDescription,
+                                        const QUrl &pIdentifier,
+                                        const QSourceLocation &pSourceLocation)
+{
+    Q_UNUSED(pType);
+    Q_UNUSED(pDescription);
+    Q_UNUSED(pIdentifier);
+    Q_UNUSED(pSourceLocation);
+
+    // We ignore the message...
+}
+
+//==============================================================================
+
+SynchronousTextFileDownloader::SynchronousTextFileDownloader()
+{
+    // Create a network access manager so that we can then retrieve the contents
+    // of a remote file
+
+    mNetworkAccessManager = new QNetworkAccessManager(this);
+
+    // Make sure that we get told if there are SSL errors (which would happen if
+    // a website's certificate is invalid, e.g. it has expired)
+
+    connect(mNetworkAccessManager, SIGNAL(sslErrors(QNetworkReply *, const QList<QSslError> &)),
+            this, SLOT(networkAccessManagerSslErrors(QNetworkReply *, const QList<QSslError> &)) );
+}
+
+//==============================================================================
+
+bool SynchronousTextFileDownloader::readTextFromUrl(const QString &pUrl,
+                                                    QString &pText,
+                                                    QString &pErrorMessage) const
+{
+    // Download the contents of the file, which URL is given
+
+    QNetworkReply *networkReply = mNetworkAccessManager->get(QNetworkRequest(pUrl));
+    QEventLoop eventLoop;
+
+    connect(networkReply, SIGNAL(finished()),
+            &eventLoop, SLOT(quit()));
+
+    eventLoop.exec();
+
+    // Check whether we were able to retrieve the contents of the file
+
+    bool res = networkReply->error() == QNetworkReply::NoError;
+
+    if (res) {
+        pText = networkReply->readAll();
+        pErrorMessage = QString();
+    } else {
+        pText = QString();
+        pErrorMessage = networkReply->errorString();
+    }
+
+    // Delete (later) the network reply
+
+    networkReply->deleteLater();
+
+    // We are all done, so...
+
+    return res;
+}
+
+//==============================================================================
+
+void SynchronousTextFileDownloader::networkAccessManagerSslErrors(QNetworkReply *pNetworkReply,
+                                                                  const QList<QSslError> &pSslErrors)
+{
+    // Ignore the SSL errors since we assume the user knows what s/he is doing
+
+    pNetworkReply->ignoreSslErrors(pSslErrors);
+}
 
 //==============================================================================
 
@@ -486,6 +569,18 @@ bool readTextFromFile(const QString &pFileName, QString &pText)
 
 //==============================================================================
 
+bool readTextFromUrl(const QString &pUrl, QString &pText,
+                     QString &pErrorMessage)
+{
+    // Read the contents of the file, which URL is given, as a string
+
+    static SynchronousTextFileDownloader synchronousTextFileDownloader;
+
+    return synchronousTextFileDownloader.readTextFromUrl(pUrl, pText, pErrorMessage);
+}
+
+//==============================================================================
+
 bool writeTextToFile(const QString &pFilename, const QString &pText)
 {
     // Write the given string to a file with the given file name
@@ -665,21 +760,6 @@ void doNothing(const int &pMax)
 #else
         asm("nop");
 #endif
-}
-
-//==============================================================================
-
-void DummyMessageHandler::handleMessage(QtMsgType pType,
-                                        const QString &pDescription,
-                                        const QUrl &pIdentifier,
-                                        const QSourceLocation &pSourceLocation)
-{
-    Q_UNUSED(pType);
-    Q_UNUSED(pDescription);
-    Q_UNUSED(pIdentifier);
-    Q_UNUSED(pSourceLocation);
-
-    // We ignore the message...
 }
 
 //==============================================================================

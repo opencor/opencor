@@ -33,7 +33,6 @@ specific language governing permissions and limitations under the License.
 
 #include <QDir>
 #include <QMap>
-#include <QSslError>
 #include <QTabBar>
 
 //==============================================================================
@@ -47,8 +46,6 @@ namespace Ui {
 class QDialog;
 class QLabel;
 class QLineEdit;
-class QNetworkAccessManager;
-class QNetworkReply;
 class QStackedWidget;
 
 //==============================================================================
@@ -178,8 +175,6 @@ private:
     QLabel *mRemoteFileDialogUrlLabel;
     QLineEdit *mRemoteFileDialogUrlValue;
 
-    QNetworkAccessManager *mNetworkAccessManager;
-
     QMap<QString, QString> mRemoteLocalFileNames;
 
     Plugin * viewPlugin(const int &pIndex) const;
@@ -187,7 +182,7 @@ private:
 
     void updateNoViewMsg();
 
-    void openRemoteFile(const QString &pUrl);
+    void openRemoteFile(const QString &pUrl, const bool &pShowWarning = true);
 
     bool saveFile(const int &pIndex, const bool &pNeedNewFileName = false);
 
@@ -251,10 +246,6 @@ private Q_SLOTS:
     void updateFileTabIcon(const QString &pViewName, const QString &pFileName,
                            const QIcon &pIcon);
     void updateFileTabIcons();
-
-    void remoteFileDownloaded(QNetworkReply *pNetworkReply);
-    void networkAccessManagerSslErrors(QNetworkReply *pNetworkReply,
-                                       const QList<QSslError> &pSslErrors);
 };
 
 //==============================================================================

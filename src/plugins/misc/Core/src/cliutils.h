@@ -32,6 +32,7 @@ specific language governing permissions and limitations under the License.
 #include <QAbstractMessageHandler>
 #include <QByteArray>
 #include <QSourceLocation>
+#include <QSslError>
 #include <QUrl>
 
 //==============================================================================
@@ -46,6 +47,8 @@ QVariantList CORE_EXPORT qIntListToVariantList(const QIntList &pIntList);
 //==============================================================================
 
 class QCoreApplication;
+class QNetworkAccessManager;
+class QNetworkReply;
 
 //==============================================================================
 
@@ -57,6 +60,38 @@ namespace Core {
 static const auto SettingsGlobal          = QStringLiteral("Global");
 static const auto SettingsLocale          = QStringLiteral("Locale");
 static const auto SettingsActiveDirectory = QStringLiteral("ActiveDirectory");
+
+//==============================================================================
+
+class CORE_EXPORT DummyMessageHandler : public QAbstractMessageHandler
+{
+    Q_OBJECT
+
+protected:
+    virtual void handleMessage(QtMsgType pType, const QString &pDescription,
+                               const QUrl &pIdentifier,
+                               const QSourceLocation &pSourceLocation);
+};
+
+//==============================================================================
+
+class SynchronousTextFileDownloader : public QObject
+{
+    Q_OBJECT
+
+public:
+    explicit SynchronousTextFileDownloader();
+
+    bool readTextFromUrl(const QString &pUrl, QString &pText,
+                         QString &pErrorMessage) const;
+
+private:
+    QNetworkAccessManager *mNetworkAccessManager;
+
+private Q_SLOTS:
+    void networkAccessManagerSslErrors(QNetworkReply *pNetworkReply,
+                                       const QList<QSslError> &pSslErrors);
+};
 
 //==============================================================================
 
@@ -90,6 +125,9 @@ QByteArray CORE_EXPORT resourceAsByteArray(const QString &pResource);
 bool CORE_EXPORT writeResourceToFile(const QString &pFilename,
                                      const QString &pResource);
 
+bool CORE_EXPORT readTextFromUrl(const QString &pUrl, QString &pText,
+                                 QString &pErrorMessage);
+
 bool CORE_EXPORT readTextFromFile(const QString &pFileName, QString &pText);
 bool CORE_EXPORT writeTextToFile(const QString &pFilename,
                                  const QString &pText);
@@ -108,16 +146,6 @@ QString CORE_EXPORT formatErrorMessage(const QString &pErrorMessage,
 QString CORE_EXPORT nonDiacriticString(const QString &pString);
 
 void CORE_EXPORT doNothing(const int &pMax);
-
-//==============================================================================
-
-class CORE_EXPORT DummyMessageHandler : public QAbstractMessageHandler
-{
-protected:
-    virtual void handleMessage(QtMsgType pType, const QString &pDescription,
-                               const QUrl &pIdentifier,
-                               const QSourceLocation &pSourceLocation);
-};
 
 //==============================================================================
 
