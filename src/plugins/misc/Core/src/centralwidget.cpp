@@ -60,6 +60,7 @@ specific language governing permissions and limitations under the License.
 #include <QStackedWidget>
 #include <QStatusBar>
 #include <QUrl>
+#include <QVariant>
 
 //==============================================================================
 
@@ -443,6 +444,18 @@ void CentralWidget::loadSettings(QSettings *pSettings)
 
 void CentralWidget::saveSettings(QSettings *pSettings) const
 {
+    // Remove possible unneeded settings in the future
+
+    static const QString settingsFileIsRemote = SettingsFileIsRemote.arg(QString());
+    static const QString settingsFileMode = SettingsFileMode.arg(QString());
+    static const QString settingsFileModeView = SettingsFileModeView.arg(QString());
+
+    foreach (const QString &key, pSettings->allKeys())
+        if (   key.startsWith(settingsFileIsRemote)
+            || key.startsWith(settingsFileMode)
+            || key.startsWith(settingsFileModeView))
+            pSettings->remove(key);
+
     // Keep track of the files that are opened, skipping new files
 
     FileManager *fileManagerInstance = FileManager::instance();
@@ -721,18 +734,27 @@ void CentralWidget::openFile()
 
 //==============================================================================
 
-void CentralWidget::doOpenRemoteFile()
+void CentralWidget::openRemoteFile(const QString &pUrl)
 {
     // Check whether the remote file is already opened and if so select it,
     // otherwise retrieve its contents
 
-    QUrl url = mRemoteFileDialogUrlValue->text();
+    QUrl url = pUrl;
     QString fileName = mRemoteLocalFileNames.value(url.toString(QUrl::NormalizePathSegments));
 
     if (fileName.isEmpty())
         mNetworkAccessManager->get(QNetworkRequest(url));
     else
         openFile(fileName);
+}
+
+//==============================================================================
+
+void CentralWidget::doOpenRemoteFile()
+{
+    // Open the remote file
+
+    openRemoteFile(mRemoteFileDialogUrlValue->text());
 
     mRemoteFileDialog->accept();
 }

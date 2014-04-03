@@ -58,11 +58,11 @@ File::File(const QString &pFileName, const Type &pType, const QString &pUrl) :
 
 File::~File()
 {
-    // Delete our corresponding physical file, in case we refer to a new file
-    // (in which case our corresponding phsyical file was supposed to be a
-    // temporary file, so...)
+    // Delete our corresponding physical file, in case we refer to a new or a
+    // remote file (in which case our corresponding phsyical file was always
+    // supposed to be only a temporary file)
 
-    if (isNew())
+    if (isNew() || isRemote())
         QFile::remove(mFileName);
 }
 

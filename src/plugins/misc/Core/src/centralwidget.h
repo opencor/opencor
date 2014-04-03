@@ -187,6 +187,8 @@ private:
 
     void updateNoViewMsg();
 
+    void openRemoteFile(const QString &pUrl);
+
     bool saveFile(const int &pIndex, const bool &pNeedNewFileName = false);
 
     bool canCloseFile(const int &pIndex);
