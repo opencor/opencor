@@ -180,6 +180,8 @@ private:
 
     QNetworkAccessManager *mNetworkAccessManager;
 
+    QMap<QString, QString> mRemoteLocalFileNames;
+
     Plugin * viewPlugin(const int &pIndex) const;
     Plugin * viewPlugin(const QString &pFileName) const;
 

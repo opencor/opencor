@@ -150,7 +150,8 @@ CentralWidget::CentralWidget(QMainWindow *pMainWindow) :
     mFileModeViewTabIndexes(QMap<QString, QMap<int, int>>()),
     mSupportedFileTypes(FileTypes()),
     mFileNames(QStringList()),
-    mModes(QMap<GuiViewSettings::Mode, CentralWidgetMode *>())
+    mModes(QMap<GuiViewSettings::Mode, CentralWidgetMode *>()),
+    mRemoteLocalFileNames(QMap<QString, QString>())
 {
     // Set up the GUI
 
@@ -641,6 +642,12 @@ void CentralWidget::openFile(const QString &pFileName, const File::Type &pType,
 
     FileManager::instance()->manage(nativeFileName, pType, pUrl);
 
+    // Keep track of the mapping between the remote file and its local version,
+    // if needed
+
+    if (!pUrl.isEmpty())
+        mRemoteLocalFileNames.insert(pUrl, nativeFileName);
+
     // Create a new tab, insert it just after the current tab, set the full name
     // of the file as the tool tip for the new tab, and make the new tab the
     // current one
@@ -716,9 +723,16 @@ void CentralWidget::openFile()
 
 void CentralWidget::doOpenRemoteFile()
 {
-    // Retrieve the contents of the remote file
+    // Check whether the remote file is already opened and if so select it,
+    // otherwise retrieve its contents
 
-    mNetworkAccessManager->get(QNetworkRequest(QUrl(mRemoteFileDialogUrlValue->text())));
+    QUrl url = mRemoteFileDialogUrlValue->text();
+    QString fileName = mRemoteLocalFileNames.value(url.toString(QUrl::NormalizePathSegments));
+
+    if (fileName.isEmpty())
+        mNetworkAccessManager->get(QNetworkRequest(url));
+    else
+        openFile(fileName);
 
     mRemoteFileDialog->accept();
 }
@@ -775,9 +789,15 @@ void CentralWidget::reloadFile(const int &pIndex)
             //       their GUI...
 
             if (doReloadFile) {
-                fileManagerInstance->reload(fileName);
+                // Actually redownload the file, if it is a remote one
 
-                fileManagerInstance->setModified(fileName, false);
+                if (fileManagerInstance->isRemote(fileName)) {
+                    mNetworkAccessManager->get(QNetworkRequest(QUrl(fileManagerInstance->url(fileName))));
+                } else {
+                    fileManagerInstance->reload(fileName);
+
+                    fileManagerInstance->setModified(fileName, false);
+                }
             }
         }
     }
@@ -1835,31 +1855,50 @@ void CentralWidget::updateStatusBarWidgets(QList<QWidget *> pWidgets)
 
 void CentralWidget::remoteFileDownloaded(QNetworkReply *pNetworkReply)
 {
+    // Retrieve the local file associated with the remote file, if any
+
+    QString url = pNetworkReply->url().toString();
+    QString fileName = mRemoteLocalFileNames.value(url);
+
     // Check whether we were able to retrieve the contents of the remote file
 
     if (pNetworkReply->error() == QNetworkReply::NoError) {
-        // We retrieved the contents of the remote file, so ask our file manager
-        // to create a new remote file
+        // We retrieved the contents of the remote file, so either ask our file
+        // manager to create a new remote file or let people know that we have
+        // just reloaded a remote file
 
         Core::FileManager *fileManagerInstance = Core::FileManager::instance();
+
+        if (fileName.isEmpty()) {
 #ifdef QT_DEBUG
-        Core::FileManager::Status createStatus =
+            Core::FileManager::Status createStatus =
 #endif
-        fileManagerInstance->create(pNetworkReply->url().toString(),
-                                    pNetworkReply->readAll());
+            fileManagerInstance->create(pNetworkReply->url().toString(),
+                                        pNetworkReply->readAll());
 
 #ifdef QT_DEBUG
-        // Make sure that the file has indeed been created
+            // Make sure that the file has indeed been created
 
-        if (createStatus != Core::FileManager::Created)
-            qFatal("FATAL ERROR | %s:%d: the remote file was not created", __FILE__, __LINE__);
+            if (createStatus != Core::FileManager::Created)
+                qFatal("FATAL ERROR | %s:%d: the remote file was not created", __FILE__, __LINE__);
 #endif
+        } else {
+            // We are reloading the file, so update its local version
+
+            Core::writeTextToFile(fileName, pNetworkReply->readAll());
+
+            fileManagerInstance->reload(fileName);
+        }
     } else {
         // We were not able to retrieve the contents of the remote file, so let
         // the user know about it
 
-        QMessageBox::warning(this, tr("Open Remote File"),
-                             tr("Sorry, but <strong>%1</strong> could not be opened (%2).").arg(pNetworkReply->url().toString(), Core::formatErrorMessage(pNetworkReply->errorString(), false)));
+        if (fileName.isEmpty())
+            QMessageBox::warning(this, tr("Open Remote File"),
+                                 tr("Sorry, but <strong>%1</strong> could not be opened (%2).").arg(pNetworkReply->url().toString(), Core::formatErrorMessage(pNetworkReply->errorString(), false)));
+        else
+            QMessageBox::warning(this, tr("Reload Remote File"),
+                                 tr("Sorry, but <strong>%1</strong> could not be reloaded (%2).").arg(pNetworkReply->url().toString(), Core::formatErrorMessage(pNetworkReply->errorString(), false)));
     }
 
     // Delete (later) the network reply
