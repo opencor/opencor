@@ -98,7 +98,7 @@ public:
                                        const QString &pResource,
                                        const QString &pId);
 
-    QString uriBase() const;
+    QString xmlBase() const;
 
     bool exportTo(const QString &pFileName, const Version &pVersion);
     bool exportTo(const QString &pFileName,
@@ -111,8 +111,6 @@ private:
 
     ObjRef<iface::rdf_api::RDFAPIRepresentation> mRdfApiRepresentation;
     ObjRef<iface::rdf_api::DataSource> mRdfDataSource;
-
-    QString mUriBase;
 
     CellmlFileRdfTriples mRdfTriples;
 

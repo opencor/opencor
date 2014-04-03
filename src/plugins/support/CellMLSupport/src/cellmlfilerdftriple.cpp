@@ -259,7 +259,7 @@ QString CellmlFileRdfTriple::metadataId() const
         // The subject of our RDF triple is a URI reference, so we can retrieve
         // its metadata id
 
-        return mSubject->uriReference().remove(QRegularExpression("^"+QRegularExpression::escape(mCellmlFile->uriBase())+"#?"));
+        return mSubject->uriReference().remove(QRegularExpression("^"+QRegularExpression::escape(mCellmlFile->xmlBase())+"#?"));
     else
         // We don't recognise the subject of our RDF triple, so...
 

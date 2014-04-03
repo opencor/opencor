@@ -107,8 +107,6 @@ void CellmlFile::reset()
     mRdfApiRepresentation = 0;
     mRdfDataSource = 0;
 
-    mUriBase = QString();
-
     foreach (CellmlFileRdfTriple *rdfTriple, mRdfTriples)
         delete rdfTriple;
 
@@ -201,12 +199,6 @@ bool CellmlFile::load()
 
             return false;
         }
-
-    // Retrieve the URI base
-
-    ObjRef<iface::cellml_api::URI> xmlBase = mModel->xmlBase();
-
-    mUriBase = QString::fromStdWString(xmlBase->asText());
 
     // Retrieve all the RDF triples associated with the model
 
@@ -638,15 +630,15 @@ QString CellmlFile::rdfTripleSubject(iface::cellml_api::CellMLElement *pElement)
 
     // Return the subject which should be used for an RDF triple
 
-    return uriBase()+"#"+cmetaId;
+    return xmlBase()+"#"+cmetaId;
 }
 
 //==============================================================================
 
 CellmlFileRdfTriple * CellmlFile::addRdfTriple(iface::cellml_api::CellMLElement *pElement,
-                                                              const CellmlFileRdfTriple::ModelQualifier &pModelQualifier,
-                                                              const QString &pResource,
-                                                              const QString &pId)
+                                               const CellmlFileRdfTriple::ModelQualifier &pModelQualifier,
+                                               const QString &pResource,
+                                               const QString &pId)
 {
     // Add an RDF triple to our CellML file
 
@@ -669,11 +661,13 @@ CellmlFileRdfTriple * CellmlFile::addRdfTriple(iface::cellml_api::CellMLElement 
 
 //==============================================================================
 
-QString CellmlFile::uriBase() const
+QString CellmlFile::xmlBase() const
 {
     // Return the CellML file's URI base
 
-    return mUriBase;
+    ObjRef<iface::cellml_api::URI> uri = mModel->xmlBase();
+
+    return QString::fromStdWString(uri->asText());
 }
 
 //==============================================================================
