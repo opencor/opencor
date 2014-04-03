@@ -594,9 +594,9 @@ void CoreEditingPlugin::newFile()
 #endif
     fileManagerInstance->create();
 
+#ifdef QT_DEBUG
     // Make sure that the file has indeed been created
 
-#ifdef QT_DEBUG
     if (createStatus != Core::FileManager::Created)
         qFatal("FATAL ERROR | %s:%d: the new file was not created", __FILE__, __LINE__);
 #endif

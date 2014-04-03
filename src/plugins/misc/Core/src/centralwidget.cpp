@@ -802,9 +802,9 @@ void CentralWidget::duplicateFile()
 #endif
     fileManagerInstance->duplicate(fileName);
 
+#ifdef QT_DEBUG
     // Make sure that the file has indeed been duplicated
 
-#ifdef QT_DEBUG
     if (duplicateStatus != FileManager::Duplicated)
         qFatal("FATAL ERROR | %s:%d: '%s' did not get duplicated", __FILE__, __LINE__, qPrintable(fileName));
 #endif
@@ -938,9 +938,9 @@ bool CentralWidget::saveFile(const int &pIndex, const bool &pNeedNewFileName)
 #endif
             fileManagerInstance->rename(oldFileName, newFileName);
 
+#ifdef QT_DEBUG
             // Make sure that the file has indeed been renamed
 
-#ifdef QT_DEBUG
             if (renameStatus != FileManager::Renamed)
                 qFatal("FATAL ERROR | %s:%d: '%s' did not get renamed to '%s'", __FILE__, __LINE__, qPrintable(oldFileName), qPrintable(newFileName));
 #endif
@@ -1848,9 +1848,9 @@ void CentralWidget::remoteFileDownloaded(QNetworkReply *pNetworkReply)
         fileManagerInstance->create(pNetworkReply->url().toString(),
                                     pNetworkReply->readAll());
 
+#ifdef QT_DEBUG
         // Make sure that the file has indeed been created
 
-#ifdef QT_DEBUG
         if (createStatus != Core::FileManager::Created)
             qFatal("FATAL ERROR | %s:%d: the remote file was not created", __FILE__, __LINE__);
 #endif
