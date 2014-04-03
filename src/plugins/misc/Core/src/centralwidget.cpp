@@ -446,13 +446,11 @@ void CentralWidget::saveSettings(QSettings *pSettings) const
 {
     // Remove possible unneeded settings in the future
 
-    static const QString settingsFileIsRemote = SettingsFileIsRemote.arg(QString());
     static const QString settingsFileMode = SettingsFileMode.arg(QString());
     static const QString settingsFileModeView = SettingsFileModeView.arg(QString());
 
     foreach (const QString &key, pSettings->allKeys())
-        if (   key.startsWith(settingsFileIsRemote)
-            || key.startsWith(settingsFileMode)
+        if (   key.startsWith(settingsFileMode)
             || key.startsWith(settingsFileModeView))
             pSettings->remove(key);
 
