@@ -438,9 +438,20 @@ void CoreEditingPlugin::fileModified(const QString &pFileName,
 
 void CoreEditingPlugin::fileReloaded(const QString &pFileName)
 {
-    Q_UNUSED(pFileName);
+    // A file has been reloaded, so update our internals, if needed
+    // Note: we clearly still have an editor for the given file, but when
+    //       reloading it, fileReloaded() will first be called for this plugin
+    //       and then for the 'proper' editing plugins. In other words, we don't
+    //       know at this stage whether a new editor will have been assigned to
+    //       the given file. Indeed, upon reloading a file, a 'proper' editing
+    //       plugin may decide to 'close' and 'reopen' the file, meaning that
+    //       its original editor will be discarded and a new one assigned to it,
+    //       so...
 
-    // We don't handle this interface...
+    if (!pFileName.compare(mFileName)) {
+        mEditor = 0;
+        mFileName = QString();
+    }
 }
 
 //==============================================================================
