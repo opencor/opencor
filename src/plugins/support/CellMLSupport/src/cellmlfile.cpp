@@ -185,15 +185,19 @@ bool CellmlFile::load()
     // In the case of a non CellML 1.0 model, we want all the imports to be
     // fully instantiated
 
-    if (QString::fromStdWString(mModel->cellmlVersion()).compare(CellMLSupport::Cellml_1_0))
+    if (QString::fromStdWString(mModel->cellmlVersion()).compare(CellMLSupport::Cellml_1_0)) {
         // First, check whether the CellML file is a remote one and, if so,
         // change its xmlbase so that it points to the remote location
 
-        if (Core::FileManager::instance()->isRemote(mFileName)) {
+        Core::FileManager *fileManagerInstance = Core::FileManager::instance();
+
+        if (fileManagerInstance->isRemote(mFileName)) {
             ObjRef<iface::cellml_api::URI> uri = mModel->xmlBase();
 
-            uri->asText(Core::FileManager::instance()->url(mFileName).toStdWString());
+            uri->asText(fileManagerInstance->url(mFileName).toStdWString());
         }
+
+        // Now, we can try to instantiate all the imports
 
         try {
             mModel->fullyInstantiateImports();
@@ -208,6 +212,7 @@ bool CellmlFile::load()
 
             return false;
         }
+    }
 
     // Retrieve all the RDF triples associated with the model
 

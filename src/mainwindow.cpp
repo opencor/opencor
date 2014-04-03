@@ -1110,7 +1110,7 @@ void MainWindow::handleAction(const QUrl &pUrl)
 
         handleArguments(pUrl.path().remove(0, 1));
     } else {
-        // We are dealing with an action which OpenCOR itself can't handle, but
+        // We are dealing with an action that OpenCOR itself can't handle, but
         // maybe one of its loaded plugins can
 
         QString host = pUrl.host();
