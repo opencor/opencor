@@ -103,29 +103,24 @@ void DummyMessageHandler::handleMessage(QtMsgType pType,
 
 //==============================================================================
 
-SynchronousTextFileDownloader::SynchronousTextFileDownloader()
-{
-    // Create a network access manager so that we can then retrieve the contents
-    // of a remote file
-
-    mNetworkAccessManager = new QNetworkAccessManager(this);
-
-    // Make sure that we get told if there are SSL errors (which would happen if
-    // a website's certificate is invalid, e.g. it has expired)
-
-    connect(mNetworkAccessManager, SIGNAL(sslErrors(QNetworkReply *, const QList<QSslError> &)),
-            this, SLOT(networkAccessManagerSslErrors(QNetworkReply *, const QList<QSslError> &)) );
-}
-
-//==============================================================================
-
 bool SynchronousTextFileDownloader::readTextFromUrl(const QString &pUrl,
                                                     QString &pText,
                                                     QString &pErrorMessage) const
 {
-    // Download the contents of the file, which URL is given
+    // Create a network access manager so that we can then retrieve the contents
+    // of the remote file
 
-    QNetworkReply *networkReply = mNetworkAccessManager->get(QNetworkRequest(pUrl));
+    QNetworkAccessManager networkAccessManager;
+
+    // Make sure that we get told if there are SSL errors (which would happen if
+    // a website's certificate is invalid, e.g. it has expired)
+
+    connect(&networkAccessManager, SIGNAL(sslErrors(QNetworkReply *, const QList<QSslError> &)),
+            this, SLOT(networkAccessManagerSslErrors(QNetworkReply *, const QList<QSslError> &)) );
+
+    // Download the contents of the remote file
+
+    QNetworkReply *networkReply = networkAccessManager.get(QNetworkRequest(pUrl));
     QEventLoop eventLoop;
 
     connect(networkReply, SIGNAL(finished()),

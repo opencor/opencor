@@ -80,13 +80,8 @@ class SynchronousTextFileDownloader : public QObject
     Q_OBJECT
 
 public:
-    explicit SynchronousTextFileDownloader();
-
     bool readTextFromUrl(const QString &pUrl, QString &pText,
                          QString &pErrorMessage) const;
-
-private:
-    QNetworkAccessManager *mNetworkAccessManager;
 
 private Q_SLOTS:
     void networkAccessManagerSslErrors(QNetworkReply *pNetworkReply,
