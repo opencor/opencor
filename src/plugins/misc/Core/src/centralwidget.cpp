@@ -345,6 +345,7 @@ CentralWidget::~CentralWidget()
 
 static const auto SettingsFileNames       = QStringLiteral("FileNames");
 static const auto SettingsCurrentFileName = QStringLiteral("CurrentFileName");
+static const auto SettingsFileIsRemote    = QStringLiteral("FileIsRemote%1");
 static const auto SettingsFileMode        = QStringLiteral("FileMode%1");
 static const auto SettingsFileModeView    = QStringLiteral("FileModeView%1%2");
 
@@ -392,7 +393,11 @@ void CentralWidget::loadSettings(QSettings *pSettings)
 
     QStringList fileNames = pSettings->value(SettingsFileNames).toStringList();
 
-    openFiles(fileNames);
+    foreach (const QString &fileName, fileNames)
+        if (pSettings->value(SettingsFileIsRemote.arg(fileName)).toBool())
+            openRemoteFile(fileName);
+        else
+            openFile(fileName);
 
     // Retrieve the modes and views of our different files
 
@@ -426,7 +431,10 @@ void CentralWidget::loadSettings(QSettings *pSettings)
 
     QString fileName = pSettings->value(SettingsCurrentFileName).toString();
 
-    if (QFileInfo(fileName).exists())
+    if (pSettings->value(SettingsFileIsRemote.arg(fileName)).toBool())
+        fileName = mRemoteLocalFileNames.value(fileName);
+
+    if (mFileNames.contains(fileName))
         openFile(fileName);
     else
         // The previously selected file doesn't exist anymore, so select the
@@ -446,11 +454,13 @@ void CentralWidget::saveSettings(QSettings *pSettings) const
 {
     // Remove possible unneeded settings in the future
 
+    static const QString settingsFileIsRemote = SettingsFileIsRemote.arg(QString());
     static const QString settingsFileMode = SettingsFileMode.arg(QString());
     static const QString settingsFileModeView = SettingsFileModeView.arg(QString());
 
     foreach (const QString &key, pSettings->allKeys())
-        if (   key.startsWith(settingsFileMode)
+        if (   key.startsWith(settingsFileIsRemote)
+            || key.startsWith(settingsFileMode)
             || key.startsWith(settingsFileModeView))
             pSettings->remove(key);
 
@@ -460,8 +470,19 @@ void CentralWidget::saveSettings(QSettings *pSettings) const
     QStringList fileNames = QStringList();
 
     foreach (const QString &fileName, mFileNames)
-        if (!fileManagerInstance->isNew(fileName))
-            fileNames << fileName;
+        if (!fileManagerInstance->isNew(fileName)) {
+            // The file is not new, so keep track of it, as well as of whether
+            // it's a remote file
+
+            bool fileIsRemote = fileManagerInstance->isRemote(fileName);
+
+            if (fileIsRemote)
+                fileNames << fileManagerInstance->url(fileName);
+            else
+                fileNames << fileName;
+
+            pSettings->setValue(SettingsFileIsRemote.arg(fileNames.last()), fileIsRemote);
+        }
 
     pSettings->setValue(SettingsFileNames, fileNames);
 
