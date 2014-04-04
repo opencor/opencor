@@ -480,7 +480,12 @@ void CorePlugin::fileOpened(const QString &pFileName)
     // Remove the file from our list of recent files and update our Reopen
     // sub-menu
 
-    mRecentFileNames.removeOne(pFileName);
+    FileManager *fileManagerInstance = FileManager::instance();
+
+    if (fileManagerInstance->isRemote(pFileName))
+        mRecentFileNames.removeOne(fileManagerInstance->url(pFileName));
+    else
+        mRecentFileNames.removeOne(pFileName);
 
     updateFileReopenMenu();
 }
@@ -548,7 +553,10 @@ void CorePlugin::fileClosed(const QString &pFileName)
 
     if (    fileManagerInstance->isManaged(pFileName)
         && !fileManagerInstance->isNew(pFileName)) {
-        mRecentFileNames.prepend(pFileName);
+        if (fileManagerInstance->isRemote(pFileName))
+            mRecentFileNames.prepend(fileManagerInstance->url(pFileName));
+        else
+            mRecentFileNames.prepend(pFileName);
 
         while (mRecentFileNames.count() > 10)
             mRecentFileNames.removeLast();
@@ -751,29 +759,32 @@ void CorePlugin::openRecentFile()
 {
     // Check that the recent file still exists
 
-    QString fileName = qobject_cast<QAction *>(sender())->text();
+    QString fileNameOrUrl = qobject_cast<QAction *>(sender())->text();
+    QUrl url = fileNameOrUrl;
 
-    if (!QFileInfo(fileName).exists()) {
-        // The file doesn't exist anymore, so let the user know about it
+    if (url.scheme().isEmpty()) {
+        if (QFileInfo(fileNameOrUrl).exists())
+            // Open the recent file
 
-        QMessageBox::warning(mMainWindow, tr("Reopen File"),
-                             tr("Sorry, but <strong>%1</strong> does not exist anymore.").arg(fileName));
+            mCentralWidget->openFile(fileNameOrUrl);
+        else
+            // The file doesn't exist anymore, so let the user know about it
 
-        // Remove the file from our list of recent files and update our Reopen
-        // sub-menu
+            QMessageBox::warning(mMainWindow, tr("Reopen File"),
+                                 tr("Sorry, but <strong>%1</strong> does not exist anymore.").arg(fileNameOrUrl));
+    } else {
+        // Open the recent remote file
 
-        mRecentFileNames.removeOne(fileName);
-
-        updateFileReopenMenu();
-
-        // Leave since we couldn't open the recent file
-
-        return;
+        mCentralWidget->openRemoteFile(fileNameOrUrl);
     }
 
-    // Open the recent file
+    // Try to remove the file from our list of recent files and update our
+    // Reopen sub-menu, if needed
+    // Note: if the file was successfully opened, then it will have already been
+    //       removed from our list of recent files...
 
-    mCentralWidget->openFile(fileName);
+    if (mRecentFileNames.removeOne(fileNameOrUrl))
+        updateFileReopenMenu();
 }
 
 //==============================================================================
