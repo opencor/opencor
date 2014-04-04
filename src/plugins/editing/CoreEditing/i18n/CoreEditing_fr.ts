@@ -12,40 +12,36 @@
         <translation>Refaire la dernière action</translation>
     </message>
     <message>
-        <source>Cut the selected object</source>
-        <translation>Couper l&apos;objet sélectionné</translation>
+        <source>Cut the selected text</source>
+        <translation>Couper le texte sélectionné</translation>
     </message>
     <message>
-        <source>Copy the selected object to the clipboard</source>
-        <translation>Copier l&apos;objet sélectionné dans le presse-papier</translation>
+        <source>Copy the selected text to the clipboard</source>
+        <translation>Copier le texte sélectionné dans le presse-papier</translation>
     </message>
     <message>
         <source>Paste the contents of the clipboard</source>
         <translation>Coller le contenu du presse-papier</translation>
     </message>
     <message>
-        <source>Delete the selected object</source>
-        <translation>Supprimer l&apos;objet sélectionné</translation>
+        <source>Delete the selected text</source>
+        <translation>Supprimer le texte sélectionné</translation>
     </message>
     <message>
-        <source>Search for a specific object</source>
-        <translation>Chercher un objet spécifique</translation>
+        <source>Search/replace a specific text</source>
+        <translation>Chercher/remplacer un texte spécifique</translation>
     </message>
     <message>
-        <source>Search forwards for the same object</source>
-        <translation>Chercher en avant le même objet</translation>
+        <source>Search forwards for the same text</source>
+        <translation>Chercher en avant le même texte</translation>
     </message>
     <message>
-        <source>Search backwards for the same object</source>
-        <translation>Chercher en arrière le même objet</translation>
+        <source>Search backwards for the same text</source>
+        <translation>Chercher en arrière le même texte</translation>
     </message>
     <message>
-        <source>Search for a specific object and replace it with another</source>
-        <translation>Chercher un objet spécifique et le remplacer par un autre</translation>
-    </message>
-    <message>
-        <source>Select all the objects</source>
-        <translation>Sélectionner tous les objets</translation>
+        <source>Select all the text</source>
+        <translation>Sélectionner tout le texte</translation>
     </message>
     <message>
         <source>Edit</source>
@@ -76,8 +72,8 @@
         <translation>Supprimer</translation>
     </message>
     <message>
-        <source>Find...</source>
-        <translation>Chercher...</translation>
+        <source>Find/Replace...</source>
+        <translation>Chercher/Remplacer...</translation>
     </message>
     <message>
         <source>Find Next</source>
@@ -86,10 +82,6 @@
     <message>
         <source>Find Previous</source>
         <translation>Chercher Précédent</translation>
-    </message>
-    <message>
-        <source>Replace</source>
-        <translation>Remplacer</translation>
     </message>
     <message>
         <source>Select All</source>

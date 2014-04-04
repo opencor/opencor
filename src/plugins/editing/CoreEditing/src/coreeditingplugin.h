@@ -93,10 +93,9 @@ private:
     QAction *mEditPasteAction;
     QAction *mEditDeleteAction;
 
-    QAction *mEditFindAction;
+    QAction *mEditFindReplaceAction;
     QAction *mEditFindNextAction;
-    QAction *mEditPreviousAction;
-    QAction *mEditReplaceAction;
+    QAction *mEditFindPreviousAction;
 
     QAction *mEditSelectAllAction;
 
@@ -120,6 +119,10 @@ private Q_SLOTS:
     void doCopy();
     void doPaste();
     void doDelete();
+
+    void doFindReplace();
+    void doFindNext();
+    void doFindPrevious();
 
     void doSelectAll();
 };

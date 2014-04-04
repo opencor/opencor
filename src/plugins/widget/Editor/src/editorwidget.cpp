@@ -479,18 +479,10 @@ void EditorWidget::editorKeyPressed(QKeyEvent *pEvent, bool &pHandled)
     // Some key combinations from our editor
 
     if (   !(pEvent->modifiers() & Qt::ShiftModifier)
-        &&  (pEvent->modifiers() & Qt::ControlModifier)
+        && !(pEvent->modifiers() & Qt::ControlModifier)
         && !(pEvent->modifiers() & Qt::AltModifier)
         && !(pEvent->modifiers() & Qt::MetaModifier)
-        &&  (pEvent->key() == Qt::Key_F)) {
-        showFindReplace();
-
-        pHandled = true;
-    } else if (   !(pEvent->modifiers() & Qt::ShiftModifier)
-               && !(pEvent->modifiers() & Qt::ControlModifier)
-               && !(pEvent->modifiers() & Qt::AltModifier)
-               && !(pEvent->modifiers() & Qt::MetaModifier)
-               &&  (pEvent->key() == Qt::Key_Escape)) {
+        &&  (pEvent->key() == Qt::Key_Escape)) {
         hideFindReplace();
 
         pHandled = true;

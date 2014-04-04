@@ -98,15 +98,13 @@ void CoreEditingPlugin::initialize()
                                   ":/oxygen/actions/edit-delete.png",
                                   QKeySequence::Delete);
 
-    mEditFindAction     = newAction(mMainWindow, false,
-                                    ":/oxygen/actions/edit-find.png",
-                                    QKeySequence::Find);
-    mEditFindNextAction = newAction(mMainWindow, false, "",
-                                    QKeySequence::FindNext);
-    mEditPreviousAction = newAction(mMainWindow, false, "",
-                                    QKeySequence::FindPrevious);
-    mEditReplaceAction  = newAction(mMainWindow, false, "",
-                                    QKeySequence::Replace);
+    mEditFindReplaceAction  = newAction(mMainWindow, false,
+                                        ":/oxygen/actions/edit-find.png",
+                                        QKeySequence::Find);
+    mEditFindNextAction     = newAction(mMainWindow, false, "",
+                                        QKeySequence::FindNext);
+    mEditFindPreviousAction = newAction(mMainWindow, false, "",
+                                        QKeySequence::FindPrevious);
 
     mEditSelectAllAction = newAction(mMainWindow, false, "",
                                      QKeySequence::SelectAll);
@@ -118,13 +116,10 @@ void CoreEditingPlugin::initialize()
     mEditMenu->addAction(mEditCopyAction);
     mEditMenu->addAction(mEditPasteAction);
     mEditMenu->addAction(mEditDeleteAction);
-/*---GRY---
     mEditMenu->addSeparator();
-    mEditMenu->addAction(mEditFindAction);
+    mEditMenu->addAction(mEditFindReplaceAction);
     mEditMenu->addAction(mEditFindNextAction);
-    mEditMenu->addAction(mEditPreviousAction);
-    mEditMenu->addAction(mEditReplaceAction);
-*/
+    mEditMenu->addAction(mEditFindPreviousAction);
     mEditMenu->addSeparator();
     mEditMenu->addAction(mEditSelectAllAction);
 
@@ -157,6 +152,13 @@ void CoreEditingPlugin::initialize()
             this, SLOT(doPaste()));
     connect(mEditDeleteAction, SIGNAL(triggered()),
             this, SLOT(doDelete()));
+
+    connect(mEditFindReplaceAction, SIGNAL(triggered()),
+            this, SLOT(doFindReplace()));
+    connect(mEditFindNextAction, SIGNAL(triggered()),
+            this, SLOT(doFindNext()));
+    connect(mEditFindPreviousAction, SIGNAL(triggered()),
+            this, SLOT(doFindPrevious()));
 
     connect(mEditSelectAllAction, SIGNAL(triggered()),
             this, SLOT(doSelectAll()));
@@ -289,12 +291,9 @@ void CoreEditingPlugin::updateGui(Plugin *pViewPlugin, const QString &pFileName)
     Core::showEnableAction(mEditPasteAction, hasEditingInterfaceAndEditor);
     Core::showEnableAction(mEditDeleteAction, hasEditingInterfaceAndEditor);
 
-/*---GRY---
-    Core::showEnableAction(mEditFindAction, hasEditingInterfaceAndEditor);
+    Core::showEnableAction(mEditFindReplaceAction, hasEditingInterfaceAndEditor);
     Core::showEnableAction(mEditFindNextAction, hasEditingInterfaceAndEditor);
-    Core::showEnableAction(mEditPreviousAction, hasEditingInterfaceAndEditor);
-    Core::showEnableAction(mEditReplaceAction, hasEditingInterfaceAndEditor);
-*/
+    Core::showEnableAction(mEditFindPreviousAction, hasEditingInterfaceAndEditor);
 
     Core::showEnableAction(mEditSelectAllAction, hasEditingInterfaceAndEditor);
 
@@ -503,25 +502,23 @@ void CoreEditingPlugin::retranslateUi()
                       tr("Redo the last action"));
 
     retranslateAction(mEditCutAction, tr("Cut"),
-                      tr("Cut the selected object"));
+                      tr("Cut the selected text"));
     retranslateAction(mEditCopyAction, tr("Copy"),
-                      tr("Copy the selected object to the clipboard"));
+                      tr("Copy the selected text to the clipboard"));
     retranslateAction(mEditPasteAction, tr("Paste"),
                       tr("Paste the contents of the clipboard"));
     retranslateAction(mEditDeleteAction, tr("Delete"),
-                      tr("Delete the selected object"));
+                      tr("Delete the selected text"));
 
-    retranslateAction(mEditFindAction, tr("Find..."),
-                      tr("Search for a specific object"));
+    retranslateAction(mEditFindReplaceAction, tr("Find/Replace..."),
+                      tr("Search/replace a specific text"));
     retranslateAction(mEditFindNextAction, tr("Find Next"),
-                      tr("Search forwards for the same object"));
-    retranslateAction(mEditPreviousAction, tr("Find Previous"),
-                      tr("Search backwards for the same object"));
-    retranslateAction(mEditReplaceAction, tr("Replace"),
-                      tr("Search for a specific object and replace it with another"));
+                      tr("Search forwards for the same text"));
+    retranslateAction(mEditFindPreviousAction, tr("Find Previous"),
+                      tr("Search backwards for the same text"));
 
     retranslateAction(mEditSelectAllAction, tr("Select All"),
-                      tr("Select all the objects"));
+                      tr("Select all the text"));
 }
 
 //==============================================================================
@@ -691,6 +688,30 @@ void CoreEditingPlugin::doDelete()
     mEditor->del();
 
     updateUndoAndRedoActions();
+}
+
+//==============================================================================
+
+void CoreEditingPlugin::doFindReplace()
+{
+    // Show/select the find/replace widget in our editor
+
+    if (mEditor)
+        mEditor->showFindReplace();
+}
+
+//==============================================================================
+
+void CoreEditingPlugin::doFindNext()
+{
+//---GRY--- TO BE DONE...
+}
+
+//==============================================================================
+
+void CoreEditingPlugin::doFindPrevious()
+{
+//---GRY--- TO BE DONE...
 }
 
 //==============================================================================
