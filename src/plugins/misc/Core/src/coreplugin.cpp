@@ -491,7 +491,7 @@ void CorePlugin::filePermissionsChanged(const QString &pFileName)
     // Update the checked state of our Locked menu, if needed
 
     if (!pFileName.compare(mCentralWidget->currentFileName()))
-        mFileLockedAction->setChecked(Core::FileManager::instance()->isLocked(pFileName));
+        mFileLockedAction->setChecked(FileManager::instance()->isLocked(pFileName));
 }
 
 //==============================================================================
@@ -543,7 +543,7 @@ void CorePlugin::fileClosed(const QString &pFileName)
     // Reopen sub-menu
     // Note: the most recent file is to be shown first...
 
-    Core::FileManager *fileManagerInstance = Core::FileManager::instance();
+    FileManager *fileManagerInstance = FileManager::instance();
 
     if (    fileManagerInstance->isManaged(pFileName)
         && !fileManagerInstance->isNew(pFileName)) {
@@ -665,7 +665,7 @@ void CorePlugin::updateNewModifiedSensitiveActions()
     QString fileName = mCentralWidget->currentFileName();
 
     if (!fileName.isEmpty()) {
-        Core::FileManager *fileManagerInstance = Core::FileManager::instance();
+        FileManager *fileManagerInstance = FileManager::instance();
         bool fileIsNew = fileManagerInstance->isNew(fileName);
         bool fileIsNewRemoteOrModified =    fileIsNew
                                          || fileManagerInstance->isRemote(fileName)
