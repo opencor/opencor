@@ -33,6 +33,7 @@ specific language governing permissions and limitations under the License.
 #include <QAction>
 #include <QApplication>
 #include <QEvent>
+#include <QFileInfo>
 #include <QMainWindow>
 #include <QMenu>
 #include <QMessageBox>

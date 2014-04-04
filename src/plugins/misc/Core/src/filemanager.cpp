@@ -288,7 +288,7 @@ bool FileManager::isNewOrModified(const QString &pFileName) const
 
 void FileManager::setModified(const QString &pFileName, const bool &pModified)
 {
-    // Set the modified status of the given file, should it be managed
+    // Set the modified state of the given file, should it be managed
 
     QString nativeFileName = nativeCanonicalFileName(pFileName);
     File *file = isManaged(nativeFileName);
