@@ -1206,6 +1206,11 @@ bool CentralWidget::closeFile(const int &pIndex, const bool &pForceClosing)
         mFileModeTabIndexes.remove(fileName);
         mFileModeViewTabIndexes.remove(fileName);
 
+        FileManager *fileManagerInstance = FileManager::instance();
+
+        if (fileManagerInstance->isRemote(fileName))
+            mRemoteLocalFileNames.remove(fileManagerInstance->url(fileName));
+
         // Remove the file tab
 
         mFileTabs->removeTab(realIndex);
