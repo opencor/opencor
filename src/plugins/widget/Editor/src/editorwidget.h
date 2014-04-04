@@ -135,6 +135,9 @@ private:
     QFrame *mSeparator;
     EditorFindReplaceWidget *mFindReplace;
 
+    int mLine;
+    int mColumn;
+
     void showFindReplace();
     void hideFindReplace();
 
@@ -155,7 +158,12 @@ Q_SIGNALS:
 private Q_SLOTS:
     void zoomLevelChanged();
 
-    void keyPressed(QKeyEvent *pEvent, bool &pHandled);
+    void keepTrackOfCursorPosition(const int &pLine, const int &pColumn);
+
+    void editorKeyPressed(QKeyEvent *pEvent, bool &pHandled);
+    void findReplaceKeyPressed(QKeyEvent *pEvent, bool &pHandled);
+
+    void findTextChanged(const QString &pText);
 };
 
 //==============================================================================

@@ -67,6 +67,11 @@ EditorFindReplaceWidget::EditorFindReplaceWidget(QWidget *pParent) :
     // Make our find edit widget our focus proxy
 
     setFocusProxy(mGui->findEdit);
+
+    // Forward some signals
+
+    connect(mGui->findEdit, SIGNAL(textChanged(const QString &)),
+            this, SIGNAL(findTextChanged(const QString &)));
 }
 
 //==============================================================================

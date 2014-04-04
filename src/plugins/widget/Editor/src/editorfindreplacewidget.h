@@ -67,6 +67,8 @@ private:
 
 Q_SIGNALS:
     void keyPressed(QKeyEvent *pEvent, bool &pHandled);
+
+    void findTextChanged(const QString &pText);
 };
 
 //==============================================================================

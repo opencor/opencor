@@ -51,7 +51,9 @@ namespace Editor {
 EditorWidget::EditorWidget(const QString &pContents, const bool &pReadOnly,
                            QsciLexer *pLexer, QWidget *pParent) :
     Core::Widget(pParent),
-    mGui(new Ui::EditorWidget)
+    mGui(new Ui::EditorWidget),
+    mLine(0),
+    mColumn(0)
 {
     // Set up the GUI
 
@@ -95,13 +97,23 @@ EditorWidget::EditorWidget(const QString &pContents, const bool &pReadOnly,
     connect(mEditor, SIGNAL(canSelectAll(const bool &)),
             this, SIGNAL(canSelectAll(const bool &)));
 
+    // Keep track of our position within our editor
+
+    connect(mEditor, SIGNAL(cursorPositionChanged(const int &, const int &)),
+            this, SLOT(keepTrackOfCursorPosition(const int &, const int &)));
+
     // Keep track of whenever a key is being pressed in our editor our
     // find/replace widget
 
     connect(mEditor, SIGNAL(keyPressed(QKeyEvent *, bool &)),
-            this, SLOT(keyPressed(QKeyEvent *, bool &)));
+            this, SLOT(editorKeyPressed(QKeyEvent *, bool &)));
     connect(mFindReplace, SIGNAL(keyPressed(QKeyEvent *, bool &)),
-            this, SLOT(keyPressed(QKeyEvent *, bool &)));
+            this, SLOT(findReplaceKeyPressed(QKeyEvent *, bool &)));
+
+    // Keep track of whenever the find text changes
+
+    connect(mFindReplace, SIGNAL(findTextChanged(const QString &)),
+            this, SLOT(findTextChanged(const QString &)));
 
     // Add our editor and find/replace widgets to our layout
 
@@ -450,12 +462,23 @@ void EditorWidget::zoomLevelChanged()
 
 //==============================================================================
 
-void EditorWidget::keyPressed(QKeyEvent *pEvent, bool &pHandled)
+void EditorWidget::keepTrackOfCursorPosition(const int &pLine, const int &pColumn)
 {
-    // Show/hide our find/replace widget, if needed
+    // Keep track of our new position within our editor
 
-    if (    (sender() == mEditor)
-        && !(pEvent->modifiers() & Qt::ShiftModifier)
+    if (!mFindReplace->isVisible()) {
+        mLine = pLine;
+        mColumn = pColumn;
+    }
+}
+
+//==============================================================================
+
+void EditorWidget::editorKeyPressed(QKeyEvent *pEvent, bool &pHandled)
+{
+    // Some key combinations from our editor
+
+    if (   !(pEvent->modifiers() & Qt::ShiftModifier)
         &&  (pEvent->modifiers() & Qt::ControlModifier)
         && !(pEvent->modifiers() & Qt::AltModifier)
         && !(pEvent->modifiers() & Qt::MetaModifier)
@@ -474,6 +497,37 @@ void EditorWidget::keyPressed(QKeyEvent *pEvent, bool &pHandled)
     } else {
         pHandled = false;
     }
+}
+
+//==============================================================================
+
+void EditorWidget::findReplaceKeyPressed(QKeyEvent *pEvent, bool &pHandled)
+{
+    // Some key combinations from our find/replace widget
+
+    if (   !(pEvent->modifiers() & Qt::ShiftModifier)
+        && !(pEvent->modifiers() & Qt::ControlModifier)
+        && !(pEvent->modifiers() & Qt::AltModifier)
+        && !(pEvent->modifiers() & Qt::MetaModifier)
+        &&  (pEvent->key() == Qt::Key_Escape)) {
+        hideFindReplace();
+
+        pHandled = true;
+    } else {
+        pHandled = false;
+    }
+}
+
+//==============================================================================
+
+void EditorWidget::findTextChanged(const QString &pText)
+{
+    // The find text has changed, so look for its first occurrence in our editor
+
+    if (pText.isEmpty())
+        mEditor->setSelection(mLine, mColumn, mLine, mColumn);
+    else
+        mEditor->findFirst(pText, false, false, false, false, true, mLine, mColumn);
 }
 
 //==============================================================================
