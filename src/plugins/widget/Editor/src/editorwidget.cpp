@@ -466,7 +466,7 @@ void EditorWidget::keepTrackOfCursorPosition(const int &pLine, const int &pColum
 {
     // Keep track of our new position within our editor
 
-    if (!mFindReplace->isVisible()) {
+    if (mEditor->hasFocus()) {
         mLine = pLine;
         mColumn = pColumn;
     }
@@ -514,12 +514,14 @@ void EditorWidget::findReplaceKeyPressed(QKeyEvent *pEvent, bool &pHandled)
 
 void EditorWidget::findTextChanged(const QString &pText)
 {
-    // The find text has changed, so look for its first occurrence in our editor
+    // The find text has changed, so look for its first occurrence in our
+    // editor, should there be some text to search otherwise go back to our
+    // original position
 
     if (pText.isEmpty())
         mEditor->setSelection(mLine, mColumn, mLine, mColumn);
     else
-        mEditor->findFirst(pText, false, false, false, false, true, mLine, mColumn);
+        mEditor->findFirst(pText, false, false, false, true, true, mLine, mColumn);
 }
 
 //==============================================================================
