@@ -396,23 +396,35 @@ void GuiInterface::setMainWindow(QMainWindow *pMainWindow)
 
 //==============================================================================
 
-QMenu * GuiInterface::newMenu(QWidget *pParent,
-                              const QString &pNameOrIconResource,
-                              const bool &pProvidedName)
+QMenu * GuiInterface::newMenu(QWidget *pParent)
+{
+    // Create and return a menu
+
+    return new QMenu(pParent);
+}
+
+//==============================================================================
+
+QMenu * GuiInterface::newMenu(const QString &pName, QWidget *pParent)
 {
     // Create and return a menu
 
     QMenu *res = new QMenu(pParent);
 
-    if (pProvidedName)
-        res->setObjectName("menu"+pNameOrIconResource.left(1).toUpper()+pNameOrIconResource.right(pNameOrIconResource.size()-1));
-        // Note #1: the object name must also be set for the main window to be
-        //          able to reconcile different menus with the same name (and
-        //          therefore merge their contents, if needed)...
-        // Note #2: the naming is such to respect the one used in the main
-        //          window...
-    else
-        res->menuAction()->setIcon(QIcon(pNameOrIconResource));
+    res->setObjectName("menu"+pName.left(1).toUpper()+pName.right(pName.size()-1));
+
+    return res;
+}
+
+//==============================================================================
+
+QMenu * GuiInterface::newMenu(const QIcon &pIcon, QWidget *pParent)
+{
+    // Create and return a menu
+
+    QMenu *res = new QMenu(pParent);
+
+    res->menuAction()->setIcon(pIcon);
 
     return res;
 }

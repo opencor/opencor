@@ -70,7 +70,7 @@ EditorFindReplaceWidget::EditorFindReplaceWidget(QWidget *pParent) :
     mCaseSensitiveAction = GuiInterface::newAction(this, true);
     mWholeWordsOnlyAction = GuiInterface::newAction(this, true);
 
-    QMenu *dropDownMenu = GuiInterface::newMenu(this, QString());
+    QMenu *dropDownMenu = GuiInterface::newMenu(this);
 
     dropDownMenu->addAction(mRegularExpressionAction);
     dropDownMenu->addAction(mCaseSensitiveAction);

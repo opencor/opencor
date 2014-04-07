@@ -86,7 +86,7 @@ void CellMLToolsPlugin::initialize()
 {
     // Create our Tools | Export To menu
 
-    mCellmlFileExportToMenu = newMenu(mMainWindow, "CellmlFileExportTo");
+    mCellmlFileExportToMenu = newMenu("CellmlFileExportTo", mMainWindow);
 
     // Create our different Tools | Export To actions, and add them to our
     // Tools | Export To menu

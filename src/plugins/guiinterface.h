@@ -206,8 +206,9 @@ public:
 
     GuiSettings * guiSettings() const;
 
-    static QMenu * newMenu(QWidget *pParent, const QString &pNameOrIconResource,
-                           const bool &pProvidedName = true);
+    static QMenu * newMenu(QWidget *pParent = 0);
+    static QMenu * newMenu(const QString &pName, QWidget *pParent = 0);
+    static QMenu * newMenu(const QIcon &pIcon, QWidget *pParent = 0);
 
     static QAction * newAction(QWidget *pParent, const bool &pCheckable,
                                const QString &pIconResource,

@@ -144,9 +144,8 @@ void CorePlugin::initialize()
 
     // Create our Reopen sub-menu
 
-    mFileReopenSubMenu = newMenu(mMainWindow,
-                                 ":/oxygen/actions/document-open-recent.png",
-                                 false);
+    mFileReopenSubMenu = newMenu(QIcon(":/oxygen/actions/document-open-recent.png"),
+                                 mMainWindow);
 
     mFileReopenSubMenuSeparator = newAction(mMainWindow);
     mFileClearReopenSubMenuAction = newAction(mMainWindow);
