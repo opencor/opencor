@@ -176,7 +176,7 @@ private:
 
     void updateSimulationMode();
 
-    int tabBarIconSize() const;
+    int tabBarImageSize() const;
 
     void updateRunPauseAction(const bool &pRunActionEnabled);
 

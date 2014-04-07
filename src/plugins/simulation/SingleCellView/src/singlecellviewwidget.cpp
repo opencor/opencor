@@ -60,6 +60,7 @@ specific language governing permissions and limitations under the License.
 #include <QScrollBar>
 #include <QSettings>
 #include <QSplitter>
+#include <QStyle>
 #include <QTextEdit>
 #include <QTimer>
 #include <QToolButton>
@@ -885,7 +886,7 @@ void SingleCellViewWidget::finalize(const QString &pFileName)
 
 //==============================================================================
 
-int SingleCellViewWidget::tabBarIconSize() const
+int SingleCellViewWidget::tabBarImageSize() const
 {
     // Return the size of a file tab icon
 
@@ -896,7 +897,7 @@ int SingleCellViewWidget::tabBarIconSize() const
 
 QIcon SingleCellViewWidget::fileTabIcon(const QString &pFileName) const
 {
-    // Return a file tab icon which shows the given file's simulation progress
+    // Return a file tab icon that shows the given file's simulation progress
 
     SingleCellViewSimulation *simulation = mSimulations.value(pFileName);
     int progress = simulation?mProgresses.value(simulation->fileName(), -1):-1;
@@ -904,18 +905,18 @@ QIcon SingleCellViewWidget::fileTabIcon(const QString &pFileName) const
     if (simulation && (progress != -1)) {
         // Create an image that shows the progress of our simulation
 
-        QImage tabBarIcon = QImage(tabBarIconSize(), mProgressBarWidget->height()+2,
-                                   QImage::Format_ARGB32_Premultiplied);
-        QPainter tabBarIconPainter(&tabBarIcon);
+        QImage tabBarImage = QImage(tabBarImageSize(), mProgressBarWidget->height()+2,
+                                    QImage::Format_ARGB32_Premultiplied);
+        QPainter tabBarImagePainter(&tabBarImage);
 
-        tabBarIconPainter.setBrush(QBrush(Core::windowColor()));
-        tabBarIconPainter.setPen(QPen(Core::borderColor()));
+        tabBarImagePainter.setBrush(QBrush(Core::windowColor()));
+        tabBarImagePainter.setPen(QPen(Core::borderColor()));
 
-        tabBarIconPainter.drawRect(0, 0, tabBarIcon.width()-1, tabBarIcon.height()-1);
-        tabBarIconPainter.fillRect(1, 1, progress, tabBarIcon.height()-2,
-                                   Core::highlightColor());
+        tabBarImagePainter.drawRect(0, 0, tabBarImage.width()-1, tabBarImage.height()-1);
+        tabBarImagePainter.fillRect(1, 1, progress, tabBarImage.height()-2,
+                                    Core::highlightColor());
 
-        return QIcon(QPixmap::fromImage(tabBarIcon));
+        return QIcon(QPixmap::fromImage(tabBarImage));
     } else {
         // No simulation object currently exists for the model, so...
 
@@ -1924,8 +1925,8 @@ void SingleCellViewWidget::updateResults(SingleCellViewSimulation *pSimulation,
         //       simulation the update is...
 
         int oldProgress = mProgresses.value(pSimulation->fileName(), -1);
-        int newProgress = (tabBarIconSize()-2)*pSimulation->progress();
-        // Note: tabBarIconSize()-2 because we want a one-pixel wide border...
+        int newProgress = (tabBarImageSize()-2)*pSimulation->progress();
+        // Note: tabBarImageSize()-2 because we want a one-pixel wide border...
 
         if (newProgress != oldProgress) {
             // The progress has changed, so keep track of its new value and
