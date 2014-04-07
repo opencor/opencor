@@ -54,7 +54,7 @@ void CellMLModelRepositoryPlugin::initialize()
 {
     // Create an action to show/hide our CellML Model Repository window
 
-    mCellmlModelRepositoryAction = newAction(mMainWindow, true);
+    mCellmlModelRepositoryAction = newAction(true, mMainWindow);
 
     // Create our CellML Model Repository window
 

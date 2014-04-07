@@ -54,9 +54,8 @@ void HelpPlugin::initialize()
 {
     // Create an action to show/hide our help window
 
-    mHelpAction = newAction(mMainWindow, true,
-                            ":/oxygen/apps/help-browser.png",
-                            Qt::Key_F1);
+    mHelpAction = newAction(true, QIcon(":/oxygen/apps/help-browser.png"),
+                            Qt::Key_F1, mMainWindow);
 
     // Create our help window
 

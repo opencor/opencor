@@ -56,8 +56,8 @@ void CoreCellMLEditingPlugin::initialize()
 {
     // Create our different File|New actions
 
-    mFileNewCellml1_0FileAction = newAction(mMainWindow);
-    mFileNewCellml1_1FileAction = newAction(mMainWindow);
+    mFileNewCellml1_0FileAction = new QAction(mMainWindow);
+    mFileNewCellml1_1FileAction = new QAction(mMainWindow);
 
     // Set our settings
 

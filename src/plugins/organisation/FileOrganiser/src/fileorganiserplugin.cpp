@@ -54,7 +54,7 @@ void FileOrganiserPlugin::initialize()
 {
     // Create an action to show/hide our file organiser window
 
-    mFileOrganiserAction = newAction(mMainWindow, true);
+    mFileOrganiserAction = newAction(true, mMainWindow);
 
     // Create our file organiser window
 

@@ -454,7 +454,7 @@ QAction * ViewerWidget::newAction()
 {
     // Create and return a checkable and checked action
 
-    QAction *res = GuiInterface::newAction(this, true);
+    QAction *res = GuiInterface::newAction(true, this);
 
     res->setChecked(true);
 

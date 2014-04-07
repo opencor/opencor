@@ -64,13 +64,13 @@ EditorFindReplaceWidget::EditorFindReplaceWidget(QWidget *pParent) :
 
     // Create and handle our drop-down menu action
 
-    mDropDownAction = GuiInterface::newAction(this, false, ":/qtCreator/src/plugins/coreplugin/images/magnifier.png", QKeySequence());
+    mDropDownAction = GuiInterface::newAction(QIcon(":/qtCreator/src/plugins/coreplugin/images/magnifier.png"), this);
 
-    mRegularExpressionAction = GuiInterface::newAction(this, true);
-    mCaseSensitiveAction = GuiInterface::newAction(this, true);
-    mWholeWordsOnlyAction = GuiInterface::newAction(this, true);
+    mRegularExpressionAction = GuiInterface::newAction(true, this);
+    mCaseSensitiveAction = GuiInterface::newAction(true, this);
+    mWholeWordsOnlyAction = GuiInterface::newAction(true, this);
 
-    QMenu *dropDownMenu = GuiInterface::newMenu(this);
+    QMenu *dropDownMenu = new QMenu(this);
 
     dropDownMenu->addAction(mRegularExpressionAction);
     dropDownMenu->addAction(mCaseSensitiveAction);
@@ -82,7 +82,7 @@ EditorFindReplaceWidget::EditorFindReplaceWidget(QWidget *pParent) :
 
     // Create and handle our clear text action
 
-    mClearTextAction = GuiInterface::newAction(this, false, ":/qtCreator/src/plugins/coreplugin/images/editclear.png", QKeySequence());
+    mClearTextAction = GuiInterface::newAction(QIcon(":/qtCreator/src/plugins/coreplugin/images/editclear.png"), this);
 
     connect(mClearTextAction, SIGNAL(triggered()),
             mGui->findEdit, SLOT(clear()));

@@ -206,19 +206,22 @@ public:
 
     GuiSettings * guiSettings() const;
 
-    static QMenu * newMenu(QWidget *pParent = 0);
     static QMenu * newMenu(const QString &pName, QWidget *pParent = 0);
     static QMenu * newMenu(const QIcon &pIcon, QWidget *pParent = 0);
 
-    static QAction * newAction(QWidget *pParent, const bool &pCheckable,
-                               const QString &pIconResource,
-                               const QList<QKeySequence> &pKeySequences);
-    static QAction * newAction(QWidget *pParent, const bool &pCheckable,
-                               const QString &pIconResource,
-                               const QKeySequence::StandardKey &pStandardKey = QKeySequence::UnknownKey);
-    static QAction * newAction(QWidget *pParent, const bool &pCheckable = false,
-                               const QString &pIconResource = QString(),
-                               const QKeySequence &pKeySequence = QKeySequence());
+    static QAction * newAction(const bool &pCheckable, const QIcon &pIcon,
+                               const QKeySequence &pKeySequence,
+                               QWidget *pParent);
+    static QAction * newAction(const bool &pCheckable,
+                               const QKeySequence &pKeySequence,
+                               QWidget *pParent = 0);
+    static QAction * newAction(const bool &pCheckable, QWidget *pParent = 0);
+    static QAction * newAction(const QIcon &pIcon,
+                               const QKeySequence &pKeySequence,
+                               QWidget *pParent = 0);
+    static QAction * newAction(const QIcon &pIcon, QWidget *pParent = 0);
+    static QAction * newAction(const QKeySequence &pKeySequence,
+                               QWidget *pParent = 0);
 
     static void retranslateMenu(QMenu *pMenu, const QString &pTitle);
     static void retranslateAction(QAction *pAction, const QString &pText,

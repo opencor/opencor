@@ -54,10 +54,6 @@ PLUGININFO_FUNC CoreEditingPluginInfo();
 
 //==============================================================================
 
-static const auto EditGroup = QStringLiteral("Edit");
-
-//==============================================================================
-
 class COREEDITING_EXPORT CoreEditingPlugin : public QObject,
                                              public CoreInterface,
                                              public GuiInterface,

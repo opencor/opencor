@@ -54,7 +54,7 @@ void FileBrowserPlugin::initialize()
 {
     // Create an action to show/hide our file browser window
 
-    mFileBrowserAction = newAction(mMainWindow, true);
+    mFileBrowserAction = newAction(true, mMainWindow);
 
     // Create our file browser window
 

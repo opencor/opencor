@@ -396,15 +396,6 @@ void GuiInterface::setMainWindow(QMainWindow *pMainWindow)
 
 //==============================================================================
 
-QMenu * GuiInterface::newMenu(QWidget *pParent)
-{
-    // Create and return a menu
-
-    return new QMenu(pParent);
-}
-
-//==============================================================================
-
 QMenu * GuiInterface::newMenu(const QString &pName, QWidget *pParent)
 {
     // Create and return a menu
@@ -431,43 +422,91 @@ QMenu * GuiInterface::newMenu(const QIcon &pIcon, QWidget *pParent)
 
 //==============================================================================
 
-QAction * GuiInterface::newAction(QWidget *pParent, const bool &pCheckable,
-                                  const QString &pIconResource,
-                                  const QList<QKeySequence> &pKeySequences)
+QAction * GuiInterface::newAction(const bool &pCheckable, const QIcon &pIcon,
+                                  const QKeySequence &pKeySequence,
+                                  QWidget *pParent)
 {
     // Create and return an action
 
     QAction *res = new QAction(pParent);
 
     res->setCheckable(pCheckable);
-    res->setIcon(QIcon(pIconResource));
-    res->setShortcuts(pKeySequences);
+    res->setIcon(pIcon);
+    res->setShortcut(pKeySequence);
 
     return res;
 }
 
 //==============================================================================
 
-QAction * GuiInterface::newAction(QWidget *pParent, const bool &pCheckable,
-                                  const QString &pIconResource,
-                                  const QKeySequence::StandardKey &pStandardKey)
+QAction * GuiInterface::newAction(const bool &pCheckable,
+                                  const QKeySequence &pKeySequence,
+                                  QWidget *pParent)
 {
     // Create and return an action
 
-    return newAction(pParent, pCheckable, pIconResource,
-                     QKeySequence::keyBindings(pStandardKey));
+    QAction *res = new QAction(pParent);
+
+    res->setCheckable(pCheckable);
+    res->setShortcut(pKeySequence);
+
+    return res;
 }
 
 //==============================================================================
 
-QAction * GuiInterface::newAction(QWidget *pParent, const bool &pCheckable,
-                                  const QString &pIconResource,
-                                  const QKeySequence &pKeySequence)
+QAction * GuiInterface::newAction(const bool &pCheckable, QWidget *pParent)
 {
     // Create and return an action
 
-    return newAction(pParent, pCheckable, pIconResource,
-                     QList<QKeySequence>() << pKeySequence);
+    QAction *res = new QAction(pParent);
+
+    res->setCheckable(pCheckable);
+
+    return res;
+}
+
+//==============================================================================
+
+QAction * GuiInterface::newAction(const QIcon &pIcon,
+                                  const QKeySequence &pKeySequence,
+                                  QWidget *pParent)
+{
+    // Create and return an action
+
+    QAction *res = new QAction(pParent);
+
+    res->setIcon(pIcon);
+    res->setShortcut(pKeySequence);
+
+    return res;
+}
+
+//==============================================================================
+
+QAction * GuiInterface::newAction(const QIcon &pIcon, QWidget *pParent)
+{
+    // Create and return an action
+
+    QAction *res = new QAction(pParent);
+
+    res->setIcon(pIcon);
+
+    return res;
+}
+
+//==============================================================================
+
+QAction * GuiInterface::newAction(const QKeySequence &pKeySequence,
+                                  QWidget *pParent)
+{
+    // Create and return an action
+
+    QAction *res = new QAction(pParent);
+
+    res->setShortcut(pKeySequence);
+
+    return res;
 }
 
 //==============================================================================

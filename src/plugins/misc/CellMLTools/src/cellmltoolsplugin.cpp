@@ -91,10 +91,10 @@ void CellMLToolsPlugin::initialize()
     // Create our different Tools | Export To actions, and add them to our
     // Tools | Export To menu
 
-    mExportToCellml10Action = newAction(mMainWindow);
-    mExportToCellml11Action = newAction(mMainWindow);
+    mExportToCellml10Action = new QAction(mMainWindow);
+    mExportToCellml11Action = new QAction(mMainWindow);
 
-    mExportToUserDefinedFormatAction = newAction(mMainWindow);
+    mExportToUserDefinedFormatAction = new QAction(mMainWindow);
 
     mCellmlFileExportToMenu->addAction(mExportToCellml10Action);
     mCellmlFileExportToMenu->addAction(mExportToCellml11Action);
