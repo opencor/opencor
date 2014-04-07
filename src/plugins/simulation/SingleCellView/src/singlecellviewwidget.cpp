@@ -51,12 +51,12 @@ specific language governing permissions and limitations under the License.
 #include <QDir>
 #include <QFileDialog>
 #include <QFrame>
-#include <QImage>
 #include <QLabel>
 #include <QMenu>
 #include <QMessageBox>
 #include <QMetaType>
 #include <QPainter>
+#include <QPixmap>
 #include <QScrollBar>
 #include <QSettings>
 #include <QSplitter>
@@ -886,7 +886,7 @@ void SingleCellViewWidget::finalize(const QString &pFileName)
 
 //==============================================================================
 
-int SingleCellViewWidget::tabBarImageSize() const
+int SingleCellViewWidget::tabBarPixmapSize() const
 {
     // Return the size of a file tab icon
 
@@ -905,18 +905,18 @@ QIcon SingleCellViewWidget::fileTabIcon(const QString &pFileName) const
     if (simulation && (progress != -1)) {
         // Create an image that shows the progress of our simulation
 
-        QImage tabBarImage = QImage(tabBarImageSize(), mProgressBarWidget->height()+2,
-                                    QImage::Format_ARGB32_Premultiplied);
-        QPainter tabBarImagePainter(&tabBarImage);
+        QPixmap tabBarPixmap = QPixmap(tabBarPixmapSize(),
+                                       mProgressBarWidget->height()+2);
+        QPainter tabBarPixmapPainter(&tabBarPixmap);
 
-        tabBarImagePainter.setBrush(QBrush(Core::windowColor()));
-        tabBarImagePainter.setPen(QPen(Core::borderColor()));
+        tabBarPixmapPainter.setBrush(QBrush(Core::windowColor()));
+        tabBarPixmapPainter.setPen(QPen(Core::borderColor()));
 
-        tabBarImagePainter.drawRect(0, 0, tabBarImage.width()-1, tabBarImage.height()-1);
-        tabBarImagePainter.fillRect(1, 1, progress, tabBarImage.height()-2,
+        tabBarPixmapPainter.drawRect(0, 0, tabBarPixmap.width()-1, tabBarPixmap.height()-1);
+        tabBarPixmapPainter.fillRect(1, 1, progress, tabBarPixmap.height()-2,
                                     Core::highlightColor());
 
-        return QIcon(QPixmap::fromImage(tabBarImage));
+        return QIcon(tabBarPixmap);
     } else {
         // No simulation object currently exists for the model, so...
 
@@ -1925,8 +1925,8 @@ void SingleCellViewWidget::updateResults(SingleCellViewSimulation *pSimulation,
         //       simulation the update is...
 
         int oldProgress = mProgresses.value(pSimulation->fileName(), -1);
-        int newProgress = (tabBarImageSize()-2)*pSimulation->progress();
-        // Note: tabBarImageSize()-2 because we want a one-pixel wide border...
+        int newProgress = (tabBarPixmapSize()-2)*pSimulation->progress();
+        // Note: tabBarPixmapSize()-2 because we want a one-pixel wide border...
 
         if (newProgress != oldProgress) {
             // The progress has changed, so keep track of its new value and
