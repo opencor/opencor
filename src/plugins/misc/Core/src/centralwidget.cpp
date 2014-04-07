@@ -765,9 +765,8 @@ void CentralWidget::openRemoteFile(const QString &pUrl,
         QString errorMessage;
 
         if (readTextFromUrl(url, fileContents, errorMessage)) {
-            // We were able to retrieve the contents of the remote file, so
-            // either ask our file manager to create a new remote file or let
-            // people know that we have just reloaded a remote file
+            // We were able to retrieve the contents of the remote file, so ask
+            // our file manager to create a new remote file
 
             Core::FileManager *fileManagerInstance = Core::FileManager::instance();
 
