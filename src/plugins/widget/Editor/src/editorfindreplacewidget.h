@@ -59,16 +59,29 @@ public:
 
     virtual void retranslateUi();
 
+    bool regularExpression() const;
+    bool caseSensitive() const;
+    bool wholeWordsOnly() const;
+
 protected:
     virtual void keyPressEvent(QKeyEvent *pEvent);
 
 private:
     Ui::EditorFindReplaceWidget *mGui;
 
+    bool mRegularExpression;
+    bool mCaseSensitive;
+    bool mWholeWordsOnly;
+
+    QAction *mClearTextAction;
+
 Q_SIGNALS:
     void keyPressed(QKeyEvent *pEvent, bool &pHandled);
 
     void findTextChanged(const QString &pText);
+
+private Q_SLOTS:
+    void updateClearTextAction(const QString &pText);
 };
 
 //==============================================================================

@@ -20,6 +20,7 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include "editorfindreplacewidget.h"
+#include "guiinterface.h"
 
 //==============================================================================
 
@@ -31,6 +32,7 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#include <QAction>
 #include <QKeyEvent>
 #include <QGridLayout>
 #include <QLabel>
@@ -46,7 +48,10 @@ namespace Editor {
 
 EditorFindReplaceWidget::EditorFindReplaceWidget(QWidget *pParent) :
     Core::Widget(pParent),
-    mGui(new Ui::EditorFindReplaceWidget)
+    mGui(new Ui::EditorFindReplaceWidget),
+    mRegularExpression(false),
+    mCaseSensitive(false),
+    mWholeWordsOnly(false)
 {
     // Set up the GUI
 
@@ -59,6 +64,13 @@ EditorFindReplaceWidget::EditorFindReplaceWidget(QWidget *pParent) :
     //       our edit widgets...
 #endif
 
+    // Create and handle our clear text action
+
+    mClearTextAction = GuiInterface::newAction(this, false, ":/qtCreator/src/plugins/coreplugin/images/editclear.png", QKeySequence());
+
+    connect(mClearTextAction, SIGNAL(triggered()),
+            mGui->findEdit, SLOT(clear()));
+
     // Make sure that we take as little vertical space as possible whilte as
     // much horizontal space as possible
 
@@ -68,10 +80,16 @@ EditorFindReplaceWidget::EditorFindReplaceWidget(QWidget *pParent) :
 
     setFocusProxy(mGui->findEdit);
 
-    // Forward some signals
+    // Some connections for our find widget
 
     connect(mGui->findEdit, SIGNAL(textChanged(const QString &)),
             this, SIGNAL(findTextChanged(const QString &)));
+    connect(mGui->findEdit, SIGNAL(textChanged(const QString &)),
+            this, SLOT(updateClearTextAction(const QString &)));
+
+    // Retranslate ourselves, so that we are properly initialised
+
+    retranslateUi();
 }
 
 //==============================================================================
@@ -81,6 +99,37 @@ void EditorFindReplaceWidget::retranslateUi()
     // Retranslate our GUI
 
     mGui->retranslateUi(this);
+
+    // Retranslate our actions
+
+    GuiInterface::retranslateAction(mClearTextAction, tr("Clear the text"));
+}
+
+//==============================================================================
+
+bool EditorFindReplaceWidget::regularExpression() const
+{
+    // Return whether we use a regular expression
+
+    return mRegularExpression;
+}
+
+//==============================================================================
+
+bool EditorFindReplaceWidget::caseSensitive() const
+{
+    // Return whether the search is to be case sensitive
+
+    return mCaseSensitive;
+}
+
+//==============================================================================
+
+bool EditorFindReplaceWidget::wholeWordsOnly() const
+{
+    // Return whether we search whole words only
+
+    return mWholeWordsOnly;
 }
 
 //==============================================================================
@@ -103,6 +152,19 @@ void EditorFindReplaceWidget::keyPressEvent(QKeyEvent *pEvent)
         // Default handling of the event
 
         QWidget::keyPressEvent(pEvent);
+}
+
+//==============================================================================
+
+void EditorFindReplaceWidget::updateClearTextAction(const QString &pText)
+{
+    // Show/hide our clear text action, based on whether our find widget
+    // contains some text
+
+    if (pText.isEmpty())
+        mGui->findEdit->removeAction(mClearTextAction);
+    else
+        mGui->findEdit->addAction(mClearTextAction, QLineEdit::TrailingPosition);
 }
 
 //==============================================================================

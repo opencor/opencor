@@ -12,4 +12,11 @@
         <translation>Trouver :</translation>
     </message>
 </context>
+<context>
+    <name>OpenCOR::Editor::EditorFindReplaceWidget</name>
+    <message>
+        <source>Clear the text</source>
+        <translation>Effacer le texte</translation>
+    </message>
+</context>
 </TS>

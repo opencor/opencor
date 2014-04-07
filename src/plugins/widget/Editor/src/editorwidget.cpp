@@ -521,7 +521,11 @@ void EditorWidget::findTextChanged(const QString &pText)
     if (pText.isEmpty())
         mEditor->setSelection(mLine, mColumn, mLine, mColumn);
     else
-        mEditor->findFirst(pText, false, false, false, true, true, mLine, mColumn);
+        mEditor->findFirst(pText,
+                           mFindReplace->regularExpression(),
+                           mFindReplace->caseSensitive(),
+                           mFindReplace->wholeWordsOnly(),
+                           true, true, mLine, mColumn);
 }
 
 //==============================================================================
