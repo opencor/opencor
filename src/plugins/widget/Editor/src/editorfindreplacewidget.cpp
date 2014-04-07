@@ -39,6 +39,8 @@ specific language governing permissions and limitations under the License.
 #include <QLayout>
 #include <QLineEdit>
 #include <QMenu>
+#include <QPainter>
+#include <QPixmap>
 
 //==============================================================================
 
@@ -64,21 +66,28 @@ EditorFindReplaceWidget::EditorFindReplaceWidget(QWidget *pParent) :
 
     // Create and handle our drop-down menu action
 
-    mDropDownAction = GuiInterface::newAction(QIcon(":/qtCreator/src/plugins/coreplugin/images/magnifier.png"), this);
+    mDropDownAction = new QAction(this);
 
-    mRegularExpressionAction = GuiInterface::newAction(true, this);
     mCaseSensitiveAction = GuiInterface::newAction(true, this);
     mWholeWordsOnlyAction = GuiInterface::newAction(true, this);
+    mRegularExpressionAction = GuiInterface::newAction(true, this);
 
     QMenu *dropDownMenu = new QMenu(this);
 
-    dropDownMenu->addAction(mRegularExpressionAction);
     dropDownMenu->addAction(mCaseSensitiveAction);
     dropDownMenu->addAction(mWholeWordsOnlyAction);
+    dropDownMenu->addAction(mRegularExpressionAction);
 
     mDropDownAction->setMenu(dropDownMenu);
 
     mGui->findEdit->addAction(mDropDownAction, QLineEdit::LeadingPosition);
+
+    connect(mCaseSensitiveAction, SIGNAL(toggled(bool)),
+            this, SLOT(searchOptionChanged()));
+    connect(mWholeWordsOnlyAction, SIGNAL(toggled(bool)),
+            this, SLOT(searchOptionChanged()));
+    connect(mRegularExpressionAction, SIGNAL(toggled(bool)),
+            this, SLOT(searchOptionChanged()));
 
     // Create and handle our clear text action
 
@@ -103,9 +112,12 @@ EditorFindReplaceWidget::EditorFindReplaceWidget(QWidget *pParent) :
     connect(mGui->findEdit, SIGNAL(textChanged(const QString &)),
             this, SLOT(updateClearTextAction(const QString &)));
 
-    // Retranslate ourselves, so that we are properly initialised
+    // Retranslate ourselves and call searchOptionChanged(), so that we are
+    // properly initialised
 
     retranslateUi();
+
+    searchOptionChanged();
 }
 
 //==============================================================================
@@ -118,20 +130,11 @@ void EditorFindReplaceWidget::retranslateUi()
 
     // Retranslate our actions
 
-    GuiInterface::retranslateAction(mRegularExpressionAction, tr("Regular Expression"));
     GuiInterface::retranslateAction(mCaseSensitiveAction, tr("Case Sensitive"));
     GuiInterface::retranslateAction(mWholeWordsOnlyAction, tr("Whole Words Only"));
+    GuiInterface::retranslateAction(mRegularExpressionAction, tr("Regular Expression"));
 
     GuiInterface::retranslateAction(mClearTextAction, tr("Clear the text"));
-}
-
-//==============================================================================
-
-bool EditorFindReplaceWidget::regularExpression() const
-{
-    // Return whether we use a regular expression
-
-    return mRegularExpressionAction->isChecked();
 }
 
 //==============================================================================
@@ -154,6 +157,15 @@ bool EditorFindReplaceWidget::wholeWordsOnly() const
 
 //==============================================================================
 
+bool EditorFindReplaceWidget::regularExpression() const
+{
+    // Return whether we use a regular expression
+
+    return mRegularExpressionAction->isChecked();
+}
+
+//==============================================================================
+
 void EditorFindReplaceWidget::keyPressEvent(QKeyEvent *pEvent)
 {
     // Let people know that a key has been pressed
@@ -172,6 +184,60 @@ void EditorFindReplaceWidget::keyPressEvent(QKeyEvent *pEvent)
         // Default handling of the event
 
         QWidget::keyPressEvent(pEvent);
+}
+
+//==============================================================================
+
+void EditorFindReplaceWidget::searchOptionChanged()
+{
+    // Update the icon used for the leading position of our find widget
+
+    int nbOfOptions =  mCaseSensitiveAction->isChecked()
+                      +mWholeWordsOnlyAction->isChecked()
+                      +mRegularExpressionAction->isChecked();
+
+    if (nbOfOptions) {
+        static QIcon caseSensitiveIcon = QIcon(":/qtCreator/src/plugins/coreplugin/find/images/casesensitively.png");
+        static QIcon wholeWordsOnlyIcon = QIcon(":/qtCreator/src/plugins/coreplugin/find/images/wholewords.png");
+        static QIcon regularExpressionIcon = QIcon(":/qtCreator/src/plugins/coreplugin/find/images/regexp.png");
+
+        static int IconSize = 16;
+        static int IconWidth = 6;
+
+        QPixmap dropDownPixmap = QPixmap(nbOfOptions*IconWidth-mRegularExpressionAction->isChecked()-1,
+                                         IconSize);
+        // Note: IconWidth-1, because regularExpressionIcon is effectively one
+        //       pixel narrower than caseSensitiveIcon and wholeWordsOnlyIcon...
+
+        dropDownPixmap.fill(Qt::transparent);
+
+        QPainter dropDownPixmapPainter(&dropDownPixmap);
+
+        int left = -IconWidth;
+
+        if (mCaseSensitiveAction->isChecked()) {
+            caseSensitiveIcon.paint(&dropDownPixmapPainter, left, 0, IconSize, IconSize);
+
+            left += IconWidth;
+        }
+
+        if (mWholeWordsOnlyAction->isChecked()) {
+            wholeWordsOnlyIcon.paint(&dropDownPixmapPainter, left, 0, IconSize, IconSize);
+
+            left += IconWidth;
+        }
+
+        if (mRegularExpressionAction->isChecked())
+            regularExpressionIcon.paint(&dropDownPixmapPainter, left-1, 0, IconSize, IconSize);
+
+        mDropDownAction->setIcon(dropDownPixmap);
+    } else {
+        // No options are set, so use our default icon
+
+        static QIcon defaultIcon = QIcon(":/qtCreator/src/plugins/coreplugin/images/magnifier.png");
+
+        mDropDownAction->setIcon(defaultIcon);
+    }
 }
 
 //==============================================================================

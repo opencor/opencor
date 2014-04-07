@@ -1,5 +1,8 @@
 <RCC>
     <qresource prefix="/">
+        <file>qtCreator/src/plugins/coreplugin/find/images/casesensitively.png</file>
+        <file>qtCreator/src/plugins/coreplugin/find/images/regexp.png</file>
+        <file>qtCreator/src/plugins/coreplugin/find/images/wholewords.png</file>
         <file>qtCreator/src/plugins/coreplugin/images/editclear.png</file>
         <file>qtCreator/src/plugins/coreplugin/images/magnifier.png</file>
         <file alias="Editor_fr">../../../../../build/Editor_fr.qm</file>

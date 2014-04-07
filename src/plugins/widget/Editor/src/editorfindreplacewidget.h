@@ -59,9 +59,9 @@ public:
 
     virtual void retranslateUi();
 
-    bool regularExpression() const;
     bool caseSensitive() const;
     bool wholeWordsOnly() const;
+    bool regularExpression() const;
 
 protected:
     virtual void keyPressEvent(QKeyEvent *pEvent);
@@ -71,9 +71,9 @@ private:
 
     QAction *mDropDownAction;
 
-    QAction *mRegularExpressionAction;
     QAction *mCaseSensitiveAction;
     QAction *mWholeWordsOnlyAction;
+    QAction *mRegularExpressionAction;
 
     QAction *mClearTextAction;
 
@@ -83,6 +83,8 @@ Q_SIGNALS:
     void findTextChanged(const QString &pText);
 
 private Q_SLOTS:
+    void searchOptionChanged();
+
     void updateClearTextAction(const QString &pText);
 };
 
