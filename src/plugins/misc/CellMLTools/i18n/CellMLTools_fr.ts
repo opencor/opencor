@@ -33,7 +33,7 @@
     </message>
     <message>
         <source>User-Defined Format...</source>
-        <translation>Format Défini Par L&apos;Utilisateur...</translation>
+        <translation>Format Défini Par Utilisateur...</translation>
     </message>
     <message>
         <source>Export the CellML file to some user-defined format</source>

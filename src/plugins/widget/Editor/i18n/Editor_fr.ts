@@ -24,7 +24,7 @@
     </message>
     <message>
         <source>Case Sensitive</source>
-        <translation>Sensible À La Différence Majuscules-Minuscules</translation>
+        <translation>Sensible À Différence Majuscules-Minuscules</translation>
     </message>
     <message>
         <source>Whole Words Only</source>
