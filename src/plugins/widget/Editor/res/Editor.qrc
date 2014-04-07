@@ -1,6 +1,7 @@
 <RCC>
     <qresource prefix="/">
         <file>qtCreator/src/plugins/coreplugin/images/editclear.png</file>
+        <file>qtCreator/src/plugins/coreplugin/images/magnifier.png</file>
         <file alias="Editor_fr">../../../../../build/Editor_fr.qm</file>
     </qresource>
 </RCC>

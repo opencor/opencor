@@ -69,9 +69,11 @@ protected:
 private:
     Ui::EditorFindReplaceWidget *mGui;
 
-    bool mRegularExpression;
-    bool mCaseSensitive;
-    bool mWholeWordsOnly;
+    QAction *mDropDownAction;
+
+    QAction *mRegularExpressionAction;
+    QAction *mCaseSensitiveAction;
+    QAction *mWholeWordsOnlyAction;
 
     QAction *mClearTextAction;
 

@@ -38,6 +38,7 @@ specific language governing permissions and limitations under the License.
 #include <QLabel>
 #include <QLayout>
 #include <QLineEdit>
+#include <QMenu>
 
 //==============================================================================
 
@@ -48,10 +49,7 @@ namespace Editor {
 
 EditorFindReplaceWidget::EditorFindReplaceWidget(QWidget *pParent) :
     Core::Widget(pParent),
-    mGui(new Ui::EditorFindReplaceWidget),
-    mRegularExpression(false),
-    mCaseSensitive(false),
-    mWholeWordsOnly(false)
+    mGui(new Ui::EditorFindReplaceWidget)
 {
     // Set up the GUI
 
@@ -63,6 +61,24 @@ EditorFindReplaceWidget::EditorFindReplaceWidget(QWidget *pParent) :
     // Note: the above remove the focus border since it messes up the look of
     //       our edit widgets...
 #endif
+
+    // Create and handle our drop-down menu action
+
+    mDropDownAction = GuiInterface::newAction(this, false, ":/qtCreator/src/plugins/coreplugin/images/magnifier.png", QKeySequence());
+
+    mRegularExpressionAction = GuiInterface::newAction(this, true);
+    mCaseSensitiveAction = GuiInterface::newAction(this, true);
+    mWholeWordsOnlyAction = GuiInterface::newAction(this, true);
+
+    QMenu *dropDownMenu = GuiInterface::newMenu(this, QString());
+
+    dropDownMenu->addAction(mRegularExpressionAction);
+    dropDownMenu->addAction(mCaseSensitiveAction);
+    dropDownMenu->addAction(mWholeWordsOnlyAction);
+
+    mDropDownAction->setMenu(dropDownMenu);
+
+    mGui->findEdit->addAction(mDropDownAction, QLineEdit::LeadingPosition);
 
     // Create and handle our clear text action
 
@@ -102,6 +118,10 @@ void EditorFindReplaceWidget::retranslateUi()
 
     // Retranslate our actions
 
+    GuiInterface::retranslateAction(mRegularExpressionAction, tr("Regular Expression"));
+    GuiInterface::retranslateAction(mCaseSensitiveAction, tr("Case Sensitive"));
+    GuiInterface::retranslateAction(mWholeWordsOnlyAction, tr("Whole Words Only"));
+
     GuiInterface::retranslateAction(mClearTextAction, tr("Clear the text"));
 }
 
@@ -111,7 +131,7 @@ bool EditorFindReplaceWidget::regularExpression() const
 {
     // Return whether we use a regular expression
 
-    return mRegularExpression;
+    return mRegularExpressionAction->isChecked();
 }
 
 //==============================================================================
@@ -120,7 +140,7 @@ bool EditorFindReplaceWidget::caseSensitive() const
 {
     // Return whether the search is to be case sensitive
 
-    return mCaseSensitive;
+    return mCaseSensitiveAction->isChecked();
 }
 
 //==============================================================================
@@ -129,7 +149,7 @@ bool EditorFindReplaceWidget::wholeWordsOnly() const
 {
     // Return whether we search whole words only
 
-    return mWholeWordsOnly;
+    return mWholeWordsOnlyAction->isChecked();
 }
 
 //==============================================================================

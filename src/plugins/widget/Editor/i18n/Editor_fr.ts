@@ -18,5 +18,17 @@
         <source>Clear the text</source>
         <translation>Effacer le texte</translation>
     </message>
+    <message>
+        <source>Regular Expression</source>
+        <translation>Expression Régulière</translation>
+    </message>
+    <message>
+        <source>Case Sensitive</source>
+        <translation>Sensible À La Différence Majuscules-Minuscules</translation>
+    </message>
+    <message>
+        <source>Whole Words Only</source>
+        <translation>Mots Entiers Seulement</translation>
+    </message>
 </context>
 </TS>
