@@ -19,6 +19,7 @@ specific language governing permissions and limitations under the License.
 // Viewer widget
 //==============================================================================
 
+#include "guiinterface.h"
 #include "viewerwidget.h"
 
 //==============================================================================
@@ -145,10 +146,10 @@ void ViewerWidget::retranslateUi()
 {
     // Retranslate our actions
 
-    mOptimiseFontSizeAction->setText(tr("Optimise Font Size"));
-    mSubscriptsAction->setText(tr("Subscripts"));
-    mGreekSymbolsAction->setText(tr("Greek Symbols"));
-    mDigitGroupingAction->setText(tr("Digit Grouping"));
+    GuiInterface::retranslateAction(mOptimiseFontSizeAction, tr("Optimise Font Size"));
+    GuiInterface::retranslateAction(mSubscriptsAction, tr("Subscripts"));
+    GuiInterface::retranslateAction(mGreekSymbolsAction, tr("Greek Symbols"));
+    GuiInterface::retranslateAction(mDigitGroupingAction, tr("Digit Grouping"));
 }
 
 //==============================================================================
@@ -453,9 +454,8 @@ QAction * ViewerWidget::newAction()
 {
     // Create and return a checkable and checked action
 
-    QAction *res = new QAction(this);
+    QAction *res = GuiInterface::newAction(this, true);
 
-    res->setCheckable(true);
     res->setChecked(true);
 
     return res;
