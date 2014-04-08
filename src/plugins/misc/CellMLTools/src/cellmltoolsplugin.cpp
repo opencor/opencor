@@ -22,14 +22,20 @@ specific language governing permissions and limitations under the License.
 #include "cellmlfilemanager.h"
 #include "cellmlsupportplugin.h"
 #include "cellmltoolsplugin.h"
+#include "cliutils.h"
+#include "filemanager.h"
 #include "guiutils.h"
 
 //==============================================================================
 
+#include <QApplication>
+#include <QDir>
+#include <QFile>
 #include <QFileInfo>
 #include <QMainWindow>
 #include <QMenu>
 #include <QMessageBox>
+#include <QTemporaryFile>
 
 //==============================================================================
 
@@ -526,68 +532,131 @@ int CellMLToolsPlugin::runExportCommand(const QStringList &pArguments)
         return -1;
     }
 
-    // Make sure that the input file exists and is a valid CellML file
+    // Check whether we are dealing with a local or a remote input file
 
     QString errorMessage = QString();
     QString inFileName = pArguments.at(0);
-    CellMLSupport::CellmlFile *inCellmlFile = new CellMLSupport::CellmlFile(inFileName);
+    QUrl inFileUrl = inFileName;
+    bool inFileIsRemote = !inFileUrl.scheme().isEmpty();
 
-    if (!QFileInfo(inFileName).exists())
-        errorMessage = "Sorry, but the input file could not be found.";
-    else if (!CellMLSupport::isCellmlFile(inFileName))
-        errorMessage = "Sorry, but the input file is not a CellML file.";
-    else if (!inCellmlFile->load())
-        errorMessage = "Sorry, but a problem occurred while loading the input file.";
-    else {
-        // Check the type of export the user wants
+    if (inFileIsRemote) {
+        // It looks like we are dealing with a remote input file, so try to get
+        // a local copy of it
 
-        QString predefinedFormatOrUserDefinedFormatFileName = pArguments.at(2);
-        bool wantExportToUserDefinedFormat = predefinedFormatOrUserDefinedFormatFileName.compare("cellml_1_0");
+        QString url = inFileUrl.toString(QUrl::NormalizePathSegments);
+        QString fileContents;
 
-        // If we want to export to a CellML 1.0, then make sure that the input
-        // file is not already in that format
+        if (Core::readTextFromUrl(url, fileContents, errorMessage)) {
+            // We were able to retrieve the contents of the remote file, so save
+            // it locally to a 'temporary' file
 
-        if (    wantExportToUserDefinedFormat
-            && !QFileInfo(predefinedFormatOrUserDefinedFormatFileName).exists()) {
-            errorMessage = "Sorry, but the user-defined format file could not be found.";
-        } else if (   !wantExportToUserDefinedFormat
-                   && !QString::fromStdWString(inCellmlFile->model()->cellmlVersion()).compare(CellMLSupport::Cellml_1_0)) {
-            errorMessage = "Sorry, but the input file is already a CellML 1.0 file.";
+            QTemporaryFile localFile(QDir::tempPath()+QDir::separator()+QFileInfo(qApp->applicationFilePath()).baseName()+"_XXXXXX.tmp");
+
+            if (localFile.open()) {
+                localFile.setAutoRemove(false);
+                // Note: by default, a temporary file is to autoremove itself,
+                //       but we clearly don't want that here...
+
+                localFile.close();
+
+                inFileName = localFile.fileName();
+
+                if (!Core::writeTextToFile(inFileName, fileContents))
+                    errorMessage = "Sorry, but the input file could not be saved locally.";
+            } else {
+                errorMessage = "Sorry, but the input file could not be saved locally.";
+            }
         } else {
-            // Everything seems to be fine, so attempt the export
+            errorMessage = QString("Sorry, but the input file could not be opened (%1).").arg(Core::formatErrorMessage(errorMessage, false));
+        }
+    }
 
-            if (   ( wantExportToUserDefinedFormat && !inCellmlFile->exportTo(pArguments.at(1), predefinedFormatOrUserDefinedFormatFileName))
-                || (!wantExportToUserDefinedFormat && !inCellmlFile->exportTo(pArguments.at(1), CellMLSupport::CellmlFile::Cellml_1_0))) {
-                errorMessage = "Sorry, but the input file could not be exported";
+    // At this stage, we should have a real input file (be it originally local
+    // or remote), so carry on with the export
 
-                CellMLSupport::CellmlFileIssues issues = inCellmlFile->issues();
+    if (errorMessage.isEmpty()) {
+        // Before actually doing the export, we need to make sure that the input
+        // file exists, that it is a valid CellML file, that it can be
+        // registered and that it can be loaded
 
-                if (issues.count())
-                    errorMessage += " ("+issues.first().message()+")";
-                    // Note: if there are 'issues', then there can be only one
-                    //       of them following a CellML export...
+        if (!QFileInfo(inFileName).exists()) {
+            errorMessage = "Sorry, but the input file could not be found.";
+        } else if (!CellMLSupport::isCellmlFile(inFileName)) {
+            errorMessage = "Sorry, but the input file is not a CellML file.";
+        } else {
+            if (Core::FileManager::instance()->manage(inFileName,
+                                                      inFileIsRemote?
+                                                          Core::File::Remote:
+                                                          Core::File::Local,
+                                                      inFileIsRemote?
+                                                          inFileUrl.toString(QUrl::NormalizePathSegments):
+                                                          QString()) != Core::FileManager::Added) {
+                errorMessage = "Sorry, but the input file could not be registered.";
+            } else {
+                CellMLSupport::CellmlFile *inCellmlFile = new CellMLSupport::CellmlFile(inFileName);
 
-                errorMessage += ".";
+                if (!inCellmlFile->load()) {
+                    errorMessage = "Sorry, but a problem occurred while loading the input file.";
+                } else {
+                    // At this stage, everything is fine with the input file, so
+                    // now we need to check the type of export the user wants
+
+                    QString predefinedFormatOrUserDefinedFormatFileName = pArguments.at(2);
+                    bool wantExportToUserDefinedFormat = predefinedFormatOrUserDefinedFormatFileName.compare("cellml_1_0");
+
+                    // If we want to export to a CellML 1.0, then we need to
+                    // make sure that the input file is not already in that
+                    // format
+
+                    if (    wantExportToUserDefinedFormat
+                        && !QFileInfo(predefinedFormatOrUserDefinedFormatFileName).exists()) {
+                        errorMessage = "Sorry, but the user-defined format file could not be found.";
+                    } else if (   !wantExportToUserDefinedFormat
+                               && !QString::fromStdWString(inCellmlFile->model()->cellmlVersion()).compare(CellMLSupport::Cellml_1_0)) {
+                        errorMessage = "Sorry, but the input file is already a CellML 1.0 file.";
+                    } else {
+                        // Everything seems to be fine, so attempt the export
+                        // itself
+
+                        if (   ( wantExportToUserDefinedFormat && !inCellmlFile->exportTo(pArguments.at(1), predefinedFormatOrUserDefinedFormatFileName))
+                            || (!wantExportToUserDefinedFormat && !inCellmlFile->exportTo(pArguments.at(1), CellMLSupport::CellmlFile::Cellml_1_0))) {
+                            errorMessage = "Sorry, but the input file could not be exported";
+
+                            CellMLSupport::CellmlFileIssues issues = inCellmlFile->issues();
+
+                            if (issues.count())
+                                errorMessage += " ("+issues.first().message()+")";
+                                // Note: if there are 'issues', then there can
+                                //       be only one of them following a CellML
+                                //       export...
+
+                            errorMessage += ".";
+                        }
+                    }
+                }
+
+                // We are done (whether the export was successful or not), so
+                // delete our input CellML file object
+
+                delete inCellmlFile;
             }
         }
     }
 
-    // We are done (whether the export was successful or not), so delete our
-    // input CellML file
+    // Delete the input file, if needed
 
-    delete inCellmlFile;
+    if (inFileIsRemote && QFileInfo(inFileName).exists())
+        QFile::remove(inFileName);
 
-    // Check whether something wrong happened at some point
+    // Let the user know if something went wrong at some point and then leave
 
-    if (!errorMessage.isEmpty()) {
+    if (errorMessage.isEmpty()) {
+        return 0;
+    } else {
         std::cout << qPrintable(errorMessage) << std::endl;
 
         return -1;
     }
-
-    // Everything went fine, so...
-
-    return 0;
 }
 
 //==============================================================================
