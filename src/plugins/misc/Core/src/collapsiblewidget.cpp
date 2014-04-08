@@ -99,7 +99,7 @@ CollapsibleHeaderWidget::CollapsibleHeaderWidget(const QColor &pSeparatorColor,
                            "    border: 0px;"
                            "}"
                            ""
-                           "QToolButton::pressed {"
+                           "QToolButton:pressed {"
                            "    margin: 0px;"
                            "}");
 
