@@ -64,6 +64,7 @@ public:
     bool regularExpression() const;
 
 protected:
+    virtual void changeEvent(QEvent *pEvent);
     virtual void keyPressEvent(QKeyEvent *pEvent);
 
 private:
@@ -76,6 +77,8 @@ private:
     QAction *mRegularExpressionAction;
 
     QAction *mClearTextAction;
+
+    void updateStyleSheet();
 
 Q_SIGNALS:
     void keyPressed(QKeyEvent *pEvent, bool &pHandled);

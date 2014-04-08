@@ -48,6 +48,7 @@ namespace Core {
 static const auto SettingsBaseColor      = QStringLiteral("BaseColor");
 static const auto SettingsBorderColor    = QStringLiteral("BorderColor");
 static const auto SettingsHighlightColor = QStringLiteral("HighlightColor");
+static const auto SettingsShadowColor    = QStringLiteral("Shadow");
 static const auto SettingsWindowColor    = QStringLiteral("WindowColor");
 
 //==============================================================================
@@ -89,6 +90,7 @@ void CORE_EXPORT showEnableAction(QAction *pAction, const bool &pShowEnable);
 QColor CORE_EXPORT baseColor();
 QColor CORE_EXPORT borderColor();
 QColor CORE_EXPORT highlightColor();
+QColor CORE_EXPORT shadowColor();
 QColor CORE_EXPORT windowColor();
 
 QColor CORE_EXPORT lockedColor(const QColor &pColor);

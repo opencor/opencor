@@ -21,6 +21,7 @@ specific language governing permissions and limitations under the License.
 
 #include "editorfindreplacewidget.h"
 #include "guiinterface.h"
+#include "guiutils.h"
 
 //==============================================================================
 
@@ -96,8 +97,8 @@ EditorFindReplaceWidget::EditorFindReplaceWidget(QWidget *pParent) :
     connect(mClearTextAction, SIGNAL(triggered()),
             mGui->findEdit, SLOT(clear()));
 
-    // Make sure that we take as little vertical space as possible whilte as
-    // much horizontal space as possible
+    // Make sure that we take as little vertical space as possible while as much
+    // horizontal space as possible
 
     mGui->layout->setSizeConstraint(QLayout::SetMaximumSize);
 
@@ -112,12 +113,13 @@ EditorFindReplaceWidget::EditorFindReplaceWidget(QWidget *pParent) :
     connect(mGui->findEdit, SIGNAL(textChanged(const QString &)),
             this, SLOT(updateClearTextAction(const QString &)));
 
-    // Retranslate ourselves and call searchOptionChanged(), so that we are
-    // properly initialised
+    // A few more things , so that we are properly initialised
 
     retranslateUi();
 
     searchOptionChanged();
+
+    updateStyleSheet();
 }
 
 //==============================================================================
@@ -134,7 +136,7 @@ void EditorFindReplaceWidget::retranslateUi()
     GuiInterface::retranslateAction(mWholeWordsOnlyAction, tr("Whole Words Only"));
     GuiInterface::retranslateAction(mRegularExpressionAction, tr("Regular Expression"));
 
-    GuiInterface::retranslateAction(mClearTextAction, tr("Clear the text"));
+    GuiInterface::retranslateAction(mClearTextAction, tr("Clear Text"));
 }
 
 //==============================================================================
@@ -162,6 +164,47 @@ bool EditorFindReplaceWidget::regularExpression() const
     // Return whether we use a regular expression
 
     return mRegularExpressionAction->isChecked();
+}
+
+//==============================================================================
+
+void EditorFindReplaceWidget::updateStyleSheet()
+{
+    // Change the style of our tool buttons
+
+    QColor shadowColor = Core::shadowColor();
+
+    setStyleSheet(QString("QToolButton {"
+                          "    border: 0px;"
+                          "    border-radius: 3px;"
+                          "    padding: 1px;"
+                          "}"
+                          ""
+                          "QToolButton:focus {"
+                          "    background: rgba(%1, %2, %3, 0.13);"
+                          "    border: 1px solid rgba(%1, %2, %3, 0.39);"
+                          "}"
+                          ""
+                          "QToolButton:hover {"
+                          "    background: rgba(%1, %2, %3, 0.39);"
+                          "}"
+                          ""
+                          "QToolButton:pressed {"
+                          "    background: rgba(%1, %2, %3, 0.79);"
+                          "}").arg(QString::number(shadowColor.red()),
+                                   QString::number(shadowColor.green()),
+                                   QString::number(shadowColor.blue())));
+}
+
+//==============================================================================
+
+void EditorFindReplaceWidget::changeEvent(QEvent *pEvent)
+{
+    // Check whether the palette has changed and if so then update our style
+    // sheet
+
+    if (pEvent->type() == QEvent::PaletteChange)
+        updateStyleSheet();
 }
 
 //==============================================================================

@@ -366,6 +366,17 @@ QColor highlightColor()
 
 //==============================================================================
 
+QColor shadowColor()
+{
+    // Return the shadow colour
+    // Note: we retrieve it from our settings, which is updated by our plugin
+    //       itself (see CorePlugin::changeEvent())...
+
+    return specificColor(SettingsShadowColor);
+}
+
+//==============================================================================
+
 QColor windowColor()
 {
     // Return the window colour
