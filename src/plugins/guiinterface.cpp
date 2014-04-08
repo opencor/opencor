@@ -511,6 +511,20 @@ QAction * GuiInterface::newAction(const QKeySequence &pKeySequence,
 
 //==============================================================================
 
+QAction * GuiInterface::newAction(const QKeySequence::StandardKey &pStandardKey,
+                                  QWidget *pParent)
+{
+    // Create and return an action
+
+    QAction *res = new QAction(pParent);
+
+    res->setShortcut(pStandardKey);
+
+    return res;
+}
+
+//==============================================================================
+
 void GuiInterface::retranslateMenu(QMenu *pMenu, const QString &pTitle)
 {
     // Retranslate the menu, i.e. retranslate its title

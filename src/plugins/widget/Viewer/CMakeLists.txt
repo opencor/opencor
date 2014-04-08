@@ -4,6 +4,7 @@ PROJECT(ViewerPlugin)
 
 ADD_PLUGIN(Viewer
     SOURCES
+        ../../guiinterface.cpp
         ../../i18ninterface.cpp
         ../../plugininfo.cpp
 

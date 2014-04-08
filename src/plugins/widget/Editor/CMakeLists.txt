@@ -10,6 +10,7 @@ ENDIF()
 
 ADD_PLUGIN(Editor
     SOURCES
+        ../../guiinterface.cpp
         ../../i18ninterface.cpp
         ../../plugininfo.cpp
 

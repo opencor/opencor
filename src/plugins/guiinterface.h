@@ -222,6 +222,8 @@ public:
     static QAction * newAction(const QIcon &pIcon, QWidget *pParent = 0);
     static QAction * newAction(const QKeySequence &pKeySequence,
                                QWidget *pParent = 0);
+    static QAction * newAction(const QKeySequence::StandardKey &pStandardKey,
+                               QWidget *pParent = 0);
 
     static void retranslateMenu(QMenu *pMenu, const QString &pTitle);
     static void retranslateAction(QAction *pAction, const QString &pText,
