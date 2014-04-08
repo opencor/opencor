@@ -40,6 +40,7 @@ specific language governing permissions and limitations under the License.
 #include <QLabel>
 #include <QMessageBox>
 #include <QSettings>
+#include <QSizePolicy>
 
 //==============================================================================
 
