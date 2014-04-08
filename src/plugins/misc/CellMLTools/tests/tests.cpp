@@ -55,11 +55,18 @@ void Tests::cliHelpTests()
 
 void Tests::cliCellmlExportTests()
 {
-    // Export a CellML 1.1 file to CellML 1.0
+    // Try to export a CellML 1.0 file to CellML 1.0
 
-    QString inFileName = "../src/plugins/misc/CellMLTools/tests/data/experiments/periodic-stimulus.xml";
+    QString inFileName = "../src/plugins/misc/CellMLTools/tests/data/noble_model_1962.cellml";
     QString outFileName = "actual.out";
     QString format = "cellml_1_0";
+
+    QCOMPARE(OpenCOR::runCli(QStringList() << "-c" << "CellMLTools::export" << inFileName << outFileName << format),
+             OpenCOR::fileContents("../src/plugins/misc/CellMLTools/tests/data/input_file_already_cellml_1_0.out"));
+
+    // Export a CellML 1.1 file to CellML 1.0
+
+    inFileName = "../src/plugins/misc/CellMLTools/tests/data/experiments/periodic-stimulus.xml";
 
     QCOMPARE(OpenCOR::runCli(QStringList() << "-c" << "CellMLTools::export" << inFileName << outFileName << format),
              QString());
