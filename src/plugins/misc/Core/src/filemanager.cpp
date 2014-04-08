@@ -95,7 +95,7 @@ FileManager::Status FileManager::manage(const QString &pFileName,
 
     QString nativeFileName = nativeCanonicalFileName(pFileName);
 
-    if (QFileInfo(nativeFileName).exists()) {
+    if (QFile::exists(nativeFileName)) {
         if (isManaged(nativeFileName)) {
             // The file is already managed, so...
 
@@ -125,7 +125,7 @@ FileManager::Status FileManager::unmanage(const QString &pFileName)
 
     QString nativeFileName = nativeCanonicalFileName(pFileName);
 
-    if (QFileInfo(nativeFileName).exists()) {
+    if (QFile::exists(nativeFileName)) {
         File *file = isManaged(nativeFileName);
 
         if (file) {

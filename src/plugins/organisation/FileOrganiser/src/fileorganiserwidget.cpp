@@ -24,6 +24,7 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include <QDir>
+#include <QFile>
 #include <QFileInfo>
 #include <QHelpEvent>
 #include <QMimeData>
@@ -891,7 +892,7 @@ void FileOrganiserWidget::addFile(const QString &pFileName,
 
     // Check whether the file exists
 
-    if (QFileInfo(fileName).exists()) {
+    if (QFile::exists(fileName)) {
         // The target file exists, so add it above/on/below pDropItem, depending
         // on the drop position and only if the file isn't already present
 

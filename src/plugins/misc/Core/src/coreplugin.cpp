@@ -33,7 +33,7 @@ specific language governing permissions and limitations under the License.
 #include <QAction>
 #include <QApplication>
 #include <QEvent>
-#include <QFileInfo>
+#include <QFile>
 #include <QMainWindow>
 #include <QMenu>
 #include <QMessageBox>
@@ -755,7 +755,7 @@ void CorePlugin::openRecentFile()
     QUrl url = fileNameOrUrl;
 
     if (url.scheme().isEmpty()) {
-        if (QFileInfo(fileNameOrUrl).exists())
+        if (QFile::exists(fileNameOrUrl))
             // Open the recent file
 
             mCentralWidget->openFile(fileNameOrUrl);

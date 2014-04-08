@@ -25,6 +25,8 @@ specific language governing permissions and limitations under the License.
 
 #include <QApplication>
 #include <QDir>
+#include <QFile>
+#include <QFileInfo>
 #include <QHeaderView>
 #include <QHelpEvent>
 #include <QSettings>
@@ -231,7 +233,7 @@ QStringList FileBrowserWidget::selectedFiles() const
 
                 fileName = fileInfo.symLinkTarget();
 
-                if (QFileInfo(fileName).exists())
+                if (QFile::exists(fileName))
                     res << fileName;
             } else {
                 // The current item is a file, so just add to the list
@@ -353,8 +355,7 @@ void FileBrowserWidget::goToOtherItem(QStringList &pItems,
 
     QString newItemPath = pItems.last();
 
-    while (   !pItems.isEmpty()
-           && !QFileInfo(newItemPath).exists()) {
+    while (!pItems.isEmpty() && !QFile::exists(newItemPath)) {
         // The new item doesn't exist anymore, so remove it from our list of
         // items and other items
 

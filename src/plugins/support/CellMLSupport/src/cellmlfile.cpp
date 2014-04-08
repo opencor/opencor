@@ -29,7 +29,6 @@ specific language governing permissions and limitations under the License.
 
 #include <QDomDocument>
 #include <QFile>
-#include <QFileInfo>
 #include <QIODevice>
 #include <QStringList>
 #include <QTextStream>
@@ -761,7 +760,7 @@ bool CellmlFile::exportTo(const QString &pFileName,
 
         // Check that the user-defined format file actually exists
 
-        if (!QFileInfo(pUserDefinedFormatFileName).exists()){
+        if (!QFile::exists(pUserDefinedFormatFileName)) {
             mIssues << CellmlFileIssue(CellmlFileIssue::Error,
                                        tr("the user-defined format file does not exist"));
 

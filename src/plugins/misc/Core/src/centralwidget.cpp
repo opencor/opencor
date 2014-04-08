@@ -650,7 +650,7 @@ void CentralWidget::updateFileTab(const int &pIndex)
 void CentralWidget::openFile(const QString &pFileName, const File::Type &pType,
                              const QString &pUrl)
 {
-    if (!mModeTabs->count() || !QFileInfo(pFileName).exists())
+    if (!mModeTabs->count() || !QFile::exists(pFileName))
         // No modes are available or the file doesn't exist, so...
 
         return;
@@ -1375,7 +1375,7 @@ void CentralWidget::dropEvent(QDropEvent *pEvent)
 
                 fileName = fileInfo.symLinkTarget();
 
-                if (QFileInfo(fileName).exists())
+                if (QFile::exists(fileName))
                     fileNames << fileName;
             } else {
                 // We are dropping a file, so we can just add it

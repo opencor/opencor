@@ -579,7 +579,7 @@ int CellMLToolsPlugin::runExportCommand(const QStringList &pArguments)
         // file exists, that it is a valid CellML file, that it can be
         // registered and that it can be loaded
 
-        if (!QFileInfo(inFileName).exists()) {
+        if (!QFile::exists(inFileName)) {
             errorMessage = "Sorry, but the input file could not be found.";
         } else if (!CellMLSupport::isCellmlFile(inFileName)) {
             errorMessage = "Sorry, but the input file is not a CellML file.";
@@ -609,7 +609,7 @@ int CellMLToolsPlugin::runExportCommand(const QStringList &pArguments)
                     // format
 
                     if (    wantExportToUserDefinedFormat
-                        && !QFileInfo(predefinedFormatOrUserDefinedFormatFileName).exists()) {
+                        && !QFile::exists(predefinedFormatOrUserDefinedFormatFileName)) {
                         errorMessage = "Sorry, but the user-defined format file could not be found.";
                     } else if (   !wantExportToUserDefinedFormat
                                && !QString::fromStdWString(inCellmlFile->model()->cellmlVersion()).compare(CellMLSupport::Cellml_1_0)) {
@@ -645,7 +645,7 @@ int CellMLToolsPlugin::runExportCommand(const QStringList &pArguments)
 
     // Delete the input file, if needed
 
-    if (inFileIsRemote && QFileInfo(inFileName).exists())
+    if (inFileIsRemote && QFile::exists(inFileName))
         QFile::remove(inFileName);
 
     // Let the user know if something went wrong at some point and then leave
