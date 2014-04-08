@@ -58,8 +58,8 @@ EditorFindReplaceWidget::EditorFindReplaceWidget(QWidget *pParent) :
     mGui->setupUi(this);
 
 #ifdef Q_OS_MAC
-    mGui->findEdit->setAttribute(Qt::WA_MacShowFocusRect, 0);
-    mGui->replaceEdit->setAttribute(Qt::WA_MacShowFocusRect, 0);
+    mGui->findEdit->setAttribute(Qt::WA_MacShowFocusRect, false);
+    mGui->replaceWithEdit->setAttribute(Qt::WA_MacShowFocusRect, false);
     // Note: the above remove the focus border since it messes up the look of
     //       our edit widgets...
 #endif

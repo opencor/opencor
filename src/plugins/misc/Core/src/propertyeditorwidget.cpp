@@ -50,7 +50,7 @@ TextEditorWidget::TextEditorWidget(QWidget *pParent) :
     QLineEdit(pParent)
 {
 #ifdef Q_OS_MAC
-    setAttribute(Qt::WA_MacShowFocusRect, 0);
+    setAttribute(Qt::WA_MacShowFocusRect, false);
     // Note: the above removes the focus border since it messes up the look of
     //       our editor
 #endif
