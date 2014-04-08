@@ -36,6 +36,7 @@ specific language governing permissions and limitations under the License.
 #include <QAction>
 #include <QKeyEvent>
 #include <QGridLayout>
+#include <QHBoxLayout>
 #include <QLabel>
 #include <QLayout>
 #include <QLineEdit>
@@ -164,6 +165,24 @@ bool EditorFindReplaceWidget::regularExpression() const
     // Return whether we use a regular expression
 
     return mRegularExpressionAction->isChecked();
+}
+
+//==============================================================================
+
+void EditorFindReplaceWidget::setReadOnly(const bool &pReadOnly)
+{
+    // Show/hide the replace-related widgets based on whether we are in
+    // read-only mode
+
+    Core::showEnableWidget(mGui->replaceWithLabel, !pReadOnly);
+    Core::showEnableWidget(mGui->replaceWithEdit, !pReadOnly);
+    Core::showEnableWidget(mGui->replaceButton, !pReadOnly);
+    Core::showEnableWidget(mGui->replaceAndFindButton, !pReadOnly);
+    Core::showEnableWidget(mGui->replaceAllButton, !pReadOnly);
+
+    // Enable/disable the find spacer
+
+    mGui->findLayout->setStretch(2, !pReadOnly);
 }
 
 //==============================================================================

@@ -86,6 +86,7 @@ QLabel CORE_EXPORT * newLabel(const QString &pText,
 QLabel CORE_EXPORT * newLabel(const QString &pText, QWidget *pParent);
 
 void CORE_EXPORT showEnableAction(QAction *pAction, const bool &pShowEnable);
+void CORE_EXPORT showEnableWidget(QWidget *pWidget, const bool &pShowEnable);
 
 QColor CORE_EXPORT baseColor();
 QColor CORE_EXPORT borderColor();

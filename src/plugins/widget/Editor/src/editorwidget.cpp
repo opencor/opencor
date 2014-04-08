@@ -206,9 +206,10 @@ bool EditorWidget::isReadOnly() const
 
 void EditorWidget::setReadOnly(const bool &pReadOnly)
 {
-    // Set the read-only mode of our editor
+    // Set the read-only mode of our editor and find/replace widget
 
     mEditor->setReadOnly(pReadOnly);
+    mFindReplace->setReadOnly(pReadOnly);
 
     // Update our background
 

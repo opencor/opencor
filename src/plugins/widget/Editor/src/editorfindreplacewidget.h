@@ -63,6 +63,8 @@ public:
     bool wholeWordsOnly() const;
     bool regularExpression() const;
 
+    void setReadOnly(const bool &pReadOnly);
+
 protected:
     virtual void changeEvent(QEvent *pEvent);
     virtual void keyPressEvent(QKeyEvent *pEvent);

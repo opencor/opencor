@@ -317,6 +317,16 @@ void showEnableAction(QAction *pAction, const bool &pShowEnable)
 
 //==============================================================================
 
+void showEnableWidget(QWidget *pWidget, const bool &pShowEnable)
+{
+    // Show/enable or hide/disable the given widget
+
+    pWidget->setVisible(pShowEnable);
+    pWidget->setEnabled(pShowEnable);
+}
+
+//==============================================================================
+
 QColor specificColor(const QString &pColor)
 {
     // Return a specific colour
