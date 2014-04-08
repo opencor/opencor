@@ -68,6 +68,7 @@ public:
 protected:
     virtual void changeEvent(QEvent *pEvent);
     virtual void keyPressEvent(QKeyEvent *pEvent);
+    virtual void resizeEvent(QResizeEvent *pEvent);
 
 private:
     Ui::EditorFindReplaceWidget *mGui;
@@ -80,6 +81,7 @@ private:
 
     QAction *mClearTextAction;
 
+    void updateHeight();
     void updateStyleSheet();
 
 Q_SIGNALS:

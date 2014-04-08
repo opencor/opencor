@@ -43,6 +43,7 @@ specific language governing permissions and limitations under the License.
 #include <QMenu>
 #include <QPainter>
 #include <QPixmap>
+#include <QSize>
 
 //==============================================================================
 
@@ -98,11 +99,6 @@ EditorFindReplaceWidget::EditorFindReplaceWidget(QWidget *pParent) :
     connect(mClearTextAction, SIGNAL(triggered()),
             mGui->findEdit, SLOT(clear()));
 
-    // Make sure that we take as little vertical space as possible while as much
-    // horizontal space as possible
-
-    mGui->layout->setSizeConstraint(QLayout::SetMaximumSize);
-
     // Make our find edit widget our focus proxy
 
     setFocusProxy(mGui->findEdit);
@@ -121,6 +117,9 @@ EditorFindReplaceWidget::EditorFindReplaceWidget(QWidget *pParent) :
     searchOptionChanged();
 
     updateStyleSheet();
+    updateHeight();
+    // Note: just to be safe, we update our height after updating our style
+    //       sheet since we change the size of our tool buttons...
 }
 
 //==============================================================================
@@ -171,7 +170,7 @@ bool EditorFindReplaceWidget::regularExpression() const
 
 void EditorFindReplaceWidget::setReadOnly(const bool &pReadOnly)
 {
-    // Show/hide the replace-related widgets based on whether we are in
+    // Show/hide our replace-related widgets based on whether we are in
     // read-only mode
 
     Core::showEnableWidget(mGui->replaceWithLabel, !pReadOnly);
@@ -180,9 +179,22 @@ void EditorFindReplaceWidget::setReadOnly(const bool &pReadOnly)
     Core::showEnableWidget(mGui->replaceAndFindButton, !pReadOnly);
     Core::showEnableWidget(mGui->replaceAllButton, !pReadOnly);
 
-    // Enable/disable the find spacer
+    // Enable/disable our find spacer
 
     mGui->findLayout->setStretch(2, !pReadOnly);
+
+    // Update our height
+
+    updateHeight();
+}
+
+//==============================================================================
+
+void EditorFindReplaceWidget::updateHeight()
+{
+    // Update our height
+
+    setFixedHeight(mGui->layout->sizeHint().height());
 }
 
 //==============================================================================
@@ -246,6 +258,19 @@ void EditorFindReplaceWidget::keyPressEvent(QKeyEvent *pEvent)
         // Default handling of the event
 
         QWidget::keyPressEvent(pEvent);
+}
+
+//==============================================================================
+
+void EditorFindReplaceWidget::resizeEvent(QResizeEvent *pEvent)
+{
+    // Default handling of the event
+
+    Core::Widget::resizeEvent(pEvent);
+
+    // Update our height
+
+    updateHeight();
 }
 
 //==============================================================================
