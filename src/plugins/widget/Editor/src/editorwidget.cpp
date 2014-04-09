@@ -52,8 +52,8 @@ EditorWidget::EditorWidget(const QString &pContents, const bool &pReadOnly,
                            QsciLexer *pLexer, QWidget *pParent) :
     Core::Widget(pParent),
     mGui(new Ui::EditorWidget),
-    mLine(0),
-    mColumn(0),
+    mCurrentLine(0),
+    mCurrentColumn(0),
     mFindReplaceVisible(false)
 {
     // Set up the GUI
@@ -496,6 +496,10 @@ void EditorWidget::showFindReplace()
     // Give the focus to our find/replace widget and hide our editor's caret
 
     mFindReplace->setFocus();
+
+    // Select the find text
+
+    mFindReplace->selectFindText();
 }
 
 //==============================================================================
@@ -520,8 +524,15 @@ void EditorWidget::findPrevious()
 {
     // Find the previous occurrence of the text in our editor
 
-qDebug(">>> Find Previous...");
-//---GRY--- TO BE DONE...
+    int oldPosition = mEditor->currentPosition();
+
+    mEditor->setCurrentPosition(oldPosition-mEditor->selectedText().length());
+
+    mCurrentLine = mEditor->currentLine();
+    mCurrentColumn = mEditor->currentColumn();
+
+    if (!findText(mFindReplace->findText(), false))
+        mEditor->setCurrentPosition(oldPosition);
 }
 
 //==============================================================================
@@ -530,8 +541,10 @@ void EditorWidget::findNext()
 {
     // Find the next occurrence of the text in our editor
 
-qDebug(">>> Find Next...");
-//---GRY--- TO BE DONE...
+    mCurrentLine = mEditor->currentLine();
+    mCurrentColumn = mEditor->currentColumn();
+
+    findText(mFindReplace->findText(), true);
 }
 
 //==============================================================================
@@ -545,13 +558,14 @@ void EditorWidget::zoomLevelChanged()
 
 //==============================================================================
 
-void EditorWidget::keepTrackOfCursorPosition(const int &pLine, const int &pColumn)
+void EditorWidget::keepTrackOfCursorPosition(const int &pLine,
+                                             const int &pColumn)
 {
     // Keep track of our new position within our editor
 
     if (mEditor->hasFocus()) {
-        mLine = pLine;
-        mColumn = pColumn;
+        mCurrentLine = pLine;
+        mCurrentColumn = pColumn;
     }
 }
 
@@ -588,9 +602,31 @@ void EditorWidget::findReplaceKeyPressed(QKeyEvent *pEvent, bool &pHandled)
         hideFindReplace();
 
         pHandled = true;
+    } else if (   !(pEvent->modifiers() & Qt::ShiftModifier)
+               && !(pEvent->modifiers() & Qt::ControlModifier)
+               && !(pEvent->modifiers() & Qt::AltModifier)
+               && !(pEvent->modifiers() & Qt::MetaModifier)
+               &&  (   (pEvent->key() == Qt::Key_Return)
+                    || (pEvent->key() == Qt::Key_Enter))) {
+        findNext();
+
+        pHandled = true;
     } else {
         pHandled = false;
     }
+}
+
+//==============================================================================
+
+bool EditorWidget::findText(const QString &pText, const bool &pForward)
+{
+    // Find the previous/next occurrence of the given text
+
+    return mEditor->findFirst(pText,
+                              mFindReplace->regularExpression(),
+                              mFindReplace->caseSensitive(),
+                              mFindReplace->wholeWordsOnly(),
+                              true, pForward, mCurrentLine, mCurrentColumn);
 }
 
 //==============================================================================
@@ -602,13 +638,10 @@ void EditorWidget::findTextChanged(const QString &pText)
     // original position
 
     if (pText.isEmpty())
-        mEditor->setSelection(mLine, mColumn, mLine, mColumn);
+        mEditor->setSelection(mCurrentLine, mCurrentColumn,
+                              mCurrentLine, mCurrentColumn);
     else
-        mEditor->findFirst(pText,
-                           mFindReplace->regularExpression(),
-                           mFindReplace->caseSensitive(),
-                           mFindReplace->wholeWordsOnly(),
-                           true, true, mLine, mColumn);
+        findText(pText, true);
 }
 
 //==============================================================================

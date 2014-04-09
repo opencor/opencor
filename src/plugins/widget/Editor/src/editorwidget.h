@@ -144,12 +144,14 @@ private:
     QFrame *mSeparator;
     EditorFindReplaceWidget *mFindReplace;
 
-    int mLine;
-    int mColumn;
+    int mCurrentLine;
+    int mCurrentColumn;
 
     bool mFindReplaceVisible;
 
     EditorFindReplaceWidget * findReplace();
+
+    bool findText(const QString &pText, const bool &pForward);
 
 Q_SIGNALS:
     void zoomLevelChanged(const int &pZoomLevel);

@@ -218,6 +218,15 @@ bool EditorFindReplaceWidget::isFindPreviousNextAvailable() const
 
 //==============================================================================
 
+void EditorFindReplaceWidget::selectFindText() const
+{
+    // Select our find text
+
+    mGui->findEdit->selectAll();
+}
+
+//==============================================================================
+
 QString EditorFindReplaceWidget::findText() const
 {
     // Return our find text

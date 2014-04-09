@@ -63,6 +63,7 @@ public:
     void setContextMenu(const QList<QAction *> &pContextMenuActions);
 
     int currentPosition() const;
+    void setCurrentPosition(const int &pCurrentPosition);
 
     QString contents() const;
     void setContents(const QString &pContents);
@@ -90,6 +91,9 @@ public:
 
     int zoomLevel() const;
 
+    int currentLine() const;
+    int currentColumn() const;
+
 protected:
     virtual void changeEvent(QEvent *pEvent);
     virtual void contextMenuEvent(QContextMenuEvent *pEvent);
@@ -114,6 +118,9 @@ private:
 
     QLabel *mCursorPositionWidget;
     QLabel *mEditingModeWidget;
+
+    int mCurrentLine;
+    int mCurrentColumn;
 
     void updateColors();
 

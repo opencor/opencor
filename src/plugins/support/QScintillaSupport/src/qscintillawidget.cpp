@@ -50,7 +50,9 @@ QScintillaWidget::QScintillaWidget(QsciLexer *pLexer, QWidget *pParent) :
     mCanUndo(false),
     mCanRedo(false),
     mCanSelectAll(false),
-    mOverwriteMode(false)
+    mOverwriteMode(false),
+    mCurrentLine(0),
+    mCurrentColumn(0)
 {
     // Remove the frame around our Scintilla editor
 
@@ -187,6 +189,18 @@ int QScintillaWidget::currentPosition() const
     // Return our current position
 
     return SendScintilla(SCI_GETCURRENTPOS);
+}
+
+//==============================================================================
+
+void QScintillaWidget::setCurrentPosition(const int &pCurrentPosition)
+{
+    // Set our current position and update our current line and column
+
+    SendScintilla(SCI_SETCURRENTPOS, pCurrentPosition);
+
+    mCurrentLine = SendScintilla(SCI_LINEFROMPOSITION, pCurrentPosition);
+    mCurrentColumn = SendScintilla(SCI_GETCOLUMN, pCurrentPosition);
 }
 
 //==============================================================================
@@ -353,6 +367,24 @@ int QScintillaWidget::zoomLevel() const
     // Return our zoom level
 
     return SendScintilla(QsciScintillaBase::SCI_GETZOOM);
+}
+
+//==============================================================================
+
+int QScintillaWidget::currentLine() const
+{
+    // Return our current line
+
+    return mCurrentLine;
+}
+
+//==============================================================================
+
+int QScintillaWidget::currentColumn() const
+{
+    // Return our current column
+
+    return mCurrentColumn;
 }
 
 //==============================================================================
@@ -588,6 +620,11 @@ void QScintillaWidget::cursorPositionChanged(const int &pLine,
 
     mCursorPositionWidget->setText(QString("Line: %1, Col: %2").arg(QString::number(pLine+1),
                                                                     QString::number(pColumn+1)));
+
+    // Keep track of the current line and column
+
+    mCurrentLine = pLine;
+    mCurrentColumn = pColumn;
 }
 
 //==============================================================================
