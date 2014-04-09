@@ -81,7 +81,8 @@ private:
     QAction *mWholeWordsOnlyAction;
     QAction *mRegularExpressionAction;
 
-    QAction *mClearTextAction;
+    QAction *mClearFindTextAction;
+    QAction *mClearReplaceTextAction;
 
     QString findText() const;
     QString replaceText() const;
@@ -97,7 +98,8 @@ Q_SIGNALS:
 private Q_SLOTS:
     void searchOptionChanged();
 
-    void updateClearTextAction(const QString &pText);
+    void updateClearFindTextAction(const QString &pText);
+    void updateClearReplaceTextAction(const QString &pText);
 };
 
 //==============================================================================

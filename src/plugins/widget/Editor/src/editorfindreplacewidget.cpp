@@ -92,12 +92,16 @@ EditorFindReplaceWidget::EditorFindReplaceWidget(QWidget *pParent) :
     connect(mRegularExpressionAction, SIGNAL(toggled(bool)),
             this, SLOT(searchOptionChanged()));
 
-    // Create and handle our clear text action
+    // Create and handle our clear find and replace text actions
 
-    mClearTextAction = GuiInterface::newAction(QIcon(":/qtCreator/src/plugins/coreplugin/images/editclear.png"), this);
+    mClearFindTextAction = GuiInterface::newAction(QIcon(":/qtCreator/src/plugins/coreplugin/images/editclear.png"), this);
+    mClearReplaceTextAction = GuiInterface::newAction(QIcon(":/qtCreator/src/plugins/coreplugin/images/editclear.png"), this);
 
-    connect(mClearTextAction, SIGNAL(triggered()),
+    connect(mClearFindTextAction, SIGNAL(triggered()),
             mGui->findEdit, SLOT(clear()));
+
+    connect(mClearReplaceTextAction, SIGNAL(triggered()),
+            mGui->replaceEdit, SLOT(clear()));
 
     // Make our find edit widget our focus proxy
 
@@ -108,7 +112,12 @@ EditorFindReplaceWidget::EditorFindReplaceWidget(QWidget *pParent) :
     connect(mGui->findEdit, SIGNAL(textChanged(const QString &)),
             this, SIGNAL(findTextChanged(const QString &)));
     connect(mGui->findEdit, SIGNAL(textChanged(const QString &)),
-            this, SLOT(updateClearTextAction(const QString &)));
+            this, SLOT(updateClearFindTextAction(const QString &)));
+
+    // Some connections for our replace widget
+
+    connect(mGui->replaceEdit, SIGNAL(textChanged(const QString &)),
+            this, SLOT(updateClearReplaceTextAction(const QString &)));
 
     // A few more things , so that we are properly initialised
 
@@ -136,7 +145,8 @@ void EditorFindReplaceWidget::retranslateUi()
     GuiInterface::retranslateAction(mWholeWordsOnlyAction, tr("Whole Words Only"));
     GuiInterface::retranslateAction(mRegularExpressionAction, tr("Regular Expression"));
 
-    GuiInterface::retranslateAction(mClearTextAction, tr("Clear Text"));
+    GuiInterface::retranslateAction(mClearFindTextAction, tr("Clear Text"));
+    GuiInterface::retranslateAction(mClearReplaceTextAction, tr("Clear Text"));
 }
 
 //==============================================================================
@@ -366,15 +376,28 @@ void EditorFindReplaceWidget::searchOptionChanged()
 
 //==============================================================================
 
-void EditorFindReplaceWidget::updateClearTextAction(const QString &pText)
+void EditorFindReplaceWidget::updateClearFindTextAction(const QString &pText)
 {
     // Show/hide our clear text action, based on whether our find widget
     // contains some text
 
     if (pText.isEmpty())
-        mGui->findEdit->removeAction(mClearTextAction);
+        mGui->findEdit->removeAction(mClearFindTextAction);
     else
-        mGui->findEdit->addAction(mClearTextAction, QLineEdit::TrailingPosition);
+        mGui->findEdit->addAction(mClearFindTextAction, QLineEdit::TrailingPosition);
+}
+
+//==============================================================================
+
+void EditorFindReplaceWidget::updateClearReplaceTextAction(const QString &pText)
+{
+    // Show/hide our clear text action, based on whether our replace widget
+    // contains some text
+
+    if (pText.isEmpty())
+        mGui->replaceEdit->removeAction(mClearReplaceTextAction);
+    else
+        mGui->replaceEdit->addAction(mClearReplaceTextAction, QLineEdit::TrailingPosition);
 }
 
 //==============================================================================
