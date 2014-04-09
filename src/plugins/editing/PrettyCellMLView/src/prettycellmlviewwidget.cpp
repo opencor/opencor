@@ -174,7 +174,7 @@ void PrettyCellmlViewWidget::initialize(const QString &pFileName)
                 this, SLOT(splitterMoved()));
 
         connect(mEditingWidget->editor(), SIGNAL(zoomLevelChanged(const int &)),
-                this, SLOT(editorZoomLevelChanged(const int &)));
+                this, SLOT(zoomLevelChanged(const int &)));
 
         // Keep track of our editing widget's viewer settings
 
@@ -314,7 +314,7 @@ void PrettyCellmlViewWidget::splitterMoved()
 
 //==============================================================================
 
-void PrettyCellmlViewWidget::editorZoomLevelChanged(const int &pZoomLevel)
+void PrettyCellmlViewWidget::zoomLevelChanged(const int &pZoomLevel)
 {
     // One of our editors had its zoom level changed, so keep track of the new
     // zoom level

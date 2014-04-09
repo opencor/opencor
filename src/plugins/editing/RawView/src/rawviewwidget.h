@@ -86,7 +86,7 @@ private:
     int mEditorZoomLevel;
 
 private Q_SLOTS:
-    void editorZoomLevelChanged(const int &pZoomLevel);
+    void zoomLevelChanged(const int &pZoomLevel);
 };
 
 //==============================================================================

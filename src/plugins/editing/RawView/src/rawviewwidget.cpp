@@ -126,7 +126,7 @@ void RawViewWidget::initialize(const QString &pFileName)
         // Keep track of changes to our editor's zoom level
 
         connect(mEditor, SIGNAL(zoomLevelChanged(const int &)),
-                this, SLOT(editorZoomLevelChanged(const int &)));
+                this, SLOT(zoomLevelChanged(const int &)));
 
         // Keep track of our editor and add it to ourselves
 
@@ -236,7 +236,7 @@ QList<QWidget *> RawViewWidget::statusBarWidgets() const
 
 //==============================================================================
 
-void RawViewWidget::editorZoomLevelChanged(const int &pZoomLevel)
+void RawViewWidget::zoomLevelChanged(const int &pZoomLevel)
 {
     // One of our editors had its zoom level changed, so keep track of the new
     // zoom level

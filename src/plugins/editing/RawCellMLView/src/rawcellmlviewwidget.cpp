@@ -191,7 +191,9 @@ void RawCellmlViewWidget::initialize(const QString &pFileName)
                 this, SLOT(splitterMoved()));
 
         connect(mEditingWidget->editor(), SIGNAL(zoomLevelChanged(const int &)),
-                this, SLOT(editorZoomLevelChanged(const int &)));
+                this, SLOT(zoomLevelChanged(const int &)));
+
+        // Update our viewer whenever necessary
 
         connect(mEditingWidget->editor(), SIGNAL(textChanged()),
                 this, SLOT(updateViewer()));
@@ -451,7 +453,7 @@ void RawCellmlViewWidget::splitterMoved()
 
 //==============================================================================
 
-void RawCellmlViewWidget::editorZoomLevelChanged(const int &pZoomLevel)
+void RawCellmlViewWidget::zoomLevelChanged(const int &pZoomLevel)
 {
     // One of our editors had its zoom level changed, so keep track of the new
     // zoom level

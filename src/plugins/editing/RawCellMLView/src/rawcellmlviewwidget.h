@@ -117,7 +117,7 @@ private:
 
 private Q_SLOTS:
     void splitterMoved();
-    void editorZoomLevelChanged(const int &pZoomLevel);
+    void zoomLevelChanged(const int &pZoomLevel);
 
     void updateViewer();
 
