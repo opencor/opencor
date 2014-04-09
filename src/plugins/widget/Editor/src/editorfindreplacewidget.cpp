@@ -179,6 +179,10 @@ void EditorFindReplaceWidget::setReadOnly(const bool &pReadOnly)
     Core::showEnableWidget(mGui->replaceAndFindButton, !pReadOnly);
     Core::showEnableWidget(mGui->replaceAllButton, !pReadOnly);
 
+    // Enable/disable our find spacer
+
+    mGui->findLayout->setStretch(2, !pReadOnly);
+
     // Update our height
 
     updateHeight();
