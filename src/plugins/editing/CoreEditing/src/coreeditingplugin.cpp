@@ -240,7 +240,7 @@ void CoreEditingPlugin::updateGui(Plugin *pViewPlugin, const QString &pFileName)
         if (mEditor) {
             disconnect(mEditor, SIGNAL(canUndo(const bool &)),
                        this, SLOT(updateUndoAndRedoActions()));
-            disconnect(mEditor, SIGNAL(copyAvailable(bool)),
+            disconnect(mEditor, SIGNAL(copyAvailable(const bool &)),
                        this, SLOT(updateEditingActions()));
             disconnect(mEditor, SIGNAL(canSelectAll(const bool &)),
                        this, SLOT(updateSelectAllAction()));
@@ -258,7 +258,7 @@ void CoreEditingPlugin::updateGui(Plugin *pViewPlugin, const QString &pFileName)
 
             connect(mEditor, SIGNAL(canUndo(const bool &)),
                     this, SLOT(updateUndoAndRedoActions()));
-            connect(mEditor, SIGNAL(copyAvailable(bool)),
+            connect(mEditor, SIGNAL(copyAvailable(const bool &)),
                     this, SLOT(updateEditingActions()));
             connect(mEditor, SIGNAL(canSelectAll(const bool &)),
                     this, SLOT(updateSelectAllAction()));
