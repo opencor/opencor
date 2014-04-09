@@ -170,6 +170,8 @@ void RawCellmlViewWidget::initialize(const QString &pFileName)
 {
     // Retrieve the editing widget associated with the given file, if any
 
+    CoreCellMLEditing::CoreCellmlEditingWidget *oldEditingWidget = mEditingWidget;
+
     mEditingWidget = mEditingWidgets.value(pFileName);
 
     if (!mEditingWidget) {
@@ -230,10 +232,13 @@ void RawCellmlViewWidget::initialize(const QString &pFileName)
     foreach (CoreCellMLEditing::CoreCellmlEditingWidget *editingWidget, mEditingWidgets)
         if (editingWidget == mEditingWidget) {
             // This is the editing widget we are after, so show it and update
-            // its size and zoom level
+            // its size, zoom level and find/replace widget
 
             editingWidget->setSizes(mEditingWidgetSizes);
             editingWidget->editor()->setZoomLevel(mEditorZoomLevel);
+
+            if (oldEditingWidget)
+                editingWidget->editor()->updateFindReplaceFrom(oldEditingWidget->editor());
 
             editingWidget->show();
         } else {

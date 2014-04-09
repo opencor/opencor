@@ -110,6 +110,8 @@ void RawViewWidget::initialize(const QString &pFileName)
 {
     // Retrieve the editor associated with the given file, if any
 
+    Editor::EditorWidget *oldEditor = mEditor;
+
     mEditor = mEditors.value(pFileName);
 
     if (!mEditor) {
@@ -140,9 +142,10 @@ void RawViewWidget::initialize(const QString &pFileName)
     foreach (Editor::EditorWidget *editor, mEditors)
         if (editor == mEditor) {
             // This is the editor we are after, so show it and update its zoom
-            // level
+            // level and find/replace widget
 
             editor->setZoomLevel(mEditorZoomLevel);
+            editor->updateFindReplaceFrom(oldEditor);
 
             editor->show();
         } else {

@@ -53,7 +53,8 @@ EditorWidget::EditorWidget(const QString &pContents, const bool &pReadOnly,
     Core::Widget(pParent),
     mGui(new Ui::EditorWidget),
     mLine(0),
-    mColumn(0)
+    mColumn(0),
+    mFindReplaceVisible(false)
 {
     // Set up the GUI
 
@@ -426,9 +427,37 @@ void EditorWidget::setZoomLevel(const int &pZoomLevel)
 
 //==============================================================================
 
+void EditorWidget::updateFindReplaceFrom(EditorWidget *pEditor)
+{
+    // Make sure that we have a given editor
+
+    if (!pEditor)
+        return;
+
+    // Show/hide our find/replace widget
+
+    if (pEditor->findReplaceIsVisible())
+        showFindReplace();
+    else
+        hideFindReplace();
+}
+
+//==============================================================================
+
+bool EditorWidget::findReplaceIsVisible() const
+{
+    // Return whether our find/replace widget is visible
+
+    return mFindReplaceVisible;
+}
+
+//==============================================================================
+
 void EditorWidget::showFindReplace()
 {
     // Show our find/replace widget
+
+    mFindReplaceVisible = true;
 
     mSeparator->setVisible(true);
     mFindReplace->setVisible(true);
@@ -443,6 +472,8 @@ void EditorWidget::showFindReplace()
 void EditorWidget::hideFindReplace()
 {
     // Hide our find/replace widget
+
+    mFindReplaceVisible = false;
 
     mSeparator->setVisible(false);
     mFindReplace->setVisible(false);

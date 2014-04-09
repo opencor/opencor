@@ -128,7 +128,12 @@ public:
     int zoomLevel() const;
     void setZoomLevel(const int &pZoomLevel);
 
+    void updateFindReplaceFrom(EditorWidget *pEditor);
+
+    bool findReplaceIsVisible() const;
+
     void showFindReplace();
+    void hideFindReplace();
 
 private:
     Ui::EditorWidget *mGui;
@@ -140,7 +145,7 @@ private:
     int mLine;
     int mColumn;
 
-    void hideFindReplace();
+    bool mFindReplaceVisible;
 
 Q_SIGNALS:
     void zoomLevelChanged(const int &pZoomLevel);
