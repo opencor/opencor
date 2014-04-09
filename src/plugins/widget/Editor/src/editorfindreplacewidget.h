@@ -65,6 +65,8 @@ public:
 
     void setReadOnly(const bool &pReadOnly);
 
+    void updateFrom(EditorFindReplaceWidget *pFindReplace);
+
 protected:
     virtual void changeEvent(QEvent *pEvent);
     virtual void keyPressEvent(QKeyEvent *pEvent);
@@ -80,6 +82,9 @@ private:
     QAction *mRegularExpressionAction;
 
     QAction *mClearTextAction;
+
+    QString findText() const;
+    QString replaceText() const;
 
     void updateHeight();
     void updateStyleSheet();

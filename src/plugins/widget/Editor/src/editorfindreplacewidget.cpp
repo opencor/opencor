@@ -62,7 +62,7 @@ EditorFindReplaceWidget::EditorFindReplaceWidget(QWidget *pParent) :
 
 #ifdef Q_OS_MAC
     mGui->findEdit->setAttribute(Qt::WA_MacShowFocusRect, false);
-    mGui->replaceWithEdit->setAttribute(Qt::WA_MacShowFocusRect, false);
+    mGui->replaceEdit->setAttribute(Qt::WA_MacShowFocusRect, false);
     // Note: the above remove the focus border since it messes up the look of
     //       our edit widgets...
 #endif
@@ -173,8 +173,8 @@ void EditorFindReplaceWidget::setReadOnly(const bool &pReadOnly)
     // Show/hide our replace-related widgets based on whether we are in
     // read-only mode
 
-    Core::showEnableWidget(mGui->replaceWithLabel, !pReadOnly);
-    Core::showEnableWidget(mGui->replaceWithEdit, !pReadOnly);
+    Core::showEnableWidget(mGui->replaceLabel, !pReadOnly);
+    Core::showEnableWidget(mGui->replaceEdit, !pReadOnly);
     Core::showEnableWidget(mGui->replaceButton, !pReadOnly);
     Core::showEnableWidget(mGui->replaceAndFindButton, !pReadOnly);
     Core::showEnableWidget(mGui->replaceAllButton, !pReadOnly);
@@ -186,6 +186,34 @@ void EditorFindReplaceWidget::setReadOnly(const bool &pReadOnly)
     // Update our height
 
     updateHeight();
+}
+
+//==============================================================================
+
+QString EditorFindReplaceWidget::findText() const
+{
+    // Return our find text
+
+    return mGui->findEdit->text();
+}
+
+//==============================================================================
+
+QString EditorFindReplaceWidget::replaceText() const
+{
+    // Return our replace text
+
+    return mGui->replaceEdit->text();
+}
+
+//==============================================================================
+
+void EditorFindReplaceWidget::updateFrom(EditorFindReplaceWidget *pFindReplace)
+{
+    // Update our find and replace texts from the given find/replace widget
+
+    mGui->findEdit->setText(pFindReplace->findText());
+    mGui->replaceEdit->setText(pFindReplace->replaceText());
 }
 
 //==============================================================================

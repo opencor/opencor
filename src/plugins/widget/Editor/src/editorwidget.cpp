@@ -440,6 +440,19 @@ void EditorWidget::updateFindReplaceFrom(EditorWidget *pEditor)
         showFindReplace();
     else
         hideFindReplace();
+
+    // Update the find/replace widget itself
+
+    mFindReplace->updateFrom(pEditor->findReplace());
+}
+
+//==============================================================================
+
+EditorFindReplaceWidget * EditorWidget::findReplace()
+{
+    // Return our find/replace widget
+
+    return mFindReplace;
 }
 
 //==============================================================================

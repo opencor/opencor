@@ -147,6 +147,8 @@ private:
 
     bool mFindReplaceVisible;
 
+    EditorFindReplaceWidget * findReplace();
+
 Q_SIGNALS:
     void zoomLevelChanged(const int &pZoomLevel);
 
