@@ -44,6 +44,7 @@ specific language governing permissions and limitations under the License.
 #include <QPainter>
 #include <QPixmap>
 #include <QSize>
+#include <QToolButton>
 
 //==============================================================================
 
@@ -403,6 +404,13 @@ void EditorFindReplaceWidget::updateClearFindTextAction(const QString &pText)
         mGui->findEdit->removeAction(mClearFindTextAction);
     else
         mGui->findEdit->addAction(mClearFindTextAction, QLineEdit::TrailingPosition);
+
+    // Enable/disable our different tool buttons
+
+    bool hasFindText = !findText().isEmpty();
+
+    mGui->findPreviousButton->setEnabled(hasFindText);
+    mGui->findNextButton->setEnabled(hasFindText);
 }
 
 //==============================================================================
