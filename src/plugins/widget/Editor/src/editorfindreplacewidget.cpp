@@ -304,7 +304,7 @@ void EditorFindReplaceWidget::keyPressEvent(QKeyEvent *pEvent)
     else
         // Default handling of the event
 
-        QWidget::keyPressEvent(pEvent);
+        Core::Widget::keyPressEvent(pEvent);
 }
 
 //==============================================================================
