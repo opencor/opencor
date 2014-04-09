@@ -104,6 +104,7 @@ private Q_SLOTS:
 
     void updateUndoAndRedoActions();
     void updateEditingActions();
+    void updateFindPreviousNextActions();
     void updateSelectAllAction();
 
     void newFile();

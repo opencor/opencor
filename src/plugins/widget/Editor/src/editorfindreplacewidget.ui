@@ -149,9 +149,9 @@
  </widget>
  <tabstops>
   <tabstop>findEdit</tabstop>
+  <tabstop>replaceEdit</tabstop>
   <tabstop>findPreviousButton</tabstop>
   <tabstop>findNextButton</tabstop>
-  <tabstop>replaceEdit</tabstop>
   <tabstop>replaceButton</tabstop>
   <tabstop>replaceAndFindButton</tabstop>
   <tabstop>replaceAllButton</tabstop>

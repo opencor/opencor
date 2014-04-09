@@ -103,6 +103,8 @@ public:
     bool isUndoAvailable() const;
     bool isRedoAvailable() const;
 
+    bool isFindPreviousNextAvailable() const;
+
     bool isSelectAllAvailable() const;
 
     void cut();
@@ -161,7 +163,13 @@ Q_SIGNALS:
     void canUndo(const bool &pCanUndo);
     void canRedo(const bool &pCanRedo);
 
+    void canFindPreviousNext(const bool &pCanFindPreviousNext);
+
     void canSelectAll(const bool &pCanSelectAll);
+
+public Q_SLOTS:
+    void findPrevious();
+    void findNext();
 
 private Q_SLOTS:
     void zoomLevelChanged();

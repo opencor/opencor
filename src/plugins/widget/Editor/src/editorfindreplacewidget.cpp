@@ -322,6 +322,24 @@ void EditorFindReplaceWidget::resizeEvent(QResizeEvent *pEvent)
 
 //==============================================================================
 
+void EditorFindReplaceWidget::on_findPreviousButton_clicked()
+{
+    // Let people know that we want to find the previous occurrence of the text
+
+    emit findPreviousRequested();
+}
+
+//==============================================================================
+
+void EditorFindReplaceWidget::on_findNextButton_clicked()
+{
+    // Let people know that we want to find the next occurrence of the text
+
+    emit findNextRequested();
+}
+
+//==============================================================================
+
 void EditorFindReplaceWidget::searchOptionChanged()
 {
     // Update the icon used for the leading position of our find widget

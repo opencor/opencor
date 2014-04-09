@@ -103,7 +103,7 @@ EditorWidget::EditorWidget(const QString &pContents, const bool &pReadOnly,
     connect(mEditor, SIGNAL(cursorPositionChanged(const int &, const int &)),
             this, SLOT(keepTrackOfCursorPosition(const int &, const int &)));
 
-    // Keep track of whenever a key is being pressed in our editor our
+    // Keep track of whenever a key is being pressed in our editor or
     // find/replace widget
 
     connect(mEditor, SIGNAL(keyPressed(QKeyEvent *, bool &)),
@@ -115,6 +115,13 @@ EditorWidget::EditorWidget(const QString &pContents, const bool &pReadOnly,
 
     connect(mFindReplace, SIGNAL(findTextChanged(const QString &)),
             this, SLOT(findTextChanged(const QString &)));
+
+    // Keep track of the triggering of some actions in our find/replace widget
+
+    connect(mFindReplace, SIGNAL(findPreviousRequested()),
+            this, SLOT(findPrevious()));
+    connect(mFindReplace, SIGNAL(findNextRequested()),
+            this, SLOT(findNext()));
 
     // Add our editor and find/replace widgets to our layout
 
@@ -277,6 +284,15 @@ bool EditorWidget::isRedoAvailable() const
     // Return whether we can redo a change in our editor
 
     return mEditor->isRedoAvailable();
+}
+
+//==============================================================================
+
+bool EditorWidget::isFindPreviousNextAvailable() const
+{
+    // Return whether we can find previous/next in our editor
+
+    return !mFindReplace->findText().isEmpty();
 }
 
 //==============================================================================
@@ -498,6 +514,26 @@ void EditorWidget::hideFindReplace()
 
 //==============================================================================
 
+void EditorWidget::findPrevious()
+{
+    // Find the previous occurrence of the text in our editor
+
+qDebug(">>> Find Previous...");
+//---GRY--- TO BE DONE...
+}
+
+//==============================================================================
+
+void EditorWidget::findNext()
+{
+    // Find the next occurrence of the text in our editor
+
+qDebug(">>> Find Next...");
+//---GRY--- TO BE DONE...
+}
+
+//==============================================================================
+
 void EditorWidget::zoomLevelChanged()
 {
     // Let people know that the zoom level has changed
@@ -571,6 +607,10 @@ void EditorWidget::findTextChanged(const QString &pText)
                            mFindReplace->caseSensitive(),
                            mFindReplace->wholeWordsOnly(),
                            true, true, mLine, mColumn);
+
+    // Let people know whether we can find previous/next
+
+    emit canFindPreviousNext(!pText.isEmpty());
 }
 
 //==============================================================================

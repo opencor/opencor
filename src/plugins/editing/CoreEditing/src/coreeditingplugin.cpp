@@ -242,6 +242,8 @@ void CoreEditingPlugin::updateGui(Plugin *pViewPlugin, const QString &pFileName)
                        this, SLOT(updateUndoAndRedoActions()));
             disconnect(mEditor, SIGNAL(copyAvailable(const bool &)),
                        this, SLOT(updateEditingActions()));
+            disconnect(mEditor, SIGNAL(canFindPreviousNext(const bool &)),
+                       this, SLOT(updateFindPreviousNextActions()));
             disconnect(mEditor, SIGNAL(canSelectAll(const bool &)),
                        this, SLOT(updateSelectAllAction()));
         }
@@ -260,6 +262,8 @@ void CoreEditingPlugin::updateGui(Plugin *pViewPlugin, const QString &pFileName)
                     this, SLOT(updateUndoAndRedoActions()));
             connect(mEditor, SIGNAL(copyAvailable(const bool &)),
                     this, SLOT(updateEditingActions()));
+            connect(mEditor, SIGNAL(canFindPreviousNext(const bool &)),
+                    this, SLOT(updateFindPreviousNextActions()));
             connect(mEditor, SIGNAL(canSelectAll(const bool &)),
                     this, SLOT(updateSelectAllAction()));
         }
@@ -292,6 +296,7 @@ void CoreEditingPlugin::updateGui(Plugin *pViewPlugin, const QString &pFileName)
     if (hasEditingInterfaceAndEditor) {
         updateUndoAndRedoActions();
         updateEditingActions();
+        updateFindPreviousNextActions();
         updateSelectAllAction();
     }
 }
@@ -396,6 +401,7 @@ void CoreEditingPlugin::filePermissionsChanged(const QString &pFileName)
 
         updateUndoAndRedoActions();
         updateEditingActions();
+        updateFindPreviousNextActions();
         updateSelectAllAction();
 
         // Make our editor read-only or writable
@@ -564,6 +570,21 @@ void CoreEditingPlugin::updateEditingActions()
 
 //==============================================================================
 
+void CoreEditingPlugin::updateFindPreviousNextActions()
+{
+    // Update our find previous and next actions
+
+    if (mEditingInterface) {
+        bool canFindPreviousNext =    mEditor
+                                   && mEditor->isFindPreviousNextAvailable();
+
+        mEditFindPreviousAction->setEnabled(canFindPreviousNext);
+        mEditFindNextAction->setEnabled(canFindPreviousNext);
+    }
+}
+
+//==============================================================================
+
 void CoreEditingPlugin::updateSelectAllAction()
 {
     // Update our select all action
@@ -693,14 +714,20 @@ void CoreEditingPlugin::doFindReplace()
 
 void CoreEditingPlugin::doFindNext()
 {
-//---GRY--- TO BE DONE...
+    // Find the next occurrence of the text in our editor
+
+    if (mEditor)
+        mEditor->findNext();
 }
 
 //==============================================================================
 
 void CoreEditingPlugin::doFindPrevious()
 {
-//---GRY--- TO BE DONE...
+    // Find the previous occurrence of the text in our editor
+
+    if (mEditor)
+        mEditor->findPrevious();
 }
 
 //==============================================================================
