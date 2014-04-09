@@ -192,6 +192,15 @@ void EditorFindReplaceWidget::setReadOnly(const bool &pReadOnly)
 
 void EditorFindReplaceWidget::updateHeight()
 {
+    // Update our layout
+    // Note: we shouldn't have to do this, but if the user opens a read-only and
+    //       shows ourselves, then the find-related widgets will be too 'low'.
+    //       This is because the replace-related widgets get hidden/disabled as
+    //       expected, but the layout doesn't get updated before we fix our
+    //       height, so we update our layout here and in all cases...
+
+    mGui->layout->update();
+
     // Update our height
 
     setFixedHeight(mGui->layout->sizeHint().height());
