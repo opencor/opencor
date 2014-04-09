@@ -248,7 +248,7 @@ void CoreEditingPlugin::updateGui(Plugin *pViewPlugin, const QString &pFileName)
 
         // Retrieve our new editor
 
-        mEditor = mEditingInterface?mEditingInterface->editor(pFileName):0;
+        mEditor = mEditingInterface->editor(pFileName);
         mFileName = pFileName;
 
         // Set our new editor's context menu, connections and background
