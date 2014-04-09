@@ -108,14 +108,19 @@ EditorFindReplaceWidget::EditorFindReplaceWidget(QWidget *pParent) :
 
     setFocusProxy(mGui->findEdit);
 
-    // Some connections for our find widget
+    // Some connections for our find-related widgets
 
     connect(mGui->findEdit, SIGNAL(textChanged(const QString &)),
             this, SIGNAL(findTextChanged(const QString &)));
     connect(mGui->findEdit, SIGNAL(textChanged(const QString &)),
             this, SLOT(updateClearFindTextAction(const QString &)));
 
-    // Some connections for our replace widget
+    connect(this, SIGNAL(canFindPreviousNext(const bool &)),
+            mGui->findPreviousButton, SLOT(setEnabled(bool)));
+    connect(this, SIGNAL(canFindPreviousNext(const bool &)),
+            mGui->findNextButton, SLOT(setEnabled(bool)));
+
+    // A connection for our replace widget
 
     connect(mGui->replaceEdit, SIGNAL(textChanged(const QString &)),
             this, SLOT(updateClearReplaceTextAction(const QString &)));
@@ -130,6 +135,9 @@ EditorFindReplaceWidget::EditorFindReplaceWidget(QWidget *pParent) :
     updateHeight();
     // Note: just to be safe, we update our height after updating our style
     //       sheet since we change the size of our tool buttons...
+
+    mGui->findPreviousButton->setEnabled(false);
+    mGui->findNextButton->setEnabled(false);
 }
 
 //==============================================================================
@@ -197,6 +205,15 @@ void EditorFindReplaceWidget::setReadOnly(const bool &pReadOnly)
     // Update our height
 
     updateHeight();
+}
+
+//==============================================================================
+
+bool EditorFindReplaceWidget::isFindPreviousNextAvailable() const
+{
+    // Return whether the find previous/next actions are available
+
+    return !findText().isEmpty();
 }
 
 //==============================================================================
@@ -405,12 +422,9 @@ void EditorFindReplaceWidget::updateClearFindTextAction(const QString &pText)
     else
         mGui->findEdit->addAction(mClearFindTextAction, QLineEdit::TrailingPosition);
 
-    // Enable/disable our different tool buttons
+    // Let people know whether we can find previous/next
 
-    bool hasFindText = !findText().isEmpty();
-
-    mGui->findPreviousButton->setEnabled(hasFindText);
-    mGui->findNextButton->setEnabled(hasFindText);
+    emit canFindPreviousNext(!findText().isEmpty());
 }
 
 //==============================================================================

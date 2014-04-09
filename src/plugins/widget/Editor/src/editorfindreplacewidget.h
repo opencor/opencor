@@ -67,8 +67,7 @@ public:
 
     void updateFrom(EditorFindReplaceWidget *pFindReplace);
 
-    QString findText() const;
-    QString replaceText() const;
+    bool isFindPreviousNextAvailable() const;
 
 protected:
     virtual void changeEvent(QEvent *pEvent);
@@ -87,6 +86,9 @@ private:
     QAction *mClearFindTextAction;
     QAction *mClearReplaceTextAction;
 
+    QString findText() const;
+    QString replaceText() const;
+
     void updateHeight();
     void updateStyleSheet();
 
@@ -94,6 +96,8 @@ Q_SIGNALS:
     void keyPressed(QKeyEvent *pEvent, bool &pHandled);
 
     void findTextChanged(const QString &pText);
+
+    void canFindPreviousNext(const bool &pCanFindPreviousNext);
 
     void findPreviousRequested();
     void findNextRequested();

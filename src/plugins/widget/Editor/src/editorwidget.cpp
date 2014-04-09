@@ -115,6 +115,8 @@ EditorWidget::EditorWidget(const QString &pContents, const bool &pReadOnly,
 
     connect(mFindReplace, SIGNAL(findTextChanged(const QString &)),
             this, SLOT(findTextChanged(const QString &)));
+    connect(mFindReplace, SIGNAL(canFindPreviousNext(const bool &)),
+            this, SIGNAL(canFindPreviousNext(const bool &)));
 
     // Keep track of the triggering of some actions in our find/replace widget
 
@@ -292,7 +294,7 @@ bool EditorWidget::isFindPreviousNextAvailable() const
 {
     // Return whether we can find previous/next in our editor
 
-    return !mFindReplace->findText().isEmpty();
+    return mFindReplace->isFindPreviousNextAvailable();
 }
 
 //==============================================================================
@@ -607,10 +609,6 @@ void EditorWidget::findTextChanged(const QString &pText)
                            mFindReplace->caseSensitive(),
                            mFindReplace->wholeWordsOnly(),
                            true, true, mLine, mColumn);
-
-    // Let people know whether we can find previous/next
-
-    emit canFindPreviousNext(!pText.isEmpty());
 }
 
 //==============================================================================
