@@ -459,8 +459,16 @@ void EditorWidget::updateFindReplaceFrom(EditorWidget *pEditor)
     setFindReplaceVisible(pEditor->findReplaceIsVisible());
 
     // Update the find/replace widget itself
+    // Note: we must inactivate (and then reactivate) our find/replace widget
+    //       otherwise opening a new file or switching to another will result in
+    //       the find text being automatically searched (see the
+    //       findTextChanged() slot)...
+
+    mFindReplace->setActive(false);
 
     mFindReplace->updateFrom(pEditor->findReplace());
+
+    mFindReplace->setActive(true);
 }
 
 //==============================================================================
@@ -495,13 +503,13 @@ void EditorWidget::setFindReplaceVisible(const bool &pVisible)
         QString currentWord = mEditor->wordAt(mCurrentLine, mCurrentColumn);
 
         if (!currentWord.isEmpty()) {
-            setFindReplaceActive(false);
+            mFindReplace->setActive(false);
 
             mEditor->selectWordAt(mCurrentLine, mCurrentColumn);
 
             mFindReplace->setFindText(currentWord);
 
-            setFindReplaceActive(true);
+            mFindReplace->setActive(true);
         } else {
             mFindReplace->selectFindText();
         }
@@ -521,21 +529,6 @@ void EditorWidget::setFindReplaceVisible(const bool &pVisible)
         mFindReplace->setFocus();
     else
         mEditor->setFocus();
-}
-
-//==============================================================================
-
-void EditorWidget::setFindReplaceActive(const bool &pActive)
-{
-    // Activate/inactivate our find/replace widget by connecting/disconnecting
-    // its findTextChanged() signal
-
-    if (pActive)
-        connect(mFindReplace, SIGNAL(findTextChanged(const QString &)),
-                this, SLOT(findTextChanged(const QString &)));
-    else
-        disconnect(mFindReplace, SIGNAL(findTextChanged(const QString &)),
-                   this, SLOT(findTextChanged(const QString &)));
 }
 
 //==============================================================================

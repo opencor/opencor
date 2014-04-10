@@ -134,7 +134,6 @@ public:
 
     bool findReplaceIsVisible() const;
 
-    void setFindReplaceActive(const bool &pActive);
     void setFindReplaceVisible(const bool &pVisible);
 
 private:

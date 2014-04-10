@@ -79,6 +79,9 @@ public:
     bool findEditHasFocus() const;
     bool replaceEditHasFocus() const;
 
+    bool isActive() const;
+    void setActive(const bool &pActive);
+
 protected:
     virtual void changeEvent(QEvent *pEvent);
     virtual void keyPressEvent(QKeyEvent *pEvent);
@@ -95,6 +98,8 @@ private:
 
     QAction *mClearFindTextAction;
     QAction *mClearReplaceTextAction;
+
+    bool mActive;
 
     void updateHeight();
     void updateStyleSheet();

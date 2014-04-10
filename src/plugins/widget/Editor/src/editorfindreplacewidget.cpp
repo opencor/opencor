@@ -55,7 +55,8 @@ namespace Editor {
 
 EditorFindReplaceWidget::EditorFindReplaceWidget(QWidget *pParent) :
     Core::Widget(pParent),
-    mGui(new Ui::EditorFindReplaceWidget)
+    mGui(new Ui::EditorFindReplaceWidget),
+    mActive(false)
 {
     // Set up the GUI
 
@@ -111,8 +112,6 @@ EditorFindReplaceWidget::EditorFindReplaceWidget(QWidget *pParent) :
     // Some connections for our find-related widgets
 
     connect(mGui->findEdit, SIGNAL(textChanged(const QString &)),
-            this, SIGNAL(findTextChanged(const QString &)));
-    connect(mGui->findEdit, SIGNAL(textChanged(const QString &)),
             this, SLOT(updateClearFindTextAction(const QString &)));
 
     connect(this, SIGNAL(canFindReplace(const bool &)),
@@ -137,6 +136,8 @@ EditorFindReplaceWidget::EditorFindReplaceWidget(QWidget *pParent) :
     retranslateUi();
 
     searchOptionChanged();
+
+    setActive(true);
 
     updateStyleSheet();
     updateHeight();
@@ -289,6 +290,34 @@ bool EditorFindReplaceWidget::replaceEditHasFocus() const
     // Return whether our replace edit has the focus
 
     return mGui->replaceEdit->hasFocus();
+}
+
+//==============================================================================
+
+bool EditorFindReplaceWidget::isActive() const
+{
+    // Return whether we are active
+
+    return mActive;
+}
+
+//==============================================================================
+
+void EditorFindReplaceWidget::setActive(const bool &pActive)
+{
+    if (pActive == mActive)
+        return;
+
+    // Set our active state
+
+    mActive = pActive;
+
+    if (pActive)
+        connect(mGui->findEdit, SIGNAL(textChanged(const QString &)),
+                this, SIGNAL(findTextChanged(const QString &)));
+    else
+        disconnect(mGui->findEdit, SIGNAL(textChanged(const QString &)),
+                   this, SIGNAL(findTextChanged(const QString &)));
 }
 
 //==============================================================================
