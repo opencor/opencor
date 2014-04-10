@@ -144,13 +144,10 @@ QScintillaWidget::QScintillaWidget(QsciLexer *pLexer, QWidget *pParent) :
 
     // Keep track of changes to our editor that may affect our ability to select
     // all of its text
-    // Note: we use the SCN_MODIFIED() signal rather than the textChanged()
-    //       signal since the latter is only emitted when inserting or deleting
-    //       some text...
 
     connect(this, SIGNAL(selectionChanged()),
             this, SLOT(checkCanSelectAll()));
-    connect(this, SIGNAL(SCN_MODIFIED(int, int, const char *, int, int, int, int, int, int, int)),
+    connect(this, SIGNAL(textChanged()),
             this, SLOT(checkCanSelectAll()));
 
     // Keep track of the change in the cursor position

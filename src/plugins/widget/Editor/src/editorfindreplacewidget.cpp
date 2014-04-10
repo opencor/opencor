@@ -436,7 +436,7 @@ void EditorFindReplaceWidget::on_replaceAndFindButton_clicked()
 
 void EditorFindReplaceWidget::on_replaceAllButton_clicked()
 {
-    // Let people know that we want to replace all the texts
+    // Let people know that we want to replace all the occurences of the text
 
     emit replaceAllRequested();
 }
