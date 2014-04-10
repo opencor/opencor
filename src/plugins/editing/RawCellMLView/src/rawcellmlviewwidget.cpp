@@ -483,20 +483,20 @@ void RawCellmlViewWidget::updateViewer()
     static const QByteArray EndMathTag = "</math>";
 
     Editor::EditorWidget *editor = mEditingWidget->editor();
-    int crtPos = editor->currentPosition();
+    int currentPosition = editor->currentPosition();
 
-    int crtStartMathTagPos = editor->findTextInRange(crtPos+StartMathTag.length(), 0, StartMathTag);
-    int prevEndMathTagPos = editor->findTextInRange(crtPos, 0, EndMathTag);
-    int crtEndMathTagPos = editor->findTextInRange(crtPos-EndMathTag.length()+1, editor->contentsSize(), EndMathTag);
+    int crtStartMathTagPos = editor->findTextInRange(currentPosition+StartMathTag.length(), 0, StartMathTag);
+    int prevEndMathTagPos = editor->findTextInRange(currentPosition, 0, EndMathTag);
+    int crtEndMathTagPos = editor->findTextInRange(currentPosition-EndMathTag.length()+1, editor->contentsSize(), EndMathTag);
 
     bool foundMathmlBlock = true;
 
     if (   (crtStartMathTagPos >= 0) && (crtEndMathTagPos >= 0)
-        && (crtStartMathTagPos <= crtPos)
-        && (crtPos <= crtEndMathTagPos+EndMathTag.length()-1)) {
+        && (crtStartMathTagPos <= currentPosition)
+        && (currentPosition <= crtEndMathTagPos+EndMathTag.length()-1)) {
         if (   (prevEndMathTagPos >= 0)
             && (prevEndMathTagPos > crtStartMathTagPos)
-            && (prevEndMathTagPos < crtPos))
+            && (prevEndMathTagPos < currentPosition))
             foundMathmlBlock = false;
     } else {
         foundMathmlBlock = false;
@@ -517,7 +517,7 @@ void RawCellmlViewWidget::updateViewer()
             // A Content MathML block contains 0+ child nodes, so extract and
             // clean up the one, if any, at our current position
 
-            QString contentMathmlEquation = cleanUpXml(retrieveContentMathmlEquation(contentMathmlBlock, crtPos-crtStartMathTagPos));
+            QString contentMathmlEquation = cleanUpXml(retrieveContentMathmlEquation(contentMathmlBlock, currentPosition-crtStartMathTagPos));
 
             // Check whether our Content MathML equation is the same as our
             // previous one
