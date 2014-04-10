@@ -84,7 +84,7 @@ EditorWidget::EditorWidget(const QString &pContents, const bool &pReadOnly,
     connect(mEditor, SIGNAL(cursorPositionChanged(int, int)),
             this, SIGNAL(cursorPositionChanged(const int &, const int &)));
 
-    connect(mEditor, SIGNAL(SCN_MODIFIED(int, int, const char *, int, int, int, int, int, int, int)),
+    connect(mEditor, SIGNAL(textChanged()),
             this, SIGNAL(textChanged()));
 
     connect(mEditor, SIGNAL(copyAvailable(bool)),
