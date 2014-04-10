@@ -83,5 +83,6 @@ Also, the divide element gets translated as <mrow>...</mrow><mo>/</mo><mrow>...<
 All of these issues are addressed in this new version of ctop.xsl. For information, the divide element issue was addressed using the solution provided by Wikiwide on 9 June 2013 (see https://addons.mozilla.org/en-US/firefox/addon/mathml-ctop/).
 
 Some additional improvements are:
- - Improvements to the way some mi elements are rendered (see https://github.com/opencor/opencor/issues/297); and
- - Use of middle dots rather than invisible multiplication signs (see https://github.com/opencor/opencor/issues/301).
+ - Improvements to the way some mi elements are rendered (see https://github.com/opencor/opencor/issues/297);
+ - Use of middle dots rather than invisible multiplication signs (see https://github.com/opencor/opencor/issues/301); and
+ - Use "and" and "or" for <and/> and <or/>, respectively, rather than "^" and "v" (see https://github.com/opencor/opencor/issues/326).

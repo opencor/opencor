@@ -628,7 +628,7 @@ Or the Apache 2, MIT or MPL 1.1 or MPL 2.0 licences.
 <xsl:call-template name="infix">
  <xsl:with-param name="this-p" select="2"/>
  <xsl:with-param name="p" select="$p"/>
- <xsl:with-param name="mo"><mo>&#8743;<!-- and --></mo></xsl:with-param>
+ <xsl:with-param name="mo"><mo>and</mo></xsl:with-param>
 </xsl:call-template>
 </xsl:template>
 
@@ -640,7 +640,7 @@ Or the Apache 2, MIT or MPL 1.1 or MPL 2.0 licences.
 <xsl:call-template name="infix">
  <xsl:with-param name="this-p" select="3"/>
  <xsl:with-param name="p" select="$p"/>
- <xsl:with-param name="mo"><mo>&#8744;<!-- or --></mo></xsl:with-param>
+ <xsl:with-param name="mo"><mo>or</mo></xsl:with-param>
 </xsl:call-template>
 </xsl:template>
 
