@@ -108,17 +108,17 @@ ViewerWidget::ViewerWidget(QWidget *pParent) :
             this, SIGNAL(optimiseFontSizeChanged(const bool &)));
 
     connect(mSubscriptsAction, SIGNAL(triggered()),
-            this, SLOT(updateContents()));
+            this, SLOT(updateViewer()));
     connect(mSubscriptsAction, SIGNAL(toggled(bool)),
             this, SIGNAL(subscriptsChanged(const bool &)));
 
     connect(mGreekSymbolsAction, SIGNAL(triggered()),
-            this, SLOT(updateContents()));
+            this, SLOT(updateViewer()));
     connect(mGreekSymbolsAction, SIGNAL(toggled(bool)),
             this, SIGNAL(greekSymbolsChanged(const bool &)));
 
     connect(mDigitGroupingAction, SIGNAL(triggered()),
-            this, SLOT(updateContents()));
+            this, SLOT(updateViewer()));
     connect(mDigitGroupingAction, SIGNAL(toggled(bool)),
             this, SIGNAL(digitGroupingChanged(const bool &)));
 
@@ -359,6 +359,7 @@ void ViewerWidget::paintEvent(QPaintEvent *pEvent)
         return;
 
     // Clear our background
+qDebug(">>> mContents: %s", qPrintable(mContents));
 
     QPainter painter(this);
     QColor backgroundColor = QColor(palette().color(QPalette::Base));
@@ -678,9 +679,9 @@ void ViewerWidget::showCustomContextMenu(const QPoint &pPosition) const
 
 //==============================================================================
 
-void ViewerWidget::updateContents()
+void ViewerWidget::updateViewer()
 {
-    // Update our contents and therefore ourselves (through setContents())
+    // Update our viewer by 'updating' our contents
 
     QString contents = mContents;
 
