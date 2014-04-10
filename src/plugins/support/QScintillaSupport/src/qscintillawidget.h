@@ -67,8 +67,6 @@ public:
 
     int currentLine() const;
     int currentColumn() const;
-    void setCurrentLineAndColumn(const int &pCurrentLine,
-                                 const int &pCurrentColumn);
 
     QString contents() const;
     void setContents(const QString &pContents);

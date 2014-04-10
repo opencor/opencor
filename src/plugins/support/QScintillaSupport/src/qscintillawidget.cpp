@@ -208,16 +208,6 @@ int QScintillaWidget::currentColumn() const
 
 //==============================================================================
 
-void QScintillaWidget::setCurrentLineAndColumn(const int &pCurrentLine,
-                                               const int &pCurrentColumn)
-{
-    // Set our current line and column
-
-    setCursorPosition(pCurrentLine, pCurrentColumn);
-}
-
-//==============================================================================
-
 QString QScintillaWidget::contents() const
 {
     // Return our contents

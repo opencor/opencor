@@ -588,16 +588,8 @@ void EditorWidget::replaceAll()
 {
     // Replace all the occurences of the text
 
-    int originalLine = mCurrentLine;
-    int originalColumn = mCurrentColumn;
-
     while (findNext())
         mEditor->replace(mFindReplace->replaceText());
-
-    mEditor->setCurrentLineAndColumn(originalLine, originalColumn);
-
-    mCurrentLine = originalLine;
-    mCurrentColumn = originalColumn;
 }
 
 //==============================================================================
