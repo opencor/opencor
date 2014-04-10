@@ -170,8 +170,8 @@ Q_SIGNALS:
     void canSelectAll(const bool &pCanSelectAll);
 
 public Q_SLOTS:
-    void findPrevious();
-    void findNext();
+    bool findPrevious();
+    bool findNext();
 
     void replace();
     void replaceAndFind();

@@ -84,7 +84,7 @@ EditorWidget::EditorWidget(const QString &pContents, const bool &pReadOnly,
     connect(mEditor, SIGNAL(cursorPositionChanged(int, int)),
             this, SIGNAL(cursorPositionChanged(const int &, const int &)));
 
-    connect(mEditor, SIGNAL(textChanged()),
+    connect(mEditor, SIGNAL(SCN_MODIFIED(int, int, const char *, int, int, int, int, int, int, int)),
             this, SIGNAL(textChanged()));
 
     connect(mEditor, SIGNAL(copyAvailable(bool)),
@@ -545,7 +545,7 @@ void EditorWidget::hideFindReplace()
 
 //==============================================================================
 
-void EditorWidget::findPrevious()
+bool EditorWidget::findPrevious()
 {
     // Find the previous occurrence of the text in our editor
 
@@ -556,20 +556,24 @@ void EditorWidget::findPrevious()
     mCurrentLine = mEditor->currentLine();
     mCurrentColumn = mEditor->currentColumn();
 
-    if (!findText(mFindReplace->findText(), false))
+    bool res = findText(mFindReplace->findText(), false);
+
+    if (!res)
         mEditor->setCurrentPosition(oldPosition);
+
+    return res;
 }
 
 //==============================================================================
 
-void EditorWidget::findNext()
+bool EditorWidget::findNext()
 {
     // Find the next occurrence of the text in our editor
 
     mCurrentLine = mEditor->currentLine();
     mCurrentColumn = mEditor->currentColumn();
 
-    findText(mFindReplace->findText(), true);
+    return findText(mFindReplace->findText(), true);
 }
 
 //==============================================================================
