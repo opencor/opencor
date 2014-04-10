@@ -172,7 +172,7 @@ void EditorFindReplaceWidget::retranslateUi()
 
 //==============================================================================
 
-bool EditorFindReplaceWidget::caseSensitive() const
+bool EditorFindReplaceWidget::isCaseSensitive() const
 {
     // Return whether the search is to be case sensitive
 
@@ -181,7 +181,7 @@ bool EditorFindReplaceWidget::caseSensitive() const
 
 //==============================================================================
 
-bool EditorFindReplaceWidget::wholeWordsOnly() const
+bool EditorFindReplaceWidget::searchWholeWordsOnly() const
 {
     // Return whether we search whole words only
 
@@ -190,7 +190,7 @@ bool EditorFindReplaceWidget::wholeWordsOnly() const
 
 //==============================================================================
 
-bool EditorFindReplaceWidget::regularExpression() const
+bool EditorFindReplaceWidget::useRegularExpression() const
 {
     // Return whether we use a regular expression
 

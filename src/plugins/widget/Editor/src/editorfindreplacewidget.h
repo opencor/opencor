@@ -59,9 +59,9 @@ public:
 
     virtual void retranslateUi();
 
-    bool caseSensitive() const;
-    bool wholeWordsOnly() const;
-    bool regularExpression() const;
+    bool isCaseSensitive() const;
+    bool searchWholeWordsOnly() const;
+    bool useRegularExpression() const;
 
     void setReadOnly(const bool &pReadOnly);
 

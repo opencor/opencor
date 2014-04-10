@@ -676,9 +676,9 @@ bool EditorWidget::findText(const QString &pText, const bool &pForward)
     // Find the previous/next occurrence of the given text
 
     return mEditor->findFirst(pText,
-                              mFindReplace->regularExpression(),
-                              mFindReplace->caseSensitive(),
-                              mFindReplace->wholeWordsOnly(),
+                              mFindReplace->useRegularExpression(),
+                              mFindReplace->isCaseSensitive(),
+                              mFindReplace->searchWholeWordsOnly(),
                               true, pForward, mCurrentLine, mCurrentColumn);
 }
 
