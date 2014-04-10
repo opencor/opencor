@@ -115,10 +115,17 @@ EditorFindReplaceWidget::EditorFindReplaceWidget(QWidget *pParent) :
     connect(mGui->findEdit, SIGNAL(textChanged(const QString &)),
             this, SLOT(updateClearFindTextAction(const QString &)));
 
-    connect(this, SIGNAL(canFindPreviousNext(const bool &)),
+    connect(this, SIGNAL(canFindReplace(const bool &)),
             mGui->findPreviousButton, SLOT(setEnabled(bool)));
-    connect(this, SIGNAL(canFindPreviousNext(const bool &)),
+    connect(this, SIGNAL(canFindReplace(const bool &)),
             mGui->findNextButton, SLOT(setEnabled(bool)));
+
+    connect(this, SIGNAL(canFindReplace(const bool &)),
+            mGui->replaceButton, SLOT(setEnabled(bool)));
+    connect(this, SIGNAL(canFindReplace(const bool &)),
+            mGui->replaceAndFindButton, SLOT(setEnabled(bool)));
+    connect(this, SIGNAL(canFindReplace(const bool &)),
+            mGui->replaceAllButton, SLOT(setEnabled(bool)));
 
     // A connection for our replace widget
 
@@ -138,6 +145,10 @@ EditorFindReplaceWidget::EditorFindReplaceWidget(QWidget *pParent) :
 
     mGui->findPreviousButton->setEnabled(false);
     mGui->findNextButton->setEnabled(false);
+
+    mGui->replaceButton->setEnabled(false);
+    mGui->replaceAndFindButton->setEnabled(false);
+    mGui->replaceAllButton->setEnabled(false);
 }
 
 //==============================================================================
@@ -201,6 +212,14 @@ void EditorFindReplaceWidget::setReadOnly(const bool &pReadOnly)
     // Enable/disable our find spacer
 
     mGui->findLayout->setStretch(2, !pReadOnly);
+
+    // Disable our replace-related buttons, if needed
+
+    if (findText().isEmpty()) {
+        mGui->replaceButton->setEnabled(false);
+        mGui->replaceAndFindButton->setEnabled(false);
+        mGui->replaceAllButton->setEnabled(false);
+    }
 
     // Update our height
 
@@ -378,6 +397,34 @@ void EditorFindReplaceWidget::on_findNextButton_clicked()
 
 //==============================================================================
 
+void EditorFindReplaceWidget::on_replaceButton_clicked()
+{
+    // Let people know that we want to replace the current text
+
+    emit replaceRequested();
+}
+
+//==============================================================================
+
+void EditorFindReplaceWidget::on_replaceAndFindButton_clicked()
+{
+    // Let people know that we want to replace the current text and the find the
+    // next occurence of the text
+
+    emit replaceAndFindRequested();
+}
+
+//==============================================================================
+
+void EditorFindReplaceWidget::on_replaceAllButton_clicked()
+{
+    // Let people know that we want to replace all the texts
+
+    emit replaceAllRequested();
+}
+
+//==============================================================================
+
 void EditorFindReplaceWidget::searchOptionChanged()
 {
     // Update the icon used for the leading position of our find widget
@@ -442,9 +489,9 @@ void EditorFindReplaceWidget::updateClearFindTextAction(const QString &pText)
     else
         mGui->findEdit->addAction(mClearFindTextAction, QLineEdit::TrailingPosition);
 
-    // Let people know whether we can find previous/next
+    // Let people know whether we can find/replace
 
-    emit canFindPreviousNext(!findText().isEmpty());
+    emit canFindReplace(!findText().isEmpty());
 }
 
 //==============================================================================

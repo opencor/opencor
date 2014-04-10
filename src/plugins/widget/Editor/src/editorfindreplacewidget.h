@@ -101,14 +101,22 @@ Q_SIGNALS:
 
     void findTextChanged(const QString &pText);
 
-    void canFindPreviousNext(const bool &pCanFindPreviousNext);
+    void canFindReplace(const bool &pCanFindReplace);
 
     void findPreviousRequested();
     void findNextRequested();
 
+    void replaceRequested();
+    void replaceAndFindRequested();
+    void replaceAllRequested();
+
 private Q_SLOTS:
     void on_findPreviousButton_clicked();
     void on_findNextButton_clicked();
+
+    void on_replaceButton_clicked();
+    void on_replaceAndFindButton_clicked();
+    void on_replaceAllButton_clicked();
 
     void searchOptionChanged();
 

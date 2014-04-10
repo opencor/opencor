@@ -165,13 +165,17 @@ Q_SIGNALS:
     void canUndo(const bool &pCanUndo);
     void canRedo(const bool &pCanRedo);
 
-    void canFindPreviousNext(const bool &pCanFindPreviousNext);
+    void canFindReplace(const bool &pCanFindReplace);
 
     void canSelectAll(const bool &pCanSelectAll);
 
 public Q_SLOTS:
     void findPrevious();
     void findNext();
+
+    void replace();
+    void replaceAndFind();
+    void replaceAll();
 
 private Q_SLOTS:
     void zoomLevelChanged();

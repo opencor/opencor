@@ -115,8 +115,8 @@ EditorWidget::EditorWidget(const QString &pContents, const bool &pReadOnly,
 
     connect(mFindReplace, SIGNAL(findTextChanged(const QString &)),
             this, SLOT(findTextChanged(const QString &)));
-    connect(mFindReplace, SIGNAL(canFindPreviousNext(const bool &)),
-            this, SIGNAL(canFindPreviousNext(const bool &)));
+    connect(mFindReplace, SIGNAL(canFindReplace(const bool &)),
+            this, SIGNAL(canFindReplace(const bool &)));
 
     // Keep track of the triggering of some actions in our find/replace widget
 
@@ -124,6 +124,13 @@ EditorWidget::EditorWidget(const QString &pContents, const bool &pReadOnly,
             this, SLOT(findPrevious()));
     connect(mFindReplace, SIGNAL(findNextRequested()),
             this, SLOT(findNext()));
+
+    connect(mFindReplace, SIGNAL(replaceRequested()),
+            this, SLOT(replace()));
+    connect(mFindReplace, SIGNAL(replaceAndFindRequested()),
+            this, SLOT(replaceAndFind()));
+    connect(mFindReplace, SIGNAL(replaceAllRequested()),
+            this, SLOT(replaceAll()));
 
     // Add our editor and find/replace widgets to our layout
 
@@ -563,6 +570,33 @@ void EditorWidget::findNext()
     mCurrentColumn = mEditor->currentColumn();
 
     findText(mFindReplace->findText(), true);
+}
+
+//==============================================================================
+
+void EditorWidget::replace()
+{
+    // Replace the current text
+
+qDebug(">>> EditorWidget::replace()...");
+}
+
+//==============================================================================
+
+void EditorWidget::replaceAndFind()
+{
+    // Replace the current text and the find the next occurence of the text
+
+qDebug(">>> EditorWidget::replaceAndFind()...");
+}
+
+//==============================================================================
+
+void EditorWidget::replaceAll()
+{
+    // Replace all the texts
+
+qDebug(">>> EditorWidget::replaceAll()...");
 }
 
 //==============================================================================

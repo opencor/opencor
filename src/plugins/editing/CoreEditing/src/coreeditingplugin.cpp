@@ -242,7 +242,7 @@ void CoreEditingPlugin::updateGui(Plugin *pViewPlugin, const QString &pFileName)
                        this, SLOT(updateUndoAndRedoActions()));
             disconnect(mEditor, SIGNAL(copyAvailable(const bool &)),
                        this, SLOT(updateEditingActions()));
-            disconnect(mEditor, SIGNAL(canFindPreviousNext(const bool &)),
+            disconnect(mEditor, SIGNAL(canFindReplace(const bool &)),
                        this, SLOT(updateFindPreviousNextActions()));
             disconnect(mEditor, SIGNAL(canSelectAll(const bool &)),
                        this, SLOT(updateSelectAllAction()));
@@ -262,7 +262,7 @@ void CoreEditingPlugin::updateGui(Plugin *pViewPlugin, const QString &pFileName)
                     this, SLOT(updateUndoAndRedoActions()));
             connect(mEditor, SIGNAL(copyAvailable(const bool &)),
                     this, SLOT(updateEditingActions()));
-            connect(mEditor, SIGNAL(canFindPreviousNext(const bool &)),
+            connect(mEditor, SIGNAL(canFindReplace(const bool &)),
                     this, SLOT(updateFindPreviousNextActions()));
             connect(mEditor, SIGNAL(canSelectAll(const bool &)),
                     this, SLOT(updateSelectAllAction()));
@@ -575,11 +575,11 @@ void CoreEditingPlugin::updateFindPreviousNextActions()
     // Update our find previous and next actions
 
     if (mEditingInterface) {
-        bool canFindPreviousNext =    mEditor
-                                   && mEditor->isFindPreviousNextAvailable();
+        bool canFindReplace =    mEditor
+                              && mEditor->isFindPreviousNextAvailable();
 
-        mEditFindPreviousAction->setEnabled(canFindPreviousNext);
-        mEditFindNextAction->setEnabled(canFindPreviousNext);
+        mEditFindPreviousAction->setEnabled(canFindReplace);
+        mEditFindNextAction->setEnabled(canFindReplace);
     }
 }
 
