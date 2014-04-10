@@ -62,7 +62,8 @@ RawCellmlViewWidget::RawCellmlViewWidget(QWidget *pParent) :
     mViewerSubscriptsEnabled(true),
     mViewerGreekSymbolsEnabled(true),
     mViewerDigitGroupingEnabled(true),
-    mPresentationMathmlEquations(QMap<QString, QString>())
+    mPresentationMathmlEquations(QMap<QString, QString>()),
+    mContentMathmlEquation(QString())
 {
     // Set up the GUI
 
@@ -522,13 +523,15 @@ void RawCellmlViewWidget::updateViewer()
             // Check whether our Content MathML equation is the same as our
             // previous one
 
-            if (!contentMathmlEquation.compare(mEditingWidget->viewer()->contents())) {
+            if (!contentMathmlEquation.compare(mContentMathmlEquation)) {
                 // It's the same, so leave
 
                 return;
             } else {
                 // It's a different one, so check whether we have already
                 // retrieved its Presentation MathML version
+
+                mContentMathmlEquation = contentMathmlEquation;
 
                 QString presentationMathmlEquation = mPresentationMathmlEquations.value(contentMathmlEquation);
 
@@ -545,7 +548,9 @@ void RawCellmlViewWidget::updateViewer()
             }
         }
     } else {
-        mEditingWidget->viewer()->setContents(QString());
+        mContentMathmlEquation = QString();
+
+        mEditingWidget->viewer()->setContents(mContentMathmlEquation);
     }
 }
 
@@ -597,9 +602,18 @@ void RawCellmlViewWidget::xslTransformationDone(const QString &pInput,
         return;
 
     // The XSL transformation is done, so update our viewer and keep track of
-    // the Presentation MathML
+    // the mapping between the Content and Presentation MathML
+    // Note: before setting the contents of our viewer, we need to make sure
+    //       that pInput is still our current Content MathML equation. Indeed,
+    //       say that updateViewer() gets called many times in a short period of
+    //       time (e.g. as a result of replacing all the occurences of a
+    //       particular string with another one) and that some of those calls
+    //       don't require an XSL transformation, then we may end up in a case
+    //       where pInput is not our current Content MathML equation anymore, in
+    //       which case the contents of our viewer shouldn't be updated...
 
-    mEditingWidget->viewer()->setContents(pOutput);
+    if (!pInput.compare(mContentMathmlEquation))
+        mEditingWidget->viewer()->setContents(pOutput);
 
     mPresentationMathmlEquations.insert(pInput, pOutput);
 }

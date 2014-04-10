@@ -109,6 +109,8 @@ private:
 
     Core::XslTransformer *mXslTransformer;
 
+    QString mContentMathmlEquation;
+
     void cleanUpXml(const QDomNode &pDomNode) const;
     QString cleanUpXml(const QString &pMathml) const;
 
