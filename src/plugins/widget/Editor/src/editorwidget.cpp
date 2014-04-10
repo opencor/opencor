@@ -486,6 +486,28 @@ bool EditorWidget::findReplaceIsVisible() const
 
 void EditorWidget::showFindReplace()
 {
+    // Set our find text
+    // Note: if we are over a word, then we want it to become our find text, but
+    //       by then it means that a call to findText() will be triggered if the
+    //       find text gets changed. We clearly don't want this to happen, hence
+    //       we disconnect and then reconnect things...
+
+    QString currentWord = mEditor->wordAt(mCurrentLine, mCurrentColumn);
+
+    if (!currentWord.isEmpty()) {
+        disconnect(mFindReplace, SIGNAL(findTextChanged(const QString &)),
+                   this, SLOT(findTextChanged(const QString &)));
+
+        mEditor->selectWordAt(mCurrentLine, mCurrentColumn);
+
+        mFindReplace->setFindText(currentWord);
+
+        connect(mFindReplace, SIGNAL(findTextChanged(const QString &)),
+                this, SLOT(findTextChanged(const QString &)));
+    } else {
+        mFindReplace->selectFindText();
+    }
+
     // Show our find/replace widget
 
     mFindReplaceVisible = true;
@@ -496,10 +518,6 @@ void EditorWidget::showFindReplace()
     // Give the focus to our find/replace widget and hide our editor's caret
 
     mFindReplace->setFocus();
-
-    // Select the find text
-
-    mFindReplace->selectFindText();
 }
 
 //==============================================================================

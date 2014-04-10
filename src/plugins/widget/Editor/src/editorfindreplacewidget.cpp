@@ -236,6 +236,17 @@ QString EditorFindReplaceWidget::findText() const
 
 //==============================================================================
 
+void EditorFindReplaceWidget::setFindText(const QString &pFindText)
+{
+    // Set our find text and select it
+
+    mGui->findEdit->setText(pFindText);
+
+    selectFindText();
+}
+
+//==============================================================================
+
 QString EditorFindReplaceWidget::replaceText() const
 {
     // Return our replace text

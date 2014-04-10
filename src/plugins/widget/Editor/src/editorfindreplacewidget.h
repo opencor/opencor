@@ -72,6 +72,8 @@ public:
     void selectFindText() const;
 
     QString findText() const;
+    void setFindText(const QString &pFindText);
+
     QString replaceText() const;
 
 protected:

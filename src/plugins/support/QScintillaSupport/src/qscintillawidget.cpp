@@ -278,6 +278,33 @@ int QScintillaWidget::findTextInRange(const int &pStartRange,
 
 //==============================================================================
 
+QString QScintillaWidget::wordAt(const int &pLine, const int &pColumn) const
+{
+    // Return the current word, if any
+
+    return wordAtLineIndex(pLine, pColumn);
+}
+
+//==============================================================================
+
+void QScintillaWidget::selectWordAt(const int &pLine, const int &pColumn)
+{
+    // Return the current word, if any
+
+    int position = positionFromLineIndex(pLine, pColumn);
+
+    int startPosition = SendScintilla(SCI_WORDSTARTPOSITION, position, true);
+    int endPosition = SendScintilla(SCI_WORDENDPOSITION, position, true);
+
+    if (endPosition-startPosition > 0)
+        setSelection(SendScintilla(SCI_LINEFROMPOSITION, startPosition),
+                     SendScintilla(SCI_GETCOLUMN, startPosition),
+                     SendScintilla(SCI_LINEFROMPOSITION, endPosition),
+                     SendScintilla(SCI_GETCOLUMN, endPosition));
+}
+
+//==============================================================================
+
 bool QScintillaWidget::isSelectAllAvailable() const
 {
     // Return whether we can select all the text

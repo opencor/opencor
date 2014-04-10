@@ -75,6 +75,10 @@ public:
                         const QString &pText,
                         const bool &pCaseSensitive = true) const;
 
+    QString wordAt(const int &pLine, const int &pColumn) const;
+
+    void selectWordAt(const int &pLine, const int &pColumn);
+
     bool isSelectAllAvailable() const;
 
     void del();
