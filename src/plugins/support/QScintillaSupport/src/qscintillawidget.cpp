@@ -150,7 +150,6 @@ QScintillaWidget::QScintillaWidget(QsciLexer *pLexer, QWidget *pParent) :
 
     connect(this, SIGNAL(selectionChanged()),
             this, SLOT(checkCanSelectAll()));
-    connect(this, SIGNAL(textChanged()),
     connect(this, SIGNAL(SCN_MODIFIED(int, int, const char *, int, int, int, int, int, int, int)),
             this, SLOT(checkCanSelectAll()));
 
