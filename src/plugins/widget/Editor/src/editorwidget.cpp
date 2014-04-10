@@ -660,9 +660,17 @@ void EditorWidget::findReplaceKeyPressed(QKeyEvent *pEvent, bool &pHandled)
                && !(pEvent->modifiers() & Qt::MetaModifier)
                &&  (   (pEvent->key() == Qt::Key_Return)
                     || (pEvent->key() == Qt::Key_Enter))) {
-        findNext();
+        if (mFindReplace->findEditHasFocus()) {
+            findNext();
 
-        pHandled = true;
+            pHandled = true;
+        } else if (mFindReplace->replaceEditHasFocus()) {
+            replaceAndFind();
+
+            pHandled = true;
+        } else {
+            pHandled = false;
+        }
     } else {
         pHandled = false;
     }

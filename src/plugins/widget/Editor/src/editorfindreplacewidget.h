@@ -76,6 +76,9 @@ public:
 
     QString replaceText() const;
 
+    bool findEditHasFocus() const;
+    bool replaceEditHasFocus() const;
+
 protected:
     virtual void changeEvent(QEvent *pEvent);
     virtual void keyPressEvent(QKeyEvent *pEvent);

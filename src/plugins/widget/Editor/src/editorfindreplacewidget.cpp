@@ -275,6 +275,24 @@ QString EditorFindReplaceWidget::replaceText() const
 
 //==============================================================================
 
+bool EditorFindReplaceWidget::findEditHasFocus() const
+{
+    // Return whether our find edit has the focus
+
+    return mGui->findEdit->hasFocus();
+}
+
+//==============================================================================
+
+bool EditorFindReplaceWidget::replaceEditHasFocus() const
+{
+    // Return whether our replace edit has the focus
+
+    return mGui->replaceEdit->hasFocus();
+}
+
+//==============================================================================
+
 void EditorFindReplaceWidget::updateFrom(EditorFindReplaceWidget *pFindReplace)
 {
     // Update our find and replace texts from the given find/replace widget
