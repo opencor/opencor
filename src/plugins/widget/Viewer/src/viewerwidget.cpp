@@ -359,7 +359,6 @@ void ViewerWidget::paintEvent(QPaintEvent *pEvent)
         return;
 
     // Clear our background
-qDebug(">>> mContents: %s", qPrintable(mContents));
 
     QPainter painter(this);
     QColor backgroundColor = QColor(palette().color(QPalette::Base));
