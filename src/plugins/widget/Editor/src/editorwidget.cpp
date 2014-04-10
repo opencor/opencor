@@ -139,7 +139,7 @@ EditorWidget::EditorWidget(const QString &pContents, const bool &pReadOnly,
 
     // Initially hide our find/replace widget
 
-    hideFindReplace();
+    setFindReplaceVisible(false);
 }
 
 //==============================================================================
@@ -456,10 +456,7 @@ void EditorWidget::updateFindReplaceFrom(EditorWidget *pEditor)
 
     // Show/hide our find/replace widget
 
-    if (pEditor->findReplaceIsVisible())
-        showFindReplace();
-    else
-        hideFindReplace();
+    setFindReplaceVisible(pEditor->findReplaceIsVisible());
 
     // Update the find/replace widget itself
 
@@ -486,56 +483,59 @@ bool EditorWidget::findReplaceIsVisible() const
 
 //==============================================================================
 
-void EditorWidget::showFindReplace()
+void EditorWidget::setFindReplaceVisible(const bool &pVisible)
 {
-    // Set our find text
+    // Set our find text, if we are to show our find/replace widget
     // Note: if we are over a word, then we want it to become our find text, but
-    //       by then it means that a call to findText() will be triggered if the
-    //       find text gets changed. We clearly don't want this to happen, hence
-    //       we disconnect and then reconnect things...
+    //       if we make it so then a call to findText() will be triggered if the
+    //       find text is different. Clearly, we don't want this to happen,
+    //       hence we inactivate and then reactivate our find/replace widget...
 
-    QString currentWord = mEditor->wordAt(mCurrentLine, mCurrentColumn);
+    if (pVisible) {
+        QString currentWord = mEditor->wordAt(mCurrentLine, mCurrentColumn);
 
-    if (!currentWord.isEmpty()) {
-        disconnect(mFindReplace, SIGNAL(findTextChanged(const QString &)),
-                   this, SLOT(findTextChanged(const QString &)));
+        if (!currentWord.isEmpty()) {
+            setFindReplaceActive(false);
 
-        mEditor->selectWordAt(mCurrentLine, mCurrentColumn);
+            mEditor->selectWordAt(mCurrentLine, mCurrentColumn);
 
-        mFindReplace->setFindText(currentWord);
+            mFindReplace->setFindText(currentWord);
 
-        connect(mFindReplace, SIGNAL(findTextChanged(const QString &)),
-                this, SLOT(findTextChanged(const QString &)));
-    } else {
-        mFindReplace->selectFindText();
+            setFindReplaceActive(true);
+        } else {
+            mFindReplace->selectFindText();
+        }
     }
 
-    // Show our find/replace widget
+    // Show/hide our find/replace widget
 
-    mFindReplaceVisible = true;
+    mFindReplaceVisible = pVisible;
 
-    mSeparator->setVisible(true);
-    mFindReplace->setVisible(true);
+    mSeparator->setVisible(pVisible);
+    mFindReplace->setVisible(pVisible);
 
-    // Give the focus to our find/replace widget and hide our editor's caret
+    // Give the focus to our find/replace widget our to our editor, depending on
+    // the case
 
-    mFindReplace->setFocus();
+    if (pVisible)
+        mFindReplace->setFocus();
+    else
+        mEditor->setFocus();
 }
 
 //==============================================================================
 
-void EditorWidget::hideFindReplace()
+void EditorWidget::setFindReplaceActive(const bool &pActive)
 {
-    // Hide our find/replace widget
+    // Activate/inactivate our find/replace widget by connecting/disconnecting
+    // its findTextChanged() signal
 
-    mFindReplaceVisible = false;
-
-    mSeparator->setVisible(false);
-    mFindReplace->setVisible(false);
-
-    // Give the focus (back) to our editor and show its caret
-
-    mEditor->setFocus();
+    if (pActive)
+        connect(mFindReplace, SIGNAL(findTextChanged(const QString &)),
+                this, SLOT(findTextChanged(const QString &)));
+    else
+        disconnect(mFindReplace, SIGNAL(findTextChanged(const QString &)),
+                   this, SLOT(findTextChanged(const QString &)));
 }
 
 //==============================================================================
@@ -640,7 +640,7 @@ void EditorWidget::editorKeyPressed(QKeyEvent *pEvent, bool &pHandled)
         && !(pEvent->modifiers() & Qt::AltModifier)
         && !(pEvent->modifiers() & Qt::MetaModifier)
         &&  (pEvent->key() == Qt::Key_Escape)) {
-        hideFindReplace();
+        setFindReplaceVisible(false);
 
         pHandled = true;
     } else {
@@ -659,7 +659,7 @@ void EditorWidget::findReplaceKeyPressed(QKeyEvent *pEvent, bool &pHandled)
         && !(pEvent->modifiers() & Qt::AltModifier)
         && !(pEvent->modifiers() & Qt::MetaModifier)
         &&  (pEvent->key() == Qt::Key_Escape)) {
-        hideFindReplace();
+        setFindReplaceVisible(false);
 
         pHandled = true;
     } else if (   !(pEvent->modifiers() & Qt::ShiftModifier)

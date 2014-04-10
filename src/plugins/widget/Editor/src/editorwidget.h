@@ -134,8 +134,8 @@ public:
 
     bool findReplaceIsVisible() const;
 
-    void showFindReplace();
-    void hideFindReplace();
+    void setFindReplaceActive(const bool &pActive);
+    void setFindReplaceVisible(const bool &pVisible);
 
 private:
     Ui::EditorWidget *mGui;

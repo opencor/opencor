@@ -707,7 +707,7 @@ void CoreEditingPlugin::doFindReplace()
     // Show/select the find/replace widget in our editor
 
     if (mEditor)
-        mEditor->showFindReplace();
+        mEditor->setFindReplaceVisible(true);
 }
 
 //==============================================================================
