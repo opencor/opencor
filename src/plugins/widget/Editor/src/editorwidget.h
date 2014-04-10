@@ -162,9 +162,6 @@ Q_SIGNALS:
 
     void copyAvailable(const bool &pCopyAvailable);
 
-    void canUndo(const bool &pCanUndo);
-    void canRedo(const bool &pCanRedo);
-
     void canFindReplace(const bool &pCanFindReplace);
 
     void canSelectAll(const bool &pCanSelectAll);

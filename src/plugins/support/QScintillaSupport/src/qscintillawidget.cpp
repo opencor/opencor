@@ -47,8 +47,6 @@ namespace QScintillaSupport {
 
 QScintillaWidget::QScintillaWidget(QsciLexer *pLexer, QWidget *pParent) :
     QsciScintilla(pParent),
-    mCanUndo(false),
-    mCanRedo(false),
     mCanSelectAll(false),
     mOverwriteMode(false)
 {
@@ -136,11 +134,6 @@ QScintillaWidget::QScintillaWidget(QsciLexer *pLexer, QWidget *pParent) :
 
     connect(this, SIGNAL(SCN_UPDATEUI(int)),
             this, SLOT(updateUi()));
-
-    // Keep track of whether we can undo/redo
-
-    connect(this, SIGNAL(textChanged()),
-            this, SLOT(updateCanUndoAndCanRedo()));
 
     // Keep track of changes to our editor that may affect our ability to select
     // all of its text
@@ -348,9 +341,6 @@ void QScintillaWidget::resetUndoHistory()
     // Reset our undo history
 
     SendScintilla(SCI_EMPTYUNDOBUFFER);
-
-    mCanUndo = false;
-    mCanRedo = false;
 }
 
 //==============================================================================
@@ -577,28 +567,6 @@ void QScintillaWidget::updateUi()
         mOverwriteMode = newOverwriteMode;
 
         mEditingModeWidget->setText(mOverwriteMode?"OVR":"INS");
-    }
-}
-
-//==============================================================================
-
-void QScintillaWidget::updateCanUndoAndCanRedo()
-{
-    // Check whether undoing/redoing is possible
-
-    bool newCanUndo = isUndoAvailable();
-    bool newCanRedo = isRedoAvailable();
-
-    if (newCanUndo != mCanUndo) {
-        mCanUndo = newCanUndo;
-
-        emit canUndo(mCanUndo);
-    }
-
-    if (newCanRedo != mCanRedo) {
-        mCanRedo = newCanRedo;
-
-        emit canRedo(mCanRedo);
     }
 }
 

@@ -238,7 +238,7 @@ void CoreEditingPlugin::updateGui(Plugin *pViewPlugin, const QString &pFileName)
         // Reset our previous editor's connections
 
         if (mEditor) {
-            disconnect(mEditor, SIGNAL(canUndo(const bool &)),
+            disconnect(mEditor, SIGNAL(textChanged()),
                        this, SLOT(updateUndoAndRedoActions()));
             disconnect(mEditor, SIGNAL(copyAvailable(const bool &)),
                        this, SLOT(updateEditingActions()));
@@ -258,7 +258,7 @@ void CoreEditingPlugin::updateGui(Plugin *pViewPlugin, const QString &pFileName)
         if (mEditor) {
             mEditor->setContextMenu(mEditMenu->actions());
 
-            connect(mEditor, SIGNAL(canUndo(const bool &)),
+            connect(mEditor, SIGNAL(textChanged()),
                     this, SLOT(updateUndoAndRedoActions()));
             connect(mEditor, SIGNAL(copyAvailable(const bool &)),
                     this, SLOT(updateEditingActions()));

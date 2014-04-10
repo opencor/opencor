@@ -90,11 +90,6 @@ EditorWidget::EditorWidget(const QString &pContents, const bool &pReadOnly,
     connect(mEditor, SIGNAL(copyAvailable(bool)),
             this, SIGNAL(copyAvailable(const bool &)));
 
-    connect(mEditor, SIGNAL(canUndo(const bool &)),
-            this, SIGNAL(canUndo(const bool &)));
-    connect(mEditor, SIGNAL(canRedo(const bool &)),
-            this, SIGNAL(canRedo(const bool &)));
-
     connect(mEditor, SIGNAL(canSelectAll(const bool &)),
             this, SIGNAL(canSelectAll(const bool &)));
 

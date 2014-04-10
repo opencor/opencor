@@ -115,9 +115,6 @@ private:
 
     QMenu *mContextMenu;
 
-    bool mCanUndo;
-    bool mCanRedo;
-
     bool mCanSelectAll;
 
     bool mOverwriteMode;
@@ -131,17 +128,12 @@ private:
     void updateColors();
 
 Q_SIGNALS:
-    void canUndo(const bool &pCanUndo);
-    void canRedo(const bool &pCanRedo);
-
     void canSelectAll(const bool &pCanSelectAll);
 
     void keyPressed(QKeyEvent *pEvent, bool &pHandled);
 
 private Q_SLOTS:
     void updateUi();
-
-    void updateCanUndoAndCanRedo();
 
     void checkCanSelectAll();
 
