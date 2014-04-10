@@ -100,7 +100,7 @@ EditorWidget::EditorWidget(const QString &pContents, const bool &pReadOnly,
 
     // Keep track of our position within our editor
 
-    connect(mEditor, SIGNAL(cursorPositionChanged(const int &, const int &)),
+    connect(mEditor, SIGNAL(cursorPositionChanged(int, int)),
             this, SLOT(keepTrackOfCursorPosition(const int &, const int &)));
 
     // Keep track of whenever a key is being pressed in our editor or
