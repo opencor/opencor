@@ -50,9 +50,7 @@ QScintillaWidget::QScintillaWidget(QsciLexer *pLexer, QWidget *pParent) :
     mCanUndo(false),
     mCanRedo(false),
     mCanSelectAll(false),
-    mOverwriteMode(false),
-    mCurrentLine(0),
-    mCurrentColumn(0)
+    mOverwriteMode(false)
 {
     // Remove the frame around our Scintilla editor
 
@@ -195,12 +193,37 @@ int QScintillaWidget::currentPosition() const
 
 void QScintillaWidget::setCurrentPosition(const int &pCurrentPosition)
 {
-    // Set our current position and update our current line and column
+    // Set our current position
 
     SendScintilla(SCI_SETCURRENTPOS, pCurrentPosition);
+}
 
-    mCurrentLine = SendScintilla(SCI_LINEFROMPOSITION, pCurrentPosition);
-    mCurrentColumn = SendScintilla(SCI_GETCOLUMN, pCurrentPosition);
+//==============================================================================
+
+int QScintillaWidget::currentLine() const
+{
+    // Return our current line
+
+    return SendScintilla(SCI_LINEFROMPOSITION, SendScintilla(SCI_GETCURRENTPOS));
+}
+
+//==============================================================================
+
+int QScintillaWidget::currentColumn() const
+{
+    // Return our current column
+
+    return SendScintilla(SCI_GETCOLUMN, SendScintilla(SCI_GETCURRENTPOS));
+}
+
+//==============================================================================
+
+void QScintillaWidget::setCurrentLineAndColumn(const int &pCurrentLine,
+                                               const int &pCurrentColumn)
+{
+    // Set our current line and column
+
+    setCursorPosition(pCurrentLine, pCurrentColumn);
 }
 
 //==============================================================================
@@ -394,24 +417,6 @@ int QScintillaWidget::zoomLevel() const
     // Return our zoom level
 
     return SendScintilla(QsciScintillaBase::SCI_GETZOOM);
-}
-
-//==============================================================================
-
-int QScintillaWidget::currentLine() const
-{
-    // Return our current line
-
-    return mCurrentLine;
-}
-
-//==============================================================================
-
-int QScintillaWidget::currentColumn() const
-{
-    // Return our current column
-
-    return mCurrentColumn;
 }
 
 //==============================================================================

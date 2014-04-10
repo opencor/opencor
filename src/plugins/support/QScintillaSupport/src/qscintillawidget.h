@@ -65,6 +65,11 @@ public:
     int currentPosition() const;
     void setCurrentPosition(const int &pCurrentPosition);
 
+    int currentLine() const;
+    int currentColumn() const;
+    void setCurrentLineAndColumn(const int &pCurrentLine,
+                                 const int &pCurrentColumn);
+
     QString contents() const;
     void setContents(const QString &pContents);
 
@@ -94,9 +99,6 @@ public:
     void setForegroundColor(const int &pStyle, const QColor &pForegroundColor);
 
     int zoomLevel() const;
-
-    int currentLine() const;
-    int currentColumn() const;
 
 protected:
     virtual void changeEvent(QEvent *pEvent);
