@@ -126,7 +126,14 @@ void CorePlugin::initialize()
                                     mMainWindow);
 
     mFileCloseAction    = newAction(QIcon(":/oxygen/actions/document-close.png"),
-                                    QKeySequence::Close, mMainWindow);
+#if defined(Q_OS_WIN)
+                                    QList<QKeySequence>() << QKeySequence::Close << QKeySequence(Qt::CTRL|Qt::Key_W),
+#elif defined(Q_OS_LINUX) || defined(Q_OS_MAC)
+                                    QKeySequence::Close,
+#else
+    #error Unsupported platform
+#endif
+                                    mMainWindow);
     mFileCloseAllAction = new QAction(mMainWindow);
 
     // Create the separator before which we will insert our Reopen sub-menu

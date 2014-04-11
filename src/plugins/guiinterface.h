@@ -217,6 +217,9 @@ public:
                                QWidget *pParent = 0);
     static QAction * newAction(const bool &pCheckable, QWidget *pParent = 0);
     static QAction * newAction(const QIcon &pIcon,
+                               const QList<QKeySequence> &pKeySequences,
+                               QWidget *pParent = 0);
+    static QAction * newAction(const QIcon &pIcon,
                                const QKeySequence &pKeySequence,
                                QWidget *pParent = 0);
     static QAction * newAction(const QIcon &pIcon, QWidget *pParent = 0);

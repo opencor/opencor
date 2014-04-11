@@ -469,6 +469,22 @@ QAction * GuiInterface::newAction(const bool &pCheckable, QWidget *pParent)
 //==============================================================================
 
 QAction * GuiInterface::newAction(const QIcon &pIcon,
+                                  const QList<QKeySequence> &pKeySequences,
+                                  QWidget *pParent)
+{
+    // Create and return an action
+
+    QAction *res = new QAction(pParent);
+
+    res->setIcon(pIcon);
+    res->setShortcuts(pKeySequences);
+
+    return res;
+}
+
+//==============================================================================
+
+QAction * GuiInterface::newAction(const QIcon &pIcon,
                                   const QKeySequence &pKeySequence,
                                   QWidget *pParent)
 {
