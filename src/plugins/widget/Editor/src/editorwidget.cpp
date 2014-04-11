@@ -570,7 +570,33 @@ void EditorWidget::replace()
 {
     // Replace the current text
 
-qDebug(">>> EditorWidget::replace()...");
+    if (mFindReplace->useRegularExpression()) {
+        // The find/replace is done using a regular expression, so only replace
+        // the currently selected text if it matches the regular expression
+
+        if (QRegularExpression(mFindReplace->findText()).match(mEditor->selectedText()).hasMatch())
+            mEditor->replace(mFindReplace->replaceText());
+    } else {
+        // The find/replace is done using a simple match, which may be case
+        // sensitive and/or may require whole words
+
+        // Make sure that the currently selected text is a whole word, should
+        // this be requested
+
+        QString currentlySelectedText = mEditor->selectedText();
+
+        if (   mFindReplace->searchWholeWordsOnly()
+            && currentlySelectedText.compare(mEditor->wordAt(mEditor->currentLine(), mEditor->currentColumn())))
+            return;
+
+        // Replace the currently selected if we have a match
+
+        if (!currentlySelectedText.compare(mFindReplace->findText(),
+                                           mFindReplace->isCaseSensitive()?
+                                               Qt::CaseSensitive:
+                                               Qt::CaseInsensitive))
+            mEditor->replace(mFindReplace->replaceText());
+    }
 }
 
 //==============================================================================
@@ -579,7 +605,8 @@ void EditorWidget::replaceAndFind()
 {
     // Replace the current text and the find the next occurence of the text
 
-qDebug(">>> EditorWidget::replaceAndFind()...");
+    replace();
+    findNext();
 }
 
 //==============================================================================
