@@ -758,9 +758,8 @@ void CorePlugin::openRecentFile()
     // Check that the recent file still exists
 
     QString fileNameOrUrl = qobject_cast<QAction *>(sender())->text();
-    QUrl url = fileNameOrUrl;
 
-    if (url.scheme().isEmpty()) {
+    if (isLocalFile(fileNameOrUrl)) {
         if (QFile::exists(fileNameOrUrl))
             // Open the recent file
 
