@@ -57,21 +57,21 @@ void Tests::cliCellmlExportTests()
 {
     // Try to export a CellML 1.0 file to CellML 1.0
 
-    QString inFileName = "../src/plugins/misc/CellMLTools/tests/data/noble_model_1962.cellml";
+    QString inFileNameOrUrl = "../src/plugins/misc/CellMLTools/tests/data/noble_model_1962.cellml";
     QString outFileName = "actual.out";
     QString format = "cellml_1_0";
 
-    QCOMPARE(OpenCOR::runCli(QStringList() << "-c" << "CellMLTools::export" << inFileName << outFileName << format),
+    QCOMPARE(OpenCOR::runCli(QStringList() << "-c" << "CellMLTools::export" << inFileNameOrUrl << outFileName << format),
              OpenCOR::fileContents("../src/plugins/misc/CellMLTools/tests/data/input_file_already_cellml_1_0.out"));
 
     // Export a CellML 1.1 file to CellML 1.0
 
-    inFileName = "../src/plugins/misc/CellMLTools/tests/data/experiments/periodic-stimulus.xml";
+    inFileNameOrUrl = "../src/plugins/misc/CellMLTools/tests/data/experiments/periodic-stimulus.xml";
 
-    QCOMPARE(OpenCOR::runCli(QStringList() << "-c" << "CellMLTools::export" << inFileName << outFileName << format),
+    QCOMPARE(OpenCOR::runCli(QStringList() << "-c" << "CellMLTools::export" << inFileNameOrUrl << outFileName << format),
              QString());
     QCOMPARE(OpenCOR::fileContents(outFileName),
-             OpenCOR::fileContents("../src/plugins/misc/CellMLTools/tests/data/cellml_1_0_export.out"));
+             OpenCOR::fileContents("../src/plugins/misc/CellMLTools/tests/data/cellml_1_0_export_for_local_file.out"));
 
     // Try to export a non-existing CellML file to CellML 1.0
 
@@ -81,21 +81,44 @@ void Tests::cliCellmlExportTests()
     // Try to export to a user-defined format, which file description doesn't
     // exist
 
-    QCOMPARE(OpenCOR::runCli(QStringList() << "-c" << "CellMLTools::export" << inFileName << outFileName << "non_existing_user_defined_format_file"),
+    QCOMPARE(OpenCOR::runCli(QStringList() << "-c" << "CellMLTools::export" << inFileNameOrUrl << outFileName << "non_existing_user_defined_format_file"),
              OpenCOR::fileContents("../src/plugins/misc/CellMLTools/tests/data/user_defined_format_file_not_found.out"));
 
-    // Try to export to a user-defined format, which file description exists
+    // Try to export a local file to a user-defined format, which file
+    // description exists
 
     QString userDefinedFormatFileName = "../src/plugins/misc/CellMLTools/tests/data/user_defined_format.xml";
 
-    QCOMPARE(OpenCOR::runCli(QStringList() << "-c" << "CellMLTools::export" << inFileName << outFileName << userDefinedFormatFileName),
+    QCOMPARE(OpenCOR::runCli(QStringList() << "-c" << "CellMLTools::export" << inFileNameOrUrl << outFileName << userDefinedFormatFileName),
              QString());
 #ifdef Q_OS_WIN
     QCOMPARE(OpenCOR::fileContents(outFileName),
-             OpenCOR::fileContents("../src/plugins/misc/CellMLTools/tests/data/user_defined_format_export_windows.out"));
+             OpenCOR::fileContents("../src/plugins/misc/CellMLTools/tests/data/user_defined_format_export_for_local_file_on_windows.out"));
 #else
     QCOMPARE(OpenCOR::fileContents(outFileName),
-             OpenCOR::fileContents("../src/plugins/misc/CellMLTools/tests/data/user_defined_format_export_nonwindows.out"));
+             OpenCOR::fileContents("../src/plugins/misc/CellMLTools/tests/data/user_defined_format_export_for_local_file_on_non_windows.out"));
+#endif
+
+    // Export a remote CellML 1.1 file to CellML 1.0
+
+    inFileNameOrUrl = "http://models.cellml.org/workspace/terkildsen_niederer_crampin_hunter_smith_2008/@@rawfile/2fc5a55ca81c8506f94d9b8a65f042fd4b826aea/Pandit_Hinch_Niederer.cellml";
+
+    QCOMPARE(OpenCOR::runCli(QStringList() << "-c" << "CellMLTools::export" << inFileNameOrUrl << outFileName << format),
+             QString());
+    QCOMPARE(OpenCOR::fileContents(outFileName),
+             OpenCOR::fileContents("../src/plugins/misc/CellMLTools/tests/data/cellml_1_0_export_for_remote_file.out"));
+
+    // Try to export a remote file to a user-defined format, which file
+    // description exists
+
+    QCOMPARE(OpenCOR::runCli(QStringList() << "-c" << "CellMLTools::export" << inFileNameOrUrl << outFileName << userDefinedFormatFileName),
+             QString());
+#ifdef Q_OS_WIN
+    QCOMPARE(OpenCOR::fileContents(outFileName),
+             OpenCOR::fileContents("../src/plugins/misc/CellMLTools/tests/data/user_defined_format_export_for_remote_file_on_windows.out"));
+#else
+    QCOMPARE(OpenCOR::fileContents(outFileName),
+             OpenCOR::fileContents("../src/plugins/misc/CellMLTools/tests/data/user_defined_format_export_for_remote_file_on_non_windows.out"));
 #endif
 }
 
