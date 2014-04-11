@@ -887,7 +887,7 @@ bool SingleCellViewSimulationResults::exportToCsv(const QString &pFileName) cons
         if (parameter != mRuntime->variableOfIntegration())
             out << "," << Header.arg(parameter->componentHierarchy().join(" | "),
                                      parameter->formattedName(),
-                                     parameter->formattedUnit(mRuntime->variableOfIntegration()->name()));
+                                     parameter->formattedUnit(mRuntime->variableOfIntegration()->unit()));
     }
 
     out << "\n";
