@@ -93,10 +93,10 @@ void Tests::cliCellmlExportTests()
              QString());
 #ifdef Q_OS_WIN
     QCOMPARE(OpenCOR::fileContents(outFileName),
-             OpenCOR::fileContents("../src/plugins/misc/CellMLTools/tests/data/user_defined_format_export_for_local_file_on_windows.out"));
+             OpenCOR::fileContents("../src/plugins/misc/CellMLTools/tests/data/user_defined_format_export_on_windows.out"));
 #else
     QCOMPARE(OpenCOR::fileContents(outFileName),
-             OpenCOR::fileContents("../src/plugins/misc/CellMLTools/tests/data/user_defined_format_export_for_local_file_on_non_windows.out"));
+             OpenCOR::fileContents("../src/plugins/misc/CellMLTools/tests/data/user_defined_format_export_on_non_windows.out"));
 #endif
 
     // Export a remote CellML 1.1 file to CellML 1.0
@@ -107,19 +107,6 @@ void Tests::cliCellmlExportTests()
              QString());
     QCOMPARE(OpenCOR::fileContents(outFileName),
              OpenCOR::fileContents("../src/plugins/misc/CellMLTools/tests/data/cellml_1_0_export_for_remote_file.out"));
-
-    // Try to export a remote file to a user-defined format, which file
-    // description exists
-
-    QCOMPARE(OpenCOR::runCli(QStringList() << "-c" << "CellMLTools::export" << inFileNameOrUrl << outFileName << userDefinedFormatFileName),
-             QString());
-#ifdef Q_OS_WIN
-    QCOMPARE(OpenCOR::fileContents(outFileName),
-             OpenCOR::fileContents("../src/plugins/misc/CellMLTools/tests/data/user_defined_format_export_for_remote_file_on_windows.out"));
-#else
-    QCOMPARE(OpenCOR::fileContents(outFileName),
-             OpenCOR::fileContents("../src/plugins/misc/CellMLTools/tests/data/user_defined_format_export_for_remote_file_on_non_windows.out"));
-#endif
 }
 
 //==============================================================================
