@@ -13,7 +13,9 @@ function headerAndContentsMenu(pageName, relativePath) {
                              [1, "FileBrowser", "user/plugins/FileBrowser.html"],
                              [1, "FileOrganiser", "user/plugins/FileOrganiser.html"],
                              [1, "Help", "user/plugins/Help.html"],
+/*---GRY--- TEMPORARILY DISABLED...
                              [1, "PrettyCellMLView", "user/plugins/PrettyCellMLView.html"],
+*/
                              [1, "RawCellMLView", "user/plugins/RawCellMLView.html"],
                              [1, "RawView", "user/plugins/RawView.html"],
                              [1, "SingleCellView", "user/plugins/SingleCellView.html"],
