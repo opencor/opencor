@@ -104,11 +104,6 @@ static const auto SettingsSelectedItem = QStringLiteral("SelectedItem");
 void FileOrganiserWidget::loadItemSettings(QSettings *pSettings,
                                            QStandardItem *pParentItem)
 {
-    // Make sure that we have a parent item
-
-    if (!pParentItem)
-        return;
-
     // Recursively retrieve the item settings
 
     static int crtItemIndex = -1;
