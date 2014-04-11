@@ -39,6 +39,7 @@ specific language governing permissions and limitations under the License.
 #include <QKeyEvent>
 #include <QLabel>
 #include <QLayout>
+#include <QRegularExpression>
 #include <QVBoxLayout>
 
 //==============================================================================
@@ -574,7 +575,10 @@ void EditorWidget::replace()
         // The find/replace is done using a regular expression, so only replace
         // the currently selected text if it matches the regular expression
 
-        if (QRegularExpression(mFindReplace->findText()).match(mEditor->selectedText()).hasMatch())
+        if (QRegularExpression(mFindReplace->findText(),
+                               mFindReplace->isCaseSensitive()?
+                                   QRegularExpression::NoPatternOption:
+                                   QRegularExpression::CaseInsensitiveOption).match(mEditor->selectedText()).hasMatch())
             mEditor->replace(mFindReplace->replaceText());
     } else {
         // The find/replace is done using a simple match, which may be case
