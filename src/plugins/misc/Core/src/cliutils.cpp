@@ -762,7 +762,9 @@ bool isLocalFile(const QString &pFileNameOrUrl)
 {
     // Return whether the given argument refers to a local file
 
-    return QUrl(pFileNameOrUrl).scheme().isEmpty();
+    QUrl url = pFileNameOrUrl;
+
+    return url.scheme().isEmpty() || url.host().isEmpty();
 }
 
 //==============================================================================
