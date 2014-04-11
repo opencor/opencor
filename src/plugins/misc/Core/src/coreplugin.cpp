@@ -342,9 +342,7 @@ void CorePlugin::handleArguments(const QStringList &pArguments)
 
     foreach (const QString &argument, pArguments)
         if (!argument.isEmpty()) {
-            QUrl url = argument;
-
-            if (url.scheme().isEmpty())
+            if (isLocalFile(argument))
                 mCentralWidget->openFile(argument);
             else
                 mCentralWidget->openRemoteFile(argument);
