@@ -530,8 +530,8 @@ void FileManager::checkFiles()
                 ;
         }
 
-        bool fileReadable = isLocked(file->fileName());
-        bool fileWritable = isLocked(file->fileName());
+        bool fileReadable = isReadable(file->fileName());
+        bool fileWritable = isWritable(file->fileName());
 
         if (    (fileReadable != mFilesReadable.value(file->fileName(), false))
             ||  (fileWritable != mFilesWritable.value(file->fileName(), false))
