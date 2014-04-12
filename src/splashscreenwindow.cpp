@@ -168,11 +168,7 @@ void SplashScreenWindow::finish(QWidget *pWindow)
 
     // Close ourselves with a bit of a delay
 
-    enum {
-        FadingDelay = 500
-    };
-
-    QTimer::singleShot(FadingDelay, this, SLOT(close()));
+    QTimer::singleShot(500, this, SLOT(close()));
 }
 
 //==============================================================================
