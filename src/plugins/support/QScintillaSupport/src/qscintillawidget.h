@@ -115,7 +115,7 @@ private:
 
     bool mCanSelectAll;
 
-    bool mOverwriteMode;
+    bool mInsertMode;
 
     QLabel *mCursorPositionWidget;
     QLabel *mEditingModeWidget;

@@ -48,7 +48,7 @@ namespace QScintillaSupport {
 QScintillaWidget::QScintillaWidget(QsciLexer *pLexer, QWidget *pParent) :
     QsciScintilla(pParent),
     mCanSelectAll(false),
-    mOverwriteMode(false)
+    mInsertMode(true)
 {
     // Remove the frame around our Scintilla editor
 
@@ -550,13 +550,13 @@ void QScintillaWidget::updateUi()
 {
     // Update our editing mode, if needed
 
-    bool newOverwriteMode = overwriteMode();
+    bool newInsertMode = !overwriteMode();
 
-    if (   (newOverwriteMode != mOverwriteMode)
+    if (   (newInsertMode != mInsertMode)
         || mEditingModeWidget->text().isEmpty()) {
-        mOverwriteMode = newOverwriteMode;
+        mInsertMode = newInsertMode;
 
-        mEditingModeWidget->setText(mOverwriteMode?"OVR":"INS");
+        mEditingModeWidget->setText(mInsertMode?"INS":"OVR");
     }
 }
 
