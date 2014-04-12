@@ -516,22 +516,22 @@ void FileManager::checkFiles()
 
     foreach (File *file, mFiles) {
         switch (file->check()) {
-            case File::Changed:
-                // The file has changed, so let people know about it
+        case File::Changed:
+            // The file has changed, so let people know about it
 
-                emit fileChanged(file->fileName());
+            emit fileChanged(file->fileName());
 
-                break;
-            case File::Deleted:
-                // The file has been deleted, so let people know about it
+            break;
+        case File::Deleted:
+            // The file has been deleted, so let people know about it
 
-                emit fileDeleted(file->fileName());
+            emit fileDeleted(file->fileName());
 
-                break;
-            default:
-                // The file is unchanged, so do nothing...
+            break;
+        default:
+            // The file is unchanged, so do nothing...
 
-                ;
+            ;
         }
 
         bool fileReadable = isReadable(file->fileName());
