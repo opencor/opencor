@@ -640,9 +640,13 @@ void CentralWidget::updateFileTab(const int &pIndex)
                                              fileName);
     mFileTabs->setTabIcon(pIndex, fileIsRemote?
                                       QIcon(":/oxygen/categories/applications-internet.png"):
-                                      fileManagerInstance->isLocked(fileName)?
-                                          QIcon(":/oxygen/status/object-locked.png"):
-                                          QIcon());
+                                      fileManagerInstance->isReadableAndWritable(fileName)?
+                                          QIcon():
+                                          QIcon(":/oxygen/status/object-locked.png"));
+    // Note: we really want to call isReadableAndWritable() rather than
+    //       isLocked() since no icon should be shown only if the file can be
+    //       both readable and writable (see
+    //       CorePlugin::filePermissionsChanged())...
 }
 
 //==============================================================================
@@ -1810,6 +1814,18 @@ void CentralWidget::fileReloaded(const QString &pFileName)
 
             if (guiInterface)
                 guiInterface->fileReloaded(pFileName);
+        }
+
+    // Now, because of the way some our views may reload a file (see
+    // CoreEditingPlugin::fileReloaded()), we need to tell them to update their
+    // GUI
+
+    foreach (Plugin *plugin, mLoadedPlugins)
+        if (fileManagerInstance->isActive() || (plugin != fileViewPlugin)) {
+            GuiInterface *guiInterface = qobject_cast<GuiInterface *>(plugin->instance());
+
+            if (guiInterface)
+                guiInterface->updateGui(fileViewPlugin, pFileName);
         }
 }
 

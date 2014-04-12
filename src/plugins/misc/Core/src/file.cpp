@@ -113,16 +113,21 @@ File::Status File::check()
 
         mSha1 = newSha1;
 
-        if (newSha1.isEmpty())
-            // The SHA-1 value of our file is now empty, which means that our
-            // file has been deleted
+        if (newSha1.isEmpty()) {
+            // The SHA-1 value of our file is now empty, which means that either
+            // our file has been either deleted or that it is unreadable (which,
+            // in effect, means that it has changed)
 
-            return File::Deleted;
-        else
+            if (QFile::exists(mFileName))
+                return File::Changed;
+            else
+                return File::Deleted;
+        } else {
             // The SHA-1 value of our file is different from our stored value,
             // which means that our file has changed
 
             return File::Changed;
+        }
     }
 }
 

@@ -494,7 +494,11 @@ void CorePlugin::filePermissionsChanged(const QString &pFileName)
     // Update the checked state of our Locked menu, if needed
 
     if (!pFileName.compare(mCentralWidget->currentFileName()))
-        mFileLockedAction->setChecked(FileManager::instance()->isLocked(pFileName));
+        mFileLockedAction->setChecked(!FileManager::instance()->isReadableAndWritable(pFileName));
+        // Note: we really want to call isReadableAndWritable() rather than
+        //       isLocked() since from the GUI perspective a file should only be
+        //       considered unlocked if it can be both readable and writable
+        //       (see CentralWidget::updateFileTab())...
 }
 
 //==============================================================================
@@ -679,7 +683,8 @@ void CorePlugin::updateNewModifiedSensitiveActions()
 
         mFileReloadAction->setEnabled(!fileIsNew);
         mFileDuplicateAction->setEnabled(!fileIsNewRemoteOrModified);
-        mFileLockedAction->setEnabled(!fileIsNewRemoteOrModified);
+        mFileLockedAction->setEnabled(   !fileIsNewRemoteOrModified
+                                      &&  fileManagerInstance->isReadable(fileName));
     } else {
         mFileReloadAction->setEnabled(false);
         mFileDuplicateAction->setEnabled(false);
