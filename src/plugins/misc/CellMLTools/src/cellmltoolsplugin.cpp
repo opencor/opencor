@@ -537,9 +537,9 @@ int CellMLToolsPlugin::runExportCommand(const QStringList &pArguments)
     QString errorMessage = QString();
     QString inFileName = pArguments.at(0);
     QUrl inFileUrl = inFileName;
-    bool inFileIsLocal = Core::isLocalFile(inFileName);
+    bool inFileIsRemote = Core::isRemoteFile(inFileName);
 
-    if (!inFileIsLocal) {
+    if (inFileIsRemote) {
         // It looks like we are dealing with a remote input file, so try to get
         // a local copy of it
 
@@ -585,12 +585,12 @@ int CellMLToolsPlugin::runExportCommand(const QStringList &pArguments)
             errorMessage = "Sorry, but the input file is not a CellML file.";
         } else {
             if (Core::FileManager::instance()->manage(inFileName,
-                                                      inFileIsLocal?
-                                                          Core::File::Local:
-                                                          Core::File::Remote,
-                                                      inFileIsLocal?
-                                                          QString():
-                                                          inFileUrl.toString(QUrl::NormalizePathSegments)) != Core::FileManager::Added) {
+                                                      inFileIsRemote?
+                                                          Core::File::Remote:
+                                                          Core::File::Local,
+                                                      inFileIsRemote?
+                                                          inFileUrl.toString(QUrl::NormalizePathSegments):
+                                                          QString()) != Core::FileManager::Added) {
                 errorMessage = "Sorry, but the input file could not be registered.";
             } else {
                 CellMLSupport::CellmlFile *inCellmlFile = new CellMLSupport::CellmlFile(inFileName);
@@ -645,7 +645,7 @@ int CellMLToolsPlugin::runExportCommand(const QStringList &pArguments)
 
     // Delete the input file, if needed
 
-    if (!inFileIsLocal && QFile::exists(inFileName))
+    if (inFileIsRemote && QFile::exists(inFileName))
         QFile::remove(inFileName);
 
     // Let the user know if something went wrong at some point and then leave

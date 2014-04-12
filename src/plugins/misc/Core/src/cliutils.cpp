@@ -758,13 +758,13 @@ void doNothing(const int &pMax)
 
 //==============================================================================
 
-bool isLocalFile(const QString &pFileNameOrUrl)
+bool isRemoteFile(const QString &pFileNameOrUrl)
 {
     // Return whether the given argument refers to a local file
 
     QUrl url = pFileNameOrUrl;
 
-    return url.scheme().isEmpty() || url.host().isEmpty();
+    return !url.scheme().isEmpty() && !url.host().isEmpty();
 }
 
 //==============================================================================

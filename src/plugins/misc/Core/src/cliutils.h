@@ -142,7 +142,7 @@ QString CORE_EXPORT nonDiacriticString(const QString &pString);
 
 void CORE_EXPORT doNothing(const int &pMax);
 
-bool CORE_EXPORT isLocalFile(const QString &pFileNameOrUrl);
+bool CORE_EXPORT isRemoteFile(const QString &pFileNameOrUrl);
 
 //==============================================================================
 

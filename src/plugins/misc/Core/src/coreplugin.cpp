@@ -349,10 +349,10 @@ void CorePlugin::handleArguments(const QStringList &pArguments)
 
     foreach (const QString &argument, pArguments)
         if (!argument.isEmpty()) {
-            if (isLocalFile(argument))
-                mCentralWidget->openFile(argument);
-            else
+            if (isRemoteFile(argument))
                 mCentralWidget->openRemoteFile(argument);
+            else
+                mCentralWidget->openFile(argument);
         }
 }
 
@@ -759,7 +759,11 @@ void CorePlugin::openRecentFile()
 
     QString fileNameOrUrl = qobject_cast<QAction *>(sender())->text();
 
-    if (isLocalFile(fileNameOrUrl)) {
+    if (isRemoteFile(fileNameOrUrl)) {
+        // Open the recent remote file
+
+        mCentralWidget->openRemoteFile(fileNameOrUrl);
+    } else {
         if (QFile::exists(fileNameOrUrl))
             // Open the recent file
 
@@ -769,10 +773,6 @@ void CorePlugin::openRecentFile()
 
             QMessageBox::warning(mMainWindow, tr("Reopen File"),
                                  tr("Sorry, but <strong>%1</strong> does not exist anymore.").arg(fileNameOrUrl));
-    } else {
-        // Open the recent remote file
-
-        mCentralWidget->openRemoteFile(fileNameOrUrl);
     }
 
     // Try to remove the file from our list of recent files and update our
