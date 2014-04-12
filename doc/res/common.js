@@ -157,17 +157,25 @@ function doHeaderAndContentsMenu(pageName, relativePath, r, g, b, data) {
             if (i !== data.length-1) {
                 // A 'normal' menu item
 
-                if (currentMenuItem)
+                if (currentMenuItem) {
                     document.write("            <li><span class=\"selectedMenuItem\">"+indent+data[i][1]+"</span></li>");
-                else
-                    document.write("            <li><a href=\""+path+"\">"+indent+data[i][1]+"</a></li>");
+                } else {
+                    if (data[i][2].length)
+                        document.write("            <li><a href=\""+path+"\">"+indent+data[i][1]+"</a></li>");
+                    else
+                        document.write("            <li>"+indent+data[i][1]+"</li>");
+                }
             } else {
                 // The last menu item, so we have some special rendering for it
 
-                if (currentMenuItem)
+                if (currentMenuItem) {
                     document.write("            <li class=\"lastMenuItem\"><span class=\"selectedMenuItem\">"+indent+data[i][1]+"</span></li>");
-                else
-                    document.write("            <li class=\"lastMenuItem\"><a href=\""+path+"\">"+indent+data[i][1]+"</a></li>");
+                } else {
+                    if (data[i][2].length)
+                        document.write("            <li class=\"lastMenuItem\"><a href=\""+path+"\">"+indent+data[i][1]+"</a></li>");
+                    else
+                        document.write("            <li class=\"lastMenuItem\">"+indent+data[i][1]+"</li>");
+                }
             }
         } else {
             // We are dealing with a menu separator

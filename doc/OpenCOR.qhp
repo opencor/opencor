@@ -13,11 +13,19 @@
 
             <file>user/*.*</file>
             <file>user/plugins/*.*</file>
+            <file>user/plugins/editing/*.*</file>
+            <file>user/plugins/editing/res/pics/*.*</file>
+            <file>user/plugins/miscellaneous/*.*</file>
+            <file>user/plugins/miscellaneous/res/pics/*.*</file>
+            <file>user/plugins/organisation/*.*</file>
+            <file>user/plugins/organisation/res/pics/*.*</file>
             <file>user/plugins/res/pics/*.*</file>
             <file>user/plugins/res/pics/oxygen/actions/*.*</file>
             <file>user/plugins/res/pics/oxygen/categories/*.*</file>
             <file>user/plugins/res/pics/oxygen/mimetypes/*.*</file>
             <file>user/plugins/res/pics/oxygen/places/*.*</file>
+            <file>user/plugins/simulation/*.*</file>
+            <file>user/plugins/simulation/res/pics/*.*</file>
             <file>user/res/*.*</file>
             <file>user/res/pics/*.*</file>
             <file>user/userInterfaces/*.*</file>

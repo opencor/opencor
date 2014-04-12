@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>
+            CellMLAnnotationView Plugin
+        </title>
+
+        <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+
+        <link href="../../res/stylesheet.css" rel="stylesheet" type="text/css"/>
+
+        <script src="../../../3rdparty/jQuery/jquery.js" type="text/javascript"></script>
+        <script src="../../../res/common.js" type="text/javascript"></script>
+        <script src="../../res/menu.js" type="text/javascript"></script>
+    </head>
+    <body>
+        <script type="text/javascript">
+            headerAndContentsMenu("CellMLAnnotationView Plugin", "../../..");
+        </script>
+
+        <p>
+            The CellMLAnnotationView plugin can be used to annotate CellML files. If you open a CellML file that does not contain any annotation, then it will look something like this:
+        </p>
+
+        <p class="center">
+            <a class="noHover" href="../../res/image.html?image=../plugins/editing/res/pics/CellMLAnnotationViewScreenshot01.png&caption=CellMLAnnotationView plugin: default view"><img class="link" src="res/pics/CellMLAnnotationViewScreenshot01Small.png" width=360 height=270 alt="CellMLAnnotationView plugin: default view"></a>
+        </p>
+
+        <p>
+            All the CellML elements that can be annotated are listed to the left of the view. If you right click on any of them, you will get a popup menu, which you can use to expand/collapse all the child nodes, as well as remove the metadata associated with the current CellML element or the whole CellML file:
+        </p>
+
+        <p class="center">
+            <a class="noHover" href="../../res/image.html?image=../plugins/editing/res/pics/CellMLAnnotationViewScreenshot02.png&caption=CellMLAnnotationView plugin: context menu"><img class="link" src="res/pics/CellMLAnnotationViewScreenshot02Small.png" width=360 height=270 alt="CellMLAnnotationView plugin: context menu"></a>
+        </p>
+
+        <div class="section">
+            Annotate a CellML element
+        </div>
+
+        <p>
+            Say that you want to annotate the <code>sodium_channel</code> component. First, you need to select it:
+        </p>
+
+        <p class="center">
+            <a class="noHover" href="../../res/image.html?image=../plugins/editing/res/pics/CellMLAnnotationViewScreenshot03.png&caption=CellMLAnnotationView plugin: select a CellML element"><img class="link" src="res/pics/CellMLAnnotationViewScreenshot03Small.png" width=360 height=270 alt="CellMLAnnotationView plugin: select a CellML element"></a>
+        </p>
+
+        <p>
+            Next, you need to specify a <a href="http://biomodels.net/qualifiers/">BioModels.net qualifier</a>. If you do not know which one to use, click on the <img src="../res/pics/oxygen/categories/applications-internet.png" width=24 height=24 alt="Look Up" align=absmiddle> button to get some information about the current BioModels.net qualifier:
+        </p>
+
+        <p class="center">
+            <a class="noHover" href="../../res/image.html?image=../plugins/editing/res/pics/CellMLAnnotationViewScreenshot04.png&caption=CellMLAnnotationView plugin: select a BioModels.net qualifier"><img class="link" src="res/pics/CellMLAnnotationViewScreenshot04Small.png" width=360 height=270 alt="CellMLAnnotationView plugin: select a BioModels.net qualifier"></a>
+        </p>
+
+        <p>
+            From there, go through the list of BioModels.net qualifiers until you find the one that suits your needs best. Here, we will say that you want to use <code>bio:isVersionOf</code>:
+        </p>
+
+        <p class="center">
+            <a class="noHover" href="../../res/image.html?image=../plugins/editing/res/pics/CellMLAnnotationViewScreenshot05.png&caption=CellMLAnnotationView plugin: select bio:isVersionOf as a qualifier"><img class="link" src="res/pics/CellMLAnnotationViewScreenshot05Small.png" width=360 height=270 alt="CellMLAnnotationView plugin: select bio:isVersionOf as a qualifier"></a>
+        </p>
+
+        <p>
+            Now, you need to retrieve some possible ontological terms to describe the <code>sodium_channel</code> component. For this, you must enter a search term, which in our case is going to be <code>sodium</code>. OpenCOR is then going to use the <a href="http://semanticsbml.org/semanticSBML/plugin_restapidoc/index">RESTful service</a> from <a href="http://www.semanticsbml.org/">SemanticSBML</a> to provide you with a list of, here, 25 possible ontological terms:
+        </p>
+
+        <p class="center">
+            <a class="noHover" href="../../res/image.html?image=../plugins/editing/res/pics/CellMLAnnotationViewScreenshot06.png&caption=CellMLAnnotationView plugin: list of possible ontological terms"><img class="link" src="res/pics/CellMLAnnotationViewScreenshot06Small.png" width=360 height=270 alt="CellMLAnnotationView plugin: list of possible ontological terms"></a>
+        </p>
+
+        <p>
+            A quick look through the list tells us that you probably want to use the ChEBI term, which identifier is 29101. If you want to know more about the ChEBI resource, you can click on its corresponding link:
+        </p>
+
+        <p class="center">
+            <a class="noHover" href="../../res/image.html?image=../plugins/editing/res/pics/CellMLAnnotationViewScreenshot07.png&caption=CellMLAnnotationView plugin: look up some resource information"><img class="link" src="res/pics/CellMLAnnotationViewScreenshot07Small.png" width=360 height=270 alt="CellMLAnnotationView plugin: look up some resource information"></a>
+        </p>
+
+        <p>
+            Similarly, if you want to know more about the ChEBI identifier:
+        </p>
+
+        <p class="center">
+            <a class="noHover" href="../../res/image.html?image=../plugins/editing/res/pics/CellMLAnnotationViewScreenshot08.png&caption=CellMLAnnotationView plugin: look up some identifier information"><img class="link" src="res/pics/CellMLAnnotationViewScreenshot08Small.png" width=360 height=270 alt="CellMLAnnotationView plugin: look up some identifier information"></a>
+        </p>
+
+        <p>
+            Now, assuming that you are happy with your choice of ontological term, you can associate it with the <code>sodium_channel</code> component by clicking on its corresponding <img src="../res/pics/oxygen/actions/list-add.png" width=24 height=24 alt="Add" align=absmiddle> button:
+        </p>
+
+        <p class="center">
+            <a class="noHover" href="../../res/image.html?image=../plugins/editing/res/pics/CellMLAnnotationViewScreenshot09.png&caption=CellMLAnnotationView plugin: associate an ontological term with a CellML element"><img class="link" src="res/pics/CellMLAnnotationViewScreenshot09Small.png" width=360 height=270 alt="CellMLAnnotationView plugin: associate an ontological term with a CellML element"></a>
+        </p>
+
+        <p>
+            As you can see, the ontological term you have added cannot be added anymore, but it  can be removed by clicking on its corresponding <img src="../res/pics/oxygen/actions/list-remove.png" width=24 height=24 alt="Delete" align=absmiddle> button or by using the context menu (see above).
+        </p>
+
+        <p>
+            Now, say that you also want to add the next ontological term. You can obviously do so by clicking on the corresponding <img src="../res/pics/oxygen/actions/list-add.png" width=24 height=24 alt="Add" align=absmiddle> button, but you could also enter <code>pubchem.substance/4541</code> (i.e. <code>&lt;resource&gt;/&lt;id&gt;</code>) in the term field. Indeed, OpenCOR will recognise this 'term' as being a valid ontological term and will offer you to add it directly:
+        </p>
+
+        <p class="center">
+            <a class="noHover" href="../../res/image.html?image=../plugins/editing/res/pics/CellMLAnnotationViewScreenshot10.png&caption=CellMLAnnotationView plugin: directly associate an ontological term with a CellML element"><img class="link" src="res/pics/CellMLAnnotationViewScreenshot10Small.png" width=360 height=270 alt="CellMLAnnotationView plugin: directly associate an ontological term with a CellML element"></a>
+        </p>
+
+        <div class="section">
+            Unrecognised annotations
+        </div>
+
+        <p>
+            Annotations consist of <a href="http://www.w3.org/TR/rdf-concepts/#section-triples">RDF triples</a>, which are made of a subject, a predicate and an object. OpenCOR recognises RDF triples which subject identifies a CellML element while it expects the predicate to be a <a href="http://biomodels.net/qualifiers/">BioModels.net qualifier</a> and the object an ontological term.
+        </p>
+
+        <p>
+            Ontological terms used to be identified using <a href="http://www.ebi.ac.uk/miriam/main/mdb?section=use">MIRIAM</a> URNs, but these have now been deprecated in favour of <a href="http://www.identifiers.org/">identifiers.org</a> URIs. OpenCOR recognises both, but it will only serialise annotations using identifiers.org URIs.
+        </p>
+
+        <p>
+            Now, it may happen that a file contains annotations that are not recognised by OpenCOR. In this case, OpenCOR will display the annotations as a simple list of RDF triples:
+        </p>
+
+        <p class="center">
+            <a class="noHover" href="../../res/image.html?image=../plugins/editing/res/pics/CellMLAnnotationViewScreenshot11.png&caption=CellMLAnnotationView plugin: unrecognised annotations"><img class="link" src="res/pics/CellMLAnnotationViewScreenshot11Small.png" width=360 height=270 alt="CellMLAnnotationView plugin: unrecognised annotations"></a>
+        </p>
+
+        <p>
+            If you ever come across such a type of annotations and think that OpenCOR ought to recognise it, then please do <a href="../../contactUs.html">let us know</a>.
+        </p>
+
+        <script type="text/javascript">
+            copyright("../../..");
+        </script>
+    </body>
+</html>
