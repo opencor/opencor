@@ -40,7 +40,8 @@ namespace Core {
 
 //==============================================================================
 
-FileManager::FileManager(const int &pTimerInterval) :
+FileManager::FileManager() :
+    mActive(true),
     mFiles(QList<File *>()),
     mFilesReadable(QMap<QString, bool>()),
     mFilesWritable(QMap<QString, bool>())
@@ -53,10 +54,6 @@ FileManager::FileManager(const int &pTimerInterval) :
 
     connect(mTimer, SIGNAL(timeout()),
             this, SLOT(checkFiles()));
-
-    // Start our timer
-
-    mTimer->start(pTimerInterval);
 }
 
 //==============================================================================
@@ -106,6 +103,9 @@ FileManager::Status FileManager::manage(const QString &pFileName,
 
             mFiles << new File(nativeFileName, pType, pUrl);
 
+            if (!mTimer->isActive())
+                mTimer->start(1000);
+
             emit fileManaged(nativeFileName);
 
             return Added;
@@ -134,6 +134,9 @@ FileManager::Status FileManager::unmanage(const QString &pFileName)
             mFiles.removeAt(mFiles.indexOf(file));
 
             delete file;
+
+            if (mFiles.isEmpty())
+                mTimer->stop();
 
             emit fileUnmanaged(nativeFileName);
 
@@ -175,21 +178,16 @@ bool FileManager::isActive() const
 {
     // Return whether we are active
 
-    return mTimer->isActive();
+    return mActive;
 }
 
 //==============================================================================
 
 void FileManager::setActive(const bool &pActive)
 {
-    // Make ourselves in/active
+    // Set whether we are active
 
-    if (pActive != isActive()) {
-        if (pActive)
-            mTimer->start();
-        else
-            mTimer->stop();
-    }
+    mActive = pActive;
 }
 
 //==============================================================================
@@ -507,6 +505,12 @@ int FileManager::count() const
 
 void FileManager::checkFiles()
 {
+    // We only want to check our files if we are active and if there is no
+    // currently active dialog box
+
+    if (!mActive || QApplication::activeModalWidget())
+        return;
+
     // Check our various files, as well as their locked status, but only if they
     // are not being ignored
 

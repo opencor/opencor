@@ -87,7 +87,7 @@ public:
         NotDuplicated
     };
 
-    explicit FileManager(const int &pTimerInterval = 1000);
+    explicit FileManager();
     ~FileManager();
 
     static FileManager * instance();
@@ -129,8 +129,12 @@ public:
     int count() const;
 
 private:
+    bool mActive;
+
     QTimer *mTimer;
+
     QList<File *> mFiles;
+
     QMap<QString, bool> mFilesReadable;
     QMap<QString, bool> mFilesWritable;
 
