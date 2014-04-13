@@ -369,6 +369,7 @@ IF(APPLE)
     # Deploy some plugins
 
     OS_X_DEPLOY_QT_PLUGIN(accessible qtaccessiblewidgets)
+    OS_X_DEPLOY_QT_PLUGIN(imageformats qjpeg)
     OS_X_DEPLOY_QT_PLUGIN(platforms qcocoa)
     OS_X_DEPLOY_QT_PLUGIN(printsupport cocoaprintersupport)
     OS_X_DEPLOY_QT_PLUGIN(sqldrivers qsqlite)
@@ -424,6 +425,7 @@ IF(WIN32)
     # Qt plugins required by OpenCOR
 
     WINDOWS_DEPLOY_QT_PLUGIN(accessible qtaccessiblewidgets)
+    WINDOWS_DEPLOY_QT_PLUGIN(imageformats qjpeg)
 
     FOREACH(QT_PLUGIN_FILE qwindows)
         INSTALL(FILES ${QT_PLUGINS_DIR}/platforms/${CMAKE_SHARED_LIBRARY_PREFIX}${QT_PLUGIN_FILE}${CMAKE_SHARED_LIBRARY_SUFFIX}
@@ -571,6 +573,7 @@ ELSE()
     # Qt plugins required by OpenCOR
 
     LINUX_DEPLOY_QT_PLUGIN(accessible qtaccessiblewidgets)
+    LINUX_DEPLOY_QT_PLUGIN(imageformats qjpeg)
     LINUX_DEPLOY_QT_PLUGIN(platforms qxcb)
     LINUX_DEPLOY_QT_PLUGIN(printsupport cupsprintersupport)
     LINUX_DEPLOY_QT_PLUGIN(sqldrivers qsqlite)
