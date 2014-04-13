@@ -51,15 +51,15 @@ void removeGlobalInstances()
 
 int main(int pArgC, char *pArgV[])
 {
-    // Remove all 'global' instances, in case OpenCOR previously crashed or
-    // something (and therefore didn't remove all of them before quitting)
-
-    removeGlobalInstances();
-
     // Create our application
 
     SharedTools::QtSingleApplication *app = new SharedTools::QtSingleApplication(QFileInfo(pArgV[0]).baseName(),
                                                                                  pArgC, pArgV);
+
+    // Remove all 'global' instances, in case OpenCOR previously crashed or
+    // something (and therefore didn't remove all of them before quitting)
+
+    removeGlobalInstances();
 
     // Some general initialisations
 
