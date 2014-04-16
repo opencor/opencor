@@ -60,6 +60,8 @@ specific language governing permissions and limitations under the License.
 
 QIntList qVariantListToIntList(const QVariantList &pVariantList)
 {
+    // Convert a list of variants to a list of integers
+
     QIntList res = QIntList();
 
     foreach (const QVariant &variant, pVariantList)
@@ -72,6 +74,8 @@ QIntList qVariantListToIntList(const QVariantList &pVariantList)
 
 QVariantList qIntListToVariantList(const QIntList &pIntList)
 {
+    // Convert a list of integers to a list of variants
+
     QVariantList res = QVariantList();
 
     foreach (const int &nb, pIntList)
