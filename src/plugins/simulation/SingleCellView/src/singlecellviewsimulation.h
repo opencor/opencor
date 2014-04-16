@@ -168,10 +168,10 @@ public:
 
     double * points() const;
 
-    double **constants() const;
-    double **rates() const;
-    double **states() const;
-    double **algebraic() const;
+    double ** constants() const;
+    double ** rates() const;
+    double ** states() const;
+    double ** algebraic() const;
 
     bool exportToCsv(const QString &pFileName) const;
 
