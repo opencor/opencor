@@ -43,7 +43,7 @@
                             array(array("Windows", "Windows XP and later", array(".exe"), array(".zip")),
                                   array("Linux", "Ubuntu 12.04 LTS (Precise Pangolin) and later", array(".tar.gz", 32), array(".tar.gz", 64)),
                                   array("OS X", "Mac OS X 10.7 (Lion) and later", array(".dmg"), array(".zip"))),
-                            "<strong>Note:</strong> this version is fairly stable and therefore the one we would recommend using, especially if you want to get access to the latest features (new snapshots are announced on our <a hrefs=\"https://twitter.com/TeamOpenCOR/\">Twitter feed</a>)."),
+                            "<strong>Note:</strong> this version is fairly stable and therefore the one we would recommend using, especially if you want to get access to the latest features (new snapshots are announced on our <a href=\"https://twitter.com/TeamOpenCOR/\">Twitter feed</a>)."),
                       array(0, 2, 0, 19, 11, 2013, 1,
                             array(array("Windows", "Windows XP and later", array(".exe"), array(".zip")),
                                   array("Linux", "Ubuntu 12.04 LTS (Precise Pangolin) and later", array(".tar.gz", 32), array(".tar.gz", 64)),
