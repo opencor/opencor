@@ -8,7 +8,7 @@ WMsg="OpenCOR must first be built before being run."
 
 if [ $OS = "Linux" ]; then
     if [ -f build/bin/OpenCOR ]; then
-        LIBGL_ALWAYS_INDIRECT=1 build/bin/OpenCOR "$@"
+        build/bin/OpenCOR "$@"
     else
         echo $WMsg
     fi
