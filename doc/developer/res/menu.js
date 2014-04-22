@@ -6,7 +6,7 @@ function headerAndContentsMenu(pageName, relativePath) {
                              [0, "File structure", "developer/fileStructure.html"],
                              [0, "Develop", "developer/develop/index.html"],
                              [1, "Coding style", "developer/develop/codingStyle.html"],
-                             [1, "Plugins", "developer/develop/plugins.html"],
+                             [1, "Plugins", "developer/develop/plugins/index.html"],
                              [1, "Internationalisation", "developer/develop/internationalisation.html"],
                              [1, "Tests", "developer/develop/tests.html"],
                              [0, "Build, test and run", "developer/buildTestAndRun.html"],
