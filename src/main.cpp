@@ -39,6 +39,10 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#include <stdlib.h>
+
+//==============================================================================
+
 void removeGlobalInstances()
 {
     // Remove all the 'global' information shared between OpenCOR and its
@@ -51,6 +55,18 @@ void removeGlobalInstances()
 
 int main(int pArgC, char *pArgV[])
 {
+    // Make sure that we always use indirect rendering on Linux
+    // Note: indeed, depending on which plugins are selected, OpenCOR may need
+    //       LLVM. If that's the case, and in case the user's video card uses a
+    //       driver that relies on LLVM (e.g. Gallium3D and Mesa 3D), then
+    //       there may be a conflict between the version of LLVM used by
+    //       OpenCOR and the one used by the video card. One way to address this
+    //       issue is by using indirect rendering...
+
+#ifdef Q_OS_LINUX
+    setenv("LIBGL_ALWAYS_INDIRECT", "1", 1);
+#endif
+
     // Create our application
 
     SharedTools::QtSingleApplication *app = new SharedTools::QtSingleApplication(QFileInfo(pArgV[0]).baseName(),
