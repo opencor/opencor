@@ -96,16 +96,12 @@
         <translation>Dé/sélectionner des extensions</translation>
     </message>
     <message>
-        <source>&amp;Docked Widgets</source>
-        <translation>&amp;Gadgets Ancrés</translation>
+        <source>Docked Windows</source>
+        <translation>&amp;Fenêtres Ancrées</translation>
     </message>
     <message>
-        <source>Docked Widgets</source>
-        <translation>Gadgets Ancrés</translation>
-    </message>
-    <message>
-        <source>Show/hide all the recent/current docked widgets</source>
-        <translation>Montrer/cacher tous les gadgets ancrés récents/actuels</translation>
+        <source>Show/hide all the recent/current docked windows</source>
+        <translation>Montrer/cacher toutes les fenêtres ancrées récentes/actuelles</translation>
     </message>
     <message>
         <source>&amp;Preferences...</source>
@@ -139,8 +135,8 @@
         <translation>Nouveau</translation>
     </message>
     <message>
-        <source>Organisation</source>
-        <translation></translation>
+        <source>Windows</source>
+        <translation>Fenêtres</translation>
     </message>
     <message>
         <source>Plugins</source>

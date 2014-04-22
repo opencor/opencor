@@ -67,7 +67,7 @@
     <property name="title">
      <string>&amp;View</string>
     </property>
-    <addaction name="actionDockedWidgets"/>
+    <addaction name="actionDockedWindows"/>
     <addaction name="separator"/>
     <addaction name="actionStatusBar"/>
     <addaction name="separator"/>
@@ -227,18 +227,21 @@
     <string>Un/select plugins</string>
    </property>
   </action>
-  <action name="actionDockedWidgets">
+  <action name="actionDockedWindows">
    <property name="checkable">
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>&amp;Docked Widgets</string>
+    <string>Docked Windows</string>
+   </property>
+   <property name="iconText">
+    <string>Docked Windows</string>
    </property>
    <property name="toolTip">
-    <string>Docked Widgets</string>
+    <string>Docked Windows</string>
    </property>
    <property name="statusTip">
-    <string>Show/hide all the recent/current docked widgets</string>
+    <string>Show/hide all the recent/current docked windows</string>
    </property>
   </action>
   <action name="actionPreferences">

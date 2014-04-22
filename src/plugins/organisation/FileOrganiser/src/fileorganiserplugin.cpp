@@ -63,7 +63,6 @@ void FileOrganiserPlugin::initialize()
     // Set our settings
 
     mGuiSettings->addWindow(Qt::LeftDockWidgetArea, mFileOrganiserWindow,
-                            GuiWindowSettings::Organisation,
                             mFileOrganiserAction);
 }
 

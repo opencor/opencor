@@ -104,14 +104,14 @@ private:
 
     QMenu *mFileNewMenu;
 
-    QMenu *mViewOrganisationMenu;
+    QMenu *mViewWindowsMenu;
     QAction *mViewSeparator;
 
     Plugin *mViewPlugin;
 
-    bool mDockedWidgetsVisible;
+    bool mDockedWindowsVisible;
 
-    QByteArray mDockedWidgetsState;
+    QByteArray mDockedWindowsState;
 
     void initializeGuiPlugin(Plugin *pPlugin, GuiSettings *pGuiSettings);
 
@@ -120,11 +120,9 @@ private:
 
     void setLocale(const QString &pLocale, const bool &pForceSetting = false);
 
-    void reorderViewMenu(QMenu *pViewMenu);
-    void reorderViewMenus();
+    void reorderViewWindowsMenu();
 
-    void updateViewMenu(const GuiWindowSettings::Type &pMenuType,
-                        QAction *pAction);
+    void updateViewWindowsMenu(QAction *pAction);
 
     void handleAction(const QUrl &pUrl);
 
@@ -145,7 +143,7 @@ private Q_SLOTS:
 
     void updateGui(Plugin *pViewPlugin, const QString &pFileName);
 
-    void showDockedWidgets(const bool &pShow,
+    void showDockedWindows(const bool &pShow,
                            const bool &pInitialisation = false);
 
     void updateDockWidgetsVisibility();

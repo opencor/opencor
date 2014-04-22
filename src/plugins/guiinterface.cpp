@@ -172,11 +172,9 @@ GuiViewSettings::Mode GuiViewSettings::modeFromString(const QString &pMode)
 
 GuiWindowSettings::GuiWindowSettings(const Qt::DockWidgetArea &pDefaultDockArea,
                                      QWidget *pWindow,
-                                     const GuiWindowSettings::Type &pType,
                                      QAction *pAction) :
     mDefaultDockArea(pDefaultDockArea),
     mWindow(pWindow),
-    mType(pType),
     mAction(pAction)
 {
 }
@@ -197,15 +195,6 @@ QWidget * GuiWindowSettings::window() const
     // Return the window itself
 
     return mWindow;
-}
-
-//==============================================================================
-
-GuiWindowSettings::Type GuiWindowSettings::type() const
-{
-    // Return the action's type
-
-    return mType;
 }
 
 //==============================================================================
@@ -288,13 +277,11 @@ void GuiSettings::setCentralWidget(QWidget *pCentralWidget)
 //==============================================================================
 
 void GuiSettings::addWindow(const Qt::DockWidgetArea &pDefaultDockArea,
-                            QWidget *pWindow,
-                            const GuiWindowSettings::Type &pType,
-                            QAction *pAction)
+                            QWidget *pWindow, QAction *pAction)
 {
     // Add a window to our list
 
-    mWindows << new GuiWindowSettings(pDefaultDockArea, pWindow, pType, pAction);
+    mWindows << new GuiWindowSettings(pDefaultDockArea, pWindow, pAction);
 }
 
 //==============================================================================

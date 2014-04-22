@@ -63,7 +63,6 @@ void FileBrowserPlugin::initialize()
     // Set our settings
 
     mGuiSettings->addWindow(Qt::LeftDockWidgetArea, mFileBrowserWindow,
-                            GuiWindowSettings::Organisation,
                             mFileBrowserAction);
 }
 

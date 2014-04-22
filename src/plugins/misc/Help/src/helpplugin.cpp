@@ -63,8 +63,7 @@ void HelpPlugin::initialize()
 
     // Set our settings
 
-    mGuiSettings->addWindow(Qt::RightDockWidgetArea, mHelpWindow,
-                            GuiWindowSettings::Help, mHelpAction);
+    mGuiSettings->addWindow(Qt::RightDockWidgetArea, mHelpWindow, mHelpAction);
 }
 
 //==============================================================================

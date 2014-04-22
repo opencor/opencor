@@ -134,25 +134,16 @@ private:
 class GuiWindowSettings
 {
 public:
-    enum Type {
-        Organisation,
-        Editing,
-        Help
-    };
-
     explicit GuiWindowSettings(const Qt::DockWidgetArea &pDefaultDockArea,
-                               QWidget *pWindow, const Type &pType,
-                               QAction *pAction);
+                               QWidget *pWindow, QAction *pAction);
 
     Qt::DockWidgetArea defaultDockArea() const;
     QWidget * window() const;
-    Type type() const;
     QAction * action() const;
 
 private:
     Qt::DockWidgetArea mDefaultDockArea;
     QWidget *mWindow;
-    Type mType;
     QAction *mAction;
 };
 
@@ -171,8 +162,7 @@ public:
                        QAction *pAction = 0);
     void setCentralWidget(QWidget *pCentralWidget);
     void addWindow(const Qt::DockWidgetArea &pDefaultDockArea,
-                   QWidget *pWindow, const GuiWindowSettings::Type &pType,
-                   QAction *pAction);
+                   QWidget *pWindow, QAction *pAction);
     void setView(const GuiViewSettings::Mode &pMode,
                  const QStringList &pMimeTypes);
 

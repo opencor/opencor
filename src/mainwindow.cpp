@@ -88,11 +88,11 @@ MainWindow::MainWindow(SharedTools::QtSingleApplication *pApp) :
     mLocale(QString()),
     mMenus(QMap<QString, QMenu *>()),
     mFileNewMenu(0),
-    mViewOrganisationMenu(0),
+    mViewWindowsMenu(0),
     mViewSeparator(0),
     mViewPlugin(0),
-    mDockedWidgetsVisible(true),
-    mDockedWidgetsState(QByteArray())
+    mDockedWindowsVisible(true),
+    mDockedWindowsState(QByteArray())
 {
     // Make sure that OpenCOR can handle a file opening request (from the
     // operating system), as well as a message sent by another instance of
@@ -136,19 +136,19 @@ Core::showEnableAction(mGui->actionPreferences, false);
 
     setWindowTitle(qApp->applicationName());
 
-    // Customise our docked widgets action and handle it through a connection
+    // Customise our docked windows action and handle it through a connection
     // Note: Ctrl+Space doesn't work on OS X, so ideally we would add the Alt
     //       key (since it's next to it, but it doesn't work either), so in the
     //       we add the Meta key...
 
 #if defined(Q_OS_MAC)
-    mGui->actionDockedWidgets->setShortcut(QKeySequence(Qt::CTRL|Qt::META|Qt::Key_Space));
+    mGui->actionDockedWindows->setShortcut(QKeySequence(Qt::CTRL|Qt::META|Qt::Key_Space));
 #else
-    mGui->actionDockedWidgets->setShortcut(QKeySequence(Qt::CTRL|Qt::Key_Space));
+    mGui->actionDockedWindows->setShortcut(QKeySequence(Qt::CTRL|Qt::Key_Space));
 #endif
 
-    connect(mGui->actionDockedWidgets, SIGNAL(triggered(bool)),
-            this, SLOT(showDockedWidgets(const bool &)));
+    connect(mGui->actionDockedWindows, SIGNAL(triggered(bool)),
+            this, SLOT(showDockedWindows(const bool &)));
 
     // A connection to handle the status bar
 
@@ -269,10 +269,10 @@ Core::showEnableAction(mGui->actionPreferences, false);
         connect(dockWidget, SIGNAL(visibilityChanged(bool)),
                 this, SLOT(updateDockWidgetsVisibility()));
 
-    // Show/hide and enable/disable the docked widgets action depending on
+    // Show/hide and enable/disable the docked windows action depending on
     // whether there are dock widgets
 
-    Core::showEnableAction(mGui->actionDockedWidgets, dockWidgets.size());
+    Core::showEnableAction(mGui->actionDockedWindows, dockWidgets.size());
 
     // Retrieve the user settings from the previous session, if any
 
@@ -604,51 +604,32 @@ void MainWindow::initializeGuiPlugin(Plugin *pPlugin, GuiSettings *pGuiSettings)
 
         addDockWidget(windowSettings->defaultDockArea(), dockWidget);
 
-        // Add an action to our menu to show/hide the menu
+        // Add an action to our menu to show/hide the window
 
-        bool doConnectDockWidgetToAction = true;
+        if (!pPlugin->name().compare(HelpPlugin)) {
+            // Special case of the help window
 
-        switch (windowSettings->type()) {
-        case GuiWindowSettings::Organisation:
+            mGui->menuHelp->insertAction(mGui->actionHomePage,
+                                         windowSettings->action());
+            mGui->menuHelp->insertSeparator(mGui->actionHomePage);
+        } else {
             // Update the View menu by adding the action to the
-            // View|Organisation menu
+            // View|Windows menu
 
-            updateViewMenu(GuiWindowSettings::Organisation,
-                           windowSettings->action());
-
-            break;
-        case GuiWindowSettings::Help:
-            if (!pPlugin->name().compare(HelpPlugin)) {
-                // We only want to add the action if we are coming here from the
-                // Help plugin
-
-                mGui->menuHelp->insertAction(mGui->actionHomePage,
-                                             windowSettings->action());
-                mGui->menuHelp->insertSeparator(mGui->actionHomePage);
-            } else {
-                doConnectDockWidgetToAction = false;
-            }
-
-            break;
-        default:
-            // Unknown type, so...
-
-            doConnectDockWidgetToAction = false;
+            updateViewWindowsMenu(windowSettings->action());
         }
 
         // Connect the action to the window
 
-        if (doConnectDockWidgetToAction) {
-            connect(windowSettings->action(), SIGNAL(triggered(bool)),
-                    dockWidget, SLOT(setVisible(bool)));
-            connect(dockWidget->toggleViewAction(), SIGNAL(toggled(bool)),
-                    windowSettings->action(), SLOT(setChecked(bool)));
-        }
+        connect(windowSettings->action(), SIGNAL(triggered(bool)),
+                dockWidget, SLOT(setVisible(bool)));
+        connect(dockWidget->toggleViewAction(), SIGNAL(toggled(bool)),
+                windowSettings->action(), SLOT(setChecked(bool)));
     }
 
-    // Reorder our various View menus, just in case
+    // Reorder our various View|Windows menu items, just in case
 
-    reorderViewMenus();
+    reorderViewWindowsMenu();
 }
 
 //==============================================================================
@@ -657,7 +638,7 @@ static const auto SettingsGlobal               = QStringLiteral("Global");
 static const auto SettingsLocale               = QStringLiteral("Locale");
 static const auto SettingsGeometry             = QStringLiteral("Geometry");
 static const auto SettingsState                = QStringLiteral("State");
-static const auto SettingsDockedWidgetsVisible = QStringLiteral("DockedWidgetsVisible");
+static const auto SettingsDockedWindowsVisible = QStringLiteral("DockedWindowsVisible");
 static const auto SettingsStatusBarVisible     = QStringLiteral("StatusBarVisible");
 
 //==============================================================================
@@ -683,9 +664,9 @@ void MainWindow::loadSettings()
                     desktopGeometry.height()-2*vertSpace);
     }
 
-    // Retrieve whether the docked widgets are to be shown
+    // Retrieve whether the docked windows are to be shown
 
-    showDockedWidgets(mSettings->value(SettingsDockedWidgetsVisible, true).toBool(), true);
+    showDockedWindows(mSettings->value(SettingsDockedWindowsVisible, true).toBool(), true);
 
     // Retrieve whether the status bar is to be shown
 
@@ -750,9 +731,9 @@ void MainWindow::saveSettings() const
     mSettings->setValue(SettingsGeometry, saveGeometry());
     mSettings->setValue(SettingsState, saveState());
 
-    // Keep track of whether the docked widgets are to be shown
+    // Keep track of whether the docked windows are to be shown
 
-    mSettings->setValue(SettingsDockedWidgetsVisible, mDockedWidgetsVisible);
+    mSettings->setValue(SettingsDockedWindowsVisible, mDockedWindowsVisible);
 
     // Keep track of whether the status bar is to be shown
 
@@ -833,9 +814,8 @@ void MainWindow::setLocale(const QString &pLocale, const bool &pForceSetting)
         if (mFileNewMenu)
             GuiInterface::retranslateMenu(mFileNewMenu, tr("New"));
 
-        if (mViewOrganisationMenu)
-            GuiInterface::retranslateMenu(mViewOrganisationMenu,
-                                          tr("Organisation"));
+        if (mViewWindowsMenu)
+            GuiInterface::retranslateMenu(mViewWindowsMenu, tr("Windows"));
 
         // Update the locale of our various loaded plugins
         // Note: we must set the locale of all the plugins before we can safely
@@ -860,9 +840,9 @@ void MainWindow::setLocale(const QString &pLocale, const bool &pForceSetting)
         foreach (I18nInterface *i18nInterface, i18nInterfaces)
             i18nInterface->retranslateUi();
 
-        // Reorder our various View menus, just in case
+        // Reorder our various View|Windows menu items, just in case
 
-        reorderViewMenus();
+        reorderViewWindowsMenu();
     }
 
     // Update the checked menu item
@@ -877,106 +857,76 @@ void MainWindow::setLocale(const QString &pLocale, const bool &pForceSetting)
 
 //==============================================================================
 
-void MainWindow::reorderViewMenu(QMenu *pViewMenu)
+void MainWindow::reorderViewWindowsMenu()
 {
-    // Reorder the required View menu
-
-    QStringList menuItemTitles;
-    QMap<QString, QAction *> menuItemActions;
-
-    // Retrieve the title of the menu items and keep track of their actions
-
-    foreach (QAction *menuItemAction, pViewMenu->actions()) {
-        // Remove any "&" present in the menu item title, as well as replace
-        // accentuated characters by non-accentuated ones, making the sorting
-        // sensible
-
-        QString menuItemTitle = menuItemAction->text().remove("&").normalized(QString::NormalizationForm_KD);
-
-        for (int i = menuItemTitle.length()-1; i >= 0; --i)
-            if (menuItemTitle[i].category() == QChar::Mark_NonSpacing)
-                menuItemTitle.remove(i, 1);
-
-        // Keep track of the menu item title and the action to which it is
-        // associated
-
-        menuItemTitles << menuItemTitle;
-        menuItemActions.insert(menuItemTitle, menuItemAction);
-    }
-
-    // Sort the menu items
-
-    menuItemTitles.sort();
-
-    // Add the menu items actions in the new order
-    // Note: to use addAction will effectively 'move' the menu items to the end
-    //       of the menu, so since we do it in the right order, we end up with
-    //       the menu items being properly ordered...
-
-    foreach (const QString &menuItemTitle, menuItemTitles)
-        pViewMenu->addAction(menuItemActions.value(menuItemTitle));
-}
-
-//==============================================================================
-
-void MainWindow::reorderViewMenus()
-{
-    // Reorder the View|Organisation men, should it exist
+    // Reorder the View|Windows menu, should it exist
     // Note: this is useful after having added a new menu item or after having
     //       changed the locale
 
-    if (mViewOrganisationMenu)
-        reorderViewMenu(mViewOrganisationMenu);
+    if (mViewWindowsMenu) {
+        // Retrieve the title of the menu items and keep track of their actions
+
+        QStringList menuItemTitles;
+        QMap<QString, QAction *> menuItemActions;
+
+        foreach (QAction *menuItemAction, mViewWindowsMenu->actions()) {
+            // Remove any "&" present in the menu item title, as well as replace
+            // accentuated characters by non-accentuated ones, making the
+            // sorting sensible
+
+            QString menuItemTitle = menuItemAction->text().remove("&").normalized(QString::NormalizationForm_KD);
+
+            for (int i = menuItemTitle.length()-1; i >= 0; --i)
+                if (menuItemTitle[i].category() == QChar::Mark_NonSpacing)
+                    menuItemTitle.remove(i, 1);
+
+            // Keep track of the menu item title and the action to which it is
+            // associated
+
+            menuItemTitles << menuItemTitle;
+            menuItemActions.insert(menuItemTitle, menuItemAction);
+        }
+
+        // Sort the menu items
+
+        menuItemTitles.sort();
+
+        // Add the menu items actions in the new order
+        // Note: to use addAction will effectively 'move' the menu items to the
+        //       end of the menu, so since we do it in the right order, we end
+        //       up with the menu items being properly ordered...
+
+        foreach (const QString &menuItemTitle, menuItemTitles)
+            mViewWindowsMenu->addAction(menuItemActions.value(menuItemTitle));
+    }
 }
 
 //==============================================================================
 
-void MainWindow::updateViewMenu(const GuiWindowSettings::Type &pMenuType,
-                                QAction *pAction)
+void MainWindow::updateViewWindowsMenu(QAction *pAction)
 {
-    // Check whether we need to insert a separator before the docked widgets
+    // Check whether we need to insert a separator before the docked windows
     // menu item
 
-    if ((pMenuType != GuiWindowSettings::Help) && !mViewSeparator)
-        // None of the menus have already been inserted which means that we need
-        // to insert a separator before the Full Screen menu item
+    if (!mViewSeparator)
+        mViewSeparator = mGui->menuView->insertSeparator(mGui->actionDockedWindows);
 
-        mViewSeparator = mGui->menuView->insertSeparator(mGui->actionDockedWidgets);
+    // Check whether the View|Windows menu already exists and create it if not
 
-    // Determine the menu that is to be inserted, should this be required, and
-    // the action before which it is to be inserted
+    if (!mViewWindowsMenu) {
+        // The View|Windows menu doesn't already exist, so create it
 
-    QMenu **menu;
-    QAction *action;
+        mViewWindowsMenu = new QMenu(this);
 
-    switch (pMenuType) {
-    case GuiWindowSettings::Organisation:
-        menu   = &mViewOrganisationMenu;
-        action = mViewSeparator;
+        // Add the View|Windows menu to our View menu
 
-        break;
-    default:
-        // Unknown type, so just leave...
-
-        return;
+        mGui->menuView->insertMenu(mViewSeparator, mViewWindowsMenu);
     }
 
-    // Check whether the menu already exists and create it if not
+    // At this stage, the View|Windows menu exist, so add the given action to
+    // it
 
-    if (!*menu) {
-        // The menu doesn't already exist, so create it
-
-        *menu = new QMenu(this);
-
-        // Add the menu to our View menu
-
-        mGui->menuView->insertMenu(action, *menu);
-    }
-
-    // At this stage, the menu to which we want to add an action has been
-    // created, so we can just add the action to it
-
-    (*menu)->addAction(pAction);
+    mViewWindowsMenu->addAction(pAction);
 }
 
 //==============================================================================
@@ -1402,50 +1352,50 @@ void MainWindow::updateGui(Plugin *pViewPlugin, const QString &pFileName)
 
 //==============================================================================
 
-void MainWindow::showDockedWidgets(const bool &pShow,
+void MainWindow::showDockedWindows(const bool &pShow,
                                    const bool &pInitialisation)
 {
-    // Show/hide the docked widgets
+    // Show/hide the docked windows
 
     if (!pInitialisation) {
         if (!pShow)
-            mDockedWidgetsState = saveState();
+            mDockedWindowsState = saveState();
 
         foreach (QDockWidget *dockWidget, findChildren<QDockWidget *>())
             if (!dockWidget->isFloating())
                 dockWidget->setVisible(pShow);
 
-        if (pShow && !mDockedWidgetsState.isEmpty())
-            restoreState(mDockedWidgetsState);
+        if (pShow && !mDockedWindowsState.isEmpty())
+            restoreState(mDockedWindowsState);
     }
 
-    // Keep track of the docked widgets visible state
+    // Keep track of the docked windows visible state
 
-    mDockedWidgetsVisible = pShow;
+    mDockedWindowsVisible = pShow;
 
-    // Update the checked state of our docked widgets action
+    // Update the checked state of our docked windows action
 
-    mGui->actionDockedWidgets->setChecked(pShow);
+    mGui->actionDockedWindows->setChecked(pShow);
 }
 
 //==============================================================================
 
 void MainWindow::updateDockWidgetsVisibility()
 {
-    // Check whether at least one dock widget is visible
+    // Check whether at least one dockable window is visible
 
-    mDockedWidgetsVisible = false;
+    mDockedWindowsVisible = false;
 
     foreach (QDockWidget *dockWidget, findChildren<QDockWidget *>())
         if (!dockWidget->isFloating() && dockWidget->isVisible()) {
-            mDockedWidgetsVisible = true;
+            mDockedWindowsVisible = true;
 
             break;
         }
 
-    // Update the checked state of our docked widgets action
+    // Update the checked state of our docked windows action
 
-    mGui->actionDockedWidgets->setChecked(mDockedWidgetsVisible);
+    mGui->actionDockedWindows->setChecked(mDockedWindowsVisible);
 }
 
 //==============================================================================

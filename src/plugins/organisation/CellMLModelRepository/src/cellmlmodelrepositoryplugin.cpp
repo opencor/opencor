@@ -64,7 +64,6 @@ void CellMLModelRepositoryPlugin::initialize()
 
     mGuiSettings->addWindow(Qt::LeftDockWidgetArea,
                             mCellmlModelRepositoryWindow,
-                            GuiWindowSettings::Organisation,
                             mCellmlModelRepositoryAction);
 }
 
