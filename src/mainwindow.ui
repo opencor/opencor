@@ -232,7 +232,7 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Docked Windows</string>
+    <string>&amp;Docked Windows</string>
    </property>
    <property name="iconText">
     <string>Docked Windows</string>

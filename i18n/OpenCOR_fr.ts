@@ -97,6 +97,10 @@
     </message>
     <message>
         <source>Docked Windows</source>
+        <translation>Fenêtres Ancrées</translation>
+    </message>
+    <message>
+        <source>&amp;Docked Windows</source>
         <translation>&amp;Fenêtres Ancrées</translation>
     </message>
     <message>
