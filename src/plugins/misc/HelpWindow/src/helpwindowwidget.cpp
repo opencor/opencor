@@ -125,10 +125,13 @@ HelpWindowNetworkAccessManager::HelpWindowNetworkAccessManager(QHelpEngine *pHel
 
 //==============================================================================
 
-QNetworkReply * HelpWindowNetworkAccessManager::createRequest(Operation,
+QNetworkReply * HelpWindowNetworkAccessManager::createRequest(Operation pOperation,
                                                               const QNetworkRequest &pRequest,
-                                                              QIODevice*)
+                                                              QIODevice *pOutgoingData)
 {
+    Q_UNUSED(pOperation);
+    Q_UNUSED(pOutgoingData);
+
     // Retrieve, if possible, the requested document
 
     QUrl url = pRequest.url();
