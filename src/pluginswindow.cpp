@@ -132,6 +132,9 @@ PluginsWindow::PluginsWindow(PluginManager *pPluginManager,
     mappedCategories.insert(tr("Editing"), PluginInfo::Editing);
     mappedCategories.insert(tr("Miscellaneous"), PluginInfo::Miscellaneous);
     mappedCategories.insert(tr("Organisation"), PluginInfo::Organisation);
+#ifdef QT_DEBUG
+    mappedCategories.insert(tr("Sample"), PluginInfo::Sample);
+#endif
     mappedCategories.insert(tr("Simulation"), PluginInfo::Simulation);
     mappedCategories.insert(tr("Solver"), PluginInfo::Solver);
     mappedCategories.insert(tr("Support"), PluginInfo::Support);

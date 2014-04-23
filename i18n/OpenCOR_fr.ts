@@ -315,6 +315,10 @@
         <source>Error:</source>
         <translation>Erreur :</translation>
     </message>
+    <message>
+        <source>Sample</source>
+        <translation>Exemple</translation>
+    </message>
 </context>
 <context>
     <name>PluginsWindow</name>

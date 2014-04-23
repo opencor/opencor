@@ -64,6 +64,9 @@ public:
         Editing,
         Miscellaneous,
         Organisation,
+#ifdef QT_DEBUG
+        Sample,
+#endif
         Simulation,
         Solver,
         Support,
