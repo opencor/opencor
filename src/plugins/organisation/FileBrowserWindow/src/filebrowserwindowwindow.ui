@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>FileBrowserWindow</class>
- <widget class="QDockWidget" name="FileBrowserWindow">
+ <class>FileBrowserWindowWindow</class>
+ <widget class="QDockWidget" name="FileBrowserWindowWindow">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -25,7 +25,7 @@
   </widget>
   <action name="actionHome">
    <property name="icon">
-    <iconset resource="../res/FileBrowser.qrc">
+    <iconset resource="../res/FileBrowserWindow.qrc">
      <normaloff>:/oxygen/places/user-home.png</normaloff>:/oxygen/places/user-home.png</iconset>
    </property>
    <property name="text">
@@ -61,7 +61,7 @@
   </action>
   <action name="actionParent">
    <property name="icon">
-    <iconset resource="../res/FileBrowser.qrc">
+    <iconset resource="../res/FileBrowserWindow.qrc">
      <normaloff>:/oxygen/actions/go-up.png</normaloff>:/oxygen/actions/go-up.png</iconset>
    </property>
    <property name="text">
@@ -73,7 +73,7 @@
   </action>
  </widget>
  <resources>
-  <include location="../res/FileBrowser.qrc"/>
+  <include location="../res/FileBrowserWindow.qrc"/>
   <include location="../../../miscellaneous/Core/res/Core.qrc"/>
  </resources>
  <connections/>

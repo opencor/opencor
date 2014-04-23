@@ -16,50 +16,64 @@ specific language governing permissions and limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// File browser model
+// FileBrowserWindow plugin
 //==============================================================================
 
-#include "filebrowsermodel.h"
+#ifndef FILEBROWSERWINDOWPLUGIN_H
+#define FILEBROWSERWINDOWPLUGIN_H
+
+//==============================================================================
+
+#include "coreinterface.h"
+#include "guiinterface.h"
+#include "i18ninterface.h"
+#include "plugininfo.h"
 
 //==============================================================================
 
 namespace OpenCOR {
-namespace FileBrowser {
+namespace FileBrowserWindow {
 
 //==============================================================================
 
-FileBrowserModel::FileBrowserModel(QObject *pParent) :
-    QFileSystemModel(pParent)
+PLUGININFO_FUNC FileBrowserWindowPluginInfo();
+
+//==============================================================================
+
+class FileBrowserWindowWindow;
+
+//==============================================================================
+
+class FileBrowserWindowPlugin : public QObject, public CoreInterface,
+                                public GuiInterface, public I18nInterface
 {
-    // We want acces to the full file system
+    Q_OBJECT
 
-    setRootPath(QString());
-}
+    Q_PLUGIN_METADATA(IID "OpenCOR.FileBrowserWindowPlugin" FILE "filebrowserwindowplugin.json")
 
-//==============================================================================
+    Q_INTERFACES(OpenCOR::CoreInterface)
+    Q_INTERFACES(OpenCOR::GuiInterface)
+    Q_INTERFACES(OpenCOR::I18nInterface)
 
-Qt::ItemFlags FileBrowserModel::flags(const QModelIndex &pIndex) const
-{
-    // Specify the supported features for the current item
+public:
+#include "coreinterface.inl"
+#include "guiinterface.inl"
+#include "i18ninterface.inl"
 
-    Qt::ItemFlags res = QFileSystemModel::flags(pIndex);
+private:
+    QAction *mFileBrowserAction;
 
-    // Prevent some features for the item in case it's a folder
-
-    if (QFileInfo(filePath(pIndex)).isDir())
-        // We don't want a folder to be draggable
-
-        res &= ~Qt::ItemIsDragEnabled;
-
-    // We are all done, so...
-
-    return res;
-}
+    FileBrowserWindowWindow *mFileBrowserWindow;
+};
 
 //==============================================================================
 
-}   // namespace FileBrowser
+}   // namespace FileBrowserWindow
 }   // namespace OpenCOR
+
+//==============================================================================
+
+#endif
 
 //==============================================================================
 // End of file

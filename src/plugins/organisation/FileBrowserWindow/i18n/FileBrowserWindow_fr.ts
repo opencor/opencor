@@ -2,7 +2,7 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="fr_FR" sourcelanguage="en_GB">
 <context>
-    <name>FileBrowserWindow</name>
+    <name>FileBrowserWindowWindow</name>
     <message>
         <source>File Browser</source>
         <translation>Gestionnaire de Fichiers</translation>
@@ -41,7 +41,7 @@
     </message>
 </context>
 <context>
-    <name>OpenCOR::FileBrowser::FileBrowserPlugin</name>
+    <name>OpenCOR::FileBrowserWindow::FileBrowserWindowPlugin</name>
     <message>
         <source>File Browser</source>
         <translation>Gestionnaire De Fichiers</translation>

@@ -16,59 +16,71 @@ specific language governing permissions and limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// FileBrowser plugin
+// File browser window
 //==============================================================================
 
-#ifndef FILEBROWSERPLUGIN_H
-#define FILEBROWSERPLUGIN_H
+#ifndef FILEBROWSERWINDOWWINDOW_H
+#define FILEBROWSERWINDOWWINDOW_H
 
 //==============================================================================
 
-#include "coreinterface.h"
-#include "guiinterface.h"
-#include "i18ninterface.h"
-#include "plugininfo.h"
+#include "organisationwidget.h"
+
+//==============================================================================
+
+namespace Ui {
+    class FileBrowserWindowWindow;
+}
+
+//==============================================================================
+
+class QMenu;
+class QModelIndex;
 
 //==============================================================================
 
 namespace OpenCOR {
-namespace FileBrowser {
+namespace FileBrowserWindow {
 
 //==============================================================================
 
-PLUGININFO_FUNC FileBrowserPluginInfo();
+class FileBrowserWindowWidget;
 
 //==============================================================================
 
-class FileBrowserWindow;
-
-//==============================================================================
-
-class FileBrowserPlugin : public QObject, public CoreInterface,
-                          public GuiInterface, public I18nInterface
+class FileBrowserWindowWindow : public Core::OrganisationWidget
 {
     Q_OBJECT
 
-    Q_PLUGIN_METADATA(IID "OpenCOR.FileBrowserPlugin" FILE "filebrowserplugin.json")
-
-    Q_INTERFACES(OpenCOR::CoreInterface)
-    Q_INTERFACES(OpenCOR::GuiInterface)
-    Q_INTERFACES(OpenCOR::I18nInterface)
-
 public:
-#include "coreinterface.inl"
-#include "guiinterface.inl"
-#include "i18ninterface.inl"
+    explicit FileBrowserWindowWindow(QWidget *pParent);
+    ~FileBrowserWindowWindow();
+
+    virtual void retranslateUi();
+
+    virtual void loadSettings(QSettings *pSettings);
+    virtual void saveSettings(QSettings *pSettings) const;
 
 private:
-    QAction *mFileBrowserAction;
+    Ui::FileBrowserWindowWindow *mGui;
 
-    FileBrowserWindow *mFileBrowserWindow;
+    FileBrowserWindowWidget *mFileBrowserWidget;
+
+    QMenu *mContextMenu;
+
+private Q_SLOTS:
+    void on_actionHome_triggered();
+    void on_actionParent_triggered();
+    void on_actionPrevious_triggered();
+    void on_actionNext_triggered();
+
+    void showCustomContextMenu(const QPoint &pPosition) const;
+    void itemDoubleClicked(const QModelIndex &pIndex);
 };
 
 //==============================================================================
 
-}   // namespace FileBrowser
+}   // namespace FileBrowserWindow
 }   // namespace OpenCOR
 
 //==============================================================================

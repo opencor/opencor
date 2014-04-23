@@ -19,7 +19,7 @@ specific language governing permissions and limitations under the License.
 // File browser widget
 //==============================================================================
 
-#include "filebrowserwidget.h"
+#include "filebrowserwindowwidget.h"
 
 //==============================================================================
 
@@ -34,11 +34,11 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 namespace OpenCOR {
-namespace FileBrowser {
+namespace FileBrowserWindow {
 
 //==============================================================================
 
-FileBrowserWidget::FileBrowserWidget(QWidget *pParent) :
+FileBrowserWindowWidget::FileBrowserWindowWidget(QWidget *pParent) :
     TreeViewWidget(pParent),
     mNeedDefColWidth(true),
     mInitPathDirs(QStringList()),
@@ -49,7 +49,7 @@ FileBrowserWidget::FileBrowserWidget(QWidget *pParent) :
 {
     // Create an instance of the file system model that we want to view
 
-    mModel = new FileBrowserModel(this);
+    mModel = new FileBrowserWindowModel(this);
 
     // Set some properties for the file browser widget itself
 
@@ -78,7 +78,7 @@ static const auto SettingsSortOrder   = QStringLiteral("SortOrder");
 
 //==============================================================================
 
-void FileBrowserWidget::loadSettings(QSettings *pSettings)
+void FileBrowserWindowWidget::loadSettings(QSettings *pSettings)
 {
     // We are about to begin loading the settings, so we don't want to keep
     // track of the change of item
@@ -191,7 +191,7 @@ void FileBrowserWidget::loadSettings(QSettings *pSettings)
 
 //==============================================================================
 
-void FileBrowserWidget::saveSettings(QSettings *pSettings) const
+void FileBrowserWindowWidget::saveSettings(QSettings *pSettings) const
 {
     // Keep track of the width of each column
 
@@ -212,7 +212,7 @@ void FileBrowserWidget::saveSettings(QSettings *pSettings) const
 
 //==============================================================================
 
-QStringList FileBrowserWidget::selectedFiles() const
+QStringList FileBrowserWindowWidget::selectedFiles() const
 {
     // Retrieve all the files that are currently selected
     // Note: if there is a non-file among the selected items, then we return an
@@ -252,7 +252,7 @@ QStringList FileBrowserWidget::selectedFiles() const
 
 //==============================================================================
 
-void FileBrowserWidget::deselectFolders() const
+void FileBrowserWindowWidget::deselectFolders() const
 {
     // Check whether more than one item is selected with the view of dragging
     // them and, if so, unselect any folder item since we don't allow them to be
@@ -277,7 +277,7 @@ void FileBrowserWidget::deselectFolders() const
 
 //==============================================================================
 
-void FileBrowserWidget::emitItemChangedRelatedSignals()
+void FileBrowserWindowWidget::emitItemChangedRelatedSignals()
 {
     // Let the user know whether the path of the new item is not that of our
     // home folder, as well as whether we could go to the parent item
@@ -293,8 +293,8 @@ void FileBrowserWidget::emitItemChangedRelatedSignals()
 
 //==============================================================================
 
-void FileBrowserWidget::updateItems(const QString &pItemPath,
-                                    QStringList &pItems) const
+void FileBrowserWindowWidget::updateItems(const QString &pItemPath,
+                                          QStringList &pItems) const
 {
     // Remove any instance of pItemPath in pItems
 
@@ -330,8 +330,8 @@ void FileBrowserWidget::updateItems(const QString &pItemPath,
 
 //==============================================================================
 
-void FileBrowserWidget::goToOtherItem(QStringList &pItems,
-                                      QStringList &pOtherItems)
+void FileBrowserWindowWidget::goToOtherItem(QStringList &pItems,
+                                            QStringList &pOtherItems)
 {
     if (pItems.isEmpty())
         return;
@@ -420,7 +420,7 @@ void FileBrowserWidget::goToOtherItem(QStringList &pItems,
 
 //==============================================================================
 
-void FileBrowserWidget::keyPressEvent(QKeyEvent *pEvent)
+void FileBrowserWindowWidget::keyPressEvent(QKeyEvent *pEvent)
 {
     // Default handling of the event
 
@@ -458,7 +458,7 @@ void FileBrowserWidget::keyPressEvent(QKeyEvent *pEvent)
 
 //==============================================================================
 
-void FileBrowserWidget::mouseMoveEvent(QMouseEvent *pEvent)
+void FileBrowserWindowWidget::mouseMoveEvent(QMouseEvent *pEvent)
 {
     // Default handling of the event
 
@@ -471,7 +471,7 @@ void FileBrowserWidget::mouseMoveEvent(QMouseEvent *pEvent)
 
 //==============================================================================
 
-void FileBrowserWidget::mousePressEvent(QMouseEvent *pEvent)
+void FileBrowserWindowWidget::mousePressEvent(QMouseEvent *pEvent)
 {
     // Default handling of the event
 
@@ -484,7 +484,7 @@ void FileBrowserWidget::mousePressEvent(QMouseEvent *pEvent)
 
 //==============================================================================
 
-bool FileBrowserWidget::viewportEvent(QEvent *pEvent)
+bool FileBrowserWindowWidget::viewportEvent(QEvent *pEvent)
 {
     if (pEvent->type() == QEvent::ToolTip) {
         // We need to show a tool tip, so make sure that it's up to date by
@@ -502,8 +502,8 @@ bool FileBrowserWidget::viewportEvent(QEvent *pEvent)
 
 //==============================================================================
 
-void FileBrowserWidget::itemChanged(const QModelIndex &,
-                                    const QModelIndex &pPrevItem)
+void FileBrowserWindowWidget::itemChanged(const QModelIndex &,
+                                          const QModelIndex &pPrevItem)
 {
     // A new item has been selected, so we need to keep track of the old one in
     // case we want to go back to it
@@ -521,7 +521,7 @@ void FileBrowserWidget::itemChanged(const QModelIndex &,
 
 //==============================================================================
 
-void FileBrowserWidget::directoryLoaded(const QString &pPath)
+void FileBrowserWindowWidget::directoryLoaded(const QString &pPath)
 {
     static bool needInitializing = true;
 
@@ -584,7 +584,8 @@ void FileBrowserWidget::directoryLoaded(const QString &pPath)
 
 //==============================================================================
 
-void FileBrowserWidget::goToPath(const QString &pPath, const bool &pExpand)
+void FileBrowserWindowWidget::goToPath(const QString &pPath,
+                                       const bool &pExpand)
 {
     // Set the current index to that of the provided path
 
@@ -602,7 +603,7 @@ void FileBrowserWidget::goToPath(const QString &pPath, const bool &pExpand)
 
 //==============================================================================
 
-void FileBrowserWidget::goToHomeFolder()
+void FileBrowserWindowWidget::goToHomeFolder()
 {
     // Go to the home folder
 
@@ -611,7 +612,7 @@ void FileBrowserWidget::goToHomeFolder()
 
 //==============================================================================
 
-void FileBrowserWidget::goToParentFolder()
+void FileBrowserWindowWidget::goToParentFolder()
 {
     // Go to the parent folder
 
@@ -620,7 +621,7 @@ void FileBrowserWidget::goToParentFolder()
 
 //==============================================================================
 
-void FileBrowserWidget::goToPreviousFileOrFolder()
+void FileBrowserWindowWidget::goToPreviousFileOrFolder()
 {
     // Go to the previous file/folder
 
@@ -629,7 +630,7 @@ void FileBrowserWidget::goToPreviousFileOrFolder()
 
 //==============================================================================
 
-void FileBrowserWidget::goToNextFileOrFolder()
+void FileBrowserWindowWidget::goToNextFileOrFolder()
 {
     // Go to the next file/folder
 
@@ -638,7 +639,7 @@ void FileBrowserWidget::goToNextFileOrFolder()
 
 //==============================================================================
 
-QString FileBrowserWidget::currentPath() const
+QString FileBrowserWindowWidget::currentPath() const
 {
     // Return the current path
 
@@ -647,7 +648,7 @@ QString FileBrowserWidget::currentPath() const
 
 //==============================================================================
 
-QString FileBrowserWidget::currentPathParent() const
+QString FileBrowserWindowWidget::currentPathParent() const
 {
     // Return the current path parent, if any
 
@@ -658,7 +659,7 @@ QString FileBrowserWidget::currentPathParent() const
 
 //==============================================================================
 
-QString FileBrowserWidget::pathOf(const QModelIndex &pIndex) const
+QString FileBrowserWindowWidget::pathOf(const QModelIndex &pIndex) const
 {
     // Return the file path of pIndex, if it exists
 
@@ -667,7 +668,7 @@ QString FileBrowserWidget::pathOf(const QModelIndex &pIndex) const
 
 //==============================================================================
 
-}   // namespace FileBrowser
+}   // namespace FileBrowserWindow
 }   // namespace OpenCOR
 
 //==============================================================================

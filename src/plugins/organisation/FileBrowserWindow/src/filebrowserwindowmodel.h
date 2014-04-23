@@ -19,8 +19,8 @@ specific language governing permissions and limitations under the License.
 // File browser model
 //==============================================================================
 
-#ifndef FILEBROWSERMODEL_H
-#define FILEBROWSERMODEL_H
+#ifndef FILEBROWSERWINDOWMODEL_H
+#define FILEBROWSERWINDOWMODEL_H
 
 //==============================================================================
 
@@ -33,23 +33,23 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 namespace OpenCOR {
-namespace FileBrowser {
+namespace FileBrowserWindow {
 
 //==============================================================================
 
-class FileBrowserModel : public QFileSystemModel
+class FileBrowserWindowModel : public QFileSystemModel
 {
     Q_OBJECT
 
 public:
-    explicit FileBrowserModel(QObject *pParent);
+    explicit FileBrowserWindowModel(QObject *pParent);
 
     virtual Qt::ItemFlags flags(const QModelIndex &pIndex) const;
 };
 
 //==============================================================================
 
-}   // namespace FileBrowser
+}   // namespace FileBrowserWindow
 }   // namespace OpenCOR
 
 //==============================================================================

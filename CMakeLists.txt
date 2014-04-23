@@ -201,7 +201,7 @@ SET(PLUGINS
     miscellaneous/HelpWindow
 
     organisation/CellMLModelRepositoryWindow
-    organisation/FileBrowser
+    organisation/FileBrowserWindow
     organisation/FileOrganiser
 
     simulation/SingleCellView

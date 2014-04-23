@@ -19,13 +19,13 @@ specific language governing permissions and limitations under the License.
 // File browser window
 //==============================================================================
 
-#include "filebrowserwindow.h"
-#include "filebrowserwidget.h"
+#include "filebrowserwindowwindow.h"
+#include "filebrowserwindowwidget.h"
 #include "toolbarwidget.h"
 
 //==============================================================================
 
-#include "ui_filebrowserwindow.h"
+#include "ui_filebrowserwindowwindow.h"
 
 //==============================================================================
 
@@ -41,13 +41,13 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 namespace OpenCOR {
-namespace FileBrowser {
+namespace FileBrowserWindow {
 
 //==============================================================================
 
-FileBrowserWindow::FileBrowserWindow(QWidget *pParent) :
+FileBrowserWindowWindow::FileBrowserWindowWindow(QWidget *pParent) :
     OrganisationWidget(pParent),
-    mGui(new Ui::FileBrowserWindow)
+    mGui(new Ui::FileBrowserWindowWindow)
 {
     // Set up the GUI
 
@@ -68,9 +68,9 @@ FileBrowserWindow::FileBrowserWindow(QWidget *pParent) :
 
     // Create and add the file browser widget
 
-    mFileBrowserWidget = new FileBrowserWidget(this);
+    mFileBrowserWidget = new FileBrowserWindowWidget(this);
 
-    mFileBrowserWidget->setObjectName("FileBrowserWidget");
+    mFileBrowserWidget->setObjectName("FileBrowserWindowWidget");
 
     mGui->layout->addWidget(mFileBrowserWidget);
 
@@ -109,7 +109,7 @@ FileBrowserWindow::FileBrowserWindow(QWidget *pParent) :
 
 //==============================================================================
 
-FileBrowserWindow::~FileBrowserWindow()
+FileBrowserWindowWindow::~FileBrowserWindowWindow()
 {
     // Delete the GUI
 
@@ -118,7 +118,7 @@ FileBrowserWindow::~FileBrowserWindow()
 
 //==============================================================================
 
-void FileBrowserWindow::retranslateUi()
+void FileBrowserWindowWindow::retranslateUi()
 {
     // Retranslate the whole window
 
@@ -131,7 +131,7 @@ void FileBrowserWindow::retranslateUi()
 
 //==============================================================================
 
-void FileBrowserWindow::loadSettings(QSettings *pSettings)
+void FileBrowserWindowWindow::loadSettings(QSettings *pSettings)
 {
     // Retrieve the settings of the file browser widget
 
@@ -142,7 +142,7 @@ void FileBrowserWindow::loadSettings(QSettings *pSettings)
 
 //==============================================================================
 
-void FileBrowserWindow::saveSettings(QSettings *pSettings) const
+void FileBrowserWindowWindow::saveSettings(QSettings *pSettings) const
 {
     // Keep track of the settings of the file browser widget
 
@@ -153,7 +153,7 @@ void FileBrowserWindow::saveSettings(QSettings *pSettings) const
 
 //==============================================================================
 
-void FileBrowserWindow::on_actionHome_triggered()
+void FileBrowserWindowWindow::on_actionHome_triggered()
 {
     // Go to the home folder
 
@@ -162,7 +162,7 @@ void FileBrowserWindow::on_actionHome_triggered()
 
 //==============================================================================
 
-void FileBrowserWindow::on_actionParent_triggered()
+void FileBrowserWindowWindow::on_actionParent_triggered()
 {
     // Go to the parent item
 
@@ -171,7 +171,7 @@ void FileBrowserWindow::on_actionParent_triggered()
 
 //==============================================================================
 
-void FileBrowserWindow::on_actionPrevious_triggered()
+void FileBrowserWindowWindow::on_actionPrevious_triggered()
 {
     // Go to the previous file/folder
 
@@ -180,7 +180,7 @@ void FileBrowserWindow::on_actionPrevious_triggered()
 
 //==============================================================================
 
-void FileBrowserWindow::on_actionNext_triggered()
+void FileBrowserWindowWindow::on_actionNext_triggered()
 {
     // Go to the next file/folder
 
@@ -189,7 +189,7 @@ void FileBrowserWindow::on_actionNext_triggered()
 
 //==============================================================================
 
-void FileBrowserWindow::showCustomContextMenu(const QPoint &pPosition) const
+void FileBrowserWindowWindow::showCustomContextMenu(const QPoint &pPosition) const
 {
     Q_UNUSED(pPosition);
 
@@ -201,7 +201,7 @@ void FileBrowserWindow::showCustomContextMenu(const QPoint &pPosition) const
 
 //==============================================================================
 
-void FileBrowserWindow::itemDoubleClicked(const QModelIndex &pIndex)
+void FileBrowserWindowWindow::itemDoubleClicked(const QModelIndex &pIndex)
 {
     Q_UNUSED(pIndex);
 
@@ -219,7 +219,7 @@ void FileBrowserWindow::itemDoubleClicked(const QModelIndex &pIndex)
 
 //==============================================================================
 
-}   // namespace FileBrowser
+}   // namespace FileBrowserWindow
 }   // namespace OpenCOR
 
 //==============================================================================

@@ -16,11 +16,11 @@ specific language governing permissions and limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// FileBrowser plugin
+// FileBrowserWindow plugin
 //==============================================================================
 
-#include "filebrowserplugin.h"
-#include "filebrowserwindow.h"
+#include "filebrowserwindowplugin.h"
+#include "filebrowserwindowwindow.h"
 
 //==============================================================================
 
@@ -30,11 +30,11 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 namespace OpenCOR {
-namespace FileBrowser {
+namespace FileBrowserWindow {
 
 //==============================================================================
 
-PLUGININFO_FUNC FileBrowserPluginInfo()
+PLUGININFO_FUNC FileBrowserWindowPluginInfo()
 {
     Descriptions descriptions;
 
@@ -50,7 +50,7 @@ PLUGININFO_FUNC FileBrowserPluginInfo()
 // Core interface
 //==============================================================================
 
-void FileBrowserPlugin::initialize()
+void FileBrowserWindowPlugin::initialize()
 {
     // Create an action to show/hide our file browser window
 
@@ -58,7 +58,7 @@ void FileBrowserPlugin::initialize()
 
     // Create our file browser window
 
-    mFileBrowserWindow = new FileBrowserWindow(mMainWindow);
+    mFileBrowserWindow = new FileBrowserWindowWindow(mMainWindow);
 
     // Set our settings
 
@@ -68,14 +68,14 @@ void FileBrowserPlugin::initialize()
 
 //==============================================================================
 
-void FileBrowserPlugin::finalize()
+void FileBrowserWindowPlugin::finalize()
 {
     // We don't handle this interface...
 }
 
 //==============================================================================
 
-void FileBrowserPlugin::initialized(const Plugins &pLoadedPlugins)
+void FileBrowserWindowPlugin::initialized(const Plugins &pLoadedPlugins)
 {
     Q_UNUSED(pLoadedPlugins);
 
@@ -84,7 +84,7 @@ void FileBrowserPlugin::initialized(const Plugins &pLoadedPlugins)
 
 //==============================================================================
 
-void FileBrowserPlugin::loadSettings(QSettings *pSettings)
+void FileBrowserWindowPlugin::loadSettings(QSettings *pSettings)
 {
     // Retrieve our file browser window settings
 
@@ -95,7 +95,7 @@ void FileBrowserPlugin::loadSettings(QSettings *pSettings)
 
 //==============================================================================
 
-void FileBrowserPlugin::saveSettings(QSettings *pSettings) const
+void FileBrowserWindowPlugin::saveSettings(QSettings *pSettings) const
 {
     // Keep track of our file browser window settings
 
@@ -106,7 +106,7 @@ void FileBrowserPlugin::saveSettings(QSettings *pSettings) const
 
 //==============================================================================
 
-void FileBrowserPlugin::settingsLoaded(const Plugins &pLoadedPlugins)
+void FileBrowserWindowPlugin::settingsLoaded(const Plugins &pLoadedPlugins)
 {
     Q_UNUSED(pLoadedPlugins);
 
@@ -115,7 +115,7 @@ void FileBrowserPlugin::settingsLoaded(const Plugins &pLoadedPlugins)
 
 //==============================================================================
 
-void FileBrowserPlugin::handleArguments(const QStringList &pArguments)
+void FileBrowserWindowPlugin::handleArguments(const QStringList &pArguments)
 {
     Q_UNUSED(pArguments);
 
@@ -124,7 +124,7 @@ void FileBrowserPlugin::handleArguments(const QStringList &pArguments)
 
 //==============================================================================
 
-void FileBrowserPlugin::handleAction(const QUrl &pUrl)
+void FileBrowserWindowPlugin::handleAction(const QUrl &pUrl)
 {
     Q_UNUSED(pUrl);
 
@@ -135,7 +135,7 @@ void FileBrowserPlugin::handleAction(const QUrl &pUrl)
 // GUI interface
 //==============================================================================
 
-void FileBrowserPlugin::changeEvent(QEvent *pEvent)
+void FileBrowserWindowPlugin::changeEvent(QEvent *pEvent)
 {
     Q_UNUSED(pEvent);
 
@@ -144,7 +144,8 @@ void FileBrowserPlugin::changeEvent(QEvent *pEvent)
 
 //==============================================================================
 
-void FileBrowserPlugin::updateGui(Plugin *pViewPlugin, const QString &pFileName)
+void FileBrowserWindowPlugin::updateGui(Plugin *pViewPlugin,
+                                        const QString &pFileName)
 {
     Q_UNUSED(pViewPlugin);
     Q_UNUSED(pFileName);
@@ -154,21 +155,21 @@ void FileBrowserPlugin::updateGui(Plugin *pViewPlugin, const QString &pFileName)
 
 //==============================================================================
 
-void FileBrowserPlugin::initializeView()
+void FileBrowserWindowPlugin::initializeView()
 {
     // We don't handle this interface...
 }
 
 //==============================================================================
 
-void FileBrowserPlugin::finalizeView()
+void FileBrowserWindowPlugin::finalizeView()
 {
     // We don't handle this interface...
 }
 
 //==============================================================================
 
-bool FileBrowserPlugin::hasViewWidget(const QString &pFileName)
+bool FileBrowserWindowPlugin::hasViewWidget(const QString &pFileName)
 {
     Q_UNUSED(pFileName);
 
@@ -179,8 +180,8 @@ bool FileBrowserPlugin::hasViewWidget(const QString &pFileName)
 
 //==============================================================================
 
-QWidget * FileBrowserPlugin::viewWidget(const QString &pFileName,
-                                        const bool &pCreate)
+QWidget * FileBrowserWindowPlugin::viewWidget(const QString &pFileName,
+                                              const bool &pCreate)
 {
     Q_UNUSED(pFileName);
     Q_UNUSED(pCreate);
@@ -192,7 +193,7 @@ QWidget * FileBrowserPlugin::viewWidget(const QString &pFileName,
 
 //==============================================================================
 
-void FileBrowserPlugin::removeViewWidget(const QString &pFileName)
+void FileBrowserWindowPlugin::removeViewWidget(const QString &pFileName)
 {
     Q_UNUSED(pFileName);
 
@@ -201,7 +202,7 @@ void FileBrowserPlugin::removeViewWidget(const QString &pFileName)
 
 //==============================================================================
 
-QString FileBrowserPlugin::viewName() const
+QString FileBrowserWindowPlugin::viewName() const
 {
     // We don't handle this interface...
 
@@ -210,7 +211,7 @@ QString FileBrowserPlugin::viewName() const
 
 //==============================================================================
 
-QIcon FileBrowserPlugin::fileTabIcon(const QString &pFileName) const
+QIcon FileBrowserWindowPlugin::fileTabIcon(const QString &pFileName) const
 {
     Q_UNUSED(pFileName);
 
@@ -221,8 +222,8 @@ QIcon FileBrowserPlugin::fileTabIcon(const QString &pFileName) const
 
 //==============================================================================
 
-bool FileBrowserPlugin::saveFile(const QString &pOldFileName,
-                                 const QString &pNewFileName)
+bool FileBrowserWindowPlugin::saveFile(const QString &pOldFileName,
+                                       const QString &pNewFileName)
 {
     Q_UNUSED(pOldFileName);
     Q_UNUSED(pNewFileName);
@@ -234,7 +235,7 @@ bool FileBrowserPlugin::saveFile(const QString &pOldFileName,
 
 //==============================================================================
 
-void FileBrowserPlugin::fileOpened(const QString &pFileName)
+void FileBrowserWindowPlugin::fileOpened(const QString &pFileName)
 {
     Q_UNUSED(pFileName);
 
@@ -243,7 +244,7 @@ void FileBrowserPlugin::fileOpened(const QString &pFileName)
 
 //==============================================================================
 
-void FileBrowserPlugin::filePermissionsChanged(const QString &pFileName)
+void FileBrowserWindowPlugin::filePermissionsChanged(const QString &pFileName)
 {
     Q_UNUSED(pFileName);
 
@@ -252,8 +253,8 @@ void FileBrowserPlugin::filePermissionsChanged(const QString &pFileName)
 
 //==============================================================================
 
-void FileBrowserPlugin::fileModified(const QString &pFileName,
-                                     const bool &pModified)
+void FileBrowserWindowPlugin::fileModified(const QString &pFileName,
+                                           const bool &pModified)
 {
     Q_UNUSED(pFileName);
     Q_UNUSED(pModified);
@@ -263,7 +264,7 @@ void FileBrowserPlugin::fileModified(const QString &pFileName,
 
 //==============================================================================
 
-void FileBrowserPlugin::fileReloaded(const QString &pFileName)
+void FileBrowserWindowPlugin::fileReloaded(const QString &pFileName)
 {
     Q_UNUSED(pFileName);
 
@@ -272,8 +273,8 @@ void FileBrowserPlugin::fileReloaded(const QString &pFileName)
 
 //==============================================================================
 
-void FileBrowserPlugin::fileRenamed(const QString &pOldFileName,
-                                    const QString &pNewFileName)
+void FileBrowserWindowPlugin::fileRenamed(const QString &pOldFileName,
+                                          const QString &pNewFileName)
 {
     Q_UNUSED(pOldFileName);
     Q_UNUSED(pNewFileName);
@@ -283,7 +284,7 @@ void FileBrowserPlugin::fileRenamed(const QString &pOldFileName,
 
 //==============================================================================
 
-void FileBrowserPlugin::fileClosed(const QString &pFileName)
+void FileBrowserWindowPlugin::fileClosed(const QString &pFileName)
 {
     Q_UNUSED(pFileName);
 
@@ -292,7 +293,7 @@ void FileBrowserPlugin::fileClosed(const QString &pFileName)
 
 //==============================================================================
 
-bool FileBrowserPlugin::canClose()
+bool FileBrowserWindowPlugin::canClose()
 {
     // We don't handle this interface...
 
@@ -303,7 +304,7 @@ bool FileBrowserPlugin::canClose()
 // I18n interface
 //==============================================================================
 
-void FileBrowserPlugin::retranslateUi()
+void FileBrowserWindowPlugin::retranslateUi()
 {
     // Retranslate our file browser action
 
@@ -317,7 +318,7 @@ void FileBrowserPlugin::retranslateUi()
 
 //==============================================================================
 
-}   // namespace FileBrowser
+}   // namespace FileBrowserWindow
 }   // namespace OpenCOR
 
 //==============================================================================

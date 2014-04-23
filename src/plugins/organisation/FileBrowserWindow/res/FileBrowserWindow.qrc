@@ -2,6 +2,6 @@
     <qresource prefix="/">
         <file>oxygen/actions/go-up.png</file>
         <file>oxygen/places/user-home.png</file>
-        <file alias="FileBrowser_fr">../../../../../build/FileBrowser_fr.qm</file>
+        <file alias="FileBrowserWindow_fr">../../../../../build/FileBrowserWindow_fr.qm</file>
     </qresource>
 </RCC>

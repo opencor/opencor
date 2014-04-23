@@ -16,71 +16,93 @@ specific language governing permissions and limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// File browser window
+// File browser widget
 //==============================================================================
 
-#ifndef FILEBROWSERWINDOW_H
-#define FILEBROWSERWINDOW_H
-
-//==============================================================================
-
-#include "organisationwidget.h"
+#ifndef FILEBROWSERWINDOWWIDGET_H
+#define FILEBROWSERWINDOWWIDGET_H
 
 //==============================================================================
 
-namespace Ui {
-    class FileBrowserWindow;
-}
-
-//==============================================================================
-
-class QMenu;
-class QModelIndex;
+#include "filebrowserwindowmodel.h"
+#include "treeviewwidget.h"
 
 //==============================================================================
 
 namespace OpenCOR {
-namespace FileBrowser {
+namespace FileBrowserWindow {
 
 //==============================================================================
 
-class FileBrowserWidget;
-
-//==============================================================================
-
-class FileBrowserWindow : public Core::OrganisationWidget
+class FileBrowserWindowWidget : public Core::TreeViewWidget
 {
     Q_OBJECT
 
 public:
-    explicit FileBrowserWindow(QWidget *pParent);
-    ~FileBrowserWindow();
-
-    virtual void retranslateUi();
+    explicit FileBrowserWindowWidget(QWidget *pParent);
 
     virtual void loadSettings(QSettings *pSettings);
     virtual void saveSettings(QSettings *pSettings) const;
 
+    QString currentPath() const;
+
+    void goToHomeFolder();
+    void goToParentFolder();
+
+    void goToPreviousFileOrFolder();
+    void goToNextFileOrFolder();
+
+protected:
+    virtual void keyPressEvent(QKeyEvent *pEvent);
+    virtual void mouseMoveEvent(QMouseEvent *pEvent);
+    virtual void mousePressEvent(QMouseEvent *pEvent);
+    virtual bool viewportEvent(QEvent *pEvent);
+
 private:
-    Ui::FileBrowserWindow *mGui;
+    FileBrowserWindowModel *mModel;
 
-    FileBrowserWidget *mFileBrowserWidget;
+    bool mNeedDefColWidth;
 
-    QMenu *mContextMenu;
+    QStringList mInitPathDirs;
+    QString mInitPathDir;
+    QString mInitPath;
+
+    QStringList mPreviousItems;
+    QStringList mNextItems;
+
+    void goToPath(const QString &pPath, const bool &pExpand = false);
+
+    QString currentPathParent() const;
+
+    QString pathOf(const QModelIndex &pIndex) const;
+
+    void deselectFolders() const;
+
+    QStringList selectedFiles() const;
+
+    void emitItemChangedRelatedSignals();
+
+    void updateItems(const QString &pItemPath, QStringList &pItems) const;
+    void goToOtherItem(QStringList &pItems, QStringList &pOtherItems);
+
+Q_SIGNALS:
+    void filesOpenRequested(const QStringList &pFileNames);
+
+    void notHomeFolder(const bool &pNotHomeFolder);
+    void goToParentFolderEnabled(const bool &pEnabled);
+
+    void goToPreviousFileOrFolderEnabled(const bool &pEnabled);
+    void goToNextFileOrFolderEnabled(const bool &pEnabled);
 
 private Q_SLOTS:
-    void on_actionHome_triggered();
-    void on_actionParent_triggered();
-    void on_actionPrevious_triggered();
-    void on_actionNext_triggered();
+    void itemChanged(const QModelIndex &, const QModelIndex &pPrevItem);
 
-    void showCustomContextMenu(const QPoint &pPosition) const;
-    void itemDoubleClicked(const QModelIndex &pIndex);
+    void directoryLoaded(const QString &pPath);
 };
 
 //==============================================================================
 
-}   // namespace FileBrowser
+}   // namespace FileBrowserWindow
 }   // namespace OpenCOR
 
 //==============================================================================
