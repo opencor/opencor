@@ -1,0 +1,7 @@
+<RCC>
+    <qresource prefix="/">
+        <file>oxygen/actions/view-refresh.png</file>
+        <file alias="CellMLModelRepositoryWindow_output">output.html</file>
+        <file alias="CellMLModelRepositoryWindow_fr">../../../../../build/CellMLModelRepositoryWindow_fr.qm</file>
+    </qresource>
+</RCC>

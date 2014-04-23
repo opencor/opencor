@@ -16,56 +16,90 @@ specific language governing permissions and limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// CellML Model Repository widget
+// CellML Model Repository window
 //==============================================================================
 
-#ifndef CELLMLMODELREPOSITORYWIDGET_H
-#define CELLMLMODELREPOSITORYWIDGET_H
-
-//==============================================================================
-
-#include "commonwidget.h"
+#ifndef CELLMLMODELREPOSITORYWINDOWWINDOW_H
+#define CELLMLMODELREPOSITORYWINDOWWINDOW_H
 
 //==============================================================================
 
-#include <QWebView>
+#include "organisationwidget.h"
+
+//==============================================================================
+
+#include <QList>
+#include <QSslError>
+
+//==============================================================================
+
+namespace Ui {
+    class CellMLModelRepositoryWindowWindow;
+}
+
+//==============================================================================
+
+class QMenu;
+class QNetworkAccessManager;
+class QNetworkReply;
 
 //==============================================================================
 
 namespace OpenCOR {
-namespace CellMLModelRepository {
+namespace CellMLModelRepositoryWindow {
 
 //==============================================================================
 
-class CellmlModelRepositoryWidget : public QWebView, public Core::CommonWidget
+class CellMLModelRepositoryWindowWidget;
+
+//==============================================================================
+
+class CellMLModelRepositoryWindowWindow : public Core::OrganisationWidget
 {
     Q_OBJECT
 
 public:
-    explicit CellmlModelRepositoryWidget(QWidget *pParent);
+    explicit CellMLModelRepositoryWindowWindow(QWidget *pParent);
+    ~CellMLModelRepositoryWindowWindow();
 
-    void output(const QString &pOutput);
-
-protected:
-    virtual QSize sizeHint() const;
-
-    virtual void paintEvent(QPaintEvent *pEvent);
+    virtual void retranslateUi();
 
 private:
-    QString mOutputTemplate;
+    Ui::CellMLModelRepositoryWindowWindow *mGui;
 
-Q_SIGNALS:
-    void copyTextEnabled(const bool &pEnabled);
+    QStringList mModelNames;
+    QStringList mModelUrls;
+
+    CellMLModelRepositoryWindowWidget *mCellmlModelRepositoryWidget;
+
+    QStringList mModelList;
+
+    QNetworkAccessManager *mNetworkAccessManager;
+    QString mErrorMessage;
+
+    bool mModelListRequested;
+
+    QMenu *mContextMenu;
+
+    void outputModelList(const QStringList &pModelList);
 
 private Q_SLOTS:
-    void openLink(const QUrl &pUrl);
+    void on_filterValue_textChanged(const QString &text);
+    void on_actionCopy_triggered();
+    void on_refreshButton_clicked();
 
-    void selectionChanged();
+    void finished(QNetworkReply *pNetworkReply);
+    void sslErrors(QNetworkReply *pNetworkReply,
+                   const QList<QSslError> &pSslErrors);
+
+    void showCustomContextMenu(const QPoint &pPosition) const;
+
+    void retrieveModelList(const bool &pVisible);
 };
 
 //==============================================================================
 
-}   // namespace CellMLModelRepository
+}   // namespace CellMLModelRepositoryWindow
 }   // namespace OpenCOR
 
 //==============================================================================

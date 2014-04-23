@@ -19,7 +19,7 @@ specific language governing permissions and limitations under the License.
 // CellML Model Repository widget
 //==============================================================================
 
-#include "cellmlmodelrepositorywidget.h"
+#include "cellmlmodelrepositorywindowwidget.h"
 #include "cliutils.h"
 
 //==============================================================================
@@ -31,11 +31,11 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 namespace OpenCOR {
-namespace CellMLModelRepository {
+namespace CellMLModelRepositoryWindow {
 
 //==============================================================================
 
-CellmlModelRepositoryWidget::CellmlModelRepositoryWidget(QWidget *pParent) :
+CellMLModelRepositoryWindowWidget::CellMLModelRepositoryWindowWidget(QWidget *pParent) :
     QWebView(pParent),
     Core::CommonWidget(pParent)
 {
@@ -67,7 +67,7 @@ CellmlModelRepositoryWidget::CellmlModelRepositoryWidget(QWidget *pParent) :
 
     // Retrieve the output template
 
-    Core::readTextFromFile(":CellMLModelRepository_output", mOutputTemplate);
+    Core::readTextFromFile(":CellMLModelRepositoryWindow_output", mOutputTemplate);
 
     // Let people know that there is nothing to copy initially
 
@@ -76,7 +76,7 @@ CellmlModelRepositoryWidget::CellmlModelRepositoryWidget(QWidget *pParent) :
 
 //==============================================================================
 
-QSize CellmlModelRepositoryWidget::sizeHint() const
+QSize CellMLModelRepositoryWindowWidget::sizeHint() const
 {
     // Suggest a default size for the CellML Model Repository widget
     // Note: this is critical if we want a docked widget, with a CellML Model
@@ -88,7 +88,7 @@ QSize CellmlModelRepositoryWidget::sizeHint() const
 
 //==============================================================================
 
-void CellmlModelRepositoryWidget::paintEvent(QPaintEvent *pEvent)
+void CellMLModelRepositoryWindowWidget::paintEvent(QPaintEvent *pEvent)
 {
     // Default handling of the event
 
@@ -110,7 +110,7 @@ void CellmlModelRepositoryWidget::paintEvent(QPaintEvent *pEvent)
 
 //==============================================================================
 
-void CellmlModelRepositoryWidget::output(const QString &pOutput)
+void CellMLModelRepositoryWindowWidget::output(const QString &pOutput)
 {
     // Set the page to contain pOutput using our output template
 
@@ -119,7 +119,7 @@ void CellmlModelRepositoryWidget::output(const QString &pOutput)
 
 //==============================================================================
 
-void CellmlModelRepositoryWidget::openLink(const QUrl &pUrl)
+void CellMLModelRepositoryWindowWidget::openLink(const QUrl &pUrl)
 {
     // Open the link in the user's browser
 
@@ -128,7 +128,7 @@ void CellmlModelRepositoryWidget::openLink(const QUrl &pUrl)
 
 //==============================================================================
 
-void CellmlModelRepositoryWidget::selectionChanged()
+void CellMLModelRepositoryWindowWidget::selectionChanged()
 {
     // The text selection has changed, so let the user know whether some text is
     // now selected
@@ -138,7 +138,7 @@ void CellmlModelRepositoryWidget::selectionChanged()
 
 //==============================================================================
 
-}   // namespace CellMLModelRepository
+}   // namespace CellMLModelRepositoryWindow
 }   // namespace OpenCOR
 
 //==============================================================================

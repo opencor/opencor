@@ -16,90 +16,60 @@ specific language governing permissions and limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// CellML Model Repository window
+// CellMLModelRepositoryWindow plugin
 //==============================================================================
 
-#ifndef CELLMLMODELREPOSITORYWINDOW_H
-#define CELLMLMODELREPOSITORYWINDOW_H
-
-//==============================================================================
-
-#include "organisationwidget.h"
+#ifndef CELLMLMODELREPOSITORYWINDOWPLUGIN_H
+#define CELLMLMODELREPOSITORYWINDOWPLUGIN_H
 
 //==============================================================================
 
-#include <QList>
-#include <QSslError>
-
-//==============================================================================
-
-namespace Ui {
-    class CellmlModelRepositoryWindow;
-}
-
-//==============================================================================
-
-class QMenu;
-class QNetworkAccessManager;
-class QNetworkReply;
+#include "coreinterface.h"
+#include "guiinterface.h"
+#include "i18ninterface.h"
+#include "plugininfo.h"
 
 //==============================================================================
 
 namespace OpenCOR {
-namespace CellMLModelRepository {
+namespace CellMLModelRepositoryWindow {
 
 //==============================================================================
 
-class CellmlModelRepositoryWidget;
+PLUGININFO_FUNC CellMLModelRepositoryWindowPluginInfo();
 
 //==============================================================================
 
-class CellmlModelRepositoryWindow : public Core::OrganisationWidget
+class CellMLModelRepositoryWindowWindow;
+
+//==============================================================================
+
+class CellMLModelRepositoryWindowPlugin : public QObject, public CoreInterface,
+                                          public GuiInterface,
+                                          public I18nInterface
 {
     Q_OBJECT
 
-public:
-    explicit CellmlModelRepositoryWindow(QWidget *pParent);
-    ~CellmlModelRepositoryWindow();
+    Q_PLUGIN_METADATA(IID "OpenCOR.CellMLModelRepositoryWindowPlugin" FILE "cellmlmodelrepositorywindowplugin.json")
 
-    virtual void retranslateUi();
+    Q_INTERFACES(OpenCOR::CoreInterface)
+    Q_INTERFACES(OpenCOR::GuiInterface)
+    Q_INTERFACES(OpenCOR::I18nInterface)
+
+public:
+#include "coreinterface.inl"
+#include "guiinterface.inl"
+#include "i18ninterface.inl"
 
 private:
-    Ui::CellmlModelRepositoryWindow *mGui;
+    QAction *mCellmlModelRepositoryAction;
 
-    QStringList mModelNames;
-    QStringList mModelUrls;
-
-    CellmlModelRepositoryWidget *mCellmlModelRepositoryWidget;
-
-    QStringList mModelList;
-
-    QNetworkAccessManager *mNetworkAccessManager;
-    QString mErrorMessage;
-
-    bool mModelListRequested;
-
-    QMenu *mContextMenu;
-
-    void outputModelList(const QStringList &pModelList);
-
-private Q_SLOTS:
-    void on_filterValue_textChanged(const QString &text);
-    void on_actionCopy_triggered();
-    void on_refreshButton_clicked();
-
-    void finished(QNetworkReply *pNetworkReply);
-    void sslErrors(QNetworkReply *pNetworkReply,
-                   const QList<QSslError> &pSslErrors);
-
-    void showCustomContextMenu(const QPoint &pPosition) const;
-
-    void retrieveModelList(const bool &pVisible);
+    CellMLModelRepositoryWindowWindow *mCellmlModelRepositoryWindow;
 };
 
 //==============================================================================
 
-}   // namespace CellMLModelRepository
+}   // namespace CellMLModelRepositoryWindow
 }   // namespace OpenCOR
 
 //==============================================================================

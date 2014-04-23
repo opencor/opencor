@@ -16,59 +16,57 @@ specific language governing permissions and limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// CellMLModelRepository plugin
+// CellML Model Repository widget
 //==============================================================================
 
-#ifndef CELLMLMODELREPOSITORYPLUGIN_H
-#define CELLMLMODELREPOSITORYPLUGIN_H
+#ifndef CELLMLMODELREPOSITORYWINDOWWIDGET_H
+#define CELLMLMODELREPOSITORYWINDOWWIDGET_H
 
 //==============================================================================
 
-#include "coreinterface.h"
-#include "guiinterface.h"
-#include "i18ninterface.h"
-#include "plugininfo.h"
+#include "commonwidget.h"
+
+//==============================================================================
+
+#include <QWebView>
 
 //==============================================================================
 
 namespace OpenCOR {
-namespace CellMLModelRepository {
+namespace CellMLModelRepositoryWindow {
 
 //==============================================================================
 
-PLUGININFO_FUNC CellMLModelRepositoryPluginInfo();
-
-//==============================================================================
-
-class CellmlModelRepositoryWindow;
-
-//==============================================================================
-
-class CellMLModelRepositoryPlugin : public QObject, public CoreInterface,
-                                    public GuiInterface, public I18nInterface
+class CellMLModelRepositoryWindowWidget : public QWebView,
+                                          public Core::CommonWidget
 {
     Q_OBJECT
 
-    Q_PLUGIN_METADATA(IID "OpenCOR.CellMLModelRepositoryPlugin" FILE "cellmlmodelrepositoryplugin.json")
-
-    Q_INTERFACES(OpenCOR::CoreInterface)
-    Q_INTERFACES(OpenCOR::GuiInterface)
-    Q_INTERFACES(OpenCOR::I18nInterface)
-
 public:
-#include "coreinterface.inl"
-#include "guiinterface.inl"
-#include "i18ninterface.inl"
+    explicit CellMLModelRepositoryWindowWidget(QWidget *pParent);
+
+    void output(const QString &pOutput);
+
+protected:
+    virtual QSize sizeHint() const;
+
+    virtual void paintEvent(QPaintEvent *pEvent);
 
 private:
-    QAction *mCellmlModelRepositoryAction;
+    QString mOutputTemplate;
 
-    CellmlModelRepositoryWindow *mCellmlModelRepositoryWindow;
+Q_SIGNALS:
+    void copyTextEnabled(const bool &pEnabled);
+
+private Q_SLOTS:
+    void openLink(const QUrl &pUrl);
+
+    void selectionChanged();
 };
 
 //==============================================================================
 
-}   // namespace CellMLModelRepository
+}   // namespace CellMLModelRepositoryWindow
 }   // namespace OpenCOR
 
 //==============================================================================

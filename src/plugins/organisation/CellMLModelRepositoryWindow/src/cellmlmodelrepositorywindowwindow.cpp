@@ -19,14 +19,14 @@ specific language governing permissions and limitations under the License.
 // CellML Model Repository window
 //==============================================================================
 
-#include "cellmlmodelrepositorywindow.h"
-#include "cellmlmodelrepositorywidget.h"
+#include "cellmlmodelrepositorywindowwindow.h"
+#include "cellmlmodelrepositorywindowwidget.h"
 #include "cliutils.h"
 #include "guiutils.h"
 
 //==============================================================================
 
-#include "ui_cellmlmodelrepositorywindow.h"
+#include "ui_cellmlmodelrepositorywindowwindow.h"
 
 //==============================================================================
 
@@ -47,13 +47,13 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 namespace OpenCOR {
-namespace CellMLModelRepository {
+namespace CellMLModelRepositoryWindow {
 
 //==============================================================================
 
-CellmlModelRepositoryWindow::CellmlModelRepositoryWindow(QWidget *pParent) :
+CellMLModelRepositoryWindowWindow::CellMLModelRepositoryWindowWindow(QWidget *pParent) :
     OrganisationWidget(pParent),
-    mGui(new Ui::CellmlModelRepositoryWindow),
+    mGui(new Ui::CellMLModelRepositoryWindowWindow),
     mModelListRequested(false)
 {
     // Set up the GUI
@@ -66,7 +66,7 @@ CellmlModelRepositoryWindow::CellmlModelRepositoryWindow(QWidget *pParent) :
 
     // Create and add the CellML Model Repository widget
 
-    mCellmlModelRepositoryWidget = new CellmlModelRepositoryWidget(this);
+    mCellmlModelRepositoryWidget = new CellMLModelRepositoryWindowWidget(this);
 
     mGui->dockWidgetContents->layout()->addWidget(mCellmlModelRepositoryWidget);
 
@@ -113,7 +113,7 @@ CellmlModelRepositoryWindow::CellmlModelRepositoryWindow(QWidget *pParent) :
 
 //==============================================================================
 
-CellmlModelRepositoryWindow::~CellmlModelRepositoryWindow()
+CellMLModelRepositoryWindowWindow::~CellMLModelRepositoryWindowWindow()
 {
     // Delete the GUI
 
@@ -122,7 +122,7 @@ CellmlModelRepositoryWindow::~CellmlModelRepositoryWindow()
 
 //==============================================================================
 
-void CellmlModelRepositoryWindow::retranslateUi()
+void CellMLModelRepositoryWindowWindow::retranslateUi()
 {
     // Retranslate the whole window
 
@@ -135,7 +135,7 @@ void CellmlModelRepositoryWindow::retranslateUi()
 
 //==============================================================================
 
-void CellmlModelRepositoryWindow::outputModelList(const QStringList &pModelList)
+void CellMLModelRepositoryWindowWindow::outputModelList(const QStringList &pModelList)
 {
     // Output a given list of models
 
@@ -186,7 +186,7 @@ void CellmlModelRepositoryWindow::outputModelList(const QStringList &pModelList)
 
 //==============================================================================
 
-void CellmlModelRepositoryWindow::on_filterValue_textChanged(const QString &text)
+void CellMLModelRepositoryWindowWindow::on_filterValue_textChanged(const QString &text)
 {
     // Generate a Web page that contains all the models which match our search
     // criteria
@@ -196,7 +196,7 @@ void CellmlModelRepositoryWindow::on_filterValue_textChanged(const QString &text
 
 //==============================================================================
 
-void CellmlModelRepositoryWindow::on_actionCopy_triggered()
+void CellMLModelRepositoryWindowWindow::on_actionCopy_triggered()
 {
     // Copy the current slection to the clipboard
 
@@ -205,7 +205,7 @@ void CellmlModelRepositoryWindow::on_actionCopy_triggered()
 
 //==============================================================================
 
-void CellmlModelRepositoryWindow::on_refreshButton_clicked()
+void CellMLModelRepositoryWindowWindow::on_refreshButton_clicked()
 {
     // Output the message telling the user that the list is being downloaded
     // Note: to clear mModelNames ensures that we get the correct message from
@@ -229,7 +229,7 @@ void CellmlModelRepositoryWindow::on_refreshButton_clicked()
 
 //==============================================================================
 
-void CellmlModelRepositoryWindow::finished(QNetworkReply *pNetworkReply)
+void CellMLModelRepositoryWindowWindow::finished(QNetworkReply *pNetworkReply)
 {
     // Clear some properties
 
@@ -291,8 +291,8 @@ void CellmlModelRepositoryWindow::finished(QNetworkReply *pNetworkReply)
 
 //==============================================================================
 
-void CellmlModelRepositoryWindow::sslErrors(QNetworkReply *pNetworkReply,
-                                            const QList<QSslError> &pSslErrors)
+void CellMLModelRepositoryWindowWindow::sslErrors(QNetworkReply *pNetworkReply,
+                                                  const QList<QSslError> &pSslErrors)
 {
     // Ignore the SSL errors since we trust the website and therefore its
     // certificate (even if it is invalid, e.g. it has expired)
@@ -302,7 +302,7 @@ void CellmlModelRepositoryWindow::sslErrors(QNetworkReply *pNetworkReply,
 
 //==============================================================================
 
-void CellmlModelRepositoryWindow::showCustomContextMenu(const QPoint &pPosition) const
+void CellMLModelRepositoryWindowWindow::showCustomContextMenu(const QPoint &pPosition) const
 {
     Q_UNUSED(pPosition);
 
@@ -313,7 +313,7 @@ void CellmlModelRepositoryWindow::showCustomContextMenu(const QPoint &pPosition)
 
 //==============================================================================
 
-void CellmlModelRepositoryWindow::retrieveModelList(const bool &pVisible)
+void CellMLModelRepositoryWindowWindow::retrieveModelList(const bool &pVisible)
 {
     // Retrieve the list of models, if we are becoming visible and the list of
     // models has never been requested before
@@ -324,7 +324,7 @@ void CellmlModelRepositoryWindow::retrieveModelList(const bool &pVisible)
 
 //==============================================================================
 
-}   // namespace CellMLModelRepository
+}   // namespace CellMLModelRepositoryWindow
 }   // namespace OpenCOR
 
 //==============================================================================

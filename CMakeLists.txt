@@ -200,7 +200,7 @@ SET(PLUGINS
     misc/CellMLTools
     misc/HelpWindow
 
-    organisation/CellMLModelRepository
+    organisation/CellMLModelRepositoryWindow
     organisation/FileBrowser
     organisation/FileOrganiser
 

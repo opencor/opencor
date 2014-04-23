@@ -1,22 +1,22 @@
-PROJECT(CellMLModelRepositoryPlugin)
+PROJECT(CellMLModelRepositoryWindowPlugin)
 
 # Add the plugin
 
-ADD_PLUGIN(CellMLModelRepository
+ADD_PLUGIN(CellMLModelRepositoryWindow
     SOURCES
         ../../guiinterface.cpp
         ../../i18ninterface.cpp
         ../../plugininfo.cpp
 
-        src/cellmlmodelrepositoryplugin.cpp
-        src/cellmlmodelrepositorywidget.cpp
-        src/cellmlmodelrepositorywindow.cpp
+        src/cellmlmodelrepositorywindowplugin.cpp
+        src/cellmlmodelrepositorywindowwidget.cpp
+        src/cellmlmodelrepositorywindowwindow.cpp
     HEADERS_MOC
-        src/cellmlmodelrepositoryplugin.h
-        src/cellmlmodelrepositorywidget.h
-        src/cellmlmodelrepositorywindow.h
+        src/cellmlmodelrepositorywindowplugin.h
+        src/cellmlmodelrepositorywindowwidget.h
+        src/cellmlmodelrepositorywindowwindow.h
     UIS
-        src/cellmlmodelrepositorywindow.ui
+        src/cellmlmodelrepositorywindowwindow.ui
     INCLUDE_DIRS
         src
     PLUGINS

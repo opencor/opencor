@@ -16,11 +16,11 @@ specific language governing permissions and limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// CellMLModelRepository plugin
+// CellMLModelRepositoryWindow plugin
 //==============================================================================
 
-#include "cellmlmodelrepositoryplugin.h"
-#include "cellmlmodelrepositorywindow.h"
+#include "cellmlmodelrepositorywindowplugin.h"
+#include "cellmlmodelrepositorywindowwindow.h"
 
 //==============================================================================
 
@@ -30,11 +30,11 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 namespace OpenCOR {
-namespace CellMLModelRepository {
+namespace CellMLModelRepositoryWindow {
 
 //==============================================================================
 
-PLUGININFO_FUNC CellMLModelRepositoryPluginInfo()
+PLUGININFO_FUNC CellMLModelRepositoryWindowPluginInfo()
 {
     Descriptions descriptions;
 
@@ -50,7 +50,7 @@ PLUGININFO_FUNC CellMLModelRepositoryPluginInfo()
 // Core interface
 //==============================================================================
 
-void CellMLModelRepositoryPlugin::initialize()
+void CellMLModelRepositoryWindowPlugin::initialize()
 {
     // Create an action to show/hide our CellML Model Repository window
 
@@ -58,7 +58,7 @@ void CellMLModelRepositoryPlugin::initialize()
 
     // Create our CellML Model Repository window
 
-    mCellmlModelRepositoryWindow = new CellmlModelRepositoryWindow(mMainWindow);
+    mCellmlModelRepositoryWindow = new CellMLModelRepositoryWindowWindow(mMainWindow);
 
     // Set our settings
 
@@ -69,14 +69,14 @@ void CellMLModelRepositoryPlugin::initialize()
 
 //==============================================================================
 
-void CellMLModelRepositoryPlugin::finalize()
+void CellMLModelRepositoryWindowPlugin::finalize()
 {
     // We don't handle this interface...
 }
 
 //==============================================================================
 
-void CellMLModelRepositoryPlugin::initialized(const Plugins &pLoadedPlugins)
+void CellMLModelRepositoryWindowPlugin::initialized(const Plugins &pLoadedPlugins)
 {
     Q_UNUSED(pLoadedPlugins);
 
@@ -85,7 +85,7 @@ void CellMLModelRepositoryPlugin::initialized(const Plugins &pLoadedPlugins)
 
 //==============================================================================
 
-void CellMLModelRepositoryPlugin::loadSettings(QSettings *pSettings)
+void CellMLModelRepositoryWindowPlugin::loadSettings(QSettings *pSettings)
 {
     // Retrieve our CellML Model Repository window settings
 
@@ -96,7 +96,7 @@ void CellMLModelRepositoryPlugin::loadSettings(QSettings *pSettings)
 
 //==============================================================================
 
-void CellMLModelRepositoryPlugin::saveSettings(QSettings *pSettings) const
+void CellMLModelRepositoryWindowPlugin::saveSettings(QSettings *pSettings) const
 {
     // Keep track of our CellML Model Repository window settings
 
@@ -107,7 +107,7 @@ void CellMLModelRepositoryPlugin::saveSettings(QSettings *pSettings) const
 
 //==============================================================================
 
-void CellMLModelRepositoryPlugin::settingsLoaded(const Plugins &pLoadedPlugins)
+void CellMLModelRepositoryWindowPlugin::settingsLoaded(const Plugins &pLoadedPlugins)
 {
     Q_UNUSED(pLoadedPlugins);
 
@@ -116,7 +116,7 @@ void CellMLModelRepositoryPlugin::settingsLoaded(const Plugins &pLoadedPlugins)
 
 //==============================================================================
 
-void CellMLModelRepositoryPlugin::handleArguments(const QStringList &pArguments)
+void CellMLModelRepositoryWindowPlugin::handleArguments(const QStringList &pArguments)
 {
     Q_UNUSED(pArguments);
 
@@ -125,7 +125,7 @@ void CellMLModelRepositoryPlugin::handleArguments(const QStringList &pArguments)
 
 //==============================================================================
 
-void CellMLModelRepositoryPlugin::handleAction(const QUrl &pUrl)
+void CellMLModelRepositoryWindowPlugin::handleAction(const QUrl &pUrl)
 {
     Q_UNUSED(pUrl);
 
@@ -134,7 +134,7 @@ void CellMLModelRepositoryPlugin::handleAction(const QUrl &pUrl)
 
 //==============================================================================
 
-void CellMLModelRepositoryPlugin::changeEvent(QEvent *pEvent)
+void CellMLModelRepositoryWindowPlugin::changeEvent(QEvent *pEvent)
 {
     Q_UNUSED(pEvent);
 
@@ -143,8 +143,8 @@ void CellMLModelRepositoryPlugin::changeEvent(QEvent *pEvent)
 
 //==============================================================================
 
-void CellMLModelRepositoryPlugin::updateGui(Plugin *pViewPlugin,
-                                            const QString &pFileName)
+void CellMLModelRepositoryWindowPlugin::updateGui(Plugin *pViewPlugin,
+                                                  const QString &pFileName)
 {
     Q_UNUSED(pViewPlugin);
     Q_UNUSED(pFileName);
@@ -154,21 +154,21 @@ void CellMLModelRepositoryPlugin::updateGui(Plugin *pViewPlugin,
 
 //==============================================================================
 
-void CellMLModelRepositoryPlugin::initializeView()
+void CellMLModelRepositoryWindowPlugin::initializeView()
 {
     // We don't handle this interface...
 }
 
 //==============================================================================
 
-void CellMLModelRepositoryPlugin::finalizeView()
+void CellMLModelRepositoryWindowPlugin::finalizeView()
 {
     // We don't handle this interface...
 }
 
 //==============================================================================
 
-bool CellMLModelRepositoryPlugin::hasViewWidget(const QString &pFileName)
+bool CellMLModelRepositoryWindowPlugin::hasViewWidget(const QString &pFileName)
 {
     Q_UNUSED(pFileName);
 
@@ -179,8 +179,8 @@ bool CellMLModelRepositoryPlugin::hasViewWidget(const QString &pFileName)
 
 //==============================================================================
 
-QWidget * CellMLModelRepositoryPlugin::viewWidget(const QString &pFileName,
-                                                  const bool &pCreate)
+QWidget * CellMLModelRepositoryWindowPlugin::viewWidget(const QString &pFileName,
+                                                        const bool &pCreate)
 {
     Q_UNUSED(pFileName);
     Q_UNUSED(pCreate);
@@ -192,7 +192,7 @@ QWidget * CellMLModelRepositoryPlugin::viewWidget(const QString &pFileName,
 
 //==============================================================================
 
-void CellMLModelRepositoryPlugin::removeViewWidget(const QString &pFileName)
+void CellMLModelRepositoryWindowPlugin::removeViewWidget(const QString &pFileName)
 {
     Q_UNUSED(pFileName);
 
@@ -201,7 +201,7 @@ void CellMLModelRepositoryPlugin::removeViewWidget(const QString &pFileName)
 
 //==============================================================================
 
-QString CellMLModelRepositoryPlugin::viewName() const
+QString CellMLModelRepositoryWindowPlugin::viewName() const
 {
     // We don't handle this interface...
 
@@ -210,7 +210,7 @@ QString CellMLModelRepositoryPlugin::viewName() const
 
 //==============================================================================
 
-QIcon CellMLModelRepositoryPlugin::fileTabIcon(const QString &pFileName) const
+QIcon CellMLModelRepositoryWindowPlugin::fileTabIcon(const QString &pFileName) const
 {
     Q_UNUSED(pFileName);
 
@@ -221,8 +221,8 @@ QIcon CellMLModelRepositoryPlugin::fileTabIcon(const QString &pFileName) const
 
 //==============================================================================
 
-bool CellMLModelRepositoryPlugin::saveFile(const QString &pOldFileName,
-                                           const QString &pNewFileName)
+bool CellMLModelRepositoryWindowPlugin::saveFile(const QString &pOldFileName,
+                                                 const QString &pNewFileName)
 {
     Q_UNUSED(pOldFileName);
     Q_UNUSED(pNewFileName);
@@ -234,7 +234,7 @@ bool CellMLModelRepositoryPlugin::saveFile(const QString &pOldFileName,
 
 //==============================================================================
 
-void CellMLModelRepositoryPlugin::fileOpened(const QString &pFileName)
+void CellMLModelRepositoryWindowPlugin::fileOpened(const QString &pFileName)
 {
     Q_UNUSED(pFileName);
 
@@ -243,7 +243,7 @@ void CellMLModelRepositoryPlugin::fileOpened(const QString &pFileName)
 
 //==============================================================================
 
-void CellMLModelRepositoryPlugin::filePermissionsChanged(const QString &pFileName)
+void CellMLModelRepositoryWindowPlugin::filePermissionsChanged(const QString &pFileName)
 {
     Q_UNUSED(pFileName);
 
@@ -252,8 +252,8 @@ void CellMLModelRepositoryPlugin::filePermissionsChanged(const QString &pFileNam
 
 //==============================================================================
 
-void CellMLModelRepositoryPlugin::fileModified(const QString &pFileName,
-                                               const bool &pModified)
+void CellMLModelRepositoryWindowPlugin::fileModified(const QString &pFileName,
+                                                     const bool &pModified)
 {
     Q_UNUSED(pFileName);
     Q_UNUSED(pModified);
@@ -263,7 +263,7 @@ void CellMLModelRepositoryPlugin::fileModified(const QString &pFileName,
 
 //==============================================================================
 
-void CellMLModelRepositoryPlugin::fileReloaded(const QString &pFileName)
+void CellMLModelRepositoryWindowPlugin::fileReloaded(const QString &pFileName)
 {
     Q_UNUSED(pFileName);
 
@@ -272,8 +272,8 @@ void CellMLModelRepositoryPlugin::fileReloaded(const QString &pFileName)
 
 //==============================================================================
 
-void CellMLModelRepositoryPlugin::fileRenamed(const QString &pOldFileName,
-                                              const QString &pNewFileName)
+void CellMLModelRepositoryWindowPlugin::fileRenamed(const QString &pOldFileName,
+                                                    const QString &pNewFileName)
 {
     Q_UNUSED(pOldFileName);
     Q_UNUSED(pNewFileName);
@@ -283,7 +283,7 @@ void CellMLModelRepositoryPlugin::fileRenamed(const QString &pOldFileName,
 
 //==============================================================================
 
-void CellMLModelRepositoryPlugin::fileClosed(const QString &pFileName)
+void CellMLModelRepositoryWindowPlugin::fileClosed(const QString &pFileName)
 {
     Q_UNUSED(pFileName);
 
@@ -292,7 +292,7 @@ void CellMLModelRepositoryPlugin::fileClosed(const QString &pFileName)
 
 //==============================================================================
 
-bool CellMLModelRepositoryPlugin::canClose()
+bool CellMLModelRepositoryWindowPlugin::canClose()
 {
     // We don't handle this interface...
 
@@ -303,7 +303,7 @@ bool CellMLModelRepositoryPlugin::canClose()
 // I18n interface
 //==============================================================================
 
-void CellMLModelRepositoryPlugin::retranslateUi()
+void CellMLModelRepositoryWindowPlugin::retranslateUi()
 {
     // Retranslate our CellML Model Repository action
 
@@ -318,7 +318,7 @@ void CellMLModelRepositoryPlugin::retranslateUi()
 
 //==============================================================================
 
-}   // namespace CellMLModelRepository
+}   // namespace CellMLModelRepositoryWindow
 }   // namespace OpenCOR
 
 //==============================================================================
