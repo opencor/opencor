@@ -58,7 +58,7 @@ void CellMLModelRepositoryWindowPlugin::initialize()
 
     // Create our CellML Model Repository window
 
-    mCellmlModelRepositoryWindow = new CellMLModelRepositoryWindowWindow(mMainWindow);
+    mCellmlModelRepositoryWindow = new CellmlModelRepositoryWindowWindow(mMainWindow);
 
     // Set our settings
 

@@ -34,7 +34,7 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 namespace Ui {
-    class CellMLModelRepositoryWindowWindow;
+    class CellmlModelRepositoryWindowWindow;
 }
 
 //==============================================================================
@@ -50,27 +50,27 @@ namespace CellMLModelRepositoryWindow {
 
 //==============================================================================
 
-class CellMLModelRepositoryWindowWidget;
+class CellmlModelRepositoryWindowWidget;
 
 //==============================================================================
 
-class CellMLModelRepositoryWindowWindow : public Core::OrganisationWidget
+class CellmlModelRepositoryWindowWindow : public Core::OrganisationWidget
 {
     Q_OBJECT
 
 public:
-    explicit CellMLModelRepositoryWindowWindow(QWidget *pParent);
-    ~CellMLModelRepositoryWindowWindow();
+    explicit CellmlModelRepositoryWindowWindow(QWidget *pParent);
+    ~CellmlModelRepositoryWindowWindow();
 
     virtual void retranslateUi();
 
 private:
-    Ui::CellMLModelRepositoryWindowWindow *mGui;
+    Ui::CellmlModelRepositoryWindowWindow *mGui;
 
     QStringList mModelNames;
     QStringList mModelUrls;
 
-    CellMLModelRepositoryWindowWidget *mCellmlModelRepositoryWidget;
+    CellmlModelRepositoryWindowWidget *mCellmlModelRepositoryWidget;
 
     QStringList mModelList;
 

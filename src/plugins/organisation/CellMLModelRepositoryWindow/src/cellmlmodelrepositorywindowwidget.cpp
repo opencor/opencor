@@ -35,7 +35,7 @@ namespace CellMLModelRepositoryWindow {
 
 //==============================================================================
 
-CellMLModelRepositoryWindowWidget::CellMLModelRepositoryWindowWidget(QWidget *pParent) :
+CellmlModelRepositoryWindowWidget::CellmlModelRepositoryWindowWidget(QWidget *pParent) :
     QWebView(pParent),
     Core::CommonWidget(pParent)
 {
@@ -76,7 +76,7 @@ CellMLModelRepositoryWindowWidget::CellMLModelRepositoryWindowWidget(QWidget *pP
 
 //==============================================================================
 
-QSize CellMLModelRepositoryWindowWidget::sizeHint() const
+QSize CellmlModelRepositoryWindowWidget::sizeHint() const
 {
     // Suggest a default size for the CellML Model Repository widget
     // Note: this is critical if we want a docked widget, with a CellML Model
@@ -88,7 +88,7 @@ QSize CellMLModelRepositoryWindowWidget::sizeHint() const
 
 //==============================================================================
 
-void CellMLModelRepositoryWindowWidget::paintEvent(QPaintEvent *pEvent)
+void CellmlModelRepositoryWindowWidget::paintEvent(QPaintEvent *pEvent)
 {
     // Default handling of the event
 
@@ -110,7 +110,7 @@ void CellMLModelRepositoryWindowWidget::paintEvent(QPaintEvent *pEvent)
 
 //==============================================================================
 
-void CellMLModelRepositoryWindowWidget::output(const QString &pOutput)
+void CellmlModelRepositoryWindowWidget::output(const QString &pOutput)
 {
     // Set the page to contain pOutput using our output template
 
@@ -119,7 +119,7 @@ void CellMLModelRepositoryWindowWidget::output(const QString &pOutput)
 
 //==============================================================================
 
-void CellMLModelRepositoryWindowWidget::openLink(const QUrl &pUrl)
+void CellmlModelRepositoryWindowWidget::openLink(const QUrl &pUrl)
 {
     // Open the link in the user's browser
 
@@ -128,7 +128,7 @@ void CellMLModelRepositoryWindowWidget::openLink(const QUrl &pUrl)
 
 //==============================================================================
 
-void CellMLModelRepositoryWindowWidget::selectionChanged()
+void CellmlModelRepositoryWindowWidget::selectionChanged()
 {
     // The text selection has changed, so let the user know whether some text is
     // now selected

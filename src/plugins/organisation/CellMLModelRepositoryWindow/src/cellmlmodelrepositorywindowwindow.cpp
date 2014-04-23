@@ -51,9 +51,9 @@ namespace CellMLModelRepositoryWindow {
 
 //==============================================================================
 
-CellMLModelRepositoryWindowWindow::CellMLModelRepositoryWindowWindow(QWidget *pParent) :
+CellmlModelRepositoryWindowWindow::CellmlModelRepositoryWindowWindow(QWidget *pParent) :
     OrganisationWidget(pParent),
-    mGui(new Ui::CellMLModelRepositoryWindowWindow),
+    mGui(new Ui::CellmlModelRepositoryWindowWindow),
     mModelListRequested(false)
 {
     // Set up the GUI
@@ -66,7 +66,7 @@ CellMLModelRepositoryWindowWindow::CellMLModelRepositoryWindowWindow(QWidget *pP
 
     // Create and add the CellML Model Repository widget
 
-    mCellmlModelRepositoryWidget = new CellMLModelRepositoryWindowWidget(this);
+    mCellmlModelRepositoryWidget = new CellmlModelRepositoryWindowWidget(this);
 
     mGui->dockWidgetContents->layout()->addWidget(mCellmlModelRepositoryWidget);
 
@@ -113,7 +113,7 @@ CellMLModelRepositoryWindowWindow::CellMLModelRepositoryWindowWindow(QWidget *pP
 
 //==============================================================================
 
-CellMLModelRepositoryWindowWindow::~CellMLModelRepositoryWindowWindow()
+CellmlModelRepositoryWindowWindow::~CellmlModelRepositoryWindowWindow()
 {
     // Delete the GUI
 
@@ -122,7 +122,7 @@ CellMLModelRepositoryWindowWindow::~CellMLModelRepositoryWindowWindow()
 
 //==============================================================================
 
-void CellMLModelRepositoryWindowWindow::retranslateUi()
+void CellmlModelRepositoryWindowWindow::retranslateUi()
 {
     // Retranslate the whole window
 
@@ -135,7 +135,7 @@ void CellMLModelRepositoryWindowWindow::retranslateUi()
 
 //==============================================================================
 
-void CellMLModelRepositoryWindowWindow::outputModelList(const QStringList &pModelList)
+void CellmlModelRepositoryWindowWindow::outputModelList(const QStringList &pModelList)
 {
     // Output a given list of models
 
@@ -186,7 +186,7 @@ void CellMLModelRepositoryWindowWindow::outputModelList(const QStringList &pMode
 
 //==============================================================================
 
-void CellMLModelRepositoryWindowWindow::on_filterValue_textChanged(const QString &text)
+void CellmlModelRepositoryWindowWindow::on_filterValue_textChanged(const QString &text)
 {
     // Generate a Web page that contains all the models which match our search
     // criteria
@@ -196,16 +196,16 @@ void CellMLModelRepositoryWindowWindow::on_filterValue_textChanged(const QString
 
 //==============================================================================
 
-void CellMLModelRepositoryWindowWindow::on_actionCopy_triggered()
+void CellmlModelRepositoryWindowWindow::on_actionCopy_triggered()
 {
-    // Copy the current slection to the clipboard
+    // Copy the current selection to the clipboard
 
     QApplication::clipboard()->setText(mCellmlModelRepositoryWidget->selectedText());
 }
 
 //==============================================================================
 
-void CellMLModelRepositoryWindowWindow::on_refreshButton_clicked()
+void CellmlModelRepositoryWindowWindow::on_refreshButton_clicked()
 {
     // Output the message telling the user that the list is being downloaded
     // Note: to clear mModelNames ensures that we get the correct message from
@@ -229,7 +229,7 @@ void CellMLModelRepositoryWindowWindow::on_refreshButton_clicked()
 
 //==============================================================================
 
-void CellMLModelRepositoryWindowWindow::finished(QNetworkReply *pNetworkReply)
+void CellmlModelRepositoryWindowWindow::finished(QNetworkReply *pNetworkReply)
 {
     // Clear some properties
 
@@ -291,7 +291,7 @@ void CellMLModelRepositoryWindowWindow::finished(QNetworkReply *pNetworkReply)
 
 //==============================================================================
 
-void CellMLModelRepositoryWindowWindow::sslErrors(QNetworkReply *pNetworkReply,
+void CellmlModelRepositoryWindowWindow::sslErrors(QNetworkReply *pNetworkReply,
                                                   const QList<QSslError> &pSslErrors)
 {
     // Ignore the SSL errors since we trust the website and therefore its
@@ -302,7 +302,7 @@ void CellMLModelRepositoryWindowWindow::sslErrors(QNetworkReply *pNetworkReply,
 
 //==============================================================================
 
-void CellMLModelRepositoryWindowWindow::showCustomContextMenu(const QPoint &pPosition) const
+void CellmlModelRepositoryWindowWindow::showCustomContextMenu(const QPoint &pPosition) const
 {
     Q_UNUSED(pPosition);
 
@@ -313,7 +313,7 @@ void CellMLModelRepositoryWindowWindow::showCustomContextMenu(const QPoint &pPos
 
 //==============================================================================
 
-void CellMLModelRepositoryWindowWindow::retrieveModelList(const bool &pVisible)
+void CellmlModelRepositoryWindowWindow::retrieveModelList(const bool &pVisible)
 {
     // Retrieve the list of models, if we are becoming visible and the list of
     // models has never been requested before

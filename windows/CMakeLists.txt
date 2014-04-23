@@ -24,14 +24,14 @@ SET(SOURCES
     ../src/plugins/plugininfo.cpp
     ../src/plugins/pluginmanager.cpp
 
-    ../src/plugins/misc/Core/src/cliutils.cpp
+    ../src/plugins/miscellaneous/Core/src/cliutils.cpp
 )
 
 SET(HEADERS_MOC
     ../src/plugins/plugin.h
     ../src/plugins/pluginmanager.h
 
-    ../src/plugins/misc/Core/src/cliutils.h
+    ../src/plugins/miscellaneous/Core/src/cliutils.h
 )
 
 SET(RESOURCES
@@ -44,7 +44,7 @@ INCLUDE_DIRECTORIES(
     ../src/comp
     ../src/misc
     ../src/plugins
-    ../src/plugins/misc/Core/src
+    ../src/plugins/miscellaneous/Core/src
 )
 
 # Build the CLI version of OpenCOR

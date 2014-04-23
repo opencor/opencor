@@ -91,11 +91,11 @@
     <name>OpenCOR::HelpWindow::HelpWindowPlugin</name>
     <message>
         <source>Help</source>
-        <translation type="unfinished">Aide</translation>
+        <translation>Aide</translation>
     </message>
     <message>
         <source>Show/hide the OpenCOR help</source>
-        <translation type="unfinished">Montrer/cacher l&apos;aide d&apos;OpenCOR</translation>
+        <translation>Montrer/cacher l&apos;aide d&apos;OpenCOR</translation>
     </message>
 </context>
 </TS>

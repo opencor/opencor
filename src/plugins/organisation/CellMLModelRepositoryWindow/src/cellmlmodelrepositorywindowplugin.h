@@ -40,7 +40,7 @@ PLUGININFO_FUNC CellMLModelRepositoryWindowPluginInfo();
 
 //==============================================================================
 
-class CellMLModelRepositoryWindowWindow;
+class CellmlModelRepositoryWindowWindow;
 
 //==============================================================================
 
@@ -64,7 +64,7 @@ public:
 private:
     QAction *mCellmlModelRepositoryAction;
 
-    CellMLModelRepositoryWindowWindow *mCellmlModelRepositoryWindow;
+    CellmlModelRepositoryWindowWindow *mCellmlModelRepositoryWindow;
 };
 
 //==============================================================================

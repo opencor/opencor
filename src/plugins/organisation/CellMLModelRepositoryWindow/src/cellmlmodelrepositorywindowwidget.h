@@ -37,13 +37,13 @@ namespace CellMLModelRepositoryWindow {
 
 //==============================================================================
 
-class CellMLModelRepositoryWindowWidget : public QWebView,
+class CellmlModelRepositoryWindowWidget : public QWebView,
                                           public Core::CommonWidget
 {
     Q_OBJECT
 
 public:
-    explicit CellMLModelRepositoryWindowWidget(QWidget *pParent);
+    explicit CellmlModelRepositoryWindowWidget(QWidget *pParent);
 
     void output(const QString &pOutput);
 

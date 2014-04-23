@@ -5,7 +5,7 @@
     <name>OpenCOR::PrettyCellMLView::PrettyCellMLViewPlugin</name>
     <message>
         <source>Pretty CellML</source>
-        <translation type="unfinished">Joli CellML</translation>
+        <translation>Joli CellML</translation>
     </message>
 </context>
 </TS>
