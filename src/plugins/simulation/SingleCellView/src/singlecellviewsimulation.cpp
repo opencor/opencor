@@ -1059,8 +1059,8 @@ double SingleCellViewSimulation::requiredMemory()
     // Determine and return the amount of required memory to run our simulation
     // Note #1: we return the amount as a double rather than a qulonglong (as we
     //          do when retrieving the total/free amount of memory available;
-    //          see [OpenCOR]/src/plugins/misc/Core/src/guiutils.cpp) in case a
-    //          simulation requires an insane amount of memory...
+    //          see [OpenCOR]/src/plugins/miscellaneous/Core/src/guiutils.cpp)
+    //          in case a simulation requires an insane amount of memory...
     // Note #2: the 1.0 is for mPoints in SingleCellViewSimulationResults...
 
     if (mRuntime)

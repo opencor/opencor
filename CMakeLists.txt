@@ -56,9 +56,9 @@ SET(SOURCES
     src/plugins/pluginmanager.cpp
     src/plugins/solverinterface.cpp
 
-    src/plugins/misc/Core/src/cliutils.cpp
-    src/plugins/misc/Core/src/commonwidget.cpp
-    src/plugins/misc/Core/src/guiutils.cpp
+    src/plugins/miscellaneous/Core/src/cliutils.cpp
+    src/plugins/miscellaneous/Core/src/commonwidget.cpp
+    src/plugins/miscellaneous/Core/src/guiutils.cpp
 )
 
 SET(HEADERS_MOC
@@ -70,7 +70,7 @@ SET(HEADERS_MOC
     src/plugins/plugin.h
     src/plugins/pluginmanager.h
 
-    src/plugins/misc/Core/src/cliutils.h
+    src/plugins/miscellaneous/Core/src/cliutils.h
 )
 
 SET(UIS
@@ -94,7 +94,7 @@ INCLUDE_DIRECTORIES(
     src/comp
     src/misc
     src/plugins
-    src/plugins/misc/Core/src
+    src/plugins/miscellaneous/Core/src
 )
 
 # Update the translation (.ts) files and generate the language (.qm) files
@@ -166,13 +166,13 @@ SET(PLUGINS
 
     api/CellMLAPI
 
-    misc/Core
+    miscellaneous/Core
 
     solver/CoreSolver
 
     # Plugins that build on top of some third-party libraries
 
-    misc/Compiler
+    miscellaneous/Compiler
 
     # Plugins that provide support for some third-party libraries
 
@@ -197,8 +197,8 @@ SET(PLUGINS
     editing/RawCellMLView
     editing/RawView
 
-    misc/CellMLTools
-    misc/HelpWindow
+    miscellaneous/CellMLTools
+    miscellaneous/HelpWindow
 
     organisation/CellMLModelRepositoryWindow
     organisation/FileBrowser
