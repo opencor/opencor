@@ -1,4 +1,4 @@
-PROJECT(HelpPlugin)
+PROJECT(HelpWindowPlugin)
 
 # Generate the help files which will be embedded in the executable as a resource
 
@@ -7,21 +7,21 @@ EXECUTE_PROCESS(COMMAND ${QT_BINARY_DIR}/qcollectiongenerator ${CMAKE_SOURCE_DIR
 
 # Add the plugin
 
-ADD_PLUGIN(Help
+ADD_PLUGIN(HelpWindow
     SOURCES
         ../../guiinterface.cpp
         ../../i18ninterface.cpp
         ../../plugininfo.cpp
 
-        src/helpplugin.cpp
-        src/helpwidget.cpp
-        src/helpwindow.cpp
+        src/helpwindowplugin.cpp
+        src/helpwindowwidget.cpp
+        src/helpwindowwindow.cpp
     HEADERS_MOC
-        src/helpplugin.h
-        src/helpwidget.h
-        src/helpwindow.h
+        src/helpwindowplugin.h
+        src/helpwindowwidget.h
+        src/helpwindowwindow.h
     UIS
-        src/helpwindow.ui
+        src/helpwindowwindow.ui
     INCLUDE_DIRS
         src
     PLUGINS

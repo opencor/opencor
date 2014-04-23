@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>HelpWindow</class>
- <widget class="QDockWidget" name="HelpWindow">
+ <class>HelpWindowWindow</class>
+ <widget class="QDockWidget" name="HelpWindowWindow">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -25,7 +25,7 @@
   </widget>
   <action name="actionHome">
    <property name="icon">
-    <iconset resource="../res/Help.qrc">
+    <iconset resource="../res/HelpWindow.qrc">
      <normaloff>:/oxygen/actions/go-home.png</normaloff>:/oxygen/actions/go-home.png</iconset>
    </property>
    <property name="text">
@@ -61,7 +61,7 @@
   </action>
   <action name="actionZoomIn">
    <property name="icon">
-    <iconset resource="../res/Help.qrc">
+    <iconset resource="../res/HelpWindow.qrc">
      <normaloff>:/oxygen/actions/zoom-in.png</normaloff>:/oxygen/actions/zoom-in.png</iconset>
    </property>
    <property name="text">
@@ -73,7 +73,7 @@
   </action>
   <action name="actionZoomOut">
    <property name="icon">
-    <iconset resource="../res/Help.qrc">
+    <iconset resource="../res/HelpWindow.qrc">
      <normaloff>:/oxygen/actions/zoom-out.png</normaloff>:/oxygen/actions/zoom-out.png</iconset>
    </property>
    <property name="text">
@@ -85,7 +85,7 @@
   </action>
   <action name="actionNormalSize">
    <property name="icon">
-    <iconset resource="../res/Help.qrc">
+    <iconset resource="../res/HelpWindow.qrc">
      <normaloff>:/oxygen/actions/zoom-original.png</normaloff>:/oxygen/actions/zoom-original.png</iconset>
    </property>
    <property name="text">
@@ -109,7 +109,7 @@
   </action>
   <action name="actionPrint">
    <property name="icon">
-    <iconset resource="../res/Help.qrc">
+    <iconset resource="../res/HelpWindow.qrc">
      <normaloff>:/oxygen/actions/document-print.png</normaloff>:/oxygen/actions/document-print.png</iconset>
    </property>
    <property name="text">
@@ -122,7 +122,7 @@
  </widget>
  <resources>
   <include location="../../Core/res/Core.qrc"/>
-  <include location="../res/Help.qrc"/>
+  <include location="../res/HelpWindow.qrc"/>
  </resources>
  <connections/>
 </ui>

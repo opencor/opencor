@@ -16,11 +16,11 @@ specific language governing permissions and limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// Help plugin
+// HelpWindow plugin
 //==============================================================================
 
-#include "helpplugin.h"
-#include "helpwindow.h"
+#include "helpwindowplugin.h"
+#include "helpwindowwindow.h"
 
 //==============================================================================
 
@@ -30,11 +30,11 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 namespace OpenCOR {
-namespace Help {
+namespace HelpWindow {
 
 //==============================================================================
 
-PLUGININFO_FUNC HelpPluginInfo()
+PLUGININFO_FUNC HelpWindowPluginInfo()
 {
     Descriptions descriptions;
 
@@ -50,7 +50,7 @@ PLUGININFO_FUNC HelpPluginInfo()
 // Core interface
 //==============================================================================
 
-void HelpPlugin::initialize()
+void HelpWindowPlugin::initialize()
 {
     // Create an action to show/hide our help window
 
@@ -59,7 +59,7 @@ void HelpPlugin::initialize()
 
     // Create our help window
 
-    mHelpWindow = new HelpWindow(mMainWindow);
+    mHelpWindow = new HelpWindowWindow(mMainWindow);
 
     // Set our settings
 
@@ -68,14 +68,14 @@ void HelpPlugin::initialize()
 
 //==============================================================================
 
-void HelpPlugin::finalize()
+void HelpWindowPlugin::finalize()
 {
     // We don't handle this interface...
 }
 
 //==============================================================================
 
-void HelpPlugin::initialized(const Plugins &pLoadedPlugins)
+void HelpWindowPlugin::initialized(const Plugins &pLoadedPlugins)
 {
     Q_UNUSED(pLoadedPlugins);
 
@@ -84,7 +84,7 @@ void HelpPlugin::initialized(const Plugins &pLoadedPlugins)
 
 //==============================================================================
 
-void HelpPlugin::loadSettings(QSettings *pSettings)
+void HelpWindowPlugin::loadSettings(QSettings *pSettings)
 {
     // Retrieve our help window settings
 
@@ -95,7 +95,7 @@ void HelpPlugin::loadSettings(QSettings *pSettings)
 
 //==============================================================================
 
-void HelpPlugin::saveSettings(QSettings *pSettings) const
+void HelpWindowPlugin::saveSettings(QSettings *pSettings) const
 {
     // Keep track of our help window settings
 
@@ -106,7 +106,7 @@ void HelpPlugin::saveSettings(QSettings *pSettings) const
 
 //==============================================================================
 
-void HelpPlugin::settingsLoaded(const Plugins &pLoadedPlugins)
+void HelpWindowPlugin::settingsLoaded(const Plugins &pLoadedPlugins)
 {
     Q_UNUSED(pLoadedPlugins);
 
@@ -115,7 +115,7 @@ void HelpPlugin::settingsLoaded(const Plugins &pLoadedPlugins)
 
 //==============================================================================
 
-void HelpPlugin::handleArguments(const QStringList &pArguments)
+void HelpWindowPlugin::handleArguments(const QStringList &pArguments)
 {
     Q_UNUSED(pArguments);
 
@@ -124,7 +124,7 @@ void HelpPlugin::handleArguments(const QStringList &pArguments)
 
 //==============================================================================
 
-void HelpPlugin::handleAction(const QUrl &pUrl)
+void HelpWindowPlugin::handleAction(const QUrl &pUrl)
 {
     Q_UNUSED(pUrl);
 
@@ -135,7 +135,7 @@ void HelpPlugin::handleAction(const QUrl &pUrl)
 // GUI interface
 //==============================================================================
 
-void HelpPlugin::changeEvent(QEvent *pEvent)
+void HelpWindowPlugin::changeEvent(QEvent *pEvent)
 {
     Q_UNUSED(pEvent);
 
@@ -144,7 +144,7 @@ void HelpPlugin::changeEvent(QEvent *pEvent)
 
 //==============================================================================
 
-void HelpPlugin::updateGui(Plugin *pViewPlugin, const QString &pFileName)
+void HelpWindowPlugin::updateGui(Plugin *pViewPlugin, const QString &pFileName)
 {
     Q_UNUSED(pViewPlugin);
     Q_UNUSED(pFileName);
@@ -154,21 +154,21 @@ void HelpPlugin::updateGui(Plugin *pViewPlugin, const QString &pFileName)
 
 //==============================================================================
 
-void HelpPlugin::initializeView()
+void HelpWindowPlugin::initializeView()
 {
     // We don't handle this interface...
 }
 
 //==============================================================================
 
-void HelpPlugin::finalizeView()
+void HelpWindowPlugin::finalizeView()
 {
     // We don't handle this interface...
 }
 
 //==============================================================================
 
-bool HelpPlugin::hasViewWidget(const QString &pFileName)
+bool HelpWindowPlugin::hasViewWidget(const QString &pFileName)
 {
     Q_UNUSED(pFileName);
 
@@ -179,8 +179,8 @@ bool HelpPlugin::hasViewWidget(const QString &pFileName)
 
 //==============================================================================
 
-QWidget * HelpPlugin::viewWidget(const QString &pFileName,
-                                 const bool &pCreate)
+QWidget * HelpWindowPlugin::viewWidget(const QString &pFileName,
+                                       const bool &pCreate)
 {
     Q_UNUSED(pFileName);
     Q_UNUSED(pCreate);
@@ -192,7 +192,7 @@ QWidget * HelpPlugin::viewWidget(const QString &pFileName,
 
 //==============================================================================
 
-void HelpPlugin::removeViewWidget(const QString &pFileName)
+void HelpWindowPlugin::removeViewWidget(const QString &pFileName)
 {
     Q_UNUSED(pFileName);
 
@@ -201,7 +201,7 @@ void HelpPlugin::removeViewWidget(const QString &pFileName)
 
 //==============================================================================
 
-QString HelpPlugin::viewName() const
+QString HelpWindowPlugin::viewName() const
 {
     // We don't handle this interface...
 
@@ -210,7 +210,7 @@ QString HelpPlugin::viewName() const
 
 //==============================================================================
 
-QIcon HelpPlugin::fileTabIcon(const QString &pFileName) const
+QIcon HelpWindowPlugin::fileTabIcon(const QString &pFileName) const
 {
     Q_UNUSED(pFileName);
 
@@ -221,8 +221,8 @@ QIcon HelpPlugin::fileTabIcon(const QString &pFileName) const
 
 //==============================================================================
 
-bool HelpPlugin::saveFile(const QString &pOldFileName,
-                          const QString &pNewFileName)
+bool HelpWindowPlugin::saveFile(const QString &pOldFileName,
+                                const QString &pNewFileName)
 {
     Q_UNUSED(pOldFileName);
     Q_UNUSED(pNewFileName);
@@ -234,7 +234,7 @@ bool HelpPlugin::saveFile(const QString &pOldFileName,
 
 //==============================================================================
 
-void HelpPlugin::fileOpened(const QString &pFileName)
+void HelpWindowPlugin::fileOpened(const QString &pFileName)
 {
     Q_UNUSED(pFileName);
 
@@ -243,7 +243,7 @@ void HelpPlugin::fileOpened(const QString &pFileName)
 
 //==============================================================================
 
-void HelpPlugin::filePermissionsChanged(const QString &pFileName)
+void HelpWindowPlugin::filePermissionsChanged(const QString &pFileName)
 {
     Q_UNUSED(pFileName);
 
@@ -252,7 +252,8 @@ void HelpPlugin::filePermissionsChanged(const QString &pFileName)
 
 //==============================================================================
 
-void HelpPlugin::fileModified(const QString &pFileName, const bool &pModified)
+void HelpWindowPlugin::fileModified(const QString &pFileName,
+                                    const bool &pModified)
 {
     Q_UNUSED(pFileName);
     Q_UNUSED(pModified);
@@ -262,7 +263,7 @@ void HelpPlugin::fileModified(const QString &pFileName, const bool &pModified)
 
 //==============================================================================
 
-void HelpPlugin::fileReloaded(const QString &pFileName)
+void HelpWindowPlugin::fileReloaded(const QString &pFileName)
 {
     Q_UNUSED(pFileName);
 
@@ -271,8 +272,8 @@ void HelpPlugin::fileReloaded(const QString &pFileName)
 
 //==============================================================================
 
-void HelpPlugin::fileRenamed(const QString &pOldFileName,
-                             const QString &pNewFileName)
+void HelpWindowPlugin::fileRenamed(const QString &pOldFileName,
+                                   const QString &pNewFileName)
 {
     Q_UNUSED(pOldFileName);
     Q_UNUSED(pNewFileName);
@@ -282,7 +283,7 @@ void HelpPlugin::fileRenamed(const QString &pOldFileName,
 
 //==============================================================================
 
-void HelpPlugin::fileClosed(const QString &pFileName)
+void HelpWindowPlugin::fileClosed(const QString &pFileName)
 {
     Q_UNUSED(pFileName);
 
@@ -291,7 +292,7 @@ void HelpPlugin::fileClosed(const QString &pFileName)
 
 //==============================================================================
 
-bool HelpPlugin::canClose()
+bool HelpWindowPlugin::canClose()
 {
     // We don't handle this interface...
 
@@ -302,7 +303,7 @@ bool HelpPlugin::canClose()
 // I18n interface
 //==============================================================================
 
-void HelpPlugin::retranslateUi()
+void HelpWindowPlugin::retranslateUi()
 {
     // Retranslate our help action
 
@@ -316,7 +317,7 @@ void HelpPlugin::retranslateUi()
 
 //==============================================================================
 
-}   // namespace Help
+}   // namespace HelpWindow
 }   // namespace OpenCOR
 
 //==============================================================================

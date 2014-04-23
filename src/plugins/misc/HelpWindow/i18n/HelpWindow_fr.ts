@@ -2,7 +2,7 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="fr_FR" sourcelanguage="en_GB">
 <context>
-    <name>HelpWindow</name>
+    <name>HelpWindowWindow</name>
     <message>
         <source>OpenCOR Help</source>
         <translation>Aide OpenCOR</translation>
@@ -73,7 +73,7 @@
     </message>
 </context>
 <context>
-    <name>OpenCOR::Help::HelpNetworkAccessManager</name>
+    <name>OpenCOR::HelpWindow::HelpWindowNetworkAccessManager</name>
     <message>
         <source>Error</source>
         <translation>Erreur</translation>
@@ -88,14 +88,14 @@
     </message>
 </context>
 <context>
-    <name>OpenCOR::Help::HelpPlugin</name>
-    <message>
-        <source>Show/hide the OpenCOR help</source>
-        <translation>Montrer/cacher l&apos;aide d&apos;OpenCOR</translation>
-    </message>
+    <name>OpenCOR::HelpWindow::HelpWindowPlugin</name>
     <message>
         <source>Help</source>
-        <translation>Aide</translation>
+        <translation type="unfinished">Aide</translation>
+    </message>
+    <message>
+        <source>Show/hide the OpenCOR help</source>
+        <translation type="unfinished">Montrer/cacher l&apos;aide d&apos;OpenCOR</translation>
     </message>
 </context>
 </TS>

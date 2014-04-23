@@ -16,11 +16,11 @@ specific language governing permissions and limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// Help plugin
+// HelpWindow plugin
 //==============================================================================
 
-#ifndef HELPPLUGIN_H
-#define HELPPLUGIN_H
+#ifndef HELPWINDOWPLUGIN_H
+#define HELPWINDOWPLUGIN_H
 
 //==============================================================================
 
@@ -32,24 +32,24 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 namespace OpenCOR {
-namespace Help {
+namespace HelpWindow {
 
 //==============================================================================
 
-PLUGININFO_FUNC HelpPluginInfo();
+PLUGININFO_FUNC HelpWindowPluginInfo();
 
 //==============================================================================
 
-class HelpWindow;
+class HelpWindowWindow;
 
 //==============================================================================
 
-class HelpPlugin : public QObject, public CoreInterface, public GuiInterface,
-                   public I18nInterface
+class HelpWindowPlugin : public QObject, public CoreInterface,
+                         public GuiInterface, public I18nInterface
 {
     Q_OBJECT
 
-    Q_PLUGIN_METADATA(IID "OpenCOR.HelpPlugin" FILE "helpplugin.json")
+    Q_PLUGIN_METADATA(IID "OpenCOR.HelpWindowPlugin" FILE "helpwindowplugin.json")
 
     Q_INTERFACES(OpenCOR::CoreInterface)
     Q_INTERFACES(OpenCOR::GuiInterface)
@@ -63,12 +63,12 @@ public:
 private:
     QAction *mHelpAction;
 
-    HelpWindow *mHelpWindow;
+    HelpWindowWindow *mHelpWindow;
 };
 
 //==============================================================================
 
-}   // namespace Help
+}   // namespace HelpWindow
 }   // namespace OpenCOR
 
 //==============================================================================

@@ -19,8 +19,8 @@ specific language governing permissions and limitations under the License.
 // Help window
 //==============================================================================
 
-#ifndef HELPWINDOW_H
-#define HELPWINDOW_H
+#ifndef HELPWINDOWWINDOW_H
+#define HELPWINDOWWINDOW_H
 
 //==============================================================================
 
@@ -35,27 +35,27 @@ class QUrl;
 //==============================================================================
 
 namespace Ui {
-    class HelpWindow;
+    class HelpWindowWindow;
 }
 
 //==============================================================================
 
 namespace OpenCOR {
-namespace Help {
+namespace HelpWindow {
 
 //==============================================================================
 
-class HelpWidget;
+class HelpWindowWidget;
 
 //==============================================================================
 
-class HelpWindow : public Core::DockWidget
+class HelpWindowWindow : public Core::DockWidget
 {
     Q_OBJECT
 
 public:
-    explicit HelpWindow(QWidget *pParent);
-    ~HelpWindow();
+    explicit HelpWindowWindow(QWidget *pParent);
+    ~HelpWindowWindow();
 
     virtual void retranslateUi();
 
@@ -63,9 +63,9 @@ public:
     virtual void saveSettings(QSettings *pSettings) const;
 
 private:
-    Ui::HelpWindow *mGui;
+    Ui::HelpWindowWindow *mGui;
 
-    HelpWidget *mHelpWidget;
+    HelpWindowWidget *mHelpWidget;
 
     QHelpEngine *mHelpEngine;
 
@@ -89,7 +89,7 @@ private Q_SLOTS:
 
 //==============================================================================
 
-}   // namespace Help
+}   // namespace HelpWindow
 }   // namespace OpenCOR
 
 //==============================================================================

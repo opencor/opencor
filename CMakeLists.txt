@@ -198,7 +198,7 @@ SET(PLUGINS
     editing/RawView
 
     misc/CellMLTools
-    misc/Help
+    misc/HelpWindow
 
     organisation/CellMLModelRepository
     organisation/FileBrowser

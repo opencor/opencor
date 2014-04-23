@@ -19,8 +19,8 @@ specific language governing permissions and limitations under the License.
 // Help widget
 //==============================================================================
 
-#ifndef HELPWIDGET_H
-#define HELPWIDGET_H
+#ifndef HELPWINDOWWIDGET_H
+#define HELPWINDOWWIDGET_H
 
 //==============================================================================
 
@@ -38,20 +38,20 @@ class QHelpEngine;
 //==============================================================================
 
 namespace OpenCOR {
-namespace Help {
+namespace HelpWindow {
 
 //==============================================================================
 
-class HelpWidget;
+class HelpWindowWidget;
 
 //==============================================================================
 
-class HelpNetworkReply : public QNetworkReply
+class HelpWindowNetworkReply : public QNetworkReply
 {
 public:
-    explicit HelpNetworkReply(const QNetworkRequest &pRequest,
-                              const QByteArray &pData,
-                              const QString &pMimeType);
+    explicit HelpWindowNetworkReply(const QNetworkRequest &pRequest,
+                                    const QByteArray &pData,
+                                    const QString &pMimeType);
 
     virtual void abort();
     virtual qint64 bytesAvailable() const;
@@ -66,13 +66,13 @@ private:
 
 //==============================================================================
 
-class HelpNetworkAccessManager : public QNetworkAccessManager
+class HelpWindowNetworkAccessManager : public QNetworkAccessManager
 {
     Q_OBJECT
 
 public:
-    explicit HelpNetworkAccessManager(QHelpEngine *pHelpEngine,
-                                      QObject *pParent);
+    explicit HelpWindowNetworkAccessManager(QHelpEngine *pHelpEngine,
+                                            QObject *pParent);
 
 protected:
     virtual QNetworkReply * createRequest(Operation pOperation,
@@ -87,10 +87,10 @@ private:
 
 //==============================================================================
 
-class HelpPage : public QWebPage
+class HelpWindowPage : public QWebPage
 {
 public:
-    explicit HelpPage(QObject *pParent);
+    explicit HelpWindowPage(QObject *pParent);
 
 protected:
     virtual bool acceptNavigationRequest(QWebFrame*,
@@ -103,13 +103,13 @@ private:
 
 //==============================================================================
 
-class HelpWidget : public QWebView, public Core::CommonWidget
+class HelpWindowWidget : public QWebView, public Core::CommonWidget
 {
     Q_OBJECT
 
 public:
-    explicit HelpWidget(QHelpEngine *pHelpEngine, const QUrl &pHomePage,
-                        QWidget *pParent);
+    explicit HelpWindowWidget(QHelpEngine *pHelpEngine, const QUrl &pHomePage,
+                              QWidget *pParent);
 
     virtual void retranslateUi();
 
@@ -162,7 +162,7 @@ private Q_SLOTS:
 
 //==============================================================================
 
-}   // namespace Help
+}   // namespace HelpWindow
 }   // namespace OpenCOR
 
 //==============================================================================

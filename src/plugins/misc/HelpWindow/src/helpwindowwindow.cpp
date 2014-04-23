@@ -20,13 +20,13 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include "cliutils.h"
-#include "helpwindow.h"
-#include "helpwidget.h"
+#include "helpwindowwindow.h"
+#include "helpwindowwidget.h"
 #include "toolbarwidget.h"
 
 //==============================================================================
 
-#include "ui_helpwindow.h"
+#include "ui_helpwindowwindow.h"
 
 //==============================================================================
 
@@ -46,17 +46,17 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 namespace OpenCOR {
-namespace Help {
+namespace HelpWindow {
 
 //==============================================================================
 
-static const auto OpencorHelpHomepageUrl = QStringLiteral("qthelp://opencor/doc/user/index.html");
+static const auto OpencorHelpWindowHomepageUrl = QStringLiteral("qthelp://opencor/doc/user/index.html");
 
 //==============================================================================
 
-HelpWindow::HelpWindow(QWidget *pParent) :
+HelpWindowWindow::HelpWindowWindow(QWidget *pParent) :
     DockWidget(pParent),
-    mGui(new Ui::HelpWindow)
+    mGui(new Ui::HelpWindowWindow)
 {
     // Set up the GUI
 
@@ -70,8 +70,8 @@ HelpWindow::HelpWindow(QWidget *pParent) :
     mQchFileName = applicationBaseFileName+".qch";
     mQhcFileName = applicationBaseFileName+".qhc";
 
-    Core::writeResourceToFile(mQchFileName, ":Help_qchFile");
-    Core::writeResourceToFile(mQhcFileName, ":Help_qhcFile");
+    Core::writeResourceToFile(mQchFileName, ":HelpWindow_qchFile");
+    Core::writeResourceToFile(mQhcFileName, ":HelpWindow_qhcFile");
 
     // Set up the help engine
 
@@ -99,9 +99,9 @@ HelpWindow::HelpWindow(QWidget *pParent) :
 
     // Create and add the help widget
 
-    mHelpWidget = new HelpWidget(mHelpEngine, OpencorHelpHomepageUrl, this);
+    mHelpWidget = new HelpWindowWidget(mHelpEngine, OpencorHelpWindowHomepageUrl, this);
 
-    mHelpWidget->setObjectName("HelpWidget");
+    mHelpWidget->setObjectName("HelpWindowWidget");
 
     mGui->layout->addWidget(mHelpWidget);
 
@@ -153,7 +153,7 @@ HelpWindow::HelpWindow(QWidget *pParent) :
 
 //==============================================================================
 
-HelpWindow::~HelpWindow()
+HelpWindowWindow::~HelpWindowWindow()
 {
     // Delete some internal objects
 
@@ -171,7 +171,7 @@ HelpWindow::~HelpWindow()
 
 //==============================================================================
 
-void HelpWindow::retranslateUi()
+void HelpWindowWindow::retranslateUi()
 {
     // Retranslate the whole window
 
@@ -184,7 +184,7 @@ void HelpWindow::retranslateUi()
 
 //==============================================================================
 
-void HelpWindow::loadSettings(QSettings *pSettings)
+void HelpWindowWindow::loadSettings(QSettings *pSettings)
 {
     // Retrieve the settings of the help widget
 
@@ -195,7 +195,7 @@ void HelpWindow::loadSettings(QSettings *pSettings)
 
 //==============================================================================
 
-void HelpWindow::saveSettings(QSettings *pSettings) const
+void HelpWindowWindow::saveSettings(QSettings *pSettings) const
 {
     // Keep track of the settings of the help widget
 
@@ -206,7 +206,7 @@ void HelpWindow::saveSettings(QSettings *pSettings) const
 
 //==============================================================================
 
-void HelpWindow::on_actionHome_triggered()
+void HelpWindowWindow::on_actionHome_triggered()
 {
     // Go to the home page
 
@@ -215,7 +215,7 @@ void HelpWindow::on_actionHome_triggered()
 
 //==============================================================================
 
-void HelpWindow::on_actionBack_triggered()
+void HelpWindowWindow::on_actionBack_triggered()
 {
     // Go to the previous help page
 
@@ -224,7 +224,7 @@ void HelpWindow::on_actionBack_triggered()
 
 //==============================================================================
 
-void HelpWindow::on_actionForward_triggered()
+void HelpWindowWindow::on_actionForward_triggered()
 {
     // Go to the next help page
 
@@ -233,7 +233,7 @@ void HelpWindow::on_actionForward_triggered()
 
 //==============================================================================
 
-void HelpWindow::on_actionCopy_triggered()
+void HelpWindowWindow::on_actionCopy_triggered()
 {
     // Copy the current slection to the clipboard
 
@@ -242,7 +242,7 @@ void HelpWindow::on_actionCopy_triggered()
 
 //==============================================================================
 
-void HelpWindow::on_actionNormalSize_triggered()
+void HelpWindowWindow::on_actionNormalSize_triggered()
 {
     // Reset the zoom level of the help page contents
 
@@ -251,7 +251,7 @@ void HelpWindow::on_actionNormalSize_triggered()
 
 //==============================================================================
 
-void HelpWindow::on_actionZoomIn_triggered()
+void HelpWindowWindow::on_actionZoomIn_triggered()
 {
     // Zoom in the help page contents
 
@@ -260,7 +260,7 @@ void HelpWindow::on_actionZoomIn_triggered()
 
 //==============================================================================
 
-void HelpWindow::on_actionZoomOut_triggered()
+void HelpWindowWindow::on_actionZoomOut_triggered()
 {
     // Zoom out the help page contents
 
@@ -269,7 +269,7 @@ void HelpWindow::on_actionZoomOut_triggered()
 
 //==============================================================================
 
-void HelpWindow::on_actionPrint_triggered()
+void HelpWindowWindow::on_actionPrint_triggered()
 {
     // Retrieve the printer with which the user wants to print the help page
     // and print it, should s/he still want to go ahead with the printing
@@ -284,7 +284,7 @@ void HelpWindow::on_actionPrint_triggered()
 
 //==============================================================================
 
-void HelpWindow::showCustomContextMenu(const QPoint &pPosition) const
+void HelpWindowWindow::showCustomContextMenu(const QPoint &pPosition) const
 {
     Q_UNUSED(pPosition);
 
@@ -296,7 +296,7 @@ void HelpWindow::showCustomContextMenu(const QPoint &pPosition) const
 
 //==============================================================================
 
-}   // namespace Help
+}   // namespace HelpWindow
 }   // namespace OpenCOR
 
 //==============================================================================

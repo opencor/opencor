@@ -20,7 +20,7 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include "cliutils.h"
-#include "helpwidget.h"
+#include "helpwindowwidget.h"
 
 //==============================================================================
 
@@ -45,13 +45,13 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 namespace OpenCOR {
-namespace Help {
+namespace HelpWindow {
 
 //==============================================================================
 
-HelpNetworkReply::HelpNetworkReply(const QNetworkRequest &pRequest,
-                                   const QByteArray &pData,
-                                   const QString &pMimeType) :
+HelpWindowNetworkReply::HelpWindowNetworkReply(const QNetworkRequest &pRequest,
+                                               const QByteArray &pData,
+                                               const QString &pMimeType) :
     mData(pData),
     mOrigLen(pData.length())
 {
@@ -70,14 +70,14 @@ HelpNetworkReply::HelpNetworkReply(const QNetworkRequest &pRequest,
 
 //==============================================================================
 
-void HelpNetworkReply::abort()
+void HelpWindowNetworkReply::abort()
 {
     // Do nothing on purpose...
 }
 
 //==============================================================================
 
-qint64 HelpNetworkReply::bytesAvailable() const
+qint64 HelpWindowNetworkReply::bytesAvailable() const
 {
     // Return the size of the data which is available for reading
 
@@ -86,7 +86,7 @@ qint64 HelpNetworkReply::bytesAvailable() const
 
 //==============================================================================
 
-qint64 HelpNetworkReply::readData(char *pBuffer, qint64 pMaxlen)
+qint64 HelpWindowNetworkReply::readData(char *pBuffer, qint64 pMaxlen)
 {
     // Determine the lenght of the data to be read
 
@@ -113,21 +113,21 @@ qint64 HelpNetworkReply::readData(char *pBuffer, qint64 pMaxlen)
 
 //==============================================================================
 
-HelpNetworkAccessManager::HelpNetworkAccessManager(QHelpEngine *pHelpEngine,
-                                                   QObject *pParent) :
+HelpWindowNetworkAccessManager::HelpWindowNetworkAccessManager(QHelpEngine *pHelpEngine,
+                                                               QObject *pParent) :
     QNetworkAccessManager(pParent),
     mHelpEngine(pHelpEngine)
 {
     // Retrieve the error message template
 
-    Core::readTextFromFile(":Help_helpWidgetErrorHtml", mErrorMessageTemplate);
+    Core::readTextFromFile(":HelpWindow_helpWindowWidgetErrorHtml", mErrorMessageTemplate);
 }
 
 //==============================================================================
 
-QNetworkReply * HelpNetworkAccessManager::createRequest(Operation,
-                                                        const QNetworkRequest &pRequest,
-                                                        QIODevice*)
+QNetworkReply * HelpWindowNetworkAccessManager::createRequest(Operation,
+                                                              const QNetworkRequest &pRequest,
+                                                              QIODevice*)
 {
     // Retrieve, if possible, the requested document
 
@@ -141,21 +141,21 @@ QNetworkReply * HelpNetworkAccessManager::createRequest(Operation,
 
     // Return the requested document or an error message
 
-    return new HelpNetworkReply(pRequest, data, "text/html");
+    return new HelpWindowNetworkReply(pRequest, data, "text/html");
 }
 
 //==============================================================================
 
-HelpPage::HelpPage(QObject *pParent) :
+HelpWindowPage::HelpWindowPage(QObject *pParent) :
     QWebPage(pParent)
 {
 }
 
 //==============================================================================
 
-bool HelpPage::acceptNavigationRequest(QWebFrame*,
-                                       const QNetworkRequest &pRequest,
-                                       QWebPage::NavigationType)
+bool HelpWindowPage::acceptNavigationRequest(QWebFrame*,
+                                             const QNetworkRequest &pRequest,
+                                             QWebPage::NavigationType)
 {
     // Requested URL
 
@@ -196,8 +196,8 @@ enum {
 
 //==============================================================================
 
-HelpWidget::HelpWidget(QHelpEngine *pHelpEngine, const QUrl &pHomePage,
-                       QWidget *pParent) :
+HelpWindowWidget::HelpWindowWidget(QHelpEngine *pHelpEngine,
+                                   const QUrl &pHomePage, QWidget *pParent) :
     QWebView(pParent),
     Core::CommonWidget(pParent),
     mHelpEngine(pHelpEngine),
@@ -217,10 +217,9 @@ HelpWidget::HelpWidget(QHelpEngine *pHelpEngine, const QUrl &pHomePage,
 
     // Use our own help page and help network access manager classes
 
-    setPage(new HelpPage(this));
+    setPage(new HelpWindowPage(this));
 
-    page()->setNetworkAccessManager(new HelpNetworkAccessManager(pHelpEngine,
-                                                                 this));
+    page()->setNetworkAccessManager(new HelpWindowNetworkAccessManager(pHelpEngine, this));
 
     // Prevent objects from being dropped on us
     // Note: by default, QWebView allows for objects to be dropped on itself,
@@ -258,7 +257,7 @@ HelpWidget::HelpWidget(QHelpEngine *pHelpEngine, const QUrl &pHomePage,
 
 //==============================================================================
 
-void HelpWidget::retranslateUi()
+void HelpWindowWidget::retranslateUi()
 {
     // Retranslate the current document, but only if it is an error document
     // since a valid document is hard-coded and therefore cannot be translated
@@ -275,7 +274,7 @@ static const auto SettingsZoomLevel = QStringLiteral("ZoomLevel");
 
 //==============================================================================
 
-void HelpWidget::loadSettings(QSettings *pSettings)
+void HelpWindowWidget::loadSettings(QSettings *pSettings)
 {
     // Let the user know of a few default things about ourselves by emitting a
     // few signals
@@ -296,7 +295,7 @@ void HelpWidget::loadSettings(QSettings *pSettings)
 
 //==============================================================================
 
-void HelpWidget::saveSettings(QSettings *pSettings) const
+void HelpWindowWidget::saveSettings(QSettings *pSettings) const
 {
     // Keep track of the text size multiplier
 
@@ -305,7 +304,7 @@ void HelpWidget::saveSettings(QSettings *pSettings) const
 
 //==============================================================================
 
-void HelpWidget::goToHomePage()
+void HelpWindowWidget::goToHomePage()
 {
     // Go to the home page
     // Note: we use setUrl() rather than load() since the former will ensure
@@ -317,7 +316,7 @@ void HelpWidget::goToHomePage()
 
 //==============================================================================
 
-void HelpWidget::resetZoom()
+void HelpWindowWidget::resetZoom()
 {
     // Reset the zoom level
 
@@ -326,7 +325,7 @@ void HelpWidget::resetZoom()
 
 //==============================================================================
 
-void HelpWidget::zoomIn()
+void HelpWindowWidget::zoomIn()
 {
     // Zoom in the help document contents
 
@@ -335,7 +334,7 @@ void HelpWidget::zoomIn()
 
 //==============================================================================
 
-void HelpWidget::zoomOut()
+void HelpWindowWidget::zoomOut()
 {
     // Zoom out the help document contents
 
@@ -344,7 +343,7 @@ void HelpWidget::zoomOut()
 
 //==============================================================================
 
-void HelpWidget::emitZoomRelatedSignals()
+void HelpWindowWidget::emitZoomRelatedSignals()
 {
     // Let the user know whether we are not at the default zoom level and
     // whether we can still zoom out
@@ -355,7 +354,7 @@ void HelpWidget::emitZoomRelatedSignals()
 
 //==============================================================================
 
-void HelpWidget::setZoomLevel(const int &pZoomLevel)
+void HelpWindowWidget::setZoomLevel(const int &pZoomLevel)
 {
     if (pZoomLevel == mZoomLevel)
         return;
@@ -373,7 +372,7 @@ void HelpWidget::setZoomLevel(const int &pZoomLevel)
 
 //==============================================================================
 
-QSize HelpWidget::sizeHint() const
+QSize HelpWindowWidget::sizeHint() const
 {
     // Suggest a default size for the help widget
     // Note: this is critical if we want a docked widget, with a help widget on
@@ -384,7 +383,7 @@ QSize HelpWidget::sizeHint() const
 
 //==============================================================================
 
-void HelpWidget::mouseReleaseEvent(QMouseEvent *pEvent)
+void HelpWindowWidget::mouseReleaseEvent(QMouseEvent *pEvent)
 {
     // Handle some special mouse buttons for navigating the help
 
@@ -414,7 +413,7 @@ void HelpWidget::mouseReleaseEvent(QMouseEvent *pEvent)
 
 //==============================================================================
 
-void HelpWidget::wheelEvent(QWheelEvent *pEvent)
+void HelpWindowWidget::wheelEvent(QWheelEvent *pEvent)
 {
     // Handle the wheel mouse button for zooming in/out the help document
     // contents
@@ -438,7 +437,7 @@ void HelpWidget::wheelEvent(QWheelEvent *pEvent)
 
 //==============================================================================
 
-void HelpWidget::paintEvent(QPaintEvent *pEvent)
+void HelpWindowWidget::paintEvent(QPaintEvent *pEvent)
 {
     // Default handling of the event
 
@@ -460,7 +459,7 @@ void HelpWidget::paintEvent(QPaintEvent *pEvent)
 
 //==============================================================================
 
-void HelpWidget::urlChanged(const QUrl &pUrl)
+void HelpWindowWidget::urlChanged(const QUrl &pUrl)
 {
     // The URL has changed, so let the user know whether it's the home page
 
@@ -469,7 +468,7 @@ void HelpWidget::urlChanged(const QUrl &pUrl)
 
 //==============================================================================
 
-void HelpWidget::selectionChanged()
+void HelpWindowWidget::selectionChanged()
 {
     // The text selection has changed, so let the user know whether some text is
     // now selected
@@ -479,7 +478,7 @@ void HelpWidget::selectionChanged()
 
 //==============================================================================
 
-void HelpWidget::documentChanged()
+void HelpWindowWidget::documentChanged()
 {
     // A new help document has been selected, resulting in the previous or next
     // help document becoming either available or not
@@ -494,7 +493,7 @@ void HelpWidget::documentChanged()
 
 //==============================================================================
 
-}   // namespace Help
+}   // namespace HelpWindow
 }   // namespace OpenCOR
 
 //==============================================================================
