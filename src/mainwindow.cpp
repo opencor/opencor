@@ -78,7 +78,7 @@ static const auto FrenchLocale  = QStringLiteral("fr");
 //==============================================================================
 
 static const auto CorePlugin = QStringLiteral("Core");
-static const auto HelpPlugin = QStringLiteral("Help");
+static const auto HelpWindowPlugin = QStringLiteral("HelpWindow");
 
 //==============================================================================
 
@@ -606,7 +606,7 @@ void MainWindow::initializeGuiPlugin(Plugin *pPlugin, GuiSettings *pGuiSettings)
 
         // Add an action to our menu to show/hide the window
 
-        if (!pPlugin->name().compare(HelpPlugin)) {
+        if (!pPlugin->name().compare(HelpWindowPlugin)) {
             // Special case of the help window
 
             mGui->menuHelp->insertAction(mGui->actionHomePage,
