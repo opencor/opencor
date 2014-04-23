@@ -19,29 +19,29 @@ specific language governing permissions and limitations under the License.
 // File organiser widget
 //==============================================================================
 
-#ifndef FILEORGANISERWIDGET_H
-#define FILEORGANISERWIDGET_H
+#ifndef FILEORGANISERWINDOWWIDGET_H
+#define FILEORGANISERWINDOWWIDGET_H
 
 //==============================================================================
 
 #include "filemanager.h"
-#include "fileorganisermodel.h"
+#include "fileorganiserwindowmodel.h"
 #include "treeviewwidget.h"
 
 //==============================================================================
 
 namespace OpenCOR {
-namespace FileOrganiser {
+namespace FileOrganiserWindow {
 
 //==============================================================================
 
-class FileOrganiserWidget : public Core::TreeViewWidget
+class FileOrganiserWindowWidget : public Core::TreeViewWidget
 {
     Q_OBJECT
 
 public:
-    explicit FileOrganiserWidget(QWidget *pParent);
-    ~FileOrganiserWidget();
+    explicit FileOrganiserWindowWidget(QWidget *pParent);
+    ~FileOrganiserWindowWidget();
 
     virtual void loadSettings(QSettings *pSettings);
     virtual void saveSettings(QSettings *pSettings) const;
@@ -59,7 +59,7 @@ protected:
     virtual bool viewportEvent(QEvent *pEvent);
 
 private:
-    FileOrganiserModel *mModel;
+    FileOrganiserWindowModel *mModel;
     Core::FileManager *mFileManager;
 
     void loadItemSettings(QSettings *pSettings, QStandardItem *pParentItem);
@@ -124,7 +124,7 @@ private Q_SLOTS:
 
 //==============================================================================
 
-}   // namespace FileOrganiser
+}   // namespace FileOrganiserWindow
 }   // namespace OpenCOR
 
 //==============================================================================

@@ -2,7 +2,7 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="fr_FR" sourcelanguage="en_GB">
 <context>
-    <name>FileOrganiserWindow</name>
+    <name>FileOrganiserWindowWindow</name>
     <message>
         <source>File Organiser</source>
         <translation>Organisateur de Fichiers</translation>
@@ -25,7 +25,7 @@
     </message>
 </context>
 <context>
-    <name>OpenCOR::FileOrganiser::FileOrganiserPlugin</name>
+    <name>OpenCOR::FileOrganiserWindow::FileOrganiserWindowPlugin</name>
     <message>
         <source>File Organiser</source>
         <translation>Organisateur De Fichiers</translation>
@@ -36,7 +36,7 @@
     </message>
 </context>
 <context>
-    <name>OpenCOR::FileOrganiser::FileOrganiserWidget</name>
+    <name>OpenCOR::FileOrganiserWindow::FileOrganiserWindowWidget</name>
     <message>
         <source>New Folder</source>
         <translation>Nouveau Répertoire</translation>

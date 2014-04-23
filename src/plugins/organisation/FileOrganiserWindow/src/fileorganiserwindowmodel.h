@@ -19,8 +19,8 @@ specific language governing permissions and limitations under the License.
 // File organiser model
 //==============================================================================
 
-#ifndef FILEORGANISERMODEL_H
-#define FILEORGANISERMODEL_H
+#ifndef FILEORGANISERWINDOWMODEL_H
+#define FILEORGANISERWINDOWMODEL_H
 
 //==============================================================================
 
@@ -33,7 +33,7 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 namespace OpenCOR {
-namespace FileOrganiser {
+namespace FileOrganiserWindow {
 
 //==============================================================================
 
@@ -47,16 +47,16 @@ namespace Item {
 
 //==============================================================================
 
-static const auto FileOrganiserMimeType = QStringLiteral("opencor/file-organiser");
+static const auto FileOrganiserWindowMimeType = QStringLiteral("opencor/file-organiser-window");
 
 //==============================================================================
 
-class FileOrganiserModel : public QStandardItemModel
+class FileOrganiserWindowModel : public QStandardItemModel
 {
     Q_OBJECT
 
 public:
-    explicit FileOrganiserModel(QObject *pParent);
+    explicit FileOrganiserWindowModel(QObject *pParent);
 
     virtual QStringList mimeTypes() const;
     virtual QMimeData * mimeData(const QModelIndexList &pIndexes) const;
@@ -78,7 +78,7 @@ private:
 
 //==============================================================================
 
-}   // namespace FileOrganiser
+}   // namespace FileOrganiserWindow
 }   // namespace OpenCOR
 
 //==============================================================================

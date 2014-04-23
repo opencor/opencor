@@ -20,7 +20,7 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include "filemanager.h"
-#include "fileorganisermodel.h"
+#include "fileorganiserwindowmodel.h"
 
 //==============================================================================
 
@@ -33,29 +33,29 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 namespace OpenCOR {
-namespace FileOrganiser {
+namespace FileOrganiserWindow {
 
 //==============================================================================
 
-FileOrganiserModel::FileOrganiserModel(QObject *pParent) :
+FileOrganiserWindowModel::FileOrganiserWindowModel(QObject *pParent) :
     QStandardItemModel(pParent)
 {
 }
 
 //==============================================================================
 
-QStringList FileOrganiserModel::mimeTypes() const
+QStringList FileOrganiserWindowModel::mimeTypes() const
 {
     // Return the MIME types supported by our model
 
-    return QStringList() << Core::FileSystemMimeType << FileOrganiserMimeType;
+    return QStringList() << Core::FileSystemMimeType << FileOrganiserWindowMimeType;
 }
 
 //==============================================================================
 
-void FileOrganiserModel::encodeHierarchyData(const QModelIndex &pIndex,
-                                             QDataStream &pStream,
-                                             const int &pLevel) const
+void FileOrganiserWindowModel::encodeHierarchyData(const QModelIndex &pIndex,
+                                                   QDataStream &pStream,
+                                                   const int &pLevel) const
 {
     // Encode the item's hierarchy
 
@@ -77,7 +77,7 @@ void FileOrganiserModel::encodeHierarchyData(const QModelIndex &pIndex,
 
 //==============================================================================
 
-QByteArray FileOrganiserModel::encodeHierarchyData(const QModelIndex &pIndex) const
+QByteArray FileOrganiserWindowModel::encodeHierarchyData(const QModelIndex &pIndex) const
 {
     // Encode the hierarchy data
 
@@ -91,7 +91,7 @@ QByteArray FileOrganiserModel::encodeHierarchyData(const QModelIndex &pIndex) co
 
 //==============================================================================
 
-QByteArray FileOrganiserModel::encodeData(const QModelIndexList &pIndexes) const
+QByteArray FileOrganiserWindowModel::encodeData(const QModelIndexList &pIndexes) const
 {
     QByteArray res;
 
@@ -119,7 +119,7 @@ QByteArray FileOrganiserModel::encodeData(const QModelIndexList &pIndexes) const
 
 //==============================================================================
 
-QModelIndex FileOrganiserModel::decodeHierarchyData(QDataStream &pStream) const
+QModelIndex FileOrganiserWindowModel::decodeHierarchyData(QDataStream &pStream) const
 {
     // Decode the hierarchy data
 
@@ -147,7 +147,7 @@ QModelIndex FileOrganiserModel::decodeHierarchyData(QDataStream &pStream) const
 
 //==============================================================================
 
-QModelIndex FileOrganiserModel::decodeHierarchyData(QByteArray &pData) const
+QModelIndex FileOrganiserWindowModel::decodeHierarchyData(QByteArray &pData) const
 {
     // Decode the hierarchy data
 
@@ -158,7 +158,7 @@ QModelIndex FileOrganiserModel::decodeHierarchyData(QByteArray &pData) const
 
 //==============================================================================
 
-QModelIndexList FileOrganiserModel::decodeData(QByteArray &pData) const
+QModelIndexList FileOrganiserWindowModel::decodeData(QByteArray &pData) const
 {
     QModelIndexList res;
 
@@ -186,7 +186,7 @@ QModelIndexList FileOrganiserModel::decodeData(QByteArray &pData) const
 
 //==============================================================================
 
-QMimeData * FileOrganiserModel::mimeData(const QModelIndexList &pIndexes) const
+QMimeData * FileOrganiserWindowModel::mimeData(const QModelIndexList &pIndexes) const
 {
     QMimeData *res = new QMimeData();
     QList<QUrl> urls;
@@ -207,11 +207,11 @@ QMimeData * FileOrganiserModel::mimeData(const QModelIndexList &pIndexes) const
     res->setUrls(urls);
 
     // Set the data which contains information on both the folder and file items
-    // Note: this data is useful with regards to the FileOrganiserMimeType MIME
-    //       type on which the file organiser widget relies for moving folder
-    //       and file items around
+    // Note: this data is useful with regards to the FileOrganiserWindowMimeType
+    //       MIME type on which the file organiser widget relies for moving
+    //       folder and file items around
 
-    res->setData(FileOrganiserMimeType, encodeData(pIndexes));
+    res->setData(FileOrganiserWindowMimeType, encodeData(pIndexes));
 
     // All done, so...
 
@@ -220,7 +220,7 @@ QMimeData * FileOrganiserModel::mimeData(const QModelIndexList &pIndexes) const
 
 //==============================================================================
 
-QString FileOrganiserModel::filePath(const QModelIndex &pFileIndex) const
+QString FileOrganiserWindowModel::filePath(const QModelIndex &pFileIndex) const
 {
     // Return the file path of pFileIndex, if it exists and corresponds to a
     // file
@@ -235,7 +235,7 @@ QString FileOrganiserModel::filePath(const QModelIndex &pFileIndex) const
 
 //==============================================================================
 
-}   // namespace FileOrganiser
+}   // namespace FileOrganiserWindow
 }   // namespace OpenCOR
 
 //==============================================================================

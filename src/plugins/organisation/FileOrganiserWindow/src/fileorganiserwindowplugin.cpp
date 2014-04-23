@@ -16,11 +16,11 @@ specific language governing permissions and limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// FileOrganiser plugin
+// FileOrganiserWindow plugin
 //==============================================================================
 
-#include "fileorganiserplugin.h"
-#include "fileorganiserwindow.h"
+#include "fileorganiserwindowplugin.h"
+#include "fileorganiserwindowwindow.h"
 
 //==============================================================================
 
@@ -30,11 +30,11 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 namespace OpenCOR {
-namespace FileOrganiser {
+namespace FileOrganiserWindow {
 
 //==============================================================================
 
-PLUGININFO_FUNC FileOrganiserPluginInfo()
+PLUGININFO_FUNC FileOrganiserWindowPluginInfo()
 {
     Descriptions descriptions;
 
@@ -50,7 +50,7 @@ PLUGININFO_FUNC FileOrganiserPluginInfo()
 // Core interface
 //==============================================================================
 
-void FileOrganiserPlugin::initialize()
+void FileOrganiserWindowPlugin::initialize()
 {
     // Create an action to show/hide our file organiser window
 
@@ -58,7 +58,7 @@ void FileOrganiserPlugin::initialize()
 
     // Create our file organiser window
 
-    mFileOrganiserWindow = new FileOrganiserWindow(mMainWindow);
+    mFileOrganiserWindow = new FileOrganiserWindowWindow(mMainWindow);
 
     // Set our settings
 
@@ -68,14 +68,14 @@ void FileOrganiserPlugin::initialize()
 
 //==============================================================================
 
-void FileOrganiserPlugin::finalize()
+void FileOrganiserWindowPlugin::finalize()
 {
     // We don't handle this interface...
 }
 
 //==============================================================================
 
-void FileOrganiserPlugin::initialized(const Plugins &pLoadedPlugins)
+void FileOrganiserWindowPlugin::initialized(const Plugins &pLoadedPlugins)
 {
     Q_UNUSED(pLoadedPlugins);
 
@@ -84,7 +84,7 @@ void FileOrganiserPlugin::initialized(const Plugins &pLoadedPlugins)
 
 //==============================================================================
 
-void FileOrganiserPlugin::loadSettings(QSettings *pSettings)
+void FileOrganiserWindowPlugin::loadSettings(QSettings *pSettings)
 {
     // Retrieve our file organiser window settings
 
@@ -95,7 +95,7 @@ void FileOrganiserPlugin::loadSettings(QSettings *pSettings)
 
 //==============================================================================
 
-void FileOrganiserPlugin::saveSettings(QSettings *pSettings) const
+void FileOrganiserWindowPlugin::saveSettings(QSettings *pSettings) const
 {
     // Keep track of our file organiser window settings
 
@@ -106,7 +106,7 @@ void FileOrganiserPlugin::saveSettings(QSettings *pSettings) const
 
 //==============================================================================
 
-void FileOrganiserPlugin::settingsLoaded(const Plugins &pLoadedPlugins)
+void FileOrganiserWindowPlugin::settingsLoaded(const Plugins &pLoadedPlugins)
 {
     Q_UNUSED(pLoadedPlugins);
 
@@ -115,7 +115,7 @@ void FileOrganiserPlugin::settingsLoaded(const Plugins &pLoadedPlugins)
 
 //==============================================================================
 
-void FileOrganiserPlugin::handleArguments(const QStringList &pArguments)
+void FileOrganiserWindowPlugin::handleArguments(const QStringList &pArguments)
 {
     Q_UNUSED(pArguments);
 
@@ -124,7 +124,7 @@ void FileOrganiserPlugin::handleArguments(const QStringList &pArguments)
 
 //==============================================================================
 
-void FileOrganiserPlugin::handleAction(const QUrl &pUrl)
+void FileOrganiserWindowPlugin::handleAction(const QUrl &pUrl)
 {
     Q_UNUSED(pUrl);
 
@@ -135,7 +135,7 @@ void FileOrganiserPlugin::handleAction(const QUrl &pUrl)
 // GUI interface
 //==============================================================================
 
-void FileOrganiserPlugin::changeEvent(QEvent *pEvent)
+void FileOrganiserWindowPlugin::changeEvent(QEvent *pEvent)
 {
     Q_UNUSED(pEvent);
 
@@ -144,8 +144,8 @@ void FileOrganiserPlugin::changeEvent(QEvent *pEvent)
 
 //==============================================================================
 
-void FileOrganiserPlugin::updateGui(Plugin *pViewPlugin,
-                                    const QString &pFileName)
+void FileOrganiserWindowPlugin::updateGui(Plugin *pViewPlugin,
+                                          const QString &pFileName)
 {
     Q_UNUSED(pViewPlugin);
     Q_UNUSED(pFileName);
@@ -155,21 +155,21 @@ void FileOrganiserPlugin::updateGui(Plugin *pViewPlugin,
 
 //==============================================================================
 
-void FileOrganiserPlugin::initializeView()
+void FileOrganiserWindowPlugin::initializeView()
 {
     // We don't handle this interface...
 }
 
 //==============================================================================
 
-void FileOrganiserPlugin::finalizeView()
+void FileOrganiserWindowPlugin::finalizeView()
 {
     // We don't handle this interface...
 }
 
 //==============================================================================
 
-bool FileOrganiserPlugin::hasViewWidget(const QString &pFileName)
+bool FileOrganiserWindowPlugin::hasViewWidget(const QString &pFileName)
 {
     Q_UNUSED(pFileName);
 
@@ -180,8 +180,8 @@ bool FileOrganiserPlugin::hasViewWidget(const QString &pFileName)
 
 //==============================================================================
 
-QWidget * FileOrganiserPlugin::viewWidget(const QString &pFileName,
-                                          const bool &pCreate)
+QWidget * FileOrganiserWindowPlugin::viewWidget(const QString &pFileName,
+                                                const bool &pCreate)
 {
     Q_UNUSED(pFileName);
     Q_UNUSED(pCreate);
@@ -193,7 +193,7 @@ QWidget * FileOrganiserPlugin::viewWidget(const QString &pFileName,
 
 //==============================================================================
 
-void FileOrganiserPlugin::removeViewWidget(const QString &pFileName)
+void FileOrganiserWindowPlugin::removeViewWidget(const QString &pFileName)
 {
     Q_UNUSED(pFileName);
 
@@ -202,7 +202,7 @@ void FileOrganiserPlugin::removeViewWidget(const QString &pFileName)
 
 //==============================================================================
 
-QString FileOrganiserPlugin::viewName() const
+QString FileOrganiserWindowPlugin::viewName() const
 {
     // We don't handle this interface...
 
@@ -211,7 +211,7 @@ QString FileOrganiserPlugin::viewName() const
 
 //==============================================================================
 
-QIcon FileOrganiserPlugin::fileTabIcon(const QString &pFileName) const
+QIcon FileOrganiserWindowPlugin::fileTabIcon(const QString &pFileName) const
 {
     Q_UNUSED(pFileName);
 
@@ -222,8 +222,8 @@ QIcon FileOrganiserPlugin::fileTabIcon(const QString &pFileName) const
 
 //==============================================================================
 
-bool FileOrganiserPlugin::saveFile(const QString &pOldFileName,
-                                   const QString &pNewFileName)
+bool FileOrganiserWindowPlugin::saveFile(const QString &pOldFileName,
+                                         const QString &pNewFileName)
 {
     Q_UNUSED(pOldFileName);
     Q_UNUSED(pNewFileName);
@@ -235,7 +235,7 @@ bool FileOrganiserPlugin::saveFile(const QString &pOldFileName,
 
 //==============================================================================
 
-void FileOrganiserPlugin::fileOpened(const QString &pFileName)
+void FileOrganiserWindowPlugin::fileOpened(const QString &pFileName)
 {
     Q_UNUSED(pFileName);
 
@@ -244,7 +244,7 @@ void FileOrganiserPlugin::fileOpened(const QString &pFileName)
 
 //==============================================================================
 
-void FileOrganiserPlugin::filePermissionsChanged(const QString &pFileName)
+void FileOrganiserWindowPlugin::filePermissionsChanged(const QString &pFileName)
 {
     Q_UNUSED(pFileName);
 
@@ -253,8 +253,8 @@ void FileOrganiserPlugin::filePermissionsChanged(const QString &pFileName)
 
 //==============================================================================
 
-void FileOrganiserPlugin::fileModified(const QString &pFileName,
-                                       const bool &pModified)
+void FileOrganiserWindowPlugin::fileModified(const QString &pFileName,
+                                             const bool &pModified)
 {
     Q_UNUSED(pFileName);
     Q_UNUSED(pModified);
@@ -264,7 +264,7 @@ void FileOrganiserPlugin::fileModified(const QString &pFileName,
 
 //==============================================================================
 
-void FileOrganiserPlugin::fileReloaded(const QString &pFileName)
+void FileOrganiserWindowPlugin::fileReloaded(const QString &pFileName)
 {
     Q_UNUSED(pFileName);
 
@@ -273,8 +273,8 @@ void FileOrganiserPlugin::fileReloaded(const QString &pFileName)
 
 //==============================================================================
 
-void FileOrganiserPlugin::fileRenamed(const QString &pOldFileName,
-                                      const QString &pNewFileName)
+void FileOrganiserWindowPlugin::fileRenamed(const QString &pOldFileName,
+                                            const QString &pNewFileName)
 {
     Q_UNUSED(pOldFileName);
     Q_UNUSED(pNewFileName);
@@ -284,7 +284,7 @@ void FileOrganiserPlugin::fileRenamed(const QString &pOldFileName,
 
 //==============================================================================
 
-void FileOrganiserPlugin::fileClosed(const QString &pFileName)
+void FileOrganiserWindowPlugin::fileClosed(const QString &pFileName)
 {
     Q_UNUSED(pFileName);
 
@@ -293,7 +293,7 @@ void FileOrganiserPlugin::fileClosed(const QString &pFileName)
 
 //==============================================================================
 
-bool FileOrganiserPlugin::canClose()
+bool FileOrganiserWindowPlugin::canClose()
 {
     // We don't handle this interface...
 
@@ -304,7 +304,7 @@ bool FileOrganiserPlugin::canClose()
 // I18n interface
 //==============================================================================
 
-void FileOrganiserPlugin::retranslateUi()
+void FileOrganiserWindowPlugin::retranslateUi()
 {
     // Retranslate our file organiser action
 
@@ -318,7 +318,7 @@ void FileOrganiserPlugin::retranslateUi()
 
 //==============================================================================
 
-}   // namespace FileOrganiser
+}   // namespace FileOrganiserWindow
 }   // namespace OpenCOR
 
 //==============================================================================

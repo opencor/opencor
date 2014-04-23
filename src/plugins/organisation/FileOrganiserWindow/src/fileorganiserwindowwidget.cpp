@@ -19,7 +19,7 @@ specific language governing permissions and limitations under the License.
 // File organiser widget
 //==============================================================================
 
-#include "fileorganiserwidget.h"
+#include "fileorganiserwindowwidget.h"
 
 //==============================================================================
 
@@ -34,7 +34,7 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 namespace OpenCOR {
-namespace FileOrganiser {
+namespace FileOrganiserWindow {
 
 //==============================================================================
 
@@ -45,12 +45,12 @@ static const auto DeletedFileIcon     = QStringLiteral(":oxygen/status/image-mis
 
 //==============================================================================
 
-FileOrganiserWidget::FileOrganiserWidget(QWidget *pParent) :
+FileOrganiserWindowWidget::FileOrganiserWindowWidget(QWidget *pParent) :
     TreeViewWidget(pParent)
 {
     // Create an instance of the data model that we want to view
 
-    mModel = new FileOrganiserModel(this);
+    mModel = new FileOrganiserWindowModel(this);
 
     // Create our 'local' file manager (as opposed to the 'global' file manager
     // that comes with the FileManager class)
@@ -87,7 +87,7 @@ FileOrganiserWidget::FileOrganiserWidget(QWidget *pParent) :
 
 //==============================================================================
 
-FileOrganiserWidget::~FileOrganiserWidget()
+FileOrganiserWindowWidget::~FileOrganiserWindowWidget()
 {
     // Delete some internal objects
 
@@ -101,8 +101,8 @@ static const auto SettingsSelectedItem = QStringLiteral("SelectedItem");
 
 //==============================================================================
 
-void FileOrganiserWidget::loadItemSettings(QSettings *pSettings,
-                                           QStandardItem *pParentItem)
+void FileOrganiserWindowWidget::loadItemSettings(QSettings *pSettings,
+                                                 QStandardItem *pParentItem)
 {
     // Recursively retrieve the item settings
 
@@ -190,7 +190,7 @@ void FileOrganiserWidget::loadItemSettings(QSettings *pSettings,
 
 //==============================================================================
 
-void FileOrganiserWidget::loadSettings(QSettings *pSettings)
+void FileOrganiserWindowWidget::loadSettings(QSettings *pSettings)
 {
     // Let the user know of a few default things about ourselves by emitting a
     // few signals
@@ -216,9 +216,9 @@ void FileOrganiserWidget::loadSettings(QSettings *pSettings)
 
 //==============================================================================
 
-void FileOrganiserWidget::saveItemSettings(QSettings *pSettings,
-                                           QStandardItem *pItem,
-                                           const int &pParentItemIndex) const
+void FileOrganiserWindowWidget::saveItemSettings(QSettings *pSettings,
+                                                 QStandardItem *pItem,
+                                                 const int &pParentItemIndex) const
 {
     // Recursively keep track of the item settings
 
@@ -265,7 +265,7 @@ void FileOrganiserWidget::saveItemSettings(QSettings *pSettings,
 
 //==============================================================================
 
-void FileOrganiserWidget::saveSettings(QSettings *pSettings) const
+void FileOrganiserWindowWidget::saveSettings(QSettings *pSettings) const
 {
     // Keep track of the data model
 
@@ -297,13 +297,13 @@ void FileOrganiserWidget::saveSettings(QSettings *pSettings) const
 
 //==============================================================================
 
-void FileOrganiserWidget::dragEnterEvent(QDragEnterEvent *pEvent)
+void FileOrganiserWindowWidget::dragEnterEvent(QDragEnterEvent *pEvent)
 {
     // Accept the proposed action for the event, but only if we are dropping
     // URIs
 
     if (   (pEvent->mimeData()->hasFormat(Core::FileSystemMimeType))
-        || (pEvent->mimeData()->hasFormat(FileOrganiserMimeType))) {
+        || (pEvent->mimeData()->hasFormat(FileOrganiserWindowMimeType))) {
         pEvent->acceptProposedAction();
     } else {
         pEvent->ignore();
@@ -312,7 +312,7 @@ void FileOrganiserWidget::dragEnterEvent(QDragEnterEvent *pEvent)
 
 //==============================================================================
 
-void FileOrganiserWidget::dragMoveEvent(QDragMoveEvent *pEvent)
+void FileOrganiserWindowWidget::dragMoveEvent(QDragMoveEvent *pEvent)
 {
     // Set the state to dragging, since we can only come here when dragging
     // Note: the state is properly set for file organiser objects being dragged,
@@ -334,7 +334,7 @@ void FileOrganiserWidget::dragMoveEvent(QDragMoveEvent *pEvent)
     // file item
     // Note #1: for the number of objects being dropped, we have to check the
     //          number of URLs information (i.e. external objects), as well as
-    //          the MIME data associated with FileOrganiserMimeType (i.e.
+    //          the MIME data associated with FileOrganiserWindowMimeType (i.e.
     //          objects from the file organiser widget, after we have )
     // Note #2: for the dropping location, it can be either a folder or a file
     //          (as long as the indicator position isn't on the item itself),
@@ -342,7 +342,7 @@ void FileOrganiserWidget::dragMoveEvent(QDragMoveEvent *pEvent)
     //          children) being dragged (only relevant when dragging items from
     //          the file organiser widget)
 
-    QByteArray data = pEvent->mimeData()->data(FileOrganiserMimeType);
+    QByteArray data = pEvent->mimeData()->data(FileOrganiserWindowMimeType);
     QModelIndexList indexes = mModel->decodeData(data);
     QStandardItem *dropItem = mModel->itemFromIndex(indexAt(pEvent->pos()));
     bool draggingOnSelfOrChild = false;
@@ -363,14 +363,15 @@ void FileOrganiserWidget::dragMoveEvent(QDragMoveEvent *pEvent)
 
 //==============================================================================
 
-void FileOrganiserWidget::dropEvent(QDropEvent *pEvent)
+void FileOrganiserWindowWidget::dropEvent(QDropEvent *pEvent)
 {
     // Note: the MIME data definitely contains the FileSystemMimeType MIME type
     //       (for objects originating from outside this widget), but it may also
-    //       contain the FileOrganiserMimeType MIME type (for objects
-    //       originating from within this widget). FileOrganiserMimeType is used
-    //       by this widget while FileSystemMimeType by external widgets. So,
-    //       this means that we must check for FileOrganiserMimeType first
+    //       contain the FileOrganiserWindowMimeType MIME type (for objects
+    //       originating from within this widget). FileOrganiserWindowMimeType
+    //       is used by this widget while FileSystemMimeType by external
+    //       widgets. So, this means that we must check for
+    //       FileOrganiserWindowMimeType first
 
     // Files have been dropped, so add them to the widget and this at the right
     // place (i.e. above/on/below a folder, above/below a file or on the
@@ -400,13 +401,13 @@ void FileOrganiserWidget::dropEvent(QDropEvent *pEvent)
 
     // Check the type of MIME data to be dropped
 
-    if (pEvent->mimeData()->hasFormat(FileOrganiserMimeType)) {
+    if (pEvent->mimeData()->hasFormat(FileOrganiserWindowMimeType)) {
         // The user is dropping folders/files from ourselves, i.e. s/he wants
         // some folders/files to be moved around
 
         // Retrieve the list of indexes to move around and clean it
 
-        QByteArray data = pEvent->mimeData()->data(FileOrganiserMimeType);
+        QByteArray data = pEvent->mimeData()->data(FileOrganiserWindowMimeType);
         QModelIndexList indexes = cleanIndexList(mModel->decodeData(data));
 
         // Convert our list of indexes to a list of items
@@ -466,7 +467,7 @@ void FileOrganiserWidget::dropEvent(QDropEvent *pEvent)
 
 //==============================================================================
 
-void FileOrganiserWidget::keyPressEvent(QKeyEvent *pEvent)
+void FileOrganiserWindowWidget::keyPressEvent(QKeyEvent *pEvent)
 {
     // Default handling of the event
 
@@ -500,7 +501,7 @@ void FileOrganiserWidget::keyPressEvent(QKeyEvent *pEvent)
 
 //==============================================================================
 
-bool FileOrganiserWidget::viewportEvent(QEvent *pEvent)
+bool FileOrganiserWindowWidget::viewportEvent(QEvent *pEvent)
 {
     if (pEvent->type() == QEvent::ToolTip) {
         // We need to show a tool tip, so make sure that it's up to date by
@@ -523,8 +524,8 @@ bool FileOrganiserWidget::viewportEvent(QEvent *pEvent)
 
 //==============================================================================
 
-bool FileOrganiserWidget::parentIndexExists(const QModelIndex &pIndex,
-                                            const QModelIndexList &pIndexes) const
+bool FileOrganiserWindowWidget::parentIndexExists(const QModelIndex &pIndex,
+                                                  const QModelIndexList &pIndexes) const
 {
     // Recursively determine whether one of the parents of the given index is in
     // the provided list
@@ -553,7 +554,7 @@ bool FileOrganiserWidget::parentIndexExists(const QModelIndex &pIndex,
 
 //==============================================================================
 
-QModelIndexList FileOrganiserWidget::cleanIndexList(const QModelIndexList &pIndexes) const
+QModelIndexList FileOrganiserWindowWidget::cleanIndexList(const QModelIndexList &pIndexes) const
 {
     // A list of indexes may contain indexes that are not relevant or
     // effectively the duplicate of another existing index, so...
@@ -633,8 +634,8 @@ QModelIndexList FileOrganiserWidget::cleanIndexList(const QModelIndexList &pInde
 
 //==============================================================================
 
-bool FileOrganiserWidget::itemIsOrIsChildOf(QStandardItem *pItem,
-                                            QStandardItem *pOtherItem) const
+bool FileOrganiserWindowWidget::itemIsOrIsChildOf(QStandardItem *pItem,
+                                                  QStandardItem *pOtherItem) const
 {
     if (pItem == pOtherItem) {
         // pItem is the same as pOtherItem, so...
@@ -661,7 +662,7 @@ bool FileOrganiserWidget::itemIsOrIsChildOf(QStandardItem *pItem,
 
 //==============================================================================
 
-void FileOrganiserWidget::backupExpandedInformation(QStandardItem *pItem) const
+void FileOrganiserWindowWidget::backupExpandedInformation(QStandardItem *pItem) const
 {
     // Recursively backup the expanded state of the item, should it be a folder,
     // and of any of its children, should it have some
@@ -681,7 +682,7 @@ void FileOrganiserWidget::backupExpandedInformation(QStandardItem *pItem) const
 
 //==============================================================================
 
-void FileOrganiserWidget::restoreExpandedInformation(QStandardItem *pItem)
+void FileOrganiserWindowWidget::restoreExpandedInformation(QStandardItem *pItem)
 {
     // Recursively restore the expanded state of the item, should it be a
     // folder, and of any of its children, should it have some
@@ -701,7 +702,7 @@ void FileOrganiserWidget::restoreExpandedInformation(QStandardItem *pItem)
 
 //==============================================================================
 
-QString FileOrganiserWidget::newFolderName(QStandardItem *pFolderItem) const
+QString FileOrganiserWindowWidget::newFolderName(QStandardItem *pFolderItem) const
 {
     // Come up with the name for a new folder which is to be under pFolderItem
 
@@ -730,7 +731,7 @@ QString FileOrganiserWidget::newFolderName(QStandardItem *pFolderItem) const
 
 //==============================================================================
 
-void FileOrganiserWidget::newFolder()
+void FileOrganiserWindowWidget::newFolder()
 {
     if (!canCreateNewFolder())
         // The conditions are not met to create a new folder, so...
@@ -774,8 +775,8 @@ void FileOrganiserWidget::newFolder()
 
 //==============================================================================
 
-QStandardItem * FileOrganiserWidget::parentItem(QStandardItem *pDropItem,
-                                                const QAbstractItemView::DropIndicatorPosition &pDropPosition)
+QStandardItem * FileOrganiserWindowWidget::parentItem(QStandardItem *pDropItem,
+                                                      const QAbstractItemView::DropIndicatorPosition &pDropPosition)
 {
     // Return who should be the parent item of pDropItem based on pDropPosition
 
@@ -788,8 +789,8 @@ QStandardItem * FileOrganiserWidget::parentItem(QStandardItem *pDropItem,
 
 //==============================================================================
 
-bool FileOrganiserWidget::ownedBy(const QString &pFileName,
-                                  QStandardItem *pItem)
+bool FileOrganiserWindowWidget::ownedBy(const QString &pFileName,
+                                        QStandardItem *pItem)
 {
     // Check whether pFileName is already owned by pItem
 
@@ -811,10 +812,10 @@ bool FileOrganiserWidget::ownedBy(const QString &pFileName,
 
 //==============================================================================
 
-void FileOrganiserWidget::dropItems(QStandardItem *pDropItem,
-                                    const QAbstractItemView::DropIndicatorPosition &pDropPosition,
-                                    QStandardItem *pNewParentItem,
-                                    QList<QStandardItem *> pItems)
+void FileOrganiserWindowWidget::dropItems(QStandardItem *pDropItem,
+                                          const QAbstractItemView::DropIndicatorPosition &pDropPosition,
+                                          QStandardItem *pNewParentItem,
+                                          QList<QStandardItem *> pItems)
 {
     // Drop pItems based on pDropPosition's value
 
@@ -845,10 +846,10 @@ void FileOrganiserWidget::dropItems(QStandardItem *pDropItem,
 
 //==============================================================================
 
-void FileOrganiserWidget::dropItem(QStandardItem *pDropItem,
-                                   const QAbstractItemView::DropIndicatorPosition &pDropPosition,
-                                   QStandardItem *pNewParentItem,
-                                   QStandardItem *pItem)
+void FileOrganiserWindowWidget::dropItem(QStandardItem *pDropItem,
+                                         const QAbstractItemView::DropIndicatorPosition &pDropPosition,
+                                         QStandardItem *pNewParentItem,
+                                         QStandardItem *pItem)
 {
     // Drop the item as if we wanted to drop a list of items
 
@@ -858,9 +859,9 @@ void FileOrganiserWidget::dropItem(QStandardItem *pDropItem,
 
 //==============================================================================
 
-void FileOrganiserWidget::addFile(const QString &pFileName,
-                                  QStandardItem *pDropItem,
-                                  const QAbstractItemView::DropIndicatorPosition &pDropPosition)
+void FileOrganiserWindowWidget::addFile(const QString &pFileName,
+                                        QStandardItem *pDropItem,
+                                        const QAbstractItemView::DropIndicatorPosition &pDropPosition)
 {
     if (!pDropItem)
         // pDropItem is not valid, so...
@@ -924,9 +925,9 @@ void FileOrganiserWidget::addFile(const QString &pFileName,
 
 //==============================================================================
 
-void FileOrganiserWidget::moveItem(QStandardItem *pItem,
-                                   QStandardItem *pDropItem,
-                                   const QAbstractItemView::DropIndicatorPosition &pDropPosition)
+void FileOrganiserWindowWidget::moveItem(QStandardItem *pItem,
+                                         QStandardItem *pDropItem,
+                                         const QAbstractItemView::DropIndicatorPosition &pDropPosition)
 {
     if (!pDropItem)
         // pDropItem is not valid, so...
@@ -992,7 +993,7 @@ void FileOrganiserWidget::moveItem(QStandardItem *pItem,
 
 //==============================================================================
 
-void FileOrganiserWidget::collapseEmptyFolders(QStandardItem *pFolder)
+void FileOrganiserWindowWidget::collapseEmptyFolders(QStandardItem *pFolder)
 {
     // Recursively collapse any empty child folder
 
@@ -1008,7 +1009,7 @@ void FileOrganiserWidget::collapseEmptyFolders(QStandardItem *pFolder)
 
 //==============================================================================
 
-void FileOrganiserWidget::deleteItems()
+void FileOrganiserWindowWidget::deleteItems()
 {
     // Remove all the selected items
 
@@ -1056,7 +1057,7 @@ void FileOrganiserWidget::deleteItems()
 
 //==============================================================================
 
-QString FileOrganiserWidget::filePath(const QModelIndex &pFileIndex) const
+QString FileOrganiserWindowWidget::filePath(const QModelIndex &pFileIndex) const
 {
     // Return the file path of pFileIndex
 
@@ -1065,7 +1066,7 @@ QString FileOrganiserWidget::filePath(const QModelIndex &pFileIndex) const
 
 //==============================================================================
 
-void FileOrganiserWidget::resizeToContents()
+void FileOrganiserWindowWidget::resizeToContents()
 {
     // Make sure that the first column allows for all of its contents to be
     // visible
@@ -1075,7 +1076,7 @@ void FileOrganiserWidget::resizeToContents()
 
 //==============================================================================
 
-QStringList FileOrganiserWidget::selectedFiles() const
+QStringList FileOrganiserWindowWidget::selectedFiles() const
 {
     // Retrieve all the files that are currently selected
     // Note: if there is a folder among the selected items, then we return an
@@ -1102,7 +1103,7 @@ QStringList FileOrganiserWidget::selectedFiles() const
 
 //==============================================================================
 
-void FileOrganiserWidget::expandedFolder(const QModelIndex &pFolderIndex)
+void FileOrganiserWindowWidget::expandedFolder(const QModelIndex &pFolderIndex)
 {
     // The folder is being expanded, so update its icon to reflect its new state
 
@@ -1115,7 +1116,7 @@ void FileOrganiserWidget::expandedFolder(const QModelIndex &pFolderIndex)
 
 //==============================================================================
 
-void FileOrganiserWidget::collapsedFolder(const QModelIndex &pFolderIndex)
+void FileOrganiserWindowWidget::collapsedFolder(const QModelIndex &pFolderIndex)
 {
     // The folder is being expanded, so update its icon to reflect its new state
 
@@ -1128,7 +1129,7 @@ void FileOrganiserWidget::collapsedFolder(const QModelIndex &pFolderIndex)
 
 //==============================================================================
 
-bool FileOrganiserWidget::canCreateNewFolder() const
+bool FileOrganiserWindowWidget::canCreateNewFolder() const
 {
     QModelIndexList selectedIndexes = selectionModel()->selectedIndexes();
     int selectedIndexesCount = selectedIndexes.count();
@@ -1149,7 +1150,7 @@ bool FileOrganiserWidget::canCreateNewFolder() const
 
 //==============================================================================
 
-void FileOrganiserWidget::emitItemsRelatedSignals()
+void FileOrganiserWindowWidget::emitItemsRelatedSignals()
 {
     // Let the user know whether a new folder could be created and whether items
     // could be deleted
@@ -1160,9 +1161,9 @@ void FileOrganiserWidget::emitItemsRelatedSignals()
 
 //==============================================================================
 
-void FileOrganiserWidget::updateFileItems(QStandardItem *pItem,
-                                          const QString &pFileName,
-                                          const Core::File::Status &pStatus) const
+void FileOrganiserWindowWidget::updateFileItems(QStandardItem *pItem,
+                                                const QString &pFileName,
+                                                const Core::File::Status &pStatus) const
 {
     // Recursively update the icon of all file items that refer to pFileName
 
@@ -1184,7 +1185,7 @@ void FileOrganiserWidget::updateFileItems(QStandardItem *pItem,
 
 //==============================================================================
 
-void FileOrganiserWidget::fileChanged(const QString &pFileName) const
+void FileOrganiserWindowWidget::fileChanged(const QString &pFileName) const
 {
     // The file has changed, which may also mean that a file may have been
     // deleted and recreated, so go through all the (file) items and update the
@@ -1196,7 +1197,7 @@ void FileOrganiserWidget::fileChanged(const QString &pFileName) const
 
 //==============================================================================
 
-void FileOrganiserWidget::fileDeleted(const QString &pFileName) const
+void FileOrganiserWindowWidget::fileDeleted(const QString &pFileName) const
 {
     // A file has been deleted, so...
 
@@ -1206,7 +1207,7 @@ void FileOrganiserWidget::fileDeleted(const QString &pFileName) const
 
 //==============================================================================
 
-}   // namespace FileOrganiser
+}   // namespace FileOrganiserWindow
 }   // namespace OpenCOR
 
 //==============================================================================

@@ -16,72 +16,59 @@ specific language governing permissions and limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// File organiser window
+// FileOrganiserWindow plugin
 //==============================================================================
 
-#ifndef FILEORGANISERWINDOW_H
-#define FILEORGANISERWINDOW_H
-
-//==============================================================================
-
-#include "organisationwidget.h"
+#ifndef FILEORGANISERWINDOWPLUGIN_H
+#define FILEORGANISERWINDOWPLUGIN_H
 
 //==============================================================================
 
-#include <QAbstractItemModel>
-
-//==============================================================================
-
-namespace Ui {
-    class FileOrganiserWindow;
-}
-
-//==============================================================================
-
-class QMenu;
+#include "coreinterface.h"
+#include "guiinterface.h"
+#include "i18ninterface.h"
+#include "plugininfo.h"
 
 //==============================================================================
 
 namespace OpenCOR {
-namespace FileOrganiser {
+namespace FileOrganiserWindow {
 
 //==============================================================================
 
-class FileOrganiserWidget;
+PLUGININFO_FUNC FileOrganiserWindowPluginInfo();
 
 //==============================================================================
 
-class FileOrganiserWindow : public Core::OrganisationWidget
+class FileOrganiserWindowWindow;
+
+//==============================================================================
+
+class FileOrganiserWindowPlugin : public QObject, public CoreInterface,
+                                  public GuiInterface, public I18nInterface
 {
     Q_OBJECT
 
+    Q_PLUGIN_METADATA(IID "OpenCOR.FileOrganiserWindowPlugin" FILE "fileorganiserwindowplugin.json")
+
+    Q_INTERFACES(OpenCOR::CoreInterface)
+    Q_INTERFACES(OpenCOR::GuiInterface)
+    Q_INTERFACES(OpenCOR::I18nInterface)
+
 public:
-    explicit FileOrganiserWindow(QWidget *pParent);
-    ~FileOrganiserWindow();
-
-    virtual void retranslateUi();
-
-    virtual void loadSettings(QSettings *pSettings);
-    virtual void saveSettings(QSettings *pSettings) const;
+#include "coreinterface.inl"
+#include "guiinterface.inl"
+#include "i18ninterface.inl"
 
 private:
-    Ui::FileOrganiserWindow *mGui;
+    QAction *mFileOrganiserAction;
 
-    FileOrganiserWidget *mFileOrganiserWidget;
-
-    QMenu *mContextMenu;
-
-private Q_SLOTS:
-    void on_actionNew_triggered();
-    void on_actionDelete_triggered();
-
-    void showCustomContextMenu(const QPoint &pPosition) const;
-    void itemDoubleClicked(const QModelIndex &itemIndex);
+    FileOrganiserWindowWindow *mFileOrganiserWindow;
 };
 
 //==============================================================================
 
-}   // namespace FileOrganiser
+}   // namespace FileOrganiserWindow
 }   // namespace OpenCOR
 
 //==============================================================================

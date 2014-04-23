@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>FileOrganiserWindow</class>
- <widget class="QDockWidget" name="FileOrganiserWindow">
+ <class>FileOrganiserWindowWindow</class>
+ <widget class="QDockWidget" name="FileOrganiserWindowWindow">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -25,7 +25,7 @@
   </widget>
   <action name="actionNew">
    <property name="icon">
-    <iconset resource="../res/FileOrganiser.qrc">
+    <iconset resource="../res/FileOrganiserWindow.qrc">
      <normaloff>:/oxygen/actions/folder-new.png</normaloff>:/oxygen/actions/folder-new.png</iconset>
    </property>
    <property name="text">
@@ -37,7 +37,7 @@
   </action>
   <action name="actionDelete">
    <property name="icon">
-    <iconset resource="../res/FileOrganiser.qrc">
+    <iconset resource="../res/FileOrganiserWindow.qrc">
      <normaloff>:/oxygen/actions/edit-delete.png</normaloff>:/oxygen/actions/edit-delete.png</iconset>
    </property>
    <property name="text">
@@ -49,7 +49,7 @@
   </action>
  </widget>
  <resources>
-  <include location="../res/FileOrganiser.qrc"/>
+  <include location="../res/FileOrganiserWindow.qrc"/>
  </resources>
  <connections/>
 </ui>

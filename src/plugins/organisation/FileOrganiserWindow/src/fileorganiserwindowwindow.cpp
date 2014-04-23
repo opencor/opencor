@@ -19,13 +19,13 @@ specific language governing permissions and limitations under the License.
 // File organiser window
 //==============================================================================
 
-#include "fileorganiserwindow.h"
-#include "fileorganiserwidget.h"
+#include "fileorganiserwindowwindow.h"
+#include "fileorganiserwindowwidget.h"
 #include "toolbarwidget.h"
 
 //==============================================================================
 
-#include "ui_fileorganiserwindow.h"
+#include "ui_fileorganiserwindowwindow.h"
 
 //==============================================================================
 
@@ -40,13 +40,13 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 namespace OpenCOR {
-namespace FileOrganiser {
+namespace FileOrganiserWindow {
 
 //==============================================================================
 
-FileOrganiserWindow::FileOrganiserWindow(QWidget *pParent) :
+FileOrganiserWindowWindow::FileOrganiserWindowWindow(QWidget *pParent) :
     OrganisationWidget(pParent),
-    mGui(new Ui::FileOrganiserWindow)
+    mGui(new Ui::FileOrganiserWindowWindow)
 {
     // Set up the GUI
 
@@ -63,9 +63,9 @@ FileOrganiserWindow::FileOrganiserWindow(QWidget *pParent) :
 
     // Create and add the file organiser widget
 
-    mFileOrganiserWidget = new FileOrganiserWidget(this);
+    mFileOrganiserWidget = new FileOrganiserWindowWidget(this);
 
-    mFileOrganiserWidget->setObjectName("FileOrganiserWidget");
+    mFileOrganiserWidget->setObjectName("FileOrganiserWindowWidget");
 
     mGui->layout->addWidget(mFileOrganiserWidget);
 
@@ -99,7 +99,7 @@ FileOrganiserWindow::FileOrganiserWindow(QWidget *pParent) :
 
 //==============================================================================
 
-FileOrganiserWindow::~FileOrganiserWindow()
+FileOrganiserWindowWindow::~FileOrganiserWindowWindow()
 {
     // Delete the GUI
 
@@ -108,7 +108,7 @@ FileOrganiserWindow::~FileOrganiserWindow()
 
 //==============================================================================
 
-void FileOrganiserWindow::retranslateUi()
+void FileOrganiserWindowWindow::retranslateUi()
 {
     // Retranslate the whole window
 
@@ -121,7 +121,7 @@ void FileOrganiserWindow::retranslateUi()
 
 //==============================================================================
 
-void FileOrganiserWindow::loadSettings(QSettings *pSettings)
+void FileOrganiserWindowWindow::loadSettings(QSettings *pSettings)
 {
     // Retrieve the settings of the file organiser widget
 
@@ -132,7 +132,7 @@ void FileOrganiserWindow::loadSettings(QSettings *pSettings)
 
 //==============================================================================
 
-void FileOrganiserWindow::saveSettings(QSettings *pSettings) const
+void FileOrganiserWindowWindow::saveSettings(QSettings *pSettings) const
 {
     // Keep track of the settings of the file organiser widget
 
@@ -143,7 +143,7 @@ void FileOrganiserWindow::saveSettings(QSettings *pSettings) const
 
 //==============================================================================
 
-void FileOrganiserWindow::on_actionNew_triggered()
+void FileOrganiserWindowWindow::on_actionNew_triggered()
 {
     // Create a new folder
 
@@ -152,7 +152,7 @@ void FileOrganiserWindow::on_actionNew_triggered()
 
 //==============================================================================
 
-void FileOrganiserWindow::on_actionDelete_triggered()
+void FileOrganiserWindowWindow::on_actionDelete_triggered()
 {
     // Remove the current item(s)
 
@@ -161,7 +161,7 @@ void FileOrganiserWindow::on_actionDelete_triggered()
 
 //==============================================================================
 
-void FileOrganiserWindow::showCustomContextMenu(const QPoint &pPosition) const
+void FileOrganiserWindowWindow::showCustomContextMenu(const QPoint &pPosition) const
 {
     Q_UNUSED(pPosition);
 
@@ -173,7 +173,7 @@ void FileOrganiserWindow::showCustomContextMenu(const QPoint &pPosition) const
 
 //==============================================================================
 
-void FileOrganiserWindow::itemDoubleClicked(const QModelIndex &itemIndex)
+void FileOrganiserWindowWindow::itemDoubleClicked(const QModelIndex &itemIndex)
 {
     // Check what kind of item has been double clicked and if it is a file, then
     // open it
@@ -188,7 +188,7 @@ void FileOrganiserWindow::itemDoubleClicked(const QModelIndex &itemIndex)
 
 //==============================================================================
 
-}   // namespace FileOrganiser
+}   // namespace FileOrganiserWindow
 }   // namespace OpenCOR
 
 //==============================================================================
