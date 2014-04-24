@@ -8,6 +8,7 @@ function headerAndContentsMenu(pageName, relativePath) {
                              [1, "Coding style", "developer/develop/codingStyle.html"],
                              [1, "Plugins", "developer/develop/plugins/index.html"],
                              [2, "Sample", "developer/develop/plugins/Sample.html"],
+                             [2, "SampleTools", "developer/develop/plugins/SampleTools.html"],
                              [2, "SampleWindow", "developer/develop/plugins/SampleWindow.html"],
                              [2, "SampleView", "developer/develop/plugins/SampleView.html"],
                              [1, "Internationalisation", "developer/develop/internationalisation.html"],
