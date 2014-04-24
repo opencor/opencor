@@ -25,6 +25,25 @@
         </p>
 
         <div class="section">
+            Sample plugins
+        </div>
+
+        <p>
+            To help you get started, you might want to have a look at the following sample plugins. They illustrate the basic concepts needed to develop plugins for OpenCOR:
+        </p>
+
+        <ul>
+            <li><a href="Sample.html">Sample</a></li>
+            <li><a href="SampleTools.html">SampleTools</a></li>
+            <li><a href="SampleWindow.html">SampleWindow</a></li>
+            <li><a href="SampleView.html">SampleView</a></li>
+        </ul>
+
+        <p class="warning">
+            <strong>Note:</strong> these plugins are only built when building OpenCOR in debug mode.
+        </p>
+
+        <div class="section">
             Namespace
         </div>
 
@@ -97,9 +116,11 @@ class LLVMPlugin : public QObject
 ...</pre>
         </p>
 
-        <div class="section">
-            Basic information
-        </div>
+        <a class="noHover" id="Basic information">
+            <div class="section">
+                Basic information
+            </div>
+        </a>
 
         <p>
             For a plugin to be recognisable by OpenCOR, it must provide the following information (see <a href="https://github.com/opencor/opencor/blob/master/src/plugins/plugininfo.h"><code>[OpenCOR]/src/plugins/plugininfo.h</code></a>):
@@ -177,9 +198,11 @@ class COMPILER_EXPORT CompilerEngine : public QObject
 ...</pre>
         </p>
 
-        <div class="section">
-            <code>ADD_PLUGIN</code> macro
-        </div>
+        <a class="noHover" id="ADD_PLUGIN macro">
+            <div class="section">
+                <code>ADD_PLUGIN</code> macro
+            </div>
+        </a>
 
         <p>
             The CMake <code>ADD_PLUGIN</code> macro is used both to build and to package a plugin (see <a href="https://github.com/opencor/opencor/blob/master/cmake/common.cmake"><code>[OpenCOR]/cmake/common.cmake</code></a>) and it requires one or several types of arguments to be passed to it:
@@ -202,25 +225,6 @@ class COMPILER_EXPORT CompilerEngine : public QObject
 
         <p class="warning">
             <strong>Note:</strong> due to the intrinsic nature of OS X binaries, it is critical that you list <em>all</em> the Qt libraries needed by a plugin. Failure to do so may result in OpenCOR not behaving as expected.
-        </p>
-
-        <div class="section">
-            Sample plugins
-        </div>
-
-        <p>
-            To help you get started, here are three sample plugins that illustrate the basic concepts needed to develop plugins for OpenCOR:
-        </p>
-
-        <ul>
-            <li><a href="Sample.html">Sample</a></li>
-            <li><a href="SampleTools.html">SampleTools</a></li>
-            <li><a href="SampleWindow.html">SampleWindow</a></li>
-            <li><a href="SampleView.html">SampleView</a></li>
-        </ul>
-
-        <p class="warning">
-            <strong>Note:</strong> these plugins are only built when building OpenCOR in debug mode.
         </p>
 
         <script type="text/javascript">

@@ -156,6 +156,14 @@ ENDIF()
 # Note: the build order must be such that plugins needed by others are built
 #       first...
 
+IF(RELEASE_MODE)
+    SET(SAMPLE_PLUGINS)
+ELSE()
+    SET(SAMPLE_PLUGINS
+        sample/Sample
+    )
+ENDIF()
+
 SET(PLUGINS
     # Plugins that have no dependencies
 
@@ -213,6 +221,10 @@ SET(PLUGINS
     solver/IDASolver
     solver/KINSOLSolver
     solver/SecondOrderRungeKuttaSolver
+
+    # Sample plugins
+
+    ${SAMPLE_PLUGINS}
 )
 
 FOREACH(PLUGIN ${PLUGINS})
