@@ -25,7 +25,7 @@
         </p>
 
         <pre class="prettyprint">...
-#include "sampleutils.h"
+#include "<a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/Sample/src/sampleutils.h"><code>sampleutils.h</code></a>"
 ...
 double addResult = Sample::add(3.0, 5.0);
 ...</pre>
@@ -48,10 +48,10 @@ double addResult = Sample::add(3.0, 5.0);
 
 ADD_PLUGIN(Sample
     SOURCES
-        ../../plugininfo.cpp
+        <a href="https://github.com/opencor/opencor/blob/master/src/plugins/plugininfo.cpp"><code>../../plugininfo.cpp</code></a>
 
-        src/sampleplugin.cpp
-        src/sampleutils.cpp
+        <a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/Sample/src/sampleplugin.cpp"><code>src/sampleplugin.cpp</code></a>
+        <a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/Sample/src/sampleutils.cpp"><code>src/sampleutils.cpp</code></a>
     INCLUDE_DIRS
         src
     QT_MODULES
@@ -72,16 +72,12 @@ ADD_PLUGIN(Sample
             <a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/Sample/src/sampleplugin.cpp"><code>sampleplugin.cpp</code></a> contains the C method that will be called by OpenCOR to retrieve some <a href="index.html#Basic%20information">basic information</a> about our plugin. It also contains a class that is used to make our plugin a proper <a href="http://qt-project.org/">Qt</a> plugin. Its corresponding header file is <a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/Sample/src/sampleplugin.h"><code>sampleplugin.h</code></a>, which contents is as follows:
         </p>
 
-        <pre class="prettyprint linenums:18">//==============================================================================
-// Sample plugin
-//==============================================================================
-
-#ifndef SAMPLEPLUGIN_H
+        <pre class="prettyprint linenums:22">#ifndef SAMPLEPLUGIN_H
 #define SAMPLEPLUGIN_H
 
 //==============================================================================
 
-#include "plugininfo.h"
+#include "<a href="https://github.com/opencor/opencor/blob/master/src/plugins/plugininfo.h"><code>plugininfo.h</code></a>"
 
 //==============================================================================
 
@@ -98,7 +94,7 @@ class SamplePlugin : public QObject
 {
     Q_OBJECT
 
-    Q_PLUGIN_METADATA(IID "OpenCOR.SamplePlugin" FILE "sampleplugin.json")
+    Q_PLUGIN_METADATA(IID "OpenCOR.SamplePlugin" FILE "<a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/Sample/src/sampleplugin.json"><code>sampleplugin.json</code></a>")
 };
 
 //==============================================================================
@@ -111,8 +107,12 @@ class SamplePlugin : public QObject
 #endif</pre>
 
         <p>
-            We have the usual C/C++ mechanism to avoid the header file from being included more than once (lines 22, 23 and 54). We need to know about the structure of the <a href="index.html#Basic%20information">basic information</a>, so we include <a href="https://github.com/opencor/opencor/blob/master/src/plugins/plugininfo.h"><code>plugininfo.h</code></a> (line 27). To protect our plugin's code, we enclose it in its own namespace (lines 32 and 49), which is itself enclosed in the OpenCOR namespace (lines 31 and 50). Then comes the definition for a C function that returns some basic information about our plugin (line 36). Finally, we have a C++ class that ensures that our plugin will be considered as a proper <a href="http://qt-project.org/">Qt</a> plugin (lines 40-45).
+            We have the usual C/C++ mechanism to avoid the header file from being included more than once (lines 22, 23 and 54). We need to know about the structure of the <a href="index.html#Basic%20information">basic information</a>, so we include <a href="https://github.com/opencor/opencor/blob/master/src/plugins/plugininfo.h"><code>plugininfo.h</code></a> (line 27). To protect our plugin's code, we enclose it in its own namespace (lines 32 and 49), which is itself enclosed in the OpenCOR namespace (lines 31 and 50). Then comes the definition for a C function that returns some basic information about our plugin (line 36). Finally, we have a C++ class that ensures that our plugin will be considered as a proper <a href="http://qt-project.org/">Qt</a> plugin (lines 40-45). The call to <code>Q_PLUGIN_METADATA</code> (line 44) requires to pass the name of a <a href="http://www.json.org/">JSON</a> file (<a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/Sample/src/sampleplugin.json"><code>sampleplugin.json</code></a>). This file is required by Qt to make our plugin a proper Qt plugin. It must reference the name of our plugin class (i.e. <code>SamplePlugin</code>):
         </p>
+
+        <pre class="prettyprint linenums">{
+    "Keys": [ "SamplePlugin" ]
+}</pre>
 
         <p class="warning">
             <strong>Note:</strong> for our plugin to be properly recognised by OpenCOR, the name of its C function must be <code>&lt;PluginName&gt;PluginInfo</code>. Indeed, when building a plugin, a <code>&lt;PluginName&gt;.dll</code>, <code>lib&lt;PluginName&gt;.so</code> or <code>lib&lt;PluginName&gt;.dylib</code> file gets generated on Windows, Linux and OS X, respectively. That file is then copied to OpenCOR's plugin folder. All the files in that folder are assumed to be plugin files. So, upon starting, OpenCOR tries to load and execute their <code>&lt;PluginName&gt;PluginInfo</code> function. If unsuccessful, the file is considered invalid. This means that if you were to duplicate a plugin file, then only the original plugin file would be considered valid.
@@ -122,11 +122,7 @@ class SamplePlugin : public QObject
             Back to the <a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/Sample/src/sampleplugin.cpp"><code>sampleplugin.cpp</code></a> file, its contents is as follows:
         </p>
 
-        <pre class="prettyprint linenums:18">//==============================================================================
-// Sample plugin
-//==============================================================================
-
-#include "sampleplugin.h"
+        <pre class="prettyprint linenums:22">#include "<a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/Sample/src/sampleplugin.h"><code>sampleplugin.h</code></a>"
 
 //==============================================================================
 
@@ -157,7 +153,36 @@ PLUGININFO_FUNC SamplePluginInfo()
         </p>
 
         <p class="warning">
-            <strong>Note:</strong> the <code>PluginInfo</code> object gets deleted by OpenCOR, so we do not have to worry about it.
+            <strong>Note:</strong> the returned <code>PluginInfo</code> object gets deleted by OpenCOR. So, no need to worry about it.
+        </p>
+
+        <p>
+            Finally, our plugin's <code>add</code> function can be found in <a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/Sample/src/sampleutils.cpp"><code>sampleutils.cpp</code></a> (for its body) and <a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/Sample/src/sampleutils.h"><code>sampleutils.h</code></a> (for its definition). The contents of the former is as follows:
+        </p>
+
+        <pre class="prettyprint linenums:22">#include "<a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/Sample/src/sampleutils.h"><code>sampleutils.h</code></a>"
+
+//==============================================================================
+
+namespace OpenCOR {
+namespace Sample {
+
+//==============================================================================
+
+double add(const double &pNb1, const double &pNb2)
+{
+    // Return the sum of the two given numbers
+
+    return pNb1+pNb2;
+}
+
+//==============================================================================
+
+}   // namespace Sample
+}   // namespace OpenCOR</pre>
+
+        <p>
+            We include the <code>.cpp</code> file's corresponding header file (line 22). Then, we have a straightforward implementation of our <code>add</code> function (lines 31-36), which is enclosed in both the OpenCOR (lines 26 and 41) and plugin namespaces (lines 27 and 40)
         </p>
 
         <script type="text/javascript">
