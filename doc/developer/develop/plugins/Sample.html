@@ -152,6 +152,14 @@ PLUGININFO_FUNC SamplePluginInfo()
 }   // namespace Sample
 }   // namespace OpenCOR</pre>
 
+        <p>
+            We start by including our header file (line 22). Then, we make sure that the rest of the code is enclosed in both the OpenCOR (lines 26 and 46) and plugin namespaces (lines 27 and 45). Lines 31 to 41 contains the body of our <code>SamplePluginInfo</code> function. The first thing we do is to create an instance of <code>Descriptions</code> on the stack (line 33). This instance is used to provide a multilingual description of our plugin (here, both in English and in French; lines 35 and 36). Then, we create and return an instance of <code>PluginInfo</code> on the heap (lines 38-40). For this, we must provide <a href="index.html#Basic%20information">four parameters</a>, the first of which being our plugin's category (i.e. <code>PluginInfo::Sample</code>; line 38). The second parameter specifies whether the plugin is to be selectable by the user (see <a href="../../../user/plugins/index.html">here</a> for selectable <em>vs.</em> non-selectable plugins). Our plugin cannot do anything on its own, so we make it non-selectable (i.e. <code>false</code>; line 38). The third parameter must provide a list of dependencies for our plugin, which here is empty since our plugin does not have any dependencies (i.e. <code>QStringList()</code>; line 39). Finally, the fourth parameter must be a <code>Descriptions</code> object (i.e. <code>descriptions</code>; line 40).
+        </p>
+
+        <p class="warning">
+            <strong>Note:</strong> the <code>PluginInfo</code> object gets deleted by OpenCOR, so we do not have to worry about it.
+        </p>
+
         <script type="text/javascript">
             copyright("../../..");
         </script>
