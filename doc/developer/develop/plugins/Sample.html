@@ -24,24 +24,22 @@
             The purpose of this plugin is to give other plugins access to a simple <code>add</code> function, which could be used as follows:
         </p>
 
-        <pre class="prettyprint">#include "sampleutils.h"
-
+        <pre class="prettyprint">...
+#include "sampleutils.h"
 ...
-
 double addResult = Sample::add(3.0, 5.0);
-
 ...</pre>
 
         <p>
-            In order to create such a plugin, we first need to decide on its category. Currently supported categories are <code>Analysis</code>, <code>Api</code>, <code>Editing</code>, <code>Miscellaneous</code>, <code>Organisation</code>, <code>Sample</code>, <code>Simulation</code>, <code>Support</code>, <code>ThirdParty</code> and <code>Widget</code> (see the <code>Category</code> enum in the <code>PluginInfo</code> class in <a href="https://github.com/opencor/opencor/blob/master/src/plugins/plugininfo.h"><code>[OpenCOR]/src/plugins/plugininfo.h</code></a>). For our current plugin, we will be using the <code>Sample</code> category.
+            First, we need to decide on the category for our plugin. <code>Analysis</code>, <code>Api</code>, <code>Editing</code>, <code>Miscellaneous</code>, <code>Organisation</code>, <code>Simulation</code>, <code>Support</code>, <code>ThirdParty</code> and <code>Widget</code> are the currently supported categories (see the <code>Category</code> enum in the <code>PluginInfo</code> class in <a href="https://github.com/opencor/opencor/blob/master/src/plugins/plugininfo.h"><code>[OpenCOR]/src/plugins/plugininfo.h</code></a>). There is also the <code>Sample</code> category, but it is only available when building OpenCOR in debug mode. This is the category we are going to use for our plugin.
         </p>
 
         <p>
-            The category of a plugin is not only needed by OpenCOR (to improve user experience), but also to determine the location of a plugin's code. Indeed, the code of all our plugins is located under <a href="https://github.com/opencor/opencor/blob/master/src/plugins/"><code>[OpenCOR]/src/plugins/</code></a> and, more precisely, under a category folder. Thus, the code of our <code>Sample</code> plugins is to be located under the <code>sample</code> folder (see <a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/"><code>[OpenCOR]/src/plugins/sample/</code></a>). However, we need to be able to distinguish between the code of our various <code>Sample</code> plugins. We therefore need to create a folder for our plugin and its name is to be that of our plugin, i.e. <code>Sample</code>. So, in the end, the code of our <code>Sample</code> plugin is to be located under <a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/Sample/"><code>[OpenCOR]/src/plugins/sample/Sample/</code></a>.
+            The category of a plugin is not only needed by OpenCOR (to improve user experience), but also to determine where a plugin's code should be located. Indeed, for consistency, our plugins' code is located under <a href="https://github.com/opencor/opencor/blob/master/src/plugins/"><code>[OpenCOR]/src/plugins/</code></a> and, more precisely, under a category folder. Thus, the code of our <code>Sample</code> plugins should be located under <a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/"><code>[OpenCOR]/src/plugins/sample/</code></a>. However, we need to be able to distinguish between the code of our various <code>Sample</code> plugins, so we need to create a plugin-specific folder, which name is to be that of our plugin. So, in the end, our <code>Sample</code> plugin's code is to be located under <a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/Sample/"><code>[OpenCOR]/src/plugins/sample/Sample/</code></a>.
         </p>
 
         <p>
-            Now, OpenCOR is built using <a href="http://www.cmake.org/">CMake</a>, so to be able to build our plugin, we need to have a simple CMake project for it. This is done by creating a <code>CMakeLists.txt</code> file (see <a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/Sample/CMakeLists.txt"><code>[OpenCOR]/src/plugins/sample/Sample/CMakeLists.txt</code></a>), which contents is as follows:
+            Now, OpenCOR is built using <a href="http://www.cmake.org/">CMake</a>, so to be able to build our plugin, we need to create a CMake project for it. This is done by creating a <code>CMakeLists.txt</code> file (see <a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/Sample/CMakeLists.txt"><code>[OpenCOR]/src/plugins/sample/Sample/CMakeLists.txt</code></a>), which contents is as follows:
         </p>
 
         <pre class="prettyprint linenums">PROJECT(SamplePlugin)
@@ -63,11 +61,11 @@ ADD_PLUGIN(Sample
 )</pre>
 
         <p>
-            The first line specifies the name of the CMake project for our <code>Sample</code> plugin, which here is <code>SamplePlugin</code>. Next, we have a call to the <code>ADD_PLUGIN</code> macro. This macro effectively handles the building of our pugin, this using the information that is passed to it. That information comes in the form of a series of parameters, some of which are keywords (<code>SOURCES</code>, <code>INCLUDE_DIRS</code>, <code>QT_MODULES</code> and <code>QT_LIBRARIES</code> at lines 6, 11, 13 and 15) that are used to give a specific meaning to the parameters that follow them. (The meaning of those keywords and that of others can be found <a href="index.html#ADD_PLUGIN%20macro">here</a>).
+            The first line specifies the name of the CMake project for our <code>Sample</code> plugin, i.e. <code>SamplePlugin</code>. Then, we have a call to the <code>ADD_PLUGIN</code> macro (line 5). This macro effectively handles the building of our plugin, using information that is passed to it. That information comes in the form of a series of parameters, some of which are keywords (<code>SOURCES</code>, <code>INCLUDE_DIRS</code>, <code>QT_MODULES</code> and <code>QT_LIBRARIES</code> at lines 6, 11, 13 and 15) that are used to give a specific meaning to the parameters that follow them. (The meaning of those keywords and that of others can be found <a href="index.html#ADD_PLUGIN%20macro">here</a>).
         </p>
 
         <p>
-            As for any plugin, our <code>Sample</code> plugin must reference <a href="https://github.com/opencor/opencor/blob/master/src/plugins/plugininfo.cpp"><code>plugininfo.cpp</code></a> (line 7), so that it can provide some <a href="index.html#Basic%20information">basic information</a> about itself (more on this below). The <code>.cpp</code> files that contain the plugin's code clearly need to be referenced too (lines 9 and 10). Note that they start with <code>sample</code>, i.e. the name of the plugin. This is a convention that is used throughout OpenCOR's code to ensure that there is no name clashing. To make <code>#include</code> statements simpler to write (and to maintain), we provide <code>src</code> as an include directory (line 12). Finally, and though our <code>Sample</code> plugin is very minimal, OpenCOR uses the <a href="http://qt-project.org/">Qt</a> framework. So, we need to reference both the <code>Core</code> module and the <code>QtCore</code> library (lines 14 and 16, respectively).
+            As for any plugin, our <code>Sample</code> plugin must reference <a href="https://github.com/opencor/opencor/blob/master/src/plugins/plugininfo.cpp"><code>plugininfo.cpp</code></a> (line 7), so that it can provide some <a href="index.html#Basic%20information">basic information</a> about itself (more on this below). The <code>.cpp</code> files that contain the plugin's code are clearly referenced too (lines 9 and 10). Note that they start with <code>sample</code>, i.e. the name of the plugin in lower case. This convention is used throughout OpenCOR's code and ensures that there is no name clashing between plugins' files. To make it easier to write (and to maintain) <code>#include</code> statements, we provide <code>src</code> as an include directory (line 12). Finally, OpenCOR uses the <a href="http://qt-project.org/">Qt</a> framework, so even though our <code>Sample</code> plugin is very minimal, we need to reference both the <code>Core</code> module and the <code>QtCore</code> library (lines 14 and 16, respectively).
         </p>
 
         <script type="text/javascript">
