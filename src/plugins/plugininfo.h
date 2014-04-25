@@ -46,8 +46,8 @@ namespace OpenCOR {
 //       function name being mangled. So, to avoid this problem, we use extern
 //       "C" which ensures that the function name remains intact. Now, because
 //       it's C and not C++, MSVC will generate a warning if we return a
-//       PluginInfo object, so we return a void pointer which means that we must
-//       free it once we have used...
+//       PluginInfo object, so we return a void pointer, which means that we
+//       must free it once we have used it...
 
 //==============================================================================
 

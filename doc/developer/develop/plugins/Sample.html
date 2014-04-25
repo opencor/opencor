@@ -68,6 +68,90 @@ ADD_PLUGIN(Sample
             As for any plugin, our <code>Sample</code> plugin must reference <a href="https://github.com/opencor/opencor/blob/master/src/plugins/plugininfo.cpp"><code>plugininfo.cpp</code></a> (line 7), so that it can provide some <a href="index.html#Basic%20information">basic information</a> about itself (more on this below). The <code>.cpp</code> files that contain the plugin's code are clearly referenced too (lines 9 and 10). Note that they start with <code>sample</code>, i.e. the name of the plugin in lower case. This convention is used throughout OpenCOR's code and ensures that there is no name clashing between plugins' files. To make it easier to write (and to maintain) <code>#include</code> statements, we provide <code>src</code> as an include directory (line 12). Finally, OpenCOR uses the <a href="http://qt-project.org/">Qt</a> framework, so even though our <code>Sample</code> plugin is very minimal, we need to reference both the <code>Core</code> module and the <code>QtCore</code> library (lines 14 and 16, respectively).
         </p>
 
+        <p>
+            <a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/Sample/src/sampleplugin.cpp"><code>sampleplugin.cpp</code></a> contains the C method that will be called by OpenCOR to retrieve some <a href="index.html#Basic%20information">basic information</a> about our plugin. It also contains a class that is used to make our plugin a proper <a href="http://qt-project.org/">Qt</a> plugin. Its corresponding header file is <a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/Sample/src/sampleplugin.h"><code>sampleplugin.h</code></a>, which contents is as follows:
+        </p>
+
+        <pre class="prettyprint linenums:18">//==============================================================================
+// Sample plugin
+//==============================================================================
+
+#ifndef SAMPLEPLUGIN_H
+#define SAMPLEPLUGIN_H
+
+//==============================================================================
+
+#include "plugininfo.h"
+
+//==============================================================================
+
+namespace OpenCOR {
+namespace Sample {
+
+//==============================================================================
+
+PLUGININFO_FUNC SamplePluginInfo();
+
+//==============================================================================
+
+class SamplePlugin : public QObject
+{
+    Q_OBJECT
+
+    Q_PLUGIN_METADATA(IID "OpenCOR.SamplePlugin" FILE "sampleplugin.json")
+};
+
+//==============================================================================
+
+}   // namespace Sample
+}   // namespace OpenCOR
+
+//==============================================================================
+
+#endif</pre>
+
+        <p>
+            We have the usual C/C++ mechanism to avoid the header file from being included more than once (lines 22, 23 and 54). We need to know about the structure of the <a href="index.html#Basic%20information">basic information</a>, so we include <a href="https://github.com/opencor/opencor/blob/master/src/plugins/plugininfo.h"><code>plugininfo.h</code></a> (line 27). To protect our plugin's code, we enclose it in its own namespace (lines 32 and 49), which is itself enclosed in the OpenCOR namespace (lines 31 and 50). Then comes the definition for a C function that returns some basic information about our plugin (line 36). Finally, we have a C++ class that ensures that our plugin will be considered as a proper <a href="http://qt-project.org/">Qt</a> plugin (lines 40-45).
+        </p>
+
+        <p class="warning">
+            <strong>Note:</strong> for our plugin to be properly recognised by OpenCOR, the name of its C function must be <code>&lt;PluginName&gt;PluginInfo</code>. Indeed, when building a plugin, a <code>&lt;PluginName&gt;.dll</code>, <code>lib&lt;PluginName&gt;.so</code> or <code>lib&lt;PluginName&gt;.dylib</code> file gets generated on Windows, Linux and OS X, respectively. That file is then copied to OpenCOR's plugin folder. All the files in that folder are assumed to be plugin files. So, upon starting, OpenCOR tries to load and execute their <code>&lt;PluginName&gt;PluginInfo</code> function. If unsuccessful, the file is considered invalid. This means that if you were to duplicate a plugin file, then only the original plugin file would be considered valid.
+        </p>
+
+        <p>
+            Back to the <a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/Sample/src/sampleplugin.cpp"><code>sampleplugin.cpp</code></a> file, its contents is as follows:
+        </p>
+
+        <pre class="prettyprint linenums:18">//==============================================================================
+// Sample plugin
+//==============================================================================
+
+#include "sampleplugin.h"
+
+//==============================================================================
+
+namespace OpenCOR {
+namespace Sample {
+
+//==============================================================================
+
+PLUGININFO_FUNC SamplePluginInfo()
+{
+    Descriptions descriptions;
+
+    descriptions.insert("en", QString::fromUtf8("a plugin that provides a simple addition function."));
+    descriptions.insert("fr", QString::fromUtf8("une extension qui fournit une simple fonction d'addition."));
+
+    return new PluginInfo(PluginInfo::Sample, false,
+                          QStringList(),
+                          descriptions);
+}
+
+//==============================================================================
+
+}   // namespace Sample
+}   // namespace OpenCOR</pre>
+
         <script type="text/javascript">
             copyright("../../..");
         </script>
