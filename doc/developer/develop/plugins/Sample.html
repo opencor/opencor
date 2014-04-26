@@ -215,37 +215,39 @@ double SAMPLE_EXPORT add(const double &pNb1, const double &pNb2);
 #endif</pre>
 
         <p>
-            We start with the usual C/C++ include mechanism (lines 22, 23 and 45). Then, we include <a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/Sample/src/sampleglobal.h"><code>sampleglobal.h</code></a> (line 27). This file defines <code>SAMPLE_EXPORT</code> (more on this below), which we use in the definition of our <code>add</code> function (line 36). As always, we enclose everything in both the OpenCOR (lines 31 and 41) and our plugin namespaces (lines 32 and 40). 
+            We start with the usual C/C++ include mechanism (lines 22, 23 and 45). Then, we include <a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/Sample/src/sampleglobal.h"><code>sampleglobal.h</code></a> (line 27). This file defines the <code>SAMPLE_EXPORT</code> macro (more on this below), which we use in the definition of our <code>add</code> function (line 36). As always, we enclose everything in both the OpenCOR (lines 31 and 41) and our plugin namespaces (lines 32 and 40). 
         </p>
 
         <p>
             Going back to <a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/Sample/src/sampleglobal.h"><code>sampleglobal.h</code></a>, its contents is as follows:
         </p>
 
-        <pre class="prettyprint linenums:22">#ifndef SAMPLEUTILS_H
-#define SAMPLEUTILS_H
+        <pre class="prettyprint linenums:22">#ifndef SAMPLEGLOBAL_H
+#define SAMPLEGLOBAL_H
 
-//==============================================================================
-
-#include "<a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/Sample/src/sampleglobal.h"><code>sampleglobal.h</code></a>"
-
-//==============================================================================
-
-namespace OpenCOR {
-namespace Sample {
-
-//==============================================================================
-
-double SAMPLE_EXPORT add(const double &pNb1, const double &pNb2);
-
-//==============================================================================
-
-}   // namespace Sample
-}   // namespace OpenCOR
-
-//==============================================================================
+#ifdef OpenCOR_MAIN
+    #define SAMPLE_EXPORT
+#else
+    #ifdef _WIN32
+        #ifdef Sample_PLUGIN
+            #define SAMPLE_EXPORT __declspec(dllexport)
+        #else
+            #define SAMPLE_EXPORT __declspec(dllimport)
+        #endif
+    #else
+        #define SAMPLE_EXPORT
+    #endif
+#endif
 
 #endif</pre>
+
+        <p>
+            Again, we have our usual C/C++ include mechanism (lines 22, 23 and 39). Then, we define the <code>SAMPLE_EXPORT</code> macro (lines 25-37). This macro is used in the definition of C/C++ function and C++ classes, and ensures that those functions and/or classes get properly exported/imported on Windows, whenever necessary. For a given plugin, the name of this macro should always be <code>&lt;PLUGIN_NAME&gt;_EXPORT</code>.
+        </p>
+
+        <p class="warning">
+            <strong>Note:</strong> the <code>&lt;PLUGIN_NAME&gt;_EXPORT</code> macro is neither needed on Linux nor on OS X, hence our use of an empty macro on those platforms.
+        </p>
 
         <script type="text/javascript">
             copyright("../../..");
