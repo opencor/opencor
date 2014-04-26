@@ -149,7 +149,7 @@ PLUGININFO_FUNC SamplePluginInfo()
 }   // namespace OpenCOR</pre>
 
         <p>
-            We start by including our header file (line 22). Then, we make sure that the rest of the code is enclosed in both the OpenCOR (lines 26 and 46) and plugin namespaces (lines 27 and 45). Lines 31 to 41 contains the body of our <code>SamplePluginInfo</code> function. The first thing we do is to create an instance of <code>Descriptions</code> on the stack (line 33). This instance is used to provide a multilingual description of our plugin (here, both in English and in French; lines 35 and 36). Then, we create and return an instance of <code>PluginInfo</code> on the heap (lines 38-40). For this, we must provide <a href="index.html#Basic%20information">four parameters</a>, the first of which being our plugin's category (i.e. <code>PluginInfo::Sample</code>; line 38). The second parameter specifies whether the plugin is to be selectable by the user (see <a href="../../../user/plugins/index.html">here</a> for selectable <em>vs.</em> non-selectable plugins). Our plugin cannot do anything on its own, so we make it non-selectable (i.e. <code>false</code>; line 38). The third parameter must provide a list of dependencies for our plugin, which here is empty since our plugin does not have any dependencies (i.e. <code>QStringList()</code>; line 39). Finally, the fourth parameter must be a <code>Descriptions</code> object (i.e. <code>descriptions</code>; line 40).
+            We start by including our header file (line 22). Then, we make sure that the rest of the code is enclosed in both the OpenCOR (lines 26 and 46) and our plugin namespaces (lines 27 and 45). Lines 31 to 41 contains the body of our <code>SamplePluginInfo</code> function. The first thing we do is to create an instance of <code>Descriptions</code> on the stack (line 33). This instance is used to provide a multilingual description of our plugin (here, both in English and in French; lines 35 and 36). Then, we create and return an instance of <code>PluginInfo</code> on the heap (lines 38-40). For this, we must provide <a href="index.html#Basic%20information">four parameters</a>, the first of which being our plugin's category (i.e. <code>PluginInfo::Sample</code>; line 38). The second parameter specifies whether the plugin is to be selectable by the user (see <a href="../../../user/plugins/index.html">here</a> for selectable <em>vs.</em> non-selectable plugins). Our plugin cannot do anything on its own, so we make it non-selectable (i.e. <code>false</code>; line 38). The third parameter must provide a list of dependencies for our plugin, which here is empty since our plugin does not have any dependencies (i.e. <code>QStringList()</code>; line 39). Finally, the fourth parameter must be a <code>Descriptions</code> object (i.e. <code>descriptions</code>; line 40).
         </p>
 
         <p class="warning">
@@ -182,8 +182,70 @@ double add(const double &pNb1, const double &pNb2)
 }   // namespace OpenCOR</pre>
 
         <p>
-            We include the <code>.cpp</code> file's corresponding header file (line 22). Then, we have a straightforward implementation of our <code>add</code> function (lines 31-36), which is enclosed in both the OpenCOR (lines 26 and 41) and plugin namespaces (lines 27 and 40)
+            We include the <code>.cpp</code> file's corresponding header file (line 22). Then, we have a straightforward implementation of our <code>add</code> function (lines 31-36), which is enclosed in both the OpenCOR (lines 26 and 41) and our plugin namespaces (lines 27 and 40).
         </p>
+
+        <p>
+            The contents of the corresponding header file is as follows:
+        </p>
+
+        <pre class="prettyprint linenums:22">#ifndef SAMPLEUTILS_H
+#define SAMPLEUTILS_H
+
+//==============================================================================
+
+#include "<a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/Sample/src/sampleglobal.h"><code>sampleglobal.h</code></a>"
+
+//==============================================================================
+
+namespace OpenCOR {
+namespace Sample {
+
+//==============================================================================
+
+double SAMPLE_EXPORT add(const double &pNb1, const double &pNb2);
+
+//==============================================================================
+
+}   // namespace Sample
+}   // namespace OpenCOR
+
+//==============================================================================
+
+#endif</pre>
+
+        <p>
+            We start with the usual C/C++ include mechanism (lines 22, 23 and 45). Then, we include <a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/Sample/src/sampleglobal.h"><code>sampleglobal.h</code></a> (line 27). This file defines <code>SAMPLE_EXPORT</code> (more on this below), which we use in the definition of our <code>add</code> function (line 36). As always, we enclose everything in both the OpenCOR (lines 31 and 41) and our plugin namespaces (lines 32 and 40). 
+        </p>
+
+        <p>
+            Going back to <a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/Sample/src/sampleglobal.h"><code>sampleglobal.h</code></a>, its contents is as follows:
+        </p>
+
+        <pre class="prettyprint linenums:22">#ifndef SAMPLEUTILS_H
+#define SAMPLEUTILS_H
+
+//==============================================================================
+
+#include "<a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/Sample/src/sampleglobal.h"><code>sampleglobal.h</code></a>"
+
+//==============================================================================
+
+namespace OpenCOR {
+namespace Sample {
+
+//==============================================================================
+
+double SAMPLE_EXPORT add(const double &pNb1, const double &pNb2);
+
+//==============================================================================
+
+}   // namespace Sample
+}   // namespace OpenCOR
+
+//==============================================================================
+
+#endif</pre>
 
         <script type="text/javascript">
             copyright("../../..");
