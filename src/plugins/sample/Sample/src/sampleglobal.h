@@ -15,6 +15,10 @@ specific language governing permissions and limitations under the License.
 
 *******************************************************************************/
 
+//==============================================================================
+// Sample global
+//==============================================================================
+
 #ifndef SAMPLEGLOBAL_H
 #define SAMPLEGLOBAL_H
 
@@ -33,3 +37,7 @@ specific language governing permissions and limitations under the License.
 #endif
 
 #endif
+
+//==============================================================================
+// End of file
+//==============================================================================

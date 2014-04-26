@@ -15,6 +15,10 @@ specific language governing permissions and limitations under the License.
 
 *******************************************************************************/
 
+//==============================================================================
+// CoreEditing global
+//==============================================================================
+
 #ifndef COREEDITINGGLOBAL_H
 #define COREEDITINGGLOBAL_H
 
@@ -29,3 +33,7 @@ specific language governing permissions and limitations under the License.
 #endif
 
 #endif
+
+//==============================================================================
+// End of file
+//==============================================================================
