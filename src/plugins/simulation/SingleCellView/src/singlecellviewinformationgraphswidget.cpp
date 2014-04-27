@@ -768,18 +768,21 @@ void SingleCellViewInformationGraphsWidget::updateGraphInfo(Core::Property *pPro
     SingleCellViewGraphPanelPlotGraph *graph = mGraphs.value(pProperty);
     QString fileName = mFileName;
     QPen oldPen = graph->pen();
+    QPen newPen = oldPen;
 
     if (!pFileName.compare(tr("Current"))) {
         pProperty->properties()[0]->setIcon(QIcon(":/oxygen/status/object-unlocked.png"));
 
-        graph->setPen(QPen(Qt::darkBlue));
+        newPen.setColor(Qt::darkBlue);
     } else {
         pProperty->properties()[0]->setIcon(QIcon(":/oxygen/status/object-locked.png"));
 
-        graph->setPen(QPen(Qt::darkRed));
+        newPen.setColor(Qt::darkRed);
 
         fileName = pFileName.split(PropertySeparator).last();
     }
+
+    graph->setPen(newPen);
 
     // Check that the parameters represented by the value of the X and Y
     // properties exist for the current/selected model
@@ -823,7 +826,7 @@ void SingleCellViewInformationGraphsWidget::updateGraphInfo(Core::Property *pPro
     if (   mCanEmitGraphsUpdatedSignal
         && (   (oldParameterX != graph->parameterX())
             || (oldParameterY != graph->parameterY())
-            || (oldPen != graph->pen()))) {
+            || (oldPen != newPen))) {
         emit graphsUpdated(qobject_cast<SingleCellViewGraphPanelPlotWidget *>(graph->plot()),
                            QList<SingleCellViewGraphPanelPlotGraph *>() << graph);
     }

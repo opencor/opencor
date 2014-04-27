@@ -44,10 +44,6 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-#include "qwt_slider.h"
-
-//==============================================================================
-
 namespace OpenCOR {
 namespace SingleCellView {
 
