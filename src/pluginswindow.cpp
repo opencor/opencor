@@ -99,14 +99,14 @@ PluginsWindow::PluginsWindow(PluginManager *pPluginManager,
 
     mGui->setupUi(this);
 
-    // Make sure that all the widgets in our details form layout can be resized
-    // if necessary and if possible
+    // Make sure that all the widgets in our details layout can be resized if
+    // necessary and if possible
     // Note: indeed, it's not the case on OS X since the field growth policy is
     //       set to FieldsStayAtSizeHint on that platform and also on Windows
     //       and Linux to make sure that, if anything, we get the same behaviour
     //       on all the platforms we support...
 
-    mGui->detailsFormLayout->setFieldGrowthPolicy(QFormLayout::AllNonFixedFieldsGrow);
+    mGui->detailsLayout->setFieldGrowthPolicy(QFormLayout::AllNonFixedFieldsGrow);
 
     // Update the note label
 
@@ -368,7 +368,7 @@ QString PluginsWindow::statusDescription(Plugin *pPlugin) const
 //==============================================================================
 
 void PluginsWindow::updateInformation(const QModelIndex &pNewIndex,
-                                      const QModelIndex &pOldIndex) const
+                                      const QModelIndex &pOldIndex)
 {
     Q_UNUSED(pOldIndex);
 
@@ -383,8 +383,9 @@ void PluginsWindow::updateInformation(const QModelIndex &pNewIndex,
 
     // Update the information view with the category's or plugin's information
 
-    QString itemText = atLeastOneItem?mModel->itemFromIndex(pNewIndex)->text():QString();
-    Plugin *plugin = mPluginManager->plugin(itemText);
+    QStandardItem *item = atLeastOneItem?mModel->itemFromIndex(pNewIndex):0;
+    QString itemText = item?item->text():QString();
+    Plugin *plugin = item->parent()?mPluginManager->plugin(itemText):0;
 
     if (plugin) {
         // We are dealing with a plugin, so retrieve its information
@@ -463,6 +464,8 @@ void PluginsWindow::updateInformation(const QModelIndex &pNewIndex,
             mGui->fieldTwoValue->setText(tr("Plugins for various things."));
         else if (!itemText.compare(tr("Organisation")))
             mGui->fieldTwoValue->setText(tr("Plugins to organise files."));
+        else if (!itemText.compare(tr("Sample")))
+            mGui->fieldTwoValue->setText(tr("Plugins to demonstrate various plugin-related features."));
         else if (!itemText.compare(tr("Simulation")))
             mGui->fieldTwoValue->setText(tr("Plugins to simulate files."));
         else if (!itemText.compare(tr("Solver")))
@@ -488,6 +491,14 @@ void PluginsWindow::updateInformation(const QModelIndex &pNewIndex,
 
     mGui->fieldFourLabel->setVisible(atLeastOneItem && validItem && pluginItem);
     mGui->fieldFourValue->setVisible(atLeastOneItem && validItem && pluginItem);
+
+    // Adjust our size, in case we need extra room for our widget to look fine
+    // Note: not sure why, but to really get our size adjusted straightaway (as
+    //       opposed to when we select another item), then we need to call
+    //       adjustSize() twice...
+
+    adjustSize();
+    adjustSize();
 }
 
 //==============================================================================

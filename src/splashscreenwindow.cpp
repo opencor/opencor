@@ -111,7 +111,7 @@ SplashScreenWindow::SplashScreenWindow() :
     mGui->versionValue->setText(Core::shortVersion(qApp));
 
     // Adjust the size of our splash screen and then move it to the center of
-    // the screen
+    // our screen
 
     adjustSize();
     move(QApplication::desktop()->screenGeometry().center()-rect().center());

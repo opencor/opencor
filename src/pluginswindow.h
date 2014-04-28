@@ -107,7 +107,7 @@ private Q_SLOTS:
     void on_buttonBox_rejected();
 
     void updateInformation(const QModelIndex &pNewIndex,
-                           const QModelIndex &pOldIndex) const;
+                           const QModelIndex &pOldIndex);
     void updatePluginsSelectedState(QStandardItem *pItem = 0,
                                     const bool &pInitializing = false);
 

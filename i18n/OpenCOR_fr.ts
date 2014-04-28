@@ -314,6 +314,10 @@
         <source>Sample</source>
         <translation>Exemple</translation>
     </message>
+    <message>
+        <source>Plugins to demonstrate various plugin-related features.</source>
+        <translation>Extensions pour montrer diverses fonctionalités relatives à une extension.</translation>
+    </message>
 </context>
 <context>
     <name>PluginsWindow</name>
