@@ -161,6 +161,7 @@ IF(RELEASE_MODE)
 ELSE()
     SET(SAMPLE_PLUGINS
         sample/Sample
+        sample/SampleTools
     )
 ENDIF()
 
