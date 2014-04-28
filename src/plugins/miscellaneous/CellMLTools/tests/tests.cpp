@@ -37,11 +37,6 @@ void Tests::cliHelpTests()
 
     QString help = OpenCOR::fileContents("../src/plugins/miscellaneous/CellMLTools/tests/data/help.out");
 
-    QCOMPARE(OpenCOR::runCli(QStringList() << "-c" << "CellMLTools"),
-             help);
-
-    // Ask for the plugin's help
-
     QCOMPARE(OpenCOR::runCli(QStringList() << "-c" << "CellMLTools::help"),
              help);
 
