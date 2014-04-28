@@ -8,6 +8,8 @@ ADD_PLUGIN(Sample
 
         src/sampleplugin.cpp
         src/sampleutils.cpp
+    HEADERS_MOC
+        src/sampleplugin.h
     INCLUDE_DIRS
         src
     QT_MODULES
