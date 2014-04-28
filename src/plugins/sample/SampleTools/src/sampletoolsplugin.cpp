@@ -20,6 +20,11 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include "sampletoolsplugin.h"
+#include "sampleutils.h"
+
+//==============================================================================
+
+#include <iostream>
 
 //==============================================================================
 
@@ -38,6 +43,88 @@ PLUGININFO_FUNC SampleToolsPluginInfo()
     return new PluginInfo(PluginInfo::Sample, true,
                           QStringList() << "Sample",
                           descriptions);
+}
+
+//==============================================================================
+// CLI interface
+//==============================================================================
+
+int SampleToolsPlugin::execute(const QString &pCommand,
+                               const QStringList &pArguments)
+{
+    // Run the given CLI command
+
+    if (!pCommand.compare("help")) {
+        // Display the commands that we support
+
+        runHelpCommand();
+
+        return 0;
+    } else if (!pCommand.compare("add")) {
+        // Add some numbers
+
+        return runAddCommand(pArguments);
+    } else {
+        // Not a CLI command that we support, so...
+
+        runHelpCommand();
+
+        return -1;
+    }
+}
+
+//==============================================================================
+// Plugin specific
+//==============================================================================
+
+void SampleToolsPlugin::runHelpCommand()
+{
+    // Output the commands we support
+
+    std::cout << "Commands supported by SampleTools:" << std::endl;
+    std::cout << " * Display the commands supported by SampleTools:" << std::endl;
+    std::cout << "      help" << std::endl;
+    std::cout << " * Add two numbers:" << std::endl;
+    std::cout << "      add <nb1> <nb2>" << std::endl;
+}
+
+//==============================================================================
+
+int SampleToolsPlugin::runAddCommand(const QStringList &pArguments)
+{
+    // Make sure that we have the correct number of arguments
+
+    if (pArguments.count() != 2) {
+        runHelpCommand();
+
+        return -1;
+    }
+
+    // Make sure that the two arguments are valid numbers
+
+    bool ok;
+
+    double nb1 = pArguments.first().toDouble(&ok);
+
+    if (!ok) {
+        std::cout << "Sorry, but " << qPrintable(pArguments.first()) << " is not a valid number." << std::endl;
+
+        return -1;
+    }
+
+    double nb2 = pArguments.last().toDouble(&ok);
+
+    if (!ok) {
+        std::cout << "Sorry, but " << qPrintable(pArguments.last()) << " is not a valid number." << std::endl;
+
+        return -1;
+    }
+
+    // Add the two numbers and output the result
+
+    std::cout << qPrintable(pArguments.first()) << " + " << qPrintable(pArguments.last()) << " = " << Sample::add(nb1, nb2) << std::endl;
+
+    return 0;
 }
 
 //==============================================================================

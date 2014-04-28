@@ -24,6 +24,7 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#include "cliinterface.h"
 #include "plugininfo.h"
 
 //==============================================================================
@@ -37,11 +38,20 @@ PLUGININFO_FUNC SampleToolsPluginInfo();
 
 //==============================================================================
 
-class SampleToolsPlugin : public QObject
+class SampleToolsPlugin : public QObject, public CliInterface
 {
     Q_OBJECT
 
     Q_PLUGIN_METADATA(IID "OpenCOR.SampleToolsPlugin" FILE "sampletoolsplugin.json")
+
+    Q_INTERFACES(OpenCOR::CliInterface)
+
+public:
+#include "cliinterface.inl"
+
+private:
+    void runHelpCommand();
+    int runAddCommand(const QStringList &pArguments);
 };
 
 //==============================================================================
