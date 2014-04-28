@@ -491,14 +491,6 @@ void PluginsWindow::updateInformation(const QModelIndex &pNewIndex,
 
     mGui->fieldFourLabel->setVisible(atLeastOneItem && validItem && pluginItem);
     mGui->fieldFourValue->setVisible(atLeastOneItem && validItem && pluginItem);
-
-    // Adjust our size, in case we need extra room for our widget to look fine
-    // Note: not sure why, but to really get our size adjusted straightaway (as
-    //       opposed to when we select another item), then we need to call
-    //       adjustSize() twice...
-
-    adjustSize();
-    adjustSize();
 }
 
 //==============================================================================
