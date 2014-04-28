@@ -39,6 +39,10 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#include <iostream>
+
+//==============================================================================
+
 namespace OpenCOR {
 namespace CellMLTools {
 
@@ -66,7 +70,7 @@ int CellMLToolsPlugin::execute(const QString &pCommand,
     // Run the given CLI command
 
     if (!pCommand.compare("help")) {
-        // Display the commands we support
+        // Display the commands that we support
 
         runHelpCommand();
 
@@ -508,6 +512,8 @@ void CellMLToolsPlugin::exportToUserDefinedFormat()
 
 void CellMLToolsPlugin::runHelpCommand()
 {
+    // Output the commands we support
+
     std::cout << "Commands supported by CellMLTools:" << std::endl;
     std::cout << " * Display the commands supported by CellMLTools:" << std::endl;
     std::cout << "      help" << std::endl;
