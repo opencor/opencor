@@ -153,7 +153,7 @@ QString CellMLSupportPlugin::fileTypeDescription(const QString &pMimeType) const
 }
 
 //==============================================================================
-// GUI interface
+// I18n interface
 //==============================================================================
 
 void CellMLSupportPlugin::retranslateUi()

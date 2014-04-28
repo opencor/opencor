@@ -250,11 +250,6 @@
         <translation>le statut de l&apos;extension est indéfini.</translation>
     </message>
     <message>
-        <source>the plugin could not be loaded due to the following problems:
-%1</source>
-        <translation>l&apos;extension n&apos;a pas pu être installée à cause des problèmes suivants :\n%1</translation>
-    </message>
-    <message>
         <source>the plugin could not be loaded due to missing or invalid plugins:
 %1</source>
         <translation>l&apos;extension n&apos;a pas pu être installée à cause d&apos;extensions manquantes ou invalides :\n%1</translation>

@@ -352,10 +352,7 @@ QString PluginsWindow::statusDescription(Plugin *pPlugin) const
     case Plugin::Loaded:
         return tr("the plugin is loaded and fully functional.");
     case Plugin::NotLoaded:
-        if (pPlugin->statusErrorsCount() == 1)
-            return tr("the plugin could not be loaded due to the following problem: %1.").arg(pPlugin->statusErrors());
-        else
-            return tr("the plugin could not be loaded due to the following problems:\n%1").arg(pPlugin->statusErrors());
+        return tr("the plugin could not be loaded due to the following problem: %1.").arg(Core::formatErrorMessage(pPlugin->statusErrors(), false));
     case Plugin::NotPlugin:
         return tr("this is not a plugin.");
     case Plugin::MissingOrInvalidDependencies:
