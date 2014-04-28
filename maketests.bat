@@ -30,7 +30,7 @@ ECHO.
 
 CD build
 
-cmake -G "NMake Makefiles" -DCMAKE_BUILD_TYPE=Release -DENABLE_TESTS=True ..
+cmake -G "NMake Makefiles" -DCMAKE_BUILD_TYPE=Debug -DENABLE_TESTS=True ..
 
 SET ExitCode=%ERRORLEVEL%
 
@@ -62,7 +62,7 @@ ECHO.
 
 CD ..\windows\build
 
-cmake -G "NMake Makefiles" -DCMAKE_BUILD_TYPE=Release ..
+cmake -G "NMake Makefiles" -DCMAKE_BUILD_TYPE=Debug ..
 
 SET ExitCode=%ERRORLEVEL%
 

@@ -4,7 +4,7 @@ echo "\033[44;37;1mMaking OpenCOR...\033[0m"
 
 cd build
 
-cmake ..
+cmake -DCMAKE_BUILD_TYPE=Release ..
 
 exitCode=$?
 
