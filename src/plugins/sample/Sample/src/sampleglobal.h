@@ -22,18 +22,14 @@ specific language governing permissions and limitations under the License.
 #ifndef SAMPLEGLOBAL_H
 #define SAMPLEGLOBAL_H
 
-#ifdef OpenCOR_MAIN
-    #define SAMPLE_EXPORT
-#else
-    #ifdef _WIN32
-        #ifdef Sample_PLUGIN
-            #define SAMPLE_EXPORT __declspec(dllexport)
-        #else
-            #define SAMPLE_EXPORT __declspec(dllimport)
-        #endif
+#ifdef _WIN32
+    #ifdef Sample_PLUGIN
+        #define SAMPLE_EXPORT __declspec(dllexport)
     #else
-        #define SAMPLE_EXPORT
+        #define SAMPLE_EXPORT __declspec(dllimport)
     #endif
+#else
+    #define SAMPLE_EXPORT
 #endif
 
 #endif
