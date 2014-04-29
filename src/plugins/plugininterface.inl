@@ -4,10 +4,10 @@
     #define PURE
 #endif
 
-    virtual void initialize() PURE;
-    virtual void finalize() PURE;
+    virtual void initializePlugin() PURE;
+    virtual void finalizePlugin() PURE;
 
-    virtual void initialized(const Plugins &pLoadedPlugins) PURE;
+    virtual void pluginInitialized(const Plugins &pLoadedPlugins) PURE;
 
     virtual void loadSettings(QSettings *pSettings) PURE;
     virtual void saveSettings(QSettings *pSettings) const PURE;

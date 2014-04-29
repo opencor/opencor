@@ -234,7 +234,7 @@ void HelpWindowPlugin::retranslateUi()
 // Plugin interface
 //==============================================================================
 
-void HelpWindowPlugin::initialize()
+void HelpWindowPlugin::initializePlugin()
 {
     // Create an action to show/hide our help window
 
@@ -252,14 +252,14 @@ void HelpWindowPlugin::initialize()
 
 //==============================================================================
 
-void HelpWindowPlugin::finalize()
+void HelpWindowPlugin::finalizePlugin()
 {
     // We don't handle this interface...
 }
 
 //==============================================================================
 
-void HelpWindowPlugin::initialized(const Plugins &pLoadedPlugins)
+void HelpWindowPlugin::pluginInitialized(const Plugins &pLoadedPlugins)
 {
     Q_UNUSED(pLoadedPlugins);
 

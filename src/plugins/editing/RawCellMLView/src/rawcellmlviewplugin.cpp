@@ -263,7 +263,7 @@ void RawCellMLViewPlugin::retranslateUi()
 // Plugin interface
 //==============================================================================
 
-void RawCellMLViewPlugin::initialize()
+void RawCellMLViewPlugin::initializePlugin()
 {
     // Create our raw CellML view widget
 
@@ -277,14 +277,14 @@ void RawCellMLViewPlugin::initialize()
 
 //==============================================================================
 
-void RawCellMLViewPlugin::finalize()
+void RawCellMLViewPlugin::finalizePlugin()
 {
     // We don't handle this interface...
 }
 
 //==============================================================================
 
-void RawCellMLViewPlugin::initialized(const Plugins &pLoadedPlugins)
+void RawCellMLViewPlugin::pluginInitialized(const Plugins &pLoadedPlugins)
 {
     Q_UNUSED(pLoadedPlugins);
 

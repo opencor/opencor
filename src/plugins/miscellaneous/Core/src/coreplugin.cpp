@@ -340,7 +340,7 @@ void CorePlugin::retranslateUi()
 // Plugin interface
 //==============================================================================
 
-void CorePlugin::initialize()
+void CorePlugin::initializePlugin()
 {
     // Create our central widget
 
@@ -523,14 +523,14 @@ void CorePlugin::initialize()
 
 //==============================================================================
 
-void CorePlugin::finalize()
+void CorePlugin::finalizePlugin()
 {
     // We don't handle this interface...
 }
 
 //==============================================================================
 
-void CorePlugin::initialized(const Plugins &pLoadedPlugins)
+void CorePlugin::pluginInitialized(const Plugins &pLoadedPlugins)
 {
     // Retrieve the different file types supported by our various plugins and
     // make our central widget aware of them

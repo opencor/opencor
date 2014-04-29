@@ -235,7 +235,7 @@ void FileBrowserWindowPlugin::retranslateUi()
 // Plugin interface
 //==============================================================================
 
-void FileBrowserWindowPlugin::initialize()
+void FileBrowserWindowPlugin::initializePlugin()
 {
     // Create an action to show/hide our file browser window
 
@@ -253,14 +253,14 @@ void FileBrowserWindowPlugin::initialize()
 
 //==============================================================================
 
-void FileBrowserWindowPlugin::finalize()
+void FileBrowserWindowPlugin::finalizePlugin()
 {
     // We don't handle this interface...
 }
 
 //==============================================================================
 
-void FileBrowserWindowPlugin::initialized(const Plugins &pLoadedPlugins)
+void FileBrowserWindowPlugin::pluginInitialized(const Plugins &pLoadedPlugins)
 {
     Q_UNUSED(pLoadedPlugins);
 

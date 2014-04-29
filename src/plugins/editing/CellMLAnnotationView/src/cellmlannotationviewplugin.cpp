@@ -267,7 +267,7 @@ void CellMLAnnotationViewPlugin::retranslateUi()
 // Plugin interface
 //==============================================================================
 
-void CellMLAnnotationViewPlugin::initialize()
+void CellMLAnnotationViewPlugin::initializePlugin()
 {
     // Create our CellML annotation view widget
 
@@ -281,14 +281,14 @@ void CellMLAnnotationViewPlugin::initialize()
 
 //==============================================================================
 
-void CellMLAnnotationViewPlugin::finalize()
+void CellMLAnnotationViewPlugin::finalizePlugin()
 {
     // We don't handle this interface...
 }
 
 //==============================================================================
 
-void CellMLAnnotationViewPlugin::initialized(const Plugins &pLoadedPlugins)
+void CellMLAnnotationViewPlugin::pluginInitialized(const Plugins &pLoadedPlugins)
 {
     Q_UNUSED(pLoadedPlugins);
 

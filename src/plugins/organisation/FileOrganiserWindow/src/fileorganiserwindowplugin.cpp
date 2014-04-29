@@ -235,7 +235,7 @@ void FileOrganiserWindowPlugin::retranslateUi()
 // Plugin interface
 //==============================================================================
 
-void FileOrganiserWindowPlugin::initialize()
+void FileOrganiserWindowPlugin::initializePlugin()
 {
     // Create an action to show/hide our file organiser window
 
@@ -253,14 +253,14 @@ void FileOrganiserWindowPlugin::initialize()
 
 //==============================================================================
 
-void FileOrganiserWindowPlugin::finalize()
+void FileOrganiserWindowPlugin::finalizePlugin()
 {
     // We don't handle this interface...
 }
 
 //==============================================================================
 
-void FileOrganiserWindowPlugin::initialized(const Plugins &pLoadedPlugins)
+void FileOrganiserWindowPlugin::pluginInitialized(const Plugins &pLoadedPlugins)
 {
     Q_UNUSED(pLoadedPlugins);
 

@@ -291,7 +291,7 @@ void CellMLToolsPlugin::retranslateUi()
 // Plugin interface
 //==============================================================================
 
-void CellMLToolsPlugin::initialize()
+void CellMLToolsPlugin::initializePlugin()
 {
     // Create our Tools | Export To menu
 
@@ -328,14 +328,14 @@ void CellMLToolsPlugin::initialize()
 
 //==============================================================================
 
-void CellMLToolsPlugin::finalize()
+void CellMLToolsPlugin::finalizePlugin()
 {
     // We don't handle this interface...
 }
 
 //==============================================================================
 
-void CellMLToolsPlugin::initialized(const Plugins &pLoadedPlugins)
+void CellMLToolsPlugin::pluginInitialized(const Plugins &pLoadedPlugins)
 {
     // Retrieve the file types supported by the CellMLSupport plugin
 

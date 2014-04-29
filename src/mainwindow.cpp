@@ -231,7 +231,7 @@ Core::showEnableAction(mGui->actionPreferences, false);
         if (pluginInterface)
             // Initialise the plugin
 
-            pluginInterface->initialize();
+            pluginInterface->initializePlugin();
 
         // Back to the GUI interface
 
@@ -255,7 +255,7 @@ Core::showEnableAction(mGui->actionPreferences, false);
         PluginInterface *pluginInterface = qobject_cast<PluginInterface *>(plugin->instance());
 
         if (pluginInterface)
-            pluginInterface->initialized(loadedPlugins);
+            pluginInterface->pluginInitialized(loadedPlugins);
     }
 
     // Keep track of the showing/hiding of the different dock widgets
@@ -296,7 +296,7 @@ MainWindow::~MainWindow()
         PluginInterface *pluginInterface = qobject_cast<PluginInterface *>(plugin->instance());
 
         if (pluginInterface)
-            pluginInterface->finalize();
+            pluginInterface->finalizePlugin();
     }
 
     // Delete our central widget

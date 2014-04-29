@@ -366,7 +366,7 @@ void CoreEditingPlugin::retranslateUi()
 // Plugin interface
 //==============================================================================
 
-void CoreEditingPlugin::initialize()
+void CoreEditingPlugin::initializePlugin()
 {
     // Create our different File|New actions
 
@@ -457,14 +457,14 @@ void CoreEditingPlugin::initialize()
 
 //==============================================================================
 
-void CoreEditingPlugin::finalize()
+void CoreEditingPlugin::finalizePlugin()
 {
     // We don't handle this interface...
 }
 
 //==============================================================================
 
-void CoreEditingPlugin::initialized(const Plugins &pLoadedPlugins)
+void CoreEditingPlugin::pluginInitialized(const Plugins &pLoadedPlugins)
 {
     Q_UNUSED(pLoadedPlugins);
 

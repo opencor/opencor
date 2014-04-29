@@ -259,7 +259,7 @@ void PrettyCellMLViewPlugin::retranslateUi()
 // Plugin interface
 //==============================================================================
 
-void PrettyCellMLViewPlugin::initialize()
+void PrettyCellMLViewPlugin::initializePlugin()
 {
     // Create our pretty CellML view widget
 
@@ -273,14 +273,14 @@ void PrettyCellMLViewPlugin::initialize()
 
 //==============================================================================
 
-void PrettyCellMLViewPlugin::finalize()
+void PrettyCellMLViewPlugin::finalizePlugin()
 {
     // We don't handle this interface...
 }
 
 //==============================================================================
 
-void PrettyCellMLViewPlugin::initialized(const Plugins &pLoadedPlugins)
+void PrettyCellMLViewPlugin::pluginInitialized(const Plugins &pLoadedPlugins)
 {
     Q_UNUSED(pLoadedPlugins);
 

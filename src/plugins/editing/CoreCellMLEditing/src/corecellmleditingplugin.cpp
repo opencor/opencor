@@ -240,7 +240,7 @@ void CoreCellMLEditingPlugin::retranslateUi()
 // Plugin interface
 //==============================================================================
 
-void CoreCellMLEditingPlugin::initialize()
+void CoreCellMLEditingPlugin::initializePlugin()
 {
     // Create our different File|New actions
 
@@ -262,14 +262,14 @@ void CoreCellMLEditingPlugin::initialize()
 
 //==============================================================================
 
-void CoreCellMLEditingPlugin::finalize()
+void CoreCellMLEditingPlugin::finalizePlugin()
 {
     // We don't handle this interface...
 }
 
 //==============================================================================
 
-void CoreCellMLEditingPlugin::initialized(const Plugins &pLoadedPlugins)
+void CoreCellMLEditingPlugin::pluginInitialized(const Plugins &pLoadedPlugins)
 {
     Q_UNUSED(pLoadedPlugins);
 

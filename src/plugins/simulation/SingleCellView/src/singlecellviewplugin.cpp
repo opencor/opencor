@@ -251,7 +251,7 @@ void SingleCellViewPlugin::retranslateUi()
 // Plugin interface
 //==============================================================================
 
-void SingleCellViewPlugin::initialize()
+void SingleCellViewPlugin::initializePlugin()
 {
     // Create our single view widget
 
@@ -265,14 +265,14 @@ void SingleCellViewPlugin::initialize()
 
 //==============================================================================
 
-void SingleCellViewPlugin::finalize()
+void SingleCellViewPlugin::finalizePlugin()
 {
     // We don't handle this interface...
 }
 
 //==============================================================================
 
-void SingleCellViewPlugin::initialized(const Plugins &pLoadedPlugins)
+void SingleCellViewPlugin::pluginInitialized(const Plugins &pLoadedPlugins)
 {
     // Retrieve the different solvers that are available to us
 

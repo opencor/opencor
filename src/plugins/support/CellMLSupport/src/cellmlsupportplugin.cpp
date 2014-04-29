@@ -89,21 +89,21 @@ void CellMLSupportPlugin::retranslateUi()
 // Plugin interface
 //==============================================================================
 
-void CellMLSupportPlugin::initialize()
+void CellMLSupportPlugin::initializePlugin()
 {
     // We don't handle this interface...
 }
 
 //==============================================================================
 
-void CellMLSupportPlugin::finalize()
+void CellMLSupportPlugin::finalizePlugin()
 {
     // We don't handle this interface...
 }
 
 //==============================================================================
 
-void CellMLSupportPlugin::initialized(const Plugins &pLoadedPlugins)
+void CellMLSupportPlugin::pluginInitialized(const Plugins &pLoadedPlugins)
 {
     Q_UNUSED(pLoadedPlugins);
 

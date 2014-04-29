@@ -236,7 +236,7 @@ void CellMLModelRepositoryWindowPlugin::retranslateUi()
 // Plugin interface
 //==============================================================================
 
-void CellMLModelRepositoryWindowPlugin::initialize()
+void CellMLModelRepositoryWindowPlugin::initializePlugin()
 {
     // Create an action to show/hide our CellML Model Repository window
 
@@ -255,14 +255,14 @@ void CellMLModelRepositoryWindowPlugin::initialize()
 
 //==============================================================================
 
-void CellMLModelRepositoryWindowPlugin::finalize()
+void CellMLModelRepositoryWindowPlugin::finalizePlugin()
 {
     // We don't handle this interface...
 }
 
 //==============================================================================
 
-void CellMLModelRepositoryWindowPlugin::initialized(const Plugins &pLoadedPlugins)
+void CellMLModelRepositoryWindowPlugin::pluginInitialized(const Plugins &pLoadedPlugins)
 {
     Q_UNUSED(pLoadedPlugins);
 

@@ -253,7 +253,7 @@ void RawViewPlugin::retranslateUi()
 // Plugin interface
 //==============================================================================
 
-void RawViewPlugin::initialize()
+void RawViewPlugin::initializePlugin()
 {
     // Create our raw view widget
 
@@ -267,14 +267,14 @@ void RawViewPlugin::initialize()
 
 //==============================================================================
 
-void RawViewPlugin::finalize()
+void RawViewPlugin::finalizePlugin()
 {
     // We don't handle this interface...
 }
 
 //==============================================================================
 
-void RawViewPlugin::initialized(const Plugins &pLoadedPlugins)
+void RawViewPlugin::pluginInitialized(const Plugins &pLoadedPlugins)
 {
     Q_UNUSED(pLoadedPlugins);
 
