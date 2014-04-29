@@ -52,15 +52,6 @@ PLUGININFO_FUNC CoreCellMLEditingPluginInfo()
 // GUI interface
 //==============================================================================
 
-void CoreCellMLEditingPlugin::changeEvent(QEvent *pEvent)
-{
-    Q_UNUSED(pEvent);
-
-    // We don't handle this interface...
-}
-
-//==============================================================================
-
 void CoreCellMLEditingPlugin::updateGui(Plugin *pViewPlugin,
                                         const QString &pFileName)
 {

@@ -50,15 +50,6 @@ PLUGININFO_FUNC FileOrganiserWindowPluginInfo()
 // GUI interface
 //==============================================================================
 
-void FileOrganiserWindowPlugin::changeEvent(QEvent *pEvent)
-{
-    Q_UNUSED(pEvent);
-
-    // We don't handle this interface...
-}
-
-//==============================================================================
-
 void FileOrganiserWindowPlugin::updateGui(Plugin *pViewPlugin,
                                           const QString &pFileName)
 {

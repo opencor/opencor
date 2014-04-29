@@ -71,15 +71,6 @@ Editor::EditorWidget * RawViewPlugin::editor(const QString &pFileName) const
 // GUI interface
 //==============================================================================
 
-void RawViewPlugin::changeEvent(QEvent *pEvent)
-{
-    Q_UNUSED(pEvent);
-
-    // We don't handle this interface...
-}
-
-//==============================================================================
-
 void RawViewPlugin::updateGui(Plugin *pViewPlugin, const QString &pFileName)
 {
     Q_UNUSED(pViewPlugin);

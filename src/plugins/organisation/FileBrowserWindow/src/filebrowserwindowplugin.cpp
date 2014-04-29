@@ -50,15 +50,6 @@ PLUGININFO_FUNC FileBrowserWindowPluginInfo()
 // GUI interface
 //==============================================================================
 
-void FileBrowserWindowPlugin::changeEvent(QEvent *pEvent)
-{
-    Q_UNUSED(pEvent);
-
-    // We don't handle this interface...
-}
-
-//==============================================================================
-
 void FileBrowserWindowPlugin::updateGui(Plugin *pViewPlugin,
                                         const QString &pFileName)
 {

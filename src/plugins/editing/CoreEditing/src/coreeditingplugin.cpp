@@ -64,15 +64,6 @@ CoreEditingPlugin::CoreEditingPlugin() :
 // GUI interface
 //==============================================================================
 
-void CoreEditingPlugin::changeEvent(QEvent *pEvent)
-{
-    Q_UNUSED(pEvent);
-
-    // We don't handle this interface...
-}
-
-//==============================================================================
-
 void CoreEditingPlugin::updateGui(Plugin *pViewPlugin, const QString &pFileName)
 {
     // Reset our previous editor and set up our new one, should the current

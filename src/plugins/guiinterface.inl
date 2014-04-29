@@ -4,8 +4,6 @@
     #define PURE
 #endif
 
-    virtual void changeEvent(QEvent *pEvent) PURE;
-
     virtual void updateGui(Plugin *pViewPlugin, const QString &pFileName) PURE;
 
     virtual void initializeView() PURE;

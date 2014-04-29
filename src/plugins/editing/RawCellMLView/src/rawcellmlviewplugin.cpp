@@ -74,15 +74,6 @@ Editor::EditorWidget * RawCellMLViewPlugin::editor(const QString &pFileName) con
 // GUI interface
 //==============================================================================
 
-void RawCellMLViewPlugin::changeEvent(QEvent *pEvent)
-{
-    Q_UNUSED(pEvent);
-
-    // We don't handle this interface...
-}
-
-//==============================================================================
-
 void RawCellMLViewPlugin::updateGui(Plugin *pViewPlugin,
                                     const QString &pFileName)
 {

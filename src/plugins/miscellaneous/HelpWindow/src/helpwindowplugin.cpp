@@ -50,15 +50,6 @@ PLUGININFO_FUNC HelpWindowPluginInfo()
 // GUI interface
 //==============================================================================
 
-void HelpWindowPlugin::changeEvent(QEvent *pEvent)
-{
-    Q_UNUSED(pEvent);
-
-    // We don't handle this interface...
-}
-
-//==============================================================================
-
 void HelpWindowPlugin::updateGui(Plugin *pViewPlugin, const QString &pFileName)
 {
     Q_UNUSED(pViewPlugin);

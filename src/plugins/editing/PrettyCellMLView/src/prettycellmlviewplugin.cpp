@@ -73,15 +73,6 @@ Editor::EditorWidget * PrettyCellMLViewPlugin::editor(const QString &pFileName) 
 // GUI interface
 //==============================================================================
 
-void PrettyCellMLViewPlugin::changeEvent(QEvent *pEvent)
-{
-    Q_UNUSED(pEvent);
-
-    // We don't handle this interface...
-}
-
-//==============================================================================
-
 void PrettyCellMLViewPlugin::updateGui(Plugin *pViewPlugin,
                                        const QString &pFileName)
 {

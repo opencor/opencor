@@ -92,15 +92,6 @@ int CellMLToolsPlugin::executeCommand(const QString &pCommand,
 // GUI interface
 //==============================================================================
 
-void CellMLToolsPlugin::changeEvent(QEvent *pEvent)
-{
-    Q_UNUSED(pEvent);
-
-    // We don't handle this interface...
-}
-
-//==============================================================================
-
 void CellMLToolsPlugin::updateGui(Plugin *pViewPlugin, const QString &pFileName)
 {
     Q_UNUSED(pViewPlugin);

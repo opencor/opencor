@@ -236,7 +236,7 @@ Core::showEnableAction(mGui->actionPreferences, false);
         // Back to the GUI interface
 
         if (guiInterface)
-            // Initialise the plugin further (i.e. do things which can only be
+            // Initialise the plugin further (i.e. do things that can only be
             // done by OpenCOR itself)
 
             initializeGuiPlugin(plugin, guiInterface->guiSettings());
@@ -322,15 +322,6 @@ void MainWindow::changeEvent(QEvent *pEvent)
 
     QMainWindow::changeEvent(pEvent);
 
-    // Let our plugins know that something changed
-
-    foreach (Plugin *plugin, mPluginManager->loadedPlugins()) {
-        GuiInterface *guiInterface = qobject_cast<GuiInterface *>(plugin->instance());
-
-        if (guiInterface)
-            guiInterface->changeEvent(pEvent);
-    }
-
     // Do a few more things for some changes
 
     if (   (pEvent->type() == QEvent::LocaleChange)
@@ -348,6 +339,10 @@ void MainWindow::changeEvent(QEvent *pEvent)
 
         mGui->actionFullScreen->setChecked(isFullScreen());
 #endif
+    } else if (pEvent->type() == QEvent::PaletteChange) {
+        // The palette has changed, so update our colours
+
+        Core::updateColors();
     }
 }
 

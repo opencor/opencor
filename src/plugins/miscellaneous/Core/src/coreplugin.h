@@ -100,9 +100,6 @@ private:
 
     void updateNewModifiedSensitiveActions();
 
-    void retrieveBorderColor();
-    void retrieveColors();
-
 private Q_SLOTS:
     void openRecentFile();
 

@@ -77,15 +77,6 @@ Editor::EditorWidget * CellMLAnnotationViewPlugin::editor(const QString &pFileNa
 // GUI interface
 //==============================================================================
 
-void CellMLAnnotationViewPlugin::changeEvent(QEvent *pEvent)
-{
-    Q_UNUSED(pEvent);
-
-    // We don't handle this interface...
-}
-
-//==============================================================================
-
 void CellMLAnnotationViewPlugin::updateGui(Plugin *pViewPlugin,
                                            const QString &pFileName)
 {

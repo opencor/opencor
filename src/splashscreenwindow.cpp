@@ -20,6 +20,7 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include "cliutils.h"
+#include "guiutils.h"
 #include "splashscreenwindow.h"
 
 //==============================================================================
@@ -73,7 +74,7 @@ SplashScreenWindow::SplashScreenWindow() :
 
     mGui->setupUi(this);
 
-    QColor borderRgb = borderColor();
+    QColor borderRgb = Core::borderColor();
     QString borderStyle = "1px solid rgb("+QString::number(borderRgb.red())+", "+QString::number(borderRgb.green())+", "+QString::number(borderRgb.blue())+");";
 
 #ifdef Q_OS_MAC
@@ -180,36 +181,6 @@ void SplashScreenWindow::mousePressEvent(QMouseEvent *pEvent)
     hide();
 
     pEvent->accept();
-}
-
-//==============================================================================
-
-QColor SplashScreenWindow::borderColor()
-{
-    // Retrieve the colour used for a 'normal' border
-    // Note: we would normally use Core::borderColor(), but it's not yet defined
-    //       when we need it here, so we shamelessly copied/pasted the code from
-    //       CorePlugin::retrieveBorderColor()...
-
-    // Create our widget and show it off screen
-
-    QStackedWidget stackedWidget;
-
-    stackedWidget.setFrameShape(QFrame::StyledPanel);
-
-    stackedWidget.move(-2*stackedWidget.width(), -2*stackedWidget.height());
-    stackedWidget.show();
-
-    // Render the widget to an image
-
-    QImage image = QImage(stackedWidget.size(),
-                          QImage::Format_ARGB32_Premultiplied);
-
-    stackedWidget.render(&image);
-
-    // Retrieve the colour we are after
-
-    return QColor(image.pixel(image.width()-1, 0.5*image.height()));
 }
 
 //==============================================================================

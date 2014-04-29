@@ -20,6 +20,7 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include "common.h"
+#include "guiutils.h"
 #include "mainwindow.h"
 #include "splashscreenwindow.h"
 
@@ -110,6 +111,10 @@ int main(int pArgC, char *pArgV[])
 #else
     #error Unsupported platform
 #endif
+
+    // Initialise our colours by 'updating' them
+
+    OpenCOR::Core::updateColors();
 
     // Show our splash screen
 

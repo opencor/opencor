@@ -39,7 +39,6 @@ specific language governing permissions and limitations under the License.
 #include <QMessageBox>
 #include <QPalette>
 #include <QSettings>
-#include <QStackedWidget>
 
 //==============================================================================
 
@@ -79,17 +78,6 @@ void CorePlugin::handleArguments(const QStringList &pArguments)
 
 //==============================================================================
 // GUI interface
-//==============================================================================
-
-void CorePlugin::changeEvent(QEvent *pEvent)
-{
-    // Check whether the palette has changed and if so then retrieve some new
-    // colours to be used
-
-    if (pEvent->type() == QEvent::PaletteChange)
-        retrieveColors();
-}
-
 //==============================================================================
 
 void CorePlugin::updateGui(Plugin *pViewPlugin, const QString &pFileName)
@@ -517,8 +505,6 @@ void CorePlugin::initializePlugin()
     // Miscellaneous
 
     mRecentFileNames = QStringList();
-
-    retrieveColors();
 }
 
 //==============================================================================
@@ -692,70 +678,6 @@ void CorePlugin::updateNewModifiedSensitiveActions()
         mFileDuplicateAction->setEnabled(false);
         mFileLockedAction->setEnabled(false);
     }
-}
-
-//==============================================================================
-
-void CorePlugin::retrieveBorderColor()
-{
-    // Retrieve the colour used for a 'normal' border
-    // Note #1: we use a QStackedWidget object and retrieve the colour of the
-    //          pixel which is in the middle of the right border...
-    // Note #2: we don't rely on the top border because it may be rendered in a
-    //          special way. Also, we don't rely on a corner as such in case
-    //          it's rendered as a rounded corner...
-    // Note #3: on OS X, our widget must be shown otherwise, the retrieved
-    //          border colour will be black. So we show it off screen, even on
-    //          Windows and Linux, in case their behaviour was to change in the
-    //          future...
-
-    // Create our widget and show it off screen
-
-    QStackedWidget stackedWidget;
-
-    stackedWidget.setFrameShape(QFrame::StyledPanel);
-
-    stackedWidget.move(-2*stackedWidget.width(), -2*stackedWidget.height());
-    stackedWidget.show();
-
-    // Render the widget to an image
-
-    QImage image = QImage(stackedWidget.size(),
-                          QImage::Format_ARGB32_Premultiplied);
-
-    stackedWidget.render(&image);
-
-    // Retrieve the colour we are after
-
-    QColor borderColor = QColor(image.pixel(image.width()-1, 0.5*image.height()));
-
-    // Use our settings to keep track of the colour
-
-    QSettings settings(SettingsOrganization, SettingsApplication);
-
-    settings.beginGroup(SettingsGlobal);
-        settings.setValue(SettingsBorderColor, borderColor);
-    settings.endGroup();
-}
-
-//==============================================================================
-
-void CorePlugin::retrieveColors()
-{
-    // Retrieve our border colour
-
-    retrieveBorderColor();
-
-    // Retrieve some other colours
-
-    QSettings settings(SettingsOrganization, SettingsApplication);
-
-    settings.beginGroup(SettingsGlobal);
-        settings.setValue(SettingsBaseColor, qApp->palette().color(QPalette::Base));
-        settings.setValue(SettingsHighlightColor, qApp->palette().color(QPalette::Highlight));
-        settings.setValue(SettingsShadowColor, qApp->palette().color(QPalette::Shadow));
-        settings.setValue(SettingsWindowColor, qApp->palette().color(QPalette::Window));
-    settings.endGroup();
 }
 
 //==============================================================================
