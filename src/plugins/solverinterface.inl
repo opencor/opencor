@@ -4,10 +4,10 @@
     #define PURE
 #endif
 
-    virtual void * instance() const PURE;
+    virtual void * solverInstance() const PURE;
 
-    virtual Solver::Type type() const PURE;
-    virtual QString name() const PURE;
-    virtual Solver::Properties properties() const PURE;
+    virtual Solver::Type solverType() const PURE;
+    virtual QString solverName() const PURE;
+    virtual Solver::Properties solverProperties() const PURE;
 
 #undef PURE

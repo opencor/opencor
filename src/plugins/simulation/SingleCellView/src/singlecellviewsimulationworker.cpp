@@ -228,21 +228,21 @@ void SingleCellViewSimulationWorker::started()
 
     if (mRuntime->needOdeSolver()) {
         foreach (SolverInterface *solverInterface, mSolverInterfaces)
-            if (!solverInterface->name().compare(mSimulation->data()->odeSolverName())) {
+            if (!solverInterface->solverName().compare(mSimulation->data()->odeSolverName())) {
                 // The requested ODE solver was found, so retrieve an instance
                 // of it
 
-                voiSolver = odeSolver = static_cast<CoreSolver::CoreOdeSolver *>(solverInterface->instance());
+                voiSolver = odeSolver = static_cast<CoreSolver::CoreOdeSolver *>(solverInterface->solverInstance());
 
                 break;
             }
     } else {
         foreach (SolverInterface *solverInterface, mSolverInterfaces)
-            if (!solverInterface->name().compare("IDA")) {
+            if (!solverInterface->solverName().compare("IDA")) {
                 // The requested DAE solver was found, so retrieve an instance
                 // of it
 
-                voiSolver = daeSolver = static_cast<CoreSolver::CoreDaeSolver *>(solverInterface->instance());
+                voiSolver = daeSolver = static_cast<CoreSolver::CoreDaeSolver *>(solverInterface->solverInstance());
 
                 break;
             }
@@ -271,11 +271,11 @@ void SingleCellViewSimulationWorker::started()
 
     if (mRuntime->needNlaSolver()) {
         foreach (SolverInterface *solverInterface, mSolverInterfaces)
-            if (!solverInterface->name().compare(mSimulation->data()->nlaSolverName())) {
+            if (!solverInterface->solverName().compare(mSimulation->data()->nlaSolverName())) {
                 // The requested NLA solver was found, so retrieve an instance
                 // of it
 
-                nlaSolver = static_cast<CoreSolver::CoreNlaSolver *>(solverInterface->instance());
+                nlaSolver = static_cast<CoreSolver::CoreNlaSolver *>(solverInterface->solverInstance());
 
                 // Keep track of our NLA solver, so that doNonLinearSolve() can
                 // work as expected

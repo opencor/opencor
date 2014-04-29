@@ -408,11 +408,11 @@ void SingleCellViewSimulationData::reset()
         // Retrieve an instance of our NLA solver
 
         foreach (SolverInterface *solverInterface, mSolverInterfaces)
-            if (!solverInterface->name().compare(mNlaSolverName)) {
+            if (!solverInterface->solverName().compare(mNlaSolverName)) {
                 // The requested NLA solver was found, so retrieve an instance
                 // of it
 
-                nlaSolver = static_cast<CoreSolver::CoreNlaSolver *>(solverInterface->instance());
+                nlaSolver = static_cast<CoreSolver::CoreNlaSolver *>(solverInterface->solverInstance());
 
                 // Keep track of our NLA solver, so that doNonLinearSolve() can
                 // work as expected

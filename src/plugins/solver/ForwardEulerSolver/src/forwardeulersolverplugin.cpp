@@ -54,7 +54,7 @@ void ForwardEulerSolverPlugin::retranslateUi()
 // Solver interface
 //==============================================================================
 
-void * ForwardEulerSolverPlugin::instance() const
+void * ForwardEulerSolverPlugin::solverInstance() const
 {
     // Create and return an instance of the solver
 
@@ -63,7 +63,7 @@ void * ForwardEulerSolverPlugin::instance() const
 
 //==============================================================================
 
-Solver::Type ForwardEulerSolverPlugin::type() const
+Solver::Type ForwardEulerSolverPlugin::solverType() const
 {
     // Return the type of the solver
 
@@ -72,7 +72,7 @@ Solver::Type ForwardEulerSolverPlugin::type() const
 
 //==============================================================================
 
-QString ForwardEulerSolverPlugin::name() const
+QString ForwardEulerSolverPlugin::solverName() const
 {
     // Return the name of the solver
 
@@ -81,7 +81,7 @@ QString ForwardEulerSolverPlugin::name() const
 
 //==============================================================================
 
-Solver::Properties ForwardEulerSolverPlugin::properties() const
+Solver::Properties ForwardEulerSolverPlugin::solverProperties() const
 {
     // Return the properties supported by the solver
 

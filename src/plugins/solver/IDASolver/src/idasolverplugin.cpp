@@ -56,7 +56,7 @@ void IDASolverPlugin::retranslateUi()
 //==============================================================================
 
 
-void * IDASolverPlugin::instance() const
+void * IDASolverPlugin::solverInstance() const
 {
     // Create and return an instance of the solver
 
@@ -65,7 +65,7 @@ void * IDASolverPlugin::instance() const
 
 //==============================================================================
 
-Solver::Type IDASolverPlugin::type() const
+Solver::Type IDASolverPlugin::solverType() const
 {
     // Return the type of the solver
 
@@ -74,7 +74,7 @@ Solver::Type IDASolverPlugin::type() const
 
 //==============================================================================
 
-QString IDASolverPlugin::name() const
+QString IDASolverPlugin::solverName() const
 {
     // Return the name of the solver
 
@@ -83,7 +83,7 @@ QString IDASolverPlugin::name() const
 
 //==============================================================================
 
-Solver::Properties IDASolverPlugin::properties() const
+Solver::Properties IDASolverPlugin::solverProperties() const
 {
     // Return the properties supported by the solver
 

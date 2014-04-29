@@ -54,7 +54,7 @@ void SecondOrderRungeKuttaSolverPlugin::retranslateUi()
 // Solver interface
 //==============================================================================
 
-void * SecondOrderRungeKuttaSolverPlugin::instance() const
+void * SecondOrderRungeKuttaSolverPlugin::solverInstance() const
 {
     // Create and return an instance of the solver
 
@@ -63,7 +63,7 @@ void * SecondOrderRungeKuttaSolverPlugin::instance() const
 
 //==============================================================================
 
-Solver::Type SecondOrderRungeKuttaSolverPlugin::type() const
+Solver::Type SecondOrderRungeKuttaSolverPlugin::solverType() const
 {
     // Return the type of the solver
 
@@ -72,7 +72,7 @@ Solver::Type SecondOrderRungeKuttaSolverPlugin::type() const
 
 //==============================================================================
 
-QString SecondOrderRungeKuttaSolverPlugin::name() const
+QString SecondOrderRungeKuttaSolverPlugin::solverName() const
 {
     // Return the name of the solver
 
@@ -81,7 +81,7 @@ QString SecondOrderRungeKuttaSolverPlugin::name() const
 
 //==============================================================================
 
-Solver::Properties SecondOrderRungeKuttaSolverPlugin::properties() const
+Solver::Properties SecondOrderRungeKuttaSolverPlugin::solverProperties() const
 {
     // Return the properties supported by the solver
 

@@ -45,7 +45,7 @@ PLUGININFO_FUNC KINSOLSolverPluginInfo()
 // Solver interface
 //==============================================================================
 
-void * KINSOLSolverPlugin::instance() const
+void * KINSOLSolverPlugin::solverInstance() const
 {
     // Create and return an instance of the solver
 
@@ -54,7 +54,7 @@ void * KINSOLSolverPlugin::instance() const
 
 //==============================================================================
 
-Solver::Type KINSOLSolverPlugin::type() const
+Solver::Type KINSOLSolverPlugin::solverType() const
 {
     // Return the type of the solver
 
@@ -63,7 +63,7 @@ Solver::Type KINSOLSolverPlugin::type() const
 
 //==============================================================================
 
-QString KINSOLSolverPlugin::name() const
+QString KINSOLSolverPlugin::solverName() const
 {
     // Return the name of the solver
 
@@ -72,7 +72,7 @@ QString KINSOLSolverPlugin::name() const
 
 //==============================================================================
 
-Solver::Properties KINSOLSolverPlugin::properties() const
+Solver::Properties KINSOLSolverPlugin::solverProperties() const
 {
     // Return the properties supported by the solver
 

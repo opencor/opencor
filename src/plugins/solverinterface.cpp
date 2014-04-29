@@ -99,7 +99,7 @@ QString SolverInterface::typeAsString() const
 {
     // Return the type of the solver as a string
 
-    switch (type()) {
+    switch (solverType()) {
     case Solver::Ode:
         return QObject::tr("ODE");
     case Solver::Dae:

@@ -54,7 +54,7 @@ void CVODESolverPlugin::retranslateUi()
 // Solver interface
 //==============================================================================
 
-void * CVODESolverPlugin::instance() const
+void * CVODESolverPlugin::solverInstance() const
 {
     // Create and return an instance of the solver
 
@@ -63,7 +63,7 @@ void * CVODESolverPlugin::instance() const
 
 //==============================================================================
 
-Solver::Type CVODESolverPlugin::type() const
+Solver::Type CVODESolverPlugin::solverType() const
 {
     // Return the type of the solver
 
@@ -72,7 +72,7 @@ Solver::Type CVODESolverPlugin::type() const
 
 //==============================================================================
 
-QString CVODESolverPlugin::name() const
+QString CVODESolverPlugin::solverName() const
 {
     // Return the name of the solver
 
@@ -81,7 +81,7 @@ QString CVODESolverPlugin::name() const
 
 //==============================================================================
 
-Solver::Properties CVODESolverPlugin::properties() const
+Solver::Properties CVODESolverPlugin::solverProperties() const
 {
     // Return the properties supported by the solver
 

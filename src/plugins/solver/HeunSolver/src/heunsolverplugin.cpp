@@ -56,7 +56,7 @@ void HeunSolverPlugin::retranslateUi()
 //==============================================================================
 
 
-void * HeunSolverPlugin::instance() const
+void * HeunSolverPlugin::solverInstance() const
 {
     // Create and return an instance of the solver
 
@@ -65,7 +65,7 @@ void * HeunSolverPlugin::instance() const
 
 //==============================================================================
 
-Solver::Type HeunSolverPlugin::type() const
+Solver::Type HeunSolverPlugin::solverType() const
 {
     // Return the type of the solver
 
@@ -74,7 +74,7 @@ Solver::Type HeunSolverPlugin::type() const
 
 //==============================================================================
 
-QString HeunSolverPlugin::name() const
+QString HeunSolverPlugin::solverName() const
 {
     // Return the name of the solver
 
@@ -83,7 +83,7 @@ QString HeunSolverPlugin::name() const
 
 //==============================================================================
 
-Solver::Properties HeunSolverPlugin::properties() const
+Solver::Properties HeunSolverPlugin::solverProperties() const
 {
     // Return the properties supported by the solver
 

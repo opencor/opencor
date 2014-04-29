@@ -56,7 +56,7 @@ void FourthOrderRungeKuttaSolverPlugin::retranslateUi()
 //==============================================================================
 
 
-void * FourthOrderRungeKuttaSolverPlugin::instance() const
+void * FourthOrderRungeKuttaSolverPlugin::solverInstance() const
 {
     // Create and return an instance of the solver
 
@@ -65,7 +65,7 @@ void * FourthOrderRungeKuttaSolverPlugin::instance() const
 
 //==============================================================================
 
-Solver::Type FourthOrderRungeKuttaSolverPlugin::type() const
+Solver::Type FourthOrderRungeKuttaSolverPlugin::solverType() const
 {
     // Return the type of the solver
 
@@ -74,7 +74,7 @@ Solver::Type FourthOrderRungeKuttaSolverPlugin::type() const
 
 //==============================================================================
 
-QString FourthOrderRungeKuttaSolverPlugin::name() const
+QString FourthOrderRungeKuttaSolverPlugin::solverName() const
 {
     // Return the name of the solver
 
@@ -83,7 +83,7 @@ QString FourthOrderRungeKuttaSolverPlugin::name() const
 
 //==============================================================================
 
-Solver::Properties FourthOrderRungeKuttaSolverPlugin::properties() const
+Solver::Properties FourthOrderRungeKuttaSolverPlugin::solverProperties() const
 {
     // Return the properties supported by the solver
 

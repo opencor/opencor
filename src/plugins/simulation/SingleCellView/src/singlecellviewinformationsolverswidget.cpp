@@ -188,10 +188,10 @@ SingleCellViewInformationSolversWidgetData * SingleCellViewInformationSolversWid
     QMap<QString, Core::Properties> solversProperties = QMap<QString, Core::Properties>();
 
     foreach (SolverInterface *solverInterface, pSolverInterfaces)
-        if (solverInterface->type() == pSolverType) {
+        if (solverInterface->solverType() == pSolverType) {
             // Keep track of the solver's name
 
-            solvers << solverInterface->name();
+            solvers << solverInterface->solverName();
 
             // Add our solvers section property and list property for our
             // solvers, if needed
@@ -208,7 +208,7 @@ SingleCellViewInformationSolversWidgetData * SingleCellViewInformationSolversWid
             Core::Properties properties = Core::Properties();
 
             foreach (const Solver::Property &solverInterfaceProperty,
-                     solverInterface->properties()) {
+                     solverInterface->solverProperties()) {
                 // Add the solver's property and set its default value
 
                 switch (solverInterfaceProperty.type()) {
@@ -251,7 +251,7 @@ SingleCellViewInformationSolversWidgetData * SingleCellViewInformationSolversWid
 
             // Keep track of the solver's properties
 
-            solversProperties.insert(solverInterface->name(), properties);
+            solversProperties.insert(solverInterface->solverName(), properties);
         }
 
     // Check whether we have at least one solver
