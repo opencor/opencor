@@ -25,7 +25,6 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include "cellmlfile.h"
-#include "cellmltoolsglobal.h"
 #include "cliinterface.h"
 #include "coreinterface.h"
 #include "fileinterface.h"
@@ -44,11 +43,9 @@ PLUGININFO_FUNC CellMLToolsPluginInfo();
 
 //==============================================================================
 
-class CELLMLTOOLS_EXPORT CellMLToolsPlugin : public QObject,
-                                             public CliInterface,
-                                             public CoreInterface,
-                                             public GuiInterface,
-                                             public I18nInterface
+class CellMLToolsPlugin : public QObject, public CliInterface,
+                          public CoreInterface, public GuiInterface,
+                          public I18nInterface
 {
     Q_OBJECT
 

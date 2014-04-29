@@ -24,7 +24,6 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-#include "coreeditingglobal.h"
 #include "coreinterface.h"
 #include "guiinterface.h"
 #include "i18ninterface.h"
@@ -54,10 +53,8 @@ PLUGININFO_FUNC CoreEditingPluginInfo();
 
 //==============================================================================
 
-class COREEDITING_EXPORT CoreEditingPlugin : public QObject,
-                                             public CoreInterface,
-                                             public GuiInterface,
-                                             public I18nInterface
+class CoreEditingPlugin : public QObject, public CoreInterface,
+                          public GuiInterface, public I18nInterface
 {
     Q_OBJECT
 
