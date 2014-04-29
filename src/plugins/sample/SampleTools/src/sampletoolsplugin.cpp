@@ -49,8 +49,8 @@ PLUGININFO_FUNC SampleToolsPluginInfo()
 // CLI interface
 //==============================================================================
 
-int SampleToolsPlugin::execute(const QString &pCommand,
-                               const QStringList &pArguments)
+int SampleToolsPlugin::executeCommand(const QString &pCommand,
+                                      const QStringList &pArguments)
 {
     // Run the given CLI command
 

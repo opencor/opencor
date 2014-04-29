@@ -4,7 +4,7 @@
     #define PURE
 #endif
 
-    virtual int execute(const QString &pCommand,
-                        const QStringList &pArguments) PURE;
+    virtual int executeCommand(const QString &pCommand,
+                               const QStringList &pArguments) PURE;
 
 #undef PURE

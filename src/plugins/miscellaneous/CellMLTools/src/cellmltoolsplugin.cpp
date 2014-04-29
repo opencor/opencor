@@ -64,8 +64,8 @@ PLUGININFO_FUNC CellMLToolsPluginInfo()
 // CLI interface
 //==============================================================================
 
-int CellMLToolsPlugin::execute(const QString &pCommand,
-                               const QStringList &pArguments)
+int CellMLToolsPlugin::executeCommand(const QString &pCommand,
+                                      const QStringList &pArguments)
 {
     // Run the given CLI command
 

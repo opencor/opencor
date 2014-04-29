@@ -245,7 +245,7 @@ bool CliApplication::command(const QStringList pArguments, int *pRes)
             // Note: since the first argument corresponds to the command
             //       itself...
 
-            if (qobject_cast<CliInterface *>(plugin->instance())->execute(commandName, arguments))
+            if (qobject_cast<CliInterface *>(plugin->instance())->executeCommand(commandName, arguments))
                 *pRes = -1;
         }
 
