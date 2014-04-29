@@ -47,91 +47,6 @@ PLUGININFO_FUNC FileOrganiserWindowPluginInfo()
 }
 
 //==============================================================================
-// Core interface
-//==============================================================================
-
-void FileOrganiserWindowPlugin::initialize()
-{
-    // Create an action to show/hide our file organiser window
-
-    mFileOrganiserAction = newAction(true, mMainWindow);
-
-    // Create our file organiser window
-
-    mFileOrganiserWindow = new FileOrganiserWindowWindow(mMainWindow);
-
-    // Set our settings
-
-    mGuiSettings->addWindow(Qt::LeftDockWidgetArea, mFileOrganiserWindow,
-                            mFileOrganiserAction);
-}
-
-//==============================================================================
-
-void FileOrganiserWindowPlugin::finalize()
-{
-    // We don't handle this interface...
-}
-
-//==============================================================================
-
-void FileOrganiserWindowPlugin::initialized(const Plugins &pLoadedPlugins)
-{
-    Q_UNUSED(pLoadedPlugins);
-
-    // We don't handle this interface...
-}
-
-//==============================================================================
-
-void FileOrganiserWindowPlugin::loadSettings(QSettings *pSettings)
-{
-    // Retrieve our file organiser window settings
-
-    pSettings->beginGroup(mFileOrganiserWindow->objectName());
-        mFileOrganiserWindow->loadSettings(pSettings);
-    pSettings->endGroup();
-}
-
-//==============================================================================
-
-void FileOrganiserWindowPlugin::saveSettings(QSettings *pSettings) const
-{
-    // Keep track of our file organiser window settings
-
-    pSettings->beginGroup(mFileOrganiserWindow->objectName());
-        mFileOrganiserWindow->saveSettings(pSettings);
-    pSettings->endGroup();
-}
-
-//==============================================================================
-
-void FileOrganiserWindowPlugin::settingsLoaded(const Plugins &pLoadedPlugins)
-{
-    Q_UNUSED(pLoadedPlugins);
-
-    // We don't handle this interface...
-}
-
-//==============================================================================
-
-void FileOrganiserWindowPlugin::handleArguments(const QStringList &pArguments)
-{
-    Q_UNUSED(pArguments);
-
-    // We don't handle this interface...
-}
-
-//==============================================================================
-
-void FileOrganiserWindowPlugin::handleAction(const QUrl &pUrl)
-{
-    Q_UNUSED(pUrl);
-
-    // We don't handle this interface...
-}
-
-//==============================================================================
 // GUI interface
 //==============================================================================
 
@@ -314,6 +229,82 @@ void FileOrganiserWindowPlugin::retranslateUi()
     // Retranslate our file organiser window
 
     mFileOrganiserWindow->retranslateUi();
+}
+
+//==============================================================================
+// Plugin interface
+//==============================================================================
+
+void FileOrganiserWindowPlugin::initialize()
+{
+    // Create an action to show/hide our file organiser window
+
+    mFileOrganiserAction = newAction(true, mMainWindow);
+
+    // Create our file organiser window
+
+    mFileOrganiserWindow = new FileOrganiserWindowWindow(mMainWindow);
+
+    // Set our settings
+
+    mGuiSettings->addWindow(Qt::LeftDockWidgetArea, mFileOrganiserWindow,
+                            mFileOrganiserAction);
+}
+
+//==============================================================================
+
+void FileOrganiserWindowPlugin::finalize()
+{
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void FileOrganiserWindowPlugin::initialized(const Plugins &pLoadedPlugins)
+{
+    Q_UNUSED(pLoadedPlugins);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void FileOrganiserWindowPlugin::loadSettings(QSettings *pSettings)
+{
+    // Retrieve our file organiser window settings
+
+    pSettings->beginGroup(mFileOrganiserWindow->objectName());
+        mFileOrganiserWindow->loadSettings(pSettings);
+    pSettings->endGroup();
+}
+
+//==============================================================================
+
+void FileOrganiserWindowPlugin::saveSettings(QSettings *pSettings) const
+{
+    // Keep track of our file organiser window settings
+
+    pSettings->beginGroup(mFileOrganiserWindow->objectName());
+        mFileOrganiserWindow->saveSettings(pSettings);
+    pSettings->endGroup();
+}
+
+//==============================================================================
+
+void FileOrganiserWindowPlugin::settingsLoaded(const Plugins &pLoadedPlugins)
+{
+    Q_UNUSED(pLoadedPlugins);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void FileOrganiserWindowPlugin::handleAction(const QUrl &pUrl)
+{
+    Q_UNUSED(pUrl);
+
+    // We don't handle this interface...
 }
 
 //==============================================================================

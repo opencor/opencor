@@ -47,91 +47,6 @@ PLUGININFO_FUNC HelpWindowPluginInfo()
 }
 
 //==============================================================================
-// Core interface
-//==============================================================================
-
-void HelpWindowPlugin::initialize()
-{
-    // Create an action to show/hide our help window
-
-    mHelpAction = newAction(true, QIcon(":/oxygen/apps/help-browser.png"),
-                            Qt::Key_F1, mMainWindow);
-
-    // Create our help window
-
-    mHelpWindow = new HelpWindowWindow(mMainWindow);
-
-    // Set our settings
-
-    mGuiSettings->addWindow(Qt::RightDockWidgetArea, mHelpWindow, mHelpAction);
-}
-
-//==============================================================================
-
-void HelpWindowPlugin::finalize()
-{
-    // We don't handle this interface...
-}
-
-//==============================================================================
-
-void HelpWindowPlugin::initialized(const Plugins &pLoadedPlugins)
-{
-    Q_UNUSED(pLoadedPlugins);
-
-    // We don't handle this interface...
-}
-
-//==============================================================================
-
-void HelpWindowPlugin::loadSettings(QSettings *pSettings)
-{
-    // Retrieve our help window settings
-
-    pSettings->beginGroup(mHelpWindow->objectName());
-        mHelpWindow->loadSettings(pSettings);
-    pSettings->endGroup();
-}
-
-//==============================================================================
-
-void HelpWindowPlugin::saveSettings(QSettings *pSettings) const
-{
-    // Keep track of our help window settings
-
-    pSettings->beginGroup(mHelpWindow->objectName());
-        mHelpWindow->saveSettings(pSettings);
-    pSettings->endGroup();
-}
-
-//==============================================================================
-
-void HelpWindowPlugin::settingsLoaded(const Plugins &pLoadedPlugins)
-{
-    Q_UNUSED(pLoadedPlugins);
-
-    // We don't handle this interface...
-}
-
-//==============================================================================
-
-void HelpWindowPlugin::handleArguments(const QStringList &pArguments)
-{
-    Q_UNUSED(pArguments);
-
-    // We don't handle this interface...
-}
-
-//==============================================================================
-
-void HelpWindowPlugin::handleAction(const QUrl &pUrl)
-{
-    Q_UNUSED(pUrl);
-
-    // We don't handle this interface...
-}
-
-//==============================================================================
 // GUI interface
 //==============================================================================
 
@@ -313,6 +228,82 @@ void HelpWindowPlugin::retranslateUi()
     // Retranslate our help window
 
     mHelpWindow->retranslateUi();
+}
+
+//==============================================================================
+// Plugin interface
+//==============================================================================
+
+void HelpWindowPlugin::initialize()
+{
+    // Create an action to show/hide our help window
+
+    mHelpAction = newAction(true, QIcon(":/oxygen/apps/help-browser.png"),
+                            Qt::Key_F1, mMainWindow);
+
+    // Create our help window
+
+    mHelpWindow = new HelpWindowWindow(mMainWindow);
+
+    // Set our settings
+
+    mGuiSettings->addWindow(Qt::RightDockWidgetArea, mHelpWindow, mHelpAction);
+}
+
+//==============================================================================
+
+void HelpWindowPlugin::finalize()
+{
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void HelpWindowPlugin::initialized(const Plugins &pLoadedPlugins)
+{
+    Q_UNUSED(pLoadedPlugins);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void HelpWindowPlugin::loadSettings(QSettings *pSettings)
+{
+    // Retrieve our help window settings
+
+    pSettings->beginGroup(mHelpWindow->objectName());
+        mHelpWindow->loadSettings(pSettings);
+    pSettings->endGroup();
+}
+
+//==============================================================================
+
+void HelpWindowPlugin::saveSettings(QSettings *pSettings) const
+{
+    // Keep track of our help window settings
+
+    pSettings->beginGroup(mHelpWindow->objectName());
+        mHelpWindow->saveSettings(pSettings);
+    pSettings->endGroup();
+}
+
+//==============================================================================
+
+void HelpWindowPlugin::settingsLoaded(const Plugins &pLoadedPlugins)
+{
+    Q_UNUSED(pLoadedPlugins);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void HelpWindowPlugin::handleAction(const QUrl &pUrl)
+{
+    Q_UNUSED(pUrl);
+
+    // We don't handle this interface...
 }
 
 //==============================================================================

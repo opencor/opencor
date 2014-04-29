@@ -26,10 +26,10 @@ specific language governing permissions and limitations under the License.
 
 #include "cellmlfile.h"
 #include "cliinterface.h"
-#include "coreinterface.h"
 #include "fileinterface.h"
 #include "guiinterface.h"
 #include "i18ninterface.h"
+#include "plugininterface.h"
 #include "plugininfo.h"
 
 //==============================================================================
@@ -44,23 +44,23 @@ PLUGININFO_FUNC CellMLToolsPluginInfo();
 //==============================================================================
 
 class CellMLToolsPlugin : public QObject, public CliInterface,
-                          public CoreInterface, public GuiInterface,
-                          public I18nInterface
+                          public GuiInterface, public I18nInterface,
+                          public PluginInterface
 {
     Q_OBJECT
 
     Q_PLUGIN_METADATA(IID "OpenCOR.CellMLToolsPlugin" FILE "cellmltoolsplugin.json")
 
     Q_INTERFACES(OpenCOR::CliInterface)
-    Q_INTERFACES(OpenCOR::CoreInterface)
     Q_INTERFACES(OpenCOR::GuiInterface)
     Q_INTERFACES(OpenCOR::I18nInterface)
+    Q_INTERFACES(OpenCOR::PluginInterface)
 
 public:
 #include "cliinterface.inl"
-#include "coreinterface.inl"
 #include "guiinterface.inl"
 #include "i18ninterface.inl"
+#include "plugininterface.inl"
 
 private:
     FileTypes mCellmlFileTypes;

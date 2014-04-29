@@ -57,87 +57,6 @@ RawViewPlugin::RawViewPlugin()
 }
 
 //==============================================================================
-// Core interface
-//==============================================================================
-
-void RawViewPlugin::initialize()
-{
-    // Create our raw view widget
-
-    mViewWidget = new RawViewWidget(mMainWindow);
-
-    // Hide our raw view widget since it may not initially be shown in our
-    // central widget
-
-    mViewWidget->setVisible(false);
-}
-
-//==============================================================================
-
-void RawViewPlugin::finalize()
-{
-    // We don't handle this interface...
-}
-
-//==============================================================================
-
-void RawViewPlugin::initialized(const Plugins &pLoadedPlugins)
-{
-    Q_UNUSED(pLoadedPlugins);
-
-    // We don't handle this interface...
-}
-
-//==============================================================================
-
-void RawViewPlugin::loadSettings(QSettings *pSettings)
-{
-    // Retrieve our raw view widget settings
-
-    pSettings->beginGroup(mViewWidget->objectName());
-        mViewWidget->loadSettings(pSettings);
-    pSettings->endGroup();
-}
-
-//==============================================================================
-
-void RawViewPlugin::saveSettings(QSettings *pSettings) const
-{
-    // Keep track of our raw view widget settings
-
-    pSettings->beginGroup(mViewWidget->objectName());
-        mViewWidget->saveSettings(pSettings);
-    pSettings->endGroup();
-}
-
-//==============================================================================
-
-void RawViewPlugin::settingsLoaded(const Plugins &pLoadedPlugins)
-{
-    Q_UNUSED(pLoadedPlugins);
-
-    // We don't handle this interface...
-}
-
-//==============================================================================
-
-void RawViewPlugin::handleArguments(const QStringList &pArguments)
-{
-    Q_UNUSED(pArguments);
-
-    // We don't handle this interface...
-}
-
-//==============================================================================
-
-void RawViewPlugin::handleAction(const QUrl &pUrl)
-{
-    Q_UNUSED(pUrl);
-
-    // We don't handle this interface...
-}
-
-//==============================================================================
 // Editing interface
 //==============================================================================
 
@@ -328,6 +247,78 @@ void RawViewPlugin::retranslateUi()
     // Retranslate our view widget
 
     mViewWidget->retranslateUi();
+}
+
+//==============================================================================
+// Plugin interface
+//==============================================================================
+
+void RawViewPlugin::initialize()
+{
+    // Create our raw view widget
+
+    mViewWidget = new RawViewWidget(mMainWindow);
+
+    // Hide our raw view widget since it may not initially be shown in our
+    // central widget
+
+    mViewWidget->setVisible(false);
+}
+
+//==============================================================================
+
+void RawViewPlugin::finalize()
+{
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void RawViewPlugin::initialized(const Plugins &pLoadedPlugins)
+{
+    Q_UNUSED(pLoadedPlugins);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void RawViewPlugin::loadSettings(QSettings *pSettings)
+{
+    // Retrieve our raw view widget settings
+
+    pSettings->beginGroup(mViewWidget->objectName());
+        mViewWidget->loadSettings(pSettings);
+    pSettings->endGroup();
+}
+
+//==============================================================================
+
+void RawViewPlugin::saveSettings(QSettings *pSettings) const
+{
+    // Keep track of our raw view widget settings
+
+    pSettings->beginGroup(mViewWidget->objectName());
+        mViewWidget->saveSettings(pSettings);
+    pSettings->endGroup();
+}
+
+//==============================================================================
+
+void RawViewPlugin::settingsLoaded(const Plugins &pLoadedPlugins)
+{
+    Q_UNUSED(pLoadedPlugins);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void RawViewPlugin::handleAction(const QUrl &pUrl)
+{
+    Q_UNUSED(pUrl);
+
+    // We don't handle this interface...
 }
 
 //==============================================================================

@@ -60,87 +60,6 @@ RawCellMLViewPlugin::RawCellMLViewPlugin()
 }
 
 //==============================================================================
-// Core interface
-//==============================================================================
-
-void RawCellMLViewPlugin::initialize()
-{
-    // Create our raw CellML view widget
-
-    mViewWidget = new RawCellmlViewWidget(mMainWindow);
-
-    // Hide our raw CellML view widget since it may not initially be shown in
-    // our central widget
-
-    mViewWidget->setVisible(false);
-}
-
-//==============================================================================
-
-void RawCellMLViewPlugin::finalize()
-{
-    // We don't handle this interface...
-}
-
-//==============================================================================
-
-void RawCellMLViewPlugin::initialized(const Plugins &pLoadedPlugins)
-{
-    Q_UNUSED(pLoadedPlugins);
-
-    // We don't handle this interface...
-}
-
-//==============================================================================
-
-void RawCellMLViewPlugin::loadSettings(QSettings *pSettings)
-{
-    // Retrieve our raw CellML view widget settings
-
-    pSettings->beginGroup(mViewWidget->objectName());
-        mViewWidget->loadSettings(pSettings);
-    pSettings->endGroup();
-}
-
-//==============================================================================
-
-void RawCellMLViewPlugin::saveSettings(QSettings *pSettings) const
-{
-    // Keep track of our raw CellML view widget settings
-
-    pSettings->beginGroup(mViewWidget->objectName());
-        mViewWidget->saveSettings(pSettings);
-    pSettings->endGroup();
-}
-
-//==============================================================================
-
-void RawCellMLViewPlugin::settingsLoaded(const Plugins &pLoadedPlugins)
-{
-    Q_UNUSED(pLoadedPlugins);
-
-    // We don't handle this interface...
-}
-
-//==============================================================================
-
-void RawCellMLViewPlugin::handleArguments(const QStringList &pArguments)
-{
-    Q_UNUSED(pArguments);
-
-    // We don't handle this interface...
-}
-
-//==============================================================================
-
-void RawCellMLViewPlugin::handleAction(const QUrl &pUrl)
-{
-    Q_UNUSED(pUrl);
-
-    // We don't handle this interface...
-}
-
-//==============================================================================
 // Editing interface
 //==============================================================================
 
@@ -338,6 +257,78 @@ void RawCellMLViewPlugin::retranslateUi()
     // Retranslate our view widget
 
     mViewWidget->retranslateUi();
+}
+
+//==============================================================================
+// Plugin interface
+//==============================================================================
+
+void RawCellMLViewPlugin::initialize()
+{
+    // Create our raw CellML view widget
+
+    mViewWidget = new RawCellmlViewWidget(mMainWindow);
+
+    // Hide our raw CellML view widget since it may not initially be shown in
+    // our central widget
+
+    mViewWidget->setVisible(false);
+}
+
+//==============================================================================
+
+void RawCellMLViewPlugin::finalize()
+{
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void RawCellMLViewPlugin::initialized(const Plugins &pLoadedPlugins)
+{
+    Q_UNUSED(pLoadedPlugins);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void RawCellMLViewPlugin::loadSettings(QSettings *pSettings)
+{
+    // Retrieve our raw CellML view widget settings
+
+    pSettings->beginGroup(mViewWidget->objectName());
+        mViewWidget->loadSettings(pSettings);
+    pSettings->endGroup();
+}
+
+//==============================================================================
+
+void RawCellMLViewPlugin::saveSettings(QSettings *pSettings) const
+{
+    // Keep track of our raw CellML view widget settings
+
+    pSettings->beginGroup(mViewWidget->objectName());
+        mViewWidget->saveSettings(pSettings);
+    pSettings->endGroup();
+}
+
+//==============================================================================
+
+void RawCellMLViewPlugin::settingsLoaded(const Plugins &pLoadedPlugins)
+{
+    Q_UNUSED(pLoadedPlugins);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void RawCellMLViewPlugin::handleAction(const QUrl &pUrl)
+{
+    Q_UNUSED(pUrl);
+
+    // We don't handle this interface...
 }
 
 //==============================================================================

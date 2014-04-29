@@ -89,119 +89,6 @@ int CellMLToolsPlugin::executeCommand(const QString &pCommand,
 }
 
 //==============================================================================
-// Core interface
-//==============================================================================
-
-void CellMLToolsPlugin::initialize()
-{
-    // Create our Tools | Export To menu
-
-    mCellmlFileExportToMenu = newMenu("CellmlFileExportTo", mMainWindow);
-
-    // Create our different Tools | Export To actions, and add them to our
-    // Tools | Export To menu
-
-    mExportToCellml10Action = new QAction(mMainWindow);
-    mExportToCellml11Action = new QAction(mMainWindow);
-
-    mExportToUserDefinedFormatAction = new QAction(mMainWindow);
-
-    mCellmlFileExportToMenu->addAction(mExportToCellml10Action);
-    mCellmlFileExportToMenu->addAction(mExportToCellml11Action);
-    mCellmlFileExportToMenu->addSeparator();
-    mCellmlFileExportToMenu->addAction(mExportToUserDefinedFormatAction);
-
-    // Some connections to handle our different Tools | Export To actions
-
-    connect(mExportToCellml10Action, SIGNAL(triggered()),
-            this, SLOT(exportToCellml10()));
-    connect(mExportToCellml11Action, SIGNAL(triggered()),
-            this, SLOT(exportToCellml11()));
-
-    connect(mExportToUserDefinedFormatAction, SIGNAL(triggered()),
-            this, SLOT(exportToUserDefinedFormat()));
-
-    // Set our settings
-
-    mGuiSettings->addMenuAction(GuiMenuActionSettings::Tools, mCellmlFileExportToMenu->menuAction());
-    mGuiSettings->addMenuAction(GuiMenuActionSettings::Tools);
-}
-
-//==============================================================================
-
-void CellMLToolsPlugin::finalize()
-{
-    // We don't handle this interface...
-}
-
-//==============================================================================
-
-void CellMLToolsPlugin::initialized(const Plugins &pLoadedPlugins)
-{
-    // Retrieve the file types supported by the CellMLSupport plugin
-
-    mCellmlFileTypes = FileTypes();
-
-    foreach (Plugin *loadedPlugin, pLoadedPlugins) {
-        FileInterface *fileInterface = qobject_cast<FileInterface *>(loadedPlugin->instance());
-
-        if (!loadedPlugin->name().compare("CellMLSupport") && fileInterface) {
-            // This is the CellMLSupport plugin and, as expected, it implements
-            // the file interface, so retrieve the file types it supports
-
-            mCellmlFileTypes = fileInterface->fileTypes();
-
-            break;
-        }
-    }
-}
-
-//==============================================================================
-
-void CellMLToolsPlugin::loadSettings(QSettings *pSettings)
-{
-    Q_UNUSED(pSettings);
-
-    // We don't handle this interface...
-}
-
-//==============================================================================
-
-void CellMLToolsPlugin::saveSettings(QSettings *pSettings) const
-{
-    Q_UNUSED(pSettings);
-
-    // We don't handle this interface...
-}
-
-//==============================================================================
-
-void CellMLToolsPlugin::settingsLoaded(const Plugins &pLoadedPlugins)
-{
-    Q_UNUSED(pLoadedPlugins);
-
-    // We don't handle this interface...
-}
-
-//==============================================================================
-
-void CellMLToolsPlugin::handleArguments(const QStringList &pArguments)
-{
-    Q_UNUSED(pArguments);
-
-    // We don't handle this interface...
-}
-
-//==============================================================================
-
-void CellMLToolsPlugin::handleAction(const QUrl &pUrl)
-{
-    Q_UNUSED(pUrl);
-
-    // We don't handle this interface...
-}
-
-//==============================================================================
 // GUI interface
 //==============================================================================
 
@@ -398,6 +285,110 @@ void CellMLToolsPlugin::retranslateUi()
     retranslateAction(mExportToCellml11Action, tr("CellML 1.1..."), tr("Export the CellML file to CellML 1.1"));
 
     retranslateAction(mExportToUserDefinedFormatAction, tr("User-Defined Format..."), tr("Export the CellML file to some user-defined format"));
+}
+
+//==============================================================================
+// Plugin interface
+//==============================================================================
+
+void CellMLToolsPlugin::initialize()
+{
+    // Create our Tools | Export To menu
+
+    mCellmlFileExportToMenu = newMenu("CellmlFileExportTo", mMainWindow);
+
+    // Create our different Tools | Export To actions, and add them to our
+    // Tools | Export To menu
+
+    mExportToCellml10Action = new QAction(mMainWindow);
+    mExportToCellml11Action = new QAction(mMainWindow);
+
+    mExportToUserDefinedFormatAction = new QAction(mMainWindow);
+
+    mCellmlFileExportToMenu->addAction(mExportToCellml10Action);
+    mCellmlFileExportToMenu->addAction(mExportToCellml11Action);
+    mCellmlFileExportToMenu->addSeparator();
+    mCellmlFileExportToMenu->addAction(mExportToUserDefinedFormatAction);
+
+    // Some connections to handle our different Tools | Export To actions
+
+    connect(mExportToCellml10Action, SIGNAL(triggered()),
+            this, SLOT(exportToCellml10()));
+    connect(mExportToCellml11Action, SIGNAL(triggered()),
+            this, SLOT(exportToCellml11()));
+
+    connect(mExportToUserDefinedFormatAction, SIGNAL(triggered()),
+            this, SLOT(exportToUserDefinedFormat()));
+
+    // Set our settings
+
+    mGuiSettings->addMenuAction(GuiMenuActionSettings::Tools, mCellmlFileExportToMenu->menuAction());
+    mGuiSettings->addMenuAction(GuiMenuActionSettings::Tools);
+}
+
+//==============================================================================
+
+void CellMLToolsPlugin::finalize()
+{
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void CellMLToolsPlugin::initialized(const Plugins &pLoadedPlugins)
+{
+    // Retrieve the file types supported by the CellMLSupport plugin
+
+    mCellmlFileTypes = FileTypes();
+
+    foreach (Plugin *loadedPlugin, pLoadedPlugins) {
+        FileInterface *fileInterface = qobject_cast<FileInterface *>(loadedPlugin->instance());
+
+        if (!loadedPlugin->name().compare("CellMLSupport") && fileInterface) {
+            // This is the CellMLSupport plugin and, as expected, it implements
+            // the file interface, so retrieve the file types it supports
+
+            mCellmlFileTypes = fileInterface->fileTypes();
+
+            break;
+        }
+    }
+}
+
+//==============================================================================
+
+void CellMLToolsPlugin::loadSettings(QSettings *pSettings)
+{
+    Q_UNUSED(pSettings);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void CellMLToolsPlugin::saveSettings(QSettings *pSettings) const
+{
+    Q_UNUSED(pSettings);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void CellMLToolsPlugin::settingsLoaded(const Plugins &pLoadedPlugins)
+{
+    Q_UNUSED(pLoadedPlugins);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void CellMLToolsPlugin::handleAction(const QUrl &pUrl)
+{
+    Q_UNUSED(pUrl);
+
+    // We don't handle this interface...
 }
 
 //==============================================================================

@@ -47,91 +47,6 @@ PLUGININFO_FUNC FileBrowserWindowPluginInfo()
 }
 
 //==============================================================================
-// Core interface
-//==============================================================================
-
-void FileBrowserWindowPlugin::initialize()
-{
-    // Create an action to show/hide our file browser window
-
-    mFileBrowserAction = newAction(true, mMainWindow);
-
-    // Create our file browser window
-
-    mFileBrowserWindow = new FileBrowserWindowWindow(mMainWindow);
-
-    // Set our settings
-
-    mGuiSettings->addWindow(Qt::LeftDockWidgetArea, mFileBrowserWindow,
-                            mFileBrowserAction);
-}
-
-//==============================================================================
-
-void FileBrowserWindowPlugin::finalize()
-{
-    // We don't handle this interface...
-}
-
-//==============================================================================
-
-void FileBrowserWindowPlugin::initialized(const Plugins &pLoadedPlugins)
-{
-    Q_UNUSED(pLoadedPlugins);
-
-    // We don't handle this interface...
-}
-
-//==============================================================================
-
-void FileBrowserWindowPlugin::loadSettings(QSettings *pSettings)
-{
-    // Retrieve our file browser window settings
-
-    pSettings->beginGroup(mFileBrowserWindow->objectName());
-        mFileBrowserWindow->loadSettings(pSettings);
-    pSettings->endGroup();
-}
-
-//==============================================================================
-
-void FileBrowserWindowPlugin::saveSettings(QSettings *pSettings) const
-{
-    // Keep track of our file browser window settings
-
-    pSettings->beginGroup(mFileBrowserWindow->objectName());
-        mFileBrowserWindow->saveSettings(pSettings);
-    pSettings->endGroup();
-}
-
-//==============================================================================
-
-void FileBrowserWindowPlugin::settingsLoaded(const Plugins &pLoadedPlugins)
-{
-    Q_UNUSED(pLoadedPlugins);
-
-    // We don't handle this interface...
-}
-
-//==============================================================================
-
-void FileBrowserWindowPlugin::handleArguments(const QStringList &pArguments)
-{
-    Q_UNUSED(pArguments);
-
-    // We don't handle this interface...
-}
-
-//==============================================================================
-
-void FileBrowserWindowPlugin::handleAction(const QUrl &pUrl)
-{
-    Q_UNUSED(pUrl);
-
-    // We don't handle this interface...
-}
-
-//==============================================================================
 // GUI interface
 //==============================================================================
 
@@ -314,6 +229,82 @@ void FileBrowserWindowPlugin::retranslateUi()
     // Retranslate our file browser window
 
     mFileBrowserWindow->retranslateUi();
+}
+
+//==============================================================================
+// Plugin interface
+//==============================================================================
+
+void FileBrowserWindowPlugin::initialize()
+{
+    // Create an action to show/hide our file browser window
+
+    mFileBrowserAction = newAction(true, mMainWindow);
+
+    // Create our file browser window
+
+    mFileBrowserWindow = new FileBrowserWindowWindow(mMainWindow);
+
+    // Set our settings
+
+    mGuiSettings->addWindow(Qt::LeftDockWidgetArea, mFileBrowserWindow,
+                            mFileBrowserAction);
+}
+
+//==============================================================================
+
+void FileBrowserWindowPlugin::finalize()
+{
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void FileBrowserWindowPlugin::initialized(const Plugins &pLoadedPlugins)
+{
+    Q_UNUSED(pLoadedPlugins);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void FileBrowserWindowPlugin::loadSettings(QSettings *pSettings)
+{
+    // Retrieve our file browser window settings
+
+    pSettings->beginGroup(mFileBrowserWindow->objectName());
+        mFileBrowserWindow->loadSettings(pSettings);
+    pSettings->endGroup();
+}
+
+//==============================================================================
+
+void FileBrowserWindowPlugin::saveSettings(QSettings *pSettings) const
+{
+    // Keep track of our file browser window settings
+
+    pSettings->beginGroup(mFileBrowserWindow->objectName());
+        mFileBrowserWindow->saveSettings(pSettings);
+    pSettings->endGroup();
+}
+
+//==============================================================================
+
+void FileBrowserWindowPlugin::settingsLoaded(const Plugins &pLoadedPlugins)
+{
+    Q_UNUSED(pLoadedPlugins);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void FileBrowserWindowPlugin::handleAction(const QUrl &pUrl)
+{
+    Q_UNUSED(pUrl);
+
+    // We don't handle this interface...
 }
 
 //==============================================================================

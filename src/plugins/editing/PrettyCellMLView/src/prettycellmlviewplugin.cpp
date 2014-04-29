@@ -59,87 +59,6 @@ PrettyCellMLViewPlugin::PrettyCellMLViewPlugin()
 }
 
 //==============================================================================
-// Core interface
-//==============================================================================
-
-void PrettyCellMLViewPlugin::initialize()
-{
-    // Create our pretty CellML view widget
-
-    mViewWidget = new PrettyCellmlViewWidget(mMainWindow);
-
-    // Hide our pretty CellML view widget since it may not initially be shown in
-    // our central widget
-
-    mViewWidget->setVisible(false);
-}
-
-//==============================================================================
-
-void PrettyCellMLViewPlugin::finalize()
-{
-    // We don't handle this interface...
-}
-
-//==============================================================================
-
-void PrettyCellMLViewPlugin::initialized(const Plugins &pLoadedPlugins)
-{
-    Q_UNUSED(pLoadedPlugins);
-
-    // We don't handle this interface...
-}
-
-//==============================================================================
-
-void PrettyCellMLViewPlugin::loadSettings(QSettings *pSettings)
-{
-    // Retrieve our pretty CellML view widget settings
-
-    pSettings->beginGroup(mViewWidget->objectName());
-        mViewWidget->loadSettings(pSettings);
-    pSettings->endGroup();
-}
-
-//==============================================================================
-
-void PrettyCellMLViewPlugin::saveSettings(QSettings *pSettings) const
-{
-    // Keep track of our generic pretty CellML view widget settings
-
-    pSettings->beginGroup(mViewWidget->objectName());
-        mViewWidget->saveSettings(pSettings);
-    pSettings->endGroup();
-}
-
-//==============================================================================
-
-void PrettyCellMLViewPlugin::settingsLoaded(const Plugins &pLoadedPlugins)
-{
-    Q_UNUSED(pLoadedPlugins);
-
-    // We don't handle this interface...
-}
-
-//==============================================================================
-
-void PrettyCellMLViewPlugin::handleArguments(const QStringList &pArguments)
-{
-    Q_UNUSED(pArguments);
-
-    // We don't handle this interface...
-}
-
-//==============================================================================
-
-void PrettyCellMLViewPlugin::handleAction(const QUrl &pUrl)
-{
-    Q_UNUSED(pUrl);
-
-    // We don't handle this interface...
-}
-
-//==============================================================================
 // Editing interface
 //==============================================================================
 
@@ -334,6 +253,78 @@ void PrettyCellMLViewPlugin::retranslateUi()
     // Retranslate our view widget
 
     mViewWidget->retranslateUi();
+}
+
+//==============================================================================
+// Plugin interface
+//==============================================================================
+
+void PrettyCellMLViewPlugin::initialize()
+{
+    // Create our pretty CellML view widget
+
+    mViewWidget = new PrettyCellmlViewWidget(mMainWindow);
+
+    // Hide our pretty CellML view widget since it may not initially be shown in
+    // our central widget
+
+    mViewWidget->setVisible(false);
+}
+
+//==============================================================================
+
+void PrettyCellMLViewPlugin::finalize()
+{
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void PrettyCellMLViewPlugin::initialized(const Plugins &pLoadedPlugins)
+{
+    Q_UNUSED(pLoadedPlugins);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void PrettyCellMLViewPlugin::loadSettings(QSettings *pSettings)
+{
+    // Retrieve our pretty CellML view widget settings
+
+    pSettings->beginGroup(mViewWidget->objectName());
+        mViewWidget->loadSettings(pSettings);
+    pSettings->endGroup();
+}
+
+//==============================================================================
+
+void PrettyCellMLViewPlugin::saveSettings(QSettings *pSettings) const
+{
+    // Keep track of our generic pretty CellML view widget settings
+
+    pSettings->beginGroup(mViewWidget->objectName());
+        mViewWidget->saveSettings(pSettings);
+    pSettings->endGroup();
+}
+
+//==============================================================================
+
+void PrettyCellMLViewPlugin::settingsLoaded(const Plugins &pLoadedPlugins)
+{
+    Q_UNUSED(pLoadedPlugins);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void PrettyCellMLViewPlugin::handleAction(const QUrl &pUrl)
+{
+    Q_UNUSED(pUrl);
+
+    // We don't handle this interface...
 }
 
 //==============================================================================

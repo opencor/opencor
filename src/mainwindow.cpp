@@ -21,11 +21,13 @@ specific language governing permissions and limitations under the License.
 
 #include "centralwidget.h"
 #include "cliutils.h"
+#include "coreinterface.h"
 #include "dockwidget.h"
 #include "fileinterface.h"
 #include "guiutils.h"
 #include "i18ninterface.h"
 #include "mainwindow.h"
+#include "plugininterface.h"
 #include "pluginmanager.h"
 #include "pluginswindow.h"
 #include "preferenceswindow.h"
@@ -74,11 +76,6 @@ namespace OpenCOR {
 static const auto SystemLocale  = QStringLiteral("");
 static const auto EnglishLocale = QStringLiteral("en");
 static const auto FrenchLocale  = QStringLiteral("fr");
-
-//==============================================================================
-
-static const auto CorePlugin = QStringLiteral("Core");
-static const auto HelpWindowPlugin = QStringLiteral("HelpWindow");
 
 //==============================================================================
 
@@ -205,9 +202,9 @@ Core::showEnableAction(mGui->actionPreferences, false);
     foreach (Plugin *plugin, loadedPlugins) {
         // Do various things that are related to our different plugin interfaces
         // Note: the order in which we do those things is important since, for
-        //       example, the call to CoreInterface::initialize() may need some
-        //       information which has been set as part of the GUI interface
-        //       (e.g. the pointer to the main window)...
+        //       example, the call to PluginInterface::initialize() may need
+        //       some information which has been set as part of the GUI
+        //       interface (e.g. the pointer to the main window)...
 
         // GUI interface
 
@@ -227,14 +224,14 @@ Core::showEnableAction(mGui->actionPreferences, false);
 
             i18nInterface->setPluginName(plugin->name());
 
-        // Core interface
+        // Plugin interface
 
-        CoreInterface *coreInterface = qobject_cast<CoreInterface *>(plugin->instance());
+        PluginInterface *pluginInterface = qobject_cast<PluginInterface *>(plugin->instance());
 
-        if (coreInterface)
+        if (pluginInterface)
             // Initialise the plugin
 
-            coreInterface->initialize();
+            pluginInterface->initialize();
 
         // Back to the GUI interface
 
@@ -255,10 +252,10 @@ Core::showEnableAction(mGui->actionPreferences, false);
     //       solvers, if any, are available to it)...
 
     foreach (Plugin *plugin, loadedPlugins) {
-        CoreInterface *coreInterface = qobject_cast<CoreInterface *>(plugin->instance());
+        PluginInterface *pluginInterface = qobject_cast<PluginInterface *>(plugin->instance());
 
-        if (coreInterface)
-            coreInterface->initialized(loadedPlugins);
+        if (pluginInterface)
+            pluginInterface->initialized(loadedPlugins);
     }
 
     // Keep track of the showing/hiding of the different dock widgets
@@ -296,10 +293,10 @@ MainWindow::~MainWindow()
     Plugins loadedPlugins = mPluginManager->loadedPlugins();
 
     foreach (Plugin *plugin, loadedPlugins) {
-        CoreInterface *coreInterface = qobject_cast<CoreInterface *>(plugin->instance());
+        PluginInterface *pluginInterface = qobject_cast<PluginInterface *>(plugin->instance());
 
-        if (coreInterface)
-            coreInterface->finalize();
+        if (pluginInterface)
+            pluginInterface->finalize();
     }
 
     // Delete our central widget
@@ -583,7 +580,7 @@ void MainWindow::initializeGuiPlugin(Plugin *pPlugin, GuiSettings *pGuiSettings)
 
     // Set our central widget, but only if we are dealing with the Core plugin
 
-    if (!pPlugin->name().compare(CorePlugin))
+    if (!pPlugin->name().compare(CorePluginName))
         if (pGuiSettings->centralWidget()) {
             // We are dealing with the Core plugin, so set our central widget
 
@@ -606,7 +603,7 @@ void MainWindow::initializeGuiPlugin(Plugin *pPlugin, GuiSettings *pGuiSettings)
 
         // Add an action to our menu to show/hide the window
 
-        if (!pPlugin->name().compare(HelpWindowPlugin)) {
+        if (!pPlugin->name().compare("HelpWindow")) {
             // Special case of the help window
 
             mGui->menuHelp->insertAction(mGui->actionHomePage,
@@ -677,12 +674,12 @@ void MainWindow::loadSettings()
     Plugins loadedPlugins = mPluginManager->loadedPlugins();
 
     foreach (Plugin *plugin, loadedPlugins) {
-        CoreInterface *coreInterface = qobject_cast<CoreInterface *>(plugin->instance());
+        PluginInterface *pluginInterface = qobject_cast<PluginInterface *>(plugin->instance());
 
-        if (coreInterface) {
+        if (pluginInterface) {
             mSettings->beginGroup(SettingsPlugins);
                 mSettings->beginGroup(plugin->name());
-                    coreInterface->loadSettings(mSettings);
+                    pluginInterface->loadSettings(mSettings);
                 mSettings->endGroup();
             mSettings->endGroup();
         }
@@ -692,10 +689,10 @@ void MainWindow::loadSettings()
     // Note: this is similar to initialize() vs. initialized()...
 
     foreach (Plugin *plugin, loadedPlugins) {
-        CoreInterface *coreInterface = qobject_cast<CoreInterface *>(plugin->instance());
+        PluginInterface *pluginInterface = qobject_cast<PluginInterface *>(plugin->instance());
 
-        if (coreInterface)
-            coreInterface->settingsLoaded(loadedPlugins);
+        if (pluginInterface)
+            pluginInterface->settingsLoaded(loadedPlugins);
     }
 
     // Remove the File menu when on OS X, should no plugins be loaded
@@ -743,12 +740,12 @@ void MainWindow::saveSettings() const
     // Keep track of the settings of our various plugins
 
     foreach (Plugin *plugin, mPluginManager->loadedPlugins()) {
-        CoreInterface *coreInterface = qobject_cast<CoreInterface *>(plugin->instance());
+        PluginInterface *pluginInterface = qobject_cast<PluginInterface *>(plugin->instance());
 
-        if (coreInterface) {
+        if (pluginInterface) {
             mSettings->beginGroup(SettingsPlugins);
                 mSettings->beginGroup(plugin->name());
-                    coreInterface->saveSettings(mSettings);
+                    pluginInterface->saveSettings(mSettings);
                 mSettings->endGroup();
             mSettings->endGroup();
         }
@@ -1005,7 +1002,7 @@ void MainWindow::handleArguments(const QString &pArguments)
     // Core plugin, should it be loaded
 
     foreach (Plugin *plugin, mPluginManager->loadedPlugins())
-        if (!plugin->name().compare(CorePlugin)) {
+        if (!plugin->name().compare(CorePluginName)) {
             CoreInterface *coreInterface = qobject_cast<CoreInterface *>(plugin->instance());
 
             if (coreInterface)
@@ -1046,7 +1043,7 @@ void MainWindow::handleAction(const QUrl &pUrl)
         // OpenCOR
         // Note: the file name is contained in the path of the URL minus the
         //       leading forward slash. Indeed, an open file request will look
-        //       something like http://gui/openFiles//home/user/file, so...
+        //       something like gui://openFiles//home/user/file, so...
 
         handleArguments(pUrl.path().remove(0, 1));
     } else if (!authority.compare("openFiles", Qt::CaseInsensitive)) {
@@ -1055,7 +1052,7 @@ void MainWindow::handleAction(const QUrl &pUrl)
         // Note: the file names are contained in the path of the URL minus the
         //       leading forward slash. Indeed, an open files request  will look
         //       something like
-        //           http://gui/openFiles//home/user/file1|/home/user/file2
+        //           gui://openFiles//home/user/file1|/home/user/file2
         //       so...
 
         handleArguments(pUrl.path().remove(0, 1));
@@ -1068,15 +1065,15 @@ void MainWindow::handleAction(const QUrl &pUrl)
         foreach (Plugin *plugin, mPluginManager->loadedPlugins())
             if (!plugin->name().toLower().compare(host)) {
                 // This is an action for the current plugin, so forward the
-                // action to it, should it support the Core interface
+                // action to it, should it support the Plugin interface
 
-                CoreInterface *coreInterface = qobject_cast<CoreInterface *>(plugin->instance());
+                PluginInterface *pluginInterface = qobject_cast<PluginInterface *>(plugin->instance());
 
-                if (coreInterface)
-                    // The plugin supports the Core interface, so ask it to
+                if (pluginInterface)
+                    // The plugin supports the Plugin interface, so ask it to
                     // handle the action
 
-                    coreInterface->handleAction(pUrl);
+                    pluginInterface->handleAction(pUrl);
 
                 break;
             }

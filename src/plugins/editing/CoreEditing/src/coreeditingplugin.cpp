@@ -61,160 +61,6 @@ CoreEditingPlugin::CoreEditingPlugin() :
 }
 
 //==============================================================================
-// Core interface
-//==============================================================================
-
-void CoreEditingPlugin::initialize()
-{
-    // Create our different File|New actions
-
-    mFileNewFileAction = newAction(QIcon(":/oxygen/actions/document-new.png"),
-                                   QKeySequence::New, mMainWindow);
-
-    // Create our Edit menu
-
-    mEditMenu = newMenu("Edit", mMainWindow);
-
-    // Create our different Edit actions, and add them to our Edit menu
-
-    mEditUndoAction = newAction(QIcon(":/oxygen/actions/edit-undo.png"),
-                                QKeySequence::Undo, mMainWindow);
-    mEditRedoAction = newAction(QIcon(":/oxygen/actions/edit-redo.png"),
-                                QKeySequence::Redo, mMainWindow);
-
-    mEditCutAction    = newAction(QIcon(":/oxygen/actions/edit-cut.png"),
-                                  QKeySequence::Cut, mMainWindow);
-    mEditCopyAction   = newAction(QIcon(":/oxygen/actions/edit-copy.png"),
-                                  QKeySequence::Copy, mMainWindow);
-    mEditPasteAction  = newAction(QIcon(":/oxygen/actions/edit-paste.png"),
-                                  QKeySequence::Paste, mMainWindow);
-    mEditDeleteAction = newAction(QIcon(":/oxygen/actions/edit-delete.png"),
-                                  QKeySequence::Delete, mMainWindow);
-
-    mEditFindReplaceAction  = newAction(QIcon(":/oxygen/actions/edit-find.png"),
-                                        QKeySequence::Find, mMainWindow);
-    mEditFindNextAction     = newAction(QKeySequence::FindNext, mMainWindow);
-    mEditFindPreviousAction = newAction(QKeySequence::FindPrevious, mMainWindow);
-
-    mEditSelectAllAction = newAction(QKeySequence::SelectAll, mMainWindow);
-
-    mEditMenu->addAction(mEditUndoAction);
-    mEditMenu->addAction(mEditRedoAction);
-    mEditMenu->addSeparator();
-    mEditMenu->addAction(mEditCutAction);
-    mEditMenu->addAction(mEditCopyAction);
-    mEditMenu->addAction(mEditPasteAction);
-    mEditMenu->addAction(mEditDeleteAction);
-    mEditMenu->addSeparator();
-    mEditMenu->addAction(mEditFindReplaceAction);
-    mEditMenu->addAction(mEditFindNextAction);
-    mEditMenu->addAction(mEditFindPreviousAction);
-    mEditMenu->addSeparator();
-    mEditMenu->addAction(mEditSelectAllAction);
-
-    // Set our settings
-
-    mGuiSettings->addMenuAction(GuiMenuActionSettings::FileNew, mFileNewFileAction);
-
-    mGuiSettings->addMenu(GuiMenuSettings::View, mEditMenu);
-
-    // Keep track of changes to the clipboard
-
-    connect(QApplication::clipboard(), SIGNAL(dataChanged()),
-            this, SLOT(clipboardDataChanged()));
-
-    // Some connections to handle our different editing actions
-
-    connect(mFileNewFileAction, SIGNAL(triggered()),
-            this, SLOT(newFile()));
-
-    connect(mEditUndoAction, SIGNAL(triggered()),
-            this, SLOT(doUndo()));
-    connect(mEditRedoAction, SIGNAL(triggered()),
-            this, SLOT(doRedo()));
-
-    connect(mEditCutAction, SIGNAL(triggered()),
-            this, SLOT(doCut()));
-    connect(mEditCopyAction, SIGNAL(triggered()),
-            this, SLOT(doCopy()));
-    connect(mEditPasteAction, SIGNAL(triggered()),
-            this, SLOT(doPaste()));
-    connect(mEditDeleteAction, SIGNAL(triggered()),
-            this, SLOT(doDelete()));
-
-    connect(mEditFindReplaceAction, SIGNAL(triggered()),
-            this, SLOT(doFindReplace()));
-    connect(mEditFindNextAction, SIGNAL(triggered()),
-            this, SLOT(doFindNext()));
-    connect(mEditFindPreviousAction, SIGNAL(triggered()),
-            this, SLOT(doFindPrevious()));
-
-    connect(mEditSelectAllAction, SIGNAL(triggered()),
-            this, SLOT(doSelectAll()));
-}
-
-//==============================================================================
-
-void CoreEditingPlugin::finalize()
-{
-    // We don't handle this interface...
-}
-
-//==============================================================================
-
-void CoreEditingPlugin::initialized(const Plugins &pLoadedPlugins)
-{
-    Q_UNUSED(pLoadedPlugins);
-
-    // We don't handle this interface...
-}
-
-//==============================================================================
-
-void CoreEditingPlugin::loadSettings(QSettings *pSettings)
-{
-    Q_UNUSED(pSettings);
-
-    // We don't handle this interface...
-}
-
-//==============================================================================
-
-void CoreEditingPlugin::saveSettings(QSettings *pSettings) const
-{
-    Q_UNUSED(pSettings);
-
-    // We don't handle this interface...
-}
-
-//==============================================================================
-
-void CoreEditingPlugin::settingsLoaded(const Plugins &pLoadedPlugins)
-{
-    Q_UNUSED(pLoadedPlugins);
-
-    // We don't handle this interface...
-}
-
-//==============================================================================
-
-void CoreEditingPlugin::handleArguments(const QStringList &pArguments)
-{
-    Q_UNUSED(pArguments);
-
-    // We don't handle this interface...
-}
-
-//==============================================================================
-
-void CoreEditingPlugin::handleAction(const QUrl &pUrl)
-{
-    Q_UNUSED(pUrl);
-
-    // We don't handle this interface...
-}
-
-//==============================================================================
 // GUI interface
 //==============================================================================
 
@@ -514,6 +360,151 @@ void CoreEditingPlugin::retranslateUi()
 
     retranslateAction(mEditSelectAllAction, tr("Select All"),
                       tr("Select all the text"));
+}
+
+//==============================================================================
+// Plugin interface
+//==============================================================================
+
+void CoreEditingPlugin::initialize()
+{
+    // Create our different File|New actions
+
+    mFileNewFileAction = newAction(QIcon(":/oxygen/actions/document-new.png"),
+                                   QKeySequence::New, mMainWindow);
+
+    // Create our Edit menu
+
+    mEditMenu = newMenu("Edit", mMainWindow);
+
+    // Create our different Edit actions, and add them to our Edit menu
+
+    mEditUndoAction = newAction(QIcon(":/oxygen/actions/edit-undo.png"),
+                                QKeySequence::Undo, mMainWindow);
+    mEditRedoAction = newAction(QIcon(":/oxygen/actions/edit-redo.png"),
+                                QKeySequence::Redo, mMainWindow);
+
+    mEditCutAction    = newAction(QIcon(":/oxygen/actions/edit-cut.png"),
+                                  QKeySequence::Cut, mMainWindow);
+    mEditCopyAction   = newAction(QIcon(":/oxygen/actions/edit-copy.png"),
+                                  QKeySequence::Copy, mMainWindow);
+    mEditPasteAction  = newAction(QIcon(":/oxygen/actions/edit-paste.png"),
+                                  QKeySequence::Paste, mMainWindow);
+    mEditDeleteAction = newAction(QIcon(":/oxygen/actions/edit-delete.png"),
+                                  QKeySequence::Delete, mMainWindow);
+
+    mEditFindReplaceAction  = newAction(QIcon(":/oxygen/actions/edit-find.png"),
+                                        QKeySequence::Find, mMainWindow);
+    mEditFindNextAction     = newAction(QKeySequence::FindNext, mMainWindow);
+    mEditFindPreviousAction = newAction(QKeySequence::FindPrevious, mMainWindow);
+
+    mEditSelectAllAction = newAction(QKeySequence::SelectAll, mMainWindow);
+
+    mEditMenu->addAction(mEditUndoAction);
+    mEditMenu->addAction(mEditRedoAction);
+    mEditMenu->addSeparator();
+    mEditMenu->addAction(mEditCutAction);
+    mEditMenu->addAction(mEditCopyAction);
+    mEditMenu->addAction(mEditPasteAction);
+    mEditMenu->addAction(mEditDeleteAction);
+    mEditMenu->addSeparator();
+    mEditMenu->addAction(mEditFindReplaceAction);
+    mEditMenu->addAction(mEditFindNextAction);
+    mEditMenu->addAction(mEditFindPreviousAction);
+    mEditMenu->addSeparator();
+    mEditMenu->addAction(mEditSelectAllAction);
+
+    // Set our settings
+
+    mGuiSettings->addMenuAction(GuiMenuActionSettings::FileNew, mFileNewFileAction);
+
+    mGuiSettings->addMenu(GuiMenuSettings::View, mEditMenu);
+
+    // Keep track of changes to the clipboard
+
+    connect(QApplication::clipboard(), SIGNAL(dataChanged()),
+            this, SLOT(clipboardDataChanged()));
+
+    // Some connections to handle our different editing actions
+
+    connect(mFileNewFileAction, SIGNAL(triggered()),
+            this, SLOT(newFile()));
+
+    connect(mEditUndoAction, SIGNAL(triggered()),
+            this, SLOT(doUndo()));
+    connect(mEditRedoAction, SIGNAL(triggered()),
+            this, SLOT(doRedo()));
+
+    connect(mEditCutAction, SIGNAL(triggered()),
+            this, SLOT(doCut()));
+    connect(mEditCopyAction, SIGNAL(triggered()),
+            this, SLOT(doCopy()));
+    connect(mEditPasteAction, SIGNAL(triggered()),
+            this, SLOT(doPaste()));
+    connect(mEditDeleteAction, SIGNAL(triggered()),
+            this, SLOT(doDelete()));
+
+    connect(mEditFindReplaceAction, SIGNAL(triggered()),
+            this, SLOT(doFindReplace()));
+    connect(mEditFindNextAction, SIGNAL(triggered()),
+            this, SLOT(doFindNext()));
+    connect(mEditFindPreviousAction, SIGNAL(triggered()),
+            this, SLOT(doFindPrevious()));
+
+    connect(mEditSelectAllAction, SIGNAL(triggered()),
+            this, SLOT(doSelectAll()));
+}
+
+//==============================================================================
+
+void CoreEditingPlugin::finalize()
+{
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void CoreEditingPlugin::initialized(const Plugins &pLoadedPlugins)
+{
+    Q_UNUSED(pLoadedPlugins);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void CoreEditingPlugin::loadSettings(QSettings *pSettings)
+{
+    Q_UNUSED(pSettings);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void CoreEditingPlugin::saveSettings(QSettings *pSettings) const
+{
+    Q_UNUSED(pSettings);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void CoreEditingPlugin::settingsLoaded(const Plugins &pLoadedPlugins)
+{
+    Q_UNUSED(pLoadedPlugins);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void CoreEditingPlugin::handleAction(const QUrl &pUrl)
+{
+    Q_UNUSED(pUrl);
+
+    // We don't handle this interface...
 }
 
 //==============================================================================

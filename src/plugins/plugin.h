@@ -56,6 +56,10 @@ static const auto SettingsPlugins = QStringLiteral("Plugins");
 
 //==============================================================================
 
+static const auto CorePluginName = QStringLiteral("Core");
+
+//==============================================================================
+
 class Plugin;
 class PluginInfo;
 class PluginManager;
@@ -78,6 +82,8 @@ public:
         Loaded,
         NotLoaded,
         NotPlugin,
+        NotCorePlugin,
+        InvalidCorePlugin,
         MissingOrInvalidDependencies
     };
 

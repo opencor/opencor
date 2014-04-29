@@ -100,7 +100,30 @@ Plugin::Plugin(const QString &pFileName, PluginInfo *pInfo,
                 if (pluginLoader.load()) {
                     mInstance = pluginLoader.instance();
 
-                    mStatus = Loaded;
+                    // Check whether the plugin supports the Core interface and,
+                    // if so, whether it's the Core plugin
+
+                    CoreInterface *coreInterface = qobject_cast<CoreInterface *>(mInstance);
+
+                    if (coreInterface && mName.compare(CorePluginName)) {
+                        // We are dealing with a plugin that supports the Core
+                        // interface, but it's not the Core plugin, so...
+
+                        pluginLoader.unload();
+
+                        mInstance = 0;
+                        mStatus = NotCorePlugin;
+                    } else if (!coreInterface && !mName.compare(CorePluginName)) {
+                        // We are dealing with the Core plugin, but it doesn't
+                        // support the Core interface, so...
+
+                        pluginLoader.unload();
+
+                        mInstance = 0;
+                        mStatus = InvalidCorePlugin;
+                    } else {
+                        mStatus = Loaded;
+                    }
                 } else {
                     mStatus = NotLoaded;
                     mStatusErrors = pluginLoader.errorString();

@@ -60,87 +60,6 @@ CellMLAnnotationViewPlugin::CellMLAnnotationViewPlugin()
 }
 
 //==============================================================================
-// Core interface
-//==============================================================================
-
-void CellMLAnnotationViewPlugin::initialize()
-{
-    // Create our CellML annotation view widget
-
-    mViewWidget = new CellmlAnnotationViewWidget(this, mMainWindow);
-
-    // Hide our CellML annotation view widget since it may not initially be
-    // shown in our central widget
-
-    mViewWidget->setVisible(false);
-}
-
-//==============================================================================
-
-void CellMLAnnotationViewPlugin::finalize()
-{
-    // We don't handle this interface...
-}
-
-//==============================================================================
-
-void CellMLAnnotationViewPlugin::initialized(const Plugins &pLoadedPlugins)
-{
-    Q_UNUSED(pLoadedPlugins);
-
-    // We don't handle this interface...
-}
-
-//==============================================================================
-
-void CellMLAnnotationViewPlugin::loadSettings(QSettings *pSettings)
-{
-    // Retrieve our CellML annotation view widget settings
-
-    pSettings->beginGroup(mViewWidget->objectName());
-        mViewWidget->loadSettings(pSettings);
-    pSettings->endGroup();
-}
-
-//==============================================================================
-
-void CellMLAnnotationViewPlugin::saveSettings(QSettings *pSettings) const
-{
-    // Keep track of our CellML annotation view widget settings
-
-    pSettings->beginGroup(mViewWidget->objectName());
-        mViewWidget->saveSettings(pSettings);
-    pSettings->endGroup();
-}
-
-//==============================================================================
-
-void CellMLAnnotationViewPlugin::settingsLoaded(const Plugins &pLoadedPlugins)
-{
-    Q_UNUSED(pLoadedPlugins);
-
-    // We don't handle this interface...
-}
-
-//==============================================================================
-
-void CellMLAnnotationViewPlugin::handleArguments(const QStringList &pArguments)
-{
-    Q_UNUSED(pArguments);
-
-    // We don't handle this interface...
-}
-
-//==============================================================================
-
-void CellMLAnnotationViewPlugin::handleAction(const QUrl &pUrl)
-{
-    Q_UNUSED(pUrl);
-
-    // We don't handle this interface...
-}
-
-//==============================================================================
 // Editing interface
 //==============================================================================
 
@@ -342,6 +261,78 @@ void CellMLAnnotationViewPlugin::retranslateUi()
     // Retranslate our CellML annotation view widget
 
     mViewWidget->retranslateUi();
+}
+
+//==============================================================================
+// Plugin interface
+//==============================================================================
+
+void CellMLAnnotationViewPlugin::initialize()
+{
+    // Create our CellML annotation view widget
+
+    mViewWidget = new CellmlAnnotationViewWidget(this, mMainWindow);
+
+    // Hide our CellML annotation view widget since it may not initially be
+    // shown in our central widget
+
+    mViewWidget->setVisible(false);
+}
+
+//==============================================================================
+
+void CellMLAnnotationViewPlugin::finalize()
+{
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void CellMLAnnotationViewPlugin::initialized(const Plugins &pLoadedPlugins)
+{
+    Q_UNUSED(pLoadedPlugins);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void CellMLAnnotationViewPlugin::loadSettings(QSettings *pSettings)
+{
+    // Retrieve our CellML annotation view widget settings
+
+    pSettings->beginGroup(mViewWidget->objectName());
+        mViewWidget->loadSettings(pSettings);
+    pSettings->endGroup();
+}
+
+//==============================================================================
+
+void CellMLAnnotationViewPlugin::saveSettings(QSettings *pSettings) const
+{
+    // Keep track of our CellML annotation view widget settings
+
+    pSettings->beginGroup(mViewWidget->objectName());
+        mViewWidget->saveSettings(pSettings);
+    pSettings->endGroup();
+}
+
+//==============================================================================
+
+void CellMLAnnotationViewPlugin::settingsLoaded(const Plugins &pLoadedPlugins)
+{
+    Q_UNUSED(pLoadedPlugins);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void CellMLAnnotationViewPlugin::handleAction(const QUrl &pUrl)
+{
+    Q_UNUSED(pUrl);
+
+    // We don't handle this interface...
 }
 
 //==============================================================================

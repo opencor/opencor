@@ -318,6 +318,14 @@
         <source>Plugins to demonstrate various plugin-related features.</source>
         <translation>Extensions pour montrer diverses fonctionalités relatives à une extension.</translation>
     </message>
+    <message>
+        <source>the plugin claims to be the core plugin, but it is not.</source>
+        <translation>l&apos;extension prétend être l&apos;extension de base, mais elle ne l&apos;est pas.</translation>
+    </message>
+    <message>
+        <source>the plugin should be the core plugin, but it does not support the core interface.</source>
+        <translation>l&apos;extension devrait être l&apos;extension de base, mais elle ne supporte pas l&apos;interface de base.</translation>
+    </message>
 </context>
 <context>
     <name>PluginsWindow</name>

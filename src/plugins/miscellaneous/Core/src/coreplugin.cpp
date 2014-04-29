@@ -61,7 +61,283 @@ PLUGININFO_FUNC CorePluginInfo()
 }
 
 //==============================================================================
-// Core interface
+// Plugin interface
+//==============================================================================
+
+void CorePlugin::handleArguments(const QStringList &pArguments)
+{
+    // All the arguments are currently assumed to be files to open, so...
+
+    foreach (const QString &argument, pArguments)
+        if (!argument.isEmpty()) {
+            if (isRemoteFile(argument))
+                mCentralWidget->openRemoteFile(argument);
+            else
+                mCentralWidget->openFile(argument);
+        }
+}
+
+//==============================================================================
+// GUI interface
+//==============================================================================
+
+void CorePlugin::changeEvent(QEvent *pEvent)
+{
+    // Check whether the palette has changed and if so then retrieve some new
+    // colours to be used
+
+    if (pEvent->type() == QEvent::PaletteChange)
+        retrieveColors();
+}
+
+//==============================================================================
+
+void CorePlugin::updateGui(Plugin *pViewPlugin, const QString &pFileName)
+{
+    Q_UNUSED(pViewPlugin);
+    Q_UNUSED(pFileName);
+
+    // Update our new/modified sensitive actions
+
+    updateNewModifiedSensitiveActions();
+}
+
+//==============================================================================
+
+void CorePlugin::initializeView()
+{
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void CorePlugin::finalizeView()
+{
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+bool CorePlugin::hasViewWidget(const QString &pFileName)
+{
+    Q_UNUSED(pFileName);
+
+    // We don't handle this interface...
+
+    return false;
+}
+
+//==============================================================================
+
+QWidget * CorePlugin::viewWidget(const QString &pFileName,
+                                 const bool &pCreate)
+{
+    Q_UNUSED(pFileName);
+    Q_UNUSED(pCreate);
+
+    // We don't handle this interface...
+
+    return 0;
+}
+
+//==============================================================================
+
+void CorePlugin::removeViewWidget(const QString &pFileName)
+{
+    Q_UNUSED(pFileName);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+QString CorePlugin::viewName() const
+{
+    // We don't handle this interface...
+
+    return QString();
+}
+
+//==============================================================================
+
+QIcon CorePlugin::fileTabIcon(const QString &pFileName) const
+{
+    Q_UNUSED(pFileName);
+
+    // We don't handle this interface...
+
+    return QIcon();
+}
+
+//==============================================================================
+
+bool CorePlugin::saveFile(const QString &pOldFileName,
+                          const QString &pNewFileName)
+{
+    Q_UNUSED(pOldFileName);
+    Q_UNUSED(pNewFileName);
+
+    // We don't handle this interface...
+
+    return false;
+}
+
+//==============================================================================
+
+void CorePlugin::fileOpened(const QString &pFileName)
+{
+    // Remove the file from our list of recent files and update our Reopen
+    // sub-menu
+
+    FileManager *fileManagerInstance = FileManager::instance();
+
+    if (fileManagerInstance->isRemote(pFileName))
+        mRecentFileNames.removeOne(fileManagerInstance->url(pFileName));
+    else
+        mRecentFileNames.removeOne(pFileName);
+
+    updateFileReopenMenu();
+}
+
+//==============================================================================
+
+void CorePlugin::filePermissionsChanged(const QString &pFileName)
+{
+    // Update the checked state of our Locked menu, if needed
+
+    if (!pFileName.compare(mCentralWidget->currentFileName()))
+        mFileLockedAction->setChecked(!FileManager::instance()->isReadableAndWritable(pFileName));
+        // Note: we really want to call isReadableAndWritable() rather than
+        //       isLocked() since from the GUI perspective a file should only be
+        //       considered unlocked if it can be both readable and writable
+        //       (see CentralWidget::updateFileTab())...
+}
+
+//==============================================================================
+
+void CorePlugin::fileModified(const QString &pFileName, const bool &pModified)
+{
+    Q_UNUSED(pModified);
+
+    // Update our new/modified sensitive actions, if needed
+
+    if (!pFileName.compare(mCentralWidget->currentFileName()))
+        updateNewModifiedSensitiveActions();
+}
+
+//==============================================================================
+
+void CorePlugin::fileReloaded(const QString &pFileName)
+{
+    Q_UNUSED(pFileName);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void CorePlugin::fileRenamed(const QString &pOldFileName,
+                             const QString &pNewFileName)
+{
+    // Remove the new file from our list of recent files, should it be there
+    // Note: it's fine if the new file isn't in our list since nothing will be
+    //       done in that case (thus avoiding us having to test for its
+    //       presence)...
+
+    mRecentFileNames.removeOne(pNewFileName);
+
+    // A file has been created or saved under a new name, so we want the old
+    // file name to be added to our list of recent files, i.e. as if it had been
+    // closed
+
+    fileClosed(pOldFileName);
+}
+
+//==============================================================================
+
+void CorePlugin::fileClosed(const QString &pFileName)
+{
+    // Add, if isn't new, the file to our list of recent files (making sure that
+    // we don't end up with more than 10 recent file names) and update our
+    // Reopen sub-menu
+    // Note: the most recent file is to be shown first...
+
+    FileManager *fileManagerInstance = FileManager::instance();
+
+    if (    fileManagerInstance->isManaged(pFileName)
+        && !fileManagerInstance->isNew(pFileName)) {
+        if (fileManagerInstance->isRemote(pFileName))
+            mRecentFileNames.prepend(fileManagerInstance->url(pFileName));
+        else
+            mRecentFileNames.prepend(pFileName);
+
+        while (mRecentFileNames.count() > 10)
+            mRecentFileNames.removeLast();
+
+        updateFileReopenMenu();
+    }
+}
+
+//==============================================================================
+
+bool CorePlugin::canClose()
+{
+    // To determine whether we can close, we must ask our central widget
+
+    return mCentralWidget->canClose();
+}
+
+//==============================================================================
+// I18n interface
+//==============================================================================
+
+void CorePlugin::retranslateUi()
+{
+    // Retranslate our different File actions
+
+    retranslateAction(mFileOpenAction, tr("Open..."), tr("Open a file"));
+    retranslateAction(mFileOpenRemoteAction, tr("Open Remote..."), tr("Open a remote file"));
+
+    retranslateAction(mFileReloadAction, tr("Reload"),
+                      tr("Reload the current file"));
+
+    retranslateAction(mFileDuplicateAction, tr("Duplicate"),
+                      tr("Duplicate the current file"));
+
+    retranslateAction(mFileLockedAction, tr("Locked"),
+                      tr("Toggle the locked state of the current file"));
+
+    retranslateAction(mFileSaveAction, tr("Save"),
+                      tr("Save the current file"));
+    retranslateAction(mFileSaveAsAction, tr("Save As..."),
+                      tr("Save the current file under a different name"));
+    retranslateAction(mFileSaveAllAction, tr("Save All"),
+                      tr("Save all the files"));
+
+    retranslateAction(mFilePreviousAction, tr("Previous"),
+                      tr("Select the previous file"));
+    retranslateAction(mFileNextAction, tr("Next"),
+                      tr("Select the next file"));
+
+    retranslateAction(mFileCloseAction, tr("Close"),
+                      tr("Close the current file"));
+    retranslateAction(mFileCloseAllAction, tr("Close All"),
+                      tr("Close all the files"));
+
+    // Retranslate our File sub-menu and its action
+
+    retranslateMenu(mFileReopenSubMenu, tr("Reopen"));
+
+    retranslateAction(mFileClearReopenSubMenuAction, tr("Clear Menu"),
+                      tr("Clear the menu"));
+
+    // Retranslate our central widget
+
+    mCentralWidget->retranslateUi();
+}
+
+//==============================================================================
+// Plugin interface
 //==============================================================================
 
 void CorePlugin::initialize()
@@ -343,285 +619,11 @@ void CorePlugin::settingsLoaded(const Plugins &pLoadedPlugins)
 
 //==============================================================================
 
-void CorePlugin::handleArguments(const QStringList &pArguments)
-{
-    // All the arguments are currently assumed to be files to open, so...
-
-    foreach (const QString &argument, pArguments)
-        if (!argument.isEmpty()) {
-            if (isRemoteFile(argument))
-                mCentralWidget->openRemoteFile(argument);
-            else
-                mCentralWidget->openFile(argument);
-        }
-}
-
-//==============================================================================
-
 void CorePlugin::handleAction(const QUrl &pUrl)
 {
     Q_UNUSED(pUrl);
 
     // We don't handle this interface...
-}
-
-//==============================================================================
-// GUI interface
-//==============================================================================
-
-void CorePlugin::changeEvent(QEvent *pEvent)
-{
-    // Check whether the palette has changed and if so then retrieve some new
-    // colours to be used
-
-    if (pEvent->type() == QEvent::PaletteChange)
-        retrieveColors();
-}
-
-//==============================================================================
-
-void CorePlugin::updateGui(Plugin *pViewPlugin, const QString &pFileName)
-{
-    Q_UNUSED(pViewPlugin);
-    Q_UNUSED(pFileName);
-
-    // Update our new/modified sensitive actions
-
-    updateNewModifiedSensitiveActions();
-}
-
-//==============================================================================
-
-void CorePlugin::initializeView()
-{
-    // We don't handle this interface...
-}
-
-//==============================================================================
-
-void CorePlugin::finalizeView()
-{
-    // We don't handle this interface...
-}
-
-//==============================================================================
-
-bool CorePlugin::hasViewWidget(const QString &pFileName)
-{
-    Q_UNUSED(pFileName);
-
-    // We don't handle this interface...
-
-    return false;
-}
-
-//==============================================================================
-
-QWidget * CorePlugin::viewWidget(const QString &pFileName,
-                                 const bool &pCreate)
-{
-    Q_UNUSED(pFileName);
-    Q_UNUSED(pCreate);
-
-    // We don't handle this interface...
-
-    return 0;
-}
-
-//==============================================================================
-
-void CorePlugin::removeViewWidget(const QString &pFileName)
-{
-    Q_UNUSED(pFileName);
-
-    // We don't handle this interface...
-}
-
-//==============================================================================
-
-QString CorePlugin::viewName() const
-{
-    // We don't handle this interface...
-
-    return QString();
-}
-
-//==============================================================================
-
-QIcon CorePlugin::fileTabIcon(const QString &pFileName) const
-{
-    Q_UNUSED(pFileName);
-
-    // We don't handle this interface...
-
-    return QIcon();
-}
-
-//==============================================================================
-
-bool CorePlugin::saveFile(const QString &pOldFileName,
-                          const QString &pNewFileName)
-{
-    Q_UNUSED(pOldFileName);
-    Q_UNUSED(pNewFileName);
-
-    // We don't handle this interface...
-
-    return false;
-}
-
-//==============================================================================
-
-void CorePlugin::fileOpened(const QString &pFileName)
-{
-    // Remove the file from our list of recent files and update our Reopen
-    // sub-menu
-
-    FileManager *fileManagerInstance = FileManager::instance();
-
-    if (fileManagerInstance->isRemote(pFileName))
-        mRecentFileNames.removeOne(fileManagerInstance->url(pFileName));
-    else
-        mRecentFileNames.removeOne(pFileName);
-
-    updateFileReopenMenu();
-}
-
-//==============================================================================
-
-void CorePlugin::filePermissionsChanged(const QString &pFileName)
-{
-    // Update the checked state of our Locked menu, if needed
-
-    if (!pFileName.compare(mCentralWidget->currentFileName()))
-        mFileLockedAction->setChecked(!FileManager::instance()->isReadableAndWritable(pFileName));
-        // Note: we really want to call isReadableAndWritable() rather than
-        //       isLocked() since from the GUI perspective a file should only be
-        //       considered unlocked if it can be both readable and writable
-        //       (see CentralWidget::updateFileTab())...
-}
-
-//==============================================================================
-
-void CorePlugin::fileModified(const QString &pFileName, const bool &pModified)
-{
-    Q_UNUSED(pModified);
-
-    // Update our new/modified sensitive actions, if needed
-
-    if (!pFileName.compare(mCentralWidget->currentFileName()))
-        updateNewModifiedSensitiveActions();
-}
-
-//==============================================================================
-
-void CorePlugin::fileReloaded(const QString &pFileName)
-{
-    Q_UNUSED(pFileName);
-
-    // We don't handle this interface...
-}
-
-//==============================================================================
-
-void CorePlugin::fileRenamed(const QString &pOldFileName,
-                             const QString &pNewFileName)
-{
-    // Remove the new file from our list of recent files, should it be there
-    // Note: it's fine if the new file isn't in our list since nothing will be
-    //       done in that case (thus avoiding us having to test for its
-    //       presence)...
-
-    mRecentFileNames.removeOne(pNewFileName);
-
-    // A file has been created or saved under a new name, so we want the old
-    // file name to be added to our list of recent files, i.e. as if it had been
-    // closed
-
-    fileClosed(pOldFileName);
-}
-
-//==============================================================================
-
-void CorePlugin::fileClosed(const QString &pFileName)
-{
-    // Add, if isn't new, the file to our list of recent files (making sure that
-    // we don't end up with more than 10 recent file names) and update our
-    // Reopen sub-menu
-    // Note: the most recent file is to be shown first...
-
-    FileManager *fileManagerInstance = FileManager::instance();
-
-    if (    fileManagerInstance->isManaged(pFileName)
-        && !fileManagerInstance->isNew(pFileName)) {
-        if (fileManagerInstance->isRemote(pFileName))
-            mRecentFileNames.prepend(fileManagerInstance->url(pFileName));
-        else
-            mRecentFileNames.prepend(pFileName);
-
-        while (mRecentFileNames.count() > 10)
-            mRecentFileNames.removeLast();
-
-        updateFileReopenMenu();
-    }
-}
-
-//==============================================================================
-
-bool CorePlugin::canClose()
-{
-    // To determine whether we can close, we must ask our central widget
-
-    return mCentralWidget->canClose();
-}
-
-//==============================================================================
-// I18n interface
-//==============================================================================
-
-void CorePlugin::retranslateUi()
-{
-    // Retranslate our different File actions
-
-    retranslateAction(mFileOpenAction, tr("Open..."), tr("Open a file"));
-    retranslateAction(mFileOpenRemoteAction, tr("Open Remote..."), tr("Open a remote file"));
-
-    retranslateAction(mFileReloadAction, tr("Reload"),
-                      tr("Reload the current file"));
-
-    retranslateAction(mFileDuplicateAction, tr("Duplicate"),
-                      tr("Duplicate the current file"));
-
-    retranslateAction(mFileLockedAction, tr("Locked"),
-                      tr("Toggle the locked state of the current file"));
-
-    retranslateAction(mFileSaveAction, tr("Save"),
-                      tr("Save the current file"));
-    retranslateAction(mFileSaveAsAction, tr("Save As..."),
-                      tr("Save the current file under a different name"));
-    retranslateAction(mFileSaveAllAction, tr("Save All"),
-                      tr("Save all the files"));
-
-    retranslateAction(mFilePreviousAction, tr("Previous"),
-                      tr("Select the previous file"));
-    retranslateAction(mFileNextAction, tr("Next"),
-                      tr("Select the next file"));
-
-    retranslateAction(mFileCloseAction, tr("Close"),
-                      tr("Close the current file"));
-    retranslateAction(mFileCloseAllAction, tr("Close All"),
-                      tr("Close all the files"));
-
-    // Retranslate our File sub-menu and its action
-
-    retranslateMenu(mFileReopenSubMenu, tr("Reopen"));
-
-    retranslateAction(mFileClearReopenSubMenuAction, tr("Clear Menu"),
-                      tr("Clear the menu"));
-
-    // Retranslate our central widget
-
-    mCentralWidget->retranslateUi();
 }
 
 //==============================================================================

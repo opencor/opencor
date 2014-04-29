@@ -50,7 +50,43 @@ PLUGININFO_FUNC CellMLSupportPluginInfo()
 }
 
 //==============================================================================
-// Core interface
+// File interface
+//==============================================================================
+
+FileTypes CellMLSupportPlugin::fileTypes() const
+{
+    // Return the CellML file type that the CellMLSupport plugin supports
+
+    return FileTypes() << FileType(qobject_cast<FileInterface *>(this),
+                                   CellmlMimeType, CellmlFileExtension);
+}
+
+//==============================================================================
+
+QString CellMLSupportPlugin::fileTypeDescription(const QString &pMimeType) const
+{
+    // Return the description for the requested MIME type, that is as long as it
+    // is for the CellML MIME type
+
+    if (!pMimeType.compare(CellmlMimeType))
+        return tr("CellML File");
+    else
+        // Not a MIME type that we can recognise, so...
+
+        return QString();
+}
+
+//==============================================================================
+// I18n interface
+//==============================================================================
+
+void CellMLSupportPlugin::retranslateUi()
+{
+    // We don't handle this interface...
+}
+
+//==============================================================================
+// Plugin interface
 //==============================================================================
 
 void CellMLSupportPlugin::initialize()
@@ -109,55 +145,10 @@ void CellMLSupportPlugin::settingsLoaded(const Plugins &pLoadedPlugins)
 
 //==============================================================================
 
-void CellMLSupportPlugin::handleArguments(const QStringList &pArguments)
-{
-    Q_UNUSED(pArguments);
-
-    // We don't handle this interface...
-}
-
-//==============================================================================
-
 void CellMLSupportPlugin::handleAction(const QUrl &pUrl)
 {
     Q_UNUSED(pUrl);
 
-    // We don't handle this interface...
-}
-
-//==============================================================================
-// File interface
-//==============================================================================
-
-FileTypes CellMLSupportPlugin::fileTypes() const
-{
-    // Return the CellML file type that the CellMLSupport plugin supports
-
-    return FileTypes() << FileType(qobject_cast<FileInterface *>(this),
-                                   CellmlMimeType, CellmlFileExtension);
-}
-
-//==============================================================================
-
-QString CellMLSupportPlugin::fileTypeDescription(const QString &pMimeType) const
-{
-    // Return the description for the requested MIME type, that is as long as it
-    // is for the CellML MIME type
-
-    if (!pMimeType.compare(CellmlMimeType))
-        return tr("CellML File");
-    else
-        // Not a MIME type that we can recognise, so...
-
-        return QString();
-}
-
-//==============================================================================
-// I18n interface
-//==============================================================================
-
-void CellMLSupportPlugin::retranslateUi()
-{
     // We don't handle this interface...
 }
 

@@ -49,91 +49,6 @@ PLUGININFO_FUNC CoreCellMLEditingPluginInfo()
 }
 
 //==============================================================================
-// Core interface
-//==============================================================================
-
-void CoreCellMLEditingPlugin::initialize()
-{
-    // Create our different File|New actions
-
-    mFileNewCellml1_0FileAction = new QAction(mMainWindow);
-    mFileNewCellml1_1FileAction = new QAction(mMainWindow);
-
-    // Set our settings
-
-    mGuiSettings->addMenuAction(GuiMenuActionSettings::FileNew, mFileNewCellml1_0FileAction);
-    mGuiSettings->addMenuAction(GuiMenuActionSettings::FileNew, mFileNewCellml1_1FileAction);
-
-    // Some connections to handle our different editing actions
-
-    connect(mFileNewCellml1_0FileAction, SIGNAL(triggered()),
-            this, SLOT(newCellml1_0File()));
-    connect(mFileNewCellml1_1FileAction, SIGNAL(triggered()),
-            this, SLOT(newCellml1_1File()));
-}
-
-//==============================================================================
-
-void CoreCellMLEditingPlugin::finalize()
-{
-    // We don't handle this interface...
-}
-
-//==============================================================================
-
-void CoreCellMLEditingPlugin::initialized(const Plugins &pLoadedPlugins)
-{
-    Q_UNUSED(pLoadedPlugins);
-
-    // We don't handle this interface...
-}
-
-//==============================================================================
-
-void CoreCellMLEditingPlugin::loadSettings(QSettings *pSettings)
-{
-    Q_UNUSED(pSettings);
-
-    // We don't handle this interface...
-}
-
-//==============================================================================
-
-void CoreCellMLEditingPlugin::saveSettings(QSettings *pSettings) const
-{
-    Q_UNUSED(pSettings);
-
-    // We don't handle this interface...
-}
-
-//==============================================================================
-
-void CoreCellMLEditingPlugin::settingsLoaded(const Plugins &pLoadedPlugins)
-{
-    Q_UNUSED(pLoadedPlugins);
-
-    // We don't handle this interface...
-}
-
-//==============================================================================
-
-void CoreCellMLEditingPlugin::handleArguments(const QStringList &pArguments)
-{
-    Q_UNUSED(pArguments);
-
-    // We don't handle this interface...
-}
-
-//==============================================================================
-
-void CoreCellMLEditingPlugin::handleAction(const QUrl &pUrl)
-{
-    Q_UNUSED(pUrl);
-
-    // We don't handle this interface...
-}
-
-//==============================================================================
 // GUI interface
 //==============================================================================
 
@@ -319,6 +234,82 @@ void CoreCellMLEditingPlugin::retranslateUi()
                       tr("Create a new CellML 1.0 file"));
     retranslateAction(mFileNewCellml1_1FileAction, tr("CellML 1.1 File"),
                       tr("Create a new CellML 1.1 file"));
+}
+
+//==============================================================================
+// Plugin interface
+//==============================================================================
+
+void CoreCellMLEditingPlugin::initialize()
+{
+    // Create our different File|New actions
+
+    mFileNewCellml1_0FileAction = new QAction(mMainWindow);
+    mFileNewCellml1_1FileAction = new QAction(mMainWindow);
+
+    // Set our settings
+
+    mGuiSettings->addMenuAction(GuiMenuActionSettings::FileNew, mFileNewCellml1_0FileAction);
+    mGuiSettings->addMenuAction(GuiMenuActionSettings::FileNew, mFileNewCellml1_1FileAction);
+
+    // Some connections to handle our different editing actions
+
+    connect(mFileNewCellml1_0FileAction, SIGNAL(triggered()),
+            this, SLOT(newCellml1_0File()));
+    connect(mFileNewCellml1_1FileAction, SIGNAL(triggered()),
+            this, SLOT(newCellml1_1File()));
+}
+
+//==============================================================================
+
+void CoreCellMLEditingPlugin::finalize()
+{
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void CoreCellMLEditingPlugin::initialized(const Plugins &pLoadedPlugins)
+{
+    Q_UNUSED(pLoadedPlugins);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void CoreCellMLEditingPlugin::loadSettings(QSettings *pSettings)
+{
+    Q_UNUSED(pSettings);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void CoreCellMLEditingPlugin::saveSettings(QSettings *pSettings) const
+{
+    Q_UNUSED(pSettings);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void CoreCellMLEditingPlugin::settingsLoaded(const Plugins &pLoadedPlugins)
+{
+    Q_UNUSED(pLoadedPlugins);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void CoreCellMLEditingPlugin::handleAction(const QUrl &pUrl)
+{
+    Q_UNUSED(pUrl);
+
+    // We don't handle this interface...
 }
 
 //==============================================================================

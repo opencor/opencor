@@ -60,101 +60,6 @@ SingleCellViewPlugin::SingleCellViewPlugin()
 }
 
 //==============================================================================
-// Core interface
-//==============================================================================
-
-void SingleCellViewPlugin::initialize()
-{
-    // Create our single view widget
-
-    mViewWidget = new SingleCellViewWidget(this, mMainWindow);
-
-    // Hide our single view widget since it may not initially be shown in our
-    // central widget
-
-    mViewWidget->setVisible(false);
-}
-
-//==============================================================================
-
-void SingleCellViewPlugin::finalize()
-{
-    // We don't handle this interface...
-}
-
-//==============================================================================
-
-void SingleCellViewPlugin::initialized(const Plugins &pLoadedPlugins)
-{
-    // Retrieve the different solvers that are available to us
-
-    SolverInterfaces solverInterfaces = SolverInterfaces();
-
-    foreach (Plugin *loadedPlugin, pLoadedPlugins) {
-        SolverInterface *solverInterface = qobject_cast<SolverInterface *>(loadedPlugin->instance());
-
-        if (solverInterface)
-            // The plugin implements our solver interface, so...
-
-            solverInterfaces << solverInterface;
-    }
-
-    // Initialise our view widget with the different solvers that are available
-    // to us
-
-    mViewWidget->setSolverInterfaces(solverInterfaces);
-}
-
-//==============================================================================
-
-void SingleCellViewPlugin::loadSettings(QSettings *pSettings)
-{
-    // Retrieve our single cell view settings
-
-    pSettings->beginGroup(mViewWidget->objectName());
-        mViewWidget->loadSettings(pSettings);
-    pSettings->endGroup();
-}
-
-//==============================================================================
-
-void SingleCellViewPlugin::saveSettings(QSettings *pSettings) const
-{
-    // Keep track of our single cell view settings
-
-    pSettings->beginGroup(mViewWidget->objectName());
-        mViewWidget->saveSettings(pSettings);
-    pSettings->endGroup();
-}
-
-//==============================================================================
-
-void SingleCellViewPlugin::settingsLoaded(const Plugins &pLoadedPlugins)
-{
-    Q_UNUSED(pLoadedPlugins);
-
-    // We don't handle this interface...
-}
-
-//==============================================================================
-
-void SingleCellViewPlugin::handleArguments(const QStringList &pArguments)
-{
-    Q_UNUSED(pArguments);
-
-    // We don't handle this interface...
-}
-
-//==============================================================================
-
-void SingleCellViewPlugin::handleAction(const QUrl &pUrl)
-{
-    Q_UNUSED(pUrl);
-
-    // We don't handle this interface...
-}
-
-//==============================================================================
 // GUI interface
 //==============================================================================
 
@@ -340,6 +245,92 @@ void SingleCellViewPlugin::retranslateUi()
     // Retranslate our single cell view widget
 
     mViewWidget->retranslateUi();
+}
+
+//==============================================================================
+// Plugin interface
+//==============================================================================
+
+void SingleCellViewPlugin::initialize()
+{
+    // Create our single view widget
+
+    mViewWidget = new SingleCellViewWidget(this, mMainWindow);
+
+    // Hide our single view widget since it may not initially be shown in our
+    // central widget
+
+    mViewWidget->setVisible(false);
+}
+
+//==============================================================================
+
+void SingleCellViewPlugin::finalize()
+{
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void SingleCellViewPlugin::initialized(const Plugins &pLoadedPlugins)
+{
+    // Retrieve the different solvers that are available to us
+
+    SolverInterfaces solverInterfaces = SolverInterfaces();
+
+    foreach (Plugin *loadedPlugin, pLoadedPlugins) {
+        SolverInterface *solverInterface = qobject_cast<SolverInterface *>(loadedPlugin->instance());
+
+        if (solverInterface)
+            // The plugin implements our solver interface, so...
+
+            solverInterfaces << solverInterface;
+    }
+
+    // Initialise our view widget with the different solvers that are available
+    // to us
+
+    mViewWidget->setSolverInterfaces(solverInterfaces);
+}
+
+//==============================================================================
+
+void SingleCellViewPlugin::loadSettings(QSettings *pSettings)
+{
+    // Retrieve our single cell view settings
+
+    pSettings->beginGroup(mViewWidget->objectName());
+        mViewWidget->loadSettings(pSettings);
+    pSettings->endGroup();
+}
+
+//==============================================================================
+
+void SingleCellViewPlugin::saveSettings(QSettings *pSettings) const
+{
+    // Keep track of our single cell view settings
+
+    pSettings->beginGroup(mViewWidget->objectName());
+        mViewWidget->saveSettings(pSettings);
+    pSettings->endGroup();
+}
+
+//==============================================================================
+
+void SingleCellViewPlugin::settingsLoaded(const Plugins &pLoadedPlugins)
+{
+    Q_UNUSED(pLoadedPlugins);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void SingleCellViewPlugin::handleAction(const QUrl &pUrl)
+{
+    Q_UNUSED(pUrl);
+
+    // We don't handle this interface...
 }
 
 //==============================================================================

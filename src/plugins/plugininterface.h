@@ -16,61 +16,45 @@ specific language governing permissions and limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// CellMLModelRepositoryWindow plugin
+// Plugin interface
 //==============================================================================
 
-#ifndef CELLMLMODELREPOSITORYWINDOWPLUGIN_H
-#define CELLMLMODELREPOSITORYWINDOWPLUGIN_H
+#ifndef PLUGININTERFACE_H
+#define PLUGININTERFACE_H
 
 //==============================================================================
 
-#include "guiinterface.h"
-#include "i18ninterface.h"
-#include "plugininterface.h"
-#include "plugininfo.h"
+#include "plugin.h"
+
+//==============================================================================
+
+#include <QUrl>
+
+//==============================================================================
+
+class QSettings;
 
 //==============================================================================
 
 namespace OpenCOR {
-namespace CellMLModelRepositoryWindow {
 
 //==============================================================================
 
-PLUGININFO_FUNC CellMLModelRepositoryWindowPluginInfo();
-
-//==============================================================================
-
-class CellmlModelRepositoryWindowWindow;
-
-//==============================================================================
-
-class CellMLModelRepositoryWindowPlugin : public QObject, public GuiInterface,
-                                          public I18nInterface,
-                                          public PluginInterface
+class PluginInterface
 {
-    Q_OBJECT
-
-    Q_PLUGIN_METADATA(IID "OpenCOR.CellMLModelRepositoryWindowPlugin" FILE "cellmlmodelrepositorywindowplugin.json")
-
-    Q_INTERFACES(OpenCOR::GuiInterface)
-    Q_INTERFACES(OpenCOR::I18nInterface)
-    Q_INTERFACES(OpenCOR::PluginInterface)
-
 public:
-#include "guiinterface.inl"
-#include "i18ninterface.inl"
-#include "plugininterface.inl"
-
-private:
-    QAction *mCellmlModelRepositoryAction;
-
-    CellmlModelRepositoryWindowWindow *mCellmlModelRepositoryWindow;
+#define INTERFACE_DEFINITION
+    #include "plugininterface.inl"
+#undef INTERFACE_DEFINITION
 };
 
 //==============================================================================
 
-}   // namespace CellMLModelRepositoryWindow
 }   // namespace OpenCOR
+
+//==============================================================================
+
+Q_DECLARE_INTERFACE(OpenCOR::PluginInterface, "OpenCOR::PluginInterface")
 
 //==============================================================================
 

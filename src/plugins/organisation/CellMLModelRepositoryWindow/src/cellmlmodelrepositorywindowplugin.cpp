@@ -47,91 +47,7 @@ PLUGININFO_FUNC CellMLModelRepositoryWindowPluginInfo()
 }
 
 //==============================================================================
-// Core interface
-//==============================================================================
-
-void CellMLModelRepositoryWindowPlugin::initialize()
-{
-    // Create an action to show/hide our CellML Model Repository window
-
-    mCellmlModelRepositoryAction = newAction(true, mMainWindow);
-
-    // Create our CellML Model Repository window
-
-    mCellmlModelRepositoryWindow = new CellmlModelRepositoryWindowWindow(mMainWindow);
-
-    // Set our settings
-
-    mGuiSettings->addWindow(Qt::LeftDockWidgetArea,
-                            mCellmlModelRepositoryWindow,
-                            mCellmlModelRepositoryAction);
-}
-
-//==============================================================================
-
-void CellMLModelRepositoryWindowPlugin::finalize()
-{
-    // We don't handle this interface...
-}
-
-//==============================================================================
-
-void CellMLModelRepositoryWindowPlugin::initialized(const Plugins &pLoadedPlugins)
-{
-    Q_UNUSED(pLoadedPlugins);
-
-    // We don't handle this interface...
-}
-
-//==============================================================================
-
-void CellMLModelRepositoryWindowPlugin::loadSettings(QSettings *pSettings)
-{
-    // Retrieve our CellML Model Repository window settings
-
-    pSettings->beginGroup(mCellmlModelRepositoryWindow->objectName());
-        mCellmlModelRepositoryWindow->loadSettings(pSettings);
-    pSettings->endGroup();
-}
-
-//==============================================================================
-
-void CellMLModelRepositoryWindowPlugin::saveSettings(QSettings *pSettings) const
-{
-    // Keep track of our CellML Model Repository window settings
-
-    pSettings->beginGroup(mCellmlModelRepositoryWindow->objectName());
-        mCellmlModelRepositoryWindow->saveSettings(pSettings);
-    pSettings->endGroup();
-}
-
-//==============================================================================
-
-void CellMLModelRepositoryWindowPlugin::settingsLoaded(const Plugins &pLoadedPlugins)
-{
-    Q_UNUSED(pLoadedPlugins);
-
-    // We don't handle this interface...
-}
-
-//==============================================================================
-
-void CellMLModelRepositoryWindowPlugin::handleArguments(const QStringList &pArguments)
-{
-    Q_UNUSED(pArguments);
-
-    // We don't handle this interface...
-}
-
-//==============================================================================
-
-void CellMLModelRepositoryWindowPlugin::handleAction(const QUrl &pUrl)
-{
-    Q_UNUSED(pUrl);
-
-    // We don't handle this interface...
-}
-
+// GUI interface
 //==============================================================================
 
 void CellMLModelRepositoryWindowPlugin::changeEvent(QEvent *pEvent)
@@ -314,6 +230,83 @@ void CellMLModelRepositoryWindowPlugin::retranslateUi()
     // Retranslate our CellML Model Repository window
 
     mCellmlModelRepositoryWindow->retranslateUi();
+}
+
+//==============================================================================
+// Plugin interface
+//==============================================================================
+
+void CellMLModelRepositoryWindowPlugin::initialize()
+{
+    // Create an action to show/hide our CellML Model Repository window
+
+    mCellmlModelRepositoryAction = newAction(true, mMainWindow);
+
+    // Create our CellML Model Repository window
+
+    mCellmlModelRepositoryWindow = new CellmlModelRepositoryWindowWindow(mMainWindow);
+
+    // Set our settings
+
+    mGuiSettings->addWindow(Qt::LeftDockWidgetArea,
+                            mCellmlModelRepositoryWindow,
+                            mCellmlModelRepositoryAction);
+}
+
+//==============================================================================
+
+void CellMLModelRepositoryWindowPlugin::finalize()
+{
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void CellMLModelRepositoryWindowPlugin::initialized(const Plugins &pLoadedPlugins)
+{
+    Q_UNUSED(pLoadedPlugins);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void CellMLModelRepositoryWindowPlugin::loadSettings(QSettings *pSettings)
+{
+    // Retrieve our CellML Model Repository window settings
+
+    pSettings->beginGroup(mCellmlModelRepositoryWindow->objectName());
+        mCellmlModelRepositoryWindow->loadSettings(pSettings);
+    pSettings->endGroup();
+}
+
+//==============================================================================
+
+void CellMLModelRepositoryWindowPlugin::saveSettings(QSettings *pSettings) const
+{
+    // Keep track of our CellML Model Repository window settings
+
+    pSettings->beginGroup(mCellmlModelRepositoryWindow->objectName());
+        mCellmlModelRepositoryWindow->saveSettings(pSettings);
+    pSettings->endGroup();
+}
+
+//==============================================================================
+
+void CellMLModelRepositoryWindowPlugin::settingsLoaded(const Plugins &pLoadedPlugins)
+{
+    Q_UNUSED(pLoadedPlugins);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void CellMLModelRepositoryWindowPlugin::handleAction(const QUrl &pUrl)
+{
+    Q_UNUSED(pUrl);
+
+    // We don't handle this interface...
 }
 
 //==============================================================================

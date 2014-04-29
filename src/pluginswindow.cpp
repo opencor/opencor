@@ -355,6 +355,10 @@ QString PluginsWindow::statusDescription(Plugin *pPlugin) const
         return tr("the plugin could not be loaded due to the following problem: %1.").arg(Core::formatErrorMessage(pPlugin->statusErrors(), false));
     case Plugin::NotPlugin:
         return tr("this is not a plugin.");
+    case Plugin::NotCorePlugin:
+        return tr("the plugin claims to be the core plugin, but it is not.");
+    case Plugin::InvalidCorePlugin:
+        return tr("the plugin should be the core plugin, but it does not support the core interface.");
     case Plugin::MissingOrInvalidDependencies:
         if (pPlugin->statusErrorsCount() == 1)
             return tr("the plugin could not be loaded due to the %1 plugin being missing or invalid.").arg(pPlugin->statusErrors());
