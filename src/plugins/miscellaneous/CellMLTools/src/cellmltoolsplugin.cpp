@@ -366,15 +366,6 @@ void CellMLToolsPlugin::saveSettings(QSettings *pSettings) const
 
 //==============================================================================
 
-void CellMLToolsPlugin::settingsLoaded(const Plugins &pLoadedPlugins)
-{
-    Q_UNUSED(pLoadedPlugins);
-
-    // We don't handle this interface...
-}
-
-//==============================================================================
-
 void CellMLToolsPlugin::handleAction(const QUrl &pUrl)
 {
     Q_UNUSED(pUrl);

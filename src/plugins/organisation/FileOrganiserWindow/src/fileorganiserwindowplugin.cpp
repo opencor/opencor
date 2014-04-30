@@ -282,15 +282,6 @@ void FileOrganiserWindowPlugin::saveSettings(QSettings *pSettings) const
 
 //==============================================================================
 
-void FileOrganiserWindowPlugin::settingsLoaded(const Plugins &pLoadedPlugins)
-{
-    Q_UNUSED(pLoadedPlugins);
-
-    // We don't handle this interface...
-}
-
-//==============================================================================
-
 void FileOrganiserWindowPlugin::handleAction(const QUrl &pUrl)
 {
     Q_UNUSED(pUrl);

@@ -284,15 +284,6 @@ void CellMLModelRepositoryWindowPlugin::saveSettings(QSettings *pSettings) const
 
 //==============================================================================
 
-void CellMLModelRepositoryWindowPlugin::settingsLoaded(const Plugins &pLoadedPlugins)
-{
-    Q_UNUSED(pLoadedPlugins);
-
-    // We don't handle this interface...
-}
-
-//==============================================================================
-
 void CellMLModelRepositoryWindowPlugin::handleAction(const QUrl &pUrl)
 {
     Q_UNUSED(pUrl);

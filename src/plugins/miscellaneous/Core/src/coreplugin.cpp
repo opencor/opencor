@@ -595,16 +595,6 @@ void CorePlugin::saveSettings(QSettings *pSettings) const
 
 //==============================================================================
 
-void CorePlugin::settingsLoaded(const Plugins &pLoadedPlugins)
-{
-    // Let our central widget know that all the other plugins have now loaded
-    // their settings
-
-    mCentralWidget->settingsLoaded(pLoadedPlugins);
-}
-
-//==============================================================================
-
 void CorePlugin::handleAction(const QUrl &pUrl)
 {
     Q_UNUSED(pUrl);
@@ -614,6 +604,16 @@ void CorePlugin::handleAction(const QUrl &pUrl)
 
 //==============================================================================
 // Plugin specific
+//==============================================================================
+
+void CorePlugin::settingsLoaded(const Plugins &pLoadedPlugins)
+{
+    // Let our central widget know that all the other plugins have now loaded
+    // their settings
+
+    mCentralWidget->settingsLoaded(pLoadedPlugins);
+}
+
 //==============================================================================
 
 void CorePlugin::updateFileReopenMenu()

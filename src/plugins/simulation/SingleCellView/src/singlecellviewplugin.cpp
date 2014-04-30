@@ -308,15 +308,6 @@ void SingleCellViewPlugin::saveSettings(QSettings *pSettings) const
 
 //==============================================================================
 
-void SingleCellViewPlugin::settingsLoaded(const Plugins &pLoadedPlugins)
-{
-    Q_UNUSED(pLoadedPlugins);
-
-    // We don't handle this interface...
-}
-
-//==============================================================================
-
 void SingleCellViewPlugin::handleAction(const QUrl &pUrl)
 {
     Q_UNUSED(pUrl);

@@ -20,7 +20,6 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include "cliinterface.h"
-#include "coreinterface.h"
 #include "plugin.h"
 #include "pluginmanager.h"
 

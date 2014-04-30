@@ -680,15 +680,19 @@ void MainWindow::loadSettings()
         }
     }
 
-    // Let our various plugins know that all of them have loaded their settings
-    // Note: this is similar to initialize() vs. initialized()...
+    // Let our core plugin know that all of the plugins have loaded their
+    // settings
+    // Note: this is similar to initializePlugin() vs. pluginInitialized()...
 
-    foreach (Plugin *plugin, loadedPlugins) {
-        PluginInterface *pluginInterface = qobject_cast<PluginInterface *>(plugin->instance());
+    foreach (Plugin *plugin, loadedPlugins)
+        if (!plugin->name().compare(CorePluginName)) {
+            CoreInterface *coreInterface = qobject_cast<CoreInterface *>(plugin->instance());
 
-        if (pluginInterface)
-            pluginInterface->settingsLoaded(loadedPlugins);
-    }
+            if (coreInterface)
+                coreInterface->settingsLoaded(loadedPlugins);
+
+            break;
+        }
 
     // Remove the File menu when on OS X, should no plugins be loaded
     // Note: our File menu should only contain the Exit menu item, but on OS X

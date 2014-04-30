@@ -296,15 +296,6 @@ void RawViewPlugin::saveSettings(QSettings *pSettings) const
 
 //==============================================================================
 
-void RawViewPlugin::settingsLoaded(const Plugins &pLoadedPlugins)
-{
-    Q_UNUSED(pLoadedPlugins);
-
-    // We don't handle this interface...
-}
-
-//==============================================================================
-
 void RawViewPlugin::handleAction(const QUrl &pUrl)
 {
     Q_UNUSED(pUrl);

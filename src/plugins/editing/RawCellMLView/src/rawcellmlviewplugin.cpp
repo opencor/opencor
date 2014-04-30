@@ -306,15 +306,6 @@ void RawCellMLViewPlugin::saveSettings(QSettings *pSettings) const
 
 //==============================================================================
 
-void RawCellMLViewPlugin::settingsLoaded(const Plugins &pLoadedPlugins)
-{
-    Q_UNUSED(pLoadedPlugins);
-
-    // We don't handle this interface...
-}
-
-//==============================================================================
-
 void RawCellMLViewPlugin::handleAction(const QUrl &pUrl)
 {
     Q_UNUSED(pUrl);

@@ -281,15 +281,6 @@ void HelpWindowPlugin::saveSettings(QSettings *pSettings) const
 
 //==============================================================================
 
-void HelpWindowPlugin::settingsLoaded(const Plugins &pLoadedPlugins)
-{
-    Q_UNUSED(pLoadedPlugins);
-
-    // We don't handle this interface...
-}
-
-//==============================================================================
-
 void HelpWindowPlugin::handleAction(const QUrl &pUrl)
 {
     Q_UNUSED(pUrl);
