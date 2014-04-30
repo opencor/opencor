@@ -539,8 +539,9 @@ void CentralWidget::settingsLoaded(const Plugins &pLoadedPlugins)
     updateGui();
 
     // Let our plugins know that our files have been opened
-    // Note: this is because mLoadedPlugins is not set when openFile() gets
-    //       called as part of OpenCOR's loading of settings...
+    // Note: the below is normally done as part of openFile(), but
+    //       mLoadedPlugins is not yet set when openFile() gets called as part
+    //       of OpenCOR's loading its settings...
 
     foreach (Plugin *plugin, mLoadedPlugins) {
         GuiInterface *guiInterface = qobject_cast<GuiInterface *>(plugin->instance());
