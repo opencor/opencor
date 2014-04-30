@@ -705,7 +705,7 @@ void CentralWidget::openFile(const QString &pFileName, const File::Type &pType,
     // opened
     // Note: this requires using mLoadedPlugins, but it will not be set when we
     //       come here following OpenCOR's loading of settings, hence we do
-    //       something similar to the below in settingsLoaded()...
+    //       something similar to what is done in settingsLoaded()...
 
     foreach (Plugin *plugin, mLoadedPlugins) {
         GuiInterface *guiInterface = qobject_cast<GuiInterface *>(plugin->instance());

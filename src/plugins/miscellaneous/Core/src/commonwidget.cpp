@@ -76,15 +76,6 @@ void CommonWidget::saveSettings(QSettings *pSettings) const
 
 //==============================================================================
 
-void CommonWidget::settingsLoaded(const Plugins &pLoadedPlugins)
-{
-    Q_UNUSED(pLoadedPlugins);
-
-    // Nothing to do by default...
-}
-
-//==============================================================================
-
 void CommonWidget::retranslateUi()
 {
     // Nothing to do by default...

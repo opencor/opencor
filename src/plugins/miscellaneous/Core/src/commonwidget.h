@@ -56,8 +56,6 @@ public:
     virtual void loadSettings(QSettings *pSettings);
     virtual void saveSettings(QSettings *pSettings) const;
 
-    virtual void settingsLoaded(const Plugins &pLoadedPlugins);
-
     virtual void retranslateUi();
 
 protected:
