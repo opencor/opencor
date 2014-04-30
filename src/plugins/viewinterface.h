@@ -16,64 +16,33 @@ specific language governing permissions and limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// SingleCellView plugin
+// View interface
 //==============================================================================
 
-#ifndef SINGLECELLVIEWPLUGIN_H
-#define SINGLECELLVIEWPLUGIN_H
-
-//==============================================================================
-
-#include "guiinterface.h"
-#include "i18ninterface.h"
-#include "plugininterface.h"
-#include "plugininfo.h"
-#include "viewinterface.h"
+#ifndef VIEWINTERFACE_H
+#define VIEWINTERFACE_H
 
 //==============================================================================
 
 namespace OpenCOR {
-namespace SingleCellView {
 
 //==============================================================================
 
-PLUGININFO_FUNC SingleCellViewPluginInfo();
-
-//==============================================================================
-
-class SingleCellViewWidget;
-
-//==============================================================================
-
-class SingleCellViewPlugin : public QObject, public GuiInterface,
-                             public I18nInterface, public PluginInterface,
-                             public ViewInterface
+class ViewInterface
 {
-    Q_OBJECT
-
-    Q_PLUGIN_METADATA(IID "OpenCOR.SingleCellViewPlugin" FILE "singlecellviewplugin.json")
-
-    Q_INTERFACES(OpenCOR::GuiInterface)
-    Q_INTERFACES(OpenCOR::I18nInterface)
-    Q_INTERFACES(OpenCOR::PluginInterface)
-    Q_INTERFACES(OpenCOR::ViewInterface)
-
 public:
-    explicit SingleCellViewPlugin();
-
-#include "guiinterface.inl"
-#include "i18ninterface.inl"
-#include "plugininterface.inl"
-#include "viewinterface.inl"
-
-private:
-    SingleCellViewWidget *mViewWidget;
+#define INTERFACE_DEFINITION
+    #include "viewinterface.inl"
+#undef INTERFACE_DEFINITION
 };
 
 //==============================================================================
 
-}   // namespace SingleCellView
 }   // namespace OpenCOR
+
+//==============================================================================
+
+Q_DECLARE_INTERFACE(OpenCOR::ViewInterface, "OpenCOR::ViewInterface")
 
 //==============================================================================
 

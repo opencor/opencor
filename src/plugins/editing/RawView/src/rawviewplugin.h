@@ -29,6 +29,7 @@ specific language governing permissions and limitations under the License.
 #include "i18ninterface.h"
 #include "plugininterface.h"
 #include "plugininfo.h"
+#include "viewinterface.h"
 
 //==============================================================================
 
@@ -47,7 +48,7 @@ class RawViewWidget;
 
 class RawViewPlugin : public QObject, public EditingInterface,
                       public GuiInterface, public I18nInterface,
-                      public PluginInterface
+                      public PluginInterface, public ViewInterface
 {
     Q_OBJECT
 
@@ -57,6 +58,7 @@ class RawViewPlugin : public QObject, public EditingInterface,
     Q_INTERFACES(OpenCOR::GuiInterface)
     Q_INTERFACES(OpenCOR::I18nInterface)
     Q_INTERFACES(OpenCOR::PluginInterface)
+    Q_INTERFACES(OpenCOR::ViewInterface)
 
 public:
     explicit RawViewPlugin();
@@ -65,6 +67,7 @@ public:
 #include "guiinterface.inl"
 #include "i18ninterface.inl"
 #include "plugininterface.inl"
+#include "viewinterface.inl"
 
 private:
     RawViewWidget *mViewWidget;
