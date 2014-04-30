@@ -219,15 +219,6 @@ void SingleCellViewPlugin::fileClosed(const QString &pFileName)
 }
 
 //==============================================================================
-
-bool SingleCellViewPlugin::canClose()
-{
-    // We don't handle this interface...
-
-    return true;
-}
-
-//==============================================================================
 // I18n interface
 //==============================================================================
 

@@ -23,7 +23,6 @@ specific language governing permissions and limitations under the License.
 #include "cliutils.h"
 #include "coreinterface.h"
 #include "dockwidget.h"
-#include "fileinterface.h"
 #include "guiutils.h"
 #include "i18ninterface.h"
 #include "mainwindow.h"
@@ -31,7 +30,6 @@ specific language governing permissions and limitations under the License.
 #include "pluginmanager.h"
 #include "pluginswindow.h"
 #include "preferenceswindow.h"
-#include "solverinterface.h"
 
 //==============================================================================
 
@@ -350,18 +348,19 @@ void MainWindow::changeEvent(QEvent *pEvent)
 
 void MainWindow::closeEvent(QCloseEvent *pEvent)
 {
-    // Check with our plugins that it's OK to close
+    // Check with our Core plugin, if it has been loaded, that it's OK to close
 
     bool canClose = true;
 
-    foreach (Plugin *plugin, mPluginManager->loadedPlugins()) {
-        GuiInterface *guiInterface = qobject_cast<GuiInterface *>(plugin->instance());
+    foreach (Plugin *plugin, mPluginManager->loadedPlugins())
+        if (!plugin->name().compare(CorePluginName)) {
+            CoreInterface *coreInterface = qobject_cast<CoreInterface *>(plugin->instance());
 
-        if (guiInterface)
-            canClose = guiInterface->canClose() && canClose;
-            // Note: we want to ask all the plugins whether we can close, hence
-            //       the order of the above test...
-    }
+            if (coreInterface)
+                canClose = coreInterface->canClose();
+
+            break;
+        }
 
     // Close ourselves
 
@@ -1328,7 +1327,7 @@ void MainWindow::updateGui(Plugin *pViewPlugin, const QString &pFileName)
         }
     }
 
-    // Let our different plugins know that the GUI got updated
+    // Let our different plugins know that the GUI has been updated
     // Note: this can be useful when a plugin (e.g. CellMLTools) offers some
     //       tools that may need to be enabled/disabled and shown/hidden,
     //       depending on which plugin and/or file are currently active...

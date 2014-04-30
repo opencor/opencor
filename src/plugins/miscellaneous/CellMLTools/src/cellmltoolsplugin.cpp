@@ -254,15 +254,6 @@ void CellMLToolsPlugin::fileClosed(const QString &pFileName)
 }
 
 //==============================================================================
-
-bool CellMLToolsPlugin::canClose()
-{
-    // We don't handle this interface...
-
-    return true;
-}
-
-//==============================================================================
 // I18n interface
 //==============================================================================
 

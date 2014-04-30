@@ -235,15 +235,6 @@ void CellMLAnnotationViewPlugin::fileClosed(const QString &pFileName)
 }
 
 //==============================================================================
-
-bool CellMLAnnotationViewPlugin::canClose()
-{
-    // We don't handle this interface...
-
-    return true;
-}
-
-//==============================================================================
 // I18n interface
 //==============================================================================
 

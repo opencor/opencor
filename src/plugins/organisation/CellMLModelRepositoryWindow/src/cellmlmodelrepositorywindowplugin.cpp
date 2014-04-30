@@ -198,15 +198,6 @@ void CellMLModelRepositoryWindowPlugin::fileClosed(const QString &pFileName)
 }
 
 //==============================================================================
-
-bool CellMLModelRepositoryWindowPlugin::canClose()
-{
-    // We don't handle this interface...
-
-    return true;
-}
-
-//==============================================================================
 // I18n interface
 //==============================================================================
 

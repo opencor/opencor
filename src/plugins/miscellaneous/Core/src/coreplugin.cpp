@@ -60,7 +60,17 @@ PLUGININFO_FUNC CorePluginInfo()
 }
 
 //==============================================================================
-// Plugin interface
+// Core interface
+//==============================================================================
+
+void CorePlugin::settingsLoaded(const Plugins &pLoadedPlugins)
+{
+    // Let our central widget know that all the other plugins have now loaded
+    // their settings
+
+    mCentralWidget->settingsLoaded(pLoadedPlugins);
+}
+
 //==============================================================================
 
 void CorePlugin::handleArguments(const QStringList &pArguments)
@@ -74,6 +84,15 @@ void CorePlugin::handleArguments(const QStringList &pArguments)
             else
                 mCentralWidget->openFile(argument);
         }
+}
+
+//==============================================================================
+
+bool CorePlugin::canClose()
+{
+    // To determine whether we can close, we must ask our central widget
+
+    return mCentralWidget->canClose();
 }
 
 //==============================================================================
@@ -264,15 +283,6 @@ void CorePlugin::fileClosed(const QString &pFileName)
 
         updateFileReopenMenu();
     }
-}
-
-//==============================================================================
-
-bool CorePlugin::canClose()
-{
-    // To determine whether we can close, we must ask our central widget
-
-    return mCentralWidget->canClose();
 }
 
 //==============================================================================
@@ -604,16 +614,6 @@ void CorePlugin::handleAction(const QUrl &pUrl)
 
 //==============================================================================
 // Plugin specific
-//==============================================================================
-
-void CorePlugin::settingsLoaded(const Plugins &pLoadedPlugins)
-{
-    // Let our central widget know that all the other plugins have now loaded
-    // their settings
-
-    mCentralWidget->settingsLoaded(pLoadedPlugins);
-}
-
 //==============================================================================
 
 void CorePlugin::updateFileReopenMenu()

@@ -198,15 +198,6 @@ void FileBrowserWindowPlugin::fileClosed(const QString &pFileName)
 }
 
 //==============================================================================
-
-bool FileBrowserWindowPlugin::canClose()
-{
-    // We don't handle this interface...
-
-    return true;
-}
-
-//==============================================================================
 // I18n interface
 //==============================================================================
 

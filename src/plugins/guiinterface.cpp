@@ -136,6 +136,13 @@ QStringList GuiViewSettings::mimeTypes() const
 
 //==============================================================================
 
+static const auto ModeUnknown    = QStringLiteral("Unknown");
+static const auto ModeEditing    = QStringLiteral("Editing");
+static const auto ModeSimulation = QStringLiteral("Simulation");
+static const auto ModeAnalysis   = QStringLiteral("Analysis");
+
+//==============================================================================
+
 QString GuiViewSettings::modeAsString(const GuiViewSettings::Mode &pMode)
 {
     // Return the mode corresponding to the given mode string

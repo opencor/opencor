@@ -227,15 +227,6 @@ void PrettyCellMLViewPlugin::fileClosed(const QString &pFileName)
 }
 
 //==============================================================================
-
-bool PrettyCellMLViewPlugin::canClose()
-{
-    // We don't handle this interface...
-
-    return true;
-}
-
-//==============================================================================
 // I18n interface
 //==============================================================================
 

@@ -8,4 +8,6 @@
 
     virtual void handleArguments(const QStringList &pArguments) PURE;
 
+    virtual bool canClose() PURE;
+
 #undef PURE

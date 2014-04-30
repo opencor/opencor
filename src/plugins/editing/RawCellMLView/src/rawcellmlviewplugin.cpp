@@ -231,15 +231,6 @@ void RawCellMLViewPlugin::fileClosed(const QString &pFileName)
 }
 
 //==============================================================================
-
-bool RawCellMLViewPlugin::canClose()
-{
-    // We don't handle this interface...
-
-    return true;
-}
-
-//==============================================================================
 // I18n interface
 //==============================================================================
 

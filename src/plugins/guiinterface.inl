@@ -29,6 +29,4 @@
                              const QString &pNewFileName) PURE;
     virtual void fileClosed(const QString &pFileName) PURE;
 
-    virtual bool canClose() PURE;
-
 #undef PURE

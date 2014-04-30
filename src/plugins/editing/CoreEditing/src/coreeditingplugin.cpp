@@ -303,15 +303,6 @@ void CoreEditingPlugin::fileClosed(const QString &pFileName)
 }
 
 //==============================================================================
-
-bool CoreEditingPlugin::canClose()
-{
-    // We don't handle this interface...
-
-    return true;
-}
-
-//==============================================================================
 // I18n interface
 //==============================================================================
 

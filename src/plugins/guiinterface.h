@@ -99,13 +99,6 @@ private:
 
 //==============================================================================
 
-static const auto ModeUnknown    = QStringLiteral("Unknown");
-static const auto ModeEditing    = QStringLiteral("Editing");
-static const auto ModeSimulation = QStringLiteral("Simulation");
-static const auto ModeAnalysis   = QStringLiteral("Analysis");
-
-//==============================================================================
-
 class GuiViewSettings
 {
 public:

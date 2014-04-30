@@ -205,15 +205,6 @@ void CoreCellMLEditingPlugin::fileClosed(const QString &pFileName)
 }
 
 //==============================================================================
-
-bool CoreCellMLEditingPlugin::canClose()
-{
-    // We don't handle this interface...
-
-    return true;
-}
-
-//==============================================================================
 // I18n interface
 //==============================================================================
 
