@@ -81,74 +81,6 @@ void RawViewPlugin::updateGui(Plugin *pViewPlugin, const QString &pFileName)
 
 //==============================================================================
 
-void RawViewPlugin::initializeView()
-{
-    // We don't handle this interface...
-}
-
-//==============================================================================
-
-void RawViewPlugin::finalizeView()
-{
-    // We don't handle this interface...
-}
-
-//==============================================================================
-
-bool RawViewPlugin::hasViewWidget(const QString &pFileName)
-{
-    // Return whether we know about the given file
-
-    return mViewWidget->contains(pFileName);
-}
-
-//==============================================================================
-
-QWidget * RawViewPlugin::viewWidget(const QString &pFileName,
-                                    const bool &pCreate)
-{
-    // Update our raw view widget using the given file
-
-    if (pCreate) {
-        mViewWidget->initialize(pFileName);
-
-        return mViewWidget;
-    } else {
-        return 0;
-    }
-}
-
-//==============================================================================
-
-void RawViewPlugin::removeViewWidget(const QString &pFileName)
-{
-    // Ask our raw view widget to finalise the given file
-
-    mViewWidget->finalize(pFileName);
-}
-
-//==============================================================================
-
-QString RawViewPlugin::viewName() const
-{
-    // Return our raw view's name
-
-    return tr("Raw");
-}
-
-//==============================================================================
-
-QIcon RawViewPlugin::fileTabIcon(const QString &pFileName) const
-{
-    Q_UNUSED(pFileName);
-
-    // We don't handle this interface...
-
-    return QIcon();
-}
-
-//==============================================================================
-
 bool RawViewPlugin::saveFile(const QString &pOldFileName,
                              const QString &pNewFileName)
 {
@@ -292,6 +224,76 @@ void RawViewPlugin::handleAction(const QUrl &pUrl)
     Q_UNUSED(pUrl);
 
     // We don't handle this interface...
+}
+
+//==============================================================================
+// View interface
+//==============================================================================
+
+void RawViewPlugin::initializeView()
+{
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void RawViewPlugin::finalizeView()
+{
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+bool RawViewPlugin::hasViewWidget(const QString &pFileName)
+{
+    // Return whether we know about the given file
+
+    return mViewWidget->contains(pFileName);
+}
+
+//==============================================================================
+
+QWidget * RawViewPlugin::viewWidget(const QString &pFileName,
+                                    const bool &pCreate)
+{
+    // Update our raw view widget using the given file
+
+    if (pCreate) {
+        mViewWidget->initialize(pFileName);
+
+        return mViewWidget;
+    } else {
+        return 0;
+    }
+}
+
+//==============================================================================
+
+void RawViewPlugin::removeViewWidget(const QString &pFileName)
+{
+    // Ask our raw view widget to finalise the given file
+
+    mViewWidget->finalize(pFileName);
+}
+
+//==============================================================================
+
+QString RawViewPlugin::viewName() const
+{
+    // Return our raw view's name
+
+    return tr("Raw");
+}
+
+//==============================================================================
+
+QIcon RawViewPlugin::fileTabIcon(const QString &pFileName) const
+{
+    Q_UNUSED(pFileName);
+
+    // We don't handle this interface...
+
+    return QIcon();
 }
 
 //==============================================================================

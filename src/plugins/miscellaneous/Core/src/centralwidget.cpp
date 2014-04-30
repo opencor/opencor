@@ -25,6 +25,7 @@ specific language governing permissions and limitations under the License.
 #include "guiutils.h"
 #include "plugin.h"
 #include "usermessagewidget.h"
+#include "viewinterface.h"
 #include "viewwidget.h"
 
 //==============================================================================
@@ -576,7 +577,7 @@ void CentralWidget::retranslateUi()
         QTabBar *viewTabs = mode->viewTabs();
 
         for (int i = 0, iMax = viewTabs->count(); i < iMax; ++i)
-            viewTabs->setTabText(i, qobject_cast<GuiInterface *>(mode->viewPlugins()->value(i)->instance())->viewName());
+            viewTabs->setTabText(i, qobject_cast<ViewInterface *>(mode->viewPlugins()->value(i)->instance())->viewName());
     }
 
     // Retranslate our modified settings, if needed
@@ -951,7 +952,8 @@ bool CentralWidget::saveFile(const int &pIndex, const bool &pNeedNewFileName)
     QString newFileName = oldFileName;
     bool fileIsNew = fileManagerInstance->isNew(oldFileName);
     bool hasNewFileName = false;
-    GuiInterface *guiInterface = qobject_cast<GuiInterface *>(viewPlugin(pIndex)->instance());
+    Plugin *fileViewPlugin = viewPlugin(pIndex);
+    GuiInterface *guiInterface = qobject_cast<GuiInterface *>(fileViewPlugin->instance());
 
     if (pNeedNewFileName || fileIsNew) {
         // Either we want to save the file under a new name or we are dealing
@@ -1011,7 +1013,7 @@ bool CentralWidget::saveFile(const int &pIndex, const bool &pNeedNewFileName)
                 // The file couldn't be saved, so...
 
                 QMessageBox::warning(mMainWindow, tr("Save File"),
-                                     tr("Sorry, but the <strong>%1</strong> view could not save <strong>%2</strong>.").arg(guiInterface->viewName(), newFileName));
+                                     tr("Sorry, but the <strong>%1</strong> view could not save <strong>%2</strong>.").arg(qobject_cast<ViewInterface *>(fileViewPlugin->instance())->viewName(), newFileName));
 
                 return false;
             }
@@ -1222,12 +1224,12 @@ bool CentralWidget::closeFile(const int &pIndex, const bool &pForceClosing)
         // Ask our view plugins to remove the corresponding view for the file
 
         foreach (Plugin *plugin, mLoadedPlugins) {
-            GuiInterface *guiInterface = qobject_cast<GuiInterface *>(plugin->instance());
+            ViewInterface *viewInterface = qobject_cast<ViewInterface *>(plugin->instance());
 
-            if (guiInterface) {
-                mContents->removeWidget(guiInterface->viewWidget(fileName, false));
+            if (viewInterface) {
+                mContents->removeWidget(viewInterface->viewWidget(fileName, false));
 
-                guiInterface->removeViewWidget(fileName);
+                viewInterface->removeViewWidget(fileName);
             }
         }
 
@@ -1514,7 +1516,7 @@ void CentralWidget::updateGui()
     // there be one)
 
     Plugin *fileViewPlugin = viewPlugin(mFileTabs->currentIndex());
-    GuiInterface *guiInterface = fileViewPlugin?qobject_cast<GuiInterface *>(fileViewPlugin->instance()):0;
+    ViewInterface *viewInterface = fileViewPlugin?qobject_cast<ViewInterface *>(fileViewPlugin->instance()):0;
     QWidget *newView;
 
     if (fileName.isEmpty()) {
@@ -1522,7 +1524,7 @@ void CentralWidget::updateGui()
     } else {
         // There is a current file, so retrieve its view
 
-        newView = guiInterface?guiInterface->viewWidget(fileName):0;
+        newView = viewInterface?viewInterface->viewWidget(fileName):0;
 
         if (!newView) {
             // The interface doesn't have a view for the current file, so use
@@ -1597,7 +1599,7 @@ void CentralWidget::updateGui()
 
     emit canSaveAs(   mFileTabs->count() && (newView != mNoViewMsg)
                    && !FileManager::instance()->isRemote(fileName)
-                   && guiInterface);
+                   && viewInterface);
 
     emit atLeastOneFile(mFileTabs->count());
     emit atLeastTwoFiles(mFileTabs->count() > 1);
@@ -1650,7 +1652,7 @@ void CentralWidget::updateNoViewMsg()
     } else {
         CentralWidgetMode *mode = mModes.value(mModeTabIndexModes.value(fileModeTabIndex));
 
-        mNoViewMsg->setMessage(tr("Sorry, but the <strong>%1</strong> view does not support this type of file...").arg(qobject_cast<GuiInterface *>(mode->viewPlugins()->value(mode->viewTabs()->currentIndex())->instance())->viewName()));
+        mNoViewMsg->setMessage(tr("Sorry, but the <strong>%1</strong> view does not support this type of file...").arg(qobject_cast<ViewInterface *>(mode->viewPlugins()->value(mode->viewTabs()->currentIndex())->instance())->viewName()));
     }
 }
 
@@ -1897,11 +1899,9 @@ void CentralWidget::updateFileTabIcon(const QString &pViewName,
     // Update the requested file tab icon, but only if the view plugin (from
     // which the signal was emitted) is the one currently active
 
-    GuiInterface *guiInterface = qobject_cast<GuiInterface *>(viewPlugin(pFileName)->instance());
-
-    if (guiInterface && !pViewName.compare(guiInterface->viewName()))
-        // The view from which the signal was emitted is visible, so we can
-        // handle its signal
+    if (!pViewName.compare(qobject_cast<ViewInterface *>(viewPlugin(pFileName)->instance())->viewName()))
+        // The view from which the signal was emitted is the currently active
+        // one, so we can try to handle its signal
 
         for (int i = 0, iMax = mFileTabs->count(); i < iMax; ++i)
             if (!pFileName.compare(mFileNames[i])) {
@@ -1924,8 +1924,7 @@ void CentralWidget::updateFileTabIcons()
     // Update all the file tab icons
 
     for (int i = 0, iMax = mFileTabs->count(); i < iMax; ++i) {
-        GuiInterface *guiInterface = qobject_cast<GuiInterface *>(viewPlugin(i)->instance());
-        QIcon tabIcon = guiInterface->fileTabIcon(mFileNames[i]);
+        QIcon tabIcon = qobject_cast<ViewInterface *>(viewPlugin(i)->instance())->fileTabIcon(mFileNames[i]);
 
         if (tabIcon.isNull())
             updateFileTab(i);

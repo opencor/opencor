@@ -74,78 +74,6 @@ void SingleCellViewPlugin::updateGui(Plugin *pViewPlugin,
 
 //==============================================================================
 
-void SingleCellViewPlugin::initializeView()
-{
-    // We don't handle this interface...
-}
-
-//==============================================================================
-
-void SingleCellViewPlugin::finalizeView()
-{
-    // We don't handle this interface...
-}
-
-//==============================================================================
-
-bool SingleCellViewPlugin::hasViewWidget(const QString &pFileName)
-{
-    // Return whether we know about the given CellML file
-
-    return mViewWidget->contains(pFileName);
-}
-
-//==============================================================================
-
-QWidget * SingleCellViewPlugin::viewWidget(const QString &pFileName,
-                                           const bool &pCreate)
-{
-    // Make sure that we are dealing with a CellML file
-
-    if (!CellMLSupport::CellmlFileManager::instance()->cellmlFile(pFileName))
-        return 0;
-
-    // Update our generic simulation view widget using the given CellML file,
-    // but only if we are asked to do so
-
-    if (pCreate) {
-        mViewWidget->initialize(pFileName);
-
-        return mViewWidget;
-    } else {
-        return 0;
-    }
-}
-
-//==============================================================================
-
-void SingleCellViewPlugin::removeViewWidget(const QString &pFileName)
-{
-    // Ask our view widget to finalise the given CellML file
-
-    mViewWidget->finalize(pFileName);
-}
-
-//==============================================================================
-
-QString SingleCellViewPlugin::viewName() const
-{
-    // Return our single cell view's name
-
-    return tr("Single Cell");
-}
-
-//==============================================================================
-
-QIcon SingleCellViewPlugin::fileTabIcon(const QString &pFileName) const
-{
-    // Return the requested file tab icon
-
-    return mViewWidget->fileTabIcon(pFileName);
-}
-
-//==============================================================================
-
 bool SingleCellViewPlugin::saveFile(const QString &pOldFileName,
                                     const QString &pNewFileName)
 {
@@ -304,6 +232,80 @@ void SingleCellViewPlugin::handleAction(const QUrl &pUrl)
     Q_UNUSED(pUrl);
 
     // We don't handle this interface...
+}
+
+//==============================================================================
+// View interface
+//==============================================================================
+
+void SingleCellViewPlugin::initializeView()
+{
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void SingleCellViewPlugin::finalizeView()
+{
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+bool SingleCellViewPlugin::hasViewWidget(const QString &pFileName)
+{
+    // Return whether we know about the given CellML file
+
+    return mViewWidget->contains(pFileName);
+}
+
+//==============================================================================
+
+QWidget * SingleCellViewPlugin::viewWidget(const QString &pFileName,
+                                           const bool &pCreate)
+{
+    // Make sure that we are dealing with a CellML file
+
+    if (!CellMLSupport::CellmlFileManager::instance()->cellmlFile(pFileName))
+        return 0;
+
+    // Update our generic simulation view widget using the given CellML file,
+    // but only if we are asked to do so
+
+    if (pCreate) {
+        mViewWidget->initialize(pFileName);
+
+        return mViewWidget;
+    } else {
+        return 0;
+    }
+}
+
+//==============================================================================
+
+void SingleCellViewPlugin::removeViewWidget(const QString &pFileName)
+{
+    // Ask our view widget to finalise the given CellML file
+
+    mViewWidget->finalize(pFileName);
+}
+
+//==============================================================================
+
+QString SingleCellViewPlugin::viewName() const
+{
+    // Return our single cell view's name
+
+    return tr("Single Cell");
+}
+
+//==============================================================================
+
+QIcon SingleCellViewPlugin::fileTabIcon(const QString &pFileName) const
+{
+    // Return the requested file tab icon
+
+    return mViewWidget->fileTabIcon(pFileName);
 }
 
 //==============================================================================

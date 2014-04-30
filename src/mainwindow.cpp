@@ -30,6 +30,7 @@ specific language governing permissions and limitations under the License.
 #include "pluginmanager.h"
 #include "pluginswindow.h"
 #include "preferenceswindow.h"
+#include "viewinterface.h"
 
 //==============================================================================
 
@@ -1289,26 +1290,20 @@ void MainWindow::updateGui(Plugin *pViewPlugin, const QString &pFileName)
         // Note #1: this is useful when a view (e.g. CellMLAnnotationView) wants
         //          to show/hide some menus that it inherited (e.g. from
         //          CoreEditing)...
-        // Note #2: see its GuiInterface::initializeView() counterpart below...
+        // Note #2: see its ViewInterface::initializeView() counterpart below...
 
-        if (mViewPlugin) {
-            GuiInterface *guiInterface = qobject_cast<GuiInterface *>(mViewPlugin->instance());
+        if (mViewPlugin)
+            qobject_cast<ViewInterface *>(mViewPlugin->instance())->finalizeView();
 
-            if (guiInterface)
-                guiInterface->finalizeView();
-        }
-
-        // Keep track of our view plugin
+        // Keep track of our new view plugin
 
         mViewPlugin = pViewPlugin;
 
         // Ask our new view plugin to initialise its view
-        // Note: see its GuiInterface::finalizeView() counterpart above...
+        // Note: see its ViewInterface::finalizeView() counterpart above...
 
-        GuiInterface *guiInterface = mViewPlugin?qobject_cast<GuiInterface *>(mViewPlugin->instance()):0;
-
-        if (guiInterface)
-            guiInterface->initializeView();
+        if (mViewPlugin)
+            qobject_cast<ViewInterface *>(mViewPlugin->instance())->initializeView();
 
         // Show/hide the File|New menu by checking whether its menu items are
         // visible
@@ -1330,7 +1325,7 @@ void MainWindow::updateGui(Plugin *pViewPlugin, const QString &pFileName)
     // Let our different plugins know that the GUI has been updated
     // Note: this can be useful when a plugin (e.g. CellMLTools) offers some
     //       tools that may need to be enabled/disabled and shown/hidden,
-    //       depending on which plugin and/or file are currently active...
+    //       depending on which view plugin and/or file are currently active...
 
     foreach (Plugin *plugin, mPluginManager->loadedPlugins()) {
         GuiInterface *guiInterface = qobject_cast<GuiInterface *>(plugin->instance());

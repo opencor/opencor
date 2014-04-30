@@ -84,80 +84,6 @@ void PrettyCellMLViewPlugin::updateGui(Plugin *pViewPlugin,
 
 //==============================================================================
 
-void PrettyCellMLViewPlugin::initializeView()
-{
-    // We don't handle this interface...
-}
-
-//==============================================================================
-
-void PrettyCellMLViewPlugin::finalizeView()
-{
-    // We don't handle this interface...
-}
-
-//==============================================================================
-
-bool PrettyCellMLViewPlugin::hasViewWidget(const QString &pFileName)
-{
-    // Return whether we know about the given CellML file
-
-    return mViewWidget->contains(pFileName);
-}
-
-//==============================================================================
-
-QWidget * PrettyCellMLViewPlugin::viewWidget(const QString &pFileName,
-                                             const bool &pCreate)
-{
-    // Make sure that we are dealing with a CellML file
-
-    if (!CellMLSupport::CellmlFileManager::instance()->cellmlFile(pFileName))
-        return 0;
-
-    // We are dealing with a CellML file, so update our pretty CellML view
-    // widget using the given CellML file
-
-    if (pCreate) {
-        mViewWidget->initialize(pFileName);
-
-        return mViewWidget;
-    } else {
-        return 0;
-    }
-}
-
-//==============================================================================
-
-void PrettyCellMLViewPlugin::removeViewWidget(const QString &pFileName)
-{
-    // Ask our pretty CellML view widget to finalise the given CellML file
-
-    mViewWidget->finalize(pFileName);
-}
-
-//==============================================================================
-
-QString PrettyCellMLViewPlugin::viewName() const
-{
-    // Return our pretty CellML view's name
-
-    return tr("Pretty CellML");
-}
-
-//==============================================================================
-
-QIcon PrettyCellMLViewPlugin::fileTabIcon(const QString &pFileName) const
-{
-    Q_UNUSED(pFileName);
-
-    // We don't handle this interface...
-
-    return QIcon();
-}
-
-//==============================================================================
-
 bool PrettyCellMLViewPlugin::saveFile(const QString &pOldFileName,
                                       const QString &pNewFileName)
 {
@@ -298,6 +224,82 @@ void PrettyCellMLViewPlugin::handleAction(const QUrl &pUrl)
     Q_UNUSED(pUrl);
 
     // We don't handle this interface...
+}
+
+//==============================================================================
+// View interface
+//==============================================================================
+
+void PrettyCellMLViewPlugin::initializeView()
+{
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void PrettyCellMLViewPlugin::finalizeView()
+{
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+bool PrettyCellMLViewPlugin::hasViewWidget(const QString &pFileName)
+{
+    // Return whether we know about the given CellML file
+
+    return mViewWidget->contains(pFileName);
+}
+
+//==============================================================================
+
+QWidget * PrettyCellMLViewPlugin::viewWidget(const QString &pFileName,
+                                             const bool &pCreate)
+{
+    // Make sure that we are dealing with a CellML file
+
+    if (!CellMLSupport::CellmlFileManager::instance()->cellmlFile(pFileName))
+        return 0;
+
+    // We are dealing with a CellML file, so update our pretty CellML view
+    // widget using the given CellML file
+
+    if (pCreate) {
+        mViewWidget->initialize(pFileName);
+
+        return mViewWidget;
+    } else {
+        return 0;
+    }
+}
+
+//==============================================================================
+
+void PrettyCellMLViewPlugin::removeViewWidget(const QString &pFileName)
+{
+    // Ask our pretty CellML view widget to finalise the given CellML file
+
+    mViewWidget->finalize(pFileName);
+}
+
+//==============================================================================
+
+QString PrettyCellMLViewPlugin::viewName() const
+{
+    // Return our pretty CellML view's name
+
+    return tr("Pretty CellML");
+}
+
+//==============================================================================
+
+QIcon PrettyCellMLViewPlugin::fileTabIcon(const QString &pFileName) const
+{
+    Q_UNUSED(pFileName);
+
+    // We don't handle this interface...
+
+    return QIcon();
 }
 
 //==============================================================================

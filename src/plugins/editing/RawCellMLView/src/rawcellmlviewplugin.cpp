@@ -85,80 +85,6 @@ void RawCellMLViewPlugin::updateGui(Plugin *pViewPlugin,
 
 //==============================================================================
 
-void RawCellMLViewPlugin::initializeView()
-{
-    // We don't handle this interface...
-}
-
-//==============================================================================
-
-void RawCellMLViewPlugin::finalizeView()
-{
-    // We don't handle this interface...
-}
-
-//==============================================================================
-
-bool RawCellMLViewPlugin::hasViewWidget(const QString &pFileName)
-{
-    // Return whether we know about the given CellML file
-
-    return mViewWidget->contains(pFileName);
-}
-
-//==============================================================================
-
-QWidget * RawCellMLViewPlugin::viewWidget(const QString &pFileName,
-                                          const bool &pCreate)
-{
-    // Make sure that we are dealing with a CellML file
-
-    if (!CellMLSupport::CellmlFileManager::instance()->cellmlFile(pFileName))
-        return 0;
-
-    // We are dealing with a CellML file, so update our raw CellML view widget
-    // using the given CellML file
-
-    if (pCreate) {
-        mViewWidget->initialize(pFileName);
-
-        return mViewWidget;
-    } else {
-        return 0;
-    }
-}
-
-//==============================================================================
-
-void RawCellMLViewPlugin::removeViewWidget(const QString &pFileName)
-{
-    // Ask our raw CellML view widget to finalise the given CellML file
-
-    mViewWidget->finalize(pFileName);
-}
-
-//==============================================================================
-
-QString RawCellMLViewPlugin::viewName() const
-{
-    // Return our raw CellML view's name
-
-    return tr("Raw CellML");
-}
-
-//==============================================================================
-
-QIcon RawCellMLViewPlugin::fileTabIcon(const QString &pFileName) const
-{
-    Q_UNUSED(pFileName);
-
-    // We don't handle this interface...
-
-    return QIcon();
-}
-
-//==============================================================================
-
 bool RawCellMLViewPlugin::saveFile(const QString &pOldFileName,
                                    const QString &pNewFileName)
 {
@@ -302,6 +228,82 @@ void RawCellMLViewPlugin::handleAction(const QUrl &pUrl)
     Q_UNUSED(pUrl);
 
     // We don't handle this interface...
+}
+
+//==============================================================================
+// View interface
+//==============================================================================
+
+void RawCellMLViewPlugin::initializeView()
+{
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void RawCellMLViewPlugin::finalizeView()
+{
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+bool RawCellMLViewPlugin::hasViewWidget(const QString &pFileName)
+{
+    // Return whether we know about the given CellML file
+
+    return mViewWidget->contains(pFileName);
+}
+
+//==============================================================================
+
+QWidget * RawCellMLViewPlugin::viewWidget(const QString &pFileName,
+                                          const bool &pCreate)
+{
+    // Make sure that we are dealing with a CellML file
+
+    if (!CellMLSupport::CellmlFileManager::instance()->cellmlFile(pFileName))
+        return 0;
+
+    // We are dealing with a CellML file, so update our raw CellML view widget
+    // using the given CellML file
+
+    if (pCreate) {
+        mViewWidget->initialize(pFileName);
+
+        return mViewWidget;
+    } else {
+        return 0;
+    }
+}
+
+//==============================================================================
+
+void RawCellMLViewPlugin::removeViewWidget(const QString &pFileName)
+{
+    // Ask our raw CellML view widget to finalise the given CellML file
+
+    mViewWidget->finalize(pFileName);
+}
+
+//==============================================================================
+
+QString RawCellMLViewPlugin::viewName() const
+{
+    // Return our raw CellML view's name
+
+    return tr("Raw CellML");
+}
+
+//==============================================================================
+
+QIcon RawCellMLViewPlugin::fileTabIcon(const QString &pFileName) const
+{
+    Q_UNUSED(pFileName);
+
+    // We don't handle this interface...
+
+    return QIcon();
 }
 
 //==============================================================================
