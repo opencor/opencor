@@ -29,6 +29,11 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+class QAction;
+class QMenu;
+
+//==============================================================================
+
 namespace OpenCOR {
 
 //==============================================================================
@@ -42,6 +47,10 @@ public:
 #define INTERFACE_DEFINITION
     #include "i18ninterface.inl"
 #undef INTERFACE_DEFINITION
+
+    static void retranslateMenu(QMenu *pMenu, const QString &pTitle);
+    static void retranslateAction(QAction *pAction, const QString &pText,
+                                  const QString &pStatusTip = QString());
 
 private:
     QString mPluginName;

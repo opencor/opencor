@@ -154,10 +154,6 @@ public:
     static QAction * newAction(const QKeySequence::StandardKey &pStandardKey,
                                QWidget *pParent = 0);
 
-    static void retranslateMenu(QMenu *pMenu, const QString &pTitle);
-    static void retranslateAction(QAction *pAction, const QString &pText,
-                                  const QString &pStatusTip = QString());
-
 protected:
     GuiSettings *mGuiSettings;
 };

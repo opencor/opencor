@@ -349,26 +349,6 @@ QAction * GuiInterface::newAction(const QKeySequence::StandardKey &pStandardKey,
 
 //==============================================================================
 
-void GuiInterface::retranslateMenu(QMenu *pMenu, const QString &pTitle)
-{
-    // Retranslate the menu, i.e. retranslate its title
-
-    pMenu->setTitle(pTitle);
-}
-
-//==============================================================================
-
-void GuiInterface::retranslateAction(QAction *pAction, const QString &pText,
-                                     const QString &pStatusTip)
-{
-    // Retranslate the action, i.e. retranslate its text and status tip
-
-    pAction->setText(pText);
-    pAction->setStatusTip(pStatusTip);
-}
-
-//==============================================================================
-
 }   // namespace OpenCOR
 
 //==============================================================================

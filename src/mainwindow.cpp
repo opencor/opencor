@@ -780,10 +780,10 @@ void MainWindow::setLocale(const QString &pLocale, const bool &pForceSetting)
         // interface
 
         if (mFileNewMenu)
-            GuiInterface::retranslateMenu(mFileNewMenu, tr("New"));
+            I18nInterface::retranslateMenu(mFileNewMenu, tr("New"));
 
         if (mViewWindowsMenu)
-            GuiInterface::retranslateMenu(mViewWindowsMenu, tr("Windows"));
+            I18nInterface::retranslateMenu(mViewWindowsMenu, tr("Windows"));
 
         // Update the locale of our various loaded plugins
         // Note: we must set the locale of all the plugins before we can safely

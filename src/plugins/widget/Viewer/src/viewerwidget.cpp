@@ -20,6 +20,7 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include "guiinterface.h"
+#include "i18ninterface.h"
 #include "viewerwidget.h"
 
 //==============================================================================
@@ -146,10 +147,10 @@ void ViewerWidget::retranslateUi()
 {
     // Retranslate our actions
 
-    GuiInterface::retranslateAction(mOptimiseFontSizeAction, tr("Optimise Font Size"));
-    GuiInterface::retranslateAction(mSubscriptsAction, tr("Subscripts"));
-    GuiInterface::retranslateAction(mGreekSymbolsAction, tr("Greek Symbols"));
-    GuiInterface::retranslateAction(mDigitGroupingAction, tr("Digit Grouping"));
+    I18nInterface::retranslateAction(mOptimiseFontSizeAction, tr("Optimise Font Size"));
+    I18nInterface::retranslateAction(mSubscriptsAction, tr("Subscripts"));
+    I18nInterface::retranslateAction(mGreekSymbolsAction, tr("Greek Symbols"));
+    I18nInterface::retranslateAction(mDigitGroupingAction, tr("Digit Grouping"));
 }
 
 //==============================================================================

@@ -24,6 +24,7 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include <QApplication>
+#include <QMenu>
 
 //==============================================================================
 
@@ -47,6 +48,26 @@ void I18nInterface::setPluginName(const QString &pPluginName)
     // Set the name of the plugin
 
     mPluginName = pPluginName;
+}
+
+//==============================================================================
+
+void I18nInterface::retranslateMenu(QMenu *pMenu, const QString &pTitle)
+{
+    // Retranslate the menu, i.e. retranslate its title
+
+    pMenu->setTitle(pTitle);
+}
+
+//==============================================================================
+
+void I18nInterface::retranslateAction(QAction *pAction, const QString &pText,
+                                      const QString &pStatusTip)
+{
+    // Retranslate the action, i.e. retranslate both its text and status tip
+
+    pAction->setText(pText);
+    pAction->setStatusTip(pStatusTip);
 }
 
 //==============================================================================

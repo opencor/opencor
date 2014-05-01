@@ -22,6 +22,7 @@ specific language governing permissions and limitations under the License.
 #include "editorfindreplacewidget.h"
 #include "guiinterface.h"
 #include "guiutils.h"
+#include "i18ninterface.h"
 
 //==============================================================================
 
@@ -162,12 +163,12 @@ void EditorFindReplaceWidget::retranslateUi()
 
     // Retranslate our actions
 
-    GuiInterface::retranslateAction(mCaseSensitiveAction, tr("Case Sensitive"));
-    GuiInterface::retranslateAction(mWholeWordsOnlyAction, tr("Whole Words Only"));
-    GuiInterface::retranslateAction(mRegularExpressionAction, tr("Regular Expression"));
+    I18nInterface::retranslateAction(mCaseSensitiveAction, tr("Case Sensitive"));
+    I18nInterface::retranslateAction(mWholeWordsOnlyAction, tr("Whole Words Only"));
+    I18nInterface::retranslateAction(mRegularExpressionAction, tr("Regular Expression"));
 
-    GuiInterface::retranslateAction(mClearFindTextAction, tr("Clear Text"));
-    GuiInterface::retranslateAction(mClearReplaceTextAction, tr("Clear Text"));
+    I18nInterface::retranslateAction(mClearFindTextAction, tr("Clear Text"));
+    I18nInterface::retranslateAction(mClearReplaceTextAction, tr("Clear Text"));
 }
 
 //==============================================================================
