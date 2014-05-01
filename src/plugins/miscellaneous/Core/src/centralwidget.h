@@ -47,6 +47,7 @@ namespace Ui {
 class QDialog;
 class QLabel;
 class QLineEdit;
+class QMainWindow;
 class QStackedWidget;
 
 //==============================================================================

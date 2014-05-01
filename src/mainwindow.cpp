@@ -199,46 +199,28 @@ Core::showEnableAction(mGui->actionPreferences, false);
     Plugins loadedPlugins = mPluginManager->loadedPlugins();
 
     foreach (Plugin *plugin, loadedPlugins) {
-        // Do various things that are related to our different plugin interfaces
-        // Note: the order in which we do those things is important since, for
-        //       example, the call to PluginInterface::initialize() may need
-        //       some information which has been set as part of the GUI
-        //       interface (e.g. the pointer to the main window)...
-
-        // GUI interface
-
-        GuiInterface *guiInterface = qobject_cast<GuiInterface *>(plugin->instance());
-
-        if (guiInterface)
-            // Keep track of some information
-
-            guiInterface->setMainWindow(this);
-
-        // Internationalisation interface
-
-        I18nInterface *i18nInterface = qobject_cast<I18nInterface *>(plugin->instance());
-
-        if (i18nInterface)
-            // Keep track of some information
-
-            i18nInterface->setPluginName(plugin->name());
-
-        // Plugin interface
+        // Initialise the plugin itself
 
         PluginInterface *pluginInterface = qobject_cast<PluginInterface *>(plugin->instance());
 
         if (pluginInterface)
-            // Initialise the plugin
+            pluginInterface->initializePlugin(this);
 
-            pluginInterface->initializePlugin();
+        // Initialise the plugin further by doing things that can only be done
+        // by OpenCOR itself (e.g. set the central widget, create some menus)
 
-        // Back to the GUI interface
+        GuiInterface *guiInterface = qobject_cast<GuiInterface *>(plugin->instance());
 
         if (guiInterface)
-            // Initialise the plugin further (i.e. do things that can only be
-            // done by OpenCOR itself)
-
             initializeGuiPlugin(plugin, guiInterface->guiSettings());
+
+        // Keep track of the plugin's name in case we support
+        // internationalisation
+
+        I18nInterface *i18nInterface = qobject_cast<I18nInterface *>(plugin->instance());
+
+        if (i18nInterface)
+            i18nInterface->setPluginName(plugin->name());
     }
 
     // Let our various plugins know that all of them have been initialised

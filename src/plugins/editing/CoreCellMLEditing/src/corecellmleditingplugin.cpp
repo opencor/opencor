@@ -155,12 +155,12 @@ void CoreCellMLEditingPlugin::retranslateUi()
 // Plugin interface
 //==============================================================================
 
-void CoreCellMLEditingPlugin::initializePlugin()
+void CoreCellMLEditingPlugin::initializePlugin(QMainWindow *pMainWindow)
 {
     // Create our different File|New actions
 
-    mFileNewCellml1_0FileAction = new QAction(mMainWindow);
-    mFileNewCellml1_1FileAction = new QAction(mMainWindow);
+    mFileNewCellml1_0FileAction = new QAction(pMainWindow);
+    mFileNewCellml1_1FileAction = new QAction(pMainWindow);
 
     // Set our settings
 

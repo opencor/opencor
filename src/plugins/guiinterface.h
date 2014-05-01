@@ -38,7 +38,6 @@ specific language governing permissions and limitations under the License.
 
 class QAction;
 class QDockWidget;
-class QMainWindow;
 class QMenu;
 class QSettings;
 class QTabBar;
@@ -145,8 +144,6 @@ private:
 
 class GuiInterface
 {
-    friend class MainWindow;
-
 public:
     explicit GuiInterface();
     ~GuiInterface();
@@ -184,12 +181,7 @@ public:
                                   const QString &pStatusTip = QString());
 
 protected:
-    QMainWindow *mMainWindow;
-
     GuiSettings *mGuiSettings;
-
-private:
-    void setMainWindow(QMainWindow *pMainWindow);
 };
 
 //==============================================================================

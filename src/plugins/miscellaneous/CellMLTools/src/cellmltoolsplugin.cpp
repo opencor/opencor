@@ -206,19 +206,23 @@ void CellMLToolsPlugin::retranslateUi()
 // Plugin interface
 //==============================================================================
 
-void CellMLToolsPlugin::initializePlugin()
+void CellMLToolsPlugin::initializePlugin(QMainWindow *pMainWindow)
 {
+    // Keep track of our parent
+
+    mMainWindow = pMainWindow;
+
     // Create our Tools | Export To menu
 
-    mCellmlFileExportToMenu = newMenu("CellmlFileExportTo", mMainWindow);
+    mCellmlFileExportToMenu = newMenu("CellmlFileExportTo", pMainWindow);
 
     // Create our different Tools | Export To actions, and add them to our
     // Tools | Export To menu
 
-    mExportToCellml10Action = new QAction(mMainWindow);
-    mExportToCellml11Action = new QAction(mMainWindow);
+    mExportToCellml10Action = new QAction(pMainWindow);
+    mExportToCellml11Action = new QAction(pMainWindow);
 
-    mExportToUserDefinedFormatAction = new QAction(mMainWindow);
+    mExportToUserDefinedFormatAction = new QAction(pMainWindow);
 
     mCellmlFileExportToMenu->addAction(mExportToCellml10Action);
     mCellmlFileExportToMenu->addAction(mExportToCellml11Action);

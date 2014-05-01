@@ -157,11 +157,11 @@ void PrettyCellMLViewPlugin::retranslateUi()
 // Plugin interface
 //==============================================================================
 
-void PrettyCellMLViewPlugin::initializePlugin()
+void PrettyCellMLViewPlugin::initializePlugin(QMainWindow *pMainWindow)
 {
     // Create our pretty CellML view widget
 
-    mViewWidget = new PrettyCellmlViewWidget(mMainWindow);
+    mViewWidget = new PrettyCellmlViewWidget(pMainWindow);
 
     // Hide our pretty CellML view widget since it may not initially be shown in
     // our central widget

@@ -25,7 +25,6 @@ specific language governing permissions and limitations under the License.
 
 #include <QAction>
 #include <QApplication>
-#include <QMainWindow>
 #include <QMenu>
 #include <QToolBar>
 
@@ -239,8 +238,7 @@ QList<GuiWindowSettings *> GuiSettings::windows() const
 
 //==============================================================================
 
-GuiInterface::GuiInterface() :
-    mMainWindow(0)
+GuiInterface::GuiInterface()
 {
     // Create our GUI settings object
 
@@ -263,15 +261,6 @@ GuiSettings * GuiInterface::guiSettings() const
     // Return the plugin's GUI settings
 
     return mGuiSettings;
-}
-
-//==============================================================================
-
-void GuiInterface::setMainWindow(QMainWindow *pMainWindow)
-{
-    // Set the main window
-
-    mMainWindow = pMainWindow;
 }
 
 //==============================================================================

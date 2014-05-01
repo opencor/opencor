@@ -4,7 +4,7 @@
     #define PURE
 #endif
 
-    virtual void initializePlugin() PURE;
+    virtual void initializePlugin(QMainWindow *pMainWindow) PURE;
     virtual void finalizePlugin() PURE;
 
     virtual void pluginInitialized(const Plugins &pLoadedPlugins) PURE;

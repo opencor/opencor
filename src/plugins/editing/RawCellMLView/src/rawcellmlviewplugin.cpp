@@ -161,11 +161,11 @@ void RawCellMLViewPlugin::retranslateUi()
 // Plugin interface
 //==============================================================================
 
-void RawCellMLViewPlugin::initializePlugin()
+void RawCellMLViewPlugin::initializePlugin(QMainWindow *pMainWindow)
 {
     // Create our raw CellML view widget
 
-    mViewWidget = new RawCellmlViewWidget(mMainWindow);
+    mViewWidget = new RawCellmlViewWidget(pMainWindow);
 
     // Hide our raw CellML view widget since it may not initially be shown in
     // our central widget

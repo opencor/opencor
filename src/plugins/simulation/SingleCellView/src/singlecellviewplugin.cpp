@@ -151,11 +151,11 @@ void SingleCellViewPlugin::retranslateUi()
 // Plugin interface
 //==============================================================================
 
-void SingleCellViewPlugin::initializePlugin()
+void SingleCellViewPlugin::initializePlugin(QMainWindow *pMainWindow)
 {
     // Create our single view widget
 
-    mViewWidget = new SingleCellViewWidget(this, mMainWindow);
+    mViewWidget = new SingleCellViewWidget(this, pMainWindow);
 
     // Hide our single view widget since it may not initially be shown in our
     // central widget

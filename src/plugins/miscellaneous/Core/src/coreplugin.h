@@ -68,6 +68,8 @@ public:
 #include "plugininterface.inl"
 
 private:
+    QMainWindow *mMainWindow;
+
     CentralWidget *mCentralWidget;
 
     QAction *mFileOpenAction;

@@ -280,33 +280,37 @@ void CorePlugin::retranslateUi()
 // Plugin interface
 //==============================================================================
 
-void CorePlugin::initializePlugin()
+void CorePlugin::initializePlugin(QMainWindow *pMainWindow)
 {
+    // Keep track of our parent
+
+    mMainWindow = pMainWindow;
+
     // Create our central widget
 
-    mCentralWidget = new CentralWidget(mMainWindow);
+    mCentralWidget = new CentralWidget(pMainWindow);
 
     // Create our different File actions
 
     mFileOpenAction = newAction(QIcon(":/oxygen/actions/document-open.png"),
-                                QKeySequence::Open, mMainWindow);
+                                QKeySequence::Open, pMainWindow);
     mFileOpenRemoteAction = newAction(QKeySequence(Qt::CTRL|Qt::SHIFT|Qt::Key_O),
-                                      mMainWindow);
+                                      pMainWindow);
 
-    mFileReloadAction = new QAction(mMainWindow);
+    mFileReloadAction = new QAction(pMainWindow);
 
     mFileDuplicateAction = newAction(QKeySequence(Qt::CTRL|Qt::Key_D),
-                                     mMainWindow);
+                                     pMainWindow);
 
     mFileLockedAction = newAction(true, QKeySequence(Qt::CTRL|Qt::Key_L),
-                                  mMainWindow);
+                                  pMainWindow);
 
     mFileSaveAction    = newAction(QIcon(":/oxygen/actions/document-save.png"),
-                                   QKeySequence::Save, mMainWindow);
+                                   QKeySequence::Save, pMainWindow);
     mFileSaveAsAction  = newAction(QIcon(":/oxygen/actions/document-save-as.png"),
-                                   QKeySequence::SaveAs, mMainWindow);
+                                   QKeySequence::SaveAs, pMainWindow);
     mFileSaveAllAction = newAction(QIcon(":/oxygen/actions/document-save-all.png"),
-                                   mMainWindow);
+                                   pMainWindow);
 
     // Note: for mFilePreviousAction and mFileNextAction, we would normally use
     //       QKeySequence::PreviousChild and QKeySequence::NextChild,
@@ -330,7 +334,7 @@ void CorePlugin::initializePlugin()
 #else
     #error Unsupported platform
 #endif
-                                    mMainWindow);
+                                    pMainWindow);
     mFileNextAction     = newAction(QIcon(":/oxygen/actions/go-next.png"),
 #if defined(Q_OS_WIN) || defined(Q_OS_LINUX)
                                     QKeySequence(Qt::CTRL|Qt::Key_Tab),
@@ -339,7 +343,7 @@ void CorePlugin::initializePlugin()
 #else
     #error Unsupported platform
 #endif
-                                    mMainWindow);
+                                    pMainWindow);
 
     mFileCloseAction    = newAction(QIcon(":/oxygen/actions/document-close.png"),
 #if defined(Q_OS_WIN)
@@ -349,22 +353,22 @@ void CorePlugin::initializePlugin()
 #else
     #error Unsupported platform
 #endif
-                                    mMainWindow);
-    mFileCloseAllAction = new QAction(mMainWindow);
+                                    pMainWindow);
+    mFileCloseAllAction = new QAction(pMainWindow);
 
     // Create the separator before which we will insert our Reopen sub-menu
 
-    QAction *openReloadSeparator = new QAction(mMainWindow);
+    QAction *openReloadSeparator = new QAction(pMainWindow);
 
     openReloadSeparator->setSeparator(true);
 
     // Create our Reopen sub-menu
 
     mFileReopenSubMenu = newMenu(QIcon(":/oxygen/actions/document-open-recent.png"),
-                                 mMainWindow);
+                                 pMainWindow);
 
-    mFileReopenSubMenuSeparator = new QAction(mMainWindow);
-    mFileClearReopenSubMenuAction = new QAction(mMainWindow);
+    mFileReopenSubMenuSeparator = new QAction(pMainWindow);
+    mFileClearReopenSubMenuAction = new QAction(pMainWindow);
 
     mFileReopenSubMenuSeparator->setSeparator(true);
 

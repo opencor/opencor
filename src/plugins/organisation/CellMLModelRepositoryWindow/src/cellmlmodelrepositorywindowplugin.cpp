@@ -151,15 +151,15 @@ void CellMLModelRepositoryWindowPlugin::retranslateUi()
 // Plugin interface
 //==============================================================================
 
-void CellMLModelRepositoryWindowPlugin::initializePlugin()
+void CellMLModelRepositoryWindowPlugin::initializePlugin(QMainWindow *pMainWindow)
 {
     // Create an action to show/hide our CellML Model Repository window
 
-    mCellmlModelRepositoryAction = newAction(true, mMainWindow);
+    mCellmlModelRepositoryAction = newAction(true, pMainWindow);
 
     // Create our CellML Model Repository window
 
-    mCellmlModelRepositoryWindow = new CellmlModelRepositoryWindowWindow(mMainWindow);
+    mCellmlModelRepositoryWindow = new CellmlModelRepositoryWindowWindow(pMainWindow);
 
     // Set our settings
 

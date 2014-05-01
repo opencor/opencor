@@ -149,16 +149,16 @@ void HelpWindowPlugin::retranslateUi()
 // Plugin interface
 //==============================================================================
 
-void HelpWindowPlugin::initializePlugin()
+void HelpWindowPlugin::initializePlugin(QMainWindow *pMainWindow)
 {
     // Create an action to show/hide our help window
 
     mHelpAction = newAction(true, QIcon(":/oxygen/apps/help-browser.png"),
-                            Qt::Key_F1, mMainWindow);
+                            Qt::Key_F1, pMainWindow);
 
     // Create our help window
 
-    mHelpWindow = new HelpWindowWindow(mMainWindow);
+    mHelpWindow = new HelpWindowWindow(pMainWindow);
 
     // Set our settings
 

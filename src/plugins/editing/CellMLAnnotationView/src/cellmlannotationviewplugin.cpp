@@ -165,11 +165,11 @@ void CellMLAnnotationViewPlugin::retranslateUi()
 // Plugin interface
 //==============================================================================
 
-void CellMLAnnotationViewPlugin::initializePlugin()
+void CellMLAnnotationViewPlugin::initializePlugin(QMainWindow *pMainWindow)
 {
     // Create our CellML annotation view widget
 
-    mViewWidget = new CellmlAnnotationViewWidget(this, mMainWindow);
+    mViewWidget = new CellmlAnnotationViewWidget(this, pMainWindow);
 
     // Hide our CellML annotation view widget since it may not initially be
     // shown in our central widget

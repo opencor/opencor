@@ -150,15 +150,15 @@ void FileOrganiserWindowPlugin::retranslateUi()
 // Plugin interface
 //==============================================================================
 
-void FileOrganiserWindowPlugin::initializePlugin()
+void FileOrganiserWindowPlugin::initializePlugin(QMainWindow *pMainWindow)
 {
     // Create an action to show/hide our file organiser window
 
-    mFileOrganiserAction = newAction(true, mMainWindow);
+    mFileOrganiserAction = newAction(true, pMainWindow);
 
     // Create our file organiser window
 
-    mFileOrganiserWindow = new FileOrganiserWindowWindow(mMainWindow);
+    mFileOrganiserWindow = new FileOrganiserWindowWindow(pMainWindow);
 
     // Set our settings
 

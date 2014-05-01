@@ -158,11 +158,11 @@ void RawViewPlugin::retranslateUi()
 // Plugin interface
 //==============================================================================
 
-void RawViewPlugin::initializePlugin()
+void RawViewPlugin::initializePlugin(QMainWindow *pMainWindow)
 {
     // Create our raw view widget
 
-    mViewWidget = new RawViewWidget(mMainWindow);
+    mViewWidget = new RawViewWidget(pMainWindow);
 
     // Hide our raw view widget since it may not initially be shown in our
     // central widget

@@ -32,6 +32,7 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+class QMainWindow;
 class QSettings;
 
 //==============================================================================
