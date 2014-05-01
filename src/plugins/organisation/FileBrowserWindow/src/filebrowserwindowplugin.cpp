@@ -159,11 +159,6 @@ void FileBrowserWindowPlugin::initializePlugin(QMainWindow *pMainWindow)
     // Create our file browser window
 
     mFileBrowserWindow = new FileBrowserWindowWindow(pMainWindow);
-
-    // Set our settings
-
-    mGuiSettings->addWindow(Qt::LeftDockWidgetArea, mFileBrowserWindow,
-                            mFileBrowserAction);
 }
 
 //==============================================================================
@@ -211,6 +206,35 @@ void FileBrowserWindowPlugin::handleAction(const QUrl &pUrl)
     Q_UNUSED(pUrl);
 
     // We don't handle this interface...
+}
+
+//==============================================================================
+// Window interface
+//==============================================================================
+
+Qt::DockWidgetArea FileBrowserWindowPlugin::windowDefaultDockArea() const
+{
+    // Return our default dock area
+
+    return Qt::LeftDockWidgetArea;
+}
+
+//==============================================================================
+
+QWidget * FileBrowserWindowPlugin::windowWidget() const
+{
+    // Return our window widget
+
+    return mFileBrowserWindow;
+}
+
+//==============================================================================
+
+QAction * FileBrowserWindowPlugin::windowAction() const
+{
+    // Return our window action
+
+    return mFileBrowserAction;
 }
 
 //==============================================================================

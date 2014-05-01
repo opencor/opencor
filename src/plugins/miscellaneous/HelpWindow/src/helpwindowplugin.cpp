@@ -159,10 +159,6 @@ void HelpWindowPlugin::initializePlugin(QMainWindow *pMainWindow)
     // Create our help window
 
     mHelpWindow = new HelpWindowWindow(pMainWindow);
-
-    // Set our settings
-
-    mGuiSettings->addWindow(Qt::RightDockWidgetArea, mHelpWindow, mHelpAction);
 }
 
 //==============================================================================
@@ -210,6 +206,35 @@ void HelpWindowPlugin::handleAction(const QUrl &pUrl)
     Q_UNUSED(pUrl);
 
     // We don't handle this interface...
+}
+
+//==============================================================================
+// Window interface
+//==============================================================================
+
+Qt::DockWidgetArea HelpWindowPlugin::windowDefaultDockArea() const
+{
+    // Return our default dock area
+
+    return Qt::RightDockWidgetArea;
+}
+
+//==============================================================================
+
+QWidget * HelpWindowPlugin::windowWidget() const
+{
+    // Return our window widget
+
+    return mHelpWindow;
+}
+
+//==============================================================================
+
+QAction * HelpWindowPlugin::windowAction() const
+{
+    // Return our window action
+
+    return mHelpAction;
 }
 
 //==============================================================================

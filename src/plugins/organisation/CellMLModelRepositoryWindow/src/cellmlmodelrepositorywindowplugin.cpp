@@ -160,12 +160,6 @@ void CellMLModelRepositoryWindowPlugin::initializePlugin(QMainWindow *pMainWindo
     // Create our CellML Model Repository window
 
     mCellmlModelRepositoryWindow = new CellmlModelRepositoryWindowWindow(pMainWindow);
-
-    // Set our settings
-
-    mGuiSettings->addWindow(Qt::LeftDockWidgetArea,
-                            mCellmlModelRepositoryWindow,
-                            mCellmlModelRepositoryAction);
 }
 
 //==============================================================================
@@ -213,6 +207,35 @@ void CellMLModelRepositoryWindowPlugin::handleAction(const QUrl &pUrl)
     Q_UNUSED(pUrl);
 
     // We don't handle this interface...
+}
+
+//==============================================================================
+// Window interface
+//==============================================================================
+
+Qt::DockWidgetArea CellMLModelRepositoryWindowPlugin::windowDefaultDockArea() const
+{
+    // Return our default dock area
+
+    return Qt::LeftDockWidgetArea;
+}
+
+//==============================================================================
+
+QWidget * CellMLModelRepositoryWindowPlugin::windowWidget() const
+{
+    // Return our window widget
+
+    return mCellmlModelRepositoryWindow;
+}
+
+//==============================================================================
+
+QAction * CellMLModelRepositoryWindowPlugin::windowAction() const
+{
+    // Return our window action
+
+    return mCellmlModelRepositoryAction;
 }
 
 //==============================================================================

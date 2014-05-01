@@ -31,6 +31,7 @@ specific language governing permissions and limitations under the License.
 #include "pluginswindow.h"
 #include "preferenceswindow.h"
 #include "viewinterface.h"
+#include "windowinterface.h"
 
 //==============================================================================
 
@@ -550,7 +551,7 @@ void MainWindow::initializeGuiPlugin(Plugin *pPlugin, GuiSettings *pGuiSettings)
             ;
         }
 
-    // Set our central widget, but only if we are dealing with the Core plugin
+    // Set our central widget, in case we are dealing with the Core plugin
 
     if (pPlugin == mPluginManager->corePlugin()) {
         // We are dealing with the Core plugin, so set our central widget
@@ -565,14 +566,16 @@ void MainWindow::initializeGuiPlugin(Plugin *pPlugin, GuiSettings *pGuiSettings)
                 this, SLOT(updateGui(Plugin *, const QString &)));
     }
 
-    // Add the windows (including to the corresponding menu)
+    // Add the plugin's window, in case we are dealing with a window plugin
 
-    foreach (GuiWindowSettings *windowSettings, pGuiSettings->windows()) {
+    WindowInterface *windowInterface = qobject_cast<WindowInterface *>(pPlugin->instance());
+
+    if (windowInterface) {
         // Dock the window to its default dock area
 
-        QDockWidget *dockWidget = qobject_cast<QDockWidget *>(windowSettings->window());
+        QDockWidget *dockWidget = qobject_cast<QDockWidget *>(windowInterface->windowWidget());
 
-        addDockWidget(windowSettings->defaultDockArea(), dockWidget);
+        addDockWidget(windowInterface->windowDefaultDockArea(), dockWidget);
 
         // Add an action to our menu to show/hide the window
 
@@ -580,26 +583,22 @@ void MainWindow::initializeGuiPlugin(Plugin *pPlugin, GuiSettings *pGuiSettings)
             // Special case of the help window
 
             mGui->menuHelp->insertAction(mGui->actionHomePage,
-                                         windowSettings->action());
+                                         windowInterface->windowAction());
             mGui->menuHelp->insertSeparator(mGui->actionHomePage);
         } else {
             // Update the View menu by adding the action to the
             // View|Windows menu
 
-            updateViewWindowsMenu(windowSettings->action());
+            updateViewWindowsMenu(windowInterface->windowAction());
         }
 
         // Connect the action to the window
 
-        connect(windowSettings->action(), SIGNAL(triggered(bool)),
+        connect(windowInterface->windowAction(), SIGNAL(triggered(bool)),
                 dockWidget, SLOT(setVisible(bool)));
         connect(dockWidget->toggleViewAction(), SIGNAL(toggled(bool)),
-                windowSettings->action(), SLOT(setChecked(bool)));
+                windowInterface->windowAction(), SLOT(setChecked(bool)));
     }
-
-    // Reorder our various View|Windows menu items, just in case
-
-    reorderViewWindowsMenu();
 }
 
 //==============================================================================

@@ -108,48 +108,9 @@ QAction * GuiMenuActionSettings::action() const
 
 //==============================================================================
 
-GuiWindowSettings::GuiWindowSettings(const Qt::DockWidgetArea &pDefaultDockArea,
-                                     QWidget *pWindow,
-                                     QAction *pAction) :
-    mDefaultDockArea(pDefaultDockArea),
-    mWindow(pWindow),
-    mAction(pAction)
-{
-}
-
-//==============================================================================
-
-Qt::DockWidgetArea GuiWindowSettings::defaultDockArea() const
-{
-    // Return the window's default dock area
-
-    return mDefaultDockArea;
-}
-
-//==============================================================================
-
-QWidget * GuiWindowSettings::window() const
-{
-    // Return the window itself
-
-    return mWindow;
-}
-
-//==============================================================================
-
-QAction * GuiWindowSettings::action() const
-{
-    // Return the action itself
-
-    return mAction;
-}
-
-//==============================================================================
-
 GuiSettings::GuiSettings() :
     mMenus(QList<GuiMenuSettings *>()),
-    mMenuActions(QList<GuiMenuActionSettings *>()),
-    mWindows(QList<GuiWindowSettings *>())
+    mMenuActions(QList<GuiMenuActionSettings *>())
 {
 }
 
@@ -164,9 +125,6 @@ GuiSettings::~GuiSettings()
 
     foreach (GuiMenuActionSettings *menuActionSettings, mMenuActions)
         delete menuActionSettings;
-
-    foreach (GuiWindowSettings *windowSettings, mWindows)
-        delete windowSettings;
 }
 
 //==============================================================================
@@ -201,16 +159,6 @@ void GuiSettings::addMenuAction(const GuiMenuActionSettings::Type &pType,
 
 //==============================================================================
 
-void GuiSettings::addWindow(const Qt::DockWidgetArea &pDefaultDockArea,
-                            QWidget *pWindow, QAction *pAction)
-{
-    // Add a window to our list
-
-    mWindows << new GuiWindowSettings(pDefaultDockArea, pWindow, pAction);
-}
-
-//==============================================================================
-
 QList<GuiMenuSettings *> GuiSettings::menus() const
 {
     // Return our menus
@@ -225,15 +173,6 @@ QList<GuiMenuActionSettings *> GuiSettings::menuActions() const
     // Return our menu actions
 
     return mMenuActions;
-}
-
-//==============================================================================
-
-QList<GuiWindowSettings *> GuiSettings::windows() const
-{
-    // Return our windows
-
-    return mWindows;
 }
 
 //==============================================================================

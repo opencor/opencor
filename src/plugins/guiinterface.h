@@ -98,24 +98,6 @@ private:
 
 //==============================================================================
 
-class GuiWindowSettings
-{
-public:
-    explicit GuiWindowSettings(const Qt::DockWidgetArea &pDefaultDockArea,
-                               QWidget *pWindow, QAction *pAction);
-
-    Qt::DockWidgetArea defaultDockArea() const;
-    QWidget * window() const;
-    QAction * action() const;
-
-private:
-    Qt::DockWidgetArea mDefaultDockArea;
-    QWidget *mWindow;
-    QAction *mAction;
-};
-
-//==============================================================================
-
 class GuiSettings
 {
 public:
@@ -127,17 +109,13 @@ public:
                  QMenu *pMenu);
     void addMenuAction(const GuiMenuActionSettings::Type &pType,
                        QAction *pAction = 0);
-    void addWindow(const Qt::DockWidgetArea &pDefaultDockArea,
-                   QWidget *pWindow, QAction *pAction);
 
     QList<GuiMenuSettings *> menus() const;
     QList<GuiMenuActionSettings *> menuActions() const;
-    QList<GuiWindowSettings *> windows() const;
 
 private:
     QList<GuiMenuSettings *> mMenus;
     QList<GuiMenuActionSettings *> mMenuActions;
-    QList<GuiWindowSettings *> mWindows;
 };
 
 //==============================================================================

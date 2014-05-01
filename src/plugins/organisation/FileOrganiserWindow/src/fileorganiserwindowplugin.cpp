@@ -159,11 +159,6 @@ void FileOrganiserWindowPlugin::initializePlugin(QMainWindow *pMainWindow)
     // Create our file organiser window
 
     mFileOrganiserWindow = new FileOrganiserWindowWindow(pMainWindow);
-
-    // Set our settings
-
-    mGuiSettings->addWindow(Qt::LeftDockWidgetArea, mFileOrganiserWindow,
-                            mFileOrganiserAction);
 }
 
 //==============================================================================
@@ -211,6 +206,35 @@ void FileOrganiserWindowPlugin::handleAction(const QUrl &pUrl)
     Q_UNUSED(pUrl);
 
     // We don't handle this interface...
+}
+
+//==============================================================================
+// Window interface
+//==============================================================================
+
+Qt::DockWidgetArea FileOrganiserWindowPlugin::windowDefaultDockArea() const
+{
+    // Return our default dock area
+
+    return Qt::LeftDockWidgetArea;
+}
+
+//==============================================================================
+
+QWidget * FileOrganiserWindowPlugin::windowWidget() const
+{
+    // Return our window widget
+
+    return mFileOrganiserWindow;
+}
+
+//==============================================================================
+
+QAction * FileOrganiserWindowPlugin::windowAction() const
+{
+    // Return our window action
+
+    return mFileOrganiserAction;
 }
 
 //==============================================================================
