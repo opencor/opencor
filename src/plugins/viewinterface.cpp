@@ -16,69 +16,59 @@ specific language governing permissions and limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// RawView plugin
+// View interface
 //==============================================================================
 
-#ifndef RAWVIEWPLUGIN_H
-#define RAWVIEWPLUGIN_H
-
-//==============================================================================
-
-#include "editinginterface.h"
-#include "guiinterface.h"
-#include "i18ninterface.h"
-#include "plugininterface.h"
-#include "plugininfo.h"
 #include "viewinterface.h"
 
 //==============================================================================
 
 namespace OpenCOR {
-namespace RawView {
 
 //==============================================================================
 
-PLUGININFO_FUNC RawViewPluginInfo();
+static const auto ViewModeUnknown    = QStringLiteral("Unknown");
+static const auto ViewModeEditing    = QStringLiteral("Editing");
+static const auto ViewModeSimulation = QStringLiteral("Simulation");
+static const auto ViewModeAnalysis   = QStringLiteral("Analysis");
 
 //==============================================================================
 
-class RawViewWidget;
-
-//==============================================================================
-
-class RawViewPlugin : public QObject, public EditingInterface,
-                      public GuiInterface, public I18nInterface,
-                      public PluginInterface, public ViewInterface
+QString ViewInterface::viewModeAsString(const ViewInterface::Mode &pMode)
 {
-    Q_OBJECT
+    // Return the mode corresponding to the given mode string
 
-    Q_PLUGIN_METADATA(IID "OpenCOR.RawViewPlugin" FILE "rawviewplugin.json")
-
-    Q_INTERFACES(OpenCOR::EditingInterface)
-    Q_INTERFACES(OpenCOR::GuiInterface)
-    Q_INTERFACES(OpenCOR::I18nInterface)
-    Q_INTERFACES(OpenCOR::PluginInterface)
-    Q_INTERFACES(OpenCOR::ViewInterface)
-
-public:
-#include "editinginterface.inl"
-#include "guiinterface.inl"
-#include "i18ninterface.inl"
-#include "plugininterface.inl"
-#include "viewinterface.inl"
-
-private:
-    RawViewWidget *mViewWidget;
-};
+    switch (pMode) {
+    case ViewInterface::Editing:
+        return ViewModeEditing;
+    case ViewInterface::Simulation:
+        return ViewModeSimulation;
+    case ViewInterface::Analysis:
+        return ViewModeAnalysis;
+    default:   // ViewInterface::Unknown
+        return ViewModeUnknown;
+    }
+}
 
 //==============================================================================
 
-}   // namespace RawView
+ViewInterface::Mode ViewInterface::viewModeFromString(const QString &pMode)
+{
+    // Return the mode string corresponding to the given mode
+
+    if (!pMode.compare(ViewModeEditing))
+        return ViewInterface::Editing;
+    else if (!pMode.compare(ViewModeSimulation))
+        return ViewInterface::Simulation;
+    else if (!pMode.compare(ViewModeAnalysis))
+        return ViewInterface::Analysis;
+    else
+        return ViewInterface::Unknown;
+}
+
+//==============================================================================
+
 }   // namespace OpenCOR
-
-//==============================================================================
-
-#endif
 
 //==============================================================================
 // End of file

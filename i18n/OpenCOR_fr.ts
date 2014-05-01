@@ -356,18 +356,6 @@
         <translation>Tous droits réservés</translation>
     </message>
     <message>
-        <source>ODE</source>
-        <translation>EDO</translation>
-    </message>
-    <message>
-        <source>DAE</source>
-        <translation>EAD</translation>
-    </message>
-    <message>
-        <source>NLA</source>
-        <translation>ANL</translation>
-    </message>
-    <message>
         <source>B</source>
         <translation>o</translation>
     </message>

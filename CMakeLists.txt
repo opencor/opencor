@@ -48,13 +48,11 @@ SET(SOURCES
     src/misc/cliapplication.cpp
     src/misc/common.cpp
 
-    src/plugins/fileinterface.cpp
     src/plugins/guiinterface.cpp
     src/plugins/i18ninterface.cpp
     src/plugins/plugin.cpp
     src/plugins/plugininfo.cpp
     src/plugins/pluginmanager.cpp
-    src/plugins/solverinterface.cpp
 
     src/plugins/miscellaneous/Core/src/cliutils.cpp
     src/plugins/miscellaneous/Core/src/commonwidget.cpp

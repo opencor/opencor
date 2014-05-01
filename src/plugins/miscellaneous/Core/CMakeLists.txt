@@ -25,6 +25,7 @@ ADD_PLUGIN(Core
         ../../plugin.cpp
         ../../plugininfo.cpp
         ../../pluginmanager.cpp
+        ../../viewinterface.cpp
 
         src/borderedwidget.cpp
         src/centralwidget.cpp

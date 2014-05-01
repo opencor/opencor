@@ -15,6 +15,7 @@ ADD_PLUGIN(SingleCellView
         ../../plugininfo.cpp
         ../../pluginmanager.cpp
         ../../solverinterface.cpp
+        ../../viewinterface.cpp
 
         src/singlecellviewcontentswidget.cpp
         src/singlecellviewgraphpanelplotwidget.cpp

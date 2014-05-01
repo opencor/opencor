@@ -49,16 +49,6 @@ PLUGININFO_FUNC PrettyCellMLViewPluginInfo()
 }
 
 //==============================================================================
-
-PrettyCellMLViewPlugin::PrettyCellMLViewPlugin()
-{
-    // Set our settings
-
-    mGuiSettings->setView(GuiViewSettings::Editing,
-                          QStringList() << CellMLSupport::CellmlMimeType);
-}
-
-//==============================================================================
 // Editing interface
 //==============================================================================
 
@@ -228,6 +218,24 @@ void PrettyCellMLViewPlugin::handleAction(const QUrl &pUrl)
 
 //==============================================================================
 // View interface
+//==============================================================================
+
+ViewInterface::Mode PrettyCellMLViewPlugin::viewMode() const
+{
+    // Return our mode
+
+    return ViewInterface::Editing;
+}
+
+//==============================================================================
+
+QStringList PrettyCellMLViewPlugin::viewMimeTypes() const
+{
+    // Return the MIME types we support
+
+    return QStringList() << CellMLSupport::CellmlMimeType;
+}
+
 //==============================================================================
 
 void PrettyCellMLViewPlugin::initializeView()

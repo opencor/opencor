@@ -24,6 +24,11 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#include <QString>
+#include <QWidget>
+
+//==============================================================================
+
 namespace OpenCOR {
 
 //==============================================================================
@@ -31,9 +36,19 @@ namespace OpenCOR {
 class ViewInterface
 {
 public:
+    enum Mode {
+        Unknown,
+        Editing,
+        Simulation,
+        Analysis
+    };
+
 #define INTERFACE_DEFINITION
     #include "viewinterface.inl"
 #undef INTERFACE_DEFINITION
+
+    static QString viewModeAsString(const Mode &pMode);
+    static Mode viewModeFromString(const QString &pMode);
 };
 
 //==============================================================================

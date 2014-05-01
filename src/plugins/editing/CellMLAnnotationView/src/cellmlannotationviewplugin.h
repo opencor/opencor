@@ -69,8 +69,6 @@ class CellMLAnnotationViewPlugin : public QObject,
     Q_INTERFACES(OpenCOR::ViewInterface)
 
 public:
-    explicit CellMLAnnotationViewPlugin();
-
 #include "cellmleditinginterface.inl"
 #include "editinginterface.inl"
 #include "guiinterface.inl"

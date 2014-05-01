@@ -50,16 +50,6 @@ PLUGININFO_FUNC CellMLAnnotationViewPluginInfo()
 }
 
 //==============================================================================
-
-CellMLAnnotationViewPlugin::CellMLAnnotationViewPlugin()
-{
-    // Set our settings
-
-    mGuiSettings->setView(GuiViewSettings::Editing,
-                          QStringList() << CellMLSupport::CellmlMimeType);
-}
-
-//==============================================================================
 // Editing interface
 //==============================================================================
 
@@ -236,6 +226,24 @@ void CellMLAnnotationViewPlugin::handleAction(const QUrl &pUrl)
 
 //==============================================================================
 // View interface
+//==============================================================================
+
+ViewInterface::Mode CellMLAnnotationViewPlugin::viewMode() const
+{
+    // Return our mode
+
+    return ViewInterface::Editing;
+}
+
+//==============================================================================
+
+QStringList CellMLAnnotationViewPlugin::viewMimeTypes() const
+{
+    // Return the MIME types we support
+
+    return QStringList() << CellMLSupport::CellmlMimeType;
+}
+
 //==============================================================================
 
 void CellMLAnnotationViewPlugin::initializeView()

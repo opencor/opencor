@@ -28,6 +28,7 @@ specific language governing permissions and limitations under the License.
 #include "fileinterface.h"
 #include "guiinterface.h"
 #include "widget.h"
+#include "viewinterface.h"
 
 //==============================================================================
 
@@ -63,7 +64,6 @@ namespace Core {
 //==============================================================================
 
 typedef QMap<int, Plugin *> CentralWidgetViewPlugins;
-typedef QMap<int, GuiViewSettings *> CentralWidgetViewSettings;
 
 //==============================================================================
 
@@ -82,17 +82,13 @@ public:
     void setEnabled(const bool &pEnabled);
 
     QTabBar * viewTabs() const;
-
     CentralWidgetViewPlugins * viewPlugins() const;
-    CentralWidgetViewSettings * viewSettings() const;
 
 private:
     bool mEnabled;
 
     QTabBar *mViewTabs;
-
     CentralWidgetViewPlugins *mViewPlugins;
-    CentralWidgetViewSettings *mViewSettings;
 };
 
 //==============================================================================
@@ -114,7 +110,7 @@ public:
 
     void setSupportedFileTypes(const FileTypes &pSupportedFileTypes);
 
-    void addView(Plugin *pPlugin, GuiViewSettings *pSettings);
+    void addView(Plugin *pPlugin);
 
     QTabBar * newTabBar(const QTabBar::Shape &pShape,
                         const bool &pMovable = false,
@@ -155,8 +151,8 @@ private:
     QTabBar *mModeTabs;
     QTabBar *mFileTabs;
 
-    QMap<int, GuiViewSettings::Mode> mModeTabIndexModes;
-    QMap<GuiViewSettings::Mode, int> mModeModeTabIndexes;
+    QMap<int, ViewInterface::Mode> mModeTabIndexModes;
+    QMap<ViewInterface::Mode, int> mModeModeTabIndexes;
 
     QMap<QString, int> mFileModeTabIndexes;
     QMap<QString, QMap<int, int>> mFileModeViewTabIndexes;
@@ -171,7 +167,7 @@ private:
 
     UserMessageWidget *mNoViewMsg;
 
-    QMap<GuiViewSettings::Mode, CentralWidgetMode *> mModes;
+    QMap<ViewInterface::Mode, CentralWidgetMode *> mModes;
 
     QDialog *mRemoteFileDialog;
     QLabel *mRemoteFileDialogUrlLabel;

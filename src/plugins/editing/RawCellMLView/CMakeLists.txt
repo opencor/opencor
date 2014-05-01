@@ -18,6 +18,7 @@ ADD_PLUGIN(RawCellMLView
         ../../guiinterface.cpp
         ../../i18ninterface.cpp
         ../../plugininfo.cpp
+        ../../viewinterface.cpp
 
         src/rawcellmlviewplugin.cpp
         src/rawcellmlviewwidget.cpp

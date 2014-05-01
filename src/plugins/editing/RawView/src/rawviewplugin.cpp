@@ -48,15 +48,6 @@ PLUGININFO_FUNC RawViewPluginInfo()
 }
 
 //==============================================================================
-
-RawViewPlugin::RawViewPlugin()
-{
-    // Set our settings
-
-    mGuiSettings->setView(GuiViewSettings::Editing, QStringList());
-}
-
-//==============================================================================
 // Editing interface
 //==============================================================================
 
@@ -228,6 +219,25 @@ void RawViewPlugin::handleAction(const QUrl &pUrl)
 
 //==============================================================================
 // View interface
+//==============================================================================
+
+ViewInterface::Mode RawViewPlugin::viewMode() const
+{
+    // Return our mode
+
+    return ViewInterface::Editing;
+}
+
+//==============================================================================
+
+QStringList RawViewPlugin::viewMimeTypes() const
+{
+    // Return the MIME types we support
+    // Note: we allow any kind of file, hence our empty string list...
+
+    return QStringList();
+}
+
 //==============================================================================
 
 void RawViewPlugin::initializeView()

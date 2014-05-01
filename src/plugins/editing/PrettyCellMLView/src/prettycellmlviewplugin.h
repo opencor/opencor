@@ -64,8 +64,6 @@ class PrettyCellMLViewPlugin : public QObject, public CellmlEditingInterface,
     Q_INTERFACES(OpenCOR::ViewInterface)
 
 public:
-    explicit PrettyCellMLViewPlugin();
-
 #include "cellmleditinginterface.inl"
 #include "editinginterface.inl"
 #include "guiinterface.inl"

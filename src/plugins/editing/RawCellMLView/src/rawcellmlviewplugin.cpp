@@ -50,16 +50,6 @@ PLUGININFO_FUNC RawCellMLViewPluginInfo()
 }
 
 //==============================================================================
-
-RawCellMLViewPlugin::RawCellMLViewPlugin()
-{
-    // Set our settings
-
-    mGuiSettings->setView(GuiViewSettings::Editing,
-                          QStringList() << CellMLSupport::CellmlMimeType);
-}
-
-//==============================================================================
 // Editing interface
 //==============================================================================
 
@@ -232,6 +222,24 @@ void RawCellMLViewPlugin::handleAction(const QUrl &pUrl)
 
 //==============================================================================
 // View interface
+//==============================================================================
+
+ViewInterface::Mode RawCellMLViewPlugin::viewMode() const
+{
+    // Return our mode
+
+    return ViewInterface::Editing;
+}
+
+//==============================================================================
+
+QStringList RawCellMLViewPlugin::viewMimeTypes() const
+{
+    // Return the MIME types we support
+
+    return QStringList() << CellMLSupport::CellmlMimeType;
+}
+
 //==============================================================================
 
 void RawCellMLViewPlugin::initializeView()

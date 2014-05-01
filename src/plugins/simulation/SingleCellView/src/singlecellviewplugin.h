@@ -59,8 +59,6 @@ class SingleCellViewPlugin : public QObject, public GuiInterface,
     Q_INTERFACES(OpenCOR::ViewInterface)
 
 public:
-    explicit SingleCellViewPlugin();
-
 #include "guiinterface.inl"
 #include "i18ninterface.inl"
 #include "plugininterface.inl"

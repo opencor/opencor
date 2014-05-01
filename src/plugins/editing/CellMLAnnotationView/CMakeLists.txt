@@ -14,6 +14,7 @@ ADD_PLUGIN(CellMLAnnotationView
         ../../plugin.cpp
         ../../plugininfo.cpp
         ../../pluginmanager.cpp
+        ../../viewinterface.cpp
 
         src/cellmlannotationviewcellmllistwidget.cpp
         src/cellmlannotationvieweditingwidget.cpp

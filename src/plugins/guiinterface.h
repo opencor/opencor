@@ -99,31 +99,6 @@ private:
 
 //==============================================================================
 
-class GuiViewSettings
-{
-public:
-    enum Mode {
-        Unknown,
-        Editing,
-        Simulation,
-        Analysis
-    };
-
-    explicit GuiViewSettings(const Mode &pMode, const QStringList &pMimeTypes);
-
-    Mode mode() const;
-    QStringList mimeTypes() const;
-
-    static QString modeAsString(const Mode &pMode);
-    static Mode modeFromString(const QString &pMode);
-
-private:
-    Mode mMode;
-    QStringList mMimeTypes;
-};
-
-//==============================================================================
-
 class GuiWindowSettings
 {
 public:
@@ -156,20 +131,16 @@ public:
     void setCentralWidget(QWidget *pCentralWidget);
     void addWindow(const Qt::DockWidgetArea &pDefaultDockArea,
                    QWidget *pWindow, QAction *pAction);
-    void setView(const GuiViewSettings::Mode &pMode,
-                 const QStringList &pMimeTypes);
 
     QList<GuiMenuSettings *> menus() const;
     QList<GuiMenuActionSettings *> menuActions() const;
     QWidget * centralWidget() const;
     QList<GuiWindowSettings *> windows() const;
-    GuiViewSettings * view() const;
 
 private:
     QList<GuiMenuSettings *> mMenus;
     QList<GuiMenuActionSettings *> mMenuActions;
     QWidget *mCentralWidget;
-    GuiViewSettings *mView;
     QList<GuiWindowSettings *> mWindows;
 };
 

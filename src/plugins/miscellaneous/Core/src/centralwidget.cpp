@@ -73,9 +73,7 @@ CentralWidgetMode::CentralWidgetMode(CentralWidget *pOwner) :
     // Initialise a few internal objects
 
     mViewTabs = pOwner->newTabBar(QTabBar::RoundedEast);
-
-    mViewPlugins  = new CentralWidgetViewPlugins();
-    mViewSettings = new CentralWidgetViewSettings();
+    mViewPlugins = new CentralWidgetViewPlugins();
 }
 
 //==============================================================================
@@ -84,9 +82,7 @@ CentralWidgetMode::~CentralWidgetMode()
 {
     // Delete some internal objects
 
-    delete mViewSettings;
     delete mViewPlugins;
-
     delete mViewTabs;
 }
 
@@ -128,28 +124,19 @@ CentralWidgetViewPlugins * CentralWidgetMode::viewPlugins() const
 
 //==============================================================================
 
-CentralWidgetViewSettings * CentralWidgetMode::viewSettings() const
-{
-    // Return the mode's view settings
-
-    return mViewSettings;
-}
-
-//==============================================================================
-
 CentralWidget::CentralWidget(QMainWindow *pMainWindow) :
     Widget(pMainWindow),
     mMainWindow(pMainWindow),
     mGui(new Ui::CentralWidget),
     mState(Starting),
     mLoadedPlugins(Plugins()),
-    mModeTabIndexModes(QMap<int, GuiViewSettings::Mode>()),
-    mModeModeTabIndexes(QMap<GuiViewSettings::Mode, int>()),
+    mModeTabIndexModes(QMap<int, ViewInterface::Mode>()),
+    mModeModeTabIndexes(QMap<ViewInterface::Mode, int>()),
     mFileModeTabIndexes(QMap<QString, int>()),
     mFileModeViewTabIndexes(QMap<QString, QMap<int, int>>()),
     mSupportedFileTypes(FileTypes()),
     mFileNames(QStringList()),
-    mModes(QMap<GuiViewSettings::Mode, CentralWidgetMode *>()),
+    mModes(QMap<ViewInterface::Mode, CentralWidgetMode *>()),
     mRemoteLocalFileNames(QMap<QString, QString>())
 {
     // Set up the GUI
@@ -166,9 +153,9 @@ CentralWidget::CentralWidget(QMainWindow *pMainWindow) :
 
     // Create our modes
 
-    mModes.insert(GuiViewSettings::Editing, new CentralWidgetMode(this));
-    mModes.insert(GuiViewSettings::Simulation, new CentralWidgetMode(this));
-    mModes.insert(GuiViewSettings::Analysis, new CentralWidgetMode(this));
+    mModes.insert(ViewInterface::Editing, new CentralWidgetMode(this));
+    mModes.insert(ViewInterface::Simulation, new CentralWidgetMode(this));
+    mModes.insert(ViewInterface::Analysis, new CentralWidgetMode(this));
     // Note: these will be deleted in CentralWidget's destructor...
 
     // Create our files tab bar widget
@@ -389,9 +376,9 @@ void CentralWidget::loadSettings(QSettings *pSettings)
         QString fileNameOrUrl = fileManagerInstance->isRemote(fileName)?
                                     fileManagerInstance->url(fileName):
                                     fileName;
-        GuiViewSettings::Mode fileMode = GuiViewSettings::modeFromString(pSettings->value(SettingsFileMode.arg(fileNameOrUrl)).toString());
+        ViewInterface::Mode fileMode = ViewInterface::viewModeFromString(pSettings->value(SettingsFileMode.arg(fileNameOrUrl)).toString());
 
-        if (fileMode != GuiViewSettings::Unknown)
+        if (fileMode != ViewInterface::Unknown)
             mFileModeTabIndexes.insert(fileName, mModeModeTabIndexes.value(fileMode));
 
         QMap<int, int> modeViewTabIndexes = QMap<int, int>();
@@ -399,7 +386,7 @@ void CentralWidget::loadSettings(QSettings *pSettings)
         for (int i = 0, iMax = mModeTabs->count(); i < iMax; ++i) {
             fileMode = mModeTabIndexModes.value(i);
 
-            QString viewPluginName = pSettings->value(SettingsFileModeView.arg(fileNameOrUrl, GuiViewSettings::modeAsString(fileMode))).toString();
+            QString viewPluginName = pSettings->value(SettingsFileModeView.arg(fileNameOrUrl, ViewInterface::viewModeAsString(fileMode))).toString();
             CentralWidgetViewPlugins *viewPlugins = mModes.value(fileMode)->viewPlugins();
 
             for (int j = 0, jMax = viewPlugins->count(); j < jMax; ++j)
@@ -484,14 +471,14 @@ void CentralWidget::saveSettings(QSettings *pSettings) const
                                     fileName;
 
         pSettings->setValue(SettingsFileMode.arg(fileNameOrUrl),
-                            GuiViewSettings::modeAsString(mModeTabIndexModes.value(mFileModeTabIndexes.value(fileName))));
+                            ViewInterface::viewModeAsString(mModeTabIndexModes.value(mFileModeTabIndexes.value(fileName))));
 
         QMap<int, int> modeViewTabIndexes = mFileModeViewTabIndexes.value(fileName);
 
         for (int i = 0, iMax = mModeTabs->count(); i < iMax; ++i) {
-            GuiViewSettings::Mode fileMode = mModeTabIndexModes.value(i);
+            ViewInterface::Mode fileMode = mModeTabIndexModes.value(i);
 
-            pSettings->setValue(SettingsFileModeView.arg(fileNameOrUrl, GuiViewSettings::modeAsString(fileMode)),
+            pSettings->setValue(SettingsFileModeView.arg(fileNameOrUrl, ViewInterface::viewModeAsString(fileMode)),
                                 mModes.value(fileMode)->viewPlugins()->value(modeViewTabIndexes.value(i))->name());
         }
     }
@@ -564,11 +551,11 @@ void CentralWidget::retranslateUi()
 
     // Retranslate our modes tab bar
 
-    mModeTabs->setTabText(mModeModeTabIndexes.value(GuiViewSettings::Editing, -1),
+    mModeTabs->setTabText(mModeModeTabIndexes.value(ViewInterface::Editing, -1),
                           tr("Editing"));
-    mModeTabs->setTabText(mModeModeTabIndexes.value(GuiViewSettings::Simulation, -1),
+    mModeTabs->setTabText(mModeModeTabIndexes.value(ViewInterface::Simulation, -1),
                           tr("Simulation"));
-    mModeTabs->setTabText(mModeModeTabIndexes.value(GuiViewSettings::Analysis, -1),
+    mModeTabs->setTabText(mModeModeTabIndexes.value(ViewInterface::Analysis, -1),
                           tr("Analysis"));
 
     // Retranslate our mode views tab bar
@@ -945,6 +932,19 @@ bool CentralWidget::saveFile(const int &pIndex, const bool &pNeedNewFileName)
     if ((pIndex < 0) || (pIndex >= mFileNames.count()))
         return false;
 
+    // Make sure that the view plugin supports saving
+
+    Plugin *fileViewPlugin = viewPlugin(pIndex);
+    GuiInterface *guiInterface = qobject_cast<GuiInterface *>(fileViewPlugin->instance());
+    ViewInterface *viewInterface = qobject_cast<ViewInterface *>(fileViewPlugin->instance());
+
+    if (!guiInterface) {
+        QMessageBox::warning(mMainWindow, tr("Save File"),
+                             tr("Sorry, but the <strong>%1</strong> view does not support saving files.").arg(viewInterface->viewName()));
+
+        return false;
+    }
+
     // Make sure that we have a file name
 
     FileManager *fileManagerInstance = FileManager::instance();
@@ -952,15 +952,13 @@ bool CentralWidget::saveFile(const int &pIndex, const bool &pNeedNewFileName)
     QString newFileName = oldFileName;
     bool fileIsNew = fileManagerInstance->isNew(oldFileName);
     bool hasNewFileName = false;
-    Plugin *fileViewPlugin = viewPlugin(pIndex);
-    GuiInterface *guiInterface = qobject_cast<GuiInterface *>(fileViewPlugin->instance());
 
     if (pNeedNewFileName || fileIsNew) {
         // Either we want to save the file under a new name or we are dealing
         // with a new file, so we ask the user for a file name based on the MIME
         // types supported by our current view
 
-        QStringList mimeTypes = guiInterface->guiSettings()->view()->mimeTypes();
+        QStringList mimeTypes = viewInterface->viewMimeTypes();
 
         QString supportedFileTypes = QString();
 
@@ -1013,7 +1011,7 @@ bool CentralWidget::saveFile(const int &pIndex, const bool &pNeedNewFileName)
                 // The file couldn't be saved, so...
 
                 QMessageBox::warning(mMainWindow, tr("Save File"),
-                                     tr("Sorry, but the <strong>%1</strong> view could not save <strong>%2</strong>.").arg(qobject_cast<ViewInterface *>(fileViewPlugin->instance())->viewName(), newFileName));
+                                     tr("Sorry, but the <strong>%1</strong> view could not save <strong>%2</strong>.").arg(viewInterface->viewName(), newFileName));
 
                 return false;
             }
@@ -1303,32 +1301,32 @@ bool CentralWidget::canClose()
 
 //==============================================================================
 
-void CentralWidget::addView(Plugin *pPlugin, GuiViewSettings *pSettings)
+void CentralWidget::addView(Plugin *pPlugin)
 {
     // Make sure that our list of required modes is up to date
 
-    GuiViewSettings::Mode settingsMode = pSettings->mode();
+    ViewInterface *viewInterface = qobject_cast<ViewInterface *>(pPlugin->instance());
+    ViewInterface::Mode viewMode = viewInterface->viewMode();
 
-    if (!mModes.value(settingsMode)->isEnabled()) {
+    if (!mModes.value(viewMode)->isEnabled()) {
         // There is no tab for the mode, so add one and enable it
 
         int tabIndex = mModeTabs->addTab(QString());
 
-        mModes.value(settingsMode)->setEnabled(true);
+        mModes.value(viewMode)->setEnabled(true);
 
         // Keep track of the correspondance mode type/index
 
-        mModeTabIndexModes.insert(tabIndex, settingsMode);
-        mModeModeTabIndexes.insert(settingsMode, tabIndex);
+        mModeTabIndexModes.insert(tabIndex, viewMode);
+        mModeModeTabIndexes.insert(viewMode, tabIndex);
     }
 
     // Add the requested view to the mode's views tab bar
 
-    CentralWidgetMode *mode = mModes.value(settingsMode);
+    CentralWidgetMode *mode = mModes.value(viewMode);
     int modeViewTabIndex = mode->viewTabs()->addTab(QString());
 
     mode->viewPlugins()->insert(modeViewTabIndex, pPlugin);
-    mode->viewSettings()->insert(modeViewTabIndex, pSettings);
 }
 
 //==============================================================================
@@ -1496,7 +1494,7 @@ void CentralWidget::updateGui()
             mFileModeTabIndexes.insert(fileName, fileModeTabIndex);
 
             QMap<int, int> modeViewTabIndexes = mFileModeViewTabIndexes.value(fileName);
-            GuiViewSettings::Mode fileMode = mModeTabIndexModes.value(fileModeTabIndex);
+            ViewInterface::Mode fileMode = mModeTabIndexModes.value(fileModeTabIndex);
 
             modeViewTabIndexes.insert(fileModeTabIndex, mModes.value(fileMode)->viewTabs()->currentIndex());
             mFileModeViewTabIndexes.insert(fileName, modeViewTabIndexes);
@@ -1508,9 +1506,9 @@ void CentralWidget::updateGui()
 
     int fileModeTabIndex = mModeTabs->currentIndex();
 
-    mModes.value(GuiViewSettings::Editing)->viewTabs()->setVisible(fileModeTabIndex == mModeModeTabIndexes.value(GuiViewSettings::Editing));
-    mModes.value(GuiViewSettings::Simulation)->viewTabs()->setVisible(fileModeTabIndex == mModeModeTabIndexes.value(GuiViewSettings::Simulation));
-    mModes.value(GuiViewSettings::Analysis)->viewTabs()->setVisible(fileModeTabIndex == mModeModeTabIndexes.value(GuiViewSettings::Analysis));
+    mModes.value(ViewInterface::Editing)->viewTabs()->setVisible(fileModeTabIndex == mModeModeTabIndexes.value(ViewInterface::Editing));
+    mModes.value(ViewInterface::Simulation)->viewTabs()->setVisible(fileModeTabIndex == mModeModeTabIndexes.value(ViewInterface::Simulation));
+    mModes.value(ViewInterface::Analysis)->viewTabs()->setVisible(fileModeTabIndex == mModeModeTabIndexes.value(ViewInterface::Analysis));
 
     // Ask the GUI interface for the widget to use for the current file (should
     // there be one)

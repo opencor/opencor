@@ -50,16 +50,6 @@ PLUGININFO_FUNC SingleCellViewPluginInfo()
 }
 
 //==============================================================================
-
-SingleCellViewPlugin::SingleCellViewPlugin()
-{
-    // Set our settings
-
-    mGuiSettings->setView(GuiViewSettings::Simulation,
-                          QStringList() << CellMLSupport::CellmlMimeType);
-}
-
-//==============================================================================
 // GUI interface
 //==============================================================================
 
@@ -236,6 +226,24 @@ void SingleCellViewPlugin::handleAction(const QUrl &pUrl)
 
 //==============================================================================
 // View interface
+//==============================================================================
+
+ViewInterface::Mode SingleCellViewPlugin::viewMode() const
+{
+    // Return our mode
+
+    return ViewInterface::Simulation;
+}
+
+//==============================================================================
+
+QStringList SingleCellViewPlugin::viewMimeTypes() const
+{
+    // Return the MIME types we support
+
+    return QStringList() << CellMLSupport::CellmlMimeType;
+}
+
 //==============================================================================
 
 void SingleCellViewPlugin::initializeView()

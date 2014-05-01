@@ -18,6 +18,7 @@ ADD_PLUGIN(PrettyCellMLView
         ../../guiinterface.cpp
         ../../i18ninterface.cpp
         ../../plugininfo.cpp
+        ../../viewinterface.cpp
 
         src/prettycellmlviewplugin.cpp
         src/prettycellmlviewwidget.cpp

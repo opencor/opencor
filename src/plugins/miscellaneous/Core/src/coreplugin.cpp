@@ -484,14 +484,13 @@ void CorePlugin::pluginInitialized(const Plugins &pLoadedPlugins)
     // widget should support
 
     foreach (Plugin *loadedPlugin, pLoadedPlugins) {
-        GuiInterface *guiInterface = qobject_cast<GuiInterface *>(loadedPlugin->instance());
+        ViewInterface *viewInterface = qobject_cast<ViewInterface *>(loadedPlugin->instance());
 
-        if (guiInterface && guiInterface->guiSettings()->view())
-            // The plugin implements our GUI interface and it has a view, so add
-            // it to our central widget
+        if (viewInterface)
+            // The plugin implements our View interface, so add it to our
+            // central widget
 
-            mCentralWidget->addView(loadedPlugin,
-                                    guiInterface->guiSettings()->view());
+            mCentralWidget->addView(loadedPlugin);
     }
 }
 

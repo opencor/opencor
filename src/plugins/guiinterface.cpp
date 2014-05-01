@@ -109,74 +109,6 @@ QAction * GuiMenuActionSettings::action() const
 
 //==============================================================================
 
-GuiViewSettings::GuiViewSettings(const Mode &pMode,
-                                 const QStringList &pMimeTypes) :
-    mMode(pMode),
-    mMimeTypes(pMimeTypes)
-{
-}
-
-//==============================================================================
-
-GuiViewSettings::Mode GuiViewSettings::mode() const
-{
-    // Return the view's mode
-
-    return mMode;
-}
-
-//==============================================================================
-
-QStringList GuiViewSettings::mimeTypes() const
-{
-    // Return the view's MIME types
-
-    return mMimeTypes;
-}
-
-//==============================================================================
-
-static const auto ModeUnknown    = QStringLiteral("Unknown");
-static const auto ModeEditing    = QStringLiteral("Editing");
-static const auto ModeSimulation = QStringLiteral("Simulation");
-static const auto ModeAnalysis   = QStringLiteral("Analysis");
-
-//==============================================================================
-
-QString GuiViewSettings::modeAsString(const GuiViewSettings::Mode &pMode)
-{
-    // Return the mode corresponding to the given mode string
-
-    switch (pMode) {
-    case GuiViewSettings::Editing:
-        return ModeEditing;
-    case GuiViewSettings::Simulation:
-        return ModeSimulation;
-    case GuiViewSettings::Analysis:
-        return ModeAnalysis;
-    default:   // GuiViewSettings::Unknown
-        return ModeUnknown;
-    }
-}
-
-//==============================================================================
-
-GuiViewSettings::Mode GuiViewSettings::modeFromString(const QString &pMode)
-{
-    // Return the mode string corresponding to the given mode
-
-    if (!pMode.compare(ModeEditing))
-        return GuiViewSettings::Editing;
-    else if (!pMode.compare(ModeSimulation))
-        return GuiViewSettings::Simulation;
-    else if (!pMode.compare(ModeAnalysis))
-        return GuiViewSettings::Analysis;
-    else
-        return GuiViewSettings::Unknown;
-}
-
-//==============================================================================
-
 GuiWindowSettings::GuiWindowSettings(const Qt::DockWidgetArea &pDefaultDockArea,
                                      QWidget *pWindow,
                                      QAction *pAction) :
@@ -219,7 +151,6 @@ GuiSettings::GuiSettings() :
     mMenus(QList<GuiMenuSettings *>()),
     mMenuActions(QList<GuiMenuActionSettings *>()),
     mCentralWidget(0),
-    mView(0),
     mWindows(QList<GuiWindowSettings *>())
 {
 }
@@ -235,8 +166,6 @@ GuiSettings::~GuiSettings()
 
     foreach (GuiMenuActionSettings *menuActionSettings, mMenuActions)
         delete menuActionSettings;
-
-    delete mView;
 
     foreach (GuiWindowSettings *windowSettings, mWindows)
         delete windowSettings;
@@ -293,21 +222,6 @@ void GuiSettings::addWindow(const Qt::DockWidgetArea &pDefaultDockArea,
 
 //==============================================================================
 
-void GuiSettings::setView(const GuiViewSettings::Mode &pMode,
-                          const QStringList &pMimeTypes)
-{
-    // Add and set the view
-
-    if (mView)
-        // There is already a view, so delete it
-
-        delete mView;
-
-    mView = new GuiViewSettings(pMode, pMimeTypes);
-}
-
-//==============================================================================
-
 QList<GuiMenuSettings *> GuiSettings::menus() const
 {
     // Return our menus
@@ -340,15 +254,6 @@ QList<GuiWindowSettings *> GuiSettings::windows() const
     // Return our windows
 
     return mWindows;
-}
-
-//==============================================================================
-
-GuiViewSettings * GuiSettings::view() const
-{
-    // Return our view
-
-    return mView;
 }
 
 //==============================================================================

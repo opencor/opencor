@@ -13,6 +13,7 @@ ADD_PLUGIN(RawView
         ../../guiinterface.cpp
         ../../i18ninterface.cpp
         ../../plugininfo.cpp
+        ../../viewinterface.cpp
 
         src/rawviewplugin.cpp
         src/rawviewwidget.cpp

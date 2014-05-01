@@ -4,6 +4,9 @@
     #define PURE
 #endif
 
+    virtual Mode viewMode() const PURE;
+    virtual QStringList viewMimeTypes() const PURE;
+
     virtual void initializeView() PURE;
     virtual void finalizeView() PURE;
 
