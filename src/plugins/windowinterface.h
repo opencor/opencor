@@ -16,64 +16,33 @@ specific language governing permissions and limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// FileBrowserWindow plugin
+// Window interface
 //==============================================================================
 
-#ifndef FILEBROWSERWINDOWPLUGIN_H
-#define FILEBROWSERWINDOWPLUGIN_H
-
-//==============================================================================
-
-#include "guiinterface.h"
-#include "i18ninterface.h"
-#include "plugininterface.h"
-#include "plugininfo.h"
-#include "windowinterface.h"
+#ifndef WINDOWINTERFACE_H
+#define WINDOWINTERFACE_H
 
 //==============================================================================
 
 namespace OpenCOR {
-namespace FileBrowserWindow {
 
 //==============================================================================
 
-PLUGININFO_FUNC FileBrowserWindowPluginInfo();
-
-//==============================================================================
-
-class FileBrowserWindowWindow;
-
-//==============================================================================
-
-class FileBrowserWindowPlugin : public QObject, public GuiInterface,
-                                public I18nInterface, public PluginInterface,
-                                public WindowInterface
+class WindowInterface
 {
-    Q_OBJECT
-
-    Q_PLUGIN_METADATA(IID "OpenCOR.FileBrowserWindowPlugin" FILE "filebrowserwindowplugin.json")
-
-    Q_INTERFACES(OpenCOR::GuiInterface)
-    Q_INTERFACES(OpenCOR::I18nInterface)
-    Q_INTERFACES(OpenCOR::PluginInterface)
-    Q_INTERFACES(OpenCOR::WindowInterface)
-
 public:
-#include "guiinterface.inl"
-#include "i18ninterface.inl"
-#include "plugininterface.inl"
-#include "windowinterface.inl"
-
-private:
-    QAction *mFileBrowserAction;
-
-    FileBrowserWindowWindow *mFileBrowserWindow;
+#define INTERFACE_DEFINITION
+    #include "windowinterface.inl"
+#undef INTERFACE_DEFINITION
 };
 
 //==============================================================================
 
-}   // namespace FileBrowserWindow
 }   // namespace OpenCOR
+
+//==============================================================================
+
+Q_DECLARE_INTERFACE(OpenCOR::WindowInterface, "OpenCOR::WindowInterface")
 
 //==============================================================================
 
