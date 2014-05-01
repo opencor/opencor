@@ -55,10 +55,14 @@ public:
     Plugins loadedCliPlugins() const;
 
     QString pluginsDir() const;
+
+    Plugin * corePlugin() const;
     Plugin * plugin(const QString &pName) const;
 
 private:
     QString mPluginsDir;
+
+    Plugin *mCorePlugin;
     Plugins mPlugins;
 };
 

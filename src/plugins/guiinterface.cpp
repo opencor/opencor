@@ -150,7 +150,6 @@ QAction * GuiWindowSettings::action() const
 GuiSettings::GuiSettings() :
     mMenus(QList<GuiMenuSettings *>()),
     mMenuActions(QList<GuiMenuActionSettings *>()),
-    mCentralWidget(0),
     mWindows(QList<GuiWindowSettings *>())
 {
 }
@@ -203,15 +202,6 @@ void GuiSettings::addMenuAction(const GuiMenuActionSettings::Type &pType,
 
 //==============================================================================
 
-void GuiSettings::setCentralWidget(QWidget *pCentralWidget)
-{
-    // Set the central widget to be used
-
-    mCentralWidget = pCentralWidget;
-}
-
-//==============================================================================
-
 void GuiSettings::addWindow(const Qt::DockWidgetArea &pDefaultDockArea,
                             QWidget *pWindow, QAction *pAction)
 {
@@ -236,15 +226,6 @@ QList<GuiMenuActionSettings *> GuiSettings::menuActions() const
     // Return our menu actions
 
     return mMenuActions;
-}
-
-//==============================================================================
-
-QWidget * GuiSettings::centralWidget() const
-{
-    // Return the central widget
-
-    return mCentralWidget;
 }
 
 //==============================================================================

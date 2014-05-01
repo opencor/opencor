@@ -35,6 +35,7 @@ namespace OpenCOR {
 //==============================================================================
 
 PluginManager::PluginManager(QCoreApplication *pApp, const bool &pGuiMode) :
+    mCorePlugin(0),
     mPlugins(Plugins())
 {
     mPluginsDir =  QDir(pApp->applicationDirPath()).canonicalPath()
@@ -176,9 +177,17 @@ PluginManager::PluginManager(QCoreApplication *pApp, const bool &pGuiMode) :
     foreach (const QString &pluginFileName, pluginFileNames) {
         QString pluginName = Plugin::name(pluginFileName);
 
-        mPlugins << new Plugin(pluginFileName, pluginsInfo.value(pluginName),
-                               pluginsError.value(pluginName),
-                               plugins.contains(pluginName), this);
+        Plugin *plugin = new Plugin(pluginFileName, pluginsInfo.value(pluginName),
+                                    pluginsError.value(pluginName),
+                                    plugins.contains(pluginName), this);
+
+        // Keep track of the Core plugin, if it's the one we are dealing with,
+        // as well as keep track of the plugin in general
+
+        if (!pluginName.compare(CorePluginName))
+            mCorePlugin = plugin;
+
+        mPlugins << plugin;
     }
 }
 
@@ -240,6 +249,15 @@ QString PluginManager::pluginsDir() const
     // Return the plugins directory
 
     return mPluginsDir;
+}
+
+//==============================================================================
+
+Plugin * PluginManager::corePlugin() const
+{
+    // Return our Core plugin
+
+    return mCorePlugin;
 }
 
 //==============================================================================

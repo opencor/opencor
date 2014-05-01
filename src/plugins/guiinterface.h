@@ -128,19 +128,16 @@ public:
                  QMenu *pMenu);
     void addMenuAction(const GuiMenuActionSettings::Type &pType,
                        QAction *pAction = 0);
-    void setCentralWidget(QWidget *pCentralWidget);
     void addWindow(const Qt::DockWidgetArea &pDefaultDockArea,
                    QWidget *pWindow, QAction *pAction);
 
     QList<GuiMenuSettings *> menus() const;
     QList<GuiMenuActionSettings *> menuActions() const;
-    QWidget * centralWidget() const;
     QList<GuiWindowSettings *> windows() const;
 
 private:
     QList<GuiMenuSettings *> mMenus;
     QList<GuiMenuActionSettings *> mMenuActions;
-    QWidget *mCentralWidget;
     QList<GuiWindowSettings *> mWindows;
 };
 

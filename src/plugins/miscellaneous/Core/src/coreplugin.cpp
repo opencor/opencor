@@ -63,6 +63,15 @@ PLUGININFO_FUNC CorePluginInfo()
 // Core interface
 //==============================================================================
 
+QWidget * CorePlugin::centralWidget()
+{
+    // Return our central widget
+
+    return mCentralWidget;
+}
+
+//==============================================================================
+
 void CorePlugin::settingsLoaded(const Plugins &pLoadedPlugins)
 {
     // Let our central widget know that all the other plugins have now loaded
@@ -442,8 +451,6 @@ void CorePlugin::initializePlugin()
     mGuiSettings->addMenuAction(GuiMenuActionSettings::File);
 
     mGuiSettings->addMenu(GuiMenuSettings::File, openReloadSeparator, mFileReopenSubMenu);
-
-    mGuiSettings->setCentralWidget(mCentralWidget);
 
     // Miscellaneous
 

@@ -353,15 +353,10 @@ void MainWindow::closeEvent(QCloseEvent *pEvent)
 
     bool canClose = true;
 
-    foreach (Plugin *plugin, mPluginManager->loadedPlugins())
-        if (!plugin->name().compare(CorePluginName)) {
-            CoreInterface *coreInterface = qobject_cast<CoreInterface *>(plugin->instance());
-
-            if (coreInterface)
-                canClose = coreInterface->canClose();
-
-            break;
-        }
+    if (mPluginManager->corePlugin())
+        canClose = qobject_cast<CoreInterface *>(mPluginManager->corePlugin()->instance())->canClose();
+        // Note: if the Core plugin is loaded, then it means it supports the
+        //       Core interface, so no need to check anything...
 
     // Close ourselves
 
@@ -575,17 +570,18 @@ void MainWindow::initializeGuiPlugin(Plugin *pPlugin, GuiSettings *pGuiSettings)
 
     // Set our central widget, but only if we are dealing with the Core plugin
 
-    if (!pPlugin->name().compare(CorePluginName))
-        if (pGuiSettings->centralWidget()) {
-            // We are dealing with the Core plugin, so set our central widget
+    if (pPlugin == mPluginManager->corePlugin()) {
+        // We are dealing with the Core plugin, so set our central widget
 
-            setCentralWidget(pGuiSettings->centralWidget());
+        setCentralWidget(qobject_cast<CoreInterface *>(pPlugin->instance())->centralWidget());
+        // Note: if the Core plugin is loaded, then it means it supports the
+        //       Core interface, so no need to check anything...
 
-            // Also keep track of GUI updates in our central widget
+        // Also keep track of GUI updates in our central widget
 
-            connect(static_cast<Core::CentralWidget *>(pGuiSettings->centralWidget()), SIGNAL(guiUpdated(Plugin *, const QString &)),
-                    this, SLOT(updateGui(Plugin *, const QString &)));
-        }
+        connect(static_cast<Core::CentralWidget *>(centralWidget()), SIGNAL(guiUpdated(Plugin *, const QString &)),
+                this, SLOT(updateGui(Plugin *, const QString &)));
+    }
 
     // Add the windows (including to the corresponding menu)
 
@@ -684,15 +680,10 @@ void MainWindow::loadSettings()
     // settings
     // Note: this is similar to initializePlugin() vs. pluginInitialized()...
 
-    foreach (Plugin *plugin, loadedPlugins)
-        if (!plugin->name().compare(CorePluginName)) {
-            CoreInterface *coreInterface = qobject_cast<CoreInterface *>(plugin->instance());
-
-            if (coreInterface)
-                coreInterface->settingsLoaded(loadedPlugins);
-
-            break;
-        }
+    if (mPluginManager->corePlugin())
+        qobject_cast<CoreInterface *>(mPluginManager->corePlugin()->instance())->settingsLoaded(loadedPlugins);
+        // Note: if the Core plugin is loaded, then it means it supports the
+        //       Core interface, so no need to check anything...
 
     // Remove the File menu when on OS X, should no plugins be loaded
     // Note: our File menu should only contain the Exit menu item, but on OS X
@@ -1000,15 +991,10 @@ void MainWindow::handleArguments(const QString &pArguments)
     // Handle the arguments that were passed to OpenCOR by passing them to the
     // Core plugin, should it be loaded
 
-    foreach (Plugin *plugin, mPluginManager->loadedPlugins())
-        if (!plugin->name().compare(CorePluginName)) {
-            CoreInterface *coreInterface = qobject_cast<CoreInterface *>(plugin->instance());
-
-            if (coreInterface)
-                coreInterface->handleArguments(pArguments.split("|"));
-
-            break;
-        }
+    if (mPluginManager->corePlugin())
+        qobject_cast<CoreInterface *>(mPluginManager->corePlugin()->instance())->handleArguments(pArguments.split("|"));
+        // Note: if the Core plugin is loaded, then it means it supports the
+        //       Core interface, so no need to check anything...
 }
 
 //==============================================================================
