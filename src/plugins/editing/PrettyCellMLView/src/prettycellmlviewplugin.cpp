@@ -60,18 +60,7 @@ Editor::EditorWidget * PrettyCellMLViewPlugin::editor(const QString &pFileName) 
 }
 
 //==============================================================================
-// GUI interface
-//==============================================================================
-
-void PrettyCellMLViewPlugin::updateGui(Plugin *pViewPlugin,
-                                       const QString &pFileName)
-{
-    Q_UNUSED(pViewPlugin);
-    Q_UNUSED(pFileName);
-
-    // We don't handle this interface...
-}
-
+// File handling interface
 //==============================================================================
 
 bool PrettyCellMLViewPlugin::saveFile(const QString &pOldFileName,
@@ -137,6 +126,19 @@ void PrettyCellMLViewPlugin::fileRenamed(const QString &pOldFileName,
 
 void PrettyCellMLViewPlugin::fileClosed(const QString &pFileName)
 {
+    Q_UNUSED(pFileName);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+// GUI interface
+//==============================================================================
+
+void PrettyCellMLViewPlugin::updateGui(Plugin *pViewPlugin,
+                                       const QString &pFileName)
+{
+    Q_UNUSED(pViewPlugin);
     Q_UNUSED(pFileName);
 
     // We don't handle this interface...

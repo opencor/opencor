@@ -50,18 +50,7 @@ PLUGININFO_FUNC SingleCellViewPluginInfo()
 }
 
 //==============================================================================
-// GUI interface
-//==============================================================================
-
-void SingleCellViewPlugin::updateGui(Plugin *pViewPlugin,
-                                     const QString &pFileName)
-{
-    Q_UNUSED(pViewPlugin);
-    Q_UNUSED(pFileName);
-
-    // We don't handle this interface...
-}
-
+// File handling interface
 //==============================================================================
 
 bool SingleCellViewPlugin::saveFile(const QString &pOldFileName,
@@ -134,6 +123,19 @@ void SingleCellViewPlugin::fileClosed(const QString &pFileName)
     // Let our view widget know that a file has been closed
 
     mViewWidget->fileClosed(pFileName);
+}
+
+//==============================================================================
+// GUI interface
+//==============================================================================
+
+void SingleCellViewPlugin::updateGui(Plugin *pViewPlugin,
+                                     const QString &pFileName)
+{
+    Q_UNUSED(pViewPlugin);
+    Q_UNUSED(pFileName);
+
+    // We don't handle this interface...
 }
 
 //==============================================================================

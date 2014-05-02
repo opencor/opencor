@@ -105,19 +105,7 @@ bool CorePlugin::canClose()
 }
 
 //==============================================================================
-// GUI interface
-//==============================================================================
-
-void CorePlugin::updateGui(Plugin *pViewPlugin, const QString &pFileName)
-{
-    Q_UNUSED(pViewPlugin);
-    Q_UNUSED(pFileName);
-
-    // Update our new/modified sensitive actions
-
-    updateNewModifiedSensitiveActions();
-}
-
+// File handling interface
 //==============================================================================
 
 bool CorePlugin::saveFile(const QString &pOldFileName,
@@ -225,6 +213,20 @@ void CorePlugin::fileClosed(const QString &pFileName)
 
         updateFileReopenMenu();
     }
+}
+
+//==============================================================================
+// GUI interface
+//==============================================================================
+
+void CorePlugin::updateGui(Plugin *pViewPlugin, const QString &pFileName)
+{
+    Q_UNUSED(pViewPlugin);
+    Q_UNUSED(pFileName);
+
+    // Update our new/modified sensitive actions
+
+    updateNewModifiedSensitiveActions();
 }
 
 //==============================================================================

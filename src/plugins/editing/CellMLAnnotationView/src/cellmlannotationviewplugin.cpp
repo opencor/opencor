@@ -64,18 +64,7 @@ Editor::EditorWidget * CellMLAnnotationViewPlugin::editor(const QString &pFileNa
 }
 
 //==============================================================================
-// GUI interface
-//==============================================================================
-
-void CellMLAnnotationViewPlugin::updateGui(Plugin *pViewPlugin,
-                                           const QString &pFileName)
-{
-    Q_UNUSED(pViewPlugin);
-    Q_UNUSED(pFileName);
-
-    // We don't handle this interface...
-}
-
+// File handling interface
 //==============================================================================
 
 bool CellMLAnnotationViewPlugin::saveFile(const QString &pOldFileName,
@@ -145,6 +134,19 @@ void CellMLAnnotationViewPlugin::fileRenamed(const QString &pOldFileName,
 
 void CellMLAnnotationViewPlugin::fileClosed(const QString &pFileName)
 {
+    Q_UNUSED(pFileName);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+// GUI interface
+//==============================================================================
+
+void CellMLAnnotationViewPlugin::updateGui(Plugin *pViewPlugin,
+                                           const QString &pFileName)
+{
+    Q_UNUSED(pViewPlugin);
     Q_UNUSED(pFileName);
 
     // We don't handle this interface...

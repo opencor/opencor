@@ -61,18 +61,7 @@ Editor::EditorWidget * RawCellMLViewPlugin::editor(const QString &pFileName) con
 }
 
 //==============================================================================
-// GUI interface
-//==============================================================================
-
-void RawCellMLViewPlugin::updateGui(Plugin *pViewPlugin,
-                                    const QString &pFileName)
-{
-    Q_UNUSED(pViewPlugin);
-    Q_UNUSED(pFileName);
-
-    // We don't handle this interface...
-}
-
+// File handling interface
 //==============================================================================
 
 bool RawCellMLViewPlugin::saveFile(const QString &pOldFileName,
@@ -141,6 +130,19 @@ void RawCellMLViewPlugin::fileRenamed(const QString &pOldFileName,
 
 void RawCellMLViewPlugin::fileClosed(const QString &pFileName)
 {
+    Q_UNUSED(pFileName);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+// GUI interface
+//==============================================================================
+
+void RawCellMLViewPlugin::updateGui(Plugin *pViewPlugin,
+                                    const QString &pFileName)
+{
+    Q_UNUSED(pViewPlugin);
     Q_UNUSED(pFileName);
 
     // We don't handle this interface...

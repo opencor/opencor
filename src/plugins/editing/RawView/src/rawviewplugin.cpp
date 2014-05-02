@@ -59,17 +59,7 @@ Editor::EditorWidget * RawViewPlugin::editor(const QString &pFileName) const
 }
 
 //==============================================================================
-// GUI interface
-//==============================================================================
-
-void RawViewPlugin::updateGui(Plugin *pViewPlugin, const QString &pFileName)
-{
-    Q_UNUSED(pViewPlugin);
-    Q_UNUSED(pFileName);
-
-    // We don't handle this interface...
-}
-
+// File handling interface
 //==============================================================================
 
 bool RawViewPlugin::saveFile(const QString &pOldFileName,
@@ -138,6 +128,18 @@ void RawViewPlugin::fileRenamed(const QString &pOldFileName,
 
 void RawViewPlugin::fileClosed(const QString &pFileName)
 {
+    Q_UNUSED(pFileName);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+// GUI interface
+//==============================================================================
+
+void RawViewPlugin::updateGui(Plugin *pViewPlugin, const QString &pFileName)
+{
+    Q_UNUSED(pViewPlugin);
     Q_UNUSED(pFileName);
 
     // We don't handle this interface...

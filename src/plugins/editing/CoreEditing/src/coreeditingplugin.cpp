@@ -61,83 +61,7 @@ CoreEditingPlugin::CoreEditingPlugin() :
 }
 
 //==============================================================================
-// GUI interface
-//==============================================================================
-
-void CoreEditingPlugin::updateGui(Plugin *pViewPlugin, const QString &pFileName)
-{
-    // Reset our previous editor and set up our new one, should the current
-    // plugin handle the editing interface
-
-    mEditingInterface = pViewPlugin?qobject_cast<EditingInterface *>(pViewPlugin->instance()):0;
-
-    if (mEditingInterface) {
-        // Reset our previous editor's connections
-
-        if (mEditor) {
-            disconnect(mEditor, SIGNAL(textChanged()),
-                       this, SLOT(updateUndoAndRedoActions()));
-            disconnect(mEditor, SIGNAL(copyAvailable(const bool &)),
-                       this, SLOT(updateEditingActions()));
-            disconnect(mEditor, SIGNAL(canFindReplace(const bool &)),
-                       this, SLOT(updateFindPreviousNextActions()));
-            disconnect(mEditor, SIGNAL(canSelectAll(const bool &)),
-                       this, SLOT(updateSelectAllAction()));
-        }
-
-        // Retrieve our new editor
-
-        mEditor = mEditingInterface->editor(pFileName);
-        mFileName = pFileName;
-
-        // Set our new editor's context menu, connections and background
-
-        if (mEditor) {
-            mEditor->setContextMenu(mEditMenu->actions());
-
-            connect(mEditor, SIGNAL(textChanged()),
-                    this, SLOT(updateUndoAndRedoActions()));
-            connect(mEditor, SIGNAL(copyAvailable(const bool &)),
-                    this, SLOT(updateEditingActions()));
-            connect(mEditor, SIGNAL(canFindReplace(const bool &)),
-                    this, SLOT(updateFindPreviousNextActions()));
-            connect(mEditor, SIGNAL(canSelectAll(const bool &)),
-                    this, SLOT(updateSelectAllAction()));
-        }
-    }
-
-    // Show/enable or hide/disable various actions, depending on whether the
-    // view plugin handles the editing interface
-
-    bool hasEditingInterfaceAndEditor = mEditingInterface && mEditor;
-
-    Core::showEnableAction(mFileNewFileAction, mEditingInterface);
-
-    Core::showEnableAction(mEditUndoAction, hasEditingInterfaceAndEditor);
-    Core::showEnableAction(mEditRedoAction, hasEditingInterfaceAndEditor);
-
-    Core::showEnableAction(mEditCutAction, hasEditingInterfaceAndEditor);
-    Core::showEnableAction(mEditCopyAction, hasEditingInterfaceAndEditor);
-    Core::showEnableAction(mEditPasteAction, hasEditingInterfaceAndEditor);
-    Core::showEnableAction(mEditDeleteAction, hasEditingInterfaceAndEditor);
-
-    Core::showEnableAction(mEditFindReplaceAction, hasEditingInterfaceAndEditor);
-    Core::showEnableAction(mEditFindNextAction, hasEditingInterfaceAndEditor);
-    Core::showEnableAction(mEditFindPreviousAction, hasEditingInterfaceAndEditor);
-
-    Core::showEnableAction(mEditSelectAllAction, hasEditingInterfaceAndEditor);
-
-    // Enable/disable some of our actions, if we have both an editing interface
-    // and an editor
-
-    if (hasEditingInterfaceAndEditor) {
-        updateUndoAndRedoActions();
-        updateEditingActions();
-        updateFindPreviousNextActions();
-        updateSelectAllAction();
-    }
-}
-
+// File handling interface
 //==============================================================================
 
 bool CoreEditingPlugin::saveFile(const QString &pOldFileName,
@@ -232,6 +156,84 @@ void CoreEditingPlugin::fileClosed(const QString &pFileName)
     if (!pFileName.compare(mFileName)) {
         mEditor = 0;
         mFileName = QString();
+    }
+}
+
+//==============================================================================
+// GUI interface
+//==============================================================================
+
+void CoreEditingPlugin::updateGui(Plugin *pViewPlugin, const QString &pFileName)
+{
+    // Reset our previous editor and set up our new one, should the current
+    // plugin handle the editing interface
+
+    mEditingInterface = pViewPlugin?qobject_cast<EditingInterface *>(pViewPlugin->instance()):0;
+
+    if (mEditingInterface) {
+        // Reset our previous editor's connections
+
+        if (mEditor) {
+            disconnect(mEditor, SIGNAL(textChanged()),
+                       this, SLOT(updateUndoAndRedoActions()));
+            disconnect(mEditor, SIGNAL(copyAvailable(const bool &)),
+                       this, SLOT(updateEditingActions()));
+            disconnect(mEditor, SIGNAL(canFindReplace(const bool &)),
+                       this, SLOT(updateFindPreviousNextActions()));
+            disconnect(mEditor, SIGNAL(canSelectAll(const bool &)),
+                       this, SLOT(updateSelectAllAction()));
+        }
+
+        // Retrieve our new editor
+
+        mEditor = mEditingInterface->editor(pFileName);
+        mFileName = pFileName;
+
+        // Set our new editor's context menu, connections and background
+
+        if (mEditor) {
+            mEditor->setContextMenu(mEditMenu->actions());
+
+            connect(mEditor, SIGNAL(textChanged()),
+                    this, SLOT(updateUndoAndRedoActions()));
+            connect(mEditor, SIGNAL(copyAvailable(const bool &)),
+                    this, SLOT(updateEditingActions()));
+            connect(mEditor, SIGNAL(canFindReplace(const bool &)),
+                    this, SLOT(updateFindPreviousNextActions()));
+            connect(mEditor, SIGNAL(canSelectAll(const bool &)),
+                    this, SLOT(updateSelectAllAction()));
+        }
+    }
+
+    // Show/enable or hide/disable various actions, depending on whether the
+    // view plugin handles the editing interface
+
+    bool hasEditingInterfaceAndEditor = mEditingInterface && mEditor;
+
+    Core::showEnableAction(mFileNewFileAction, mEditingInterface);
+
+    Core::showEnableAction(mEditUndoAction, hasEditingInterfaceAndEditor);
+    Core::showEnableAction(mEditRedoAction, hasEditingInterfaceAndEditor);
+
+    Core::showEnableAction(mEditCutAction, hasEditingInterfaceAndEditor);
+    Core::showEnableAction(mEditCopyAction, hasEditingInterfaceAndEditor);
+    Core::showEnableAction(mEditPasteAction, hasEditingInterfaceAndEditor);
+    Core::showEnableAction(mEditDeleteAction, hasEditingInterfaceAndEditor);
+
+    Core::showEnableAction(mEditFindReplaceAction, hasEditingInterfaceAndEditor);
+    Core::showEnableAction(mEditFindNextAction, hasEditingInterfaceAndEditor);
+    Core::showEnableAction(mEditFindPreviousAction, hasEditingInterfaceAndEditor);
+
+    Core::showEnableAction(mEditSelectAllAction, hasEditingInterfaceAndEditor);
+
+    // Enable/disable some of our actions, if we have both an editing interface
+    // and an editor
+
+    if (hasEditingInterfaceAndEditor) {
+        updateUndoAndRedoActions();
+        updateEditingActions();
+        updateFindPreviousNextActions();
+        updateSelectAllAction();
     }
 }
 
