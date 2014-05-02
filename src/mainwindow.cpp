@@ -23,6 +23,7 @@ specific language governing permissions and limitations under the License.
 #include "cliutils.h"
 #include "coreinterface.h"
 #include "dockwidget.h"
+#include "guiinterface.h"
 #include "guiutils.h"
 #include "i18ninterface.h"
 #include "mainwindow.h"
