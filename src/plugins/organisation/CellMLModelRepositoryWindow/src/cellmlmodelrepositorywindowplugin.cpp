@@ -21,6 +21,7 @@ specific language governing permissions and limitations under the License.
 
 #include "cellmlmodelrepositorywindowplugin.h"
 #include "cellmlmodelrepositorywindowwindow.h"
+#include "guiutils.h"
 
 //==============================================================================
 
@@ -44,19 +45,6 @@ PLUGININFO_FUNC CellMLModelRepositoryWindowPluginInfo()
     return new PluginInfo(PluginInfo::Organisation, true,
                           QStringList() << "Core",
                           descriptions);
-}
-
-//==============================================================================
-// GUI interface
-//==============================================================================
-
-void CellMLModelRepositoryWindowPlugin::updateGui(Plugin *pViewPlugin,
-                                                  const QString &pFileName)
-{
-    Q_UNUSED(pViewPlugin);
-    Q_UNUSED(pFileName);
-
-    // We don't handle this interface...
 }
 
 //==============================================================================
@@ -84,7 +72,7 @@ void CellMLModelRepositoryWindowPlugin::initializePlugin(QMainWindow *pMainWindo
 {
     // Create an action to show/hide our CellML Model Repository window
 
-    mCellmlModelRepositoryAction = newAction(true, pMainWindow);
+    mCellmlModelRepositoryAction = Core::newAction(true, pMainWindow);
 
     // Create our CellML Model Repository window
 

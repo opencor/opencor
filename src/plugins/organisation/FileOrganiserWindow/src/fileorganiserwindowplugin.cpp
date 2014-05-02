@@ -21,6 +21,7 @@ specific language governing permissions and limitations under the License.
 
 #include "fileorganiserwindowplugin.h"
 #include "fileorganiserwindowwindow.h"
+#include "guiutils.h"
 
 //==============================================================================
 
@@ -47,19 +48,6 @@ PLUGININFO_FUNC FileOrganiserWindowPluginInfo()
 }
 
 //==============================================================================
-// GUI interface
-//==============================================================================
-
-void FileOrganiserWindowPlugin::updateGui(Plugin *pViewPlugin,
-                                          const QString &pFileName)
-{
-    Q_UNUSED(pViewPlugin);
-    Q_UNUSED(pFileName);
-
-    // We don't handle this interface...
-}
-
-//==============================================================================
 // I18n interface
 //==============================================================================
 
@@ -83,7 +71,7 @@ void FileOrganiserWindowPlugin::initializePlugin(QMainWindow *pMainWindow)
 {
     // Create an action to show/hide our file organiser window
 
-    mFileOrganiserAction = newAction(true, pMainWindow);
+    mFileOrganiserAction = Core::newAction(true, pMainWindow);
 
     // Create our file organiser window
 

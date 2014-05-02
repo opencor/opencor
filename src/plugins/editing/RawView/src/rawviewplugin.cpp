@@ -134,18 +134,6 @@ void RawViewPlugin::fileClosed(const QString &pFileName)
 }
 
 //==============================================================================
-// GUI interface
-//==============================================================================
-
-void RawViewPlugin::updateGui(Plugin *pViewPlugin, const QString &pFileName)
-{
-    Q_UNUSED(pViewPlugin);
-    Q_UNUSED(pFileName);
-
-    // We don't handle this interface...
-}
-
-//==============================================================================
 // I18n interface
 //==============================================================================
 

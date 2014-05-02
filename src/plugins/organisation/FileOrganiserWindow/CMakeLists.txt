@@ -4,7 +4,6 @@ PROJECT(FileOrganiserWindowPlugin)
 
 ADD_PLUGIN(FileOrganiserWindow
     SOURCES
-        ../../guiinterface.cpp
         ../../i18ninterface.cpp
         ../../plugininfo.cpp
 

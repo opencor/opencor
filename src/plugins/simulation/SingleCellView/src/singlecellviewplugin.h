@@ -25,7 +25,6 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include "filehandlinginterface.h"
-#include "guiinterface.h"
 #include "i18ninterface.h"
 #include "plugininterface.h"
 #include "plugininfo.h"
@@ -47,22 +46,20 @@ class SingleCellViewWidget;
 //==============================================================================
 
 class SingleCellViewPlugin : public QObject, public FileHandlingInterface,
-                             public GuiInterface, public I18nInterface,
-                             public PluginInterface, public ViewInterface
+                             public I18nInterface, public PluginInterface,
+                             public ViewInterface
 {
     Q_OBJECT
 
     Q_PLUGIN_METADATA(IID "OpenCOR.SingleCellViewPlugin" FILE "singlecellviewplugin.json")
 
     Q_INTERFACES(OpenCOR::FileHandlingInterface)
-    Q_INTERFACES(OpenCOR::GuiInterface)
     Q_INTERFACES(OpenCOR::I18nInterface)
     Q_INTERFACES(OpenCOR::PluginInterface)
     Q_INTERFACES(OpenCOR::ViewInterface)
 
 public:
 #include "filehandlinginterface.inl"
-#include "guiinterface.inl"
 #include "i18ninterface.inl"
 #include "plugininterface.inl"
 #include "viewinterface.inl"

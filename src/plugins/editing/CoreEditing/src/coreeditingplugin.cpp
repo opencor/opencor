@@ -287,35 +287,35 @@ void CoreEditingPlugin::initializePlugin(QMainWindow *pMainWindow)
 {
     // Create our different File|New actions
 
-    mFileNewFileAction = newAction(QIcon(":/oxygen/actions/document-new.png"),
-                                   QKeySequence::New, pMainWindow);
+    mFileNewFileAction = Core::newAction(QIcon(":/oxygen/actions/document-new.png"),
+                                         QKeySequence::New, pMainWindow);
 
     // Create our Edit menu
 
-    mEditMenu = newMenu("Edit", pMainWindow);
+    mEditMenu = Core::newMenu("Edit", pMainWindow);
 
     // Create our different Edit actions, and add them to our Edit menu
 
-    mEditUndoAction = newAction(QIcon(":/oxygen/actions/edit-undo.png"),
-                                QKeySequence::Undo, pMainWindow);
-    mEditRedoAction = newAction(QIcon(":/oxygen/actions/edit-redo.png"),
-                                QKeySequence::Redo, pMainWindow);
+    mEditUndoAction = Core::newAction(QIcon(":/oxygen/actions/edit-undo.png"),
+                                      QKeySequence::Undo, pMainWindow);
+    mEditRedoAction = Core::newAction(QIcon(":/oxygen/actions/edit-redo.png"),
+                                      QKeySequence::Redo, pMainWindow);
 
-    mEditCutAction    = newAction(QIcon(":/oxygen/actions/edit-cut.png"),
-                                  QKeySequence::Cut, pMainWindow);
-    mEditCopyAction   = newAction(QIcon(":/oxygen/actions/edit-copy.png"),
-                                  QKeySequence::Copy, pMainWindow);
-    mEditPasteAction  = newAction(QIcon(":/oxygen/actions/edit-paste.png"),
-                                  QKeySequence::Paste, pMainWindow);
-    mEditDeleteAction = newAction(QIcon(":/oxygen/actions/edit-delete.png"),
-                                  QKeySequence::Delete, pMainWindow);
+    mEditCutAction    = Core::newAction(QIcon(":/oxygen/actions/edit-cut.png"),
+                                        QKeySequence::Cut, pMainWindow);
+    mEditCopyAction   = Core::newAction(QIcon(":/oxygen/actions/edit-copy.png"),
+                                        QKeySequence::Copy, pMainWindow);
+    mEditPasteAction  = Core::newAction(QIcon(":/oxygen/actions/edit-paste.png"),
+                                        QKeySequence::Paste, pMainWindow);
+    mEditDeleteAction = Core::newAction(QIcon(":/oxygen/actions/edit-delete.png"),
+                                        QKeySequence::Delete, pMainWindow);
 
-    mEditFindReplaceAction  = newAction(QIcon(":/oxygen/actions/edit-find.png"),
-                                        QKeySequence::Find, pMainWindow);
-    mEditFindNextAction     = newAction(QKeySequence::FindNext, pMainWindow);
-    mEditFindPreviousAction = newAction(QKeySequence::FindPrevious, pMainWindow);
+    mEditFindReplaceAction  = Core::newAction(QIcon(":/oxygen/actions/edit-find.png"),
+                                              QKeySequence::Find, pMainWindow);
+    mEditFindNextAction     = Core::newAction(QKeySequence::FindNext, pMainWindow);
+    mEditFindPreviousAction = Core::newAction(QKeySequence::FindPrevious, pMainWindow);
 
-    mEditSelectAllAction = newAction(QKeySequence::SelectAll, pMainWindow);
+    mEditSelectAllAction = Core::newAction(QKeySequence::SelectAll, pMainWindow);
 
     mEditMenu->addAction(mEditUndoAction);
     mEditMenu->addAction(mEditRedoAction);

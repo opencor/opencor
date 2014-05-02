@@ -24,7 +24,6 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-#include "guiinterface.h"
 #include "i18ninterface.h"
 #include "plugininterface.h"
 #include "plugininfo.h"
@@ -45,8 +44,7 @@ class CellmlModelRepositoryWindowWindow;
 
 //==============================================================================
 
-class CellMLModelRepositoryWindowPlugin : public QObject, public GuiInterface,
-                                          public I18nInterface,
+class CellMLModelRepositoryWindowPlugin : public QObject, public I18nInterface,
                                           public PluginInterface,
                                           public WindowInterface
 {
@@ -54,13 +52,11 @@ class CellMLModelRepositoryWindowPlugin : public QObject, public GuiInterface,
 
     Q_PLUGIN_METADATA(IID "OpenCOR.CellMLModelRepositoryWindowPlugin" FILE "cellmlmodelrepositorywindowplugin.json")
 
-    Q_INTERFACES(OpenCOR::GuiInterface)
     Q_INTERFACES(OpenCOR::I18nInterface)
     Q_INTERFACES(OpenCOR::PluginInterface)
     Q_INTERFACES(OpenCOR::WindowInterface)
 
 public:
-#include "guiinterface.inl"
 #include "i18ninterface.inl"
 #include "plugininterface.inl"
 #include "windowinterface.inl"

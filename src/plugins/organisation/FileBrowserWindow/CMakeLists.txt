@@ -4,7 +4,6 @@ PROJECT(FileBrowserWindowPlugin)
 
 ADD_PLUGIN(FileBrowserWindow
     SOURCES
-        ../../guiinterface.cpp
         ../../i18ninterface.cpp
         ../../plugininfo.cpp
 

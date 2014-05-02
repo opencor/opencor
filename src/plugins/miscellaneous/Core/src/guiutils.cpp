@@ -38,6 +38,7 @@ specific language governing permissions and limitations under the License.
 #include <QFont>
 #include <QFrame>
 #include <QLabel>
+#include <QMenu>
 #include <QMessageBox>
 #include <QSettings>
 #include <QSizePolicy>
@@ -179,6 +180,146 @@ void setFocusTo(QWidget *pWidget)
 
         focusedWidget->setFocus();
     }
+}
+
+//==============================================================================
+
+QMenu * newMenu(const QString &pName, QWidget *pParent)
+{
+    // Create and return a menu
+
+    QMenu *res = new QMenu(pParent);
+
+    res->setObjectName("menu"+pName.left(1).toUpper()+pName.right(pName.size()-1));
+
+    return res;
+}
+
+//==============================================================================
+
+QMenu * newMenu(const QIcon &pIcon, QWidget *pParent)
+{
+    // Create and return a menu
+
+    QMenu *res = new QMenu(pParent);
+
+    res->menuAction()->setIcon(pIcon);
+
+    return res;
+}
+
+//==============================================================================
+
+QAction * newAction(const bool &pCheckable, const QIcon &pIcon,
+                    const QKeySequence &pKeySequence, QWidget *pParent)
+{
+    // Create and return an action
+
+    QAction *res = new QAction(pParent);
+
+    res->setCheckable(pCheckable);
+    res->setIcon(pIcon);
+    res->setShortcut(pKeySequence);
+
+    return res;
+}
+
+//==============================================================================
+
+QAction * newAction(const bool &pCheckable, const QKeySequence &pKeySequence,
+                    QWidget *pParent)
+{
+    // Create and return an action
+
+    QAction *res = new QAction(pParent);
+
+    res->setCheckable(pCheckable);
+    res->setShortcut(pKeySequence);
+
+    return res;
+}
+
+//==============================================================================
+
+QAction * newAction(const bool &pCheckable, QWidget *pParent)
+{
+    // Create and return an action
+
+    QAction *res = new QAction(pParent);
+
+    res->setCheckable(pCheckable);
+
+    return res;
+}
+
+//==============================================================================
+
+QAction * newAction(const QIcon &pIcon,
+                    const QList<QKeySequence> &pKeySequences, QWidget *pParent)
+{
+    // Create and return an action
+
+    QAction *res = new QAction(pParent);
+
+    res->setIcon(pIcon);
+    res->setShortcuts(pKeySequences);
+
+    return res;
+}
+
+//==============================================================================
+
+QAction * newAction(const QIcon &pIcon, const QKeySequence &pKeySequence,
+                    QWidget *pParent)
+{
+    // Create and return an action
+
+    QAction *res = new QAction(pParent);
+
+    res->setIcon(pIcon);
+    res->setShortcut(pKeySequence);
+
+    return res;
+}
+
+//==============================================================================
+
+QAction * newAction(const QIcon &pIcon, QWidget *pParent)
+{
+    // Create and return an action
+
+    QAction *res = new QAction(pParent);
+
+    res->setIcon(pIcon);
+
+    return res;
+}
+
+//==============================================================================
+
+QAction * newAction(const QKeySequence &pKeySequence, QWidget *pParent)
+{
+    // Create and return an action
+
+    QAction *res = new QAction(pParent);
+
+    res->setShortcut(pKeySequence);
+
+    return res;
+}
+
+//==============================================================================
+
+QAction * newAction(const QKeySequence::StandardKey &pStandardKey,
+                    QWidget *pParent)
+{
+    // Create and return an action
+
+    QAction *res = new QAction(pParent);
+
+    res->setShortcut(pStandardKey);
+
+    return res;
 }
 
 //==============================================================================

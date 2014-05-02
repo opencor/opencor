@@ -15,7 +15,6 @@ ENDIF()
 
 ADD_PLUGIN(PrettyCellMLView
     SOURCES
-        ../../guiinterface.cpp
         ../../i18ninterface.cpp
         ../../plugininfo.cpp
         ../../viewinterface.cpp

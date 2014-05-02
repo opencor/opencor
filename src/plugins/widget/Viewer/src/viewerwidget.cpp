@@ -19,7 +19,7 @@ specific language governing permissions and limitations under the License.
 // Viewer widget
 //==============================================================================
 
-#include "guiinterface.h"
+#include "guiutils.h"
 #include "i18ninterface.h"
 #include "viewerwidget.h"
 
@@ -455,7 +455,7 @@ QAction * ViewerWidget::newAction()
 {
     // Create and return a checkable and checked action
 
-    QAction *res = GuiInterface::newAction(true, this);
+    QAction *res = Core::newAction(true, this);
 
     res->setChecked(true);
 

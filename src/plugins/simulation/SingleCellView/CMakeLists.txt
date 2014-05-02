@@ -9,7 +9,6 @@ RETRIEVE_LLVM_SETTINGS()
 
 ADD_PLUGIN(SingleCellView
     SOURCES
-        ../../guiinterface.cpp
         ../../i18ninterface.cpp
         ../../plugin.cpp
         ../../plugininfo.cpp

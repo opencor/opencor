@@ -10,7 +10,6 @@ ENDIF()
 
 ADD_PLUGIN(RawView
     SOURCES
-        ../../guiinterface.cpp
         ../../i18ninterface.cpp
         ../../plugininfo.cpp
         ../../viewinterface.cpp

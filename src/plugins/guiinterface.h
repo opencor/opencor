@@ -123,28 +123,6 @@ public:
 
     GuiSettings * guiSettings() const;
 
-    static QMenu * newMenu(const QString &pName, QWidget *pParent = 0);
-    static QMenu * newMenu(const QIcon &pIcon, QWidget *pParent = 0);
-
-    static QAction * newAction(const bool &pCheckable, const QIcon &pIcon,
-                               const QKeySequence &pKeySequence,
-                               QWidget *pParent);
-    static QAction * newAction(const bool &pCheckable,
-                               const QKeySequence &pKeySequence,
-                               QWidget *pParent = 0);
-    static QAction * newAction(const bool &pCheckable, QWidget *pParent = 0);
-    static QAction * newAction(const QIcon &pIcon,
-                               const QList<QKeySequence> &pKeySequences,
-                               QWidget *pParent = 0);
-    static QAction * newAction(const QIcon &pIcon,
-                               const QKeySequence &pKeySequence,
-                               QWidget *pParent = 0);
-    static QAction * newAction(const QIcon &pIcon, QWidget *pParent = 0);
-    static QAction * newAction(const QKeySequence &pKeySequence,
-                               QWidget *pParent = 0);
-    static QAction * newAction(const QKeySequence::StandardKey &pStandardKey,
-                               QWidget *pParent = 0);
-
 protected:
     GuiSettings *mGuiSettings;
 };

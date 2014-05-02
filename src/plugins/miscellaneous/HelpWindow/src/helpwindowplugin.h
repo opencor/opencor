@@ -24,7 +24,6 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-#include "guiinterface.h"
 #include "i18ninterface.h"
 #include "plugininterface.h"
 #include "plugininfo.h"
@@ -45,21 +44,18 @@ class HelpWindowWindow;
 
 //==============================================================================
 
-class HelpWindowPlugin : public QObject, public GuiInterface,
-                         public I18nInterface, public PluginInterface,
-                         public WindowInterface
+class HelpWindowPlugin : public QObject, public I18nInterface,
+                         public PluginInterface, public WindowInterface
 {
     Q_OBJECT
 
     Q_PLUGIN_METADATA(IID "OpenCOR.HelpWindowPlugin" FILE "helpwindowplugin.json")
 
-    Q_INTERFACES(OpenCOR::GuiInterface)
     Q_INTERFACES(OpenCOR::I18nInterface)
     Q_INTERFACES(OpenCOR::PluginInterface)
     Q_INTERFACES(OpenCOR::WindowInterface)
 
 public:
-#include "guiinterface.inl"
 #include "i18ninterface.inl"
 #include "plugininterface.inl"
 #include "windowinterface.inl"

@@ -143,7 +143,7 @@ void CellMLToolsPlugin::initializePlugin(QMainWindow *pMainWindow)
 
     // Create our Tools | Export To menu
 
-    mCellmlFileExportToMenu = newMenu("CellmlFileExportTo", pMainWindow);
+    mCellmlFileExportToMenu = Core::newMenu("CellmlFileExportTo", pMainWindow);
 
     // Create our different Tools | Export To actions, and add them to our
     // Tools | Export To menu

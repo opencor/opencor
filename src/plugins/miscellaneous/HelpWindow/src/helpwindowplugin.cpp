@@ -19,6 +19,7 @@ specific language governing permissions and limitations under the License.
 // HelpWindow plugin
 //==============================================================================
 
+#include "guiutils.h"
 #include "helpwindowplugin.h"
 #include "helpwindowwindow.h"
 
@@ -47,18 +48,6 @@ PLUGININFO_FUNC HelpWindowPluginInfo()
 }
 
 //==============================================================================
-// GUI interface
-//==============================================================================
-
-void HelpWindowPlugin::updateGui(Plugin *pViewPlugin, const QString &pFileName)
-{
-    Q_UNUSED(pViewPlugin);
-    Q_UNUSED(pFileName);
-
-    // We don't handle this interface...
-}
-
-//==============================================================================
 // I18n interface
 //==============================================================================
 
@@ -82,8 +71,8 @@ void HelpWindowPlugin::initializePlugin(QMainWindow *pMainWindow)
 {
     // Create an action to show/hide our help window
 
-    mHelpAction = newAction(true, QIcon(":/oxygen/apps/help-browser.png"),
-                            Qt::Key_F1, pMainWindow);
+    mHelpAction = Core::newAction(true, QIcon(":/oxygen/apps/help-browser.png"),
+                                  Qt::Key_F1, pMainWindow);
 
     // Create our help window
 

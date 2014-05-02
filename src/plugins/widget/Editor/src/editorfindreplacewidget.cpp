@@ -20,7 +20,6 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include "editorfindreplacewidget.h"
-#include "guiinterface.h"
 #include "guiutils.h"
 #include "i18ninterface.h"
 
@@ -74,9 +73,9 @@ EditorFindReplaceWidget::EditorFindReplaceWidget(QWidget *pParent) :
 
     mDropDownAction = new QAction(this);
 
-    mCaseSensitiveAction = GuiInterface::newAction(true, this);
-    mWholeWordsOnlyAction = GuiInterface::newAction(true, this);
-    mRegularExpressionAction = GuiInterface::newAction(true, this);
+    mCaseSensitiveAction = Core::newAction(true, this);
+    mWholeWordsOnlyAction = Core::newAction(true, this);
+    mRegularExpressionAction = Core::newAction(true, this);
 
     QMenu *dropDownMenu = new QMenu(this);
 
@@ -97,8 +96,8 @@ EditorFindReplaceWidget::EditorFindReplaceWidget(QWidget *pParent) :
 
     // Create and handle our clear find and replace text actions
 
-    mClearFindTextAction = GuiInterface::newAction(QIcon(":/qtCreator/src/plugins/coreplugin/images/editclear.png"), this);
-    mClearReplaceTextAction = GuiInterface::newAction(QIcon(":/qtCreator/src/plugins/coreplugin/images/editclear.png"), this);
+    mClearFindTextAction = Core::newAction(QIcon(":/qtCreator/src/plugins/coreplugin/images/editclear.png"), this);
+    mClearReplaceTextAction = Core::newAction(QIcon(":/qtCreator/src/plugins/coreplugin/images/editclear.png"), this);
 
     connect(mClearFindTextAction, SIGNAL(triggered()),
             mGui->findEdit, SLOT(clear()));
