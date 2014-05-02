@@ -152,10 +152,8 @@ void CorePlugin::filePermissionsChanged(const QString &pFileName)
 
 //==============================================================================
 
-void CorePlugin::fileModified(const QString &pFileName, const bool &pModified)
+void CorePlugin::fileModified(const QString &pFileName)
 {
-    Q_UNUSED(pModified);
-
     // Update our new/modified sensitive actions, if needed
 
     if (!pFileName.compare(mCentralWidget->currentFileName()))

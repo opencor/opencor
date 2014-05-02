@@ -107,11 +107,9 @@ void CoreEditingPlugin::filePermissionsChanged(const QString &pFileName)
 
 //==============================================================================
 
-void CoreEditingPlugin::fileModified(const QString &pFileName,
-                                     const bool &pModified)
+void CoreEditingPlugin::fileModified(const QString &pFileName)
 {
     Q_UNUSED(pFileName);
-    Q_UNUSED(pModified);
 
     // We don't handle this interface...
 }

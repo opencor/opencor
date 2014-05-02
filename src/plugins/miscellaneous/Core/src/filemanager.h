@@ -146,7 +146,7 @@ Q_SIGNALS:
     void fileDeleted(const QString &pFileName);
 
     void filePermissionsChanged(const QString &pFileName);
-    void fileModified(const QString &pFileName, const bool &pModified);
+    void fileModified(const QString &pFileName);
 
     void fileReloaded(const QString &pFileName);
 

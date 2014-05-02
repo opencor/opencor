@@ -86,11 +86,9 @@ void SingleCellViewPlugin::filePermissionsChanged(const QString &pFileName)
 
 //==============================================================================
 
-void SingleCellViewPlugin::fileModified(const QString &pFileName,
-                                        const bool &pModified)
+void SingleCellViewPlugin::fileModified(const QString &pFileName)
 {
     Q_UNUSED(pFileName);
-    Q_UNUSED(pModified);
 
     // We don't handle this interface...
 }

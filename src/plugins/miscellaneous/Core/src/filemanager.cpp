@@ -292,7 +292,7 @@ void FileManager::setModified(const QString &pFileName, const bool &pModified)
     File *file = isManaged(nativeFileName);
 
     if (file && file->setModified(pModified))
-        emit fileModified(nativeFileName, pModified);
+        emit fileModified(nativeFileName);
 }
 
 //==============================================================================

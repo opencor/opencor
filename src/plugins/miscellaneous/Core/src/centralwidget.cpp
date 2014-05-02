@@ -225,8 +225,8 @@ CentralWidget::CentralWidget(QMainWindow *pMainWindow) :
 
     connect(fileManagerInstance, SIGNAL(filePermissionsChanged(const QString &)),
             this, SLOT(filePermissionsChanged(const QString &)));
-    connect(fileManagerInstance, SIGNAL(fileModified(const QString &, const bool &)),
-            this, SLOT(fileModified(const QString &, const bool &)));
+    connect(fileManagerInstance, SIGNAL(fileModified(const QString &)),
+            this, SLOT(fileModified(const QString &)));
 
     // Some connections to handle our files tab bar
 
@@ -344,7 +344,7 @@ void CentralWidget::loadSettings(QSettings *pSettings)
     // Note: we do it here for the same reason as above (see the note for the
     //       connections to handle an external change in the state of a file)...
 
-    connect(fileManagerInstance, SIGNAL(fileModified(const QString &, const bool &)),
+    connect(fileManagerInstance, SIGNAL(fileModified(const QString &)),
             this, SLOT(updateModifiedSettings()));
     connect(fileManagerInstance, SIGNAL(fileReloaded(const QString &)),
             this, SLOT(fileReloaded(const QString &)));
@@ -1782,8 +1782,7 @@ void CentralWidget::filePermissionsChanged(const QString &pFileName)
 
 //==============================================================================
 
-void CentralWidget::fileModified(const QString &pFileName,
-                                 const bool &pModified)
+void CentralWidget::fileModified(const QString &pFileName)
 {
     // Let our plugins know about the file having been modified
 
@@ -1791,7 +1790,7 @@ void CentralWidget::fileModified(const QString &pFileName,
         FileHandlingInterface *fileHandlingInterface = qobject_cast<FileHandlingInterface *>(plugin->instance());
 
         if (fileHandlingInterface)
-            fileHandlingInterface->fileModified(pFileName, pModified);
+            fileHandlingInterface->fileModified(pFileName);
     }
 }
 

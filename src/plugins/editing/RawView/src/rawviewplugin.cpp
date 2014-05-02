@@ -96,11 +96,9 @@ void RawViewPlugin::filePermissionsChanged(const QString &pFileName)
 
 //==============================================================================
 
-void RawViewPlugin::fileModified(const QString &pFileName,
-                                 const bool &pModified)
+void RawViewPlugin::fileModified(const QString &pFileName)
 {
     Q_UNUSED(pFileName);
-    Q_UNUSED(pModified);
 
     // We don't handle this interface...
 }
