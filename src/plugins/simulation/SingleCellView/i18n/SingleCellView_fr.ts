@@ -320,21 +320,6 @@
     </message>
 </context>
 <context>
-    <name>QObject</name>
-    <message>
-        <source>ODE</source>
-        <translation>EDO</translation>
-    </message>
-    <message>
-        <source>DAE</source>
-        <translation>EAD</translation>
-    </message>
-    <message>
-        <source>NLA</source>
-        <translation>ANL</translation>
-    </message>
-</context>
-<context>
     <name>SingleCellViewGraphPanelPlotWidget</name>
     <message>
         <source>Copy</source>

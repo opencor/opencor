@@ -57,7 +57,7 @@ FileTypes CellMLSupportPlugin::fileTypes() const
 {
     // Return the CellML file type that the CellMLSupport plugin supports
 
-    return FileTypes() << FileType(qobject_cast<FileInterface *>(this),
+    return FileTypes() << FileType(qobject_cast<FileTypeInterface *>(this),
                                    CellmlMimeType, CellmlFileExtension);
 }
 

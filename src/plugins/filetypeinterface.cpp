@@ -16,15 +16,10 @@ specific language governing permissions and limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// Window interface
+// File type interface
 //==============================================================================
 
-#ifndef WINDOWINTERFACE_H
-#define WINDOWINTERFACE_H
-
-//==============================================================================
-
-#include <QObject>
+#include "filetypeinterface.h"
 
 //==============================================================================
 
@@ -32,25 +27,54 @@ namespace OpenCOR {
 
 //==============================================================================
 
-class WindowInterface
+FileType::FileType(FileTypeInterface *pOwner, const QString &pMimeType,
+                   const QString &pFileExtension) :
+    mOwner(pOwner),
+    mMimeType(pMimeType),
+    mFileExtension(pFileExtension)
 {
-public:
-#define INTERFACE_DEFINITION
-    #include "windowinterface.inl"
-#undef INTERFACE_DEFINITION
-};
+}
+
+//==============================================================================
+
+bool FileType::operator==(const FileType &pFileType) const
+{
+    // Return whether the current item is equal to the given one
+
+    return    !mMimeType.compare(pFileType.mimeType())
+           && !mFileExtension.compare(pFileType.fileExtension());
+}
+
+//==============================================================================
+
+QString FileType::mimeType() const
+{
+    // Return the file's MIME type
+
+    return mMimeType;
+}
+
+//==============================================================================
+
+QString FileType::fileExtension() const
+{
+    // Return the file's extension
+
+    return mFileExtension;
+}
+
+//==============================================================================
+
+QString FileType::description() const
+{
+    // Return the file's description
+
+    return mOwner->fileTypeDescription(mMimeType);
+}
 
 //==============================================================================
 
 }   // namespace OpenCOR
-
-//==============================================================================
-
-Q_DECLARE_INTERFACE(OpenCOR::WindowInterface, "OpenCOR::WindowInterface")
-
-//==============================================================================
-
-#endif
 
 //==============================================================================
 // End of file

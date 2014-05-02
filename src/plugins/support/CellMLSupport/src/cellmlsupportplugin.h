@@ -25,7 +25,7 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include "cellmlsupportglobal.h"
-#include "fileinterface.h"
+#include "filetypeinterface.h"
 #include "i18ninterface.h"
 #include "plugininterface.h"
 #include "plugininfo.h"
@@ -46,19 +46,19 @@ static const auto CellmlFileExtension = QStringLiteral("cellml");
 
 //==============================================================================
 
-class CellMLSupportPlugin : public QObject, public FileInterface,
+class CellMLSupportPlugin : public QObject, public FileTypeInterface,
                             public I18nInterface, public PluginInterface
 {
     Q_OBJECT
 
     Q_PLUGIN_METADATA(IID "OpenCOR.CellMLSupportPlugin" FILE "cellmlsupportplugin.json")
 
-    Q_INTERFACES(OpenCOR::FileInterface)
+    Q_INTERFACES(OpenCOR::FileTypeInterface)
     Q_INTERFACES(OpenCOR::I18nInterface)
     Q_INTERFACES(OpenCOR::PluginInterface)
 
 public:
-#include "fileinterface.inl"
+#include "filetypeinterface.inl"
 #include "i18ninterface.inl"
 #include "plugininterface.inl"
 };

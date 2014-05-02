@@ -22,7 +22,7 @@ specific language governing permissions and limitations under the License.
 #include "cliutils.h"
 #include "centralwidget.h"
 #include "coreplugin.h"
-#include "fileinterface.h"
+#include "filetypeinterface.h"
 #include "filemanager.h"
 #include "guiutils.h"
 #include "organisationwidget.h"
@@ -478,13 +478,14 @@ void CorePlugin::pluginInitialized(const Plugins &pLoadedPlugins)
     FileTypes supportedFileTypes = FileTypes();
 
     foreach (Plugin *loadedPlugin, pLoadedPlugins) {
-        FileInterface *fileInterface = qobject_cast<FileInterface *>(loadedPlugin->instance());
+        FileTypeInterface *fileTypeInterface = qobject_cast<FileTypeInterface *>(loadedPlugin->instance());
 
-        if (fileInterface)
-            // The plugin implements our file interface, so add the supported
-            // file types, but only if they are not already in our list
+        if (fileTypeInterface)
+            // The plugin implements our file type interface, so add the
+            // supported file types, but only if they are not already in our
+            // list
 
-            foreach (const FileType &fileType, fileInterface->fileTypes())
+            foreach (const FileType &fileType, fileTypeInterface->fileTypes())
                 if (!supportedFileTypes.contains(fileType))
                     supportedFileTypes << fileType;
     }

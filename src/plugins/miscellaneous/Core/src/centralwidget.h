@@ -25,7 +25,7 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include "file.h"
-#include "fileinterface.h"
+#include "filetypeinterface.h"
 #include "guiinterface.h"
 #include "widget.h"
 #include "viewinterface.h"

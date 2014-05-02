@@ -25,6 +25,7 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include "coreinterface.h"
+#include "filehandlinginterface.h"
 #include "guiinterface.h"
 #include "i18ninterface.h"
 #include "plugininfo.h"
@@ -49,7 +50,8 @@ class CentralWidget;
 
 //==============================================================================
 
-class CorePlugin : public QObject, public CoreInterface, public GuiInterface,
+class CorePlugin : public QObject, public CoreInterface,
+                   public FileHandlingInterface, public GuiInterface,
                    public I18nInterface, public PluginInterface
 {
     Q_OBJECT
@@ -57,12 +59,14 @@ class CorePlugin : public QObject, public CoreInterface, public GuiInterface,
     Q_PLUGIN_METADATA(IID "OpenCOR.CorePlugin" FILE "coreplugin.json")
 
     Q_INTERFACES(OpenCOR::CoreInterface)
+    Q_INTERFACES(OpenCOR::FileHandlingInterface)
     Q_INTERFACES(OpenCOR::GuiInterface)
     Q_INTERFACES(OpenCOR::I18nInterface)
     Q_INTERFACES(OpenCOR::PluginInterface)
 
 public:
 #include "coreinterface.inl"
+#include "filehandlinginterface.inl"
 #include "guiinterface.inl"
 #include "i18ninterface.inl"
 #include "plugininterface.inl"

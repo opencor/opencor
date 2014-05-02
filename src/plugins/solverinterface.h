@@ -91,8 +91,6 @@ public:
 #define INTERFACE_DEFINITION
     #include "solverinterface.inl"
 #undef INTERFACE_DEFINITION
-
-    QString typeAsString() const;
 };
 
 //==============================================================================

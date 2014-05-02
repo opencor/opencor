@@ -26,6 +26,7 @@ specific language governing permissions and limitations under the License.
 
 #include "cellmleditinginterface.h"
 #include "editinginterface.h"
+#include "filehandlinginterface.h"
 #include "guiinterface.h"
 #include "i18ninterface.h"
 #include "plugininterface.h"
@@ -53,9 +54,10 @@ class CellmlAnnotationViewWidget;
 
 class CellMLAnnotationViewPlugin : public QObject,
                                    public CellmlEditingInterface,
-                                   public EditingInterface, public GuiInterface,
-                                   public I18nInterface, public PluginInterface,
-                                   public ViewInterface
+                                   public EditingInterface,
+                                   public FileHandlingInterface,
+                                   public GuiInterface, public I18nInterface,
+                                   public PluginInterface, public ViewInterface
 {
     Q_OBJECT
 
@@ -63,6 +65,7 @@ class CellMLAnnotationViewPlugin : public QObject,
 
     Q_INTERFACES(OpenCOR::CellmlEditingInterface)
     Q_INTERFACES(OpenCOR::EditingInterface)
+    Q_INTERFACES(OpenCOR::FileHandlingInterface)
     Q_INTERFACES(OpenCOR::GuiInterface)
     Q_INTERFACES(OpenCOR::I18nInterface)
     Q_INTERFACES(OpenCOR::PluginInterface)
@@ -71,6 +74,7 @@ class CellMLAnnotationViewPlugin : public QObject,
 public:
 #include "cellmleditinginterface.inl"
 #include "editinginterface.inl"
+#include "filehandlinginterface.inl"
 #include "guiinterface.inl"
 #include "i18ninterface.inl"
 #include "plugininterface.inl"

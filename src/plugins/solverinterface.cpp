@@ -95,24 +95,6 @@ bool Property::hasVoiUnit() const
 
 //==============================================================================
 
-QString SolverInterface::typeAsString() const
-{
-    // Return the type of the solver as a string
-
-    switch (solverType()) {
-    case Solver::Ode:
-        return QObject::tr("ODE");
-    case Solver::Dae:
-        return QObject::tr("DAE");
-    case Solver::Nla:
-        return QObject::tr("NLA");
-    default:
-        return "???";
-    }
-}
-
-//==============================================================================
-
 }   // namespace OpenCOR
 
 //==============================================================================

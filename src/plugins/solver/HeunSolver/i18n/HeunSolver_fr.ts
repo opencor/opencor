@@ -4,18 +4,6 @@
 <context>
     <name>QObject</name>
     <message>
-        <source>ODE</source>
-        <translation>EDO</translation>
-    </message>
-    <message>
-        <source>DAE</source>
-        <translation>EAD</translation>
-    </message>
-    <message>
-        <source>NLA</source>
-        <translation>ANL</translation>
-    </message>
-    <message>
         <source>the &apos;step&apos; property value could not be retrieved</source>
         <translation>la valeur de la propriété &apos;pas&apos; n&apos;a pas pu être retrouvée</translation>
     </message>

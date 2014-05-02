@@ -24,6 +24,7 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#include "filehandlinginterface.h"
 #include "guiinterface.h"
 #include "i18ninterface.h"
 #include "plugininterface.h"
@@ -53,13 +54,15 @@ PLUGININFO_FUNC CoreEditingPluginInfo();
 
 //==============================================================================
 
-class CoreEditingPlugin : public QObject, public GuiInterface,
-                          public I18nInterface, public PluginInterface
+class CoreEditingPlugin : public QObject, public FileHandlingInterface,
+                          public GuiInterface, public I18nInterface,
+                          public PluginInterface
 {
     Q_OBJECT
 
     Q_PLUGIN_METADATA(IID "OpenCOR.CoreEditingPlugin" FILE "coreeditingplugin.json")
 
+    Q_INTERFACES(OpenCOR::FileHandlingInterface)
     Q_INTERFACES(OpenCOR::GuiInterface)
     Q_INTERFACES(OpenCOR::I18nInterface)
     Q_INTERFACES(OpenCOR::PluginInterface)
@@ -67,6 +70,7 @@ class CoreEditingPlugin : public QObject, public GuiInterface,
 public:
     explicit CoreEditingPlugin();
 
+#include "filehandlinginterface.inl"
 #include "guiinterface.inl"
 #include "i18ninterface.inl"
 #include "plugininterface.inl"

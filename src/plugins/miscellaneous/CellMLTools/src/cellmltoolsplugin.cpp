@@ -116,77 +116,6 @@ Core::showEnableAction(mExportToCellml11Action, false);
 }
 
 //==============================================================================
-
-bool CellMLToolsPlugin::saveFile(const QString &pOldFileName,
-                                 const QString &pNewFileName)
-{
-    Q_UNUSED(pOldFileName);
-    Q_UNUSED(pNewFileName);
-
-    // We don't handle this interface...
-
-    return false;
-}
-
-//==============================================================================
-
-void CellMLToolsPlugin::fileOpened(const QString &pFileName)
-{
-    Q_UNUSED(pFileName);
-
-    // We don't handle this interface...
-}
-
-//==============================================================================
-
-void CellMLToolsPlugin::filePermissionsChanged(const QString &pFileName)
-{
-    Q_UNUSED(pFileName);
-
-    // We don't handle this interface...
-}
-
-//==============================================================================
-
-void CellMLToolsPlugin::fileModified(const QString &pFileName,
-                                     const bool &pModified)
-{
-    Q_UNUSED(pFileName);
-    Q_UNUSED(pModified);
-
-    // We don't handle this interface...
-}
-
-//==============================================================================
-
-void CellMLToolsPlugin::fileReloaded(const QString &pFileName)
-{
-    Q_UNUSED(pFileName);
-
-    // We don't handle this interface...
-}
-
-//==============================================================================
-
-void CellMLToolsPlugin::fileRenamed(const QString &pOldFileName,
-                                    const QString &pNewFileName)
-{
-    Q_UNUSED(pOldFileName);
-    Q_UNUSED(pNewFileName);
-
-    // We don't handle this interface...
-}
-
-//==============================================================================
-
-void CellMLToolsPlugin::fileClosed(const QString &pFileName)
-{
-    Q_UNUSED(pFileName);
-
-    // We don't handle this interface...
-}
-
-//==============================================================================
 // I18n interface
 //==============================================================================
 
@@ -261,13 +190,13 @@ void CellMLToolsPlugin::pluginInitialized(const Plugins &pLoadedPlugins)
     mCellmlFileTypes = FileTypes();
 
     foreach (Plugin *loadedPlugin, pLoadedPlugins) {
-        FileInterface *fileInterface = qobject_cast<FileInterface *>(loadedPlugin->instance());
+        FileTypeInterface *fileTypeInterface = qobject_cast<FileTypeInterface *>(loadedPlugin->instance());
 
-        if (!loadedPlugin->name().compare("CellMLSupport") && fileInterface) {
+        if (!loadedPlugin->name().compare("CellMLSupport") && fileTypeInterface) {
             // This is the CellMLSupport plugin and, as expected, it implements
-            // the file interface, so retrieve the file types it supports
+            // our file type interface, so retrieve the file types it supports
 
-            mCellmlFileTypes = fileInterface->fileTypes();
+            mCellmlFileTypes = fileTypeInterface->fileTypes();
 
             break;
         }

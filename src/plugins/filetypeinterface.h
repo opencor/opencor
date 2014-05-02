@@ -16,11 +16,11 @@ specific language governing permissions and limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// File interface
+// File type interface
 //==============================================================================
 
-#ifndef FILEINTERFACE_H
-#define FILEINTERFACE_H
+#ifndef FILETYPEINTERFACE_H
+#define FILETYPEINTERFACE_H
 
 //==============================================================================
 
@@ -32,14 +32,14 @@ namespace OpenCOR {
 
 //==============================================================================
 
-class FileInterface;
+class FileTypeInterface;
 
 //==============================================================================
 
 class FileType
 {
 public:
-    explicit FileType(FileInterface *pOwner, const QString &pMimeType,
+    explicit FileType(FileTypeInterface *pOwner, const QString &pMimeType,
                       const QString &pFileExtension);
 
     bool operator==(const FileType &pFileType) const;
@@ -49,7 +49,7 @@ public:
     QString description() const;
 
 private:
-    FileInterface *mOwner;
+    FileTypeInterface *mOwner;
 
     QString mMimeType;
     QString mFileExtension;
@@ -61,11 +61,11 @@ typedef QList<FileType> FileTypes;
 
 //==============================================================================
 
-class FileInterface
+class FileTypeInterface
 {
 public:
 #define INTERFACE_DEFINITION
-    #include "fileinterface.inl"
+    #include "filetypeinterface.inl"
 #undef INTERFACE_DEFINITION
 };
 
@@ -75,7 +75,7 @@ public:
 
 //==============================================================================
 
-Q_DECLARE_INTERFACE(OpenCOR::FileInterface, "OpenCOR::FileInterface")
+Q_DECLARE_INTERFACE(OpenCOR::FileTypeInterface, "OpenCOR::FileTypeInterface")
 
 //==============================================================================
 

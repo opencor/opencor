@@ -24,24 +24,15 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-#include <Qt>
-
-//==============================================================================
-
 #include <QIcon>
 #include <QList>
 #include <QKeySequence>
-#include <QObject>
 #include <QString>
 
 //==============================================================================
 
 class QAction;
-class QDockWidget;
 class QMenu;
-class QSettings;
-class QTabBar;
-class QToolBar;
 class QWidget;
 
 //==============================================================================

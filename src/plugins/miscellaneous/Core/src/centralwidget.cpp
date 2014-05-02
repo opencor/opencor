@@ -21,6 +21,7 @@ specific language governing permissions and limitations under the License.
 
 #include "centralwidget.h"
 #include "cliutils.h"
+#include "filehandlinginterface.h"
 #include "filemanager.h"
 #include "guiutils.h"
 #include "plugin.h"
@@ -529,14 +530,14 @@ void CentralWidget::settingsLoaded(const Plugins &pLoadedPlugins)
     // Let our plugins know that our files have been opened
     // Note: the below is normally done as part of openFile(), but
     //       mLoadedPlugins is not yet set when openFile() gets called as part
-    //       of OpenCOR's loading its settings...
+    //       of OpenCOR's loading its settings, so we do it here instead...
 
     foreach (Plugin *plugin, mLoadedPlugins) {
-        GuiInterface *guiInterface = qobject_cast<GuiInterface *>(plugin->instance());
+        FileHandlingInterface *fileHandlingInterface = qobject_cast<FileHandlingInterface *>(plugin->instance());
 
-        if (guiInterface)
+        if (fileHandlingInterface)
             foreach (const QString &fileName, mFileNames)
-                guiInterface->fileOpened(fileName);
+                fileHandlingInterface->fileOpened(fileName);
     }
 }
 
@@ -697,10 +698,10 @@ void CentralWidget::openFile(const QString &pFileName, const File::Type &pType,
     //       something similar to what is done in settingsLoaded()...
 
     foreach (Plugin *plugin, mLoadedPlugins) {
-        GuiInterface *guiInterface = qobject_cast<GuiInterface *>(plugin->instance());
+        FileHandlingInterface *fileHandlingInterface = qobject_cast<FileHandlingInterface *>(plugin->instance());
 
-        if (guiInterface)
-            guiInterface->fileOpened(nativeFileName);
+        if (fileHandlingInterface)
+            fileHandlingInterface->fileOpened(nativeFileName);
     }
 }
 
@@ -935,10 +936,10 @@ bool CentralWidget::saveFile(const int &pIndex, const bool &pNeedNewFileName)
     // Make sure that the view plugin supports saving
 
     Plugin *fileViewPlugin = viewPlugin(pIndex);
-    GuiInterface *guiInterface = qobject_cast<GuiInterface *>(fileViewPlugin->instance());
+    FileHandlingInterface *fileHandlingInterface = qobject_cast<FileHandlingInterface *>(fileViewPlugin->instance());
     ViewInterface *viewInterface = qobject_cast<ViewInterface *>(fileViewPlugin->instance());
 
-    if (!guiInterface) {
+    if (!fileHandlingInterface) {
         QMessageBox::warning(mMainWindow, tr("Save File"),
                              tr("Sorry, but the <strong>%1</strong> view does not support saving files.").arg(viewInterface->viewName()));
 
@@ -1000,7 +1001,7 @@ bool CentralWidget::saveFile(const int &pIndex, const bool &pNeedNewFileName)
             // The file is or has been modified, so ask the current view to save
             // it
 
-            bool fileSaved = guiInterface->saveFile(oldFileName, newFileName);
+            bool fileSaved = fileHandlingInterface->saveFile(oldFileName, newFileName);
 
             if (fileSaved) {
                 // The file has been saved, so ask our file manager to reset its
@@ -1234,10 +1235,10 @@ bool CentralWidget::closeFile(const int &pIndex, const bool &pForceClosing)
         // Let our plugins know about the file having just been closed
 
         foreach (Plugin *plugin, mLoadedPlugins) {
-            GuiInterface *guiInterface = qobject_cast<GuiInterface *>(plugin->instance());
+            FileHandlingInterface *fileHandlingInterface = qobject_cast<FileHandlingInterface *>(plugin->instance());
 
-            if (guiInterface)
-                guiInterface->fileClosed(fileName);
+            if (fileHandlingInterface)
+                fileHandlingInterface->fileClosed(fileName);
         }
 
         // Unregister the file from our file manager
@@ -1772,10 +1773,10 @@ void CentralWidget::filePermissionsChanged(const QString &pFileName)
     // Let our plugins know about the file having had its permissions changed
 
     foreach (Plugin *plugin, mLoadedPlugins) {
-        GuiInterface *guiInterface = qobject_cast<GuiInterface *>(plugin->instance());
+        FileHandlingInterface *fileHandlingInterface = qobject_cast<FileHandlingInterface *>(plugin->instance());
 
-        if (guiInterface)
-            guiInterface->filePermissionsChanged(pFileName);
+        if (fileHandlingInterface)
+            fileHandlingInterface->filePermissionsChanged(pFileName);
     }
 }
 
@@ -1787,10 +1788,10 @@ void CentralWidget::fileModified(const QString &pFileName,
     // Let our plugins know about the file having been modified
 
     foreach (Plugin *plugin, mLoadedPlugins) {
-        GuiInterface *guiInterface = qobject_cast<GuiInterface *>(plugin->instance());
+        FileHandlingInterface *fileHandlingInterface = qobject_cast<FileHandlingInterface *>(plugin->instance());
 
-        if (guiInterface)
-            guiInterface->fileModified(pFileName, pModified);
+        if (fileHandlingInterface)
+            fileHandlingInterface->fileModified(pFileName, pModified);
     }
 }
 
@@ -1811,10 +1812,10 @@ void CentralWidget::fileReloaded(const QString &pFileName)
 
     foreach (Plugin *plugin, mLoadedPlugins)
         if (fileManagerInstance->isActive() || (plugin != fileViewPlugin)) {
-            GuiInterface *guiInterface = qobject_cast<GuiInterface *>(plugin->instance());
+            FileHandlingInterface *fileHandlingInterface = qobject_cast<FileHandlingInterface *>(plugin->instance());
 
-            if (guiInterface)
-                guiInterface->fileReloaded(pFileName);
+            if (fileHandlingInterface)
+                fileHandlingInterface->fileReloaded(pFileName);
         }
 
     // Now, because of the way some our views may reload a file (see
@@ -1878,10 +1879,10 @@ void CentralWidget::fileRenamed(const QString &pOldFileName,
             // Let our plugins know about a file having been renamed
 
             foreach (Plugin *plugin, mLoadedPlugins) {
-                GuiInterface *guiInterface = qobject_cast<GuiInterface *>(plugin->instance());
+                FileHandlingInterface *fileHandlingInterface = qobject_cast<FileHandlingInterface *>(plugin->instance());
 
-                if (guiInterface)
-                    guiInterface->fileRenamed(pOldFileName, pNewFileName);
+                if (fileHandlingInterface)
+                    fileHandlingInterface->fileRenamed(pOldFileName, pNewFileName);
             }
 
             break;

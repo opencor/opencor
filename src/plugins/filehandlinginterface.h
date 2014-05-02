@@ -16,10 +16,16 @@ specific language governing permissions and limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// File interface
+// File handling interface
 //==============================================================================
 
-#include "fileinterface.h"
+#ifndef FILEHANDLINGINTERFACE_H
+#define FILEHANDLINGINTERFACE_H
+
+//==============================================================================
+
+#include <QObject>
+#include <QString>
 
 //==============================================================================
 
@@ -27,54 +33,25 @@ namespace OpenCOR {
 
 //==============================================================================
 
-FileType::FileType(FileInterface *pOwner, const QString &pMimeType,
-                   const QString &pFileExtension) :
-    mOwner(pOwner),
-    mMimeType(pMimeType),
-    mFileExtension(pFileExtension)
+class FileHandlingInterface
 {
-}
-
-//==============================================================================
-
-bool FileType::operator==(const FileType &pFileType) const
-{
-    // Return whether the current item is equal to the given one
-
-    return    !mMimeType.compare(pFileType.mimeType())
-           && !mFileExtension.compare(pFileType.fileExtension());
-}
-
-//==============================================================================
-
-QString FileType::mimeType() const
-{
-    // Return the file's MIME type
-
-    return mMimeType;
-}
-
-//==============================================================================
-
-QString FileType::fileExtension() const
-{
-    // Return the file's extension
-
-    return mFileExtension;
-}
-
-//==============================================================================
-
-QString FileType::description() const
-{
-    // Return the file's description
-
-    return mOwner->fileTypeDescription(mMimeType);
-}
+public:
+#define INTERFACE_DEFINITION
+    #include "filehandlinginterface.inl"
+#undef INTERFACE_DEFINITION
+};
 
 //==============================================================================
 
 }   // namespace OpenCOR
+
+//==============================================================================
+
+Q_DECLARE_INTERFACE(OpenCOR::FileHandlingInterface, "OpenCOR::FileHandlingInterface")
+
+//==============================================================================
+
+#endif
 
 //==============================================================================
 // End of file
