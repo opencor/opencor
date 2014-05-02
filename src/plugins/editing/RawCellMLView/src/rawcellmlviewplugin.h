@@ -24,6 +24,7 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#include "cellmleditinginterface.h"
 #include "editinginterface.h"
 #include "guiinterface.h"
 #include "i18ninterface.h"
@@ -46,14 +47,16 @@ class RawCellmlViewWidget;
 
 //==============================================================================
 
-class RawCellMLViewPlugin : public QObject, public EditingInterface,
-                            public GuiInterface, public I18nInterface,
-                            public PluginInterface, public ViewInterface
+class RawCellMLViewPlugin : public QObject, public CellmlEditingInterface,
+                            public EditingInterface, public GuiInterface,
+                            public I18nInterface, public PluginInterface,
+                            public ViewInterface
 {
     Q_OBJECT
 
     Q_PLUGIN_METADATA(IID "OpenCOR.RawCellMLViewPlugin" FILE "rawcellmlviewplugin.json")
 
+    Q_INTERFACES(OpenCOR::CellmlEditingInterface)
     Q_INTERFACES(OpenCOR::EditingInterface)
     Q_INTERFACES(OpenCOR::GuiInterface)
     Q_INTERFACES(OpenCOR::I18nInterface)
@@ -61,6 +64,7 @@ class RawCellMLViewPlugin : public QObject, public EditingInterface,
     Q_INTERFACES(OpenCOR::ViewInterface)
 
 public:
+#include "cellmleditinginterface.inl"
 #include "editinginterface.inl"
 #include "guiinterface.inl"
 #include "i18ninterface.inl"

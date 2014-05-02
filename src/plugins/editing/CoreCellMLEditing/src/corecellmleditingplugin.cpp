@@ -19,6 +19,7 @@ specific language governing permissions and limitations under the License.
 // CoreCellMLEditing plugin
 //==============================================================================
 
+#include "cellmleditinginterface.h"
 #include "corecellmleditingplugin.h"
 #include "filemanager.h"
 #include "guiutils.h"
@@ -59,10 +60,10 @@ void CoreCellMLEditingPlugin::updateGui(Plugin *pViewPlugin,
     // Show/enable or hide/disable various actions, depending on whether the
     // view plugin handles the CellML editing interface
 
-    bool isCellmlEditingPlugin = pViewPlugin->info()->fullDependencies().contains("CoreCellMLEditing");
+    CellmlEditingInterface *cellmlEditingInterface = pViewPlugin?qobject_cast<CellmlEditingInterface *>(pViewPlugin->instance()):0;
 
-    Core::showEnableAction(mFileNewCellml1_0FileAction, isCellmlEditingPlugin);
-    Core::showEnableAction(mFileNewCellml1_1FileAction, isCellmlEditingPlugin);
+    Core::showEnableAction(mFileNewCellml1_0FileAction, cellmlEditingInterface);
+    Core::showEnableAction(mFileNewCellml1_1FileAction, cellmlEditingInterface);
 }
 
 //==============================================================================

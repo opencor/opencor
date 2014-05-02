@@ -16,74 +16,37 @@ specific language governing permissions and limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// CellMLAnnotationView plugin
+// CellML editing interface
 //==============================================================================
 
-#ifndef CELLMLANNOTATIONVIEWPLUGIN_H
-#define CELLMLANNOTATIONVIEWPLUGIN_H
-
-//==============================================================================
-
-#include "cellmleditinginterface.h"
-#include "editinginterface.h"
-#include "guiinterface.h"
-#include "i18ninterface.h"
-#include "plugininterface.h"
-#include "plugininfo.h"
-#include "viewinterface.h"
+#ifndef CELLMLEDITINGINTERFACE_H
+#define CELLMLEDITINGINTERFACE_H
 
 //==============================================================================
 
-class QSettings;
+#include <QObject>
 
 //==============================================================================
 
 namespace OpenCOR {
-namespace CellMLAnnotationView {
 
 //==============================================================================
 
-PLUGININFO_FUNC CellMLAnnotationViewPluginInfo();
-
-//==============================================================================
-
-class CellmlAnnotationViewWidget;
-
-//==============================================================================
-
-class CellMLAnnotationViewPlugin : public QObject,
-                                   public CellmlEditingInterface,
-                                   public EditingInterface, public GuiInterface,
-                                   public I18nInterface, public PluginInterface,
-                                   public ViewInterface
+class CellmlEditingInterface
 {
-    Q_OBJECT
-
-    Q_PLUGIN_METADATA(IID "OpenCOR.CellMLAnnotationViewPlugin" FILE "cellmlannotationviewplugin.json")
-
-    Q_INTERFACES(OpenCOR::CellmlEditingInterface)
-    Q_INTERFACES(OpenCOR::EditingInterface)
-    Q_INTERFACES(OpenCOR::GuiInterface)
-    Q_INTERFACES(OpenCOR::I18nInterface)
-    Q_INTERFACES(OpenCOR::PluginInterface)
-    Q_INTERFACES(OpenCOR::ViewInterface)
-
 public:
-#include "cellmleditinginterface.inl"
-#include "editinginterface.inl"
-#include "guiinterface.inl"
-#include "i18ninterface.inl"
-#include "plugininterface.inl"
-#include "viewinterface.inl"
-
-private:
-    CellmlAnnotationViewWidget *mViewWidget;
+#define INTERFACE_DEFINITION
+    #include "cellmleditinginterface.inl"
+#undef INTERFACE_DEFINITION
 };
 
 //==============================================================================
 
-}   // namespace CellMLAnnotationView
 }   // namespace OpenCOR
+
+//==============================================================================
+
+Q_DECLARE_INTERFACE(OpenCOR::CellmlEditingInterface, "OpenCOR::CellmlEditingInterface")
 
 //==============================================================================
 
