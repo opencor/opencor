@@ -30,6 +30,7 @@ script:
     && ./run -h
     && ./run -p
     && ./run -c CellMLTools::help
+    && ./run -platform offscreen -c CellMLTools::help
     && cd build/tests
     && ./runtests -platform offscreen
 
