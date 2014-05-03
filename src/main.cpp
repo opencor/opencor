@@ -46,6 +46,67 @@ specific language governing permissions and limitations under the License.
 
 int main(int pArgC, char *pArgV[])
 {
+    // Create our application
+    // Note: on Linux and OS X, we first try to run the CLI version of OpenCOR
+    //       while on Windows, we go straight for the GUI version. Indeed, in
+    //       the case of Windows, we have two binaries (.com and .exe that are
+    //       for the CLI and GUI versions of OpenCOR, respectively). This means
+    //       that when a console window is open, to enter something like:
+    //           C:\>OpenCOR
+    //       will effectively call OpenCOR.com. From there, should there be no
+    //       argument that requires CLI treatment, then the GUI version of
+    //       OpenCOR will be launched. This is, unfortunately, the only way to
+    //       have OpenCOR to behave as both a CLI and a GUI application on
+    //       Windows, hence the [OpenCOR]/windows/main.cpp file which is used to
+    //       generate the CLI version of OpenCOR...
+
+#if defined(Q_OS_WIN)
+    SharedTools::QtSingleApplication *app = new SharedTools::QtSingleApplication(QFileInfo(pArgV[0]).baseName(),
+                                                                                 pArgC, pArgV);
+#elif defined(Q_OS_LINUX) || defined(Q_OS_MAC)
+    QCoreApplication *cliApp = new QCoreApplication(pArgC, pArgV);
+#else
+    #error Unsupported platform
+#endif
+
+    // Remove all 'global' instances, in case OpenCOR previously crashed or
+    // something (and therefore didn't remove all of them before quitting)
+
+    OpenCOR::removeGlobalInstances();
+
+    // Some general initialisations
+
+#if defined(Q_OS_WIN)
+    OpenCOR::initApplication(app);
+#elif defined(Q_OS_LINUX) || defined(Q_OS_MAC)
+    OpenCOR::initApplication(cliApp);
+#else
+    #error Unsupported platform
+#endif
+
+    // Try to run OpenCOR as a CLI application
+
+#if defined(Q_OS_WIN)
+    // Do nothing...
+#elif defined(Q_OS_LINUX) || defined(Q_OS_MAC)
+    int res;
+
+    bool runCliApplication = OpenCOR::cliApplication(cliApp, &res);
+
+    delete cliApp;
+
+    if (runCliApplication) {
+        // OpenCOR was run as a CLI application, so...
+
+        OpenCOR::removeGlobalInstances();
+
+        return res;
+    }
+
+    // At this stage, we tried to run the CLI version of OpenCOR, but in the end
+    // we need to run the GUI version, so start over but with the GUI version of
+    // OpenCOR this time
+
     // Make sure that we always use indirect rendering on Linux
     // Note: indeed, depending on which plugins are selected, OpenCOR may need
     //       LLVM. If that's the case, and in case the user's video card uses a
@@ -59,45 +120,15 @@ int main(int pArgC, char *pArgV[])
 #endif
 
     // Create our application
+    // Note: the CLI version of OpenCOR didn't actually do anything, so no need
+    //       to re-remove all 'global' instances...
 
     SharedTools::QtSingleApplication *app = new SharedTools::QtSingleApplication(QFileInfo(pArgV[0]).baseName(),
                                                                                  pArgC, pArgV);
 
-    // Remove all 'global' instances, in case OpenCOR previously crashed or
-    // something (and therefore didn't remove all of them before quitting)
-
-    OpenCOR::removeGlobalInstances();
-
     // Some general initialisations
 
     OpenCOR::initApplication(app);
-
-    // Try to run OpenCOR as a CLI application
-    // Note: in the case of Windows, we have two binaries (.com and .exe which
-    //       are for the CLI and GUI versions of OpenCOR, respectively). This
-    //       means that when a console window is open, to enter something like:
-    //           C:\>OpenCOR
-    //       will effectively call OpenCOR.com. From there, should there be no
-    //       argument that requires CLI treatment, the GUI version of OpenCOR
-    //       will be launched. This is, unfortunately, the only way to have
-    //       OpenCOR behave as both a CLI and a GUI application on Windows,
-    //       hence the ../windows/main.cpp file which is used to generate the
-    //       CLI version of OpenCOR...
-
-#if defined(Q_OS_WIN)
-    // Do nothing...
-#elif defined(Q_OS_LINUX) || defined(Q_OS_MAC)
-    int res;
-
-    if (OpenCOR::cliApplication(app, &res)) {
-        // OpenCOR was run as a CLI application, so...
-
-        delete app;
-
-        OpenCOR::removeGlobalInstances();
-
-        return res;
-    }
 #else
     #error Unsupported platform
 #endif
