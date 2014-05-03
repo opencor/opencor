@@ -191,11 +191,6 @@ int main(int pArgC, char *pArgV[])
 
     delete win;
 
-    // Remove all 'global' instances that were created and used during this
-    // session
-
-    OpenCOR::removeGlobalInstances();
-
     // If we use QtWebKit, and QWebPage in particular, then leak messages will
     // get generated on Windows when leaving OpenCOR. This is because an object
     // cache is shared between all QWebPage instances. So to destroy a QWebPage

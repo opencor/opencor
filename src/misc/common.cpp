@@ -39,6 +39,48 @@ namespace OpenCOR {
 
 //==============================================================================
 
+void initApplication(QCoreApplication *pApp)
+{
+    // Set the name of the application
+
+    pApp->setApplicationName(QFileInfo(pApp->applicationFilePath()).baseName());
+
+    // Retrieve and set the version of the application
+
+    QFile versionFile(":app_version");
+
+    versionFile.open(QIODevice::ReadOnly);
+
+    pApp->setApplicationVersion(QString(versionFile.readLine()).trimmed());
+
+    versionFile.close();
+}
+
+//==============================================================================
+
+bool cliApplication(QCoreApplication *pApp, int *pRes)
+{
+    // Create our CLI application object
+
+    CliApplication *cliApp = new CliApplication(pApp);
+
+    // Run our CLI application
+
+    return cliApp->run(pRes);
+}
+
+//==============================================================================
+
+void removeGlobalInstances()
+{
+    // Remove all the 'global' information shared between OpenCOR and its
+    // different plugins
+
+    QSettings(SettingsOrganization, SettingsApplication).remove(SettingsGlobal);
+}
+
+//==============================================================================
+
 QString shortVersion(QCoreApplication *pApp)
 {
     QString res;
@@ -89,48 +131,6 @@ QString version(QCoreApplication *pApp)
         res += " ("+bitVersion+")";
 
     return res;
-}
-
-//==============================================================================
-
-void initApplication(QCoreApplication *pApp)
-{
-    // Set the name of the application
-
-    pApp->setApplicationName(QFileInfo(pApp->applicationFilePath()).baseName());
-
-    // Retrieve and set the version of the application
-
-    QFile versionFile(":app_version");
-
-    versionFile.open(QIODevice::ReadOnly);
-
-    pApp->setApplicationVersion(QString(versionFile.readLine()).trimmed());
-
-    versionFile.close();
-}
-
-//==============================================================================
-
-bool cliApplication(QCoreApplication *pApp, int *pRes)
-{
-    // Create our CLI application object
-
-    CliApplication *cliApp = new CliApplication(pApp);
-
-    // Run our CLI application
-
-    return cliApp->run(pRes);
-}
-
-//==============================================================================
-
-void removeGlobalInstances()
-{
-    // Remove all the 'global' information shared between OpenCOR and its
-    // different plugins
-
-    QSettings(SettingsOrganization, SettingsApplication).remove(SettingsGlobal);
 }
 
 //==============================================================================

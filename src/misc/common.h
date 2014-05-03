@@ -36,14 +36,14 @@ namespace OpenCOR {
 
 //==============================================================================
 
-QString shortVersion(QCoreApplication *pApp);
-QString version(QCoreApplication *pApp);
-
 void initApplication(QCoreApplication *pApp);
 
 bool cliApplication(QCoreApplication *pApp, int *pRes);
 
 void removeGlobalInstances();
+
+QString shortVersion(QCoreApplication *pApp);
+QString version(QCoreApplication *pApp);
 
 //==============================================================================
 
