@@ -53,13 +53,16 @@ class QNetworkReply;
 //==============================================================================
 
 namespace OpenCOR {
-namespace Core {
 
 //==============================================================================
 
 static const auto SettingsGlobal          = QStringLiteral("Global");
 static const auto SettingsLocale          = QStringLiteral("Locale");
 static const auto SettingsActiveDirectory = QStringLiteral("ActiveDirectory");
+
+//==============================================================================
+
+namespace Core {
 
 //==============================================================================
 
@@ -91,9 +94,6 @@ private Q_SLOTS:
 //==============================================================================
 
 QString CORE_EXPORT osName();
-
-QString CORE_EXPORT shortVersion(QCoreApplication *pApp);
-QString CORE_EXPORT version(QCoreApplication *pApp);
 
 QString CORE_EXPORT copyright();
 

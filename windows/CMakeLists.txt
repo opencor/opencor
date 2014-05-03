@@ -23,15 +23,11 @@ SET(SOURCES
     ../src/plugins/plugin.cpp
     ../src/plugins/plugininfo.cpp
     ../src/plugins/pluginmanager.cpp
-
-    ../src/plugins/miscellaneous/Core/src/cliutils.cpp
 )
 
 SET(HEADERS_MOC
     ../src/plugins/plugin.h
     ../src/plugins/pluginmanager.h
-
-    ../src/plugins/miscellaneous/Core/src/cliutils.h
 )
 
 SET(RESOURCES

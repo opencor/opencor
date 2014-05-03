@@ -24,6 +24,10 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#include <QString>
+
+//==============================================================================
+
 class QCoreApplication;
 
 //==============================================================================
@@ -32,9 +36,14 @@ namespace OpenCOR {
 
 //==============================================================================
 
+QString shortVersion(QCoreApplication *pApp);
+QString version(QCoreApplication *pApp);
+
 void initApplication(QCoreApplication *pApp);
 
 bool cliApplication(QCoreApplication *pApp, int *pRes);
+
+void removeGlobalInstances();
 
 //==============================================================================
 

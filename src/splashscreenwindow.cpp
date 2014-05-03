@@ -20,6 +20,7 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include "cliutils.h"
+#include "common.h"
 #include "guiutils.h"
 #include "splashscreenwindow.h"
 
@@ -109,7 +110,7 @@ SplashScreenWindow::SplashScreenWindow() :
     mGui->versionValue->setFont(newFont);
 
     mGui->copyrightValue->setText(Core::copyright());
-    mGui->versionValue->setText(Core::shortVersion(qApp));
+    mGui->versionValue->setText(shortVersion(qApp));
 
     // Adjust the size of our splash screen and then move it to the center of
     // our screen

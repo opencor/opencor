@@ -20,7 +20,9 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include "cliapplication.h"
+#include "cliutils.h"
 #include "common.h"
+#include "plugin.h"
 
 //==============================================================================
 
@@ -28,11 +30,66 @@ specific language governing permissions and limitations under the License.
 #include <QFile>
 #include <QFileInfo>
 #include <QIODevice>
+#include <QSettings>
 #include <QString>
 
 //==============================================================================
 
 namespace OpenCOR {
+
+//==============================================================================
+
+QString shortVersion(QCoreApplication *pApp)
+{
+    QString res;
+    QString appVersion = pApp->applicationVersion();
+
+    if (!appVersion.contains("-"))
+        res += "Version ";
+    else
+        res += "Snapshot ";
+
+    res += appVersion;
+
+    return res;
+}
+
+//==============================================================================
+
+QString version(QCoreApplication *pApp)
+{
+    QString appVersion = pApp->applicationVersion();
+    QString bitVersion;
+
+    enum {
+        SizeOfPointer = sizeof(void *)
+    };
+
+    if (SizeOfPointer == 4)
+        bitVersion = "32-bit";
+    else if (SizeOfPointer == 8)
+        bitVersion = "64-bit";
+    else
+        // Not a size that we could recognise, so...
+
+        bitVersion = "";
+
+    bool snapshot = appVersion.contains("-");
+    QString res = pApp->applicationName()+" ";
+
+    if (snapshot)
+        res += "[";
+
+    res += appVersion;
+
+    if (snapshot)
+        res += "]";
+
+    if (!bitVersion.isEmpty())
+        res += " ("+bitVersion+")";
+
+    return res;
+}
 
 //==============================================================================
 
@@ -64,6 +121,16 @@ bool cliApplication(QCoreApplication *pApp, int *pRes)
     // Run our CLI application
 
     return cliApp->run(pRes);
+}
+
+//==============================================================================
+
+void removeGlobalInstances()
+{
+    // Remove all the 'global' information shared between OpenCOR and its
+    // different plugins
+
+    QSettings(SettingsOrganization, SettingsApplication).remove(SettingsGlobal);
 }
 
 //==============================================================================

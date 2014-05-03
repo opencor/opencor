@@ -21,6 +21,7 @@ specific language governing permissions and limitations under the License.
 
 #include "centralwidget.h"
 #include "cliutils.h"
+#include "common.h"
 #include "coreinterface.h"
 #include "dockwidget.h"
 #include "guiinterface.h"
@@ -604,8 +605,6 @@ void MainWindow::initializeGuiPlugin(Plugin *pPlugin, GuiSettings *pGuiSettings)
 
 //==============================================================================
 
-static const auto SettingsGlobal               = QStringLiteral("Global");
-static const auto SettingsLocale               = QStringLiteral("Locale");
 static const auto SettingsGeometry             = QStringLiteral("Geometry");
 static const auto SettingsState                = QStringLiteral("State");
 static const auto SettingsDockedWindowsVisible = QStringLiteral("DockedWindowsVisible");
@@ -1191,7 +1190,7 @@ void MainWindow::on_actionAbout_triggered()
     // Display some information about OpenCOR
 
     QMessageBox::about(this, tr("About"),
-                        "<h1 align=center><strong>"+Core::version(qApp)+"</strong></h1>"
+                        "<h1 align=center><strong>"+version(qApp)+"</strong></h1>"
                        +"<h3 align=center><em>"+Core::osName()+"</em></h3>"
                        +"<p align=center><em>"+Core::copyright()+"</em></p>"
                        +"<a href=\""+QString(OpencorHomePageUrl)+"\"><strong>"+qApp->applicationName()+"</strong></a> "+tr("is a cross-platform modelling environment, which can be used to organise, edit, simulate and analyse <a href=\"http://www.cellml.org/\">CellML</a> files."));

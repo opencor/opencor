@@ -247,60 +247,6 @@ QString osName()
 
 //==============================================================================
 
-QString shortVersion(QCoreApplication *pApp)
-{
-    QString res;
-    QString appVersion = pApp->applicationVersion();
-
-    if (!appVersion.contains("-"))
-        res += "Version ";
-    else
-        res += "Snapshot ";
-
-    res += appVersion;
-
-    return res;
-}
-
-//==============================================================================
-
-QString version(QCoreApplication *pApp)
-{
-    QString appVersion = pApp->applicationVersion();
-    QString bitVersion;
-
-    enum {
-        SizeOfPointer = sizeof(void *)
-    };
-
-    if (SizeOfPointer == 4)
-        bitVersion = "32-bit";
-    else if (SizeOfPointer == 8)
-        bitVersion = "64-bit";
-    else
-        // Not a size that we could recognise, so...
-
-        bitVersion = "";
-
-    bool snapshot = appVersion.contains("-");
-    QString res = pApp->applicationName()+" ";
-
-    if (snapshot)
-        res += "[";
-
-    res += appVersion;
-
-    if (snapshot)
-        res += "]";
-
-    if (!bitVersion.isEmpty())
-        res += " ("+bitVersion+")";
-
-    return res;
-}
-
-//==============================================================================
-
 QString copyright()
 {
     return QObject::tr("Copyright")+" 2011-"+QString::number(QDate::currentDate().year());

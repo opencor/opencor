@@ -22,6 +22,7 @@ specific language governing permissions and limitations under the License.
 #include "cliapplication.h"
 #include "cliinterface.h"
 #include "cliutils.h"
+#include "common.h"
 #include "pluginmanager.h"
 
 //==============================================================================
@@ -81,7 +82,7 @@ void CliApplication::usage()
 
 void CliApplication::version()
 {
-    std::cout << qPrintable(Core::version(mApp)) << std::endl;
+    std::cout << qPrintable(OpenCOR::version(mApp)) << std::endl;
 }
 
 //==============================================================================
