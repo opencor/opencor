@@ -24,6 +24,11 @@ script:
   -    cd build
     && cmake -DCMAKE_BUILD_TYPE=$CONFIG -DCMAKE_PREFIX_PATH=/opt/qt52/lib/cmake -DENABLE_TRAVIS_CI=True -DENABLE_TESTS=True ..
     && make -j $PROCS
+    && ./run -v
+    && ./run -a
+    && ./run -h
+    && ./run -p
+    && ./run -c SampleTools::add 19 23
     && cd tests
     && ./runtests -platform offscreen
 
