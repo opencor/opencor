@@ -29,7 +29,7 @@ script:
     && ./run -a
     && ./run -h
     && ./run -p
-    && ./run -c SampleTools::add 19 23
+    && ./run -c CellMLTools::help
     && cd build/tests
     && ./runtests -platform offscreen
 
