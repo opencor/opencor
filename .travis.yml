@@ -29,10 +29,12 @@ script:
     && ./run -a
     && ./run -h
     && ./run -p
+    && echo "./run -c CellMLTools::help"
     && ./run -c CellMLTools::help
+    && echo "./run -platform offscreen -c CellMLTools::help"
     && ./run -platform offscreen -c CellMLTools::help
     && cd build/tests
-    && ./runtests
+    && ./runtests -platform offscreen
 
 notifications:
   recipients:
