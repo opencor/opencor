@@ -212,10 +212,7 @@ Core::showEnableAction(mGui->actionPreferences, false);
         // Initialise the plugin further by doing things that can only be done
         // by OpenCOR itself (e.g. set the central widget, create some menus)
 
-        GuiInterface *guiInterface = qobject_cast<GuiInterface *>(plugin->instance());
-
-        if (guiInterface)
-            initializeGuiPlugin(plugin, guiInterface->guiSettings());
+        initializeGuiPlugin(plugin);
 
         // Keep track of the plugin's name in case we support
         // internationalisation
@@ -394,110 +391,164 @@ void MainWindow::showEvent(QShowEvent *pEvent)
 
 //==============================================================================
 
-void MainWindow::initializeGuiPlugin(Plugin *pPlugin, GuiSettings *pGuiSettings)
+void MainWindow::initializeGuiPlugin(Plugin *pPlugin)
 {
-    // Add the menus to our menu bar or merge them to existing menus, if needed
-    // Note: we must do that in reverse order since we are inserting menus,
-    //       as opposed to appending them...
+    // Retrieve and apply the plugin's GUI settings, if any
 
-    QListIterator<GuiMenuSettings *> menuIter(pGuiSettings->menus());
+    GuiInterface *guiInterface = qobject_cast<GuiInterface *>(pPlugin->instance());
 
-    menuIter.toBack();
+    if (guiInterface) {
+        // Add the menus to our menu bar or merge them to existing menus, if
+        // needed
+        // Note: we must do that in reverse order since we are inserting menus,
+        //       as opposed to appending them...
 
-    while (menuIter.hasPrevious()) {
-        // Insert the menu in the right place
+        QListIterator<GuiMenuSettings *> menuIter(guiInterface->guiSettings()->menus());
 
-        GuiMenuSettings *menuSettings = menuIter.previous();
+        menuIter.toBack();
 
-        QMenu *newMenu = menuSettings->menu();
-        QString newMenuName = newMenu->objectName();
+        while (menuIter.hasPrevious()) {
+            // Insert the menu in the right place
 
-        QMenu *oldMenu = mMenus.value(newMenuName);
+            GuiMenuSettings *menuSettings = menuIter.previous();
 
-        if (oldMenu && !menuSettings->action()) {
-            // A menu with the same name already exists, so add the contents of
-            // the new menu to the existing one
+            QMenu *newMenu = menuSettings->menu();
+            QString newMenuName = newMenu->objectName();
 
-            oldMenu->addSeparator();
-            oldMenu->addActions(newMenu->actions());
+            QMenu *oldMenu = mMenus.value(newMenuName);
 
-            // Delete the new menu since we don't need it anymore
+            if (oldMenu && !menuSettings->action()) {
+                // A menu with the same name already exists, so add the contents
+                // of the new menu to the existing one
 
-            delete newMenu;
-        } else {
-            // No menu with the same name already exists (or the menu doesn't
-            // have a name), so add the new menu to our menu bar
+                oldMenu->addSeparator();
+                oldMenu->addActions(newMenu->actions());
 
-            switch (menuSettings->type()) {
-            case GuiMenuSettings::View:
-                mGui->menuBar->insertAction(mGui->menuView->menuAction(),
-                                            newMenu->menuAction());
+                // Delete the new menu since we don't need it anymore
+
+                delete newMenu;
+            } else {
+                // No menu with the same name already exists (or the menu
+                // doesn't have a name), so add the new menu to our menu bar
+
+                switch (menuSettings->type()) {
+                case GuiMenuSettings::View:
+                    mGui->menuBar->insertAction(mGui->menuView->menuAction(),
+                                                newMenu->menuAction());
+
+                    break;
+                default:
+                    // Nothing to be done...
+
+                    ;
+                }
+
+                // Keep track of the new menu, but only if it has a name
+
+                if (newMenuName.size())
+                    mMenus.insert(newMenuName, newMenu);
+            }
+        }
+
+        // Add the actions/separators to our different menus
+        // Note: as for the menus above, we must do that in reverse order since
+        //       we are inserting actions, as opposed to appending them...
+
+        QListIterator<GuiMenuActionSettings *> menuActionIter(guiInterface->guiSettings()->menuActions());
+
+        menuActionIter.toBack();
+
+        while (menuActionIter.hasPrevious()) {
+            // Insert the action/separator to the right menu
+
+            GuiMenuActionSettings *menuActionSettings = menuActionIter.previous();
+
+            switch (menuActionSettings->type()) {
+            case GuiMenuActionSettings::File: {
+                QAction *action = menuActionSettings->action();
+
+                if (action)
+                    mGui->menuFile->insertAction(mGui->menuFile->actions().first(), action);
+                else
+                    action = mGui->menuFile->insertSeparator(mGui->menuFile->actions().first());
 
                 break;
+            }
+            case GuiMenuActionSettings::Tools: {
+                QAction *action = menuActionSettings->action();
+
+                if (action)
+                    mGui->menuTools->insertAction(mGui->menuTools->actions().first(), action);
+                else
+                    mGui->menuTools->insertSeparator(mGui->menuTools->actions().first());
+
+                break;
+            }
             default:
-                // Nothing to be done...
+                // Not a type in which we are interested, so do nothing...
 
                 ;
             }
-
-            // Keep track of the new menu, but only if it has a name
-
-            if (newMenuName.size())
-                mMenus.insert(newMenuName, newMenu);
         }
-    }
 
-    // Add the actions/separators to our different menus
-    // Note: as for the menus above, we must do that in reverse order since we
-    //       are inserting actions, as opposed to appending them...
+        // Add some sub-menus before some menu items
 
-    QListIterator<GuiMenuActionSettings *> menuActionIter(pGuiSettings->menuActions());
+        foreach (GuiMenuSettings *menuSettings, guiInterface->guiSettings()->menus()) {
+            // Insert the menu before a menu item / separator
 
-    menuActionIter.toBack();
+            if (menuSettings->action())
+                switch (menuSettings->type()) {
+                case GuiMenuActionSettings::File:
+                    mGui->menuFile->insertMenu(menuSettings->action(),
+                                               menuSettings->menu());
 
-    while (menuActionIter.hasPrevious()) {
-        // Insert the action/separator to the right menu
+                    break;
+                default:
+                    // Not a type in which we are interested, so do nothing...
 
-        GuiMenuActionSettings *menuActionSettings = menuActionIter.previous();
-
-        switch (menuActionSettings->type()) {
-        case GuiMenuActionSettings::File: {
-            QAction *action = menuActionSettings->action();
-
-            if (action)
-                mGui->menuFile->insertAction(mGui->menuFile->actions().first(), action);
-            else
-                action = mGui->menuFile->insertSeparator(mGui->menuFile->actions().first());
-
-            break;
+                    ;
+                }
         }
-        case GuiMenuActionSettings::Tools: {
-            QAction *action = menuActionSettings->action();
 
-            if (action)
-                mGui->menuTools->insertAction(mGui->menuTools->actions().first(), action);
-            else
-                mGui->menuTools->insertSeparator(mGui->menuTools->actions().first());
+        // Add some actions to some sub-menus and keep track of them
 
-            break;
-        }
-        default:
-            // Not a type in which we are interested, so do nothing...
+        static QString pluginForFileNewMenu = QString();
 
-            ;
-        }
-    }
+        foreach (GuiMenuActionSettings *menuActionSettings,
+                 guiInterface->guiSettings()->menuActions()) {
+            // Insert the action to the right menu
 
-    // Add some sub-menus before some menu items
+            switch (menuActionSettings->type()) {
+            case GuiMenuActionSettings::FileNew:
+                // Check whether the File|New menu has been created and if not,
+                // then create it
 
-    foreach (GuiMenuSettings *menuSettings, pGuiSettings->menus())
-        // Insert the menu before a menu item / separator
+                if (!mFileNewMenu) {
+                    // The menu doesn't already exist, so create it
 
-        if (menuSettings->action())
-            switch (menuSettings->type()) {
-            case GuiMenuActionSettings::File:
-                mGui->menuFile->insertMenu(menuSettings->action(),
-                                           menuSettings->menu());
+                    mFileNewMenu = new QMenu(this);
+
+                    mFileNewMenu->menuAction()->setIcon(QIcon(":/oxygen/mimetypes/application-x-zerosize.png"));
+
+                    // Add the New menu to our File menu and add a separator
+                    // after it
+
+                    mGui->menuFile->insertMenu(mGui->menuFile->actions().first(),
+                                               mFileNewMenu);
+                    mGui->menuFile->insertSeparator(mGui->menuFile->actions()[1]);
+
+                    pluginForFileNewMenu = pPlugin->name();
+                } else if (pluginForFileNewMenu.compare(pPlugin->name())) {
+                    // The File|New menu already exists, so add a separator to
+                    // it so that previous menu items (from a different plugin)
+                    // don't get mixed up with the new one
+
+                    mFileNewMenu->addSeparator();
+
+                    pluginForFileNewMenu = pPlugin->name();
+                }
+
+                mFileNewMenu->addAction(menuActionSettings->action());
 
                 break;
             default:
@@ -505,53 +556,8 @@ void MainWindow::initializeGuiPlugin(Plugin *pPlugin, GuiSettings *pGuiSettings)
 
                 ;
             }
-
-    // Add some actions to some sub-menus and keep track of them
-
-    static QString pluginForFileNewMenu = QString();
-
-    foreach (GuiMenuActionSettings *menuActionSettings,
-             pGuiSettings->menuActions())
-        // Insert the action to the right menu
-
-        switch (menuActionSettings->type()) {
-        case GuiMenuActionSettings::FileNew:
-            // Check whether the File|New menu has been created and if not, then
-            // create it
-
-            if (!mFileNewMenu) {
-                // The menu doesn't already exist, so create it
-
-                mFileNewMenu = new QMenu(this);
-
-                mFileNewMenu->menuAction()->setIcon(QIcon(":/oxygen/mimetypes/application-x-zerosize.png"));
-
-                // Add the New menu to our File menu and add a separator after
-                // it
-
-                mGui->menuFile->insertMenu(mGui->menuFile->actions().first(),
-                                           mFileNewMenu);
-                mGui->menuFile->insertSeparator(mGui->menuFile->actions()[1]);
-
-                pluginForFileNewMenu = pPlugin->name();
-            } else if (pluginForFileNewMenu.compare(pPlugin->name())) {
-                // The File|New menu already exists, so add a separator to it so
-                // that previous menu items (from a different plugin) don't get
-                // mixed up with the new one
-
-                mFileNewMenu->addSeparator();
-
-                pluginForFileNewMenu = pPlugin->name();
-            }
-
-            mFileNewMenu->addAction(menuActionSettings->action());
-
-            break;
-        default:
-            // Not a type in which we are interested, so do nothing...
-
-            ;
         }
+    }
 
     // Set our central widget, in case we are dealing with the Core plugin
 

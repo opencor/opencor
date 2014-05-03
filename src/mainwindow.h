@@ -113,7 +113,7 @@ private:
 
     QByteArray mDockedWindowsState;
 
-    void initializeGuiPlugin(Plugin *pPlugin, GuiSettings *pGuiSettings);
+    void initializeGuiPlugin(Plugin *pPlugin);
 
     void loadSettings();
     void saveSettings() const;
