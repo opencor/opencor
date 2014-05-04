@@ -137,9 +137,9 @@ int main(int pArgC, char *pArgV[])
 
     OpenCOR::Core::updateColors();
 
+#ifndef QT_DEBUG
     // Show our splash screen
 
-#ifndef QT_DEBUG
     OpenCOR::SplashScreenWindow *splashScreen = new OpenCOR::SplashScreenWindow();
 
     splashScreen->show();
@@ -168,9 +168,9 @@ int main(int pArgC, char *pArgV[])
         return 0;
     }
 
+#ifdef Q_OS_WIN
     // Specify where to find non-OpenCOR plugins (only required on Windows)
 
-#ifdef Q_OS_WIN
     app->addLibraryPath( QDir(app->applicationDirPath()).canonicalPath()
                         +QDir::separator()+QString("..")
                         +QDir::separator()+"plugins");
@@ -193,17 +193,17 @@ int main(int pArgC, char *pArgV[])
 
     win->show();
 
+#ifndef QT_DEBUG
     // Get rid of our splash screen once our main window is visible
 
-#ifndef QT_DEBUG
     splashScreen->finish(win);
-#endif
 
     // Make sure that our main window is in the foreground
     // Note: indeed, on Linux, to show our splash screen may result in our main
     //       window being shown in the background, so...
 
     win->showSelf();
+#endif
 
     // Execute our application
 

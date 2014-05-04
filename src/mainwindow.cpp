@@ -340,7 +340,7 @@ void MainWindow::closeEvent(QCloseEvent *pEvent)
         // Note: if the Core plugin is loaded, then it means it supports the
         //       Core interface, so no need to check anything...
 
-    // Close ourselves
+    // Close ourselves, if possible
 
     if (canClose) {
         // Keep track of our default settings
@@ -367,8 +367,8 @@ void MainWindow::showEvent(QShowEvent *pEvent)
 
     QMainWindow::showEvent(pEvent);
 
-    // Things which need to be done and can only be done once the main window is
-    // fully created
+    // Things that need to be done and can only be done once the main window is
+    // fully initialised
 
     static bool firstTime = true;
 
@@ -378,7 +378,7 @@ void MainWindow::showEvent(QShowEvent *pEvent)
         // The first time we show OpenCOR, we want to make sure that its menu is
         // fine (i.e. it respects OpenCOR's settings that were loaded in the
         // constructor). Various connections (set in the constructor) take care
-        // of this, but there is still one menu item (which tells us whether the
+        // of this, but there is still one menu item (that tells us whether the
         // status bar is to be shown) for which no connection can be set. So, we
         // have to 'manually' set the status of that menu item here (as opposed
         // to, say, the constructor), since we may need (on Windows at least)
