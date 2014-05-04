@@ -125,10 +125,6 @@ ENDIF()
 # directory and build our main test program
 
 IF(ENABLE_TESTS)
-    # Destination tests directory
-
-    SET(DEST_TESTS_DIR ${PROJECT_BUILD_DIR}/tests)
-
     # Build our main test program
 
     SET(RUNTESTS_NAME runtests)
@@ -147,7 +143,7 @@ IF(ENABLE_TESTS)
 
     ADD_CUSTOM_COMMAND(TARGET ${RUNTESTS_NAME} POST_BUILD
                        COMMAND ${CMAKE_COMMAND} -E copy ${PROJECT_BINARY_DIR}/${MAIN_TEST_FILENAME}
-                                                        ${DEST_TESTS_DIR}/${MAIN_TEST_FILENAME})
+                                                        ${PROJECT_BUILD_DIR}/tests/${MAIN_TEST_FILENAME})
 ENDIF()
 
 # Build the OpenCOR plugins
@@ -306,7 +302,7 @@ IF(NOT APPLE)
     ENDIF()
 ENDIF()
 
-# Get our application bundle ready
+# Some post-processing specific to OS X
 
 IF(APPLE)
     # Configure and use our own Info.plist file
@@ -386,7 +382,7 @@ IF(APPLE)
     OS_X_DEPLOY_QT_PLUGIN(sqldrivers qsqlite)
 ENDIF()
 
-# Package OpenCOR (using CPack)
+# Package OpenCOR
 
 SET(CPACK_PACKAGE_NAME "${PROJECT_NAME}")
 SET(CPACK_PACKAGE_CONTACT "Team OpenCOR (team@opencor.ws)")
