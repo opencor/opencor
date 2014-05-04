@@ -198,6 +198,8 @@ int main(int pArgC, char *pArgV[])
 
     splashScreen->finish(win);
 
+    delete splashScreen;
+
     // Make sure that our main window is in the foreground
     // Note: indeed, on Linux, to show our splash screen may result in our main
     //       window being shown in the background, so...
