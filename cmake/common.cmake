@@ -775,7 +775,7 @@ ENDMACRO()
 
 #===============================================================================
 
-MACRO(COPY_FILE_TO_BUILD_DIR ORIG_DIRNAME DEST_DIRNAME FILENAME)
+MACRO(COPY_FILE_TO_BUILD_DIR PROJECT_TARGET ORIG_DIRNAME DEST_DIRNAME FILENAME)
     # Determine the real destination folder
     # Note: see the INITIALISE_PROJECT() macro for an explanation of why we
     #       check the existence of the cmake folder below...
@@ -787,14 +787,14 @@ MACRO(COPY_FILE_TO_BUILD_DIR ORIG_DIRNAME DEST_DIRNAME FILENAME)
     ENDIF()
 
     IF("${ARGN}" STREQUAL "")
-        ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
+        ADD_CUSTOM_COMMAND(TARGET ${PROJECT_TARGET} POST_BUILD
                            COMMAND ${CMAKE_COMMAND} -E copy ${ORIG_DIRNAME}/${FILENAME}
                                                             ${REAL_DEST_DIRNAME}/${FILENAME})
     ELSE()
         # An argument was passed so use it to rename the file which is to be
         # copied
 
-        ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
+        ADD_CUSTOM_COMMAND(TARGET ${PROJECT_TARGET} POST_BUILD
                            COMMAND ${CMAKE_COMMAND} -E copy ${ORIG_DIRNAME}/${FILENAME}
                                                             ${REAL_DEST_DIRNAME}/${ARGN})
     ENDIF()
@@ -828,8 +828,8 @@ MACRO(WINDOWS_DEPLOY_LIBRARY DIRNAME FILENAME)
     # Copy the library file to both the build and build/bin folders, so we can
     # test things without first having to deploy OpenCOR
 
-    COPY_FILE_TO_BUILD_DIR(${DIRNAME} . ${FILENAME})
-    COPY_FILE_TO_BUILD_DIR(${DIRNAME} bin ${FILENAME})
+    COPY_FILE_TO_BUILD_DIR(${PROJECT_NAME} ${DIRNAME} . ${FILENAME})
+    COPY_FILE_TO_BUILD_DIR(${PROJECT_NAME} ${DIRNAME} bin ${FILENAME})
 
     # Install the library file
 
@@ -854,7 +854,7 @@ MACRO(LINUX_DEPLOY_LIBRARY DIRNAME FILENAME)
     # Copy the library file to the build folder, so we can test things without
     # first having to deploy OpenCOR
 
-    COPY_FILE_TO_BUILD_DIR(${DIRNAME} . ${FILENAME})
+    COPY_FILE_TO_BUILD_DIR(${PROJECT_NAME} ${DIRNAME} . ${FILENAME})
 
     # Install the library file
 

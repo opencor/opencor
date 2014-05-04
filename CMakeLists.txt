@@ -83,6 +83,34 @@ SET(RESOURCES
     res/ui.qrc
 )
 
+# Files that make up the CLI version of OpenCOR (Windows specific)
+
+IF(WIN32)
+    SET(WINDOWS_CLI_SOURCES
+        windows/main.cpp
+
+        src/misc/cliapplication.cpp
+        src/misc/common.cpp
+
+        src/plugins/plugin.cpp
+        src/plugins/plugininfo.cpp
+        src/plugins/pluginmanager.cpp
+
+        src/plugins/miscellaneous/Core/src/cliutils.cpp
+    )
+
+    SET(WINDOWS_CLI_HEADERS_MOC
+        src/plugins/plugin.h
+        src/plugins/pluginmanager.h
+
+        src/plugins/miscellaneous/Core/src/cliutils.h
+    )
+
+    SET(WINDOWS_CLI_RESOURCES
+        res/common.qrc
+    )
+ENDIF()
+
 # Various include directories
 # Note: the OpenCOR executable uses bits of the Core plugin, hence we include
 #       its directory so that we can build OpenCOR without any plugin, should we
@@ -125,6 +153,12 @@ ENDIF()
 # directory and build our main test program
 
 IF(ENABLE_TESTS)
+    # Destination tests directory
+    # Note: DEST_TESTS_DIR isn't only used here, but also in our ADD_PLUGIN()
+    #       macro...
+
+    SET(DEST_TESTS_DIR ${PROJECT_BUILD_DIR}/tests)
+
     # Build our main test program
 
     SET(RUNTESTS_NAME runtests)
@@ -143,7 +177,7 @@ IF(ENABLE_TESTS)
 
     ADD_CUSTOM_COMMAND(TARGET ${RUNTESTS_NAME} POST_BUILD
                        COMMAND ${CMAKE_COMMAND} -E copy ${PROJECT_BINARY_DIR}/${MAIN_TEST_FILENAME}
-                                                        ${PROJECT_BUILD_DIR}/tests/${MAIN_TEST_FILENAME})
+                                                        ${DEST_TESTS_DIR}/${MAIN_TEST_FILENAME})
 ENDIF()
 
 # Build the OpenCOR plugins
@@ -275,6 +309,26 @@ IF(WIN32)
     )
 ENDIF()
 
+# Build the CLI version of OpenCOR (Windows specific)
+
+IF(WIN32)
+    QT5_WRAP_CPP(WINDOWS_CLI_SOURCES_MOC ${WINDOWS_CLI_HEADERS_MOC})
+    QT5_ADD_RESOURCES(WINDOWS_CLI_SOURCES_RCS ${WINDOWS_CLI_RESOURCES})
+
+    SET(WINDOWS_CLI_PROJECT_NAME ${PROJECT_NAME}.com)
+
+    ADD_EXECUTABLE(${WINDOWS_CLI_PROJECT_NAME}
+        ${WINDOWS_CLI_SOURCES}
+        ${WINDOWS_CLI_SOURCES_MOC}
+        ${WINDOWS_CLI_SOURCES_RCS}
+    )
+
+    QT5_USE_MODULES(${WINDOWS_CLI_PROJECT_NAME}
+        Core
+        XmlPatterns
+    )
+ENDIF()
+
 # Additional compiler and linker settings
 
 ADD_DEFINITIONS(-D${PROJECT_NAME}_MAIN)
@@ -283,22 +337,25 @@ SET_TARGET_PROPERTIES(${PROJECT_NAME} PROPERTIES
     LINK_FLAGS "${LINK_FLAGS_PROPERTIES}"
 )
 
+IF(WIN32)
+    SET_TARGET_PROPERTIES(${WINDOWS_CLI_PROJECT_NAME} PROPERTIES
+        LINK_FLAGS "${LINK_FLAGS_PROPERTIES}"
+    )
+ENDIF()
+
 # Some post-processing specific to Windows and Linux
 
 IF(NOT APPLE)
-    # Copy the OpenCOR executable to the build/bin folder
+    # Copy the GUI version of the OpenCOR executable to the build/bin folder
 
-    COPY_FILE_TO_BUILD_DIR(${PROJECT_BUILD_DIR} bin
+    COPY_FILE_TO_BUILD_DIR(${PROJECT_NAME} ${PROJECT_BUILD_DIR} bin
                            ${PROJECT_NAME}${CMAKE_EXECUTABLE_SUFFIX})
 
     IF(WIN32)
-        # Copy the OpenCOR executable to the build/Release folder, so that
-        # CPack can find it since this is where it expects it to be, except
-        # that make.bat asks for the OpenCOR executable to be generated in
-        # build to match what does Qt Creator, so...
+        # Copy the CLI version of the OpenCOR executable to the build/bin folder
 
-        COPY_FILE_TO_BUILD_DIR(${PROJECT_BUILD_DIR} Release
-                               ${PROJECT_NAME}${CMAKE_EXECUTABLE_SUFFIX})
+        COPY_FILE_TO_BUILD_DIR(${WINDOWS_CLI_PROJECT_NAME} ${PROJECT_BUILD_DIR} bin
+                               ${WINDOWS_CLI_PROJECT_NAME}${CMAKE_EXECUTABLE_SUFFIX} ${PROJECT_NAME}.com)
     ENDIF()
 ENDIF()
 
