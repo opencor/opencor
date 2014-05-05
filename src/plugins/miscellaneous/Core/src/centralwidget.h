@@ -148,6 +148,9 @@ private:
     State mState;
 
     Plugins mLoadedPlugins;
+    Plugins mLoadedFileHandlingPlugins;
+    Plugins mLoadedGuiPlugins;
+    Plugins mLoadedViewPlugins;
 
     QTabBar *mModeTabs;
     QTabBar *mFileTabs;
