@@ -581,9 +581,7 @@ void MainWindow::initializeGuiPlugin(Plugin *pPlugin)
     if (windowInterface) {
         // Dock the window to its default dock area
 
-        QDockWidget *dockWidget = qobject_cast<QDockWidget *>(windowInterface->windowWidget());
-
-        addDockWidget(windowInterface->windowDefaultDockArea(), dockWidget);
+        addDockWidget(windowInterface->windowDefaultDockArea(), windowInterface->windowWidget());
 
         // Add an action to our menu to show/hide the window
 
@@ -603,8 +601,8 @@ void MainWindow::initializeGuiPlugin(Plugin *pPlugin)
         // Connect the action to the window
 
         connect(windowInterface->windowAction(), SIGNAL(triggered(bool)),
-                dockWidget, SLOT(setVisible(bool)));
-        connect(dockWidget->toggleViewAction(), SIGNAL(toggled(bool)),
+                windowInterface->windowWidget(), SLOT(setVisible(bool)));
+        connect(windowInterface->windowWidget()->toggleViewAction(), SIGNAL(toggled(bool)),
                 windowInterface->windowAction(), SLOT(setChecked(bool)));
     }
 }
