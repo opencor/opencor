@@ -95,6 +95,11 @@ private:
 
     PluginManager *mPluginManager;
 
+    Plugins mLoadedPluginPlugins;
+    Plugins mLoadedI18nPlugins;
+    Plugins mLoadedGuiPlugins;
+    Plugins mLoadedWindowPlugins;
+
     QString mLocale;
 
     QTranslator mQtTranslator;
