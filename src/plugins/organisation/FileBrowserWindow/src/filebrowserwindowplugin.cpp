@@ -138,7 +138,7 @@ Qt::DockWidgetArea FileBrowserWindowPlugin::windowDefaultDockArea() const
 
 //==============================================================================
 
-QWidget * FileBrowserWindowPlugin::windowWidget() const
+QDockWidget * FileBrowserWindowPlugin::windowWidget() const
 {
     // Return our window widget
 

@@ -139,7 +139,7 @@ Qt::DockWidgetArea CellMLModelRepositoryWindowPlugin::windowDefaultDockArea() co
 
 //==============================================================================
 
-QWidget * CellMLModelRepositoryWindowPlugin::windowWidget() const
+QDockWidget * CellMLModelRepositoryWindowPlugin::windowWidget() const
 {
     // Return our window widget
 

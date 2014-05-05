@@ -5,7 +5,7 @@
 #endif
 
     virtual Qt::DockWidgetArea windowDefaultDockArea() const PURE;
-    virtual QWidget * windowWidget() const PURE;
+    virtual QDockWidget * windowWidget() const PURE;
     virtual QAction * windowAction() const PURE;
 
 #undef PURE

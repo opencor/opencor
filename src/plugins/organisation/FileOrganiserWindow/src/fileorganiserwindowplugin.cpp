@@ -138,7 +138,7 @@ Qt::DockWidgetArea FileOrganiserWindowPlugin::windowDefaultDockArea() const
 
 //==============================================================================
 
-QWidget * FileOrganiserWindowPlugin::windowWidget() const
+QDockWidget * FileOrganiserWindowPlugin::windowWidget() const
 {
     // Return our window widget
 

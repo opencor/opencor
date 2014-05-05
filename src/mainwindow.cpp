@@ -1349,12 +1349,19 @@ void MainWindow::updateDockWidgetsVisibility()
 
     mDockedWindowsVisible = false;
 
-    foreach (QDockWidget *dockWidget, findChildren<QDockWidget *>())
-        if (!dockWidget->isFloating() && dockWidget->isVisible()) {
-            mDockedWindowsVisible = true;
+    foreach (Plugin *plugin, mPluginManager->loadedPlugins()) {
+        WindowInterface *windowInterface = qobject_cast<WindowInterface *>(plugin->instance());
 
-            break;
+        if (windowInterface) {
+            QDockWidget *dockWidget = windowInterface->windowWidget();
+
+            if (!dockWidget->isFloating() && dockWidget->isVisible()) {
+                mDockedWindowsVisible = true;
+
+                break;
+            }
         }
+    }
 
     // Update the checked state of our docked windows action
 
