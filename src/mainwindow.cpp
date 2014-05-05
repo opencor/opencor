@@ -91,6 +91,7 @@ MainWindow::MainWindow(SharedTools::QtSingleApplication *pApp) :
     mViewSeparator(0),
     mViewPlugin(0),
     mDockedWindowsVisible(true),
+    mDockedWindowVisible(QMap<QString, bool>()),
     mDockedWindowsState(QByteArray())
 {
     // Make sure that OpenCOR can handle a file opening request (from the
@@ -607,6 +608,7 @@ void MainWindow::initializeGuiPlugin(Plugin *pPlugin)
 
 static const auto SettingsGeometry             = QStringLiteral("Geometry");
 static const auto SettingsState                = QStringLiteral("State");
+static const auto SettingsDockedWindowVisible  = QStringLiteral("%1Visible");
 static const auto SettingsDockedWindowsVisible = QStringLiteral("DockedWindowsVisible");
 static const auto SettingsStatusBarVisible     = QStringLiteral("StatusBarVisible");
 
@@ -631,6 +633,20 @@ void MainWindow::loadSettings()
                     desktopGeometry.top()+vertSpace,
                     desktopGeometry.width()-2*horizSpace,
                     desktopGeometry.height()-2*vertSpace);
+    }
+
+    // Retrieve which docked windows are to be visible
+
+    foreach (Plugin *plugin, mPluginManager->loadedPlugins()) {
+        WindowInterface *windowInterface = qobject_cast<WindowInterface *>(plugin->instance());
+
+        if (windowInterface) {
+            bool dockedWindowVisible = mSettings->value(SettingsDockedWindowVisible.arg(plugin->name()), true).toBool();
+
+            mDockedWindowVisible.insert(plugin->name(), dockedWindowVisible);
+
+            windowInterface->windowWidget()->setVisible(dockedWindowVisible);
+        }
     }
 
     // Retrieve whether the docked windows are to be shown
@@ -696,6 +712,15 @@ void MainWindow::saveSettings() const
 
     mSettings->setValue(SettingsGeometry, saveGeometry());
     mSettings->setValue(SettingsState, saveState());
+
+    // Keep track of which docked windows are visible
+
+    foreach (Plugin *plugin, mPluginManager->loadedPlugins()) {
+        WindowInterface *windowInterface = qobject_cast<WindowInterface *>(plugin->instance());
+
+        if (windowInterface)
+            mSettings->setValue(SettingsDockedWindowVisible.arg(plugin->name()), mDockedWindowVisible.value(plugin->name()));
+    }
 
     // Keep track of whether the docked windows are to be shown
 
