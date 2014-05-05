@@ -240,16 +240,23 @@ Core::showEnableAction(mGui->actionPreferences, false);
 
     // Keep track of the showing/hiding of the different dock widgets
 
-    QList<QDockWidget *> dockWidgets = findChildren<QDockWidget *>();
+    bool actionDockedWindowsEnabled = false;
 
-    foreach (QDockWidget *dockWidget, dockWidgets)
-        connect(dockWidget, SIGNAL(visibilityChanged(bool)),
-                this, SLOT(updateDockWidgetsVisibility()));
+    foreach (Plugin *plugin, mPluginManager->loadedPlugins()) {
+        WindowInterface *windowInterface = qobject_cast<WindowInterface *>(plugin->instance());
+
+        if (windowInterface) {
+            connect(windowInterface->windowWidget(), SIGNAL(visibilityChanged(bool)),
+                    this, SLOT(updateDockWidgetsVisibility()));
+
+            actionDockedWindowsEnabled = true;
+        }
+    }
 
     // Show/hide and enable/disable the docked windows action depending on
     // whether there are dock widgets
 
-    Core::showEnableAction(mGui->actionDockedWindows, dockWidgets.size());
+    Core::showEnableAction(mGui->actionDockedWindows, actionDockedWindowsEnabled);
 
     // Retrieve the user settings from the previous session, if any
 
@@ -1340,9 +1347,12 @@ void MainWindow::showDockedWindows(const bool &pShow,
         if (!pShow)
             mDockedWindowsState = saveState();
 
-        foreach (QDockWidget *dockWidget, findChildren<QDockWidget *>())
-            if (!dockWidget->isFloating())
-                dockWidget->setVisible(pShow);
+        foreach (Plugin *plugin, mPluginManager->loadedPlugins()) {
+            WindowInterface *windowInterface = qobject_cast<WindowInterface *>(plugin->instance());
+
+            if (windowInterface && !windowInterface->windowWidget()->isFloating())
+                windowInterface->windowWidget()->setVisible(pShow);
+        }
 
         if (pShow && !mDockedWindowsState.isEmpty())
             restoreState(mDockedWindowsState);
