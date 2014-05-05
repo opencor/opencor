@@ -19,8 +19,10 @@ specific language governing permissions and limitations under the License.
 // Plugin
 //==============================================================================
 
+#include "coreinterface.h"
 #include "plugin.h"
 #include "pluginmanager.h"
+#include "cliinterface.h"
 
 //==============================================================================
 
@@ -100,29 +102,39 @@ Plugin::Plugin(const QString &pFileName, PluginInfo *pInfo,
                 if (pluginLoader.load()) {
                     mInstance = pluginLoader.instance();
 
-                    // Check whether the plugin supports the Core interface and,
-                    // if so, whether it's the Core plugin
+                    // Check for the Core plugin/interface and CLI support
+
+                    bool unloadPlugin = true;
 
                     CoreInterface *coreInterface = qobject_cast<CoreInterface *>(mInstance);
+                    CliInterface *cliInterface = qobject_cast<CliInterface *>(mInstance);
 
                     if (coreInterface && mName.compare(CorePluginName)) {
                         // We are dealing with a plugin that supports the Core
                         // interface, but it's not the Core plugin, so...
 
-                        pluginLoader.unload();
-
-                        mInstance = 0;
                         mStatus = NotCorePlugin;
                     } else if (!coreInterface && !mName.compare(CorePluginName)) {
                         // We are dealing with the Core plugin, but it doesn't
                         // support the Core interface, so...
 
+                        mStatus = InvalidCorePlugin;
+                    } else if (!cliInterface && pInfo->hasCliSupport()) {
+                        // We are dealing with a plugin that is supposed to have
+                        // CLI support, yet it doesn't support the CLI interface,
+                        // so...
+
+                        mStatus = NotCliPlugin;
+                    } else {
+                        unloadPlugin = false;
+
+                        mStatus = Loaded;
+                    }
+
+                    if (unloadPlugin) {
                         pluginLoader.unload();
 
                         mInstance = 0;
-                        mStatus = InvalidCorePlugin;
-                    } else {
-                        mStatus = Loaded;
                     }
                 } else {
                     mStatus = NotLoaded;

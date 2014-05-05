@@ -35,7 +35,7 @@ PLUGININFO_FUNC SamplePluginInfo()
     descriptions.insert("en", QString::fromUtf8("a plugin that provides a simple addition function."));
     descriptions.insert("fr", QString::fromUtf8("une extension qui fournit une simple fonction d'addition."));
 
-    return new PluginInfo(PluginInfo::Sample, false,
+    return new PluginInfo(PluginInfo::Sample, false, false,
                           QStringList(),
                           descriptions);
 }

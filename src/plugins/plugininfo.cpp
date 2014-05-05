@@ -28,10 +28,12 @@ namespace OpenCOR {
 //==============================================================================
 
 PluginInfo::PluginInfo(const Category &pCategory, const bool &pSelectable,
+                       const bool &pCliSupport,
                        const QStringList &pDependencies,
                        const Descriptions &pDescriptions) :
     mCategory(pCategory),
     mSelectable(pSelectable),
+    mCliSupport(pCliSupport),
     mDependencies(pDependencies),
     mFullDependencies(QStringList()),
     mDescriptions(pDescriptions)
@@ -51,9 +53,18 @@ PluginInfo::Category PluginInfo::category() const
 
 bool PluginInfo::isSelectable() const
 {
-    // Return the plugin's manageability
+    // Return whether the plugin is selectable
 
     return mSelectable;
+}
+
+//==============================================================================
+
+bool PluginInfo::hasCliSupport() const
+{
+    // Return whether the plugin has CLI support
+
+    return mCliSupport;
 }
 
 //==============================================================================

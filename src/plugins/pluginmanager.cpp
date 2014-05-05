@@ -123,21 +123,11 @@ PluginManager::PluginManager(QCoreApplication *pApp, const bool &pGuiMode) :
     QStringList wantedPlugins = QStringList();
 
     foreach (const QString &selectablePlugin, selectablePlugins)
-        if ((pGuiMode && Plugin::load(selectablePlugin)) || !pGuiMode) {
+        if (   ( pGuiMode && Plugin::load(selectablePlugin))
+            || (!pGuiMode && pluginsInfo.value(selectablePlugin)->hasCliSupport())) {
             // We are in GUI mode and the user wants to load the plugin, or we
-            // are not in GUI mode (i.e. CLI mode), so retrieve and keep track
-            // of the plugin's dependencies
-            // Note: in CLI mode, a selectable plugin gets automatically loaded
-            //       no matter what, making sure that the CLI version of OpenCOR
-            //       has access to all the plugins. The drawback with this
-            //       approach is that non-CLI capable plugins will also be
-            //       loaded, but there is not much we can do about it. Actually,
-            //       we could have a boolean in the plugin information to tell
-            //       us whether a plugin is CLI-capable, but this is error-prone
-            //       (indeed, what would happen if the developer of a
-            //       CLI-capable plugin was to forget to turn that flag on?).
-            //       So, in the end, it's better to load all the plugins and
-            //       then deal with only those that support the CLI interface...
+            // are not in GUI mode (i.e. CLI mode) and the plugin has CLI
+            // support, so retrieve and keep track of the plugin's dependencies
 
             neededPlugins << pluginsInfo.value(selectablePlugin)->fullDependencies();
 

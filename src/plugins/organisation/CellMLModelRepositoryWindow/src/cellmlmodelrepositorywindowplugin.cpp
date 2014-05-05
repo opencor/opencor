@@ -42,7 +42,7 @@ PLUGININFO_FUNC CellMLModelRepositoryWindowPluginInfo()
     descriptions.insert("en", QString::fromUtf8("a plugin to access the <a href=\"http://models.physiomeproject.org/cellml/\">CellML Model Repository</a>."));
     descriptions.insert("fr", QString::fromUtf8("une extension pour accéder au <a href=\"http://models.physiomeproject.org/cellml/\">Répertoire de Modèles CellML</a>."));
 
-    return new PluginInfo(PluginInfo::Organisation, true,
+    return new PluginInfo(PluginInfo::Organisation, true, false,
                           QStringList() << "Core",
                           descriptions);
 }

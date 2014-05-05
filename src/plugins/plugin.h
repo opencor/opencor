@@ -84,6 +84,7 @@ public:
         NotPlugin,
         NotCorePlugin,
         InvalidCorePlugin,
+        NotCliPlugin,
         MissingOrInvalidDependencies
     };
 

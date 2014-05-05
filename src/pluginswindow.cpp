@@ -359,6 +359,8 @@ QString PluginsWindow::statusDescription(Plugin *pPlugin) const
         return tr("the plugin claims to be the core plugin, but it is not.");
     case Plugin::InvalidCorePlugin:
         return tr("the plugin should be the core plugin, but it does not support the core interface.");
+    case Plugin::NotCliPlugin:
+        return tr("the plugin claims to be CLI-capable, but it does not support the CLI interface.");
     case Plugin::MissingOrInvalidDependencies:
         if (pPlugin->statusErrorsCount() == 1)
             return tr("the plugin could not be loaded due to the %1 plugin being missing or invalid.").arg(pPlugin->statusErrors());

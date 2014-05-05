@@ -326,6 +326,10 @@
         <source>the plugin should be the core plugin, but it does not support the core interface.</source>
         <translation>l&apos;extension devrait être l&apos;extension de base, mais elle ne supporte pas l&apos;interface de base.</translation>
     </message>
+    <message>
+        <source>the plugin claims to be CLI-capable, but it does not support the CLI interface.</source>
+        <translation>l&apos;extension prétend être capable de CLI, mais elle ne support pas l&apos;interface CLI.</translation>
+    </message>
 </context>
 <context>
     <name>PluginsWindow</name>

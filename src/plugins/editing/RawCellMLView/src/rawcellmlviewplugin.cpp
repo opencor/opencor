@@ -44,7 +44,7 @@ PLUGININFO_FUNC RawCellMLViewPluginInfo()
     descriptions.insert("en", QString::fromUtf8("a plugin to edit <a href=\"http://www.cellml.org/\">CellML</a> files using an XML editor."));
     descriptions.insert("fr", QString::fromUtf8("une extension pour éditer des fichiers <a href=\"http://www.cellml.org/\">CellML</a> à l'aide d'un éditeur XML."));
 
-    return new PluginInfo(PluginInfo::Editing, true,
+    return new PluginInfo(PluginInfo::Editing, true, false,
                           QStringList() << "CoreCellMLEditing",
                           descriptions);
 }

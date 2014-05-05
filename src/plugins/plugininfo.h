@@ -75,12 +75,14 @@ public:
     };
 
     explicit PluginInfo(const Category &pCategory, const bool &pSelectable,
+                        const bool &pCliSupport,
                         const QStringList &pDependencies,
                         const Descriptions &pDescriptions);
 
     Category category() const;
 
     bool isSelectable() const;
+    bool hasCliSupport() const;
 
     QStringList dependencies() const;
     QStringList fullDependencies() const;
@@ -93,6 +95,7 @@ private:
     Category mCategory;
 
     bool mSelectable;
+    bool mCliSupport;
 
     QStringList mDependencies;
     QStringList mFullDependencies;
