@@ -22,6 +22,8 @@ specific language governing permissions and limitations under the License.
 #include "cliinterface.h"
 #include "plugin.h"
 #include "pluginmanager.h"
+#include "viewinterface.h"
+#include "windowinterface.h"
 
 //==============================================================================
 
@@ -35,8 +37,12 @@ namespace OpenCOR {
 //==============================================================================
 
 PluginManager::PluginManager(QCoreApplication *pApp, const bool &pGuiMode) :
-    mCorePlugin(0),
-    mPlugins(Plugins())
+    mPlugins(Plugins()),
+    mLoadedPlugins(Plugins()),
+    mLoadedCliPlugins(Plugins()),
+    mLoadedWindowPlugins(Plugins()),
+    mLoadedViewPlugins(Plugins()),
+    mCorePlugin(0)
 {
     mPluginsDir =  QDir(pApp->applicationDirPath()).canonicalPath()
                   +QDir::separator()+QString("..")
@@ -188,6 +194,19 @@ PluginManager::PluginManager(QCoreApplication *pApp, const bool &pGuiMode) :
             mCorePlugin = plugin;
 
         mPlugins << plugin;
+
+        if (plugin->status() == Plugin::Loaded) {
+            mLoadedPlugins << plugin;
+
+            if (qobject_cast<CliInterface *>(plugin->instance()))
+                mLoadedCliPlugins << plugin;
+
+            if (qobject_cast<ViewInterface *>(plugin->instance()))
+                mLoadedViewPlugins << plugin;
+
+            if (qobject_cast<WindowInterface *>(plugin->instance()))
+                mLoadedWindowPlugins << plugin;
+        }
     }
 }
 
@@ -214,32 +233,36 @@ Plugins PluginManager::plugins() const
 
 Plugins PluginManager::loadedPlugins() const
 {
-    // Return a list of only our loaded plugins
+    // Return a list of our loaded plugins
 
-    Plugins res = Plugins();
-
-    foreach (Plugin *plugin, mPlugins)
-        if (plugin->status() == Plugin::Loaded)
-            res << plugin;
-
-    return res;
+    return mLoadedPlugins;
 }
 
 //==============================================================================
 
 Plugins PluginManager::loadedCliPlugins() const
 {
-    // Return a list of only our loaded CLI plugins
+    // Return a list of our loaded CLI plugins
 
-    Plugins res = Plugins();
+    return mLoadedCliPlugins;
+}
 
-    foreach (Plugin *plugin, mPlugins)
-        if (   qobject_cast<CliInterface *>(plugin->instance())
-            && (plugin->status() == Plugin::Loaded)) {
-            res << plugin;
-        }
+//==============================================================================
 
-    return res;
+Plugins PluginManager::loadedWindowPlugins() const
+{
+    // Return a list of our loaded Window plugins
+
+    return mLoadedWindowPlugins;
+}
+
+//==============================================================================
+
+Plugins PluginManager::loadedViewPlugins() const
+{
+    // Return a list of our loaded View plugins
+
+    return mLoadedViewPlugins;
 }
 
 //==============================================================================
@@ -249,15 +272,6 @@ QString PluginManager::pluginsDir() const
     // Return the plugins directory
 
     return mPluginsDir;
-}
-
-//==============================================================================
-
-Plugin * PluginManager::corePlugin() const
-{
-    // Return our Core plugin
-
-    return mCorePlugin;
 }
 
 //==============================================================================
@@ -275,6 +289,15 @@ Plugin * PluginManager::plugin(const QString &pName) const
     // The plugin we are after wasn't found, so...
 
     return 0;
+}
+
+//==============================================================================
+
+Plugin * PluginManager::corePlugin() const
+{
+    // Return our Core plugin
+
+    return mCorePlugin;
 }
 
 //==============================================================================

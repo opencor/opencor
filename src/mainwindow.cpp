@@ -199,9 +199,7 @@ Core::showEnableAction(mGui->actionPreferences, false);
 
     // Initialise our various plugins
 
-    Plugins loadedPlugins = mPluginManager->loadedPlugins();
-
-    foreach (Plugin *plugin, loadedPlugins) {
+    foreach (Plugin *plugin, mPluginManager->loadedPlugins()) {
         // Initialise the plugin itself
 
         PluginInterface *pluginInterface = qobject_cast<PluginInterface *>(plugin->instance());
@@ -232,11 +230,11 @@ Core::showEnableAction(mGui->actionPreferences, false);
     //       (e.g. the SingleCellSimulationView plugin needs to know which
     //       solvers, if any, are available to it)...
 
-    foreach (Plugin *plugin, loadedPlugins) {
+    foreach (Plugin *plugin, mPluginManager->loadedPlugins()) {
         PluginInterface *pluginInterface = qobject_cast<PluginInterface *>(plugin->instance());
 
         if (pluginInterface)
-            pluginInterface->pluginInitialized(loadedPlugins);
+            pluginInterface->pluginInitialized(mPluginManager->loadedPlugins());
     }
 
     // Keep track of the showing/hiding of the different dock widgets
@@ -271,9 +269,7 @@ MainWindow::~MainWindow()
     //       call the finalize method and this method is not overriden by any
     //       other interface, so...
 
-    Plugins loadedPlugins = mPluginManager->loadedPlugins();
-
-    foreach (Plugin *plugin, loadedPlugins) {
+    foreach (Plugin *plugin, mPluginManager->loadedPlugins()) {
         PluginInterface *pluginInterface = qobject_cast<PluginInterface *>(plugin->instance());
 
         if (pluginInterface)
@@ -647,9 +643,7 @@ void MainWindow::loadSettings()
 
     // Retrieve the settings of our various plugins
 
-    Plugins loadedPlugins = mPluginManager->loadedPlugins();
-
-    foreach (Plugin *plugin, loadedPlugins) {
+    foreach (Plugin *plugin, mPluginManager->loadedPlugins()) {
         PluginInterface *pluginInterface = qobject_cast<PluginInterface *>(plugin->instance());
 
         if (pluginInterface) {
@@ -666,7 +660,7 @@ void MainWindow::loadSettings()
     // Note: this is similar to initializePlugin() vs. pluginInitialized()...
 
     if (mPluginManager->corePlugin())
-        qobject_cast<CoreInterface *>(mPluginManager->corePlugin()->instance())->settingsLoaded(loadedPlugins);
+        qobject_cast<CoreInterface *>(mPluginManager->corePlugin()->instance())->settingsLoaded(mPluginManager->loadedPlugins());
         // Note: if the Core plugin is loaded, then it means it supports the
         //       Core interface, so no need to check anything...
 
@@ -676,7 +670,7 @@ void MainWindow::loadSettings()
     //       so...
 
 #ifdef Q_OS_MAC
-    mGui->menuFile->menuAction()->setVisible(loadedPlugins.count());
+    mGui->menuFile->menuAction()->setVisible(mPluginManager->loadedPlugins().count());
 #endif
 
     // Retrieve and set the language to be used by OpenCOR
@@ -794,11 +788,10 @@ void MainWindow::setLocale(const QString &pLocale, const bool &pForceSetting)
         //       retranslate them since a plugin may require another plugin to
         //       work properly...
 
-        Plugins loadedPlugins = mPluginManager->loadedPlugins();
         QList<I18nInterface *> i18nInterfaces = QList<I18nInterface *>();
 
-        for (int i = 0, iMax = loadedPlugins.count(); i < iMax; ++i) {
-            I18nInterface *i18nInterface = qobject_cast<I18nInterface *>(loadedPlugins[i]->instance());
+        foreach (Plugin *plugin, mPluginManager->loadedPlugins()) {
+            I18nInterface *i18nInterface = qobject_cast<I18nInterface *>(plugin->instance());
 
             if (i18nInterface) {
                 i18nInterface->setLocale(newLocale);
