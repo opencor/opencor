@@ -52,9 +52,6 @@ public:
 
     Plugins plugins() const;
     Plugins loadedPlugins() const;
-    Plugins loadedCliPlugins() const;
-    Plugins loadedWindowPlugins() const;
-    Plugins loadedViewPlugins() const;
 
     QString pluginsDir() const;
 
@@ -66,9 +63,6 @@ private:
 
     Plugins mPlugins;
     Plugins mLoadedPlugins;
-    Plugins mLoadedCliPlugins;
-    Plugins mLoadedWindowPlugins;
-    Plugins mLoadedViewPlugins;
 
     Plugin *mCorePlugin;
 };

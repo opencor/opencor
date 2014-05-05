@@ -24,6 +24,10 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#include "plugin.h"
+
+//==============================================================================
+
 #include <QStringList>
 
 //==============================================================================
@@ -51,6 +55,8 @@ private:
     QCoreApplication *mApp;
 
     PluginManager *mPluginManager;
+
+    Plugins mLoadedCliPlugins;
 
     void usage();
 

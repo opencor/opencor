@@ -39,9 +39,6 @@ namespace OpenCOR {
 PluginManager::PluginManager(QCoreApplication *pApp, const bool &pGuiMode) :
     mPlugins(Plugins()),
     mLoadedPlugins(Plugins()),
-    mLoadedCliPlugins(Plugins()),
-    mLoadedWindowPlugins(Plugins()),
-    mLoadedViewPlugins(Plugins()),
     mCorePlugin(0)
 {
     mPluginsDir =  QDir(pApp->applicationDirPath()).canonicalPath()
@@ -195,18 +192,8 @@ PluginManager::PluginManager(QCoreApplication *pApp, const bool &pGuiMode) :
 
         mPlugins << plugin;
 
-        if (plugin->status() == Plugin::Loaded) {
+        if (plugin->status() == Plugin::Loaded)
             mLoadedPlugins << plugin;
-
-            if (qobject_cast<CliInterface *>(plugin->instance()))
-                mLoadedCliPlugins << plugin;
-
-            if (qobject_cast<ViewInterface *>(plugin->instance()))
-                mLoadedViewPlugins << plugin;
-
-            if (qobject_cast<WindowInterface *>(plugin->instance()))
-                mLoadedWindowPlugins << plugin;
-        }
     }
 }
 
@@ -236,33 +223,6 @@ Plugins PluginManager::loadedPlugins() const
     // Return a list of our loaded plugins
 
     return mLoadedPlugins;
-}
-
-//==============================================================================
-
-Plugins PluginManager::loadedCliPlugins() const
-{
-    // Return a list of our loaded CLI plugins
-
-    return mLoadedCliPlugins;
-}
-
-//==============================================================================
-
-Plugins PluginManager::loadedWindowPlugins() const
-{
-    // Return a list of our loaded Window plugins
-
-    return mLoadedWindowPlugins;
-}
-
-//==============================================================================
-
-Plugins PluginManager::loadedViewPlugins() const
-{
-    // Return a list of our loaded View plugins
-
-    return mLoadedViewPlugins;
 }
 
 //==============================================================================

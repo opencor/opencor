@@ -46,7 +46,8 @@ namespace OpenCOR {
 
 CliApplication::CliApplication(QCoreApplication *pApp) :
     mApp(pApp),
-    mPluginManager(0)
+    mPluginManager(0),
+    mLoadedCliPlugins(Plugins())
 {
 }
 
@@ -108,6 +109,12 @@ void CliApplication::loadPlugins()
     // Load all the plugins by creating our plugin manager
 
     mPluginManager = new PluginManager(mApp, false);
+
+    // Keep track of our loaded CLI plugins
+
+    foreach (Plugin *plugin, mPluginManager->loadedPlugins())
+        if (qobject_cast<CliInterface *>(plugin->instance()))
+            mLoadedCliPlugins << plugin;
 }
 
 //==============================================================================
@@ -117,9 +124,7 @@ void CliApplication::plugins()
     // Output some information about our CLI-enabled plugins, so first make sure
     // that we have at least one of them
 
-    Plugins loadedCliPlugins = mPluginManager->loadedCliPlugins();
-
-    if (loadedCliPlugins.isEmpty()) {
+    if (mLoadedCliPlugins.isEmpty()) {
         std::cout << "Sorry, but no plugins could be found." << std::endl;
 
         return;
@@ -129,7 +134,7 @@ void CliApplication::plugins()
 
     QStringList pluginsInfo = QStringList();
 
-    foreach (Plugin *plugin, loadedCliPlugins) {
+    foreach (Plugin *plugin, mLoadedCliPlugins) {
         // Retrieve the plugin's default description, stripped out of all its
         // HTML (should it have some)
         // Note: we enclose the plugin's default description within an html tag
@@ -171,11 +176,6 @@ void CliApplication::plugins()
 
 bool CliApplication::command(const QStringList pArguments, int *pRes)
 {
-    // Send a command to one or all the plugins, so first retrieve the list of
-    // loaded CLI plugins
-
-    Plugins loadedCliPlugins = mPluginManager->loadedCliPlugins();
-
     // Make sure that we have at least one argument
 
     if (!pArguments.count())
@@ -229,7 +229,7 @@ bool CliApplication::command(const QStringList pArguments, int *pRes)
 
     // Make sure that we have at least one CLI-enabled plugin
 
-    if (loadedCliPlugins.isEmpty()) {
+    if (mLoadedCliPlugins.isEmpty()) {
         std::cout << "Sorry, but no plugins could be found to run the command." << std::endl;
 
         return true;
@@ -237,7 +237,7 @@ bool CliApplication::command(const QStringList pArguments, int *pRes)
 
     // Send the command to the plugin(s)
 
-    foreach (Plugin *plugin, loadedCliPlugins)
+    foreach (Plugin *plugin, mLoadedCliPlugins)
         if (    commandPlugin.isEmpty()
             || !commandPlugin.compare(plugin->name())) {
             QStringList arguments = pArguments;
