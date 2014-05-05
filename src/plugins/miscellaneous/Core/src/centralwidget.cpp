@@ -131,7 +131,6 @@ CentralWidget::CentralWidget(QMainWindow *pMainWindow) :
     mMainWindow(pMainWindow),
     mGui(new Ui::CentralWidget),
     mState(Starting),
-    mLoadedPlugins(Plugins()),
     mLoadedFileHandlingPlugins(Plugins()),
     mLoadedGuiPlugins(Plugins()),
     mLoadedViewPlugins(Plugins()),
@@ -519,10 +518,6 @@ void CentralWidget::saveSettings(QSettings *pSettings) const
 
 void CentralWidget::settingsLoaded(const Plugins &pLoadedPlugins)
 {
-    // Keep track of our loaded plugins
-
-    mLoadedPlugins = pLoadedPlugins;
-
     // Determine which loaded plugins support the file handling interface, and
     // which ones support the view interface
 
