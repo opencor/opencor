@@ -165,8 +165,8 @@ void SingleCellViewPlugin::pluginInitialized(const Plugins &pLoadedPlugins)
 
     SolverInterfaces solverInterfaces = SolverInterfaces();
 
-    foreach (Plugin *loadedPlugin, pLoadedPlugins) {
-        SolverInterface *solverInterface = qobject_cast<SolverInterface *>(loadedPlugin->instance());
+    foreach (Plugin *plugin, pLoadedPlugins) {
+        SolverInterface *solverInterface = qobject_cast<SolverInterface *>(plugin->instance());
 
         if (solverInterface)
             // The plugin implements our solver interface, so...

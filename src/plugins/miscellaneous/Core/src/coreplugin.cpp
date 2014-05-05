@@ -477,8 +477,8 @@ void CorePlugin::pluginInitialized(const Plugins &pLoadedPlugins)
 
     FileTypes supportedFileTypes = FileTypes();
 
-    foreach (Plugin *loadedPlugin, pLoadedPlugins) {
-        FileTypeInterface *fileTypeInterface = qobject_cast<FileTypeInterface *>(loadedPlugin->instance());
+    foreach (Plugin *plugin, pLoadedPlugins) {
+        FileTypeInterface *fileTypeInterface = qobject_cast<FileTypeInterface *>(plugin->instance());
 
         if (fileTypeInterface)
             // The plugin implements our file type interface, so add the
@@ -495,14 +495,14 @@ void CorePlugin::pluginInitialized(const Plugins &pLoadedPlugins)
     // Check, based on the loaded plugins, which views, if any, our central
     // widget should support
 
-    foreach (Plugin *loadedPlugin, pLoadedPlugins) {
-        ViewInterface *viewInterface = qobject_cast<ViewInterface *>(loadedPlugin->instance());
+    foreach (Plugin *plugin, pLoadedPlugins) {
+        ViewInterface *viewInterface = qobject_cast<ViewInterface *>(plugin->instance());
 
         if (viewInterface)
             // The plugin implements our View interface, so add it to our
             // central widget
 
-            mCentralWidget->addView(loadedPlugin);
+            mCentralWidget->addView(plugin);
     }
 }
 

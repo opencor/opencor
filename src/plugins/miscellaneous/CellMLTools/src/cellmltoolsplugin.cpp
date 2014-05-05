@@ -189,10 +189,10 @@ void CellMLToolsPlugin::pluginInitialized(const Plugins &pLoadedPlugins)
 
     mCellmlFileTypes = FileTypes();
 
-    foreach (Plugin *loadedPlugin, pLoadedPlugins) {
-        FileTypeInterface *fileTypeInterface = qobject_cast<FileTypeInterface *>(loadedPlugin->instance());
+    foreach (Plugin *plugin, pLoadedPlugins) {
+        FileTypeInterface *fileTypeInterface = qobject_cast<FileTypeInterface *>(plugin->instance());
 
-        if (!loadedPlugin->name().compare("CellMLSupport") && fileTypeInterface) {
+        if (!plugin->name().compare("CellMLSupport") && fileTypeInterface) {
             // This is the CellMLSupport plugin and, as expected, it implements
             // our file type interface, so retrieve the file types it supports
 
