@@ -82,7 +82,7 @@ PluginManager::PluginManager(QCoreApplication *pApp, const bool &pGuiMode) :
     QMap<QString, PluginInfo *> pluginsInfo = QMap<QString, PluginInfo *>();
     QMap<QString, QString> pluginsError = QMap<QString, QString>();
 
-    QStringList selectablePlugins = QStringList();
+    QStringList selectableOrCliPlugins = QStringList();
 
     foreach (const QString &fileName, fileNames) {
         QString pluginError;
@@ -102,10 +102,12 @@ PluginManager::PluginManager(QCoreApplication *pApp, const bool &pGuiMode) :
 
             pluginInfo->setFullDependencies(pluginFullDependencies);
 
-            // Keep track of the plugin itself, should it be selectable
+            // Keep track of the plugin itself, should it be selectable (if we
+            // are in GUI mode) or have CLI support (if we are in CLI mode)
 
-            if (pluginInfo->isSelectable())
-                selectablePlugins << pluginName;
+            if (   ( pGuiMode && pluginInfo->isSelectable())
+                || (!pGuiMode && pluginInfo->hasCliSupport()))
+                selectableOrCliPlugins << pluginName;
         }
     }
 
@@ -119,18 +121,17 @@ PluginManager::PluginManager(QCoreApplication *pApp, const bool &pGuiMode) :
     QStringList neededPlugins = QStringList();
     QStringList wantedPlugins = QStringList();
 
-    foreach (const QString &selectablePlugin, selectablePlugins)
-        if (   ( pGuiMode && Plugin::load(selectablePlugin))
-            || (!pGuiMode && pluginsInfo.value(selectablePlugin)->hasCliSupport())) {
+    foreach (const QString &plugin, selectableOrCliPlugins)
+        if (( pGuiMode && Plugin::load(plugin)) || !pGuiMode) {
             // We are in GUI mode and the user wants to load the plugin, or we
-            // are not in GUI mode (i.e. CLI mode) and the plugin has CLI
-            // support, so retrieve and keep track of the plugin's dependencies
+            // are not in GUI mode (i.e. CLI mode), so retrieve and keep track
+            // of the plugin's dependencies
 
-            neededPlugins << pluginsInfo.value(selectablePlugin)->fullDependencies();
+            neededPlugins << pluginsInfo.value(plugin)->fullDependencies();
 
             // Also keep track of the plugin itself
 
-            wantedPlugins << selectablePlugin;
+            wantedPlugins << plugin;
         }
 
     // Remove possible duplicates in our list of needed plugins
