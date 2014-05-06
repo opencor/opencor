@@ -46,29 +46,27 @@ enum Type {
 
 //==============================================================================
 
-enum PropertyType {
-    Integer,
-    Double
-};
-
-//==============================================================================
-
 class Property
 {
 public:
-    explicit Property(const PropertyType &pType, const QString &pId,
+    enum Type {
+        Integer,
+        Double
+    };
+
+    explicit Property(const Type &pType, const QString &pId,
                       const Descriptions &pDescriptions,
                       const QVariant &pDefaultValue,
                       const bool &pHasVoiUnit = false);
 
-    PropertyType type() const;
+    Type type() const;
     QString id() const;
     Descriptions descriptions() const;
     QVariant defaultValue() const;
     bool hasVoiUnit() const;
 
 private:
-    PropertyType mType;
+    Type mType;
     QString mId;
     Descriptions mDescriptions;
     QVariant mDefaultValue;

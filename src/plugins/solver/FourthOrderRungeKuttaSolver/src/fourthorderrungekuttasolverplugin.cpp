@@ -92,7 +92,7 @@ Solver::Properties FourthOrderRungeKuttaSolverPlugin::solverProperties() const
     stepPropertyDescriptions.insert("en", QString::fromUtf8("Step"));
     stepPropertyDescriptions.insert("fr", QString::fromUtf8("Pas"));
 
-    return Solver::Properties() << Solver::Property(Solver::Double, StepId, stepPropertyDescriptions, StepDefaultValue, true);
+    return Solver::Properties() << Solver::Property(Solver::Property::Double, StepId, stepPropertyDescriptions, StepDefaultValue, true);
 }
 
 //==============================================================================

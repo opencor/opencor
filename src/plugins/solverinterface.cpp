@@ -32,7 +32,7 @@ namespace Solver {
 
 //==============================================================================
 
-Property::Property(const PropertyType &pType, const QString &pId,
+Property::Property(const Property::Type &pType, const QString &pId,
                    const Descriptions &pDescriptions,
                    const QVariant &pDefaultValue,
                    const bool &pHasVoiUnit) :
@@ -46,7 +46,7 @@ Property::Property(const PropertyType &pType, const QString &pId,
 
 //==============================================================================
 
-PropertyType Property::type() const
+Property::Type Property::type() const
 {
     // Return our type
 
@@ -92,9 +92,6 @@ bool Property::hasVoiUnit() const
 //==============================================================================
 
 }   // namespace Solver
-
-//==============================================================================
-
 }   // namespace OpenCOR
 
 //==============================================================================
