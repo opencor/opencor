@@ -85,7 +85,6 @@ Solver::Properties CVODESolverPlugin::solverProperties() const
 {
     // Return the properties supported by the solver
 
-    Solver::Properties res = Solver::Properties();
     Descriptions MaximumStepDescriptions;
     Descriptions MaximumNumberOfStepsDescriptions;
     Descriptions RelativeToleranceDescriptions;
@@ -103,12 +102,10 @@ Solver::Properties CVODESolverPlugin::solverProperties() const
     AbsoluteToleranceDescriptions.insert("en", QString::fromUtf8("Absolute tolerance"));
     AbsoluteToleranceDescriptions.insert("fr", QString::fromUtf8("Tolérance absolue"));
 
-    res.append(Solver::Property(Solver::Double, MaximumStepId, MaximumStepDescriptions, MaximumStepDefaultValue, true));
-    res.append(Solver::Property(Solver::Integer, MaximumNumberOfStepsId, MaximumNumberOfStepsDescriptions, MaximumNumberOfStepsDefaultValue));
-    res.append(Solver::Property(Solver::Double, RelativeToleranceId, RelativeToleranceDescriptions, RelativeToleranceDefaultValue));
-    res.append(Solver::Property(Solver::Double, AbsoluteToleranceId, AbsoluteToleranceDescriptions, AbsoluteToleranceDefaultValue));
-
-    return res;
+    return Solver::Properties() << Solver::Property(Solver::Double, MaximumStepId, MaximumStepDescriptions, MaximumStepDefaultValue, true)
+                                << Solver::Property(Solver::Integer, MaximumNumberOfStepsId, MaximumNumberOfStepsDescriptions, MaximumNumberOfStepsDefaultValue)
+                                << Solver::Property(Solver::Double, RelativeToleranceId, RelativeToleranceDescriptions, RelativeToleranceDefaultValue)
+                                << Solver::Property(Solver::Double, AbsoluteToleranceId, AbsoluteToleranceDescriptions, AbsoluteToleranceDefaultValue);
 }
 
 //==============================================================================

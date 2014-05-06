@@ -87,7 +87,6 @@ Solver::Properties IDASolverPlugin::solverProperties() const
 {
     // Return the properties supported by the solver
 
-    Solver::Properties res = Solver::Properties();
     Descriptions MaximumStepPropertyDescriptions;
     Descriptions MaximumNumberOfStepsPropertyDescriptions;
     Descriptions RelativeTolerancePropertyDescriptions;
@@ -105,12 +104,10 @@ Solver::Properties IDASolverPlugin::solverProperties() const
     AbsoluteTolerancePropertyDescriptions.insert("en", QString::fromUtf8("Absolute tolerance"));
     AbsoluteTolerancePropertyDescriptions.insert("fr", QString::fromUtf8("Tolérance absolue"));
 
-    res.append(Solver::Property(Solver::Double, MaximumStepId, MaximumStepPropertyDescriptions, MaximumStepDefaultValue, true));
-    res.append(Solver::Property(Solver::Integer, MaximumNumberOfStepsId, MaximumNumberOfStepsPropertyDescriptions, MaximumNumberOfStepsDefaultValue));
-    res.append(Solver::Property(Solver::Double, RelativeToleranceId, RelativeTolerancePropertyDescriptions, RelativeToleranceDefaultValue));
-    res.append(Solver::Property(Solver::Double, AbsoluteToleranceId, AbsoluteTolerancePropertyDescriptions, AbsoluteToleranceDefaultValue));
-
-    return res;
+    return Solver::Properties() << Solver::Property(Solver::Double, MaximumStepId, MaximumStepPropertyDescriptions, MaximumStepDefaultValue, true)
+                                << Solver::Property(Solver::Integer, MaximumNumberOfStepsId, MaximumNumberOfStepsPropertyDescriptions, MaximumNumberOfStepsDefaultValue)
+                                << Solver::Property(Solver::Double, RelativeToleranceId, RelativeTolerancePropertyDescriptions, RelativeToleranceDefaultValue)
+                                << Solver::Property(Solver::Double, AbsoluteToleranceId, AbsoluteTolerancePropertyDescriptions, AbsoluteToleranceDefaultValue);
 }
 
 //==============================================================================

@@ -85,15 +85,12 @@ Solver::Properties SecondOrderRungeKuttaSolverPlugin::solverProperties() const
 {
     // Return the properties supported by the solver
 
-    Solver::Properties res = Solver::Properties();
     Descriptions stepPropertyDescriptions;
 
     stepPropertyDescriptions.insert("en", QString::fromUtf8("Step"));
     stepPropertyDescriptions.insert("fr", QString::fromUtf8("Pas"));
 
-    res.append(Solver::Property(Solver::Double, StepId, stepPropertyDescriptions, StepDefaultValue, true));
-
-    return res;
+    return Solver::Properties() << Solver::Property(Solver::Double, StepId, stepPropertyDescriptions, StepDefaultValue, true);
 }
 
 //==============================================================================

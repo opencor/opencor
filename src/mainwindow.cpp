@@ -400,7 +400,7 @@ void MainWindow::initializeGuiPlugin(Plugin *pPlugin)
         // Add the menus to our menu bar or merge them to existing menus, if
         // needed
         // Note: we must do that in reverse order since we are inserting menus,
-        //       as opposed to appending them...
+        //       as opposed to appending some...
 
         QListIterator<GuiMenuSettings *> menuIter(guiInterface->guiSettings()->menus());
 
@@ -450,8 +450,8 @@ void MainWindow::initializeGuiPlugin(Plugin *pPlugin)
         }
 
         // Add the actions/separators to our different menus
-        // Note: as for the menus above, we must do that in reverse order since
-        //       we are inserting actions, as opposed to appending them...
+        // Note: as for the menus above, we must do it in reverse order since we
+        //       are inserting actions, as opposed to appending some...
 
         QListIterator<GuiMenuActionSettings *> menuActionIter(guiInterface->guiSettings()->menuActions());
 
