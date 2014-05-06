@@ -19,11 +19,8 @@ specific language governing permissions and limitations under the License.
 // Plugin manager
 //==============================================================================
 
-#include "cliinterface.h"
 #include "plugin.h"
 #include "pluginmanager.h"
-#include "viewinterface.h"
-#include "windowinterface.h"
 
 //==============================================================================
 
