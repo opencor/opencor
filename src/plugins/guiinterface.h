@@ -45,7 +45,11 @@ class Plugin;
 
 //==============================================================================
 
-class GuiMenuSettings
+namespace Gui {
+
+//==============================================================================
+
+class Menu
 {
 public:
     enum Type {
@@ -53,8 +57,8 @@ public:
         View
     };
 
-    explicit GuiMenuSettings(const Type &pType, QMenu *pMenu);
-    explicit GuiMenuSettings(const Type &pType, QAction *pAction, QMenu *pMenu);
+    explicit Menu(const Type &pType, QMenu *pMenu);
+    explicit Menu(const Type &pType, QAction *pAction, QMenu *pMenu);
 
     Type type() const;
     QAction * action() const;
@@ -68,25 +72,8 @@ private:
 
 //==============================================================================
 
-class GuiSettings
-{
-public:
-    explicit GuiSettings();
-    ~GuiSettings();
-
-    void addMenu(const GuiMenuSettings::Type &pType, QMenu *pMenu);
-    void addMenu(const GuiMenuSettings::Type &pType, QAction *pAction,
-                 QMenu *pMenu);
-
-    QList<GuiMenuSettings *> menus() const;
-
-private:
-    QList<GuiMenuSettings *> mMenus;
-};
-
-//==============================================================================
-
-namespace Gui {
+typedef QList<Menu> Menus;
+typedef QListIterator<Menu> MenuIterator;
 
 //==============================================================================
 
@@ -123,17 +110,9 @@ typedef QListIterator<MenuAction> MenuActionIterator;
 class GuiInterface
 {
 public:
-    explicit GuiInterface();
-    ~GuiInterface();
-
 #define INTERFACE_DEFINITION
     #include "guiinterface.inl"
 #undef INTERFACE_DEFINITION
-
-    GuiSettings * guiSettings() const;
-
-protected:
-    GuiSettings *mGuiSettings;
 };
 
 //==============================================================================

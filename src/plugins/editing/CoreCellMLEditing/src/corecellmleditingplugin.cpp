@@ -68,6 +68,15 @@ void CoreCellMLEditingPlugin::updateGui(Plugin *pViewPlugin,
 
 //==============================================================================
 
+Gui::Menus CoreCellMLEditingPlugin::guiMenus() const
+{
+    // We don't handle this interface...
+
+    return Gui::Menus();
+}
+
+//==============================================================================
+
 Gui::MenuActions CoreCellMLEditingPlugin::guiMenuActions() const
 {
     // Return our menu actions

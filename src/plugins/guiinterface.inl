@@ -6,6 +6,7 @@
 
     virtual void updateGui(Plugin *pViewPlugin, const QString &pFileName) PURE;
 
+    virtual Gui::Menus guiMenus() const PURE;
     virtual Gui::MenuActions guiMenuActions() const PURE;
 
 #undef PURE

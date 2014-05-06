@@ -35,6 +35,51 @@ namespace Gui {
 
 //==============================================================================
 
+Menu::Menu(const Menu::Type &pType, QMenu *pMenu) :
+    mType(pType),
+    mAction(0),
+    mMenu(pMenu)
+{
+}
+
+//==============================================================================
+
+Menu::Menu(const Menu::Type &pType, QAction *pAction, QMenu *pMenu) :
+    mType(pType),
+    mAction(pAction),
+    mMenu(pMenu)
+{
+}
+
+//==============================================================================
+
+Menu::Type Menu::type() const
+{
+    // Return the menu's type
+
+    return mType;
+}
+
+//==============================================================================
+
+QAction * Menu::action() const
+{
+    // Return the menu's action
+
+    return mAction;
+}
+
+//==============================================================================
+
+QMenu * Menu::menu() const
+{
+    // Return the menu itsef
+
+    return mMenu;
+}
+
+//==============================================================================
+
 MenuAction::MenuAction(const MenuAction::Type &pType, QAction *pAction) :
     mType(pType),
     mAction(pAction)
@@ -62,125 +107,6 @@ QAction * MenuAction::action() const
 //==============================================================================
 
 }   // namespace Gui
-
-//==============================================================================
-
-GuiMenuSettings::GuiMenuSettings(const GuiMenuSettings::Type &pType,
-                                 QMenu *pMenu) :
-    mType(pType),
-    mAction(0),
-    mMenu(pMenu)
-{
-}
-
-//==============================================================================
-
-GuiMenuSettings::GuiMenuSettings(const GuiMenuSettings::Type &pType,
-                                 QAction *pAction, QMenu *pMenu) :
-    mType(pType),
-    mAction(pAction),
-    mMenu(pMenu)
-{
-}
-
-//==============================================================================
-
-GuiMenuSettings::Type GuiMenuSettings::type() const
-{
-    // Return the menu's type
-
-    return mType;
-}
-
-//==============================================================================
-
-QAction * GuiMenuSettings::action() const
-{
-    // Return the menu's action
-
-    return mAction;
-}
-
-//==============================================================================
-
-QMenu * GuiMenuSettings::menu() const
-{
-    // Return the menu itsef
-
-    return mMenu;
-}
-
-//==============================================================================
-
-GuiSettings::GuiSettings() :
-    mMenus(QList<GuiMenuSettings *>())
-{
-}
-
-//==============================================================================
-
-GuiSettings::~GuiSettings()
-{
-    // Delete the contents of our various lists
-
-    foreach (GuiMenuSettings *menuSettings, mMenus)
-        delete menuSettings;
-}
-
-//==============================================================================
-
-void GuiSettings::addMenu(const GuiMenuSettings::Type &pType, QMenu *pMenu)
-{
-    // Add a menu to our list
-
-    mMenus << new GuiMenuSettings(pType, pMenu);
-}
-
-//==============================================================================
-
-void GuiSettings::addMenu(const GuiMenuSettings::Type &pType, QAction *pAction,
-                          QMenu *pMenu)
-{
-    // Add a menu to our list
-
-    mMenus << new GuiMenuSettings(pType, pAction, pMenu);
-}
-
-//==============================================================================
-
-QList<GuiMenuSettings *> GuiSettings::menus() const
-{
-    // Return our menus
-
-    return mMenus;
-}
-
-//==============================================================================
-
-GuiInterface::GuiInterface()
-{
-    // Create our GUI settings object
-
-    mGuiSettings = new GuiSettings();
-}
-
-//==============================================================================
-
-GuiInterface::~GuiInterface()
-{
-    // Delete our GUI settings object
-
-    delete mGuiSettings;
-}
-
-//==============================================================================
-
-GuiSettings * GuiInterface::guiSettings() const
-{
-    // Return the plugin's GUI settings
-
-    return mGuiSettings;
-}
 
 //==============================================================================
 

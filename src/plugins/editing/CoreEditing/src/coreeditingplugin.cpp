@@ -237,6 +237,15 @@ void CoreEditingPlugin::updateGui(Plugin *pViewPlugin, const QString &pFileName)
 
 //==============================================================================
 
+Gui::Menus CoreEditingPlugin::guiMenus() const
+{
+    // Return our menus
+
+    return Gui::Menus() << Gui::Menu(Gui::Menu::View, mEditMenu);
+}
+
+//==============================================================================
+
 Gui::MenuActions CoreEditingPlugin::guiMenuActions() const
 {
     // Return our menu actions
@@ -337,10 +346,6 @@ void CoreEditingPlugin::initializePlugin(QMainWindow *pMainWindow)
     mEditMenu->addAction(mEditFindPreviousAction);
     mEditMenu->addSeparator();
     mEditMenu->addAction(mEditSelectAllAction);
-
-    // Set our settings
-
-    mGuiSettings->addMenu(GuiMenuSettings::View, mEditMenu);
 
     // Keep track of changes to the clipboard
 

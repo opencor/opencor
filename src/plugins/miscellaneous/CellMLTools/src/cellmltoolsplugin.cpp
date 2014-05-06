@@ -117,6 +117,15 @@ Core::showEnableAction(mExportToCellml11Action, false);
 
 //==============================================================================
 
+Gui::Menus CellMLToolsPlugin::guiMenus() const
+{
+    // We don't handle this interface...
+
+    return Gui::Menus();
+}
+
+//==============================================================================
+
 Gui::MenuActions CellMLToolsPlugin::guiMenuActions() const
 {
     // Return our menu actions

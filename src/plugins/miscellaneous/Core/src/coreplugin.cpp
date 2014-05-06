@@ -229,6 +229,15 @@ void CorePlugin::updateGui(Plugin *pViewPlugin, const QString &pFileName)
 
 //==============================================================================
 
+Gui::Menus CorePlugin::guiMenus() const
+{
+    // Return our menus
+
+    return Gui::Menus() << Gui::Menu(Gui::Menu::File, mOpenReloadSeparator, mFileReopenSubMenu);
+}
+
+//==============================================================================
+
 Gui::MenuActions CorePlugin::guiMenuActions() const
 {
     // Return our menu actions
@@ -458,10 +467,6 @@ void CorePlugin::initializePlugin(QMainWindow *pMainWindow)
 
     connect(mFileClearReopenSubMenuAction, SIGNAL(triggered()),
             this, SLOT(clearReopenSubMenu()));
-
-    // Set our settings
-
-    mGuiSettings->addMenu(GuiMenuSettings::File, mOpenReloadSeparator, mFileReopenSubMenu);
 
     // Miscellaneous
 

@@ -402,21 +402,21 @@ void MainWindow::initializeGuiPlugin(Plugin *pPlugin)
         // Note: we must do that in reverse order since we are inserting menus,
         //       as opposed to appending some...
 
-        QListIterator<GuiMenuSettings *> menuIter(guiInterface->guiSettings()->menus());
+        Gui::MenuIterator menuIter(guiInterface->guiMenus());
 
         menuIter.toBack();
 
         while (menuIter.hasPrevious()) {
             // Insert the menu in the right place
 
-            GuiMenuSettings *menuSettings = menuIter.previous();
+            Gui::Menu menu = menuIter.previous();
 
-            QMenu *newMenu = menuSettings->menu();
+            QMenu *newMenu = menu.menu();
             QString newMenuName = newMenu->objectName();
 
             QMenu *oldMenu = mMenus.value(newMenuName);
 
-            if (oldMenu && !menuSettings->action()) {
+            if (oldMenu && !menu.action()) {
                 // A menu with the same name already exists, so add the contents
                 // of the new menu to the existing one
 
@@ -430,14 +430,14 @@ void MainWindow::initializeGuiPlugin(Plugin *pPlugin)
                 // No menu with the same name already exists (or the menu
                 // doesn't have a name), so add the new menu to our menu bar
 
-                switch (menuSettings->type()) {
-                case GuiMenuSettings::View:
+                switch (menu.type()) {
+                case Gui::Menu::View:
                     mGui->menuBar->insertAction(mGui->menuView->menuAction(),
                                                 newMenu->menuAction());
 
                     break;
                 default:
-                    // Nothing to be done...
+                    // Not a type in which we are interested, so do nothing...
 
                     ;
                 }
@@ -492,14 +492,13 @@ void MainWindow::initializeGuiPlugin(Plugin *pPlugin)
 
         // Add some sub-menus before some menu items
 
-        foreach (GuiMenuSettings *menuSettings, guiInterface->guiSettings()->menus()) {
+        foreach (const Gui::Menu &menu, guiInterface->guiMenus()) {
             // Insert the menu before a menu item / separator
 
-            if (menuSettings->action())
-                switch (menuSettings->type()) {
-                case Gui::MenuAction::File:
-                    mGui->menuFile->insertMenu(menuSettings->action(),
-                                               menuSettings->menu());
+            if (menu.action())
+                switch (menu.type()) {
+                case Gui::Menu::File:
+                    mGui->menuFile->insertMenu(menu.action(), menu.menu());
 
                     break;
                 default:
@@ -513,8 +512,7 @@ void MainWindow::initializeGuiPlugin(Plugin *pPlugin)
 
         static QString pluginForFileNewMenu = QString();
 
-        foreach (const Gui::MenuAction &menuAction,
-                 guiInterface->guiMenuActions()) {
+        foreach (const Gui::MenuAction &menuAction, guiInterface->guiMenuActions()) {
             // Insert the action to the right menu
 
             switch (menuAction.type()) {
