@@ -212,7 +212,7 @@ SingleCellViewInformationSolversWidgetData * SingleCellViewInformationSolversWid
                 // Add the solver's property and set its default value
 
                 switch (solverInterfaceProperty.type()) {
-                case Solver::Double:
+                case Solver::Property::Double:
                     property = addDoubleProperty(solverInterfaceProperty.defaultValue().toDouble(),
                                                  solversProperty);
 
@@ -220,7 +220,7 @@ SingleCellViewInformationSolversWidgetData * SingleCellViewInformationSolversWid
 
                     break;
                 default:
-                    // Solver::Integer
+                    // Solver::Property::Integer
 
                     property = addIntegerProperty(solverInterfaceProperty.defaultValue().toInt(),
                                                   solversProperty);
