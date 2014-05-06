@@ -82,7 +82,8 @@ PluginManager::PluginManager(QCoreApplication *pApp, const bool &pGuiMode) :
     QMap<QString, PluginInfo *> pluginsInfo = QMap<QString, PluginInfo *>();
     QMap<QString, QString> pluginsError = QMap<QString, QString>();
 
-    QStringList selectableOrCliPlugins = QStringList();
+    QStringList neededPlugins = QStringList();
+    QStringList wantedPlugins = QStringList();
 
     foreach (const QString &fileName, fileNames) {
         QString pluginError;
@@ -102,37 +103,22 @@ PluginManager::PluginManager(QCoreApplication *pApp, const bool &pGuiMode) :
 
             pluginInfo->setFullDependencies(pluginFullDependencies);
 
-            // Keep track of the plugin itself, should it be selectable (if we
-            // are in GUI mode) or have CLI support (if we are in CLI mode)
+            // Keep track of the plugin itself, should it be selectable and
+            // requested by the user (if we are in GUI mode) or have CLI support
+            // (if we are in CLI mode)
 
-            if (   ( pGuiMode && pluginInfo->isSelectable())
-                || (!pGuiMode && pluginInfo->hasCliSupport()))
-                selectableOrCliPlugins << pluginName;
+            if (   ( pGuiMode && pluginInfo->isSelectable() && Plugin::load(pluginName))
+                || (!pGuiMode && pluginInfo->hasCliSupport())) {
+                // Keep track of the plugin's dependencies
+
+                neededPlugins << pluginsInfo.value(pluginName)->fullDependencies();
+
+                // Also keep track of the plugin itself
+
+                wantedPlugins << pluginName;
+            }
         }
     }
-
-    // Determine which plugins, if any, are needed or wanted
-    // Note: unselectable plugins (e.g. the QScintilla plugin) don't get loaded
-    //       by default, but the situation is obviously different if such a
-    //       plugin is needed by another plugin (e.g. the RawView plugin
-    //       indirectly requires the QScintilla plugin to be loaded), in which
-    //       case the unselectable plugin must be loaded...
-
-    QStringList neededPlugins = QStringList();
-    QStringList wantedPlugins = QStringList();
-
-    foreach (const QString &plugin, selectableOrCliPlugins)
-        if (( pGuiMode && Plugin::load(plugin)) || !pGuiMode) {
-            // We are in GUI mode and the user wants to load the plugin, or we
-            // are not in GUI mode (i.e. CLI mode), so retrieve and keep track
-            // of the plugin's dependencies
-
-            neededPlugins << pluginsInfo.value(plugin)->fullDependencies();
-
-            // Also keep track of the plugin itself
-
-            wantedPlugins << plugin;
-        }
 
     // Remove possible duplicates in our list of needed plugins
 
