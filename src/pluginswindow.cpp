@@ -64,9 +64,10 @@ void PluginItemDelegate::paint(QPainter *pPainter,
     if (!pluginItem->parent())
         option.font.setBold(true);
 
-    // If the item is not checkable, then render it as disabled
+    // If the item is neither a category nor checkable, then render it as
+    // disabled
 
-    if (!pluginItem->isCheckable())
+    if (pluginItem->parent() && !pluginItem->isCheckable())
         option.state &= ~QStyle::State_Enabled;
 
     QStyledItemDelegate::paint(pPainter, option, pIndex);
