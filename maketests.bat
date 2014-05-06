@@ -28,17 +28,13 @@ cmake -G "NMake Makefiles" -DCMAKE_BUILD_TYPE=Debug -DENABLE_TESTS=True ..
 
 SET ExitCode=%ERRORLEVEL%
 
-IF %ExitCode% EQU 0 GOTO BuildOpenCOR
-
-CD ..
-
-EXIT /B %ExitCode%
-
-:BuildOpenCOR
+IF %ExitCode% NEQ 0 GOTO End
 
 jom
 
 SET ExitCode=%ERRORLEVEL%
+
+:End
 
 CD ..
 
