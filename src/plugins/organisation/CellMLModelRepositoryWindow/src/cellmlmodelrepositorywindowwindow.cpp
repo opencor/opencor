@@ -220,7 +220,7 @@ void CellmlModelRepositoryWindowWindow::on_refreshButton_clicked()
     // Disable the GUI side, so that the user doesn't get confused and ask to
     // refresh over and over again while he should just be patient
 
-    setEnabled(false);
+    mGui->dockWidgetContents->setEnabled(false);
 
     // Get the list of CellML models
 
@@ -277,7 +277,7 @@ void CellmlModelRepositoryWindowWindow::finished(QNetworkReply *pNetworkReply)
 
     // Re-enable the GUI side
 
-    setEnabled(true);
+    mGui->dockWidgetContents->setEnabled(true);
 
     // Give, within the current window, the focus to mGui->filterValue, but
     // only if the current window already has the focus
