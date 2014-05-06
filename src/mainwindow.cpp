@@ -611,6 +611,7 @@ void MainWindow::initializeGuiPlugin(Plugin *pPlugin)
 static const auto SettingsGeometry             = QStringLiteral("Geometry");
 static const auto SettingsState                = QStringLiteral("State");
 static const auto SettingsDockedWindowsVisible = QStringLiteral("DockedWindowsVisible");
+static const auto SettingsDockedWindowsState   = QStringLiteral("DockedWindowsState");
 static const auto SettingsStatusBarVisible     = QStringLiteral("StatusBarVisible");
 
 //==============================================================================
@@ -639,6 +640,10 @@ void MainWindow::loadSettings()
     // Retrieve whether the docked windows are to be shown
 
     showDockedWindows(mSettings->value(SettingsDockedWindowsVisible, true).toBool(), true);
+
+    // Retrieve the state of the docked windows
+
+    mDockedWindowsState = mSettings->value(SettingsDockedWindowsState, QByteArray()).toByteArray();
 
     // Retrieve whether the status bar is to be shown
 
@@ -699,6 +704,10 @@ void MainWindow::saveSettings() const
     // Keep track of whether the docked windows are to be shown
 
     mSettings->setValue(SettingsDockedWindowsVisible, mDockedWindowsVisible);
+
+    // Keep track of the state of the docked windows
+
+    mSettings->setValue(SettingsDockedWindowsState, mDockedWindowsState);
 
     // Keep track of whether the status bar is to be shown
 
