@@ -115,7 +115,6 @@ private:
     Plugin *mViewPlugin;
 
     bool mDockedWindowsVisible;
-    QMap<QString, bool> mDockedWindowVisible;
 
     QByteArray mDockedWindowsState;
 
