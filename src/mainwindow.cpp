@@ -453,18 +453,18 @@ void MainWindow::initializeGuiPlugin(Plugin *pPlugin)
         // Note: as for the menus above, we must do it in reverse order since we
         //       are inserting actions, as opposed to appending some...
 
-        QListIterator<GuiMenuActionSettings *> menuActionIter(guiInterface->guiSettings()->menuActions());
+        Gui::MenuActionIterator menuActionIter(guiInterface->guiMenuActions());
 
         menuActionIter.toBack();
 
         while (menuActionIter.hasPrevious()) {
             // Insert the action/separator to the right menu
 
-            GuiMenuActionSettings *menuActionSettings = menuActionIter.previous();
+            Gui::MenuAction menuAction = menuActionIter.previous();
 
-            switch (menuActionSettings->type()) {
-            case GuiMenuActionSettings::File: {
-                QAction *action = menuActionSettings->action();
+            switch (menuAction.type()) {
+            case Gui::MenuAction::File: {
+                QAction *action = menuAction.action();
 
                 if (action)
                     mGui->menuFile->insertAction(mGui->menuFile->actions().first(), action);
@@ -473,8 +473,8 @@ void MainWindow::initializeGuiPlugin(Plugin *pPlugin)
 
                 break;
             }
-            case GuiMenuActionSettings::Tools: {
-                QAction *action = menuActionSettings->action();
+            case Gui::MenuAction::Tools: {
+                QAction *action = menuAction.action();
 
                 if (action)
                     mGui->menuTools->insertAction(mGui->menuTools->actions().first(), action);
@@ -497,7 +497,7 @@ void MainWindow::initializeGuiPlugin(Plugin *pPlugin)
 
             if (menuSettings->action())
                 switch (menuSettings->type()) {
-                case GuiMenuActionSettings::File:
+                case Gui::MenuAction::File:
                     mGui->menuFile->insertMenu(menuSettings->action(),
                                                menuSettings->menu());
 
@@ -513,12 +513,12 @@ void MainWindow::initializeGuiPlugin(Plugin *pPlugin)
 
         static QString pluginForFileNewMenu = QString();
 
-        foreach (GuiMenuActionSettings *menuActionSettings,
-                 guiInterface->guiSettings()->menuActions()) {
+        foreach (const Gui::MenuAction &menuAction,
+                 guiInterface->guiMenuActions()) {
             // Insert the action to the right menu
 
-            switch (menuActionSettings->type()) {
-            case GuiMenuActionSettings::FileNew:
+            switch (menuAction.type()) {
+            case Gui::MenuAction::FileNew:
                 // Check whether the File|New menu has been created and if not,
                 // then create it
 
@@ -547,7 +547,7 @@ void MainWindow::initializeGuiPlugin(Plugin *pPlugin)
                     pluginForFileNewMenu = pPlugin->name();
                 }
 
-                mFileNewMenu->addAction(menuActionSettings->action());
+                mFileNewMenu->addAction(menuAction.action());
 
                 break;
             default:

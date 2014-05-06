@@ -31,6 +31,37 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 namespace OpenCOR {
+namespace Gui {
+
+//==============================================================================
+
+MenuAction::MenuAction(const MenuAction::Type &pType, QAction *pAction) :
+    mType(pType),
+    mAction(pAction)
+{
+}
+
+//==============================================================================
+
+MenuAction::Type MenuAction::type() const
+{
+    // Return the action's type
+
+    return mType;
+}
+
+//==============================================================================
+
+QAction * MenuAction::action() const
+{
+    // Return the action itself
+
+    return mAction;
+}
+
+//==============================================================================
+
+}   // namespace Gui
 
 //==============================================================================
 
@@ -81,36 +112,8 @@ QMenu * GuiMenuSettings::menu() const
 
 //==============================================================================
 
-GuiMenuActionSettings::GuiMenuActionSettings(const GuiMenuActionSettings::Type &pType,
-                                             QAction *pAction) :
-    mType(pType),
-    mAction(pAction)
-{
-}
-
-//==============================================================================
-
-GuiMenuActionSettings::Type GuiMenuActionSettings::type() const
-{
-    // Return the action's type
-
-    return mType;
-}
-
-//==============================================================================
-
-QAction * GuiMenuActionSettings::action() const
-{
-    // Return the action itself
-
-    return mAction;
-}
-
-//==============================================================================
-
 GuiSettings::GuiSettings() :
-    mMenus(QList<GuiMenuSettings *>()),
-    mMenuActions(QList<GuiMenuActionSettings *>())
+    mMenus(QList<GuiMenuSettings *>())
 {
 }
 
@@ -122,9 +125,6 @@ GuiSettings::~GuiSettings()
 
     foreach (GuiMenuSettings *menuSettings, mMenus)
         delete menuSettings;
-
-    foreach (GuiMenuActionSettings *menuActionSettings, mMenuActions)
-        delete menuActionSettings;
 }
 
 //==============================================================================
@@ -148,31 +148,11 @@ void GuiSettings::addMenu(const GuiMenuSettings::Type &pType, QAction *pAction,
 
 //==============================================================================
 
-void GuiSettings::addMenuAction(const GuiMenuActionSettings::Type &pType,
-                                QAction *pAction)
-{
-    // Add a menu action to our list
-    // Note: a null pAction means that we want to add a separator...
-
-    mMenuActions << new GuiMenuActionSettings(pType, pAction);
-}
-
-//==============================================================================
-
 QList<GuiMenuSettings *> GuiSettings::menus() const
 {
     // Return our menus
 
     return mMenus;
-}
-
-//==============================================================================
-
-QList<GuiMenuActionSettings *> GuiSettings::menuActions() const
-{
-    // Return our menu actions
-
-    return mMenuActions;
 }
 
 //==============================================================================

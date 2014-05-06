@@ -95,6 +95,8 @@ private:
     QAction *mFileCloseAction;
     QAction *mFileCloseAllAction;
 
+    QAction *mOpenReloadSeparator;
+
     QMenu *mFileReopenSubMenu;
 
     QAction *mFileReopenSubMenuSeparator;

@@ -68,7 +68,29 @@ private:
 
 //==============================================================================
 
-class GuiMenuActionSettings
+class GuiSettings
+{
+public:
+    explicit GuiSettings();
+    ~GuiSettings();
+
+    void addMenu(const GuiMenuSettings::Type &pType, QMenu *pMenu);
+    void addMenu(const GuiMenuSettings::Type &pType, QAction *pAction,
+                 QMenu *pMenu);
+
+    QList<GuiMenuSettings *> menus() const;
+
+private:
+    QList<GuiMenuSettings *> mMenus;
+};
+
+//==============================================================================
+
+namespace Gui {
+
+//==============================================================================
+
+class MenuAction
 {
 public:
     enum Type {
@@ -77,7 +99,7 @@ public:
         Tools
     };
 
-    explicit GuiMenuActionSettings(const Type &pType, QAction *pAction);
+    explicit MenuAction(const Type &pType, QAction *pAction = 0);
 
     Type type() const;
     QAction * action() const;
@@ -89,25 +111,12 @@ private:
 
 //==============================================================================
 
-class GuiSettings
-{
-public:
-    explicit GuiSettings();
-    ~GuiSettings();
+typedef QList<MenuAction> MenuActions;
+typedef QListIterator<MenuAction> MenuActionIterator;
 
-    void addMenu(const GuiMenuSettings::Type &pType, QMenu *pMenu);
-    void addMenu(const GuiMenuSettings::Type &pType, QAction *pAction,
-                 QMenu *pMenu);
-    void addMenuAction(const GuiMenuActionSettings::Type &pType,
-                       QAction *pAction = 0);
+//==============================================================================
 
-    QList<GuiMenuSettings *> menus() const;
-    QList<GuiMenuActionSettings *> menuActions() const;
-
-private:
-    QList<GuiMenuSettings *> mMenus;
-    QList<GuiMenuActionSettings *> mMenuActions;
-};
+}   // namespace Gui
 
 //==============================================================================
 

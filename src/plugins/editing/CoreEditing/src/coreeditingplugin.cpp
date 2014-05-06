@@ -236,6 +236,15 @@ void CoreEditingPlugin::updateGui(Plugin *pViewPlugin, const QString &pFileName)
 }
 
 //==============================================================================
+
+Gui::MenuActions CoreEditingPlugin::guiMenuActions() const
+{
+    // Return our menu actions
+
+    return Gui::MenuActions() << Gui::MenuAction(Gui::MenuAction::FileNew, mFileNewFileAction);
+}
+
+//==============================================================================
 // I18n interface
 //==============================================================================
 
@@ -330,8 +339,6 @@ void CoreEditingPlugin::initializePlugin(QMainWindow *pMainWindow)
     mEditMenu->addAction(mEditSelectAllAction);
 
     // Set our settings
-
-    mGuiSettings->addMenuAction(GuiMenuActionSettings::FileNew, mFileNewFileAction);
 
     mGuiSettings->addMenu(GuiMenuSettings::View, mEditMenu);
 

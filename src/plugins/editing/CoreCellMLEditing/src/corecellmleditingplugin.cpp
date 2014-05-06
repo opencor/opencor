@@ -67,6 +67,16 @@ void CoreCellMLEditingPlugin::updateGui(Plugin *pViewPlugin,
 }
 
 //==============================================================================
+
+Gui::MenuActions CoreCellMLEditingPlugin::guiMenuActions() const
+{
+    // Return our menu actions
+
+    return Gui::MenuActions() << Gui::MenuAction(Gui::MenuAction::FileNew, mFileNewCellml1_0FileAction)
+                              << Gui::MenuAction(Gui::MenuAction::FileNew, mFileNewCellml1_1FileAction);
+}
+
+//==============================================================================
 // I18n interface
 //==============================================================================
 
@@ -90,11 +100,6 @@ void CoreCellMLEditingPlugin::initializePlugin(QMainWindow *pMainWindow)
 
     mFileNewCellml1_0FileAction = new QAction(pMainWindow);
     mFileNewCellml1_1FileAction = new QAction(pMainWindow);
-
-    // Set our settings
-
-    mGuiSettings->addMenuAction(GuiMenuActionSettings::FileNew, mFileNewCellml1_0FileAction);
-    mGuiSettings->addMenuAction(GuiMenuActionSettings::FileNew, mFileNewCellml1_1FileAction);
 
     // Some connections to handle our different editing actions
 

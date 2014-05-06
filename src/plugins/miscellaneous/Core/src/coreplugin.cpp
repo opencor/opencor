@@ -228,6 +228,33 @@ void CorePlugin::updateGui(Plugin *pViewPlugin, const QString &pFileName)
 }
 
 //==============================================================================
+
+Gui::MenuActions CorePlugin::guiMenuActions() const
+{
+    // Return our menu actions
+
+    return Gui::MenuActions() << Gui::MenuAction(Gui::MenuAction::File, mFileOpenAction)
+                              << Gui::MenuAction(Gui::MenuAction::File, mFileOpenRemoteAction)
+                              << Gui::MenuAction(Gui::MenuAction::File, mOpenReloadSeparator)
+                              << Gui::MenuAction(Gui::MenuAction::File, mFileReloadAction)
+                              << Gui::MenuAction(Gui::MenuAction::File)
+                              << Gui::MenuAction(Gui::MenuAction::File, mFileDuplicateAction)
+                              << Gui::MenuAction(Gui::MenuAction::File)
+                              << Gui::MenuAction(Gui::MenuAction::File, mFileLockedAction)
+                              << Gui::MenuAction(Gui::MenuAction::File)
+                              << Gui::MenuAction(Gui::MenuAction::File, mFileSaveAction)
+                              << Gui::MenuAction(Gui::MenuAction::File, mFileSaveAsAction)
+                              << Gui::MenuAction(Gui::MenuAction::File, mFileSaveAllAction)
+                              << Gui::MenuAction(Gui::MenuAction::File)
+                              << Gui::MenuAction(Gui::MenuAction::File, mFilePreviousAction)
+                              << Gui::MenuAction(Gui::MenuAction::File, mFileNextAction)
+                              << Gui::MenuAction(Gui::MenuAction::File)
+                              << Gui::MenuAction(Gui::MenuAction::File, mFileCloseAction)
+                              << Gui::MenuAction(Gui::MenuAction::File, mFileCloseAllAction)
+                              << Gui::MenuAction(Gui::MenuAction::File);
+}
+
+//==============================================================================
 // I18n interface
 //==============================================================================
 
@@ -358,9 +385,9 @@ void CorePlugin::initializePlugin(QMainWindow *pMainWindow)
 
     // Create the separator before which we will insert our Reopen sub-menu
 
-    QAction *openReloadSeparator = new QAction(pMainWindow);
+    mOpenReloadSeparator = new QAction(pMainWindow);
 
-    openReloadSeparator->setSeparator(true);
+    mOpenReloadSeparator->setSeparator(true);
 
     // Create our Reopen sub-menu
 
@@ -434,27 +461,7 @@ void CorePlugin::initializePlugin(QMainWindow *pMainWindow)
 
     // Set our settings
 
-    mGuiSettings->addMenuAction(GuiMenuActionSettings::File, mFileOpenAction);
-    mGuiSettings->addMenuAction(GuiMenuActionSettings::File, mFileOpenRemoteAction);
-    mGuiSettings->addMenuAction(GuiMenuActionSettings::File, openReloadSeparator);
-    mGuiSettings->addMenuAction(GuiMenuActionSettings::File, mFileReloadAction);
-    mGuiSettings->addMenuAction(GuiMenuActionSettings::File);
-    mGuiSettings->addMenuAction(GuiMenuActionSettings::File, mFileDuplicateAction);
-    mGuiSettings->addMenuAction(GuiMenuActionSettings::File);
-    mGuiSettings->addMenuAction(GuiMenuActionSettings::File, mFileLockedAction);
-    mGuiSettings->addMenuAction(GuiMenuActionSettings::File);
-    mGuiSettings->addMenuAction(GuiMenuActionSettings::File, mFileSaveAction);
-    mGuiSettings->addMenuAction(GuiMenuActionSettings::File, mFileSaveAsAction);
-    mGuiSettings->addMenuAction(GuiMenuActionSettings::File, mFileSaveAllAction);
-    mGuiSettings->addMenuAction(GuiMenuActionSettings::File);
-    mGuiSettings->addMenuAction(GuiMenuActionSettings::File, mFilePreviousAction);
-    mGuiSettings->addMenuAction(GuiMenuActionSettings::File, mFileNextAction);
-    mGuiSettings->addMenuAction(GuiMenuActionSettings::File);
-    mGuiSettings->addMenuAction(GuiMenuActionSettings::File, mFileCloseAction);
-    mGuiSettings->addMenuAction(GuiMenuActionSettings::File, mFileCloseAllAction);
-    mGuiSettings->addMenuAction(GuiMenuActionSettings::File);
-
-    mGuiSettings->addMenu(GuiMenuSettings::File, openReloadSeparator, mFileReopenSubMenu);
+    mGuiSettings->addMenu(GuiMenuSettings::File, mOpenReloadSeparator, mFileReopenSubMenu);
 
     // Miscellaneous
 
