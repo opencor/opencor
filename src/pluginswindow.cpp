@@ -391,7 +391,7 @@ void PluginsWindow::updateInformation(const QModelIndex &pNewIndex,
 
     QStandardItem *item = atLeastOneItem?mModel->itemFromIndex(pNewIndex):0;
     QString itemText = item?item->text():QString();
-    Plugin *plugin = item->parent()?mPluginManager->plugin(itemText):0;
+    Plugin *plugin = (item && item->parent())?mPluginManager->plugin(itemText):0;
 
     if (plugin) {
         // We are dealing with a plugin, so retrieve its information
