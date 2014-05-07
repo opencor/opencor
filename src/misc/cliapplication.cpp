@@ -77,7 +77,27 @@ void CliApplication::loadPlugins()
 
 //==============================================================================
 
-void CliApplication::about()
+QString CliApplication::pluginDescription(Plugin *pPlugin) const
+{
+    // Retrieve and return the plugin's default description, stripped out of all
+    // its HTML (should it have some)
+    // Note: we enclose the CLI plugin's default description within an html
+    //       tag so that the stripping out can proceed without any
+    //       problem...
+
+    QXmlStreamReader description("<html>"+pPlugin->info()->description()+"</html>");
+    QString res = QString();
+
+    while (!description.atEnd())
+        if (description.readNext() == QXmlStreamReader::Characters)
+            res += description.text();
+
+    return res;
+}
+
+//==============================================================================
+
+void CliApplication::about() const
 {
     // Output some information about OpenCOR
 
@@ -95,7 +115,7 @@ void CliApplication::about()
 
 //==============================================================================
 
-bool CliApplication::command(const QStringList pArguments, int *pRes)
+bool CliApplication::command(const QStringList pArguments, int *pRes) const
 {
     // Make sure that we have at least one argument
 
@@ -176,7 +196,7 @@ bool CliApplication::command(const QStringList pArguments, int *pRes)
 
 //==============================================================================
 
-void CliApplication::help()
+void CliApplication::help() const
 {
     // Output some help
 
@@ -199,7 +219,7 @@ void CliApplication::help()
 
 //==============================================================================
 
-void CliApplication::plugins()
+void CliApplication::plugins() const
 {
     // Output some information about our CLI plugins, so first make sure that we
     // have at least one of them
@@ -215,25 +235,13 @@ void CliApplication::plugins()
     QStringList pluginsInfo = QStringList();
 
     foreach (Plugin *plugin, mLoadedCliPlugins) {
-        // Retrieve the CLI plugin's default description, stripped out of all
-        // its HTML (should it have some)
-        // Note: we enclose the CLI plugin's default description within an html
-        //       tag so that the stripping out can proceed without any
-        //       problem...
+        // Retrieve the CLI plugin and its default description
 
-        QXmlStreamReader description("<html>"+plugin->info()->description()+"</html>");
-        QString pluginInfo = QString();
+        QString pluginInfo = plugin->name();
+        QString pluginDesc = pluginDescription(plugin);
 
-        while (!description.atEnd())
-            if (description.readNext() == QXmlStreamReader::Characters)
-                pluginInfo += description.text();
-
-        // Complete the plugin information
-
-        if (!pluginInfo.isEmpty())
-            pluginInfo.prepend(": ");
-
-        pluginInfo.prepend(plugin->name());
+        if (!pluginDesc.isEmpty())
+            pluginInfo += ": "+pluginDesc;
 
         // Add the plugin information to our list
 
@@ -255,17 +263,51 @@ void CliApplication::plugins()
 
 //==============================================================================
 
-void CliApplication::status()
+void CliApplication::status() const
 {
     // Output the status of all the plugins that should (have) normally be(en)
-    // loaded
+    // loaded, so first make sure that we have at least one of them
 
-    std::cout << "To be done..." << std::endl;
+    if (mPluginManager->loadedPlugins().isEmpty()) {
+        std::cout << "Sorry, but no plugins could be found." << std::endl;
+
+        return;
+    }
+
+    // First, we retrieve all the plugins information
+
+    QStringList pluginsInfo = QStringList();
+
+    foreach (Plugin *plugin, mPluginManager->loadedPlugins()) {
+        // Retrieve the plugin and its default description
+
+        QString pluginInfo = plugin->name();
+        QString pluginDesc = pluginDescription(plugin);
+
+        if (!pluginDesc.isEmpty())
+            pluginInfo += ": "+pluginDesc;
+
+        // Add the plugin information to our list
+
+        pluginsInfo << pluginInfo;
+    }
+
+    // Now, we can output the plugin information in alphabetical order
+
+    pluginsInfo.sort(Qt::CaseInsensitive);
+
+    if (pluginsInfo.count() == 1)
+        std::cout << "The following plugin is available:" << std::endl;
+    else
+        std::cout << "The following plugins are available:" << std::endl;
+
+    foreach (const QString &pluginInfo, pluginsInfo)
+        std::cout << " - " << qPrintable(pluginInfo) << std::endl;
 }
 
 //==============================================================================
 
-void CliApplication::version()
+void CliApplication::version() const
 {
     // Output the version of OpenCOR
 
