@@ -44,8 +44,7 @@ Plugin::Plugin(const QString &pFileName, PluginInfo *pInfo,
     mName(name(pFileName)),
     mInfo(pInfo),
     mErrorMessage(pErrorMessage),
-    mInstance(0),
-    mStatus(Undefined)
+    mInstance(0)
 {
     if (pInfo) {
         // We are dealing with a plugin, so try to load it, but only if the user

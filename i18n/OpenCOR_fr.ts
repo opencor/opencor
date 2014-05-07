@@ -246,10 +246,6 @@
         <translation>ce n&apos;est pas une extension.</translation>
     </message>
     <message>
-        <source>the status of the plugin is undefined.</source>
-        <translation>le statut de l&apos;extension est indéfini.</translation>
-    </message>
-    <message>
         <source>the plugin could not be loaded due to missing or invalid plugins:
 %1</source>
         <translation>l&apos;extension n&apos;a pas pu être installée à cause d&apos;extensions manquantes ou invalides :\n%1</translation>
