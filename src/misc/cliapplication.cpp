@@ -278,7 +278,7 @@ void CliApplication::status() const
 
     QStringList pluginsInfo = QStringList();
 
-    foreach (Plugin *plugin, mPluginManager->loadedPlugins()) {
+    foreach (Plugin *plugin, mPluginManager->plugins()) {
         // Retrieve the plugin and its status
 
         QString pluginInfo = plugin->name()+": ";
