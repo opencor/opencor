@@ -108,8 +108,8 @@ void CliApplication::about() const
     std::cout << std::endl;
     std::cout << qPrintable(mApp->applicationName())
               << " is a cross-platform CellML-based modelling environment,"
-              << " which can be" << std::endl;
-    std::cout << "used to organise, edit, simulate and analyse CellML files."
+              << " which can be used to organise, edit,"
+              << " simulate and analyse CellML files."
               << std::endl;
 }
 
