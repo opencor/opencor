@@ -25,11 +25,12 @@
         </div>
 
         <pre class="prettyprint">$ ./OpenCOR -h
-<span class="nocode">Usage: OpenCOR [-a|--about] [-c|--command [&lt;plugin&gt;::]&lt;command&gt; &lt;options&gt;] [-h|--help] [-p|--plugins] [-v|--version] [&lt;files&gt;]
+<span class="nocode">Usage: OpenCOR [-a|--about] [-c|--command [&lt;plugin&gt;::]&lt;command&gt; &lt;options&gt;] [-h|--help] [-p|--plugins] [-s|--status] [-v|--version] [&lt;files&gt;]
  -a, --about     Display some information about OpenCOR
- -c, --command   Send a command to one or all the plugins
+ -c, --command   Send a command to one or all the CLI plugins
  -h, --help      Display this help information
- -p, --plugins   Display the list of plugins
+ -p, --plugins   Display all the CLI plugins
+ -s, --status    Display the status of all the plugins
  -v, --version   Display the version of OpenCOR</span>
 </pre>
 
@@ -38,7 +39,7 @@
         </div>
 
         <pre class="prettyprint">$ ./OpenCOR -v
-<span class="nocode">OpenCOR 0.2 (64-bit)</span>
+<span class="nocode">OpenCOR 0.3 (64-bit)</span>
 </pre>
 
         <div class="section">
@@ -46,12 +47,11 @@
         </div>
 
         <pre class="prettyprint">$ ./OpenCOR -a
-<span class="nocode">OpenCOR 0.2 (64-bit)
+<span class="nocode">OpenCOR 0.3 (64-bit)
 OS X 10.9 (Mavericks)
-Copyright 2011-2013
+Copyright 2011-2014
 
-OpenCOR is a cross-platform CellML-based modelling environment, which can be
-used to organise, edit, simulate and analyse CellML files.</span>
+OpenCOR is a cross-platform CellML-based modelling environment, which can be used to organise, edit, simulate and analyse CellML files.</span>
 </pre>
 
         <div class="section">
@@ -59,8 +59,23 @@ used to organise, edit, simulate and analyse CellML files.</span>
         </div>
 
         <pre class="prettyprint">$ ./OpenCOR -p
-<span class="nocode">The following plugin is loaded:
- - <a href="../plugins/CellMLTools.html">CellMLTools</a>: a plugin to access various CellML-related tools.</span>
+<span class="nocode">The following <a href="http://en.wikipedia.org/wiki/Command-line_interface">CLI</a> plugin is available:
+ - <a href="../plugins/miscellaneous/CellMLTools.html">CellMLTools</a>: a plugin to access various CellML-related tools.</span>
+</pre>
+
+        <div class="section">
+            Status
+        </div>
+
+        <pre class="prettyprint">$ ./OpenCOR -s
+<span class="nocode">The following plugins are available:
+ - CellMLAPI: the plugin is loaded and fully functional.
+ - CellMLSupport: the plugin is loaded and fully functional.
+ - <a href="../plugins/miscellaneous/CellMLTools.html">CellMLTools</a>: the plugin is loaded and fully functional.
+ - Compiler: the plugin is loaded and fully functional.
+ - Core: the plugin is loaded and fully functional.
+ - CoreSolver: the plugin is loaded and fully functional.
+ - LLVM: the plugin is loaded and fully functional.</span>
 </pre>
 
         <div class="section">
