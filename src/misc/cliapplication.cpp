@@ -279,13 +279,53 @@ void CliApplication::status() const
     QStringList pluginsInfo = QStringList();
 
     foreach (Plugin *plugin, mPluginManager->loadedPlugins()) {
-        // Retrieve the plugin and its default description
+        // Retrieve the plugin and its status
 
-        QString pluginInfo = plugin->name();
-        QString pluginDesc = pluginDescription(plugin);
+        QString pluginInfo = plugin->name()+": ";
 
-        if (!pluginDesc.isEmpty())
-            pluginInfo += ": "+pluginDesc;
+        // Retrieve the plugin's status
+
+        switch (plugin->status()) {
+        case Plugin::NotWanted:
+            pluginInfo += "the plugin is not wanted.";
+
+            break;
+        case Plugin::NotNeeded:
+            pluginInfo += "the plugin is not needed.";
+
+            break;
+        case Plugin::NotLoaded:
+            pluginInfo += QString("the plugin could not be loaded due to the following problem: %1.").arg(Core::formatErrorMessage(plugin->statusErrors(), false));
+
+            break;
+        case Plugin::NotPlugin:
+            pluginInfo += "this is not a plugin.";
+
+            break;
+        case Plugin::NotCorePlugin:
+            pluginInfo += "the plugin claims to be the core plugin, but it is not.";
+
+            break;
+        case Plugin::InvalidCorePlugin:
+            pluginInfo += "the plugin should be the core plugin, but it does not support the core interface.";
+
+            break;
+        case Plugin::NotCliPlugin:
+            pluginInfo += "the plugin claims to be CLI-capable, but it does not support the CLI interface.";
+
+            break;
+        case Plugin::MissingOrInvalidDependencies:
+            if (plugin->statusErrorsCount() == 1)
+                pluginInfo += QString("the plugin could not be loaded due to the %1 plugin being missing or invalid.").arg(plugin->statusErrors());
+            else
+                pluginInfo += QString("the plugin could not be loaded due to missing or invalid plugins:\n%1").arg(plugin->statusErrors());
+
+            break;
+        default:
+            // Plugin::Loaded
+
+            pluginInfo += "the plugin is loaded and fully functional.";
+        }
 
         // Add the plugin information to our list
 
