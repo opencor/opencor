@@ -76,28 +76,33 @@ namespace Core {
         </p>
 
         <p>
-            Each plugin must inherit from <code>QObject</code>, refer to its <a href="http://en.wikipedia.org/wiki/JSON">JSON</a> file, and may implement any of the <a href="https://github.com/opencor/opencor/blob/master/src/plugins/cliinterface.h">CLI</a>, <a href="https://github.com/opencor/opencor/blob/master/src/plugins/coreinterface.h">core</a>, <a href="https://github.com/opencor/opencor/blob/master/src/plugins/fileinterface.h">file</a>, <a href="https://github.com/opencor/opencor/blob/master/src/plugins/guiinterface.h">GUI</a>, <a href="https://github.com/opencor/opencor/blob/master/src/plugins/i18ninterface.h">internationalisation</a> and <a href="https://github.com/opencor/opencor/blob/master/src/plugins/solverinterface.h">solver</a> interfaces.
+            Each plugin must inherit from <code>QObject</code>, refer to its <a href="http://en.wikipedia.org/wiki/JSON">JSON</a> file, and may implement any of the <a href="https://github.com/opencor/opencor/blob/master/src/plugins/cliinterface.h">CLI</a>, <a href="https://github.com/opencor/opencor/blob/master/src/plugins/coreinterface.h">core</a>, <a href="https://github.com/opencor/opencor/blob/master/src/plugins/filehandlinginterface.h">file handling</a>, <a href="https://github.com/opencor/opencor/blob/master/src/plugins/filetypeinterface.h">file type</a>, <a href="https://github.com/opencor/opencor/blob/master/src/plugins/guiinterface.h">GUI</a>, <a href="https://github.com/opencor/opencor/blob/master/src/plugins/i18ninterface.h">internationalisation</a>, <a href="https://github.com/opencor/opencor/blob/master/src/plugins/plugininterface.h">plugin</a>, <a href="https://github.com/opencor/opencor/blob/master/src/plugins/solverinterface.h">solver</a>, <a href="https://github.com/opencor/opencor/blob/master/src/plugins/viewinterface.h">view</a>, and/or <a href="https://github.com/opencor/opencor/blob/master/src/plugins/windowinterface.h">window</a> interfaces.
         </p>
 
         <p>
-            For example, the <a href="https://github.com/opencor/opencor/blob/master/src/plugins/miscellaneous/Core">Core</a> plugin implements the <a href="https://github.com/opencor/opencor/blob/master/src/plugins/coreinterface.h">core</a>, <a href="https://github.com/opencor/opencor/blob/master/src/plugins/guiinterface.h">GUI</a> and <a href="https://github.com/opencor/opencor/blob/master/src/plugins/i18ninterface.h">internationalisation</a> interfaces, resulting in the following class definition (see <a href="https://github.com/opencor/opencor/blob/master/src/plugins/miscellaneous/Core/src/coreplugin.h"><code>[OpenCOR]/src/plugins/miscellaneous/Core/src/coreplugin.h</code></a>):
+            For example, the <a href="https://github.com/opencor/opencor/blob/master/src/plugins/coreinterface.h">core</a>, <a href="https://github.com/opencor/opencor/blob/master/src/plugins/filehandlinginterface.h">file handling</a>, <a href="https://github.com/opencor/opencor/blob/master/src/plugins/guiinterface.h">GUI</a>, <a href="https://github.com/opencor/opencor/blob/master/src/plugins/i18ninterface.h">internationalisation</a> and <a href="https://github.com/opencor/opencor/blob/master/src/plugins/plugininterface.h">plugin</a> interfaces, resulting in the following class definition (see <a href="https://github.com/opencor/opencor/blob/master/src/plugins/miscellaneous/Core/src/coreplugin.h"><code>[OpenCOR]/src/plugins/miscellaneous/Core/src/coreplugin.h</code></a>):
 
             <pre class="prettyprint">...
-class CorePlugin : public QObject, public CoreInterface, public GuiInterface,
-                   public I18nInterface
+class CorePlugin : public QObject, public CoreInterface,
+                   public FileHandlingInterface, public GuiInterface,
+                   public I18nInterface, public PluginInterface
 {
     Q_OBJECT
 
-    Q_PLUGIN_METADATA(IID "OpenCOR.CorePlugin" FILE "coreplugin.json")
+    Q_PLUGIN_METADATA(IID "OpenCOR.CorePlugin" FILE "<a href="https://github.com/opencor/opencor/blob/master/src/plugins/miscellaneous/Core/src/coreplugin.json"><code>coreplugin.json</code></a>")
 
     Q_INTERFACES(OpenCOR::CoreInterface)
+    Q_INTERFACES(OpenCOR::FileHandlingInterface)
     Q_INTERFACES(OpenCOR::GuiInterface)
     Q_INTERFACES(OpenCOR::I18nInterface)
+    Q_INTERFACES(OpenCOR::PluginInterface)
 
 public:
-#include "coreinterface.inl"
-#include "guiinterface.inl"
-#include "i18ninterface.inl"
+#include "<a href="https://github.com/opencor/opencor/blob/master/src/plugins/coreinterface.inl">coreinterface.inl</a>"
+#include "<a href="https://github.com/opencor/opencor/blob/master/src/plugins/filehandlinginterface.inl">filehandlinginterface.inl</a>"
+#include "<a href="https://github.com/opencor/opencor/blob/master/src/plugins/guiinterface.inl">guiinterface.inl</a>"
+#include "<a href="https://github.com/opencor/opencor/blob/master/src/plugins/i18ninterface.inl">i18ninterface.inl</a>"
+#include "<a href="https://github.com/opencor/opencor/blob/master/src/plugins/plugininterface.inl">plugininterface.inl</a>"
 ...
 };
 ...</pre>
