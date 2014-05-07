@@ -310,7 +310,11 @@ void CliApplication::status() const
             pluginInfo += "the plugin should be the core plugin, but it does not support the core interface.";
 
             break;
-        case Plugin::NotCliPlugin:
+        case Plugin::NotCliPluginNoCliSupport:
+            pluginInfo += "the plugin supports the CLI interface, but it does not claim to be CLI-capable.";
+
+            break;
+        case Plugin::NotCliPluginNoCliInterface:
             pluginInfo += "the plugin claims to be CLI-capable, but it does not support the CLI interface.";
 
             break;

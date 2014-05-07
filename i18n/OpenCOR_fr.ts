@@ -324,7 +324,11 @@
     </message>
     <message>
         <source>the plugin claims to be CLI-capable, but it does not support the CLI interface.</source>
-        <translation>l&apos;extension prétend être capable de CLI, mais elle ne support pas l&apos;interface CLI.</translation>
+        <translation>l&apos;extension prétend être capable de CLI, mais elle ne supporte pas l&apos;interface CLI.</translation>
+    </message>
+    <message>
+        <source>the plugin supports the CLI interface, but it does not claim to be CLI-capable.</source>
+        <translation>l&apos;extension supporte l&apos;interface CLI, mais elle ne prétend pas être capable de CLI.</translation>
     </message>
 </context>
 <context>

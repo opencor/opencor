@@ -118,12 +118,18 @@ Plugin::Plugin(const QString &pFileName, PluginInfo *pInfo,
                         // support the Core interface, so...
 
                         mStatus = InvalidCorePlugin;
+                    } else if (cliInterface && !pInfo->hasCliSupport()) {
+                        // We are dealing with a plugin that supports the CLI
+                        // interface, but it doesn't claim to have CLI support,
+                        // so...
+
+                        mStatus = NotCliPluginNoCliSupport;
                     } else if (!cliInterface && pInfo->hasCliSupport()) {
                         // We are dealing with a plugin that is supposed to have
                         // CLI support, yet it doesn't support the CLI interface,
                         // so...
 
-                        mStatus = NotCliPlugin;
+                        mStatus = NotCliPluginNoCliInterface;
                     } else {
                         unloadPlugin = false;
 
