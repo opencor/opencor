@@ -58,15 +58,14 @@ private:
 
     Plugins mLoadedCliPlugins;
 
-    void usage();
-
-    void version();
-    void about();
-
     void loadPlugins();
-    void plugins();
 
+    void about();
     bool command(const QStringList pArguments, int *pRes);
+    void help();
+    void plugins();
+    void status();
+    void version();
 };
 
 //==============================================================================
