@@ -224,7 +224,7 @@ bool CellmlFileRuntime::needOdeSolver() const
 {
     // Return whether the model needs an ODE solver
 
-    return mModelType == Ode;
+    return mModelType == CellmlFileRuntime::Ode;
 }
 
 //==============================================================================
@@ -233,7 +233,7 @@ bool CellmlFileRuntime::needDaeSolver() const
 {
     // Return whether the model needs a DAE solver
 
-    return mModelType == Dae;
+    return mModelType == CellmlFileRuntime::Dae;
 }
 
 //==============================================================================
@@ -251,7 +251,7 @@ int CellmlFileRuntime::constantsCount() const
 {
     // Return the number of constants in the model
 
-    if (mModelType == Ode)
+    if (mModelType == CellmlFileRuntime::Ode)
         return mOdeCodeInformation?mOdeCodeInformation->constantIndexCount():0;
     else
         return mDaeCodeInformation?mDaeCodeInformation->constantIndexCount():0;
@@ -263,7 +263,7 @@ int CellmlFileRuntime::statesCount() const
 {
     // Return the number of states in the model
 
-    if (mModelType == Ode)
+    if (mModelType == CellmlFileRuntime::Ode)
         return mOdeCodeInformation?mOdeCodeInformation->rateIndexCount():0;
     else
         return mDaeCodeInformation?mDaeCodeInformation->rateIndexCount():0;
@@ -286,7 +286,7 @@ int CellmlFileRuntime::algebraicCount() const
 {
     // Return the number of algebraic equations in the model
 
-    if (mModelType == Ode)
+    if (mModelType == CellmlFileRuntime::Ode)
         return mOdeCodeInformation?mOdeCodeInformation->algebraicIndexCount():0;
     else
         return mDaeCodeInformation?mDaeCodeInformation->algebraicIndexCount():0;
@@ -298,7 +298,7 @@ int CellmlFileRuntime::condVarCount() const
 {
     // Return the number of conditional variables in the model
 
-    if (mModelType == Ode)
+    if (mModelType == CellmlFileRuntime::Ode)
         return 0;
     else
         return mDaeCodeInformation?mDaeCodeInformation->conditionVariableCount():0;
@@ -452,7 +452,7 @@ void CellmlFileRuntime::reset(const bool &pRecreateCompilerEngine,
 {
     // Reset all of the runtime's properties
 
-    mModelType = Undefined;
+    mModelType = CellmlFileRuntime::Ode;
     mAtLeastOneNlaSystem = false;
 
     resetOdeCodeInformation();
@@ -763,14 +763,14 @@ CellmlFileRuntime * CellmlFileRuntime::update(CellmlFile *pCellmlFile)
 
     ObjRef<iface::mathml_dom::MathMLNodeList> flaggedEquations = mOdeCodeInformation->flaggedEquations();
 
-    mModelType = flaggedEquations->length()?Dae:Ode;
+    mModelType = flaggedEquations->length()?CellmlFileRuntime::Dae:CellmlFileRuntime::Ode;
 
     // If the model is of DAE type, then we don't want the ODE-specific code
     // information, but the DAE-specific code information
 
     ObjRef<iface::cellml_services::CodeInformation> genericCodeInformation;
 
-    if (mModelType == Ode) {
+    if (mModelType == CellmlFileRuntime::Ode) {
         genericCodeInformation = mOdeCodeInformation;
     } else {
         getDaeCodeInformation(model);
@@ -832,16 +832,20 @@ CellmlFileRuntime * CellmlFileRuntime::update(CellmlFile *pCellmlFile)
                 parameterType = CellmlFileRuntimeParameter::Algebraic;
 
             break;
-        default:
-            // We are dealing with a type of computed target which is of no
-            // interest to us, so...
+        case iface::cellml_services::FLOATING:
+            parameterType = CellmlFileRuntimeParameter::Floating;
 
-            parameterType = CellmlFileRuntimeParameter::Undefined;
+            break;
+        case iface::cellml_services::LOCALLY_BOUND:
+            parameterType = CellmlFileRuntimeParameter::LocallyBound;
+
+            break;
         }
 
-        // Keep track of the parameter, should its type be known
+        // Keep track of the parameter, should its type be of interest
 
-        if (parameterType != CellmlFileRuntimeParameter::Undefined) {
+        if (   (parameterType != CellmlFileRuntimeParameter::Floating)
+            && (parameterType != CellmlFileRuntimeParameter::LocallyBound)) {
             // Note: we cannot keep track of the parameter using a pointer to a
             //       CellmlFileVariable object since our CellmlFileVariable
             //       objects are for the current CellML file only. In other
@@ -984,7 +988,7 @@ CellmlFileRuntime * CellmlFileRuntime::update(CellmlFile *pCellmlFile)
 
     // Retrieve the body of the remaining functions
 
-    if (mModelType == Ode) {
+    if (mModelType == CellmlFileRuntime::Ode) {
         modelCode += functionCode("int computeOdeRates(double VOI, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC)",
                                   QString::fromStdWString(mOdeCodeInformation->ratesString()));
         modelCode += "\n";
@@ -1035,7 +1039,7 @@ CellmlFileRuntime * CellmlFileRuntime::update(CellmlFile *pCellmlFile)
 
         mComputeComputedConstants = (ComputeComputedConstantsFunction) (intptr_t) mCompilerEngine->getFunction("computeComputedConstants");
 
-        if (mModelType == Ode) {
+        if (mModelType == CellmlFileRuntime::Ode) {
             mComputeOdeRates     = (ComputeOdeRatesFunction) (intptr_t) mCompilerEngine->getFunction("computeOdeRates");
             mComputeOdeVariables = (ComputeOdeVariablesFunction) (intptr_t) mCompilerEngine->getFunction("computeOdeVariables");
         } else {
@@ -1051,7 +1055,7 @@ CellmlFileRuntime * CellmlFileRuntime::update(CellmlFile *pCellmlFile)
         bool functionsOk =    mInitializeConstants
                            && mComputeComputedConstants;
 
-        if (mModelType == Ode)
+        if (mModelType == CellmlFileRuntime::Ode)
             functionsOk =    functionsOk
                           && mComputeOdeRates
                           && mComputeOdeVariables;

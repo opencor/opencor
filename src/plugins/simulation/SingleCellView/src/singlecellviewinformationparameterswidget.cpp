@@ -221,10 +221,6 @@ void SingleCellViewInformationParametersWidget::updateParameters(const double &p
 
         if (parameter)
             switch (parameter->type()) {
-            case CellMLSupport::CellmlFileRuntimeParameter::Voi:
-                property->setDoubleValue(pCurrentPoint, false);
-
-                break;
             case CellMLSupport::CellmlFileRuntimeParameter::Constant:
             case CellMLSupport::CellmlFileRuntimeParameter::ComputedConstant:
                 property->setDoubleValue(mSimulation->data()->constants()[parameter->index()], false);
@@ -243,10 +239,9 @@ void SingleCellViewInformationParametersWidget::updateParameters(const double &p
 
                 break;
             default:
-                // Undefined, so...
-                // Note: we should never reach this point...
+                // CellMLSupport::CellmlFileRuntimeParameter::Voi
 
-                ;
+                property->setDoubleValue(pCurrentPoint, false);
             }
     }
 
@@ -274,7 +269,7 @@ void SingleCellViewInformationParametersWidget::propertyChanged(Core::Property *
 
             break;
         default:
-            // Either Voi, ComputedConstant, Rate, Algebraic or Undefined, so...
+            // Not a type in which we are interested, so...
 
             ;
         }
@@ -404,10 +399,6 @@ void SingleCellViewInformationParametersWidget::populateModel(CellMLSupport::Cel
         double propertyValue = 0.0;
 
         switch (parameter->type()) {
-        case CellMLSupport::CellmlFileRuntimeParameter::Voi:
-            propertyValue = mSimulation->data()->startingPoint();
-
-            break;
         case CellMLSupport::CellmlFileRuntimeParameter::Constant:
         case CellMLSupport::CellmlFileRuntimeParameter::ComputedConstant:
             propertyValue = mSimulation->data()->constants()[parameter->index()];
@@ -426,10 +417,9 @@ void SingleCellViewInformationParametersWidget::populateModel(CellMLSupport::Cel
 
             break;
         default:
-            // Undefined, so...
-            // Note: we should never reach this point...
+            // CellMLSupport::CellmlFileRuntimeParameter::Voi
 
-            ;
+            propertyValue = mSimulation->data()->startingPoint();
         }
 
         Core::Property *property = mPropertyEditor->addDoubleProperty(propertyValue, sectionProperty);
@@ -582,10 +572,6 @@ void SingleCellViewInformationParametersWidget::updateExtraInfos()
             QString parameterType = QString();
 
             switch (parameter->type()) {
-            case CellMLSupport::CellmlFileRuntimeParameter::Voi:
-                parameterType = tr("variable of integration");
-
-                break;
             case CellMLSupport::CellmlFileRuntimeParameter::Constant:
                 parameterType = tr("constant");
 
@@ -607,10 +593,9 @@ void SingleCellViewInformationParametersWidget::updateExtraInfos()
 
                 break;
             default:
-                // Undefined, so...
-                // Note: we should never reach this point...
+                // CellMLSupport::CellmlFileRuntimeParameter::Voi
 
-                ;
+                parameterType = tr("variable of integration");
             }
 
             property->setExtraInfo(parameterType);

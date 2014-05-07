@@ -68,7 +68,8 @@ public:
         Rate,
         State,
         Algebraic,
-        Undefined
+        Floating,
+        LocallyBound
     };
 
     explicit CellmlFileRuntimeParameter(const QString &pName,
@@ -113,8 +114,7 @@ class CELLMLSUPPORT_EXPORT CellmlFileRuntime : public QObject
 public:
     enum ModelType {
         Ode,
-        Dae,
-        Undefined
+        Dae
     };
 
     typedef int (*InitializeConstantsFunction)(double *CONSTANTS, double *RATES, double *STATES);

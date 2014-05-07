@@ -1746,21 +1746,20 @@ double * SingleCellViewWidget::dataPoints(SingleCellViewSimulation *pSimulation,
     if (!pSimulation || !pParameter)
         return 0;
 
-    if (pParameter->type() == CellMLSupport::CellmlFileRuntimeParameter::Voi) {
-        return pSimulation->results()->points()?pSimulation->results()->points():0;
-    } else if (   (pParameter->type() == CellMLSupport::CellmlFileRuntimeParameter::Constant)
-               || (pParameter->type() == CellMLSupport::CellmlFileRuntimeParameter::ComputedConstant)) {
+    switch (pParameter->type()) {
+    case CellMLSupport::CellmlFileRuntimeParameter::Constant:
+    case CellMLSupport::CellmlFileRuntimeParameter::ComputedConstant:
         return pSimulation->results()->constants()?pSimulation->results()->constants()[pParameter->index()]:0;
-    } else if (pParameter->type() == CellMLSupport::CellmlFileRuntimeParameter::Rate) {
+    case CellMLSupport::CellmlFileRuntimeParameter::Rate:
         return pSimulation->results()->rates()?pSimulation->results()->rates()[pParameter->index()]:0;
-    } else if (pParameter->type() == CellMLSupport::CellmlFileRuntimeParameter::State) {
+    case CellMLSupport::CellmlFileRuntimeParameter::State:
         return pSimulation->results()->states()?pSimulation->results()->states()[pParameter->index()]:0;
-    } else if (pParameter->type() == CellMLSupport::CellmlFileRuntimeParameter::Algebraic) {
+    case CellMLSupport::CellmlFileRuntimeParameter::Algebraic:
         return pSimulation->results()->algebraic()?pSimulation->results()->algebraic()[pParameter->index()]:0;
-    } else {
-        // Undefined type
+    default:
+        // CellMLSupport::CellmlFileRuntimeParameter::Voi
 
-        return 0;
+        return pSimulation->results()->points()?pSimulation->results()->points():0;
     }
 }
 

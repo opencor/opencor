@@ -915,7 +915,7 @@ bool SingleCellViewSimulationResults::exportToCsv(const QString &pFileName) cons
 
                 break;
             default:
-                // Either Voi or Undefined, so...
+                // Not a type in which we are interested, so...
 
                 ;
             }
