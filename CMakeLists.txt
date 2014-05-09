@@ -392,13 +392,13 @@ IF(APPLE)
     # Clean up the OpenCOR executable
 
     IF(APPLE)
-        SET(COMMON_QT_LIBRARIES_EXTRAS QtMacExtras)
+        SET(QT_LIBRARIES_EXTRAS QtMacExtras)
     ELSE()
-        SET(COMMON_QT_LIBRARIES_EXTRAS)
+        SET(QT_LIBRARIES_EXTRAS)
     ENDIF()
 
-    SET(COMMON_QT_LIBRARIES
-        ${COMMON_QT_LIBRARIES_EXTRAS}
+    SET(QT_LIBRARIES
+        ${QT_LIBRARIES_EXTRAS}
         QtConcurrent
         QtCore
         QtGui
@@ -421,13 +421,13 @@ IF(APPLE)
     )
 
     OS_X_CLEAN_UP_FILE_WITH_QT_LIBRARIES(${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME}.app/Contents/MacOS ${PROJECT_NAME}
-                                         ${COMMON_QT_LIBRARIES})
+                                         ${QT_LIBRARIES})
 
     # Deploy our Qt libraries, but only if we are to package OpenCOR
     # Note: see OS_X_CLEAN_UP_FILE_WITH_QT_LIBRARIES() for the reason...
 
     IF("$ENV{PACKAGE_OPENCOR}" STREQUAL "True")
-        OS_X_DEPLOY_QT_LIBRARIES(${COMMON_QT_LIBRARIES} QtCLucene QtSql)
+        OS_X_DEPLOY_QT_LIBRARIES(${QT_LIBRARIES} QtCLucene QtSql)
     ENDIF()
 
     # Deploy some plugins
