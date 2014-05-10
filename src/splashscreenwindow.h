@@ -47,9 +47,10 @@ public:
     explicit SplashScreenWindow();
     ~SplashScreenWindow();
 
-    void finish(QWidget *pWindow);
+    void closeAndDeleteAfter(QWidget *pWindow);
 
 protected:
+    virtual void closeEvent(QCloseEvent *pEvent);
     virtual void mousePressEvent(QMouseEvent *pEvent);
 
 private:

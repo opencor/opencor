@@ -138,9 +138,11 @@ int main(int pArgC, char *pArgV[])
     OpenCOR::Core::updateColors();
 
 #ifndef QT_DEBUG
-    // Show our splash screen
+    // Create our splash screen
 
     OpenCOR::SplashScreenWindow *splashScreen = new OpenCOR::SplashScreenWindow();
+
+    // Show our splash screen, making sure that it's done straightaway
 
     splashScreen->show();
 
@@ -194,11 +196,9 @@ int main(int pArgC, char *pArgV[])
     win->show();
 
 #ifndef QT_DEBUG
-    // Get rid of our splash screen once our main window is visible
+    // Close and delete our splash screen once our main window is visible
 
-    splashScreen->finish(win);
-
-    delete splashScreen;
+    splashScreen->closeAndDeleteAfter(win);
 
     // Make sure that our main window is in the foreground
     // Note: indeed, on Linux, to show our splash screen may result in our main
