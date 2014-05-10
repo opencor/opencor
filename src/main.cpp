@@ -195,24 +195,36 @@ int main(int pArgC, char *pArgV[])
 
     win->show();
 
+    // By default, we can and should execute our application
+
+    bool canExecuteAplication = true;
+
 #ifndef QT_DEBUG
     // Close and delete our splash screen once our main window is visible
 
     splashScreen->closeAndDeleteAfter(win);
 
-    // Make sure that our main window is in the foreground
+    // Make sure that our main window is in the foreground, unless the user
+    // decided to close our main window while we were showing our splash screen
     // Note: indeed, on Linux, to show our splash screen may result in our main
     //       window being shown in the background, so...
 
-    win->showSelf();
+    if (!win->shuttingDown())
+        win->showSelf();
+    else
+        canExecuteAplication = false;
 #endif
 
-    // Execute our application
+    // Execute our application, if possible
 
 #ifdef Q_OS_WIN
-    int
+    int res;
 #endif
-    res = app->exec();
+
+    if (canExecuteAplication)
+        res = app->exec();
+    else
+        res = 0;
 
     // Keep track of our application file and directory paths (in case we need
     // to restart OpenCOR)

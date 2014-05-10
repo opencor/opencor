@@ -84,6 +84,7 @@ static const auto FrenchLocale  = QStringLiteral("fr");
 MainWindow::MainWindow(SharedTools::QtSingleApplication *pApp) :
     QMainWindow(),
     mGui(new Ui::MainWindow),
+    mShuttingDown(false),
     mLoadedPluginPlugins(Plugins()),
     mLoadedI18nPlugins(Plugins()),
     mLoadedGuiPlugins(Plugins()),
@@ -342,6 +343,8 @@ void MainWindow::closeEvent(QCloseEvent *pEvent)
     // Close ourselves, if possible
 
     if (canClose) {
+        mShuttingDown = true;
+
         // Keep track of our default settings
         // Note: it must be done here, as opposed to the destructor, otherwise
         //       some settings (e.g. docked windows) won't be properly saved...
@@ -885,6 +888,15 @@ void MainWindow::updateViewWindowsMenu(QAction *pAction)
     // it
 
     mViewWindowsMenu->addAction(pAction);
+}
+
+//==============================================================================
+
+bool MainWindow::shuttingDown() const
+{
+    // Return whether we are shutting down
+
+    return mShuttingDown;
 }
 
 //==============================================================================

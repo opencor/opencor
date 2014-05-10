@@ -81,6 +81,8 @@ public:
 
     void handleArguments(const QString &pArguments);
 
+    bool shuttingDown() const;
+
     void showSelf();
 
 protected:
@@ -90,6 +92,8 @@ protected:
 
 private:
     Ui::MainWindow *mGui;
+
+    bool mShuttingDown;
 
     QSettings *mSettings;
 
