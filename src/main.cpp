@@ -46,46 +46,57 @@ specific language governing permissions and limitations under the License.
 
 int main(int pArgC, char *pArgV[])
 {
-    // On OS X, if the user double clicks on the OpenCOR bundle or enter
-    // something like the following at the command line:
-    //     open OpenCOR.app
-    // then we want to start OpenCOR directly in GUI mode rather than try to run
-    // it as a CLI application first. Indeed, if we were to try to do the
-    // latter, we would get an error message similar to this one:
-    //    LSOpenURLsWithRole() failed with error -10810 for the file [SomePath]/OpenCOR.app.
-    // Fortunately, when double clicking on the OpenCOR bundle or opening it,
-    // then a special argument in the form of -psn_0_1234567 is passed to it, so
-    // we can use that to determine whether we need to force OpenCOR to be run
-    // into GUI mode or whether we can try to run it in CLI mode
+    // Determine whether we should start in GUI mode. This is platform
+    // dependent:
+    //  - Windows: we always start in GUI mode;
+    //  - Linux: we never start in GUI mode. Instead, we first want to try the
+    //           CLI version of OpenCOR, and then the GUI version if needed.
+    //  - OS X: if the user double clicks on the OpenCOR bundle or opens it from
+    //          the command line by entering something like:
+    //              open OpenCOR.app
+    //          then we want to start OpenCOR in GUI mode, otherwise we first
+    //          want to try the CLI version of OpenCOR, and then the GUI version
+    //          if needed.
+    // Note #1: on Windows, we have two binaries (.com and .exe that are for the
+    //          CLI and GUI versions of OpenCOR, respectively). This means that
+    //          when a console window is open, to enter something like:
+    //              C:\>OpenCOR
+    //          will effectively call OpenCOR.com. From there, should there be
+    //          no argument that requires CLI treatment, then the GUI version of
+    //          OpenCOR will be run. This is, unfortunately, the only way to
+    //          have OpenCOR to behave as both a CLI and a GUI application on
+    //          Windows, hence the [OpenCOR]/windows/main.cpp file, which is
+    //          used to generate the CLI version of OpenCOR...
+    // Note #2: on OS X, if we were to try to open the OpenCOR bundly from the
+    //          command line, then we would get an error message similar to:
+    //              LSOpenURLsWithRole() failed with error -10810 for the file [SomePath]/OpenCOR.app.
+    //          Fortunately, when double clicking on the OpenCOR bundle or
+    //          opening it from the command line, a special argument in the form
+    //          of -psn_0_1234567 is passed to OpenCOR, so we can use that to
+    //          determine whether we need to force OpenCOR to be run in GUI mode
+    //          or whether we first try the CLI version of OpenCOR, and then the
+    //          GUI version if needed...
 
- #ifdef Q_OS_MAC
-    if ((pArgC > 1) && !memcmp(pArgV[1], "-psn_", 5)) {
-        #define FORCE_GUI_MODE
-    }
-#endif
-
-    // Create our application
-    // Note: on Linux and OS X, we first try to run the CLI version of OpenCOR
-    //       while on Windows, we go straight for the GUI version. Indeed, in
-    //       the case of Windows, we have two binaries (.com and .exe that are
-    //       for the CLI and GUI versions of OpenCOR, respectively). This means
-    //       that when a console window is open, to enter something like:
-    //           C:\>OpenCOR
-    //       will effectively call OpenCOR.com. From there, should there be no
-    //       argument that requires CLI treatment, then the GUI version of
-    //       OpenCOR will be launched. This is, unfortunately, the only way to
-    //       have OpenCOR to behave as both a CLI and a GUI application on
-    //       Windows, hence the [OpenCOR]/windows/main.cpp file which is used to
-    //       generate the CLI version of OpenCOR...
-
-#if defined(Q_OS_WIN) || defined(FORCE_GUI_MODE)
-    SharedTools::QtSingleApplication *app = new SharedTools::QtSingleApplication(QFileInfo(pArgV[0]).baseName(),
-                                                                                 pArgC, pArgV);
-#elif defined(Q_OS_LINUX) || defined(Q_OS_MAC)
-    QCoreApplication *cliApp = new QCoreApplication(pArgC, pArgV);
+#if defined(Q_OS_WIN)
+    bool startInGiMode = true;
+#elif defined(Q_OS_LINUX)
+    bool startInGiMode = false;
+#elif defined(Q_OS_MAC)
+    bool startInGiMode = (pArgC > 1) && !memcmp(pArgV[1], "-psn_", 5);
 #else
     #error Unsupported platform
 #endif
+
+    // Create our application
+
+    SharedTools::QtSingleApplication *app;
+    QCoreApplication *cliApp;
+
+    if (startInGiMode)
+        app = new SharedTools::QtSingleApplication(QFileInfo(pArgV[0]).baseName(),
+                                                   pArgC, pArgV);
+    else
+        cliApp = new QCoreApplication(pArgC, pArgV);
 
     // Remove all 'global' instances, in case OpenCOR previously crashed or
     // something (and therefore didn't remove all of them before quitting)
@@ -94,62 +105,55 @@ int main(int pArgC, char *pArgV[])
 
     // Some general initialisations
 
-#if defined(Q_OS_WIN) || defined(FORCE_GUI_MODE)
-    OpenCOR::initApplication(app);
-#elif defined(Q_OS_LINUX) || defined(Q_OS_MAC)
-    OpenCOR::initApplication(cliApp);
-#else
-    #error Unsupported platform
-#endif
+    if (startInGiMode)
+        OpenCOR::initApplication(app);
+    else
+        OpenCOR::initApplication(cliApp);
 
     // Try to run OpenCOR as a CLI application, if possible
 
-#if defined(Q_OS_WIN) || defined(FORCE_GUI_MODE)
-    // Do nothing...
-#elif defined(Q_OS_LINUX) || defined(Q_OS_MAC)
-    int res;
+    if (!startInGiMode) {
+        int res;
 
-    bool runCliApplication = OpenCOR::cliApplication(cliApp, &res);
+        bool runCliApplication = OpenCOR::cliApplication(cliApp, &res);
 
-    delete cliApp;
+        delete cliApp;
 
-    if (runCliApplication) {
-        // OpenCOR was run as a CLI application, so...
+        if (runCliApplication) {
+            // OpenCOR was run as a CLI application, so...
 
-        OpenCOR::removeGlobalInstances();
+            OpenCOR::removeGlobalInstances();
 
-        return res;
-    }
+            return res;
+        }
 
-    // At this stage, we tried to run the CLI version of OpenCOR, but in the end
-    // we need to run the GUI version, so start over but with the GUI version of
-    // OpenCOR this time
+        // At this stage, we tried to run the CLI version of OpenCOR, but in the
+        // end we need to run the GUI version, so start over but with the GUI
+        // version of OpenCOR this time
 
-    // Make sure that we always use indirect rendering on Linux
-    // Note: indeed, depending on which plugins are selected, OpenCOR may need
-    //       LLVM. If that's the case, and in case the user's video card uses a
-    //       driver that relies on LLVM (e.g. Gallium3D and Mesa 3D), then
-    //       there may be a conflict between the version of LLVM used by
-    //       OpenCOR and the one used by the video card. One way to address this
-    //       issue is by using indirect rendering...
+        // Make sure that we always use indirect rendering on Linux
+        // Note: indeed, depending on which plugins are selected, OpenCOR may
+        //       need LLVM. If that's the case, and in case the user's video
+        //       card uses a driver that relies on LLVM (e.g. Gallium3D and Mesa
+        //       3D), then there may be a conflict between the version of LLVM
+        //       used by OpenCOR and the one used by the video card. One way to
+        //       address this issue is by using indirect rendering...
 
 #ifdef Q_OS_LINUX
-    setenv("LIBGL_ALWAYS_INDIRECT", "1", 1);
+        setenv("LIBGL_ALWAYS_INDIRECT", "1", 1);
 #endif
 
-    // Create our application
-    // Note: the CLI version of OpenCOR didn't actually do anything, so no need
-    //       to re-remove all 'global' instances...
+        // Create our application
+        // Note: the CLI version of OpenCOR didn't actually do anything, so no
+        //       need to re-remove all 'global' instances once again...
 
-    SharedTools::QtSingleApplication *app = new SharedTools::QtSingleApplication(QFileInfo(pArgV[0]).baseName(),
-                                                                                 pArgC, pArgV);
+        app = new SharedTools::QtSingleApplication(QFileInfo(pArgV[0]).baseName(),
+                                                   pArgC, pArgV);
 
-    // Some general initialisations
+        // Some general initialisations
 
-    OpenCOR::initApplication(app);
-#else
-    #error Unsupported platform
-#endif
+        OpenCOR::initApplication(app);
+    }
 
     // Initialise our colours by 'updating' them
 
@@ -235,9 +239,7 @@ int main(int pArgC, char *pArgV[])
 
     // Execute our application, if possible
 
-#if defined(Q_OS_WIN) || defined(FORCE_GUI_MODE)
     int res;
-#endif
 
     if (canExecuteAplication)
         res = app->exec();
