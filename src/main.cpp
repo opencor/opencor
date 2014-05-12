@@ -84,7 +84,7 @@ int main(int pArgC, char *pArgV[])
     #error Unsupported platform
 #endif
 
-    // Try to run OpenCOR as a CLI application
+    // Try to run OpenCOR as a CLI application, if possible
 
 #if defined(Q_OS_WIN)
     // Do nothing...
@@ -137,16 +137,15 @@ int main(int pArgC, char *pArgV[])
 
     OpenCOR::Core::updateColors();
 
+    // Create and show our splash screen, if we are not in debug mode
+
 #ifndef QT_DEBUG
-    // Create our splash screen
-
     OpenCOR::SplashScreenWindow *splashScreen = new OpenCOR::SplashScreenWindow();
-
-    // Show our splash screen, making sure that it's done straightaway
 
     splashScreen->show();
 
     app->processEvents();
+    // Note: this ensures that our splash screen is immediately visible...
 #endif
 
     // Send a message (containing the arguments that were passed to this
@@ -170,9 +169,9 @@ int main(int pArgC, char *pArgV[])
         return 0;
     }
 
-#ifdef Q_OS_WIN
-    // Specify where to find non-OpenCOR plugins (only required on Windows)
+    // Specify where to find non-OpenCOR plugins, but only if we are on Windows
 
+#ifdef Q_OS_WIN
     app->addLibraryPath( QDir(app->applicationDirPath()).canonicalPath()
                         +QDir::separator()+QString("..")
                         +QDir::separator()+"plugins");
@@ -199,9 +198,10 @@ int main(int pArgC, char *pArgV[])
 
     bool canExecuteAplication = true;
 
-#ifndef QT_DEBUG
-    // Close and delete our splash screen once our main window is visible
+    // Close and delete our splash screen once our main window is visible, if we
+    // are not in debug mode
 
+#ifndef QT_DEBUG
     splashScreen->closeAndDeleteAfter(win);
 
     // Make sure that our main window is in the foreground, unless the user
