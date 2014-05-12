@@ -46,6 +46,24 @@ specific language governing permissions and limitations under the License.
 
 int main(int pArgC, char *pArgV[])
 {
+    // On OS X, if the user double clicks on the OpenCOR bundle or enter
+    // something like the following at the command line:
+    //     open OpenCOR.app
+    // then we want to start OpenCOR directly in GUI mode rather than try to run
+    // it as a CLI application first. Indeed, if we were to try to do the
+    // latter, we would get an error message similar to this one:
+    //    LSOpenURLsWithRole() failed with error -10810 for the file [SomePath]/OpenCOR.app.
+    // Fortunately, when double clicking on the OpenCOR bundle or opening it,
+    // then a special argument in the form of -psn_0_1234567 is passed to it, so
+    // we can use that to determine whether we need to force OpenCOR to be run
+    // into GUI mode or whether we can try to run it in CLI mode
+
+ #ifdef Q_OS_MAC
+    if ((pArgC > 1) && !memcmp(pArgV[1], "-psn_", 5)) {
+        #define FORCE_GUI_MODE
+    }
+#endif
+
     // Create our application
     // Note: on Linux and OS X, we first try to run the CLI version of OpenCOR
     //       while on Windows, we go straight for the GUI version. Indeed, in
@@ -60,7 +78,7 @@ int main(int pArgC, char *pArgV[])
     //       Windows, hence the [OpenCOR]/windows/main.cpp file which is used to
     //       generate the CLI version of OpenCOR...
 
-#if defined(Q_OS_WIN)
+#if defined(Q_OS_WIN) || defined(FORCE_GUI_MODE)
     SharedTools::QtSingleApplication *app = new SharedTools::QtSingleApplication(QFileInfo(pArgV[0]).baseName(),
                                                                                  pArgC, pArgV);
 #elif defined(Q_OS_LINUX) || defined(Q_OS_MAC)
@@ -76,7 +94,7 @@ int main(int pArgC, char *pArgV[])
 
     // Some general initialisations
 
-#if defined(Q_OS_WIN)
+#if defined(Q_OS_WIN) || defined(FORCE_GUI_MODE)
     OpenCOR::initApplication(app);
 #elif defined(Q_OS_LINUX) || defined(Q_OS_MAC)
     OpenCOR::initApplication(cliApp);
@@ -86,7 +104,7 @@ int main(int pArgC, char *pArgV[])
 
     // Try to run OpenCOR as a CLI application, if possible
 
-#if defined(Q_OS_WIN)
+#if defined(Q_OS_WIN) || defined(FORCE_GUI_MODE)
     // Do nothing...
 #elif defined(Q_OS_LINUX) || defined(Q_OS_MAC)
     int res;
@@ -217,7 +235,7 @@ int main(int pArgC, char *pArgV[])
 
     // Execute our application, if possible
 
-#ifdef Q_OS_WIN
+#if defined(Q_OS_WIN) || defined(FORCE_GUI_MODE)
     int res;
 #endif
 
