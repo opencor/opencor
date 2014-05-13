@@ -128,6 +128,10 @@ void SampleToolsPlugin::retranslateUi()
 
 void SampleToolsPlugin::initializePlugin(QMainWindow *pMainWindow)
 {
+    // Keep track of our main window
+
+    mMainWindow = pMainWindow;
+
     // Create our Add Two Numbers action
 
     mAddTwoNumbersAction = new QAction(pMainWindow);
@@ -240,16 +244,16 @@ int SampleToolsPlugin::runAddCommand(const QStringList &pArguments)
 void SampleToolsPlugin::addTwoNumbers()
 {
     bool ok;
-    double nb1 = QInputDialog::getDouble(0, tr("Add Two Numbers"), tr("First number:"),
+    double nb1 = QInputDialog::getDouble(mMainWindow, tr("Add Two Numbers"), tr("First number:"),
                                          0, -2147483647, 2147483647, 1, &ok);
     double nb2;
 
     if (ok) {
-        nb2 = QInputDialog::getDouble(0, tr("Add Two Numbers"), tr("Second number:"),
+        nb2 = QInputDialog::getDouble(mMainWindow, tr("Add Two Numbers"), tr("Second number:"),
                                       0, -2147483647, 2147483647, 1, &ok);
 
         if (ok)
-            QMessageBox::information(0, tr("Add Two Numbers"), QString::number(nb1)+" + "+QString::number(nb2)+" = "+QString::number(Sample::add(nb1, nb2)));
+            QMessageBox::information(mMainWindow, tr("Add Two Numbers"), QString::number(nb1)+" + "+QString::number(nb2)+" = "+QString::number(Sample::add(nb1, nb2)));
     }
 }
 
