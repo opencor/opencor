@@ -4,6 +4,8 @@ PROJECT(SampleToolsPlugin)
 
 ADD_PLUGIN(SampleTools
     SOURCES
+        ../../guiinterface.cpp
+        ../../i18ninterface.cpp
         ../../plugininfo.cpp
 
         src/sampletoolsplugin.cpp
@@ -14,7 +16,9 @@ ADD_PLUGIN(SampleTools
     PLUGINS
         Sample
     QT_MODULES
-        Core
+        Widgets
     QT_LIBRARIES
         QtCore
+        QtGui
+        QtWidgets
 )

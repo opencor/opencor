@@ -24,6 +24,11 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#include <QAction>
+#include <QMainWindow>
+
+//==============================================================================
+
 #include <iostream>
 
 //==============================================================================
@@ -71,6 +76,107 @@ int SampleToolsPlugin::executeCommand(const QString &pCommand,
 
         return -1;
     }
+}
+
+//==============================================================================
+// GUI interface
+//==============================================================================
+
+void SampleToolsPlugin::updateGui(Plugin *pViewPlugin, const QString &pFileName)
+{
+    Q_UNUSED(pViewPlugin);
+    Q_UNUSED(pFileName);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+Gui::Menus SampleToolsPlugin::guiMenus() const
+{
+    // We don't handle this interface...
+
+    return Gui::Menus();
+}
+
+//==============================================================================
+
+Gui::MenuActions SampleToolsPlugin::guiMenuActions() const
+{
+    // Return our menu actions
+
+    return Gui::MenuActions() << Gui::MenuAction(Gui::MenuAction::Tools, mAddTwoNumbersAction)
+                              << Gui::MenuAction(Gui::MenuAction::Tools);
+}
+
+//==============================================================================
+// I18n interface
+//==============================================================================
+
+void SampleToolsPlugin::retranslateUi()
+{
+    // Retranslate our different Tools actions
+
+    retranslateAction(mAddTwoNumbersAction, tr("Add Two Numbers..."), tr("Add two numbers together"));
+}
+
+//==============================================================================
+// Plugin interface
+//==============================================================================
+
+void SampleToolsPlugin::initializePlugin(QMainWindow *pMainWindow)
+{
+    // Create our Add Two Numbers action
+
+    mAddTwoNumbersAction = new QAction(pMainWindow);
+
+    // A connection to handle our Add Two Numbers action
+
+    connect(mAddTwoNumbersAction, SIGNAL(triggered()),
+            this, SLOT(addTwoNumbers()));
+}
+
+//==============================================================================
+
+void SampleToolsPlugin::finalizePlugin()
+{
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void SampleToolsPlugin::pluginInitialized(const Plugins &pLoadedPlugins)
+{
+    Q_UNUSED(pLoadedPlugins);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void SampleToolsPlugin::loadSettings(QSettings *pSettings)
+{
+    Q_UNUSED(pSettings);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void SampleToolsPlugin::saveSettings(QSettings *pSettings) const
+{
+    Q_UNUSED(pSettings);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void SampleToolsPlugin::handleAction(const QUrl &pUrl)
+{
+    Q_UNUSED(pUrl);
+
+    // We don't handle this interface...
 }
 
 //==============================================================================
@@ -125,6 +231,14 @@ int SampleToolsPlugin::runAddCommand(const QStringList &pArguments)
     std::cout << qPrintable(pArguments.first()) << " + " << qPrintable(pArguments.last()) << " = " << Sample::add(nb1, nb2) << std::endl;
 
     return 0;
+}
+
+//==============================================================================
+
+void SampleToolsPlugin::addTwoNumbers()
+{
+//---GRY--- TO BE DONE...
+qDebug(">>> SampleToolsPlugin::addTwoNumbers(): to be done...");
 }
 
 //==============================================================================

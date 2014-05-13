@@ -25,7 +25,10 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include "cliinterface.h"
+#include "guiinterface.h"
+#include "i18ninterface.h"
 #include "plugininfo.h"
+#include "plugininterface.h"
 
 //==============================================================================
 
@@ -38,20 +41,33 @@ PLUGININFO_FUNC SampleToolsPluginInfo();
 
 //==============================================================================
 
-class SampleToolsPlugin : public QObject, public CliInterface
+class SampleToolsPlugin : public QObject, public CliInterface,
+                          public GuiInterface, public I18nInterface,
+                          public PluginInterface
 {
     Q_OBJECT
 
     Q_PLUGIN_METADATA(IID "OpenCOR.SampleToolsPlugin" FILE "sampletoolsplugin.json")
 
     Q_INTERFACES(OpenCOR::CliInterface)
+    Q_INTERFACES(OpenCOR::GuiInterface)
+    Q_INTERFACES(OpenCOR::I18nInterface)
+    Q_INTERFACES(OpenCOR::PluginInterface)
 
 public:
 #include "cliinterface.inl"
+#include "guiinterface.inl"
+#include "i18ninterface.inl"
+#include "plugininterface.inl"
 
 private:
+    QAction *mAddTwoNumbersAction;
+
     void runHelpCommand();
     int runAddCommand(const QStringList &pArguments);
+
+private Q_SLOTS:
+    void addTwoNumbers();
 };
 
 //==============================================================================
