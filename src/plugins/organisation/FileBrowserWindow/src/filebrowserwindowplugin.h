@@ -25,8 +25,8 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include "i18ninterface.h"
-#include "plugininterface.h"
 #include "plugininfo.h"
+#include "plugininterface.h"
 #include "windowinterface.h"
 
 //==============================================================================
