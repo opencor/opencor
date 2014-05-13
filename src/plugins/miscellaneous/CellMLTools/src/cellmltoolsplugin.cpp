@@ -292,68 +292,6 @@ void CellMLToolsPlugin::exportTo(const CellMLSupport::CellmlFile::Version &pVers
 
 //==============================================================================
 
-void CellMLToolsPlugin::exportToCellml10()
-{
-    // Export the current file to CellML 1.0
-
-    exportTo(CellMLSupport::CellmlFile::Cellml_1_0);
-}
-
-//==============================================================================
-
-void CellMLToolsPlugin::exportToCellml11()
-{
-    // Export the current file to CellML 1.1
-
-    exportTo(CellMLSupport::CellmlFile::Cellml_1_1);
-}
-
-//==============================================================================
-
-void CellMLToolsPlugin::exportToUserDefinedFormat()
-{
-    // Ask for the name of the file that contains the user-defined format
-
-    QString userDefinedFormatFileName = Core::getOpenFileName(tr("Select User-Defined Format File"), tr("User-Defined Format File (*.xml)"));
-
-    if (userDefinedFormatFileName.isEmpty())
-        return;
-
-    // Ask for the name of the file that will contain the export
-
-    QString fileType = tr("All Files")
-                       +" (*"
-#ifdef Q_OS_WIN
-                       +".*"
-#endif
-                       +")";
-
-    QString outFileName = Core::getSaveFileName(tr("Export CellML File To User-Defined Format"), mFileName, fileType);
-
-    if (outFileName.isEmpty())
-        return;
-
-    // Now that we have both a user-defined format file and output file, we can
-    // do the eport itself
-
-    CellMLSupport::CellmlFile *cellmlFile = CellMLSupport::CellmlFileManager::instance()->cellmlFile(mFileName);
-
-    if (!cellmlFile->exportTo(outFileName, userDefinedFormatFileName)) {
-        CellMLSupport::CellmlFileIssues issues = cellmlFile->issues();
-        QString errorMessage = QString();
-
-        if (issues.count())
-            errorMessage = " ("+issues.first().message()+")";
-            // Note: if there are 'issues', then there can be only one of them
-            //       following a CellML export...
-
-        QMessageBox::warning(mMainWindow, tr("Export CellML File To User-Defined Format"),
-                             tr("Sorry, but <strong>%1</strong> could not be exported to the user-defined format described in <strong>%2</strong>%3.").arg(outFileName, userDefinedFormatFileName, errorMessage));
-    }
-}
-
-//==============================================================================
-
 void CellMLToolsPlugin::runHelpCommand()
 {
     // Output the commands we support
@@ -506,6 +444,68 @@ int CellMLToolsPlugin::runExportCommand(const QStringList &pArguments)
         std::cout << qPrintable(errorMessage) << std::endl;
 
         return -1;
+    }
+}
+
+//==============================================================================
+
+void CellMLToolsPlugin::exportToCellml10()
+{
+    // Export the current file to CellML 1.0
+
+    exportTo(CellMLSupport::CellmlFile::Cellml_1_0);
+}
+
+//==============================================================================
+
+void CellMLToolsPlugin::exportToCellml11()
+{
+    // Export the current file to CellML 1.1
+
+    exportTo(CellMLSupport::CellmlFile::Cellml_1_1);
+}
+
+//==============================================================================
+
+void CellMLToolsPlugin::exportToUserDefinedFormat()
+{
+    // Ask for the name of the file that contains the user-defined format
+
+    QString userDefinedFormatFileName = Core::getOpenFileName(tr("Select User-Defined Format File"), tr("User-Defined Format File (*.xml)"));
+
+    if (userDefinedFormatFileName.isEmpty())
+        return;
+
+    // Ask for the name of the file that will contain the export
+
+    QString fileType = tr("All Files")
+                       +" (*"
+#ifdef Q_OS_WIN
+                       +".*"
+#endif
+                       +")";
+
+    QString outFileName = Core::getSaveFileName(tr("Export CellML File To User-Defined Format"), mFileName, fileType);
+
+    if (outFileName.isEmpty())
+        return;
+
+    // Now that we have both a user-defined format file and output file, we can
+    // do the eport itself
+
+    CellMLSupport::CellmlFile *cellmlFile = CellMLSupport::CellmlFileManager::instance()->cellmlFile(mFileName);
+
+    if (!cellmlFile->exportTo(outFileName, userDefinedFormatFileName)) {
+        CellMLSupport::CellmlFileIssues issues = cellmlFile->issues();
+        QString errorMessage = QString();
+
+        if (issues.count())
+            errorMessage = " ("+issues.first().message()+")";
+            // Note: if there are 'issues', then there can be only one of them
+            //       following a CellML export...
+
+        QMessageBox::warning(mMainWindow, tr("Export CellML File To User-Defined Format"),
+                             tr("Sorry, but <strong>%1</strong> could not be exported to the user-defined format described in <strong>%2</strong>%3.").arg(outFileName, userDefinedFormatFileName, errorMessage));
     }
 }
 
