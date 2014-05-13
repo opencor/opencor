@@ -30,16 +30,24 @@
 double addResult = Sample::add(3.0, 5.0);
 ...</pre>
 
+        <div class="section">
+            Category
+        </div>
+
         <p>
-            First, we need to decide on the category for our plugin. <code>Analysis</code>, <code>Api</code>, <code>Editing</code>, <code>Miscellaneous</code>, <code>Organisation</code>, <code>Simulation</code>, <code>Support</code>, <code>ThirdParty</code> and <code>Widget</code> are the currently supported categories (see the <code>Category</code> enum in the <code>PluginInfo</code> class in <a href="https://github.com/opencor/opencor/blob/master/src/plugins/plugininfo.h"><code>[OpenCOR]/src/plugins/plugininfo.h</code></a>). There is also the <code>Sample</code> category, but it is only available when building OpenCOR in debug mode. This is the category we are going to use for our plugin.
+            The first thing we need to do is to decide on the category of our plugin. <code>Analysis</code>, <code>Api</code>, <code>Editing</code>, <code>Miscellaneous</code>, <code>Organisation</code>, <code>Simulation</code>, <code>Support</code>, <code>ThirdParty</code> and <code>Widget</code> are the categories that are currently supported (see the <code>Category</code> enum in the <code>PluginInfo</code> class in <a href="https://github.com/opencor/opencor/blob/master/src/plugins/plugininfo.h"><code>[OpenCOR]/src/plugins/plugininfo.h</code></a>). There is also the <code>Sample</code> category, but it is only available when building OpenCOR in debug mode. Considering the purpose of our plugin, this is the category we are going to use.
         </p>
 
         <p>
-            The category of a plugin is not only needed by OpenCOR (to improve user experience), but also to determine where a plugin's code should be located. Indeed, for consistency, our plugins' code is located under <a href="https://github.com/opencor/opencor/blob/master/src/plugins/"><code>[OpenCOR]/src/plugins/</code></a> and, more precisely, under a category folder. Thus, the code of our <code>Sample</code> plugins should be located under <a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/"><code>[OpenCOR]/src/plugins/sample/</code></a>. However, we need to be able to distinguish between the code of our various <code>Sample</code> plugins, so we need to create a plugin-specific folder, which name is to be that of our plugin. So, in the end, our <code>Sample</code> plugin's code is to be located under <a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/Sample/"><code>[OpenCOR]/src/plugins/sample/Sample/</code></a>.
+            The category of a plugin is not only needed by OpenCOR (to improve user experience), but also to determine where a plugin's code should be located. Indeed, for consistency, our plugins' code is located under <a href="https://github.com/opencor/opencor/blob/master/src/plugins/"><code>[OpenCOR]/src/plugins/</code></a> and, more precisely, under a category folder. Thus, the code of our <code>Sample</code> plugins should be located under <a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/"><code>[OpenCOR]/src/plugins/sample/</code></a>. However, we need to be able to distinguish between the code of our various <code>Sample</code> plugins, so we need to create a plugin-specific folder, which name is to be that of our plugin. So, in the end, the code for our <code>Sample</code> plugin is to be located under <a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/Sample/"><code>[OpenCOR]/src/plugins/sample/Sample/</code></a>.
         </p>
 
+        <div class="section">
+            CMake project
+        </div>
+
         <p>
-            Now, OpenCOR is built using <a href="http://www.cmake.org/">CMake</a>, so to be able to build our plugin, we need to create a CMake project for it. This is done by creating a <code>CMakeLists.txt</code> file (see <a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/Sample/CMakeLists.txt"><code>[OpenCOR]/src/plugins/sample/Sample/CMakeLists.txt</code></a>), which contents is as follows:
+            OpenCOR is built using <a href="http://www.cmake.org/">CMake</a>, so to be able to build our plugin, we need to create a CMake project for it. This is done by creating a <code>CMakeLists.txt</code> file in the plugin's root folder (i.e. <a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/Sample/CMakeLists.txt"><code>[OpenCOR]/src/plugins/sample/Sample/CMakeLists.txt</code></a>). Its contents is as follows:
         </p>
 
         <pre class="prettyprint linenums">PROJECT(SamplePlugin)
@@ -63,12 +71,16 @@ ADD_PLUGIN(Sample
 )</pre>
 
         <p>
-            The first line specifies the name of the CMake project for our <code>Sample</code> plugin, i.e. <code>SamplePlugin</code>. Then, we have a call to the <code>ADD_PLUGIN</code> macro (line 5). This macro effectively handles the building of our plugin, using information that is passed to it. That information comes in the form of a series of parameters, some of which are keywords (<code>SOURCES</code>, <code>HEADERS_MOC</code>, <code>INCLUDE_DIRS</code>, <code>QT_MODULES</code> and <code>QT_LIBRARIES</code> at lines 6, 11, 13, 15 and 17) that are used to give a specific meaning to the parameters that follow them. (The meaning of those keywords and that of others can be found <a href="index.html#ADD_PLUGIN%20macro">here</a>).
+            The first line specifies the name of the CMake project for our <code>Sample</code> plugin, i.e. <code>SamplePlugin</code>. Then, we have a call to the <code>ADD_PLUGIN</code> macro (line 5). This macro effectively handles the building of our plugin, using information that is passed to it. That information comes in the form of a series of parameters, some of which are keywords (<code>SOURCES</code>, <code>HEADERS_MOC</code>, <code>INCLUDE_DIRS</code>, <code>QT_MODULES</code> and <code>QT_LIBRARIES</code> at lines 6, 11, 13, 15 and 17, respectively) that are used to give a specific meaning to the parameters that follow them. (The meaning of those keywords and that of others can be found <a href="index.html#ADD_PLUGIN%20macro">here</a>).
         </p>
 
         <p>
-            As for any plugin, our <code>Sample</code> plugin must reference <a href="https://github.com/opencor/opencor/blob/master/src/plugins/plugininfo.cpp"><code>plugininfo.cpp</code></a> (line 7), so that it can provide some <a href="index.html#Basic%20information">basic information</a> about itself (more on this below). <code>.cpp</code> files that contain the plugin's code must also  be referenced (lines 9 and 10). Note that they start with <code>sample</code>, i.e. the name of the plugin in lower case. This convention is used throughout OpenCOR's code and ensures that there is no name clashing between plugins' files. All header files that declare a class that uses the <code>Q_OBJECT</code> macro must also be referenced. <code>sampleplugin.h</code> is one such file (see below) and is therefore referenced (line 12). To make it easier to write (and to maintain) <code>#include</code> statements, we provide <code>src</code> as an include directory (line 14). Finally, OpenCOR uses the <a href="http://qt-project.org/">Qt</a> framework, so even though our <code>Sample</code> plugin is very minimal, we must reference both the <code>Core</code> module and the <code>QtCore</code> library (lines 16 and 18, respectively).
+            As for any plugin, our <code>Sample</code> plugin must reference <a href="https://github.com/opencor/opencor/blob/master/src/plugins/plugininfo.cpp"><code>plugininfo.cpp</code></a> (line 7), so that it can provide some <a href="index.html#Basic%20information">basic information</a> about itself (more on this below). <code>.cpp</code> files that contain the plugin's code must also  be referenced (lines 9 and 10). (Note that they start with <code>sample</code>, i.e. the name of the plugin in lower case. This convention is used throughout OpenCOR's code and ensures that there is no name clashing between plugins' files.) All header files that declare a class that uses the <code>Q_OBJECT</code> macro must also be referenced. <code>sampleplugin.h</code> is one such file (see below) and is therefore referenced (line 12). To make it easier to write (and to maintain) <code>#include</code> statements, we provide <code>src</code> as an include directory (line 14). Finally, OpenCOR uses the <a href="http://qt-project.org/">Qt</a> framework, so even though our <code>Sample</code> plugin is very minimal, we must reference both the <code>Core</code> module and the <code>QtCore</code> library (lines 16 and 18, respectively).
         </p>
+
+        <div class="section">
+            Basic information
+        </div>
 
         <p>
             <a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/Sample/src/sampleplugin.cpp"><code>sampleplugin.cpp</code></a> contains the C method that is called by OpenCOR to retrieve some <a href="index.html#Basic%20information">basic information</a> about our plugin. It is declared in <a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/Sample/src/sampleplugin.h"><code>sampleplugin.h</code></a>, which also contains the declaration of a class that is used to make our plugin a proper <a href="http://qt-project.org/">Qt</a> plugin:
@@ -109,7 +121,7 @@ class SamplePlugin : public QObject
 #endif</pre>
 
         <p>
-            We have the usual C/C++ mechanism to avoid the header file from being included more than once (lines 22, 23 and 54). We need to know about the structure of the <a href="index.html#Basic%20information">basic information</a>, so we include <a href="https://github.com/opencor/opencor/blob/master/src/plugins/plugininfo.h"><code>plugininfo.h</code></a> (line 27). To protect our plugin's code, we enclose it in its own namespace (lines 32 and 49), which is itself enclosed in the OpenCOR namespace (lines 31 and 50). Then comes the definition for a C function that returns some basic information about our plugin (line 36). Finally, we have a C++ class that ensures that our plugin will be considered as a proper <a href="http://qt-project.org/">Qt</a> plugin (lines 40-45). The call to <code>Q_PLUGIN_METADATA</code> (line 44) requires to pass both an IID (<code>OpenCOR.SamplePlugin</code>) and the name of a <a href="http://www.json.org/">JSON</a> file (<a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/Sample/src/sampleplugin.json"><code>sampleplugin.json</code></a>). The JSON file is required by Qt to make our plugin a proper Qt plugin. It must reference the name of our plugin class (i.e. <code>SamplePlugin</code>):
+            We have the usual C/C++ mechanism to avoid the header file from being included more than once (lines 22, 23 and 54). We need to know about the structure of the <a href="index.html#Basic%20information">basic information</a>, so we include <a href="https://github.com/opencor/opencor/blob/master/src/plugins/plugininfo.h"><code>plugininfo.h</code></a> (line 27). To protect our plugin's code, we enclose it in its own namespace (lines 32 and 49), which is itself enclosed in the OpenCOR namespace (lines 31 and 50). Then comes the definition of the C function that returns some basic information about our plugin (line 36). Finally, we have the definition of a C++ class that ensures that our plugin will be considered as a proper <a href="http://qt-project.org/">Qt</a> plugin (lines 40-45). The call to <code>Q_PLUGIN_METADATA</code> (line 44) requires to pass both an IID (<code>OpenCOR.SamplePlugin</code>) and the name of a <a href="http://www.json.org/">JSON</a> file (<a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/Sample/src/sampleplugin.json"><code>sampleplugin.json</code></a>). The JSON file references the name of our plugin class (i.e. <code>SamplePlugin</code>):
         </p>
 
         <pre class="prettyprint linenums">{
@@ -140,7 +152,7 @@ PLUGININFO_FUNC SamplePluginInfo()
     descriptions.insert("en", QString::fromUtf8("a plugin that provides a simple addition function."));
     descriptions.insert("fr", QString::fromUtf8("une extension qui fournit une simple fonction d'addition."));
 
-    return new PluginInfo(PluginInfo::Sample, false,
+    return new PluginInfo(PluginInfo::Sample, false, false,
                           QStringList(),
                           descriptions);
 }
@@ -151,12 +163,16 @@ PLUGININFO_FUNC SamplePluginInfo()
 }   // namespace OpenCOR</pre>
 
         <p>
-            We start by including our header file (line 22). Then, we make sure that the rest of the code is enclosed in both the OpenCOR (lines 26 and 46) and our plugin namespaces (lines 27 and 45). Lines 31 to 41 contains the body of our <code>SamplePluginInfo</code> function. The first thing we do is to create an instance of <code>Descriptions</code> on the stack (line 33). This instance is used to provide a multilingual description of our plugin (here, both in English and in French; lines 35 and 36). Then, we create and return an instance of <code>PluginInfo</code> on the heap (lines 38-40). For this, we must provide <a href="index.html#Basic%20information">four parameters</a>, the first of which being our plugin's category (i.e. <code>PluginInfo::Sample</code>; line 38). The second parameter specifies whether the plugin is to be selectable by the user (see <a href="../../../user/plugins/index.html">here</a> for selectable <em>vs.</em> non-selectable plugins). Our plugin cannot do anything on its own, so we make it non-selectable (i.e. <code>false</code>; line 38). The third parameter must provide a list of dependencies for our plugin, which here is empty since our plugin does not have any dependencies (i.e. <code>QStringList()</code>; line 39). Finally, the fourth parameter must be a <code>Descriptions</code> object (i.e. <code>descriptions</code>; line 40).
+            We start by including our header file (line 22). Then, we make sure that the rest of the code is enclosed in both the OpenCOR (lines 26 and 46) and our plugin namespaces (lines 27 and 45). Lines 31 to 41 contains the body of our plugin's <code>SamplePluginInfo</code> function. The first thing we do is to create an instance of <code>Descriptions</code> on the stack (line 33). This instance is used to provide a multilingual description of our plugin (here, both in English and in French; lines 35 and 36). Then, we create and return an instance of <code>PluginInfo</code> on the heap (lines 38-40). For this, we must provide <a href="index.html#Basic%20information">five parameters</a>, the first of which being our plugin's category (i.e. <code>PluginInfo::Sample</code>; line 38). The second parameter specifies whether the plugin is to be selectable by the user (see <a href="../../../user/plugins/index.html">here</a> for selectable <em>vs.</em> non-selectable plugins). Our plugin cannot do anything on its own, so we make it non-selectable (i.e. <code>false</code>; line 38). The third parameter tells OpenCOR whether the plugin offers direct <a href="http://en.wikipedia.org/wiki/Command-line_interface">CLI</a> support, which is not the case here (i.e. <code>false</code>; line 38). The fourth parameter provides a list of dependencies for our plugin, which here is empty since our plugin does not have any dependencies (i.e. <code>QStringList()</code>; line 39). Finally, the fifth parameter is our <code>Descriptions</code> object (i.e. <code>descriptions</code>; line 40).
         </p>
 
         <p class="warning">
             <strong>Note:</strong> the returned <code>PluginInfo</code> object gets deleted by OpenCOR. So, no need to worry about it.
         </p>
+
+        <div class="section">
+            Plugin specific
+        </div>
 
         <p>
             Finally, our plugin's <code>add</code> function can be found in <a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/Sample/src/sampleutils.cpp"><code>sampleutils.cpp</code></a> (for its body) and <a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/Sample/src/sampleutils.h"><code>sampleutils.h</code></a> (for its definition). The contents of the former is as follows:
@@ -188,7 +204,7 @@ double add(const double &pNb1, const double &pNb2)
         </p>
 
         <p>
-            The contents of the corresponding header file is as follows:
+            The contents of the corresponding header file (<a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/Sample/src/sampleutils.h"><code>sampleutils.h</code></a>) is as follows:
         </p>
 
         <pre class="prettyprint linenums:22">#ifndef SAMPLEUTILS_H
@@ -220,6 +236,10 @@ double SAMPLE_EXPORT add(const double &pNb1, const double &pNb2);
             We start with the usual C/C++ include mechanism (lines 22, 23 and 45). Then, we include <a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/Sample/src/sampleglobal.h"><code>sampleglobal.h</code></a> (line 27). This file defines the <code>SAMPLE_EXPORT</code> macro (more on this below), which we use in the definition of our <code>add</code> function (line 36). As always, we enclose everything in both the OpenCOR (lines 31 and 41) and our plugin namespaces (lines 32 and 40).
         </p>
 
+        <div class="section">
+            Global header file
+        </div>
+
         <p>
             Going back to <a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/Sample/src/sampleglobal.h"><code>sampleglobal.h</code></a>, its contents is as follows:
         </p>
@@ -240,11 +260,11 @@ double SAMPLE_EXPORT add(const double &pNb1, const double &pNb2);
 #endif</pre>
 
         <p>
-            Again, we have our usual C/C++ include mechanism (lines 22, 23 and 35). Then, we define the <code>SAMPLE_EXPORT</code> macro (lines 25-33). This macro is used in the definition of C/C++ function and C++ classes, and ensures that those functions and/or classes get properly exported/imported on Windows, whenever necessary. For a given plugin, the name of this macro should always be <code>&lt;PLUGIN_NAME&gt;_EXPORT</code>.
+            Again, we have our usual C/C++ include mechanism (lines 22, 23 and 35). Then, we define the <code>SAMPLE_EXPORT</code> macro (lines 25-33). Use of this macro ensures that C/C++ functions and C++ classes can be properly exported/imported on Windows. For a given plugin, the name of this macro should always be <code>&lt;PLUGIN_NAME&gt;_EXPORT</code>.
         </p>
 
         <p class="warning">
-            <strong>Note:</strong> the <code>&lt;PLUGIN_NAME&gt;_EXPORT</code> macro is neither needed on Linux nor on OS X, hence our use of an empty macro on those platforms.
+            <strong>Note:</strong> the <code>&lt;PLUGIN_NAME&gt;_EXPORT</code> macro is neither needed on Linux nor on OS X, hence our use of an empty macro on non-Windows platforms.
         </p>
 
         <script type="text/javascript">
