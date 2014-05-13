@@ -156,7 +156,7 @@ void CellMLToolsPlugin::retranslateUi()
 
 void CellMLToolsPlugin::initializePlugin(QMainWindow *pMainWindow)
 {
-    // Keep track of our parent
+    // Keep track of our main window
 
     mMainWindow = pMainWindow;
 
