@@ -7,19 +7,144 @@
 
         <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
 
+        <link href="../../../3rdparty/googleCodePrettify/prettify.css" rel="stylesheet" type="text/css"/>
         <link href="../../res/stylesheet.css" rel="stylesheet" type="text/css"/>
 
+        <script src="../../../3rdparty/googleCodePrettify/prettify.js" type="text/javascript"></script>
         <script src="../../../3rdparty/jQuery/jquery.js" type="text/javascript"></script>
         <script src="../../../res/common.js" type="text/javascript"></script>
         <script src="../../res/menu.js" type="text/javascript"></script>
     </head>
-    <body>
+    <body onload="prettyPrint()">
         <script type="text/javascript">
             headerAndContentsMenu("SampleTools Plugin", "../../..");
         </script>
 
         <p>
-            The purpose of this plugin is to extend our <a href="Sample.html">Sample plugin</a> by making it possible for the user to add two numbers both from the command line and from OpenCOR's <code>Tools</code> menu.
+            The purpose of this plugin is to extend our <a href="Sample.html">Sample</a> plugin by making it possible for the user to add two numbers both from the command line and from OpenCOR's <code>Tools</code> menu.
+        </p>
+
+        <div class="section">
+            Category
+        </div>
+
+        <p>
+            Our plugin is part of the <code>Sample</code> category, which means that its code can be found under <a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/SampleTools/"><code>[OpenCOR]/src/plugins/sample/SampleTools/</code></a>.
+        </p>
+
+        <div class="section">
+            CMake project
+        </div>
+
+        <p>
+            As for the <a href="Sample.html">Sample</a> plugin, our plugin has a <a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/SampleTools/CMakeLists.txt"><code>CMakeLists.txt</code></a> file, which contents is as follows:
+        </p>
+
+        <pre class="prettyprint linenums">PROJECT(SampleToolsPlugin)
+
+# Add the plugin
+
+ADD_PLUGIN(SampleTools
+    SOURCES
+        <a href="https://github.com/opencor/opencor/blob/master/src/plugins/guiinterface.cpp"><code>../../guiinterface.cpp</code></a>
+        <a href="https://github.com/opencor/opencor/blob/master/src/plugins/i18ninterface.cpp"><code>../../i18ninterface.cpp</code></a>
+        <a href="https://github.com/opencor/opencor/blob/master/src/plugins/plugininfo.cpp"><code>../../plugininfo.cpp</code></a>
+
+        <a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/SampleTools/src/sampletoolsplugin.cpp"><code>src/sampletoolsplugin.cpp</code></a>
+    HEADERS_MOC
+        <a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/SampleTools/src/sampletoolsplugin.h"><code>src/sampletoolsplugin.h</code></a>
+    INCLUDE_DIRS
+        src
+    PLUGINS
+        Sample
+    QT_MODULES
+        Widgets
+    QT_LIBRARIES
+        QtCore
+        QtGui
+        QtWidgets
+)</pre>
+
+        <p>
+            Our plugin supports some interfaces (more on this below), some of which have a <code>.cpp</code> file. So, we need to reference all of those (lines 7 and 8). The <a href="Sample.html">Sample</a> plugin is needed by our plugin, so we reference it (line 17) using the special <code>PLUGINS</code> keyword (line 16). Finally, we reference the <a href="http://qt-project.org/">Qt</a> modules (line 19) and libraries (lines 21-23) needed by our plugin.
+        </p>
+
+        <div class="section">
+            Plugin information
+        </div>
+
+        <p>
+            <a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/SampleTools/src/sampletoolsplugin.cpp"><code>sampletoolsplugin.cpp</code></a>, <a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/SampleTools/src/sampletoolsplugin.h"><code>sampletoolsplugin.h</code></a> and <a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/SampleTools/src/sampletoolsplugin.json"><code>sampletoolsplugin.json</code></a> make up the body of our plugin. As for our <a href="Sample.html">Sample</a> plugin, the JSON file simply reference the name of our plugin. On the other hand, both the <code>.cpp</code> and <code>.h</code> files require some explaining. Starting with <a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/SampleTools/src/sampletoolsplugin.h"><code>sampletoolsplugin.h</code></a>, its contents is as follows:
+        </p>
+
+        <pre class="prettyprint linenums:22">#ifndef SAMPLETOOLSPLUGIN_H
+#define SAMPLETOOLSPLUGIN_H
+
+//==============================================================================
+
+#include "<a href="https://github.com/opencor/opencor/blob/master/src/plugins/cliinterface.h"><code>cliinterface.h</code></a>"
+#include "<a href="https://github.com/opencor/opencor/blob/master/src/plugins/guiinterface.h"><code>guiinterface.h</code></a>"
+#include "<a href="https://github.com/opencor/opencor/blob/master/src/plugins/i18ninterface.h"><code>i18ninterface.h</code></a>"
+#include "<a href="https://github.com/opencor/opencor/blob/master/src/plugins/plugininfo.h"><code>plugininfo.h</code></a>"
+#include "<a href="https://github.com/opencor/opencor/blob/master/src/plugins/plugininterface.h"><code>plugininterface.h</code></a>"
+
+//==============================================================================
+
+namespace OpenCOR {
+namespace SampleTools {
+
+//==============================================================================
+
+PLUGININFO_FUNC SampleToolsPluginInfo();
+
+//==============================================================================
+
+class SampleToolsPlugin : public QObject, public CliInterface,
+                          public GuiInterface, public I18nInterface,
+                          public PluginInterface
+{
+    Q_OBJECT
+
+    Q_PLUGIN_METADATA(IID "OpenCOR.SampleToolsPlugin" FILE "<a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/SampleTools/src/sampletoolsplugin.json"><code>sampletoolsplugin.json</code></a>")
+
+    Q_INTERFACES(OpenCOR::CliInterface)
+    Q_INTERFACES(OpenCOR::GuiInterface)
+    Q_INTERFACES(OpenCOR::I18nInterface)
+    Q_INTERFACES(OpenCOR::PluginInterface)
+
+public:
+#include "<a href="https://github.com/opencor/opencor/blob/master/src/plugins/cliinterface.inl"><code>cliinterface.inl</code></a>"
+#include "<a href="https://github.com/opencor/opencor/blob/master/src/plugins/guiinterface.inl"><code>guiinterface.inl</code></a>"
+#include "<a href="https://github.com/opencor/opencor/blob/master/src/plugins/i18ninterface.inl"><code>i18ninterface.inl</code></a>"
+#include "<a href="https://github.com/opencor/opencor/blob/master/src/plugins/plugininterface.inl"><code>plugininterface.inl</code></a>"
+
+private:
+    QMainWindow *mMainWindow;
+
+    QAction *mAddTwoNumbersAction;
+
+    void runHelpCommand();
+    int runAddCommand(const QStringList &pArguments);
+
+private Q_SLOTS:
+    void addTwoNumbers();
+};
+
+//==============================================================================
+
+}   // namespace SampleTools
+}   // namespace OpenCOR
+
+//==============================================================================
+
+#endif</pre>
+
+        <div class="section">
+            Interfaces
+        </div>
+
+        <p>
+            Blah...
         </p>
 
         <script type="text/javascript">
