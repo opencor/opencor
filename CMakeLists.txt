@@ -196,10 +196,10 @@ ENDIF()
 SET(PLUGINS
     # Plugins that have no dependencies
 
-    3rdparty/LLVM
-    3rdparty/QScintilla
-    3rdparty/Qwt
-    3rdparty/SUNDIALS
+    thirdParty/LLVM
+    thirdParty/QScintilla
+    thirdParty/Qwt
+    thirdParty/SUNDIALS
 
     api/CellMLAPI
 
