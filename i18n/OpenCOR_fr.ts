@@ -275,8 +275,8 @@
         <translation>Extensions pour éditer des fichiers.</translation>
     </message>
     <message>
-        <source>Plugins for various things.</source>
-        <translation>Extensions pour différentes choses.</translation>
+        <source>Plugins that do not fit in any other category.</source>
+        <translation>Extensions qui n&apos;entrent dans aucune autre catégorie.</translation>
     </message>
     <message>
         <source>Plugins to organise files.</source>
