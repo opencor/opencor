@@ -311,8 +311,8 @@
         <translation>Exemple</translation>
     </message>
     <message>
-        <source>Plugins to demonstrate various plugin-related features.</source>
-        <translation>Extensions pour montrer diverses fonctionalités relatives à une extension.</translation>
+        <source>Plugins that illustrate various plugin-related aspects.</source>
+        <translation>Extensions qui illustrent diverses fonctionalités relatives à une extension.</translation>
     </message>
     <message>
         <source>the plugin claims to be the core plugin, but it is not.</source>

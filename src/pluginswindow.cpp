@@ -474,7 +474,7 @@ void PluginsWindow::updateInformation(const QModelIndex &pNewIndex,
         else if (!itemText.compare(tr("Organisation")))
             mGui->fieldTwoValue->setText(tr("Plugins to organise files."));
         else if (!itemText.compare(tr("Sample")))
-            mGui->fieldTwoValue->setText(tr("Plugins to demonstrate various plugin-related features."));
+            mGui->fieldTwoValue->setText(tr("Plugins that illustrate various plugin-related aspects."));
         else if (!itemText.compare(tr("Simulation")))
             mGui->fieldTwoValue->setText(tr("Plugins to simulate files."));
         else if (!itemText.compare(tr("Solver")))
