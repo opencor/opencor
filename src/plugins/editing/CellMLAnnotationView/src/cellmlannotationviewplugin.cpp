@@ -96,7 +96,7 @@ void CellMLAnnotationViewPlugin::filePermissionsChanged(const QString &pFileName
     //       it was easier/faster to do it that way), so all we had to do was to
     //       make those updateGui() methods locked-dependent...
 
-    if (hasViewWidget(pFileName))
+    if (mViewWidget->contains(pFileName))
         retranslateUi();
 }
 
@@ -243,15 +243,6 @@ void CellMLAnnotationViewPlugin::initializeView()
 void CellMLAnnotationViewPlugin::finalizeView()
 {
     // We don't handle this interface...
-}
-
-//==============================================================================
-
-bool CellMLAnnotationViewPlugin::hasViewWidget(const QString &pFileName)
-{
-    // Return whether we know about the given CellML file
-
-    return mViewWidget->contains(pFileName);
 }
 
 //==============================================================================

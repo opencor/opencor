@@ -100,7 +100,7 @@ void SingleCellViewPlugin::fileReloaded(const QString &pFileName)
     // The given file has been reloaded, so let its corresponding view widget
     // know about it
 
-    if (hasViewWidget(pFileName))
+    if (mViewWidget->contains(pFileName))
         mViewWidget->fileReloaded(pFileName);
 }
 
@@ -243,15 +243,6 @@ void SingleCellViewPlugin::initializeView()
 void SingleCellViewPlugin::finalizeView()
 {
     // We don't handle this interface...
-}
-
-//==============================================================================
-
-bool SingleCellViewPlugin::hasViewWidget(const QString &pFileName)
-{
-    // Return whether we know about the given CellML file
-
-    return mViewWidget->contains(pFileName);
 }
 
 //==============================================================================

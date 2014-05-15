@@ -242,15 +242,6 @@ void RawViewPlugin::finalizeView()
 
 //==============================================================================
 
-bool RawViewPlugin::hasViewWidget(const QString &pFileName)
-{
-    // Return whether we know about the given file
-
-    return mViewWidget->contains(pFileName);
-}
-
-//==============================================================================
-
 QWidget * RawViewPlugin::viewWidget(const QString &pFileName,
                                     const bool &pCreate)
 {
