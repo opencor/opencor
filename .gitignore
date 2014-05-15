@@ -7,11 +7,11 @@
 
 /src/plugins/*/*/bin/
 
-/src/plugins/3rdparty/LLVM/include/llvm/Config/config.h
-/src/plugins/3rdparty/LLVM/include/llvm/Config/llvm-config.h
+/src/plugins/thirdParty/LLVM/include/llvm/Config/config.h
+/src/plugins/thirdParty/LLVM/include/llvm/Config/llvm-config.h
 
-/src/plugins/3rdparty/LLVM/include/llvm/Support/DataTypes.h
+/src/plugins/thirdParty/LLVM/include/llvm/Support/DataTypes.h
 
-/src/plugins/3rdparty/LLVM/lib/Target/X86/X86GenAsmMatcher.inc
+/src/plugins/thirdParty/LLVM/lib/Target/X86/X86GenAsmMatcher.inc
 
 /windows/CMakeLists.txt.user
