@@ -24,6 +24,10 @@ div.section {
     color: rgb(54, 96, 146);
 }
 
+div.subsection {
+    color: rgb(54, 96, 146);
+}
+
 p.center {
     text-align: center;
 }

@@ -21,8 +21,30 @@
         </script>
 
         <p>
-            The purpose of this plugin is to extend our <a href="Sample.html">Sample</a> plugin by making it possible for the user to add two numbers both from the command line and from OpenCOR's <code>Tools</code> menu.
+            The purpose of this plugin is to extend our <a href="Sample.html">Sample</a> plugin by making it possible for the user to add two numbers, both from the command line and from OpenCOR's <code>Tools</code> menu.
         </p>
+
+        <div class="section">
+            Prerequisites
+        </div>
+
+        <ul>
+            <li><a href="Sample.html">Sample</a> plugin</li>
+        </ul>
+
+        <div class="section">
+            File structure
+        </div>
+
+        <pre><a href="https://github.com/opencor/opencor/tree/master/src/plugins/sample/SampleTools/i18n">i18n</a>
+ &#9492;&#9472; <a href="https://github.com/opencor/opencor/tree/master/src/plugins/sample/SampleTools/i18n/SampleTools_fr.ts">SampleTools_fr.ts</a>
+<a href="https://github.com/opencor/opencor/tree/master/src/plugins/sample/SampleTools/res">res</a>
+ &#9492;&#9472; <a href="https://github.com/opencor/opencor/tree/master/src/plugins/sample/SampleTools/res/SampleTools.qrc">SampleTools.qrc</a>
+<a href="https://github.com/opencor/opencor/tree/master/src/plugins/sample/SampleTools/src">src</a>
+ &#9500;&#9472; <a href="https://github.com/opencor/opencor/tree/master/src/plugins/sample/SampleTools/src/sampletoolsplugin.cpp">sampletoolsplugin.cpp</a>
+ &#9500;&#9472; <a href="https://github.com/opencor/opencor/tree/master/src/plugins/sample/SampleTools/src/sampletoolsplugin.h">sampletoolsplugin.h</a>
+ &#9492;&#9472; <a href="https://github.com/opencor/opencor/tree/master/src/plugins/sample/SampleTools/src/sampletoolsplugin.json">sampletoolsplugin.json</a>
+<a href="https://github.com/opencor/opencor/tree/master/src/plugins/sample/SampleTools/CMakeLists.txt">CMakeLists.txt</a></pre>
 
         <div class="section">
             Category
@@ -33,11 +55,27 @@
         </p>
 
         <div class="section">
+            Interfaces
+        </div>
+
+        <p>
+            Unlike for the <a href="Sample.html">Sample</a> plugin, we want our plugin to interact with OpenCOR. This means that it needs to implement some interfaces (click <a href="index.html#Interfaces">here</a> for more information about interfaces).
+        </p>
+
+        <p>
+            We want our plugin to work from the command line, so we need to implement the <a href="https://github.com/opencor/opencor/blob/master/src/plugins/cliinterface.inl">CLI</a> interface. We also want our plugin to work from OpenCOR's <code>Tools</code> menu, which involves creating a menu item and making it available to OpenCOR so that it can add it for us to its <code>Tools</code> menu. To do these, we need to implement both the <a href="https://github.com/opencor/opencor/blob/master/src/plugins/guiinterface.inl">GUI</a> and <a href="https://github.com/opencor/opencor/blob/master/src/plugins/plugininterface.inl">plugin</a> interfaces. While we are at it, we might as well internationalise our menu item, which means that we also need to implement the <a href="https://github.com/opencor/opencor/blob/master/src/plugins/i18ninterface.inl">internationalisation</a> interface.
+        </p>
+
+        <p>
+            So, in the end, our plugin needs to implement the <a href="https://github.com/opencor/opencor/blob/master/src/plugins/cliinterface.inl">CLI</a>, <a href="https://github.com/opencor/opencor/blob/master/src/plugins/guiinterface.inl">GUI</a>, <a href="https://github.com/opencor/opencor/blob/master/src/plugins/i18ninterface.inl">internationalisation</a> and <a href="https://github.com/opencor/opencor/blob/master/src/plugins/plugininterface.inl">plugin</a> interfaces.
+        </p>
+
+        <div class="section">
             CMake project
         </div>
 
         <p>
-            As for the <a href="Sample.html">Sample</a> plugin, our plugin has a <a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/SampleTools/CMakeLists.txt"><code>CMakeLists.txt</code></a> file, which contents is as follows:
+            As for the <a href="Sample.html">Sample</a> plugin, our plugin has a <a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/SampleTools/CMakeLists.txt"><code>CMakeLists.txt</code></a> file, which contents is:
         </p>
 
         <pre class="prettyprint linenums">PROJECT(SampleToolsPlugin)
@@ -66,7 +104,7 @@ ADD_PLUGIN(SampleTools
 )</pre>
 
         <p>
-            Our plugin supports some interfaces (more on this below), some of which have a <code>.cpp</code> file. So, we need to reference all of those (lines 7 and 8). The <a href="Sample.html">Sample</a> plugin is needed by our plugin, so we reference it (line 17) using the special <code>PLUGINS</code> keyword (line 16). Finally, we reference the <a href="http://qt-project.org/">Qt</a> modules (line 19) and libraries (lines 21-23) needed by our plugin.
+            Some of the interfaces our plugin implements come with a <code>.cpp</code> file, so we reference them (lines 7 and 8). Then, our plugin needs the <a href="Sample.html">Sample</a> plugin (to be able to use its <code>add()</code> function), so it is referenced (line 17) using the <code>PLUGINS</code> keyword (line 16). Finally, we reference the <a href="http://qt-project.org/">Qt</a> modules (line 19) and libraries (lines 21-23) needed by our plugin.
         </p>
 
         <div class="section">
@@ -74,7 +112,7 @@ ADD_PLUGIN(SampleTools
         </div>
 
         <p>
-            <a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/SampleTools/src/sampletoolsplugin.cpp"><code>sampletoolsplugin.cpp</code></a>, <a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/SampleTools/src/sampletoolsplugin.h"><code>sampletoolsplugin.h</code></a> and <a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/SampleTools/src/sampletoolsplugin.json"><code>sampletoolsplugin.json</code></a> make up the body of our plugin. As for our <a href="Sample.html">Sample</a> plugin, the JSON file simply reference the name of our plugin. On the other hand, both the <code>.cpp</code> and <code>.h</code> files require some explaining. Starting with <a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/SampleTools/src/sampletoolsplugin.h"><code>sampletoolsplugin.h</code></a>, its contents is as follows:
+            Our <a href="index.html#Plugin%20information">plugin information</a> can be found in <a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/SampleTools/src/sampletoolsplugin.cpp"><code>sampletoolsplugin.cpp</code></a>, <a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/SampleTools/src/sampletoolsplugin.h"><code>sampletoolsplugin.h</code></a> and <a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/SampleTools/src/sampletoolsplugin.json"><code>sampletoolsplugin.json</code></a>. Starting with <a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/SampleTools/src/sampletoolsplugin.h"><code>sampletoolsplugin.h</code></a>, its contents is:
         </p>
 
         <pre class="prettyprint linenums:22">#ifndef SAMPLETOOLSPLUGIN_H
@@ -139,12 +177,213 @@ private Q_SLOTS:
 
 #endif</pre>
 
+        <p>
+            As mentioned above, our plugin implements some interfaces, which means that their header file is included (lines 27-29 and 31). It also means that our plugin class inherits from those interfaces (lines 44-46), as well as make calls to the <code>Q_INTERFACES()</code> macro to let <a href-="http://qt-project.org/">Qt</a> know which interfaces it implements (lines 52-55). Finally, we include the inline files (lines 58-61) that declare various methods that must be implemented by our plugin class (see the <a href="#Interfaces%20implementation">next section</a>). (The rest of the class definition is specific to our plugin and is discussed <a href="#Plugin%20specific">below</a>.)
+        </p>
+
+        <p>
+            The C function that is used by OpenCOR to retrieve some <a href="index.html#Basic%20information">basic information</a> about our plugin can be found in <a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/SampleTools/src/sampletoolsplugin.cpp"><code>sampletoolsplugin.cpp</code></a>:
+        </p>
+
+        <pre class="prettyprint linenums:43">PLUGININFO_FUNC SampleToolsPluginInfo()
+{
+    Descriptions descriptions;
+
+    descriptions.insert("en", QString::fromUtf8("a plugin that provides a simple addition tool."));
+    descriptions.insert("fr", QString::fromUtf8("une extension qui fournit un simple outil d'addition."));
+
+    return new PluginInfo(PluginInfo::Sample, true, true,
+                          QStringList() << "Sample",
+                          descriptions);
+}</pre>
+
+        <p>
+            As can be seen, our plugin is selectable by the user and it offers direct <a href="http://en.wikipedia.org/wiki/Command-line_interface">CLI</a> support (line 50). It also has a direct dependency on the <a href="Sample.html">Sample</a> plugin (line 51).
+        </p>
+
+        <span class="anchor" id="Interfaces implementation"></span>
+
         <div class="section">
-            Interfaces
+            Interfaces implementation
         </div>
 
         <p>
-            Blah...
+            The implementation of the interfaces' various methods can also be found in <a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/SampleTools/src/sampletoolsplugin.cpp"><code>sampletoolsplugin.cpp</code></a>. The methods are grouped by interface and are ordered alphabetically. The interfaces are also ordered alphabetically, making it easier to read and maintain the code.
+        </p>
+
+        <p>
+            We start with the <a href="https://github.com/opencor/opencor/blob/master/src/plugins/cliinterface.inl">CLI</a>, which has only one method:
+        </p>
+
+        <pre class="prettyprint linenums:55">//==============================================================================
+// CLI interface
+//==============================================================================
+
+int SampleToolsPlugin::executeCommand(const QString &pCommand,
+                                      const QStringList &pArguments)
+{
+    // Run the given CLI command
+
+    if (!pCommand.compare("help")) {
+        // Display the commands that we support
+
+        runHelpCommand();
+
+        return 0;
+    } else if (!pCommand.compare("add")) {
+        // Add some numbers
+
+        return runAddCommand(pArguments);
+    } else {
+        // Not a CLI command that we support, so...
+
+        runHelpCommand();
+
+        return -1;
+    }
+}</pre>
+
+        <p>
+            As can be seen, our plugin handles both the <code>help</code> and <code>add</code> commands.
+        </p>
+
+        <p>
+            Next, we have three methods for the <a href="https://github.com/opencor/opencor/blob/master/src/plugins/guiinterface.inl">GUI</a> interface:
+        </p>
+
+        <pre class="prettyprint linenums:83">//==============================================================================
+// GUI interface
+//==============================================================================
+
+void SampleToolsPlugin::updateGui(Plugin *pViewPlugin, const QString &pFileName)
+{
+    Q_UNUSED(pViewPlugin);
+    Q_UNUSED(pFileName);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+Gui::Menus SampleToolsPlugin::guiMenus() const
+{
+    // We don't handle this interface...
+
+    return Gui::Menus();
+}
+
+//==============================================================================
+
+Gui::MenuActions SampleToolsPlugin::guiMenuActions() const
+{
+    // Return our menu actions
+
+    return Gui::MenuActions() << Gui::MenuAction(Gui::MenuAction::Tools, mAddTwoNumbersAction)
+                              << Gui::MenuAction(Gui::MenuAction::Tools);
+}</pre>
+
+        <p>
+            Our plugin does not need to do anything whenever OpenCOR needs to update the <a href="http://en.wikipedia.org/wiki/Graphical_user_interface">GUI</a>, so we do nothing in <code>updateGui()</code> (lines 87-93). Similarly, we do not need to add menus to OpenCOR, so all <code>guiMenus()</code> does is return <code>Gui::Menus()</code> (lines 97-102). However, we do want to add a menu action (and a menu separator) to OpenCOR's <code>Tools</code> menu, which we do via <code>guiMenuActions()</code> (lines 106-112). Note that <code>mAddTwoNumbersAction</code> is initialised in our implementation of the <a href="https://github.com/opencor/opencor/blob/master/src/plugins/plugininterface.inl">plugin</a> interface (see below).
+        </p>
+
+        <p>
+            After the <a href="https://github.com/opencor/opencor/blob/master/src/plugins/guiinterface.inl">GUI</a> interface, we have the <a href="https://github.com/opencor/opencor/blob/master/src/plugins/i18ninterface.inl">internationalisation</a> interface and its method:
+        </p>
+
+        <pre class="prettyprint linenums:114">//==============================================================================
+// I18n interface
+//==============================================================================
+
+void SampleToolsPlugin::retranslateUi()
+{
+    // Retranslate our different Tools actions
+
+    retranslateAction(mAddTwoNumbersAction, tr("Add Two Numbers..."), tr("Add two numbers together"));
+}</pre>
+
+        <p>
+            All that we need to do here is to (re)translate <code>mAddTwoNumbersAction</code> with the actual (French) translations in <a href="https://github.com/opencor/opencor/tree/master/src/plugins/sample/SampleTools/i18n/SampleTools_fr.ts"><code>SampleTools_fr.ts</code></a> (together with some others needed in the <a href="#Plugin%20specific">next section</a>).
+        </p>
+
+        <p>
+            Finally, we have the <a href="https://github.com/opencor/opencor/blob/master/src/plugins/plugininterface.inl">plugin</a> interface:
+        </p>
+
+        <pre class="prettyprint linenums:125">//==============================================================================
+// Plugin interface
+//==============================================================================
+
+void SampleToolsPlugin::initializePlugin(QMainWindow *pMainWindow)
+{
+    // Keep track of our main window
+
+    mMainWindow = pMainWindow;
+
+    // Create our Add Two Numbers action
+
+    mAddTwoNumbersAction = new QAction(pMainWindow);
+
+    // A connection to handle our Add Two Numbers action
+
+    connect(mAddTwoNumbersAction, SIGNAL(triggered()),
+            this, SLOT(addTwoNumbers()));
+}
+
+//==============================================================================
+
+void SampleToolsPlugin::finalizePlugin()
+{
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void SampleToolsPlugin::pluginInitialized(const Plugins &pLoadedPlugins)
+{
+    Q_UNUSED(pLoadedPlugins);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void SampleToolsPlugin::loadSettings(QSettings *pSettings)
+{
+    Q_UNUSED(pSettings);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void SampleToolsPlugin::saveSettings(QSettings *pSettings) const
+{
+    Q_UNUSED(pSettings);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void SampleToolsPlugin::handleAction(const QUrl &pUrl)
+{
+    Q_UNUSED(pUrl);
+
+    // We don't handle this interface...
+}</pre>
+
+        <p>
+            The only method of interest to our plugin is <code>initializePlugin()</code> (lines 129-143), which is where we initialise <code>mAddTwoNumbersAction</code>, among a couple of other things. All the other methods (<code>finalizePlugin()</code>, <code>pluginInitialized()</code>, <code>loadSettings()</code>, <code>saveSettings()</code> and <code>handleAction()</code>) are left empty.
+        </p>
+
+        <span class="anchor" id="Plugin specific"></span>
+
+        <div class="section">
+            Plugin specific
+        </div>
+
+        <p>
+            To be done...
         </p>
 
         <script type="text/javascript">
