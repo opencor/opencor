@@ -241,7 +241,9 @@ int SampleToolsPlugin::executeCommand(const QString &pCommand,
 
         return -1;
     }
-}</pre>
+}
+
+//==============================================================================</pre>
 
         <p>
             As can be seen, our plugin handles both the <code>help</code> and <code>add</code> commands.
@@ -280,7 +282,9 @@ Gui::MenuActions SampleToolsPlugin::guiMenuActions() const
 
     return Gui::MenuActions() << Gui::MenuAction(Gui::MenuAction::Tools, mAddTwoNumbersAction)
                               << Gui::MenuAction(Gui::MenuAction::Tools);
-}</pre>
+}
+
+//==============================================================================</pre>
 
         <p>
             Our plugin does not need to do anything whenever OpenCOR needs to update the <a href="http://en.wikipedia.org/wiki/Graphical_user_interface">GUI</a>, so we do nothing in <code>updateGui()</code> (lines 87-93). Similarly, we do not need to add menus to OpenCOR, so all <code>guiMenus()</code> does is return <code>Gui::Menus()</code> (lines 97-102). However, we do want to add a menu action (and a menu separator) to OpenCOR's <code>Tools</code> menu, which we do via <code>guiMenuActions()</code> (lines 106-112). Note that <code>mAddTwoNumbersAction</code> is initialised in our implementation of the <a href="https://github.com/opencor/opencor/blob/master/src/plugins/plugininterface.inl">plugin</a> interface (see below).
@@ -299,7 +303,9 @@ void SampleToolsPlugin::retranslateUi()
     // Retranslate our different Tools actions
 
     retranslateAction(mAddTwoNumbersAction, tr("Add Two Numbers..."), tr("Add two numbers together"));
-}</pre>
+}
+
+//==============================================================================</pre>
 
         <p>
             All that we need to do here is to (re)translate <code>mAddTwoNumbersAction</code> with the actual (French) translations in <a href="https://github.com/opencor/opencor/tree/master/src/plugins/sample/SampleTools/i18n/SampleTools_fr.ts"><code>SampleTools_fr.ts</code></a> (together with some others needed in the <a href="#Plugin%20specific">next section</a>).
@@ -370,7 +376,9 @@ void SampleToolsPlugin::handleAction(const QUrl &pUrl)
     Q_UNUSED(pUrl);
 
     // We don't handle this interface...
-}</pre>
+}
+
+//==============================================================================</pre>
 
         <p>
             The only method of interest to our plugin is <code>initializePlugin()</code> (lines 129-143), which is where we initialise <code>mAddTwoNumbersAction</code>, among a couple of other things. All the other methods (<code>finalizePlugin()</code>, <code>pluginInitialized()</code>, <code>loadSettings()</code>, <code>saveSettings()</code> and <code>handleAction()</code>) are left empty.
@@ -383,7 +391,104 @@ void SampleToolsPlugin::handleAction(const QUrl &pUrl)
         </div>
 
         <p>
-            To be done...
+            Some extra methods are needed to get our plugin to do what it is supposed to be doing. They are declared in the <code>SampleToolsPlugin</code> class in <a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/SampleTools/src/sampletoolsplugin.h"><code>sampletoolsplugin.h</code></a>:
+        </p>
+
+        <pre class="prettyprint linenums:63">private:
+    QMainWindow *mMainWindow;
+ 
+    QAction *mAddTwoNumbersAction;
+ 
+    void runHelpCommand();
+    int runAddCommand(const QStringList &pArguments);
+ 
+private Q_SLOTS:
+    void addTwoNumbers();</pre>
+
+        <p>
+            Their implementation can be found in <a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/SampleTools/src/sampletoolsplugin.cpp"><code>sampletoolsplugin.cpp</code></a>:
+        </p>
+
+        <pre class="prettyprint linenums:188">//==============================================================================
+// Plugin specific
+//==============================================================================
+
+void SampleToolsPlugin::runHelpCommand()
+{
+    // Output the commands we support
+
+    std::cout << "Commands supported by SampleTools:" << std::endl;
+    std::cout << " * Display the commands supported by SampleTools:" << std::endl;
+    std::cout << "      help" << std::endl;
+    std::cout << " * Add two numbers:" << std::endl;
+    std::cout << "      add <nb1> <nb2>" << std::endl;
+}
+
+//==============================================================================
+
+int SampleToolsPlugin::runAddCommand(const QStringList &pArguments)
+{
+    // Make sure that we have the correct number of arguments
+
+    if (pArguments.count() != 2) {
+        runHelpCommand();
+
+        return -1;
+    }
+
+    // Make sure that the two arguments are valid numbers
+
+    bool ok;
+
+    double nb1 = pArguments.first().toDouble(&ok);
+
+    if (!ok) {
+        std::cout << "Sorry, but " << qPrintable(pArguments.first()) << " is not a valid number." << std::endl;
+
+        return -1;
+    }
+
+    double nb2 = pArguments.last().toDouble(&ok);
+
+    if (!ok) {
+        std::cout << "Sorry, but " << qPrintable(pArguments.last()) << " is not a valid number." << std::endl;
+
+        return -1;
+    }
+
+    // Add the two numbers and output the result
+
+    std::cout << qPrintable(pArguments.first()) << " + " << qPrintable(pArguments.last()) << " = " << Sample::add(nb1, nb2) << std::endl;
+
+    return 0;
+}
+
+//==============================================================================
+
+void SampleToolsPlugin::addTwoNumbers()
+{
+    bool ok;
+    double nb1 = QInputDialog::getDouble(mMainWindow, tr("Add Two Numbers"), tr("First number:"),
+                                         0, -2147483647, 2147483647, 1, &ok);
+    double nb2;
+
+    if (ok) {
+        nb2 = QInputDialog::getDouble(mMainWindow, tr("Add Two Numbers"), tr("Second number:"),
+                                      0, -2147483647, 2147483647, 1, &ok);
+
+        if (ok)
+            QMessageBox::information(mMainWindow, tr("Add Two Numbers"), QString::number(nb1)+" + "+QString::number(nb2)+" = "+QString::number(Sample::add(nb1, nb2)));
+    }
+}
+
+//==============================================================================</pre>
+
+        <p>
+            <code>runHelpCommand()</code> (lines 192-201) is the method that is executed whenever our plugin is asked to handle the <code>help</code> command. It provides the user with some information about the commands it supports. In a similar way, <code>runAddCommand()</code> (lines 205-240) is executed whenever our plugin is asked to handle the <code>add</code> command. It checks that two numbers have been passed to the command and, if so, returns their sum to the user.
+        </p>
+
+        <p>
+            <code>addTwoNumbers()</code> (lines 244-260) is a <a href="http://qt-project.org/">Qt</a> slot that is executed whenever the user selects our menu item (<code>mAddTwoNumbersAction</code>). Using a GUI approach, it asks the user to provide two numbers and returns their sum, unless the user cancels things.
         </p>
 
         <script type="text/javascript">
