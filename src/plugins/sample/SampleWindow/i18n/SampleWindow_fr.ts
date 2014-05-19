@@ -18,5 +18,13 @@
         <source>Sample</source>
         <translation>Exemple</translation>
     </message>
+    <message>
+        <source>+</source>
+        <translation></translation>
+    </message>
+    <message>
+        <source>=</source>
+        <translation></translation>
+    </message>
 </context>
 </TS>

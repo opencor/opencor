@@ -47,10 +47,11 @@ public:
     explicit SampleWindowWindow(QWidget *pParent);
     ~SampleWindowWindow();
 
-    virtual void retranslateUi();
-
 private:
     Ui::SampleWindowWindow *mGui;
+
+private Q_SLOTS:
+    void updateSum();
 };
 
 //==============================================================================

@@ -19,6 +19,7 @@ specific language governing permissions and limitations under the License.
 // Sample window
 //==============================================================================
 
+#include "sampleutils.h"
 #include "samplewindowwindow.h"
 
 //==============================================================================
@@ -39,6 +40,18 @@ SampleWindowWindow::SampleWindowWindow(QWidget *pParent) :
     // Set up the GUI
 
     mGui->setupUi(this);
+
+    // A connection to update our sum whenever one of the value of one of our
+    // numbers is updated
+
+    connect(mGui->nb1DoubleSpinBox, SIGNAL(valueChanged(double)),
+            this, SLOT(updateSum()));
+    connect(mGui->nb2DoubleSpinBox, SIGNAL(valueChanged(double)),
+            this, SLOT(updateSum()));
+
+    // Initialise our sum
+
+    updateSum();
 }
 
 //==============================================================================
@@ -52,11 +65,11 @@ SampleWindowWindow::~SampleWindowWindow()
 
 //==============================================================================
 
-void SampleWindowWindow::retranslateUi()
+void SampleWindowWindow::updateSum()
 {
-    // Retranslate the whole window
+    // Update our sum
 
-    mGui->retranslateUi(this);
+    mGui->sumLabel->setText(QString::number(Sample::add(mGui->nb1DoubleSpinBox->value(), mGui->nb2DoubleSpinBox->value())));
 }
 
 //==============================================================================

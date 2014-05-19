@@ -58,10 +58,6 @@ void SampleWindowPlugin::retranslateUi()
     retranslateAction(mSampleWindowAction,
                       tr("Sample"),
                       tr("Show/hide the Sample window"));
-
-    // Retranslate our sample window
-
-    mSampleWindowWindow->retranslateUi();
 }
 
 //==============================================================================
