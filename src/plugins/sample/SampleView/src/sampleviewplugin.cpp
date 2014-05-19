@@ -20,6 +20,11 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include "sampleviewplugin.h"
+#include "sampleviewwidget.h"
+
+//==============================================================================
+
+#include <QMainWindow>
 
 //==============================================================================
 
@@ -90,9 +95,9 @@ void SampleViewPlugin::fileModified(const QString &pFileName)
 
 void SampleViewPlugin::fileReloaded(const QString &pFileName)
 {
-    Q_UNUSED(pFileName);
+    // The given file has been reloaded, so let our view widget know about it
 
-    // We don't handle this interface...
+    mViewWidget->fileReloaded(pFileName);
 }
 
 //==============================================================================
@@ -100,10 +105,9 @@ void SampleViewPlugin::fileReloaded(const QString &pFileName)
 void SampleViewPlugin::fileRenamed(const QString &pOldFileName,
                                    const QString &pNewFileName)
 {
-    Q_UNUSED(pOldFileName);
-    Q_UNUSED(pNewFileName);
+    // The given file has been renamed, so let our view widget know about it
 
-    // We don't handle this interface...
+    mViewWidget->fileRenamed(pOldFileName, pNewFileName);
 }
 
 //==============================================================================
@@ -121,7 +125,9 @@ void SampleViewPlugin::fileClosed(const QString &pFileName)
 
 void SampleViewPlugin::retranslateUi()
 {
-    // We don't handle this interface...
+    // Retranslate our view widget
+
+    mViewWidget->retranslateUi();
 }
 
 //==============================================================================
@@ -130,9 +136,14 @@ void SampleViewPlugin::retranslateUi()
 
 void SampleViewPlugin::initializePlugin(QMainWindow *pMainWindow)
 {
-    Q_UNUSED(pMainWindow);
+    // Create our sample view widget
 
-    // We don't handle this interface...
+    mViewWidget = new SampleViewWidget(pMainWindow);
+
+    // Hide our sample view widget since it may not initially be shown in our
+    // central widget
+
+    mViewWidget->setVisible(false);
 }
 
 //==============================================================================
@@ -218,28 +229,31 @@ void SampleViewPlugin::finalizeView()
 QWidget * SampleViewPlugin::viewWidget(const QString &pFileName,
                                        const bool &pCreate)
 {
-    Q_UNUSED(pFileName);
-    Q_UNUSED(pCreate);
+    // Update our sample view widget using the given file
 
-    // We don't handle this interface...
+    if (pCreate) {
+        mViewWidget->initialize(pFileName);
 
-    return 0;
+        return mViewWidget;
+    } else {
+        return 0;
+    }
 }
 
 //==============================================================================
 
 void SampleViewPlugin::removeViewWidget(const QString &pFileName)
 {
-    Q_UNUSED(pFileName);
+    // Ask our sample view widget to finalise the given file
 
-    // We don't handle this interface...
+    mViewWidget->finalize(pFileName);
 }
 
 //==============================================================================
 
 QString SampleViewPlugin::viewName() const
 {
-    // Return our raw view's name
+    // Return our sample view's name
 
     return tr("Sample");
 }
