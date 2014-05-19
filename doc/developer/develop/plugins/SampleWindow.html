@@ -340,6 +340,134 @@ QDockWidget * SampleWindowPlugin::windowWidget() const
             All three methods are implemented since they tell OpenCOR the default dock area for our plugin window (<code>Qt::TopDockWidgetArea</code>; lines 124-129), as well as provide the pointer to our action (<code>mSampleWindowAction</code>; lines 133-138) and window (<code>mSampleWindowWindow</code>; lines 142-147).
         </p>
 
+        <span class="anchor" id="Plugin specific"></span>
+
+        <div class="section">
+            Plugin specific
+        </div>
+
+        <p>
+            Some extra work is needed to get our plugin to do what it is supposed to be doing, and this is done via the <code>SampleWindowWindow</code> class in <a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/SampleWindow/src/samplewindowwindow.h"><code>samplewindowwindow.h</code></a>:
+        </p>
+
+        <pre class="prettyprint linenums:22">#ifndef SAMPLEWINDOWWINDOW_H
+#define SAMPLEWINDOWWINDOW_H
+
+//==============================================================================
+
+#include "<a href="https://github.com/opencor/opencor/blob/master/src/plugins/miscellaneous/Core/src/dockwidget.h"><code>dockwidget.h</code></a>"
+
+//==============================================================================
+
+namespace Ui {
+    class SampleWindowWindow;
+}
+
+//==============================================================================
+
+namespace OpenCOR {
+namespace SampleWindow {
+
+//==============================================================================
+
+class SampleWindowWindow : public Core::DockWidget
+{
+    Q_OBJECT
+
+public:
+    explicit SampleWindowWindow(QWidget *pParent);
+    ~SampleWindowWindow();
+
+private:
+    Ui::SampleWindowWindow *mGui;
+
+private Q_SLOTS:
+    void updateSum();
+};
+
+//==============================================================================
+
+}   // namespace SampleWindow
+}   // namespace OpenCOR
+
+//==============================================================================
+
+#endif</pre>
+
+        <p>
+            <code>SampleWindowWindow</code> inherits from <code>Core::DockWidget</code>, which is defined in the Core plugin and is an extended version of <a href="http://qt-project.org/">Qt</a>'s <code>QDockWidget</code> (line 42). It also comes with a GUI file, which describes the layout of our plugin window (<a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/SampleWindow/src/samplewindowwindow.ui"><code>samplewindowwindow.ui</code></a>).
+        </p>
+
+        <p>
+            The implementation of <code>SampleWindowWindow</code> can be found in <a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/SampleWindow/src/samplewindowwindow.cpp"><code>samplewindowwindow.cpp</code></a>:
+        </p>
+
+        <pre class="prettyprint linenums:18">//==============================================================================
+// Sample window
+//==============================================================================
+
+#include "<a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/Sample/src/sampleutils.h"><code>sampleutils.h</code></a>"
+#include "<a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/SampleWindow/src/samplewindowwindow.h"><code>samplewindowwindow.h</code></a>"
+
+//==============================================================================
+
+#include "ui_samplewindowwindow.h"
+
+//==============================================================================
+
+namespace OpenCOR {
+namespace SampleWindow {
+
+//==============================================================================
+
+SampleWindowWindow::SampleWindowWindow(QWidget *pParent) :
+    Core::DockWidget(pParent),
+    mGui(new Ui::SampleWindowWindow)
+{
+    // Set up the GUI
+
+    mGui->setupUi(this);
+
+    // A couple of connections to update our sum whenever one of the value of
+    // one of our numbers is updated
+
+    connect(mGui->nb1DoubleSpinBox, SIGNAL(valueChanged(double)),
+            this, SLOT(updateSum()));
+    connect(mGui->nb2DoubleSpinBox, SIGNAL(valueChanged(double)),
+            this, SLOT(updateSum()));
+
+    // Initialise our sum
+
+    updateSum();
+}
+
+//==============================================================================
+
+SampleWindowWindow::~SampleWindowWindow()
+{
+    // Delete the GUI
+
+    delete mGui;
+}
+
+//==============================================================================
+
+void SampleWindowWindow::updateSum()
+{
+    // Update our sum
+
+    mGui->sumLabel->setText(QString::number(Sample::add(mGui->nb1DoubleSpinBox->value(), mGui->nb2DoubleSpinBox->value())));
+}
+
+//==============================================================================
+
+}   // namespace SampleWindow
+}   // namespace OpenCOR</pre>
+
+        <p>
+            <code>SampleWindowWindow()</code> (lines 36-55) initialises <code>SampleWindowWindow</code>, as well as create a couple of connections (lines 44-50) and initialise our sum by calling <code>updateSum()</code> (line 52-54). As can be seen, <code>updateSum()</code> calls the <code>add()</code> method from the <a href="Sample.html">Sample</a> plugin (lines 68-73).
+        </p>
+
         <script type="text/javascript">
             copyright("../../..");
         </script>

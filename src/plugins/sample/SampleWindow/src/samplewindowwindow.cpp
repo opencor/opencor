@@ -41,8 +41,8 @@ SampleWindowWindow::SampleWindowWindow(QWidget *pParent) :
 
     mGui->setupUi(this);
 
-    // A connection to update our sum whenever one of the value of one of our
-    // numbers is updated
+    // A couple of connections to update our sum whenever one of the value of
+    // one of our numbers is updated
 
     connect(mGui->nb1DoubleSpinBox, SIGNAL(valueChanged(double)),
             this, SLOT(updateSum()));
