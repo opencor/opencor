@@ -46,7 +46,7 @@ namespace FileBrowserWindow {
 //==============================================================================
 
 FileBrowserWindowWindow::FileBrowserWindowWindow(QWidget *pParent) :
-    OrganisationWidget(pParent),
+    Core::OrganisationWidget(pParent),
     mGui(new Ui::FileBrowserWindowWindow)
 {
     // Set up the GUI

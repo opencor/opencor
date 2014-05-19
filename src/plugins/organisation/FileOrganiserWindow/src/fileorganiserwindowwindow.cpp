@@ -45,7 +45,7 @@ namespace FileOrganiserWindow {
 //==============================================================================
 
 FileOrganiserWindowWindow::FileOrganiserWindowWindow(QWidget *pParent) :
-    OrganisationWidget(pParent),
+    Core::OrganisationWidget(pParent),
     mGui(new Ui::FileOrganiserWindowWindow)
 {
     // Set up the GUI

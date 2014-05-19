@@ -52,7 +52,7 @@ namespace CellMLModelRepositoryWindow {
 //==============================================================================
 
 CellmlModelRepositoryWindowWindow::CellmlModelRepositoryWindowWindow(QWidget *pParent) :
-    OrganisationWidget(pParent),
+    Core::OrganisationWidget(pParent),
     mGui(new Ui::CellmlModelRepositoryWindowWindow),
     mModelListRequested(false)
 {
