@@ -53,14 +53,14 @@ PLUGININFO_FUNC FileBrowserWindowPluginInfo()
 
 void FileBrowserWindowPlugin::retranslateUi()
 {
-    // Retranslate our file browser action
+    // Retranslate our file browser window action
 
-    retranslateAction(mFileBrowserAction, tr("File Browser"),
+    retranslateAction(mFileBrowserWindowAction, tr("File Browser"),
                       tr("Show/hide the File Browser window"));
 
     // Retranslate our file browser window
 
-    mFileBrowserWindow->retranslateUi();
+    mFileBrowserWindowWindow->retranslateUi();
 }
 
 //==============================================================================
@@ -71,11 +71,11 @@ void FileBrowserWindowPlugin::initializePlugin(QMainWindow *pMainWindow)
 {
     // Create an action to show/hide our file browser window
 
-    mFileBrowserAction = Core::newAction(true, pMainWindow);
+    mFileBrowserWindowAction = Core::newAction(true, pMainWindow);
 
     // Create our file browser window
 
-    mFileBrowserWindow = new FileBrowserWindowWindow(pMainWindow);
+    mFileBrowserWindowWindow = new FileBrowserWindowWindow(pMainWindow);
 }
 
 //==============================================================================
@@ -100,8 +100,8 @@ void FileBrowserWindowPlugin::loadSettings(QSettings *pSettings)
 {
     // Retrieve our file browser window settings
 
-    pSettings->beginGroup(mFileBrowserWindow->objectName());
-        mFileBrowserWindow->loadSettings(pSettings);
+    pSettings->beginGroup(mFileBrowserWindowWindow->objectName());
+        mFileBrowserWindowWindow->loadSettings(pSettings);
     pSettings->endGroup();
 }
 
@@ -111,8 +111,8 @@ void FileBrowserWindowPlugin::saveSettings(QSettings *pSettings) const
 {
     // Keep track of our file browser window settings
 
-    pSettings->beginGroup(mFileBrowserWindow->objectName());
-        mFileBrowserWindow->saveSettings(pSettings);
+    pSettings->beginGroup(mFileBrowserWindowWindow->objectName());
+        mFileBrowserWindowWindow->saveSettings(pSettings);
     pSettings->endGroup();
 }
 
@@ -142,7 +142,7 @@ QDockWidget * FileBrowserWindowPlugin::windowWidget() const
 {
     // Return our window widget
 
-    return mFileBrowserWindow;
+    return mFileBrowserWindowWindow;
 }
 
 //==============================================================================
@@ -151,7 +151,7 @@ QAction * FileBrowserWindowPlugin::windowAction() const
 {
     // Return our window action
 
-    return mFileBrowserAction;
+    return mFileBrowserWindowAction;
 }
 
 //==============================================================================

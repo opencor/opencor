@@ -61,9 +61,9 @@ public:
 #include "windowinterface.inl"
 
 private:
-    QAction *mFileOrganiserAction;
+    QAction *mFileOrganiserWindowAction;
 
-    FileOrganiserWindowWindow *mFileOrganiserWindow;
+    FileOrganiserWindowWindow *mFileOrganiserWindowWindow;
 };
 
 //==============================================================================

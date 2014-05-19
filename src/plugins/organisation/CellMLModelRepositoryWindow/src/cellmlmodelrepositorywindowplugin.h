@@ -62,9 +62,9 @@ public:
 #include "windowinterface.inl"
 
 private:
-    QAction *mCellmlModelRepositoryAction;
+    QAction *mCellmlModelRepositoryWindowAction;
 
-    CellmlModelRepositoryWindowWindow *mCellmlModelRepositoryWindow;
+    CellmlModelRepositoryWindowWindow *mCellmlModelRepositoryWindowWindow;
 };
 
 //==============================================================================

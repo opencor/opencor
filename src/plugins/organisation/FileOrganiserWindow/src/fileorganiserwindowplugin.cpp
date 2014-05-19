@@ -53,14 +53,14 @@ PLUGININFO_FUNC FileOrganiserWindowPluginInfo()
 
 void FileOrganiserWindowPlugin::retranslateUi()
 {
-    // Retranslate our file organiser action
+    // Retranslate our file organiser window action
 
-    retranslateAction(mFileOrganiserAction, tr("File Organiser"),
+    retranslateAction(mFileOrganiserWindowAction, tr("File Organiser"),
                       tr("Show/hide the File Organiser window"));
 
     // Retranslate our file organiser window
 
-    mFileOrganiserWindow->retranslateUi();
+    mFileOrganiserWindowWindow->retranslateUi();
 }
 
 //==============================================================================
@@ -71,11 +71,11 @@ void FileOrganiserWindowPlugin::initializePlugin(QMainWindow *pMainWindow)
 {
     // Create an action to show/hide our file organiser window
 
-    mFileOrganiserAction = Core::newAction(true, pMainWindow);
+    mFileOrganiserWindowAction = Core::newAction(true, pMainWindow);
 
     // Create our file organiser window
 
-    mFileOrganiserWindow = new FileOrganiserWindowWindow(pMainWindow);
+    mFileOrganiserWindowWindow = new FileOrganiserWindowWindow(pMainWindow);
 }
 
 //==============================================================================
@@ -100,8 +100,8 @@ void FileOrganiserWindowPlugin::loadSettings(QSettings *pSettings)
 {
     // Retrieve our file organiser window settings
 
-    pSettings->beginGroup(mFileOrganiserWindow->objectName());
-        mFileOrganiserWindow->loadSettings(pSettings);
+    pSettings->beginGroup(mFileOrganiserWindowWindow->objectName());
+        mFileOrganiserWindowWindow->loadSettings(pSettings);
     pSettings->endGroup();
 }
 
@@ -111,8 +111,8 @@ void FileOrganiserWindowPlugin::saveSettings(QSettings *pSettings) const
 {
     // Keep track of our file organiser window settings
 
-    pSettings->beginGroup(mFileOrganiserWindow->objectName());
-        mFileOrganiserWindow->saveSettings(pSettings);
+    pSettings->beginGroup(mFileOrganiserWindowWindow->objectName());
+        mFileOrganiserWindowWindow->saveSettings(pSettings);
     pSettings->endGroup();
 }
 
@@ -142,7 +142,7 @@ QDockWidget * FileOrganiserWindowPlugin::windowWidget() const
 {
     // Return our window widget
 
-    return mFileOrganiserWindow;
+    return mFileOrganiserWindowWindow;
 }
 
 //==============================================================================
@@ -151,7 +151,7 @@ QAction * FileOrganiserWindowPlugin::windowAction() const
 {
     // Return our window action
 
-    return mFileOrganiserAction;
+    return mFileOrganiserWindowAction;
 }
 
 //==============================================================================

@@ -53,15 +53,15 @@ PLUGININFO_FUNC CellMLModelRepositoryWindowPluginInfo()
 
 void CellMLModelRepositoryWindowPlugin::retranslateUi()
 {
-    // Retranslate our CellML Model Repository action
+    // Retranslate our CellML Model Repository window action
 
-    retranslateAction(mCellmlModelRepositoryAction,
+    retranslateAction(mCellmlModelRepositoryWindowAction,
                       tr("CellML Model Repository"),
                       tr("Show/hide the CellML Model Repository window"));
 
     // Retranslate our CellML Model Repository window
 
-    mCellmlModelRepositoryWindow->retranslateUi();
+    mCellmlModelRepositoryWindowWindow->retranslateUi();
 }
 
 //==============================================================================
@@ -72,11 +72,11 @@ void CellMLModelRepositoryWindowPlugin::initializePlugin(QMainWindow *pMainWindo
 {
     // Create an action to show/hide our CellML Model Repository window
 
-    mCellmlModelRepositoryAction = Core::newAction(true, pMainWindow);
+    mCellmlModelRepositoryWindowAction = Core::newAction(true, pMainWindow);
 
     // Create our CellML Model Repository window
 
-    mCellmlModelRepositoryWindow = new CellmlModelRepositoryWindowWindow(pMainWindow);
+    mCellmlModelRepositoryWindowWindow = new CellmlModelRepositoryWindowWindow(pMainWindow);
 }
 
 //==============================================================================
@@ -101,8 +101,8 @@ void CellMLModelRepositoryWindowPlugin::loadSettings(QSettings *pSettings)
 {
     // Retrieve our CellML Model Repository window settings
 
-    pSettings->beginGroup(mCellmlModelRepositoryWindow->objectName());
-        mCellmlModelRepositoryWindow->loadSettings(pSettings);
+    pSettings->beginGroup(mCellmlModelRepositoryWindowWindow->objectName());
+        mCellmlModelRepositoryWindowWindow->loadSettings(pSettings);
     pSettings->endGroup();
 }
 
@@ -112,8 +112,8 @@ void CellMLModelRepositoryWindowPlugin::saveSettings(QSettings *pSettings) const
 {
     // Keep track of our CellML Model Repository window settings
 
-    pSettings->beginGroup(mCellmlModelRepositoryWindow->objectName());
-        mCellmlModelRepositoryWindow->saveSettings(pSettings);
+    pSettings->beginGroup(mCellmlModelRepositoryWindowWindow->objectName());
+        mCellmlModelRepositoryWindowWindow->saveSettings(pSettings);
     pSettings->endGroup();
 }
 
@@ -143,7 +143,7 @@ QDockWidget * CellMLModelRepositoryWindowPlugin::windowWidget() const
 {
     // Return our window widget
 
-    return mCellmlModelRepositoryWindow;
+    return mCellmlModelRepositoryWindowWindow;
 }
 
 //==============================================================================
@@ -152,7 +152,7 @@ QAction * CellMLModelRepositoryWindowPlugin::windowAction() const
 {
     // Return our window action
 
-    return mCellmlModelRepositoryAction;
+    return mCellmlModelRepositoryWindowAction;
 }
 
 //==============================================================================
