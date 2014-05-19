@@ -184,7 +184,7 @@ private:
             The C function that is used by OpenCOR to retrieve some <a href="index.html#Basic%20information">basic information</a> about our plugin can be found in <a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/SampleWindow/src/samplewindowplugin.cpp"><code>samplewindowplugin.cpp</code></a>:
         </p>
 
-        <pre class="prettyprint linenums:38">PLUGININFO_FUNC SampleWindowPluginInfo()
+        <pre class="prettyprint linenums:37">PLUGININFO_FUNC SampleWindowPluginInfo()
 {
     Descriptions descriptions;
 
@@ -198,6 +198,146 @@ private:
 
         <p>
             As can be seen, our plugin is selectable by the user, but it does not offer direct <a href="http://en.wikipedia.org/wiki/Command-line_interface">CLI</a> support (line 50). It also has a direct dependency on the Core <a href="Sample.html">Sample</a> plugins (line 51).
+        </p>
+
+        <span class="anchor" id="Interfaces implementation"></span>
+
+        <div class="section">
+            Interfaces implementation
+        </div>
+
+        <p>
+            The implementation of the interfaces' various methods can also be found in <a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/SampleWindow/src/samplewindowplugin.cpp"><code>samplewindowplugin.cpp</code></a>. The methods are grouped by interface and are ordered alphabetically. The interfaces are also ordered alphabetically, making it easier to read and maintain the code.
+        </p>
+
+        <p>
+            We start with the <a href="https://github.com/opencor/opencor/blob/master/src/plugins/i18ninterface.inl">internationalisation</a>, which has only one method:
+        </p>
+
+        <pre class="prettyprint linenums:49">//==============================================================================
+// I18n interface
+//==============================================================================
+
+void SampleWindowPlugin::retranslateUi()
+{
+    // Retranslate our sample window action
+
+    retranslateAction(mSampleWindowAction,
+                      tr("Sample"),
+                      tr("Show/hide the Sample window"));
+}
+
+//==============================================================================</pre>
+
+        <p>
+            All that we need to do here is to (re)translate <code>mSampleWindowAction</code> with the actual (French) translations in <a href="https://github.com/opencor/opencor/tree/master/src/plugins/sample/SampleWindow/i18n/SampleWindow_fr.ts"><code>SampleWindow_fr.ts</code></a> (together with some others needed in the <a href="#Plugin%20specific">next section</a>). Note that <code>mSampleWindowAction</code> is initialised in our implementation of the <a href="https://github.com/opencor/opencor/blob/master/src/plugins/plugininterface.inl">plugin</a> interface (see below).
+        </p>
+
+        <p>
+            Next, we have six methods for the <a href="https://github.com/opencor/opencor/blob/master/src/plugins/plugininterface.inl">plugin</a> interface:
+        </p>
+
+        <pre class="prettyprint linenums:62">//==============================================================================
+// Plugin interface
+//==============================================================================
+
+void SampleWindowPlugin::initializePlugin(QMainWindow *pMainWindow)
+{
+    // Create an action to show/hide our sample window
+
+    mSampleWindowAction = Core::newAction(true, pMainWindow);
+
+    // Create our sample window
+
+    mSampleWindowWindow = new SampleWindowWindow(pMainWindow);
+}
+
+//==============================================================================
+
+void SampleWindowPlugin::finalizePlugin()
+{
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void SampleWindowPlugin::pluginInitialized(const Plugins &pLoadedPlugins)
+{
+    Q_UNUSED(pLoadedPlugins);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void SampleWindowPlugin::loadSettings(QSettings *pSettings)
+{
+    Q_UNUSED(pSettings);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void SampleWindowPlugin::saveSettings(QSettings *pSettings) const
+{
+    Q_UNUSED(pSettings);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void SampleWindowPlugin::handleAction(const QUrl &pUrl)
+{
+    Q_UNUSED(pUrl);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================</pre>
+
+        <p>
+            The only method of interest to our plugin is <code>initializePlugin()</code> (lines 129-143), which is where we initialise both <code>mSampleWindowAction</code> and <code>mSampleWindowWindow </code>. All the other methods (<code>finalizePlugin()</code>, <code>pluginInitialized()</code>, <code>loadSettings()</code>, <code>saveSettings()</code> and <code>handleAction()</code>) are left empty.
+        </p>
+
+        <p>
+            Finally, we have the <a href="https://github.com/opencor/opencor/blob/master/src/plugins/windowinterface.inl">window</a> interface:
+        </p>
+
+        <pre class="prettyprint linenums:120">//==============================================================================
+// Window interface
+//==============================================================================
+
+Qt::DockWidgetArea SampleWindowPlugin::windowDefaultDockArea() const
+{
+    // Return our default dock area
+
+    return Qt::TopDockWidgetArea;
+}
+
+//==============================================================================
+
+QAction * SampleWindowPlugin::windowAction() const
+{
+    // Return our window action
+
+    return mSampleWindowAction;
+}
+
+//==============================================================================
+
+QDockWidget * SampleWindowPlugin::windowWidget() const
+{
+    // Return our window widget
+
+    return mSampleWindowWindow;
+}
+
+//==============================================================================</pre>
+
+        <p>
+            All three methods are implemented since they tell OpenCOR the default dock area for our plugin window (<code>Qt::TopDockWidgetArea</code>; lines 124-129), as well as provide the pointer to our action (<code>mSampleWindowAction</code>; lines 133-138) and window (<code>mSampleWindowWindow</code>; lines 142-147).
         </p>
 
         <script type="text/javascript">
