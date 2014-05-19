@@ -40,7 +40,7 @@ PLUGININFO_FUNC SampleWindowPluginInfo()
     Descriptions descriptions;
 
     descriptions.insert("en", QString::fromUtf8("a plugin that provides a simple addition window."));
-    descriptions.insert("fr", QString::fromUtf8("une extension qui fournit une simple fenêtre d'addition."));
+    descriptions.insert("fr", QString::fromUtf8("une extension qui fournit une simple fenÃªtre d'addition."));
 
     return new PluginInfo(PluginInfo::Sample, true, false,
                           QStringList() << "Core" << "Sample",
