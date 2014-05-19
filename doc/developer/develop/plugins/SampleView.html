@@ -7,13 +7,15 @@
 
         <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
 
+        <link href="../../../3rdparty/googleCodePrettify/prettify.css" rel="stylesheet" type="text/css"/>
         <link href="../../res/stylesheet.css" rel="stylesheet" type="text/css"/>
 
+        <script src="../../../3rdparty/googleCodePrettify/prettify.js" type="text/javascript"></script>
         <script src="../../../3rdparty/jQuery/jquery.js" type="text/javascript"></script>
         <script src="../../../res/common.js" type="text/javascript"></script>
         <script src="../../res/menu.js" type="text/javascript"></script>
     </head>
-    <body>
+    <body onload="prettyPrint()">
         <script type="text/javascript">
             headerAndContentsMenu("SampleView Plugin", "../../..");
         </script>
@@ -35,6 +37,69 @@
  &#9500;&#9472; <a href="https://github.com/opencor/opencor/tree/master/src/plugins/sample/SampleView/src/sampleviewplugin.h">sampleviewplugin.h</a>
  &#9492;&#9472; <a href="https://github.com/opencor/opencor/tree/master/src/plugins/sample/SampleView/src/sampleviewplugin.json">sampleviewplugin.json</a>
 <a href="https://github.com/opencor/opencor/tree/master/src/plugins/sample/SampleView/CMakeLists.txt">CMakeLists.txt</a></pre>
+
+        <div class="section">
+            Category
+        </div>
+
+        <p>
+            Our plugin is part of the <code>Sample</code> category, which means that its code can be found under <a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/SampleView/"><code>[OpenCOR]/src/plugins/sample/SampleView/</code></a>.
+        </p>
+
+        <div class="section">
+            Interfaces
+        </div>
+
+        <p>
+            We want our plugin to interact with OpenCOR. This means that it needs to implement some interfaces (click <a href="index.html#Interfaces">here</a> for more information about interfaces).
+        </p>
+
+        <p>
+            More specifically, we want our plugin to be a view, so we need to implement both the <a href="https://github.com/opencor/opencor/blob/master/src/plugins/filehandlinginterface.inl">file handling</a>, <a href="https://github.com/opencor/opencor/blob/master/src/plugins/i18ninterface.inl">internationalisation</a>, <a href="https://github.com/opencor/opencor/blob/master/src/plugins/plugininterface.inl">plugin</a> and <a href="https://github.com/opencor/opencor/blob/master/src/plugins/viewinterface.inl">view</a> interfaces.
+        </p>
+
+        <div class="section">
+            CMake project
+        </div>
+
+        <p>
+            As for any OpenCOR plugin, our plugin has a <a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/SampleView/CMakeLists.txt"><code>CMakeLists.txt</code></a> file, which contents is:
+        </p>
+
+        <pre class="prettyprint linenums">PROJECT(SampleViewPlugin)
+
+# Add the plugin
+
+ADD_PLUGIN(SampleView
+    SOURCES
+        <a href="https://github.com/opencor/opencor/blob/master/src/plugins/i18ninterface.cpp"><code>../../i18ninterface.cpp</code></a>
+        <a href="https://github.com/opencor/opencor/blob/master/src/plugins/plugininfo.cpp"><code>../../plugininfo.cpp</code></a>
+        <a href="https://github.com/opencor/opencor/blob/master/src/plugins/viewinterface.cpp"><code>../../viewinterface.cpp</code></a>
+
+        <a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/SampleView/src/sampleviewplugin.cpp"><code>src/sampleviewplugin.cpp</code></a>
+        <a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/SampleView/src/sampleviewwidget.cpp"><code>src/sampleviewwidget.cpp</code></a>
+    HEADERS_MOC
+        <a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/SampleView/src/sampleviewplugin.h"><code>src/sampleviewplugin.h</code></a>
+        <a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/SampleView/src/sampleviewwidget.h"><code>src/sampleviewwidget.h</code></a>
+    UIS
+        <a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/SampleView/src/sampleviewwidget.ui"><code>src/sampleviewwidget.ui</code></a>
+    INCLUDE_DIRS
+        src
+    PLUGINS
+        Core
+    QT_MODULES
+        Widgets
+    QT_LIBRARIES
+        QtCore
+        QtGui
+        QtNetwork
+        QtWidgets
+        QtXmlPatterns
+)</pre>
+
+        <p>
+            Some of the interfaces our plugin implements come with a <code>.cpp</code> file, so we reference them (lines 7 and 8). Then, we reference the <a href="http://qt-project.org/">Qt</a> modules (line 23) and libraries (lines 25-29) needed by our plugin.
+        </p>
 
         <script type="text/javascript">
             copyright("../../..");
