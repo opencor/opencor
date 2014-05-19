@@ -139,20 +139,20 @@ Qt::DockWidgetArea HelpWindowPlugin::windowDefaultDockArea() const
 
 //==============================================================================
 
-QDockWidget * HelpWindowPlugin::windowWidget() const
-{
-    // Return our window widget
-
-    return mHelpWindow;
-}
-
-//==============================================================================
-
 QAction * HelpWindowPlugin::windowAction() const
 {
     // Return our window action
 
     return mHelpAction;
+}
+
+//==============================================================================
+
+QDockWidget * HelpWindowPlugin::windowWidget() const
+{
+    // Return our window widget
+
+    return mHelpWindow;
 }
 
 //==============================================================================

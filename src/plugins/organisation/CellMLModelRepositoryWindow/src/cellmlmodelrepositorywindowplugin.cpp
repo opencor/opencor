@@ -139,20 +139,20 @@ Qt::DockWidgetArea CellMLModelRepositoryWindowPlugin::windowDefaultDockArea() co
 
 //==============================================================================
 
-QDockWidget * CellMLModelRepositoryWindowPlugin::windowWidget() const
-{
-    // Return our window widget
-
-    return mCellmlModelRepositoryWindowWindow;
-}
-
-//==============================================================================
-
 QAction * CellMLModelRepositoryWindowPlugin::windowAction() const
 {
     // Return our window action
 
     return mCellmlModelRepositoryWindowAction;
+}
+
+//==============================================================================
+
+QDockWidget * CellMLModelRepositoryWindowPlugin::windowWidget() const
+{
+    // Return our window widget
+
+    return mCellmlModelRepositoryWindowWindow;
 }
 
 //==============================================================================

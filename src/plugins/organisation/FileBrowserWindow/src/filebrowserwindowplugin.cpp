@@ -138,20 +138,20 @@ Qt::DockWidgetArea FileBrowserWindowPlugin::windowDefaultDockArea() const
 
 //==============================================================================
 
-QDockWidget * FileBrowserWindowPlugin::windowWidget() const
-{
-    // Return our window widget
-
-    return mFileBrowserWindowWindow;
-}
-
-//==============================================================================
-
 QAction * FileBrowserWindowPlugin::windowAction() const
 {
     // Return our window action
 
     return mFileBrowserWindowAction;
+}
+
+//==============================================================================
+
+QDockWidget * FileBrowserWindowPlugin::windowWidget() const
+{
+    // Return our window widget
+
+    return mFileBrowserWindowWindow;
 }
 
 //==============================================================================

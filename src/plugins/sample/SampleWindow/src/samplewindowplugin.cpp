@@ -26,7 +26,6 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include <QMainWindow>
-#include <QSettings>
 
 //==============================================================================
 
@@ -95,22 +94,18 @@ void SampleWindowPlugin::pluginInitialized(const Plugins &pLoadedPlugins)
 
 void SampleWindowPlugin::loadSettings(QSettings *pSettings)
 {
-    // Retrieve our sample window settings
+    Q_UNUSED(pSettings);
 
-    pSettings->beginGroup(mSampleWindowWindow->objectName());
-        mSampleWindowWindow->loadSettings(pSettings);
-    pSettings->endGroup();
+    // We don't handle this interface...
 }
 
 //==============================================================================
 
 void SampleWindowPlugin::saveSettings(QSettings *pSettings) const
 {
-    // Keep track of our sample window settings
+    Q_UNUSED(pSettings);
 
-    pSettings->beginGroup(mSampleWindowWindow->objectName());
-        mSampleWindowWindow->saveSettings(pSettings);
-    pSettings->endGroup();
+    // We don't handle this interface...
 }
 
 //==============================================================================
@@ -135,20 +130,20 @@ Qt::DockWidgetArea SampleWindowPlugin::windowDefaultDockArea() const
 
 //==============================================================================
 
-QDockWidget * SampleWindowPlugin::windowWidget() const
-{
-    // Return our window widget
-
-    return mSampleWindowWindow;
-}
-
-//==============================================================================
-
 QAction * SampleWindowPlugin::windowAction() const
 {
     // Return our window action
 
     return mSampleWindowAction;
+}
+
+//==============================================================================
+
+QDockWidget * SampleWindowPlugin::windowWidget() const
+{
+    // Return our window widget
+
+    return mSampleWindowWindow;
 }
 
 //==============================================================================
