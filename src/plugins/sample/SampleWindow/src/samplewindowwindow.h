@@ -16,18 +16,21 @@ specific language governing permissions and limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// SampleWindow plugin
+// Sample window
 //==============================================================================
 
-#ifndef SAMPLEWINDOWPLUGIN_H
-#define SAMPLEWINDOWPLUGIN_H
+#ifndef SAMPLEWINDOWWINDOW_H
+#define SAMPLEWINDOWWINDOW_H
 
 //==============================================================================
 
-#include "i18ninterface.h"
-#include "plugininfo.h"
-#include "plugininterface.h"
-#include "windowinterface.h"
+#include "dockwidget.h"
+
+//==============================================================================
+
+namespace Ui {
+    class SampleWindowWindow;
+}
 
 //==============================================================================
 
@@ -36,34 +39,18 @@ namespace SampleWindow {
 
 //==============================================================================
 
-PLUGININFO_FUNC SampleWindowPluginInfo();
-
-//==============================================================================
-
-class SampleWindowWindow;
-
-//==============================================================================
-
-class SampleWindowPlugin : public QObject, public I18nInterface,
-                           public PluginInterface, public WindowInterface
+class SampleWindowWindow : public Core::DockWidget
 {
     Q_OBJECT
 
-    Q_PLUGIN_METADATA(IID "OpenCOR.SampleWindowPlugin" FILE "samplewindowplugin.json")
-
-    Q_INTERFACES(OpenCOR::I18nInterface)
-    Q_INTERFACES(OpenCOR::PluginInterface)
-    Q_INTERFACES(OpenCOR::WindowInterface)
-
 public:
-#include "i18ninterface.inl"
-#include "plugininterface.inl"
-#include "windowinterface.inl"
+    explicit SampleWindowWindow(QWidget *pParent);
+    ~SampleWindowWindow();
+
+    virtual void retranslateUi();
 
 private:
-    QAction *mSampleWindowAction;
-
-    SampleWindowWindow *mSampleWindowWindow;
+    Ui::SampleWindowWindow *mGui;
 };
 
 //==============================================================================

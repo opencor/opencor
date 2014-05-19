@@ -19,7 +19,14 @@ specific language governing permissions and limitations under the License.
 // SampleWindow plugin
 //==============================================================================
 
+#include "guiutils.h"
 #include "samplewindowplugin.h"
+#include "samplewindowwindow.h"
+
+//==============================================================================
+
+#include <QMainWindow>
+#include <QSettings>
 
 //==============================================================================
 
@@ -36,8 +43,116 @@ PLUGININFO_FUNC SampleWindowPluginInfo()
     descriptions.insert("fr", QString::fromUtf8("une extension qui fournit une simple fenêtre d'addition."));
 
     return new PluginInfo(PluginInfo::Sample, true, false,
-                          QStringList() << "Sample",
+                          QStringList() << "Core" << "Sample",
                           descriptions);
+}
+
+//==============================================================================
+// I18n interface
+//==============================================================================
+
+void SampleWindowPlugin::retranslateUi()
+{
+    // Retranslate our sample window action
+
+    retranslateAction(mSampleWindowAction,
+                      tr("Sample"),
+                      tr("Show/hide the Sample window"));
+
+    // Retranslate our sample window
+
+    mSampleWindowWindow->retranslateUi();
+}
+
+//==============================================================================
+// Plugin interface
+//==============================================================================
+
+void SampleWindowPlugin::initializePlugin(QMainWindow *pMainWindow)
+{
+    // Create an action to show/hide our sample window
+
+    mSampleWindowAction = Core::newAction(true, pMainWindow);
+
+    // Create our sample window
+
+    mSampleWindowWindow = new SampleWindowWindow(pMainWindow);
+}
+
+//==============================================================================
+
+void SampleWindowPlugin::finalizePlugin()
+{
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void SampleWindowPlugin::pluginInitialized(const Plugins &pLoadedPlugins)
+{
+    Q_UNUSED(pLoadedPlugins);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void SampleWindowPlugin::loadSettings(QSettings *pSettings)
+{
+    // Retrieve our sample window settings
+
+    pSettings->beginGroup(mSampleWindowWindow->objectName());
+        mSampleWindowWindow->loadSettings(pSettings);
+    pSettings->endGroup();
+}
+
+//==============================================================================
+
+void SampleWindowPlugin::saveSettings(QSettings *pSettings) const
+{
+    // Keep track of our sample window settings
+
+    pSettings->beginGroup(mSampleWindowWindow->objectName());
+        mSampleWindowWindow->saveSettings(pSettings);
+    pSettings->endGroup();
+}
+
+//==============================================================================
+
+void SampleWindowPlugin::handleAction(const QUrl &pUrl)
+{
+    Q_UNUSED(pUrl);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+// Window interface
+//==============================================================================
+
+Qt::DockWidgetArea SampleWindowPlugin::windowDefaultDockArea() const
+{
+    // Return our default dock area
+
+    return Qt::TopDockWidgetArea;
+}
+
+//==============================================================================
+
+QDockWidget * SampleWindowPlugin::windowWidget() const
+{
+    // Return our window widget
+
+    return mSampleWindowWindow;
+}
+
+//==============================================================================
+
+QAction * SampleWindowPlugin::windowAction() const
+{
+    // Return our window action
+
+    return mSampleWindowAction;
 }
 
 //==============================================================================

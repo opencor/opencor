@@ -16,18 +16,14 @@ specific language governing permissions and limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// SampleWindow plugin
+// Sample window
 //==============================================================================
 
-#ifndef SAMPLEWINDOWPLUGIN_H
-#define SAMPLEWINDOWPLUGIN_H
+#include "samplewindowwindow.h"
 
 //==============================================================================
 
-#include "i18ninterface.h"
-#include "plugininfo.h"
-#include "plugininterface.h"
-#include "windowinterface.h"
+#include "ui_samplewindowwindow.h"
 
 //==============================================================================
 
@@ -36,44 +32,37 @@ namespace SampleWindow {
 
 //==============================================================================
 
-PLUGININFO_FUNC SampleWindowPluginInfo();
-
-//==============================================================================
-
-class SampleWindowWindow;
-
-//==============================================================================
-
-class SampleWindowPlugin : public QObject, public I18nInterface,
-                           public PluginInterface, public WindowInterface
+SampleWindowWindow::SampleWindowWindow(QWidget *pParent) :
+    Core::DockWidget(pParent),
+    mGui(new Ui::SampleWindowWindow)
 {
-    Q_OBJECT
+    // Set up the GUI
 
-    Q_PLUGIN_METADATA(IID "OpenCOR.SampleWindowPlugin" FILE "samplewindowplugin.json")
+    mGui->setupUi(this);
+}
 
-    Q_INTERFACES(OpenCOR::I18nInterface)
-    Q_INTERFACES(OpenCOR::PluginInterface)
-    Q_INTERFACES(OpenCOR::WindowInterface)
+//==============================================================================
 
-public:
-#include "i18ninterface.inl"
-#include "plugininterface.inl"
-#include "windowinterface.inl"
+SampleWindowWindow::~SampleWindowWindow()
+{
+    // Delete the GUI
 
-private:
-    QAction *mSampleWindowAction;
+    delete mGui;
+}
 
-    SampleWindowWindow *mSampleWindowWindow;
-};
+//==============================================================================
+
+void SampleWindowWindow::retranslateUi()
+{
+    // Retranslate the whole window
+
+    mGui->retranslateUi(this);
+}
 
 //==============================================================================
 
 }   // namespace SampleWindow
 }   // namespace OpenCOR
-
-//==============================================================================
-
-#endif
 
 //==============================================================================
 // End of file
