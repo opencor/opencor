@@ -14,60 +14,70 @@
    <string>CellML Model Repository</string>
   </property>
   <widget class="QWidget" name="dockWidgetContents">
-   <layout class="QHBoxLayout" name="layout">
+   <layout class="QVBoxLayout" name="layout">
+    <property name="margin">
+     <number>0</number>
+    </property>
     <property name="spacing">
-     <number>8</number>
-    </property>
-    <property name="leftMargin">
-     <number>4</number>
-    </property>
-    <property name="topMargin">
-     <number>4</number>
-    </property>
-    <property name="rightMargin">
-     <number>4</number>
-    </property>
-    <property name="bottomMargin">
-     <number>4</number>
+     <number>0</number>
     </property>
     <item>
-     <widget class="QLabel" name="filterLabel">
-      <property name="font">
-       <font>
-        <weight>75</weight>
-        <bold>true</bold>
-       </font>
+     <layout class="QHBoxLayout" name="subLayout">
+      <property name="spacing">
+       <number>8</number>
       </property>
-      <property name="text">
-       <string>Filter:</string>
+      <property name="leftMargin">
+       <number>4</number>
       </property>
-     </widget>
-    </item>
-    <item>
-     <widget class="QLineEdit" name="filterValue"/>
-    </item>
-    <item>
-     <widget class="QPushButton" name="refreshButton">
-      <property name="toolTip">
-       <string>Refresh</string>
+      <property name="topMargin">
+       <number>4</number>
       </property>
-      <property name="statusTip">
-       <string>Refresh the list of CellML models</string>
+      <property name="rightMargin">
+       <number>4</number>
       </property>
-      <property name="text">
-       <string/>
+      <property name="bottomMargin">
+       <number>4</number>
       </property>
-      <property name="icon">
-       <iconset resource="../res/CellMLModelRepositoryWindow.qrc">
-        <normaloff>:/oxygen/actions/view-refresh.png</normaloff>:/oxygen/actions/view-refresh.png</iconset>
-      </property>
-      <property name="iconSize">
-       <size>
-        <width>16</width>
-        <height>16</height>
-       </size>
-      </property>
-     </widget>
+      <item>
+       <widget class="QLabel" name="filterLabel">
+        <property name="font">
+         <font>
+          <weight>75</weight>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="text">
+         <string>Filter:</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLineEdit" name="filterValue"/>
+      </item>
+      <item>
+       <widget class="QPushButton" name="refreshButton">
+        <property name="toolTip">
+         <string>Refresh</string>
+        </property>
+        <property name="statusTip">
+         <string>Refresh the list of CellML models</string>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+        <property name="icon">
+         <iconset resource="../res/CellMLModelRepositoryWindow.qrc">
+          <normaloff>:/oxygen/actions/view-refresh.png</normaloff>:/oxygen/actions/view-refresh.png</iconset>
+        </property>
+        <property name="iconSize">
+         <size>
+          <width>16</width>
+          <height>16</height>
+         </size>
+        </property>
+       </widget>
+      </item>
+     </layout>
     </item>
    </layout>
   </widget>
