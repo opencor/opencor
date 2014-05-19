@@ -38,6 +38,9 @@ class ViewInterface
 public:
     enum Mode {
         Unknown,
+#ifdef QT_DEBUG
+        Sample,
+#endif
         Editing,
         Simulation,
         Analysis
