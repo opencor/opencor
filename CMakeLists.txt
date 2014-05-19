@@ -190,6 +190,7 @@ ELSE()
     SET(SAMPLE_PLUGINS
         sample/Sample
         sample/SampleTools
+        sample/SampleWindow
     )
 ENDIF()
 
