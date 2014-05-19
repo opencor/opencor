@@ -15,7 +15,7 @@
         <script src="../../../res/common.js" type="text/javascript"></script>
         <script src="../../res/menu.js" type="text/javascript"></script>
     </head>
-    <body>
+    <body onload="prettyPrint()">
         <script type="text/javascript">
             headerAndContentsMenu("SampleWindow Plugin", "../../..");
         </script>
@@ -55,6 +55,59 @@
 
         <p>
             Our plugin is part of the <code>Sample</code> category, which means that its code can be found under <a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/SampleTools/"><code>[OpenCOR]/src/plugins/sample/SampleTools/</code></a>.
+        </p>
+
+        <div class="section">
+            Interfaces
+        </div>
+
+        <p>
+            Unlike for the <a href="Sample.html">Sample</a> plugin, we want our plugin to interact with OpenCOR. This means that it needs to implement some interfaces (click <a href="index.html#Interfaces">here</a> for more information about interfaces).
+        </p>
+
+        <p>
+            We want our plugin to be a dockable window, so we need to implement both the <a href="https://github.com/opencor/opencor/blob/master/src/plugins/plugininterface.inl">plugin</a> and <a href="https://github.com/opencor/opencor/blob/master/src/plugins/windowinterface.inl">window</a> interfaces.
+        </p>
+
+        <div class="section">
+            CMake project
+        </div>
+
+        <p>
+            As for the <a href="Sample.html">Sample</a> plugin, our plugin has a <a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/SampleTools/CMakeLists.txt"><code>CMakeLists.txt</code></a> file, which contents is:
+        </p>
+
+        <pre class="prettyprint linenums">PROJECT(SampleWindowPlugin)
+
+# Add the plugin
+
+ADD_PLUGIN(SampleWindow
+    SOURCES
+        <a href="https://github.com/opencor/opencor/blob/master/src/plugins/i18ninterface.cpp"><code>../../i18ninterface.cpp</code></a>
+        <a href="https://github.com/opencor/opencor/blob/master/src/plugins/plugininfo.cpp"><code>../../plugininfo.cpp</code></a>
+
+        <a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/SampleWindow/src/samplewindowplugin.cpp"><code>src/samplewindowplugin.cpp</code></a>
+        <a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/SampleWindow/src/samplewindowwindow.cpp"><code>src/samplewindowwindow.cpp</code></a>
+    HEADERS_MOC
+        <a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/SampleWindow/src/samplewindowplugin.h"><code>src/samplewindowplugin.h</code></a>
+        <a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/SampleWindow/src/samplewindowwindow.h"><code>src/samplewindowwindow.h</code></a>
+    UIS
+        <a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/SampleWindow/src/samplewindowwindow.ui"><code>src/samplewindowwindow.ui</code></a>
+    INCLUDE_DIRS
+        src
+    PLUGINS
+        Core
+        Sample
+    QT_MODULES
+        Widgets
+    QT_LIBRARIES
+        QtCore
+        QtGui
+        QtWidgets
+)</pre>
+
+        <p>
+            One of the interfaces our plugin implements comes with a <code>.cpp</code> file, so we reference it (line 7). Then, our plugin needs both the Core plugin and the <a href="Sample.html">Sample</a> plugin (to be able to use its <code>add()</code> function), so  they are referenced (lines 20-21) using the <code>PLUGINS</code> keyword (line 19). Finally, we reference the <a href="http://qt-project.org/">Qt</a> modules (line 23) and libraries (lines 25-27) needed by our plugin.
         </p>
 
         <script type="text/javascript">
