@@ -23,6 +23,10 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#include <QIcon>
+
+//==============================================================================
+
 namespace OpenCOR {
 namespace SampleView {
 
@@ -41,8 +45,216 @@ PLUGININFO_FUNC SampleViewPluginInfo()
 }
 
 //==============================================================================
+// File handling interface
+//==============================================================================
 
-}   // namespace SampleWindow
+bool SampleViewPlugin::saveFile(const QString &pOldFileName,
+                                const QString &pNewFileName)
+{
+    Q_UNUSED(pOldFileName);
+    Q_UNUSED(pNewFileName);
+
+    // We don't handle this interface...
+
+    return false;
+}
+
+//==============================================================================
+
+void SampleViewPlugin::fileOpened(const QString &pFileName)
+{
+    Q_UNUSED(pFileName);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void SampleViewPlugin::filePermissionsChanged(const QString &pFileName)
+{
+    Q_UNUSED(pFileName);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void SampleViewPlugin::fileModified(const QString &pFileName)
+{
+    Q_UNUSED(pFileName);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void SampleViewPlugin::fileReloaded(const QString &pFileName)
+{
+    Q_UNUSED(pFileName);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void SampleViewPlugin::fileRenamed(const QString &pOldFileName,
+                                   const QString &pNewFileName)
+{
+    Q_UNUSED(pOldFileName);
+    Q_UNUSED(pNewFileName);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void SampleViewPlugin::fileClosed(const QString &pFileName)
+{
+    Q_UNUSED(pFileName);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+// I18n interface
+//==============================================================================
+
+void SampleViewPlugin::retranslateUi()
+{
+    // We don't handle this interface...
+}
+
+//==============================================================================
+// Plugin interface
+//==============================================================================
+
+void SampleViewPlugin::initializePlugin(QMainWindow *pMainWindow)
+{
+    Q_UNUSED(pMainWindow);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void SampleViewPlugin::finalizePlugin()
+{
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void SampleViewPlugin::pluginInitialized(const Plugins &pLoadedPlugins)
+{
+    Q_UNUSED(pLoadedPlugins);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void SampleViewPlugin::loadSettings(QSettings *pSettings)
+{
+    Q_UNUSED(pSettings);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void SampleViewPlugin::saveSettings(QSettings *pSettings) const
+{
+    Q_UNUSED(pSettings);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void SampleViewPlugin::handleAction(const QUrl &pUrl)
+{
+    Q_UNUSED(pUrl);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+// View interface
+//==============================================================================
+
+ViewInterface::Mode SampleViewPlugin::viewMode() const
+{
+    // Return our mode
+
+    return ViewInterface::Sample;
+}
+
+//==============================================================================
+
+QStringList SampleViewPlugin::viewMimeTypes() const
+{
+    // Return the MIME types we support
+    // Note: we allow any kind of file, hence our empty string list...
+
+    return QStringList();
+}
+
+//==============================================================================
+
+void SampleViewPlugin::initializeView()
+{
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void SampleViewPlugin::finalizeView()
+{
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+QWidget * SampleViewPlugin::viewWidget(const QString &pFileName,
+                                       const bool &pCreate)
+{
+    // We don't handle this interface...
+
+    return 0;
+}
+
+//==============================================================================
+
+void SampleViewPlugin::removeViewWidget(const QString &pFileName)
+{
+    Q_UNUSED(pFileName);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+QString SampleViewPlugin::viewName() const
+{
+    // Return our raw view's name
+
+    return tr("Sample");
+}
+
+//==============================================================================
+
+QIcon SampleViewPlugin::fileTabIcon(const QString &pFileName) const
+{
+    Q_UNUSED(pFileName);
+
+    // We don't handle this interface...
+
+    return QIcon();
+}
+
+//==============================================================================
+
+}   // namespace SampleView
 }   // namespace OpenCOR
 
 //==============================================================================

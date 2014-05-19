@@ -24,7 +24,11 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#include "filehandlinginterface.h"
+#include "i18ninterface.h"
 #include "plugininfo.h"
+#include "plugininterface.h"
+#include "viewinterface.h"
 
 //==============================================================================
 
@@ -37,11 +41,31 @@ PLUGININFO_FUNC SampleViewPluginInfo();
 
 //==============================================================================
 
-class SampleViewPlugin : public QObject
+class SampleViewWidget;
+
+//==============================================================================
+
+class SampleViewPlugin : public QObject, public FileHandlingInterface,
+                         public I18nInterface, public PluginInterface,
+                         public ViewInterface
 {
     Q_OBJECT
 
     Q_PLUGIN_METADATA(IID "OpenCOR.SampleViewPlugin" FILE "sampleviewplugin.json")
+
+    Q_INTERFACES(OpenCOR::FileHandlingInterface)
+    Q_INTERFACES(OpenCOR::I18nInterface)
+    Q_INTERFACES(OpenCOR::PluginInterface)
+    Q_INTERFACES(OpenCOR::ViewInterface)
+
+public:
+#include "filehandlinginterface.inl"
+#include "i18ninterface.inl"
+#include "plugininterface.inl"
+#include "viewinterface.inl"
+
+private:
+    SampleViewWidget *mViewWidget;
 };
 
 //==============================================================================
