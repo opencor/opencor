@@ -115,6 +115,10 @@
         <source>Sorry, but the &lt;strong&gt;%1&lt;/strong&gt; view does not support saving files.</source>
         <translation>Désolé, mais la vue &lt;strong&gt;%1&lt;/strong&gt; ne supporte pas la sauvegarde de fichiers.</translation>
     </message>
+    <message>
+        <source>Sample</source>
+        <translation>Exemple</translation>
+    </message>
 </context>
 <context>
     <name>OpenCOR::Core::CorePlugin</name>

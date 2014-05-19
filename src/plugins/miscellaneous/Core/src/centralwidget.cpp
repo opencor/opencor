@@ -157,6 +157,9 @@ CentralWidget::CentralWidget(QMainWindow *pMainWindow) :
 
     // Create our modes
 
+#ifdef QT_DEBUG
+    mModes.insert(ViewInterface::Sample, new CentralWidgetMode(this));
+#endif
     mModes.insert(ViewInterface::Editing, new CentralWidgetMode(this));
     mModes.insert(ViewInterface::Simulation, new CentralWidgetMode(this));
     mModes.insert(ViewInterface::Analysis, new CentralWidgetMode(this));
@@ -562,6 +565,10 @@ void CentralWidget::retranslateUi()
 
     // Retranslate our modes tab bar
 
+#ifdef QT_DEBUG
+    mModeTabs->setTabText(mModeModeTabIndexes.value(ViewInterface::Sample, -1),
+                          tr("Sample"));
+#endif
     mModeTabs->setTabText(mModeModeTabIndexes.value(ViewInterface::Editing, -1),
                           tr("Editing"));
     mModeTabs->setTabText(mModeModeTabIndexes.value(ViewInterface::Simulation, -1),
@@ -1508,6 +1515,7 @@ void CentralWidget::updateGui()
 
     int fileModeTabIndex = mModeTabs->currentIndex();
 
+    mModes.value(ViewInterface::Sample)->viewTabs()->setVisible(fileModeTabIndex == mModeModeTabIndexes.value(ViewInterface::Sample));
     mModes.value(ViewInterface::Editing)->viewTabs()->setVisible(fileModeTabIndex == mModeModeTabIndexes.value(ViewInterface::Editing));
     mModes.value(ViewInterface::Simulation)->viewTabs()->setVisible(fileModeTabIndex == mModeModeTabIndexes.value(ViewInterface::Simulation));
     mModes.value(ViewInterface::Analysis)->viewTabs()->setVisible(fileModeTabIndex == mModeModeTabIndexes.value(ViewInterface::Analysis));
