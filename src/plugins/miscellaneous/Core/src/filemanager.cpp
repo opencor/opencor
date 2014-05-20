@@ -192,6 +192,21 @@ void FileManager::setActive(const bool &pActive)
 
 //==============================================================================
 
+QString FileManager::sha1(const QString &pFileName) const
+{
+    // Return the SHA-1 value of the given file, should it be managed
+
+    QString nativeFileName = nativeCanonicalFileName(pFileName);
+    File *file = isManaged(nativeFileName);
+
+    if (file)
+        return file->sha1();
+    else
+        return QString();
+}
+
+//==============================================================================
+
 void FileManager::reset(const QString &pFileName)
 {
     // Reset the given file, should it be managed

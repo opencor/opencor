@@ -102,6 +102,8 @@ public:
     bool isActive() const;
     void setActive(const bool &pActive);
 
+    QString sha1(const QString &pFileName) const;
+
     void reset(const QString &pFileName);
 
     int newIndex(const QString &pFileName) const;

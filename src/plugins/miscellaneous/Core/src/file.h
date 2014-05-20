@@ -65,6 +65,8 @@ public:
 
     Status check();
 
+    QString sha1() const;
+
     void reset();
 
     bool isNew() const;
@@ -93,8 +95,6 @@ private:
     int mNewIndex;
 
     bool mModified;
-
-    QString sha1() const;
 };
 
 //==============================================================================
