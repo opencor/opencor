@@ -18,11 +18,11 @@ before_install:
     && make -j $PROCS
     && sudo make install
     && cd ../..
-    && sudo apt-get -qq install qt52tools qt52svg qt52webkit
+    && sudo apt-get -qq install qt53tools qt53svg qt53webkit
 
 script:
   -    cd build
-    && cmake -DCMAKE_BUILD_TYPE=$CONFIG -DCMAKE_PREFIX_PATH=/opt/qt52/lib/cmake -DENABLE_TESTS=True ..
+    && cmake -DCMAKE_BUILD_TYPE=$CONFIG -DCMAKE_PREFIX_PATH=/opt/qt53/lib/cmake -DENABLE_TESTS=True ..
     && make -j $PROCS
     && cd tests
     && ./runtests -platform offscreen
