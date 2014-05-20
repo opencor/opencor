@@ -19,12 +19,17 @@ specific language governing permissions and limitations under the License.
 // Raw view widget
 //==============================================================================
 
+#include "cliutils.h"
 #include "filemanager.h"
 #include "sampleviewwidget.h"
 
 //==============================================================================
 
 #include "ui_sampleviewwidget.h"
+
+//==============================================================================
+
+#include <QFile>
 
 //==============================================================================
 
@@ -85,35 +90,7 @@ void SampleViewWidget::initialize(const QString &pFileName)
     QString sha1Value = fileManagerInstance->sha1(pFileName);
 
     mGui->sha1Value->setText(sha1Value.isEmpty()?"???":sha1Value);
-}
-
-//==============================================================================
-
-void SampleViewWidget::finalize(const QString &pFileName)
-{
-    Q_UNUSED(pFileName);
-
-    // We don't handle this interface...
-}
-
-//==============================================================================
-
-void SampleViewWidget::fileReloaded(const QString &pFileName)
-{
-    Q_UNUSED(pFileName);
-
-    // We don't handle this interface...
-}
-
-//==============================================================================
-
-void SampleViewWidget::fileRenamed(const QString &pOldFileName,
-                                   const QString &pNewFileName)
-{
-    Q_UNUSED(pOldFileName);
-    Q_UNUSED(pNewFileName);
-
-    // We don't handle this interface...
+    mGui->sizeValue->setText(Core::sizeAsString(QFile(pFileName).size()));
 }
 
 //==============================================================================

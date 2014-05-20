@@ -50,6 +50,13 @@ PLUGININFO_FUNC SampleViewPluginInfo()
 }
 
 //==============================================================================
+
+SampleViewPlugin::SampleViewPlugin() :
+    mFileName(QString())
+{
+}
+
+//==============================================================================
 // File handling interface
 //==============================================================================
 
@@ -77,9 +84,11 @@ void SampleViewPlugin::fileOpened(const QString &pFileName)
 
 void SampleViewPlugin::filePermissionsChanged(const QString &pFileName)
 {
-    Q_UNUSED(pFileName);
+    // The given file has had its permissions changed, so re-initialise our
+    // view widget, if needed
 
-    // We don't handle this interface...
+    if (!pFileName.compare(mFileName))
+        mViewWidget->initialize(pFileName);
 }
 
 //==============================================================================
@@ -95,9 +104,11 @@ void SampleViewPlugin::fileModified(const QString &pFileName)
 
 void SampleViewPlugin::fileReloaded(const QString &pFileName)
 {
-    // The given file has been reloaded, so let our view widget know about it
+    // The given file has been reloaded, so re-initialise our view widget, if
+    // needed
 
-    mViewWidget->fileReloaded(pFileName);
+    if (!pFileName.compare(mFileName))
+        mViewWidget->initialize(pFileName);
 }
 
 //==============================================================================
@@ -105,18 +116,25 @@ void SampleViewPlugin::fileReloaded(const QString &pFileName)
 void SampleViewPlugin::fileRenamed(const QString &pOldFileName,
                                    const QString &pNewFileName)
 {
-    // The given file has been renamed, so let our view widget know about it
+    Q_UNUSED(pOldFileName);
 
-    mViewWidget->fileRenamed(pOldFileName, pNewFileName);
+    // The given file has been renamed, so re-initialise our view widget
+
+    if (!pOldFileName.compare(mFileName)) {
+        mFileName = pNewFileName;
+
+        mViewWidget->initialize(pNewFileName);
+    }
 }
 
 //==============================================================================
 
 void SampleViewPlugin::fileClosed(const QString &pFileName)
 {
-    Q_UNUSED(pFileName);
+    // The given file has been closed, so update our internals, if needed
 
-    // We don't handle this interface...
+    if (!pFileName.compare(mFileName))
+        mFileName = QString();
 }
 
 //==============================================================================
@@ -232,10 +250,14 @@ QWidget * SampleViewPlugin::viewWidget(const QString &pFileName,
     // Update our sample view widget using the given file
 
     if (pCreate) {
+        mFileName = pFileName;
+
         mViewWidget->initialize(pFileName);
 
         return mViewWidget;
     } else {
+        mFileName = QString();
+
         return 0;
     }
 }
@@ -244,9 +266,9 @@ QWidget * SampleViewPlugin::viewWidget(const QString &pFileName,
 
 void SampleViewPlugin::removeViewWidget(const QString &pFileName)
 {
-    // Ask our sample view widget to finalise the given file
+    Q_UNUSED(pFileName);
 
-    mViewWidget->finalize(pFileName);
+    // We don't handle this interface...
 }
 
 //==============================================================================

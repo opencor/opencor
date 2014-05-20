@@ -21,6 +21,7 @@ ADD_PLUGIN(SampleView
         Core
     QT_MODULES
         Widgets
+        XmlPatterns
     QT_LIBRARIES
         QtCore
         QtGui

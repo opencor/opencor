@@ -33,5 +33,9 @@
         <source>SHA-1:</source>
         <translation>SHA-1 :</translation>
     </message>
+    <message>
+        <source>Size:</source>
+        <translation>Taille :</translation>
+    </message>
 </context>
 </TS>

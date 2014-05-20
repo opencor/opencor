@@ -59,6 +59,8 @@ class SampleViewPlugin : public QObject, public FileHandlingInterface,
     Q_INTERFACES(OpenCOR::ViewInterface)
 
 public:
+    explicit SampleViewPlugin();
+
 #include "filehandlinginterface.inl"
 #include "i18ninterface.inl"
 #include "plugininterface.inl"
@@ -66,6 +68,8 @@ public:
 
 private:
     SampleViewWidget *mViewWidget;
+
+    QString mFileName;
 };
 
 //==============================================================================
