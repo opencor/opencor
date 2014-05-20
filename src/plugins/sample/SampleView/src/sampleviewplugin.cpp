@@ -143,9 +143,10 @@ void SampleViewPlugin::fileClosed(const QString &pFileName)
 
 void SampleViewPlugin::retranslateUi()
 {
-    // Retranslate our view widget
+    // Retranslate our view widget, if needed
 
-    mViewWidget->retranslateUi();
+    if (!mFileName.isEmpty())
+        mViewWidget->retranslateUi();
 }
 
 //==============================================================================
