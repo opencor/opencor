@@ -6,7 +6,7 @@ env:
 
 before_install:
   -    export PROCS=`cat /proc/cpuinfo | grep processor | wc -l`
-    && sudo apt-add-repository -y ppa:beineri/opt-qt521
+    && sudo apt-add-repository -y ppa:beineri/opt-qt53
     && sudo apt-get -qq update
     && sudo apt-get -qq install cmake
     && wget http://www.cmake.org/files/v2.8/cmake-2.8.12.2.tar.gz
