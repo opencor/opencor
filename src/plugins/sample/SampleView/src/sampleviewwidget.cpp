@@ -19,6 +19,7 @@ specific language governing permissions and limitations under the License.
 // Raw view widget
 //==============================================================================
 
+#include "filemanager.h"
 #include "sampleviewwidget.h"
 
 //==============================================================================
@@ -34,7 +35,8 @@ namespace SampleView {
 
 SampleViewWidget::SampleViewWidget(QWidget *pParent) :
     ViewWidget(pParent),
-    mGui(new Ui::SampleViewWidget)
+    mGui(new Ui::SampleViewWidget),
+    mFileName(QString())
 {
     // Set up the GUI
 
@@ -57,15 +59,32 @@ void SampleViewWidget::retranslateUi()
     // Retranslate our GUI
 
     mGui->retranslateUi(this);
+
+    // Reinitialise ourself too since some widgets will have been reset
+    // following the retranslation (e.g. mGui->fileNameValue)
+
+    initialize(mFileName);
 }
 
 //==============================================================================
 
 void SampleViewWidget::initialize(const QString &pFileName)
 {
-    Q_UNUSED(pFileName);
+    // Keep track of the given file name
 
-    // We don't handle this interface...
+    mFileName = pFileName;
+
+    // Initialise our GUI with some information about the given file
+
+    mGui->fileNameValue->setText(pFileName);
+
+    Core::FileManager *fileManagerInstance = Core::FileManager::instance();
+
+    mGui->lockedValue->setText(fileManagerInstance->isLocked(pFileName)?tr("Yes"):tr("No"));
+
+    QString sha1Value = fileManagerInstance->sha1(pFileName);
+
+    mGui->sha1Value->setText(sha1Value.isEmpty()?"???":sha1Value);
 }
 
 //==============================================================================

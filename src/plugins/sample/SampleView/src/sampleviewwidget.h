@@ -57,6 +57,8 @@ public:
 
 private:
     Ui::SampleViewWidget *mGui;
+
+    QString mFileName;
 };
 
 //==============================================================================
