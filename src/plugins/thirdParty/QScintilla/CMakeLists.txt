@@ -3,7 +3,27 @@ PROJECT(QScintillaPlugin)
 # Use our pre-built version unless instructed otherwise
 
 IF(USE_PREBUILT_QSCINTILLA_PLUGIN)
-# To be done...
+    # Retrieve the plugin's binary file(s)
+
+    STRING(REPLACE "${${CMAKE_PROJECT_NAME}_SOURCE_DIR}/" "" RELATIVE_PROJECT_SOURCE_DIR "${PROJECT_SOURCE_DIR}/bin/${DISTRIB_BINARY_DIR}")
+
+    IF(WIN32)
+        IF(RELEASE_MODE)
+            RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} QScintilla.dll ea5a10948a255a55f9402873d8dbaee5dbe05196)
+            RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} QScintilla.lib c60aed038bfd3dd93aaa4700f0420b82ceecb1d4)
+        ELSE()
+            RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} QScintilla.dll 3392158b603232f0161a0f86e8813ef2bcb773b0)
+            RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} QScintilla.lib f27002bc699f6441d1063b96ec79e7b1f05f0093)
+        ENDIF()
+    ELSEIF(APPLE)
+        RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} libQScintilla.dylib 9c2b19164aafb885c9acb9652c5d66e52bd323ab)
+    ELSE()
+        IF(${ARCHITECTURE} EQUAL 32)
+            RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} libQScintilla.so bab0c8ae661d69e0be776840c4eee99540e41564)
+        ELSE()
+            RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} libQScintilla.so cfe026b6c1382c9da2c8100e8d536f26ce7f4bfa)
+        ENDIF()
+    ENDIF()
 ELSE()
     # Add the plugin
 
