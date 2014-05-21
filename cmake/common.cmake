@@ -3,7 +3,7 @@
 SET(USE_PREBUILT_LLVM_PLUGIN ON)
 SET(USE_PREBUILT_QSCINTILLA_PLUGIN OFF)
 SET(USE_PREBUILT_QWT_PLUGIN OFF)
-SET(USE_PREBUILT_SUNDIALS_PLUGIN OFF)
+SET(USE_PREBUILT_SUNDIALS_PLUGIN ON)
 
 # Determine the effective build directory
 
@@ -748,7 +748,7 @@ MACRO(ADD_PLUGIN_BINARY PLUGIN_NAME)
 
         IF(NOT "$ENV{PACKAGE_OPENCOR}" STREQUAL "True")
             FOREACH(QT_LIBRARY ${QT_LIBRARIES})
-                ADD_CUSTOM_TARGET(${QT_LIBRARY}_UPDATE_OS_X_QT_REFERENCE_IN_BUNDLE ALL
+                ADD_CUSTOM_TARGET(${PLUGIN_NAME}_${QT_LIBRARY}_UPDATE_OS_X_QT_REFERENCE_IN_BUNDLE ALL
                                   DEPENDS ${PLUGIN_NAME}_COPY_PLUGIN_TO_BUILD_DIRECTORY
                                   COMMAND install_name_tool -change @executable_path/../Frameworks/${QT_LIBRARY}.framework/Versions/${QT_VERSION_MAJOR}/${QT_LIBRARY}
                                                                     ${QT_LIBRARY_DIR}/${QT_LIBRARY}.framework/Versions/${QT_VERSION_MAJOR}/${QT_LIBRARY}
@@ -763,7 +763,7 @@ MACRO(ADD_PLUGIN_BINARY PLUGIN_NAME)
         #       to the system version of the Qt libraries, so...
 
         FOREACH(QT_LIBRARY ${QT_LIBRARIES})
-            ADD_CUSTOM_TARGET(${QT_LIBRARY}_UPDATE_OS_X_QT_REFERENCE_IN_BUILD_DIRECTORY ALL
+            ADD_CUSTOM_TARGET(${PLUGIN_NAME}_${QT_LIBRARY}_UPDATE_OS_X_QT_REFERENCE_IN_BUILD_DIRECTORY ALL
                               DEPENDS ${PLUGIN_NAME}_COPY_PLUGIN_TO_BUILD_DIRECTORY
                               COMMAND install_name_tool -change @executable_path/../Frameworks/${QT_LIBRARY}.framework/Versions/${QT_VERSION_MAJOR}/${QT_LIBRARY}
                                                                 ${QT_LIBRARY_DIR}/${QT_LIBRARY}.framework/Versions/${QT_VERSION_MAJOR}/${QT_LIBRARY}
