@@ -102,6 +102,100 @@ ADD_PLUGIN(SampleView
             Some of the interfaces our plugin implements come with a <code>.cpp</code> file, so we reference them (lines 7 and 8). Our plugin provides OpenCOR with a test view, which is implemented using various files (lines 12, 15 and 17). One of those files is a <code>.ui</code> file, which is referenced using the <code>UIS</code> keyword (line 16). Finally, we reference the <a href="http://qt-project.org/">Qt</a> modules (line 23-24) and libraries (lines 26-30) needed by our plugin.
         </p>
 
+        <div class="section">
+            Plugin information
+        </div>
+
+        <p>
+            Our <a href="index.html#Plugin%20information">plugin information</a> can be found in <a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/SampleView/src/sampleviewplugin.cpp"><code>sampleviewplugin.cpp</code></a>, <a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/SampleView/src/sampleviewplugin.h"><code>sampleviewplugin.h</code></a> and <a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/SampleView/src/sampleviewplugin.json"><code>sampleviewplugin.json</code></a>. Starting with <a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/SampleView/src/sampleviewplugin.h"><code>sampleviewplugin.h</code></a>, its contents is:
+        </p>
+
+        <pre class="prettyprint linenums:22">#ifndef SAMPLEVIEWPLUGIN_H
+#define SAMPLEVIEWPLUGIN_H
+
+//==============================================================================
+
+#include "<a href="https://github.com/opencor/opencor/blob/master/src/plugins/filehandlinginterface.h"><code>filehandlinginterface.h</code></a>"
+#include "<a href="https://github.com/opencor/opencor/blob/master/src/plugins/i18ninterface.h"><code>i18ninterface.h</code></a>"
+#include "<a href="https://github.com/opencor/opencor/blob/master/src/plugins/plugininfo.h"><code>plugininfo.h</code></a>"
+#include "<a href="https://github.com/opencor/opencor/blob/master/src/plugins/plugininterface.h"><code>plugininterface.h</code></a>"
+#include "<a href="https://github.com/opencor/opencor/blob/master/src/plugins/viewinterface.h"><code>viewinterface.h</code></a>"
+
+//==============================================================================
+
+namespace OpenCOR {
+namespace SampleView {
+
+//==============================================================================
+
+PLUGININFO_FUNC SampleViewPluginInfo();
+
+//==============================================================================
+
+class SampleViewWidget;
+
+//==============================================================================
+
+class SampleViewPlugin : public QObject, public FileHandlingInterface,
+                         public I18nInterface, public PluginInterface,
+                         public ViewInterface
+{
+    Q_OBJECT
+
+    Q_PLUGIN_METADATA(IID "OpenCOR.SampleViewPlugin" FILE "<a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/SampleView/src/sampleviewplugin.json"><code>sampleviewplugin.json</code></a>")
+
+    Q_INTERFACES(OpenCOR::FileHandlingInterface)
+    Q_INTERFACES(OpenCOR::I18nInterface)
+    Q_INTERFACES(OpenCOR::PluginInterface)
+    Q_INTERFACES(OpenCOR::ViewInterface)
+
+public:
+    explicit SampleViewPlugin();
+
+#include "<a href="https://github.com/opencor/opencor/blob/master/src/plugins/filehandlinginterface.inl"><code>filehandlinginterface.inl</code></a>"
+#include "<a href="https://github.com/opencor/opencor/blob/master/src/plugins/i18ninterface.inl"><code>i18ninterface.inl</code></a>"
+#include "<a href="https://github.com/opencor/opencor/blob/master/src/plugins/plugininterface.inl"><code>plugininterface.inl</code></a>"
+#include "<a href="https://github.com/opencor/opencor/blob/master/src/plugins/viewinterface.inl"><code>viewinterface.inl</code></a>"
+
+private:
+    SampleViewWidget *mViewWidget;
+
+    QString mFileName;
+};
+
+//==============================================================================
+
+}   // namespace SampleView
+}   // namespace OpenCOR
+
+//==============================================================================
+
+#endif</pre>
+
+        <p>
+            As mentioned above, our plugin implements some interfaces, which means that their header file is included (lines 27-28 and 30-31). It also means that our plugin class inherits from those interfaces (lines 48-50), as well as make calls to the <code>Q_INTERFACES()</code> macro to let <a href-="http://qt-project.org/">Qt</a> know which interfaces it implements (lines 56-59). Finally, we include the inline files (lines 64-67) that declare various methods that must be implemented by our plugin class (see the <a href="#Interfaces%20implementation">next section</a>). (The rest of the class definition is specific to our plugin and is discussed <a href="#Plugin%20specific">below</a>.)
+        </p>
+
+        <p>
+            The C function that is used by OpenCOR to retrieve some <a href="index.html#Basic%20information">basic information</a> about our plugin and can be found in <a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/SampleView/src/sampleviewplugin.cpp"><code>sampleviewplugin.cpp</code></a>:
+        </p>
+
+        <pre class="prettyprint linenums:37">PLUGININFO_FUNC SampleViewPluginInfo()
+{
+    Descriptions descriptions;
+
+    descriptions.insert("en", QString::fromUtf8("a plugin that provides a test view."));
+    descriptions.insert("fr", QString::fromUtf8("une extension qui fournit une vue de test."));
+
+    return new PluginInfo(PluginInfo::Sample, true, false,
+                          QStringList() << "Core",
+                          descriptions);
+}</pre>
+
+        <p>
+            As can be seen, our plugin is selectable by the user, but it does not offer direct <a href="http://en.wikipedia.org/wiki/Command-line_interface">CLI</a> support (line 44). It also has a direct dependency on the Core plugin (line 45).
+        </p>
+
         <script type="text/javascript">
             copyright("../../..");
         </script>
