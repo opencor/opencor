@@ -23,7 +23,9 @@ ADD_PLUGIN(QScintillaSupport
         src
     PLUGINS
         Core
-        QScintilla
+        ${QSCINTILLA_PLUGIN}
+    PLUGIN_BINARIES
+        ${QSCINTILLA_PLUGIN_BINARY}
     QT_MODULES
         Network
         Widgets

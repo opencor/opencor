@@ -56,7 +56,7 @@ ADD_PLUGIN(CellMLAnnotationView
         CoreSolver
         ${LLVM_PLUGIN}
     PLUGIN_BINARIES
-        ${LLVM_BINARY_PLUGIN}
+        ${LLVM_PLUGIN_BINARY}
     QT_MODULES
         WebKitWidgets
         XmlPatterns

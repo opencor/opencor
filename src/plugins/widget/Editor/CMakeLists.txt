@@ -28,8 +28,10 @@ ADD_PLUGIN(Editor
         src
     PLUGINS
         Core
-        QScintilla
+        ${QSCINTILLA_PLUGIN}
         QScintillaSupport
+    PLUGIN_BINARIES
+        ${QSCINTILLA_PLUGIN_BINARY}
     QT_MODULES
         Network
         Widgets

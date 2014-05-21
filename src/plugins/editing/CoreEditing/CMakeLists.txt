@@ -27,8 +27,10 @@ ADD_PLUGIN(CoreEditing
     PLUGINS
         Core
         Editor
-        QScintilla
+        ${QSCINTILLA_PLUGIN}
         QScintillaSupport
+    PLUGIN_BINARIES
+        ${QSCINTILLA_PLUGIN_BINARY}
     QT_MODULES
         Widgets
     QT_LIBRARIES

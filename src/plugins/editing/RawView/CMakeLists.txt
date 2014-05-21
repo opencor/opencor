@@ -26,8 +26,10 @@ ADD_PLUGIN(RawView
     PLUGINS
         Core
         Editor
-        QScintilla
+        ${QSCINTILLA_PLUGIN}
         QScintillaSupport
+    PLUGIN_BINARIES
+        ${QSCINTILLA_PLUGIN_BINARY}
     QT_MODULES
         Widgets
         XmlPatterns

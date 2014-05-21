@@ -39,12 +39,14 @@ ADD_PLUGIN(CoreCellMLEditing
         Core
         Editor
         ${LLVM_PLUGIN}
-        QScintilla
+        ${QSCINTILLA_PLUGIN}
         QScintillaSupport
-        Qwt
+        ${QWT_PLUGIN}
         Viewer
     PLUGIN_BINARIES
-        ${LLVM_BINARY_PLUGIN}
+        ${LLVM_PLUGIN_BINARY}
+        ${QSCINTILLA_PLUGIN_BINARY}
+        ${QWT_PLUGIN_BINARY}
     QT_MODULES
         Widgets
         Xml

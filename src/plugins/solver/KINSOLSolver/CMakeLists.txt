@@ -17,7 +17,7 @@ ADD_PLUGIN(KINSOLSolver
         CoreSolver
         ${SUNDIALS_PLUGIN}
     PLUGIN_BINARIES
-        ${SUNDIALS_BINARY_PLUGIN}
+        ${SUNDIALS_PLUGIN_BINARY}
     QT_MODULES
         Core
     QT_LIBRARIES

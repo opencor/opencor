@@ -64,9 +64,10 @@ ADD_PLUGIN(SingleCellView
         Core
         CoreSolver
         ${LLVM_PLUGIN}
-        Qwt
+        ${QWT_PLUGIN}
     PLUGIN_BINARIES
-        ${LLVM_BINARY_PLUGIN}
+        ${LLVM_PLUGIN_BINARY}
+        ${QWT_PLUGIN_BINARY}
     QT_MODULES
         Widgets
         XmlPatterns

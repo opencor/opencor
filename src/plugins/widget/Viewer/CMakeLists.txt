@@ -19,7 +19,9 @@ ADD_PLUGIN(Viewer
         QWT_DLL
     PLUGINS
         Core
-        Qwt
+        ${QWT_PLUGIN}
+    PLUGIN_BINARIES
+        ${QWT_PLUGIN_BINARY}
     QT_MODULES
         Widgets
         Xml

@@ -18,7 +18,7 @@ ADD_PLUGIN(IDASolver
         CoreSolver
         ${SUNDIALS_PLUGIN}
     PLUGIN_BINARIES
-        ${SUNDIALS_BINARY_PLUGIN}
+        ${SUNDIALS_PLUGIN_BINARY}
     QT_MODULES
         Core
         Widgets

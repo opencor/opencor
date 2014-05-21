@@ -34,7 +34,7 @@ ADD_PLUGIN(CellMLTools
         CoreSolver
         ${LLVM_PLUGIN}
     PLUGIN_BINARIES
-        ${LLVM_BINARY_PLUGIN}
+        ${LLVM_PLUGIN_BINARY}
     QT_MODULES
         Widgets
         XmlPatterns
