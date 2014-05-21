@@ -24,6 +24,32 @@ IF(USE_PREBUILT_QWT_PLUGIN)
             RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} libQwt.so 39149f96685869e25afca1e4d6fd48199c551afd)
         ENDIF()
     ENDIF()
+
+    # Add the plugin as a binary
+    # Note: in the case of Windows, must refer to the distribution directory as
+    #       opposed to the main build directory since we need the .lib file and
+    #       it's only there...
+
+    IF(WIN32)
+        SET(QWT_BINARY_PLUGIN ${PROJECT_SOURCE_DIR}/bin/${DISTRIB_BINARY_DIR}/${CMAKE_IMPORT_LIBRARY_PREFIX}Qwt${CMAKE_IMPORT_LIBRARY_SUFFIX} PARENT_SCOPE)
+    ELSE()
+        SET(QWT_BINARY_PLUGIN ${PROJECT_BUILD_DIR}/${CMAKE_SHARED_LIBRARY_PREFIX}Qwt${CMAKE_SHARED_LIBRARY_SUFFIX} PARENT_SCOPE)
+    ENDIF()
+
+    ADD_PLUGIN_BINARY(Qwt
+        INCLUDE_DIRS
+            src
+            textengines/mathml
+        QT_LIBRARIES
+            QtConcurrent
+            QtCore
+            QtGui
+            QtOpenGL
+            QtPrintSupport
+            QtSvg
+            QtWidgets
+            QtXml
+    )
 ELSE()
     # Add the plugin
 

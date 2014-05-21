@@ -2,6 +2,12 @@ PROJECT(QScintillaPlugin)
 
 # Use our pre-built version unless instructed otherwise
 
+IF(APPLE)
+    SET(QT_LIBRARIES_EXTRAS QtMacExtras)
+ELSE()
+    SET(QT_LIBRARIES_EXTRAS)
+ENDIF()
+
 IF(USE_PREBUILT_QSCINTILLA_PLUGIN)
     # Retrieve the plugin's binary file(s)
 
@@ -24,15 +30,37 @@ IF(USE_PREBUILT_QSCINTILLA_PLUGIN)
             RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} libQScintilla.so cfe026b6c1382c9da2c8100e8d536f26ce7f4bfa)
         ENDIF()
     ENDIF()
+
+    # Add the plugin as a binary
+    # Note: in the case of Windows, must refer to the distribution directory as
+    #       opposed to the main build directory since we need the .lib file and
+    #       it's only there...
+
+    IF(WIN32)
+        SET(QSCINTILLA_BINARY_PLUGIN ${PROJECT_SOURCE_DIR}/bin/${DISTRIB_BINARY_DIR}/${CMAKE_IMPORT_LIBRARY_PREFIX}QScintilla${CMAKE_IMPORT_LIBRARY_SUFFIX} PARENT_SCOPE)
+    ELSE()
+        SET(QSCINTILLA_BINARY_PLUGIN ${PROJECT_BUILD_DIR}/${CMAKE_SHARED_LIBRARY_PREFIX}QScintilla${CMAKE_SHARED_LIBRARY_SUFFIX} PARENT_SCOPE)
+    ENDIF()
+
+    ADD_PLUGIN_BINARY(QScintilla
+        INCLUDE_DIRS
+            include
+            lexlib
+            Qt4Qt5
+            src
+        QT_LIBRARIES
+            ${QT_LIBRARIES_EXTRAS}
+            QtCore
+            QtGui
+            QtWidgets
+    )
 ELSE()
     # Add the plugin
 
     IF(APPLE)
         SET(QT_MODULES_EXTRAS MacExtras)
-        SET(QT_LIBRARIES_EXTRAS QtMacExtras)
     ELSE()
         SET(QT_MODULES_EXTRAS)
-        SET(QT_LIBRARIES_EXTRAS)
     ENDIF()
 
     ADD_PLUGIN(QScintilla

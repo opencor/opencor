@@ -73,27 +73,20 @@ IF(USE_PREBUILT_LLVM_PLUGIN)
     ENDIF()
 
     # Add the plugin as a binary
-    # Note: in the case of Windows, LLVM_BINARY_PLUGIN must refer to the
-    #       distribution directory as opposed to the main build directory since
-    #       we need the .lib file and it's only there, so...
+    # Note: in the case of Windows, must refer to the distribution directory as
+    #       opposed to the main build directory since we need the .lib file and
+    #       it's only there...
 
     IF(WIN32)
-        SET(LLVM_BINARY_PLUGIN
-            ${PROJECT_SOURCE_DIR}/bin/${DISTRIB_BINARY_DIR}/${CMAKE_IMPORT_LIBRARY_PREFIX}LLVM${CMAKE_IMPORT_LIBRARY_SUFFIX}
-
-            PARENT_SCOPE
-        )
+        SET(LLVM_BINARY_PLUGIN ${PROJECT_SOURCE_DIR}/bin/${DISTRIB_BINARY_DIR}/${CMAKE_IMPORT_LIBRARY_PREFIX}LLVM${CMAKE_IMPORT_LIBRARY_SUFFIX} PARENT_SCOPE)
     ELSE()
-        SET(LLVM_BINARY_PLUGIN
-            ${PROJECT_BUILD_DIR}/${CMAKE_SHARED_LIBRARY_PREFIX}LLVM${CMAKE_SHARED_LIBRARY_SUFFIX}
-
-            PARENT_SCOPE
-        )
+        SET(LLVM_BINARY_PLUGIN ${PROJECT_BUILD_DIR}/${CMAKE_SHARED_LIBRARY_PREFIX}LLVM${CMAKE_SHARED_LIBRARY_SUFFIX} PARENT_SCOPE)
     ENDIF()
 
     ADD_PLUGIN_BINARY(LLVM
         INCLUDE_DIRS
             include
+            lib/Target/X86
             src
             tools/clang/include
         QT_LIBRARIES

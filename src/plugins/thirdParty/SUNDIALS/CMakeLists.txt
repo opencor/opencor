@@ -24,6 +24,25 @@ IF(USE_PREBUILT_SUNDIALS_PLUGIN)
             RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} libSUNDIALS.so e03ae4583a0eeaf5465a17054b1a9cd2e5edfb95)
         ENDIF()
     ENDIF()
+
+    # Add the plugin as a binary
+    # Note: in the case of Windows, must refer to the distribution directory as
+    #       opposed to the main build directory since we need the .lib file and
+    #       it's only there...
+
+    IF(WIN32)
+        SET(SUNDIALS_BINARY_PLUGIN ${PROJECT_SOURCE_DIR}/bin/${DISTRIB_BINARY_DIR}/${CMAKE_IMPORT_LIBRARY_PREFIX}SUNDIALS${CMAKE_IMPORT_LIBRARY_SUFFIX} PARENT_SCOPE)
+    ELSE()
+        SET(SUNDIALS_BINARY_PLUGIN ${PROJECT_BUILD_DIR}/${CMAKE_SHARED_LIBRARY_PREFIX}SUNDIALS${CMAKE_SHARED_LIBRARY_SUFFIX} PARENT_SCOPE)
+    ENDIF()
+
+    ADD_PLUGIN_BINARY(SUNDIALS
+        INCLUDE_DIRS
+            include
+            src
+        QT_LIBRARIES
+            QtCore
+    )
 ELSE()
     # Add the plugin
 
