@@ -63,6 +63,8 @@ ELSE()
         SET(QT_MODULES_EXTRAS)
     ENDIF()
 
+    SET(QSCINTILLA_PLUGIN QScintilla PARENT_SCOPE)
+
     ADD_PLUGIN(QScintilla
         THIRD_PARTY
         SOURCES

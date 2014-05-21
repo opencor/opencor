@@ -53,6 +53,8 @@ IF(USE_PREBUILT_QWT_PLUGIN)
 ELSE()
     # Add the plugin
 
+    SET(QWT_PLUGIN Qwt PARENT_SCOPE)
+
     ADD_PLUGIN(Qwt
         THIRD_PARTY
         SOURCES

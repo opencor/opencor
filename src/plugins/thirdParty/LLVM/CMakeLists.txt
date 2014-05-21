@@ -115,11 +115,7 @@ ELSE()
 
     # Add the plugin
 
-    SET(LLVM_PLUGIN
-        LLVM
-
-        PARENT_SCOPE
-    )
+    SET(LLVM_PLUGIN LLVM PARENT_SCOPE)
 
     ADD_PLUGIN(LLVM
         THIRD_PARTY
