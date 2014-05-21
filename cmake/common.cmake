@@ -1,10 +1,3 @@
-# Use the pre-built version of our third-party plugins
-
-SET(USE_PREBUILT_LLVM_PLUGIN ON)
-SET(USE_PREBUILT_QSCINTILLA_PLUGIN ON)
-SET(USE_PREBUILT_QWT_PLUGIN ON)
-SET(USE_PREBUILT_SUNDIALS_PLUGIN ON)
-
 # Determine the effective build directory
 
 SET(PROJECT_BUILD_DIR ${CMAKE_BINARY_DIR})

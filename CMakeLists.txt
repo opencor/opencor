@@ -184,6 +184,11 @@ ENDIF()
 # Note: the build order must be such that plugins needed by others are built
 #       first...
 
+SET(USE_PREBUILT_LLVM_PLUGIN ON)
+SET(USE_PREBUILT_QSCINTILLA_PLUGIN ON)
+SET(USE_PREBUILT_QWT_PLUGIN ON)
+SET(USE_PREBUILT_SUNDIALS_PLUGIN ON)
+
 IF(RELEASE_MODE)
     SET(SAMPLE_PLUGINS)
 ELSE()
