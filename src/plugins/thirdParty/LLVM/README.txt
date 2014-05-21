@@ -18,4 +18,3 @@ In case LLVM is to be built (by setting USE_PREBUILT_LLVM_PLUGIN to OFF in [Open
        From there, the configuration files are to be manually copied over to the windows, linux and osx folders of the various folders.
  - Neither HAVE_TERMINFO nor HAVE_ZLIB_H must be set, while LLVM_ENABLE_ZLIB must be set to 0 in [LLVM]/include/llvm/Config/config.h on all three platforms. To do anything else will require additional features that may or not be present on the build machine.
  - OpencOR is currently supported on Windows, Linux and OS X, so we only need to target X86 at this stage.
- - on OS X, a normal build of LLVM (incl. Clang) will produce a 'dirty' binary (it is so that it can work without any problem with XCode). Yet, we need a 'clean' binary, so LLVM (incl. Clang) must be built as if we wanted to package OpenCOR.
