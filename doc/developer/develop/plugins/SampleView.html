@@ -207,7 +207,7 @@ private:
         </p>
 
         <p>
-            We start with the <a href="https://github.com/opencor/opencor/blob/master/src/plugins/filehandlinginterface.inl">file handling</a>, which has a few methods:
+            We start with the <a href="https://github.com/opencor/opencor/blob/master/src/plugins/filehandlinginterface.inl">file handling</a> interface:
         </p>
 
         <pre class="prettyprint linenums:59">//==============================================================================
@@ -298,7 +298,7 @@ void SampleViewPlugin::fileClosed(const QString &pFileName)
         </p>
 
         <p>
-            Next, we have the <a href="https://github.com/opencor/opencor/blob/master/src/plugins/i18ninterface.inl">internationalisation</a>, which has only one method:
+            Next, we have the <a href="https://github.com/opencor/opencor/blob/master/src/plugins/i18ninterface.inl">internationalisation</a> interface:
         </p>
 
         <pre class="prettyprint linenums:140">//==============================================================================
@@ -320,7 +320,7 @@ void SampleViewPlugin::retranslateUi()
         </p>
 
         <p>
-            Next, we have six methods for the <a href="https://github.com/opencor/opencor/blob/master/src/plugins/plugininterface.inl">plugin</a> interface:
+            After the <a href="https://github.com/opencor/opencor/blob/master/src/plugins/i18ninterface.inl">internationalisation</a> interface, we have the <a href="https://github.com/opencor/opencor/blob/master/src/plugins/plugininterface.inl">plugin</a> interface:
         </p>
 
         <pre class="prettyprint linenums:152">//==============================================================================
