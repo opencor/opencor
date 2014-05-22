@@ -294,7 +294,7 @@ void SampleViewPlugin::fileClosed(const QString &pFileName)
 //==============================================================================</pre>
 
         <p>
-            ---GRY--- To be done...
+            Our plugin provides a view and, as such, should at least handle some of the methods of the <a href="https://github.com/opencor/opencor/blob/master/src/plugins/filehandlinginterface.inl">file handling</a> interface.
         </p>
 
         <p>
@@ -548,19 +548,20 @@ private:
         </p>
 
         <pre class="prettyprint linenums:18">//==============================================================================
-// SampleView plugin
+// Sample view widget
 //==============================================================================
 
-#include "sampleviewplugin.h"
+#include "cliutils.h"
+#include "filemanager.h"
 #include "sampleviewwidget.h"
 
 //==============================================================================
 
-#include <QMainWindow>
+#include "ui_sampleviewwidget.h"
 
 //==============================================================================
 
-#include <QIcon>
+#include <QFile>
 
 //==============================================================================
 
@@ -569,259 +570,59 @@ namespace SampleView {
 
 //==============================================================================
 
-PLUGININFO_FUNC SampleViewPluginInfo()
-{
-    Descriptions descriptions;
-
-    descriptions.insert("en", QString::fromUtf8("a plugin that provides a test view."));
-    descriptions.insert("fr", QString::fromUtf8("une extension qui fournit une vue de test."));
-
-    return new PluginInfo(PluginInfo::Sample, true, false,
-                          QStringList() << "Core" << "Sample",
-                          descriptions);
-}
-
-//==============================================================================
-
-SampleViewPlugin::SampleViewPlugin() :
+SampleViewWidget::SampleViewWidget(QWidget *pParent) :
+    ViewWidget(pParent),
+    mGui(new Ui::SampleViewWidget),
     mFileName(QString())
 {
-}
+    // Set up the GUI
 
-//==============================================================================
-// File handling interface
-//==============================================================================
-
-bool SampleViewPlugin::saveFile(const QString &pOldFileName,
-                                const QString &pNewFileName)
-{
-    Q_UNUSED(pOldFileName);
-    Q_UNUSED(pNewFileName);
-
-    // We don't handle this interface...
-
-    return false;
+    mGui->setupUi(this);
 }
 
 //==============================================================================
 
-void SampleViewPlugin::fileOpened(const QString &pFileName)
+SampleViewWidget::~SampleViewWidget()
 {
-    Q_UNUSED(pFileName);
+    // Delete the GUI
 
-    // We don't handle this interface...
+    delete mGui;
 }
 
 //==============================================================================
 
-void SampleViewPlugin::filePermissionsChanged(const QString &pFileName)
+void SampleViewWidget::retranslateUi()
 {
-    // The given file has had its permissions changed, so re-initialise our
-    // view widget, if needed
+    // Retranslate our GUI
 
-    if (!pFileName.compare(mFileName))
-        mViewWidget->initialize(pFileName);
+    mGui->retranslateUi(this);
+
+    // Reinitialise ourself too since some widgets will have been reset
+    // following the retranslation (e.g. mGui->fileNameValue)
+
+    initialize(mFileName);
 }
 
 //==============================================================================
 
-void SampleViewPlugin::fileModified(const QString &pFileName)
+void SampleViewWidget::initialize(const QString &pFileName)
 {
-    Q_UNUSED(pFileName);
+    // Keep track of the given file name
 
-    // We don't handle this interface...
-}
+    mFileName = pFileName;
 
-//==============================================================================
+    // Initialise our GUI with some information about the given file
 
-void SampleViewPlugin::fileReloaded(const QString &pFileName)
-{
-    // The given file has been reloaded, so re-initialise our view widget, if
-    // needed
+    mGui->fileNameValue->setText(pFileName);
 
-    if (!pFileName.compare(mFileName))
-        mViewWidget->initialize(pFileName);
-}
+    Core::FileManager *fileManagerInstance = Core::FileManager::instance();
 
-//==============================================================================
+    mGui->lockedValue->setText(fileManagerInstance->isLocked(pFileName)?tr("Yes"):tr("No"));
 
-void SampleViewPlugin::fileRenamed(const QString &pOldFileName,
-                                   const QString &pNewFileName)
-{
-    Q_UNUSED(pOldFileName);
+    QString sha1Value = fileManagerInstance->sha1(pFileName);
 
-    // The given file has been renamed, so re-initialise our view widget
-
-    if (!pOldFileName.compare(mFileName)) {
-        mFileName = pNewFileName;
-
-        mViewWidget->initialize(pNewFileName);
-    }
-}
-
-//==============================================================================
-
-void SampleViewPlugin::fileClosed(const QString &pFileName)
-{
-    // The given file has been closed, so update our internals, if needed
-
-    if (!pFileName.compare(mFileName))
-        mFileName = QString();
-}
-
-//==============================================================================
-// I18n interface
-//==============================================================================
-
-void SampleViewPlugin::retranslateUi()
-{
-    // Retranslate our view widget, if needed
-
-    if (!mFileName.isEmpty())
-        mViewWidget->retranslateUi();
-}
-
-//==============================================================================
-// Plugin interface
-//==============================================================================
-
-void SampleViewPlugin::initializePlugin(QMainWindow *pMainWindow)
-{
-    // Create our sample view widget
-
-    mViewWidget = new SampleViewWidget(pMainWindow);
-
-    // Hide our sample view widget since it may not initially be shown in our
-    // central widget
-
-    mViewWidget->setVisible(false);
-}
-
-//==============================================================================
-
-void SampleViewPlugin::finalizePlugin()
-{
-    // We don't handle this interface...
-}
-
-//==============================================================================
-
-void SampleViewPlugin::pluginInitialized(const Plugins &pLoadedPlugins)
-{
-    Q_UNUSED(pLoadedPlugins);
-
-    // We don't handle this interface...
-}
-
-//==============================================================================
-
-void SampleViewPlugin::loadSettings(QSettings *pSettings)
-{
-    Q_UNUSED(pSettings);
-
-    // We don't handle this interface...
-}
-
-//==============================================================================
-
-void SampleViewPlugin::saveSettings(QSettings *pSettings) const
-{
-    Q_UNUSED(pSettings);
-
-    // We don't handle this interface...
-}
-
-//==============================================================================
-
-void SampleViewPlugin::handleAction(const QUrl &pUrl)
-{
-    Q_UNUSED(pUrl);
-
-    // We don't handle this interface...
-}
-
-//==============================================================================
-// View interface
-//==============================================================================
-
-ViewInterface::Mode SampleViewPlugin::viewMode() const
-{
-    // Return our mode
-
-    return ViewInterface::Sample;
-}
-
-//==============================================================================
-
-QStringList SampleViewPlugin::viewMimeTypes() const
-{
-    // Return the MIME types we support
-    // Note: we allow any kind of file, hence our empty string list...
-
-    return QStringList();
-}
-
-//==============================================================================
-
-void SampleViewPlugin::initializeView()
-{
-    // We don't handle this interface...
-}
-
-//==============================================================================
-
-void SampleViewPlugin::finalizeView()
-{
-    // We don't handle this interface...
-}
-
-//==============================================================================
-
-QWidget * SampleViewPlugin::viewWidget(const QString &pFileName,
-                                       const bool &pCreate)
-{
-    // Update our sample view widget using the given file
-
-    if (pCreate) {
-        mFileName = pFileName;
-
-        mViewWidget->initialize(pFileName);
-
-        return mViewWidget;
-    } else {
-        mFileName = QString();
-
-        return 0;
-    }
-}
-
-//==============================================================================
-
-void SampleViewPlugin::removeViewWidget(const QString &pFileName)
-{
-    Q_UNUSED(pFileName);
-
-    // We don't handle this interface...
-}
-
-//==============================================================================
-
-QString SampleViewPlugin::viewName() const
-{
-    // Return our sample view's name
-
-    return tr("Sample");
-}
-
-//==============================================================================
-
-QIcon SampleViewPlugin::fileTabIcon(const QString &pFileName) const
-{
-    Q_UNUSED(pFileName);
-
-    // We don't handle this interface...
-
-    return QIcon();
+    mGui->sha1Value->setText(sha1Value.isEmpty()?"???":sha1Value);
+    mGui->sizeValue->setText(Core::sizeAsString(QFile(pFileName).size()));
 }
 
 //==============================================================================
