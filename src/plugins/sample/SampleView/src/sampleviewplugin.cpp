@@ -174,7 +174,7 @@ void SampleViewPlugin::finalizePlugin()
 
 //==============================================================================
 
-void SampleViewPlugin::pluginInitialized(const Plugins &pLoadedPlugins)
+void SampleViewPlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
 {
     Q_UNUSED(pLoadedPlugins);
 

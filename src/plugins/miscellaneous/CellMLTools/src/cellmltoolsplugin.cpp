@@ -197,7 +197,7 @@ void CellMLToolsPlugin::finalizePlugin()
 
 //==============================================================================
 
-void CellMLToolsPlugin::pluginInitialized(const Plugins &pLoadedPlugins)
+void CellMLToolsPlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
 {
     // Retrieve the file types supported by the CellMLSupport plugin
 

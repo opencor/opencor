@@ -87,7 +87,7 @@ void FileBrowserWindowPlugin::finalizePlugin()
 
 //==============================================================================
 
-void FileBrowserWindowPlugin::pluginInitialized(const Plugins &pLoadedPlugins)
+void FileBrowserWindowPlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
 {
     Q_UNUSED(pLoadedPlugins);
 

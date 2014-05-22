@@ -87,7 +87,7 @@ void FileOrganiserWindowPlugin::finalizePlugin()
 
 //==============================================================================
 
-void FileOrganiserWindowPlugin::pluginInitialized(const Plugins &pLoadedPlugins)
+void FileOrganiserWindowPlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
 {
     Q_UNUSED(pLoadedPlugins);
 

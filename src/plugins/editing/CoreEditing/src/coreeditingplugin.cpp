@@ -391,7 +391,7 @@ void CoreEditingPlugin::finalizePlugin()
 
 //==============================================================================
 
-void CoreEditingPlugin::pluginInitialized(const Plugins &pLoadedPlugins)
+void CoreEditingPlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
 {
     Q_UNUSED(pLoadedPlugins);
 

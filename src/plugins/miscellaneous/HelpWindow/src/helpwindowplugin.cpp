@@ -88,7 +88,7 @@ void HelpWindowPlugin::finalizePlugin()
 
 //==============================================================================
 
-void HelpWindowPlugin::pluginInitialized(const Plugins &pLoadedPlugins)
+void HelpWindowPlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
 {
     Q_UNUSED(pLoadedPlugins);
 

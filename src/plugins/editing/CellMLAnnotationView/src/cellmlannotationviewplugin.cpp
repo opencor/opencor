@@ -173,7 +173,7 @@ void CellMLAnnotationViewPlugin::finalizePlugin()
 
 //==============================================================================
 
-void CellMLAnnotationViewPlugin::pluginInitialized(const Plugins &pLoadedPlugins)
+void CellMLAnnotationViewPlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
 {
     Q_UNUSED(pLoadedPlugins);
 

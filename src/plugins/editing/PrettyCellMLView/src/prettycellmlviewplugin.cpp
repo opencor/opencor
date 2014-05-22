@@ -165,7 +165,7 @@ void PrettyCellMLViewPlugin::finalizePlugin()
 
 //==============================================================================
 
-void PrettyCellMLViewPlugin::pluginInitialized(const Plugins &pLoadedPlugins)
+void PrettyCellMLViewPlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
 {
     Q_UNUSED(pLoadedPlugins);
 

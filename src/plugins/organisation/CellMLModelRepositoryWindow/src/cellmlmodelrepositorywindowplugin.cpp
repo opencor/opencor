@@ -88,7 +88,7 @@ void CellMLModelRepositoryWindowPlugin::finalizePlugin()
 
 //==============================================================================
 
-void CellMLModelRepositoryWindowPlugin::pluginInitialized(const Plugins &pLoadedPlugins)
+void CellMLModelRepositoryWindowPlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
 {
     Q_UNUSED(pLoadedPlugins);
 

@@ -83,7 +83,7 @@ void SampleWindowPlugin::finalizePlugin()
 
 //==============================================================================
 
-void SampleWindowPlugin::pluginInitialized(const Plugins &pLoadedPlugins)
+void SampleWindowPlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
 {
     Q_UNUSED(pLoadedPlugins);
 

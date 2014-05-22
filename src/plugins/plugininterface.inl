@@ -7,7 +7,7 @@
     virtual void initializePlugin(QMainWindow *pMainWindow) PURE;
     virtual void finalizePlugin() PURE;
 
-    virtual void pluginInitialized(const Plugins &pLoadedPlugins) PURE;
+    virtual void pluginsInitialized(const Plugins &pLoadedPlugins) PURE;
 
     virtual void loadSettings(QSettings *pSettings) PURE;
     virtual void saveSettings(QSettings *pSettings) const PURE;

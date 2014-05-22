@@ -169,7 +169,7 @@ void RawCellMLViewPlugin::finalizePlugin()
 
 //==============================================================================
 
-void RawCellMLViewPlugin::pluginInitialized(const Plugins &pLoadedPlugins)
+void RawCellMLViewPlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
 {
     Q_UNUSED(pLoadedPlugins);
 

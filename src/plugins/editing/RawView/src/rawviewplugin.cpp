@@ -167,7 +167,7 @@ void RawViewPlugin::finalizePlugin()
 
 //==============================================================================
 
-void RawViewPlugin::pluginInitialized(const Plugins &pLoadedPlugins)
+void RawViewPlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
 {
     Q_UNUSED(pLoadedPlugins);
 

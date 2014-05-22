@@ -245,7 +245,7 @@ Core::showEnableAction(mGui->actionPreferences, false);
     //       solvers, if any, are available to it)...
 
     foreach (Plugin *plugin, mLoadedPluginPlugins)
-        qobject_cast<PluginInterface *>(plugin->instance())->pluginInitialized(mPluginManager->loadedPlugins());
+        qobject_cast<PluginInterface *>(plugin->instance())->pluginsInitialized(mPluginManager->loadedPlugins());
 
     // Keep track of the showing/hiding of the different dock widgets
 
@@ -662,7 +662,7 @@ void MainWindow::loadSettings()
 
     // Let our core plugin know that all of the plugins have loaded their
     // settings
-    // Note: this is similar to initializePlugin() vs. pluginInitialized()...
+    // Note: this is similar to initializePlugin() vs. pluginsInitialized()...
 
     if (mPluginManager->corePlugin())
         qobject_cast<CoreInterface *>(mPluginManager->corePlugin()->instance())->settingsLoaded(mPluginManager->loadedPlugins());

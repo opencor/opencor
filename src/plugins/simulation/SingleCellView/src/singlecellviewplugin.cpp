@@ -159,7 +159,7 @@ void SingleCellViewPlugin::finalizePlugin()
 
 //==============================================================================
 
-void SingleCellViewPlugin::pluginInitialized(const Plugins &pLoadedPlugins)
+void SingleCellViewPlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
 {
     // Retrieve the different solvers that are available to us
 

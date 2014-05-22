@@ -482,7 +482,7 @@ void CorePlugin::finalizePlugin()
 
 //==============================================================================
 
-void CorePlugin::pluginInitialized(const Plugins &pLoadedPlugins)
+void CorePlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
 {
     // Retrieve the different file types supported by our various plugins and
     // make our central widget aware of them

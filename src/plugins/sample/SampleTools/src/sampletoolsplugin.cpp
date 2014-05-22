@@ -151,7 +151,7 @@ void SampleToolsPlugin::finalizePlugin()
 
 //==============================================================================
 
-void SampleToolsPlugin::pluginInitialized(const Plugins &pLoadedPlugins)
+void SampleToolsPlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
 {
     Q_UNUSED(pLoadedPlugins);
 

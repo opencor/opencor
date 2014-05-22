@@ -127,7 +127,7 @@ void CoreCellMLEditingPlugin::finalizePlugin()
 
 //==============================================================================
 
-void CoreCellMLEditingPlugin::pluginInitialized(const Plugins &pLoadedPlugins)
+void CoreCellMLEditingPlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
 {
     Q_UNUSED(pLoadedPlugins);
 
