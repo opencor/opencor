@@ -48,6 +48,9 @@ PLUGININFO_FUNC SecondOrderRungeKuttaSolverPluginInfo()
 void SecondOrderRungeKuttaSolverPlugin::retranslateUi()
 {
     // We don't handle this interface...
+    // Note: even though we don't handle this interface, we still want to
+    //       support the internationalisation interface since some other aspects
+    //       of our plugin are multi-lingual...
 }
 
 //==============================================================================
