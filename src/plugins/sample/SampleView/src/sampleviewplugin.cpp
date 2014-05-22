@@ -223,24 +223,9 @@ ViewInterface::Mode SampleViewPlugin::viewMode() const
 
 QStringList SampleViewPlugin::viewMimeTypes() const
 {
-    // Return the MIME types we support
-    // Note: we allow any kind of file, hence our empty string list...
+    // Return the MIME types we support, i.e. any in our case
 
     return QStringList();
-}
-
-//==============================================================================
-
-void SampleViewPlugin::initializeView()
-{
-    // We don't handle this interface...
-}
-
-//==============================================================================
-
-void SampleViewPlugin::finalizeView()
-{
-    // We don't handle this interface...
 }
 
 //==============================================================================

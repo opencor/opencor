@@ -233,20 +233,6 @@ QStringList SingleCellViewPlugin::viewMimeTypes() const
 
 //==============================================================================
 
-void SingleCellViewPlugin::initializeView()
-{
-    // We don't handle this interface...
-}
-
-//==============================================================================
-
-void SingleCellViewPlugin::finalizeView()
-{
-    // We don't handle this interface...
-}
-
-//==============================================================================
-
 QWidget * SingleCellViewPlugin::viewWidget(const QString &pFileName,
                                            const bool &pCreate)
 {

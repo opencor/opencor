@@ -74,7 +74,7 @@ QString KINSOLSolverPlugin::solverName() const
 
 Solver::Properties KINSOLSolverPlugin::solverProperties() const
 {
-    // Return the properties supported by the solver
+    // Return the properties supported by the solver, i.e. none in our case
 
     return Solver::Properties();
 }

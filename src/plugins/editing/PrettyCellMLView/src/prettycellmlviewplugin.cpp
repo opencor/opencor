@@ -225,20 +225,6 @@ QStringList PrettyCellMLViewPlugin::viewMimeTypes() const
 
 //==============================================================================
 
-void PrettyCellMLViewPlugin::initializeView()
-{
-    // We don't handle this interface...
-}
-
-//==============================================================================
-
-void PrettyCellMLViewPlugin::finalizeView()
-{
-    // We don't handle this interface...
-}
-
-//==============================================================================
-
 QWidget * PrettyCellMLViewPlugin::viewWidget(const QString &pFileName,
                                              const bool &pCreate)
 {

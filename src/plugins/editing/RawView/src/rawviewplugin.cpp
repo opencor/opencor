@@ -220,24 +220,9 @@ ViewInterface::Mode RawViewPlugin::viewMode() const
 
 QStringList RawViewPlugin::viewMimeTypes() const
 {
-    // Return the MIME types we support
-    // Note: we allow any kind of file, hence our empty string list...
+    // Return the MIME types we support, i.e. any in our case
 
     return QStringList();
-}
-
-//==============================================================================
-
-void RawViewPlugin::initializeView()
-{
-    // We don't handle this interface...
-}
-
-//==============================================================================
-
-void RawViewPlugin::finalizeView()
-{
-    // We don't handle this interface...
 }
 
 //==============================================================================

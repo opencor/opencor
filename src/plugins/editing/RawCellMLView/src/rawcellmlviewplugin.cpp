@@ -229,20 +229,6 @@ QStringList RawCellMLViewPlugin::viewMimeTypes() const
 
 //==============================================================================
 
-void RawCellMLViewPlugin::initializeView()
-{
-    // We don't handle this interface...
-}
-
-//==============================================================================
-
-void RawCellMLViewPlugin::finalizeView()
-{
-    // We don't handle this interface...
-}
-
-//==============================================================================
-
 QWidget * RawCellMLViewPlugin::viewWidget(const QString &pFileName,
                                           const bool &pCreate)
 {

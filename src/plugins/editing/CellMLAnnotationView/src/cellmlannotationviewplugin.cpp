@@ -233,20 +233,6 @@ QStringList CellMLAnnotationViewPlugin::viewMimeTypes() const
 
 //==============================================================================
 
-void CellMLAnnotationViewPlugin::initializeView()
-{
-    // We don't handle this interface...
-}
-
-//==============================================================================
-
-void CellMLAnnotationViewPlugin::finalizeView()
-{
-    // We don't handle this interface...
-}
-
-//==============================================================================
-
 QWidget * CellMLAnnotationViewPlugin::viewWidget(const QString &pFileName,
                                                  const bool &pCreate)
 {
