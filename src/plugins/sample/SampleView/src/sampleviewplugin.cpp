@@ -84,11 +84,11 @@ void SampleViewPlugin::fileOpened(const QString &pFileName)
 
 void SampleViewPlugin::filePermissionsChanged(const QString &pFileName)
 {
-    // The given file has had its permissions changed, so re-initialise our
-    // view widget, if needed
+    // The given file has had its permissions changed, so update our view
+    // widget, if needed
 
     if (!pFileName.compare(mFileName))
-        mViewWidget->initialize(pFileName);
+        mViewWidget->update(pFileName);
 }
 
 //==============================================================================
@@ -104,11 +104,10 @@ void SampleViewPlugin::fileModified(const QString &pFileName)
 
 void SampleViewPlugin::fileReloaded(const QString &pFileName)
 {
-    // The given file has been reloaded, so re-initialise our view widget, if
-    // needed
+    // The given file has been reloaded, so update our view widget, if needed
 
     if (!pFileName.compare(mFileName))
-        mViewWidget->initialize(pFileName);
+        mViewWidget->update(pFileName);
 }
 
 //==============================================================================
@@ -118,12 +117,12 @@ void SampleViewPlugin::fileRenamed(const QString &pOldFileName,
 {
     Q_UNUSED(pOldFileName);
 
-    // The given file has been renamed, so re-initialise our view widget
+    // The given file has been renamed, so update our view widget, if needed
 
     if (!pOldFileName.compare(mFileName)) {
         mFileName = pNewFileName;
 
-        mViewWidget->initialize(pNewFileName);
+        mViewWidget->update(pNewFileName);
     }
 }
 
@@ -238,7 +237,7 @@ QWidget * SampleViewPlugin::viewWidget(const QString &pFileName,
     if (pCreate) {
         mFileName = pFileName;
 
-        mViewWidget->initialize(pFileName);
+        mViewWidget->update(pFileName);
 
         return mViewWidget;
     } else {

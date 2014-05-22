@@ -49,7 +49,7 @@ public:
 
     virtual void retranslateUi();
 
-    void initialize(const QString &pFileName);
+    void update(const QString &pFileName);
 
 private:
     Ui::SampleViewWidget *mGui;

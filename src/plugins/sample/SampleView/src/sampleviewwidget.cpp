@@ -65,15 +65,15 @@ void SampleViewWidget::retranslateUi()
 
     mGui->retranslateUi(this);
 
-    // Reinitialise ourself too since some widgets will have been reset
-    // following the retranslation (e.g. mGui->fileNameValue)
+    // Update ourself too since some widgets will have been reset following the
+    // retranslation (e.g. mGui->fileNameValue)
 
-    initialize(mFileName);
+    update(mFileName);
 }
 
 //==============================================================================
 
-void SampleViewWidget::initialize(const QString &pFileName)
+void SampleViewWidget::update(const QString &pFileName)
 {
     // Keep track of the given file name
 
