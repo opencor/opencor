@@ -229,22 +229,15 @@ QStringList SampleViewPlugin::viewMimeTypes() const
 
 //==============================================================================
 
-QWidget * SampleViewPlugin::viewWidget(const QString &pFileName,
-                                       const bool &pCreate)
+QWidget * SampleViewPlugin::viewWidget(const QString &pFileName)
 {
-    // Update our sample view widget using the given file
+    // Update and return our sample view widget using the given file
 
-    if (pCreate) {
-        mFileName = pFileName;
+    mFileName = pFileName;
 
-        mViewWidget->update(pFileName);
+    mViewWidget->update(pFileName);
 
-        return mViewWidget;
-    } else {
-        mFileName = QString();
-
-        return 0;
-    }
+    return mViewWidget;
 }
 
 //==============================================================================
@@ -253,7 +246,9 @@ void SampleViewPlugin::removeViewWidget(const QString &pFileName)
 {
     Q_UNUSED(pFileName);
 
-    // We don't handle this interface...
+    // Reset our internals
+
+    mFileName = QString();
 }
 
 //==============================================================================

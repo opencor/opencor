@@ -7,8 +7,7 @@
     virtual Mode viewMode() const PURE;
     virtual QStringList viewMimeTypes() const PURE;
 
-    virtual QWidget * viewWidget(const QString &pFileName,
-                                 const bool &pCreate = true) PURE;
+    virtual QWidget * viewWidget(const QString &pFileName) PURE;
     virtual void removeViewWidget(const QString &pFileName) PURE;
     virtual QString viewName() const PURE;
 

@@ -1236,13 +1236,8 @@ bool CentralWidget::closeFile(const int &pIndex, const bool &pForceClosing)
 
         // Ask our view plugins to remove the corresponding view for the file
 
-        foreach (Plugin *plugin, mLoadedViewPlugins) {
-            ViewInterface *viewInterface = qobject_cast<ViewInterface *>(plugin->instance());
-
-            mContents->removeWidget(viewInterface->viewWidget(fileName, false));
-
-            viewInterface->removeViewWidget(fileName);
-        }
+        foreach (Plugin *plugin, mLoadedViewPlugins)
+            qobject_cast<ViewInterface *>(plugin->instance())->removeViewWidget(fileName);
 
         // Let our plugins know about the file having just been closed
 

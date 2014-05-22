@@ -227,18 +227,13 @@ QStringList RawViewPlugin::viewMimeTypes() const
 
 //==============================================================================
 
-QWidget * RawViewPlugin::viewWidget(const QString &pFileName,
-                                    const bool &pCreate)
+QWidget * RawViewPlugin::viewWidget(const QString &pFileName)
 {
-    // Update our raw view widget using the given file
+    // Update and return our raw view widget using the given file
 
-    if (pCreate) {
-        mViewWidget->initialize(pFileName);
+    mViewWidget->initialize(pFileName);
 
-        return mViewWidget;
-    } else {
-        return 0;
-    }
+    return mViewWidget;
 }
 
 //==============================================================================

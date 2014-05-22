@@ -233,24 +233,19 @@ QStringList CellMLAnnotationViewPlugin::viewMimeTypes() const
 
 //==============================================================================
 
-QWidget * CellMLAnnotationViewPlugin::viewWidget(const QString &pFileName,
-                                                 const bool &pCreate)
+QWidget * CellMLAnnotationViewPlugin::viewWidget(const QString &pFileName)
 {
     // Make sure that we are dealing with a CellML file
 
     if (!CellMLSupport::CellmlFileManager::instance()->cellmlFile(pFileName))
         return 0;
 
-    // We are dealing with a CellML file, so update our CellML annotation view
-    // widget using the given CellML file
+    // Update and return our CellML annotation view widget using the given
+    // CellML file
 
-    if (pCreate) {
-        mViewWidget->initialize(pFileName);
+    mViewWidget->initialize(pFileName);
 
-        return mViewWidget;
-    } else {
-        return 0;
-    }
+    return mViewWidget;
 }
 
 //==============================================================================

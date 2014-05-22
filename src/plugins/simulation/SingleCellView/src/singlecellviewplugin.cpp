@@ -233,24 +233,18 @@ QStringList SingleCellViewPlugin::viewMimeTypes() const
 
 //==============================================================================
 
-QWidget * SingleCellViewPlugin::viewWidget(const QString &pFileName,
-                                           const bool &pCreate)
+QWidget * SingleCellViewPlugin::viewWidget(const QString &pFileName)
 {
     // Make sure that we are dealing with a CellML file
 
     if (!CellMLSupport::CellmlFileManager::instance()->cellmlFile(pFileName))
         return 0;
 
-    // Update our generic simulation view widget using the given CellML file,
-    // but only if we are asked to do so
+    // Update and return our simulation view widget using the given CellML file
 
-    if (pCreate) {
-        mViewWidget->initialize(pFileName);
+    mViewWidget->initialize(pFileName);
 
-        return mViewWidget;
-    } else {
-        return 0;
-    }
+    return mViewWidget;
 }
 
 //==============================================================================
