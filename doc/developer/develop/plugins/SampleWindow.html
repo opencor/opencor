@@ -261,7 +261,7 @@ void SampleWindowPlugin::finalizePlugin()
 
 //==============================================================================
 
-void SampleWindowPlugin::pluginInitialized(const Plugins &pLoadedPlugins)
+void SampleWindowPlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
 {
     Q_UNUSED(pLoadedPlugins);
 
@@ -298,7 +298,7 @@ void SampleWindowPlugin::handleAction(const QUrl &pUrl)
 //==============================================================================</pre>
 
         <p>
-            The only method of interest to our plugin is <code>initializePlugin()</code> (lines 129-143), which is where we initialise both <code>mSampleWindowAction</code> and <code>mSampleWindowWindow </code>. All the other methods (<code>finalizePlugin()</code>, <code>pluginInitialized()</code>, <code>loadSettings()</code>, <code>saveSettings()</code> and <code>handleAction()</code>) are left empty.
+            The only method of interest to our plugin is <code>initializePlugin()</code> (lines 129-143), which is where we initialise both <code>mSampleWindowAction</code> and <code>mSampleWindowWindow </code>. All the other methods (<code>finalizePlugin()</code>, <code>pluginsInitialized()</code>, <code>loadSettings()</code>, <code>saveSettings()</code> and <code>handleAction()</code>) are left empty.
         </p>
 
         <p>

@@ -344,7 +344,7 @@ void SampleToolsPlugin::finalizePlugin()
 
 //==============================================================================
 
-void SampleToolsPlugin::pluginInitialized(const Plugins &pLoadedPlugins)
+void SampleToolsPlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
 {
     Q_UNUSED(pLoadedPlugins);
 
@@ -381,7 +381,7 @@ void SampleToolsPlugin::handleAction(const QUrl &pUrl)
 //==============================================================================</pre>
 
         <p>
-            The only method of interest to our plugin is <code>initializePlugin()</code> (lines 129-143), which is where we initialise <code>mAddTwoNumbersAction</code>, among a couple of other things. All the other methods (<code>finalizePlugin()</code>, <code>pluginInitialized()</code>, <code>loadSettings()</code>, <code>saveSettings()</code> and <code>handleAction()</code>) are left empty.
+            The only method of interest to our plugin is <code>initializePlugin()</code> (lines 129-143), which is where we initialise <code>mAddTwoNumbersAction</code>, among a couple of other things. All the other methods (<code>finalizePlugin()</code>, <code>pluginsInitialized()</code>, <code>loadSettings()</code>, <code>saveSettings()</code> and <code>handleAction()</code>) are left empty.
         </p>
 
         <span class="anchor" id="Plugin specific"></span>

@@ -180,7 +180,7 @@ private:
             The C function that is used by OpenCOR to retrieve some <a href="index.html#Basic%20information">basic information</a> about our plugin and can be found in <a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/SampleView/src/sampleviewplugin.cpp"><code>sampleviewplugin.cpp</code></a>:
         </p>
 
-        <pre class="prettyprint linenums:37">PLUGININFO_FUNC SampleViewPluginInfo()
+        <pre class="prettyprint linenums:40">PLUGININFO_FUNC SampleViewPluginInfo()
 {
     Descriptions descriptions;
 
@@ -193,7 +193,7 @@ private:
 }</pre>
 
         <p>
-            As can be seen, our plugin is selectable by the user, but it does not offer direct <a href="http://en.wikipedia.org/wiki/Command-line_interface">CLI</a> support (line 44). It also has a direct dependency on the Core plugin (line 45).
+            As can be seen, our plugin is selectable by the user, but it does not offer direct <a href="http://en.wikipedia.org/wiki/Command-line_interface">CLI</a> support (line 47). It also has a direct dependency on the Core plugin (line 48).
         </p>
 
         <span class="anchor" id="Interfaces implementation"></span>
@@ -294,7 +294,7 @@ void SampleViewPlugin::fileClosed(const QString &pFileName)
 //==============================================================================</pre>
 
         <p>
-            Our plugin provides a view and, as such, should at least handle some of the methods of the <a href="https://github.com/opencor/opencor/blob/master/src/plugins/filehandlinginterface.inl">file handling</a> interface.
+            Our plugin provides a view and, as such, should at least handle some of the <a href="https://github.com/opencor/opencor/blob/master/src/plugins/filehandlinginterface.inl">file handling</a> interface's methods. Here, we want our plugin to provide some information about the current file, so we do not want to handle the <code>saveFile()</code> method (lines 63-72).
         </p>
 
         <p>
@@ -348,7 +348,7 @@ void SampleViewPlugin::finalizePlugin()
 
 //==============================================================================
 
-void SampleViewPlugin::pluginInitialized(const Plugins &pLoadedPlugins)
+void SampleViewPlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
 {
     Q_UNUSED(pLoadedPlugins);
 
@@ -407,24 +407,9 @@ ViewInterface::Mode SampleViewPlugin::viewMode() const
 
 QStringList SampleViewPlugin::viewMimeTypes() const
 {
-    // Return the MIME types we support
-    // Note: we allow any kind of file, hence our empty string list...
+    // Return the MIME types we support, i.e. any in our case
 
     return QStringList();
-}
-
-//==============================================================================
-
-void SampleViewPlugin::initializeView()
-{
-    // We don't handle this interface...
-}
-
-//==============================================================================
-
-void SampleViewPlugin::finalizeView()
-{
-    // We don't handle this interface...
 }
 
 //==============================================================================
