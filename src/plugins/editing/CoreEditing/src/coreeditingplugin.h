@@ -100,6 +100,9 @@ private:
 
     QString mFileName;
 
+    void unpopulateEditMenu();
+    void populateEditMenu(QAction *pBeforeAction = 0);
+
 private Q_SLOTS:
     void clipboardDataChanged();
 

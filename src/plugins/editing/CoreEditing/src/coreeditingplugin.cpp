@@ -268,6 +268,22 @@ void CoreEditingPlugin::retranslateUi()
 
     retranslateMenu(mEditMenu, tr("Edit"));
 
+    // Unpopulate our Edit menu
+    // Note #1: this is required on OS X otherwise we get several console
+    //          messages that read
+    //              void QCocoaMenu::insertNative(QCocoaMenuItem *, QCocoaMenuItem *) Menu item is already in a menu, remove it from the other menu first before inserting
+    // Note #2: beforeAction is used to keep track of where our first action
+    //          should really be. Indeed, on OS X, our Edit menu gets additional
+    //          menu items (they are automatically added by OS X at the end of
+    //          our Edit menu, should in the system locale), so we cannot just
+    //          use mEditMenu->clear() to unpopulate our Edit menu since
+    //          otherwise when repopulating it those extra menu items will end
+    //          up before (rather than after) our menu items...
+
+    QAction *beforeAction = mEditMenu->insertSeparator(mEditUndoAction);
+
+    unpopulateEditMenu();
+
     // Retranslate our different Edit actions
 
     retranslateAction(mEditUndoAction, tr("Undo"),
@@ -293,6 +309,12 @@ void CoreEditingPlugin::retranslateUi()
 
     retranslateAction(mEditSelectAllAction, tr("Select All"),
                       tr("Select all the text"));
+
+    // (Re)populate our Edit menu
+
+    populateEditMenu(beforeAction);
+
+    mEditMenu->removeAction(beforeAction);
 }
 
 //==============================================================================
@@ -333,19 +355,7 @@ void CoreEditingPlugin::initializePlugin(QMainWindow *pMainWindow)
 
     mEditSelectAllAction = Core::newAction(QKeySequence::SelectAll, pMainWindow);
 
-    mEditMenu->addAction(mEditUndoAction);
-    mEditMenu->addAction(mEditRedoAction);
-    mEditMenu->addSeparator();
-    mEditMenu->addAction(mEditCutAction);
-    mEditMenu->addAction(mEditCopyAction);
-    mEditMenu->addAction(mEditPasteAction);
-    mEditMenu->addAction(mEditDeleteAction);
-    mEditMenu->addSeparator();
-    mEditMenu->addAction(mEditFindReplaceAction);
-    mEditMenu->addAction(mEditFindNextAction);
-    mEditMenu->addAction(mEditFindPreviousAction);
-    mEditMenu->addSeparator();
-    mEditMenu->addAction(mEditSelectAllAction);
+    populateEditMenu();
 
     // Keep track of changes to the clipboard
 
@@ -427,6 +437,50 @@ void CoreEditingPlugin::handleAction(const QUrl &pUrl)
 
 //==============================================================================
 // Plugin specific
+//==============================================================================
+
+void CoreEditingPlugin::unpopulateEditMenu()
+{
+    // Unpopulate our Edit menu
+    // Note: we do not want to use mEditMenu->clear() since we want to keep our
+    //       tracker, so we can repopulate our Edit menu without any problem...
+
+    mEditMenu->removeAction(mEditUndoAction);
+    mEditMenu->removeAction(mEditRedoAction);
+
+    mEditMenu->removeAction(mEditCutAction);
+    mEditMenu->removeAction(mEditCopyAction);
+    mEditMenu->removeAction(mEditPasteAction);
+    mEditMenu->removeAction(mEditDeleteAction);
+
+    mEditMenu->removeAction(mEditFindReplaceAction);
+    mEditMenu->removeAction(mEditFindNextAction);
+    mEditMenu->removeAction(mEditFindPreviousAction);
+
+    mEditMenu->addAction(mEditSelectAllAction);
+}
+
+//==============================================================================
+
+void CoreEditingPlugin::populateEditMenu(QAction *pBeforeAction)
+{
+    // Populate our Edit menu
+
+    mEditMenu->insertAction(pBeforeAction, mEditUndoAction);
+    mEditMenu->insertAction(pBeforeAction, mEditRedoAction);
+    mEditMenu->insertSeparator(pBeforeAction);
+    mEditMenu->insertAction(pBeforeAction, mEditCutAction);
+    mEditMenu->insertAction(pBeforeAction, mEditCopyAction);
+    mEditMenu->insertAction(pBeforeAction, mEditPasteAction);
+    mEditMenu->insertAction(pBeforeAction, mEditDeleteAction);
+    mEditMenu->insertSeparator(pBeforeAction);
+    mEditMenu->insertAction(pBeforeAction, mEditFindReplaceAction);
+    mEditMenu->insertAction(pBeforeAction, mEditFindNextAction);
+    mEditMenu->insertAction(pBeforeAction, mEditFindPreviousAction);
+    mEditMenu->insertSeparator(pBeforeAction);
+    mEditMenu->insertAction(pBeforeAction, mEditSelectAllAction);
+}
+
 //==============================================================================
 
 void CoreEditingPlugin::clipboardDataChanged()
