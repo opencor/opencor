@@ -28,25 +28,12 @@ MACRO(INITIALISE_PROJECT)
     UPDATE_POLICIES()
 
     # Make sure that we are building on a supported architecture
-    # Note #1: normally, we would check the value of CMAKE_SIZEOF_VOID_P, but
-    #          in some cases it may not be set (e.g. when generating an Xcode
-    #          project file), so we determine and retrieve that value
-    #          ourselves...
-    # Note #2: we can come here from either the main project (i.e. the GUI
-    #          version of OpenCOR on Windows and the GUI/CLI versions of
-    #          OpenCOR on Linux / OS X) or the non-main project (i.e. the CLI
-    #          version of OpenCOR on Windows), hence we test the existence of
-    #          the cmake folder so that we can determine the exact location of
-    #          architecture.c file...
-
-    IF(EXISTS ${CMAKE_SOURCE_DIR}/cmake)
-        SET(ARCHITECTURE_FILENAME ${CMAKE_SOURCE_DIR}/cmake/architecture.c)
-    ELSE()
-        SET(ARCHITECTURE_FILENAME ${CMAKE_SOURCE_DIR}/../cmake/architecture.c)
-    ENDIF()
+    # Note: normally, we would check the value of CMAKE_SIZEOF_VOID_P, but in
+    #       some cases it may not be set (e.g. when generating an Xcode project
+    #       file), so we determine and retrieve that value ourselves...
 
     TRY_RUN(ARCHITECTURE_RUN ARCHITECTURE_COMPILE
-            ${CMAKE_BINARY_DIR} ${ARCHITECTURE_FILENAME}
+            ${CMAKE_BINARY_DIR} ${CMAKE_SOURCE_DIR}/cmake/architecture.c
             RUN_OUTPUT_VARIABLE ARCHITECTURE)
 
     IF(NOT ${ARCHITECTURE} EQUAL 32 AND NOT ${ARCHITECTURE} EQUAL 64)
@@ -777,26 +764,18 @@ ENDMACRO()
 
 MACRO(COPY_FILE_TO_BUILD_DIR PROJECT_TARGET ORIG_DIRNAME DEST_DIRNAME FILENAME)
     # Determine the real destination folder
-    # Note: see the INITIALISE_PROJECT() macro for an explanation of why we
-    #       check the existence of the cmake folder below...
-
-    IF(EXISTS ${CMAKE_SOURCE_DIR}/cmake)
-        SET(REAL_DEST_DIRNAME ${PROJECT_BUILD_DIR}/${DEST_DIRNAME})
-    ELSE()
-        SET(REAL_DEST_DIRNAME ${CMAKE_BINARY_DIR}/../../build/${CMAKE_CFG_INTDIR}/${DEST_DIRNAME})
-    ENDIF()
 
     IF("${ARGN}" STREQUAL "")
         ADD_CUSTOM_COMMAND(TARGET ${PROJECT_TARGET} POST_BUILD
                            COMMAND ${CMAKE_COMMAND} -E copy ${ORIG_DIRNAME}/${FILENAME}
-                                                            ${REAL_DEST_DIRNAME}/${FILENAME})
+                                                            ${PROJECT_BUILD_DIR}/${DEST_DIRNAME}/${FILENAME})
     ELSE()
         # An argument was passed so use it to rename the file which is to be
         # copied
 
         ADD_CUSTOM_COMMAND(TARGET ${PROJECT_TARGET} POST_BUILD
                            COMMAND ${CMAKE_COMMAND} -E copy ${ORIG_DIRNAME}/${FILENAME}
-                                                            ${REAL_DEST_DIRNAME}/${ARGN})
+                                                            ${PROJECT_BUILD_DIR}/${DEST_DIRNAME}/${ARGN})
     ENDIF()
 ENDMACRO()
 
