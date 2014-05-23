@@ -32,7 +32,7 @@
         </ul>
 
         <p class="warning">
-            <strong>Note:</strong> these plugins are only built when building OpenCOR in debug mode.
+            <strong>Note:</strong> these plugins only get built when building OpenCOR in debug mode.
         </p>
 
         <span class="anchor" id="Category"></span>
@@ -56,11 +56,11 @@
             <li><strong>Solver:</strong> plugins to access various solvers.</li>
             <li><strong>Support:</strong> plugins to support various third-party libraries and APIs.</li>
             <li><strong>Third-party:</strong> plugins to access various third-party libraries.</li>
-            <li><strong>Widget:</strong> plugins to access various ad hoc widgets.</li>
+            <li><strong>Widget:</strong> plugins to access various <em>ad hoc</em> widgets.</li>
         </ul>
 
         <p>
-            A category is used by OpenCOR to group plugins together and thus improve user experience. From a developer's perspective, a category determines where a plugin's code should be located. Thus, the different folders under <a href="https://github.com/opencor/opencor/blob/master/src/plugins/"><code>[OpenCOR]/src/plugins/</code></a> are for our different categories. For example, <a href="https://github.com/opencor/opencor/blob/master/src/plugins/miscellaneous/"><code>[OpenCOR]/src/plugins/miscellaneous/</code></a> contains the code of our different <strong>Miscellaneous</strong> plugins and <a href="https://github.com/opencor/opencor/blob/master/src/plugins/miscellaneous/Core/"><code>[OpenCOR]/src/plugins/miscellaneous/Core/</code></a> that of the <strong>Core</strong> plugin in particular.
+            A category is used by OpenCOR to group plugins together to improve user experience. From a developer's perspective, a category determines where a plugin's code should be located. Thus, the different folders under <a href="https://github.com/opencor/opencor/blob/master/src/plugins/"><code>[OpenCOR]/src/plugins/</code></a> are for our different categories. For example, <a href="https://github.com/opencor/opencor/blob/master/src/plugins/miscellaneous/"><code>[OpenCOR]/src/plugins/miscellaneous/</code></a> contains the code of our different <strong>Miscellaneous</strong> plugins and <a href="https://github.com/opencor/opencor/blob/master/src/plugins/miscellaneous/Core/"><code>[OpenCOR]/src/plugins/miscellaneous/Core/</code></a> that of the <strong>Core</strong> plugin in particular.
         </p>
 
         <p class="warning">
@@ -82,11 +82,11 @@
             <li><strong><a href="https://github.com/opencor/opencor/blob/master/src/plugins/coreinterface.inl">Core</a>:</strong> to control some of OpenCOR's core aspects.</li>
             <li><strong><a href="https://github.com/opencor/opencor/blob/master/src/plugins/filehandlinginterface.inl">File handling</a>:</strong> to save a file, as well as to be told whenever a file has been opened, modified, closed, etc.</li>
             <li><strong><a href="https://github.com/opencor/opencor/blob/master/src/plugins/filetypeinterface.inl">File type</a>:</strong> to let OpenCOR know about our supported file types and their description.</li>
-            <li><strong><a href="https://github.com/opencor/opencor/blob/master/src/plugins/guiinterface.inl">GUI</a>:</strong> to let OpenCOR know about the menus and menu actions that we want to see added to the GUI, as well as to be told whenever the GUI needs updating.</li>
+            <li><strong><a href="https://github.com/opencor/opencor/blob/master/src/plugins/guiinterface.inl">GUI</a>:</strong> to let OpenCOR know about the menus and menu actions that we want to see added to the <a href="http://en.wikipedia.org/wiki/Graphical_user_interface">GUI</a>, as well as to be told whenever the <a href="http://en.wikipedia.org/wiki/Graphical_user_interface">GUI</a> needs updating.</li>
             <li><strong><a href="https://github.com/opencor/opencor/blob/master/src/plugins/i18ninterface.inl">Internationalisation</a>:</strong> to be told whenever we should retranslate ourselves.</li>
             <li><strong><a href="https://github.com/opencor/opencor/blob/master/src/plugins/plugininterface.inl">Plugin</a>:</strong> to initialise/finalise a plugin, load/save its settings, etc.</li>
             <li><strong><a href="https://github.com/opencor/opencor/blob/master/src/plugins/solverinterface.inl">Solver</a>:</strong> to let OpenCOR know about the type, name and properties of our solver, as well as to provide OpenCOR with a new instance of that solver.</li>
-            <li><strong><a href="https://github.com/opencor/opencor/blob/master/src/plugins/viewinterface.inl">View</a>:</strong> to let OpenCOR know about the mode of our view, the MIME types it supports, whether we have a view for the current file, etc.</li>
+            <li><strong><a href="https://github.com/opencor/opencor/blob/master/src/plugins/viewinterface.inl">View</a>:</strong> to let OpenCOR know about the name of our view, its mode, the MIME types it supports, whether we have a view for the current file, etc.</li>
             <li><strong><a href="https://github.com/opencor/opencor/blob/master/src/plugins/windowinterface.inl">Window</a>:</strong> to let OpenCOR know about the widget, action and default location of our window.</li>
         </ul>
 
@@ -95,7 +95,7 @@
         </p>
 
         <p class="warning">
-            <strong>Note:</strong> the <strong><a href="https://github.com/opencor/opencor/blob/master/src/plugins/coreinterface.inl">Core</a></strong> interface is a special interface in that it is only, and can only be, implemented by the <strong>Core</strong> plugin. Any plugin, besides the <strong>Core</strong> plugin, that tries to implement the <strong><a href="https://github.com/opencor/opencor/blob/master/src/plugins/coreinterface.inl">Core</a></strong> interface will be reported by OpenCOR as being invalid.
+            <strong>Note:</strong> the <strong><a href="https://github.com/opencor/opencor/blob/master/src/plugins/coreinterface.inl">core</a></strong> interface is a special interface in that it is only, and can only be, implemented by the <strong>Core</strong> plugin. Any plugin, besides the <strong>Core</strong> plugin, that tries to implement the <strong><a href="https://github.com/opencor/opencor/blob/master/src/plugins/coreinterface.inl">core</a></strong> interface will be reported by OpenCOR as being invalid.
         </p>
 
         <span class="anchor" id="CMake project"></span>
@@ -105,22 +105,22 @@
         </div>
 
         <p>
-            OpenCOR is built and packaged using <a href="http://www.cmake.org/">CMake</a>. When it comes to plugins, this requires creating a <code>CMakeLists.txt</code> file in the plugin's root folder and calling the <code>ADD_PLUGIN()</code> macro, which is defined in <a href="https://github.com/opencor/opencor/blob/master/cmake/common.cmake"><code>[OpenCOR]/cmake/common.cmake</code></a>. The <code>ADD_PLUGIN()</code> macro uses information to it to build and package the plugin. That information comes in the form of a series of parameters, some of which are keywords:
+            OpenCOR is built and packaged using <a href="http://www.cmake.org/">CMake</a>. When it comes to plugins, this requires creating a <code>CMakeLists.txt</code> file in the plugin's root folder and calling the <code>ADD_PLUGIN()</code> macro, which is defined in <a href="https://github.com/opencor/opencor/blob/master/cmake/common.cmake"><code>[OpenCOR]/cmake/common.cmake</code></a>. The <code>ADD_PLUGIN()</code> macro uses information passed to it to build and package the plugin. That information comes in the form of a series of parameters, some of which are keywords:
         </p>
 
         <ul>
-            <li><code>SOURCES</code>: impementation files.</li>
+            <li><code>SOURCES</code>: implementation files.</li>
             <li><code>HEADERS_MOC</code>: header files, which define at least one <code>QObject</code>-based class.</li>
             <li><code>UIS</code>: user interface files.</li>
             <li><code>INCLUDE_DIRS</code>: various locations where header files can be found.</li>
             <li><code>DEFINITIONS</code>: definitions needed to build the plugin.</li>
             <li><code>PLUGINS</code>: plugins needed by the plugin.</li>
             <li><code>PLUGIN_BINARIES</code>: the binary version of plugins needed by the plugin.</li>
-            <li><code>QT_MODULES</code>: Qt modules needed by the plugin.</li>
-            <li><code>QT_LIBRARIES</code>: Qt libraries needed by the plugin.</li>
+            <li><code>QT_MODULES</code>: <a href="http://qt-project.org/">Qt</a> modules needed by the plugin.</li>
+            <li><code>QT_LIBRARIES</code>: <a href="http://qt-project.org/">Qt</a> libraries needed by the plugin.</li>
             <li><code>EXTERNAL_BINARIES_DIR</code>: location where external binaries needed by the plugin can be found.</li>
             <li><code>EXTERNAL_BINARIES</code>: external binaries needed by the plugin.</li>
-            <li><code>TESTS</code>: tests for the plugin.</li>
+            <li><code>TESTS</code>: <a href="../tests.html">tests</a> for the plugin.</li>
         </ul>
 
         <p>
@@ -201,7 +201,7 @@ namespace Core {
         </p>
 
         <p>
-            In the case of the <strong>Core</strong> plugin, the body of the function is:
+            In the case of the <strong>Core</strong> plugin, the body of its function is:
         </p>
 
         <pre class="prettyprint">PLUGININFO_FUNC CorePluginInfo()
@@ -275,7 +275,7 @@ class LLVMPlugin : public QObject
         </div>
 
         <p>
-            There may be cases where a plugin declares a function or defines a class that we want to be able to use from another plugin. On both <a href="http://www.linux.org/">Linux</a> and <a href="http://www.apple.com/osx/">OS X</a>, nothing needs to be done, but on <a href="http://www.microsoft.com/windows/">Windows</a>, the function or class needs to be exported by the original plugin:
+            There may be cases where a plugin declares a function or defines a class that we want to be able to use from another plugin. On <a href="http://www.linux.org/">Linux</a> and <a href="http://www.apple.com/osx/">OS X</a>, nothing special needs to be done, but on <a href="http://www.microsoft.com/windows/">Windows</a>, the function or class needs to be exported by the original plugin:
         </p>
 
         <pre class="prettyprint">void __declspec(dllexport) myFunction();
@@ -289,7 +289,7 @@ class __declspec(dllexport) myClass;</pre>
 class __declspec(dllimport) myClass;</pre>
 
         <p>
-            Each plugin that exports functions and/or classes therefore defines a macro that refers to either <code>__declspec(dllexport)</code> or <code>__declspec(dllimport)</code>, depending on how the plugin's code is to be compiled. Thus, in the case of the <code>Compiler</code> plugin, we have:
+            Each plugin that exports functions and/or classes therefore defines a macro that refers either to <code>__declspec(dllexport)</code> or to <code>__declspec(dllimport)</code>, depending on how the plugin's code is to be compiled. Thus, in the case of the <strong>Compiler</strong> plugin, we have:
         </p>
 
         <pre class="prettyprint">...
@@ -305,7 +305,7 @@ class __declspec(dllimport) myClass;</pre>
 ...</pre>
 
         <p>
-            <code>_WIN32</code> and <code>Compiler_PLUGIN</code> (or, more generally, <code>&lt;PluginName&gt;_PLUGIN</code>) are automatically defined at build time, and are used to determine the value of <code>COMPILER_EXPORT</code> (or, more generally, the value of <code>&lt;PLUGINNAME&gt;_EXPORT</code>), which can then be used as:
+            <code>_WIN32</code> and <code>Compiler_PLUGIN</code> (or, more generally, <code>&lt;PluginName&gt;_PLUGIN</code>) are automatically defined, if at all, at build time, and are used to determine the value of <code>COMPILER_EXPORT</code> (or, more generally, the value of <code>&lt;PLUGINNAME&gt;_EXPORT</code>), which can then be used as follows without having to worry whether the function or class should be imported or exported:
         </p>
 
         <pre class="prettyprint">void COMPILER_EXPORT myFunction();
