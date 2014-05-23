@@ -450,10 +450,10 @@ ELSE()
         #       locally. It all depends on how the user's computer is
         #       configured...
 
-        RETRIEVE_BINARY_FILE(distrib/windows/x86 libeay32.dll 38c830cbe05d4ef7a193bbf754a521c8f7a185c5)
-        RETRIEVE_BINARY_FILE(distrib/windows/x86 msvcp100.dll 2ada702a0c143a7ae39b7de16a4b5cc994d2548b)
-        RETRIEVE_BINARY_FILE(distrib/windows/x86 msvcr100.dll 0b51fb415ec89848f339f8989d323bea722bfd70)
-        RETRIEVE_BINARY_FILE(distrib/windows/x86 ssleay32.dll e89a16dfcea27e5528c4781a2140cb57dc40cd61)
+        RETRIEVE_BINARY_FILE(distrib/windows/x86 libeay32.dll 8e18f9f241ef04f41675934cac11ac98dc721a4b)
+        RETRIEVE_BINARY_FILE(distrib/windows/x86 msvcp100.dll 79bcaad3714433e01c7f153b05b781f8d7cb318d)
+        RETRIEVE_BINARY_FILE(distrib/windows/x86 msvcr100.dll 4e880fc7625ccf8d9ca799d5b94ce2b1e7597335)
+        RETRIEVE_BINARY_FILE(distrib/windows/x86 ssleay32.dll 9b82650fbf2d51eea2af13a4cd85c88407e67559)
 
         FOREACH(REDISTRIBUTABLE_FILE libeay32 msvcp100 msvcr100 ssleay32)
             COPY_FILE_TO_BUILD_DIR(${PROJECT_NAME} ${CMAKE_SOURCE_DIR}/distrib/windows/x86 .
