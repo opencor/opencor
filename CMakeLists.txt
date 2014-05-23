@@ -350,23 +350,7 @@ IF(WIN32)
     )
 ENDIF()
 
-# Some post-processing specific to Windows and Linux
-
-IF(NOT APPLE)
-    # Copy the GUI version of the OpenCOR executable to the build/bin folder
-
-    COPY_FILE_TO_BUILD_DIR(${PROJECT_NAME} ${PROJECT_BUILD_DIR} bin
-                           ${PROJECT_NAME}${CMAKE_EXECUTABLE_SUFFIX})
-
-    IF(WIN32)
-        # Copy the CLI version of the OpenCOR executable to the build/bin folder
-
-        COPY_FILE_TO_BUILD_DIR(${WINDOWS_CLI_PROJECT_NAME} ${PROJECT_BUILD_DIR} bin
-                               ${WINDOWS_CLI_PROJECT_NAME}${CMAKE_EXECUTABLE_SUFFIX} ${PROJECT_NAME}.com)
-    ENDIF()
-ENDIF()
-
-# Some post-processing specific to OS X
+# Some post-processing specific
 
 IF(APPLE)
     # Configure and use our own Info.plist file
@@ -444,6 +428,40 @@ IF(APPLE)
     OS_X_DEPLOY_QT_PLUGIN(platforms qcocoa)
     OS_X_DEPLOY_QT_PLUGIN(printsupport cocoaprintersupport)
     OS_X_DEPLOY_QT_PLUGIN(sqldrivers qsqlite)
+ELSE()
+    # Copy the GUI version of the OpenCOR executable to the build/bin folder
+
+    COPY_FILE_TO_BUILD_DIR(${PROJECT_NAME} ${PROJECT_BUILD_DIR} bin
+                           ${PROJECT_NAME}${CMAKE_EXECUTABLE_SUFFIX})
+
+    IF(WIN32)
+        # Copy the CLI version of the OpenCOR executable to both the build and
+        # build/bin folders
+        # Note: the idea is that, on Windows, we can test both the CLI and the
+        #       GUI versions of OpenCOR from either build or build/bin...
+
+        COPY_FILE_TO_BUILD_DIR(${WINDOWS_CLI_PROJECT_NAME} ${PROJECT_BUILD_DIR} .
+                               ${WINDOWS_CLI_PROJECT_NAME}${CMAKE_EXECUTABLE_SUFFIX} ${PROJECT_NAME}.com)
+        COPY_FILE_TO_BUILD_DIR(${WINDOWS_CLI_PROJECT_NAME} ${PROJECT_BUILD_DIR} bin
+                               ${WINDOWS_CLI_PROJECT_NAME}${CMAKE_EXECUTABLE_SUFFIX} ${PROJECT_NAME}.com)
+
+        # Redistributable files required by OpenCOR
+        # Note: these files may or not be needed in order to test OpenCOR
+        #       locally. It all depends on how the user's computer is
+        #       configured...
+
+        RETRIEVE_BINARY_FILE(distrib/windows/x86 libeay32.dll 38c830cbe05d4ef7a193bbf754a521c8f7a185c5)
+        RETRIEVE_BINARY_FILE(distrib/windows/x86 msvcp100.dll 2ada702a0c143a7ae39b7de16a4b5cc994d2548b)
+        RETRIEVE_BINARY_FILE(distrib/windows/x86 msvcr100.dll 0b51fb415ec89848f339f8989d323bea722bfd70)
+        RETRIEVE_BINARY_FILE(distrib/windows/x86 ssleay32.dll e89a16dfcea27e5528c4781a2140cb57dc40cd61)
+
+        FOREACH(REDISTRIBUTABLE_FILE libeay32 msvcp100 msvcr100 ssleay32)
+            COPY_FILE_TO_BUILD_DIR(${PROJECT_NAME} ${CMAKE_SOURCE_DIR}/distrib/windows/x86 .
+                                   ${REDISTRIBUTABLE_FILE}${CMAKE_SHARED_LIBRARY_SUFFIX})
+            COPY_FILE_TO_BUILD_DIR(${PROJECT_NAME} ${CMAKE_SOURCE_DIR}/distrib/windows/x86 bin
+                                   ${REDISTRIBUTABLE_FILE}${CMAKE_SHARED_LIBRARY_SUFFIX})
+        ENDFOREACH()
+    ENDIF()
 ENDIF()
 
 # Package OpenCOR
@@ -478,13 +496,8 @@ IF(WIN32)
 
     # Redistributable files required by OpenCOR
 
-    RETRIEVE_BINARY_FILE(distrib/windows/x86 libeay32.dll 38c830cbe05d4ef7a193bbf754a521c8f7a185c5)
-    RETRIEVE_BINARY_FILE(distrib/windows/x86 msvcp100.dll 2ada702a0c143a7ae39b7de16a4b5cc994d2548b)
-    RETRIEVE_BINARY_FILE(distrib/windows/x86 msvcr100.dll 0b51fb415ec89848f339f8989d323bea722bfd70)
-    RETRIEVE_BINARY_FILE(distrib/windows/x86 ssleay32.dll e89a16dfcea27e5528c4781a2140cb57dc40cd61)
-
     FOREACH(REDISTRIBUTABLE_FILE libeay32 msvcp100 msvcr100 ssleay32)
-        INSTALL(FILES distrib/windows/x86/${REDISTRIBUTABLE_FILE}${CMAKE_SHARED_LIBRARY_SUFFIX}
+        INSTALL(FILES ${CMAKE_SOURCE_DIR}/distrib/windows/x86/${REDISTRIBUTABLE_FILE}${CMAKE_SHARED_LIBRARY_SUFFIX}
                 DESTINATION bin)
     ENDFOREACH()
 
