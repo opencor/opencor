@@ -484,7 +484,7 @@ void PluginsWindow::updateInformation(const QModelIndex &pNewIndex,
         else if (!itemText.compare(tr("Third-party")))
             mGui->fieldTwoValue->setText(tr("Plugins to access various third-party libraries."));
         else if (!itemText.compare(tr("Widget")))
-            mGui->fieldTwoValue->setText(tr("Plugins to access various ad hoc widgets."));
+            mGui->fieldTwoValue->setText(tr("Plugins to access various <em>ad hoc</em> widgets."));
     }
 
     // Show/hide the different fields

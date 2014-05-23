@@ -299,8 +299,8 @@
         <translation>Extensions pour donner accéder différentes librairies externes.</translation>
     </message>
     <message>
-        <source>Plugins to access various ad hoc widgets.</source>
-        <translation>Extensions pour accéder différents gadgets ad hoc.</translation>
+        <source>Plugins to access various &lt;em&gt;ad hoc&lt;/em&gt; widgets.</source>
+        <translation>Extensions pour accéder différents gadgets &lt;em&gt;ad hoc&lt;/em&gt;.</translation>
     </message>
     <message>
         <source>Error:</source>
