@@ -519,7 +519,7 @@ private:
 #endif</pre>
 
         <p>
-            ---GRY--- To be done...
+            <code>SampleViewWidget</code> inherits from <code>Core::ViewWidget</code>, which is defined in the Core plugin and is an extended version of <a href="http://qt-project.org/">Qt</a>'s <code>QWidget</code> (line 42). It also comes with a GUI file, which describes the layout of our plugin window (<a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/SampleView/src/sampleviewwidget.ui"><code>sampleviewwidget.ui</code></a>). The <code>update()</code> method is used by our plugin to update the contents of our view using information about the given file.
         </p>
 
         <p>
@@ -610,7 +610,7 @@ void SampleViewWidget::update(const QString &pFileName)
 }   // namespace OpenCOR</pre>
 
         <p>
-            ---GRY--- To be done...
+            <code>retranslateUi()()</code> (lines 62-72) retranslates our view, as well as update its contents using <code>update()</code> (lines 76-94).
         </p>
 
         <script type="text/javascript">
