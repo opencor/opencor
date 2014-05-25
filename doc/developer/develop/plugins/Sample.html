@@ -21,7 +21,7 @@
         </script>
 
         <p>
-            The purpose of this plugin is to give other plugins access to a simple <code>add()</code> function, which could be used as follows:
+            The purpose of this plugin is to give other plugins access to a simple <code>add()</code> function, which could then be used as follows:
         </p>
 
         <pre class="prettyprint">...
@@ -48,7 +48,15 @@ double addResult = Sample::add(3.0, 5.0);
         </div>
 
         <p>
-            The first thing we need to do is to decide on the category of our plugin (click <a href="index.html#Category">here</a> for more information about categories). Our plugin is aimed at helping people who want to learn how to write plugins for OpenCOR. So, it should be in the <code>Sample</code> category. This means that its code is located under <a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/Sample/"><code>[OpenCOR]/src/plugins/sample/Sample/</code></a>.
+            The first thing we need to do is to decide on the category of our plugin (click <a href="index.html#Category">here</a> for some information on categories). Our plugin is aimed at helping people who want to learn how to write plugins for OpenCOR. So, it should be in the <code>Sample</code> category. This means that its code can be found under <a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/Sample/"><code>[OpenCOR]/src/plugins/sample/Sample/</code></a>.
+        </p>
+
+        <div class="section">
+            Interfaces
+        </div>
+
+        <p>
+            All our plugin does is to make its <code>add()</code> function available to other plugins, so there is no need for our plugin to interact with OpenCOR and, therefore, no need to implement any interface.
         </p>
 
         <div class="section">
@@ -56,7 +64,7 @@ double addResult = Sample::add(3.0, 5.0);
         </div>
 
         <p>
-            To be able to build our plugin, we need to create a <code>CMakeLists.txt</code> file for it (click <a href="index.html#CMake%20project">here</a> for more information about CMake and plugins in OpenCOR). The contents of that file is:
+            To be able to build our plugin, we need to create a <code>CMakeLists.txt</code> file for it (click <a href="index.html#CMake%20project">here</a> for some information on CMake and plugins in OpenCOR). The contents of that file is:
         </p>
 
         <pre class="prettyprint linenums">PROJECT(SamplePlugin)
@@ -209,7 +217,7 @@ double SAMPLE_EXPORT add(const double &pNb1, const double &pNb2);
 #endif</pre>
 
         <p>
-            We start by including <a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/Sample/src/sampleglobal.h"><code>sampleglobal.h</code></a> (line 27). This header file defines the <code>SAMPLE_EXPORT</code> macro (click <a href="index.html#Global%20header%20file">here</a> for more information about our plugin's global header file), which we use to declare our plugin's <code>add()</code> function (line 36).
+            We start by including <a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/Sample/src/sampleglobal.h"><code>sampleglobal.h</code></a> (line 27). This header file defines the <code>SAMPLE_EXPORT</code> macro (click <a href="index.html#Global%20header%20file">here</a> for some information on plugins' global header file in OpenCOR), which we use to declare our plugin's <code>add()</code> function (line 36).
         </p>
 
         <p>

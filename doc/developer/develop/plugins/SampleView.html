@@ -35,7 +35,10 @@
 <a href="https://github.com/opencor/opencor/tree/master/src/plugins/sample/SampleView/src">src</a>
  &#9500;&#9472; <a href="https://github.com/opencor/opencor/tree/master/src/plugins/sample/SampleView/src/sampleviewplugin.cpp">sampleviewplugin.cpp</a>
  &#9500;&#9472; <a href="https://github.com/opencor/opencor/tree/master/src/plugins/sample/SampleView/src/sampleviewplugin.h">sampleviewplugin.h</a>
- &#9492;&#9472; <a href="https://github.com/opencor/opencor/tree/master/src/plugins/sample/SampleView/src/sampleviewplugin.json">sampleviewplugin.json</a>
+ &#9500;&#9472; <a href="https://github.com/opencor/opencor/tree/master/src/plugins/sample/SampleView/src/sampleviewplugin.json">sampleviewplugin.json</a>
+ &#9500;&#9472; <a href="https://github.com/opencor/opencor/tree/master/src/plugins/sample/SampleView/src/sampleviewwidget.cpp">sampleviewwidget.cpp</a>
+ &#9500;&#9472; <a href="https://github.com/opencor/opencor/tree/master/src/plugins/sample/SampleView/src/sampleviewwidget.h">sampleviewwidget.h</a>
+ &#9492;&#9472; <a href="https://github.com/opencor/opencor/tree/master/src/plugins/sample/SampleView/src/sampleviewwidget.ui">sampleviewwidget.ui</a>
 <a href="https://github.com/opencor/opencor/tree/master/src/plugins/sample/SampleView/CMakeLists.txt">CMakeLists.txt</a></pre>
 
         <div class="section">
@@ -51,11 +54,11 @@
         </div>
 
         <p>
-            We want our plugin to interact with OpenCOR. This means that it needs to implement some interfaces (click <a href="index.html#Interfaces">here</a> for more information about interfaces).
+            We want our plugin to interact with OpenCOR. This means that it needs to implement some interfaces (click <a href="index.html#Interfaces">here</a> for some information on interfaces).
         </p>
 
         <p>
-            More specifically, we want our plugin to be a view, so we need to implement both the <a href="https://github.com/opencor/opencor/blob/master/src/plugins/filehandlinginterface.inl">file handling</a>, <a href="https://github.com/opencor/opencor/blob/master/src/plugins/i18ninterface.inl">internationalisation</a>, <a href="https://github.com/opencor/opencor/blob/master/src/plugins/plugininterface.inl">plugin</a> and <a href="https://github.com/opencor/opencor/blob/master/src/plugins/viewinterface.inl">view</a> interfaces.
+            More specifically, we want our plugin to be a view, so we need to implement both the <a href="https://github.com/opencor/opencor/blob/master/src/plugins/filehandlinginterface.inl">file handling</a>, <a href="https://github.com/opencor/opencor/blob/master/src/plugins/plugininterface.inl">plugin</a> and <a href="https://github.com/opencor/opencor/blob/master/src/plugins/viewinterface.inl">view</a> interfaces. While we are at it, we might as well internationalise our plugin, in which case it means that we also need to implement the <a href="https://github.com/opencor/opencor/blob/master/src/plugins/i18ninterface.inl">internationalisation</a> interface.
         </p>
 
         <div class="section">
