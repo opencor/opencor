@@ -100,7 +100,7 @@ ADD_PLUGIN(SampleTools
 )</pre>
 
         <p>
-            Some of the interfaces our plugin implements come with a <code>.cpp</code> file, so we reference them (lines 7 and 8). Then, our plugin needs the <a href="Sample.html">Sample</a> plugin (to be able to use its <code>add()</code> function), so it is referenced (line 17) using the <code>PLUGINS</code> keyword (line 16). Finally, we reference the <a href="http://qt-project.org/">Qt</a> module (line 19) and libraries (lines 21-23) needed by our plugin.
+            Some of the interfaces our plugin implements come with a <code>.cpp</code> file, so we reference them (lines 7 and 8). Then, our plugin needs the <a href="Sample.html"><strong>Sample</strong></a> plugin (to be able to use its <code>add()</code> function), so it is referenced (line 17) using the <code>PLUGINS</code> keyword (line 16). Finally, we reference the <a href="http://qt-project.org/">Qt</a> module (line 19) and libraries (lines 21-23) needed by our plugin.
         </p>
 
         <div class="section">
@@ -174,11 +174,11 @@ private Q_SLOTS:
 #endif</pre>
 
         <p>
-            As mentioned above, our plugin implements some interfaces, which means that their header file is included (lines 27-29 and 31). It also means that our plugin class inherits from those interfaces (lines 44-46), as well as make calls to the <code>Q_INTERFACES()</code> macro to let <a href-="http://qt-project.org/">Qt</a> know which interfaces it implements (lines 52-55). Finally, we include the inline files (lines 58-61) that declare various methods that must be implemented by our plugin class (see the <a href="#Interfaces%20implementation">next section</a>). (The rest of the class definition is specific to our plugin and is discussed <a href="#Plugin%20specific">below</a>.)
+            As mentioned above, our plugin implements some interfaces, which means that their header file is included (lines 27-29 and 31). It also means that our plugin class inherits from those interfaces (lines 44-46), as well as make calls to the <code>Q_INTERFACES()</code> macro to let <a href-="http://qt-project.org/">Qt</a> know which interfaces it implements (lines 52-55). Finally, we include the inline files (lines 58-61) that declare various methods that must be implemented by our plugin (see the <a href="#Interfaces%20implementation">next section</a>). (The rest of the class definition is specific to our plugin and is discussed <a href="#Plugin%20specific">below</a>.)
         </p>
 
         <p>
-            The C function that is used by OpenCOR to retrieve some <a href="index.html#Basic%20information">basic information</a> about our plugin and can be found in <a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/SampleTools/src/sampletoolsplugin.cpp"><code>sampletoolsplugin.cpp</code></a>:
+            The C function that is used by OpenCOR to retrieve some <a href="index.html#Basic%20information">basic information</a> about our plugin can be found in <a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/SampleTools/src/sampletoolsplugin.cpp"><code>sampletoolsplugin.cpp</code></a>:
         </p>
 
         <pre class="prettyprint linenums:43">PLUGININFO_FUNC SampleToolsPluginInfo()
@@ -194,7 +194,7 @@ private Q_SLOTS:
 }</pre>
 
         <p>
-            As can be seen, our plugin is selectable by the user and it offers direct <a href="http://en.wikipedia.org/wiki/Command-line_interface">CLI</a> support (line 50). It also has a direct dependency on the <a href="Sample.html">Sample</a> plugin (line 51).
+            As can be seen, our plugin is selectable by the user and it offers direct <a href="http://en.wikipedia.org/wiki/Command-line_interface">CLI</a> support (line 50). It also has a direct dependency on the <a href="Sample.html"><strong>Sample</strong></a> plugin (line 51).
         </p>
 
         <span class="anchor" id="Interfaces implementation"></span>
@@ -242,7 +242,7 @@ int SampleToolsPlugin::executeCommand(const QString &pCommand,
 //==============================================================================</pre>
 
         <p>
-            As can be seen, our plugin handles both the <code>help</code> and <code>add</code> commands.
+            As can be seen, our plugin handles both the <code>help</code> and <code>add</code> commands (lines 64-70 and 70-74, respectively).
         </p>
 
         <p>
@@ -304,7 +304,7 @@ void SampleToolsPlugin::retranslateUi()
 //==============================================================================</pre>
 
         <p>
-            All that we need to do here is to (re)translate <code>mAddTwoNumbersAction</code> with the actual (French) translations in <a href="https://github.com/opencor/opencor/tree/master/src/plugins/sample/SampleTools/i18n/SampleTools_fr.ts"><code>SampleTools_fr.ts</code></a> (together with some others needed in the <a href="#Plugin%20specific">next section</a>).
+            All that we need to do here is to (re)translate <code>mAddTwoNumbersAction</code> with the actual (French) translations in <a href="https://github.com/opencor/opencor/tree/master/src/plugins/sample/SampleTools/i18n/SampleTools_fr.ts"><code>SampleTools_fr.ts</code></a> (together with some other translations needed in the <a href="#Plugin%20specific">next section</a>).
         </p>
 
         <p>
@@ -484,7 +484,7 @@ void SampleToolsPlugin::addTwoNumbers()
         </p>
 
         <p>
-            <code>addTwoNumbers()</code> (lines 244-260) is a <a href="http://qt-project.org/">Qt</a> slot that is executed whenever the user selects our menu item (<code>mAddTwoNumbersAction</code>). Using a GUI approach, it asks the user to provide two numbers and returns their sum, unless the user cancels things.
+            <code>addTwoNumbers()</code> (lines 244-260) is a <a href="http://qt-project.org/">Qt</a> slot that is executed whenever the user selects our menu item (see <code>mAddTwoNumbersAction</code>). Using a GUI approach, it asks the user to provide two numbers and returns their sum, unless the user decides to cancel the action.
         </p>
 
         <script type="text/javascript">
