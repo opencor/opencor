@@ -106,7 +106,7 @@ QsciScintillaBase::QsciScintillaBase(QWidget *parent)
     setFocusPolicy(Qt::WheelFocus);
     setAttribute(Qt::WA_KeyCompression);
     setAttribute(Qt::WA_InputMethodEnabled);
-#if QT_VERSION >= 0x050000
+#if QT_VERSION >= 0x050100
     setInputMethodHints(
             Qt::ImhNoAutoUppercase|Qt::ImhNoPredictiveText|Qt::ImhMultiLine);
 #elif QT_VERSION >= 0x040600

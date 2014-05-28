@@ -291,7 +291,7 @@ void SurfaceImpl::InitPixMap(int width, int height, Surface *, WindowID wid)
 {
     Release();
 
-#if QT_VERSION >= 0x050000
+#if QT_VERSION >= 0x050100
     int dpr = PWindow(wid)->devicePixelRatio();
     QPixmap *pixmap = new QPixmap(width * dpr, height * dpr);
     pixmap->setDevicePixelRatio(dpr);
@@ -470,7 +470,7 @@ void SurfaceImpl::Copy(PRectangle rc, Point from, Surface &surfaceSource)
         qreal width = rc.right - rc.left;
         qreal height = rc.bottom - rc.top;
 
-#if QT_VERSION >= 0x050000
+#if QT_VERSION >= 0x050100
         qreal dpr = pm->devicePixelRatio();
 
         x *= dpr;

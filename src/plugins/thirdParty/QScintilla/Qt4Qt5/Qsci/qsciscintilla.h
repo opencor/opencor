@@ -1949,6 +1949,9 @@ protected:
     virtual bool event(QEvent *e);
 
     //! \reimp
+    virtual void changeEvent(QEvent *e);
+
+    //! \reimp
     virtual void contextMenuEvent(QContextMenuEvent *e);
 
 private slots:
@@ -2008,6 +2011,7 @@ private:
     void setFoldMarker(int marknr, int mark = SC_MARK_EMPTY);
     void setLexerStyle(int style);
     void setStylesFont(const QFont &f, int style);
+    void setEnabledColors(int style, QColor &fore, QColor &back);
 
     void braceMatch();
     bool findMatchingBrace(long &brace, long &other, BraceMatch mode);

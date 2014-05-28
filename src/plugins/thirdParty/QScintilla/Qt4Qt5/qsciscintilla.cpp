@@ -4155,6 +4155,65 @@ bool QsciScintilla::event(QEvent *e)
 }
 
 
+// Re-implemented to handle chenges to the enabled state.
+void QsciScintilla::changeEvent(QEvent *e)
+{
+    QsciScintillaBase::changeEvent(e);
+
+    if (e->type() != QEvent::EnabledChange)
+        return;
+
+    if (isEnabled())
+        SendScintilla(SCI_SETCARETSTYLE, CARETSTYLE_LINE);
+    else
+        SendScintilla(SCI_SETCARETSTYLE, CARETSTYLE_INVISIBLE);
+
+    QColor fore = palette().color(QPalette::Disabled, QPalette::Text);
+    QColor back = palette().color(QPalette::Disabled, QPalette::Base);
+
+    if (lex.isNull())
+    {
+        if (isEnabled())
+        {
+            fore = nl_text_colour;
+            back = nl_paper_colour;
+        }
+
+        SendScintilla(SCI_STYLESETFORE, 0, fore);
+
+        // Assume style 0 applies to everything so that we don't need to use
+        // SCI_STYLECLEARALL which clears everything.  We still have to set the
+        // default style as well for the background without any text.
+        SendScintilla(SCI_STYLESETBACK, 0, back);
+        SendScintilla(SCI_STYLESETBACK, STYLE_DEFAULT, back);
+    }
+    else
+    {
+        setEnabledColors(STYLE_DEFAULT, fore, back);
+
+        int nrStyles = 1 << SendScintilla(SCI_GETSTYLEBITS);
+
+        for (int s = 0; s < nrStyles; ++s)
+            if (!lex->description(s).isNull())
+                setEnabledColors(s, fore, back);
+    }
+}
+
+
+// Set the foreground and background colours for a style.
+void QsciScintilla::setEnabledColors(int style, QColor &fore, QColor &back)
+{
+    if (isEnabled())
+    {
+        fore = lex->color(style);
+        back = lex->paper(style);
+    }
+
+    handleStyleColorChange(fore, style);
+    handleStylePaperChange(back, style);
+}
+
+
 // Re-implemented to implement a more Qt-like context menu.
 void QsciScintilla::contextMenuEvent(QContextMenuEvent *e)
 {
