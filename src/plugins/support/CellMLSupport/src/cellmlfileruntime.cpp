@@ -578,14 +578,7 @@ void CellmlFileRuntime::getOdeCodeInformation(CellmlFile *pCellmlFile)
     //       setjmp()/longjmp() to get back on our feet. I agree, it's not
     //       great, but we don't really have any other choice or do we?...
 
-    struct sigaction signalAction;
-
-    signalAction.sa_handler = sigSegvHandler;
-    signalAction.sa_flags = 0;
-
-    sigemptyset(&signalAction.sa_mask);
-
-    sigaction(SIGSEGV, &signalAction, 0);
+    signal(SIGSEGV, sigSegvHandler);
 
     if (!setjmp(gJumpBuffer)) {
         try {
@@ -603,9 +596,7 @@ void CellmlFileRuntime::getOdeCodeInformation(CellmlFile *pCellmlFile)
         modelCodeGenerationCrashedIssue(pCellmlFile);
     }
 
-    signalAction.sa_handler = SIG_DFL;
-
-    sigaction(SIGSEGV, &signalAction, 0);
+    signal(SIGSEGV, SIG_DFL);
 
     // Check the outcome of the ODE code generation
 
@@ -634,14 +625,7 @@ void CellmlFileRuntime::getDaeCodeInformation(CellmlFile *pCellmlFile)
     //       and use setjmp()/longjmp() to get back on our feet. I agree, it's
     //       not great, but we don't really have any other choice or do we?...
 
-    struct sigaction signalAction;
-
-    signalAction.sa_handler = sigSegvHandler;
-    signalAction.sa_flags = 0;
-
-    sigemptyset(&signalAction.sa_mask);
-
-    sigaction(SIGSEGV, &signalAction, 0);
+    signal(SIGSEGV, sigSegvHandler);
 
     if (!setjmp(gJumpBuffer)) {
         try {
@@ -659,9 +643,7 @@ void CellmlFileRuntime::getDaeCodeInformation(CellmlFile *pCellmlFile)
         modelCodeGenerationCrashedIssue(pCellmlFile);
     }
 
-    signalAction.sa_handler = SIG_DFL;
-
-    sigaction(SIGSEGV, &signalAction, 0);
+    signal(SIGSEGV, SIG_DFL);
 
     // Check the outcome of the DAE code generation
 
