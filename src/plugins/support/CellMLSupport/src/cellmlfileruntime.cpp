@@ -535,7 +535,7 @@ void CellmlFileRuntime::getOdeCodeInformation(CellmlFile *pCellmlFile)
 {
     // Retrieve the model for the given CellML file
 
-    ObjRef<iface::cellml_api::Model> model = pCellmlFile->model();
+    iface::cellml_api::Model *model = pCellmlFile->model();
 
     // Get a code generator bootstrap and create an ODE code generator
 
@@ -571,7 +571,7 @@ void CellmlFileRuntime::getDaeCodeInformation(CellmlFile *pCellmlFile)
 {
     // Retrieve the model for the given CellML file
 
-    ObjRef<iface::cellml_api::Model> model = pCellmlFile->model();
+    iface::cellml_api::Model *model = pCellmlFile->model();
 
     // Get a code generator bootstrap and create a DAE code generator
 
