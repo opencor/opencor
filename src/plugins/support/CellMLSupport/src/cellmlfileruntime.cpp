@@ -566,7 +566,6 @@ void CellmlFileRuntime::getOdeCodeInformation(CellmlFile *pCellmlFile)
 
 //==============================================================================
 
-{
 void CellmlFileRuntime::getDaeCodeInformation(CellmlFile *pCellmlFile)
 {
     // Retrieve the model for the given CellML file
