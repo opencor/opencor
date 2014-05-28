@@ -36,6 +36,11 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#include <setjmp.h>
+#include <signal.h>
+
+//==============================================================================
+
 #include "CCGSBootstrap.hpp"
 
 //==============================================================================
@@ -496,6 +501,18 @@ void CellmlFileRuntime::unknownProblemDuringModelCodeGenerationIssue()
 
 //==============================================================================
 
+void CellmlFileRuntime::modelCodeGenerationCrashedIssue(CellmlFile *pCellmlFile)
+{
+    mIssues << CellmlFileIssue(CellmlFileIssue::Error,
+                               tr("the model code generator crashed"));
+
+    // Reload the CellML file to ensure that its internals are fine
+
+    pCellmlFile->reload();
+}
+
+//==============================================================================
+
 void CellmlFileRuntime::checkCodeInformation(iface::cellml_services::CodeInformation *pCodeInformation)
 {
     if (!pCodeInformation)
@@ -531,6 +548,19 @@ void CellmlFileRuntime::checkCodeInformation(iface::cellml_services::CodeInforma
 
 //==============================================================================
 
+static jmp_buf gJumpBuffer;
+
+//==============================================================================
+
+void sigSegvHandler(int pSignal)
+{
+    Q_UNUSED(pSignal);
+
+    longjmp(gJumpBuffer, 1);
+}
+
+//==============================================================================
+
 void CellmlFileRuntime::getOdeCodeInformation(CellmlFile *pCellmlFile)
 {
     // Retrieve the model for the given CellML file
@@ -543,18 +573,39 @@ void CellmlFileRuntime::getOdeCodeInformation(CellmlFile *pCellmlFile)
     ObjRef<iface::cellml_services::CodeGenerator> codeGenerator = codeGeneratorBootstrap->createCodeGenerator();
 
     // Generate some code for the model
+    // Note: CodeGenerator::generateCode() may segfault, resulting in OpenCOR
+    //       crashing. So, to avoid this, we catch the SIGSEGV signal and use
+    //       setjmp()/longjmp() to get back on our feet. I agree, it's not
+    //       great, but we don't really have any other choice or do we?...
 
-    try {
+    struct sigaction signalAction;
 
-        // Check that the code generation went fine
-        mOdeCodeInformation = codeGenerator->generateCode(model);
+    signalAction.sa_handler = sigSegvHandler;
+    signalAction.sa_flags = 0;
 
-        checkCodeInformation(mOdeCodeInformation);
-    } catch (iface::cellml_api::CellMLException &) {
-        couldNotGenerateModelCodeIssue();
-    } catch (...) {
-        unknownProblemDuringModelCodeGenerationIssue();
+    sigemptyset(&signalAction.sa_mask);
+
+    sigaction(SIGSEGV, &signalAction, 0);
+
+    if (!setjmp(gJumpBuffer)) {
+        try {
+            mOdeCodeInformation = codeGenerator->generateCode(model);
+
+            // Check that the code generation went fine
+
+            checkCodeInformation(mOdeCodeInformation);
+        } catch (iface::cellml_api::CellMLException &) {
+            couldNotGenerateModelCodeIssue();
+        } catch (...) {
+            unknownProblemDuringModelCodeGenerationIssue();
+        }
+    } else {
+        modelCodeGenerationCrashedIssue(pCellmlFile);
     }
+
+    signalAction.sa_handler = SIG_DFL;
+
+    sigaction(SIGSEGV, &signalAction, 0);
 
     // Check the outcome of the ODE code generation
 
@@ -578,18 +629,39 @@ void CellmlFileRuntime::getDaeCodeInformation(CellmlFile *pCellmlFile)
     ObjRef<iface::cellml_services::IDACodeGenerator> codeGenerator = codeGeneratorBootstrap->createIDACodeGenerator();
 
     // Generate some code for the model
+    // Note: IDACodeGenerator::generateIDACode() may segfault, resulting in
+    //       OpenCOR crashing. So, to avoid this, we catch the SIGSEGV signal
+    //       and use setjmp()/longjmp() to get back on our feet. I agree, it's
+    //       not great, but we don't really have any other choice or do we?...
 
-    try {
+    struct sigaction signalAction;
 
-        // Check that the code generation went fine
+    signalAction.sa_handler = sigSegvHandler;
+    signalAction.sa_flags = 0;
 
-        checkCodeInformation(mDaeCodeInformation);
-    } catch (iface::cellml_api::CellMLException &) {
-        couldNotGenerateModelCodeIssue();
-    } catch (...) {
-        unknownProblemDuringModelCodeGenerationIssue();
-        mDaeCodeInformation = codeGenerator->generateIDACode(model);
+    sigemptyset(&signalAction.sa_mask);
+
+    sigaction(SIGSEGV, &signalAction, 0);
+
+    if (!setjmp(gJumpBuffer)) {
+        try {
+            mDaeCodeInformation = codeGenerator->generateIDACode(model);
+
+            // Check that the code generation went fine
+
+            checkCodeInformation(mDaeCodeInformation);
+        } catch (iface::cellml_api::CellMLException &) {
+            couldNotGenerateModelCodeIssue();
+        } catch (...) {
+            unknownProblemDuringModelCodeGenerationIssue();
+        }
+    } else {
+        modelCodeGenerationCrashedIssue(pCellmlFile);
     }
+
+    signalAction.sa_handler = SIG_DFL;
+
+    sigaction(SIGSEGV, &signalAction, 0);
 
     // Check the outcome of the DAE code generation
 
@@ -750,9 +822,7 @@ CellmlFileRuntime * CellmlFileRuntime::update(CellmlFile *pCellmlFile)
     // Note #3: ideally, there would be a more convenient way to determine the
     //          type of a model, but well... there isn't, so...
 
-    ObjRef<iface::cellml_api::Model> model = pCellmlFile->model();
-
-    if (!model)
+    if (!pCellmlFile->model())
         // No model was provided, so...
 
         return this;

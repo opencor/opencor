@@ -206,6 +206,7 @@ private:
 
     void couldNotGenerateModelCodeIssue();
     void unknownProblemDuringModelCodeGenerationIssue();
+    void modelCodeGenerationCrashedIssue(CellmlFile *pCellmlFile);
 
     void checkCodeInformation(iface::cellml_services::CodeInformation *pCodeInformation);
 
