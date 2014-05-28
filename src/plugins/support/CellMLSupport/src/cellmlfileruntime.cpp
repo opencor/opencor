@@ -531,8 +531,12 @@ void CellmlFileRuntime::checkCodeInformation(iface::cellml_services::CodeInforma
 
 //==============================================================================
 
-void CellmlFileRuntime::getOdeCodeInformation(iface::cellml_api::Model *pModel)
+void CellmlFileRuntime::getOdeCodeInformation(CellmlFile *pCellmlFile)
 {
+    // Retrieve the model for the given CellML file
+
+    ObjRef<iface::cellml_api::Model> model = pCellmlFile->model();
+
     // Get a code generator bootstrap and create an ODE code generator
 
     ObjRef<iface::cellml_services::CodeGeneratorBootstrap> codeGeneratorBootstrap = CreateCodeGeneratorBootstrap();
@@ -541,9 +545,9 @@ void CellmlFileRuntime::getOdeCodeInformation(iface::cellml_api::Model *pModel)
     // Generate some code for the model
 
     try {
-        mOdeCodeInformation = codeGenerator->generateCode(pModel);
 
         // Check that the code generation went fine
+        mOdeCodeInformation = codeGenerator->generateCode(model);
 
         checkCodeInformation(mOdeCodeInformation);
     } catch (iface::cellml_api::CellMLException &) {
@@ -562,8 +566,13 @@ void CellmlFileRuntime::getOdeCodeInformation(iface::cellml_api::Model *pModel)
 
 //==============================================================================
 
-void CellmlFileRuntime::getDaeCodeInformation(iface::cellml_api::Model *pModel)
 {
+void CellmlFileRuntime::getDaeCodeInformation(CellmlFile *pCellmlFile)
+{
+    // Retrieve the model for the given CellML file
+
+    ObjRef<iface::cellml_api::Model> model = pCellmlFile->model();
+
     // Get a code generator bootstrap and create a DAE code generator
 
     ObjRef<iface::cellml_services::CodeGeneratorBootstrap> codeGeneratorBootstrap = CreateCodeGeneratorBootstrap();
@@ -572,7 +581,6 @@ void CellmlFileRuntime::getDaeCodeInformation(iface::cellml_api::Model *pModel)
     // Generate some code for the model
 
     try {
-        mDaeCodeInformation = codeGenerator->generateIDACode(pModel);
 
         // Check that the code generation went fine
 
@@ -581,6 +589,7 @@ void CellmlFileRuntime::getDaeCodeInformation(iface::cellml_api::Model *pModel)
         couldNotGenerateModelCodeIssue();
     } catch (...) {
         unknownProblemDuringModelCodeGenerationIssue();
+        mDaeCodeInformation = codeGenerator->generateIDACode(model);
     }
 
     // Check the outcome of the DAE code generation
@@ -753,7 +762,7 @@ CellmlFileRuntime * CellmlFileRuntime::update(CellmlFile *pCellmlFile)
     // Note: this can be done by checking whether some equations were flagged
     //       as needing a Newton-Raphson evaluation...
 
-    getOdeCodeInformation(model);
+    getOdeCodeInformation(pCellmlFile);
 
     if (!mOdeCodeInformation)
         return this;
@@ -773,7 +782,7 @@ CellmlFileRuntime * CellmlFileRuntime::update(CellmlFile *pCellmlFile)
     if (mModelType == CellmlFileRuntime::Ode) {
         genericCodeInformation = mOdeCodeInformation;
     } else {
-        getDaeCodeInformation(model);
+        getDaeCodeInformation(pCellmlFile);
 
         genericCodeInformation = mDaeCodeInformation;
     }
