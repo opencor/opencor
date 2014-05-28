@@ -488,10 +488,10 @@ void CellmlFileRuntime::couldNotGenerateModelCodeIssue()
 
 //==============================================================================
 
-void CellmlFileRuntime::unexpectedProblemDuringModelCodeGenerationIssue()
+void CellmlFileRuntime::unknownProblemDuringModelCodeGenerationIssue()
 {
     mIssues << CellmlFileIssue(CellmlFileIssue::Error,
-                               tr("an unexpected problem occurred while trying to generate the model code"));
+                               tr("an unknown problem occurred while trying to generate the model code"));
 }
 
 //==============================================================================
@@ -549,7 +549,7 @@ void CellmlFileRuntime::getOdeCodeInformation(iface::cellml_api::Model *pModel)
     } catch (iface::cellml_api::CellMLException &) {
         couldNotGenerateModelCodeIssue();
     } catch (...) {
-        unexpectedProblemDuringModelCodeGenerationIssue();
+        unknownProblemDuringModelCodeGenerationIssue();
     }
 
     // Check the outcome of the ODE code generation
@@ -580,7 +580,7 @@ void CellmlFileRuntime::getDaeCodeInformation(iface::cellml_api::Model *pModel)
     } catch (iface::cellml_api::CellMLException &) {
         couldNotGenerateModelCodeIssue();
     } catch (...) {
-        unexpectedProblemDuringModelCodeGenerationIssue();
+        unknownProblemDuringModelCodeGenerationIssue();
     }
 
     // Check the outcome of the DAE code generation

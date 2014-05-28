@@ -205,7 +205,7 @@ private:
     void reset(const bool &pRecreateCompilerEngine, const bool &pResetIssues);
 
     void couldNotGenerateModelCodeIssue();
-    void unexpectedProblemDuringModelCodeGenerationIssue();
+    void unknownProblemDuringModelCodeGenerationIssue();
 
     void checkCodeInformation(iface::cellml_services::CodeInformation *pCodeInformation);
 
