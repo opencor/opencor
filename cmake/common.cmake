@@ -148,6 +148,12 @@ MACRO(INITIALISE_PROJECT)
         ADD_DEFINITIONS(-D_UNICODE)
     ENDIF()
 
+    # Sample plugins support, if requested
+
+    IF(ENABLE_SAMPLES)
+        ADD_DEFINITIONS(-DENABLE_SAMPLES)
+    ENDIF()
+
     # On OS X, use the oldest SDK available, as long as it is for Mac OS X 10.7
     # or later (i.e. a version that supports C++11)
 

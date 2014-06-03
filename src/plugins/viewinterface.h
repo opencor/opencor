@@ -38,7 +38,7 @@ class ViewInterface
 public:
     enum Mode {
         Unknown,
-#ifdef QT_DEBUG
+#ifdef ENABLE_SAMPLES
         Sample,
 #endif
         Editing,

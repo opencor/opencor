@@ -133,7 +133,7 @@ PluginsWindow::PluginsWindow(PluginManager *pPluginManager,
     mappedCategories.insert(tr("Editing"), PluginInfo::Editing);
     mappedCategories.insert(tr("Miscellaneous"), PluginInfo::Miscellaneous);
     mappedCategories.insert(tr("Organisation"), PluginInfo::Organisation);
-#ifdef QT_DEBUG
+#ifdef ENABLE_SAMPLES
     mappedCategories.insert(tr("Sample"), PluginInfo::Sample);
 #endif
     mappedCategories.insert(tr("Simulation"), PluginInfo::Simulation);

@@ -157,7 +157,7 @@ CentralWidget::CentralWidget(QMainWindow *pMainWindow) :
 
     // Create our modes
 
-#ifdef QT_DEBUG
+#ifdef ENABLE_SAMPLES
     mModes.insert(ViewInterface::Sample, new CentralWidgetMode(this));
 #endif
     mModes.insert(ViewInterface::Editing, new CentralWidgetMode(this));
@@ -565,7 +565,7 @@ void CentralWidget::retranslateUi()
 
     // Retranslate our modes tab bar
 
-#ifdef QT_DEBUG
+#ifdef ENABLE_SAMPLES
     mModeTabs->setTabText(mModeModeTabIndexes.value(ViewInterface::Sample, -1),
                           tr("Sample"));
 #endif
@@ -1510,7 +1510,7 @@ void CentralWidget::updateGui()
 
     int fileModeTabIndex = mModeTabs->currentIndex();
 
-#ifdef QT_DEBUG
+#ifdef ENABLE_SAMPLES
     mModes.value(ViewInterface::Sample)->viewTabs()->setVisible(fileModeTabIndex == mModeModeTabIndexes.value(ViewInterface::Sample));
 #endif
     mModes.value(ViewInterface::Editing)->viewTabs()->setVisible(fileModeTabIndex == mModeModeTabIndexes.value(ViewInterface::Editing));
