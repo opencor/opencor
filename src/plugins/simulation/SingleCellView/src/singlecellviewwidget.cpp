@@ -958,7 +958,7 @@ void SingleCellViewWidget::fileReloaded(const QString &pFileName)
     // The given file has been reloaded, so stop its current simulation, if any
     // Note: indeed, it may be that a file has been opened (e.g. from a previous
     //       session), but hasn't yet been selected, in which case it won't have
-    //       simulation associated with it...
+    //       a simulation associated with it...
 
     bool needReloadView = true;
     SingleCellViewSimulation *simulation = mSimulations.value(pFileName);
