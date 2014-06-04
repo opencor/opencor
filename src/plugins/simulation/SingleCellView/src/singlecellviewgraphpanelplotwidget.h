@@ -253,7 +253,7 @@ private:
                         const bool pNeedOffset = true) const;
 
 private Q_SLOTS:
-    void on_actionCopy_triggered();
+    void on_actionCopyToClipboard_triggered();
 
     void on_actionZoomIn_triggered();
     void on_actionZoomOut_triggered();

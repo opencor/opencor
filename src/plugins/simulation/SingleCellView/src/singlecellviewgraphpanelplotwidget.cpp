@@ -519,7 +519,7 @@ SingleCellViewGraphPanelPlotWidget::SingleCellViewGraphPanelPlotWidget(QWidget *
 
     mContextMenu = new QMenu(this);
 
-    mContextMenu->addAction(mGui->actionCopy);
+    mContextMenu->addAction(mGui->actionCopyToClipboard);
     mContextMenu->addSeparator();
     mContextMenu->addAction(mGui->actionZoomIn);
     mContextMenu->addAction(mGui->actionZoomOut);
@@ -1355,7 +1355,7 @@ void SingleCellViewGraphPanelPlotWidget::drawGraphSegment(SingleCellViewGraphPan
 
 //==============================================================================
 
-void SingleCellViewGraphPanelPlotWidget::on_actionCopy_triggered()
+void SingleCellViewGraphPanelPlotWidget::on_actionCopyToClipboard_triggered()
 {
     // Copy our contents to the clipboard
 

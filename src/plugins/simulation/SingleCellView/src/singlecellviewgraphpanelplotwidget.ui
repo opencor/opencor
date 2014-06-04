@@ -10,12 +10,12 @@
     <height>240</height>
    </rect>
   </property>
-  <action name="actionCopy">
+  <action name="actionCopyToClipboard">
    <property name="text">
-    <string>Copy</string>
+    <string>Copy To Clipboard</string>
    </property>
    <property name="statusTip">
-    <string>Copy the graph panel to the clipboard</string>
+    <string>Copy the contents of the graph panel to the clipboard</string>
    </property>
   </action>
   <action name="actionZoomIn">
