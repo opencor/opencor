@@ -30,6 +30,8 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include <QAction>
+#include <QApplication>
+#include <QClipboard>
 #include <QCursor>
 #include <QDomDocument>
 #include <QIcon>
@@ -102,6 +104,7 @@ ViewerWidget::ViewerWidget(QWidget *pParent) :
     mSubscriptsAction = newAction();
     mGreekSymbolsAction = newAction();
     mDigitGroupingAction = newAction();
+    mCopyToClipboardAction = new QAction(this);
 
     connect(mOptimiseFontSizeAction, SIGNAL(triggered()),
             this, SLOT(update()));
@@ -123,11 +126,16 @@ ViewerWidget::ViewerWidget(QWidget *pParent) :
     connect(mDigitGroupingAction, SIGNAL(toggled(bool)),
             this, SIGNAL(digitGroupingChanged(const bool &)));
 
+    connect(mCopyToClipboardAction, SIGNAL(triggered()),
+            this, SLOT(copyToClipboard()));
+
     mContextMenu->addAction(mOptimiseFontSizeAction);
     mContextMenu->addSeparator();
     mContextMenu->addAction(mSubscriptsAction);
     mContextMenu->addAction(mGreekSymbolsAction);
     mContextMenu->addAction(mDigitGroupingAction);
+    mContextMenu->addSeparator();
+    mContextMenu->addAction(mCopyToClipboardAction);
 
     // We want a context menu
 
@@ -151,6 +159,7 @@ void ViewerWidget::retranslateUi()
     I18nInterface::retranslateAction(mSubscriptsAction, tr("Subscripts"));
     I18nInterface::retranslateAction(mGreekSymbolsAction, tr("Greek Symbols"));
     I18nInterface::retranslateAction(mDigitGroupingAction, tr("Digit Grouping"));
+    I18nInterface::retranslateAction(mCopyToClipboardAction, tr("Copy To Clipboard"));
 }
 
 //==============================================================================
@@ -688,6 +697,15 @@ void ViewerWidget::updateViewer()
     mContents = QString();
 
     setContents(contents);
+}
+
+//==============================================================================
+
+void ViewerWidget::copyToClipboard()
+{
+    // Copy our contents to the clipboard
+
+    QApplication::clipboard()->setPixmap(grab());
 }
 
 //==============================================================================

@@ -94,6 +94,7 @@ private:
     QAction *mSubscriptsAction;
     QAction *mGreekSymbolsAction;
     QAction *mDigitGroupingAction;
+    QAction *mCopyToClipboardAction;
 
     QAction * newAction();
 
@@ -114,6 +115,8 @@ private Q_SLOTS:
     void showCustomContextMenu(const QPoint &pPosition) const;
 
     void updateViewer();
+
+    void copyToClipboard();
 };
 
 //==============================================================================

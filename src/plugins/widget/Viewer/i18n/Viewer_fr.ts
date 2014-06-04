@@ -19,5 +19,9 @@
         <source>Subscripts</source>
         <translation>Indices</translation>
     </message>
+    <message>
+        <source>Copy To Clipboard</source>
+        <translation>Copier Dans Presse-Papier</translation>
+    </message>
 </context>
 </TS>
