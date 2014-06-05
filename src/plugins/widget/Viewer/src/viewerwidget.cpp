@@ -180,12 +180,10 @@ QString ViewerWidget::contents() const
 
 void ViewerWidget::setContents(const QString &pContents)
 {
-    // Set our contents
-
-    if (!pContents.compare(mContents))
-        return;
-
     // Try to set our contents to our MathML document
+    // Note: we don't check whether pContents has the same value as mContents
+    //       since we would also need to check the value of mError and we can't
+    //       be certain about it...
 
     mContents = pContents;
 
@@ -235,7 +233,7 @@ void ViewerWidget::setError(const bool &pError)
 {
     // Keep track of whether there is an error
 
-    if (pError == mError)
+    if (mContents.isEmpty() && (pError == mError))
         return;
 
     mContents = QString();
