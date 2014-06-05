@@ -162,12 +162,17 @@ void EditorFindReplaceWidget::retranslateUi()
 
     // Retranslate our actions
 
-    I18nInterface::retranslateAction(mCaseSensitiveAction, tr("Case Sensitive"));
-    I18nInterface::retranslateAction(mWholeWordsOnlyAction, tr("Whole Words Only"));
-    I18nInterface::retranslateAction(mRegularExpressionAction, tr("Regular Expression"));
+    I18nInterface::retranslateAction(mCaseSensitiveAction, tr("Case Sensitive"),
+                                     tr("The search is case sensitive"));
+    I18nInterface::retranslateAction(mWholeWordsOnlyAction, tr("Whole Words Only"),
+                                     tr("The search is done on whole words only"));
+    I18nInterface::retranslateAction(mRegularExpressionAction, tr("Regular Expression"),
+                                     tr("The search uses a regular expression"));
 
-    I18nInterface::retranslateAction(mClearFindTextAction, tr("Clear Text"));
-    I18nInterface::retranslateAction(mClearReplaceTextAction, tr("Clear Text"));
+    I18nInterface::retranslateAction(mClearFindTextAction, tr("Clear Text"),
+                                     tr("Clear the text"));
+    I18nInterface::retranslateAction(mClearReplaceTextAction, tr("Clear Text"),
+                                     tr("Clear the text"));
 }
 
 //==============================================================================

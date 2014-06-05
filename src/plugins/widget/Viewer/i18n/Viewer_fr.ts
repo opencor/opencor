@@ -23,5 +23,25 @@
         <source>Copy To Clipboard</source>
         <translation>Copier Dans Presse-Papier</translation>
     </message>
+    <message>
+        <source>Copy the contents of the viewer to the clipboard</source>
+        <translation>Copier le contenu du visualiseur dans le presse-papier</translation>
+    </message>
+    <message>
+        <source>Optimise the font size to get the best fit possible</source>
+        <translation>Optimiser la taille de la fonte pour obtenir le meilleur ajustement possible</translation>
+    </message>
+    <message>
+        <source>Use &apos;_&apos; to specify a subscript</source>
+        <translation>Utiliser &apos;_&apos; pour spécifier un indice inférieur</translation>
+    </message>
+    <message>
+        <source>Replace &apos;alpha&apos; with &apos;α&apos;, &apos;beta&apos; with &apos;β&apos;, etc.</source>
+        <translation>Remplacer &apos;alpha&apos; par &apos;α&apos;, &apos;beta&apos; par &apos;β&apos;, etc.</translation>
+    </message>
+    <message>
+        <source>Group the digits of a number in groups of thousands</source>
+        <translation>Grouper les chiffres d&apos;un nombre par groupes de milles</translation>
+    </message>
 </context>
 </TS>

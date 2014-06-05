@@ -155,11 +155,16 @@ void ViewerWidget::retranslateUi()
 {
     // Retranslate our actions
 
-    I18nInterface::retranslateAction(mOptimiseFontSizeAction, tr("Optimise Font Size"));
-    I18nInterface::retranslateAction(mSubscriptsAction, tr("Subscripts"));
-    I18nInterface::retranslateAction(mGreekSymbolsAction, tr("Greek Symbols"));
-    I18nInterface::retranslateAction(mDigitGroupingAction, tr("Digit Grouping"));
-    I18nInterface::retranslateAction(mCopyToClipboardAction, tr("Copy To Clipboard"));
+    I18nInterface::retranslateAction(mOptimiseFontSizeAction, tr("Optimise Font Size"),
+                                     tr("Optimise the font size to get the best fit possible"));
+    I18nInterface::retranslateAction(mSubscriptsAction, tr("Subscripts"),
+                                     tr("Use '_' to specify a subscript"));
+    I18nInterface::retranslateAction(mGreekSymbolsAction, tr("Greek Symbols"),
+                                     tr("Replace 'alpha' with 'α', 'beta' with 'β', etc."));
+    I18nInterface::retranslateAction(mDigitGroupingAction, tr("Digit Grouping"),
+                                     tr("Group the digits of a number in groups of thousands"));
+    I18nInterface::retranslateAction(mCopyToClipboardAction, tr("Copy To Clipboard"),
+                                     tr("Copy the contents of the viewer to the clipboard"));
 }
 
 //==============================================================================

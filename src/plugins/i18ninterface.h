@@ -50,7 +50,7 @@ public:
 
     static void retranslateMenu(QMenu *pMenu, const QString &pTitle);
     static void retranslateAction(QAction *pAction, const QString &pText,
-                                  const QString &pStatusTip = QString());
+                                  const QString &pStatusTip);
 
 private:
     QString mPluginName;
