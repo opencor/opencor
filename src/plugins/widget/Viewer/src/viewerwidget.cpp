@@ -46,6 +46,10 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#include <qmath.h>
+
+//==============================================================================
+
 #include "qwt_mathml_text_engine.h"
 
 //==============================================================================
@@ -712,7 +716,12 @@ void ViewerWidget::copyToClipboard()
 {
     // Copy our contents to the clipboard
 
-    QApplication::clipboard()->setPixmap(grab());
+    QSizeF mathmlDocumentSize = mMathmlDocument.size();
+
+    QApplication::clipboard()->setPixmap(grab().copy(qFloor(0.5*(width()-mathmlDocumentSize.width())),
+                                                     qFloor(0.5*(height()-mathmlDocumentSize.height())),
+                                                     qCeil(mathmlDocumentSize.width()),
+                                                     qCeil(mathmlDocumentSize.height())));
 }
 
 //==============================================================================
