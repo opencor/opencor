@@ -513,6 +513,8 @@ void RawCellmlViewWidget::updateViewer()
         //       case cleaning it up will result in an empty string...
 
         if (cleanUpXml(contentMathmlBlock).isEmpty()) {
+            mContentMathmlEquation = QString();
+
             mEditingWidget->viewer()->setError(true);
         } else {
             // A Content MathML block contains 0+ child nodes, so extract and
