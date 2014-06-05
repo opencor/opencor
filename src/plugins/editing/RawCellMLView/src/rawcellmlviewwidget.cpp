@@ -388,58 +388,79 @@ QString RawCellmlViewWidget::retrieveContentMathmlEquation(const QString &pConte
     QDomDocument domDocument;
 
     if (domDocument.setContent(pContentMathmlBlock)) {
-        // If our DOM representation contains zero or one child node, then we
-        // simply return its string representation
+        // Look for the child node within which our position is located, if any
 
+        int childNodeIndex = -1;
         QDomNode domNode = domDocument.documentElement();
 
-        if (domNode.childNodes().count() <= 1)
-            return domDocument.toString(-1);
+        for (int i = 0, iMax = domNode.childNodes().count(); i < iMax; ++i) {
+            QDomNode childNode = domNode.childNodes().at(i);
 
-        // Go through the different child nodes of our DOM representation and
-        // determine (based on our line and column values) to which one we
-        // 'belong'
-
-        QDomNode prevChildNode = domNode.firstChild();
-
-        while (domNode.childNodes().count() != 1) {
-            // Retrieve the position of the current child node
+            // Retrieve the start position of the current child node
             // Note: it needs to be corrected since the line and column numbers
             //       we are getting for the current child node correspond to the
             //       position of ">" in, say, "<apply ...>", while we need the
             //       position of "<"...
 
-            QDomNode childNode = prevChildNode.nextSibling();
-            int childNodePosition;
+            int childNodeStartPosition;
 
             Core::stringLineColumnAsPosition(pContentMathmlBlock,
                                              mEditingWidget->editor()->eolString(),
                                              childNode.lineNumber(),
                                              childNode.columnNumber(),
-                                             childNodePosition);
+                                             childNodeStartPosition);
 
-            childNodePosition = pContentMathmlBlock.lastIndexOf("<"+childNode.nodeName(), childNodePosition);
+            childNodeStartPosition = pContentMathmlBlock.lastIndexOf("<"+childNode.nodeName(), childNodeStartPosition);
 
-            // Check where we are with respect to the position of the current
-            // child node and remove the previous node or all the subsequent
-            // ones, depending on the case
+            // Retrieve the end position of the current child node
 
-            if (pPosition >= childNodePosition) {
-                domNode.removeChild(prevChildNode);
+            int childNodeEndPosition = -1;
 
-                prevChildNode = childNode;
-            } else {
-                while (domNode.childNodes().count() != 1)
-                    domNode.removeChild(domNode.lastChild());
+            if (i < iMax-1) {
+                // We are not dealing with the last child node, so update the
+                // position from which we are to look for the closing tag, which
+                // here must be the start position of the next child node and
+                // not the end of the given Content MathML block
+
+                QDomNode nextChildNode = domNode.childNodes().at(i+1);
+
+                Core::stringLineColumnAsPosition(pContentMathmlBlock,
+                                                 mEditingWidget->editor()->eolString(),
+                                                 nextChildNode.lineNumber(),
+                                                 nextChildNode.columnNumber(),
+                                                 childNodeEndPosition);
+            }
+
+            childNodeEndPosition = pContentMathmlBlock.lastIndexOf("</"+childNode.nodeName()+">", childNodeEndPosition)+2+childNode.nodeName().length();
+
+            // Check whether our position is within the start and end positions
+            // of the current child node
+
+            if ((pPosition >= childNodeStartPosition) && (pPosition <= childNodeEndPosition)) {
+                childNodeIndex = i;
 
                 break;
             }
         }
 
-        // At this stage, our DOM document contains only the equation we are
-        // after, so all we now need to do is return its string representation
+        // Check whether our position is within a child node
 
-        return domDocument.toString(-1);
+        if (childNodeIndex != -1) {
+            // We are within a childe node, so remove all the other child nodes
+            // and the string representation of the resulting DOM document
+
+            for (int i = 0, iMax = domNode.childNodes().count()-1-childNodeIndex; i < iMax; ++i)
+                domNode.removeChild(domNode.lastChild());
+
+            for (int i = 0; i < childNodeIndex; ++i)
+                domNode.removeChild(domNode.firstChild());
+
+            return domDocument.toString(-1);
+        } else {
+            // We are not within a child node, so...
+
+            return QString();
+        }
     } else {
         // No DOM representation of the given Content MathML block could be
         // retrieved, so...
@@ -477,8 +498,7 @@ void RawCellmlViewWidget::updateViewer()
     if (!mEditingWidget)
         return;
 
-    // Retrieve the new mathematical equation, if any, around our current
-    // position
+    // Retrieve the Content MathML block around our current position, if any
 
     static const QString StartMathTag = "<math ";
     static const QByteArray EndMathTag = "</math>";
@@ -522,34 +542,47 @@ void RawCellmlViewWidget::updateViewer()
 
             QString contentMathmlEquation = cleanUpXml(retrieveContentMathmlEquation(contentMathmlBlock, currentPosition-crtStartMathTagPos));
 
-            // Check whether our Content MathML equation is the same as our
-            // previous one
+            // Check whether we have got a Content MathML equation
 
-            if (!contentMathmlEquation.compare(mContentMathmlEquation)) {
-                // It's the same, so leave
+            if (!contentMathmlEquation.isEmpty()) {
+                // Now, check whether our Content MathML equation is the same as
+                // our previous one
 
-                return;
-            } else {
-                // It's a different one, so check whether we have already
-                // retrieved its Presentation MathML version
+                if (!contentMathmlEquation.compare(mContentMathmlEquation)) {
+                    // It's the same, so leave
 
-                mContentMathmlEquation = contentMathmlEquation;
-
-                QString presentationMathmlEquation = mPresentationMathmlEquations.value(contentMathmlEquation);
-
-                if (!presentationMathmlEquation.isEmpty()) {
-                    mEditingWidget->viewer()->setContents(presentationMathmlEquation);
+                    return;
                 } else {
-                    // We haven't already retrieved its Presentation MathML
-                    // version, so do it now
+                    // It's a different one, so check whether we have already
+                    // retrieved its Presentation MathML version
 
-                    static const QString CtopXsl = Core::resourceAsByteArray(":/web-xslt/ctop.xsl");
+                    mContentMathmlEquation = contentMathmlEquation;
 
-                    mXslTransformer->transform(contentMathmlEquation, CtopXsl);
+                    QString presentationMathmlEquation = mPresentationMathmlEquations.value(contentMathmlEquation);
+
+                    if (!presentationMathmlEquation.isEmpty()) {
+                        mEditingWidget->viewer()->setContents(presentationMathmlEquation);
+                    } else {
+                        // We haven't already retrieved its Presentation MathML
+                        // version, so do it now
+
+                        static const QString CtopXsl = Core::resourceAsByteArray(":/web-xslt/ctop.xsl");
+
+                        mXslTransformer->transform(contentMathmlEquation, CtopXsl);
+                    }
                 }
+            } else {
+                // Our current position is not within a Content MathML equation,
+                // so...
+
+                mContentMathmlEquation = QString();
+
+                mEditingWidget->viewer()->setContents(mContentMathmlEquation);
             }
         }
     } else {
+        // We couldn't find any Content MathML block, so...
+
         mContentMathmlEquation = QString();
 
         mEditingWidget->viewer()->setContents(mContentMathmlEquation);
