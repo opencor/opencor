@@ -42,10 +42,6 @@
         <translation>un problème inconnu s&apos;est produit lors de la génération du code pour le modèle</translation>
     </message>
     <message>
-        <source>the model code generator crashed</source>
-        <translation>le générateur de code pour le modèle s&apos;est planté</translation>
-    </message>
-    <message>
         <source>the model is underconstrained (i.e. some variables need to be initialised or computed)</source>
         <translation>le modèle n&apos;est pas assez constraint (i.e. des variables ont besoin d&apos;être intiialisées ou calculées)</translation>
     </message>
