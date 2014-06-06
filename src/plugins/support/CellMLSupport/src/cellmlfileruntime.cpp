@@ -21,6 +21,7 @@ specific language governing permissions and limitations under the License.
 
 #include "cellmlfile.h"
 #include "cellmlfileruntime.h"
+#include "cliutils.h"
 #include "compilerengine.h"
 #include "compilermath.h"
 #include "corenlasolver.h"
@@ -33,11 +34,6 @@ specific language governing permissions and limitations under the License.
 
 #include <QRegularExpression>
 #include <QStringList>
-
-//==============================================================================
-
-#include <setjmp.h>
-#include <signal.h>
 
 //==============================================================================
 
@@ -501,18 +497,6 @@ void CellmlFileRuntime::unknownProblemDuringModelCodeGenerationIssue()
 
 //==============================================================================
 
-void CellmlFileRuntime::modelCodeGenerationCrashedIssue(CellmlFile *pCellmlFile)
-{
-    mIssues << CellmlFileIssue(CellmlFileIssue::Error,
-                               tr("the model code generator crashed"));
-
-    // Reload the CellML file to ensure that its internals are fine
-
-    pCellmlFile->reload();
-}
-
-//==============================================================================
-
 void CellmlFileRuntime::checkCodeInformation(iface::cellml_services::CodeInformation *pCodeInformation)
 {
     if (!pCodeInformation)
@@ -548,55 +532,26 @@ void CellmlFileRuntime::checkCodeInformation(iface::cellml_services::CodeInforma
 
 //==============================================================================
 
-static jmp_buf gJumpBuffer;
-
-//==============================================================================
-
-void sigSegvHandler(int pSignal)
+void CellmlFileRuntime::getOdeCodeInformation(iface::cellml_api::Model *pModel)
 {
-    Q_UNUSED(pSignal);
-
-    longjmp(gJumpBuffer, 1);
-}
-
-//==============================================================================
-
-void CellmlFileRuntime::getOdeCodeInformation(CellmlFile *pCellmlFile)
-{
-    // Retrieve the model for the given CellML file
-
-    iface::cellml_api::Model *model = pCellmlFile->model();
-
     // Get a code generator bootstrap and create an ODE code generator
 
     ObjRef<iface::cellml_services::CodeGeneratorBootstrap> codeGeneratorBootstrap = CreateCodeGeneratorBootstrap();
     ObjRef<iface::cellml_services::CodeGenerator> codeGenerator = codeGeneratorBootstrap->createCodeGenerator();
 
     // Generate some code for the model
-    // Note: CodeGenerator::generateCode() may segfault, resulting in OpenCOR
-    //       crashing. So, to avoid this, we catch the SIGSEGV signal and use
-    //       setjmp()/longjmp() to get back on our feet. I agree, it's not
-    //       great, but we don't really have any other choice or do we?...
 
-    signal(SIGSEGV, sigSegvHandler);
+    try {
+        mOdeCodeInformation = codeGenerator->generateCode(pModel);
 
-    if (!setjmp(gJumpBuffer)) {
-        try {
-            mOdeCodeInformation = codeGenerator->generateCode(model);
+        // Check that the code generation went fine
 
-            // Check that the code generation went fine
-
-            checkCodeInformation(mOdeCodeInformation);
-        } catch (iface::cellml_api::CellMLException &) {
-            couldNotGenerateModelCodeIssue();
-        } catch (...) {
-            unknownProblemDuringModelCodeGenerationIssue();
-        }
-    } else {
-        modelCodeGenerationCrashedIssue(pCellmlFile);
+        checkCodeInformation(mOdeCodeInformation);
+    } catch (iface::cellml_api::CellMLException &) {
+        couldNotGenerateModelCodeIssue();
+    } catch (...) {
+        unknownProblemDuringModelCodeGenerationIssue();
     }
-
-    signal(SIGSEGV, SIG_DFL);
 
     // Check the outcome of the ODE code generation
 
@@ -608,42 +563,26 @@ void CellmlFileRuntime::getOdeCodeInformation(CellmlFile *pCellmlFile)
 
 //==============================================================================
 
-void CellmlFileRuntime::getDaeCodeInformation(CellmlFile *pCellmlFile)
+void CellmlFileRuntime::getDaeCodeInformation(iface::cellml_api::Model *pModel)
 {
-    // Retrieve the model for the given CellML file
-
-    iface::cellml_api::Model *model = pCellmlFile->model();
-
     // Get a code generator bootstrap and create a DAE code generator
 
     ObjRef<iface::cellml_services::CodeGeneratorBootstrap> codeGeneratorBootstrap = CreateCodeGeneratorBootstrap();
     ObjRef<iface::cellml_services::IDACodeGenerator> codeGenerator = codeGeneratorBootstrap->createIDACodeGenerator();
 
     // Generate some code for the model
-    // Note: IDACodeGenerator::generateIDACode() may segfault, resulting in
-    //       OpenCOR crashing. So, to avoid this, we catch the SIGSEGV signal
-    //       and use setjmp()/longjmp() to get back on our feet. I agree, it's
-    //       not great, but we don't really have any other choice or do we?...
 
-    signal(SIGSEGV, sigSegvHandler);
+    try {
+        mDaeCodeInformation = codeGenerator->generateIDACode(pModel);
 
-    if (!setjmp(gJumpBuffer)) {
-        try {
-            mDaeCodeInformation = codeGenerator->generateIDACode(model);
+        // Check that the code generation went fine
 
-            // Check that the code generation went fine
-
-            checkCodeInformation(mDaeCodeInformation);
-        } catch (iface::cellml_api::CellMLException &) {
-            couldNotGenerateModelCodeIssue();
-        } catch (...) {
-            unknownProblemDuringModelCodeGenerationIssue();
-        }
-    } else {
-        modelCodeGenerationCrashedIssue(pCellmlFile);
+        checkCodeInformation(mDaeCodeInformation);
+    } catch (iface::cellml_api::CellMLException &) {
+        couldNotGenerateModelCodeIssue();
+    } catch (...) {
+        unknownProblemDuringModelCodeGenerationIssue();
     }
-
-    signal(SIGSEGV, SIG_DFL);
 
     // Check the outcome of the DAE code generation
 
@@ -804,7 +743,9 @@ CellmlFileRuntime * CellmlFileRuntime::update(CellmlFile *pCellmlFile)
     // Note #3: ideally, there would be a more convenient way to determine the
     //          type of a model, but well... there isn't, so...
 
-    if (!pCellmlFile->model())
+    iface::cellml_api::Model *model = pCellmlFile->model();
+
+    if (!model)
         // No model is available, so...
 
         return this;
@@ -813,7 +754,7 @@ CellmlFileRuntime * CellmlFileRuntime::update(CellmlFile *pCellmlFile)
     // Note: this can be done by checking whether some equations were flagged
     //       as needing a Newton-Raphson evaluation...
 
-    getOdeCodeInformation(pCellmlFile);
+    getOdeCodeInformation(model);
 
     if (!mOdeCodeInformation)
         return this;
@@ -833,7 +774,7 @@ CellmlFileRuntime * CellmlFileRuntime::update(CellmlFile *pCellmlFile)
     if (mModelType == CellmlFileRuntime::Ode) {
         genericCodeInformation = mOdeCodeInformation;
     } else {
-        getDaeCodeInformation(pCellmlFile);
+        getDaeCodeInformation(model);
 
         genericCodeInformation = mDaeCodeInformation;
     }

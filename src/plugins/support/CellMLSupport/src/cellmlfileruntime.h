@@ -206,12 +206,11 @@ private:
 
     void couldNotGenerateModelCodeIssue();
     void unknownProblemDuringModelCodeGenerationIssue();
-    void modelCodeGenerationCrashedIssue(CellmlFile *pCellmlFile);
 
     void checkCodeInformation(iface::cellml_services::CodeInformation *pCodeInformation);
 
-    void getOdeCodeInformation(CellmlFile *pCellmlFile);
-    void getDaeCodeInformation(CellmlFile *pCellmlFile);
+    void getOdeCodeInformation(iface::cellml_api::Model *pModel);
+    void getDaeCodeInformation(iface::cellml_api::Model *pModel);
 
     QString functionCode(const QString &pFunctionSignature,
                          const QString &pFunctionBody,
