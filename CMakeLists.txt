@@ -228,7 +228,7 @@ SET(PLUGINS
     support/CellMLSupport
     support/QScintillaSupport
 
-    # Plugins that extend some third-party libraries
+    # Plugins that extend some libraries (incl. third-party ones)
 
     widget/Editor
     widget/Viewer
