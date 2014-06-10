@@ -94,16 +94,11 @@ public:
 private:
     Ui::RawCellmlViewWidget *mGui;
 
+    bool mNeedLoadingSettings;
+    QString mSettingsGroup;
+
     CoreCellMLEditing::CoreCellmlEditingWidget *mEditingWidget;
     QMap<QString, CoreCellMLEditing::CoreCellmlEditingWidget *> mEditingWidgets;
-
-    QIntList mEditingWidgetSizes;
-    int mEditorZoomLevel;
-
-    bool mViewerOptimiseFontSizeEnabled;
-    bool mViewerSubscriptsEnabled;
-    bool mViewerGreekSymbolsEnabled;
-    bool mViewerDigitGroupingEnabled;
 
     QMap<QString, QString> mPresentationMathmlEquations;
 
@@ -118,15 +113,7 @@ private:
                                           const int &pPosition) const;
 
 private Q_SLOTS:
-    void splitterMoved();
-    void zoomLevelChanged(const int &pZoomLevel);
-
     void updateViewer();
-
-    void optimiseFontSizeChanged(const bool &pEnabled);
-    void subscriptsChanged(const bool &pEnabled);
-    void greekSymbolsChanged(const bool &pEnabled);
-    void digitGroupingChanged(const bool &pEnabled);
 
     void xslTransformationDone(const QString &pInput, const QString &pOutput);
 };

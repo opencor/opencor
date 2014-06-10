@@ -87,7 +87,12 @@ public:
                                      QWidget *pParent);
     ~CoreCellmlEditingWidget();
 
+    virtual void loadSettings(QSettings *pSettings);
+    virtual void saveSettings(QSettings *pSettings) const;
+
     virtual void retranslateUi();
+
+    void reset(CoreCellmlEditingWidget *pCoreCellmlEditingWidget);
 
     Viewer::ViewerWidget * viewer() const;
     Editor::EditorWidget * editor() const;

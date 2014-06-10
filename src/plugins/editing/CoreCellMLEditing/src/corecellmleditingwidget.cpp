@@ -99,12 +99,87 @@ CoreCellmlEditingWidget::~CoreCellmlEditingWidget()
 
 //==============================================================================
 
+static const auto SettingsEditingWidgetSizes = QStringLiteral("EditingWidgetSizes");
+
+//==============================================================================
+
+void CoreCellmlEditingWidget::loadSettings(QSettings *pSettings)
+{
+    // Retrieve our sizes
+    // Note #1: the viewer's and editor list's default height is 19% of the
+    //          desktop's height while that of the editor is as big as it can
+    //          be...
+    // Note #2: because the editor's default height is much bigger than that of
+    //          our widget, the viewer's and editor list's default height will
+    //          effectively be less than 19% of the desktop's height, but that
+    //          doesn't matter at all...
+
+    QVariantList defaultEditingWidgetSizes = QVariantList() << 0.19*qApp->desktop()->screenGeometry().height()
+                                                            << qApp->desktop()->screenGeometry().height()
+                                                            << 0.19*qApp->desktop()->screenGeometry().height();
+
+    setSizes(qVariantListToIntList(pSettings->value(SettingsEditingWidgetSizes, defaultEditingWidgetSizes).toList()));
+
+    // Retrieve our viewer's settings
+
+    mViewer->loadSettings(pSettings);
+
+    // Retrieve our editor's settings
+
+    mEditor->loadSettings(pSettings);
+}
+
+//==============================================================================
+
+void CoreCellmlEditingWidget::saveSettings(QSettings *pSettings) const
+{
+    // Keep track of our sizes
+
+    pSettings->setValue(SettingsEditingWidgetSizes, qIntListToVariantList(sizes()));
+
+    // Keep track of our viewer's settings
+
+    mViewer->saveSettings(pSettings);
+
+    // Keep track of our editor's settings
+
+    mEditor->saveSettings(pSettings);
+}
+
+//==============================================================================
+
 void CoreCellmlEditingWidget::retranslateUi()
 {
     // Retranslate our viewer and editor
 
     mViewer->retranslateUi();
     mEditor->retranslateUi();
+}
+
+//==============================================================================
+
+void CoreCellmlEditingWidget::reset(CoreCellmlEditingWidget *pCoreCellmlEditingWidget)
+{
+    // Make sure that we are given another widget
+
+    if (!pCoreCellmlEditingWidget)
+        return;
+
+    // Reset our sizes
+
+    setSizes(pCoreCellmlEditingWidget->sizes());
+
+    // Reset our viewer settings
+
+    mViewer->setOptimiseFontSize(pCoreCellmlEditingWidget->viewer()->optimiseFontSize());
+    mViewer->setSubscripts(pCoreCellmlEditingWidget->viewer()->subscripts());
+    mViewer->setGreekSymbols(pCoreCellmlEditingWidget->viewer()->greekSymbols());
+    mViewer->setDigitGrouping(pCoreCellmlEditingWidget->viewer()->digitGrouping());
+
+    // Reset our size, zoom level and find/replace widget
+
+    mEditor->setZoomLevel(pCoreCellmlEditingWidget->editor()->zoomLevel());
+    mEditor->updateFindReplaceFrom(pCoreCellmlEditingWidget->editor());
 }
 
 //==============================================================================

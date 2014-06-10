@@ -40,6 +40,7 @@ specific language governing permissions and limitations under the License.
 #include <QLabel>
 #include <QLayout>
 #include <QRegularExpression>
+#include <QSettings>
 #include <QVBoxLayout>
 
 //==============================================================================
@@ -141,6 +142,28 @@ EditorWidget::EditorWidget(const QString &pContents, const bool &pReadOnly,
     // Initially hide our find/replace widget
 
     setFindReplaceVisible(false);
+}
+
+//==============================================================================
+
+static const auto SettingsEditorZoomLevel = QStringLiteral("EditorZoomLevel");
+
+//==============================================================================
+
+void EditorWidget::loadSettings(QSettings *pSettings)
+{
+    // Retrieve our settings
+
+    setZoomLevel(pSettings->value(SettingsEditorZoomLevel, 0).toInt());
+}
+
+//==============================================================================
+
+void EditorWidget::saveSettings(QSettings *pSettings) const
+{
+    // Keep track of our settings
+
+    pSettings->setValue(SettingsEditorZoomLevel, zoomLevel());
 }
 
 //==============================================================================

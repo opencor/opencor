@@ -43,6 +43,7 @@ specific language governing permissions and limitations under the License.
 #include <QPoint>
 #include <QRectF>
 #include <QRegularExpression>
+#include <QSettings>
 
 //==============================================================================
 
@@ -110,25 +111,15 @@ ViewerWidget::ViewerWidget(QWidget *pParent) :
     mDigitGroupingAction = newAction();
     mCopyToClipboardAction = new QAction(this);
 
-    connect(mOptimiseFontSizeAction, SIGNAL(triggered()),
-            this, SLOT(update()));
     connect(mOptimiseFontSizeAction, SIGNAL(toggled(bool)),
-            this, SIGNAL(optimiseFontSizeChanged(const bool &)));
+            this, SLOT(update()));
 
-    connect(mSubscriptsAction, SIGNAL(triggered()),
-            this, SLOT(updateViewer()));
     connect(mSubscriptsAction, SIGNAL(toggled(bool)),
-            this, SIGNAL(subscriptsChanged(const bool &)));
-
-    connect(mGreekSymbolsAction, SIGNAL(triggered()),
             this, SLOT(updateViewer()));
     connect(mGreekSymbolsAction, SIGNAL(toggled(bool)),
-            this, SIGNAL(greekSymbolsChanged(const bool &)));
-
-    connect(mDigitGroupingAction, SIGNAL(triggered()),
             this, SLOT(updateViewer()));
     connect(mDigitGroupingAction, SIGNAL(toggled(bool)),
-            this, SIGNAL(digitGroupingChanged(const bool &)));
+            this, SLOT(updateViewer()));
 
     connect(mCopyToClipboardAction, SIGNAL(triggered()),
             this, SLOT(copyToClipboard()));
@@ -151,6 +142,37 @@ ViewerWidget::ViewerWidget(QWidget *pParent) :
     // Retranslate ourselves, so that our actions are properly initialised
 
     retranslateUi();
+}
+
+//==============================================================================
+
+static const auto SettingsViewerOptimiseFontSizeEnabled = QStringLiteral("ViewerOptimiseFontSizeEnabled");
+static const auto SettingsViewerSubscriptsEnabled       = QStringLiteral("ViewerSubscriptsEnabled");
+static const auto SettingsViewerGreekSymbolsEnabled     = QStringLiteral("ViewerGreekSymbolsEnabled");
+static const auto SettingsViewerDigitGroupingEnabled    = QStringLiteral("ViewerDigitGroupingEnabled");
+
+//==============================================================================
+
+void ViewerWidget::loadSettings(QSettings *pSettings)
+{
+    // Retrieve our settings
+
+    setOptimiseFontSize(pSettings->value(SettingsViewerOptimiseFontSizeEnabled, true).toBool());
+    setSubscripts(pSettings->value(SettingsViewerSubscriptsEnabled, true).toBool());
+    setGreekSymbols(pSettings->value(SettingsViewerGreekSymbolsEnabled, true).toBool());
+    setDigitGrouping(pSettings->value(SettingsViewerDigitGroupingEnabled, true).toBool());
+}
+
+//==============================================================================
+
+void ViewerWidget::saveSettings(QSettings *pSettings) const
+{
+    // Keep track of our settings
+
+    pSettings->setValue(SettingsViewerOptimiseFontSizeEnabled, optimiseFontSize());
+    pSettings->setValue(SettingsViewerSubscriptsEnabled, subscripts());
+    pSettings->setValue(SettingsViewerGreekSymbolsEnabled, greekSymbols());
+    pSettings->setValue(SettingsViewerDigitGroupingEnabled, digitGrouping());
 }
 
 //==============================================================================
@@ -267,14 +289,6 @@ void ViewerWidget::setOptimiseFontSize(const bool &pOptimiseFontSize)
         return;
 
     mOptimiseFontSizeAction->setChecked(pOptimiseFontSize);
-
-    // Let people know about the new value
-
-    emit optimiseFontSizeChanged(pOptimiseFontSize);
-
-    // Update ourselves
-
-    update();
 }
 
 //==============================================================================
@@ -296,14 +310,6 @@ void ViewerWidget::setSubscripts(const bool &pSubscripts)
         return;
 
     mSubscriptsAction->setChecked(pSubscripts);
-
-    // Let people know about the new value
-
-    emit subscriptsChanged(pSubscripts);
-
-    // Update ourselves
-
-    update();
 }
 
 //==============================================================================
@@ -325,14 +331,6 @@ void ViewerWidget::setGreekSymbols(const bool &pGreekSymbols)
         return;
 
     mGreekSymbolsAction->setChecked(pGreekSymbols);
-
-    // Let people know about the new value
-
-    emit greekSymbolsChanged(pGreekSymbols);
-
-    // Update ourselves
-
-    update();
 }
 
 //==============================================================================
@@ -354,14 +352,6 @@ void ViewerWidget::setDigitGrouping(const bool &pDigitGrouping)
         return;
 
     mDigitGroupingAction->setChecked(pDigitGrouping);
-
-    // Let people know about the new value
-
-    emit digitGroupingChanged(pDigitGrouping);
-
-    // Update ourselves
-
-    update();
 }
 
 //==============================================================================

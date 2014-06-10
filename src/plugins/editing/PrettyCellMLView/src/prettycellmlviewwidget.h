@@ -87,25 +87,11 @@ public:
 private:
     Ui::PrettyCellmlViewWidget *mGui;
 
+    bool mNeedLoadingSettings;
+    QString mSettingsGroup;
+
     CoreCellMLEditing::CoreCellmlEditingWidget *mEditingWidget;
     QMap<QString, CoreCellMLEditing::CoreCellmlEditingWidget *> mEditingWidgets;
-
-    QIntList mEditingWidgetSizes;
-    int mEditorZoomLevel;
-
-    bool mViewerOptimiseFontSizeEnabled;
-    bool mViewerSubscriptsEnabled;
-    bool mViewerGreekSymbolsEnabled;
-    bool mViewerDigitGroupingEnabled;
-
-private Q_SLOTS:
-    void splitterMoved();
-    void zoomLevelChanged(const int &pZoomLevel);
-
-    void optimiseFontSizeChanged(const bool &pEnabled);
-    void subscriptsChanged(const bool &pEnabled);
-    void greekSymbolsChanged(const bool &pEnabled);
-    void digitGroupingChanged(const bool &pEnabled);
 };
 
 //==============================================================================

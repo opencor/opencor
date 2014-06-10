@@ -32,7 +32,6 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-#include <QDesktopWidget>
 #include <QDomDocument>
 #include <QLabel>
 #include <QLayout>
@@ -54,14 +53,10 @@ namespace RawCellMLView {
 RawCellmlViewWidget::RawCellmlViewWidget(QWidget *pParent) :
     ViewWidget(pParent),
     mGui(new Ui::RawCellmlViewWidget),
+    mNeedLoadingSettings(true),
+    mSettingsGroup(QString()),
     mEditingWidget(0),
     mEditingWidgets(QMap<QString, CoreCellMLEditing::CoreCellmlEditingWidget *>()),
-    mEditingWidgetSizes(QIntList()),
-    mEditorZoomLevel(0),
-    mViewerOptimiseFontSizeEnabled(true),
-    mViewerSubscriptsEnabled(true),
-    mViewerGreekSymbolsEnabled(true),
-    mViewerDigitGroupingEnabled(true),
     mPresentationMathmlEquations(QMap<QString, QString>()),
     mContentMathmlEquation(QString())
 {
@@ -95,54 +90,23 @@ RawCellmlViewWidget::~RawCellmlViewWidget()
 
 //==============================================================================
 
-static const auto SettingsEditingWidgetSizes            = QStringLiteral("EditingWidgetSizes");
-static const auto SettingsEditorZoomLevel               = QStringLiteral("EditorZoomLevel");
-static const auto SettingsViewerOptimiseFontSizeEnabled = QStringLiteral("ViewerOptimiseFontSizeEnabled");
-static const auto SettingsViewerSubscriptsEnabled       = QStringLiteral("ViewerSubscriptsEnabled");
-static const auto SettingsViewerGreekSymbolsEnabled     = QStringLiteral("ViewerGreekSymbolsEnabled");
-static const auto SettingsViewerDigitGroupingEnabled    = QStringLiteral("ViewerDigitGroupingEnabled");
-
-//==============================================================================
-
 void RawCellmlViewWidget::loadSettings(QSettings *pSettings)
 {
-    // Retrieve the editing widget's sizes and the editor's zoom level
-    // Note #1: the viewer's default height is 19% of the desktop's height while
-    //          that of the editor is as big as it can be...
-    // Note #2: because the editor's default height is much bigger than that of
-    //          our raw CellML view widget, the viewer's default height will
-    //          effectively be less than 19% of the desktop's height, but that
-    //          doesn't matter at all...
+    // Normally, we would retrieve the editing widget's settings, but
+    // mEditingWidget is not set at this stage. So, instead, we keep track of
+    // our settings' group and load them when initialising (see initialize())...
 
-    QVariantList defaultEditingWidgetSizes = QVariantList() << 0.19*qApp->desktop()->screenGeometry().height()
-                                                            << qApp->desktop()->screenGeometry().height();
-
-    mEditingWidgetSizes = qVariantListToIntList(pSettings->value(SettingsEditingWidgetSizes, defaultEditingWidgetSizes).toList());
-    mEditorZoomLevel = pSettings->value(SettingsEditorZoomLevel, 0).toInt();
-
-    // Retrieve the editing widget's viewer settings
-
-    mViewerOptimiseFontSizeEnabled = pSettings->value(SettingsViewerOptimiseFontSizeEnabled, true).toBool();
-    mViewerSubscriptsEnabled = pSettings->value(SettingsViewerSubscriptsEnabled, true).toBool();
-    mViewerGreekSymbolsEnabled = pSettings->value(SettingsViewerGreekSymbolsEnabled, true).toBool();
-    mViewerDigitGroupingEnabled = pSettings->value(SettingsViewerDigitGroupingEnabled, true).toBool();
+    mSettingsGroup = pSettings->group();
 }
 
 //==============================================================================
 
 void RawCellmlViewWidget::saveSettings(QSettings *pSettings) const
 {
-    // Keep track of the editing widget's sizes and the editor's zoom level
+    // Keep track of the editing widget's settings, if needed
 
-    pSettings->setValue(SettingsEditingWidgetSizes, qIntListToVariantList(mEditingWidgetSizes));
-    pSettings->setValue(SettingsEditorZoomLevel, mEditorZoomLevel);
-
-    // Keep track of the editing widget's viewer settings
-
-    pSettings->setValue(SettingsViewerOptimiseFontSizeEnabled, mViewerOptimiseFontSizeEnabled);
-    pSettings->setValue(SettingsViewerSubscriptsEnabled, mViewerSubscriptsEnabled);
-    pSettings->setValue(SettingsViewerGreekSymbolsEnabled, mViewerGreekSymbolsEnabled);
-    pSettings->setValue(SettingsViewerDigitGroupingEnabled, mViewerDigitGroupingEnabled);
+    if (mEditingWidget)
+        mEditingWidget->saveSettings(pSettings);
 }
 
 //==============================================================================
@@ -187,32 +151,12 @@ void RawCellmlViewWidget::initialize(const QString &pFileName)
                                                                         new QsciLexerXML(this),
                                                                         parentWidget());
 
-        // Keep track of our editing widget's sizes when moving the splitter and
-        // of changes to our editor's zoom level
-
-        connect(mEditingWidget, SIGNAL(splitterMoved(int, int)),
-                this, SLOT(splitterMoved()));
-
-        connect(mEditingWidget->editor(), SIGNAL(zoomLevelChanged(const int &)),
-                this, SLOT(zoomLevelChanged(const int &)));
-
         // Update our viewer whenever necessary
 
         connect(mEditingWidget->editor(), SIGNAL(textChanged()),
                 this, SLOT(updateViewer()));
         connect(mEditingWidget->editor(), SIGNAL(cursorPositionChanged(const int &, const int &)),
                 this, SLOT(updateViewer()));
-
-        // Keep track of our editing widget's viewer settings
-
-        connect(mEditingWidget->viewer(), SIGNAL(optimiseFontSizeChanged(const bool &)),
-                this, SLOT(optimiseFontSizeChanged(const bool &)));
-        connect(mEditingWidget->viewer(), SIGNAL(subscriptsChanged(const bool &)),
-                this, SLOT(subscriptsChanged(const bool &)));
-        connect(mEditingWidget->viewer(), SIGNAL(greekSymbolsChanged(const bool &)),
-                this, SLOT(greekSymbolsChanged(const bool &)));
-        connect(mEditingWidget->viewer(), SIGNAL(digitGroupingChanged(const bool &)),
-                this, SLOT(digitGroupingChanged(const bool &)));
 
         // Keep track of our editing widget and add it to ourselves
 
@@ -221,32 +165,32 @@ void RawCellmlViewWidget::initialize(const QString &pFileName)
         layout()->addWidget(mEditingWidget);
     }
 
-    // Set our current editing widget's viewer settings
+    // Load our settings, if needed, or reset our editing widget using the old
+    // one
 
-    mEditingWidget->viewer()->setOptimiseFontSize(mViewerOptimiseFontSizeEnabled);
-    mEditingWidget->viewer()->setSubscripts(mViewerSubscriptsEnabled);
-    mEditingWidget->viewer()->setGreekSymbols(mViewerGreekSymbolsEnabled);
-    mEditingWidget->viewer()->setDigitGrouping(mViewerDigitGroupingEnabled);
+    if (mNeedLoadingSettings) {
+        QSettings settings(SettingsOrganization, SettingsApplication);
+
+        settings.beginGroup(mSettingsGroup);
+            mEditingWidget->loadSettings(&settings);
+        settings.endGroup();
+
+        mNeedLoadingSettings = false;
+    } else {
+        mEditingWidget->reset(oldEditingWidget);
+    }
 
     // Show/hide our editing widgets and adjust our sizes
 
     foreach (CoreCellMLEditing::CoreCellmlEditingWidget *editingWidget, mEditingWidgets)
-        if (editingWidget == mEditingWidget) {
-            // This is the editing widget we are after, so show it and update
-            // its size, zoom level and find/replace widget
-
-            editingWidget->setSizes(mEditingWidgetSizes);
-            editingWidget->editor()->setZoomLevel(mEditorZoomLevel);
-
-            if (oldEditingWidget)
-                editingWidget->editor()->updateFindReplaceFrom(oldEditingWidget->editor());
+        if (editingWidget == mEditingWidget)
+            // This is the editing widget we are after, so show it
 
             editingWidget->show();
-        } else {
+        else
             // Not the editing widget we are after, so hide it
 
             editingWidget->hide();
-        }
 
     // Set our focus proxy to our 'new' editing widget and make sure that the
     // latter immediately gets the focus
@@ -471,25 +415,6 @@ QString RawCellmlViewWidget::retrieveContentMathmlEquation(const QString &pConte
 
 //==============================================================================
 
-void RawCellmlViewWidget::splitterMoved()
-{
-    // The splitter has moved, so keep track of the editing widget's sizes
-
-    mEditingWidgetSizes = qobject_cast<CoreCellMLEditing::CoreCellmlEditingWidget *>(sender())->sizes();
-}
-
-//==============================================================================
-
-void RawCellmlViewWidget::zoomLevelChanged(const int &pZoomLevel)
-{
-    // One of our editors had its zoom level changed, so keep track of the new
-    // zoom level
-
-    mEditorZoomLevel = pZoomLevel;
-}
-
-//==============================================================================
-
 void RawCellmlViewWidget::updateViewer()
 {
     // Make sure that we still have an editing widget (i.e. it hasn't been
@@ -587,42 +512,6 @@ void RawCellmlViewWidget::updateViewer()
 
         mEditingWidget->viewer()->setContents(mContentMathmlEquation);
     }
-}
-
-//==============================================================================
-
-void RawCellmlViewWidget::optimiseFontSizeChanged(const bool &pEnabled)
-{
-    // Keep track of our editing widget's viewer settings
-
-    mViewerOptimiseFontSizeEnabled = pEnabled;
-}
-
-//==============================================================================
-
-void RawCellmlViewWidget::subscriptsChanged(const bool &pEnabled)
-{
-    // Keep track of our editing widget's viewer settings
-
-    mViewerSubscriptsEnabled = pEnabled;
-}
-
-//==============================================================================
-
-void RawCellmlViewWidget::greekSymbolsChanged(const bool &pEnabled)
-{
-    // Keep track of our editing widget's viewer settings
-
-    mViewerGreekSymbolsEnabled = pEnabled;
-}
-
-//==============================================================================
-
-void RawCellmlViewWidget::digitGroupingChanged(const bool &pEnabled)
-{
-    // Keep track of our editing widget's viewer settings
-
-    mViewerDigitGroupingEnabled = pEnabled;
 }
 
 //==============================================================================

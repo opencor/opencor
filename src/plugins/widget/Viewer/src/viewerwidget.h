@@ -53,6 +53,9 @@ class VIEWER_EXPORT ViewerWidget : public Core::Widget
 public:
     explicit ViewerWidget(QWidget *pParent);
 
+    virtual void loadSettings(QSettings *pSettings);
+    virtual void saveSettings(QSettings *pSettings) const;
+
     virtual void retranslateUi();
 
     QString contents() const;
@@ -104,12 +107,6 @@ private:
 
     void processNode(const QDomNode &pDomNode) const;
     QString processedContents() const;
-
-Q_SIGNALS:
-    void optimiseFontSizeChanged(const bool &pEnabled);
-    void subscriptsChanged(const bool &pEnabled);
-    void greekSymbolsChanged(const bool &pEnabled);
-    void digitGroupingChanged(const bool &pEnabled);
 
 private Q_SLOTS:
     void showCustomContextMenu(const QPoint &pPosition) const;
