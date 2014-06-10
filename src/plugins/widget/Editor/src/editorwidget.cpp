@@ -184,10 +184,23 @@ void EditorWidget::updateSettings(EditorWidget *pEditorWidget)
     if (!pEditorWidget)
         return;
 
-    // Update our zoom level and find/replace widget
+    // Update our zoom level
 
     setZoomLevel(pEditorWidget->zoomLevel());
-    updateFindReplaceFrom(pEditorWidget);
+
+    // Show/hide our find/replace widget
+
+    setFindReplaceVisible(pEditorWidget->findReplaceIsVisible());
+
+    // Update the find/replace widget itself
+    // Note: we must inactivate (and then reactivate) our find/replace widget
+    //       otherwise opening a new file or switching to another will result in
+    //       the find text being automatically searched (see the
+    //       findTextChanged() slot)...
+
+    mFindReplace->setActive(false);
+        mFindReplace->updateFrom(pEditorWidget->findReplace());
+    mFindReplace->setActive(true);
 }
 
 //==============================================================================
@@ -486,32 +499,6 @@ void EditorWidget::setZoomLevel(const int &pZoomLevel)
 
 //==============================================================================
 
-void EditorWidget::updateFindReplaceFrom(EditorWidget *pEditor)
-{
-    // Make sure that we have a given editor
-
-    if (!pEditor)
-        return;
-
-    // Show/hide our find/replace widget
-
-    setFindReplaceVisible(pEditor->findReplaceIsVisible());
-
-    // Update the find/replace widget itself
-    // Note: we must inactivate (and then reactivate) our find/replace widget
-    //       otherwise opening a new file or switching to another will result in
-    //       the find text being automatically searched (see the
-    //       findTextChanged() slot)...
-
-    mFindReplace->setActive(false);
-
-    mFindReplace->updateFrom(pEditor->findReplace());
-
-    mFindReplace->setActive(true);
-}
-
-//==============================================================================
-
 EditorFindReplaceWidget * EditorWidget::findReplace()
 {
     // Return our find/replace widget
@@ -543,11 +530,9 @@ void EditorWidget::setFindReplaceVisible(const bool &pVisible)
 
         if (!currentWord.isEmpty()) {
             mFindReplace->setActive(false);
+                mEditor->selectWordAt(mCurrentLine, mCurrentColumn);
 
-            mEditor->selectWordAt(mCurrentLine, mCurrentColumn);
-
-            mFindReplace->setFindText(currentWord);
-
+                mFindReplace->setFindText(currentWord);
             mFindReplace->setActive(true);
         } else {
             mFindReplace->selectFindText();

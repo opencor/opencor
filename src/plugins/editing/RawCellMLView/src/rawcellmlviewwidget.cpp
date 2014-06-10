@@ -180,7 +180,7 @@ void RawCellmlViewWidget::initialize(const QString &pFileName)
         mEditingWidget->updateSettings(oldEditingWidget);
     }
 
-    // Show/hide our editing widgets and adjust our sizes
+    // Show/hide our editing widgets
 
     foreach (CoreCellMLEditing::CoreCellmlEditingWidget *editingWidget, mEditingWidgets)
         if (editingWidget == mEditingWidget)

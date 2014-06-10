@@ -135,8 +135,6 @@ public:
     int zoomLevel() const;
     void setZoomLevel(const int &pZoomLevel);
 
-    void updateFindReplaceFrom(EditorWidget *pEditor);
-
     bool findReplaceIsVisible() const;
 
     void setFindReplaceVisible(const bool &pVisible);

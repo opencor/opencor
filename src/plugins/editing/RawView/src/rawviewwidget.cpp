@@ -44,9 +44,10 @@ namespace RawView {
 RawViewWidget::RawViewWidget(QWidget *pParent) :
     ViewWidget(pParent),
     mGui(new Ui::RawViewWidget),
+    mNeedLoadingSettings(true),
+    mSettingsGroup(QString()),
     mEditor(0),
-    mEditors(QMap<QString, Editor::EditorWidget *>()),
-    mEditorZoomLevel(0)
+    mEditors(QMap<QString, Editor::EditorWidget *>())
 {
     // Set up the GUI
 
@@ -64,24 +65,23 @@ RawViewWidget::~RawViewWidget()
 
 //==============================================================================
 
-static const auto SettingsEditorZoomLevel = QStringLiteral("EditorZoomLevel");
-
-//==============================================================================
-
 void RawViewWidget::loadSettings(QSettings *pSettings)
 {
-    // Retrieve the editor's zoom level
+    // Normally, we would retrieve the editing widget's settings, but
+    // mEditingWidget is not set at this stage. So, instead, we keep track of
+    // our settings' group and load them when initialising (see initialize())...
 
-    mEditorZoomLevel = pSettings->value(SettingsEditorZoomLevel, 0).toInt();
+    mSettingsGroup = pSettings->group();
 }
 
 //==============================================================================
 
 void RawViewWidget::saveSettings(QSettings *pSettings) const
 {
-    // Keep track of the editor's zoom level
+    // Keep track of the editing widget's settings, if needed
 
-    pSettings->setValue(SettingsEditorZoomLevel, mEditorZoomLevel);
+    if (mEditor)
+        mEditor->saveSettings(pSettings);
 }
 
 //==============================================================================
@@ -125,11 +125,6 @@ void RawViewWidget::initialize(const QString &pFileName)
                                            !Core::FileManager::instance()->isReadableAndWritable(pFileName),
                                            0, parentWidget());
 
-        // Keep track of changes to our editor's zoom level
-
-        connect(mEditor, SIGNAL(zoomLevelChanged(const int &)),
-                this, SLOT(zoomLevelChanged(const int &)));
-
         // Keep track of our editor and add it to ourselves
 
         mEditors.insert(pFileName, mEditor);
@@ -137,22 +132,32 @@ void RawViewWidget::initialize(const QString &pFileName)
         layout()->addWidget(mEditor);
     }
 
-    // Show/hide our editors and adjust our sizes
+    // Load our settings, if needed, or reset our editing widget using the old
+    // one
+
+    if (mNeedLoadingSettings) {
+        QSettings settings(SettingsOrganization, SettingsApplication);
+
+        settings.beginGroup(mSettingsGroup);
+            mEditor->loadSettings(&settings);
+        settings.endGroup();
+
+        mNeedLoadingSettings = false;
+    } else {
+        mEditor->updateSettings(oldEditor);
+    }
+
+    // Show/hide our editors
 
     foreach (Editor::EditorWidget *editor, mEditors)
-        if (editor == mEditor) {
-            // This is the editor we are after, so show it and update its zoom
-            // level and find/replace widget
-
-            editor->setZoomLevel(mEditorZoomLevel);
-            editor->updateFindReplaceFrom(oldEditor);
+        if (editor == mEditor)
+            // This is the editor we are after, so show it
 
             editor->show();
-        } else {
+        else
             // Not the editor we are after, so hide it
 
             editor->hide();
-        }
 
     // Set our focus proxy to our 'new' editor and make sure that the latter
     // immediately gets the focus
@@ -235,16 +240,6 @@ QList<QWidget *> RawViewWidget::statusBarWidgets() const
                                   << mEditor->editingModeWidget();
     else
         return QList<QWidget *>();
-}
-
-//==============================================================================
-
-void RawViewWidget::zoomLevelChanged(const int &pZoomLevel)
-{
-    // One of our editors had its zoom level changed, so keep track of the new
-    // zoom level
-
-    mEditorZoomLevel = pZoomLevel;
 }
 
 //==============================================================================
