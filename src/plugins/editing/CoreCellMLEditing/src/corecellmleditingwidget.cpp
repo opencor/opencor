@@ -106,17 +106,17 @@ static const auto SettingsEditingWidgetSizes = QStringLiteral("EditingWidgetSize
 void CoreCellmlEditingWidget::loadSettings(QSettings *pSettings)
 {
     // Retrieve our sizes
-    // Note #1: the viewer's and editor list's default height is 19% of the
-    //          desktop's height while that of the editor is as big as it can
-    //          be...
+    // Note #1: the viewer's and editor list's default height is 19% and 13%,
+    //          respectively, of the desktop's height while that of the editor
+    //          is as big as it can be...
     // Note #2: because the editor's default height is much bigger than that of
     //          our widget, the viewer's and editor list's default height will
-    //          effectively be less than 19% of the desktop's height, but that
-    //          doesn't matter at all...
+    //          effectively be less than 19% and 13%, respectively, of the
+    //          desktop's height, but that doesn't matter at all...
 
     QVariantList defaultEditingWidgetSizes = QVariantList() << 0.19*qApp->desktop()->screenGeometry().height()
                                                             << qApp->desktop()->screenGeometry().height()
-                                                            << 0.19*qApp->desktop()->screenGeometry().height();
+                                                            << 0.13*qApp->desktop()->screenGeometry().height();
 
     setSizes(qVariantListToIntList(pSettings->value(SettingsEditingWidgetSizes, defaultEditingWidgetSizes).toList()));
 
