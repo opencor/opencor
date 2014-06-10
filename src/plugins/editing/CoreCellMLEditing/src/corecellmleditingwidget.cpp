@@ -158,28 +158,19 @@ void CoreCellmlEditingWidget::retranslateUi()
 
 //==============================================================================
 
-void CoreCellmlEditingWidget::reset(CoreCellmlEditingWidget *pCoreCellmlEditingWidget)
+void CoreCellmlEditingWidget::updateSettings(CoreCellmlEditingWidget *pCoreCellmlEditingWidget)
 {
     // Make sure that we are given another widget
 
     if (!pCoreCellmlEditingWidget)
         return;
 
-    // Reset our sizes
+    // Update our sizes, viewer settings and editor settings
 
     setSizes(pCoreCellmlEditingWidget->sizes());
 
-    // Reset our viewer settings
-
-    mViewer->setOptimiseFontSize(pCoreCellmlEditingWidget->viewer()->optimiseFontSize());
-    mViewer->setSubscripts(pCoreCellmlEditingWidget->viewer()->subscripts());
-    mViewer->setGreekSymbols(pCoreCellmlEditingWidget->viewer()->greekSymbols());
-    mViewer->setDigitGrouping(pCoreCellmlEditingWidget->viewer()->digitGrouping());
-
-    // Reset our size, zoom level and find/replace widget
-
-    mEditor->setZoomLevel(pCoreCellmlEditingWidget->editor()->zoomLevel());
-    mEditor->updateFindReplaceFrom(pCoreCellmlEditingWidget->editor());
+    mViewer->updateSettings(pCoreCellmlEditingWidget->viewer());
+    mEditor->updateSettings(pCoreCellmlEditingWidget->editor());
 }
 
 //==============================================================================

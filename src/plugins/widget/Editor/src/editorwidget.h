@@ -82,6 +82,8 @@ public:
 
     virtual void retranslateUi();
 
+    void updateSettings(EditorWidget *pEditorWidget);
+
     QMenu * contextMenu() const;
     void setContextMenu(const QList<QAction *> &pContextMenuActions);
 

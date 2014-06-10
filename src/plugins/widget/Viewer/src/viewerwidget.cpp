@@ -195,6 +195,23 @@ void ViewerWidget::retranslateUi()
 
 //==============================================================================
 
+void ViewerWidget::updateSettings(ViewerWidget *pViewerWidget)
+{
+    // Make sure that we are given another widget
+
+    if (!pViewerWidget)
+        return;
+
+    // Update our viewer settings
+
+    setOptimiseFontSize(pViewerWidget->optimiseFontSize());
+    setSubscripts(pViewerWidget->subscripts());
+    setGreekSymbols(pViewerWidget->greekSymbols());
+    setDigitGrouping(pViewerWidget->digitGrouping());
+}
+
+//==============================================================================
+
 QString ViewerWidget::contents() const
 {
     // Return our contents

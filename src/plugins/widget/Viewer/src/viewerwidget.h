@@ -58,6 +58,8 @@ public:
 
     virtual void retranslateUi();
 
+    void updateSettings(ViewerWidget *pViewerWidget);
+
     QString contents() const;
     void setContents(const QString &pContents);
 

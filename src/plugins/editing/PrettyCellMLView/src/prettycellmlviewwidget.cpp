@@ -152,7 +152,7 @@ void PrettyCellmlViewWidget::initialize(const QString &pFileName)
 
         mNeedLoadingSettings = false;
     } else {
-        mEditingWidget->reset(oldEditingWidget);
+        mEditingWidget->updateSettings(oldEditingWidget);
     }
 
     // Show/hide our editing widgets and adjust our sizes

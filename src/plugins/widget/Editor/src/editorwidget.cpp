@@ -177,6 +177,21 @@ void EditorWidget::retranslateUi()
 
 //==============================================================================
 
+void EditorWidget::updateSettings(EditorWidget *pEditorWidget)
+{
+    // Make sure that we are given another widget
+
+    if (!pEditorWidget)
+        return;
+
+    // Update our zoom level and find/replace widget
+
+    setZoomLevel(pEditorWidget->zoomLevel());
+    updateFindReplaceFrom(pEditorWidget);
+}
+
+//==============================================================================
+
 QMenu * EditorWidget::contextMenu() const
 {
     // Return the context menu of our editor

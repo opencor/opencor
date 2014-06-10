@@ -92,7 +92,7 @@ public:
 
     virtual void retranslateUi();
 
-    void reset(CoreCellmlEditingWidget *pCoreCellmlEditingWidget);
+    void updateSettings(CoreCellmlEditingWidget *pCoreCellmlEditingWidget);
 
     Viewer::ViewerWidget * viewer() const;
     Editor::EditorWidget * editor() const;
