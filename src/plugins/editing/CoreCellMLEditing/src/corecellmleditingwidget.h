@@ -40,6 +40,10 @@ namespace Ui {
 
 //==============================================================================
 
+class QListView;
+
+//==============================================================================
+
 class QsciLexer;
 
 //==============================================================================
@@ -85,6 +89,7 @@ public:
 
     Viewer::ViewerWidget * viewer() const;
     Editor::EditorWidget * editor() const;
+    QListView * list() const;
 
 private:
     Ui::CoreCellmlEditingWidget *mGui;
@@ -94,6 +99,9 @@ private:
 
     Core::BorderedWidget *mBorderedEditor;
     Editor::EditorWidget *mEditor;
+
+    Core::BorderedWidget *mBorderedList;
+    QListView *mList;
 };
 
 //==============================================================================

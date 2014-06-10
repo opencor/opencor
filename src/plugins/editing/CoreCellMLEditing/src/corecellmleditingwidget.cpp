@@ -35,6 +35,7 @@ specific language governing permissions and limitations under the License.
 
 #include <QDesktopWidget>
 #include <QFileInfo>
+#include <QListView>
 #include <QSettings>
 #include <QSplitter>
 
@@ -67,12 +68,21 @@ CoreCellmlEditingWidget::CoreCellmlEditingWidget(const QString &pContents,
 
     mEditor = new Editor::EditorWidget(pContents, pReadOnly, pLexer, this);
     mBorderedEditor = new Core::BorderedWidget(mEditor,
-                                               true, false, false, false);
+                                               true, false, true, false);
 
-    // Add the bordered viewer and editor to ourselves
+    // Create our bordered list
+
+    mList = new QListView(this);
+    mBorderedList = new Core::BorderedWidget(mList,
+                                             true, false, false, false);
+
+    mList->setFrameShape(QFrame::NoFrame);
+
+    // Add the bordered viewer, editor and list to ourselves
 
     addWidget(mBorderedViewer);
     addWidget(mBorderedEditor);
+    addWidget(mBorderedList);
 
     // Set our focus proxy to our editor
 
@@ -114,6 +124,15 @@ Editor::EditorWidget * CoreCellmlEditingWidget::editor() const
     // Return our editor
 
     return mEditor;
+}
+
+//==============================================================================
+
+QListView * CoreCellmlEditingWidget::list() const
+{
+    // Return our list
+
+    return mList;
 }
 
 //==============================================================================
