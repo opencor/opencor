@@ -120,12 +120,9 @@ void CoreCellmlEditingWidget::loadSettings(QSettings *pSettings)
 
     setSizes(qVariantListToIntList(pSettings->value(SettingsEditingWidgetSizes, defaultEditingWidgetSizes).toList()));
 
-    // Retrieve our viewer's settings
+    // Retrieve our viewer's and editor's settings
 
     mViewer->loadSettings(pSettings);
-
-    // Retrieve our editor's settings
-
     mEditor->loadSettings(pSettings);
 }
 
@@ -137,12 +134,9 @@ void CoreCellmlEditingWidget::saveSettings(QSettings *pSettings) const
 
     pSettings->setValue(SettingsEditingWidgetSizes, qIntListToVariantList(sizes()));
 
-    // Keep track of our viewer's settings
+    // Keep track of our viewer's and editor's settings
 
     mViewer->saveSettings(pSettings);
-
-    // Keep track of our editor's settings
-
     mEditor->saveSettings(pSettings);
 }
 
