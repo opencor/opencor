@@ -60,6 +60,12 @@ CellmlModelRepositoryWindowWindow::CellmlModelRepositoryWindowWindow(QWidget *pP
 
     mGui->setupUi(this);
 
+#ifdef Q_OS_MAC
+    mGui->filterValue->setAttribute(Qt::WA_MacShowFocusRect, false);
+    // Note: the above removes the focus border since it messes up the look of
+    //       our filter value widget...
+#endif
+
     // Make the name value our focus proxy
 
     setFocusProxy(mGui->filterValue);

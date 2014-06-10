@@ -120,6 +120,11 @@ PluginsWindow::PluginsWindow(PluginManager *pPluginManager,
     mModel = new QStandardItemModel(mGui->pluginsTreeView);
     mPluginItemDelegate = new PluginItemDelegate();
 
+#ifdef Q_OS_MAC
+    mGui->pluginsTreeView->setAttribute(Qt::WA_MacShowFocusRect, false);
+    // Note: the above removes the focus border since it messes up the look of
+    //       our plugins tree view widget...
+#endif
     mGui->pluginsTreeView->setModel(mModel);
     mGui->pluginsTreeView->setItemDelegate(mPluginItemDelegate);
 
