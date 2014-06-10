@@ -231,6 +231,7 @@ SET(PLUGINS
     # Plugins that extend some libraries (incl. third-party ones)
 
     widget/Editor
+    widget/EditorList
     widget/Viewer
 
     # Plugins that have dependencies on others

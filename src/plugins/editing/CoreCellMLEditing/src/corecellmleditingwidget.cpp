@@ -22,6 +22,7 @@ specific language governing permissions and limitations under the License.
 #include "borderedwidget.h"
 #include "cliutils.h"
 #include "corecellmleditingwidget.h"
+#include "editorlistwidget.h"
 #include "editorwidget.h"
 #include "filemanager.h"
 #include "guiutils.h"
@@ -70,24 +71,17 @@ CoreCellmlEditingWidget::CoreCellmlEditingWidget(const QString &pContents,
     mBorderedEditor = new Core::BorderedWidget(mEditor,
                                                true, false, true, false);
 
-    // Create our bordered list
+    // Create our bordered editor list
 
-    mList = new QListView(this);
-    mBorderedList = new Core::BorderedWidget(mList,
-                                             true, false, false, false);
+    mEditorList = new EditorList::EditorListWidget(this);
+    mBorderedEditorList = new Core::BorderedWidget(mEditorList,
+                                                   true, false, false, false);
 
-#ifdef Q_OS_MAC
-    mList->setAttribute(Qt::WA_MacShowFocusRect, false);
-    // Note: the above removes the focus border since it messes up the look of
-    //       our list
-#endif
-    mList->setFrameShape(QFrame::NoFrame);
-
-    // Add the bordered viewer, editor and list to ourselves
+    // Add the bordered viewer, editor and editor list to ourselves
 
     addWidget(mBorderedViewer);
     addWidget(mBorderedEditor);
-    addWidget(mBorderedList);
+    addWidget(mBorderedEditorList);
 
     // Set our focus proxy to our editor
 
@@ -133,11 +127,11 @@ Editor::EditorWidget * CoreCellmlEditingWidget::editor() const
 
 //==============================================================================
 
-QListView * CoreCellmlEditingWidget::list() const
+EditorList::EditorListWidget * CoreCellmlEditingWidget::editorList() const
 {
-    // Return our list
+    // Return our editor list
 
-    return mList;
+    return mEditorList;
 }
 
 //==============================================================================

@@ -38,6 +38,7 @@ ADD_PLUGIN(CoreCellMLEditing
     PLUGINS
         Core
         Editor
+        EditorList
         ${LLVM_PLUGIN}
         ${QSCINTILLA_PLUGIN}
         QScintillaSupport
