@@ -42,7 +42,7 @@ class EditorListPlugin : public QObject, public I18nInterface
 {
     Q_OBJECT
 
-    Q_PLUGIN_METADATA(IID "OpenCOR.ViewerPlugin" FILE "viewerplugin.json")
+    Q_PLUGIN_METADATA(IID "OpenCOR.EditorListPlugin" FILE "editorlistplugin.json")
 
     Q_INTERFACES(OpenCOR::I18nInterface)
 
