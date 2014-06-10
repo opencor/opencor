@@ -51,8 +51,7 @@ TextEditorWidget::TextEditorWidget(QWidget *pParent) :
 {
 #ifdef Q_OS_MAC
     setAttribute(Qt::WA_MacShowFocusRect, false);
-    // Note: the above removes the focus border since it messes up the look of
-    //       our editor
+    // Note: the above removes the focus border since it messes up our look
 #endif
     setFrame(QFrame::NoFrame);
 }
