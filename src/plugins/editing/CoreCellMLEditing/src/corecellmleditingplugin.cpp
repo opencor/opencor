@@ -20,6 +20,7 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include "cellmleditinginterface.h"
+#include "cellmlfilemanager.h"
 #include "corecellmleditingplugin.h"
 #include "filemanager.h"
 #include "guiutils.h"
@@ -49,14 +50,19 @@ PLUGININFO_FUNC CoreCellMLEditingPluginInfo()
 }
 
 //==============================================================================
+
+CoreCellMLEditingPlugin::CoreCellMLEditingPlugin() :
+    mFileName(QString())
+{
+}
+
+//==============================================================================
 // GUI interface
 //==============================================================================
 
 void CoreCellMLEditingPlugin::updateGui(Plugin *pViewPlugin,
                                         const QString &pFileName)
 {
-    Q_UNUSED(pFileName);
-
     // Show/enable or hide/disable various actions, depending on whether the
     // view plugin handles the CellML editing interface
 
@@ -64,6 +70,12 @@ void CoreCellMLEditingPlugin::updateGui(Plugin *pViewPlugin,
 
     Core::showEnableAction(mFileNewCellml1_0FileAction, cellmlEditingInterface);
     Core::showEnableAction(mFileNewCellml1_1FileAction, cellmlEditingInterface);
+
+    Core::showEnableAction(mToolsCellmlValidationAction, cellmlEditingInterface);
+
+    // Keep track of the file name
+
+    mFileName = pFileName;
 }
 
 //==============================================================================
@@ -82,7 +94,9 @@ Gui::MenuActions CoreCellMLEditingPlugin::guiMenuActions() const
     // Return our menu actions
 
     return Gui::MenuActions() << Gui::MenuAction(Gui::MenuAction::FileNew, mFileNewCellml1_0FileAction)
-                              << Gui::MenuAction(Gui::MenuAction::FileNew, mFileNewCellml1_1FileAction);
+                              << Gui::MenuAction(Gui::MenuAction::FileNew, mFileNewCellml1_1FileAction)
+                              << Gui::MenuAction(Gui::MenuAction::Tools, mToolsCellmlValidationAction)
+                              << Gui::MenuAction(Gui::MenuAction::Tools);
 }
 
 //==============================================================================
@@ -91,12 +105,15 @@ Gui::MenuActions CoreCellMLEditingPlugin::guiMenuActions() const
 
 void CoreCellMLEditingPlugin::retranslateUi()
 {
-    // Retranslate our different File|New actions
+    // Retranslate our different actions
 
     retranslateAction(mFileNewCellml1_0FileAction, tr("CellML 1.0 File"),
                       tr("Create a new CellML 1.0 file"));
     retranslateAction(mFileNewCellml1_1FileAction, tr("CellML 1.1 File"),
                       tr("Create a new CellML 1.1 file"));
+
+    retranslateAction(mToolsCellmlValidationAction, tr("CellML Validation"),
+                      tr("Validate the CellML file"));
 }
 
 //==============================================================================
@@ -105,17 +122,22 @@ void CoreCellMLEditingPlugin::retranslateUi()
 
 void CoreCellMLEditingPlugin::initializePlugin(QMainWindow *pMainWindow)
 {
-    // Create our different File|New actions
+    // Create our different actions
 
     mFileNewCellml1_0FileAction = new QAction(pMainWindow);
     mFileNewCellml1_1FileAction = new QAction(pMainWindow);
 
-    // Some connections to handle our different editing actions
+    mToolsCellmlValidationAction = new QAction(pMainWindow);
+
+    // Some connections to handle our different actions
 
     connect(mFileNewCellml1_0FileAction, SIGNAL(triggered()),
             this, SLOT(newCellml1_0File()));
     connect(mFileNewCellml1_1FileAction, SIGNAL(triggered()),
             this, SLOT(newCellml1_1File()));
+
+    connect(mToolsCellmlValidationAction, SIGNAL(triggered()),
+            this, SLOT(cellmlValidation()));
 }
 
 //==============================================================================
@@ -221,6 +243,22 @@ void CoreCellMLEditingPlugin::newCellml1_1File()
     // Create a new CellML 1.1 file
 
     newCellmlFile(CellMLSupport::CellmlFile::Cellml_1_1);
+}
+
+//==============================================================================
+
+void CoreCellMLEditingPlugin::cellmlValidation()
+{
+    // Validate the current CellML file
+
+//---GRY--- TO BE DONE...
+
+    // Now that we have both a user-defined format file and output file, we can
+    // do the eport itself
+
+    CellMLSupport::CellmlFile *cellmlFile = CellMLSupport::CellmlFileManager::instance()->cellmlFile(mFileName);
+
+qDebug(">>> CellML validation: %sOK", cellmlFile->isValid()?"":"NOT ");
 }
 
 //==============================================================================

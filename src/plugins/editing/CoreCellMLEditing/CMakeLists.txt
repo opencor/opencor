@@ -36,6 +36,7 @@ ADD_PLUGIN(CoreCellMLEditing
     DEFINITIONS
         ${LLVM_DEFINITIONS}
     PLUGINS
+        CellMLSupport
         Core
         Editor
         EditorList

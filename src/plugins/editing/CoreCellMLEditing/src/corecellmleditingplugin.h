@@ -53,6 +53,8 @@ class CoreCellMLEditingPlugin : public QObject, public GuiInterface,
     Q_INTERFACES(OpenCOR::PluginInterface)
 
 public:
+    explicit CoreCellMLEditingPlugin();
+
 #include "guiinterface.inl"
 #include "i18ninterface.inl"
 #include "plugininterface.inl"
@@ -61,11 +63,17 @@ private:
     QAction *mFileNewCellml1_0FileAction;
     QAction *mFileNewCellml1_1FileAction;
 
+    QAction *mToolsCellmlValidationAction;
+
+    QString mFileName;
+
     void newCellmlFile(const CellMLSupport::CellmlFile::Version &pVersion);
 
 private Q_SLOTS:
     void newCellml1_0File();
     void newCellml1_1File();
+
+    void cellmlValidation();
 };
 
 //==============================================================================
