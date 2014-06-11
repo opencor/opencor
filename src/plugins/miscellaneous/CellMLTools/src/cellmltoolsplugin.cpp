@@ -144,10 +144,13 @@ void CellMLToolsPlugin::retranslateUi()
 
     retranslateMenu(mCellmlFileExportToMenu, tr("CellML File Export To"));
 
-    retranslateAction(mExportToCellml10Action, tr("CellML 1.0..."), tr("Export the CellML file to CellML 1.0"));
-    retranslateAction(mExportToCellml11Action, tr("CellML 1.1..."), tr("Export the CellML file to CellML 1.1"));
+    retranslateAction(mExportToCellml10Action, tr("CellML 1.0..."),
+                      tr("Export the CellML file to CellML 1.0"));
+    retranslateAction(mExportToCellml11Action, tr("CellML 1.1..."),
+                      tr("Export the CellML file to CellML 1.1"));
 
-    retranslateAction(mExportToUserDefinedFormatAction, tr("User-Defined Format..."), tr("Export the CellML file to some user-defined format"));
+    retranslateAction(mExportToUserDefinedFormatAction, tr("User-Defined Format..."),
+                      tr("Export the CellML file to some user-defined format"));
 }
 
 //==============================================================================

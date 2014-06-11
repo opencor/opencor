@@ -271,8 +271,10 @@ void CorePlugin::retranslateUi()
 {
     // Retranslate our different File actions
 
-    retranslateAction(mFileOpenAction, tr("Open..."), tr("Open a file"));
-    retranslateAction(mFileOpenRemoteAction, tr("Open Remote..."), tr("Open a remote file"));
+    retranslateAction(mFileOpenAction, tr("Open..."),
+                      tr("Open a file"));
+    retranslateAction(mFileOpenRemoteAction, tr("Open Remote..."),
+                      tr("Open a remote file"));
 
     retranslateAction(mFileReloadAction, tr("Reload"),
                       tr("Reload the current file"));
