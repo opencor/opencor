@@ -287,11 +287,19 @@ int main(int pArgC, char *pArgV[])
     //       since all that remains to be done is to return the result of the
     //       execution of our application...
 
-    if (res == OpenCOR::NeedRestart)
+    if (res == OpenCOR::NeedRestart) {
+        // We want to restart (as a result of resetting everything), so clear
+        // all the user settings (indeed, this will ensure that the various dock
+        // windows are, for instance, properly reset with regards to their
+        // dimensions)
+
+        QSettings(OpenCOR::SettingsOrganization, OpenCOR::SettingsApplication).clear();
+
         // Restart OpenCOR, but without providing any of the arguments that were
         // originally passed to us since we want to reset everything
 
         QProcess::startDetached(appFilePath, QStringList(), appDirPath);
+    }
 
     // We are done, so...
 
