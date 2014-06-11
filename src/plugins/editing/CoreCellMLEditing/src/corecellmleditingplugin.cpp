@@ -259,6 +259,11 @@ void CoreCellMLEditingPlugin::cellmlValidation()
     CellMLSupport::CellmlFile *cellmlFile = CellMLSupport::CellmlFileManager::instance()->cellmlFile(mFileName);
 
 qDebug(">>> CellML validation: %sOK", cellmlFile->isValid()?"":"NOT ");
+
+CellMLSupport::CellmlFileIssues issues = cellmlFile->issues();
+
+for (int i = 0, iMax = issues.count(); i < iMax; ++i)
+    qDebug(">>> Issue %d (%d, %d): %s", i+1, issues[i].line(), issues[i].column(), qPrintable(issues[i].formattedMessage()));
 }
 
 //==============================================================================

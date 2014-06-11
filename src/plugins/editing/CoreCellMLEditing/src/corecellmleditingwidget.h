@@ -60,12 +60,6 @@ namespace Editor {
 
 //==============================================================================
 
-namespace EditorList {
-    class EditorListWidget;
-}   // namespace EditorList
-
-//==============================================================================
-
 namespace Viewer {
     class ViewerWidget;
 }   // namespace QScintillaSupport
@@ -73,6 +67,10 @@ namespace Viewer {
 //==============================================================================
 
 namespace CoreCellMLEditing {
+
+//==============================================================================
+
+class CoreCellmlEditingEditorListWidget;
 
 //==============================================================================
 
@@ -96,7 +94,7 @@ public:
 
     Viewer::ViewerWidget * viewer() const;
     Editor::EditorWidget * editor() const;
-    EditorList::EditorListWidget * editorList() const;
+    CoreCellmlEditingEditorListWidget * editorList() const;
 
 private:
     Ui::CoreCellmlEditingWidget *mGui;
@@ -108,7 +106,7 @@ private:
     Editor::EditorWidget *mEditor;
 
     Core::BorderedWidget *mBorderedEditorList;
-    EditorList::EditorListWidget *mEditorList;
+    CoreCellmlEditingEditorListWidget *mEditorList;
 };
 
 //==============================================================================
