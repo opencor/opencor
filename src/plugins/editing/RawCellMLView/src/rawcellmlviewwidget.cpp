@@ -94,7 +94,8 @@ void RawCellmlViewWidget::loadSettings(QSettings *pSettings)
 {
     // Normally, we would retrieve the editing widget's settings, but
     // mEditingWidget is not set at this stage. So, instead, we keep track of
-    // our settings' group and load them when initialising (see initialize())...
+    // our settings' group and load them when initialising ourselves (see
+    // initialize())...
 
     mSettingsGroup = pSettings->group();
 }
@@ -103,10 +104,9 @@ void RawCellmlViewWidget::loadSettings(QSettings *pSettings)
 
 void RawCellmlViewWidget::saveSettings(QSettings *pSettings) const
 {
-    // Keep track of the editing widget's settings, if needed
-
-    if (mEditingWidget)
-        mEditingWidget->saveSettings(pSettings);
+    Q_UNUSED(pSettings);
+    // Note: our view is such that our settings are actually saved when calling
+    //       finalize() on the last file...
 }
 
 //==============================================================================
@@ -212,17 +212,26 @@ void RawCellmlViewWidget::finalize(const QString &pFileName)
     CoreCellMLEditing::CoreCellmlEditingWidget *editingWidget  = mEditingWidgets.value(pFileName);
 
     if (editingWidget) {
-        // There is an editor for the given file name, so delete it and remove
-        // it from our list
+        // There is an editing widget for the given file name, so save our
+        // settings and reset our memory of the current editing widget, if
+        // needed
+
+        if (editingWidget == mEditingWidget) {
+            QSettings settings(SettingsOrganization, SettingsApplication);
+
+            settings.beginGroup(mSettingsGroup);
+                mEditingWidget->saveSettings(&settings);
+            settings.endGroup();
+
+            mNeedLoadingSettings = true;
+            mEditingWidget = 0;
+        }
+
+        // Delete the editor and remove it from our list
 
         delete editingWidget;
 
         mEditingWidgets.remove(pFileName);
-
-        // Reset our memory of the current editor, if needed
-
-        if (editingWidget == mEditingWidget)
-            mEditingWidget = 0;
     }
 }
 
