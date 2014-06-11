@@ -1354,7 +1354,7 @@ void MainWindow::resetAll()
         //       the 'root' of mSettings), so instead we create a 'new'
         //       QSettings object to clear our "OpenCOR" key...
 
-        QSettings(OpenCOR::SettingsOrganization, OpenCOR::SettingsApplication).clear();
+        QSettings(SettingsOrganization, SettingsApplication).clear();
 
         // Restart OpenCOR without first saving its settings
 
