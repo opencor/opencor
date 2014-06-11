@@ -60,6 +60,13 @@ PLUGININFO_FUNC CorePluginInfo()
 }
 
 //==============================================================================
+
+CorePlugin::CorePlugin() :
+    mRecentFileNames(QStringList())
+{
+}
+
+//==============================================================================
 // Core interface
 //==============================================================================
 
@@ -469,10 +476,6 @@ void CorePlugin::initializePlugin(QMainWindow *pMainWindow)
 
     connect(mFileClearReopenSubMenuAction, SIGNAL(triggered()),
             this, SLOT(clearReopenSubMenu()));
-
-    // Miscellaneous
-
-    mRecentFileNames = QStringList();
 }
 
 //==============================================================================

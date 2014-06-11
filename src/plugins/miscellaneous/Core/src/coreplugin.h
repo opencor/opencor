@@ -65,6 +65,8 @@ class CorePlugin : public QObject, public CoreInterface,
     Q_INTERFACES(OpenCOR::PluginInterface)
 
 public:
+    explicit CorePlugin();
+
 #include "coreinterface.inl"
 #include "filehandlinginterface.inl"
 #include "guiinterface.inl"
