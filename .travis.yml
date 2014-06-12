@@ -1,8 +1,5 @@
 language: cpp
 
-compiler:
-  - gcc
-  - clang
 
 env:
   - CONFIG=Release
