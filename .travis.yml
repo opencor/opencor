@@ -1,7 +1,7 @@
 language: cpp
 
 os:
-  - linux
+#  - linux
   - osx
 
 env:
@@ -9,27 +9,38 @@ env:
   - CONFIG=Debug
 
 before_install:
-  -    sudo apt-add-repository -y ppa:beineri/opt-qt53
-    && sudo apt-get -qq update
-    && sudo apt-get -qq install cmake
-    && wget http://www.cmake.org/files/v2.8/cmake-2.8.12.2.tar.gz
+#  -    sudo apt-add-repository -y ppa:beineri/opt-qt53
+#    && sudo apt-get -qq update
+#    && sudo apt-get -qq install cmake
+#    && wget http://www.cmake.org/files/v2.8/cmake-2.8.12.2.tar.gz
+#    && tar -xzf cmake-2.8.12.2.tar.gz
+#    && mkdir cmake-2.8.12.2/build
+#    && cd cmake-2.8.12.2/build
+#    && cmake -DCMAKE_INSTALL_PREFIX=/usr ..
+#    && export PROCS=`cat /proc/cpuinfo | grep processor | wc -l`
+#    && make -j `echo "$PROCS-$PROCS/2" | bc`
+#    && sudo make install
+#    && cd ../..
+#    && sudo apt-get -qq install qt53tools qt53svg qt53webkit
+  -    curl -O http://www.cmake.org/files/v2.8/cmake-2.8.12.2.tar.gz
     && tar -xzf cmake-2.8.12.2.tar.gz
-    && cd cmake-2.8.12.2
-    && mkdir build
-    && cd build
+    && mkdir cmake-2.8.12.2/build
+    && cd cmake-2.8.12.2/build
     && cmake -DCMAKE_INSTALL_PREFIX=/usr ..
-    && export PROCS=`cat /proc/cpuinfo | grep processor | wc -l`
+    && export PROCS=`sysctl hw.ncpu | cut -d " " -f 2`
     && make -j `echo "$PROCS-$PROCS/2" | bc`
+    && cmake --version
     && sudo make install
-    && cd ../..
-    && sudo apt-get -qq install qt53tools qt53svg qt53webkit
+    && cmake --version
+#    && cd ../..
+#    && sudo apt-get -qq install qt53tools qt53svg qt53webkit
 
-script:
-  -    cd build
-    && cmake -DCMAKE_BUILD_TYPE=$CONFIG -DCMAKE_PREFIX_PATH=/opt/qt53/lib/cmake -DENABLE_TESTS=True ..
-    && make -j $PROCS
-    && cd tests
-    && ./runtests -platform offscreen
+#script:
+#  -    cd build
+#    && cmake -DCMAKE_BUILD_TYPE=$CONFIG -DCMAKE_PREFIX_PATH=/opt/qt53/lib/cmake -DENABLE_TESTS=True ..
+#    && make -j $PROCS
+#    && cd tests
+#    && ./runtests -platform offscreen
 
 notifications:
   email:
