@@ -62,6 +62,7 @@ public:
         Analysis,
         Api,
         Editing,
+        Datastore,
         Miscellaneous,
         Organisation,
 #ifdef QT_DEBUG

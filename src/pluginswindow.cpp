@@ -131,6 +131,7 @@ PluginsWindow::PluginsWindow(PluginManager *pPluginManager,
     mappedCategories.insert(tr("Analysis"), PluginInfo::Analysis);
     mappedCategories.insert(tr("API"), PluginInfo::Api);
     mappedCategories.insert(tr("Editing"), PluginInfo::Editing);
+    mappedCategories.insert(tr("Datastore"), PluginInfo::Datastore);
     mappedCategories.insert(tr("Miscellaneous"), PluginInfo::Miscellaneous);
     mappedCategories.insert(tr("Organisation"), PluginInfo::Organisation);
 #ifdef QT_DEBUG
