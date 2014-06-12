@@ -8,24 +8,9 @@ ENDIF()
 
 #===============================================================================
 
-MACRO(UPDATE_POLICIES)
-    # Make sure that all the CMake policies that have been introduced since our
-    # minimum required CMake version (i.e. 2.8.9) are compatible with it
-
-    IF(NOT CMAKE_VERSION VERSION_LESS 2.8.11)
-        CMAKE_POLICY(SET CMP0020 OLD)
-    ENDIF()
-ENDMACRO()
-
-#===============================================================================
-
 MACRO(INITIALISE_PROJECT)
 #    SET(CMAKE_VERBOSE_MAKEFILE ON)
     SET(CMAKE_INCLUDE_CURRENT_DIR ON)
-
-    # Make sure that our policies are up to date
-
-    UPDATE_POLICIES()
 
     # Make sure that we are building on a supported architecture
     # Note: normally, we would check the value of CMAKE_SIZEOF_VOID_P, but in
@@ -56,6 +41,8 @@ MACRO(INITIALISE_PROJECT)
     # Required packages
 
     FIND_PACKAGE(Qt5Widgets REQUIRED)
+    FIND_PACKAGE(Qt5Xml REQUIRED)
+    FIND_PACKAGE(Qt5XmlPatterns REQUIRED)
 
     # Keep track of some information about Qt
 
@@ -284,10 +271,6 @@ ENDMACRO()
 #===============================================================================
 
 MACRO(ADD_PLUGIN PLUGIN_NAME)
-    # Make sure that our policies are up to date
-
-    UPDATE_POLICIES()
-
     # Various initialisations
 
     SET(PLUGIN_NAME ${PLUGIN_NAME})

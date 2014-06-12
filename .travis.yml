@@ -12,10 +12,10 @@ before_install:
   -    sudo apt-add-repository -y ppa:beineri/opt-qt53
     && sudo apt-get -qq update
     && sudo apt-get -qq install cmake
-    && wget http://www.cmake.org/files/v2.8/cmake-2.8.12.2.tar.gz
-    && tar -xzf cmake-2.8.12.2.tar.gz
-    && mkdir cmake-2.8.12.2/build
-    && cd cmake-2.8.12.2/build
+    && wget http://www.cmake.org/files/v3.0/cmake-3.0.0.tar.gz
+    && tar -xzf cmake-3.0.0.tar.gz
+    && mkdir cmake-3.0.0/build
+    && cd cmake-3.0.0/build
     && cmake -DCMAKE_INSTALL_PREFIX=/usr ..
     && export PROCS=`cat /proc/cpuinfo | grep processor | wc -l`
     && make -j `echo "$PROCS-$PROCS/2" | bc`
