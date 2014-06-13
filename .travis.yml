@@ -19,9 +19,10 @@ before_install:
     && export JOBS=`echo "$PROCS-$PROCS/2" | bc`
 
 script:
-  -    export PATH=~/cmake-3.0.0-Linux-i386/bin:$PATH
+  -    export PATH=/home/travis/build/opencor/opencor/cmake-3.0.0-Linux-i386/bin:$PATH
     && cd build
     && cmake -DCMAKE_BUILD_TYPE=$CONFIG -DCMAKE_PREFIX_PATH=/opt/qt53/lib/cmake -DENABLE_TESTS=True ..
+    && echo $JOBS
     && make -j $JOBS
     && cd tests
     && ./runtests -platform offscreen
