@@ -46,14 +46,18 @@ void DataVariable::reset(void)
   mBuffer.clear() ;
   }
 
-void DataVariable::storeValue(void)
+SizeType DataVariable::storeValue(void)
 {
-  mBuffer.push_back(mValuePointer ? *mValuePointer : 0.0) ;
+  const qulonglong index = mBuffer.size() ;
+  if (mValuePointer) mBuffer.push_back(*mValuePointer) ;
+  return index ;
   }
 
-void DataVariable::storeValue(const double &pValue)
+SizeType DataVariable::storeValue(const double &pValue)
 {
+  const SizeType index = mBuffer.size() ;
   mBuffer.push_back(pValue) ;
+  return index ;
   }
 
 //==============================================================================

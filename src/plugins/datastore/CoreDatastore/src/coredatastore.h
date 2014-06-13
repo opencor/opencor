@@ -41,6 +41,7 @@ namespace CoreDatastore {
 
 //==============================================================================
 
+typedef qulonglong SizeType ;      // Large array sizes and indexes
 class DataVariable {
 
  public:
@@ -48,8 +49,8 @@ class DataVariable {
   ~DataVariable() ;
 
   void reset(void) ;
-  void storeValue(void) ;
-  void storeValue(const double &pValue) ;
+  SizeType storeValue(void) ;
+  SizeType storeValue(const double &pValue) ;
 
  private:
   const std::string mUri ;
