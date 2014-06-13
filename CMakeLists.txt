@@ -2,7 +2,7 @@ PROJECT(OpenCOR)
 
 # Minimum required version of CMake
 
-CMAKE_MINIMUM_REQUIRED(VERSION 2.8.9)
+CMAKE_MINIMUM_REQUIRED(VERSION 3.0.0)
 
 # Some in-house CMake functions/macros
 
