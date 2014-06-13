@@ -30,18 +30,18 @@ before_install:
     fi
 
 script:
-  - if [ "`uname -s`" = "Linux" ]; then \
+  - if [ "`uname -s`" = "Linux" ]; then
          cd build \
       && cmake -DCMAKE_BUILD_TYPE=$CONFIG -DCMAKE_PREFIX_PATH=/opt/qt53/lib/cmake -DENABLE_TESTS=True .. \
       && make -j `cat /proc/cpuinfo | grep processor | wc -l` \
       && cd tests \
-      && ./runtests -platform offscreen \
-    else \
+      && ./runtests -platform offscreen
+    else
          cd build \
       && cmake -DCMAKE_BUILD_TYPE=$CONFIG -DCMAKE_PREFIX_PATH=/usr/local/opt/qt5/lib/cmake -DENABLE_TESTS=True .. \
       && make -j `sysctl hw.ncpu | cut -d " " -f 2` \
       && cd tests \
-      && ./runtests -platform offscreen \
+      && ./runtests -platform offscreen
     fi
 
 notifications:
