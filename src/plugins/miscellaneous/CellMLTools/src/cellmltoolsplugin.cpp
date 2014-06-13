@@ -63,6 +63,7 @@ PLUGININFO_FUNC CellMLToolsPluginInfo()
 //==============================================================================
 
 CellMLToolsPlugin::CellMLToolsPlugin() :
+    mCellmlFileTypes(FileTypes()),
     mFileName(QString())
 {
 }
@@ -211,8 +212,6 @@ void CellMLToolsPlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
 {
     // Retrieve the file types supported by the CellMLSupport plugin
 
-    mCellmlFileTypes = FileTypes();
-
     foreach (Plugin *plugin, pLoadedPlugins) {
         FileTypeInterface *fileTypeInterface = qobject_cast<FileTypeInterface *>(plugin->instance());
 
@@ -220,7 +219,7 @@ void CellMLToolsPlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
             // This is the CellMLSupport plugin and, as expected, it implements
             // our file type interface, so retrieve the file types it supports
 
-            mCellmlFileTypes = fileTypeInterface->fileTypes();
+            mCellmlFileTypes << fileTypeInterface->fileTypes();
 
             break;
         }
