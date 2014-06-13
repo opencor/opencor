@@ -11,7 +11,6 @@ env:
 before_install:
   -    wget http://www.cmake.org/files/v3.0/cmake-3.0.0-Linux-i386.tar.gz
     && tar -xzf cmake-3.0.0-Linux-i386.tar.gz
-    && export PATH=~/cmake-3.0.0-Linux-i386/bin:$PATH
   -    sudo apt-add-repository -y ppa:beineri/opt-qt53
     && sudo apt-get -qq update
     && sudo apt-get -qq install cmake
@@ -20,8 +19,8 @@ before_install:
     && export JOBS=`echo "$PROCS-$PROCS/2" | bc`
 
 script:
-  - pwd
-  -    cd build
+  -    export PATH=~/cmake-3.0.0-Linux-i386/bin:$PATH
+    && cd build
     && cmake -DCMAKE_BUILD_TYPE=$CONFIG -DCMAKE_PREFIX_PATH=/opt/qt53/lib/cmake -DENABLE_TESTS=True ..
     && make -j $JOBS
     && cd tests
