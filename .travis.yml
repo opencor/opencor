@@ -9,7 +9,8 @@ env:
   - CONFIG=Debug
 
 before_install:
-  -    wget http://www.cmake.org/files/v3.0/cmake-3.0.0-Linux-i386.tar.gz
+  -    sudo apt-get install libc6-i386
+    && wget http://www.cmake.org/files/v3.0/cmake-3.0.0-Linux-i386.tar.gz
     && tar -xzf cmake-3.0.0-Linux-i386.tar.gz
   -    sudo apt-add-repository -y ppa:beineri/opt-qt53
     && sudo apt-get -qq update
@@ -25,7 +26,6 @@ script:
     && ldd /home/travis/build/opencor/opencor/cmake-3.0.0-Linux-i386/bin/cmake
     && ls -l /home/travis/build/opencor/opencor/cmake-3.0.0-Linux-i386/bin/cmake
     && cmake -DCMAKE_BUILD_TYPE=$CONFIG -DCMAKE_PREFIX_PATH=/opt/qt53/lib/cmake -DENABLE_TESTS=True ..
-    ; ls -l /home/travis/build/opencor/opencor/cmake-3.0.0-Linux-i386/bin/cmake
     && echo $JOBS
     && make -j $JOBS
     && cd tests
