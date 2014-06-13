@@ -1,8 +1,8 @@
 language: cpp
 
 os:
-  - linux
-#  - osx
+#  - linux
+  - osx
 
 env:
   - CONFIG=Release
