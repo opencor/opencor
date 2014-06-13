@@ -23,7 +23,6 @@ before_install:
     && cmake --version
   -    brew update
     && brew install qt5
-    && which qmake
 
 #script:
 #  -    cd build
