@@ -9,6 +9,10 @@ env:
   - CONFIG=Debug
 
 before_install:
+  -    sudo apt-get install bc
+    && PROCS=`cat /proc/cpuinfo | grep processor | wc -l`
+#    && export JOBS=`echo "$PROCS-$PROCS/2" | bc`
+    && export JOBS=`echo "$PROCS"`
   -    sudo apt-get install libc6-i386
     && wget http://www.cmake.org/files/v3.0/cmake-3.0.0-Linux-i386.sh
     && sudo sh cmake-3.0.0-Linux-i386.sh --skip-license --prefix=/usr
@@ -16,10 +20,6 @@ before_install:
     && sudo apt-get -qq update
     && sudo apt-get -qq install cmake
     && sudo apt-get -qq install qt53tools qt53svg qt53webkit
-  -    sudo apt-get install bc
-    && PROCS=`cat /proc/cpuinfo | grep processor | wc -l`
-    && export JOBS=`echo "$PROCS-$PROCS/2" | bc`
-    && echo ">>> Nb of jobs = $JOBS"
 
 script:
   -    cd build
