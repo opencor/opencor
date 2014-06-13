@@ -16,13 +16,14 @@ before_install:
     && sudo apt-get -qq update
     && sudo apt-get -qq install cmake
     && sudo apt-get -qq install qt53tools qt53svg qt53webkit
+  -    sudo apt-get install bc
+    && PROCS=`cat /proc/cpuinfo | grep processor | wc -l`
+    && export JOBS=`echo "$PROCS-$PROCS/2" | bc`
+    && echo ">>> Nb of jobs = $JOBS"
 
 script:
   -    cd build
     && cmake -DCMAKE_BUILD_TYPE=$CONFIG -DCMAKE_PREFIX_PATH=/opt/qt53/lib/cmake -DENABLE_TESTS=True ..
-    && PROCS=`cat /proc/cpuinfo | grep processor | wc -l`
-    && export JOBS=`echo "$PROCS-$PROCS/2" | bc`
-    && echo ">>> Nb of jobs = $JOBS"
     && make -j $JOBS
     && cd tests
     && ./runtests -platform offscreen
