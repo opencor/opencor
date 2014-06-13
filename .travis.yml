@@ -21,6 +21,8 @@ before_install:
     && tar -xzf cmake-3.0.0-Darwin-universal.tar.gz
     && sudo cp -fR cmake-3.0.0-Darwin-universal/CMake.app/Contents/* /usr
     && cmake --version
+  -    brew update
+    && brew install qt5
 
 #script:
 #  -    cd build
