@@ -10,9 +10,8 @@ env:
 
 before_install:
   -    sudo apt-get install libc6-i386
-    && wget http://www.cmake.org/files/v3.0/cmake-3.0.0-Linux-i386.tar.gz
-    && tar -xzf cmake-3.0.0-Linux-i386.tar.gz
-    && export PATH=`pwd`/cmake-3.0.0-Linux-i386/bin:$PATH
+    && wget http://www.cmake.org/files/v3.0/cmake-3.0.0-Linux-i386.sh
+    && sudo sh cmake-3.0.0-Linux-i386.sh --skip-license --prefix=/usr
   -    sudo apt-add-repository -y ppa:beineri/opt-qt53
     && sudo apt-get -qq update
     && sudo apt-get -qq install cmake
@@ -23,7 +22,7 @@ before_install:
 script:
   -    cd build
     && cmake -DCMAKE_BUILD_TYPE=$CONFIG -DCMAKE_PREFIX_PATH=/opt/qt53/lib/cmake -DENABLE_TESTS=True ..
-    && echo ">>> Nb of jobs: $JOBS"
+    && echo ">>> Nb of jobs = $JOBS"
     && make -j $JOBS
     && cd tests
     && ./runtests -platform offscreen
