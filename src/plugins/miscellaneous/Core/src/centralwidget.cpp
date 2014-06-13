@@ -732,10 +732,10 @@ void CentralWidget::openFile()
 
     QString supportedFileTypes;
 
-    foreach (const FileType &supportedFileType, mSupportedFileTypes)
+    foreach (FileType *supportedFileType, mSupportedFileTypes)
         supportedFileTypes +=  ";;"
-                              +supportedFileType.description()
-                              +" (*."+supportedFileType.fileExtension()+")";
+                              +supportedFileType->description()
+                              +" (*."+supportedFileType->fileExtension()+")";
 
     QStringList files = getOpenFileNames(tr("Open File"),
                                          tr("All Files")
@@ -972,13 +972,13 @@ bool CentralWidget::saveFile(const int &pIndex, const bool &pNeedNewFileName)
 
         QString supportedFileTypes = QString();
 
-        foreach (const FileType &supportedFileType, mSupportedFileTypes)
-            if (mimeTypes.contains(supportedFileType.mimeType())) {
+        foreach (FileType *supportedFileType, mSupportedFileTypes)
+            if (mimeTypes.contains(supportedFileType->mimeType())) {
                 if (!supportedFileTypes.isEmpty())
                     supportedFileTypes += ";;";
 
-                supportedFileTypes +=  supportedFileType.description()
-                                      +" (*."+supportedFileType.fileExtension()+")";
+                supportedFileTypes +=  supportedFileType->description()
+                                      +" (*."+supportedFileType->fileExtension()+")";
             }
 
         newFileName = Core::getSaveFileName(tr("Save File"),

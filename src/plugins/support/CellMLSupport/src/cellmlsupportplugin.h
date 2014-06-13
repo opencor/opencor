@@ -58,9 +58,15 @@ class CellMLSupportPlugin : public QObject, public FileTypeInterface,
     Q_INTERFACES(OpenCOR::PluginInterface)
 
 public:
+    explicit CellMLSupportPlugin();
+    ~CellMLSupportPlugin();
+
 #include "filetypeinterface.inl"
 #include "i18ninterface.inl"
 #include "plugininterface.inl"
+
+private:
+    FileTypes mFileTypes;
 };
 
 //==============================================================================

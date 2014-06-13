@@ -37,12 +37,12 @@ FileType::FileType(FileTypeInterface *pOwner, const QString &pMimeType,
 
 //==============================================================================
 
-bool FileType::operator==(const FileType &pFileType) const
+bool FileType::operator==(FileType *pFileType) const
 {
     // Return whether the current item is equal to the given one
 
-    return    !mMimeType.compare(pFileType.mimeType())
-           && !mFileExtension.compare(pFileType.fileExtension());
+    return    !mMimeType.compare(pFileType->mimeType())
+           && !mFileExtension.compare(pFileType->fileExtension());
 }
 
 //==============================================================================
