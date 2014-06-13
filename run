@@ -1,12 +1,10 @@
 #!/bin/sh
 
-OS=`uname -s`
-
 echo "\033[44;37;1mRunning OpenCOR...\033[0m"
 
 WMsg="OpenCOR must first be built before being run."
 
-if [ $OS = "Linux" ]; then
+if [ "`uname -s`" = "Linux" ]; then
     if [ -f build/bin/OpenCOR ]; then
         build/bin/OpenCOR "$@"
     else
