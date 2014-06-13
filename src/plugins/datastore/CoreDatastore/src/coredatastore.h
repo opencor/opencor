@@ -46,7 +46,7 @@ typedef long     IndexType ;       // Object counts and indexes (-1 ==> un-init)
 class DataVariable {
 
  public:
-  DataVariable(const qulonglong &pSize, const double *pValuePointer=0) ;
+  DataVariable(const SizeType &pSize, const double *pValuePointer=0) ;
   ~DataVariable() ;
 
   void reset(void) ;
@@ -66,7 +66,7 @@ class DataVariable {
 class DataStore {
 
  public:
-  DataStore(const qulonglong &pSize) ;
+  DataStore(const SizeType &pSize) ;
   ~DataStore() ;
 
   IndexType newVariable(const double *pValuePointer=0) ;
@@ -76,7 +76,7 @@ class DataStore {
   void storeValues(void) ;
 
  private:
-  const qulonglong mSize ;
+  const SizeType mSize ;
   std::vector<DataVariable *> mVariables ;
   } ;
 

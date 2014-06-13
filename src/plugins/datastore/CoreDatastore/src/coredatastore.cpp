@@ -74,7 +74,7 @@ const double *DataVariable::data(void) const
 
 //==============================================================================
 
-DataStore::DataStore(const qulonglong &pSize)
+DataStore::DataStore(const SizeType &pSize)
 : mSize(pSize), mVariables(0)
 {
   }
