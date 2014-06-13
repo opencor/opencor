@@ -42,6 +42,7 @@ namespace CoreDatastore {
 //==============================================================================
 
 typedef qulonglong SizeType ;      // Large array sizes and indexes
+typedef long     IndexType ;       // Object counts and indexes (-1 ==> un-init)
 class DataVariable {
 
  public:
@@ -68,8 +69,8 @@ class DataStore {
   DataStore(const qulonglong &pSize) ;
   ~DataStore() ;
 
-  DataVariable *newVariable(const double *pValuePointer=0) ;
-  void holdElements(const size_t &count, const double *values) ;
+  IndexType newVariable(const double *pValuePointer=0) ;
+  IndexType holdElements(const IndexType &pCount, const double *pValues) ;
   void reset(void) ;
   void storeValues(void) ;
 

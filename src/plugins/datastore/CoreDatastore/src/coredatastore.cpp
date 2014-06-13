@@ -86,19 +86,23 @@ DataStore::~DataStore()
     }
   }
 
-DataVariable *DataStore::newVariable(const double *pValuePointer)
+IndexType DataStore::newVariable(const double *pValuePointer)
 {
+  IndexType index = mVariables.size() ;
   DataVariable *v = new DataVariable(mSize, pValuePointer) ;
   mVariables.push_back(v) ;
-  return v ;
+  return index ;
   }
 
-void DataStore::holdElements(const size_t &pCount, const double *pValues)
+IndexType DataStore::holdElements(const IndexType &pCount, const double *pValues)
 {
   const double *v = pValues ;
-  for (size_t n = 0 ;  n < pCount ;  ++n, ++v) {
+  IndexType start = mVariables.size() ;
+  for (IndexType n = 0 ;  n < pCount ;  ++n, ++v) {
     mVariables.push_back(new DataVariable(mSize, v)) ;
     }
+  return start ;
+  }
   }
 
 void DataStore::reset(void)
