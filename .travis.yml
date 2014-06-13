@@ -24,7 +24,7 @@ before_install:
   -    brew update
     && brew install qt5
 
-#script:
+script:
 #  -    cd build
 #    && cmake -DCMAKE_BUILD_TYPE=$CONFIG -DCMAKE_PREFIX_PATH=/opt/qt53/lib/cmake -DENABLE_TESTS=True ..
 #    && make -j `cat /proc/cpuinfo | grep processor | wc -l`
