@@ -51,6 +51,8 @@ class DataVariable {
   void reset(void) ;
   SizeType storeValue(void) ;
   SizeType storeValue(const double &pValue) ;
+  double getValue(const SizeType &pIndex) const ;  // also [] operator...
+  const double *data(void) const ;
 
  private:
   const std::string mUri ;

@@ -60,6 +60,18 @@ SizeType DataVariable::storeValue(const double &pValue)
   return index ;
   }
 
+double DataVariable::getValue(const SizeType &pIndex) const  // also [] operator...
+/*-------------------------------------------------------*/
+{
+  return mBuffer[pIndex] ;
+  }
+
+const double *DataVariable::data(void) const
+/*----------------------------------------*/
+{
+  return mBuffer.data() ;
+  }
+
 //==============================================================================
 
 DataStore::DataStore(const qulonglong &pSize)
