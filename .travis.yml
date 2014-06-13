@@ -25,6 +25,7 @@ script:
     && ls ../cmake-3.0.0-Linux-i386
     && ls ../cmake-3.0.0-Linux-i386/bin
     && ls -l ../cmake-3.0.0-Linux-i386/bin/cmake
+    && cat /home/travis/build.sh
     && ../cmake-3.0.0-Linux-i386/bin/cmake -DCMAKE_BUILD_TYPE=$CONFIG -DCMAKE_PREFIX_PATH=/opt/qt53/lib/cmake -DENABLE_TESTS=True ..
     && make -j $JOBS
     && cd tests
