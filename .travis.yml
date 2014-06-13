@@ -9,7 +9,6 @@ env:
   - CONFIG=Debug
 
 before_install:
-  - pwd
   -    wget http://www.cmake.org/files/v3.0/cmake-3.0.0-Linux-i386.tar.gz
     && tar -xzf cmake-3.0.0-Linux-i386.tar.gz
   -    sudo apt-add-repository -y ppa:beineri/opt-qt53
@@ -25,6 +24,7 @@ script:
     && pwd
     && ls ../cmake-3.0.0-Linux-i386
     && ls ../cmake-3.0.0-Linux-i386/bin
+    && ls -l ../cmake-3.0.0-Linux-i386/bin/cmake
     && ../cmake-3.0.0-Linux-i386/bin/cmake -DCMAKE_BUILD_TYPE=$CONFIG -DCMAKE_PREFIX_PATH=/opt/qt53/lib/cmake -DENABLE_TESTS=True ..
     && make -j $JOBS
     && cd tests
