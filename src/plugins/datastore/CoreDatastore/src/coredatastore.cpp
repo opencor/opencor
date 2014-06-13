@@ -32,21 +32,25 @@ namespace CoreDatastore {
 //==============================================================================
 
 DataVariable::DataVariable(const qulonglong &pSize, const double *pValuePointer)
+/*----------------------------------------------------------------------------*/
 : mUri(""), mValuePointer(pValuePointer), mBuffer(0)
 {
   mBuffer.reserve(pSize) ;
   }
 
 DataVariable::~DataVariable()
+/*-------------------------*/
 {
   }
 
 void DataVariable::reset(void)
+/*--------------------------*/
 {
   mBuffer.clear() ;
   }
 
 SizeType DataVariable::storeValue(void)
+/*-----------------------------------*/
 {
   const qulonglong index = mBuffer.size() ;
   if (mValuePointer) mBuffer.push_back(*mValuePointer) ;
@@ -54,6 +58,7 @@ SizeType DataVariable::storeValue(void)
   }
 
 SizeType DataVariable::storeValue(const double &pValue)
+/*---------------------------------------------------*/
 {
   const SizeType index = mBuffer.size() ;
   mBuffer.push_back(pValue) ;
@@ -75,11 +80,13 @@ const double *DataVariable::data(void) const
 //==============================================================================
 
 DataStore::DataStore(const SizeType &pSize)
+/*---------------------------------------*/
 : mSize(pSize), mVariables(0)
 {
   }
 
 DataStore::~DataStore()
+/*-------------------*/
 {
   for (auto v = mVariables.begin() ;  v != mVariables.end() ;  ++v) {
     delete *v ;
@@ -87,6 +94,7 @@ DataStore::~DataStore()
   }
 
 IndexType DataStore::newVariable(const double *pValuePointer)
+/*---------------------------------------------------------*/
 {
   IndexType index = mVariables.size() ;
   DataVariable *v = new DataVariable(mSize, pValuePointer) ;
@@ -95,6 +103,7 @@ IndexType DataStore::newVariable(const double *pValuePointer)
   }
 
 IndexType DataStore::holdElements(const IndexType &pCount, const double *pValues)
+/*-----------------------------------------------------------------------------*/
 {
   const double *v = pValues ;
   IndexType start = mVariables.size() ;
@@ -111,6 +120,7 @@ DataVariable *DataStore::getVariable(const IndexType pIndex) const
   }
 
 void DataStore::reset(void)
+/*-----------------------*/
 {
   for (auto v = mVariables.begin() ;  v != mVariables.end() ;  ++v) {
     (*v)->reset() ;
@@ -118,6 +128,7 @@ void DataStore::reset(void)
   }
 
 void DataStore::storeValues(void)
+/*-----------------------------*/
 {
   for (auto v = mVariables.begin() ;  v != mVariables.end() ;  ++v) {
     (*v)->storeValue() ;

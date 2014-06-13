@@ -43,6 +43,9 @@ namespace CoreDatastore {
 
 typedef qulonglong SizeType ;      // Large array sizes and indexes
 typedef long     IndexType ;       // Object counts and indexes (-1 ==> un-init)
+
+//==============================================================================
+
 class DataVariable {
 
  public:
