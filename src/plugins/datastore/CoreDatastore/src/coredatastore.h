@@ -71,6 +71,7 @@ class DataStore {
 
   IndexType newVariable(const double *pValuePointer=0) ;
   IndexType holdElements(const IndexType &pCount, const double *pValues) ;
+  DataVariable *getVariable(const IndexType pIndex) const ;
   void reset(void) ;
   void storeValues(void) ;
 

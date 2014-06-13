@@ -103,6 +103,11 @@ IndexType DataStore::holdElements(const IndexType &pCount, const double *pValues
     }
   return start ;
   }
+
+DataVariable *DataStore::getVariable(const IndexType pIndex) const
+/*--------------------------------------------------------------*/
+{
+  return mVariables[pIndex] ;
   }
 
 void DataStore::reset(void)
