@@ -12,7 +12,7 @@ before_install:
   -    sudo apt-get install libc6-i386
     && wget http://www.cmake.org/files/v3.0/cmake-3.0.0-Linux-i386.tar.gz
     && tar -xzf cmake-3.0.0-Linux-i386.tar.gz
-    && sudo mv -f cmake-3.0.0-Linux-i386/* /usr
+    && sudo cp -fR cmake-3.0.0-Linux-i386/* /usr
   -    sudo apt-add-repository -y ppa:beineri/opt-qt53
     && sudo apt-get -qq update
     && sudo apt-get -qq install cmake
