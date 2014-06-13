@@ -23,6 +23,7 @@ before_install:
     && cmake --version
   -    brew update
     && brew install qt5
+    && which qmake
 
 #script:
 #  -    cd build
@@ -31,7 +32,7 @@ before_install:
 #    && cd tests
 #    && ./runtests -platform offscreen
   -    cd build
-    && cmake -DCMAKE_BUILD_TYPE=$CONFIG -DCMAKE_PREFIX_PATH=/opt/qt53/lib/cmake -DENABLE_TESTS=True ..
+    && cmake -DCMAKE_BUILD_TYPE=$CONFIG -DCMAKE_PREFIX_PATH=/usr/local/opt/qt5/lib/cmake -DENABLE_TESTS=True ..
     && make -j `sysctl hw.ncpu | cut -d " " -f 2`
     && cd tests
     && ./runtests -platform offscreen
