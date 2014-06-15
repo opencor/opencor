@@ -23,28 +23,33 @@ before_install:
       ;
     fi
   - if [ "`uname -s`" = "Linux" ]; then
-         sudo apt-add-repository -y ppa:beineri/opt-qt53 \
-      && sudo apt-get -qq update \
+         sudo apt-add-repository -y ppa:beineri/opt-qt53
+      && sudo apt-get -qq update
       && sudo apt-get -qq install qt53tools qt53svg qt53webkit
+      ;
     else
-         brew update \
+         brew update
       && brew install qt5
+      ;
     fi
 
 script:
   - if [ "`uname -s`" = "Linux" ]; then
-         cd build \
-      && cmake -DCMAKE_BUILD_TYPE=$CONFIG -DCMAKE_PREFIX_PATH=/opt/qt53/lib/cmake -DENABLE_TESTS=True .. \
-      && make -j `cat /proc/cpuinfo | grep processor | wc -l` \
-      && cd tests \
+         cd build
+      && cmake -DCMAKE_BUILD_TYPE=$CONFIG -DCMAKE_PREFIX_PATH=/opt/qt53/lib/cmake -DENABLE_TESTS=True ..
+      && make -j `cat /proc/cpuinfo | grep processor | wc -l`
+      && cd tests
       && ./runtests -platform offscreen
+      ;
     else
-         cd build \
-      && cmake -DCMAKE_BUILD_TYPE=$CONFIG -DCMAKE_PREFIX_PATH=/usr/local/opt/qt5/lib/cmake -DENABLE_TESTS=True .. \
-      && make -j `sysctl hw.ncpu | cut -d " " -f 2` \
-      && cd tests \
+         cd build
+      && cmake -DCMAKE_BUILD_TYPE=$CONFIG -DCMAKE_PREFIX_PATH=/usr/local/opt/qt5/lib/cmake -DENABLE_TESTS=True ..
+      && make -j `sysctl hw.ncpu | cut -d " " -f 2`
+      && cd tests
       && ./runtests -platform offscreen
+      ;
     fi
+  - echo "ALL DONE..."
 
 notifications:
   email:
