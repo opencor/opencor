@@ -49,7 +49,6 @@ script:
       && ./runtests -platform offscreen
       ;
     fi
-  - echo "ALL DONE..."
 
 notifications:
   email:
