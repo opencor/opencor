@@ -235,6 +235,7 @@ void CvodeSolver::solve(double &pVoi, const double &pVoiEnd) const
 {
     // Solve the model
 
+    CVodeSetStopTime(mSolver, pVoiEnd);
     CVode(mSolver, pVoiEnd, mStatesVector, &pVoi, CV_NORMAL);
 
     // Compute the rates one more time to get up to date values for the rates
