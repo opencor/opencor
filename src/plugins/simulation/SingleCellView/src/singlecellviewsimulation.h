@@ -177,11 +177,11 @@ private:
     qulonglong mSize;
 
     CoreDatastore::DataStore *mStore ;
-    CoreDatastore::DataVariable *mPointsVariable ;
-    CoreDatastore::IndexType mConstantsBase ;
-    CoreDatastore::IndexType mRatesBase ;
-    CoreDatastore::IndexType mStatesBase ;
-    CoreDatastore::IndexType mAlgebraicBase ;
+    CoreDatastore::DataVariable *mPoints ;
+    std::vector<const CoreDatastore::DataVariable *> mConstants ;
+    std::vector<const CoreDatastore::DataVariable *> mRates ;
+    std::vector<const CoreDatastore::DataVariable *> mStates ;
+    std::vector<const CoreDatastore::DataVariable *> mAlgebraic ;
 
     bool createArrays();
     void deleteArrays();

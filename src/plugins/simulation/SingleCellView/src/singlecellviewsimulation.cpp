@@ -557,11 +557,11 @@ SingleCellViewSimulationResults::SingleCellViewSimulationResults(CellMLSupport::
     mSimulation(pSimulation),
     mSize(0),
     mStore(0),
-    mPointsVariable(0),
-    mConstantsBase(-1),
-    mRatesBase(-1),
-    mStatesBase(-1),
-    mAlgebraicBase(-1)
+    mPoints(0),
+    mConstants(0),
+    mRates(0),
+    mStates(0),
+    mAlgebraic(0)
 {
 }
 
@@ -601,11 +601,11 @@ bool SingleCellViewSimulationResults::createArrays()
 
     try {
       mStore = new CoreDatastore::DataStore(simulationSize) ;
-      mPointsVariable = mStore->getVariable(mStore->newVariable()) ;
-      mConstantsBase = mStore->holdElements(mRuntime->constantsCount(), mSimulation->data()->constants()) ;
-      mRatesBase = mStore->holdElements(mRuntime->ratesCount(), mSimulation->data()->rates()) ;
-      mStatesBase = mStore->holdElements(mRuntime->statesCount(), mSimulation->data()->states()) ;
-      mAlgebraicBase = mStore->holdElements(mRuntime->algebraicCount(), mSimulation->data()->algebraic()) ;
+      mPoints = mStore->holdPoint() ;
+      mConstants = mStore->holdPoints(mRuntime->constantsCount(), mSimulation->data()->constants()) ;
+      mRates = mStore->holdPoints(mRuntime->ratesCount(), mSimulation->data()->rates()) ;
+      mStates = mStore->holdPoints(mRuntime->statesCount(), mSimulation->data()->states()) ;
+      mAlgebraic = mStore->holdPoints(mRuntime->algebraicCount(), mSimulation->data()->algebraic()) ;
       }
     catch (...) {
       delete mStore ;
@@ -621,14 +621,14 @@ void SingleCellViewSimulationResults::deleteArrays()
 {
     // Delete our data store and associated variables/arrays.
 
+    mPoints = 0 ;
+    mConstants.clear() ;
+    mRates.clear() ;
+    mStates.clear() ;
+    mAlgebraic.clear() ;
+
     if (mStore) delete mStore ;
     mStore = 0;
-
-    mPointsVariable = 0 ;
-    mConstantsBase = -1 ;
-    mRatesBase = -1 ;
-    mStatesBase = -1 ;
-    mAlgebraicBase = -1 ;
 }
 
 //==============================================================================
@@ -658,8 +658,8 @@ void SingleCellViewSimulationResults::addPoint(const double &pPoint)
         return;
 
     // Add the data to our different arrays
-    mPointsVariable->storeValue(pPoint) ;
-    mStore->storeValues() ;
+    mPoints->savePoint(pPoint) ;
+    mStore->savePoints() ;
     ++mSize;
 }
 
@@ -677,7 +677,7 @@ qulonglong SingleCellViewSimulationResults::size() const
 const double *SingleCellViewSimulationResults::points()
 {
    // Return our points
-   return mPointsVariable ? mPointsVariable->data() : 0 ;
+   return mPoints ? mPoints->data() : 0 ;
 }
 
 //==============================================================================
@@ -685,7 +685,7 @@ const double *SingleCellViewSimulationResults::points()
 const double *SingleCellViewSimulationResults::constants(size_t pIndex)
 {
    // Return constants data at index
-   return (mConstantsBase >= 0) ? mStore->getVariable(mConstantsBase + pIndex)->data() : 0 ;
+   return mConstants[pIndex]->data() ;
 }
 
 //==============================================================================
@@ -693,7 +693,7 @@ const double *SingleCellViewSimulationResults::constants(size_t pIndex)
 const double *SingleCellViewSimulationResults::rates(size_t pIndex)
 {
    // Return rates data at index
-   return (mRatesBase >= 0) ? mStore->getVariable(mRatesBase + pIndex)->data() : 0 ;
+   return mRates[pIndex]->data() ;
 }
 
 //==============================================================================
@@ -701,7 +701,7 @@ const double *SingleCellViewSimulationResults::rates(size_t pIndex)
 const double *SingleCellViewSimulationResults::states(size_t pIndex)
 {
    // Return states data at index
-   return (mStatesBase >= 0) ? mStore->getVariable(mStatesBase + pIndex)->data() : 0 ;
+   return mStates[pIndex]->data() ;
 }
 
 //==============================================================================
@@ -709,7 +709,7 @@ const double *SingleCellViewSimulationResults::states(size_t pIndex)
 const double *SingleCellViewSimulationResults::algebraic(size_t pIndex)
 {
    // Return algebraic data at index
-   return (mAlgebraicBase >= 0) ? mStore->getVariable(mAlgebraicBase + pIndex)->data() : 0 ;
+   return mAlgebraic[pIndex]->data() ;
 }
 
 //==============================================================================
