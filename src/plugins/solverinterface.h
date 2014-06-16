@@ -50,6 +50,7 @@ class Property
 {
 public:
     enum Type {
+        Boolean,
         Integer,
         Double
     };

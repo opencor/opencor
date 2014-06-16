@@ -109,7 +109,8 @@ CvodeSolver::CvodeSolver() :
     mMaximumStep(MaximumStepDefaultValue),
     mMaximumNumberOfSteps(MaximumNumberOfStepsDefaultValue),
     mRelativeTolerance(RelativeToleranceDefaultValue),
-    mAbsoluteTolerance(AbsoluteToleranceDefaultValue)
+    mAbsoluteTolerance(AbsoluteToleranceDefaultValue),
+    mInterpolateSolution(InterpolateSolutionDefaultValue)
 {
 }
 
@@ -170,6 +171,14 @@ void CvodeSolver::initialize(const double &pVoiStart,
             mAbsoluteTolerance = mProperties.value(AbsoluteToleranceId).toDouble();
         } else {
             emit error(QObject::tr("the 'absolute tolerance' property value could not be retrieved"));
+
+            return;
+        }
+
+        if (mProperties.contains(InterpolateSolutionId)) {
+            mInterpolateSolution = mProperties.value(InterpolateSolutionId).toBool();
+        } else {
+            emit error(QObject::tr("the 'interpolate solution' property value could not be retrieved"));
 
             return;
         }
@@ -235,7 +244,9 @@ void CvodeSolver::solve(double &pVoi, const double &pVoiEnd) const
 {
     // Solve the model
 
-    CVodeSetStopTime(mSolver, pVoiEnd);
+    if (!mInterpolateSolution)
+        CVodeSetStopTime(mSolver, pVoiEnd);
+
     CVode(mSolver, pVoiEnd, mStatesVector, &pVoi, CV_NORMAL);
 
     // Compute the rates one more time to get up to date values for the rates
