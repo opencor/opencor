@@ -32,8 +32,11 @@ ADD_PLUGIN(CoreCellMLEditing
     DEFINITIONS
         ${LLVM_DEFINITIONS}
     PLUGINS
+        CellMLAPI
         CellMLSupport
+        Compiler
         Core
+        CoreSolver
         Editor
         ${LLVM_PLUGIN}
         ${QSCINTILLA_PLUGIN}

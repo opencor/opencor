@@ -520,7 +520,7 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
 
             FOREACH(PLUGIN_BUILD_DIR ${PLUGIN_BUILD_DIRS})
                 ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
-                                   COMMAND install_name_tool -change ${PLUGIN_BUILD_DIR}/${CMAKE_SHARED_LIBRARY_PREFIX}${PLUGIN}${CMAKE_SHARED_LIBRARY_SUFFIX}
+                                   COMMAND install_name_tool -change @rpath/${CMAKE_SHARED_LIBRARY_PREFIX}${PLUGIN}${CMAKE_SHARED_LIBRARY_SUFFIX}
                                                                      @executable_path/../PlugIns/${CMAKE_PROJECT_NAME}/${CMAKE_SHARED_LIBRARY_PREFIX}${PLUGIN}${CMAKE_SHARED_LIBRARY_SUFFIX}
                                                                      ${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME}.app/Contents/PlugIns/${CMAKE_PROJECT_NAME}/${PLUGIN_FILENAME})
             ENDFOREACH()
