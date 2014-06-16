@@ -49,20 +49,22 @@ void DataVariable::reset(void)
   mBuffer.clear() ;
   }
 
-SizeType DataVariable::savePoint(void)
-/*----------------------------------*/
+SizeType DataVariable::size(void)
+/*-----------------------------*/
 {
-  const qulonglong index = mBuffer.size() ;
-  if (mValuePointer) mBuffer.push_back(*mValuePointer) ;
-  return index ;
+  return mBuffer.size() ;
   }
 
-SizeType DataVariable::savePoint(const double &pValue)
+void DataVariable::savePoint(void)
+/*----------------------------------*/
+{
+  if (mValuePointer) mBuffer.push_back(*mValuePointer) ;
+  }
+
+void DataVariable::savePoint(const double &pValue)
 /*--------------------------------------------------*/
 {
-  const SizeType index = mBuffer.size() ;
   mBuffer.push_back(pValue) ;
-  return index ;
   }
 
 double DataVariable::getPoint(const SizeType &pIndex) const  // also [] operator...

@@ -53,8 +53,9 @@ class DataVariable {
   ~DataVariable() ;
 
   void reset(void) ;
-  SizeType savePoint(void) ;
-  SizeType savePoint(const double &pValue) ;
+  SizeType size(void) ;
+  void savePoint(void) ;
+  void savePoint(const double &pValue) ;
   double getPoint(const SizeType &pIndex) const ;  // also [] operator...
   const double *data(void) const ;
 
