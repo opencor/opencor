@@ -1481,7 +1481,7 @@ Property * PropertyEditorWidget::addListProperty(const QStringList &pStringList,
                                                  Property *pParent)
 {
     // Add a list property and return its information
-    // Note: a list property must necessarily be editable...
+    // Note: a list property is necessarily editable...
 
     Property *res = addProperty(Property::List, pParent);
 
