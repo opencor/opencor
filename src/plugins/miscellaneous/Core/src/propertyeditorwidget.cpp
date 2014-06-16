@@ -303,6 +303,8 @@ QWidget * PropertyItemDelegate::createEditor(QWidget *pParent,
     case Property::List: {
         ListEditorWidget *listEditor = new ListEditorWidget(pParent);
 
+        editor = listEditor;
+
         // Add the value items to the list, keeping in mind separators
 
         foreach (const QString &valueItem, property->listValue())
@@ -310,8 +312,6 @@ QWidget * PropertyItemDelegate::createEditor(QWidget *pParent,
                 listEditor->insertSeparator(listEditor->count());
             else
                 listEditor->addItem(valueItem);
-
-        editor = listEditor;
 
         // Propagate the signal telling us about the list property value having
         // changed
