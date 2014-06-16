@@ -49,23 +49,23 @@ void DataVariable::reset(void)
   mBuffer.clear() ;
   }
 
-SizeType DataVariable::storeValue(void)
-/*-----------------------------------*/
+SizeType DataVariable::savePoint(void)
+/*----------------------------------*/
 {
   const qulonglong index = mBuffer.size() ;
   if (mValuePointer) mBuffer.push_back(*mValuePointer) ;
   return index ;
   }
 
-SizeType DataVariable::storeValue(const double &pValue)
-/*---------------------------------------------------*/
+SizeType DataVariable::savePoint(const double &pValue)
+/*--------------------------------------------------*/
 {
   const SizeType index = mBuffer.size() ;
   mBuffer.push_back(pValue) ;
   return index ;
   }
 
-double DataVariable::getValue(const SizeType &pIndex) const  // also [] operator...
+double DataVariable::getPoint(const SizeType &pIndex) const  // also [] operator...
 /*-------------------------------------------------------*/
 {
   return mBuffer[pIndex] ;
@@ -93,30 +93,25 @@ DataStore::~DataStore()
     }
   }
 
-IndexType DataStore::newVariable(const double *pValuePointer)
-/*---------------------------------------------------------*/
+DataVariable *DataStore::holdPoint(const double *pPoint)
+/*----------------------------------------------------*/
 {
-  IndexType index = mVariables.size() ;
-  DataVariable *v = new DataVariable(mSize, pValuePointer) ;
-  mVariables.push_back(v) ;
-  return index ;
+  DataVariable *var = new DataVariable(mSize, pPoint) ;
+  mVariables.push_back(var) ;
+  return var ;
   }
 
-IndexType DataStore::holdElements(const IndexType &pCount, const double *pValues)
-/*-----------------------------------------------------------------------------*/
+std::vector<const DataVariable *> DataStore::holdPoints(const IndexType &pCount, const double *pPoints)
+/*---------------------------------------------------------------------------------------------------*/
 {
-  const double *v = pValues ;
-  IndexType start = mVariables.size() ;
+  const double *v = pPoints ;
+  std::vector<const DataVariable *> vars(pCount) ;
   for (IndexType n = 0 ;  n < pCount ;  ++n, ++v) {
-    mVariables.push_back(new DataVariable(mSize, v)) ;
+    DataVariable *var = new DataVariable(mSize, v) ;
+    mVariables.push_back(var) ;
+    vars[n] = var ;
     }
-  return start ;
-  }
-
-DataVariable *DataStore::getVariable(const IndexType pIndex) const
-/*--------------------------------------------------------------*/
-{
-  return mVariables[pIndex] ;
+  return vars ;
   }
 
 void DataStore::reset(void)
@@ -127,11 +122,11 @@ void DataStore::reset(void)
     }
   }
 
-void DataStore::storeValues(void)
-/*-----------------------------*/
+void DataStore::savePoints(void)
+/*----------------------------*/
 {
   for (auto v = mVariables.begin() ;  v != mVariables.end() ;  ++v) {
-    (*v)->storeValue() ;
+    (*v)->savePoint() ;
     }
   }
 

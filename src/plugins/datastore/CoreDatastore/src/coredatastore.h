@@ -41,8 +41,8 @@ namespace CoreDatastore {
 
 //==============================================================================
 
-typedef qulonglong SizeType ;      // Large array sizes and indexes
-typedef long     IndexType ;       // Object counts and indexes (-1 ==> un-init)
+typedef qulonglong SizeType ;   // Large array sizes and indexes
+typedef long       IndexType ;  // Object counts and indexes (-1 ==> not inited)
 
 //==============================================================================
 
@@ -53,9 +53,9 @@ class DataVariable {
   ~DataVariable() ;
 
   void reset(void) ;
-  SizeType storeValue(void) ;
-  SizeType storeValue(const double &pValue) ;
-  double getValue(const SizeType &pIndex) const ;  // also [] operator...
+  SizeType savePoint(void) ;
+  SizeType savePoint(const double &pValue) ;
+  double getPoint(const SizeType &pIndex) const ;  // also [] operator...
   const double *data(void) const ;
 
  private:
@@ -72,11 +72,10 @@ class DataStore {
   DataStore(const SizeType &pSize) ;
   ~DataStore() ;
 
-  IndexType newVariable(const double *pValuePointer=0) ;
-  IndexType holdElements(const IndexType &pCount, const double *pValues) ;
-  DataVariable *getVariable(const IndexType pIndex) const ;
+  DataVariable *holdPoint(const double *pPoint=0) ;
+  std::vector<const DataVariable *> holdPoints(const IndexType &pCount, const double *pPoints) ;
   void reset(void) ;
-  void storeValues(void) ;
+  void savePoints(void) ;
 
  private:
   const SizeType mSize ;
