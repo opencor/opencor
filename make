@@ -1,10 +1,20 @@
 #!/bin/sh
 
-echo "\033[44;37;1mMaking OpenCOR...\033[0m"
+if hash ninja 2> /dev/null; then
+    ninjaFound=true
+    generator="Ninja"
+    cmakeGenerator="Ninja"
+else
+    ninjaFound=false
+    generator="Make"
+    cmakeGenerator="Unix Makefiles"
+fi
+
+echo "\033[44;37;1mMaking OpenCOR (using $generator)...\033[0m"
 
 cd build
 
-cmake -DCMAKE_BUILD_TYPE=Release ..
+cmake -G "$cmakeGenerator" -DCMAKE_BUILD_TYPE=Release ..
 
 exitCode=$?
 
@@ -14,7 +24,11 @@ if [ $exitCode -ne 0 ]; then
     exit $exitCode
 fi
 
-make $*
+if $ninjaFound; then
+    ninja
+else
+    make $*
+fi
 
 exitCode=$?
 
