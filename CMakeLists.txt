@@ -97,6 +97,7 @@ SET(RESOURCES
 )
 
 # Files that make up the CLI version of OpenCOR (Windows specific)
+# Note: see the node about using Core plugin features above...
 
 IF(WIN32)
     SET(WINDOWS_CLI_SOURCES
@@ -115,8 +116,6 @@ IF(WIN32)
     SET(WINDOWS_CLI_HEADERS_MOC
         src/plugins/plugin.h
         src/plugins/pluginmanager.h
-
-        src/plugins/miscellaneous/Core/src/cliutils.h
     )
 
     SET(WINDOWS_CLI_RESOURCES
