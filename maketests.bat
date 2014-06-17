@@ -2,7 +2,15 @@
 
 SETLOCAL ENABLEDELAYEDEXPANSION
 
-TITLE Making OpenCOR and its tests...
+FOR %%X IN (ninja.exe) DO (SET NinjaFound=%%~$PATH:X)
+
+IF DEFINED NinjaFound (
+    SET Generator=Ninja
+) ELSE (
+    SET Generator=JOM
+)
+
+TITLE Making OpenCOR and its tests (using !Generator!)...
 
 IF NOT DEFINED SetupMSVC2010Environment (
     IF EXIST "C:\Program Files (x86)\" (
@@ -18,14 +26,26 @@ IF NOT DEFINED SetupMSVC2010Environment (
 
 CD build
 
-cmake -G "NMake Makefiles" -DCMAKE_BUILD_TYPE=Debug -DENABLE_TESTS=ON ..
+IF DEFINED NinjaFound (
+    SET CMakeGenerator=Ninja
+) ELSE (
+    SET CMakeGenerator=NMake Makefiles
+)
+
+cmake -G "!CMakeGenerator!" -DCMAKE_BUILD_TYPE=Debug -DENABLE_TESTS=ON ..
 
 SET ExitCode=!ERRORLEVEL!
 
 IF !ExitCode! EQU 0 (
-    jom
+    IF DEFINED NinjaFound (
+        ninja
 
-    SET ExitCode=!ERRORLEVEL!
+        SET ExitCode=!ERRORLEVEL!
+    ) ELSE (
+        jom
+
+        SET ExitCode=!ERRORLEVEL!
+    )
 )
 
 CD ..
