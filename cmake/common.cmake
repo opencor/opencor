@@ -308,7 +308,7 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
             ENDIF()
 
             # Add a definition in case of compilation from within Qt Creator
-            # using MSVC since JOM overrides some of our settings
+            # using MSVC and JOM since the latter overrides some of our settings
 
             IF(WIN32)
                 ADD_DEFINITIONS(-D_CRT_SECURE_NO_WARNINGS)
