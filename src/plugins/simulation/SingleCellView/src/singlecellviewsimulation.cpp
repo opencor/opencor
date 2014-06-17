@@ -719,40 +719,40 @@ qulonglong SingleCellViewSimulationResults::size() const
 
 const double *SingleCellViewSimulationResults::points()
 {
-   // Return our points
-   return mPoints ? mPoints->data() : 0 ;
+    // Return our points
+    return mPoints ? mPoints->data() : 0 ;
 }
 
 //==============================================================================
 
 const double *SingleCellViewSimulationResults::constants(size_t pIndex)
 {
-   // Return constants data at index
-   return mConstants[pIndex]->data() ;
+    // Return constants data at index
+    return mConstants[pIndex]->data() ;
 }
 
 //==============================================================================
 
 const double *SingleCellViewSimulationResults::rates(size_t pIndex)
 {
-   // Return rates data at index
-   return mRates[pIndex]->data() ;
+    // Return rates data at index
+    return mRates[pIndex]->data() ;
 }
 
 //==============================================================================
 
 const double *SingleCellViewSimulationResults::states(size_t pIndex)
 {
-   // Return states data at index
-   return mStates[pIndex]->data() ;
+    // Return states data at index
+    return mStates[pIndex]->data() ;
 }
 
 //==============================================================================
 
 const double *SingleCellViewSimulationResults::algebraic(size_t pIndex)
 {
-   // Return algebraic data at index
-   return mAlgebraic[pIndex]->data() ;
+    // Return algebraic data at index
+    return mAlgebraic[pIndex]->data() ;
 }
 
 //==============================================================================
