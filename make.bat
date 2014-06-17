@@ -2,25 +2,17 @@
 
 TITLE Making OpenCOR...
 
-IF NOT "%SetupMSVC2010Environment%" == "" GOTO MakeOpenCOR
+IF NOT DEFINED SetupMSVC2010Environment (
+    IF EXIST "C:\Program Files (x86)\" (
+        SET ProgFilesDir=C:\Program Files (x86)
+    ) ELSE (
+        SET ProgFilesDir=C:\Program Files
+    )
 
-IF NOT EXIST "C:\Program Files (x86)\" GOTO SetupMSVC2010EnvironmentOn32BitSystem
+    CALL "%ProgFilesDir%\Microsoft Visual Studio 10.0\VC\bin\vcvars32.bat"
 
-SET ProgFilesDir=C:\Program Files (x86)
-
-GOTO ContinueSetupMSVC2010Environment
-
-:SetupMSVC2010EnvironmentOn32BitSystem
-
-SET ProgFilesDir=C:\Program Files
-
-:ContinueSetupMSVC2010Environment
-
-CALL "%ProgFilesDir%\Microsoft Visual Studio 10.0\VC\bin\vcvars32.bat"
-
-SET SetupMSVC2010Environment=Done
-
-:MakeOpenCOR
+    SET SetupMSVC2010Environment=Done
+)
 
 CD build
 
@@ -28,13 +20,11 @@ cmake -G "NMake Makefiles" -DCMAKE_BUILD_TYPE=Release ..
 
 SET ExitCode=%ERRORLEVEL%
 
-IF %ExitCode% NEQ 0 GOTO End
+IF %ExitCode% EQU 0 (
+    jom
 
-jom
-
-SET ExitCode=%ERRORLEVEL%
-
-:End
+    SET ExitCode=%ERRORLEVEL%
+)
 
 CD ..
 

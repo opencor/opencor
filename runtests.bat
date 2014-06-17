@@ -2,15 +2,10 @@
 
 TITLE Running OpenCOR's tests...
 
-IF NOT EXIST build\tests\runtests.exe GOTO Information
+IF NOT EXIST build\tests\runtests.exe SET NeedInformation=Yes
 
-build\tests\runtests.exe
-
-GOTO End
-
-:Information
-
-ECHO OpenCOR's tests must first be built before being run.
-ECHO.
-
-:End
+IF DEFINED NeedInformation (
+    ECHO OpenCOR's tests must first be built before being run.
+) ELSE (
+    build\tests\runtests.exe
+)

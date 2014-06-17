@@ -2,16 +2,11 @@
 
 TITLE Running OpenCOR...
 
-IF NOT EXIST build\bin\OpenCOR.com GOTO Information
-IF NOT EXIST build\bin\OpenCOR.exe GOTO Information
+IF NOT EXIST build\bin\OpenCOR.com SET NeedInformation=Yes
+IF NOT EXIST build\bin\OpenCOR.exe SET NeedInformation=Yes
 
-build\bin\OpenCOR %*
-
-GOTO End
-
-:Information
-
-ECHO OpenCOR must first be built before being run.
-ECHO.
-
-:End
+IF DEFINED NeedInformation (
+    ECHO OpenCOR must first be built before being run.
+) ELSE (
+    build\bin\OpenCOR %*
+)
