@@ -62,21 +62,6 @@ QString XslTransformerJob::xsl() const
 
 //==============================================================================
 
-void XslTransformerMessageHandler::handleMessage(QtMsgType pType,
-                                                 const QString &pDescription,
-                                                 const QUrl &pIdentifier,
-                                                 const QSourceLocation &pSourceLocation)
-{
-    Q_UNUSED(pType);
-    Q_UNUSED(pDescription);
-    Q_UNUSED(pIdentifier);
-    Q_UNUSED(pSourceLocation);
-
-    // We ignore the message...
-}
-
-//==============================================================================
-
 XslTransformer::XslTransformer() :
     mPaused(false),
     mStopped(false),
@@ -154,9 +139,9 @@ void XslTransformer::started()
     // Create our XML query object
 
     QXmlQuery xmlQuery(QXmlQuery::XSLT20);
-    XslTransformerMessageHandler xslTransformerMessageHandler;
+    DummyMessageHandler dummyMessageHandler;
 
-    xmlQuery.setMessageHandler(&xslTransformerMessageHandler);
+    xmlQuery.setMessageHandler(&dummyMessageHandler);
 
     // Do our XSL transformations
 

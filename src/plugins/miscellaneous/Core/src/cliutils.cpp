@@ -91,6 +91,21 @@ namespace Core {
 
 //==============================================================================
 
+void DummyMessageHandler::handleMessage(QtMsgType pType,
+                                        const QString &pDescription,
+                                        const QUrl &pIdentifier,
+                                        const QSourceLocation &pSourceLocation)
+{
+    Q_UNUSED(pType);
+    Q_UNUSED(pDescription);
+    Q_UNUSED(pIdentifier);
+    Q_UNUSED(pSourceLocation);
+
+    // We ignore the message...
+}
+
+//==============================================================================
+
 bool SynchronousTextFileDownloader::readTextFromUrl(const QString &pUrl,
                                                     QString &pText,
                                                     QString &pErrorMessage) const

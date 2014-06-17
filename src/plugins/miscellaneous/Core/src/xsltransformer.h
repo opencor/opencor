@@ -28,7 +28,6 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-#include <QAbstractMessageHandler>
 #include <QList>
 #include <QObject>
 #include <QString>
@@ -38,6 +37,10 @@ specific language governing permissions and limitations under the License.
 
 namespace OpenCOR {
 namespace Core {
+
+//==============================================================================
+
+class DummyMessageHandler;
 
 //==============================================================================
 
@@ -52,18 +55,6 @@ public:
 private:
     QString mInput;
     QString mXsl;
-};
-
-//==============================================================================
-
-class XslTransformerMessageHandler : public QAbstractMessageHandler
-{
-    Q_OBJECT
-
-protected:
-    virtual void handleMessage(QtMsgType pType, const QString &pDescription,
-                               const QUrl &pIdentifier,
-                               const QSourceLocation &pSourceLocation);
 };
 
 //==============================================================================
