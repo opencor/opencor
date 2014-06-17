@@ -759,89 +759,14 @@ const double *SingleCellViewSimulationResults::algebraic(size_t pIndex)
 
 bool SingleCellViewSimulationResults::exportToCsv(const QString &pFileName) const
 {
-    if (!mRuntime)
-        return false;
+    if (!mRuntime) return false;
 
     // Export of all of our data to a CSV file
-
-    QFile file(pFileName);
-
-    if (!file.open(QIODevice::WriteOnly)) {
-        // The file can't be opened, so...
-
-        file.remove();
-
-        return false;
-    }
-#if OLDWAY
-
-    // Write out the contents of the CellML file to the file
-
-    QTextStream out(&file);
-
-    // Header
-
-    static const QString Header = "%1 | %2 (%3)";
-
-    out << Header.arg(mRuntime->variableOfIntegration()->componentHierarchy().join(" | "),
-                      mRuntime->variableOfIntegration()->name(),
-                      mRuntime->variableOfIntegration()->unit());
-
-    for (int i = 0, iMax = mRuntime->parameters().count(); i < iMax; ++i) {
-        CellMLSupport::CellmlFileRuntimeParameter *parameter = mRuntime->parameters()[i];
-
-        if (parameter != mRuntime->variableOfIntegration())
-            out << "," << Header.arg(parameter->componentHierarchy().join(" | "),
-                                     parameter->formattedName(),
-                                     parameter->formattedUnit(mRuntime->variableOfIntegration()->unit()));
-    }
-
-    out << "\n";
-
-    // Data itself
-
-    for (qulonglong j = 0; j < mSize; ++j) {
-        out << mPoints[j];
-
-        for (int i = 0, iMax = mRuntime->parameters().count(); i < iMax; ++i) {
-            CellMLSupport::CellmlFileRuntimeParameter *parameter = mRuntime->parameters()[i];
-
-            switch (parameter->type()) {
-            case CellMLSupport::CellmlFileRuntimeParameter::Constant:
-            case CellMLSupport::CellmlFileRuntimeParameter::ComputedConstant:
-                out << "," << mConstants[parameter->index()][j];
-
-                break;
-            case CellMLSupport::CellmlFileRuntimeParameter::Rate:
-                out << "," << mRates[parameter->index()][j];
-
-                break;
-            case CellMLSupport::CellmlFileRuntimeParameter::State:
-                out << "," << mStates[parameter->index()][j];
-
-                break;
-            case CellMLSupport::CellmlFileRuntimeParameter::Algebraic:
-                out << "," << mAlgebraic[parameter->index()][j];
-
-                break;
-            default:
-                // Not a type in which we are interested, so...
-
-                ;
-            }
-        }
-
-        out << "\n";
-    }
-
+    std::string unused = pFileName.toStdString() ;
+    return false ;
+#if WIP
+    // return selectedStore->exportDataset(mDataset) ;
 #endif
-    // We are done, so close our file
-
-    file.close();
-
-    // Everything went fine, so...
-
-    return true;
 }
 
 //==============================================================================
