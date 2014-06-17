@@ -697,15 +697,15 @@ MACRO(ADD_PLUGIN_BINARY PLUGIN_NAME)
 
     SET(PLUGIN_FILENAME ${CMAKE_SHARED_LIBRARY_PREFIX}${PLUGIN_NAME}${CMAKE_SHARED_LIBRARY_SUFFIX})
 
-    ADD_CUSTOM_TARGET(${PLUGIN_NAME}_COPY_PLUGIN_TO_PLUGINS_DIRECTORY ALL
-                      COMMAND ${CMAKE_COMMAND} -E copy ${PLUGIN_BINARY_DIR}/${PLUGIN_FILENAME}
-                                                       ${DEST_PLUGINS_DIR}/${PLUGIN_FILENAME})
+    ADD_CUSTOM_COMMAND(OUTPUT ${DEST_PLUGINS_DIR}/${PLUGIN_FILENAME}
+                       COMMAND ${CMAKE_COMMAND} -E copy ${PLUGIN_BINARY_DIR}/${PLUGIN_FILENAME}
+                                                        ${DEST_PLUGINS_DIR}/${PLUGIN_FILENAME})
 
     # Make a copy of the plugin to our main build directory
 
-    ADD_CUSTOM_TARGET(${PLUGIN_NAME}_COPY_PLUGIN_TO_BUILD_DIRECTORY ALL
-                      COMMAND ${CMAKE_COMMAND} -E copy ${PLUGIN_BINARY_DIR}/${PLUGIN_FILENAME}
-                                                       ${PROJECT_BUILD_DIR}/${PLUGIN_FILENAME})
+    ADD_CUSTOM_COMMAND(OUTPUT ${PROJECT_BUILD_DIR}/${PLUGIN_FILENAME}
+                       COMMAND ${CMAKE_COMMAND} -E copy ${PLUGIN_BINARY_DIR}/${PLUGIN_FILENAME}
+                                                        ${PROJECT_BUILD_DIR}/${PLUGIN_FILENAME})
 
     # A few OS X specific things
 
@@ -718,7 +718,7 @@ MACRO(ADD_PLUGIN_BINARY PLUGIN_NAME)
         IF(NOT "$ENV{PACKAGE_OPENCOR}" STREQUAL "True")
             FOREACH(QT_LIBRARY ${QT_LIBRARIES})
                 ADD_CUSTOM_TARGET(${PLUGIN_NAME}_${QT_LIBRARY}_UPDATE_OS_X_QT_REFERENCE_IN_BUNDLE ALL
-                                  DEPENDS ${PLUGIN_NAME}_COPY_PLUGIN_TO_BUILD_DIRECTORY
+                                  DEPENDS ${DEST_PLUGINS_DIR}/${PLUGIN_FILENAME}
                                   COMMAND install_name_tool -change @executable_path/../Frameworks/${QT_LIBRARY}.framework/Versions/${QT_VERSION_MAJOR}/${QT_LIBRARY}
                                                                     ${QT_LIBRARY_DIR}/${QT_LIBRARY}.framework/Versions/${QT_VERSION_MAJOR}/${QT_LIBRARY}
                                                                     ${DEST_PLUGINS_DIR}/${CMAKE_SHARED_LIBRARY_PREFIX}${PLUGIN_NAME}${CMAKE_SHARED_LIBRARY_SUFFIX})
@@ -733,7 +733,7 @@ MACRO(ADD_PLUGIN_BINARY PLUGIN_NAME)
 
         FOREACH(QT_LIBRARY ${QT_LIBRARIES})
             ADD_CUSTOM_TARGET(${PLUGIN_NAME}_${QT_LIBRARY}_UPDATE_OS_X_QT_REFERENCE_IN_BUILD_DIRECTORY ALL
-                              DEPENDS ${PLUGIN_NAME}_COPY_PLUGIN_TO_BUILD_DIRECTORY
+                              DEPENDS ${PROJECT_BUILD_DIR}/${PLUGIN_FILENAME}
                               COMMAND install_name_tool -change @executable_path/../Frameworks/${QT_LIBRARY}.framework/Versions/${QT_VERSION_MAJOR}/${QT_LIBRARY}
                                                                 ${QT_LIBRARY_DIR}/${QT_LIBRARY}.framework/Versions/${QT_VERSION_MAJOR}/${QT_LIBRARY}
                                                                 ${PROJECT_BUILD_DIR}/${CMAKE_SHARED_LIBRARY_PREFIX}${PLUGIN_NAME}${CMAKE_SHARED_LIBRARY_SUFFIX})
