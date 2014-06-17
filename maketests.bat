@@ -29,7 +29,7 @@ CD build
 IF DEFINED NinjaFound (
     SET CMakeGenerator=Ninja
 ) ELSE (
-    SET CMakeGenerator=NMake Makefiles
+    SET CMakeGenerator=NMake Makefiles JOM
 )
 
 cmake -G "!CMakeGenerator!" -DCMAKE_BUILD_TYPE=Debug -DENABLE_TESTS=ON ..
