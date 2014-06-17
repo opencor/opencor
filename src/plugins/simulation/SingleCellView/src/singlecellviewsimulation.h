@@ -176,7 +176,7 @@ private:
     SingleCellViewSimulation *mSimulation;
     qulonglong mSize;
 
-    CoreDatastore::DataStore *mStore ;
+    CoreDatastore::DataSet *mDataset ;
     CoreDatastore::DataVariable *mPoints ;
     std::vector<const CoreDatastore::DataVariable *> mConstants ;
     std::vector<const CoreDatastore::DataVariable *> mRates ;

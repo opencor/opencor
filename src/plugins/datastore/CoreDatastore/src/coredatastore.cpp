@@ -81,30 +81,30 @@ const double *DataVariable::data(void) const
 
 //==============================================================================
 
-DataStore::DataStore(const SizeType &pSize)
-/*---------------------------------------*/
+DataSet::DataSet(const SizeType &pSize)
+/*-----------------------------------*/
 : mSize(pSize), mVariables(0)
 {
   }
 
-DataStore::~DataStore()
-/*-------------------*/
+DataSet::~DataSet()
+/*---------------*/
 {
   for (auto v = mVariables.begin() ;  v != mVariables.end() ;  ++v) {
     delete *v ;
     }
   }
 
-DataVariable *DataStore::holdPoint(const double *pPoint)
-/*----------------------------------------------------*/
+DataVariable *DataSet::holdPoint(const double *pPoint)
+/*--------------------------------------------------*/
 {
   DataVariable *var = new DataVariable(mSize, pPoint) ;
   mVariables.push_back(var) ;
   return var ;
   }
 
-std::vector<const DataVariable *> DataStore::holdPoints(const IndexType &pCount, const double *pPoints)
-/*---------------------------------------------------------------------------------------------------*/
+std::vector<const DataVariable *> DataSet::holdPoints(const IndexType &pCount, const double *pPoints)
+/*-------------------------------------------------------------------------------------------------*/
 {
   const double *v = pPoints ;
   std::vector<const DataVariable *> vars(pCount) ;
@@ -116,16 +116,16 @@ std::vector<const DataVariable *> DataStore::holdPoints(const IndexType &pCount,
   return vars ;
   }
 
-void DataStore::reset(void)
-/*-----------------------*/
+void DataSet::reset(void)
+/*---------------------*/
 {
   for (auto v = mVariables.begin() ;  v != mVariables.end() ;  ++v) {
     (*v)->reset() ;
     }
   }
 
-void DataStore::savePoints(void)
-/*----------------------------*/
+void DataSet::savePoints(void)
+/*--------------------------*/
 {
   for (auto v = mVariables.begin() ;  v != mVariables.end() ;  ++v) {
     (*v)->savePoint() ;

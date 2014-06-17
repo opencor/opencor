@@ -67,11 +67,11 @@ class DataVariable {
 
 //==============================================================================
 
-class DataStore {
+class DataSet {
 
  public:
-  DataStore(const SizeType &pSize) ;
-  ~DataStore() ;
+  DataSet(const SizeType &pSize) ;
+  ~DataSet() ;
 
   DataVariable *holdPoint(const double *pPoint=0) ;
   std::vector<const DataVariable *> holdPoints(const IndexType &pCount, const double *pPoints) ;

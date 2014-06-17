@@ -556,7 +556,7 @@ SingleCellViewSimulationResults::SingleCellViewSimulationResults(CellMLSupport::
     mRuntime(pRuntime),
     mSimulation(pSimulation),
     mSize(0),
-    mStore(0),
+    mDataset(0),
     mPoints(0),
     mConstants(0),
     mRates(0),
@@ -600,15 +600,16 @@ bool SingleCellViewSimulationResults::createArrays()
         return true;
 
     try {
-      mStore = new CoreDatastore::DataStore(simulationSize) ;
-      mPoints = mStore->holdPoint() ;
-      mConstants = mStore->holdPoints(mRuntime->constantsCount(), mSimulation->data()->constants()) ;
-      mRates = mStore->holdPoints(mRuntime->ratesCount(), mSimulation->data()->rates()) ;
-      mStates = mStore->holdPoints(mRuntime->statesCount(), mSimulation->data()->states()) ;
-      mAlgebraic = mStore->holdPoints(mRuntime->algebraicCount(), mSimulation->data()->algebraic()) ;
+      mDataset = new CoreDatastore::DataSet(simulationSize) ;
+      mPoints = mDataset->holdPoint() ;
+      mConstants = mDataset->holdPoints(mRuntime->constantsCount(), mSimulation->data()->constants()) ;
+      mRates = mDataset->holdPoints(mRuntime->ratesCount(), mSimulation->data()->rates()) ;
+      mStates = mDataset->holdPoints(mRuntime->statesCount(), mSimulation->data()->states()) ;
+      mAlgebraic = mDataset->holdPoints(mRuntime->algebraicCount(), mSimulation->data()->algebraic()) ;
       }
     catch (...) {
-      delete mStore ;
+      delete mDataset ;
+      mDataset = 0 ;
       return false ;
       }
 
@@ -627,8 +628,8 @@ void SingleCellViewSimulationResults::deleteArrays()
     mStates.clear() ;
     mAlgebraic.clear() ;
 
-    if (mStore) delete mStore ;
-    mStore = 0;
+    if (mDataset) delete mDataset ;
+    mDataset = 0;
 }
 
 //==============================================================================
@@ -659,7 +660,7 @@ void SingleCellViewSimulationResults::addPoint(const double &pPoint)
 
     // Add the data to our different arrays
     mPoints->savePoint(pPoint) ;
-    mStore->savePoints() ;
+    mDataset->savePoints() ;
     ++mSize;
 }
 
