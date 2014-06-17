@@ -91,6 +91,7 @@ namespace Core {
 
 //==============================================================================
 
+#ifndef OpenCOR_MAIN
 void DummyMessageHandler::handleMessage(QtMsgType pType,
                                         const QString &pDescription,
                                         const QUrl &pIdentifier,
@@ -103,9 +104,11 @@ void DummyMessageHandler::handleMessage(QtMsgType pType,
 
     // We ignore the message...
 }
+#endif
 
 //==============================================================================
 
+#ifndef OpenCOR_MAIN
 bool SynchronousTextFileDownloader::readTextFromUrl(const QString &pUrl,
                                                     QString &pText,
                                                     QString &pErrorMessage) const
@@ -151,9 +154,11 @@ bool SynchronousTextFileDownloader::readTextFromUrl(const QString &pUrl,
 
     return res;
 }
+#endif
 
 //==============================================================================
 
+#ifndef OpenCOR_MAIN
 void SynchronousTextFileDownloader::networkAccessManagerSslErrors(QNetworkReply *pNetworkReply,
                                                                   const QList<QSslError> &pSslErrors)
 {
@@ -161,6 +166,7 @@ void SynchronousTextFileDownloader::networkAccessManagerSslErrors(QNetworkReply 
 
     pNetworkReply->ignoreSslErrors(pSslErrors);
 }
+#endif
 
 //==============================================================================
 
@@ -513,6 +519,7 @@ bool readTextFromFile(const QString &pFileName, QString &pText)
 
 //==============================================================================
 
+#ifndef OpenCOR_MAIN
 bool readTextFromUrl(const QString &pUrl, QString &pText,
                      QString &pErrorMessage)
 {
@@ -522,6 +529,7 @@ bool readTextFromUrl(const QString &pUrl, QString &pText,
 
     return synchronousTextFileDownloader.readTextFromUrl(pUrl, pText, pErrorMessage);
 }
+#endif
 
 //==============================================================================
 

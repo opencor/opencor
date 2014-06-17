@@ -47,6 +47,11 @@ ENDIF()
 FILE(WRITE ${CMAKE_BINARY_DIR}/version.txt ${VERSION})
 
 # Files that make up the GUI version of OpenCOR
+# Note: when it comes to using some of the Core plugin features, we don't want
+#       any of them to require a MOC file to be generated. Indeed, should this
+#       happen, then some build systems (e.g. Ninja) will warn that there exist
+#       multiple rules to generate it. In practice, it's fine, but it's still a
+#       warning and we don't like (and want) warnings...
 
 SET(SOURCES
     src/main.cpp
@@ -77,8 +82,6 @@ SET(HEADERS_MOC
 
     src/plugins/plugin.h
     src/plugins/pluginmanager.h
-
-    src/plugins/miscellaneous/Core/src/cliutils.h
 )
 
 SET(UIS
