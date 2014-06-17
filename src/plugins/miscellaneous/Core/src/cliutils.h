@@ -29,7 +29,6 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-#include <QAbstractMessageHandler>
 #include <QByteArray>
 #include <QSourceLocation>
 #include <QSslError>
@@ -63,18 +62,6 @@ static const auto SettingsActiveDirectory = QStringLiteral("ActiveDirectory");
 //==============================================================================
 
 namespace Core {
-
-//==============================================================================
-
-class CORE_EXPORT DummyMessageHandler : public QAbstractMessageHandler
-{
-    Q_OBJECT
-
-protected:
-    virtual void handleMessage(QtMsgType pType, const QString &pDescription,
-                               const QUrl &pIdentifier,
-                               const QSourceLocation &pSourceLocation);
-};
 
 //==============================================================================
 
