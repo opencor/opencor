@@ -53,7 +53,12 @@ class VIEWER_EXPORT ViewerWidget : public Core::Widget
 public:
     explicit ViewerWidget(QWidget *pParent);
 
+    virtual void loadSettings(QSettings *pSettings);
+    virtual void saveSettings(QSettings *pSettings) const;
+
     virtual void retranslateUi();
+
+    void updateSettings(ViewerWidget *pViewerWidget);
 
     QString contents() const;
     void setContents(const QString &pContents);
@@ -94,6 +99,7 @@ private:
     QAction *mSubscriptsAction;
     QAction *mGreekSymbolsAction;
     QAction *mDigitGroupingAction;
+    QAction *mCopyToClipboardAction;
 
     QAction * newAction();
 
@@ -104,16 +110,12 @@ private:
     void processNode(const QDomNode &pDomNode) const;
     QString processedContents() const;
 
-Q_SIGNALS:
-    void optimiseFontSizeChanged(const bool &pEnabled);
-    void subscriptsChanged(const bool &pEnabled);
-    void greekSymbolsChanged(const bool &pEnabled);
-    void digitGroupingChanged(const bool &pEnabled);
-
 private Q_SLOTS:
     void showCustomContextMenu(const QPoint &pPosition) const;
 
     void updateViewer();
+
+    void copyToClipboard();
 };
 
 //==============================================================================

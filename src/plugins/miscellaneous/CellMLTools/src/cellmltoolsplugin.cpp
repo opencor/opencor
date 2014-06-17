@@ -61,6 +61,14 @@ PLUGININFO_FUNC CellMLToolsPluginInfo()
 }
 
 //==============================================================================
+
+CellMLToolsPlugin::CellMLToolsPlugin() :
+    mCellmlFileTypes(FileTypes()),
+    mFileName(QString())
+{
+}
+
+//==============================================================================
 // CLI interface
 //==============================================================================
 
@@ -144,10 +152,13 @@ void CellMLToolsPlugin::retranslateUi()
 
     retranslateMenu(mCellmlFileExportToMenu, tr("CellML File Export To"));
 
-    retranslateAction(mExportToCellml10Action, tr("CellML 1.0..."), tr("Export the CellML file to CellML 1.0"));
-    retranslateAction(mExportToCellml11Action, tr("CellML 1.1..."), tr("Export the CellML file to CellML 1.1"));
+    retranslateAction(mExportToCellml10Action, tr("CellML 1.0..."),
+                      tr("Export the CellML file to CellML 1.0"));
+    retranslateAction(mExportToCellml11Action, tr("CellML 1.1..."),
+                      tr("Export the CellML file to CellML 1.1"));
 
-    retranslateAction(mExportToUserDefinedFormatAction, tr("User-Defined Format..."), tr("Export the CellML file to some user-defined format"));
+    retranslateAction(mExportToUserDefinedFormatAction, tr("User-Defined Format..."),
+                      tr("Export the CellML file to some user-defined format"));
 }
 
 //==============================================================================
@@ -201,8 +212,6 @@ void CellMLToolsPlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
 {
     // Retrieve the file types supported by the CellMLSupport plugin
 
-    mCellmlFileTypes = FileTypes();
-
     foreach (Plugin *plugin, pLoadedPlugins) {
         FileTypeInterface *fileTypeInterface = qobject_cast<FileTypeInterface *>(plugin->instance());
 
@@ -210,7 +219,7 @@ void CellMLToolsPlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
             // This is the CellMLSupport plugin and, as expected, it implements
             // our file type interface, so retrieve the file types it supports
 
-            mCellmlFileTypes = fileTypeInterface->fileTypes();
+            mCellmlFileTypes << fileTypeInterface->fileTypes();
 
             break;
         }
@@ -260,11 +269,11 @@ void CellMLToolsPlugin::exportTo(const CellMLSupport::CellmlFile::Version &pVers
     else
         format = "CellML 1.1";
 
-    foreach (const FileType &fileType, mCellmlFileTypes) {
+    foreach (FileType *fileType, mCellmlFileTypes) {
         if (!fileTypes.isEmpty())
             fileTypes += ";;";
 
-        fileTypes +=  fileType.description()+" (*."+fileType.fileExtension()+")";
+        fileTypes +=  fileType->description()+" (*."+fileType->fileExtension()+")";
     }
 
     QString fileName = Core::getSaveFileName(tr("Export CellML File To %1").arg(format), mFileName, fileTypes);

@@ -28,7 +28,7 @@ namespace OpenCOR {
 //==============================================================================
 
 static const auto ViewModeUnknown    = QStringLiteral("Unknown");
-#ifdef QT_DEBUG
+#ifdef ENABLE_SAMPLES
 static const auto ViewModeSample     = QStringLiteral("Sample");
 #endif
 static const auto ViewModeEditing    = QStringLiteral("Editing");
@@ -42,7 +42,7 @@ QString ViewInterface::viewModeAsString(const ViewInterface::Mode &pMode)
     // Return the mode corresponding to the given mode string
 
     switch (pMode) {
-#ifdef QT_DEBUG
+#ifdef ENABLE_SAMPLES
     case ViewInterface::Sample:
         return ViewModeSample;
 #endif
@@ -63,7 +63,7 @@ ViewInterface::Mode ViewInterface::viewModeFromString(const QString &pMode)
 {
     // Return the mode string corresponding to the given mode
 
-#ifdef QT_DEBUG
+#ifdef ENABLE_SAMPLES
     if (!pMode.compare(ViewModeSample))
         return ViewInterface::Sample;
     else if (!pMode.compare(ViewModeEditing))

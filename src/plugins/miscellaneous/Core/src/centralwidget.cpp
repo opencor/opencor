@@ -157,7 +157,7 @@ CentralWidget::CentralWidget(QMainWindow *pMainWindow) :
 
     // Create our modes
 
-#ifdef QT_DEBUG
+#ifdef ENABLE_SAMPLES
     mModes.insert(ViewInterface::Sample, new CentralWidgetMode(this));
 #endif
     mModes.insert(ViewInterface::Editing, new CentralWidgetMode(this));
@@ -410,13 +410,13 @@ void CentralWidget::loadSettings(QSettings *pSettings)
     // Select the previously selected file, if it still exists, by pretending to
     // open it (which, in turn, will select the file)
 
-    QString fileNameOrUrl = pSettings->value(SettingsCurrentFileNameOrUrl).toString();
-    QString fileName = pSettings->value(SettingsFileIsRemote.arg(fileNameOrUrl)).toBool()?
-                           mRemoteLocalFileNames.value(fileNameOrUrl):
-                           fileNameOrUrl;
+    QString currentFileNameOrUrl = pSettings->value(SettingsCurrentFileNameOrUrl).toString();
+    QString currentFileName = pSettings->value(SettingsFileIsRemote.arg(currentFileNameOrUrl)).toBool()?
+                                  mRemoteLocalFileNames.value(currentFileNameOrUrl):
+                                  currentFileNameOrUrl;
 
-    if (mFileNames.contains(fileName))
-        openFile(fileName);
+    if (mFileNames.contains(currentFileName))
+        openFile(currentFileName);
     else
         // The previously selected file doesn't exist anymore, so select the
         // first file (otherwise the last file will be selected)
@@ -492,25 +492,20 @@ void CentralWidget::saveSettings(QSettings *pSettings) const
 
     // Keep track of the currently selected file
     // Note: we don't rely on mFileTabs->currentIndex() since it may refer to a
-    //       new file, which we will have skipped above...
+    //       new file, which we will have been skipped above...
 
-    bool hasCurrentFile = false;
+    QString currentFileNameOrUrl = QString();
 
     if (fileNames.count()) {
-        QString fileName = mFileNames[mFileTabs->currentIndex()];
-        QString fileNameOrUrl = fileManagerInstance->isRemote(fileName)?
-                                    fileManagerInstance->url(fileName):
-                                    fileName;
+        QString currentFileName = mFileNames[mFileTabs->currentIndex()];
 
-        if (fileNames.contains(fileName)) {
-            pSettings->setValue(SettingsCurrentFileNameOrUrl, fileNameOrUrl);
-
-            hasCurrentFile = true;
-        }
+        if (fileNames.contains(currentFileName))
+            currentFileNameOrUrl = fileManagerInstance->isRemote(currentFileName)?
+                                       fileManagerInstance->url(currentFileName):
+                                       currentFileName;
     }
 
-    if (!hasCurrentFile)
-        pSettings->setValue(SettingsCurrentFileNameOrUrl, QString());
+    pSettings->setValue(SettingsCurrentFileNameOrUrl, currentFileNameOrUrl);
 
     // Keep track of the active directory
 
@@ -565,7 +560,7 @@ void CentralWidget::retranslateUi()
 
     // Retranslate our modes tab bar
 
-#ifdef QT_DEBUG
+#ifdef ENABLE_SAMPLES
     mModeTabs->setTabText(mModeModeTabIndexes.value(ViewInterface::Sample, -1),
                           tr("Sample"));
 #endif
@@ -737,10 +732,10 @@ void CentralWidget::openFile()
 
     QString supportedFileTypes;
 
-    foreach (const FileType &supportedFileType, mSupportedFileTypes)
+    foreach (FileType *supportedFileType, mSupportedFileTypes)
         supportedFileTypes +=  ";;"
-                              +supportedFileType.description()
-                              +" (*."+supportedFileType.fileExtension()+")";
+                              +supportedFileType->description()
+                              +" (*."+supportedFileType->fileExtension()+")";
 
     QStringList files = getOpenFileNames(tr("Open File"),
                                          tr("All Files")
@@ -977,13 +972,13 @@ bool CentralWidget::saveFile(const int &pIndex, const bool &pNeedNewFileName)
 
         QString supportedFileTypes = QString();
 
-        foreach (const FileType &supportedFileType, mSupportedFileTypes)
-            if (mimeTypes.contains(supportedFileType.mimeType())) {
+        foreach (FileType *supportedFileType, mSupportedFileTypes)
+            if (mimeTypes.contains(supportedFileType->mimeType())) {
                 if (!supportedFileTypes.isEmpty())
                     supportedFileTypes += ";;";
 
-                supportedFileTypes +=  supportedFileType.description()
-                                      +" (*."+supportedFileType.fileExtension()+")";
+                supportedFileTypes +=  supportedFileType->description()
+                                      +" (*."+supportedFileType->fileExtension()+")";
             }
 
         newFileName = Core::getSaveFileName(tr("Save File"),
@@ -1510,7 +1505,7 @@ void CentralWidget::updateGui()
 
     int fileModeTabIndex = mModeTabs->currentIndex();
 
-#ifdef QT_DEBUG
+#ifdef ENABLE_SAMPLES
     mModes.value(ViewInterface::Sample)->viewTabs()->setVisible(fileModeTabIndex == mModeModeTabIndexes.value(ViewInterface::Sample));
 #endif
     mModes.value(ViewInterface::Editing)->viewTabs()->setVisible(fileModeTabIndex == mModeModeTabIndexes.value(ViewInterface::Editing));

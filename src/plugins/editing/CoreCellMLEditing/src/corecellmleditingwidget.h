@@ -70,6 +70,10 @@ namespace CoreCellMLEditing {
 
 //==============================================================================
 
+class CoreCellmlEditingEditorListWidget;
+
+//==============================================================================
+
 class CORECELLMLEDITING_EXPORT CoreCellmlEditingWidget : public QSplitter,
                                                          public Core::CommonWidget
 {
@@ -81,10 +85,16 @@ public:
                                      QWidget *pParent);
     ~CoreCellmlEditingWidget();
 
+    virtual void loadSettings(QSettings *pSettings);
+    virtual void saveSettings(QSettings *pSettings) const;
+
     virtual void retranslateUi();
+
+    void updateSettings(CoreCellmlEditingWidget *pCoreCellmlEditingWidget);
 
     Viewer::ViewerWidget * viewer() const;
     Editor::EditorWidget * editor() const;
+    CoreCellmlEditingEditorListWidget * editorList() const;
 
 private:
     Ui::CoreCellmlEditingWidget *mGui;
@@ -94,6 +104,9 @@ private:
 
     Core::BorderedWidget *mBorderedEditor;
     Editor::EditorWidget *mEditor;
+
+    Core::BorderedWidget *mBorderedEditorList;
+    CoreCellmlEditingEditorListWidget *mEditorList;
 };
 
 //==============================================================================

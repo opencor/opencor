@@ -80,13 +80,11 @@ public:
 private:
     Ui::RawViewWidget *mGui;
 
+    bool mNeedLoadingSettings;
+    QString mSettingsGroup;
+
     Editor::EditorWidget *mEditor;
     QMap<QString, Editor::EditorWidget *> mEditors;
-
-    int mEditorZoomLevel;
-
-private Q_SLOTS:
-    void zoomLevelChanged(const int &pZoomLevel);
 };
 
 //==============================================================================

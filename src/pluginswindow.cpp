@@ -120,6 +120,11 @@ PluginsWindow::PluginsWindow(PluginManager *pPluginManager,
     mModel = new QStandardItemModel(mGui->pluginsTreeView);
     mPluginItemDelegate = new PluginItemDelegate();
 
+#ifdef Q_OS_MAC
+    mGui->pluginsTreeView->setAttribute(Qt::WA_MacShowFocusRect, false);
+    // Note: the above removes the focus border since it messes up the look of
+    //       our plugins tree view widget...
+#endif
     mGui->pluginsTreeView->setModel(mModel);
     mGui->pluginsTreeView->setItemDelegate(mPluginItemDelegate);
 
@@ -134,7 +139,7 @@ PluginsWindow::PluginsWindow(PluginManager *pPluginManager,
     mappedCategories.insert(tr("Datastore"), PluginInfo::Datastore);
     mappedCategories.insert(tr("Miscellaneous"), PluginInfo::Miscellaneous);
     mappedCategories.insert(tr("Organisation"), PluginInfo::Organisation);
-#ifdef QT_DEBUG
+#ifdef ENABLE_SAMPLES
     mappedCategories.insert(tr("Sample"), PluginInfo::Sample);
 #endif
     mappedCategories.insert(tr("Simulation"), PluginInfo::Simulation);

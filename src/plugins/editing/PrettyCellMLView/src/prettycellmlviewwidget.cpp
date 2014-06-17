@@ -31,7 +31,6 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-#include <QDesktopWidget>
 #include <QLabel>
 #include <QLayout>
 #include <QMetaType>
@@ -52,14 +51,10 @@ namespace PrettyCellMLView {
 PrettyCellmlViewWidget::PrettyCellmlViewWidget(QWidget *pParent) :
     ViewWidget(pParent),
     mGui(new Ui::PrettyCellmlViewWidget),
+    mNeedLoadingSettings(true),
+    mSettingsGroup(QString()),
     mEditingWidget(0),
-    mEditingWidgets(QMap<QString, CoreCellMLEditing::CoreCellmlEditingWidget *>()),
-    mEditingWidgetSizes(QIntList()),
-    mEditorZoomLevel(0),
-    mViewerOptimiseFontSizeEnabled(true),
-    mViewerSubscriptsEnabled(true),
-    mViewerGreekSymbolsEnabled(true),
-    mViewerDigitGroupingEnabled(true)
+    mEditingWidgets(QMap<QString, CoreCellMLEditing::CoreCellmlEditingWidget *>())
 {
     // Set up the GUI
 
@@ -77,54 +72,23 @@ PrettyCellmlViewWidget::~PrettyCellmlViewWidget()
 
 //==============================================================================
 
-static const auto SettingsEditingWidgetSizes            = QStringLiteral("EditingWidgetSizes");
-static const auto SettingsEditorZoomLevel               = QStringLiteral("EditorZoomLevel");
-static const auto SettingsViewerOptimiseFontSizeEnabled = QStringLiteral("ViewerOptimiseFontSizeEnabled");
-static const auto SettingsViewerSubscriptsEnabled       = QStringLiteral("ViewerSubscriptsEnabled");
-static const auto SettingsViewerGreekSymbolsEnabled     = QStringLiteral("ViewerGreekSymbolsEnabled");
-static const auto SettingsViewerDigitGroupingEnabled    = QStringLiteral("ViewerDigitGroupingEnabled");
-
-//==============================================================================
-
 void PrettyCellmlViewWidget::loadSettings(QSettings *pSettings)
 {
-    // Retrieve the editing widget's sizes and the editor's zoom level
-    // Note #1: the viewer's default height is 19% of the desktop's height while
-    //          that of the editor is as big as it can be...
-    // Note #2: because the editor's default height is much bigger than that of
-    //          our raw CellML view widget, the viewer's default height will
-    //          effectively be less than 19% of the desktop's height, but that
-    //          doesn't matter at all...
+    // Normally, we would retrieve the editing widget's settings, but
+    // mEditingWidget is not set at this stage. So, instead, we keep track of
+    // our settings' group and load them when initialising ourselves (see
+    // initialize())...
 
-    QVariantList defaultEditingWidgetSizes = QVariantList() << 0.19*qApp->desktop()->screenGeometry().height()
-                                                            << qApp->desktop()->screenGeometry().height();
-
-    mEditingWidgetSizes = qVariantListToIntList(pSettings->value(SettingsEditingWidgetSizes, defaultEditingWidgetSizes).toList());
-    mEditorZoomLevel = pSettings->value(SettingsEditorZoomLevel, 0).toInt();
-
-    // Retrieve the editing widget's viewer settings
-
-    mViewerOptimiseFontSizeEnabled = pSettings->value(SettingsViewerOptimiseFontSizeEnabled, true).toBool();
-    mViewerSubscriptsEnabled = pSettings->value(SettingsViewerSubscriptsEnabled, true).toBool();
-    mViewerGreekSymbolsEnabled = pSettings->value(SettingsViewerGreekSymbolsEnabled, true).toBool();
-    mViewerDigitGroupingEnabled = pSettings->value(SettingsViewerDigitGroupingEnabled, true).toBool();
+    mSettingsGroup = pSettings->group();
 }
 
 //==============================================================================
 
 void PrettyCellmlViewWidget::saveSettings(QSettings *pSettings) const
 {
-    // Keep track of the editing widget's sizes and the editor's zoom level
-
-    pSettings->setValue(SettingsEditingWidgetSizes, qIntListToVariantList(mEditingWidgetSizes));
-    pSettings->setValue(SettingsEditorZoomLevel, mEditorZoomLevel);
-
-    // Keep track of the editing widget's viewer settings
-
-    pSettings->setValue(SettingsViewerOptimiseFontSizeEnabled, mViewerOptimiseFontSizeEnabled);
-    pSettings->setValue(SettingsViewerSubscriptsEnabled, mViewerSubscriptsEnabled);
-    pSettings->setValue(SettingsViewerGreekSymbolsEnabled, mViewerGreekSymbolsEnabled);
-    pSettings->setValue(SettingsViewerDigitGroupingEnabled, mViewerDigitGroupingEnabled);
+    Q_UNUSED(pSettings);
+    // Note: our view is such that our settings are actually saved when calling
+    //       finalize() on the last file...
 }
 
 //==============================================================================
@@ -169,26 +133,6 @@ void PrettyCellmlViewWidget::initialize(const QString &pFileName)
                                                                         new QsciLexerXML(this),
                                                                         parentWidget());
 
-        // Keep track of our editing widget's sizes when moving the splitter and
-        // of changes to our editor's zoom level
-
-        connect(mEditingWidget, SIGNAL(splitterMoved(int, int)),
-                this, SLOT(splitterMoved()));
-
-        connect(mEditingWidget->editor(), SIGNAL(zoomLevelChanged(const int &)),
-                this, SLOT(zoomLevelChanged(const int &)));
-
-        // Keep track of our editing widget's viewer settings
-
-        connect(mEditingWidget->viewer(), SIGNAL(optimiseFontSizeChanged(const bool &)),
-                this, SLOT(optimiseFontSizeChanged(const bool &)));
-        connect(mEditingWidget->viewer(), SIGNAL(subscriptsChanged(const bool &)),
-                this, SLOT(subscriptsChanged(const bool &)));
-        connect(mEditingWidget->viewer(), SIGNAL(greekSymbolsChanged(const bool &)),
-                this, SLOT(greekSymbolsChanged(const bool &)));
-        connect(mEditingWidget->viewer(), SIGNAL(digitGroupingChanged(const bool &)),
-                this, SLOT(digitGroupingChanged(const bool &)));
-
         // Keep track of our editing widget and add it to ourselves
 
         mEditingWidgets.insert(pFileName, mEditingWidget);
@@ -196,32 +140,32 @@ void PrettyCellmlViewWidget::initialize(const QString &pFileName)
         layout()->addWidget(mEditingWidget);
     }
 
-    // Set our current editing widget's viewer settings
+    // Load our settings, if needed, or reset our editing widget using the old
+    // one
 
-    mEditingWidget->viewer()->setOptimiseFontSize(mViewerOptimiseFontSizeEnabled);
-    mEditingWidget->viewer()->setSubscripts(mViewerSubscriptsEnabled);
-    mEditingWidget->viewer()->setGreekSymbols(mViewerGreekSymbolsEnabled);
-    mEditingWidget->viewer()->setDigitGrouping(mViewerDigitGroupingEnabled);
+    if (mNeedLoadingSettings) {
+        QSettings settings(SettingsOrganization, SettingsApplication);
 
-    // Show/hide our editing widgets and adjust our sizes
+        settings.beginGroup(mSettingsGroup);
+            mEditingWidget->loadSettings(&settings);
+        settings.endGroup();
+
+        mNeedLoadingSettings = false;
+    } else {
+        mEditingWidget->updateSettings(oldEditingWidget);
+    }
+
+    // Show/hide our editing widgets
 
     foreach (CoreCellMLEditing::CoreCellmlEditingWidget *editingWidget, mEditingWidgets)
-        if (editingWidget == mEditingWidget) {
-            // This is the editing widget we are after, so show it and update
-            // its size, zoom level and find/replace widget
-
-            editingWidget->setSizes(mEditingWidgetSizes);
-            editingWidget->editor()->setZoomLevel(mEditorZoomLevel);
-
-            if (oldEditingWidget)
-                editingWidget->editor()->updateFindReplaceFrom(oldEditingWidget->editor());
+        if (editingWidget == mEditingWidget)
+            // This is the editing widget we are after, so show it
 
             editingWidget->show();
-        } else {
+        else
             // Not the editing widget we are after, so hide it
 
             editingWidget->hide();
-        }
 
     // Set our focus proxy to our 'new' editing widget and make sure that the
     // latter immediately gets the focus
@@ -243,17 +187,26 @@ void PrettyCellmlViewWidget::finalize(const QString &pFileName)
     CoreCellMLEditing::CoreCellmlEditingWidget *editingWidget  = mEditingWidgets.value(pFileName);
 
     if (editingWidget) {
-        // There is an editor for the given file name, so delete it and remove
-        // it from our list
+        // There is an editing widget for the given file name, so save our
+        // settings and reset our memory of the current editing widget, if
+        // needed
+
+        if (editingWidget == mEditingWidget) {
+            QSettings settings(SettingsOrganization, SettingsApplication);
+
+            settings.beginGroup(mSettingsGroup);
+                mEditingWidget->saveSettings(&settings);
+            settings.endGroup();
+
+            mNeedLoadingSettings = true;
+            mEditingWidget = 0;
+        }
+
+        // Delete the editor and remove it from our list
 
         delete editingWidget;
 
         mEditingWidgets.remove(pFileName);
-
-        // Reset our memory of the current editor, if needed
-
-        if (editingWidget == mEditingWidget)
-            mEditingWidget = 0;
     }
 }
 
@@ -306,61 +259,6 @@ QList<QWidget *> PrettyCellmlViewWidget::statusBarWidgets() const
                                   << mEditingWidget->editor()->editingModeWidget();
     else
         return QList<QWidget *>();
-}
-
-//==============================================================================
-
-void PrettyCellmlViewWidget::splitterMoved()
-{
-    // The splitter has moved, so keep track of the editing widget's sizes
-
-    mEditingWidgetSizes = qobject_cast<CoreCellMLEditing::CoreCellmlEditingWidget *>(sender())->sizes();
-}
-
-//==============================================================================
-
-void PrettyCellmlViewWidget::zoomLevelChanged(const int &pZoomLevel)
-{
-    // One of our editors had its zoom level changed, so keep track of the new
-    // zoom level
-
-    mEditorZoomLevel = pZoomLevel;
-}
-
-//==============================================================================
-
-void PrettyCellmlViewWidget::optimiseFontSizeChanged(const bool &pEnabled)
-{
-    // Keep track of our editing widget's viewer settings
-
-    mViewerOptimiseFontSizeEnabled = pEnabled;
-}
-
-//==============================================================================
-
-void PrettyCellmlViewWidget::subscriptsChanged(const bool &pEnabled)
-{
-    // Keep track of our editing widget's viewer settings
-
-    mViewerSubscriptsEnabled = pEnabled;
-}
-
-//==============================================================================
-
-void PrettyCellmlViewWidget::greekSymbolsChanged(const bool &pEnabled)
-{
-    // Keep track of our editing widget's viewer settings
-
-    mViewerGreekSymbolsEnabled = pEnabled;
-}
-
-//==============================================================================
-
-void PrettyCellmlViewWidget::digitGroupingChanged(const bool &pEnabled)
-{
-    // Keep track of our editing widget's viewer settings
-
-    mViewerDigitGroupingEnabled = pEnabled;
 }
 
 //==============================================================================

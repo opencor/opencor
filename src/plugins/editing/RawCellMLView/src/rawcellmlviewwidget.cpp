@@ -32,7 +32,6 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-#include <QDesktopWidget>
 #include <QDomDocument>
 #include <QLabel>
 #include <QLayout>
@@ -54,14 +53,10 @@ namespace RawCellMLView {
 RawCellmlViewWidget::RawCellmlViewWidget(QWidget *pParent) :
     ViewWidget(pParent),
     mGui(new Ui::RawCellmlViewWidget),
+    mNeedLoadingSettings(true),
+    mSettingsGroup(QString()),
     mEditingWidget(0),
     mEditingWidgets(QMap<QString, CoreCellMLEditing::CoreCellmlEditingWidget *>()),
-    mEditingWidgetSizes(QIntList()),
-    mEditorZoomLevel(0),
-    mViewerOptimiseFontSizeEnabled(true),
-    mViewerSubscriptsEnabled(true),
-    mViewerGreekSymbolsEnabled(true),
-    mViewerDigitGroupingEnabled(true),
     mPresentationMathmlEquations(QMap<QString, QString>()),
     mContentMathmlEquation(QString())
 {
@@ -95,54 +90,23 @@ RawCellmlViewWidget::~RawCellmlViewWidget()
 
 //==============================================================================
 
-static const auto SettingsEditingWidgetSizes            = QStringLiteral("EditingWidgetSizes");
-static const auto SettingsEditorZoomLevel               = QStringLiteral("EditorZoomLevel");
-static const auto SettingsViewerOptimiseFontSizeEnabled = QStringLiteral("ViewerOptimiseFontSizeEnabled");
-static const auto SettingsViewerSubscriptsEnabled       = QStringLiteral("ViewerSubscriptsEnabled");
-static const auto SettingsViewerGreekSymbolsEnabled     = QStringLiteral("ViewerGreekSymbolsEnabled");
-static const auto SettingsViewerDigitGroupingEnabled    = QStringLiteral("ViewerDigitGroupingEnabled");
-
-//==============================================================================
-
 void RawCellmlViewWidget::loadSettings(QSettings *pSettings)
 {
-    // Retrieve the editing widget's sizes and the editor's zoom level
-    // Note #1: the viewer's default height is 19% of the desktop's height while
-    //          that of the editor is as big as it can be...
-    // Note #2: because the editor's default height is much bigger than that of
-    //          our raw CellML view widget, the viewer's default height will
-    //          effectively be less than 19% of the desktop's height, but that
-    //          doesn't matter at all...
+    // Normally, we would retrieve the editing widget's settings, but
+    // mEditingWidget is not set at this stage. So, instead, we keep track of
+    // our settings' group and load them when initialising ourselves (see
+    // initialize())...
 
-    QVariantList defaultEditingWidgetSizes = QVariantList() << 0.19*qApp->desktop()->screenGeometry().height()
-                                                            << qApp->desktop()->screenGeometry().height();
-
-    mEditingWidgetSizes = qVariantListToIntList(pSettings->value(SettingsEditingWidgetSizes, defaultEditingWidgetSizes).toList());
-    mEditorZoomLevel = pSettings->value(SettingsEditorZoomLevel, 0).toInt();
-
-    // Retrieve the editing widget's viewer settings
-
-    mViewerOptimiseFontSizeEnabled = pSettings->value(SettingsViewerOptimiseFontSizeEnabled, true).toBool();
-    mViewerSubscriptsEnabled = pSettings->value(SettingsViewerSubscriptsEnabled, true).toBool();
-    mViewerGreekSymbolsEnabled = pSettings->value(SettingsViewerGreekSymbolsEnabled, true).toBool();
-    mViewerDigitGroupingEnabled = pSettings->value(SettingsViewerDigitGroupingEnabled, true).toBool();
+    mSettingsGroup = pSettings->group();
 }
 
 //==============================================================================
 
 void RawCellmlViewWidget::saveSettings(QSettings *pSettings) const
 {
-    // Keep track of the editing widget's sizes and the editor's zoom level
-
-    pSettings->setValue(SettingsEditingWidgetSizes, qIntListToVariantList(mEditingWidgetSizes));
-    pSettings->setValue(SettingsEditorZoomLevel, mEditorZoomLevel);
-
-    // Keep track of the editing widget's viewer settings
-
-    pSettings->setValue(SettingsViewerOptimiseFontSizeEnabled, mViewerOptimiseFontSizeEnabled);
-    pSettings->setValue(SettingsViewerSubscriptsEnabled, mViewerSubscriptsEnabled);
-    pSettings->setValue(SettingsViewerGreekSymbolsEnabled, mViewerGreekSymbolsEnabled);
-    pSettings->setValue(SettingsViewerDigitGroupingEnabled, mViewerDigitGroupingEnabled);
+    Q_UNUSED(pSettings);
+    // Note: our view is such that our settings are actually saved when calling
+    //       finalize() on the last file...
 }
 
 //==============================================================================
@@ -187,32 +151,12 @@ void RawCellmlViewWidget::initialize(const QString &pFileName)
                                                                         new QsciLexerXML(this),
                                                                         parentWidget());
 
-        // Keep track of our editing widget's sizes when moving the splitter and
-        // of changes to our editor's zoom level
-
-        connect(mEditingWidget, SIGNAL(splitterMoved(int, int)),
-                this, SLOT(splitterMoved()));
-
-        connect(mEditingWidget->editor(), SIGNAL(zoomLevelChanged(const int &)),
-                this, SLOT(zoomLevelChanged(const int &)));
-
         // Update our viewer whenever necessary
 
         connect(mEditingWidget->editor(), SIGNAL(textChanged()),
                 this, SLOT(updateViewer()));
         connect(mEditingWidget->editor(), SIGNAL(cursorPositionChanged(const int &, const int &)),
                 this, SLOT(updateViewer()));
-
-        // Keep track of our editing widget's viewer settings
-
-        connect(mEditingWidget->viewer(), SIGNAL(optimiseFontSizeChanged(const bool &)),
-                this, SLOT(optimiseFontSizeChanged(const bool &)));
-        connect(mEditingWidget->viewer(), SIGNAL(subscriptsChanged(const bool &)),
-                this, SLOT(subscriptsChanged(const bool &)));
-        connect(mEditingWidget->viewer(), SIGNAL(greekSymbolsChanged(const bool &)),
-                this, SLOT(greekSymbolsChanged(const bool &)));
-        connect(mEditingWidget->viewer(), SIGNAL(digitGroupingChanged(const bool &)),
-                this, SLOT(digitGroupingChanged(const bool &)));
 
         // Keep track of our editing widget and add it to ourselves
 
@@ -221,32 +165,32 @@ void RawCellmlViewWidget::initialize(const QString &pFileName)
         layout()->addWidget(mEditingWidget);
     }
 
-    // Set our current editing widget's viewer settings
+    // Load our settings, if needed, or reset our editing widget using the old
+    // one
 
-    mEditingWidget->viewer()->setOptimiseFontSize(mViewerOptimiseFontSizeEnabled);
-    mEditingWidget->viewer()->setSubscripts(mViewerSubscriptsEnabled);
-    mEditingWidget->viewer()->setGreekSymbols(mViewerGreekSymbolsEnabled);
-    mEditingWidget->viewer()->setDigitGrouping(mViewerDigitGroupingEnabled);
+    if (mNeedLoadingSettings) {
+        QSettings settings(SettingsOrganization, SettingsApplication);
 
-    // Show/hide our editing widgets and adjust our sizes
+        settings.beginGroup(mSettingsGroup);
+            mEditingWidget->loadSettings(&settings);
+        settings.endGroup();
+
+        mNeedLoadingSettings = false;
+    } else {
+        mEditingWidget->updateSettings(oldEditingWidget);
+    }
+
+    // Show/hide our editing widgets
 
     foreach (CoreCellMLEditing::CoreCellmlEditingWidget *editingWidget, mEditingWidgets)
-        if (editingWidget == mEditingWidget) {
-            // This is the editing widget we are after, so show it and update
-            // its size, zoom level and find/replace widget
-
-            editingWidget->setSizes(mEditingWidgetSizes);
-            editingWidget->editor()->setZoomLevel(mEditorZoomLevel);
-
-            if (oldEditingWidget)
-                editingWidget->editor()->updateFindReplaceFrom(oldEditingWidget->editor());
+        if (editingWidget == mEditingWidget)
+            // This is the editing widget we are after, so show it
 
             editingWidget->show();
-        } else {
+        else
             // Not the editing widget we are after, so hide it
 
             editingWidget->hide();
-        }
 
     // Set our focus proxy to our 'new' editing widget and make sure that the
     // latter immediately gets the focus
@@ -268,17 +212,26 @@ void RawCellmlViewWidget::finalize(const QString &pFileName)
     CoreCellMLEditing::CoreCellmlEditingWidget *editingWidget  = mEditingWidgets.value(pFileName);
 
     if (editingWidget) {
-        // There is an editor for the given file name, so delete it and remove
-        // it from our list
+        // There is an editing widget for the given file name, so save our
+        // settings and reset our memory of the current editing widget, if
+        // needed
+
+        if (editingWidget == mEditingWidget) {
+            QSettings settings(SettingsOrganization, SettingsApplication);
+
+            settings.beginGroup(mSettingsGroup);
+                mEditingWidget->saveSettings(&settings);
+            settings.endGroup();
+
+            mNeedLoadingSettings = true;
+            mEditingWidget = 0;
+        }
+
+        // Delete the editor and remove it from our list
 
         delete editingWidget;
 
         mEditingWidgets.remove(pFileName);
-
-        // Reset our memory of the current editor, if needed
-
-        if (editingWidget == mEditingWidget)
-            mEditingWidget = 0;
     }
 }
 
@@ -388,83 +341,85 @@ QString RawCellmlViewWidget::retrieveContentMathmlEquation(const QString &pConte
     QDomDocument domDocument;
 
     if (domDocument.setContent(pContentMathmlBlock)) {
-        // If our DOM representation contains zero or one child node, then we
-        // simply return its string representation
+        // Look for the child node within which our position is located, if any
 
+        int childNodeIndex = -1;
         QDomNode domNode = domDocument.documentElement();
 
-        if (domNode.childNodes().count() <= 1)
-            return domDocument.toString(-1);
+        for (int i = 0, iMax = domNode.childNodes().count(); i < iMax; ++i) {
+            QDomNode childNode = domNode.childNodes().at(i);
 
-        // Go through the different child nodes of our DOM representation and
-        // determine (based on our line and column values) to which one we
-        // 'belong'
-
-        QDomNode prevChildNode = domNode.firstChild();
-
-        while (domNode.childNodes().count() != 1) {
-            // Retrieve the position of the current child node
+            // Retrieve the start position of the current child node
             // Note: it needs to be corrected since the line and column numbers
             //       we are getting for the current child node correspond to the
             //       position of ">" in, say, "<apply ...>", while we need the
             //       position of "<"...
 
-            QDomNode childNode = prevChildNode.nextSibling();
-            int childNodePosition;
+            int childNodeStartPosition;
 
             Core::stringLineColumnAsPosition(pContentMathmlBlock,
                                              mEditingWidget->editor()->eolString(),
                                              childNode.lineNumber(),
                                              childNode.columnNumber(),
-                                             childNodePosition);
+                                             childNodeStartPosition);
 
-            childNodePosition = pContentMathmlBlock.lastIndexOf("<"+childNode.nodeName(), childNodePosition);
+            childNodeStartPosition = pContentMathmlBlock.lastIndexOf("<"+childNode.nodeName(), childNodeStartPosition);
 
-            // Check where we are with respect to the position of the current
-            // child node and remove the previous node or all the subsequent
-            // ones, depending on the case
+            // Retrieve the end position of the current child node
 
-            if (pPosition >= childNodePosition) {
-                domNode.removeChild(prevChildNode);
+            int childNodeEndPosition = -1;
 
-                prevChildNode = childNode;
-            } else {
-                while (domNode.childNodes().count() != 1)
-                    domNode.removeChild(domNode.lastChild());
+            if (i < iMax-1) {
+                // We are not dealing with the last child node, so update the
+                // position from which we are to look for the closing tag, which
+                // here must be the start position of the next child node and
+                // not the end of the given Content MathML block
+
+                QDomNode nextChildNode = domNode.childNodes().at(i+1);
+
+                Core::stringLineColumnAsPosition(pContentMathmlBlock,
+                                                 mEditingWidget->editor()->eolString(),
+                                                 nextChildNode.lineNumber(),
+                                                 nextChildNode.columnNumber(),
+                                                 childNodeEndPosition);
+            }
+
+            childNodeEndPosition = pContentMathmlBlock.lastIndexOf("</"+childNode.nodeName()+">", childNodeEndPosition)+2+childNode.nodeName().length();
+
+            // Check whether our position is within the start and end positions
+            // of the current child node
+
+            if ((pPosition >= childNodeStartPosition) && (pPosition <= childNodeEndPosition)) {
+                childNodeIndex = i;
 
                 break;
             }
         }
 
-        // At this stage, our DOM document contains only the equation we are
-        // after, so all we now need to do is return its string representation
+        // Check whether our position is within a child node
 
-        return domDocument.toString(-1);
+        if (childNodeIndex != -1) {
+            // We are within a childe node, so remove all the other child nodes
+            // and the string representation of the resulting DOM document
+
+            for (int i = 0, iMax = domNode.childNodes().count()-1-childNodeIndex; i < iMax; ++i)
+                domNode.removeChild(domNode.lastChild());
+
+            for (int i = 0; i < childNodeIndex; ++i)
+                domNode.removeChild(domNode.firstChild());
+
+            return domDocument.toString(-1);
+        } else {
+            // We are not within a child node, so...
+
+            return QString();
+        }
     } else {
         // No DOM representation of the given Content MathML block could be
         // retrieved, so...
 
         return QString();
     }
-}
-
-//==============================================================================
-
-void RawCellmlViewWidget::splitterMoved()
-{
-    // The splitter has moved, so keep track of the editing widget's sizes
-
-    mEditingWidgetSizes = qobject_cast<CoreCellMLEditing::CoreCellmlEditingWidget *>(sender())->sizes();
-}
-
-//==============================================================================
-
-void RawCellmlViewWidget::zoomLevelChanged(const int &pZoomLevel)
-{
-    // One of our editors had its zoom level changed, so keep track of the new
-    // zoom level
-
-    mEditorZoomLevel = pZoomLevel;
 }
 
 //==============================================================================
@@ -477,8 +432,7 @@ void RawCellmlViewWidget::updateViewer()
     if (!mEditingWidget)
         return;
 
-    // Retrieve the new mathematical equation, if any, around our current
-    // position
+    // Retrieve the Content MathML block around our current position, if any
 
     static const QString StartMathTag = "<math ";
     static const QByteArray EndMathTag = "</math>";
@@ -513,6 +467,8 @@ void RawCellmlViewWidget::updateViewer()
         //       case cleaning it up will result in an empty string...
 
         if (cleanUpXml(contentMathmlBlock).isEmpty()) {
+            mContentMathmlEquation = QString();
+
             mEditingWidget->viewer()->setError(true);
         } else {
             // A Content MathML block contains 0+ child nodes, so extract and
@@ -520,74 +476,51 @@ void RawCellmlViewWidget::updateViewer()
 
             QString contentMathmlEquation = cleanUpXml(retrieveContentMathmlEquation(contentMathmlBlock, currentPosition-crtStartMathTagPos));
 
-            // Check whether our Content MathML equation is the same as our
-            // previous one
+            // Check whether we have got a Content MathML equation
 
-            if (!contentMathmlEquation.compare(mContentMathmlEquation)) {
-                // It's the same, so leave
+            if (!contentMathmlEquation.isEmpty()) {
+                // Now, check whether our Content MathML equation is the same as
+                // our previous one
 
-                return;
-            } else {
-                // It's a different one, so check whether we have already
-                // retrieved its Presentation MathML version
+                if (!contentMathmlEquation.compare(mContentMathmlEquation)) {
+                    // It's the same, so leave
 
-                mContentMathmlEquation = contentMathmlEquation;
-
-                QString presentationMathmlEquation = mPresentationMathmlEquations.value(contentMathmlEquation);
-
-                if (!presentationMathmlEquation.isEmpty()) {
-                    mEditingWidget->viewer()->setContents(presentationMathmlEquation);
+                    return;
                 } else {
-                    // We haven't already retrieved its Presentation MathML
-                    // version, so do it now
+                    // It's a different one, so check whether we have already
+                    // retrieved its Presentation MathML version
 
-                    static const QString CtopXsl = Core::resourceAsByteArray(":/web-xslt/ctop.xsl");
+                    mContentMathmlEquation = contentMathmlEquation;
 
-                    mXslTransformer->transform(contentMathmlEquation, CtopXsl);
+                    QString presentationMathmlEquation = mPresentationMathmlEquations.value(contentMathmlEquation);
+
+                    if (!presentationMathmlEquation.isEmpty()) {
+                        mEditingWidget->viewer()->setContents(presentationMathmlEquation);
+                    } else {
+                        // We haven't already retrieved its Presentation MathML
+                        // version, so do it now
+
+                        static const QString CtopXsl = Core::resourceAsByteArray(":/web-xslt/ctop.xsl");
+
+                        mXslTransformer->transform(contentMathmlEquation, CtopXsl);
+                    }
                 }
+            } else {
+                // Our current position is not within a Content MathML equation,
+                // so...
+
+                mContentMathmlEquation = QString();
+
+                mEditingWidget->viewer()->setContents(mContentMathmlEquation);
             }
         }
     } else {
+        // We couldn't find any Content MathML block, so...
+
         mContentMathmlEquation = QString();
 
         mEditingWidget->viewer()->setContents(mContentMathmlEquation);
     }
-}
-
-//==============================================================================
-
-void RawCellmlViewWidget::optimiseFontSizeChanged(const bool &pEnabled)
-{
-    // Keep track of our editing widget's viewer settings
-
-    mViewerOptimiseFontSizeEnabled = pEnabled;
-}
-
-//==============================================================================
-
-void RawCellmlViewWidget::subscriptsChanged(const bool &pEnabled)
-{
-    // Keep track of our editing widget's viewer settings
-
-    mViewerSubscriptsEnabled = pEnabled;
-}
-
-//==============================================================================
-
-void RawCellmlViewWidget::greekSymbolsChanged(const bool &pEnabled)
-{
-    // Keep track of our editing widget's viewer settings
-
-    mViewerGreekSymbolsEnabled = pEnabled;
-}
-
-//==============================================================================
-
-void RawCellmlViewWidget::digitGroupingChanged(const bool &pEnabled)
-{
-    // Keep track of our editing widget's viewer settings
-
-    mViewerDigitGroupingEnabled = pEnabled;
 }
 
 //==============================================================================

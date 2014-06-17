@@ -16,19 +16,19 @@ specific language governing permissions and limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// CoreCellMLEditing plugin
+// Core CellML editing editor list widget
 //==============================================================================
 
-#ifndef CORECELLMLEDITINGPLUGIN_H
-#define CORECELLMLEDITINGPLUGIN_H
+#ifndef CORECELLMLEDITINGEDITORLISTWIDGET_H
+#define CORECELLMLEDITINGEDITORLISTWIDGET_H
 
 //==============================================================================
 
-#include "cellmlfile.h"
-#include "guiinterface.h"
-#include "i18ninterface.h"
-#include "plugininfo.h"
-#include "plugininterface.h"
+#include "corecellmleditingglobal.h"
+
+//==============================================================================
+
+#include <QListView>
 
 //==============================================================================
 
@@ -37,43 +37,12 @@ namespace CoreCellMLEditing {
 
 //==============================================================================
 
-PLUGININFO_FUNC CoreCellMLEditingPluginInfo();
-
-//==============================================================================
-
-class CoreCellMLEditingPlugin : public QObject, public GuiInterface,
-                                public I18nInterface, public PluginInterface
+class CORECELLMLEDITING_EXPORT CoreCellmlEditingEditorListWidget : public QListView
 {
     Q_OBJECT
 
-    Q_PLUGIN_METADATA(IID "OpenCOR.CoreCellMLEditingPlugin" FILE "corecellmleditingplugin.json")
-
-    Q_INTERFACES(OpenCOR::GuiInterface)
-    Q_INTERFACES(OpenCOR::I18nInterface)
-    Q_INTERFACES(OpenCOR::PluginInterface)
-
 public:
-    explicit CoreCellMLEditingPlugin();
-
-#include "guiinterface.inl"
-#include "i18ninterface.inl"
-#include "plugininterface.inl"
-
-private:
-    QAction *mFileNewCellml1_0FileAction;
-    QAction *mFileNewCellml1_1FileAction;
-
-    QAction *mToolsCellmlValidationAction;
-
-    QString mFileName;
-
-    void newCellmlFile(const CellMLSupport::CellmlFile::Version &pVersion);
-
-private Q_SLOTS:
-    void newCellml1_0File();
-    void newCellml1_1File();
-
-    void cellmlValidation();
+    explicit CoreCellmlEditingEditorListWidget(QWidget *pParent);
 };
 
 //==============================================================================

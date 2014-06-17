@@ -41,6 +41,7 @@ static const auto MaximumStepId          = QStringLiteral("MaximumStep");
 static const auto MaximumNumberOfStepsId = QStringLiteral("MaximumNumberOfSteps");
 static const auto RelativeToleranceId    = QStringLiteral("RelativeTolerance");
 static const auto AbsoluteToleranceId    = QStringLiteral("AbsoluteTolerance");
+static const auto InterpolateSolutionId  = QStringLiteral("InterpolateSolution");
 
 //==============================================================================
 
@@ -58,6 +59,8 @@ enum {
 
 static const double RelativeToleranceDefaultValue = 1.0e-7;
 static const double AbsoluteToleranceDefaultValue = 1.0e-7;
+
+static const bool InterpolateSolutionDefaultValue = true;
 
 //==============================================================================
 
@@ -103,6 +106,7 @@ private:
     int mMaximumNumberOfSteps;
     double mRelativeTolerance;
     double mAbsoluteTolerance;
+    bool mInterpolateSolution;
 };
 
 //==============================================================================

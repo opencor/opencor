@@ -2,11 +2,21 @@ PROJECT(OpenCOR)
 
 # Minimum required version of CMake
 
-CMAKE_MINIMUM_REQUIRED(VERSION 2.8.9)
+CMAKE_MINIMUM_REQUIRED(VERSION 3.0.0)
 
 # Some in-house CMake functions/macros
 
 INCLUDE(${CMAKE_SOURCE_DIR}/cmake/common.cmake)
+
+# Our options
+
+OPTION(ENABLE_SAMPLES "Enable the sample plugins to be built" OFF)
+OPTION(ENABLE_TESTS "Enable the tests to be built" OFF)
+
+OPTION(USE_PREBUILT_LLVM_PLUGIN "Use the pre-built version of the LLVM plugin" ON)
+OPTION(USE_PREBUILT_QSCINTILLA_PLUGIN "Use the pre-built version of the QScintilla plugin" ON)
+OPTION(USE_PREBUILT_QWT_PLUGIN "Use the pre-built version of the Qwt plugin" ON)
+OPTION(USE_PREBUILT_SUNDIALS_PLUGIN "Use the pre-built version of the SUNDIALS plugin" ON)
 
 # Initialise the project
 
@@ -184,20 +194,15 @@ ENDIF()
 # Note: the build order must be such that plugins needed by others are built
 #       first...
 
-SET(USE_PREBUILT_LLVM_PLUGIN ON)
-SET(USE_PREBUILT_QSCINTILLA_PLUGIN ON)
-SET(USE_PREBUILT_QWT_PLUGIN ON)
-SET(USE_PREBUILT_SUNDIALS_PLUGIN ON)
-
-IF(RELEASE_MODE)
-    SET(SAMPLE_PLUGINS)
-ELSE()
+IF(ENABLE_SAMPLES)
     SET(SAMPLE_PLUGINS
         sample/Sample
         sample/SampleTools
         sample/SampleView
         sample/SampleWindow
     )
+ELSE()
+    SET(SAMPLE_PLUGINS)
 ENDIF()
 
 SET(PLUGINS
@@ -224,7 +229,7 @@ SET(PLUGINS
     support/CellMLSupport
     support/QScintillaSupport
 
-    # Plugins that extend some third-party libraries
+    # Plugins that extend some libraries (incl. third-party ones)
 
     widget/Editor
     widget/Viewer

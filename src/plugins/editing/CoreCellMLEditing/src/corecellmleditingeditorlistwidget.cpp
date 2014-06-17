@@ -16,19 +16,10 @@ specific language governing permissions and limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// CoreCellMLEditing plugin
+// Core CellML editing editor list widget
 //==============================================================================
 
-#ifndef CORECELLMLEDITINGPLUGIN_H
-#define CORECELLMLEDITINGPLUGIN_H
-
-//==============================================================================
-
-#include "cellmlfile.h"
-#include "guiinterface.h"
-#include "i18ninterface.h"
-#include "plugininfo.h"
-#include "plugininterface.h"
+#include "corecellmleditingeditorlistwidget.h"
 
 //==============================================================================
 
@@ -37,53 +28,22 @@ namespace CoreCellMLEditing {
 
 //==============================================================================
 
-PLUGININFO_FUNC CoreCellMLEditingPluginInfo();
-
-//==============================================================================
-
-class CoreCellMLEditingPlugin : public QObject, public GuiInterface,
-                                public I18nInterface, public PluginInterface
+CoreCellmlEditingEditorListWidget::CoreCellmlEditingEditorListWidget(QWidget *pParent) :
+    QListView(pParent)
 {
-    Q_OBJECT
+    // Customise ourselves
 
-    Q_PLUGIN_METADATA(IID "OpenCOR.CoreCellMLEditingPlugin" FILE "corecellmleditingplugin.json")
-
-    Q_INTERFACES(OpenCOR::GuiInterface)
-    Q_INTERFACES(OpenCOR::I18nInterface)
-    Q_INTERFACES(OpenCOR::PluginInterface)
-
-public:
-    explicit CoreCellMLEditingPlugin();
-
-#include "guiinterface.inl"
-#include "i18ninterface.inl"
-#include "plugininterface.inl"
-
-private:
-    QAction *mFileNewCellml1_0FileAction;
-    QAction *mFileNewCellml1_1FileAction;
-
-    QAction *mToolsCellmlValidationAction;
-
-    QString mFileName;
-
-    void newCellmlFile(const CellMLSupport::CellmlFile::Version &pVersion);
-
-private Q_SLOTS:
-    void newCellml1_0File();
-    void newCellml1_1File();
-
-    void cellmlValidation();
-};
+#ifdef Q_OS_MAC
+    setAttribute(Qt::WA_MacShowFocusRect, false);
+    // Note: the above removes the focus border since it messes up our look
+#endif
+    setFrameShape(QFrame::NoFrame);
+}
 
 //==============================================================================
 
 }   // namespace CoreCellMLEditing
 }   // namespace OpenCOR
-
-//==============================================================================
-
-#endif
 
 //==============================================================================
 // End of file

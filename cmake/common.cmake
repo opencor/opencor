@@ -8,24 +8,9 @@ ENDIF()
 
 #===============================================================================
 
-MACRO(UPDATE_POLICIES)
-    # Make sure that all the CMake policies that have been introduced since our
-    # minimum required CMake version (i.e. 2.8.9) are compatible with it
-
-    IF(NOT CMAKE_VERSION VERSION_LESS 2.8.11)
-        CMAKE_POLICY(SET CMP0020 OLD)
-    ENDIF()
-ENDMACRO()
-
-#===============================================================================
-
 MACRO(INITIALISE_PROJECT)
 #    SET(CMAKE_VERBOSE_MAKEFILE ON)
     SET(CMAKE_INCLUDE_CURRENT_DIR ON)
-
-    # Make sure that our policies are up to date
-
-    UPDATE_POLICIES()
 
     # Make sure that we are building on a supported architecture
     # Note: normally, we would check the value of CMAKE_SIZEOF_VOID_P, but in
@@ -56,6 +41,8 @@ MACRO(INITIALISE_PROJECT)
     # Required packages
 
     FIND_PACKAGE(Qt5Widgets REQUIRED)
+    FIND_PACKAGE(Qt5Xml REQUIRED)
+    FIND_PACKAGE(Qt5XmlPatterns REQUIRED)
 
     # Keep track of some information about Qt
 
@@ -146,6 +133,12 @@ MACRO(INITIALISE_PROJECT)
 
     IF(WIN32)
         ADD_DEFINITIONS(-D_UNICODE)
+    ENDIF()
+
+    # Sample plugins support, if requested
+
+    IF(ENABLE_SAMPLES)
+        ADD_DEFINITIONS(-DENABLE_SAMPLES)
     ENDIF()
 
     # On OS X, use the oldest SDK available, as long as it is for Mac OS X 10.7
@@ -278,10 +271,6 @@ ENDMACRO()
 #===============================================================================
 
 MACRO(ADD_PLUGIN PLUGIN_NAME)
-    # Make sure that our policies are up to date
-
-    UPDATE_POLICIES()
-
     # Various initialisations
 
     SET(PLUGIN_NAME ${PLUGIN_NAME})
@@ -531,7 +520,7 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
 
             FOREACH(PLUGIN_BUILD_DIR ${PLUGIN_BUILD_DIRS})
                 ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
-                                   COMMAND install_name_tool -change ${PLUGIN_BUILD_DIR}/${CMAKE_SHARED_LIBRARY_PREFIX}${PLUGIN}${CMAKE_SHARED_LIBRARY_SUFFIX}
+                                   COMMAND install_name_tool -change @rpath/${CMAKE_SHARED_LIBRARY_PREFIX}${PLUGIN}${CMAKE_SHARED_LIBRARY_SUFFIX}
                                                                      @executable_path/../PlugIns/${CMAKE_PROJECT_NAME}/${CMAKE_SHARED_LIBRARY_PREFIX}${PLUGIN}${CMAKE_SHARED_LIBRARY_SUFFIX}
                                                                      ${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME}.app/Contents/PlugIns/${CMAKE_PROJECT_NAME}/${PLUGIN_FILENAME})
             ENDFOREACH()
@@ -868,34 +857,32 @@ ENDMACRO()
 #===============================================================================
 
 MACRO(OS_X_CLEAN_UP_FILE_WITH_QT_LIBRARIES DIRNAME FILENAME)
-    # Note: we only clean up the file with Qt libraries if we are to package
-    #       OpenCOR. Indeed, if we were to do this when building OpenCOR for,
-    #       say, debugging purposes, then we would end up with two sets of Qt
-    #       libraries (one in /Applications/Qt5 and another in the OpenCOR
-    #       bundle), potentially confusing tools such as Xcode, generating
-    #       messages like "XXX is implemented in both YYY and ZZZ. One of the
-    #       two will be used. Which one is undefined." even though everything is
-    #       actually fine...
+    # Strip the Qt file of all local symbols
+
+    SET(FULL_FILENAME ${DIRNAME}/${FILENAME})
+
+    IF(RELEASE_MODE)
+        ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
+                           COMMAND strip -x ${FULL_FILENAME})
+    ENDIF()
+
+    # Clean up the Qt file's id
+
+    ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
+                       COMMAND install_name_tool -id ${FILENAME}
+                                                     ${FULL_FILENAME})
+
+    # Make sure that the Qt file refers to our embedded version of its Qt
+    # dependencies
+    # Note: we only do this if we are to package OpenCOR. Indeed, if we were to
+    #       do this when building OpenCOR for, say, debugging purposes, then we
+    #       would end up with two sets of Qt libraries (one in /Applications/Qt5
+    #       and another in the OpenCOR bundle), potentially confusing tools such
+    #       as Xcode, generating messages like "XXX is implemented in both YYY
+    #       and ZZZ. One of the two will be used. Which one is undefined." even
+    #       though everything is actually fine...
 
     IF("$ENV{PACKAGE_OPENCOR}" STREQUAL "True")
-        # Strip the Qt file of all local symbols
-
-        SET(FULL_FILENAME ${DIRNAME}/${FILENAME})
-
-        IF(RELEASE_MODE)
-            ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
-                               COMMAND strip -x ${FULL_FILENAME})
-        ENDIF()
-
-        # Clean up the Qt file's id
-
-        ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
-                           COMMAND install_name_tool -id ${FILENAME}
-                                                         ${FULL_FILENAME})
-
-        # Make sure that the Qt file refers to our embedded version of its Qt
-        # dependencies
-
         FOREACH(DEPENDENCY ${ARGN})
             SET(DEPENDENCY_FILENAME ${DEPENDENCY}.framework/Versions/${QT_VERSION_MAJOR}/${DEPENDENCY})
 

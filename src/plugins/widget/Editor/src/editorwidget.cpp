@@ -40,6 +40,7 @@ specific language governing permissions and limitations under the License.
 #include <QLabel>
 #include <QLayout>
 #include <QRegularExpression>
+#include <QSettings>
 #include <QVBoxLayout>
 
 //==============================================================================
@@ -145,11 +146,61 @@ EditorWidget::EditorWidget(const QString &pContents, const bool &pReadOnly,
 
 //==============================================================================
 
+static const auto SettingsEditorZoomLevel = QStringLiteral("EditorZoomLevel");
+
+//==============================================================================
+
+void EditorWidget::loadSettings(QSettings *pSettings)
+{
+    // Retrieve our settings
+
+    setZoomLevel(pSettings->value(SettingsEditorZoomLevel, 0).toInt());
+}
+
+//==============================================================================
+
+void EditorWidget::saveSettings(QSettings *pSettings) const
+{
+    // Keep track of our settings
+
+    pSettings->setValue(SettingsEditorZoomLevel, zoomLevel());
+}
+
+//==============================================================================
+
 void EditorWidget::retranslateUi()
 {
     // Retranslate our find/replace widget
 
     mFindReplace->retranslateUi();
+}
+
+//==============================================================================
+
+void EditorWidget::updateSettings(EditorWidget *pEditorWidget)
+{
+    // Make sure that we are given another widget
+
+    if (!pEditorWidget)
+        return;
+
+    // Update our zoom level
+
+    setZoomLevel(pEditorWidget->zoomLevel());
+
+    // Show/hide our find/replace widget
+
+    setFindReplaceVisible(pEditorWidget->findReplaceIsVisible());
+
+    // Update the find/replace widget itself
+    // Note: we must inactivate (and then reactivate) our find/replace widget
+    //       otherwise opening a new file or switching to another will result in
+    //       the find text being automatically searched (see the
+    //       findTextChanged() slot)...
+
+    mFindReplace->setActive(false);
+        mFindReplace->updateFrom(pEditorWidget->findReplace());
+    mFindReplace->setActive(true);
 }
 
 //==============================================================================
@@ -448,32 +499,6 @@ void EditorWidget::setZoomLevel(const int &pZoomLevel)
 
 //==============================================================================
 
-void EditorWidget::updateFindReplaceFrom(EditorWidget *pEditor)
-{
-    // Make sure that we have a given editor
-
-    if (!pEditor)
-        return;
-
-    // Show/hide our find/replace widget
-
-    setFindReplaceVisible(pEditor->findReplaceIsVisible());
-
-    // Update the find/replace widget itself
-    // Note: we must inactivate (and then reactivate) our find/replace widget
-    //       otherwise opening a new file or switching to another will result in
-    //       the find text being automatically searched (see the
-    //       findTextChanged() slot)...
-
-    mFindReplace->setActive(false);
-
-    mFindReplace->updateFrom(pEditor->findReplace());
-
-    mFindReplace->setActive(true);
-}
-
-//==============================================================================
-
 EditorFindReplaceWidget * EditorWidget::findReplace()
 {
     // Return our find/replace widget
@@ -505,11 +530,9 @@ void EditorWidget::setFindReplaceVisible(const bool &pVisible)
 
         if (!currentWord.isEmpty()) {
             mFindReplace->setActive(false);
+                mEditor->selectWordAt(mCurrentLine, mCurrentColumn);
 
-            mEditor->selectWordAt(mCurrentLine, mCurrentColumn);
-
-            mFindReplace->setFindText(currentWord);
-
+                mFindReplace->setFindText(currentWord);
             mFindReplace->setActive(true);
         } else {
             mFindReplace->selectFindText();

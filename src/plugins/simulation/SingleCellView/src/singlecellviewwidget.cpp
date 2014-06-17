@@ -958,7 +958,7 @@ void SingleCellViewWidget::fileReloaded(const QString &pFileName)
     // The given file has been reloaded, so stop its current simulation, if any
     // Note: indeed, it may be that a file has been opened (e.g. from a previous
     //       session), but hasn't yet been selected, in which case it won't have
-    //       simulation associated with it...
+    //       a simulation associated with it...
 
     bool needReloadView = true;
     SingleCellViewSimulation *simulation = mSimulations.value(pFileName);
@@ -1002,6 +1002,24 @@ void SingleCellViewWidget::fileClosed(const QString &pFileName)
 
 //==============================================================================
 
+QVariant SingleCellViewWidget::value(Core::Property *pProperty) const
+{
+    switch (pProperty->type()) {
+    case Core::Property::Integer:
+        return pProperty->integerValue();
+    case Core::Property::Double:
+        return pProperty->doubleValue();
+    case Core::Property::Boolean:
+        return pProperty->booleanValue();
+    default:
+        // Not a property type we are interested in, so...
+
+        return QVariant();
+    }
+}
+
+//==============================================================================
+
 void SingleCellViewWidget::on_actionRunPauseResumeSimulation_triggered()
 {
     // Run or resume our simulation, or pause it
@@ -1041,16 +1059,10 @@ void SingleCellViewWidget::on_actionRunPauseResumeSimulation_triggered()
             mSimulation->data()->setDaeSolverName(solversWidget->daeSolverData()->solversListProperty()->value());
 
             foreach (Core::Property *property, solversWidget->odeSolverData()->solversProperties().value(mSimulation->data()->odeSolverName()))
-                mSimulation->data()->addOdeSolverProperty(property->id(),
-                                                          (property->type() == Core::Property::Integer)?
-                                                              property->integerValue():
-                                                              property->doubleValue());
+                mSimulation->data()->addOdeSolverProperty(property->id(), value(property));
 
             foreach (Core::Property *property, solversWidget->daeSolverData()->solversProperties().value(mSimulation->data()->daeSolverName()))
-                mSimulation->data()->addDaeSolverProperty(property->id(),
-                                                          (property->type() == Core::Property::Integer)?
-                                                              property->integerValue():
-                                                              property->doubleValue());
+                mSimulation->data()->addDaeSolverProperty(property->id(), value(property));
 
             // Check that we have enough memory to run our simulation
 
@@ -1464,10 +1476,7 @@ void SingleCellViewWidget::solversPropertyChanged(Core::Property *pProperty)
                     // We have found the NLA solver's property that got changed,
                     // so keep track of the new value
 
-                    mSimulation->data()->addNlaSolverProperty(pProperty->id(),
-                                                              (pProperty->type() == Core::Property::Integer)?
-                                                                  pProperty->integerValue():
-                                                                  pProperty->doubleValue());
+                    mSimulation->data()->addNlaSolverProperty(pProperty->id(), value(property));
 
                     break;
                 }

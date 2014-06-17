@@ -24,7 +24,7 @@ SET SetupMSVC2010Environment=Done
 
 CD build
 
-cmake -G "NMake Makefiles" -DCMAKE_BUILD_TYPE=Debug -DENABLE_TESTS=True ..
+cmake -G "NMake Makefiles" -DCMAKE_BUILD_TYPE=Debug -DENABLE_TESTS=ON ..
 
 SET ExitCode=%ERRORLEVEL%
 

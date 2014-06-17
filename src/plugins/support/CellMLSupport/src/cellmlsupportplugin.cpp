@@ -50,15 +50,34 @@ PLUGININFO_FUNC CellMLSupportPluginInfo()
 }
 
 //==============================================================================
+
+CellMLSupportPlugin::CellMLSupportPlugin()
+{
+    // The file types that we support
+
+    mFileTypes = FileTypes() << new FileType(qobject_cast<FileTypeInterface *>(this),
+                                             CellmlMimeType, CellmlFileExtension);
+}
+
+//==============================================================================
+
+CellMLSupportPlugin::~CellMLSupportPlugin()
+{
+    // Delete some internal objects
+
+    foreach (FileType *fileType, mFileTypes)
+        delete fileType;
+}
+
+//==============================================================================
 // File interface
 //==============================================================================
 
 FileTypes CellMLSupportPlugin::fileTypes() const
 {
-    // Return the CellML file type that the CellMLSupport plugin supports
+    // Return the file types that we support
 
-    return FileTypes() << FileType(qobject_cast<FileTypeInterface *>(this),
-                                   CellmlMimeType, CellmlFileExtension);
+    return mFileTypes;
 }
 
 //==============================================================================
@@ -66,7 +85,7 @@ FileTypes CellMLSupportPlugin::fileTypes() const
 QString CellMLSupportPlugin::fileTypeDescription(const QString &pMimeType) const
 {
     // Return the description for the requested MIME type, that is as long as it
-    // is for the CellML MIME type
+    // is for the MIME type that we support
 
     if (!pMimeType.compare(CellmlMimeType))
         return tr("CellML File");
@@ -84,8 +103,8 @@ void CellMLSupportPlugin::retranslateUi()
 {
     // We don't handle this interface...
     // Note: even though we don't handle this interface, we still want to
-    //       support the internationalisation interface since some other aspects
-    //       of our plugin are multilingual...
+    //       support it since some other aspects of our plugin are
+    //       multilingual...
 }
 
 //==============================================================================

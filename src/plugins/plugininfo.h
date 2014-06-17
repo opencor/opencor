@@ -65,7 +65,7 @@ public:
         Datastore,
         Miscellaneous,
         Organisation,
-#ifdef QT_DEBUG
+#ifdef ENABLE_SAMPLES
         Sample,
 #endif
         Simulation,

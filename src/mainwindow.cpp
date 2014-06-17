@@ -1346,16 +1346,6 @@ void MainWindow::resetAll()
                               tr("You are about to reset <strong>all</strong> of your settings. Do you wish to proceed?"),
                               QMessageBox::Yes|QMessageBox::No,
                               QMessageBox::Yes) == QMessageBox::Yes ) {
-        // We want to reset everything, so clear all the user settings and
-        // restart OpenCOR (indeed, a restart will ensure that the various dock
-        // windows are, for instance, properly reset with regards to their
-        // dimensions)
-        // Note: mSettings->clear() won't delete the "OpenCOR" key (since it's
-        //       the 'root' of mSettings), so instead we create a 'new'
-        //       QSettings object to clear our "OpenCOR" key...
-
-        QSettings(OpenCOR::SettingsOrganization, OpenCOR::SettingsApplication).clear();
-
         // Restart OpenCOR without first saving its settings
 
         restart(false);

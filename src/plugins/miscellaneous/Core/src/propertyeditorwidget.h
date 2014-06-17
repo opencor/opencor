@@ -105,6 +105,16 @@ Q_SIGNALS:
 
 //==============================================================================
 
+class BooleanEditorWidget : public ListEditorWidget
+{
+    Q_OBJECT
+
+public:
+    explicit BooleanEditorWidget(QWidget *pParent);
+};
+
+//==============================================================================
+
 class Property;
 class PropertyEditorWidget;
 
@@ -131,12 +141,14 @@ Q_SIGNALS:
     void goToNextPropertyRequested();
 
     void listPropertyChanged(Core::Property *pProperty, const QString &pValue);
+    void booleanPropertyChanged(Core::Property *pProperty, const QString &pValue);
     // Note: strictly speaking, we don't need to specify the Core namespace, but
     //       then if we were to do that we wouldn't be able to use the property
     //       editor outside of the Core namespace, so...
 
 private Q_SLOTS:
     void emitListPropertyChanged(const QString &pValue);
+    void emitBooleanPropertyChanged(const QString &pValue);
 };
 
 //==============================================================================
@@ -164,7 +176,8 @@ public:
         String   = QStandardItem::UserType+1,
         Integer  = QStandardItem::UserType+2,
         Double   = QStandardItem::UserType+3,
-        List     = QStandardItem::UserType+4
+        List     = QStandardItem::UserType+4,
+        Boolean  = QStandardItem::UserType+5
     };
 
     explicit Property(const Type &pType, PropertyEditorWidget *pParent);
@@ -221,6 +234,9 @@ public:
 
     QString emptyListValue() const;
     void setEmptyListValue(const QString &pEmptyListValue);
+
+    bool booleanValue() const;
+    void setBooleanValue(const bool &pBooleanValue);
 
     QString unit() const;
     void setUnit(const QString &pUnit);
@@ -355,6 +371,9 @@ public:
     Property * addListProperty(const QStringList &pStringList,
                                Property *pParent = 0);
     Property * addListProperty(Property *pParent = 0);
+
+    Property * addBooleanProperty(const bool &pValue, Property *pParent = 0);
+    Property * addBooleanProperty(Property *pParent = 0);
 
     Property * addStringProperty(const QString &pString, Property *pParent = 0);
     Property * addStringProperty(Property *pParent = 0);

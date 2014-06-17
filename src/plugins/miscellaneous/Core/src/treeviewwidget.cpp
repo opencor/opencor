@@ -50,8 +50,7 @@ TreeViewWidget::TreeViewWidget(QWidget *pParent) :
     setAllColumnsShowFocus(true);
 #ifdef Q_OS_MAC
     setAttribute(Qt::WA_MacShowFocusRect, false);
-    // Note: the above removes the focus border since it messes up the look of
-    //       our tree view widget...
+    // Note: the above removes the focus border since it messes up our look
 #endif
     setFrameShape(QFrame::NoFrame);
     setSelectionMode(QAbstractItemView::ExtendedSelection);

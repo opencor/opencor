@@ -60,6 +60,13 @@ PLUGININFO_FUNC CorePluginInfo()
 }
 
 //==============================================================================
+
+CorePlugin::CorePlugin() :
+    mRecentFileNames(QStringList())
+{
+}
+
+//==============================================================================
 // Core interface
 //==============================================================================
 
@@ -271,8 +278,10 @@ void CorePlugin::retranslateUi()
 {
     // Retranslate our different File actions
 
-    retranslateAction(mFileOpenAction, tr("Open..."), tr("Open a file"));
-    retranslateAction(mFileOpenRemoteAction, tr("Open Remote..."), tr("Open a remote file"));
+    retranslateAction(mFileOpenAction, tr("Open..."),
+                      tr("Open a file"));
+    retranslateAction(mFileOpenRemoteAction, tr("Open Remote..."),
+                      tr("Open a remote file"));
 
     retranslateAction(mFileReloadAction, tr("Reload"),
                       tr("Reload the current file"));
@@ -467,10 +476,6 @@ void CorePlugin::initializePlugin(QMainWindow *pMainWindow)
 
     connect(mFileClearReopenSubMenuAction, SIGNAL(triggered()),
             this, SLOT(clearReopenSubMenu()));
-
-    // Miscellaneous
-
-    mRecentFileNames = QStringList();
 }
 
 //==============================================================================
@@ -497,7 +502,7 @@ void CorePlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
             // supported file types, but only if they are not already in our
             // list
 
-            foreach (const FileType &fileType, fileTypeInterface->fileTypes())
+            foreach (FileType *fileType, fileTypeInterface->fileTypes())
                 if (!supportedFileTypes.contains(fileType))
                     supportedFileTypes << fileType;
     }

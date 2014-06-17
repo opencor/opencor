@@ -57,6 +57,8 @@ class CellMLToolsPlugin : public QObject, public CliInterface,
     Q_INTERFACES(OpenCOR::PluginInterface)
 
 public:
+    explicit CellMLToolsPlugin();
+
 #include "cliinterface.inl"
 #include "guiinterface.inl"
 #include "i18ninterface.inl"

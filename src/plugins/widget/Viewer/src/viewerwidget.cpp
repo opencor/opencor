@@ -30,6 +30,8 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include <QAction>
+#include <QApplication>
+#include <QClipboard>
 #include <QCursor>
 #include <QDomDocument>
 #include <QIcon>
@@ -41,6 +43,11 @@ specific language governing permissions and limitations under the License.
 #include <QPoint>
 #include <QRectF>
 #include <QRegularExpression>
+#include <QSettings>
+
+//==============================================================================
+
+#include <qmath.h>
 
 //==============================================================================
 
@@ -102,32 +109,28 @@ ViewerWidget::ViewerWidget(QWidget *pParent) :
     mSubscriptsAction = newAction();
     mGreekSymbolsAction = newAction();
     mDigitGroupingAction = newAction();
+    mCopyToClipboardAction = new QAction(this);
 
-    connect(mOptimiseFontSizeAction, SIGNAL(triggered()),
-            this, SLOT(update()));
     connect(mOptimiseFontSizeAction, SIGNAL(toggled(bool)),
-            this, SIGNAL(optimiseFontSizeChanged(const bool &)));
+            this, SLOT(update()));
 
-    connect(mSubscriptsAction, SIGNAL(triggered()),
-            this, SLOT(updateViewer()));
     connect(mSubscriptsAction, SIGNAL(toggled(bool)),
-            this, SIGNAL(subscriptsChanged(const bool &)));
-
-    connect(mGreekSymbolsAction, SIGNAL(triggered()),
             this, SLOT(updateViewer()));
     connect(mGreekSymbolsAction, SIGNAL(toggled(bool)),
-            this, SIGNAL(greekSymbolsChanged(const bool &)));
-
-    connect(mDigitGroupingAction, SIGNAL(triggered()),
             this, SLOT(updateViewer()));
     connect(mDigitGroupingAction, SIGNAL(toggled(bool)),
-            this, SIGNAL(digitGroupingChanged(const bool &)));
+            this, SLOT(updateViewer()));
+
+    connect(mCopyToClipboardAction, SIGNAL(triggered()),
+            this, SLOT(copyToClipboard()));
 
     mContextMenu->addAction(mOptimiseFontSizeAction);
     mContextMenu->addSeparator();
     mContextMenu->addAction(mSubscriptsAction);
     mContextMenu->addAction(mGreekSymbolsAction);
     mContextMenu->addAction(mDigitGroupingAction);
+    mContextMenu->addSeparator();
+    mContextMenu->addAction(mCopyToClipboardAction);
 
     // We want a context menu
 
@@ -143,14 +146,68 @@ ViewerWidget::ViewerWidget(QWidget *pParent) :
 
 //==============================================================================
 
+static const auto SettingsViewerOptimiseFontSizeEnabled = QStringLiteral("ViewerOptimiseFontSizeEnabled");
+static const auto SettingsViewerSubscriptsEnabled       = QStringLiteral("ViewerSubscriptsEnabled");
+static const auto SettingsViewerGreekSymbolsEnabled     = QStringLiteral("ViewerGreekSymbolsEnabled");
+static const auto SettingsViewerDigitGroupingEnabled    = QStringLiteral("ViewerDigitGroupingEnabled");
+
+//==============================================================================
+
+void ViewerWidget::loadSettings(QSettings *pSettings)
+{
+    // Retrieve our settings
+
+    setOptimiseFontSize(pSettings->value(SettingsViewerOptimiseFontSizeEnabled, true).toBool());
+    setSubscripts(pSettings->value(SettingsViewerSubscriptsEnabled, true).toBool());
+    setGreekSymbols(pSettings->value(SettingsViewerGreekSymbolsEnabled, true).toBool());
+    setDigitGrouping(pSettings->value(SettingsViewerDigitGroupingEnabled, true).toBool());
+}
+
+//==============================================================================
+
+void ViewerWidget::saveSettings(QSettings *pSettings) const
+{
+    // Keep track of our settings
+
+    pSettings->setValue(SettingsViewerOptimiseFontSizeEnabled, optimiseFontSize());
+    pSettings->setValue(SettingsViewerSubscriptsEnabled, subscripts());
+    pSettings->setValue(SettingsViewerGreekSymbolsEnabled, greekSymbols());
+    pSettings->setValue(SettingsViewerDigitGroupingEnabled, digitGrouping());
+}
+
+//==============================================================================
+
 void ViewerWidget::retranslateUi()
 {
     // Retranslate our actions
 
-    I18nInterface::retranslateAction(mOptimiseFontSizeAction, tr("Optimise Font Size"));
-    I18nInterface::retranslateAction(mSubscriptsAction, tr("Subscripts"));
-    I18nInterface::retranslateAction(mGreekSymbolsAction, tr("Greek Symbols"));
-    I18nInterface::retranslateAction(mDigitGroupingAction, tr("Digit Grouping"));
+    I18nInterface::retranslateAction(mOptimiseFontSizeAction, tr("Optimise Font Size"),
+                                     tr("Optimise the font size to get the best fit possible"));
+    I18nInterface::retranslateAction(mSubscriptsAction, tr("Subscripts"),
+                                     tr("Use '_' to specify a subscript"));
+    I18nInterface::retranslateAction(mGreekSymbolsAction, tr("Greek Symbols"),
+                                     tr("Replace 'alpha' with 'α', 'beta' with 'β', etc."));
+    I18nInterface::retranslateAction(mDigitGroupingAction, tr("Digit Grouping"),
+                                     tr("Group the digits of a number in groups of thousands"));
+    I18nInterface::retranslateAction(mCopyToClipboardAction, tr("Copy To Clipboard"),
+                                     tr("Copy the contents of the viewer to the clipboard"));
+}
+
+//==============================================================================
+
+void ViewerWidget::updateSettings(ViewerWidget *pViewerWidget)
+{
+    // Make sure that we are given another widget
+
+    if (!pViewerWidget)
+        return;
+
+    // Update our viewer settings
+
+    setOptimiseFontSize(pViewerWidget->optimiseFontSize());
+    setSubscripts(pViewerWidget->subscripts());
+    setGreekSymbols(pViewerWidget->greekSymbols());
+    setDigitGrouping(pViewerWidget->digitGrouping());
 }
 
 //==============================================================================
@@ -166,12 +223,10 @@ QString ViewerWidget::contents() const
 
 void ViewerWidget::setContents(const QString &pContents)
 {
-    // Set our contents
-
-    if (!pContents.compare(mContents))
-        return;
-
     // Try to set our contents to our MathML document
+    // Note: we don't check whether pContents has the same value as mContents
+    //       since we would also need to check the value of mError and we can't
+    //       be certain about it...
 
     mContents = pContents;
 
@@ -221,7 +276,7 @@ void ViewerWidget::setError(const bool &pError)
 {
     // Keep track of whether there is an error
 
-    if (pError == mError)
+    if (mContents.isEmpty() && (pError == mError))
         return;
 
     mContents = QString();
@@ -251,14 +306,6 @@ void ViewerWidget::setOptimiseFontSize(const bool &pOptimiseFontSize)
         return;
 
     mOptimiseFontSizeAction->setChecked(pOptimiseFontSize);
-
-    // Let people know about the new value
-
-    emit optimiseFontSizeChanged(pOptimiseFontSize);
-
-    // Update ourselves
-
-    update();
 }
 
 //==============================================================================
@@ -280,14 +327,6 @@ void ViewerWidget::setSubscripts(const bool &pSubscripts)
         return;
 
     mSubscriptsAction->setChecked(pSubscripts);
-
-    // Let people know about the new value
-
-    emit subscriptsChanged(pSubscripts);
-
-    // Update ourselves
-
-    update();
 }
 
 //==============================================================================
@@ -309,14 +348,6 @@ void ViewerWidget::setGreekSymbols(const bool &pGreekSymbols)
         return;
 
     mGreekSymbolsAction->setChecked(pGreekSymbols);
-
-    // Let people know about the new value
-
-    emit greekSymbolsChanged(pGreekSymbols);
-
-    // Update ourselves
-
-    update();
 }
 
 //==============================================================================
@@ -338,14 +369,6 @@ void ViewerWidget::setDigitGrouping(const bool &pDigitGrouping)
         return;
 
     mDigitGroupingAction->setChecked(pDigitGrouping);
-
-    // Let people know about the new value
-
-    emit digitGroupingChanged(pDigitGrouping);
-
-    // Update ourselves
-
-    update();
 }
 
 //==============================================================================
@@ -423,6 +446,10 @@ void ViewerWidget::paintEvent(QPaintEvent *pEvent)
         mMathmlDocument.paint(&painter, QPointF(0.5*(rect.width()-mathmlDocumentSize.width()),
                                                 0.5*(rect.height()-mathmlDocumentSize.height())));
     }
+
+    // Enable/disable our copy to clipboard action
+
+    mCopyToClipboardAction->setEnabled(!mContents.isEmpty() && !mError);
 
     // Accept the event
 
@@ -688,6 +715,20 @@ void ViewerWidget::updateViewer()
     mContents = QString();
 
     setContents(contents);
+}
+
+//==============================================================================
+
+void ViewerWidget::copyToClipboard()
+{
+    // Copy our contents to the clipboard
+
+    QSizeF mathmlDocumentSize = mMathmlDocument.size();
+
+    QApplication::clipboard()->setPixmap(grab().copy(qFloor(0.5*(width()-mathmlDocumentSize.width())),
+                                                     qFloor(0.5*(height()-mathmlDocumentSize.height())),
+                                                     qCeil(mathmlDocumentSize.width()),
+                                                     qCeil(mathmlDocumentSize.height())));
 }
 
 //==============================================================================

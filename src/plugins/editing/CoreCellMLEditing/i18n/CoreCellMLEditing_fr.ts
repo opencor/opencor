@@ -19,5 +19,13 @@
         <source>Create a new CellML 1.1 file</source>
         <translation>Créer un nouveau fichier CellML 1.1</translation>
     </message>
+    <message>
+        <source>CellML Validation</source>
+        <translation>Validation CellML</translation>
+    </message>
+    <message>
+        <source>Validate the CellML file</source>
+        <translation>Valider le fichier CellML</translation>
+    </message>
 </context>
 </TS>

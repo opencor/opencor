@@ -2,12 +2,6 @@ PROJECT(CoreEditingPlugin)
 
 # Add the plugin
 
-IF(APPLE)
-    SET(QT_LIBRARIES_EXTRAS QtMacExtras)
-ELSE()
-    SET(QT_LIBRARIES_EXTRAS)
-ENDIF()
-
 ADD_PLUGIN(CoreEditing
     SOURCES
         ../../guiinterface.cpp
@@ -34,7 +28,6 @@ ADD_PLUGIN(CoreEditing
     QT_MODULES
         Widgets
     QT_LIBRARIES
-        ${QT_LIBRARIES_EXTRAS}
         QtCore
         QtGui
         QtNetwork

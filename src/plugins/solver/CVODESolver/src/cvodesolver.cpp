@@ -109,7 +109,8 @@ CvodeSolver::CvodeSolver() :
     mMaximumStep(MaximumStepDefaultValue),
     mMaximumNumberOfSteps(MaximumNumberOfStepsDefaultValue),
     mRelativeTolerance(RelativeToleranceDefaultValue),
-    mAbsoluteTolerance(AbsoluteToleranceDefaultValue)
+    mAbsoluteTolerance(AbsoluteToleranceDefaultValue),
+    mInterpolateSolution(InterpolateSolutionDefaultValue)
 {
 }
 
@@ -174,6 +175,14 @@ void CvodeSolver::initialize(const double &pVoiStart,
             return;
         }
 
+        if (mProperties.contains(InterpolateSolutionId)) {
+            mInterpolateSolution = mProperties.value(InterpolateSolutionId).toBool();
+        } else {
+            emit error(QObject::tr("the 'interpolate solution' property value could not be retrieved"));
+
+            return;
+        }
+
         // Initialise the ODE solver itself
 
         OpenCOR::CoreSolver::CoreOdeSolver::initialize(pVoiStart,
@@ -234,6 +243,9 @@ void CvodeSolver::initialize(const double &pVoiStart,
 void CvodeSolver::solve(double &pVoi, const double &pVoiEnd) const
 {
     // Solve the model
+
+    if (!mInterpolateSolution)
+        CVodeSetStopTime(mSolver, pVoiEnd);
 
     CVode(mSolver, pVoiEnd, mStatesVector, &pVoi, CV_NORMAL);
 

@@ -51,8 +51,7 @@ TextEditorWidget::TextEditorWidget(QWidget *pParent) :
 {
 #ifdef Q_OS_MAC
     setAttribute(Qt::WA_MacShowFocusRect, false);
-    // Note: the above removes the focus border since it messes up the look of
-    //       our editor
+    // Note: the above removes the focus border since it messes up our look
 #endif
     setFrame(QFrame::NoFrame);
 }
@@ -270,6 +269,22 @@ void ListEditorWidget::mousePressEvent(QMouseEvent *pEvent)
 
 //==============================================================================
 
+static const auto TrueValue  = QStringLiteral("True");
+static const auto FalseValue = QStringLiteral("False");
+
+//==============================================================================
+
+BooleanEditorWidget::BooleanEditorWidget(QWidget *pParent) :
+    ListEditorWidget(pParent)
+{
+    // Add "True" and "False" to ourselves
+
+    addItem(TrueValue);
+    addItem(FalseValue);
+}
+
+//==============================================================================
+
 PropertyItemDelegate::PropertyItemDelegate(PropertyEditorWidget *pParent) :
     QStyledItemDelegate(pParent)
 {
@@ -304,6 +319,8 @@ QWidget * PropertyItemDelegate::createEditor(QWidget *pParent,
     case Property::List: {
         ListEditorWidget *listEditor = new ListEditorWidget(pParent);
 
+        editor = listEditor;
+
         // Add the value items to the list, keeping in mind separators
 
         foreach (const QString &valueItem, property->listValue())
@@ -312,13 +329,24 @@ QWidget * PropertyItemDelegate::createEditor(QWidget *pParent,
             else
                 listEditor->addItem(valueItem);
 
-        editor = listEditor;
-
         // Propagate the signal telling us about the list property value having
         // changed
 
         connect(listEditor, SIGNAL(currentIndexChanged(const QString &)),
                 this, SLOT(emitListPropertyChanged(const QString &)));
+
+        break;
+    }
+    case Property::Boolean: {
+        BooleanEditorWidget *booleanEditor = new BooleanEditorWidget(pParent);
+
+        editor = booleanEditor;
+
+        // Propagate the signal telling us about the list property value having
+        // changed
+
+        connect(booleanEditor, SIGNAL(currentIndexChanged(const QString &)),
+                this, SLOT(emitBooleanPropertyChanged(const QString &)));
 
         break;
     }
@@ -387,6 +415,16 @@ void PropertyItemDelegate::emitListPropertyChanged(const QString &pValue)
 
     emit listPropertyChanged(qobject_cast<PropertyEditorWidget *>(parent())->currentProperty(),
                              pValue);
+}
+
+//==============================================================================
+
+void PropertyItemDelegate::emitBooleanPropertyChanged(const QString &pValue)
+{
+    // Let people know about the boolean property value having changed
+
+    emit booleanPropertyChanged(qobject_cast<PropertyEditorWidget *>(parent())->currentProperty(),
+                                pValue);
 }
 
 //==============================================================================
@@ -824,6 +862,30 @@ void Property::setEmptyListValue(const QString &pEmptyListValue)
 
         setValue(mListValue.isEmpty()?mEmptyListValue:mValue->text());
     }
+}
+
+//==============================================================================
+
+bool Property::booleanValue() const
+{
+    // Return our value as a boolean, if it is of that type
+
+    if (mType == Boolean)
+        return !mValue->text().compare(TrueValue);
+    else
+        // Our value is not of boolean type, so...
+
+        return false;
+}
+
+//==============================================================================
+
+void Property::setBooleanValue(const bool &pBooleanValue)
+{
+    // Set our value, should it be of boolean type
+
+    if (mType == Boolean)
+        setValue(pBooleanValue?TrueValue:FalseValue);
 }
 
 //==============================================================================
@@ -1482,7 +1544,7 @@ Property * PropertyEditorWidget::addListProperty(const QStringList &pStringList,
                                                  Property *pParent)
 {
     // Add a list property and return its information
-    // Note: a list property must necessarily be editable...
+    // Note: a list property is necessarily editable...
 
     Property *res = addProperty(Property::List, pParent);
 
@@ -1499,6 +1561,31 @@ Property * PropertyEditorWidget::addListProperty(Property *pParent)
     // Add a list property and return its information
 
     return addListProperty(QStringList(), pParent);
+}
+
+//==============================================================================
+
+Property * PropertyEditorWidget::addBooleanProperty(const bool &pValue,
+                                                    Property *pParent)
+{
+    // Add a boolean property and return its information
+    // Note: a boolean property is necessarily editable...
+
+    Property *res = addProperty(Property::Boolean, pParent);
+
+    res->setEditable(true);
+    res->setBooleanValue(pValue);
+
+    return res;
+}
+
+//==============================================================================
+
+Property * PropertyEditorWidget::addBooleanProperty(Property *pParent)
+{
+    // Add a boolean property and return its information
+
+    return addBooleanProperty(false, pParent);
 }
 
 //==============================================================================

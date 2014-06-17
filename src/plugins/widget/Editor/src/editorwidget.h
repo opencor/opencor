@@ -77,7 +77,12 @@ public:
     explicit EditorWidget(const QString &pContents, const bool &pReadOnly,
                           QsciLexer *pLexer, QWidget *pParent);
 
+    virtual void loadSettings(QSettings *pSettings);
+    virtual void saveSettings(QSettings *pSettings) const;
+
     virtual void retranslateUi();
+
+    void updateSettings(EditorWidget *pEditorWidget);
 
     QMenu * contextMenu() const;
     void setContextMenu(const QList<QAction *> &pContextMenuActions);
@@ -129,8 +134,6 @@ public:
 
     int zoomLevel() const;
     void setZoomLevel(const int &pZoomLevel);
-
-    void updateFindReplaceFrom(EditorWidget *pEditor);
 
     bool findReplaceIsVisible() const;
 

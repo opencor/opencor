@@ -201,6 +201,8 @@ private:
     void resetFileTabIcon(const QString &pFileName,
                           const bool &pRemoveProgress = true);
 
+    QVariant value(Core::Property *pProperty) const;
+
 private Q_SLOTS:
     void on_actionRunPauseResumeSimulation_triggered();
     void on_actionStopSimulation_triggered();

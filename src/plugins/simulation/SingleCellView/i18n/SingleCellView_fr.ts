@@ -322,12 +322,12 @@
 <context>
     <name>SingleCellViewGraphPanelPlotWidget</name>
     <message>
-        <source>Copy</source>
-        <translation>Copier</translation>
+        <source>Copy To Clipboard</source>
+        <translation>Copier Dans Presse-Papier</translation>
     </message>
     <message>
-        <source>Copy the graph panel to the clipboard</source>
-        <translation>Copier le panneau graphique dans le presse-papier</translation>
+        <source>Copy the contents of the graph panel to the clipboard</source>
+        <translation>Copier le contenu du panneau graphique dans le presse-papier</translation>
     </message>
     <message>
         <source>Zoom In</source>
