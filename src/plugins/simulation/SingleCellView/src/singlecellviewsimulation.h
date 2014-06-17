@@ -178,10 +178,10 @@ private:
 
     CoreDatastore::DataSet *mDataset ;
     CoreDatastore::DataVariable *mPoints ;
-    std::vector<const CoreDatastore::DataVariable *> mConstants ;
-    std::vector<const CoreDatastore::DataVariable *> mRates ;
-    std::vector<const CoreDatastore::DataVariable *> mStates ;
-    std::vector<const CoreDatastore::DataVariable *> mAlgebraic ;
+    std::vector<CoreDatastore::DataVariable *> mConstants ;
+    std::vector<CoreDatastore::DataVariable *> mRates ;
+    std::vector<CoreDatastore::DataVariable *> mStates ;
+    std::vector<CoreDatastore::DataVariable *> mAlgebraic ;
 
     bool createArrays();
     void deleteArrays();

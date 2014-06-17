@@ -576,6 +576,15 @@ SingleCellViewSimulationResults::~SingleCellViewSimulationResults()
 
 //==============================================================================
 
+
+static std::string make_uri(const QString &uri)
+/*-------------------------------------------*/
+{
+  QString s(uri) ;
+  return s.replace("'", "/prime").toStdString() ;
+  }
+
+
 bool SingleCellViewSimulationResults::createArrays()
 {
     // Note: the boolean value we return is true if we have had no problem
@@ -613,8 +622,41 @@ bool SingleCellViewSimulationResults::createArrays()
       return false ;
       }
 
-    return true;
-}
+    mPoints->setUri(make_uri(mRuntime->variableOfIntegration()->componentHierarchy().join("/")
+                             + "/" + mRuntime->variableOfIntegration()->name())) ;
+    mPoints->setLabel(mRuntime->variableOfIntegration()->name().toStdString()) ;
+    mPoints->setUnits(mRuntime->variableOfIntegration()->unit().toStdString()) ;
+
+    for (int i = 0, iMax = mRuntime->parameters().count(); i < iMax; ++i) {
+      CellMLSupport::CellmlFileRuntimeParameter *parameter = mRuntime->parameters()[i] ;
+      CoreDatastore::DataVariable *var = 0 ;
+      switch (parameter->type()) {
+       case CellMLSupport::CellmlFileRuntimeParameter::Constant:
+       case CellMLSupport::CellmlFileRuntimeParameter::ComputedConstant:
+        var = mConstants[parameter->index()] ;
+        break ;
+       case CellMLSupport::CellmlFileRuntimeParameter::Rate:
+        var = mRates[parameter->index()] ;
+        break ;
+       case CellMLSupport::CellmlFileRuntimeParameter::State:
+        var = mStates[parameter->index()] ;
+        break ;
+       case CellMLSupport::CellmlFileRuntimeParameter::Algebraic:
+        var = mAlgebraic[parameter->index()] ;
+        break ;
+       default:
+        break ;
+        }
+      if (var) {
+        var->setUri(make_uri(parameter->componentHierarchy().join("/")
+                             + "/" + parameter->formattedName())) ;
+        var->setLabel(parameter->formattedName().toStdString()) ;
+        var->setUnits(parameter->formattedUnit(mRuntime->variableOfIntegration()->unit()).toStdString()) ;
+        }
+      }
+
+    return true ;
+    }
 
 //==============================================================================
 

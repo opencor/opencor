@@ -52,6 +52,10 @@ class DataVariable {
   DataVariable(const SizeType &pSize, const double *pValuePointer=0) ;
   ~DataVariable() ;
 
+  void setUri(const std::string &pUri) ;
+  void setUnits(const std::string &pUnits) ;
+  void setLabel(const std::string &pLavel) ;
+
   void reset(void) ;
   SizeType size(void) ;
   void savePoint(void) ;
@@ -60,7 +64,9 @@ class DataVariable {
   const double *data(void) const ;
 
  private:
-  const std::string mUri ;
+  std::string mUri ;
+  std::string mUnits ;
+  std::string mLabel ;
   const double *mValuePointer ;
   std::vector<double> mBuffer ;  
   } ;
@@ -74,7 +80,7 @@ class DataSet {
   ~DataSet() ;
 
   DataVariable *holdPoint(const double *pPoint=0) ;
-  std::vector<const DataVariable *> holdPoints(const IndexType &pCount, const double *pPoints) ;
+  std::vector<DataVariable *> holdPoints(const IndexType &pCount, const double *pPoints) ;
   void reset(void) ;
   void savePoints(void) ;
 

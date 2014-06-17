@@ -33,7 +33,7 @@ namespace CoreDatastore {
 
 DataVariable::DataVariable(const qulonglong &pSize, const double *pValuePointer)
 /*----------------------------------------------------------------------------*/
-: mUri(""), mValuePointer(pValuePointer), mBuffer(0)
+: mUri(""), mUnits(""), mLabel(""), mValuePointer(pValuePointer), mBuffer(0)
 {
   mBuffer.reserve(pSize) ;
   }
@@ -47,6 +47,24 @@ void DataVariable::reset(void)
 /*--------------------------*/
 {
   mBuffer.clear() ;
+  }
+
+void DataVariable::setUri(const std::string &pUri)
+/*----------------------------------------------*/
+{
+  mUri = pUri ;
+  }
+
+void DataVariable::setUnits(const std::string &pUnits)
+/*--------------------------------------------------*/
+{
+  mUnits = pUnits ;
+  }
+
+void DataVariable::setLabel(const std::string &pLabel)
+/*--------------------------------------------------*/
+{
+  mLabel = pLabel ;
   }
 
 SizeType DataVariable::size(void)
@@ -103,11 +121,11 @@ DataVariable *DataSet::holdPoint(const double *pPoint)
   return var ;
   }
 
-std::vector<const DataVariable *> DataSet::holdPoints(const IndexType &pCount, const double *pPoints)
-/*-------------------------------------------------------------------------------------------------*/
+std::vector<DataVariable *> DataSet::holdPoints(const IndexType &pCount, const double *pPoints)
+/*-------------------------------------------------------------------------------------------*/
 {
   const double *v = pPoints ;
-  std::vector<const DataVariable *> vars(pCount) ;
+  std::vector<DataVariable *> vars(pCount) ;
   for (IndexType n = 0 ;  n < pCount ;  ++n, ++v) {
     DataVariable *var = new DataVariable(mSize, v) ;
     mVariables.push_back(var) ;
