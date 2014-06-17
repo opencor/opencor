@@ -1,4 +1,4 @@
-﻿/*******************************************************************************
+/*******************************************************************************
 
 Licensed to the OpenCOR team under one or more contributor license agreements.
 See the NOTICE.txt file distributed with this work for additional information
