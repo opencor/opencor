@@ -67,6 +67,25 @@ void DataVariable::setLabel(const std::string &pLabel)
   mLabel = pLabel ;
   }
 
+const std::string DataVariable::getUri(void) const
+/*----------------------------------------------*/
+{
+  return mUri ;
+  }
+
+const std::string DataVariable::getUnits(void) const
+/*------------------------------------------------*/
+{
+  return mUnits ;
+  }
+
+const std::string DataVariable::getLabel(void) const
+/*------------------------------------------------*/
+{
+  return mLabel ;
+  }
+
+
 SizeType DataVariable::size(void)
 /*-----------------------------*/
 {

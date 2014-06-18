@@ -55,6 +55,9 @@ class DataVariable {
   void setUri(const std::string &pUri) ;
   void setUnits(const std::string &pUnits) ;
   void setLabel(const std::string &pLavel) ;
+  const std::string getUri(void) const ;
+  const std::string getLabel(void) const ;
+  const std::string getUnits(void) const ;
 
   void reset(void) ;
   SizeType size(void) ;
