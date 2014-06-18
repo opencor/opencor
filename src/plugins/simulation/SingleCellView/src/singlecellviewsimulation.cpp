@@ -728,7 +728,7 @@ const double *SingleCellViewSimulationResults::points()
 const double *SingleCellViewSimulationResults::constants(size_t pIndex)
 {
     // Return constants data at index
-    return mConstants[pIndex]->data() ;
+    return mConstants.empty() ? 0 : mConstants[pIndex]->data() ;
 }
 
 //==============================================================================
@@ -736,7 +736,7 @@ const double *SingleCellViewSimulationResults::constants(size_t pIndex)
 const double *SingleCellViewSimulationResults::rates(size_t pIndex)
 {
     // Return rates data at index
-    return mRates[pIndex]->data() ;
+    return mRates.empty() ? 0 : mRates[pIndex]->data() ;
 }
 
 //==============================================================================
@@ -744,7 +744,7 @@ const double *SingleCellViewSimulationResults::rates(size_t pIndex)
 const double *SingleCellViewSimulationResults::states(size_t pIndex)
 {
     // Return states data at index
-    return mStates[pIndex]->data() ;
+    return mStates.empty() ? 0 : mStates[pIndex]->data() ;
 }
 
 //==============================================================================
@@ -752,7 +752,7 @@ const double *SingleCellViewSimulationResults::states(size_t pIndex)
 const double *SingleCellViewSimulationResults::algebraic(size_t pIndex)
 {
     // Return algebraic data at index
-    return mAlgebraic[pIndex]->data() ;
+    return mAlgebraic.empty() ? 0 : mAlgebraic[pIndex]->data() ;
 }
 
 //==============================================================================
