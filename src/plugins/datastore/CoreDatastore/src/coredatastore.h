@@ -24,12 +24,12 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-#include <QtGlobal>
+#include <QString>
+#include <QVector>
 
 //==============================================================================
 
-#include <string>
-#include <vector>
+#include <QtGlobal>
 
 //==============================================================================
 
@@ -52,12 +52,12 @@ class DataVariable {
   DataVariable(const SizeType &pSize, const double *pValuePointer=0) ;
   ~DataVariable() ;
 
-  void setUri(const std::string &pUri) ;
-  void setUnits(const std::string &pUnits) ;
-  void setLabel(const std::string &pLavel) ;
-  const std::string getUri(void) const ;
-  const std::string getLabel(void) const ;
-  const std::string getUnits(void) const ;
+  void setUri(const QString &pUri) ;
+  void setUnits(const QString &pUnits) ;
+  void setLabel(const QString &pLavel) ;
+  const QString getUri(void) const ;
+  const QString getLabel(void) const ;
+  const QString getUnits(void) const ;
 
   void reset(void) ;
   SizeType size(void) ;
@@ -67,11 +67,11 @@ class DataVariable {
   const double *data(void) const ;
 
  private:
-  std::string mUri ;
-  std::string mUnits ;
-  std::string mLabel ;
+  QString mUri ;
+  QString mUnits ;
+  QString mLabel ;
   const double *mValuePointer ;
-  std::vector<double> mBuffer ;  
+  QVector<double> mBuffer ;
   } ;
 
 //==============================================================================
@@ -83,13 +83,13 @@ class DataSet {
   ~DataSet() ;
 
   DataVariable *holdPoint(const double *pPoint=0) ;
-  std::vector<DataVariable *> holdPoints(const IndexType &pCount, const double *pPoints) ;
+  QVector<DataVariable *> holdPoints(const IndexType &pCount, const double *pPoints) ;
   void reset(void) ;
   void savePoints(void) ;
 
  private:
   const SizeType mSize ;
-  std::vector<DataVariable *> mVariables ;
+  QVector<DataVariable *> mVariables ;
   } ;
 
 //==============================================================================

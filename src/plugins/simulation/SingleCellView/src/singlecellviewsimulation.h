@@ -32,6 +32,7 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include <QObject>
+#include <QVector>
 
 //==============================================================================
 
@@ -178,10 +179,10 @@ private:
 
     CoreDatastore::DataSet *mDataset ;
     CoreDatastore::DataVariable *mPoints ;
-    std::vector<CoreDatastore::DataVariable *> mConstants ;
-    std::vector<CoreDatastore::DataVariable *> mRates ;
-    std::vector<CoreDatastore::DataVariable *> mStates ;
-    std::vector<CoreDatastore::DataVariable *> mAlgebraic ;
+    QVector<CoreDatastore::DataVariable *> mConstants ;
+    QVector<CoreDatastore::DataVariable *> mRates ;
+    QVector<CoreDatastore::DataVariable *> mStates ;
+    QVector<CoreDatastore::DataVariable *> mAlgebraic ;
 
     bool createArrays();
     void deleteArrays();

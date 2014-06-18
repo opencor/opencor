@@ -577,11 +577,11 @@ SingleCellViewSimulationResults::~SingleCellViewSimulationResults()
 //==============================================================================
 
 
-static std::string make_uri(const QString &uri)
-/*-------------------------------------------*/
+static QString make_uri(const QString &uri)
+/*---------------------------------------*/
 {
-  QString s(uri) ;
-  return s.replace("'", "/prime").toStdString() ;
+  QString u(uri) ;
+  return u.replace("'", "/prime") ;
   }
 
 
@@ -624,8 +624,8 @@ bool SingleCellViewSimulationResults::createArrays()
 
     mPoints->setUri(make_uri(mRuntime->variableOfIntegration()->componentHierarchy().join("/")
                              + "/" + mRuntime->variableOfIntegration()->name())) ;
-    mPoints->setLabel(mRuntime->variableOfIntegration()->name().toStdString()) ;
-    mPoints->setUnits(mRuntime->variableOfIntegration()->unit().toStdString()) ;
+    mPoints->setLabel(mRuntime->variableOfIntegration()->name()) ;
+    mPoints->setUnits(mRuntime->variableOfIntegration()->unit()) ;
 
     for (int i = 0, iMax = mRuntime->parameters().count(); i < iMax; ++i) {
       CellMLSupport::CellmlFileRuntimeParameter *parameter = mRuntime->parameters()[i] ;
@@ -650,8 +650,8 @@ bool SingleCellViewSimulationResults::createArrays()
       if (var) {
         var->setUri(make_uri(parameter->componentHierarchy().join("/")
                              + "/" + parameter->formattedName())) ;
-        var->setLabel(parameter->formattedName().toStdString()) ;
-        var->setUnits(parameter->formattedUnit(mRuntime->variableOfIntegration()->unit()).toStdString()) ;
+        var->setLabel(parameter->formattedName()) ;
+        var->setUnits(parameter->formattedUnit(mRuntime->variableOfIntegration()->unit())) ;
         }
       }
 

@@ -49,38 +49,38 @@ void DataVariable::reset(void)
   mBuffer.clear() ;
   }
 
-void DataVariable::setUri(const std::string &pUri)
-/*----------------------------------------------*/
+void DataVariable::setUri(const QString &pUri)
+/*------------------------------------------*/
 {
   mUri = pUri ;
   }
 
-void DataVariable::setUnits(const std::string &pUnits)
-/*--------------------------------------------------*/
+void DataVariable::setUnits(const QString &pUnits)
+/*----------------------------------------------*/
 {
   mUnits = pUnits ;
   }
 
-void DataVariable::setLabel(const std::string &pLabel)
-/*--------------------------------------------------*/
+void DataVariable::setLabel(const QString &pLabel)
+/*----------------------------------------------*/
 {
   mLabel = pLabel ;
   }
 
-const std::string DataVariable::getUri(void) const
-/*----------------------------------------------*/
+const QString DataVariable::getUri(void) const
+/*------------------------------------------*/
 {
   return mUri ;
   }
 
-const std::string DataVariable::getUnits(void) const
-/*------------------------------------------------*/
+const QString DataVariable::getUnits(void) const
+/*--------------------------------------------*/
 {
   return mUnits ;
   }
 
-const std::string DataVariable::getLabel(void) const
-/*------------------------------------------------*/
+const QString DataVariable::getLabel(void) const
+/*--------------------------------------------*/
 {
   return mLabel ;
   }
@@ -140,11 +140,11 @@ DataVariable *DataSet::holdPoint(const double *pPoint)
   return var ;
   }
 
-std::vector<DataVariable *> DataSet::holdPoints(const IndexType &pCount, const double *pPoints)
-/*-------------------------------------------------------------------------------------------*/
+QVector<DataVariable *> DataSet::holdPoints(const IndexType &pCount, const double *pPoints)
+/*---------------------------------------------------------------------------------------*/
 {
   const double *v = pPoints ;
-  std::vector<DataVariable *> vars(pCount) ;
+  QVector<DataVariable *> vars(pCount) ;
   for (IndexType n = 0 ;  n < pCount ;  ++n, ++v) {
     DataVariable *var = new DataVariable(mSize, v) ;
     mVariables.push_back(var) ;
