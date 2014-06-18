@@ -4,7 +4,7 @@ To address this shortcoming, we manually expose the classes/methods that are cur
 
 In addition to exposing some classes/methods, we also had to 'fix' a few things. Again, those are highlighted (just look for ---OPENCOR---).
 
-In case LLVM is to be built (by setting USE_PREBUILT_LLVM_PLUGIN to OFF in [OpenCOR]/cmake/common.cmake), then keep in mind the following:
+In case LLVM is to be built (by setting the USE_PREBUILT_LLVM_PLUGIN option to OFF), then keep in mind the following:
  - Configuration files are to be generated using CMake (on Windows, we also need Python 2.7.x; http://www.python.org/download/):
     1) Download the LLVM and Clang source codes from http://llvm.org/releases/download.html
     2) Uncompress their corresponding tar.gz file
