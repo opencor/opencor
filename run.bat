@@ -2,6 +2,8 @@
 
 TITLE Running OpenCOR...
 
+SET NeedInformation=
+
 IF NOT EXIST build\bin\OpenCOR.com SET NeedInformation=Yes
 IF NOT EXIST build\bin\OpenCOR.exe SET NeedInformation=Yes
 
