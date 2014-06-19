@@ -3,7 +3,7 @@
 SETLOCAL ENABLEDELAYEDEXPANSION
 
 FOR %%X IN (ninja.exe) DO (
-    SET NinjaPath=%%~$PATH:X
+    SET NinjaFound=%%~$PATH:X
 )
 
 IF DEFINED NinjaFound (
