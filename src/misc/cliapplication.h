@@ -63,7 +63,7 @@ private:
     QString pluginDescription(Plugin *pPlugin) const;
 
     void about() const;
-    bool command(const QStringList pArguments, int *pRes) const;
+    bool command(const QStringList &pArguments, int *pRes) const;
     void help() const;
     void plugins() const;
     void status() const;

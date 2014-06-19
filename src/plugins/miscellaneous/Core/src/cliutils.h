@@ -66,6 +66,7 @@ namespace Core {
 
 //==============================================================================
 
+#ifndef OpenCOR_MAIN
 class CORE_EXPORT DummyMessageHandler : public QAbstractMessageHandler
 {
     Q_OBJECT
@@ -75,9 +76,11 @@ protected:
                                const QUrl &pIdentifier,
                                const QSourceLocation &pSourceLocation);
 };
+#endif
 
 //==============================================================================
 
+#ifndef OpenCOR_MAIN
 class SynchronousTextFileDownloader : public QObject
 {
     Q_OBJECT
@@ -90,6 +93,7 @@ private Q_SLOTS:
     void networkAccessManagerSslErrors(QNetworkReply *pNetworkReply,
                                        const QList<QSslError> &pSslErrors);
 };
+#endif
 
 //==============================================================================
 
@@ -120,8 +124,10 @@ QByteArray CORE_EXPORT resourceAsByteArray(const QString &pResource);
 bool CORE_EXPORT writeResourceToFile(const QString &pFilename,
                                      const QString &pResource);
 
+#ifndef OpenCOR_MAIN
 bool CORE_EXPORT readTextFromUrl(const QString &pUrl, QString &pText,
                                  QString &pErrorMessage);
+#endif
 
 bool CORE_EXPORT readTextFromFile(const QString &pFileName, QString &pText);
 bool CORE_EXPORT writeTextToFile(const QString &pFilename,

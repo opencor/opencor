@@ -1,22 +1,22 @@
 @ECHO OFF
 
+SETLOCAL ENABLEDELAYEDEXPANSION
+
 CALL clean
 CALL make
 
-SET ExitCode=%ERRORLEVEL%
+SET ExitCode=!ERRORLEVEL!
 
-IF %ExitCode% NEQ 0 GOTO End
+IF !ExitCode! EQU 0 (
+    TITLE Packaging OpenCOR...
 
-TITLE Packaging OpenCOR...
+    CD build
 
-CD build
+    cpack -C CPackConfig.cmake
 
-cpack -C CPackConfig.cmake
+    SET ExitCode=!ERRORLEVEL!
 
-SET ExitCode=%ERRORLEVEL%
+    CD ..
+)
 
-CD ..
-
-:End
-
-EXIT /B %ExitCode%
+EXIT /B !ExitCode!

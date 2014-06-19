@@ -4,7 +4,7 @@ To address this shortcoming, we manually expose the classes/methods that are cur
 
 In addition to exposing some classes/methods, we also had to 'fix' a few things. Again, those are highlighted (just look for ---OPENCOR---).
 
-In case LLVM is to be built (by setting USE_PREBUILT_LLVM_PLUGIN to OFF in [OpenCOR]/cmake/common.cmake), then keep in mind the following:
+In case LLVM is to be built (by setting the USE_PREBUILT_LLVM_PLUGIN option to OFF), then keep in mind the following:
  - Configuration files are to be generated using CMake (on Windows, we also need Python 2.7.x; http://www.python.org/download/):
     1) Download the LLVM and Clang source codes from http://llvm.org/releases/download.html
     2) Uncompress their corresponding tar.gz file
@@ -13,8 +13,8 @@ In case LLVM is to be built (by setting USE_PREBUILT_LLVM_PLUGIN to OFF in [Open
            cd [LLVM]
            mkdir build
            cd build
-           cmake ..   OR   cmake -G "NMake Makefiles" ..
-           make       OR   jom
+           cmake -G "Ninja" ..   OR   cmake -G "Unix Makefiles" ..   OR    -G "NMake Makefiles JOM" ..
+           ninja                 OR   make                           OR   jom
        From there, the configuration files are to be manually copied over to the windows, linux and osx folders of the various folders.
  - Neither HAVE_TERMINFO nor HAVE_ZLIB_H must be set, while LLVM_ENABLE_ZLIB must be set to 0 in [LLVM]/include/llvm/Config/config.h on all three platforms. To do anything else will require additional features that may or not be present on the build machine.
  - OpencOR is currently supported on Windows, Linux and OS X, so we only need to target X86 at this stage.

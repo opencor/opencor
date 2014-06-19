@@ -1,41 +1,55 @@
 @ECHO OFF
 
-TITLE Making OpenCOR and its tests...
+SETLOCAL ENABLEDELAYEDEXPANSION
 
-IF NOT "%SetupMSVC2010Environment%" == "" GOTO MakeOpenCOR
+FOR %%X IN (ninja.exe) DO (
+    SET NinjaFound=%%~$PATH:X
+)
 
-IF NOT EXIST "C:\Program Files (x86)\" GOTO SetupMSVC2010EnvironmentOn32BitSystem
+IF DEFINED NinjaFound (
+    SET Generator=Ninja
+) ELSE (
+    SET Generator=JOM
+)
 
-SET ProgFilesDir=C:\Program Files (x86)
+TITLE Making OpenCOR and its tests (using !Generator!)...
 
-GOTO ContinueSetupMSVC2010Environment
+IF NOT DEFINED SetupMSVC2010Environment (
+    IF EXIST "C:\Program Files (x86)\" (
+        SET ProgFilesDir=C:\Program Files ^(x86^)
+    ) ELSE (
+        SET ProgFilesDir=C:\Program Files
+    )
 
-:SetupMSVC2010EnvironmentOn32BitSystem
+    CALL "!ProgFilesDir!\Microsoft Visual Studio 10.0\VC\bin\vcvars32.bat"
 
-SET ProgFilesDir=C:\Program Files
-
-:ContinueSetupMSVC2010Environment
-
-CALL "%ProgFilesDir%\Microsoft Visual Studio 10.0\VC\bin\vcvars32.bat"
-
-SET SetupMSVC2010Environment=Done
-
-:MakeOpenCOR
+    SET SetupMSVC2010Environment=Done
+)
 
 CD build
 
-cmake -G "NMake Makefiles" -DCMAKE_BUILD_TYPE=Debug -DENABLE_TESTS=ON ..
+IF DEFINED NinjaFound (
+    SET CMakeGenerator=Ninja
+) ELSE (
+    SET CMakeGenerator=NMake Makefiles JOM
+)
 
-SET ExitCode=%ERRORLEVEL%
+cmake -G "!CMakeGenerator!" -DCMAKE_BUILD_TYPE=Debug -DENABLE_TESTS=ON ..
 
-IF %ExitCode% NEQ 0 GOTO End
+SET ExitCode=!ERRORLEVEL!
 
-jom
+IF !ExitCode! EQU 0 (
+    IF DEFINED NinjaFound (
+        ninja
 
-SET ExitCode=%ERRORLEVEL%
+        SET ExitCode=!ERRORLEVEL!
+    ) ELSE (
+        jom
 
-:End
+        SET ExitCode=!ERRORLEVEL!
+    )
+)
 
 CD ..
 
-EXIT /B %ExitCode%
+EXIT /B !ExitCode!
