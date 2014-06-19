@@ -70,10 +70,12 @@ MACRO(INITIALISE_PROJECT)
         SET(LINK_FLAGS_PROPERTIES "/STACK:10000000 /MACHINE:X86")
     ELSE()
         SET(CMAKE_CXX_FLAGS "-Wall -W -Werror -std=c++0x")
-        SET(LINK_FLAGS_PROPERTIES)
 
         IF(APPLE)
             SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -stdlib=libc++")
+            SET(LINK_FLAGS_PROPERTIES "-stdlib=libc++")
+        ELSE()
+            SET(LINK_FLAGS_PROPERTIES)
         ENDIF()
     ENDIF()
 
