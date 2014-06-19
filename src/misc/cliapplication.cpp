@@ -115,7 +115,7 @@ void CliApplication::about() const
 
 //==============================================================================
 
-bool CliApplication::command(const QStringList pArguments, int *pRes) const
+bool CliApplication::command(const QStringList &pArguments, int *pRes) const
 {
     // Make sure that we have at least one argument
 
