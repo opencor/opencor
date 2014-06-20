@@ -7,6 +7,12 @@ RETRIEVE_LLVM_SETTINGS()
 
 # Add the plugin
 
+IF(APPLE)
+    SET(QT_MAC_EXTRAS QtMacExtras)
+ELSE()
+    SET(QT_MAC_EXTRAS)
+ENDIF()
+
 ADD_PLUGIN(RawCellMLView
     SOURCES
         ../../i18ninterface.cpp
@@ -30,8 +36,10 @@ ADD_PLUGIN(RawCellMLView
         Compiler
         Core
         CoreCellMLEditing
+        CoreEditing
         CoreSolver
         Editor
+        EditorList
         ${LLVM_PLUGIN}
         ${QSCINTILLA_PLUGIN}
         QScintillaSupport
@@ -45,6 +53,7 @@ ADD_PLUGIN(RawCellMLView
         QtConcurrent
         QtCore
         QtGui
+        ${QT_MAC_EXTRAS}
         QtNetwork
         QtOpenGL
         QtPrintSupport
