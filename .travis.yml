@@ -33,7 +33,8 @@ before_install:
       ;
     fi
   - if [ "`uname -s`" = "Linux" ]; then
-         sudo apt-get install bc
+         sudo apt-get -qq update
+      && sudo apt-get install bc
       && PROCS=`cat /proc/cpuinfo | grep processor | wc -l`
       ;
     else
@@ -50,7 +51,6 @@ script:
       cmake -DCMAKE_BUILD_TYPE=$CONFIG -DCMAKE_PREFIX_PATH=/usr/local/opt/qt5/lib/cmake -DENABLE_TESTS=True ..
       ;
     fi
-  - echo ">>> Nb of jobs = `echo "$PROCS-$PROCS/2" | bc`"
   -    make -j `echo "$PROCS-$PROCS/2" | bc`
     && cd tests
     && ./runtests -platform offscreen
