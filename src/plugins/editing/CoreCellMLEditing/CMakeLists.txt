@@ -15,14 +15,12 @@ ADD_PLUGIN(CoreCellMLEditing
         ../../plugininfo.cpp
         ../../pluginmanager.cpp
 
-        src/corecellmleditingeditorlistwidget.cpp
         src/corecellmleditingplugin.cpp
         src/corecellmleditingwidget.cpp
     HEADERS_MOC
         ../../plugin.h
         ../../pluginmanager.h
 
-        src/corecellmleditingeditorlistwidget.h
         src/corecellmleditingplugin.h
         src/corecellmleditingwidget.h
     UIS
@@ -36,8 +34,10 @@ ADD_PLUGIN(CoreCellMLEditing
         CellMLSupport
         Compiler
         Core
+        CoreEditing
         CoreSolver
         Editor
+        EditorList
         ${LLVM_PLUGIN}
         ${QSCINTILLA_PLUGIN}
         QScintillaSupport

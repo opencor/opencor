@@ -16,15 +16,15 @@ specific language governing permissions and limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// Core CellML editing editor list widget
+// Editor list widget
 //==============================================================================
 
-#ifndef CORECELLMLEDITINGEDITORLISTWIDGET_H
-#define CORECELLMLEDITINGEDITORLISTWIDGET_H
+#ifndef EDITORLISTWIDGET_H
+#define EDITORLISTWIDGET_H
 
 //==============================================================================
 
-#include "corecellmleditingglobal.h"
+#include "editorlistglobal.h"
 
 //==============================================================================
 
@@ -33,21 +33,21 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 namespace OpenCOR {
-namespace CoreCellMLEditing {
+namespace EditorList {
 
 //==============================================================================
 
-class CORECELLMLEDITING_EXPORT CoreCellmlEditingEditorListWidget : public QListView
+class EDITORLIST_EXPORT EditorListWidget : public QListView
 {
     Q_OBJECT
 
 public:
-    explicit CoreCellmlEditingEditorListWidget(QWidget *pParent);
+    explicit EditorListWidget(QWidget *pParent);
 };
 
 //==============================================================================
 
-}   // namespace CoreCellMLEditing
+}   // namespace EditorList
 }   // namespace OpenCOR
 
 //==============================================================================

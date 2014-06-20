@@ -16,34 +16,46 @@ specific language governing permissions and limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// Core CellML editing editor list widget
+// EditorList plugin
 //==============================================================================
 
-#include "corecellmleditingeditorlistwidget.h"
+#ifndef EDITORLISTPLUGIN_H
+#define EDITORLISTPLUGIN_H
+
+//==============================================================================
+
+#include "plugininfo.h"
+
+//==============================================================================
+
+#include <QObject>
 
 //==============================================================================
 
 namespace OpenCOR {
-namespace CoreCellMLEditing {
+namespace EditorList {
 
 //==============================================================================
 
-CoreCellmlEditingEditorListWidget::CoreCellmlEditingEditorListWidget(QWidget *pParent) :
-    QListView(pParent)
+PLUGININFO_FUNC EditorListPluginInfo();
+
+//==============================================================================
+
+class EditorListPlugin : public QObject
 {
-    // Customise ourselves
+    Q_OBJECT
 
-#ifdef Q_OS_MAC
-    setAttribute(Qt::WA_MacShowFocusRect, false);
-    // Note: the above removes the focus border since it messes up our look
-#endif
-    setFrameShape(QFrame::NoFrame);
-}
+    Q_PLUGIN_METADATA(IID "OpenCOR.EditorListPlugin" FILE "editorlistplugin.json")
+};
 
 //==============================================================================
 
-}   // namespace CoreCellMLEditing
+}   // namespace EditorList
 }   // namespace OpenCOR
+
+//==============================================================================
+
+#endif
 
 //==============================================================================
 // End of file
