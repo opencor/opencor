@@ -22,9 +22,6 @@ ADD_PLUGIN(Viewer
         ${QWT_PLUGIN}
     PLUGIN_BINARIES
         ${QWT_PLUGIN_BINARY}
-    QT_MODULES
-        Widgets
-        Xml
     QT_LIBRARIES
         QtConcurrent
         QtCore

@@ -18,6 +18,11 @@ OPTION(USE_PREBUILT_QSCINTILLA_PLUGIN "Use the pre-built version of the QScintil
 OPTION(USE_PREBUILT_QWT_PLUGIN "Use the pre-built version of the Qwt plugin" ON)
 OPTION(USE_PREBUILT_SUNDIALS_PLUGIN "Use the pre-built version of the SUNDIALS plugin" ON)
 
+SET(USE_PREBUILT_LLVM_PLUGIN ON)
+SET(USE_PREBUILT_QSCINTILLA_PLUGIN OFF)
+SET(USE_PREBUILT_QWT_PLUGIN OFF)
+SET(USE_PREBUILT_SUNDIALS_PLUGIN OFF)
+
 # Initialise the project
 
 INITIALISE_PROJECT()
@@ -245,7 +250,7 @@ SET(PLUGINS
 
     editing/CellMLAnnotationView
 #---GRY--- TEMPORARILY DISABLED...
-#    editing/PrettyCellMLView
+    editing/PrettyCellMLView
     editing/RawCellMLView
     editing/RawView
 
@@ -378,17 +383,17 @@ IF(APPLE)
     # Clean up the OpenCOR executable
 
     IF(APPLE)
-        SET(QT_LIBRARIES_EXTRAS QtMacExtras)
+        SET(QT_MAC_EXTRAS QtMacExtras)
     ELSE()
-        SET(QT_LIBRARIES_EXTRAS)
+        SET(QT_MAC_EXTRAS)
     ENDIF()
 
     SET(QT_LIBRARIES
-        ${QT_LIBRARIES_EXTRAS}
         QtConcurrent
         QtCore
         QtGui
         QtHelp
+        ${QT_MAC_EXTRAS}
         QtMultimedia
         QtMultimediaWidgets
         QtNetwork

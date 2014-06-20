@@ -3,9 +3,9 @@ PROJECT(QScintillaPlugin)
 # Use our pre-built version unless instructed otherwise
 
 IF(APPLE)
-    SET(QT_LIBRARIES_EXTRAS QtMacExtras)
+    SET(QT_MAC_EXTRAS QtMacExtras)
 ELSE()
-    SET(QT_LIBRARIES_EXTRAS)
+    SET(QT_MAC_EXTRAS)
 ENDIF()
 
 IF(USE_PREBUILT_QSCINTILLA_PLUGIN)
@@ -49,18 +49,20 @@ IF(USE_PREBUILT_QSCINTILLA_PLUGIN)
             Qt4Qt5
             src
         QT_LIBRARIES
-            ${QT_LIBRARIES_EXTRAS}
             QtCore
             QtGui
+            ${QT_MAC_EXTRAS}
             QtWidgets
     )
 ELSE()
     # Add the plugin
 
     IF(APPLE)
-        SET(QT_MODULES_EXTRAS MacExtras)
+        SET(MAC_EXTRAS MacExtras)
+        SET(QT_MAC_EXTRAS QtMacExtras)
     ELSE()
-        SET(QT_MODULES_EXTRAS)
+        SET(MAC_EXTRAS)
+        SET(QT_MAC_EXTRAS)
     ENDIF()
 
     SET(QSCINTILLA_PLUGIN QScintilla PARENT_SCOPE)
@@ -153,12 +155,12 @@ ELSE()
             SCINTILLA_QT
             SCI_LEXER
         QT_MODULES
-            ${QT_MODULES_EXTRAS}
+            ${MAC_EXTRAS}
             Widgets
         QT_LIBRARIES
-            ${QT_LIBRARIES_EXTRAS}
             QtCore
             QtGui
+            ${QT_MAC_EXTRAS}
             QtWidgets
     )
 ENDIF()
