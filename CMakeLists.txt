@@ -511,7 +511,7 @@ IF(WIN32)
     # Qt libraries required by OpenCOR
 
     WINDOWS_DEPLOY_QT_LIBRARIES(Qt5CLucene Qt5Core Qt5Gui Qt5Help Qt5Multimedia Qt5MultimediaWidgets Qt5Network Qt5OpenGL Qt5Positioning Qt5PrintSupport Qt5Qml Qt5Quick Qt5Sensors Qt5Sql Qt5Svg Qt5WebKit Qt5WebKitWidgets Qt5Widgets Qt5Xml Qt5XmlPatterns)
-    WINDOWS_DEPLOY_QT_LIBRARIES(icudt51 icuin51 icuuc51)
+    WINDOWS_DEPLOY_QT_LIBRARIES(icudt52 icuin52 icuuc52)
 
     # Qt plugins required by OpenCOR
 
@@ -610,9 +610,9 @@ ELSE()
     ENDFOREACH()
 
     FOREACH(QT_FILE icudata icui18n icuuc)
-        INSTALL(FILES ${QT_LIBRARY_DIR}/${CMAKE_SHARED_LIBRARY_PREFIX}${QT_FILE}${CMAKE_SHARED_LIBRARY_SUFFIX}.51.1
+        INSTALL(FILES ${QT_LIBRARY_DIR}/${CMAKE_SHARED_LIBRARY_PREFIX}${QT_FILE}${CMAKE_SHARED_LIBRARY_SUFFIX}.52.1
                 DESTINATION lib
-                RENAME ${CMAKE_SHARED_LIBRARY_PREFIX}${QT_FILE}${CMAKE_SHARED_LIBRARY_SUFFIX}.51)
+                RENAME ${CMAKE_SHARED_LIBRARY_PREFIX}${QT_FILE}${CMAKE_SHARED_LIBRARY_SUFFIX}.52)
     ENDFOREACH()
 
     # Additional libraries required by Qt, but which are not available on a
