@@ -33,10 +33,10 @@ before_install:
       ;
     fi
   - if [ "`uname -s`" = "Linux" ]; then
-      PROCS=`cat /proc/cpuinfo | grep processor | wc -l`
+      export PROCS=`cat /proc/cpuinfo | grep processor | wc -l`
       ;
     else
-      PROCS=`sysctl hw.ncpu | cut -d " " -f 2`
+      export PROCS=`sysctl hw.ncpu | cut -d " " -f 2`
       ;
     fi
 
