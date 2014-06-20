@@ -377,7 +377,7 @@ void CentralWidget::loadSettings(QSettings *pSettings)
         else
             openFile(fileNameOrUrl);
 
-    // Retrieve the modes and views of our different files
+    // Retrieve the selected modes and views of our different files
 
     foreach (const QString &fileName, mFileNames) {
         QString fileNameOrUrl = fileManagerInstance->isRemote(fileName)?
@@ -437,7 +437,7 @@ void CentralWidget::saveSettings(QSettings *pSettings) const
 
     static const QString settingsFileIsRemote = SettingsFileIsRemote.arg(QString());
     static const QString settingsFileMode = SettingsFileMode.arg(QString());
-    static const QString settingsFileModeView = SettingsFileModeView.arg(QString());
+    static const QString settingsFileModeView = SettingsFileModeView.arg(QString(), QString());
 
     foreach (const QString &key, pSettings->allKeys())
         if (   key.startsWith(settingsFileIsRemote)
@@ -470,7 +470,7 @@ void CentralWidget::saveSettings(QSettings *pSettings) const
 
     pSettings->setValue(SettingsFileNamesOrUrls, fileNamesOrUrls);
 
-    // Keep track of the modes and views of our different files
+    // Keep track of the selected modes and views of our different files
 
     foreach (const QString &fileName, fileNames) {
         QString fileNameOrUrl = fileManagerInstance->isRemote(fileName)?
