@@ -33,10 +33,11 @@ before_install:
       ;
     fi
   - if [ "`uname -s`" = "Linux" ]; then
-      export PROCS=`cat /proc/cpuinfo | grep processor | wc -l`
+         sudo apt-get install bc
+      && PROCS=`cat /proc/cpuinfo | grep processor | wc -l`
       ;
     else
-      export PROCS=`sysctl hw.ncpu | cut -d " " -f 2`
+      PROCS=`sysctl hw.ncpu | cut -d " " -f 2`
       ;
     fi
 
