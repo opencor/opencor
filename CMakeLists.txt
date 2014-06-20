@@ -179,8 +179,8 @@ IF(ENABLE_TESTS)
         tests/main.cpp
     )
 
-    QT5_USE_MODULES(${RUNTESTS_NAME}
-        Core
+    TARGET_LINK_LIBRARIES(${RUNTESTS_NAME}
+        Qt5::Core
     )
 
     # Copy our main test program to our tests directory
@@ -299,30 +299,17 @@ ADD_EXECUTABLE(${PROJECT_NAME} WIN32 MACOSX_BUNDLE
     ${SOURCES_RCS}
 )
 
-IF(APPLE)
-    SET(QT_MODULES_EXTRAS MacExtras)
-ELSE()
-    SET(QT_MODULES_EXTRAS)
-ENDIF()
-
-QT5_USE_MODULES(${PROJECT_NAME}
-    ${QT_MODULES_EXTRAS}
-    Concurrent
-    Help
-    Network
-    PrintSupport
-    Svg
-    WebKitWidgets
-    Widgets
-    Xml
-    XmlPatterns
-)
-
 IF(WIN32)
     TARGET_LINK_LIBRARIES(${PROJECT_NAME}
         ${Qt5Core_QTMAIN_LIBRARIES}
     )
 ENDIF()
+
+FOREACH(REQUIRED_QT_MODULE ${REQUIRED_QT_MODULES})
+    TARGET_LINK_LIBRARIES(${PROJECT_NAME}
+        Qt5::${REQUIRED_QT_MODULE}
+    )
+ENDFOREACH()
 
 # Build the CLI version of OpenCOR (Windows specific)
 
@@ -338,9 +325,9 @@ IF(WIN32)
         ${WINDOWS_CLI_SOURCES_RCS}
     )
 
-    QT5_USE_MODULES(${WINDOWS_CLI_PROJECT_NAME}
-        Core
-        XmlPatterns
+    TARGET_LINK_LIBRARIES(${WINDOWS_CLI_PROJECT_NAME}
+        Qt5::Core
+        Qt5::XmlPatterns
     )
 ENDIF()
 

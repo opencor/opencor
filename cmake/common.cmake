@@ -40,9 +40,33 @@ MACRO(INITIALISE_PROJECT)
 
     # Required packages
 
-    FIND_PACKAGE(Qt5Widgets REQUIRED)
-    FIND_PACKAGE(Qt5Xml REQUIRED)
-    FIND_PACKAGE(Qt5XmlPatterns REQUIRED)
+    IF(APPLE)
+        SET(MAC_EXTRAS MacExtras)
+    ELSE()
+        SET(MAC_EXTRAS)
+    ENDIF()
+
+    SET(REQUIRED_QT_MODULES
+        Concurrent
+        Help
+        ${MAC_EXTRAS}
+        Network
+        PrintSupport
+        Svg
+        UiTools
+        WebKitWidgets
+        Widgets
+        Xml
+        XmlPatterns
+    )
+
+    FOREACH(REQUIRED_QT_MODULE ${REQUIRED_QT_MODULES})
+        FIND_PACKAGE(Qt5${REQUIRED_QT_MODULE} REQUIRED)
+    ENDFOREACH()
+
+    IF(ENABLE_TESTS)
+        FIND_PACKAGE(Qt5Test REQUIRED)
+    ENDIF()
 
     # Keep track of some information about Qt
 
@@ -450,8 +474,8 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
     # Qt modules
 
     FOREACH(QT_MODULE ${QT_MODULES})
-        QT5_USE_MODULES(${PROJECT_NAME}
-            ${QT_MODULE}
+        TARGET_LINK_LIBRARIES(${PROJECT_NAME}
+            Qt5::${QT_MODULE}
         )
     ENDFOREACH()
 
@@ -614,8 +638,8 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
                 # Qt modules
 
                 FOREACH(QT_MODULE ${QT_MODULES} Test)
-                    QT5_USE_MODULES(${TEST_NAME}
-                        ${QT_MODULE}
+                    TARGET_LINK_LIBRARIES(${TEST_NAME}
+                        Qt5::${QT_MODULE}
                     )
                 ENDFOREACH()
 
@@ -842,7 +866,8 @@ MACRO(LINUX_DEPLOY_LIBRARY DIRNAME FILENAME)
 
     # Install the library file
 
-    INSTALL(FILES ${DIRNAME}/${FILENAME} DESTINATION lib)
+    INSTALL(FILES ${DIRNAME}/${FILENAME}
+            DESTINATION lib)
 ENDMACRO()
 
 #===============================================================================
