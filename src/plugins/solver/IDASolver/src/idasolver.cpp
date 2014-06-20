@@ -197,7 +197,8 @@ IdaSolver::IdaSolver() :
     mMaximumStep(MaximumStepDefaultValue),
     mMaximumNumberOfSteps(MaximumNumberOfStepsDefaultValue),
     mRelativeTolerance(RelativeToleranceDefaultValue),
-    mAbsoluteTolerance(AbsoluteToleranceDefaultValue)
+    mAbsoluteTolerance(AbsoluteToleranceDefaultValue),
+    mInterpolateSolution(InterpolateSolutionDefaultValue)
 {
 }
 
@@ -267,7 +268,15 @@ void IdaSolver::initialize(const double &pVoiStart, const double &pVoiEnd,
             return;
         }
 
-        // Initialise the ODE solver itself
+        if (mProperties.contains(InterpolateSolutionId)) {
+            mInterpolateSolution = mProperties.value(InterpolateSolutionId).toBool();
+        } else {
+            emit error(QObject::tr("the 'interpolate solution' property value could not be retrieved"));
+
+            return;
+        }
+
+        // Initialise the DAE solver itself
 
         OpenCOR::CoreSolver::CoreDaeSolver::initialize(pVoiStart, pVoiEnd,
                                                        pRatesStatesCount,
@@ -359,6 +368,9 @@ void IdaSolver::initialize(const double &pVoiStart, const double &pVoiEnd,
 void IdaSolver::solve(double &pVoi, const double &pVoiEnd) const
 {
     // Solve the model
+
+    if (!mInterpolateSolution)
+        IDASetStopTime(mSolver, pVoiEnd);
 
     IDASolve(mSolver, pVoiEnd, &pVoi, mStatesVector, mRatesVector, IDA_NORMAL);
 
