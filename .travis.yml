@@ -49,6 +49,7 @@ script:
       cmake -DCMAKE_BUILD_TYPE=$CONFIG -DCMAKE_PREFIX_PATH=/usr/local/opt/qt5/lib/cmake -DENABLE_TESTS=True ..
       ;
     fi
+  - echo ">>> Nb of jobs = `echo "$PROCS-$PROCS/2" | bc`"
   -    make -j `echo "$PROCS-$PROCS/2" | bc`
     && cd tests
     && ./runtests -platform offscreen
