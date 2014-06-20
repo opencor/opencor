@@ -41,10 +41,6 @@ ADD_PLUGIN(PrettyCellMLView
         ${LLVM_PLUGIN_BINARY}
         ${QSCINTILLA_PLUGIN_BINARY}
         ${QWT_PLUGIN_BINARY}
-    QT_MODULES
-        Widgets
-        Xml
-        XmlPatterns
     QT_LIBRARIES
         QtConcurrent
         QtCore

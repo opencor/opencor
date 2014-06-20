@@ -22,8 +22,6 @@ ADD_PLUGIN(FileOrganiserWindow
         src
     PLUGINS
         Core
-    QT_MODULES
-        Widgets
     QT_LIBRARIES
         QtCore
         QtGui
