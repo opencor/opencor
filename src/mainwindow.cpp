@@ -954,11 +954,6 @@ void MainWindow::showSelf()
 #elif defined(Q_OS_LINUX) || defined(Q_OS_MAC)
     // We are on Linux or OS X, so we can simply activate the window and raise
     // ourselves
-//---GRY--- THERE ARE A COUPLE OF ISSUES WITH raise(), SEE
-//              https://github.com/opencor/opencor/issues/126
-//          AS WELL AS THE CORRESPONDING Qt BUG REPORTS:
-//              https://bugreports.qt-project.org/browse/QTBUG-29087
-//              https://bugreports.qt-project.org/browse/QTBUG-29107
 
     activateWindow();
     raise();
