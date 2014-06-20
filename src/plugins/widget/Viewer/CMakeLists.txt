@@ -2,6 +2,12 @@ PROJECT(ViewerPlugin)
 
 # Add the plugin
 
+IF(USE_PREBUILT_QWT_PLUGIN)
+    SET(XML Xml)
+ELSE()
+    SET(XML)
+ENDIF()
+
 ADD_PLUGIN(Viewer
     SOURCES
         ../../guiinterface.cpp
@@ -22,6 +28,8 @@ ADD_PLUGIN(Viewer
         ${QWT_PLUGIN}
     PLUGIN_BINARIES
         ${QWT_PLUGIN_BINARY}
+    QT_MODULES
+        ${XML}
     QT_LIBRARIES
         QtConcurrent
         QtCore
