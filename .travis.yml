@@ -32,23 +32,26 @@ before_install:
       && brew install qt5
       ;
     fi
-
-script:
   - if [ "`uname -s`" = "Linux" ]; then
-         cd build
-      && cmake -DCMAKE_BUILD_TYPE=$CONFIG -DCMAKE_PREFIX_PATH=/opt/qt53/lib/cmake -DENABLE_TESTS=True ..
-      && make -j `cat /proc/cpuinfo | grep processor | wc -l`
-      && cd tests
-      && ./runtests -platform offscreen
+      PROCS=`cat /proc/cpuinfo | grep processor | wc -l`
       ;
     else
-         cd build
-      && cmake -DCMAKE_BUILD_TYPE=$CONFIG -DCMAKE_PREFIX_PATH=/usr/local/opt/qt5/lib/cmake -DENABLE_TESTS=True ..
-      && make -j `sysctl hw.ncpu | cut -d " " -f 2`
-      && cd tests
-      && ./runtests -platform offscreen
+      PROCS=`sysctl hw.ncpu | cut -d " " -f 2`
       ;
     fi
+
+script:
+  - cd build
+  - if [ "`uname -s`" = "Linux" ]; then
+      cmake -DCMAKE_BUILD_TYPE=$CONFIG -DCMAKE_PREFIX_PATH=/opt/qt53/lib/cmake -DENABLE_TESTS=True ..
+      ;
+    else
+      cmake -DCMAKE_BUILD_TYPE=$CONFIG -DCMAKE_PREFIX_PATH=/usr/local/opt/qt5/lib/cmake -DENABLE_TESTS=True ..
+      ;
+    fi
+  -    make -j `echo "$PROCS-$PROCS/2" | bc`
+    && cd tests
+    && ./runtests -platform offscreen
 
 notifications:
   email:
