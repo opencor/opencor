@@ -20,6 +20,7 @@ ADD_PLUGIN(IDASolver
     PLUGIN_BINARIES
         ${SUNDIALS_PLUGIN_BINARY}
     QT_MODULES
+        Core
         Widgets
     QT_LIBRARIES
         QtCore

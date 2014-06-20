@@ -42,7 +42,9 @@ ADD_PLUGIN(CellMLSupport
     PLUGIN_BINARIES
         ${LLVM_PLUGIN_BINARY}
     QT_MODULES
+        Widgets
         Xml
+        XmlPatterns
     QT_LIBRARIES
         QtCore
         QtGui

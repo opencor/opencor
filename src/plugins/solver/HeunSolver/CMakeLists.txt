@@ -17,6 +17,7 @@ ADD_PLUGIN(HeunSolver
     PLUGINS
         CoreSolver
     QT_MODULES
+        Core
         Widgets
     QT_LIBRARIES
         QtCore

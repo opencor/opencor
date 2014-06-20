@@ -15,6 +15,9 @@ ADD_PLUGIN(EditorList
         src
     PLUGINS
         Core
+    QT_MODULES
+        Network
+        Widgets
     QT_LIBRARIES
         QtCore
         QtGui

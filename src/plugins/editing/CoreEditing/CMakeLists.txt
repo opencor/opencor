@@ -25,6 +25,8 @@ ADD_PLUGIN(CoreEditing
         QScintillaSupport
     PLUGIN_BINARIES
         ${QSCINTILLA_PLUGIN_BINARY}
+    QT_MODULES
+        Widgets
     QT_LIBRARIES
         QtCore
         QtGui

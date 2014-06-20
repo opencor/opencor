@@ -41,10 +41,18 @@ ADD_PLUGIN(RawCellMLView
         ${LLVM_PLUGIN_BINARY}
         ${QSCINTILLA_PLUGIN_BINARY}
         ${QWT_PLUGIN_BINARY}
+    QT_MODULES
+        Widgets
+        Xml
+        XmlPatterns
     QT_LIBRARIES
+        QtConcurrent
         QtCore
         QtGui
         QtNetwork
+        QtOpenGL
+        QtPrintSupport
+        QtSvg
         QtWidgets
         QtXml
         QtXmlPatterns

@@ -27,7 +27,9 @@ ADD_PLUGIN(HelpWindow
         Core
     QT_MODULES
         Help
+        Network
         WebKitWidgets
+        XmlPatterns
     QT_LIBRARIES
         QtCore
         QtGui

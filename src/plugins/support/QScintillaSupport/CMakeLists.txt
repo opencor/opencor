@@ -20,6 +20,9 @@ ADD_PLUGIN(QScintillaSupport
         ${QSCINTILLA_PLUGIN}
     PLUGIN_BINARIES
         ${QSCINTILLA_PLUGIN_BINARY}
+    QT_MODULES
+        Network
+        Widgets
     QT_LIBRARIES
         QtCore
         QtGui

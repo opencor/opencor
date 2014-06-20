@@ -24,6 +24,9 @@ ADD_PLUGIN(RawView
         QScintillaSupport
     PLUGIN_BINARIES
         ${QSCINTILLA_PLUGIN_BINARY}
+    QT_MODULES
+        Widgets
+        XmlPatterns
     QT_LIBRARIES
         QtCore
         QtGui

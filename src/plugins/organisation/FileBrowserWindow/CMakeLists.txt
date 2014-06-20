@@ -22,6 +22,8 @@ ADD_PLUGIN(FileBrowserWindow
         src
     PLUGINS
         Core
+    QT_MODULES
+        Widgets
     QT_LIBRARIES
         QtCore
         QtGui

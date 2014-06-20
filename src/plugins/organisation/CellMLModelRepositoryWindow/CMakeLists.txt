@@ -22,6 +22,7 @@ ADD_PLUGIN(CellMLModelRepositoryWindow
         Core
     QT_MODULES
         WebKitWidgets
+        XmlPatterns
     QT_LIBRARIES
         QtCore
         QtGui

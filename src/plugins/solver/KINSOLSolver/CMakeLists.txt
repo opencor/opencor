@@ -18,6 +18,8 @@ ADD_PLUGIN(KINSOLSolver
         ${SUNDIALS_PLUGIN}
     PLUGIN_BINARIES
         ${SUNDIALS_PLUGIN_BINARY}
+    QT_MODULES
+        Core
     QT_LIBRARIES
         QtCore
 )
