@@ -423,6 +423,30 @@ void CentralWidget::loadSettings(QSettings *pSettings)
 
         mFileTabs->setCurrentIndex(0);
 
+    // Retrieve the seleted modes and views, in case there are no files
+
+    if (mFileNames.isEmpty()) {
+        ViewInterface::Mode fileMode = ViewInterface::viewModeFromString(pSettings->value(SettingsFileMode.arg(QString())).toString());
+
+        if (fileMode != ViewInterface::Unknown)
+            mModeTabs->setCurrentIndex(mModeModeTabIndexes.value(fileMode));
+
+        for (int i = 0, iMax = mModeTabs->count(); i < iMax; ++i) {
+            fileMode = mModeTabIndexModes.value(i);
+
+            CentralWidgetMode *mode = mModes.value(fileMode);
+            QString viewPluginName = pSettings->value(SettingsFileModeView.arg(QString(), ViewInterface::viewModeAsString(fileMode))).toString();
+            CentralWidgetViewPlugins *viewPlugins = mode->viewPlugins();
+
+            for (int j = 0, jMax = viewPlugins->count(); j < jMax; ++j)
+                if (!viewPluginName.compare(viewPlugins->value(j)->name())) {
+                    mode->viewTabs()->setCurrentIndex(j);
+
+                    break;
+                }
+        }
+    }
+
     // Retrieve the active directory
 
     setActiveDirectory(pSettings->value(SettingsActiveDirectory,
@@ -506,6 +530,20 @@ void CentralWidget::saveSettings(QSettings *pSettings) const
     }
 
     pSettings->setValue(SettingsCurrentFileNameOrUrl, currentFileNameOrUrl);
+
+    // Keep track of the selected modes and views, should there be no files the
+    // next time we use OpenCOR
+
+    pSettings->setValue(SettingsFileMode.arg(QString()),
+                        ViewInterface::viewModeAsString(mModeTabIndexModes.value(mModeTabs->currentIndex())));
+
+    for (int i = 0, iMax = mModeTabs->count(); i < iMax; ++i) {
+        ViewInterface::Mode fileMode = mModeTabIndexModes.value(i);
+        CentralWidgetMode *mode = mModes.value(fileMode);
+
+        pSettings->setValue(SettingsFileModeView.arg(QString(), ViewInterface::viewModeAsString(fileMode)),
+                            mode->viewPlugins()->value(mode->viewTabs()->currentIndex())->name());
+    }
 
     // Keep track of the active directory
 
