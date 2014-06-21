@@ -91,7 +91,16 @@ SET(UIS
     src/splashscreenwindow.ui
 )
 
+IF(WIN32)
+    SET(QT_CONF_QRC)
+ELSEIF(APPLE)
+    SET(QT_CONF_QRC res/osx/qt_conf.qrc)
+ELSE()
+    SET(QT_CONF_QRC res/linux/qt_conf.qrc)
+ENDIF()
+
 SET(RESOURCES
+    ${QT_CONF_QRC}
     res/common.qrc
     res/ui.qrc
 )
@@ -369,12 +378,6 @@ IF(APPLE)
     #       regularly been causing us problems, so instead we have decided to do
     #       everything ourselves...
 
-    # Copy our qt.conf file over
-
-    ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
-                       COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SOURCE_DIR}/distrib/osx/qt.conf
-                                                        ${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME}.app/Contents/Resources/qt.conf)
-
     # Clean up the OpenCOR executable
 
     IF(APPLE)
@@ -636,11 +639,6 @@ ELSE()
                     DESTINATION lib)
         ENDIF()
     ENDFOREACH()
-
-    # Qt configuration file to tell OpenCOR where to look for plugins
-
-    INSTALL(FILES ${CMAKE_SOURCE_DIR}/distrib/linux/qt.conf
-            DESTINATION bin)
 
     # Qt plugins required by OpenCOR
 
