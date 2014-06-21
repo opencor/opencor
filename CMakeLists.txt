@@ -503,18 +503,11 @@ IF(WIN32)
 
     # Qt plugins required by OpenCOR
 
-    WINDOWS_DEPLOY_QT_PLUGIN(accessible qtaccessiblewidgets)
-    WINDOWS_DEPLOY_QT_PLUGIN(imageformats qjpeg)
-
-    FOREACH(QT_PLUGIN_FILE qwindows)
-        INSTALL(FILES ${QT_PLUGINS_DIR}/platforms/${CMAKE_SHARED_LIBRARY_PREFIX}${QT_PLUGIN_FILE}${CMAKE_SHARED_LIBRARY_SUFFIX}
-                DESTINATION bin/platforms)
-        # Note: yes, the platforms plugin must be installed in the bin folder
-        #       and not the plugins folder...
-    ENDFOREACH()
-
-    WINDOWS_DEPLOY_QT_PLUGIN(printsupport windowsprintersupport)
-    WINDOWS_DEPLOY_QT_PLUGIN(sqldrivers qsqlite)
+    WINDOWS_DEPLOY_QT_PLUGIN(plugins accessible qtaccessiblewidgets)
+    WINDOWS_DEPLOY_QT_PLUGIN(plugins imageformats qjpeg)
+    WINDOWS_DEPLOY_QT_PLUGIN(bin platforms qwindows)
+    WINDOWS_DEPLOY_QT_PLUGIN(plugins printsupport windowsprintersupport)
+    WINDOWS_DEPLOY_QT_PLUGIN(plugins sqldrivers qsqlite)
 
     # Batch and VBScript files to run OpenCOR (useful when downloading a ZIPped
     # version of OpenCOR)
