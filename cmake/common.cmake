@@ -763,7 +763,7 @@ MACRO(ADD_PLUGIN_BINARY PLUGIN_NAME)
                                   DEPENDS ${DEST_PLUGINS_DIR}/${PLUGIN_FILENAME}
                                   COMMAND install_name_tool -change @executable_path/../Frameworks/${QT_LIBRARY}.framework/Versions/${QT_VERSION_MAJOR}/${QT_LIBRARY}
                                                                     ${QT_LIBRARY_DIR}/${QT_LIBRARY}.framework/Versions/${QT_VERSION_MAJOR}/${QT_LIBRARY}
-                                                                    ${DEST_PLUGINS_DIR}/${CMAKE_SHARED_LIBRARY_PREFIX}${PLUGIN_NAME}${CMAKE_SHARED_LIBRARY_SUFFIX})
+                                                                    ${DEST_PLUGINS_DIR}/${PLUGIN_FILENAME})
             ENDFOREACH()
         ENDIF()
 
@@ -778,7 +778,7 @@ MACRO(ADD_PLUGIN_BINARY PLUGIN_NAME)
                               DEPENDS ${PROJECT_BUILD_DIR}/${PLUGIN_FILENAME}
                               COMMAND install_name_tool -change @executable_path/../Frameworks/${QT_LIBRARY}.framework/Versions/${QT_VERSION_MAJOR}/${QT_LIBRARY}
                                                                 ${QT_LIBRARY_DIR}/${QT_LIBRARY}.framework/Versions/${QT_VERSION_MAJOR}/${QT_LIBRARY}
-                                                                ${PROJECT_BUILD_DIR}/${CMAKE_SHARED_LIBRARY_PREFIX}${PLUGIN_NAME}${CMAKE_SHARED_LIBRARY_SUFFIX})
+                                                                ${PROJECT_BUILD_DIR}/${PLUGIN_FILENAME})
         ENDFOREACH()
     ENDIF()
 
