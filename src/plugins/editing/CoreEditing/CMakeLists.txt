@@ -2,6 +2,12 @@ PROJECT(CoreEditingPlugin)
 
 # Add the plugin
 
+IF(APPLE)
+    SET(QT_MAC_EXTRAS QtMacExtras)
+ELSE()
+    SET(QT_MAC_EXTRAS)
+ENDIF()
+
 ADD_PLUGIN(CoreEditing
     SOURCES
         ../../guiinterface.cpp
@@ -25,11 +31,10 @@ ADD_PLUGIN(CoreEditing
         QScintillaSupport
     PLUGIN_BINARIES
         ${QSCINTILLA_PLUGIN_BINARY}
-    QT_MODULES
-        Widgets
     QT_LIBRARIES
         QtCore
         QtGui
+        ${QT_MAC_EXTRAS}
         QtNetwork
         QtWidgets
         QtXmlPatterns

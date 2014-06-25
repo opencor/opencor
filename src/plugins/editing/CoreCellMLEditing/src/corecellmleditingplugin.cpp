@@ -253,9 +253,6 @@ void CoreCellMLEditingPlugin::cellmlValidation()
 
 //---GRY--- TO BE DONE...
 
-    // Now that we have both a user-defined format file and output file, we can
-    // do the eport itself
-
     CellMLSupport::CellmlFile *cellmlFile = CellMLSupport::CellmlFileManager::instance()->cellmlFile(mFileName);
 
 qDebug(">>> CellML validation: %sOK", cellmlFile->isValid()?"":"NOT ");

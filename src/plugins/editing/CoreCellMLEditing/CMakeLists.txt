@@ -7,6 +7,12 @@ RETRIEVE_LLVM_SETTINGS()
 
 # Add the plugin
 
+IF(APPLE)
+    SET(QT_MAC_EXTRAS QtMacExtras)
+ELSE()
+    SET(QT_MAC_EXTRAS)
+ENDIF()
+
 ADD_PLUGIN(CoreCellMLEditing
     SOURCES
         ../../guiinterface.cpp
@@ -15,14 +21,12 @@ ADD_PLUGIN(CoreCellMLEditing
         ../../plugininfo.cpp
         ../../pluginmanager.cpp
 
-        src/corecellmleditingeditorlistwidget.cpp
         src/corecellmleditingplugin.cpp
         src/corecellmleditingwidget.cpp
     HEADERS_MOC
         ../../plugin.h
         ../../pluginmanager.h
 
-        src/corecellmleditingeditorlistwidget.h
         src/corecellmleditingplugin.h
         src/corecellmleditingwidget.h
     UIS
@@ -36,8 +40,10 @@ ADD_PLUGIN(CoreCellMLEditing
         CellMLSupport
         Compiler
         Core
+        CoreEditing
         CoreSolver
         Editor
+        EditorList
         ${LLVM_PLUGIN}
         ${QSCINTILLA_PLUGIN}
         QScintillaSupport
@@ -47,14 +53,11 @@ ADD_PLUGIN(CoreCellMLEditing
         ${LLVM_PLUGIN_BINARY}
         ${QSCINTILLA_PLUGIN_BINARY}
         ${QWT_PLUGIN_BINARY}
-    QT_MODULES
-        Widgets
-        Xml
-        XmlPatterns
     QT_LIBRARIES
         QtConcurrent
         QtCore
         QtGui
+        ${QT_MAC_EXTRAS}
         QtNetwork
         QtOpenGL
         QtPrintSupport

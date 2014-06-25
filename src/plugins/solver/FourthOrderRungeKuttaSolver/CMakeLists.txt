@@ -17,7 +17,6 @@ ADD_PLUGIN(FourthOrderRungeKuttaSolver
     PLUGINS
         CoreSolver
     QT_MODULES
-        Core
         Widgets
     QT_LIBRARIES
         QtCore

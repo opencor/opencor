@@ -90,27 +90,32 @@ Solver::Properties IDASolverPlugin::solverProperties() const
 {
     // Return the properties supported by the solver
 
-    Descriptions MaximumStepPropertyDescriptions;
-    Descriptions MaximumNumberOfStepsPropertyDescriptions;
-    Descriptions RelativeTolerancePropertyDescriptions;
-    Descriptions AbsoluteTolerancePropertyDescriptions;
+    Descriptions MaximumStepDescriptions;
+    Descriptions MaximumNumberOfStepsDescriptions;
+    Descriptions RelativeToleranceDescriptions;
+    Descriptions AbsoluteToleranceDescriptions;
+    Descriptions InterpolateSolutionDescriptions;
 
-    MaximumStepPropertyDescriptions.insert("en", QString::fromUtf8("Maximum step"));
-    MaximumStepPropertyDescriptions.insert("fr", QString::fromUtf8("Pas maximum"));
+    MaximumStepDescriptions.insert("en", QString::fromUtf8("Maximum step"));
+    MaximumStepDescriptions.insert("fr", QString::fromUtf8("Pas maximum"));
 
-    MaximumNumberOfStepsPropertyDescriptions.insert("en", QString::fromUtf8("Maximum number of steps"));
-    MaximumNumberOfStepsPropertyDescriptions.insert("fr", QString::fromUtf8("Nombre maximum de pas"));
+    MaximumNumberOfStepsDescriptions.insert("en", QString::fromUtf8("Maximum number of steps"));
+    MaximumNumberOfStepsDescriptions.insert("fr", QString::fromUtf8("Nombre maximum de pas"));
 
-    RelativeTolerancePropertyDescriptions.insert("en", QString::fromUtf8("Relative tolerance"));
-    RelativeTolerancePropertyDescriptions.insert("fr", QString::fromUtf8("Tolérance relative"));
+    RelativeToleranceDescriptions.insert("en", QString::fromUtf8("Relative tolerance"));
+    RelativeToleranceDescriptions.insert("fr", QString::fromUtf8("Tolérance relative"));
 
-    AbsoluteTolerancePropertyDescriptions.insert("en", QString::fromUtf8("Absolute tolerance"));
-    AbsoluteTolerancePropertyDescriptions.insert("fr", QString::fromUtf8("Tolérance absolue"));
+    AbsoluteToleranceDescriptions.insert("en", QString::fromUtf8("Absolute tolerance"));
+    AbsoluteToleranceDescriptions.insert("fr", QString::fromUtf8("Tolérance absolue"));
 
-    return Solver::Properties() << Solver::Property(Solver::Property::Double, MaximumStepId, MaximumStepPropertyDescriptions, MaximumStepDefaultValue, true)
-                                << Solver::Property(Solver::Property::Integer, MaximumNumberOfStepsId, MaximumNumberOfStepsPropertyDescriptions, MaximumNumberOfStepsDefaultValue)
-                                << Solver::Property(Solver::Property::Double, RelativeToleranceId, RelativeTolerancePropertyDescriptions, RelativeToleranceDefaultValue)
-                                << Solver::Property(Solver::Property::Double, AbsoluteToleranceId, AbsoluteTolerancePropertyDescriptions, AbsoluteToleranceDefaultValue);
+    InterpolateSolutionDescriptions.insert("en", QString::fromUtf8("Interpolate solution"));
+    InterpolateSolutionDescriptions.insert("fr", QString::fromUtf8("Interpoler solution"));
+
+    return Solver::Properties() << Solver::Property(Solver::Property::Double, MaximumStepId, MaximumStepDescriptions, MaximumStepDefaultValue, true)
+                                << Solver::Property(Solver::Property::Integer, MaximumNumberOfStepsId, MaximumNumberOfStepsDescriptions, MaximumNumberOfStepsDefaultValue)
+                                << Solver::Property(Solver::Property::Double, RelativeToleranceId, RelativeToleranceDescriptions, RelativeToleranceDefaultValue)
+                                << Solver::Property(Solver::Property::Double, AbsoluteToleranceId, AbsoluteToleranceDescriptions, AbsoluteToleranceDefaultValue)
+                                << Solver::Property(Solver::Property::Boolean, InterpolateSolutionId, InterpolateSolutionDescriptions, InterpolateSolutionDefaultValue);
 }
 
 //==============================================================================

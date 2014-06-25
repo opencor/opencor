@@ -21,8 +21,8 @@ specific language governing permissions and limitations under the License.
 
 #include "borderedwidget.h"
 #include "cliutils.h"
-#include "corecellmleditingeditorlistwidget.h"
 #include "corecellmleditingwidget.h"
+#include "editorlistwidget.h"
 #include "editorwidget.h"
 #include "filemanager.h"
 #include "guiutils.h"
@@ -73,7 +73,7 @@ CoreCellmlEditingWidget::CoreCellmlEditingWidget(const QString &pContents,
 
     // Create our bordered editor list
 
-    mEditorList = new CoreCellmlEditingEditorListWidget(this);
+    mEditorList = new EditorList::EditorListWidget(this);
     mBorderedEditorList = new Core::BorderedWidget(mEditorList,
                                                    true, false, false, false);
 
@@ -187,7 +187,7 @@ Editor::EditorWidget * CoreCellmlEditingWidget::editor() const
 
 //==============================================================================
 
-CoreCellmlEditingEditorListWidget * CoreCellmlEditingWidget::editorList() const
+EditorList::EditorListWidget * CoreCellmlEditingWidget::editorList() const
 {
     // Return our editor list
 

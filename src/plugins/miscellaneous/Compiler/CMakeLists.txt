@@ -27,13 +27,10 @@ ADD_PLUGIN(Compiler
         ${LLVM_PLUGIN_BINARY}
     QT_MODULES
         Widgets
-        XmlPatterns
     QT_LIBRARIES
         QtCore
         QtGui
-        QtNetwork
         QtWidgets
-        QtXmlPatterns
     TESTS
         tests
 )

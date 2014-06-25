@@ -91,7 +91,16 @@ SET(UIS
     src/splashscreenwindow.ui
 )
 
+IF(WIN32)
+    SET(QT_CONF_QRC)
+ELSEIF(APPLE)
+    SET(QT_CONF_QRC res/osx/qt_conf.qrc)
+ELSE()
+    SET(QT_CONF_QRC res/linux/qt_conf.qrc)
+ENDIF()
+
 SET(RESOURCES
+    ${QT_CONF_QRC}
     res/common.qrc
     res/ui.qrc
 )
@@ -179,8 +188,8 @@ IF(ENABLE_TESTS)
         tests/main.cpp
     )
 
-    QT5_USE_MODULES(${RUNTESTS_NAME}
-        Core
+    TARGET_LINK_LIBRARIES(${RUNTESTS_NAME}
+        Qt5::Core
     )
 
     # Copy our main test program to our tests directory
@@ -234,6 +243,7 @@ SET(PLUGINS
     # Plugins that extend some libraries (incl. third-party ones)
 
     widget/Editor
+    widget/EditorList
     widget/Viewer
 
     # Plugins that have dependencies on others
@@ -299,30 +309,17 @@ ADD_EXECUTABLE(${PROJECT_NAME} WIN32 MACOSX_BUNDLE
     ${SOURCES_RCS}
 )
 
-IF(APPLE)
-    SET(QT_MODULES_EXTRAS MacExtras)
-ELSE()
-    SET(QT_MODULES_EXTRAS)
-ENDIF()
-
-QT5_USE_MODULES(${PROJECT_NAME}
-    ${QT_MODULES_EXTRAS}
-    Concurrent
-    Help
-    Network
-    PrintSupport
-    Svg
-    WebKitWidgets
-    Widgets
-    Xml
-    XmlPatterns
-)
-
 IF(WIN32)
     TARGET_LINK_LIBRARIES(${PROJECT_NAME}
         ${Qt5Core_QTMAIN_LIBRARIES}
     )
 ENDIF()
+
+FOREACH(REQUIRED_QT_MODULE ${REQUIRED_QT_MODULES})
+    TARGET_LINK_LIBRARIES(${PROJECT_NAME}
+        Qt5::${REQUIRED_QT_MODULE}
+    )
+ENDFOREACH()
 
 # Build the CLI version of OpenCOR (Windows specific)
 
@@ -338,9 +335,9 @@ IF(WIN32)
         ${WINDOWS_CLI_SOURCES_RCS}
     )
 
-    QT5_USE_MODULES(${WINDOWS_CLI_PROJECT_NAME}
-        Core
-        XmlPatterns
+    TARGET_LINK_LIBRARIES(${WINDOWS_CLI_PROJECT_NAME}
+        Qt5::Core
+        Qt5::XmlPatterns
     )
 ENDIF()
 
@@ -382,26 +379,20 @@ IF(APPLE)
     #       regularly been causing us problems, so instead we have decided to do
     #       everything ourselves...
 
-    # Copy our qt.conf file over
-
-    ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
-                       COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SOURCE_DIR}/distrib/osx/qt.conf
-                                                        ${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME}.app/Contents/Resources/qt.conf)
-
     # Clean up the OpenCOR executable
 
     IF(APPLE)
-        SET(QT_LIBRARIES_EXTRAS QtMacExtras)
+        SET(QT_MAC_EXTRAS QtMacExtras)
     ELSE()
-        SET(QT_LIBRARIES_EXTRAS)
+        SET(QT_MAC_EXTRAS)
     ENDIF()
 
     SET(QT_LIBRARIES
-        ${QT_LIBRARIES_EXTRAS}
         QtConcurrent
         QtCore
         QtGui
         QtHelp
+        ${QT_MAC_EXTRAS}
         QtMultimedia
         QtMultimediaWidgets
         QtNetwork
@@ -512,22 +503,15 @@ IF(WIN32)
     # Qt libraries required by OpenCOR
 
     WINDOWS_DEPLOY_QT_LIBRARIES(Qt5CLucene Qt5Core Qt5Gui Qt5Help Qt5Multimedia Qt5MultimediaWidgets Qt5Network Qt5OpenGL Qt5Positioning Qt5PrintSupport Qt5Qml Qt5Quick Qt5Sensors Qt5Sql Qt5Svg Qt5WebKit Qt5WebKitWidgets Qt5Widgets Qt5Xml Qt5XmlPatterns)
-    WINDOWS_DEPLOY_QT_LIBRARIES(icudt51 icuin51 icuuc51)
+    WINDOWS_DEPLOY_QT_LIBRARIES(icudt52 icuin52 icuuc52)
 
     # Qt plugins required by OpenCOR
 
-    WINDOWS_DEPLOY_QT_PLUGIN(accessible qtaccessiblewidgets)
-    WINDOWS_DEPLOY_QT_PLUGIN(imageformats qjpeg)
-
-    FOREACH(QT_PLUGIN_FILE qwindows)
-        INSTALL(FILES ${QT_PLUGINS_DIR}/platforms/${CMAKE_SHARED_LIBRARY_PREFIX}${QT_PLUGIN_FILE}${CMAKE_SHARED_LIBRARY_SUFFIX}
-                DESTINATION bin/platforms)
-        # Note: yes, the platforms plugin must be installed in the bin folder
-        #       and not the plugins folder...
-    ENDFOREACH()
-
-    WINDOWS_DEPLOY_QT_PLUGIN(printsupport windowsprintersupport)
-    WINDOWS_DEPLOY_QT_PLUGIN(sqldrivers qsqlite)
+    WINDOWS_DEPLOY_QT_PLUGIN(plugins accessible qtaccessiblewidgets)
+    WINDOWS_DEPLOY_QT_PLUGIN(plugins imageformats qjpeg)
+    WINDOWS_DEPLOY_QT_PLUGIN(bin platforms qwindows)
+    WINDOWS_DEPLOY_QT_PLUGIN(plugins printsupport windowsprintersupport)
+    WINDOWS_DEPLOY_QT_PLUGIN(plugins sqldrivers qsqlite)
 
     # Batch and VBScript files to run OpenCOR (useful when downloading a ZIPped
     # version of OpenCOR)
@@ -611,9 +595,9 @@ ELSE()
     ENDFOREACH()
 
     FOREACH(QT_FILE icudata icui18n icuuc)
-        INSTALL(FILES ${QT_LIBRARY_DIR}/${CMAKE_SHARED_LIBRARY_PREFIX}${QT_FILE}${CMAKE_SHARED_LIBRARY_SUFFIX}.51.1
+        INSTALL(FILES ${QT_LIBRARY_DIR}/${CMAKE_SHARED_LIBRARY_PREFIX}${QT_FILE}${CMAKE_SHARED_LIBRARY_SUFFIX}.52.1
                 DESTINATION lib
-                RENAME ${CMAKE_SHARED_LIBRARY_PREFIX}${QT_FILE}${CMAKE_SHARED_LIBRARY_SUFFIX}.51)
+                RENAME ${CMAKE_SHARED_LIBRARY_PREFIX}${QT_FILE}${CMAKE_SHARED_LIBRARY_SUFFIX}.52)
     ENDFOREACH()
 
     # Additional libraries required by Qt, but which are not available on a
@@ -656,11 +640,6 @@ ELSE()
                     DESTINATION lib)
         ENDIF()
     ENDFOREACH()
-
-    # Qt configuration file to tell OpenCOR where to look for plugins
-
-    INSTALL(FILES ${CMAKE_SOURCE_DIR}/distrib/linux/qt.conf
-            DESTINATION bin)
 
     # Qt plugins required by OpenCOR
 

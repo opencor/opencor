@@ -281,7 +281,7 @@ void CellMLToolsPlugin::exportTo(const CellMLSupport::CellmlFile::Version &pVers
     if (fileName.isEmpty())
         return;
 
-    // Now that we have a file name, we can do the eport itself
+    // Now that we have a file name, we can do the export itself
 
     CellMLSupport::CellmlFile *cellmlFile = CellMLSupport::CellmlFileManager::instance()->cellmlFile(mFileName);
 

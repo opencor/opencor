@@ -40,9 +40,33 @@ MACRO(INITIALISE_PROJECT)
 
     # Required packages
 
-    FIND_PACKAGE(Qt5Widgets REQUIRED)
-    FIND_PACKAGE(Qt5Xml REQUIRED)
-    FIND_PACKAGE(Qt5XmlPatterns REQUIRED)
+    IF(APPLE)
+        SET(MAC_EXTRAS MacExtras)
+    ELSE()
+        SET(MAC_EXTRAS)
+    ENDIF()
+
+    SET(REQUIRED_QT_MODULES
+        Concurrent
+        Help
+        ${MAC_EXTRAS}
+        Network
+        PrintSupport
+        Svg
+        UiTools
+        WebKitWidgets
+        Widgets
+        Xml
+        XmlPatterns
+    )
+
+    FOREACH(REQUIRED_QT_MODULE ${REQUIRED_QT_MODULES})
+        FIND_PACKAGE(Qt5${REQUIRED_QT_MODULE} REQUIRED)
+    ENDFOREACH()
+
+    IF(ENABLE_TESTS)
+        FIND_PACKAGE(Qt5Test REQUIRED)
+    ENDIF()
 
     # Keep track of some information about Qt
 
@@ -450,8 +474,10 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
     # Qt modules
 
     FOREACH(QT_MODULE ${QT_MODULES})
-        QT5_USE_MODULES(${PROJECT_NAME}
-            ${QT_MODULE}
+        FIND_PACKAGE(Qt5${QT_MODULE} REQUIRED)
+
+        TARGET_LINK_LIBRARIES(${PROJECT_NAME}
+            Qt5::${QT_MODULE}
         )
     ENDFOREACH()
 
@@ -614,8 +640,8 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
                 # Qt modules
 
                 FOREACH(QT_MODULE ${QT_MODULES} Test)
-                    QT5_USE_MODULES(${TEST_NAME}
-                        ${QT_MODULE}
+                    TARGET_LINK_LIBRARIES(${TEST_NAME}
+                        Qt5::${QT_MODULE}
                     )
                 ENDFOREACH()
 
@@ -737,7 +763,7 @@ MACRO(ADD_PLUGIN_BINARY PLUGIN_NAME)
                                   DEPENDS ${DEST_PLUGINS_DIR}/${PLUGIN_FILENAME}
                                   COMMAND install_name_tool -change @executable_path/../Frameworks/${QT_LIBRARY}.framework/Versions/${QT_VERSION_MAJOR}/${QT_LIBRARY}
                                                                     ${QT_LIBRARY_DIR}/${QT_LIBRARY}.framework/Versions/${QT_VERSION_MAJOR}/${QT_LIBRARY}
-                                                                    ${DEST_PLUGINS_DIR}/${CMAKE_SHARED_LIBRARY_PREFIX}${PLUGIN_NAME}${CMAKE_SHARED_LIBRARY_SUFFIX})
+                                                                    ${DEST_PLUGINS_DIR}/${PLUGIN_FILENAME})
             ENDFOREACH()
         ENDIF()
 
@@ -752,7 +778,7 @@ MACRO(ADD_PLUGIN_BINARY PLUGIN_NAME)
                               DEPENDS ${PROJECT_BUILD_DIR}/${PLUGIN_FILENAME}
                               COMMAND install_name_tool -change @executable_path/../Frameworks/${QT_LIBRARY}.framework/Versions/${QT_VERSION_MAJOR}/${QT_LIBRARY}
                                                                 ${QT_LIBRARY_DIR}/${QT_LIBRARY}.framework/Versions/${QT_VERSION_MAJOR}/${QT_LIBRARY}
-                                                                ${PROJECT_BUILD_DIR}/${CMAKE_SHARED_LIBRARY_PREFIX}${PLUGIN_NAME}${CMAKE_SHARED_LIBRARY_SUFFIX})
+                                                                ${PROJECT_BUILD_DIR}/${PLUGIN_FILENAME})
         ENDFOREACH()
     ENDIF()
 
@@ -797,12 +823,12 @@ ENDMACRO()
 
 #===============================================================================
 
-MACRO(WINDOWS_DEPLOY_QT_PLUGIN PLUGIN_CATEGORY)
+MACRO(WINDOWS_DEPLOY_QT_PLUGIN PLUGIN_DIRECTORY PLUGIN_CATEGORY)
     FOREACH(PLUGIN_NAME ${ARGN})
         # Deploy the Qt plugin
 
         INSTALL(FILES ${QT_PLUGINS_DIR}/${PLUGIN_CATEGORY}/${CMAKE_SHARED_LIBRARY_PREFIX}${PLUGIN_NAME}${CMAKE_SHARED_LIBRARY_SUFFIX}
-                DESTINATION plugins/${PLUGIN_CATEGORY})
+                DESTINATION ${PLUGIN_DIRECTORY}/${PLUGIN_CATEGORY})
     ENDFOREACH()
 ENDMACRO()
 
@@ -842,7 +868,8 @@ MACRO(LINUX_DEPLOY_LIBRARY DIRNAME FILENAME)
 
     # Install the library file
 
-    INSTALL(FILES ${DIRNAME}/${FILENAME} DESTINATION lib)
+    INSTALL(FILES ${DIRNAME}/${FILENAME}
+            DESTINATION lib)
 ENDMACRO()
 
 #===============================================================================
