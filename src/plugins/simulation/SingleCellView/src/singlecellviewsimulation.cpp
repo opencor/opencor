@@ -700,9 +700,8 @@ void SingleCellViewSimulationResults::addPoint(const double &pPoint)
     if (!mRuntime)
         return;
 
-    // Add the data to our different arrays
-    mPoints->savePoint(pPoint) ;
-    mDataset->savePoints() ;
+    mPoints->savePoint(mSize, pPoint) ;
+    mDataset->savePoints(mSize) ;
     ++mSize;
 }
 

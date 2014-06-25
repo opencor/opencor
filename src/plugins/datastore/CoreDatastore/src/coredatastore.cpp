@@ -35,18 +35,14 @@ DataVariable::DataVariable(const qulonglong &pSize, const double *pValuePointer)
 /*----------------------------------------------------------------------------*/
 : mUri(""), mUnits(""), mLabel(""), mValuePointer(pValuePointer), mBuffer(0)
 {
-  mBuffer.reserve(pSize) ;
+  mBuffer = new double[pSize] ;
+  mSize = pSize ;
   }
 
 DataVariable::~DataVariable()
 /*-------------------------*/
 {
-  }
-
-void DataVariable::reset(void)
-/*--------------------------*/
-{
-  mBuffer.clear() ;
+  delete[] mBuffer ;
   }
 
 void DataVariable::setUri(const QString &pUri)
@@ -86,36 +82,6 @@ const QString DataVariable::getLabel(void) const
   }
 
 
-SizeType DataVariable::size(void)
-/*-----------------------------*/
-{
-  return mBuffer.size() ;
-  }
-
-void DataVariable::savePoint(void)
-/*----------------------------------*/
-{
-  if (mValuePointer) mBuffer.push_back(*mValuePointer) ;
-  }
-
-void DataVariable::savePoint(const double &pValue)
-/*--------------------------------------------------*/
-{
-  mBuffer.push_back(pValue) ;
-  }
-
-double DataVariable::getPoint(const SizeType &pIndex) const  // also [] operator...
-/*-------------------------------------------------------*/
-{
-  return mBuffer[pIndex] ;
-  }
-
-const double *DataVariable::data(void) const
-/*----------------------------------------*/
-{
-  return mBuffer.data() ;
-  }
-
 //==============================================================================
 
 DataSet::DataSet(const SizeType &pSize)
@@ -153,21 +119,8 @@ QVector<DataVariable *> DataSet::holdPoints(const IndexType &pCount, const doubl
   return vars ;
   }
 
-void DataSet::reset(void)
-/*---------------------*/
-{
-  for (auto v = mVariables.begin() ;  v != mVariables.end() ;  ++v) {
-    (*v)->reset() ;
-    }
-  }
 
-void DataSet::savePoints(void)
-/*--------------------------*/
 {
-  for (auto v = mVariables.begin() ;  v != mVariables.end() ;  ++v) {
-    (*v)->savePoint() ;
-    }
-  }
 
 //==============================================================================
 

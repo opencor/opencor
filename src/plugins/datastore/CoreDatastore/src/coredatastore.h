@@ -33,6 +33,10 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#include <cassert>
+
+//==============================================================================
+
 namespace OpenCOR {
 
 //==============================================================================
@@ -59,19 +63,46 @@ class DataVariable {
   const QString getLabel(void) const ;
   const QString getUnits(void) const ;
 
-  void reset(void) ;
-  SizeType size(void) ;
-  void savePoint(void) ;
-  void savePoint(const double &pValue) ;
-  double getPoint(const SizeType &pIndex) const ;  // also [] operator...
-  const double *data(void) const ;
+/*
+   The following code is time-critical and having it
+   in a separate implementation file that is compiled
+   to a library can double execution time (under OS/X).
+*/
+
+  void savePoint(const SizeType &pPos)
+  /*--------------------------------*/
+  {
+    assert(pPos >= 0 && pPos < mSize) ;
+    if (mValuePointer) mBuffer[pPos] = *mValuePointer ;
+    }
+
+  void savePoint(const SizeType &pPos, const double &pValue)
+  /*------------------------------------------------------*/
+  {
+    assert(pPos >= 0 && pPos < mSize) ;
+    mBuffer[pPos] = pValue ;
+    }
+
+  double getPoint(const SizeType &pPos) const
+  /*---------------------------------------*/
+  {
+    assert(pPos >= 0 && pPos < mSize) ;
+    return mBuffer[pPos] ;
+    }
+
+  const double *data(void) const
+  /*--------------------------*/
+  {
+    return mBuffer ;
+    }
 
  private:
   QString mUri ;
   QString mUnits ;
   QString mLabel ;
   const double *mValuePointer ;
-  QVector<double> mBuffer ;
+  double *mBuffer ;
+  SizeType mSize ;
   } ;
 
 //==============================================================================
@@ -84,8 +115,13 @@ class DataSet {
 
   DataVariable *holdPoint(const double *pPoint=0) ;
   QVector<DataVariable *> holdPoints(const IndexType &pCount, const double *pPoints) ;
-  void reset(void) ;
-  void savePoints(void) ;
+
+  void savePoints(const SizeType &pPos)
+  /*---------------------------------*/
+  {
+    for (auto vp = mVariables.begin() ;  vp != mVariables.end() ;  ++vp)
+      (*vp)->savePoint(pPos) ;
+    }
 
  private:
   const SizeType mSize ;
