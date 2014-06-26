@@ -1,13 +1,3 @@
-# Determine the effective build directory
-
-SET(PROJECT_BUILD_DIR ${CMAKE_BINARY_DIR})
-
-IF(NOT "${CMAKE_CFG_INTDIR}" STREQUAL ".")
-    SET(PROJECT_BUILD_DIR ${PROJECT_BUILD_DIR}/${CMAKE_CFG_INTDIR})
-ENDIF()
-
-#===============================================================================
-
 MACRO(INITIALISE_PROJECT)
 #    SET(CMAKE_VERBOSE_MAKEFILE ON)
     SET(CMAKE_INCLUDE_CURRENT_DIR ON)
@@ -36,6 +26,14 @@ MACRO(INITIALISE_PROJECT)
         MESSAGE("Building a ${ARCHITECTURE}-bit release version...")
 
         SET(RELEASE_MODE ON)
+    ENDIF()
+
+    # Determine the effective build directory
+
+    SET(PROJECT_BUILD_DIR ${CMAKE_BINARY_DIR})
+
+    IF(NOT "${CMAKE_CFG_INTDIR}" STREQUAL ".")
+        SET(PROJECT_BUILD_DIR ${PROJECT_BUILD_DIR}/${CMAKE_CFG_INTDIR})
     ENDIF()
 
     # Required packages
