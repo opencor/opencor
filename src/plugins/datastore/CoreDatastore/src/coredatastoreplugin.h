@@ -24,7 +24,7 @@ class CoreDatastorePlugin : public QObject
 {
     Q_OBJECT
 
-    Q_PLUGIN_METADATA(IID "OpenCOR.CoreDatrastorePlugin" FILE "coredatastoreplugin.json")
+    Q_PLUGIN_METADATA(IID "OpenCOR.CoreDatastorePlugin" FILE "coredatastoreplugin.json")
 };
 
 //==============================================================================
