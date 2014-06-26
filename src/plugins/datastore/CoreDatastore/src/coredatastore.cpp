@@ -119,9 +119,6 @@ QVector<DataVariable *> DataSet::holdPoints(const IndexType &pCount, const doubl
   return vars ;
   }
 
-
-{
-
 //==============================================================================
 
 }   // namespace CoreDatastore
