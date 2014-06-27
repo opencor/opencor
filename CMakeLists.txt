@@ -181,7 +181,7 @@ IF(ENABLE_TESTS)
     IF(APPLE)
         SET(DEST_TESTS_DIR ${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME}.app/Contents/MacOS)
     ELSE()
-        SET(DEST_TESTS_DIR ${PROJECT_BUILD_DIR}/tests)
+        SET(DEST_TESTS_DIR ${PROJECT_BUILD_DIR}/bin)
     ENDIF()
 
     # Build our main test program
@@ -390,18 +390,12 @@ IF(APPLE)
 
     # Clean up the OpenCOR executable
 
-    IF(APPLE)
-        SET(QT_MAC_EXTRAS QtMacExtras)
-    ELSE()
-        SET(QT_MAC_EXTRAS)
-    ENDIF()
-
     SET(QT_LIBRARIES
         QtConcurrent
         QtCore
         QtGui
         QtHelp
-        ${QT_MAC_EXTRAS}
+        QtMacExtras
         QtMultimedia
         QtMultimediaWidgets
         QtNetwork
