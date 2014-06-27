@@ -27,7 +27,7 @@ IF(USE_PREBUILT_QWT_PLUGIN)
 
     # Add the plugin as a binary
     # Note: in the case of Windows, must refer to the distribution directory as
-    #       opposed to the main build directory since we need the .lib file and
+    #       opposed to the plugins directory since we need the .lib file and
     #       it's only there...
 
     IF(WIN32)
