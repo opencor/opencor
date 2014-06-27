@@ -472,7 +472,7 @@ void MainWindow::initializeGuiPlugin(Plugin *pPlugin)
                 if (action)
                     mGui->menuFile->insertAction(mGui->menuFile->actions().first(), action);
                 else
-                    action = mGui->menuFile->insertSeparator(mGui->menuFile->actions().first());
+                    mGui->menuFile->insertSeparator(mGui->menuFile->actions().first());
 
                 break;
             }

@@ -140,7 +140,8 @@ void FileOrganiserWindowWidget::loadItemSettings(QSettings *pSettings,
 
                 folderItem->setData(true, Item::Folder);
 
-                pParentItem->appendRow(folderItem);
+                if (pParentItem)
+                    pParentItem->appendRow(folderItem);
 
                 // Expand the folder item, if necessary
 
@@ -162,7 +163,8 @@ void FileOrganiserWindowWidget::loadItemSettings(QSettings *pSettings,
 
                 fileItem->setData(textOrPath, Item::Path);
 
-                pParentItem->appendRow(fileItem);
+                if (pParentItem)
+                    pParentItem->appendRow(fileItem);
 
                 // Add the file to our file manager
                 // Note: it doesn't matter whether or not the file is already
