@@ -178,7 +178,11 @@ IF(ENABLE_TESTS)
     # Note: DEST_TESTS_DIR isn't only used here, but also in our ADD_PLUGIN()
     #       macro...
 
-    SET(DEST_TESTS_DIR ${PROJECT_BUILD_DIR}/tests)
+    IF(APPLE)
+        SET(DEST_TESTS_DIR ${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME}.app/Contents/MacOS)
+    ELSE()
+        SET(DEST_TESTS_DIR ${PROJECT_BUILD_DIR}/tests)
+    ENDIF()
 
     # Build our main test program
 
@@ -199,6 +203,12 @@ IF(ENABLE_TESTS)
     ADD_CUSTOM_COMMAND(TARGET ${RUNTESTS_NAME} POST_BUILD
                        COMMAND ${CMAKE_COMMAND} -E copy ${PROJECT_BINARY_DIR}/${MAIN_TEST_FILENAME}
                                                         ${DEST_TESTS_DIR}/${MAIN_TEST_FILENAME})
+
+    # Clean up our test program, but only if we are on OS X
+
+    IF(APPLE)
+        OS_X_CLEAN_UP_FILE_WITH_QT_LIBRARIES(${RUNTESTS_NAME} ${DEST_TESTS_DIR} ${MAIN_TEST_FILENAME} QtCore)
+    ENDIF()
 ENDIF()
 
 # Build the OpenCOR plugins
@@ -409,14 +419,14 @@ IF(APPLE)
         QtXmlPatterns
     )
 
-    OS_X_CLEAN_UP_FILE_WITH_QT_LIBRARIES(${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME}.app/Contents/MacOS ${PROJECT_NAME}
-                                         ${QT_LIBRARIES})
+    OS_X_CLEAN_UP_FILE_WITH_QT_LIBRARIES(${PROJECT_NAME} ${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME}.app/Contents/MacOS ${PROJECT_NAME} ${QT_LIBRARIES})
 
-    # Deploy our Qt libraries, but only if we are not building using Xcode
-    # Note: see OS_X_CLEAN_UP_FILE_WITH_QT_LIBRARIES() for the reason...
+    # Deploy our Qt libraries
 
-    IF(NOT XCODE)
-        OS_X_DEPLOY_QT_LIBRARIES(${QT_LIBRARIES} QtCLucene QtSql)
+    OS_X_DEPLOY_QT_LIBRARIES(${QT_LIBRARIES} QtCLucene QtSql)
+
+    IF(ENABLE_TESTS)
+        OS_X_DEPLOY_QT_LIBRARIES(QtTest)
     ENDIF()
 
     # Deploy some plugins
