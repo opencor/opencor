@@ -860,9 +860,18 @@ ENDMACRO()
 
 MACRO(LINUX_DEPLOY_QT_PLUGIN PLUGIN_CATEGORY)
     FOREACH(PLUGIN_NAME ${ARGN})
+        # Copy the Qt plugin to the plugins folder, if required
+
+        SET(PLUGIN_DIRNAME ${QT_PLUGINS_DIR}/${PLUGIN_CATEGORY})
+        SET(PLUGIN_FILENAME ${CMAKE_SHARED_LIBRARY_PREFIX}${PLUGIN_NAME}${CMAKE_SHARED_LIBRARY_SUFFIX})
+
+        IF(ENABLE_TESTS)
+            COPY_FILE_TO_BUILD_DIR(${PROJECT_NAME} ${PLUGIN_DIRNAME} plugins/${PLUGIN_CATEGORY} ${PLUGIN_FILENAME})
+        ENDIF()
+
         # Deploy the Qt plugin
 
-        INSTALL(FILES ${QT_PLUGINS_DIR}/${PLUGIN_CATEGORY}/${CMAKE_SHARED_LIBRARY_PREFIX}${PLUGIN_NAME}${CMAKE_SHARED_LIBRARY_SUFFIX}
+        INSTALL(FILES ${PLUGIN_DIRNAME}/${PLUGIN_FILENAME}
                 DESTINATION plugins/${PLUGIN_CATEGORY})
     ENDFOREACH()
 ENDMACRO()
@@ -870,6 +879,12 @@ ENDMACRO()
 #===============================================================================
 
 MACRO(LINUX_DEPLOY_LIBRARY DIRNAME FILENAME)
+    # Copy the library file to the build/bin folder, if required
+
+    IF(ENABLE_TESTS)
+        COPY_FILE_TO_BUILD_DIR(${PROJECT_NAME} ${DIRNAME} bin ${FILENAME})
+    ENDIF()
+
     # Install the library file
 
     INSTALL(FILES ${DIRNAME}/${FILENAME}

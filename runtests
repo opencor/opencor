@@ -5,8 +5,8 @@ echo "\033[44;37;1mRunning OpenCOR's tests...\033[0m"
 WMsg="OpenCOR's tests must first be built before being run."
 
 if [ "`uname -s`" = "Linux" ]; then
-    if [ -f build/tests/runtests ]; then
-        build/tests/runtests
+    if [ -f build/bin/runtests ]; then
+        build/bin/runtests
     else
         echo $WMsg
     fi
