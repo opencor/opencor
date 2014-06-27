@@ -67,7 +67,7 @@ int main(int pArgC, char *pArgV[])
     //          have OpenCOR to behave as both a CLI and a GUI application on
     //          Windows, hence the [OpenCOR]/windows/main.cpp file, which is
     //          used to generate the CLI version of OpenCOR...
-    // Note #2: on OS X, if we were to try to open the OpenCOR bundly from the
+    // Note #2: on OS X, if we were to try to open the OpenCOR bundle from the
     //          command line, then we would get an error message similar to:
     //              LSOpenURLsWithRole() failed with error -10810 for the file [SomePath]/OpenCOR.app.
     //          Fortunately, when double clicking on the OpenCOR bundle or
