@@ -2,8 +2,6 @@
 
 ./clean
 
-export PACKAGE_OPENCOR=True
-
 ./make $*
 
 exitCode=$?

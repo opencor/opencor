@@ -412,10 +412,10 @@ IF(APPLE)
     OS_X_CLEAN_UP_FILE_WITH_QT_LIBRARIES(${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME}.app/Contents/MacOS ${PROJECT_NAME}
                                          ${QT_LIBRARIES})
 
-    # Deploy our Qt libraries, but only if we are to package OpenCOR
+    # Deploy our Qt libraries, but only if we are not building using Xcode
     # Note: see OS_X_CLEAN_UP_FILE_WITH_QT_LIBRARIES() for the reason...
 
-    IF("$ENV{PACKAGE_OPENCOR}" STREQUAL "True")
+    IF(NOT XCODE)
         OS_X_DEPLOY_QT_LIBRARIES(${QT_LIBRARIES} QtCLucene QtSql)
     ENDIF()
 

@@ -75,6 +75,14 @@ MACRO(INITIALISE_PROJECT)
     SET(QT_VERSION_MINOR ${Qt5Widgets_VERSION_MINOR})
     SET(QT_VERSION_PATCH ${Qt5Widgets_VERSION_PATCH})
 
+    # Check whether we want to generate an Xcode project
+
+    IF("${CMAKE_GENERATOR}" STREQUAL "Xcode")
+        SET(XCODE ON)
+    ELSE()
+        SET(XCODE OFF)
+    ENDIF()
+
     # Some general build settings
     # Note: we need to use C++11, so that we can define strings as static const.
     #       Now, it happens that MSVC enables C++11 support by default, so we
@@ -715,48 +723,31 @@ MACRO(ADD_PLUGIN_BINARY PLUGIN_NAME)
     SET(PLUGIN_BINARY_DIR ${PROJECT_SOURCE_DIR}/bin/${DISTRIB_BINARY_DIR})
 
     # Copy the plugin to our plugins directory
-    # Note #1: this is done so that we can, on Windows and Linux, test the use
-    #          of plugins in OpenCOR without first having to package and deploy
-    #          everything...
-    # Note #2: to use ADD_CUSTOM_COMMAND() on Windows or Linux with Ninja
-    #          doesn't work, so we use EXECUTE_PROCESS() instead...
-    # Note #3: we don't use EXECUTE_PROCESS() on OS X because it doesn't work
-    #          with Xcode...
+    # Note: this is done so that we can, on Windows and Linux, test the use of
+    #       plugins in OpenCOR without first having to package and deploy
+    #       everything...
 
     SET(PLUGIN_FILENAME ${CMAKE_SHARED_LIBRARY_PREFIX}${PLUGIN_NAME}${CMAKE_SHARED_LIBRARY_SUFFIX})
 
-    IF(APPLE)
-        ADD_CUSTOM_COMMAND(OUTPUT ${DEST_PLUGINS_DIR}/${PLUGIN_FILENAME}
-                           COMMAND ${CMAKE_COMMAND} -E copy ${PLUGIN_BINARY_DIR}/${PLUGIN_FILENAME}
-                                                            ${DEST_PLUGINS_DIR}/${PLUGIN_FILENAME})
-    ELSE()
-        EXECUTE_PROCESS(COMMAND ${CMAKE_COMMAND} -E copy ${PLUGIN_BINARY_DIR}/${PLUGIN_FILENAME}
-                                                         ${DEST_PLUGINS_DIR}/${PLUGIN_FILENAME})
-    ENDIF()
+    EXECUTE_PROCESS(COMMAND ${CMAKE_COMMAND} -E copy ${PLUGIN_BINARY_DIR}/${PLUGIN_FILENAME}
+                                                     ${DEST_PLUGINS_DIR}/${PLUGIN_FILENAME})
 
     # Make a copy of the plugin to our main build directory
 
-    IF(APPLE)
-        ADD_CUSTOM_COMMAND(OUTPUT ${PROJECT_BUILD_DIR}/${PLUGIN_FILENAME}
-                           COMMAND ${CMAKE_COMMAND} -E copy ${PLUGIN_BINARY_DIR}/${PLUGIN_FILENAME}
-                                                            ${PROJECT_BUILD_DIR}/${PLUGIN_FILENAME})
-    ELSE()
-        EXECUTE_PROCESS(COMMAND ${CMAKE_COMMAND} -E copy ${PLUGIN_BINARY_DIR}/${PLUGIN_FILENAME}
-                                                         ${PROJECT_BUILD_DIR}/${PLUGIN_FILENAME})
-    ENDIF()
+    EXECUTE_PROCESS(COMMAND ${CMAKE_COMMAND} -E copy ${PLUGIN_BINARY_DIR}/${PLUGIN_FILENAME}
+                                                     ${PROJECT_BUILD_DIR}/${PLUGIN_FILENAME})
 
     # A few OS X specific things
 
     IF(APPLE)
         # Make sure that the copy of our plugin in our plugins directory refers
         # to the system version of the Qt libraries on which it depends, this in
-        # case we are not to package OpenCOR
+        # case we are to build OpenCOR using Xcode
         # Note: see OS_X_CLEAN_UP_FILE_WITH_QT_LIBRARIES() for the reason...
 
-        IF(NOT "$ENV{PACKAGE_OPENCOR}" STREQUAL "True")
+        IF(XCODE)
             FOREACH(QT_LIBRARY ${QT_LIBRARIES})
                 ADD_CUSTOM_TARGET(${PLUGIN_NAME}_${QT_LIBRARY}_UPDATE_OS_X_QT_REFERENCE_IN_BUNDLE ALL
-                                  DEPENDS ${DEST_PLUGINS_DIR}/${PLUGIN_FILENAME}
                                   COMMAND install_name_tool -change @executable_path/../Frameworks/${QT_LIBRARY}.framework/Versions/${QT_VERSION_MAJOR}/${QT_LIBRARY}
                                                                     ${QT_LIBRARY_DIR}/${QT_LIBRARY}.framework/Versions/${QT_VERSION_MAJOR}/${QT_LIBRARY}
                                                                     ${DEST_PLUGINS_DIR}/${PLUGIN_FILENAME})
@@ -771,7 +762,6 @@ MACRO(ADD_PLUGIN_BINARY PLUGIN_NAME)
 
         FOREACH(QT_LIBRARY ${QT_LIBRARIES})
             ADD_CUSTOM_TARGET(${PLUGIN_NAME}_${QT_LIBRARY}_UPDATE_OS_X_QT_REFERENCE_IN_BUILD_DIRECTORY ALL
-                              DEPENDS ${PROJECT_BUILD_DIR}/${PLUGIN_FILENAME}
                               COMMAND install_name_tool -change @executable_path/../Frameworks/${QT_LIBRARY}.framework/Versions/${QT_VERSION_MAJOR}/${QT_LIBRARY}
                                                                 ${QT_LIBRARY_DIR}/${QT_LIBRARY}.framework/Versions/${QT_VERSION_MAJOR}/${QT_LIBRARY}
                                                                 ${PROJECT_BUILD_DIR}/${PLUGIN_FILENAME})
@@ -913,15 +903,14 @@ MACRO(OS_X_CLEAN_UP_FILE_WITH_QT_LIBRARIES DIRNAME FILENAME)
 
     # Make sure that the Qt file refers to our embedded version of its Qt
     # dependencies
-    # Note: we only do this if we are to package OpenCOR. Indeed, if we were to
-    #       do this when building OpenCOR for, say, debugging purposes, then we
-    #       would end up with two sets of Qt libraries (one in /Applications/Qt5
-    #       and another in the OpenCOR bundle), potentially confusing tools such
-    #       as Xcode, generating messages like "XXX is implemented in both YYY
-    #       and ZZZ. One of the two will be used. Which one is undefined." even
-    #       though everything is actually fine...
+    # Note: we only do this if we are not using Xcode. Indeed, if we were when
+    #       using Xcode, then we would end up with two sets of Qt libraries (one
+    #       in /Applications/Qt5 and another in the OpenCOR bundle), potentially
+    #       confusing Xcode, resulting in messages like "XXX is implemented in
+    #       both YYY and ZZZ. One of the two will be used. Which one is
+    #       undefined." even though everything is actually fine...
 
-    IF("$ENV{PACKAGE_OPENCOR}" STREQUAL "True")
+    IF(NOT XCODE)
         FOREACH(DEPENDENCY ${ARGN})
             SET(DEPENDENCY_FILENAME ${DEPENDENCY}.framework/Versions/${QT_VERSION_MAJOR}/${DEPENDENCY})
 
