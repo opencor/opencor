@@ -844,6 +844,12 @@ ENDMACRO()
 #===============================================================================
 
 MACRO(WINDOWS_DEPLOY_LIBRARY DIRNAME FILENAME)
+    # Copy the library file to the build/bin folder, if required
+
+    IF(ENABLE_TESTS)
+        COPY_FILE_TO_BUILD_DIR(${PROJECT_NAME} ${DIRNAME} bin ${FILENAME})
+    ENDIF()
+
     # Install the library file
 
     INSTALL(FILES ${DIRNAME}/${FILENAME}

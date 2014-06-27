@@ -75,10 +75,12 @@ int main(int pArgC, char *pArgV[])
         foreach (const QString &test, iter.value()) {
             QString testName = QString("%1_%2").arg(iter.key(), test);
 
-            // Go to the parent directory of the directory that contains the
-            // test, so that we can load plugins without any problem
+            // Go to the directory that contains our plugins, so that we can load them
+            // without any problem
 
-            QDir::setCurrent(exePath+"/..");
+#ifdef Q_OS_WIN
+            QDir::setCurrent(exePath+"/../plugins/OpenCOR");
+#endif
 
             // Execute the test itself
 
