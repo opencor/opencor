@@ -595,9 +595,9 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
                 )
 
                 IF(WIN32)
-                    SET(QT_CONF_SOURCES_RC)
+                    SET(QT_CONF_SOURCE_RC)
                 ELSE()
-                    QT5_ADD_RESOURCES(QT_CONF_SOURCES_RC
+                    QT5_ADD_RESOURCES(QT_CONF_SOURCE_RC
                         ../../../../${QT_CONF_QRC}
                     )
                 ENDIF()
@@ -617,7 +617,7 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
                     ${TEST_SOURCE}
                     ${TEST_SOURCES_MOC}
 
-                    ${QT_CONF_SOURCES_RC}
+                    ${QT_CONF_SOURCE_RC}
                 )
 
                 # Plugins
