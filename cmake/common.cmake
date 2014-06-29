@@ -844,11 +844,11 @@ ENDMACRO()
 #===============================================================================
 
 MACRO(WINDOWS_DEPLOY_LIBRARY DIRNAME FILENAME)
-    # Copy the library file to the build/bin folder, if required
+    # Copy the library file to both the build and build/bin folders, so we can
+    # test things without first having to deploy OpenCOR
 
-    IF(ENABLE_TESTS)
-        COPY_FILE_TO_BUILD_DIR(${PROJECT_NAME} ${DIRNAME} bin ${FILENAME})
-    ENDIF()
+    COPY_FILE_TO_BUILD_DIR(${PROJECT_NAME} ${DIRNAME} . ${FILENAME})
+    COPY_FILE_TO_BUILD_DIR(${PROJECT_NAME} ${DIRNAME} bin ${FILENAME})
 
     # Install the library file
 
@@ -879,12 +879,6 @@ ENDMACRO()
 #===============================================================================
 
 MACRO(LINUX_DEPLOY_LIBRARY DIRNAME FILENAME)
-    # Copy the library file to the build/bin folder, if required
-
-    IF(ENABLE_TESTS)
-        COPY_FILE_TO_BUILD_DIR(${PROJECT_NAME} ${DIRNAME} bin ${FILENAME})
-    ENDIF()
-
     # Install the library file
 
     INSTALL(FILES ${DIRNAME}/${FILENAME}
