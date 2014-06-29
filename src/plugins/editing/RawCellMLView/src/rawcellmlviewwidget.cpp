@@ -290,26 +290,26 @@ QList<QWidget *> RawCellmlViewWidget::statusBarWidgets() const
 
 void RawCellmlViewWidget::cleanUpXml(const QDomNode &pDomNode) const
 {
-    // Go through the node's children and remove all unrecognisable attributes
+    // Clean up the current node
 
-    for (int i = 0, iMax = pDomNode.childNodes().count(); i < iMax; ++i) {
-        QDomNode domNode = pDomNode.childNodes().at(i);
-        QDomNamedNodeMap domNodeAttributes = domNode.attributes();
+    QDomNamedNodeMap domNodeAttributes = pDomNode.attributes();
 
-        QStringList attributeNames = QStringList();
+    QStringList attributeNames = QStringList();
 
-        for (int j = 0, jMax = domNodeAttributes.count(); j < jMax; ++j) {
-            QString attributeName = domNodeAttributes.item(j).nodeName();
+    for (int j = 0, jMax = domNodeAttributes.count(); j < jMax; ++j) {
+        QString attributeName = domNodeAttributes.item(j).nodeName();
 
-            if (attributeName.contains(":"))
-                attributeNames << attributeName;
-        }
-
-        foreach (const QString &attributeName, attributeNames)
-            domNodeAttributes.removeNamedItem(attributeName);
-
-        cleanUpXml(domNode);
+        if (attributeName.contains(":"))
+            attributeNames << attributeName;
     }
+
+    foreach (const QString &attributeName, attributeNames)
+        domNodeAttributes.removeNamedItem(attributeName);
+
+    // Go through the node's children, if any, and clean them up
+
+    for (int i = 0, iMax = pDomNode.childNodes().count(); i < iMax; ++i)
+        cleanUpXml(pDomNode.childNodes().at(i));
 }
 
 //==============================================================================
