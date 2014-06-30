@@ -803,7 +803,11 @@ ENDMACRO()
 #===============================================================================
 
 MACRO(COPY_FILE_TO_BUILD_DIR PROJECT_TARGET ORIG_DIRNAME DEST_DIRNAME FILENAME)
-    # Determine the real destination folder
+    # Copy the file (renaming it if needed) to the destination folder
+
+IF(NOT EXISTS ${PROJECT_BUILD_DIR}/${DEST_DIRNAME})
+    MESSAGE(">>> Creating '${PROJECT_BUILD_DIR}/${DEST_DIRNAME}'...")
+ENDIF()
 
     IF("${ARGN}" STREQUAL "")
         ADD_CUSTOM_COMMAND(TARGET ${PROJECT_TARGET} POST_BUILD
