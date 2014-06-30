@@ -60,7 +60,7 @@ script:
       cd bin
       ;
     else
-      ls -al /Users/travis/build/opencor/opencor/build/OpenCOR.app/Contents
+      ls -alR /Users/travis/build/opencor/opencor/build/OpenCOR.app/Contents
       cd OpenCOR.app/Contents/MacOS
       ;
     fi
