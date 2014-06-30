@@ -29,7 +29,6 @@ before_install:
   - if [ "`uname -s`" = "Linux" ]; then
          sudo apt-add-repository -y ppa:beineri/opt-qt531
       && sudo apt-get -qq update
-#      && sudo apt-get -qq install qt53tools qt53svg qt53webkit
       && sudo apt-get -qq install qt53-meta qt53base qt53connectivity qt53creator qt53declarative qt53doc qt53graphicaleffects qt53imageformats qt53location qt53multimedia qt53qbs qt53quick1 qt53quickcontrols qt53script qt53sensors qt53serialport qt53svg qt53tools qt53translations qt53webkit-examples qt53websockets qt53x11extras qt53xmlpatterns	
       && ls -alR /opt/qt53/plugins
       ;
