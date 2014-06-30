@@ -34,9 +34,13 @@ before_install:
     else
          brew update
       && brew install qt5
+      && echo "Listing Qt5 contents [1]"
       && ls -alR /usr/local/opt/qt5/lib/QtConcurrent.framework
+      && echo "Changing ownership of Qt5 files"
       && sudo chown -R travis /usr/local/opt/qt5
+      && echo "Changing right accesses of Qt5 files"
       && sudo chmod -R 755 /usr/local/opt/qt5
+      && echo "Listing Qt5 contents [2]"
       && ls -alR /usr/local/opt/qt5/lib/QtConcurrent.framework
       ;
     fi
