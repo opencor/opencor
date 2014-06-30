@@ -5,7 +5,7 @@ branches:
     - master
 
 os:
-  - linux
+#  - linux
   - osx
 
 env:
@@ -60,6 +60,7 @@ script:
       cd bin
       ;
     else
+      ls -al /Users/travis/build/opencor/opencor/build/OpenCOR.app/Contents
       cd OpenCOR.app/Contents/MacOS
       ;
     fi
