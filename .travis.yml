@@ -55,9 +55,15 @@ script:
       cmake -DCMAKE_BUILD_TYPE=$CONFIG -DCMAKE_PREFIX_PATH=/usr/local/opt/qt5/lib/cmake -DENABLE_TESTS=True ..
       ;
     fi
-  -    make -j `echo "$PROCS-$PROCS/2" | bc`
-    && cd tests
-    && ./runtests -platform offscreen
+  - make -j `echo "$PROCS-$PROCS/2" | bc`
+  - if [ "`uname -s`" = "Linux" ]; then
+      cd bin
+      ;
+    else
+      cd OpenCOR.app/Contents/MacOS
+      ;
+    fi
+  - ./runtests -platform offscreen
 
 notifications:
   email:
