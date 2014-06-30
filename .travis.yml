@@ -34,7 +34,7 @@ before_install:
     else
          brew update
       && brew install qt5
-      && chmod -R 755 /usr/local/opt/qt5
+      && chmod -R 755 /usr/local/opt/qt5/*
       ;
     fi
   - if [ "`uname -s`" = "Linux" ]; then
@@ -61,9 +61,7 @@ script:
       cd bin
       ;
     else
-         ls -alR /usr/local/opt/qt5/lib/QtConcurrent.framework
-      && ls -alR /Users/travis/build/opencor/opencor/build/OpenCOR.app/Contents/Frameworks/QtConcurrent.framework
-      && cd OpenCOR.app/Contents/MacOS
+      cd OpenCOR.app/Contents/MacOS
       ;
     fi
   - ./runtests -platform offscreen
