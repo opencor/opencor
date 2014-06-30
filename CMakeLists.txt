@@ -463,6 +463,13 @@ ELSE()
             COPY_FILE_TO_BUILD_DIR(${PROJECT_NAME} ${CMAKE_SOURCE_DIR}/distrib/windows/x86 bin
                                    ${REDISTRIBUTABLE_FILE}${CMAKE_SHARED_LIBRARY_SUFFIX})
         ENDFOREACH()
+    ELSE()
+        # We need the qxcb plugin, if we are to test OpenCOR on Linux
+
+        IF(ENABLE_TESTS)
+            COPY_FILE_TO_BUILD_DIR(${PROJECT_NAME} ${QT_PLUGINS_DIR}/platforms plugins/platforms
+                                   ${CMAKE_SHARED_LIBRARY_PREFIX}qxcb${CMAKE_SHARED_LIBRARY_SUFFIX})
+        ENDIF()
     ENDIF()
 ENDIF()
 
