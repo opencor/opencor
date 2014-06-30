@@ -13,58 +13,58 @@ env:
   - CONFIG=Debug
 
 before_install:
-  - if [ "`uname -s`" = "Linux" ] ; then
-         sudo apt-get -qq update
-      && sudo apt-get -qq install libc6-i386
-      && wget http://www.cmake.org/files/v3.0/cmake-3.0.0-Linux-i386.tar.gz
-      && tar -xzf cmake-3.0.0-Linux-i386.tar.gz
-      && sudo cp -fR cmake-3.0.0-Linux-i386/* /usr
-      ;
-    else
-         curl -O http://www.cmake.org/files/v3.0/cmake-3.0.0-Darwin-universal.tar.gz
-      && tar -xzf cmake-3.0.0-Darwin-universal.tar.gz
-      && sudo cp -fR cmake-3.0.0-Darwin-universal/CMake.app/Contents/* /usr
-      ;
-    fi
-  - if [ "`uname -s`" = "Linux" ]; then
-         sudo apt-add-repository -y ppa:beineri/opt-qt531
-      && sudo apt-get -qq update
-      && sudo apt-get -qq install qt53tools qt53svg qt53webkit
-      ;
-    else
-         brew update
-      && brew install qt5
-      && chmod -R 755 /usr/local/opt/qt5/*
-      ;
-    fi
-  - if [ "`uname -s`" = "Linux" ]; then
-         sudo apt-get -qq update
-      && sudo apt-get install bc
-      && PROCS=`cat /proc/cpuinfo | grep processor | wc -l`
-      ;
-    else
-      PROCS=`sysctl hw.ncpu | cut -d " " -f 2`
-      ;
-    fi
+  -    if [ "`uname -s`" = "Linux" ] ; then
+            sudo apt-get -qq update
+         && sudo apt-get -qq install libc6-i386
+         && wget http://www.cmake.org/files/v3.0/cmake-3.0.0-Linux-i386.tar.gz
+         && tar -xzf cmake-3.0.0-Linux-i386.tar.gz
+         && sudo cp -fR cmake-3.0.0-Linux-i386/* /usr
+         ;
+       else
+            curl -O http://www.cmake.org/files/v3.0/cmake-3.0.0-Darwin-universal.tar.gz
+         && tar -xzf cmake-3.0.0-Darwin-universal.tar.gz
+         && sudo cp -fR cmake-3.0.0-Darwin-universal/CMake.app/Contents/* /usr
+         ;
+       fi
+    && if [ "`uname -s`" = "Linux" ]; then
+            sudo apt-add-repository -y ppa:beineri/opt-qt531
+         && sudo apt-get -qq update
+         && sudo apt-get -qq install qt53tools qt53svg qt53webkit
+         ;
+       else
+            brew update
+         && brew install qt5
+         && chmod -R 755 /usr/local/opt/qt5/*
+         ;
+       fi
+    && if [ "`uname -s`" = "Linux" ]; then
+            sudo apt-get -qq update
+         && sudo apt-get install bc
+         && PROCS=`cat /proc/cpuinfo | grep processor | wc -l`
+         ;
+       else
+         PROCS=`sysctl hw.ncpu | cut -d " " -f 2`
+         ;
+       fi
 
 script:
-  - cd build
-  - if [ "`uname -s`" = "Linux" ]; then
-      cmake -DCMAKE_BUILD_TYPE=$CONFIG -DCMAKE_PREFIX_PATH=/opt/qt53/lib/cmake -DENABLE_TESTS=True ..
-      ;
-    else
-      cmake -DCMAKE_BUILD_TYPE=$CONFIG -DCMAKE_PREFIX_PATH=/usr/local/opt/qt5/lib/cmake -DENABLE_TESTS=True ..
-      ;
-    fi
-  - make -j `echo "$PROCS-$PROCS/2" | bc`
-  - if [ "`uname -s`" = "Linux" ]; then
-      cd bin
-      ;
-    else
-      cd OpenCOR.app/Contents/MacOS
-      ;
-    fi
-  - ./runtests -platform offscreen
+  -    cd build
+    && if [ "`uname -s`" = "Linux" ]; then
+         cmake -DCMAKE_BUILD_TYPE=$CONFIG -DCMAKE_PREFIX_PATH=/opt/qt53/lib/cmake -DENABLE_TESTS=True ..
+         ;
+       else
+         cmake -DCMAKE_BUILD_TYPE=$CONFIG -DCMAKE_PREFIX_PATH=/usr/local/opt/qt5/lib/cmake -DENABLE_TESTS=True ..
+         ;
+       fi
+    && make -j `echo "$PROCS-$PROCS/2" | bc`
+    && if [ "`uname -s`" = "Linux" ]; then
+         cd bin
+         ;
+       else
+         cd OpenCOR.app/Contents/MacOS
+         ;
+       fi
+    && ./runtests -platform offscreen
 
 notifications:
   email:
