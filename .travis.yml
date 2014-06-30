@@ -34,17 +34,7 @@ before_install:
     else
          brew update
       && brew install qt5
-      && echo "Listing Qt5 contents [1]"
-      && ls -alR /usr/local/opt/qt5/lib/QtConcurrent.framework
-      && echo "Changing right accesses of Qt5 files"
-      && chmod -R 755 /usr/local/opt/qt5/*
-      && echo "Listing Qt5 contents [2]"
-      && ls -alR /usr/local/opt/qt5/lib/QtConcurrent.framework
-      && echo "Changing right access of QtConcurrentRun"
-      && chmod 755 /usr/local/opt/qt5/lib/QtConcurrent.framework/Versions/5/Headers/QtConcurrentRun
-      && echo "Listing QtConcurrentRun"
-      && ls -l /usr/local/opt/qt5/lib/QtConcurrent.framework/Versions/5/Headers/QtConcurrentRun
-      && echo "Done with testing things"
+      && chmod -R 755 /usr/local/opt/qt5
       ;
     fi
   - if [ "`uname -s`" = "Linux" ]; then
