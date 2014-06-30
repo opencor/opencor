@@ -63,7 +63,8 @@ script:
       cd bin
       ;
     else
-         ls -alR /Users/travis/build/opencor/opencor/build/OpenCOR.app/Contents/Frameworks/QtConcurrent.framework
+         ls -alR /usr/local/opt/qt5/lib/QtConcurrent.framework
+      && ls -alR /Users/travis/build/opencor/opencor/build/OpenCOR.app/Contents/Frameworks/QtConcurrent.framework
       && cd OpenCOR.app/Contents/MacOS
       ;
     fi
