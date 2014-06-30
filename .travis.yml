@@ -60,6 +60,7 @@ script:
       cd bin
       ;
     else
+      ls -alR /usr/local/opt/qt5/lib/QtConcurrent.framework
       ls -alR /Users/travis/build/opencor/opencor/build/OpenCOR.app/Contents
       cd OpenCOR.app/Contents/MacOS
       ;
