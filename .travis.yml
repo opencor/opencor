@@ -32,8 +32,8 @@ before_install:
       && sudo apt-get -qq install qt53tools qt53svg qt53webkit
       ;
     else
-         brew update
-      && brew install qt5
+         sudo brew update
+      && sudo brew install qt5
       && ls -alR /usr/local/opt/qt5/lib/QtConcurrent.framework
       && sudo chmod -R 755 /usr/local/opt/qt5
       && ls -alR /usr/local/opt/qt5/lib/QtConcurrent.framework
