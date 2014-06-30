@@ -42,6 +42,8 @@ before_install:
       && sudo chmod -R 755 /usr/local/opt/qt5
       && echo "Listing Qt5 contents [2]"
       && ls -alR /usr/local/opt/qt5/lib/QtConcurrent.framework
+      && chmod 755 /usr/local/opt/qt5/lib/QtConcurrent.framework/Versions/5/Headers/QtConcurrentRun
+      && ls -l /usr/local/opt/qt5/lib/QtConcurrent.framework/Versions/5/Headers/QtConcurrentRun
       ;
     fi
   - if [ "`uname -s`" = "Linux" ]; then
