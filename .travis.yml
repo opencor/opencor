@@ -64,7 +64,7 @@ script:
          cd OpenCOR.app/Contents/MacOS
          ;
        fi
-    && ./runtests -platform offscreen
+    && ./runtests
 
 notifications:
   email:
