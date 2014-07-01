@@ -63,20 +63,20 @@ void DataVariable::setLabel(const QString &pLabel)
   mLabel = pLabel ;
   }
 
-const QString DataVariable::getUri(void) const
-/*------------------------------------------*/
+QString DataVariable::getUri(void) const
+/*------------------------------------*/
 {
   return mUri ;
   }
 
-const QString DataVariable::getUnits(void) const
-/*--------------------------------------------*/
+QString DataVariable::getUnits(void) const
+/*--------------------------------------*/
 {
   return mUnits ;
   }
 
-const QString DataVariable::getLabel(void) const
-/*--------------------------------------------*/
+QString DataVariable::getLabel(void) const
+/*--------------------------------------*/
 {
   return mLabel ;
   }

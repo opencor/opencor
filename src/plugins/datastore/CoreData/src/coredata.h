@@ -59,9 +59,9 @@ class DataVariable {
   void setUri(const QString &pUri) ;
   void setUnits(const QString &pUnits) ;
   void setLabel(const QString &pLabel) ;
-  const QString getUri(void) const ;
-  const QString getLabel(void) const ;
-  const QString getUnits(void) const ;
+  QString getUri(void) const ;
+  QString getLabel(void) const ;
+  QString getUnits(void) const ;
 
 /*
    The following code is time-critical and having it
