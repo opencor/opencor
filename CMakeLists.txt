@@ -501,11 +501,11 @@ IF(WIN32)
 
     # Qt plugins required by OpenCOR
 
-    WINDOWS_DEPLOY_QT_PLUGIN(plugins accessible qtaccessiblewidgets)
-    WINDOWS_DEPLOY_QT_PLUGIN(plugins imageformats qjpeg)
-    WINDOWS_DEPLOY_QT_PLUGIN(bin platforms qwindows)
-    WINDOWS_DEPLOY_QT_PLUGIN(plugins printsupport windowsprintersupport)
-    WINDOWS_DEPLOY_QT_PLUGIN(plugins sqldrivers qsqlite)
+    WINDOWS_DEPLOY_QT_PLUGIN(accessible qtaccessiblewidgets)
+    WINDOWS_DEPLOY_QT_PLUGIN(imageformats qjpeg)
+    WINDOWS_DEPLOY_QT_PLUGIN(platforms qwindows)
+    WINDOWS_DEPLOY_QT_PLUGIN(printsupport windowsprintersupport)
+    WINDOWS_DEPLOY_QT_PLUGIN(sqldrivers qsqlite)
 
     # Batch and VBScript files to run OpenCOR (useful when downloading a ZIPped
     # version of OpenCOR)
