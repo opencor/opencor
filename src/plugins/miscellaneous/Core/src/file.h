@@ -69,6 +69,8 @@ public:
 
     void reset();
 
+    bool isDifferent() const;
+
     bool isNew() const;
 
     int newIndex() const;

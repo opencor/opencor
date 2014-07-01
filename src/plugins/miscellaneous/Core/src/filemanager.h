@@ -109,6 +109,8 @@ public:
     int newIndex(const QString &pFileName) const;
     QString url(const QString &pFileName) const;
 
+    bool isDifferent(const QString &pFileName) const;
+
     bool isNew(const QString &pFileName) const;
     bool isRemote(const QString &pFileName) const;
     bool isModified(const QString &pFileName) const;

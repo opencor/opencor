@@ -1693,26 +1693,36 @@ void CentralWidget::updateNoViewMsg()
 
 void CentralWidget::fileChanged(const QString &pFileName)
 {
-    // The given file has been changed, so ask the user whether to reload it
+    // Make sure that the fact that the file has been changed is still relevant,
+    // i.e. the given file has either been modified or it's different from its
+    // physical version
 
-    if (QMessageBox::question(mMainWindow, qApp->applicationName(),
-                              tr("<strong>%1</strong> has been modified. Do you want to reload it?").arg(pFileName),
-                              QMessageBox::Yes|QMessageBox::No,
-                              QMessageBox::Yes) == QMessageBox::Yes) {
-        // The user wants to reload the file
+    FileManager *fileManagerInstance = FileManager::instance();
 
-        for (int i = 0, iMax = mFileNames.count(); i < iMax; ++i)
-            if (!mFileNames[i].compare(pFileName)) {
-                // We have found the file to reload
+    if (   fileManagerInstance->isNewOrModified(pFileName)
+        || fileManagerInstance->isDifferent(pFileName)) {
+        // The given file has been changed, so ask the user whether to reload it
 
-                reloadFile(i);
+        if (QMessageBox::question(mMainWindow, qApp->applicationName(),
+                                  tr("<strong>%1</strong> has been modified. Do you want to reload it?").arg(pFileName),
+                                  QMessageBox::Yes|QMessageBox::No,
+                                  QMessageBox::Yes) == QMessageBox::Yes) {
+            // The user wants to reload the file
 
-                break;
-            }
-    } else {
-        // The user doesn't want to reload the file, so consider it as modified
+            for (int i = 0, iMax = mFileNames.count(); i < iMax; ++i)
+                if (!mFileNames[i].compare(pFileName)) {
+                    // We have found the file to reload
 
-        FileManager::instance()->setModified(pFileName, true);
+                    reloadFile(i);
+
+                    break;
+                }
+        } else {
+            // The user doesn't want to reload the file, so consider it as
+            // modified
+
+            fileManagerInstance->setModified(pFileName, true);
+        }
     }
 }
 

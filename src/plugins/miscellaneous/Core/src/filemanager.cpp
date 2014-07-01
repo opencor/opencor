@@ -248,6 +248,21 @@ QString FileManager::url(const QString &pFileName) const
 
 //==============================================================================
 
+bool FileManager::isDifferent(const QString &pFileName) const
+{
+    // Return whether the given file, if it is being managed, is different from
+    // its corresponding physical version
+
+    File *file = isManaged(nativeCanonicalFileName(pFileName));
+
+    if (file)
+        return file->isDifferent();
+    else
+        return false;
+}
+
+//==============================================================================
+
 bool FileManager::isNew(const QString &pFileName) const
 {
     // Return whether the given file, if it is being managed, is new
@@ -396,11 +411,16 @@ void FileManager::reload(const QString &pFileName)
     // Make sure that the given file is managed
 
     QString nativeFileName = nativeCanonicalFileName(pFileName);
+    File *file = isManaged(nativeFileName);
 
-    if (isManaged(nativeFileName))
-        // The file is managed, so let people know that it should be reloaded
+    if (file) {
+        // The file is managed, so reset its settings and let people know that
+        // it should be reloaded
+
+        file->reset();
 
         emit fileReloaded(nativeFileName);
+    }
 }
 
 //==============================================================================

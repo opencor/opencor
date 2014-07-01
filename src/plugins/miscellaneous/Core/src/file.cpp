@@ -109,9 +109,7 @@ File::Status File::check()
 
         return File::Unchanged;
     } else {
-        // We have a new SHA-1 value, so keep track of it
-
-        mSha1 = newSha1;
+        // We have a new SHA-1 value
 
         if (newSha1.isEmpty()) {
             // The SHA-1 value of our file is now empty, which means that either
@@ -157,6 +155,16 @@ void File::reset()
     mNewIndex = 0;
 
     mModified = false;
+}
+
+//==============================================================================
+
+bool File::isDifferent() const
+{
+    // Return whether the file is different from its corresponding physical
+    // version by comparing its SHA-1 value against that of its physical version
+
+    return mSha1.compare(sha1());
 }
 
 //==============================================================================
