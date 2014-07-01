@@ -591,11 +591,6 @@ void CentralWidget::settingsLoaded(const Plugins &pLoadedPlugins)
 
 void CentralWidget::retranslateUi()
 {
-    // Retranslate our files tab bar, in case some files are new
-
-    for (int i = 0, iMax = mFileTabs->count(); i < iMax; ++i)
-        updateFileTab(i);
-
     // Retranslate our modes tab bar
 
 #ifdef ENABLE_SAMPLES
