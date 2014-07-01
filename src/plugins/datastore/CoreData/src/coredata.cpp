@@ -19,7 +19,7 @@ specific language governing permissions and limitations under the License.
 // A store for simulation data
 //==============================================================================
 
-#include "coredatastore.h"
+#include "coredata.h"
 
 //==============================================================================
 
@@ -27,7 +27,7 @@ namespace OpenCOR {
 
 //==============================================================================
 
-namespace CoreDatastore {
+namespace CoreData {
 
 //==============================================================================
 
@@ -122,7 +122,7 @@ QVector<DataVariable *> DataSet::holdPoints(const IndexType &pCount, const doubl
 
 //==============================================================================
 
-}   // namespace CoreDatastore
+}   // namespace CoreData
 }   // namespace OpenCOR
 
 //==============================================================================

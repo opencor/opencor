@@ -20,7 +20,7 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include "cellmlfileruntime.h"
-#include "coredatastore.h"
+#include "coredata.h"
 #include "corenlasolver.h"
 #include "singlecellviewcontentswidget.h"
 #include "singlecellviewinformationsimulationwidget.h"
@@ -627,7 +627,7 @@ bool SingleCellViewSimulationResults::createArrays()
         return true;
 
     try {
-      mDataset = new CoreDatastore::DataSet(simulationSize) ;
+      mDataset = new CoreData::DataSet(simulationSize) ;
       mPoints = mDataset->holdPoint(0, true) ;
       mConstants = mDataset->holdPoints(mRuntime->constantsCount(), mSimulation->data()->constants()) ;
       mRates = mDataset->holdPoints(mRuntime->ratesCount(), mSimulation->data()->rates()) ;
@@ -647,7 +647,7 @@ bool SingleCellViewSimulationResults::createArrays()
 
     for (int i = 0, iMax = mRuntime->parameters().count(); i < iMax; ++i) {
       CellMLSupport::CellmlFileRuntimeParameter *parameter = mRuntime->parameters()[i] ;
-      CoreDatastore::DataVariable *var = 0 ;
+      CoreData::DataVariable *var = 0 ;
       switch (parameter->type()) {
        case CellMLSupport::CellmlFileRuntimeParameter::Constant:
        case CellMLSupport::CellmlFileRuntimeParameter::ComputedConstant:

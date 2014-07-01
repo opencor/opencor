@@ -229,7 +229,8 @@ SET(PLUGINS
 
     miscellaneous/Core
 
-    datastore/CoreDatastore
+    datastore/CoreData
+
     solver/CoreSolver
 
     # Plugins that build on top of some third-party libraries

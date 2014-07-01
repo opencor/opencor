@@ -19,8 +19,8 @@ specific language governing permissions and limitations under the License.
 // A store for simulation data
 //==============================================================================
 
-#ifndef COREDATASTORE_H
-#define COREDATASTORE_H
+#ifndef COREDATA_H
+#define COREDATA_H
 
 //==============================================================================
 
@@ -41,7 +41,7 @@ namespace OpenCOR {
 
 //==============================================================================
 
-namespace CoreDatastore {
+namespace CoreData {
 
 //==============================================================================
 
@@ -131,7 +131,7 @@ class DataSet {
 
 //==============================================================================
 
-}   // namespace CoreDatastore
+}   // namespace CoreData
 }   // namespace OpenCOR
 
 //==============================================================================

@@ -2,16 +2,16 @@
 // CoreStore plugin
 //==============================================================================
 
-#include "coredatastoreplugin.h"
+#include "coredataplugin.h"
 
 //==============================================================================
 
 namespace OpenCOR {
-namespace CoreDatastore {
+namespace CoreData {
 
 //==============================================================================
 
-PLUGININFO_FUNC CoreDatastorePluginInfo()
+PLUGININFO_FUNC CoreDataPluginInfo()
 {
     Descriptions descriptions;
 
@@ -25,7 +25,7 @@ PLUGININFO_FUNC CoreDatastorePluginInfo()
 
 //==============================================================================
 
-}   // namespace CoreDatastore
+}   // namespace CoreData
 }   // namespace OpenCOR
 
 //==============================================================================

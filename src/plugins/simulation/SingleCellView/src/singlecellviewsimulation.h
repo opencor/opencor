@@ -24,7 +24,7 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-#include "coredatastore.h"
+#include "coredata.h"
 #include "coresolver.h"
 #include "singlecellviewsimulationworker.h"
 #include "solverinterface.h"
@@ -177,12 +177,12 @@ private:
     SingleCellViewSimulation *mSimulation;
     qulonglong mSize;
 
-    CoreDatastore::DataSet *mDataset ;
-    CoreDatastore::DataVariable *mPoints ;
-    QVector<CoreDatastore::DataVariable *> mConstants ;
-    QVector<CoreDatastore::DataVariable *> mRates ;
-    QVector<CoreDatastore::DataVariable *> mStates ;
-    QVector<CoreDatastore::DataVariable *> mAlgebraic ;
+    CoreData::DataSet *mDataset ;
+    CoreData::DataVariable *mPoints ;
+    QVector<CoreData::DataVariable *> mConstants ;
+    QVector<CoreData::DataVariable *> mRates ;
+    QVector<CoreData::DataVariable *> mStates ;
+    QVector<CoreData::DataVariable *> mAlgebraic ;
 
     bool createArrays();
     void deleteArrays();

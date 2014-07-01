@@ -1,9 +1,9 @@
 //==============================================================================
-// CoreDatastore plugin
+// CoreData plugin
 //==============================================================================
 
-#ifndef COREDATASTOREPLUGIN_H
-#define COREDATASTOREPLUGIN_H
+#ifndef COREDATAPLUGIN_H
+#define COREDATAPLUGIN_H
 
 //==============================================================================
 
@@ -12,24 +12,24 @@
 //==============================================================================
 
 namespace OpenCOR {
-namespace CoreDatastore {
+namespace CoreData {
 
 //==============================================================================
 
-PLUGININFO_FUNC CoreDatastorePluginInfo();
+PLUGININFO_FUNC CoreDataPluginInfo();
 
 //==============================================================================
 
-class CoreDatastorePlugin : public QObject
+class CoreDataPlugin : public QObject
 {
     Q_OBJECT
 
-    Q_PLUGIN_METADATA(IID "OpenCOR.CoreDatastorePlugin" FILE "coredatastoreplugin.json")
+    Q_PLUGIN_METADATA(IID "OpenCOR.CoreDataPlugin" FILE "coredataplugin.json")
 };
 
 //==============================================================================
 
-}   // namespace CoreDatastore
+}   // namespace CoreData
 }   // namespace OpenCOR
 
 //==============================================================================
