@@ -47,14 +47,6 @@ namespace Core {
 
 //==============================================================================
 
-static const auto SettingsBaseColor      = QStringLiteral("BaseColor");
-static const auto SettingsBorderColor    = QStringLiteral("BorderColor");
-static const auto SettingsHighlightColor = QStringLiteral("HighlightColor");
-static const auto SettingsShadowColor    = QStringLiteral("Shadow");
-static const auto SettingsWindowColor    = QStringLiteral("WindowColor");
-
-//==============================================================================
-
 QString CORE_EXPORT getOpenFileName(const QString &pCaption,
                                     const QString &pFilter);
 QStringList CORE_EXPORT getOpenFileNames(const QString &pCaption,

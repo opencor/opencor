@@ -20,9 +20,10 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include "cliapplication.h"
-#include "cliutils.h"
+#include "coresettings.h"
 #include "common.h"
 #include "plugin.h"
+#include "settings.h"
 
 //==============================================================================
 

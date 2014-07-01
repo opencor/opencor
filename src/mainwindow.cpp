@@ -23,6 +23,7 @@ specific language governing permissions and limitations under the License.
 #include "cliutils.h"
 #include "common.h"
 #include "coreinterface.h"
+#include "coresettings.h"
 #include "dockwidget.h"
 #include "guiinterface.h"
 #include "guiutils.h"
@@ -32,6 +33,7 @@ specific language governing permissions and limitations under the License.
 #include "pluginmanager.h"
 #include "pluginswindow.h"
 #include "preferenceswindow.h"
+#include "settings.h"
 #include "viewinterface.h"
 #include "windowinterface.h"
 

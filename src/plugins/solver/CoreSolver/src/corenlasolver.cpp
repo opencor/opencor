@@ -20,7 +20,7 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include "corenlasolver.h"
-#include "plugin.h"
+#include "settings.h"
 
 //==============================================================================
 

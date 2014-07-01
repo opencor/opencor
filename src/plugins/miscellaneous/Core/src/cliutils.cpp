@@ -19,7 +19,9 @@ specific language governing permissions and limitations under the License.
 // CLI utilities
 //==============================================================================
 
+#include "coresettings.h"
 #include "cliutils.h"
+#include "settings.h"
 
 //==============================================================================
 
