@@ -60,13 +60,15 @@ void initApplication(QCoreApplication *pApp)
 
 bool cliApplication(QCoreApplication *pApp, int *pRes)
 {
-    // Create our CLI application object
+    // Create and run our CLI application object
 
     CliApplication *cliApp = new CliApplication(pApp);
 
-    // Run our CLI application
+    bool res = cliApp->run(pRes);
 
-    return cliApp->run(pRes);
+    delete cliApp;
+
+    return res;
 }
 
 //==============================================================================
