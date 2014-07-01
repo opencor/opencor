@@ -863,7 +863,7 @@ void CentralWidget::openRemoteFile()
 
 //==============================================================================
 
-void CentralWidget::reloadFile(const int &pIndex)
+void CentralWidget::reloadFile(const int &pIndex, const bool &pForce)
 {
     // Ask our file manager to reload the file, but only if it isn't new and if
     // the user wants (in case the file has been modified)
@@ -877,7 +877,7 @@ void CentralWidget::reloadFile(const int &pIndex)
         if (!fileManagerInstance->isNew(fileName)) {
             bool doReloadFile = true;
 
-            if (fileManagerInstance->isModified(fileName))
+            if (!pForce && fileManagerInstance->isModified(fileName))
                 // The current file is modified, so ask the user whether s/he
                 // still wants to reload it
 
@@ -1713,6 +1713,7 @@ void CentralWidget::fileChanged(const QString &pFileName)
                 if (!mFileNames[i].compare(pFileName)) {
                     // We have found the file to reload
 
+                    reloadFile(i, true);
                     reloadFile(i);
 
                     break;
@@ -1856,6 +1857,10 @@ void CentralWidget::fileReloaded(const QString &pFileName)
     foreach (Plugin *plugin, mLoadedGuiPlugins)
         if (fileManagerInstance->isActive() || (plugin != fileViewPlugin))
             qobject_cast<GuiInterface *>(plugin->instance())->updateGui(fileViewPlugin, pFileName);
+
+    // Update our modified settings
+
+    updateModifiedSettings();
 }
 
 //==============================================================================

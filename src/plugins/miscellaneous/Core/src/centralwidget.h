@@ -210,7 +210,7 @@ private Q_SLOTS:
     void cancelOpenRemoteFile();
     void openRemoteFile();
 
-    void reloadFile(const int &pIndex = -1);
+    void reloadFile(const int &pIndex = -1, const bool &pForce = false);
 
     void duplicateFile();
 
