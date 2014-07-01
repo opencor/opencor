@@ -91,16 +91,7 @@ SET(UIS
     src/splashscreenwindow.ui
 )
 
-IF(WIN32)
-    SET(QT_CONF_QRC)
-ELSEIF(APPLE)
-    SET(QT_CONF_QRC res/osx/qt_conf.qrc)
-ELSE()
-    SET(QT_CONF_QRC res/linux/qt_conf.qrc)
-ENDIF()
-
 SET(RESOURCES
-    ${QT_CONF_QRC}
     res/common.qrc
     res/ui.qrc
 )

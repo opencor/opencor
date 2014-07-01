@@ -25,17 +25,13 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-#include "../../../../tests/testsutils.h"
+#include <QtTest/QtTest>
 
 //==============================================================================
 
 #include "disableunusedparameterwarning.inl"
     #include "llvm/ExecutionEngine/ExecutionEngine.h"
 #include "enableunusedparameterwarning.inl"
-
-//==============================================================================
-
-#include <QtTest/QtTest>
 
 //==============================================================================
 
@@ -941,7 +937,7 @@ void Tests::minFunctionTests()
 
 //==============================================================================
 
-QTEST_MAIN(Tests)
+QTEST_GUILESS_MAIN(Tests)
 
 //==============================================================================
 // End of file

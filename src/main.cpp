@@ -47,17 +47,21 @@ specific language governing permissions and limitations under the License.
 
 int main(int pArgC, char *pArgV[])
 {
-    // Determine whether we should start in GUI mode. This is platform
-    // dependent:
-    //  - Windows: we always start in GUI mode;
-    //  - Linux: we never start in GUI mode. Instead, we first want to try the
-    //           CLI version of OpenCOR, and then the GUI version if needed.
-    //  - OS X: if the user double clicks on the OpenCOR bundle or opens it from
-    //          the command line by entering something like:
+    // Remove all 'global' instances, in case OpenCOR previously crashed or
+    // something (and therefore didn't remove all of them before quitting)
+
+    OpenCOR::removeGlobalInstances();
+
+    // Determine whether we should try the CLI version of OpenCOR:
+    //  - Windows: we never try the CLI version of OpenCOR. We go straight for
+    //             its GUI version.
+    //  - Linux: we always try the CLI version of OpenCOR and then go for its
+    //           GUI version, if needed.
+    //  - OS X: we try the CLI version of OpenCOR unless the user double clicks
+    //          on the OpenCOR bundle or opens it from the command line by
+    //          entering something like:
     //              open OpenCOR.app
-    //          then we want to start OpenCOR in GUI mode, otherwise we first
-    //          want to try the CLI version of OpenCOR, and then the GUI version
-    //          if needed.
+    //          in which case we go for its GUI version.
     // Note #1: on Windows, we have two binaries (.com and .exe that are for the
     //          CLI and GUI versions of OpenCOR, respectively). This means that
     //          when a console window is open, to enter something like:
@@ -79,41 +83,26 @@ int main(int pArgC, char *pArgV[])
     //          GUI version if needed...
 
 #if defined(Q_OS_WIN)
-    bool startInGiMode = true;
+    bool tryCliVersion = false;
 #elif defined(Q_OS_LINUX)
-    bool startInGiMode = false;
+    bool tryCliVersion = true;
 #elif defined(Q_OS_MAC)
-    bool startInGiMode = (pArgC > 1) && !memcmp(pArgV[1], "-psn_", 5);
+    bool tryCliVersion = (pArgC == 1) || memcmp(pArgV[1], "-psn_", 5);
 #else
     #error Unsupported platform
 #endif
 
-    // Create our application
+    // Run the CLI version of OpenCOR, if possible/needed
 
-    SharedTools::QtSingleApplication *app;
-    QCoreApplication *cliApp;
+    if (tryCliVersion) {
+        // Create and initialise the CLI version of OpenCOR
 
-    if (startInGiMode)
-        app = new SharedTools::QtSingleApplication(QFileInfo(pArgV[0]).baseName(),
-                                                   pArgC, pArgV);
-    else
-        cliApp = new QCoreApplication(pArgC, pArgV);
+        QCoreApplication *cliApp = new QCoreApplication(pArgC, pArgV);
 
-    // Remove all 'global' instances, in case OpenCOR previously crashed or
-    // something (and therefore didn't remove all of them before quitting)
-
-    OpenCOR::removeGlobalInstances();
-
-    // Some general initialisations
-
-    if (startInGiMode)
-        OpenCOR::initApplication(app);
-    else
         OpenCOR::initApplication(cliApp);
 
-    // Try to run OpenCOR as a CLI application, if possible
+        // Try to run the CLI version of OpenCOR
 
-    if (!startInGiMode) {
         int res;
 
         bool runCliApplication = OpenCOR::cliApplication(cliApp, &res);
@@ -128,33 +117,47 @@ int main(int pArgC, char *pArgV[])
             return res;
         }
 
-        // At this stage, we tried to run the CLI version of OpenCOR, but in the
-        // end we need to run the GUI version, so start over but with the GUI
-        // version of OpenCOR this time
+        // Note: at this stage, we tried the CLI version of OpenCOR, but in the
+        //       end we need to go for its GUI version, so start over but with
+        //       the GUI version of OpenCOR this time...
+    }
 
-        // Make sure that we always use indirect rendering on Linux
-        // Note: indeed, depending on which plugins are selected, OpenCOR may
-        //       need LLVM. If that's the case, and in case the user's video
-        //       card uses a driver that relies on LLVM (e.g. Gallium3D and Mesa
-        //       3D), then there may be a conflict between the version of LLVM
-        //       used by OpenCOR and the one used by the video card. One way to
-        //       address this issue is by using indirect rendering...
+    // Make sure that we always use indirect rendering on Linux
+    // Note: indeed, depending on which plugins are selected, OpenCOR may need
+    //       LLVM. If that's the case, and in case the user's video card uses a
+    //       driver that relies on LLVM (e.g. Gallium3D and Mesa 3D), then there
+    //       may be a conflict between the version of LLVM used by OpenCOR and
+    //       the one used by the video card. One way to address this issue is by
+    //       using indirect rendering...
 
 #ifdef Q_OS_LINUX
         setenv("LIBGL_ALWAYS_INDIRECT", "1", 1);
 #endif
 
-        // Create our application
-        // Note: the CLI version of OpenCOR didn't actually do anything, so no
-        //       need to re-remove all 'global' instances once again...
+    // Initialise the plugins path
 
-        app = new SharedTools::QtSingleApplication(QFileInfo(pArgV[0]).baseName(),
-                                                   pArgC, pArgV);
+    QFileInfo appFileInfo(pArgV[0]);
 
-        // Some general initialisations
+#if defined(Q_OS_WIN) || defined(Q_OS_LINUX)
+    QCoreApplication::setLibraryPaths(QStringList() <<  appFileInfo.canonicalPath()
+                                                       +QDir::separator()+QString("..")
+                                                       +QDir::separator()+"plugins");
+#elif defined(Q_OS_MAC)
+    QCoreApplication::setLibraryPaths(QStringList() <<  appFileInfo.canonicalPath()
+                                                       +QDir::separator()+QString("..")
+                                                       +QDir::separator()+"PlugIns");
+#else
+    #error Unsupported platform
+#endif
 
-        OpenCOR::initApplication(app);
-    }
+    // Create and initialise the GUI version of OpenCOR
+    // Note: if we tried the CLI version of OpenCOR before, then it won't have
+    //       done anything, so no need to re-remove all 'global' instances...
+
+    SharedTools::QtSingleApplication *guiApp = new SharedTools::QtSingleApplication(appFileInfo.baseName(),
+                                                                                    pArgC, pArgV);
+
+    OpenCOR::initApplication(guiApp);
 
     // Initialise our colours by 'updating' them
 
@@ -167,7 +170,7 @@ int main(int pArgC, char *pArgV[])
 
     splashScreen->show();
 
-    app->processEvents();
+    guiApp->processEvents();
     // Note: this ensures that our splash screen is immediately visible...
 #endif
 
@@ -178,36 +181,28 @@ int main(int pArgC, char *pArgV[])
     // carry on as normal, otherwise exit since we want only one instance of
     // OpenCOR at any given time
 
-    QStringList appArguments = app->arguments();
+    QStringList appArguments = guiApp->arguments();
 
     appArguments.removeFirst();
 
     QString arguments = appArguments.join("|");
 
-    if (app->isRunning()) {
-        app->sendMessage(arguments);
+    if (guiApp->isRunning()) {
+        guiApp->sendMessage(arguments);
 
-        delete app;
+        delete guiApp;
 
         return 0;
     }
 
-    // Specify where to find non-OpenCOR plugins, but only if we are on Windows
-
-#ifdef Q_OS_WIN
-    app->addLibraryPath( QDir(app->applicationDirPath()).canonicalPath()
-                        +QDir::separator()+QString("..")
-                        +QDir::separator()+"plugins");
-#endif
-
     // Create our main window
 
-    OpenCOR::MainWindow *win = new OpenCOR::MainWindow(app);
+    OpenCOR::MainWindow *win = new OpenCOR::MainWindow(guiApp);
 
     // Keep track of our main window (required by QtSingleApplication so that it
     // can do what it's supposed to be doing)
 
-    app->setActivationWindow(win);
+    guiApp->setActivationWindow(win);
 
     // Handle our arguments
 
@@ -243,15 +238,15 @@ int main(int pArgC, char *pArgV[])
     int res;
 
     if (canExecuteAplication)
-        res = app->exec();
+        res = guiApp->exec();
     else
         res = 0;
 
     // Keep track of our application file and directory paths (in case we need
     // to restart OpenCOR)
 
-    QString appFilePath = app->applicationFilePath();
-    QString appDirPath  = app->applicationDirPath();
+    QString appFilePath = guiApp->applicationFilePath();
+    QString appDirPath  = guiApp->applicationDirPath();
 
     // Delete our main window
 
@@ -264,8 +259,8 @@ int main(int pArgC, char *pArgV[])
     // messages are 'only' warnings, so we can safely live with them. Still, it
     // doesn't look 'good', so we clear the memory caches, thus avoiding those
     // leak messages...
-    // Note: the below must absolutely be done after calling app->exec() and
-    //       before deleting app...
+    // Note: the below must absolutely be done after calling guiApp->exec() and
+    //       before deleting guiApp...
 
 #ifdef Q_OS_WIN
     QWebSettings::clearMemoryCaches();
@@ -273,7 +268,7 @@ int main(int pArgC, char *pArgV[])
 
     // Delete our application
 
-    delete app;
+    delete guiApp;
 
     // Remove all 'global' instances that were created and used during this
     // session

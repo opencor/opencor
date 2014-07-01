@@ -594,14 +594,6 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
                     ${TEST_HEADER_MOC}
                 )
 
-                IF(WIN32)
-                    SET(QT_CONF_SOURCE_RC)
-                ELSE()
-                    QT5_ADD_RESOURCES(QT_CONF_SOURCE_RC
-                        ../../../../${QT_CONF_QRC}
-                    )
-                ENDIF()
-
                 ADD_EXECUTABLE(${TEST_NAME}
                     ../../../../tests/testsutils.cpp
 
@@ -616,8 +608,6 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
 
                     ${TEST_SOURCE}
                     ${TEST_SOURCES_MOC}
-
-                    ${QT_CONF_SOURCE_RC}
                 )
 
                 # Plugins
