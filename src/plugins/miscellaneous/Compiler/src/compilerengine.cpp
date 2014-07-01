@@ -118,7 +118,7 @@ bool CompilerEngine::compileCode(const QString &pCode)
     // Retrieve the application file name and determine the name of the
     // temporary file which will contain our code
 
-    QTemporaryFile tempFile(QDir::tempPath()+QDir::separator()+QFileInfo(qApp->applicationFilePath()).baseName()+"_XXXXXX.c");
+    QTemporaryFile tempFile(QDir::tempPath()+QDir::separator()+QFileInfo(QCoreApplication::applicationFilePath()).baseName()+"_XXXXXX.c");
 
     if (!tempFile.open()) {
         mError = tr("<strong>%1</strong> could not be created").arg(tempFile.fileName());
