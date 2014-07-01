@@ -90,8 +90,8 @@ class DataVariable {
     return mBuffer[pPos] ;
     }
 
-  const double *data(void) const
-  /*--------------------------*/
+  const double *getData(void) const
+  /*-----------------------------*/
   {
     return mBuffer ;
     }
