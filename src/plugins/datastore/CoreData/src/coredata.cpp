@@ -98,6 +98,18 @@ DataSet::~DataSet()
     }
   }
 
+const DataVariable *DataSet::getVoi(void) const
+/*-------------------------------------------*/
+{
+  return mVoi ;
+  }
+
+const QVector<DataVariable *> &DataSet::getVariables(void) const
+/*------------------------------------------------------------*/
+{
+  return mVariables ;
+  }
+
 DataVariable *DataSet::holdPoint(const double *pPoint, const bool &pVoi)
 /*--------------------------------------------------------------------*/
 {

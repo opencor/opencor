@@ -96,6 +96,12 @@ class DataVariable {
     return mBuffer ;
     }
 
+  SizeType getSize(void) const
+  /*------------------------*/
+  {
+    return mSize ;
+    }
+
  private:
   QString mUri ;
   QString mUnits ;
@@ -113,6 +119,9 @@ class DataSet {
   DataSet(const SizeType &pSize) ;
   ~DataSet() ;
 
+  const DataVariable *getVoi(void) const ;
+  const QVector<DataVariable *> &getVariables(void) const ;
+
   DataVariable *holdPoint(const double *pPoint=0, const bool &pVoi=false) ;
   QVector<DataVariable *> holdPoints(const IndexType &pCount, const double *pPoints) ;
 
@@ -121,6 +130,12 @@ class DataSet {
   {
     for (auto vp = mVariables.begin() ;  vp != mVariables.end() ;  ++vp)
       (*vp)->savePoint(pPos) ;
+    }
+
+  SizeType getSize(void) const
+  /*------------------------*/
+  {
+    return mSize ;
     }
 
  private:
