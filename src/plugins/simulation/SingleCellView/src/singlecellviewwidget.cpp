@@ -843,7 +843,8 @@ void SingleCellViewWidget::initialize(const QString &pFileName)
 
 //==============================================================================
 
-void SingleCellViewWidget::finalize(const QString &pFileName)
+void SingleCellViewWidget::finalize(const QString &pFileName,
+                                    const bool &pReloadView)
 {
     // Remove our simulation object, should there be one for the given file name
 
@@ -871,13 +872,19 @@ void SingleCellViewWidget::finalize(const QString &pFileName)
     mResets.remove(pFileName);
     mDelays.remove(pFileName);
 
-    // Finalize a few things in our GUI's simulation, solvers, graphs,
+    // Finalize/backup a few things in our GUI's simulation, solvers, graphs,
     // parameters and graph panels widgets
 
     SingleCellViewInformationWidget *informationWidget = mContentsWidget->informationWidget();
 
-    informationWidget->simulationWidget()->finalize(pFileName);
-    informationWidget->solversWidget()->finalize(pFileName);
+    if (pReloadView) {
+        informationWidget->simulationWidget()->backup(pFileName);
+        informationWidget->solversWidget()->backup(pFileName);
+    } else {
+        informationWidget->simulationWidget()->finalize(pFileName);
+        informationWidget->solversWidget()->finalize(pFileName);
+    }
+
     informationWidget->graphsWidget()->finalize(pFileName);
     informationWidget->parametersWidget()->finalize(pFileName);
 
@@ -940,7 +947,7 @@ void SingleCellViewWidget::reloadView(const QString &pFileName)
     // Reload ourselves, i.e. finalise and (re)initialise ourselves, meaning
     // that the given file will have effectively been closed and (re)opened
 
-    finalize(pFileName);
+    finalize(pFileName, true);
     fileClosed(pFileName);
 
     initialize(pFileName);
