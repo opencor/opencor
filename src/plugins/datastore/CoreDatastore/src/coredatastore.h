@@ -113,7 +113,7 @@ class DataSet {
   DataSet(const SizeType &pSize) ;
   ~DataSet() ;
 
-  DataVariable *holdPoint(const double *pPoint=0) ;
+  DataVariable *holdPoint(const double *pPoint=0, const bool &pVoi=false) ;
   QVector<DataVariable *> holdPoints(const IndexType &pCount, const double *pPoints) ;
 
   void savePoints(const SizeType &pPos)
@@ -126,6 +126,7 @@ class DataSet {
  private:
   const SizeType mSize ;
   QVector<DataVariable *> mVariables ;
+  DataVariable *mVoi ;
   } ;
 
 //==============================================================================

@@ -86,7 +86,7 @@ const QString DataVariable::getLabel(void) const
 
 DataSet::DataSet(const SizeType &pSize)
 /*-----------------------------------*/
-: mSize(pSize), mVariables(0)
+: mSize(pSize), mVariables(0), mVoi(0)
 {
   }
 
@@ -98,11 +98,12 @@ DataSet::~DataSet()
     }
   }
 
-DataVariable *DataSet::holdPoint(const double *pPoint)
-/*--------------------------------------------------*/
+DataVariable *DataSet::holdPoint(const double *pPoint, const bool &pVoi)
+/*--------------------------------------------------------------------*/
 {
   DataVariable *var = new DataVariable(mSize, pPoint) ;
   mVariables.push_back(var) ;
+  if (pVoi) mVoi = var ;
   return var ;
   }
 

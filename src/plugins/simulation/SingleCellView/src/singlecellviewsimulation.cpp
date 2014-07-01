@@ -628,7 +628,7 @@ bool SingleCellViewSimulationResults::createArrays()
 
     try {
       mDataset = new CoreDatastore::DataSet(simulationSize) ;
-      mPoints = mDataset->holdPoint() ;
+      mPoints = mDataset->holdPoint(0, true) ;
       mConstants = mDataset->holdPoints(mRuntime->constantsCount(), mSimulation->data()->constants()) ;
       mRates = mDataset->holdPoints(mRuntime->ratesCount(), mSimulation->data()->rates()) ;
       mStates = mDataset->holdPoints(mRuntime->statesCount(), mSimulation->data()->states()) ;
