@@ -21,6 +21,7 @@ specific language governing permissions and limitations under the License.
 
 #include "cellmlfileruntime.h"
 #include "coredata.h"
+#include "csvstore.h"
 #include "corenlasolver.h"
 #include "singlecellviewcontentswidget.h"
 #include "singlecellviewinformationsimulationwidget.h"
@@ -778,12 +779,8 @@ bool SingleCellViewSimulationResults::exportToCsv(const QString &pFileName) cons
 {
     if (!mRuntime) return false;
 
-    // Export of all of our data to a CSV file
-    std::string unused = pFileName.toStdString() ;
-    return false ;
-#if WIP
-    // return selectedStore->exportDataset(mDataset) ;
-#endif
+    // Export of all of our data
+    return CsvStore::exportDataSet(mDataset, pFileName) ;
 }
 
 //==============================================================================

@@ -64,6 +64,7 @@ ADD_PLUGIN(SingleCellView
         Core
         CoreSolver
         CoreData
+        CsvStore
         ${LLVM_PLUGIN}
         ${QWT_PLUGIN}
     PLUGIN_BINARIES

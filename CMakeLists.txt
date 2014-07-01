@@ -230,6 +230,7 @@ SET(PLUGINS
     miscellaneous/Core
 
     datastore/CoreData
+    datastore/CsvStore
 
     solver/CoreSolver
 
