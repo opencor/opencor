@@ -116,6 +116,8 @@ public:
     bool isModified(const QString &pFileName) const;
     bool isNewOrModified(const QString &pFileName) const;
 
+    void setModified(const QString &pFileName, const bool &pModified);
+
     bool isReadable(const QString &pFileName) const;
     bool isWritable(const QString &pFileName) const;
     bool isReadableAndWritable(const QString &pFileName) const;
@@ -157,9 +159,6 @@ Q_SIGNALS:
     void fileCreated(const QString &pFileName, const QString &pUrl);
     void fileRenamed(const QString &pOldFileName, const QString &pNewFileName);
     void fileDuplicated(const QString &pFileName);
-
-public Q_SLOTS:
-    void setModified(const QString &pFileName, const bool &pModified);
 
 private Q_SLOTS:
     void checkFiles();
