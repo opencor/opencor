@@ -137,18 +137,35 @@ int main(int pArgC, char *pArgV[])
     // Initialise the plugins path
 
     QFileInfo appFileInfo(pArgV[0]);
+    QString pluginsDir = QString();
 
 #if defined(Q_OS_WIN) || defined(Q_OS_LINUX)
-    QCoreApplication::setLibraryPaths(QStringList() <<  appFileInfo.canonicalPath()
-                                                       +QDir::separator()+QString("..")
-                                                       +QDir::separator()+"plugins");
+    pluginsDir =  appFileInfo.canonicalPath()
+                 +QDir::separator()+QString("..")
+                 +QDir::separator()+"plugins";
+
+    if (!QDir(pluginsDir).exists())
+        // The plugins directory doesn't exist. This should only happen if we
+        // are trying to run OpenCOR from within Qt Creator, in which case the
+        // binary will be running from [OpenCOR]/build/OpenCOR[.exe] rather than
+        // [OpenCOR]/build/bin/OpenCOR[.exe] as it should if we were to mimic the
+        // case where OpenCOR has been deployed. Then, because the plugins are in
+        // [OpenCOR]/build/plugins/OpenCOR, we must skip the "../" bit. So, yes,
+        // it's not neat, but... is there another solution?...
+
+        pluginsDir =  appFileInfo.canonicalPath()
+                     +QDir::separator()+"plugins";
 #elif defined(Q_OS_MAC)
-    QCoreApplication::setLibraryPaths(QStringList() <<  appFileInfo.canonicalPath()
-                                                       +QDir::separator()+QString("..")
-                                                       +QDir::separator()+"PlugIns");
+    pluginsDir =  appFileInfo.canonicalPath()
+                 +QDir::separator()+QString("..")
+                 +QDir::separator()+"PlugIns";
 #else
     #error Unsupported platform
 #endif
+
+    pluginsDir = QDir::toNativeSeparators(QDir(pluginsDir).canonicalPath());
+
+    QCoreApplication::setLibraryPaths(QStringList() <<  pluginsDir);
 
     // Create and initialise the GUI version of OpenCOR
     // Note: if we tried the CLI version of OpenCOR before, then it won't have
