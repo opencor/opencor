@@ -463,7 +463,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(const Items &pItem
 
     // Update the enabled state of our various add buttons
 
-    updateGui(mElement, false);
+    updateGui(mElement);
 
     // Allow ourselves to be updated again
 
@@ -814,7 +814,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::qualifierChanged(const QStri
 
     // Update the enabled state of our various add buttons
 
-    updateGui(mElement, false);
+    updateGui(mElement);
 }
 
 //==============================================================================
@@ -887,7 +887,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::termChanged(const QString &p
 
     // Update the enabled state of our various add buttons
 
-    updateGui(mElement);
+    updateGui(mElement, true);
 
     // Retrieve some possible terms based on the given term, but only if the
     // term cannot be added directly
@@ -1017,7 +1017,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::termLookedUp(QNetworkReply *
 
         // Update the enabled state of our various add buttons
 
-        updateGui(mElement, false);
+        updateGui(mElement);
     }
 
     // Delete (later) the network reply

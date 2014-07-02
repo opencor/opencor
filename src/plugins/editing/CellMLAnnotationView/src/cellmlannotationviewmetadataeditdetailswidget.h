@@ -177,7 +177,7 @@ Q_SIGNALS:
 
 public Q_SLOTS:
     void updateGui(iface::cellml_api::CellMLElement *pElement,
-                   const bool &pResetItemsGui = true);
+                   const bool &pResetItemsGui = false);
 
 private Q_SLOTS:
     void on_actionCopy_triggered();
