@@ -50,20 +50,6 @@ PLUGININFO_FUNC CellMLAnnotationViewPluginInfo()
 }
 
 //==============================================================================
-// Editing interface
-//==============================================================================
-
-Editor::EditorWidget * CellMLAnnotationViewPlugin::editor(const QString &pFileName) const
-{
-    Q_UNUSED(pFileName);
-
-    // Return the requested editor, i.e. nothing since we don't have an editor
-    // as such
-
-    return 0;
-}
-
-//==============================================================================
 // File handling interface
 //==============================================================================
 
