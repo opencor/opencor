@@ -1201,7 +1201,7 @@ void MainWindow::restart(const bool &pSaveSettings) const
     if (pSaveSettings)
         saveSettings();
 
-    qApp->exit(NeedRestart);
+    qApp->exit(pSaveSettings?NormalRestart:CleanRestart);
 }
 
 //==============================================================================

@@ -300,13 +300,16 @@ int main(int pArgC, char *pArgV[])
     //       since all that remains to be done is to return the result of the
     //       execution of our application...
 
-    if (res == OpenCOR::NeedRestart) {
-        // We want to restart (as a result of resetting everything), so clear
-        // all the user settings (indeed, this will ensure that the various dock
-        // windows are, for instance, properly reset with regards to their
-        // dimensions)
+    if ((res == OpenCOR::CleanRestart) || (res == OpenCOR::NormalRestart)) {
+        // We want to restart, so the question is whether we want a normal
+        // restart or a clean one
 
-        QSettings(OpenCOR::SettingsOrganization, OpenCOR::SettingsApplication).clear();
+        if (res == OpenCOR::CleanRestart)
+            // We want a clean restart, so clear all the user settings (indeed,
+            // this will ensure that the various dock windows are, for instance,
+            // properly reset with regards to their dimensions)
+
+            QSettings(OpenCOR::SettingsOrganization, OpenCOR::SettingsApplication).clear();
 
         // Restart OpenCOR, but without providing any of the arguments that were
         // originally passed to us since we want to reset everything
