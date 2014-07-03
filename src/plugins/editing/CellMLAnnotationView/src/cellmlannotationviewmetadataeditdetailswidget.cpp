@@ -869,8 +869,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::lookupId(const QString &pIte
 
 //==============================================================================
 
-static const auto SemanticSbmlUrlStart = QStringLiteral("http://www.semanticsbml.org/semanticSBML/annotate/search.json?q=");
-static const auto SemanticSbmlUrlEnd   = QStringLiteral("&full_info=1");
+static const auto Pmr2RicordoUrl = QStringLiteral("http://staging.physiomeproject.org/pmr2_ricordo/miriam_terms/");
 
 //==============================================================================
 
@@ -896,7 +895,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::termChanged(const QString &p
         // We are not dealing with a direct term, so retrieve some possible
         // terms
 
-        QString termUrl = SemanticSbmlUrlStart+pTerm+SemanticSbmlUrlEnd;
+        QString termUrl = Pmr2RicordoUrl+pTerm;
 
         if (mTermUrl.isEmpty()) {
             // No other term is being looked up, so keep track of the given term
@@ -935,9 +934,8 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::termLookedUp(QNetworkReply *
         // No other term to look up, so make sure that the network reply we got
         // corresponds to that of the current term
 
-        if (mTerm.compare(pNetworkReply->url().toString()
-                                              .remove(QRegularExpression("^"+QRegularExpression::escape(SemanticSbmlUrlStart)))
-                                              .remove(QRegularExpression(QRegularExpression::escape(SemanticSbmlUrlEnd)+"$")))) {
+        if (mTerm.compare(Core::stringFromPercentEncoding(pNetworkReply->url().toString()
+                                                          .remove(QRegularExpression("^"+QRegularExpression::escape(Pmr2RicordoUrl)))))) {
             // Not the correct term, so... delete (later) the network reply and
             // leave
 
@@ -961,37 +959,26 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::termLookedUp(QNetworkReply *
             if (jsonParseError.error == QJsonParseError::NoError) {
                 // Retrieve the list of terms
 
-                QVariantMap resultMap = jsonDocument.object().toVariantMap();
+                QVariantMap termMap;
+                QString resource;
+                QString id;
 
-                foreach (const QVariant &termsVariant, resultMap["result"].toList()) {
-                    QVariantList termVariant = termsVariant.toList();
+                foreach (const QVariant &termsVariant, jsonDocument.object().toVariantMap()["results"].toList()) {
+                    termMap = termsVariant.toMap();
 
-                    for (int i = 0, iMax = termVariant.count(); i < iMax; ++i) {
-                        // At this stage, we have a term (in the form of either
-                        // a MIRIAM URN or an identifiers.org URI) and a name
-                        // (as well as a URL, but we don't care about it), so we
-                        // need to decode the term to retrieve the corresponding
-                        // resource and id
+                    if (!CellMLSupport::CellmlFileRdfTriple::decodeTerm(termMap["identifiers_org_uri"].toString(),
+                                                                        resource, id)) {
+                        // The term couldn't be decoded, so...
 
-                        QVariantMap termMap = termVariant[i].toMap();
+                        items = Items();
 
-                        QString resource = QString();
-                        QString id = QString();
+                        errorMessage = tr("the search returned invalid results");
 
-                        if (!CellMLSupport::CellmlFileRdfTriple::decodeTerm(termMap["uri"].toString(),
-                                                                            resource, id)) {
-                            // The term couldn't be decoded, so...
+                        break;
+                    } else {
+                        // The term could be decoded, so add it to our list
 
-                            items = Items();
-
-                            errorMessage = tr("the search returned invalid results");
-
-                            break;
-                        } else {
-                            // The term could be decoded, so add it to our list
-
-                            items << item(termMap["name"].toString(), resource, id);
-                        }
+                        items << item(termMap["name"].toString(), resource, id);
                     }
 
                     if (!errorMessage.isEmpty())
@@ -1032,7 +1019,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::addTerm()
     // Add the term to our CellML element as an RDF triple
 
     CellMLSupport::CellmlFileRdfTriple *rdfTriple;
-    QStringList termInformation = mTerm.replace("%3A", ":").split("/");
+    QStringList termInformation = Core::stringFromPercentEncoding(mTerm).split("/");
 
     if (mQualifierIndex < CellMLSupport::CellmlFileRdfTriple::LastBioQualifier)
         rdfTriple = mCellmlFile->addRdfTriple(mElement,

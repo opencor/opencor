@@ -21,6 +21,7 @@ specific language governing permissions and limitations under the License.
 
 #include "cellmlfile.h"
 #include "cellmlfilerdftriple.h"
+#include "cliutils.h"
 
 //==============================================================================
 
@@ -480,8 +481,8 @@ bool CellmlFileRdfTriple::decodeTerm(const QString &pTerm, QString &pResource,
 
         QStringList miriamUrnList = pTerm.split(":");
 
-        pResource = miriamUrnList[2];
-        pId       = miriamUrnList[3].replace("%3A", ":");
+        pResource = Core::stringFromPercentEncoding(miriamUrnList[2]);
+        pId       = Core::stringFromPercentEncoding(miriamUrnList[3]);
     } else if (QRegularExpression("^http://identifiers.org/"+ResourceRegExp+"/#?"+IdRegExp).match(pTerm).hasMatch()) {
         // The term is an identifiers.org URI, so retrieve its corresponding
         // resource and id
@@ -491,14 +492,8 @@ bool CellmlFileRdfTriple::decodeTerm(const QString &pTerm, QString &pResource,
         //       QString::remove() on it...
         QStringList identifiersDotOrgUriList = identifiersDotOrgUri.remove("http://identifiers.org/").split("/");
 
-        pResource = identifiersDotOrgUriList[0];
-        pId       = identifiersDotOrgUriList[1].replace("%3A", ":");
-
-        // Remove the leading '#', if any, from the id
-        // Note: semanticSBML does, for example, prepend a '#'...
-
-        if (pId[0] == '#')
-            pId = pId.right(pId.size()-1);
+        pResource = Core::stringFromPercentEncoding(identifiersDotOrgUriList[0]);
+        pId       = Core::stringFromPercentEncoding(identifiersDotOrgUriList[1]);
     } else {
         // Not a term we can recognise, so...
 

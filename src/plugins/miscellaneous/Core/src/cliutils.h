@@ -141,6 +141,9 @@ void CORE_EXPORT doNothing(const int &pMax);
 
 bool CORE_EXPORT isRemoteFile(const QString &pFileNameOrUrl);
 
+QString CORE_EXPORT stringToPercentEncoding(const QString &pString);
+QString CORE_EXPORT stringFromPercentEncoding(const QString &pString);
+
 //==============================================================================
 
 }   // namespace Core
