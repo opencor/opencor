@@ -3281,7 +3281,8 @@ void QsciScintilla::handleStyleFontChange(const QFont &f, int style)
 void QsciScintilla::setStylesFont(const QFont &f, int style)
 {
     SendScintilla(SCI_STYLESETFONT, style, f.family().toLatin1().data());
-    SendScintilla(SCI_STYLESETSIZE, style, f.pointSize());
+    SendScintilla(SCI_STYLESETSIZEFRACTIONAL, style,
+            long(f.pointSizeF() * SC_FONT_SIZE_MULTIPLIER));
 
     // Pass the Qt weight via the back door.
     SendScintilla(SCI_STYLESETWEIGHT, style, -f.weight());
