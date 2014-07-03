@@ -1243,29 +1243,9 @@ void MainWindow::updateGui(Plugin *pViewPlugin, const QString &pFileName)
     // meaning that a new view or file has been selected, so we may need to
     // enable/disable and/or show/hide some menus/actions/etc.
 
-    // Things that are to be done when a new view plugin has been selected
+    // Keep track of our view plugin
 
-    if (pViewPlugin != mViewPlugin) {
-        // Keep track of our new view plugin
-
-        mViewPlugin = pViewPlugin;
-
-        // Show/hide the File|New menu by checking whether its menu items are
-        // visible
-
-        if (mFileNewMenu) {
-            bool fileNewMenuVisible = false;
-
-            foreach (QAction *action, mFileNewMenu->actions())
-                if (action->isVisible()) {
-                    fileNewMenuVisible = true;
-
-                    break;
-                }
-
-            mFileNewMenu->menuAction()->setVisible(fileNewMenuVisible);
-        }
-    }
+    mViewPlugin = pViewPlugin;
 
     // Let our different plugins know that the GUI has been updated
     // Note: this can be useful when a plugin (e.g. CellMLTools) offers some
