@@ -430,7 +430,7 @@ FileManager::Status FileManager::create(const QString &pUrl,
 {
     // Create a new file
 
-    QTemporaryFile createdFile(QDir::tempPath()+QDir::separator()+QFileInfo(qApp->applicationFilePath()).baseName()+"_XXXXXX.tmp");
+    QTemporaryFile createdFile(QDir::tempPath()+QDir::separator()+"XXXXXX.tmp");
 
     if (createdFile.open()) {
         createdFile.setAutoRemove(false);
@@ -498,7 +498,7 @@ FileManager::Status FileManager::duplicate(const QString &pFileName)
             // Now, we can create a new file, which contents will be that of our
             // given file
 
-            QTemporaryFile duplicatedFile(QDir::tempPath()+QDir::separator()+QFileInfo(qApp->applicationFilePath()).baseName()+"_XXXXXX."+QFileInfo(pFileName).completeSuffix());
+            QTemporaryFile duplicatedFile(QDir::tempPath()+QDir::separator()+"XXXXXX."+QFileInfo(pFileName).completeSuffix());
 
             if (duplicatedFile.open()) {
                 duplicatedFile.setAutoRemove(false);

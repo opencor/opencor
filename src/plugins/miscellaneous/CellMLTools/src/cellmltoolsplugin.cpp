@@ -347,7 +347,7 @@ int CellMLToolsPlugin::runExportCommand(const QStringList &pArguments)
             // We were able to retrieve the contents of the remote file, so save
             // it locally to a 'temporary' file
 
-            QTemporaryFile localFile(QDir::tempPath()+QDir::separator()+QFileInfo(qApp->applicationFilePath()).baseName()+"_XXXXXX.tmp");
+            QTemporaryFile localFile(QDir::tempPath()+QDir::separator()+"XXXXXX.tmp");
 
             if (localFile.open()) {
                 localFile.setAutoRemove(false);
