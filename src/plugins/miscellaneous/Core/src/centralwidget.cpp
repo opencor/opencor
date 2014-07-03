@@ -1548,7 +1548,8 @@ void CentralWidget::updateGui()
     // Ask the GUI interface for the widget to use for the current file (should
     // there be one)
 
-    Plugin *fileViewPlugin = viewPlugin(mFileTabs->currentIndex());
+    CentralWidgetMode *mode = mModes.value(mModeTabIndexModes.value(fileModeTabIndex));
+    Plugin *fileViewPlugin = mode->viewPlugins()->value(mode->viewTabs()->currentIndex());
     ViewInterface *viewInterface = fileViewPlugin?qobject_cast<ViewInterface *>(fileViewPlugin->instance()):0;
     QWidget *newView;
 

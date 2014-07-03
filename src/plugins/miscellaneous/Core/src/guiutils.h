@@ -101,8 +101,10 @@ QLabel CORE_EXPORT * newLabel(const QString &pText,
                               const double &pFontPercentage, QWidget *pParent);
 QLabel CORE_EXPORT * newLabel(const QString &pText, QWidget *pParent);
 
-void CORE_EXPORT showEnableAction(QAction *pAction, const bool &pShowEnable);
-void CORE_EXPORT showEnableWidget(QWidget *pWidget, const bool &pShowEnable);
+void CORE_EXPORT showEnableAction(QAction *pAction, const bool &pVisible,
+                                  const bool &pEnabled = true);
+void CORE_EXPORT showEnableWidget(QWidget *pWidget, const bool &pVisible,
+                                  const bool &pEnabled = true);
 
 void CORE_EXPORT updateColors();
 

@@ -71,7 +71,7 @@ void CoreCellMLEditingPlugin::updateGui(Plugin *pViewPlugin,
     Core::showEnableAction(mFileNewCellml1_0FileAction, cellmlEditingInterface);
     Core::showEnableAction(mFileNewCellml1_1FileAction, cellmlEditingInterface);
 
-    Core::showEnableAction(mToolsCellmlValidationAction, cellmlEditingInterface);
+    Core::showEnableAction(mToolsCellmlValidationAction, cellmlEditingInterface, !pFileName.isEmpty());
 
     // Keep track of the file name
 

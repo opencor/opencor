@@ -452,22 +452,24 @@ QLabel * newLabel(const QString &pText, QWidget *pParent)
 
 //==============================================================================
 
-void showEnableAction(QAction *pAction, const bool &pShowEnable)
+void showEnableAction(QAction *pAction, const bool &pVisible,
+                      const bool &pEnabled)
 {
     // Show/enable or hide/disable the given action
 
-    pAction->setVisible(pShowEnable);
-    pAction->setEnabled(pShowEnable);
+    pAction->setVisible(pVisible);
+    pAction->setEnabled(pVisible && pEnabled);
 }
 
 //==============================================================================
 
-void showEnableWidget(QWidget *pWidget, const bool &pShowEnable)
+void showEnableWidget(QWidget *pWidget, const bool &pVisible,
+                      const bool &pEnabled)
 {
     // Show/enable or hide/disable the given widget
 
-    pWidget->setVisible(pShowEnable);
-    pWidget->setEnabled(pShowEnable);
+    pWidget->setVisible(pVisible);
+    pWidget->setEnabled(pVisible && pEnabled);
 }
 
 //==============================================================================
