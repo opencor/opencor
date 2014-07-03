@@ -30,9 +30,10 @@ before_install:
             sudo apt-add-repository -y ppa:beineri/opt-qt531
          && sudo apt-get -qq update
          && sudo apt-get -qq install qt53tools qt53svg qt53webkit
-         && which qmake
          && curl -O http://www.opencor.ws/binaries/libcupsprintersupport.so.tar.gz
          && tar -xzf libcupsprintersupport.so.tar.gz
+         && sudo mkdir /opt/qt53/plugins/printsupport
+         && sudo cp -f libcupsprintersupport.so /opt/qt53/plugins/printsupport/libcupsprintersupport.so
          ;
        else
             brew update
