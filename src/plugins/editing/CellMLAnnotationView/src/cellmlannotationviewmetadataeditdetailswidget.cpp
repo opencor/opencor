@@ -993,7 +993,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::termLookedUp(QNetworkReply *
             } else {
                 // Something went wrong, so...
 
-                mErrorMessage = jsonParseError.errorString();
+                errorMessage = jsonParseError.errorString();
             }
         } else {
             // Something went wrong, so...
