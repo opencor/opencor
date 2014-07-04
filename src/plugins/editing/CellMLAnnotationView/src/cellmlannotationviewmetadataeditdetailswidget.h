@@ -127,9 +127,6 @@ private:
     QString mTerm;
     bool mTermIsDirect;
 
-    QString mTermUrl;
-    QString mOtherTermUrl;
-
     Items mItems;
     QString mErrorMessage;
     bool mLookupTerm;
@@ -150,6 +147,8 @@ private:
     QLabel *mCurrentResourceOrIdLabel;
 
     QMenu *mContextMenu;
+
+    QNetworkReply *mNetworkReply;
 
     void updateGui(const Items &pItems, const QString &pErrorMessage,
                    const bool &pLookupTerm,

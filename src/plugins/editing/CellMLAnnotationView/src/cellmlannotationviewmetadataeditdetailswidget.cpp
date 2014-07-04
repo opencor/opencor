@@ -118,8 +118,6 @@ CellmlAnnotationViewMetadataEditDetailsWidget::CellmlAnnotationViewMetadataEditD
     mAddTermButton(0),
     mTerm(QString()),
     mTermIsDirect(false),
-    mTermUrl(QString()),
-    mOtherTermUrl(QString()),
     mItems(Items()),
     mErrorMessage(QString()),
     mLookupTerm(false),
@@ -130,7 +128,8 @@ CellmlAnnotationViewMetadataEditDetailsWidget::CellmlAnnotationViewMetadataEditD
     mItemsVerticalScrollBarPosition(0),
     mCellmlFile(pParent->cellmlFile()),
     mElement(0),
-    mCurrentResourceOrIdLabel(0)
+    mCurrentResourceOrIdLabel(0),
+    mNetworkReply(0)
 {
     // Set up the GUI
 
@@ -903,24 +902,17 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::termChanged(const QString &p
     // term cannot be added directly
 
     if (!mTermIsDirect) {
-        // We are not dealing with a direct term, so retrieve some possible
-        // terms
+        // We are not dealing with a direct term, so cancel the previous
+        // request, if any
+
+        if (mNetworkReply)
+            mNetworkReply->close();
+
+        // Now, retrieve some possible terms
 
         QString termUrl = Pmr2RicordoUrl+pTerm;
 
-        if (mTermUrl.isEmpty()) {
-            // No other term is being looked up, so keep track of the given term
-            // and look it up
-
-            mTermUrl = termUrl;
-
-            mNetworkAccessManager->get(QNetworkRequest(termUrl));
-        } else {
-            // Another term is already being looked up, so keep track of the
-            // given term for later
-
-            mOtherTermUrl = termUrl;
-        }
+        mNetworkReply = mNetworkAccessManager->get(QNetworkRequest(termUrl));
     }
 }
 
@@ -928,90 +920,71 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::termChanged(const QString &p
 
 void CellmlAnnotationViewMetadataEditDetailsWidget::termLookedUp(QNetworkReply *pNetworkReply)
 {
-    // We are done looking up the term, so...
+    // Ignore the network reply if it got cancelled
 
-    mTermUrl = QString();
+    if (pNetworkReply->error() == QNetworkReply::OperationCanceledError) {
+        pNetworkReply->deleteLater();
 
-    // Look up another term, should there be one to look up, or update the GUI
-    // with the results of the lookup
-
-    if (!mOtherTermUrl.isEmpty()) {
-        // There is another term to look up, so...
-
-        mNetworkAccessManager->get(QNetworkRequest(mOtherTermUrl));
-
-        mOtherTermUrl = QString();
+        return;
     } else {
-        // No other term to look up, so make sure that the network reply we got
-        // corresponds to that of the current term
+        mNetworkReply = 0;
+    }
 
-        if (mTerm.compare(Core::stringFromPercentEncoding(pNetworkReply->url().toString()
-                                                          .remove(QRegularExpression("^"+QRegularExpression::escape(Pmr2RicordoUrl)))))) {
-            // Not the correct term, so... delete (later) the network reply and
-            // leave
+    // Retrieve the list of terms, should we have retrieved it without any problem
 
-            pNetworkReply->deleteLater();
+    Items items = Items();
+    QString errorMessage = QString();
 
-            return;
-        }
+    if (pNetworkReply->error() == QNetworkReply::NoError) {
+        // Parse the JSON code
 
-        // The network reply is for the current term, so retrieve the list of
-        // terms, should we have retrieved it without any problem
+        QJsonParseError jsonParseError;
+        QJsonDocument jsonDocument = QJsonDocument::fromJson(pNetworkReply->readAll(), &jsonParseError);
 
-        Items items = Items();
-        QString errorMessage = QString();
+        if (jsonParseError.error == QJsonParseError::NoError) {
+            // Retrieve the list of terms
 
-        if (pNetworkReply->error() == QNetworkReply::NoError) {
-            // Parse the JSON code
+            QVariantMap termMap;
+            QString name;
+            QString resource;
+            QString id;
 
-            QJsonParseError jsonParseError;
-            QJsonDocument jsonDocument = QJsonDocument::fromJson(pNetworkReply->readAll(), &jsonParseError);
+            foreach (const QVariant &termsVariant, jsonDocument.object().toVariantMap()["results"].toList()) {
+                termMap = termsVariant.toMap();
+                name = termMap["name"].toString();
 
-            if (jsonParseError.error == QJsonParseError::NoError) {
-                // Retrieve the list of terms
+                if (   !name.isEmpty()
+                    &&  CellMLSupport::CellmlFileRdfTriple::decodeTerm(termMap["identifiers_org_uri"].toString(), resource, id)) {
+                    // We have a name and we could decode the term, so add the
+                    // item to our list, should it not already be in it
 
-                QVariantMap termMap;
-                QString name;
-                QString resource;
-                QString id;
+                    Item newItem = item(name, resource, id);
 
-                foreach (const QVariant &termsVariant, jsonDocument.object().toVariantMap()["results"].toList()) {
-                    termMap = termsVariant.toMap();
-                    name = termMap["name"].toString();
-
-                    if (   !name.isEmpty()
-                        &&  CellMLSupport::CellmlFileRdfTriple::decodeTerm(termMap["identifiers_org_uri"].toString(), resource, id)) {
-                        // We have a name and we could decode the term, so add
-                        // the item to our list, should it not already be in it
-
-                        Item newItem = item(name, resource, id);
-
-                        if (!items.contains(newItem))
-                            items << newItem;
-                    }
+                    if (!items.contains(newItem))
+                        items << newItem;
                 }
-            } else {
-                // Something went wrong, so...
-
-                errorMessage = jsonParseError.errorString();
             }
         } else {
             // Something went wrong, so...
 
-            errorMessage = pNetworkReply->errorString();
+            errorMessage = jsonParseError.errorString();
         }
+    } else {
+        // Something went wrong, so...
 
-        // Update our GUI with the results of the lookup after having sorted
-        // them
-
-        qSort(items.begin(), items.end());
-
-        updateItemsGui(items, errorMessage, false);
-
-        // Update the enabled state of our various add buttons
-
-        updateGui(mElement);
+        errorMessage = pNetworkReply->errorString();
     }
+
+    // Update our GUI with the results of the lookup after having sorted
+    // them
+
+    qSort(items.begin(), items.end());
+
+    updateItemsGui(items, errorMessage, false);
+
+    // Update the enabled state of our various add buttons
+
+    updateGui(mElement);
 
     // Delete (later) the network reply
 
