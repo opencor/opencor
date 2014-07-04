@@ -116,6 +116,7 @@ public:
     bool isModified(const QString &pFileName) const;
     bool isNewOrModified(const QString &pFileName) const;
 
+    void setNew(const QString &pFileName, const bool &pNew);
     void setModified(const QString &pFileName, const bool &pModified);
 
     bool isReadable(const QString &pFileName) const;
@@ -143,6 +144,8 @@ private:
 
     QMap<QString, bool> mFilesReadable;
     QMap<QString, bool> mFilesWritable;
+
+    bool newFile(const QString &pContents, QString &pFileName);
 
 Q_SIGNALS:
     void fileManaged(const QString &pFileName);

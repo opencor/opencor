@@ -425,27 +425,46 @@ void FileManager::reload(const QString &pFileName)
 
 //==============================================================================
 
+bool FileManager::newFile(const QString &pContents, QString &pFileName)
+{
+    // Create a new file
+
+    QTemporaryFile file(QDir::tempPath()+QDir::separator()+"XXXXXX.tmp");
+
+    if (file.open()) {
+        file.setAutoRemove(false);
+        // Note: by default, a temporary file is to autoremove itself, but we
+        //       clearly don't want that here...
+
+        QTextStream fileOut(&file);
+
+        fileOut << pContents;
+
+        file.close();
+
+        pFileName = file.fileName();
+
+        return true;
+    } else {
+        pFileName = QString();
+
+        return false;
+    }
+}
+
+//==============================================================================
+
 FileManager::Status FileManager::create(const QString &pUrl,
                                         const QString &pContents)
 {
     // Create a new file
 
-    QTemporaryFile createdFile(QDir::tempPath()+QDir::separator()+"XXXXXX.tmp");
+    QString createdFileName;
 
-    if (createdFile.open()) {
-        createdFile.setAutoRemove(false);
-        // Note: by default, a temporary file is to autoremove itself, but we
-        //       clearly don't want that here...
-
-        QTextStream createdFileOut(&createdFile);
-
-        createdFileOut << pContents;
-
-        createdFile.close();
-
+    if (newFile(pContents, createdFileName)) {
         // Let people know that we have created a file
 
-        emit fileCreated(createdFile.fileName(), pUrl);
+        emit fileCreated(createdFileName, pUrl);
 
         return Created;
     } else {
@@ -498,22 +517,12 @@ FileManager::Status FileManager::duplicate(const QString &pFileName)
             // Now, we can create a new file, which contents will be that of our
             // given file
 
-            QTemporaryFile duplicatedFile(QDir::tempPath()+QDir::separator()+"XXXXXX."+QFileInfo(pFileName).completeSuffix());
+            QString duplicatedFileName;
 
-            if (duplicatedFile.open()) {
-                duplicatedFile.setAutoRemove(false);
-                // Note: by default, a temporary file is to autoremove itself,
-                //       but we clearly don't want that here...
-
-                QTextStream duplicatedFileOut(&duplicatedFile);
-
-                duplicatedFileOut << fileContents;
-
-                duplicatedFile.close();
-
+            if (newFile(fileContents, duplicatedFileName)) {
                 // Let people know that we have duplicated a file
 
-                emit fileDuplicated(duplicatedFile.fileName());
+                emit fileDuplicated(duplicatedFileName);
 
                 return Duplicated;
             } else {
