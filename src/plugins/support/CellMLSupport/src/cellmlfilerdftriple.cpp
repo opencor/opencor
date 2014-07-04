@@ -473,8 +473,6 @@ bool CellmlFileRdfTriple::decodeTerm(const QString &pTerm, QString &pResource,
     // Decode the term, based on whether it matches that of a MIRIAN URN or an
     // identifiers.org URI
 
-    bool res = true;
-
     if (QRegularExpression("^urn:miriam:"+ResourceRegExp+":"+IdRegExp).match(pTerm).hasMatch()) {
         // The term is a MIRIAM URN, so retrieve its corresponding resource and
         // id
@@ -483,6 +481,8 @@ bool CellmlFileRdfTriple::decodeTerm(const QString &pTerm, QString &pResource,
 
         pResource = Core::stringFromPercentEncoding(miriamUrnList[2]);
         pId       = Core::stringFromPercentEncoding(miriamUrnList[3]);
+
+        return true;
     } else if (QRegularExpression("^http://identifiers.org/"+ResourceRegExp+"/#?"+IdRegExp).match(pTerm).hasMatch()) {
         // The term is an identifiers.org URI, so retrieve its corresponding
         // resource and id
@@ -494,22 +494,16 @@ bool CellmlFileRdfTriple::decodeTerm(const QString &pTerm, QString &pResource,
 
         pResource = Core::stringFromPercentEncoding(identifiersDotOrgUriList[0]);
         pId       = Core::stringFromPercentEncoding(identifiersDotOrgUriList[1]);
+
+        return true;
     } else {
         // Not a term we can recognise, so...
 
         pResource = "???";
         pId       = "???";
 
-        res = false;
-
-#ifdef QT_DEBUG
-        qWarning("WARNING | %s:%d: '%s' is not a valid RDF term", __FILE__, __LINE__, qPrintable(pTerm));
-#endif
+        return false;
     }
-
-    // Return the result of our decoding
-
-    return res;
 }
 
 //==============================================================================
