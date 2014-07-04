@@ -90,6 +90,7 @@ private:
         QString resource;
         QString id;
 
+        bool operator==(const Item &pItem) const;
         bool operator<(const Item &pItem) const;
     };
 

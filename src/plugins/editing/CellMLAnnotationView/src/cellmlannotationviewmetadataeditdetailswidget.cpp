@@ -64,6 +64,17 @@ namespace CellMLAnnotationView {
 
 //==============================================================================
 
+bool CellmlAnnotationViewMetadataEditDetailsWidget::Item::operator==(const Item &pItem) const
+{
+    // Return whether the current item is the same as the given one
+
+    return    !name.compare(pItem.name)
+           && !resource.compare(pItem.resource)
+           && !id.compare(pItem.id);
+}
+
+//==============================================================================
+
 bool CellmlAnnotationViewMetadataEditDetailsWidget::Item::operator<(const Item &pItem) const
 {
     // Return whether the current item is lower than the given one
@@ -869,7 +880,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::lookupId(const QString &pIte
 
 //==============================================================================
 
-static const auto Pmr2RicordoUrl = QStringLiteral("http://staging.physiomeproject.org/pmr2_ricordo/miriam_terms/");
+static const auto Pmr2RicordoUrl = QStringLiteral("https://models.physiomeproject.org/pmr2_ricordo/miriam_terms/");
 
 //==============================================================================
 
@@ -960,29 +971,24 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::termLookedUp(QNetworkReply *
                 // Retrieve the list of terms
 
                 QVariantMap termMap;
+                QString name;
                 QString resource;
                 QString id;
 
                 foreach (const QVariant &termsVariant, jsonDocument.object().toVariantMap()["results"].toList()) {
                     termMap = termsVariant.toMap();
+                    name = termMap["name"].toString();
 
-                    if (!CellMLSupport::CellmlFileRdfTriple::decodeTerm(termMap["identifiers_org_uri"].toString(),
-                                                                        resource, id)) {
-                        // The term couldn't be decoded, so...
+                    if (   !name.isEmpty()
+                        &&  CellMLSupport::CellmlFileRdfTriple::decodeTerm(termMap["identifiers_org_uri"].toString(), resource, id)) {
+                        // We have a name and we could decode the term, so add
+                        // the item to our list, should it not already be in it
 
-                        items = Items();
+                        Item newItem = item(name, resource, id);
 
-                        errorMessage = tr("the search returned invalid results");
-
-                        break;
-                    } else {
-                        // The term could be decoded, so add it to our list
-
-                        items << item(termMap["name"].toString(), resource, id);
+                        if (!items.contains(newItem))
+                            items << newItem;
                     }
-
-                    if (!errorMessage.isEmpty())
-                        break;
                 }
             } else {
                 // Something went wrong, so...
