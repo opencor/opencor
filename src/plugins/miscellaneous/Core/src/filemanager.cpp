@@ -99,7 +99,7 @@ FileManager::Status FileManager::manage(const QString &pFileName,
             return AlreadyManaged;
         } else {
             // The file isn't already managed, so add it to our list of managed
-            // files, let people know about it being now managed
+            // files and let people know about it being now managed
 
             mFiles << new File(nativeFileName, pType, pUrl);
 
@@ -124,30 +124,23 @@ FileManager::Status FileManager::unmanage(const QString &pFileName)
     // Unmanage the given file, should it be managed
 
     QString nativeFileName = nativeCanonicalFileName(pFileName);
+    File *file = isManaged(nativeFileName);
 
-    if (QFile::exists(nativeFileName)) {
-        File *file = isManaged(nativeFileName);
+    if (file) {
+        // The file is managed, so we can remove it
 
-        if (file) {
-            // The file is managed, so we can remove it
+        mFiles.removeAt(mFiles.indexOf(file));
 
-            mFiles.removeAt(mFiles.indexOf(file));
+        delete file;
 
-            delete file;
+        if (mFiles.isEmpty())
+            mTimer->stop();
 
-            if (mFiles.isEmpty())
-                mTimer->stop();
+        emit fileUnmanaged(nativeFileName);
 
-            emit fileUnmanaged(nativeFileName);
-
-            return Removed;
-        } else {
-            // The file isn't managed, so...
-
-            return NotManaged;
-        }
+        return Removed;
     } else {
-        // The file doesn't exist, so...
+        // The file isn't managed, so...
 
         return NotManaged;
     }
@@ -559,17 +552,19 @@ void FileManager::checkFiles()
     // are not being ignored
 
     foreach (File *file, mFiles) {
+        QString fileName = file->fileName();
+
         switch (file->check()) {
         case File::Changed:
             // The file has changed, so let people know about it
 
-            emit fileChanged(file->fileName());
+            emit fileChanged(fileName);
 
             break;
         case File::Deleted:
             // The file has been deleted, so let people know about it
 
-            emit fileDeleted(file->fileName());
+            emit fileDeleted(fileName);
 
             break;
         default:
@@ -578,17 +573,18 @@ void FileManager::checkFiles()
             ;
         }
 
-        bool fileReadable = isReadable(file->fileName());
-        bool fileWritable = isWritable(file->fileName());
+        bool fileReadable = isReadable(fileName);
+        bool fileWritable = isWritable(fileName);
 
-        if (    (fileReadable != mFilesReadable.value(file->fileName(), false))
-            ||  (fileWritable != mFilesWritable.value(file->fileName(), false))
-            || !(   mFilesReadable.contains(file->fileName())
-                 && mFilesWritable.contains(file->fileName()))) {
-            emit filePermissionsChanged(file->fileName());
+        if (    (fileReadable != mFilesReadable.value(fileName, false))
+            ||  (fileWritable != mFilesWritable.value(fileName, false))
+            || !(   mFilesReadable.contains(fileName)
+                 && mFilesWritable.contains(fileName))) {
 
-            mFilesReadable.insert(file->fileName(), fileReadable);
-            mFilesWritable.insert(file->fileName(), fileWritable);
+            emit filePermissionsChanged(fileName);
+
+            mFilesReadable.insert(fileName, fileReadable);
+            mFilesWritable.insert(fileName, fileWritable);
         }
     }
 }
