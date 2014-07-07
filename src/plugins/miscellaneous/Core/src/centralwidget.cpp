@@ -1484,7 +1484,7 @@ void CentralWidget::updateGui()
     bool changedModes = sender() == mModeTabs;
     bool changedViews = false;
 
-    foreach (CentralWidgetMode *mode, mModes.values())
+    foreach (CentralWidgetMode *mode, mModes)
         if (sender() == mode->viewTabs()) {
             changedViews = true;
 
