@@ -42,7 +42,7 @@ namespace Core {
 
 FileManager::FileManager() :
     mActive(true),
-    mFiles(QList<File *>()),
+    mFiles(QMap<QString, File *>()),
     mFilesReadable(QMap<QString, bool>()),
     mFilesWritable(QMap<QString, bool>())
 {
@@ -101,7 +101,7 @@ FileManager::Status FileManager::manage(const QString &pFileName,
             // The file isn't already managed, so add it to our list of managed
             // files and let people know about it being now managed
 
-            mFiles << new File(nativeFileName, pType, pUrl);
+            mFiles.insert(nativeFileName, new File(nativeFileName, pType, pUrl));
 
             if (!mTimer->isActive())
                 mTimer->start(1000);
@@ -129,7 +129,7 @@ FileManager::Status FileManager::unmanage(const QString &pFileName)
     if (file) {
         // The file is managed, so we can remove it
 
-        mFiles.removeAt(mFiles.indexOf(file));
+        mFiles.remove(nativeFileName);;
 
         delete file;
 
@@ -152,17 +152,7 @@ File * FileManager::isManaged(const QString &pFileName) const
 {
     // Return whether the given file is managed
 
-    QString nativeFileName = nativeCanonicalFileName(pFileName);
-
-    foreach (File *file, mFiles)
-        if (!file->fileName().compare(nativeFileName))
-            // The file has been found meaning it is managed
-
-            return file;
-
-    // The file couldn't be found meaning it's not managed
-
-    return 0;
+    return mFiles.value(nativeCanonicalFileName(pFileName), 0);
 }
 
 //==============================================================================
