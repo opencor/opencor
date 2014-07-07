@@ -41,7 +41,7 @@ namespace Core {
 //==============================================================================
 
 FileManager::FileManager() :
-    mActive(true),
+    mCanCheckFiles(true),
     mFiles(QMap<QString, File *>()),
     mFilesReadable(QMap<QString, bool>()),
     mFilesWritable(QMap<QString, bool>())
@@ -157,20 +157,20 @@ File * FileManager::isManaged(const QString &pFileName) const
 
 //==============================================================================
 
-bool FileManager::isActive() const
+bool FileManager::canCheckFiles() const
 {
-    // Return whether we are active
+    // Return whether we can check files
 
-    return mActive;
+    return mCanCheckFiles;
 }
 
 //==============================================================================
 
-void FileManager::setActive(const bool &pActive)
+void FileManager::setCanCheckFiles(const bool &pCanCheckFiles)
 {
-    // Set whether we are active
+    // Set whether we can check files
 
-    mActive = pActive;
+    mCanCheckFiles = pCanCheckFiles;
 }
 
 //==============================================================================
@@ -532,10 +532,10 @@ int FileManager::count() const
 
 void FileManager::checkFiles()
 {
-    // We only want to check our files if we are active and if there is no
+    // We only want to check our files if we can check files and if there is no
     // currently active dialog box
 
-    if (!mActive || QApplication::activeModalWidget())
+    if (!mCanCheckFiles || QApplication::activeModalWidget())
         return;
 
     // Check our various files, as well as their locked status, but only if they

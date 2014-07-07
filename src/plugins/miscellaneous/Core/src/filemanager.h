@@ -98,8 +98,8 @@ public:
 
     File * isManaged(const QString &pFileName) const;
 
-    bool isActive() const;
-    void setActive(const bool &pActive);
+    bool canCheckFiles() const;
+    void setCanCheckFiles(const bool &pCanCheckFiles);
 
     QString sha1(const QString &pFileName) const;
 
@@ -134,7 +134,7 @@ public:
     int count() const;
 
 private:
-    bool mActive;
+    bool mCanCheckFiles;
 
     QTimer *mTimer;
 

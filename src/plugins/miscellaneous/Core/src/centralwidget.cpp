@@ -1032,12 +1032,11 @@ bool CentralWidget::saveFile(const int &pIndex, const bool &pNeedNewFileName)
     bool fileIsModified = fileManagerInstance->isModified(oldFileName);
 
     if (fileIsModified || hasNewFileName) {
-        // Inactivate our file manager so that it doesn't check for changes in
-        // files
+        // Prevent our file manager from checking files
         // Note: indeed, otherwise we will get told that the current file has
         //       changed and we will be asked whether we want to reload it...
 
-        fileManagerInstance->setActive(false);
+        fileManagerInstance->setCanCheckFiles(false);
 
         if (fileIsNew || fileIsModified) {
             // The file is or has been modified, so ask the current view to save
@@ -1109,7 +1108,7 @@ bool CentralWidget::saveFile(const int &pIndex, const bool &pNeedNewFileName)
 
         // Re-activate our file manager
 
-        fileManagerInstance->setActive(true);
+        fileManagerInstance->setCanCheckFiles(true);
 
         // Everything went fine, so...
 
@@ -1837,18 +1836,18 @@ void CentralWidget::fileModified(const QString &pFileName)
 void CentralWidget::fileReloaded(const QString &pFileName)
 {
     // Let our plugins know about the file having been reloaded, but ignore the
-    // current plugin if our file manager is inactive
-    // Note: indeed, if our file manager is inactive, then it means that we are
-    //       saving the file (see saveFile()), hence we don't need and don't
-    //       want (since it may mess up our current view; e.g. the caret of a
-    //       QScintilla-based view will get moved back to its original position)
-    //       our current plugin to reload it...
+    // current plugin if our file manager cannot check files
+    // Note: indeed, if our file manager cannot check files, then it means that
+    //       we are saving the file (see saveFile()), hence we don't need and
+    //       don't want (since it may mess up our current view; e.g. the caret
+    //       of a QScintilla-based view will get moved back to its original
+    //       position) our current plugin to reload it...
 
     FileManager *fileManagerInstance = FileManager::instance();
     Plugin *fileViewPlugin = viewPlugin(pFileName);
 
     foreach (Plugin *plugin, mLoadedFileHandlingPlugins)
-        if (fileManagerInstance->isActive() || (plugin != fileViewPlugin))
+        if (fileManagerInstance->canCheckFiles() || (plugin != fileViewPlugin))
             qobject_cast<FileHandlingInterface *>(plugin->instance())->fileReloaded(pFileName);
 
     // Now, because of the way some our views may reload a file (see
@@ -1856,7 +1855,7 @@ void CentralWidget::fileReloaded(const QString &pFileName)
     // GUI
 
     foreach (Plugin *plugin, mLoadedGuiPlugins)
-        if (fileManagerInstance->isActive() || (plugin != fileViewPlugin))
+        if (fileManagerInstance->canCheckFiles() || (plugin != fileViewPlugin))
             qobject_cast<GuiInterface *>(plugin->instance())->updateGui(fileViewPlugin, pFileName);
 
     // Update our modified settings
