@@ -170,6 +170,10 @@ QString CellmlFileRuntimeParameter::formattedUnit(const QString &pVoiUnit) const
 CellmlFileRuntime::CellmlFileRuntime() :
     mOdeCodeInformation(0),
     mDaeCodeInformation(0),
+    mConstantsCount(0),
+    mStatesRatesCount(0),
+    mAlgebraicCount(0),
+    mCondVarCount(0),
     mCompilerEngine(0),
     mVariableOfIntegration(0),
     mParameters(CellmlFileRuntimeParameters())
@@ -252,10 +256,7 @@ int CellmlFileRuntime::constantsCount() const
 {
     // Return the number of constants in the model
 
-    if (mModelType == CellmlFileRuntime::Ode)
-        return mOdeCodeInformation?mOdeCodeInformation->constantIndexCount():0;
-    else
-        return mDaeCodeInformation?mDaeCodeInformation->constantIndexCount():0;
+    return mConstantsCount;
 }
 
 //==============================================================================
@@ -264,10 +265,7 @@ int CellmlFileRuntime::statesCount() const
 {
     // Return the number of states in the model
 
-    if (mModelType == CellmlFileRuntime::Ode)
-        return mOdeCodeInformation?mOdeCodeInformation->rateIndexCount():0;
-    else
-        return mDaeCodeInformation?mDaeCodeInformation->rateIndexCount():0;
+    return mStatesRatesCount;
 }
 
 //==============================================================================
@@ -275,10 +273,8 @@ int CellmlFileRuntime::statesCount() const
 int CellmlFileRuntime::ratesCount() const
 {
     // Return the number of rates in the model
-    // Note: it is obviously the same as the number of states, so this function
-    //       is only for user convenience...
 
-    return statesCount();
+    return mStatesRatesCount;
 }
 
 //==============================================================================
@@ -287,10 +283,7 @@ int CellmlFileRuntime::algebraicCount() const
 {
     // Return the number of algebraic equations in the model
 
-    if (mModelType == CellmlFileRuntime::Ode)
-        return mOdeCodeInformation?mOdeCodeInformation->algebraicIndexCount():0;
-    else
-        return mDaeCodeInformation?mDaeCodeInformation->algebraicIndexCount():0;
+    return mAlgebraicCount;
 }
 
 //==============================================================================
@@ -299,10 +292,7 @@ int CellmlFileRuntime::condVarCount() const
 {
     // Return the number of conditional variables in the model
 
-    if (mModelType == CellmlFileRuntime::Ode)
-        return 0;
-    else
-        return mDaeCodeInformation?mDaeCodeInformation->conditionVariableCount():0;
+    return mCondVarCount;
 }
 
 //==============================================================================
@@ -777,6 +767,25 @@ CellmlFileRuntime * CellmlFileRuntime::update(CellmlFile *pCellmlFile)
         getDaeCodeInformation(model);
 
         genericCodeInformation = mDaeCodeInformation;
+    }
+
+    // Retrieve the number of constants, states/rates, algebraic and conditional
+    // variables in the model
+    // Note: this is to avoid having to go through the ODE/DAE code information
+    //       an unnecessary number of times when we want to retrieve either of
+    //       those numbers (e.g. see
+    //       SingleCellViewSimulationResults::addPoint())...
+
+    if (mModelType == CellmlFileRuntime::Ode) {
+        mConstantsCount   = mOdeCodeInformation->constantIndexCount();
+        mStatesRatesCount = mOdeCodeInformation->rateIndexCount();
+        mAlgebraicCount   = mOdeCodeInformation->algebraicIndexCount();
+        mCondVarCount     = 0;
+    } else {
+        mConstantsCount   = mDaeCodeInformation->constantIndexCount();
+        mStatesRatesCount = mDaeCodeInformation->rateIndexCount();
+        mAlgebraicCount   = mDaeCodeInformation->algebraicIndexCount();
+        mCondVarCount     = mDaeCodeInformation->conditionVariableCount();
     }
 
     // Retrieve all the parameters and sort them by component/variable name

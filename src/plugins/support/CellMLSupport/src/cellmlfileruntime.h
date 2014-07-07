@@ -177,6 +177,11 @@ private:
     ObjRef<iface::cellml_services::CodeInformation> mOdeCodeInformation;
     ObjRef<iface::cellml_services::IDACodeInformation> mDaeCodeInformation;
 
+    int mConstantsCount;
+    int mStatesRatesCount;
+    int mAlgebraicCount;
+    int mCondVarCount;
+
     Compiler::CompilerEngine *mCompilerEngine;
 
     CellmlFileIssues mIssues;
