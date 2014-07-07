@@ -378,8 +378,8 @@ void SingleCellViewSimulationWorker::started()
 
         timer.start();
 
-        // Add our first point after making sure that all the variables have
-        // been computed
+        // Add our first point after making sure that all the variables are up
+        // to date
 
         mSimulation->data()->recomputeVariables(mCurrentPoint);
 
@@ -414,8 +414,8 @@ void SingleCellViewSimulationWorker::started()
 
             mProgress = (mCurrentPoint-startingPoint)*oneOverPointsRange;
 
-            // Add our new point after making sure that all the variables have
-            // been computed
+            // Add our new point after making sure that all the variables are up
+            // to date
 
             mSimulation->data()->recomputeVariables(mCurrentPoint);
 
