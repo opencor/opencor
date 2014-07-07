@@ -297,6 +297,22 @@ bool FileManager::isNewOrModified(const QString &pFileName) const
 
 //==============================================================================
 
+void FileManager::makeNew(const QString &pFileName)
+{
+    // Make the given file new, should it be managed
+
+    File *file = isManaged(nativeCanonicalFileName(pFileName));
+
+    if (file) {
+        QString newFileName;
+
+        if (newFile(QString(), newFileName))
+            file->makeNew(newFileName);
+    }
+}
+
+//==============================================================================
+
 void FileManager::setModified(const QString &pFileName, const bool &pModified)
 {
     // Set the modified state of the given file, should it be managed
@@ -558,23 +574,22 @@ void FileManager::checkFiles()
 
             break;
         default:
-            // The file is unchanged, so do nothing...
+            // The file has neither changed nor been deleted, so check whether
+            // its permissions have changed
 
-            ;
-        }
+            bool fileReadable = isReadable(fileName);
+            bool fileWritable = isWritable(fileName);
 
-        bool fileReadable = isReadable(fileName);
-        bool fileWritable = isWritable(fileName);
+            if (    (fileReadable != mFilesReadable.value(fileName, false))
+                ||  (fileWritable != mFilesWritable.value(fileName, false))
+                || !(   mFilesReadable.contains(fileName)
+                     && mFilesWritable.contains(fileName))) {
 
-        if (    (fileReadable != mFilesReadable.value(fileName, false))
-            ||  (fileWritable != mFilesWritable.value(fileName, false))
-            || !(   mFilesReadable.contains(fileName)
-                 && mFilesWritable.contains(fileName))) {
+                emit filePermissionsChanged(fileName);
 
-            emit filePermissionsChanged(fileName);
-
-            mFilesReadable.insert(fileName, fileReadable);
-            mFilesWritable.insert(fileName, fileWritable);
+                mFilesReadable.insert(fileName, fileReadable);
+                mFilesWritable.insert(fileName, fileWritable);
+            }
         }
     }
 }

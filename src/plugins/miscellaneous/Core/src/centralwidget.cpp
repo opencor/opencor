@@ -1748,9 +1748,13 @@ void CentralWidget::fileDeleted(const QString &pFileName)
                 break;
             }
     } else {
-        // The user wants to keep the file, so consider it as modified
+        // The user wants to keep the file, so consider it as new now
 
-        FileManager::instance()->setModified(pFileName, true);
+        FileManager::instance()->makeNew(pFileName);
+
+        // Update our modified settings
+
+        updateModifiedSettings();
     }
 }
 

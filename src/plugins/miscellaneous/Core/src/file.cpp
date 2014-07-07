@@ -37,6 +37,10 @@ namespace Core {
 
 //==============================================================================
 
+static int gNewIndex = 0;
+
+//==============================================================================
+
 File::File(const QString &pFileName, const Type &pType, const QString &pUrl) :
     mFileName(nativeCanonicalFileName(pFileName)),
     mUrl(pUrl)
@@ -47,11 +51,8 @@ File::File(const QString &pFileName, const Type &pType, const QString &pUrl) :
 
     // Set our index, in case we are a new file
 
-    if (pType == New) {
-        static int newIndex = 0;
-
-        mNewIndex = ++newIndex;
-    }
+    if (pType == New)
+        mNewIndex = ++gNewIndex;
 }
 
 //==============================================================================
@@ -174,6 +175,22 @@ bool File::isNew() const
     // Return whether the file is new
 
     return mNewIndex != 0;
+}
+
+//==============================================================================
+
+bool File::makeNew(const QString &pFileName)
+{
+    // Make the file new
+
+    mFileName = nativeCanonicalFileName(pFileName);
+    mUrl = QString();
+
+    reset();
+
+    mNewIndex = ++gNewIndex;
+
+    return true;
 }
 
 //==============================================================================

@@ -72,6 +72,7 @@ public:
     bool isDifferent() const;
 
     bool isNew() const;
+    bool makeNew(const QString &pFileName);
 
     int newIndex() const;
 

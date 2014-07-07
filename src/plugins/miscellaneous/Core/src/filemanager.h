@@ -115,6 +115,8 @@ public:
     bool isModified(const QString &pFileName) const;
     bool isNewOrModified(const QString &pFileName) const;
 
+    void makeNew(const QString &pFileName);
+
     void setModified(const QString &pFileName, const bool &pModified);
 
     bool isReadable(const QString &pFileName) const;
