@@ -16,7 +16,7 @@ install:
   -    if [ "`uname -s`" = "Linux" ] ; then
             sudo add-apt-repository ppa:ubuntu-toolchain-r/test
          && sudo apt-get -qq update
-         && sudo apt-get install install gcc-4.8
+         && sudo apt-get -qq install gcc-4.8
          && sudo update-alternatives --remove-all gcc
          && sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-4.8 20
          && sudo update-alternatives --config gcc
