@@ -12,7 +12,7 @@ env:
   - CONFIG=Release
   - CONFIG=Debug
 
-before_install:
+install:
   -    if [ "`uname -s`" = "Linux" ] ; then
             sudo add-apt-repository ppa:ubuntu-toolchain-r/test
          && sudo apt-get -qq update
@@ -77,8 +77,5 @@ script:
 
 notifications:
   email:
-    on_success: change
-    on_failure: always
-    recipients:
-      - team@opencor.ws
-      - agarny@hellix.com
+    - team@opencor.ws
+    - agarny@hellix.com
