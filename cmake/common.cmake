@@ -2,6 +2,23 @@ MACRO(INITIALISE_PROJECT)
 #    SET(CMAKE_VERBOSE_MAKEFILE ON)
     SET(CMAKE_INCLUDE_CURRENT_DIR ON)
 
+    # Make sure that we are using the compiler we support
+
+    IF(WIN32)
+        IF(   NOT "${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC"
+           OR NOT ${MSVC_VERSION} EQUAL 1600)
+            MESSAGE(FATAL_ERROR "OpenCOR can only be built using MSVC 2010 on Windows...")
+        ENDIF()
+    ELSEIF(APPLE)
+        IF(NOT "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+            MESSAGE(FATAL_ERROR "OpenCOR can only be built using Clang on OS X...")
+        ENDIF()
+    ELSE()
+        IF(NOT "${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+            MESSAGE(FATAL_ERROR "OpenCOR can only be built using GCC on Linux...")
+        ENDIF()
+    ENDIF()
+
     # Make sure that we are building on a supported architecture
     # Note: normally, we would check the value of CMAKE_SIZEOF_VOID_P, but in
     #       some cases it may not be set (e.g. when generating an Xcode project
