@@ -475,15 +475,9 @@ IF(WIN32)
 
     SET(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_SOURCE_DIR}/LICENSE.txt")
 
-    # Install both the GUI and consolve version of OpenCOR
-    # Note: we would normally use
-    #           INSTALL(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION bin)
-    #       for the GUI version of OpenCOR, but for some reasons it doesn't
-    #       work (anymore?) while it works fine on Linux and OS X. Could that
-    #       have something to do with us now using MSVC?...
+    # Install both the GUI and CLI versions of OpenCOR
 
-    INSTALL(FILES ${PROJECT_BUILD_DIR}/bin/${PROJECT_NAME}${CMAKE_EXECUTABLE_SUFFIX}
-            DESTINATION bin)
+    INSTALL(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION bin)
     INSTALL(FILES ${PROJECT_BUILD_DIR}/bin/${PROJECT_NAME}.com
             DESTINATION bin)
 
