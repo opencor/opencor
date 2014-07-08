@@ -176,7 +176,7 @@ bool CompilerEngine::compileCode(const QString &pCode)
 
     compilationArguments.push_back("clang");
     compilationArguments.push_back("-fsyntax-only");
-    compilationArguments.push_back("-O4");
+    compilationArguments.push_back("-O3");
     compilationArguments.push_back("-ffast-math");
     compilationArguments.push_back("-Werror");
     compilationArguments.push_back(tempFileName);
