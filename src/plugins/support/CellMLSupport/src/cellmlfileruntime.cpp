@@ -1023,12 +1023,20 @@ CellmlFileRuntime * CellmlFileRuntime::update(CellmlFile *pCellmlFile)
     // Check whether the model code contains a definite integral, otherwise
     // compute it and check that everything went fine
 
-    if (modelCode.contains("defint(func"))
+    if (modelCode.contains("defint(func")) {
         mIssues << CellmlFileIssue(CellmlFileIssue::Error,
                                    tr("definite integrals are not yet supported"));
-    else if (!mCompilerEngine->compileCode(modelCode))
-        mIssues << CellmlFileIssue(CellmlFileIssue::Error,
-                                   QString("%1").arg(mCompilerEngine->error()));
+    } else {
+        modelCode += "\n";
+        modelCode += "void dummy()\n";
+        modelCode += "{\n";
+        modelCode += "}\n";
+        modelCode += "\n";
+
+        if (!mCompilerEngine->compileCode(modelCode))
+            mIssues << CellmlFileIssue(CellmlFileIssue::Error,
+                                       QString("%1").arg(mCompilerEngine->error()));
+    }
 
     // Keep track of the ODE/DAE functions, but only if no issues were reported
 
@@ -1083,6 +1091,10 @@ CellmlFileRuntime * CellmlFileRuntime::update(CellmlFile *pCellmlFile)
 
             reset(true, false);
         }
+
+        DummyFunction dummyFunction = (DummyFunction) (intptr_t) mCompilerEngine->getFunction("dummy");
+
+        dummyFunction();
     }
 
     // We are done, so return ourselves
