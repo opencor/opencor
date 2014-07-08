@@ -95,9 +95,7 @@ MACRO(INITIALISE_PROJECT)
     # Some general build settings
     # Note: we need to use C++11, so that we can define strings as static const.
     #       Now, it happens that MSVC enables C++11 support by default, so we
-    #       just need to enable it on Linux and OS X. In that context, and for
-    #       backward compatilibity with versions of gcc older than 4.7, we do
-    #       this by using -std=c++0x rather than -std=c++11...
+    #       just need to enable it on Linux and OS X...
 
     IF(WIN32)
         STRING(REPLACE "/W3" "/W3 /WX" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
@@ -108,7 +106,7 @@ MACRO(INITIALISE_PROJECT)
 
         SET(LINK_FLAGS_PROPERTIES "/STACK:10000000 /MACHINE:X86")
     ELSE()
-        SET(CMAKE_CXX_FLAGS "-Wall -W -Werror -std=c++0x")
+        SET(CMAKE_CXX_FLAGS "-Wall -W -Werror -std=c++11")
 
         IF(APPLE)
             SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -stdlib=libc++")
@@ -123,20 +121,14 @@ MACRO(INITIALISE_PROJECT)
 
     IF(RELEASE_MODE)
         # Default compiler and linker settings
-        # Note: OpenCOR is built using gcc on Linux. However, in gcc, the -O3
-        #       option comes with a warning: "Under some circumstances where
-        #       these optimizations are not favorable, this option might
-        #       actually make a program slower." This is the reason we use -O2.
-        #       On the other hand, OpenCOR is built using Clang on OS X, hence
-        #       we use -O3 in that case...
 
         IF(WIN32)
             SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /DNDEBUG /MD /O2 /Ob2")
         ELSE()
             IF(APPLE)
-                SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3")
+                SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O4")
             ELSE()
-                SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O2")
+                SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3")
             ENDIF()
 
             SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -ffast-math")
@@ -1088,7 +1080,7 @@ MACRO(RETRIEVE_BINARY_FILE DIRNAME FILENAME SHA1_VALUE)
         LIST(GET STATUS 0 STATUS_CODE)
 
         IF(${STATUS_CODE} EQUAL 0)
-            EXECUTE_PROCESS(COMMAND ${CMAKE_COMMAND} -E tar zxvf ${REAL_COMPRESSED_FILENAME}
+            EXECUTE_PROCESS(COMMAND ${CMAKE_COMMAND} -E tar -xzf ${REAL_COMPRESSED_FILENAME}
                             WORKING_DIRECTORY ${REAL_DIRNAME} OUTPUT_QUIET)
             FILE(REMOVE ${REAL_COMPRESSED_FILENAME})
         ELSE()
