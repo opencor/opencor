@@ -103,10 +103,10 @@ void CliApplication::about() const
 
     version();
 
-    std::cout << qPrintable(Core::osName()) << std::endl;
-    std::cout << qPrintable(Core::copyright()) << std::endl;
+    std::cout << Core::osName().toStdString() << std::endl;
+    std::cout << Core::copyright().toStdString() << std::endl;
     std::cout << std::endl;
-    std::cout << qPrintable(mApp->applicationName())
+    std::cout << mApp->applicationName().toStdString()
               << " is a cross-platform CellML-based modelling environment,"
               << " which can be used to organise, edit,"
               << " simulate and analyse CellML files."
@@ -150,11 +150,11 @@ bool CliApplication::command(const QStringList &pArguments, int *pRes) const
                 }
 
             if (!pluginFound) {
-                std::cout << "Sorry, but the " << qPrintable(commandPlugin) << " plugin could not be found." << std::endl;
+                std::cout << "Sorry, but the " << commandPlugin.toStdString() << " plugin could not be found." << std::endl;
 
                 return true;
             } else if (!pluginHasCliSupport) {
-                std::cout << "Sorry, but the " << qPrintable(commandPlugin) << " plugin does not support the execution of commands." << std::endl;
+                std::cout << "Sorry, but the " << commandPlugin.toStdString() << " plugin does not support the execution of commands." << std::endl;
 
                 return true;
             }
@@ -200,7 +200,7 @@ void CliApplication::help() const
 {
     // Output some help
 
-    std::cout << "Usage: " << qPrintable(mApp->applicationName())
+    std::cout << "Usage: " << mApp->applicationName().toStdString()
               << " [-a|--about] [-c|--command [<plugin>::]<command> <options>] [-h|--help] [-p|--plugins] [-s|--status] [-v|--version] [<files>]"
               << std::endl;
     std::cout << " -a, --about     Display some information about OpenCOR"
@@ -258,7 +258,7 @@ void CliApplication::plugins() const
         std::cout << "The following CLI plugins are available:" << std::endl;
 
     foreach (const QString &pluginInfo, pluginsInfo)
-        std::cout << " - " << qPrintable(pluginInfo) << std::endl;
+        std::cout << " - " << pluginInfo.toStdString() << std::endl;
 }
 
 //==============================================================================
@@ -346,7 +346,7 @@ void CliApplication::status() const
         std::cout << "The following plugins are available:" << std::endl;
 
     foreach (const QString &pluginInfo, pluginsInfo)
-        std::cout << " - " << qPrintable(pluginInfo) << std::endl;
+        std::cout << " - " << pluginInfo.toStdString() << std::endl;
 }
 
 //==============================================================================
@@ -355,7 +355,7 @@ void CliApplication::version() const
 {
     // Output the version of OpenCOR
 
-    std::cout << qPrintable(OpenCOR::version(mApp)) << std::endl;
+    std::cout << OpenCOR::version(mApp).toStdString() << std::endl;
 }
 
 //==============================================================================

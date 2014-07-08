@@ -450,7 +450,7 @@ int CellMLToolsPlugin::runExportCommand(const QStringList &pArguments)
     if (errorMessage.isEmpty()) {
         return 0;
     } else {
-        std::cout << qPrintable(errorMessage) << std::endl;
+        std::cout << errorMessage.toStdString() << std::endl;
 
         return -1;
     }

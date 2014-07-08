@@ -69,7 +69,7 @@ int main(int pArgC, char *pArgV[])
             std::cout << std::endl;
         }
 
-        std::cout << "********* " << qPrintable(iter.key()) << " *********" << std::endl;
+        std::cout << "********* " << iter.key().toStdString() << " *********" << std::endl;
         std::cout << std::endl;
 
         foreach (const QString &test, iter.value()) {
@@ -94,7 +94,7 @@ int main(int pArgC, char *pArgV[])
             std::cout << std::endl;
         }
 
-        std::cout << qPrintable(QString("*").repeated(9+1+iter.key().count()+1+9)) << std::endl;
+        std::cout << QString("*").repeated(9+1+iter.key().count()+1+9).toStdString() << std::endl;
 
         ++iter;
     }
@@ -116,7 +116,7 @@ int main(int pArgC, char *pArgV[])
             std::cout << "The following tests failed:" << std::endl;
 
         foreach (const QString &failedTest, failedTests)
-            std::cout << " - " << qPrintable(failedTest) << std::endl;
+            std::cout << " - " << failedTest.toStdString() << std::endl;
     }
 
     std::cout << std::endl;
