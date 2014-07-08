@@ -117,8 +117,6 @@ public:
         Dae
     };
 
-    typedef void (*DummyFunction)();
-
     typedef int (*InitializeConstantsFunction)(double *CONSTANTS, double *RATES, double *STATES);
 
     typedef int (*ComputeComputedConstantsFunction)(double *CONSTANTS, double *RATES, double *STATES);
