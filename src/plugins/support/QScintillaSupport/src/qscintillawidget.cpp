@@ -19,6 +19,7 @@ specific language governing permissions and limitations under the License.
 // QScintillaWidget class
 //==============================================================================
 
+#include "cliutils.h"
 #include "filemanager.h"
 #include "guiutils.h"
 #include "qscintillawidget.h"
@@ -274,9 +275,9 @@ int QScintillaWidget::findTextInRange(const int &pStartRange,
     SendScintilla(SCI_SETTARGETSTART, pStartRange);
     SendScintilla(SCI_SETTARGETEND, pEndRange);
 
-    QByteArray text = pText.toUtf8();
+    const char *text = qStringToConstCharArray(pText);
 
-    return SendScintilla(SCI_SEARCHINTARGET, text.length(), text.constData());
+    return SendScintilla(SCI_SEARCHINTARGET, strlen(text), text);
 }
 
 //==============================================================================
