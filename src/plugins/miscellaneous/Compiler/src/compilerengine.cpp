@@ -115,8 +115,7 @@ bool CompilerEngine::compileCode(const QString &pCode)
 
     reset();
 
-    // Retrieve the application file name and determine the name of the
-    // temporary file which will contain our code
+    // Determine the name of the temporary file that will contain our code
 
     QTemporaryFile tempFile(QDir::tempPath()+QDir::separator()+"XXXXXX.c");
 
@@ -129,13 +128,12 @@ bool CompilerEngine::compileCode(const QString &pCode)
     tempFile.close();
 
     // 'Properly' create our temporary file
-    // Note #1: for some reasons, a temporary file created using QTemporaryFile
-    //          doesn't work straightaway with stat() (which LLVM uses in its
-    //          call to CompilerInstance::ExecuteAction()), so instead we use
-    //          QTemporaryFile to get a temporary file name and then use QFile
-    //          to 'properly' create our temporary file...
-    // Note #2: see https://bugreports.qt-project.org/browse/QTBUG-33727 for
-    //          more information...
+    // Note: for some reasons, a temporary file created using QTemporaryFile
+    //       doesn't work straightaway with stat(), which LLVM uses in its call
+    //       to CompilerInstance::ExecuteAction()). So, instead, we use
+    //       QTemporaryFile to get a temporary file name and then use QFile to
+    //       'properly' create our temporary file. For more information, see
+    //       https://bugreports.qt-project.org/browse/QTBUG-33727...
 
     QFile file(tempFile.fileName());
     // Note: we don't have to delete the file ourselves afterwards since it has
@@ -216,7 +214,7 @@ bool CompilerEngine::compileCode(const QString &pCode)
     // Create a compiler invocation using our command's arguments
 
     const clang::driver::ArgStringList &commandArguments = command->getArguments();
-    clang::CompilerInvocation *compilerInvocation = new clang::CompilerInvocation();
+    llvm::OwningPtr<clang::CompilerInvocation> compilerInvocation(new clang::CompilerInvocation());
 
     clang::CompilerInvocation::CreateFromArgs(*compilerInvocation,
                                               const_cast<const char **>(commandArguments.data()),
@@ -227,7 +225,7 @@ bool CompilerEngine::compileCode(const QString &pCode)
 
     clang::CompilerInstance compilerInstance;
 
-    compilerInstance.setInvocation(compilerInvocation);
+    compilerInstance.setInvocation(compilerInvocation.take());
 
     // Create the compiler instance's diagnostics engine
 

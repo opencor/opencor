@@ -73,7 +73,7 @@ const char * qStringToConstCharArray(const QString &pString)
 
 QIntList qVariantListToIntList(const QVariantList &pVariantList)
 {
-    // Convert a list of variants to a list of integers
+    // Convert the given list of variants to a list of integers
 
     QIntList res = QIntList();
 
@@ -87,7 +87,7 @@ QIntList qVariantListToIntList(const QVariantList &pVariantList)
 
 QVariantList qIntListToVariantList(const QIntList &pIntList)
 {
-    // Convert a list of integers to a list of variants
+    // Convert the given list of integers to a list of variants
 
     QVariantList res = QVariantList();
 
