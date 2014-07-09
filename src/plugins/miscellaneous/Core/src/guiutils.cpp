@@ -173,14 +173,13 @@ void setFocusTo(QWidget *pWidget)
                                  qApp->activeWindow()->focusWidget():
                                  0;
 
-    pWidget->setFocus();
+    if (   !focusedWidget
+        || (pWidget->parentWidget() == focusedWidget->parentWidget())) {
+        // Either there is no currently focused widget or the currently focused
+        // widget and the one to which we want to set the focus share the same
+        // parent, so set the focus to the given widget
 
-    if (   focusedWidget
-        && (pWidget->parentWidget() != focusedWidget->parentWidget())) {
-        // The current and previously focused widgets don't share the same
-        // parent, so revert the focus back to the previously focused widget
-
-        focusedWidget->setFocus();
+        pWidget->setFocus();
     }
 }
 
