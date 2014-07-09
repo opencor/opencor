@@ -249,8 +249,7 @@ void SingleCellViewSimulationWorker::started()
     }
 
     // Make sure that we have found our ODE/DAE solver
-    // Note #1: this should never happen, but we never know, so...
-    // Note #2: see the end of this method about we do before returning...
+    // Note: this should never happen, but we never know, so...
 
     if (!voiSolver) {
         if (mRuntime->needOdeSolver())
