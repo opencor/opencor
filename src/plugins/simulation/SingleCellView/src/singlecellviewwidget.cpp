@@ -601,8 +601,8 @@ void SingleCellViewWidget::initialize(const QString &pFileName)
                 this, SLOT(simulationRunning(const bool &)));
         connect(mSimulation, SIGNAL(paused()),
                 this, SLOT(simulationPaused()));
-        connect(mSimulation, SIGNAL(stopped(const int &)),
-                this, SLOT(simulationStopped(const int &)));
+        connect(mSimulation, SIGNAL(stopped(const qint64 &)),
+                this, SLOT(simulationStopped(const qint64 &)));
 
         connect(mSimulation, SIGNAL(error(const QString &)),
                 this, SLOT(simulationError(const QString &)));
@@ -1270,7 +1270,7 @@ void SingleCellViewWidget::simulationPaused()
 
 //==============================================================================
 
-void SingleCellViewWidget::simulationStopped(const int &pElapsedTime)
+void SingleCellViewWidget::simulationStopped(const qint64 &pElapsedTime)
 {
     // We want a short delay before resetting the progress bar and the file tab
     // icon, so that the user can really see when our simulation has completed,

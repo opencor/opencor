@@ -246,7 +246,7 @@ private:
 Q_SIGNALS:
     void running(const bool &pIsResuming);
     void paused();
-    void stopped(const int &pElapsedTime);
+    void stopped(const qint64 &pElapsedTime);
 
     void error(const QString &pMessage);
 };

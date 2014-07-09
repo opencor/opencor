@@ -1159,8 +1159,8 @@ bool SingleCellViewSimulation::run()
         connect(mWorker, SIGNAL(paused()),
                 this, SIGNAL(paused()));
 
-        connect(mWorker, SIGNAL(finished(const int &)),
-                this, SIGNAL(stopped(const int &)));
+        connect(mWorker, SIGNAL(finished(const qint64 &)),
+                this, SIGNAL(stopped(const qint64 &)));
 
         connect(mWorker, SIGNAL(error(const QString &)),
                 this, SIGNAL(error(const QString &)));

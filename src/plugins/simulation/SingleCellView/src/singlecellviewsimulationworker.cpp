@@ -68,7 +68,7 @@ SingleCellViewSimulationWorker::SingleCellViewSimulationWorker(const SolverInter
     connect(mThread, SIGNAL(started()),
             this, SLOT(started()));
 
-    connect(this, SIGNAL(finished(const int &)),
+    connect(this, SIGNAL(finished(const qint64 &)),
             mThread, SLOT(quit()));
 
     connect(mThread, SIGNAL(finished()),
@@ -326,7 +326,7 @@ void SingleCellViewSimulationWorker::started()
 
     bool increasingPoints = endingPoint > startingPoint;
     const double oneOverPointsRange = 1.0/(endingPoint-startingPoint);
-    int pointCounter = 0;
+    quint64 pointCounter = 0;
 
     mCurrentPoint = startingPoint;
 
@@ -367,7 +367,7 @@ void SingleCellViewSimulationWorker::started()
     // Now, we are ready to compute our model, but only if no error has occurred
     // so far
 
-    int elapsedTime;
+    qint64 elapsedTime;
 
     if (!mError) {
         // Start our timer
