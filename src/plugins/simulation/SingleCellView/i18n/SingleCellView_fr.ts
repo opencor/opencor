@@ -318,6 +318,10 @@
         <source>Simulation Delay</source>
         <translation>Délai Simulation</translation>
     </message>
+    <message>
+        <source>File</source>
+        <translation>Fichier</translation>
+    </message>
 </context>
 <context>
     <name>SingleCellViewGraphPanelPlotWidget</name>
