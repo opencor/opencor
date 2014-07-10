@@ -624,7 +624,7 @@ void SingleCellViewWidget::initialize(const QString &pFileName)
     // Reset our file tab icon and update our progress bar
     // Note: they may not both be necessary, but we never know, so...
 
-    resetFileTabIcon(mSimulation->fileName());
+    resetFileTabIcon(pFileName);
 
     mProgressBarWidget->setValue(mSimulation->progress());
 
