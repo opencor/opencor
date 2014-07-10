@@ -69,10 +69,6 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-#include "float.h"
-
-//==============================================================================
-
 #include "qwt_plot.h"
 #include "qwt_plot_curve.h"
 #include "qwt_wheel.h"
