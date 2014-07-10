@@ -22,6 +22,7 @@ specific language governing permissions and limitations under the License.
 #include "cellmlfilemanager.h"
 #include "cellmlfileruntime.h"
 #include "cliutils.h"
+#include "filemanager.h"
 #include "guiutils.h"
 #include "progressbarwidget.h"
 #include "propertyeditorwidget.h"
@@ -643,7 +644,14 @@ void SingleCellViewWidget::initialize(const QString &pFileName)
     if (!mOutputWidget->document()->isEmpty())
         information += "<hr/>\n";
 
-    information += "<strong>"+pFileName+"</strong>"+OutputBrLn;
+    Core::FileManager *fileManagerInstance = Core::FileManager::instance();
+    QString fileName = fileManagerInstance->isNew(pFileName)?
+                           tr("File")+" #"+QString::number(fileManagerInstance->newIndex(pFileName)):
+                           fileManagerInstance->isRemote(pFileName)?
+                               fileManagerInstance->url(pFileName):
+                               pFileName;
+
+    information += "<strong>"+fileName+"</strong>"+OutputBrLn;
     information += OutputTab+"<strong>"+tr("Runtime:")+"</strong> ";
 
     if (variableOfIntegration) {
