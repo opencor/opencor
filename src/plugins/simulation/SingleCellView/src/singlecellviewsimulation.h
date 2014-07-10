@@ -100,7 +100,7 @@ public:
     void addNlaSolverProperty(const QString &pName, const QVariant &pValue,
                               const bool &pReset = true);
 
-    void reset();
+    void reset(const bool &pInitialize = true);
 
     void recomputeComputedConstantsAndVariables(const double &pCurrentPoint,
                                                 const bool &pFullComputeComputedConstants = true);

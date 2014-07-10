@@ -796,14 +796,6 @@ void SingleCellViewWidget::initialize(const QString &pFileName)
     // environment
 
     if (validSimulationEnvironment) {
-        // Reset both the simulation's data and results (well, initialise in the
-        // case of its data), in case we are dealing with a new simulation
-
-        if (newSimulation) {
-            mSimulation->data()->reset();
-            mSimulation->results()->reset(false);
-        }
-
         // Initialise our GUI's simulation, solvers, graphs, parameters and
         // graph panels widgets
         // Note #1: this will also initialise some of our simulation data (i.e.
@@ -836,6 +828,14 @@ void SingleCellViewWidget::initialize(const QString &pFileName)
         graphPanelsWidget->initialize(pFileName);
 
         mCanUpdatePlotsForUpdatedGraphs = true;
+
+        // Reset both the simulation's data and results (well, initialise in the
+        // case of its data), in case we are dealing with a new simulation
+
+        if (newSimulation) {
+            mSimulation->data()->reset();
+            mSimulation->results()->reset(false);
+        }
     }
 
     // Resume the tracking of certain things

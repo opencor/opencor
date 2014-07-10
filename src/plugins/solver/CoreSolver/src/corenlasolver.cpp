@@ -53,6 +53,8 @@ void doNonLinearSolve(char *pRuntime,
         // We couldn't retrieve an NLA solver, so...
         // Note: this should never happen, but we never know, so...
 
+        qWarning("doNonLinearSolve(): no NLA solver could be found...");
+
         *pRes = 0;
     }
 }

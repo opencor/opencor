@@ -182,10 +182,11 @@ void SingleCellViewSimulationData::setStartingPoint(const double &pStartingPoint
 
     mStartingPoint = pStartingPoint;
 
-    // Recompute our 'computed constants' and 'variables'
+    // Recompute our 'computed constants' and 'variables', i.e. reset ourselves
+    // witout initialisation (hence passing false to reset())
 
     if (pRecompute)
-        recomputeComputedConstantsAndVariables(mStartingPoint);
+        reset(false);
 }
 
 //==============================================================================
@@ -389,7 +390,7 @@ void SingleCellViewSimulationData::addNlaSolverProperty(const QString &pName,
 
 //==============================================================================
 
-void SingleCellViewSimulationData::reset()
+void SingleCellViewSimulationData::reset(const bool &pInitialize)
 {
     if (!mRuntime)
         return;
@@ -443,14 +444,29 @@ void SingleCellViewSimulationData::reset()
 
     // Reset our parameter values
 
-    memset(mConstants, 0, mRuntime->constantsCount()*CoreSolver::SizeOfDouble);
-    memset(mRates, 0, mRuntime->ratesCount()*CoreSolver::SizeOfDouble);
-    memset(mStates, 0, mRuntime->statesCount()*CoreSolver::SizeOfDouble);
-    memset(mAlgebraic, 0, mRuntime->algebraicCount()*CoreSolver::SizeOfDouble);
-    memset(mCondVar, 0, mRuntime->condVarCount()*CoreSolver::SizeOfDouble);
+    if (pInitialize) {
+        memset(mConstants, 0, mRuntime->constantsCount()*CoreSolver::SizeOfDouble);
+        memset(mRates, 0, mRuntime->ratesCount()*CoreSolver::SizeOfDouble);
+        memset(mStates, 0, mRuntime->statesCount()*CoreSolver::SizeOfDouble);
+        memset(mAlgebraic, 0, mRuntime->algebraicCount()*CoreSolver::SizeOfDouble);
+        memset(mCondVar, 0, mRuntime->condVarCount()*CoreSolver::SizeOfDouble);
 
-    mRuntime->initializeConstants()(mConstants, mRates, mStates);
-    recomputeComputedConstantsAndVariables(mStartingPoint);
+        mRuntime->initializeConstants()(mConstants, mRates, mStates);
+    }
+
+    recomputeComputedConstantsAndVariables(mStartingPoint, pInitialize);
+
+    // Recompute our computed constants and variables in case our model needs an
+    // NLA solver
+    // Note: this is very much empiric. Indeed, we noticed that using
+    //       https://gist.github.com/agarny/b051897560031a2591a2,
+    //       x=3.0000006396753 after calling
+    //       recomputeComputedConstantsAndVariables(), but then if we call
+    //       recomputeComputedConstantsAndVariables() again, then we get
+    //       x=3.00000000000007, so...
+
+    if (mRuntime->needNlaSolver())
+        recomputeComputedConstantsAndVariables(mStartingPoint, pInitialize);
 
     // Delete our NLA solver, if any
 
@@ -462,12 +478,14 @@ void SingleCellViewSimulationData::reset()
 
     // Keep track of our various initial values
 
-    memcpy(mInitialConstants, mConstants, mRuntime->constantsCount()*CoreSolver::SizeOfDouble);
-    memcpy(mInitialStates, mStates, mRuntime->statesCount()*CoreSolver::SizeOfDouble);
+    if (pInitialize) {
+        memcpy(mInitialConstants, mConstants, mRuntime->constantsCount()*CoreSolver::SizeOfDouble);
+        memcpy(mInitialStates, mStates, mRuntime->statesCount()*CoreSolver::SizeOfDouble);
+    }
 
-    // Let people know that our data is 'cleaned', i.e. not modified
+    // Let people know whether our data is 'cleaned', i.e. not modified
 
-    emit modified(false);
+    emit modified(isModified());
 }
 
 //==============================================================================
@@ -529,11 +547,11 @@ bool SingleCellViewSimulationData::isModified() const
     //       than our constants...
 
     for (int i = 0, iMax = mRuntime->statesCount(); i < iMax; ++i)
-        if (!qIsFinite(mStates[i]) || (mStates[i] != mInitialStates[i]))
+        if (!qIsFinite(mStates[i]) || !qFuzzyCompare(mStates[i], mInitialStates[i]))
             return true;
 
     for (int i = 0, iMax = mRuntime->constantsCount(); i < iMax; ++i)
-        if (!qIsFinite(mConstants[i]) || (mConstants[i] != mInitialConstants[i]))
+        if (!qIsFinite(mConstants[i]) || !qFuzzyCompare(mConstants[i], mInitialConstants[i]))
             return true;
 
     return false;
