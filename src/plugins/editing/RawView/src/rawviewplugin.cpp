@@ -65,12 +65,9 @@ Editor::EditorWidget * RawViewPlugin::editor(const QString &pFileName) const
 bool RawViewPlugin::saveFile(const QString &pOldFileName,
                              const QString &pNewFileName)
 {
-    // Ask our raw view widget to save the given file
+    // Save the given file
 
-    Editor::EditorWidget *editor = mViewWidget->editor(pOldFileName);
-    bool res = Core::writeTextToFile(pNewFileName, editor->contents());
-
-    return res;
+    return Core::writeTextToFile(pNewFileName, mViewWidget->editor(pOldFileName)->contents());
 }
 
 //==============================================================================
