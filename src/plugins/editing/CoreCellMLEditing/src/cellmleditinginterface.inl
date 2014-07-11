@@ -4,4 +4,6 @@
     #define PURE
 #endif
 
+    virtual void cellmlValidation(const QString &pFileName) const PURE;
+
 #undef PURE

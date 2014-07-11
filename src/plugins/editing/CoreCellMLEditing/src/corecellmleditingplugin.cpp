@@ -52,7 +52,8 @@ PLUGININFO_FUNC CoreCellMLEditingPluginInfo()
 //==============================================================================
 
 CoreCellMLEditingPlugin::CoreCellMLEditingPlugin() :
-    mFileName(QString())
+    mFileName(QString()),
+    mCellmlEditingInterface(0)
 {
 }
 
@@ -66,12 +67,12 @@ void CoreCellMLEditingPlugin::updateGui(Plugin *pViewPlugin,
     // Show/enable or hide/disable various actions, depending on whether the
     // view plugin handles the CellML editing interface
 
-    CellmlEditingInterface *cellmlEditingInterface = pViewPlugin?qobject_cast<CellmlEditingInterface *>(pViewPlugin->instance()):0;
+    mCellmlEditingInterface = pViewPlugin?qobject_cast<CellmlEditingInterface *>(pViewPlugin->instance()):0;
 
-    Core::showEnableAction(mFileNewCellml1_0FileAction, cellmlEditingInterface);
-    Core::showEnableAction(mFileNewCellml1_1FileAction, cellmlEditingInterface);
+    Core::showEnableAction(mFileNewCellml1_0FileAction, mCellmlEditingInterface);
+    Core::showEnableAction(mFileNewCellml1_1FileAction, mCellmlEditingInterface);
 
-    Core::showEnableAction(mToolsCellmlValidationAction, cellmlEditingInterface, !pFileName.isEmpty());
+    Core::showEnableAction(mToolsCellmlValidationAction, mCellmlEditingInterface, !pFileName.isEmpty());
 
     // Keep track of the file name
 
@@ -251,16 +252,7 @@ void CoreCellMLEditingPlugin::cellmlValidation()
 {
     // Validate the current CellML file
 
-//---GRY--- TO BE DONE...
-
-    CellMLSupport::CellmlFile *cellmlFile = CellMLSupport::CellmlFileManager::instance()->cellmlFile(mFileName);
-
-qDebug(">>> CellML validation: %sOK", cellmlFile->isValid()?"":"NOT ");
-
-CellMLSupport::CellmlFileIssues issues = cellmlFile->issues();
-
-for (int i = 0, iMax = issues.count(); i < iMax; ++i)
-    qDebug(">>> Issue #%d (%d, %d): %s", i+1, issues[i].line(), issues[i].column(), qPrintable(issues[i].formattedMessage()));
+    mCellmlEditingInterface->cellmlValidation(mFileName);
 }
 
 //==============================================================================
