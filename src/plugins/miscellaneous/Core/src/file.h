@@ -70,6 +70,7 @@ public:
     void reset();
 
     bool isDifferent() const;
+    bool isDifferent(const QString pFileContents) const;
 
     bool isNew() const;
     bool makeNew(const QString &pFileName);

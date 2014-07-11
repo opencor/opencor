@@ -496,7 +496,7 @@ void CoreEditingPlugin::clipboardDataChanged()
 void CoreEditingPlugin::updateUndoAndRedoActions()
 {
     // Update our undo/redo actions, and update the modified state of the
-    // current file (since it can be determined by whether we can undo)
+    // current file
 
     if (mEditingInterface) {
         Core::FileManager *fileManagerInstance = Core::FileManager::instance();
@@ -507,7 +507,7 @@ void CoreEditingPlugin::updateUndoAndRedoActions()
         mEditRedoAction->setEnabled(editorAndFileReadableAndWritable && mEditor->isRedoAvailable());
 
         fileManagerInstance->setModified(mFileName,
-                                         mEditor && mEditor->isUndoAvailable());
+                                         mEditor && fileManagerInstance->isDifferent(mFileName, mEditor->contents()));
     }
 }
 

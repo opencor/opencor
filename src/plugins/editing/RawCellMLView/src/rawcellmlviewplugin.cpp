@@ -72,9 +72,6 @@ bool RawCellMLViewPlugin::saveFile(const QString &pOldFileName,
     Editor::EditorWidget *editor = mViewWidget->editor(pOldFileName);
     bool res = Core::writeTextToFile(pNewFileName, editor->contents());
 
-    if (res)
-        editor->resetUndoHistory();
-
     return res;
 }
 

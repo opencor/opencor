@@ -246,6 +246,22 @@ bool FileManager::isDifferent(const QString &pFileName) const
 
 //==============================================================================
 
+bool FileManager::isDifferent(const QString &pFileName,
+                              const QString &pFileContents) const
+{
+    // Return whether the given file, if it is being managed, has the same
+    // contents has the given one
+
+    File *file = isManaged(nativeCanonicalFileName(pFileName));
+
+    if (file)
+        return file->isDifferent(pFileContents);
+    else
+        return false;
+}
+
+//==============================================================================
+
 bool FileManager::isNew(const QString &pFileName) const
 {
     // Return whether the given file, if it is being managed, is new

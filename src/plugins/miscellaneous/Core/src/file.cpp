@@ -164,9 +164,19 @@ void File::reset()
 bool File::isDifferent() const
 {
     // Return whether the file is different from its corresponding physical
-    // version by comparing its SHA-1 value against that of its physical version
+    // version by comparing their SHA-1 values
 
     return mSha1.compare(sha1());
+}
+
+//==============================================================================
+
+bool File::isDifferent(const QString pFileContents) const
+{
+    // Return whether the file is different from the given file contents by
+    // comparing their SHA-1 values
+
+    return mSha1.compare(Core::sha1(pFileContents));
 }
 
 //==============================================================================
