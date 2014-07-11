@@ -69,7 +69,7 @@ bool RawCellMLViewPlugin::saveFile(const QString &pOldFileName,
 {
     // Save the given file
 
-    return Core::writeTextToFile(pNewFileName, mViewWidget->editor(pOldFileName)->contents());
+    return Core::writeTextToFile(pNewFileName, editor(pOldFileName)->contents());
 }
 
 //==============================================================================
