@@ -23,6 +23,7 @@ specific language governing permissions and limitations under the License.
 #include "editorwidget.h"
 #include "filemanager.h"
 #include "prettycellmlviewwidget.h"
+#include "settings.h"
 #include "viewerwidget.h"
 
 //==============================================================================
