@@ -1100,7 +1100,7 @@ bool CentralWidget::saveFile(const int &pIndex, const bool &pNeedNewFileName)
         // Let people know that the file has been saved, if needed, by reloading
         // it
 
-        reloadFile(pIndex);
+        reloadFile(pIndex, true);
 
         // Update our modified settings
 
@@ -1699,8 +1699,8 @@ void CentralWidget::fileChanged(const QString &pFileName)
 
     FileManager *fileManagerInstance = FileManager::instance();
 
-    if (   fileManagerInstance->isNewOrModified(pFileName)
-        || fileManagerInstance->isDifferent(pFileName)) {
+    if (   !fileManagerInstance->isNewOrModified(pFileName)
+        &&  fileManagerInstance->isDifferent(pFileName)) {
         // The given file has been changed, so ask the user whether to reload it
 
         if (QMessageBox::question(mMainWindow, qApp->applicationName(),
@@ -1714,7 +1714,6 @@ void CentralWidget::fileChanged(const QString &pFileName)
                     // We have found the file to reload
 
                     reloadFile(i, true);
-                    reloadFile(i);
 
                     break;
                 }
@@ -1722,7 +1721,7 @@ void CentralWidget::fileChanged(const QString &pFileName)
             // The user doesn't want to reload the file, so consider it as
             // modified
 
-            fileManagerInstance->setModified(pFileName, true);
+            fileManagerInstance->setConsiderModified(pFileName, true);
         }
     }
 }

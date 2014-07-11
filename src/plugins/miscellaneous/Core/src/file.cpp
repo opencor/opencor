@@ -156,6 +156,7 @@ void File::reset()
     mNewIndex = 0;
 
     mModified = false;
+    mConsiderModified = false;
 }
 
 //==============================================================================
@@ -224,9 +225,9 @@ QString File::url() const
 
 bool File::isModified() const
 {
-    // Return whether the file has been modified
+    // Return whether the file has been modified or is considered modified
 
-    return mModified;
+    return mModified || mConsiderModified;
 }
 
 //==============================================================================
@@ -237,6 +238,21 @@ bool File::setModified(const bool &pModified)
 
     if (pModified != mModified) {
         mModified = pModified;
+
+        return true;
+    } else {
+        return false;
+    }
+}
+
+//==============================================================================
+
+bool File::setConsiderModified(const bool &pConsiderModified)
+{
+    // Set the consider modified status of the file
+
+    if (pConsiderModified != mConsiderModified) {
+        mConsiderModified = pConsiderModified;
 
         return true;
     } else {

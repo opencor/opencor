@@ -82,6 +82,7 @@ public:
 
     bool isModified() const;
     bool setModified(const bool &pModified);
+    bool setConsiderModified(const bool &pModified);
 
     bool isReadable() const;
     bool isWritable() const;
@@ -98,6 +99,7 @@ private:
     int mNewIndex;
 
     bool mModified;
+    bool mConsiderModified;
 };
 
 //==============================================================================
