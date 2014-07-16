@@ -29,6 +29,7 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include <QListView>
+#include <QStandardItem>
 
 //==============================================================================
 
@@ -37,18 +38,18 @@ namespace EditorList {
 
 //==============================================================================
 
-class EDITORLIST_EXPORT EditorListItem
+class EDITORLIST_EXPORT EditorListItem : public QStandardItem
 {
 public:
     enum Type {
-        Error,
-        Warning
+        Error   = QStandardItem::UserType,
+        Warning = QStandardItem::UserType+1
     };
 
     explicit EditorListItem(const Type &pType, const int &pLine,
-                             const int &pColumn, const QString &pMessage);
+                            const int &pColumn, const QString &pMessage);
 
-    Type type() const;
+    virtual int type() const;
     int line() const;
     int column() const;
     QString message() const;
@@ -73,9 +74,13 @@ class EDITORLIST_EXPORT EditorListWidget : public QListView
 public:
     explicit EditorListWidget(QWidget *pParent);
 
-    void reset();
+    void clear();
 
-    void addItem(const EditorListItem &pItem);
+    void addItem(const EditorListItem::Type &pType, const int &pLine,
+                 const int &pColumn, const QString &pMessage);
+
+private:
+    QStandardItemModel *mModel;
 };
 
 //==============================================================================

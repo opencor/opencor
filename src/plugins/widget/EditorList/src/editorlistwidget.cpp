@@ -30,16 +30,19 @@ namespace EditorList {
 
 EditorListItem::EditorListItem(const Type &pType, const int &pLine,
                                const int &pColumn, const QString &pMessage) :
+    QStandardItem(),
     mType(pType),
     mLine(pLine),
     mColumn(pColumn),
     mMessage(pMessage)
 {
+    setText(QString("[%1:%2] %3").arg(QString::number(pLine), QString::number(pColumn), pMessage));
+    setToolTip(text());
 }
 
 //==============================================================================
 
-EditorListItem::Type EditorListItem::type() const
+int EditorListItem::type() const
 {
     // Return the item's type
 
@@ -76,7 +79,8 @@ QString EditorListItem::message() const
 //==============================================================================
 
 EditorListWidget::EditorListWidget(QWidget *pParent) :
-    QListView(pParent)
+    QListView(pParent),
+    mModel(new QStandardItemModel(this))
 {
     // Customise ourselves
 
@@ -85,22 +89,27 @@ EditorListWidget::EditorListWidget(QWidget *pParent) :
     // Note: the above removes the focus border since it messes up our look
 #endif
     setFrameShape(QFrame::NoFrame);
+    setModel(mModel);
 }
 
 //==============================================================================
 
-void EditorListWidget::reset()
+void EditorListWidget::clear()
 {
-//---GRY--- TO BE DONE...
+    // Reset our list of items
+
+    mModel->clear();
 }
 
 //==============================================================================
 
-void EditorListWidget::addItem(const EditorListItem &pItem)
+void EditorListWidget::addItem(const EditorListItem::Type &pType,
+                               const int &pLine, const int &pColumn,
+                               const QString &pMessage)
 {
-Q_UNUSED(pItem);
+    // Add the given item to our list
 
-//---GRY--- TO BE DONE...
+    mModel->invisibleRootItem()->appendRow(new EditorListItem(pType, pLine, pColumn, pMessage));
 }
 
 //==============================================================================
