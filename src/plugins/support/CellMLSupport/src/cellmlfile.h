@@ -68,7 +68,8 @@ public:
     bool save(const QString &pNewFileName = QString());
 
     bool isValid();
-    bool isValid(const QString &pFileContents, CellmlFileIssues &pIssues);
+    static bool isValid(const QString &pFileContents,
+                        CellmlFileIssues &pIssues);
 
     bool isModified() const;
     void setModified(const bool &pModified) const;
@@ -127,11 +128,12 @@ private:
 
     void reset();
 
-    bool doLoad(const QString &pFileName, const QString &pFileContents,
-                ObjRef<iface::cellml_api::Model> *pModel,
-                CellmlFileIssues &pIssues);
+    static bool doLoad(const QString &pFileName, const QString &pFileContents,
+                       ObjRef<iface::cellml_api::Model> *pModel,
+                       CellmlFileIssues &pIssues);
 
-    bool doIsValid(iface::cellml_api::Model *pModel, CellmlFileIssues &pIssues);
+    static bool doIsValid(iface::cellml_api::Model *pModel,
+                          CellmlFileIssues &pIssues);
 
     bool rdfTripleExists(iface::cellml_api::CellMLElement *pElement,
                          const QString &pQualifier,
