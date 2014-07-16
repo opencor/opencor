@@ -294,13 +294,17 @@ void RawCellmlViewWidget::validate(const QString &pFileName) const
 {
     // Validate the given file
 
-    CellMLSupport::CellmlFile *cellmlFile = CellMLSupport::CellmlFileManager::instance()->cellmlFile(pFileName);
-    CellMLSupport::CellmlFileIssues cellmlFileIssues;
+    CoreCellMLEditing::CoreCellmlEditingWidget *editingWidget = mEditingWidgets.value(pFileName);
 
-qDebug(">>> CellML validation: %sOK", cellmlFile->isValid(editor(pFileName)->contents(), cellmlFileIssues)?"":"NOT ");
+    if (editingWidget) {
+        CellMLSupport::CellmlFile *cellmlFile = CellMLSupport::CellmlFileManager::instance()->cellmlFile(pFileName);
+        CellMLSupport::CellmlFileIssues cellmlFileIssues;
 
-for (int i = 0, iMax = cellmlFileIssues.count(); i < iMax; ++i)
-    qDebug(">>> Issue #%d (%d, %d): %s", i+1, cellmlFileIssues[i].line(), cellmlFileIssues[i].column(), qPrintable(cellmlFileIssues[i].formattedMessage()));
+    qDebug(">>> CellML validation: %sOK", cellmlFile->isValid(editingWidget->editor()->contents(), cellmlFileIssues)?"":"NOT ");
+
+    for (int i = 0, iMax = cellmlFileIssues.count(); i < iMax; ++i)
+        qDebug(">>> Issue #%d (%d, %d): %s", i+1, cellmlFileIssues[i].line(), cellmlFileIssues[i].column(), qPrintable(cellmlFileIssues[i].formattedMessage()));
+    }
 }
 
 //==============================================================================
