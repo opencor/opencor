@@ -313,12 +313,12 @@ void RawCellmlViewWidget::validate(const QString &pFileName) const
             editorList->reset();
 
             foreach (const CellMLSupport::CellmlFileIssue &cellmlFileIssue, cellmlFileIssues)
-                editorList->addItem((cellmlFileIssue.type() == CellMLSupport::CellmlFileIssue::Error)?
-                                        EditorList::EditorListWidget::Error:
-                                        EditorList::EditorListWidget::Warning,
-                                    cellmlFileIssue.line(),
-                                    cellmlFileIssue.column(),
-                                    qPrintable(cellmlFileIssue.formattedMessage()));
+                editorList->addItem(EditorList::EditorListItem((cellmlFileIssue.type() == CellMLSupport::CellmlFileIssue::Error)?
+                                                                   EditorList::EditorListItem::Error:
+                                                                   EditorList::EditorListItem::Warning,
+                                                               cellmlFileIssue.line(),
+                                                               cellmlFileIssue.column(),
+                                                               qPrintable(cellmlFileIssue.formattedMessage())));
         }
     }
 }

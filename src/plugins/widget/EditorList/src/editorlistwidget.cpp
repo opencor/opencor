@@ -28,6 +28,53 @@ namespace EditorList {
 
 //==============================================================================
 
+EditorListItem::EditorListItem(const Type &pType, const int &pLine,
+                               const int &pColumn, const QString &pMessage) :
+    mType(pType),
+    mLine(pLine),
+    mColumn(pColumn),
+    mMessage(pMessage)
+{
+}
+
+//==============================================================================
+
+EditorListItem::Type EditorListItem::type() const
+{
+    // Return the item's type
+
+    return mType;
+}
+
+//==============================================================================
+
+int EditorListItem::line() const
+{
+    // Return the item's line
+
+    return mLine;
+}
+
+//==============================================================================
+
+int EditorListItem::column() const
+{
+    // Return the item's column
+
+    return mColumn;
+}
+
+//==============================================================================
+
+QString EditorListItem::message() const
+{
+    // Return the item's message
+
+    return mMessage;
+}
+
+//==============================================================================
+
 EditorListWidget::EditorListWidget(QWidget *pParent) :
     QListView(pParent)
 {
@@ -49,13 +96,9 @@ void EditorListWidget::reset()
 
 //==============================================================================
 
-void EditorListWidget::addItem(const Type &pType, const int &pLine,
-                               const int &pColumn, const QString &pMessage)
+void EditorListWidget::addItem(const EditorListItem &pItem)
 {
-Q_UNUSED(pType);
-Q_UNUSED(pLine);
-Q_UNUSED(pColumn);
-Q_UNUSED(pMessage);
+Q_UNUSED(pItem);
 
 //---GRY--- TO BE DONE...
 }

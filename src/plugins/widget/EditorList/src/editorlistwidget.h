@@ -37,22 +37,45 @@ namespace EditorList {
 
 //==============================================================================
 
-class EDITORLIST_EXPORT EditorListWidget : public QListView
+class EDITORLIST_EXPORT EditorListItem
 {
-    Q_OBJECT
-
 public:
     enum Type {
         Error,
         Warning
     };
 
+    explicit EditorListItem(const Type &pType, const int &pLine,
+                             const int &pColumn, const QString &pMessage);
+
+    Type type() const;
+    int line() const;
+    int column() const;
+    QString message() const;
+
+private:
+    Type mType;
+    int mLine;
+    int mColumn;
+    QString mMessage;
+};
+
+//==============================================================================
+
+typedef QList<EditorListItem> EditorListItems;
+
+//==============================================================================
+
+class EDITORLIST_EXPORT EditorListWidget : public QListView
+{
+    Q_OBJECT
+
+public:
     explicit EditorListWidget(QWidget *pParent);
 
     void reset();
 
-    void addItem(const Type &pType, const int &pLine, const int &pColumn,
-                 const QString &pMessage);
+    void addItem(const EditorListItem &pItem);
 };
 
 //==============================================================================
