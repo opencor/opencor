@@ -50,23 +50,28 @@ public:
         Warning
     };
 
-    explicit CellmlFileIssue(const Type &pType, const QString &pMessage,
-                             const int &pLine = 0, const int &pColumn = 0,
-                             const QString &pImportedFile = QString());
+    explicit CellmlFileIssue(const Type &pType, const int &pLine,
+                             const int &pColumn, const QString &pMessage,
+                             const QString &pImportedFile);
+    explicit CellmlFileIssue(const Type &pType, const QString &pMessage);
 
     Type type() const;
-    QString message() const;
-    QString formattedMessage() const;
     int line() const;
     int column() const;
+    QString message() const;
+    QString formattedMessage() const;
     QString importedFile() const;
 
 private:
     Type mType;
-    QString mMessage;
     int mLine;
     int mColumn;
+    QString mMessage;
     QString mImportedFile;
+
+    void constructor(const Type &pType, const int &pLine,
+                     const int &pColumn, const QString &pMessage,
+                     const QString &pImportedFile);
 };
 
 //==============================================================================

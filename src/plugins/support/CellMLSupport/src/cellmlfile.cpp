@@ -438,9 +438,9 @@ bool CellmlFile::doIsValid(iface::cellml_api::Model *pModel,
 
         // Append the issue to our list
 
-        pIssues << CellmlFileIssue(issueType,
+        pIssues << CellmlFileIssue(issueType, line, column,
                                    QString::fromStdWString(cellmlValidityIssue->description()),
-                                   line, column, importedFile);
+                                   importedFile);
     }
 
     return !cellmlErrorsCount;
