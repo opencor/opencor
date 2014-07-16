@@ -42,6 +42,26 @@ EditorListWidget::EditorListWidget(QWidget *pParent) :
 
 //==============================================================================
 
+void EditorListWidget::reset()
+{
+//---GRY--- TO BE DONE...
+}
+
+//==============================================================================
+
+void EditorListWidget::addItem(const Type &pType, const int &pLine,
+                               const int &pColumn, const QString &pMessage)
+{
+Q_UNUSED(pType);
+Q_UNUSED(pLine);
+Q_UNUSED(pColumn);
+Q_UNUSED(pMessage);
+
+//---GRY--- TO BE DONE...
+}
+
+//==============================================================================
+
 }   // namespace EditorList
 }   // namespace OpenCOR
 

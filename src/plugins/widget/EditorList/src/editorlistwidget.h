@@ -42,7 +42,17 @@ class EDITORLIST_EXPORT EditorListWidget : public QListView
     Q_OBJECT
 
 public:
+    enum Type {
+        Error,
+        Warning
+    };
+
     explicit EditorListWidget(QWidget *pParent);
+
+    void reset();
+
+    void addItem(const Type &pType, const int &pLine, const int &pColumn,
+                 const QString &pMessage);
 };
 
 //==============================================================================

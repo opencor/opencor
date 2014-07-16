@@ -299,8 +299,6 @@ void RawCellmlViewWidget::validate(const QString &pFileName) const
     CoreCellMLEditing::CoreCellmlEditingWidget *editingWidget = mEditingWidgets.value(pFileName);
 
     if (editingWidget) {
-//        editingWidget->editorList()->clean();
-
         CellMLSupport::CellmlFile *cellmlFile = CellMLSupport::CellmlFileManager::instance()->cellmlFile(pFileName);
         CellMLSupport::CellmlFileIssues cellmlFileIssues;
 
@@ -310,8 +308,17 @@ void RawCellmlViewWidget::validate(const QString &pFileName) const
                                      tr("The CellML file is valid."),
                                      QMessageBox::Ok);
         } else {
-for (int i = 0, iMax = cellmlFileIssues.count(); i < iMax; ++i)
-    qDebug(">>> Issue #%d (%d, %d): %s", i+1, cellmlFileIssues[i].line(), cellmlFileIssues[i].column(), qPrintable(cellmlFileIssues[i].formattedMessage()));
+            EditorList::EditorListWidget *editorList = editingWidget->editorList();
+
+            editorList->reset();
+
+            foreach (const CellMLSupport::CellmlFileIssue &cellmlFileIssue, cellmlFileIssues)
+                editorList->addItem((cellmlFileIssue.type() == CellMLSupport::CellmlFileIssue::Error)?
+                                        EditorList::EditorListWidget::Error:
+                                        EditorList::EditorListWidget::Warning,
+                                    cellmlFileIssue.line(),
+                                    cellmlFileIssue.column(),
+                                    qPrintable(cellmlFileIssue.formattedMessage()));
         }
     }
 }
