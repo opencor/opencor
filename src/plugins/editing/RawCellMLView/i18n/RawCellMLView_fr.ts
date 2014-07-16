@@ -8,4 +8,15 @@
         <translation>CellML Brut</translation>
     </message>
 </context>
+<context>
+    <name>OpenCOR::RawCellMLView::RawCellmlViewWidget</name>
+    <message>
+        <source>CellML Validation</source>
+        <translation>Validation CellML</translation>
+    </message>
+    <message>
+        <source>The CellML file is valid.</source>
+        <translation>Le fichier CellML est valide.</translation>
+    </message>
+</context>
 </TS>

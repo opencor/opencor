@@ -21,6 +21,7 @@ specific language governing permissions and limitations under the License.
 
 #include "cellmlfilemanager.h"
 #include "corecellmleditingwidget.h"
+#include "editorlistwidget.h"
 #include "editorwidget.h"
 #include "filemanager.h"
 #include "rawcellmlviewwidget.h"
@@ -37,6 +38,7 @@ specific language governing permissions and limitations under the License.
 #include <QDomDocument>
 #include <QLabel>
 #include <QLayout>
+#include <QMessageBox>
 #include <QMetaType>
 #include <QSettings>
 #include <QVariant>
@@ -297,13 +299,20 @@ void RawCellmlViewWidget::validate(const QString &pFileName) const
     CoreCellMLEditing::CoreCellmlEditingWidget *editingWidget = mEditingWidgets.value(pFileName);
 
     if (editingWidget) {
+//        editingWidget->editorList()->clean();
+
         CellMLSupport::CellmlFile *cellmlFile = CellMLSupport::CellmlFileManager::instance()->cellmlFile(pFileName);
         CellMLSupport::CellmlFileIssues cellmlFileIssues;
 
-    qDebug(">>> CellML validation: %sOK", cellmlFile->isValid(editingWidget->editor()->contents(), cellmlFileIssues)?"":"NOT ");
-
-    for (int i = 0, iMax = cellmlFileIssues.count(); i < iMax; ++i)
-        qDebug(">>> Issue #%d (%d, %d): %s", i+1, cellmlFileIssues[i].line(), cellmlFileIssues[i].column(), qPrintable(cellmlFileIssues[i].formattedMessage()));
+        if (cellmlFile->isValid(editingWidget->editor()->contents(), cellmlFileIssues)) {
+            QMessageBox::information(qApp->activeWindow(),
+                                     tr("CellML Validation"),
+                                     tr("The CellML file is valid."),
+                                     QMessageBox::Ok);
+        } else {
+for (int i = 0, iMax = cellmlFileIssues.count(); i < iMax; ++i)
+    qDebug(">>> Issue #%d (%d, %d): %s", i+1, cellmlFileIssues[i].line(), cellmlFileIssues[i].column(), qPrintable(cellmlFileIssues[i].formattedMessage()));
+        }
     }
 }
 
