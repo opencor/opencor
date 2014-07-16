@@ -252,7 +252,8 @@ void CoreCellMLEditingPlugin::cellmlValidation()
 {
     // Validate the current CellML file
 
-    mCellmlEditingInterface->cellmlValidation(mFileName);
+    if (mCellmlEditingInterface)
+        mCellmlEditingInterface->cellmlValidation(mFileName);
 }
 
 //==============================================================================
