@@ -53,17 +53,11 @@ PLUGININFO_FUNC RawCellMLViewPluginInfo()
 // CellML editing interface
 //==============================================================================
 
-void RawCellMLViewPlugin::cellmlValidation(const QString &pFileName) const
+void RawCellMLViewPlugin::validate(const QString &pFileName) const
 {
-    // Return whether the given file is valid
+    // Validate the given file
 
-    CellMLSupport::CellmlFile *cellmlFile = CellMLSupport::CellmlFileManager::instance()->cellmlFile(pFileName);
-    CellMLSupport::CellmlFileIssues cellmlFileIssues;
-
-qDebug(">>> CellML validation: %sOK", cellmlFile->isValid(editor(pFileName)->contents(), cellmlFileIssues)?"":"NOT ");
-
-for (int i = 0, iMax = cellmlFileIssues.count(); i < iMax; ++i)
-    qDebug(">>> Issue #%d (%d, %d): %s", i+1, cellmlFileIssues[i].line(), cellmlFileIssues[i].column(), qPrintable(cellmlFileIssues[i].formattedMessage()));
+    mViewWidget->validate(pFileName);
 }
 
 //==============================================================================

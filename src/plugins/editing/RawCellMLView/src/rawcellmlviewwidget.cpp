@@ -19,6 +19,7 @@ specific language governing permissions and limitations under the License.
 // Raw CellML view widget
 //==============================================================================
 
+#include "cellmlfilemanager.h"
 #include "corecellmleditingwidget.h"
 #include "editorwidget.h"
 #include "filemanager.h"
@@ -285,6 +286,21 @@ QList<QWidget *> RawCellmlViewWidget::statusBarWidgets() const
                                   << mEditingWidget->editor()->editingModeWidget();
     else
         return QList<QWidget *>();
+}
+
+//==============================================================================
+
+void RawCellmlViewWidget::validate(const QString &pFileName) const
+{
+    // Validate the given file
+
+    CellMLSupport::CellmlFile *cellmlFile = CellMLSupport::CellmlFileManager::instance()->cellmlFile(pFileName);
+    CellMLSupport::CellmlFileIssues cellmlFileIssues;
+
+qDebug(">>> CellML validation: %sOK", cellmlFile->isValid(editor(pFileName)->contents(), cellmlFileIssues)?"":"NOT ");
+
+for (int i = 0, iMax = cellmlFileIssues.count(); i < iMax; ++i)
+    qDebug(">>> Issue #%d (%d, %d): %s", i+1, cellmlFileIssues[i].line(), cellmlFileIssues[i].column(), qPrintable(cellmlFileIssues[i].formattedMessage()));
 }
 
 //==============================================================================
