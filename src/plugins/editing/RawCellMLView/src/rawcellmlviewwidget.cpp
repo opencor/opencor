@@ -319,6 +319,8 @@ void RawCellmlViewWidget::validate(const QString &pFileName) const
                                     cellmlFileIssue.line(),
                                     cellmlFileIssue.column(),
                                     qPrintable(cellmlFileIssue.formattedMessage()));
+
+            editorList->selectFirstItem();
         }
     }
 }

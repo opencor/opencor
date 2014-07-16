@@ -50,6 +50,8 @@ public:
     void addItem(const EditorListItem::Type &pType, const int &pLine,
                  const int &pColumn, const QString &pMessage);
 
+    void selectFirstItem();
+
 private:
     QStandardItemModel *mModel;
 };

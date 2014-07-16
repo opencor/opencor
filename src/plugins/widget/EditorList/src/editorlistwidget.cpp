@@ -38,6 +38,7 @@ EditorListWidget::EditorListWidget(QWidget *pParent) :
     setAttribute(Qt::WA_MacShowFocusRect, false);
     // Note: the above removes the focus border since it messes up our look
 #endif
+    setEditTriggers(QAbstractItemView::NoEditTriggers);
     setFrameShape(QFrame::NoFrame);
     setModel(mModel);
 }
@@ -60,6 +61,18 @@ void EditorListWidget::addItem(const EditorListItem::Type &pType,
     // Add the given item to our list
 
     mModel->invisibleRootItem()->appendRow(new EditorListItem(pType, pLine, pColumn, pMessage));
+}
+
+//==============================================================================
+
+void EditorListWidget::selectFirstItem()
+{
+    // Select the first item in our list
+
+    QStandardItem *listViewItem = mModel->invisibleRootItem()->child(0);
+
+    if (listViewItem)
+        setCurrentIndex(listViewItem->index());
 }
 
 //==============================================================================
