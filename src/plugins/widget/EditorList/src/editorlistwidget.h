@@ -25,45 +25,16 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include "editorlistglobal.h"
+#include "editorlistitem.h"
 
 //==============================================================================
 
 #include <QListView>
-#include <QStandardItem>
 
 //==============================================================================
 
 namespace OpenCOR {
 namespace EditorList {
-
-//==============================================================================
-
-class EDITORLIST_EXPORT EditorListItem : public QStandardItem
-{
-public:
-    enum Type {
-        Error   = QStandardItem::UserType,
-        Warning = QStandardItem::UserType+1
-    };
-
-    explicit EditorListItem(const Type &pType, const int &pLine,
-                            const int &pColumn, const QString &pMessage);
-
-    virtual int type() const;
-    int line() const;
-    int column() const;
-    QString message() const;
-
-private:
-    Type mType;
-    int mLine;
-    int mColumn;
-    QString mMessage;
-};
-
-//==============================================================================
-
-typedef QList<EditorListItem> EditorListItems;
 
 //==============================================================================
 

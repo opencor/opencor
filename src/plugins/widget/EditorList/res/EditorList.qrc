@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/">
+        <file alias="EditorList_errorItem">oxygen/emblems/emblem-important.png</file>
+        <file alias="EditorList_warningItem">oxygen/status/task-attention.png</file>
+    </qresource>
+</RCC>

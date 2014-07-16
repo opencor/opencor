@@ -16,10 +16,10 @@ specific language governing permissions and limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// Editor list widget
+// Editor list item
 //==============================================================================
 
-#include "editorlistwidget.h"
+#include "editorlistitem.h"
 
 //==============================================================================
 
@@ -28,38 +28,59 @@ namespace EditorList {
 
 //==============================================================================
 
-EditorListWidget::EditorListWidget(QWidget *pParent) :
-    QListView(pParent),
-    mModel(new QStandardItemModel(this))
+EditorListItem::EditorListItem(const Type &pType, const int &pLine,
+                               const int &pColumn, const QString &pMessage) :
+    QStandardItem(),
+    mType(pType),
+    mLine(pLine),
+    mColumn(pColumn),
+    mMessage(pMessage)
 {
     // Customise ourselves
 
-#ifdef Q_OS_MAC
-    setAttribute(Qt::WA_MacShowFocusRect, false);
-    // Note: the above removes the focus border since it messes up our look
-#endif
-    setFrameShape(QFrame::NoFrame);
-    setModel(mModel);
+    setText(QString("[%1:%2] %3").arg(QString::number(pLine), QString::number(pColumn), pMessage));
+    setToolTip(text());
+
+    if (pType == Error)
+        setIcon(QIcon(":EditorList_errorItem"));
+    else
+        setIcon(QIcon(":EditorList_warningItem"));
 }
 
 //==============================================================================
 
-void EditorListWidget::clear()
+int EditorListItem::type() const
 {
-    // Reset our list of items
+    // Return the item's type
 
-    mModel->clear();
+    return mType;
 }
 
 //==============================================================================
 
-void EditorListWidget::addItem(const EditorListItem::Type &pType,
-                               const int &pLine, const int &pColumn,
-                               const QString &pMessage)
+int EditorListItem::line() const
 {
-    // Add the given item to our list
+    // Return the item's line
 
-    mModel->invisibleRootItem()->appendRow(new EditorListItem(pType, pLine, pColumn, pMessage));
+    return mLine;
+}
+
+//==============================================================================
+
+int EditorListItem::column() const
+{
+    // Return the item's column
+
+    return mColumn;
+}
+
+//==============================================================================
+
+QString EditorListItem::message() const
+{
+    // Return the item's message
+
+    return mMessage;
 }
 
 //==============================================================================

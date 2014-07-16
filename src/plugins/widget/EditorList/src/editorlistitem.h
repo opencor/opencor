@@ -16,10 +16,19 @@ specific language governing permissions and limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// Editor list widget
+// Editor list item
 //==============================================================================
 
-#include "editorlistwidget.h"
+#ifndef EDITORLISTITEM_H
+#define EDITORLISTITEM_H
+
+//==============================================================================
+
+#include "editorlistglobal.h"
+
+//==============================================================================
+
+#include <QStandardItem>
 
 //==============================================================================
 
@@ -28,44 +37,41 @@ namespace EditorList {
 
 //==============================================================================
 
-EditorListWidget::EditorListWidget(QWidget *pParent) :
-    QListView(pParent),
-    mModel(new QStandardItemModel(this))
+class EDITORLIST_EXPORT EditorListItem : public QStandardItem
 {
-    // Customise ourselves
+public:
+    enum Type {
+        Error   = QStandardItem::UserType,
+        Warning = QStandardItem::UserType+1
+    };
 
-#ifdef Q_OS_MAC
-    setAttribute(Qt::WA_MacShowFocusRect, false);
-    // Note: the above removes the focus border since it messes up our look
-#endif
-    setFrameShape(QFrame::NoFrame);
-    setModel(mModel);
-}
+    explicit EditorListItem(const Type &pType, const int &pLine,
+                            const int &pColumn, const QString &pMessage);
+
+    virtual int type() const;
+    int line() const;
+    int column() const;
+    QString message() const;
+
+private:
+    Type mType;
+    int mLine;
+    int mColumn;
+    QString mMessage;
+};
 
 //==============================================================================
 
-void EditorListWidget::clear()
-{
-    // Reset our list of items
-
-    mModel->clear();
-}
-
-//==============================================================================
-
-void EditorListWidget::addItem(const EditorListItem::Type &pType,
-                               const int &pLine, const int &pColumn,
-                               const QString &pMessage)
-{
-    // Add the given item to our list
-
-    mModel->invisibleRootItem()->appendRow(new EditorListItem(pType, pLine, pColumn, pMessage));
-}
+typedef QList<EditorListItem> EditorListItems;
 
 //==============================================================================
 
 }   // namespace EditorList
 }   // namespace OpenCOR
+
+//==============================================================================
+
+#endif
 
 //==============================================================================
 // End of file
