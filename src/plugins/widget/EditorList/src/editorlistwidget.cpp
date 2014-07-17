@@ -149,7 +149,7 @@ void EditorListWidget::copyToClipboard()
     QStringList list = QStringList();
 
     for (int i = 0, iMax = mModel->rowCount(); i < iMax; ++i) {
-        EditorListItem *item = (EditorListItem *) mModel->item(i);
+        EditorListItem *item = static_cast<EditorListItem *>(mModel->item(i));
         QString itemType = (item->type() == EditorListItem::Error)?tr("Error"):tr("Warning");
 
         list << "["+itemType+"] "+item->text();
