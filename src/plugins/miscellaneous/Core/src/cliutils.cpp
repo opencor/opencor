@@ -758,6 +758,23 @@ QString stringFromPercentEncoding(const QString &pString)
 
 //==============================================================================
 
+QString eolString()
+{
+    // Return the end of line to use
+
+#ifdef Q_OS_WIN
+    return "\r\n";
+#else
+    // Note: before OS X, the EOL string would have been "\r", but since OS X it
+    //       is the same as on Linux (i.e. "\n") and since we don't support
+    //       versions prior to OS X...
+
+    return "\n";
+#endif
+}
+
+//==============================================================================
+
 }   // namespace Core
 }   // namespace OpenCOR
 

@@ -19,6 +19,7 @@ specific language governing permissions and limitations under the License.
 // Editor list widget
 //==============================================================================
 
+#include "cliutils.h"
 #include "editorlistwidget.h"
 #include "i18ninterface.h"
 
@@ -154,7 +155,7 @@ void EditorListWidget::copyToClipboard()
         list << "["+itemType+"] "+item->text();
     }
 
-    QApplication::clipboard()->setText(list.join("\n")+"\n");
+    QApplication::clipboard()->setText(list.join(Core::eolString())+Core::eolString());
 }
 
 //==============================================================================
