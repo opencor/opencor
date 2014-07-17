@@ -24,6 +24,7 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#include "commonwidget.h"
 #include "editorlistglobal.h"
 #include "editorlistitem.h"
 
@@ -38,14 +39,15 @@ namespace EditorList {
 
 //==============================================================================
 
-class EDITORLIST_EXPORT EditorListWidget : public QListView
+class EDITORLIST_EXPORT EditorListWidget : public QListView,
+                                           public Core::CommonWidget
 {
     Q_OBJECT
 
 public:
     explicit EditorListWidget(QWidget *pParent);
 
-    void clear();
+    virtual void retranslateUi();
 
     void addItem(const EditorListItem::Type &pType, const int &pLine,
                  const int &pColumn, const QString &pMessage);
@@ -54,6 +56,19 @@ public:
 
 private:
     QStandardItemModel *mModel;
+
+    QMenu *mContextMenu;
+
+    QAction *mClearAction;
+    QAction *mCopyToClipboardAction;
+
+public Q_SLOTS:
+    void clear();
+
+private Q_SLOTS:
+    void showCustomContextMenu(const QPoint &pPosition) const;
+
+    void copyToClipboard();
 };
 
 //==============================================================================

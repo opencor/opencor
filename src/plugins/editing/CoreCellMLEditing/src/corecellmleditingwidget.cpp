@@ -144,10 +144,11 @@ void CoreCellmlEditingWidget::saveSettings(QSettings *pSettings) const
 
 void CoreCellmlEditingWidget::retranslateUi()
 {
-    // Retranslate our viewer and editor
+    // Retranslate our viewer, editor and editor list
 
     mViewer->retranslateUi();
     mEditor->retranslateUi();
+    mEditorList->retranslateUi();
 }
 
 //==============================================================================

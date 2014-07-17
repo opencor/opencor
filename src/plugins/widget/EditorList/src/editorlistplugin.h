@@ -24,6 +24,7 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#include "i18ninterface.h"
 #include "plugininfo.h"
 
 //==============================================================================
@@ -41,11 +42,16 @@ PLUGININFO_FUNC EditorListPluginInfo();
 
 //==============================================================================
 
-class EditorListPlugin : public QObject
+class EditorListPlugin : public QObject, public I18nInterface
 {
     Q_OBJECT
 
     Q_PLUGIN_METADATA(IID "OpenCOR.EditorListPlugin" FILE "editorlistplugin.json")
+
+    Q_INTERFACES(OpenCOR::I18nInterface)
+
+public:
+#include "i18ninterface.inl"
 };
 
 //==============================================================================

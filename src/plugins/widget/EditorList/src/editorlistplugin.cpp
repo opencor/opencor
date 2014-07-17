@@ -36,8 +36,20 @@ PLUGININFO_FUNC EditorListPluginInfo()
     descriptions.insert("fr", QString::fromUtf8("une extension pour gérer les problèmes dans un éditeur de texte."));
 
     return new PluginInfo(PluginInfo::Widget, false, false,
-                          QStringList() << "Editor",
+                          QStringList() << "Core",
                           descriptions);
+}
+
+//==============================================================================
+// I18n interface
+//==============================================================================
+
+void EditorListPlugin::retranslateUi()
+{
+    // We don't handle this interface...
+    // Note: even though we don't handle this interface, we still want to
+    //       support it since some other aspects of our plugin are
+    //       multilingual...
 }
 
 //==============================================================================

@@ -4,6 +4,7 @@ PROJECT(EditorListPlugin)
 
 ADD_PLUGIN(EditorList
     SOURCES
+        ../../i18ninterface.cpp
         ../../plugininfo.cpp
 
         src/editorlistitem.cpp
