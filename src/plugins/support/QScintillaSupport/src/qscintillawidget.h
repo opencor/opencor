@@ -62,6 +62,8 @@ public:
     QMenu * contextMenu() const;
     void setContextMenu(const QList<QAction *> &pContextMenuActions);
 
+    virtual void setCursorPosition(int pLine, int pColumn);
+
     int currentPosition() const;
     void setCurrentPosition(const int &pCurrentPosition);
 

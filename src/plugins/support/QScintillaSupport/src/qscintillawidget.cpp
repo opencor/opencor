@@ -173,6 +173,23 @@ void QScintillaWidget::setContextMenu(const QList<QAction *> &pContextMenuAction
 
 //==============================================================================
 
+void QScintillaWidget::setCursorPosition(int pLine, int pColumn)
+{
+    // Make sure that the line is not within a folded block
+
+    ensureLineVisible(pLine);
+
+    // Center ourselves around the given line
+
+    SendScintilla(SCI_LINESCROLL, 0, pLine-firstVisibleLine()-0.5*SendScintilla(SCI_LINESONSCREEN));
+
+    // Set our cursor position
+
+    QsciScintilla::setCursorPosition(pLine, pColumn);
+}
+
+//==============================================================================
+
 int QScintillaWidget::currentPosition() const
 {
     // Return our current position
