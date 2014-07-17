@@ -72,7 +72,7 @@ bool CellmlFileIssue::operator<(const CellmlFileIssue &pIssue) const
 
     return (mLine < pIssue.line())?
                true:
-               (mLine > pIssue.line() > 0)?
+               (mLine > pIssue.line())?
                    false:
                    (mColumn < pIssue.column())?
                        true:
