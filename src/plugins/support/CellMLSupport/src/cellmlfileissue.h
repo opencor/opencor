@@ -55,6 +55,8 @@ public:
                              const QString &pImportedFile);
     explicit CellmlFileIssue(const Type &pType, const QString &pMessage);
 
+    bool operator<(const CellmlFileIssue &pIssue) const;
+
     Type type() const;
     int line() const;
     int column() const;

@@ -343,6 +343,10 @@ bool CellmlFile::doIsValid(iface::cellml_api::Model *pModel,
     //       but we just can't afford the time it takes to fully validate a
     //       model that has many warnings/errors)...
 
+    // Make sure that pIssues is empty
+
+    pIssues.clear();
+
     // Determine the number of errors and warnings
     // Note: CellMLValidityErrorSet::nValidityErrors() returns any type of
     //       validation issue, be it an error or a warning, so we need to
@@ -442,6 +446,10 @@ bool CellmlFile::doIsValid(iface::cellml_api::Model *pModel,
                                    QString::fromStdWString(cellmlValidityIssue->description()),
                                    importedFile);
     }
+
+    // Sort our issues
+
+    std::sort(pIssues.begin(), pIssues.end());
 
     return !cellmlErrorsCount;
 }

@@ -66,6 +66,27 @@ CellmlFileIssue::CellmlFileIssue(const Type &pType, const QString &pMessage)
 
 //==============================================================================
 
+bool CellmlFileIssue::operator<(const CellmlFileIssue &pIssue) const
+{
+    // Return whether the current issue is lower than the given one
+
+    return (mLine < pIssue.line())?
+               true:
+               (mLine > pIssue.line() > 0)?
+                   false:
+                   (mColumn < pIssue.column())?
+                       true:
+                       (mColumn > pIssue.column())?
+                           false:
+                            (mType < pIssue.type())?
+                                true:
+                                (mType > pIssue.type())?
+                                    false:
+                                    mMessage.compare(pIssue.message(), Qt::CaseInsensitive) < 0;
+}
+
+//==============================================================================
+
 CellmlFileIssue::Type CellmlFileIssue::type() const
 {
     // Return the issue's type
