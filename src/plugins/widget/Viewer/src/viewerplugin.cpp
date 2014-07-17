@@ -36,7 +36,7 @@ PLUGININFO_FUNC ViewerPluginInfo()
     descriptions.insert("fr", QString::fromUtf8("une extension pour visualiser graphiquement différents concepts de modélisation (par exemple des équations mathématiques)."));
 
     return new PluginInfo(PluginInfo::Widget, false, false,
-                          QStringList() << "Qwt",
+                          QStringList() << "Core" << "Qwt",
                           descriptions);
 }
 
