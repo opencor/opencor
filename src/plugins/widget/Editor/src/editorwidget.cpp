@@ -223,6 +223,15 @@ void EditorWidget::setContextMenu(const QList<QAction *> &pContextMenuActions)
 
 //==============================================================================
 
+void EditorWidget::setCursorPosition(const int &pLine, const int &pColumn)
+{
+    // Set our cursor position
+
+    return mEditor->setCursorPosition(pLine, pColumn);
+}
+
+//==============================================================================
+
 int EditorWidget::currentPosition() const
 {
     // Return the current position of our editor

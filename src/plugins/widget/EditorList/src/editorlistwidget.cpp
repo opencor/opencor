@@ -77,6 +77,11 @@ EditorListWidget::EditorListWidget(QWidget *pParent) :
     // Make sure that we are properly initialised
 
     clear();
+
+    // A connection to handle a double click on a given item
+
+    connect(this, SIGNAL(doubleClicked(const QModelIndex &)),
+            this, SLOT(itemDoubleClicked(const QModelIndex &)));
 }
 
 //==============================================================================
@@ -156,6 +161,19 @@ void EditorListWidget::copyToClipboard()
     }
 
     QApplication::clipboard()->setText(list.join(Core::eolString())+Core::eolString());
+}
+
+//==============================================================================
+
+void EditorListWidget::itemDoubleClicked(const QModelIndex &pItemIndex)
+{
+    // Check what kind of item has been double clicked and if it is a file, then
+    // open it
+
+    EditorListItem *item = static_cast<EditorListItem *>(mModel->itemFromIndex(pItemIndex));
+
+    if (item)
+        emit itemRequested(item);
 }
 
 //==============================================================================

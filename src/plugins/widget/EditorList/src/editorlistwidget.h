@@ -62,6 +62,9 @@ private:
     QAction *mClearAction;
     QAction *mCopyToClipboardAction;
 
+Q_SIGNALS:
+    void itemRequested(EditorList::EditorListItem *pItem);
+
 public Q_SLOTS:
     void clear();
 
@@ -69,6 +72,8 @@ private Q_SLOTS:
     void showCustomContextMenu(const QPoint &pPosition) const;
 
     void copyToClipboard();
+
+    void itemDoubleClicked(const QModelIndex &pItemIndex);
 };
 
 //==============================================================================

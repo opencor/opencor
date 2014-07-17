@@ -77,6 +77,9 @@ CoreCellmlEditingWidget::CoreCellmlEditingWidget(const QString &pContents,
     mBorderedEditorList = new Core::BorderedWidget(mEditorList,
                                                    true, false, false, false);
 
+    connect(mEditorList, SIGNAL(itemRequested(EditorList::EditorListItem *)),
+            this, SLOT(itemRequested(EditorList::EditorListItem *)));
+
     // Add the bordered viewer, editor and editor list to ourselves
 
     addWidget(mBorderedViewer);
@@ -193,6 +196,19 @@ EditorList::EditorListWidget * CoreCellmlEditingWidget::editorList() const
     // Return our editor list
 
     return mEditorList;
+}
+
+//==============================================================================
+
+void CoreCellmlEditingWidget::itemRequested(EditorList::EditorListItem *pItem)
+{
+    // Set our editor's cursor position to the line/column of the given item and
+    // give our editor the focuse so that we can see the exact location of the
+    // item (otherwise it will mEditorList that will have the focus since we
+    // just double-clicked on it)
+
+    mEditor->setCursorPosition(pItem->line()-1, pItem->column()-1);
+    mEditor->setFocus();
 }
 
 //==============================================================================

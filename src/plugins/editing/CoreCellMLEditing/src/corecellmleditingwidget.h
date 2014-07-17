@@ -61,6 +61,7 @@ namespace Editor {
 //==============================================================================
 
 namespace EditorList {
+    class EditorListItem;
     class EditorListWidget;
 }   // namespace EditorList
 
@@ -109,6 +110,9 @@ private:
 
     Core::BorderedWidget *mBorderedEditorList;
     EditorList::EditorListWidget *mEditorList;
+
+private Q_SLOTS:
+    void itemRequested(EditorList::EditorListItem *pItem);
 };
 
 //==============================================================================
