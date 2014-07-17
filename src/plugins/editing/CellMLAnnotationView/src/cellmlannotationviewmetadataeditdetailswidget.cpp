@@ -978,7 +978,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::termLookedUp(QNetworkReply *
     // Update our GUI with the results of the lookup after having sorted
     // them
 
-    qSort(items.begin(), items.end());
+    std::sort(items.begin(), items.end());
 
     updateItemsGui(items, errorMessage, false);
 

@@ -883,7 +883,7 @@ CellmlFileRuntime * CellmlFileRuntime::update(CellmlFile *pCellmlFile)
         }
     }
 
-    qSort(mParameters.begin(), mParameters.end(), sortParameters);
+    std::sort(mParameters.begin(), mParameters.end(), sortParameters);
 
     // Generate the model code, after having prepended to it all the external
     // functions which may, or not, be needed

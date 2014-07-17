@@ -168,6 +168,10 @@ MACRO(INITIALISE_PROJECT)
         ADD_DEFINITIONS(-D_UNICODE)
     ENDIF()
 
+    # Ask for Qt deprecated uses to be reported
+
+    ADD_DEFINITIONS(-DQT_DEPRECATED_WARNINGS)
+
     # Sample plugins support, if requested
 
     IF(ENABLE_SAMPLES)
