@@ -30,6 +30,7 @@ install:
          ;
        else
             brew update
+         && brew unlink cmake
          && brew install cmake
          ;
        fi
