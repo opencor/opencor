@@ -13,11 +13,11 @@ ADD_PLUGIN(Viewer
         ../../i18ninterface.cpp
         ../../plugininfo.cpp
 
-        src/viewerwidget.cpp
         src/viewerplugin.cpp
+        src/viewerwidget.cpp
     HEADERS_MOC
-        src/viewerwidget.h
         src/viewerplugin.h
+        src/viewerwidget.h
     INCLUDE_DIRS
         src
     DEFINITIONS
