@@ -559,7 +559,7 @@ void RawCellmlViewWidget::updateViewer()
 
                 mContentMathmlEquation = QString();
 
-                mEditingWidget->viewer()->setContents(mContentMathmlEquation);
+                mEditingWidget->viewer()->setContents(QString());
             }
         }
     } else {
@@ -567,7 +567,7 @@ void RawCellmlViewWidget::updateViewer()
 
         mContentMathmlEquation = QString();
 
-        mEditingWidget->viewer()->setContents(mContentMathmlEquation);
+        mEditingWidget->viewer()->setContents(QString());
     }
 }
 
