@@ -54,6 +54,9 @@ public:
 
     void selectFirstItem();
 
+protected:
+    virtual void keyPressEvent(QKeyEvent *pEvent);
+
 private:
     QStandardItemModel *mModel;
 

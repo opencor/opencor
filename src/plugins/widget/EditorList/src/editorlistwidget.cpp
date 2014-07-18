@@ -26,6 +26,7 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include <QApplication>
+#include <QKeyEvent>
 #include <QMenu>
 #include <QClipboard>
 
@@ -137,6 +138,20 @@ void EditorListWidget::selectFirstItem()
 
         requestItem(firstItemIndex);
     }
+}
+
+//==============================================================================
+
+void EditorListWidget::keyPressEvent(QKeyEvent *pEvent)
+{
+    // Default handling of the event
+
+    QListView::keyPressEvent(pEvent);
+
+    // Check whether the user wants the current item to be requested
+
+    if ((pEvent->key() == Qt::Key_Enter) || (pEvent->key() == Qt::Key_Return))
+        requestItem(currentIndex());
 }
 
 //==============================================================================
