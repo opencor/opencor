@@ -1548,7 +1548,7 @@ void CentralWidget::updateGui()
     // there be one)
 
     CentralWidgetMode *mode = mModes.value(mModeTabIndexModes.value(fileModeTabIndex));
-    Plugin *fileViewPlugin = mode->viewPlugins()->value(mode->viewTabs()->currentIndex());
+    Plugin *fileViewPlugin = mode?mode->viewPlugins()->value(mode->viewTabs()->currentIndex()):0;
     ViewInterface *viewInterface = fileViewPlugin?qobject_cast<ViewInterface *>(fileViewPlugin->instance()):0;
     QWidget *newView;
 
