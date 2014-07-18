@@ -41,8 +41,6 @@ typedef QList<int> QIntList;
 
 //==============================================================================
 
-const char CORE_EXPORT * qStringToConstCharArray(const QString &pString);
-
 QIntList CORE_EXPORT qVariantListToIntList(const QVariantList &pVariantList);
 QVariantList CORE_EXPORT qIntListToVariantList(const QIntList &pIntList);
 

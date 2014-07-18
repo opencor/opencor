@@ -292,7 +292,9 @@ int QScintillaWidget::findTextInRange(const int &pStartRange,
     SendScintilla(SCI_SETTARGETSTART, pStartRange);
     SendScintilla(SCI_SETTARGETEND, pEndRange);
 
-    const char *text = qStringToConstCharArray(pText);
+    QByteArray byteArray = pText.toUtf8();
+
+    const char *text = byteArray.constData();
 
     return SendScintilla(SCI_SEARCHINTARGET, strlen(text), text);
 }

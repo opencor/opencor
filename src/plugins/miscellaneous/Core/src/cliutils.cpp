@@ -60,17 +60,6 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-const char * qStringToConstCharArray(const QString &pString)
-{
-    // Convert the given string to an array of characters
-
-    QByteArray byteArray = pString.toUtf8();
-
-    return byteArray.constData();
-}
-
-//==============================================================================
-
 QIntList qVariantListToIntList(const QVariantList &pVariantList)
 {
     // Convert the given list of variants to a list of integers
