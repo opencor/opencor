@@ -81,7 +81,7 @@ EditorListWidget::EditorListWidget(QWidget *pParent) :
     // A connection to handle a double click on a given item
 
     connect(this, SIGNAL(doubleClicked(const QModelIndex &)),
-            this, SLOT(itemDoubleClicked(const QModelIndex &)));
+            this, SLOT(requestItem(const QModelIndex &)));
 }
 
 //==============================================================================
@@ -126,12 +126,17 @@ void EditorListWidget::addItem(const EditorListItem::Type &pType,
 
 void EditorListWidget::selectFirstItem()
 {
-    // Select the first item in our list
+    // Select the first item in our list and 'request' it
 
-    QStandardItem *listViewItem = mModel->invisibleRootItem()->child(0);
+    QStandardItem *firstItem = mModel->invisibleRootItem()->child(0);
 
-    if (listViewItem)
-        setCurrentIndex(listViewItem->index());
+    if (firstItem) {
+        QModelIndex firstItemIndex = firstItem->index();
+
+        setCurrentIndex(firstItemIndex);
+
+        requestItem(firstItemIndex);
+    }
 }
 
 //==============================================================================
@@ -165,7 +170,7 @@ void EditorListWidget::copyToClipboard()
 
 //==============================================================================
 
-void EditorListWidget::itemDoubleClicked(const QModelIndex &pItemIndex)
+void EditorListWidget::requestItem(const QModelIndex &pItemIndex)
 {
     // Check what kind of item has been double clicked and if it is a file, then
     // open it

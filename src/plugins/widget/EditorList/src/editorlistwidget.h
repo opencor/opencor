@@ -73,7 +73,7 @@ private Q_SLOTS:
 
     void copyToClipboard();
 
-    void itemDoubleClicked(const QModelIndex &pItemIndex);
+    void requestItem(const QModelIndex &pItemIndex);
 };
 
 //==============================================================================

@@ -299,18 +299,27 @@ void RawCellmlViewWidget::validate(const QString &pFileName) const
     CoreCellMLEditing::CoreCellmlEditingWidget *editingWidget = mEditingWidgets.value(pFileName);
 
     if (editingWidget) {
+        // Clear the list of CellML issues
+
+        EditorList::EditorListWidget *editorList = editingWidget->editorList();
+
+        editorList->clear();
+
+        // Retrieve the list of CellML issues, if any
+
         CellMLSupport::CellmlFile *cellmlFile = CellMLSupport::CellmlFileManager::instance()->cellmlFile(pFileName);
         CellMLSupport::CellmlFileIssues cellmlFileIssues;
 
         if (cellmlFile->isValid(editingWidget->editor()->contents(), cellmlFileIssues)) {
+            // There are no CellML issues, so the CellML file is valid
+
             QMessageBox::information(qApp->activeWindow(),
                                      tr("CellML Validation"),
                                      tr("The CellML file is valid."),
                                      QMessageBox::Ok);
         } else {
-            EditorList::EditorListWidget *editorList = editingWidget->editorList();
-
-            editorList->clear();
+            // There are some CellML issues, so add them to our list and select
+            // the first one
 
             foreach (const CellMLSupport::CellmlFileIssue &cellmlFileIssue, cellmlFileIssues)
                 editorList->addItem((cellmlFileIssue.type() == CellMLSupport::CellmlFileIssue::Error)?
