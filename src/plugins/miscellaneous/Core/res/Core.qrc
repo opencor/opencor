@@ -8,9 +8,10 @@
         <file>oxygen/actions/document-save.png</file>
         <file>oxygen/actions/document-save-all.png</file>
         <file>oxygen/actions/document-save-as.png</file>
-        <file>oxygen/actions/edit-copy.png</file>
         <file>oxygen/actions/go-next.png</file>
         <file>oxygen/actions/go-previous.png</file>
+        <file>oxygen/actions/help-about.png</file>
+        <file>oxygen/categories/applications-internet.png</file>
         <file>oxygen/mimetypes/application-x-zerosize.png</file>
         <file>oxygen/places/document-multiple.png</file>
         <file>oxygen/status/object-locked.png</file>
