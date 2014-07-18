@@ -1,6 +1,6 @@
 <RCC>
     <qresource prefix="/">
-        <file alias="Viewer_warning">oxygen/status/task-attention.png</file>
+        <file>oxygen/status/task-attention.png</file>
         <file alias="Viewer_fr">../../../../../build/Viewer_fr.qm</file>
     </qresource>
 </RCC>

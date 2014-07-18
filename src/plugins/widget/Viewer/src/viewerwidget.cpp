@@ -396,7 +396,7 @@ void ViewerWidget::paintEvent(QPaintEvent *pEvent)
         // We want to show that there is an error, so render a stretched warning
         // icon in our center
 
-        QIcon icon = QIcon(":Viewer_warning");
+        QIcon icon = QIcon(":/oxygen/status/task-attention.png");
         QSize iconSize = icon.availableSizes().first();
 
         int painterRectWidth = iconSize.width();

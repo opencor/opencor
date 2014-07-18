@@ -2,7 +2,7 @@
     <qresource prefix="/">
         <file>oxygen/actions/edit-copy.png</file>
         <file>oxygen/actions/view-refresh.png</file>
-        <file alias="CellMLModelRepositoryWindow_output">output.html</file>
+        <file>output.html</file>
         <file alias="CellMLModelRepositoryWindow_fr">../../../../../build/CellMLModelRepositoryWindow_fr.qm</file>
     </qresource>
 </RCC>

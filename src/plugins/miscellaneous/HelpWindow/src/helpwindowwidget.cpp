@@ -120,7 +120,7 @@ HelpWindowNetworkAccessManager::HelpWindowNetworkAccessManager(QHelpEngine *pHel
 {
     // Retrieve the error message template
 
-    Core::readTextFromFile(":HelpWindow_helpWindowWidgetErrorHtml", mErrorMessageTemplate);
+    Core::readTextFromFile(":/helpWindowWidgetError.html", mErrorMessageTemplate);
 }
 
 //==============================================================================

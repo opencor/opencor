@@ -42,9 +42,9 @@ EditorListItem::EditorListItem(const Type &pType, const int &pLine,
     setToolTip(text());
 
     if (pType == Error)
-        setIcon(QIcon(":EditorList_errorItem"));
+        setIcon(QIcon(":/oxygen/emblems/emblem-important.png"));
     else
-        setIcon(QIcon(":EditorList_warningItem"));
+        setIcon(QIcon(":/oxygen/status/task-attention.png"));
 }
 
 //==============================================================================

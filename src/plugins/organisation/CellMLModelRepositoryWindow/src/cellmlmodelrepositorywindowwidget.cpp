@@ -67,7 +67,7 @@ CellmlModelRepositoryWindowWidget::CellmlModelRepositoryWindowWidget(QWidget *pP
 
     // Retrieve the output template
 
-    Core::readTextFromFile(":CellMLModelRepositoryWindow_output", mOutputTemplate);
+    Core::readTextFromFile(":/output.html", mOutputTemplate);
 
     // Let people know that there is nothing to copy initially
 

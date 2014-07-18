@@ -730,7 +730,7 @@ bool SingleCellViewInformationGraphsWidget::checkParameter(CellMLSupport::Cellml
     // existing parameter in our runtime
 
     pParameterProperty->setIcon(res?
-                                    QIcon(":Core_blankIcon"):
+                                    QIcon(":/blank.png"):
                                     QIcon(":/oxygen/status/task-attention.png"));
     pParameterProperty->setExtraInfo(res?
                                          QString():
@@ -814,7 +814,7 @@ void SingleCellViewInformationGraphsWidget::updateGraphInfo(Core::Property *pPro
     // Update the status (i.e. icon) of our (section) property
 
     pProperty->setIcon(graphOk?
-                           QIcon(":Core_blankIcon"):
+                           QIcon(":/blank.png"):
                            QIcon(":/oxygen/status/task-attention.png"));
 
     // Update the file name with which the graph is associated
