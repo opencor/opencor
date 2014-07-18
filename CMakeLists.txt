@@ -136,11 +136,11 @@ INCLUDE_DIRECTORIES(
 )
 
 # Update the translation (.ts) files and generate the language (.qm) files
-# which will later on be embedded in the OpenCOR executable as resources
+# that will later on be embedded in the OpenCOR executable as resources
 
 UPDATE_LANGUAGE_FILES(${PROJECT_NAME} FALSE)
 
-# Third-party library which must be directly embedded in the GUI version of
+# Third-party library that must be directly embedded in the GUI version of
 # OpenCOR
 
 INCLUDE(src/3rdparty/QtSingleApplication/QtSingleApplication.cmake)
@@ -588,7 +588,7 @@ ELSE()
                 RENAME ${CMAKE_SHARED_LIBRARY_PREFIX}${QT_FILE}${CMAKE_SHARED_LIBRARY_SUFFIX}.52)
     ENDFOREACH()
 
-    # Additional libraries required by Qt, but which are not available on a
+    # Additional libraries required by Qt, but that are not available on a
     # 'blank' version of Ubuntu or their version differs from one version of
     # Ubuntu to another
     # Note: starting with Ubuntu 11.04, some system libraries are located in

@@ -101,7 +101,7 @@ MACRO(INITIALISE_PROJECT)
         STRING(REPLACE "/W3" "/W3 /WX" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
         # Note: MSVC has a /Wall flag, but it results in MSVC being very
         #       pedantic, so instead we use what MSVC recommends for production
-        #       code which is /W3 and which is also what CMake uses by
+        #       code, which is /W3 and which is also what CMake uses by
         #       default...
 
         SET(LINK_FLAGS_PROPERTIES "/STACK:10000000 /MACHINE:X86")
@@ -813,7 +813,7 @@ MACRO(COPY_FILE_TO_BUILD_DIR PROJECT_TARGET ORIG_DIRNAME DEST_DIRNAME FILENAME)
                            COMMAND ${CMAKE_COMMAND} -E copy ${ORIG_DIRNAME}/${FILENAME}
                                                             ${PROJECT_BUILD_DIR}/${DEST_DIRNAME}/${FILENAME})
     ELSE()
-        # An argument was passed so use it to rename the file which is to be
+        # An argument was passed so use it to rename the file, which is to be
         # copied
 
         ADD_CUSTOM_COMMAND(TARGET ${PROJECT_TARGET} POST_BUILD

@@ -175,7 +175,7 @@ CentralWidget::CentralWidget(QMainWindow *pMainWindow) :
 
     mContents->setFrameShape(QFrame::StyledPanel);
 
-    // Create our logo view which simply display OpenCOR's logo
+    // Create our logo view which simply displays OpenCOR's logo
 
     mLogoView = new QWidget(this);
 

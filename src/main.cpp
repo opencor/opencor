@@ -296,7 +296,7 @@ int main(int pArgC, char *pArgV[])
     // whether we need to restart
     // Note: we do this here rather than 'within' the GUI because once we have
     //       launched a new instance of OpenCOR, we want this instance of
-    //       OpenCOR to finish as soon as possible which will be the case here
+    //       OpenCOR to finish as soon as possible, which will be the case here
     //       since all that remains to be done is to return the result of the
     //       execution of our application...
 

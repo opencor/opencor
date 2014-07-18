@@ -433,7 +433,7 @@ bool CliApplication::run(int *pRes)
         } else if (versionOption) {
             version();
         } else {
-            // The user didn't provide any option which requires running OpenCOR
+            // The user didn't provide any option that requires running OpenCOR
             // as a CLI application
 
             return false;

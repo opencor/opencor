@@ -239,7 +239,7 @@ Core::showEnableAction(mGui->actionPreferences, false);
 
     // Let our various plugins know that all of them have been initialised
     // Note: this is important to do since the initialisation of a plugin is
-    //       something which is done without knowing anything about other
+    //       something that is done without knowing anything about other
     //       plugins. However, there may be things that require knowledge of
     //       what one or several other plugins are about, and this is something
     //       that can only be done once all the plugins have been initialised
@@ -1045,8 +1045,8 @@ void MainWindow::messageReceived(const QString &pMessage, QObject *pSocket)
 {
     Q_UNUSED(pSocket);
 
-    // We have just received a message which can be one of two things:
-    //  1) The user tried to run another instance of OpenCOR which sent a
+    // We have just received a message, which can be one of two things:
+    //  1) The user tried to run another instance of OpenCOR, which sent a
     //     message to this instance, asking it to bring itself to the foreground
     //     and handling all the arguments passed in the message; or
     //  2) A GUI action was sent to us, so we need to handle it.
