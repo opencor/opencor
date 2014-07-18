@@ -481,7 +481,7 @@ void FileOrganiserWindowWidget::keyPressEvent(QKeyEvent *pEvent)
     QStringList crtSelectedFiles = selectedFiles();
 
     if (   crtSelectedFiles.count()
-       && ((pEvent->key() == Qt::Key_Enter) || (pEvent->key() == Qt::Key_Return)))
+        && ((pEvent->key() == Qt::Key_Enter) || (pEvent->key() == Qt::Key_Return)))
         // There are some files that are selected and we want to open them, so
         // let people know about it
 
