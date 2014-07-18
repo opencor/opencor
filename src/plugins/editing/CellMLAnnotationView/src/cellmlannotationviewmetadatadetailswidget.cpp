@@ -61,7 +61,7 @@ CellmlAnnotationViewMetadataDetailsWidget::CellmlAnnotationViewMetadataDetailsWi
 
     // Create our unsupported metadata message widget
 
-    mCategoryMessage = new Core::UserMessageWidget(":/oxygen/actions/help-about.png", this);
+    mCategoryMessage = new UserMessage::UserMessageWidget(":/oxygen/actions/help-about.png", this);
     mBorderedCategoryMessage = new Core::BorderedWidget(mCategoryMessage,
                                                         false, true, true, false);
 
@@ -70,7 +70,7 @@ CellmlAnnotationViewMetadataDetailsWidget::CellmlAnnotationViewMetadataDetailsWi
 
     // Create our unsupported metadata message widget
 
-    mUnsupportedMetadataMessage = new Core::UserMessageWidget(":/oxygen/actions/help-about.png", this);
+    mUnsupportedMetadataMessage = new UserMessage::UserMessageWidget(":/oxygen/actions/help-about.png", this);
     mBorderedUnsupportedMetadataMessage = new Core::BorderedWidget(mUnsupportedMetadataMessage,
                                                                    false, true, true, false);
 

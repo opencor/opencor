@@ -16,46 +16,46 @@ specific language governing permissions and limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// EditorList plugin
+// User message plugin
 //==============================================================================
 
-#include "editorlistplugin.h"
+#ifndef USERMESSAGEPLUGIN_H
+#define USERMESSAGEPLUGIN_H
+
+//==============================================================================
+
+#include "plugininfo.h"
+
+//==============================================================================
+
+#include <QObject>
 
 //==============================================================================
 
 namespace OpenCOR {
-namespace EditorList {
+namespace UserMessage {
 
 //==============================================================================
 
-PLUGININFO_FUNC EditorListPluginInfo()
+PLUGININFO_FUNC UserMessagePluginInfo();
+
+//==============================================================================
+
+class UserMessagePlugin : public QObject
 {
-    Descriptions descriptions;
+    Q_OBJECT
 
-    descriptions.insert("en", QString::fromUtf8("a plugin to list issues in a text editor."));
-    descriptions.insert("fr", QString::fromUtf8("une extension pour lister les problèmes dans un éditeur de texte."));
-
-    return new PluginInfo(PluginInfo::Widget, false, false,
-                          QStringList() << "Core",
-                          descriptions);
-}
-
-//==============================================================================
-// I18n interface
-//==============================================================================
-
-void EditorListPlugin::retranslateUi()
-{
-    // We don't handle this interface...
-    // Note: even though we don't handle this interface, we still want to
-    //       support it since some other aspects of our plugin are
-    //       multilingual...
-}
+    Q_PLUGIN_METADATA(IID "OpenCOR.UserMessagePlugin" FILE "usermessageplugin.json")
+};
 
 //==============================================================================
 
-}   // namespace EditorList
+}   // namespace UserMessage
 }   // namespace OpenCOR
+
+//==============================================================================
+
+#endif
 
 //==============================================================================
 // End of file

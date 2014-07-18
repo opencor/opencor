@@ -16,46 +16,62 @@ specific language governing permissions and limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// EditorList plugin
+// User message widget
 //==============================================================================
 
-#include "editorlistplugin.h"
+#ifndef USERMESSAGEWIDGET_H
+#define USERMESSAGEWIDGET_H
+
+//==============================================================================
+
+#include "usermessageglobal.h"
+
+//==============================================================================
+
+#include <QLabel>
+#include <QString>
+
+//==============================================================================
+
+class QWidget;
 
 //==============================================================================
 
 namespace OpenCOR {
-namespace EditorList {
+namespace UserMessage {
 
 //==============================================================================
 
-PLUGININFO_FUNC EditorListPluginInfo()
+class USERMESSAGE_EXPORT UserMessageWidget : public QLabel
 {
-    Descriptions descriptions;
+    Q_OBJECT
 
-    descriptions.insert("en", QString::fromUtf8("a plugin to list issues in a text editor."));
-    descriptions.insert("fr", QString::fromUtf8("une extension pour lister les problèmes dans un éditeur de texte."));
+public:
+    explicit UserMessageWidget(const QString &pIcon, const QString &pMessage,
+                               QWidget *pParent);
+    explicit UserMessageWidget(const QString &pIcon, QWidget *pParent);
 
-    return new PluginInfo(PluginInfo::Widget, false, false,
-                          QStringList() << "Core",
-                          descriptions);
-}
+    void setIcon(const QString &pIcon);
+    void setMessage(const QString &pMessage);
 
-//==============================================================================
-// I18n interface
-//==============================================================================
+private:
+    QString mIcon;
+    QString mMessage;
 
-void EditorListPlugin::retranslateUi()
-{
-    // We don't handle this interface...
-    // Note: even though we don't handle this interface, we still want to
-    //       support it since some other aspects of our plugin are
-    //       multilingual...
-}
+    void constructor(const QString &pIcon,
+                     const QString &pMessage = QString());
+
+    void updateMessage();
+};
 
 //==============================================================================
 
-}   // namespace EditorList
+}   // namespace UserMessage
 }   // namespace OpenCOR
+
+//==============================================================================
+
+#endif
 
 //==============================================================================
 // End of file

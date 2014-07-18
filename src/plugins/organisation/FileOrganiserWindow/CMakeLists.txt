@@ -22,6 +22,7 @@ ADD_PLUGIN(FileOrganiserWindow
         src
     PLUGINS
         Core
+        UserMessage
     QT_LIBRARIES
         QtCore
         QtGui

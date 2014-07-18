@@ -25,6 +25,7 @@ ADD_PLUGIN(Viewer
     PLUGINS
         Core
         ${QWT_PLUGIN}
+        UserMessage
     PLUGIN_BINARIES
         ${QWT_PLUGIN_BINARY}
     QT_MODULES

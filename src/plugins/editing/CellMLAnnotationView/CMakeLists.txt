@@ -55,6 +55,7 @@ ADD_PLUGIN(CellMLAnnotationView
         Core
         CoreSolver
         ${LLVM_PLUGIN}
+        UserMessage
     PLUGIN_BINARIES
         ${LLVM_PLUGIN_BINARY}
     QT_MODULES

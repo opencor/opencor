@@ -44,6 +44,7 @@ ADD_PLUGIN(RawCellMLView
         ${QSCINTILLA_PLUGIN}
         QScintillaSupport
         ${QWT_PLUGIN}
+        UserMessage
         Viewer
     PLUGIN_BINARIES
         ${LLVM_PLUGIN_BINARY}

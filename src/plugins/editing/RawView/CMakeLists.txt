@@ -28,6 +28,7 @@ ADD_PLUGIN(RawView
         Editor
         ${QSCINTILLA_PLUGIN}
         QScintillaSupport
+        UserMessage
     PLUGIN_BINARIES
         ${QSCINTILLA_PLUGIN_BINARY}
     QT_LIBRARIES

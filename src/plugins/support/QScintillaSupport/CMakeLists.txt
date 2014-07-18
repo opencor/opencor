@@ -24,6 +24,7 @@ ADD_PLUGIN(QScintillaSupport
     PLUGINS
         Core
         ${QSCINTILLA_PLUGIN}
+        UserMessage
     PLUGIN_BINARIES
         ${QSCINTILLA_PLUGIN_BINARY}
     QT_LIBRARIES

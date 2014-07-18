@@ -17,6 +17,7 @@ ADD_PLUGIN(EditorList
         src
     PLUGINS
         Core
+        UserMessage
     QT_LIBRARIES
         QtCore
         QtGui

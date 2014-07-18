@@ -16,62 +16,34 @@ specific language governing permissions and limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// User message widget
+// User message plugin
 //==============================================================================
 
-#ifndef USERMESSAGEWIDGET_H
-#define USERMESSAGEWIDGET_H
-
-//==============================================================================
-
-#include "coreglobal.h"
-
-//==============================================================================
-
-#include <QLabel>
-#include <QString>
-
-//==============================================================================
-
-class QWidget;
+#include "usermessageplugin.h"
 
 //==============================================================================
 
 namespace OpenCOR {
-namespace Core {
+namespace UserMessage {
 
 //==============================================================================
 
-class CORE_EXPORT UserMessageWidget : public QLabel
+PLUGININFO_FUNC UserMessagePluginInfo()
 {
-    Q_OBJECT
+    Descriptions descriptions;
 
-public:
-    explicit UserMessageWidget(const QString &pIcon, const QString &pMessage,
-                               QWidget *pParent);
-    explicit UserMessageWidget(const QString &pIcon, QWidget *pParent);
+    descriptions.insert("en", QString::fromUtf8("a plugin to show a user message."));
+    descriptions.insert("fr", QString::fromUtf8("une extension pour montrer un message utilisateur."));
 
-    void setIcon(const QString &pIcon);
-    void setMessage(const QString &pMessage);
-
-private:
-    QString mIcon;
-    QString mMessage;
-
-    void constructor(const QString &pIcon,
-                     const QString &pMessage = QString());
-
-    void updateMessage();
-};
+    return new PluginInfo(PluginInfo::Widget, false, false,
+                          QStringList(),
+                          descriptions);
+}
 
 //==============================================================================
 
-}   // namespace Core
+}   // namespace Viewer
 }   // namespace OpenCOR
-
-//==============================================================================
-
-#endif
 
 //==============================================================================
 // End of file

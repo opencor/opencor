@@ -47,8 +47,13 @@ namespace OpenCOR {
 
 namespace Core {
     class BorderedWidget;
-    class UserMessageWidget;
 }   // namespace Core
+
+//==============================================================================
+
+namespace UserMessage {
+    class UserMessageWidget;
+}   // namespace UserMessage
 
 //==============================================================================
 
@@ -87,10 +92,10 @@ private:
     Ui::CellmlAnnotationViewMetadataDetailsWidget *mGui;
 
     Core::BorderedWidget *mBorderedCategoryMessage;
-    Core::UserMessageWidget *mCategoryMessage;
+    UserMessage::UserMessageWidget *mCategoryMessage;
 
     Core::BorderedWidget *mBorderedUnsupportedMetadataMessage;
-    Core::UserMessageWidget *mUnsupportedMetadataMessage;
+    UserMessage::UserMessageWidget *mUnsupportedMetadataMessage;
 
     QSplitter *mSplitter;
 

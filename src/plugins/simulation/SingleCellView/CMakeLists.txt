@@ -65,6 +65,7 @@ ADD_PLUGIN(SingleCellView
         CoreSolver
         ${LLVM_PLUGIN}
         ${QWT_PLUGIN}
+        UserMessage
     PLUGIN_BINARIES
         ${LLVM_PLUGIN_BINARY}
         ${QWT_PLUGIN_BINARY}
