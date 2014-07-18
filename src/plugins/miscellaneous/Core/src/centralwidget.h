@@ -60,12 +60,6 @@ class Plugin;
 
 //==============================================================================
 
-namespace UserMessage {
-    class UserMessageWidget;
-}   // namespace UserMessage
-
-//==============================================================================
-
 namespace Core {
 
 //==============================================================================
@@ -75,6 +69,7 @@ typedef QMap<int, Plugin *> CentralWidgetViewPlugins;
 //==============================================================================
 
 class CentralWidget;
+class UserMessageWidget;
 
 //==============================================================================
 
@@ -173,7 +168,7 @@ private:
 
     QWidget *mLogoView;
 
-    UserMessage::UserMessageWidget *mNoViewMsg;
+    UserMessageWidget *mNoViewMsg;
 
     QMap<ViewInterface::Mode, CentralWidgetMode *> mModes;
 

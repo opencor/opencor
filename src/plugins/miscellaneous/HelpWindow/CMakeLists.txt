@@ -25,7 +25,6 @@ ADD_PLUGIN(HelpWindow
         src
     PLUGINS
         Core
-        UserMessage
     QT_MODULES
         Help
         WebKitWidgets

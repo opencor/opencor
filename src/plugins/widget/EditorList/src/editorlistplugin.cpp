@@ -32,8 +32,8 @@ PLUGININFO_FUNC EditorListPluginInfo()
 {
     Descriptions descriptions;
 
-    descriptions.insert("en", QString::fromUtf8("a plugin to list issues in a text editor."));
-    descriptions.insert("fr", QString::fromUtf8("une extension pour lister les problèmes dans un éditeur de texte."));
+    descriptions.insert("en", QString::fromUtf8("a plugin to handle issues in a text editor."));
+    descriptions.insert("fr", QString::fromUtf8("une extension pour gérer les problèmes dans un éditeur de texte."));
 
     return new PluginInfo(PluginInfo::Widget, false, false,
                           QStringList() << "Core",

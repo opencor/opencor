@@ -59,6 +59,7 @@ namespace Core {
     class Property;
     class ProgressBarWidget;
     class ToolBarWidget;
+    class UserMessageWidget;
 }   // namespace Core
 
 //==============================================================================
@@ -66,12 +67,6 @@ namespace Core {
 namespace CellMLSupport {
     class CellmlFileRuntimeParameter;
 }   // namespace CellMLSupport
-
-//==============================================================================
-
-namespace UserMessage {
-    class UserMessageWidget;
-}   // namespace UserMessage
 
 //==============================================================================
 
@@ -158,7 +153,7 @@ private:
 
     bool mRunActionEnabled;
 
-    UserMessage::UserMessageWidget *mInvalidModelMessageWidget;
+    Core::UserMessageWidget *mInvalidModelMessageWidget;
 
     QTextEdit *mOutputWidget;
 

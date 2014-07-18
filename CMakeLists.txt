@@ -227,13 +227,9 @@ SET(PLUGINS
 
     api/CellMLAPI
 
-    solver/CoreSolver
-
-    widget/UserMessage
-
-    # Our Core plugin
-
     miscellaneous/Core
+
+    solver/CoreSolver
 
     # Plugins that build on top of some third-party libraries
 

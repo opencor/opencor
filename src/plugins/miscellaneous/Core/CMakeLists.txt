@@ -42,6 +42,7 @@ ADD_PLUGIN(Core
         src/propertyeditorwidget.cpp
         src/toolbarwidget.cpp
         src/treeviewwidget.cpp
+        src/usermessagewidget.cpp
         src/viewwidget.cpp
         src/widget.cpp
         src/xsltransformer.cpp
@@ -64,6 +65,7 @@ ADD_PLUGIN(Core
         src/propertyeditorwidget.h
         src/toolbarwidget.h
         src/treeviewwidget.h
+        src/usermessagewidget.h
         src/viewwidget.h
         src/widget.h
         src/xsltransformer.h
@@ -71,8 +73,6 @@ ADD_PLUGIN(Core
         src/centralwidget.ui
     INCLUDE_DIRS
         src
-    PLUGINS
-        UserMessage
     QT_MODULES
         Network
         Widgets

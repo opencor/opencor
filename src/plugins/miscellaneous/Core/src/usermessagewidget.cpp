@@ -34,7 +34,7 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 namespace OpenCOR {
-namespace UserMessage {
+namespace Core {
 
 //==============================================================================
 
@@ -139,7 +139,7 @@ void UserMessageWidget::setMessage(const QString &pMessage)
 
 //==============================================================================
 
-}   // namespace UserMessage
+}   // namespace Core
 }   // namespace OpenCOR
 
 //==============================================================================

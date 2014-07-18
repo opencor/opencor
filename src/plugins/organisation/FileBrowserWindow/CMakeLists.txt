@@ -22,7 +22,6 @@ ADD_PLUGIN(FileBrowserWindow
         src
     PLUGINS
         Core
-        UserMessage
     QT_LIBRARIES
         QtCore
         QtGui
