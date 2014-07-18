@@ -225,21 +225,24 @@ void ViewerWidget::setContents(const QString &pContents)
 {
     // Try to set our contents to our MathML document
     // Note: we don't check whether pContents has the same value as mContents
-    //       since we would also need to check the value of mError and we can't
-    //       be certain about it...
+    //       since we would also need to check the value of mError and we don't
+    //       know about it...
 
     mContents = pContents;
 
-    if (mMathmlDocument.setContent(pContents)) {
-        mError = false;
+    if (subscripts() || greekSymbols() || digitGrouping())
+        mError = !mMathmlDocument.setContent(processedContents());
+    else
+        mError = mMathmlDocument.setContent(pContents);
 
-        // Process and reset our contents, if needed
+    if (mError) {
+        // An error occurred, but consider it only as an actual error if our
+        // contents is not empty
 
-        if (subscripts() || greekSymbols() || digitGrouping())
-            mMathmlDocument.setContent(processedContents());
-
-        // Determine (the inverse of) the size of our contents when rendered
-        // using a font size of 100 points
+        mError = pContents.size();
+    } else {
+        // Everything went fine, so determine (the inverse of) the size of our
+        // contents when rendered using a font size of 100 points
         // Note: when setting the contents, QwtMathMLDocument recomputes its
         //       layout. Now, because we want the contents to be rendered as
         //       optimally as possible, we use a big font size, so that when we
@@ -252,8 +255,6 @@ void ViewerWidget::setContents(const QString &pContents)
 
         mOneOverMathmlDocumentWidth  = 1.0/mathmlDocumentSize.width();
         mOneOverMathmlDocumentHeight = 1.0/mathmlDocumentSize.height();
-    } else {
-        mError = pContents.size();
     }
 
     // Update ourselves
