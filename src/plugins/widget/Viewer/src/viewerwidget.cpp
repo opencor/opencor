@@ -230,10 +230,18 @@ void ViewerWidget::setContents(const QString &pContents)
 
     mContents = pContents;
 
-    if (subscripts() || greekSymbols() || digitGrouping())
+    if (subscripts() || greekSymbols() || digitGrouping()) {
         mError = !mMathmlDocument.setContent(processedContents());
-    else
-        mError = mMathmlDocument.setContent(pContents);
+    } else {
+        // Clean up the given contents, if possible, before setting it
+
+        QDomDocument domDocument;
+
+        if (domDocument.setContent(pContents))
+            mError = !mMathmlDocument.setContent(domDocument.toString(-1));
+        else
+            mError = true;
+    }
 
     if (mError) {
         // An error occurred, but consider it only as an actual error if our
