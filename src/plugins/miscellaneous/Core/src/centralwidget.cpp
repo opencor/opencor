@@ -1601,7 +1601,7 @@ void CentralWidget::updateGui()
 
     // Replace the current view with the new one
     // Note: the order in which the adding and removing (as well as the
-    //       showing/hiding) of view is done to ensures that the replacement
+    //       showing/hiding) of view is done to ensure that the replacement
     //       looks as good as possible...
 
     mContents->removeWidget(mContents->currentWidget());
