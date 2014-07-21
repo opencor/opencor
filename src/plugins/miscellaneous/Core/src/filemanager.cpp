@@ -517,6 +517,9 @@ FileManager::Status FileManager::rename(const QString &pOldFileName,
         QString newNativeFileName = nativeCanonicalFileName(pNewFileName);
 
         if (file->setFileName(newNativeFileName)) {
+            mFiles.insert(newNativeFileName, mFiles.value(oldNativeFileName));
+            mFiles.remove(oldNativeFileName);;
+
             emit fileRenamed(oldNativeFileName, newNativeFileName);
 
             return Renamed;
