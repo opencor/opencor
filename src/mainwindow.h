@@ -123,6 +123,8 @@ private:
 
     QByteArray mDockedWindowsState;
 
+    bool mStatusBarVisible;
+
     void initializeGuiPlugin(Plugin *pPlugin);
 
     void loadSettings();

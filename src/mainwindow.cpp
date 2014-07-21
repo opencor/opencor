@@ -98,7 +98,8 @@ MainWindow::MainWindow(SharedTools::QtSingleApplication *pApp) :
     mViewSeparator(0),
     mViewPlugin(0),
     mDockedWindowsVisible(true),
-    mDockedWindowsState(QByteArray())
+    mDockedWindowsState(QByteArray()),
+    mStatusBarVisible(false)
 {
     // Make sure that OpenCOR can handle a file opening request (from the
     // operating system), as well as a message sent by another instance of
@@ -389,6 +390,8 @@ void MainWindow::showEvent(QShowEvent *pEvent)
         // all of OpenCOR to be visible in order to be able to determine whether
         // the status bar is visible...
 
+        statusBar()->setVisible(mStatusBarVisible);
+
         mGui->actionStatusBar->setChecked(statusBar()->isVisible());
     }
 }
@@ -650,7 +653,7 @@ void MainWindow::loadSettings()
 
     // Retrieve whether the status bar is to be shown
 
-    mGui->statusBar->setVisible(mSettings->value(SettingsStatusBarVisible, true).toBool());
+    mStatusBarVisible = mSettings->value(SettingsStatusBarVisible, true).toBool();
 
     // Retrieve the settings of our various plugins
 

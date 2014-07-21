@@ -1600,12 +1600,24 @@ void CentralWidget::updateGui()
     emit guiUpdated(fileViewPlugin, fileName);
 
     // Replace the current view with the new one
-    // Note: the order in which the adding and removing (as well as the
-    //       showing/hiding) of view is done to ensure that the replacement
-    //       looks as good as possible...
+    // Note #1: the order in which the adding and removing (as well as the
+    //          showing/hiding) of view is done to ensure that the replacement
+    //          looks as good as possible...
+    // Note #2: to show/hide the status bar is to avoid some of the flickering
+    //          that results from switching from one file to another (both using
+    //          the same view) with the status bar visible and the mouse pointer
+    //          over a button-like widget within the current view (see
+    //          https://github.com/opencor/opencor/issues/405). It's not 'neat',
+    //          but it seems like it might an issue with Qt itself, so...
+
+    bool statusBarVisible = mMainWindow->statusBar()->isVisible();
+
+    mMainWindow->statusBar()->setVisible(false);
 
     mContents->removeWidget(mContents->currentWidget());
     mContents->addWidget(newView);
+
+    mMainWindow->statusBar()->setVisible(statusBarVisible);
 
     // Give the focus to the new view after first checking whether it has a
     // focused widget
