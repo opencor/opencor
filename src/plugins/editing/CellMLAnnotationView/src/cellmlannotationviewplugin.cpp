@@ -29,6 +29,7 @@ specific language governing permissions and limitations under the License.
 
 #include <QMainWindow>
 #include <QSettings>
+#include <QStatusBar>
 
 //==============================================================================
 
@@ -140,6 +141,10 @@ void CellMLAnnotationViewPlugin::retranslateUi()
 
 void CellMLAnnotationViewPlugin::initializePlugin(QMainWindow *pMainWindow)
 {
+    // Keep track of our main window
+
+    mMainWindow = pMainWindow;
+
     // Create our CellML annotation view widget
 
     mViewWidget = new CellmlAnnotationViewWidget(this, pMainWindow);
@@ -228,8 +233,20 @@ QWidget * CellMLAnnotationViewPlugin::viewWidget(const QString &pFileName)
 
     // Update and return our CellML annotation view widget using the given
     // CellML file
+    // Note: to show/hide the status bar is to avoid some of the flickering that
+    //       results from switching from one file to another (both using the
+    //       same view) with the status bar visible and the mouse pointer over a
+    //       button-like widget within the current view (see
+    //       https://github.com/opencor/opencor/issues/405). It's not 'neat',
+    //       but it seems like it might be an issue with Qt itself, so...
+
+    bool statusBarVisible = mMainWindow->statusBar()->isVisible();
+
+    mMainWindow->statusBar()->setVisible(false);
 
     mViewWidget->initialize(pFileName);
+
+    mMainWindow->statusBar()->setVisible(statusBarVisible);
 
     return mViewWidget;
 }

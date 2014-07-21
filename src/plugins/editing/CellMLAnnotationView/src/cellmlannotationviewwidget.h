@@ -39,6 +39,10 @@ namespace Ui {
 
 //==============================================================================
 
+class QStackedWidget;
+
+//==============================================================================
+
 namespace OpenCOR {
 namespace CellMLAnnotationView {
 
@@ -77,6 +81,8 @@ private:
     Ui::CellmlAnnotationViewWidget *mGui;
 
     CellMLAnnotationViewPlugin *mPluginParent;
+
+    QStackedWidget *mContents;
 
     CellmlAnnotationViewEditingWidget *mEditingWidget;
     QMap<QString, CellmlAnnotationViewEditingWidget *> mEditingWidgets;

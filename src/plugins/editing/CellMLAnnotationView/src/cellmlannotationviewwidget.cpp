@@ -34,6 +34,7 @@ specific language governing permissions and limitations under the License.
 #include <QLayout>
 #include <QMetaType>
 #include <QSettings>
+#include <QStackedWidget>
 #include <QVariant>
 
 //==============================================================================
@@ -56,6 +57,12 @@ CellmlAnnotationViewWidget::CellmlAnnotationViewWidget(CellMLAnnotationViewPlugi
     // Set up the GUI
 
     mGui->setupUi(this);
+
+    // Add a stacked widget to our layout
+
+    mContents = new QStackedWidget(this);
+
+    layout()->addWidget(mContents);
 }
 
 //==============================================================================
@@ -151,22 +158,16 @@ void CellmlAnnotationViewWidget::initialize(const QString &pFileName)
         layout()->addWidget(mEditingWidget);
     }
 
-    // Show/hide our editing widgets and adjust our sizes
+    // Update the sizes of our new editing widget and those of its metadata
+    // details
 
-    foreach (CellmlAnnotationViewEditingWidget *editingWidget, mEditingWidgets)
-        if (editingWidget == mEditingWidget) {
-            // This is the editing widget we are after, so show it and update
-            // its sizes and those of its metadata details
+    mEditingWidget->setSizes(mEditingWidgetSizes);
+    mEditingWidget->metadataDetails()->splitter()->setSizes(mMetadataDetailsWidgetSizes);
 
-            editingWidget->setSizes(mEditingWidgetSizes);
-            editingWidget->metadataDetails()->splitter()->setSizes(mMetadataDetailsWidgetSizes);
+    // Remove our previous editing widget and add ouew new one
 
-            editingWidget->show();
-        } else {
-            // Not the editing widget we are after, so hide it
-
-            editingWidget->hide();
-        }
+    mContents->removeWidget(mContents->currentWidget());
+    mContents->addWidget(mEditingWidget);
 
     // Set our focus proxy to our 'new' editing widget and make sure that the
     // latter immediately gets the focus
