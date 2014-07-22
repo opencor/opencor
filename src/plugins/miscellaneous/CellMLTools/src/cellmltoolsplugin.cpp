@@ -276,7 +276,13 @@ void CellMLToolsPlugin::exportTo(const CellMLSupport::CellmlFile::Version &pVers
         fileTypes +=  fileType->description()+" (*."+fileType->fileExtension()+")";
     }
 
-    QString fileName = Core::getSaveFileName(tr("Export CellML File To %1").arg(format), mFileName, fileTypes);
+    Core::FileManager *fileManagerInstance = Core::FileManager::instance();
+
+    QString fileName = Core::getSaveFileName(tr("Export CellML File To %1").arg(format),
+                                             fileManagerInstance->isRemote(mFileName)?
+                                                 fileManagerInstance->url(mFileName):
+                                                 mFileName,
+                                             fileTypes);
 
     if (fileName.isEmpty())
         return;
@@ -494,9 +500,15 @@ void CellMLToolsPlugin::exportToUserDefinedFormat()
 #endif
                        +")";
 
-    QString outFileName = Core::getSaveFileName(tr("Export CellML File To User-Defined Format"), mFileName, fileType);
+    Core::FileManager *fileManagerInstance = Core::FileManager::instance();
 
-    if (outFileName.isEmpty())
+    QString fileName = Core::getSaveFileName(tr("Export CellML File To User-Defined Format"),
+                                             fileManagerInstance->isRemote(mFileName)?
+                                                 fileManagerInstance->url(mFileName):
+                                                 mFileName,
+                                             fileType);
+
+    if (fileName.isEmpty())
         return;
 
     // Now that we have both a user-defined format file and output file, we can
@@ -504,7 +516,7 @@ void CellMLToolsPlugin::exportToUserDefinedFormat()
 
     CellMLSupport::CellmlFile *cellmlFile = CellMLSupport::CellmlFileManager::instance()->cellmlFile(mFileName);
 
-    if (!cellmlFile->exportTo(outFileName, userDefinedFormatFileName)) {
+    if (!cellmlFile->exportTo(fileName, userDefinedFormatFileName)) {
         CellMLSupport::CellmlFileIssues issues = cellmlFile->issues();
         QString errorMessage = QString();
 
@@ -514,7 +526,7 @@ void CellMLToolsPlugin::exportToUserDefinedFormat()
             //       following a CellML export...
 
         QMessageBox::warning(mMainWindow, tr("Export CellML File To User-Defined Format"),
-                             tr("Sorry, but <strong>%1</strong> could not be exported to the user-defined format described in <strong>%2</strong>%3.").arg(outFileName, userDefinedFormatFileName, errorMessage));
+                             tr("Sorry, but <strong>%1</strong> could not be exported to the user-defined format described in <strong>%2</strong>%3.").arg(fileName, userDefinedFormatFileName, errorMessage));
     }
 }
 
