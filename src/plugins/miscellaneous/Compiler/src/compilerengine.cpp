@@ -170,7 +170,6 @@ bool CompilerEngine::compileCode(const QString &pCode)
     // Get a compilation object to which we pass some arguments
 
     QByteArray tempFileByteArray = tempFile.fileName().toUtf8();
-    const char *tempFileName = tempFileByteArray.constData();
 
     llvm::SmallVector<const char *, 16> compilationArguments;
 
@@ -179,7 +178,7 @@ bool CompilerEngine::compileCode(const QString &pCode)
     compilationArguments.push_back("-O3");
     compilationArguments.push_back("-ffast-math");
     compilationArguments.push_back("-Werror");
-    compilationArguments.push_back(tempFileName);
+    compilationArguments.push_back(tempFileByteArray.constData());
 
     llvm::OwningPtr<clang::driver::Compilation> compilation(driver.BuildCompilation(compilationArguments));
 
