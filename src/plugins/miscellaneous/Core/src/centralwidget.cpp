@@ -1302,7 +1302,8 @@ void CentralWidget::closeAllFiles(const bool &pForceClosing)
 
     // Close all the files
 
-    while (closeFile(-2, pForceClosing)) {}
+    while (closeFile(-2, pForceClosing))
+        ;
 }
 
 //==============================================================================
