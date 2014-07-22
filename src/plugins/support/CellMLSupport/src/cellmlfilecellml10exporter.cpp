@@ -76,7 +76,7 @@ CellmlFileCellml10Exporter::CellmlFileCellml10Exporter(iface::cellml_api::Model 
     std::wstring cevasError = cevas->modelError();
 
     if (cevasError.length()) {
-        mErrorMessage = QObject::tr("a CeVAS object could not be created");
+        mErrorMessage = QObject::tr("CeVAS error: %1").arg(QString::fromStdWString(cevasError));
 
         return;
     }

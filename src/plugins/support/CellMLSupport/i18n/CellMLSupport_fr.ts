@@ -77,8 +77,8 @@
 <context>
     <name>QObject</name>
     <message>
-        <source>a CeVAS object could not be created</source>
-        <translation>un objet CeVAS n&apos;a pas pu être créé</translation>
+        <source>CeVAS error: %1</source>
+        <translation>Erreur CeVAS : %1</translation>
     </message>
 </context>
 </TS>
