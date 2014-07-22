@@ -52,6 +52,10 @@ int main(int pArgC, char *pArgV[])
 
     OpenCOR::removeGlobalInstances();
 
+    // Initialise the plugins path
+
+    OpenCOR::initPluginsPath(pArgV[0]);
+
     // Determine whether we should try the CLI version of OpenCOR:
     //  - Windows: we never try the CLI version of OpenCOR. We go straight for
     //             its GUI version.
@@ -134,44 +138,11 @@ int main(int pArgC, char *pArgV[])
         setenv("LIBGL_ALWAYS_INDIRECT", "1", 1);
 #endif
 
-    // Initialise the plugins path
-
-    QFileInfo appFileInfo(pArgV[0]);
-    QString pluginsDir = QString();
-
-#if defined(Q_OS_WIN) || defined(Q_OS_LINUX)
-    pluginsDir =  appFileInfo.canonicalPath()
-                 +QDir::separator()+QString("..")
-                 +QDir::separator()+"plugins";
-
-    if (!QDir(pluginsDir).exists())
-        // The plugins directory doesn't exist. This should only happen if we
-        // are trying to run OpenCOR from within Qt Creator, in which case the
-        // binary will be running from [OpenCOR]/build/OpenCOR[.exe] rather than
-        // [OpenCOR]/build/bin/OpenCOR[.exe] as it should if we were to mimic the
-        // case where OpenCOR has been deployed. Then, because the plugins are in
-        // [OpenCOR]/build/plugins/OpenCOR, we must skip the "../" bit. So, yes,
-        // it's not neat, but... is there another solution?...
-
-        pluginsDir =  appFileInfo.canonicalPath()
-                     +QDir::separator()+"plugins";
-#elif defined(Q_OS_MAC)
-    pluginsDir =  appFileInfo.canonicalPath()
-                 +QDir::separator()+QString("..")
-                 +QDir::separator()+"PlugIns";
-#else
-    #error Unsupported platform
-#endif
-
-    pluginsDir = QDir::toNativeSeparators(QDir(pluginsDir).canonicalPath());
-
-    QCoreApplication::setLibraryPaths(QStringList() <<  pluginsDir);
-
     // Create and initialise the GUI version of OpenCOR
     // Note: if we tried the CLI version of OpenCOR before, then it won't have
     //       done anything, so no need to re-remove all 'global' instances...
 
-    SharedTools::QtSingleApplication *guiApp = new SharedTools::QtSingleApplication(appFileInfo.baseName(),
+    SharedTools::QtSingleApplication *guiApp = new SharedTools::QtSingleApplication(QFileInfo(pArgV[0]).baseName(),
                                                                                     pArgC, pArgV);
 
     OpenCOR::initApplication(guiApp);

@@ -52,6 +52,10 @@ int main(int pArgC, char *pArgV[])
 
     OpenCOR::removeGlobalInstances();
 
+    // Initialise the plugins path
+
+    OpenCOR::initPluginsPath(pArgV[0]);
+
     // Create our application
 
     QCoreApplication *app = new QCoreApplication(pArgC, pArgV);

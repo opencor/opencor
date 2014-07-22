@@ -36,6 +36,8 @@ namespace OpenCOR {
 
 //==============================================================================
 
+void initPluginsPath(const QString &pAppFileName);
+
 void initApplication(QCoreApplication *pApp);
 
 bool cliApplication(QCoreApplication *pApp, int *pRes);
