@@ -199,15 +199,16 @@ void CorePlugin::fileRenamed(const QString &pOldFileName,
 
 void CorePlugin::fileClosed(const QString &pFileName)
 {
-    // Add, if isn't new, the file to our list of recent files (making sure that
-    // we don't end up with more than 10 recent file names) and update our
+    // Add, if isn't new and it still exists (i.e. we are not here because the
+    // file has been deleted), the file to our list of recent files (making sure
+    // that we don't end up with more than 10 recent file names) and update our
     // Reopen sub-menu
     // Note: the most recent file is to be shown first...
 
     FileManager *fileManagerInstance = FileManager::instance();
 
-    if (    fileManagerInstance->isManaged(pFileName)
-        && !fileManagerInstance->isNew(pFileName)) {
+    if (   !fileManagerInstance->isNew(pFileName)
+        &&  QFileInfo(pFileName).exists()) {
         if (fileManagerInstance->isRemote(pFileName))
             mRecentFileNames.prepend(fileManagerInstance->url(pFileName));
         else
