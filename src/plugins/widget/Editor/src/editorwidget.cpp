@@ -625,7 +625,7 @@ void EditorWidget::replace()
             && currentlySelectedText.compare(mEditor->wordAt(mEditor->currentLine(), mEditor->currentColumn())))
             return;
 
-        // Replace the currently selected if we have a match
+        // Replace the currently selected text if we have a match
 
         if (!currentlySelectedText.compare(mFindReplace->findText(),
                                            mFindReplace->isCaseSensitive()?
