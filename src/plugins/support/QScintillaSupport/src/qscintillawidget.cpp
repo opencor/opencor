@@ -19,7 +19,6 @@ specific language governing permissions and limitations under the License.
 // QScintillaWidget class
 //==============================================================================
 
-#include "cliutils.h"
 #include "filemanager.h"
 #include "guiutils.h"
 #include "qscintillawidget.h"
@@ -51,13 +50,12 @@ QScintillaWidget::QScintillaWidget(QsciLexer *pLexer, QWidget *pParent) :
     mCanSelectAll(false),
     mInsertMode(true)
 {
-    // Remove the frame around our Scintilla editor
+    // Customise ourselves
 
+    setCaretLineVisible(true);
     setFrameShape(QFrame::NoFrame);
-
-    // Remove the margin number in our Scintilla editor
-
     setMarginWidth(SC_MARGIN_NUMBER, 0);
+    setUtf8(true);
 
     // Associate a lexer to our Scintilla editor, should one be provided
     // Note: the default font family and size come from Qt Creator...
@@ -90,10 +88,6 @@ QScintillaWidget::QScintillaWidget(QsciLexer *pLexer, QWidget *pParent) :
 
         setFont(mFont);
     }
-
-    // Show the caret line
-
-    setCaretLineVisible(true);
 
     // Force the use of UNIX EOL mode
     // Note: by default QScintilla will use EolWindows on Windows and EolUnix on
