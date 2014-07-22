@@ -52,10 +52,6 @@ int main(int pArgC, char *pArgV[])
 
     OpenCOR::removeGlobalInstances();
 
-    // Initialise the plugins path
-
-    OpenCOR::initPluginsPath(pArgV[0]);
-
     // Determine whether we should try the CLI version of OpenCOR:
     //  - Windows: we never try the CLI version of OpenCOR. We go straight for
     //             its GUI version.
@@ -99,6 +95,10 @@ int main(int pArgC, char *pArgV[])
     // Run the CLI version of OpenCOR, if possible/needed
 
     if (tryCliVersion) {
+        // Initialise the plugins path
+
+        OpenCOR::initPluginsPath(pArgV[0]);
+
         // Create and initialise the CLI version of OpenCOR
 
         QCoreApplication *cliApp = new QCoreApplication(pArgC, pArgV);
@@ -137,6 +137,10 @@ int main(int pArgC, char *pArgV[])
 #ifdef Q_OS_LINUX
         setenv("LIBGL_ALWAYS_INDIRECT", "1", 1);
 #endif
+
+    // Initialise the plugins path
+
+    OpenCOR::initPluginsPath(pArgV[0]);
 
     // Create and initialise the GUI version of OpenCOR
     // Note: if we tried the CLI version of OpenCOR before, then it won't have
