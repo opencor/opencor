@@ -333,7 +333,7 @@ void QScintillaWidget::del()
 {
     // Delete the selected text, if any
 
-    SendScintilla(QsciScintillaBase::SCI_CLEAR);
+    SendScintilla(SCI_CLEAR);
 }
 
 //==============================================================================
@@ -386,7 +386,7 @@ void QScintillaWidget::setBackgroundColor(const int &pStyle,
 {
     // Set the background color for the given style
 
-    SendScintilla(QsciScintillaBase::SCI_STYLESETBACK, pStyle, pBackgroundColor);
+    SendScintilla(SCI_STYLESETBACK, pStyle, pBackgroundColor);
 }
 
 //==============================================================================
@@ -396,7 +396,7 @@ void QScintillaWidget::setForegroundColor(const int &pStyle,
 {
     // Set the foreground color for the given style
 
-    SendScintilla(QsciScintillaBase::SCI_STYLESETFORE, pStyle, pForegroundColor);
+    SendScintilla(SCI_STYLESETFORE, pStyle, pForegroundColor);
 }
 
 //==============================================================================
@@ -405,7 +405,7 @@ int QScintillaWidget::zoomLevel() const
 {
     // Return our zoom level
 
-    return SendScintilla(QsciScintillaBase::SCI_GETZOOM);
+    return SendScintilla(SCI_GETZOOM);
 }
 
 //==============================================================================
