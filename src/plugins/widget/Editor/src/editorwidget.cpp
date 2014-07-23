@@ -573,9 +573,7 @@ bool EditorWidget::findPrevious()
     int oldPosition = mEditor->currentPosition();
 
     mEditor->setCurrentPosition(oldPosition-mEditor->selectedText().length());
-
-    mCurrentLine = mEditor->currentLine();
-    mCurrentColumn = mEditor->currentColumn();
+    mEditor->getCursorPosition(&mCurrentLine, &mCurrentColumn);
 
     bool res = findText(mFindReplace->findText(), false);
 
@@ -591,8 +589,7 @@ bool EditorWidget::findNext()
 {
     // Find the next occurrence of the text in our editor
 
-    mCurrentLine = mEditor->currentLine();
-    mCurrentColumn = mEditor->currentColumn();
+    mEditor->getCursorPosition(&mCurrentLine, &mCurrentColumn);
 
     return findText(mFindReplace->findText(), true);
 }
@@ -620,9 +617,13 @@ void EditorWidget::replace()
         // this be requested
 
         QString currentlySelectedText = mEditor->selectedText();
+        int currentLine;
+        int currentColumn;
+
+        mEditor->getCursorPosition(&currentLine, &currentColumn);
 
         if (   mFindReplace->searchWholeWordsOnly()
-            && currentlySelectedText.compare(mEditor->wordAt(mEditor->currentLine(), mEditor->currentColumn())))
+            && currentlySelectedText.compare(mEditor->wordAt(currentLine, currentColumn)))
             return;
 
         // Replace the currently selected text if we have a match

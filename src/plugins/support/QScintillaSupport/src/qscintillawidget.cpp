@@ -202,24 +202,6 @@ void QScintillaWidget::setCurrentPosition(const int &pCurrentPosition)
 
 //==============================================================================
 
-int QScintillaWidget::currentLine() const
-{
-    // Return our current line
-
-    return SendScintilla(SCI_LINEFROMPOSITION, SendScintilla(SCI_GETCURRENTPOS));
-}
-
-//==============================================================================
-
-int QScintillaWidget::currentColumn() const
-{
-    // Return our current column
-
-    return SendScintilla(SCI_GETCOLUMN, SendScintilla(SCI_GETCURRENTPOS));
-}
-
-//==============================================================================
-
 QString QScintillaWidget::contents() const
 {
     // Return our contents

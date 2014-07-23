@@ -67,9 +67,6 @@ public:
     int currentPosition() const;
     void setCurrentPosition(const int &pCurrentPosition);
 
-    int currentLine() const;
-    int currentColumn() const;
-
     QString contents() const;
     void setContents(const QString &pContents);
 
