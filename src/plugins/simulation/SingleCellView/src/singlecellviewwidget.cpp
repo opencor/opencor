@@ -848,7 +848,7 @@ void SingleCellViewWidget::initialize(const QString &pFileName)
 //==============================================================================
 
 void SingleCellViewWidget::finalize(const QString &pFileName,
-                                    const bool &pReloadView)
+                                    const bool &pReloadingView)
 {
     // Remove our simulation object, should there be one for the given file name
 
@@ -874,14 +874,18 @@ void SingleCellViewWidget::finalize(const QString &pFileName,
     mProgresses.remove(pFileName);
 
     mResets.remove(pFileName);
-    mDelays.remove(pFileName);
+
+    if (pReloadingView)
+        mDelays.insert(pFileName, mDelayWidget->value());
+    else
+        mDelays.remove(pFileName);
 
     // Finalize/backup a few things in our GUI's simulation, solvers, graphs,
     // parameters and graph panels widgets
 
     SingleCellViewInformationWidget *informationWidget = mContentsWidget->informationWidget();
 
-    if (pReloadView) {
+    if (pReloadingView) {
         informationWidget->simulationWidget()->backup(pFileName);
         informationWidget->solversWidget()->backup(pFileName);
     } else {
