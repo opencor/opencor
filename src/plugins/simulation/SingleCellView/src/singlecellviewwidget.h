@@ -101,7 +101,8 @@ public:
 
     bool contains(const QString &pFileName) const;
 
-    void initialize(const QString &pFileName);
+    void initialize(const QString &pFileName,
+                    const bool &pReloadingView = false);
     void finalize(const QString &pFileName, const bool &pReloadingView = false);
 
     QIcon fileTabIcon(const QString &pFileName) const;

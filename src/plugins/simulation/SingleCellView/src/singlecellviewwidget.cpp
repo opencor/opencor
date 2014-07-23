@@ -532,7 +532,8 @@ static const auto OutputBrLn = QStringLiteral("<br/>\n");
 
 //==============================================================================
 
-void SingleCellViewWidget::initialize(const QString &pFileName)
+void SingleCellViewWidget::initialize(const QString &pFileName,
+                                      const bool &pReloadingView)
 {
     // Stop keeping track of certain things (so that updatePlot() doesn't get
     // called unnecessarily)
@@ -836,6 +837,35 @@ void SingleCellViewWidget::initialize(const QString &pFileName)
             mSimulation->data()->reset();
             mSimulation->results()->reset(false);
         }
+
+        // Retrieve our simulation and NLA solver's properties, in case we are
+        // reloading the file
+        // Note: unlike for other properties, we need to retrieve our simulation
+        //       and NLA solver's properties 'manually' since the rest of the
+        //       time they are automatically retrieved through
+        //       simulationPropertyChanged() and solversPropertyChanged()...
+
+        if (pReloadingView) {
+            // Retrieve our simulation's properties
+
+            SingleCellViewInformationSimulationWidget *simulationWidget = mContentsWidget->informationWidget()->simulationWidget();
+
+            mSimulation->data()->setStartingPoint(simulationWidget->startingPointProperty()->doubleValue());
+            mSimulation->data()->setEndingPoint(simulationWidget->endingPointProperty()->doubleValue());
+            mSimulation->data()->setPointInterval(simulationWidget->pointIntervalProperty()->doubleValue());
+
+            foreach (SingleCellViewGraphPanelPlotWidget *plot, mPlots)
+                updatePlot(plot);
+
+            // Retrieve our NLA solver's properties
+
+            SingleCellViewInformationSolversWidgetData *nlaSolverData = mContentsWidget->informationWidget()->solversWidget()->nlaSolverData();
+
+            mSimulation->data()->setNlaSolverName(nlaSolverData->solversListProperty()->value());
+
+            foreach (Core::Property *property, nlaSolverData->solversProperties().value(mSimulation->data()->nlaSolverName()))
+                mSimulation->data()->addNlaSolverProperty(property->id(), value(property));
+        }
     }
 
     // Resume the tracking of certain things
@@ -958,7 +988,7 @@ void SingleCellViewWidget::reloadView(const QString &pFileName)
     finalize(pFileName, true);
     fileClosed(pFileName);
 
-    initialize(pFileName);
+    initialize(pFileName, true);
     fileOpened(pFileName);
 
     // Stop keeping track of the fact that we need to reload ourselves
