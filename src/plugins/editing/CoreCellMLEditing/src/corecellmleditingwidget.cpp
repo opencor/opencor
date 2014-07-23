@@ -59,32 +59,20 @@ CoreCellmlEditingWidget::CoreCellmlEditingWidget(const QString &pContents,
 
     mGui->setupUi(this);
 
-    // Create our bordered viewer
+    // Create our viewer, editor and editor list
 
     mViewer = new Viewer::ViewerWidget(this);
-    mBorderedViewer = new Core::BorderedWidget(mViewer,
-                                               false, false, true, false);
-
-    // Create our bordered editor
-
     mEditor = new Editor::EditorWidget(pContents, pReadOnly, pLexer, this);
-    mBorderedEditor = new Core::BorderedWidget(mEditor,
-                                               true, false, true, false);
-
-    // Create our bordered editor list
-
     mEditorList = new EditorList::EditorListWidget(this);
-    mBorderedEditorList = new Core::BorderedWidget(mEditorList,
-                                                   true, false, false, false);
 
     connect(mEditorList, SIGNAL(itemRequested(EditorList::EditorListItem *)),
             this, SLOT(itemRequested(EditorList::EditorListItem *)));
 
     // Add the bordered viewer, editor and editor list to ourselves
 
-    addWidget(mBorderedViewer);
-    addWidget(mBorderedEditor);
-    addWidget(mBorderedEditorList);
+    addWidget(new Core::BorderedWidget(mViewer, false, false, true, false));
+    addWidget(new Core::BorderedWidget(mEditor, true, false, true, false));
+    addWidget(new Core::BorderedWidget(mEditorList, true, false, false, false));
 
     // Set our focus proxy to our editor
 

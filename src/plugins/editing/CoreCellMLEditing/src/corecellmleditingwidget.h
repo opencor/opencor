@@ -48,12 +48,6 @@ namespace OpenCOR {
 
 //==============================================================================
 
-namespace Core {
-    class BorderedWidget;
-}   // namespace Core
-
-//==============================================================================
-
 namespace Editor {
     class EditorWidget;
 }   // namespace Editor
@@ -102,13 +96,8 @@ public:
 private:
     Ui::CoreCellmlEditingWidget *mGui;
 
-    Core::BorderedWidget *mBorderedViewer;
     Viewer::ViewerWidget *mViewer;
-
-    Core::BorderedWidget *mBorderedEditor;
     Editor::EditorWidget *mEditor;
-
-    Core::BorderedWidget *mBorderedEditorList;
     EditorList::EditorListWidget *mEditorList;
 
 private Q_SLOTS:
