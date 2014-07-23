@@ -122,9 +122,6 @@ private:
     QLabel *mCursorPositionWidget;
     QLabel *mEditingModeWidget;
 
-    int mCurrentLine;
-    int mCurrentColumn;
-
     void updateColors();
 
 Q_SIGNALS:

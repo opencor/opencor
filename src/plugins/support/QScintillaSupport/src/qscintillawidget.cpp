@@ -619,11 +619,6 @@ void QScintillaWidget::cursorPositionChanged(const int &pLine,
 
     mCursorPositionWidget->setText(QString("Line: %1, Col: %2").arg(QString::number(pLine+1),
                                                                     QString::number(pColumn+1)));
-
-    // Keep track of the current line and column
-
-    mCurrentLine = pLine;
-    mCurrentColumn = pColumn;
 }
 
 //==============================================================================
