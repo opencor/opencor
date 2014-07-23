@@ -260,6 +260,11 @@ int QScintillaWidget::findTextInRange(const int &pStartRange,
                                       const QString &pText,
                                       const bool &pCaseSensitive) const
 {
+    // Keep track of the start and end of the current target
+
+    int currentTargetStart = SendScintilla(SCI_GETTARGETSTART);
+    int currentTargetEnd = SendScintilla(SCI_GETTARGETEND);
+
     // Find and return the position, if any, of the given text within the given
     // range
 
@@ -270,7 +275,16 @@ int QScintillaWidget::findTextInRange(const int &pStartRange,
 
     QByteArray byteArray = pText.toUtf8();
 
-    return SendScintilla(SCI_SEARCHINTARGET, byteArray.length(), byteArray.constData());
+    int res = SendScintilla(SCI_SEARCHINTARGET, byteArray.length(), byteArray.constData());
+
+    // Retrieve the start and end of the current target
+
+    SendScintilla(SCI_SETTARGETSTART, currentTargetStart);
+    SendScintilla(SCI_SETTARGETEND, currentTargetEnd);
+
+    // We are all done, so...
+
+    return res;
 }
 
 //==============================================================================
