@@ -314,7 +314,7 @@ void RawCellmlViewWidget::validate(const QString &pFileName) const
         CellMLSupport::CellmlFile *cellmlFile = CellMLSupport::CellmlFileManager::instance()->cellmlFile(pFileName);
         CellMLSupport::CellmlFileIssues cellmlFileIssues;
 
-        if (cellmlFile->isValid(editingWidget->editor()->contents(), cellmlFileIssues)) {
+        if (cellmlFile->isValid(pFileName, editingWidget->editor()->contents(), cellmlFileIssues)) {
             // There are no CellML issues, so the CellML file is valid
 
             QMessageBox::information(qApp->activeWindow(),

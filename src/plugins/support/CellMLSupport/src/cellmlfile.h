@@ -68,7 +68,7 @@ public:
     bool save(const QString &pNewFileName = QString());
 
     bool isValid();
-    static bool isValid(const QString &pFileContents,
+    static bool isValid(const QString &pFileName, const QString &pFileContents,
                         CellmlFileIssues &pIssues);
 
     bool isModified() const;

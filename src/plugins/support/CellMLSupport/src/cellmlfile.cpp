@@ -162,16 +162,19 @@ bool CellmlFile::doLoad(const QString &pFileName, const QString &pFileContents,
     // Try to create the model
 
     try {
-        *pModel = modelLoader->createFromText(pFileContents.toStdWString());
+        if (pFileContents.isEmpty())
+            *pModel = modelLoader->loadFromURL(QUrl::fromPercentEncoding(QUrl::fromLocalFile(pFileName).toEncoded()).toStdWString());
+        else
+            *pModel = modelLoader->createFromText(pFileContents.toStdWString());
     } catch (iface::cellml_api::CellMLException &) {
         // Something went wrong with the loading of the model, so...
 
-        if (pFileName.isEmpty())
-            pIssues << CellmlFileIssue(CellmlFileIssue::Error,
-                                       tr("the model could not be created (%1)").arg(QString::fromStdWString(modelLoader->lastErrorMessage())));
-        else
+        if (pFileContents.isEmpty())
             pIssues << CellmlFileIssue(CellmlFileIssue::Error,
                                        tr("the model could not be loaded (%1)").arg(QString::fromStdWString(modelLoader->lastErrorMessage())));
+        else
+            pIssues << CellmlFileIssue(CellmlFileIssue::Error,
+                                       tr("the model could not be created (%1)").arg(QString::fromStdWString(modelLoader->lastErrorMessage())));
 
         return false;
     }
@@ -180,15 +183,26 @@ bool CellmlFile::doLoad(const QString &pFileName, const QString &pFileContents,
     // fully instantiated
 
     if (QString::fromStdWString((*pModel)->cellmlVersion()).compare(CellMLSupport::Cellml_1_0)) {
-        // First, check whether the CellML file is a remote one and, if so,
-        // change its xmlbase so that it points to the remote location
+        // Check whether the CellML file is a remote one or whether its contents
+        // was directly passed onto us
 
         Core::FileManager *fileManagerInstance = Core::FileManager::instance();
 
         if (fileManagerInstance->isRemote(pFileName)) {
+            // We are dealing with a remote file, so change its xmlbase value so
+            // that it points to its remote location
+
             ObjRef<iface::cellml_api::URI> uri = (*pModel)->xmlBase();
 
             uri->asText(fileManagerInstance->url(pFileName).toStdWString());
+        } else if (!pFileContents.isEmpty()) {
+            // We are dealing with a file which contents was directly passed
+            // onto us, so change its xmlbase value so that it points to its
+            // actual location
+
+            ObjRef<iface::cellml_api::URI> uri = (*pModel)->xmlBase();
+
+            uri->asText(pFileName.toStdWString());
         }
 
         // Now, we can try to instantiate all the imports
@@ -229,11 +243,7 @@ bool CellmlFile::load()
 
     // Try to load and fully instantiate, if needed, the model
 
-    QString fileContents;
-
-    Core::readTextFromFile(mFileName, fileContents);
-
-    if (!doLoad(mFileName, fileContents, &mModel, mIssues))
+    if (!doLoad(mFileName, QString(), &mModel, mIssues))
         return false;
 
     // Retrieve all the RDF triples associated with the model
@@ -483,7 +493,7 @@ bool CellmlFile::isValid()
 
 //==============================================================================
 
-bool CellmlFile::isValid(const QString &pFileContents,
+bool CellmlFile::isValid(const QString &pFileName, const QString &pFileContents,
                          CellmlFileIssues &pIssues)
 {
     // Check whether the given file contents is CellML valid, so first create a
@@ -491,7 +501,7 @@ bool CellmlFile::isValid(const QString &pFileContents,
 
     ObjRef<iface::cellml_api::Model> model;
 
-    if (doLoad(QString(), pFileContents, &model, pIssues))
+    if (doLoad(pFileName, pFileContents, &model, pIssues))
         return doIsValid(model, pIssues);
     else
         return false;
