@@ -1,8 +1,26 @@
+<?php
+    // Check whether we want the list of downloads for the main downloads page
+    // or the previous snapshots page
+
+    if (!isset($previousSnapshots))
+        $previousSnapshots = false;
+?>
+
 <!DOCTYPE html>
 <html>
     <head>
         <title>
+<?php
+    if ($previousSnapshots) {
+?>
+            Previous snapshots
+<?php
+    } else {
+?>
             Downloads
+<?php
+    }
+?>
         </title>
 
         <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
@@ -15,7 +33,17 @@
     </head>
     <body>
         <script type="text/javascript">
+<?php
+    if ($previousSnapshots) {
+?>
+            headerAndContentsMenu("Previous snapshots", "..");
+<?php
+    } else {
+?>
             headerAndContentsMenu("Downloads", "..");
+<?php
+    }
+?>
         </script>
 
 <?php
@@ -38,28 +66,6 @@
     // Various initialisations
 
     date_default_timezone_set("Europe/London");
-
-    $versions = array(array(0, 0, 0, 23, 7, 2014, 2,
-                            array(array("Windows", "Windows XP and later", array(".exe"), array(".zip")),
-                                  array("Linux", "Ubuntu 13.04 LTS (Raring Ringtail) and later", array(".tar.gz", 32), array(".tar.gz", 64)),
-                                  array("OS X", "Mac OS X 10.7 (Lion) and later", array(".dmg"), array(".zip"))),
-                            "<strong>Note:</strong> this version is fairly stable and therefore the one we would recommend using, especially if you want to get access to the latest features (new snapshots are announced on our <a href=\"https://twitter.com/TeamOpenCOR/\">Twitter feed</a>)."),
-                      array(0, 2, 0, 19, 11, 2013, 1,
-                            array(array("Windows", "Windows XP and later", array(".exe"), array(".zip")),
-                                  array("Linux", "Ubuntu 12.04 LTS (Precise Pangolin) and later", array(".tar.gz", 32), array(".tar.gz", 64)),
-                                  array("OS X", "Mac OS X 10.7 (Lion) and later", array(".dmg"), array(".zip")))),
-                      array(0, 1, 2, 29, 5, 2013, 0,
-                            array(array("Windows", "Windows XP and later", array(".exe"), array(".zip")),
-                                  array("Linux", "Ubuntu 12.04 LTS (Precise Pangolin) and later", array(".tar.gz", 32), array(".tar.gz", 64)),
-                                  array("OS X", "OS X 10.8 (Mountain Lion) and later", array(".dmg"), array(".zip")))),
-                      array(0, 1, 1, 17, 4, 2013, 0,
-                            array(array("Windows", "Windows XP and later", array(".exe"), array(".zip")),
-                                  array("Linux", "Ubuntu 12.04 LTS (Precise Pangolin) and later", array(".tar.gz", 32), array(".tar.gz", 64)),
-                                  array("OS X", "OS X 10.8 (Mountain Lion) and later", array(".dmg"), array(".zip")))),
-                      array(0, 1, 0, 1, 4, 2013, 0,
-                            array(array("Windows", "Windows XP and later", array(".exe"), array(".zip")),
-                                  array("Linux", "Ubuntu 12.04 LTS (Precise Pangolin) and later", array(".tar.gz", 32), array(".tar.gz", 64)),
-                                  array("OS X", "OS X 10.8 (Mountain Lion) and later", array(".dmg"), array(".zip")))));
 
     // Output our various versions
 
@@ -91,8 +97,12 @@
                 $versionVersion .= "-".$versionPatch;
             }
         } else {
-            $versionTitle   = "Latest snapshot";
-            $versionVer     = "latest";
+            if ($previousSnapshots)
+                $versionTitle = date("j F Y", mktime(0, 0, 0, $versionMonth, $versionDay, $versionYear));
+            else
+                $versionTitle = "Latest snapshot";
+
+            $versionVer = "snapshots/".date("Y-m-d", mktime(0, 0, 0, $versionMonth, $versionDay, $versionYear));
             $versionVersion = date("Y-m-d", mktime(0, 0, 0, $versionMonth, $versionDay, $versionYear));
         }
 
@@ -111,10 +121,23 @@
                 <tbody>
                     <tr>
                         <td>
-                            <?php echo $versionTitle."\n"; ?> <span class="whatIsNew"><a href="../user/whatIsNew.html#<?php echo $versionVer; ?>">What is new?</a></span>
+                            <?php echo $versionTitle."\n"; ?>
+<?php
+        if (!$previousSnapshots) {
+?>
+                            <span class="whatIsNew"><a href="../user/whatIsNew.html#<?php echo $versionVer; ?>">What is new?</a></span>
+<?php
+        }
+?>
                         </td>
                         <td class="date">
+<?php
+        if (!$previousSnapshots) {
+?>
                             (<?php echo date("j F Y", mktime(0, 0, 0, $versionMonth, $versionDay, $versionYear)); ?>)
+<?php
+        }
+?>
                         </td>
                     </tr>
                 </tbody>
@@ -128,7 +151,7 @@
 
         if ($versionType == 1)
             $versionClass = "official";
-        else if ($versionType == 2)
+        else if (($versionType == 2) && !$previousSnapshots)
             $versionClass = "latest";
 
         if (strlen($versionInfo))
