@@ -78,7 +78,6 @@ CollapsibleHeaderWidget::CollapsibleHeaderWidget(const QColor &pSeparatorColor,
     // Create a sub-widget with a horizontal layout
 
     QWidget *subWidget = new QWidget(this);
-
     QHBoxLayout *subLayout = new QHBoxLayout(subWidget);
 
     subLayout->setMargin(0);
@@ -231,10 +230,9 @@ void CollapsibleWidget::constructor(const QColor &pSeparatorColor)
     // Some initialisations
 
     mSeparatorColor = pSeparatorColor;
-
     mHeaders = QList<CollapsibleHeaderWidget *>();
 
-    // Create a vertical layout which will contain our headers and widgets
+    // Create a vertical layout that will contain our headers and widgets
 
     mLayout = new QVBoxLayout(this);
 
