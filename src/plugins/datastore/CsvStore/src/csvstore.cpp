@@ -57,10 +57,8 @@ bool exportDataSet(const CoreData::DataSet *pDataset, const QString &pFileName)
    out << Header.arg(voi->getUri().replace("/prime", "'").replace("/", " | "),
                      voi->getUnits());
    for (auto v = variables.begin() ;  v != variables.end() ;  ++v) {
-       if (*v != voi) {
-           out << "," << Header.arg((*v)->getUri().replace("/prime", "'").replace("/", " | "),
-                                    (*v)->getUnits());
-       }
+       out << "," << Header.arg((*v)->getUri().replace("/prime", "'").replace("/", " | "),
+                                (*v)->getUnits());
    }
    out << "\n";
 
@@ -68,7 +66,7 @@ bool exportDataSet(const CoreData::DataSet *pDataset, const QString &pFileName)
    for (CoreData::SizeType j = 0 ;  j < pDataset->getSize() ;  ++j) {
        out << voi->getPoint(j) ;
        for (auto v = variables.begin() ;  v != variables.end() ;  ++v) {
-           if (*v != voi) out << "," << (*v)->getPoint(j) ;
+           out << "," << (*v)->getPoint(j) ;
        }
        out << "\n";
    }
