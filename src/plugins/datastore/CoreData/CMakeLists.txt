@@ -10,7 +10,6 @@ ADD_PLUGIN(CoreData
         src/coredata.cpp
     HEADERS_MOC
         src/coredataplugin.h
-        src/coredata.h
     INCLUDE_DIRS
         src
     QT_MODULES

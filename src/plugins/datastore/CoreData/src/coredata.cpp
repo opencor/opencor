@@ -37,6 +37,7 @@ DataVariable::DataVariable(const qulonglong &pSize, const double *pValuePointer)
 {
   mBuffer = new double[pSize] ;
   mSize = pSize ;
+// What if fail??
   }
 
 DataVariable::~DataVariable()
@@ -98,12 +99,6 @@ DataSet::~DataSet()
     }
   }
 
-const DataVariable *DataSet::getVoi(void) const
-/*-------------------------------------------*/
-{
-  return mVoi ;
-  }
-
 const QVector<DataVariable *> &DataSet::getVariables(void) const
 /*------------------------------------------------------------*/
 {
@@ -114,8 +109,9 @@ DataVariable *DataSet::holdPoint(const double *pPoint, const bool &pVoi)
 /*--------------------------------------------------------------------*/
 {
   DataVariable *var = new DataVariable(mSize, pPoint) ;
-  mVariables.push_back(var) ;
-  if (pVoi) mVoi = var ;
+// What if cannot construct new DataVariable??
+  if (pVoi) mVoi = var ;  // What if (mVoi != 0) ?? Return NULL? Set error message??
+  else mVariables.push_back(var) ;
   return var ;
   }
 
@@ -128,6 +124,7 @@ QVector<DataVariable *> DataSet::holdPoints(const IndexType &pCount, const doubl
     DataVariable *var = new DataVariable(mSize, v) ;
     mVariables.push_back(var) ;
     vars[n] = var ;
+// What if cannot construct new DataVariable??
     }
   return vars ;
   }

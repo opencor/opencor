@@ -54,7 +54,7 @@ class DataVariable {
 
  public:
   DataVariable(const SizeType &pSize, const double *pValuePointer=0) ;
-  ~DataVariable() ;
+  virtual ~DataVariable() ;
 
   void setUri(const QString &pUri) ;
   void setUnits(const QString &pUnits) ;
@@ -90,6 +90,8 @@ class DataVariable {
     return mBuffer[pPos] ;
     }
 
+/* End time critical code */
+
   const double *getData(void) const
   /*-----------------------------*/
   {
@@ -117,12 +119,20 @@ class DataSet {
 
  public:
   DataSet(const SizeType &pSize) ;
-  ~DataSet() ;
+  virtual ~DataSet() ;
 
-  const DataVariable *getVoi(void) const ;
+  DataVariable *getVoi(void) const
+  /*----------------------------*/
+  { return mVoi ; }
+
+  DataVariable *getVariable(long index) const
+  /*---------------------------------------*/
+  { return mVariables[index] ; }
+
   const QVector<DataVariable *> &getVariables(void) const ;
 
   DataVariable *holdPoint(const double *pPoint=0, const bool &pVoi=false) ;
+
   QVector<DataVariable *> holdPoints(const IndexType &pCount, const double *pPoints) ;
 
   void savePoints(const SizeType &pPos)
@@ -134,8 +144,12 @@ class DataSet {
 
   SizeType getSize(void) const
   /*------------------------*/
+  { return mSize ; }
+
+  IndexType length(void) const
+  /*------------------------*/
   {
-    return mSize ;
+    return mVariables.size() ;
     }
 
  private:
