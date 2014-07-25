@@ -10,7 +10,6 @@ ADD_PLUGIN(CsvStore
         src/csvstore.cpp
     HEADERS_MOC
         src/csvstoreplugin.h
-        src/csvstore.h
     INCLUDE_DIRS
         src
     PLUGINS
