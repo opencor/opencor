@@ -146,6 +146,27 @@ iface::rdf_api::DataSource * CellmlFile::rdfDataSource()
 
 //==============================================================================
 
+void CellmlFile::retrieveImports(iface::cellml_api::Model *pModel,
+                                 QList<iface::cellml_api::CellMLImport *> &pImportList,
+                                 QStringList &pImportXmlBaseList,
+                                 const QString &pXmlBase)
+{
+    // Retrieve all the imports of the given model
+
+    ObjRef<iface::cellml_api::CellMLImportSet> imports = pModel->imports();
+    ObjRef<iface::cellml_api::CellMLImportIterator> importsIterator = imports->iterateImports();
+
+    for (ObjRef<iface::cellml_api::CellMLImport> import = importsIterator->nextImport();
+         import; import = importsIterator->nextImport()) {
+        import->add_ref();
+
+        pImportList << import;
+        pImportXmlBaseList << pXmlBase;
+    }
+}
+
+//==============================================================================
+
 bool CellmlFile::doLoad(const QString &pFileName, const QString &pFileContents,
                         ObjRef<iface::cellml_api::Model> *pModel,
                         CellmlFileIssues &pIssues)
@@ -187,28 +208,99 @@ bool CellmlFile::doLoad(const QString &pFileName, const QString &pFileContents,
         // was directly passed onto us
 
         Core::FileManager *fileManagerInstance = Core::FileManager::instance();
+        ObjRef<iface::cellml_api::URI> uri = (*pModel)->xmlBase();
 
-        if (fileManagerInstance->isRemote(pFileName)) {
-            // We are dealing with a remote file, so change its xmlbase value so
-            // that it points to its remote location
-
-            ObjRef<iface::cellml_api::URI> uri = (*pModel)->xmlBase();
+        if (fileManagerInstance->isRemote(pFileName))
+            // We are dealing with a remote file, so its XML base value should
+            // point to its remote location
 
             uri->asText(fileManagerInstance->url(pFileName).toStdWString());
-        } else if (!pFileContents.isEmpty()) {
+        else if (!pFileContents.isEmpty())
             // We are dealing with a file which contents was directly passed
-            // onto us, so change its xmlbase value so that it points to its
-            // actual location
-
-            ObjRef<iface::cellml_api::URI> uri = (*pModel)->xmlBase();
+            // onto us, so its XML base value should point to its actual location
 
             uri->asText(pFileName.toStdWString());
-        }
 
         // Now, we can try to instantiate all the imports
 
         try {
-            (*pModel)->fullyInstantiateImports();
+            // Note: the below is based on CDA_Model::fullyInstantiateImports().
+            //       Indeed, CDA_Model::fullyInstantiateImports() doesn't work
+            //       with CellML imports that rely on https (see
+            //       https://github.com/opencor/opencor/issues/417), so rather
+            //       than calling CDA_CellMLImport::instantiate(), we call
+            //       CDA_CellMLImport::instantiateFromText() instead, which
+            //       requires loading the imported CellML file. Otherwise, to
+            //       speed things up as much as possible, we cache the contents
+            //       of the URLs that we load...
+
+            // Retrieve the list of imports, together with their XML base values
+
+            QList<iface::cellml_api::CellMLImport *> importList = QList<iface::cellml_api::CellMLImport *>();
+            QStringList importXmlBaseList = QStringList();
+
+            retrieveImports(*pModel, importList, importXmlBaseList,
+                            QString::fromStdWString(uri->asText()));
+
+            // Instantiate all the imports in our list
+
+            QMap<QString, QString> importContents = QMap<QString, QString>();
+
+            while (!importList.isEmpty()) {
+                // Retrieve the first import and instantiate it, if needed
+
+                ObjRef<iface::cellml_api::CellMLImport> import = importList.first();
+                QString importXmlBase = importXmlBaseList.first();
+
+                importList.removeFirst();
+                importXmlBaseList.removeFirst();
+
+                if (!import->wasInstantiated()) {
+                    // Note: CDA_CellMLImport::instantiate() would normally be
+                    //       called, but it doesn't work with https, so we
+                    //       retrieve the contents of the import ourselves and
+                    //       instantiate it from text instead...
+
+                    ObjRef<iface::cellml_api::URI> xlinkHref = import->xlinkHref();
+                    QString url = QUrl(importXmlBase).resolved(QString::fromStdWString(xlinkHref->asText())).toString();
+
+                    if (importContents.contains(url)) {
+                        // We have already loaded the import contents, so
+                        // directly instantiate the import with it
+
+                        import->instantiateFromText(importContents.value(url).toStdWString());
+                    } else {
+                        // We haven't already loaded the import contents, so do
+                        // so
+
+                        QString urlContents;
+                        QString dummy;
+
+                        if (Core::readTextFromUrl(url, urlContents, dummy)) {
+                            // We were able to retrieve the import contents, so
+                            // instantiate the import with it
+
+                            import->instantiateFromText(urlContents.toStdWString());
+
+                            // Keep track of the import contents
+
+                            importContents.insert(url, urlContents);
+                        } else {
+                            throw(std::exception());
+                        }
+                    }
+
+                    // Now that the import is instantiated, add its own imports
+                    // to our list
+
+                    ObjRef<iface::cellml_api::Model> importModel = import->importedModel();
+
+                    if (!importModel)
+                        throw(std::exception());
+
+                    retrieveImports(importModel, importList, importXmlBaseList, url);
+                }
+            }
         } catch (...) {
             // Something went wrong with the full instantiation of the imports,
             // so...

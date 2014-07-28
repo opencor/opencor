@@ -128,6 +128,11 @@ private:
 
     void reset();
 
+    static void retrieveImports(iface::cellml_api::Model *pModel,
+                                QList<iface::cellml_api::CellMLImport *> &pImportList,
+                                QStringList &pImportXmlBaseList,
+                                const QString &pXmlBase);
+
     static bool doLoad(const QString &pFileName, const QString &pFileContents,
                        ObjRef<iface::cellml_api::Model> *pModel,
                        CellmlFileIssues &pIssues);
