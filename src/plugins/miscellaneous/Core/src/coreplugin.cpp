@@ -95,8 +95,10 @@ void CorePlugin::handleArguments(const QStringList &pArguments)
 
     foreach (const QString &argument, pArguments)
         if (!argument.isEmpty()) {
-            if (QUrl(argument).isLocalFile())
-                mCentralWidget->openFile(argument);
+            QUrl argumentAsUrl = argument;
+
+            if (argumentAsUrl.isLocalFile())
+                mCentralWidget->openFile(argumentAsUrl.toLocalFile());
             else
                 mCentralWidget->openRemoteFile(argument);
         }
