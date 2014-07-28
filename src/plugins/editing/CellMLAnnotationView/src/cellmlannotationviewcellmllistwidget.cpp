@@ -1069,7 +1069,7 @@ void CellmlAnnotationViewCellmlListWidget::on_actionOpenImport_triggered()
                    fileManagerInstance->url(mCellmlFile->fileName()):
                    QUrl::fromLocalFile(mCellmlFile->fileName());
 
-    url = url.adjusted(QUrl::RemoveFilename).toString()+currentCellmlElementItem()->text();
+    url = url.resolved(currentCellmlElementItem()->text());
 
     static_cast<SharedTools::QtSingleApplication *>(qApp)->handleAction("gui://openFile/"+url.toString());
 }
