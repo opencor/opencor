@@ -340,7 +340,7 @@ int CellMLToolsPlugin::runExportCommand(const QStringList &pArguments)
     QString errorMessage = QString();
     QString inFileName = pArguments.at(0);
     QUrl inFileUrl = inFileName;
-    bool inFileIsRemote = Core::isRemoteFile(inFileName);
+    bool inFileIsRemote = !QUrl(inFileName).isLocalFile();
 
     if (inFileIsRemote) {
         // We are dealing with a remote input file, so try to get a local copy

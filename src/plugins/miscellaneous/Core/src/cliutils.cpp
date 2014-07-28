@@ -718,17 +718,6 @@ void doNothing(const int &pMax)
 
 //==============================================================================
 
-bool isRemoteFile(const QString &pFileNameOrUrl)
-{
-    // Return whether the given argument refers to a local file
-
-    QUrl url = pFileNameOrUrl;
-
-    return !url.scheme().isEmpty() && !url.host().isEmpty();
-}
-
-//==============================================================================
-
 QString stringToPercentEncoding(const QString &pString)
 {
     // Convert the given string to one with percent encoding
