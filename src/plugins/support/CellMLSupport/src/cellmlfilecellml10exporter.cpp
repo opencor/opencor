@@ -303,11 +303,9 @@ iface::dom::Element * CellmlFileCellml10Exporter::copyDomElement(iface::dom::Ele
     //          must also release_ref() the parent, or its refcount never
     //          reaches zero...
 
-    std::wstring namespaceUri = pDomElement->namespaceURI();
-
     // Create a blank DOM element
 
-    iface::dom::Element *res = mExportedModel->createExtensionElement(namespaceUri,
+    iface::dom::Element *res = mExportedModel->createExtensionElement(pDomElement->namespaceURI(),
                                                                       pDomElement->nodeName());
 
     // Copy the DOM element attributes
