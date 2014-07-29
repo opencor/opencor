@@ -95,12 +95,15 @@ void CorePlugin::handleArguments(const QStringList &pArguments)
 
     foreach (const QString &argument, pArguments)
         if (!argument.isEmpty()) {
-            QUrl fileNameOrUrl = argument;
+            bool isLocalFile;
+            QString fileNameOrUrl;
 
-            if (fileNameOrUrl.isLocalFile())
-                mCentralWidget->openFile(fileNameOrUrl.toLocalFile());
+            checkFileNameOrUrl(argument, isLocalFile, fileNameOrUrl);
+
+            if (isLocalFile)
+                mCentralWidget->openFile(fileNameOrUrl);
             else
-                mCentralWidget->openRemoteFile(fileNameOrUrl.toString(QUrl::NormalizePathSegments));
+                mCentralWidget->openRemoteFile(fileNameOrUrl);
         }
 }
 
@@ -650,25 +653,26 @@ void CorePlugin::openRecentFile()
 {
     // Check that the recent file still exists
 
-    QString recentFileNameOrUrl = qobject_cast<QAction *>(sender())->text();
-    QUrl fileNameOrUrl = recentFileNameOrUrl;
+    QString actionText = qobject_cast<QAction *>(sender())->text();
+    bool isLocalFile;
+    QString fileNameOrUrl;
 
-    if (fileNameOrUrl.isLocalFile()) {
-        QString fileName = fileNameOrUrl.toLocalFile();
+    checkFileNameOrUrl(actionText, isLocalFile, fileNameOrUrl);
 
-        if (QFile::exists(fileName))
+    if (isLocalFile) {
+        if (QFile::exists(fileNameOrUrl))
             // Open the recent file
 
-            mCentralWidget->openFile(fileName);
+            mCentralWidget->openFile(fileNameOrUrl);
         else
             // The file doesn't exist anymore, so let the user know about it
 
             QMessageBox::warning(mMainWindow, tr("Reopen File"),
-                                 tr("Sorry, but <strong>%1</strong> does not exist anymore.").arg(fileName));
+                                 tr("Sorry, but <strong>%1</strong> does not exist anymore.").arg(fileNameOrUrl));
     } else {
         // Open the recent remote file
 
-        mCentralWidget->openRemoteFile(fileNameOrUrl.toString(QUrl::NormalizePathSegments));
+        mCentralWidget->openRemoteFile(fileNameOrUrl);
     }
 
     // Try to remove the file from our list of recent files and update our
@@ -676,7 +680,7 @@ void CorePlugin::openRecentFile()
     // Note: if the file was successfully opened, then it will have already been
     //       removed from our list of recent files...
 
-    if (mRecentFileNamesOrUrls.removeOne(recentFileNameOrUrl))
+    if (mRecentFileNamesOrUrls.removeOne(actionText))
         updateFileReopenMenu();
 }
 

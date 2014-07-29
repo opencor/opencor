@@ -788,11 +788,29 @@ void CentralWidget::openFile()
 void CentralWidget::openRemoteFile(const QString &pUrl,
                                    const bool &pShowWarning)
 {
+    // Make sure that pUrl really refers to a remote file
+
+    bool isLocalFile;
+    QString fileNameOrUrl;
+
+    checkFileNameOrUrl(pUrl, isLocalFile, fileNameOrUrl);
+
+    if (isLocalFile) {
+        // It looks like the user tried to open a local file using a URL, e.g.
+        //     file:///home/me/mymodel.cellml
+        // rather than a local file name, e.g.
+        //     /home/me/mymodel.cellml
+        // so open the file as a local file and leave
+
+        openFile(fileNameOrUrl);
+
+        return;
+    }
+
     // Check whether the remote file is already opened and if so select it,
     // otherwise retrieve its contents
 
-    QString url = QUrl(pUrl).toString(QUrl::NormalizePathSegments);
-    QString fileName = mRemoteLocalFileNames.value(url);
+    QString fileName = mRemoteLocalFileNames.value(fileNameOrUrl);
 
     if (fileName.isEmpty()) {
         // The remote file isn't already opened, so download its contents
@@ -800,7 +818,7 @@ void CentralWidget::openRemoteFile(const QString &pUrl,
         QString fileContents;
         QString errorMessage;
 
-        if (readTextFromUrl(url, fileContents, errorMessage)) {
+        if (readTextFromUrl(fileNameOrUrl, fileContents, errorMessage)) {
             // We were able to retrieve the contents of the remote file, so ask
             // our file manager to create a new remote file
 
@@ -809,7 +827,7 @@ void CentralWidget::openRemoteFile(const QString &pUrl,
 #ifdef QT_DEBUG
             Core::FileManager::Status createStatus =
 #endif
-            fileManagerInstance->create(url, fileContents);
+            fileManagerInstance->create(fileNameOrUrl, fileContents);
 
 #ifdef QT_DEBUG
             // Make sure that the file has indeed been created
@@ -823,7 +841,7 @@ void CentralWidget::openRemoteFile(const QString &pUrl,
 
             if (pShowWarning)
                 QMessageBox::warning(this, tr("Open Remote File"),
-                                     tr("Sorry, but <strong>%1</strong> could not be opened (%2).").arg(url, Core::formatErrorMessage(errorMessage, false)));
+                                     tr("Sorry, but <strong>%1</strong> could not be opened (%2).").arg(fileNameOrUrl, Core::formatErrorMessage(errorMessage, false)));
         }
     } else {
         openFile(fileName);
