@@ -582,9 +582,12 @@ int FileManager::count() const
 void FileManager::checkFiles()
 {
     // We only want to check our files if we can check files and if there is no
-    // currently active dialog box
+    // currently active dialog box (which requires at least one top level
+    // widget)
 
-    if (!mCanCheckFiles || QApplication::activeModalWidget())
+    if (   !mCanCheckFiles
+        || !QApplication::topLevelWidgets().count()
+        ||  QApplication::activePopupWidget())
         return;
 
     // Check our various files, as well as their locked status, but only if they
