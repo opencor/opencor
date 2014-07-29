@@ -338,17 +338,24 @@ int CellMLToolsPlugin::runExportCommand(const QStringList &pArguments)
     // Check whether we are dealing with a local or a remote input file
 
     QString errorMessage = QString();
-    QString inFileName = pArguments.at(0);
-    QUrl inFileNameOrUrl = inFileName;
+    bool inIsLocalFile;
+    QString inFileNameOrUrl;
 
-    if (!inFileNameOrUrl.isLocalFile()) {
+    Core::checkFileNameOrUrl(pArguments.at(0), inIsLocalFile, inFileNameOrUrl);
+
+    QString inFileName = inFileNameOrUrl;
+
+    if (inIsLocalFile) {
+        // We are dealing with a local file, so just update inFileName
+
+        inFileName = inFileNameOrUrl;
+    } else {
         // We are dealing with a remote input file, so try to get a local copy
         // of it
 
         QString fileContents;
 
-        if (Core::readTextFromUrl(inFileNameOrUrl.toString(QUrl::NormalizePathSegments),
-                                  fileContents, errorMessage)) {
+        if (Core::readTextFromUrl(inFileNameOrUrl, fileContents, errorMessage)) {
             // We were able to retrieve the contents of the remote file, so save
             // it locally to a 'temporary' file
 
@@ -387,12 +394,12 @@ int CellMLToolsPlugin::runExportCommand(const QStringList &pArguments)
             errorMessage = "Sorry, but the input file is not a CellML file.";
         } else {
             if (Core::FileManager::instance()->manage(inFileName,
-                                                      inFileNameOrUrl.isLocalFile()?
+                                                      inIsLocalFile?
                                                           Core::File::Local:
                                                           Core::File::Remote,
-                                                      inFileNameOrUrl.isLocalFile()?
+                                                      inIsLocalFile?
                                                           QString():
-                                                          inFileNameOrUrl.toString(QUrl::NormalizePathSegments)) != Core::FileManager::Added) {
+                                                          inFileNameOrUrl) != Core::FileManager::Added) {
                 errorMessage = "Sorry, but the input file could not be managed.";
             } else {
                 CellMLSupport::CellmlFile *inCellmlFile = new CellMLSupport::CellmlFile(inFileName);
@@ -448,7 +455,7 @@ int CellMLToolsPlugin::runExportCommand(const QStringList &pArguments)
     // Delete the temporary input file, if any, i.e. we are dealing with a
     // remote file and it has a temporay input file associated with it
 
-    if (!inFileNameOrUrl.isLocalFile() && QFile::exists(inFileName))
+    if (!inIsLocalFile && QFile::exists(inFileName))
         QFile::remove(inFileName);
 
     // Let the user know if something went wrong at some point and then leave

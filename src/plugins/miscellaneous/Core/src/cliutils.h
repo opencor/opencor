@@ -139,6 +139,10 @@ QString CORE_EXPORT nonDiacriticString(const QString &pString);
 
 void CORE_EXPORT doNothing(const int &pMax);
 
+void CORE_EXPORT checkFileNameOrUrl(const QString &pInFileNameOrUrl,
+                                    bool &pOutIsLocalFile,
+                                    QString &pOutFileNameOrUrl);
+
 QString CORE_EXPORT stringToPercentEncoding(const QString &pString);
 QString CORE_EXPORT stringFromPercentEncoding(const QString &pString);
 

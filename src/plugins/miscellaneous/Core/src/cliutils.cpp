@@ -718,6 +718,39 @@ void doNothing(const int &pMax)
 
 //==============================================================================
 
+void checkFileNameOrUrl(const QString &pInFileNameOrUrl, bool &pOutIsLocalFile,
+                        QString &pOutFileNameOrUrl)
+{
+    // Determine whether pInFileNameOrUrl refers to a local file or a remote
+    // one, and set pOutIsLocalFile and pOutFileNameOrUrl accordingly
+    // Note #1: to use QUrl::isLocalFile() is not enough. Indeed, say that
+    //          pInFileNameOrUrl is equal to
+    //              /home/me/mymodel.cellml
+    //          then QUrl(pInFileNameOrUrl).isLocalFile() will be false. For it
+    //          to be true, we would have to initialise the QUrl object using
+    //          QUrl::fromLocalFile(), but we can't do that since we don't know
+    //          whether pInFileNameOrUrl refers to a local file or not. So,
+    //          instead we test for the scheme and host of the QUrl object...
+    // Note #2: a local file can be passed as a URL. For example,
+    //              file:///home/me/mymodel.cellml
+    //          is a URL, but effectively a local file, hence pOutIsLocalFile is
+    //          to be true and pOutFileNameOrUrl is to be set to
+    //              /home/me/mymodel.cellml
+
+    QUrl fileNameOrUrl = pInFileNameOrUrl;
+
+    pOutIsLocalFile =    (    fileNameOrUrl.scheme().isEmpty()
+                          || !fileNameOrUrl.scheme().compare("file"))
+                      && fileNameOrUrl.host().isEmpty();
+    pOutFileNameOrUrl = pOutIsLocalFile?
+                            fileNameOrUrl.scheme().isEmpty()?
+                                pInFileNameOrUrl:
+                                fileNameOrUrl.toLocalFile():
+                            fileNameOrUrl.url();
+}
+
+//==============================================================================
+
 QString stringToPercentEncoding(const QString &pString)
 {
     // Convert the given string to one with percent encoding
