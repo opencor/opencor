@@ -512,7 +512,7 @@ void CellMLToolsPlugin::exportToUserDefinedFormat()
         return;
 
     // Now that we have both a user-defined format file and output file, we can
-    // do the eport itself
+    // do the export itself
 
     CellMLSupport::CellmlFile *cellmlFile = CellMLSupport::CellmlFileManager::instance()->cellmlFile(mFileName);
 
