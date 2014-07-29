@@ -660,18 +660,18 @@ void CentralWidget::updateFileTab(const int &pIndex)
     QString fileName = mFileNames[pIndex];
     bool fileIsNew = fileManagerInstance->isNew(fileName);
     bool fileIsRemote = fileManagerInstance->isRemote(fileName);
-    QString fileUrl = fileManagerInstance->url(fileName);
+    QString url = fileManagerInstance->url(fileName);
     QString tabText = fileIsNew?
                           tr("File")+" #"+QString::number(fileManagerInstance->newIndex(fileName)):
                           fileIsRemote?
-                              QUrl(fileUrl).fileName():
+                              QUrl(url).fileName():
                               QFileInfo(fileName).fileName();
 
     mFileTabs->setTabText(pIndex, tabText+(fileManagerInstance->isNewOrModified(fileName)?"*":QString()));
     mFileTabs->setTabToolTip(pIndex, fileIsNew?
                                          tabText:
                                          fileIsRemote?
-                                             fileUrl:
+                                             url:
                                              fileName);
     mFileTabs->setTabIcon(pIndex, fileIsRemote?
                                       QIcon(":/oxygen/categories/applications-internet.png"):
