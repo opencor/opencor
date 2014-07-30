@@ -356,8 +356,6 @@ bool CellmlFile::load()
         }
     }
 
-    // All done, so...
-
     return true;
 }
 
@@ -887,8 +885,6 @@ bool CellmlFile::exportTo(const QString &pFileName, const Version &pVersion)
             return exporter.result();
         }
     } else {
-        // The file couldn't be loaded, so...
-
         return false;
     }
 }
@@ -952,8 +948,6 @@ bool CellmlFile::exportTo(const QString &pFileName,
 
         return true;
     } else {
-        // The file couldn't be loaded, so...
-
         return false;
     }
 }
