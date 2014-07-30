@@ -642,7 +642,7 @@ CellmlFileRuntime * CellmlFile::runtime()
 
         mRuntime->update(this);
 
-        mRuntimeUpdateNeeded = !mRuntime->isValid();
+        mRuntimeUpdateNeeded = false;
 
         return mRuntime;
     } else {
