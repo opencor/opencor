@@ -118,6 +118,8 @@ void CellmlFile::reset()
     mLoadingNeeded = true;
     mValidNeeded = true;
     mRuntimeUpdateNeeded = true;
+
+    mImportContents = QMap<QString, QString>();
 }
 
 //==============================================================================
@@ -196,8 +198,6 @@ bool CellmlFile::fullyInstantiateImports(iface::cellml_api::Model *pModel,
 
             // Instantiate all the imports in our list
 
-            QMap<QString, QString> importContents = QMap<QString, QString>();
-
             while (!importList.isEmpty()) {
                 // Retrieve the first import and instantiate it, if needed
 
@@ -220,15 +220,14 @@ bool CellmlFile::fullyInstantiateImports(iface::cellml_api::Model *pModel,
 
                     Core::checkFileNameOrUrl(url, isLocalFile, fileNameOrUrl);
 
-                    if (importContents.contains(fileNameOrUrl)) {
+                    if (mImportContents.contains(fileNameOrUrl)) {
                         // We have already loaded the import contents, so
                         // directly instantiate the import with it
 
-                        import->instantiateFromText(importContents.value(fileNameOrUrl).toStdWString());
+                        import->instantiateFromText(mImportContents.value(fileNameOrUrl).toStdWString());
                     } else {
                         // We haven't already loaded the import contents, so do
                         // so
-
 
                         QString fileContents;
                         QString dummy;
@@ -242,7 +241,7 @@ bool CellmlFile::fullyInstantiateImports(iface::cellml_api::Model *pModel,
 
                             // Keep track of the import contents
 
-                            importContents.insert(fileNameOrUrl, fileContents);
+                            mImportContents.insert(fileNameOrUrl, fileContents);
                         } else {
                             throw(std::exception());
                         }

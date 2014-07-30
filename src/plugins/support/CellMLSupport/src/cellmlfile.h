@@ -31,6 +31,7 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#include <QMap>
 #include <QObject>
 
 //==============================================================================
@@ -125,6 +126,8 @@ private:
     bool mLoadingNeeded;
     bool mValidNeeded;
     bool mRuntimeUpdateNeeded;
+
+    QMap<QString, QString> mImportContents;
 
     void reset();
 
