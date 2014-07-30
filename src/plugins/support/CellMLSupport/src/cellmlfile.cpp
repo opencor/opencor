@@ -119,7 +119,7 @@ void CellmlFile::reset()
     mValidNeeded = true;
     mRuntimeUpdateNeeded = true;
 
-    mImportContents = QMap<QString, QString>();
+    mImportContents.clear();
 }
 
 //==============================================================================
