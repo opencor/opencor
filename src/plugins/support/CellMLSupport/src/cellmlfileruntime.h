@@ -130,7 +130,7 @@ public:
     typedef int (*ComputeDaeStateInformationFunction)(double *SI);
     typedef int (*ComputeDaeVariablesFunction)(double VOI, double *CONSTANTS, double *RATES, double *STATES, double *ALGEBRAIC, double *CONDVAR);
 
-    explicit CellmlFileRuntime();
+    explicit CellmlFileRuntime(CellmlFile *pCellmlFile);
     ~CellmlFileRuntime();
 
     QString address() const;
@@ -166,11 +166,13 @@ public:
 
     CellmlFileRuntimeParameters parameters() const;
 
-    void update(CellmlFile *pCellmlFile);
+    void update();
 
     CellmlFileRuntimeParameter * variableOfIntegration() const;
 
 private:
+    CellmlFile *mCellmlFile;
+
     ModelType mModelType;
     bool mAtLeastOneNlaSystem;
 

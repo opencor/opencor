@@ -167,7 +167,8 @@ QString CellmlFileRuntimeParameter::formattedUnit(const QString &pVoiUnit) const
 
 //==============================================================================
 
-CellmlFileRuntime::CellmlFileRuntime() :
+CellmlFileRuntime::CellmlFileRuntime(CellmlFile *pCellmlFile) :
+    mCellmlFile(pCellmlFile),
     mOdeCodeInformation(0),
     mDaeCodeInformation(0),
     mConstantsCount(0),
@@ -714,7 +715,7 @@ QStringList CellmlFileRuntime::componentHierarchy(iface::cellml_api::CellMLEleme
 
 //==============================================================================
 
-void CellmlFileRuntime::update(CellmlFile *pCellmlFile)
+void CellmlFileRuntime::update()
 {
     // Reset the runtime's properties
 
@@ -733,7 +734,7 @@ void CellmlFileRuntime::update(CellmlFile *pCellmlFile)
     // Note #3: ideally, there would be a more convenient way to determine the
     //          type of a model, but well... there isn't, so...
 
-    iface::cellml_api::Model *model = pCellmlFile->model();
+    iface::cellml_api::Model *model = mCellmlFile->model();
 
     if (!model)
         // No model is available, so...

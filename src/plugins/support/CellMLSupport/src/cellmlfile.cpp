@@ -77,7 +77,7 @@ CellmlFile::CellmlFile(const QString &pFileName) :
 {
     // Instantiate our runtime object
 
-    mRuntime = new CellmlFileRuntime();
+    mRuntime = new CellmlFileRuntime(this);
 
     // Reset ourselves
 
@@ -638,9 +638,9 @@ CellmlFileRuntime * CellmlFile::runtime()
     if (load()) {
         // The file is loaded, so return an updated version of its runtime
 
-        mRuntime->update(this);
 
         mRuntimeUpdateNeeded = false;
+        mRuntime->update();
 
         return mRuntime;
     } else {
