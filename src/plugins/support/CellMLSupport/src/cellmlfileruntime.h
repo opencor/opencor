@@ -166,7 +166,7 @@ public:
 
     CellmlFileRuntimeParameters parameters() const;
 
-    CellmlFileRuntime * update(CellmlFile *pCellmlFile);
+    void update(CellmlFile *pCellmlFile);
 
     CellmlFileRuntimeParameter * variableOfIntegration() const;
 

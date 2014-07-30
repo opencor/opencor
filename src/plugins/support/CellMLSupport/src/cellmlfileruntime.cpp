@@ -714,7 +714,7 @@ QStringList CellmlFileRuntime::componentHierarchy(iface::cellml_api::CellMLEleme
 
 //==============================================================================
 
-CellmlFileRuntime * CellmlFileRuntime::update(CellmlFile *pCellmlFile)
+void CellmlFileRuntime::update(CellmlFile *pCellmlFile)
 {
     // Reset the runtime's properties
 
@@ -738,7 +738,7 @@ CellmlFileRuntime * CellmlFileRuntime::update(CellmlFile *pCellmlFile)
     if (!model)
         // No model is available, so...
 
-        return this;
+        return;
 
     // Retrieve the model's type
     // Note: this can be done by checking whether some equations were flagged
@@ -747,7 +747,7 @@ CellmlFileRuntime * CellmlFileRuntime::update(CellmlFile *pCellmlFile)
     getOdeCodeInformation(model);
 
     if (!mOdeCodeInformation)
-        return this;
+        return;
 
     ObjRef<iface::mathml_dom::MathMLNodeList> flaggedEquations = mOdeCodeInformation->flaggedEquations();
 
@@ -1081,10 +1081,6 @@ CellmlFileRuntime * CellmlFileRuntime::update(CellmlFile *pCellmlFile)
             reset(true, false);
         }
     }
-
-    // We are done, so return ourselves
-
-    return this;
 }
 
 //==============================================================================
