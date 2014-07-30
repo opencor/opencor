@@ -749,15 +749,12 @@ CellmlFileRuntime * CellmlFileRuntime::update(CellmlFile *pCellmlFile)
     if (!mOdeCodeInformation)
         return this;
 
-    // An ODE code information could be retrieved, so we can determine the
-    // model's type
-
     ObjRef<iface::mathml_dom::MathMLNodeList> flaggedEquations = mOdeCodeInformation->flaggedEquations();
 
     mModelType = flaggedEquations->length()?CellmlFileRuntime::Dae:CellmlFileRuntime::Ode;
 
     // If the model is of DAE type, then we don't want the ODE-specific code
-    // information, but the DAE-specific code information
+    // information, but the DAE-specific code one
 
     ObjRef<iface::cellml_services::CodeInformation> genericCodeInformation;
 
