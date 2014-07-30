@@ -167,6 +167,113 @@ void CellmlFile::retrieveImports(iface::cellml_api::Model *pModel,
 
 //==============================================================================
 
+bool CellmlFile::fullyInstantiateImports(iface::cellml_api::Model *pModel,
+                                         CellmlFileIssues &pIssues)
+{
+    // Fully instantiate all the imports, but only if we are dealing with a non
+    // CellML 1.0 model
+
+    if (QString::fromStdWString(pModel->cellmlVersion()).compare(CellMLSupport::Cellml_1_0))
+        try {
+            // Note: the below is based on CDA_Model::fullyInstantiateImports().
+            //       Indeed, CDA_Model::fullyInstantiateImports() doesn't work
+            //       with CellML imports that rely on https (see
+            //       https://github.com/opencor/opencor/issues/417), so rather
+            //       than calling CDA_CellMLImport::instantiate(), we call
+            //       CDA_CellMLImport::instantiateFromText() instead, which
+            //       requires loading the imported CellML file. Otherwise, to
+            //       speed things up as much as possible, we cache the contents
+            //       of the URLs that we load...
+
+            // Retrieve the list of imports, together with their XML base values
+
+            ObjRef<iface::cellml_api::URI> uri = pModel->xmlBase();
+            QList<iface::cellml_api::CellMLImport *> importList = QList<iface::cellml_api::CellMLImport *>();
+            QStringList importXmlBaseList = QStringList();
+
+            retrieveImports(pModel, importList, importXmlBaseList,
+                            QString::fromStdWString(uri->asText()));
+
+            // Instantiate all the imports in our list
+
+            QMap<QString, QString> importContents = QMap<QString, QString>();
+
+            while (!importList.isEmpty()) {
+                // Retrieve the first import and instantiate it, if needed
+
+                ObjRef<iface::cellml_api::CellMLImport> import = importList.first();
+                QString importXmlBase = importXmlBaseList.first();
+
+                importList.removeFirst();
+                importXmlBaseList.removeFirst();
+
+                if (!import->wasInstantiated()) {
+                    // Note: CDA_CellMLImport::instantiate() would normally be
+                    //       called, but it doesn't work with https, so we
+                    //       retrieve the contents of the import ourselves and
+                    //       instantiate it from text instead...
+
+                    ObjRef<iface::cellml_api::URI> xlinkHref = import->xlinkHref();
+                    QString url = QUrl(importXmlBase).resolved(QString::fromStdWString(xlinkHref->asText())).toString();
+                    bool isLocalFile;
+                    QString fileNameOrUrl;
+
+                    Core::checkFileNameOrUrl(url, isLocalFile, fileNameOrUrl);
+
+                    if (importContents.contains(fileNameOrUrl)) {
+                        // We have already loaded the import contents, so
+                        // directly instantiate the import with it
+
+                        import->instantiateFromText(importContents.value(fileNameOrUrl).toStdWString());
+                    } else {
+                        // We haven't already loaded the import contents, so do
+                        // so
+
+
+                        QString fileContents;
+                        QString dummy;
+
+                        if (   ( isLocalFile && Core::readTextFromFile(fileNameOrUrl, fileContents))
+                            || (!isLocalFile && Core::readTextFromUrl(fileNameOrUrl, fileContents, dummy))) {
+                            // We were able to retrieve the import contents, so
+                            // instantiate the import with it
+
+                            import->instantiateFromText(fileContents.toStdWString());
+
+                            // Keep track of the import contents
+
+                            importContents.insert(fileNameOrUrl, fileContents);
+                        } else {
+                            throw(std::exception());
+                        }
+                    }
+
+                    // Now that the import is instantiated, add its own imports
+                    // to our list
+
+                    ObjRef<iface::cellml_api::Model> importModel = import->importedModel();
+
+                    if (!importModel)
+                        throw(std::exception());
+
+                    retrieveImports(importModel, importList, importXmlBaseList, fileNameOrUrl);
+                }
+            }
+        } catch (...) {
+            // Something went wrong with the full instantiation of the imports,
+            // so...
+
+            pIssues << CellmlFileIssue(CellmlFileIssue::Error,
+                                       tr("the imports could not be fully instantiated"));
+
+            return false;
+        }
+
+    return true;
+}
+
+//==============================================================================
+
 bool CellmlFile::doLoad(const QString &pFileName, const QString &pFileContents,
                         ObjRef<iface::cellml_api::Model> *pModel,
                         CellmlFileIssues &pIssues)
@@ -200,119 +307,22 @@ bool CellmlFile::doLoad(const QString &pFileName, const QString &pFileContents,
         return false;
     }
 
-    // In the case of a non CellML 1.0 model, we want all the imports to be
-    // fully instantiated
+    // Update the XML base value, should the CellML file be a remote one or its
+    // contents be directly passed onto us
 
-    if (QString::fromStdWString((*pModel)->cellmlVersion()).compare(CellMLSupport::Cellml_1_0)) {
-        // Check whether the CellML file is a remote one or whether its contents
-        // was directly passed onto us
+    Core::FileManager *fileManagerInstance = Core::FileManager::instance();
+    ObjRef<iface::cellml_api::URI> uri = (*pModel)->xmlBase();
 
-        Core::FileManager *fileManagerInstance = Core::FileManager::instance();
-        ObjRef<iface::cellml_api::URI> uri = (*pModel)->xmlBase();
+    if (fileManagerInstance->isRemote(pFileName))
+        // We are dealing with a remote file, so its XML base value should point
+        // to its remote location
 
-        if (fileManagerInstance->isRemote(pFileName))
-            // We are dealing with a remote file, so its XML base value should
-            // point to its remote location
+        uri->asText(fileManagerInstance->url(pFileName).toStdWString());
+    else if (!pFileContents.isEmpty())
+        // We are dealing with a file which contents was directly passed onto
+        // us, so its XML base value should point to its actual location
 
-            uri->asText(fileManagerInstance->url(pFileName).toStdWString());
-        else if (!pFileContents.isEmpty())
-            // We are dealing with a file which contents was directly passed
-            // onto us, so its XML base value should point to its actual location
-
-            uri->asText(pFileName.toStdWString());
-
-        // Now, we can try to instantiate all the imports
-
-        try {
-            // Note: the below is based on CDA_Model::fullyInstantiateImports().
-            //       Indeed, CDA_Model::fullyInstantiateImports() doesn't work
-            //       with CellML imports that rely on https (see
-            //       https://github.com/opencor/opencor/issues/417), so rather
-            //       than calling CDA_CellMLImport::instantiate(), we call
-            //       CDA_CellMLImport::instantiateFromText() instead, which
-            //       requires loading the imported CellML file. Otherwise, to
-            //       speed things up as much as possible, we cache the contents
-            //       of the URLs that we load...
-
-            // Retrieve the list of imports, together with their XML base values
-
-            QList<iface::cellml_api::CellMLImport *> importList = QList<iface::cellml_api::CellMLImport *>();
-            QStringList importXmlBaseList = QStringList();
-
-            retrieveImports(*pModel, importList, importXmlBaseList,
-                            QString::fromStdWString(uri->asText()));
-
-            // Instantiate all the imports in our list
-
-            QMap<QString, QString> importContents = QMap<QString, QString>();
-
-            while (!importList.isEmpty()) {
-                // Retrieve the first import and instantiate it, if needed
-
-                ObjRef<iface::cellml_api::CellMLImport> import = importList.first();
-                QString importXmlBase = importXmlBaseList.first();
-
-                importList.removeFirst();
-                importXmlBaseList.removeFirst();
-
-                if (!import->wasInstantiated()) {
-                    // Note: CDA_CellMLImport::instantiate() would normally be
-                    //       called, but it doesn't work with https, so we
-                    //       retrieve the contents of the import ourselves and
-                    //       instantiate it from text instead...
-
-                    ObjRef<iface::cellml_api::URI> xlinkHref = import->xlinkHref();
-                    QString url = QUrl(importXmlBase).resolved(QString::fromStdWString(xlinkHref->asText())).toString();
-
-                    if (importContents.contains(url)) {
-                        // We have already loaded the import contents, so
-                        // directly instantiate the import with it
-
-                        import->instantiateFromText(importContents.value(url).toStdWString());
-                    } else {
-                        // We haven't already loaded the import contents, so do
-                        // so
-
-                        QString urlContents;
-                        QString dummy;
-
-                        if (Core::readTextFromUrl(url, urlContents, dummy)) {
-                            // We were able to retrieve the import contents, so
-                            // instantiate the import with it
-
-                            import->instantiateFromText(urlContents.toStdWString());
-
-                            // Keep track of the import contents
-
-                            importContents.insert(url, urlContents);
-                        } else {
-                            throw(std::exception());
-                        }
-                    }
-
-                    // Now that the import is instantiated, add its own imports
-                    // to our list
-
-                    ObjRef<iface::cellml_api::Model> importModel = import->importedModel();
-
-                    if (!importModel)
-                        throw(std::exception());
-
-                    retrieveImports(importModel, importList, importXmlBaseList, url);
-                }
-            }
-        } catch (...) {
-            // Something went wrong with the full instantiation of the imports,
-            // so...
-
-            *pModel = 0;
-
-            pIssues << CellmlFileIssue(CellmlFileIssue::Error,
-                                       tr("the imports could not be fully instantiated"));
-
-            return false;
-        }
-    }
+        uri->asText(pFileName.toStdWString());
 
     return true;
 }
@@ -333,7 +343,7 @@ bool CellmlFile::load()
 
     mLoadingNeeded = false;
 
-    // Try to load and fully instantiate, if needed, the model
+    // Try to load the model
 
     if (!doLoad(mFileName, QString(), &mModel, mIssues))
         return false;
@@ -566,17 +576,21 @@ bool CellmlFile::isValid()
     // Load (but not reload!) the file, if needed
 
     if (load()) {
-        // The file was properly loaded (or was already loaded), so check
-        // whether it is CellML valid
+        // The file was properly loaded (or was already loaded), so make sure
+        // that its imports, if any, are fully instantiated
 
-        mValid = doIsValid(mModel, mIssues);
+        if (fullyInstantiateImports(mModel, mIssues)) {
+            // Now, we can check whether the file is CellML valid
 
-        mValidNeeded = false;
+            mValid = doIsValid(mModel, mIssues);
 
-        return mValid;
+            mValidNeeded = false;
+
+            return mValid;
+        } else {
+            return false;
+        }
     } else {
-        // The file couldn't be loaded, so...
-
         return false;
     }
 }
@@ -591,10 +605,20 @@ bool CellmlFile::isValid(const QString &pFileName, const QString &pFileContents,
 
     ObjRef<iface::cellml_api::Model> model;
 
-    if (doLoad(pFileName, pFileContents, &model, pIssues))
-        return doIsValid(model, pIssues);
-    else
+    if (doLoad(pFileName, pFileContents, &model, pIssues)) {
+        // The file contents was properly loaded, so make sure that its imports,
+        // if any, are fully instantiated
+
+        if (fullyInstantiateImports(model, pIssues)) {
+            // Now, we can check whether the file contents is CellML valid
+
+            return doIsValid(model, pIssues);
+        } else {
+            return false;
+        }
+    } else {
         return false;
+    }
 }
 
 //==============================================================================
@@ -636,13 +660,20 @@ CellmlFileRuntime * CellmlFile::runtime()
     // Load (but not reload!) the file, if needed
 
     if (load()) {
-        // The file is loaded, so return an updated version of its runtime
+        // The file was properly loaded (or was already loaded), so make sure
+        // that its imports, if any, are fully instantiated
 
+        if (fullyInstantiateImports(mModel, mIssues)) {
+            // Now, we can return an updated version of its runtime
 
-        mRuntimeUpdateNeeded = false;
-        mRuntime->update();
+            mRuntime->update();
 
-        return mRuntime;
+            mRuntimeUpdateNeeded = false;
+
+            return mRuntime;
+        } else {
+            return 0;
+        }
     } else {
         // The file coudln't be loaded, so...
 
@@ -863,6 +894,11 @@ bool CellmlFile::exportTo(const QString &pFileName, const Version &pVersion)
                 return false;
         }
 
+        // Fully instantiate all the imports
+
+        if (!fullyInstantiateImports(mModel, mIssues))
+            return false;
+
         // Do the actual export
 
         switch (pVersion) {
@@ -931,6 +967,11 @@ bool CellmlFile::exportTo(const QString &pFileName,
 
             return false;
         }
+
+        // Fully instantiate all the imports
+
+        if (!fullyInstantiateImports(mModel, mIssues))
+            return false;
 
         // Do the actual export
 

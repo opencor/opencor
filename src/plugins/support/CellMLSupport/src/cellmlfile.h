@@ -133,6 +133,9 @@ private:
                                 QStringList &pImportXmlBaseList,
                                 const QString &pXmlBase);
 
+    static bool fullyInstantiateImports(iface::cellml_api::Model *pModel,
+                                        CellmlFileIssues &pIssues);
+
     static bool doLoad(const QString &pFileName, const QString &pFileContents,
                        ObjRef<iface::cellml_api::Model> *pModel,
                        CellmlFileIssues &pIssues);
