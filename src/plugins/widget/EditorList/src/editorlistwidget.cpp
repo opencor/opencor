@@ -83,6 +83,10 @@ EditorListWidget::EditorListWidget(QWidget *pParent) :
 
     connect(this, SIGNAL(doubleClicked(const QModelIndex &)),
             this, SLOT(requestItem(const QModelIndex &)));
+
+    // Retranslate ourselves, so that our actions are properly initialised
+
+    retranslateUi();
 }
 
 //==============================================================================
