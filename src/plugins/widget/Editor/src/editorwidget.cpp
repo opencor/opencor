@@ -651,9 +651,57 @@ void EditorWidget::replaceAndFind()
 void EditorWidget::replaceAll()
 {
     // Replace all the occurences of the text
+    // Note: the original plan was to call mEditor->findFirst() the first time
+    //       round and with wrapping disabled, and then mEditor->findNext()
+    //       until we have found all occurrences, but for some reasons this can
+    //       result in some occurrences being missed, hence the way we do it
+    //       below...
 
-    while (findNext())
+    // Keep track of our position
+
+    int origLine;
+    int origColumn;
+
+    mEditor->getCursorPosition(&origLine, &origColumn);
+
+    // Go to the beginning of the of the editor
+
+    qobject_cast<QsciScintilla *>(mEditor)->setCursorPosition(0, 0);
+
+    // Replace all occurrences
+
+    int oldLine = 0;
+    int oldColumn = 0;
+    int newLine;
+    int newColumn;
+
+    while (findNext()) {
+        // Retrieve our new position
+
+        mEditor->getCursorPosition(&newLine, &newColumn);
+
+        // Make sure that our new position is not 'before' our old one
+
+        if (   (newLine < oldLine)
+            || ((newLine == oldLine) && (newColumn < oldColumn)))
+            break;
+
+        // Our new position is fine, so replace the occurrence
+
         mEditor->replace(mFindReplace->replaceText());
+
+        // Get ready for the next occurrence
+
+        oldLine = newLine;
+        oldColumn = newColumn;
+    }
+
+    // Go to our original position, after having corrected it if needed
+
+    origLine = qMin(origLine, mEditor->lines()-1);
+    origColumn = qMin(origColumn, mEditor->lineLength(origLine)-1);
+
+    qobject_cast<QsciScintilla *>(mEditor)->setCursorPosition(origLine, origColumn);
 }
 
 //==============================================================================
