@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<model name="simple_dae_model" cmeta:id="simple_dae_model" xmlns="http://www.cellml.org/cellml/1.0#" xmlns:cellml="http://www.cellml.org/cellml/1.0#" xmlns:cmeta="http://www.cellml.org/metadata/1.0#">
+    <component name="main">
+        <variable initial_value="0" name="a" units="dimensionless"/>
+        <variable name="b" units="dimensionless"/>
+        <variable name="t" units="dimensionless"/>
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+                <eq/>
+                <apply>
+                    <diff/>
+                    <bvar>
+                        <ci>t</ci>
+                    </bvar>
+                    <ci>a</ci>
+                </apply>
+                <apply>
+                    <cos/>
+                    <ci>b</ci>
+                </apply>
+            </apply>
+        </math>
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+                <eq/>
+                <apply>
+                    <minus/>
+                    <apply>
+                        <sin/>
+                        <ci>a</ci>
+                    </apply>
+                    <ci>b</ci>
+                </apply>
+                <cn cellml:units="dimensionless">0</cn>
+            </apply>
+        </math>
+    </component>
+</model>

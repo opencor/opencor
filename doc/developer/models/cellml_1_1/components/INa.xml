@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<model xmlns="http://www.cellml.org/cellml/1.1#" xmlns:cellml="http://www.cellml.org/cellml/1.1#" xmlns:xlink="http://www.w3.org/1999/xlink" name="INa">
+  
+  <import xlink:href="units.xml">
+    <units name="ms" units_ref="ms"/>
+    <units name="mV" units_ref="mV"/>
+    <units name="per_ms" units_ref="per_ms"/>
+    <units name="per_ms_mV" units_ref="per_ms_mV"/>
+    <units name="uA_per_cmsq" units_ref="uA_per_cmsq"/>
+    <units name="mS_per_cmsq" units_ref="mS_per_cmsq"/>
+  </import>
+  <import xlink:href="gating-variable.xml">
+    <component name="m_gate" component_ref="hh_gating_variable"/>
+  </import>
+  <import xlink:href="gating-variable.xml">
+    <component name="h_gate" component_ref="hh_gating_variable"/>
+  </import>
+  <import xlink:href="INa-gating-rates.xml">
+    <component name="alpha_m" component_ref="alpha_m"/>
+    <component name="beta_m" component_ref="beta_m"/>
+    <component name="alpha_h" component_ref="alpha_h"/>
+    <component name="beta_h" component_ref="beta_h"/>
+  </import>
+  <component name="INa">
+    <variable name="INa" public_interface="out" private_interface="out" units="uA_per_cmsq"/>
+    <variable name="m_initial" public_interface="in" private_interface="out" units="dimensionless"/>
+    <variable name="m" public_interface="out" private_interface="in" units="dimensionless"/>
+    <variable name="h_initial" public_interface="in" private_interface="out" units="dimensionless"/>
+    <variable name="h" public_interface="out" private_interface="in" units="dimensionless"/>
+    <variable name="time" public_interface="in" private_interface="out" units="ms"/>
+    <variable name="V" public_interface="in" private_interface="out" units="mV"/>
+    <variable name="VNa" public_interface="in" private_interface="out" units="mV"/>
+    <variable name="gNa" public_interface="out" private_interface="out" units="mS_per_cmsq"/>
+    <variable name="gNa_max" public_interface="in" private_interface="out" units="mS_per_cmsq"/>
+    <math xmlns="http://www.w3.org/1998/Math/MathML">
+      <apply id="INa_calculation"><eq/>
+        <ci>INa</ci>
+        <apply><times/>
+          <ci>gNa</ci>
+          <apply><minus/>
+            <ci>V</ci>
+            <ci>VNa</ci>
+          </apply>
+        </apply>
+      </apply>
+    </math>
+    <math xmlns="http://www.w3.org/1998/Math/MathML">
+      <apply id="gNa_calculation"><eq/>
+        <ci>gNa</ci>
+        <apply><times/>
+          <ci>gNa_max</ci>
+          <apply><power/>
+            <ci>m</ci>
+            <cn cellml:units="dimensionless">3.0</cn>
+          </apply>
+          <ci>h</ci>
+        </apply>
+      </apply>
+    </math>
+  </component>
+  <group>
+    <relationship_ref relationship="encapsulation"/>
+    <component_ref component="INa">
+      <component_ref component="alpha_m"/>
+      <component_ref component="beta_m"/>
+      <component_ref component="alpha_h"/>
+      <component_ref component="beta_h"/>
+      <component_ref component="m_gate"/>
+      <component_ref component="h_gate"/>
+    </component_ref>
+  </group>
+  <connection>
+    <map_components component_1="INa" component_2="m_gate"/>
+    <map_variables variable_1="time" variable_2="time"/>
+    <map_variables variable_1="m_initial" variable_2="X_initial"/>
+    <map_variables variable_1="m" variable_2="X"/>
+  </connection>
+  <connection>
+    <map_components component_1="INa" component_2="h_gate"/>
+    <map_variables variable_1="time" variable_2="time"/>
+    <map_variables variable_1="h_initial" variable_2="X_initial"/>
+    <map_variables variable_1="h" variable_2="X"/>
+  </connection>
+  <connection>
+    <map_components component_1="INa" component_2="alpha_m"/>
+    <map_variables variable_1="V" variable_2="V"/>
+  </connection>
+  <connection>
+    <map_components component_1="INa" component_2="beta_m"/>
+    <map_variables variable_1="V" variable_2="V"/>
+  </connection>
+  <connection>
+    <map_components component_1="INa" component_2="alpha_h"/>
+    <map_variables variable_1="V" variable_2="V"/>
+  </connection>
+  <connection>
+    <map_components component_1="INa" component_2="beta_h"/>
+    <map_variables variable_1="V" variable_2="V"/>
+  </connection>
+  <connection>
+    <map_components component_1="m_gate" component_2="alpha_m"/>
+    <map_variables variable_1="alpha_X" variable_2="alpha"/>
+  </connection>
+  <connection>
+    <map_components component_1="m_gate" component_2="beta_m"/>
+    <map_variables variable_1="beta_X" variable_2="beta"/>
+  </connection>
+  <connection>
+    <map_components component_1="h_gate" component_2="alpha_h"/>
+    <map_variables variable_1="alpha_X" variable_2="alpha"/>
+  </connection>
+  <connection>
+    <map_components component_1="h_gate" component_2="beta_h"/>
+    <map_variables variable_1="beta_X" variable_2="beta"/>
+  </connection>
+</model>

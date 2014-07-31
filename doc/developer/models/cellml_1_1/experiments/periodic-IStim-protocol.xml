@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<model xmlns="http://www.cellml.org/cellml/1.1#" xmlns:cellml="http://www.cellml.org/cellml/1.1#" xmlns:xlink="http://www.w3.org/1999/xlink" name="periodic_IStim">
+  <import xlink:href="../components/units.xml">
+    <units name="ms" units_ref="ms"/>
+    <units name="uA_per_cmsq" units_ref="uA_per_cmsq"/>
+  </import>
+  <component name="stimulus_protocol">
+    <variable name="IStim" public_interface="out" units="uA_per_cmsq"/>
+    <variable name="time" public_interface="in" units="ms"/>
+    <variable name="stimPeriod" public_interface="in" units="ms"/>
+    <variable name="stimDuration" public_interface="in" units="ms"/>
+    <variable name="stimCurrent" public_interface="in" units="uA_per_cmsq"/>
+    <math xmlns="http://www.w3.org/1998/Math/MathML">
+      <apply id="stimulus_calculation"><eq/>
+        <ci>IStim</ci>
+        <piecewise>
+          <piece>
+            <ci>stimCurrent</ci>
+            <apply><lt/>
+              <apply><rem/>
+                <ci>time</ci>
+                <ci>stimPeriod</ci>
+              </apply>
+              <ci>stimDuration</ci>
+            </apply>
+          </piece>
+          <otherwise>
+            <cn cellml:units="uA_per_cmsq">0.0</cn>
+          </otherwise>
+        </piecewise>
+      </apply>
+    </math>
+  </component>
+</model>
