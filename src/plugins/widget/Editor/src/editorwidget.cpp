@@ -657,8 +657,9 @@ void EditorWidget::replaceAll()
     //       result in some occurrences being missed, hence the way we do it
     //       below...
 
-    // Keep track of our position
+    // Keep track of the first visible line and of our position
 
+    int origFirstVisibleLine = mEditor->firstVisibleLine();
     int origLine;
     int origColumn;
 
@@ -666,7 +667,7 @@ void EditorWidget::replaceAll()
 
     // Go to the beginning of the of the editor
 
-    qobject_cast<QsciScintilla *>(mEditor)->setCursorPosition(0, 0);
+    mEditor->QsciScintilla::setCursorPosition(0, 0);
 
     // Replace all occurrences
 
@@ -696,12 +697,15 @@ void EditorWidget::replaceAll()
         oldColumn = newColumn;
     }
 
-    // Go to our original position, after having corrected it if needed
+    // Reset the first visible line and go to our original position, after
+    // having corrected it, if needed
+
+    mEditor->setFirstVisibleLine(origFirstVisibleLine);
 
     origLine = qMin(origLine, mEditor->lines()-1);
     origColumn = qMin(origColumn, mEditor->lineLength(origLine)-1);
 
-    qobject_cast<QsciScintilla *>(mEditor)->setCursorPosition(origLine, origColumn);
+    mEditor->QsciScintilla::setCursorPosition(origLine, origColumn);
 }
 
 //==============================================================================
