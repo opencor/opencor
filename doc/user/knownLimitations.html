@@ -30,7 +30,12 @@
 
         <ul>
             <li>By default, OpenCOR uses your system's language for menus, dialog boxes, etc., as long as it is either English or French (please <a href="contactUs.html">contact us</a> if you would like OpenCOR to support other languages). If your system uses another language, then OpenCOR will default to English. Otherwise, if you specifically specify English or French, then please be aware that system messages, dialog boxes, etc. will still be displayed using your system's language (assuming it is not one of the languages supported by OpenCOR).</li>
-            <li>OpenCOR uses the <a href="http://cellml-api.sourceforge.net/">CellML API</a>, which will crash OpenCOR if you try to export a CellML file to a user-defined format that is described in a file that contains valid, but unknown, XML.</li>
+            <li>
+                OpenCOR uses the <a href="http://cellml-api.sourceforge.net/">CellML API</a>, which is known to have the following limitations:
+                <ul>
+                    <li>It will crash OpenCOR if you try to export a CellML file to a user-defined format that is described in a file that contains valid, but unknown, XML.</li>
+                    <li>It may incorrectly (in)validate certain CellML files.</li>
+                </ul>
         </ul>
 
         <div class="section">
@@ -38,7 +43,7 @@
         </div>
 
         <ul>
-            <li>OpenCOR's <a href="plugins/organisation/FileBrowserWindow.html">FileBrowserWindow</a> plugin may, on some systems, result in OpenCOR being slow to respond at startup. This has nothing to do with OpenCOR, but with Windows or, rather, a program that tightly integrates with the Windows shell. There are <a href="http://www.brighthub.com/computing/windows-platform/articles/86552.aspx">several known causes and solutions</a> to this problem. However, should none of them work for you, then you might have to unselect the FileBrowserWindow plugin.</li>
+            <li>OpenCOR's <a href="plugins/organisation/FileBrowserWindow.html">FileBrowserWindow</a> plugin may, on some systems, result in OpenCOR being slow to respond at startup. This has nothing to do with OpenCOR, but most likely with a Windows shell add-on that is installed on your system. <a href="http://www.brighthub.com/computing/windows-platform/articles/86552.aspx">This page</a> might help you, but if not then you might have to unselect the FileBrowserWindow plugin.</li>
         </ul>
 
         <div class="section">
@@ -46,7 +51,7 @@
         </div>
 
         <ul>
-            <li>Upon starting, the position of the main window may be slightly different from the one in your previous session. This is due to a lack of compliancy between window managers on Linux. In other words, something that works with one may or may not work with another.</li>
+            <li>Upon starting, the position of the main window may be slightly different from the one in your previous session. This is due to a lack of compliancy between window managers on Linux. So, if you can, try another window manager.</li>
         </ul>
 
         <div class="section">
@@ -54,7 +59,7 @@
         </div>
 
         <ul>
-            <li>If you run a simulation on OS X 10.9 (Mavericks), then the first time you use a particular solver, the simulation will be 'slow'. However, subsequent runs will be 'fast'. It looks like it might have nothing to do with OpenCOR since all simulations are 'fast' on Windows and Linux, as well as on Mac OS X 10.7 (Lion) and OS X 10.8 (Mountain Lion).</li>
+            <li>If you run a simulation on OS X 10.9 (Mavericks), then the first time you use a particular version of a solver, the simulation will be 'slow'. However, subsequent runs will be 'fast'. It looks like it might have nothing to do with OpenCOR since all simulations are 'fast' on Windows and Linux, as well as on Mac OS X 10.7 (Lion) and OS X 10.8 (Mountain Lion).</li>
         </ul>
 
         <script type="text/javascript">
