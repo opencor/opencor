@@ -213,7 +213,7 @@ void CorePlugin::fileClosed(const QString &pFileName)
     FileManager *fileManagerInstance = FileManager::instance();
 
     if (   !fileManagerInstance->isNew(pFileName)
-        &&  QFileInfo(pFileName).exists()) {
+        &&  QFile::exists(pFileName)) {
         if (fileManagerInstance->isRemote(pFileName))
             mRecentFileNamesOrUrls.prepend(fileManagerInstance->url(pFileName));
         else
