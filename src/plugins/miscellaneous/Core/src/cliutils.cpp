@@ -739,13 +739,12 @@ void checkFileNameOrUrl(const QString &pInFileNameOrUrl, bool &pOutIsLocalFile,
 
     QUrl fileNameOrUrl = pInFileNameOrUrl;
 
-    pOutIsLocalFile =    (    fileNameOrUrl.scheme().isEmpty()
-                          || !fileNameOrUrl.scheme().compare("file"))
-                      && fileNameOrUrl.host().isEmpty();
+    pOutIsLocalFile =    !fileNameOrUrl.scheme().compare("file")
+                      ||  fileNameOrUrl.host().isEmpty();
     pOutFileNameOrUrl = pOutIsLocalFile?
-                            fileNameOrUrl.scheme().isEmpty()?
-                                pInFileNameOrUrl:
-                                fileNameOrUrl.toLocalFile():
+                            !fileNameOrUrl.scheme().compare("file")?
+                                nativeCanonicalFileName(fileNameOrUrl.toLocalFile()):
+                                nativeCanonicalFileName(pInFileNameOrUrl):
                             fileNameOrUrl.url();
 }
 
