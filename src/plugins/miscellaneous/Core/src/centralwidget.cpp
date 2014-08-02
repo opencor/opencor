@@ -1092,6 +1092,15 @@ bool CentralWidget::saveFile(const int &pIndex, const bool &pNeedNewFileName)
             }
         }
 
+        // Delete the 'old' file, if it was a new one that got saved
+        // Note: we delete the 'old' file before updating the file name in case
+        //       someone handles the renaming of a file and checks whether the
+        //       old file still exists (see CorePlugin::fileRenamed() and
+        //       CorePlugin::fileClosed())...
+
+        if (fileIsNew)
+            QFile::remove(oldFileName);
+
         // Update its file name, if needed
 
         if (hasNewFileName) {
@@ -1109,11 +1118,6 @@ bool CentralWidget::saveFile(const int &pIndex, const bool &pNeedNewFileName)
                 qFatal("FATAL ERROR | %s:%d: '%s' did not get renamed to '%s'", __FILE__, __LINE__, qPrintable(oldFileName), qPrintable(newFileName));
 #endif
         }
-
-        // Delete the 'old' file, if it was a new one that got saved
-
-        if (fileIsNew)
-            QFile::remove(oldFileName);
 
         // Let people know that the file has been saved, if needed, by reloading
         // it
