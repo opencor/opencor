@@ -223,7 +223,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(iface::cellml_api:
 
     // Reset our items' GUI, if needed
 
-    if (pResetItemsGui)
+    if (pResetItemsGui || mTermIsDirect)
         updateItemsGui(Items(), QString(), !mTermIsDirect);
 
     // Enable or disable the add buttons for our retrieved terms, depending on

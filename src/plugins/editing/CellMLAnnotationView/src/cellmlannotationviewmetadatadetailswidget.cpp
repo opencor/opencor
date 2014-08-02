@@ -374,7 +374,7 @@ void CellmlAnnotationViewMetadataDetailsWidget::updateMetadataEditDetails()
 {
     // Update our metadata edit details widget
 
-    mMetadataEditDetails->updateGui(mElement, true);
+    mMetadataEditDetails->updateGui(mElement);
 }
 
 //==============================================================================
