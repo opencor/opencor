@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <model xmlns="http://www.cellml.org/cellml/1.1#" xmlns:cellml="http://www.cellml.org/cellml/1.1#" xmlns:xlink="http://www.w3.org/1999/xlink" name="hh_gating_variable">
-  
+
   <import xlink:href="units.xml">
     <units name="ms" units_ref="ms"/>
     <units name="per_ms" units_ref="per_ms"/>
