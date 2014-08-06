@@ -554,8 +554,7 @@ void CentralWidget::saveSettings(QSettings *pSettings) const
 
 void CentralWidget::settingsLoaded(const Plugins &pLoadedPlugins)
 {
-    // Determine which loaded plugins support the file handling interface, and
-    // which ones support the view interface
+    // Determine which loaded plugins support a given interface
 
     foreach (Plugin *plugin, pLoadedPlugins) {
         if (qobject_cast<FileHandlingInterface *>(plugin->instance()))
