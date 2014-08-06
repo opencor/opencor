@@ -762,20 +762,19 @@ void CentralWidget::openFile()
 {
     // Ask for the file(s) to be opened
 
-    QString supportedFileTypes;
+    QString fileTypes =  tr("All Files")
+                        +" (*"
+#ifdef Q_OS_WIN
+                        +".*"
+#endif
+                        +")";
 
     foreach (FileType *supportedFileType, mSupportedFileTypes)
-        supportedFileTypes +=  ";;"
-                              +supportedFileType->description()
-                              +" (*."+supportedFileType->fileExtension()+")";
+        fileTypes +=  ";;"
+                     +supportedFileType->description()
+                     +" (*."+supportedFileType->fileExtension()+")";
 
-    QStringList files = getOpenFileNames(tr("Open File"),
-                                         tr("All Files")
-                                         +" (*"
-#ifdef Q_OS_WIN
-                                         +".*"
-#endif
-                                         +")"+supportedFileTypes);
+    QStringList files = getOpenFileNames(tr("Open File"), fileTypes);
 
     // Open the file(s)
 
@@ -1020,20 +1019,22 @@ bool CentralWidget::saveFile(const int &pIndex, const bool &pNeedNewFileName)
 
         QStringList mimeTypes = viewInterface->viewMimeTypes();
 
-        QString supportedFileTypes = QString();
+        QString fileTypes =  tr("All Files")
+                            +" (*"
+#ifdef Q_OS_WIN
+                            +".*"
+#endif
+                            +")";
 
         foreach (FileType *supportedFileType, mSupportedFileTypes)
-            if (mimeTypes.contains(supportedFileType->mimeType())) {
-                if (!supportedFileTypes.isEmpty())
-                    supportedFileTypes += ";;";
-
-                supportedFileTypes +=  supportedFileType->description()
-                                      +" (*."+supportedFileType->fileExtension()+")";
-            }
+            if (mimeTypes.contains(supportedFileType->mimeType()))
+                fileTypes +=  ";;"
+                             +supportedFileType->description()
+                             +" (*."+supportedFileType->fileExtension()+")";
 
         newFileName = Core::getSaveFileName(tr("Save File"),
                                             fileIsNew?mFileTabs->tabToolTip(pIndex):newFileName,
-                                            supportedFileTypes);
+                                            fileTypes);
 
         // Make sure that a new file name was retrieved
 
