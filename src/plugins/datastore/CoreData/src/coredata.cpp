@@ -23,6 +23,10 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#include <cassert>
+
+//==============================================================================
+
 namespace OpenCOR {
 
 //==============================================================================
@@ -44,6 +48,39 @@ DataVariable::~DataVariable()
 /*-------------------------*/
 {
   delete[] mBuffer ;
+  }
+
+void DataVariable::savePoint(const SizeType &pPos)
+/*----------------------------------------------*/
+{
+  assert(pPos >= 0 && pPos < mSize) ;
+  if (mValuePointer) mBuffer[pPos] = *mValuePointer ;
+  }
+
+void DataVariable::savePoint(const SizeType &pPos, const double &pValue)
+/*--------------------------------------------------------------------*/
+{
+  assert(pPos >= 0 && pPos < mSize) ;
+  mBuffer[pPos] = pValue ;
+  }
+
+double DataVariable::getPoint(const SizeType &pPos) const
+/*-----------------------------------------------------*/
+{
+  assert(pPos >= 0 && pPos < mSize) ;
+  return mBuffer[pPos] ;
+  }
+
+const double *DataVariable::getData(void) const
+/*-------------------------------------------*/
+{
+  return mBuffer ;
+  }
+
+SizeType DataVariable::getSize(void) const
+/*--------------------------------------*/
+{
+  return mSize ;
   }
 
 void DataVariable::setUri(const QString &pUri)
@@ -99,6 +136,18 @@ DataSet::~DataSet()
     }
   }
 
+DataVariable *DataSet::getVoi(void) const
+/*-------------------------------------*/
+{
+  return mVoi ;
+  }
+
+DataVariable *DataSet::getVariable(long index) const
+/*------------------------------------------------*/
+{
+  return mVariables[index] ;
+  }
+
 const QVector<DataVariable *> &DataSet::getVariables(void) const
 /*------------------------------------------------------------*/
 {
@@ -127,6 +176,25 @@ QVector<DataVariable *> DataSet::holdPoints(const IndexType &pCount, const doubl
 // What if cannot construct new DataVariable??
     }
   return vars ;
+  }
+
+void DataSet::savePoints(const SizeType &pPos)
+/*------------------------------------------*/
+{
+  for (auto vp = mVariables.begin() ;  vp != mVariables.end() ;  ++vp)
+    (*vp)->savePoint(pPos) ;
+  }
+
+SizeType DataSet::getSize(void) const
+/*---------------------------------*/
+{
+  return mSize ;
+  }
+
+IndexType DataSet::length(void) const
+/*---------------------------------*/
+{
+  return mVariables.size() ;
   }
 
 //==============================================================================

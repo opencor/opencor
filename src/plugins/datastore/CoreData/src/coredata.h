@@ -33,10 +33,6 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-#include <cassert>
-
-//==============================================================================
-
 namespace OpenCOR {
 
 //==============================================================================
@@ -59,50 +55,17 @@ class DataVariable {
   void setUri(const QString &pUri) ;
   void setUnits(const QString &pUnits) ;
   void setLabel(const QString &pLabel) ;
+
   QString getUri(void) const ;
   QString getLabel(void) const ;
   QString getUnits(void) const ;
 
-/*
-   The following code is time-critical and having it
-   in a separate implementation file that is compiled
-   to a library can double execution time (under OS/X).
-*/
+  void savePoint(const SizeType &pPos) ;
+  void savePoint(const SizeType &pPos, const double &pValue) ;
 
-  void savePoint(const SizeType &pPos)
-  /*--------------------------------*/
-  {
-    assert(pPos >= 0 && pPos < mSize) ;
-    if (mValuePointer) mBuffer[pPos] = *mValuePointer ;
-    }
-
-  void savePoint(const SizeType &pPos, const double &pValue)
-  /*------------------------------------------------------*/
-  {
-    assert(pPos >= 0 && pPos < mSize) ;
-    mBuffer[pPos] = pValue ;
-    }
-
-  double getPoint(const SizeType &pPos) const
-  /*---------------------------------------*/
-  {
-    assert(pPos >= 0 && pPos < mSize) ;
-    return mBuffer[pPos] ;
-    }
-
-/* End time critical code */
-
-  const double *getData(void) const
-  /*-----------------------------*/
-  {
-    return mBuffer ;
-    }
-
-  SizeType getSize(void) const
-  /*------------------------*/
-  {
-    return mSize ;
-    }
+  double getPoint(const SizeType &pPos) const ;
+  const double *getData(void) const ;
+  SizeType getSize(void) const ;
 
  private:
   QString mUri ;
@@ -121,36 +84,17 @@ class DataSet {
   DataSet(const SizeType &pSize) ;
   virtual ~DataSet() ;
 
-  DataVariable *getVoi(void) const
-  /*----------------------------*/
-  { return mVoi ; }
-
-  DataVariable *getVariable(long index) const
-  /*---------------------------------------*/
-  { return mVariables[index] ; }
-
+  DataVariable *getVoi(void) const ;
+  DataVariable *getVariable(long index) const ;
   const QVector<DataVariable *> &getVariables(void) const ;
 
   DataVariable *holdPoint(const double *pPoint=0, const bool &pVoi=false) ;
-
   QVector<DataVariable *> holdPoints(const IndexType &pCount, const double *pPoints) ;
 
-  void savePoints(const SizeType &pPos)
-  /*---------------------------------*/
-  {
-    for (auto vp = mVariables.begin() ;  vp != mVariables.end() ;  ++vp)
-      (*vp)->savePoint(pPos) ;
-    }
+  void savePoints(const SizeType &pPos) ;
 
-  SizeType getSize(void) const
-  /*------------------------*/
-  { return mSize ; }
-
-  IndexType length(void) const
-  /*------------------------*/
-  {
-    return mVariables.size() ;
-    }
+  SizeType getSize(void) const ;
+  IndexType length(void) const ;
 
  private:
   const SizeType mSize ;
