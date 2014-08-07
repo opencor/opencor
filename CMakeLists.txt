@@ -591,20 +591,11 @@ ELSE()
     # Additional libraries required by Qt, but that are not available on a
     # 'blank' version of Ubuntu or their version differs from one version of
     # Ubuntu to another
-    # Note: starting with Ubuntu 11.04, some system libraries are located in
-    #       /usr/lib/i386-linux-gnu or /usr/lib/x86_64-linux-gnu rather than
-    #       /usr/lib, so we need to check those folders first...
 
-    SET(DEFAULT_LIBRARY_FOLDER /usr/lib)
-    SET(X86_LIBRARY_FOLDER ${DEFAULT_LIBRARY_FOLDER}/i386-linux-gnu)
-    SET(X64_LIBRARY_FOLDER ${DEFAULT_LIBRARY_FOLDER}/x86_64-linux-gnu)
-
-    IF(EXISTS "${X86_LIBRARY_FOLDER}" AND IS_DIRECTORY "${X86_LIBRARY_FOLDER}")
-        SET(LIBRARY_FOLDER ${X86_LIBRARY_FOLDER})
-    ELSEIF(EXISTS "${X64_LIBRARY_FOLDER}" AND IS_DIRECTORY "${X64_LIBRARY_FOLDER}")
-        SET(LIBRARY_FOLDER ${X64_LIBRARY_FOLDER})
+    IF(${ARCHITECTURE} EQUAL 32)
+        SET(LIBRARY_FOLDER /usr/lib/i386-linux-gnu)
     ELSE()
-        SET(LIBRARY_FOLDER ${DEFAULT_LIBRARY_FOLDER})
+        SET(LIBRARY_FOLDER /usr/lib/x86_64-linux-gnu)
     ENDIF()
 
     FOREACH(LIBRARY stdc++.so.6)
