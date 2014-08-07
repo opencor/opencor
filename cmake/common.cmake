@@ -884,6 +884,13 @@ MACRO(LINUX_DEPLOY_QT_PLUGIN PLUGIN_CATEGORY)
 
         COPY_FILE_TO_BUILD_DIR(${PROJECT_NAME} ${PLUGIN_ORIG_DIRNAME} ${PLUGIN_DEST_DIRNAME} ${PLUGIN_FILENAME})
 
+        # Strip the Qt plugin of all local symbols
+
+        IF(RELEASE_MODE)
+            ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
+                               COMMAND strip -x ${PLUGIN_DEST_DIRNAME}/${PLUGIN_FILENAME})
+        ENDIF()
+
         # Deploy the Qt plugin
 
         INSTALL(FILES ${PLUGIN_ORIG_DIRNAME}/${PLUGIN_FILENAME}
@@ -894,6 +901,13 @@ ENDMACRO()
 #===============================================================================
 
 MACRO(LINUX_DEPLOY_LIBRARY DIRNAME FILENAME)
+    # Strip the library of all local symbols
+
+    IF(RELEASE_MODE)
+        ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
+                           COMMAND strip -x ${DIRNAME}/${FILENAME})
+    ENDIF()
+
     # Install the library file
 
     INSTALL(FILES ${DIRNAME}/${FILENAME}
