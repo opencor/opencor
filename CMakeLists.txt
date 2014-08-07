@@ -588,26 +588,6 @@ ELSE()
                 RENAME ${CMAKE_SHARED_LIBRARY_PREFIX}${QT_FILE}${CMAKE_SHARED_LIBRARY_SUFFIX}.52)
     ENDFOREACH()
 
-    # Additional libraries required by Qt, but that are not available on a
-    # 'blank' version of Ubuntu or their version differs from one version of
-    # Ubuntu to another
-
-    IF(${ARCHITECTURE} EQUAL 32)
-        SET(LIBRARY_FOLDER /usr/lib/i386-linux-gnu)
-    ELSE()
-        SET(LIBRARY_FOLDER /usr/lib/x86_64-linux-gnu)
-    ENDIF()
-
-    FOREACH(LIBRARY stdc++.so.6)
-        SET(LIBRARY_FILENAME ${CMAKE_SHARED_LIBRARY_PREFIX}${LIBRARY})
-        SET(LIBRARY_FILEPATH ${LIBRARY_FOLDER}/${LIBRARY_FILENAME})
-
-        GET_FILENAME_COMPONENT(REAL_LIBRARY_FILEPATH ${LIBRARY_FILEPATH} REALPATH)
-
-        INSTALL(FILES ${REAL_LIBRARY_FILEPATH} RENAME ${LIBRARY_FILENAME}
-                DESTINATION lib)
-    ENDFOREACH()
-
     # Qt plugins required by OpenCOR
 
     LINUX_DEPLOY_QT_PLUGIN(accessible qtaccessiblewidgets)
