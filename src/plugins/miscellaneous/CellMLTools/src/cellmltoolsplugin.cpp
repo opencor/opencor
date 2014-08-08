@@ -264,14 +264,17 @@ void CellMLToolsPlugin::exportTo(const CellMLSupport::CellmlFile::Version &pVers
     QString format = (pVersion == CellMLSupport::CellmlFile::Cellml_1_0)?
                          "CellML 1.0":
                          "CellML 1.1";
-    QString fileTypes = QString();
+    QString fileTypes =  tr("All Files")
+                        +" (*"
+#ifdef Q_OS_WIN
+                        +".*"
+#endif
+                        +")";
 
-    foreach (FileType *fileType, mCellmlFileTypes) {
-        if (!fileTypes.isEmpty())
-            fileTypes += ";;";
-
-        fileTypes +=  fileType->description()+" (*."+fileType->fileExtension()+")";
-    }
+    foreach (FileType *fileType, mCellmlFileTypes)
+        fileTypes +=  ";;"
+                     +fileType->description()
+                     +" (*."+fileType->fileExtension()+")";
 
     Core::FileManager *fileManagerInstance = Core::FileManager::instance();
 
