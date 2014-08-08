@@ -501,7 +501,7 @@ void CellMLToolsPlugin::exportToUserDefinedFormat()
 
     // Ask for the name of the file that will contain the export
 
-    QString fileType = tr("All Files")
+    QString fileType =  tr("All Files")
                        +" (*"
 #ifdef Q_OS_WIN
                        +".*"
