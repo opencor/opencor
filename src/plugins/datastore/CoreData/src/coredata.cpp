@@ -53,21 +53,21 @@ DataVariable::~DataVariable()
 void DataVariable::savePoint(const SizeType &pPos)
 /*----------------------------------------------*/
 {
-  assert(pPos >= 0 && pPos < mSize) ;
+  assert(pPos < mSize) ;
   if (mValuePointer) mBuffer[pPos] = *mValuePointer ;
   }
 
 void DataVariable::savePoint(const SizeType &pPos, const double &pValue)
 /*--------------------------------------------------------------------*/
 {
-  assert(pPos >= 0 && pPos < mSize) ;
+  assert(pPos < mSize) ;
   mBuffer[pPos] = pValue ;
   }
 
 double DataVariable::getPoint(const SizeType &pPos) const
 /*-----------------------------------------------------*/
 {
-  assert(pPos >= 0 && pPos < mSize) ;
+  assert(pPos < mSize) ;
   return mBuffer[pPos] ;
   }
 
