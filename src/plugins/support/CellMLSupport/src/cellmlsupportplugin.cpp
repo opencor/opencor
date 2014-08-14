@@ -21,6 +21,7 @@ specific language governing permissions and limitations under the License.
 
 #include "cellmlfilemanager.h"
 #include "cellmlsupportplugin.h"
+#include "cliutils.h"
 #include "filemanager.h"
 
 //==============================================================================
@@ -186,6 +187,15 @@ bool isCellmlFile(const QString &pFileName)
     // a new file
 
     if (Core::FileManager::instance()->isNew(pFileName))
+        return true;
+
+    // Check whether we are dealing with an empty file or a file that contains
+    // spaces of sorts
+
+    QString fileContents;
+
+    if (   Core::readTextFromFile(pFileName, fileContents)
+        && fileContents.trimmed().isEmpty())
         return true;
 
     // The file neither has the 'correct' file extension nor is a new file, so
