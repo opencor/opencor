@@ -194,6 +194,8 @@ private:
 Q_SIGNALS:
     void guiUpdated(Plugin *pViewPlugin, const QString &pFileName);
 
+    void atLeastOneView(const bool &pAtLeastOneView);
+
     void canSave(const bool &pEnabled);
     void canSaveAs(const bool &pEnabled);
     void canSaveAll(const bool &pEnabled);

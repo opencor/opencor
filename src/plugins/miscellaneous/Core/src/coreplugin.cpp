@@ -461,6 +461,13 @@ void CorePlugin::initializePlugin(QMainWindow *pMainWindow)
 
     // Some connections to update the enabled state of our various actions
 
+    connect(mCentralWidget, SIGNAL(atLeastOneView(const bool &)),
+            mFileOpenAction, SLOT(setEnabled(bool)));
+    connect(mCentralWidget, SIGNAL(atLeastOneView(const bool &)),
+            mFileOpenRemoteAction, SLOT(setEnabled(bool)));
+    connect(mCentralWidget, SIGNAL(atLeastOneView(const bool &)),
+            this, SLOT(updateFileReopenMenu(const bool &)));
+
     connect(mCentralWidget, SIGNAL(canSave(const bool &)),
             mFileSaveAction, SLOT(setEnabled(bool)));
     connect(mCentralWidget, SIGNAL(canSaveAs(const bool &)),
@@ -583,7 +590,7 @@ void CorePlugin::handleAction(const QUrl &pUrl)
 // Plugin specific
 //==============================================================================
 
-void CorePlugin::updateFileReopenMenu()
+void CorePlugin::updateFileReopenMenu(const bool &pEnabled)
 {
     // Update the contents of our Reopen sub-menu by first cleaning it
 
@@ -606,6 +613,7 @@ void CorePlugin::updateFileReopenMenu()
     foreach (const QString &recentFile, mRecentFileNamesOrUrls) {
         QAction *action = new QAction(mMainWindow);
 
+        action->setEnabled(pEnabled);
         action->setText(recentFile);
 
         connect(action, SIGNAL(triggered()),

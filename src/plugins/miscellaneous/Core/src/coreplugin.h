@@ -106,11 +106,11 @@ private:
 
     QStringList mRecentFileNamesOrUrls;
 
-    void updateFileReopenMenu();
-
     void updateNewModifiedSensitiveActions();
 
 private Q_SLOTS:
+    void updateFileReopenMenu(const bool &pEnabled = true);
+
     void openRecentFile();
 
     void clearReopenSubMenu();

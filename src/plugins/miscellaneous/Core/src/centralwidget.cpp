@@ -1663,8 +1663,10 @@ void CentralWidget::updateGui()
 
     updateModifiedSettings();
 
-    // Let people know whether we can save as, as well as whether there is/are
-    // at least one/two file/s
+    // Let people know whether there is at least one view, as well as whether we
+    // can save as and there is/are at least one/two file/s
+
+    emit atLeastOneView(mModeTabs->currentIndex() != -1);
 
     emit canSaveAs(   mFileTabs->count() && (newView != mNoViewMsg)
                    && !FileManager::instance()->isRemote(fileName)
