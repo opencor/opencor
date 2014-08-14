@@ -135,16 +135,17 @@ PluginManager::PluginManager(QCoreApplication *pApp, const bool &pGuiMode) :
                                     pluginsError.value(pluginName),
                                     plugins.contains(pluginName), this);
 
-        // Keep track of the Core plugin, if it's the one we are dealing with,
-        // as well as keep track of the plugin in general
-
-        if (!pluginName.compare(CorePluginName))
-            mCorePlugin = plugin;
+        // Keep track of the plugin and of the Core plugin, in particular, if it
+        // is loaded
 
         mPlugins << plugin;
 
-        if (plugin->status() == Plugin::Loaded)
+        if (plugin->status() == Plugin::Loaded) {
             mLoadedPlugins << plugin;
+
+            if (!pluginName.compare(CorePluginName))
+                mCorePlugin = plugin;
+        }
     }
 }
 
