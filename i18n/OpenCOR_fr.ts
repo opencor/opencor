@@ -403,5 +403,9 @@
         <source>&lt;strong&gt;%1&lt;/strong&gt; already exists. Do you want to overwrite it?</source>
         <translation>&lt;strong&gt;%1&lt;/strong&gt; existe déjà. Voulez-vous le remplacer ?</translation>
     </message>
+    <message>
+        <source>All Files</source>
+        <translation>Tous Fichiers</translation>
+    </message>
 </context>
 </TS>

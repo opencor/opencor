@@ -264,17 +264,15 @@ void CellMLToolsPlugin::exportTo(const CellMLSupport::CellmlFile::Version &pVers
     QString format = (pVersion == CellMLSupport::CellmlFile::Cellml_1_0)?
                          "CellML 1.0":
                          "CellML 1.1";
-    QString fileTypes =  tr("All Files")
-                        +" (*"
-#ifdef Q_OS_WIN
-                        +".*"
-#endif
-                        +")";
+    QString fileTypes = QString();
 
-    foreach (FileType *fileType, mCellmlFileTypes)
-        fileTypes +=  ";;"
-                     +fileType->description()
+    foreach (FileType *fileType, mCellmlFileTypes) {
+        if (!fileTypes.isEmpty())
+            fileTypes += ";;";
+
+        fileTypes +=  fileType->description()
                      +" (*."+fileType->fileExtension()+")";
+    }
 
     Core::FileManager *fileManagerInstance = Core::FileManager::instance();
 
@@ -494,27 +492,19 @@ void CellMLToolsPlugin::exportToUserDefinedFormat()
     // Ask for the name of the file that contains the user-defined format
 
     QString userDefinedFormatFileName = Core::getOpenFileName(tr("Select User-Defined Format File"),
-                                                              tr("User-Defined Format File (*.xml)"));
+                                                              tr("User-Defined Format File")+" (*.xml)");
 
     if (userDefinedFormatFileName.isEmpty())
         return;
 
     // Ask for the name of the file that will contain the export
 
-    QString fileType =  tr("All Files")
-                       +" (*"
-#ifdef Q_OS_WIN
-                       +".*"
-#endif
-                       +")";
-
     Core::FileManager *fileManagerInstance = Core::FileManager::instance();
 
     QString fileName = Core::getSaveFileName(tr("Export CellML File To User-Defined Format"),
                                              fileManagerInstance->isRemote(mFileName)?
                                                  fileManagerInstance->url(mFileName):
-                                                 mFileName,
-                                             fileType);
+                                                 mFileName);
 
     if (fileName.isEmpty())
         return;

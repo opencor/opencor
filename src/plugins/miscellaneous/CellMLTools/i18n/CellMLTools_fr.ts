@@ -52,12 +52,8 @@
         <translation>Désolé, mais &lt;strong&gt;%1&lt;/strong&gt; n&apos;a pas pu être exporté vers le format défini par l&apos;utilisateur décrit dans &lt;strong&gt;%2&lt;/strong&gt;%3.</translation>
     </message>
     <message>
-        <source>User-Defined Format File (*.xml)</source>
-        <translation>Fichier Format Défini Par L&apos;Utilisateur (*.xml)</translation>
-    </message>
-    <message>
-        <source>All Files</source>
-        <translation>Tous Fichiers</translation>
+        <source>User-Defined Format File</source>
+        <translation>Fichier Format Défini Par L&apos;Utilisateur</translation>
     </message>
 </context>
 </TS>
