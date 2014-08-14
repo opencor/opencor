@@ -638,32 +638,38 @@ void ViewerWidget::processNode(const QDomNode &pDomNode) const
                 if (domChildNodeValueValid) {
                     // The number is valid, so do digit grouping on it
 
-                    int exponentPos = domChildNodeValue.indexOf("e", 0, Qt::CaseInsensitive);
                     int decimalPointPos = domChildNodeValue.indexOf(".");
+                    int exponentPos = domChildNodeValue.indexOf("e", 0, Qt::CaseInsensitive);
 
-                    if (   (decimalPointPos != -1)
-                        && ((exponentPos == -1) || (decimalPointPos < exponentPos))) {
-                        QString beforeDecimalPoint = domChildNodeValue.left(decimalPointPos);
-                        domChildNodeValue = domChildNodeValue.right(domChildNodeValue.length()-decimalPointPos);
-                        bool maybeDigit = true;
-                        int nbOfDigits = -1;
+                    if (decimalPointPos == -1) {
+                        if (exponentPos == -1)
+                            decimalPointPos = domChildNodeValue.length();
+                        else
+                            decimalPointPos = exponentPos;
+                    }
 
-                        for (int i = beforeDecimalPoint.length()-1; i >= 0; --i) {
-                            if (maybeDigit && beforeDecimalPoint[i].isDigit()) {
-                                if (++nbOfDigits == 3) {
-                                    domChildNodeValue = ","+domChildNodeValue;
+                    QString beforeDecimalPoint = domChildNodeValue.left(decimalPointPos);
 
-                                    nbOfDigits = 0;
-                                }
-                            } else {
-                                maybeDigit = false;
+                    domChildNodeValue = domChildNodeValue.right(domChildNodeValue.length()-decimalPointPos);
+
+                    bool maybeDigit = true;
+                    int nbOfDigits = -1;
+
+                    for (int i = beforeDecimalPoint.length()-1; i >= 0; --i) {
+                        if (maybeDigit && beforeDecimalPoint[i].isDigit()) {
+                            if (++nbOfDigits == 3) {
+                                domChildNodeValue = ","+domChildNodeValue;
+
+                                nbOfDigits = 0;
                             }
-
-                            domChildNodeValue = beforeDecimalPoint[i]+domChildNodeValue;
+                        } else {
+                            maybeDigit = false;
                         }
 
-                        domNode.firstChild().setNodeValue(domChildNodeValue);
+                        domChildNodeValue = beforeDecimalPoint[i]+domChildNodeValue;
                     }
+
+                    domNode.firstChild().setNodeValue(domChildNodeValue);
                 }
 
                 processDomNode = false;
