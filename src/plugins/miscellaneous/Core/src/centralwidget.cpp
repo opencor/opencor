@@ -1063,6 +1063,11 @@ bool CentralWidget::saveFile(const int &pIndex, const bool &pNeedNewFileName)
                 // settings
 
                 fileManagerInstance->reset(oldFileName);
+
+                // Let people know, through the file manager, that the file has
+                // been saved
+
+                emit fileManagerInstance->fileSaved(oldFileName);
             } else {
                 // The file couldn't be saved, so...
 

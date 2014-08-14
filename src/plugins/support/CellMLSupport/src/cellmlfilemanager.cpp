@@ -53,6 +53,11 @@ CellmlFileManager::CellmlFileManager() :
 
     connect(fileManagerInstance, SIGNAL(fileRenamed(const QString &, const QString &)),
             this, SLOT(renameFile(const QString &, const QString &)));
+
+    connect(fileManagerInstance, SIGNAL(fileSaved(const QString &)),
+            this, SLOT(unmanageFile(const QString &)));
+    connect(fileManagerInstance, SIGNAL(fileSaved(const QString &)),
+            this, SLOT(manageFile(const QString &)));
 }
 
 //==============================================================================
@@ -103,15 +108,15 @@ void CellmlFileManager::manageFile(const QString &pFileName)
 
 void CellmlFileManager::unmanageFile(const QString &pFileName)
 {
-    QString nativeFileName = Core::nativeCanonicalFileName(pFileName);
+    CellmlFile *crtCellmlFile = cellmlFile(pFileName);
 
-    if (isCellmlFile(nativeFileName)) {
+    if (crtCellmlFile) {
         // We are dealing with a CellML file, so we can remove it from our list
         // of managed CellML files after having deleted it
 
-        delete cellmlFile(nativeFileName);
+        delete crtCellmlFile;
 
-        mCellmlFiles.remove(nativeFileName);
+        mCellmlFiles.remove(Core::nativeCanonicalFileName(pFileName));
     }
 }
 
@@ -123,14 +128,10 @@ void CellmlFileManager::reloadFile(const QString &pFileName)
     // Note: to reload a file here ensures that our different CellML-based views
     //       won't each do it, thus saving time, etc.
 
-    QString nativeFileName = Core::nativeCanonicalFileName(pFileName);
+    CellmlFile *crtCellmlFile = cellmlFile(pFileName);
 
-    if (isCellmlFile(nativeFileName)) {
-        CellmlFile *crtCellmlFile = cellmlFile(nativeFileName);
-
-        if (crtCellmlFile)
-            crtCellmlFile->reload();
-    }
+    if (crtCellmlFile)
+        crtCellmlFile->reload();
 }
 
 //==============================================================================

@@ -167,6 +167,8 @@ Q_SIGNALS:
     void fileRenamed(const QString &pOldFileName, const QString &pNewFileName);
     void fileDuplicated(const QString &pFileName);
 
+    void fileSaved(const QString &pFileName);
+
 private Q_SLOTS:
     void checkFiles();
 };
