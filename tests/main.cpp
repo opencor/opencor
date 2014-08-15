@@ -60,9 +60,7 @@ int main(int pArgC, char *pArgV[])
     Tests::const_iterator iterBegin = tests.constBegin();
     Tests::const_iterator iterEnd = tests.constEnd();
 
-    Tests::const_iterator iter = iterBegin;
-
-    while (iter != iterEnd) {
+    for (Tests::const_iterator iter = iterBegin; iter != iterEnd; ++iter) {
         if (iter != iterBegin) {
             std::cout << std::endl;
             std::cout << std::endl;
@@ -95,8 +93,6 @@ int main(int pArgC, char *pArgV[])
         }
 
         std::cout << QString("*").repeated(9+1+iter.key().count()+1+9).toStdString() << std::endl;
-
-        ++iter;
     }
 
     // Reporting
