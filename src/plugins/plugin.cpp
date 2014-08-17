@@ -283,19 +283,14 @@ PluginInfo * Plugin::info(const QString &pFileName, QString &pErrorMessage)
     QDir::setCurrent(origPath);
 #endif
 
-    // Check whether the plugin information function was found
+    // Check whether the plugin information could be retrieved and, if not,
+    // retrieve the error and format it a bit
 
     if (pluginInfoFunc) {
-        // The plugin information function was found, so we can extract the
-        // information we are after
-
         pErrorMessage = QString();
 
         return static_cast<PluginInfo *>(pluginInfoFunc());
     } else {
-        // The plugin information couldn't be found, so retrieve the error and
-        // format it a bit
-
         pErrorMessage = plugin.errorString();
 
         pErrorMessage[0] = pErrorMessage[0].toLower();
