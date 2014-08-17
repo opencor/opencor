@@ -440,29 +440,16 @@ ELSE()
 
         # Redistributable files required by OpenCOR
         # Note: these files may or not be needed in order to test OpenCOR
-        #       locally. It all depends on how the user's computer is
-        #       configured...
+        #       locally. It all depends on whether they are present on the
+        #       user's computer...
 
-        IF(RELEASE_MODE)
-            SET(D)
+        RETRIEVE_BINARY_FILE(distrib/windows/x86 libeay32.dll be778153098099f8e7f4a64edaf2244d3b8e0137)
+        RETRIEVE_BINARY_FILE(distrib/windows/x86 ssleay32.dll 0da2affc1a46c7f0c4f583cb9d562143c6dc19b8)
 
-            RETRIEVE_BINARY_FILE(distrib/${DISTRIB_BINARY_DIR} libeay32.dll be778153098099f8e7f4a64edaf2244d3b8e0137)
-            RETRIEVE_BINARY_FILE(distrib/${DISTRIB_BINARY_DIR} msvcp100.dll 79bcaad3714433e01c7f153b05b781f8d7cb318d)
-            RETRIEVE_BINARY_FILE(distrib/${DISTRIB_BINARY_DIR} msvcr100.dll 4e880fc7625ccf8d9ca799d5b94ce2b1e7597335)
-            RETRIEVE_BINARY_FILE(distrib/${DISTRIB_BINARY_DIR} ssleay32.dll 0da2affc1a46c7f0c4f583cb9d562143c6dc19b8)
-        ELSE()
-            SET(D d)
-
-            RETRIEVE_BINARY_FILE(distrib/${DISTRIB_BINARY_DIR} libeay32.dll f8e0f391b00e5bc41c4ea5b5e3a02548c8cfdd03)
-            RETRIEVE_BINARY_FILE(distrib/${DISTRIB_BINARY_DIR} msvcp100d.dll 99c1518f18d0e1636019b085f343563d70f5a6ed)
-            RETRIEVE_BINARY_FILE(distrib/${DISTRIB_BINARY_DIR} msvcr100d.dll 3fecde2d21b8fbcc11110d0c74d510bf52c5cd84)
-            RETRIEVE_BINARY_FILE(distrib/${DISTRIB_BINARY_DIR} ssleay32.dll ad2035f30d27f6ab527144a04a241aec69e81315)
-        ENDIF()
-
-        FOREACH(REDISTRIBUTABLE_FILE libeay32 msvcp100${D} msvcr100${D} ssleay32)
-            COPY_FILE_TO_BUILD_DIR(${PROJECT_NAME} ${CMAKE_SOURCE_DIR}/distrib/${DISTRIB_BINARY_DIR} .
+        FOREACH(REDISTRIBUTABLE_FILE libeay32 ssleay32)
+            COPY_FILE_TO_BUILD_DIR(${PROJECT_NAME} ${CMAKE_SOURCE_DIR}/distrib/windows/x86 .
                                    ${REDISTRIBUTABLE_FILE}${CMAKE_SHARED_LIBRARY_SUFFIX})
-            COPY_FILE_TO_BUILD_DIR(${PROJECT_NAME} ${CMAKE_SOURCE_DIR}/distrib/${DISTRIB_BINARY_DIR} bin
+            COPY_FILE_TO_BUILD_DIR(${PROJECT_NAME} ${CMAKE_SOURCE_DIR}/distrib/windows/x86 bin
                                    ${REDISTRIBUTABLE_FILE}${CMAKE_SHARED_LIBRARY_SUFFIX})
         ENDFOREACH()
     ENDIF()
@@ -493,6 +480,10 @@ IF(WIN32)
             DESTINATION bin)
 
     # Redistributable files required by OpenCOR
+    # Note: libeay32 and ssleay32 have already been retrieved earlier...
+
+    RETRIEVE_BINARY_FILE(distrib/windows/x86 msvcp100.dll 79bcaad3714433e01c7f153b05b781f8d7cb318d)
+    RETRIEVE_BINARY_FILE(distrib/windows/x86 msvcr100.dll 4e880fc7625ccf8d9ca799d5b94ce2b1e7597335)
 
     FOREACH(REDISTRIBUTABLE_FILE libeay32 msvcp100 msvcr100 ssleay32)
         INSTALL(FILES ${CMAKE_SOURCE_DIR}/distrib/windows/x86/${REDISTRIBUTABLE_FILE}${CMAKE_SHARED_LIBRARY_SUFFIX}

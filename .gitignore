@@ -1,14 +1,9 @@
 /CMakeLists.txt.user
 
-/distrib/windows/x86/debug/libeay32.dll
-/distrib/windows/x86/debug/msvcp100d.dll
-/distrib/windows/x86/debug/msvcr100d.dll
-/distrib/windows/x86/debug/ssleay32.dll
-
-/distrib/windows/x86/release/libeay32.dll
-/distrib/windows/x86/release/msvcp100.dll
-/distrib/windows/x86/release/msvcr100.dll
-/distrib/windows/x86/release/ssleay32.dll
+/distrib/windows/x86/libeay32.dll
+/distrib/windows/x86/msvcp100.dll
+/distrib/windows/x86/msvcr100.dll
+/distrib/windows/x86/ssleay32.dll
 
 /src/plugins/*/*/bin/
 
