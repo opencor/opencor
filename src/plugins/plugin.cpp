@@ -257,7 +257,7 @@ QString Plugin::fileName(const QString &pPluginsDir, const QString &pName)
 
 //==============================================================================
 
-PluginInfo * Plugin::info(const QString &pFileName, QString &pErrorMessage)
+PluginInfo * Plugin::info(const QString &pFileName, QString *pErrorMessage)
 {
     // Return the plugin's information
     // Note: to retrieve a plugin's information, we must, on both Windows and
@@ -287,31 +287,34 @@ PluginInfo * Plugin::info(const QString &pFileName, QString &pErrorMessage)
     // retrieve the error and format it a bit
 
     if (pluginInfoFunc) {
-        pErrorMessage = QString();
+        if (pErrorMessage)
+            *pErrorMessage = QString();
 
         return static_cast<PluginInfo *>(pluginInfoFunc());
     } else {
-        pErrorMessage = plugin.errorString();
+        if (pErrorMessage) {
+            *pErrorMessage = plugin.errorString();
 
-        pErrorMessage[0] = pErrorMessage[0].toLower();
+            (*pErrorMessage)[0] = (*pErrorMessage)[0].toLower();
 
-        if (!pErrorMessage.endsWith("."))
-            pErrorMessage += ".";
+            if (!pErrorMessage->endsWith("."))
+                *pErrorMessage += ".";
 
-        pErrorMessage.replace("\n", ";");
-        pErrorMessage.replace("  ", " ");
+            pErrorMessage->replace("\n", ";");
+            pErrorMessage->replace("  ", " ");
 
-        int errorMessageSize = pErrorMessage.size();
-        int from = 0;
-        int pos;
+            int errorMessageSize = pErrorMessage->size();
+            int from = 0;
+            int pos;
 
-        while ((pos = pErrorMessage.indexOf(":", from)) != -1) {
-            pos += 2;
+            while ((pos = pErrorMessage->indexOf(":", from)) != -1) {
+                pos += 2;
 
-            if (pos < errorMessageSize)
-                pErrorMessage[pos] = pErrorMessage[pos].toLower();
+                if (pos < errorMessageSize)
+                    (*pErrorMessage)[pos] = (*pErrorMessage)[pos].toLower();
 
-            from = pos;
+                from = pos;
+            }
         }
 
         return 0;
@@ -373,8 +376,7 @@ QStringList Plugin::fullDependencies(const QString &pPluginsDir,
 
     // Recursively look for the plugin's full dependencies
 
-    QString dummy;
-    PluginInfo *pluginInfo = Plugin::info(Plugin::fileName(pPluginsDir, pName), dummy);
+    PluginInfo *pluginInfo = Plugin::info(Plugin::fileName(pPluginsDir, pName));
 
     if (!pluginInfo)
         return res;

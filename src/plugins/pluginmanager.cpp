@@ -64,7 +64,7 @@ PluginManager::PluginManager(QCoreApplication *pApp, const bool &pGuiMode) :
 
     foreach (const QString &fileName, fileNames) {
         QString pluginError;
-        PluginInfo *pluginInfo = Plugin::info(fileName, pluginError);
+        PluginInfo *pluginInfo = Plugin::info(fileName, &pluginError);
         // Note: if there is some plugin information, then it will get owned by
         //       the plugin itself. So, it's the plugin's responsibility to
         //       delete it (see Plugin::~Plugin())...

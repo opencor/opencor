@@ -97,7 +97,8 @@ public:
 
     static QString name(const QString &pFileName);
     static QString fileName(const QString &pPluginsDir, const QString &pName);
-    static PluginInfo * info(const QString &pFileName, QString &pErrorMessage);
+    static PluginInfo * info(const QString &pFileName,
+                             QString *pErrorMessage = 0);
 
     static bool load(const QString &pName);
     static void setLoad(const QString &pName, const bool &pToBeLoaded);
