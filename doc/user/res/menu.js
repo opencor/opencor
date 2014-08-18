@@ -9,9 +9,6 @@ function headerAndContentsMenu(pageName, relativePath) {
                              [0, "Plugins", "user/plugins/index.html"],
                              [1, "Editing", ""],
                              [2, "CellMLAnnotationView", "user/plugins/editing/CellMLAnnotationView.html"],
-/*---GRY--- TEMPORARILY DISABLED...
-                             [2, "PrettyCellMLView", "user/plugins/editing/PrettyCellMLView.html"],
-*/
                              [2, "RawCellMLView", "user/plugins/editing/RawCellMLView.html"],
                              [2, "RawView", "user/plugins/editing/RawView.html"],
                              [1, "Miscellaneous", ""],
