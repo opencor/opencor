@@ -45,25 +45,27 @@ namespace OpenCOR {
 void initPluginsPath(const QString &pAppFileName)
 {
     // Initialise the plugins path
-    // Note: pAppFileName contains OpenCOR's file name. Using this, we want to
-    //       retrieve OpenCOR's file path. Normally, we would be using
-    //       QFileInfo(pAppFileName).canonicalPath(), but this may not always
-    //       work. Indeed, say that you want to run OpenCOR from the command
-    //       line by simply entering something like "[OpenCOR]/OpenCOR", then
-    //       QFileInfo() will get lost since "[OpenCOR]/OpenCOR" doesn't refer
-    //       to a physical file (it would need either the .exe or .com extension
-    //       for this). So, instead, we manually retrieve OpenCOR's file path...
 
-    QString appFilePath = pAppFileName;
+    QFileInfo appFileInfo = pAppFileName;
+    QString appDir;
+
+#ifdef Q_OS_WIN
+    if (appFileInfo.suffix().isEmpty())
+        // If pAppFileName has no suffix, then it means we tried to run OpenCOR
+        // using something like "[OpenCOR]/OpenCOR", in which case QFileInfo()
+        // will get lost when trying to retrieve the canonical path for OpenCOR.
+        // Now, when use something like "[OpenCOR]/OpenCOR", it's as if we were
+        // to use something like "[OpenCOR]/OpenCOR.com", so...
+
+        appFileInfo = pAppFileName+".com";
+#endif
+
+    appDir = QDir::toNativeSeparators(appFileInfo.canonicalPath());
+
     QString pluginsDir = QString();
 
-    if (appFilePath.contains(QRegularExpression("[/\\\\]")))
-        appFilePath.remove(QRegularExpression("[/\\\\][^/\\\\]*$"));
-    else
-        appFilePath = ".";
-
 #if defined(Q_OS_WIN) || defined(Q_OS_LINUX)
-    pluginsDir = appFilePath+QDir::separator()+QString("..")+QDir::separator()+"plugins";
+    pluginsDir = appDir+QDir::separator()+QString("..")+QDir::separator()+"plugins";
 
     if (!QDir(pluginsDir).exists())
         // The plugins directory doesn't exist, which should only happen if we
@@ -74,16 +76,16 @@ void initPluginsPath(const QString &pAppFileName)
         // plugins are in [OpenCOR]/build/plugins/OpenCOR, we must skip the
         // "../" bit. So, yes, it's not neat, but is there another solution?...
 
-        pluginsDir = appFilePath+QDir::separator()+"plugins";
+        pluginsDir = appDir+QDir::separator()+"plugins";
 #elif defined(Q_OS_MAC)
-    pluginsDir = appFilePath+QDir::separator()+QString("..")+QDir::separator()+"PlugIns";
+    pluginsDir = appDir+QDir::separator()+QString("..")+QDir::separator()+"PlugIns";
 #else
     #error Unsupported platform
 #endif
 
     pluginsDir = QDir::toNativeSeparators(QDir(pluginsDir).canonicalPath());
 
-    QCoreApplication::setLibraryPaths(QStringList() <<  pluginsDir);
+    QCoreApplication::setLibraryPaths(QStringList() << pluginsDir);
 }
 
 //==============================================================================
