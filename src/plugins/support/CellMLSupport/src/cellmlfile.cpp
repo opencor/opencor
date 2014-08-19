@@ -175,7 +175,7 @@ bool CellmlFile::fullyInstantiateImports(iface::cellml_api::Model *pModel,
     // Fully instantiate all the imports, but only if we are dealing with a non
     // CellML 1.0 model
 
-    if (QString::fromStdWString(pModel->cellmlVersion()).compare(CellMLSupport::Cellml_1_0))
+    if (QString::fromStdWString(pModel->cellmlVersion()).compare(CellMLSupport::Cellml_1_0)) {
         try {
             // Note: the below is based on CDA_Model::fullyInstantiateImports().
             //       Indeed, CDA_Model::fullyInstantiateImports() doesn't work
@@ -255,7 +255,10 @@ bool CellmlFile::fullyInstantiateImports(iface::cellml_api::Model *pModel,
                     if (!importModel)
                         throw(std::exception());
 
-                    retrieveImports(importModel, importList, importXmlBaseList, fileNameOrUrl);
+                    retrieveImports(importModel, importList, importXmlBaseList,
+                                    isLocalFile?
+                                        QUrl::fromLocalFile(fileNameOrUrl).toString():
+                                        fileNameOrUrl);
                 }
             }
         } catch (...) {
@@ -267,6 +270,7 @@ bool CellmlFile::fullyInstantiateImports(iface::cellml_api::Model *pModel,
 
             return false;
         }
+    }
 
     return true;
 }
