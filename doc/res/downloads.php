@@ -332,6 +332,14 @@
 
         ++$versionIndex;
     }
+
+    if (!$previousSnapshots) {
+?>
+        <p class="warning">
+            <strong>Note:</strong> old snapshots can be found <a href="previousSnapshots.php">here</a>.
+        </p>
+<?php
+    }
 ?>
 
         <script type="text/javascript">
