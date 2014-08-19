@@ -19,11 +19,72 @@
         </script>
 
         <p>
-            The RawCellMLView plugin can be used to edit <a href="http://www.cellml.org/">CellML</a> files. It offers the same editing features as the <a href="RawView.html">Raw</a> view.
+            The RawCellMLView plugin can be used to edit <a href="http://www.cellml.org/">CellML</a> files using a text editor. If you open a file, it will look something like:
+        </p>
+
+        <p class="center">
+            <a class="noHover" href="../../res/image.html?image=../plugins/editing/res/pics/RawCellMLViewScreenshot01.png&caption=RawCellMLView plugin: default view"><img class="link" src="res/pics/RawCellMLViewScreenshot01Small.png" width=360 height=270 alt="RawCellMLView plugin: default view"></a>
         </p>
 
         <p>
-            To be completed...
+            Besides using syntax highlighting, the text editor behaves in exactly the same way as the text editor in the <a href="RawView.html">Raw</a> view.
+        </p>
+
+        <p>
+            The panel above the text editor is used to visualise mathematical equations in real-time. You just need the caret to be within a valid <code>apply</code> <a href="http://www.w3.org/Math/">MathML</a> block:
+        </p>
+
+        <p class="center">
+            <a class="noHover" href="../../res/image.html?image=../plugins/editing/res/pics/RawCellMLViewScreenshot02.png&caption=RawCellMLView plugin: valid equation"><img class="link" src="res/pics/RawCellMLViewScreenshot02Small.png" width=360 height=270 alt="RawCellMLView plugin: valid equation"></a>
+        </p>
+
+        <p>
+            If the equation is not valid, a warning sign gets displayed:
+        </p>
+
+        <p class="center">
+            <a class="noHover" href="../../res/image.html?image=../plugins/editing/res/pics/RawCellMLViewScreenshot03.png&caption=RawCellMLView plugin: invalid equation"><img class="link" src="res/pics/RawCellMLViewScreenshot03Small.png" width=360 height=270 alt="RawCellMLView plugin: invalid equation"></a>
+        </p>
+
+        <p>
+            The equation viewer can be customised using its context menu:
+        </p>
+
+        <p class="center">
+            <a class="noHover" href="../../res/image.html?image=../plugins/editing/res/pics/RawCellMLViewScreenshot04.png&caption=RawCellMLView plugin: customising the equation viewer"><img class="link" src="res/pics/RawCellMLViewScreenshot04Small.png" width=360 height=270 alt="RawCellMLView plugin: customising the equation viewer"></a>
+        </p>
+
+        <p>
+            The font size can be optimised, so that an equation can take as much space as possible when rendered. Subscripts are supported (e.g. <code>a_b</code> will be rendered as <em>a<sub>b</sub></em>) and so are Greek symbols (i.e. <code>alpha</code>, <code>beta</code>, etc. are replaced with <em>&alpha;</em>, <em>&beta;</em>, etc.) and digit grouping (e.g. <code>1000</code> will be rendered as <em>1,000</em>). A rendered equation can also be copied to the clipboard for use in another program.
+
+        </p>
+
+        <p>
+            The panel below the text editor is used to list any CellML issue that results from trying to validate a CellML file:
+        </p>
+
+        <p class="center">
+            <a class="noHover" href="../../res/image.html?image=../plugins/editing/res/pics/RawCellMLViewScreenshot05.png&caption=RawCellMLView plugin: validate a CellML file"><img class="link" src="res/pics/RawCellMLViewScreenshot05Small.png" width=360 height=270 alt="RawCellMLView plugin: validate a CellML file"></a>
+        </p>
+
+        <p>
+            A dialog box is displayed if the CellML file is valid:
+        </p>
+
+        <p class="center">
+            <a class="noHover" href="../../res/image.html?image=../plugins/editing/res/pics/RawCellMLViewScreenshot06.png&caption=RawCellMLView plugin: valid CellML file"><img class="link" src="res/pics/RawCellMLViewScreenshot06Small.png" width=360 height=270 alt="RawCellMLView plugin: valid CellML file"></a>
+        </p>
+
+        <p>
+            Otherwise, it will list all the CellML issues it contains:
+        </p>
+
+        <p class="center">
+            <a class="noHover" href="../../res/image.html?image=../plugins/editing/res/pics/RawCellMLViewScreenshot07.png&caption=RawCellMLView plugin: list of CellML issues"><img class="link" src="res/pics/RawCellMLViewScreenshot07Small.png" width=360 height=270 alt="RawCellMLView plugin: list of CellML issues"></a>
+        </p>
+
+        <p>
+            To double click on an issue will get the text editor to navigate to the line that contains it.
         </p>
 
         <script type="text/javascript">
