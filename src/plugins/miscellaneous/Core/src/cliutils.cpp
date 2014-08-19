@@ -113,7 +113,7 @@ void DummyMessageHandler::handleMessage(QtMsgType pType,
 #ifndef OpenCOR_MAIN
 bool SynchronousTextFileDownloader::readTextFromUrl(const QString &pUrl,
                                                     QString &pText,
-                                                    QString &pErrorMessage) const
+                                                    QString *pErrorMessage) const
 {
     // Create a network access manager so that we can then retrieve the contents
     // of the remote file
@@ -142,10 +142,14 @@ bool SynchronousTextFileDownloader::readTextFromUrl(const QString &pUrl,
 
     if (res) {
         pText = networkReply->readAll();
-        pErrorMessage = QString();
+
+        if (pErrorMessage)
+            *pErrorMessage = QString();
     } else {
         pText = QString();
-        pErrorMessage = networkReply->errorString();
+
+        if (pErrorMessage)
+            *pErrorMessage = networkReply->errorString();
     }
 
     // Delete (later) the network reply
@@ -523,7 +527,7 @@ bool readTextFromFile(const QString &pFileName, QString &pText)
 
 #ifndef OpenCOR_MAIN
 bool readTextFromUrl(const QString &pUrl, QString &pText,
-                     QString &pErrorMessage)
+                     QString *pErrorMessage)
 {
     // Read the contents of the file, which URL is given, as a string
 

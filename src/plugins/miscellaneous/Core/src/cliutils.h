@@ -78,7 +78,7 @@ class SynchronousTextFileDownloader : public QObject
 
 public:
     bool readTextFromUrl(const QString &pUrl, QString &pText,
-                         QString &pErrorMessage) const;
+                         QString *pErrorMessage) const;
 
 private Q_SLOTS:
     void networkAccessManagerSslErrors(QNetworkReply *pNetworkReply,
@@ -117,7 +117,7 @@ bool CORE_EXPORT writeResourceToFile(const QString &pFilename,
 
 #ifndef OpenCOR_MAIN
 bool CORE_EXPORT readTextFromUrl(const QString &pUrl, QString &pText,
-                                 QString &pErrorMessage);
+                                 QString *pErrorMessage = 0);
 #endif
 
 bool CORE_EXPORT readTextFromFile(const QString &pFileName, QString &pText);

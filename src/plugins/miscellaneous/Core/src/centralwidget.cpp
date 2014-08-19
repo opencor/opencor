@@ -814,7 +814,7 @@ void CentralWidget::openRemoteFile(const QString &pUrl,
         QString fileContents;
         QString errorMessage;
 
-        if (readTextFromUrl(fileNameOrUrl, fileContents, errorMessage)) {
+        if (readTextFromUrl(fileNameOrUrl, fileContents, &errorMessage)) {
             // We were able to retrieve the contents of the remote file, so ask
             // our file manager to create a new remote file
 
@@ -914,7 +914,7 @@ void CentralWidget::reloadFile(const int &pIndex, const bool &pForce)
                     QString fileContents;
                     QString errorMessage;
 
-                    if (readTextFromUrl(url, fileContents, errorMessage)) {
+                    if (readTextFromUrl(url, fileContents, &errorMessage)) {
                         Core::writeTextToFile(fileName, fileContents);
 
                         fileManagerInstance->reload(fileName);

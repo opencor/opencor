@@ -353,7 +353,7 @@ int CellMLToolsPlugin::runExportCommand(const QStringList &pArguments)
 
         QString fileContents;
 
-        if (Core::readTextFromUrl(inFileNameOrUrl, fileContents, errorMessage)) {
+        if (Core::readTextFromUrl(inFileNameOrUrl, fileContents, &errorMessage)) {
             // We were able to retrieve the contents of the remote file, so save
             // it locally to a 'temporary' file
 
