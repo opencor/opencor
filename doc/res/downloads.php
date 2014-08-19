@@ -1,9 +1,9 @@
 <?php
     // Check whether we want the list of downloads for the main downloads page
-    // or the previous snapshots page
+    // or the old snapshots page
 
-    if (!isset($previousSnapshots))
-        $previousSnapshots = false;
+    if (!isset($oldSnapshots))
+        $oldSnapshots = false;
 ?>
 
 <!DOCTYPE html>
@@ -11,9 +11,9 @@
     <head>
         <title>
 <?php
-    if ($previousSnapshots) {
+    if ($oldSnapshots) {
 ?>
-            Previous snapshots
+            Old Snapshots
 <?php
     } else {
 ?>
@@ -34,9 +34,9 @@
     <body>
         <script type="text/javascript">
 <?php
-    if ($previousSnapshots) {
+    if ($oldSnapshots) {
 ?>
-            headerAndContentsMenu("Previous snapshots", "..");
+            headerAndContentsMenu("Old Snapshots", "..");
 <?php
     } else {
 ?>
@@ -97,7 +97,7 @@
                 $versionVersion .= "-".$versionPatch;
             }
         } else {
-            if ($previousSnapshots)
+            if ($oldSnapshots)
                 $versionTitle = date("j F Y", mktime(0, 0, 0, $versionMonth, $versionDay, $versionYear));
             else
                 $versionTitle = "Latest snapshot";
@@ -123,7 +123,7 @@
                         <td>
                             <?php echo $versionTitle."\n"; ?>
 <?php
-        if (!$previousSnapshots) {
+        if (!$oldSnapshots) {
 ?>
                             <span class="whatIsNew"><a href="../user/whatIsNew.html#<?php echo $versionVer; ?>">What is new?</a></span>
 <?php
@@ -132,7 +132,7 @@
                         </td>
                         <td class="date">
 <?php
-        if (!$previousSnapshots) {
+        if (!$oldSnapshots) {
 ?>
                             (<?php echo date("j F Y", mktime(0, 0, 0, $versionMonth, $versionDay, $versionYear)); ?>)
 <?php
@@ -151,7 +151,7 @@
 
         if ($versionType == 1)
             $versionClass = "official";
-        else if (($versionType == 2) && !$previousSnapshots)
+        else if (($versionType == 2) && !$oldSnapshots)
             $versionClass = "latest";
 
         if (strlen($versionInfo))
@@ -333,10 +333,10 @@
         ++$versionIndex;
     }
 
-    if (!$previousSnapshots) {
+    if (!$oldSnapshots) {
 ?>
         <p class="warning">
-            <strong>Note:</strong> old snapshots can be found <a href="previousSnapshots.php">here</a>.
+            <strong>Note:</strong> old snapshots can be found <a href="oldSnapshots.php">here</a>.
         </p>
 <?php
     }

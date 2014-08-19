@@ -1,5 +1,5 @@
 <?php
-    $previousSnapshots = true;
+    $oldSnapshots = true;
     $versions = array(array(0, 0, 0, 6, 8, 2014, 2,
                             array(array("Windows", "Windows XP and later", array(".exe"), array(".zip")),
                                   array("Linux", "Ubuntu 14.04 LTS (Trusty Tahr) and later", array(".tar.gz", 32), array(".tar.gz", 64)),

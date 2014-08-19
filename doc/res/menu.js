@@ -6,7 +6,7 @@ function headerAndContentsMenu(pageName, relativePath) {
                              [0, "Developer documentation", "developer/index.html"],
                              [],
                              [0, "Downloads", "downloads/index.php"],
-                             [1, "Previous snapshots", "downloads/previousSnapshots.php"],
+                             [1, "Old snapshots", "downloads/oldSnapshots.php"],
                              [],
                              [0, "Contact us", "user/contactUs.html"]]);
 }
