@@ -268,9 +268,13 @@ MACRO(INITIALISE_PROJECT)
         SET(DISTRIB_BINARY_DIR ${DISTRIB_DIR})
     ENDIF()
 
-    # Set the RPATH information on Linux
+    # Set the RPATH information on Linux and OS X
 
-    IF(NOT WIN32 AND NOT APPLE)
+    IF(APPLE)
+        SET(CMAKE_BUILD_WITH_INSTALL_RPATH TRUE)
+
+        SET(CMAKE_INSTALL_RPATH "@executable_path/../Frameworks;@executable_path/../PlugIns/${PROJECT_NAME}")
+    ELSEIF(NOT WIN32)
         SET(CMAKE_INSTALL_RPATH "$ORIGIN/../lib")
     ENDIF()
 ENDMACRO()
@@ -541,21 +545,6 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
 
         OS_X_CLEAN_UP_FILE_WITH_QT_LIBRARIES(${PROJECT_NAME} ${DEST_PLUGINS_DIR} ${PLUGIN_FILENAME} ${QT_LIBRARIES})
 
-        # Make sure that the plugin refers to our embedded version of the other
-        # plugins on which it depends
-
-        FOREACH(PLUGIN ${PLUGINS})
-            # We don't know where the plugin is located, so we try our different
-            # plugin build directories
-
-            FOREACH(PLUGIN_BUILD_DIR ${PLUGIN_BUILD_DIRS})
-                ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
-                                   COMMAND install_name_tool -change @rpath/${CMAKE_SHARED_LIBRARY_PREFIX}${PLUGIN}${CMAKE_SHARED_LIBRARY_SUFFIX}
-                                                                     @executable_path/../PlugIns/${CMAKE_PROJECT_NAME}/${CMAKE_SHARED_LIBRARY_PREFIX}${PLUGIN}${CMAKE_SHARED_LIBRARY_SUFFIX}
-                                                                     ${DEST_PLUGINS_DIR}/${PLUGIN_FILENAME})
-            ENDFOREACH()
-        ENDFOREACH()
-
         # Make sure that the plugin refers to our embedded version of the
         # binary plugins on which it depends
 
@@ -564,7 +553,7 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
 
             ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
                                COMMAND install_name_tool -change ${PLUGIN_BINARY}
-                                                                 @executable_path/../PlugIns/${CMAKE_PROJECT_NAME}/${PLUGIN_BINARY}
+                                                                 @rpath/${PLUGIN_BINARY}
                                                                  ${DEST_PLUGINS_DIR}/${PLUGIN_FILENAME})
         ENDFOREACH()
 
@@ -574,7 +563,7 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
         FOREACH(EXTERNAL_BINARY ${EXTERNAL_BINARIES})
             ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
                                COMMAND install_name_tool -change ${EXTERNAL_BINARY}
-                                                                 @executable_path/../Frameworks/${EXTERNAL_BINARY}
+                                                                 @rpath/${EXTERNAL_BINARY}
                                                                  ${DEST_PLUGINS_DIR}/${PLUGIN_FILENAME})
         ENDFOREACH()
     ENDIF()
@@ -682,23 +671,6 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
 
                     OS_X_CLEAN_UP_FILE_WITH_QT_LIBRARIES(${TEST_NAME} ${DEST_TESTS_DIR} ${TEST_FILENAME} ${QT_LIBRARIES})
 
-                    # Make sure that the plugin's tests refer to our embedded version of the other
-                    # plugins on which they depend
-
-                    LIST(APPEND PLUGINS ${PLUGIN_NAME})
-
-                    FOREACH(PLUGIN ${PLUGINS})
-                        # We don't know where the plugin is located, so we try our different
-                        # plugin build directories
-
-                        FOREACH(PLUGIN_BUILD_DIR ${PLUGIN_BUILD_DIRS})
-                            ADD_CUSTOM_COMMAND(TARGET ${TEST_NAME} POST_BUILD
-                                               COMMAND install_name_tool -change @rpath/${CMAKE_SHARED_LIBRARY_PREFIX}${PLUGIN}${CMAKE_SHARED_LIBRARY_SUFFIX}
-                                                                                 @executable_path/../PlugIns/${CMAKE_PROJECT_NAME}/${CMAKE_SHARED_LIBRARY_PREFIX}${PLUGIN}${CMAKE_SHARED_LIBRARY_SUFFIX}
-                                                                                 ${DEST_TESTS_DIR}/${TEST_FILENAME})
-                        ENDFOREACH()
-                    ENDFOREACH()
-
                     # Make sure that the plugin's tests refer to our embedded version of the
                     # binary plugins on which they depend
 
@@ -707,7 +679,7 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
 
                         ADD_CUSTOM_COMMAND(TARGET ${TEST_NAME} POST_BUILD
                                            COMMAND install_name_tool -change ${PLUGIN_BINARY}
-                                                                             @executable_path/../PlugIns/${CMAKE_PROJECT_NAME}/${PLUGIN_BINARY}
+                                                                             @rpath/${PLUGIN_BINARY}
                                                                              ${DEST_TESTS_DIR}/${TEST_FILENAME})
                     ENDFOREACH()
 
@@ -717,7 +689,7 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
                     FOREACH(EXTERNAL_BINARY ${EXTERNAL_BINARIES})
                         ADD_CUSTOM_COMMAND(TARGET ${TEST_NAME} POST_BUILD
                                            COMMAND install_name_tool -change ${EXTERNAL_BINARY}
-                                                                             @executable_path/../Frameworks/${EXTERNAL_BINARY}
+                                                                             @rpath/${EXTERNAL_BINARY}
                                                                              ${DEST_TESTS_DIR}/${TEST_FILENAME})
                     ENDFOREACH()
                 ENDIF()
@@ -965,7 +937,7 @@ MACRO(OS_X_CLEAN_UP_FILE_WITH_QT_LIBRARIES PROJECT_TARGET DIRNAME FILENAME)
 
         ADD_CUSTOM_COMMAND(TARGET ${PROJECT_TARGET} POST_BUILD
                            COMMAND install_name_tool -change ${QT_LIBRARY_DIR}/${DEPENDENCY_FILENAME}
-                                                             @executable_path/../Frameworks/${DEPENDENCY_FILENAME}
+                                                             @rpath/${DEPENDENCY_FILENAME}
                                                              ${FULL_FILENAME})
     ENDFOREACH()
 ENDMACRO()
@@ -1043,7 +1015,7 @@ MACRO(OS_X_DEPLOY_LIBRARY DIRNAME LIBRARY_NAME)
 
         ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
                            COMMAND install_name_tool -change ${DEPENDENCY_FILENAME}
-                                                             @executable_path/../Frameworks/${DEPENDENCY_FILENAME}
+                                                             @rpath/${DEPENDENCY_FILENAME}
                                                              ${LIBRARY_FILEPATH})
     ENDFOREACH()
 ENDMACRO()
