@@ -143,6 +143,22 @@
         <translation>L&apos;objet de modélisation représenté par l&apos;élément de modèle est décrit par le sujet dont la ressource est référencée (&quot;Modelling Object B&quot;). Cette relation pourrait être utilisée pour associer un modèle ou une loi cinétique à la littérature qui le ou la décrit.</translation>
     </message>
     <message>
+        <source>Class</source>
+        <translation>Classe</translation>
+    </message>
+    <message>
+        <source>The modelling object represented by the model element is an instance of the subject of the referenced resource (&quot;Modelling Object B&quot;). For instance, this qualifier might be used to link a specific model with its generic form.</source>
+        <translation>L&apos;objet de modélisation représenté par l&apos;élément de modèle est une instance du sujet dont la ressource est référencée (&quot;Modelling Object B&quot;). Par exemple, ce qualificatif pourrait être utilisé pour associer un modèle spécifique à sa forme générique.</translation>
+    </message>
+    <message>
+        <source>Instance</source>
+        <translation>Instance</translation>
+    </message>
+    <message>
+        <source>The modelling object represented by the model element has for instance (is a class of) the subject of the referenced resource (&quot;Modelling Object B&quot;). For instance, this qualifier might be used to link a generic model with its specific forms.</source>
+        <translation>L&apos;objet de modélisation représenté par l&apos;élément de modèle a pour instance (est une classe de) le sujet dont la ressource est référencée (&quot;Modelling Object B&quot;). Par exemple, ce qualificatif pourrait être utilisé pour associer un modèle générique à ses formes spécifiques.</translation>
+    </message>
+    <message>
         <source>Encodement</source>
         <translation>Encodage</translation>
     </message>

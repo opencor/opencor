@@ -229,6 +229,16 @@ void CellmlAnnotationViewEditingWidget::updateWebViewerWithQualifierDetails(QWeb
 
         shortDescription = tr("Description");
         longDescription  = tr("The modelling object represented by the model element is described by the subject of the referenced resource (\"Modelling Object B\"). This relation might be used to link a model or a kinetic law to the literature that describes it.");
+    } else if (!pQualifier.compare("model:isInstanceOf")) {
+        qualifierSvg = mModelQualifierSvg;
+
+        shortDescription = tr("Class");
+        longDescription  = tr("The modelling object represented by the model element is an instance of the subject of the referenced resource (\"Modelling Object B\"). For instance, this qualifier might be used to link a specific model with its generic form.");
+    } else if (!pQualifier.compare("model:hasInstance")) {
+        qualifierSvg = mModelQualifierSvg;
+
+        shortDescription = tr("Instance");
+        longDescription  = tr("The modelling object represented by the model element has for instance (is a class of) the subject of the referenced resource (\"Modelling Object B\"). For instance, this qualifier might be used to link a generic model with its specific forms.");
     } else if (!pQualifier.compare("bio:encodes")) {
         qualifierSvg = mBiologyQualifierSvg;
 

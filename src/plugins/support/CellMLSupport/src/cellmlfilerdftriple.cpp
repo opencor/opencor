@@ -311,6 +311,10 @@ QString CellmlFileRdfTriple::modelQualifierAsString(const ModelQualifier &pModel
         return "model:isDerivedFrom";
     case ModelIsDescribedBy:
         return "model:isDescribedBy";
+    case ModelIsInstanceOf:
+        return "model:isInstanceOf";
+    case ModelHasInstance:
+        return "model:hasInstance";
     default:
         // ModelUnknown
 
@@ -397,7 +401,9 @@ QStringList CellmlFileRdfTriple::qualifiersAsStringList()
                          << bioQualifierAsString(BioHasTaxon)
                          << modelQualifierAsString(ModelIs)
                          << modelQualifierAsString(ModelIsDerivedFrom)
-                         << modelQualifierAsString(ModelIsDescribedBy);
+                         << modelQualifierAsString(ModelIsDescribedBy)
+                         << modelQualifierAsString(ModelIsInstanceOf)
+                         << modelQualifierAsString(ModelHasInstance);
 }
 
 //==============================================================================
