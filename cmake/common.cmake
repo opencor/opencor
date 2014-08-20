@@ -38,11 +38,11 @@ MACRO(INITIALISE_PROJECT)
     IF("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
         MESSAGE("Building a ${ARCHITECTURE}-bit debug version...")
 
-        SET(RELEASE_MODE OFF)
+        SET(RELEASE_MODE FALSE)
     ELSE()
         MESSAGE("Building a ${ARCHITECTURE}-bit release version...")
 
-        SET(RELEASE_MODE ON)
+        SET(RELEASE_MODE TRUE)
     ENDIF()
 
     # Determine the effective build directory
