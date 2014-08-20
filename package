@@ -13,7 +13,12 @@ echo "\033[44;37;1mPackaging OpenCOR...\033[0m"
 
 cd build
 
-cpack
+if [ "`uname -s`" = "Linux" ]; then
+    cpack
+else
+    cpack -G PackageMaker -D CPACK_INSTALL_PREFIX=/Applications/OpenCOR
+    cpack -G ZIP -D CPACK_INSTALL_PREFIX=.
+fi
 
 exitCode=$?
 
