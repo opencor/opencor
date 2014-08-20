@@ -12,7 +12,7 @@ IF !ExitCode! EQU 0 (
 
     CD build
 
-    cpack -C CPackConfig.cmake
+    cpack
 
     SET ExitCode=!ERRORLEVEL!
 
