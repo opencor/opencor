@@ -271,7 +271,7 @@ MACRO(INITIALISE_PROJECT)
     # Set the RPATH information on Linux
 
     IF(NOT WIN32 AND NOT APPLE)
-        SET(CMAKE_INSTALL_RPATH "$ORIGIN/../lib:$ORIGIN/../plugins/${PROJECT_NAME}")
+        SET(CMAKE_INSTALL_RPATH "$ORIGIN/../lib")
     ENDIF()
 ENDMACRO()
 
