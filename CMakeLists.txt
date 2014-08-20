@@ -254,8 +254,7 @@ SET(PLUGINS
     # Selectable plugins
 
     editing/CellMLAnnotationView
-#---GRY--- TEMPORARILY DISABLED...
-#    editing/PrettyCellMLView
+    editing/PrettyCellMLView
     editing/RawCellMLView
     editing/RawView
 
