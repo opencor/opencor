@@ -21,7 +21,9 @@ specific language governing permissions and limitations under the License.
 
 #include "cliutils.h"
 #include "commonwidget.h"
+#include "coresettings.h"
 #include "guiutils.h"
+#include "settings.h"
 
 //==============================================================================
 
@@ -51,13 +53,26 @@ namespace Core {
 
 //==============================================================================
 
-QString getOpenFileName(const QString &pCaption, const QString &pFilter)
+QString allFilters(const QString &pFilters)
+{
+    return  QObject::tr("All Files")
+           +" (*"
+#ifdef Q_OS_WIN
+           +".*"
+#endif
+           +")"
+           +(pFilters.isEmpty()?QString():";;"+pFilters);
+}
+
+//==============================================================================
+
+QString getOpenFileName(const QString &pCaption, const QString &pFilters)
 {
     // Retrieve and return one open file name
 
     QString res = QFileDialog::getOpenFileName(qApp->activeWindow(),
                                                pCaption, activeDirectory(),
-                                               pFilter);
+                                               allFilters(pFilters));
 
     if (res.size())
         // We have retrieved a file name, so keep track of the folder in which
@@ -72,13 +87,13 @@ QString getOpenFileName(const QString &pCaption, const QString &pFilter)
 
 //==============================================================================
 
-QStringList getOpenFileNames(const QString &pCaption, const QString &pFilter)
+QStringList getOpenFileNames(const QString &pCaption, const QString &pFilters)
 {
     // Retrieve and return one or several open file names
 
     QStringList res = QFileDialog::getOpenFileNames(qApp->activeWindow(),
                                                     pCaption, activeDirectory(),
-                                                    pFilter);
+                                                    allFilters(pFilters));
 
     if (res.count())
         // We have retrieved at least one file name, so keep track of the folder
@@ -107,7 +122,7 @@ QStringList getOpenFileNames(const QString &pCaption, const QString &pFilter)
 //==============================================================================
 
 QString getSaveFileName(const QString &pCaption, const QString &pFileName,
-                        const QString &pFilter)
+                        const QString &pFilters)
 {
     // Retrieve and return a save file name
 
@@ -116,7 +131,7 @@ QString getSaveFileName(const QString &pCaption, const QString &pFileName,
                                                                         pFileName.isEmpty()?
                                                                             activeDirectory():
                                                                             pFileName,
-                                                                        pFilter, 0,
+                                                                        allFilters(pFilters), 0,
                                                                         QFileDialog::DontConfirmOverwrite));
 
     // Make sure that we have got a save file name
@@ -171,14 +186,13 @@ void setFocusTo(QWidget *pWidget)
                                  qApp->activeWindow()->focusWidget():
                                  0;
 
-    pWidget->setFocus();
+    if (   !focusedWidget
+        || (pWidget->parentWidget() == focusedWidget->parentWidget())) {
+        // Either there is no currently focused widget or the currently focused
+        // widget and the one to which we want to set the focus share the same
+        // parent, so set the focus to the given widget
 
-    if (   focusedWidget
-        && (pWidget->parentWidget() != focusedWidget->parentWidget())) {
-        // The current and previously focused widgets don't share the same
-        // parent, so revert the focus back to the previously focused widget
-
-        focusedWidget->setFocus();
+        pWidget->setFocus();
     }
 }
 
@@ -450,22 +464,24 @@ QLabel * newLabel(const QString &pText, QWidget *pParent)
 
 //==============================================================================
 
-void showEnableAction(QAction *pAction, const bool &pShowEnable)
+void showEnableAction(QAction *pAction, const bool &pVisible,
+                      const bool &pEnabled)
 {
     // Show/enable or hide/disable the given action
 
-    pAction->setVisible(pShowEnable);
-    pAction->setEnabled(pShowEnable);
+    pAction->setVisible(pVisible);
+    pAction->setEnabled(pVisible && pEnabled);
 }
 
 //==============================================================================
 
-void showEnableWidget(QWidget *pWidget, const bool &pShowEnable)
+void showEnableWidget(QWidget *pWidget, const bool &pVisible,
+                      const bool &pEnabled)
 {
     // Show/enable or hide/disable the given widget
 
-    pWidget->setVisible(pShowEnable);
-    pWidget->setEnabled(pShowEnable);
+    pWidget->setVisible(pVisible);
+    pWidget->setEnabled(pVisible && pEnabled);
 }
 
 //==============================================================================

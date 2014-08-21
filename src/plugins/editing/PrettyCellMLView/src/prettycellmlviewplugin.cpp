@@ -49,6 +49,17 @@ PLUGININFO_FUNC PrettyCellMLViewPluginInfo()
 }
 
 //==============================================================================
+// CellML editing interface
+//==============================================================================
+
+void PrettyCellMLViewPlugin::validate(const QString &pFileName) const
+{
+    Q_UNUSED(pFileName);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
 // Editing interface
 //==============================================================================
 

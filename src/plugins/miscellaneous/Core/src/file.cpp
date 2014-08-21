@@ -37,6 +37,10 @@ namespace Core {
 
 //==============================================================================
 
+static int gNewIndex = 0;
+
+//==============================================================================
+
 File::File(const QString &pFileName, const Type &pType, const QString &pUrl) :
     mFileName(nativeCanonicalFileName(pFileName)),
     mUrl(pUrl)
@@ -47,11 +51,8 @@ File::File(const QString &pFileName, const Type &pType, const QString &pUrl) :
 
     // Set our index, in case we are a new file
 
-    if (pType == New) {
-        static int newIndex = 0;
-
-        mNewIndex = ++newIndex;
-    }
+    if (pType == New)
+        mNewIndex = ++gNewIndex;
 }
 
 //==============================================================================
@@ -109,9 +110,7 @@ File::Status File::check()
 
         return File::Unchanged;
     } else {
-        // We have a new SHA-1 value, so keep track of it
-
-        mSha1 = newSha1;
+        // We have a new SHA-1 value
 
         if (newSha1.isEmpty()) {
             // The SHA-1 value of our file is now empty, which means that either
@@ -157,6 +156,27 @@ void File::reset()
     mNewIndex = 0;
 
     mModified = false;
+    mConsiderModified = false;
+}
+
+//==============================================================================
+
+bool File::isDifferent() const
+{
+    // Return whether the file is different from its corresponding physical
+    // version by comparing their SHA-1 values
+
+    return mSha1.compare(sha1());
+}
+
+//==============================================================================
+
+bool File::isDifferent(const QString pFileContents) const
+{
+    // Return whether the file is different from the given file contents by
+    // comparing their SHA-1 values
+
+    return mSha1.compare(Core::sha1(pFileContents));
 }
 
 //==============================================================================
@@ -166,6 +186,22 @@ bool File::isNew() const
     // Return whether the file is new
 
     return mNewIndex != 0;
+}
+
+//==============================================================================
+
+bool File::makeNew(const QString &pFileName)
+{
+    // Make the file new
+
+    mFileName = nativeCanonicalFileName(pFileName);
+    mUrl = QString();
+
+    reset();
+
+    mNewIndex = ++gNewIndex;
+
+    return true;
 }
 
 //==============================================================================
@@ -199,9 +235,9 @@ QString File::url() const
 
 bool File::isModified() const
 {
-    // Return whether the file has been modified
+    // Return whether the file has been modified or is considered modified
 
-    return mModified;
+    return mModified || mConsiderModified;
 }
 
 //==============================================================================
@@ -212,6 +248,21 @@ bool File::setModified(const bool &pModified)
 
     if (pModified != mModified) {
         mModified = pModified;
+
+        return true;
+    } else {
+        return false;
+    }
+}
+
+//==============================================================================
+
+bool File::setConsiderModified(const bool &pConsiderModified)
+{
+    // Set the consider modified status of the file
+
+    if (pConsiderModified != mConsiderModified) {
+        mConsiderModified = pConsiderModified;
 
         return true;
     } else {

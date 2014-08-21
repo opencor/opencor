@@ -62,7 +62,8 @@ class PluginManager;
 //==============================================================================
 
 enum {
-    NeedRestart = 1789
+    CleanRestart  =  843,
+    NormalRestart = 1789
 };
 
 //==============================================================================
@@ -121,6 +122,8 @@ private:
     bool mDockedWindowsVisible;
 
     QByteArray mDockedWindowsState;
+
+    bool mStatusBarVisible;
 
     void initializeGuiPlugin(Plugin *pPlugin);
 

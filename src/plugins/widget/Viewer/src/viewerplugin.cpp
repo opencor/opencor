@@ -32,11 +32,11 @@ PLUGININFO_FUNC ViewerPluginInfo()
 {
     Descriptions descriptions;
 
-    descriptions.insert("en", QString::fromUtf8("a plugin to graphically visualise various modelling concepts (e.g. mathematical equations)."));
-    descriptions.insert("fr", QString::fromUtf8("une extension pour visualiser graphiquement différents concepts de modélisation (par exemple des équations mathématiques)."));
+    descriptions.insert("en", QString::fromUtf8("a plugin to visualise mathematical equations."));
+    descriptions.insert("fr", QString::fromUtf8("une extension pour visualiser des équations mathématiques."));
 
     return new PluginInfo(PluginInfo::Widget, false, false,
-                          QStringList() << "Qwt",
+                          QStringList() << "Core" << "Qwt",
                           descriptions);
 }
 

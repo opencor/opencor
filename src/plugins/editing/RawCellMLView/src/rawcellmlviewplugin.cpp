@@ -50,6 +50,17 @@ PLUGININFO_FUNC RawCellMLViewPluginInfo()
 }
 
 //==============================================================================
+// CellML editing interface
+//==============================================================================
+
+void RawCellMLViewPlugin::validate(const QString &pFileName) const
+{
+    // Validate the given file
+
+    mViewWidget->validate(pFileName);
+}
+
+//==============================================================================
 // Editing interface
 //==============================================================================
 
@@ -67,15 +78,9 @@ Editor::EditorWidget * RawCellMLViewPlugin::editor(const QString &pFileName) con
 bool RawCellMLViewPlugin::saveFile(const QString &pOldFileName,
                                    const QString &pNewFileName)
 {
-    // Ask our raw CellML view widget to save the given file
+    // Save the given file
 
-    Editor::EditorWidget *editor = mViewWidget->editor(pOldFileName);
-    bool res = Core::writeTextToFile(pNewFileName, editor->contents());
-
-    if (res)
-        editor->resetUndoHistory();
-
-    return res;
+    return Core::writeTextToFile(pNewFileName, editor(pOldFileName)->contents());
 }
 
 //==============================================================================

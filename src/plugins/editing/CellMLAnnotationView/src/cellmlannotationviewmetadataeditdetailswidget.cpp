@@ -64,6 +64,17 @@ namespace CellMLAnnotationView {
 
 //==============================================================================
 
+bool CellmlAnnotationViewMetadataEditDetailsWidget::Item::operator==(const Item &pItem) const
+{
+    // Return whether the current item is the same as the given one
+
+    return    !name.compare(pItem.name)
+           && !resource.compare(pItem.resource)
+           && !id.compare(pItem.id);
+}
+
+//==============================================================================
+
 bool CellmlAnnotationViewMetadataEditDetailsWidget::Item::operator<(const Item &pItem) const
 {
     // Return whether the current item is lower than the given one
@@ -107,8 +118,6 @@ CellmlAnnotationViewMetadataEditDetailsWidget::CellmlAnnotationViewMetadataEditD
     mAddTermButton(0),
     mTerm(QString()),
     mTermIsDirect(false),
-    mTermUrl(QString()),
-    mOtherTermUrl(QString()),
     mItems(Items()),
     mErrorMessage(QString()),
     mLookupTerm(false),
@@ -119,7 +128,8 @@ CellmlAnnotationViewMetadataEditDetailsWidget::CellmlAnnotationViewMetadataEditD
     mItemsVerticalScrollBarPosition(0),
     mCellmlFile(pParent->cellmlFile()),
     mElement(0),
-    mCurrentResourceOrIdLabel(0)
+    mCurrentResourceOrIdLabel(0),
+    mNetworkReply(0)
 {
     // Set up the GUI
 
@@ -213,7 +223,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(iface::cellml_api:
 
     // Reset our items' GUI, if needed
 
-    if (pResetItemsGui)
+    if (pResetItemsGui || mTermIsDirect)
         updateItemsGui(Items(), QString(), !mTermIsDirect);
 
     // Enable or disable the add buttons for our retrieved terms, depending on
@@ -463,7 +473,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(const Items &pItem
 
     // Update the enabled state of our various add buttons
 
-    updateGui(mElement, false);
+    updateGui(mElement);
 
     // Allow ourselves to be updated again
 
@@ -814,7 +824,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::qualifierChanged(const QStri
 
     // Update the enabled state of our various add buttons
 
-    updateGui(mElement, false);
+    updateGui(mElement);
 }
 
 //==============================================================================
@@ -869,8 +879,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::lookupId(const QString &pIte
 
 //==============================================================================
 
-static const auto SemanticSbmlUrlStart = QStringLiteral("http://www.semanticsbml.org/semanticSBML/annotate/search.json?q=");
-static const auto SemanticSbmlUrlEnd   = QStringLiteral("&full_info=1");
+static const auto Pmr2RicordoUrl = QStringLiteral("https://models.physiomeproject.org/pmr2_ricordo/miriam_terms/");
 
 //==============================================================================
 
@@ -887,30 +896,23 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::termChanged(const QString &p
 
     // Update the enabled state of our various add buttons
 
-    updateGui(mElement);
+    updateGui(mElement, true);
 
     // Retrieve some possible terms based on the given term, but only if the
     // term cannot be added directly
 
     if (!mTermIsDirect) {
-        // We are not dealing with a direct term, so retrieve some possible
-        // terms
+        // We are not dealing with a direct term, so cancel the previous
+        // request, if any
 
-        QString termUrl = SemanticSbmlUrlStart+pTerm+SemanticSbmlUrlEnd;
+        if (mNetworkReply)
+            mNetworkReply->close();
 
-        if (mTermUrl.isEmpty()) {
-            // No other term is being looked up, so keep track of the given term
-            // and look it up
+        // Now, retrieve some possible terms
 
-            mTermUrl = termUrl;
+        QString termUrl = Pmr2RicordoUrl+pTerm;
 
-            mNetworkAccessManager->get(QNetworkRequest(termUrl));
-        } else {
-            // Another term is already being looked up, so keep track of the
-            // given term for later
-
-            mOtherTermUrl = termUrl;
-        }
+        mNetworkReply = mNetworkAccessManager->get(QNetworkRequest(termUrl));
     }
 }
 
@@ -918,107 +920,71 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::termChanged(const QString &p
 
 void CellmlAnnotationViewMetadataEditDetailsWidget::termLookedUp(QNetworkReply *pNetworkReply)
 {
-    // We are done looking up the term, so...
+    // Ignore the network reply if it got cancelled
 
-    mTermUrl = QString();
+    if (pNetworkReply->error() == QNetworkReply::OperationCanceledError) {
+        pNetworkReply->deleteLater();
 
-    // Look up another term, should there be one to look up, or update the GUI
-    // with the results of the lookup
-
-    if (!mOtherTermUrl.isEmpty()) {
-        // There is another term to look up, so...
-
-        mNetworkAccessManager->get(QNetworkRequest(mOtherTermUrl));
-
-        mOtherTermUrl = QString();
+        return;
     } else {
-        // No other term to look up, so make sure that the network reply we got
-        // corresponds to that of the current term
+        mNetworkReply = 0;
+    }
 
-        if (mTerm.compare(pNetworkReply->url().toString()
-                                              .remove(QRegularExpression("^"+QRegularExpression::escape(SemanticSbmlUrlStart)))
-                                              .remove(QRegularExpression(QRegularExpression::escape(SemanticSbmlUrlEnd)+"$")))) {
-            // Not the correct term, so... delete (later) the network reply and
-            // leave
+    // Retrieve the list of terms, should we have retrieved it without any problem
 
-            pNetworkReply->deleteLater();
+    Items items = Items();
+    QString errorMessage = QString();
 
-            return;
-        }
+    if (pNetworkReply->error() == QNetworkReply::NoError) {
+        // Parse the JSON code
 
-        // The network reply is for the current term, so retrieve the list of
-        // terms, should we have retrieved it without any problem
+        QJsonParseError jsonParseError;
+        QJsonDocument jsonDocument = QJsonDocument::fromJson(pNetworkReply->readAll(), &jsonParseError);
 
-        Items items = Items();
-        QString errorMessage = QString();
+        if (jsonParseError.error == QJsonParseError::NoError) {
+            // Retrieve the list of terms
 
-        if (pNetworkReply->error() == QNetworkReply::NoError) {
-            // Parse the JSON code
+            QVariantMap termMap;
+            QString name;
+            QString resource;
+            QString id;
 
-            QJsonParseError jsonParseError;
-            QJsonDocument jsonDocument = QJsonDocument::fromJson(pNetworkReply->readAll(), &jsonParseError);
+            foreach (const QVariant &termsVariant, jsonDocument.object().toVariantMap()["results"].toList()) {
+                termMap = termsVariant.toMap();
+                name = termMap["name"].toString();
 
-            if (jsonParseError.error == QJsonParseError::NoError) {
-                // Retrieve the list of terms
+                if (   !name.isEmpty()
+                    &&  CellMLSupport::CellmlFileRdfTriple::decodeTerm(termMap["identifiers_org_uri"].toString(), resource, id)) {
+                    // We have a name and we could decode the term, so add the
+                    // item to our list, should it not already be in it
 
-                QVariantMap resultMap = jsonDocument.object().toVariantMap();
+                    Item newItem = item(name, resource, id);
 
-                foreach (const QVariant &termsVariant, resultMap["result"].toList()) {
-                    QVariantList termVariant = termsVariant.toList();
-
-                    for (int i = 0, iMax = termVariant.count(); i < iMax; ++i) {
-                        // At this stage, we have a term (in the form of either
-                        // a MIRIAM URN or an identifiers.org URI) and a name
-                        // (as well as a URL, but we don't care about it), so we
-                        // need to decode the term to retrieve the corresponding
-                        // resource and id
-
-                        QVariantMap termMap = termVariant[i].toMap();
-
-                        QString resource = QString();
-                        QString id = QString();
-
-                        if (!CellMLSupport::CellmlFileRdfTriple::decodeTerm(termMap["uri"].toString(),
-                                                                            resource, id)) {
-                            // The term couldn't be decoded, so...
-
-                            items = Items();
-
-                            errorMessage = tr("the search returned invalid results");
-
-                            break;
-                        } else {
-                            // The term could be decoded, so add it to our list
-
-                            items << item(termMap["name"].toString(), resource, id);
-                        }
-                    }
-
-                    if (!errorMessage.isEmpty())
-                        break;
+                    if (!items.contains(newItem))
+                        items << newItem;
                 }
-            } else {
-                // Something went wrong, so...
-
-                mErrorMessage = jsonParseError.errorString();
             }
         } else {
             // Something went wrong, so...
 
-            errorMessage = pNetworkReply->errorString();
+            errorMessage = jsonParseError.errorString();
         }
+    } else {
+        // Something went wrong, so...
 
-        // Update our GUI with the results of the lookup after having sorted
-        // them
-
-        qSort(items.begin(), items.end());
-
-        updateItemsGui(items, errorMessage, false);
-
-        // Update the enabled state of our various add buttons
-
-        updateGui(mElement, false);
+        errorMessage = pNetworkReply->errorString();
     }
+
+    // Update our GUI with the results of the lookup after having sorted
+    // them
+
+    std::sort(items.begin(), items.end());
+
+    updateItemsGui(items, errorMessage, false);
+
+    // Update the enabled state of our various add buttons
+
+    updateGui(mElement);
 
     // Delete (later) the network reply
 
@@ -1032,7 +998,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::addTerm()
     // Add the term to our CellML element as an RDF triple
 
     CellMLSupport::CellmlFileRdfTriple *rdfTriple;
-    QStringList termInformation = mTerm.replace("%3A", ":").split("/");
+    QStringList termInformation = Core::stringFromPercentEncoding(mTerm).split("/");
 
     if (mQualifierIndex < CellMLSupport::CellmlFileRdfTriple::LastBioQualifier)
         rdfTriple = mCellmlFile->addRdfTriple(mElement,

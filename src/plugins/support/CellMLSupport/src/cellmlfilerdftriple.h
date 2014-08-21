@@ -68,8 +68,10 @@ public:
         ModelIs,
         ModelIsDerivedFrom,
         ModelIsDescribedBy,
+        ModelIsInstanceOf,
+        ModelHasInstance,
         FirstModelQualifier = ModelIs,
-        LastModelQualifier = ModelIsDescribedBy
+        LastModelQualifier = ModelHasInstance
     };
 
     enum BioQualifier {

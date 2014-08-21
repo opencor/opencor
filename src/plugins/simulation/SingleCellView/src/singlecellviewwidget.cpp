@@ -22,6 +22,7 @@ specific language governing permissions and limitations under the License.
 #include "cellmlfilemanager.h"
 #include "cellmlfileruntime.h"
 #include "cliutils.h"
+#include "filemanager.h"
 #include "guiutils.h"
 #include "progressbarwidget.h"
 #include "propertyeditorwidget.h"
@@ -65,10 +66,6 @@ specific language governing permissions and limitations under the License.
 #include <QTimer>
 #include <QToolButton>
 #include <QVariant>
-
-//==============================================================================
-
-#include "float.h"
 
 //==============================================================================
 
@@ -535,7 +532,8 @@ static const auto OutputBrLn = QStringLiteral("<br/>\n");
 
 //==============================================================================
 
-void SingleCellViewWidget::initialize(const QString &pFileName)
+void SingleCellViewWidget::initialize(const QString &pFileName,
+                                      const bool &pReloadingView)
 {
     // Stop keeping track of certain things (so that updatePlot() doesn't get
     // called unnecessarily)
@@ -601,8 +599,8 @@ void SingleCellViewWidget::initialize(const QString &pFileName)
                 this, SLOT(simulationRunning(const bool &)));
         connect(mSimulation, SIGNAL(paused()),
                 this, SLOT(simulationPaused()));
-        connect(mSimulation, SIGNAL(stopped(const int &)),
-                this, SLOT(simulationStopped(const int &)));
+        connect(mSimulation, SIGNAL(stopped(const qint64 &)),
+                this, SLOT(simulationStopped(const qint64 &)));
 
         connect(mSimulation, SIGNAL(error(const QString &)),
                 this, SLOT(simulationError(const QString &)));
@@ -624,7 +622,7 @@ void SingleCellViewWidget::initialize(const QString &pFileName)
     // Reset our file tab icon and update our progress bar
     // Note: they may not both be necessary, but we never know, so...
 
-    resetFileTabIcon(mSimulation->fileName());
+    resetFileTabIcon(pFileName);
 
     mProgressBarWidget->setValue(mSimulation->progress());
 
@@ -643,7 +641,14 @@ void SingleCellViewWidget::initialize(const QString &pFileName)
     if (!mOutputWidget->document()->isEmpty())
         information += "<hr/>\n";
 
-    information += "<strong>"+pFileName+"</strong>"+OutputBrLn;
+    Core::FileManager *fileManagerInstance = Core::FileManager::instance();
+    QString fileName = fileManagerInstance->isNew(pFileName)?
+                           tr("File")+" #"+QString::number(fileManagerInstance->newIndex(pFileName)):
+                           fileManagerInstance->isRemote(pFileName)?
+                               fileManagerInstance->url(pFileName):
+                               pFileName;
+
+    information += "<strong>"+fileName+"</strong>"+OutputBrLn;
     information += OutputTab+"<strong>"+tr("Runtime:")+"</strong> ";
 
     if (variableOfIntegration) {
@@ -792,14 +797,6 @@ void SingleCellViewWidget::initialize(const QString &pFileName)
     // environment
 
     if (validSimulationEnvironment) {
-        // Reset both the simulation's data and results (well, initialise in the
-        // case of its data), in case we are dealing with a new simulation
-
-        if (newSimulation) {
-            mSimulation->data()->reset();
-            mSimulation->results()->reset(false);
-        }
-
         // Initialise our GUI's simulation, solvers, graphs, parameters and
         // graph panels widgets
         // Note #1: this will also initialise some of our simulation data (i.e.
@@ -832,6 +829,43 @@ void SingleCellViewWidget::initialize(const QString &pFileName)
         graphPanelsWidget->initialize(pFileName);
 
         mCanUpdatePlotsForUpdatedGraphs = true;
+
+        // Reset both the simulation's data and results (well, initialise in the
+        // case of its data), in case we are dealing with a new simulation
+
+        if (newSimulation) {
+            mSimulation->data()->reset();
+            mSimulation->results()->reset(false);
+        }
+
+        // Retrieve our simulation and NLA solver's properties, in case we are
+        // reloading the file
+        // Note: unlike for other properties, we need to retrieve our simulation
+        //       and NLA solver's properties 'manually' since the rest of the
+        //       time they are automatically retrieved through
+        //       simulationPropertyChanged() and solversPropertyChanged()...
+
+        if (pReloadingView) {
+            // Retrieve our simulation's properties
+
+            SingleCellViewInformationSimulationWidget *simulationWidget = mContentsWidget->informationWidget()->simulationWidget();
+
+            mSimulation->data()->setStartingPoint(simulationWidget->startingPointProperty()->doubleValue());
+            mSimulation->data()->setEndingPoint(simulationWidget->endingPointProperty()->doubleValue());
+            mSimulation->data()->setPointInterval(simulationWidget->pointIntervalProperty()->doubleValue());
+
+            foreach (SingleCellViewGraphPanelPlotWidget *plot, mPlots)
+                updatePlot(plot);
+
+            // Retrieve our NLA solver's properties
+
+            SingleCellViewInformationSolversWidgetData *nlaSolverData = mContentsWidget->informationWidget()->solversWidget()->nlaSolverData();
+
+            mSimulation->data()->setNlaSolverName(nlaSolverData->solversListProperty()->value());
+
+            foreach (Core::Property *property, nlaSolverData->solversProperties().value(mSimulation->data()->nlaSolverName()))
+                mSimulation->data()->addNlaSolverProperty(property->id(), value(property));
+        }
     }
 
     // Resume the tracking of certain things
@@ -843,7 +877,8 @@ void SingleCellViewWidget::initialize(const QString &pFileName)
 
 //==============================================================================
 
-void SingleCellViewWidget::finalize(const QString &pFileName)
+void SingleCellViewWidget::finalize(const QString &pFileName,
+                                    const bool &pReloadingView)
 {
     // Remove our simulation object, should there be one for the given file name
 
@@ -869,15 +904,25 @@ void SingleCellViewWidget::finalize(const QString &pFileName)
     mProgresses.remove(pFileName);
 
     mResets.remove(pFileName);
-    mDelays.remove(pFileName);
 
-    // Finalize a few things in our GUI's simulation, solvers, graphs,
+    if (pReloadingView)
+        mDelays.insert(pFileName, mDelayWidget->value());
+    else
+        mDelays.remove(pFileName);
+
+    // Finalize/backup a few things in our GUI's simulation, solvers, graphs,
     // parameters and graph panels widgets
 
     SingleCellViewInformationWidget *informationWidget = mContentsWidget->informationWidget();
 
-    informationWidget->simulationWidget()->finalize(pFileName);
-    informationWidget->solversWidget()->finalize(pFileName);
+    if (pReloadingView) {
+        informationWidget->simulationWidget()->backup(pFileName);
+        informationWidget->solversWidget()->backup(pFileName);
+    } else {
+        informationWidget->simulationWidget()->finalize(pFileName);
+        informationWidget->solversWidget()->finalize(pFileName);
+    }
+
     informationWidget->graphsWidget()->finalize(pFileName);
     informationWidget->parametersWidget()->finalize(pFileName);
 
@@ -940,10 +985,10 @@ void SingleCellViewWidget::reloadView(const QString &pFileName)
     // Reload ourselves, i.e. finalise and (re)initialise ourselves, meaning
     // that the given file will have effectively been closed and (re)opened
 
-    finalize(pFileName);
+    finalize(pFileName, true);
     fileClosed(pFileName);
 
-    initialize(pFileName);
+    initialize(pFileName, true);
     fileOpened(pFileName);
 
     // Stop keeping track of the fact that we need to reload ourselves
@@ -1263,7 +1308,7 @@ void SingleCellViewWidget::simulationPaused()
 
 //==============================================================================
 
-void SingleCellViewWidget::simulationStopped(const int &pElapsedTime)
+void SingleCellViewWidget::simulationStopped(const qint64 &pElapsedTime)
 {
     // We want a short delay before resetting the progress bar and the file tab
     // icon, so that the user can really see when our simulation has completed,
@@ -2011,17 +2056,17 @@ QIcon SingleCellViewWidget::parameterIcon(const CellMLSupport::CellmlFileRuntime
 
     switch (pParameterType) {
     case CellMLSupport::CellmlFileRuntimeParameter::Voi:
-        return QIcon(":SingleCellView_voi");
+        return QIcon(":/voi.png");
     case CellMLSupport::CellmlFileRuntimeParameter::Constant:
-        return QIcon(":SingleCellView_constant");
+        return QIcon(":/constant.png");
     case CellMLSupport::CellmlFileRuntimeParameter::ComputedConstant:
-        return QIcon(":SingleCellView_computedConstant");
+        return QIcon(":/computedConstant.png");
     case CellMLSupport::CellmlFileRuntimeParameter::Rate:
-        return QIcon(":SingleCellView_rate");
+        return QIcon(":/rate.png");
     case CellMLSupport::CellmlFileRuntimeParameter::State:
-        return QIcon(":SingleCellView_state");
+        return QIcon(":/state.png");
     case CellMLSupport::CellmlFileRuntimeParameter::Algebraic:
-        return QIcon(":SingleCellView_algebraic");
+        return QIcon(":/algebraic.png");
     default:
         // We are dealing with a type of parameter which is of no interest to us
         // Note: we should never reach this point...

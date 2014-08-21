@@ -103,7 +103,7 @@ Q_SIGNALS:
     void running(const bool &pIsResuming);
     void paused();
 
-    void finished(const int &pElapsedTime);
+    void finished(const qint64 &pElapsedTime);
 
     void error(const QString &pMessage);
 

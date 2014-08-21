@@ -49,16 +49,16 @@ void CoreSolver::emitError(const QString &pErrorMessage)
     // Let people know that an error occured, but first reformat the error a
     // bit, if needed
 
-    QString errorMessage;
+    QString errorMessage = QString();
 
     if (pErrorMessage.startsWith("Newton"))
         errorMessage = pErrorMessage;
-    else
+    else if (!pErrorMessage.isEmpty())
         errorMessage = pErrorMessage[0].toLower()+pErrorMessage.right(pErrorMessage.size()-1);
 
-    if (!pErrorMessage.right(3).compare("..."))
+    if (!errorMessage.right(3).compare("..."))
         emit error(errorMessage.left(errorMessage.size()-3));
-    else if (!pErrorMessage.right(1).compare("."))
+    else if (!errorMessage.right(1).compare("."))
         emit error(errorMessage.left(errorMessage.size()-1));
     else
         emit error(errorMessage);

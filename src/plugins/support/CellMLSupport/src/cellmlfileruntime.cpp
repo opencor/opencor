@@ -167,9 +167,14 @@ QString CellmlFileRuntimeParameter::formattedUnit(const QString &pVoiUnit) const
 
 //==============================================================================
 
-CellmlFileRuntime::CellmlFileRuntime() :
+CellmlFileRuntime::CellmlFileRuntime(CellmlFile *pCellmlFile) :
+    mCellmlFile(pCellmlFile),
     mOdeCodeInformation(0),
     mDaeCodeInformation(0),
+    mConstantsCount(0),
+    mStatesRatesCount(0),
+    mAlgebraicCount(0),
+    mCondVarCount(0),
     mCompilerEngine(0),
     mVariableOfIntegration(0),
     mParameters(CellmlFileRuntimeParameters())
@@ -252,10 +257,7 @@ int CellmlFileRuntime::constantsCount() const
 {
     // Return the number of constants in the model
 
-    if (mModelType == CellmlFileRuntime::Ode)
-        return mOdeCodeInformation?mOdeCodeInformation->constantIndexCount():0;
-    else
-        return mDaeCodeInformation?mDaeCodeInformation->constantIndexCount():0;
+    return mConstantsCount;
 }
 
 //==============================================================================
@@ -264,10 +266,7 @@ int CellmlFileRuntime::statesCount() const
 {
     // Return the number of states in the model
 
-    if (mModelType == CellmlFileRuntime::Ode)
-        return mOdeCodeInformation?mOdeCodeInformation->rateIndexCount():0;
-    else
-        return mDaeCodeInformation?mDaeCodeInformation->rateIndexCount():0;
+    return mStatesRatesCount;
 }
 
 //==============================================================================
@@ -275,10 +274,8 @@ int CellmlFileRuntime::statesCount() const
 int CellmlFileRuntime::ratesCount() const
 {
     // Return the number of rates in the model
-    // Note: it is obviously the same as the number of states, so this function
-    //       is only for user convenience...
 
-    return statesCount();
+    return mStatesRatesCount;
 }
 
 //==============================================================================
@@ -287,10 +284,7 @@ int CellmlFileRuntime::algebraicCount() const
 {
     // Return the number of algebraic equations in the model
 
-    if (mModelType == CellmlFileRuntime::Ode)
-        return mOdeCodeInformation?mOdeCodeInformation->algebraicIndexCount():0;
-    else
-        return mDaeCodeInformation?mDaeCodeInformation->algebraicIndexCount():0;
+    return mAlgebraicCount;
 }
 
 //==============================================================================
@@ -299,10 +293,7 @@ int CellmlFileRuntime::condVarCount() const
 {
     // Return the number of conditional variables in the model
 
-    if (mModelType == CellmlFileRuntime::Ode)
-        return 0;
-    else
-        return mDaeCodeInformation?mDaeCodeInformation->conditionVariableCount():0;
+    return mCondVarCount;
 }
 
 //==============================================================================
@@ -724,7 +715,7 @@ QStringList CellmlFileRuntime::componentHierarchy(iface::cellml_api::CellMLEleme
 
 //==============================================================================
 
-CellmlFileRuntime * CellmlFileRuntime::update(CellmlFile *pCellmlFile)
+void CellmlFileRuntime::update()
 {
     // Reset the runtime's properties
 
@@ -743,12 +734,12 @@ CellmlFileRuntime * CellmlFileRuntime::update(CellmlFile *pCellmlFile)
     // Note #3: ideally, there would be a more convenient way to determine the
     //          type of a model, but well... there isn't, so...
 
-    iface::cellml_api::Model *model = pCellmlFile->model();
+    iface::cellml_api::Model *model = mCellmlFile->model();
 
     if (!model)
         // No model is available, so...
 
-        return this;
+        return;
 
     // Retrieve the model's type
     // Note: this can be done by checking whether some equations were flagged
@@ -757,17 +748,14 @@ CellmlFileRuntime * CellmlFileRuntime::update(CellmlFile *pCellmlFile)
     getOdeCodeInformation(model);
 
     if (!mOdeCodeInformation)
-        return this;
-
-    // An ODE code information could be retrieved, so we can determine the
-    // model's type
+        return;
 
     ObjRef<iface::mathml_dom::MathMLNodeList> flaggedEquations = mOdeCodeInformation->flaggedEquations();
 
     mModelType = flaggedEquations->length()?CellmlFileRuntime::Dae:CellmlFileRuntime::Ode;
 
     // If the model is of DAE type, then we don't want the ODE-specific code
-    // information, but the DAE-specific code information
+    // information, but the DAE-specific code one
 
     ObjRef<iface::cellml_services::CodeInformation> genericCodeInformation;
 
@@ -777,6 +765,25 @@ CellmlFileRuntime * CellmlFileRuntime::update(CellmlFile *pCellmlFile)
         getDaeCodeInformation(model);
 
         genericCodeInformation = mDaeCodeInformation;
+    }
+
+    // Retrieve the number of constants, states/rates, algebraic and conditional
+    // variables in the model
+    // Note: this is to avoid having to go through the ODE/DAE code information
+    //       an unnecessary number of times when we want to retrieve either of
+    //       those numbers (e.g. see
+    //       SingleCellViewSimulationResults::addPoint())...
+
+    if (mModelType == CellmlFileRuntime::Ode) {
+        mConstantsCount   = mOdeCodeInformation->constantIndexCount();
+        mStatesRatesCount = mOdeCodeInformation->rateIndexCount();
+        mAlgebraicCount   = mOdeCodeInformation->algebraicIndexCount();
+        mCondVarCount     = 0;
+    } else {
+        mConstantsCount   = mDaeCodeInformation->constantIndexCount();
+        mStatesRatesCount = mDaeCodeInformation->rateIndexCount();
+        mAlgebraicCount   = mDaeCodeInformation->algebraicIndexCount();
+        mCondVarCount     = mDaeCodeInformation->conditionVariableCount();
     }
 
     // Retrieve all the parameters and sort them by component/variable name
@@ -874,7 +881,7 @@ CellmlFileRuntime * CellmlFileRuntime::update(CellmlFile *pCellmlFile)
         }
     }
 
-    qSort(mParameters.begin(), mParameters.end(), sortParameters);
+    std::sort(mParameters.begin(), mParameters.end(), sortParameters);
 
     // Generate the model code, after having prepended to it all the external
     // functions which may, or not, be needed
@@ -1075,10 +1082,6 @@ CellmlFileRuntime * CellmlFileRuntime::update(CellmlFile *pCellmlFile)
             reset(true, false);
         }
     }
-
-    // We are done, so return ourselves
-
-    return this;
 }
 
 //==============================================================================

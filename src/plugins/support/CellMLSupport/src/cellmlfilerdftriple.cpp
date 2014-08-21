@@ -21,6 +21,7 @@ specific language governing permissions and limitations under the License.
 
 #include "cellmlfile.h"
 #include "cellmlfilerdftriple.h"
+#include "cliutils.h"
 
 //==============================================================================
 
@@ -310,6 +311,10 @@ QString CellmlFileRdfTriple::modelQualifierAsString(const ModelQualifier &pModel
         return "model:isDerivedFrom";
     case ModelIsDescribedBy:
         return "model:isDescribedBy";
+    case ModelIsInstanceOf:
+        return "model:isInstanceOf";
+    case ModelHasInstance:
+        return "model:hasInstance";
     default:
         // ModelUnknown
 
@@ -396,7 +401,9 @@ QStringList CellmlFileRdfTriple::qualifiersAsStringList()
                          << bioQualifierAsString(BioHasTaxon)
                          << modelQualifierAsString(ModelIs)
                          << modelQualifierAsString(ModelIsDerivedFrom)
-                         << modelQualifierAsString(ModelIsDescribedBy);
+                         << modelQualifierAsString(ModelIsDescribedBy)
+                         << modelQualifierAsString(ModelIsInstanceOf)
+                         << modelQualifierAsString(ModelHasInstance);
 }
 
 //==============================================================================
@@ -472,16 +479,16 @@ bool CellmlFileRdfTriple::decodeTerm(const QString &pTerm, QString &pResource,
     // Decode the term, based on whether it matches that of a MIRIAN URN or an
     // identifiers.org URI
 
-    bool res = true;
-
     if (QRegularExpression("^urn:miriam:"+ResourceRegExp+":"+IdRegExp).match(pTerm).hasMatch()) {
         // The term is a MIRIAM URN, so retrieve its corresponding resource and
         // id
 
         QStringList miriamUrnList = pTerm.split(":");
 
-        pResource = miriamUrnList[2];
-        pId       = miriamUrnList[3].replace("%3A", ":");
+        pResource = Core::stringFromPercentEncoding(miriamUrnList[2]);
+        pId       = Core::stringFromPercentEncoding(miriamUrnList[3]);
+
+        return true;
     } else if (QRegularExpression("^http://identifiers.org/"+ResourceRegExp+"/#?"+IdRegExp).match(pTerm).hasMatch()) {
         // The term is an identifiers.org URI, so retrieve its corresponding
         // resource and id
@@ -491,30 +498,18 @@ bool CellmlFileRdfTriple::decodeTerm(const QString &pTerm, QString &pResource,
         //       QString::remove() on it...
         QStringList identifiersDotOrgUriList = identifiersDotOrgUri.remove("http://identifiers.org/").split("/");
 
-        pResource = identifiersDotOrgUriList[0];
-        pId       = identifiersDotOrgUriList[1].replace("%3A", ":");
+        pResource = Core::stringFromPercentEncoding(identifiersDotOrgUriList[0]);
+        pId       = Core::stringFromPercentEncoding(identifiersDotOrgUriList[1]);
 
-        // Remove the leading '#', if any, from the id
-        // Note: semanticSBML does, for example, prepend a '#'...
-
-        if (pId[0] == '#')
-            pId = pId.right(pId.size()-1);
+        return true;
     } else {
         // Not a term we can recognise, so...
 
         pResource = "???";
         pId       = "???";
 
-        res = false;
-
-#ifdef QT_DEBUG
-        qWarning("WARNING | %s:%d: '%s' is not a valid RDF term", __FILE__, __LINE__, qPrintable(pTerm));
-#endif
+        return false;
     }
-
-    // Return the result of our decoding
-
-    return res;
 }
 
 //==============================================================================

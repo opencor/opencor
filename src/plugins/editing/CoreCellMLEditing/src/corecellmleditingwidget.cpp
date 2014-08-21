@@ -59,29 +59,20 @@ CoreCellmlEditingWidget::CoreCellmlEditingWidget(const QString &pContents,
 
     mGui->setupUi(this);
 
-    // Create our bordered viewer
+    // Create our viewer, editor and editor list
 
     mViewer = new Viewer::ViewerWidget(this);
-    mBorderedViewer = new Core::BorderedWidget(mViewer,
-                                               false, false, true, false);
-
-    // Create our bordered editor
-
     mEditor = new Editor::EditorWidget(pContents, pReadOnly, pLexer, this);
-    mBorderedEditor = new Core::BorderedWidget(mEditor,
-                                               true, false, true, false);
-
-    // Create our bordered editor list
-
     mEditorList = new EditorList::EditorListWidget(this);
-    mBorderedEditorList = new Core::BorderedWidget(mEditorList,
-                                                   true, false, false, false);
+
+    connect(mEditorList, SIGNAL(itemRequested(EditorList::EditorListItem *)),
+            this, SLOT(itemRequested(EditorList::EditorListItem *)));
 
     // Add the bordered viewer, editor and editor list to ourselves
 
-    addWidget(mBorderedViewer);
-    addWidget(mBorderedEditor);
-    addWidget(mBorderedEditorList);
+    addWidget(new Core::BorderedWidget(mViewer, false, false, true, false));
+    addWidget(new Core::BorderedWidget(mEditor, true, false, true, false));
+    addWidget(new Core::BorderedWidget(mEditorList, true, false, false, false));
 
     // Set our focus proxy to our editor
 
@@ -144,10 +135,11 @@ void CoreCellmlEditingWidget::saveSettings(QSettings *pSettings) const
 
 void CoreCellmlEditingWidget::retranslateUi()
 {
-    // Retranslate our viewer and editor
+    // Retranslate our viewer, editor and editor list
 
     mViewer->retranslateUi();
     mEditor->retranslateUi();
+    mEditorList->retranslateUi();
 }
 
 //==============================================================================
@@ -192,6 +184,19 @@ EditorList::EditorListWidget * CoreCellmlEditingWidget::editorList() const
     // Return our editor list
 
     return mEditorList;
+}
+
+//==============================================================================
+
+void CoreCellmlEditingWidget::itemRequested(EditorList::EditorListItem *pItem)
+{
+    // Set our editor's cursor position to the line/column of the given item and
+    // give our editor the focuse so that we can see the exact location of the
+    // item (otherwise it will mEditorList that will have the focus since we
+    // just double-clicked on it)
+
+    mEditor->setCursorPosition(pItem->line()-1, pItem->column()-1);
+    mEditor->setFocus();
 }
 
 //==============================================================================

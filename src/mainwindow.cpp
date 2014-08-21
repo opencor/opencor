@@ -23,6 +23,7 @@ specific language governing permissions and limitations under the License.
 #include "cliutils.h"
 #include "common.h"
 #include "coreinterface.h"
+#include "coresettings.h"
 #include "dockwidget.h"
 #include "guiinterface.h"
 #include "guiutils.h"
@@ -32,6 +33,7 @@ specific language governing permissions and limitations under the License.
 #include "pluginmanager.h"
 #include "pluginswindow.h"
 #include "preferenceswindow.h"
+#include "settings.h"
 #include "viewinterface.h"
 #include "windowinterface.h"
 
@@ -96,7 +98,8 @@ MainWindow::MainWindow(SharedTools::QtSingleApplication *pApp) :
     mViewSeparator(0),
     mViewPlugin(0),
     mDockedWindowsVisible(true),
-    mDockedWindowsState(QByteArray())
+    mDockedWindowsState(QByteArray()),
+    mStatusBarVisible(false)
 {
     // Make sure that OpenCOR can handle a file opening request (from the
     // operating system), as well as a message sent by another instance of
@@ -237,7 +240,7 @@ Core::showEnableAction(mGui->actionPreferences, false);
 
     // Let our various plugins know that all of them have been initialised
     // Note: this is important to do since the initialisation of a plugin is
-    //       something which is done without knowing anything about other
+    //       something that is done without knowing anything about other
     //       plugins. However, there may be things that require knowledge of
     //       what one or several other plugins are about, and this is something
     //       that can only be done once all the plugins have been initialised
@@ -387,6 +390,8 @@ void MainWindow::showEvent(QShowEvent *pEvent)
         // all of OpenCOR to be visible in order to be able to determine whether
         // the status bar is visible...
 
+        statusBar()->setVisible(mStatusBarVisible);
+
         mGui->actionStatusBar->setChecked(statusBar()->isVisible());
     }
 }
@@ -472,7 +477,7 @@ void MainWindow::initializeGuiPlugin(Plugin *pPlugin)
                 if (action)
                     mGui->menuFile->insertAction(mGui->menuFile->actions().first(), action);
                 else
-                    action = mGui->menuFile->insertSeparator(mGui->menuFile->actions().first());
+                    mGui->menuFile->insertSeparator(mGui->menuFile->actions().first());
 
                 break;
             }
@@ -648,7 +653,7 @@ void MainWindow::loadSettings()
 
     // Retrieve whether the status bar is to be shown
 
-    mGui->statusBar->setVisible(mSettings->value(SettingsStatusBarVisible, true).toBool());
+    mStatusBarVisible = mSettings->value(SettingsStatusBarVisible, true).toBool();
 
     // Retrieve the settings of our various plugins
 
@@ -1043,8 +1048,8 @@ void MainWindow::messageReceived(const QString &pMessage, QObject *pSocket)
 {
     Q_UNUSED(pSocket);
 
-    // We have just received a message which can be one of two things:
-    //  1) The user tried to run another instance of OpenCOR which sent a
+    // We have just received a message, which can be one of two things:
+    //  1) The user tried to run another instance of OpenCOR, which sent a
     //     message to this instance, asking it to bring itself to the foreground
     //     and handling all the arguments passed in the message; or
     //  2) A GUI action was sent to us, so we need to handle it.
@@ -1199,7 +1204,7 @@ void MainWindow::restart(const bool &pSaveSettings) const
     if (pSaveSettings)
         saveSettings();
 
-    qApp->exit(NeedRestart);
+    qApp->exit(pSaveSettings?NormalRestart:CleanRestart);
 }
 
 //==============================================================================
@@ -1241,29 +1246,9 @@ void MainWindow::updateGui(Plugin *pViewPlugin, const QString &pFileName)
     // meaning that a new view or file has been selected, so we may need to
     // enable/disable and/or show/hide some menus/actions/etc.
 
-    // Things that are to be done when a new view plugin has been selected
+    // Keep track of our view plugin
 
-    if (pViewPlugin != mViewPlugin) {
-        // Keep track of our new view plugin
-
-        mViewPlugin = pViewPlugin;
-
-        // Show/hide the File|New menu by checking whether its menu items are
-        // visible
-
-        if (mFileNewMenu) {
-            bool fileNewMenuVisible = false;
-
-            foreach (QAction *action, mFileNewMenu->actions())
-                if (action->isVisible()) {
-                    fileNewMenuVisible = true;
-
-                    break;
-                }
-
-            mFileNewMenu->menuAction()->setVisible(fileNewMenuVisible);
-        }
-    }
+    mViewPlugin = pViewPlugin;
 
     // Let our different plugins know that the GUI has been updated
     // Note: this can be useful when a plugin (e.g. CellMLTools) offers some

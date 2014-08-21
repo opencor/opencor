@@ -77,7 +77,7 @@ CellmlFile::CellmlFile(const QString &pFileName) :
 {
     // Instantiate our runtime object
 
-    mRuntime = new CellmlFileRuntime();
+    mRuntime = new CellmlFileRuntime(this);
 
     // Reset ourselves
 
@@ -118,6 +118,8 @@ void CellmlFile::reset()
     mLoadingNeeded = true;
     mValidNeeded = true;
     mRuntimeUpdateNeeded = true;
+
+    mImportContents.clear();
 }
 
 //==============================================================================
@@ -146,6 +148,189 @@ iface::rdf_api::DataSource * CellmlFile::rdfDataSource()
 
 //==============================================================================
 
+void CellmlFile::retrieveImports(iface::cellml_api::Model *pModel,
+                                 QList<iface::cellml_api::CellMLImport *> &pImportList,
+                                 QStringList &pImportXmlBaseList,
+                                 const QString &pXmlBase)
+{
+    // Retrieve all the imports of the given model
+
+    ObjRef<iface::cellml_api::CellMLImportSet> imports = pModel->imports();
+    ObjRef<iface::cellml_api::CellMLImportIterator> importsIterator = imports->iterateImports();
+
+    for (ObjRef<iface::cellml_api::CellMLImport> import = importsIterator->nextImport();
+         import; import = importsIterator->nextImport()) {
+        import->add_ref();
+
+        pImportList << import;
+        pImportXmlBaseList << pXmlBase;
+    }
+}
+
+//==============================================================================
+
+bool CellmlFile::fullyInstantiateImports(iface::cellml_api::Model *pModel,
+                                         CellmlFileIssues &pIssues)
+{
+    // Fully instantiate all the imports, but only if we are dealing with a non
+    // CellML 1.0 model
+
+    if (QString::fromStdWString(pModel->cellmlVersion()).compare(CellMLSupport::Cellml_1_0)) {
+        try {
+            // Note: the below is based on CDA_Model::fullyInstantiateImports().
+            //       Indeed, CDA_Model::fullyInstantiateImports() doesn't work
+            //       with CellML imports that rely on https (see
+            //       https://github.com/opencor/opencor/issues/417), so rather
+            //       than calling CDA_CellMLImport::instantiate(), we call
+            //       CDA_CellMLImport::instantiateFromText() instead, which
+            //       requires loading the imported CellML file. Otherwise, to
+            //       speed things up as much as possible, we cache the contents
+            //       of the URLs that we load...
+
+            // Retrieve the list of imports, together with their XML base values
+
+            ObjRef<iface::cellml_api::URI> uri = pModel->xmlBase();
+            QList<iface::cellml_api::CellMLImport *> importList = QList<iface::cellml_api::CellMLImport *>();
+            QStringList importXmlBaseList = QStringList();
+
+            retrieveImports(pModel, importList, importXmlBaseList,
+                            QString::fromStdWString(uri->asText()));
+
+            // Instantiate all the imports in our list
+
+            while (!importList.isEmpty()) {
+                // Retrieve the first import and instantiate it, if needed
+
+                ObjRef<iface::cellml_api::CellMLImport> import = importList.first();
+                QString importXmlBase = importXmlBaseList.first();
+
+                importList.removeFirst();
+                importXmlBaseList.removeFirst();
+
+                if (!import->wasInstantiated()) {
+                    // Note: CDA_CellMLImport::instantiate() would normally be
+                    //       called, but it doesn't work with https, so we
+                    //       retrieve the contents of the import ourselves and
+                    //       instantiate it from text instead...
+
+                    ObjRef<iface::cellml_api::URI> xlinkHref = import->xlinkHref();
+                    QString url = QUrl(importXmlBase).resolved(QString::fromStdWString(xlinkHref->asText())).toString();
+                    bool isLocalFile;
+                    QString fileNameOrUrl;
+
+                    Core::checkFileNameOrUrl(url, isLocalFile, fileNameOrUrl);
+
+                    if (mImportContents.contains(fileNameOrUrl)) {
+                        // We have already loaded the import contents, so
+                        // directly instantiate the import with it
+
+                        import->instantiateFromText(mImportContents.value(fileNameOrUrl).toStdWString());
+                    } else {
+                        // We haven't already loaded the import contents, so do
+                        // so
+
+                        QString fileContents;
+
+                        if (   ( isLocalFile && Core::readTextFromFile(fileNameOrUrl, fileContents))
+                            || (!isLocalFile && Core::readTextFromUrl(fileNameOrUrl, fileContents))) {
+                            // We were able to retrieve the import contents, so
+                            // instantiate the import with it
+
+                            import->instantiateFromText(fileContents.toStdWString());
+
+                            // Keep track of the import contents
+
+                            mImportContents.insert(fileNameOrUrl, fileContents);
+                        } else {
+                            throw(std::exception());
+                        }
+                    }
+
+                    // Now that the import is instantiated, add its own imports
+                    // to our list
+
+                    ObjRef<iface::cellml_api::Model> importModel = import->importedModel();
+
+                    if (!importModel)
+                        throw(std::exception());
+
+                    retrieveImports(importModel, importList, importXmlBaseList,
+                                    isLocalFile?
+                                        QUrl::fromLocalFile(fileNameOrUrl).toString():
+                                        fileNameOrUrl);
+                }
+            }
+        } catch (...) {
+            // Something went wrong with the full instantiation of the imports,
+            // so...
+
+            pIssues << CellmlFileIssue(CellmlFileIssue::Error,
+                                       tr("the imports could not be fully instantiated"));
+
+            return false;
+        }
+    }
+
+    return true;
+}
+
+//==============================================================================
+
+bool CellmlFile::doLoad(const QString &pFileName, const QString &pFileContents,
+                        ObjRef<iface::cellml_api::Model> *pModel,
+                        CellmlFileIssues &pIssues)
+{
+    // Make sure that pIssues is empty
+
+    pIssues.clear();
+
+    // Get a bootstrap object and its model loader
+
+    ObjRef<iface::cellml_api::CellMLBootstrap> cellmlBootstrap = CreateCellMLBootstrap();
+    ObjRef<iface::cellml_api::DOMModelLoader> modelLoader = cellmlBootstrap->modelLoader();
+
+    // Try to create the model
+
+    try {
+        if (pFileContents.isEmpty())
+            *pModel = modelLoader->loadFromURL(QUrl::fromPercentEncoding(QUrl::fromLocalFile(pFileName).toEncoded()).toStdWString());
+        else
+            *pModel = modelLoader->createFromText(pFileContents.toStdWString());
+    } catch (iface::cellml_api::CellMLException &) {
+        // Something went wrong with the loading of the model, so...
+
+        if (pFileContents.isEmpty())
+            pIssues << CellmlFileIssue(CellmlFileIssue::Error,
+                                       tr("the model could not be loaded (%1)").arg(QString::fromStdWString(modelLoader->lastErrorMessage())));
+        else
+            pIssues << CellmlFileIssue(CellmlFileIssue::Error,
+                                       tr("the model could not be created (%1)").arg(QString::fromStdWString(modelLoader->lastErrorMessage())));
+
+        return false;
+    }
+
+    // Update the XML base value, should the CellML file be a remote one or its
+    // contents be directly passed onto us
+
+    Core::FileManager *fileManagerInstance = Core::FileManager::instance();
+    ObjRef<iface::cellml_api::URI> uri = (*pModel)->xmlBase();
+
+    if (fileManagerInstance->isRemote(pFileName))
+        // We are dealing with a remote file, so its XML base value should point
+        // to its remote location
+
+        uri->asText(fileManagerInstance->url(pFileName).toStdWString());
+    else if (!pFileContents.isEmpty())
+        // We are dealing with a file which contents was directly passed onto
+        // us, so its XML base value should point to its actual location
+
+        uri->asText(pFileName.toStdWString());
+
+    return true;
+}
+
+//==============================================================================
+
 bool CellmlFile::load()
 {
     if (!mLoadingNeeded)
@@ -153,65 +338,17 @@ bool CellmlFile::load()
 
         return true;
 
-    // Reset any issues that we may have found before and consider the file
-    // loaded
-    // Note: even we can't load the file, we still consider it 'loaded' since we
-    //       at least tried to load it, so unless the file gets modified (and we
-    //       are to reload it), we are 'fine'...
-
-    mIssues.clear();
+    // Consider the file loaded
+    // Note: even when we can't load the file, we still consider it 'loaded'
+    //       since we at least tried to load it, so unless the file gets
+    //       modified (and we are to reload it), we are 'fine'...
 
     mLoadingNeeded = false;
 
-    // Get a bootstrap object and its model loader
-
-    ObjRef<iface::cellml_api::CellMLBootstrap> cellmlBootstrap = CreateCellMLBootstrap();
-    ObjRef<iface::cellml_api::DOMModelLoader> modelLoader = cellmlBootstrap->modelLoader();
-
     // Try to load the model
 
-    try {
-        mModel = modelLoader->loadFromURL(QUrl::fromPercentEncoding(QUrl::fromLocalFile(mFileName).toEncoded()).toStdWString());
-    } catch (iface::cellml_api::CellMLException &) {
-        // Something went wrong with the loading of the model, so...
-
-        mIssues << CellmlFileIssue(CellmlFileIssue::Error,
-                                   tr("the model could not be loaded (%1)").arg(QString::fromStdWString(modelLoader->lastErrorMessage())));
-
+    if (!doLoad(mFileName, QString(), &mModel, mIssues))
         return false;
-    }
-
-    // In the case of a non CellML 1.0 model, we want all the imports to be
-    // fully instantiated
-
-    if (QString::fromStdWString(mModel->cellmlVersion()).compare(CellMLSupport::Cellml_1_0)) {
-        // First, check whether the CellML file is a remote one and, if so,
-        // change its xmlbase so that it points to the remote location
-
-        Core::FileManager *fileManagerInstance = Core::FileManager::instance();
-
-        if (fileManagerInstance->isRemote(mFileName)) {
-            ObjRef<iface::cellml_api::URI> uri = mModel->xmlBase();
-
-            uri->asText(fileManagerInstance->url(mFileName).toStdWString());
-        }
-
-        // Now, we can try to instantiate all the imports
-
-        try {
-            mModel->fullyInstantiateImports();
-        } catch (...) {
-            // Something went wrong with the full instantiation of the imports,
-            // so...
-
-            mModel = 0;
-
-            mIssues << CellmlFileIssue(CellmlFileIssue::Error,
-                                       tr("the imports could not be fully instantiated"));
-
-            return false;
-        }
-    }
 
     // Retrieve all the RDF triples associated with the model
 
@@ -230,8 +367,6 @@ bool CellmlFile::load()
                 mRdfTriples << new CellmlFileRdfTriple(this, rdfTriple);
         }
     }
-
-    // All done, so...
 
     return true;
 }
@@ -305,6 +440,134 @@ bool CellmlFile::save(const QString &pNewFileName)
 
 //==============================================================================
 
+bool CellmlFile::doIsValid(iface::cellml_api::Model *pModel,
+                           CellmlFileIssues &pIssues)
+{
+    // Check whether the given model is CellML valid
+    // Note: validateModel() is somewhat slow, but there is (unfortunately)
+    //       nothing we can do about it. Then, there is getPositionInXML() which
+    //       is painfully slow, but unlike for validateModel() its use is not
+    //       essential (even though it would be nice from an end-user's
+    //       perspective). So, rather than retrieve the line/column of every
+    //       single warning/error, we only keep track of the various
+    //       warnings/errors and only retrieve their corresponding line/column
+    //       when requested (definitely not neat from an end-user's perspective,
+    //       but we just can't afford the time it takes to fully validate a
+    //       model that has many warnings/errors)...
+
+    // Make sure that pIssues is empty
+
+    pIssues.clear();
+
+    // Determine the number of errors and warnings
+    // Note: CellMLValidityErrorSet::nValidityErrors() returns any type of
+    //       validation issue, be it an error or a warning, so we need to
+    //       determine the number of true errors
+
+    ObjRef<iface::cellml_services::VACSService> vacssService = CreateVACSService();
+    ObjRef<iface::cellml_services::CellMLValidityErrorSet> cellmlValidityErrorSet = vacssService->validateModel(pModel);
+
+    int cellmlErrorsCount = 0;
+
+    for (int i = 0, iMax = cellmlValidityErrorSet->nValidityErrors(); i < iMax; ++i) {
+        ObjRef<iface::cellml_services::CellMLValidityError> cellmlValidityIssue = cellmlValidityErrorSet->getValidityError(i);
+        ObjRef<iface::cellml_services::CellMLRepresentationValidityError> cellmlRepresentationValidityError = QueryInterface(cellmlValidityIssue);
+
+        // Determine the issue's location
+
+        uint32_t line = 0;
+        uint32_t column = 0;
+        QString importedFile = QString();
+
+        if (cellmlRepresentationValidityError) {
+            // We are dealing with a CellML representation issue, so determine
+            // its line and column
+
+            ObjRef<iface::dom::Node> errorNode = cellmlRepresentationValidityError->errorNode();
+
+            line = vacssService->getPositionInXML(errorNode,
+                                                  cellmlRepresentationValidityError->errorNodalOffset(),
+                                                  &column);
+        } else {
+            // We are not dealing with a CellML representation issue, so check
+            // whether we are dealing with a semantic one
+
+            ObjRef<iface::cellml_services::CellMLSemanticValidityError> cellmlSemanticValidityError = QueryInterface(cellmlValidityIssue);
+
+            if (cellmlSemanticValidityError) {
+                // We are dealing with a CellML semantic issue, so determine its
+                // line and column
+
+                ObjRef<iface::cellml_api::CellMLElement> cellmlElement = cellmlSemanticValidityError->errorElement();
+                ObjRef<iface::cellml_api::CellMLDOMElement> cellmlDomElement = QueryInterface(cellmlElement);
+
+                ObjRef<iface::dom::Element> domElement = cellmlDomElement->domElement();
+
+                line = vacssService->getPositionInXML(domElement, 0, &column);
+
+                // Also determine its imported file, if any
+
+                ObjRef<iface::cellml_api::CellMLElement> cellmlElementParent = cellmlElement->parentElement();
+
+                if (cellmlElementParent) {
+                    // Check whether the parent is an imported file
+
+                    ObjRef<iface::cellml_api::Model> importedCellmlFile = QueryInterface(cellmlElementParent);
+
+                    if (importedCellmlFile) {
+                        // Retrieve the imported CellML element
+
+                        ObjRef<iface::cellml_api::CellMLElement> importedCellmlElement = importedCellmlFile->parentElement();
+
+                        if (importedCellmlElement) {
+                            // Check whether the imported CellML element is an
+                            // import CellML element
+
+                            ObjRef<iface::cellml_api::CellMLImport> importCellmlElement = QueryInterface(importedCellmlElement);
+
+                            if (importCellmlElement) {
+                                ObjRef<iface::cellml_api::URI> xlinkHref = importCellmlElement->xlinkHref();
+
+                                importedFile = QString::fromStdWString(xlinkHref->asText());
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        // Determine the issue's type
+
+        CellmlFileIssue::Type issueType;
+
+        if (cellmlValidityIssue->isWarningOnly()) {
+            // We are dealing with a warning
+
+            issueType = CellmlFileIssue::Warning;
+        } else {
+            // We are dealing with an error
+
+            ++cellmlErrorsCount;
+
+            issueType = CellmlFileIssue::Error;
+        }
+
+        // Append the issue to our list
+
+        pIssues << CellmlFileIssue(issueType, line, column,
+                                   QString::fromStdWString(cellmlValidityIssue->description()),
+                                   importedFile);
+    }
+
+    // Sort our issues
+
+    std::sort(pIssues.begin(), pIssues.end());
+
+    return !cellmlErrorsCount;
+}
+
+//==============================================================================
+
 bool CellmlFile::isValid()
 {
     if (!mValidNeeded)
@@ -315,139 +578,47 @@ bool CellmlFile::isValid()
     // Load (but not reload!) the file, if needed
 
     if (load()) {
-        // The file was properly loaded (or was already loaded), so check
-        // whether it is CellML valid
-        // Note: validateModel() is somewhat slow, but there is (unfortunately)
-        //       nothing we can do about it. Then, there is getPositionInXML()
-        //       which is painfully slow, but unlike for validateModel() its use
-        //       is not essential (even though it would be nice from an
-        //       end-user's perspective). So, rather than retrieve the
-        //       line/column of every single warning/error, we only keep track
-        //       of the various warnings/errors and only retrieve their
-        //       corresponding line/column when requested (definitely not neat
-        //       from an end-user's perspective, but we just can't afford the
-        //       time it takes to fully validate a model that has many
-        //       warnings/errors)...
+        // The file was properly loaded (or was already loaded), so make sure
+        // that its imports, if any, are fully instantiated
 
-        // Reset any issues that we may have found before
+        if (fullyInstantiateImports(mModel, mIssues)) {
+            // Now, we can check whether the file is CellML valid
 
-        mIssues.clear();
+            mValid = doIsValid(mModel, mIssues);
 
-        // Determine the number of errors and warnings
-        // Note: CellMLValidityErrorSet::nValidityErrors() returns any type of
-        //       validation issue, be it an error or a warning, so we need to
-        //       determine the number of true errors
+            mValidNeeded = false;
 
-        ObjRef<iface::cellml_services::VACSService> vacssService = CreateVACSService();
-        ObjRef<iface::cellml_services::CellMLValidityErrorSet> cellmlValidityErrorSet = vacssService->validateModel(mModel);
-
-        int cellmlErrorsCount = 0;
-
-        for (int i = 0, iMax = cellmlValidityErrorSet->nValidityErrors(); i < iMax; ++i) {
-            ObjRef<iface::cellml_services::CellMLValidityError> cellmlValidityIssue = cellmlValidityErrorSet->getValidityError(i);
-            ObjRef<iface::cellml_services::CellMLRepresentationValidityError> cellmlRepresentationValidityError = QueryInterface(cellmlValidityIssue);
-
-            // Determine the issue's location
-
-            uint32_t line = 0;
-            uint32_t column = 0;
-            QString importedFile = QString();
-
-            if (cellmlRepresentationValidityError) {
-                // We are dealing with a CellML representation issue, so
-                // determine its line and column
-
-                ObjRef<iface::dom::Node> errorNode = cellmlRepresentationValidityError->errorNode();
-
-                line = vacssService->getPositionInXML(errorNode,
-                                                      cellmlRepresentationValidityError->errorNodalOffset(),
-                                                      &column);
-            } else {
-                // We are not dealing with a CellML representation issue, so
-                // check whether we are dealing with a semantic one
-
-                ObjRef<iface::cellml_services::CellMLSemanticValidityError> cellmlSemanticValidityError = QueryInterface(cellmlValidityIssue);
-
-                if (cellmlSemanticValidityError) {
-                    // We are dealing with a CellML semantic issue, so determine
-                    // its line and column
-
-                    ObjRef<iface::cellml_api::CellMLElement> cellmlElement = cellmlSemanticValidityError->errorElement();
-                    ObjRef<iface::cellml_api::CellMLDOMElement> cellmlDomElement = QueryInterface(cellmlElement);
-
-                    ObjRef<iface::dom::Element> domElement = cellmlDomElement->domElement();
-
-                    line = vacssService->getPositionInXML(domElement, 0, &column);
-
-                    // Also determine its imported file, if any
-
-                    ObjRef<iface::cellml_api::CellMLElement> cellmlElementParent = cellmlElement->parentElement();
-
-                    if (cellmlElementParent) {
-                        // Check whether the parent is an imported file
-
-                        ObjRef<iface::cellml_api::Model> importedCellmlFile = QueryInterface(cellmlElementParent);
-
-                        if (importedCellmlFile) {
-                            // Retrieve the imported CellML element
-
-                            ObjRef<iface::cellml_api::CellMLElement> importedCellmlElement = importedCellmlFile->parentElement();
-
-                            if (importedCellmlElement) {
-                                // Check whether the imported CellML element
-                                // is an import CellML element
-
-                                ObjRef<iface::cellml_api::CellMLImport> importCellmlElement = QueryInterface(importedCellmlElement);
-
-                                if (importCellmlElement) {
-                                    ObjRef<iface::cellml_api::URI> xlinkHref = importCellmlElement->xlinkHref();
-
-                                    importedFile = QString::fromStdWString(xlinkHref->asText());
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-
-            // Determine the issue's type
-
-            CellmlFileIssue::Type issueType;
-
-            if (cellmlValidityIssue->isWarningOnly()) {
-                // We are dealing with a warning
-
-                issueType = CellmlFileIssue::Warning;
-            } else {
-                // We are dealing with an error
-
-                ++cellmlErrorsCount;
-
-                issueType = CellmlFileIssue::Error;
-            }
-
-            // Append the issue to our list
-
-            mIssues << CellmlFileIssue(issueType,
-                                       QString::fromStdWString(cellmlValidityIssue->description()),
-                                       line, column, importedFile);
+            return mValid;
+        } else {
+            return false;
         }
-
-        if (cellmlErrorsCount)
-            // There are CellML errors, so...
-
-            mValid = false;
-        else
-            // Everything went as expected, so...
-
-            mValid = true;
-
-        mValidNeeded = false;
-
-        return mValid;
     } else {
-        // The file couldn't be loaded, so...
+        return false;
+    }
+}
 
+//==============================================================================
+
+bool CellmlFile::isValid(const QString &pFileName, const QString &pFileContents,
+                         CellmlFileIssues &pIssues)
+{
+    // Check whether the given file contents is CellML valid, so first create a
+    // model
+
+    ObjRef<iface::cellml_api::Model> model;
+
+    if (doLoad(pFileName, pFileContents, &model, pIssues)) {
+        // The file contents was properly loaded, so make sure that its imports,
+        // if any, are fully instantiated
+
+        if (fullyInstantiateImports(model, pIssues)) {
+            // Now, we can check whether the file contents is CellML valid
+
+            return doIsValid(model, pIssues);
+        } else {
+            return false;
+        }
+    } else {
         return false;
     }
 }
@@ -491,13 +662,20 @@ CellmlFileRuntime * CellmlFile::runtime()
     // Load (but not reload!) the file, if needed
 
     if (load()) {
-        // The file is loaded, so return an updated version of its runtime
+        // The file was properly loaded (or was already loaded), so make sure
+        // that its imports, if any, are fully instantiated
 
-        mRuntime->update(this);
+        if (fullyInstantiateImports(mModel, mIssues)) {
+            // Now, we can return an updated version of its runtime
 
-        mRuntimeUpdateNeeded = !mRuntime->isValid();
+            mRuntime->update();
 
-        return mRuntime;
+            mRuntimeUpdateNeeded = false;
+
+            return mRuntime;
+        } else {
+            return 0;
+        }
     } else {
         // The file coudln't be loaded, so...
 
@@ -718,6 +896,11 @@ bool CellmlFile::exportTo(const QString &pFileName, const Version &pVersion)
                 return false;
         }
 
+        // Fully instantiate all the imports
+
+        if (!fullyInstantiateImports(mModel, mIssues))
+            return false;
+
         // Do the actual export
 
         switch (pVersion) {
@@ -740,8 +923,6 @@ bool CellmlFile::exportTo(const QString &pFileName, const Version &pVersion)
             return exporter.result();
         }
     } else {
-        // The file couldn't be loaded, so...
-
         return false;
     }
 }
@@ -789,6 +970,11 @@ bool CellmlFile::exportTo(const QString &pFileName,
             return false;
         }
 
+        // Fully instantiate all the imports
+
+        if (!fullyInstantiateImports(mModel, mIssues))
+            return false;
+
         // Do the actual export
 
         ObjRef<iface::cellml_services::CeLEDSExporterBootstrap> celedsExporterBootstrap = CreateCeLEDSExporterBootstrap();
@@ -805,8 +991,6 @@ bool CellmlFile::exportTo(const QString &pFileName,
 
         return true;
     } else {
-        // The file couldn't be loaded, so...
-
         return false;
     }
 }

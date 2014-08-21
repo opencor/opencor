@@ -69,7 +69,11 @@ public:
 
     void reset();
 
+    bool isDifferent() const;
+    bool isDifferent(const QString pFileContents) const;
+
     bool isNew() const;
+    bool makeNew(const QString &pFileName);
 
     int newIndex() const;
 
@@ -79,6 +83,7 @@ public:
 
     bool isModified() const;
     bool setModified(const bool &pModified);
+    bool setConsiderModified(const bool &pModified);
 
     bool isReadable() const;
     bool isWritable() const;
@@ -95,6 +100,7 @@ private:
     int mNewIndex;
 
     bool mModified;
+    bool mConsiderModified;
 };
 
 //==============================================================================

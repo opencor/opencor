@@ -68,7 +68,7 @@ void CellmlAnnotationViewCellmlElementItemDelegate::paint(QPainter *pPainter,
         || (cellmlElementItem->type() == CellmlAnnotationViewCellmlElementItem::Warning)) {
         // This is an error/warning item, so prevent it from hoverable and make
         // it look enabled since it's actually disabled (so we can't select it),
-        // yet we want to see as if it was enabled, so...
+        // yet we want to see it as if it was enabled, so...
 
         option.state &= ~QStyle::State_MouseOver;
         option.state |=  QStyle::State_Enabled;
@@ -1069,7 +1069,7 @@ void CellmlAnnotationViewCellmlListWidget::on_actionOpenImport_triggered()
                    fileManagerInstance->url(mCellmlFile->fileName()):
                    QUrl::fromLocalFile(mCellmlFile->fileName());
 
-    url = url.adjusted(QUrl::RemoveFilename).toString()+currentCellmlElementItem()->text();
+    url = url.resolved(currentCellmlElementItem()->text());
 
     static_cast<SharedTools::QtSingleApplication *>(qApp)->handleAction("gui://openFile/"+url.toString());
 }

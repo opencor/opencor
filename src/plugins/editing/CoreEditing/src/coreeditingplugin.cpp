@@ -206,28 +206,26 @@ void CoreEditingPlugin::updateGui(Plugin *pViewPlugin, const QString &pFileName)
     // Show/enable or hide/disable various actions, depending on whether the
     // view plugin handles the editing interface
 
-    bool hasEditingInterfaceAndEditor = mEditingInterface && mEditor;
-
     Core::showEnableAction(mFileNewFileAction, mEditingInterface);
 
-    Core::showEnableAction(mEditUndoAction, hasEditingInterfaceAndEditor);
-    Core::showEnableAction(mEditRedoAction, hasEditingInterfaceAndEditor);
+    Core::showEnableAction(mEditUndoAction, mEditingInterface, mEditor);
+    Core::showEnableAction(mEditRedoAction, mEditingInterface, mEditor);
 
-    Core::showEnableAction(mEditCutAction, hasEditingInterfaceAndEditor);
-    Core::showEnableAction(mEditCopyAction, hasEditingInterfaceAndEditor);
-    Core::showEnableAction(mEditPasteAction, hasEditingInterfaceAndEditor);
-    Core::showEnableAction(mEditDeleteAction, hasEditingInterfaceAndEditor);
+    Core::showEnableAction(mEditCutAction, mEditingInterface, mEditor);
+    Core::showEnableAction(mEditCopyAction, mEditingInterface, mEditor);
+    Core::showEnableAction(mEditPasteAction, mEditingInterface, mEditor);
+    Core::showEnableAction(mEditDeleteAction, mEditingInterface, mEditor);
 
-    Core::showEnableAction(mEditFindReplaceAction, hasEditingInterfaceAndEditor);
-    Core::showEnableAction(mEditFindNextAction, hasEditingInterfaceAndEditor);
-    Core::showEnableAction(mEditFindPreviousAction, hasEditingInterfaceAndEditor);
+    Core::showEnableAction(mEditFindReplaceAction, mEditingInterface, mEditor);
+    Core::showEnableAction(mEditFindNextAction, mEditingInterface, mEditor);
+    Core::showEnableAction(mEditFindPreviousAction, mEditingInterface, mEditor);
 
-    Core::showEnableAction(mEditSelectAllAction, hasEditingInterfaceAndEditor);
+    Core::showEnableAction(mEditSelectAllAction, mEditingInterface, mEditor);
 
     // Enable/disable some of our actions, if we have both an editing interface
     // and an editor
 
-    if (hasEditingInterfaceAndEditor) {
+    if (mEditingInterface && mEditor) {
         updateUndoAndRedoActions();
         updateEditingActions();
         updateFindPreviousNextActions();
@@ -498,7 +496,7 @@ void CoreEditingPlugin::clipboardDataChanged()
 void CoreEditingPlugin::updateUndoAndRedoActions()
 {
     // Update our undo/redo actions, and update the modified state of the
-    // current file (since it can be determined by whether we can undo)
+    // current file
 
     if (mEditingInterface) {
         Core::FileManager *fileManagerInstance = Core::FileManager::instance();
@@ -509,7 +507,7 @@ void CoreEditingPlugin::updateUndoAndRedoActions()
         mEditRedoAction->setEnabled(editorAndFileReadableAndWritable && mEditor->isRedoAvailable());
 
         fileManagerInstance->setModified(mFileName,
-                                         mEditor && mEditor->isUndoAvailable());
+                                         mEditor && fileManagerInstance->isDifferent(mFileName, mEditor->contents()));
     }
 }
 

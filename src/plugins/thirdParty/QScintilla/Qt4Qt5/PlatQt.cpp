@@ -129,7 +129,7 @@ void Font::Create(const FontParameters &fp)
     else
     {
         f->setFamily(fp.faceName);
-        f->setPointSize(fp.size);
+        f->setPointSizeF(fp.size);
 
         // See if the Qt weight has been passed via the back door.   Otherwise
         // map Scintilla weights to Qt weights ensuring that the SC_WEIGHT_*

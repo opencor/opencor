@@ -33,6 +33,13 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 namespace OpenCOR {
+
+//==============================================================================
+
+class CellmlEditingInterface;
+
+//==============================================================================
+
 namespace CoreCellMLEditing {
 
 //==============================================================================
@@ -66,6 +73,7 @@ private:
     QAction *mToolsCellmlValidationAction;
 
     QString mFileName;
+    CellmlEditingInterface *mCellmlEditingInterface;
 
     void newCellmlFile(const CellMLSupport::CellmlFile::Version &pVersion);
 

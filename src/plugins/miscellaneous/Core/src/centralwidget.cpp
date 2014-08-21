@@ -21,11 +21,11 @@ specific language governing permissions and limitations under the License.
 
 #include "centralwidget.h"
 #include "cliutils.h"
+#include "coresettings.h"
 #include "filehandlinginterface.h"
 #include "filemanager.h"
 #include "guiinterface.h"
 #include "guiutils.h"
-#include "plugin.h"
 #include "usermessagewidget.h"
 #include "viewinterface.h"
 #include "viewwidget.h"
@@ -175,13 +175,13 @@ CentralWidget::CentralWidget(QMainWindow *pMainWindow) :
 
     mContents->setFrameShape(QFrame::StyledPanel);
 
-    // Create our logo view which simply display OpenCOR's logo
+    // Create our logo view which simply displays OpenCOR's logo
 
     mLogoView = new QWidget(this);
 
     mLogoView->setStyleSheet("QWidget {"
                              "    background-color: white;"
-                             "    background-image: url(:Core_logo);"
+                             "    background-image: url(:/logo.png);"
                              "    background-position: center;"
                              "    background-repeat: no-repeat;"
                              "}");
@@ -554,8 +554,7 @@ void CentralWidget::saveSettings(QSettings *pSettings) const
 
 void CentralWidget::settingsLoaded(const Plugins &pLoadedPlugins)
 {
-    // Determine which loaded plugins support the file handling interface, and
-    // which ones support the view interface
+    // Determine which loaded plugins support a given interface
 
     foreach (Plugin *plugin, pLoadedPlugins) {
         if (qobject_cast<FileHandlingInterface *>(plugin->instance()))
@@ -591,11 +590,6 @@ void CentralWidget::settingsLoaded(const Plugins &pLoadedPlugins)
 
 void CentralWidget::retranslateUi()
 {
-    // Retranslate our files tab bar, in case some files are new
-
-    for (int i = 0, iMax = mFileTabs->count(); i < iMax; ++i)
-        updateFileTab(i);
-
     // Retranslate our modes tab bar
 
 #ifdef ENABLE_SAMPLES
@@ -665,18 +659,18 @@ void CentralWidget::updateFileTab(const int &pIndex)
     QString fileName = mFileNames[pIndex];
     bool fileIsNew = fileManagerInstance->isNew(fileName);
     bool fileIsRemote = fileManagerInstance->isRemote(fileName);
-    QString fileUrl = fileManagerInstance->url(fileName);
+    QString url = fileManagerInstance->url(fileName);
     QString tabText = fileIsNew?
                           tr("File")+" #"+QString::number(fileManagerInstance->newIndex(fileName)):
                           fileIsRemote?
-                              QUrl(fileUrl).fileName():
+                              QUrl(url).fileName():
                               QFileInfo(fileName).fileName();
 
     mFileTabs->setTabText(pIndex, tabText+(fileManagerInstance->isNewOrModified(fileName)?"*":QString()));
     mFileTabs->setTabToolTip(pIndex, fileIsNew?
                                          tabText:
                                          fileIsRemote?
-                                             fileUrl:
+                                             url:
                                              fileName);
     mFileTabs->setTabIcon(pIndex, fileIsRemote?
                                       QIcon(":/oxygen/categories/applications-internet.png"):
@@ -768,20 +762,17 @@ void CentralWidget::openFile()
 {
     // Ask for the file(s) to be opened
 
-    QString supportedFileTypes;
+    QString fileTypes = QString();
 
-    foreach (FileType *supportedFileType, mSupportedFileTypes)
-        supportedFileTypes +=  ";;"
-                              +supportedFileType->description()
-                              +" (*."+supportedFileType->fileExtension()+")";
+    foreach (FileType *supportedFileType, mSupportedFileTypes) {
+        if (!fileTypes.isEmpty())
+            fileTypes += ";;";
 
-    QStringList files = getOpenFileNames(tr("Open File"),
-                                         tr("All Files")
-                                         +" (*"
-#ifdef Q_OS_WIN
-                                         +".*"
-#endif
-                                         +")"+supportedFileTypes);
+        fileTypes +=  supportedFileType->description()
+                     +" (*."+supportedFileType->fileExtension()+")";
+    }
+
+    QStringList files = getOpenFileNames(tr("Open File"), fileTypes);
 
     // Open the file(s)
 
@@ -793,11 +784,29 @@ void CentralWidget::openFile()
 void CentralWidget::openRemoteFile(const QString &pUrl,
                                    const bool &pShowWarning)
 {
+    // Make sure that pUrl really refers to a remote file
+
+    bool isLocalFile;
+    QString fileNameOrUrl;
+
+    checkFileNameOrUrl(pUrl, isLocalFile, fileNameOrUrl);
+
+    if (isLocalFile) {
+        // It looks like the user tried to open a local file using a URL, e.g.
+        //     file:///home/me/mymodel.cellml
+        // rather than a local file name, e.g.
+        //     /home/me/mymodel.cellml
+        // so open the file as a local file and leave
+
+        openFile(fileNameOrUrl);
+
+        return;
+    }
+
     // Check whether the remote file is already opened and if so select it,
     // otherwise retrieve its contents
 
-    QString url = QUrl(pUrl).toString(QUrl::NormalizePathSegments);
-    QString fileName = mRemoteLocalFileNames.value(url);
+    QString fileName = mRemoteLocalFileNames.value(fileNameOrUrl);
 
     if (fileName.isEmpty()) {
         // The remote file isn't already opened, so download its contents
@@ -805,7 +814,7 @@ void CentralWidget::openRemoteFile(const QString &pUrl,
         QString fileContents;
         QString errorMessage;
 
-        if (readTextFromUrl(url, fileContents, errorMessage)) {
+        if (readTextFromUrl(fileNameOrUrl, fileContents, &errorMessage)) {
             // We were able to retrieve the contents of the remote file, so ask
             // our file manager to create a new remote file
 
@@ -814,7 +823,7 @@ void CentralWidget::openRemoteFile(const QString &pUrl,
 #ifdef QT_DEBUG
             Core::FileManager::Status createStatus =
 #endif
-            fileManagerInstance->create(url, fileContents);
+            fileManagerInstance->create(fileNameOrUrl, fileContents);
 
 #ifdef QT_DEBUG
             // Make sure that the file has indeed been created
@@ -828,7 +837,7 @@ void CentralWidget::openRemoteFile(const QString &pUrl,
 
             if (pShowWarning)
                 QMessageBox::warning(this, tr("Open Remote File"),
-                                     tr("Sorry, but <strong>%1</strong> could not be opened (%2).").arg(url, Core::formatErrorMessage(errorMessage, false)));
+                                     tr("Sorry, but <strong>%1</strong> could not be opened (%2).").arg(fileNameOrUrl, Core::formatErrorMessage(errorMessage, false)));
         }
     } else {
         openFile(fileName);
@@ -868,7 +877,7 @@ void CentralWidget::openRemoteFile()
 
 //==============================================================================
 
-void CentralWidget::reloadFile(const int &pIndex)
+void CentralWidget::reloadFile(const int &pIndex, const bool &pForce)
 {
     // Ask our file manager to reload the file, but only if it isn't new and if
     // the user wants (in case the file has been modified)
@@ -882,7 +891,7 @@ void CentralWidget::reloadFile(const int &pIndex)
         if (!fileManagerInstance->isNew(fileName)) {
             bool doReloadFile = true;
 
-            if (fileManagerInstance->isModified(fileName))
+            if (!pForce && fileManagerInstance->isModified(fileName))
                 // The current file is modified, so ask the user whether s/he
                 // still wants to reload it
 
@@ -905,7 +914,7 @@ void CentralWidget::reloadFile(const int &pIndex)
                     QString fileContents;
                     QString errorMessage;
 
-                    if (readTextFromUrl(url, fileContents, errorMessage)) {
+                    if (readTextFromUrl(url, fileContents, &errorMessage)) {
                         Core::writeTextToFile(fileName, fileContents);
 
                         fileManagerInstance->reload(fileName);
@@ -1008,20 +1017,20 @@ bool CentralWidget::saveFile(const int &pIndex, const bool &pNeedNewFileName)
 
         QStringList mimeTypes = viewInterface->viewMimeTypes();
 
-        QString supportedFileTypes = QString();
+        QString fileTypes = QString();
 
         foreach (FileType *supportedFileType, mSupportedFileTypes)
             if (mimeTypes.contains(supportedFileType->mimeType())) {
-                if (!supportedFileTypes.isEmpty())
-                    supportedFileTypes += ";;";
+                if (!fileTypes.isEmpty())
+                    fileTypes += ";;";
 
-                supportedFileTypes +=  supportedFileType->description()
-                                      +" (*."+supportedFileType->fileExtension()+")";
+                fileTypes +=  supportedFileType->description()
+                             +" (*."+supportedFileType->fileExtension()+")";
             }
 
         newFileName = Core::getSaveFileName(tr("Save File"),
                                             fileIsNew?mFileTabs->tabToolTip(pIndex):newFileName,
-                                            supportedFileTypes);
+                                            fileTypes);
 
         // Make sure that a new file name was retrieved
 
@@ -1037,12 +1046,11 @@ bool CentralWidget::saveFile(const int &pIndex, const bool &pNeedNewFileName)
     bool fileIsModified = fileManagerInstance->isModified(oldFileName);
 
     if (fileIsModified || hasNewFileName) {
-        // Inactivate our file manager so that it doesn't check for changes in
-        // files
+        // Prevent our file manager from checking files
         // Note: indeed, otherwise we will get told that the current file has
         //       changed and we will be asked whether we want to reload it...
 
-        fileManagerInstance->setActive(false);
+        fileManagerInstance->setCanCheckFiles(false);
 
         if (fileIsNew || fileIsModified) {
             // The file is or has been modified, so ask the current view to save
@@ -1055,6 +1063,11 @@ bool CentralWidget::saveFile(const int &pIndex, const bool &pNeedNewFileName)
                 // settings
 
                 fileManagerInstance->reset(oldFileName);
+
+                // Let people know, through the file manager, that the file has
+                // been saved
+
+                emit fileManagerInstance->fileSaved(oldFileName);
             } else {
                 // The file couldn't be saved, so...
 
@@ -1080,6 +1093,15 @@ bool CentralWidget::saveFile(const int &pIndex, const bool &pNeedNewFileName)
             }
         }
 
+        // Delete the 'old' file, if it was a new one that got saved
+        // Note: we delete the 'old' file before updating the file name in case
+        //       someone handles the renaming of a file and checks whether the
+        //       old file still exists (see CorePlugin::fileRenamed() and
+        //       CorePlugin::fileClosed())...
+
+        if (fileIsNew)
+            QFile::remove(oldFileName);
+
         // Update its file name, if needed
 
         if (hasNewFileName) {
@@ -1098,15 +1120,10 @@ bool CentralWidget::saveFile(const int &pIndex, const bool &pNeedNewFileName)
 #endif
         }
 
-        // Delete the 'old' file, if it was a new one that got saved
-
-        if (fileIsNew)
-            QFile::remove(oldFileName);
-
         // Let people know that the file has been saved, if needed, by reloading
         // it
 
-        reloadFile(pIndex);
+        reloadFile(pIndex, true);
 
         // Update our modified settings
 
@@ -1114,7 +1131,7 @@ bool CentralWidget::saveFile(const int &pIndex, const bool &pNeedNewFileName)
 
         // Re-activate our file manager
 
-        fileManagerInstance->setActive(true);
+        fileManagerInstance->setCanCheckFiles(true);
 
         // Everything went fine, so...
 
@@ -1308,7 +1325,8 @@ void CentralWidget::closeAllFiles(const bool &pForceClosing)
 
     // Close all the files
 
-    while (closeFile(-2, pForceClosing)) {}
+    while (closeFile(-2, pForceClosing))
+        ;
 }
 
 //==============================================================================
@@ -1490,7 +1508,7 @@ void CentralWidget::updateGui()
     bool changedModes = sender() == mModeTabs;
     bool changedViews = false;
 
-    foreach (CentralWidgetMode *mode, mModes.values())
+    foreach (CentralWidgetMode *mode, mModes)
         if (sender() == mode->viewTabs()) {
             changedViews = true;
 
@@ -1553,7 +1571,8 @@ void CentralWidget::updateGui()
     // Ask the GUI interface for the widget to use for the current file (should
     // there be one)
 
-    Plugin *fileViewPlugin = viewPlugin(mFileTabs->currentIndex());
+    CentralWidgetMode *mode = mModes.value(mModeTabIndexModes.value(fileModeTabIndex));
+    Plugin *fileViewPlugin = mode?mode->viewPlugins()->value(mode->viewTabs()->currentIndex()):0;
     ViewInterface *viewInterface = fileViewPlugin?qobject_cast<ViewInterface *>(fileViewPlugin->instance()):0;
     QWidget *newView;
 
@@ -1605,12 +1624,24 @@ void CentralWidget::updateGui()
     emit guiUpdated(fileViewPlugin, fileName);
 
     // Replace the current view with the new one
-    // Note: the order in which the adding and removing (as well as the
-    //       showing/hiding) of view is done to ensures that the replacement
-    //       looks as good as possible...
+    // Note #1: the order in which the adding and removing (as well as the
+    //          showing/hiding) of view is done to ensure that the replacement
+    //          looks as good as possible...
+    // Note #2: to show/hide the status bar is to avoid some of the flickering
+    //          that results from switching from one file to another (both using
+    //          the same view) with the status bar visible and the mouse pointer
+    //          over a button-like widget within the current view (see
+    //          https://github.com/opencor/opencor/issues/405). It's not neat,
+    //          but it seems like it might be an issue with Qt itself, so...
+
+    bool statusBarVisible = mMainWindow->statusBar()->isVisible();
+
+    mMainWindow->statusBar()->setVisible(false);
 
     mContents->removeWidget(mContents->currentWidget());
     mContents->addWidget(newView);
+
+    mMainWindow->statusBar()->setVisible(statusBarVisible);
 
     // Give the focus to the new view after first checking whether it has a
     // focused widget
@@ -1632,8 +1663,10 @@ void CentralWidget::updateGui()
 
     updateModifiedSettings();
 
-    // Let people know whether we can save as, as well as whether there is/are
-    // at least one/two file/s
+    // Let people know whether there is at least one view, as well as whether we
+    // can save as and there is/are at least one/two file/s
+
+    emit atLeastOneView(mModeTabs->currentIndex() != -1);
 
     emit canSaveAs(   mFileTabs->count() && (newView != mNoViewMsg)
                    && !FileManager::instance()->isRemote(fileName)
@@ -1698,26 +1731,36 @@ void CentralWidget::updateNoViewMsg()
 
 void CentralWidget::fileChanged(const QString &pFileName)
 {
-    // The given file has been changed, so ask the user whether to reload it
+    // Make sure that the fact that the file has been changed is still relevant,
+    // i.e. the given file has either been modified or it's different from its
+    // physical version
 
-    if (QMessageBox::question(mMainWindow, qApp->applicationName(),
-                              tr("<strong>%1</strong> has been modified. Do you want to reload it?").arg(pFileName),
-                              QMessageBox::Yes|QMessageBox::No,
-                              QMessageBox::Yes) == QMessageBox::Yes) {
-        // The user wants to reload the file
+    FileManager *fileManagerInstance = FileManager::instance();
 
-        for (int i = 0, iMax = mFileNames.count(); i < iMax; ++i)
-            if (!mFileNames[i].compare(pFileName)) {
-                // We have found the file to reload
+    if (   !fileManagerInstance->isNewOrModified(pFileName)
+        &&  fileManagerInstance->isDifferent(pFileName)) {
+        // The given file has been changed, so ask the user whether to reload it
 
-                reloadFile(i);
+        if (QMessageBox::question(mMainWindow, qApp->applicationName(),
+                                  tr("<strong>%1</strong> has been modified. Do you want to reload it?").arg(pFileName),
+                                  QMessageBox::Yes|QMessageBox::No,
+                                  QMessageBox::Yes) == QMessageBox::Yes) {
+            // The user wants to reload the file
 
-                break;
-            }
-    } else {
-        // The user doesn't want to reload the file, so consider it as modified
+            for (int i = 0, iMax = mFileNames.count(); i < iMax; ++i)
+                if (!mFileNames[i].compare(pFileName)) {
+                    // We have found the file to reload
 
-        FileManager::instance()->setModified(pFileName, true);
+                    reloadFile(i, true);
+
+                    break;
+                }
+        } else {
+            // The user doesn't want to reload the file, so consider it as
+            // modified
+
+            fileManagerInstance->setConsiderModified(pFileName, true);
+        }
     }
 }
 
@@ -1742,9 +1785,13 @@ void CentralWidget::fileDeleted(const QString &pFileName)
                 break;
             }
     } else {
-        // The user wants to keep the file, so consider it as modified
+        // The user wants to keep the file, so consider it as new now
 
-        FileManager::instance()->setModified(pFileName, true);
+        FileManager::instance()->makeNew(pFileName);
+
+        // Update our modified settings
+
+        updateModifiedSettings();
     }
 }
 
@@ -1830,18 +1877,18 @@ void CentralWidget::fileModified(const QString &pFileName)
 void CentralWidget::fileReloaded(const QString &pFileName)
 {
     // Let our plugins know about the file having been reloaded, but ignore the
-    // current plugin if our file manager is inactive
-    // Note: indeed, if our file manager is inactive, then it means that we are
-    //       saving the file (see saveFile()), hence we don't need and don't
-    //       want (since it may mess up our current view; e.g. the caret of a
-    //       QScintilla-based view will get moved back to its original position)
-    //       our current plugin to reload it...
+    // current plugin if our file manager cannot check files
+    // Note: indeed, if our file manager cannot check files, then it means that
+    //       we are saving the file (see saveFile()), hence we don't need and
+    //       don't want (since it may mess up our current view; e.g. the caret
+    //       of a QScintilla-based view will get moved back to its original
+    //       position) our current plugin to reload it...
 
     FileManager *fileManagerInstance = FileManager::instance();
     Plugin *fileViewPlugin = viewPlugin(pFileName);
 
     foreach (Plugin *plugin, mLoadedFileHandlingPlugins)
-        if (fileManagerInstance->isActive() || (plugin != fileViewPlugin))
+        if (fileManagerInstance->canCheckFiles() || (plugin != fileViewPlugin))
             qobject_cast<FileHandlingInterface *>(plugin->instance())->fileReloaded(pFileName);
 
     // Now, because of the way some our views may reload a file (see
@@ -1849,8 +1896,12 @@ void CentralWidget::fileReloaded(const QString &pFileName)
     // GUI
 
     foreach (Plugin *plugin, mLoadedGuiPlugins)
-        if (fileManagerInstance->isActive() || (plugin != fileViewPlugin))
+        if (fileManagerInstance->canCheckFiles() || (plugin != fileViewPlugin))
             qobject_cast<GuiInterface *>(plugin->instance())->updateGui(fileViewPlugin, pFileName);
+
+    // Update our modified settings
+
+    updateModifiedSettings();
 }
 
 //==============================================================================

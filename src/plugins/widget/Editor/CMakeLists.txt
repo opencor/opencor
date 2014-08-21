@@ -15,12 +15,12 @@ ADD_PLUGIN(Editor
         ../../plugininfo.cpp
 
         src/editorfindreplacewidget.cpp
-        src/editorwidget.cpp
         src/editorplugin.cpp
+        src/editorwidget.cpp
     HEADERS_MOC
         src/editorfindreplacewidget.h
-        src/editorwidget.h
         src/editorplugin.h
+        src/editorwidget.h
     UIS
         src/editorfindreplacewidget.ui
         src/editorwidget.ui

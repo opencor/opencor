@@ -28,15 +28,61 @@ namespace CellMLSupport {
 
 //==============================================================================
 
-CellmlFileIssue::CellmlFileIssue(const Type &pType, const QString &pMessage,
-                                 const int &pLine, const int &pColumn,
-                                 const QString &pImportedFile) :
-    mType(pType),
-    mMessage(pMessage),
-    mLine(pLine),
-    mColumn(pColumn),
-    mImportedFile(pImportedFile)
+void CellmlFileIssue::constructor(const Type &pType, const int &pLine,
+                                  const int &pColumn, const QString &pMessage,
+                                  const QString &pImportedFile)
 {
+    // Some initialisations
+
+    mType = pType;
+
+    mLine = pLine;
+    mColumn = pColumn;
+
+    mMessage = pMessage;
+
+    mImportedFile = pImportedFile;
+}
+
+//==============================================================================
+
+CellmlFileIssue::CellmlFileIssue(const Type &pType, const int &pLine,
+                                 const int &pColumn, const QString &pMessage,
+                                 const QString &pImportedFile)
+{
+    // Construct our object
+
+    constructor(pType, pLine, pColumn, pMessage, pImportedFile);
+}
+
+//==============================================================================
+
+CellmlFileIssue::CellmlFileIssue(const Type &pType, const QString &pMessage)
+{
+    // Construct our object
+
+    constructor(pType, 0, 0, pMessage, QString());
+}
+
+//==============================================================================
+
+bool CellmlFileIssue::operator<(const CellmlFileIssue &pIssue) const
+{
+    // Return whether the current issue is lower than the given one
+
+    return (mLine < pIssue.line())?
+               true:
+               (mLine > pIssue.line())?
+                   false:
+                   (mColumn < pIssue.column())?
+                       true:
+                       (mColumn > pIssue.column())?
+                           false:
+                            (mType < pIssue.type())?
+                                true:
+                                (mType > pIssue.type())?
+                                    false:
+                                    mMessage.compare(pIssue.message(), Qt::CaseInsensitive) < 0;
 }
 
 //==============================================================================
@@ -46,6 +92,24 @@ CellmlFileIssue::Type CellmlFileIssue::type() const
     // Return the issue's type
 
     return mType;
+}
+
+//==============================================================================
+
+int CellmlFileIssue::line() const
+{
+    // Return the issue's line
+
+    return mLine;
+}
+
+//==============================================================================
+
+int CellmlFileIssue::column() const
+{
+    // Return the issue's column
+
+    return mColumn;
 }
 
 //==============================================================================
@@ -65,24 +129,6 @@ QString CellmlFileIssue::formattedMessage() const
     // message is capitalised and its end consists of a full stop)
 
     return mMessage[0].toUpper()+mMessage.right(mMessage.size()-1)+".";
-}
-
-//==============================================================================
-
-int CellmlFileIssue::line() const
-{
-    // Return the issue's line
-
-    return mLine;
-}
-
-//==============================================================================
-
-int CellmlFileIssue::column() const
-{
-    // Return the issue's column
-
-    return mColumn;
 }
 
 //==============================================================================

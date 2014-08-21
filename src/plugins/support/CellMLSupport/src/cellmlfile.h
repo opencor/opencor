@@ -31,6 +31,7 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#include <QMap>
 #include <QObject>
 
 //==============================================================================
@@ -68,6 +69,8 @@ public:
     bool save(const QString &pNewFileName = QString());
 
     bool isValid();
+    bool isValid(const QString &pFileName, const QString &pFileContents,
+                 CellmlFileIssues &pIssues);
 
     bool isModified() const;
     void setModified(const bool &pModified) const;
@@ -124,7 +127,23 @@ private:
     bool mValidNeeded;
     bool mRuntimeUpdateNeeded;
 
+    QMap<QString, QString> mImportContents;
+
     void reset();
+
+    void retrieveImports(iface::cellml_api::Model *pModel,
+                         QList<iface::cellml_api::CellMLImport *> &pImportList,
+                         QStringList &pImportXmlBaseList,
+                         const QString &pXmlBase);
+
+    bool fullyInstantiateImports(iface::cellml_api::Model *pModel,
+                                 CellmlFileIssues &pIssues);
+
+    bool doLoad(const QString &pFileName, const QString &pFileContents,
+                ObjRef<iface::cellml_api::Model> *pModel,
+                CellmlFileIssues &pIssues);
+
+    bool doIsValid(iface::cellml_api::Model *pModel, CellmlFileIssues &pIssues);
 
     bool rdfTripleExists(iface::cellml_api::CellMLElement *pElement,
                          const QString &pQualifier,

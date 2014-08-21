@@ -47,21 +47,13 @@ namespace Core {
 
 //==============================================================================
 
-static const auto SettingsBaseColor      = QStringLiteral("BaseColor");
-static const auto SettingsBorderColor    = QStringLiteral("BorderColor");
-static const auto SettingsHighlightColor = QStringLiteral("HighlightColor");
-static const auto SettingsShadowColor    = QStringLiteral("Shadow");
-static const auto SettingsWindowColor    = QStringLiteral("WindowColor");
-
-//==============================================================================
-
 QString CORE_EXPORT getOpenFileName(const QString &pCaption,
-                                    const QString &pFilter);
+                                    const QString &pFilters = QString());
 QStringList CORE_EXPORT getOpenFileNames(const QString &pCaption,
-                                         const QString &pFilter);
+                                         const QString &pFilters = QString());
 QString CORE_EXPORT getSaveFileName(const QString &pCaption,
                                     const QString &pFileName,
-                                    const QString &pFilter);
+                                    const QString &pFilters = QString());
 
 void CORE_EXPORT setFocusTo(QWidget *pWidget);
 
@@ -109,8 +101,10 @@ QLabel CORE_EXPORT * newLabel(const QString &pText,
                               const double &pFontPercentage, QWidget *pParent);
 QLabel CORE_EXPORT * newLabel(const QString &pText, QWidget *pParent);
 
-void CORE_EXPORT showEnableAction(QAction *pAction, const bool &pShowEnable);
-void CORE_EXPORT showEnableWidget(QWidget *pWidget, const bool &pShowEnable);
+void CORE_EXPORT showEnableAction(QAction *pAction, const bool &pVisible,
+                                  const bool &pEnabled = true);
+void CORE_EXPORT showEnableWidget(QWidget *pWidget, const bool &pVisible,
+                                  const bool &pEnabled = true);
 
 void CORE_EXPORT updateColors();
 

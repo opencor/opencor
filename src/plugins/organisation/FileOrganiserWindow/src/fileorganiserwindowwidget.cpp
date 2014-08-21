@@ -140,7 +140,8 @@ void FileOrganiserWindowWidget::loadItemSettings(QSettings *pSettings,
 
                 folderItem->setData(true, Item::Folder);
 
-                pParentItem->appendRow(folderItem);
+                if (pParentItem)
+                    pParentItem->appendRow(folderItem);
 
                 // Expand the folder item, if necessary
 
@@ -162,7 +163,8 @@ void FileOrganiserWindowWidget::loadItemSettings(QSettings *pSettings,
 
                 fileItem->setData(textOrPath, Item::Path);
 
-                pParentItem->appendRow(fileItem);
+                if (pParentItem)
+                    pParentItem->appendRow(fileItem);
 
                 // Add the file to our file manager
                 // Note: it doesn't matter whether or not the file is already
@@ -479,24 +481,11 @@ void FileOrganiserWindowWidget::keyPressEvent(QKeyEvent *pEvent)
     QStringList crtSelectedFiles = selectedFiles();
 
     if (   crtSelectedFiles.count()
-#if defined(Q_OS_WIN) || defined(Q_OS_LINUX)
-       && (   (pEvent->key() == Qt::Key_Enter)
-           || (pEvent->key() == Qt::Key_Return))
-#elif defined(Q_OS_MAC)
-       && (    (pEvent->key() == Qt::Key_Down)
-           && !(pEvent->modifiers() & Qt::ShiftModifier)
-           &&  (pEvent->modifiers() & Qt::ControlModifier)
-           && !(pEvent->modifiers() & Qt::AltModifier)
-           && !(pEvent->modifiers() & Qt::MetaModifier))
-#else
-    #error Unsupported platform
-#endif
-       ) {
+        && ((pEvent->key() == Qt::Key_Enter) || (pEvent->key() == Qt::Key_Return)))
         // There are some files that are selected and we want to open them, so
         // let people know about it
 
         emit filesOpenRequested(crtSelectedFiles);
-    }
 }
 
 //==============================================================================

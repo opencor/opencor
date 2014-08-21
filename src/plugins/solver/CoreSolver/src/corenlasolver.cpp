@@ -20,7 +20,7 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include "corenlasolver.h"
-#include "plugin.h"
+#include "settings.h"
 
 //==============================================================================
 
@@ -52,6 +52,8 @@ void doNonLinearSolve(char *pRuntime,
     } else {
         // We couldn't retrieve an NLA solver, so...
         // Note: this should never happen, but we never know, so...
+
+        qWarning("doNonLinearSolve(): no NLA solver could be found...");
 
         *pRes = 0;
     }

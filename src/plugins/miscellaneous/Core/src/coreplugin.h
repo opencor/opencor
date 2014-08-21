@@ -104,13 +104,13 @@ private:
     QAction *mFileReopenSubMenuSeparator;
     QAction *mFileClearReopenSubMenuAction;
 
-    QStringList mRecentFileNames;
-
-    void updateFileReopenMenu();
+    QStringList mRecentFileNamesOrUrls;
 
     void updateNewModifiedSensitiveActions();
 
 private Q_SLOTS:
+    void updateFileReopenMenu(const bool &pEnabled = true);
+
     void openRecentFile();
 
     void clearReopenSubMenu();

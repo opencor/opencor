@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<model name="hodgkin_huxley_squid_axon_model_1952_original" cmeta:id="hodgkin_huxley_squid_axon_model_1952_original" xmlns="http://www.cellml.org/cellml/1.0#" xmlns:cellml="http://www.cellml.org/cellml/1.0#" xmlns:cmeta="http://www.cellml.org/metadata/1.0#">
+<model name="hodgkin_huxley_squid_axon_model_1952" cmeta:id="hodgkin_huxley_squid_axon_model_1952" xmlns="http://www.cellml.org/cellml/1.0#" xmlns:cellml="http://www.cellml.org/cellml/1.0#" xmlns:cmeta="http://www.cellml.org/metadata/1.0#">
     <units name="millisecond">
         <unit units="second" prefix="milli"/>
     </units>
@@ -29,9 +29,9 @@
         <variable name="time" units="millisecond" public_interface="out"/>
     </component>
     <component name="membrane">
-        <variable name="V" units="millivolt" initial_value="0" public_interface="out"/>
-        <variable name="E_R" units="millivolt" initial_value="0" public_interface="out"/>
-        <variable name="Cm" units="microF_per_cm2" initial_value="1"/>
+        <variable name="V" initial_value="0" units="millivolt" public_interface="out"/>
+        <variable name="E_R" initial_value="0" units="millivolt" public_interface="out"/>
+        <variable name="Cm" initial_value="1" units="microF_per_cm2"/>
         <variable name="time" units="millisecond" public_interface="in"/>
         <variable name="i_Na" units="microA_per_cm2" public_interface="in"/>
         <variable name="i_K" units="microA_per_cm2" public_interface="in"/>
@@ -97,7 +97,7 @@
     </component>
     <component name="sodium_channel">
         <variable name="i_Na" units="microA_per_cm2" public_interface="out"/>
-        <variable name="g_Na" units="milliS_per_cm2" initial_value="120"/>
+        <variable name="g_Na" initial_value="120" units="milliS_per_cm2"/>
         <variable name="E_Na" units="millivolt"/>
         <variable name="time" units="millisecond" public_interface="in" private_interface="out"/>
         <variable name="V" units="millivolt" public_interface="in" private_interface="out"/>
@@ -136,7 +136,7 @@
         </math>
     </component>
     <component name="sodium_channel_m_gate">
-        <variable name="m" units="dimensionless" initial_value="0.05" public_interface="out"/>
+        <variable name="m" initial_value="0.05" units="dimensionless" public_interface="out"/>
         <variable name="alpha_m" units="per_millisecond"/>
         <variable name="beta_m" units="per_millisecond"/>
         <variable name="V" units="millivolt" public_interface="in"/>
@@ -220,7 +220,7 @@
         </math>
     </component>
     <component name="sodium_channel_h_gate">
-        <variable name="h" units="dimensionless" initial_value="0.6" public_interface="out"/>
+        <variable name="h" initial_value="0.6" units="dimensionless" public_interface="out"/>
         <variable name="alpha_h" units="per_millisecond"/>
         <variable name="beta_h" units="per_millisecond"/>
         <variable name="V" units="millivolt" public_interface="in"/>
@@ -297,7 +297,7 @@
     </component>
     <component name="potassium_channel">
         <variable name="i_K" units="microA_per_cm2" public_interface="out"/>
-        <variable name="g_K" units="milliS_per_cm2" initial_value="36"/>
+        <variable name="g_K" initial_value="36" units="milliS_per_cm2"/>
         <variable name="E_K" units="millivolt"/>
         <variable name="time" units="millisecond" public_interface="in" private_interface="out"/>
         <variable name="V" units="millivolt" public_interface="in" private_interface="out"/>
@@ -334,7 +334,7 @@
         </math>
     </component>
     <component name="potassium_channel_n_gate">
-        <variable name="n" units="dimensionless" initial_value="0.325" public_interface="out"/>
+        <variable name="n" initial_value="0.325" units="dimensionless" public_interface="out"/>
         <variable name="alpha_n" units="per_millisecond"/>
         <variable name="beta_n" units="per_millisecond"/>
         <variable name="V" units="millivolt" public_interface="in"/>
@@ -419,7 +419,7 @@
     </component>
     <component name="leakage_current">
         <variable name="i_L" units="microA_per_cm2" public_interface="out"/>
-        <variable name="g_L" units="milliS_per_cm2" initial_value="0.3"/>
+        <variable name="g_L" initial_value="0.3" units="milliS_per_cm2"/>
         <variable name="E_L" units="millivolt"/>
         <variable name="time" units="millisecond" public_interface="in"/>
         <variable name="V" units="millivolt" public_interface="in"/>

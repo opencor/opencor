@@ -5,9 +5,9 @@
             <unit units="second" exponent="-1"/>
         </units>
         <variable name="time" units="second"/>
-        <variable name="x" units="dimensionless" initial_value="-2"/>
-        <variable name="y" units="dimensionless" initial_value="0"/>
-        <variable name="epsilon" units="dimensionless" initial_value="1"/>
+        <variable name="x" initial_value="-2" units="dimensionless"/>
+        <variable name="y" initial_value="0" units="dimensionless"/>
+        <variable name="epsilon" initial_value="1" units="dimensionless"/>
         <math xmlns="http://www.w3.org/1998/Math/MathML">
             <apply>
                 <eq/>

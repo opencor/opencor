@@ -170,7 +170,7 @@ PluginsWindow::PluginsWindow(PluginManager *pPluginManager,
 
     Plugins plugins = mPluginManager->plugins();
 
-    qSort(plugins.begin(), plugins.end(), sortPlugins);
+    std::sort(plugins.begin(), plugins.end(), sortPlugins);
 
     // Populate the data model with our different plugins
 

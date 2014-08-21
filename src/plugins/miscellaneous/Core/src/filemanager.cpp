@@ -41,8 +41,8 @@ namespace Core {
 //==============================================================================
 
 FileManager::FileManager() :
-    mActive(true),
-    mFiles(QList<File *>()),
+    mCanCheckFiles(true),
+    mFiles(QMap<QString, File *>()),
     mFilesReadable(QMap<QString, bool>()),
     mFilesWritable(QMap<QString, bool>())
 {
@@ -99,9 +99,9 @@ FileManager::Status FileManager::manage(const QString &pFileName,
             return AlreadyManaged;
         } else {
             // The file isn't already managed, so add it to our list of managed
-            // files, let people know about it being now managed
+            // files and let people know about it being now managed
 
-            mFiles << new File(nativeFileName, pType, pUrl);
+            mFiles.insert(nativeFileName, new File(nativeFileName, pType, pUrl));
 
             if (!mTimer->isActive())
                 mTimer->start(1000);
@@ -124,30 +124,23 @@ FileManager::Status FileManager::unmanage(const QString &pFileName)
     // Unmanage the given file, should it be managed
 
     QString nativeFileName = nativeCanonicalFileName(pFileName);
+    File *file = isManaged(nativeFileName);
 
-    if (QFile::exists(nativeFileName)) {
-        File *file = isManaged(nativeFileName);
+    if (file) {
+        // The file is managed, so we can remove it
 
-        if (file) {
-            // The file is managed, so we can remove it
+        mFiles.remove(nativeFileName);;
 
-            mFiles.removeAt(mFiles.indexOf(file));
+        delete file;
 
-            delete file;
+        if (mFiles.isEmpty())
+            mTimer->stop();
 
-            if (mFiles.isEmpty())
-                mTimer->stop();
+        emit fileUnmanaged(nativeFileName);
 
-            emit fileUnmanaged(nativeFileName);
-
-            return Removed;
-        } else {
-            // The file isn't managed, so...
-
-            return NotManaged;
-        }
+        return Removed;
     } else {
-        // The file doesn't exist, so...
+        // The file isn't managed, so...
 
         return NotManaged;
     }
@@ -159,35 +152,25 @@ File * FileManager::isManaged(const QString &pFileName) const
 {
     // Return whether the given file is managed
 
-    QString nativeFileName = nativeCanonicalFileName(pFileName);
-
-    foreach (File *file, mFiles)
-        if (!file->fileName().compare(nativeFileName))
-            // The file has been found meaning it is managed
-
-            return file;
-
-    // The file couldn't be found meaning it's not managed
-
-    return 0;
+    return mFiles.value(nativeCanonicalFileName(pFileName), 0);
 }
 
 //==============================================================================
 
-bool FileManager::isActive() const
+bool FileManager::canCheckFiles() const
 {
-    // Return whether we are active
+    // Return whether we can check files
 
-    return mActive;
+    return mCanCheckFiles;
 }
 
 //==============================================================================
 
-void FileManager::setActive(const bool &pActive)
+void FileManager::setCanCheckFiles(const bool &pCanCheckFiles)
 {
-    // Set whether we are active
+    // Set whether we can check files
 
-    mActive = pActive;
+    mCanCheckFiles = pCanCheckFiles;
 }
 
 //==============================================================================
@@ -248,6 +231,37 @@ QString FileManager::url(const QString &pFileName) const
 
 //==============================================================================
 
+bool FileManager::isDifferent(const QString &pFileName) const
+{
+    // Return whether the given file, if it is being managed, is different from
+    // its corresponding physical version
+
+    File *file = isManaged(nativeCanonicalFileName(pFileName));
+
+    if (file)
+        return file->isDifferent();
+    else
+        return false;
+}
+
+//==============================================================================
+
+bool FileManager::isDifferent(const QString &pFileName,
+                              const QString &pFileContents) const
+{
+    // Return whether the given file, if it is being managed, has the same
+    // contents has the given one
+
+    File *file = isManaged(nativeCanonicalFileName(pFileName));
+
+    if (file)
+        return file->isDifferent(pFileContents);
+    else
+        return false;
+}
+
+//==============================================================================
+
 bool FileManager::isNew(const QString &pFileName) const
 {
     // Return whether the given file, if it is being managed, is new
@@ -299,6 +313,22 @@ bool FileManager::isNewOrModified(const QString &pFileName) const
 
 //==============================================================================
 
+void FileManager::makeNew(const QString &pFileName)
+{
+    // Make the given file new, should it be managed
+
+    File *file = isManaged(nativeCanonicalFileName(pFileName));
+
+    if (file) {
+        QString newFileName;
+
+        if (newFile(QString(), newFileName))
+            file->makeNew(newFileName);
+    }
+}
+
+//==============================================================================
+
 void FileManager::setModified(const QString &pFileName, const bool &pModified)
 {
     // Set the modified state of the given file, should it be managed
@@ -307,6 +337,20 @@ void FileManager::setModified(const QString &pFileName, const bool &pModified)
     File *file = isManaged(nativeFileName);
 
     if (file && file->setModified(pModified))
+        emit fileModified(nativeFileName);
+}
+
+//==============================================================================
+
+void FileManager::setConsiderModified(const QString &pFileName,
+                                      const bool &pConsiderModified)
+{
+    // Set the consider modified state of the given file, should it be managed
+
+    QString nativeFileName = nativeCanonicalFileName(pFileName);
+    File *file = isManaged(nativeFileName);
+
+    if (file && file->setConsiderModified(pConsiderModified))
         emit fileModified(nativeFileName);
 }
 
@@ -396,11 +440,45 @@ void FileManager::reload(const QString &pFileName)
     // Make sure that the given file is managed
 
     QString nativeFileName = nativeCanonicalFileName(pFileName);
+    File *file = isManaged(nativeFileName);
 
-    if (isManaged(nativeFileName))
-        // The file is managed, so let people know that it should be reloaded
+    if (file) {
+        // The file is managed, so reset its settings and let people know that
+        // it should be reloaded
+
+        file->reset();
 
         emit fileReloaded(nativeFileName);
+    }
+}
+
+//==============================================================================
+
+bool FileManager::newFile(const QString &pContents, QString &pFileName)
+{
+    // Create a new file
+
+    QTemporaryFile file(QDir::tempPath()+QDir::separator()+"XXXXXX.tmp");
+
+    if (file.open()) {
+        file.setAutoRemove(false);
+        // Note: by default, a temporary file is to autoremove itself, but we
+        //       clearly don't want that here...
+
+        QTextStream fileOut(&file);
+
+        fileOut << pContents;
+
+        file.close();
+
+        pFileName = file.fileName();
+
+        return true;
+    } else {
+        pFileName = QString();
+
+        return false;
+    }
 }
 
 //==============================================================================
@@ -410,22 +488,12 @@ FileManager::Status FileManager::create(const QString &pUrl,
 {
     // Create a new file
 
-    QTemporaryFile createdFile(QDir::tempPath()+QDir::separator()+QFileInfo(qApp->applicationFilePath()).baseName()+"_XXXXXX.tmp");
+    QString createdFileName;
 
-    if (createdFile.open()) {
-        createdFile.setAutoRemove(false);
-        // Note: by default, a temporary file is to autoremove itself, but we
-        //       clearly don't want that here...
-
-        QTextStream createdFileOut(&createdFile);
-
-        createdFileOut << pContents;
-
-        createdFile.close();
-
+    if (newFile(pContents, createdFileName)) {
         // Let people know that we have created a file
 
-        emit fileCreated(createdFile.fileName(), pUrl);
+        emit fileCreated(createdFileName, pUrl);
 
         return Created;
     } else {
@@ -449,6 +517,9 @@ FileManager::Status FileManager::rename(const QString &pOldFileName,
         QString newNativeFileName = nativeCanonicalFileName(pNewFileName);
 
         if (file->setFileName(newNativeFileName)) {
+            mFiles.insert(newNativeFileName, mFiles.value(oldNativeFileName));
+            mFiles.remove(oldNativeFileName);
+
             emit fileRenamed(oldNativeFileName, newNativeFileName);
 
             return Renamed;
@@ -478,22 +549,12 @@ FileManager::Status FileManager::duplicate(const QString &pFileName)
             // Now, we can create a new file, which contents will be that of our
             // given file
 
-            QTemporaryFile duplicatedFile(QDir::tempPath()+QDir::separator()+QFileInfo(qApp->applicationFilePath()).baseName()+"_XXXXXX."+QFileInfo(pFileName).completeSuffix());
+            QString duplicatedFileName;
 
-            if (duplicatedFile.open()) {
-                duplicatedFile.setAutoRemove(false);
-                // Note: by default, a temporary file is to autoremove itself,
-                //       but we clearly don't want that here...
-
-                QTextStream duplicatedFileOut(&duplicatedFile);
-
-                duplicatedFileOut << fileContents;
-
-                duplicatedFile.close();
-
+            if (newFile(fileContents, duplicatedFileName)) {
                 // Let people know that we have duplicated a file
 
-                emit fileDuplicated(duplicatedFile.fileName());
+                emit fileDuplicated(duplicatedFileName);
 
                 return Duplicated;
             } else {
@@ -520,46 +581,51 @@ int FileManager::count() const
 
 void FileManager::checkFiles()
 {
-    // We only want to check our files if we are active and if there is no
-    // currently active dialog box
+    // We only want to check our files if we can check files and if there is no
+    // currently active dialog box (which requires at least one top level
+    // widget)
 
-    if (!mActive || QApplication::activeModalWidget())
+    if (   !mCanCheckFiles
+        || !QApplication::topLevelWidgets().count()
+        ||  QApplication::activePopupWidget())
         return;
 
     // Check our various files, as well as their locked status, but only if they
     // are not being ignored
 
     foreach (File *file, mFiles) {
+        QString fileName = file->fileName();
+
         switch (file->check()) {
         case File::Changed:
             // The file has changed, so let people know about it
 
-            emit fileChanged(file->fileName());
+            emit fileChanged(fileName);
 
             break;
         case File::Deleted:
             // The file has been deleted, so let people know about it
 
-            emit fileDeleted(file->fileName());
+            emit fileDeleted(fileName);
 
             break;
         default:
-            // The file is unchanged, so do nothing...
+            // The file has neither changed nor been deleted, so check whether
+            // its permissions have changed
 
-            ;
-        }
+            bool fileReadable = isReadable(fileName);
+            bool fileWritable = isWritable(fileName);
 
-        bool fileReadable = isReadable(file->fileName());
-        bool fileWritable = isWritable(file->fileName());
+            if (    (fileReadable != mFilesReadable.value(fileName, false))
+                ||  (fileWritable != mFilesWritable.value(fileName, false))
+                || !(   mFilesReadable.contains(fileName)
+                     && mFilesWritable.contains(fileName))) {
 
-        if (    (fileReadable != mFilesReadable.value(file->fileName(), false))
-            ||  (fileWritable != mFilesWritable.value(file->fileName(), false))
-            || !(   mFilesReadable.contains(file->fileName())
-                 && mFilesWritable.contains(file->fileName()))) {
-            emit filePermissionsChanged(file->fileName());
+                emit filePermissionsChanged(fileName);
 
-            mFilesReadable.insert(file->fileName(), fileReadable);
-            mFilesWritable.insert(file->fileName(), fileWritable);
+                mFilesReadable.insert(fileName, fileReadable);
+                mFilesWritable.insert(fileName, fileWritable);
+            }
         }
     }
 }

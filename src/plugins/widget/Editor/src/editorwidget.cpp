@@ -223,6 +223,15 @@ void EditorWidget::setContextMenu(const QList<QAction *> &pContextMenuActions)
 
 //==============================================================================
 
+void EditorWidget::setCursorPosition(const int &pLine, const int &pColumn)
+{
+    // Set our cursor position
+
+    mEditor->setCursorPosition(pLine, pColumn);
+}
+
+//==============================================================================
+
 int EditorWidget::currentPosition() const
 {
     // Return the current position of our editor
@@ -564,9 +573,7 @@ bool EditorWidget::findPrevious()
     int oldPosition = mEditor->currentPosition();
 
     mEditor->setCurrentPosition(oldPosition-mEditor->selectedText().length());
-
-    mCurrentLine = mEditor->currentLine();
-    mCurrentColumn = mEditor->currentColumn();
+    mEditor->getCursorPosition(&mCurrentLine, &mCurrentColumn);
 
     bool res = findText(mFindReplace->findText(), false);
 
@@ -582,8 +589,7 @@ bool EditorWidget::findNext()
 {
     // Find the next occurrence of the text in our editor
 
-    mCurrentLine = mEditor->currentLine();
-    mCurrentColumn = mEditor->currentColumn();
+    mEditor->getCursorPosition(&mCurrentLine, &mCurrentColumn);
 
     return findText(mFindReplace->findText(), true);
 }
@@ -611,12 +617,16 @@ void EditorWidget::replace()
         // this be requested
 
         QString currentlySelectedText = mEditor->selectedText();
+        int currentLine;
+        int currentColumn;
+
+        mEditor->getCursorPosition(&currentLine, &currentColumn);
 
         if (   mFindReplace->searchWholeWordsOnly()
-            && currentlySelectedText.compare(mEditor->wordAt(mEditor->currentLine(), mEditor->currentColumn())))
+            && currentlySelectedText.compare(mEditor->wordAt(currentLine, currentColumn)))
             return;
 
-        // Replace the currently selected if we have a match
+        // Replace the currently selected text if we have a match
 
         if (!currentlySelectedText.compare(mFindReplace->findText(),
                                            mFindReplace->isCaseSensitive()?
@@ -641,9 +651,61 @@ void EditorWidget::replaceAndFind()
 void EditorWidget::replaceAll()
 {
     // Replace all the occurences of the text
+    // Note: the original plan was to call mEditor->findFirst() the first time
+    //       round and with wrapping disabled, and then mEditor->findNext()
+    //       until we have found all occurrences, but for some reasons this can
+    //       result in some occurrences being missed, hence the way we do it
+    //       below...
 
-    while (findNext())
+    // Keep track of the first visible line and of our position
+
+    int origFirstVisibleLine = mEditor->firstVisibleLine();
+    int origLine;
+    int origColumn;
+
+    mEditor->getCursorPosition(&origLine, &origColumn);
+
+    // Go to the beginning of the of the editor
+
+    mEditor->QsciScintilla::setCursorPosition(0, 0);
+
+    // Replace all occurrences
+
+    int oldLine = 0;
+    int oldColumn = 0;
+    int newLine;
+    int newColumn;
+
+    while (findNext()) {
+        // Retrieve our new position
+
+        mEditor->getCursorPosition(&newLine, &newColumn);
+
+        // Make sure that our new position is not 'before' our old one
+
+        if (   (newLine < oldLine)
+            || ((newLine == oldLine) && (newColumn < oldColumn)))
+            break;
+
+        // Our new position is fine, so replace the occurrence
+
         mEditor->replace(mFindReplace->replaceText());
+
+        // Get ready for the next occurrence
+
+        oldLine = newLine;
+        oldColumn = newColumn;
+    }
+
+    // Reset the first visible line and go to our original position, after
+    // having corrected it, if needed
+
+    mEditor->setFirstVisibleLine(origFirstVisibleLine);
+
+    origLine = qMin(origLine, mEditor->lines()-1);
+    origColumn = qMin(origColumn, mEditor->lineLength(origLine)-1);
+
+    mEditor->QsciScintilla::setCursorPosition(origLine, origColumn);
 }
 
 //==============================================================================

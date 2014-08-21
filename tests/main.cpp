@@ -60,25 +60,25 @@ int main(int pArgC, char *pArgV[])
     Tests::const_iterator iterBegin = tests.constBegin();
     Tests::const_iterator iterEnd = tests.constEnd();
 
-    Tests::const_iterator iter = iterBegin;
-
-    while (iter != iterEnd) {
+    for (Tests::const_iterator iter = iterBegin; iter != iterEnd; ++iter) {
         if (iter != iterBegin) {
             std::cout << std::endl;
             std::cout << std::endl;
             std::cout << std::endl;
         }
 
-        std::cout << "********* " << qPrintable(iter.key()) << " *********" << std::endl;
+        std::cout << "********* " << iter.key().toStdString() << " *********" << std::endl;
         std::cout << std::endl;
 
         foreach (const QString &test, iter.value()) {
             QString testName = QString("%1_%2").arg(iter.key(), test);
 
-            // Go to the parent directory of the directory that contains the
-            // test, so that we can load plugins without any problem
+            // Go to the directory that contains our plugins, so that we can load them
+            // without any problem
 
-            QDir::setCurrent(exePath+"/..");
+#ifdef Q_OS_WIN
+            QDir::setCurrent(exePath+"/../plugins/OpenCOR");
+#endif
 
             // Execute the test itself
 
@@ -92,9 +92,7 @@ int main(int pArgC, char *pArgV[])
             std::cout << std::endl;
         }
 
-        std::cout << qPrintable(QString("*").repeated(9+1+iter.key().count()+1+9)) << std::endl;
-
-        ++iter;
+        std::cout << QString("*").repeated(9+1+iter.key().count()+1+9).toStdString() << std::endl;
     }
 
     // Reporting
@@ -114,7 +112,7 @@ int main(int pArgC, char *pArgV[])
             std::cout << "The following tests failed:" << std::endl;
 
         foreach (const QString &failedTest, failedTests)
-            std::cout << " - " << qPrintable(failedTest) << std::endl;
+            std::cout << " - " << failedTest.toStdString() << std::endl;
     }
 
     std::cout << std::endl;

@@ -37,16 +37,9 @@ specific language governing permissions and limitations under the License.
 #include <QEvent>
 #include <QEventLoop>
 #include <QFont>
-#include <QImage>
 #include <QLabel>
 #include <QMouseEvent>
-#include <QPainter>
-#include <QPixmap>
-#include <QPoint>
-#include <QRect>
-#include <QStackedWidget>
 #include <QTimer>
-#include <QVBoxLayout>
 #include <QWindow>
 
 //==============================================================================

@@ -261,22 +261,26 @@ void CellMLToolsPlugin::exportTo(const CellMLSupport::CellmlFile::Version &pVers
 {
     // Ask for the name of the file that will contain the export
 
-    QString format;
-    QString fileTypes;
-
-    if (pVersion == CellMLSupport::CellmlFile::Cellml_1_0)
-        format = "CellML 1.0";
-    else
-        format = "CellML 1.1";
+    QString format = (pVersion == CellMLSupport::CellmlFile::Cellml_1_0)?
+                         "CellML 1.0":
+                         "CellML 1.1";
+    QString fileTypes = QString();
 
     foreach (FileType *fileType, mCellmlFileTypes) {
         if (!fileTypes.isEmpty())
             fileTypes += ";;";
 
-        fileTypes +=  fileType->description()+" (*."+fileType->fileExtension()+")";
+        fileTypes +=  fileType->description()
+                     +" (*."+fileType->fileExtension()+")";
     }
 
-    QString fileName = Core::getSaveFileName(tr("Export CellML File To %1").arg(format), mFileName, fileTypes);
+    Core::FileManager *fileManagerInstance = Core::FileManager::instance();
+
+    QString fileName = Core::getSaveFileName(tr("Export CellML File To %1").arg(format),
+                                             fileManagerInstance->isRemote(mFileName)?
+                                                 fileManagerInstance->url(mFileName):
+                                                 mFileName,
+                                             fileTypes);
 
     if (fileName.isEmpty())
         return;
@@ -332,22 +336,28 @@ int CellMLToolsPlugin::runExportCommand(const QStringList &pArguments)
     // Check whether we are dealing with a local or a remote input file
 
     QString errorMessage = QString();
-    QString inFileName = pArguments.at(0);
-    QUrl inFileUrl = inFileName;
-    bool inFileIsRemote = Core::isRemoteFile(inFileName);
+    bool inIsLocalFile;
+    QString inFileNameOrUrl;
 
-    if (inFileIsRemote) {
-        // It looks like we are dealing with a remote input file, so try to get
-        // a local copy of it
+    Core::checkFileNameOrUrl(pArguments.at(0), inIsLocalFile, inFileNameOrUrl);
 
-        QString url = inFileUrl.toString(QUrl::NormalizePathSegments);
+    QString inFileName = inFileNameOrUrl;
+
+    if (inIsLocalFile) {
+        // We are dealing with a local file, so just update inFileName
+
+        inFileName = inFileNameOrUrl;
+    } else {
+        // We are dealing with a remote input file, so try to get a local copy
+        // of it
+
         QString fileContents;
 
-        if (Core::readTextFromUrl(url, fileContents, errorMessage)) {
+        if (Core::readTextFromUrl(inFileNameOrUrl, fileContents, &errorMessage)) {
             // We were able to retrieve the contents of the remote file, so save
             // it locally to a 'temporary' file
 
-            QTemporaryFile localFile(QDir::tempPath()+QDir::separator()+QFileInfo(qApp->applicationFilePath()).baseName()+"_XXXXXX.tmp");
+            QTemporaryFile localFile(QDir::tempPath()+QDir::separator()+"XXXXXX.tmp");
 
             if (localFile.open()) {
                 localFile.setAutoRemove(false);
@@ -373,8 +383,8 @@ int CellMLToolsPlugin::runExportCommand(const QStringList &pArguments)
 
     if (errorMessage.isEmpty()) {
         // Before actually doing the export, we need to make sure that the input
-        // file exists, that it is a valid CellML file, that it can be
-        // registered and that it can be loaded
+        // file exists, that it is a valid CellML file, that it can be managed
+        // and that it can be loaded
 
         if (!QFile::exists(inFileName)) {
             errorMessage = "Sorry, but the input file could not be found.";
@@ -382,13 +392,13 @@ int CellMLToolsPlugin::runExportCommand(const QStringList &pArguments)
             errorMessage = "Sorry, but the input file is not a CellML file.";
         } else {
             if (Core::FileManager::instance()->manage(inFileName,
-                                                      inFileIsRemote?
-                                                          Core::File::Remote:
-                                                          Core::File::Local,
-                                                      inFileIsRemote?
-                                                          inFileUrl.toString(QUrl::NormalizePathSegments):
-                                                          QString()) != Core::FileManager::Added) {
-                errorMessage = "Sorry, but the input file could not be registered.";
+                                                      inIsLocalFile?
+                                                          Core::File::Local:
+                                                          Core::File::Remote,
+                                                      inIsLocalFile?
+                                                          QString():
+                                                          inFileNameOrUrl) != Core::FileManager::Added) {
+                errorMessage = "Sorry, but the input file could not be managed.";
             } else {
                 CellMLSupport::CellmlFile *inCellmlFile = new CellMLSupport::CellmlFile(inFileName);
 
@@ -440,9 +450,10 @@ int CellMLToolsPlugin::runExportCommand(const QStringList &pArguments)
         }
     }
 
-    // Delete the input file, if needed
+    // Delete the temporary input file, if any, i.e. we are dealing with a
+    // remote file and it has a temporay input file associated with it
 
-    if (inFileIsRemote && QFile::exists(inFileName))
+    if (!inIsLocalFile && QFile::exists(inFileName))
         QFile::remove(inFileName);
 
     // Let the user know if something went wrong at some point and then leave
@@ -450,7 +461,7 @@ int CellMLToolsPlugin::runExportCommand(const QStringList &pArguments)
     if (errorMessage.isEmpty()) {
         return 0;
     } else {
-        std::cout << qPrintable(errorMessage) << std::endl;
+        std::cout << errorMessage.toStdString() << std::endl;
 
         return -1;
     }
@@ -480,31 +491,30 @@ void CellMLToolsPlugin::exportToUserDefinedFormat()
 {
     // Ask for the name of the file that contains the user-defined format
 
-    QString userDefinedFormatFileName = Core::getOpenFileName(tr("Select User-Defined Format File"), tr("User-Defined Format File (*.xml)"));
+    QString userDefinedFormatFileName = Core::getOpenFileName(tr("Select User-Defined Format File"),
+                                                              tr("User-Defined Format File")+" (*.xml)");
 
     if (userDefinedFormatFileName.isEmpty())
         return;
 
     // Ask for the name of the file that will contain the export
 
-    QString fileType = tr("All Files")
-                       +" (*"
-#ifdef Q_OS_WIN
-                       +".*"
-#endif
-                       +")";
+    Core::FileManager *fileManagerInstance = Core::FileManager::instance();
 
-    QString outFileName = Core::getSaveFileName(tr("Export CellML File To User-Defined Format"), mFileName, fileType);
+    QString fileName = Core::getSaveFileName(tr("Export CellML File To User-Defined Format"),
+                                             fileManagerInstance->isRemote(mFileName)?
+                                                 fileManagerInstance->url(mFileName):
+                                                 mFileName);
 
-    if (outFileName.isEmpty())
+    if (fileName.isEmpty())
         return;
 
     // Now that we have both a user-defined format file and output file, we can
-    // do the eport itself
+    // do the export itself
 
     CellMLSupport::CellmlFile *cellmlFile = CellMLSupport::CellmlFileManager::instance()->cellmlFile(mFileName);
 
-    if (!cellmlFile->exportTo(outFileName, userDefinedFormatFileName)) {
+    if (!cellmlFile->exportTo(fileName, userDefinedFormatFileName)) {
         CellMLSupport::CellmlFileIssues issues = cellmlFile->issues();
         QString errorMessage = QString();
 
@@ -514,7 +524,7 @@ void CellMLToolsPlugin::exportToUserDefinedFormat()
             //       following a CellML export...
 
         QMessageBox::warning(mMainWindow, tr("Export CellML File To User-Defined Format"),
-                             tr("Sorry, but <strong>%1</strong> could not be exported to the user-defined format described in <strong>%2</strong>%3.").arg(outFileName, userDefinedFormatFileName, errorMessage));
+                             tr("Sorry, but <strong>%1</strong> could not be exported to the user-defined format described in <strong>%2</strong>%3.").arg(fileName, userDefinedFormatFileName, errorMessage));
     }
 }
 

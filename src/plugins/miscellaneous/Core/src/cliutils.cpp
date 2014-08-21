@@ -19,7 +19,9 @@ specific language governing permissions and limitations under the License.
 // CLI utilities
 //==============================================================================
 
+#include "coresettings.h"
 #include "cliutils.h"
+#include "settings.h"
 
 //==============================================================================
 
@@ -60,7 +62,7 @@ specific language governing permissions and limitations under the License.
 
 QIntList qVariantListToIntList(const QVariantList &pVariantList)
 {
-    // Convert a list of variants to a list of integers
+    // Convert the given list of variants to a list of integers
 
     QIntList res = QIntList();
 
@@ -74,7 +76,7 @@ QIntList qVariantListToIntList(const QVariantList &pVariantList)
 
 QVariantList qIntListToVariantList(const QIntList &pIntList)
 {
-    // Convert a list of integers to a list of variants
+    // Convert the given list of integers to a list of variants
 
     QVariantList res = QVariantList();
 
@@ -111,7 +113,7 @@ void DummyMessageHandler::handleMessage(QtMsgType pType,
 #ifndef OpenCOR_MAIN
 bool SynchronousTextFileDownloader::readTextFromUrl(const QString &pUrl,
                                                     QString &pText,
-                                                    QString &pErrorMessage) const
+                                                    QString *pErrorMessage) const
 {
     // Create a network access manager so that we can then retrieve the contents
     // of the remote file
@@ -140,10 +142,14 @@ bool SynchronousTextFileDownloader::readTextFromUrl(const QString &pUrl,
 
     if (res) {
         pText = networkReply->readAll();
-        pErrorMessage = QString();
+
+        if (pErrorMessage)
+            *pErrorMessage = QString();
     } else {
         pText = QString();
-        pErrorMessage = networkReply->errorString();
+
+        if (pErrorMessage)
+            *pErrorMessage = networkReply->errorString();
     }
 
     // Delete (later) the network reply
@@ -521,7 +527,7 @@ bool readTextFromFile(const QString &pFileName, QString &pText)
 
 #ifndef OpenCOR_MAIN
 bool readTextFromUrl(const QString &pUrl, QString &pText,
-                     QString &pErrorMessage)
+                     QString *pErrorMessage)
 {
     // Read the contents of the file, which URL is given, as a string
 
@@ -716,13 +722,69 @@ void doNothing(const int &pMax)
 
 //==============================================================================
 
-bool isRemoteFile(const QString &pFileNameOrUrl)
+void checkFileNameOrUrl(const QString &pInFileNameOrUrl, bool &pOutIsLocalFile,
+                        QString &pOutFileNameOrUrl)
 {
-    // Return whether the given argument refers to a local file
+    // Determine whether pInFileNameOrUrl refers to a local file or a remote
+    // one, and set pOutIsLocalFile and pOutFileNameOrUrl accordingly
+    // Note #1: to use QUrl::isLocalFile() is not enough. Indeed, say that
+    //          pInFileNameOrUrl is equal to
+    //              /home/me/mymodel.cellml
+    //          then QUrl(pInFileNameOrUrl).isLocalFile() will be false. For it
+    //          to be true, we would have to initialise the QUrl object using
+    //          QUrl::fromLocalFile(), but we can't do that since we don't know
+    //          whether pInFileNameOrUrl refers to a local file or not. So,
+    //          instead we test for the scheme and host of the QUrl object...
+    // Note #2: a local file can be passed as a URL. For example,
+    //              file:///home/me/mymodel.cellml
+    //          is a URL, but effectively a local file, hence pOutIsLocalFile is
+    //          to be true and pOutFileNameOrUrl is to be set to
+    //              /home/me/mymodel.cellml
 
-    QUrl url = pFileNameOrUrl;
+    QUrl fileNameOrUrl = pInFileNameOrUrl;
 
-    return !url.scheme().isEmpty() && !url.host().isEmpty();
+    pOutIsLocalFile =    !fileNameOrUrl.scheme().compare("file")
+                      ||  fileNameOrUrl.host().isEmpty();
+    pOutFileNameOrUrl = pOutIsLocalFile?
+                            !fileNameOrUrl.scheme().compare("file")?
+                                nativeCanonicalFileName(fileNameOrUrl.toLocalFile()):
+                                nativeCanonicalFileName(pInFileNameOrUrl):
+                            fileNameOrUrl.url();
+}
+
+//==============================================================================
+
+QString stringToPercentEncoding(const QString &pString)
+{
+    // Convert the given string to one with percent encoding
+
+    return QUrl::toPercentEncoding(pString);
+}
+
+//==============================================================================
+
+QString stringFromPercentEncoding(const QString &pString)
+{
+    // Remove the percent encoding from the given string
+
+    return QUrl::fromPercentEncoding(pString.toUtf8());
+}
+
+//==============================================================================
+
+QString eolString()
+{
+    // Return the end of line to use
+
+#ifdef Q_OS_WIN
+    return "\r\n";
+#else
+    // Note: before OS X, the EOL string would have been "\r", but since OS X it
+    //       is the same as on Linux (i.e. "\n") and since we don't support
+    //       versions prior to OS X...
+
+    return "\n";
+#endif
 }
 
 //==============================================================================

@@ -38,33 +38,10 @@ PluginManager::PluginManager(QCoreApplication *pApp, const bool &pGuiMode) :
     mLoadedPlugins(Plugins()),
     mCorePlugin(0)
 {
-    mPluginsDir =  QDir(pApp->applicationDirPath()).canonicalPath()
-                  +QDir::separator()+QString("..")
-#if defined(Q_OS_WIN) || defined(Q_OS_LINUX)
-                  +QDir::separator()+"plugins"
-#elif defined(Q_OS_MAC)
-                  +QDir::separator()+"PlugIns"
-#else
-    #error Unsupported platform
-#endif
-                  +QDir::separator()+pApp->applicationName();
+    // Retrieve OpenCOR's plugins directory
+    // Note: the plugin's directory is set in main()...
 
-#if defined(Q_OS_WIN) || defined(Q_OS_LINUX)
-    // The plugins directory should be correct, but in case we try to run
-    // OpenCOR on Windows or Linux AND from within Qt Creator, then the binary
-    // will be running from [OpenCOR]/build/OpenCOR[.exe] rather than
-    // [OpenCOR]/build/bin/OpenCOR[.exe] as it should if we were to mimic the
-    // case where OpenCOR has been deployed. Then, because the plugins are in
-    // [OpenCOR]/build/plugins/OpenCOR, we must skip the "../" bit. So, yes,
-    // it's not neat, but... is there another solution?...
-
-    if (!QDir(mPluginsDir).exists())
-        mPluginsDir =  QDir(pApp->applicationDirPath()).canonicalPath()
-                      +QDir::separator()+"plugins"
-                      +QDir::separator()+pApp->applicationName();
-#endif
-
-    mPluginsDir = QDir::toNativeSeparators(QDir(mPluginsDir).canonicalPath());
+    mPluginsDir = QCoreApplication::libraryPaths().first()+QDir::separator()+pApp->applicationName();
 
     // Retrieve the list of plugins available for loading
 
@@ -87,7 +64,7 @@ PluginManager::PluginManager(QCoreApplication *pApp, const bool &pGuiMode) :
 
     foreach (const QString &fileName, fileNames) {
         QString pluginError;
-        PluginInfo *pluginInfo = Plugin::info(fileName, pluginError);
+        PluginInfo *pluginInfo = Plugin::info(fileName, &pluginError);
         // Note: if there is some plugin information, then it will get owned by
         //       the plugin itself. So, it's the plugin's responsibility to
         //       delete it (see Plugin::~Plugin())...
@@ -154,20 +131,22 @@ PluginManager::PluginManager(QCoreApplication *pApp, const bool &pGuiMode) :
     foreach (const QString &pluginFileName, pluginFileNames) {
         QString pluginName = Plugin::name(pluginFileName);
 
-        Plugin *plugin = new Plugin(pluginFileName, pluginsInfo.value(pluginName),
+        Plugin *plugin = new Plugin(pluginFileName,
+                                    pluginsInfo.value(pluginName),
                                     pluginsError.value(pluginName),
                                     plugins.contains(pluginName), this);
 
-        // Keep track of the Core plugin, if it's the one we are dealing with,
-        // as well as keep track of the plugin in general
-
-        if (!pluginName.compare(CorePluginName))
-            mCorePlugin = plugin;
+        // Keep track of the plugin and of the Core plugin, in particular, if it
+        // is loaded
 
         mPlugins << plugin;
 
-        if (plugin->status() == Plugin::Loaded)
+        if (plugin->status() == Plugin::Loaded) {
             mLoadedPlugins << plugin;
+
+            if (!pluginName.compare(CorePluginName))
+                mCorePlugin = plugin;
+        }
     }
 }
 

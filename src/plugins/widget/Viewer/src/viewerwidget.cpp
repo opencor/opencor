@@ -225,21 +225,32 @@ void ViewerWidget::setContents(const QString &pContents)
 {
     // Try to set our contents to our MathML document
     // Note: we don't check whether pContents has the same value as mContents
-    //       since we would also need to check the value of mError and we can't
-    //       be certain about it...
+    //       since we would also need to check the value of mError and we don't
+    //       know about it...
 
     mContents = pContents;
 
-    if (mMathmlDocument.setContent(pContents)) {
-        mError = false;
+    if (subscripts() || greekSymbols() || digitGrouping()) {
+        mError = !mMathmlDocument.setContent(processedContents());
+    } else {
+        // Clean up the given contents, if possible, before setting it
 
-        // Process and reset our contents, if needed
+        QDomDocument domDocument;
 
-        if (subscripts() || greekSymbols() || digitGrouping())
-            mMathmlDocument.setContent(processedContents());
+        if (domDocument.setContent(pContents))
+            mError = !mMathmlDocument.setContent(domDocument.toString(-1));
+        else
+            mError = true;
+    }
 
-        // Determine (the inverse of) the size of our contents when rendered
-        // using a font size of 100 points
+    if (mError) {
+        // An error occurred, but consider it only as an actual error if our
+        // contents is not empty
+
+        mError = pContents.size();
+    } else {
+        // Everything went fine, so determine (the inverse of) the size of our
+        // contents when rendered using a font size of 100 points
         // Note: when setting the contents, QwtMathMLDocument recomputes its
         //       layout. Now, because we want the contents to be rendered as
         //       optimally as possible, we use a big font size, so that when we
@@ -252,8 +263,6 @@ void ViewerWidget::setContents(const QString &pContents)
 
         mOneOverMathmlDocumentWidth  = 1.0/mathmlDocumentSize.width();
         mOneOverMathmlDocumentHeight = 1.0/mathmlDocumentSize.height();
-    } else {
-        mError = pContents.size();
     }
 
     // Update ourselves
@@ -396,7 +405,7 @@ void ViewerWidget::paintEvent(QPaintEvent *pEvent)
         // We want to show that there is an error, so render a stretched warning
         // icon in our center
 
-        QIcon icon = QIcon(":Viewer_warning");
+        QIcon icon = QIcon(":/oxygen/status/task-attention.png");
         QSize iconSize = icon.availableSizes().first();
 
         int painterRectWidth = iconSize.width();
@@ -629,32 +638,38 @@ void ViewerWidget::processNode(const QDomNode &pDomNode) const
                 if (domChildNodeValueValid) {
                     // The number is valid, so do digit grouping on it
 
-                    int exponentPos = domChildNodeValue.indexOf("e", 0, Qt::CaseInsensitive);
                     int decimalPointPos = domChildNodeValue.indexOf(".");
+                    int exponentPos = domChildNodeValue.indexOf("e", 0, Qt::CaseInsensitive);
 
-                    if (   (decimalPointPos != -1)
-                        && ((exponentPos == -1) || (decimalPointPos < exponentPos))) {
-                        QString beforeDecimalPoint = domChildNodeValue.left(decimalPointPos);
-                        domChildNodeValue = domChildNodeValue.right(domChildNodeValue.length()-decimalPointPos);
-                        bool maybeDigit = true;
-                        int nbOfDigits = -1;
+                    if (decimalPointPos == -1) {
+                        if (exponentPos == -1)
+                            decimalPointPos = domChildNodeValue.length();
+                        else
+                            decimalPointPos = exponentPos;
+                    }
 
-                        for (int i = beforeDecimalPoint.length()-1; i >= 0; --i) {
-                            if (maybeDigit && beforeDecimalPoint[i].isDigit()) {
-                                if (++nbOfDigits == 3) {
-                                    domChildNodeValue = ","+domChildNodeValue;
+                    QString beforeDecimalPoint = domChildNodeValue.left(decimalPointPos);
 
-                                    nbOfDigits = 0;
-                                }
-                            } else {
-                                maybeDigit = false;
+                    domChildNodeValue = domChildNodeValue.right(domChildNodeValue.length()-decimalPointPos);
+
+                    bool maybeDigit = true;
+                    int nbOfDigits = -1;
+
+                    for (int i = beforeDecimalPoint.length()-1; i >= 0; --i) {
+                        if (maybeDigit && beforeDecimalPoint[i].isDigit()) {
+                            if (++nbOfDigits == 3) {
+                                domChildNodeValue = ","+domChildNodeValue;
+
+                                nbOfDigits = 0;
                             }
-
-                            domChildNodeValue = beforeDecimalPoint[i]+domChildNodeValue;
+                        } else {
+                            maybeDigit = false;
                         }
 
-                        domNode.firstChild().setNodeValue(domChildNodeValue);
+                        domChildNodeValue = beforeDecimalPoint[i]+domChildNodeValue;
                     }
+
+                    domNode.firstChild().setNodeValue(domChildNodeValue);
                 }
 
                 processDomNode = false;

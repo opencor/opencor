@@ -53,15 +53,6 @@ class QNetworkReply;
 //==============================================================================
 
 namespace OpenCOR {
-
-//==============================================================================
-
-static const auto SettingsGlobal          = QStringLiteral("Global");
-static const auto SettingsLocale          = QStringLiteral("Locale");
-static const auto SettingsActiveDirectory = QStringLiteral("ActiveDirectory");
-
-//==============================================================================
-
 namespace Core {
 
 //==============================================================================
@@ -87,7 +78,7 @@ class SynchronousTextFileDownloader : public QObject
 
 public:
     bool readTextFromUrl(const QString &pUrl, QString &pText,
-                         QString &pErrorMessage) const;
+                         QString *pErrorMessage) const;
 
 private Q_SLOTS:
     void networkAccessManagerSslErrors(QNetworkReply *pNetworkReply,
@@ -126,7 +117,7 @@ bool CORE_EXPORT writeResourceToFile(const QString &pFilename,
 
 #ifndef OpenCOR_MAIN
 bool CORE_EXPORT readTextFromUrl(const QString &pUrl, QString &pText,
-                                 QString &pErrorMessage);
+                                 QString *pErrorMessage = 0);
 #endif
 
 bool CORE_EXPORT readTextFromFile(const QString &pFileName, QString &pText);
@@ -148,7 +139,14 @@ QString CORE_EXPORT nonDiacriticString(const QString &pString);
 
 void CORE_EXPORT doNothing(const int &pMax);
 
-bool CORE_EXPORT isRemoteFile(const QString &pFileNameOrUrl);
+void CORE_EXPORT checkFileNameOrUrl(const QString &pInFileNameOrUrl,
+                                    bool &pOutIsLocalFile,
+                                    QString &pOutFileNameOrUrl);
+
+QString CORE_EXPORT stringToPercentEncoding(const QString &pString);
+QString CORE_EXPORT stringFromPercentEncoding(const QString &pString);
+
+QString CORE_EXPORT eolString();
 
 //==============================================================================
 

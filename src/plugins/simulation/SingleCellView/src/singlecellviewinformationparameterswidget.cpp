@@ -285,9 +285,9 @@ void SingleCellViewInformationParametersWidget::propertyChanged(Core::Property *
     //          but not after the user has modified one or several model
     //          parameters (see https://github.com/opencor/opencor/issues/234
     //          for more insight on this issue), hence our passing false to
-    //          recomputeComputedConstantsAndVariables()...
+    //          mSimulation->data()->reset()...
 
-    mSimulation->data()->recomputeComputedConstantsAndVariables(mSimulation->currentPoint(), false);
+    mSimulation->data()->reset(false);
 }
 
 //==============================================================================

@@ -237,10 +237,10 @@ void TreeViewWidget::startDrag(Qt::DropActions pSupportedActions)
     // This a reimplementation of QAbstractItemView::startDrag, so that we can
     // provide OpenCOR with a better pixmap for the drag object
     // Note: indeed, on Windows, the pixmap only shows the dragged item that are
-    //       visible in the QTreeView. Also, if there an item covers several
-    //       columns, then the pixmap will show several 'cells' some of them
-    //       empty if a column is empty, so... instead we want to provide a
-    //       generic pixmap which looks 'good' on all platforms...
+    //       visible in the QTreeView. Also, if an item covers several columns,
+    //       then the pixmap will show several 'cells' some of them empty if a
+    //       column is empty, so... instead we want to provide a generic pixmap
+    //       that looks 'good' on all platforms...
 
     // Retrieve the selected draggable items, if any
     // Note: the following code is based on

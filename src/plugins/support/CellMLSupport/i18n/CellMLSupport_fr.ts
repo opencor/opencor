@@ -34,6 +34,10 @@
         <source>the user-defined format file is not a valid XML file</source>
         <translation>le fichier du format défini par l&apos;utilisateur n&apos;est pas un fichier XML valide</translation>
     </message>
+    <message>
+        <source>the model could not be created (%1)</source>
+        <translation>le modèle n&apos;a pas pu être créé (%1)</translation>
+    </message>
 </context>
 <context>
     <name>OpenCOR::CellMLSupport::CellmlFileRuntime</name>
@@ -73,8 +77,8 @@
 <context>
     <name>QObject</name>
     <message>
-        <source>a CeVAS object could not be created</source>
-        <translation>un objet CeVAS n&apos;a pas pu être créé</translation>
+        <source>CeVAS error: %1</source>
+        <translation>Erreur CeVAS : %1</translation>
     </message>
 </context>
 </TS>

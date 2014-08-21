@@ -19,10 +19,13 @@ specific language governing permissions and limitations under the License.
 // Raw CellML view widget
 //==============================================================================
 
+#include "cellmlfilemanager.h"
 #include "corecellmleditingwidget.h"
+#include "editorlistwidget.h"
 #include "editorwidget.h"
 #include "filemanager.h"
 #include "rawcellmlviewwidget.h"
+#include "settings.h"
 #include "viewerwidget.h"
 #include "xsltransformer.h"
 
@@ -35,6 +38,7 @@ specific language governing permissions and limitations under the License.
 #include <QDomDocument>
 #include <QLabel>
 #include <QLayout>
+#include <QMessageBox>
 #include <QMetaType>
 #include <QSettings>
 #include <QVariant>
@@ -192,6 +196,10 @@ void RawCellmlViewWidget::initialize(const QString &pFileName)
 
             editingWidget->hide();
 
+    // Update our viewer
+
+    updateViewer();
+
     // Set our focus proxy to our 'new' editing widget and make sure that the
     // latter immediately gets the focus
     // Note: if we were not to immediately give our 'new' editing widget the
@@ -288,28 +296,72 @@ QList<QWidget *> RawCellmlViewWidget::statusBarWidgets() const
 
 //==============================================================================
 
+void RawCellmlViewWidget::validate(const QString &pFileName) const
+{
+    // Validate the given file
+
+    CoreCellMLEditing::CoreCellmlEditingWidget *editingWidget = mEditingWidgets.value(pFileName);
+
+    if (editingWidget) {
+        // Clear the list of CellML issues
+
+        EditorList::EditorListWidget *editorList = editingWidget->editorList();
+
+        editorList->clear();
+
+        // Retrieve the list of CellML issues, if any
+
+        CellMLSupport::CellmlFile *cellmlFile = CellMLSupport::CellmlFileManager::instance()->cellmlFile(pFileName);
+        CellMLSupport::CellmlFileIssues cellmlFileIssues;
+
+        if (cellmlFile->isValid(pFileName, editingWidget->editor()->contents(), cellmlFileIssues)) {
+            // There are no CellML issues, so the CellML file is valid
+
+            QMessageBox::information(qApp->activeWindow(),
+                                     tr("CellML Validation"),
+                                     tr("The CellML file is valid."),
+                                     QMessageBox::Ok);
+        } else {
+            // There are some CellML issues, so add them to our list and select
+            // the first one
+
+            foreach (const CellMLSupport::CellmlFileIssue &cellmlFileIssue, cellmlFileIssues)
+                editorList->addItem((cellmlFileIssue.type() == CellMLSupport::CellmlFileIssue::Error)?
+                                        EditorList::EditorListItem::Error:
+                                        EditorList::EditorListItem::Warning,
+                                    cellmlFileIssue.line(),
+                                    cellmlFileIssue.column(),
+                                    qPrintable(cellmlFileIssue.formattedMessage()));
+
+            editorList->selectFirstItem();
+        }
+    }
+}
+
+//==============================================================================
+
 void RawCellmlViewWidget::cleanUpXml(const QDomNode &pDomNode) const
 {
-    // Go through the node's children and remove all unrecognisable attributes
+    // Clean up the current node
 
-    for (int i = 0, iMax = pDomNode.childNodes().count(); i < iMax; ++i) {
-        QDomNode domNode = pDomNode.childNodes().at(i);
-        QDomNamedNodeMap domNodeAttributes = domNode.attributes();
+    QDomNamedNodeMap domNodeAttributes = pDomNode.attributes();
 
-        QStringList attributeNames = QStringList();
+    QStringList attributeNames = QStringList();
 
-        for (int j = 0, jMax = domNodeAttributes.count(); j < jMax; ++j) {
-            QString attributeName = domNodeAttributes.item(j).nodeName();
+    for (int j = 0, jMax = domNodeAttributes.count(); j < jMax; ++j) {
+        QString attributeName = domNodeAttributes.item(j).nodeName();
 
-            if (attributeName.contains(":"))
-                attributeNames << attributeName;
-        }
-
-        foreach (const QString &attributeName, attributeNames)
-            domNodeAttributes.removeNamedItem(attributeName);
-
-        cleanUpXml(domNode);
+        if (attributeName.contains(":"))
+            attributeNames << attributeName;
     }
+
+    foreach (const QString &attributeName, attributeNames)
+        domNodeAttributes.removeNamedItem(attributeName);
+
+    // Go through the node's children, if any, and clean them up
+
+    for (int i = 0, iMax = pDomNode.childNodes().count(); i < iMax; ++i)
+        cleanUpXml(pDomNode.childNodes().at(i));
 }
 
 //==============================================================================
@@ -511,7 +563,7 @@ void RawCellmlViewWidget::updateViewer()
 
                 mContentMathmlEquation = QString();
 
-                mEditingWidget->viewer()->setContents(mContentMathmlEquation);
+                mEditingWidget->viewer()->setContents(QString());
             }
         }
     } else {
@@ -519,7 +571,7 @@ void RawCellmlViewWidget::updateViewer()
 
         mContentMathmlEquation = QString();
 
-        mEditingWidget->viewer()->setContents(mContentMathmlEquation);
+        mEditingWidget->viewer()->setContents(QString());
     }
 }
 

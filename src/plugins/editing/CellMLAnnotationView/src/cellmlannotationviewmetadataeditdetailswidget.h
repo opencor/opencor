@@ -90,6 +90,7 @@ private:
         QString resource;
         QString id;
 
+        bool operator==(const Item &pItem) const;
         bool operator<(const Item &pItem) const;
     };
 
@@ -126,9 +127,6 @@ private:
     QString mTerm;
     bool mTermIsDirect;
 
-    QString mTermUrl;
-    QString mOtherTermUrl;
-
     Items mItems;
     QString mErrorMessage;
     bool mLookupTerm;
@@ -149,6 +147,8 @@ private:
     QLabel *mCurrentResourceOrIdLabel;
 
     QMenu *mContextMenu;
+
+    QNetworkReply *mNetworkReply;
 
     void updateGui(const Items &pItems, const QString &pErrorMessage,
                    const bool &pLookupTerm,
@@ -177,7 +177,7 @@ Q_SIGNALS:
 
 public Q_SLOTS:
     void updateGui(iface::cellml_api::CellMLElement *pElement,
-                   const bool &pResetItemsGui = true);
+                   const bool &pResetItemsGui = false);
 
 private Q_SLOTS:
     void on_actionCopy_triggered();

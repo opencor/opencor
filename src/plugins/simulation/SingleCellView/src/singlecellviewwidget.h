@@ -101,8 +101,9 @@ public:
 
     bool contains(const QString &pFileName) const;
 
-    void initialize(const QString &pFileName);
-    void finalize(const QString &pFileName);
+    void initialize(const QString &pFileName,
+                    const bool &pReloadingView = false);
+    void finalize(const QString &pFileName, const bool &pReloadingView = false);
 
     QIcon fileTabIcon(const QString &pFileName) const;
 
@@ -224,7 +225,7 @@ private Q_SLOTS:
 
     void simulationRunning(const bool &pIsResuming);
     void simulationPaused();
-    void simulationStopped(const int &pElapsedTime);
+    void simulationStopped(const qint64 &pElapsedTime);
 
     void resetProgressBar();
     void resetFileTabIcon();

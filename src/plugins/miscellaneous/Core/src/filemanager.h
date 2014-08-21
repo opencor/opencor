@@ -29,7 +29,6 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-#include <QList>
 #include <QMap>
 #include <QObject>
 
@@ -99,8 +98,8 @@ public:
 
     File * isManaged(const QString &pFileName) const;
 
-    bool isActive() const;
-    void setActive(const bool &pActive);
+    bool canCheckFiles() const;
+    void setCanCheckFiles(const bool &pCanCheckFiles);
 
     QString sha1(const QString &pFileName) const;
 
@@ -109,10 +108,20 @@ public:
     int newIndex(const QString &pFileName) const;
     QString url(const QString &pFileName) const;
 
+    bool isDifferent(const QString &pFileName) const;
+    bool isDifferent(const QString &pFileName,
+                     const QString &pFileContents) const;
+
     bool isNew(const QString &pFileName) const;
     bool isRemote(const QString &pFileName) const;
     bool isModified(const QString &pFileName) const;
     bool isNewOrModified(const QString &pFileName) const;
+
+    void makeNew(const QString &pFileName);
+
+    void setModified(const QString &pFileName, const bool &pModified);
+    void setConsiderModified(const QString &pFileName,
+                             const bool &pConsiderModified);
 
     bool isReadable(const QString &pFileName) const;
     bool isWritable(const QString &pFileName) const;
@@ -131,14 +140,16 @@ public:
     int count() const;
 
 private:
-    bool mActive;
+    bool mCanCheckFiles;
 
     QTimer *mTimer;
 
-    QList<File *> mFiles;
+    QMap<QString, File *> mFiles;
 
     QMap<QString, bool> mFilesReadable;
     QMap<QString, bool> mFilesWritable;
+
+    bool newFile(const QString &pContents, QString &pFileName);
 
 Q_SIGNALS:
     void fileManaged(const QString &pFileName);
@@ -156,8 +167,7 @@ Q_SIGNALS:
     void fileRenamed(const QString &pOldFileName, const QString &pNewFileName);
     void fileDuplicated(const QString &pFileName);
 
-public Q_SLOTS:
-    void setModified(const QString &pFileName, const bool &pModified);
+    void fileSaved(const QString &pFileName);
 
 private Q_SLOTS:
     void checkFiles();

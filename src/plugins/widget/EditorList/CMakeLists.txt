@@ -4,13 +4,15 @@ PROJECT(EditorListPlugin)
 
 ADD_PLUGIN(EditorList
     SOURCES
+        ../../i18ninterface.cpp
         ../../plugininfo.cpp
 
-        src/editorlistwidget.cpp
+        src/editorlistitem.cpp
         src/editorlistplugin.cpp
+        src/editorlistwidget.cpp
     HEADERS_MOC
-        src/editorlistwidget.h
         src/editorlistplugin.h
+        src/editorlistwidget.h
     INCLUDE_DIRS
         src
     PLUGINS

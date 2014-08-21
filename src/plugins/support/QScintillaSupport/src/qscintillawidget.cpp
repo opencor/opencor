@@ -50,13 +50,12 @@ QScintillaWidget::QScintillaWidget(QsciLexer *pLexer, QWidget *pParent) :
     mCanSelectAll(false),
     mInsertMode(true)
 {
-    // Remove the frame around our Scintilla editor
+    // Customise ourselves
 
+    setCaretLineVisible(true);
     setFrameShape(QFrame::NoFrame);
-
-    // Remove the margin number in our Scintilla editor
-
     setMarginWidth(SC_MARGIN_NUMBER, 0);
+    setUtf8(true);
 
     // Associate a lexer to our Scintilla editor, should one be provided
     // Note: the default font family and size come from Qt Creator...
@@ -90,15 +89,11 @@ QScintillaWidget::QScintillaWidget(QsciLexer *pLexer, QWidget *pParent) :
         setFont(mFont);
     }
 
-    // Show the caret line
-
-    setCaretLineVisible(true);
-
     // Force the use of UNIX EOL mode
     // Note: by default QScintilla will use EolWindows on Windows and EolUnix on
     //       Linux and OS X. However, the fact that it uses EolWindows on
-    //       Windows can cause problems on that platform, this with files not
-    //       using a a Windows EOL mode, so...
+    //       Windows can cause problems on that platform (with files not using a
+    //       Windows EOL mode), so...
 
     setEolMode(EolUnix);
 
@@ -172,6 +167,23 @@ void QScintillaWidget::setContextMenu(const QList<QAction *> &pContextMenuAction
 
 //==============================================================================
 
+void QScintillaWidget::setCursorPosition(int pLine, int pColumn)
+{
+    // Make sure that the line is not within a folded block
+
+    ensureLineVisible(pLine);
+
+    // Center ourselves around the given line
+
+    SendScintilla(SCI_LINESCROLL, 0, pLine-firstVisibleLine()-0.5*SendScintilla(SCI_LINESONSCREEN));
+
+    // Set our cursor position
+
+    QsciScintilla::setCursorPosition(pLine, pColumn);
+}
+
+//==============================================================================
+
 int QScintillaWidget::currentPosition() const
 {
     // Return our current position
@@ -186,24 +198,6 @@ void QScintillaWidget::setCurrentPosition(const int &pCurrentPosition)
     // Set our current position
 
     SendScintilla(SCI_SETCURRENTPOS, pCurrentPosition);
-}
-
-//==============================================================================
-
-int QScintillaWidget::currentLine() const
-{
-    // Return our current line
-
-    return SendScintilla(SCI_LINEFROMPOSITION, SendScintilla(SCI_GETCURRENTPOS));
-}
-
-//==============================================================================
-
-int QScintillaWidget::currentColumn() const
-{
-    // Return our current column
-
-    return SendScintilla(SCI_GETCOLUMN, SendScintilla(SCI_GETCURRENTPOS));
 }
 
 //==============================================================================
@@ -266,6 +260,11 @@ int QScintillaWidget::findTextInRange(const int &pStartRange,
                                       const QString &pText,
                                       const bool &pCaseSensitive) const
 {
+    // Keep track of the start and end of the current target
+
+    int currentTargetStart = SendScintilla(SCI_GETTARGETSTART);
+    int currentTargetEnd = SendScintilla(SCI_GETTARGETEND);
+
     // Find and return the position, if any, of the given text within the given
     // range
 
@@ -274,9 +273,18 @@ int QScintillaWidget::findTextInRange(const int &pStartRange,
     SendScintilla(SCI_SETTARGETSTART, pStartRange);
     SendScintilla(SCI_SETTARGETEND, pEndRange);
 
-    QByteArray text = pText.toUtf8();
+    QByteArray byteArray = pText.toUtf8();
 
-    return SendScintilla(SCI_SEARCHINTARGET, text.length(), text.constData());
+    int res = SendScintilla(SCI_SEARCHINTARGET, byteArray.length(), byteArray.constData());
+
+    // Retrieve the start and end of the current target
+
+    SendScintilla(SCI_SETTARGETSTART, currentTargetStart);
+    SendScintilla(SCI_SETTARGETEND, currentTargetEnd);
+
+    // We are all done, so...
+
+    return res;
 }
 
 //==============================================================================
@@ -321,7 +329,7 @@ void QScintillaWidget::del()
 {
     // Delete the selected text, if any
 
-    SendScintilla(QsciScintillaBase::SCI_CLEAR);
+    SendScintilla(SCI_CLEAR);
 }
 
 //==============================================================================
@@ -374,7 +382,7 @@ void QScintillaWidget::setBackgroundColor(const int &pStyle,
 {
     // Set the background color for the given style
 
-    SendScintilla(QsciScintillaBase::SCI_STYLESETBACK, pStyle, pBackgroundColor);
+    SendScintilla(SCI_STYLESETBACK, pStyle, pBackgroundColor);
 }
 
 //==============================================================================
@@ -384,7 +392,7 @@ void QScintillaWidget::setForegroundColor(const int &pStyle,
 {
     // Set the foreground color for the given style
 
-    SendScintilla(QsciScintillaBase::SCI_STYLESETFORE, pStyle, pForegroundColor);
+    SendScintilla(SCI_STYLESETFORE, pStyle, pForegroundColor);
 }
 
 //==============================================================================
@@ -393,7 +401,7 @@ int QScintillaWidget::zoomLevel() const
 {
     // Return our zoom level
 
-    return SendScintilla(QsciScintillaBase::SCI_GETZOOM);
+    return SendScintilla(SCI_GETZOOM);
 }
 
 //==============================================================================
@@ -607,11 +615,6 @@ void QScintillaWidget::cursorPositionChanged(const int &pLine,
 
     mCursorPositionWidget->setText(QString("Line: %1, Col: %2").arg(QString::number(pLine+1),
                                                                     QString::number(pColumn+1)));
-
-    // Keep track of the current line and column
-
-    mCurrentLine = pLine;
-    mCurrentColumn = pColumn;
 }
 
 //==============================================================================

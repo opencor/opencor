@@ -102,7 +102,7 @@ public:
     void addNlaSolverProperty(const QString &pName, const QVariant &pValue,
                               const bool &pReset = true);
 
-    void reset();
+    void reset(const bool &pInitialize = true);
 
     void recomputeComputedConstantsAndVariables(const double &pCurrentPoint,
                                                 const bool &pFullComputeComputedConstants = true);
@@ -245,7 +245,7 @@ private:
 Q_SIGNALS:
     void running(const bool &pIsResuming);
     void paused();
-    void stopped(const int &pElapsedTime);
+    void stopped(const qint64 &pElapsedTime);
 
     void error(const QString &pMessage);
 };

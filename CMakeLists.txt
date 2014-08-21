@@ -27,7 +27,7 @@ INITIALISE_PROJECT()
 SET(SNAPSHOT ON)
 
 SET(VERSION_MAJOR 0)
-SET(VERSION_MINOR 2)
+SET(VERSION_MINOR 3)
 SET(VERSION_PATCH 0)
 
 IF(SNAPSHOT)
@@ -91,16 +91,7 @@ SET(UIS
     src/splashscreenwindow.ui
 )
 
-IF(WIN32)
-    SET(QT_CONF_QRC)
-ELSEIF(APPLE)
-    SET(QT_CONF_QRC res/osx/qt_conf.qrc)
-ELSE()
-    SET(QT_CONF_QRC res/linux/qt_conf.qrc)
-ENDIF()
-
 SET(RESOURCES
-    ${QT_CONF_QRC}
     res/common.qrc
     res/ui.qrc
 )
@@ -145,11 +136,11 @@ INCLUDE_DIRECTORIES(
 )
 
 # Update the translation (.ts) files and generate the language (.qm) files
-# which will later on be embedded in the OpenCOR executable as resources
+# that will later on be embedded in the OpenCOR executable as resources
 
 UPDATE_LANGUAGE_FILES(${PROJECT_NAME} FALSE)
 
-# Third-party library which must be directly embedded in the GUI version of
+# Third-party library that must be directly embedded in the GUI version of
 # OpenCOR
 
 INCLUDE(src/3rdparty/QtSingleApplication/QtSingleApplication.cmake)
@@ -178,7 +169,11 @@ IF(ENABLE_TESTS)
     # Note: DEST_TESTS_DIR isn't only used here, but also in our ADD_PLUGIN()
     #       macro...
 
-    SET(DEST_TESTS_DIR ${PROJECT_BUILD_DIR}/tests)
+    IF(APPLE)
+        SET(DEST_TESTS_DIR ${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME}.app/Contents/MacOS)
+    ELSE()
+        SET(DEST_TESTS_DIR ${PROJECT_BUILD_DIR}/bin)
+    ENDIF()
 
     # Build our main test program
 
@@ -199,6 +194,12 @@ IF(ENABLE_TESTS)
     ADD_CUSTOM_COMMAND(TARGET ${RUNTESTS_NAME} POST_BUILD
                        COMMAND ${CMAKE_COMMAND} -E copy ${PROJECT_BINARY_DIR}/${MAIN_TEST_FILENAME}
                                                         ${DEST_TESTS_DIR}/${MAIN_TEST_FILENAME})
+
+    # Clean up our test program, but only if we are on OS X
+
+    IF(APPLE)
+        OS_X_CLEAN_UP_FILE_WITH_QT_LIBRARIES(${RUNTESTS_NAME} ${DEST_TESTS_DIR} ${MAIN_TEST_FILENAME} QtCore)
+    ENDIF()
 ENDIF()
 
 # Build the OpenCOR plugins
@@ -254,8 +255,7 @@ SET(PLUGINS
     # Selectable plugins
 
     editing/CellMLAnnotationView
-#---GRY--- TEMPORARILY DISABLED...
-#    editing/PrettyCellMLView
+    editing/PrettyCellMLView
     editing/RawCellMLView
     editing/RawView
 
@@ -381,18 +381,12 @@ IF(APPLE)
 
     # Clean up the OpenCOR executable
 
-    IF(APPLE)
-        SET(QT_MAC_EXTRAS QtMacExtras)
-    ELSE()
-        SET(QT_MAC_EXTRAS)
-    ENDIF()
-
     SET(QT_LIBRARIES
         QtConcurrent
         QtCore
         QtGui
         QtHelp
-        ${QT_MAC_EXTRAS}
+        QtMacExtras
         QtMultimedia
         QtMultimediaWidgets
         QtNetwork
@@ -410,14 +404,14 @@ IF(APPLE)
         QtXmlPatterns
     )
 
-    OS_X_CLEAN_UP_FILE_WITH_QT_LIBRARIES(${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME}.app/Contents/MacOS ${PROJECT_NAME}
-                                         ${QT_LIBRARIES})
+    OS_X_CLEAN_UP_FILE_WITH_QT_LIBRARIES(${PROJECT_NAME} ${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME}.app/Contents/MacOS ${PROJECT_NAME} ${QT_LIBRARIES})
 
-    # Deploy our Qt libraries, but only if we are to package OpenCOR
-    # Note: see OS_X_CLEAN_UP_FILE_WITH_QT_LIBRARIES() for the reason...
+    # Deploy our Qt libraries
 
-    IF("$ENV{PACKAGE_OPENCOR}" STREQUAL "True")
-        OS_X_DEPLOY_QT_LIBRARIES(${QT_LIBRARIES} QtCLucene QtSql)
+    OS_X_DEPLOY_QT_LIBRARIES(${QT_LIBRARIES} QtCLucene QtSql)
+
+    IF(ENABLE_TESTS)
+        OS_X_DEPLOY_QT_LIBRARIES(QtTest)
     ENDIF()
 
     # Deploy some plugins
@@ -446,15 +440,13 @@ ELSE()
 
         # Redistributable files required by OpenCOR
         # Note: these files may or not be needed in order to test OpenCOR
-        #       locally. It all depends on how the user's computer is
-        #       configured...
+        #       locally. It all depends on whether they are present on the
+        #       user's computer...
 
-        RETRIEVE_BINARY_FILE(distrib/windows/x86 libeay32.dll 8e18f9f241ef04f41675934cac11ac98dc721a4b)
-        RETRIEVE_BINARY_FILE(distrib/windows/x86 msvcp100.dll 79bcaad3714433e01c7f153b05b781f8d7cb318d)
-        RETRIEVE_BINARY_FILE(distrib/windows/x86 msvcr100.dll 4e880fc7625ccf8d9ca799d5b94ce2b1e7597335)
-        RETRIEVE_BINARY_FILE(distrib/windows/x86 ssleay32.dll 9b82650fbf2d51eea2af13a4cd85c88407e67559)
+        RETRIEVE_BINARY_FILE(distrib/windows/x86 libeay32.dll be778153098099f8e7f4a64edaf2244d3b8e0137)
+        RETRIEVE_BINARY_FILE(distrib/windows/x86 ssleay32.dll 0da2affc1a46c7f0c4f583cb9d562143c6dc19b8)
 
-        FOREACH(REDISTRIBUTABLE_FILE libeay32 msvcp100 msvcr100 ssleay32)
+        FOREACH(REDISTRIBUTABLE_FILE libeay32 ssleay32)
             COPY_FILE_TO_BUILD_DIR(${PROJECT_NAME} ${CMAKE_SOURCE_DIR}/distrib/windows/x86 .
                                    ${REDISTRIBUTABLE_FILE}${CMAKE_SHARED_LIBRARY_SUFFIX})
             COPY_FILE_TO_BUILD_DIR(${PROJECT_NAME} ${CMAKE_SOURCE_DIR}/distrib/windows/x86 bin
@@ -481,19 +473,17 @@ IF(WIN32)
 
     SET(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_SOURCE_DIR}/LICENSE.txt")
 
-    # Install both the GUI and consolve version of OpenCOR
-    # Note: we would normally use
-    #           INSTALL(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION bin)
-    #       for the GUI version of OpenCOR, but for some reasons it doesn't
-    #       work (anymore?) while it works fine on Linux and OS X. Could that
-    #       have something to do with us now using MSVC?...
+    # Install both the GUI and CLI versions of OpenCOR
 
-    INSTALL(FILES ${PROJECT_BUILD_DIR}/bin/${PROJECT_NAME}${CMAKE_EXECUTABLE_SUFFIX}
-            DESTINATION bin)
+    INSTALL(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION bin)
     INSTALL(FILES ${PROJECT_BUILD_DIR}/bin/${PROJECT_NAME}.com
             DESTINATION bin)
 
     # Redistributable files required by OpenCOR
+    # Note: libeay32 and ssleay32 have already been retrieved earlier...
+
+    RETRIEVE_BINARY_FILE(distrib/windows/x86 msvcp100.dll 79bcaad3714433e01c7f153b05b781f8d7cb318d)
+    RETRIEVE_BINARY_FILE(distrib/windows/x86 msvcr100.dll 4e880fc7625ccf8d9ca799d5b94ce2b1e7597335)
 
     FOREACH(REDISTRIBUTABLE_FILE libeay32 msvcp100 msvcr100 ssleay32)
         INSTALL(FILES ${CMAKE_SOURCE_DIR}/distrib/windows/x86/${REDISTRIBUTABLE_FILE}${CMAKE_SHARED_LIBRARY_SUFFIX}
@@ -507,11 +497,11 @@ IF(WIN32)
 
     # Qt plugins required by OpenCOR
 
-    WINDOWS_DEPLOY_QT_PLUGIN(plugins accessible qtaccessiblewidgets)
-    WINDOWS_DEPLOY_QT_PLUGIN(plugins imageformats qjpeg)
-    WINDOWS_DEPLOY_QT_PLUGIN(bin platforms qwindows)
-    WINDOWS_DEPLOY_QT_PLUGIN(plugins printsupport windowsprintersupport)
-    WINDOWS_DEPLOY_QT_PLUGIN(plugins sqldrivers qsqlite)
+    WINDOWS_DEPLOY_QT_PLUGIN(accessible qtaccessiblewidgets)
+    WINDOWS_DEPLOY_QT_PLUGIN(imageformats qjpeg)
+    WINDOWS_DEPLOY_QT_PLUGIN(platforms qwindows)
+    WINDOWS_DEPLOY_QT_PLUGIN(printsupport windowsprintersupport)
+    WINDOWS_DEPLOY_QT_PLUGIN(sqldrivers qsqlite)
 
     # Batch and VBScript files to run OpenCOR (useful when downloading a ZIPped
     # version of OpenCOR)
@@ -545,20 +535,15 @@ IF(WIN32)
 ELSEIF(APPLE)
     # Select PackageMaker and ZIP as the packagers on OS X
 
-    SET(CPACK_GENERATOR PackageMaker ZIP)
-
     SET(CPACK_SYSTEM_NAME "OSX")
 
     SET(CPACK_RESOURCE_FILE_WELCOME "${CMAKE_SOURCE_DIR}/distrib/osx/welcome.txt")
     SET(CPACK_RESOURCE_FILE_README "${CMAKE_SOURCE_DIR}/distrib/readMe.txt")
     SET(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_SOURCE_DIR}/LICENSE.txt")
 
-    SET(INSTALL_DIR "/Applications/${PROJECT_NAME}")
-
     SET(CPACK_SET_DESTDIR TRUE)
-    SET(CMAKE_INSTALL_PREFIX ${INSTALL_DIR})
 
-    INSTALL(TARGETS ${PROJECT_NAME} BUNDLE DESTINATION ${INSTALL_DIR})
+    INSTALL(TARGETS ${PROJECT_NAME} BUNDLE DESTINATION .)
 
     # Shell script to run OpenCOR (useful when downloading a ZIPped version of
     # OpenCOR)
@@ -598,47 +583,6 @@ ELSE()
         INSTALL(FILES ${QT_LIBRARY_DIR}/${CMAKE_SHARED_LIBRARY_PREFIX}${QT_FILE}${CMAKE_SHARED_LIBRARY_SUFFIX}.52.1
                 DESTINATION lib
                 RENAME ${CMAKE_SHARED_LIBRARY_PREFIX}${QT_FILE}${CMAKE_SHARED_LIBRARY_SUFFIX}.52)
-    ENDFOREACH()
-
-    # Additional libraries required by Qt, but which are not available on a
-    # 'blank' version of Ubuntu or their version differs from one version of
-    # Ubuntu to another
-    # Note: starting with Ubuntu 11.04, some system libraries are located in
-    #       /usr/lib/i386-linux-gnu or /usr/lib/x86_64-linux-gnu rather than
-    #       /usr/lib, so we need to check those folders first...
-
-    SET(DEFAULT_LIBRARY_FOLDER /usr/lib)
-    SET(X86_LIBRARY_FOLDER ${DEFAULT_LIBRARY_FOLDER}/i386-linux-gnu)
-    SET(X64_LIBRARY_FOLDER ${DEFAULT_LIBRARY_FOLDER}/x86_64-linux-gnu)
-
-    IF(EXISTS "${X86_LIBRARY_FOLDER}" AND IS_DIRECTORY "${X86_LIBRARY_FOLDER}")
-        SET(LIBRARY_FOLDER ${X86_LIBRARY_FOLDER})
-    ELSEIF(EXISTS "${X64_LIBRARY_FOLDER}" AND IS_DIRECTORY "${X64_LIBRARY_FOLDER}")
-        SET(LIBRARY_FOLDER ${X64_LIBRARY_FOLDER})
-    ELSE()
-        SET(LIBRARY_FOLDER ${DEFAULT_LIBRARY_FOLDER})
-    ENDIF()
-
-    FOREACH(LIBRARY stdc++.so.6)
-        # Note: stdc++.so.6 is required by a few Qt libraries and may not be
-        #       present or different on the target machine, so...
-
-        IF(EXISTS "${LIBRARY_FOLDER}/${CMAKE_SHARED_LIBRARY_PREFIX}${LIBRARY}")
-            SET(CORRECT_LIBRARY ${LIBRARY_FOLDER}/${CMAKE_SHARED_LIBRARY_PREFIX}${LIBRARY})
-        ELSEIF(EXISTS "${DEFAULT_LIBRARY_FOLDER}/${CMAKE_SHARED_LIBRARY_PREFIX}${LIBRARY}")
-            SET(CORRECT_LIBRARY ${DEFAULT_LIBRARY_FOLDER}/${CMAKE_SHARED_LIBRARY_PREFIX}${LIBRARY})
-        ELSE()
-            SET(CORRECT_LIBRARY)
-        ENDIF()
-
-        IF("${CORRECT_LIBRARY}" STREQUAL "")
-            MESSAGE(FATAL_ERROR "The '${LIBRARY}' could not be found...")
-        ELSE()
-            GET_FILENAME_COMPONENT(REAL_CORRECT_LIBRARY ${CORRECT_LIBRARY} REALPATH)
-
-            INSTALL(FILES ${REAL_CORRECT_LIBRARY} RENAME ${CMAKE_SHARED_LIBRARY_PREFIX}${LIBRARY}
-                    DESTINATION lib)
-        ENDIF()
     ENDFOREACH()
 
     # Qt plugins required by OpenCOR

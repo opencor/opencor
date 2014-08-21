@@ -173,12 +173,12 @@ void FileOrganiserWindowWindow::showCustomContextMenu(const QPoint &pPosition) c
 
 //==============================================================================
 
-void FileOrganiserWindowWindow::itemDoubleClicked(const QModelIndex &itemIndex)
+void FileOrganiserWindowWindow::itemDoubleClicked(const QModelIndex &pItemIndex)
 {
     // Check what kind of item has been double clicked and if it is a file, then
     // open it
 
-    QString fileName = mFileOrganiserWidget->filePath(itemIndex);
+    QString fileName = mFileOrganiserWidget->filePath(pItemIndex);
 
     if (!fileName.isEmpty())
         // We are dealing with a file (as opposed to a folder), so just open it

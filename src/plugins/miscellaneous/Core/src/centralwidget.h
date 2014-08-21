@@ -194,6 +194,8 @@ private:
 Q_SIGNALS:
     void guiUpdated(Plugin *pViewPlugin, const QString &pFileName);
 
+    void atLeastOneView(const bool &pAtLeastOneView);
+
     void canSave(const bool &pEnabled);
     void canSaveAs(const bool &pEnabled);
     void canSaveAll(const bool &pEnabled);
@@ -210,7 +212,7 @@ private Q_SLOTS:
     void cancelOpenRemoteFile();
     void openRemoteFile();
 
-    void reloadFile(const int &pIndex = -1);
+    void reloadFile(const int &pIndex = -1, const bool &pForce = false);
 
     void duplicateFile();
 

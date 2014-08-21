@@ -62,11 +62,10 @@ public:
     QMenu * contextMenu() const;
     void setContextMenu(const QList<QAction *> &pContextMenuActions);
 
+    virtual void setCursorPosition(int pLine, int pColumn);
+
     int currentPosition() const;
     void setCurrentPosition(const int &pCurrentPosition);
-
-    int currentLine() const;
-    int currentColumn() const;
 
     QString contents() const;
     void setContents(const QString &pContents);
@@ -119,9 +118,6 @@ private:
 
     QLabel *mCursorPositionWidget;
     QLabel *mEditingModeWidget;
-
-    int mCurrentLine;
-    int mCurrentColumn;
 
     void updateColors();
 

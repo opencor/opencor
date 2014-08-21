@@ -19,7 +19,16 @@ specific language governing permissions and limitations under the License.
 // Editor list widget
 //==============================================================================
 
+#include "cliutils.h"
 #include "editorlistwidget.h"
+#include "i18ninterface.h"
+
+//==============================================================================
+
+#include <QApplication>
+#include <QKeyEvent>
+#include <QMenu>
+#include <QClipboard>
 
 //==============================================================================
 
@@ -29,7 +38,9 @@ namespace EditorList {
 //==============================================================================
 
 EditorListWidget::EditorListWidget(QWidget *pParent) :
-    QListView(pParent)
+    QListView(pParent),
+    CommonWidget(pParent),
+    mModel(new QStandardItemModel(this))
 {
     // Customise ourselves
 
@@ -37,7 +48,156 @@ EditorListWidget::EditorListWidget(QWidget *pParent) :
     setAttribute(Qt::WA_MacShowFocusRect, false);
     // Note: the above removes the focus border since it messes up our look
 #endif
+    setEditTriggers(QAbstractItemView::NoEditTriggers);
     setFrameShape(QFrame::NoFrame);
+    setModel(mModel);
+
+    // Create our context menu
+
+    mContextMenu = new QMenu(this);
+
+    mClearAction = new QAction(this);
+    mCopyToClipboardAction = new QAction(this);
+
+    connect(mClearAction, SIGNAL(triggered()),
+            this, SLOT(clear()));
+    connect(mCopyToClipboardAction, SIGNAL(triggered()),
+            this, SLOT(copyToClipboard()));
+
+    mContextMenu->addAction(mClearAction);
+    mContextMenu->addSeparator();
+    mContextMenu->addAction(mCopyToClipboardAction);
+
+    // We want a context menu
+
+    setContextMenuPolicy(Qt::CustomContextMenu);
+
+    connect(this, SIGNAL(customContextMenuRequested(const QPoint &)),
+            this, SLOT(showCustomContextMenu(const QPoint &)));
+
+    // Make sure that we are properly initialised
+
+    clear();
+
+    // A connection to handle a double click on a given item
+
+    connect(this, SIGNAL(doubleClicked(const QModelIndex &)),
+            this, SLOT(requestItem(const QModelIndex &)));
+
+    // Retranslate ourselves, so that our actions are properly initialised
+
+    retranslateUi();
+}
+
+//==============================================================================
+
+void EditorListWidget::retranslateUi()
+{
+    // Retranslate our actions
+
+    I18nInterface::retranslateAction(mClearAction, tr("Clear List"),
+                                     tr("Clear the list"));
+    I18nInterface::retranslateAction(mCopyToClipboardAction, tr("Copy List To Clipboard"),
+                                     tr("Copy the list to the clipboard"));
+}
+
+//==============================================================================
+
+void EditorListWidget::clear()
+{
+    // Reset our list of items
+
+    mModel->clear();
+
+    mClearAction->setEnabled(false);
+    mCopyToClipboardAction->setEnabled(false);
+}
+
+//==============================================================================
+
+void EditorListWidget::addItem(const EditorListItem::Type &pType,
+                               const int &pLine, const int &pColumn,
+                               const QString &pMessage)
+{
+    // Add the given item to our list
+
+    mModel->invisibleRootItem()->appendRow(new EditorListItem(pType, pLine, pColumn, pMessage));
+
+    mClearAction->setEnabled(true);
+    mCopyToClipboardAction->setEnabled(true);
+}
+
+//==============================================================================
+
+void EditorListWidget::selectFirstItem()
+{
+    // Select the first item in our list and 'request' it
+
+    QStandardItem *firstItem = mModel->invisibleRootItem()->child(0);
+
+    if (firstItem) {
+        QModelIndex firstItemIndex = firstItem->index();
+
+        setCurrentIndex(firstItemIndex);
+
+        requestItem(firstItemIndex);
+    }
+}
+
+//==============================================================================
+
+void EditorListWidget::keyPressEvent(QKeyEvent *pEvent)
+{
+    // Default handling of the event
+
+    QListView::keyPressEvent(pEvent);
+
+    // Check whether the user wants the current item to be requested
+
+    if ((pEvent->key() == Qt::Key_Enter) || (pEvent->key() == Qt::Key_Return))
+        requestItem(currentIndex());
+}
+
+//==============================================================================
+
+void EditorListWidget::showCustomContextMenu(const QPoint &pPosition) const
+{
+    Q_UNUSED(pPosition);
+
+    // Show our custom context menu
+
+    mContextMenu->exec(QCursor::pos());
+}
+
+//==============================================================================
+
+void EditorListWidget::copyToClipboard()
+{
+    // Copy our list to the clipboard
+
+    QStringList list = QStringList();
+
+    for (int i = 0, iMax = mModel->rowCount(); i < iMax; ++i) {
+        EditorListItem *item = static_cast<EditorListItem *>(mModel->item(i));
+        QString itemType = (item->type() == EditorListItem::Error)?tr("Error"):tr("Warning");
+
+        list << "["+itemType+"] "+item->text();
+    }
+
+    QApplication::clipboard()->setText(list.join(Core::eolString())+Core::eolString());
+}
+
+//==============================================================================
+
+void EditorListWidget::requestItem(const QModelIndex &pItemIndex)
+{
+    // Check what kind of item has been double clicked and if it is a file, then
+    // open it
+
+    EditorListItem *item = static_cast<EditorListItem *>(mModel->itemFromIndex(pItemIndex));
+
+    if (item)
+        emit itemRequested(item);
 }
 
 //==============================================================================

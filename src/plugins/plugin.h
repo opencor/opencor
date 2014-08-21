@@ -35,20 +35,14 @@ namespace OpenCOR {
 
 //==============================================================================
 
-static const auto SettingsOrganization = QStringLiteral("Physiome");
-static const auto SettingsApplication = QStringLiteral("OpenCOR");
-static const auto SettingsPlugins = QStringLiteral("Plugins");
-
-//==============================================================================
-
 #if defined(Q_OS_WIN)
-    static const auto PluginPrefix = QStringLiteral("");
+    static const auto PluginPrefix    = QStringLiteral("");
     static const auto PluginExtension = QStringLiteral(".dll");
 #elif defined(Q_OS_LINUX)
-    static const auto PluginPrefix = QStringLiteral("lib");
+    static const auto PluginPrefix    = QStringLiteral("lib");
     static const auto PluginExtension = QStringLiteral(".so");
 #elif defined(Q_OS_MAC)
-    static const auto PluginPrefix = QStringLiteral("lib");
+    static const auto PluginPrefix    = QStringLiteral("lib");
     static const auto PluginExtension = QStringLiteral(".dylib");
 #else
     #error Unsupported platform
@@ -103,7 +97,8 @@ public:
 
     static QString name(const QString &pFileName);
     static QString fileName(const QString &pPluginsDir, const QString &pName);
-    static PluginInfo * info(const QString &pFileName, QString &pErrorMessage);
+    static PluginInfo * info(const QString &pFileName,
+                             QString *pErrorMessage = 0);
 
     static bool load(const QString &pName);
     static void setLoad(const QString &pName, const bool &pToBeLoaded);

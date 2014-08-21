@@ -115,10 +115,9 @@ bool CompilerEngine::compileCode(const QString &pCode)
 
     reset();
 
-    // Retrieve the application file name and determine the name of the
-    // temporary file which will contain our code
+    // Determine the name of the temporary file that will contain our code
 
-    QTemporaryFile tempFile(QDir::tempPath()+QDir::separator()+QFileInfo(qApp->applicationFilePath()).baseName()+"_XXXXXX.c");
+    QTemporaryFile tempFile(QDir::tempPath()+QDir::separator()+"XXXXXX.c");
 
     if (!tempFile.open()) {
         mError = tr("<strong>%1</strong> could not be created").arg(tempFile.fileName());
@@ -129,13 +128,12 @@ bool CompilerEngine::compileCode(const QString &pCode)
     tempFile.close();
 
     // 'Properly' create our temporary file
-    // Note #1: for some reasons, a temporary file created using QTemporaryFile
-    //          doesn't work straightaway with stat() (which LLVM uses in its
-    //          call to CompilerInstance::ExecuteAction()), so instead we use
-    //          QTemporaryFile to get a temporary file name and then use QFile
-    //          to 'properly' create our temporary file...
-    // Note #2: see https://bugreports.qt-project.org/browse/QTBUG-33727 for
-    //          more information...
+    // Note: for some reasons, a temporary file created using QTemporaryFile
+    //       doesn't work straightaway with stat(), which LLVM uses in its call
+    //       to CompilerInstance::ExecuteAction()). So, instead, we use
+    //       QTemporaryFile to get a temporary file name and then use QFile to
+    //       'properly' create our temporary file. For more information, see
+    //       https://bugreports.qt-project.org/browse/QTBUG-33727...
 
     QFile file(tempFile.fileName());
     // Note: we don't have to delete the file ourselves afterwards since it has
@@ -172,15 +170,15 @@ bool CompilerEngine::compileCode(const QString &pCode)
     // Get a compilation object to which we pass some arguments
 
     QByteArray tempFileByteArray = tempFile.fileName().toUtf8();
-    const char *tempFileName = tempFileByteArray.constData();
 
     llvm::SmallVector<const char *, 16> compilationArguments;
 
     compilationArguments.push_back("clang");
     compilationArguments.push_back("-fsyntax-only");
     compilationArguments.push_back("-O3");
+    compilationArguments.push_back("-ffast-math");
     compilationArguments.push_back("-Werror");
-    compilationArguments.push_back(tempFileName);
+    compilationArguments.push_back(tempFileByteArray.constData());
 
     llvm::OwningPtr<clang::driver::Compilation> compilation(driver.BuildCompilation(compilationArguments));
 
@@ -216,7 +214,7 @@ bool CompilerEngine::compileCode(const QString &pCode)
     // Create a compiler invocation using our command's arguments
 
     const clang::driver::ArgStringList &commandArguments = command->getArguments();
-    clang::CompilerInvocation *compilerInvocation = new clang::CompilerInvocation();
+    llvm::OwningPtr<clang::CompilerInvocation> compilerInvocation(new clang::CompilerInvocation());
 
     clang::CompilerInvocation::CreateFromArgs(*compilerInvocation,
                                               const_cast<const char **>(commandArguments.data()),
@@ -227,7 +225,7 @@ bool CompilerEngine::compileCode(const QString &pCode)
 
     clang::CompilerInstance compilerInstance;
 
-    compilerInstance.setInvocation(compilerInvocation);
+    compilerInstance.setInvocation(compilerInvocation.take());
 
     // Create the compiler instance's diagnostics engine
 

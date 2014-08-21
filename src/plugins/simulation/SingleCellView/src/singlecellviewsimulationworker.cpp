@@ -68,7 +68,7 @@ SingleCellViewSimulationWorker::SingleCellViewSimulationWorker(const SolverInter
     connect(mThread, SIGNAL(started()),
             this, SLOT(started()));
 
-    connect(this, SIGNAL(finished(const int &)),
+    connect(this, SIGNAL(finished(const qint64 &)),
             mThread, SLOT(quit()));
 
     connect(mThread, SIGNAL(finished()),
@@ -249,8 +249,7 @@ void SingleCellViewSimulationWorker::started()
     }
 
     // Make sure that we have found our ODE/DAE solver
-    // Note #1: this should never happen, but we never know, so...
-    // Note #2: see the end of this method about we do before returning...
+    // Note: this should never happen, but we never know, so...
 
     if (!voiSolver) {
         if (mRuntime->needOdeSolver())
@@ -326,7 +325,7 @@ void SingleCellViewSimulationWorker::started()
 
     bool increasingPoints = endingPoint > startingPoint;
     const double oneOverPointsRange = 1.0/(endingPoint-startingPoint);
-    int pointCounter = 0;
+    quint64 pointCounter = 0;
 
     mCurrentPoint = startingPoint;
 
@@ -367,7 +366,7 @@ void SingleCellViewSimulationWorker::started()
     // Now, we are ready to compute our model, but only if no error has occurred
     // so far
 
-    int elapsedTime;
+    qint64 elapsedTime;
 
     if (!mError) {
         // Start our timer
@@ -378,8 +377,8 @@ void SingleCellViewSimulationWorker::started()
 
         timer.start();
 
-        // Add our first point after making sure that all the variables have
-        // been computed
+        // Add our first point after making sure that all the variables are up
+        // to date
 
         mSimulation->data()->recomputeVariables(mCurrentPoint);
 
@@ -414,8 +413,8 @@ void SingleCellViewSimulationWorker::started()
 
             mProgress = (mCurrentPoint-startingPoint)*oneOverPointsRange;
 
-            // Add our new point after making sure that all the variables have
-            // been computed
+            // Add our new point after making sure that all the variables are up
+            // to date
 
             mSimulation->data()->recomputeVariables(mCurrentPoint);
 
