@@ -230,7 +230,6 @@ SET(PLUGINS
     miscellaneous/Core
 
     datastore/CoreData
-    datastore/CsvStore
 
     solver/CoreSolver
 
@@ -253,6 +252,8 @@ SET(PLUGINS
 
     editing/CoreCellMLEditing
     editing/CoreEditing
+
+    datastore/CsvStore
 
     # Selectable plugins
 
