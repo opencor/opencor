@@ -683,12 +683,6 @@ void SingleCellViewSimulationResults::deleteArrays()
 {
     // Delete our data store and associated variables/arrays.
 
-    mPoints = 0 ;
-    mConstants.clear() ;
-    mRates.clear() ;
-    mStates.clear() ;
-    mAlgebraic.clear() ;
-
     if (mDataset) delete mDataset ;
     mDataset = 0;
 }
