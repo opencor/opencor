@@ -25,6 +25,7 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include "coredata.h"
+#include "csvstoreglobal.h"
 
 //==============================================================================
 
@@ -37,7 +38,7 @@ namespace CsvStore {
 
 //==============================================================================
 
-bool exportDataSet(const CoreData::DataSet *pDataset, const QString &pFileName) ;
+bool CSVSTORE_EXPORT exportDataSet(const CoreData::DataSet *pDataset, const QString &pFileName) ;
 
 //==============================================================================
 

@@ -24,6 +24,10 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#include "coredataglobal.h"
+
+//==============================================================================
+
 #include <QString>
 #include <QVector>
 
@@ -46,7 +50,7 @@ typedef long       IndexType ;  // Object counts and indexes (-1 ==> not inited)
 
 //==============================================================================
 
-class DataVariable {
+class COREDATA_EXPORT DataVariable {
 
  public:
   DataVariable(const SizeType &pSize, const double *pValuePointer=0) ;
@@ -78,7 +82,7 @@ class DataVariable {
 
 //==============================================================================
 
-class DataSet {
+class COREDATA_EXPORT DataSet {
 
  public:
   DataSet(const SizeType &pSize) ;
