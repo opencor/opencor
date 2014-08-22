@@ -20,6 +20,8 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include "cellmlfileruntime.h"
+#include "coredata.h"
+#include "csvstore.h"
 #include "corenlasolver.h"
 #include "singlecellviewcontentswidget.h"
 #include "singlecellviewinformationsimulationwidget.h"
@@ -573,6 +575,7 @@ SingleCellViewSimulationResults::SingleCellViewSimulationResults(CellMLSupport::
     mRuntime(pRuntime),
     mSimulation(pSimulation),
     mSize(0),
+    mDataset(0),
     mPoints(0),
     mConstants(0),
     mRates(0),
@@ -591,6 +594,15 @@ SingleCellViewSimulationResults::~SingleCellViewSimulationResults()
 }
 
 //==============================================================================
+
+
+static QString make_uri(const QString &uri)
+/*---------------------------------------*/
+{
+  QString u(uri) ;
+  return u.replace("'", "/prime") ;
+  }
+
 
 bool SingleCellViewSimulationResults::createArrays()
 {
@@ -615,152 +627,64 @@ bool SingleCellViewSimulationResults::createArrays()
     if (!simulationSize)
         return true;
 
-    // Create our points array
-
     try {
-        mPoints = new double[simulationSize];
-    } catch (...) {
-        return false;
-    }
+      mDataset = new CoreData::DataSet(simulationSize) ;
+      mPoints = mDataset->holdPoint(0, true) ;
+      mConstants = mDataset->holdPoints(mRuntime->constantsCount(), mSimulation->data()->constants()) ;
+      mRates = mDataset->holdPoints(mRuntime->ratesCount(), mSimulation->data()->rates()) ;
+      mStates = mDataset->holdPoints(mRuntime->statesCount(), mSimulation->data()->states()) ;
+      mAlgebraic = mDataset->holdPoints(mRuntime->algebraicCount(), mSimulation->data()->algebraic()) ;
+      }
+    catch (...) {
+      delete mDataset ;
+      mDataset = 0 ;
+      return false ;
+      }
 
-    // Create our constants arrays
+    mPoints->setUri(make_uri(mRuntime->variableOfIntegration()->componentHierarchy().join("/")
+                             + "/" + mRuntime->variableOfIntegration()->name())) ;
+    mPoints->setLabel(mRuntime->variableOfIntegration()->name()) ;
+    mPoints->setUnits(mRuntime->variableOfIntegration()->unit()) ;
 
-    try {
-        mConstants = new double*[mRuntime->constantsCount()];
-
-        memset(mConstants, 0, mRuntime->constantsCount()*CoreSolver::SizeOfDoublePointer);
-    } catch (...) {
-        deleteArrays();
-
-        return false;
-    }
-
-    for (int i = 0, iMax = mRuntime->constantsCount(); i < iMax; ++i)
-        try {
-            mConstants[i] = new double[simulationSize];
-        } catch (...) {
-            deleteArrays();
-
-            return false;
+    for (int i = 0, iMax = mRuntime->parameters().count(); i < iMax; ++i) {
+      CellMLSupport::CellmlFileRuntimeParameter *parameter = mRuntime->parameters()[i] ;
+      CoreData::DataVariable *var = 0 ;
+      switch (parameter->type()) {
+       case CellMLSupport::CellmlFileRuntimeParameter::Constant:
+       case CellMLSupport::CellmlFileRuntimeParameter::ComputedConstant:
+        var = mConstants[parameter->index()] ;
+        break ;
+       case CellMLSupport::CellmlFileRuntimeParameter::Rate:
+        var = mRates[parameter->index()] ;
+        break ;
+       case CellMLSupport::CellmlFileRuntimeParameter::State:
+        var = mStates[parameter->index()] ;
+        break ;
+       case CellMLSupport::CellmlFileRuntimeParameter::Algebraic:
+        var = mAlgebraic[parameter->index()] ;
+        break ;
+       default:
+        break ;
         }
-
-    // Create our rates arrays
-
-    try {
-        mRates = new double*[mRuntime->ratesCount()];
-
-        memset(mRates, 0, mRuntime->ratesCount()*CoreSolver::SizeOfDoublePointer);
-    } catch (...) {
-        deleteArrays();
-
-        return false;
-    }
-
-    for (int i = 0, iMax = mRuntime->ratesCount(); i < iMax; ++i)
-        try {
-            mRates[i] = new double[simulationSize];
-        } catch (...) {
-            deleteArrays();
-
-            return false;
+      if (var) {
+        var->setUri(make_uri(parameter->componentHierarchy().join("/")
+                             + "/" + parameter->formattedName())) ;
+        var->setLabel(parameter->formattedName()) ;
+        var->setUnits(parameter->formattedUnit(mRuntime->variableOfIntegration()->unit())) ;
         }
+      }
 
-    // Create our states arrays
-
-    try {
-        mStates = new double*[mRuntime->statesCount()];
-
-        memset(mStates, 0, mRuntime->statesCount()*CoreSolver::SizeOfDoublePointer);
-    } catch (...) {
-        deleteArrays();
-
-        return false;
+    return true ;
     }
-
-    for (int i = 0, iMax = mRuntime->statesCount(); i < iMax; ++i)
-        try {
-            mStates[i] = new double[simulationSize];
-        } catch (...) {
-            deleteArrays();
-
-            return false;
-        }
-
-    // Create our algebraic arrays
-
-    try {
-        mAlgebraic = new double*[mRuntime->algebraicCount()];
-
-        memset(mAlgebraic, 0, mRuntime->algebraicCount()*CoreSolver::SizeOfDoublePointer);
-    } catch (...) {
-        deleteArrays();
-
-        return false;
-    }
-
-    for (int i = 0, iMax = mRuntime->algebraicCount(); i < iMax; ++i)
-        try {
-            mAlgebraic[i] = new double[simulationSize];
-        } catch (...) {
-            deleteArrays();
-
-            return false;
-        }
-
-    // We could allocate all of our required memory, so...
-
-    return true;
-}
 
 //==============================================================================
 
 void SingleCellViewSimulationResults::deleteArrays()
 {
-    // Delete our points array
+    // Delete our data store and associated variables/arrays.
 
-    delete[] mPoints;
-
-    mPoints = 0;
-
-    // Delete our constants arrays
-
-    if (mRuntime && mConstants)
-        for (int i = 0, iMax = mRuntime->constantsCount(); i < iMax; ++i)
-            delete[] mConstants[i];
-
-    delete mConstants;
-
-    mConstants = 0;
-
-    // Delete our rates arrays
-
-    if (mRuntime && mRates)
-        for (int i = 0, iMax = mRuntime->ratesCount(); i < iMax; ++i)
-            delete[] mRates[i];
-
-    delete mRates;
-
-    mRates = 0;
-
-    // Delete our states arrays
-
-    if (mRuntime && mStates)
-        for (int i = 0, iMax = mRuntime->statesCount(); i < iMax; ++i)
-            delete[] mStates[i];
-
-    delete mStates;
-
-    mStates = 0;
-
-    // Delete our algebraic arrays
-
-    if (mRuntime && mAlgebraic)
-        for (int i = 0, iMax = mRuntime->algebraicCount(); i < iMax; ++i)
-            delete[] mAlgebraic[i];
-
-    delete mAlgebraic;
-
-    mAlgebraic = 0;
+    if (mDataset) delete mDataset ;
+    mDataset = 0;
 }
 
 //==============================================================================
@@ -789,24 +713,8 @@ void SingleCellViewSimulationResults::addPoint(const double &pPoint)
     if (!mRuntime)
         return;
 
-    // Add the data to our different arrays
-
-    mPoints[mSize] = pPoint;
-
-    for (int i = 0, iMax = mRuntime->constantsCount(); i < iMax; ++i)
-        mConstants[i][mSize] = mSimulation->data()->constants()[i];
-
-    for (int i = 0, iMax = mRuntime->ratesCount(); i < iMax; ++i)
-        mRates[i][mSize] = mSimulation->data()->rates()[i];
-
-    for (int i = 0, iMax = mRuntime->statesCount(); i < iMax; ++i)
-        mStates[i][mSize] = mSimulation->data()->states()[i];
-
-    for (int i = 0, iMax = mRuntime->algebraicCount(); i < iMax; ++i)
-        mAlgebraic[i][mSize] = mSimulation->data()->algebraic()[i];
-
-    // Increase our size
-
+    mPoints->savePoint(mSize, pPoint) ;
+    mDataset->savePoints(mSize) ;
     ++mSize;
 }
 
@@ -821,134 +729,52 @@ qulonglong SingleCellViewSimulationResults::size() const
 
 //==============================================================================
 
-double * SingleCellViewSimulationResults::points() const
+const double *SingleCellViewSimulationResults::points()
 {
     // Return our points
-
-    return mPoints;
+    return mPoints ? mPoints->getData() : 0 ;
 }
 
 //==============================================================================
 
-double ** SingleCellViewSimulationResults::constants() const
+const double *SingleCellViewSimulationResults::constants(size_t pIndex)
 {
-    // Return our constants array
-
-    return mConstants;
+    // Return constants data at index
+    return mConstants.empty() ? 0 : mConstants[pIndex]->getData() ;
 }
 
 //==============================================================================
 
-double ** SingleCellViewSimulationResults::rates() const
+const double *SingleCellViewSimulationResults::rates(size_t pIndex)
 {
-    // Return our rates array
-
-    return mRates;
+    // Return rates data at index
+    return mRates.empty() ? 0 : mRates[pIndex]->getData() ;
 }
 
 //==============================================================================
 
-double ** SingleCellViewSimulationResults::states() const
+const double *SingleCellViewSimulationResults::states(size_t pIndex)
 {
-    // Return our states array
-
-    return mStates;
+    // Return states data at index
+    return mStates.empty() ? 0 : mStates[pIndex]->getData() ;
 }
 
 //==============================================================================
 
-double ** SingleCellViewSimulationResults::algebraic() const
+const double *SingleCellViewSimulationResults::algebraic(size_t pIndex)
 {
-    // Return our algebraic array
-
-    return mAlgebraic;
+    // Return algebraic data at index
+    return mAlgebraic.empty() ? 0 : mAlgebraic[pIndex]->getData() ;
 }
 
 //==============================================================================
 
 bool SingleCellViewSimulationResults::exportToCsv(const QString &pFileName) const
 {
-    if (!mRuntime)
-        return false;
+    if (!mRuntime) return false;
 
-    // Export of all of our data to a CSV file
-
-    QFile file(pFileName);
-
-    if (!file.open(QIODevice::WriteOnly)) {
-        // The file can't be opened, so...
-
-        file.remove();
-
-        return false;
-    }
-
-    // Write out the contents of the CellML file to the file
-
-    QTextStream out(&file);
-
-    // Header
-
-    static const QString Header = "%1 | %2 (%3)";
-
-    out << Header.arg(mRuntime->variableOfIntegration()->componentHierarchy().join(" | "),
-                      mRuntime->variableOfIntegration()->name(),
-                      mRuntime->variableOfIntegration()->unit());
-
-    for (int i = 0, iMax = mRuntime->parameters().count(); i < iMax; ++i) {
-        CellMLSupport::CellmlFileRuntimeParameter *parameter = mRuntime->parameters()[i];
-
-        if (parameter != mRuntime->variableOfIntegration())
-            out << "," << Header.arg(parameter->componentHierarchy().join(" | "),
-                                     parameter->formattedName(),
-                                     parameter->formattedUnit(mRuntime->variableOfIntegration()->unit()));
-    }
-
-    out << "\n";
-
-    // Data itself
-
-    for (qulonglong j = 0; j < mSize; ++j) {
-        out << mPoints[j];
-
-        for (int i = 0, iMax = mRuntime->parameters().count(); i < iMax; ++i) {
-            CellMLSupport::CellmlFileRuntimeParameter *parameter = mRuntime->parameters()[i];
-
-            switch (parameter->type()) {
-            case CellMLSupport::CellmlFileRuntimeParameter::Constant:
-            case CellMLSupport::CellmlFileRuntimeParameter::ComputedConstant:
-                out << "," << mConstants[parameter->index()][j];
-
-                break;
-            case CellMLSupport::CellmlFileRuntimeParameter::Rate:
-                out << "," << mRates[parameter->index()][j];
-
-                break;
-            case CellMLSupport::CellmlFileRuntimeParameter::State:
-                out << "," << mStates[parameter->index()][j];
-
-                break;
-            case CellMLSupport::CellmlFileRuntimeParameter::Algebraic:
-                out << "," << mAlgebraic[parameter->index()][j];
-
-                break;
-            default:
-                // Not a type in which we are interested, so...
-
-                ;
-            }
-        }
-
-        out << "\n";
-    }
-
-    // We are done, so close our file
-
-    file.close();
-
-    // Everything went fine, so...
-
-    return true;
+    // Export of all of our data
+    return CsvStore::exportDataSet(mDataset, pFileName) ;
 }
 
 //==============================================================================

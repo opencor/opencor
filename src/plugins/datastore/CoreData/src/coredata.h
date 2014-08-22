@@ -16,21 +16,20 @@ specific language governing permissions and limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// Plugin information
+// A store for simulation data
 //==============================================================================
 
-#ifndef PLUGININFO_H
-#define PLUGININFO_H
-
-//==============================================================================
-
-#include <QtPlugin>
+#ifndef COREDATA_H
+#define COREDATA_H
 
 //==============================================================================
 
-#include <QMap>
 #include <QString>
-#include <QStringList>
+#include <QVector>
+
+//==============================================================================
+
+#include <QtGlobal>
 
 //==============================================================================
 
@@ -38,74 +37,74 @@ namespace OpenCOR {
 
 //==============================================================================
 
-#define PLUGININFO_FUNC extern "C" Q_DECL_EXPORT void *
-// Note: each plugin has a function called <PLUGIN_NAME>PluginInfo which is used
-//       to retrieve some information about the plugin itself. This is done by
-//       returning a PluginInfo object. This therefore requires C++ support, so
-//       logically we would use extern "C++", but this would result in the
-//       function name being mangled. So, to avoid this problem, we use extern
-//       "C" which ensures that the function name remains intact. Now, because
-//       it's C and not C++, MSVC will generate a warning if we return a
-//       PluginInfo object, so we return a void pointer, which means that we
-//       must free it once we have used it...
+namespace CoreData {
 
 //==============================================================================
 
-typedef QMap<QString, QString> Descriptions;
+typedef qulonglong SizeType ;   // Large array sizes and indexes
+typedef long       IndexType ;  // Object counts and indexes (-1 ==> not inited)
 
 //==============================================================================
 
-class PluginInfo
-{
-public:
-    enum Category {
-        Analysis,
-        Api,
-        Editing,
-        Datastore,
-        Miscellaneous,
-        Organisation,
-#ifdef ENABLE_SAMPLES
-        Sample,
-#endif
-        Simulation,
-        Solver,
-        Support,
-        ThirdParty,
-        Widget
-    };
+class DataVariable {
 
-    explicit PluginInfo(const Category &pCategory, const bool &pSelectable,
-                        const bool &pCliSupport,
-                        const QStringList &pDependencies,
-                        const Descriptions &pDescriptions);
+ public:
+  DataVariable(const SizeType &pSize, const double *pValuePointer=0) ;
+  virtual ~DataVariable() ;
 
-    Category category() const;
+  void setUri(const QString &pUri) ;
+  void setUnits(const QString &pUnits) ;
+  void setLabel(const QString &pLabel) ;
 
-    bool isSelectable() const;
-    bool hasCliSupport() const;
+  QString getUri(void) const ;
+  QString getLabel(void) const ;
+  QString getUnits(void) const ;
 
-    QStringList dependencies() const;
-    QStringList fullDependencies() const;
-    void setFullDependencies(const QStringList &pFullDependencies);
+  void savePoint(const SizeType &pPos) ;
+  void savePoint(const SizeType &pPos, const double &pValue) ;
 
-    QString description(const QString &pLocale = "en") const;
-    Descriptions descriptions() const;
+  double getPoint(const SizeType &pPos) const ;
+  const double *getData(void) const ;
+  SizeType getSize(void) const ;
 
-private:
-    Category mCategory;
-
-    bool mSelectable;
-    bool mCliSupport;
-
-    QStringList mDependencies;
-    QStringList mFullDependencies;
-
-    Descriptions mDescriptions;
-};
+ private:
+  QString mUri ;
+  QString mUnits ;
+  QString mLabel ;
+  const double *mValuePointer ;
+  double *mBuffer ;
+  SizeType mSize ;
+  } ;
 
 //==============================================================================
 
+class DataSet {
+
+ public:
+  DataSet(const SizeType &pSize) ;
+  virtual ~DataSet() ;
+
+  DataVariable *getVoi(void) const ;
+  DataVariable *getVariable(long index) const ;
+  const QVector<DataVariable *> &getVariables(void) const ;
+
+  DataVariable *holdPoint(const double *pPoint=0, const bool &pVoi=false) ;
+  QVector<DataVariable *> holdPoints(const IndexType &pCount, const double *pPoints) ;
+
+  void savePoints(const SizeType &pPos) ;
+
+  SizeType getSize(void) const ;
+  IndexType length(void) const ;
+
+ private:
+  const SizeType mSize ;
+  QVector<DataVariable *> mVariables ;
+  DataVariable *mVoi ;
+  } ;
+
+//==============================================================================
+
+}   // namespace CoreData
 }   // namespace OpenCOR
 
 //==============================================================================

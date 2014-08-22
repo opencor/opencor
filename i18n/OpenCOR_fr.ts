@@ -330,6 +330,10 @@
         <source>the plugin supports the CLI interface, but it does not claim to be CLI-capable.</source>
         <translation>l&apos;extension supporte l&apos;interface CLI, mais elle ne prétend pas être capable de CLI.</translation>
     </message>
+    <message>
+        <source>Datastore</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>PluginsWindow</name>

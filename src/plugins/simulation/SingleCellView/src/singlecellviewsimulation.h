@@ -1,4 +1,4 @@
-﻿/*******************************************************************************
+/*******************************************************************************
 
 Licensed to the OpenCOR team under one or more contributor license agreements.
 See the NOTICE.txt file distributed with this work for additional information
@@ -24,6 +24,7 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#include "coredata.h"
 #include "coresolver.h"
 #include "singlecellviewsimulationworker.h"
 #include "solverinterface.h"
@@ -31,6 +32,7 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include <QObject>
+#include <QVector>
 
 //==============================================================================
 
@@ -162,28 +164,25 @@ public:
 
     qulonglong size() const;
 
-    double * points() const;
-
-    double ** constants() const;
-    double ** rates() const;
-    double ** states() const;
-    double ** algebraic() const;
+    const double *points() ;
+    const double *constants(size_t pIndex) ;
+    const double *rates(size_t pIndex) ;
+    const double *states(size_t pIndex) ;
+    const double *algebraic(size_t pIndex) ;
 
     bool exportToCsv(const QString &pFileName) const;
 
 private:
     CellMLSupport::CellmlFileRuntime *mRuntime;
-
     SingleCellViewSimulation *mSimulation;
-
     qulonglong mSize;
 
-    double *mPoints;
-
-    double **mConstants;
-    double **mRates;
-    double **mStates;
-    double **mAlgebraic;
+    CoreData::DataSet *mDataset ;
+    CoreData::DataVariable *mPoints ;
+    QVector<CoreData::DataVariable *> mConstants ;
+    QVector<CoreData::DataVariable *> mRates ;
+    QVector<CoreData::DataVariable *> mStates ;
+    QVector<CoreData::DataVariable *> mAlgebraic ;
 
     bool createArrays();
     void deleteArrays();

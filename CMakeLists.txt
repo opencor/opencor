@@ -229,6 +229,8 @@ SET(PLUGINS
 
     miscellaneous/Core
 
+    datastore/CoreData
+
     solver/CoreSolver
 
     # Plugins that build on top of some third-party libraries
@@ -250,6 +252,8 @@ SET(PLUGINS
 
     editing/CoreCellMLEditing
     editing/CoreEditing
+
+    datastore/CsvStore
 
     # Selectable plugins
 

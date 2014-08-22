@@ -1791,8 +1791,8 @@ bool SingleCellViewWidget::updatePlot(SingleCellViewGraphPanelPlotWidget *pPlot,
 
 //==============================================================================
 
-double * SingleCellViewWidget::dataPoints(SingleCellViewSimulation *pSimulation,
-                                          CellMLSupport::CellmlFileRuntimeParameter *pParameter) const
+const double * SingleCellViewWidget::dataPoints(SingleCellViewSimulation *pSimulation,
+                                                CellMLSupport::CellmlFileRuntimeParameter *pParameter) const
 {
     // Return the array of data points associated with the given simulation and
     // parameter
@@ -1803,17 +1803,16 @@ double * SingleCellViewWidget::dataPoints(SingleCellViewSimulation *pSimulation,
     switch (pParameter->type()) {
     case CellMLSupport::CellmlFileRuntimeParameter::Constant:
     case CellMLSupport::CellmlFileRuntimeParameter::ComputedConstant:
-        return pSimulation->results()->constants()?pSimulation->results()->constants()[pParameter->index()]:0;
+        return pSimulation->results()->constants(pParameter->index()) ;
     case CellMLSupport::CellmlFileRuntimeParameter::Rate:
-        return pSimulation->results()->rates()?pSimulation->results()->rates()[pParameter->index()]:0;
+        return pSimulation->results()->rates(pParameter->index()) ;
     case CellMLSupport::CellmlFileRuntimeParameter::State:
-        return pSimulation->results()->states()?pSimulation->results()->states()[pParameter->index()]:0;
+        return pSimulation->results()->states(pParameter->index()) ;
     case CellMLSupport::CellmlFileRuntimeParameter::Algebraic:
-        return pSimulation->results()->algebraic()?pSimulation->results()->algebraic()[pParameter->index()]:0;
+        return pSimulation->results()->algebraic(pParameter->index()) ;
     default:
         // CellMLSupport::CellmlFileRuntimeParameter::Voi
-
-        return pSimulation->results()->points()?pSimulation->results()->points():0;
+        return pSimulation->results()->points() ;
     }
 }
 
