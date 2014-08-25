@@ -220,18 +220,18 @@ ENDIF()
 SET(PLUGINS
     # Plugins that have no dependencies
 
+    api/CellMLAPI
+
+    datastore/CoreData
+
+    miscellaneous/Core
+
+    solver/CoreSolver
+
     thirdParty/LLVM
     thirdParty/QScintilla
     thirdParty/Qwt
     thirdParty/SUNDIALS
-
-    api/CellMLAPI
-
-    miscellaneous/Core
-
-    datastore/CoreData
-
-    solver/CoreSolver
 
     # Plugins that build on top of some third-party libraries
 

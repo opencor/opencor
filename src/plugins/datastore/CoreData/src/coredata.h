@@ -45,31 +45,26 @@ namespace CoreData {
 
 //==============================================================================
 
-typedef qulonglong SizeType ;   // Large array sizes and indexes
-typedef long       IndexType ;  // Object counts and indexes (-1 ==> not inited)
-
-//==============================================================================
-
 class COREDATA_EXPORT DataVariable {
 
  public:
-  DataVariable(const SizeType &pSize, const double *pValuePointer=0) ;
+  DataVariable(const qulonglong &pSize, const double *pValuePointer=0) ;
   virtual ~DataVariable() ;
 
   void setUri(const QString &pUri) ;
   void setUnits(const QString &pUnits) ;
   void setLabel(const QString &pLabel) ;
 
-  QString getUri(void) const ;
-  QString getLabel(void) const ;
-  QString getUnits(void) const ;
+  QString getUri() const ;
+  QString getLabel() const ;
+  QString getUnits() const ;
 
-  void savePoint(const SizeType &pPos) ;
-  void savePoint(const SizeType &pPos, const double &pValue) ;
+  void savePoint(const qulonglong &pPos) ;
+  void savePoint(const qulonglong &pPos, const double &pValue) ;
 
-  double getPoint(const SizeType &pPos) const ;
-  const double *getData(void) const ;
-  SizeType getSize(void) const ;
+  double getPoint(const qulonglong &pPos) const ;
+  const double *getData() const ;
+  qulonglong getSize() const ;
 
  private:
   QString mUri ;
@@ -77,7 +72,7 @@ class COREDATA_EXPORT DataVariable {
   QString mLabel ;
   const double *mValuePointer ;
   double *mBuffer ;
-  SizeType mSize ;
+  qulonglong mSize ;
   } ;
 
 //==============================================================================
@@ -85,23 +80,23 @@ class COREDATA_EXPORT DataVariable {
 class COREDATA_EXPORT DataSet {
 
  public:
-  DataSet(const SizeType &pSize) ;
+  DataSet(const qulonglong &pSize) ;
   virtual ~DataSet() ;
 
-  DataVariable *getVoi(void) const ;
-  DataVariable *getVariable(long index) const ;
-  const QVector<DataVariable *> &getVariables(void) const ;
+  DataVariable * getVoi() const ;
+  DataVariable * getVariable(long index) const ;
+  const QVector<DataVariable *> &getVariables() const ;
 
-  DataVariable *holdPoint(const double *pPoint=0, const bool &pVoi=false) ;
-  QVector<DataVariable *> holdPoints(const IndexType &pCount, const double *pPoints) ;
+  DataVariable * holdPoint(const double *pPoint=0, const bool &pVoi=false) ;
+  QVector<DataVariable *> holdPoints(const long &pCount, const double *pPoints) ;
 
-  void savePoints(const SizeType &pPos) ;
+  void savePoints(const qulonglong &pPos) ;
 
-  SizeType getSize(void) const ;
-  IndexType length(void) const ;
+  qulonglong getSize() const ;
+  long length() const ;
 
  private:
-  const SizeType mSize ;
+  const qulonglong mSize ;
   QVector<DataVariable *> mVariables ;
   DataVariable *mVoi ;
   } ;

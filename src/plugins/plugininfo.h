@@ -61,8 +61,8 @@ public:
     enum Category {
         Analysis,
         Api,
+        DataStore,
         Editing,
-        Datastore,
         Miscellaneous,
         Organisation,
 #ifdef ENABLE_SAMPLES

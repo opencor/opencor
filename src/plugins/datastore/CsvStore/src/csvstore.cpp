@@ -28,18 +28,14 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 namespace OpenCOR {
-
 namespace CsvStore {
 
 //==============================================================================
 
-/**
- * Export the contents of a dataset as a CSV file.
- *
-**/
 bool exportDataSet(const CoreData::DataSet *pDataset, const QString &pFileName)
-/*---------------------------------------------------------------------------*/
 {
+    // Export the contents of a dataset to a CSV file
+
    QFile file(pFileName);
    if (!file.open(QIODevice::WriteOnly)) {
        // The file can't be opened, so...
@@ -49,31 +45,31 @@ bool exportDataSet(const CoreData::DataSet *pDataset, const QString &pFileName)
 
    QTextStream out(&file);
 
-   const CoreData::DataVariable *voi = pDataset->getVoi() ;
-   QVector<CoreData::DataVariable *> variables = pDataset->getVariables() ;
+   const CoreData::DataVariable *voi = pDataset->getVoi();
+   QVector<CoreData::DataVariable *> variables = pDataset->getVariables();
 
    // File header
    static const QString Header = "%1 (%2)";
    out << Header.arg(voi->getUri().replace("/prime", "'").replace("/", " | "),
                      voi->getUnits());
-   for (auto v = variables.begin() ;  v != variables.end() ;  ++v) {
+   for (auto v = variables.begin();  v != variables.end();  ++v) {
        out << "," << Header.arg((*v)->getUri().replace("/prime", "'").replace("/", " | "),
                                 (*v)->getUnits());
    }
    out << "\n";
 
    // File data
-   for (CoreData::SizeType j = 0 ;  j < pDataset->getSize() ;  ++j) {
-       out << voi->getPoint(j) ;
-       for (auto v = variables.begin() ;  v != variables.end() ;  ++v) {
-           out << "," << (*v)->getPoint(j) ;
+   for (qulonglong j = 0;  j < pDataset->getSize();  ++j) {
+       out << voi->getPoint(j);
+       for (auto v = variables.begin();  v != variables.end();  ++v) {
+           out << "," << (*v)->getPoint(j);
        }
        out << "\n";
    }
 
    file.close();
-   
-   return true ;
+
+   return true;
 }
 
 //==============================================================================

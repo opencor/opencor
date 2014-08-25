@@ -23,175 +23,218 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-#include <cassert>
-
-//==============================================================================
-
 namespace OpenCOR {
 namespace CoreData {
 
 //==============================================================================
 
-DataVariable::DataVariable(const qulonglong &pSize, const double *pValuePointer)
-/*----------------------------------------------------------------------------*/
-: mUri(""), mUnits(""), mLabel(""), mValuePointer(pValuePointer), mBuffer(0)
+DataVariable::DataVariable(const qulonglong &pSize,
+                           const double *pValuePointer) :
+    mUri(QString()),
+    mUnits(QString()),
+    mLabel(QString()),
+    mValuePointer(pValuePointer),
+    mSize(pSize)
 {
-  mBuffer = new double[pSize] ;
-  mSize = pSize ;
-  }
-
-DataVariable::~DataVariable()
-/*-------------------------*/
-{
-  delete[] mBuffer ;
-  }
-
-void DataVariable::savePoint(const SizeType &pPos)
-/*----------------------------------------------*/
-{
-  assert(pPos < mSize) ;
-  if (mValuePointer) mBuffer[pPos] = *mValuePointer ;
-  }
-
-void DataVariable::savePoint(const SizeType &pPos, const double &pValue)
-/*--------------------------------------------------------------------*/
-{
-  assert(pPos < mSize) ;
-  mBuffer[pPos] = pValue ;
-  }
-
-double DataVariable::getPoint(const SizeType &pPos) const
-/*-----------------------------------------------------*/
-{
-  assert(pPos < mSize) ;
-  return mBuffer[pPos] ;
-  }
-
-const double *DataVariable::getData(void) const
-/*-------------------------------------------*/
-{
-  return mBuffer ;
-  }
-
-SizeType DataVariable::getSize(void) const
-/*--------------------------------------*/
-{
-  return mSize ;
-  }
-
-void DataVariable::setUri(const QString &pUri)
-/*------------------------------------------*/
-{
-  mUri = pUri ;
-  }
-
-void DataVariable::setUnits(const QString &pUnits)
-/*----------------------------------------------*/
-{
-  mUnits = pUnits ;
-  }
-
-void DataVariable::setLabel(const QString &pLabel)
-/*----------------------------------------------*/
-{
-  mLabel = pLabel ;
-  }
-
-QString DataVariable::getUri(void) const
-/*------------------------------------*/
-{
-  return mUri ;
-  }
-
-QString DataVariable::getUnits(void) const
-/*--------------------------------------*/
-{
-  return mUnits ;
-  }
-
-QString DataVariable::getLabel(void) const
-/*--------------------------------------*/
-{
-  return mLabel ;
-  }
-
+    mBuffer = new double[pSize];
+}
 
 //==============================================================================
 
-DataSet::DataSet(const SizeType &pSize)
-/*-----------------------------------*/
-: mSize(pSize), mVariables(0), mVoi(0)
+DataVariable::~DataVariable()
 {
-  }
+    delete[] mBuffer;
+}
+
+//==============================================================================
+
+void DataVariable::savePoint(const qulonglong &pPos)
+{
+    Q_ASSERT(pPos < mSize);
+
+    if (mValuePointer)
+        mBuffer[pPos] = *mValuePointer;
+}
+
+//==============================================================================
+
+void DataVariable::savePoint(const qulonglong &pPos, const double &pValue)
+{
+    Q_ASSERT(pPos < mSize);
+
+    mBuffer[pPos] = pValue;
+}
+
+//==============================================================================
+
+double DataVariable::getPoint(const qulonglong &pPos) const
+{
+    Q_ASSERT(pPos < mSize);
+
+    return mBuffer[pPos];
+}
+
+//==============================================================================
+
+const double *DataVariable::getData() const
+{
+    return mBuffer;
+}
+
+//==============================================================================
+
+qulonglong DataVariable::getSize() const
+{
+    return mSize;
+}
+
+//==============================================================================
+
+void DataVariable::setUri(const QString &pUri)
+{
+    mUri = pUri;
+}
+
+//==============================================================================
+
+void DataVariable::setUnits(const QString &pUnits)
+{
+    mUnits = pUnits;
+}
+
+//==============================================================================
+
+void DataVariable::setLabel(const QString &pLabel)
+{
+    mLabel = pLabel;
+}
+
+//==============================================================================
+
+QString DataVariable::getUri() const
+{
+    return mUri;
+}
+
+//==============================================================================
+
+QString DataVariable::getUnits() const
+{
+    return mUnits;
+}
+
+//==============================================================================
+
+QString DataVariable::getLabel() const
+{
+    return mLabel;
+}
+
+//==============================================================================
+
+DataSet::DataSet(const qulonglong &pSize) :
+    mSize(pSize),
+    mVariables(0),
+    mVoi(0)
+{
+}
+
+//==============================================================================
 
 DataSet::~DataSet()
-/*---------------*/
 {
-  if (mVoi) delete mVoi ;
-  for (auto v = mVariables.begin() ;  v != mVariables.end() ;  ++v) {
-    delete *v ;
+    if (mVoi)
+        delete mVoi;
+
+    for (QVector<DataVariable *>::Iterator iter = mVariables.begin(),
+                                           iterEnd = mVariables.end();
+         iter != iterEnd; ++iter) {
+        delete *iter;
     }
-  }
+}
 
-DataVariable *DataSet::getVoi(void) const
-/*-------------------------------------*/
-{
-  return mVoi ;
-  }
+//==============================================================================
 
-DataVariable *DataSet::getVariable(long index) const
-/*------------------------------------------------*/
+DataVariable * DataSet::getVoi() const
 {
-  return mVariables[index] ;
-  }
+    return mVoi;
+}
 
-const QVector<DataVariable *> &DataSet::getVariables(void) const
-/*------------------------------------------------------------*/
-{
-  return mVariables ;
-  }
+//==============================================================================
 
-DataVariable *DataSet::holdPoint(const double *pPoint, const bool &pVoi)
-/*--------------------------------------------------------------------*/
+DataVariable * DataSet::getVariable(long index) const
 {
-  if (pVoi && mVoi) delete mVoi ;
-  DataVariable *var = new DataVariable(mSize, pPoint) ;
-  if (pVoi) mVoi = var ;
-  else mVariables.push_back(var) ;
-  return var ;
-  }
+    return mVariables[index];
+}
 
-QVector<DataVariable *> DataSet::holdPoints(const IndexType &pCount, const double *pPoints)
-/*---------------------------------------------------------------------------------------*/
+//==============================================================================
+
+const QVector<DataVariable *> &DataSet::getVariables() const
 {
-  const double *v = pPoints ;
-  QVector<DataVariable *> vars(pCount) ;
-  for (IndexType n = 0 ;  n < pCount ;  ++n, ++v) {
-    DataVariable *var = new DataVariable(mSize, v) ;
-    mVariables.push_back(var) ;
-    vars[n] = var ;
+    return mVariables;
+}
+
+//==============================================================================
+
+DataVariable * DataSet::holdPoint(const double *pPoint, const bool &pVoi)
+{
+    if (pVoi && mVoi)
+        delete mVoi;
+
+    DataVariable *var = new DataVariable(mSize, pPoint);
+
+    if (pVoi)
+        mVoi = var;
+    else
+        mVariables.push_back(var);
+
+    return var;
+}
+
+//==============================================================================
+
+QVector<DataVariable *> DataSet::holdPoints(const long &pCount,
+                                            const double *pPoints)
+{
+    const double *points = pPoints;
+
+    QVector<DataVariable *> vars(pCount);
+
+    for (long i = 0;  i < pCount;  ++i, ++points) {
+        DataVariable *variable = new DataVariable(mSize, points);
+
+        mVariables.push_back(variable);
+
+        vars[i] = variable;
     }
-  return vars ;
-  }
 
-void DataSet::savePoints(const SizeType &pPos)
-/*------------------------------------------*/
-{
-  for (auto vp = mVariables.begin() ;  vp != mVariables.end() ;  ++vp)
-    (*vp)->savePoint(pPos) ;
-  }
+    return vars;
+}
 
-SizeType DataSet::getSize(void) const
-/*---------------------------------*/
-{
-  return mSize ;
-  }
+//==============================================================================
 
-IndexType DataSet::length(void) const
-/*---------------------------------*/
+void DataSet::savePoints(const qulonglong &pPos)
 {
-  return mVariables.size() ;
-  }
+    for (QVector<DataVariable *>::Iterator iter = mVariables.begin(),
+                                           iterEnd = mVariables.end();
+         iter != iterEnd; ++iter) {
+        (*iter)->savePoint(pPos);
+    }
+}
+
+//==============================================================================
+
+qulonglong DataSet::getSize() const
+{
+    return mSize;
+}
+
+//==============================================================================
+
+long DataSet::length() const
+{
+    return mVariables.size();
+}
 
 //==============================================================================
 

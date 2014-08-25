@@ -331,8 +331,8 @@
         <translation>l&apos;extension supporte l&apos;interface CLI, mais elle ne prétend pas être capable de CLI.</translation>
     </message>
     <message>
-        <source>Datastore</source>
-        <translation type="unfinished"></translation>
+        <source>Data store</source>
+        <translation>Magasin de données</translation>
     </message>
 </context>
 <context>
