@@ -222,7 +222,7 @@ SET(PLUGINS
 
     api/CellMLAPI
 
-    datastore/CoreData
+    dataStore/CoreDataStore
 
     miscellaneous/Core
 
@@ -253,9 +253,9 @@ SET(PLUGINS
     editing/CoreCellMLEditing
     editing/CoreEditing
 
-    datastore/CsvStore
-
     # Selectable plugins
+
+    dataStore/CSVDataStore
 
     editing/CellMLAnnotationView
     editing/PrettyCellMLView
