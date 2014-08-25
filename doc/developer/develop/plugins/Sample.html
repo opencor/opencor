@@ -179,8 +179,8 @@ PLUGININFO_FUNC SamplePluginInfo()
             We start by including our header file (line 22). Then, lines 31-41 contain the body of our C function . The first thing it does is to create an instance of <code>Descriptions</code> on the stack (line 33). This instance is used to provide a multilingual description of our plugin (here, both in English and in French; lines 35 and 36). Then, it creates and returns an instance of <code>PluginInfo</code> on the heap (lines 38-40), which contains the <a href="index.html#Basic%20information">basic information</a> needed by OpenCOR to identify our plugin. This includes our plugin's category (<code>PluginInfo::Sample</code>; line 38), whether it is selectable (<code>false</code>; line 38), whether it offers direct <a href="http://en.wikipedia.org/wiki/Command-line_interface">CLI</a> support (<code>false</code>; line 38), our plugin's direct dependencies (none, so <code>QStringList()</code>; line 39) and its multilingual description (<code>descriptions</code>; line 40).
         </p>
 
-        <p class="warning">
-            <strong>Note:</strong> the returned <code>PluginInfo</code> object gets deleted by OpenCOR. So, no need to worry about it.
+        <p class="note">
+            the returned <code>PluginInfo</code> object gets deleted by OpenCOR. So, no need to worry about it.
         </p>
 
         <div class="section">

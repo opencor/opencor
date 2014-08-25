@@ -335,8 +335,8 @@
 
     if (!$oldSnapshots) {
 ?>
-        <p class="warning">
-            <strong>Note:</strong> old snapshots can be found <a href="oldSnapshots.php">here</a>.
+        <p class="note">
+            old snapshots can be found <a href="oldSnapshots.php">here</a>.
         </p>
 <?php
     }

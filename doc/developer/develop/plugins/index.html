@@ -31,8 +31,8 @@
             <li><a href="SampleWindow.html">SampleWindow</a></li>
         </ul>
 
-        <p class="warning">
-            <strong>Note:</strong> these plugins only get built if the <a href="http://www.cmake.org/">CMake</a> <code>ENABLE_SAMPLES</code> option is set to <code>ON</code>.
+        <p class="note">
+            these plugins only get built if the <a href="http://www.cmake.org/">CMake</a> <code>ENABLE_SAMPLES</code> option is set to <code>ON</code>.
         </p>
 
         <span class="anchor" id="Category"></span>
@@ -63,8 +63,8 @@
             A category is used by OpenCOR to group plugins together to improve user experience. From a developer's perspective, a category determines where a plugin's code should be located. Thus, the different folders under <a href="https://github.com/opencor/opencor/blob/master/src/plugins/"><code>[OpenCOR]/src/plugins/</code></a> are for our different categories. For example, <a href="https://github.com/opencor/opencor/blob/master/src/plugins/miscellaneous/"><code>[OpenCOR]/src/plugins/miscellaneous/</code></a> contains the code of our different <strong>Miscellaneous</strong> plugins and <a href="https://github.com/opencor/opencor/blob/master/src/plugins/miscellaneous/Core/"><code>[OpenCOR]/src/plugins/miscellaneous/Core/</code></a> that of the <strong>Core</strong> plugin in particular.
         </p>
 
-        <p class="warning">
-            <strong>Note:</strong> the <strong>Sample</strong> category is a special category in that it is only available when building OpenCOR with the <a href="http://www.cmake.org/">CMake</a> <code>ENABLE_SAMPLES</code> option set to <code>ON</code>. It should therefore only be used for plugins that are aimed at helping people who want to learn how to write plugins for OpenCOR.
+        <p class="note">
+            the <strong>Sample</strong> category is a special category in that it is only available when building OpenCOR with the <a href="http://www.cmake.org/">CMake</a> <code>ENABLE_SAMPLES</code> option set to <code>ON</code>. It should therefore only be used for plugins that are aimed at helping people who want to learn how to write plugins for OpenCOR.
         </p>
 
         <span class="anchor" id="Interfaces"></span>
@@ -94,8 +94,8 @@
             Some plugins do not implement any interface (e.g. the <strong>LLVM</strong> plugin) while others may implement one or several interfaces (e.g. the <strong>Core</strong> plugin implements the <a href="https://github.com/opencor/opencor/blob/master/src/plugins/coreinterface.inl">core</a>, <a href="https://github.com/opencor/opencor/blob/master/src/plugins/filehandlinginterface.inl">file handling</a>, <a href="https://github.com/opencor/opencor/blob/master/src/plugins/guiinterface.inl">GUI</a>, <a href="https://github.com/opencor/opencor/blob/master/src/plugins/i18ninterface.inl">internationalisation</a> and <a href="https://github.com/opencor/opencor/blob/master/src/plugins/plugininterface.inl">plugin</a> interfaces).
         </p>
 
-        <p class="warning">
-            <strong>Note:</strong> the <strong><a href="https://github.com/opencor/opencor/blob/master/src/plugins/coreinterface.inl">core</a></strong> interface is a special interface in that it is only, and can only be, implemented by the <strong>Core</strong> plugin. Any plugin, besides the <strong>Core</strong> plugin, that tries to implement the <strong><a href="https://github.com/opencor/opencor/blob/master/src/plugins/coreinterface.inl">core</a></strong> interface will be reported by OpenCOR as being invalid.
+        <p class="note">
+            the <strong><a href="https://github.com/opencor/opencor/blob/master/src/plugins/coreinterface.inl">core</a></strong> interface is a special interface in that it is only, and can only be, implemented by the <strong>Core</strong> plugin. Any plugin, besides the <strong>Core</strong> plugin, that tries to implement the <strong><a href="https://github.com/opencor/opencor/blob/master/src/plugins/coreinterface.inl">core</a></strong> interface will be reported by OpenCOR as being invalid.
         </p>
 
         <span class="anchor" id="CMake project"></span>
@@ -127,8 +127,8 @@
             Following those keywords are the parameters themselves, as can be seen in <a href="https://github.com/opencor/opencor/blob/master/src/plugins/miscellaneous/Core/CMakeLists.txt"><code>[OpenCOR]/src/plugins/miscellaneous/Core/CMakeLists.txt</code></a> for the <strong>Core</strong> plugin.
         </p>
 
-        <p class="warning">
-            <strong>Note:</strong> due to the intrinsic nature of OS X binaries, it is critical that you list <em>all</em> the <a href="http://qt-project.org/">Qt</a> libraries needed by a plugin. Failure to do so may result in OpenCOR not behaving as expected.
+        <p class="note">
+            due to the intrinsic nature of OS X binaries, it is critical that you list <em>all</em> the <a href="http://qt-project.org/">Qt</a> libraries needed by a plugin. Failure to do so may result in OpenCOR not behaving as expected.
         </p>
 
         <span class="anchor" id="Plugin information"></span>
@@ -196,8 +196,8 @@ namespace Core {
 
         <pre class="prettyprint">PLUGININFO_FUNC CorePluginInfo();</pre>
 
-        <p class="warning">
-            <strong>Note:</strong> to ensure the uniqueness of a plugin, OpenCOR uses the name of a plugin to determine the name of its function. In other words, the name of the function is expected to be <code>&lt;PluginName&gt;PluginInfo()</code>. If it is not, OpenCOR will not be able to recognise the plugin.
+        <p class="note">
+            to ensure the uniqueness of a plugin, OpenCOR uses the name of a plugin to determine the name of its function. In other words, the name of the function is expected to be <code>&lt;PluginName&gt;PluginInfo()</code>. If it is not, OpenCOR will not be able to recognise the plugin.
         </p>
 
         <p>
@@ -216,8 +216,8 @@ namespace Core {
                           descriptions);
 }</pre>
 
-        <p class="warning">
-            <strong>Note:</strong> support for the internationalisation of a plugin's description would normally be done using <a href="http://qt-project.org/">Qt</a>'s <code>tr()</code> function, but the C nature of the function means that it cannot be done. So, instead, we use a <code>QMap</code>-based approach.
+        <p class="note">
+            support for the internationalisation of a plugin's description would normally be done using <a href="http://qt-project.org/">Qt</a>'s <code>tr()</code> function, but the C nature of the function means that it cannot be done. So, instead, we use a <code>QMap</code>-based approach.
         </p>
 
         <span class="anchor" id="Plugin class"></span>

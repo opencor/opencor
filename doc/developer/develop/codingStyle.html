@@ -113,8 +113,8 @@ char *c, *d;</pre>
     void Function();
     ...
 }</pre>
-                        <p class="warning">
-                            <strong>Note:</strong> class variables start with a lower-case <code>m</code>.
+                        <p class="note">
+                            class variables start with a lower-case <code>m</code>.
                         </p>
                     </li>
                     <li>
@@ -147,8 +147,8 @@ int height;</pre>
                         <pre class="good prettyprint">QString firstName = "Joe";
 QString lastName = "Foo";</pre>
                         <pre class="bad prettyprint">QString firstName = "Joe", lastName = "Foo";</pre>
-                        <p class="warning">
-                            <strong>Note:</strong> <code>QString firstName = "Joe";</code> is formally calling a copy constructor on a temporary string constructed from a string literal and therefore has the potential of being more expensive than direct construction by <code>QString firstName("joe")</code>. However, the compiler is allowed to elide the copy (even if it has side effects), and modern compilers typically do so. Given these equal costs, OpenCOR code favours the <code>=</code> idiom as it is in line with the traditional C-style initialisation, <em>and</em> cannot be mistaken as a function declaration, <em>and</em> reduces the level of nested parantheses in more initialisations.
+                        <p class="note">
+                            <code>QString firstName = "Joe";</code> is formally calling a copy constructor on a temporary string constructed from a string literal and therefore has the potential of being more expensive than direct construction by <code>QString firstName("joe")</code>. However, the compiler is allowed to elide the copy (even if it has side effects), and modern compilers typically do so. Given these equal costs, OpenCOR code favours the <code>=</code> idiom as it is in line with the traditional C-style initialisation, <em>and</em> cannot be mistaken as a function declaration, <em>and</em> reduces the level of nested parantheses in more initialisations.
                         </p>
                     </li>
                 </ul>
