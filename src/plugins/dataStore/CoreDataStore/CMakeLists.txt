@@ -1,15 +1,15 @@
-PROJECT(CoreDataPlugin)
+PROJECT(CoreDataStorePlugin)
 
 # Add the plugin
 
-ADD_PLUGIN(CoreData
+ADD_PLUGIN(CoreDataStore
     SOURCES
         ../../plugininfo.cpp
 
-        src/coredataplugin.cpp
-        src/coredata.cpp
+        src/coredatastoreplugin.cpp
+        src/coredatastore.cpp
     HEADERS_MOC
-        src/coredataplugin.h
+        src/coredatastoreplugin.h
     INCLUDE_DIRS
         src
     QT_MODULES

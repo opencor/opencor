@@ -16,34 +16,42 @@ specific language governing permissions and limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// CoreStore plugin
+// CoreDataStore plugin
 //==============================================================================
 
-#include "csvstoreplugin.h"
+#ifndef COREDATASTOREPLUGIN_H
+#define COREDATASTOREPLUGIN_H
+
+//==============================================================================
+
+#include "plugininfo.h"
 
 //==============================================================================
 
 namespace OpenCOR {
-namespace CsvStore {
+namespace CoreDataStore {
 
 //==============================================================================
 
-PLUGININFO_FUNC CsvStorePluginInfo()
+PLUGININFO_FUNC CoreDataStorePluginInfo();
+
+//==============================================================================
+
+class CoreDataStorePlugin : public QObject
 {
-    Descriptions descriptions;
+    Q_OBJECT
 
-    descriptions.insert("en", QString::fromUtf8("the CSV data store interface."));
-    descriptions.insert("fr", QString::fromUtf8("the CSV data store interface."));
-
-    return new PluginInfo(PluginInfo::DataStore, true, false,
-                          QStringList() << "CoreData",
-                          descriptions);
-}
+    Q_PLUGIN_METADATA(IID "OpenCOR.CoreDataStorePlugin" FILE "coredatastoreplugin.json")
+};
 
 //==============================================================================
 
-}   // namespace CsvStore
+}   // namespace CoreDataStore
 }   // namespace OpenCOR
+
+//==============================================================================
+
+#endif
 
 //==============================================================================
 // End of file

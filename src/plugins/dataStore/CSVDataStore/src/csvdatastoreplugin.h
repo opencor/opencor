@@ -16,66 +16,42 @@ specific language governing permissions and limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// A CSV store for simulation data
+// CSVDataStore plugin
 //==============================================================================
 
-#include "csvstore.h"
+#ifndef CSVDATASTOREPLUGIN_H
+#define CSVDATASTOREPLUGIN_H
 
 //==============================================================================
 
-#include <QtCore>
+#include "plugininfo.h"
 
 //==============================================================================
 
 namespace OpenCOR {
-namespace CsvStore {
+namespace CSVDataStore {
 
 //==============================================================================
 
-bool exportDataSet(const CoreData::DataSet *pDataset, const QString &pFileName)
+PLUGININFO_FUNC CSVDataStorePluginInfo();
+
+//==============================================================================
+
+class CSVDataStorePlugin : public QObject
 {
-    // Export the contents of a dataset to a CSV file
+    Q_OBJECT
 
-   QFile file(pFileName);
-   if (!file.open(QIODevice::WriteOnly)) {
-       // The file can't be opened, so...
-       file.remove();
-       return false;
-   }
-
-   QTextStream out(&file);
-
-   const CoreData::DataVariable *voi = pDataset->getVoi();
-   QVector<CoreData::DataVariable *> variables = pDataset->getVariables();
-
-   // File header
-   static const QString Header = "%1 (%2)";
-   out << Header.arg(voi->getUri().replace("/prime", "'").replace("/", " | "),
-                     voi->getUnits());
-   for (auto v = variables.begin();  v != variables.end();  ++v) {
-       out << "," << Header.arg((*v)->getUri().replace("/prime", "'").replace("/", " | "),
-                                (*v)->getUnits());
-   }
-   out << "\n";
-
-   // File data
-   for (qulonglong j = 0;  j < pDataset->getSize();  ++j) {
-       out << voi->getPoint(j);
-       for (auto v = variables.begin();  v != variables.end();  ++v) {
-           out << "," << (*v)->getPoint(j);
-       }
-       out << "\n";
-   }
-
-   file.close();
-
-   return true;
-}
+    Q_PLUGIN_METADATA(IID "OpenCOR.CSVDataStorePlugin" FILE "csvdatastoreplugin.json")
+};
 
 //==============================================================================
 
-}   // namespace CsvStore
+}   // namespace CSVDataStore
 }   // namespace OpenCOR
+
+//==============================================================================
+
+#endif
 
 //==============================================================================
 // End of file

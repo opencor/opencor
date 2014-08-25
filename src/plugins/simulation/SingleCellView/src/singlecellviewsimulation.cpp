@@ -20,9 +20,9 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include "cellmlfileruntime.h"
-#include "coredata.h"
-#include "csvstore.h"
+#include "coredatastore.h"
 #include "corenlasolver.h"
+#include "csvdatastore.h"
 #include "singlecellviewcontentswidget.h"
 #include "singlecellviewinformationsimulationwidget.h"
 #include "singlecellviewinformationwidget.h"
@@ -628,7 +628,7 @@ bool SingleCellViewSimulationResults::createArrays()
         return true;
 
     try {
-      mDataset = new CoreData::DataSet(simulationSize) ;
+      mDataset = new CoreDataStore::DataSet(simulationSize) ;
       mPoints = mDataset->holdPoint(0, true) ;
       mConstants = mDataset->holdPoints(mRuntime->constantsCount(), mSimulation->data()->constants()) ;
       mRates = mDataset->holdPoints(mRuntime->ratesCount(), mSimulation->data()->rates()) ;
@@ -648,7 +648,7 @@ bool SingleCellViewSimulationResults::createArrays()
 
     for (int i = 0, iMax = mRuntime->parameters().count(); i < iMax; ++i) {
       CellMLSupport::CellmlFileRuntimeParameter *parameter = mRuntime->parameters()[i] ;
-      CoreData::DataVariable *var = 0 ;
+      CoreDataStore::DataVariable *var = 0 ;
       switch (parameter->type()) {
        case CellMLSupport::CellmlFileRuntimeParameter::Constant:
        case CellMLSupport::CellmlFileRuntimeParameter::ComputedConstant:
@@ -774,7 +774,7 @@ bool SingleCellViewSimulationResults::exportToCsv(const QString &pFileName) cons
     if (!mRuntime) return false;
 
     // Export of all of our data
-    return CsvStore::exportDataSet(mDataset, pFileName) ;
+    return CSVDataStore::exportDataSet(mDataset, pFileName) ;
 }
 
 //==============================================================================

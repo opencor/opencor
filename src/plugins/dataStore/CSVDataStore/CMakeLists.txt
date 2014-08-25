@@ -1,19 +1,19 @@
-PROJECT(CsvStorePlugin)
+PROJECT(CSVDataStorePlugin)
 
 # Add the plugin
 
-ADD_PLUGIN(CsvStore
+ADD_PLUGIN(CSVDataStore
     SOURCES
         ../../plugininfo.cpp
 
-        src/csvstoreplugin.cpp
-        src/csvstore.cpp
+        src/csvdatastoreplugin.cpp
+        src/csvdatastore.cpp
     HEADERS_MOC
-        src/csvstoreplugin.h
+        src/csvdatastoreplugin.h
     INCLUDE_DIRS
         src
     PLUGINS
-        CoreData
+        CoreDataStore
     QT_MODULES
         Core
     QT_LIBRARIES

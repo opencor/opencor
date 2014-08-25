@@ -16,38 +16,66 @@ specific language governing permissions and limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// A CSV interface to simulation data
+// CSV data store class
 //==============================================================================
 
-#ifndef CSVSTORE_H
-#define CSVSTORE_H
-
-//==============================================================================
-
-#include "coredata.h"
-#include "csvstoreglobal.h"
+#include "csvdatastore.h"
 
 //==============================================================================
 
-#include <QtGlobal>
+#include <QtCore>
 
 //==============================================================================
 
 namespace OpenCOR {
-namespace CsvStore {
+namespace CSVDataStore {
 
 //==============================================================================
 
-bool CSVSTORE_EXPORT exportDataSet(const CoreData::DataSet *pDataset, const QString &pFileName) ;
+bool exportDataSet(const CoreDataStore::DataSet *pDataset, const QString &pFileName)
+{
+    // Export the contents of a dataset to a CSV file
+
+   QFile file(pFileName);
+   if (!file.open(QIODevice::WriteOnly)) {
+       // The file can't be opened, so...
+       file.remove();
+       return false;
+   }
+
+   QTextStream out(&file);
+
+   const CoreDataStore::DataVariable *voi = pDataset->getVoi();
+   QVector<CoreDataStore::DataVariable *> variables = pDataset->getVariables();
+
+   // File header
+   static const QString Header = "%1 (%2)";
+   out << Header.arg(voi->getUri().replace("/prime", "'").replace("/", " | "),
+                     voi->getUnits());
+   for (auto v = variables.begin();  v != variables.end();  ++v) {
+       out << "," << Header.arg((*v)->getUri().replace("/prime", "'").replace("/", " | "),
+                                (*v)->getUnits());
+   }
+   out << "\n";
+
+   // File data
+   for (qulonglong j = 0;  j < pDataset->getSize();  ++j) {
+       out << voi->getPoint(j);
+       for (auto v = variables.begin();  v != variables.end();  ++v) {
+           out << "," << (*v)->getPoint(j);
+       }
+       out << "\n";
+   }
+
+   file.close();
+
+   return true;
+}
 
 //==============================================================================
 
-}   // namespace CsvStore
+}   // namespace CSVDataStore
 }   // namespace OpenCOR
-
-//==============================================================================
-
-#endif
 
 //==============================================================================
 // End of file

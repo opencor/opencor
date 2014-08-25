@@ -62,9 +62,9 @@ ADD_PLUGIN(SingleCellView
         CellMLSupport
         Compiler
         Core
+        CoreDataStore
         CoreSolver
-        CoreData
-        CsvStore
+        CSVDataStore
         ${LLVM_PLUGIN}
         ${QWT_PLUGIN}
     PLUGIN_BINARIES

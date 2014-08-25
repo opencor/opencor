@@ -16,15 +16,15 @@ specific language governing permissions and limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// A store for simulation data
+// Core data store classes
 //==============================================================================
 
-#include "coredata.h"
+#include "coredatastore.h"
 
 //==============================================================================
 
 namespace OpenCOR {
-namespace CoreData {
+namespace CoreDataStore {
 
 //==============================================================================
 
@@ -238,7 +238,7 @@ long DataSet::length() const
 
 //==============================================================================
 
-}   // namespace CoreData
+}   // namespace CoreDataStore
 }   // namespace OpenCOR
 
 //==============================================================================
