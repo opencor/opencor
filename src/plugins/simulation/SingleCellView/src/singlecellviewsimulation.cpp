@@ -772,10 +772,12 @@ const double *SingleCellViewSimulationResults::algebraic(size_t pIndex)
 
 bool SingleCellViewSimulationResults::exportToCsv(const QString &pFileName) const
 {
-    if (!mRuntime) return false;
+    if (!mRuntime)
+        return false;
 
     // Export of all of our data
-    return CSVDataStore::exportDataSet(mDataset, pFileName);
+
+    return CSVDataStore::exportDataStore(mDataset, pFileName);
 }
 
 //==============================================================================

@@ -42,11 +42,8 @@ CoreDataStore::~CoreDataStore()
 {
     delete mVoi;
 
-    for (QVector<CoreDataStoreVariable *>::Iterator iter = mVariables.begin(),
-                                                    iterEnd = mVariables.end();
-         iter != iterEnd; ++iter) {
-        delete *iter;
-    }
+    for (auto var = mVariables.begin(), varEnd = mVariables.end(); var != varEnd; ++var)
+        delete *var;
 }
 
 //==============================================================================
@@ -112,11 +109,8 @@ QVector<CoreDataStoreVariable *> CoreDataStore::holdPoints(const long &pCount,
 
 void CoreDataStore::savePoints(const qulonglong &pPos)
 {
-    for (QVector<CoreDataStoreVariable *>::Iterator iter = mVariables.begin(),
-                                                    iterEnd = mVariables.end();
-         iter != iterEnd; ++iter) {
-        (*iter)->savePoint(pPos);
-    }
+    for (auto var = mVariables.begin(), varEnd = mVariables.end(); var != varEnd; ++var)
+        (*var)->savePoint(pPos);
 }
 
 //==============================================================================

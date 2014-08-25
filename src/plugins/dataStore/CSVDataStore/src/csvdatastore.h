@@ -46,8 +46,8 @@ namespace CSVDataStore {
 
 //==============================================================================
 
-bool CSVDATASTORE_EXPORT exportDataSet(const CoreDataStore::CoreDataStore *pDataset,
-                                       const QString &pFileName);
+bool CSVDATASTORE_EXPORT exportDataStore(const CoreDataStore::CoreDataStore *pDataStore,
+                                         const QString &pFileName);
 
 //==============================================================================
 

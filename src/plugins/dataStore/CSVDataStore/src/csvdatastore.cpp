@@ -35,40 +35,56 @@ namespace CSVDataStore {
 
 //==============================================================================
 
-bool exportDataSet(const CoreDataStore::CoreDataStore *pDataset, const QString &pFileName)
+bool exportDataStore(const CoreDataStore::CoreDataStore *pDataStore,
+                     const QString &pFileName)
 {
-    // Export the contents of a dataset to a CSV file
+    // Export the given data store to a CSV file with the given file name
 
-   QFile file(pFileName);
-   if (!file.open(QIODevice::WriteOnly)) {
-       // The file can't be opened, so...
-       file.remove();
-       return false;
-   }
+    QFile file(pFileName);
 
-   QTextStream out(&file);
+    if (!file.open(QIODevice::WriteOnly)) {
+        // The file can't be opened, so...
 
-   const CoreDataStore::CoreDataStoreVariable *voi = pDataset->getVoi();
-   QVector<CoreDataStore::CoreDataStoreVariable *> variables = pDataset->getVariables();
+        file.remove();
 
-   // File header
-   static const QString Header = "%1 (%2)";
-   out << Header.arg(voi->getUri().replace("/prime", "'").replace("/", " | "),
-                     voi->getUnits());
-   for (auto v = variables.begin();  v != variables.end();  ++v) {
-       out << "," << Header.arg((*v)->getUri().replace("/prime", "'").replace("/", " | "),
-                                (*v)->getUnits());
-   }
-   out << "\n";
+        return false;
+    }
 
-   // File data
-   for (qulonglong j = 0;  j < pDataset->getSize();  ++j) {
-       out << voi->getPoint(j);
-       for (auto v = variables.begin();  v != variables.end();  ++v) {
-           out << "," << (*v)->getPoint(j);
-       }
+    // Write out the contents of the data store to the file
+
+    QTextStream out(&file);
+
+    // Header
+
+    static const QString Header = "%1 (%2)";
+
+    CoreDataStore::CoreDataStoreVariable *voi = pDataStore->getVoi();
+    QVector<CoreDataStore::CoreDataStoreVariable *> variables = pDataStore->getVariables();
+
+    out << Header.arg(voi->getUri().replace("/prime", "'").replace("/", " | "),
+                      voi->getUnits());
+
+    auto varBegin = variables.begin();
+    auto varEnd = variables.end();
+
+    for (auto var = varBegin; var != varEnd; ++var)
+        out << "," << Header.arg((*var)->getUri().replace("/prime", "'").replace("/", " | "),
+                                 (*var)->getUnits());
+
+    out << "\n";
+
+    // Data itself
+
+   for (qulonglong i = 0;  i < pDataStore->getSize(); ++i) {
+       out << voi->getPoint(i);
+
+       for (auto var = varBegin; var != varEnd; ++var)
+           out << "," << (*var)->getPoint(i);
+
        out << "\n";
    }
+
+   // We are done...
 
    file.close();
 
