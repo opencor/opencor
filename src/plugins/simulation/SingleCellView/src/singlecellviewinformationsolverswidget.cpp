@@ -477,13 +477,13 @@ void SingleCellViewInformationSolversWidget::doSolverChanged(SingleCellViewInfor
     // Go through the different properties for the given type of solver and
     // show/hide whatever needs showing/hiding
 
-    for (QMap<QString, Core::Properties>::ConstIterator iter = pSolverData->solversProperties().constBegin(),
-                                                        iterEnd = pSolverData->solversProperties().constEnd();
-         iter != iterEnd; ++iter) {
-        bool propertyVisible = !iter.key().compare(pSolverName);
+    for (auto solverProperties = pSolverData->solversProperties().constBegin(),
+              solverPropertiesEnd = pSolverData->solversProperties().constEnd();
+         solverProperties != solverPropertiesEnd; ++solverProperties) {
+        bool solverPropertyVisible = !solverProperties.key().compare(pSolverName);
 
-        foreach (Core::Property *property, iter.value())
-            property->setVisible(propertyVisible);
+        foreach (Core::Property *solverProperty, solverProperties.value())
+            solverProperty->setVisible(solverPropertyVisible);
     }
 }
 

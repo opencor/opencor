@@ -330,10 +330,9 @@ void TreeViewWidget::startDrag(Qt::DropActions pSupportedActions)
                 foreach (const QModelIndex &index, selection.indexes()) {
                     QMap<int, QVariant> roles = model()->itemData(index);
 
-                    for (QMap<int, QVariant>::Iterator iter = roles.begin(),
-                                                       iterEnd = roles.end();
-                         iter != iterEnd; ++iter) {
-                        iter.value() = QVariant();
+                    for (auto role = roles.begin(), roleEnd = roles.end();
+                         role != roleEnd; ++role) {
+                        role.value() = QVariant();
                     }
 
                     model()->setItemData(index, roles);

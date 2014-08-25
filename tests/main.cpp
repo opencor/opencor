@@ -30,7 +30,7 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-typedef QMap<QString, QStringList> Tests;
+typedef QMap<QString, QStringList> TestsGroups;
 
 //==============================================================================
 
@@ -43,13 +43,13 @@ int main(int pArgC, char *pArgV[])
     for (int i = 1; i < pArgC; ++i)
         args << pArgV[i];
 
-    // The different tests that are to be run
+    // The different groups of tests that are to be run
 
-    Tests tests;
+    TestsGroups testsGroups;
 
-    tests["CellMLTools"] = QStringList() << "tests";
-    tests["Compiler"]    = QStringList() << "tests";
-    tests["Core"]        = QStringList() << "tests";
+    testsGroups["CellMLTools"] = QStringList() << "tests";
+    testsGroups["Compiler"]    = QStringList() << "tests";
+    testsGroups["Core"]        = QStringList() << "tests";
 
     // Run the different tests
 
@@ -57,21 +57,21 @@ int main(int pArgC, char *pArgV[])
     QStringList failedTests = QStringList();
     int res = 0;
 
-    Tests::const_iterator iterBegin = tests.constBegin();
-    Tests::const_iterator iterEnd = tests.constEnd();
+    auto testBegin = testsGroups.constBegin();
+    auto testEnd = testsGroups.constEnd();
 
-    for (Tests::const_iterator iter = iterBegin; iter != iterEnd; ++iter) {
-        if (iter != iterBegin) {
+    for (auto testsGroup = testBegin; testsGroup != testEnd; ++testsGroup) {
+        if (testsGroup != testBegin) {
             std::cout << std::endl;
             std::cout << std::endl;
             std::cout << std::endl;
         }
 
-        std::cout << "********* " << iter.key().toStdString() << " *********" << std::endl;
+        std::cout << "********* " << testsGroup.key().toStdString() << " *********" << std::endl;
         std::cout << std::endl;
 
-        foreach (const QString &test, iter.value()) {
-            QString testName = QString("%1_%2").arg(iter.key(), test);
+        foreach (const QString &testName, testsGroup.value()) {
+            QString fullTestName = QString("%1_%2").arg(testsGroup.key(), testName);
 
             // Go to the directory that contains our plugins, so that we can load them
             // without any problem
@@ -82,17 +82,17 @@ int main(int pArgC, char *pArgV[])
 
             // Execute the test itself
 
-            int testRes = QProcess::execute(exePath+QDir::separator()+testName, args);
+            int testRes = QProcess::execute(exePath+QDir::separator()+fullTestName, args);
 
             if (testRes)
-                failedTests << testName;
+                failedTests << fullTestName;
 
             res = res?res:testRes;
 
             std::cout << std::endl;
         }
 
-        std::cout << QString("*").repeated(9+1+iter.key().count()+1+9).toStdString() << std::endl;
+        std::cout << QString("*").repeated(9+1+testsGroup.key().count()+1+9).toStdString() << std::endl;
     }
 
     // Reporting
