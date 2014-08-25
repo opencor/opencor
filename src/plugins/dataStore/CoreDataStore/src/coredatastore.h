@@ -45,58 +45,58 @@ namespace CoreDataStore {
 class COREDATASTORE_EXPORT DataVariable {
 
  public:
-  DataVariable(const qulonglong &pSize, const double *pValuePointer=0) ;
-  virtual ~DataVariable() ;
+  DataVariable(const qulonglong &pSize, const double *pValuePointer=0);
+  virtual ~DataVariable();
 
-  void setUri(const QString &pUri) ;
-  void setUnits(const QString &pUnits) ;
-  void setLabel(const QString &pLabel) ;
+  void setUri(const QString &pUri);
+  void setUnits(const QString &pUnits);
+  void setLabel(const QString &pLabel);
 
-  QString getUri() const ;
-  QString getLabel() const ;
-  QString getUnits() const ;
+  QString getUri() const;
+  QString getLabel() const;
+  QString getUnits() const;
 
-  void savePoint(const qulonglong &pPos) ;
-  void savePoint(const qulonglong &pPos, const double &pValue) ;
+  void savePoint(const qulonglong &pPos);
+  void savePoint(const qulonglong &pPos, const double &pValue);
 
-  double getPoint(const qulonglong &pPos) const ;
-  const double *getData() const ;
-  qulonglong getSize() const ;
+  double getPoint(const qulonglong &pPos) const;
+  const double *getData() const;
+  qulonglong getSize() const;
 
  private:
-  QString mUri ;
-  QString mUnits ;
-  QString mLabel ;
-  const double *mValuePointer ;
-  double *mBuffer ;
-  qulonglong mSize ;
-  } ;
+  QString mUri;
+  QString mUnits;
+  QString mLabel;
+  const double *mValuePointer;
+  double *mBuffer;
+  qulonglong mSize;
+  };
 
 //==============================================================================
 
 class COREDATASTORE_EXPORT DataSet {
 
  public:
-  DataSet(const qulonglong &pSize) ;
-  virtual ~DataSet() ;
+  DataSet(const qulonglong &pSize);
+  virtual ~DataSet();
 
-  DataVariable * getVoi() const ;
-  DataVariable * getVariable(long index) const ;
-  const QVector<DataVariable *> &getVariables() const ;
+  DataVariable * getVoi() const;
+  DataVariable * getVariable(long index) const;
+  const QVector<DataVariable *> &getVariables() const;
 
-  DataVariable * holdPoint(const double *pPoint=0, const bool &pVoi=false) ;
-  QVector<DataVariable *> holdPoints(const long &pCount, const double *pPoints) ;
+  DataVariable * holdPoint(const double *pPoint=0, const bool &pVoi=false);
+  QVector<DataVariable *> holdPoints(const long &pCount, const double *pPoints);
 
-  void savePoints(const qulonglong &pPos) ;
+  void savePoints(const qulonglong &pPos);
 
-  qulonglong getSize() const ;
-  long length() const ;
+  qulonglong getSize() const;
+  long length() const;
 
  private:
-  const qulonglong mSize ;
-  QVector<DataVariable *> mVariables ;
-  DataVariable *mVoi ;
-  } ;
+  const qulonglong mSize;
+  QVector<DataVariable *> mVariables;
+  DataVariable *mVoi;
+  };
 
 //==============================================================================
 

@@ -164,11 +164,11 @@ public:
 
     qulonglong size() const;
 
-    const double *points() ;
-    const double *constants(size_t pIndex) ;
-    const double *rates(size_t pIndex) ;
-    const double *states(size_t pIndex) ;
-    const double *algebraic(size_t pIndex) ;
+    const double *points();
+    const double *constants(size_t pIndex);
+    const double *rates(size_t pIndex);
+    const double *states(size_t pIndex);
+    const double *algebraic(size_t pIndex);
 
     bool exportToCsv(const QString &pFileName) const;
 
@@ -177,12 +177,12 @@ private:
     SingleCellViewSimulation *mSimulation;
     qulonglong mSize;
 
-    CoreDataStore::DataSet *mDataset ;
-    CoreDataStore::DataVariable *mPoints ;
-    QVector<CoreDataStore::DataVariable *> mConstants ;
-    QVector<CoreDataStore::DataVariable *> mRates ;
-    QVector<CoreDataStore::DataVariable *> mStates ;
-    QVector<CoreDataStore::DataVariable *> mAlgebraic ;
+    CoreDataStore::DataSet *mDataset;
+    CoreDataStore::DataVariable *mPoints;
+    QVector<CoreDataStore::DataVariable *> mConstants;
+    QVector<CoreDataStore::DataVariable *> mRates;
+    QVector<CoreDataStore::DataVariable *> mStates;
+    QVector<CoreDataStore::DataVariable *> mAlgebraic;
 
     bool createArrays();
     void deleteArrays();

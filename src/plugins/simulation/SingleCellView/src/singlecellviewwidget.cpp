@@ -1803,16 +1803,16 @@ const double * SingleCellViewWidget::dataPoints(SingleCellViewSimulation *pSimul
     switch (pParameter->type()) {
     case CellMLSupport::CellmlFileRuntimeParameter::Constant:
     case CellMLSupport::CellmlFileRuntimeParameter::ComputedConstant:
-        return pSimulation->results()->constants(pParameter->index()) ;
+        return pSimulation->results()->constants(pParameter->index());
     case CellMLSupport::CellmlFileRuntimeParameter::Rate:
-        return pSimulation->results()->rates(pParameter->index()) ;
+        return pSimulation->results()->rates(pParameter->index());
     case CellMLSupport::CellmlFileRuntimeParameter::State:
-        return pSimulation->results()->states(pParameter->index()) ;
+        return pSimulation->results()->states(pParameter->index());
     case CellMLSupport::CellmlFileRuntimeParameter::Algebraic:
-        return pSimulation->results()->algebraic(pParameter->index()) ;
+        return pSimulation->results()->algebraic(pParameter->index());
     default:
         // CellMLSupport::CellmlFileRuntimeParameter::Voi
-        return pSimulation->results()->points() ;
+        return pSimulation->results()->points();
     }
 }
 

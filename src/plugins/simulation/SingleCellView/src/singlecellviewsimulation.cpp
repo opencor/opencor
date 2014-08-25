@@ -599,8 +599,8 @@ SingleCellViewSimulationResults::~SingleCellViewSimulationResults()
 static QString make_uri(const QString &uri)
 /*---------------------------------------*/
 {
-  QString u(uri) ;
-  return u.replace("'", "/prime") ;
+  QString u(uri);
+  return u.replace("'", "/prime");
   }
 
 
@@ -628,53 +628,53 @@ bool SingleCellViewSimulationResults::createArrays()
         return true;
 
     try {
-      mDataset = new CoreDataStore::DataSet(simulationSize) ;
-      mPoints = mDataset->holdPoint(0, true) ;
-      mConstants = mDataset->holdPoints(mRuntime->constantsCount(), mSimulation->data()->constants()) ;
-      mRates = mDataset->holdPoints(mRuntime->ratesCount(), mSimulation->data()->rates()) ;
-      mStates = mDataset->holdPoints(mRuntime->statesCount(), mSimulation->data()->states()) ;
-      mAlgebraic = mDataset->holdPoints(mRuntime->algebraicCount(), mSimulation->data()->algebraic()) ;
+      mDataset = new CoreDataStore::DataSet(simulationSize);
+      mPoints = mDataset->holdPoint(0, true);
+      mConstants = mDataset->holdPoints(mRuntime->constantsCount(), mSimulation->data()->constants());
+      mRates = mDataset->holdPoints(mRuntime->ratesCount(), mSimulation->data()->rates());
+      mStates = mDataset->holdPoints(mRuntime->statesCount(), mSimulation->data()->states());
+      mAlgebraic = mDataset->holdPoints(mRuntime->algebraicCount(), mSimulation->data()->algebraic());
       }
     catch (...) {
-      delete mDataset ;
-      mDataset = 0 ;
-      return false ;
+      delete mDataset;
+      mDataset = 0;
+      return false;
       }
 
     mPoints->setUri(make_uri(mRuntime->variableOfIntegration()->componentHierarchy().join("/")
-                             + "/" + mRuntime->variableOfIntegration()->name())) ;
-    mPoints->setLabel(mRuntime->variableOfIntegration()->name()) ;
-    mPoints->setUnits(mRuntime->variableOfIntegration()->unit()) ;
+                             + "/" + mRuntime->variableOfIntegration()->name()));
+    mPoints->setLabel(mRuntime->variableOfIntegration()->name());
+    mPoints->setUnits(mRuntime->variableOfIntegration()->unit());
 
     for (int i = 0, iMax = mRuntime->parameters().count(); i < iMax; ++i) {
-      CellMLSupport::CellmlFileRuntimeParameter *parameter = mRuntime->parameters()[i] ;
-      CoreDataStore::DataVariable *var = 0 ;
+      CellMLSupport::CellmlFileRuntimeParameter *parameter = mRuntime->parameters()[i];
+      CoreDataStore::DataVariable *var = 0;
       switch (parameter->type()) {
        case CellMLSupport::CellmlFileRuntimeParameter::Constant:
        case CellMLSupport::CellmlFileRuntimeParameter::ComputedConstant:
-        var = mConstants[parameter->index()] ;
-        break ;
+        var = mConstants[parameter->index()];
+        break;
        case CellMLSupport::CellmlFileRuntimeParameter::Rate:
-        var = mRates[parameter->index()] ;
-        break ;
+        var = mRates[parameter->index()];
+        break;
        case CellMLSupport::CellmlFileRuntimeParameter::State:
-        var = mStates[parameter->index()] ;
-        break ;
+        var = mStates[parameter->index()];
+        break;
        case CellMLSupport::CellmlFileRuntimeParameter::Algebraic:
-        var = mAlgebraic[parameter->index()] ;
-        break ;
+        var = mAlgebraic[parameter->index()];
+        break;
        default:
-        break ;
+        break;
         }
       if (var) {
         var->setUri(make_uri(parameter->componentHierarchy().join("/")
-                             + "/" + parameter->formattedName())) ;
-        var->setLabel(parameter->formattedName()) ;
-        var->setUnits(parameter->formattedUnit(mRuntime->variableOfIntegration()->unit())) ;
+                             + "/" + parameter->formattedName()));
+        var->setLabel(parameter->formattedName());
+        var->setUnits(parameter->formattedUnit(mRuntime->variableOfIntegration()->unit()));
         }
       }
 
-    return true ;
+    return true;
     }
 
 //==============================================================================
@@ -683,7 +683,7 @@ void SingleCellViewSimulationResults::deleteArrays()
 {
     // Delete our data store and associated variables/arrays.
 
-    if (mDataset) delete mDataset ;
+    if (mDataset) delete mDataset;
     mDataset = 0;
 }
 
@@ -713,8 +713,8 @@ void SingleCellViewSimulationResults::addPoint(const double &pPoint)
     if (!mRuntime)
         return;
 
-    mPoints->savePoint(mSize, pPoint) ;
-    mDataset->savePoints(mSize) ;
+    mPoints->savePoint(mSize, pPoint);
+    mDataset->savePoints(mSize);
     ++mSize;
 }
 
@@ -732,7 +732,7 @@ qulonglong SingleCellViewSimulationResults::size() const
 const double *SingleCellViewSimulationResults::points()
 {
     // Return our points
-    return mPoints ? mPoints->getData() : 0 ;
+    return mPoints ? mPoints->getData() : 0;
 }
 
 //==============================================================================
@@ -740,7 +740,7 @@ const double *SingleCellViewSimulationResults::points()
 const double *SingleCellViewSimulationResults::constants(size_t pIndex)
 {
     // Return constants data at index
-    return mConstants.empty() ? 0 : mConstants[pIndex]->getData() ;
+    return mConstants.empty() ? 0 : mConstants[pIndex]->getData();
 }
 
 //==============================================================================
@@ -748,7 +748,7 @@ const double *SingleCellViewSimulationResults::constants(size_t pIndex)
 const double *SingleCellViewSimulationResults::rates(size_t pIndex)
 {
     // Return rates data at index
-    return mRates.empty() ? 0 : mRates[pIndex]->getData() ;
+    return mRates.empty() ? 0 : mRates[pIndex]->getData();
 }
 
 //==============================================================================
@@ -756,7 +756,7 @@ const double *SingleCellViewSimulationResults::rates(size_t pIndex)
 const double *SingleCellViewSimulationResults::states(size_t pIndex)
 {
     // Return states data at index
-    return mStates.empty() ? 0 : mStates[pIndex]->getData() ;
+    return mStates.empty() ? 0 : mStates[pIndex]->getData();
 }
 
 //==============================================================================
@@ -764,7 +764,7 @@ const double *SingleCellViewSimulationResults::states(size_t pIndex)
 const double *SingleCellViewSimulationResults::algebraic(size_t pIndex)
 {
     // Return algebraic data at index
-    return mAlgebraic.empty() ? 0 : mAlgebraic[pIndex]->getData() ;
+    return mAlgebraic.empty() ? 0 : mAlgebraic[pIndex]->getData();
 }
 
 //==============================================================================
@@ -774,7 +774,7 @@ bool SingleCellViewSimulationResults::exportToCsv(const QString &pFileName) cons
     if (!mRuntime) return false;
 
     // Export of all of our data
-    return CSVDataStore::exportDataSet(mDataset, pFileName) ;
+    return CSVDataStore::exportDataSet(mDataset, pFileName);
 }
 
 //==============================================================================
