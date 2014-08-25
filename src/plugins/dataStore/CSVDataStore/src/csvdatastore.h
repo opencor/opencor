@@ -29,16 +29,12 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-#include <QtGlobal>
-
-//==============================================================================
-
 namespace OpenCOR {
 namespace CSVDataStore {
 
 //==============================================================================
 
-bool CSVDATASTORE_EXPORT exportDataSet(const CoreDataStore::DataSet *pDataset,
+bool CSVDATASTORE_EXPORT exportDataSet(const CoreDataStore::CoreDataStore *pDataset,
                                        const QString &pFileName);
 
 //==============================================================================

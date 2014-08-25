@@ -28,7 +28,7 @@ namespace CoreDataStore {
 
 //==============================================================================
 
-DataVariable::DataVariable(const qulonglong &pSize,
+CoreDataStoreVariable::CoreDataStoreVariable(const qulonglong &pSize,
                            const double *pValuePointer) :
     mUri(QString()),
     mUnits(QString()),
@@ -41,14 +41,14 @@ DataVariable::DataVariable(const qulonglong &pSize,
 
 //==============================================================================
 
-DataVariable::~DataVariable()
+CoreDataStoreVariable::~CoreDataStoreVariable()
 {
     delete[] mBuffer;
 }
 
 //==============================================================================
 
-void DataVariable::savePoint(const qulonglong &pPos)
+void CoreDataStoreVariable::savePoint(const qulonglong &pPos)
 {
     Q_ASSERT(pPos < mSize);
 
@@ -58,7 +58,7 @@ void DataVariable::savePoint(const qulonglong &pPos)
 
 //==============================================================================
 
-void DataVariable::savePoint(const qulonglong &pPos, const double &pValue)
+void CoreDataStoreVariable::savePoint(const qulonglong &pPos, const double &pValue)
 {
     Q_ASSERT(pPos < mSize);
 
@@ -67,7 +67,7 @@ void DataVariable::savePoint(const qulonglong &pPos, const double &pValue)
 
 //==============================================================================
 
-double DataVariable::getPoint(const qulonglong &pPos) const
+double CoreDataStoreVariable::getPoint(const qulonglong &pPos) const
 {
     Q_ASSERT(pPos < mSize);
 
@@ -76,63 +76,63 @@ double DataVariable::getPoint(const qulonglong &pPos) const
 
 //==============================================================================
 
-const double *DataVariable::getData() const
+const double *CoreDataStoreVariable::getData() const
 {
     return mBuffer;
 }
 
 //==============================================================================
 
-qulonglong DataVariable::getSize() const
+qulonglong CoreDataStoreVariable::getSize() const
 {
     return mSize;
 }
 
 //==============================================================================
 
-void DataVariable::setUri(const QString &pUri)
+void CoreDataStoreVariable::setUri(const QString &pUri)
 {
     mUri = pUri;
 }
 
 //==============================================================================
 
-void DataVariable::setUnits(const QString &pUnits)
+void CoreDataStoreVariable::setUnits(const QString &pUnits)
 {
     mUnits = pUnits;
 }
 
 //==============================================================================
 
-void DataVariable::setLabel(const QString &pLabel)
+void CoreDataStoreVariable::setLabel(const QString &pLabel)
 {
     mLabel = pLabel;
 }
 
 //==============================================================================
 
-QString DataVariable::getUri() const
+QString CoreDataStoreVariable::getUri() const
 {
     return mUri;
 }
 
 //==============================================================================
 
-QString DataVariable::getUnits() const
+QString CoreDataStoreVariable::getUnits() const
 {
     return mUnits;
 }
 
 //==============================================================================
 
-QString DataVariable::getLabel() const
+QString CoreDataStoreVariable::getLabel() const
 {
     return mLabel;
 }
 
 //==============================================================================
 
-DataSet::DataSet(const qulonglong &pSize) :
+CoreDataStore::CoreDataStore(const qulonglong &pSize) :
     mSize(pSize),
     mVariables(0),
     mVoi(0)
@@ -141,12 +141,12 @@ DataSet::DataSet(const qulonglong &pSize) :
 
 //==============================================================================
 
-DataSet::~DataSet()
+CoreDataStore::~CoreDataStore()
 {
     if (mVoi)
         delete mVoi;
 
-    for (QVector<DataVariable *>::Iterator iter = mVariables.begin(),
+    for (QVector<CoreDataStoreVariable *>::Iterator iter = mVariables.begin(),
                                            iterEnd = mVariables.end();
          iter != iterEnd; ++iter) {
         delete *iter;
@@ -155,33 +155,33 @@ DataSet::~DataSet()
 
 //==============================================================================
 
-DataVariable * DataSet::getVoi() const
+CoreDataStoreVariable * CoreDataStore::getVoi() const
 {
     return mVoi;
 }
 
 //==============================================================================
 
-DataVariable * DataSet::getVariable(long index) const
+CoreDataStoreVariable * CoreDataStore::getVariable(long index) const
 {
     return mVariables[index];
 }
 
 //==============================================================================
 
-const QVector<DataVariable *> &DataSet::getVariables() const
+const QVector<CoreDataStoreVariable *> &CoreDataStore::getVariables() const
 {
     return mVariables;
 }
 
 //==============================================================================
 
-DataVariable * DataSet::holdPoint(const double *pPoint, const bool &pVoi)
+CoreDataStoreVariable * CoreDataStore::holdPoint(const double *pPoint, const bool &pVoi)
 {
     if (pVoi && mVoi)
         delete mVoi;
 
-    DataVariable *var = new DataVariable(mSize, pPoint);
+    CoreDataStoreVariable *var = new CoreDataStoreVariable(mSize, pPoint);
 
     if (pVoi)
         mVoi = var;
@@ -193,15 +193,15 @@ DataVariable * DataSet::holdPoint(const double *pPoint, const bool &pVoi)
 
 //==============================================================================
 
-QVector<DataVariable *> DataSet::holdPoints(const long &pCount,
+QVector<CoreDataStoreVariable *> CoreDataStore::holdPoints(const long &pCount,
                                             const double *pPoints)
 {
     const double *points = pPoints;
 
-    QVector<DataVariable *> vars(pCount);
+    QVector<CoreDataStoreVariable *> vars(pCount);
 
     for (long i = 0;  i < pCount;  ++i, ++points) {
-        DataVariable *variable = new DataVariable(mSize, points);
+        CoreDataStoreVariable *variable = new CoreDataStoreVariable(mSize, points);
 
         mVariables.push_back(variable);
 
@@ -213,9 +213,9 @@ QVector<DataVariable *> DataSet::holdPoints(const long &pCount,
 
 //==============================================================================
 
-void DataSet::savePoints(const qulonglong &pPos)
+void CoreDataStore::savePoints(const qulonglong &pPos)
 {
-    for (QVector<DataVariable *>::Iterator iter = mVariables.begin(),
+    for (QVector<CoreDataStoreVariable *>::Iterator iter = mVariables.begin(),
                                            iterEnd = mVariables.end();
          iter != iterEnd; ++iter) {
         (*iter)->savePoint(pPos);
@@ -224,14 +224,14 @@ void DataSet::savePoints(const qulonglong &pPos)
 
 //==============================================================================
 
-qulonglong DataSet::getSize() const
+qulonglong CoreDataStore::getSize() const
 {
     return mSize;
 }
 
 //==============================================================================
 
-long DataSet::length() const
+long CoreDataStore::length() const
 {
     return mVariables.size();
 }

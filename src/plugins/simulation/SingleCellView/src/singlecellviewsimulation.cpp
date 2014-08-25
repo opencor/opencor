@@ -628,7 +628,7 @@ bool SingleCellViewSimulationResults::createArrays()
         return true;
 
     try {
-      mDataset = new CoreDataStore::DataSet(simulationSize);
+      mDataset = new CoreDataStore::CoreDataStore(simulationSize);
       mPoints = mDataset->holdPoint(0, true);
       mConstants = mDataset->holdPoints(mRuntime->constantsCount(), mSimulation->data()->constants());
       mRates = mDataset->holdPoints(mRuntime->ratesCount(), mSimulation->data()->rates());
@@ -648,7 +648,7 @@ bool SingleCellViewSimulationResults::createArrays()
 
     for (int i = 0, iMax = mRuntime->parameters().count(); i < iMax; ++i) {
       CellMLSupport::CellmlFileRuntimeParameter *parameter = mRuntime->parameters()[i];
-      CoreDataStore::DataVariable *var = 0;
+      CoreDataStore::CoreDataStoreVariable *var = 0;
       switch (parameter->type()) {
        case CellMLSupport::CellmlFileRuntimeParameter::Constant:
        case CellMLSupport::CellmlFileRuntimeParameter::ComputedConstant:

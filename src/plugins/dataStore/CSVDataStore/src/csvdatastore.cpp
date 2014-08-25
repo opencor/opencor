@@ -32,7 +32,7 @@ namespace CSVDataStore {
 
 //==============================================================================
 
-bool exportDataSet(const CoreDataStore::DataSet *pDataset, const QString &pFileName)
+bool exportDataSet(const CoreDataStore::CoreDataStore *pDataset, const QString &pFileName)
 {
     // Export the contents of a dataset to a CSV file
 
@@ -45,8 +45,8 @@ bool exportDataSet(const CoreDataStore::DataSet *pDataset, const QString &pFileN
 
    QTextStream out(&file);
 
-   const CoreDataStore::DataVariable *voi = pDataset->getVoi();
-   QVector<CoreDataStore::DataVariable *> variables = pDataset->getVariables();
+   const CoreDataStore::CoreDataStoreVariable *voi = pDataset->getVoi();
+   QVector<CoreDataStore::CoreDataStoreVariable *> variables = pDataset->getVariables();
 
    // File header
    static const QString Header = "%1 (%2)";

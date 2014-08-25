@@ -177,12 +177,12 @@ private:
     SingleCellViewSimulation *mSimulation;
     qulonglong mSize;
 
-    CoreDataStore::DataSet *mDataset;
-    CoreDataStore::DataVariable *mPoints;
-    QVector<CoreDataStore::DataVariable *> mConstants;
-    QVector<CoreDataStore::DataVariable *> mRates;
-    QVector<CoreDataStore::DataVariable *> mStates;
-    QVector<CoreDataStore::DataVariable *> mAlgebraic;
+    CoreDataStore::CoreDataStore *mDataset;
+    CoreDataStore::CoreDataStoreVariable *mPoints;
+    QVector<CoreDataStore::CoreDataStoreVariable *> mConstants;
+    QVector<CoreDataStore::CoreDataStoreVariable *> mRates;
+    QVector<CoreDataStore::CoreDataStoreVariable *> mStates;
+    QVector<CoreDataStore::CoreDataStoreVariable *> mAlgebraic;
 
     bool createArrays();
     void deleteArrays();
