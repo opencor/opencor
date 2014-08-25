@@ -19,11 +19,14 @@ specific language governing permissions and limitations under the License.
 // CSV data store class
 //==============================================================================
 
+#include "coredatastore.h"
+#include "coredatastorevariable.h"
 #include "csvdatastore.h"
 
 //==============================================================================
 
-#include <QtCore>
+#include <QFile>
+#include <QTextStream>
 
 //==============================================================================
 

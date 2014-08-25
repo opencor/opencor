@@ -21,6 +21,7 @@ specific language governing permissions and limitations under the License.
 
 #include "cellmlfileruntime.h"
 #include "coredatastore.h"
+#include "coredatastorevariable.h"
 #include "corenlasolver.h"
 #include "csvdatastore.h"
 #include "singlecellviewcontentswidget.h"

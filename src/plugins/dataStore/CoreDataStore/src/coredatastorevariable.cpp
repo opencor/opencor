@@ -16,10 +16,9 @@ specific language governing permissions and limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// Core data store class
+// Core data store variable class
 //==============================================================================
 
-#include "coredatastore.h"
 #include "coredatastorevariable.h"
 
 //==============================================================================
@@ -29,108 +28,106 @@ namespace CoreDataStore {
 
 //==============================================================================
 
-CoreDataStore::CoreDataStore(const qulonglong &pSize) :
-    mSize(pSize),
-    mVariables(0),
-    mVoi(0)
+CoreDataStoreVariable::CoreDataStoreVariable(const qulonglong &pSize,
+                           const double *pValuePointer) :
+    mUri(QString()),
+    mUnits(QString()),
+    mLabel(QString()),
+    mValuePointer(pValuePointer),
+    mSize(pSize)
 {
+    mBuffer = new double[pSize];
 }
 
 //==============================================================================
 
-CoreDataStore::~CoreDataStore()
+CoreDataStoreVariable::~CoreDataStoreVariable()
 {
-    delete mVoi;
-
-    for (QVector<CoreDataStoreVariable *>::Iterator iter = mVariables.begin(),
-                                                    iterEnd = mVariables.end();
-         iter != iterEnd; ++iter) {
-        delete *iter;
-    }
+    delete[] mBuffer;
 }
 
 //==============================================================================
 
-CoreDataStoreVariable * CoreDataStore::getVoi() const
+void CoreDataStoreVariable::savePoint(const qulonglong &pPos)
 {
-    return mVoi;
+    Q_ASSERT(pPos < mSize);
+
+    if (mValuePointer)
+        mBuffer[pPos] = *mValuePointer;
 }
 
 //==============================================================================
 
-CoreDataStoreVariable * CoreDataStore::getVariable(long index) const
+void CoreDataStoreVariable::savePoint(const qulonglong &pPos, const double &pValue)
 {
-    return mVariables[index];
+    Q_ASSERT(pPos < mSize);
+
+    mBuffer[pPos] = pValue;
 }
 
 //==============================================================================
 
-const QVector<CoreDataStoreVariable *> &CoreDataStore::getVariables() const
+double CoreDataStoreVariable::getPoint(const qulonglong &pPos) const
 {
-    return mVariables;
+    Q_ASSERT(pPos < mSize);
+
+    return mBuffer[pPos];
 }
 
 //==============================================================================
 
-CoreDataStoreVariable * CoreDataStore::holdPoint(const double *pPoint,
-                                                 const bool &pVoi)
+const double *CoreDataStoreVariable::getData() const
 {
-    if (pVoi)
-        delete mVoi;
-
-    CoreDataStoreVariable *var = new CoreDataStoreVariable(mSize, pPoint);
-
-    if (pVoi)
-        mVoi = var;
-    else
-        mVariables.push_back(var);
-
-    return var;
+    return mBuffer;
 }
 
 //==============================================================================
 
-QVector<CoreDataStoreVariable *> CoreDataStore::holdPoints(const long &pCount,
-                                            const double *pPoints)
-{
-    const double *points = pPoints;
-
-    QVector<CoreDataStoreVariable *> vars(pCount);
-
-    for (long i = 0;  i < pCount;  ++i, ++points) {
-        CoreDataStoreVariable *variable = new CoreDataStoreVariable(mSize, points);
-
-        mVariables.push_back(variable);
-
-        vars[i] = variable;
-    }
-
-    return vars;
-}
-
-//==============================================================================
-
-void CoreDataStore::savePoints(const qulonglong &pPos)
-{
-    for (QVector<CoreDataStoreVariable *>::Iterator iter = mVariables.begin(),
-                                                    iterEnd = mVariables.end();
-         iter != iterEnd; ++iter) {
-        (*iter)->savePoint(pPos);
-    }
-}
-
-//==============================================================================
-
-qulonglong CoreDataStore::getSize() const
+qulonglong CoreDataStoreVariable::getSize() const
 {
     return mSize;
 }
 
 //==============================================================================
 
-long CoreDataStore::length() const
+void CoreDataStoreVariable::setUri(const QString &pUri)
 {
-    return mVariables.size();
+    mUri = pUri;
+}
+
+//==============================================================================
+
+void CoreDataStoreVariable::setUnits(const QString &pUnits)
+{
+    mUnits = pUnits;
+}
+
+//==============================================================================
+
+void CoreDataStoreVariable::setLabel(const QString &pLabel)
+{
+    mLabel = pLabel;
+}
+
+//==============================================================================
+
+QString CoreDataStoreVariable::getUri() const
+{
+    return mUri;
+}
+
+//==============================================================================
+
+QString CoreDataStoreVariable::getUnits() const
+{
+    return mUnits;
+}
+
+//==============================================================================
+
+QString CoreDataStoreVariable::getLabel() const
+{
+    return mLabel;
 }
 
 //==============================================================================

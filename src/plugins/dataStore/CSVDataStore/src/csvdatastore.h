@@ -16,7 +16,7 @@ specific language governing permissions and limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// A CSV data store interface
+// CSV data store class
 //==============================================================================
 
 #ifndef CSVDATASTORE_H
@@ -24,12 +24,24 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-#include "coredatastore.h"
 #include "csvdatastoreglobal.h"
 
 //==============================================================================
 
+#include <QString>
+
+//==============================================================================
+
 namespace OpenCOR {
+
+//==============================================================================
+
+namespace CoreDataStore {
+    class CoreDataStore;
+}   // namespace CoreDataStore
+
+//==============================================================================
+
 namespace CSVDataStore {
 
 //==============================================================================

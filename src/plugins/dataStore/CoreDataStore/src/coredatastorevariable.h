@@ -16,11 +16,11 @@ specific language governing permissions and limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// Core data store class
+// Core data store variable class
 //==============================================================================
 
-#ifndef COREDATASTORE_H
-#define COREDATASTORE_H
+#ifndef COREDATASTOREVARIABLE_H
+#define COREDATASTOREVARIABLE_H
 
 //==============================================================================
 
@@ -32,7 +32,7 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-#include <QVector>
+#include <QString>
 
 //==============================================================================
 
@@ -41,34 +41,35 @@ namespace CoreDataStore {
 
 //==============================================================================
 
-class CoreDataStoreVariable;
-
-//==============================================================================
-
-class COREDATASTORE_EXPORT CoreDataStore
+class COREDATASTORE_EXPORT CoreDataStoreVariable
 {
 public:
-    explicit CoreDataStore(const qulonglong &pSize);
-    virtual ~CoreDataStore();
+    explicit CoreDataStoreVariable(const qulonglong &pSize,
+                                   const double *pValuePointer = 0);
+    virtual ~CoreDataStoreVariable();
 
-    CoreDataStoreVariable * getVoi() const;
-    CoreDataStoreVariable * getVariable(long index) const;
-    const QVector<CoreDataStoreVariable *> &getVariables() const;
+    void setUri(const QString &pUri);
+    void setUnits(const QString &pUnits);
+    void setLabel(const QString &pLabel);
 
-    CoreDataStoreVariable * holdPoint(const double *pPoint = 0,
-                                      const bool &pVoi = false);
-    QVector<CoreDataStoreVariable *> holdPoints(const long &pCount,
-                                                const double *pPoints);
+    QString getUri() const;
+    QString getLabel() const;
+    QString getUnits() const;
 
-    void savePoints(const qulonglong &pPos);
+    void savePoint(const qulonglong &pPos);
+    void savePoint(const qulonglong &pPos, const double &pValue);
 
+    double getPoint(const qulonglong &pPos) const;
+    const double *getData() const;
     qulonglong getSize() const;
-    long length() const;
 
 private:
-    const qulonglong mSize;
-    QVector<CoreDataStoreVariable *> mVariables;
-    CoreDataStoreVariable *mVoi;
+    QString mUri;
+    QString mUnits;
+    QString mLabel;
+    const double *mValuePointer;
+    double *mBuffer;
+    qulonglong mSize;
 };
 
 //==============================================================================

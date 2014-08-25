@@ -24,7 +24,6 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-#include "coredatastore.h"
 #include "coresolver.h"
 #include "singlecellviewsimulationworker.h"
 #include "solverinterface.h"
@@ -43,6 +42,13 @@ namespace OpenCOR {
 namespace CellMLSupport {
     class CellmlFileRuntime;
 }   // namespace CellMLSupport
+
+//==============================================================================
+
+namespace CoreDataStore {
+    class CoreDataStore;
+    class CoreDataStoreVariable;
+}   // namespace CoreDataStore
 
 //==============================================================================
 
