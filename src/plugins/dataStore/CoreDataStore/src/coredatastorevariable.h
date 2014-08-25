@@ -45,7 +45,7 @@ class COREDATASTORE_EXPORT CoreDataStoreVariable
 {
 public:
     explicit CoreDataStoreVariable(const qulonglong &pSize,
-                                   const double *pValuePointer = 0);
+                                   const double *pValue = 0);
     virtual ~CoreDataStoreVariable();
 
     void setUri(const QString &pUri);
@@ -56,10 +56,10 @@ public:
     QString getLabel() const;
     QString getUnits() const;
 
-    void savePoint(const qulonglong &pPos);
-    void savePoint(const qulonglong &pPos, const double &pValue);
+    void savePoint(const qulonglong &pPosition);
+    void savePoint(const qulonglong &pPosition, const double &pValue);
 
-    double getPoint(const qulonglong &pPos) const;
+    double getPoint(const qulonglong &pPosition) const;
     const double *getData() const;
     qulonglong getSize() const;
 
@@ -67,10 +67,14 @@ private:
     QString mUri;
     QString mUnits;
     QString mLabel;
-    const double *mValuePointer;
-    double *mBuffer;
+    const double *mValue;
+    double *mData;
     qulonglong mSize;
 };
+
+//==============================================================================
+
+typedef QVector<CoreDataStoreVariable *> CoreDataStoreVariables;
 
 //==============================================================================
 

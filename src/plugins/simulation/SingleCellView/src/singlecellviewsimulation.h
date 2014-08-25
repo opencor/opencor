@@ -24,6 +24,7 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#include "coredatastorevariable.h"
 #include "coresolver.h"
 #include "singlecellviewsimulationworker.h"
 #include "solverinterface.h"
@@ -47,7 +48,6 @@ namespace CellMLSupport {
 
 namespace CoreDataStore {
     class CoreDataStore;
-    class CoreDataStoreVariable;
 }   // namespace CoreDataStore
 
 //==============================================================================
@@ -185,10 +185,10 @@ private:
 
     CoreDataStore::CoreDataStore *mDataset;
     CoreDataStore::CoreDataStoreVariable *mPoints;
-    QVector<CoreDataStore::CoreDataStoreVariable *> mConstants;
-    QVector<CoreDataStore::CoreDataStoreVariable *> mRates;
-    QVector<CoreDataStore::CoreDataStoreVariable *> mStates;
-    QVector<CoreDataStore::CoreDataStoreVariable *> mAlgebraic;
+    CoreDataStore::CoreDataStoreVariables mConstants;
+    CoreDataStore::CoreDataStoreVariables mRates;
+    CoreDataStore::CoreDataStoreVariables mStates;
+    CoreDataStore::CoreDataStoreVariables mAlgebraic;
 
     bool createArrays();
     void deleteArrays();

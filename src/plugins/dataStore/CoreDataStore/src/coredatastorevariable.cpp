@@ -29,56 +29,57 @@ namespace CoreDataStore {
 //==============================================================================
 
 CoreDataStoreVariable::CoreDataStoreVariable(const qulonglong &pSize,
-                           const double *pValuePointer) :
+                                             const double *pValue) :
     mUri(QString()),
     mUnits(QString()),
     mLabel(QString()),
-    mValuePointer(pValuePointer),
+    mValue(pValue),
     mSize(pSize)
 {
-    mBuffer = new double[pSize];
+    mData = new double[pSize];
 }
 
 //==============================================================================
 
 CoreDataStoreVariable::~CoreDataStoreVariable()
 {
-    delete[] mBuffer;
+    delete[] mData;
 }
 
 //==============================================================================
 
-void CoreDataStoreVariable::savePoint(const qulonglong &pPos)
+void CoreDataStoreVariable::savePoint(const qulonglong &pPosition)
 {
-    Q_ASSERT(pPos < mSize);
+    Q_ASSERT(pPosition < mSize);
 
-    if (mValuePointer)
-        mBuffer[pPos] = *mValuePointer;
+    if (mValue)
+        mData[pPosition] = *mValue;
 }
 
 //==============================================================================
 
-void CoreDataStoreVariable::savePoint(const qulonglong &pPos, const double &pValue)
+void CoreDataStoreVariable::savePoint(const qulonglong &pPosition,
+                                      const double &pValue)
 {
-    Q_ASSERT(pPos < mSize);
+    Q_ASSERT(pPosition < mSize);
 
-    mBuffer[pPos] = pValue;
+    mData[pPosition] = pValue;
 }
 
 //==============================================================================
 
-double CoreDataStoreVariable::getPoint(const qulonglong &pPos) const
+double CoreDataStoreVariable::getPoint(const qulonglong &pPosition) const
 {
-    Q_ASSERT(pPos < mSize);
+    Q_ASSERT(pPosition < mSize);
 
-    return mBuffer[pPos];
+    return mData[pPosition];
 }
 
 //==============================================================================
 
 const double *CoreDataStoreVariable::getData() const
 {
-    return mBuffer;
+    return mData;
 }
 
 //==============================================================================

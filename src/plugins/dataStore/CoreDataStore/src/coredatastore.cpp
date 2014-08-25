@@ -20,7 +20,6 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include "coredatastore.h"
-#include "coredatastorevariable.h"
 
 //==============================================================================
 
@@ -31,8 +30,8 @@ namespace CoreDataStore {
 
 CoreDataStore::CoreDataStore(const qulonglong &pSize) :
     mSize(pSize),
-    mVariables(0),
-    mVoi(0)
+    mVoi(0),
+    mVariables(0)
 {
 }
 
@@ -40,30 +39,40 @@ CoreDataStore::CoreDataStore(const qulonglong &pSize) :
 
 CoreDataStore::~CoreDataStore()
 {
+    // Delete some internal objects
+
     delete mVoi;
 
-    for (auto var = mVariables.begin(), varEnd = mVariables.end(); var != varEnd; ++var)
-        delete *var;
+    for (auto variable = mVariables.begin(), variableEnd = mVariables.end();
+         variable != variableEnd; ++variable) {
+        delete *variable;
+    }
 }
 
 //==============================================================================
 
-CoreDataStoreVariable * CoreDataStore::getVoi() const
+qulonglong CoreDataStore::size() const
 {
+    // Return our size
+
+    return mSize;
+}
+
+//==============================================================================
+
+CoreDataStoreVariable * CoreDataStore::voi() const
+{
+    // Return our variable of integration
+
     return mVoi;
 }
 
 //==============================================================================
 
-CoreDataStoreVariable * CoreDataStore::getVariable(long index) const
+CoreDataStoreVariables CoreDataStore::variables() const
 {
-    return mVariables[index];
-}
+    // Return all our variables
 
-//==============================================================================
-
-const QVector<CoreDataStoreVariable *> &CoreDataStore::getVariables() const
-{
     return mVariables;
 }
 
@@ -75,56 +84,44 @@ CoreDataStoreVariable * CoreDataStore::holdPoint(const double *pPoint,
     if (pVoi)
         delete mVoi;
 
-    CoreDataStoreVariable *var = new CoreDataStoreVariable(mSize, pPoint);
+    CoreDataStoreVariable *variable = new CoreDataStoreVariable(mSize, pPoint);
 
     if (pVoi)
-        mVoi = var;
+        mVoi = variable;
     else
-        mVariables.push_back(var);
+        mVariables << variable;
 
-    return var;
+    return variable;
 }
 
 //==============================================================================
 
-QVector<CoreDataStoreVariable *> CoreDataStore::holdPoints(const long &pCount,
-                                            const double *pPoints)
+CoreDataStoreVariables CoreDataStore::holdPoints(const int &pCount,
+                                                 const double *pPoints)
 {
     const double *points = pPoints;
 
-    QVector<CoreDataStoreVariable *> vars(pCount);
+    CoreDataStoreVariables variables(pCount);
 
-    for (long i = 0;  i < pCount;  ++i, ++points) {
+    for (int i = 0;  i < pCount;  ++i, ++points) {
         CoreDataStoreVariable *variable = new CoreDataStoreVariable(mSize, points);
 
-        mVariables.push_back(variable);
+        mVariables << variable;
 
-        vars[i] = variable;
+        variables[i] = variable;
     }
 
-    return vars;
+    return variables;
 }
 
 //==============================================================================
 
-void CoreDataStore::savePoints(const qulonglong &pPos)
+void CoreDataStore::savePoints(const qulonglong &pPosition)
 {
-    for (auto var = mVariables.begin(), varEnd = mVariables.end(); var != varEnd; ++var)
-        (*var)->savePoint(pPos);
-}
-
-//==============================================================================
-
-qulonglong CoreDataStore::getSize() const
-{
-    return mSize;
-}
-
-//==============================================================================
-
-long CoreDataStore::length() const
-{
-    return mVariables.size();
+    for (auto variable = mVariables.begin(), variableEnd = mVariables.end();
+         variable != variableEnd; ++variable) {
+        (*variable)->savePoint(pPosition);
+    }
 }
 
 //==============================================================================

@@ -596,14 +596,13 @@ SingleCellViewSimulationResults::~SingleCellViewSimulationResults()
 
 //==============================================================================
 
-
 static QString make_uri(const QString &uri)
-/*---------------------------------------*/
 {
-  QString u(uri);
-  return u.replace("'", "/prime");
-  }
+    QString u(uri);
+    return u.replace("'", "/prime");
+}
 
+//==============================================================================
 
 bool SingleCellViewSimulationResults::createArrays()
 {

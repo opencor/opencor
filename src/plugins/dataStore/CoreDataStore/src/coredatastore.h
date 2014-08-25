@@ -25,6 +25,7 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include "coredatastoreglobal.h"
+#include "coredatastorevariable.h"
 
 //==============================================================================
 
@@ -41,34 +42,28 @@ namespace CoreDataStore {
 
 //==============================================================================
 
-class CoreDataStoreVariable;
-
-//==============================================================================
-
 class COREDATASTORE_EXPORT CoreDataStore
 {
 public:
     explicit CoreDataStore(const qulonglong &pSize);
     virtual ~CoreDataStore();
 
-    CoreDataStoreVariable * getVoi() const;
-    CoreDataStoreVariable * getVariable(long index) const;
-    const QVector<CoreDataStoreVariable *> &getVariables() const;
+    qulonglong size() const;
+
+    CoreDataStoreVariable * voi() const;
+    CoreDataStoreVariables variables() const;
 
     CoreDataStoreVariable * holdPoint(const double *pPoint = 0,
                                       const bool &pVoi = false);
-    QVector<CoreDataStoreVariable *> holdPoints(const long &pCount,
-                                                const double *pPoints);
+    CoreDataStoreVariables holdPoints(const int &pCount, const double *pPoints);
 
-    void savePoints(const qulonglong &pPos);
-
-    qulonglong getSize() const;
-    long length() const;
+    void savePoints(const qulonglong &pPosition);
 
 private:
     const qulonglong mSize;
-    QVector<CoreDataStoreVariable *> mVariables;
+
     CoreDataStoreVariable *mVoi;
+    CoreDataStoreVariables mVariables;
 };
 
 //==============================================================================
