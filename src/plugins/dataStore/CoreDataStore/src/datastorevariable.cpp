@@ -28,107 +28,132 @@ namespace CoreDataStore {
 
 //==============================================================================
 
-DataStoreVariable::DataStoreVariable(const qulonglong &pSize,
-                                     const double *pValue) :
+DataStoreVariable::DataStoreVariable(const qulonglong &pSize, double *pValue) :
     mUri(QString()),
-    mUnits(QString()),
-    mLabel(QString()),
-    mValue(pValue),
-    mSize(pSize)
+    mName(QString()),
+    mUnit(QString()),
+    mSize(pSize),
+    mValue(pValue)
 {
-    mData = new double[pSize];
+    // Create our array of values
+
+    mValues = new double[pSize];
 }
 
 //==============================================================================
 
 DataStoreVariable::~DataStoreVariable()
 {
-    delete[] mData;
+    // Delete some internal objects
+
+    delete[] mValues;
 }
 
 //==============================================================================
 
-void DataStoreVariable::savePoint(const qulonglong &pPosition)
+QString DataStoreVariable::uri() const
 {
-    Q_ASSERT(pPosition < mSize);
+    // Return our URI
 
-    if (mValue)
-        mData[pPosition] = *mValue;
-}
-
-//==============================================================================
-
-void DataStoreVariable::savePoint(const qulonglong &pPosition,
-                                  const double &pValue)
-{
-    Q_ASSERT(pPosition < mSize);
-
-    mData[pPosition] = pValue;
-}
-
-//==============================================================================
-
-double DataStoreVariable::getPoint(const qulonglong &pPosition) const
-{
-    Q_ASSERT(pPosition < mSize);
-
-    return mData[pPosition];
-}
-
-//==============================================================================
-
-const double *DataStoreVariable::getData() const
-{
-    return mData;
-}
-
-//==============================================================================
-
-qulonglong DataStoreVariable::getSize() const
-{
-    return mSize;
+    return mUri;
 }
 
 //==============================================================================
 
 void DataStoreVariable::setUri(const QString &pUri)
 {
+    // Set our URI
+
     mUri = pUri;
 }
 
 //==============================================================================
 
-void DataStoreVariable::setUnits(const QString &pUnits)
+QString DataStoreVariable::name() const
 {
-    mUnits = pUnits;
+    // Return our name
+
+    return mName;
 }
 
 //==============================================================================
 
-void DataStoreVariable::setLabel(const QString &pLabel)
+void DataStoreVariable::setName(const QString &pName)
 {
-    mLabel = pLabel;
+    // Set our name
+
+    mName = pName;
 }
 
 //==============================================================================
 
-QString DataStoreVariable::getUri() const
+QString DataStoreVariable::unit() const
 {
-    return mUri;
+    // Return our unit
+
+    return mUnit;
 }
 
 //==============================================================================
 
-QString DataStoreVariable::getUnits() const
+void DataStoreVariable::setUnit(const QString &pUnit)
 {
-    return mUnits;
+    // Set our unit
+
+    mUnit = pUnit;
 }
 
 //==============================================================================
 
-QString DataStoreVariable::getLabel() const
+qulonglong DataStoreVariable::size() const
 {
-    return mLabel;
+    // Return our size
+
+    return mSize;
+}
+
+//==============================================================================
+
+void DataStoreVariable::setValue(const qulonglong &pPosition)
+{
+    // Set the value of the variable at the given position
+
+    Q_ASSERT(pPosition < mSize);
+    Q_ASSERT(mValue);
+
+    mValues[pPosition] = *mValue;
+}
+
+//==============================================================================
+
+void DataStoreVariable::setValue(const qulonglong &pPosition,
+                                 const double &pValue)
+{
+    // Set the value of the variable at the given position using the given value
+
+    Q_ASSERT(pPosition < mSize);
+
+    mValues[pPosition] = pValue;
+}
+
+//==============================================================================
+
+double DataStoreVariable::value(const qulonglong &pPosition) const
+{
+    // Return our value at the given position
+
+    Q_ASSERT(pPosition < mSize);
+
+    return mValues[pPosition];
+}
+
+//==============================================================================
+
+const double * DataStoreVariable::values() const
+{
+    // Return our values
+
+    return mValues;
 }
 
 //==============================================================================

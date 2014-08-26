@@ -628,11 +628,11 @@ bool SingleCellViewSimulationResults::createArrays()
 
     try {
       mDataset = new CoreDataStore::CoreDataStore(simulationSize);
-      mPoints = mDataset->holdPoint(0, true);
-      mConstants = mDataset->holdPoints(mRuntime->constantsCount(), mSimulation->data()->constants());
-      mRates = mDataset->holdPoints(mRuntime->ratesCount(), mSimulation->data()->rates());
-      mStates = mDataset->holdPoints(mRuntime->statesCount(), mSimulation->data()->states());
-      mAlgebraic = mDataset->holdPoints(mRuntime->algebraicCount(), mSimulation->data()->algebraic());
+      mPoints = mDataset->addVoi();
+      mConstants = mDataset->addVariables(mRuntime->constantsCount(), mSimulation->data()->constants());
+      mRates = mDataset->addVariables(mRuntime->ratesCount(), mSimulation->data()->rates());
+      mStates = mDataset->addVariables(mRuntime->statesCount(), mSimulation->data()->states());
+      mAlgebraic = mDataset->addVariables(mRuntime->algebraicCount(), mSimulation->data()->algebraic());
       }
     catch (...) {
       delete mDataset;
@@ -642,8 +642,8 @@ bool SingleCellViewSimulationResults::createArrays()
 
     mPoints->setUri(make_uri(mRuntime->variableOfIntegration()->componentHierarchy().join("/")
                              + "/" + mRuntime->variableOfIntegration()->name()));
-    mPoints->setLabel(mRuntime->variableOfIntegration()->name());
-    mPoints->setUnits(mRuntime->variableOfIntegration()->unit());
+    mPoints->setName(mRuntime->variableOfIntegration()->name());
+    mPoints->setUnit(mRuntime->variableOfIntegration()->unit());
 
     for (int i = 0, iMax = mRuntime->parameters().count(); i < iMax; ++i) {
       CellMLSupport::CellmlFileRuntimeParameter *parameter = mRuntime->parameters()[i];
@@ -668,8 +668,8 @@ bool SingleCellViewSimulationResults::createArrays()
       if (var) {
         var->setUri(make_uri(parameter->componentHierarchy().join("/")
                              + "/" + parameter->formattedName()));
-        var->setLabel(parameter->formattedName());
-        var->setUnits(parameter->formattedUnit(mRuntime->variableOfIntegration()->unit()));
+        var->setName(parameter->formattedName());
+        var->setUnit(parameter->formattedUnit(mRuntime->variableOfIntegration()->unit()));
         }
       }
 
@@ -712,8 +712,8 @@ void SingleCellViewSimulationResults::addPoint(const double &pPoint)
     if (!mRuntime)
         return;
 
-    mPoints->savePoint(mSize, pPoint);
-    mDataset->savePoints(mSize);
+    mPoints->setValue(mSize, pPoint);
+    mDataset->setValues(mSize);
     ++mSize;
 }
 
@@ -731,7 +731,7 @@ qulonglong SingleCellViewSimulationResults::size() const
 const double *SingleCellViewSimulationResults::points()
 {
     // Return our points
-    return mPoints ? mPoints->getData() : 0;
+    return mPoints ? mPoints->values() : 0;
 }
 
 //==============================================================================
@@ -739,7 +739,7 @@ const double *SingleCellViewSimulationResults::points()
 const double *SingleCellViewSimulationResults::constants(size_t pIndex)
 {
     // Return constants data at index
-    return mConstants.empty() ? 0 : mConstants[pIndex]->getData();
+    return mConstants.empty() ? 0 : mConstants[pIndex]->values();
 }
 
 //==============================================================================
@@ -747,7 +747,7 @@ const double *SingleCellViewSimulationResults::constants(size_t pIndex)
 const double *SingleCellViewSimulationResults::rates(size_t pIndex)
 {
     // Return rates data at index
-    return mRates.empty() ? 0 : mRates[pIndex]->getData();
+    return mRates.empty() ? 0 : mRates[pIndex]->values();
 }
 
 //==============================================================================
@@ -755,7 +755,7 @@ const double *SingleCellViewSimulationResults::rates(size_t pIndex)
 const double *SingleCellViewSimulationResults::states(size_t pIndex)
 {
     // Return states data at index
-    return mStates.empty() ? 0 : mStates[pIndex]->getData();
+    return mStates.empty() ? 0 : mStates[pIndex]->values();
 }
 
 //==============================================================================
@@ -763,7 +763,7 @@ const double *SingleCellViewSimulationResults::states(size_t pIndex)
 const double *SingleCellViewSimulationResults::algebraic(size_t pIndex)
 {
     // Return algebraic data at index
-    return mAlgebraic.empty() ? 0 : mAlgebraic[pIndex]->getData();
+    return mAlgebraic.empty() ? 0 : mAlgebraic[pIndex]->values();
 }
 
 //==============================================================================

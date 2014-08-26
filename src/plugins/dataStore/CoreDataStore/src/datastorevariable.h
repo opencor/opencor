@@ -44,32 +44,35 @@ namespace CoreDataStore {
 class COREDATASTORE_EXPORT DataStoreVariable
 {
 public:
-    explicit DataStoreVariable(const qulonglong &pSize,
-                               const double *pValue = 0);
+    explicit DataStoreVariable(const qulonglong &pSize, double *pValue = 0);
     virtual ~DataStoreVariable();
 
+    QString uri() const;
     void setUri(const QString &pUri);
-    void setUnits(const QString &pUnits);
-    void setLabel(const QString &pLabel);
 
-    QString getUri() const;
-    QString getLabel() const;
-    QString getUnits() const;
+    QString name() const;
+    void setName(const QString &pName);
 
-    void savePoint(const qulonglong &pPosition);
-    void savePoint(const qulonglong &pPosition, const double &pValue);
+    QString unit() const;
+    void setUnit(const QString &pUnit);
 
-    double getPoint(const qulonglong &pPosition) const;
-    const double *getData() const;
-    qulonglong getSize() const;
+    qulonglong size() const;
+
+    void setValue(const qulonglong &pPosition);
+    void setValue(const qulonglong &pPosition, const double &pValue);
+
+    double value(const qulonglong &pPosition) const;
+    const double * values() const;
 
 private:
     QString mUri;
-    QString mUnits;
-    QString mLabel;
-    const double *mValue;
-    double *mData;
+    QString mName;
+    QString mUnit;
+
     qulonglong mSize;
+
+    double *mValue;
+    double *mValues;
 };
 
 //==============================================================================

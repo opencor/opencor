@@ -51,13 +51,13 @@ public:
     qulonglong size() const;
 
     DataStoreVariable * voi() const;
+    DataStoreVariable * addVoi();
+
     DataStoreVariables variables() const;
+    DataStoreVariable * addVariable(double *pPoint = 0);
+    DataStoreVariables addVariables(const int &pCount, double *pData);
 
-    DataStoreVariable * holdPoint(const double *pPoint = 0,
-                                  const bool &pVoi = false);
-    DataStoreVariables holdPoints(const int &pCount, const double *pPoints);
-
-    void savePoints(const qulonglong &pPosition);
+    void setValues(const qulonglong &pPosition);
 
 private:
     const qulonglong mSize;

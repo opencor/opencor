@@ -69,6 +69,19 @@ DataStoreVariable * CoreDataStore::voi() const
 
 //==============================================================================
 
+DataStoreVariable * CoreDataStore::addVoi()
+{
+    // Add a (new) variable of integration to our data store
+
+    delete mVoi;
+
+    mVoi = new DataStoreVariable(mSize);
+
+    return mVoi;
+}
+
+//==============================================================================
+
 DataStoreVariables CoreDataStore::variables() const
 {
     // Return all our variables
@@ -78,37 +91,29 @@ DataStoreVariables CoreDataStore::variables() const
 
 //==============================================================================
 
-DataStoreVariable * CoreDataStore::holdPoint(const double *pPoint,
-                                             const bool &pVoi)
+DataStoreVariable * CoreDataStore::addVariable(double *pPoint)
 {
-    if (pVoi)
-        delete mVoi;
+    // Add a variable to our data store
 
     DataStoreVariable *variable = new DataStoreVariable(mSize, pPoint);
 
-    if (pVoi)
-        mVoi = variable;
-    else
-        mVariables << variable;
+    mVariables << variable;
 
     return variable;
 }
 
 //==============================================================================
 
-DataStoreVariables CoreDataStore::holdPoints(const int &pCount,
-                                             const double *pPoints)
+DataStoreVariables CoreDataStore::addVariables(const int &pCount, double *pData)
 {
-    const double *points = pPoints;
+    // Add some variables to our data store
 
     DataStoreVariables variables(pCount);
 
-    for (int i = 0;  i < pCount;  ++i, ++points) {
-        DataStoreVariable *variable = new DataStoreVariable(mSize, points);
+    for (int i = 0;  i < pCount;  ++i, ++pData) {
+        variables[i] = new DataStoreVariable(mSize, pData);
 
-        mVariables << variable;
-
-        variables[i] = variable;
+        mVariables << variables[i];
     }
 
     return variables;
@@ -116,11 +121,13 @@ DataStoreVariables CoreDataStore::holdPoints(const int &pCount,
 
 //==============================================================================
 
-void CoreDataStore::savePoints(const qulonglong &pPosition)
+void CoreDataStore::setValues(const qulonglong &pPosition)
 {
+    // Set the value at the given position of all our variables
+
     for (auto variable = mVariables.begin(), variableEnd = mVariables.end();
          variable != variableEnd; ++variable) {
-        (*variable)->savePoint(pPosition);
+        (*variable)->setValue(pPosition);
     }
 }
 
