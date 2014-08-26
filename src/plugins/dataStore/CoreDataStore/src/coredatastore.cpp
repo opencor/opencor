@@ -91,11 +91,11 @@ DataStoreVariables CoreDataStore::variables() const
 
 //==============================================================================
 
-DataStoreVariable * CoreDataStore::addVariable(double *pPoint)
+DataStoreVariable * CoreDataStore::addVariable(double *pValue)
 {
     // Add a variable to our data store
 
-    DataStoreVariable *variable = new DataStoreVariable(mSize, pPoint);
+    DataStoreVariable *variable = new DataStoreVariable(mSize, pValue);
 
     mVariables << variable;
 
@@ -104,14 +104,15 @@ DataStoreVariable * CoreDataStore::addVariable(double *pPoint)
 
 //==============================================================================
 
-DataStoreVariables CoreDataStore::addVariables(const int &pCount, double *pData)
+DataStoreVariables CoreDataStore::addVariables(const int &pCount,
+                                               double *pValues)
 {
     // Add some variables to our data store
 
     DataStoreVariables variables(pCount);
 
-    for (int i = 0;  i < pCount;  ++i, ++pData) {
-        variables[i] = new DataStoreVariable(mSize, pData);
+    for (int i = 0; i < pCount; ++i, ++pValues) {
+        variables[i] = new DataStoreVariable(mSize, pValues);
 
         mVariables << variables[i];
     }

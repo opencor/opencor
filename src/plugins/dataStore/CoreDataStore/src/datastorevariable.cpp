@@ -149,7 +149,7 @@ double DataStoreVariable::value(const qulonglong &pPosition) const
 
 //==============================================================================
 
-const double * DataStoreVariable::values() const
+double * DataStoreVariable::values() const
 {
     // Return our values
 

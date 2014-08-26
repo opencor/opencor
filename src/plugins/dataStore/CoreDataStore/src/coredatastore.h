@@ -54,8 +54,8 @@ public:
     DataStoreVariable * addVoi();
 
     DataStoreVariables variables() const;
-    DataStoreVariable * addVariable(double *pPoint = 0);
-    DataStoreVariables addVariables(const int &pCount, double *pData);
+    DataStoreVariable * addVariable(double *pValue = 0);
+    DataStoreVariables addVariables(const int &pCount, double *pValues);
 
     void setValues(const qulonglong &pPosition);
 

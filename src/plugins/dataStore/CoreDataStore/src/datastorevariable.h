@@ -62,7 +62,7 @@ public:
     void setValue(const qulonglong &pPosition, const double &pValue);
 
     double value(const qulonglong &pPosition) const;
-    const double * values() const;
+    double * values() const;
 
 private:
     QString mUri;

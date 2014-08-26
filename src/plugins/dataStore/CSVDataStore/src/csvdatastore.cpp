@@ -35,7 +35,7 @@ namespace CSVDataStore {
 
 //==============================================================================
 
-bool exportDataStore(const CoreDataStore::CoreDataStore *pDataStore,
+bool exportDataStore(CoreDataStore::CoreDataStore *pDataStore,
                      const QString &pFileName)
 {
     // Export the given data store to a CSV file with the given file name
@@ -75,7 +75,7 @@ bool exportDataStore(const CoreDataStore::CoreDataStore *pDataStore,
 
     // Data itself
 
-   for (qulonglong i = 0;  i < pDataStore->size(); ++i) {
+   for (qulonglong i = 0; i < pDataStore->size(); ++i) {
        out << voi->value(i);
 
        for (auto variable = variableBegin; variable != variableEnd; ++variable)
