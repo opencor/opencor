@@ -521,13 +521,6 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
         SET(PLUGIN_BUILD_DIR ${PLUGIN_BUILD_DIR}/${CMAKE_CFG_INTDIR})
     ENDIF()
 
-    # Keep track of the location of our plugins, so that we can properly clean
-    # up our bundle on OS X
-
-    LIST(APPEND PLUGIN_BUILD_DIRS ${PLUGIN_BUILD_DIR})
-
-    SET(PLUGIN_BUILD_DIRS "${PLUGIN_BUILD_DIRS}" PARENT_SCOPE)
-
     # Copy the plugin to our plugins directory
     # Note: this is done so that we can, on Windows and Linux, test the use of
     #       plugins in OpenCOR without first having to package OpenCOR...
