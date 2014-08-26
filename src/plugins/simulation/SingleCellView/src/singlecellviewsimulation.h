@@ -32,7 +32,6 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include <QObject>
-#include <QVector>
 
 //==============================================================================
 
@@ -170,20 +169,24 @@ public:
 
     qulonglong size() const;
 
-    const double *points();
-    const double *constants(size_t pIndex);
-    const double *rates(size_t pIndex);
-    const double *states(size_t pIndex);
-    const double *algebraic(size_t pIndex);
+    double * points() const;
+
+    double * constants(const int &pIndex) const;
+    double * rates(const int &pIndex) const;
+    double * states(const int &pIndex) const;
+    double * algebraic(const int &pIndex) const;
 
     bool exportToCsv(const QString &pFileName) const;
 
 private:
     CellMLSupport::CellmlFileRuntime *mRuntime;
+
     SingleCellViewSimulation *mSimulation;
+
     qulonglong mSize;
 
-    CoreDataStore::CoreDataStore *mDataset;
+    CoreDataStore::CoreDataStore *mDataStore;
+
     CoreDataStore::DataStoreVariable *mPoints;
     CoreDataStore::DataStoreVariables mConstants;
     CoreDataStore::DataStoreVariables mRates;

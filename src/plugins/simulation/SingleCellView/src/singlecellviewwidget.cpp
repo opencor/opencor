@@ -1791,8 +1791,8 @@ bool SingleCellViewWidget::updatePlot(SingleCellViewGraphPanelPlotWidget *pPlot,
 
 //==============================================================================
 
-const double * SingleCellViewWidget::dataPoints(SingleCellViewSimulation *pSimulation,
-                                                CellMLSupport::CellmlFileRuntimeParameter *pParameter) const
+double * SingleCellViewWidget::dataPoints(SingleCellViewSimulation *pSimulation,
+                                          CellMLSupport::CellmlFileRuntimeParameter *pParameter) const
 {
     // Return the array of data points associated with the given simulation and
     // parameter
@@ -1812,6 +1812,7 @@ const double * SingleCellViewWidget::dataPoints(SingleCellViewSimulation *pSimul
         return pSimulation->results()->algebraic(pParameter->index());
     default:
         // CellMLSupport::CellmlFileRuntimeParameter::Voi
+
         return pSimulation->results()->points();
     }
 }
