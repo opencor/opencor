@@ -630,7 +630,7 @@ bool sortParameters(CellmlFileRuntimeParameter *pParameter1,
 {
     // Determine which of the two parameters should be first
     // Note: the two comparisons are case insensitive, so that it's easier for
-    //       people to search a parameter...
+    //       people to find a parameter...
 
     QString componentHierarchy1 = pParameter1->formattedComponentHierarchy();
     QString componentHierarchy2 = pParameter2->formattedComponentHierarchy();
