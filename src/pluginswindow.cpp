@@ -138,7 +138,7 @@ PluginsWindow::PluginsWindow(PluginManager *pPluginManager,
 
     mappedCategories.insert(tr("Analysis"), PluginInfo::Analysis);
     mappedCategories.insert(tr("API"), PluginInfo::Api);
-    mappedCategories.insert(tr("Data store"), PluginInfo::DataStore);
+    mappedCategories.insert(tr("Data Store"), PluginInfo::DataStore);
     mappedCategories.insert(tr("Editing"), PluginInfo::Editing);
     mappedCategories.insert(tr("Miscellaneous"), PluginInfo::Miscellaneous);
     mappedCategories.insert(tr("Organisation"), PluginInfo::Organisation);
@@ -476,6 +476,8 @@ void PluginsWindow::updateInformation(const QModelIndex &pNewIndex,
             mGui->fieldTwoValue->setText(tr("Plugins to analyse files."));
         else if (!itemText.compare(tr("API")))
             mGui->fieldTwoValue->setText(tr("Plugins to access various APIs."));
+        else if (!itemText.compare(tr("Data Store")))
+            mGui->fieldTwoValue->setText(tr("Plugins to store and manipulate simulation data."));
         else if (!itemText.compare(tr("Editing")))
             mGui->fieldTwoValue->setText(tr("Plugins to edit files."));
         else if (!itemText.compare(tr("Miscellaneous")))
@@ -494,6 +496,8 @@ void PluginsWindow::updateInformation(const QModelIndex &pNewIndex,
             mGui->fieldTwoValue->setText(tr("Plugins to access various third-party libraries."));
         else if (!itemText.compare(tr("Widget")))
             mGui->fieldTwoValue->setText(tr("Plugins to access various <em>ad hoc</em> widgets."));
+        else
+            mGui->fieldTwoValue->setText("???");
     }
 
     // Show/hide the different fields

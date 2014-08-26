@@ -331,8 +331,12 @@
         <translation>l&apos;extension supporte l&apos;interface CLI, mais elle ne prétend pas être capable de CLI.</translation>
     </message>
     <message>
-        <source>Data store</source>
-        <translation>Magasin de données</translation>
+        <source>Data Store</source>
+        <translation>Magasin de Données</translation>
+    </message>
+    <message>
+        <source>Plugins to store and manipulate simulation data.</source>
+        <translation>Extensions pour stocker et manipuler les données d&apos;une simulation.</translation>
     </message>
 </context>
 <context>
