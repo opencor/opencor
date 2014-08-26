@@ -23,6 +23,10 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#include <Qt>
+
+//==============================================================================
+
 namespace OpenCOR {
 namespace CoreDataStore {
 
@@ -82,9 +86,22 @@ DataStoreVariable * CoreDataStore::addVoi()
 
 //==============================================================================
 
-DataStoreVariables CoreDataStore::variables() const
+bool sortVariables(DataStoreVariable *pVariable1, DataStoreVariable *pVariable2)
 {
-    // Return all our variables
+    // Determine which of the two variables should be first based on their URI
+    // Note: the comparison is case insensitive, so that it's easier for people
+    //       to find a variable...
+
+    return pVariable1->uri().compare(pVariable2->uri(), Qt::CaseInsensitive) < 0;
+}
+
+//==============================================================================
+
+DataStoreVariables CoreDataStore::variables()
+{
+    // Return all our variables, after making sure that they are sorted
+
+    std::sort(mVariables.begin(), mVariables.end(), sortVariables);
 
     return mVariables;
 }

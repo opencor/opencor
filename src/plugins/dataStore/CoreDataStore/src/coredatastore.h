@@ -53,7 +53,7 @@ public:
     DataStoreVariable * voi() const;
     DataStoreVariable * addVoi();
 
-    DataStoreVariables variables() const;
+    DataStoreVariables variables();
     DataStoreVariable * addVariable(double *pValue = 0);
     DataStoreVariables addVariables(const int &pCount, double *pValues);
 
