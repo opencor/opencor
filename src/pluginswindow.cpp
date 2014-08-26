@@ -96,6 +96,7 @@ PluginsWindow::PluginsWindow(PluginManager *pPluginManager,
     mGui(new Ui::PluginsWindow),
     mMainWindow(pMainWindow),
     mPluginManager(pPluginManager),
+    mMappedCategories(QMap<QString, PluginInfo::Category>()),
     mSelectablePluginItems(QList<QStandardItem *>()),
     mUnselectablePluginItems(QList<QStandardItem *>())
 {
@@ -134,26 +135,24 @@ PluginsWindow::PluginsWindow(PluginManager *pPluginManager,
     // Populate the data model with our different categories of plugins, making
     // sure that they are in alphabetical order, no matter the locale
 
-    QMap<QString, PluginInfo::Category> mappedCategories = QMap<QString, PluginInfo::Category>();
-
-    mappedCategories.insert(tr("Analysis"), PluginInfo::Analysis);
-    mappedCategories.insert(tr("API"), PluginInfo::Api);
-    mappedCategories.insert(tr("Data Store"), PluginInfo::DataStore);
-    mappedCategories.insert(tr("Editing"), PluginInfo::Editing);
-    mappedCategories.insert(tr("Miscellaneous"), PluginInfo::Miscellaneous);
-    mappedCategories.insert(tr("Organisation"), PluginInfo::Organisation);
+    mMappedCategories.insert(tr("Analysis"), PluginInfo::Analysis);
+    mMappedCategories.insert(tr("API"), PluginInfo::Api);
+    mMappedCategories.insert(tr("Data Store"), PluginInfo::DataStore);
+    mMappedCategories.insert(tr("Editing"), PluginInfo::Editing);
+    mMappedCategories.insert(tr("Miscellaneous"), PluginInfo::Miscellaneous);
+    mMappedCategories.insert(tr("Organisation"), PluginInfo::Organisation);
 #ifdef ENABLE_SAMPLES
-    mappedCategories.insert(tr("Sample"), PluginInfo::Sample);
+    mMappedCategories.insert(tr("Sample"), PluginInfo::Sample);
 #endif
-    mappedCategories.insert(tr("Simulation"), PluginInfo::Simulation);
-    mappedCategories.insert(tr("Solver"), PluginInfo::Solver);
-    mappedCategories.insert(tr("Support"), PluginInfo::Support);
-    mappedCategories.insert(tr("Third-party"), PluginInfo::ThirdParty);
-    mappedCategories.insert(tr("Widget"), PluginInfo::Widget);
+    mMappedCategories.insert(tr("Simulation"), PluginInfo::Simulation);
+    mMappedCategories.insert(tr("Solver"), PluginInfo::Solver);
+    mMappedCategories.insert(tr("Support"), PluginInfo::Support);
+    mMappedCategories.insert(tr("Third-party"), PluginInfo::ThirdParty);
+    mMappedCategories.insert(tr("Widget"), PluginInfo::Widget);
 
     QMap<QString, QString> diacriticCategories = QMap<QString, QString>();
 
-    foreach (const QString &diacriticCategory, mappedCategories.keys())
+    foreach (const QString &diacriticCategory, mMappedCategories.keys())
         diacriticCategories.insert(Core::nonDiacriticString(diacriticCategory), diacriticCategory);
 
     QStringList nonDiacriticCategories = diacriticCategories.keys();
@@ -163,7 +162,7 @@ PluginsWindow::PluginsWindow(PluginManager *pPluginManager,
     foreach (const QString &nonDiacriticCategory, nonDiacriticCategories) {
         QString diacriticCategory = diacriticCategories.value(nonDiacriticCategory);
 
-        newPluginCategory(mappedCategories.value(diacriticCategory), diacriticCategory);
+        newPluginCategory(mMappedCategories.value(diacriticCategory), diacriticCategory);
     }
 
     // Sort our different plugins by their name
@@ -472,32 +471,60 @@ void PluginsWindow::updateInformation(const QModelIndex &pNewIndex,
 
         mGui->fieldTwoLabel->setText(tr("Description:"));
 
-        if (!itemText.compare(tr("Analysis")))
+        switch (mMappedCategories.value(itemText)) {
+        case PluginInfo::Analysis:
             mGui->fieldTwoValue->setText(tr("Plugins to analyse files."));
-        else if (!itemText.compare(tr("API")))
+
+            break;
+        case PluginInfo::Api:
             mGui->fieldTwoValue->setText(tr("Plugins to access various APIs."));
-        else if (!itemText.compare(tr("Data Store")))
+
+            break;
+        case PluginInfo::DataStore:
             mGui->fieldTwoValue->setText(tr("Plugins to store and manipulate simulation data."));
-        else if (!itemText.compare(tr("Editing")))
+
+            break;
+        case PluginInfo::Editing:
             mGui->fieldTwoValue->setText(tr("Plugins to edit files."));
-        else if (!itemText.compare(tr("Miscellaneous")))
+
+            break;
+        case PluginInfo::Miscellaneous:
             mGui->fieldTwoValue->setText(tr("Plugins that do not fit in any other category."));
-        else if (!itemText.compare(tr("Organisation")))
+
+            break;
+        case PluginInfo::Organisation:
             mGui->fieldTwoValue->setText(tr("Plugins to organise files."));
-        else if (!itemText.compare(tr("Sample")))
+#ifdef ENABLE_SAMPLES
+        case PluginInfo::Sample:
             mGui->fieldTwoValue->setText(tr("Plugins that illustrate various plugin-related aspects."));
-        else if (!itemText.compare(tr("Simulation")))
+
+            break;
+#endif
+        case PluginInfo::Simulation:
             mGui->fieldTwoValue->setText(tr("Plugins to simulate files."));
-        else if (!itemText.compare(tr("Solver")))
+
+            break;
+        case PluginInfo::Solver:
             mGui->fieldTwoValue->setText(tr("Plugins to access various solvers."));
-        else if (!itemText.compare(tr("Support")))
+
+            break;
+        case PluginInfo::Support:
             mGui->fieldTwoValue->setText(tr("Plugins to support various third-party libraries and APIs."));
-        else if (!itemText.compare(tr("Third-party")))
+
+            break;
+        case PluginInfo::ThirdParty:
             mGui->fieldTwoValue->setText(tr("Plugins to access various third-party libraries."));
-        else if (!itemText.compare(tr("Widget")))
+
+            break;
+        case PluginInfo::Widget:
             mGui->fieldTwoValue->setText(tr("Plugins to access various <em>ad hoc</em> widgets."));
-        else
+
+            break;
+        default:
+            // Not a category we can recognise, so...
+
             mGui->fieldTwoValue->setText("???");
+        }
     }
 
     // Show/hide the different fields

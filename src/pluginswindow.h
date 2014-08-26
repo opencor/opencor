@@ -86,6 +86,8 @@ private:
     QStandardItemModel *mModel;
     PluginItemDelegate *mPluginItemDelegate;
 
+    QMap<QString, PluginInfo::Category> mMappedCategories;
+
     QList<QStandardItem *> mSelectablePluginItems;
     QList<QStandardItem *> mUnselectablePluginItems;
 
