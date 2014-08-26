@@ -590,7 +590,7 @@ SingleCellViewSimulationResults::~SingleCellViewSimulationResults()
 {
     // Delete some internal objects
 
-    deleteArrays();
+    deleteDataStore();
 }
 
 //==============================================================================
@@ -607,16 +607,16 @@ QString SingleCellViewSimulationResults::uri(const QStringList &pComponentHierar
 
 //==============================================================================
 
-bool SingleCellViewSimulationResults::createArrays()
+bool SingleCellViewSimulationResults::createDataStore()
 {
     // Note: the boolean value we return is true if we have had no problem
-    //       allocating memory, false otherwise. This is the reason, for
-    //       example, we return true when there is either no runtime or the
+    //       creating our data store, false otherwise. This is the reason, for
+    //       example, we return true when there is either no runtime or if the
     //       simulation size is zero...
 
-    // Clean things up
+    // Delete the previous data store, if any
 
-    deleteArrays();
+    deleteDataStore();
 
     // Make sure that we have a runtime
 
@@ -630,19 +630,27 @@ bool SingleCellViewSimulationResults::createArrays()
     if (!simulationSize)
         return true;
 
+    // Create our data store and populate it with a variable of integration, as
+    // well as with constant, rate, state and algebraic variables
+
     try {
-      mDataStore = new CoreDataStore::CoreDataStore(simulationSize);
-      mPoints = mDataStore->addVoi();
-      mConstants = mDataStore->addVariables(mRuntime->constantsCount(), mSimulation->data()->constants());
-      mRates = mDataStore->addVariables(mRuntime->ratesCount(), mSimulation->data()->rates());
-      mStates = mDataStore->addVariables(mRuntime->statesCount(), mSimulation->data()->states());
-      mAlgebraic = mDataStore->addVariables(mRuntime->algebraicCount(), mSimulation->data()->algebraic());
-      }
-    catch (...) {
-      delete mDataStore;
-      mDataStore = 0;
-      return false;
-      }
+        mDataStore = new CoreDataStore::CoreDataStore(simulationSize);
+
+        mPoints = mDataStore->addVoi();
+        mConstants = mDataStore->addVariables(mRuntime->constantsCount(), mSimulation->data()->constants());
+        mRates = mDataStore->addVariables(mRuntime->ratesCount(), mSimulation->data()->rates());
+        mStates = mDataStore->addVariables(mRuntime->statesCount(), mSimulation->data()->states());
+        mAlgebraic = mDataStore->addVariables(mRuntime->algebraicCount(), mSimulation->data()->algebraic());
+    } catch (...) {
+        // Something went wrong, so...
+
+        deleteDataStore();
+
+        return false;
+    }
+
+    // Customise our variable of integration, as well as our constant, rate,
+    // state and algebraic variables
 
     mPoints->setUri(uri(mRuntime->variableOfIntegration()->componentHierarchy(),
                         mRuntime->variableOfIntegration()->name()));
@@ -650,39 +658,49 @@ bool SingleCellViewSimulationResults::createArrays()
     mPoints->setUnit(mRuntime->variableOfIntegration()->unit());
 
     for (int i = 0, iMax = mRuntime->parameters().count(); i < iMax; ++i) {
-      CellMLSupport::CellmlFileRuntimeParameter *parameter = mRuntime->parameters()[i];
-      CoreDataStore::DataStoreVariable *var = 0;
-      switch (parameter->type()) {
-       case CellMLSupport::CellmlFileRuntimeParameter::Constant:
-       case CellMLSupport::CellmlFileRuntimeParameter::ComputedConstant:
-        var = mConstants[parameter->index()];
-        break;
-       case CellMLSupport::CellmlFileRuntimeParameter::Rate:
-        var = mRates[parameter->index()];
-        break;
-       case CellMLSupport::CellmlFileRuntimeParameter::State:
-        var = mStates[parameter->index()];
-        break;
-       case CellMLSupport::CellmlFileRuntimeParameter::Algebraic:
-        var = mAlgebraic[parameter->index()];
-        break;
-       default:
-        break;
+        CellMLSupport::CellmlFileRuntimeParameter *parameter = mRuntime->parameters()[i];
+        CoreDataStore::DataStoreVariable *variable = 0;
+
+        switch (parameter->type()) {
+        case CellMLSupport::CellmlFileRuntimeParameter::Constant:
+        case CellMLSupport::CellmlFileRuntimeParameter::ComputedConstant:
+            variable = mConstants[parameter->index()];
+
+            break;
+        case CellMLSupport::CellmlFileRuntimeParameter::Rate:
+            variable = mRates[parameter->index()];
+
+            break;
+        case CellMLSupport::CellmlFileRuntimeParameter::State:
+            variable = mStates[parameter->index()];
+
+            break;
+        case CellMLSupport::CellmlFileRuntimeParameter::Algebraic:
+            variable = mAlgebraic[parameter->index()];
+
+            break;
+        default:
+            // Not a type in which we are interested, so...
+
+            ;
         }
-      if (var) {
-        var->setUri(uri(parameter->componentHierarchy(),
-                        parameter->formattedName()));
-        var->setName(parameter->formattedName());
-        var->setUnit(parameter->formattedUnit(mRuntime->variableOfIntegration()->unit()));
+
+        if (variable) {
+            variable->setUri(uri(parameter->componentHierarchy(),
+                                 parameter->formattedName()));
+            variable->setName(parameter->formattedName());
+            variable->setUnit(parameter->formattedUnit(mRuntime->variableOfIntegration()->unit()));
         }
-      }
+    }
+
+    // We could create our data store, so...
 
     return true;
-    }
+}
 
 //==============================================================================
 
-void SingleCellViewSimulationResults::deleteArrays()
+void SingleCellViewSimulationResults::deleteDataStore()
 {
     // Delete our data store
 
@@ -693,18 +711,18 @@ void SingleCellViewSimulationResults::deleteArrays()
 
 //==============================================================================
 
-bool SingleCellViewSimulationResults::reset(const bool &pCreateArrays)
+bool SingleCellViewSimulationResults::reset(const bool &pCreateDataStore)
 {
     // Reset our size
 
     mSize = 0;
 
-    // Reset our arrays
+    // Reset our data store
 
-    if (pCreateArrays) {
-        return createArrays();
+    if (pCreateDataStore) {
+        return createDataStore();
     } else {
-        deleteArrays();
+        deleteDataStore();
 
         return true;
     }

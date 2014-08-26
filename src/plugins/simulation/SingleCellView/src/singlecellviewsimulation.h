@@ -163,7 +163,7 @@ public:
                                              SingleCellViewSimulation *pSimulation);
     ~SingleCellViewSimulationResults();
 
-    bool reset(const bool &pCreateArrays = true);
+    bool reset(const bool &pCreateDataStore = true);
 
     void addPoint(const double &pPoint);
 
@@ -193,8 +193,8 @@ private:
     CoreDataStore::DataStoreVariables mStates;
     CoreDataStore::DataStoreVariables mAlgebraic;
 
-    bool createArrays();
-    void deleteArrays();
+    bool createDataStore();
+    void deleteDataStore();
 
     QString uri(const QStringList &pComponentHierarchy, const QString &pName);
 };
