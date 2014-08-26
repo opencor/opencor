@@ -20,8 +20,8 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include "coredatastore.h"
-#include "coredatastorevariable.h"
 #include "csvdatastore.h"
+#include "datastorevariable.h"
 
 //==============================================================================
 
@@ -58,8 +58,8 @@ bool exportDataStore(const CoreDataStore::CoreDataStore *pDataStore,
 
     static const QString Header = "%1 (%2)";
 
-    CoreDataStore::CoreDataStoreVariable *voi = pDataStore->voi();
-    CoreDataStore::CoreDataStoreVariables variables = pDataStore->variables();
+    CoreDataStore::DataStoreVariable *voi = pDataStore->voi();
+    CoreDataStore::DataStoreVariables variables = pDataStore->variables();
 
     out << Header.arg(voi->getUri().replace("/prime", "'").replace("/", " | "),
                       voi->getUnits());

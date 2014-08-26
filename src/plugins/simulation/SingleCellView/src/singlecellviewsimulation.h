@@ -24,8 +24,8 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-#include "coredatastorevariable.h"
 #include "coresolver.h"
+#include "datastorevariable.h"
 #include "singlecellviewsimulationworker.h"
 #include "solverinterface.h"
 
@@ -184,11 +184,11 @@ private:
     qulonglong mSize;
 
     CoreDataStore::CoreDataStore *mDataset;
-    CoreDataStore::CoreDataStoreVariable *mPoints;
-    CoreDataStore::CoreDataStoreVariables mConstants;
-    CoreDataStore::CoreDataStoreVariables mRates;
-    CoreDataStore::CoreDataStoreVariables mStates;
-    CoreDataStore::CoreDataStoreVariables mAlgebraic;
+    CoreDataStore::DataStoreVariable *mPoints;
+    CoreDataStore::DataStoreVariables mConstants;
+    CoreDataStore::DataStoreVariables mRates;
+    CoreDataStore::DataStoreVariables mStates;
+    CoreDataStore::DataStoreVariables mAlgebraic;
 
     bool createArrays();
     void deleteArrays();

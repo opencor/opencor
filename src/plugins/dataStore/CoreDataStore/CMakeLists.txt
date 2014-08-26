@@ -8,7 +8,7 @@ ADD_PLUGIN(CoreDataStore
 
         src/coredatastoreplugin.cpp
         src/coredatastore.cpp
-        src/coredatastorevariable.cpp
+        src/datastorevariable.cpp
     HEADERS_MOC
         src/coredatastoreplugin.h
     INCLUDE_DIRS

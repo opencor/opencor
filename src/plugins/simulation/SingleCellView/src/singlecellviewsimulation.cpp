@@ -21,7 +21,6 @@ specific language governing permissions and limitations under the License.
 
 #include "cellmlfileruntime.h"
 #include "coredatastore.h"
-#include "coredatastorevariable.h"
 #include "corenlasolver.h"
 #include "csvdatastore.h"
 #include "singlecellviewcontentswidget.h"
@@ -648,7 +647,7 @@ bool SingleCellViewSimulationResults::createArrays()
 
     for (int i = 0, iMax = mRuntime->parameters().count(); i < iMax; ++i) {
       CellMLSupport::CellmlFileRuntimeParameter *parameter = mRuntime->parameters()[i];
-      CoreDataStore::CoreDataStoreVariable *var = 0;
+      CoreDataStore::DataStoreVariable *var = 0;
       switch (parameter->type()) {
        case CellMLSupport::CellmlFileRuntimeParameter::Constant:
        case CellMLSupport::CellmlFileRuntimeParameter::ComputedConstant:

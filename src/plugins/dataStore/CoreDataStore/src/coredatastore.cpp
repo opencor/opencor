@@ -60,7 +60,7 @@ qulonglong CoreDataStore::size() const
 
 //==============================================================================
 
-CoreDataStoreVariable * CoreDataStore::voi() const
+DataStoreVariable * CoreDataStore::voi() const
 {
     // Return our variable of integration
 
@@ -69,7 +69,7 @@ CoreDataStoreVariable * CoreDataStore::voi() const
 
 //==============================================================================
 
-CoreDataStoreVariables CoreDataStore::variables() const
+DataStoreVariables CoreDataStore::variables() const
 {
     // Return all our variables
 
@@ -78,13 +78,13 @@ CoreDataStoreVariables CoreDataStore::variables() const
 
 //==============================================================================
 
-CoreDataStoreVariable * CoreDataStore::holdPoint(const double *pPoint,
-                                                 const bool &pVoi)
+DataStoreVariable * CoreDataStore::holdPoint(const double *pPoint,
+                                             const bool &pVoi)
 {
     if (pVoi)
         delete mVoi;
 
-    CoreDataStoreVariable *variable = new CoreDataStoreVariable(mSize, pPoint);
+    DataStoreVariable *variable = new DataStoreVariable(mSize, pPoint);
 
     if (pVoi)
         mVoi = variable;
@@ -96,15 +96,15 @@ CoreDataStoreVariable * CoreDataStore::holdPoint(const double *pPoint,
 
 //==============================================================================
 
-CoreDataStoreVariables CoreDataStore::holdPoints(const int &pCount,
-                                                 const double *pPoints)
+DataStoreVariables CoreDataStore::holdPoints(const int &pCount,
+                                             const double *pPoints)
 {
     const double *points = pPoints;
 
-    CoreDataStoreVariables variables(pCount);
+    DataStoreVariables variables(pCount);
 
     for (int i = 0;  i < pCount;  ++i, ++points) {
-        CoreDataStoreVariable *variable = new CoreDataStoreVariable(mSize, points);
+        DataStoreVariable *variable = new DataStoreVariable(mSize, points);
 
         mVariables << variable;
 

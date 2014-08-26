@@ -41,12 +41,12 @@ namespace CoreDataStore {
 
 //==============================================================================
 
-class COREDATASTORE_EXPORT CoreDataStoreVariable
+class COREDATASTORE_EXPORT DataStoreVariable
 {
 public:
-    explicit CoreDataStoreVariable(const qulonglong &pSize,
-                                   const double *pValue = 0);
-    virtual ~CoreDataStoreVariable();
+    explicit DataStoreVariable(const qulonglong &pSize,
+                               const double *pValue = 0);
+    virtual ~DataStoreVariable();
 
     void setUri(const QString &pUri);
     void setUnits(const QString &pUnits);
@@ -74,7 +74,7 @@ private:
 
 //==============================================================================
 
-typedef QVector<CoreDataStoreVariable *> CoreDataStoreVariables;
+typedef QVector<DataStoreVariable *> DataStoreVariables;
 
 //==============================================================================
 

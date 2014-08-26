@@ -25,7 +25,7 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include "coredatastoreglobal.h"
-#include "coredatastorevariable.h"
+#include "datastorevariable.h"
 
 //==============================================================================
 
@@ -50,20 +50,20 @@ public:
 
     qulonglong size() const;
 
-    CoreDataStoreVariable * voi() const;
-    CoreDataStoreVariables variables() const;
+    DataStoreVariable * voi() const;
+    DataStoreVariables variables() const;
 
-    CoreDataStoreVariable * holdPoint(const double *pPoint = 0,
-                                      const bool &pVoi = false);
-    CoreDataStoreVariables holdPoints(const int &pCount, const double *pPoints);
+    DataStoreVariable * holdPoint(const double *pPoint = 0,
+                                  const bool &pVoi = false);
+    DataStoreVariables holdPoints(const int &pCount, const double *pPoints);
 
     void savePoints(const qulonglong &pPosition);
 
 private:
     const qulonglong mSize;
 
-    CoreDataStoreVariable *mVoi;
-    CoreDataStoreVariables mVariables;
+    DataStoreVariable *mVoi;
+    DataStoreVariables mVariables;
 };
 
 //==============================================================================

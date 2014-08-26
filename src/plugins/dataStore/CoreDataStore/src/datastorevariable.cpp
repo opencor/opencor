@@ -19,7 +19,7 @@ specific language governing permissions and limitations under the License.
 // Core data store variable class
 //==============================================================================
 
-#include "coredatastorevariable.h"
+#include "datastorevariable.h"
 
 //==============================================================================
 
@@ -28,8 +28,8 @@ namespace CoreDataStore {
 
 //==============================================================================
 
-CoreDataStoreVariable::CoreDataStoreVariable(const qulonglong &pSize,
-                                             const double *pValue) :
+DataStoreVariable::DataStoreVariable(const qulonglong &pSize,
+                                     const double *pValue) :
     mUri(QString()),
     mUnits(QString()),
     mLabel(QString()),
@@ -41,14 +41,14 @@ CoreDataStoreVariable::CoreDataStoreVariable(const qulonglong &pSize,
 
 //==============================================================================
 
-CoreDataStoreVariable::~CoreDataStoreVariable()
+DataStoreVariable::~DataStoreVariable()
 {
     delete[] mData;
 }
 
 //==============================================================================
 
-void CoreDataStoreVariable::savePoint(const qulonglong &pPosition)
+void DataStoreVariable::savePoint(const qulonglong &pPosition)
 {
     Q_ASSERT(pPosition < mSize);
 
@@ -58,8 +58,8 @@ void CoreDataStoreVariable::savePoint(const qulonglong &pPosition)
 
 //==============================================================================
 
-void CoreDataStoreVariable::savePoint(const qulonglong &pPosition,
-                                      const double &pValue)
+void DataStoreVariable::savePoint(const qulonglong &pPosition,
+                                  const double &pValue)
 {
     Q_ASSERT(pPosition < mSize);
 
@@ -68,7 +68,7 @@ void CoreDataStoreVariable::savePoint(const qulonglong &pPosition,
 
 //==============================================================================
 
-double CoreDataStoreVariable::getPoint(const qulonglong &pPosition) const
+double DataStoreVariable::getPoint(const qulonglong &pPosition) const
 {
     Q_ASSERT(pPosition < mSize);
 
@@ -77,56 +77,56 @@ double CoreDataStoreVariable::getPoint(const qulonglong &pPosition) const
 
 //==============================================================================
 
-const double *CoreDataStoreVariable::getData() const
+const double *DataStoreVariable::getData() const
 {
     return mData;
 }
 
 //==============================================================================
 
-qulonglong CoreDataStoreVariable::getSize() const
+qulonglong DataStoreVariable::getSize() const
 {
     return mSize;
 }
 
 //==============================================================================
 
-void CoreDataStoreVariable::setUri(const QString &pUri)
+void DataStoreVariable::setUri(const QString &pUri)
 {
     mUri = pUri;
 }
 
 //==============================================================================
 
-void CoreDataStoreVariable::setUnits(const QString &pUnits)
+void DataStoreVariable::setUnits(const QString &pUnits)
 {
     mUnits = pUnits;
 }
 
 //==============================================================================
 
-void CoreDataStoreVariable::setLabel(const QString &pLabel)
+void DataStoreVariable::setLabel(const QString &pLabel)
 {
     mLabel = pLabel;
 }
 
 //==============================================================================
 
-QString CoreDataStoreVariable::getUri() const
+QString DataStoreVariable::getUri() const
 {
     return mUri;
 }
 
 //==============================================================================
 
-QString CoreDataStoreVariable::getUnits() const
+QString DataStoreVariable::getUnits() const
 {
     return mUnits;
 }
 
 //==============================================================================
 
-QString CoreDataStoreVariable::getLabel() const
+QString DataStoreVariable::getLabel() const
 {
     return mLabel;
 }
