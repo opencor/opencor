@@ -139,9 +139,13 @@ DataStoreVariables CoreDataStore::addVariables(const int &pCount,
 
 //==============================================================================
 
-void CoreDataStore::setValues(const qulonglong &pPosition)
+void CoreDataStore::setValues(const qulonglong &pPosition, const double &pValue)
 {
-    // Set the value at the given position of all our variables
+    // Set the value at the given position of all our variables including our
+    // variable of integration, which value is directly given to us
+
+    if (mVoi)
+        mVoi->setValue(pPosition, pValue);
 
     for (auto variable = mVariables.begin(), variableEnd = mVariables.end();
          variable != variableEnd; ++variable) {

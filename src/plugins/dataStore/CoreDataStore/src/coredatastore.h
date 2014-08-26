@@ -57,7 +57,7 @@ public:
     DataStoreVariable * addVariable(double *pValue = 0);
     DataStoreVariables addVariables(const int &pCount, double *pValues);
 
-    void setValues(const qulonglong &pPosition);
+    void setValues(const qulonglong &pPosition, const double &pValue);
 
 private:
     const qulonglong mSize;

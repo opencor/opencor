@@ -195,6 +195,8 @@ private:
 
     bool createArrays();
     void deleteArrays();
+
+    QString uri(const QStringList &pComponentHierarchy, const QString &pName);
 };
 
 //==============================================================================

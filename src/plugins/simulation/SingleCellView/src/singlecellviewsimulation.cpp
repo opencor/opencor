@@ -595,10 +595,14 @@ SingleCellViewSimulationResults::~SingleCellViewSimulationResults()
 
 //==============================================================================
 
-static QString make_uri(const QString &uri)
+QString SingleCellViewSimulationResults::uri(const QStringList &pComponentHierarchy,
+                                             const QString &pName)
 {
-    QString u(uri);
-    return u.replace("'", "/prime");
+    // Generate an URI using the given component hierarchy and name
+
+    QString res = pComponentHierarchy.join("/")+"/"+pName;
+
+    return res.replace("'", "/prime");
 }
 
 //==============================================================================
@@ -640,8 +644,8 @@ bool SingleCellViewSimulationResults::createArrays()
       return false;
       }
 
-    mPoints->setUri(make_uri(mRuntime->variableOfIntegration()->componentHierarchy().join("/")
-                             + "/" + mRuntime->variableOfIntegration()->name()));
+    mPoints->setUri(uri(mRuntime->variableOfIntegration()->componentHierarchy(),
+                        mRuntime->variableOfIntegration()->name()));
     mPoints->setName(mRuntime->variableOfIntegration()->name());
     mPoints->setUnit(mRuntime->variableOfIntegration()->unit());
 
@@ -666,8 +670,8 @@ bool SingleCellViewSimulationResults::createArrays()
         break;
         }
       if (var) {
-        var->setUri(make_uri(parameter->componentHierarchy().join("/")
-                             + "/" + parameter->formattedName()));
+        var->setUri(uri(parameter->componentHierarchy(),
+                        parameter->formattedName()));
         var->setName(parameter->formattedName());
         var->setUnit(parameter->formattedUnit(mRuntime->variableOfIntegration()->unit()));
         }
@@ -680,9 +684,10 @@ bool SingleCellViewSimulationResults::createArrays()
 
 void SingleCellViewSimulationResults::deleteArrays()
 {
-    // Delete our data store and associated variables/arrays.
+    // Delete our data store
 
-    if (mDataStore) delete mDataStore;
+    delete mDataStore;
+
     mDataStore = 0;
 }
 
@@ -709,11 +714,10 @@ bool SingleCellViewSimulationResults::reset(const bool &pCreateArrays)
 
 void SingleCellViewSimulationResults::addPoint(const double &pPoint)
 {
-    if (!mRuntime)
-        return;
+    // Add the data to our data store
 
-    mPoints->setValue(mSize, pPoint);
-    mDataStore->setValues(mSize);
+    mDataStore->setValues(mSize, pPoint);
+
     ++mSize;
 }
 
