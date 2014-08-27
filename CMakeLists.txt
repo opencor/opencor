@@ -246,6 +246,7 @@ SET(PLUGINS
 
     widget/Editor
     widget/EditorList
+    widget/Spinner
     widget/Viewer
 
     # Plugins that have dependencies on others
