@@ -19,7 +19,6 @@ specific language governing permissions and limitations under the License.
 // CoreSolver plugin
 //==============================================================================
 
-#include "corenlasolver.h"
 #include "coresolverplugin.h"
 
 //==============================================================================
