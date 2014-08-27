@@ -232,7 +232,12 @@ int Plugin::statusErrorsCount() const
 {
     // Return the number of plugin's status errors
 
-    return mStatusErrors.count("\n")+1;
+    int res = mStatusErrors.count("\n");
+
+    if (res)
+        return res+1;
+    else
+        return !mStatusErrors.isEmpty();
 }
 
 //==============================================================================
