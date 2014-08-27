@@ -24,7 +24,7 @@ install:
     && if [ "`uname -s`" = "Linux" ] ; then
             sudo apt-get -qq update
          && sudo apt-get -qq install libc6-i386
-         && wget http://www.cmake.org/files/v3.0/cmake-3.0.0-Linux-i386.tar.gz
+         && wget http://www.cmake.org/files/v3.0/cmake-3.0.1-Linux-i386.tar.gz
          && tar -xzf cmake-3.0.0-Linux-i386.tar.gz
          && sudo cp -fR cmake-3.0.0-Linux-i386/* /usr
          ;
@@ -58,10 +58,10 @@ install:
 script:
   -    cd build
     && if [ "`uname -s`" = "Linux" ]; then
-         cmake -DCMAKE_BUILD_TYPE=$CONFIG -DCMAKE_PREFIX_PATH=/opt/qt53/lib/cmake -DENABLE_TESTS=True ..
+         cmake -DCMAKE_BUILD_TYPE=$CONFIG -DCMAKE_PREFIX_PATH=/opt/qt53/lib/cmake -DENABLE_TESTS=ON -DENABLE_SAMPLES=ON ..
          ;
        else
-         cmake -DCMAKE_BUILD_TYPE=$CONFIG -DCMAKE_PREFIX_PATH=/usr/local/opt/qt5/lib/cmake -DENABLE_TESTS=True ..
+         cmake -DCMAKE_BUILD_TYPE=$CONFIG -DCMAKE_PREFIX_PATH=/usr/local/opt/qt5/lib/cmake -DENABLE_TESTS=ON -DENABLE_SAMPLES=ON ..
          ;
        fi
     && make -j `echo "$PROCS-$PROCS/2" | bc`
