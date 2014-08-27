@@ -25,6 +25,10 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#include <QtMath>
+
+//==============================================================================
+
 #include <QChar>
 #include <QCoreApplication>
 #include <QCryptographicHash>
@@ -41,10 +45,6 @@ specific language governing permissions and limitations under the License.
 #include <QSettings>
 #include <QString>
 #include <QStringList>
-
-//==============================================================================
-
-#include <qmath.h>
 
 //==============================================================================
 

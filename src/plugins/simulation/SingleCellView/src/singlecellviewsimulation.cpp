@@ -32,17 +32,14 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-#include <QFile>
-#include <QIODevice>
-#include <QTextStream>
-
-//==============================================================================
-
+#include <QtMath>
 #include <QtNumeric>
 
 //==============================================================================
 
-#include <qmath.h>
+#include <QFile>
+#include <QIODevice>
+#include <QTextStream>
 
 //==============================================================================
 

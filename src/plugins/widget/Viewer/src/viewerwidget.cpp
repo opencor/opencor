@@ -26,6 +26,7 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include <Qt>
+#include <QtMath>
 
 //==============================================================================
 
@@ -44,10 +45,6 @@ specific language governing permissions and limitations under the License.
 #include <QRectF>
 #include <QRegularExpression>
 #include <QSettings>
-
-//==============================================================================
-
-#include <qmath.h>
 
 //==============================================================================
 
