@@ -25,8 +25,8 @@ install:
             sudo apt-get -qq update
          && sudo apt-get -qq install libc6-i386
          && wget http://www.cmake.org/files/v3.0/cmake-3.0.1-Linux-i386.tar.gz
-         && tar -xzf cmake-3.0.0-Linux-i386.tar.gz
-         && sudo cp -fR cmake-3.0.0-Linux-i386/* /usr
+         && tar -xzf cmake-3.0.1-Linux-i386.tar.gz
+         && sudo cp -fR cmake-3.0.1-Linux-i386/* /usr
          ;
        else
             brew update
