@@ -493,10 +493,11 @@ void EditorFindReplaceWidget::searchOptionChanged()
         static int IconSize = 16;
         static int IconWidth = 6;
 
-        QPixmap dropDownPixmap = QPixmap(nbOfOptions*IconWidth-mRegularExpressionAction->isChecked()-1,
+        QPixmap dropDownPixmap = QPixmap(nbOfOptions*IconWidth-mRegularExpressionAction->isChecked(),
                                          IconSize);
-        // Note: IconWidth-1, because regularExpressionIcon is effectively one
-        //       pixel narrower than caseSensitiveIcon and wholeWordsOnlyIcon...
+        // Note: -mRegularExpressionAction->isChecked(), because
+        //       regularExpressionIcon is effectively one pixel narrower than
+        //       caseSensitiveIcon and wholeWordsOnlyIcon...
 
         dropDownPixmap.fill(Qt::transparent);
 
