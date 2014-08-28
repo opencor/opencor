@@ -54,10 +54,6 @@
         <translation>Aucun modèle CellML ne correspond à votre critère</translation>
     </message>
     <message>
-        <source>Please wait while the list of CellML models is being loaded...</source>
-        <translation>Veuillez patienter pendant que la liste de modèles CellML se charge...</translation>
-    </message>
-    <message>
         <source>&lt;strong&gt;Error:&lt;/strong&gt; </source>
         <translation>&lt;strong&gt;Erreur :&lt;/strong&gt; </translation>
     </message>

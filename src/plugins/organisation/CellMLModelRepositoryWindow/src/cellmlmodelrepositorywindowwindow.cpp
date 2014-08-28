@@ -23,6 +23,7 @@ specific language governing permissions and limitations under the License.
 #include "cellmlmodelrepositorywindowwidget.h"
 #include "cliutils.h"
 #include "guiutils.h"
+#include "spinnerwidget.h"
 
 //==============================================================================
 
@@ -75,6 +76,10 @@ CellmlModelRepositoryWindowWindow::CellmlModelRepositoryWindowWindow(QWidget *pP
     mCellmlModelRepositoryWidget = new CellmlModelRepositoryWindowWidget(this);
 
     mGui->dockWidgetContents->layout()->addWidget(mCellmlModelRepositoryWidget);
+
+    // Create our spinner widget
+
+    mSpinnerWidget = new Spinner::SpinnerWidget(mCellmlModelRepositoryWidget);
 
     // Create and populate our context menu
 
@@ -141,14 +146,28 @@ void CellmlModelRepositoryWindowWindow::retranslateUi()
 
 //==============================================================================
 
+void CellmlModelRepositoryWindowWindow::resizeEvent(QResizeEvent *pEvent)
+{
+    // Default handling of the event
+
+    Core::OrganisationWidget::resizeEvent(pEvent);
+
+    // (Re-)center our spinner widget
+
+    mSpinnerWidget->move(0.5*(mCellmlModelRepositoryWidget->width()-mSpinnerWidget->width()),
+                         0.5*(mCellmlModelRepositoryWidget->height()-mSpinnerWidget->height()));
+}
+
+//==============================================================================
+
 void CellmlModelRepositoryWindowWindow::outputModelList(const QStringList &pModelList)
 {
     // Output a given list of models
 
     mModelList = pModelList;
 
-    QString contents = "";
-    const QString leadingSpaces = "        ";
+    QString contents = QString();
+    static const QString leadingSpaces = "        ";
 
     if (mModelList.count()) {
         // We have models to list, so...
@@ -170,31 +189,28 @@ void CellmlModelRepositoryWindowWindow::outputModelList(const QStringList &pMode
             // so...
 
             contents = leadingSpaces+tr("<strong>Error:</strong> ")+Core::formatErrorMessage(mErrorMessage);
-        else if (mModelListRequested)
-            // The list is still being loaded, so...
-
-            contents = leadingSpaces+tr("Please wait while the list of CellML models is being loaded...");
-        else
-            // We have yet to request the list of models, so...
-
-            contents = QString();
     } else {
         // No model could be found, so...
 
         contents = leadingSpaces+tr("No CellML model matches your criteria");
     }
 
-    // Output the list matching the search criteria, or a message telling the
-    // user what went wrong, if anything
+    // Show/hide our spinner widget
 
-    mCellmlModelRepositoryWidget->output(contents);
+    mSpinnerWidget->setVisible(mModelListRequested);
+
+    // Output the list matching the search criteria, or a message telling the
+    // user what went wrong, if anything and if needed
+
+    if (!mModelListRequested)
+        mCellmlModelRepositoryWidget->output(contents);
 }
 
 //==============================================================================
 
 void CellmlModelRepositoryWindowWindow::on_filterValue_textChanged(const QString &text)
 {
-    // Generate a Web page that contains all the models which match our search
+    // Generate a Web page that contains all the models that match our search
     // criteria
 
     outputModelList(mModelNames.filter(QRegularExpression(text, QRegularExpression::CaseInsensitiveOption)));
@@ -241,6 +257,8 @@ void CellmlModelRepositoryWindowWindow::finished(QNetworkReply *pNetworkReply)
 
     mModelNames.clear();
     mModelUrls.clear();
+
+    mModelListRequested = false;
 
     // Output the list of models, should we have retrieved it without any
     // problem

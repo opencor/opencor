@@ -20,6 +20,7 @@ ADD_PLUGIN(CellMLModelRepositoryWindow
         src
     PLUGINS
         Core
+        Spinner
     QT_MODULES
         WebKitWidgets
     QT_LIBRARIES
