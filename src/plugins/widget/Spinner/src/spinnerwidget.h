@@ -28,7 +28,12 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#include <QColor>
 #include <QWidget>
+
+//==============================================================================
+
+class QTimer;
 
 //==============================================================================
 
@@ -44,11 +49,67 @@ class SPINNER_EXPORT SpinnerWidget : public QWidget
 public:
     explicit SpinnerWidget(QWidget *pParent);
 
+    int fps() const;
+    void setFps(const int &pFps);
+
+    QColor backgroundColor() const;
+    void setBackgroundColor(const QColor &pBackgroundColor);
+
+    double backgroundRoundness() const;
+    void setBackgroundRoundness(const double &pBackgroundRoundness);
+
+    int lineCount() const;
+    void setLineCount(const int &pLineCount);
+
+    QColor lineColor() const;
+    void setLineColor(const QColor &pLineColor);
+
+    int lineLength() const;
+    void setLineLength(const int &pLineLength);
+
+    int lineWidth() const;
+    void setLineWidth(const int &pLineWidth);
+
+    double lineRoundness() const;
+    void setLineRoundness(const double &pLineRoundness);
+
+    int lineTrail() const;
+    void setLineTrail(const int &pLineTrail);
+
+    double lineOpacity() const;
+    void setLineOpacity(const double &pLineOpacity);
+
+    int radius() const;
+    void setRadius(const int &pRadius);
+
 protected:
     virtual void paintEvent(QPaintEvent *pEvent);
 
+private:
+    QTimer *mTimer;
+
+    int mFps;
+
+    QColor mBackgroundColor;
+    double mBackgroundRoundness;
+
+    int mMainLine;
+
+    int mLineCount;
+    QColor mLineColor;
+    int mLineLength;
+    int mLineWidth;
+    double mLineRoundness;
+    int mLineTrail;
+    double mLineOpacity;
+
+    int mRadius;
+
 public Q_SLOTS:
     virtual void setVisible(bool pVisible);
+
+private Q_SLOTS:
+    void rotate();
 };
 
 //==============================================================================

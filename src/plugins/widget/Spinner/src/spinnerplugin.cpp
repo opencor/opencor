@@ -36,7 +36,7 @@ PLUGININFO_FUNC SpinnerPluginInfo()
     descriptions.insert("fr", QString::fromUtf8("une extension pour montrer qu'il y a quelque chose qui se passe."));
 
     return new PluginInfo(PluginInfo::Widget, false, false,
-                          QStringList() << "Core",
+                          QStringList(),
                           descriptions);
 }
 

@@ -4,7 +4,6 @@ PROJECT(SpinnerPlugin)
 
 ADD_PLUGIN(Spinner
     SOURCES
-        ../../i18ninterface.cpp
         ../../plugininfo.cpp
 
         src/spinnerplugin.cpp
@@ -14,8 +13,6 @@ ADD_PLUGIN(Spinner
         src/spinnerwidget.h
     INCLUDE_DIRS
         src
-    PLUGINS
-        Core
     QT_MODULES
         Widgets
     QT_LIBRARIES
