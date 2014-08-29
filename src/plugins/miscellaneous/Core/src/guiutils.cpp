@@ -42,6 +42,7 @@ specific language governing permissions and limitations under the License.
 #include <QLabel>
 #include <QMenu>
 #include <QMessageBox>
+#include <QPalette>
 #include <QSettings>
 #include <QSizePolicy>
 #include <QStackedWidget>
