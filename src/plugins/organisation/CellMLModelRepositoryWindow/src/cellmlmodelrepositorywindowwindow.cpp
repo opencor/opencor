@@ -342,8 +342,13 @@ void CellmlModelRepositoryWindowWindow::retrieveModelList(const bool &pVisible)
     // Retrieve the list of models, if we are becoming visible and the list of
     // models has never been requested before
 
-    if (pVisible && !mModelListRequested)
+    static bool firstTime = true;
+
+    if (pVisible && firstTime) {
+        firstTime = false;
+
         on_refreshButton_clicked();
+    }
 }
 
 //==============================================================================
