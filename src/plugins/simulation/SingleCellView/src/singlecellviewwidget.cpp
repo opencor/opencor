@@ -47,6 +47,7 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#include <QApplication>
 #include <QBrush>
 #include <QDesktopWidget>
 #include <QDir>
@@ -66,6 +67,7 @@ specific language governing permissions and limitations under the License.
 #include <QTimer>
 #include <QToolButton>
 #include <QVariant>
+#include <QVBoxLayout>
 
 //==============================================================================
 

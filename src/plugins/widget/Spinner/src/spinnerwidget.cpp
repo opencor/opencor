@@ -47,7 +47,7 @@ namespace Spinner {
 SpinnerWidget::SpinnerWidget(QWidget *pParent) :
     QWidget(pParent),
     mFps(20),
-    mBackgroundColor(QColor(51, 51, 51)),
+    mBackgroundColor(QColor(54, 96, 146)),
     mBackgroundRoundness(0.25),
     mMainLine(0),
     mLineCount(12),
