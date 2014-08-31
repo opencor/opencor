@@ -154,21 +154,21 @@ p.nomargins {
     margin: 0px;
 }
 
-p.note::before { 
+p.note::before {
     content: "Note:";
     font-weight: bold;
     text-decoration: underline;
 }
 
-p.note1::before { 
+p.note1::before {
     content: "Note #1:";
 }
 
-p.note2::before { 
+p.note2::before {
     content: "Note #2:";
 }
 
-p.note3::before { 
+p.note3::before {
     content: "Note #3:";
 }
 
