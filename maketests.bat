@@ -14,16 +14,20 @@ IF DEFINED NinjaFound (
 
 TITLE Making OpenCOR and its tests (using !Generator!)...
 
-IF NOT DEFINED SetupMSVC2010Environment (
+IF NOT DEFINED SetupMSVC2013Environment (
     IF EXIST "C:\Program Files (x86)\" (
         SET ProgFilesDir=C:\Program Files ^(x86^)
     ) ELSE (
         SET ProgFilesDir=C:\Program Files
     )
 
-    CALL "!ProgFilesDir!\Microsoft Visual Studio 10.0\VC\bin\vcvars32.bat"
+    IF EXIST "C:\Program Files (x86)\" (
+        CALL "!ProgFilesDir!\Microsoft Visual Studio 12.0\VC\bin\x86_amd64\vcvarsx86_amd64.bat"
+    ) ELSE (
+        CALL "!ProgFilesDir!\Microsoft Visual Studio 12.0\VC\bin\vcvars32.bat"
+    )
 
-    SET SetupMSVC2010Environment=Done
+    SET SetupMSVC2013Environment=Done
 )
 
 CD build

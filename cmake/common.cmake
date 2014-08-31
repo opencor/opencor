@@ -6,8 +6,8 @@ MACRO(INITIALISE_PROJECT)
 
     IF(WIN32)
         IF(   NOT "${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC"
-           OR NOT ${MSVC_VERSION} EQUAL 1600)
-            MESSAGE(FATAL_ERROR "OpenCOR can only be built using MSVC 2010 on Windows...")
+           OR NOT ${MSVC_VERSION} EQUAL 1800)
+            MESSAGE(FATAL_ERROR "OpenCOR can only be built using MSVC 2013 on Windows...")
         ENDIF()
     ELSEIF(APPLE)
         IF(NOT "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
@@ -104,7 +104,7 @@ MACRO(INITIALISE_PROJECT)
         #       code, which is /W3 and which is also what CMake uses by
         #       default...
 
-        SET(LINK_FLAGS_PROPERTIES "/STACK:10000000 /MACHINE:X86")
+        SET(LINK_FLAGS_PROPERTIES "/STACK:10000000")
     ELSE()
         SET(CMAKE_CXX_FLAGS "-Wall -W -Werror -std=c++11")
 
@@ -158,6 +158,15 @@ MACRO(INITIALISE_PROJECT)
         # Make sure that debugging is on in Qt
 
         ADD_DEFINITIONS(-DQT_DEBUG)
+    ENDIF()
+
+    # Disable a warning that occurs on 64-bit Windows
+    # Note: the warning occurs in (at least) MSVC's algorithm header file and on
+    #       64-bit Windows. To disable it here means that we disable it for
+    #       everything, but is there another solution?...
+
+    IF(WIN32 AND ${ARCHITECTURE} EQUAL 64)
+        SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4267")
     ENDIF()
 
     # Ask for Unicode to be used
@@ -247,7 +256,11 @@ MACRO(INITIALISE_PROJECT)
     # Default location of external dependencies
 
     IF(WIN32)
-        SET(DISTRIB_DIR windows/x86)
+        IF(${ARCHITECTURE} EQUAL 32)
+            SET(DISTRIB_DIR windows/x86)
+        ELSE()
+            SET(DISTRIB_DIR windows/x64)
+        ENDIF()
     ELSEIF(APPLE)
         SET(DISTRIB_DIR osx)
     ELSE()

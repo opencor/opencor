@@ -20,12 +20,12 @@ MACRO(RETRIEVE_LLVM_SETTINGS)
         ENDIF()
     ENDIF()
 
-    # Ignore some warnings on Windows
-    # Note: we have nothing to do with them, so...
+    # Ignore some warnings on Windows, as well as allow for big objects
+    # Note: we have nothing to do with those warnings, so...
 
     IF(WIN32)
-        SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /wd4244")
-        SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4180 /wd4244 /wd4355 /wd4291 /wd4351 /wd4624 /wd4722 /wd4996")
+        SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /wd4244 /wd4267")
+        SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /bigobj /wd4180 /wd4244 /wd4355 /wd4291 /wd4351 /wd4624 /wd4722 /wd4996")
     ENDIF()
 ENDMACRO()
 
@@ -55,12 +55,22 @@ IF(USE_PREBUILT_LLVM_PLUGIN)
     STRING(REPLACE "${${CMAKE_PROJECT_NAME}_SOURCE_DIR}/" "" RELATIVE_PROJECT_SOURCE_DIR "${PROJECT_SOURCE_DIR}/bin/${DISTRIB_BINARY_DIR}")
 
     IF(WIN32)
-        IF(RELEASE_MODE)
-            RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} LLVM.dll 805b4cf498264ee61d9b6eb736a6eaa08ce56bb8)
-            RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} LLVM.lib 7148586a679be5e4ededd2774886372b7133cacb)
+        IF(${ARCHITECTURE} EQUAL 32)
+            IF(RELEASE_MODE)
+                RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} LLVM.dll 1d8a21b24c5613adc16cac21e9a9f5b6f88f7ac9)
+                RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} LLVM.lib b861a9e66bb3901fe66d0d91e59ec49e4e3c7eff)
+            ELSE()
+                RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} LLVM.dll 1d4621b059d7f826e49cf2cf254942960eece795)
+                RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} LLVM.lib 6ee73e97a58ccbfdd71b850fd5381d042ed803c1)
+            ENDIF()
         ELSE()
-            RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} LLVM.dll 85b55352ef0ed4f0e05f8b32b0f7aeca58a81312)
-            RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} LLVM.lib 2bc3b858bfb75e8761e12a352d90f6ecd4d4cf11)
+            IF(RELEASE_MODE)
+                RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} LLVM.dll e2e08b014103cbf9c36716de1f1e9906c2bcd15d)
+                RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} LLVM.lib c1be02f4d222c68627cd6124f03a51f78d2dae7b)
+            ELSE()
+                RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} LLVM.dll 6e0882cb032640bf20c9ad399a0e8a2c48285682)
+                RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} LLVM.lib eb37f2252d4e0a6346c5b71d6cb14ff81d8ded84)
+            ENDIF()
         ENDIF()
     ELSEIF(APPLE)
         RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} libLLVM.dylib ba21faa0a2e2b793e9d2553b663c68110488a6e2)
@@ -109,6 +119,21 @@ ELSE()
                        COPYONLY)
     ENDFOREACH()
 
+    # Build a special assembly file on 64-bit Windows
+
+    IF(WIN32 AND ${ARCHITECTURE} EQUAL 64)
+        ENABLE_LANGUAGE(ASM_MASM)
+
+        ADD_CUSTOM_COMMAND(OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/X86CompilationCallback_Win64.obj
+                           MAIN_DEPENDENCY ${PROJECT_SOURCE_DIR}/lib/Target/X86/X86CompilationCallback_Win64.asm
+                           COMMAND ${CMAKE_ASM_MASM_COMPILER} /Fo ${CMAKE_CURRENT_BINARY_DIR}/X86CompilationCallback_Win64.obj /c ${PROJECT_SOURCE_DIR}/lib/Target/X86/X86CompilationCallback_Win64.asm
+        )
+
+        SET(ASM_OBJECT ${CMAKE_CURRENT_BINARY_DIR}/X86CompilationCallback_Win64.obj)
+    ELSE()
+        SET(ASM_OBJECT)
+    ENDIF()
+
     # Retrieve some LLVM settings
 
     RETRIEVE_LLVM_SETTINGS()
@@ -121,6 +146,8 @@ ELSE()
         THIRD_PARTY
         SOURCES
             ../../plugininfo.cpp
+
+            ${ASM_OBJECT}
 
             lib/Analysis/AliasAnalysis.cpp
             lib/Analysis/AliasAnalysisCounter.cpp

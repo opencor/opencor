@@ -129,7 +129,6 @@ ENDIF()
 #       ever want/need to do that...
 
 INCLUDE_DIRECTORIES(
-    src/comp
     src/misc
     src/plugins
     src/plugins/miscellaneous/Core/src
@@ -447,13 +446,18 @@ ELSE()
         #       locally. It all depends on whether they are present on the
         #       user's computer...
 
-        RETRIEVE_BINARY_FILE(distrib/windows/x86 libeay32.dll be778153098099f8e7f4a64edaf2244d3b8e0137)
-        RETRIEVE_BINARY_FILE(distrib/windows/x86 ssleay32.dll 0da2affc1a46c7f0c4f583cb9d562143c6dc19b8)
+        IF(${ARCHITECTURE} EQUAL 32)
+            RETRIEVE_BINARY_FILE(distrib/${DISTRIB_DIR} libeay32.dll 824d314e6f24c490ec0329d20762ae8a3263af92)
+            RETRIEVE_BINARY_FILE(distrib/${DISTRIB_DIR} ssleay32.dll fbf26c1f27b89b4116b43f28964b3d3176776804)
+        ELSE()
+            RETRIEVE_BINARY_FILE(distrib/${DISTRIB_DIR} libeay32.dll e674f9bc7271b1f0112c5d38d5ecb09b45b4b8ab)
+            RETRIEVE_BINARY_FILE(distrib/${DISTRIB_DIR} ssleay32.dll 597653fd6b869f37a865b84fa5b59fd0905a1ed5)
+        ENDIF()
 
         FOREACH(REDISTRIBUTABLE_FILE libeay32 ssleay32)
-            COPY_FILE_TO_BUILD_DIR(${PROJECT_NAME} ${CMAKE_SOURCE_DIR}/distrib/windows/x86 .
+            COPY_FILE_TO_BUILD_DIR(${PROJECT_NAME} ${CMAKE_SOURCE_DIR}/distrib/${DISTRIB_DIR} .
                                    ${REDISTRIBUTABLE_FILE}${CMAKE_SHARED_LIBRARY_SUFFIX})
-            COPY_FILE_TO_BUILD_DIR(${PROJECT_NAME} ${CMAKE_SOURCE_DIR}/distrib/windows/x86 bin
+            COPY_FILE_TO_BUILD_DIR(${PROJECT_NAME} ${CMAKE_SOURCE_DIR}/distrib/${DISTRIB_DIR} bin
                                    ${REDISTRIBUTABLE_FILE}${CMAKE_SHARED_LIBRARY_SUFFIX})
         ENDFOREACH()
     ENDIF()
@@ -473,7 +477,7 @@ IF(WIN32)
 
     SET(CPACK_GENERATOR NSIS ZIP)
 
-    SET(CPACK_SYSTEM_NAME "Windows")
+    SET(CPACK_SYSTEM_NAME "Windows${ARCHITECTURE}")
 
     SET(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_SOURCE_DIR}/LICENSE.txt")
 
@@ -486,11 +490,16 @@ IF(WIN32)
     # Redistributable files required by OpenCOR
     # Note: libeay32 and ssleay32 have already been retrieved earlier...
 
-    RETRIEVE_BINARY_FILE(distrib/windows/x86 msvcp100.dll 79bcaad3714433e01c7f153b05b781f8d7cb318d)
-    RETRIEVE_BINARY_FILE(distrib/windows/x86 msvcr100.dll 4e880fc7625ccf8d9ca799d5b94ce2b1e7597335)
+    IF(${ARCHITECTURE} EQUAL 32)
+        RETRIEVE_BINARY_FILE(distrib/${DISTRIB_DIR} msvcp120.dll efd1e306c1092c17f6944cc6bf9a1bfad4d14613)
+        RETRIEVE_BINARY_FILE(distrib/${DISTRIB_DIR} msvcr120.dll f19e9d8317161edc7d3e963cc0fc46bd5e4a55a1)
+    ELSE()
+        RETRIEVE_BINARY_FILE(distrib/${DISTRIB_DIR} msvcp120.dll d0164c041707f297a73abb9ea854111953e99cf1)
+        RETRIEVE_BINARY_FILE(distrib/${DISTRIB_DIR} msvcr120.dll 62cb65a1d79e2c5ada0c7bfc04c18693567c90d0)
+    ENDIF()
 
-    FOREACH(REDISTRIBUTABLE_FILE libeay32 msvcp100 msvcr100 ssleay32)
-        INSTALL(FILES ${CMAKE_SOURCE_DIR}/distrib/windows/x86/${REDISTRIBUTABLE_FILE}${CMAKE_SHARED_LIBRARY_SUFFIX}
+    FOREACH(REDISTRIBUTABLE_FILE libeay32 msvcp120 msvcr120 ssleay32)
+        INSTALL(FILES ${CMAKE_SOURCE_DIR}/distrib/${DISTRIB_DIR}/${REDISTRIBUTABLE_FILE}${CMAKE_SHARED_LIBRARY_SUFFIX}
                 DESTINATION bin)
     ENDFOREACH()
 

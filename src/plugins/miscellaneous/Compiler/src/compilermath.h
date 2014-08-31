@@ -41,12 +41,6 @@ extern "C" double COMPILER_EXPORT lcm_multi(int pCount, ...);
 extern "C" double COMPILER_EXPORT multi_max(int pCount, ...);
 extern "C" double COMPILER_EXPORT multi_min(int pCount, ...);
 
-#ifdef Q_OS_WIN
-    extern "C" double COMPILER_EXPORT asinh(double pNb);
-    extern "C" double COMPILER_EXPORT acosh(double pNb);
-    extern "C" double COMPILER_EXPORT atanh(double pNb);
-#endif
-
 //==============================================================================
 
 #endif

@@ -26,7 +26,7 @@
 /* #undef LLVM_DATADIR */
 
 /* Target triple LLVM will generate code for by default */
-#define LLVM_DEFAULT_TARGET_TRIPLE "i686-pc-win32"
+#define LLVM_DEFAULT_TARGET_TRIPLE "x86_64-pc-win32"
 
 /* Installation directory for documentation */
 /* #undef LLVM_DOCSDIR */
@@ -41,7 +41,7 @@
 #define LLVM_HAS_ATOMICS 1
 
 /* Host triple LLVM will be executed on */
-#define LLVM_HOST_TRIPLE "i686-pc-win32"
+#define LLVM_HOST_TRIPLE "x86_64-pc-win32"
 
 /* Installation directory for include files */
 /* #undef LLVM_INCLUDEDIR */
@@ -107,7 +107,7 @@
 /* #undef LLVM_PATH_XDOT_PY */
 
 /* Installation prefix directory */
-#define LLVM_PREFIX "C:/Program Files (x86)/LLVM"
+#define LLVM_PREFIX "C:/Program Files/LLVM"
 
 /* Define if we have the Intel JIT API runtime support library */
 /* #undef LLVM_USE_INTEL_JITEVENTS */

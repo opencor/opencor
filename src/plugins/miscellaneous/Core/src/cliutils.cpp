@@ -707,17 +707,11 @@ void doNothing(const int &pMax)
 {
     // A silly function, which aim is simply to do nothing
     // Note: this function came about because there is no way, on Windows, to
-    //       pause a thread for less than a millisecond (in the best of
-    //       cases)...
+    //       pause a thread for less than a millisecond (and this is in the best
+    //       of cases)...
 
     for (int i = 0; i < pMax; ++i)
-#ifdef Q_OS_WIN
-        __asm {
-            nop
-        }
-#else
-        asm("nop");
-#endif
+        ;
 }
 
 //==============================================================================

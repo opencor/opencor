@@ -14,6 +14,8 @@ IF DEFINED NinjaFound (
 
 TITLE Making OpenCOR (using !Generator!)...
 
+SET OLDPATH=!PATH!
+
 IF NOT DEFINED SetupMSVC2013Environment (
     IF EXIST "C:\Program Files (x86)\" (
         SET ProgFilesDir=C:\Program Files ^(x86^)
@@ -21,11 +23,9 @@ IF NOT DEFINED SetupMSVC2013Environment (
         SET ProgFilesDir=C:\Program Files
     )
 
-    IF EXIST "C:\Qt\5.3\msvc2013_64_opengl\bin\" (
-        CALL "!ProgFilesDir!\Microsoft Visual Studio 12.0\VC\bin\x86_amd64\vcvarsx86_amd64.bat"
-    ) ELSE (
-        CALL "!ProgFilesDir!\Microsoft Visual Studio 12.0\VC\bin\vcvars32.bat"
-    )
+    SET PATH=C:\Qt\5.3\msvc2013_opengl\bin;!PATH!
+
+    CALL "!ProgFilesDir!\Microsoft Visual Studio 12.0\VC\bin\vcvars32.bat"
 
     SET SetupMSVC2013Environment=Done
 )
@@ -55,5 +55,7 @@ IF !ExitCode! EQU 0 (
 )
 
 CD ..
+
+SET PATH=!OLDPATH!
 
 EXIT /B !ExitCode!

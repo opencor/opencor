@@ -34,13 +34,13 @@
         <ul>
             <li><a href="https://github.com/opencor/opencor/blob/master/clean"><code>[OpenCOR]/clean</code></a>[<a href="https://github.com/opencor/opencor/blob/master/clean.bat"><code>.bat</code></a>]: cleans the OpenCOR environment;</li>
             <li>
-                <a href="https://github.com/opencor/opencor/blob/master/make"><code>[OpenCOR]/make</code></a>[<a href="https://github.com/opencor/opencor/blob/master/make.bat"><code>.bat</code></a>]: compiles and links everything that is required to get a release version of OpenCOR;
+                <a href="https://github.com/opencor/opencor/blob/master/make"><code>[OpenCOR]/make</code></a>[[<a href="https://github.com/opencor/opencor/blob/master/make32.bat"><code>32</code></a>]<a href="https://github.com/opencor/opencor/blob/master/make.bat"><code>.bat</code></a>]: compiles and links everything that is required to get a release version of OpenCOR;
 
                 <p class="nomargins note">
                     if you use <code>make</code> and don't have <a href="http://martine.github.io/ninja/">Ninja</a> installed on your system, then OpenCOR will by default be compiled sequentially. You can, however, specify a maximum number of jobs (<code>n</code>) to be run simultaneously by calling <code>make</code> with <code>-j [n]</code>. If no <code>n</code> value is provided, then as many jobs as possible will be run simultaneously.
                 </p>
             </li>
-            <li><a href="https://github.com/opencor/opencor/blob/master/maketests"><code>[OpenCOR]/maketests</code></a>[<a href="https://github.com/opencor/opencor/blob/master/maketests.bat"><code>.bat</code></a>]: builds a release version of OpenCOR and its tests;</li>
+            <li><a href="https://github.com/opencor/opencor/blob/master/maketests"><code>[OpenCOR]/maketests</code></a>[[<a href="https://github.com/opencor/opencor/blob/master/maketests32.bat"><code>32</code></a>]<a href="https://github.com/opencor/opencor/blob/master/maketests.bat"><code>.bat</code></a>]: builds a release version of OpenCOR and its tests;</li>
             <li>
                 <a href="https://github.com/opencor/opencor/blob/master/run"><code>[OpenCOR]/run</code></a>[<a href="https://github.com/opencor/opencor/blob/master/run.bat"><code>.bat</code></a> | <a href="https://github.com/opencor/opencor/blob/master/run.vbs"><code>.vbs</code></a>]: runs OpenCOR; and
 
@@ -64,6 +64,7 @@
             <li>Click on the <code>Finish</code> button; and</li>
             <li>
                 Build and run OpenCOR (by selecting the <code>Build</code> | <code>Run</code> menu or by pressing <code>Ctrl</code>+<code>R</code>).
+
                 <p class="nomargins note note1">
                     because of our use of CMake, debugging with Qt Creator currently requires an extra build step that can be set by selecting the <code>Projects</code> view and by clicking on the <code>Add Build Step</code> drop-down button and clicking on the <code>Custom Process Step</code> menu item. From there, set the <code>Command</code> field to <code>cmake</code> and the <code>Arguments</code> field to <code>-DCMAKE_BUILD_TYPE=Debug ..</code>. Finally, make sure that this new build step comes <em>before</em> the default <code>Make</code> build step.
                 </p>

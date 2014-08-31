@@ -136,23 +136,7 @@ void removeGlobalInstances()
 
 QString shortVersion(QCoreApplication *pApp)
 {
-    QString res;
-    QString appVersion = pApp->applicationVersion();
-
-    if (!appVersion.contains("-"))
-        res += "Version ";
-    else
-        res += "Snapshot ";
-
-    res += appVersion;
-
-    return res;
-}
-
-//==============================================================================
-
-QString version(QCoreApplication *pApp)
-{
+    QString res = QString();
     QString appVersion = pApp->applicationVersion();
     QString bitVersion;
 
@@ -169,21 +153,24 @@ QString version(QCoreApplication *pApp)
 
         bitVersion = "";
 
-    bool snapshot = appVersion.contains("-");
-    QString res = pApp->applicationName()+" ";
-
-    if (snapshot)
-        res += "[";
+    if (!appVersion.contains("-"))
+        res += "Version ";
+    else
+        res += "Snapshot ";
 
     res += appVersion;
-
-    if (snapshot)
-        res += "]";
 
     if (!bitVersion.isEmpty())
         res += " ("+bitVersion+")";
 
     return res;
+}
+
+//==============================================================================
+
+QString version(QCoreApplication *pApp)
+{
+    return  pApp->applicationName()+" "+shortVersion(pApp);
 }
 
 //==============================================================================
