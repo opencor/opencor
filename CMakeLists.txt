@@ -556,7 +556,8 @@ ELSEIF(APPLE)
 
     SET(CPACK_SET_DESTDIR TRUE)
 
-    INSTALL(TARGETS ${PROJECT_NAME} BUNDLE DESTINATION .)
+    INSTALL(TARGETS ${PROJECT_NAME} BUNDLE
+            DESTINATION .)
 
     # Shell script to run OpenCOR (useful when downloading a ZIPped version of
     # OpenCOR)
