@@ -35,7 +35,10 @@ PLUGININFO_FUNC CSVDataStorePluginInfo()
     descriptions.insert("en", QString::fromUtf8("a CSV specific data store plugin."));
     descriptions.insert("fr", QString::fromUtf8("une extension de magasin de données spécifique à CSV."));
 
-    return new PluginInfo(PluginInfo::DataStore, true, false,
+//    return new PluginInfo(PluginInfo::DataStore, true, false,
+// ---GRY--- THE BELOW IS TEMPORARY, UNTIL WE HAVE IMPLEMENTED ISSUE #451...
+//           SEE https://github.com/opencor/opencor/issues/451
+    return new PluginInfo(PluginInfo::DataStore, false, false,
                           QStringList() << "CoreDataStore",
                           descriptions);
 }
