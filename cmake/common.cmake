@@ -903,7 +903,7 @@ MACRO(LINUX_DEPLOY_QT_PLUGIN PLUGIN_CATEGORY)
 
         COPY_FILE_TO_BUILD_DIR(DIRECT_COPY ${PLUGIN_ORIG_DIRNAME} ${PLUGIN_DEST_DIRNAME} ${PLUGIN_FILENAME})
 
-        # Strip the Qt plugin of all local symbols
+        # Strip the Qt plugin of all its local symbols
 
         IF(RELEASE_MODE)
             ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
@@ -920,7 +920,7 @@ ENDMACRO()
 #===============================================================================
 
 MACRO(LINUX_DEPLOY_LIBRARY DIRNAME FILENAME)
-    # Strip the library of all local symbols
+    # Strip the library of all its local symbols
 
     IF(RELEASE_MODE)
         ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
@@ -961,7 +961,7 @@ ENDMACRO()
 #===============================================================================
 
 MACRO(OS_X_CLEAN_UP_FILE_WITH_QT_LIBRARIES PROJECT_TARGET DIRNAME FILENAME)
-    # Strip the Qt file of all local symbols
+    # Strip the Qt file of all its local symbols
 
     SET(FULL_FILENAME ${DIRNAME}/${FILENAME})
 
@@ -1047,7 +1047,7 @@ MACRO(OS_X_DEPLOY_LIBRARY DIRNAME LIBRARY_NAME)
                        COMMAND ${CMAKE_COMMAND} -E copy ${DIRNAME}/${LIBRARY_FILENAME}
                                                         ${LIBRARY_FILEPATH})
 
-    # Strip the library of all local symbols
+    # Strip the library of all its local symbols
 
     IF(RELEASE_MODE)
         ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
