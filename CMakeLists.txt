@@ -528,6 +528,10 @@ IF(WIN32)
     WINDOWS_DEPLOY_QT_LIBRARIES(Qt5CLucene Qt5Core Qt5Gui Qt5Help Qt5Multimedia Qt5MultimediaWidgets Qt5Network Qt5OpenGL Qt5Positioning Qt5PrintSupport Qt5Qml Qt5Quick Qt5Sensors Qt5Sql Qt5Svg Qt5WebKit Qt5WebKitWidgets Qt5Widgets Qt5Xml Qt5XmlPatterns)
     WINDOWS_DEPLOY_QT_LIBRARIES(icudt52 icuin52 icuuc52)
 
+    IF(ENABLE_TESTS)
+        WINDOWS_DEPLOY_QT_LIBRARIES(Qt5Test)
+    ENDIF()
+
     # Qt plugins required by OpenCOR
 
     WINDOWS_DEPLOY_QT_PLUGIN(accessible qtaccessiblewidgets)
