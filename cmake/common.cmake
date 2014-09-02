@@ -785,18 +785,34 @@ ENDMACRO()
 
 MACRO(COPY_FILE_TO_BUILD_DIR PROJECT_TARGET ORIG_DIRNAME DEST_DIRNAME FILENAME)
     # Copy the file (renaming it if needed) to the destination folder
+    # Note: DIRECT_COPY is used to copy a file that doesn't first need to be
+    #       built. This means that we can then use EXECUTE_PROCESS() rather than
+    #       ADD_CUSTOM_COMMAND(), and thus reduce the length of the
+    #       PROJECT_TARGET command, something that can be useful on Windows
+    #       since the command might otherwise end up being too long for Windows
+    #       to handle...
 
     IF("${ARGN}" STREQUAL "")
-        ADD_CUSTOM_COMMAND(TARGET ${PROJECT_TARGET} POST_BUILD
-                           COMMAND ${CMAKE_COMMAND} -E copy ${ORIG_DIRNAME}/${FILENAME}
-                                                            ${PROJECT_BUILD_DIR}/${DEST_DIRNAME}/${FILENAME})
+        IF("${PROJECT_TARGET}" STREQUAL "DIRECT_COPY")
+            EXECUTE_PROCESS(COMMAND ${CMAKE_COMMAND} -E copy ${ORIG_DIRNAME}/${FILENAME}
+                                                             ${PROJECT_BUILD_DIR}/${DEST_DIRNAME}/${FILENAME})
+        ELSE()
+            ADD_CUSTOM_COMMAND(TARGET ${PROJECT_TARGET} POST_BUILD
+                               COMMAND ${CMAKE_COMMAND} -E copy ${ORIG_DIRNAME}/${FILENAME}
+                                                                ${PROJECT_BUILD_DIR}/${DEST_DIRNAME}/${FILENAME})
+        ENDIF()
     ELSE()
         # An argument was passed so use it to rename the file, which is to be
         # copied
 
-        ADD_CUSTOM_COMMAND(TARGET ${PROJECT_TARGET} POST_BUILD
-                           COMMAND ${CMAKE_COMMAND} -E copy ${ORIG_DIRNAME}/${FILENAME}
-                                                            ${PROJECT_BUILD_DIR}/${DEST_DIRNAME}/${ARGN})
+        IF("${PROJECT_TARGET}" STREQUAL "DIRECT_COPY")
+            EXECUTE_PROCESS(COMMAND ${CMAKE_COMMAND} -E copy ${ORIG_DIRNAME}/${FILENAME}
+                                                             ${PROJECT_BUILD_DIR}/${DEST_DIRNAME}/${ARGN})
+        ELSE()
+            ADD_CUSTOM_COMMAND(TARGET ${PROJECT_TARGET} POST_BUILD
+                               COMMAND ${CMAKE_COMMAND} -E copy ${ORIG_DIRNAME}/${FILENAME}
+                                                                ${PROJECT_BUILD_DIR}/${DEST_DIRNAME}/${ARGN})
+        ENDIF()
     ENDIF()
 ENDMACRO()
 
@@ -804,9 +820,34 @@ ENDMACRO()
 
 MACRO(WINDOWS_DEPLOY_QT_LIBRARIES)
     FOREACH(LIBRARY ${ARGN})
+        # Copy the Qt library to both the build and build/bin folders, so we can
+        # test things without first having to deploy OpenCOR
+        # Note: this is particularly useful on 64-bit Windows where we might
+        #       want to be able to test both the 32-bit and 64-bit versions of
+        #       OpenCOR (since only the 32-bit or 64-bit Qt libraries are
+        #       indirectly referenced in the PATH)...
+
+        SET(LIBRARY_RELEASE_FILENAME ${CMAKE_SHARED_LIBRARY_PREFIX}${LIBRARY}${CMAKE_SHARED_LIBRARY_SUFFIX})
+        SET(LIBRARY_DEBUG_FILENAME ${CMAKE_SHARED_LIBRARY_PREFIX}${LIBRARY}d${CMAKE_SHARED_LIBRARY_SUFFIX})
+
+        IF(NOT EXISTS ${LIBRARY_DEBUG_FILENAME})
+            # No debug version of the Qt library exists, so use its release
+            # version instead
+
+            SET(LIBRARY_DEBUG_FILENAME ${LIBRARY_RELEASE_FILENAME})
+        ENDIF()
+
+        IF(RELEASE_MODE)
+            COPY_FILE_TO_BUILD_DIR(DIRECT_COPY ${QT_BINARY_DIR} . ${LIBRARY_RELEASE_FILENAME})
+            COPY_FILE_TO_BUILD_DIR(DIRECT_COPY ${QT_BINARY_DIR} bin ${LIBRARY_RELEASE_FILENAME})
+        ELSE()
+            COPY_FILE_TO_BUILD_DIR(DIRECT_COPY ${QT_BINARY_DIR} . ${LIBRARY_DEBUG_FILENAME})
+            COPY_FILE_TO_BUILD_DIR(DIRECT_COPY ${QT_BINARY_DIR} bin ${LIBRARY_DEBUG_FILENAME})
+        ENDIF()
+
         # Deploy the Qt library
 
-        INSTALL(FILES ${QT_BINARY_DIR}/${CMAKE_SHARED_LIBRARY_PREFIX}${LIBRARY}${CMAKE_SHARED_LIBRARY_SUFFIX}
+        INSTALL(FILES ${QT_BINARY_DIR}/${LIBRARY_RELEASE_FILENAME}
                 DESTINATION bin)
     ENDFOREACH()
 ENDMACRO()
@@ -823,9 +864,9 @@ MACRO(WINDOWS_DEPLOY_QT_PLUGIN PLUGIN_CATEGORY)
         SET(PLUGIN_DEBUG_FILENAME ${CMAKE_SHARED_LIBRARY_PREFIX}${PLUGIN_NAME}d${CMAKE_SHARED_LIBRARY_SUFFIX})
 
         IF(RELEASE_MODE)
-            COPY_FILE_TO_BUILD_DIR(${PROJECT_NAME} ${PLUGIN_ORIG_DIRNAME} ${PLUGIN_DEST_DIRNAME} ${PLUGIN_RELEASE_FILENAME})
+            COPY_FILE_TO_BUILD_DIR(DIRECT_COPY ${PLUGIN_ORIG_DIRNAME} ${PLUGIN_DEST_DIRNAME} ${PLUGIN_RELEASE_FILENAME})
         ELSE()
-            COPY_FILE_TO_BUILD_DIR(${PROJECT_NAME} ${PLUGIN_ORIG_DIRNAME} ${PLUGIN_DEST_DIRNAME} ${PLUGIN_DEBUG_FILENAME})
+            COPY_FILE_TO_BUILD_DIR(DIRECT_COPY ${PLUGIN_ORIG_DIRNAME} ${PLUGIN_DEST_DIRNAME} ${PLUGIN_DEBUG_FILENAME})
         ENDIF()
 
         # Deploy the Qt plugin
@@ -841,8 +882,8 @@ MACRO(WINDOWS_DEPLOY_LIBRARY DIRNAME FILENAME)
     # Copy the library file to both the build and build/bin folders, so we can
     # test things without first having to deploy OpenCOR
 
-    COPY_FILE_TO_BUILD_DIR(${PROJECT_NAME} ${DIRNAME} . ${FILENAME})
-    COPY_FILE_TO_BUILD_DIR(${PROJECT_NAME} ${DIRNAME} bin ${FILENAME})
+    COPY_FILE_TO_BUILD_DIR(DIRECT_COPY ${DIRNAME} . ${FILENAME})
+    COPY_FILE_TO_BUILD_DIR(DIRECT_COPY ${DIRNAME} bin ${FILENAME})
 
     # Install the library file
 
@@ -860,7 +901,7 @@ MACRO(LINUX_DEPLOY_QT_PLUGIN PLUGIN_CATEGORY)
         SET(PLUGIN_DEST_DIRNAME plugins/${PLUGIN_CATEGORY})
         SET(PLUGIN_FILENAME ${CMAKE_SHARED_LIBRARY_PREFIX}${PLUGIN_NAME}${CMAKE_SHARED_LIBRARY_SUFFIX})
 
-        COPY_FILE_TO_BUILD_DIR(${PROJECT_NAME} ${PLUGIN_ORIG_DIRNAME} ${PLUGIN_DEST_DIRNAME} ${PLUGIN_FILENAME})
+        COPY_FILE_TO_BUILD_DIR(DIRECT_COPY ${PLUGIN_ORIG_DIRNAME} ${PLUGIN_DEST_DIRNAME} ${PLUGIN_FILENAME})
 
         # Strip the Qt plugin of all local symbols
 
