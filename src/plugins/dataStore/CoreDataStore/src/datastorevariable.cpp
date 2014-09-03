@@ -69,20 +69,20 @@ void DataStoreVariable::setUri(const QString &pUri)
 
 //==============================================================================
 
-QString DataStoreVariable::name() const
+QString DataStoreVariable::label() const
 {
-    // Return our name
+    // Return our label
 
     return mName;
 }
 
 //==============================================================================
 
-void DataStoreVariable::setName(const QString &pName)
+void DataStoreVariable::setLabel(const QString &pLabel)
 {
-    // Set our name
+    // Set our label
 
-    mName = pName;
+    mName = pLabel;
 }
 
 //==============================================================================

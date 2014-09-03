@@ -651,7 +651,7 @@ bool SingleCellViewSimulationResults::createDataStore()
 
     mPoints->setUri(uri(mRuntime->variableOfIntegration()->componentHierarchy(),
                         mRuntime->variableOfIntegration()->name()));
-    mPoints->setName(mRuntime->variableOfIntegration()->name());
+    mPoints->setLabel(mRuntime->variableOfIntegration()->name());
     mPoints->setUnit(mRuntime->variableOfIntegration()->unit());
 
     for (int i = 0, iMax = mRuntime->parameters().count(); i < iMax; ++i) {
@@ -685,7 +685,7 @@ bool SingleCellViewSimulationResults::createDataStore()
         if (variable) {
             variable->setUri(uri(parameter->componentHierarchy(),
                                  parameter->formattedName()));
-            variable->setName(parameter->formattedName());
+            variable->setLabel(parameter->formattedName());
             variable->setUnit(parameter->formattedUnit(mRuntime->variableOfIntegration()->unit()));
         }
     }

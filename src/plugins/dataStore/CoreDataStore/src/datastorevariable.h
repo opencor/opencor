@@ -51,8 +51,8 @@ public:
     QString uri() const;
     void setUri(const QString &pUri);
 
-    QString name() const;
-    void setName(const QString &pName);
+    QString label() const;
+    void setLabel(const QString &pLabel);
 
     QString unit() const;
     void setUnit(const QString &pUnit);
