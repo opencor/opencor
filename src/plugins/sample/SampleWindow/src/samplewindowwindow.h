@@ -24,7 +24,7 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-#include "dockwidget.h"
+#include "windowwidget.h"
 
 //==============================================================================
 
@@ -39,7 +39,7 @@ namespace SampleWindow {
 
 //==============================================================================
 
-class SampleWindowWindow : public Core::DockWidget
+class SampleWindowWindow : public Core::WindowWidget
 {
     Q_OBJECT
 

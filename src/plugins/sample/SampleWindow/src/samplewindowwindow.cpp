@@ -34,7 +34,7 @@ namespace SampleWindow {
 //==============================================================================
 
 SampleWindowWindow::SampleWindowWindow(QWidget *pParent) :
-    Core::DockWidget(pParent),
+    Core::WindowWidget(pParent),
     mGui(new Ui::SampleWindowWindow)
 {
     // Set up the GUI

@@ -355,7 +355,7 @@ QDockWidget * SampleWindowPlugin::windowWidget() const
 
 //==============================================================================
 
-#include "<a href="https://github.com/opencor/opencor/blob/master/src/plugins/miscellaneous/Core/src/dockwidget.h"><code>dockwidget.h</code></a>"
+#include "<a href="https://github.com/opencor/opencor/blob/master/src/plugins/miscellaneous/Core/src/windowwidget.h"><code>windowwidget.h</code></a>"
 
 //==============================================================================
 
@@ -370,7 +370,7 @@ namespace SampleWindow {
 
 //==============================================================================
 
-class SampleWindowWindow : public Core::DockWidget
+class SampleWindowWindow : public Core::WindowWidget
 {
     Q_OBJECT
 
@@ -395,7 +395,7 @@ private Q_SLOTS:
 #endif</pre>
 
         <p>
-            <code>SampleWindowWindow</code> inherits from <code>Core::DockWidget</code>, which is defined in the <strong>Core</strong> plugin and is an extended version of <a href="http://qt-project.org/">Qt</a>'s <code>QDockWidget</code> (line 42). It also comes with a GUI file, which describes the layout of our plugin window (<a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/SampleWindow/src/samplewindowwindow.ui"><code>samplewindowwindow.ui</code></a>).
+            <code>SampleWindowWindow</code> inherits from <code>Core::WindowWidget</code>, which is defined in the <strong>Core</strong> plugin and is an extended version of <a href="http://qt-project.org/">Qt</a>'s <code>QDockWidget</code> (line 42). It also comes with a GUI file, which describes the layout of our plugin window (<a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/SampleWindow/src/samplewindowwindow.ui"><code>samplewindowwindow.ui</code></a>).
         </p>
 
         <p>
@@ -421,7 +421,7 @@ namespace SampleWindow {
 //==============================================================================
 
 SampleWindowWindow::SampleWindowWindow(QWidget *pParent) :
-    Core::DockWidget(pParent),
+    Core::WindowWidget(pParent),
     mGui(new Ui::SampleWindowWindow)
 {
     // Set up the GUI
