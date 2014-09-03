@@ -38,12 +38,28 @@ namespace Core {
 
 //==============================================================================
 
+class SpinnerWidget;
+
+//==============================================================================
+
 class CORE_EXPORT WindowWidget : public QDockWidget, public CommonWidget
 {
     Q_OBJECT
 
 public:
     explicit WindowWidget(QWidget *pParent);
+
+    void setSpinnerWidgetParent(QWidget *pParent);
+    void setSpinnerWidgetVisible(const bool &pVisible);
+
+protected:
+    void resizeEvent(QResizeEvent *pEvent);
+
+private:
+    QWidget *mSpinnerWidgetParent;
+    SpinnerWidget *mSpinnerWidget;
+
+    void recenterSpinnerWidget();
 };
 
 //==============================================================================

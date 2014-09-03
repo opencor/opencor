@@ -46,15 +46,6 @@ class QNetworkReply;
 //==============================================================================
 
 namespace OpenCOR {
-
-//==============================================================================
-
-namespace Core {
-    class SpinnerWidget;
-}   // namespace Core
-
-//==============================================================================
-
 namespace CellMLModelRepositoryWindow {
 
 //==============================================================================
@@ -73,13 +64,8 @@ public:
 
     virtual void retranslateUi();
 
-protected:
-    void resizeEvent(QResizeEvent *pEvent);
-
 private:
     Ui::CellmlModelRepositoryWindowWindow *mGui;
-
-    Core::SpinnerWidget *mSpinnerWidget;
 
     QStringList mModelNames;
     QStringList mModelUrls;
