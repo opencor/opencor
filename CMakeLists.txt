@@ -245,7 +245,6 @@ SET(PLUGINS
 
     widget/Editor
     widget/EditorList
-    widget/Spinner
     widget/Viewer
 
     # Plugins that have dependencies on others
@@ -452,7 +451,7 @@ ELSE()
         IF(NOT RELEASE_MODE)
             SET(MSVC_DIRNAME "${MSVC_DIRNAME}/Debug_NonRedist")
         ENDIF()
-       
+
         IF(${ARCHITECTURE} EQUAL 32)
             SET(MSVC_DIRNAME "${MSVC_DIRNAME}/x86")
         ELSE()

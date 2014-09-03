@@ -79,7 +79,7 @@ CellmlModelRepositoryWindowWindow::CellmlModelRepositoryWindowWindow(QWidget *pP
 
     // Create our spinner widget
 
-    mSpinnerWidget = new Spinner::SpinnerWidget(mCellmlModelRepositoryWidget);
+    mSpinnerWidget = new Core::SpinnerWidget(mCellmlModelRepositoryWidget);
 
     // Create and populate our context menu
 

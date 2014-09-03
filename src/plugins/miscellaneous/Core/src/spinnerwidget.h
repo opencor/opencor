@@ -24,7 +24,7 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-#include "spinnerglobal.h"
+#include "coreglobal.h"
 
 //==============================================================================
 
@@ -38,11 +38,11 @@ class QTimer;
 //==============================================================================
 
 namespace OpenCOR {
-namespace Spinner {
+namespace Core {
 
 //==============================================================================
 
-class SPINNER_EXPORT SpinnerWidget : public QWidget
+class CORE_EXPORT SpinnerWidget : public QWidget
 {
     Q_OBJECT
 
@@ -114,7 +114,7 @@ private Q_SLOTS:
 
 //==============================================================================
 
-}   // namespace Spinner
+}   // namespace Core
 }   // namespace OpenCOR
 
 //==============================================================================

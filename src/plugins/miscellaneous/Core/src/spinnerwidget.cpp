@@ -40,7 +40,7 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 namespace OpenCOR {
-namespace Spinner {
+namespace Core {
 
 //==============================================================================
 
@@ -414,7 +414,7 @@ void SpinnerWidget::setVisible(bool pVisible)
 
 //==============================================================================
 
-}   // namespace Viewer
+}   // namespace Core
 }   // namespace OpenCOR
 
 //==============================================================================

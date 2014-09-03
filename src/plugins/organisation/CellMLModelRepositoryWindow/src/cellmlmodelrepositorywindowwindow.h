@@ -49,9 +49,9 @@ namespace OpenCOR {
 
 //==============================================================================
 
-namespace Spinner {
+namespace Core {
     class SpinnerWidget;
-}   // namespace Spinner
+}   // namespace Core
 
 //==============================================================================
 
@@ -79,7 +79,7 @@ protected:
 private:
     Ui::CellmlModelRepositoryWindowWindow *mGui;
 
-    Spinner::SpinnerWidget *mSpinnerWidget;
+    Core::SpinnerWidget *mSpinnerWidget;
 
     QStringList mModelNames;
     QStringList mModelUrls;
