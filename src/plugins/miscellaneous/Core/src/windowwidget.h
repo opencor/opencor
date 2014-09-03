@@ -16,11 +16,11 @@ specific language governing permissions and limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// Dock widget
+// Window widget
 //==============================================================================
 
-#ifndef DOCKWIDGET_H
-#define DOCKWIDGET_H
+#ifndef WINDOWWIDGET_H
+#define WINDOWWIDGET_H
 
 //==============================================================================
 
@@ -38,12 +38,12 @@ namespace Core {
 
 //==============================================================================
 
-class CORE_EXPORT DockWidget : public QDockWidget, public CommonWidget
+class CORE_EXPORT WindowWidget : public QDockWidget, public CommonWidget
 {
     Q_OBJECT
 
 public:
-    explicit DockWidget(QWidget *pParent);
+    explicit WindowWidget(QWidget *pParent);
 };
 
 //==============================================================================

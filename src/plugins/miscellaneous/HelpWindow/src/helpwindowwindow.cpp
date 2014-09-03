@@ -55,7 +55,7 @@ static const auto OpencorHelpWindowHomepageUrl = QStringLiteral("qthelp://openco
 //==============================================================================
 
 HelpWindowWindow::HelpWindowWindow(QWidget *pParent) :
-    DockWidget(pParent),
+    WindowWidget(pParent),
     mGui(new Ui::HelpWindowWindow)
 {
     // Set up the GUI

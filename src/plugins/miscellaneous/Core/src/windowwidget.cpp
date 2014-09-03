@@ -16,10 +16,10 @@ specific language governing permissions and limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// Dock widget
+// Window widget
 //==============================================================================
 
-#include "dockwidget.h"
+#include "windowwidget.h"
 
 //==============================================================================
 
@@ -28,7 +28,7 @@ namespace Core {
 
 //==============================================================================
 
-DockWidget::DockWidget(QWidget *pParent) :
+WindowWidget::WindowWidget(QWidget *pParent) :
     QDockWidget(pParent),
     CommonWidget(pParent)
 {

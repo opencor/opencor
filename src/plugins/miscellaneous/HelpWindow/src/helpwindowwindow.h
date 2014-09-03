@@ -24,7 +24,7 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-#include "dockwidget.h"
+#include "windowwidget.h"
 
 //==============================================================================
 
@@ -49,7 +49,7 @@ class HelpWindowWidget;
 
 //==============================================================================
 
-class HelpWindowWindow : public Core::DockWidget
+class HelpWindowWindow : public Core::WindowWidget
 {
     Q_OBJECT
 

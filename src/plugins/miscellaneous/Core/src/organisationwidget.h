@@ -24,8 +24,8 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-#include "dockwidget.h"
 #include "coreglobal.h"
+#include "windowwidget.h"
 
 //==============================================================================
 
@@ -38,7 +38,7 @@ namespace Core {
 
 //==============================================================================
 
-class CORE_EXPORT OrganisationWidget : public DockWidget
+class CORE_EXPORT OrganisationWidget : public WindowWidget
 {
     Q_OBJECT
 

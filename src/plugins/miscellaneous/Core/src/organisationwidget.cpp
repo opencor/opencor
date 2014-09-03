@@ -33,7 +33,7 @@ namespace Core {
 //==============================================================================
 
 OrganisationWidget::OrganisationWidget(QWidget *pParent) :
-    DockWidget(pParent)
+    WindowWidget(pParent)
 {
 }
 

@@ -281,7 +281,7 @@ int main(int pArgC, char *pArgV[])
 
         if (res == OpenCOR::CleanRestart)
             // We want a clean restart, so clear all the user settings (indeed,
-            // this will ensure that the various dock windows are, for instance,
+            // this will ensure that the various windows are, for instance,
             // properly reset with regards to their dimensions)
 
             QSettings(OpenCOR::SettingsOrganization, OpenCOR::SettingsApplication).clear();

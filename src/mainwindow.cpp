@@ -24,7 +24,6 @@ specific language governing permissions and limitations under the License.
 #include "common.h"
 #include "coreinterface.h"
 #include "coresettings.h"
-#include "dockwidget.h"
 #include "guiinterface.h"
 #include "guiutils.h"
 #include "i18ninterface.h"
@@ -36,6 +35,7 @@ specific language governing permissions and limitations under the License.
 #include "settings.h"
 #include "viewinterface.h"
 #include "windowinterface.h"
+#include "windowwidget.h"
 
 //==============================================================================
 
@@ -250,14 +250,14 @@ Core::showEnableAction(mGui->actionPreferences, false);
     foreach (Plugin *plugin, mLoadedPluginPlugins)
         qobject_cast<PluginInterface *>(plugin->instance())->pluginsInitialized(mPluginManager->loadedPlugins());
 
-    // Keep track of the showing/hiding of the different dock widgets
+    // Keep track of the showing/hiding of the different window widgets
 
     foreach (Plugin *plugin, mLoadedWindowPlugins)
         connect(qobject_cast<WindowInterface *>(plugin->instance())->windowWidget(), SIGNAL(visibilityChanged(bool)),
                 this, SLOT(updateDockWidgetsVisibility()));
 
-    // Show/hide and enable/disable the docked windows action depending on
-    // whether there are dock widgets
+    // Show/hide and enable/disable the windows action depending on whether
+    // there are window widgets
 
     Core::showEnableAction(mGui->actionDockedWindows, mLoadedWindowPlugins.count());
 
