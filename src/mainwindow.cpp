@@ -61,6 +61,7 @@ specific language governing permissions and limitations under the License.
 #include <QMenu>
 #include <QMenuBar>
 #include <QMessageBox>
+#include <QRect>
 #include <QSettings>
 #ifdef Q_OS_MAC
     #include <QShortcut>
