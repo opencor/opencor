@@ -25,6 +25,7 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include "coreglobal.h"
+#include "spinnersupportwidget.h"
 #include "widget.h"
 
 //==============================================================================
@@ -34,7 +35,7 @@ namespace Core {
 
 //==============================================================================
 
-class CORE_EXPORT ViewWidget : public Widget
+class CORE_EXPORT ViewWidget : public Widget, public SpinnerSupportWidget
 {
     Q_OBJECT
 
@@ -42,6 +43,9 @@ public:
     explicit ViewWidget(QWidget *pParent);
 
     virtual QList<QWidget *> statusBarWidgets() const;
+
+protected:
+    void resizeEvent(QResizeEvent *pEvent);
 
 Q_SIGNALS:
     void updateFileTabIcon(const QString &pViewName, const QString &pFileName,

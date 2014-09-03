@@ -26,6 +26,7 @@ specific language governing permissions and limitations under the License.
 
 #include "commonwidget.h"
 #include "coreglobal.h"
+#include "spinnersupportwidget.h"
 
 //==============================================================================
 
@@ -38,28 +39,16 @@ namespace Core {
 
 //==============================================================================
 
-class SpinnerWidget;
-
-//==============================================================================
-
-class CORE_EXPORT WindowWidget : public QDockWidget, public CommonWidget
+class CORE_EXPORT WindowWidget : public QDockWidget, public CommonWidget,
+                                 public SpinnerSupportWidget
 {
     Q_OBJECT
 
 public:
     explicit WindowWidget(QWidget *pParent);
 
-    void setSpinnerWidgetParent(QWidget *pParent);
-    void setSpinnerWidgetVisible(const bool &pVisible);
-
 protected:
     void resizeEvent(QResizeEvent *pEvent);
-
-private:
-    QWidget *mSpinnerWidgetParent;
-    SpinnerWidget *mSpinnerWidget;
-
-    void recenterSpinnerWidget();
 };
 
 //==============================================================================

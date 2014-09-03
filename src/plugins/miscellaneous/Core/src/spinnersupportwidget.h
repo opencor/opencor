@@ -16,10 +16,20 @@ specific language governing permissions and limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// View widget
+// Spinner support widget
 //==============================================================================
 
-#include "viewwidget.h"
+#ifndef SPINNERSUPPORTWIDGET_H
+#define SPINNERSUPPORTWIDGET_H
+
+//==============================================================================
+
+#include "commonwidget.h"
+#include "coreglobal.h"
+
+//==============================================================================
+
+#include <QDockWidget>
 
 //==============================================================================
 
@@ -28,38 +38,34 @@ namespace Core {
 
 //==============================================================================
 
-ViewWidget::ViewWidget(QWidget *pParent) :
-    Widget(pParent),
-    SpinnerSupportWidget(pParent)
-{
-}
+class SpinnerWidget;
 
 //==============================================================================
 
-void ViewWidget::resizeEvent(QResizeEvent *pEvent)
+class CORE_EXPORT SpinnerSupportWidget
 {
-    // Default handling of the event
+public:
+    explicit SpinnerSupportWidget(QWidget *pParent);
 
-    Widget::resizeEvent(pEvent);
+    void setSpinnerWidgetParent(QWidget *pParent);
+    void setSpinnerWidgetVisible(const bool &pVisible);
 
-    // (Re-)center our spinner widget
+protected:
+    void centerSpinnerWidget();
 
-    centerSpinnerWidget();
-}
-
-//==============================================================================
-
-QList<QWidget *> ViewWidget::statusBarWidgets() const
-{
-    // No status bar widgets by default
-
-    return QList<QWidget *>();
-}
+private:
+    QWidget *mSpinnerWidgetParent;
+    SpinnerWidget *mSpinnerWidget;
+};
 
 //==============================================================================
 
 }   // namespace Core
 }   // namespace OpenCOR
+
+//==============================================================================
+
+#endif
 
 //==============================================================================
 // End of file

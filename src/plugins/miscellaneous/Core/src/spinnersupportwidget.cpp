@@ -16,10 +16,17 @@ specific language governing permissions and limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// View widget
+// Spinner support widget
 //==============================================================================
 
-#include "viewwidget.h"
+#include "spinnersupportwidget.h"
+#include "spinnerwidget.h"
+
+//==============================================================================
+
+#include <QApplication>
+#include <QDesktopWidget>
+#include <QRect>
 
 //==============================================================================
 
@@ -28,32 +35,51 @@ namespace Core {
 
 //==============================================================================
 
-ViewWidget::ViewWidget(QWidget *pParent) :
-    Widget(pParent),
-    SpinnerSupportWidget(pParent)
+SpinnerSupportWidget::SpinnerSupportWidget(QWidget *pParent)
 {
+    // Create and customise our spinner widget
+
+    mSpinnerWidget = new Core::SpinnerWidget(pParent);
+
+    mSpinnerWidget->setVisible(false);
+
+    setSpinnerWidgetParent(pParent);
 }
 
 //==============================================================================
 
-void ViewWidget::resizeEvent(QResizeEvent *pEvent)
+void SpinnerSupportWidget::setSpinnerWidgetParent(QWidget *pParent)
 {
-    // Default handling of the event
+    // Set the parent of our spinner widget and (re-)center it
 
-    Widget::resizeEvent(pEvent);
+    mSpinnerWidgetParent = pParent;
 
-    // (Re-)center our spinner widget
+    mSpinnerWidget->setParent(pParent);
 
     centerSpinnerWidget();
 }
 
 //==============================================================================
 
-QList<QWidget *> ViewWidget::statusBarWidgets() const
+void SpinnerSupportWidget::setSpinnerWidgetVisible(const bool &pVisible)
 {
-    // No status bar widgets by default
+    // Show/hide our spinner widget
 
-    return QList<QWidget *>();
+    mSpinnerWidget->setVisible(pVisible);
+}
+
+//==============================================================================
+
+void SpinnerSupportWidget::centerSpinnerWidget()
+{
+    // (Re-)center our spinner widget
+
+    QRect desktopGeometry = qApp->desktop()->availableGeometry();
+    int parentWidth = mSpinnerWidgetParent?mSpinnerWidgetParent->width():desktopGeometry.width();
+    int parentHeight = mSpinnerWidgetParent?mSpinnerWidgetParent->height():desktopGeometry.height();
+
+    mSpinnerWidget->move(0.5*(parentWidth-mSpinnerWidget->width()),
+                         0.5*(parentHeight-mSpinnerWidget->height()));
 }
 
 //==============================================================================
