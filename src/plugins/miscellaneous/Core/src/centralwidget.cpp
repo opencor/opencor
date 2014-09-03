@@ -61,6 +61,7 @@ specific language governing permissions and limitations under the License.
 #include <QStatusBar>
 #include <QUrl>
 #include <QVariant>
+#include <QVBoxLayout>
 
 //==============================================================================
 
