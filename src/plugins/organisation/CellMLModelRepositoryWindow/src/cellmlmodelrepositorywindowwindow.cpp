@@ -76,10 +76,6 @@ CellmlModelRepositoryWindowWindow::CellmlModelRepositoryWindowWindow(QWidget *pP
 
     mGui->dockWidgetContents->layout()->addWidget(mCellmlModelRepositoryWidget);
 
-    // Customise our inherited spinner widget
-
-    setSpinnerWidgetParent(mCellmlModelRepositoryWidget);
-
     // Create and populate our context menu
 
     mContextMenu = new QMenu(this);
@@ -182,7 +178,10 @@ void CellmlModelRepositoryWindowWindow::outputModelList(const QStringList &pMode
 
     // Show/hide our spinner widget
 
-    setSpinnerWidgetVisible(mModelListRequested);
+    if (mModelListRequested)
+        showSpinnerWidget(mCellmlModelRepositoryWidget);
+    else
+        hideSpinnerWidget();
 
     // Output the list matching the search criteria, or a message telling the
     // user what went wrong, if anything and if needed

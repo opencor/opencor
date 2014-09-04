@@ -1,4 +1,4 @@
-/*******************************************************************************
+﻿/*******************************************************************************
 
 Licensed to the OpenCOR team under one or more contributor license agreements.
 See the NOTICE.txt file distributed with this work for additional information
@@ -45,16 +45,15 @@ class SpinnerWidget;
 class CORE_EXPORT SpinnerSupportWidget
 {
 public:
-    explicit SpinnerSupportWidget(QWidget *pParent);
+    explicit SpinnerSupportWidget();
 
-    void setSpinnerWidgetParent(QWidget *pParent);
-    void setSpinnerWidgetVisible(const bool &pVisible);
+    void showSpinnerWidget(QWidget *pParent);
+    void hideSpinnerWidget();
 
 protected:
     void centerSpinnerWidget();
 
 private:
-    QWidget *mSpinnerWidgetParent;
     SpinnerWidget *mSpinnerWidget;
 };
 

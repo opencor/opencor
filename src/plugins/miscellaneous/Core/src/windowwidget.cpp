@@ -31,7 +31,7 @@ namespace Core {
 WindowWidget::WindowWidget(QWidget *pParent) :
     QDockWidget(pParent),
     CommonWidget(pParent),
-    SpinnerSupportWidget(pParent)
+    SpinnerSupportWidget()
 {
 }
 

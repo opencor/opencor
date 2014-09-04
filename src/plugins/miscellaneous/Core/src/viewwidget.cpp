@@ -30,7 +30,7 @@ namespace Core {
 
 ViewWidget::ViewWidget(QWidget *pParent) :
     Widget(pParent),
-    SpinnerSupportWidget(pParent)
+    SpinnerSupportWidget()
 {
 }
 

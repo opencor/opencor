@@ -35,48 +35,52 @@ namespace Core {
 
 //==============================================================================
 
-SpinnerSupportWidget::SpinnerSupportWidget(QWidget *pParent)
+SpinnerSupportWidget::SpinnerSupportWidget() :
+    mSpinnerWidget(0)
 {
-    // Create and customise our spinner widget
+}
+
+//==============================================================================
+
+void SpinnerSupportWidget::showSpinnerWidget(QWidget *pParent)
+{
+    // Show our spinner widget, which implies deleting its previous instance (if
+    // any), creating a new one, centering it and finally showing it
+
+    delete mSpinnerWidget;
 
     mSpinnerWidget = new Core::SpinnerWidget(pParent);
 
-    mSpinnerWidget->setVisible(false);
-
-    setSpinnerWidgetParent(pParent);
-}
-
-//==============================================================================
-
-void SpinnerSupportWidget::setSpinnerWidgetParent(QWidget *pParent)
-{
-    // Set the parent of our spinner widget and (re-)center it
-
-    mSpinnerWidgetParent = pParent;
-
-    mSpinnerWidget->setParent(pParent);
-
     centerSpinnerWidget();
+
+    mSpinnerWidget->setVisible(true);
 }
 
 //==============================================================================
 
-void SpinnerSupportWidget::setSpinnerWidgetVisible(const bool &pVisible)
+void SpinnerSupportWidget::hideSpinnerWidget()
 {
-    // Show/hide our spinner widget
+    // Hide our spinner widget by deleting it
 
-    mSpinnerWidget->setVisible(pVisible);
+    delete mSpinnerWidget;
+
+    mSpinnerWidget = 0;
 }
 
 //==============================================================================
 
 void SpinnerSupportWidget::centerSpinnerWidget()
 {
-    // (Re)center our spinner widget
+    // Make sure that we have a spinner widget
+
+    if (!mSpinnerWidget)
+        return;
+
+    // Center our spinner widget
 
     QRect desktopGeometry = qApp->desktop()->availableGeometry();
-    int parentWidth = mSpinnerWidgetParent?mSpinnerWidgetParent->width():desktopGeometry.width();
-    int parentHeight = mSpinnerWidgetParent?mSpinnerWidgetParent->height():desktopGeometry.height();
+    int parentWidth = mSpinnerWidget->parentWidget()?mSpinnerWidget->parentWidget()->width():desktopGeometry.width();
+    int parentHeight = mSpinnerWidget->parentWidget()?mSpinnerWidget->parentWidget()->height():desktopGeometry.height();
 
     mSpinnerWidget->move(0.5*(parentWidth-mSpinnerWidget->width()),
                          0.5*(parentHeight-mSpinnerWidget->height()));
