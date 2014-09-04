@@ -45,15 +45,6 @@ install:
          && chmod -R 755 /usr/local/opt/qt5/*
          ;
        fi
-    && if [ "`uname -s`" = "Linux" ]; then
-            sudo apt-get -qq update
-         && sudo apt-get install bc
-         && PROCS=`cat /proc/cpuinfo | grep processor | wc -l`
-         ;
-       else
-         PROCS=`sysctl hw.ncpu | cut -d " " -f 2`
-         ;
-       fi
 
 script:
   -    cd build
@@ -64,7 +55,7 @@ script:
          cmake -DCMAKE_BUILD_TYPE=$CONFIG -DCMAKE_PREFIX_PATH=/usr/local/opt/qt5/lib/cmake -DENABLE_TESTS=ON -DENABLE_SAMPLES=ON ..
          ;
        fi
-    && make -j `echo "$PROCS-$PROCS/2" | bc`
+    && make
     && if [ "`uname -s`" = "Linux" ]; then
          cd bin
          ;
