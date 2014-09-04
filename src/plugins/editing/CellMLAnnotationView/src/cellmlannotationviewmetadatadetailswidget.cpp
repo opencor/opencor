@@ -25,6 +25,7 @@ specific language governing permissions and limitations under the License.
 #include "cellmlannotationviewmetadatadetailswidget.h"
 #include "cellmlannotationviewmetadataeditdetailswidget.h"
 #include "cellmlannotationviewmetadataviewdetailswidget.h"
+#include "cellmlannotationviewplugin.h"
 #include "filemanager.h"
 #include "usermessagewidget.h"
 
@@ -220,7 +221,7 @@ void CellmlAnnotationViewMetadataDetailsWidget::retranslateUi()
 
     mUnsupportedMetadataMessage->setMessage( "<div align=center>"
                                              "    <p>"
-                                             "        "+tr("Sorry, but the <strong>%1</strong> view does not support this type of metadata...").arg(mParent->pluginViewName())
+                                             "        "+tr("Sorry, but the <strong>%1</strong> view does not support this type of metadata...").arg(mParent->pluginParent()->viewName())
                                             +"    </p>"
                                             +extraMessage
                                             +"</div>");

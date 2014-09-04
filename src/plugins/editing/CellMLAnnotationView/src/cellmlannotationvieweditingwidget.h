@@ -57,6 +57,7 @@ namespace CellMLAnnotationView {
 class CellmlAnnotationViewCellmlListWidget;
 class CellmlAnnotationViewMetadataDetailsWidget;
 class CellMLAnnotationViewPlugin;
+class CellmlAnnotationViewWidget;
 
 //==============================================================================
 
@@ -68,12 +69,13 @@ class CellmlAnnotationViewEditingWidget : public QSplitter,
 public:
     explicit CellmlAnnotationViewEditingWidget(CellMLAnnotationViewPlugin *pPluginParent,
                                                const QString &pFileName,
-                                               QWidget *pParent);
+                                               CellmlAnnotationViewWidget *pParent);
     ~CellmlAnnotationViewEditingWidget();
 
     virtual void retranslateUi();
 
-    QString pluginViewName() const;
+    CellMLAnnotationViewPlugin * pluginParent() const;
+    CellmlAnnotationViewWidget * parent() const;
 
     CellMLSupport::CellmlFile * cellmlFile() const;
 
@@ -97,6 +99,7 @@ private:
     Ui::CellmlAnnotationViewEditingWidget *mGui;
 
     CellMLAnnotationViewPlugin *mPluginParent;
+    CellmlAnnotationViewWidget *mParent;
 
     CellMLSupport::CellmlFile *mCellmlFile;
 

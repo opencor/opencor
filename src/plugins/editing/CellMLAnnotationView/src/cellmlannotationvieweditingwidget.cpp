@@ -27,6 +27,7 @@ specific language governing permissions and limitations under the License.
 #include "cellmlannotationviewmetadataeditdetailswidget.h"
 #include "cellmlannotationviewmetadataviewdetailswidget.h"
 #include "cellmlannotationviewplugin.h"
+#include "cellmlannotationviewwidget.h"
 #include "cellmlfilemanager.h"
 #include "cliutils.h"
 #include "treeviewwidget.h"
@@ -52,11 +53,12 @@ namespace CellMLAnnotationView {
 
 CellmlAnnotationViewEditingWidget::CellmlAnnotationViewEditingWidget(CellMLAnnotationViewPlugin *pPluginParent,
                                                                      const QString &pFileName,
-                                                                     QWidget *pParent) :
+                                                                     CellmlAnnotationViewWidget *pParent) :
     QSplitter(pParent),
     Core::CommonWidget(pParent),
     mGui(new Ui::CellmlAnnotationViewEditingWidget),
     mPluginParent(pPluginParent),
+    mParent(pParent),
     oldWebViewUrls(QMap<QWebView *, QUrl>())
 {
     // Set up the GUI
@@ -146,11 +148,20 @@ void CellmlAnnotationViewEditingWidget::retranslateUi()
 
 //==============================================================================
 
-QString CellmlAnnotationViewEditingWidget::pluginViewName() const
+CellMLAnnotationViewPlugin * CellmlAnnotationViewEditingWidget::pluginParent() const
 {
-    // Return our pointer to the plugin parent
+    // Return our plugin parent
 
-    return mPluginParent->viewName();
+    return mPluginParent;
+}
+
+//==============================================================================
+
+CellmlAnnotationViewWidget * CellmlAnnotationViewEditingWidget::parent() const
+{
+    // Return our parent
+
+    return mParent;
 }
 
 //==============================================================================
