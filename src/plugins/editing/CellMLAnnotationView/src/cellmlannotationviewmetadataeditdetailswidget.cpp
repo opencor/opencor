@@ -264,7 +264,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(const Items &pItem
 
     setUpdatesEnabled(false);
 
-    // Create a widget which will contain our GUI
+    // Create a widget that will contain our GUI
 
     QWidget *newMainWidget = new QWidget(this);
     QVBoxLayout *newMainLayout = new QVBoxLayout(newMainWidget);
@@ -273,14 +273,14 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(const Items &pItem
 
     newMainWidget->setLayout(newMainLayout);
 
-    // Create a form widget which will contain our qualifier and term fields
+    // Create a form widget that will contain our qualifier and term fields
 
     QWidget *newFormWidget = new QWidget(newMainWidget);
     QFormLayout *newFormLayout = new QFormLayout(newFormWidget);
 
     newFormWidget->setLayout(newFormLayout);
 
-    // Create a widget which will contain both our qualifier value widget and a
+    // Create a widget that will contain both our qualifier value widget and a
     // button to look up the qualifier
 
     QWidget *qualifierWidget = new QWidget(newFormWidget);
@@ -335,7 +335,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(const Items &pItem
 
     // Add our term field
 
-    // Create a widget which will contain both our qualifier value widget and a
+    // Create a widget that will contain both our qualifier value widget and a
     // button to look up the qualifier
 
     QWidget *termWidget = new QWidget(newFormWidget);
