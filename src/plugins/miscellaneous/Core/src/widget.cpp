@@ -28,19 +28,19 @@ namespace Core {
 
 //==============================================================================
 
-Widget::Widget(const QSize &pSizeHint, QWidget *pParent) :
+Widget::Widget(QWidget *pParent) :
     QWidget(pParent),
     CommonWidget(pParent),
-    mSizeHint(pSizeHint)
+    mSizeHint(defaultSize(0.15))
 {
 }
 
 //==============================================================================
 
-Widget::Widget(QWidget *pParent) :
+Widget::Widget(const QSize &pSizeHint, QWidget *pParent) :
     QWidget(pParent),
     CommonWidget(pParent),
-    mSizeHint(defaultSize(0.15))
+    mSizeHint(pSizeHint)
 {
 }
 
