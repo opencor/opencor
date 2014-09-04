@@ -325,10 +325,6 @@
         <translation>Ajouter</translation>
     </message>
     <message>
-        <source>Please wait while we are retrieving possible terms for &lt;strong&gt;%1&lt;/strong&gt;...</source>
-        <translation>Veuillez patienter pendant que nous retrouvons des termes possibles pour &lt;strong&gt;%1&lt;/strong&gt;...</translation>
-    </message>
-    <message>
         <source>Please enter a term to search above...</source>
         <translation>Veuillez entrer un terme à chercher plus haut...</translation>
     </message>

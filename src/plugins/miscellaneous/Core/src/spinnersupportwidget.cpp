@@ -42,6 +42,15 @@ SpinnerSupportWidget::SpinnerSupportWidget() :
 
 //==============================================================================
 
+bool SpinnerSupportWidget::spinnerWidgetVisible() const
+{
+    // Return whether our spinner widget is visible
+
+    return mSpinnerWidget?mSpinnerWidget->isVisible():false;
+}
+
+//==============================================================================
+
 void SpinnerSupportWidget::showSpinnerWidget(QWidget *pParent)
 {
     // Show our spinner widget, which implies deleting its previous instance (if

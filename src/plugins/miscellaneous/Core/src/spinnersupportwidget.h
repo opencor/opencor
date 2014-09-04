@@ -47,6 +47,8 @@ class CORE_EXPORT SpinnerSupportWidget
 public:
     explicit SpinnerSupportWidget();
 
+    bool spinnerWidgetVisible() const;
+
     void showSpinnerWidget(QWidget *pParent);
     void hideSpinnerWidget();
 
