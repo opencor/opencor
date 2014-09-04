@@ -1241,8 +1241,15 @@ void SingleCellViewWidget::on_actionSimulationDataCsvExport_triggered()
                                              QString(),
                                              tr("CSV File")+" (*.csv)");
 
-    if (!fileName.isEmpty())
+    if (!fileName.isEmpty()) {
+        setEnabled(false);
+        showSpinnerWidget(this);
+
         mSimulation->results()->exportToCsv(fileName);
+
+        hideSpinnerWidget();
+        setEnabled(true);
+    }
 }
 
 //==============================================================================
