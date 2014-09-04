@@ -645,29 +645,16 @@ void CellmlAnnotationViewCellmlListWidget::populateModel()
                 CellmlAnnotationViewCellmlElementItem *variablesItem = new CellmlAnnotationViewCellmlElementItem(CellmlAnnotationViewCellmlElementItem::Variable,
                                                                                                                  tr("Variables"));
 
-                // Retrieve the model's component's variables themselves, but
-                // only add a variable if neither its public nor its private
-                // interface is equal to "in"
+                // Retrieve the model's component's variables themselves
 
-                bool atLeastOneVariable = false;
                 ObjRef<iface::cellml_api::CellMLVariableIterator> componentVariablesIterator = componentVariables->iterateVariables();
 
                 for (ObjRef<iface::cellml_api::CellMLVariable> componentVariable = componentVariablesIterator->nextVariable();
                      componentVariable; componentVariable = componentVariablesIterator->nextVariable())
-                    if (   (componentVariable->publicInterface()  != iface::cellml_api::INTERFACE_IN)
-                        && (componentVariable->privateInterface() != iface::cellml_api::INTERFACE_IN)) {
                         variablesItem->appendRow(new CellmlAnnotationViewCellmlElementItem(CellmlAnnotationViewCellmlElementItem::Variable,
                                                                                            componentVariable));
 
-                        atLeastOneVariable = true;
-                    }
-
-                // Check whether some variables were actually added
-
-                if (atLeastOneVariable)
-                    componentItem->appendRow(variablesItem);
-                else
-                    delete variablesItem;
+                componentItem->appendRow(variablesItem);
             }
         }
     }
