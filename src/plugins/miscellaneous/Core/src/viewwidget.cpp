@@ -42,7 +42,7 @@ void ViewWidget::resizeEvent(QResizeEvent *pEvent)
 
     Widget::resizeEvent(pEvent);
 
-    // (Re-)center our spinner widget
+    // (Re)center our spinner widget
 
     centerSpinnerWidget();
 }

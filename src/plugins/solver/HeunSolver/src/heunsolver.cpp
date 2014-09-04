@@ -74,7 +74,7 @@ void HeunSolver::initialize(const double &pVoiStart,
                                                    pConstants, pRates, pStates,
                                                    pAlgebraic, pComputeRates);
 
-    // (Re-)create our various arrays
+    // (Re)create our various arrays
 
     delete[] mK;
     delete[] mYk;

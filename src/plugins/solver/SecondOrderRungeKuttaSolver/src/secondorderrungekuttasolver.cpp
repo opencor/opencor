@@ -74,7 +74,7 @@ void SecondOrderRungeKuttaSolver::initialize(const double &pVoiStart,
                                                    pConstants, pRates, pStates,
                                                    pAlgebraic, pComputeRates);
 
-    // (Re-)create our mYk1 array
+    // (Re)create our mYk1 array
 
     delete[] mYk1;
 

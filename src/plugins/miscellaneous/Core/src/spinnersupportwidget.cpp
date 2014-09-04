@@ -72,7 +72,7 @@ void SpinnerSupportWidget::setSpinnerWidgetVisible(const bool &pVisible)
 
 void SpinnerSupportWidget::centerSpinnerWidget()
 {
-    // (Re-)center our spinner widget
+    // (Re)center our spinner widget
 
     QRect desktopGeometry = qApp->desktop()->availableGeometry();
     int parentWidth = mSpinnerWidgetParent?mSpinnerWidgetParent->width():desktopGeometry.width();

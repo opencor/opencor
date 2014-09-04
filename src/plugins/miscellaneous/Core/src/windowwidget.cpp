@@ -43,7 +43,7 @@ void WindowWidget::resizeEvent(QResizeEvent *pEvent)
 
     QDockWidget::resizeEvent(pEvent);
 
-    // (Re-)center our spinner widget
+    // (Re)center our spinner widget
 
     centerSpinnerWidget();
 }
