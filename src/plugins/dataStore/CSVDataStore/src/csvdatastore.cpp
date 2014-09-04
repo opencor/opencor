@@ -25,6 +25,7 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#include <QApplication>
 #include <QFile>
 #include <QTextStream>
 
@@ -82,6 +83,13 @@ bool exportDataStore(CoreDataStore::CoreDataStore *pDataStore,
            out << "," << (*variable)->value(i);
 
        out << "\n";
+
+       qApp->processEvents();
+//---GRY--- THE CALL TO qApp->processEvents() IS TEMPORARY, I.E. UNTIL WE HAVE
+//          IMPLEMENTED ISSUE #451 (see https://github.com/opencor/opencor/issues/451)
+//          AND THEREFORE HAVE THOSE DATA STORES DO THE EXPORT IN THEIR OWN
+//          THREAD THUS NOT BLOCKING THE MAIN THREAD (IN CASE THE EXPORT TAKES A
+//          LONG TIME)...
    }
 
    // We are done...

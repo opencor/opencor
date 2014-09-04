@@ -15,7 +15,9 @@ ADD_PLUGIN(CSVDataStore
     PLUGINS
         CoreDataStore
     QT_MODULES
-        Core
+        Widgets
     QT_LIBRARIES
         QtCore
+        QtGui
+        QtWidgets
 )
