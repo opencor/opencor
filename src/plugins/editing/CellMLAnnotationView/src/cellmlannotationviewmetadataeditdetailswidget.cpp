@@ -523,10 +523,13 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateItemsGui(const Items &
 
     // Create a new widget and layout
 
-    QWidget *newGridWidget = new QWidget(mItemsScrollArea);
+    QWidget *newGridWidget = new Core::Widget(mItemsScrollArea);
     QGridLayout *newGridLayout = new QGridLayout(newGridWidget);
 
     newGridWidget->setLayout(newGridLayout);
+
+    connect(newGridWidget, SIGNAL(resized(const QSize &, const QSize &)),
+            this, SLOT(recenterSpinnerWidget()));
 
     // Populate our new layout, but only if there is at least one item
 
@@ -1119,6 +1122,15 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::fileReloaded()
     mLookupQualifierButton->setChecked(false);
 
     mTermValue->setText(QString());
+}
+
+//==============================================================================
+
+void CellmlAnnotationViewMetadataEditDetailsWidget::recenterSpinnerWidget()
+{
+    // Recenter our spinner widget
+
+    mParent->parent()->centerSpinnerWidget();
 }
 
 //==============================================================================

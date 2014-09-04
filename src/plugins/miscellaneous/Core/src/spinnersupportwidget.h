@@ -52,7 +52,6 @@ public:
     void showSpinnerWidget(QWidget *pParent);
     void hideSpinnerWidget();
 
-protected:
     void centerSpinnerWidget();
 
 private:

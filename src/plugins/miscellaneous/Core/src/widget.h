@@ -49,8 +49,13 @@ public:
 protected:
     virtual QSize sizeHint() const;
 
+    virtual void resizeEvent(QResizeEvent *pEvent);
+
 private:
     QSize mSizeHint;
+
+Q_SIGNALS:
+    void resized(const QSize &pSize, const QSize &pOldSize);
 };
 
 //==============================================================================

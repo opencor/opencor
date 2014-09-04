@@ -200,6 +200,8 @@ private Q_SLOTS:
     void trackItemsVerticalScrollBarPosition(const int &pPosition);
 
     void showCustomContextMenu(const QPoint &pPosition);
+
+    void recenterSpinnerWidget();
 };
 
 //==============================================================================
