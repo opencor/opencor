@@ -64,7 +64,6 @@ ADD_PLUGIN(Core
         src/organisationwidget.h
         src/progressbarwidget.h
         src/propertyeditorwidget.h
-        src/spinnersupportwidget.h
         src/spinnerwidget.h
         src/toolbarwidget.h
         src/treeviewwidget.h
