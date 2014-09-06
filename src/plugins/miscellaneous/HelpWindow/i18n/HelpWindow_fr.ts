@@ -4,8 +4,8 @@
 <context>
     <name>HelpWindowWindow</name>
     <message>
-        <source>OpenCOR Help</source>
-        <translation>Aide OpenCOR</translation>
+        <source>Help</source>
+        <translation>Aide</translation>
     </message>
     <message>
         <source>Go to the home page</source>
