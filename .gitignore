@@ -12,4 +12,6 @@
 
 /src/plugins/thirdParty/LLVM/lib/Target/X86/X86GenAsmMatcher.inc
 
+src/plugins/thirdParty/LLVM/tools/clang/include/clang/Config/config.h
+
 /windows/CMakeLists.txt.user
