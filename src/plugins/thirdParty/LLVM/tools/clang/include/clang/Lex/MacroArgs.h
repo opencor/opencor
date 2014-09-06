@@ -54,7 +54,8 @@ class MacroArgs {
   MacroArgs *ArgCache;
 
   MacroArgs(unsigned NumToks, bool varargsElided)
-    : NumUnexpArgTokens(NumToks), VarargsElided(varargsElided), ArgCache(0) {}
+    : NumUnexpArgTokens(NumToks), VarargsElided(varargsElided),
+      ArgCache(nullptr) {}
   ~MacroArgs() {}
 public:
   /// MacroArgs ctor function - Create a new MacroArgs object with the specified

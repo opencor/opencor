@@ -306,7 +306,7 @@ ComplexPairTy ComplexExprEmitter::EmitLoadOfLValue(LValue lvalue,
   unsigned ComplexAlign = C.getTypeAlignInChars(ComplexTy).getQuantity();
   unsigned AlignI = std::min(AlignR, ComplexAlign);
 
-  llvm::Value *Real=0, *Imag=0;
+  llvm::Value *Real=nullptr, *Imag=nullptr;
 
   if (!IgnoreReal || isVolatile) {
     llvm::Value *RealP = Builder.CreateStructGEP(SrcPtr, 0,
@@ -752,11 +752,13 @@ VisitAbstractConditionalOperator(const AbstractConditionalOperator *E) {
   // Bind the common expression if necessary.
   CodeGenFunction::OpaqueValueMapping binding(CGF, E);
 
+  RegionCounter Cnt = CGF.getPGORegionCounter(E);
   CodeGenFunction::ConditionalEvaluation eval(CGF);
-  CGF.EmitBranchOnBoolExpr(E->getCond(), LHSBlock, RHSBlock);
+  CGF.EmitBranchOnBoolExpr(E->getCond(), LHSBlock, RHSBlock, Cnt.getCount());
 
   eval.begin(CGF);
   CGF.EmitBlock(LHSBlock);
+  Cnt.beginRegion(Builder);
   ComplexPairTy LHS = Visit(E->getTrueExpr());
   LHSBlock = Builder.GetInsertBlock();
   CGF.EmitBranch(ContBlock);

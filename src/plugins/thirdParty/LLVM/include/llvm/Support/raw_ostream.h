@@ -17,7 +17,6 @@
 #include "llvm/ADT/StringRef.h"
 #include "llvm/Support/Compiler.h"
 #include "llvm/Support/DataTypes.h"
-#include "llvm/Support/FileSystem.h"
 //---OPENCOR--- BEGIN
 #include "llvmglobal.h"
 //---OPENCOR--- END
@@ -26,6 +25,12 @@ namespace llvm {
   class format_object_base;
   template <typename T>
   class SmallVectorImpl;
+
+  namespace sys {
+    namespace fs {
+      enum OpenFlags : unsigned;
+    }
+  }
 
 /// raw_ostream - This class implements an extremely fast bulk output stream
 /// that can *only* output to a stream.  It does not support seeking, reopening,
@@ -79,7 +84,7 @@ public:
   explicit raw_ostream(bool unbuffered=false)
     : BufferMode(unbuffered ? Unbuffered : InternalBuffer) {
     // Start out ready to flush.
-    OutBufStart = OutBufEnd = OutBufCur = 0;
+    OutBufStart = OutBufEnd = OutBufCur = nullptr;
   }
 
   virtual ~raw_ostream();
@@ -105,7 +110,7 @@ public:
   size_t GetBufferSize() const {
     // If we're supposed to be buffered but haven't actually gotten around
     // to allocating the buffer yet, return the value that would be used.
-    if (BufferMode != Unbuffered && OutBufStart == 0)
+    if (BufferMode != Unbuffered && OutBufStart == nullptr)
       return preferred_buffer_size();
 
     // Otherwise just return the size of the allocated buffer.
@@ -118,7 +123,7 @@ public:
   /// set to unbuffered.
   void SetUnbuffered() {
     flush();
-    SetBufferAndMode(0, 0, Unbuffered);
+    SetBufferAndMode(nullptr, 0, Unbuffered);
   }
 
   size_t GetNumBytesInBuffer() const {
@@ -160,7 +165,7 @@ public:
     size_t Size = Str.size();
 
     // Make sure we can use the fast path.
-    if (OutBufCur+Size > OutBufEnd)
+    if (Size > (size_t)(OutBufEnd - OutBufCur))
       return write(Str.data(), Size);
 
     memcpy(OutBufCur, Str.data(), Size);
@@ -325,14 +330,14 @@ class raw_fd_ostream : public raw_ostream {
   uint64_t pos;
 
   /// write_impl - See raw_ostream::write_impl.
-  virtual void write_impl(const char *Ptr, size_t Size) LLVM_OVERRIDE;
+  void write_impl(const char *Ptr, size_t Size) override;
 
   /// current_pos - Return the current position within the stream, not
   /// counting the bytes currently in the buffer.
-  virtual uint64_t current_pos() const LLVM_OVERRIDE { return pos; }
+  uint64_t current_pos() const override { return pos; }
 
   /// preferred_buffer_size - Determine an efficient buffer size.
-  virtual size_t preferred_buffer_size() const LLVM_OVERRIDE;
+  size_t preferred_buffer_size() const override;
 
   /// error_detected - Set the flag indicating that an output error has
   /// been encountered.
@@ -350,7 +355,7 @@ public:
   /// file descriptor when it is done (this is necessary to detect
   /// output errors).
   raw_fd_ostream(const char *Filename, std::string &ErrorInfo,
-                 sys::fs::OpenFlags Flags = sys::fs::F_None);
+                 sys::fs::OpenFlags Flags);
 
   /// raw_fd_ostream ctor - FD is the file descriptor that this writes to.  If
   /// ShouldClose is true, this closes the file when the stream is destroyed.
@@ -376,15 +381,15 @@ public:
     UseAtomicWrites = Value;
   }
 
-  virtual raw_ostream &changeColor(enum Colors colors, bool bold=false,
-                                   bool bg=false) LLVM_OVERRIDE;
-  virtual raw_ostream &resetColor() LLVM_OVERRIDE;
+  raw_ostream &changeColor(enum Colors colors, bool bold=false,
+                           bool bg=false) override;
+  raw_ostream &resetColor() override;
 
-  virtual raw_ostream &reverseColor() LLVM_OVERRIDE;
+  raw_ostream &reverseColor() override;
 
-  virtual bool is_displayed() const LLVM_OVERRIDE;
+  bool is_displayed() const override;
 
-  virtual bool has_colors() const LLVM_OVERRIDE;
+  bool has_colors() const override;
 
   /// has_error - Return the value of the flag in this raw_fd_ostream indicating
   /// whether an output error has been encountered.
@@ -440,11 +445,11 @@ class raw_string_ostream : public raw_ostream {
   std::string &OS;
 
   /// write_impl - See raw_ostream::write_impl.
-  virtual void write_impl(const char *Ptr, size_t Size) LLVM_OVERRIDE;
+  void write_impl(const char *Ptr, size_t Size) override;
 
   /// current_pos - Return the current position within the stream, not
   /// counting the bytes currently in the buffer.
-  virtual uint64_t current_pos() const LLVM_OVERRIDE { return OS.size(); }
+  uint64_t current_pos() const override { return OS.size(); }
 public:
   explicit raw_string_ostream(std::string &O) : OS(O) {}
   ~raw_string_ostream();
@@ -464,11 +469,11 @@ class raw_svector_ostream : public raw_ostream {
   SmallVectorImpl<char> &OS;
 
   /// write_impl - See raw_ostream::write_impl.
-  virtual void write_impl(const char *Ptr, size_t Size) LLVM_OVERRIDE;
+  void write_impl(const char *Ptr, size_t Size) override;
 
   /// current_pos - Return the current position within the stream, not
   /// counting the bytes currently in the buffer.
-  virtual uint64_t current_pos() const LLVM_OVERRIDE;
+  uint64_t current_pos() const override;
 public:
   /// Construct a new raw_svector_ostream.
   ///
@@ -490,11 +495,11 @@ public:
 /// raw_null_ostream - A raw_ostream that discards all output.
 class raw_null_ostream : public raw_ostream {
   /// write_impl - See raw_ostream::write_impl.
-  virtual void write_impl(const char *Ptr, size_t size) LLVM_OVERRIDE;
+  void write_impl(const char *Ptr, size_t size) override;
 
   /// current_pos - Return the current position within the stream, not
   /// counting the bytes currently in the buffer.
-  virtual uint64_t current_pos() const LLVM_OVERRIDE;
+  uint64_t current_pos() const override;
 
 public:
   explicit raw_null_ostream() {}

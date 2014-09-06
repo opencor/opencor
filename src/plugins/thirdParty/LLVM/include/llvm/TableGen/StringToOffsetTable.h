@@ -25,8 +25,8 @@ namespace llvm {
 class StringToOffsetTable {
   StringMap<unsigned> StringOffset;
   std::string AggregateString;
-public:
 
+public:
   unsigned GetOrAddStringOffset(StringRef Str, bool appendZero = true) {
     StringMapEntry<unsigned> &Entry = StringOffset.GetOrCreateValue(Str, -1U);
     if (Entry.getValue() == -1U) {

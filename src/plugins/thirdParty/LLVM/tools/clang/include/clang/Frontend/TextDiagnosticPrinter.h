@@ -18,7 +18,7 @@
 #include "clang/Basic/Diagnostic.h"
 #include "clang/Basic/LLVM.h"
 #include "llvm/ADT/IntrusiveRefCntPtr.h"
-#include "llvm/ADT/OwningPtr.h"
+#include <memory>
 //---OPENCOR--- BEGIN
 #include "llvmglobal.h"
 //---OPENCOR--- END
@@ -38,7 +38,7 @@ class LLVM_EXPORT TextDiagnosticPrinter : public DiagnosticConsumer {
   IntrusiveRefCntPtr<DiagnosticOptions> DiagOpts;
 
   /// \brief Handle to the currently active text diagnostic emitter.
-  OwningPtr<TextDiagnostic> TextDiag;
+  std::unique_ptr<TextDiagnostic> TextDiag;
 
   /// A string to prefix to error messages.
   std::string Prefix;
@@ -55,9 +55,10 @@ public:
   /// used.
   void setPrefix(std::string Value) { Prefix = Value; }
 
-  void BeginSourceFile(const LangOptions &LO, const Preprocessor *PP);
-  void EndSourceFile();
-  void HandleDiagnostic(DiagnosticsEngine::Level Level, const Diagnostic &Info);
+  void BeginSourceFile(const LangOptions &LO, const Preprocessor *PP) override;
+  void EndSourceFile() override;
+  void HandleDiagnostic(DiagnosticsEngine::Level Level,
+                        const Diagnostic &Info) override;
 };
 
 } // end namespace clang

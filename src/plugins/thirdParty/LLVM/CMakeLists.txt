@@ -24,8 +24,9 @@ MACRO(RETRIEVE_LLVM_SETTINGS)
     # Note: we have nothing to do with those warnings, so...
 
     IF(WIN32)
+#        SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /bigobj /wd4355 /wd4996")
         SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /wd4244 /wd4267")
-        SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /bigobj /wd4180 /wd4244 /wd4355 /wd4291 /wd4351 /wd4624 /wd4722 /wd4996")
+        SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4180 /wd4244 /wd4291 /wd4351 /wd4624 /wd4661 /wd4722")
     ENDIF()
 ENDMACRO()
 
@@ -36,6 +37,8 @@ SET(CONFIG_FILES
     include/llvm/Config/DISTRIB_DIR/llvm-config.h
 
     include/llvm/Support/DISTRIB_DIR/DataTypes.h
+
+    tools/clang/include/clang/Config/DISTRIB_DIR/config.h
 )
 
 FOREACH(CONFIG_FILE ${CONFIG_FILES})
@@ -157,10 +160,12 @@ ELSE()
             lib/Analysis/Analysis.cpp
             lib/Analysis/BasicAliasAnalysis.cpp
             lib/Analysis/BlockFrequencyInfo.cpp
+            lib/Analysis/BlockFrequencyInfoImpl.cpp
             lib/Analysis/BranchProbabilityInfo.cpp
             lib/Analysis/CaptureTracking.cpp
             lib/Analysis/CFG.cpp
             lib/Analysis/CFGPrinter.cpp
+            lib/Analysis/CGSCCPassManager.cpp
             lib/Analysis/CodeMetrics.cpp
             lib/Analysis/ConstantFolding.cpp
             lib/Analysis/CostModel.cpp
@@ -172,7 +177,16 @@ ELSE()
             lib/Analysis/InstructionSimplify.cpp
             lib/Analysis/Interval.cpp
             lib/Analysis/IntervalPartition.cpp
+            lib/Analysis/IPA/CallGraph.cpp
+            lib/Analysis/IPA/CallGraphSCCPass.cpp
+            lib/Analysis/IPA/CallPrinter.cpp
+            lib/Analysis/IPA/FindUsedTypes.cpp
+            lib/Analysis/IPA/GlobalsModRef.cpp
+            lib/Analysis/IPA/InlineCost.cpp
+            lib/Analysis/IPA/IPA.cpp
             lib/Analysis/IVUsers.cpp
+            lib/Analysis/JumpInstrTableInfo.cpp
+            lib/Analysis/LazyCallGraph.cpp
             lib/Analysis/LazyValueInfo.cpp
             lib/Analysis/LibCallAliasAnalysis.cpp
             lib/Analysis/LibCallSemantics.cpp
@@ -201,14 +215,6 @@ ELSE()
             lib/Analysis/TypeBasedAliasAnalysis.cpp
             lib/Analysis/ValueTracking.cpp
 
-            lib/Analysis/IPA/CallGraph.cpp
-            lib/Analysis/IPA/CallGraphSCCPass.cpp
-            lib/Analysis/IPA/CallPrinter.cpp
-            lib/Analysis/IPA/FindUsedTypes.cpp
-            lib/Analysis/IPA/GlobalsModRef.cpp
-            lib/Analysis/IPA/InlineCost.cpp
-            lib/Analysis/IPA/IPA.cpp
-
             lib/AsmParser/LLLexer.cpp
             lib/AsmParser/LLParser.cpp
             lib/AsmParser/Parser.cpp
@@ -225,11 +231,13 @@ ELSE()
             lib/CodeGen/AggressiveAntiDepBreaker.cpp
             lib/CodeGen/AllocationOrder.cpp
             lib/CodeGen/Analysis.cpp
+            lib/CodeGen/AtomicExpandLoadLinkedPass.cpp
             lib/CodeGen/BasicTargetTransformInfo.cpp
             lib/CodeGen/BranchFolding.cpp
             lib/CodeGen/CalcSpillWeights.cpp
             lib/CodeGen/CallingConvLower.cpp
             lib/CodeGen/CodeGen.cpp
+            lib/CodeGen/CodeGenPrepare.cpp
             lib/CodeGen/CriticalAntiDepBreaker.cpp
             lib/CodeGen/DeadMachineInstructionElim.cpp
             lib/CodeGen/DFAPacketizer.cpp
@@ -243,21 +251,23 @@ ELSE()
             lib/CodeGen/GCMetadata.cpp
             lib/CodeGen/GCMetadataPrinter.cpp
             lib/CodeGen/GCStrategy.cpp
+            lib/CodeGen/GlobalMerge.cpp
             lib/CodeGen/IfConversion.cpp
             lib/CodeGen/InlineSpiller.cpp
             lib/CodeGen/InterferenceCache.cpp
             lib/CodeGen/IntrinsicLowering.cpp
             lib/CodeGen/JITCodeEmitter.cpp
+            lib/CodeGen/JumpInstrTables.cpp
             lib/CodeGen/LatencyPriorityQueue.cpp
             lib/CodeGen/LexicalScopes.cpp
             lib/CodeGen/LiveDebugVariables.cpp
             lib/CodeGen/LiveInterval.cpp
             lib/CodeGen/LiveIntervalAnalysis.cpp
             lib/CodeGen/LiveIntervalUnion.cpp
+            lib/CodeGen/LivePhysRegs.cpp
             lib/CodeGen/LiveRangeCalc.cpp
             lib/CodeGen/LiveRangeEdit.cpp
             lib/CodeGen/LiveRegMatrix.cpp
-            lib/CodeGen/LiveRegUnits.cpp
             lib/CodeGen/LiveStackAnalysis.cpp
             lib/CodeGen/LiveVariables.cpp
             lib/CodeGen/LLVMTargetMachine.cpp
@@ -269,6 +279,7 @@ ELSE()
             lib/CodeGen/MachineCodeEmitter.cpp
             lib/CodeGen/MachineCopyPropagation.cpp
             lib/CodeGen/MachineCSE.cpp
+            lib/CodeGen/MachineDominanceFrontier.cpp
             lib/CodeGen/MachineDominators.cpp
             lib/CodeGen/MachineFunction.cpp
             lib/CodeGen/MachineFunctionAnalysis.cpp
@@ -282,6 +293,7 @@ ELSE()
             lib/CodeGen/MachineModuleInfoImpls.cpp
             lib/CodeGen/MachinePassRegistry.cpp
             lib/CodeGen/MachinePostDominators.cpp
+            lib/CodeGen/MachineRegionInfo.cpp
             lib/CodeGen/MachineRegisterInfo.cpp
             lib/CodeGen/MachineScheduler.cpp
             lib/CodeGen/MachineSink.cpp
@@ -318,6 +330,7 @@ ELSE()
             lib/CodeGen/SpillPlacement.cpp
             lib/CodeGen/SplitKit.cpp
             lib/CodeGen/StackColoring.cpp
+            lib/CodeGen/StackMapLivenessAnalysis.cpp
             lib/CodeGen/StackMaps.cpp
             lib/CodeGen/StackProtector.cpp
             lib/CodeGen/StackSlotColoring.cpp
@@ -333,20 +346,25 @@ ELSE()
             lib/CodeGen/UnreachableBlockElim.cpp
             lib/CodeGen/VirtRegMap.cpp
 
+            lib/CodeGen/AsmPrinter/AddressPool.cpp
             lib/CodeGen/AsmPrinter/ARMException.cpp
             lib/CodeGen/AsmPrinter/AsmPrinter.cpp
             lib/CodeGen/AsmPrinter/AsmPrinterDwarf.cpp
             lib/CodeGen/AsmPrinter/AsmPrinterInlineAsm.cpp
+            lib/CodeGen/AsmPrinter/DbgValueHistoryCalculator.cpp
             lib/CodeGen/AsmPrinter/DIE.cpp
             lib/CodeGen/AsmPrinter/DIEHash.cpp
             lib/CodeGen/AsmPrinter/DwarfAccelTable.cpp
             lib/CodeGen/AsmPrinter/DwarfCFIException.cpp
-            lib/CodeGen/AsmPrinter/DwarfCompileUnit.cpp
             lib/CodeGen/AsmPrinter/DwarfDebug.cpp
-            lib/CodeGen/AsmPrinter/DwarfException.cpp
+            lib/CodeGen/AsmPrinter/DwarfFile.cpp
+            lib/CodeGen/AsmPrinter/DwarfStringPool.cpp
+            lib/CodeGen/AsmPrinter/DwarfUnit.cpp
+            lib/CodeGen/AsmPrinter/EHStreamer.cpp
             lib/CodeGen/AsmPrinter/ErlangGCPrinter.cpp
             lib/CodeGen/AsmPrinter/OcamlGCPrinter.cpp
             lib/CodeGen/AsmPrinter/Win64Exception.cpp
+            lib/CodeGen/AsmPrinter/WinCodeViewLineTables.cpp
 
             lib/CodeGen/SelectionDAG/DAGCombiner.cpp
             lib/CodeGen/SelectionDAG/FastISel.cpp
@@ -398,7 +416,7 @@ ELSE()
 # Note: we don't need the above, but we leave them so we know about them next
 #       time we update LLVM. Indeed, Intel JIT API support is only available on
 #       Linux and Windows, and it requires additional features that may or not
-#       be present on the build machine, so...
+#       be present on a build machine, so...
 
             lib/ExecutionEngine/Interpreter/Execution.cpp
             lib/ExecutionEngine/Interpreter/ExternalFunctions.cpp
@@ -416,10 +434,11 @@ ELSE()
 # Note: we don't need the above, but we leave them so we know about them next
 #       time we update LLVM. Indeed, OProfile support is only available on
 #       Linux, and it requires additional features that may or not be present
-#       on the build machine, so...
+#       on a build machine, so...
 
             lib/ExecutionEngine/RuntimeDyld/GDBRegistrar.cpp
             lib/ExecutionEngine/RuntimeDyld/RuntimeDyld.cpp
+            lib/ExecutionEngine/RuntimeDyld/RuntimeDyldChecker.cpp
             lib/ExecutionEngine/RuntimeDyld/RuntimeDyldELF.cpp
             lib/ExecutionEngine/RuntimeDyld/RuntimeDyldMachO.cpp
 
@@ -427,12 +446,16 @@ ELSE()
             lib/IR/Attributes.cpp
             lib/IR/AutoUpgrade.cpp
             lib/IR/BasicBlock.cpp
+            lib/IR/Comdat.cpp
             lib/IR/ConstantFold.cpp
+            lib/IR/ConstantRange.cpp
             lib/IR/Constants.cpp
             lib/IR/Core.cpp
             lib/IR/DataLayout.cpp
             lib/IR/DebugInfo.cpp
             lib/IR/DebugLoc.cpp
+            lib/IR/DiagnosticInfo.cpp
+            lib/IR/DiagnosticPrinter.cpp
             lib/IR/DIBuilder.cpp
             lib/IR/Dominators.cpp
             lib/IR/Function.cpp
@@ -444,16 +467,18 @@ ELSE()
             lib/IR/Instructions.cpp
             lib/IR/IntrinsicInst.cpp
             lib/IR/IRBuilder.cpp
+            lib/IR/IRPrintingPasses.cpp
             lib/IR/LeakDetector.cpp
             lib/IR/LegacyPassManager.cpp
             lib/IR/LLVMContext.cpp
             lib/IR/LLVMContextImpl.cpp
+            lib/IR/Mangler.cpp
+            lib/IR/MDBuilder.cpp
             lib/IR/Metadata.cpp
             lib/IR/Module.cpp
             lib/IR/Pass.cpp
             lib/IR/PassManager.cpp
             lib/IR/PassRegistry.cpp
-            lib/IR/PrintModulePass.cpp
             lib/IR/Type.cpp
             lib/IR/TypeFinder.cpp
             lib/IR/Use.cpp
@@ -465,62 +490,19 @@ ELSE()
 
             lib/IRReader/IRReader.cpp
 
+            lib/LineEditor/LineEditor.cpp
+
             lib/Linker/LinkModules.cpp
 
             lib/LTO/LTOCodeGenerator.cpp
             lib/LTO/LTOModule.cpp
 
-            lib/MC/ELFObjectWriter.cpp
-            lib/MC/MachObjectWriter.cpp
-            lib/MC/MCAsmBackend.cpp
-            lib/MC/MCAsmInfo.cpp
-            lib/MC/MCAsmInfoCOFF.cpp
-            lib/MC/MCAsmInfoDarwin.cpp
-            lib/MC/MCAsmInfoELF.cpp
-            lib/MC/MCAsmStreamer.cpp
-            lib/MC/MCAssembler.cpp
-            lib/MC/MCAtom.cpp
-            lib/MC/MCCodeEmitter.cpp
-            lib/MC/MCCodeGenInfo.cpp
-            lib/MC/MCContext.cpp
-            lib/MC/MCDisassembler.cpp
-            lib/MC/MCDwarf.cpp
-            lib/MC/MCELF.cpp
-            lib/MC/MCELFObjectTargetWriter.cpp
-            lib/MC/MCELFStreamer.cpp
-            lib/MC/MCExpr.cpp
-            lib/MC/MCExternalSymbolizer.cpp
-            lib/MC/MCFunction.cpp
-            lib/MC/MCInst.cpp
-            lib/MC/MCInstPrinter.cpp
-            lib/MC/MCInstrAnalysis.cpp
-            lib/MC/MCLabel.cpp
-            lib/MC/MCMachObjectTargetWriter.cpp
-            lib/MC/MCMachOStreamer.cpp
-            lib/MC/MCModule.cpp
-            lib/MC/MCModuleYAML.cpp
-            lib/MC/MCNullStreamer.cpp
-            lib/MC/MCObjectDisassembler.cpp
-            lib/MC/MCObjectFileInfo.cpp
-            lib/MC/MCObjectStreamer.cpp
-            lib/MC/MCObjectSymbolizer.cpp
-            lib/MC/MCObjectWriter.cpp
-            lib/MC/MCPureStreamer.cpp
-            lib/MC/MCRegisterInfo.cpp
-            lib/MC/MCRelocationInfo.cpp
-            lib/MC/MCSection.cpp
-            lib/MC/MCSectionCOFF.cpp
-            lib/MC/MCSectionELF.cpp
-            lib/MC/MCSectionMachO.cpp
-            lib/MC/MCStreamer.cpp
-            lib/MC/MCSubtargetInfo.cpp
-            lib/MC/MCSymbol.cpp
-            lib/MC/MCSymbolizer.cpp
-            lib/MC/MCValue.cpp
-            lib/MC/MCWin64EH.cpp
-            lib/MC/SubtargetFeature.cpp
-            lib/MC/WinCOFFObjectWriter.cpp
-            lib/MC/WinCOFFStreamer.cpp
+            lib/MC/MCAnalysis/MCAtom.cpp
+            lib/MC/MCAnalysis/MCFunction.cpp
+            lib/MC/MCAnalysis/MCModule.cpp
+            lib/MC/MCAnalysis/MCModuleYAML.cpp
+            lib/MC/MCAnalysis/MCObjectDisassembler.cpp
+            lib/MC/MCAnalysis/MCObjectSymbolizer.cpp
 
             lib/MC/MCDisassembler/Disassembler.cpp
 
@@ -534,6 +516,56 @@ ELSE()
             lib/MC/MCParser/MCAsmParserExtension.cpp
             lib/MC/MCParser/MCTargetAsmParser.cpp
 
+            lib/MC/ConstantPools.cpp
+            lib/MC/ELFObjectWriter.cpp
+            lib/MC/MachObjectWriter.cpp
+            lib/MC/MCAsmBackend.cpp
+            lib/MC/MCAsmInfo.cpp
+            lib/MC/MCAsmInfoCOFF.cpp
+            lib/MC/MCAsmInfoDarwin.cpp
+            lib/MC/MCAsmInfoELF.cpp
+            lib/MC/MCAsmStreamer.cpp
+            lib/MC/MCAssembler.cpp
+            lib/MC/MCCodeEmitter.cpp
+            lib/MC/MCCodeGenInfo.cpp
+            lib/MC/MCContext.cpp
+            lib/MC/MCDisassembler.cpp
+            lib/MC/MCDwarf.cpp
+            lib/MC/MCELF.cpp
+            lib/MC/MCELFObjectTargetWriter.cpp
+            lib/MC/MCELFStreamer.cpp
+            lib/MC/MCExpr.cpp
+            lib/MC/MCExternalSymbolizer.cpp
+            lib/MC/MCInst.cpp
+            lib/MC/MCInstPrinter.cpp
+            lib/MC/MCInstrAnalysis.cpp
+            lib/MC/MCLabel.cpp
+            lib/MC/MCLinkerOptimizationHint.cpp
+            lib/MC/MCMachObjectTargetWriter.cpp
+            lib/MC/MCMachOStreamer.cpp
+            lib/MC/MCNullStreamer.cpp
+            lib/MC/MCObjectFileInfo.cpp
+            lib/MC/MCObjectStreamer.cpp
+            lib/MC/MCObjectWriter.cpp
+            lib/MC/MCRegisterInfo.cpp
+            lib/MC/MCRelocationInfo.cpp
+            lib/MC/MCSection.cpp
+            lib/MC/MCSectionCOFF.cpp
+            lib/MC/MCSectionELF.cpp
+            lib/MC/MCSectionMachO.cpp
+            lib/MC/MCStreamer.cpp
+            lib/MC/MCSubtargetInfo.cpp
+            lib/MC/MCSymbol.cpp
+            lib/MC/MCSymbolizer.cpp
+            lib/MC/MCTargetOptions.cpp
+            lib/MC/MCValue.cpp
+            lib/MC/MCWin64EH.cpp
+            lib/MC/StringTableBuilder.cpp
+            lib/MC/SubtargetFeature.cpp
+            lib/MC/WinCOFFObjectWriter.cpp
+            lib/MC/WinCOFFStreamer.cpp
+            lib/MC/YAML.cpp
+
             lib/Object/Archive.cpp
             lib/Object/Binary.cpp
             lib/Object/COFFObjectFile.cpp
@@ -542,28 +574,35 @@ ELSE()
             lib/Object/ELFObjectFile.cpp
             lib/Object/ELFYAML.cpp
             lib/Object/Error.cpp
+            lib/Object/IRObjectFile.cpp
             lib/Object/MachOObjectFile.cpp
             lib/Object/MachOUniversal.cpp
             lib/Object/Object.cpp
             lib/Object/ObjectFile.cpp
-            lib/Object/YAML.cpp
+            lib/Object/RecordStreamer.cpp
+            lib/Object/SymbolicFile.cpp
 
             lib/Option/Arg.cpp
             lib/Option/ArgList.cpp
             lib/Option/Option.cpp
             lib/Option/OptTable.cpp
 
+            lib/ProfileData/InstrProf.cpp
+            lib/ProfileData/InstrProfReader.cpp
+            lib/ProfileData/InstrProfWriter.cpp
+
             lib/Support/Allocator.cpp
             lib/Support/APFloat.cpp
             lib/Support/APInt.cpp
             lib/Support/APSInt.cpp
+            lib/Support/ARMBuildAttrs.cpp
+            lib/Support/ARMWinEH.cpp
             lib/Support/Atomic.cpp
             lib/Support/BlockFrequency.cpp
             lib/Support/BranchProbability.cpp
             lib/Support/circular_raw_ostream.cpp
             lib/Support/CommandLine.cpp
             lib/Support/Compression.cpp
-            lib/Support/ConstantRange.cpp
             lib/Support/ConvertUTF.c
             lib/Support/ConvertUTFWrapper.cpp
             lib/Support/CrashRecoveryContext.cpp
@@ -572,7 +611,6 @@ ELSE()
             lib/Support/DataStream.cpp
             lib/Support/Debug.cpp
             lib/Support/DeltaAlgorithm.cpp
-            lib/Support/Disassembler.cpp
             lib/Support/Dwarf.cpp
             lib/Support/DynamicLibrary.cpp
             lib/Support/Errno.cpp
@@ -590,6 +628,8 @@ ELSE()
             lib/Support/IntrusiveRefCntPtr.cpp
             lib/Support/IsInf.cpp
             lib/Support/IsNAN.cpp
+            lib/Support/LEB128.cpp
+            lib/Support/LineIterator.cpp
             lib/Support/Locale.cpp
             lib/Support/LockFileManager.cpp
             lib/Support/ManagedStatic.cpp
@@ -603,6 +643,7 @@ ELSE()
             lib/Support/PrettyStackTrace.cpp
             lib/Support/Process.cpp
             lib/Support/Program.cpp
+            lib/Support/RandomNumberGenerator.cpp
             lib/Support/raw_os_ostream.cpp
             lib/Support/raw_ostream.cpp
             lib/Support/regcomp.c
@@ -612,11 +653,13 @@ ELSE()
             lib/Support/regfree.c
             lib/Support/regstrlcpy.c
             lib/Support/RWMutex.cpp
+            lib/Support/ScaledNumber.cpp
             lib/Support/SearchForAddressOfSpecialSymbol.cpp
             lib/Support/Signals.cpp
             lib/Support/SmallPtrSet.cpp
             lib/Support/SmallVector.cpp
             lib/Support/SourceMgr.cpp
+            lib/Support/SpecialCaseList.cpp
             lib/Support/Statistic.cpp
             lib/Support/StreamableMemoryObject.cpp
             lib/Support/StringExtras.cpp
@@ -624,7 +667,6 @@ ELSE()
             lib/Support/StringPool.cpp
             lib/Support/StringRef.cpp
             lib/Support/StringRefMemoryObject.cpp
-            lib/Support/system_error.cpp
             lib/Support/SystemUtils.cpp
             lib/Support/TargetRegistry.cpp
             lib/Support/Threading.cpp
@@ -643,12 +685,12 @@ ELSE()
             lib/TableGen/Error.cpp
             lib/TableGen/Main.cpp
             lib/TableGen/Record.cpp
+            lib/TableGen/SetTheory.cpp
             lib/TableGen/StringMatcher.cpp
             lib/TableGen/TableGenBackend.cpp
             lib/TableGen/TGLexer.cpp
             lib/TableGen/TGParser.cpp
 
-            lib/Target/Mangler.cpp
             lib/Target/Target.cpp
             lib/Target/TargetIntrinsicInfo.cpp
             lib/Target/TargetJITInfo.cpp
@@ -659,8 +701,8 @@ ELSE()
             lib/Target/TargetSubtargetInfo.cpp
 
             lib/Target/X86/X86AsmPrinter.cpp
+            lib/Target/X86/X86AtomicExpandPass.cpp
             lib/Target/X86/X86CodeEmitter.cpp
-            lib/Target/X86/X86COFFMachineModuleInfo.cpp
             lib/Target/X86/X86FastISel.cpp
             lib/Target/X86/X86FixupLEAs.cpp
             lib/Target/X86/X86FloatingPoint.cpp
@@ -680,10 +722,11 @@ ELSE()
             lib/Target/X86/X86TargetTransformInfo.cpp
             lib/Target/X86/X86VZeroUpper.cpp
 
+            lib/Target/X86/AsmParser/X86AsmInstrumentation.cpp
             lib/Target/X86/AsmParser/X86AsmParser.cpp
 
             lib/Target/X86/Disassembler/X86Disassembler.cpp
-            lib/Target/X86/Disassembler/X86DisassemblerDecoder.c
+            lib/Target/X86/Disassembler/X86DisassemblerDecoder.cpp
 
             lib/Target/X86/InstPrinter/X86ATTInstPrinter.cpp
             lib/Target/X86/InstPrinter/X86InstComments.cpp
@@ -698,6 +741,7 @@ ELSE()
             lib/Target/X86/MCTargetDesc/X86MCCodeEmitter.cpp
             lib/Target/X86/MCTargetDesc/X86MCTargetDesc.cpp
             lib/Target/X86/MCTargetDesc/X86WinCOFFObjectWriter.cpp
+            lib/Target/X86/MCTargetDesc/X86WinCOFFStreamer.cpp
 
             lib/Target/X86/TargetInfo/X86TargetInfo.cpp
 
@@ -761,18 +805,18 @@ ELSE()
             lib/Transforms/ObjCARC/ProvenanceAnalysis.cpp
 
             lib/Transforms/Scalar/ADCE.cpp
-            lib/Transforms/Scalar/CodeGenPrepare.cpp
+            lib/Transforms/Scalar/ConstantHoisting.cpp
             lib/Transforms/Scalar/ConstantProp.cpp
             lib/Transforms/Scalar/CorrelatedValuePropagation.cpp
             lib/Transforms/Scalar/DCE.cpp
             lib/Transforms/Scalar/DeadStoreElimination.cpp
             lib/Transforms/Scalar/EarlyCSE.cpp
             lib/Transforms/Scalar/FlattenCFGPass.cpp
-            lib/Transforms/Scalar/GlobalMerge.cpp
             lib/Transforms/Scalar/GVN.cpp
             lib/Transforms/Scalar/IndVarSimplify.cpp
             lib/Transforms/Scalar/JumpThreading.cpp
             lib/Transforms/Scalar/LICM.cpp
+            lib/Transforms/Scalar/LoadCombine.cpp
             lib/Transforms/Scalar/LoopDeletion.cpp
             lib/Transforms/Scalar/LoopIdiomRecognize.cpp
             lib/Transforms/Scalar/LoopInstSimplify.cpp
@@ -783,19 +827,24 @@ ELSE()
             lib/Transforms/Scalar/LoopUnswitch.cpp
             lib/Transforms/Scalar/LowerAtomic.cpp
             lib/Transforms/Scalar/MemCpyOptimizer.cpp
+            lib/Transforms/Scalar/MergedLoadStoreMotion.cpp
             lib/Transforms/Scalar/PartiallyInlineLibCalls.cpp
             lib/Transforms/Scalar/Reassociate.cpp
             lib/Transforms/Scalar/Reg2Mem.cpp
             lib/Transforms/Scalar/SampleProfile.cpp
             lib/Transforms/Scalar/Scalar.cpp
+            lib/Transforms/Scalar/Scalarizer.cpp
             lib/Transforms/Scalar/ScalarReplAggregates.cpp
             lib/Transforms/Scalar/SCCP.cpp
+            lib/Transforms/Scalar/SeparateConstOffsetFromGEP.cpp
             lib/Transforms/Scalar/SimplifyCFGPass.cpp
             lib/Transforms/Scalar/Sink.cpp
             lib/Transforms/Scalar/SROA.cpp
             lib/Transforms/Scalar/StructurizeCFG.cpp
             lib/Transforms/Scalar/TailRecursionElimination.cpp
 
+            lib/Transforms/Utils/AddDiscriminators.cpp
+            lib/Transforms/Utils/ASanStackFrameLayout.cpp
             lib/Transforms/Utils/BasicBlockUtils.cpp
             lib/Transforms/Utils/BreakCriticalEdges.cpp
             lib/Transforms/Utils/BuildLibCalls.cpp
@@ -804,6 +853,7 @@ ELSE()
             lib/Transforms/Utils/CloneModule.cpp
             lib/Transforms/Utils/CmpInstAnalysis.cpp
             lib/Transforms/Utils/CodeExtractor.cpp
+            lib/Transforms/Utils/CtorUtils.cpp
             lib/Transforms/Utils/DemoteRegToStack.cpp
             lib/Transforms/Utils/FlattenCFG.cpp
             lib/Transforms/Utils/GlobalStatus.cpp
@@ -826,7 +876,6 @@ ELSE()
             lib/Transforms/Utils/SimplifyIndVar.cpp
             lib/Transforms/Utils/SimplifyInstructions.cpp
             lib/Transforms/Utils/SimplifyLibCalls.cpp
-            lib/Transforms/Utils/SpecialCaseList.cpp
             lib/Transforms/Utils/SSAUpdater.cpp
             lib/Transforms/Utils/UnifyFunctionExitNodes.cpp
             lib/Transforms/Utils/Utils.cpp
@@ -858,6 +907,9 @@ ELSE()
             tools/clang/lib/Analysis/ReachableCode.cpp
             tools/clang/lib/Analysis/ScanfFormatString.cpp
             tools/clang/lib/Analysis/ThreadSafety.cpp
+            tools/clang/lib/Analysis/ThreadSafetyCommon.cpp
+            tools/clang/lib/Analysis/ThreadSafetyLogical.cpp
+            tools/clang/lib/Analysis/ThreadSafetyTIL.cpp
             tools/clang/lib/Analysis/UninitializedValues.cpp
 
             tools/clang/lib/ARCMigrate/ARCMT.cpp
@@ -944,6 +996,8 @@ ELSE()
             tools/clang/lib/ASTMatchers/Dynamic/Parser.cpp
             tools/clang/lib/ASTMatchers/Dynamic/Registry.cpp
             tools/clang/lib/ASTMatchers/Dynamic/VariantValue.cpp
+
+            tools/clang/lib/Basic/Attributes.cpp
             tools/clang/lib/Basic/Builtins.cpp
             tools/clang/lib/Basic/CharInfo.cpp
             tools/clang/lib/Basic/Diagnostic.cpp
@@ -963,6 +1017,8 @@ ELSE()
             tools/clang/lib/Basic/TokenKinds.cpp
             tools/clang/lib/Basic/Version.cpp
             tools/clang/lib/Basic/VersionTuple.cpp
+            tools/clang/lib/Basic/VirtualFileSystem.cpp
+            tools/clang/lib/Basic/Warnings.cpp
 
             tools/clang/lib/CodeGen/BackendUtil.cpp
             tools/clang/lib/CodeGen/CGAtomic.cpp
@@ -985,34 +1041,37 @@ ELSE()
             tools/clang/lib/CodeGen/CGExprConstant.cpp
             tools/clang/lib/CodeGen/CGExprCXX.cpp
             tools/clang/lib/CodeGen/CGExprScalar.cpp
+            tools/clang/lib/CodeGen/CGLoopInfo.cpp
             tools/clang/lib/CodeGen/CGObjC.cpp
             tools/clang/lib/CodeGen/CGObjCGNU.cpp
             tools/clang/lib/CodeGen/CGObjCMac.cpp
             tools/clang/lib/CodeGen/CGObjCRuntime.cpp
             tools/clang/lib/CodeGen/CGOpenCLRuntime.cpp
+            tools/clang/lib/CodeGen/CGOpenMPRuntime.cpp
             tools/clang/lib/CodeGen/CGRecordLayoutBuilder.cpp
-            tools/clang/lib/CodeGen/CGRTTI.cpp
             tools/clang/lib/CodeGen/CGStmt.cpp
+            tools/clang/lib/CodeGen/CGStmtOpenMP.cpp
             tools/clang/lib/CodeGen/CGVTables.cpp
             tools/clang/lib/CodeGen/CGVTT.cpp
             tools/clang/lib/CodeGen/CodeGenABITypes.cpp
             tools/clang/lib/CodeGen/CodeGenAction.cpp
             tools/clang/lib/CodeGen/CodeGenFunction.cpp
             tools/clang/lib/CodeGen/CodeGenModule.cpp
+            tools/clang/lib/CodeGen/CodeGenPGO.cpp
             tools/clang/lib/CodeGen/CodeGenTBAA.cpp
             tools/clang/lib/CodeGen/CodeGenTypes.cpp
             tools/clang/lib/CodeGen/ItaniumCXXABI.cpp
             tools/clang/lib/CodeGen/MicrosoftCXXABI.cpp
-            tools/clang/lib/CodeGen/MicrosoftVBTables.cpp
             tools/clang/lib/CodeGen/ModuleBuilder.cpp
+            tools/clang/lib/CodeGen/SanitizerBlacklist.cpp
             tools/clang/lib/CodeGen/TargetInfo.cpp
 
             tools/clang/lib/Driver/Action.cpp
-            tools/clang/lib/Driver/CC1AsOptions.cpp
             tools/clang/lib/Driver/Compilation.cpp
             tools/clang/lib/Driver/Driver.cpp
             tools/clang/lib/Driver/DriverOptions.cpp
             tools/clang/lib/Driver/Job.cpp
+            tools/clang/lib/Driver/Multilib.cpp
             tools/clang/lib/Driver/Phases.cpp
             tools/clang/lib/Driver/SanitizerArgs.cpp
             tools/clang/lib/Driver/Tool.cpp
@@ -1055,6 +1114,7 @@ ELSE()
             tools/clang/lib/Frontend/LangStandards.cpp
             tools/clang/lib/Frontend/LayoutOverrideSource.cpp
             tools/clang/lib/Frontend/LogDiagnosticPrinter.cpp
+            tools/clang/lib/Frontend/ModuleDependencyCollector.cpp
             tools/clang/lib/Frontend/MultiplexConsumer.cpp
             tools/clang/lib/Frontend/PrintPreprocessedOutput.cpp
             tools/clang/lib/Frontend/SerializedDiagnosticPrinter.cpp
@@ -1062,11 +1122,21 @@ ELSE()
             tools/clang/lib/Frontend/TextDiagnosticBuffer.cpp
             tools/clang/lib/Frontend/TextDiagnosticPrinter.cpp
             tools/clang/lib/Frontend/VerifyDiagnosticConsumer.cpp
-            tools/clang/lib/Frontend/Warnings.cpp
+
+            tools/clang/lib/Frontend/Rewrite/FixItRewriter.cpp
+            tools/clang/lib/Frontend/Rewrite/FrontendActions.cpp
+            tools/clang/lib/Frontend/Rewrite/HTMLPrint.cpp
+            tools/clang/lib/Frontend/Rewrite/InclusionRewriter.cpp
+            tools/clang/lib/Frontend/Rewrite/RewriteMacros.cpp
+            tools/clang/lib/Frontend/Rewrite/RewriteModernObjC.cpp
+            tools/clang/lib/Frontend/Rewrite/RewriteObjC.cpp
+            tools/clang/lib/Frontend/Rewrite/RewriteTest.cpp
 
             tools/clang/lib/FrontendTool/ExecuteCompilerInvocation.cpp
+
             tools/clang/lib/Index/CommentToXML.cpp
             tools/clang/lib/Index/USRGeneration.cpp
+
             tools/clang/lib/Lex/HeaderMap.cpp
             tools/clang/lib/Lex/HeaderSearch.cpp
             tools/clang/lib/Lex/Lexer.cpp
@@ -1102,23 +1172,15 @@ ELSE()
             tools/clang/lib/Parse/ParsePragma.cpp
             tools/clang/lib/Parse/Parser.cpp
             tools/clang/lib/Parse/ParseStmt.cpp
+            tools/clang/lib/Parse/ParseStmtAsm.cpp
             tools/clang/lib/Parse/ParseTemplate.cpp
             tools/clang/lib/Parse/ParseTentative.cpp
 
-            tools/clang/lib/Rewrite/Core/DeltaTree.cpp
-            tools/clang/lib/Rewrite/Core/HTMLRewrite.cpp
-            tools/clang/lib/Rewrite/Core/Rewriter.cpp
-            tools/clang/lib/Rewrite/Core/RewriteRope.cpp
-            tools/clang/lib/Rewrite/Core/TokenRewriter.cpp
-
-            tools/clang/lib/Rewrite/Frontend/FixItRewriter.cpp
-            tools/clang/lib/Rewrite/Frontend/FrontendActions.cpp
-            tools/clang/lib/Rewrite/Frontend/HTMLPrint.cpp
-            tools/clang/lib/Rewrite/Frontend/InclusionRewriter.cpp
-            tools/clang/lib/Rewrite/Frontend/RewriteMacros.cpp
-            tools/clang/lib/Rewrite/Frontend/RewriteModernObjC.cpp
-            tools/clang/lib/Rewrite/Frontend/RewriteObjC.cpp
-            tools/clang/lib/Rewrite/Frontend/RewriteTest.cpp
+            tools/clang/lib/Rewrite/DeltaTree.cpp
+            tools/clang/lib/Rewrite/HTMLRewrite.cpp
+            tools/clang/lib/Rewrite/Rewriter.cpp
+            tools/clang/lib/Rewrite/RewriteRope.cpp
+            tools/clang/lib/Rewrite/TokenRewriter.cpp
 
             tools/clang/lib/Sema/AnalysisBasedWarnings.cpp
             tools/clang/lib/Sema/AttributeList.cpp
@@ -1164,8 +1226,8 @@ ELSE()
             tools/clang/lib/Sema/SemaTemplateInstantiateDecl.cpp
             tools/clang/lib/Sema/SemaTemplateVariadic.cpp
             tools/clang/lib/Sema/SemaType.cpp
-            tools/clang/lib/Sema/TargetAttributesSema.cpp
             tools/clang/lib/Sema/TypeLocBuilder.cpp
+
             tools/clang/lib/Serialization/ASTCommon.cpp
             tools/clang/lib/Serialization/ASTReader.cpp
             tools/clang/lib/Serialization/ASTReaderDecl.cpp
@@ -1206,7 +1268,6 @@ ELSE()
             tools/clang/lib/StaticAnalyzer/Checkers/ExprInspectionChecker.cpp
             tools/clang/lib/StaticAnalyzer/Checkers/FixedAddressChecker.cpp
             tools/clang/lib/StaticAnalyzer/Checkers/GenericTaintChecker.cpp
-            tools/clang/lib/StaticAnalyzer/Checkers/IdempotentOperationChecker.cpp
             tools/clang/lib/StaticAnalyzer/Checkers/IdenticalExprChecker.cpp
             tools/clang/lib/StaticAnalyzer/Checkers/IvarInvalidationChecker.cpp
             tools/clang/lib/StaticAnalyzer/Checkers/LLVMConventionsChecker.cpp
@@ -1235,6 +1296,7 @@ ELSE()
             tools/clang/lib/StaticAnalyzer/Checkers/StackAddrEscapeChecker.cpp
             tools/clang/lib/StaticAnalyzer/Checkers/StreamChecker.cpp
             tools/clang/lib/StaticAnalyzer/Checkers/TaintTesterChecker.cpp
+            tools/clang/lib/StaticAnalyzer/Checkers/TestAfterDivZeroChecker.cpp
             tools/clang/lib/StaticAnalyzer/Checkers/TraversalChecker.cpp
             tools/clang/lib/StaticAnalyzer/Checkers/UndefBranchChecker.cpp
             tools/clang/lib/StaticAnalyzer/Checkers/UndefCapturedBlockVarChecker.cpp

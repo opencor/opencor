@@ -170,8 +170,7 @@ bool CompilerEngine::compileCode(const QString &pCode)
     clang::DiagnosticsEngine diagnosticsEngine(llvm::IntrusiveRefCntPtr<clang::DiagnosticIDs>(new clang::DiagnosticIDs()),
                                                &*diagnosticOptions,
                                                new clang::TextDiagnosticPrinter(outputStream, &*diagnosticOptions));
-    clang::driver::Driver driver("clang", llvm::sys::getProcessTriple(), "",
-                                 diagnosticsEngine);
+    clang::driver::Driver driver("clang", llvm::sys::getProcessTriple(), diagnosticsEngine);
 
     // Get a compilation object to which we pass some arguments
 
@@ -186,7 +185,7 @@ bool CompilerEngine::compileCode(const QString &pCode)
     compilationArguments.push_back("-Werror");
     compilationArguments.push_back(tempFileByteArray.constData());
 
-    llvm::OwningPtr<clang::driver::Compilation> compilation(driver.BuildCompilation(compilationArguments));
+    std::unique_ptr<clang::driver::Compilation> compilation(driver.BuildCompilation(compilationArguments));
 
     if (!compilation) {
         mError = tr("the compilation object could not be created");
@@ -220,7 +219,7 @@ bool CompilerEngine::compileCode(const QString &pCode)
     // Create a compiler invocation using our command's arguments
 
     const clang::driver::ArgStringList &commandArguments = command->getArguments();
-    llvm::OwningPtr<clang::CompilerInvocation> compilerInvocation(new clang::CompilerInvocation());
+    std::unique_ptr<clang::CompilerInvocation> compilerInvocation(new clang::CompilerInvocation());
 
     clang::CompilerInvocation::CreateFromArgs(*compilerInvocation,
                                               const_cast<const char **>(commandArguments.data()),
@@ -231,7 +230,7 @@ bool CompilerEngine::compileCode(const QString &pCode)
 
     clang::CompilerInstance compilerInstance;
 
-    compilerInstance.setInvocation(compilerInvocation.take());
+    compilerInstance.setInvocation(compilerInvocation.release());
 
     // Create the compiler instance's diagnostics engine
 
@@ -249,7 +248,7 @@ bool CompilerEngine::compileCode(const QString &pCode)
     //       output stream we want to use (rather than always use llvm::errs()),
     //       but they have yet to actually do it, so we modified it ourselves...
 
-    llvm::OwningPtr<clang::CodeGenAction> codeGenerationAction(new clang::EmitLLVMOnlyAction(&llvm::getGlobalContext()));
+    std::unique_ptr<clang::CodeGenAction> codeGenerationAction(new clang::EmitLLVMOnlyAction(&llvm::getGlobalContext()));
 
     if (!compilerInstance.ExecuteAction(*codeGenerationAction, outputStream)) {
         mError = tr("the code could not be compiled");

@@ -97,13 +97,12 @@ public:
   /// the system (the first part of each pair) and gives them the
   /// contents of other files on the system (the second part of each
   /// pair).
-  std::vector<std::pair<std::string, std::string> >  RemappedFiles;
+  std::vector<std::pair<std::string, std::string>> RemappedFiles;
 
   /// \brief The set of file-to-buffer remappings, which take existing files
   /// on the system (the first part of each pair) and gives them the contents
   /// of the specified memory buffer (the second part of each pair).
-  std::vector<std::pair<std::string, const llvm::MemoryBuffer *> >
-    RemappedFileBuffers;
+  std::vector<std::pair<std::string, llvm::MemoryBuffer *>> RemappedFileBuffers;
 
   /// \brief Whether the compiler instance should retain (i.e., not free)
   /// the buffers associated with remapped files.
@@ -140,40 +139,6 @@ public:
   /// build it again.
   IntrusiveRefCntPtr<FailedModulesSet> FailedModules;
 
-  typedef std::vector<std::pair<std::string, std::string> >::iterator
-    remapped_file_iterator;
-  typedef std::vector<std::pair<std::string, std::string> >::const_iterator
-    const_remapped_file_iterator;
-  remapped_file_iterator remapped_file_begin() {
-    return RemappedFiles.begin();
-  }
-  const_remapped_file_iterator remapped_file_begin() const {
-    return RemappedFiles.begin();
-  }
-  remapped_file_iterator remapped_file_end() {
-    return RemappedFiles.end();
-  }
-  const_remapped_file_iterator remapped_file_end() const {
-    return RemappedFiles.end();
-  }
-
-  typedef std::vector<std::pair<std::string, const llvm::MemoryBuffer *> >::
-                                  iterator remapped_file_buffer_iterator;
-  typedef std::vector<std::pair<std::string, const llvm::MemoryBuffer *> >::
-                            const_iterator const_remapped_file_buffer_iterator;
-  remapped_file_buffer_iterator remapped_file_buffer_begin() {
-    return RemappedFileBuffers.begin();
-  }
-  const_remapped_file_buffer_iterator remapped_file_buffer_begin() const {
-    return RemappedFileBuffers.begin();
-  }
-  remapped_file_buffer_iterator remapped_file_buffer_end() {
-    return RemappedFileBuffers.end();
-  }
-  const_remapped_file_buffer_iterator remapped_file_buffer_end() const {
-    return RemappedFileBuffers.end();
-  }
-
 public:
   PreprocessorOptions() : UsePredefines(true), DetailedRecord(false),
                           DisablePCHValidation(false),
@@ -194,17 +159,8 @@ public:
     RemappedFiles.push_back(std::make_pair(From, To));
   }
 
-  remapped_file_iterator eraseRemappedFile(remapped_file_iterator Remapped) {
-    return RemappedFiles.erase(Remapped);
-  }
-
-  void addRemappedFile(StringRef From, const llvm::MemoryBuffer * To) {
+  void addRemappedFile(StringRef From, llvm::MemoryBuffer *To) {
     RemappedFileBuffers.push_back(std::make_pair(From, To));
-  }
-
-  remapped_file_buffer_iterator
-  eraseRemappedFile(remapped_file_buffer_iterator Remapped) {
-    return RemappedFileBuffers.erase(Remapped);
   }
 
   void clearRemappedFiles() {

@@ -13,36 +13,51 @@
   case attr::ARMInterrupt: {
     const ARMInterruptAttr *SA = cast<ARMInterruptAttr>(A);
     switch(SA->getInterrupt()) {
-    case ARMInterruptAttr::ABORT:
-      OS << " ABORT";
+    case ARMInterruptAttr::IRQ:
+      OS << " IRQ";
       break;
     case ARMInterruptAttr::FIQ:
       OS << " FIQ";
       break;
-    case ARMInterruptAttr::Generic:
-      OS << " Generic";
-      break;
-    case ARMInterruptAttr::IRQ:
-      OS << " IRQ";
-      break;
     case ARMInterruptAttr::SWI:
       OS << " SWI";
+      break;
+    case ARMInterruptAttr::ABORT:
+      OS << " ABORT";
       break;
     case ARMInterruptAttr::UNDEF:
       OS << " UNDEF";
       break;
+    case ARMInterruptAttr::Generic:
+      OS << " Generic";
+      break;
     }
     bool OldMoreChildren = hasMoreChildren();
-    bool MoreChildren = OldMoreChildren;
+    bool MoreChildren;
     MoreChildren = OldMoreChildren;
     setMoreChildren(MoreChildren);
+    setMoreChildren(OldMoreChildren);
+    break;
+  }
+  case attr::AcquireCapability: {
+    OS << " " << A->getSpelling();
+    const AcquireCapabilityAttr *SA = cast<AcquireCapabilityAttr>(A);
+    bool OldMoreChildren = hasMoreChildren();
+    bool MoreChildren;
+    MoreChildren = OldMoreChildren;
+    setMoreChildren(MoreChildren);
+    for (AcquireCapabilityAttr::args_iterator I = SA->args_begin(), E = SA->args_end(); I != E; ++I) {
+      if (I + 1 == E)
+        lastChild();
+      dumpStmt(*I);
+    }
     setMoreChildren(OldMoreChildren);
     break;
   }
   case attr::AcquiredAfter: {
     const AcquiredAfterAttr *SA = cast<AcquiredAfterAttr>(A);
     bool OldMoreChildren = hasMoreChildren();
-    bool MoreChildren = OldMoreChildren;
+    bool MoreChildren;
     MoreChildren = OldMoreChildren;
     setMoreChildren(MoreChildren);
     for (AcquiredAfterAttr::args_iterator I = SA->args_begin(), E = SA->args_end(); I != E; ++I) {
@@ -56,7 +71,7 @@
   case attr::AcquiredBefore: {
     const AcquiredBeforeAttr *SA = cast<AcquiredBeforeAttr>(A);
     bool OldMoreChildren = hasMoreChildren();
-    bool MoreChildren = OldMoreChildren;
+    bool MoreChildren;
     MoreChildren = OldMoreChildren;
     setMoreChildren(MoreChildren);
     for (AcquiredBeforeAttr::args_iterator I = SA->args_begin(), E = SA->args_end(); I != E; ++I) {
@@ -71,7 +86,7 @@
     const AliasAttr *SA = cast<AliasAttr>(A);
     OS << " \"" << SA->getAliasee() << "\"";
     bool OldMoreChildren = hasMoreChildren();
-    bool MoreChildren = OldMoreChildren;
+    bool MoreChildren;
     MoreChildren = OldMoreChildren;
     setMoreChildren(MoreChildren);
     setMoreChildren(OldMoreChildren);
@@ -81,9 +96,10 @@
     break;
   }
   case attr::Aligned: {
+    OS << " " << A->getSpelling();
     const AlignedAttr *SA = cast<AlignedAttr>(A);
     bool OldMoreChildren = hasMoreChildren();
-    bool MoreChildren = OldMoreChildren;
+    bool MoreChildren;
     MoreChildren = OldMoreChildren;
     setMoreChildren(MoreChildren);
     if (SA->isAlignmentExpr()) {
@@ -94,18 +110,8 @@
     setMoreChildren(OldMoreChildren);
     break;
   }
-  case attr::AllocSize: {
-    const AllocSizeAttr *SA = cast<AllocSizeAttr>(A);
-    for (AllocSizeAttr::args_iterator I = SA->args_begin(), E = SA->args_end(); I != E; ++I)
-      OS << " " << *I;
-    bool OldMoreChildren = hasMoreChildren();
-    bool MoreChildren = OldMoreChildren;
-    MoreChildren = OldMoreChildren;
-    setMoreChildren(MoreChildren);
-    setMoreChildren(OldMoreChildren);
-    break;
-  }
   case attr::AlwaysInline: {
+    OS << " " << A->getSpelling();
     break;
   }
   case attr::AnalyzerNoReturn: {
@@ -115,7 +121,7 @@
     const AnnotateAttr *SA = cast<AnnotateAttr>(A);
     OS << " \"" << SA->getAnnotation() << "\"";
     bool OldMoreChildren = hasMoreChildren();
-    bool MoreChildren = OldMoreChildren;
+    bool MoreChildren;
     MoreChildren = OldMoreChildren;
     setMoreChildren(MoreChildren);
     setMoreChildren(OldMoreChildren);
@@ -125,13 +131,14 @@
     break;
   }
   case attr::ArgumentWithTypeTag: {
+    OS << " " << A->getSpelling();
     const ArgumentWithTypeTagAttr *SA = cast<ArgumentWithTypeTagAttr>(A);
     OS << " " << SA->getArgumentKind()->getName();
     OS << " " << SA->getArgumentIdx();
     OS << " " << SA->getTypeTagIdx();
     if (SA->getIsPointer()) OS << " IsPointer";
     bool OldMoreChildren = hasMoreChildren();
-    bool MoreChildren = OldMoreChildren;
+    bool MoreChildren;
     MoreChildren = OldMoreChildren || false || false || false;
     setMoreChildren(MoreChildren);
     MoreChildren = OldMoreChildren || false || false;
@@ -147,16 +154,28 @@
     const AsmLabelAttr *SA = cast<AsmLabelAttr>(A);
     OS << " \"" << SA->getLabel() << "\"";
     bool OldMoreChildren = hasMoreChildren();
-    bool MoreChildren = OldMoreChildren;
+    bool MoreChildren;
     MoreChildren = OldMoreChildren;
     setMoreChildren(MoreChildren);
+    setMoreChildren(OldMoreChildren);
+    break;
+  }
+  case attr::AssertCapability: {
+    OS << " " << A->getSpelling();
+    const AssertCapabilityAttr *SA = cast<AssertCapabilityAttr>(A);
+    bool OldMoreChildren = hasMoreChildren();
+    bool MoreChildren;
+    MoreChildren = OldMoreChildren;
+    setMoreChildren(MoreChildren);
+    lastChild();
+    dumpStmt(SA->getExpr());
     setMoreChildren(OldMoreChildren);
     break;
   }
   case attr::AssertExclusiveLock: {
     const AssertExclusiveLockAttr *SA = cast<AssertExclusiveLockAttr>(A);
     bool OldMoreChildren = hasMoreChildren();
-    bool MoreChildren = OldMoreChildren;
+    bool MoreChildren;
     MoreChildren = OldMoreChildren;
     setMoreChildren(MoreChildren);
     for (AssertExclusiveLockAttr::args_iterator I = SA->args_begin(), E = SA->args_end(); I != E; ++I) {
@@ -170,7 +189,7 @@
   case attr::AssertSharedLock: {
     const AssertSharedLockAttr *SA = cast<AssertSharedLockAttr>(A);
     bool OldMoreChildren = hasMoreChildren();
-    bool MoreChildren = OldMoreChildren;
+    bool MoreChildren;
     MoreChildren = OldMoreChildren;
     setMoreChildren(MoreChildren);
     for (AssertSharedLockAttr::args_iterator I = SA->args_begin(), E = SA->args_end(); I != E; ++I) {
@@ -190,7 +209,7 @@
     if (SA->getUnavailable()) OS << " Unavailable";
     OS << " \"" << SA->getMessage() << "\"";
     bool OldMoreChildren = hasMoreChildren();
-    bool MoreChildren = OldMoreChildren;
+    bool MoreChildren;
     MoreChildren = OldMoreChildren || false || false || false || false || false;
     setMoreChildren(MoreChildren);
     MoreChildren = OldMoreChildren || false || false || false || false;
@@ -214,7 +233,7 @@
       break;
     }
     bool OldMoreChildren = hasMoreChildren();
-    bool MoreChildren = OldMoreChildren;
+    bool MoreChildren;
     MoreChildren = OldMoreChildren;
     setMoreChildren(MoreChildren);
     setMoreChildren(OldMoreChildren);
@@ -258,7 +277,7 @@
     OS << " " << SA->getMaxThreads();
     OS << " " << SA->getMinBlocks();
     bool OldMoreChildren = hasMoreChildren();
-    bool MoreChildren = OldMoreChildren;
+    bool MoreChildren;
     MoreChildren = OldMoreChildren || false;
     setMoreChildren(MoreChildren);
     MoreChildren = OldMoreChildren;
@@ -274,21 +293,32 @@
   }
   case attr::CallableWhen: {
     const CallableWhenAttr *SA = cast<CallableWhenAttr>(A);
-    for (CallableWhenAttr::callableState_iterator I = SA->callableState_begin(), E = SA->callableState_end(); I != E; ++I) {
+    for (CallableWhenAttr::callableStates_iterator I = SA->callableStates_begin(), E = SA->callableStates_end(); I != E; ++I) {
       switch(*I) {
+    case CallableWhenAttr::Unknown:
+      OS << " Unknown";
+      break;
     case CallableWhenAttr::Consumed:
       OS << " Consumed";
       break;
     case CallableWhenAttr::Unconsumed:
       OS << " Unconsumed";
       break;
-    case CallableWhenAttr::Unknown:
-      OS << " Unknown";
-      break;
       }
     }
     bool OldMoreChildren = hasMoreChildren();
-    bool MoreChildren = OldMoreChildren;
+    bool MoreChildren;
+    MoreChildren = OldMoreChildren;
+    setMoreChildren(MoreChildren);
+    setMoreChildren(OldMoreChildren);
+    break;
+  }
+  case attr::Capability: {
+    OS << " " << A->getSpelling();
+    const CapabilityAttr *SA = cast<CapabilityAttr>(A);
+    OS << " \"" << SA->getName() << "\"";
+    bool OldMoreChildren = hasMoreChildren();
+    bool MoreChildren;
     MoreChildren = OldMoreChildren;
     setMoreChildren(MoreChildren);
     setMoreChildren(OldMoreChildren);
@@ -302,7 +332,7 @@
     OS << " ";
     dumpBareDeclRef(SA->getFunctionDecl());
     bool OldMoreChildren = hasMoreChildren();
-    bool MoreChildren = OldMoreChildren;
+    bool MoreChildren;
     MoreChildren = OldMoreChildren;
     setMoreChildren(MoreChildren);
     setMoreChildren(OldMoreChildren);
@@ -321,7 +351,7 @@
     const ConstructorAttr *SA = cast<ConstructorAttr>(A);
     OS << " " << SA->getPriority();
     bool OldMoreChildren = hasMoreChildren();
-    bool MoreChildren = OldMoreChildren;
+    bool MoreChildren;
     MoreChildren = OldMoreChildren;
     setMoreChildren(MoreChildren);
     setMoreChildren(OldMoreChildren);
@@ -330,21 +360,27 @@
   case attr::Consumable: {
     const ConsumableAttr *SA = cast<ConsumableAttr>(A);
     switch(SA->getDefaultState()) {
+    case ConsumableAttr::Unknown:
+      OS << " Unknown";
+      break;
     case ConsumableAttr::Consumed:
       OS << " Consumed";
       break;
     case ConsumableAttr::Unconsumed:
       OS << " Unconsumed";
       break;
-    case ConsumableAttr::Unknown:
-      OS << " Unknown";
-      break;
     }
     bool OldMoreChildren = hasMoreChildren();
-    bool MoreChildren = OldMoreChildren;
+    bool MoreChildren;
     MoreChildren = OldMoreChildren;
     setMoreChildren(MoreChildren);
     setMoreChildren(OldMoreChildren);
+    break;
+  }
+  case attr::ConsumableAutoCast: {
+    break;
+  }
+  case attr::ConsumableSetOnRead: {
     break;
   }
   case attr::DLLExport: {
@@ -357,7 +393,7 @@
     const DeprecatedAttr *SA = cast<DeprecatedAttr>(A);
     OS << " \"" << SA->getMessage() << "\"";
     bool OldMoreChildren = hasMoreChildren();
-    bool MoreChildren = OldMoreChildren;
+    bool MoreChildren;
     MoreChildren = OldMoreChildren;
     setMoreChildren(MoreChildren);
     setMoreChildren(OldMoreChildren);
@@ -367,44 +403,30 @@
     const DestructorAttr *SA = cast<DestructorAttr>(A);
     OS << " " << SA->getPriority();
     bool OldMoreChildren = hasMoreChildren();
-    bool MoreChildren = OldMoreChildren;
+    bool MoreChildren;
     MoreChildren = OldMoreChildren;
     setMoreChildren(MoreChildren);
     setMoreChildren(OldMoreChildren);
     break;
   }
-  case attr::ExclusiveLockFunction: {
-    const ExclusiveLockFunctionAttr *SA = cast<ExclusiveLockFunctionAttr>(A);
+  case attr::EnableIf: {
+    const EnableIfAttr *SA = cast<EnableIfAttr>(A);
+    OS << " \"" << SA->getMessage() << "\"";
     bool OldMoreChildren = hasMoreChildren();
-    bool MoreChildren = OldMoreChildren;
+    bool MoreChildren;
+    MoreChildren = OldMoreChildren || false;
+    setMoreChildren(MoreChildren);
+    lastChild();
+    dumpStmt(SA->getCond());
     MoreChildren = OldMoreChildren;
     setMoreChildren(MoreChildren);
-    for (ExclusiveLockFunctionAttr::args_iterator I = SA->args_begin(), E = SA->args_end(); I != E; ++I) {
-      if (I + 1 == E)
-        lastChild();
-      dumpStmt(*I);
-    }
-    setMoreChildren(OldMoreChildren);
-    break;
-  }
-  case attr::ExclusiveLocksRequired: {
-    const ExclusiveLocksRequiredAttr *SA = cast<ExclusiveLocksRequiredAttr>(A);
-    bool OldMoreChildren = hasMoreChildren();
-    bool MoreChildren = OldMoreChildren;
-    MoreChildren = OldMoreChildren;
-    setMoreChildren(MoreChildren);
-    for (ExclusiveLocksRequiredAttr::args_iterator I = SA->args_begin(), E = SA->args_end(); I != E; ++I) {
-      if (I + 1 == E)
-        lastChild();
-      dumpStmt(*I);
-    }
     setMoreChildren(OldMoreChildren);
     break;
   }
   case attr::ExclusiveTrylockFunction: {
     const ExclusiveTrylockFunctionAttr *SA = cast<ExclusiveTrylockFunctionAttr>(A);
     bool OldMoreChildren = hasMoreChildren();
-    bool MoreChildren = OldMoreChildren;
+    bool MoreChildren;
     MoreChildren = OldMoreChildren || SA->args_begin() != SA->args_end();
     setMoreChildren(MoreChildren);
     lastChild();
@@ -426,9 +448,10 @@
     break;
   }
   case attr::Final: {
+    OS << " " << A->getSpelling();
     break;
   }
-  case attr::ForceInline: {
+  case attr::Flatten: {
     break;
   }
   case attr::Format: {
@@ -437,7 +460,7 @@
     OS << " " << SA->getFormatIdx();
     OS << " " << SA->getFirstArg();
     bool OldMoreChildren = hasMoreChildren();
-    bool MoreChildren = OldMoreChildren;
+    bool MoreChildren;
     MoreChildren = OldMoreChildren || false || false;
     setMoreChildren(MoreChildren);
     MoreChildren = OldMoreChildren || false;
@@ -451,7 +474,7 @@
     const FormatArgAttr *SA = cast<FormatArgAttr>(A);
     OS << " " << SA->getFormatIdx();
     bool OldMoreChildren = hasMoreChildren();
-    bool MoreChildren = OldMoreChildren;
+    bool MoreChildren;
     MoreChildren = OldMoreChildren;
     setMoreChildren(MoreChildren);
     setMoreChildren(OldMoreChildren);
@@ -463,7 +486,7 @@
   case attr::GuardedBy: {
     const GuardedByAttr *SA = cast<GuardedByAttr>(A);
     bool OldMoreChildren = hasMoreChildren();
-    bool MoreChildren = OldMoreChildren;
+    bool MoreChildren;
     MoreChildren = OldMoreChildren;
     setMoreChildren(MoreChildren);
     lastChild();
@@ -487,7 +510,7 @@
     const IBOutletCollectionAttr *SA = cast<IBOutletCollectionAttr>(A);
     OS << " " << SA->getInterface().getAsString();
     bool OldMoreChildren = hasMoreChildren();
-    bool MoreChildren = OldMoreChildren;
+    bool MoreChildren;
     MoreChildren = OldMoreChildren;
     setMoreChildren(MoreChildren);
     setMoreChildren(OldMoreChildren);
@@ -497,7 +520,17 @@
     const InitPriorityAttr *SA = cast<InitPriorityAttr>(A);
     OS << " " << SA->getPriority();
     bool OldMoreChildren = hasMoreChildren();
-    bool MoreChildren = OldMoreChildren;
+    bool MoreChildren;
+    MoreChildren = OldMoreChildren;
+    setMoreChildren(MoreChildren);
+    setMoreChildren(OldMoreChildren);
+    break;
+  }
+  case attr::InitSeg: {
+    const InitSegAttr *SA = cast<InitSegAttr>(A);
+    OS << " \"" << SA->getSection() << "\"";
+    bool OldMoreChildren = hasMoreChildren();
+    bool MoreChildren;
     MoreChildren = OldMoreChildren;
     setMoreChildren(MoreChildren);
     setMoreChildren(OldMoreChildren);
@@ -509,7 +542,7 @@
   case attr::LockReturned: {
     const LockReturnedAttr *SA = cast<LockReturnedAttr>(A);
     bool OldMoreChildren = hasMoreChildren();
-    bool MoreChildren = OldMoreChildren;
+    bool MoreChildren;
     MoreChildren = OldMoreChildren;
     setMoreChildren(MoreChildren);
     lastChild();
@@ -517,13 +550,10 @@
     setMoreChildren(OldMoreChildren);
     break;
   }
-  case attr::Lockable: {
-    break;
-  }
   case attr::LocksExcluded: {
     const LocksExcludedAttr *SA = cast<LocksExcludedAttr>(A);
     bool OldMoreChildren = hasMoreChildren();
-    bool MoreChildren = OldMoreChildren;
+    bool MoreChildren;
     MoreChildren = OldMoreChildren;
     setMoreChildren(MoreChildren);
     for (LocksExcludedAttr::args_iterator I = SA->args_begin(), E = SA->args_end(); I != E; ++I) {
@@ -534,14 +564,68 @@
     setMoreChildren(OldMoreChildren);
     break;
   }
+  case attr::LoopHint: {
+    OS << " " << A->getSpelling();
+    const LoopHintAttr *SA = cast<LoopHintAttr>(A);
+    switch(SA->getOption()) {
+    case LoopHintAttr::Vectorize:
+      OS << " Vectorize";
+      break;
+    case LoopHintAttr::VectorizeWidth:
+      OS << " VectorizeWidth";
+      break;
+    case LoopHintAttr::Interleave:
+      OS << " Interleave";
+      break;
+    case LoopHintAttr::InterleaveCount:
+      OS << " InterleaveCount";
+      break;
+    case LoopHintAttr::Unroll:
+      OS << " Unroll";
+      break;
+    case LoopHintAttr::UnrollCount:
+      OS << " UnrollCount";
+      break;
+    }
+    OS << " " << SA->getValue();
+    bool OldMoreChildren = hasMoreChildren();
+    bool MoreChildren;
+    MoreChildren = OldMoreChildren || false;
+    setMoreChildren(MoreChildren);
+    MoreChildren = OldMoreChildren;
+    setMoreChildren(MoreChildren);
+    setMoreChildren(OldMoreChildren);
+    break;
+  }
   case attr::MSABI: {
+    break;
+  }
+  case attr::MSInheritance: {
+    OS << " " << A->getSpelling();
+    const MSInheritanceAttr *SA = cast<MSInheritanceAttr>(A);
+    if (SA->getBestCase()) OS << " BestCase";
+    bool OldMoreChildren = hasMoreChildren();
+    bool MoreChildren;
+    MoreChildren = OldMoreChildren;
+    setMoreChildren(MoreChildren);
+    setMoreChildren(OldMoreChildren);
     break;
   }
   case attr::MSP430Interrupt: {
     const MSP430InterruptAttr *SA = cast<MSP430InterruptAttr>(A);
     OS << " " << SA->getNumber();
     bool OldMoreChildren = hasMoreChildren();
-    bool MoreChildren = OldMoreChildren;
+    bool MoreChildren;
+    MoreChildren = OldMoreChildren;
+    setMoreChildren(MoreChildren);
+    setMoreChildren(OldMoreChildren);
+    break;
+  }
+  case attr::MSVtorDisp: {
+    const MSVtorDispAttr *SA = cast<MSVtorDispAttr>(A);
+    OS << " " << SA->getVdm();
+    bool OldMoreChildren = hasMoreChildren();
+    bool MoreChildren;
     MoreChildren = OldMoreChildren;
     setMoreChildren(MoreChildren);
     setMoreChildren(OldMoreChildren);
@@ -554,7 +638,7 @@
     const MaxFieldAlignmentAttr *SA = cast<MaxFieldAlignmentAttr>(A);
     OS << " " << SA->getAlignment();
     bool OldMoreChildren = hasMoreChildren();
-    bool MoreChildren = OldMoreChildren;
+    bool MoreChildren;
     MoreChildren = OldMoreChildren;
     setMoreChildren(MoreChildren);
     setMoreChildren(OldMoreChildren);
@@ -573,26 +657,13 @@
     const ModeAttr *SA = cast<ModeAttr>(A);
     OS << " " << SA->getMode()->getName();
     bool OldMoreChildren = hasMoreChildren();
-    bool MoreChildren = OldMoreChildren;
+    bool MoreChildren;
     MoreChildren = OldMoreChildren;
     setMoreChildren(MoreChildren);
     setMoreChildren(OldMoreChildren);
     break;
   }
   case attr::MsStruct: {
-    break;
-  }
-  case attr::MultipleInheritance: {
-    break;
-  }
-  case attr::NSBridged: {
-    const NSBridgedAttr *SA = cast<NSBridgedAttr>(A);
-    OS << " " << SA->getBridgedType()->getName();
-    bool OldMoreChildren = hasMoreChildren();
-    bool MoreChildren = OldMoreChildren;
-    MoreChildren = OldMoreChildren;
-    setMoreChildren(MoreChildren);
-    setMoreChildren(OldMoreChildren);
     break;
   }
   case attr::NSConsumed: {
@@ -619,6 +690,9 @@
   case attr::NoDebug: {
     break;
   }
+  case attr::NoDuplicate: {
+    break;
+  }
   case attr::NoInline: {
     break;
   }
@@ -632,12 +706,16 @@
     break;
   }
   case attr::NoSanitizeAddress: {
+    OS << " " << A->getSpelling();
     break;
   }
   case attr::NoSanitizeMemory: {
     break;
   }
   case attr::NoSanitizeThread: {
+    break;
+  }
+  case attr::NoSplitStack: {
     break;
   }
   case attr::NoThreadSafetyAnalysis: {
@@ -648,10 +726,10 @@
   }
   case attr::NonNull: {
     const NonNullAttr *SA = cast<NonNullAttr>(A);
-    for (NonNullAttr::args_iterator I = SA->args_begin(), E = SA->args_end(); I != E; ++I)
-      OS << " " << *I;
+    for (const auto &Val : SA->args())
+      OS << " " << Val;
     bool OldMoreChildren = hasMoreChildren();
-    bool MoreChildren = OldMoreChildren;
+    bool MoreChildren;
     MoreChildren = OldMoreChildren;
     setMoreChildren(MoreChildren);
     setMoreChildren(OldMoreChildren);
@@ -661,13 +739,45 @@
     const ObjCBridgeAttr *SA = cast<ObjCBridgeAttr>(A);
     OS << " " << SA->getBridgedType()->getName();
     bool OldMoreChildren = hasMoreChildren();
-    bool MoreChildren = OldMoreChildren;
+    bool MoreChildren;
     MoreChildren = OldMoreChildren;
     setMoreChildren(MoreChildren);
     setMoreChildren(OldMoreChildren);
     break;
   }
+  case attr::ObjCBridgeMutable: {
+    const ObjCBridgeMutableAttr *SA = cast<ObjCBridgeMutableAttr>(A);
+    OS << " " << SA->getBridgedType()->getName();
+    bool OldMoreChildren = hasMoreChildren();
+    bool MoreChildren;
+    MoreChildren = OldMoreChildren;
+    setMoreChildren(MoreChildren);
+    setMoreChildren(OldMoreChildren);
+    break;
+  }
+  case attr::ObjCBridgeRelated: {
+    const ObjCBridgeRelatedAttr *SA = cast<ObjCBridgeRelatedAttr>(A);
+    OS << " " << SA->getRelatedClass()->getName();
+    OS << " " << SA->getClassMethod()->getName();
+    OS << " " << SA->getInstanceMethod()->getName();
+    bool OldMoreChildren = hasMoreChildren();
+    bool MoreChildren;
+    MoreChildren = OldMoreChildren || false || false;
+    setMoreChildren(MoreChildren);
+    MoreChildren = OldMoreChildren || false;
+    setMoreChildren(MoreChildren);
+    MoreChildren = OldMoreChildren;
+    setMoreChildren(MoreChildren);
+    setMoreChildren(OldMoreChildren);
+    break;
+  }
+  case attr::ObjCDesignatedInitializer: {
+    break;
+  }
   case attr::ObjCException: {
+    break;
+  }
+  case attr::ObjCExplicitProtocolImpl: {
     break;
   }
   case attr::ObjCMethodFamily: {
@@ -693,7 +803,7 @@
       break;
     }
     bool OldMoreChildren = hasMoreChildren();
-    bool MoreChildren = OldMoreChildren;
+    bool MoreChildren;
     MoreChildren = OldMoreChildren;
     setMoreChildren(MoreChildren);
     setMoreChildren(OldMoreChildren);
@@ -717,17 +827,24 @@
   case attr::ObjCRootClass: {
     break;
   }
-  case attr::OpenCLImageAccess: {
-    const OpenCLImageAccessAttr *SA = cast<OpenCLImageAccessAttr>(A);
-    OS << " " << SA->getAccess();
+  case attr::ObjCRuntimeName: {
+    const ObjCRuntimeNameAttr *SA = cast<ObjCRuntimeNameAttr>(A);
+    OS << " \"" << SA->getMetadataName() << "\"";
     bool OldMoreChildren = hasMoreChildren();
-    bool MoreChildren = OldMoreChildren;
+    bool MoreChildren;
     MoreChildren = OldMoreChildren;
     setMoreChildren(MoreChildren);
     setMoreChildren(OldMoreChildren);
     break;
   }
+  case attr::OpenCLImageAccess: {
+    OS << " " << A->getSpelling();
+    break;
+  }
   case attr::OpenCLKernel: {
+    break;
+  }
+  case attr::OptimizeNone: {
     break;
   }
   case attr::Overloadable: {
@@ -737,25 +854,13 @@
     break;
   }
   case attr::Ownership: {
+    OS << " " << A->getSpelling();
     const OwnershipAttr *SA = cast<OwnershipAttr>(A);
-    switch(SA->getOwnKind()) {
-    case OwnershipAttr::Holds:
-      OS << " Holds";
-      break;
-    case OwnershipAttr::Returns:
-      OS << " Returns";
-      break;
-    case OwnershipAttr::Takes:
-      OS << " Takes";
-      break;
-    }
-    OS << " \"" << SA->getModule() << "\"";
-    for (OwnershipAttr::args_iterator I = SA->args_begin(), E = SA->args_end(); I != E; ++I)
-      OS << " " << *I;
+    OS << " " << SA->getModule()->getName();
+    for (const auto &Val : SA->args())
+      OS << " " << Val;
     bool OldMoreChildren = hasMoreChildren();
-    bool MoreChildren = OldMoreChildren;
-    MoreChildren = OldMoreChildren || false || false;
-    setMoreChildren(MoreChildren);
+    bool MoreChildren;
     MoreChildren = OldMoreChildren || false;
     setMoreChildren(MoreChildren);
     MoreChildren = OldMoreChildren;
@@ -769,18 +874,18 @@
   case attr::ParamTypestate: {
     const ParamTypestateAttr *SA = cast<ParamTypestateAttr>(A);
     switch(SA->getParamState()) {
+    case ParamTypestateAttr::Unknown:
+      OS << " Unknown";
+      break;
     case ParamTypestateAttr::Consumed:
       OS << " Consumed";
       break;
     case ParamTypestateAttr::Unconsumed:
       OS << " Unconsumed";
       break;
-    case ParamTypestateAttr::Unknown:
-      OS << " Unknown";
-      break;
     }
     bool OldMoreChildren = hasMoreChildren();
-    bool MoreChildren = OldMoreChildren;
+    bool MoreChildren;
     MoreChildren = OldMoreChildren;
     setMoreChildren(MoreChildren);
     setMoreChildren(OldMoreChildren);
@@ -800,7 +905,7 @@
       break;
     }
     bool OldMoreChildren = hasMoreChildren();
-    bool MoreChildren = OldMoreChildren;
+    bool MoreChildren;
     MoreChildren = OldMoreChildren;
     setMoreChildren(MoreChildren);
     setMoreChildren(OldMoreChildren);
@@ -812,7 +917,7 @@
   case attr::PtGuardedBy: {
     const PtGuardedByAttr *SA = cast<PtGuardedByAttr>(A);
     bool OldMoreChildren = hasMoreChildren();
-    bool MoreChildren = OldMoreChildren;
+    bool MoreChildren;
     MoreChildren = OldMoreChildren;
     setMoreChildren(MoreChildren);
     lastChild();
@@ -826,13 +931,18 @@
   case attr::Pure: {
     break;
   }
-  case attr::Regparm: {
-    const RegparmAttr *SA = cast<RegparmAttr>(A);
-    OS << " " << SA->getNumParams();
+  case attr::ReleaseCapability: {
+    OS << " " << A->getSpelling();
+    const ReleaseCapabilityAttr *SA = cast<ReleaseCapabilityAttr>(A);
     bool OldMoreChildren = hasMoreChildren();
-    bool MoreChildren = OldMoreChildren;
+    bool MoreChildren;
     MoreChildren = OldMoreChildren;
     setMoreChildren(MoreChildren);
+    for (ReleaseCapabilityAttr::args_iterator I = SA->args_begin(), E = SA->args_end(); I != E; ++I) {
+      if (I + 1 == E)
+        lastChild();
+      dumpStmt(*I);
+    }
     setMoreChildren(OldMoreChildren);
     break;
   }
@@ -842,7 +952,7 @@
     OS << " " << SA->getYDim();
     OS << " " << SA->getZDim();
     bool OldMoreChildren = hasMoreChildren();
-    bool MoreChildren = OldMoreChildren;
+    bool MoreChildren;
     MoreChildren = OldMoreChildren || false || false;
     setMoreChildren(MoreChildren);
     MoreChildren = OldMoreChildren || false;
@@ -852,24 +962,42 @@
     setMoreChildren(OldMoreChildren);
     break;
   }
+  case attr::RequiresCapability: {
+    OS << " " << A->getSpelling();
+    const RequiresCapabilityAttr *SA = cast<RequiresCapabilityAttr>(A);
+    bool OldMoreChildren = hasMoreChildren();
+    bool MoreChildren;
+    MoreChildren = OldMoreChildren;
+    setMoreChildren(MoreChildren);
+    for (RequiresCapabilityAttr::args_iterator I = SA->args_begin(), E = SA->args_end(); I != E; ++I) {
+      if (I + 1 == E)
+        lastChild();
+      dumpStmt(*I);
+    }
+    setMoreChildren(OldMoreChildren);
+    break;
+  }
   case attr::ReturnTypestate: {
     const ReturnTypestateAttr *SA = cast<ReturnTypestateAttr>(A);
     switch(SA->getState()) {
+    case ReturnTypestateAttr::Unknown:
+      OS << " Unknown";
+      break;
     case ReturnTypestateAttr::Consumed:
       OS << " Consumed";
       break;
     case ReturnTypestateAttr::Unconsumed:
       OS << " Unconsumed";
       break;
-    case ReturnTypestateAttr::Unknown:
-      OS << " Unknown";
-      break;
     }
     bool OldMoreChildren = hasMoreChildren();
-    bool MoreChildren = OldMoreChildren;
+    bool MoreChildren;
     MoreChildren = OldMoreChildren;
     setMoreChildren(MoreChildren);
     setMoreChildren(OldMoreChildren);
+    break;
+  }
+  case attr::ReturnsNonNull: {
     break;
   }
   case attr::ReturnsTwice: {
@@ -879,10 +1007,11 @@
     break;
   }
   case attr::Section: {
+    OS << " " << A->getSpelling();
     const SectionAttr *SA = cast<SectionAttr>(A);
     OS << " \"" << SA->getName() << "\"";
     bool OldMoreChildren = hasMoreChildren();
-    bool MoreChildren = OldMoreChildren;
+    bool MoreChildren;
     MoreChildren = OldMoreChildren;
     setMoreChildren(MoreChildren);
     setMoreChildren(OldMoreChildren);
@@ -896,7 +1025,7 @@
     OS << " " << SA->getSentinel();
     OS << " " << SA->getNullPos();
     bool OldMoreChildren = hasMoreChildren();
-    bool MoreChildren = OldMoreChildren;
+    bool MoreChildren;
     MoreChildren = OldMoreChildren || false;
     setMoreChildren(MoreChildren);
     MoreChildren = OldMoreChildren;
@@ -907,55 +1036,27 @@
   case attr::SetTypestate: {
     const SetTypestateAttr *SA = cast<SetTypestateAttr>(A);
     switch(SA->getNewState()) {
+    case SetTypestateAttr::Unknown:
+      OS << " Unknown";
+      break;
     case SetTypestateAttr::Consumed:
       OS << " Consumed";
       break;
     case SetTypestateAttr::Unconsumed:
       OS << " Unconsumed";
       break;
-    case SetTypestateAttr::Unknown:
-      OS << " Unknown";
-      break;
     }
     bool OldMoreChildren = hasMoreChildren();
-    bool MoreChildren = OldMoreChildren;
+    bool MoreChildren;
     MoreChildren = OldMoreChildren;
     setMoreChildren(MoreChildren);
-    setMoreChildren(OldMoreChildren);
-    break;
-  }
-  case attr::SharedLockFunction: {
-    const SharedLockFunctionAttr *SA = cast<SharedLockFunctionAttr>(A);
-    bool OldMoreChildren = hasMoreChildren();
-    bool MoreChildren = OldMoreChildren;
-    MoreChildren = OldMoreChildren;
-    setMoreChildren(MoreChildren);
-    for (SharedLockFunctionAttr::args_iterator I = SA->args_begin(), E = SA->args_end(); I != E; ++I) {
-      if (I + 1 == E)
-        lastChild();
-      dumpStmt(*I);
-    }
-    setMoreChildren(OldMoreChildren);
-    break;
-  }
-  case attr::SharedLocksRequired: {
-    const SharedLocksRequiredAttr *SA = cast<SharedLocksRequiredAttr>(A);
-    bool OldMoreChildren = hasMoreChildren();
-    bool MoreChildren = OldMoreChildren;
-    MoreChildren = OldMoreChildren;
-    setMoreChildren(MoreChildren);
-    for (SharedLocksRequiredAttr::args_iterator I = SA->args_begin(), E = SA->args_end(); I != E; ++I) {
-      if (I + 1 == E)
-        lastChild();
-      dumpStmt(*I);
-    }
     setMoreChildren(OldMoreChildren);
     break;
   }
   case attr::SharedTrylockFunction: {
     const SharedTrylockFunctionAttr *SA = cast<SharedTrylockFunctionAttr>(A);
     bool OldMoreChildren = hasMoreChildren();
-    bool MoreChildren = OldMoreChildren;
+    bool MoreChildren;
     MoreChildren = OldMoreChildren || SA->args_begin() != SA->args_end();
     setMoreChildren(MoreChildren);
     lastChild();
@@ -970,9 +1071,6 @@
     setMoreChildren(OldMoreChildren);
     break;
   }
-  case attr::SingleInheritance: {
-    break;
-  }
   case attr::StdCall: {
     break;
   }
@@ -983,7 +1081,7 @@
     const TLSModelAttr *SA = cast<TLSModelAttr>(A);
     OS << " \"" << SA->getModel() << "\"";
     bool OldMoreChildren = hasMoreChildren();
-    bool MoreChildren = OldMoreChildren;
+    bool MoreChildren;
     MoreChildren = OldMoreChildren;
     setMoreChildren(MoreChildren);
     setMoreChildren(OldMoreChildren);
@@ -1000,7 +1098,7 @@
       break;
     }
     bool OldMoreChildren = hasMoreChildren();
-    bool MoreChildren = OldMoreChildren;
+    bool MoreChildren;
     MoreChildren = OldMoreChildren;
     setMoreChildren(MoreChildren);
     setMoreChildren(OldMoreChildren);
@@ -1009,7 +1107,29 @@
   case attr::ThisCall: {
     break;
   }
+  case attr::Thread: {
+    break;
+  }
   case attr::TransparentUnion: {
+    break;
+  }
+  case attr::TryAcquireCapability: {
+    OS << " " << A->getSpelling();
+    const TryAcquireCapabilityAttr *SA = cast<TryAcquireCapabilityAttr>(A);
+    bool OldMoreChildren = hasMoreChildren();
+    bool MoreChildren;
+    MoreChildren = OldMoreChildren || SA->args_begin() != SA->args_end();
+    setMoreChildren(MoreChildren);
+    lastChild();
+    dumpStmt(SA->getSuccessValue());
+    MoreChildren = OldMoreChildren;
+    setMoreChildren(MoreChildren);
+    for (TryAcquireCapabilityAttr::args_iterator I = SA->args_begin(), E = SA->args_end(); I != E; ++I) {
+      if (I + 1 == E)
+        lastChild();
+      dumpStmt(*I);
+    }
+    setMoreChildren(OldMoreChildren);
     break;
   }
   case attr::TypeTagForDatatype: {
@@ -1019,7 +1139,7 @@
     if (SA->getLayoutCompatible()) OS << " LayoutCompatible";
     if (SA->getMustBeNull()) OS << " MustBeNull";
     bool OldMoreChildren = hasMoreChildren();
-    bool MoreChildren = OldMoreChildren;
+    bool MoreChildren;
     MoreChildren = OldMoreChildren || false || false || false;
     setMoreChildren(MoreChildren);
     MoreChildren = OldMoreChildren || false || false;
@@ -1045,7 +1165,7 @@
       break;
     }
     bool OldMoreChildren = hasMoreChildren();
-    bool MoreChildren = OldMoreChildren;
+    bool MoreChildren;
     MoreChildren = OldMoreChildren;
     setMoreChildren(MoreChildren);
     setMoreChildren(OldMoreChildren);
@@ -1055,27 +1175,10 @@
     const UnavailableAttr *SA = cast<UnavailableAttr>(A);
     OS << " \"" << SA->getMessage() << "\"";
     bool OldMoreChildren = hasMoreChildren();
-    bool MoreChildren = OldMoreChildren;
+    bool MoreChildren;
     MoreChildren = OldMoreChildren;
     setMoreChildren(MoreChildren);
     setMoreChildren(OldMoreChildren);
-    break;
-  }
-  case attr::UnlockFunction: {
-    const UnlockFunctionAttr *SA = cast<UnlockFunctionAttr>(A);
-    bool OldMoreChildren = hasMoreChildren();
-    bool MoreChildren = OldMoreChildren;
-    MoreChildren = OldMoreChildren;
-    setMoreChildren(MoreChildren);
-    for (UnlockFunctionAttr::args_iterator I = SA->args_begin(), E = SA->args_end(); I != E; ++I) {
-      if (I + 1 == E)
-        lastChild();
-      dumpStmt(*I);
-    }
-    setMoreChildren(OldMoreChildren);
-    break;
-  }
-  case attr::UnspecifiedInheritance: {
     break;
   }
   case attr::Unused: {
@@ -1088,7 +1191,7 @@
     const UuidAttr *SA = cast<UuidAttr>(A);
     OS << " \"" << SA->getGuid() << "\"";
     bool OldMoreChildren = hasMoreChildren();
-    bool MoreChildren = OldMoreChildren;
+    bool MoreChildren;
     MoreChildren = OldMoreChildren;
     setMoreChildren(MoreChildren);
     setMoreChildren(OldMoreChildren);
@@ -1101,13 +1204,10 @@
     const VecTypeHintAttr *SA = cast<VecTypeHintAttr>(A);
     OS << " " << SA->getTypeHint().getAsString();
     bool OldMoreChildren = hasMoreChildren();
-    bool MoreChildren = OldMoreChildren;
+    bool MoreChildren;
     MoreChildren = OldMoreChildren;
     setMoreChildren(MoreChildren);
     setMoreChildren(OldMoreChildren);
-    break;
-  }
-  case attr::VirtualInheritance: {
     break;
   }
   case attr::Visibility: {
@@ -1124,7 +1224,7 @@
       break;
     }
     bool OldMoreChildren = hasMoreChildren();
-    bool MoreChildren = OldMoreChildren;
+    bool MoreChildren;
     MoreChildren = OldMoreChildren;
     setMoreChildren(MoreChildren);
     setMoreChildren(OldMoreChildren);
@@ -1146,13 +1246,10 @@
     const WeakRefAttr *SA = cast<WeakRefAttr>(A);
     OS << " \"" << SA->getAliasee() << "\"";
     bool OldMoreChildren = hasMoreChildren();
-    bool MoreChildren = OldMoreChildren;
+    bool MoreChildren;
     MoreChildren = OldMoreChildren;
     setMoreChildren(MoreChildren);
     setMoreChildren(OldMoreChildren);
-    break;
-  }
-  case attr::Win64: {
     break;
   }
   case attr::WorkGroupSizeHint: {
@@ -1161,7 +1258,7 @@
     OS << " " << SA->getYDim();
     OS << " " << SA->getZDim();
     bool OldMoreChildren = hasMoreChildren();
-    bool MoreChildren = OldMoreChildren;
+    bool MoreChildren;
     MoreChildren = OldMoreChildren || false || false;
     setMoreChildren(MoreChildren);
     MoreChildren = OldMoreChildren || false;

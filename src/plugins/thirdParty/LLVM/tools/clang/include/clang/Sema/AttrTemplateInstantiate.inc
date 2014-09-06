@@ -18,6 +18,21 @@ Attr *instantiateTemplateAttribute(const Attr *At, ASTContext &C, Sema &S,
       const ARMInterruptAttr *A = cast<ARMInterruptAttr>(At);
       return A->clone(C);
     }
+    case attr::AcquireCapability: {
+      const AcquireCapabilityAttr *A = cast<AcquireCapabilityAttr>(At);
+      Expr * *tempInstArgs = new (C, 16) Expr *[A->args_size()];
+      {
+        EnterExpressionEvaluationContext Unevaluated(S, Sema::Unevaluated);
+        Expr * *TI = tempInstArgs;
+        Expr * *I = A->args_begin();
+        Expr * *E = A->args_end();
+        for (; I != E; ++I, ++TI) {
+          ExprResult Result = S.SubstExpr(*I, TemplateArgs);
+          *TI = Result.getAs<Expr>();
+        }
+      }
+      return new (C) AcquireCapabilityAttr(A->getLocation(), C, tempInstArgs, A->args_size(), A->getSpellingListIndex());
+    }
     case attr::AcquiredAfter: {
       const AcquiredAfterAttr *A = cast<AcquiredAfterAttr>(At);
       Expr * *tempInstArgs = new (C, 16) Expr *[A->args_size()];
@@ -28,10 +43,10 @@ Attr *instantiateTemplateAttribute(const Attr *At, ASTContext &C, Sema &S,
         Expr * *E = A->args_end();
         for (; I != E; ++I, ++TI) {
           ExprResult Result = S.SubstExpr(*I, TemplateArgs);
-          *TI = Result.takeAs<Expr>();
+          *TI = Result.getAs<Expr>();
         }
       }
-      return new (C) AcquiredAfterAttr(A->getLocation(), C, tempInstArgs, A->args_size());
+      return new (C) AcquiredAfterAttr(A->getLocation(), C, tempInstArgs, A->args_size(), A->getSpellingListIndex());
     }
     case attr::AcquiredBefore: {
       const AcquiredBeforeAttr *A = cast<AcquiredBeforeAttr>(At);
@@ -43,10 +58,10 @@ Attr *instantiateTemplateAttribute(const Attr *At, ASTContext &C, Sema &S,
         Expr * *E = A->args_end();
         for (; I != E; ++I, ++TI) {
           ExprResult Result = S.SubstExpr(*I, TemplateArgs);
-          *TI = Result.takeAs<Expr>();
+          *TI = Result.getAs<Expr>();
         }
       }
-      return new (C) AcquiredBeforeAttr(A->getLocation(), C, tempInstArgs, A->args_size());
+      return new (C) AcquiredBeforeAttr(A->getLocation(), C, tempInstArgs, A->args_size(), A->getSpellingListIndex());
     }
     case attr::Alias: {
       const AliasAttr *A = cast<AliasAttr>(At);
@@ -58,10 +73,6 @@ Attr *instantiateTemplateAttribute(const Attr *At, ASTContext &C, Sema &S,
     }
     case attr::Aligned: {
       const AlignedAttr *A = cast<AlignedAttr>(At);
-      return A->clone(C);
-    }
-    case attr::AllocSize: {
-      const AllocSizeAttr *A = cast<AllocSizeAttr>(At);
       return A->clone(C);
     }
     case attr::AlwaysInline: {
@@ -88,6 +99,16 @@ Attr *instantiateTemplateAttribute(const Attr *At, ASTContext &C, Sema &S,
       const AsmLabelAttr *A = cast<AsmLabelAttr>(At);
       return A->clone(C);
     }
+    case attr::AssertCapability: {
+      const AssertCapabilityAttr *A = cast<AssertCapabilityAttr>(At);
+      Expr * tempInstExpr;
+      {
+        EnterExpressionEvaluationContext Unevaluated(S, Sema::Unevaluated);
+        ExprResult Result = S.SubstExpr(A->getExpr(), TemplateArgs);
+        tempInstExpr = Result.getAs<Expr>();
+      }
+      return new (C) AssertCapabilityAttr(A->getLocation(), C, tempInstExpr, A->getSpellingListIndex());
+    }
     case attr::AssertExclusiveLock: {
       const AssertExclusiveLockAttr *A = cast<AssertExclusiveLockAttr>(At);
       Expr * *tempInstArgs = new (C, 16) Expr *[A->args_size()];
@@ -98,10 +119,10 @@ Attr *instantiateTemplateAttribute(const Attr *At, ASTContext &C, Sema &S,
         Expr * *E = A->args_end();
         for (; I != E; ++I, ++TI) {
           ExprResult Result = S.SubstExpr(*I, TemplateArgs);
-          *TI = Result.takeAs<Expr>();
+          *TI = Result.getAs<Expr>();
         }
       }
-      return new (C) AssertExclusiveLockAttr(A->getLocation(), C, tempInstArgs, A->args_size());
+      return new (C) AssertExclusiveLockAttr(A->getLocation(), C, tempInstArgs, A->args_size(), A->getSpellingListIndex());
     }
     case attr::AssertSharedLock: {
       const AssertSharedLockAttr *A = cast<AssertSharedLockAttr>(At);
@@ -113,10 +134,10 @@ Attr *instantiateTemplateAttribute(const Attr *At, ASTContext &C, Sema &S,
         Expr * *E = A->args_end();
         for (; I != E; ++I, ++TI) {
           ExprResult Result = S.SubstExpr(*I, TemplateArgs);
-          *TI = Result.takeAs<Expr>();
+          *TI = Result.getAs<Expr>();
         }
       }
-      return new (C) AssertSharedLockAttr(A->getLocation(), C, tempInstArgs, A->args_size());
+      return new (C) AssertSharedLockAttr(A->getLocation(), C, tempInstArgs, A->args_size(), A->getSpellingListIndex());
     }
     case attr::Availability: {
       const AvailabilityAttr *A = cast<AvailabilityAttr>(At);
@@ -186,6 +207,10 @@ Attr *instantiateTemplateAttribute(const Attr *At, ASTContext &C, Sema &S,
       const CallableWhenAttr *A = cast<CallableWhenAttr>(At);
       return A->clone(C);
     }
+    case attr::Capability: {
+      const CapabilityAttr *A = cast<CapabilityAttr>(At);
+      return A->clone(C);
+    }
     case attr::CarriesDependency: {
       const CarriesDependencyAttr *A = cast<CarriesDependencyAttr>(At);
       return A->clone(C);
@@ -214,6 +239,14 @@ Attr *instantiateTemplateAttribute(const Attr *At, ASTContext &C, Sema &S,
       const ConsumableAttr *A = cast<ConsumableAttr>(At);
       return A->clone(C);
     }
+    case attr::ConsumableAutoCast: {
+      const ConsumableAutoCastAttr *A = cast<ConsumableAutoCastAttr>(At);
+      return A->clone(C);
+    }
+    case attr::ConsumableSetOnRead: {
+      const ConsumableSetOnReadAttr *A = cast<ConsumableSetOnReadAttr>(At);
+      return A->clone(C);
+    }
     case attr::DLLExport: {
       const DLLExportAttr *A = cast<DLLExportAttr>(At);
       return A->clone(C);
@@ -230,35 +263,15 @@ Attr *instantiateTemplateAttribute(const Attr *At, ASTContext &C, Sema &S,
       const DestructorAttr *A = cast<DestructorAttr>(At);
       return A->clone(C);
     }
-    case attr::ExclusiveLockFunction: {
-      const ExclusiveLockFunctionAttr *A = cast<ExclusiveLockFunctionAttr>(At);
-      Expr * *tempInstArgs = new (C, 16) Expr *[A->args_size()];
+    case attr::EnableIf: {
+      const EnableIfAttr *A = cast<EnableIfAttr>(At);
+      Expr * tempInstCond;
       {
         EnterExpressionEvaluationContext Unevaluated(S, Sema::Unevaluated);
-        Expr * *TI = tempInstArgs;
-        Expr * *I = A->args_begin();
-        Expr * *E = A->args_end();
-        for (; I != E; ++I, ++TI) {
-          ExprResult Result = S.SubstExpr(*I, TemplateArgs);
-          *TI = Result.takeAs<Expr>();
-        }
+        ExprResult Result = S.SubstExpr(A->getCond(), TemplateArgs);
+        tempInstCond = Result.getAs<Expr>();
       }
-      return new (C) ExclusiveLockFunctionAttr(A->getLocation(), C, tempInstArgs, A->args_size());
-    }
-    case attr::ExclusiveLocksRequired: {
-      const ExclusiveLocksRequiredAttr *A = cast<ExclusiveLocksRequiredAttr>(At);
-      Expr * *tempInstArgs = new (C, 16) Expr *[A->args_size()];
-      {
-        EnterExpressionEvaluationContext Unevaluated(S, Sema::Unevaluated);
-        Expr * *TI = tempInstArgs;
-        Expr * *I = A->args_begin();
-        Expr * *E = A->args_end();
-        for (; I != E; ++I, ++TI) {
-          ExprResult Result = S.SubstExpr(*I, TemplateArgs);
-          *TI = Result.takeAs<Expr>();
-        }
-      }
-      return new (C) ExclusiveLocksRequiredAttr(A->getLocation(), C, tempInstArgs, A->args_size());
+      return new (C) EnableIfAttr(A->getLocation(), C, tempInstCond, A->getMessage(), A->getSpellingListIndex());
     }
     case attr::ExclusiveTrylockFunction: {
       const ExclusiveTrylockFunctionAttr *A = cast<ExclusiveTrylockFunctionAttr>(At);
@@ -266,7 +279,7 @@ Attr *instantiateTemplateAttribute(const Attr *At, ASTContext &C, Sema &S,
       {
         EnterExpressionEvaluationContext Unevaluated(S, Sema::Unevaluated);
         ExprResult Result = S.SubstExpr(A->getSuccessValue(), TemplateArgs);
-        tempInstSuccessValue = Result.takeAs<Expr>();
+        tempInstSuccessValue = Result.getAs<Expr>();
       }
       Expr * *tempInstArgs = new (C, 16) Expr *[A->args_size()];
       {
@@ -276,10 +289,10 @@ Attr *instantiateTemplateAttribute(const Attr *At, ASTContext &C, Sema &S,
         Expr * *E = A->args_end();
         for (; I != E; ++I, ++TI) {
           ExprResult Result = S.SubstExpr(*I, TemplateArgs);
-          *TI = Result.takeAs<Expr>();
+          *TI = Result.getAs<Expr>();
         }
       }
-      return new (C) ExclusiveTrylockFunctionAttr(A->getLocation(), C, tempInstSuccessValue, tempInstArgs, A->args_size());
+      return new (C) ExclusiveTrylockFunctionAttr(A->getLocation(), C, tempInstSuccessValue, tempInstArgs, A->args_size(), A->getSpellingListIndex());
     }
     case attr::FallThrough: {
       const FallThroughAttr *A = cast<FallThroughAttr>(At);
@@ -293,8 +306,8 @@ Attr *instantiateTemplateAttribute(const Attr *At, ASTContext &C, Sema &S,
       const FinalAttr *A = cast<FinalAttr>(At);
       return A->clone(C);
     }
-    case attr::ForceInline: {
-      const ForceInlineAttr *A = cast<ForceInlineAttr>(At);
+    case attr::Flatten: {
+      const FlattenAttr *A = cast<FlattenAttr>(At);
       return A->clone(C);
     }
     case attr::Format: {
@@ -315,9 +328,9 @@ Attr *instantiateTemplateAttribute(const Attr *At, ASTContext &C, Sema &S,
       {
         EnterExpressionEvaluationContext Unevaluated(S, Sema::Unevaluated);
         ExprResult Result = S.SubstExpr(A->getArg(), TemplateArgs);
-        tempInstArg = Result.takeAs<Expr>();
+        tempInstArg = Result.getAs<Expr>();
       }
-      return new (C) GuardedByAttr(A->getLocation(), C, tempInstArg);
+      return new (C) GuardedByAttr(A->getLocation(), C, tempInstArg, A->getSpellingListIndex());
     }
     case attr::GuardedVar: {
       const GuardedVarAttr *A = cast<GuardedVarAttr>(At);
@@ -343,6 +356,10 @@ Attr *instantiateTemplateAttribute(const Attr *At, ASTContext &C, Sema &S,
       const InitPriorityAttr *A = cast<InitPriorityAttr>(At);
       return A->clone(C);
     }
+    case attr::InitSeg: {
+      const InitSegAttr *A = cast<InitSegAttr>(At);
+      return A->clone(C);
+    }
     case attr::IntelOclBicc: {
       const IntelOclBiccAttr *A = cast<IntelOclBiccAttr>(At);
       return A->clone(C);
@@ -353,13 +370,9 @@ Attr *instantiateTemplateAttribute(const Attr *At, ASTContext &C, Sema &S,
       {
         EnterExpressionEvaluationContext Unevaluated(S, Sema::Unevaluated);
         ExprResult Result = S.SubstExpr(A->getArg(), TemplateArgs);
-        tempInstArg = Result.takeAs<Expr>();
+        tempInstArg = Result.getAs<Expr>();
       }
-      return new (C) LockReturnedAttr(A->getLocation(), C, tempInstArg);
-    }
-    case attr::Lockable: {
-      const LockableAttr *A = cast<LockableAttr>(At);
-      return A->clone(C);
+      return new (C) LockReturnedAttr(A->getLocation(), C, tempInstArg, A->getSpellingListIndex());
     }
     case attr::LocksExcluded: {
       const LocksExcludedAttr *A = cast<LocksExcludedAttr>(At);
@@ -371,17 +384,29 @@ Attr *instantiateTemplateAttribute(const Attr *At, ASTContext &C, Sema &S,
         Expr * *E = A->args_end();
         for (; I != E; ++I, ++TI) {
           ExprResult Result = S.SubstExpr(*I, TemplateArgs);
-          *TI = Result.takeAs<Expr>();
+          *TI = Result.getAs<Expr>();
         }
       }
-      return new (C) LocksExcludedAttr(A->getLocation(), C, tempInstArgs, A->args_size());
+      return new (C) LocksExcludedAttr(A->getLocation(), C, tempInstArgs, A->args_size(), A->getSpellingListIndex());
+    }
+    case attr::LoopHint: {
+      const LoopHintAttr *A = cast<LoopHintAttr>(At);
+      return A->clone(C);
     }
     case attr::MSABI: {
       const MSABIAttr *A = cast<MSABIAttr>(At);
       return A->clone(C);
     }
+    case attr::MSInheritance: {
+      const MSInheritanceAttr *A = cast<MSInheritanceAttr>(At);
+      return A->clone(C);
+    }
     case attr::MSP430Interrupt: {
       const MSP430InterruptAttr *A = cast<MSP430InterruptAttr>(At);
+      return A->clone(C);
+    }
+    case attr::MSVtorDisp: {
+      const MSVtorDispAttr *A = cast<MSVtorDispAttr>(At);
       return A->clone(C);
     }
     case attr::Malloc: {
@@ -410,14 +435,6 @@ Attr *instantiateTemplateAttribute(const Attr *At, ASTContext &C, Sema &S,
     }
     case attr::MsStruct: {
       const MsStructAttr *A = cast<MsStructAttr>(At);
-      return A->clone(C);
-    }
-    case attr::MultipleInheritance: {
-      const MultipleInheritanceAttr *A = cast<MultipleInheritanceAttr>(At);
-      return A->clone(C);
-    }
-    case attr::NSBridged: {
-      const NSBridgedAttr *A = cast<NSBridgedAttr>(At);
       return A->clone(C);
     }
     case attr::NSConsumed: {
@@ -452,6 +469,10 @@ Attr *instantiateTemplateAttribute(const Attr *At, ASTContext &C, Sema &S,
       const NoDebugAttr *A = cast<NoDebugAttr>(At);
       return A->clone(C);
     }
+    case attr::NoDuplicate: {
+      const NoDuplicateAttr *A = cast<NoDuplicateAttr>(At);
+      return A->clone(C);
+    }
     case attr::NoInline: {
       const NoInlineAttr *A = cast<NoInlineAttr>(At);
       return A->clone(C);
@@ -480,6 +501,10 @@ Attr *instantiateTemplateAttribute(const Attr *At, ASTContext &C, Sema &S,
       const NoSanitizeThreadAttr *A = cast<NoSanitizeThreadAttr>(At);
       return A->clone(C);
     }
+    case attr::NoSplitStack: {
+      const NoSplitStackAttr *A = cast<NoSplitStackAttr>(At);
+      return A->clone(C);
+    }
     case attr::NoThreadSafetyAnalysis: {
       const NoThreadSafetyAnalysisAttr *A = cast<NoThreadSafetyAnalysisAttr>(At);
       return A->clone(C);
@@ -496,8 +521,24 @@ Attr *instantiateTemplateAttribute(const Attr *At, ASTContext &C, Sema &S,
       const ObjCBridgeAttr *A = cast<ObjCBridgeAttr>(At);
       return A->clone(C);
     }
+    case attr::ObjCBridgeMutable: {
+      const ObjCBridgeMutableAttr *A = cast<ObjCBridgeMutableAttr>(At);
+      return A->clone(C);
+    }
+    case attr::ObjCBridgeRelated: {
+      const ObjCBridgeRelatedAttr *A = cast<ObjCBridgeRelatedAttr>(At);
+      return A->clone(C);
+    }
+    case attr::ObjCDesignatedInitializer: {
+      const ObjCDesignatedInitializerAttr *A = cast<ObjCDesignatedInitializerAttr>(At);
+      return A->clone(C);
+    }
     case attr::ObjCException: {
       const ObjCExceptionAttr *A = cast<ObjCExceptionAttr>(At);
+      return A->clone(C);
+    }
+    case attr::ObjCExplicitProtocolImpl: {
+      const ObjCExplicitProtocolImplAttr *A = cast<ObjCExplicitProtocolImplAttr>(At);
       return A->clone(C);
     }
     case attr::ObjCMethodFamily: {
@@ -528,12 +569,20 @@ Attr *instantiateTemplateAttribute(const Attr *At, ASTContext &C, Sema &S,
       const ObjCRootClassAttr *A = cast<ObjCRootClassAttr>(At);
       return A->clone(C);
     }
+    case attr::ObjCRuntimeName: {
+      const ObjCRuntimeNameAttr *A = cast<ObjCRuntimeNameAttr>(At);
+      return A->clone(C);
+    }
     case attr::OpenCLImageAccess: {
       const OpenCLImageAccessAttr *A = cast<OpenCLImageAccessAttr>(At);
       return A->clone(C);
     }
     case attr::OpenCLKernel: {
       const OpenCLKernelAttr *A = cast<OpenCLKernelAttr>(At);
+      return A->clone(C);
+    }
+    case attr::OptimizeNone: {
+      const OptimizeNoneAttr *A = cast<OptimizeNoneAttr>(At);
       return A->clone(C);
     }
     case attr::Overloadable: {
@@ -574,9 +623,9 @@ Attr *instantiateTemplateAttribute(const Attr *At, ASTContext &C, Sema &S,
       {
         EnterExpressionEvaluationContext Unevaluated(S, Sema::Unevaluated);
         ExprResult Result = S.SubstExpr(A->getArg(), TemplateArgs);
-        tempInstArg = Result.takeAs<Expr>();
+        tempInstArg = Result.getAs<Expr>();
       }
-      return new (C) PtGuardedByAttr(A->getLocation(), C, tempInstArg);
+      return new (C) PtGuardedByAttr(A->getLocation(), C, tempInstArg, A->getSpellingListIndex());
     }
     case attr::PtGuardedVar: {
       const PtGuardedVarAttr *A = cast<PtGuardedVarAttr>(At);
@@ -586,16 +635,46 @@ Attr *instantiateTemplateAttribute(const Attr *At, ASTContext &C, Sema &S,
       const PureAttr *A = cast<PureAttr>(At);
       return A->clone(C);
     }
-    case attr::Regparm: {
-      const RegparmAttr *A = cast<RegparmAttr>(At);
-      return A->clone(C);
+    case attr::ReleaseCapability: {
+      const ReleaseCapabilityAttr *A = cast<ReleaseCapabilityAttr>(At);
+      Expr * *tempInstArgs = new (C, 16) Expr *[A->args_size()];
+      {
+        EnterExpressionEvaluationContext Unevaluated(S, Sema::Unevaluated);
+        Expr * *TI = tempInstArgs;
+        Expr * *I = A->args_begin();
+        Expr * *E = A->args_end();
+        for (; I != E; ++I, ++TI) {
+          ExprResult Result = S.SubstExpr(*I, TemplateArgs);
+          *TI = Result.getAs<Expr>();
+        }
+      }
+      return new (C) ReleaseCapabilityAttr(A->getLocation(), C, tempInstArgs, A->args_size(), A->getSpellingListIndex());
     }
     case attr::ReqdWorkGroupSize: {
       const ReqdWorkGroupSizeAttr *A = cast<ReqdWorkGroupSizeAttr>(At);
       return A->clone(C);
     }
+    case attr::RequiresCapability: {
+      const RequiresCapabilityAttr *A = cast<RequiresCapabilityAttr>(At);
+      Expr * *tempInstArgs = new (C, 16) Expr *[A->args_size()];
+      {
+        EnterExpressionEvaluationContext Unevaluated(S, Sema::Unevaluated);
+        Expr * *TI = tempInstArgs;
+        Expr * *I = A->args_begin();
+        Expr * *E = A->args_end();
+        for (; I != E; ++I, ++TI) {
+          ExprResult Result = S.SubstExpr(*I, TemplateArgs);
+          *TI = Result.getAs<Expr>();
+        }
+      }
+      return new (C) RequiresCapabilityAttr(A->getLocation(), C, tempInstArgs, A->args_size(), A->getSpellingListIndex());
+    }
     case attr::ReturnTypestate: {
       const ReturnTypestateAttr *A = cast<ReturnTypestateAttr>(At);
+      return A->clone(C);
+    }
+    case attr::ReturnsNonNull: {
+      const ReturnsNonNullAttr *A = cast<ReturnsNonNullAttr>(At);
       return A->clone(C);
     }
     case attr::ReturnsTwice: {
@@ -622,43 +701,13 @@ Attr *instantiateTemplateAttribute(const Attr *At, ASTContext &C, Sema &S,
       const SetTypestateAttr *A = cast<SetTypestateAttr>(At);
       return A->clone(C);
     }
-    case attr::SharedLockFunction: {
-      const SharedLockFunctionAttr *A = cast<SharedLockFunctionAttr>(At);
-      Expr * *tempInstArgs = new (C, 16) Expr *[A->args_size()];
-      {
-        EnterExpressionEvaluationContext Unevaluated(S, Sema::Unevaluated);
-        Expr * *TI = tempInstArgs;
-        Expr * *I = A->args_begin();
-        Expr * *E = A->args_end();
-        for (; I != E; ++I, ++TI) {
-          ExprResult Result = S.SubstExpr(*I, TemplateArgs);
-          *TI = Result.takeAs<Expr>();
-        }
-      }
-      return new (C) SharedLockFunctionAttr(A->getLocation(), C, tempInstArgs, A->args_size());
-    }
-    case attr::SharedLocksRequired: {
-      const SharedLocksRequiredAttr *A = cast<SharedLocksRequiredAttr>(At);
-      Expr * *tempInstArgs = new (C, 16) Expr *[A->args_size()];
-      {
-        EnterExpressionEvaluationContext Unevaluated(S, Sema::Unevaluated);
-        Expr * *TI = tempInstArgs;
-        Expr * *I = A->args_begin();
-        Expr * *E = A->args_end();
-        for (; I != E; ++I, ++TI) {
-          ExprResult Result = S.SubstExpr(*I, TemplateArgs);
-          *TI = Result.takeAs<Expr>();
-        }
-      }
-      return new (C) SharedLocksRequiredAttr(A->getLocation(), C, tempInstArgs, A->args_size());
-    }
     case attr::SharedTrylockFunction: {
       const SharedTrylockFunctionAttr *A = cast<SharedTrylockFunctionAttr>(At);
       Expr * tempInstSuccessValue;
       {
         EnterExpressionEvaluationContext Unevaluated(S, Sema::Unevaluated);
         ExprResult Result = S.SubstExpr(A->getSuccessValue(), TemplateArgs);
-        tempInstSuccessValue = Result.takeAs<Expr>();
+        tempInstSuccessValue = Result.getAs<Expr>();
       }
       Expr * *tempInstArgs = new (C, 16) Expr *[A->args_size()];
       {
@@ -668,14 +717,10 @@ Attr *instantiateTemplateAttribute(const Attr *At, ASTContext &C, Sema &S,
         Expr * *E = A->args_end();
         for (; I != E; ++I, ++TI) {
           ExprResult Result = S.SubstExpr(*I, TemplateArgs);
-          *TI = Result.takeAs<Expr>();
+          *TI = Result.getAs<Expr>();
         }
       }
-      return new (C) SharedTrylockFunctionAttr(A->getLocation(), C, tempInstSuccessValue, tempInstArgs, A->args_size());
-    }
-    case attr::SingleInheritance: {
-      const SingleInheritanceAttr *A = cast<SingleInheritanceAttr>(At);
-      return A->clone(C);
+      return new (C) SharedTrylockFunctionAttr(A->getLocation(), C, tempInstSuccessValue, tempInstArgs, A->args_size(), A->getSpellingListIndex());
     }
     case attr::StdCall: {
       const StdCallAttr *A = cast<StdCallAttr>(At);
@@ -697,9 +742,34 @@ Attr *instantiateTemplateAttribute(const Attr *At, ASTContext &C, Sema &S,
       const ThisCallAttr *A = cast<ThisCallAttr>(At);
       return A->clone(C);
     }
+    case attr::Thread: {
+      const ThreadAttr *A = cast<ThreadAttr>(At);
+      return A->clone(C);
+    }
     case attr::TransparentUnion: {
       const TransparentUnionAttr *A = cast<TransparentUnionAttr>(At);
       return A->clone(C);
+    }
+    case attr::TryAcquireCapability: {
+      const TryAcquireCapabilityAttr *A = cast<TryAcquireCapabilityAttr>(At);
+      Expr * tempInstSuccessValue;
+      {
+        EnterExpressionEvaluationContext Unevaluated(S, Sema::Unevaluated);
+        ExprResult Result = S.SubstExpr(A->getSuccessValue(), TemplateArgs);
+        tempInstSuccessValue = Result.getAs<Expr>();
+      }
+      Expr * *tempInstArgs = new (C, 16) Expr *[A->args_size()];
+      {
+        EnterExpressionEvaluationContext Unevaluated(S, Sema::Unevaluated);
+        Expr * *TI = tempInstArgs;
+        Expr * *I = A->args_begin();
+        Expr * *E = A->args_end();
+        for (; I != E; ++I, ++TI) {
+          ExprResult Result = S.SubstExpr(*I, TemplateArgs);
+          *TI = Result.getAs<Expr>();
+        }
+      }
+      return new (C) TryAcquireCapabilityAttr(A->getLocation(), C, tempInstSuccessValue, tempInstArgs, A->args_size(), A->getSpellingListIndex());
     }
     case attr::TypeTagForDatatype: {
       const TypeTagForDatatypeAttr *A = cast<TypeTagForDatatypeAttr>(At);
@@ -710,25 +780,6 @@ Attr *instantiateTemplateAttribute(const Attr *At, ASTContext &C, Sema &S,
     }
     case attr::Unavailable: {
       const UnavailableAttr *A = cast<UnavailableAttr>(At);
-      return A->clone(C);
-    }
-    case attr::UnlockFunction: {
-      const UnlockFunctionAttr *A = cast<UnlockFunctionAttr>(At);
-      Expr * *tempInstArgs = new (C, 16) Expr *[A->args_size()];
-      {
-        EnterExpressionEvaluationContext Unevaluated(S, Sema::Unevaluated);
-        Expr * *TI = tempInstArgs;
-        Expr * *I = A->args_begin();
-        Expr * *E = A->args_end();
-        for (; I != E; ++I, ++TI) {
-          ExprResult Result = S.SubstExpr(*I, TemplateArgs);
-          *TI = Result.takeAs<Expr>();
-        }
-      }
-      return new (C) UnlockFunctionAttr(A->getLocation(), C, tempInstArgs, A->args_size());
-    }
-    case attr::UnspecifiedInheritance: {
-      const UnspecifiedInheritanceAttr *A = cast<UnspecifiedInheritanceAttr>(At);
       return A->clone(C);
     }
     case attr::Unused: {
@@ -749,10 +800,6 @@ Attr *instantiateTemplateAttribute(const Attr *At, ASTContext &C, Sema &S,
     }
     case attr::VecTypeHint: {
       const VecTypeHintAttr *A = cast<VecTypeHintAttr>(At);
-      return A->clone(C);
-    }
-    case attr::VirtualInheritance: {
-      const VirtualInheritanceAttr *A = cast<VirtualInheritanceAttr>(At);
       return A->clone(C);
     }
     case attr::Visibility: {
@@ -776,10 +823,6 @@ Attr *instantiateTemplateAttribute(const Attr *At, ASTContext &C, Sema &S,
     }
     case attr::WeakRef: {
       const WeakRefAttr *A = cast<WeakRefAttr>(At);
-      return A->clone(C);
-    }
-    case attr::Win64: {
-      const Win64Attr *A = cast<Win64Attr>(At);
       return A->clone(C);
     }
     case attr::WorkGroupSizeHint: {

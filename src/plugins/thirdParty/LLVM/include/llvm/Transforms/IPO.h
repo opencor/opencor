@@ -58,20 +58,17 @@ ModulePass *createStripDeadDebugInfoPass();
 ///
 ModulePass *createConstantMergePass();
 
-
 //===----------------------------------------------------------------------===//
 /// createGlobalOptimizerPass - This function returns a new pass that optimizes
 /// non-address taken internal globals.
 ///
 ModulePass *createGlobalOptimizerPass();
 
-
 //===----------------------------------------------------------------------===//
 /// createGlobalDCEPass - This transform is designed to eliminate unreachable
 /// internal globals (functions or global variables)
 ///
 ModulePass *createGlobalDCEPass();
-
 
 //===----------------------------------------------------------------------===//
 /// createGVExtractionPass - If deleteFn is true, this pass deletes
@@ -85,10 +82,14 @@ ModulePass *createGVExtractionPass(std::vector<GlobalValue*>& GVs, bool
 /// createFunctionInliningPass - Return a new pass object that uses a heuristic
 /// to inline direct function calls to small functions.
 ///
+/// The Threshold can be passed directly, or asked to be computed from the
+/// given optimization and size optimization arguments.
+///
 /// The -inline-threshold command line option takes precedence over the
 /// threshold given here.
 Pass *createFunctionInliningPass();
 Pass *createFunctionInliningPass(int Threshold);
+Pass *createFunctionInliningPass(unsigned OptLevel, unsigned SizeOptLevel);
 
 //===----------------------------------------------------------------------===//
 /// createAlwaysInlinerPass - Return a new pass object that inlines only

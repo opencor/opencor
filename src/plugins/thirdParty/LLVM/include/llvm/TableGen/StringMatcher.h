@@ -31,6 +31,7 @@ namespace llvm {
 class StringMatcher {
 public:
   typedef std::pair<std::string, std::string> StringPair;
+
 private:
   StringRef StrVariableName;
   const std::vector<StringPair> &Matches;
@@ -42,7 +43,6 @@ public:
     : StrVariableName(strVariableName), Matches(matches), OS(os) {}
 
   void Emit(unsigned Indent = 0) const;
-
 
 private:
   bool EmitStringMatcherForChar(const std::vector<const StringPair*> &Matches,

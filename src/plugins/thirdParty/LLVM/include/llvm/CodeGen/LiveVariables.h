@@ -177,7 +177,7 @@ private:   // Intermediate data structures
   void analyzePHINodes(const MachineFunction& Fn);
 public:
 
-  virtual bool runOnMachineFunction(MachineFunction &MF);
+  bool runOnMachineFunction(MachineFunction &MF) override;
 
   /// RegisterDefIsDead - Return true if the specified instruction defines the
   /// specified register, but that definition is dead.
@@ -259,9 +259,9 @@ public:
     return true;
   }
 
-  void getAnalysisUsage(AnalysisUsage &AU) const;
+  void getAnalysisUsage(AnalysisUsage &AU) const override;
 
-  virtual void releaseMemory() {
+  void releaseMemory() override {
     VirtRegInfo.clear();
   }
 

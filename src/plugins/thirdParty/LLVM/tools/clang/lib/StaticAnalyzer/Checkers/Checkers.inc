@@ -49,6 +49,7 @@ CHECKER("unix.cstring.NullArg", CStringNullArg, CStringChecker.cpp, "Check for n
 CHECKER("alpha.unix.cstring.OutOfBounds", CStringOutOfBounds, CStringChecker.cpp, "Check for out-of-bounds access in string functions", -1, true)
 CHECKER("unix.cstring.BadSizeArg", CStringSyntaxChecker, CStringSyntaxChecker.cpp, "Check the size argument passed into C string functions for common erroneous patterns", -1, true)
 CHECKER("core.CallAndMessage", CallAndMessageChecker, CallAndMessageChecker.cpp, "Check for logical errors for function calls and Objective-C message expressions (e.g., uninitialized arguments, null function pointers)", -1, false)
+CHECKER("alpha.core.CallAndMessageUnInitRefArg", CallAndMessageUnInitRefArg, CallAndMessageChecker.cpp, "Check for logical errors for function calls and Objective-C message expressions (e.g., uninitialized arguments, null function pointers, and pointer to undefined variables)", -1, true)
 CHECKER("debug.DumpCalls", CallDumper, TraversalChecker.cpp, "Print calls as they are traversed by the engine", -1, false)
 CHECKER("debug.DumpCallGraph", CallGraphDumper, DebugCheckers.cpp, "Display Call Graph", -1, false)
 CHECKER("debug.ViewCallGraph", CallGraphViewer, DebugCheckers.cpp, "View Call Graph using GraphViz", -1, false)
@@ -69,7 +70,6 @@ CHECKER("debug.ExprInspection", ExprInspectionChecker, ExprInspectionChecker.cpp
 CHECKER("alpha.core.FixedAddr", FixedAddressChecker, FixedAddressChecker.cpp, "Check for assignment of a fixed address to a pointer", -1, true)
 CHECKER("security.FloatLoopCounter", FloatLoopCounter, CheckSecuritySyntaxOnly.cpp, "Warn on using a floating point value as a loop counter (CERT: FLP30-C, FLP30-CPP)", -1, false)
 CHECKER("alpha.security.taint.TaintPropagation", GenericTaintChecker, GenericTaintChecker.cpp, "Generate taint information used by other checkers", -1, true)
-CHECKER("alpha.deadcode.IdempotentOperations", IdempotentOperationChecker, IdempotentOperationChecker.cpp, "Warn about idempotent operations", -1, true)
 CHECKER("alpha.core.IdenticalExpr", IdenticalExprChecker, IdenticalExprChecker.cpp, "Warn about unintended use of identical expressions in operators", -1, true)
 CHECKER("alpha.osx.cocoa.InstanceVariableInvalidation", InstanceVariableInvalidation, IvarInvalidationChecker.cpp, "Check that the invalidatable instance variables are invalidated in the methods annotated with objc_instance_variable_invalidator", -1, true)
 CHECKER("llvm.Conventions", LLVMConventionsChecker, LLVMConventionsChecker.cpp, "Check code for LLVM codebase conventions", -1, false)
@@ -97,7 +97,7 @@ CHECKER("osx.cocoa.Loops", ObjCLoopChecker, BasicObjCFoundationChecks.cpp, "Impr
 CHECKER("osx.cocoa.IncompatibleMethodTypes", ObjCMethSigsChecker, CheckObjCInstMethSignature.cpp, "Warn about Objective-C method signatures with type incompatibilities", -1, false)
 CHECKER("osx.cocoa.NonNilReturnValue", ObjCNonNilReturnValueChecker, BasicObjCFoundationChecks.cpp, "Model the APIs that are guaranteed to return a non-nil value", -1, false)
 CHECKER("osx.cocoa.SelfInit", ObjCSelfInitChecker, ObjCSelfInitChecker.cpp, "Check that 'self' is properly initialized inside an initializer method", -1, false)
-CHECKER("alpha.osx.cocoa.MissingSuperCall", ObjCSuperCallChecker, ObjCMissingSuperCallChecker.cpp, "Warn about Objective-C methods that lack a necessary call to super", -1, true)
+CHECKER("osx.cocoa.MissingSuperCall", ObjCSuperCallChecker, ObjCMissingSuperCallChecker.cpp, "Warn about Objective-C methods that lack a necessary call to super", -1, false)
 CHECKER("osx.cocoa.UnusedIvars", ObjCUnusedIvarsChecker, ObjCUnusedIVarsChecker.cpp, "Warn about private ivars that are never used", -1, false)
 CHECKER("alpha.core.PointerArithm", PointerArithChecker, PointerArithChecker, "Check for pointer arithmetic on locations other than array elements", -1, true)
 CHECKER("alpha.core.PointerSub", PointerSubChecker, PointerSubChecker, "Check for pointer subtractions on two pointers pointing to different memory chunks", -1, true)
@@ -110,6 +110,7 @@ CHECKER("alpha.core.SizeofPtr", SizeofPointerChecker, CheckSizeofPointer.cpp, "W
 CHECKER("core.StackAddressEscape", StackAddrEscapeChecker, StackAddrEscapeChecker.cpp, "Check that addresses to stack memory do not escape the function", -1, false)
 CHECKER("alpha.unix.Stream", StreamChecker, StreamChecker.cpp, "Check stream handling functions", -1, true)
 CHECKER("debug.TaintTest", TaintTesterChecker, TaintTesterChecker.cpp, "Mark tainted symbols as such.", -1, false)
+CHECKER("alpha.core.TestAfterDivZero", TestAfterDivZeroChecker, TestAfterDivZeroChecker.cpp, "Check for division by variable that is later compared against 0. Either the comparison is useless or there is division by zero.", -1, true)
 CHECKER("debug.DumpTraversal", TraversalDumper, TraversalChecker.cpp, "Print branch conditions as they are traversed by the engine", -1, false)
 CHECKER("security.insecureAPI.UncheckedReturn", UncheckedReturn, CheckSecuritySyntaxOnly.cpp, "Warn on uses of functions whose return values must be always checked", -1, false)
 CHECKER("core.uninitialized.Branch", UndefBranchChecker, UndefBranchChecker.cpp, "Check for uninitialized values used as branch conditions", -1, false)
@@ -133,39 +134,39 @@ CHECKER("security.insecureAPI.vfork", vfork, CheckSecuritySyntaxOnly.cpp, "Warn 
 
 
 #ifdef GET_MEMBER_ARRAYS
-static const short SubPackageArray0[] = { 1, 10, 13, 24, 31, 16, -1 };
-static const short SubPackageArray1[] = { 2, 3, 4, 6, 5, 7, 8, 9, -1 };
+static const short SubPackageArray0[] = { 1, 12, 15, 24, 31, 17, -1 };
+static const short SubPackageArray1[] = { 2, 4, 5, 7, 6, 8, 9, 10, 3, 11, -1 };
 static const short CheckerArray2[] = { 3, -1 };
-static const short CheckerArray3[] = { 19, -1 };
+static const short CheckerArray3[] = { 16, -1 };
 static const short CheckerArray4[] = { 20, -1 };
-static const short CheckerArray5[] = { 33, -1 };
-static const short CheckerArray6[] = { 37, -1 };
-static const short CheckerArray7[] = { 66, -1 };
-static const short CheckerArray8[] = { 67, -1 };
-static const short CheckerArray9[] = { 73, -1 };
-static const short SubPackageArray10[] = { 12, 11, -1 };
-static const short CheckerArray11[] = { 52, -1 };
-static const short CheckerArray12[] = { 88, -1 };
-static const short SubPackageArray13[] = { 14, 15, -1 };
-static const short CheckerArray14[] = { 36, -1 };
-static const short CheckerArray15[] = { 85, -1 };
-static const short SubPackageArray16[] = { 17, -1 };
-static const short SubPackageArray17[] = { 18, 21, 22, 19, 20, 23, -1 };
-static const short CheckerArray18[] = { 59, -1 };
-static const short CheckerArray19[] = { 26, -1 };
+static const short CheckerArray5[] = { 21, -1 };
+static const short CheckerArray6[] = { 34, -1 };
+static const short CheckerArray7[] = { 37, -1 };
+static const short CheckerArray8[] = { 66, -1 };
+static const short CheckerArray9[] = { 67, -1 };
+static const short CheckerArray10[] = { 73, -1 };
+static const short CheckerArray11[] = { 77, -1 };
+static const short SubPackageArray12[] = { 14, 13, -1 };
+static const short CheckerArray13[] = { 52, -1 };
+static const short CheckerArray14[] = { 89, -1 };
+static const short SubPackageArray15[] = { 16, -1 };
+static const short CheckerArray16[] = { 86, -1 };
+static const short SubPackageArray17[] = { 18, -1 };
+static const short SubPackageArray18[] = { 19, 22, 23, 20, 21, -1 };
+static const short CheckerArray19[] = { 59, -1 };
 static const short CheckerArray20[] = { 27, -1 };
-static const short CheckerArray21[] = { 38, -1 };
-static const short CheckerArray22[] = { 48, -1 };
-static const short CheckerArray23[] = { 64, -1 };
+static const short CheckerArray21[] = { 28, -1 };
+static const short CheckerArray22[] = { 38, -1 };
+static const short CheckerArray23[] = { 48, -1 };
 static const short SubPackageArray24[] = { 29, 25, 26, 28, 27, -1 };
 static const short CheckerArray25[] = { 1, -1 };
 static const short CheckerArray26[] = { 2, -1 };
 static const short CheckerArray27[] = { 44, -1 };
 static const short CheckerArray28[] = { 70, -1 };
 static const short SubPackageArray29[] = { 30, -1 };
-static const short CheckerArray30[] = { 35, -1 };
+static const short CheckerArray30[] = { 36, -1 };
 static const short SubPackageArray31[] = { 37, 32, 33, 34, 36, 35, -1 };
-static const short CheckerArray32[] = { 21, -1 };
+static const short CheckerArray32[] = { 22, -1 };
 static const short CheckerArray33[] = { 43, -1 };
 static const short CheckerArray34[] = { 68, -1 };
 static const short CheckerArray35[] = { 72, -1 };
@@ -176,84 +177,85 @@ static const short CheckerArray39[] = { 11, -1 };
 static const short CheckerArray40[] = { 13, -1 };
 static const short SubPackageArray41[] = { 50, 53, 46, 42, 45, 49, 43, 48, 47, 44, -1 };
 static const short CheckerArray42[] = { 15, -1 };
-static const short CheckerArray43[] = { 28, -1 };
-static const short CheckerArray44[] = { 30, -1 };
+static const short CheckerArray43[] = { 29, -1 };
+static const short CheckerArray44[] = { 31, -1 };
 static const short CheckerArray45[] = { 55, -1 };
-static const short CheckerArray46[] = { 25, -1 };
+static const short CheckerArray46[] = { 26, -1 };
 static const short CheckerArray47[] = { 74, -1 };
-static const short CheckerArray48[] = { 81, -1 };
-static const short CheckerArray49[] = { 86, -1 };
+static const short CheckerArray48[] = { 82, -1 };
+static const short CheckerArray49[] = { 87, -1 };
 static const short SubPackageArray50[] = { 52, 51, -1 };
 static const short CheckerArray51[] = { 4, -1 };
 static const short CheckerArray52[] = { 54, -1 };
 static const short SubPackageArray53[] = { 54, 55, 56, 57, 58, -1 };
-static const short CheckerArray54[] = { 82, -1 };
-static const short CheckerArray55[] = { 83, -1 };
-static const short CheckerArray56[] = { 79, -1 };
-static const short CheckerArray57[] = { 80, -1 };
+static const short CheckerArray54[] = { 83, -1 };
+static const short CheckerArray55[] = { 84, -1 };
+static const short CheckerArray56[] = { 80, -1 };
+static const short CheckerArray57[] = { 81, -1 };
 static const short CheckerArray58[] = { 71, -1 };
 static const short SubPackageArray59[] = { 60, -1 };
 static const short CheckerArray60[] = { 51, -1 };
 static const short SubPackageArray61[] = { 62, -1 };
-static const short CheckerArray62[] = { 24, -1 };
+static const short CheckerArray62[] = { 25, -1 };
 static const short SubPackageArray63[] = { 68, 69, 74, 65, 75, 66, 64, 70, 67, 72, 73, 71, 76, -1 };
-static const short CheckerArray64[] = { 23, -1 };
+static const short CheckerArray64[] = { 24, -1 };
 static const short CheckerArray65[] = { 6, -1 };
-static const short CheckerArray66[] = { 17, -1 };
-static const short CheckerArray67[] = { 16, -1 };
-static const short CheckerArray68[] = { 29, -1 };
+static const short CheckerArray66[] = { 18, -1 };
+static const short CheckerArray67[] = { 17, -1 };
+static const short CheckerArray68[] = { 30, -1 };
 static const short CheckerArray69[] = { 40, -1 };
-static const short CheckerArray70[] = { 77, -1 };
-static const short CheckerArray71[] = { 32, -1 };
+static const short CheckerArray70[] = { 78, -1 };
+static const short CheckerArray71[] = { 33, -1 };
 static const short CheckerArray72[] = { 0, -1 };
 static const short CheckerArray73[] = { 76, -1 };
 static const short CheckerArray74[] = { 7, -1 };
-static const short CheckerArray75[] = { 18, -1 };
-static const short CheckerArray76[] = { 31, -1 };
+static const short CheckerArray75[] = { 19, -1 };
+static const short CheckerArray76[] = { 32, -1 };
 static const short SubPackageArray77[] = { 78, -1 };
 static const short CheckerArray78[] = { 39, -1 };
-static const short SubPackageArray79[] = { 82, 95, 80, 81, -1 };
+static const short SubPackageArray79[] = { 82, 96, 80, 81, -1 };
 static const short CheckerArray80[] = { 42, -1 };
 static const short CheckerArray81[] = { 41, -1 };
-static const short SubPackageArray82[] = { 83, 89, 84, 94, 87, 85, 93, 92, 86, 90, 88, 91, -1 };
+static const short SubPackageArray82[] = { 83, 90, 84, 95, 88, 85, 94, 93, 86, 91, 87, 89, 92, -1 };
 static const short CheckerArray83[] = { 56, -1 };
-static const short CheckerArray84[] = { 22, -1 };
+static const short CheckerArray84[] = { 23, -1 };
 static const short CheckerArray85[] = { 61, -1 };
 static const short CheckerArray86[] = { 60, -1 };
-static const short CheckerArray87[] = { 49, -1 };
-static const short CheckerArray88[] = { 50, -1 };
-static const short CheckerArray89[] = { 53, -1 };
-static const short CheckerArray90[] = { 62, -1 };
-static const short CheckerArray91[] = { 69, -1 };
-static const short CheckerArray92[] = { 63, -1 };
-static const short CheckerArray93[] = { 65, -1 };
-static const short CheckerArray94[] = { 87, -1 };
-static const short SubPackageArray95[] = { 99, 97, 98, 96, -1 };
-static const short CheckerArray96[] = { 5, -1 };
-static const short CheckerArray97[] = { 8, -1 };
-static const short CheckerArray98[] = { 9, -1 };
-static const short SubPackageArray99[] = { 101, 100, -1 };
-static const short CheckerArray100[] = { 58, -1 };
-static const short CheckerArray101[] = { 57, -1 };
-static const short SubPackageArray102[] = { 104, 103, -1 };
-static const short CheckerArray103[] = { 34, -1 };
-static const short SubPackageArray104[] = { 107, 106, 109, 108, 110, 111, 112, 105, -1 };
-static const short CheckerArray105[] = { 78, -1 };
-static const short CheckerArray106[] = { 89, -1 };
+static const short CheckerArray87[] = { 64, -1 };
+static const short CheckerArray88[] = { 49, -1 };
+static const short CheckerArray89[] = { 50, -1 };
+static const short CheckerArray90[] = { 53, -1 };
+static const short CheckerArray91[] = { 62, -1 };
+static const short CheckerArray92[] = { 69, -1 };
+static const short CheckerArray93[] = { 63, -1 };
+static const short CheckerArray94[] = { 65, -1 };
+static const short CheckerArray95[] = { 88, -1 };
+static const short SubPackageArray96[] = { 100, 98, 99, 97, -1 };
+static const short CheckerArray97[] = { 5, -1 };
+static const short CheckerArray98[] = { 8, -1 };
+static const short CheckerArray99[] = { 9, -1 };
+static const short SubPackageArray100[] = { 102, 101, -1 };
+static const short CheckerArray101[] = { 58, -1 };
+static const short CheckerArray102[] = { 57, -1 };
+static const short SubPackageArray103[] = { 105, 104, -1 };
+static const short CheckerArray104[] = { 35, -1 };
+static const short SubPackageArray105[] = { 108, 107, 110, 109, 111, 112, 113, 106, -1 };
+static const short CheckerArray106[] = { 79, -1 };
 static const short CheckerArray107[] = { 90, -1 };
 static const short CheckerArray108[] = { 91, -1 };
 static const short CheckerArray109[] = { 92, -1 };
 static const short CheckerArray110[] = { 93, -1 };
 static const short CheckerArray111[] = { 94, -1 };
 static const short CheckerArray112[] = { 95, -1 };
-static const short SubPackageArray113[] = { 118, 114, 115, 116, 117, -1 };
-static const short CheckerArray114[] = { 84, -1 };
-static const short CheckerArray115[] = { 45, -1 };
-static const short CheckerArray116[] = { 46, -1 };
-static const short CheckerArray117[] = { 47, -1 };
-static const short SubPackageArray118[] = { 120, 119, -1 };
-static const short CheckerArray119[] = { 14, -1 };
-static const short CheckerArray120[] = { 12, -1 };
+static const short CheckerArray113[] = { 96, -1 };
+static const short SubPackageArray114[] = { 119, 115, 116, 117, 118, -1 };
+static const short CheckerArray115[] = { 85, -1 };
+static const short CheckerArray116[] = { 45, -1 };
+static const short CheckerArray117[] = { 46, -1 };
+static const short CheckerArray118[] = { 47, -1 };
+static const short SubPackageArray119[] = { 121, 120, -1 };
+static const short CheckerArray120[] = { 14, -1 };
+static const short CheckerArray121[] = { 12, -1 };
 #endif // GET_MEMBER_ARRAYS
 
 
@@ -261,27 +263,27 @@ static const short CheckerArray120[] = { 12, -1 };
   { "alpha",                                                     0, SubPackageArray0, false },
   { "alpha.core",                                                0, SubPackageArray1, true },
   { "alpha.core.BoolAssignment",                                 CheckerArray2, 0, false },
-  { "alpha.core.CastSize",                                       CheckerArray3, 0, false },
-  { "alpha.core.CastToStruct",                                   CheckerArray4, 0, false },
-  { "alpha.core.FixedAddr",                                      CheckerArray5, 0, false },
-  { "alpha.core.IdenticalExpr",                                  CheckerArray6, 0, false },
-  { "alpha.core.PointerArithm",                                  CheckerArray7, 0, false },
-  { "alpha.core.PointerSub",                                     CheckerArray8, 0, false },
-  { "alpha.core.SizeofPtr",                                      CheckerArray9, 0, false },
-  { "alpha.cplusplus",                                           0, SubPackageArray10, true },
-  { "alpha.cplusplus.NewDeleteLeaks",                            CheckerArray11, 0, false },
-  { "alpha.cplusplus.VirtualCall",                               CheckerArray12, 0, false },
-  { "alpha.deadcode",                                            0, SubPackageArray13, true },
-  { "alpha.deadcode.IdempotentOperations",                       CheckerArray14, 0, false },
-  { "alpha.deadcode.UnreachableCode",                            CheckerArray15, 0, false },
-  { "alpha.osx",                                                 0, SubPackageArray16, true },
-  { "alpha.osx.cocoa",                                           0, SubPackageArray17, true },
-  { "alpha.osx.cocoa.Dealloc",                                   CheckerArray18, 0, false },
-  { "alpha.osx.cocoa.DirectIvarAssignment",                      CheckerArray19, 0, false },
-  { "alpha.osx.cocoa.DirectIvarAssignmentForAnnotatedFunctions", CheckerArray20, 0, false },
-  { "alpha.osx.cocoa.InstanceVariableInvalidation",              CheckerArray21, 0, false },
-  { "alpha.osx.cocoa.MissingInvalidationMethod",                 CheckerArray22, 0, false },
-  { "alpha.osx.cocoa.MissingSuperCall",                          CheckerArray23, 0, false },
+  { "alpha.core.CallAndMessageUnInitRefArg",                     CheckerArray3, 0, false },
+  { "alpha.core.CastSize",                                       CheckerArray4, 0, false },
+  { "alpha.core.CastToStruct",                                   CheckerArray5, 0, false },
+  { "alpha.core.FixedAddr",                                      CheckerArray6, 0, false },
+  { "alpha.core.IdenticalExpr",                                  CheckerArray7, 0, false },
+  { "alpha.core.PointerArithm",                                  CheckerArray8, 0, false },
+  { "alpha.core.PointerSub",                                     CheckerArray9, 0, false },
+  { "alpha.core.SizeofPtr",                                      CheckerArray10, 0, false },
+  { "alpha.core.TestAfterDivZero",                               CheckerArray11, 0, false },
+  { "alpha.cplusplus",                                           0, SubPackageArray12, true },
+  { "alpha.cplusplus.NewDeleteLeaks",                            CheckerArray13, 0, false },
+  { "alpha.cplusplus.VirtualCall",                               CheckerArray14, 0, false },
+  { "alpha.deadcode",                                            0, SubPackageArray15, true },
+  { "alpha.deadcode.UnreachableCode",                            CheckerArray16, 0, false },
+  { "alpha.osx",                                                 0, SubPackageArray17, true },
+  { "alpha.osx.cocoa",                                           0, SubPackageArray18, true },
+  { "alpha.osx.cocoa.Dealloc",                                   CheckerArray19, 0, false },
+  { "alpha.osx.cocoa.DirectIvarAssignment",                      CheckerArray20, 0, false },
+  { "alpha.osx.cocoa.DirectIvarAssignmentForAnnotatedFunctions", CheckerArray21, 0, false },
+  { "alpha.osx.cocoa.InstanceVariableInvalidation",              CheckerArray22, 0, false },
+  { "alpha.osx.cocoa.MissingInvalidationMethod",                 CheckerArray23, 0, false },
   { "alpha.security",                                            0, SubPackageArray24, true },
   { "alpha.security.ArrayBound",                                 CheckerArray25, 0, false },
   { "alpha.security.ArrayBoundV2",                               CheckerArray26, 0, false },
@@ -345,39 +347,40 @@ static const short CheckerArray120[] = { 12, -1 };
   { "osx.cocoa.ClassRelease",                                    CheckerArray84, 0, false },
   { "osx.cocoa.IncompatibleMethodTypes",                         CheckerArray85, 0, false },
   { "osx.cocoa.Loops",                                           CheckerArray86, 0, false },
-  { "osx.cocoa.NSAutoreleasePool",                               CheckerArray87, 0, false },
-  { "osx.cocoa.NSError",                                         CheckerArray88, 0, false },
-  { "osx.cocoa.NilArg",                                          CheckerArray89, 0, false },
-  { "osx.cocoa.NonNilReturnValue",                               CheckerArray90, 0, false },
-  { "osx.cocoa.RetainCount",                                     CheckerArray91, 0, false },
-  { "osx.cocoa.SelfInit",                                        CheckerArray92, 0, false },
-  { "osx.cocoa.UnusedIvars",                                     CheckerArray93, 0, false },
-  { "osx.cocoa.VariadicMethodTypes",                             CheckerArray94, 0, false },
-  { "osx.coreFoundation",                                        0, SubPackageArray95, false },
-  { "osx.coreFoundation.CFError",                                CheckerArray96, 0, false },
-  { "osx.coreFoundation.CFNumber",                               CheckerArray97, 0, false },
-  { "osx.coreFoundation.CFRetainRelease",                        CheckerArray98, 0, false },
-  { "osx.coreFoundation.containers",                             0, SubPackageArray99, false },
-  { "osx.coreFoundation.containers.OutOfBounds",                 CheckerArray100, 0, false },
-  { "osx.coreFoundation.containers.PointerSizedValues",          CheckerArray101, 0, false },
-  { "security",                                                  0, SubPackageArray102, false },
-  { "security.FloatLoopCounter",                                 CheckerArray103, 0, false },
-  { "security.insecureAPI",                                      0, SubPackageArray104, false },
-  { "security.insecureAPI.UncheckedReturn",                      CheckerArray105, 0, false },
-  { "security.insecureAPI.getpw",                                CheckerArray106, 0, false },
-  { "security.insecureAPI.gets",                                 CheckerArray107, 0, false },
-  { "security.insecureAPI.mkstemp",                              CheckerArray108, 0, false },
-  { "security.insecureAPI.mktemp",                               CheckerArray109, 0, false },
-  { "security.insecureAPI.rand",                                 CheckerArray110, 0, false },
-  { "security.insecureAPI.strcpy",                               CheckerArray111, 0, false },
-  { "security.insecureAPI.vfork",                                CheckerArray112, 0, false },
-  { "unix",                                                      0, SubPackageArray113, false },
-  { "unix.API",                                                  CheckerArray114, 0, false },
-  { "unix.Malloc",                                               CheckerArray115, 0, false },
-  { "unix.MallocSizeof",                                         CheckerArray116, 0, false },
-  { "unix.MismatchedDeallocator",                                CheckerArray117, 0, false },
-  { "unix.cstring",                                              0, SubPackageArray118, true },
-  { "unix.cstring.BadSizeArg",                                   CheckerArray119, 0, false },
-  { "unix.cstring.NullArg",                                      CheckerArray120, 0, false },
+  { "osx.cocoa.MissingSuperCall",                                CheckerArray87, 0, false },
+  { "osx.cocoa.NSAutoreleasePool",                               CheckerArray88, 0, false },
+  { "osx.cocoa.NSError",                                         CheckerArray89, 0, false },
+  { "osx.cocoa.NilArg",                                          CheckerArray90, 0, false },
+  { "osx.cocoa.NonNilReturnValue",                               CheckerArray91, 0, false },
+  { "osx.cocoa.RetainCount",                                     CheckerArray92, 0, false },
+  { "osx.cocoa.SelfInit",                                        CheckerArray93, 0, false },
+  { "osx.cocoa.UnusedIvars",                                     CheckerArray94, 0, false },
+  { "osx.cocoa.VariadicMethodTypes",                             CheckerArray95, 0, false },
+  { "osx.coreFoundation",                                        0, SubPackageArray96, false },
+  { "osx.coreFoundation.CFError",                                CheckerArray97, 0, false },
+  { "osx.coreFoundation.CFNumber",                               CheckerArray98, 0, false },
+  { "osx.coreFoundation.CFRetainRelease",                        CheckerArray99, 0, false },
+  { "osx.coreFoundation.containers",                             0, SubPackageArray100, false },
+  { "osx.coreFoundation.containers.OutOfBounds",                 CheckerArray101, 0, false },
+  { "osx.coreFoundation.containers.PointerSizedValues",          CheckerArray102, 0, false },
+  { "security",                                                  0, SubPackageArray103, false },
+  { "security.FloatLoopCounter",                                 CheckerArray104, 0, false },
+  { "security.insecureAPI",                                      0, SubPackageArray105, false },
+  { "security.insecureAPI.UncheckedReturn",                      CheckerArray106, 0, false },
+  { "security.insecureAPI.getpw",                                CheckerArray107, 0, false },
+  { "security.insecureAPI.gets",                                 CheckerArray108, 0, false },
+  { "security.insecureAPI.mkstemp",                              CheckerArray109, 0, false },
+  { "security.insecureAPI.mktemp",                               CheckerArray110, 0, false },
+  { "security.insecureAPI.rand",                                 CheckerArray111, 0, false },
+  { "security.insecureAPI.strcpy",                               CheckerArray112, 0, false },
+  { "security.insecureAPI.vfork",                                CheckerArray113, 0, false },
+  { "unix",                                                      0, SubPackageArray114, false },
+  { "unix.API",                                                  CheckerArray115, 0, false },
+  { "unix.Malloc",                                               CheckerArray116, 0, false },
+  { "unix.MallocSizeof",                                         CheckerArray117, 0, false },
+  { "unix.MismatchedDeallocator",                                CheckerArray118, 0, false },
+  { "unix.cstring",                                              0, SubPackageArray119, true },
+  { "unix.cstring.BadSizeArg",                                   CheckerArray120, 0, false },
+  { "unix.cstring.NullArg",                                      CheckerArray121, 0, false },
 #endif // GET_CHECKNAME_TABLE
 
