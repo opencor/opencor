@@ -25,7 +25,12 @@ public:
 };
 }
 
+/*---OPENCOR---
 const char *_object_error_category::name() const {
+*/
+//---OPENCOR--- BEGIN
+const char *_object_error_category::name() const LLVM_NOEXCEPT {
+//---OPENCOR--- END
   return "llvm.object";
 }
 
