@@ -180,6 +180,8 @@ private:
 
     QMap<QString, QString> mRemoteLocalFileNames;
 
+    QMap<QString, QWidget *> mViews;
+
     Plugin * viewPlugin(const int &pIndex) const;
     Plugin * viewPlugin(const QString &pFileName) const;
 
@@ -192,6 +194,9 @@ private:
     void updateFileTab(const int &pIndex);
 
     void updateStatusBarWidgets(QList<QWidget *> pWidgets);
+
+    QString viewKey(const int &pMode, const int &pView,
+                    const QString &pFileName);
 
 Q_SIGNALS:
     void guiUpdated(Plugin *pViewPlugin, const QString &pFileName);

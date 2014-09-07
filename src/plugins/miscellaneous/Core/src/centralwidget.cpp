@@ -142,7 +142,8 @@ CentralWidget::CentralWidget(QMainWindow *pMainWindow) :
     mSupportedFileTypes(FileTypes()),
     mFileNames(QStringList()),
     mModes(QMap<ViewInterface::Mode, CentralWidgetMode *>()),
-    mRemoteLocalFileNames(QMap<QString, QString>())
+    mRemoteLocalFileNames(QMap<QString, QString>()),
+    mViews(QMap<QString, QWidget *>())
 {
     // Set up the GUI
 
@@ -1298,6 +1299,16 @@ bool CentralWidget::closeFile(const int &pIndex, const bool &pForceClosing)
 
         mFileTabs->removeTab(realIndex);
 
+        // Remove track of the views for the file
+
+        for (int i = 0, iMax = mModeTabs->count(); i < iMax; ++i) {
+            ViewInterface::Mode fileMode = mModeTabIndexModes.value(i);
+            CentralWidgetViewPlugins *viewPlugins = mModes.value(fileMode)->viewPlugins();
+
+            for (int j = 0, jMax = viewPlugins->count(); j < jMax; ++j)
+                mViews.remove(viewKey(i, j, fileName));
+        }
+
         // Ask our view plugins to remove the corresponding view for the file
 
         foreach (Plugin *plugin, mLoadedViewPlugins)
@@ -1516,6 +1527,19 @@ Plugin * CentralWidget::viewPlugin(const QString &pFileName) const
 
 //==============================================================================
 
+QString CentralWidget::viewKey(const int &pMode, const int &pView,
+                               const QString &pFileName)
+{
+    // Return the view key to be used with mViews for the given mode, view and
+    // file name
+
+    return QString("%1|%2|%3").arg(QString::number(pMode),
+                                   QString::number(pView),
+                                   pFileName);
+}
+
+//==============================================================================
+
 void CentralWidget::updateGui()
 {
     if (mState != Idling)
@@ -1610,8 +1634,11 @@ void CentralWidget::updateGui()
         // widget if necessary
 
         bool isRemoteFile = FileManager::instance()->isRemote(fileName);
+        QTabBar *viewTabs = mModes.value(mModeTabIndexModes.value(fileModeTabIndex))->viewTabs();
+        QString fileViewKey = viewKey(fileModeTabIndex, viewTabs->currentIndex(), fileName);
+        bool hasView = mViews.value(fileViewKey);
 
-        if (isRemoteFile && !isSpinnerWidgetVisible())
+        if (isRemoteFile && !isSpinnerWidgetVisible() && !hasView)
             // Note: we check whether the spinner widget is visible since we may
             //       be coming here as a result of the user opening a remote
             //       file, as opposed to just switching files/modes/views...
@@ -1620,7 +1647,12 @@ void CentralWidget::updateGui()
 
         newView = viewInterface?viewInterface->viewWidget(fileName):0;
 
-        if (!newView) {
+        if (newView) {
+            // We could get a view for the current file, so keep track of it
+
+            if (!hasView)
+                mViews.insert(fileViewKey, newView);
+        } else {
             // The interface doesn't have a view for the current file, so use
             // our no-view widget instead and update its message
 
@@ -1629,8 +1661,15 @@ void CentralWidget::updateGui()
             updateNoViewMsg();
         }
 
-        if (isRemoteFile)
-            hideSpinnerWidget();
+        hideSpinnerWidget();
+        // Note: normally, we would check for the file to be a remote one and
+        //       our spinner widget to be visible before hiding it, but on
+        //       starting up OpenCOR, our spinner widget will be shown, but it
+        //       won't have time to become visible by the time we need to hide
+        //       it, which means that it wouldn't get hidden and that it would
+        //       become visible by the time OpenCOR is fully initialised, which
+        //       is clearly not what we want, so we hide our spinner widget in
+        //       all cases...
     }
 
     // Create a connection to update the tab icon for the current file and
