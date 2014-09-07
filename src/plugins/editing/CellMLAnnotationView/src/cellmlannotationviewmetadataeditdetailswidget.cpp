@@ -230,7 +230,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(iface::cellml_api:
     //       if we were then our spinner widget would get 'reset' every time,
     //       which doesn't look nice...
 
-    if (   (pResetItemsGui && !mParent->parent()->spinnerWidgetVisible())
+    if (   (pResetItemsGui && !mParent->parent()->isSpinnerWidgetVisible())
         || mTermIsDirect)
         updateItemsGui(Items(), QString(), !mTermIsDirect);
 

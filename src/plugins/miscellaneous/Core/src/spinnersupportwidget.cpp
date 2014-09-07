@@ -42,7 +42,7 @@ SpinnerSupportWidget::SpinnerSupportWidget() :
 
 //==============================================================================
 
-bool SpinnerSupportWidget::spinnerWidgetVisible() const
+bool SpinnerSupportWidget::isSpinnerWidgetVisible() const
 {
     // Return whether our spinner widget is visible
 
