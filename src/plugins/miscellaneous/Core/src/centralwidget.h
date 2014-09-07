@@ -27,6 +27,7 @@ specific language governing permissions and limitations under the License.
 #include "file.h"
 #include "filetypeinterface.h"
 #include "guiinterface.h"
+#include "spinnersupportwidget.h"
 #include "widget.h"
 #include "viewinterface.h"
 
@@ -94,7 +95,7 @@ private:
 
 //==============================================================================
 
-class CentralWidget : public Widget
+class CentralWidget : public Widget, public SpinnerSupportWidget
 {
     Q_OBJECT
 
@@ -132,6 +133,7 @@ protected:
     virtual void dragEnterEvent(QDragEnterEvent *pEvent);
     virtual void dragMoveEvent(QDragMoveEvent *pEvent);
     virtual void dropEvent(QDropEvent *pEvent);
+    virtual void resizeEvent(QResizeEvent *pEvent);
 
 private:
     enum State {

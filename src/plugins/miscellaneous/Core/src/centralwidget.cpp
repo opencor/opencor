@@ -378,6 +378,14 @@ void CentralWidget::loadSettings(QSettings *pSettings)
         else
             openFile(fileNameOrUrl);
 
+    // Make sure that our spinner widget is hidden
+    // Note: indeed, if we opened some remote files, then it will have been
+    //       shown, but not hidden since this would normally be done by
+    //       updateGui() who can't do it since mState is set to Starting at this
+    //       stage...
+
+    hideSpinnerWidget();
+
     // Retrieve the selected modes and views of our different files
 
     foreach (const QString &fileName, mFileNames) {
@@ -810,7 +818,12 @@ void CentralWidget::openRemoteFile(const QString &pUrl,
     QString fileName = mRemoteLocalFileNames.value(fileNameOrUrl);
 
     if (fileName.isEmpty()) {
-        // The remote file isn't already opened, so download its contents
+        // The remote file isn't already opened, so download its contents and
+        // show our spinner widget during that process
+        // Note: our spinner widget gets hidden either by loadSettings() or by
+        //       updateGui()...
+
+        showSpinnerWidget(this);
 
         QString fileContents;
         QString errorMessage;
@@ -851,9 +864,9 @@ void CentralWidget::doOpenRemoteFile()
 {
     // Open the remote file
 
-    openRemoteFile(mRemoteFileDialogUrlValue->text());
-
     mRemoteFileDialog->accept();
+
+    openRemoteFile(mRemoteFileDialogUrlValue->text());
 }
 
 //==============================================================================
@@ -1297,7 +1310,7 @@ bool CentralWidget::closeFile(const int &pIndex, const bool &pForceClosing)
 
         // Unregister the file from our file manager
 
-        FileManager::instance()->unmanage(fileName);
+        fileManagerInstance->unmanage(fileName);
 
         // Update our modified settings
 
@@ -1462,6 +1475,19 @@ void CentralWidget::dropEvent(QDropEvent *pEvent)
 
 //==============================================================================
 
+void CentralWidget::resizeEvent(QResizeEvent *pEvent)
+{
+    // Default handling of the event
+
+    Widget::resizeEvent(pEvent);
+
+    // (Re)center our spinner widget
+
+    centerSpinnerWidget();
+}
+
+//==============================================================================
+
 Plugin * CentralWidget::viewPlugin(const int &pIndex) const
 {
     // Return the view plugin associated with the file, which index is given
@@ -1541,7 +1567,7 @@ void CentralWidget::updateGui()
             mode->viewTabs()->setCurrentIndex(modeViewTabIndexes.value(fileModeTabIndex));
         }
 
-        // Keep track of the mode and view for the current file, should we not
+        // Keep track of the mode and view of the current file, should we not
         // have any track of them or should we be changing modes or views
 
         if ((fileModeTabIndex == -1) || changedModes || changedViews) {
@@ -1580,7 +1606,17 @@ void CentralWidget::updateGui()
     if (fileName.isEmpty()) {
         newView = mLogoView;
     } else {
-        // There is a current file, so retrieve its view
+        // There is a current file, so retrieve its view, showing our spinner
+        // widget if necessary
+
+        bool isRemoteFile = FileManager::instance()->isRemote(fileName);
+
+        if (isRemoteFile && !isSpinnerWidgetVisible())
+            // Note: we check whether the spinner widget is visible since we may
+            //       be coming here as a result of the user opening a remote
+            //       file, as opposed to just switching files/modes/views...
+
+            showSpinnerWidget(this);
 
         newView = viewInterface?viewInterface->viewWidget(fileName):0;
 
@@ -1592,6 +1628,9 @@ void CentralWidget::updateGui()
 
             updateNoViewMsg();
         }
+
+        if (isRemoteFile)
+            hideSpinnerWidget();
     }
 
     // Create a connection to update the tab icon for the current file and
