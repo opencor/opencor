@@ -703,6 +703,10 @@ QString nonDiacriticString(const QString &pString)
 
 //==============================================================================
 
+#ifdef Q_OS_WIN
+    #pragma optimize("", off)
+#endif
+
 void doNothing(const int &pMax)
 {
     // A silly function, which aim is simply to do nothing
@@ -711,8 +715,16 @@ void doNothing(const int &pMax)
     //       of cases)...
 
     for (int i = 0; i < pMax; ++i)
+#ifdef Q_OS_WIN
         ;
+#else
+        asm("nop");
+#endif
 }
+
+#ifdef Q_OS_WIN
+    #pragma optimize("", on)
+#endif
 
 //==============================================================================
 
