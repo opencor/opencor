@@ -933,9 +933,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::termChanged(const QString &p
 
         // Now, retrieve some possible terms
 
-        QString termUrl = Pmr2RicordoUrl+pTerm;
-
-        mNetworkReply = mNetworkAccessManager->get(QNetworkRequest(termUrl));
+        mNetworkReply = mNetworkAccessManager->get(QNetworkRequest(Pmr2RicordoUrl+pTerm));
     }
 }
 
