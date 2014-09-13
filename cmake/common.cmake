@@ -28,7 +28,9 @@ MACRO(INITIALISE_PROJECT)
             ${CMAKE_BINARY_DIR} ${CMAKE_SOURCE_DIR}/cmake/architecture.c
             RUN_OUTPUT_VARIABLE ARCHITECTURE)
 
-    IF(NOT ${ARCHITECTURE} EQUAL 32 AND NOT ${ARCHITECTURE} EQUAL 64)
+    IF(NOT ARCHITECTURE_COMPILE)
+        MESSAGE(FATAL_ERROR "We could not determine your architecture. Please clean your OpenCOR environment and try again...")
+    ELSEIF(NOT ${ARCHITECTURE} EQUAL 32 AND NOT ${ARCHITECTURE} EQUAL 64)
         MESSAGE(FATAL_ERROR "OpenCOR can only be built in 32-bit or 64-bit mode...")
     ENDIF()
 
