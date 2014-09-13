@@ -829,7 +829,15 @@ void QsciScintilla::autoIndentation(char ch, long pos)
             autoIndentLine(pos, curr_line, blockIndent(curr_line - 1) - ind_width);
     }
     else if (ch == '\r' || ch == '\n')
-        autoIndentLine(pos, curr_line, blockIndent(curr_line - 1));
+    {
+        // Don't auto-indent the line (ie. preserve its existing indentation)
+        // if we have inserted a new line above by pressing return at the start
+        // of this line - in other words, if the previous line is empty.
+        long prev_line_length = SendScintilla(SCI_GETLINEENDPOSITION, curr_line - 1) - SendScintilla(SCI_POSITIONFROMLINE, curr_line - 1);
+
+        if (prev_line_length != 0)
+            autoIndentLine(pos, curr_line, blockIndent(curr_line - 1));
+    }
 }
 
 
@@ -2033,6 +2041,48 @@ void QsciScintilla::setCaretLineBackgroundColor(const QColor &col)
 void QsciScintilla::setCaretLineVisible(bool enable)
 {
     SendScintilla(SCI_SETCARETLINEVISIBLE, enable);
+}
+
+
+// Set the background colour of a hotspot area.
+void QsciScintilla::setHotspotBackgroundColor(const QColor &col)
+{
+    SendScintilla(SCI_SETSELBACK, 1, col);
+}
+
+
+// Set the foreground colour of a hotspot area.
+void QsciScintilla::setHotspotForegroundColor(const QColor &col)
+{
+    SendScintilla(SCI_SETHOTSPOTACTIVEFORE, 1, col);
+}
+
+
+// Reset the background colour of a hotspot area to the default.
+void QsciScintilla::resetHotspotBackgroundColor()
+{
+    SendScintilla(SCI_SETSELBACK, 0UL);
+}
+
+
+// Reset the foreground colour of a hotspot area to the default.
+void QsciScintilla::resetHotspotForegroundColor()
+{
+    SendScintilla(SCI_SETHOTSPOTACTIVEFORE, 0UL);
+}
+
+
+// Set the underline of a hotspot area.
+void QsciScintilla::setHotspotUnderline(bool enable)
+{
+    SendScintilla(SCI_SETHOTSPOTACTIVEUNDERLINE, enable);
+}
+
+
+// Set the wrapping of a hotspot area.
+void QsciScintilla::setHotspotWrap(bool enable)
+{
+    SendScintilla(SCI_SETHOTSPOTSINGLELINE, !enable);
 }
 
 

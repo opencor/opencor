@@ -1393,6 +1393,9 @@ public:
         SCI_COPYTEXT = 2420,
 
         //!
+        SCI_SETHOTSPOTSINGLELINE = 2421,
+
+        //!
         SCI_SETSELECTIONMODE = 2422,
 
         //!

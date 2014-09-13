@@ -1087,6 +1087,16 @@ public:
     //! \sa setFoldMarginColors()
     void resetFoldMarginColors();
 
+    //! Resets the background colour of an active hotspot area to the default.
+    //!
+    //! \sa setHotspotBackgroundColor(), resetHotspotForegroundColor()
+    void resetHotspotBackgroundColor();
+
+    //! Resets the foreground colour of an active hotspot area to the default.
+    //!
+    //! \sa setHotspotForegroundColor(), resetHotspotBackgroundColor()
+    void resetHotspotForegroundColor();
+
     //! The fold margin may be drawn as a one pixel sized checkerboard pattern
     //! of two colours, \a fore and \a back.
     //!
@@ -1313,6 +1323,24 @@ public:
     //!
     //! \sa setSelectionToEol()
     bool selectionToEol() const;
+
+    //! Sets the background colour of an active hotspot area to \a col.
+    //!
+    //! \sa resetHotspotBackgroundColor(), setHotspotForegroundColor()
+    void setHotspotBackgroundColor(const QColor &col);
+
+    //! Sets the foreground colour of an active hotspot area to \a col.
+    //!
+    //! \sa resetHotspotForegroundColor(), setHotspotBackgroundColor()
+    void setHotspotForegroundColor(const QColor &col);
+
+    //! Enables or disables, according to \a enable, the underlining of an
+    //! active hotspot area.  The default is false.
+    void setHotspotUnderline(bool enable);
+
+    //! Enables or disables, according to \a enable, the wrapping of a hotspot
+    //! area to following lines.  The default is true.
+    void setHotspotWrap(bool enable);
 
     //! Sets whether or not the selection is drawn up to the right hand border.
     //! \a filled is set if the selection is drawn to the border.
