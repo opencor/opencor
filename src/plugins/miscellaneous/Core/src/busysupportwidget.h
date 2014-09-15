@@ -1,4 +1,4 @@
-/*******************************************************************************
+﻿/*******************************************************************************
 
 Licensed to the OpenCOR team under one or more contributor license agreements.
 See the NOTICE.txt file distributed with this work for additional information
@@ -16,24 +16,20 @@ specific language governing permissions and limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// Spinner widget
+// Busy support widget
 //==============================================================================
 
-#ifndef SPINNERWIDGET_H
-#define SPINNERWIDGET_H
+#ifndef BUSYSUPPORTWIDGET_H
+#define BUSYSUPPORTWIDGET_H
 
 //==============================================================================
 
+#include "commonwidget.h"
 #include "coreglobal.h"
 
 //==============================================================================
 
-#include <QColor>
-#include <QWidget>
-
-//==============================================================================
-
-class QTimer;
+#include <QDockWidget>
 
 //==============================================================================
 
@@ -42,74 +38,24 @@ namespace Core {
 
 //==============================================================================
 
-class CORE_EXPORT SpinnerWidget : public QWidget
+class BusyWidget;
+
+//==============================================================================
+
+class CORE_EXPORT BusySupportWidget
 {
-    Q_OBJECT
-
 public:
-    explicit SpinnerWidget(QWidget *pParent);
+    explicit BusySupportWidget();
 
-    int fps() const;
-    void setFps(const int &pFps);
+    bool isBusyWidgetVisible() const;
 
-    QColor backgroundColor() const;
-    void setBackgroundColor(const QColor &pBackgroundColor);
+    void showBusyWidget(QWidget *pParent);
+    void hideBusyWidget();
 
-    double backgroundRoundness() const;
-    void setBackgroundRoundness(const double &pBackgroundRoundness);
-
-    int lineCount() const;
-    void setLineCount(const int &pLineCount);
-
-    QColor lineColor() const;
-    void setLineColor(const QColor &pLineColor);
-
-    int lineLength() const;
-    void setLineLength(const int &pLineLength);
-
-    int lineWidth() const;
-    void setLineWidth(const int &pLineWidth);
-
-    double lineRoundness() const;
-    void setLineRoundness(const double &pLineRoundness);
-
-    int lineTrail() const;
-    void setLineTrail(const int &pLineTrail);
-
-    double lineOpacity() const;
-    void setLineOpacity(const double &pLineOpacity);
-
-    int radius() const;
-    void setRadius(const int &pRadius);
-
-protected:
-    virtual void paintEvent(QPaintEvent *pEvent);
+    void centerBusyWidget();
 
 private:
-    QTimer *mTimer;
-
-    int mFps;
-
-    QColor mBackgroundColor;
-    double mBackgroundRoundness;
-
-    int mMainLine;
-
-    int mLineCount;
-    QColor mLineColor;
-    int mLineLength;
-    int mLineWidth;
-    double mLineRoundness;
-    int mLineTrail;
-    double mLineOpacity;
-
-    int mRadius;
-
-public Q_SLOTS:
-    virtual void setVisible(bool pVisible);
-
-private Q_SLOTS:
-    void rotate();
+    BusyWidget *mBusyWidget;
 };
 
 //==============================================================================

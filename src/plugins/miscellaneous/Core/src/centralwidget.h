@@ -24,10 +24,10 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#include "busysupportwidget.h"
 #include "file.h"
 #include "filetypeinterface.h"
 #include "guiinterface.h"
-#include "spinnersupportwidget.h"
 #include "widget.h"
 #include "viewinterface.h"
 
@@ -95,7 +95,7 @@ private:
 
 //==============================================================================
 
-class CentralWidget : public Widget, public SpinnerSupportWidget
+class CentralWidget : public Widget, public BusySupportWidget
 {
     Q_OBJECT
 

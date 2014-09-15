@@ -16,12 +16,12 @@ specific language governing permissions and limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// Spinner widget
+// Busy widget
 //==============================================================================
 // Note: this widget is adapted from http://fgnass.github.io/spin.js/...
 //==============================================================================
 
-#include "spinnerwidget.h"
+#include "busywidget.h"
 
 //==============================================================================
 
@@ -44,7 +44,7 @@ namespace Core {
 
 //==============================================================================
 
-SpinnerWidget::SpinnerWidget(QWidget *pParent) :
+BusyWidget::BusyWidget(QWidget *pParent) :
     QWidget(pParent),
     mFps(20),
     mBackgroundColor(QColor(54, 96, 146)),
@@ -77,7 +77,7 @@ SpinnerWidget::SpinnerWidget(QWidget *pParent) :
 
 //==============================================================================
 
-int SpinnerWidget::fps() const
+int BusyWidget::fps() const
 {
     // Return our FPS
 
@@ -86,7 +86,7 @@ int SpinnerWidget::fps() const
 
 //==============================================================================
 
-void SpinnerWidget::setFps(const int &pFps)
+void BusyWidget::setFps(const int &pFps)
 {
     // Set our FPS
 
@@ -99,7 +99,7 @@ void SpinnerWidget::setFps(const int &pFps)
 
 //==============================================================================
 
-QColor SpinnerWidget::backgroundColor() const
+QColor BusyWidget::backgroundColor() const
 {
     // Return our background colour
 
@@ -108,7 +108,7 @@ QColor SpinnerWidget::backgroundColor() const
 
 //==============================================================================
 
-void SpinnerWidget::setBackgroundColor(const QColor &pBackgroundColor)
+void BusyWidget::setBackgroundColor(const QColor &pBackgroundColor)
 {
     // Set our background colour
 
@@ -121,7 +121,7 @@ void SpinnerWidget::setBackgroundColor(const QColor &pBackgroundColor)
 
 //==============================================================================
 
-double SpinnerWidget::backgroundRoundness() const
+double BusyWidget::backgroundRoundness() const
 {
     // Return our background roundness
 
@@ -130,7 +130,7 @@ double SpinnerWidget::backgroundRoundness() const
 
 //==============================================================================
 
-void SpinnerWidget::setBackgroundRoundness(const double &pBackgroundRoundness)
+void BusyWidget::setBackgroundRoundness(const double &pBackgroundRoundness)
 {
     // Set our background roundness
 
@@ -143,7 +143,7 @@ void SpinnerWidget::setBackgroundRoundness(const double &pBackgroundRoundness)
 
 //==============================================================================
 
-int SpinnerWidget::lineCount() const
+int BusyWidget::lineCount() const
 {
     // Return our number of lines
 
@@ -152,7 +152,7 @@ int SpinnerWidget::lineCount() const
 
 //==============================================================================
 
-void SpinnerWidget::setLineCount(const int &pLineCount)
+void BusyWidget::setLineCount(const int &pLineCount)
 {
     // Set our number of lines
 
@@ -166,7 +166,7 @@ void SpinnerWidget::setLineCount(const int &pLineCount)
 
 //==============================================================================
 
-QColor SpinnerWidget::lineColor() const
+QColor BusyWidget::lineColor() const
 {
     // Return our line colour
 
@@ -175,7 +175,7 @@ QColor SpinnerWidget::lineColor() const
 
 //==============================================================================
 
-void SpinnerWidget::setLineColor(const QColor &pLineColor)
+void BusyWidget::setLineColor(const QColor &pLineColor)
 {
     // Set our line colour
 
@@ -188,7 +188,7 @@ void SpinnerWidget::setLineColor(const QColor &pLineColor)
 
 //==============================================================================
 
-int SpinnerWidget::lineLength() const
+int BusyWidget::lineLength() const
 {
     // Return the length of our lines
 
@@ -197,7 +197,7 @@ int SpinnerWidget::lineLength() const
 
 //==============================================================================
 
-void SpinnerWidget::setLineLength(const int &pLineLength)
+void BusyWidget::setLineLength(const int &pLineLength)
 {
     // Set the length of our lines
 
@@ -210,7 +210,7 @@ void SpinnerWidget::setLineLength(const int &pLineLength)
 
 //==============================================================================
 
-int SpinnerWidget::lineWidth() const
+int BusyWidget::lineWidth() const
 {
     // Return the width of our lines
 
@@ -219,7 +219,7 @@ int SpinnerWidget::lineWidth() const
 
 //==============================================================================
 
-void SpinnerWidget::setLineWidth(const int &pLineWidth)
+void BusyWidget::setLineWidth(const int &pLineWidth)
 {
     // Set the width of our lines
 
@@ -232,7 +232,7 @@ void SpinnerWidget::setLineWidth(const int &pLineWidth)
 
 //==============================================================================
 
-double SpinnerWidget::lineRoundness() const
+double BusyWidget::lineRoundness() const
 {
     // Return the roundness of our lines
 
@@ -241,7 +241,7 @@ double SpinnerWidget::lineRoundness() const
 
 //==============================================================================
 
-void SpinnerWidget::setLineRoundness(const double &pLineRoundness)
+void BusyWidget::setLineRoundness(const double &pLineRoundness)
 {
     // Set the roundness of our lines
 
@@ -254,7 +254,7 @@ void SpinnerWidget::setLineRoundness(const double &pLineRoundness)
 
 //==============================================================================
 
-int SpinnerWidget::lineTrail() const
+int BusyWidget::lineTrail() const
 {
     // Return the trail of our lines
 
@@ -263,7 +263,7 @@ int SpinnerWidget::lineTrail() const
 
 //==============================================================================
 
-void SpinnerWidget::setLineTrail(const int &pLineTrail)
+void BusyWidget::setLineTrail(const int &pLineTrail)
 {
     // Set the trail of our lines
 
@@ -276,7 +276,7 @@ void SpinnerWidget::setLineTrail(const int &pLineTrail)
 
 //==============================================================================
 
-double SpinnerWidget::lineOpacity() const
+double BusyWidget::lineOpacity() const
 {
     // Return the opacity of our lines
 
@@ -285,7 +285,7 @@ double SpinnerWidget::lineOpacity() const
 
 //==============================================================================
 
-void SpinnerWidget::setLineOpacity(const double &pLineOpacity)
+void BusyWidget::setLineOpacity(const double &pLineOpacity)
 {
     // Set the opacity of our lines
 
@@ -298,7 +298,7 @@ void SpinnerWidget::setLineOpacity(const double &pLineOpacity)
 
 //==============================================================================
 
-int SpinnerWidget::radius() const
+int BusyWidget::radius() const
 {
     // Return our radius
 
@@ -307,7 +307,7 @@ int SpinnerWidget::radius() const
 
 //==============================================================================
 
-void SpinnerWidget::setRadius(const int &pRadius)
+void BusyWidget::setRadius(const int &pRadius)
 {
     // Set our radius
 
@@ -320,7 +320,7 @@ void SpinnerWidget::setRadius(const int &pRadius)
 
 //==============================================================================
 
-void SpinnerWidget::rotate()
+void BusyWidget::rotate()
 {
     // Rotate ourselves
 
@@ -334,7 +334,7 @@ void SpinnerWidget::rotate()
 
 //==============================================================================
 
-void SpinnerWidget::paintEvent(QPaintEvent *pEvent)
+void BusyWidget::paintEvent(QPaintEvent *pEvent)
 {
     // Get a painter that supports antialiasing
 
@@ -342,7 +342,7 @@ void SpinnerWidget::paintEvent(QPaintEvent *pEvent)
 
     painter.setRenderHint(QPainter::Antialiasing, true);
 
-    // Draw a background for our spinner
+    // Draw a background for ourselves
 
     QPainterPath painterPath;
 
@@ -355,7 +355,7 @@ void SpinnerWidget::paintEvent(QPaintEvent *pEvent)
 
     painter.drawPath(painterPath);
 
-    // Draw our spinner
+    // Draw ourselves
 
     double lineCornerRadius = mLineRoundness*(mLineWidth >> 1);
 
@@ -391,7 +391,7 @@ void SpinnerWidget::paintEvent(QPaintEvent *pEvent)
 
 //==============================================================================
 
-void SpinnerWidget::setVisible(bool pVisible)
+void BusyWidget::setVisible(bool pVisible)
 {
     // Reset ourselves, if needed
 

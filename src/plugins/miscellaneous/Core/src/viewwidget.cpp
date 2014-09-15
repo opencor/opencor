@@ -30,7 +30,7 @@ namespace Core {
 
 ViewWidget::ViewWidget(QWidget *pParent) :
     Widget(pParent),
-    SpinnerSupportWidget()
+    BusySupportWidget()
 {
 }
 
@@ -42,9 +42,9 @@ void ViewWidget::resizeEvent(QResizeEvent *pEvent)
 
     Widget::resizeEvent(pEvent);
 
-    // (Re)center our spinner widget
+    // (Re)center our busy widget
 
-    centerSpinnerWidget();
+    centerBusyWidget();
 }
 
 //==============================================================================

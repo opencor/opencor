@@ -1243,11 +1243,11 @@ void SingleCellViewWidget::on_actionSimulationDataCsvExport_triggered()
 
     if (!fileName.isEmpty()) {
         setEnabled(false);
-        showSpinnerWidget(this);
+        showBusyWidget(this);
 
         mSimulation->results()->exportToCsv(fileName);
 
-        hideSpinnerWidget();
+        hideBusyWidget();
         setEnabled(true);
     }
 }

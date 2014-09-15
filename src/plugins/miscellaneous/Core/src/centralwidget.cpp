@@ -379,13 +379,13 @@ void CentralWidget::loadSettings(QSettings *pSettings)
         else
             openFile(fileNameOrUrl);
 
-    // Make sure that our spinner widget is hidden
+    // Make sure that our busy widget is hidden
     // Note: indeed, if we opened some remote files, then it will have been
     //       shown, but not hidden since this would normally be done by
     //       updateGui() who can't do it since mState is set to Starting at this
     //       stage...
 
-    hideSpinnerWidget();
+    hideBusyWidget();
 
     // Retrieve the selected modes and views of our different files
 
@@ -820,11 +820,11 @@ void CentralWidget::openRemoteFile(const QString &pUrl,
 
     if (fileName.isEmpty()) {
         // The remote file isn't already opened, so download its contents and
-        // show our spinner widget during that process
-        // Note: our spinner widget gets hidden either by loadSettings() or by
+        // show our busy widget during that process
+        // Note: our busy widget gets hidden either by loadSettings() or by
         //       updateGui()...
 
-        showSpinnerWidget(this);
+        showBusyWidget(this);
 
         QString fileContents;
         QString errorMessage;
@@ -1492,9 +1492,9 @@ void CentralWidget::resizeEvent(QResizeEvent *pEvent)
 
     Widget::resizeEvent(pEvent);
 
-    // (Re)center our spinner widget
+    // (Re)center our busy widget
 
-    centerSpinnerWidget();
+    centerBusyWidget();
 }
 
 //==============================================================================
@@ -1630,20 +1630,20 @@ void CentralWidget::updateGui()
     if (fileName.isEmpty()) {
         newView = mLogoView;
     } else {
-        // There is a current file, so retrieve its view, showing our spinner
-        // widget if necessary
+        // There is a current file, so retrieve its view, showing our busy
+        // widget, if necessary
 
         bool isRemoteFile = FileManager::instance()->isRemote(fileName);
         QTabBar *viewTabs = mModes.value(mModeTabIndexModes.value(fileModeTabIndex))->viewTabs();
         QString fileViewKey = viewKey(fileModeTabIndex, viewTabs->currentIndex(), fileName);
         bool hasView = mViews.value(fileViewKey);
 
-        if (isRemoteFile && !isSpinnerWidgetVisible() && !hasView)
-            // Note: we check whether the spinner widget is visible since we may
-            //       be coming here as a result of the user opening a remote
-            //       file, as opposed to just switching files/modes/views...
+        if (isRemoteFile && !isBusyWidgetVisible() && !hasView)
+            // Note: we check whether the busy widget is visible since we may be
+            //       coming here as a result of the user opening a remote file,
+            //       as opposed to just switching files/modes/views...
 
-            showSpinnerWidget(this);
+            showBusyWidget(this);
 
         newView = viewInterface?viewInterface->viewWidget(fileName):0;
 
@@ -1661,15 +1661,15 @@ void CentralWidget::updateGui()
             updateNoViewMsg();
         }
 
-        hideSpinnerWidget();
+        hideBusyWidget();
         // Note: normally, we would check for the file to be a remote one and
-        //       our spinner widget to be visible before hiding it, but on
-        //       starting up OpenCOR, our spinner widget will be shown, but it
-        //       won't have time to become visible by the time we need to hide
-        //       it, which means that it wouldn't get hidden and that it would
-        //       become visible by the time OpenCOR is fully initialised, which
-        //       is clearly not what we want, so we hide our spinner widget in
-        //       all cases...
+        //       our busy widget to be visible before hiding it, but on starting
+        //       up OpenCOR, our busy widget will be shown, but it won't have
+        //       time to become visible by the time we need to hide it, which
+        //       means that it wouldn't get hidden and that it would become
+        //       visible by the time OpenCOR is fully initialised, which is
+        //       clearly not what we want, so we hide our busy widget in all
+        //       cases...
     }
 
     // Create a connection to update the tab icon for the current file and

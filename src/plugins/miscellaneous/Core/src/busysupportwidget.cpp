@@ -16,11 +16,11 @@ specific language governing permissions and limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// Spinner support widget
+// Busy support widget
 //==============================================================================
 
-#include "spinnersupportwidget.h"
-#include "spinnerwidget.h"
+#include "busysupportwidget.h"
+#include "busywidget.h"
 
 //==============================================================================
 
@@ -35,64 +35,64 @@ namespace Core {
 
 //==============================================================================
 
-SpinnerSupportWidget::SpinnerSupportWidget() :
-    mSpinnerWidget(0)
+BusySupportWidget::BusySupportWidget() :
+    mBusyWidget(0)
 {
 }
 
 //==============================================================================
 
-bool SpinnerSupportWidget::isSpinnerWidgetVisible() const
+bool BusySupportWidget::isBusyWidgetVisible() const
 {
-    // Return whether our spinner widget is visible
+    // Return whether our busy widget is visible
 
-    return mSpinnerWidget?mSpinnerWidget->isVisible():false;
+    return mBusyWidget?mBusyWidget->isVisible():false;
 }
 
 //==============================================================================
 
-void SpinnerSupportWidget::showSpinnerWidget(QWidget *pParent)
+void BusySupportWidget::showBusyWidget(QWidget *pParent)
 {
-    // Show our spinner widget, which implies deleting its previous instance (if
+    // Show our busy widget, which implies deleting its previous instance (if
     // any), creating a new one, centering it and finally showing it
 
-    delete mSpinnerWidget;
+    delete mBusyWidget;
 
-    mSpinnerWidget = new Core::SpinnerWidget(pParent);
+    mBusyWidget = new Core::BusyWidget(pParent);
 
-    centerSpinnerWidget();
+    centerBusyWidget();
 
-    mSpinnerWidget->setVisible(true);
+    mBusyWidget->setVisible(true);
 }
 
 //==============================================================================
 
-void SpinnerSupportWidget::hideSpinnerWidget()
+void BusySupportWidget::hideBusyWidget()
 {
-    // Hide our spinner widget by deleting it
+    // Hide our busy widget by deleting it
 
-    delete mSpinnerWidget;
+    delete mBusyWidget;
 
-    mSpinnerWidget = 0;
+    mBusyWidget = 0;
 }
 
 //==============================================================================
 
-void SpinnerSupportWidget::centerSpinnerWidget()
+void BusySupportWidget::centerBusyWidget()
 {
-    // Make sure that we have a spinner widget
+    // Make sure that we have a busy widget
 
-    if (!mSpinnerWidget)
+    if (!mBusyWidget)
         return;
 
-    // Center our spinner widget
+    // Center our busy widget
 
     QRect desktopGeometry = qApp->desktop()->availableGeometry();
-    int parentWidth = mSpinnerWidget->parentWidget()?mSpinnerWidget->parentWidget()->width():desktopGeometry.width();
-    int parentHeight = mSpinnerWidget->parentWidget()?mSpinnerWidget->parentWidget()->height():desktopGeometry.height();
+    int parentWidth = mBusyWidget->parentWidget()?mBusyWidget->parentWidget()->width():desktopGeometry.width();
+    int parentHeight = mBusyWidget->parentWidget()?mBusyWidget->parentWidget()->height():desktopGeometry.height();
 
-    mSpinnerWidget->move(0.5*(parentWidth-mSpinnerWidget->width()),
-                         0.5*(parentHeight-mSpinnerWidget->height()));
+    mBusyWidget->move(0.5*(parentWidth-mBusyWidget->width()),
+                      0.5*(parentHeight-mBusyWidget->height()));
 }
 
 //==============================================================================

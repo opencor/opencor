@@ -24,8 +24,8 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#include "busysupportwidget.h"
 #include "coreglobal.h"
-#include "spinnersupportwidget.h"
 #include "widget.h"
 
 //==============================================================================
@@ -35,7 +35,7 @@ namespace Core {
 
 //==============================================================================
 
-class CORE_EXPORT ViewWidget : public Widget, public SpinnerSupportWidget
+class CORE_EXPORT ViewWidget : public Widget, public BusySupportWidget
 {
     Q_OBJECT
 

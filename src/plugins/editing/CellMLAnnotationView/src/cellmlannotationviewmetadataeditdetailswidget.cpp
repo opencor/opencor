@@ -222,15 +222,15 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(iface::cellml_api:
         mAddTermButton->setEnabled(false);
     }
 
-    // Reset our items' GUI, if needed and if our spinner widget is not already
+    // Reset our items' GUI, if needed and if our busy widget is not already
     // visible
-    // Note: the reason for checking whether our spinner widget is visible is
-    //       that we come here every time the user modifies the term to lookup.
-    //       So, we don't want to call updateItemsGui() for no reasons. Indeed,
-    //       if we were then our spinner widget would get 'reset' every time,
-    //       which doesn't look nice...
+    // Note: the reason for checking whether our busy widget is visible is that
+    //       we come here every time the user modifies the term to lookup. So,
+    //       we don't want to call updateItemsGui() for no reasons. Indeed, if
+    //       we were then our busy widget would get 'reset' every time, which
+    //       doesn't look nice...
 
-    if (   (pResetItemsGui && !mParent->parent()->isSpinnerWidgetVisible())
+    if (   (pResetItemsGui && !mParent->parent()->isBusyWidgetVisible())
         || mTermIsDirect)
         updateItemsGui(Items(), QString(), !mTermIsDirect);
 
@@ -529,13 +529,13 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateItemsGui(const Items &
     newGridWidget->setLayout(newGridLayout);
 
     connect(newGridWidget, SIGNAL(resized(const QSize &, const QSize &)),
-            this, SLOT(recenterSpinnerWidget()));
+            this, SLOT(recenterBusyWidget()));
 
     // Populate our new layout, but only if there is at least one item
 
-    bool showSpinnerWidget = false;
+    bool showBusyWidget = false;
 
-    mParent->parent()->hideSpinnerWidget();
+    mParent->parent()->hideBusyWidget();
 
     if (pItems.count()) {
         // Create labels to act as headers
@@ -661,7 +661,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateItemsGui(const Items &
         } else if (pLookupTerm) {
             labelText = QString();
 
-            showSpinnerWidget = true;
+            showBusyWidget = true;
         } else if (pErrorMessage.isEmpty()) {
             if (mTermIsDirect) {
                 if (mAddTermButton->isEnabled())
@@ -695,10 +695,10 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateItemsGui(const Items &
 
     mItemsScrollArea->setWidget(newGridWidget);
 
-    // Show our spinner widget, if needed
+    // Show our busy widget, if needed
 
-    if (showSpinnerWidget)
-        mParent->parent()->showSpinnerWidget(newGridWidget);
+    if (showBusyWidget)
+        mParent->parent()->showBusyWidget(newGridWidget);
 
     // Keep track of our new grid widgets and layouts
 
@@ -1124,11 +1124,11 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::fileReloaded()
 
 //==============================================================================
 
-void CellmlAnnotationViewMetadataEditDetailsWidget::recenterSpinnerWidget()
+void CellmlAnnotationViewMetadataEditDetailsWidget::recenterBusyWidget()
 {
-    // Recenter our spinner widget
+    // Recenter our busy widget
 
-    mParent->parent()->centerSpinnerWidget();
+    mParent->parent()->centerBusyWidget();
 }
 
 //==============================================================================

@@ -31,7 +31,7 @@ namespace Core {
 WindowWidget::WindowWidget(QWidget *pParent) :
     QDockWidget(pParent),
     CommonWidget(pParent),
-    SpinnerSupportWidget()
+    BusySupportWidget()
 {
 }
 
@@ -43,9 +43,9 @@ void WindowWidget::resizeEvent(QResizeEvent *pEvent)
 
     QDockWidget::resizeEvent(pEvent);
 
-    // (Re)center our spinner widget
+    // (Re)center our busy widget
 
-    centerSpinnerWidget();
+    centerBusyWidget();
 }
 
 //==============================================================================

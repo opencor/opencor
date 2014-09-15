@@ -201,7 +201,7 @@ private Q_SLOTS:
 
     void showCustomContextMenu(const QPoint &pPosition);
 
-    void recenterSpinnerWidget();
+    void recenterBusyWidget();
 };
 
 //==============================================================================

@@ -28,6 +28,8 @@ ADD_PLUGIN(Core
         ../../viewinterface.cpp
 
         src/borderedwidget.cpp
+        src/busysupportwidget.cpp
+        src/busywidget.cpp
         src/centralwidget.cpp
         src/cliutils.cpp
         src/collapsiblewidget.cpp
@@ -39,8 +41,6 @@ ADD_PLUGIN(Core
         src/organisationwidget.cpp
         src/progressbarwidget.cpp
         src/propertyeditorwidget.cpp
-        src/spinnersupportwidget.cpp
-        src/spinnerwidget.cpp
         src/toolbarwidget.cpp
         src/treeviewwidget.cpp
         src/usermessagewidget.cpp
@@ -56,6 +56,7 @@ ADD_PLUGIN(Core
         ../../pluginmanager.h
 
         src/borderedwidget.h
+        src/busywidget.h
         src/centralwidget.h
         src/cliutils.h
         src/collapsiblewidget.h
@@ -64,7 +65,6 @@ ADD_PLUGIN(Core
         src/organisationwidget.h
         src/progressbarwidget.h
         src/propertyeditorwidget.h
-        src/spinnerwidget.h
         src/toolbarwidget.h
         src/treeviewwidget.h
         src/usermessagewidget.h
