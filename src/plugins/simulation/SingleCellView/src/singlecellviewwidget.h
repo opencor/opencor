@@ -33,8 +33,6 @@ specific language governing permissions and limitations under the License.
 
 class QFrame;
 class QLabel;
-class QProgressBar;
-class QScrollBar;
 class QSettings;
 class QSplitter;
 class QTextEdit;
