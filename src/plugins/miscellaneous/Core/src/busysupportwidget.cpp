@@ -51,18 +51,16 @@ bool BusySupportWidget::isBusyWidgetVisible() const
 
 //==============================================================================
 
-void BusySupportWidget::showBusyWidget(QWidget *pParent)
+void BusySupportWidget::showBusyWidget(QWidget *pParent, const double &pProgress)
 {
     // Show our busy widget, which implies deleting its previous instance (if
-    // any), creating a new one, centering it and finally showing it
+    // any), creating a new one and centering it
 
     delete mBusyWidget;
 
-    mBusyWidget = new Core::BusyWidget(pParent);
+    mBusyWidget = new Core::BusyWidget(pParent, pProgress);
 
     centerBusyWidget();
-
-    mBusyWidget->setVisible(true);
 }
 
 //==============================================================================
@@ -93,6 +91,20 @@ void BusySupportWidget::centerBusyWidget()
 
     mBusyWidget->move(0.5*(parentWidth-mBusyWidget->width()),
                       0.5*(parentHeight-mBusyWidget->height()));
+}
+
+//==============================================================================
+
+void BusySupportWidget::setBusyWidgetProgress(const double &pProgress)
+{
+    // Make sure that we have a busy widget
+
+    if (!mBusyWidget)
+        return;
+
+    // Set the progress of our busy widget
+
+    mBusyWidget->setProgress(pProgress);
 }
 
 //==============================================================================

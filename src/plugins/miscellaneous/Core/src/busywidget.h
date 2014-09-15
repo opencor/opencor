@@ -47,10 +47,13 @@ class CORE_EXPORT BusyWidget : public QWidget
     Q_OBJECT
 
 public:
-    explicit BusyWidget(QWidget *pParent);
+    explicit BusyWidget(QWidget *pParent, const double &pProgress = -1.0);
 
     int fps() const;
     void setFps(const int &pFps);
+
+    QColor foregroundColor() const;
+    void setForegroundColor(const QColor &pForegroundColor);
 
     QColor backgroundColor() const;
     void setBackgroundColor(const QColor &pBackgroundColor);
@@ -58,29 +61,29 @@ public:
     double backgroundRoundness() const;
     void setBackgroundRoundness(const double &pBackgroundRoundness);
 
-    int lineCount() const;
-    void setLineCount(const int &pLineCount);
+    int count() const;
+    void setCount(const int &pCount);
 
-    QColor lineColor() const;
-    void setLineColor(const QColor &pLineColor);
+    int length() const;
+    void setLength(const int &pLength);
 
-    int lineLength() const;
-    void setLineLength(const int &pLineLength);
+    int thickness() const;
+    void setThickness(const int &pThickness);
 
-    int lineWidth() const;
-    void setLineWidth(const int &pLineWidth);
+    double roundness() const;
+    void setRoundness(const double &pRoundness);
 
-    double lineRoundness() const;
-    void setLineRoundness(const double &pLineRoundness);
+    int trail() const;
+    void setTrail(const int &pTrail);
 
-    int lineTrail() const;
-    void setLineTrail(const int &pLineTrail);
-
-    double lineOpacity() const;
-    void setLineOpacity(const double &pLineOpacity);
+    double opacity() const;
+    void setOpacity(const double &pOpacity);
 
     int radius() const;
     void setRadius(const int &pRadius);
+
+    double progress() const;
+    void setProgress(const double &pProgress);
 
 protected:
     virtual void paintEvent(QPaintEvent *pEvent);
@@ -90,23 +93,23 @@ private:
 
     int mFps;
 
+    QColor mForegroundColor;
     QColor mBackgroundColor;
+
     double mBackgroundRoundness;
 
     int mMainLine;
 
-    int mLineCount;
-    QColor mLineColor;
-    int mLineLength;
-    int mLineWidth;
-    double mLineRoundness;
-    int mLineTrail;
-    double mLineOpacity;
+    int mCount;
+    int mLength;
+    int mThickness;
+    double mRoundness;
+    int mTrail;
+    double mOpacity;
 
     int mRadius;
 
-public Q_SLOTS:
-    virtual void setVisible(bool pVisible);
+    double mProgress;
 
 private Q_SLOTS:
     void rotate();

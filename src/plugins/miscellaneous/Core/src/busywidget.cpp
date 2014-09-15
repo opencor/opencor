@@ -35,6 +35,7 @@ specific language governing permissions and limitations under the License.
 #include <QPaintEvent>
 #include <QPainterPath>
 #include <QPoint>
+#include <QRectF>
 #include <QTimer>
 
 //==============================================================================
@@ -44,24 +45,29 @@ namespace Core {
 
 //==============================================================================
 
-BusyWidget::BusyWidget(QWidget *pParent) :
+static const int Margin = 5;
+
+//==============================================================================
+
+BusyWidget::BusyWidget(QWidget *pParent, const double &pProgress) :
     QWidget(pParent),
-    mFps(20),
+    mFps(0),
+    mForegroundColor(Qt::white),
     mBackgroundColor(QColor(54, 96, 146)),
     mBackgroundRoundness(0.25),
     mMainLine(0),
-    mLineCount(12),
-    mLineColor(Qt::white),
-    mLineLength(5),
-    mLineWidth(5),
-    mLineRoundness(1.0),
-    mLineTrail(100),
-    mLineOpacity(0.25),
-    mRadius(15)
+    mCount(12),
+    mLength(5),
+    mThickness(5),
+    mRoundness(1.0),
+    mTrail(100),
+    mOpacity(0.25),
+    mRadius(15),
+    mProgress(pProgress)
 {
     // Set our default size
 
-    int size = 2*(mRadius+mLineLength+5);
+    int size = 2*(mRadius+mLength+Margin);
 
     resize(size, size);
 
@@ -69,10 +75,17 @@ BusyWidget::BusyWidget(QWidget *pParent) :
 
     mTimer = new QTimer(this);
 
-    mTimer->setInterval(100);
+    setFps(10);
 
     connect(mTimer, SIGNAL(timeout()),
             this, SLOT(rotate()));
+
+    // Make ourselves visible and start our timer, if needed
+
+    setVisible(true);
+
+    if (pProgress == -1.0)
+        mTimer->start();
 }
 
 //==============================================================================
@@ -94,6 +107,28 @@ void BusyWidget::setFps(const int &pFps)
         mFps = pFps;
 
         mTimer->setInterval(1000/pFps);
+    }
+}
+
+//==============================================================================
+
+QColor BusyWidget::foregroundColor() const
+{
+    // Return our foreground colour
+
+    return mForegroundColor;
+}
+
+//==============================================================================
+
+void BusyWidget::setForegroundColor(const QColor &pForegroundColor)
+{
+    // Set our foreground colour
+
+    if (pForegroundColor != mForegroundColor) {
+        mForegroundColor = pForegroundColor;
+
+        update();
     }
 }
 
@@ -143,21 +178,21 @@ void BusyWidget::setBackgroundRoundness(const double &pBackgroundRoundness)
 
 //==============================================================================
 
-int BusyWidget::lineCount() const
+int BusyWidget::count() const
 {
     // Return our number of lines
 
-    return mLineCount;
+    return mCount;
 }
 
 //==============================================================================
 
-void BusyWidget::setLineCount(const int &pLineCount)
+void BusyWidget::setCount(const int &pCount)
 {
     // Set our number of lines
 
-    if (pLineCount != mLineCount) {
-        mLineCount = pLineCount;
+    if ((pCount != mCount) && (pCount > 1)) {
+        mCount = pCount;
         mMainLine = 0;
 
         update();
@@ -166,43 +201,21 @@ void BusyWidget::setLineCount(const int &pLineCount)
 
 //==============================================================================
 
-QColor BusyWidget::lineColor() const
-{
-    // Return our line colour
-
-    return mLineColor;
-}
-
-//==============================================================================
-
-void BusyWidget::setLineColor(const QColor &pLineColor)
-{
-    // Set our line colour
-
-    if (pLineColor != mLineColor) {
-        mLineColor = pLineColor;
-
-        update();
-    }
-}
-
-//==============================================================================
-
-int BusyWidget::lineLength() const
+int BusyWidget::length() const
 {
     // Return the length of our lines
 
-    return mLineLength;
+    return mLength;
 }
 
 //==============================================================================
 
-void BusyWidget::setLineLength(const int &pLineLength)
+void BusyWidget::setLength(const int &pLength)
 {
     // Set the length of our lines
 
-    if (pLineLength != mLineLength) {
-        mLineLength = pLineLength;
+    if (pLength != mLength) {
+        mLength = pLength;
 
         update();
     }
@@ -210,21 +223,21 @@ void BusyWidget::setLineLength(const int &pLineLength)
 
 //==============================================================================
 
-int BusyWidget::lineWidth() const
+int BusyWidget::thickness() const
 {
-    // Return the width of our lines
+    // Return the thickness of our lines
 
-    return mLineWidth;
+    return mThickness;
 }
 
 //==============================================================================
 
-void BusyWidget::setLineWidth(const int &pLineWidth)
+void BusyWidget::setThickness(const int &pThickness)
 {
-    // Set the width of our lines
+    // Set the thickness of our lines
 
-    if (pLineWidth != mLineWidth) {
-        mLineWidth = pLineWidth;
+    if (pThickness != mThickness) {
+        mThickness = pThickness;
 
         update();
     }
@@ -232,21 +245,21 @@ void BusyWidget::setLineWidth(const int &pLineWidth)
 
 //==============================================================================
 
-double BusyWidget::lineRoundness() const
+double BusyWidget::roundness() const
 {
     // Return the roundness of our lines
 
-    return mLineRoundness;
+    return mRoundness;
 }
 
 //==============================================================================
 
-void BusyWidget::setLineRoundness(const double &pLineRoundness)
+void BusyWidget::setRoundness(const double &pRoundness)
 {
     // Set the roundness of our lines
 
-    if (pLineRoundness != mLineRoundness) {
-        mLineRoundness = pLineRoundness;
+    if (pRoundness != mRoundness) {
+        mRoundness = pRoundness;
 
         update();
     }
@@ -254,21 +267,21 @@ void BusyWidget::setLineRoundness(const double &pLineRoundness)
 
 //==============================================================================
 
-int BusyWidget::lineTrail() const
+int BusyWidget::trail() const
 {
     // Return the trail of our lines
 
-    return mLineTrail;
+    return mTrail;
 }
 
 //==============================================================================
 
-void BusyWidget::setLineTrail(const int &pLineTrail)
+void BusyWidget::setTrail(const int &pTrail)
 {
     // Set the trail of our lines
 
-    if (pLineTrail != mLineTrail) {
-        mLineTrail = pLineTrail;
+    if (pTrail != mTrail) {
+        mTrail = pTrail;
 
         update();
     }
@@ -276,21 +289,21 @@ void BusyWidget::setLineTrail(const int &pLineTrail)
 
 //==============================================================================
 
-double BusyWidget::lineOpacity() const
+double BusyWidget::opacity() const
 {
     // Return the opacity of our lines
 
-    return mLineOpacity;
+    return mOpacity;
 }
 
 //==============================================================================
 
-void BusyWidget::setLineOpacity(const double &pLineOpacity)
+void BusyWidget::setOpacity(const double &pOpacity)
 {
     // Set the opacity of our lines
 
-    if (pLineOpacity != mLineOpacity) {
-        mLineOpacity = pLineOpacity;
+    if (pOpacity != mOpacity) {
+        mOpacity = pOpacity;
 
         update();
     }
@@ -320,13 +333,43 @@ void BusyWidget::setRadius(const int &pRadius)
 
 //==============================================================================
 
+double BusyWidget::progress() const
+{
+    // Return our progress
+
+    return mProgress;
+}
+
+//==============================================================================
+
+void BusyWidget::setProgress(const double &pProgress)
+{
+    // Set our progress and enable/disable our timer, depending on the case
+
+    if (pProgress != mProgress) {
+        mProgress = pProgress;
+
+        if (pProgress == -1.0) {
+            mMainLine = 0;
+
+            mTimer->start();
+        } else {
+            mTimer->stop();
+        }
+
+        update();
+    }
+}
+
+//==============================================================================
+
 void BusyWidget::rotate()
 {
     // Rotate ourselves
 
     ++mMainLine;
 
-    if (mMainLine >= mLineCount)
+    if (mMainLine >= mCount)
         mMainLine = 0;
 
     update();
@@ -357,59 +400,46 @@ void BusyWidget::paintEvent(QPaintEvent *pEvent)
 
     // Draw ourselves
 
-    double lineCornerRadius = mLineRoundness*(mLineWidth >> 1);
+    if (mProgress == -1.0) {
+        double lineCornerRadius = mRoundness*(mThickness >> 1);
 
-    painter.translate(0.5*width(), 0.5*height());
+        painter.translate(0.5*width(), 0.5*height());
 
-    for (int i = 0; i < mLineCount; ++i) {
-        painter.save();
+        for (int i = 0; i < mCount; ++i) {
+            painter.save();
 
-        painter.rotate(i*360.0/mLineCount);
-        painter.translate(mRadius, 0);
+            int relativeLine = i-mMainLine;
 
-        int relativeLine = i-mMainLine;
+            if (relativeLine < 0)
+                relativeLine += mCount;
 
-        if (relativeLine < 0)
-            relativeLine += mLineCount;
+            painter.rotate(-90-relativeLine*360.0/mCount);
+            painter.translate(mRadius, 0);
 
-        QColor lineColor = mLineColor;
+            QColor foregroundColor = mForegroundColor;
 
-        lineColor.setAlphaF(qMax(1.0-(100.0-100.0*relativeLine/(mLineCount-1))*(1.0-mLineOpacity)/mLineTrail, mLineOpacity));
+            foregroundColor.setAlphaF(qMax(1.0-(100.0-100.0*(mCount-1-i)/(mCount-1))*(1.0-mOpacity)/mTrail, mOpacity));
 
-        painter.setBrush(lineColor);
+            painter.setBrush(foregroundColor);
 
-        painter.drawRoundedRect(QRectF(0.0, -0.5*mLineWidth, mLineLength, mLineWidth),
-                                lineCornerRadius, lineCornerRadius);
+            painter.drawRoundedRect(QRectF(0.0, -0.5*mThickness, mLength, mThickness),
+                                    lineCornerRadius, lineCornerRadius);
 
-        painter.restore();
+            painter.restore();
+        }
+    } else {
+        int size = 2*(mRadius+mLength);
+
+        painter.translate(Margin, Margin);
+
+        painter.setBrush(mForegroundColor);
+
+        painter.drawPie(0.0, 0.0, size, size, 90*16, -mProgress*360*16);
     }
 
     // Accept the event
 
     pEvent->accept();
-}
-
-//==============================================================================
-
-void BusyWidget::setVisible(bool pVisible)
-{
-    // Reset ourselves, if needed
-
-    if (pVisible)
-        mMainLine = 0;
-
-    // Default handling of the method
-
-    QWidget::setVisible(pVisible);
-
-    // Start/stop our timer
-
-    if (pVisible) {
-        if (!mTimer->isActive())
-            mTimer->start();
-    } else {
-        mTimer->stop();
-    }
 }
 
 //==============================================================================
