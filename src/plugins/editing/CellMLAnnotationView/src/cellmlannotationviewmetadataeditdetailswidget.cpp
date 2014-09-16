@@ -951,7 +951,8 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::termLookedUp(QNetworkReply *
         mNetworkReply = 0;
     }
 
-    // Retrieve the list of terms, should we have retrieved it without any problem
+    // Retrieve the list of terms, should we have retrieved it without any
+    // problem
 
     Items items = Items();
     QString errorMessage = QString();
