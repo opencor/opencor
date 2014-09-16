@@ -27,6 +27,7 @@ ADD_PLUGIN(HelpWindow
         Core
     QT_MODULES
         Help
+        PrintSupport
         WebKitWidgets
     QT_LIBRARIES
         QtCore
