@@ -537,8 +537,6 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateItemsGui(const Items &
 
     bool showBusyWidget = false;
 
-    mParent->parent()->hideBusyWidget();
-
     if (pItems.count()) {
         // Create labels to act as headers
 
@@ -691,6 +689,8 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateItemsGui(const Items &
         if (mLookupInformation && (mType != Qualifier))
             genericLookup();
     }
+
+    mParent->parent()->hideBusyWidget();
 
     // Set our new grid widget as the widget for our scroll area
     // Note: this will automatically delete the old grid widget...
