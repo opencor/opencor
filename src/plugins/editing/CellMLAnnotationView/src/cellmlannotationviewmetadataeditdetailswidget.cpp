@@ -55,6 +55,7 @@ specific language governing permissions and limitations under the License.
 #include <QRegularExpression>
 #include <QScrollBar>
 #include <QStackedWidget>
+#include <QTimer>
 #include <QVariant>
 #include <QVBoxLayout>
 
@@ -118,6 +119,7 @@ CellmlAnnotationViewMetadataEditDetailsWidget::CellmlAnnotationViewMetadataEditD
     mTermValue(0),
     mAddTermButton(0),
     mTerm(QString()),
+    mTerms(QStringList()),
     mTermIsDirect(false),
     mItems(Items()),
     mErrorMessage(QString()),
@@ -902,10 +904,6 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::lookupId(const QString &pIte
 
 //==============================================================================
 
-static const auto Pmr2RicordoUrl = QStringLiteral("https://models.physiomeproject.org/pmr2_ricordo/miriam_terms/");
-
-//==============================================================================
-
 void CellmlAnnotationViewMetadataEditDetailsWidget::termChanged(const QString &pTerm)
 {
     // Keep track of the term to look up
@@ -921,20 +919,47 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::termChanged(const QString &p
 
     updateGui(mElement, true);
 
-    // Retrieve some possible terms based on the given term, but only if the
-    // term cannot be added directly
+    // Retrieve some possible ontological terms based on the given term, but
+    // only if the term cannot be added directly and if it is not empty
 
-    if (!mTermIsDirect) {
-        // We are not dealing with a direct term, so cancel the previous
-        // request, if any
+    if (!mTermIsDirect && !mTerm.isEmpty()) {
+        // Add the term to our list of terms to look up
 
-        if (mNetworkReply)
-            mNetworkReply->close();
+        mTerms << mTerm;
 
-        // Now, retrieve some possible terms
+        // Retrieve some possible ontological terms, but after a short delay
+        // Note: the delay is in case the term gets changed in between. Indeed,
+        //       we can't cancel a request sent to PMR2, so we should try to
+        //       send as few of them as possible...
 
-        mNetworkReply = mNetworkAccessManager->get(QNetworkRequest(Pmr2RicordoUrl+pTerm));
+        QTimer::singleShot(500, this, SLOT(lookupTerm()));
     }
+}
+
+//==============================================================================
+
+static const auto Pmr2RicordoUrl = QStringLiteral("https://models.physiomeproject.org/pmr2_ricordo/miriam_terms/");
+
+//==============================================================================
+
+void CellmlAnnotationViewMetadataEditDetailsWidget::lookupTerm()
+{
+    // 'Cancel' the previous request, if any
+
+    if (mNetworkReply) {
+        mNetworkReply->close();
+
+        mNetworkReply = 0;
+    }
+
+    // Now, retrieve some possible ontological terms
+
+    QString term = mTerms.first();
+
+    mTerms.removeFirst();
+
+    if (mTerms.isEmpty())
+        mNetworkReply = mNetworkAccessManager->get(QNetworkRequest(Pmr2RicordoUrl+term));
 }
 
 //==============================================================================
