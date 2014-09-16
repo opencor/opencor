@@ -68,9 +68,6 @@ XslTransformer::XslTransformer() :
     mJobs(QList<XslTransformerJob>())
 {
     // Create our thread
-    // Note: XSL transformation requires using a QXmlQuery object, which is
-    //       inherently not thread-safe. So, we create a thread and move
-    //       ourselves to it...
 
     mThread = new QThread();
 
