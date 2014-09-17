@@ -19,7 +19,6 @@ specific language governing permissions and limitations under the License.
 // CellML annotation view metadata edit details widget
 //==============================================================================
 
-#include "borderedwidget.h"
 #include "cellmlannotationviewcellmllistwidget.h"
 #include "cellmlannotationvieweditingwidget.h"
 #include "cellmlannotationviewmetadataeditdetailswidget.h"
@@ -417,8 +416,8 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(const Items &pItem
     // Add our 'internal' widgets to our new main widget
 
     newMainLayout->addWidget(newFormWidget);
-    newMainLayout->addWidget(new Core::BorderedWidget(newItemsScrollArea,
-                                                      true, false, false, false));
+    newMainLayout->addWidget(Core::newLineWidget(newMainWidget));
+    newMainLayout->addWidget(newItemsScrollArea);
 
     // Keep track of the position of our items vertical scroll bar
     // Note: this is required to make sure that the position doesn't get reset
