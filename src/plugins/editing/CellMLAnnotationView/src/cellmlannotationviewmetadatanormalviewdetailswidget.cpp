@@ -61,7 +61,7 @@ CellmlAnnotationViewMetadataNormalViewDetailsWidget::CellmlAnnotationViewMetadat
     mElement(0),
     mRdfTripleInformation(QString()),
     mType(No),
-    mLookupInformation(First),
+    mLookUpInformation(First),
     mVerticalScrollBarPosition(0),
     mNeighbourRow(0),
     mRdfTriplesMapping(QMap<QObject *, CellMLSupport::CellmlFileRdfTriple *>()),
@@ -112,7 +112,7 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::retranslateUi()
 
     // For the rest of our GUI, it's easier to just update it, so...
 
-    updateGui(mElement, mRdfTripleInformation, mType, mLookupInformation,
+    updateGui(mElement, mRdfTripleInformation, mType, mLookUpInformation,
               mVerticalScrollBarPosition, true);
 }
 
@@ -121,7 +121,7 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::retranslateUi()
 void CellmlAnnotationViewMetadataNormalViewDetailsWidget::updateGui(iface::cellml_api::CellMLElement *pElement,
                                                                     const QString &pRdfTripleInformation,
                                                                     const Type &pType,
-                                                                    const Information &pLookupInformation,
+                                                                    const Information &pLookUpInformation,
                                                                     const int &pVerticalScrollBarPosition,
                                                                     const bool &pRetranslate)
 {
@@ -204,7 +204,7 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::updateGui(iface::cellm
                                                     newGridWidget);
 
             connect(qualifierLabel, SIGNAL(linkActivated(const QString &)),
-                    this, SLOT(lookupQualifier(const QString &)));
+                    this, SLOT(lookUpQualifier(const QString &)));
 
             newGridLayout->addWidget(qualifierLabel, row, 0);
 
@@ -221,7 +221,7 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::updateGui(iface::cellm
             connect(resourceLabel, SIGNAL(customContextMenuRequested(const QPoint &)),
                     this, SLOT(showCustomContextMenu(const QPoint &)));
             connect(resourceLabel, SIGNAL(linkActivated(const QString &)),
-                    this, SLOT(lookupResource(const QString &)));
+                    this, SLOT(lookUpResource(const QString &)));
 
             newGridLayout->addWidget(resourceLabel, row, 1);
 
@@ -235,7 +235,7 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::updateGui(iface::cellm
             connect(idLabel, SIGNAL(customContextMenuRequested(const QPoint &)),
                     this, SLOT(showCustomContextMenu(const QPoint &)));
             connect(idLabel, SIGNAL(linkActivated(const QString &)),
-                    this, SLOT(lookupId(const QString &)));
+                    this, SLOT(lookUpId(const QString &)));
 
             idLabel->setAccessibleDescription("http://identifiers.org/"+rdfTriple->resource()+"/"+rdfTriple->id()+"/?profile=most_reliable&redirect=true");
             idLabel->setContextMenuPolicy(Qt::CustomContextMenu);
@@ -323,30 +323,30 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::updateGui(iface::cellm
 
     // Request for something to be looked up, if needed
 
-    if (pLookupInformation != None) {
+    if (pLookUpInformation != None) {
         if (rdfTriples.count()) {
             // Request for the first resource id, the last resource id or an
             // 'old' qualifier, resource or resource id to be looked up
 
-            if (pLookupInformation == First)
+            if (pLookUpInformation == First)
                 // Look up the first resource id
 
-                genericLookup(firstRdfTripleInformation, Id, pRetranslate);
-            else if (pLookupInformation == Last)
+                genericLookUp(firstRdfTripleInformation, Id, pRetranslate);
+            else if (pLookUpInformation == Last)
                 // Look up the last resource id
 
-                genericLookup(lastRdfTripleInformation, Id, pRetranslate);
+                genericLookUp(lastRdfTripleInformation, Id, pRetranslate);
             else
                 // Look up any 'old' qualifier, resource or resource id
 
-                genericLookup(pRdfTripleInformation, pType, pRetranslate);
+                genericLookUp(pRdfTripleInformation, pType, pRetranslate);
         } else {
             // No RDF triple left, so ask for 'nothing' to be looked up
             // Note: we do this to let people know that there is nothing to look
             //       up and that they can 'clean' whatever they use to show a
-            //       lookup to the user...
+            //       look up to the user...
 
-            genericLookup();
+            genericLookUp();
         }
     }
 
@@ -371,16 +371,16 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::addRdfTriple(CellMLSup
 
     // Enable the looking up of the last information
 
-    mLookupInformation = Last;
+    mLookUpInformation = Last;
 
     // Update the GUI to reflect the addition of the given RDF triple
 
-    updateGui(mElement, QString(), No, mLookupInformation);
+    updateGui(mElement, QString(), No, mLookUpInformation);
 }
 
 //==============================================================================
 
-void CellmlAnnotationViewMetadataNormalViewDetailsWidget::genericLookup(const QString &pRdfTripleInformation,
+void CellmlAnnotationViewMetadataNormalViewDetailsWidget::genericLookUp(const QString &pRdfTripleInformation,
                                                                         const Type &pType,
                                                                         const bool &pRetranslate)
 {
@@ -411,7 +411,7 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::genericLookup(const QS
 
         QFont font = idLabel->font();
 
-        font.setBold((mLookupInformation != None) && (row == rowAsInt));
+        font.setBold((mLookUpInformation != None) && (row == rowAsInt));
         font.setItalic(false);
 
         QFont italicFont = idLabel->font();
@@ -426,7 +426,7 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::genericLookup(const QS
 
     // Check whether we have something to look up
 
-    if (mLookupInformation == None)
+    if (mLookUpInformation == None)
         // Nothing to look up, so...
 
         return;
@@ -435,74 +435,74 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::genericLookup(const QS
 
     switch (pType) {
     case Qualifier:
-        emit qualifierLookupRequested(qualifierAsString, pRetranslate);
+        emit qualifierLookUpRequested(qualifierAsString, pRetranslate);
 
         break;
     case Resource:
-        emit resourceLookupRequested(resourceAsString, pRetranslate);
+        emit resourceLookUpRequested(resourceAsString, pRetranslate);
 
         break;
     case Id:
-        emit idLookupRequested(resourceAsString, idAsString, pRetranslate);
+        emit idLookUpRequested(resourceAsString, idAsString, pRetranslate);
 
         break;
     default:
         // No
 
-        emit noLookupRequested();
+        emit noLookUpRequested();
     }
 }
 
 //==============================================================================
 
-void CellmlAnnotationViewMetadataNormalViewDetailsWidget::disableLookupInformation()
+void CellmlAnnotationViewMetadataNormalViewDetailsWidget::disableLookUpInformation()
 {
     // Disable the looking up of information
 
-    mLookupInformation = None;
+    mLookUpInformation = None;
 
     // Update the GUI by pretending to be interested in looking something up
 
-    genericLookup();
+    genericLookUp();
 }
 
 //==============================================================================
 
-void CellmlAnnotationViewMetadataNormalViewDetailsWidget::lookupQualifier(const QString &pRdfTripleInformation)
+void CellmlAnnotationViewMetadataNormalViewDetailsWidget::lookUpQualifier(const QString &pRdfTripleInformation)
 {
     // Enable the looking up of any information
 
-    mLookupInformation = Any;
+    mLookUpInformation = Any;
 
-    // Call our generic lookup function
+    // Call our generic look up function
 
-    genericLookup(pRdfTripleInformation, Qualifier);
+    genericLookUp(pRdfTripleInformation, Qualifier);
 }
 
 //==============================================================================
 
-void CellmlAnnotationViewMetadataNormalViewDetailsWidget::lookupResource(const QString &pRdfTripleInformation)
+void CellmlAnnotationViewMetadataNormalViewDetailsWidget::lookUpResource(const QString &pRdfTripleInformation)
 {
     // Enable the looking up of any information
 
-    mLookupInformation = Any;
+    mLookUpInformation = Any;
 
-    // Call our generic lookup function
+    // Call our generic look up function
 
-    genericLookup(pRdfTripleInformation, Resource);
+    genericLookUp(pRdfTripleInformation, Resource);
 }
 
 //==============================================================================
 
-void CellmlAnnotationViewMetadataNormalViewDetailsWidget::lookupId(const QString &pRdfTripleInformation)
+void CellmlAnnotationViewMetadataNormalViewDetailsWidget::lookUpId(const QString &pRdfTripleInformation)
 {
     // Enable the looking up of any information
 
-    mLookupInformation = Any;
+    mLookUpInformation = Any;
 
-    // Call our generic lookup function
+    // Call our generic look up function
 
-    genericLookup(pRdfTripleInformation, Id);
+    genericLookUp(pRdfTripleInformation, Id);
 }
 
 //==============================================================================
@@ -612,7 +612,7 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::removeRdfTriple()
 
     // Update the GUI to reflect the removal of the RDF triple
 
-    updateGui(mElement, mRdfTripleInformation, mType, mLookupInformation);
+    updateGui(mElement, mRdfTripleInformation, mType, mLookUpInformation);
 
     // Let people know that an RDF triple has been removed
 

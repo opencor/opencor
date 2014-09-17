@@ -25,7 +25,7 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include "cellmlfile.h"
-#include "commonwidget.h"
+#include "widget.h"
 
 //==============================================================================
 
@@ -48,12 +48,20 @@ class QMenu;
 class QNetworkAccessManager;
 class QNetworkReply;
 class QPushButton;
-class QStackedWidget;
 class QVBoxLayout;
 
 //==============================================================================
 
 namespace OpenCOR {
+
+//==============================================================================
+
+namespace Core {
+    class Widget;
+}   // namespace Core
+
+//==============================================================================
+
 namespace CellMLAnnotationView {
 
 //==============================================================================
@@ -62,8 +70,7 @@ class CellmlAnnotationViewEditingWidget;
 
 //==============================================================================
 
-class CellmlAnnotationViewMetadataEditDetailsWidget : public QScrollArea,
-                                                      public Core::CommonWidget
+class CellmlAnnotationViewMetadataEditDetailsWidget : public Core::Widget
 {
     Q_OBJECT
 
@@ -99,22 +106,15 @@ private:
 
     Ui::CellmlAnnotationViewMetadataEditDetailsWidget *mGui;
 
-    QStackedWidget *mWidget;
-
-    QWidget *mMainWidget;
-    QVBoxLayout *mMainLayout;
-
-    QWidget *mFormWidget;
-    QWidget *mItemsWidget;
+    Core::Widget *mItemsWidget;
 
     QNetworkAccessManager *mNetworkAccessManager;
 
+    QLabel *mQualifierLabel;
     QComboBox *mQualifierValue;
-    QPushButton *mLookupQualifierButton;
+    QPushButton *mLookUpQualifierButton;
 
-    int mQualifierIndex;
-    bool mLookupQualifierButtonIsChecked;
-
+    QLabel *mTermLabel;
     QLineEdit *mTermValue;
     QPushButton *mAddTermButton;
 
@@ -124,12 +124,12 @@ private:
 
     Items mItems;
     QString mErrorMessage;
-    bool mLookupTerm;
+    bool mLookUpTerm;
 
     QString mInformation;
     Type mType;
 
-    bool mLookupInformation;
+    bool mLookUpInformation;
 
     QMap<QObject *, Item> mItemsMapping;
 
@@ -147,27 +147,24 @@ private:
 
     void removeLayoutWidgets(QLayout *pLayout);
 
-    void updateGui(const Items &pItems, const QString &pErrorMessage,
-                   const bool &pLookupTerm,
-                   const bool &pRetranslate);
     void updateItemsGui(const Items &pItems, const QString &pErrorMessage,
-                        const bool &pLookupTerm);
+                        const bool &pLookUpTerm);
 
     static Item item(const QString &pName,
                      const QString &pResource, const QString &pId);
 
-    void genericLookup(const QString &pItemInformation = QString(),
+    void genericLookUp(const QString &pItemInformation = QString(),
                        const Type &pType = No,
                        const bool &pRetranslate = false);
 
 Q_SIGNALS:
-    void qualifierLookupRequested(const QString &pQualifier,
+    void qualifierLookUpRequested(const QString &pQualifier,
                                   const bool &pRetranslate);
-    void resourceLookupRequested(const QString &pResource,
+    void resourceLookUpRequested(const QString &pResource,
                                  const bool &pRetranslate);
-    void idLookupRequested(const QString &pResource, const QString &pId,
+    void idLookUpRequested(const QString &pResource, const QString &pId,
                            const bool &pRetranslate);
-    void noLookupRequested();
+    void noLookUpRequested();
 
     void rdfTripleAdded(CellMLSupport::CellmlFileRdfTriple *pRdfTriple);
 
@@ -178,16 +175,15 @@ public Q_SLOTS:
 private Q_SLOTS:
     void on_actionCopy_triggered();
 
-    void disableLookupInformation();
+    void disableLookUpInformation();
 
-    void qualifierChanged(const int &pQualifierIndex);
     void qualifierChanged(const QString &pQualifier);
 
-    void lookupQualifier();
-    void lookupResource(const QString &pItemInformation);
-    void lookupId(const QString &pItemInformation);
+    void lookUpQualifier();
+    void lookUpResource(const QString &pItemInformation);
+    void lookUpId(const QString &pItemInformation);
 
-    void lookupTerm();
+    void lookUpTerm();
 
     void termChanged(const QString &pTerm);
     void termLookedUp(QNetworkReply *pNetworkReply);

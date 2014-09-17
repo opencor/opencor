@@ -309,14 +309,6 @@
         <translation></translation>
     </message>
     <message>
-        <source>(1 term)</source>
-        <translation>(1 terme)</translation>
-    </message>
-    <message>
-        <source>(%1 terms)</source>
-        <translation>(%1 termes)</translation>
-    </message>
-    <message>
         <source>Add the term</source>
         <translation>Ajouter le terme</translation>
     </message>

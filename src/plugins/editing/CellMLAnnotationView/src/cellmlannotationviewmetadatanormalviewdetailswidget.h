@@ -85,7 +85,7 @@ public:
     void updateGui(iface::cellml_api::CellMLElement *pElement,
                    const QString &pRdfTripleInformation = QString(),
                    const Type &pType = No,
-                   const Information &pLookupInformation = First,
+                   const Information &pLookUpInformation = First,
                    const int &pVerticalScrollBarPosition = 0,
                    const bool &pRetranslate = false);
 
@@ -106,7 +106,7 @@ private:
     QString mRdfTripleInformation;
     Type mType;
 
-    Information mLookupInformation;
+    Information mLookUpInformation;
 
     int mVerticalScrollBarPosition;
     int mNeighbourRow;
@@ -117,31 +117,31 @@ private:
 
     QMenu *mContextMenu;
 
-    void genericLookup(const QString &pRdfTripleInformation = QString(),
+    void genericLookUp(const QString &pRdfTripleInformation = QString(),
                        const Type &pType = No,
                        const bool &pRetranslate = false);
 
     QString rdfTripleInformation(const int &pRow) const;
 
 Q_SIGNALS:
-    void qualifierLookupRequested(const QString &pQualifier,
+    void qualifierLookUpRequested(const QString &pQualifier,
                                   const bool &pRetranslate);
-    void resourceLookupRequested(const QString &pResource,
+    void resourceLookUpRequested(const QString &pResource,
                                  const bool &pRetranslate);
-    void idLookupRequested(const QString &pResource, const QString &pId,
+    void idLookUpRequested(const QString &pResource, const QString &pId,
                            const bool &pRetranslate);
-    void noLookupRequested();
+    void noLookUpRequested();
 
     void rdfTripleRemoved(CellMLSupport::CellmlFileRdfTriple *pRdfTriple);
 
 private Q_SLOTS:
     void on_actionCopy_triggered();
 
-    void disableLookupInformation();
+    void disableLookUpInformation();
 
-    void lookupQualifier(const QString &pRdfTripleInformation);
-    void lookupResource(const QString &pRdfTripleInformation);
-    void lookupId(const QString &pRdfTripleInformation);
+    void lookUpQualifier(const QString &pRdfTripleInformation);
+    void lookUpResource(const QString &pRdfTripleInformation);
+    void lookUpId(const QString &pRdfTripleInformation);
 
     void removeRdfTriple();
 

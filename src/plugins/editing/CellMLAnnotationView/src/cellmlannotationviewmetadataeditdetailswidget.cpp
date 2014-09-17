@@ -102,18 +102,9 @@ bool CellmlAnnotationViewMetadataEditDetailsWidget::Item::operator<(const Item &
 //==============================================================================
 
 CellmlAnnotationViewMetadataEditDetailsWidget::CellmlAnnotationViewMetadataEditDetailsWidget(CellmlAnnotationViewEditingWidget *pParent) :
-    QScrollArea(pParent),
-    Core::CommonWidget(pParent),
+    Core::Widget(pParent),
     mParent(pParent),
     mGui(new Ui::CellmlAnnotationViewMetadataEditDetailsWidget),
-    mMainWidget(0),
-    mMainLayout(0),
-    mFormWidget(0),
-    mItemsWidget(0),
-    mQualifierValue(0),
-    mLookupQualifierButton(0),
-    mQualifierIndex(0),
-    mLookupQualifierButtonIsChecked(false),
     mTermValue(0),
     mAddTermButton(0),
     mTerm(QString()),
@@ -121,10 +112,10 @@ CellmlAnnotationViewMetadataEditDetailsWidget::CellmlAnnotationViewMetadataEditD
     mTermIsDirect(false),
     mItems(Items()),
     mErrorMessage(QString()),
-    mLookupTerm(false),
+    mLookUpTerm(false),
     mInformation(QString()),
     mType(No),
-    mLookupInformation(false),
+    mLookUpInformation(false),
     mItemsMapping(QMap<QObject *, Item>()),
     mCellmlFile(pParent->cellmlFile()),
     mElement(0),
@@ -134,14 +125,6 @@ CellmlAnnotationViewMetadataEditDetailsWidget::CellmlAnnotationViewMetadataEditD
     // Set up the GUI
 
     mGui->setupUi(this);
-
-    // Create a stacked widget that will contain our GUI
-
-    mWidget = new QStackedWidget(this);
-
-    // Add our stacked widget to our scroll area
-
-    setWidget(mWidget);
 
     // Create a network access manager so that we can then retrieve a list of
     // CellML models from the CellML Model Repository
@@ -159,6 +142,133 @@ CellmlAnnotationViewMetadataEditDetailsWidget::CellmlAnnotationViewMetadataEditD
     mContextMenu = new QMenu(this);
 
     mContextMenu->addAction(mGui->actionCopy);
+
+    // Create a form widget that will contain our qualifier and term fields
+
+    QWidget *formWidget = new QWidget(this);
+    QFormLayout *formWidgetLayout = new QFormLayout(formWidget);
+
+    formWidget->setLayout(formWidgetLayout);
+
+    // Create a widget that will contain both our qualifier value widget and a
+    // button to look up the qualifier
+
+    QWidget *qualifierWidget = new QWidget(formWidget);
+    QHBoxLayout *qualifierWidgetLayout = new QHBoxLayout(qualifierWidget);
+
+    qualifierWidgetLayout->setMargin(0);
+
+    qualifierWidget->setLayout(qualifierWidgetLayout);
+
+    // Create our qualifier value widget
+
+    mQualifierValue = new QComboBox(qualifierWidget);
+
+    mQualifierValue->addItems(CellMLSupport::CellmlFileRdfTriple::qualifiersAsStringList());
+
+    connect(mQualifierValue, SIGNAL(currentIndexChanged(const QString &)),
+            this, SLOT(qualifierChanged(const QString &)));
+
+    // Create our qualifier look up button widget
+
+    mLookUpQualifierButton = new QPushButton(qualifierWidget);
+    // Note #1: ideally, we could assign a QAction to our QPushButton, but this
+    //          cannot be done, so... we assign a few properties by hand...
+    // Note #2: to use a QToolButton would allow us to assign a QAction to it,
+    //          but a QToolButton doesn't look quite the same as a QPushButton
+    //          on some platforms, so...
+
+    mLookUpQualifierButton->setCheckable(true);
+    mLookUpQualifierButton->setIcon(QIcon(":/oxygen/categories/applications-internet.png"));
+    mLookUpQualifierButton->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+
+    connect(mLookUpQualifierButton, SIGNAL(toggled(bool)),
+            this, SLOT(lookUpQualifier()));
+
+    // Add our qualifier value and qualifier look up button widgets to our
+    // qualifier widget layout
+
+    qualifierWidgetLayout->addWidget(mQualifierValue);
+    qualifierWidgetLayout->addWidget(mLookUpQualifierButton);
+
+    // Create a widget that will contain both our term widget and a button to
+    // add it (if it is a direct term)
+
+    QWidget *termWidget = new QWidget(formWidget);
+    QHBoxLayout *termWidgetLayout = new QHBoxLayout(termWidget);
+
+    termWidgetLayout->setMargin(0);
+
+    termWidget->setLayout(termWidgetLayout);
+
+    // Create our term value widget
+
+    mTermValue = new QLineEdit(termWidget);
+
+    connect(mTermValue, SIGNAL(textChanged(const QString &)),
+            this, SLOT(termChanged(const QString &)));
+
+    // Create our add term button widget
+
+    mAddTermButton = new QPushButton(termWidget);
+
+    mAddTermButton->setEnabled(false);
+    mAddTermButton->setIcon(QIcon(":/oxygen/actions/list-add.png"));
+    mAddTermButton->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+
+    connect(mAddTermButton, SIGNAL(clicked()),
+            this, SLOT(addTerm()));
+
+    // Add our term value and add term button widgets to our term widget layout
+
+    termWidgetLayout->addWidget(mTermValue);
+    termWidgetLayout->addWidget(mAddTermButton);
+
+    // Add both our qualifier and term widgets to our form widget layout
+
+    mQualifierLabel = Core::newLabel(QString(), 1.0, true, formWidget);
+    mTermLabel = Core::newLabel(QString(), 1.0, true, formWidget);
+
+    formWidgetLayout->addRow(mQualifierLabel, qualifierWidget);
+    formWidgetLayout->addRow(mTermLabel, termWidget);
+
+    // Reset the tab order from our parent's CellML list's tree view widget
+    // Note: ideally, we would take advantage of Qt's signal/slot approach with
+    //       the signal being emitted here and the slot being implemented in
+    //       mParent, but this wouldn't work here since updateGui() gets called
+    //       as part of the creation of this metadata details widget, so...
+
+    setTabOrder(qobject_cast<QWidget *>(mParent->cellmlList()->treeViewWidget()),
+                mQualifierValue);
+    setTabOrder(mQualifierValue, mLookUpQualifierButton);
+    setTabOrder(mLookUpQualifierButton, mTermValue);
+    setTabOrder(mTermValue, mAddTermButton);
+
+    // Create an items widget that will contain our items
+
+    mItemsWidget = new Core::Widget(this);
+
+    mItemsWidget->setLayout(new QVBoxLayout(mItemsWidget));
+
+    mItemsWidget->layout()->setMargin(0);
+
+    connect(mItemsWidget, SIGNAL(resized(const QSize &, const QSize &)),
+            this, SLOT(recenterBusyWidget()));
+
+    // Add our 'internal' widgets to our main layout
+
+    mGui->layout->addWidget(formWidget);
+    mGui->layout->addWidget(Core::newLineWidget(this));
+    mGui->layout->addWidget(mItemsWidget);
+
+    // Update the enabled state of our various add buttons
+
+    updateGui(mElement);
+
+    // Some further initialisations that are done as part of retranslating the
+    // GUI (so that they can be updated when changing languages)
+
+    retranslateUi();
 }
 
 //==============================================================================
@@ -178,10 +288,20 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::retranslateUi()
 
     mGui->retranslateUi(this);
 
-    // For the rest of our GUI, it's easier to just update it (since it's
-    // relatively complex)
+    // Retranslate various aspects of our form widget
 
-    updateGui(mItems, mErrorMessage, mLookupTerm, true);
+    mQualifierLabel->setText(tr("Qualifier:"));
+    mTermLabel->setText(tr("Term:"));
+
+    mLookUpQualifierButton->setStatusTip(tr("Look up the qualifier"));
+    mLookUpQualifierButton->setToolTip(tr("Look Up"));
+
+    mAddTermButton->setStatusTip(tr("Add the term"));
+    mAddTermButton->setToolTip(tr("Add"));
+
+    // Update our items GUI
+
+//    updateItemsGui(mItems, mErrorMessage, mLookUpTerm);
 }
 
 //==============================================================================
@@ -198,7 +318,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(iface::cellml_api:
     bool fileReadableAndWritable = Core::FileManager::instance()->isReadableAndWritable(mCellmlFile->fileName());
 
     mQualifierValue->setEnabled(fileReadableAndWritable);
-    mLookupQualifierButton->setEnabled(fileReadableAndWritable);
+    mLookUpQualifierButton->setEnabled(fileReadableAndWritable);
 
     mTermValue->setEnabled(fileReadableAndWritable);
 
@@ -208,15 +328,15 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(iface::cellml_api:
     if (mTermIsDirect) {
         QStringList termInformation = mTerm.split("/");
 
-        if (mQualifierIndex < CellMLSupport::CellmlFileRdfTriple::LastBioQualifier)
+        if (mQualifierValue->currentIndex() < CellMLSupport::CellmlFileRdfTriple::LastBioQualifier)
             mAddTermButton->setEnabled(    fileReadableAndWritable
                                        && !mCellmlFile->rdfTripleExists(mElement,
-                                                                        CellMLSupport::CellmlFileRdfTriple::BioQualifier(mQualifierIndex+1),
+                                                                        CellMLSupport::CellmlFileRdfTriple::BioQualifier(mQualifierValue->currentIndex()+1),
                                                                         termInformation[0], termInformation[1]));
         else
             mAddTermButton->setEnabled(    fileReadableAndWritable
                                        && !mCellmlFile->rdfTripleExists(mElement,
-                                                                        CellMLSupport::CellmlFileRdfTriple::ModelQualifier(mQualifierIndex-CellMLSupport::CellmlFileRdfTriple::LastBioQualifier+1),
+                                                                        CellMLSupport::CellmlFileRdfTriple::ModelQualifier(mQualifierValue->currentIndex()-CellMLSupport::CellmlFileRdfTriple::LastBioQualifier+1),
                                                                         termInformation[0], termInformation[1]));
     } else {
         mAddTermButton->setEnabled(false);
@@ -225,7 +345,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(iface::cellml_api:
     // Reset our items' GUI, if needed and if our busy widget is not already
     // visible
     // Note: the reason for checking whether our busy widget is visible is that
-    //       we come here every time the user modifies the term to lookup. So,
+    //       we come here every time the user modifies the term to look up. So,
     //       we don't want to call updateItemsGui() for no reasons. Indeed, if
     //       we were then our busy widget would get 'reset' every time, which
     //       doesn't look nice...
@@ -243,15 +363,15 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(iface::cellml_api:
 
 //            Item item = mItemsMapping.value(addButton);
 
-//            if (mQualifierIndex < CellMLSupport::CellmlFileRdfTriple::LastBioQualifier)
+//            if (mQualifierValue->currentIndex() < CellMLSupport::CellmlFileRdfTriple::LastBioQualifier)
 //                addButton->setEnabled(    fileReadableAndWritable
 //                                      && !mCellmlFile->rdfTripleExists(mElement,
-//                                                                       CellMLSupport::CellmlFileRdfTriple::BioQualifier(mQualifierIndex+1),
+//                                                                       CellMLSupport::CellmlFileRdfTriple::BioQualifier(mQualifierValue->currentIndex()+1),
 //                                                                       item.resource, item.id));
 //            else
 //                addButton->setEnabled(    fileReadableAndWritable
 //                                      && !mCellmlFile->rdfTripleExists(mElement,
-//                                                                       CellMLSupport::CellmlFileRdfTriple::ModelQualifier(mQualifierIndex-CellMLSupport::CellmlFileRdfTriple::LastBioQualifier+1),
+//                                                                       CellMLSupport::CellmlFileRdfTriple::ModelQualifier(mQualifierValue->currentIndex()-CellMLSupport::CellmlFileRdfTriple::LastBioQualifier+1),
 //                                                                       item.resource, item.id));
 //        }
 }
@@ -274,226 +394,9 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::removeLayoutWidgets(QLayout 
 
 //==============================================================================
 
-void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(const Items &pItems,
-                                                              const QString &pErrorMessage,
-                                                              const bool &pLookupTerm,
-                                                              const bool &pRetranslate)
-{
-    // Prevent ourselves from being updated (to avoid flickering)
-
-    setUpdatesEnabled(false);
-
-    // Create a widget that will contain our GUI
-
-    QWidget *newMainWidget = new QWidget(this);
-    QVBoxLayout *newMainLayout = new QVBoxLayout(newMainWidget);
-
-    newMainLayout->setMargin(0);
-    newMainLayout->setSpacing(0);
-
-    newMainWidget->setLayout(newMainLayout);
-
-    // Create a form widget that will contain our qualifier and term fields
-
-    QWidget *newFormWidget = new QWidget(newMainWidget);
-    QFormLayout *newFormLayout = new QFormLayout(newFormWidget);
-
-    newFormWidget->setLayout(newFormLayout);
-
-    // Create a widget that will contain both our qualifier value widget and a
-    // button to look up the qualifier
-
-    QWidget *qualifierWidget = new QWidget(newFormWidget);
-
-    QHBoxLayout *qualifierWidgetLayout = new QHBoxLayout(qualifierWidget);
-
-    qualifierWidgetLayout->setMargin(0);
-
-    qualifierWidget->setLayout(qualifierWidgetLayout);
-
-    // Create our qualifier value widget
-
-    mQualifierValue = new QComboBox(qualifierWidget);
-
-    mQualifierValue->addItems(CellMLSupport::CellmlFileRdfTriple::qualifiersAsStringList());
-
-    mQualifierValue->setCurrentIndex(mQualifierIndex);
-
-    connect(mQualifierValue, SIGNAL(currentIndexChanged(int)),
-            this, SLOT(qualifierChanged(const int &)));
-    connect(mQualifierValue, SIGNAL(currentIndexChanged(const QString &)),
-            this, SLOT(qualifierChanged(const QString &)));
-
-    // Create our qualifier lookup button widget
-
-    mLookupQualifierButton = new QPushButton(qualifierWidget);
-    // Note #1: ideally, we could assign a QAction to our QPushButton, but this
-    //          cannot be done, so... we assign a few properties by hand...
-    // Note #2: to use a QToolButton would allow us to assign a QAction to it,
-    //          but a QToolButton doesn't look quite the same as a QPushButton
-    //          on some platforms, so...
-
-    mLookupQualifierButton->setCheckable(true);
-    mLookupQualifierButton->setChecked(mLookupQualifierButtonIsChecked);
-    mLookupQualifierButton->setIcon(QIcon(":/oxygen/categories/applications-internet.png"));
-    mLookupQualifierButton->setStatusTip(tr("Look up the qualifier"));
-    mLookupQualifierButton->setToolTip(tr("Look Up"));
-    mLookupQualifierButton->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
-
-    connect(mLookupQualifierButton, SIGNAL(toggled(bool)),
-            this, SLOT(lookupQualifier()));
-
-    // Add our QComboBox and QPushButton to our cmeta:id widget
-
-    qualifierWidgetLayout->addWidget(mQualifierValue);
-    qualifierWidgetLayout->addWidget(mLookupQualifierButton);
-
-    // Add our qualifier widget to our main layout
-
-    newFormLayout->addRow(Core::newLabel(tr("Qualifier:"), 1.0, true, newFormWidget),
-                          qualifierWidget);
-
-    // Add our term field
-
-    // Create a widget that will contain both our qualifier value widget and a
-    // button to look up the qualifier
-
-    QWidget *termWidget = new QWidget(newFormWidget);
-
-    QHBoxLayout *termWidgetLayout = new QHBoxLayout(termWidget);
-
-    termWidgetLayout->setMargin(0);
-
-    termWidget->setLayout(termWidgetLayout);
-
-    // Create our term value widget
-
-    mTermValue = new QLineEdit(termWidget);
-
-    mTermValue->setText(mTerm);
-    // Note: we set the text to whatever term was previously being looked up and
-    //       this before tracking changes to the term since we don't want to
-    //       trigger a call to termChanged(). Indeed, we might come here as a
-    //       result of a retranslation so we shouldn't look up for the term and,
-    //       instead, we should call updateItemsGui(), which we do at the end of
-    //       this procedure...
-
-    connect(mTermValue, SIGNAL(textChanged(const QString &)),
-            this, SLOT(termChanged(const QString &)));
-
-    // Create our add term button widget
-
-    mAddTermButton = new QPushButton(termWidget);
-
-    mAddTermButton->setEnabled(false);
-    mAddTermButton->setIcon(QIcon(":/oxygen/actions/list-add.png"));
-    mAddTermButton->setStatusTip(tr("Add the term"));
-    mAddTermButton->setToolTip(tr("Add"));
-    mAddTermButton->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
-
-    connect(mAddTermButton, SIGNAL(clicked()),
-            this, SLOT(addTerm()));
-
-    // Add our QComboBox and QPushButton to our cmeta:id widget
-
-    termWidgetLayout->addWidget(mTermValue);
-    termWidgetLayout->addWidget(mAddTermButton);
-
-    // Add our term widget to our main layout
-
-    newFormLayout->addRow(Core::newLabel(tr("Term:"), 1.0, true, newFormWidget),
-                          termWidget);
-
-    // Reset the tab order from our parent's CellML list's tree view widget
-    // Note: ideally, we would take advantage of Qt's signal/slot approach with
-    //       the signal being emitted here and the slot being implemented in
-    //       mParent, but this wouldn't work here since updateGui() gets called
-    //       as part of the creation of this metadata details widget, so...
-
-    setTabOrder(qobject_cast<QWidget *>(mParent->cellmlList()->treeViewWidget()),
-                mQualifierValue);
-    setTabOrder(mQualifierValue, mLookupQualifierButton);
-    setTabOrder(mLookupQualifierButton, mTermValue);
-    setTabOrder(mTermValue, mAddTermButton);
-
-    // Create an items widget that will contain our items
-
-    QWidget *newItemsWidget = new QWidget(newMainWidget);
-
-    newItemsWidget->setLayout(new QVBoxLayout(newItemsWidget));
-
-    newItemsWidget->layout()->setMargin(0);
-
-    // Add our 'internal' widgets to our new main widget
-
-    newMainLayout->addWidget(newFormWidget);
-    newMainLayout->addWidget(Core::newLineWidget(newMainWidget));
-    newMainLayout->addWidget(newItemsWidget);
-
-    // Add our new widget to our stacked widget
-
-    mWidget->addWidget(newMainWidget);
-
-    // Remove the contents of both our old form and old items layouts
-
-    if (mFormWidget)
-        removeLayoutWidgets(mFormWidget->layout());
-
-    delete mFormWidget;
-
-    if (mItemsWidget)
-        removeLayoutWidgets(mItemsWidget->layout());
-
-    delete mItemsWidget;
-
-    // Get rid of our old main widget and layout (and its contents)
-
-    if (mMainWidget) {
-        mWidget->removeWidget(mMainWidget);
-
-        for (int i = 0, iMax = mMainLayout->count(); i < iMax; ++i) {
-            QLayoutItem *item = mMainLayout->takeAt(0);
-
-            delete item->widget();
-            delete item;
-        }
-
-        delete mMainWidget;
-    }
-
-    // Keep track of our new main widgets and layouts
-
-    mMainWidget = newMainWidget;
-    mMainLayout = newMainLayout;
-
-    mFormWidget = newFormWidget;
-    mItemsWidget = newItemsWidget;
-
-    // Update the enabled state of our various add buttons
-
-    updateGui(mElement);
-
-    // Allow ourselves to be updated again
-
-    setUpdatesEnabled(true);
-
-    // Update our items GUI
-
-    updateItemsGui(pItems, pErrorMessage, pLookupTerm);
-
-    // Request for something to be looked up, if needed
-
-    if (mLookupInformation)
-        // Look up an 'old' qualifier, resource or resource id
-
-        genericLookup(mInformation, mType, pRetranslate);
-}
-
-//==============================================================================
-
 void CellmlAnnotationViewMetadataEditDetailsWidget::updateItemsGui(const Items &pItems,
                                                                    const QString &pErrorMessage,
-                                                                   const bool &pLookupTerm)
+                                                                   const bool &pLookUpTerm)
 {
     // Prevent ourselves from being updated (to avoid flickering)
 
@@ -503,7 +406,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateItemsGui(const Items &
 
     mItems = pItems;
     mErrorMessage = pErrorMessage;
-    mLookupTerm = pLookupTerm;
+    mLookUpTerm = pLookUpTerm;
 
     // Populate our new layout, but only if there is at least one item
 
@@ -523,39 +426,11 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateItemsGui(const Items &
 
         // Create labels to act as headers
 
-//        newGridLayout->addWidget(Core::newLabel(tr("Name"),
-//                                                1.25, true, false,
-//                                                Qt::AlignCenter,
-//                                                newGridWidget),
-//                                 0, 0);
-//        newGridLayout->addWidget(Core::newLabel(tr("Resource"),
-//                                                1.25, true, false,
-//                                                Qt::AlignCenter,
-//                                                newGridWidget),
-//                                 0, 1);
-//        newGridLayout->addWidget(Core::newLabel(tr("Id"),
-//                                                1.25, true, false,
-//                                                Qt::AlignCenter,
-//                                                newGridWidget),
-//                                 0, 2);
-
         treeViewModel->setHorizontalHeaderLabels(QStringList() << tr("Name")
                                                                << tr("Resource")
                                                                << tr("Id"));
 
-        // Number of terms
-
-//        newGridLayout->addWidget(Core::newLabel((pItems.count() == 1)?
-//                                                    tr("(1 term)"):
-//                                                    tr("(%1 terms)").arg(QString::number(pItems.count())),
-//                                                1.0, false, true,
-//                                                Qt::AlignCenter,
-//                                                newGridWidget),
-//                                 0, 3);
-
         // Add the items
-
-//        int row = 0;
 
         foreach (const Item &item, pItems) {
             // Name
@@ -581,7 +456,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateItemsGui(const Items &
 //            connect(resourceLabel, SIGNAL(customContextMenuRequested(const QPoint &)),
 //                    this, SLOT(showCustomContextMenu(const QPoint &)));
 //            connect(resourceLabel, SIGNAL(linkActivated(const QString &)),
-//                    this, SLOT(lookupResource(const QString &)));
+//                    this, SLOT(lookUpResource(const QString &)));
 
 //            newGridLayout->addWidget(resourceLabel, row, 1);
 
@@ -598,7 +473,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateItemsGui(const Items &
 //            connect(idLabel, SIGNAL(customContextMenuRequested(const QPoint &)),
 //                    this, SLOT(showCustomContextMenu(const QPoint &)));
 //            connect(idLabel, SIGNAL(linkActivated(const QString &)),
-//                    this, SLOT(lookupId(const QString &)));
+//                    this, SLOT(lookUpId(const QString &)));
 
 //            newGridLayout->addWidget(idLabel, row, 2);
 
@@ -653,7 +528,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateItemsGui(const Items &
             labelText = QString();
         } else if (mTerm.isEmpty()) {
             labelText = tr("Please enter a term to search above...");
-        } else if (pLookupTerm) {
+        } else if (pLookUpTerm) {
             labelText = QString();
 
             showBusyWidget = true;
@@ -677,8 +552,8 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateItemsGui(const Items &
         // Note: this is in case a resource or id used to be looked up, in which
         //       case we don't want it to be anymore...
 
-        if (mLookupInformation && (mType != Qualifier))
-            genericLookup();
+        if (mLookUpInformation && (mType != Qualifier))
+            genericLookUp();
     }
 
     // Hide our busy widget (just to be on the safe side)
@@ -720,7 +595,7 @@ CellmlAnnotationViewMetadataEditDetailsWidget::Item CellmlAnnotationViewMetadata
 
 //==============================================================================
 
-void CellmlAnnotationViewMetadataEditDetailsWidget::genericLookup(const QString &pItemInformation,
+void CellmlAnnotationViewMetadataEditDetailsWidget::genericLookUp(const QString &pItemInformation,
                                                                   const Type &pType,
                                                                   const bool &pRetranslate)
 {
@@ -736,14 +611,14 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::genericLookup(const QString 
     mInformation = pItemInformation;
     mType = pType;
 
-    // Toggle the lookup button, if needed
+    // Toggle the look up button, if needed
 
-    if ((mType != Qualifier) && mLookupQualifierButton->isChecked())
-        mLookupQualifierButton->toggle();
+    if ((mType != Qualifier) && mLookUpQualifierButton->isChecked())
+        mLookUpQualifierButton->toggle();
 
     // Check that we have something to look up
 
-    if (!mLookupInformation)
+    if (!mLookUpInformation)
         // Nothing to look up, so...
 
         return;
@@ -752,60 +627,51 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::genericLookup(const QString 
 
     switch (pType) {
     case Qualifier:
-        emit qualifierLookupRequested(qualifierAsString, pRetranslate);
+        emit qualifierLookUpRequested(qualifierAsString, pRetranslate);
 
         break;
     case Resource:
-        emit resourceLookupRequested(resourceAsString, pRetranslate);
+        emit resourceLookUpRequested(resourceAsString, pRetranslate);
 
         break;
     case Id:
-        emit idLookupRequested(resourceAsString, idAsString, pRetranslate);
+        emit idLookUpRequested(resourceAsString, idAsString, pRetranslate);
 
         break;
     default:
         // No
 
-        emit noLookupRequested();
+        emit noLookUpRequested();
     }
 }
 
 //==============================================================================
 
-void CellmlAnnotationViewMetadataEditDetailsWidget::disableLookupInformation()
+void CellmlAnnotationViewMetadataEditDetailsWidget::disableLookUpInformation()
 {
     // Disable the looking up of information
 
-    mLookupInformation = false;
+    mLookUpInformation = false;
 
     // Update the GUI by pretending to be interested in looking something up
 
-    genericLookup();
-}
-
-//==============================================================================
-
-void CellmlAnnotationViewMetadataEditDetailsWidget::qualifierChanged(const int &pQualifierIndex)
-{
-    // Keep track of the qualifier index
-
-    mQualifierIndex = pQualifierIndex;
+    genericLookUp();
 }
 
 //==============================================================================
 
 void CellmlAnnotationViewMetadataEditDetailsWidget::qualifierChanged(const QString &pQualifier)
 {
-    // Lookup the qualifier, if requested
+    // Look up the qualifier, if requested
 
-    if (mLookupQualifierButton->isChecked()) {
+    if (mLookUpQualifierButton->isChecked()) {
         // Enable the looking up of information
 
-        mLookupInformation = true;
+        mLookUpInformation = true;
 
-        // Call our generic lookup function
+        // Call our generic look up function
 
-        genericLookup(pQualifier, Qualifier);
+        genericLookUp(pQualifier, Qualifier);
     }
 
     // Update the enabled state of our various add buttons
@@ -815,52 +681,48 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::qualifierChanged(const QStri
 
 //==============================================================================
 
-void CellmlAnnotationViewMetadataEditDetailsWidget::lookupQualifier()
+void CellmlAnnotationViewMetadataEditDetailsWidget::lookUpQualifier()
 {
     // Enable the looking up of information
 
-    mLookupInformation = true;
+    mLookUpInformation = true;
 
-    // Keep track of the checked status of our lookup button
+    // Call our generic look up function
 
-    mLookupQualifierButtonIsChecked = mLookupQualifierButton->isChecked();
-
-    // Call our generic lookup function
-
-    if (mLookupQualifierButton->isChecked())
+    if (mLookUpQualifierButton->isChecked())
         // We want to look something up, so...
 
-        genericLookup(mQualifierValue->currentText(), Qualifier);
+        genericLookUp(mQualifierValue->currentText(), Qualifier);
     else
         // We don't want to look anything up anymore, so...
 
-        genericLookup();
+        genericLookUp();
 }
 
 //==============================================================================
 
-void CellmlAnnotationViewMetadataEditDetailsWidget::lookupResource(const QString &pItemInformation)
+void CellmlAnnotationViewMetadataEditDetailsWidget::lookUpResource(const QString &pItemInformation)
 {
     // Enable the looking up of information
 
-    mLookupInformation = true;
+    mLookUpInformation = true;
 
-    // Call our generic lookup function
+    // Call our generic look up function
 
-    genericLookup(pItemInformation, Resource);
+    genericLookUp(pItemInformation, Resource);
 }
 
 //==============================================================================
 
-void CellmlAnnotationViewMetadataEditDetailsWidget::lookupId(const QString &pItemInformation)
+void CellmlAnnotationViewMetadataEditDetailsWidget::lookUpId(const QString &pItemInformation)
 {
     // Enable the looking up of information
 
-    mLookupInformation = true;
+    mLookUpInformation = true;
 
-    // Call our generic lookup function
+    // Call our generic look up function
 
-    genericLookup(pItemInformation, Id);
+    genericLookUp(pItemInformation, Id);
 }
 
 //==============================================================================
@@ -893,7 +755,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::termChanged(const QString &p
         //       we can't cancel a request sent to PMR2, so we should try to
         //       send as few of them as possible...
 
-        QTimer::singleShot(500, this, SLOT(lookupTerm()));
+        QTimer::singleShot(500, this, SLOT(lookUpTerm()));
     }
 }
 
@@ -903,7 +765,7 @@ static const auto Pmr2RicordoUrl = QStringLiteral("https://models.physiomeprojec
 
 //==============================================================================
 
-void CellmlAnnotationViewMetadataEditDetailsWidget::lookupTerm()
+void CellmlAnnotationViewMetadataEditDetailsWidget::lookUpTerm()
 {
     // 'Cancel' the previous request, if any
 
@@ -983,7 +845,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::termLookedUp(QNetworkReply *
         errorMessage = pNetworkReply->errorString();
     }
 
-    // Update our GUI with the results of the lookup after having sorted them
+    // Update our GUI with the results of the look up after having sorted them
 
     std::sort(items.begin(), items.end());
 
@@ -1007,13 +869,13 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::addTerm()
     CellMLSupport::CellmlFileRdfTriple *rdfTriple;
     QStringList termInformation = Core::stringFromPercentEncoding(mTerm).split("/");
 
-    if (mQualifierIndex < CellMLSupport::CellmlFileRdfTriple::LastBioQualifier)
+    if (mQualifierValue->currentIndex() < CellMLSupport::CellmlFileRdfTriple::LastBioQualifier)
         rdfTriple = mCellmlFile->addRdfTriple(mElement,
-                                              CellMLSupport::CellmlFileRdfTriple::BioQualifier(mQualifierIndex+1),
+                                              CellMLSupport::CellmlFileRdfTriple::BioQualifier(mQualifierValue->currentIndex()+1),
                                               termInformation[0], termInformation[1]);
     else
         rdfTriple = mCellmlFile->addRdfTriple(mElement,
-                                              CellMLSupport::CellmlFileRdfTriple::ModelQualifier(mQualifierIndex-CellMLSupport::CellmlFileRdfTriple::LastBioQualifier+1),
+                                              CellMLSupport::CellmlFileRdfTriple::ModelQualifier(mQualifierValue->currentIndex()-CellMLSupport::CellmlFileRdfTriple::LastBioQualifier+1),
                                               termInformation[0], termInformation[1]);
 
     // Disable the add term buton, now that we have added the term
@@ -1045,13 +907,13 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::addRetrievedTerm()
 
     CellMLSupport::CellmlFileRdfTriple *rdfTriple;
 
-    if (mQualifierIndex < CellMLSupport::CellmlFileRdfTriple::LastBioQualifier)
+    if (mQualifierValue->currentIndex() < CellMLSupport::CellmlFileRdfTriple::LastBioQualifier)
         rdfTriple = mCellmlFile->addRdfTriple(mElement,
-                                              CellMLSupport::CellmlFileRdfTriple::BioQualifier(mQualifierIndex+1),
+                                              CellMLSupport::CellmlFileRdfTriple::BioQualifier(mQualifierValue->currentIndex()+1),
                                               item.resource, item.id);
     else
         rdfTriple = mCellmlFile->addRdfTriple(mElement,
-                                              CellMLSupport::CellmlFileRdfTriple::ModelQualifier(mQualifierIndex-CellMLSupport::CellmlFileRdfTriple::LastBioQualifier+1),
+                                              CellMLSupport::CellmlFileRdfTriple::ModelQualifier(mQualifierValue->currentIndex()-CellMLSupport::CellmlFileRdfTriple::LastBioQualifier+1),
                                               item.resource, item.id);
 
     // Disable the add button, now that we have added the retrieved term
@@ -1095,7 +957,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::fileReloaded()
     // The file has been reloaded, so we need to reset our various user fields
 
     mQualifierValue->setCurrentIndex(0);
-    mLookupQualifierButton->setChecked(false);
+    mLookUpQualifierButton->setChecked(false);
 
     mTermValue->setText(QString());
 }
