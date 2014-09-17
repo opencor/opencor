@@ -41,9 +41,8 @@ namespace Ui {
 //==============================================================================
 
 class QComboBox;
-class QFormLayout;
-class QGridLayout;
 class QLabel;
+class QLayout;
 class QLineEdit;
 class QMenu;
 class QNetworkAccessManager;
@@ -106,11 +105,7 @@ private:
     QVBoxLayout *mMainLayout;
 
     QWidget *mFormWidget;
-    QFormLayout *mFormLayout;
-
-    QScrollArea *mItemsScrollArea;
-
-    QGridLayout *mGridLayout;
+    QWidget *mItemsWidget;
 
     QNetworkAccessManager *mNetworkAccessManager;
 
@@ -150,9 +145,10 @@ private:
 
     QNetworkReply *mNetworkReply;
 
+    void removeLayoutWidgets(QLayout *pLayout);
+
     void updateGui(const Items &pItems, const QString &pErrorMessage,
                    const bool &pLookupTerm,
-                   const int &pItemsVerticalScrollBarPosition,
                    const bool &pRetranslate);
     void updateItemsGui(const Items &pItems, const QString &pErrorMessage,
                         const bool &pLookupTerm);
@@ -198,8 +194,6 @@ private Q_SLOTS:
 
     void addTerm();
     void addRetrievedTerm();
-
-    void trackItemsVerticalScrollBarPosition(const int &pPosition);
 
     void showCustomContextMenu(const QPoint &pPosition);
 

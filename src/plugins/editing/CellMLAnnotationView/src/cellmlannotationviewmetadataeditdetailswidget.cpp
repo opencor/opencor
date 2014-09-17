@@ -45,6 +45,8 @@ specific language governing permissions and limitations under the License.
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QLabel>
+#include <QLayout>
+#include <QLayoutItem>
 #include <QLineEdit>
 #include <QMenu>
 #include <QNetworkAccessManager>
@@ -107,9 +109,7 @@ CellmlAnnotationViewMetadataEditDetailsWidget::CellmlAnnotationViewMetadataEditD
     mMainWidget(0),
     mMainLayout(0),
     mFormWidget(0),
-    mFormLayout(0),
-    mItemsScrollArea(0),
-    mGridLayout(0),
+    mItemsWidget(0),
     mQualifierValue(0),
     mLookupQualifierButton(0),
     mQualifierIndex(0),
@@ -126,7 +126,6 @@ CellmlAnnotationViewMetadataEditDetailsWidget::CellmlAnnotationViewMetadataEditD
     mType(No),
     mLookupInformation(false),
     mItemsMapping(QMap<QObject *, Item>()),
-    mItemsVerticalScrollBarPosition(0),
     mCellmlFile(pParent->cellmlFile()),
     mElement(0),
     mCurrentResourceOrIdLabel(0),
@@ -179,9 +178,10 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::retranslateUi()
 
     mGui->retranslateUi(this);
 
-    // For the rest of our GUI, it's easier to just update it
+    // For the rest of our GUI, it's easier to just update it (since it's
+    // relatively complex)
 
-    updateGui(mItems, mErrorMessage, mLookupTerm, mItemsVerticalScrollBarPosition, true);
+    updateGui(mItems, mErrorMessage, mLookupTerm, true);
 }
 
 //==============================================================================
@@ -237,23 +237,39 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(iface::cellml_api:
     // Enable or disable the add buttons for our retrieved terms, depending on
     // whether they are already associated with the CellML element
 
-    if (mGridLayout)
-        for (int row = 0; mGridLayout->itemAtPosition(++row, 0);) {
-            QPushButton *addButton = qobject_cast<QPushButton *>(mGridLayout->itemAtPosition(row, 3)->widget());
+//    if (mGridLayout)
+//        for (int row = 0; mGridLayout->itemAtPosition(++row, 0);) {
+//            QPushButton *addButton = qobject_cast<QPushButton *>(mGridLayout->itemAtPosition(row, 3)->widget());
 
-            Item item = mItemsMapping.value(addButton);
+//            Item item = mItemsMapping.value(addButton);
 
-            if (mQualifierIndex < CellMLSupport::CellmlFileRdfTriple::LastBioQualifier)
-                addButton->setEnabled(    fileReadableAndWritable
-                                      && !mCellmlFile->rdfTripleExists(mElement,
-                                                                       CellMLSupport::CellmlFileRdfTriple::BioQualifier(mQualifierIndex+1),
-                                                                       item.resource, item.id));
-            else
-                addButton->setEnabled(    fileReadableAndWritable
-                                      && !mCellmlFile->rdfTripleExists(mElement,
-                                                                       CellMLSupport::CellmlFileRdfTriple::ModelQualifier(mQualifierIndex-CellMLSupport::CellmlFileRdfTriple::LastBioQualifier+1),
-                                                                       item.resource, item.id));
-        }
+//            if (mQualifierIndex < CellMLSupport::CellmlFileRdfTriple::LastBioQualifier)
+//                addButton->setEnabled(    fileReadableAndWritable
+//                                      && !mCellmlFile->rdfTripleExists(mElement,
+//                                                                       CellMLSupport::CellmlFileRdfTriple::BioQualifier(mQualifierIndex+1),
+//                                                                       item.resource, item.id));
+//            else
+//                addButton->setEnabled(    fileReadableAndWritable
+//                                      && !mCellmlFile->rdfTripleExists(mElement,
+//                                                                       CellMLSupport::CellmlFileRdfTriple::ModelQualifier(mQualifierIndex-CellMLSupport::CellmlFileRdfTriple::LastBioQualifier+1),
+//                                                                       item.resource, item.id));
+//        }
+}
+
+//==============================================================================
+
+void CellmlAnnotationViewMetadataEditDetailsWidget::removeLayoutWidgets(QLayout *pLayout)
+{
+    // Remove and delete all the widgets in the given layout
+
+    QLayoutItem *item;
+
+    for (int i = 0, iMax = pLayout->count(); i < iMax; ++i) {
+        item = pLayout->takeAt(0);
+
+        delete item->widget();
+        delete item;
+    }
 }
 
 //==============================================================================
@@ -261,13 +277,8 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(iface::cellml_api:
 void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(const Items &pItems,
                                                               const QString &pErrorMessage,
                                                               const bool &pLookupTerm,
-                                                              const int &pItemsVerticalScrollBarPosition,
                                                               const bool &pRetranslate)
 {
-    // Note: we are using certain layouts to dislay the contents of our view,
-    //       but this unfortunately results in some very bad flickering on OS X.
-    //       This can, however, be addressed using a stacked widget, so...
-
     // Prevent ourselves from being updated (to avoid flickering)
 
     setUpdatesEnabled(false);
@@ -278,6 +289,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(const Items &pItem
     QVBoxLayout *newMainLayout = new QVBoxLayout(newMainWidget);
 
     newMainLayout->setMargin(0);
+    newMainLayout->setSpacing(0);
 
     newMainWidget->setLayout(newMainLayout);
 
@@ -404,52 +416,35 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(const Items &pItem
     setTabOrder(mLookupQualifierButton, mTermValue);
     setTabOrder(mTermValue, mAddTermButton);
 
-    // Create a stacked widget (within a scroll area, so that only the items get
-    // scrolled, not the whole metadata edit details widget) that will contain a
-    // grid with the results of our terms lookup
+    // Create an items widget that will contain our items
 
-    QScrollArea *newItemsScrollArea = new QScrollArea(newMainWidget);
+    QWidget *newItemsWidget = new QWidget(newMainWidget);
 
-    newItemsScrollArea->setFrameShape(QFrame::NoFrame);
-    newItemsScrollArea->setWidgetResizable(true);
+    newItemsWidget->setLayout(new QVBoxLayout(newItemsWidget));
+
+    newItemsWidget->layout()->setMargin(0);
 
     // Add our 'internal' widgets to our new main widget
 
     newMainLayout->addWidget(newFormWidget);
     newMainLayout->addWidget(Core::newLineWidget(newMainWidget));
-    newMainLayout->addWidget(newItemsScrollArea);
-
-    // Keep track of the position of our items vertical scroll bar
-    // Note: this is required to make sure that the position doesn't get reset
-    //       as a result of retranslating the GUI...
-
-    connect(newItemsScrollArea->verticalScrollBar(), SIGNAL(sliderMoved(int)),
-            this, SLOT(trackItemsVerticalScrollBarPosition(const int &)));
+    newMainLayout->addWidget(newItemsWidget);
 
     // Add our new widget to our stacked widget
 
     mWidget->addWidget(newMainWidget);
 
-    // Remove the contents of our old form layout
+    // Remove the contents of both our old form and old items layouts
 
     if (mFormWidget)
-        for (int i = 0, iMax = mFormLayout->count(); i < iMax; ++i) {
-            QLayoutItem *item = mFormLayout->takeAt(0);
+        removeLayoutWidgets(mFormWidget->layout());
 
-            delete item->widget();
-            delete item;
-        }
+    delete mFormWidget;
 
-    // Reset the widget of our old items scroll area and stop tracking the
-    // position of its vertical scroll bar
-    // Note: the resetting this will automatically delete our old grid widget...
+    if (mItemsWidget)
+        removeLayoutWidgets(mItemsWidget->layout());
 
-    if (mItemsScrollArea) {
-        mItemsScrollArea->setWidget(0);
-
-        disconnect(mItemsScrollArea->verticalScrollBar(), SIGNAL(sliderMoved(int)),
-                   this, SLOT(trackItemsVerticalScrollBarPosition(const int &)));
-    }
+    delete mItemsWidget;
 
     // Get rid of our old main widget and layout (and its contents)
 
@@ -472,12 +467,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(const Items &pItem
     mMainLayout = newMainLayout;
 
     mFormWidget = newFormWidget;
-    mFormLayout = newFormLayout;
-
-    mItemsScrollArea = newItemsScrollArea;
-
-    mGridLayout = 0;
-    // Note: this will be set by our other updateGui() function...
+    mItemsWidget = newItemsWidget;
 
     // Update the enabled state of our various add buttons
 
@@ -497,10 +487,6 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(const Items &pItem
         // Look up an 'old' qualifier, resource or resource id
 
         genericLookup(mInformation, mType, pRetranslate);
-
-    // Set the position of our vertical scroll bar
-
-    mItemsScrollArea->verticalScrollBar()->setValue(pItemsVerticalScrollBarPosition);
 }
 
 //==============================================================================
@@ -509,8 +495,6 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateItemsGui(const Items &
                                                                    const QString &pErrorMessage,
                                                                    const bool &pLookupTerm)
 {
-    Q_ASSERT(mItemsScrollArea);
-
     // Prevent ourselves from being updated (to avoid flickering)
 
     setUpdatesEnabled(false);
@@ -521,101 +505,106 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateItemsGui(const Items &
     mErrorMessage = pErrorMessage;
     mLookupTerm = pLookupTerm;
 
-    // Create a new widget and layout
-
-    QWidget *newGridWidget = new Core::Widget(mItemsScrollArea);
-    QGridLayout *newGridLayout = new QGridLayout(newGridWidget);
-
-    newGridWidget->setLayout(newGridLayout);
-
-    connect(newGridWidget, SIGNAL(resized(const QSize &, const QSize &)),
-            this, SLOT(recenterBusyWidget()));
-
     // Populate our new layout, but only if there is at least one item
 
     bool showBusyWidget = false;
+    QWidget *newWidget = 0;
 
     if (pItems.count()) {
+        // Create our tree view
+
+        Core::TreeViewWidget *treeView = new Core::TreeViewWidget(mItemsWidget);
+        QStandardItemModel *treeViewModel = new QStandardItemModel(treeView);
+
+        treeView->setEditTriggers(QAbstractItemView::NoEditTriggers);
+        treeView->setModel(treeViewModel);
+        treeView->setRootIsDecorated(false);
+        treeView->setSelectionMode(QAbstractItemView::SingleSelection);
+
         // Create labels to act as headers
 
-        newGridLayout->addWidget(Core::newLabel(tr("Name"),
-                                                1.25, true, false,
-                                                Qt::AlignCenter,
-                                                newGridWidget),
-                                 0, 0);
-        newGridLayout->addWidget(Core::newLabel(tr("Resource"),
-                                                1.25, true, false,
-                                                Qt::AlignCenter,
-                                                newGridWidget),
-                                 0, 1);
-        newGridLayout->addWidget(Core::newLabel(tr("Id"),
-                                                1.25, true, false,
-                                                Qt::AlignCenter,
-                                                newGridWidget),
-                                 0, 2);
+//        newGridLayout->addWidget(Core::newLabel(tr("Name"),
+//                                                1.25, true, false,
+//                                                Qt::AlignCenter,
+//                                                newGridWidget),
+//                                 0, 0);
+//        newGridLayout->addWidget(Core::newLabel(tr("Resource"),
+//                                                1.25, true, false,
+//                                                Qt::AlignCenter,
+//                                                newGridWidget),
+//                                 0, 1);
+//        newGridLayout->addWidget(Core::newLabel(tr("Id"),
+//                                                1.25, true, false,
+//                                                Qt::AlignCenter,
+//                                                newGridWidget),
+//                                 0, 2);
+
+        treeViewModel->setHorizontalHeaderLabels(QStringList() << tr("Name")
+                                                               << tr("Resource")
+                                                               << tr("Id"));
 
         // Number of terms
 
-        newGridLayout->addWidget(Core::newLabel((pItems.count() == 1)?
-                                                    tr("(1 term)"):
-                                                    tr("(%1 terms)").arg(QString::number(pItems.count())),
-                                                1.0, false, true,
-                                                Qt::AlignCenter,
-                                                newGridWidget),
-                                 0, 3);
+//        newGridLayout->addWidget(Core::newLabel((pItems.count() == 1)?
+//                                                    tr("(1 term)"):
+//                                                    tr("(%1 terms)").arg(QString::number(pItems.count())),
+//                                                1.0, false, true,
+//                                                Qt::AlignCenter,
+//                                                newGridWidget),
+//                                 0, 3);
 
         // Add the items
 
-        int row = 0;
+//        int row = 0;
 
         foreach (const Item &item, pItems) {
             // Name
 
-            newGridLayout->addWidget(Core::newLabel(item.name,
-                                                    1.0, false, false,
-                                                    Qt::AlignCenter,
-                                                    newGridWidget),
-                                     ++row, 0);
+//            newGridLayout->addWidget(Core::newLabel(item.name,
+//                                                    1.0, false, false,
+//                                                    Qt::AlignCenter,
+//                                                    newGridWidget),
+//                                     ++row, 0);
 
             // Resource
 
-            QString itemInformation = item.resource+"|"+item.id;
+//            QString itemInformation = item.resource+"|"+item.id;
 
-            QLabel *resourceLabel = Core::newLabel("<a href=\""+itemInformation+"\">"+item.resource+"</a>",
-                                                   1.0, false, false,
-                                                   Qt::AlignCenter,
-                                                   newGridWidget);
+//            QLabel *resourceLabel = Core::newLabel("<a href=\""+itemInformation+"\">"+item.resource+"</a>",
+//                                                   1.0, false, false,
+//                                                   Qt::AlignCenter,
+//                                                   newGridWidget);
 
-            resourceLabel->setAccessibleDescription("http://identifiers.org/"+item.resource+"/?redirect=true");
-            resourceLabel->setContextMenuPolicy(Qt::CustomContextMenu);
+//            resourceLabel->setAccessibleDescription("http://identifiers.org/"+item.resource+"/?redirect=true");
+//            resourceLabel->setContextMenuPolicy(Qt::CustomContextMenu);
 
-            connect(resourceLabel, SIGNAL(customContextMenuRequested(const QPoint &)),
-                    this, SLOT(showCustomContextMenu(const QPoint &)));
-            connect(resourceLabel, SIGNAL(linkActivated(const QString &)),
-                    this, SLOT(lookupResource(const QString &)));
+//            connect(resourceLabel, SIGNAL(customContextMenuRequested(const QPoint &)),
+//                    this, SLOT(showCustomContextMenu(const QPoint &)));
+//            connect(resourceLabel, SIGNAL(linkActivated(const QString &)),
+//                    this, SLOT(lookupResource(const QString &)));
 
-            newGridLayout->addWidget(resourceLabel, row, 1);
+//            newGridLayout->addWidget(resourceLabel, row, 1);
 
             // Id
 
-            QLabel *idLabel = Core::newLabel("<a href=\""+itemInformation+"\">"+item.id+"</a>",
-                                             1.0, false, false,
-                                             Qt::AlignCenter,
-                                             newGridWidget);
+//            QLabel *idLabel = Core::newLabel("<a href=\""+itemInformation+"\">"+item.id+"</a>",
+//                                             1.0, false, false,
+//                                             Qt::AlignCenter,
+//                                             newGridWidget);
 
-            idLabel->setAccessibleDescription("http://identifiers.org/"+item.resource+"/"+item.id+"/?profile=most_reliable&redirect=true");
-            idLabel->setContextMenuPolicy(Qt::CustomContextMenu);
+//            idLabel->setAccessibleDescription("http://identifiers.org/"+item.resource+"/"+item.id+"/?profile=most_reliable&redirect=true");
+//            idLabel->setContextMenuPolicy(Qt::CustomContextMenu);
 
-            connect(idLabel, SIGNAL(customContextMenuRequested(const QPoint &)),
-                    this, SLOT(showCustomContextMenu(const QPoint &)));
-            connect(idLabel, SIGNAL(linkActivated(const QString &)),
-                    this, SLOT(lookupId(const QString &)));
+//            connect(idLabel, SIGNAL(customContextMenuRequested(const QPoint &)),
+//                    this, SLOT(showCustomContextMenu(const QPoint &)));
+//            connect(idLabel, SIGNAL(linkActivated(const QString &)),
+//                    this, SLOT(lookupId(const QString &)));
 
-            newGridLayout->addWidget(idLabel, row, 2);
+//            newGridLayout->addWidget(idLabel, row, 2);
 
             // Add button
 
-            QPushButton *addButton = new QPushButton(newGridWidget);
+//            QPushButton *addButton = new QPushButton(newGridWidget);
             // Note #1: ideally, we could assign a QAction to our
             //          QPushButton, but this cannot be done, so... we
             //          assign a few properties by hand...
@@ -623,29 +612,37 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateItemsGui(const Items &
             //          QAction to it, but a QToolButton doesn't look quite
             //          the same as a QPushButton on some platforms, so...
 
-            addButton->setIcon(QIcon(":/oxygen/actions/list-add.png"));
-            addButton->setStatusTip(tr("Add the term"));
-            addButton->setToolTip(tr("Add"));
-            addButton->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+//            addButton->setIcon(QIcon(":/oxygen/actions/list-add.png"));
+//            addButton->setStatusTip(tr("Add the term"));
+//            addButton->setToolTip(tr("Add"));
+//            addButton->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
 
-            mItemsMapping.insert(addButton, item);
+//            mItemsMapping.insert(addButton, item);
 
-            connect(addButton, SIGNAL(clicked()),
-                    this, SLOT(addRetrievedTerm()));
+//            connect(addButton, SIGNAL(clicked()),
+//                    this, SLOT(addRetrievedTerm()));
 
-            newGridLayout->addWidget(addButton, row, 3, Qt::AlignCenter);
+//            newGridLayout->addWidget(addButton, row, 3, Qt::AlignCenter);
+
+            treeViewModel->invisibleRootItem()->appendRow(QList<QStandardItem *>() << new QStandardItem(item.name)
+                                                                                   << new QStandardItem(item.resource)
+                                                                                   << new QStandardItem(item.id));
         }
 
         // Have the remove buttons column take as little horizontal space as
         // possible compared to the other columns
 
-        newGridLayout->setColumnStretch(0, 1);
-        newGridLayout->setColumnStretch(1, 1);
-        newGridLayout->setColumnStretch(2, 1);
+//        newGridLayout->setColumnStretch(0, 1);
+//        newGridLayout->setColumnStretch(1, 1);
+//        newGridLayout->setColumnStretch(2, 1);
 
         // Have all the rows take a minimum of vertical space
 
-        newGridLayout->setRowStretch(++row, 1);
+//        newGridLayout->setRowStretch(++row, 1);
+
+        treeView->resizeColumnsToContents();
+
+        newWidget = treeView;
     } else {
         // No items to show, so either there is no data available or an error
         // occurred
@@ -673,12 +670,8 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateItemsGui(const Items &
             labelText = tr("<strong>Error:</strong> ")+Core::formatErrorMessage(pErrorMessage);
         }
 
-        if (!labelText.isEmpty())
-            newGridLayout->addWidget(Core::newLabel(labelText,
-                                                    1.25, false, false,
-                                                    Qt::AlignCenter,
-                                                    newGridWidget),
-                                     0, 0);
+        newWidget = Core::newLabel(labelText, 1.25, false, false,
+                                   Qt::AlignCenter, mItemsWidget);
 
         // Pretend that we want to look nothing up, if needed
         // Note: this is in case a resource or id used to be looked up, in which
@@ -688,21 +681,20 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateItemsGui(const Items &
             genericLookup();
     }
 
+    // Hide our busy widget (just to be on the safe side)
+
     mParent->parent()->hideBusyWidget();
 
-    // Set our new grid widget as the widget for our scroll area
-    // Note: this will automatically delete the old grid widget...
+    // Show our new widget
 
-    mItemsScrollArea->setWidget(newGridWidget);
+    removeLayoutWidgets(mItemsWidget->layout());
 
-    // Show our busy widget, if needed
+    mItemsWidget->layout()->addWidget(newWidget);
+
+    // show our busy widget instead, if needed
 
     if (showBusyWidget)
-        mParent->parent()->showBusyWidget(newGridWidget);
-
-    // Keep track of our new grid layout
-
-    mGridLayout = newGridLayout;
+        mParent->parent()->showBusyWidget(mItemsWidget);
 
     // Allow ourselves to be updated again
 
@@ -748,34 +740,6 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::genericLookup(const QString 
 
     if ((mType != Qualifier) && mLookupQualifierButton->isChecked())
         mLookupQualifierButton->toggle();
-
-    // Make the row corresponding to the resource or id bold (and italic in some
-    // cases)
-    // Note: to use mGridLayout->rowCount() to determine the number of rows
-    //       isn't an option since the returned value will be the maximum number
-    //       of rows that there has ever been, so...
-
-    for (int row = 0; mGridLayout->itemAtPosition(++row, 0);) {
-        QLabel *nameLabel = qobject_cast<QLabel *>(mGridLayout->itemAtPosition(row, 0)->widget());
-        QLabel *resourceLabel = qobject_cast<QLabel *>(mGridLayout->itemAtPosition(row, 1)->widget());
-        QLabel *idLabel = qobject_cast<QLabel *>(mGridLayout->itemAtPosition(row, 2)->widget());
-
-        QFont font = idLabel->font();
-
-        font.setBold(   mLookupInformation
-                     && !resourceLabel->text().compare("<a href=\""+pItemInformation+"\">"+resourceAsString+"</a>")
-                     && !idLabel->text().compare("<a href=\""+pItemInformation+"\">"+idAsString+"</a>"));
-        font.setItalic(false);
-
-        QFont italicFont = idLabel->font();
-
-        italicFont.setBold(font.bold());
-        italicFont.setItalic(font.bold());
-
-        nameLabel->setFont(font);
-        resourceLabel->setFont((pType == Resource)?italicFont:font);
-        idLabel->setFont((pType == Id)?italicFont:font);
-    }
 
     // Check that we have something to look up
 
@@ -1097,15 +1061,6 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::addRetrievedTerm()
     // Let people know that we have added an RDF triple
 
     emit rdfTripleAdded(rdfTriple);
-}
-
-//==============================================================================
-
-void CellmlAnnotationViewMetadataEditDetailsWidget::trackItemsVerticalScrollBarPosition(const int &pPosition)
-{
-    // Keep track of the new position of our vertical scroll bar
-
-    mItemsVerticalScrollBarPosition = pPosition;
 }
 
 //==============================================================================
