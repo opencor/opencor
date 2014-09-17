@@ -110,7 +110,6 @@ CellmlAnnotationViewMetadataEditDetailsWidget::CellmlAnnotationViewMetadataEditD
     mFormWidget(0),
     mFormLayout(0),
     mItemsScrollArea(0),
-    mGridWidget(0),
     mGridLayout(0),
     mQualifierValue(0),
     mLookupQualifierButton(0),
@@ -478,8 +477,8 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(const Items &pItem
 
     mItemsScrollArea = newItemsScrollArea;
 
-    mGridWidget = 0;   // Note: this will be set by our
-    mGridLayout = 0;   //       other updateGui() function...
+    mGridLayout = 0;
+    // Note: this will be set by our other updateGui() function...
 
     // Update the enabled state of our various add buttons
 
@@ -702,9 +701,8 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateItemsGui(const Items &
     if (showBusyWidget)
         mParent->parent()->showBusyWidget(newGridWidget);
 
-    // Keep track of our new grid widgets and layouts
+    // Keep track of our new grid layout
 
-    mGridWidget = newGridWidget;
     mGridLayout = newGridLayout;
 
     // Allow ourselves to be updated again

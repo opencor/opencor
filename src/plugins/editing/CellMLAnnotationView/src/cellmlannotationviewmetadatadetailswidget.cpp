@@ -235,37 +235,35 @@ void CellmlAnnotationViewMetadataDetailsWidget::updateGui(iface::cellml_api::Cel
 
     mElement = pElement;
 
-    // Show/hide our category message depending, if needed
+    // Show/hide our category message
 
-    bool isCategoryElement = !pElement;
-
-    mBorderedCategoryMessage->setVisible(isCategoryElement);
-    mSplitter->setVisible(!isCategoryElement);
+    mBorderedCategoryMessage->setVisible(!pElement);
+    mSplitter->setVisible(pElement);
 
     // Show/hide our unsupported metadata message depending on whether the type
     // of the RDF triples is known
 
-    bool isUnknownMetadata = isCategoryElement?
-                                 true:
-                                 mCellmlFile->rdfTriples(pElement).type() == CellMLSupport::CellmlFileRdfTriple::Unknown;
+    bool isUnknownMetadata = pElement?
+                                 mCellmlFile->rdfTriples(pElement).type() == CellMLSupport::CellmlFileRdfTriple::Unknown:
+                                 true;
 
-    mBorderedUnsupportedMetadataMessage->setVisible(!isCategoryElement && isUnknownMetadata);
+    mBorderedUnsupportedMetadataMessage->setVisible(pElement && isUnknownMetadata);
 
     // Show/hide our metadata edit details and web viewer, depending on whether
     // the type of the metadata is known
 
-    mBorderedMetadataEditDetails->setVisible(!isCategoryElement && !isUnknownMetadata);
-    mBorderedWebView->setVisible(!isCategoryElement && !isUnknownMetadata);
+    mBorderedMetadataEditDetails->setVisible(pElement && !isUnknownMetadata);
+    mBorderedWebView->setVisible(pElement && !isUnknownMetadata);
 
-    mBorderedMetadataViewDetails->setTopBorderVisible(!isCategoryElement && !isUnknownMetadata);
-    mBorderedMetadataViewDetails->setBottomBorderVisible(!isCategoryElement && !isUnknownMetadata);
+    mBorderedMetadataViewDetails->setTopBorderVisible(pElement && !isUnknownMetadata);
+    mBorderedMetadataViewDetails->setBottomBorderVisible(pElement && !isUnknownMetadata);
 
     // Update our metadata edit and view details, if needed
 
-    if (!isCategoryElement && !isUnknownMetadata)
+    if (pElement && !isUnknownMetadata)
         mMetadataEditDetails->updateGui(pElement);
 
-    if (!isCategoryElement)
+    if (pElement)
         mMetadataViewDetails->updateGui(pElement);
 }
 

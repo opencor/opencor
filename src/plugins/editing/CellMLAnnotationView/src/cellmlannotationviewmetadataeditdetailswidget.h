@@ -110,7 +110,6 @@ private:
 
     QScrollArea *mItemsScrollArea;
 
-    QWidget *mGridWidget;
     QGridLayout *mGridLayout;
 
     QNetworkAccessManager *mNetworkAccessManager;
