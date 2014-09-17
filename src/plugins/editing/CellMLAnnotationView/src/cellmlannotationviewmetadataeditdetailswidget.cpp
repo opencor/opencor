@@ -137,7 +137,7 @@ CellmlAnnotationViewMetadataEditDetailsWidget::CellmlAnnotationViewMetadataEditD
 
     mGui->setupUi(this);
 
-    // Create a stacked widget which will contain our GUI
+    // Create a stacked widget that will contain our GUI
 
     mWidget = new QStackedWidget(this);
 
@@ -364,7 +364,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(const Items &pItem
     //       this before tracking changes to the term since we don't want to
     //       trigger a call to termChanged(). Indeed, we might come here as a
     //       result of a retranslation so we shouldn't look up for the term and,
-    //       instead, we should call updateItemsGui() which we do at the end of
+    //       instead, we should call updateItemsGui(), which we do at the end of
     //       this procedure...
 
     connect(mTermValue, SIGNAL(textChanged(const QString &)),
@@ -406,8 +406,8 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(const Items &pItem
     setTabOrder(mTermValue, mAddTermButton);
 
     // Create a stacked widget (within a scroll area, so that only the items get
-    // scrolled, not the whole metadata edit details widget) which will contain
-    // a grid with the results of our terms lookup
+    // scrolled, not the whole metadata edit details widget) that will contain a
+    // grid with the results of our terms lookup
 
     QScrollArea *newItemsScrollArea = new QScrollArea(newMainWidget);
 
