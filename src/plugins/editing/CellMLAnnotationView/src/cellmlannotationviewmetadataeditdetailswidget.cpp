@@ -111,7 +111,6 @@ CellmlAnnotationViewMetadataEditDetailsWidget::CellmlAnnotationViewMetadataEditD
     mTerm(QString()),
     mTerms(QStringList()),
     mTermIsDirect(false),
-    mItems(Items()),
     mErrorMessage(QString()),
     mLookUpTerm(false),
     mInformationType(None),
@@ -284,11 +283,6 @@ CellmlAnnotationViewMetadataEditDetailsWidget::CellmlAnnotationViewMetadataEditD
     // Update the enabled state of our various add buttons
 
     updateGui(mElement, true);
-
-    // Some further initialisations that are done as part of retranslating the
-    // GUI (so that they can be updated when changing languages)
-
-    retranslateUi();
 }
 
 //==============================================================================
@@ -319,15 +313,15 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::retranslateUi()
     mAddTermButton->setStatusTip(tr("Add the term"));
     mAddTermButton->setToolTip(tr("Add"));
 
+    // Retranslate our output label text, if needed
+
+    upudateOutputLabelText(mLookUpTerm, mErrorMessage);
+
     // Retranslate the headers of our tree view
 
     mOutputTreeViewModel->setHorizontalHeaderLabels(QStringList() << tr("Name")
                                                                   << tr("Resource")
                                                                   << tr("Id"));
-
-    // Update our items GUI
-
-//    updateItemsGui(mItems, mErrorMessage, mLookUpTerm);
 }
 
 //==============================================================================
@@ -378,7 +372,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(iface::cellml_api:
 
     if (   (pResetItemsGui && !mParent->parent()->isBusyWidgetVisible())
         || mTermIsDirect)
-        updateItemsGui(Items(), QString(), !mTermIsDirect);
+        updateItemsGui(Items(), !mTermIsDirect, QString());
 
     // Enable or disable the add buttons for our retrieved terms, depending on
     // whether they are already associated with the CellML element
@@ -404,15 +398,52 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(iface::cellml_api:
 
 //==============================================================================
 
+void CellmlAnnotationViewMetadataEditDetailsWidget::upudateOutputLabelText(const bool &pLookUpTerm,
+                                                                           const QString &pErrorMessage,
+                                                                           bool *pShowBusyWidget)
+{
+    // Update our output label text
+
+    if (pShowBusyWidget)
+        *pShowBusyWidget = false;
+
+    QString outputLabelText;
+
+    if (!Core::FileManager::instance()->isReadableAndWritable(mCellmlFile->fileName())) {
+        outputLabelText = QString();
+    } else if (mTerm.isEmpty()) {
+        outputLabelText = tr("Please enter a term to search above...");
+    } else if (pLookUpTerm) {
+        outputLabelText = QString();
+
+        if (pShowBusyWidget)
+            *pShowBusyWidget = true;
+    } else if (pErrorMessage.isEmpty()) {
+        if (mTermIsDirect) {
+            if (mAddTermButton->isEnabled())
+                outputLabelText = tr("<strong>Information:</strong> you can directly add the term <strong>%1</strong>...").arg(mTerm);
+            else
+                outputLabelText = tr("<strong>Information:</strong> the term <strong>%1</strong> has already been added using the above qualifier...").arg(mTerm);
+        } else {
+            outputLabelText = tr("Sorry, but no terms were found for <strong>%1</strong>...").arg(mTerm);
+        }
+    } else {
+        outputLabelText = tr("<strong>Error:</strong> ")+Core::formatErrorMessage(pErrorMessage);
+    }
+
+    mOutputLabel->setText(outputLabelText);
+}
+
+//==============================================================================
+
 void CellmlAnnotationViewMetadataEditDetailsWidget::updateItemsGui(const Items &pItems,
-                                                                   const QString &pErrorMessage,
-                                                                   const bool &pLookUpTerm)
+                                                                   const bool &pLookUpTerm,
+                                                                   const QString &pErrorMessage)
 {
     // Keep track of some information
 
-    mItems = pItems;
-    mErrorMessage = pErrorMessage;
     mLookUpTerm = pLookUpTerm;
+    mErrorMessage = pErrorMessage;
 
     // Populate our new layout, but only if there is at least one item
 
@@ -493,32 +524,9 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateItemsGui(const Items &
         newOutputWidget = mOutputTreeView;
     } else {
         // No items to show, so either there is no data available or an error
-        // occurred
+        // occurred, so update our output label text
 
-        QString outputLabelText;
-
-        if (!Core::FileManager::instance()->isReadableAndWritable(mCellmlFile->fileName())) {
-            outputLabelText = QString();
-        } else if (mTerm.isEmpty()) {
-            outputLabelText = tr("Please enter a term to search above...");
-        } else if (pLookUpTerm) {
-            outputLabelText = QString();
-
-            showBusyWidget = true;
-        } else if (pErrorMessage.isEmpty()) {
-            if (mTermIsDirect) {
-                if (mAddTermButton->isEnabled())
-                    outputLabelText = tr("<strong>Information:</strong> you can directly add the term <strong>%1</strong>...").arg(mTerm);
-                else
-                    outputLabelText = tr("<strong>Information:</strong> the term <strong>%1</strong> has already been added using the above qualifier...").arg(mTerm);
-            } else {
-                outputLabelText = tr("Sorry, but no terms were found for <strong>%1</strong>...").arg(mTerm);
-            }
-        } else {
-            outputLabelText = tr("<strong>Error:</strong> ")+Core::formatErrorMessage(pErrorMessage);
-        }
-
-        mOutputLabel->setText(outputLabelText);
+        upudateOutputLabelText(pLookUpTerm, pErrorMessage, &showBusyWidget);
 
         newOutputWidget = mOutputLabel;
 
@@ -821,7 +829,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::termLookedUp(QNetworkReply *
 
     std::sort(items.begin(), items.end());
 
-    updateItemsGui(items, errorMessage, false);
+    updateItemsGui(items, false, errorMessage);
 
     // Update the enabled state of our various add buttons
 
@@ -856,7 +864,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::addTerm()
 
     // Update our items' GUI
 
-    updateItemsGui(Items(), QString(), !mTermIsDirect);
+    updateItemsGui(Items(), !mTermIsDirect, QString());
 
     // Let people know that we have added an RDF triple
 

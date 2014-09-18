@@ -121,7 +121,6 @@ private:
     QStringList mTerms;
     bool mTermIsDirect;
 
-    Items mItems;
     QString mErrorMessage;
     bool mLookUpTerm;
 
@@ -150,8 +149,11 @@ private:
 
     QNetworkReply *mNetworkReply;
 
-    void updateItemsGui(const Items &pItems, const QString &pErrorMessage,
-                        const bool &pLookUpTerm);
+    void upudateOutputLabelText(const bool &pLookUpTerm,
+                                const QString &pErrorMessage,
+                                bool *pShowBusyWidget = 0);
+    void updateItemsGui(const Items &pItems, const bool &pLookUpTerm,
+                        const QString &pErrorMessage);
 
     static Item item(const QString &pName,
                      const QString &pResource, const QString &pId);
