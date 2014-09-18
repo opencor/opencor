@@ -504,14 +504,18 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateItemsGui(const Items &
     mLookUpTerm = pLookUpTerm;
     mErrorMessage = pErrorMessage;
 
+    // Clean up our output tree view model
+    // Note: we might only do that before adding new items, but then again there
+    //       is no need to waste memory, so...
+
+    mOutputTreeViewModel->removeRows(0, mOutputTreeViewModel->rowCount());
+
     // Populate our new layout, but only if there is at least one item
 
     bool showBusyWidget = false;
 
     if (pItems.count()) {
-        // Add the items after having cleaned up our output tree view model
-
-        mOutputTreeViewModel->removeRows(0, mOutputTreeViewModel->rowCount());
+        // Add the items
 
         foreach (const Item &item, pItems) {
             // Resource
