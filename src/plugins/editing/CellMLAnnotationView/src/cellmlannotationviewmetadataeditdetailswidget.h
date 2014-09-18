@@ -30,7 +30,6 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include <QMap>
-#include <QScrollArea>
 
 //==============================================================================
 
@@ -48,6 +47,7 @@ class QMenu;
 class QNetworkAccessManager;
 class QNetworkReply;
 class QPushButton;
+class QScrollArea;
 class QStandardItemModel;
 class QVBoxLayout;
 
@@ -126,10 +126,11 @@ private:
 
     Core::Widget *mOutput;
 
+    QScrollArea *mOutputLabelScrollArea;
+    QLabel *mOutputLabel;
+
     Core::TreeViewWidget *mOutputTreeView;
     QStandardItemModel *mOutputTreeViewModel;
-
-    QLabel *mOutputLabel;
 
     InformationType mInformationType;
 

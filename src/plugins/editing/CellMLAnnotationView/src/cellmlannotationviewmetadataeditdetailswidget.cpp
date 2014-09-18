@@ -55,6 +55,7 @@ specific language governing permissions and limitations under the License.
 #include <QNetworkRequest>
 #include <QPushButton>
 #include <QRegularExpression>
+#include <QScrollArea>
 #include <QScrollBar>
 #include <QStackedWidget>
 #include <QTimer>
@@ -249,15 +250,28 @@ CellmlAnnotationViewMetadataEditDetailsWidget::CellmlAnnotationViewMetadataEditD
 
     mOutput->setLayout(new QVBoxLayout(mOutput));
 
+    int outputLayoutMargin = mOutput->layout()->margin();
+
     mOutput->layout()->setMargin(0);
 
     connect(mOutput, SIGNAL(resized(const QSize &, const QSize &)),
             this, SLOT(recenterBusyWidget()));
 
-    // Create our output label
+    // Create our output label (within a scroll area, in case the label is too
+    // wide)
+
+    mOutputLabelScrollArea = new QScrollArea(mOutput);
+
+    mOutputLabelScrollArea->setFrameShape(QFrame::NoFrame);
+    mOutputLabelScrollArea->setWidgetResizable(true);
 
     mOutputLabel = Core::newLabel(QString(), 1.25, false, false,
-                                  Qt::AlignCenter, mOutput);
+                                  Qt::AlignCenter, mOutputLabelScrollArea);
+
+    mOutputLabel->setContentsMargins(outputLayoutMargin, outputLayoutMargin,
+                                     outputLayoutMargin, outputLayoutMargin);
+
+    mOutputLabelScrollArea->setWidget(mOutputLabel);
 
     // Create our output tree view
 
@@ -271,7 +285,7 @@ CellmlAnnotationViewMetadataEditDetailsWidget::CellmlAnnotationViewMetadataEditD
 
     // Add our output label and tree view to our output widget
 
-    mOutput->layout()->addWidget(mOutputLabel);
+    mOutput->layout()->addWidget(mOutputLabelScrollArea);
     mOutput->layout()->addWidget(mOutputTreeView);
 
     // Add our 'internal' widgets to our main layout
@@ -448,7 +462,6 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateItemsGui(const Items &
     // Populate our new layout, but only if there is at least one item
 
     bool showBusyWidget = false;
-    QWidget *newOutputWidget = 0;
 
     if (pItems.count()) {
         // Add the items after having cleaned up our output tree view model
@@ -520,15 +533,11 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateItemsGui(const Items &
         }
 
         mOutputTreeView->resizeColumnsToContents();
-
-        newOutputWidget = mOutputTreeView;
     } else {
         // No items to show, so either there is no data available or an error
         // occurred, so update our output label text
 
         upudateOutputLabelText(pLookUpTerm, pErrorMessage, &showBusyWidget);
-
-        newOutputWidget = mOutputLabel;
 
         // Pretend that we don't want to look anything up, if needed
         // Note: this is in case a resource or id used to be looked up, in which
@@ -544,12 +553,8 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateItemsGui(const Items &
 
     // Hide our old output widget and show our new one
 
-    if (newOutputWidget == mOutputLabel)
-        mOutputTreeView->hide();
-    else
-        mOutputLabel->hide();
-
-    newOutputWidget->show();
+    mOutputLabelScrollArea->setVisible(!pItems.count());
+    mOutputTreeView->setVisible(pItems.count());
 
     // show our busy widget instead, if needed
 
