@@ -113,8 +113,7 @@ CellmlAnnotationViewMetadataEditDetailsWidget::CellmlAnnotationViewMetadataEditD
     mItems(Items()),
     mErrorMessage(QString()),
     mLookUpTerm(false),
-    mInformation(QString()),
-    mType(No),
+    mInformationType(None),
     mLookUpInformation(false),
     mItemsMapping(QMap<QObject *, Item>()),
     mCellmlFile(pParent->cellmlFile()),
@@ -433,14 +432,6 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateItemsGui(const Items &
         // Add the items
 
         foreach (const Item &item, pItems) {
-            // Name
-
-//            newGridLayout->addWidget(Core::newLabel(item.name,
-//                                                    1.0, false, false,
-//                                                    Qt::AlignCenter,
-//                                                    newGridWidget),
-//                                     ++row, 0);
-
             // Resource
 
 //            QString itemInformation = item.resource+"|"+item.id;
@@ -504,17 +495,6 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateItemsGui(const Items &
                                                                                    << new QStandardItem(item.id));
         }
 
-        // Have the remove buttons column take as little horizontal space as
-        // possible compared to the other columns
-
-//        newGridLayout->setColumnStretch(0, 1);
-//        newGridLayout->setColumnStretch(1, 1);
-//        newGridLayout->setColumnStretch(2, 1);
-
-        // Have all the rows take a minimum of vertical space
-
-//        newGridLayout->setRowStretch(++row, 1);
-
         treeView->resizeColumnsToContents();
 
         newWidget = treeView;
@@ -548,11 +528,11 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateItemsGui(const Items &
         newWidget = Core::newLabel(labelText, 1.25, false, false,
                                    Qt::AlignCenter, mItemsWidget);
 
-        // Pretend that we want to look nothing up, if needed
+        // Pretend that we don't want to look anything up, if needed
         // Note: this is in case a resource or id used to be looked up, in which
         //       case we don't want it to be anymore...
 
-        if (mLookUpInformation && (mType != Qualifier))
+        if (mLookUpInformation && (mInformationType != Qualifier))
             genericLookUp();
     }
 
@@ -596,24 +576,23 @@ CellmlAnnotationViewMetadataEditDetailsWidget::Item CellmlAnnotationViewMetadata
 //==============================================================================
 
 void CellmlAnnotationViewMetadataEditDetailsWidget::genericLookUp(const QString &pItemInformation,
-                                                                  const Type &pType,
+                                                                  const InformationType &pInformationType,
                                                                   const bool &pRetranslate)
 {
     // Retrieve the information
 
     QStringList itemInformationAsStringList = pItemInformation.split("|");
-    QString qualifierAsString = (pType != Qualifier)?QString():pItemInformation;
-    QString resourceAsString = (pItemInformation.isEmpty() || (pType == Qualifier))?QString():itemInformationAsStringList[0];
-    QString idAsString = (pItemInformation.isEmpty() || (pType == Qualifier))?QString():itemInformationAsStringList[1];
+    QString qualifierAsString = (pInformationType != Qualifier)?QString():pItemInformation;
+    QString resourceAsString = (pItemInformation.isEmpty() || (pInformationType == Qualifier))?QString():itemInformationAsStringList[0];
+    QString idAsString = (pItemInformation.isEmpty() || (pInformationType == Qualifier))?QString():itemInformationAsStringList[1];
 
-    // Keep track of the information
+    // Keep track of the type of information we are looking up
 
-    mInformation = pItemInformation;
-    mType = pType;
+    mInformationType = pInformationType;
 
     // Toggle the look up button, if needed
 
-    if ((mType != Qualifier) && mLookUpQualifierButton->isChecked())
+    if ((pInformationType != Qualifier) && mLookUpQualifierButton->isChecked())
         mLookUpQualifierButton->toggle();
 
     // Check that we have something to look up
@@ -625,7 +604,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::genericLookUp(const QString 
 
     // Let people know that we want to look something up
 
-    switch (pType) {
+    switch (pInformationType) {
     case Qualifier:
         emit qualifierLookUpRequested(qualifierAsString, pRetranslate);
 
@@ -639,7 +618,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::genericLookUp(const QString 
 
         break;
     default:
-        // No
+        // None
 
         emit noLookUpRequested();
     }

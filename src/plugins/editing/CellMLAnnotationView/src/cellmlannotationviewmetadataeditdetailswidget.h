@@ -83,8 +83,8 @@ public:
     void fileReloaded();
 
 private:
-    enum Type {
-        No,
+    enum InformationType {
+        None,
         Qualifier,
         Resource,
         Id
@@ -126,8 +126,7 @@ private:
     QString mErrorMessage;
     bool mLookUpTerm;
 
-    QString mInformation;
-    Type mType;
+    InformationType mInformationType;
 
     bool mLookUpInformation;
 
@@ -154,7 +153,7 @@ private:
                      const QString &pResource, const QString &pId);
 
     void genericLookUp(const QString &pItemInformation = QString(),
-                       const Type &pType = No,
+                       const InformationType &pInformationType = None,
                        const bool &pRetranslate = false);
 
 Q_SIGNALS:
