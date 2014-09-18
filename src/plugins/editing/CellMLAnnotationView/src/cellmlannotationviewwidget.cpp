@@ -113,10 +113,10 @@ void CellmlAnnotationViewWidget::saveSettings(QSettings *pSettings) const
 
 void CellmlAnnotationViewWidget::retranslateUi()
 {
-    // Retranslate our editing widget
+    // Retranslate our editing widgets
 
-    if (mEditingWidget)
-        mEditingWidget->retranslateUi();
+    foreach (CellmlAnnotationViewEditingWidget *editingWidget, mEditingWidgets)
+        editingWidget->retranslateUi();
 }
 
 //==============================================================================
