@@ -39,6 +39,7 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#include <QApplication>
 #include <QClipboard>
 #include <QComboBox>
 #include <QFormLayout>
@@ -243,26 +244,46 @@ CellmlAnnotationViewMetadataEditDetailsWidget::CellmlAnnotationViewMetadataEditD
     setTabOrder(mLookUpQualifierButton, mTermValue);
     setTabOrder(mTermValue, mAddTermButton);
 
-    // Create an items widget that will contain our items
+    // Create an output widget that will contain our output label and tree view
 
-    mItemsWidget = new Core::Widget(this);
+    mOutput = new Core::Widget(this);
 
-    mItemsWidget->setLayout(new QVBoxLayout(mItemsWidget));
+    mOutput->setLayout(new QVBoxLayout(mOutput));
 
-    mItemsWidget->layout()->setMargin(0);
+    mOutput->layout()->setMargin(0);
 
-    connect(mItemsWidget, SIGNAL(resized(const QSize &, const QSize &)),
+    connect(mOutput, SIGNAL(resized(const QSize &, const QSize &)),
             this, SLOT(recenterBusyWidget()));
+
+    // Create our output label
+
+    mOutputLabel = Core::newLabel(QString(), 1.25, false, false,
+                                  Qt::AlignCenter, mOutput);
+
+    // Create our output tree view
+
+    mOutputTreeView = new Core::TreeViewWidget(mOutput);
+    mOutputTreeViewModel = new QStandardItemModel(mOutputTreeView);
+
+    mOutputTreeView->setEditTriggers(QAbstractItemView::NoEditTriggers);
+    mOutputTreeView->setModel(mOutputTreeViewModel);
+    mOutputTreeView->setRootIsDecorated(false);
+    mOutputTreeView->setSelectionMode(QAbstractItemView::SingleSelection);
+
+    // Add our output label and tree view to our output widget
+
+    mOutput->layout()->addWidget(mOutputLabel);
+    mOutput->layout()->addWidget(mOutputTreeView);
 
     // Add our 'internal' widgets to our main layout
 
     mGui->layout->addWidget(formWidget);
     mGui->layout->addWidget(Core::newLineWidget(this));
-    mGui->layout->addWidget(mItemsWidget);
+    mGui->layout->addWidget(mOutput);
 
     // Update the enabled state of our various add buttons
 
-    updateGui(mElement);
+    updateGui(mElement, true);
 
     // Some further initialisations that are done as part of retranslating the
     // GUI (so that they can be updated when changing languages)
@@ -297,6 +318,12 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::retranslateUi()
 
     mAddTermButton->setStatusTip(tr("Add the term"));
     mAddTermButton->setToolTip(tr("Add"));
+
+    // Retranslate the headers of our tree view
+
+    mOutputTreeViewModel->setHorizontalHeaderLabels(QStringList() << tr("Name")
+                                                                  << tr("Resource")
+                                                                  << tr("Id"));
 
     // Update our items GUI
 
@@ -377,30 +404,10 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(iface::cellml_api:
 
 //==============================================================================
 
-void CellmlAnnotationViewMetadataEditDetailsWidget::removeLayoutWidgets(QLayout *pLayout)
-{
-    // Remove and delete all the widgets in the given layout
-
-    QLayoutItem *item;
-
-    for (int i = 0, iMax = pLayout->count(); i < iMax; ++i) {
-        item = pLayout->takeAt(0);
-
-        delete item->widget();
-        delete item;
-    }
-}
-
-//==============================================================================
-
 void CellmlAnnotationViewMetadataEditDetailsWidget::updateItemsGui(const Items &pItems,
                                                                    const QString &pErrorMessage,
                                                                    const bool &pLookUpTerm)
 {
-    // Prevent ourselves from being updated (to avoid flickering)
-
-    setUpdatesEnabled(false);
-
     // Keep track of some information
 
     mItems = pItems;
@@ -410,26 +417,12 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateItemsGui(const Items &
     // Populate our new layout, but only if there is at least one item
 
     bool showBusyWidget = false;
-    QWidget *newWidget = 0;
+    QWidget *newOutputWidget = 0;
 
     if (pItems.count()) {
-        // Create our tree view
+        // Add the items after having cleaned up our output tree view model
 
-        Core::TreeViewWidget *treeView = new Core::TreeViewWidget(mItemsWidget);
-        QStandardItemModel *treeViewModel = new QStandardItemModel(treeView);
-
-        treeView->setEditTriggers(QAbstractItemView::NoEditTriggers);
-        treeView->setModel(treeViewModel);
-        treeView->setRootIsDecorated(false);
-        treeView->setSelectionMode(QAbstractItemView::SingleSelection);
-
-        // Create labels to act as headers
-
-        treeViewModel->setHorizontalHeaderLabels(QStringList() << tr("Name")
-                                                               << tr("Resource")
-                                                               << tr("Id"));
-
-        // Add the items
+        mOutputTreeViewModel->removeRows(0, mOutputTreeViewModel->rowCount());
 
         foreach (const Item &item, pItems) {
             // Resource
@@ -490,43 +483,44 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateItemsGui(const Items &
 
 //            newGridLayout->addWidget(addButton, row, 3, Qt::AlignCenter);
 
-            treeViewModel->invisibleRootItem()->appendRow(QList<QStandardItem *>() << new QStandardItem(item.name)
-                                                                                   << new QStandardItem(item.resource)
-                                                                                   << new QStandardItem(item.id));
+            mOutputTreeViewModel->invisibleRootItem()->appendRow(QList<QStandardItem *>() << new QStandardItem(item.name)
+                                                                                          << new QStandardItem(item.resource)
+                                                                                          << new QStandardItem(item.id));
         }
 
-        treeView->resizeColumnsToContents();
+        mOutputTreeView->resizeColumnsToContents();
 
-        newWidget = treeView;
+        newOutputWidget = mOutputTreeView;
     } else {
         // No items to show, so either there is no data available or an error
         // occurred
 
-        QString labelText;
+        QString outputLabelText;
 
         if (!Core::FileManager::instance()->isReadableAndWritable(mCellmlFile->fileName())) {
-            labelText = QString();
+            outputLabelText = QString();
         } else if (mTerm.isEmpty()) {
-            labelText = tr("Please enter a term to search above...");
+            outputLabelText = tr("Please enter a term to search above...");
         } else if (pLookUpTerm) {
-            labelText = QString();
+            outputLabelText = QString();
 
             showBusyWidget = true;
         } else if (pErrorMessage.isEmpty()) {
             if (mTermIsDirect) {
                 if (mAddTermButton->isEnabled())
-                    labelText = tr("<strong>Information:</strong> you can directly add the term <strong>%1</strong>...").arg(mTerm);
+                    outputLabelText = tr("<strong>Information:</strong> you can directly add the term <strong>%1</strong>...").arg(mTerm);
                 else
-                    labelText = tr("<strong>Information:</strong> the term <strong>%1</strong> has already been added using the above qualifier...").arg(mTerm);
+                    outputLabelText = tr("<strong>Information:</strong> the term <strong>%1</strong> has already been added using the above qualifier...").arg(mTerm);
             } else {
-                labelText = tr("Sorry, but no terms were found for <strong>%1</strong>...").arg(mTerm);
+                outputLabelText = tr("Sorry, but no terms were found for <strong>%1</strong>...").arg(mTerm);
             }
         } else {
-            labelText = tr("<strong>Error:</strong> ")+Core::formatErrorMessage(pErrorMessage);
+            outputLabelText = tr("<strong>Error:</strong> ")+Core::formatErrorMessage(pErrorMessage);
         }
 
-        newWidget = Core::newLabel(labelText, 1.25, false, false,
-                                   Qt::AlignCenter, mItemsWidget);
+        mOutputLabel->setText(outputLabelText);
+
+        newOutputWidget = mOutputLabel;
 
         // Pretend that we don't want to look anything up, if needed
         // Note: this is in case a resource or id used to be looked up, in which
@@ -540,20 +534,19 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateItemsGui(const Items &
 
     mParent->parent()->hideBusyWidget();
 
-    // Show our new widget
+    // Hide our old output widget and show our new one
 
-    removeLayoutWidgets(mItemsWidget->layout());
+    if (newOutputWidget == mOutputLabel)
+        mOutputTreeView->hide();
+    else
+        mOutputLabel->hide();
 
-    mItemsWidget->layout()->addWidget(newWidget);
+    newOutputWidget->show();
 
     // show our busy widget instead, if needed
 
     if (showBusyWidget)
-        mParent->parent()->showBusyWidget(mItemsWidget);
-
-    // Allow ourselves to be updated again
-
-    setUpdatesEnabled(true);
+        mParent->parent()->showBusyWidget(mOutput);
 }
 
 //==============================================================================

@@ -48,6 +48,7 @@ class QMenu;
 class QNetworkAccessManager;
 class QNetworkReply;
 class QPushButton;
+class QStandardItemModel;
 class QVBoxLayout;
 
 //==============================================================================
@@ -57,7 +58,7 @@ namespace OpenCOR {
 //==============================================================================
 
 namespace Core {
-    class Widget;
+    class TreeViewWidget;
 }   // namespace Core
 
 //==============================================================================
@@ -106,8 +107,6 @@ private:
 
     Ui::CellmlAnnotationViewMetadataEditDetailsWidget *mGui;
 
-    Core::Widget *mItemsWidget;
-
     QNetworkAccessManager *mNetworkAccessManager;
 
     QLabel *mQualifierLabel;
@@ -126,6 +125,13 @@ private:
     QString mErrorMessage;
     bool mLookUpTerm;
 
+    Core::Widget *mOutput;
+
+    Core::TreeViewWidget *mOutputTreeView;
+    QStandardItemModel *mOutputTreeViewModel;
+
+    QLabel *mOutputLabel;
+
     InformationType mInformationType;
 
     bool mLookUpInformation;
@@ -143,8 +149,6 @@ private:
     QMenu *mContextMenu;
 
     QNetworkReply *mNetworkReply;
-
-    void removeLayoutWidgets(QLayout *pLayout);
 
     void updateItemsGui(const Items &pItems, const QString &pErrorMessage,
                         const bool &pLookUpTerm);
