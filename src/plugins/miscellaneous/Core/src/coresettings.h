@@ -41,6 +41,7 @@ static const auto SettingsActiveDirectory = QStringLiteral("ActiveDirectory");
 static const auto SettingsBaseColor      = QStringLiteral("BaseColor");
 static const auto SettingsBorderColor    = QStringLiteral("BorderColor");
 static const auto SettingsHighlightColor = QStringLiteral("HighlightColor");
+static const auto SettingsLinkColor      = QStringLiteral("LinkColor");
 static const auto SettingsShadowColor    = QStringLiteral("Shadow");
 static const auto SettingsWindowColor    = QStringLiteral("WindowColor");
 

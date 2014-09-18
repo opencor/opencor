@@ -30,6 +30,10 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include <QMap>
+#include <QModelIndex>
+#include <QStandardItem>
+#include <QStyledItemDelegate>
+#include <QStyleOptionViewItem>
 
 //==============================================================================
 
@@ -46,6 +50,7 @@ class QLineEdit;
 class QMenu;
 class QNetworkAccessManager;
 class QNetworkReply;
+class QPainter;
 class QPushButton;
 class QScrollArea;
 class QStandardItemModel;
@@ -68,6 +73,29 @@ namespace CellMLAnnotationView {
 //==============================================================================
 
 class CellmlAnnotationViewEditingWidget;
+
+//==============================================================================
+
+class CellmlAnnotationViewMetadataItemDelegate : public QStyledItemDelegate
+{
+public:
+    virtual void paint(QPainter *pPainter, const QStyleOptionViewItem &pOption,
+                       const QModelIndex &pIndex) const;
+};
+
+//==============================================================================
+
+class CellmlAnnotationViewMetadataItem : public QStandardItem
+{
+public:
+    explicit CellmlAnnotationViewMetadataItem(const QString &pText,
+                                              const QString &pUrl = QString());
+
+    QString url() const;
+
+private:
+    QString mUrl;
+};
 
 //==============================================================================
 
@@ -131,6 +159,7 @@ private:
 
     Core::TreeViewWidget *mOutputTreeView;
     QStandardItemModel *mOutputTreeViewModel;
+    CellmlAnnotationViewMetadataItemDelegate *mOutputTreeViewItemDelegate;
 
     InformationType mInformationType;
 

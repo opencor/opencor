@@ -39,9 +39,11 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#include <QAbstractItemView>
 #include <QApplication>
 #include <QClipboard>
 #include <QComboBox>
+#include <QFont>
 #include <QFormLayout>
 #include <QJsonDocument>
 #include <QJsonObject>
@@ -53,6 +55,7 @@ specific language governing permissions and limitations under the License.
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
 #include <QNetworkRequest>
+#include <QPalette>
 #include <QPushButton>
 #include <QRegularExpression>
 #include <QScrollArea>
@@ -66,6 +69,46 @@ specific language governing permissions and limitations under the License.
 
 namespace OpenCOR {
 namespace CellMLAnnotationView {
+
+//==============================================================================
+
+void CellmlAnnotationViewMetadataItemDelegate::paint(QPainter *pPainter,
+                                                     const QStyleOptionViewItem &pOption,
+                                                     const QModelIndex &pIndex) const
+{
+    // Paint the item as normal, except for error/warning/category items
+
+    CellmlAnnotationViewMetadataItem *metadataItem = static_cast<CellmlAnnotationViewMetadataItem *>(qobject_cast<const QStandardItemModel *>(pIndex.model())->itemFromIndex(pIndex));
+
+    QStyleOptionViewItemV4 option(pOption);
+
+    initStyleOption(&option, pIndex);
+
+    if (!metadataItem->url().isEmpty()) {
+        option.palette.setColor(QPalette::Text, Core::linkColor());
+        option.font.setUnderline(true);
+    }
+
+    QStyledItemDelegate::paint(pPainter, option, pIndex);
+}
+
+//==============================================================================
+
+CellmlAnnotationViewMetadataItem::CellmlAnnotationViewMetadataItem(const QString &pText,
+                                                                   const QString &pUrl) :
+    QStandardItem(pText),
+    mUrl(pUrl)
+{
+}
+
+//==============================================================================
+
+QString CellmlAnnotationViewMetadataItem::url() const
+{
+    // Return the metadata item's URL
+
+    return mUrl;
+}
 
 //==============================================================================
 
@@ -277,11 +320,13 @@ CellmlAnnotationViewMetadataEditDetailsWidget::CellmlAnnotationViewMetadataEditD
 
     mOutputTreeView = new Core::TreeViewWidget(mOutput);
     mOutputTreeViewModel = new QStandardItemModel(mOutputTreeView);
+    mOutputTreeViewItemDelegate = new CellmlAnnotationViewMetadataItemDelegate();
 
     mOutputTreeView->setEditTriggers(QAbstractItemView::NoEditTriggers);
+    mOutputTreeView->setItemDelegate(mOutputTreeViewItemDelegate);
     mOutputTreeView->setModel(mOutputTreeViewModel);
     mOutputTreeView->setRootIsDecorated(false);
-    mOutputTreeView->setSelectionMode(QAbstractItemView::SingleSelection);
+    mOutputTreeView->setSelectionMode(QAbstractItemView::NoSelection);
 
     // Add our output label and tree view to our output widget
 
@@ -471,6 +516,8 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateItemsGui(const Items &
         foreach (const Item &item, pItems) {
             // Resource
 
+            QString resourceUrl = "http://identifiers.org/"+item.resource+"/?redirect=true";
+
 //            QString itemInformation = item.resource+"|"+item.id;
 
 //            QLabel *resourceLabel = Core::newLabel("<a href=\""+itemInformation+"\">"+item.resource+"</a>",
@@ -489,6 +536,8 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateItemsGui(const Items &
 //            newGridLayout->addWidget(resourceLabel, row, 1);
 
             // Id
+
+            QString idUrl = "http://identifiers.org/"+item.resource+"/"+item.id+"/?profile=most_reliable&redirect=true";
 
 //            QLabel *idLabel = Core::newLabel("<a href=\""+itemInformation+"\">"+item.id+"</a>",
 //                                             1.0, false, false,
@@ -527,9 +576,9 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateItemsGui(const Items &
 
 //            newGridLayout->addWidget(addButton, row, 3, Qt::AlignCenter);
 
-            mOutputTreeViewModel->invisibleRootItem()->appendRow(QList<QStandardItem *>() << new QStandardItem(item.name)
-                                                                                          << new QStandardItem(item.resource)
-                                                                                          << new QStandardItem(item.id));
+            mOutputTreeViewModel->invisibleRootItem()->appendRow(QList<QStandardItem *>() << new CellmlAnnotationViewMetadataItem(item.name)
+                                                                                          << new CellmlAnnotationViewMetadataItem(item.resource, resourceUrl)
+                                                                                          << new CellmlAnnotationViewMetadataItem(item.id, idUrl));
         }
 
         mOutputTreeView->resizeColumnsToContents();

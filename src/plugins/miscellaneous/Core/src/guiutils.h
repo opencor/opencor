@@ -111,6 +111,7 @@ void CORE_EXPORT updateColors();
 QColor CORE_EXPORT baseColor();
 QColor CORE_EXPORT borderColor();
 QColor CORE_EXPORT highlightColor();
+QColor CORE_EXPORT linkColor();
 QColor CORE_EXPORT shadowColor();
 QColor CORE_EXPORT windowColor();
 

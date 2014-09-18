@@ -533,6 +533,7 @@ void updateColors()
     settings.beginGroup(SettingsGlobal);
         settings.setValue(SettingsBaseColor, qApp->palette().color(QPalette::Base));
         settings.setValue(SettingsHighlightColor, qApp->palette().color(QPalette::Highlight));
+        settings.setValue(SettingsLinkColor, qApp->palette().color(QPalette::Link));
         settings.setValue(SettingsShadowColor, qApp->palette().color(QPalette::Shadow));
         settings.setValue(SettingsWindowColor, qApp->palette().color(QPalette::Window));
     settings.endGroup();
@@ -585,6 +586,17 @@ QColor highlightColor()
     //       itself (see CorePlugin::changeEvent())...
 
     return specificColor(SettingsHighlightColor);
+}
+
+//==============================================================================
+
+QColor linkColor()
+{
+    // Return the link colour
+    // Note: we retrieve it from our settings, which is updated by our plugin
+    //       itself (see CorePlugin::changeEvent())...
+
+    return specificColor(SettingsLinkColor);
 }
 
 //==============================================================================

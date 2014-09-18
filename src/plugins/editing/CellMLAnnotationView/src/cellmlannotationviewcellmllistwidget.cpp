@@ -35,11 +35,14 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#include <QAbstractItemView>
 #include <QDir>
 #include <QFileInfo>
+#include <QFont>
 #include <QMenu>
 #include <QPoint>
 #include <QStandardItemModel>
+#include <QStyle>
 
 //==============================================================================
 
@@ -66,9 +69,9 @@ void CellmlAnnotationViewCellmlElementItemDelegate::paint(QPainter *pPainter,
 
     if (   (cellmlElementItem->type() == CellmlAnnotationViewCellmlElementItem::Error)
         || (cellmlElementItem->type() == CellmlAnnotationViewCellmlElementItem::Warning)) {
-        // This is an error/warning item, so prevent it from hoverable and make
-        // it look enabled since it's actually disabled (so we can't select it),
-        // yet we want to see it as if it was enabled, so...
+        // This is an error/warning item, so prevent it from being hoverable and
+        // make it look enabled since it's actually disabled (so we can't select
+        // it), yet we want to see it as if it was enabled, so...
 
         option.state &= ~QStyle::State_MouseOver;
         option.state |=  QStyle::State_Enabled;
@@ -100,7 +103,8 @@ void CellmlAnnotationViewCellmlElementItem::constructor(const bool &pCategory,
 
 //==============================================================================
 
-CellmlAnnotationViewCellmlElementItem::CellmlAnnotationViewCellmlElementItem(const bool &pError, const QString &pText) :
+CellmlAnnotationViewCellmlElementItem::CellmlAnnotationViewCellmlElementItem(const bool &pError,
+                                                                             const QString &pText) :
     QStandardItem(pText)
 {
     // Constructor for either an error or a warning

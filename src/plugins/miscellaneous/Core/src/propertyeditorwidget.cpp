@@ -31,12 +31,16 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#include <QAbstractItemDelegate>
+#include <QAbstractItemView>
 #include <QHeaderView>
 #include <QKeyEvent>
+#include <QModelIndex>
 #include <QRegularExpressionValidator>
 #include <QScrollBar>
 #include <QSettings>
 #include <QStandardItem>
+#include <QStyleOptionViewItem>
 #include <QVariant>
 
 //==============================================================================
