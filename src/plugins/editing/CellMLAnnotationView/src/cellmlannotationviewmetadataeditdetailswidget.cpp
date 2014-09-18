@@ -721,7 +721,8 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::termChanged(const QString &p
     // Check whether the term could be directly added, resulting in the add term
     // button being enabled/disabled, depending on the case
 
-    mTermIsDirect = QRegularExpression("^"+CellMLSupport::ResourceRegExp+"/"+CellMLSupport::IdRegExp+"$").match(pTerm).hasMatch();
+    mTermIsDirect =    QRegularExpression("^"+CellMLSupport::ResourceRegExp+"/"+CellMLSupport::IdRegExp+"$").match(pTerm).hasMatch()
+                    && (pTerm.count("/") == 1);
 
     // Update the enabled state of our various add buttons
 
