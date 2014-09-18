@@ -84,7 +84,7 @@ private:
     PluginManager *mPluginManager;
 
     QStandardItemModel *mModel;
-    PluginItemDelegate *mPluginItemDelegate;
+    PluginItemDelegate *mItemDelegate;
 
     QMap<QString, PluginInfo::Category> mMappedCategories;
 
