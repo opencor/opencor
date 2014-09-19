@@ -34,7 +34,6 @@ specific language governing permissions and limitations under the License.
 #include <QStandardItem>
 #include <QStyledItemDelegate>
 #include <QStyleOptionViewItem>
-#include <QWebView>
 
 //==============================================================================
 
@@ -75,22 +74,7 @@ namespace CellMLAnnotationView {
 //==============================================================================
 
 class CellmlAnnotationViewEditingWidget;
-
-//==============================================================================
-
-class CellmlAnnotationViewMetadataWebView : public QWebView
-{
-    Q_OBJECT
-
-public:
-    explicit CellmlAnnotationViewMetadataWebView(QWidget *pParent);
-
-protected:
-    virtual bool event(QEvent *pEvent);
-
-protected:
-    bool mResettingCursor;
-};
+class CellmlAnnotationViewMetadataWebViewWidget;
 
 //==============================================================================
 
@@ -152,7 +136,7 @@ private:
     Core::UserMessageWidget *mOutputMessage;
 
     QString mOutputPossibleOntologicalTermsTemplate;
-    CellmlAnnotationViewMetadataWebView *mOutputPossibleOntologicalTerms;
+    CellmlAnnotationViewMetadataWebViewWidget *mOutputPossibleOntologicalTerms;
 
     InformationType mInformationType;
 

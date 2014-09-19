@@ -22,6 +22,7 @@ specific language governing permissions and limitations under the License.
 #include "cellmlannotationviewcellmllistwidget.h"
 #include "cellmlannotationvieweditingwidget.h"
 #include "cellmlannotationviewmetadataeditdetailswidget.h"
+#include "cellmlannotationviewmetadatawebviewwidget.h"
 #include "cellmlannotationviewwidget.h"
 #include "cellmlfilerdftriple.h"
 #include "cliutils.h"
@@ -39,7 +40,6 @@ specific language governing permissions and limitations under the License.
 #include <Qt>
 
 //==============================================================================
-#include <QDebug>
 
 #include <QAbstractItemView>
 #include <QApplication>
@@ -74,37 +74,6 @@ specific language governing permissions and limitations under the License.
 
 namespace OpenCOR {
 namespace CellMLAnnotationView {
-
-//==============================================================================
-
-CellmlAnnotationViewMetadataWebView::CellmlAnnotationViewMetadataWebView(QWidget *pParent) :
-    QWebView(pParent),
-    mResettingCursor(false)
-{
-}
-
-//==============================================================================
-
-bool CellmlAnnotationViewMetadataWebView::event(QEvent *pEvent)
-{
-    // Override the change of the cursor when hovering some text
-
-    if (mResettingCursor) {
-        return true;
-    } else if (    (pEvent->type() == QEvent::CursorChange)
-        &&  (cursor().shape() == Qt::IBeamCursor)
-        && !mResettingCursor) {
-        mResettingCursor = true;
-
-        setCursor(Qt::ArrowCursor);
-
-        mResettingCursor = false;
-
-        return true;
-    } else {
-        return QWebView::event(pEvent);
-    }
-}
 
 //==============================================================================
 
@@ -310,11 +279,7 @@ CellmlAnnotationViewMetadataEditDetailsWidget::CellmlAnnotationViewMetadataEditD
 
     Core::readTextFromFile(":/possibleOntologicalTerms.html", mOutputPossibleOntologicalTermsTemplate);
 
-    mOutputPossibleOntologicalTerms = new CellmlAnnotationViewMetadataWebView(mOutput);
-
-    mOutputPossibleOntologicalTerms->setAcceptDrops(false);
-    mOutputPossibleOntologicalTerms->setSizePolicy(QSizePolicy::Expanding,
-                                                   QSizePolicy::Expanding);
+    mOutputPossibleOntologicalTerms = new CellmlAnnotationViewMetadataWebViewWidget(mOutput);
 
     // Add our output message and ourput for possible ontological terms to our
     // output widget
