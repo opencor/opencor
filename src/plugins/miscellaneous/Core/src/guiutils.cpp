@@ -405,7 +405,7 @@ QLabel * newLabel(const QString &pText, const double &pFontPercentage,
 
     font.setBold(pBold);
     font.setItalic(pItalic);
-    font.setPointSize(pFontPercentage*font.pointSize());
+    font.setPointSizeF(pFontPercentage*font.pointSize());
 
     res->setAlignment(pAlignment);
     res->setFont(font);
