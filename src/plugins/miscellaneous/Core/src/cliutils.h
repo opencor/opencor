@@ -133,7 +133,8 @@ QString CORE_EXPORT activeDirectory();
 QString CORE_EXPORT nativeCanonicalFileName(const QString &pFileName);
 
 QString CORE_EXPORT formatErrorMessage(const QString &pErrorMessage,
-                                       const bool &pDotDotDot = true);
+                                       const bool &pLowerCase = true,
+                                       const bool &pDotDotDot = false);
 
 QString CORE_EXPORT nonDiacriticString(const QString &pString);
 

@@ -295,7 +295,7 @@ void CliApplication::status() const
 
             break;
         case Plugin::NotLoaded:
-            pluginInfo += QString("the plugin could not be loaded due to the following problem: %1.").arg(Core::formatErrorMessage(plugin->statusErrors(), false));
+            pluginInfo += QString("the plugin could not be loaded due to the following problem: %1.").arg(Core::formatErrorMessage(plugin->statusErrors()));
 
             break;
         case Plugin::NotPlugin:

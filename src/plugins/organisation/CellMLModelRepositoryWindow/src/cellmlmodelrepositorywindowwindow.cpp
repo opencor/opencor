@@ -173,7 +173,7 @@ void CellmlModelRepositoryWindowWindow::outputModelList(const QStringList &pMode
             // Something went wrong while trying to retrieve the list of models
 
             contents += indent+indent+"<p>\n";
-            contents += indent+indent+indent+tr("<strong>Error:</strong> ")+Core::formatErrorMessage(mErrorMessage);
+            contents += indent+indent+indent+tr("<strong>Error:</strong> ")+Core::formatErrorMessage(mErrorMessage, true, true);
             contents += indent+indent+"</p>\n";
         }
     } else {

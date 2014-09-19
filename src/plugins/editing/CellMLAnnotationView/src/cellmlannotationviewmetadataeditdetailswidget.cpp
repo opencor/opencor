@@ -444,7 +444,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::upudateOutputMessage(const b
         }
     } else {
         mOutputMessage->setIconMessage(":/oxygen/emblems/emblem-important.png",
-                                       Core::formatErrorMessage(pErrorMessage));
+                                       Core::formatErrorMessage(pErrorMessage, false, true));
     }
 }
 

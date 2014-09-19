@@ -374,7 +374,7 @@ int CellMLToolsPlugin::runExportCommand(const QStringList &pArguments)
                 errorMessage = "The input file could not be saved locally.";
             }
         } else {
-            errorMessage = QString("The input file could not be opened (%1).").arg(Core::formatErrorMessage(errorMessage, false));
+            errorMessage = QString("The input file could not be opened (%1).").arg(Core::formatErrorMessage(errorMessage));
         }
     }
 
