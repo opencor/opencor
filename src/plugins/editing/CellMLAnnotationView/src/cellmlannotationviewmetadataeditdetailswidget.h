@@ -64,6 +64,7 @@ namespace OpenCOR {
 
 namespace Core {
     class TreeViewWidget;
+    class UserMessageWidget;
 }   // namespace Core
 
 //==============================================================================
@@ -154,7 +155,7 @@ private:
     Core::Widget *mOutput;
 
     QScrollArea *mOutputLabelScrollArea;
-    QLabel *mOutputLabel;
+    Core::UserMessageWidget *mOutputMessage;
 
     Core::TreeViewWidget *mOutputTreeView;
     QStandardItemModel *mOutputTreeViewModel;

@@ -28,6 +28,7 @@ specific language governing permissions and limitations under the License.
 #include "filemanager.h"
 #include "guiutils.h"
 #include "treeviewwidget.h"
+#include "usermessagewidget.h"
 
 //==============================================================================
 
@@ -292,14 +293,12 @@ CellmlAnnotationViewMetadataEditDetailsWidget::CellmlAnnotationViewMetadataEditD
 
     mOutput->setLayout(new QVBoxLayout(mOutput));
 
-    int outputLayoutMargin = mOutput->layout()->margin();
-
     mOutput->layout()->setMargin(0);
 
     connect(mOutput, SIGNAL(resized(const QSize &, const QSize &)),
             this, SLOT(recenterBusyWidget()));
 
-    // Create our output label (within a scroll area, in case the label is too
+    // Create our output message (within a scroll area, in case the label is too
     // wide)
 
     mOutputLabelScrollArea = new QScrollArea(mOutput);
@@ -307,13 +306,10 @@ CellmlAnnotationViewMetadataEditDetailsWidget::CellmlAnnotationViewMetadataEditD
     mOutputLabelScrollArea->setFrameShape(QFrame::NoFrame);
     mOutputLabelScrollArea->setWidgetResizable(true);
 
-    mOutputLabel = Core::newLabel(QString(), 1.25, false, false,
-                                  Qt::AlignCenter, mOutputLabelScrollArea);
+    mOutputMessage = new Core::UserMessageWidget(":/oxygen/actions/help-about.png",
+                                                 mOutputLabelScrollArea);
 
-    mOutputLabel->setContentsMargins(outputLayoutMargin, outputLayoutMargin,
-                                     outputLayoutMargin, outputLayoutMargin);
-
-    mOutputLabelScrollArea->setWidget(mOutputLabel);
+    mOutputLabelScrollArea->setWidget(mOutputMessage);
 
     // Create our output tree view
 
@@ -491,7 +487,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::upudateOutputLabelText(const
         outputLabelText = tr("<strong>Error:</strong> ")+Core::formatErrorMessage(pErrorMessage);
     }
 
-    mOutputLabel->setText(outputLabelText);
+    mOutputMessage->setMessage(outputLabelText);
 }
 
 //==============================================================================
