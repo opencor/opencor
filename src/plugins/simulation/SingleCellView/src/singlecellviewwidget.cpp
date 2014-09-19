@@ -501,17 +501,12 @@ void SingleCellViewWidget::updateInvalidModelMessageWidget()
 {
     // Update our invalid model message
 
-    mInvalidModelMessageWidget->setMessage("<div align=center>"
-                                           "    <p>"
-                                          +((mErrorType == InvalidCellmlFile)?
-                                                "        "+tr("Sorry, but the <strong>%1</strong> view requires a valid CellML file to work...").arg(mPluginParent->viewName()):
-                                                "        "+tr("Sorry, but the <strong>%1</strong> view requires a valid simulation environment to work...").arg(mPluginParent->viewName())
-                                           )
-                                          +"    </p>"
-                                           "    <p>"
-                                           "        <small><em>("+tr("See below for more information.")+")</em></small>"
-                                           "    </p>"
-                                           "</div>");
+    mInvalidModelMessageWidget->setMessage( ((mErrorType == InvalidCellmlFile)?
+                                                 tr("Sorry, but the <strong>%1</strong> view requires a valid CellML file to work...").arg(mPluginParent->viewName()):
+                                                 tr("Sorry, but the <strong>%1</strong> view requires a valid simulation environment to work...").arg(mPluginParent->viewName())
+                                            )
+                                           +"<br/>"
+                                            "<small><em>("+tr("See below for more information.")+")</em></small>");
 }
 
 //==============================================================================

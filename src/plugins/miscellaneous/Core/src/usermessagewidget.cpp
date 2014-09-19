@@ -104,7 +104,7 @@ void UserMessageWidget::updateMessage()
                     "        <td align=right>"
                     "            <img src=\"%1\"/>"
                     "        </td>"
-                    "        <td align=left>"
+                    "        <td align=center>"
                     "            %2"
                     "        </td>"
                     "    </tr>"
