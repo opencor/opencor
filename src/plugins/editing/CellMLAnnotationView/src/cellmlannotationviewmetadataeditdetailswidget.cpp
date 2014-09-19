@@ -403,10 +403,10 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(iface::cellml_api:
     // Enable/disable our add term button, depending on whether the direct term
     // is already associated with the CellML element
 
-    bool termIsDirect = isDirectTerm(mTerm);
+    bool termIsDirect = isDirectTerm(mTermValue->text());
 
     if (termIsDirect) {
-        QStringList termInformation = mTerm.split("/");
+        QStringList termInformation = mTermValue->text().split("/");
 
         if (mQualifierValue->currentIndex() < CellMLSupport::CellmlFileRdfTriple::LastBioQualifier)
             mAddTermButton->setEnabled(    fileReadableAndWritable
@@ -471,7 +471,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::upudateOutputLabelText(const
 
     if (!Core::FileManager::instance()->isReadableAndWritable(mCellmlFile->fileName())) {
         outputLabelText = QString();
-    } else if (mTerm.isEmpty()) {
+    } else if (mTermValue->text().isEmpty()) {
         outputLabelText = tr("Please enter a term to search above...");
     } else if (pLookUpTerm) {
         outputLabelText = QString();
@@ -479,11 +479,11 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::upudateOutputLabelText(const
         if (pShowBusyWidget)
             *pShowBusyWidget = true;
     } else if (pErrorMessage.isEmpty()) {
-        if (isDirectTerm(mTerm)) {
+        if (isDirectTerm(mTermValue->text())) {
             if (mAddTermButton->isEnabled())
-                outputLabelText = tr("<strong>Information:</strong> you can directly add the term <strong>%1</strong>...").arg(mTerm);
+                outputLabelText = tr("<strong>Information:</strong> you can directly add the term <strong>%1</strong>...").arg(mTermValue->text());
             else
-                outputLabelText = tr("<strong>Information:</strong> the term <strong>%1</strong> has already been added using the above qualifier...").arg(mTerm);
+                outputLabelText = tr("<strong>Information:</strong> the term <strong>%1</strong> has already been added using the above qualifier...").arg(mTermValue->text());
         } else {
             outputLabelText = tr("Sorry, but no terms were found for <strong>%1</strong>...").arg(mTerm);
         }
