@@ -429,7 +429,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::upudateOutputMessage(const b
         mOutputMessage->setIconMessage(QString(), QString());
     } else if (mTermValue->text().isEmpty()) {
         mOutputMessage->setIconMessage(":/oxygen/actions/help-hint.png",
-                                       tr("Enter a term to search above..."));
+                                       tr("Enter a term above..."));
     } else if (pLookUpTerm) {
         mOutputMessage->setIconMessage(QString(), QString());
 

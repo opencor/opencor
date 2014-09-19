@@ -317,8 +317,8 @@
         <translation>Ajouter</translation>
     </message>
     <message>
-        <source>Enter a term to search above...</source>
-        <translation>Entrez un terme à chercher plus haut...</translation>
+        <source>Enter a term above...</source>
+        <translation>Entrez un terme plus haut...</translation>
     </message>
     <message>
         <source>No terms were found for &lt;strong&gt;%1&lt;/strong&gt;...</source>
