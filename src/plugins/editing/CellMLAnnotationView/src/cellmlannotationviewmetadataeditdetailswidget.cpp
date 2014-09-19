@@ -39,6 +39,7 @@ specific language governing permissions and limitations under the License.
 #include <Qt>
 
 //==============================================================================
+#include <QDebug>
 
 #include <QAbstractItemView>
 #include <QApplication>
@@ -65,51 +66,15 @@ specific language governing permissions and limitations under the License.
 #include <QTimer>
 #include <QVariant>
 #include <QVBoxLayout>
+#include <QWebElement>
+#include <QWebFrame>
+#include <QWebPage>
+#include <QWebView>
 
 //==============================================================================
 
 namespace OpenCOR {
 namespace CellMLAnnotationView {
-
-//==============================================================================
-
-void CellmlAnnotationViewMetadataItemDelegate::paint(QPainter *pPainter,
-                                                     const QStyleOptionViewItem &pOption,
-                                                     const QModelIndex &pIndex) const
-{
-    // Paint the item as normal, except for error/warning/category items
-
-    CellmlAnnotationViewMetadataItem *metadataItem = static_cast<CellmlAnnotationViewMetadataItem *>(qobject_cast<const QStandardItemModel *>(pIndex.model())->itemFromIndex(pIndex));
-
-    QStyleOptionViewItemV4 option(pOption);
-
-    initStyleOption(&option, pIndex);
-
-    if (!metadataItem->url().isEmpty()) {
-        option.palette.setColor(QPalette::Text, Core::linkColor());
-        option.font.setUnderline(true);
-    }
-
-    QStyledItemDelegate::paint(pPainter, option, pIndex);
-}
-
-//==============================================================================
-
-CellmlAnnotationViewMetadataItem::CellmlAnnotationViewMetadataItem(const QString &pText,
-                                                                   const QString &pUrl) :
-    QStandardItem(pText),
-    mUrl(pUrl)
-{
-}
-
-//==============================================================================
-
-QString CellmlAnnotationViewMetadataItem::url() const
-{
-    // Return the metadata item's URL
-
-    return mUrl;
-}
 
 //==============================================================================
 
@@ -287,7 +252,8 @@ CellmlAnnotationViewMetadataEditDetailsWidget::CellmlAnnotationViewMetadataEditD
     setTabOrder(mLookUpQualifierButton, mTermValue);
     setTabOrder(mTermValue, mAddTermButton);
 
-    // Create an output widget that will contain our output label and tree view
+    // Create an output widget that will contain our output message and ourput
+    // for possible ontological terms
 
     mOutput = new Core::Widget(this);
 
@@ -301,31 +267,30 @@ CellmlAnnotationViewMetadataEditDetailsWidget::CellmlAnnotationViewMetadataEditD
     // Create our output message (within a scroll area, in case the label is too
     // wide)
 
-    mOutputLabelScrollArea = new QScrollArea(mOutput);
+    mOutputMessageScrollArea = new QScrollArea(mOutput);
 
-    mOutputLabelScrollArea->setFrameShape(QFrame::NoFrame);
-    mOutputLabelScrollArea->setWidgetResizable(true);
+    mOutputMessageScrollArea->setFrameShape(QFrame::NoFrame);
+    mOutputMessageScrollArea->setWidgetResizable(true);
 
-    mOutputMessage = new Core::UserMessageWidget(mOutputLabelScrollArea);
+    mOutputMessage = new Core::UserMessageWidget(mOutputMessageScrollArea);
 
-    mOutputLabelScrollArea->setWidget(mOutputMessage);
+    mOutputMessageScrollArea->setWidget(mOutputMessage);
 
-    // Create our output tree view
+    // Create our output for possible ontological terms
 
-    mOutputTreeView = new Core::TreeViewWidget(mOutput);
-    mOutputTreeViewModel = new QStandardItemModel(mOutputTreeView);
-    mOutputTreeViewItemDelegate = new CellmlAnnotationViewMetadataItemDelegate();
+    Core::readTextFromFile(":/possibleOntologicalTerms.html", mOutputPossibleOntologicalTermsTemplate);
 
-    mOutputTreeView->setEditTriggers(QAbstractItemView::NoEditTriggers);
-    mOutputTreeView->setItemDelegate(mOutputTreeViewItemDelegate);
-    mOutputTreeView->setModel(mOutputTreeViewModel);
-    mOutputTreeView->setRootIsDecorated(false);
-    mOutputTreeView->setSelectionMode(QAbstractItemView::NoSelection);
+    mOutputPossibleOntologicalTerms = new QWebView(mOutput);
 
-    // Add our output label and tree view to our output widget
+    mOutputPossibleOntologicalTerms->setAcceptDrops(false);
+    mOutputPossibleOntologicalTerms->setSizePolicy(QSizePolicy::Expanding,
+                                                   QSizePolicy::Expanding);
 
-    mOutput->layout()->addWidget(mOutputLabelScrollArea);
-    mOutput->layout()->addWidget(mOutputTreeView);
+    // Add our output message and ourput for possible ontological terms to our
+    // output widget
+
+    mOutput->layout()->addWidget(mOutputMessageScrollArea);
+    mOutput->layout()->addWidget(mOutputPossibleOntologicalTerms);
 
     // Add our 'internal' widgets to our main layout
 
@@ -366,15 +331,13 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::retranslateUi()
     mAddTermButton->setStatusTip(tr("Add the term"));
     mAddTermButton->setToolTip(tr("Add"));
 
-    // Retranslate our output label text, if needed
+    // Retranslate our output message
 
-    upudateOutputLabelText(mLookUpTerm, mErrorMessage);
+    upudateOutputMessage(mLookUpTerm, mErrorMessage);
 
-    // Retranslate the headers of our tree view
+    // Retranslate our output for possible ontological terms
 
-    mOutputTreeViewModel->setHorizontalHeaderLabels(QStringList() << tr("Name")
-                                                                  << tr("Resource")
-                                                                  << tr("Id"));
+    updateOutputPossibleOntologicalTerms();
 }
 
 //==============================================================================
@@ -453,11 +416,11 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(iface::cellml_api:
 
 //==============================================================================
 
-void CellmlAnnotationViewMetadataEditDetailsWidget::upudateOutputLabelText(const bool &pLookUpTerm,
-                                                                           const QString &pErrorMessage,
-                                                                           bool *pShowBusyWidget)
+void CellmlAnnotationViewMetadataEditDetailsWidget::upudateOutputMessage(const bool &pLookUpTerm,
+                                                                         const QString &pErrorMessage,
+                                                                         bool *pShowBusyWidget)
 {
-    // Update our output label text
+    // Update our output message
 
     if (pShowBusyWidget)
         *pShowBusyWidget = false;
@@ -492,6 +455,19 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::upudateOutputLabelText(const
 
 //==============================================================================
 
+void CellmlAnnotationViewMetadataEditDetailsWidget::updateOutputPossibleOntologicalTerms()
+{
+    // Update our output for possible ontological terms
+
+    QWebElement documentElement = mOutputPossibleOntologicalTerms->page()->mainFrame()->documentElement();
+
+    documentElement.findFirst("th[id=name]").setInnerXml(tr("Name"));
+    documentElement.findFirst("th[id=resource]").setInnerXml(tr("Resource"));
+    documentElement.findFirst("th[id=is]").setInnerXml(tr("Id"));
+}
+
+//==============================================================================
+
 void CellmlAnnotationViewMetadataEditDetailsWidget::updateItemsGui(const Items &pItems,
                                                                    const bool &pLookUpTerm,
                                                                    const QString &pErrorMessage)
@@ -505,7 +481,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateItemsGui(const Items &
     // Note: we might only do that before adding new items, but then again there
     //       is no need to waste memory, so...
 
-    mOutputTreeViewModel->removeRows(0, mOutputTreeViewModel->rowCount());
+    mOutputPossibleOntologicalTerms->setHtml(QString());
 
     // Populate our new layout, but only if there is at least one item
 
@@ -513,6 +489,8 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateItemsGui(const Items &
 
     if (pItems.count()) {
         // Add the items
+
+        QString possibleOntologicalTerms = QString();
 
         foreach (const Item &item, pItems) {
             // Resource
@@ -577,17 +555,30 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateItemsGui(const Items &
 
 //            newGridLayout->addWidget(addButton, row, 3, Qt::AlignCenter);
 
-            mOutputTreeViewModel->invisibleRootItem()->appendRow(QList<QStandardItem *>() << new CellmlAnnotationViewMetadataItem(item.name)
-                                                                                          << new CellmlAnnotationViewMetadataItem(item.resource, resourceUrl)
-                                                                                          << new CellmlAnnotationViewMetadataItem(item.id, idUrl));
+//            mOutputTreeViewModel->invisibleRootItem()->appendRow(QList<QStandardItem *>() << new CellmlAnnotationViewMetadataItem(item.name)
+//                                                                                          << new CellmlAnnotationViewMetadataItem(item.resource, resourceUrl)
+//                                                                                          << new CellmlAnnotationViewMetadataItem(item.id, idUrl));
+            possibleOntologicalTerms +=  "<tr>"
+                                         "    <td>"
+                                         "        "+item.name
+                                        +"    </td>"
+                                         "    <td>"
+                                         "        "+item.resource
+                                        +"    </td>"
+                                         "    <td>"
+                                         "        "+item.id
+                                        +"    </td>"
+                                         "</tr>";
         }
 
-        mOutputTreeView->resizeColumnsToContents();
+        mOutputPossibleOntologicalTerms->setHtml(mOutputPossibleOntologicalTermsTemplate.arg(possibleOntologicalTerms));
+
+        updateOutputPossibleOntologicalTerms();
     } else {
         // No items to show, so either there is no data available or an error
-        // occurred, so update our output label text
+        // occurred, so update our output message
 
-        upudateOutputLabelText(pLookUpTerm, pErrorMessage, &showBusyWidget);
+        upudateOutputMessage(pLookUpTerm, pErrorMessage, &showBusyWidget);
 
         // Pretend that we don't want to look anything up, if needed
         // Note: this is in case a resource or id used to be looked up, in which
@@ -603,8 +594,8 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateItemsGui(const Items &
 
     // Hide our old output widget and show our new one
 
-    mOutputLabelScrollArea->setVisible(!pItems.count());
-    mOutputTreeView->setVisible(pItems.count());
+    mOutputMessageScrollArea->setVisible(!pItems.count());
+    mOutputPossibleOntologicalTerms->setVisible(pItems.count());
 
     // show our busy widget instead, if needed
 

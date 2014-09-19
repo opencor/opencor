@@ -55,6 +55,7 @@ class QPushButton;
 class QScrollArea;
 class QStandardItemModel;
 class QVBoxLayout;
+class QWebView;
 
 //==============================================================================
 
@@ -74,29 +75,6 @@ namespace CellMLAnnotationView {
 //==============================================================================
 
 class CellmlAnnotationViewEditingWidget;
-
-//==============================================================================
-
-class CellmlAnnotationViewMetadataItemDelegate : public QStyledItemDelegate
-{
-public:
-    virtual void paint(QPainter *pPainter, const QStyleOptionViewItem &pOption,
-                       const QModelIndex &pIndex) const;
-};
-
-//==============================================================================
-
-class CellmlAnnotationViewMetadataItem : public QStandardItem
-{
-public:
-    explicit CellmlAnnotationViewMetadataItem(const QString &pText,
-                                              const QString &pUrl = QString());
-
-    QString url() const;
-
-private:
-    QString mUrl;
-};
 
 //==============================================================================
 
@@ -154,12 +132,11 @@ private:
 
     Core::Widget *mOutput;
 
-    QScrollArea *mOutputLabelScrollArea;
+    QScrollArea *mOutputMessageScrollArea;
     Core::UserMessageWidget *mOutputMessage;
 
-    Core::TreeViewWidget *mOutputTreeView;
-    QStandardItemModel *mOutputTreeViewModel;
-    CellmlAnnotationViewMetadataItemDelegate *mOutputTreeViewItemDelegate;
+    QString mOutputPossibleOntologicalTermsTemplate;
+    QWebView *mOutputPossibleOntologicalTerms;
 
     InformationType mInformationType;
 
@@ -179,9 +156,11 @@ private:
 
     QNetworkReply *mNetworkReply;
 
-    void upudateOutputLabelText(const bool &pLookUpTerm,
-                                const QString &pErrorMessage,
-                                bool *pShowBusyWidget = 0);
+    void upudateOutputMessage(const bool &pLookUpTerm,
+                              const QString &pErrorMessage,
+                              bool *pShowBusyWidget = 0);
+    void updateOutputPossibleOntologicalTerms();
+
     void updateItemsGui(const Items &pItems, const bool &pLookUpTerm,
                         const QString &pErrorMessage);
 
