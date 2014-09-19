@@ -176,18 +176,17 @@ void CellmlModelRepositoryWindowWindow::outputModelList(const QStringList &pMode
         contents = leadingSpaces+tr("No CellML model matches your criteria");
     }
 
-    // Show/hide our busy widget
+    // Show/hide our busy widget and output the list matching the search
+    // criteria, or a message telling the user what went wrong, if anything and
+    // if needed
 
-    if (mModelListRequested)
+    if (mModelListRequested) {
         showBusyWidget(mCellmlModelRepositoryWidget);
-    else
+    } else {
         hideBusyWidget();
 
-    // Output the list matching the search criteria, or a message telling the
-    // user what went wrong, if anything and if needed
-
-    if (!mModelListRequested)
         mCellmlModelRepositoryWidget->output(contents);
+    }
 }
 
 //==============================================================================
