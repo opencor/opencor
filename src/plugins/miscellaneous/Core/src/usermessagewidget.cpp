@@ -44,9 +44,9 @@ void UserMessageWidget::constructor(const QString &pIcon,
 {
     // Some initialisations
 
-    mIcon = pIcon;
-    mMessage = pMessage;
-    mExtraMessage = pExtraMessage;
+    mIcon = QString();
+    mMessage = QString();
+    mExtraMessage = QString();
 
     // Customise our background
 
@@ -69,7 +69,7 @@ void UserMessageWidget::constructor(const QString &pIcon,
 
     // 'Initialise' our message
 
-    updateMessage();
+    setIconMessage(pIcon, pMessage, pExtraMessage);
 }
 
 //==============================================================================
@@ -109,52 +109,48 @@ UserMessageWidget::UserMessageWidget(const QString &pIcon, QWidget *pParent) :
 
 //==============================================================================
 
-void UserMessageWidget::updateMessage()
+void UserMessageWidget::setIconMessage(const QString &pIcon,
+                                       const QString &pMessage,
+                                       const QString &pExtraMessage)
 {
-    // Update our message by setting the icon to the left and the message itself
-    // to the right
+    // Set our message, if needed
 
-    if (mExtraMessage.isEmpty())
-        setText(QString("<table align=center>"
-                        "    <tr valign=middle>"
-                        "        <td>"
-                        "            <img src=\"%1\"/>"
-                        "        </td>"
-                        "        <td align=center>"
-                        "            <p>"
-                        "                %2"
-                        "            </p>"
-                        "        </td>"
-                        "    </tr>"
-                        "</table>").arg(mIcon, mMessage));
-    else
-        setText(QString("<table align=center>"
-                        "    <tr valign=middle>"
-                        "        <td>"
-                        "            <img src=\"%1\"/>"
-                        "        </td>"
-                        "        <td align=center>"
-                        "            <p>"
-                        "                %2"
-                        "            </p>"
-                        "            <p>"
-                        "                <small><em>(%3)</em></small>"
-                        "            </p>"
-                        "        </td>"
-                        "    </tr>"
-                        "</table>").arg(mIcon, mMessage, mExtraMessage));
-}
-
-//==============================================================================
-
-void UserMessageWidget::setIcon(const QString &pIcon)
-{
-    // Set the icon
-
-    if (pIcon.compare(mIcon)) {
+    if (   pIcon.compare(mIcon)
+        || pMessage.compare(mMessage)
+        || pExtraMessage.compare(mExtraMessage)) {
         mIcon = pIcon;
+        mMessage = pMessage;
+        mExtraMessage = pExtraMessage;
 
-        updateMessage();
+        if (mExtraMessage.isEmpty())
+            setText(QString("<table align=center>"
+                            "    <tr valign=middle>"
+                            "        <td>"
+                            "            <img src=\"%1\"/>"
+                            "        </td>"
+                            "        <td align=center>"
+                            "            <p style=\"margin: 0px;\">"
+                            "                %2"
+                            "            </p>"
+                            "        </td>"
+                            "    </tr>"
+                            "</table>").arg(mIcon, mMessage));
+        else
+            setText(QString("<table align=center>"
+                            "    <tr valign=middle>"
+                            "        <td>"
+                            "            <img src=\"%1\"/>"
+                            "        </td>"
+                            "        <td align=center>"
+                            "            <p style=\"margin: 0px;\">"
+                            "                %2"
+                            "            </p>"
+                            "            <p style=\"margin: 0px;\">"
+                            "                <small><em>(%3)</em></small>"
+                            "            </p>"
+                            "        </td>"
+                            "    </tr>"
+                            "</table>").arg(mIcon, mMessage, mExtraMessage));
     }
 }
 
@@ -163,14 +159,9 @@ void UserMessageWidget::setIcon(const QString &pIcon)
 void UserMessageWidget::setMessage(const QString &pMessage,
                                    const QString &pExtraMessage)
 {
-    // Set the message
+    // Set our message
 
-    if (pMessage.compare(mMessage) || pExtraMessage.compare(mExtraMessage)) {
-        mMessage = pMessage;
-        mExtraMessage = pExtraMessage;
-
-        updateMessage();
-    }
+    setIconMessage(mIcon, pMessage, pExtraMessage);
 }
 
 //==============================================================================
