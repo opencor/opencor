@@ -490,9 +490,9 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateItemsGui(const Items &
         foreach (const Item &item, pItems) {
             // Resource
 
-            QString resourceUrl = "http://identifiers.org/"+item.resource+"/?redirect=true";
+            QString itemInformation = item.resource+"|"+item.id;
 
-//            QString itemInformation = item.resource+"|"+item.id;
+            QString resourceUrl = "http://identifiers.org/"+item.resource+"/?redirect=true";
 
 //            QLabel *resourceLabel = Core::newLabel("<a href=\""+itemInformation+"\">"+item.resource+"</a>",
 //                                                   1.0, false, false,
@@ -558,10 +558,10 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateItemsGui(const Items &
                                          "        "+item.name
                                         +"    </td>"
                                          "    <td>"
-                                         "        "+item.resource
+                                         "        <a href=\""+itemInformation+"\">"+item.resource+"</a>"
                                         +"    </td>"
                                          "    <td>"
-                                         "        "+item.id
+                                         "        <a href=\""+itemInformation+"\">"+item.id+"</a>"
                                         +"    </td>"
                                          "</tr>";
         }
