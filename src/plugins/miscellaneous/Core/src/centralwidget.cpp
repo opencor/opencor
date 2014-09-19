@@ -1802,7 +1802,7 @@ void CentralWidget::updateNoViewMsg()
     } else {
         CentralWidgetMode *mode = mModes.value(mModeTabIndexModes.value(fileModeTabIndex));
 
-        mNoViewMsg->setMessage(tr("Sorry, but the <strong>%1</strong> view does not support this type of file...").arg(qobject_cast<ViewInterface *>(mode->viewPlugins()->value(mode->viewTabs()->currentIndex())->instance())->viewName()));
+        mNoViewMsg->setMessage(tr("The <strong>%1</strong> view does not support this type of file...").arg(qobject_cast<ViewInterface *>(mode->viewPlugins()->value(mode->viewTabs()->currentIndex())->instance())->viewName()));
     }
 }
 

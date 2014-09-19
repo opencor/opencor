@@ -62,7 +62,7 @@ CellmlAnnotationViewMetadataDetailsWidget::CellmlAnnotationViewMetadataDetailsWi
 
     // Create our unsupported metadata message widget
 
-    mCategoryMessage = new Core::UserMessageWidget(":/oxygen/actions/help-about.png", this);
+    mCategoryMessage = new Core::UserMessageWidget(":/oxygen/actions/help-hint.png", this);
     mBorderedCategoryMessage = new Core::BorderedWidget(mCategoryMessage,
                                                         false, true, true, false);
 
@@ -205,13 +205,13 @@ void CellmlAnnotationViewMetadataDetailsWidget::retranslateUi()
 
     // Retranslate our category message
 
-    mCategoryMessage->setMessage(tr("Please select a CellML element..."));
+    mCategoryMessage->setMessage(tr("Select a CellML element..."));
 
     // Retranslate our unsupported metadata message
 
-    mUnsupportedMetadataMessage->setMessage(tr("Sorry, but the <strong>%1</strong> view does not support this type of metadata...").arg(mParent->pluginParent()->viewName()),
+    mUnsupportedMetadataMessage->setMessage(tr("The <strong>%1</strong> view does not support this type of metadata...").arg(mParent->pluginParent()->viewName()),
                                             Core::FileManager::instance()->isReadableAndWritable(mCellmlFile->fileName())?
-                                                tr("Please click <a href=\"here\">here</a> if you want to remove the existing metadata."):
+                                                tr("Click <a href=\"here\">here</a> if you want to remove the existing metadata."):
                                                 QString());
 }
 

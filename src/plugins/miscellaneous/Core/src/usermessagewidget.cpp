@@ -109,6 +109,16 @@ UserMessageWidget::UserMessageWidget(const QString &pIcon, QWidget *pParent) :
 
 //==============================================================================
 
+UserMessageWidget::UserMessageWidget(QWidget *pParent) :
+    QLabel(pParent)
+{
+    // Construct our object
+
+    constructor();
+}
+
+//==============================================================================
+
 void UserMessageWidget::setIconMessage(const QString &pIcon,
                                        const QString &pMessage,
                                        const QString &pExtraMessage)

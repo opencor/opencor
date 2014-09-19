@@ -306,8 +306,7 @@ CellmlAnnotationViewMetadataEditDetailsWidget::CellmlAnnotationViewMetadataEditD
     mOutputLabelScrollArea->setFrameShape(QFrame::NoFrame);
     mOutputLabelScrollArea->setWidgetResizable(true);
 
-    mOutputMessage = new Core::UserMessageWidget(":/oxygen/actions/help-about.png",
-                                                 mOutputLabelScrollArea);
+    mOutputMessage = new Core::UserMessageWidget(mOutputLabelScrollArea);
 
     mOutputLabelScrollArea->setWidget(mOutputMessage);
 
@@ -463,31 +462,32 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::upudateOutputLabelText(const
     if (pShowBusyWidget)
         *pShowBusyWidget = false;
 
-    QString outputLabelText;
-
     if (!Core::FileManager::instance()->isReadableAndWritable(mCellmlFile->fileName())) {
-        outputLabelText = QString();
+        mOutputMessage->setIconMessage(QString(), QString());
     } else if (mTermValue->text().isEmpty()) {
-        outputLabelText = tr("Please enter a term to search above...");
+        mOutputMessage->setIconMessage(":/oxygen/actions/help-hint.png",
+                                       tr("Enter a term to search above..."));
     } else if (pLookUpTerm) {
-        outputLabelText = QString();
+        mOutputMessage->setIconMessage(QString(), QString());
 
         if (pShowBusyWidget)
             *pShowBusyWidget = true;
     } else if (pErrorMessage.isEmpty()) {
         if (isDirectTerm(mTermValue->text())) {
             if (mAddTermButton->isEnabled())
-                outputLabelText = tr("<strong>Information:</strong> you can directly add the term <strong>%1</strong>...").arg(mTermValue->text());
+                mOutputMessage->setIconMessage(":/oxygen/actions/help-hint.png",
+                                               tr("You can directly add the term <strong>%1</strong>...").arg(mTermValue->text()));
             else
-                outputLabelText = tr("<strong>Information:</strong> the term <strong>%1</strong> has already been added using the above qualifier...").arg(mTermValue->text());
+                mOutputMessage->setIconMessage(":/oxygen/actions/help-about.png",
+                                               tr("The term <strong>%1</strong> has already been added using the above qualifier...").arg(mTermValue->text()));
         } else {
-            outputLabelText = tr("Sorry, but no terms were found for <strong>%1</strong>...").arg(mTerm);
+            mOutputMessage->setIconMessage(":/oxygen/actions/help-about.png",
+                                           tr("No terms were found for <strong>%1</strong>...").arg(mTerm));
         }
     } else {
-        outputLabelText = tr("<strong>Error:</strong> ")+Core::formatErrorMessage(pErrorMessage);
+        mOutputMessage->setIconMessage(":/oxygen/emblems/emblem-important.png",
+                                       Core::formatErrorMessage(pErrorMessage));
     }
-
-    mOutputMessage->setMessage(outputLabelText);
 }
 
 //==============================================================================
