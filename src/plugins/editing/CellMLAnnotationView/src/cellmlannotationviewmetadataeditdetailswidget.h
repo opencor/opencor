@@ -147,7 +147,6 @@ private:
 
     QString mTerm;
     QStringList mTerms;
-    bool mTermIsDirect;
 
     QString mErrorMessage;
     bool mLookUpTerm;
@@ -191,6 +190,8 @@ private:
     void genericLookUp(const QString &pItemInformation = QString(),
                        const InformationType &pInformationType = None,
                        const bool &pRetranslate = false);
+
+    bool isDirectTerm(const QString &pTerm) const;
 
 Q_SIGNALS:
     void qualifierLookUpRequested(const QString &pQualifier,

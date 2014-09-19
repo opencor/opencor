@@ -154,7 +154,6 @@ CellmlAnnotationViewMetadataEditDetailsWidget::CellmlAnnotationViewMetadataEditD
     mAddTermButton(0),
     mTerm(QString()),
     mTerms(QStringList()),
-    mTermIsDirect(false),
     mErrorMessage(QString()),
     mLookUpTerm(false),
     mInformationType(None),
@@ -404,7 +403,9 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(iface::cellml_api:
     // Enable/disable our add term button, depending on whether the direct term
     // is already associated with the CellML element
 
-    if (mTermIsDirect) {
+    bool termIsDirect = isDirectTerm(mTerm);
+
+    if (termIsDirect) {
         QStringList termInformation = mTerm.split("/");
 
         if (mQualifierValue->currentIndex() < CellMLSupport::CellmlFileRdfTriple::LastBioQualifier)
@@ -430,8 +431,8 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(iface::cellml_api:
     //       doesn't look nice...
 
     if (   (pResetItemsGui && !mParent->parent()->isBusyWidgetVisible())
-        || mTermIsDirect)
-        updateItemsGui(Items(), !mTermIsDirect, QString());
+        || termIsDirect)
+        updateItemsGui(Items(), !termIsDirect, QString());
 
     // Enable or disable the add buttons for our retrieved terms, depending on
     // whether they are already associated with the CellML element
@@ -478,7 +479,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::upudateOutputLabelText(const
         if (pShowBusyWidget)
             *pShowBusyWidget = true;
     } else if (pErrorMessage.isEmpty()) {
-        if (mTermIsDirect) {
+        if (isDirectTerm(mTerm)) {
             if (mAddTermButton->isEnabled())
                 outputLabelText = tr("<strong>Information:</strong> you can directly add the term <strong>%1</strong>...").arg(mTerm);
             else
@@ -765,18 +766,18 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::lookUpId(const QString &pIte
 
 //==============================================================================
 
+bool CellmlAnnotationViewMetadataEditDetailsWidget::isDirectTerm(const QString &pTerm) const
+{
+    // Return whether the given term is a direct one
+
+    return    QRegularExpression("^"+CellMLSupport::ResourceRegExp+"/"+CellMLSupport::IdRegExp+"$").match(pTerm).hasMatch()
+           && (pTerm.count("/") == 1);
+}
+
+//==============================================================================
+
 void CellmlAnnotationViewMetadataEditDetailsWidget::termChanged(const QString &pTerm)
 {
-    // Keep track of the term to look up
-
-    mTerm = pTerm;
-
-    // Check whether the term could be directly added, resulting in the add term
-    // button being enabled/disabled, depending on the case
-
-    mTermIsDirect =    QRegularExpression("^"+CellMLSupport::ResourceRegExp+"/"+CellMLSupport::IdRegExp+"$").match(pTerm).hasMatch()
-                    && (pTerm.count("/") == 1);
-
     // Update the enabled state of our various add buttons
 
     updateGui(mElement, true);
@@ -784,10 +785,10 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::termChanged(const QString &p
     // Retrieve some possible ontological terms based on the given term, but
     // only if the term cannot be added directly and if it is not empty
 
-    if (!mTermIsDirect && !mTerm.isEmpty()) {
+    if (!isDirectTerm(pTerm) && !pTerm.isEmpty()) {
         // Add the term to our list of terms to look up
 
-        mTerms << mTerm;
+        mTerms << pTerm;
 
         // Retrieve some possible ontological terms, but after a short delay
         // Note: the delay is in case the term gets changed in between. Indeed,
@@ -837,6 +838,10 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::termLookedUp(QNetworkReply *
     } else {
         mNetworkReply = 0;
     }
+
+    // Keep track of the term we have just looked up
+
+    mTerm = pNetworkReply->url().toString().remove(Pmr2RicordoUrl);
 
     // Retrieve the list of terms, should we have retrieved it without any
     // problem
@@ -906,7 +911,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::addTerm()
     // Add the term to our CellML element as an RDF triple
 
     CellMLSupport::CellmlFileRdfTriple *rdfTriple;
-    QStringList termInformation = Core::stringFromPercentEncoding(mTerm).split("/");
+    QStringList termInformation = Core::stringFromPercentEncoding(mTermValue->text()).split("/");
 
     if (mQualifierValue->currentIndex() < CellMLSupport::CellmlFileRdfTriple::LastBioQualifier)
         rdfTriple = mCellmlFile->addRdfTriple(mElement,
@@ -923,7 +928,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::addTerm()
 
     // Update our items' GUI
 
-    updateItemsGui(Items(), !mTermIsDirect, QString());
+    updateItemsGui(Items(), !isDirectTerm(mTermValue->text()), QString());
 
     // Let people know that we have added an RDF triple
 
