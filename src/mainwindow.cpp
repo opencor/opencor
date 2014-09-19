@@ -1152,7 +1152,7 @@ void MainWindow::on_actionPlugins_triggered()
         // There are no plugins, so...
 
         QMessageBox::warning(this, tr("Plugins"),
-                             tr("Sorry, but no plugin could be found."));
+                             tr("No plugin could be found."));
     }
 }
 

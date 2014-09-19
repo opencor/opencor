@@ -179,8 +179,8 @@
         <translation>Délai entre deux points de données</translation>
     </message>
     <message>
-        <source>Sorry, but the &lt;strong&gt;%1&lt;/strong&gt; view requires a valid CellML file to work...</source>
-        <translation>Désolé, mais la vue &lt;strong&gt;%1&lt;/strong&gt; nécessite un fichier CellML valide pour fonctionner...</translation>
+        <source>The &lt;strong&gt;%1&lt;/strong&gt; view requires a valid CellML file to work...</source>
+        <translation>La vue &lt;strong&gt;%1&lt;/strong&gt; nécessite un fichier CellML valide pour fonctionner...</translation>
     </message>
     <message>
         <source>See below for more information.</source>
@@ -255,8 +255,8 @@
         <translation>le modèle a besoin d&apos;un solveur EAD, mais aucun n&apos;est disponible</translation>
     </message>
     <message>
-        <source>Sorry, but the &lt;strong&gt;%1&lt;/strong&gt; view requires a valid simulation environment to work...</source>
-        <translation>Désolé, mais la vue &lt;strong&gt;%1&lt;/strong&gt; nécessite un environnement de simulation valide pour fonctionner...</translation>
+        <source>The &lt;strong&gt;%1&lt;/strong&gt; view requires a valid simulation environment to work...</source>
+        <translation>La vue &lt;strong&gt;%1&lt;/strong&gt; nécessite un environnement de simulation valide pour fonctionner...</translation>
     </message>
     <message>
         <source>none</source>
@@ -271,16 +271,16 @@
         <translation>Fichier CSV</translation>
     </message>
     <message>
-        <source>Sorry, but the simulation requires %1 of memory and you have only %2 left.</source>
-        <translation>Désolé, mais la simulation requiert %1 de mémoire et il ne vous en reste que %2.</translation>
+        <source>The simulation requires %1 of memory and you have only %2 left.</source>
+        <translation>La simulation requiert %1 de mémoire et il ne vous en reste que %2.</translation>
     </message>
     <message>
         <source>NLA system(s)</source>
         <translation>Système(s) ANL</translation>
     </message>
     <message>
-        <source>Sorry, but we could not allocate the %1 of memory required for the simulation.</source>
-        <translation>Désolé, mais nous n&apos;avons pas pu allouer les %1 de mémoire nécessaires pour la simulation.</translation>
+        <source>We could not allocate the %1 of memory required for the simulation.</source>
+        <translation>Nous n&apos;avons pas pu allouer les %1 de mémoire nécessaires pour la simulation.</translation>
     </message>
     <message>
         <source>Run the simulation</source>

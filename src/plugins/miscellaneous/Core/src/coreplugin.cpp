@@ -676,7 +676,7 @@ void CorePlugin::openRecentFile()
             // The file doesn't exist anymore, so let the user know about it
 
             QMessageBox::warning(mMainWindow, tr("Reopen File"),
-                                 tr("Sorry, but <strong>%1</strong> does not exist anymore.").arg(fileNameOrUrl));
+                                 tr("<strong>%1</strong> does not exist anymore.").arg(fileNameOrUrl));
     } else {
         // Open the recent remote file
 

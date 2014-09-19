@@ -147,8 +147,8 @@
         <translation>Extensions</translation>
     </message>
     <message>
-        <source>Sorry, but no plugin could be found.</source>
-        <translation>Désolé, mais aucune extension n&apos;a été trouvée.</translation>
+        <source>No plugin could be found.</source>
+        <translation>Aucune extension n&apos;a été trouvée.</translation>
     </message>
     <message>
         <source>About</source>

@@ -299,7 +299,7 @@ void CellMLToolsPlugin::exportTo(const CellMLSupport::CellmlFile::Version &pVers
             //       following a CellML export...
 
         QMessageBox::warning(mMainWindow, tr("Export CellML File To %1").arg(format),
-                             tr("Sorry, but <strong>%1</strong> could not be exported to <strong>%2</strong>%3.").arg(fileName, format, errorMessage));
+                             tr("<strong>%1</strong> could not be exported to <strong>%2</strong>%3.").arg(fileName, format, errorMessage));
     }
 }
 
@@ -369,12 +369,12 @@ int CellMLToolsPlugin::runExportCommand(const QStringList &pArguments)
                 inFileName = localFile.fileName();
 
                 if (!Core::writeTextToFile(inFileName, fileContents))
-                    errorMessage = "Sorry, but the input file could not be saved locally.";
+                    errorMessage = "The input file could not be saved locally.";
             } else {
-                errorMessage = "Sorry, but the input file could not be saved locally.";
+                errorMessage = "The input file could not be saved locally.";
             }
         } else {
-            errorMessage = QString("Sorry, but the input file could not be opened (%1).").arg(Core::formatErrorMessage(errorMessage, false));
+            errorMessage = QString("The input file could not be opened (%1).").arg(Core::formatErrorMessage(errorMessage, false));
         }
     }
 
@@ -387,9 +387,9 @@ int CellMLToolsPlugin::runExportCommand(const QStringList &pArguments)
         // and that it can be loaded
 
         if (!QFile::exists(inFileName)) {
-            errorMessage = "Sorry, but the input file could not be found.";
+            errorMessage = "The input file could not be found.";
         } else if (!CellMLSupport::isCellmlFile(inFileName)) {
-            errorMessage = "Sorry, but the input file is not a CellML file.";
+            errorMessage = "The input file is not a CellML file.";
         } else {
             if (Core::FileManager::instance()->manage(inFileName,
                                                       inIsLocalFile?
@@ -398,12 +398,12 @@ int CellMLToolsPlugin::runExportCommand(const QStringList &pArguments)
                                                       inIsLocalFile?
                                                           QString():
                                                           inFileNameOrUrl) != Core::FileManager::Added) {
-                errorMessage = "Sorry, but the input file could not be managed.";
+                errorMessage = "The input file could not be managed.";
             } else {
                 CellMLSupport::CellmlFile *inCellmlFile = new CellMLSupport::CellmlFile(inFileName);
 
                 if (!inCellmlFile->load()) {
-                    errorMessage = "Sorry, but a problem occurred while loading the input file.";
+                    errorMessage = "A problem occurred while loading the input file.";
                 } else {
                     // At this stage, everything is fine with the input file, so
                     // now we need to check the type of export the user wants
@@ -417,17 +417,17 @@ int CellMLToolsPlugin::runExportCommand(const QStringList &pArguments)
 
                     if (    wantExportToUserDefinedFormat
                         && !QFile::exists(predefinedFormatOrUserDefinedFormatFileName)) {
-                        errorMessage = "Sorry, but the user-defined format file could not be found.";
+                        errorMessage = "The user-defined format file could not be found.";
                     } else if (   !wantExportToUserDefinedFormat
                                && !QString::fromStdWString(inCellmlFile->model()->cellmlVersion()).compare(CellMLSupport::Cellml_1_0)) {
-                        errorMessage = "Sorry, but the input file is already a CellML 1.0 file.";
+                        errorMessage = "The input file is already a CellML 1.0 file.";
                     } else {
                         // Everything seems to be fine, so attempt the export
                         // itself
 
                         if (   ( wantExportToUserDefinedFormat && !inCellmlFile->exportTo(pArguments.at(1), predefinedFormatOrUserDefinedFormatFileName))
                             || (!wantExportToUserDefinedFormat && !inCellmlFile->exportTo(pArguments.at(1), CellMLSupport::CellmlFile::Cellml_1_0))) {
-                            errorMessage = "Sorry, but the input file could not be exported";
+                            errorMessage = "The input file could not be exported";
 
                             CellMLSupport::CellmlFileIssues issues = inCellmlFile->issues();
 
@@ -524,7 +524,7 @@ void CellMLToolsPlugin::exportToUserDefinedFormat()
             //       following a CellML export...
 
         QMessageBox::warning(mMainWindow, tr("Export CellML File To User-Defined Format"),
-                             tr("Sorry, but <strong>%1</strong> could not be exported to the user-defined format described in <strong>%2</strong>%3.").arg(fileName, userDefinedFormatFileName, errorMessage));
+                             tr("<strong>%1</strong> could not be exported to the user-defined format described in <strong>%2</strong>%3.").arg(fileName, userDefinedFormatFileName, errorMessage));
     }
 }
 

@@ -20,8 +20,8 @@
         <translation></translation>
     </message>
     <message>
-        <source>Sorry, but &lt;strong&gt;%1&lt;/strong&gt; could not be exported to &lt;strong&gt;%2&lt;/strong&gt;%3.</source>
-        <translation>Désolé, mais &lt;strong&gt;%1&lt;/strong&gt; n&apos;a pas pu être exporté vers &lt;strong&gt;%2&lt;/strong&gt;%3.</translation>
+        <source>&lt;strong&gt;%1&lt;/strong&gt; could not be exported to &lt;strong&gt;%2&lt;/strong&gt;%3.</source>
+        <translation>&lt;strong&gt;%1&lt;/strong&gt; n&apos;a pas pu être exporté vers &lt;strong&gt;%2&lt;/strong&gt;%3.</translation>
     </message>
     <message>
         <source>CellML File Export To</source>
@@ -48,8 +48,8 @@
         <translation>Exporter Fichier CellML Vers Fichier Format Défini Par L&apos;Utilisateur</translation>
     </message>
     <message>
-        <source>Sorry, but &lt;strong&gt;%1&lt;/strong&gt; could not be exported to the user-defined format described in &lt;strong&gt;%2&lt;/strong&gt;%3.</source>
-        <translation>Désolé, mais &lt;strong&gt;%1&lt;/strong&gt; n&apos;a pas pu être exporté vers le format défini par l&apos;utilisateur décrit dans &lt;strong&gt;%2&lt;/strong&gt;%3.</translation>
+        <source>&lt;strong&gt;%1&lt;/strong&gt; could not be exported to the user-defined format described in &lt;strong&gt;%2&lt;/strong&gt;%3.</source>
+        <translation>&lt;strong&gt;%1&lt;/strong&gt; n&apos;a pas pu être exporté vers le format défini par l&apos;utilisateur décrit dans &lt;strong&gt;%2&lt;/strong&gt;%3.</translation>
     </message>
     <message>
         <source>User-Defined Format File</source>

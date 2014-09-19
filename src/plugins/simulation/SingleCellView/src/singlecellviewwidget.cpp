@@ -502,8 +502,8 @@ void SingleCellViewWidget::updateInvalidModelMessageWidget()
     // Update our invalid model message
 
     mInvalidModelMessageWidget->setMessage((mErrorType == InvalidCellmlFile)?
-                                               tr("Sorry, but the <strong>%1</strong> view requires a valid CellML file to work...").arg(mPluginParent->viewName()):
-                                               tr("Sorry, but the <strong>%1</strong> view requires a valid simulation environment to work...").arg(mPluginParent->viewName()),
+                                               tr("The <strong>%1</strong> view requires a valid CellML file to work...").arg(mPluginParent->viewName()):
+                                               tr("The <strong>%1</strong> view requires a valid simulation environment to work...").arg(mPluginParent->viewName()),
                                            tr("See below for more information."));
 }
 
@@ -1113,7 +1113,7 @@ void SingleCellViewWidget::on_actionRunPauseResumeSimulation_triggered()
 
             if (requiredMemory > freeMemory) {
                 QMessageBox::warning(qApp->activeWindow(), tr("Run Simulation"),
-                                     tr("Sorry, but the simulation requires %1 of memory and you have only %2 left.").arg(Core::sizeAsString(requiredMemory), Core::sizeAsString(freeMemory)));
+                                     tr("The simulation requires %1 of memory and you have only %2 left.").arg(Core::sizeAsString(requiredMemory), Core::sizeAsString(freeMemory)));
             } else {
                 // Theoretically speaking, we have enough memory to run the
                 // simulation, so try to allocate all the memory we need for the
@@ -1133,7 +1133,7 @@ void SingleCellViewWidget::on_actionRunPauseResumeSimulation_triggered()
                     mSimulation->run();
                 else
                     QMessageBox::warning(qApp->activeWindow(), tr("Run Simulation"),
-                                         tr("Sorry, but we could not allocate the %1 of memory required for the simulation.").arg(Core::sizeAsString(requiredMemory)));
+                                         tr("We could not allocate the %1 of memory required for the simulation.").arg(Core::sizeAsString(requiredMemory)));
             }
 
             // We are done handling the action, so...
