@@ -69,12 +69,42 @@ specific language governing permissions and limitations under the License.
 #include <QWebElement>
 #include <QWebFrame>
 #include <QWebPage>
-#include <QWebView>
 
 //==============================================================================
 
 namespace OpenCOR {
 namespace CellMLAnnotationView {
+
+//==============================================================================
+
+CellmlAnnotationViewMetadataWebView::CellmlAnnotationViewMetadataWebView(QWidget *pParent) :
+    QWebView(pParent),
+    mResettingCursor(false)
+{
+}
+
+//==============================================================================
+
+bool CellmlAnnotationViewMetadataWebView::event(QEvent *pEvent)
+{
+    // Override the change of the cursor when hovering some text
+
+    if (mResettingCursor) {
+        return true;
+    } else if (    (pEvent->type() == QEvent::CursorChange)
+        &&  (cursor().shape() == Qt::IBeamCursor)
+        && !mResettingCursor) {
+        mResettingCursor = true;
+
+        setCursor(Qt::ArrowCursor);
+
+        mResettingCursor = false;
+
+        return true;
+    } else {
+        return QWebView::event(pEvent);
+    }
+}
 
 //==============================================================================
 
@@ -280,7 +310,7 @@ CellmlAnnotationViewMetadataEditDetailsWidget::CellmlAnnotationViewMetadataEditD
 
     Core::readTextFromFile(":/possibleOntologicalTerms.html", mOutputPossibleOntologicalTermsTemplate);
 
-    mOutputPossibleOntologicalTerms = new QWebView(mOutput);
+    mOutputPossibleOntologicalTerms = new CellmlAnnotationViewMetadataWebView(mOutput);
 
     mOutputPossibleOntologicalTerms->setAcceptDrops(false);
     mOutputPossibleOntologicalTerms->setSizePolicy(QSizePolicy::Expanding,
