@@ -64,7 +64,7 @@ CellmlAnnotationViewMetadataDetailsWidget::CellmlAnnotationViewMetadataDetailsWi
 
     mCategoryMessage = new Core::UserMessageWidget(":/oxygen/actions/help-hint.png", this);
     mBorderedCategoryMessage = new Core::BorderedWidget(mCategoryMessage,
-                                                        false, true, true, false);
+                                                        false, true, false, false);
 
     mBorderedCategoryMessage->setVisible(false);
     // Note: we don't initially want to see it, so...
