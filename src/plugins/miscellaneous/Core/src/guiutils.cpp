@@ -33,6 +33,7 @@ specific language governing permissions and limitations under the License.
 
 #include <QAction>
 #include <QApplication>
+#include <QBuffer>
 #include <QColor>
 #include <QDate>
 #include <QFileDialog>
@@ -461,6 +462,30 @@ QLabel * newLabel(const QString &pText, QWidget *pParent)
 
     return newLabel(pText, 1.0, false, false, Qt::AlignLeft|Qt::AlignVCenter,
                     pParent);
+}
+
+//==============================================================================
+
+QString iconDataUri(const QString &pIcon, const int &pWidth, const int &pHeight)
+{
+    // Convert an icon, which resource name is given, to a data URI, after
+    // having resized it, if requested
+qDebug(">>> %s [%s, %s]", qPrintable(pIcon), qPrintable(QString::number(pWidth)), qPrintable(QString::number(pHeight)));
+
+    QIcon icon(pIcon);
+
+    if (icon.isNull())
+        return QString();
+
+    QByteArray data;
+    QBuffer buffer(&data);
+    QSize iconSize = icon.availableSizes().first();
+
+    buffer.open(QIODevice::WriteOnly);
+    icon.pixmap((pWidth == -1)?iconSize.width():pWidth,
+                (pHeight == -1)?iconSize.height():pHeight).save(&buffer, "PNG");
+
+    return QString("data:image/png;base64,%1").arg(QString(data.toBase64()));
 }
 
 //==============================================================================

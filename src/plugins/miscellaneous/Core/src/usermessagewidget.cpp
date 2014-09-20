@@ -19,6 +19,7 @@ specific language governing permissions and limitations under the License.
 // User message widget
 //==============================================================================
 
+#include "guiutils.h"
 #include "usermessagewidget.h"
 
 //==============================================================================
@@ -136,26 +137,14 @@ void UserMessageWidget::setIconMessage(const QString &pIcon,
         mMessage = pMessage;
         mExtraMessage = pExtraMessage;
 
-        // Generate a data URI for our icon
+        // Set our text as HTML
         // Note: we want our icon to have a final size of 32px by 32px. However,
         //       it may be that it has a different size to begin with. Normally,
         //       we would rely on QLabel's HTML support (and in particular on
         //       the width and height attributes of the img element) to have our
         //       icon resized for us, but this results in a pixelated and
-        //       therefore ugly image. So, instead, we generate a data URI for
-        //       our icon after having resized our icon ourselves using
-        //       QIcon::pixmap()...
-
-        QIcon icon(mIcon);
-        QByteArray data;
-        QBuffer buffer(&data);
-
-        buffer.open(QIODevice::WriteOnly);
-        icon.pixmap(32, 32).save(&buffer, "PNG");
-
-        QString iconDataUri = QString("data:image/png;base64,%1").arg(QString(data.toBase64()));
-
-        // Set our text as HTML
+        //       therefore ugly image. So, instead, we retrieve a data URI for
+        //       our resized icon...
 
         if (mExtraMessage.isEmpty())
             setText(QString("<table align=center>"
@@ -171,7 +160,7 @@ void UserMessageWidget::setIconMessage(const QString &pIcon,
                             "            </td>"
                             "        </tr>"
                             "    </tbody>"
-                            "</table>").arg(iconDataUri, mMessage));
+                            "</table>").arg(iconDataUri(mIcon, 32, 32), mMessage));
         else
             setText(QString("<table align=center>"
                             "    <tbody>"
@@ -189,7 +178,7 @@ void UserMessageWidget::setIconMessage(const QString &pIcon,
                             "            </td>"
                             "        </tr>"
                             "    </tbody>"
-                            "</table>").arg(iconDataUri, mMessage, mExtraMessage));
+                            "</table>").arg(iconDataUri(mIcon, 32, 32), mMessage, mExtraMessage));
     }
 }
 

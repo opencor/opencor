@@ -101,6 +101,9 @@ QLabel CORE_EXPORT * newLabel(const QString &pText,
                               const double &pFontPercentage, QWidget *pParent);
 QLabel CORE_EXPORT * newLabel(const QString &pText, QWidget *pParent);
 
+QString CORE_EXPORT iconDataUri(const QString &pIcon, const int &pWidth = -1,
+                                const int &pHeight = -1);
+
 void CORE_EXPORT showEnableAction(QAction *pAction, const bool &pVisible,
                                   const bool &pEnabled = true);
 void CORE_EXPORT showEnableWidget(QWidget *pWidget, const bool &pVisible,
