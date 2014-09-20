@@ -332,6 +332,14 @@
         <source>The term &lt;strong&gt;%1&lt;/strong&gt; has already been added using the above qualifier...</source>
         <translation>Le terme &lt;strong&gt;%1&lt;/strong&gt; a déjà été ajouté avec le qualificatif ci-dessus...</translation>
     </message>
+    <message>
+        <source>(1 term)</source>
+        <translation>(1 terme)</translation>
+    </message>
+    <message>
+        <source>(%1 terms)</source>
+        <translation>(%1 termes)</translation>
+    </message>
 </context>
 <context>
     <name>OpenCOR::CellMLAnnotationView::CellmlAnnotationViewMetadataNormalViewDetailsWidget</name>

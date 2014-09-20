@@ -459,6 +459,14 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateOutputPossibleOntologi
     documentElement.findFirst("th[id=name]").setInnerXml(tr("Name"));
     documentElement.findFirst("th[id=resource]").setInnerXml(tr("Resource"));
     documentElement.findFirst("th[id=is]").setInnerXml(tr("Id"));
+
+    QWebElement countElement = documentElement.findFirst("th[id=count]");
+    QString countValue = countElement.attribute("value");
+
+    if (countValue.toInt() == 1)
+        countElement.setInnerXml(tr("(1 term)"));
+    else
+        countElement.setInnerXml(tr("(%1 terms)").arg(Core::digitGroupNumber(countValue)));
 }
 
 //==============================================================================
@@ -567,6 +575,10 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateItemsGui(const Items &
         }
 
         mOutputPossibleOntologicalTerms->setHtml(mOutputPossibleOntologicalTermsTemplate.arg(possibleOntologicalTerms));
+
+        QWebElement documentElement = mOutputPossibleOntologicalTerms->page()->mainFrame()->documentElement();
+
+        documentElement.findFirst("th[id=count]").setAttribute("value", QString::number(pItems.count()));
 
         updateOutputPossibleOntologicalTerms();
     } else {
