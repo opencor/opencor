@@ -350,6 +350,56 @@ qulonglong freeMemory()
 
 //==============================================================================
 
+QString digitGroupNumber(const QString &pNumber)
+{
+    // Digit group the given number, if possible, and return the result of the
+    // digit grouping
+
+    QString res = pNumber;
+    bool validNumber;
+
+    res.toDouble(&validNumber);
+
+    if (validNumber) {
+        // The number is valid, so do digit grouping on it
+
+        int decimalPointPos = res.indexOf(".");
+        int exponentPos = res.indexOf("e", 0, Qt::CaseInsensitive);
+
+        if (decimalPointPos == -1) {
+            if (exponentPos == -1)
+                decimalPointPos = res.length();
+            else
+                decimalPointPos = exponentPos;
+        }
+
+        QString beforeDecimalPoint = res.left(decimalPointPos);
+
+        res = res.right(res.length()-decimalPointPos);
+
+        bool maybeDigit = true;
+        int nbOfDigits = -1;
+
+        for (int i = beforeDecimalPoint.length()-1; i >= 0; --i) {
+            if (maybeDigit && beforeDecimalPoint[i].isDigit()) {
+                if (++nbOfDigits == 3) {
+                    res = ","+res;
+
+                    nbOfDigits = 0;
+                }
+            } else {
+                maybeDigit = false;
+            }
+
+            res = beforeDecimalPoint[i]+res;
+        }
+    }
+
+    return res;
+}
+
+//==============================================================================
+
 QString sizeAsString(const double &pSize, const int &pPrecision)
 {
     // Note: pSize is a double rather than a qulonglong, in case we need to

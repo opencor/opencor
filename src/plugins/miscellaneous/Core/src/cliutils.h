@@ -97,6 +97,8 @@ QString CORE_EXPORT locale();
 qulonglong CORE_EXPORT totalMemory();
 qulonglong CORE_EXPORT freeMemory();
 
+QString CORE_EXPORT digitGroupNumber(const QString &pNumber);
+
 QString CORE_EXPORT sizeAsString(const double &pSize,
                                  const int &pPrecision = 1);
 

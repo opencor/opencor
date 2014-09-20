@@ -19,6 +19,7 @@ specific language governing permissions and limitations under the License.
 // Viewer widget
 //==============================================================================
 
+#include "cliutils.h"
 #include "guiutils.h"
 #include "i18ninterface.h"
 #include "viewerwidget.h"
@@ -627,47 +628,7 @@ void ViewerWidget::processNode(const QDomNode &pDomNode) const
                 // element, so check whether the value of its child is a valid
                 // number
 
-                bool domChildNodeValueValid;
-                QString domChildNodeValue = domNode.firstChild().nodeValue();
-
-                domChildNodeValue.toDouble(&domChildNodeValueValid);
-
-                if (domChildNodeValueValid) {
-                    // The number is valid, so do digit grouping on it
-
-                    int decimalPointPos = domChildNodeValue.indexOf(".");
-                    int exponentPos = domChildNodeValue.indexOf("e", 0, Qt::CaseInsensitive);
-
-                    if (decimalPointPos == -1) {
-                        if (exponentPos == -1)
-                            decimalPointPos = domChildNodeValue.length();
-                        else
-                            decimalPointPos = exponentPos;
-                    }
-
-                    QString beforeDecimalPoint = domChildNodeValue.left(decimalPointPos);
-
-                    domChildNodeValue = domChildNodeValue.right(domChildNodeValue.length()-decimalPointPos);
-
-                    bool maybeDigit = true;
-                    int nbOfDigits = -1;
-
-                    for (int i = beforeDecimalPoint.length()-1; i >= 0; --i) {
-                        if (maybeDigit && beforeDecimalPoint[i].isDigit()) {
-                            if (++nbOfDigits == 3) {
-                                domChildNodeValue = ","+domChildNodeValue;
-
-                                nbOfDigits = 0;
-                            }
-                        } else {
-                            maybeDigit = false;
-                        }
-
-                        domChildNodeValue = beforeDecimalPoint[i]+domChildNodeValue;
-                    }
-
-                    domNode.firstChild().setNodeValue(domChildNodeValue);
-                }
+                domNode.firstChild().setNodeValue(Core::digitGroupNumber(domNode.firstChild().nodeValue()));
 
                 processDomNode = false;
             }
