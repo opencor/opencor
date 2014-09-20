@@ -470,7 +470,6 @@ QString iconDataUri(const QString &pIcon, const int &pWidth, const int &pHeight)
 {
     // Convert an icon, which resource name is given, to a data URI, after
     // having resized it, if requested
-qDebug(">>> %s [%s, %s]", qPrintable(pIcon), qPrintable(QString::number(pWidth)), qPrintable(QString::number(pHeight)));
 
     QIcon icon(pIcon);
 

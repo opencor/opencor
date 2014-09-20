@@ -8,7 +8,7 @@ body {
 
 a {
     color: rgb(103, 103, 103);
-    outline: none;
+    outline: 0px;
     text-decoration: none;
 }
 

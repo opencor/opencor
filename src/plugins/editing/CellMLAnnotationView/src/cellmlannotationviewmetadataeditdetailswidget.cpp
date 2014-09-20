@@ -493,6 +493,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateItemsGui(const Items &
     if (pItems.count()) {
         // Add the items
 
+        static const QString indent = "                ";
         QString possibleOntologicalTerms = QString();
 
         foreach (const Item &item, pItems) {
@@ -561,17 +562,21 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateItemsGui(const Items &
 //            mOutputTreeViewModel->invisibleRootItem()->appendRow(QList<QStandardItem *>() << new CellmlAnnotationViewMetadataItem(item.name)
 //                                                                                          << new CellmlAnnotationViewMetadataItem(item.resource, resourceUrl)
 //                                                                                          << new CellmlAnnotationViewMetadataItem(item.id, idUrl));
-            possibleOntologicalTerms +=  "<tr>"
-                                         "    <td>"
-                                         "        "+item.name
-                                        +"    </td>"
-                                         "    <td>"
-                                         "        <a href=\""+itemInformation+"\">"+item.resource+"</a>"
-                                        +"    </td>"
-                                         "    <td>"
-                                         "        <a href=\""+itemInformation+"\">"+item.id+"</a>"
-                                        +"    </td>"
-                                         "</tr>";
+
+            possibleOntologicalTerms +=  indent+"<tr>\n"
+                                        +indent+"    <td>\n"
+                                        +indent+"        "+item.name+"\n"
+                                        +indent+"    </td>\n"
+                                        +indent+"    <td>\n"
+                                        +indent+"        <a href=\""+itemInformation+"\" draggable=\"false\">"+item.resource+"</a>\n"
+                                        +indent+"    </td>\n"
+                                        +indent+"    <td>\n"
+                                        +indent+"        <a href=\""+itemInformation+"\" draggable=\"false\">"+item.id+"</a>\n"
+                                        +indent+"    </td>\n"
+                                        +indent+"    <td>\n"
+                                        +indent+"        <button type=\"button\"><img src=\""+Core::iconDataUri(":/oxygen/actions/list-add.png", 16, 16)+"\" draggable=\"false\"/></button>\n"
+                                        +indent+"    </td>\n"
+                                        +indent+"</tr>\n";
         }
 
         mOutputPossibleOntologicalTerms->setHtml(mOutputPossibleOntologicalTermsTemplate.arg(possibleOntologicalTerms));

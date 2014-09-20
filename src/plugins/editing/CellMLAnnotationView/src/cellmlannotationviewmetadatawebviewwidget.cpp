@@ -39,6 +39,7 @@ CellmlAnnotationViewMetadataWebViewWidget::CellmlAnnotationViewMetadataWebViewWi
     // Customise ourselves
 
     setAcceptDrops(false);
+    setFocusPolicy(Qt::NoFocus);
     setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 }
 
