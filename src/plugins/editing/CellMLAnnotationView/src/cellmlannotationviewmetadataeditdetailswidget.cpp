@@ -553,16 +553,15 @@ int counter = 0;
                                         +indent+"    </td>\n"
                                         +indent+"    <td>\n"
 +indent+((++counter % 2 == 1)?
-"        <button><img src=\""+Core::iconDataUri(":/oxygen/actions/list-add.png", 16, 16)+"\" draggable=\"false\"/></button>\n":
-"        <button disabled><img class=\"disabled\" src=\""+Core::iconDataUri(":/oxygen/actions/list-add.png", 16, 16)+"\" draggable=\"false\"/></button>\n")
-//                                        +indent+"        <button><img src=\""+Core::iconDataUri(":/oxygen/actions/list-add.png", 16, 16)+"\" draggable=\"false\"/></button>\n"
+"        <img class=\"button\" src=\""+Core::iconDataUri(":/oxygen/actions/list-add.png", 16, 16)+"\" draggable=\"false\"/>\n":
+"        <img class=\"disabledbutton\" src=\""+Core::iconDataUri(":/oxygen/actions/list-add.png", 16, 16)+"\" draggable=\"false\"/>\n")
+//                                        +indent+"        <img class=\"button\" src=\""+Core::iconDataUri(":/oxygen/actions/list-add.png", 16, 16)+"\" draggable=\"false\"/>\n"
+
                                         +indent+"    </td>\n"
                                         +indent+"</tr>\n";
         }
 
         mOutputPossibleOntologicalTerms->setHtml(mOutputPossibleOntologicalTermsTemplate.arg(possibleOntologicalTerms));
-
-        QWebElement documentElement = mOutputPossibleOntologicalTerms->page()->mainFrame()->documentElement();
 
         updateOutputPossibleOntologicalTerms();
     } else {

@@ -28,19 +28,25 @@
                 color: rgb(54, 96, 146);
             }
 
-            button {
-                outline: 0px;
-                padding: 1px;
-                width: 24px;
-                height: 24px;
+            img.button {
+                background: linear-gradient(to bottom, #f9f9f9 5%, #e9e9e9 100%);
+                border: 1px solid #dcdcdc;
+                border-radius: 5px;
+                padding: 2px;
             }
 
-            img {
-                margin: -2px 0px 0px -2px;
+            img.button:active {
+                background: linear-gradient(to bottom, #e9e9e9 5%, #f9f9f9 100%);
+                filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#e9e9e9', endColorstr='#f9f9f9',GradientType=0);
+                background-color:#e9e9e9;
             }
 
-            img.disabled {
+            img.disabledbutton {
                 -webkit-filter: grayscale(100%);
+                background-color: #f9f9f9;
+                border: 1px solid #dcdcdc;
+                border-radius: 5px;
+                padding: 2px;
             }
 
             table {
