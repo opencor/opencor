@@ -150,7 +150,14 @@ private:
 
     ObjRef<iface::cellml_api::CellMLElement> mElement;
 
-    QLabel *mCurrentResourceOrIdLabel;
+    QMap<QString, QString> mUrls;
+    QStringList mItemInformationSha1s;
+
+    QString mItemInformation;
+    QString mItemResourceOrId;
+
+    QString mItemInformationForCopy;
+    QString mItemResourceOrIdForCopy;
 
     QMenu *mContextMenu;
 
@@ -196,8 +203,10 @@ private Q_SLOTS:
     void qualifierChanged(const QString &pQualifier);
 
     void lookUpQualifier();
-    void lookUpResource(const QString &pItemInformation);
-    void lookUpId(const QString &pItemInformation);
+
+    void linkHovered(const QString &pLink, const QString &pTitle,
+                     const QString &pTextContent);
+    void linkClicked();
 
     void lookUpTerm();
 

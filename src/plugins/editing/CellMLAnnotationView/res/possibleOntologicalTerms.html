@@ -30,28 +30,47 @@
 
             button {
                 outline: 0px;
+                padding: 1px;
+                width: 24px;
+                height: 24px;
             }
 
             img {
-                vertical-align: middle;
+                margin: -2px 0px 0px -2px;
+            }
+
+            img.disabled {
+                -webkit-filter: grayscale(100%);
             }
 
             table {
                 width: 100%;
+                border-spacing: 0px;
             }
 
             th {
+                font-size: 12pt;
                 white-space: nowrap;
             }
 
             th.count {
+                font-size: 10pt;
                 font-weight: normal;
                 font-style: italic;
             }
 
+            tr.highlighted {
+                background-color: rgba(54, 96, 146, 0.05);
+            }
+
             td {
+                padding: 0px;
                 text-align: center;
                 white-space: nowrap;
+            }
+
+            td.selected {
+                background-color: rgba(54, 96, 146, 0.05);
             }
         </style>
     </head>

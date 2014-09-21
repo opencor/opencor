@@ -126,7 +126,12 @@ CellmlAnnotationViewMetadataEditDetailsWidget::CellmlAnnotationViewMetadataEditD
     mItemsMapping(QMap<QObject *, Item>()),
     mCellmlFile(pParent->cellmlFile()),
     mElement(0),
-    mCurrentResourceOrIdLabel(0),
+    mUrls(QMap<QString, QString>()),
+    mItemInformationSha1s(QStringList()),
+    mItemInformation(QString()),
+    mItemResourceOrId(QString()),
+    mItemInformationForCopy(QString()),
+    mItemResourceOrIdForCopy(QString()),
     mNetworkReply(0)
 {
     // Set up the GUI
@@ -280,6 +285,18 @@ CellmlAnnotationViewMetadataEditDetailsWidget::CellmlAnnotationViewMetadataEditD
     Core::readTextFromFile(":/possibleOntologicalTerms.html", mOutputPossibleOntologicalTermsTemplate);
 
     mOutputPossibleOntologicalTerms = new CellmlAnnotationViewMetadataWebViewWidget(mOutput);
+
+    mOutputPossibleOntologicalTerms->setContextMenuPolicy(Qt::CustomContextMenu);
+
+    connect(mOutputPossibleOntologicalTerms, SIGNAL(customContextMenuRequested(const QPoint &)),
+            this, SLOT(showCustomContextMenu(const QPoint &)));
+
+    mOutputPossibleOntologicalTerms->page()->setLinkDelegationPolicy(QWebPage::DelegateAllLinks);
+
+    connect(mOutputPossibleOntologicalTerms->page(), SIGNAL(linkHovered(const QString &, const QString &, const QString &)),
+            this, SLOT(linkHovered(const QString &, const QString &, const QString &)));
+    connect(mOutputPossibleOntologicalTerms->page(), SIGNAL(linkClicked(const QUrl &)),
+            this, SLOT(linkClicked()));
 
     // Add our output message and ourput for possible ontological terms to our
     // output widget
@@ -458,7 +475,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateOutputPossibleOntologi
 
     documentElement.findFirst("th[id=name]").setInnerXml(tr("Name"));
     documentElement.findFirst("th[id=resource]").setInnerXml(tr("Resource"));
-    documentElement.findFirst("th[id=is]").setInnerXml(tr("Id"));
+    documentElement.findFirst("th[id=id]").setInnerXml(tr("Id"));
 
     QWebElement countElement = documentElement.findFirst("th[id=count]");
     QString countValue = countElement.attribute("value");
@@ -480,9 +497,12 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateItemsGui(const Items &
     mLookUpTerm = pLookUpTerm;
     mErrorMessage = pErrorMessage;
 
-    // Clean up our output tree view model
+    // Reset various properties
     // Note: we might only do that before adding new items, but then again there
     //       is no need to waste memory, so...
+
+    mUrls.clear();
+    mItemInformationSha1s.clear();
 
     mOutputPossibleOntologicalTerms->setHtml(QString());
 
@@ -495,86 +515,46 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateItemsGui(const Items &
 
         static const QString indent = "                ";
         QString possibleOntologicalTerms = QString();
+int counter = 0;
 
         foreach (const Item &item, pItems) {
-            // Resource
+            // Keep track of the URLs for the resource and id, and of the item
+            // information
 
             QString itemInformation = item.resource+"|"+item.id;
-
+            QString itemInformationSha1 = Core::sha1(itemInformation);
             QString resourceUrl = "http://identifiers.org/"+item.resource+"/?redirect=true";
-
-//            QLabel *resourceLabel = Core::newLabel("<a href=\""+itemInformation+"\">"+item.resource+"</a>",
-//                                                   1.0, false, false,
-//                                                   Qt::AlignCenter,
-//                                                   newGridWidget);
-
-//            resourceLabel->setAccessibleDescription("http://identifiers.org/"+item.resource+"/?redirect=true");
-//            resourceLabel->setContextMenuPolicy(Qt::CustomContextMenu);
-
-//            connect(resourceLabel, SIGNAL(customContextMenuRequested(const QPoint &)),
-//                    this, SLOT(showCustomContextMenu(const QPoint &)));
-//            connect(resourceLabel, SIGNAL(linkActivated(const QString &)),
-//                    this, SLOT(lookUpResource(const QString &)));
-
-//            newGridLayout->addWidget(resourceLabel, row, 1);
-
-            // Id
-
             QString idUrl = "http://identifiers.org/"+item.resource+"/"+item.id+"/?profile=most_reliable&redirect=true";
 
-//            QLabel *idLabel = Core::newLabel("<a href=\""+itemInformation+"\">"+item.id+"</a>",
-//                                             1.0, false, false,
-//                                             Qt::AlignCenter,
-//                                             newGridWidget);
+            if (!mUrls.contains(item.resource))
+                mUrls.insert(item.resource, resourceUrl);
 
-//            idLabel->setAccessibleDescription("http://identifiers.org/"+item.resource+"/"+item.id+"/?profile=most_reliable&redirect=true");
-//            idLabel->setContextMenuPolicy(Qt::CustomContextMenu);
+            mUrls.insert(itemInformation, idUrl);
 
-//            connect(idLabel, SIGNAL(customContextMenuRequested(const QPoint &)),
-//                    this, SLOT(showCustomContextMenu(const QPoint &)));
-//            connect(idLabel, SIGNAL(linkActivated(const QString &)),
-//                    this, SLOT(lookUpId(const QString &)));
-
-//            newGridLayout->addWidget(idLabel, row, 2);
+            mItemInformationSha1s << itemInformationSha1;
 
             // Add button
-
-//            QPushButton *addButton = new QPushButton(newGridWidget);
-            // Note #1: ideally, we could assign a QAction to our
-            //          QPushButton, but this cannot be done, so... we
-            //          assign a few properties by hand...
-            // Note #2: to use a QToolButton would allow us to assign a
-            //          QAction to it, but a QToolButton doesn't look quite
-            //          the same as a QPushButton on some platforms, so...
-
-//            addButton->setIcon(QIcon(":/oxygen/actions/list-add.png"));
-//            addButton->setStatusTip(tr("Add the term"));
-//            addButton->setToolTip(tr("Add"));
-//            addButton->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
 
 //            mItemsMapping.insert(addButton, item);
 
 //            connect(addButton, SIGNAL(clicked()),
 //                    this, SLOT(addRetrievedTerm()));
 
-//            newGridLayout->addWidget(addButton, row, 3, Qt::AlignCenter);
-
-//            mOutputTreeViewModel->invisibleRootItem()->appendRow(QList<QStandardItem *>() << new CellmlAnnotationViewMetadataItem(item.name)
-//                                                                                          << new CellmlAnnotationViewMetadataItem(item.resource, resourceUrl)
-//                                                                                          << new CellmlAnnotationViewMetadataItem(item.id, idUrl));
-
-            possibleOntologicalTerms +=  indent+"<tr>\n"
+            possibleOntologicalTerms +=  indent+"<tr id=\"item_"+itemInformationSha1+"\">\n"
                                         +indent+"    <td>\n"
                                         +indent+"        "+item.name+"\n"
                                         +indent+"    </td>\n"
-                                        +indent+"    <td>\n"
+                                        +indent+"    <td id=\"resource_"+itemInformationSha1+"\">\n"
                                         +indent+"        <a href=\""+itemInformation+"\" draggable=\"false\">"+item.resource+"</a>\n"
                                         +indent+"    </td>\n"
-                                        +indent+"    <td>\n"
+                                        +indent+"    <td id=\"id_"+itemInformationSha1+"\">\n"
                                         +indent+"        <a href=\""+itemInformation+"\" draggable=\"false\">"+item.id+"</a>\n"
                                         +indent+"    </td>\n"
                                         +indent+"    <td>\n"
-                                        +indent+"        <button type=\"button\"><img src=\""+Core::iconDataUri(":/oxygen/actions/list-add.png", 16, 16)+"\" draggable=\"false\"/></button>\n"
++indent+((++counter % 2 == 1)?
+"        <button><img src=\""+Core::iconDataUri(":/oxygen/actions/list-add.png", 16, 16)+"\" draggable=\"false\"/></button>\n":
+"        <button disabled><img class=\"disabled\" src=\""+Core::iconDataUri(":/oxygen/actions/list-add.png", 16, 16)+"\" draggable=\"false\"/></button>\n")
+//                                        +indent+"        <button><img src=\""+Core::iconDataUri(":/oxygen/actions/list-add.png", 16, 16)+"\" draggable=\"false\"/></button>\n"
                                         +indent+"    </td>\n"
                                         +indent+"</tr>\n";
         }
@@ -739,28 +719,63 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::lookUpQualifier()
 
 //==============================================================================
 
-void CellmlAnnotationViewMetadataEditDetailsWidget::lookUpResource(const QString &pItemInformation)
+void CellmlAnnotationViewMetadataEditDetailsWidget::linkHovered(const QString &pLink,
+                                                                const QString &pTitle,
+                                                                const QString &pTextContent)
 {
-    // Enable the looking up of information
+    Q_UNUSED(pTitle);
 
-    mLookUpInformation = true;
+    // Keep track of the link and text content
+    // Note: they will later on be used to determine whether we can show our
+    //       context menu
 
-    // Call our generic look up function
-
-    genericLookUp(pItemInformation, Resource);
+    mItemInformation = pLink;
+    mItemResourceOrId = pTextContent;
 }
 
 //==============================================================================
 
-void CellmlAnnotationViewMetadataEditDetailsWidget::lookUpId(const QString &pItemInformation)
+void CellmlAnnotationViewMetadataEditDetailsWidget::linkClicked()
 {
     // Enable the looking up of information
 
     mLookUpInformation = true;
 
+    // (Un)highlight/(un)select our various items
+
+    static const QString Highlighted = "highlighted";
+    static const QString Selected = "selected";
+
+    bool lookUpResource = mUrls.contains(mItemResourceOrId);
+    QString activeItemInformationSha1 = Core::sha1(mItemInformation);
+
+    foreach (const QString &itemInformationSha1, mItemInformationSha1s) {
+        QWebElement documentElement = mOutputPossibleOntologicalTerms->page()->mainFrame()->documentElement();
+        QWebElement itemElement = documentElement.findFirst(QString("tr[id=item_%1]").arg(itemInformationSha1));
+        QWebElement resourceElement = documentElement.findFirst(QString("td[id=resource_%1]").arg(itemInformationSha1));
+        QWebElement idElement = documentElement.findFirst(QString("td[id=id_%1]").arg(itemInformationSha1));
+
+        if (!itemInformationSha1.compare(activeItemInformationSha1)) {
+            itemElement.addClass(Highlighted);
+
+            if (lookUpResource) {
+                resourceElement.addClass(Selected);
+                idElement.removeClass(Selected);
+            } else {
+                resourceElement.removeClass(Selected);
+                idElement.addClass(Selected);
+            }
+        } else {
+            itemElement.removeClass(Highlighted);
+
+            resourceElement.removeClass(Selected);
+            idElement.removeClass(Selected);
+        }
+    }
+
     // Call our generic look up function
 
-    genericLookUp(pItemInformation, Id);
+    genericLookUp(mItemInformation, lookUpResource?Resource:Id);
 }
 
 //==============================================================================
@@ -974,14 +989,22 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::showCustomContextMenu(const 
 {
     Q_UNUSED(pPosition);
 
-    // Keep track of the resource or id
-
-    mCurrentResourceOrIdLabel = qobject_cast<QLabel *>(qApp->widgetAt(QCursor::pos()));
-
     // Show our context menu to allow the copying of the URL of the resource or
-    // id
+    // id, but only if we are over a link, i.e. if both mItemInformation and
+    // mItemResourceOrId are not empty
 
-    mContextMenu->exec(QCursor::pos());
+    if (!mItemInformation.isEmpty() && !mItemResourceOrId.isEmpty()) {
+        // Keep track of both mItemInformation and mItemResourceOrId
+        // Note: indeed, as soon as we show our context menu linkHovered() will
+        //       get called (since we won't be hovering the link anymore),
+        //       resulting in both mItemInformation and mItemResourceOrId
+        //       becoming empty...
+
+        mItemInformationForCopy = mItemInformation;
+        mItemResourceOrIdForCopy = mItemResourceOrId;
+
+        mContextMenu->exec(QCursor::pos());
+    }
 }
 
 //==============================================================================
@@ -990,7 +1013,10 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::on_actionCopy_triggered()
 {
     // Copy the URL of the resource or id to the clipboard
 
-    QApplication::clipboard()->setText(mCurrentResourceOrIdLabel->accessibleDescription());
+    if (mUrls.contains(mItemResourceOrIdForCopy))
+        QApplication::clipboard()->setText(mUrls.value(mItemResourceOrIdForCopy));
+    else
+        QApplication::clipboard()->setText(mUrls.value(mItemInformationForCopy));
 }
 
 //==============================================================================
