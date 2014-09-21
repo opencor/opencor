@@ -37,6 +37,7 @@ specific language governing permissions and limitations under the License.
 #include <QEventLoop>
 #include <QFile>
 #include <QIODevice>
+#include <QLocale>
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
 #include <QNetworkRequest>
@@ -352,48 +353,16 @@ qulonglong freeMemory()
 
 QString digitGroupNumber(const QString &pNumber)
 {
-    // Digit group the given number, if possible, and return the result of the
-    // digit grouping
+    // Digit group the given number (which we assume to be specified in the "C"
+    // locale), if possible, and return the result of the digit grouping (which
+    // is done keeping in mind the current locale)
 
     QString res = pNumber;
     bool validNumber;
+    double number = res.toDouble(&validNumber);
 
-    res.toDouble(&validNumber);
-
-    if (validNumber) {
-        // The number is valid, so do digit grouping on it
-
-        int decimalPointPos = res.indexOf(".");
-        int exponentPos = res.indexOf("e", 0, Qt::CaseInsensitive);
-
-        if (decimalPointPos == -1) {
-            if (exponentPos == -1)
-                decimalPointPos = res.length();
-            else
-                decimalPointPos = exponentPos;
-        }
-
-        QString beforeDecimalPoint = res.left(decimalPointPos);
-
-        res = res.right(res.length()-decimalPointPos);
-
-        bool maybeDigit = true;
-        int nbOfDigits = -1;
-
-        for (int i = beforeDecimalPoint.length()-1; i >= 0; --i) {
-            if (maybeDigit && beforeDecimalPoint[i].isDigit()) {
-                if (++nbOfDigits == 3) {
-                    res = ","+res;
-
-                    nbOfDigits = 0;
-                }
-            } else {
-                maybeDigit = false;
-            }
-
-            res = beforeDecimalPoint[i]+res;
-        }
-    }
+    if (validNumber)
+        res = QLocale().toString(number);
 
     return res;
 }
@@ -415,7 +384,7 @@ QString sizeAsString(const double &pSize, const int &pPrecision)
 
     size = qRound(scaling*size)/scaling;
 
-    return digitGroupNumber(QString::number(size))+" "+units[i];
+    return QLocale().toString(size)+" "+units[i];
 }
 
 //==============================================================================

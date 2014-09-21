@@ -53,6 +53,7 @@ specific language governing permissions and limitations under the License.
 #include <QLayout>
 #include <QLayoutItem>
 #include <QLineEdit>
+#include <QLocale>
 #include <QMenu>
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
@@ -119,6 +120,7 @@ CellmlAnnotationViewMetadataEditDetailsWidget::CellmlAnnotationViewMetadataEditD
     mAddTermButton(0),
     mTerm(QString()),
     mTerms(QStringList()),
+    mCount(0),
     mErrorMessage(QString()),
     mLookUpTerm(false),
     mInformationType(None),
@@ -478,12 +480,11 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateOutputPossibleOntologi
     documentElement.findFirst("th[id=id]").setInnerXml(tr("Id"));
 
     QWebElement countElement = documentElement.findFirst("th[id=count]");
-    QString countValue = countElement.attribute("value");
 
-    if (countValue.toInt() == 1)
+    if (mCount == 1)
         countElement.setInnerXml(tr("(1 term)"));
     else
-        countElement.setInnerXml(tr("(%1 terms)").arg(Core::digitGroupNumber(countValue)));
+        countElement.setInnerXml(tr("(%1 terms)").arg(QLocale().toString(mCount)));
 }
 
 //==============================================================================
@@ -562,8 +563,6 @@ int counter = 0;
         mOutputPossibleOntologicalTerms->setHtml(mOutputPossibleOntologicalTermsTemplate.arg(possibleOntologicalTerms));
 
         QWebElement documentElement = mOutputPossibleOntologicalTerms->page()->mainFrame()->documentElement();
-
-        documentElement.findFirst("th[id=count]").setAttribute("value", QString::number(pItems.count()));
 
         updateOutputPossibleOntologicalTerms();
     } else {
@@ -904,8 +903,11 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::termLookedUp(QNetworkReply *
     }
 
     // Update our GUI with the results of the look up after having sorted them
+    // and kept track of it size
 
     std::sort(items.begin(), items.end());
+
+    mCount = items.count();
 
     updateItemsGui(items, false, errorMessage);
 

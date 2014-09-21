@@ -625,8 +625,7 @@ void ViewerWidget::processNode(const QDomNode &pDomNode) const
             } else if (    digitGrouping()
                        && !domNode.nodeName().compare("mn")) {
                 // We want to do digit grouping and the current node is an mn
-                // element, so check whether the value of its child is a valid
-                // number
+                // element, so we can go ahead
 
                 domNode.firstChild().setNodeValue(Core::digitGroupNumber(domNode.firstChild().nodeValue()));
 

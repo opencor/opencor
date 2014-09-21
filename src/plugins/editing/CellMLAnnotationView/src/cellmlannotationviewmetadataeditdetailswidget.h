@@ -127,6 +127,8 @@ private:
     QString mTerm;
     QStringList mTerms;
 
+    int mCount;
+
     QString mErrorMessage;
     bool mLookUpTerm;
 

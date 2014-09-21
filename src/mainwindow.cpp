@@ -58,6 +58,7 @@ specific language governing permissions and limitations under the License.
 #include <QDesktopServices>
 #include <QDesktopWidget>
 #include <QFileDialog>
+#include <QLocale>
 #include <QMenu>
 #include <QMenuBar>
 #include <QMessageBox>
@@ -772,6 +773,8 @@ void MainWindow::setLocale(const QString &pLocale, const bool &pForceSetting)
 
     if (oldLocale.compare(newLocale) || pForceSetting) {
         // Specify the language to be used by OpenCOR
+
+        QLocale::setDefault(QLocale(newLocale));
 
         qApp->removeTranslator(&mQtTranslator);
         mQtTranslator.load(":qt_"+newLocale);
