@@ -133,10 +133,6 @@ SingleCellViewWidget::SingleCellViewWidget(SingleCellViewPlugin *pPluginParent,
 
     mDelayWidget->setValue(0.0);
 
-    updateDelayValue(mDelayWidget->value());
-    // Note: our call to updateDelayValue() is because the connection is not yet
-    //       effective when we set the value of the delay widget...
-
     // Create a tool bar widget with different buttons
 
     mToolBarWidget = new Core::ToolBarWidget(this);
@@ -342,6 +338,10 @@ void SingleCellViewWidget::retranslateUi()
     mGui->retranslateUi(this);
 
     // Retranslate our delay and delay value widgets
+
+    updateDelayValue(mDelayWidget->value());
+    // Note: we do this because we want to display the delay using digit
+    //       grouping, this respecting the current locale...
 
     mDelayWidget->setToolTip(tr("Simulation Delay"));
     mDelayValueWidget->setToolTip(mDelayWidget->toolTip());

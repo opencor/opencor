@@ -189,6 +189,12 @@ void ViewerWidget::retranslateUi()
                                      tr("Group the digits of a number in groups of thousands"));
     I18nInterface::retranslateAction(mCopyToClipboardAction, tr("Copy To Clipboard"),
                                      tr("Copy the contents of the viewer to the clipboard"));
+
+    // Retranslate our contents
+    // Note: we do this because we may be displaying numbers using digit
+    //       grouping, this respecting the current locale...
+
+    setContents(mContents);
 }
 
 //==============================================================================
