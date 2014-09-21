@@ -415,7 +415,7 @@ QString sizeAsString(const double &pSize, const int &pPrecision)
 
     size = qRound(scaling*size)/scaling;
 
-    return QString::number(size)+" "+units[i];
+    return digitGroupNumber(QString::number(size))+" "+units[i];
 }
 
 //==============================================================================
