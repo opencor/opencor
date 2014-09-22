@@ -125,15 +125,15 @@ CellmlAnnotationViewMetadataEditDetailsWidget::CellmlAnnotationViewMetadataEditD
     mLookUpTerm(false),
     mInformationType(None),
     mLookUpInformation(false),
-    mItemsMapping(QMap<QObject *, Item>()),
+    mItemsMapping(QMap<QString, Item>()),
     mCellmlFile(pParent->cellmlFile()),
     mElement(0),
     mUrls(QMap<QString, QString>()),
     mItemInformationSha1s(QStringList()),
+    mLink(QString()),
+    mTextContent(QString()),
     mItemInformation(QString()),
     mItemResourceOrId(QString()),
-    mItemInformationForCopy(QString()),
-    mItemResourceOrIdForCopy(QString()),
     mNetworkReply(0)
 {
     // Set up the GUI
@@ -535,10 +535,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateItemsGui(const Items &
 
             // Add button
 
-//            mItemsMapping.insert(addButton, item);
-
-//            connect(addButton, SIGNAL(clicked()),
-//                    this, SLOT(addRetrievedTerm()));
+            mItemsMapping.insert(itemInformationSha1, item);
 
             possibleOntologicalTerms +=  indent+"<tr id=\"item_"+itemInformationSha1+"\">\n"
                                         +indent+"    <td>\n"
@@ -550,9 +547,11 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateItemsGui(const Items &
                                         +indent+"    <td id=\"id_"+itemInformationSha1+"\">\n"
                                         +indent+"        <a href=\""+itemInformation+"\">"+item.id+"</a>\n"
                                         +indent+"    </td>\n"
-                                        +indent+"    <td>\n"
-                                        +indent+"        <a class=\"noHover\" href=\"#\"><img class=\"button\" src=\""+Core::iconDataUri(":/oxygen/actions/list-add.png", 16, 16)+"\"/></a>\n"
-+indent+"        <a class=\"noHover\"><img class=\"disabledbutton\" src=\""+Core::iconDataUri(":/oxygen/actions/list-add.png", 16, 16, QIcon::Disabled)+"\"/></a>\n"
+                                        +indent+"    <td id=\"button_"+itemInformationSha1+"\">\n"
+                                        +indent+"        <a class=\"noHover\" href=\""+itemInformationSha1+"\"><img class=\"button\" src=\""+Core::iconDataUri(":/oxygen/actions/list-add.png", 16, 16)+"\"/></a>\n"
+                                        +indent+"    </td>\n"
+                                        +indent+"    <td id=\"disabledButton_"+itemInformationSha1+"\" style=\"display: none;\">\n"
+                                        +indent+"        <img class=\"disabledButton\" src=\""+Core::iconDataUri(":/oxygen/actions/list-add.png", 16, 16, QIcon::Disabled)+"\"/>\n"
                                         +indent+"    </td>\n"
                                         +indent+"</tr>\n";
         }
@@ -723,53 +722,87 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::linkHovered(const QString &p
     // Note: they will later on be used to determine whether we can show our
     //       context menu
 
-    mItemInformation = pLink;
-    mItemResourceOrId = pTextContent;
+    mLink = pLink;
+    mTextContent = pTextContent;
 }
 
 //==============================================================================
 
 void CellmlAnnotationViewMetadataEditDetailsWidget::linkClicked()
 {
-    // Enable the looking up of information
+    // Check whether we have clicked a resource/id link or a button link
 
-    mLookUpInformation = true;
+    if (mTextContent.isEmpty()) {
+        // We have clicked on a button link, so retrieve the item associated
+        // with the add button
 
-    // (Un)highlight/(un)select our various items
+        Item item = mItemsMapping.value(mLink);
 
-    static const QString Highlighted = "highlighted";
-    static const QString Selected = "selected";
+        // Add the ontological term to our CellML element as an RDF triple
 
-    bool lookUpResource = mUrls.contains(mItemResourceOrId);
-    QString activeItemInformationSha1 = Core::sha1(mItemInformation);
+        CellMLSupport::CellmlFileRdfTriple *rdfTriple;
 
-    foreach (const QString &itemInformationSha1, mItemInformationSha1s) {
+        if (mQualifierValue->currentIndex() < CellMLSupport::CellmlFileRdfTriple::LastBioQualifier)
+            rdfTriple = mCellmlFile->addRdfTriple(mElement,
+                                                  CellMLSupport::CellmlFileRdfTriple::BioQualifier(mQualifierValue->currentIndex()+1),
+                                                  item.resource, item.id);
+        else
+            rdfTriple = mCellmlFile->addRdfTriple(mElement,
+                                                  CellMLSupport::CellmlFileRdfTriple::ModelQualifier(mQualifierValue->currentIndex()-CellMLSupport::CellmlFileRdfTriple::LastBioQualifier+1),
+                                                  item.resource, item.id);
+
+        // Disable the add button, now that we have added the ontological term
+
         QWebElement documentElement = mOutputPossibleOntologicalTerms->page()->mainFrame()->documentElement();
-        QWebElement itemElement = documentElement.findFirst(QString("tr[id=item_%1]").arg(itemInformationSha1));
-        QWebElement resourceElement = documentElement.findFirst(QString("td[id=resource_%1]").arg(itemInformationSha1));
-        QWebElement idElement = documentElement.findFirst(QString("td[id=id_%1]").arg(itemInformationSha1));
 
-        if (!itemInformationSha1.compare(activeItemInformationSha1)) {
-            itemElement.addClass(Highlighted);
+        documentElement.findFirst(QString("td[id=button_%1]").arg(mLink)).setStyleProperty("display", "none");
+        documentElement.findFirst(QString("td[id=disabledButton_%1]").arg(mLink)).setStyleProperty("display", "table-cell");
 
-            if (lookUpResource) {
-                resourceElement.addClass(Selected);
-                idElement.removeClass(Selected);
+        // Let people know that we have added an RDF triple
+
+        emit rdfTripleAdded(rdfTriple);
+    } else {
+        // We have clicked on a resource/id link, so start by enabling the
+        // looking up of information
+
+        mLookUpInformation = true;
+
+        // (Un)highlight/(un)select our various items
+
+        static const QString Highlighted = "highlighted";
+        static const QString Selected = "selected";
+
+        bool lookUpResource = mUrls.contains(mTextContent);
+        QString activeItemInformationSha1 = Core::sha1(mLink);
+
+        foreach (const QString &itemInformationSha1, mItemInformationSha1s) {
+            QWebElement documentElement = mOutputPossibleOntologicalTerms->page()->mainFrame()->documentElement();
+            QWebElement itemElement = documentElement.findFirst(QString("tr[id=item_%1]").arg(itemInformationSha1));
+            QWebElement resourceElement = documentElement.findFirst(QString("td[id=resource_%1]").arg(itemInformationSha1));
+            QWebElement idElement = documentElement.findFirst(QString("td[id=id_%1]").arg(itemInformationSha1));
+
+            if (!itemInformationSha1.compare(activeItemInformationSha1)) {
+                itemElement.addClass(Highlighted);
+
+                if (lookUpResource) {
+                    resourceElement.addClass(Selected);
+                    idElement.removeClass(Selected);
+                } else {
+                    resourceElement.removeClass(Selected);
+                    idElement.addClass(Selected);
+                }
             } else {
+                itemElement.removeClass(Highlighted);
+
                 resourceElement.removeClass(Selected);
-                idElement.addClass(Selected);
+                idElement.removeClass(Selected);
             }
-        } else {
-            itemElement.removeClass(Highlighted);
-
-            resourceElement.removeClass(Selected);
-            idElement.removeClass(Selected);
         }
+
+        // Call our generic look up function
+
+        genericLookUp(mLink, lookUpResource?Resource:Id);
     }
-
-    // Call our generic look up function
-
-    genericLookUp(mItemInformation, lookUpResource?Resource:Id);
 }
 
 //==============================================================================
@@ -948,57 +981,22 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::addTerm()
 
 //==============================================================================
 
-void CellmlAnnotationViewMetadataEditDetailsWidget::addRetrievedTerm()
-{
-    // Retrieve the add button
-
-    QPushButton *addButton = qobject_cast<QPushButton *>(sender());
-
-    // Retrieve the item associated with the add button
-
-    Item item = mItemsMapping.value(addButton);
-
-    // Add the retrieved term to our CellML element as an RDF triple
-
-    CellMLSupport::CellmlFileRdfTriple *rdfTriple;
-
-    if (mQualifierValue->currentIndex() < CellMLSupport::CellmlFileRdfTriple::LastBioQualifier)
-        rdfTriple = mCellmlFile->addRdfTriple(mElement,
-                                              CellMLSupport::CellmlFileRdfTriple::BioQualifier(mQualifierValue->currentIndex()+1),
-                                              item.resource, item.id);
-    else
-        rdfTriple = mCellmlFile->addRdfTriple(mElement,
-                                              CellMLSupport::CellmlFileRdfTriple::ModelQualifier(mQualifierValue->currentIndex()-CellMLSupport::CellmlFileRdfTriple::LastBioQualifier+1),
-                                              item.resource, item.id);
-
-    // Disable the add button, now that we have added the retrieved term
-
-    addButton->setEnabled(false);
-
-    // Let people know that we have added an RDF triple
-
-    emit rdfTripleAdded(rdfTriple);
-}
-
-//==============================================================================
-
 void CellmlAnnotationViewMetadataEditDetailsWidget::showCustomContextMenu(const QPoint &pPosition)
 {
     Q_UNUSED(pPosition);
 
     // Show our context menu to allow the copying of the URL of the resource or
-    // id, but only if we are over a link, i.e. if both mItemInformation and
-    // mItemResourceOrId are not empty
+    // id, but only if we are over a link, i.e. if both mLink and mTextContent
+    // are not empty
 
-    if (!mItemInformation.isEmpty() && !mItemResourceOrId.isEmpty()) {
-        // Keep track of both mItemInformation and mItemResourceOrId
+    if (!mLink.isEmpty() && !mTextContent.isEmpty()) {
+        // Keep track of both mLink and mTextContent
         // Note: indeed, as soon as we show our context menu linkHovered() will
         //       get called (since we won't be hovering the link anymore),
-        //       resulting in both mItemInformation and mItemResourceOrId
-        //       becoming empty...
+        //       resulting in both mLink and mTextContent becoming empty...
 
-        mItemInformationForCopy = mItemInformation;
-        mItemResourceOrIdForCopy = mItemResourceOrId;
+        mItemInformation = mLink;
+        mItemResourceOrId = mTextContent;
 
         mContextMenu->exec(QCursor::pos());
     }
@@ -1010,10 +1008,10 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::on_actionCopy_triggered()
 {
     // Copy the URL of the resource or id to the clipboard
 
-    if (mUrls.contains(mItemResourceOrIdForCopy))
-        QApplication::clipboard()->setText(mUrls.value(mItemResourceOrIdForCopy));
+    if (mUrls.contains(mItemResourceOrId))
+        QApplication::clipboard()->setText(mUrls.value(mItemResourceOrId));
     else
-        QApplication::clipboard()->setText(mUrls.value(mItemInformationForCopy));
+        QApplication::clipboard()->setText(mUrls.value(mItemInformation));
 }
 
 //==============================================================================

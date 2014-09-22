@@ -144,7 +144,7 @@ private:
 
     bool mLookUpInformation;
 
-    QMap<QObject *, Item> mItemsMapping;
+    QMap<QString, Item> mItemsMapping;
 
     int mItemsVerticalScrollBarPosition;
 
@@ -155,11 +155,11 @@ private:
     QMap<QString, QString> mUrls;
     QStringList mItemInformationSha1s;
 
+    QString mLink;
+    QString mTextContent;
+
     QString mItemInformation;
     QString mItemResourceOrId;
-
-    QString mItemInformationForCopy;
-    QString mItemResourceOrIdForCopy;
 
     QMenu *mContextMenu;
 
@@ -216,7 +216,6 @@ private Q_SLOTS:
     void termLookedUp(QNetworkReply *pNetworkReply);
 
     void addTerm();
-    void addRetrievedTerm();
 
     void showCustomContextMenu(const QPoint &pPosition);
 

@@ -30,16 +30,22 @@
             a.noHover:hover {
                 margin: 0px;
                 border: 0px;
-                background: rgb(255, 255, 255);
+                background: rgba(255, 255, 255, 0);
                 cursor: default;
             }
 
-            img.button, img.disabledbutton {
+            img.button, img.disabledButton {
+                position: relative;
+                top: 1px;
                 border: 1px solid rgb(219, 219, 219);
                 border-radius: 5px;
                 padding: 2px;
                 background: linear-gradient(to bottom, rgba(249, 249, 249, 0.2), rgb(233, 233, 233));
                 cursor: default;
+            }
+
+            img.button:hover {
+                border: 1px solid rgb(189, 189, 189);
             }
 
             img.button:active {
@@ -67,7 +73,7 @@
             }
 
             td {
-                padding: 0px;
+                padding-top: 2px;
                 text-align: center;
                 white-space: nowrap;
             }
