@@ -26,6 +26,7 @@ a:hover {
 a.noHover:hover {
     /* This prevents anchors from looking like a link */
 
+    margin: 0px;
     border: 0px;
     background: rgb(255, 255, 255);
 }
