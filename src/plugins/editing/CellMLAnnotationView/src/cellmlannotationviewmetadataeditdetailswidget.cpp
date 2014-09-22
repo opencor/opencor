@@ -516,7 +516,6 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateItemsGui(const Items &
 
         static const QString indent = "                ";
         QString possibleOntologicalTerms = QString();
-int counter = 0;
 
         foreach (const Item &item, pItems) {
             // Keep track of the URLs for the resource and id, and of the item
@@ -546,17 +545,13 @@ int counter = 0;
                                         +indent+"        "+item.name+"\n"
                                         +indent+"    </td>\n"
                                         +indent+"    <td id=\"resource_"+itemInformationSha1+"\">\n"
-                                        +indent+"        <a href=\""+itemInformation+"\" draggable=\"false\">"+item.resource+"</a>\n"
+                                        +indent+"        <a href=\""+itemInformation+"\">"+item.resource+"</a>\n"
                                         +indent+"    </td>\n"
                                         +indent+"    <td id=\"id_"+itemInformationSha1+"\">\n"
-                                        +indent+"        <a href=\""+itemInformation+"\" draggable=\"false\">"+item.id+"</a>\n"
+                                        +indent+"        <a href=\""+itemInformation+"\">"+item.id+"</a>\n"
                                         +indent+"    </td>\n"
                                         +indent+"    <td>\n"
-+indent+((++counter % 2 == 1)?
-"        <img class=\"button\" src=\""+Core::iconDataUri(":/oxygen/actions/list-add.png", 16, 16)+"\" draggable=\"false\"/>\n":
-"        <img class=\"disabledbutton\" src=\""+Core::iconDataUri(":/oxygen/actions/list-add.png", 16, 16)+"\" draggable=\"false\"/>\n")
-//                                        +indent+"        <img class=\"button\" src=\""+Core::iconDataUri(":/oxygen/actions/list-add.png", 16, 16)+"\" draggable=\"false\"/>\n"
-
+                                        +indent+"        <a class=\"noHover\" href=\"#\"><img class=\"button\" src=\""+Core::iconDataUri(":/oxygen/actions/list-add.png", 16, 16)+"\"/></a>\n"
                                         +indent+"    </td>\n"
                                         +indent+"</tr>\n";
         }
