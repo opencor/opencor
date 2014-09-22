@@ -40,6 +40,7 @@ specific language governing permissions and limitations under the License.
 #include <QFileInfo>
 #include <QFont>
 #include <QFrame>
+#include <QIODevice>
 #include <QLabel>
 #include <QMenu>
 #include <QMessageBox>
@@ -466,7 +467,8 @@ QLabel * newLabel(const QString &pText, QWidget *pParent)
 
 //==============================================================================
 
-QString iconDataUri(const QString &pIcon, const int &pWidth, const int &pHeight)
+QString iconDataUri(const QString &pIcon, const int &pWidth, const int &pHeight,
+                    const QIcon::Mode &pMode)
 {
     // Convert an icon, which resource name is given, to a data URI, after
     // having resized it, if requested
@@ -482,7 +484,8 @@ QString iconDataUri(const QString &pIcon, const int &pWidth, const int &pHeight)
 
     buffer.open(QIODevice::WriteOnly);
     icon.pixmap((pWidth == -1)?iconSize.width():pWidth,
-                (pHeight == -1)?iconSize.height():pHeight).save(&buffer, "PNG");
+                (pHeight == -1)?iconSize.height():pHeight,
+                pMode).save(&buffer, "PNG");
 
     return QString("data:image/png;base64,%1").arg(QString(data.toBase64()));
 }

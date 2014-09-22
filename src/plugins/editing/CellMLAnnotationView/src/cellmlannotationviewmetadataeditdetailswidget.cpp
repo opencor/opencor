@@ -552,6 +552,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateItemsGui(const Items &
                                         +indent+"    </td>\n"
                                         +indent+"    <td>\n"
                                         +indent+"        <a class=\"noHover\" href=\"#\"><img class=\"button\" src=\""+Core::iconDataUri(":/oxygen/actions/list-add.png", 16, 16)+"\"/></a>\n"
++indent+"        <a class=\"noHover\"><img class=\"disabledbutton\" src=\""+Core::iconDataUri(":/oxygen/actions/list-add.png", 16, 16, QIcon::Disabled)+"\"/></a>\n"
                                         +indent+"    </td>\n"
                                         +indent+"</tr>\n";
         }
