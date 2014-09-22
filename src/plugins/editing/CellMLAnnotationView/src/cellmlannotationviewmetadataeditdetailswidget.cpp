@@ -409,23 +409,26 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(iface::cellml_api:
     // Enable or disable the add buttons for our retrieved terms, depending on
     // whether they are already associated with the CellML element
 
-//    if (mGridLayout)
-//        for (int row = 0; mGridLayout->itemAtPosition(++row, 0);) {
-//            QPushButton *addButton = qobject_cast<QPushButton *>(mGridLayout->itemAtPosition(row, 3)->widget());
+    QWebElement documentElement = mOutputPossibleOntologicalTerms->page()->mainFrame()->documentElement();
 
-//            Item item = mItemsMapping.value(addButton);
+    foreach (const QString &itemInformationSha1, mItemInformationSha1s) {
+        Item item = mItemsMapping.value(itemInformationSha1);
+        bool enabledButton;
 
-//            if (mQualifierValue->currentIndex() < CellMLSupport::CellmlFileRdfTriple::LastBioQualifier)
-//                addButton->setEnabled(    fileReadableAndWritable
-//                                      && !mCellmlFile->rdfTripleExists(mElement,
-//                                                                       CellMLSupport::CellmlFileRdfTriple::BioQualifier(mQualifierValue->currentIndex()+1),
-//                                                                       item.resource, item.id));
-//            else
-//                addButton->setEnabled(    fileReadableAndWritable
-//                                      && !mCellmlFile->rdfTripleExists(mElement,
-//                                                                       CellMLSupport::CellmlFileRdfTriple::ModelQualifier(mQualifierValue->currentIndex()-CellMLSupport::CellmlFileRdfTriple::LastBioQualifier+1),
-//                                                                       item.resource, item.id));
-//        }
+        if (mQualifierValue->currentIndex() < CellMLSupport::CellmlFileRdfTriple::LastBioQualifier)
+            enabledButton =     fileReadableAndWritable
+                            && !mCellmlFile->rdfTripleExists(mElement,
+                                                             CellMLSupport::CellmlFileRdfTriple::BioQualifier(mQualifierValue->currentIndex()+1),
+                                                             item.resource, item.id);
+        else
+            enabledButton =     fileReadableAndWritable
+                            && !mCellmlFile->rdfTripleExists(mElement,
+                                                             CellMLSupport::CellmlFileRdfTriple::ModelQualifier(mQualifierValue->currentIndex()-CellMLSupport::CellmlFileRdfTriple::LastBioQualifier+1),
+                                                             item.resource, item.id);
+
+        documentElement.findFirst(QString("td[id=button_%1]").arg(itemInformationSha1)).setStyleProperty("display", enabledButton?"table-cell":"none");
+        documentElement.findFirst(QString("td[id=disabledButton_%1]").arg(itemInformationSha1)).setStyleProperty("display", !enabledButton?"table-cell":"none");
+    }
 }
 
 //==============================================================================
@@ -627,6 +630,39 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::genericLookUp(const QString 
     if ((pInformationType != Qualifier) && mLookUpQualifierButton->isChecked())
         mLookUpQualifierButton->toggle();
 
+    // (Un)highlight/(un)select our various items
+
+    static const QString Highlighted = "highlighted";
+    static const QString Selected = "selected";
+
+    bool lookUpResource = mUrls.contains(mTextContent);
+    QString activeItemInformationSha1 = Core::sha1(mLink);
+
+    foreach (const QString &itemInformationSha1, mItemInformationSha1s) {
+        QWebElement documentElement = mOutputPossibleOntologicalTerms->page()->mainFrame()->documentElement();
+        QWebElement itemElement = documentElement.findFirst(QString("tr[id=item_%1]").arg(itemInformationSha1));
+        QWebElement resourceElement = documentElement.findFirst(QString("td[id=resource_%1]").arg(itemInformationSha1));
+        QWebElement idElement = documentElement.findFirst(QString("td[id=id_%1]").arg(itemInformationSha1));
+
+        if (    mLookUpInformation
+            && !itemInformationSha1.compare(activeItemInformationSha1)) {
+            itemElement.addClass(Highlighted);
+
+            if (lookUpResource) {
+                resourceElement.addClass(Selected);
+                idElement.removeClass(Selected);
+            } else {
+                resourceElement.removeClass(Selected);
+                idElement.addClass(Selected);
+            }
+        } else {
+            itemElement.removeClass(Highlighted);
+
+            resourceElement.removeClass(Selected);
+            idElement.removeClass(Selected);
+        }
+    }
+
     // Check that we have something to look up
 
     if (!mLookUpInformation)
@@ -767,41 +803,9 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::linkClicked()
 
         mLookUpInformation = true;
 
-        // (Un)highlight/(un)select our various items
-
-        static const QString Highlighted = "highlighted";
-        static const QString Selected = "selected";
-
-        bool lookUpResource = mUrls.contains(mTextContent);
-        QString activeItemInformationSha1 = Core::sha1(mLink);
-
-        foreach (const QString &itemInformationSha1, mItemInformationSha1s) {
-            QWebElement documentElement = mOutputPossibleOntologicalTerms->page()->mainFrame()->documentElement();
-            QWebElement itemElement = documentElement.findFirst(QString("tr[id=item_%1]").arg(itemInformationSha1));
-            QWebElement resourceElement = documentElement.findFirst(QString("td[id=resource_%1]").arg(itemInformationSha1));
-            QWebElement idElement = documentElement.findFirst(QString("td[id=id_%1]").arg(itemInformationSha1));
-
-            if (!itemInformationSha1.compare(activeItemInformationSha1)) {
-                itemElement.addClass(Highlighted);
-
-                if (lookUpResource) {
-                    resourceElement.addClass(Selected);
-                    idElement.removeClass(Selected);
-                } else {
-                    resourceElement.removeClass(Selected);
-                    idElement.addClass(Selected);
-                }
-            } else {
-                itemElement.removeClass(Highlighted);
-
-                resourceElement.removeClass(Selected);
-                idElement.removeClass(Selected);
-            }
-        }
-
         // Call our generic look up function
 
-        genericLookUp(mLink, lookUpResource?Resource:Id);
+        genericLookUp(mLink, mUrls.contains(mTextContent)?Resource:Id);
     }
 }
 
