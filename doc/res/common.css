@@ -54,9 +54,9 @@ div.copyright div.left {
 }
 
 div.copyright div.center {
-	position: absolute;
-	left: 50%;
-	top: 50%;
+    position: absolute;
+    left: 50%;
+    top: 50%;
 }
 
 div.copyright div.right {
