@@ -28,7 +28,7 @@ a.noHover:hover {
 
     margin: 0px;
     border: 0px;
-    background: rgb(255, 255, 255);
+    background: rgba(255, 255, 255, 0);
 }
 
 div.copyright {
