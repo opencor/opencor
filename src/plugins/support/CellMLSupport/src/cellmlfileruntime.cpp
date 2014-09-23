@@ -523,7 +523,7 @@ void CellmlFileRuntime::checkCodeInformation(iface::cellml_services::CodeInforma
 
 //==============================================================================
 
-void CellmlFileRuntime::getOdeCodeInformation(iface::cellml_api::Model *pModel)
+void CellmlFileRuntime::retrieveOdeCodeInformation(iface::cellml_api::Model *pModel)
 {
     // Get a code generator bootstrap and create an ODE code generator
 
@@ -554,7 +554,7 @@ void CellmlFileRuntime::getOdeCodeInformation(iface::cellml_api::Model *pModel)
 
 //==============================================================================
 
-void CellmlFileRuntime::getDaeCodeInformation(iface::cellml_api::Model *pModel)
+void CellmlFileRuntime::retrieveDaeCodeInformation(iface::cellml_api::Model *pModel)
 {
     // Get a code generator bootstrap and create a DAE code generator
 
@@ -745,7 +745,7 @@ void CellmlFileRuntime::update()
     // Note: this can be done by checking whether some equations were flagged
     //       as needing a Newton-Raphson evaluation...
 
-    getOdeCodeInformation(model);
+    retrieveOdeCodeInformation(model);
 
     if (!mOdeCodeInformation)
         return;
@@ -762,7 +762,7 @@ void CellmlFileRuntime::update()
     if (mModelType == CellmlFileRuntime::Ode) {
         genericCodeInformation = mOdeCodeInformation;
     } else {
-        getDaeCodeInformation(model);
+        retrieveDaeCodeInformation(model);
 
         genericCodeInformation = mDaeCodeInformation;
     }
