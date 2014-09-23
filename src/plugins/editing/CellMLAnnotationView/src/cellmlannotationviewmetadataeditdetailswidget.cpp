@@ -136,8 +136,6 @@ CellmlAnnotationViewMetadataEditDetailsWidget::CellmlAnnotationViewMetadataEditD
     mLookUpResource(true),
     mLink(QString()),
     mTextContent(QString()),
-    mItemInformation(QString()),
-    mItemResourceOrId(QString()),
     mNetworkReply(0)
 {
     // Set up the GUI
@@ -299,8 +297,6 @@ CellmlAnnotationViewMetadataEditDetailsWidget::CellmlAnnotationViewMetadataEditD
 
     mOutputPossibleOntologicalTerms->page()->setLinkDelegationPolicy(QWebPage::DelegateAllLinks);
 
-    connect(mOutputPossibleOntologicalTerms->page(), SIGNAL(linkHovered(const QString &, const QString &, const QString &)),
-            this, SLOT(linkHovered(const QString &, const QString &, const QString &)));
     connect(mOutputPossibleOntologicalTerms->page(), SIGNAL(linkClicked(const QUrl &)),
             this, SLOT(linkClicked()));
 
@@ -767,41 +763,11 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::lookUpQualifier()
 
 //==============================================================================
 
-void CellmlAnnotationViewMetadataEditDetailsWidget::linkHovered(const QString &pLink,
-                                                                const QString &pTitle,
-                                                                const QString &pTextContent)
-{
-    Q_UNUSED(pTitle);
-
-    // Keep track of the link and text content
-
-    mLink = pLink;
-    mTextContent = pTextContent;
-}
-
-//==============================================================================
-
 void CellmlAnnotationViewMetadataEditDetailsWidget::linkClicked()
 {
-    // Manually get the link and text content values for the link that just got
-    // clicked
-    // Note: normally, we get that information by handling the linkHovered()
-    //       signal (see above), but it may be wrong when the user actually
-    //       clicks on a link. Indeed, say that you are over a link and then
-    //       scroll the list using your mouse wheel, and you end up over another
-    //       link. Now, because your mouse didn't move, no linkHovered() message
-    //       was emitted, whcih means that both mLink and mTextContent contain
-    //       the wrong information...
+    // Retrieve some information about the link
 
-    QWebHitTestResult hitTestResult = mOutputPossibleOntologicalTerms->page()->mainFrame()->hitTestContent(mOutputPossibleOntologicalTerms->mapFromGlobal(QCursor::pos()));
-    QWebElement element = hitTestResult.element();
-
-    if (!element.tagName().compare("IMG"))
-        mLink = element.parent().attribute("href");
-    else
-        mLink = element.attribute("href");
-
-    mTextContent = hitTestResult.linkText();
+    mOutputPossibleOntologicalTerms->retrieveLinkInformation(mLink, mTextContent);
 
     // Check whether we have clicked a resource/id link or a button link
 
@@ -1028,21 +994,16 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::showCustomContextMenu(const 
 {
     Q_UNUSED(pPosition);
 
+    // Retrieve some information about the link
+
+    mOutputPossibleOntologicalTerms->retrieveLinkInformation(mLink, mTextContent);
+
     // Show our context menu to allow the copying of the URL of the resource or
     // id, but only if we are over a link, i.e. if both mLink and mTextContent
     // are not empty
 
-    if (!mLink.isEmpty() && !mTextContent.isEmpty()) {
-        // Keep track of both mLink and mTextContent
-        // Note: indeed, as soon as we show our context menu linkHovered() will
-        //       get called (since we won't be hovering the link anymore),
-        //       resulting in both mLink and mTextContent becoming empty...
-
-        mItemInformation = mLink;
-        mItemResourceOrId = mTextContent;
-
+    if (!mLink.isEmpty() && !mTextContent.isEmpty())
         mContextMenu->exec(QCursor::pos());
-    }
 }
 
 //==============================================================================
@@ -1051,10 +1012,10 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::on_actionCopy_triggered()
 {
     // Copy the URL of the resource or id to the clipboard
 
-    if (mUrls.contains(mItemResourceOrId))
-        QApplication::clipboard()->setText(mUrls.value(mItemResourceOrId));
+    if (mUrls.contains(mTextContent))
+        QApplication::clipboard()->setText(mUrls.value(mTextContent));
     else
-        QApplication::clipboard()->setText(mUrls.value(mItemInformation));
+        QApplication::clipboard()->setText(mUrls.value(mLink));
 }
 
 //==============================================================================

@@ -23,7 +23,10 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#include <QCursor>
 #include <QEvent>
+#include <QWebElement>
+#include <QWebHitTestResult>
 
 //==============================================================================
 
@@ -63,6 +66,36 @@ bool CellmlAnnotationViewMetadataWebViewWidget::event(QEvent *pEvent)
         return true;
     } else {
         return QWebView::event(pEvent);
+    }
+}
+
+//==============================================================================
+
+void CellmlAnnotationViewMetadataWebViewWidget::retrieveLinkInformation(QString &pLink,
+                                                                        QString &pTextContent)
+{
+    // Retrieve the link and text content values for the link, if any, below our
+    // mouse pointer
+    // Note: normally, one would want handle the linkHovered() signal, but it
+    //       may provide the wrong information. Indeed, say that you are over a
+    //       link and then scroll down/up using your mouse wheel, and end up
+    //       over another link and click it. Now, because your mouse didn't
+    //       move, no linkHovered() message will have been emitted (and
+    //       handled), which means that if we need that information to process
+    //       the click, then we will have the wrong information...
+
+    QWebHitTestResult hitTestResult = page()->mainFrame()->hitTestContent(mapFromGlobal(QCursor::pos()));
+    QWebElement element = hitTestResult.element();
+
+    while (!element.isNull() && element.tagName().compare("A"))
+        element = element.parent();
+
+    if (element.isNull()) {
+        pLink = QString();
+        pTextContent = QString();
+    } else {
+        pLink = element.attribute("href");
+        pTextContent = hitTestResult.linkText();
     }
 }
 

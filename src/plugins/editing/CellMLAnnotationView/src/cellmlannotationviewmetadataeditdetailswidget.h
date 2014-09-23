@@ -159,9 +159,6 @@ private:
     QString mLink;
     QString mTextContent;
 
-    QString mItemInformation;
-    QString mItemResourceOrId;
-
     QMenu *mContextMenu;
 
     QNetworkReply *mNetworkReply;
@@ -207,8 +204,6 @@ private Q_SLOTS:
 
     void lookUpQualifier();
 
-    void linkHovered(const QString &pLink, const QString &pTitle,
-                     const QString &pTextContent);
     void linkClicked();
 
     void lookUpTerm();

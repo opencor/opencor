@@ -24,6 +24,7 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#include <QString>
 #include <QWebView>
 
 //==============================================================================
@@ -39,6 +40,8 @@ class CellmlAnnotationViewMetadataWebViewWidget : public QWebView
 
 public:
     explicit CellmlAnnotationViewMetadataWebViewWidget(QWidget *pParent);
+
+    void retrieveLinkInformation(QString &pLink, QString &pTextContent);
 
 protected:
     virtual bool event(QEvent *pEvent);
