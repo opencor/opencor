@@ -119,7 +119,7 @@ ViewerWidget::ViewerWidget(QWidget *pParent) :
     connect(mDigitGroupingAction, SIGNAL(toggled(bool)),
             this, SLOT(updateViewer()));
 
-    connect(mCopyToClipboardAction, SIGNAL(triggered()),
+    connect(mCopyToClipboardAction, SIGNAL(triggered(bool)),
             this, SLOT(copyToClipboard()));
 
     mContextMenu->addAction(mOptimiseFontSizeAction);

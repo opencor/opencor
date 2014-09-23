@@ -39,6 +39,7 @@ specific language governing permissions and limitations under the License.
 #include <QLabel>
 #include <QLayoutItem>
 #include <QMenu>
+#include <QPoint>
 #include <QPushButton>
 #include <QRegularExpression>
 #include <QScrollBar>
@@ -260,7 +261,7 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::updateGui(iface::cellm
 
             mRdfTriplesMapping.insert(removeButton, rdfTriple);
 
-            connect(removeButton, SIGNAL(clicked()),
+            connect(removeButton, SIGNAL(clicked(bool)),
                     this, SLOT(removeRdfTriple()));
 
             newGridLayout->addWidget(removeButton, row, 3, Qt::AlignCenter);

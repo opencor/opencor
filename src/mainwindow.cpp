@@ -182,9 +182,9 @@ Core::showEnableAction(mGui->actionPreferences, false);
 
     // Some connections to handle our various menu items
 
-    connect(mGui->actionQuit, SIGNAL(triggered()),
+    connect(mGui->actionQuit, SIGNAL(triggered(bool)),
             this, SLOT(close()));
-    connect(mGui->actionResetAll, SIGNAL(triggered()),
+    connect(mGui->actionResetAll, SIGNAL(triggered(bool)),
             this, SLOT(resetAll()));
 
     // Set the shortcuts of some actions

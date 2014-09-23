@@ -362,31 +362,31 @@ void CoreEditingPlugin::initializePlugin(QMainWindow *pMainWindow)
 
     // Some connections to handle our different editing actions
 
-    connect(mFileNewFileAction, SIGNAL(triggered()),
+    connect(mFileNewFileAction, SIGNAL(triggered(bool)),
             this, SLOT(newFile()));
 
-    connect(mEditUndoAction, SIGNAL(triggered()),
+    connect(mEditUndoAction, SIGNAL(triggered(bool)),
             this, SLOT(doUndo()));
-    connect(mEditRedoAction, SIGNAL(triggered()),
+    connect(mEditRedoAction, SIGNAL(triggered(bool)),
             this, SLOT(doRedo()));
 
-    connect(mEditCutAction, SIGNAL(triggered()),
+    connect(mEditCutAction, SIGNAL(triggered(bool)),
             this, SLOT(doCut()));
-    connect(mEditCopyAction, SIGNAL(triggered()),
+    connect(mEditCopyAction, SIGNAL(triggered(bool)),
             this, SLOT(doCopy()));
-    connect(mEditPasteAction, SIGNAL(triggered()),
+    connect(mEditPasteAction, SIGNAL(triggered(bool)),
             this, SLOT(doPaste()));
-    connect(mEditDeleteAction, SIGNAL(triggered()),
+    connect(mEditDeleteAction, SIGNAL(triggered(bool)),
             this, SLOT(doDelete()));
 
-    connect(mEditFindReplaceAction, SIGNAL(triggered()),
+    connect(mEditFindReplaceAction, SIGNAL(triggered(bool)),
             this, SLOT(doFindReplace()));
-    connect(mEditFindNextAction, SIGNAL(triggered()),
+    connect(mEditFindNextAction, SIGNAL(triggered(bool)),
             this, SLOT(doFindNext()));
-    connect(mEditFindPreviousAction, SIGNAL(triggered()),
+    connect(mEditFindPreviousAction, SIGNAL(triggered(bool)),
             this, SLOT(doFindPrevious()));
 
-    connect(mEditSelectAllAction, SIGNAL(triggered()),
+    connect(mEditSelectAllAction, SIGNAL(triggered(bool)),
             this, SLOT(doSelectAll()));
 }
 

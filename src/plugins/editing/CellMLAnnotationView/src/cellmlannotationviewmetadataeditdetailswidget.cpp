@@ -234,7 +234,7 @@ CellmlAnnotationViewMetadataEditDetailsWidget::CellmlAnnotationViewMetadataEditD
     mAddTermButton->setIcon(QIcon(":/oxygen/actions/list-add.png"));
     mAddTermButton->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
 
-    connect(mAddTermButton, SIGNAL(clicked()),
+    connect(mAddTermButton, SIGNAL(clicked(bool)),
             this, SLOT(addTerm()));
 
     // Add our term value and add term button widgets to our term widget layout

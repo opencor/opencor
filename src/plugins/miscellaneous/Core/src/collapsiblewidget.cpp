@@ -131,7 +131,7 @@ CollapsibleHeaderWidget::CollapsibleHeaderWidget(const QColor &pSeparatorColor,
 
     // Connections to toggle our collapsed state
 
-    connect(mButton, SIGNAL(clicked()),
+    connect(mButton, SIGNAL(clicked(bool)),
             this, SLOT(toggleCollapsedState()));
     connect(mTitle, SIGNAL(doubleClicked()),
             this, SLOT(toggleCollapsedState()));

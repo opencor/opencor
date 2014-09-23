@@ -38,6 +38,7 @@ specific language governing permissions and limitations under the License.
 #include <QDesktopServices>
 #include <QDialogButtonBox>
 #include <QMessageBox>
+#include <QModelIndex>
 #include <QPushButton>
 #include <QSettings>
 #include <QStandardItemModel>

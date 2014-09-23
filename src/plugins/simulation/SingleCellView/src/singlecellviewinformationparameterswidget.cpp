@@ -469,7 +469,7 @@ void SingleCellViewInformationParametersWidget::populateContextMenu(QMenu *pCont
     // Create a connection to handle the graph requirement against our variable
     // of integration
 
-    connect(voiAction, SIGNAL(triggered()),
+    connect(voiAction, SIGNAL(triggered(bool)),
             this, SLOT(emitGraphRequired()));
 
     // Keep track of the parameter associated with our first main menu item
@@ -544,7 +544,7 @@ void SingleCellViewInformationParametersWidget::populateContextMenu(QMenu *pCont
         // Create a connection to handle the graph requirement against our
         // parameter
 
-        connect(parameterAction, SIGNAL(triggered()),
+        connect(parameterAction, SIGNAL(triggered(bool)),
                 this, SLOT(emitGraphRequired()));
 
         // Keep track of the parameter associated with our model parameter

@@ -99,10 +99,10 @@ EditorFindReplaceWidget::EditorFindReplaceWidget(QWidget *pParent) :
     mClearFindTextAction = Core::newAction(QIcon(":/qtCreator/src/plugins/coreplugin/images/editclear.png"), this);
     mClearReplaceTextAction = Core::newAction(QIcon(":/qtCreator/src/plugins/coreplugin/images/editclear.png"), this);
 
-    connect(mClearFindTextAction, SIGNAL(triggered()),
+    connect(mClearFindTextAction, SIGNAL(triggered(bool)),
             mGui->findEdit, SLOT(clear()));
 
-    connect(mClearReplaceTextAction, SIGNAL(triggered()),
+    connect(mClearReplaceTextAction, SIGNAL(triggered(bool)),
             mGui->replaceEdit, SLOT(clear()));
 
     // Make our find edit widget our focus proxy

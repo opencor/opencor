@@ -190,12 +190,12 @@ void CellMLToolsPlugin::initializePlugin(QMainWindow *pMainWindow)
 
     // Some connections to handle our different Tools | Export To actions
 
-    connect(mExportToCellml10Action, SIGNAL(triggered()),
+    connect(mExportToCellml10Action, SIGNAL(triggered(bool)),
             this, SLOT(exportToCellml10()));
-    connect(mExportToCellml11Action, SIGNAL(triggered()),
+    connect(mExportToCellml11Action, SIGNAL(triggered(bool)),
             this, SLOT(exportToCellml11()));
 
-    connect(mExportToUserDefinedFormatAction, SIGNAL(triggered()),
+    connect(mExportToUserDefinedFormatAction, SIGNAL(triggered(bool)),
             this, SLOT(exportToUserDefinedFormat()));
 }
 
