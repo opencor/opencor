@@ -551,15 +551,17 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateItemsGui(const Items &
                                         +indent+"        <a href=\""+itemInformation+"\">"+item.id+"</a>\n"
                                         +indent+"    </td>\n"
                                         +indent+"    <td id=\"button_"+itemInformationSha1+"\">\n"
-                                        +indent+"        <a class=\"noHover\" href=\""+itemInformationSha1+"\"><img class=\"button\" src=\""+Core::iconDataUri(":/oxygen/actions/list-add.png", 16, 16)+"\"/></a>\n"
+                                        +indent+"        <a class=\"noHover\" href=\""+itemInformationSha1+"\"><img class=\"button\"/></a>\n"
                                         +indent+"    </td>\n"
                                         +indent+"    <td id=\"disabledButton_"+itemInformationSha1+"\" style=\"display: none;\">\n"
-                                        +indent+"        <img class=\"disabledButton\" src=\""+Core::iconDataUri(":/oxygen/actions/list-add.png", 16, 16, QIcon::Disabled)+"\"/>\n"
+                                        +indent+"        <img class=\"disabledButton\"/>\n"
                                         +indent+"    </td>\n"
                                         +indent+"</tr>\n";
         }
 
-        mOutputPossibleOntologicalTerms->setHtml(mOutputPossibleOntologicalTermsTemplate.arg(possibleOntologicalTerms));
+        mOutputPossibleOntologicalTerms->setHtml(mOutputPossibleOntologicalTermsTemplate.arg(Core::iconDataUri(":/oxygen/actions/list-add.png", 16, 16),
+                                                                                             Core::iconDataUri(":/oxygen/actions/list-add.png", 16, 16, QIcon::Disabled),
+                                                                                             possibleOntologicalTerms));
 
         updateOutputPossibleOntologicalTerms();
     } else {
