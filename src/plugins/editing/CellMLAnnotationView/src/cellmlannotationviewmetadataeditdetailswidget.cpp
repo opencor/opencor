@@ -286,25 +286,25 @@ CellmlAnnotationViewMetadataEditDetailsWidget::CellmlAnnotationViewMetadataEditD
 
     // Create our output for possible ontological terms
 
-    Core::readTextFromFile(":/possibleOntologicalTerms.html", mOutputPossibleOntologicalTermsTemplate);
+    Core::readTextFromFile(":/ontologicalTerms.html", mOutputOntologicalTermsTemplate);
 
-    mOutputPossibleOntologicalTerms = new CellmlAnnotationViewMetadataWebViewWidget(mOutput);
+    mOutputOntologicalTerms = new CellmlAnnotationViewMetadataWebViewWidget(mOutput);
 
-    mOutputPossibleOntologicalTerms->setContextMenuPolicy(Qt::CustomContextMenu);
+    mOutputOntologicalTerms->setContextMenuPolicy(Qt::CustomContextMenu);
 
-    connect(mOutputPossibleOntologicalTerms, SIGNAL(customContextMenuRequested(const QPoint &)),
+    connect(mOutputOntologicalTerms, SIGNAL(customContextMenuRequested(const QPoint &)),
             this, SLOT(showCustomContextMenu(const QPoint &)));
 
-    mOutputPossibleOntologicalTerms->page()->setLinkDelegationPolicy(QWebPage::DelegateAllLinks);
+    mOutputOntologicalTerms->page()->setLinkDelegationPolicy(QWebPage::DelegateAllLinks);
 
-    connect(mOutputPossibleOntologicalTerms->page(), SIGNAL(linkClicked(const QUrl &)),
+    connect(mOutputOntologicalTerms->page(), SIGNAL(linkClicked(const QUrl &)),
             this, SLOT(linkClicked()));
 
     // Add our output message and ourput for possible ontological terms to our
     // output widget
 
     mOutput->layout()->addWidget(mOutputMessageScrollArea);
-    mOutput->layout()->addWidget(mOutputPossibleOntologicalTerms);
+    mOutput->layout()->addWidget(mOutputOntologicalTerms);
 
     // Add our 'internal' widgets to our main layout
 
@@ -409,7 +409,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(iface::cellml_api:
     // Enable or disable the add buttons for our retrieved terms, depending on
     // whether they are already associated with the CellML element
 
-    QWebElement documentElement = mOutputPossibleOntologicalTerms->page()->mainFrame()->documentElement();
+    QWebElement documentElement = mOutputOntologicalTerms->page()->mainFrame()->documentElement();
 
     foreach (const QString &itemInformationSha1, mItemInformationSha1s) {
         Item item = mItemsMapping.value(itemInformationSha1);
@@ -480,7 +480,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateOutputPossibleOntologi
 {
     // Update our output for possible ontological terms
 
-    QWebElement documentElement = mOutputPossibleOntologicalTerms->page()->mainFrame()->documentElement();
+    QWebElement documentElement = mOutputOntologicalTerms->page()->mainFrame()->documentElement();
 
     documentElement.findFirst("th[id=name]").setInnerXml(tr("Name"));
     documentElement.findFirst("th[id=resource]").setInnerXml(tr("Resource"));
@@ -512,7 +512,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateItemsGui(const Items &
     mUrls.clear();
     mItemInformationSha1s.clear();
 
-    mOutputPossibleOntologicalTerms->setHtml(QString());
+    mOutputOntologicalTerms->setHtml(QString());
 
     // Populate our new layout, but only if there is at least one item
 
@@ -564,9 +564,9 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateItemsGui(const Items &
                                         +indent+"</tr>\n";
         }
 
-        mOutputPossibleOntologicalTerms->setHtml(mOutputPossibleOntologicalTermsTemplate.arg(Core::iconDataUri(":/oxygen/actions/list-add.png", 16, 16),
-                                                                                             Core::iconDataUri(":/oxygen/actions/list-add.png", 16, 16, QIcon::Disabled),
-                                                                                             possibleOntologicalTerms));
+        mOutputOntologicalTerms->setHtml(mOutputOntologicalTermsTemplate.arg(Core::iconDataUri(":/oxygen/actions/list-add.png", 16, 16),
+                                                                             Core::iconDataUri(":/oxygen/actions/list-add.png", 16, 16, QIcon::Disabled),
+                                                                             possibleOntologicalTerms));
 
         updateOutputPossibleOntologicalTerms();
     } else {
@@ -590,7 +590,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateItemsGui(const Items &
     // Hide our old output widget and show our new one
 
     mOutputMessageScrollArea->setVisible(!pItems.count());
-    mOutputPossibleOntologicalTerms->setVisible(pItems.count());
+    mOutputOntologicalTerms->setVisible(pItems.count());
 
     // show our busy widget instead, if needed
 
@@ -661,7 +661,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::genericLookUp(const QString 
     static const QString Highlighted = "highlighted";
     static const QString Selected = "selected";
 
-    QWebElement documentElement = mOutputPossibleOntologicalTerms->page()->mainFrame()->documentElement();
+    QWebElement documentElement = mOutputOntologicalTerms->page()->mainFrame()->documentElement();
     QString itemInformationSha1 = mLink.isEmpty()?QString():Core::sha1(mLink);
     bool lookUpResource = mUrls.contains(mTextContent);
 
@@ -786,7 +786,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::linkClicked()
 {
     // Retrieve some information about the link
 
-    mOutputPossibleOntologicalTerms->retrieveLinkInformation(mLink, mTextContent);
+    mOutputOntologicalTerms->retrieveLinkInformation(mLink, mTextContent);
 
     // Check whether we have clicked a resource/id link or a button link
 
@@ -813,7 +813,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::linkClicked()
 
         mEnabledItems.insert(mLink, false);
 
-        QWebElement documentElement = mOutputPossibleOntologicalTerms->page()->mainFrame()->documentElement();
+        QWebElement documentElement = mOutputOntologicalTerms->page()->mainFrame()->documentElement();
 
         documentElement.findFirst(QString("td[id=button_%1]").arg(mLink)).setStyleProperty("display", "none");
         documentElement.findFirst(QString("td[id=disabledButton_%1]").arg(mLink)).setStyleProperty("display", "table-cell");
@@ -1015,7 +1015,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::showCustomContextMenu(const 
 
     // Retrieve some information about the link
 
-    mOutputPossibleOntologicalTerms->retrieveLinkInformation(mLink, mTextContent);
+    mOutputOntologicalTerms->retrieveLinkInformation(mLink, mTextContent);
 
     // Show our context menu to allow the copying of the URL of the resource or
     // id, but only if we are over a link, i.e. if both mLink and mTextContent

@@ -137,8 +137,8 @@ private:
     QScrollArea *mOutputMessageScrollArea;
     Core::UserMessageWidget *mOutputMessage;
 
-    QString mOutputPossibleOntologicalTermsTemplate;
-    CellmlAnnotationViewMetadataWebViewWidget *mOutputPossibleOntologicalTerms;
+    QString mOutputOntologicalTermsTemplate;
+    CellmlAnnotationViewMetadataWebViewWidget *mOutputOntologicalTerms;
 
     InformationType mInformationType;
 
