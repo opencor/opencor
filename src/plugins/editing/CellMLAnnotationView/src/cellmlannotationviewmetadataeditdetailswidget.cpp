@@ -120,7 +120,7 @@ CellmlAnnotationViewMetadataEditDetailsWidget::CellmlAnnotationViewMetadataEditD
     mAddTermButton(0),
     mTerm(QString()),
     mTerms(QStringList()),
-    mCount(0),
+    mItemsCount(0),
     mErrorMessage(QString()),
     mLookUpTerm(false),
     mInformationType(None),
@@ -484,10 +484,10 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateOutputPossibleOntologi
 
     QWebElement countElement = documentElement.findFirst("th[id=count]");
 
-    if (mCount == 1)
+    if (mItemsCount == 1)
         countElement.setInnerXml(tr("(1 term)"));
     else
-        countElement.setInnerXml(tr("(%1 terms)").arg(QLocale().toString(mCount)));
+        countElement.setInnerXml(tr("(%1 terms)").arg(QLocale().toString(mItemsCount)));
 }
 
 //==============================================================================
@@ -941,7 +941,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::termLookedUp(QNetworkReply *
 
     std::sort(items.begin(), items.end());
 
-    mCount = items.count();
+    mItemsCount = items.count();
 
     updateItemsGui(items, false, errorMessage);
 

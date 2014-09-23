@@ -127,7 +127,7 @@ private:
     QString mTerm;
     QStringList mTerms;
 
-    int mCount;
+    int mItemsCount;
 
     QString mErrorMessage;
     bool mLookUpTerm;
@@ -145,8 +145,6 @@ private:
     bool mLookUpInformation;
 
     QMap<QString, Item> mItemsMapping;
-
-    int mItemsVerticalScrollBarPosition;
 
     CellMLSupport::CellmlFile *mCellmlFile;
 
