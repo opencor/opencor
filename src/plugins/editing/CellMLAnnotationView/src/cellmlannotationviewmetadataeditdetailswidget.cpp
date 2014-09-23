@@ -45,6 +45,7 @@ specific language governing permissions and limitations under the License.
 #include <QApplication>
 #include <QClipboard>
 #include <QComboBox>
+#include <QCursor>
 #include <QFont>
 #include <QFormLayout>
 #include <QJsonDocument>
@@ -126,10 +127,13 @@ CellmlAnnotationViewMetadataEditDetailsWidget::CellmlAnnotationViewMetadataEditD
     mInformationType(None),
     mLookUpInformation(false),
     mItemsMapping(QMap<QString, Item>()),
+    mEnabledItems(QMap<QString, bool>()),
     mCellmlFile(pParent->cellmlFile()),
     mElement(0),
     mUrls(QMap<QString, QString>()),
     mItemInformationSha1s(QStringList()),
+    mItemInformationSha1(QString()),
+    mLookUpResource(true),
     mLink(QString()),
     mTextContent(QString()),
     mItemInformation(QString()),
@@ -426,8 +430,12 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(iface::cellml_api:
                                                              CellMLSupport::CellmlFileRdfTriple::ModelQualifier(mQualifierValue->currentIndex()-CellMLSupport::CellmlFileRdfTriple::LastBioQualifier+1),
                                                              item.resource, item.id);
 
-        documentElement.findFirst(QString("td[id=button_%1]").arg(itemInformationSha1)).setStyleProperty("display", enabledButton?"table-cell":"none");
-        documentElement.findFirst(QString("td[id=disabledButton_%1]").arg(itemInformationSha1)).setStyleProperty("display", !enabledButton?"table-cell":"none");
+        if (enabledButton != mEnabledItems.value(itemInformationSha1)) {
+            mEnabledItems.insert(itemInformationSha1, enabledButton);
+
+            documentElement.findFirst(QString("td[id=button_%1]").arg(itemInformationSha1)).setStyleProperty("display", enabledButton?"table-cell":"none");
+            documentElement.findFirst(QString("td[id=disabledButton_%1]").arg(itemInformationSha1)).setStyleProperty("display", !enabledButton?"table-cell":"none");
+        }
     }
 }
 
@@ -539,6 +547,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateItemsGui(const Items &
             // Add button
 
             mItemsMapping.insert(itemInformationSha1, item);
+            mEnabledItems.insert(itemInformationSha1, true);
 
             possibleOntologicalTerms +=  indent+"<tr id=\"item_"+itemInformationSha1+"\">\n"
                                         +indent+"    <td>\n"
@@ -637,33 +646,41 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::genericLookUp(const QString 
     static const QString Highlighted = "highlighted";
     static const QString Selected = "selected";
 
+    QWebElement documentElement = mOutputPossibleOntologicalTerms->page()->mainFrame()->documentElement();
+    QString itemInformationSha1 = Core::sha1(mLink);
     bool lookUpResource = mUrls.contains(mTextContent);
-    QString activeItemInformationSha1 = Core::sha1(mLink);
 
-    foreach (const QString &itemInformationSha1, mItemInformationSha1s) {
-        QWebElement documentElement = mOutputPossibleOntologicalTerms->page()->mainFrame()->documentElement();
-        QWebElement itemElement = documentElement.findFirst(QString("tr[id=item_%1]").arg(itemInformationSha1));
-        QWebElement resourceElement = documentElement.findFirst(QString("td[id=resource_%1]").arg(itemInformationSha1));
-        QWebElement idElement = documentElement.findFirst(QString("td[id=id_%1]").arg(itemInformationSha1));
+    if (itemInformationSha1.compare(mItemInformationSha1)) {
+        if (!mItemInformationSha1.isEmpty()) {
+            documentElement.findFirst(QString("tr[id=item_%1]").arg(mItemInformationSha1)).removeClass(Highlighted);
 
-        if (    mLookUpInformation
-            && !itemInformationSha1.compare(activeItemInformationSha1)) {
-            itemElement.addClass(Highlighted);
+            if (mLookUpResource)
+                documentElement.findFirst(QString("td[id=resource_%1]").arg(mItemInformationSha1)).removeClass(Selected);
+            else
+                documentElement.findFirst(QString("td[id=id_%1]").arg(mItemInformationSha1)).removeClass(Selected);
+        }
 
-            if (lookUpResource) {
-                resourceElement.addClass(Selected);
-                idElement.removeClass(Selected);
-            } else {
-                resourceElement.removeClass(Selected);
-                idElement.addClass(Selected);
-            }
+        if (!itemInformationSha1.isEmpty()) {
+            documentElement.findFirst(QString("tr[id=item_%1]").arg(itemInformationSha1)).addClass(Highlighted);
+
+            if (lookUpResource)
+                documentElement.findFirst(QString("td[id=resource_%1]").arg(itemInformationSha1)).addClass(Selected);
+            else
+                documentElement.findFirst(QString("td[id=id_%1]").arg(itemInformationSha1)).addClass(Selected);
+        }
+
+        mItemInformationSha1 = itemInformationSha1;
+    } else {
+        if (lookUpResource) {
+            documentElement.findFirst(QString("td[id=resource_%1]").arg(itemInformationSha1)).addClass(Selected);
+            documentElement.findFirst(QString("td[id=id_%1]").arg(itemInformationSha1)).removeClass(Selected);
         } else {
-            itemElement.removeClass(Highlighted);
-
-            resourceElement.removeClass(Selected);
-            idElement.removeClass(Selected);
+            documentElement.findFirst(QString("td[id=resource_%1]").arg(itemInformationSha1)).removeClass(Selected);
+            documentElement.findFirst(QString("td[id=id_%1]").arg(itemInformationSha1)).addClass(Selected);
         }
     }
+
+    mLookUpResource = lookUpResource;
 
     // Check that we have something to look up
 
@@ -757,8 +774,6 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::linkHovered(const QString &p
     Q_UNUSED(pTitle);
 
     // Keep track of the link and text content
-    // Note: they will later on be used to determine whether we can show our
-    //       context menu
 
     mLink = pLink;
     mTextContent = pTextContent;
@@ -768,6 +783,26 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::linkHovered(const QString &p
 
 void CellmlAnnotationViewMetadataEditDetailsWidget::linkClicked()
 {
+    // Manually get the link and text content values for the link that just got
+    // clicked
+    // Note: normally, we get that information by handling the linkHovered()
+    //       signal (see above), but it may be wrong when the user actually
+    //       clicks on a link. Indeed, say that you are over a link and then
+    //       scroll the list using your mouse wheel, and you end up over another
+    //       link. Now, because your mouse didn't move, no linkHovered() message
+    //       was emitted, whcih means that both mLink and mTextContent contain
+    //       the wrong information...
+
+    QWebHitTestResult hitTestResult = mOutputPossibleOntologicalTerms->page()->mainFrame()->hitTestContent(mOutputPossibleOntologicalTerms->mapFromGlobal(QCursor::pos()));
+    QWebElement element = hitTestResult.element();
+
+    if (!element.tagName().compare("IMG"))
+        mLink = element.parent().attribute("href");
+    else
+        mLink = element.attribute("href");
+
+    mTextContent = hitTestResult.linkText();
+
     // Check whether we have clicked a resource/id link or a button link
 
     if (mTextContent.isEmpty()) {
@@ -790,6 +825,8 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::linkClicked()
                                                   item.resource, item.id);
 
         // Disable the add button, now that we have added the ontological term
+
+        mEnabledItems.insert(mLink, false);
 
         QWebElement documentElement = mOutputPossibleOntologicalTerms->page()->mainFrame()->documentElement();
 

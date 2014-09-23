@@ -145,6 +145,7 @@ private:
     bool mLookUpInformation;
 
     QMap<QString, Item> mItemsMapping;
+    QMap<QString, bool> mEnabledItems;
 
     CellMLSupport::CellmlFile *mCellmlFile;
 
@@ -152,6 +153,8 @@ private:
 
     QMap<QString, QString> mUrls;
     QStringList mItemInformationSha1s;
+    QString mItemInformationSha1;
+    bool mLookUpResource;
 
     QString mLink;
     QString mTextContent;
