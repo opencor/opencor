@@ -124,7 +124,8 @@ private:
 
     QMap<QObject *, CellMLSupport::CellmlFileRdfTriple *> mRdfTriplesMapping;
 
-    QLabel *mCurrentResourceOrIdLabel;
+    QString mLink;
+    QString mTextContent;
 
     QMenu *mContextMenu;
 

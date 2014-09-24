@@ -39,6 +39,7 @@ specific language governing permissions and limitations under the License.
 
 #include <QApplication>
 #include <QClipboard>
+#include <QCursor>
 #include <QMenu>
 //#include <QPoint>
 //#include <QRegularExpression>
@@ -66,7 +67,8 @@ CellmlAnnotationViewMetadataNormalViewDetailsWidget::CellmlAnnotationViewMetadat
     mVerticalScrollBarPosition(0),
     mNeighbourRow(0),
     mRdfTriplesMapping(QMap<QObject *, CellMLSupport::CellmlFileRdfTriple *>()),
-    mCurrentResourceOrIdLabel(0)
+    mLink(QString()),
+    mTextContent(QString())
 {
     // Set up the GUI
 
@@ -230,8 +232,6 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::updateGui(iface::cellm
 //            resourceLabel->setAccessibleDescription("http://identifiers.org/"+rdfTriple->resource()+"/?redirect=true");
 //            resourceLabel->setContextMenuPolicy(Qt::CustomContextMenu);
 
-//            connect(resourceLabel, SIGNAL(customContextMenuRequested(const QPoint &)),
-//                    this, SLOT(showCustomContextMenu(const QPoint &)));
 //            connect(resourceLabel, SIGNAL(linkActivated(const QString &)),
 //                    this, SLOT(lookUpResource(const QString &)));
 
@@ -242,8 +242,6 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::updateGui(iface::cellm
 //                                             Qt::AlignCenter,
 //                                             newGridWidget);
 
-//            connect(idLabel, SIGNAL(customContextMenuRequested(const QPoint &)),
-//                    this, SLOT(showCustomContextMenu(const QPoint &)));
 //            connect(idLabel, SIGNAL(linkActivated(const QString &)),
 //                    this, SLOT(lookUpId(const QString &)));
 
@@ -649,14 +647,16 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::showCustomContextMenu(
 {
     Q_UNUSED(pPosition);
 
-    // Keep track of the resource or id
+    // Retrieve some information about the link
 
-    mCurrentResourceOrIdLabel = qobject_cast<QLabel *>(qApp->widgetAt(QCursor::pos()));
+    mOutputOntologicalTerms->retrieveLinkInformation(mLink, mTextContent);
 
-    // Should our context menu to allow the copying of the URL of the resource
-    // or id
+    // Show our context menu to allow the copying of the URL of the resource or
+    // id, but only if we are over a link, i.e. if both mLink and mTextContent
+    // are not empty
 
-    mContextMenu->exec(QCursor::pos());
+    if (!mLink.isEmpty() && !mTextContent.isEmpty())
+        mContextMenu->exec(QCursor::pos());
 }
 
 //==============================================================================
@@ -665,7 +665,7 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::on_actionCopy_triggere
 {
     // Copy the URL of the resource or id to the clipboard
 
-    QApplication::clipboard()->setText(mCurrentResourceOrIdLabel->accessibleDescription());
+//    QApplication::clipboard()->setText(mCurrentResourceOrIdLabel->accessibleDescription());
 }
 
 //==============================================================================
