@@ -475,7 +475,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateOutputOntologicalTerms
 
     QWebElement documentElement = mOutputOntologicalTerms->page()->mainFrame()->documentElement();
 
-    documentElement.findFirst("th[id=name]").setInnerXml(tr("Name"));
+    documentElement.findFirst("th[id=nameOrQualifier]").setInnerXml(tr("Name"));
     documentElement.findFirst("th[id=resource]").setInnerXml(tr("Resource"));
     documentElement.findFirst("th[id=id]").setInnerXml(tr("Id"));
 
@@ -515,11 +515,11 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateItemsGui(const Items &
         // Add the items
 
         static const QString indent = "                ";
-        QString possibleOntologicalTerms = QString();
+        QString ontologicalTerms = QString();
 
         foreach (const Item &item, pItems) {
-            // Keep track of the URLs for the resource and id, and of the item
-            // information
+            // Keep track of the item informatio and its SHA-1 value, as well as
+            // of the URLs for the resource and id
 
             QString itemInformation = item.resource+"|"+item.id;
             QString itemInformationSha1 = Core::sha1(itemInformation);
@@ -538,28 +538,28 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateItemsGui(const Items &
             mItemsMapping.insert(itemInformationSha1, item);
             mEnabledItems.insert(itemInformationSha1, true);
 
-            possibleOntologicalTerms +=  indent+"<tr id=\"item_"+itemInformationSha1+"\">\n"
-                                        +indent+"    <td>\n"
-                                        +indent+"        "+item.name+"\n"
-                                        +indent+"    </td>\n"
-                                        +indent+"    <td id=\"resource_"+itemInformationSha1+"\">\n"
-                                        +indent+"        <a href=\""+itemInformation+"\">"+item.resource+"</a>\n"
-                                        +indent+"    </td>\n"
-                                        +indent+"    <td id=\"id_"+itemInformationSha1+"\">\n"
-                                        +indent+"        <a href=\""+itemInformation+"\">"+item.id+"</a>\n"
-                                        +indent+"    </td>\n"
-                                        +indent+"    <td id=\"button_"+itemInformationSha1+"\">\n"
-                                        +indent+"        <a class=\"noHover\" href=\""+itemInformationSha1+"\"><img class=\"button\"/></a>\n"
-                                        +indent+"    </td>\n"
-                                        +indent+"    <td id=\"disabledButton_"+itemInformationSha1+"\" style=\"display: none;\">\n"
-                                        +indent+"        <img class=\"disabledButton\"/>\n"
-                                        +indent+"    </td>\n"
-                                        +indent+"</tr>\n";
+            ontologicalTerms +=  indent+"<tr id=\"item_"+itemInformationSha1+"\">\n"
+                                +indent+"    <td>\n"
+                                +indent+"        "+item.name+"\n"
+                                +indent+"    </td>\n"
+                                +indent+"    <td id=\"resource_"+itemInformationSha1+"\">\n"
+                                +indent+"        <a href=\""+itemInformation+"\">"+item.resource+"</a>\n"
+                                +indent+"    </td>\n"
+                                +indent+"    <td id=\"id_"+itemInformationSha1+"\">\n"
+                                +indent+"        <a href=\""+itemInformation+"\">"+item.id+"</a>\n"
+                                +indent+"    </td>\n"
+                                +indent+"    <td id=\"button_"+itemInformationSha1+"\">\n"
+                                +indent+"        <a class=\"noHover\" href=\""+itemInformationSha1+"\"><img class=\"button\"/></a>\n"
+                                +indent+"    </td>\n"
+                                +indent+"    <td id=\"disabledButton_"+itemInformationSha1+"\" style=\"display: none;\">\n"
+                                +indent+"        <img class=\"disabledButton\"/>\n"
+                                +indent+"    </td>\n"
+                                +indent+"</tr>\n";
         }
 
         mOutputOntologicalTerms->setHtml(mOutputOntologicalTermsTemplate.arg(Core::iconDataUri(":/oxygen/actions/list-add.png", 16, 16),
                                                                              Core::iconDataUri(":/oxygen/actions/list-add.png", 16, 16, QIcon::Disabled),
-                                                                             possibleOntologicalTerms));
+                                                                             ontologicalTerms));
 
         updateOutputOntologicalTerms();
     } else {

@@ -102,6 +102,8 @@ private:
 
     Ui::CellmlAnnotationViewMetadataNormalViewDetailsWidget *mGui;
 
+    int mItemsCount;
+
     Core::Widget *mOutput;
 
     QScrollArea *mOutputMessageScrollArea;
@@ -125,6 +127,8 @@ private:
     QLabel *mCurrentResourceOrIdLabel;
 
     QMenu *mContextMenu;
+
+    void updateOutputOntologicalTerms();
 
     void genericLookUp(const QString &pRdfTripleInformation = QString(),
                        const Type &pType = No,

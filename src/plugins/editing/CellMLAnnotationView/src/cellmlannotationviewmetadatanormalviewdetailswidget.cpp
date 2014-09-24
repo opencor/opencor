@@ -43,6 +43,8 @@ specific language governing permissions and limitations under the License.
 //#include <QRegularExpression>
 #include <QScrollArea>
 #include <QStackedWidget>
+#include <QWebElement>
+#include <QWebFrame>
 
 //==============================================================================
 
@@ -55,6 +57,7 @@ CellmlAnnotationViewMetadataNormalViewDetailsWidget::CellmlAnnotationViewMetadat
     Core::Widget(pParent),
     mCellmlFile(pParent->cellmlFile()),
     mGui(new Ui::CellmlAnnotationViewMetadataNormalViewDetailsWidget),
+    mItemsCount(0),
     mElement(0),
     mRdfTripleInformation(QString()),
     mType(No),
@@ -140,13 +143,33 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::retranslateUi()
 
     mGui->retranslateUi(this);
 
-    // For the rest of our GUI, it's easier to just update it, so...
-
-//    updateGui(mElement, mRdfTripleInformation, mType, mLookUpInformation, true);
-
     // Retranslate our output message
 
     mOutputMessage->setMessage(tr("There is no metadata associated with the current CellML element..."));
+
+    // Retranslate our output for ontological terms
+
+    updateOutputOntologicalTerms();
+}
+
+//==============================================================================
+
+void CellmlAnnotationViewMetadataNormalViewDetailsWidget::updateOutputOntologicalTerms()
+{
+    // Update our output for ontological terms
+
+    QWebElement documentElement = mOutputOntologicalTerms->page()->mainFrame()->documentElement();
+
+    documentElement.findFirst("th[id=nameOrQualifier]").setInnerXml(tr("Qualifier"));
+    documentElement.findFirst("th[id=resource]").setInnerXml(tr("Resource"));
+    documentElement.findFirst("th[id=id]").setInnerXml(tr("Id"));
+
+    QWebElement countElement = documentElement.findFirst("th[id=count]");
+
+    if (mItemsCount == 1)
+        countElement.setInnerXml(tr("(1 term)"));
+    else
+        countElement.setInnerXml(tr("(%1 terms)").arg(QLocale().toString(mItemsCount)));
 }
 
 //==============================================================================
@@ -178,39 +201,17 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::updateGui(iface::cellm
     QString lastRdfTripleInformation = QString();
 
     if (rdfTriples.count()) {
-        // Create labels to act as headers
-
-//        newGridLayout->addWidget(Core::newLabel(tr("Qualifier"),
-//                                                1.25, true, false,
-//                                                Qt::AlignCenter,
-//                                                newGridWidget),
-//                                 0, 0);
-//        newGridLayout->addWidget(Core::newLabel(tr("Resource"),
-//                                                1.25, true, false,
-//                                                Qt::AlignCenter,
-//                                                newGridWidget),
-//                                 0, 1);
-//        newGridLayout->addWidget(Core::newLabel(tr("Id"),
-//                                                1.25, true, false,
-//                                                Qt::AlignCenter,
-//                                                newGridWidget),
-//                                 0, 2);
-
         // Number of terms
 
-//        newGridLayout->addWidget(Core::newLabel((rdfTriples.count() == 1)?
-//                                                    tr("(1 term)"):
-//                                                    tr("(%1 terms)").arg(QString::number(rdfTriples.count())),
-//                                                1.0, false, true,
-//                                                Qt::AlignCenter,
-//                                                newGridWidget),
-//                                 0, 3);
+        mItemsCount = rdfTriples.count();
 
         // Add the RDF triples information to our layout
         // Note: for the RDF triple's subject, we try to remove the CellML
         //       file's URI base, thus only leaving the equivalent of a CellML
         //       element cmeta:id which will speak more to the user than a
         //       possibly long URI reference...
+
+        QString ontologicalTerms = QString();
 
 //        int row = 0;
 
@@ -307,6 +308,12 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::updateGui(iface::cellm
         // Have all the rows take a minimum of vertical space
 
 //        newGridLayout->setRowStretch(++row, 1);
+
+        mOutputOntologicalTerms->setHtml(mOutputOntologicalTermsTemplate.arg(Core::iconDataUri(":/oxygen/actions/list-remove.png", 16, 16),
+                                                                             Core::iconDataUri(":/oxygen/actions/list-remove.png", 16, 16, QIcon::Disabled),
+                                                                             ontologicalTerms));
+
+        updateOutputOntologicalTerms();
     }
 
     // Hide our old output widget and show our new one
