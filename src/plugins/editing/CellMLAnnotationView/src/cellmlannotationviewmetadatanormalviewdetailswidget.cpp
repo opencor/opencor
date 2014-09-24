@@ -67,6 +67,7 @@ CellmlAnnotationViewMetadataNormalViewDetailsWidget::CellmlAnnotationViewMetadat
     mVerticalScrollBarPosition(0),
     mNeighbourRow(0),
     mRdfTriplesMapping(QMap<QObject *, CellMLSupport::CellmlFileRdfTriple *>()),
+    mUrls(QMap<QString, QString>()),
     mLink(QString()),
     mTextContent(QString())
 {
@@ -194,6 +195,8 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::updateGui(iface::cellm
     // Note: we might only do that before adding new items, but then again there
     //       is no need to waste memory, so...
 
+    mUrls.clear();
+
     mOutputOntologicalTerms->setHtml(QString());
 
     // Populate mOutputOntologicalTerms, but only if there is at least one RDF
@@ -216,11 +219,21 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::updateGui(iface::cellm
 //        int row = 0;
 
         foreach (CellMLSupport::CellmlFileRdfTriple *rdfTriple, rdfTriples) {
+            // Keep track of the item information and its SHA-1 value, as well
+            // as of the qualifier and of the URLs for the resource and id
+
             QString itemInformation = rdfTriple->resource()+"|"+rdfTriple->id();
             QString itemInformationSha1 = Core::sha1(itemInformation);
             QString qualifier = (rdfTriple->modelQualifier() != CellMLSupport::CellmlFileRdfTriple::ModelUnknown)?
                                     rdfTriple->modelQualifierAsString():
                                     rdfTriple->bioQualifierAsString();
+            QString resourceUrl = "http://identifiers.org/"+rdfTriple->resource()+"/?redirect=true";
+            QString idUrl = "http://identifiers.org/"+rdfTriple->resource()+"/"+rdfTriple->id()+"/?profile=most_reliable&redirect=true";
+
+            if (!mUrls.contains(rdfTriple->resource()))
+                mUrls.insert(rdfTriple->resource(), resourceUrl);
+
+            mUrls.insert(itemInformation, idUrl);
 
             // Resource
 
@@ -663,9 +676,14 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::showCustomContextMenu(
 
 void CellmlAnnotationViewMetadataNormalViewDetailsWidget::on_actionCopy_triggered()
 {
-    // Copy the URL of the resource or id to the clipboard
+    // Copy the qualifier or the URL of the resource or id to the clipboard
 
-//    QApplication::clipboard()->setText(mCurrentResourceOrIdLabel->accessibleDescription());
+    if (!mLink.compare(mTextContent))
+        QApplication::clipboard()->setText(mLink);
+    else if (mUrls.contains(mTextContent))
+        QApplication::clipboard()->setText(mUrls.value(mTextContent));
+    else
+        QApplication::clipboard()->setText(mUrls.value(mLink));
 }
 
 //==============================================================================

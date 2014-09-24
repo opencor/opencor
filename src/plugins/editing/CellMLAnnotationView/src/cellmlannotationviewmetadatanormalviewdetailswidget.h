@@ -124,6 +124,8 @@ private:
 
     QMap<QObject *, CellMLSupport::CellmlFileRdfTriple *> mRdfTriplesMapping;
 
+    QMap<QString, QString> mUrls;
+
     QString mLink;
     QString mTextContent;
 
