@@ -46,25 +46,18 @@ specific language governing permissions and limitations under the License.
 #include <QClipboard>
 #include <QComboBox>
 #include <QCursor>
-#include <QFont>
 #include <QFormLayout>
 #include <QJsonDocument>
 #include <QJsonObject>
-#include <QLabel>
-#include <QLayout>
-#include <QLayoutItem>
 #include <QLineEdit>
 #include <QLocale>
 #include <QMenu>
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
 #include <QNetworkRequest>
-#include <QPalette>
 #include <QPushButton>
 #include <QRegularExpression>
 #include <QScrollArea>
-#include <QScrollBar>
-#include <QStackedWidget>
 #include <QTimer>
 #include <QVariant>
 #include <QVBoxLayout>
@@ -260,7 +253,7 @@ CellmlAnnotationViewMetadataEditDetailsWidget::CellmlAnnotationViewMetadataEditD
     setTabOrder(mLookUpQualifierButton, mTermValue);
     setTabOrder(mTermValue, mAddTermButton);
 
-    // Create an output widget that will contain our output message and ourput
+    // Create an output widget that will contain our output message and output
     // for ontological terms
 
     mOutput = new Core::Widget(this);
@@ -300,7 +293,7 @@ CellmlAnnotationViewMetadataEditDetailsWidget::CellmlAnnotationViewMetadataEditD
     connect(mOutputOntologicalTerms->page(), SIGNAL(linkClicked(const QUrl &)),
             this, SLOT(linkClicked()));
 
-    // Add our output message and ourput for ontological terms to our output
+    // Add our output message and output for ontological terms to our output
     // widget
 
     mOutput->layout()->addWidget(mOutputMessageScrollArea);

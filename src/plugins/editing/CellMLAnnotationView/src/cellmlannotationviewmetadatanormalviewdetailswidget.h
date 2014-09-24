@@ -25,12 +25,11 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include "cellmlfile.h"
-#include "commonwidget.h"
+#include "widget.h"
 
 //==============================================================================
 
 #include <QMap>
-#include <QScrollArea>
 
 //==============================================================================
 
@@ -40,24 +39,32 @@ namespace Ui {
 
 //==============================================================================
 
-class QGridLayout;
 class QLabel;
 class QMenu;
-class QStackedWidget;
+class QScrollArea;
 
 //==============================================================================
 
 namespace OpenCOR {
+
+//==============================================================================
+
+namespace Core {
+    class UserMessageWidget;
+}   // namespace Core
+
+//==============================================================================
+
 namespace CellMLAnnotationView {
 
 //==============================================================================
 
 class CellmlAnnotationViewEditingWidget;
+class CellmlAnnotationViewMetadataWebViewWidget;
 
 //==============================================================================
 
-class CellmlAnnotationViewMetadataNormalViewDetailsWidget : public QScrollArea,
-                                                            public Core::CommonWidget
+class CellmlAnnotationViewMetadataNormalViewDetailsWidget : public Core::Widget
 {
     Q_OBJECT
 
@@ -86,7 +93,6 @@ public:
                    const QString &pRdfTripleInformation = QString(),
                    const Type &pType = No,
                    const Information &pLookUpInformation = First,
-                   const int &pVerticalScrollBarPosition = 0,
                    const bool &pRetranslate = false);
 
     void addRdfTriple(CellMLSupport::CellmlFileRdfTriple *pRdfTriple);
@@ -96,10 +102,13 @@ private:
 
     Ui::CellmlAnnotationViewMetadataNormalViewDetailsWidget *mGui;
 
-    QStackedWidget *mWidget;
+    Core::Widget *mOutput;
 
-    QWidget *mGridWidget;
-    QGridLayout *mGridLayout;
+    QScrollArea *mOutputMessageScrollArea;
+    Core::UserMessageWidget *mOutputMessage;
+
+    QString mOutputOntologicalTermsTemplate;
+    CellmlAnnotationViewMetadataWebViewWidget *mOutputOntologicalTerms;
 
     ObjRef<iface::cellml_api::CellMLElement> mElement;
 
@@ -148,7 +157,7 @@ private Q_SLOTS:
     void showNeighbourRdfTriple();
     void showLastRdfTriple();
 
-    void trackVerticalScrollBarPosition(const int &pPosition);
+    void linkClicked();
 
     void showCustomContextMenu(const QPoint &pPosition);
 };

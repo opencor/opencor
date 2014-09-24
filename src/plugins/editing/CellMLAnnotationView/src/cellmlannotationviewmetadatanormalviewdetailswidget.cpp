@@ -21,8 +21,10 @@ specific language governing permissions and limitations under the License.
 
 #include "cellmlannotationvieweditingwidget.h"
 #include "cellmlannotationviewmetadatanormalviewdetailswidget.h"
+#include "cellmlannotationviewmetadatawebviewwidget.h"
 #include "filemanager.h"
 #include "guiutils.h"
+#include "usermessagewidget.h"
 
 //==============================================================================
 
@@ -34,15 +36,12 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#include <QApplication>
 #include <QClipboard>
-#include <QGridLayout>
-#include <QLabel>
-#include <QLayoutItem>
 #include <QMenu>
-#include <QPoint>
-#include <QPushButton>
-#include <QRegularExpression>
-#include <QScrollBar>
+//#include <QPoint>
+//#include <QRegularExpression>
+#include <QScrollArea>
 #include <QStackedWidget>
 
 //==============================================================================
@@ -53,12 +52,9 @@ namespace CellMLAnnotationView {
 //==============================================================================
 
 CellmlAnnotationViewMetadataNormalViewDetailsWidget::CellmlAnnotationViewMetadataNormalViewDetailsWidget(CellmlAnnotationViewEditingWidget *pParent) :
-    QScrollArea(pParent),
-    Core::CommonWidget(pParent),
+    Core::Widget(pParent),
     mCellmlFile(pParent->cellmlFile()),
     mGui(new Ui::CellmlAnnotationViewMetadataNormalViewDetailsWidget),
-    mGridWidget(0),
-    mGridLayout(0),
     mElement(0),
     mRdfTripleInformation(QString()),
     mType(No),
@@ -72,26 +68,59 @@ CellmlAnnotationViewMetadataNormalViewDetailsWidget::CellmlAnnotationViewMetadat
 
     mGui->setupUi(this);
 
-    // Create a stacked widget which will contain our GUI
-
-    mWidget = new QStackedWidget(this);
-
-    // Add our stacked widget to our scroll area
-
-    setWidget(mWidget);
-
-    // Keep track of the position of our vertical scroll bar
-    // Note: this is required to make sure that the position doesn't get reset
-    //       as a result of retranslating the GUI...
-
-    connect(verticalScrollBar(), SIGNAL(sliderMoved(int)),
-            this, SLOT(trackVerticalScrollBarPosition(const int &)));
-
     // Create and populate our context menu
 
     mContextMenu = new QMenu(this);
 
     mContextMenu->addAction(mGui->actionCopy);
+
+    // Create an output widget that will contain our output message and output
+    // for ontological terms
+
+    mOutput = new Core::Widget(this);
+
+    mOutput->setLayout(new QVBoxLayout(mOutput));
+
+    mOutput->layout()->setMargin(0);
+
+    // Create our output message (within a scroll area, in case the label is too
+    // wide)
+
+    mOutputMessageScrollArea = new QScrollArea(mOutput);
+
+    mOutputMessageScrollArea->setFrameShape(QFrame::NoFrame);
+    mOutputMessageScrollArea->setWidgetResizable(true);
+
+    mOutputMessage = new Core::UserMessageWidget(":/oxygen/actions/help-about.png",
+                                                 mOutputMessageScrollArea);
+
+    mOutputMessageScrollArea->setWidget(mOutputMessage);
+
+    // Create our output for ontological terms
+
+    Core::readTextFromFile(":/ontologicalTerms.html", mOutputOntologicalTermsTemplate);
+
+    mOutputOntologicalTerms = new CellmlAnnotationViewMetadataWebViewWidget(mOutput);
+
+    mOutputOntologicalTerms->setContextMenuPolicy(Qt::CustomContextMenu);
+
+    connect(mOutputOntologicalTerms, SIGNAL(customContextMenuRequested(const QPoint &)),
+            this, SLOT(showCustomContextMenu(const QPoint &)));
+
+    mOutputOntologicalTerms->page()->setLinkDelegationPolicy(QWebPage::DelegateAllLinks);
+
+    connect(mOutputOntologicalTerms->page(), SIGNAL(linkClicked(const QUrl &)),
+            this, SLOT(linkClicked()));
+
+    // Add our output message and output for ontological terms to our output
+    // widget
+
+    mOutput->layout()->addWidget(mOutputMessageScrollArea);
+    mOutput->layout()->addWidget(mOutputOntologicalTerms);
+
+    // Add our output widget to our main layout
+
+    mGui->layout->addWidget(mOutput);
 }
 
 //==============================================================================
@@ -113,8 +142,11 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::retranslateUi()
 
     // For the rest of our GUI, it's easier to just update it, so...
 
-    updateGui(mElement, mRdfTripleInformation, mType, mLookUpInformation,
-              mVerticalScrollBarPosition, true);
+//    updateGui(mElement, mRdfTripleInformation, mType, mLookUpInformation, true);
+
+    // Retranslate our output message
+
+    mOutputMessage->setMessage(tr("There is no metadata associated with the current CellML element..."));
 }
 
 //==============================================================================
@@ -123,32 +155,23 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::updateGui(iface::cellm
                                                                     const QString &pRdfTripleInformation,
                                                                     const Type &pType,
                                                                     const Information &pLookUpInformation,
-                                                                    const int &pVerticalScrollBarPosition,
                                                                     const bool &pRetranslate)
 {
     if (!pElement)
         return;
 
-    // Note: we are using a grid layout to dislay the contents of our view, but
-    //       this unfortunately results in some very bad flickering on OS X.
-    //       This can, however, be addressed using a stacked widget, so...
-
-    // Prevent ourselves from being updated (to avoid flickering)
-
-    setUpdatesEnabled(false);
-
     // Keep track of the CellML element
 
     mElement = pElement;
 
-    // Create a new widget and layout
+    // Reset various properties
+    // Note: we might only do that before adding new items, but then again there
+    //       is no need to waste memory, so...
 
-    QWidget *newGridWidget = new QWidget(mWidget);
-    QGridLayout *newGridLayout = new QGridLayout(newGridWidget);
+    mOutputOntologicalTerms->setHtml(QString());
 
-    newGridWidget->setLayout(newGridLayout);
-
-    // Populate our new layout, but only if there is at least one RDF triple
+    // Populate mOutputOntologicalTerms, but only if there is at least one RDF
+    // triple
 
     CellMLSupport::CellmlFileRdfTriples rdfTriples = mCellmlFile->rdfTriples(pElement);
     QString firstRdfTripleInformation = QString();
@@ -157,31 +180,31 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::updateGui(iface::cellm
     if (rdfTriples.count()) {
         // Create labels to act as headers
 
-        newGridLayout->addWidget(Core::newLabel(tr("Qualifier"),
-                                                1.25, true, false,
-                                                Qt::AlignCenter,
-                                                newGridWidget),
-                                 0, 0);
-        newGridLayout->addWidget(Core::newLabel(tr("Resource"),
-                                                1.25, true, false,
-                                                Qt::AlignCenter,
-                                                newGridWidget),
-                                 0, 1);
-        newGridLayout->addWidget(Core::newLabel(tr("Id"),
-                                                1.25, true, false,
-                                                Qt::AlignCenter,
-                                                newGridWidget),
-                                 0, 2);
+//        newGridLayout->addWidget(Core::newLabel(tr("Qualifier"),
+//                                                1.25, true, false,
+//                                                Qt::AlignCenter,
+//                                                newGridWidget),
+//                                 0, 0);
+//        newGridLayout->addWidget(Core::newLabel(tr("Resource"),
+//                                                1.25, true, false,
+//                                                Qt::AlignCenter,
+//                                                newGridWidget),
+//                                 0, 1);
+//        newGridLayout->addWidget(Core::newLabel(tr("Id"),
+//                                                1.25, true, false,
+//                                                Qt::AlignCenter,
+//                                                newGridWidget),
+//                                 0, 2);
 
         // Number of terms
 
-        newGridLayout->addWidget(Core::newLabel((rdfTriples.count() == 1)?
-                                                    tr("(1 term)"):
-                                                    tr("(%1 terms)").arg(QString::number(rdfTriples.count())),
-                                                1.0, false, true,
-                                                Qt::AlignCenter,
-                                                newGridWidget),
-                                 0, 3);
+//        newGridLayout->addWidget(Core::newLabel((rdfTriples.count() == 1)?
+//                                                    tr("(1 term)"):
+//                                                    tr("(%1 terms)").arg(QString::number(rdfTriples.count())),
+//                                                1.0, false, true,
+//                                                Qt::AlignCenter,
+//                                                newGridWidget),
+//                                 0, 3);
 
         // Add the RDF triples information to our layout
         // Note: for the RDF triple's subject, we try to remove the CellML
@@ -189,138 +212,107 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::updateGui(iface::cellm
         //       element cmeta:id which will speak more to the user than a
         //       possibly long URI reference...
 
-        int row = 0;
+//        int row = 0;
 
-        foreach (CellMLSupport::CellmlFileRdfTriple *rdfTriple, rdfTriples) {
-            // Qualifier
+//        foreach (CellMLSupport::CellmlFileRdfTriple *rdfTriple, rdfTriples) {
+//            // Qualifier
 
-            QString qualifierAsString = (rdfTriple->modelQualifier() != CellMLSupport::CellmlFileRdfTriple::ModelUnknown)?
-                                            rdfTriple->modelQualifierAsString():
-                                            rdfTriple->bioQualifierAsString();
-            QString rdfTripleInformation = qualifierAsString+"|"+rdfTriple->resource()+"|"+rdfTriple->id()+"|"+QString::number(++row);
+//            QString qualifierAsString = (rdfTriple->modelQualifier() != CellMLSupport::CellmlFileRdfTriple::ModelUnknown)?
+//                                            rdfTriple->modelQualifierAsString():
+//                                            rdfTriple->bioQualifierAsString();
+//            QString rdfTripleInformation = qualifierAsString+"|"+rdfTriple->resource()+"|"+rdfTriple->id()+"|"+QString::number(++row);
 
-            QLabel *qualifierLabel = Core::newLabel("<a href=\""+rdfTripleInformation+"\">"+qualifierAsString+"</a>",
-                                                    1.0, false, false,
-                                                    Qt::AlignCenter,
-                                                    newGridWidget);
+//            QLabel *qualifierLabel = Core::newLabel("<a href=\""+rdfTripleInformation+"\">"+qualifierAsString+"</a>",
+//                                                    1.0, false, false,
+//                                                    Qt::AlignCenter,
+//                                                    newGridWidget);
 
-            connect(qualifierLabel, SIGNAL(linkActivated(const QString &)),
-                    this, SLOT(lookUpQualifier(const QString &)));
+//            connect(qualifierLabel, SIGNAL(linkActivated(const QString &)),
+//                    this, SLOT(lookUpQualifier(const QString &)));
 
-            newGridLayout->addWidget(qualifierLabel, row, 0);
+//            newGridLayout->addWidget(qualifierLabel, row, 0);
 
-            // Resource
+//            // Resource
 
-            QLabel *resourceLabel = Core::newLabel("<a href=\""+rdfTripleInformation+"\">"+rdfTriple->resource()+"</a>",
-                                                   1.0, false, false,
-                                                   Qt::AlignCenter,
-                                                   newGridWidget);
+//            QLabel *resourceLabel = Core::newLabel("<a href=\""+rdfTripleInformation+"\">"+rdfTriple->resource()+"</a>",
+//                                                   1.0, false, false,
+//                                                   Qt::AlignCenter,
+//                                                   newGridWidget);
 
-            resourceLabel->setAccessibleDescription("http://identifiers.org/"+rdfTriple->resource()+"/?redirect=true");
-            resourceLabel->setContextMenuPolicy(Qt::CustomContextMenu);
+//            resourceLabel->setAccessibleDescription("http://identifiers.org/"+rdfTriple->resource()+"/?redirect=true");
+//            resourceLabel->setContextMenuPolicy(Qt::CustomContextMenu);
 
-            connect(resourceLabel, SIGNAL(customContextMenuRequested(const QPoint &)),
-                    this, SLOT(showCustomContextMenu(const QPoint &)));
-            connect(resourceLabel, SIGNAL(linkActivated(const QString &)),
-                    this, SLOT(lookUpResource(const QString &)));
+//            connect(resourceLabel, SIGNAL(customContextMenuRequested(const QPoint &)),
+//                    this, SLOT(showCustomContextMenu(const QPoint &)));
+//            connect(resourceLabel, SIGNAL(linkActivated(const QString &)),
+//                    this, SLOT(lookUpResource(const QString &)));
 
-            newGridLayout->addWidget(resourceLabel, row, 1);
+//            newGridLayout->addWidget(resourceLabel, row, 1);
 
-            // Id
+//            // Id
 
-            QLabel *idLabel = Core::newLabel("<a href=\""+rdfTripleInformation+"\">"+rdfTriple->id()+"</a>",
-                                             1.0, false, false,
-                                             Qt::AlignCenter,
-                                             newGridWidget);
+//            QLabel *idLabel = Core::newLabel("<a href=\""+rdfTripleInformation+"\">"+rdfTriple->id()+"</a>",
+//                                             1.0, false, false,
+//                                             Qt::AlignCenter,
+//                                             newGridWidget);
 
-            connect(idLabel, SIGNAL(customContextMenuRequested(const QPoint &)),
-                    this, SLOT(showCustomContextMenu(const QPoint &)));
-            connect(idLabel, SIGNAL(linkActivated(const QString &)),
-                    this, SLOT(lookUpId(const QString &)));
+//            connect(idLabel, SIGNAL(customContextMenuRequested(const QPoint &)),
+//                    this, SLOT(showCustomContextMenu(const QPoint &)));
+//            connect(idLabel, SIGNAL(linkActivated(const QString &)),
+//                    this, SLOT(lookUpId(const QString &)));
 
-            idLabel->setAccessibleDescription("http://identifiers.org/"+rdfTriple->resource()+"/"+rdfTriple->id()+"/?profile=most_reliable&redirect=true");
-            idLabel->setContextMenuPolicy(Qt::CustomContextMenu);
+//            idLabel->setAccessibleDescription("http://identifiers.org/"+rdfTriple->resource()+"/"+rdfTriple->id()+"/?profile=most_reliable&redirect=true");
+//            idLabel->setContextMenuPolicy(Qt::CustomContextMenu);
 
-            newGridLayout->addWidget(idLabel, row, 2);
+//            newGridLayout->addWidget(idLabel, row, 2);
 
-            // Remove button
+//            // Remove button
 
-            QPushButton *removeButton = new QPushButton(newGridWidget);
-            // Note #1: ideally, we could assign a QAction to our
-            //          QPushButton, but this cannot be done, so... we
-            //          assign a few properties by hand...
-            // Note #2: to use a QToolButton would allow us to assign a
-            //          QAction to it, but a QToolButton doesn't look quite
-            //          the same as a QPushButton on some platforms, so...
+//            QPushButton *removeButton = new QPushButton(newGridWidget);
+//            // Note #1: ideally, we could assign a QAction to our
+//            //          QPushButton, but this cannot be done, so... we
+//            //          assign a few properties by hand...
+//            // Note #2: to use a QToolButton would allow us to assign a
+//            //          QAction to it, but a QToolButton doesn't look quite
+//            //          the same as a QPushButton on some platforms, so...
 
-            removeButton->setEnabled(Core::FileManager::instance()->isReadableAndWritable(mCellmlFile->fileName()));
-            removeButton->setIcon(QIcon(":/oxygen/actions/list-remove.png"));
-            removeButton->setStatusTip(tr("Remove the term"));
-            removeButton->setToolTip(tr("Remove"));
-            removeButton->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+//            removeButton->setEnabled(Core::FileManager::instance()->isReadableAndWritable(mCellmlFile->fileName()));
+//            removeButton->setIcon(QIcon(":/oxygen/actions/list-remove.png"));
+//            removeButton->setStatusTip(tr("Remove the term"));
+//            removeButton->setToolTip(tr("Remove"));
+//            removeButton->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
 
-            mRdfTriplesMapping.insert(removeButton, rdfTriple);
+//            mRdfTriplesMapping.insert(removeButton, rdfTriple);
 
-            connect(removeButton, SIGNAL(clicked(bool)),
-                    this, SLOT(removeRdfTriple()));
+//            connect(removeButton, SIGNAL(clicked(bool)),
+//                    this, SLOT(removeRdfTriple()));
 
-            newGridLayout->addWidget(removeButton, row, 3, Qt::AlignCenter);
+//            newGridLayout->addWidget(removeButton, row, 3, Qt::AlignCenter);
 
-            // Keep track of the very first resource id and update the last one
+//            // Keep track of the very first resource id and update the last one
 
-            if (row == 1)
-                firstRdfTripleInformation = rdfTripleInformation;
+//            if (row == 1)
+//                firstRdfTripleInformation = rdfTripleInformation;
 
-            lastRdfTripleInformation = rdfTripleInformation;
-        }
+//            lastRdfTripleInformation = rdfTripleInformation;
+//        }
 
         // Have the remove buttons column take as little horizontal space as
         // possible compared to the other columns
 
-        newGridLayout->setColumnStretch(0, 1);
-        newGridLayout->setColumnStretch(1, 1);
-        newGridLayout->setColumnStretch(2, 1);
+//        newGridLayout->setColumnStretch(0, 1);
+//        newGridLayout->setColumnStretch(1, 1);
+//        newGridLayout->setColumnStretch(2, 1);
 
         // Have all the rows take a minimum of vertical space
 
-        newGridLayout->setRowStretch(++row, 1);
-    } else {
-        // No RDF triples, so...
-
-        newGridLayout->addWidget(Core::newLabel(tr("There is no metadata associated with the current CellML element..."),
-                                                1.25, false, false,
-                                                Qt::AlignCenter,
-                                                newGridWidget),
-                                 0, 0);
+//        newGridLayout->setRowStretch(++row, 1);
     }
 
-    // Add our new widget to our stacked widget
+    // Hide our old output widget and show our new one
 
-    mWidget->addWidget(newGridWidget);
-
-    // Get rid of our old widget and layout (and its contents)
-
-    if (mGridWidget) {
-        mWidget->removeWidget(mGridWidget);
-
-        for (int i = 0, iMax = mGridLayout->count(); i < iMax; ++i) {
-            QLayoutItem *item = mGridLayout->takeAt(0);
-
-            delete item->widget();
-            delete item;
-        }
-
-        delete mGridWidget;
-    }
-
-    // Keep track of our new widget and layout
-
-    mGridWidget = newGridWidget;
-    mGridLayout = newGridLayout;
-
-    // Allow ourselves to be updated again
-
-    setUpdatesEnabled(true);
+    mOutputMessageScrollArea->setVisible(!rdfTriples.count());
+    mOutputOntologicalTerms->setVisible(rdfTriples.count());
 
     // Request for something to be looked up, if needed
 
@@ -350,10 +342,6 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::updateGui(iface::cellm
             genericLookUp();
         }
     }
-
-    // Set the position of our vertical scroll bar
-
-    verticalScrollBar()->setValue(pVerticalScrollBarPosition);
 }
 
 //==============================================================================
@@ -367,8 +355,8 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::addRdfTriple(CellMLSup
     // change in the range of our vertical scroll bar which will result in
     // showLastRdfTriple() being called
 
-    connect(verticalScrollBar(), SIGNAL(rangeChanged(int, int)),
-            this, SLOT(showLastRdfTriple()));
+//    connect(verticalScrollBar(), SIGNAL(rangeChanged(int, int)),
+//            this, SLOT(showLastRdfTriple()));
 
     // Enable the looking up of the last information
 
@@ -391,7 +379,7 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::genericLookUp(const QS
     QString qualifierAsString = pRdfTripleInformation.isEmpty()?QString():rdfTripleInformationAsStringList[0];
     QString resourceAsString = pRdfTripleInformation.isEmpty()?QString():rdfTripleInformationAsStringList[1];
     QString idAsString = pRdfTripleInformation.isEmpty()?QString():rdfTripleInformationAsStringList[2];
-    int rowAsInt = pRdfTripleInformation.isEmpty()?0:rdfTripleInformationAsStringList[3].toInt();
+//    int rowAsInt = pRdfTripleInformation.isEmpty()?0:rdfTripleInformationAsStringList[3].toInt();
 
     // Keep track of the RDF triple information and type
 
@@ -405,25 +393,25 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::genericLookUp(const QS
     //       updateGui()), the returned value will be the maximum number of rows
     //       that there has ever been, so...
 
-    for (int row = 0; mGridLayout->itemAtPosition(++row, 0);) {
-        QLabel *qualifierLabel = qobject_cast<QLabel *>(mGridLayout->itemAtPosition(row, 0)->widget());
-        QLabel *resourceLabel = qobject_cast<QLabel *>(mGridLayout->itemAtPosition(row, 1)->widget());
-        QLabel *idLabel = qobject_cast<QLabel *>(mGridLayout->itemAtPosition(row, 2)->widget());
+//    for (int row = 0; mGridLayout->itemAtPosition(++row, 0);) {
+//        QLabel *qualifierLabel = qobject_cast<QLabel *>(mGridLayout->itemAtPosition(row, 0)->widget());
+//        QLabel *resourceLabel = qobject_cast<QLabel *>(mGridLayout->itemAtPosition(row, 1)->widget());
+//        QLabel *idLabel = qobject_cast<QLabel *>(mGridLayout->itemAtPosition(row, 2)->widget());
 
-        QFont font = idLabel->font();
+//        QFont font = idLabel->font();
 
-        font.setBold((mLookUpInformation != None) && (row == rowAsInt));
-        font.setItalic(false);
+//        font.setBold((mLookUpInformation != None) && (row == rowAsInt));
+//        font.setItalic(false);
 
-        QFont italicFont = idLabel->font();
+//        QFont italicFont = idLabel->font();
 
-        italicFont.setBold(font.bold());
-        italicFont.setItalic(font.bold());
+//        italicFont.setBold(font.bold());
+//        italicFont.setItalic(font.bold());
 
-        qualifierLabel->setFont((pType == Qualifier)?italicFont:font);
-        resourceLabel->setFont((pType == Resource)?italicFont:font);
-        idLabel->setFont((pType == Id)?italicFont:font);
-    }
+//        qualifierLabel->setFont((pType == Qualifier)?italicFont:font);
+//        resourceLabel->setFont((pType == Resource)?italicFont:font);
+//        idLabel->setFont((pType == Id)?italicFont:font);
+//    }
 
     // Check whether we have something to look up
 
@@ -510,27 +498,28 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::lookUpId(const QString
 
 QString CellmlAnnotationViewMetadataNormalViewDetailsWidget::rdfTripleInformation(const int &pRow) const
 {
+Q_UNUSED(pRow);
     // Return the RDF triple information for the given row
 
     QString res = QString();
 
-    // Retrieve the item for the first label link from the given row
+//    // Retrieve the item for the first label link from the given row
 
-    QLayoutItem *item = mGridLayout->itemAtPosition(pRow, 0);
+//    QLayoutItem *item = mGridLayout->itemAtPosition(pRow, 0);
 
-    if (!item)
-        // No item could be retrieved, so...
+//    if (!item)
+//        // No item could be retrieved, so...
 
-        return res;
+//        return res;
 
-    // Retrieve the text from the item's widget which is a QLabel
+//    // Retrieve the text from the item's widget which is a QLabel
 
-    res = static_cast<QLabel *>(item->widget())->text();
+//    res = static_cast<QLabel *>(item->widget())->text();
 
-    // Extract the RDF triple information from the text
+//    // Extract the RDF triple information from the text
 
-    res.remove(QRegularExpression("^[^\"]*\""));
-    res.remove(QRegularExpression("\"[^\"]*$"));
+//    res.remove(QRegularExpression("^[^\"]*\""));
+//    res.remove(QRegularExpression("\"[^\"]*$"));
 
     // We are done with retrieving the RDF triple information for the given row,
     // so...
@@ -559,57 +548,57 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::removeRdfTriple()
     //       mGridLayout->rowCount() won't give us the correct number of rows,
     //       so...
 
-    int row = 0;
-    int rowMax = mGridLayout->rowCount();
+//    int row = 0;
+//    int rowMax = mGridLayout->rowCount();
 
-    for (int i = 1; i < rowMax; ++i) {
-        QLayoutItem *item = mGridLayout->itemAtPosition(i, 3);
+//    for (int i = 1; i < rowMax; ++i) {
+//        QLayoutItem *item = mGridLayout->itemAtPosition(i, 3);
 
-        if (!item) {
-            // The row doesn't exist anymore, so...
+//        if (!item) {
+//            // The row doesn't exist anymore, so...
 
-            rowMax = i;
+//            rowMax = i;
 
-            break;
-        }
+//            break;
+//        }
 
-        if (item->widget() == sender())
-            // This is the row we want to remove
+//        if (item->widget() == sender())
+//            // This is the row we want to remove
 
-            row = i;
-    }
+//            row = i;
+//    }
 
     // Make sure that row and rowMax have meaningful values
 
-    Q_ASSERT(row > 0);
-    Q_ASSERT(rowMax > row);
+//    Q_ASSERT(row > 0);
+//    Q_ASSERT(rowMax > row);
 
     // Determine the neighbour row which we want to be visible
 
-    mNeighbourRow = (rowMax-1 > row)?row:row-1;
+//    mNeighbourRow = (rowMax-1 > row)?row:row-1;
 
-    // Determine the 'new' RDF triple information to look up, depending on
-    // whether there is any RDF triple left
+//    // Determine the 'new' RDF triple information to look up, depending on
+//    // whether there is any RDF triple left
 
-    if (mRdfTriplesMapping.isEmpty()) {
-        // There are no RDF triples left, so...
+//    if (mRdfTriplesMapping.isEmpty()) {
+//        // There are no RDF triples left, so...
 
-        mRdfTripleInformation = QString();
-        mType = No;
-    } else if (!rdfTripleInformation(row).compare(mRdfTripleInformation)) {
-        // The RDF triple information is related to the row we want to delete,
-        // so we need to find a new one
+//        mRdfTripleInformation = QString();
+//        mType = No;
+//    } else if (!rdfTripleInformation(row).compare(mRdfTripleInformation)) {
+//        // The RDF triple information is related to the row we want to delete,
+//        // so we need to find a new one
 
-        mRdfTripleInformation = rdfTripleInformation((rowMax-1 > row)?row+1:row-1);
-    }
+//        mRdfTripleInformation = rdfTripleInformation((rowMax-1 > row)?row+1:row-1);
+//    }
 
     // Make sure that the neighbour of our removed RDF triple will be made
     // visible and we do this by handling the change in the range of our
     // vertical scroll bar which will result in showNeighbourRdfTriple() being
     // called
 
-    connect(verticalScrollBar(), SIGNAL(rangeChanged(int, int)),
-            this, SLOT(showNeighbourRdfTriple()));
+//    connect(verticalScrollBar(), SIGNAL(rangeChanged(int, int)),
+//            this, SLOT(showNeighbourRdfTriple()));
 
     // Update the GUI to reflect the removal of the RDF triple
 
@@ -624,47 +613,45 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::removeRdfTriple()
 
 void CellmlAnnotationViewMetadataNormalViewDetailsWidget::showNeighbourRdfTriple()
 {
-    // No need to show our neighbour RDF triple, so...
+//    // No need to show our neighbour RDF triple, so...
 
-    disconnect(verticalScrollBar(), SIGNAL(rangeChanged(int, int)),
-               this, SLOT(showNeighbourRdfTriple()));
+//    disconnect(verticalScrollBar(), SIGNAL(rangeChanged(int, int)),
+//               this, SLOT(showNeighbourRdfTriple()));
 
-    // Make sure that the neighbour RDF triple is visible
+//    // Make sure that the neighbour RDF triple is visible
 
-    ensureWidgetVisible(mGridLayout->itemAtPosition(mNeighbourRow, 0)->widget());
+//    ensureWidgetVisible(mGridLayout->itemAtPosition(mNeighbourRow, 0)->widget());
 }
 
 //==============================================================================
 
 void CellmlAnnotationViewMetadataNormalViewDetailsWidget::showLastRdfTriple()
 {
-    // No need to show our last RDF triple, so...
+//    // No need to show our last RDF triple, so...
 
-    disconnect(verticalScrollBar(), SIGNAL(rangeChanged(int, int)),
-               this, SLOT(showLastRdfTriple()));
+//    disconnect(verticalScrollBar(), SIGNAL(rangeChanged(int, int)),
+//               this, SLOT(showLastRdfTriple()));
 
-    // Determine the number of rows in our grid layout
-    // Note: to use mGridLayout->rowCount() isn't an option since no matter
-    //       whether we remove rows (in updateGui()), the returned value will be
-    //       the maximum number of rows that there has ever been, so...
+//    // Determine the number of rows in our grid layout
+//    // Note: to use mGridLayout->rowCount() isn't an option since no matter
+//    //       whether we remove rows (in updateGui()), the returned value will be
+//    //       the maximum number of rows that there has ever been, so...
 
-    int row = 0;
+//    int row = 0;
 
-    while (mGridLayout->itemAtPosition(++row, 0))
-        ;
+//    while (mGridLayout->itemAtPosition(++row, 0))
+//        ;
 
-    // Make sure that the last RDF triple is visible
+//    // Make sure that the last RDF triple is visible
 
-    ensureWidgetVisible(mGridLayout->itemAtPosition(row-1, 0)->widget());
+//    ensureWidgetVisible(mGridLayout->itemAtPosition(row-1, 0)->widget());
 }
 
 //==============================================================================
 
-void CellmlAnnotationViewMetadataNormalViewDetailsWidget::trackVerticalScrollBarPosition(const int &pPosition)
+void CellmlAnnotationViewMetadataNormalViewDetailsWidget::linkClicked()
 {
-    // Keep track of the new position of our vertical scroll bar
-
-    mVerticalScrollBarPosition = pPosition;
+//---GRY--- TO BE DONE...
 }
 
 //==============================================================================

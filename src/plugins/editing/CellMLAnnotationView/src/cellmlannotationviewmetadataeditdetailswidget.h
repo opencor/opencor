@@ -45,16 +45,12 @@ namespace Ui {
 
 class QComboBox;
 class QLabel;
-class QLayout;
 class QLineEdit;
 class QMenu;
 class QNetworkAccessManager;
 class QNetworkReply;
-class QPainter;
 class QPushButton;
 class QScrollArea;
-class QStandardItemModel;
-class QVBoxLayout;
 
 //==============================================================================
 
@@ -63,7 +59,6 @@ namespace OpenCOR {
 //==============================================================================
 
 namespace Core {
-    class TreeViewWidget;
     class UserMessageWidget;
 }   // namespace Core
 
