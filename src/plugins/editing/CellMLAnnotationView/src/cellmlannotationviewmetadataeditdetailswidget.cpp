@@ -261,7 +261,7 @@ CellmlAnnotationViewMetadataEditDetailsWidget::CellmlAnnotationViewMetadataEditD
     setTabOrder(mTermValue, mAddTermButton);
 
     // Create an output widget that will contain our output message and ourput
-    // for possible ontological terms
+    // for ontological terms
 
     mOutput = new Core::Widget(this);
 
@@ -284,7 +284,7 @@ CellmlAnnotationViewMetadataEditDetailsWidget::CellmlAnnotationViewMetadataEditD
 
     mOutputMessageScrollArea->setWidget(mOutputMessage);
 
-    // Create our output for possible ontological terms
+    // Create our output for ontological terms
 
     Core::readTextFromFile(":/ontologicalTerms.html", mOutputOntologicalTermsTemplate);
 
@@ -300,8 +300,8 @@ CellmlAnnotationViewMetadataEditDetailsWidget::CellmlAnnotationViewMetadataEditD
     connect(mOutputOntologicalTerms->page(), SIGNAL(linkClicked(const QUrl &)),
             this, SLOT(linkClicked()));
 
-    // Add our output message and ourput for possible ontological terms to our
-    // output widget
+    // Add our output message and ourput for ontological terms to our output
+    // widget
 
     mOutput->layout()->addWidget(mOutputMessageScrollArea);
     mOutput->layout()->addWidget(mOutputOntologicalTerms);
@@ -349,9 +349,9 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::retranslateUi()
 
     upudateOutputMessage(mLookUpTerm, mErrorMessage);
 
-    // Retranslate our output for possible ontological terms
+    // Retranslate our output for ontological terms
 
-    updateOutputPossibleOntologicalTerms();
+    updateOutputOntologicalTerms();
 }
 
 //==============================================================================
@@ -476,9 +476,9 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::upudateOutputMessage(const b
 
 //==============================================================================
 
-void CellmlAnnotationViewMetadataEditDetailsWidget::updateOutputPossibleOntologicalTerms()
+void CellmlAnnotationViewMetadataEditDetailsWidget::updateOutputOntologicalTerms()
 {
-    // Update our output for possible ontological terms
+    // Update our output for ontological terms
 
     QWebElement documentElement = mOutputOntologicalTerms->page()->mainFrame()->documentElement();
 
@@ -514,7 +514,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateItemsGui(const Items &
 
     mOutputOntologicalTerms->setHtml(QString());
 
-    // Populate our new layout, but only if there is at least one item
+    // Populate mOutputOntologicalTerms, but only if there is at least one item
 
     bool showBusyWidget = false;
 
@@ -568,7 +568,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateItemsGui(const Items &
                                                                              Core::iconDataUri(":/oxygen/actions/list-add.png", 16, 16, QIcon::Disabled),
                                                                              possibleOntologicalTerms));
 
-        updateOutputPossibleOntologicalTerms();
+        updateOutputOntologicalTerms();
     } else {
         // No items to show, so either there is no data available or an error
         // occurred, so update our output message
@@ -851,15 +851,15 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::termChanged(const QString &p
 
     updateGui(mElement, true);
 
-    // Retrieve some possible ontological terms based on the given term, but
-    // only if the term cannot be added directly and if it is not empty
+    // Retrieve some ontological terms based on the given term, but only if the
+    // term cannot be added directly and if it is not empty
 
     if (!isDirectTerm(pTerm) && !pTerm.isEmpty()) {
         // Add the term to our list of terms to look up
 
         mTerms << pTerm;
 
-        // Retrieve some possible ontological terms, but after a short delay
+        // Retrieve some ontological terms, but after a short delay
         // Note: the delay is in case the term gets changed in between. Indeed,
         //       we can't cancel a request sent to PMR2, so we should try to
         //       send as few of them as possible...
@@ -884,7 +884,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::lookUpTerm()
         mNetworkReply = 0;
     }
 
-    // Now, retrieve some possible ontological terms
+    // Now, retrieve some ontological terms
 
     QString term = mTerms.first();
 
