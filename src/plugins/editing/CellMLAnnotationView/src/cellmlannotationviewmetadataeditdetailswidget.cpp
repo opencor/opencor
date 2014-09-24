@@ -518,8 +518,8 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateItemsGui(const Items &
         QString ontologicalTerms = QString();
 
         foreach (const Item &item, pItems) {
-            // Keep track of the item informatio and its SHA-1 value, as well as
-            // of the URLs for the resource and id
+            // Keep track of the item information and its SHA-1 value, as well
+            // as of the URLs for the resource and id
 
             QString itemInformation = item.resource+"|"+item.id;
             QString itemInformationSha1 = Core::sha1(itemInformation);
@@ -533,7 +533,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateItemsGui(const Items &
 
             mItemInformationSha1s << itemInformationSha1;
 
-            // Add button
+            // Add the item
 
             mItemsMapping.insert(itemInformationSha1, item);
             mEnabledItems.insert(itemInformationSha1, true);

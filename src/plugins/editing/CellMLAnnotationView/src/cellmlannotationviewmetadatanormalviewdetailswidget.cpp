@@ -22,6 +22,7 @@ specific language governing permissions and limitations under the License.
 #include "cellmlannotationvieweditingwidget.h"
 #include "cellmlannotationviewmetadatanormalviewdetailswidget.h"
 #include "cellmlannotationviewmetadatawebviewwidget.h"
+#include "cliutils.h"
 #include "filemanager.h"
 #include "guiutils.h"
 #include "usermessagewidget.h"
@@ -205,35 +206,21 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::updateGui(iface::cellm
 
         mItemsCount = rdfTriples.count();
 
-        // Add the RDF triples information to our layout
-        // Note: for the RDF triple's subject, we try to remove the CellML
-        //       file's URI base, thus only leaving the equivalent of a CellML
-        //       element cmeta:id which will speak more to the user than a
-        //       possibly long URI reference...
+        // Add the RDF triples
 
+        static const QString indent = "                ";
         QString ontologicalTerms = QString();
 
 //        int row = 0;
 
-//        foreach (CellMLSupport::CellmlFileRdfTriple *rdfTriple, rdfTriples) {
-//            // Qualifier
+        foreach (CellMLSupport::CellmlFileRdfTriple *rdfTriple, rdfTriples) {
+            QString itemInformation = rdfTriple->resource()+"|"+rdfTriple->id();
+            QString itemInformationSha1 = Core::sha1(itemInformation);
+            QString qualifier = (rdfTriple->modelQualifier() != CellMLSupport::CellmlFileRdfTriple::ModelUnknown)?
+                                    rdfTriple->modelQualifierAsString():
+                                    rdfTriple->bioQualifierAsString();
 
-//            QString qualifierAsString = (rdfTriple->modelQualifier() != CellMLSupport::CellmlFileRdfTriple::ModelUnknown)?
-//                                            rdfTriple->modelQualifierAsString():
-//                                            rdfTriple->bioQualifierAsString();
-//            QString rdfTripleInformation = qualifierAsString+"|"+rdfTriple->resource()+"|"+rdfTriple->id()+"|"+QString::number(++row);
-
-//            QLabel *qualifierLabel = Core::newLabel("<a href=\""+rdfTripleInformation+"\">"+qualifierAsString+"</a>",
-//                                                    1.0, false, false,
-//                                                    Qt::AlignCenter,
-//                                                    newGridWidget);
-
-//            connect(qualifierLabel, SIGNAL(linkActivated(const QString &)),
-//                    this, SLOT(lookUpQualifier(const QString &)));
-
-//            newGridLayout->addWidget(qualifierLabel, row, 0);
-
-//            // Resource
+            // Resource
 
 //            QLabel *resourceLabel = Core::newLabel("<a href=\""+rdfTripleInformation+"\">"+rdfTriple->resource()+"</a>",
 //                                                   1.0, false, false,
@@ -248,9 +235,7 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::updateGui(iface::cellm
 //            connect(resourceLabel, SIGNAL(linkActivated(const QString &)),
 //                    this, SLOT(lookUpResource(const QString &)));
 
-//            newGridLayout->addWidget(resourceLabel, row, 1);
-
-//            // Id
+            // Id
 
 //            QLabel *idLabel = Core::newLabel("<a href=\""+rdfTripleInformation+"\">"+rdfTriple->id()+"</a>",
 //                                             1.0, false, false,
@@ -265,49 +250,46 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::updateGui(iface::cellm
 //            idLabel->setAccessibleDescription("http://identifiers.org/"+rdfTriple->resource()+"/"+rdfTriple->id()+"/?profile=most_reliable&redirect=true");
 //            idLabel->setContextMenuPolicy(Qt::CustomContextMenu);
 
-//            newGridLayout->addWidget(idLabel, row, 2);
-
-//            // Remove button
-
-//            QPushButton *removeButton = new QPushButton(newGridWidget);
-//            // Note #1: ideally, we could assign a QAction to our
-//            //          QPushButton, but this cannot be done, so... we
-//            //          assign a few properties by hand...
-//            // Note #2: to use a QToolButton would allow us to assign a
-//            //          QAction to it, but a QToolButton doesn't look quite
-//            //          the same as a QPushButton on some platforms, so...
-
-//            removeButton->setEnabled(Core::FileManager::instance()->isReadableAndWritable(mCellmlFile->fileName()));
-//            removeButton->setIcon(QIcon(":/oxygen/actions/list-remove.png"));
-//            removeButton->setStatusTip(tr("Remove the term"));
-//            removeButton->setToolTip(tr("Remove"));
-//            removeButton->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+            // Remove button
 
 //            mRdfTriplesMapping.insert(removeButton, rdfTriple);
 
 //            connect(removeButton, SIGNAL(clicked(bool)),
 //                    this, SLOT(removeRdfTriple()));
 
-//            newGridLayout->addWidget(removeButton, row, 3, Qt::AlignCenter);
-
-//            // Keep track of the very first resource id and update the last one
+            // Keep track of the very first resource id and update the last one
 
 //            if (row == 1)
 //                firstRdfTripleInformation = rdfTripleInformation;
 
 //            lastRdfTripleInformation = rdfTripleInformation;
-//        }
 
-        // Have the remove buttons column take as little horizontal space as
-        // possible compared to the other columns
 
-//        newGridLayout->setColumnStretch(0, 1);
-//        newGridLayout->setColumnStretch(1, 1);
-//        newGridLayout->setColumnStretch(2, 1);
 
-        // Have all the rows take a minimum of vertical space
 
-//        newGridLayout->setRowStretch(++row, 1);
+            // Add the item
+
+//            mItemsMapping.insert(itemInformationSha1, item);
+//            mEnabledItems.insert(itemInformationSha1, true);
+
+            ontologicalTerms +=  indent+"<tr id=\"item_"+itemInformationSha1+"\">\n"
+                                +indent+"    <td>\n"
+                                +indent+"        <a href=\""+qualifier+"\">"+qualifier+"</a>\n"
+                                +indent+"    </td>\n"
+                                +indent+"    <td id=\"resource_"+itemInformationSha1+"\">\n"
+                                +indent+"        <a href=\""+itemInformation+"\">"+rdfTriple->resource()+"</a>\n"
+                                +indent+"    </td>\n"
+                                +indent+"    <td id=\"id_"+itemInformationSha1+"\">\n"
+                                +indent+"        <a href=\""+itemInformation+"\">"+rdfTriple->id()+"</a>\n"
+                                +indent+"    </td>\n"
+                                +indent+"    <td id=\"button_"+itemInformationSha1+"\">\n"
+                                +indent+"        <a class=\"noHover\" href=\""+itemInformationSha1+"\"><img class=\"button\"/></a>\n"
+                                +indent+"    </td>\n"
+                                +indent+"    <td id=\"disabledButton_"+itemInformationSha1+"\" style=\"display: none;\">\n"
+                                +indent+"        <img class=\"disabledButton\"/>\n"
+                                +indent+"    </td>\n"
+                                +indent+"</tr>\n";
+        }
 
         mOutputOntologicalTerms->setHtml(mOutputOntologicalTermsTemplate.arg(Core::iconDataUri(":/oxygen/actions/list-remove.png", 16, 16),
                                                                              Core::iconDataUri(":/oxygen/actions/list-remove.png", 16, 16, QIcon::Disabled),
