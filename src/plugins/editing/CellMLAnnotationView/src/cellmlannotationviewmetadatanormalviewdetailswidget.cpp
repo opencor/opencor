@@ -216,87 +216,57 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::updateGui(iface::cellm
         static const QString indent = "                ";
         QString ontologicalTerms = QString();
 
-//        int row = 0;
+        bool firstRdfTriple = true;
 
         foreach (CellMLSupport::CellmlFileRdfTriple *rdfTriple, rdfTriples) {
             // Keep track of the item information and its SHA-1 value, as well
             // as of the qualifier and of the URLs for the resource and id
 
-            QString itemInformation = rdfTriple->resource()+"|"+rdfTriple->id();
-            QString itemInformationSha1 = Core::sha1(itemInformation);
             QString qualifier = (rdfTriple->modelQualifier() != CellMLSupport::CellmlFileRdfTriple::ModelUnknown)?
                                     rdfTriple->modelQualifierAsString():
                                     rdfTriple->bioQualifierAsString();
+            QString rdfTripleInformation = qualifier+"|"+rdfTriple->resource()+"|"+rdfTriple->id();
+            QString rdfTripleInformationSha1 = Core::sha1(rdfTripleInformation);
             QString resourceUrl = "http://identifiers.org/"+rdfTriple->resource()+"/?redirect=true";
             QString idUrl = "http://identifiers.org/"+rdfTriple->resource()+"/"+rdfTriple->id()+"/?profile=most_reliable&redirect=true";
 
             if (!mUrls.contains(rdfTriple->resource()))
                 mUrls.insert(rdfTriple->resource(), resourceUrl);
 
-            mUrls.insert(itemInformation, idUrl);
-
-            // Resource
-
-//            QLabel *resourceLabel = Core::newLabel("<a href=\""+rdfTripleInformation+"\">"+rdfTriple->resource()+"</a>",
-//                                                   1.0, false, false,
-//                                                   Qt::AlignCenter,
-//                                                   newGridWidget);
-
-//            resourceLabel->setAccessibleDescription("http://identifiers.org/"+rdfTriple->resource()+"/?redirect=true");
-//            resourceLabel->setContextMenuPolicy(Qt::CustomContextMenu);
-
-//            connect(resourceLabel, SIGNAL(linkActivated(const QString &)),
-//                    this, SLOT(lookUpResource(const QString &)));
-
-            // Id
-
-//            QLabel *idLabel = Core::newLabel("<a href=\""+rdfTripleInformation+"\">"+rdfTriple->id()+"</a>",
-//                                             1.0, false, false,
-//                                             Qt::AlignCenter,
-//                                             newGridWidget);
-
-//            connect(idLabel, SIGNAL(linkActivated(const QString &)),
-//                    this, SLOT(lookUpId(const QString &)));
-
-//            idLabel->setAccessibleDescription("http://identifiers.org/"+rdfTriple->resource()+"/"+rdfTriple->id()+"/?profile=most_reliable&redirect=true");
-//            idLabel->setContextMenuPolicy(Qt::CustomContextMenu);
-
-            // Remove button
-
-//            mRdfTriplesMapping.insert(removeButton, rdfTriple);
-
-//            connect(removeButton, SIGNAL(clicked(bool)),
-//                    this, SLOT(removeRdfTriple()));
+            mUrls.insert(rdfTripleInformation, idUrl);
 
             // Keep track of the very first resource id and update the last one
 
-//            if (row == 1)
-//                firstRdfTripleInformation = rdfTripleInformation;
+            if (firstRdfTriple) {
+                firstRdfTripleInformation = rdfTripleInformation;
 
-//            lastRdfTripleInformation = rdfTripleInformation;
+                firstRdfTriple = false;
+            }
+
+            lastRdfTripleInformation = rdfTripleInformation;
 
 
 
 
             // Add the item
 
-//            mItemsMapping.insert(itemInformationSha1, item);
-//            mEnabledItems.insert(itemInformationSha1, true);
+//            mItemsMapping.insert(rdfTripleInformationSha1, item);
+//            mEnabledItems.insert(rdfTripleInformationSha1, true);
 
-            ontologicalTerms +=  indent+"<tr id=\"item_"+itemInformationSha1+"\">\n"
+            ontologicalTerms +=  indent+"<tr id=\"item_"+rdfTripleInformationSha1+"\">\n"
                                 +indent+"    <td>\n"
                                 +indent+"        <a href=\""+qualifier+"\">"+qualifier+"</a>\n"
                                 +indent+"    </td>\n"
-                                +indent+"    <td id=\"resource_"+itemInformationSha1+"\">\n"
-                                +indent+"        <a href=\""+itemInformation+"\">"+rdfTriple->resource()+"</a>\n"
+                                +indent+"    <td id=\"resource_"+rdfTripleInformationSha1+"\">\n"
+                                +indent+"        <a href=\""+rdfTripleInformation+"\">"+rdfTriple->resource()+"</a>\n"
                                 +indent+"    </td>\n"
-                                +indent+"    <td id=\"id_"+itemInformationSha1+"\">\n"
-                                +indent+"        <a href=\""+itemInformation+"\">"+rdfTriple->id()+"</a>\n"
+                                +indent+"    <td id=\"id_"+rdfTripleInformationSha1+"\">\n"
+                                +indent+"        <a href=\""+rdfTripleInformation+"\">"+rdfTriple->id()+"</a>\n"
                                 +indent+"    </td>\n"
-                                +indent+"    <td id=\"button_"+itemInformationSha1+"\">\n"
-                                +indent+"        <a class=\"noHover\" href=\""+itemInformationSha1+"\"><img class=\"button\"/></a>\n"
+                                +indent+"    <td id=\"button_"+rdfTripleInformationSha1+"\">\n"
+                                +indent+"        <a class=\"noHover\" href=\""+rdfTripleInformationSha1+"\"><img class=\"button\"/></a>\n"
                                 +indent+"    </td>\n"
-                                +indent+"    <td id=\"disabledButton_"+itemInformationSha1+"\" style=\"display: none;\">\n"
+                                +indent+"    <td id=\"disabledButton_"+rdfTripleInformationSha1+"\" style=\"display: none;\">\n"
                                 +indent+"        <img class=\"disabledButton\"/>\n"
                                 +indent+"    </td>\n"
                                 +indent+"</tr>\n";
@@ -388,10 +358,6 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::genericLookUp(const QS
 
     // Make the row corresponding to the qualifier, resource or id bold (and
     // italic in some cases)
-    // Note: to use mGridLayout->rowCount() to determine the number of rows
-    //       isn't an option since no matter whether we remove rows (in
-    //       updateGui()), the returned value will be the maximum number of rows
-    //       that there has ever been, so...
 
 //    for (int row = 0; mGridLayout->itemAtPosition(++row, 0);) {
 //        QLabel *qualifierLabel = qobject_cast<QLabel *>(mGridLayout->itemAtPosition(row, 0)->widget());
@@ -453,45 +419,6 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::disableLookUpInformati
     // Update the GUI by pretending to be interested in looking something up
 
     genericLookUp();
-}
-
-//==============================================================================
-
-void CellmlAnnotationViewMetadataNormalViewDetailsWidget::lookUpQualifier(const QString &pRdfTripleInformation)
-{
-    // Enable the looking up of any information
-
-    mLookUpInformation = Any;
-
-    // Call our generic look up function
-
-    genericLookUp(pRdfTripleInformation, Qualifier);
-}
-
-//==============================================================================
-
-void CellmlAnnotationViewMetadataNormalViewDetailsWidget::lookUpResource(const QString &pRdfTripleInformation)
-{
-    // Enable the looking up of any information
-
-    mLookUpInformation = Any;
-
-    // Call our generic look up function
-
-    genericLookUp(pRdfTripleInformation, Resource);
-}
-
-//==============================================================================
-
-void CellmlAnnotationViewMetadataNormalViewDetailsWidget::lookUpId(const QString &pRdfTripleInformation)
-{
-    // Enable the looking up of any information
-
-    mLookUpInformation = Any;
-
-    // Call our generic look up function
-
-    genericLookUp(pRdfTripleInformation, Id);
 }
 
 //==============================================================================
@@ -651,7 +578,32 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::showLastRdfTriple()
 
 void CellmlAnnotationViewMetadataNormalViewDetailsWidget::linkClicked()
 {
+    // Retrieve some information about the link
+
+    mOutputOntologicalTerms->retrieveLinkInformation(mLink, mTextContent);
+
+    // Check whether we have clicked a resource/id link or a button link
+
+    if (mTextContent.isEmpty()) {
+        // We have clicked on a button link, so remove the RDF triple associated
+        // with it
+
 //---GRY--- TO BE DONE...
+    } else {
+        // We have clicked on a qualifier/resource/id link, so start by enabling
+        // the looking up of any information
+
+        mLookUpInformation = Any;
+
+        // Call our generic look up function
+
+        genericLookUp(mLink,
+                      (!mLink.compare(mTextContent))?
+                          Qualifier:
+                          mUrls.contains(mTextContent)?
+                              Resource:
+                              Id);
+    }
 }
 
 //==============================================================================

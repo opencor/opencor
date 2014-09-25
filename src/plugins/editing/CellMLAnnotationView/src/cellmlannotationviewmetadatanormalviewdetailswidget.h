@@ -155,10 +155,6 @@ private Q_SLOTS:
 
     void disableLookUpInformation();
 
-    void lookUpQualifier(const QString &pRdfTripleInformation);
-    void lookUpResource(const QString &pRdfTripleInformation);
-    void lookUpId(const QString &pRdfTripleInformation);
-
     void removeRdfTriple();
 
     void showNeighbourRdfTriple();

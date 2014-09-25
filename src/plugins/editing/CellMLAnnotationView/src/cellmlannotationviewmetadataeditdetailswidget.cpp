@@ -785,7 +785,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::linkClicked()
 
     if (mTextContent.isEmpty()) {
         // We have clicked on a button link, so retrieve the item associated
-        // with the add button
+        // with it
 
         Item item = mItemsMapping.value(mLink);
 
@@ -822,7 +822,10 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::linkClicked()
 
         // Call our generic look up function
 
-        genericLookUp(mLink, mUrls.contains(mTextContent)?Resource:Id);
+        genericLookUp(mLink,
+                      mUrls.contains(mTextContent)?
+                          Resource:
+                          Id);
     }
 }
 
