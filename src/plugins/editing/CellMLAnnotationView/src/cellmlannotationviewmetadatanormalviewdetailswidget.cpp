@@ -45,6 +45,7 @@ specific language governing permissions and limitations under the License.
 //#include <QRegularExpression>
 #include <QScrollArea>
 #include <QStackedWidget>
+#include <QString>
 #include <QWebElement>
 #include <QWebFrame>
 
@@ -255,8 +256,8 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::updateGui(iface::cellm
 //            mEnabledItems.insert(rdfTripleInformationSha1, true);
 
             ontologicalTerms +=  indent+"<tr id=\"item_"+rdfTripleInformationSha1+"\">\n"
-                                +indent+"    <td>\n"
-                                +indent+"        <a href=\""+qualifier+"\">"+qualifier+"</a>\n"
+                                +indent+"    <td id=\"qualifier_"+rdfTripleInformationSha1+"\">\n"
+                                +indent+"        <a href=\""+rdfTripleInformation+"\">"+qualifier+"</a>\n"
                                 +indent+"    </td>\n"
                                 +indent+"    <td id=\"resource_"+rdfTripleInformationSha1+"\">\n"
                                 +indent+"        <a href=\""+rdfTripleInformation+"\">"+rdfTriple->resource()+"</a>\n"
@@ -345,10 +346,10 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::genericLookUp(const QS
 {
     // Retrieve the RDF triple information
 
-    QStringList rdfTripleInformationAsStringList = pRdfTripleInformation.split("|");
-    QString qualifierAsString = pRdfTripleInformation.isEmpty()?QString():rdfTripleInformationAsStringList[0];
-    QString resourceAsString = pRdfTripleInformation.isEmpty()?QString():rdfTripleInformationAsStringList[1];
-    QString idAsString = pRdfTripleInformation.isEmpty()?QString():rdfTripleInformationAsStringList[2];
+    QStringList rdfTripleInformation = pRdfTripleInformation.split("|");
+    QString qualifier = pRdfTripleInformation.isEmpty()?QString():rdfTripleInformation[0];
+    QString resource = pRdfTripleInformation.isEmpty()?QString():rdfTripleInformation[0];
+    QString id = pRdfTripleInformation.isEmpty()?QString():rdfTripleInformation[1];
 
     // Keep track of the RDF triple information and type
 
@@ -415,15 +416,15 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::genericLookUp(const QS
 
     switch (pInformationType) {
     case Qualifier:
-        emit qualifierLookUpRequested(qualifierAsString);
+        emit qualifierLookUpRequested(qualifier);
 
         break;
     case Resource:
-        emit resourceLookUpRequested(resourceAsString);
+        emit resourceLookUpRequested(resource);
 
         break;
     case Id:
-        emit idLookUpRequested(resourceAsString, idAsString);
+        emit idLookUpRequested(resource, id);
 
         break;
     default:
@@ -622,10 +623,12 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::linkClicked()
 
         // Call our generic look up function
 
+        QStringList rdfTripleInformation = mLink.split("|");
+
         genericLookUp(mLink,
-                      (!mLink.compare(mTextContent))?
+                      (!rdfTripleInformation[0].compare(mTextContent))?
                           Qualifier:
-                          mUrls.contains(mTextContent)?
+                          !rdfTripleInformation[1].compare(mTextContent)?
                               Resource:
                               Id);
     }
@@ -655,9 +658,11 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::on_actionCopy_triggere
 {
     // Copy the qualifier or the URL of the resource or id to the clipboard
 
-    if (!mLink.compare(mTextContent))
-        QApplication::clipboard()->setText(mLink);
-    else if (mUrls.contains(mTextContent))
+    QStringList rdfTripleInformation = mLink.split("|");
+
+    if (!rdfTripleInformation[0].compare(mTextContent))
+        QApplication::clipboard()->setText(mTextContent);
+    else if (!rdfTripleInformation[1].compare(mTextContent))
         QApplication::clipboard()->setText(mUrls.value(mTextContent));
     else
         QApplication::clipboard()->setText(mUrls.value(mLink));

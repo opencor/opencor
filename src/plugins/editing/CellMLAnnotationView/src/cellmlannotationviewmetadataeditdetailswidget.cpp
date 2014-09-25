@@ -614,10 +614,10 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::genericLookUp(const QString 
 {
     // Retrieve the information
 
-    QStringList itemInformationAsStringList = pItemInformation.split("|");
-    QString qualifierAsString = (pInformationType != Qualifier)?QString():pItemInformation;
-    QString resourceAsString = (pItemInformation.isEmpty() || (pInformationType == Qualifier))?QString():itemInformationAsStringList[0];
-    QString idAsString = (pItemInformation.isEmpty() || (pInformationType == Qualifier))?QString():itemInformationAsStringList[1];
+    QStringList itemInformation = pItemInformation.split("|");
+    QString qualifier = (pInformationType != Qualifier)?QString():pItemInformation;
+    QString resource = (pItemInformation.isEmpty() || (pInformationType == Qualifier))?QString():itemInformation[0];
+    QString id = (pItemInformation.isEmpty() || (pInformationType == Qualifier))?QString():itemInformation[1];
 
     // Toggle the look up button, if needed
     // Note: we don't want nested generic look ups, hence we temporarily disable
@@ -694,15 +694,15 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::genericLookUp(const QString 
 
     switch (pInformationType) {
     case Qualifier:
-        emit qualifierLookUpRequested(qualifierAsString);
+        emit qualifierLookUpRequested(qualifier);
 
         break;
     case Resource:
-        emit resourceLookUpRequested(resourceAsString);
+        emit resourceLookUpRequested(resource);
 
         break;
     case Id:
-        emit idLookUpRequested(resourceAsString, idAsString);
+        emit idLookUpRequested(resource, id);
 
         break;
     default:
