@@ -70,14 +70,14 @@ class CellmlAnnotationViewMetadataNormalViewDetailsWidget : public Core::Widget
 
 private:
     enum Information {
-        None,
+        No,
         First,
         Any,
         Last
     };
 
-    enum Type {
-        No,
+    enum InformationType {
+        None,
         Qualifier,
         Resource,
         Id
@@ -91,7 +91,7 @@ public:
 
     void updateGui(iface::cellml_api::CellMLElement *pElement,
                    const QString &pRdfTripleInformation = QString(),
-                   const Type &pType = No,
+                   const InformationType &pInformationType = None,
                    const Information &pLookUpInformation = First);
 
     void addRdfTriple(CellMLSupport::CellmlFileRdfTriple *pRdfTriple);
@@ -114,7 +114,7 @@ private:
     ObjRef<iface::cellml_api::CellMLElement> mElement;
 
     QString mRdfTripleInformation;
-    Type mType;
+    InformationType mInformationType;
 
     Information mLookUpInformation;
 
@@ -124,6 +124,8 @@ private:
     QMap<QObject *, CellMLSupport::CellmlFileRdfTriple *> mRdfTriplesMapping;
 
     QMap<QString, QString> mUrls;
+    QStringList mRdfTripleInformationSha1s;
+    QString mRdfTripleInformationSha1;
 
     QString mLink;
     QString mTextContent;
@@ -133,7 +135,7 @@ private:
     void updateOutputOntologicalTerms();
 
     void genericLookUp(const QString &pRdfTripleInformation = QString(),
-                       const Type &pType = No);
+                       const InformationType &pInformationType = None);
 
     QString rdfTripleInformation(const int &pRow) const;
 

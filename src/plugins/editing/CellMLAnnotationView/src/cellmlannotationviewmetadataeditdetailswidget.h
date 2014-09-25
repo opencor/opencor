@@ -149,7 +149,6 @@ private:
     QMap<QString, QString> mUrls;
     QStringList mItemInformationSha1s;
     QString mItemInformationSha1;
-    bool mLookUpResource;
 
     QString mLink;
     QString mTextContent;

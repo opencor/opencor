@@ -62,12 +62,14 @@ CellmlAnnotationViewMetadataNormalViewDetailsWidget::CellmlAnnotationViewMetadat
     mItemsCount(0),
     mElement(0),
     mRdfTripleInformation(QString()),
-    mType(No),
+    mInformationType(None),
     mLookUpInformation(First),
     mVerticalScrollBarPosition(0),
     mNeighbourRow(0),
     mRdfTriplesMapping(QMap<QObject *, CellMLSupport::CellmlFileRdfTriple *>()),
     mUrls(QMap<QString, QString>()),
+    mRdfTripleInformationSha1s(QStringList()),
+    mRdfTripleInformationSha1(QString()),
     mLink(QString()),
     mTextContent(QString())
 {
@@ -180,7 +182,7 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::updateOutputOntologica
 
 void CellmlAnnotationViewMetadataNormalViewDetailsWidget::updateGui(iface::cellml_api::CellMLElement *pElement,
                                                                     const QString &pRdfTripleInformation,
-                                                                    const Type &pType,
+                                                                    const InformationType &pInformationType,
                                                                     const Information &pLookUpInformation)
 {
     if (!pElement)
@@ -195,6 +197,7 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::updateGui(iface::cellm
     //       is no need to waste memory, so...
 
     mUrls.clear();
+    mRdfTripleInformationSha1s.clear();
 
     mOutputOntologicalTerms->setHtml(QString());
 
@@ -233,6 +236,8 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::updateGui(iface::cellm
                 mUrls.insert(rdfTriple->resource(), resourceUrl);
 
             mUrls.insert(rdfTripleInformation, idUrl);
+
+            mRdfTripleInformationSha1s << rdfTripleInformationSha1;
 
             // Keep track of the first and last RDF triple information
 
@@ -282,7 +287,7 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::updateGui(iface::cellm
 
     // Request for something to be looked up, if needed
 
-    if (pLookUpInformation != None) {
+    if (pLookUpInformation != No) {
         if (rdfTriples.count()) {
             // Request for the first resource id, the last resource id or an
             // 'old' qualifier, resource or resource id to be looked up
@@ -298,7 +303,7 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::updateGui(iface::cellm
             else
                 // Look up any 'old' qualifier, resource or resource id
 
-                genericLookUp(pRdfTripleInformation, pType);
+                genericLookUp(pRdfTripleInformation, pInformationType);
         } else {
             // No RDF triple left, so ask for 'nothing' to be looked up
             // Note: we do this to let people know that there is nothing to look
@@ -330,13 +335,13 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::addRdfTriple(CellMLSup
 
     // Update the GUI to reflect the addition of the given RDF triple
 
-    updateGui(mElement, QString(), No, mLookUpInformation);
+    updateGui(mElement, QString(), None, mLookUpInformation);
 }
 
 //==============================================================================
 
 void CellmlAnnotationViewMetadataNormalViewDetailsWidget::genericLookUp(const QString &pRdfTripleInformation,
-                                                                        const Type &pType)
+                                                                        const InformationType &pInformationType)
 {
     // Retrieve the RDF triple information
 
@@ -344,46 +349,71 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::genericLookUp(const QS
     QString qualifierAsString = pRdfTripleInformation.isEmpty()?QString():rdfTripleInformationAsStringList[0];
     QString resourceAsString = pRdfTripleInformation.isEmpty()?QString():rdfTripleInformationAsStringList[1];
     QString idAsString = pRdfTripleInformation.isEmpty()?QString():rdfTripleInformationAsStringList[2];
-//    int rowAsInt = pRdfTripleInformation.isEmpty()?0:rdfTripleInformationAsStringList[3].toInt();
 
     // Keep track of the RDF triple information and type
 
     mRdfTripleInformation = pRdfTripleInformation;
-    mType = pType;
 
-    // Make the row corresponding to the qualifier, resource or id bold (and
-    // italic in some cases)
+    // (Un)highlight/(un)select our various RDF triple information
 
-//    for (int row = 0; mGridLayout->itemAtPosition(++row, 0);) {
-//        QLabel *qualifierLabel = qobject_cast<QLabel *>(mGridLayout->itemAtPosition(row, 0)->widget());
-//        QLabel *resourceLabel = qobject_cast<QLabel *>(mGridLayout->itemAtPosition(row, 1)->widget());
-//        QLabel *idLabel = qobject_cast<QLabel *>(mGridLayout->itemAtPosition(row, 2)->widget());
+    static const QString Highlighted = "highlighted";
+    static const QString Selected = "selected";
 
-//        QFont font = idLabel->font();
+    QWebElement documentElement = mOutputOntologicalTerms->page()->mainFrame()->documentElement();
+    QString rdfTripleInformationSha1 = pRdfTripleInformation.isEmpty()?QString():Core::sha1(pRdfTripleInformation);
 
-//        font.setBold((mLookUpInformation != None) && (row == rowAsInt));
-//        font.setItalic(false);
+    if (rdfTripleInformationSha1.compare(mRdfTripleInformationSha1)) {
+        if (!mRdfTripleInformationSha1.isEmpty()) {
+            documentElement.findFirst(QString("tr[id=item_%1]").arg(mRdfTripleInformationSha1)).removeClass(Highlighted);
 
-//        QFont italicFont = idLabel->font();
+            if (mInformationType == Qualifier)
+                documentElement.findFirst(QString("td[id=qualifier_%1]").arg(mRdfTripleInformationSha1)).removeClass(Selected);
+            else if (mInformationType == Resource)
+                documentElement.findFirst(QString("td[id=resource_%1]").arg(mRdfTripleInformationSha1)).removeClass(Selected);
+            else if (mInformationType == Id)
+                documentElement.findFirst(QString("td[id=id_%1]").arg(mRdfTripleInformationSha1)).removeClass(Selected);
+        }
 
-//        italicFont.setBold(font.bold());
-//        italicFont.setItalic(font.bold());
+        if (!rdfTripleInformationSha1.isEmpty()) {
+            documentElement.findFirst(QString("tr[id=item_%1]").arg(rdfTripleInformationSha1)).addClass(Highlighted);
 
-//        qualifierLabel->setFont((pType == Qualifier)?italicFont:font);
-//        resourceLabel->setFont((pType == Resource)?italicFont:font);
-//        idLabel->setFont((pType == Id)?italicFont:font);
-//    }
+            if (pInformationType == Qualifier)
+                documentElement.findFirst(QString("td[id=qualifier_%1]").arg(rdfTripleInformationSha1)).addClass(Selected);
+            else if (pInformationType == Resource)
+                documentElement.findFirst(QString("td[id=resource_%1]").arg(rdfTripleInformationSha1)).addClass(Selected);
+            else if (pInformationType == Id)
+                documentElement.findFirst(QString("td[id=id_%1]").arg(rdfTripleInformationSha1)).addClass(Selected);
+        }
+
+        mRdfTripleInformationSha1 = rdfTripleInformationSha1;
+    } else if (!rdfTripleInformationSha1.isEmpty()) {
+        if (pInformationType == Qualifier) {
+            documentElement.findFirst(QString("td[id=qualifier_%1]").arg(rdfTripleInformationSha1)).addClass(Selected);
+            documentElement.findFirst(QString("td[id=resource_%1]").arg(rdfTripleInformationSha1)).removeClass(Selected);
+            documentElement.findFirst(QString("td[id=id_%1]").arg(rdfTripleInformationSha1)).removeClass(Selected);
+        } else if (pInformationType == Resource) {
+            documentElement.findFirst(QString("td[id=qualifier_%1]").arg(rdfTripleInformationSha1)).removeClass(Selected);
+            documentElement.findFirst(QString("td[id=resource_%1]").arg(rdfTripleInformationSha1)).addClass(Selected);
+            documentElement.findFirst(QString("td[id=id_%1]").arg(rdfTripleInformationSha1)).removeClass(Selected);
+        } else if (pInformationType == Id) {
+            documentElement.findFirst(QString("td[id=qualifier_%1]").arg(rdfTripleInformationSha1)).removeClass(Selected);
+            documentElement.findFirst(QString("td[id=resource_%1]").arg(rdfTripleInformationSha1)).removeClass(Selected);
+            documentElement.findFirst(QString("td[id=id_%1]").arg(rdfTripleInformationSha1)).addClass(Selected);
+        }
+    }
+
+    mInformationType = pInformationType;
 
     // Check whether we have something to look up
 
-    if (mLookUpInformation == None)
+    if (mLookUpInformation == No)
         // Nothing to look up, so...
 
         return;
 
     // Let people know that we want to look something up
 
-    switch (pType) {
+    switch (pInformationType) {
     case Qualifier:
         emit qualifierLookUpRequested(qualifierAsString);
 
@@ -397,7 +427,7 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::genericLookUp(const QS
 
         break;
     default:
-        // No
+        // None
 
         emit noLookUpRequested();
     }
@@ -409,7 +439,7 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::disableLookUpInformati
 {
     // Disable the looking up of information
 
-    mLookUpInformation = None;
+    mLookUpInformation = No;
 
     // Update the GUI by pretending to be interested in looking something up
 
@@ -506,7 +536,7 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::removeRdfTriple()
 //        // There are no RDF triples left, so...
 
 //        mRdfTripleInformation = QString();
-//        mType = No;
+//        mType = None;
 //    } else if (!rdfTripleInformation(row).compare(mRdfTripleInformation)) {
 //        // The RDF triple information is related to the row we want to delete,
 //        // so we need to find a new one
@@ -524,7 +554,7 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::removeRdfTriple()
 
     // Update the GUI to reflect the removal of the RDF triple
 
-    updateGui(mElement, mRdfTripleInformation, mType, mLookUpInformation);
+    updateGui(mElement, mRdfTripleInformation, mInformationType, mLookUpInformation);
 
     // Let people know that an RDF triple has been removed
 

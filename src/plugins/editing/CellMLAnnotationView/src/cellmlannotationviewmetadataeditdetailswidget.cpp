@@ -126,7 +126,6 @@ CellmlAnnotationViewMetadataEditDetailsWidget::CellmlAnnotationViewMetadataEditD
     mUrls(QMap<QString, QString>()),
     mItemInformationSha1s(QStringList()),
     mItemInformationSha1(QString()),
-    mLookUpResource(true),
     mLink(QString()),
     mTextContent(QString()),
     mNetworkReply(0)
@@ -620,10 +619,6 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::genericLookUp(const QString 
     QString resourceAsString = (pItemInformation.isEmpty() || (pInformationType == Qualifier))?QString():itemInformationAsStringList[0];
     QString idAsString = (pItemInformation.isEmpty() || (pInformationType == Qualifier))?QString():itemInformationAsStringList[1];
 
-    // Keep track of the type of information we are looking up
-
-    mInformationType = pInformationType;
-
     // Toggle the look up button, if needed
     // Note: we don't want nested generic look ups, hence we temporarily disable
     //       the handling of toggled() on mLookUpQualifierButton. If we don't do
@@ -655,39 +650,38 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::genericLookUp(const QString 
 
     QWebElement documentElement = mOutputOntologicalTerms->page()->mainFrame()->documentElement();
     QString itemInformationSha1 = mLink.isEmpty()?QString():Core::sha1(mLink);
-    bool lookUpResource = mUrls.contains(mTextContent);
 
     if (itemInformationSha1.compare(mItemInformationSha1)) {
         if (!mItemInformationSha1.isEmpty()) {
             documentElement.findFirst(QString("tr[id=item_%1]").arg(mItemInformationSha1)).removeClass(Highlighted);
 
-            if (mLookUpResource)
+            if (mInformationType == Resource)
                 documentElement.findFirst(QString("td[id=resource_%1]").arg(mItemInformationSha1)).removeClass(Selected);
-            else
+            else if (mInformationType == Id)
                 documentElement.findFirst(QString("td[id=id_%1]").arg(mItemInformationSha1)).removeClass(Selected);
         }
 
         if (!itemInformationSha1.isEmpty()) {
             documentElement.findFirst(QString("tr[id=item_%1]").arg(itemInformationSha1)).addClass(Highlighted);
 
-            if (lookUpResource)
+            if (pInformationType == Resource)
                 documentElement.findFirst(QString("td[id=resource_%1]").arg(itemInformationSha1)).addClass(Selected);
-            else
+            else if (pInformationType == Id)
                 documentElement.findFirst(QString("td[id=id_%1]").arg(itemInformationSha1)).addClass(Selected);
         }
 
         mItemInformationSha1 = itemInformationSha1;
     } else if (!itemInformationSha1.isEmpty()) {
-        if (lookUpResource) {
+        if (pInformationType == Resource) {
             documentElement.findFirst(QString("td[id=resource_%1]").arg(itemInformationSha1)).addClass(Selected);
             documentElement.findFirst(QString("td[id=id_%1]").arg(itemInformationSha1)).removeClass(Selected);
-        } else {
+        } else if (pInformationType == Id) {
             documentElement.findFirst(QString("td[id=resource_%1]").arg(itemInformationSha1)).removeClass(Selected);
             documentElement.findFirst(QString("td[id=id_%1]").arg(itemInformationSha1)).addClass(Selected);
         }
     }
 
-    mLookUpResource = lookUpResource;
+    mInformationType = pInformationType;
 
     // Check that we have something to look up
 
