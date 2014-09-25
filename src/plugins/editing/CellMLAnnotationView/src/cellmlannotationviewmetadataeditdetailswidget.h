@@ -170,18 +170,14 @@ private:
                      const QString &pResource, const QString &pId);
 
     void genericLookUp(const QString &pItemInformation = QString(),
-                       const InformationType &pInformationType = None,
-                       const bool &pRetranslate = false);
+                       const InformationType &pInformationType = None);
 
     bool isDirectTerm(const QString &pTerm) const;
 
 Q_SIGNALS:
-    void qualifierLookUpRequested(const QString &pQualifier,
-                                  const bool &pRetranslate);
-    void resourceLookUpRequested(const QString &pResource,
-                                 const bool &pRetranslate);
-    void idLookUpRequested(const QString &pResource, const QString &pId,
-                           const bool &pRetranslate);
+    void qualifierLookUpRequested(const QString &pQualifier);
+    void resourceLookUpRequested(const QString &pResource);
+    void idLookUpRequested(const QString &pResource, const QString &pId);
     void noLookUpRequested();
 
     void rdfTripleAdded(CellMLSupport::CellmlFileRdfTriple *pRdfTriple);

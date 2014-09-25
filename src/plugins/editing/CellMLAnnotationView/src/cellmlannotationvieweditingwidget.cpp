@@ -58,8 +58,7 @@ CellmlAnnotationViewEditingWidget::CellmlAnnotationViewEditingWidget(CellMLAnnot
     Core::CommonWidget(pParent),
     mGui(new Ui::CellmlAnnotationViewEditingWidget),
     mPluginParent(pPluginParent),
-    mParent(pParent),
-    oldWebViewUrls(QMap<QWebView *, QUrl>())
+    mParent(pParent)
 {
     // Set up the GUI
 
@@ -203,11 +202,8 @@ CellmlAnnotationViewMetadataDetailsWidget * CellmlAnnotationViewEditingWidget::m
 //==============================================================================
 
 void CellmlAnnotationViewEditingWidget::updateWebViewerWithQualifierDetails(QWebView *pWebView,
-                                                                            const QString &pQualifier,
-                                                                            const bool &pRetranslate)
+                                                                            const QString &pQualifier)
 {
-    Q_UNUSED(pRetranslate);
-
     // The user requested a qualifier to be looked up, so generate a web page
     // containing some information about the qualifier
     // Note: ideally, there would be a way to refer to a particular qualifier
@@ -324,8 +320,6 @@ void CellmlAnnotationViewEditingWidget::updateWebViewerWithQualifierDetails(QWeb
 
     // Show the information
 
-    oldWebViewUrls.insert(pWebView, QUrl());
-
     pWebView->setHtml(mQualifierInformationTemplate.arg(pQualifier,
                                                         qualifierSvg,
                                                         shortDescription,
@@ -335,60 +329,24 @@ void CellmlAnnotationViewEditingWidget::updateWebViewerWithQualifierDetails(QWeb
 //==============================================================================
 
 void CellmlAnnotationViewEditingWidget::updateWebViewerWithResourceDetails(QWebView *pWebView,
-                                                                           const QString &pResource,
-                                                                           const bool &pRetranslate)
+                                                                           const QString &pResource)
 {
     // The user requested a resource to be looked up, so retrieve it using
-    // identifiers.org, but only if we are not retranslating since the looking
-    // up would already be correct
+    // identifiers.org
 
-    if (!pRetranslate) {
-        // Note: updating the URL of the web view results in it being refreshed,
-        //       even if the URL is the same as the one before in which case it
-        //       looks like some kind of a big flickering. We therefore want to
-        //       avoid setting the URL if it's the same as the previous one.
-        //       Normally, we would check the (current) URL of the web view, but
-        //       this won't work if the URL redirects to another (as is the case
-        //       with identifiers.org URLs), so instead we keep track of the URL
-        //       ourselves...
-
-        QUrl oldUrl = oldWebViewUrls.value(pWebView);
-        QUrl newUrl = "http://identifiers.org/"+pResource+"/?redirect=true";
-        //---GRY--- NOTE THAT redirect=true DOESN'T WORK AT THE MOMENT, SO WE DO
-        //          END UP WITH A FRAME, BUT THE identifiers.org GUYS ARE GOING
-        //          TO 'FIX' IT, SO WE SHOULD BE READY FOR WHEN IT'S DONE...
-
-        if (newUrl != oldUrl) {
-            oldWebViewUrls.insert(pWebView, newUrl);
-
-            pWebView->setUrl(newUrl);
-        }
-    }
+    pWebView->setUrl("http://identifiers.org/"+pResource+"/?redirect=true");
 }
 
 //==============================================================================
 
 void CellmlAnnotationViewEditingWidget::updateWebViewerWithIdDetails(QWebView *pWebView,
                                                                      const QString &pResource,
-                                                                     const QString &pId,
-                                                                     const bool &pRetranslate)
+                                                                     const QString &pId)
 {
     // The user requested a resource id to be looked up, so retrieve it using
-    // identifiers.org, but only if we are not retranslating since the looking
-    // up would already be correct
+    // identifiers.org
 
-    if (!pRetranslate) {
-        // Note: see comment in updateWebViewerWithResourceDetails()...
-
-        QUrl oldUrl = oldWebViewUrls.value(pWebView);
-        QUrl newUrl = "http://identifiers.org/"+pResource+"/"+pId+"?profile=most_reliable&redirect=true";
-
-        if (newUrl != oldUrl) {
-            oldWebViewUrls.insert(pWebView, newUrl);
-
-            pWebView->setUrl(newUrl);
-        }
-    }
+    pWebView->setUrl("http://identifiers.org/"+pResource+"/"+pId+"?profile=most_reliable&redirect=true");
 }
 
 //==============================================================================

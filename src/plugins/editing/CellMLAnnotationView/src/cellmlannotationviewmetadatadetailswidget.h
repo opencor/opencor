@@ -115,10 +115,9 @@ public Q_SLOTS:
 private Q_SLOTS:
     void emitSplitterMoved();
 
-    void lookUpQualifier(const QString &pQualifier, const bool &pRetranslate);
-    void lookUpResource(const QString &pResource, const bool &pRetranslate);
-    void lookUpId(const QString &pResource, const QString &pId,
-                  const bool &pRetranslate);
+    void lookUpQualifier(const QString &pQualifier);
+    void lookUpResource(const QString &pResource);
+    void lookUpId(const QString &pResource, const QString &pId);
     void lookUpNothing();
 
     void removeAllMetadata();

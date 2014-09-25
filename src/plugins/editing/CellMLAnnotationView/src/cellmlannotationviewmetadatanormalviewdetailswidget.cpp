@@ -181,8 +181,7 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::updateOutputOntologica
 void CellmlAnnotationViewMetadataNormalViewDetailsWidget::updateGui(iface::cellml_api::CellMLElement *pElement,
                                                                     const QString &pRdfTripleInformation,
                                                                     const Type &pType,
-                                                                    const Information &pLookUpInformation,
-                                                                    const bool &pRetranslate)
+                                                                    const Information &pLookUpInformation)
 {
     if (!pElement)
         return;
@@ -235,7 +234,7 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::updateGui(iface::cellm
 
             mUrls.insert(rdfTripleInformation, idUrl);
 
-            // Keep track of the very first resource id and update the last one
+            // Keep track of the first and last RDF triple information
 
             if (firstRdfTriple) {
                 firstRdfTripleInformation = rdfTripleInformation;
@@ -244,9 +243,6 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::updateGui(iface::cellm
             }
 
             lastRdfTripleInformation = rdfTripleInformation;
-
-
-
 
             // Add the item
 
@@ -294,15 +290,15 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::updateGui(iface::cellm
             if (pLookUpInformation == First)
                 // Look up the first resource id
 
-                genericLookUp(firstRdfTripleInformation, Id, pRetranslate);
+                genericLookUp(firstRdfTripleInformation, Id);
             else if (pLookUpInformation == Last)
                 // Look up the last resource id
 
-                genericLookUp(lastRdfTripleInformation, Id, pRetranslate);
+                genericLookUp(lastRdfTripleInformation, Id);
             else
                 // Look up any 'old' qualifier, resource or resource id
 
-                genericLookUp(pRdfTripleInformation, pType, pRetranslate);
+                genericLookUp(pRdfTripleInformation, pType);
         } else {
             // No RDF triple left, so ask for 'nothing' to be looked up
             // Note: we do this to let people know that there is nothing to look
@@ -340,8 +336,7 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::addRdfTriple(CellMLSup
 //==============================================================================
 
 void CellmlAnnotationViewMetadataNormalViewDetailsWidget::genericLookUp(const QString &pRdfTripleInformation,
-                                                                        const Type &pType,
-                                                                        const bool &pRetranslate)
+                                                                        const Type &pType)
 {
     // Retrieve the RDF triple information
 
@@ -390,15 +385,15 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::genericLookUp(const QS
 
     switch (pType) {
     case Qualifier:
-        emit qualifierLookUpRequested(qualifierAsString, pRetranslate);
+        emit qualifierLookUpRequested(qualifierAsString);
 
         break;
     case Resource:
-        emit resourceLookUpRequested(resourceAsString, pRetranslate);
+        emit resourceLookUpRequested(resourceAsString);
 
         break;
     case Id:
-        emit idLookUpRequested(resourceAsString, idAsString, pRetranslate);
+        emit idLookUpRequested(resourceAsString, idAsString);
 
         break;
     default:

@@ -611,8 +611,7 @@ CellmlAnnotationViewMetadataEditDetailsWidget::Item CellmlAnnotationViewMetadata
 //==============================================================================
 
 void CellmlAnnotationViewMetadataEditDetailsWidget::genericLookUp(const QString &pItemInformation,
-                                                                  const InformationType &pInformationType,
-                                                                  const bool &pRetranslate)
+                                                                  const InformationType &pInformationType)
 {
     // Retrieve the information
 
@@ -701,15 +700,15 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::genericLookUp(const QString 
 
     switch (pInformationType) {
     case Qualifier:
-        emit qualifierLookUpRequested(qualifierAsString, pRetranslate);
+        emit qualifierLookUpRequested(qualifierAsString);
 
         break;
     case Resource:
-        emit resourceLookUpRequested(resourceAsString, pRetranslate);
+        emit resourceLookUpRequested(resourceAsString);
 
         break;
     case Id:
-        emit idLookUpRequested(resourceAsString, idAsString, pRetranslate);
+        emit idLookUpRequested(resourceAsString, idAsString);
 
         break;
     default:

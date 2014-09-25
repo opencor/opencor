@@ -92,8 +92,7 @@ public:
     void updateGui(iface::cellml_api::CellMLElement *pElement,
                    const QString &pRdfTripleInformation = QString(),
                    const Type &pType = No,
-                   const Information &pLookUpInformation = First,
-                   const bool &pRetranslate = false);
+                   const Information &pLookUpInformation = First);
 
     void addRdfTriple(CellMLSupport::CellmlFileRdfTriple *pRdfTriple);
 
@@ -134,18 +133,14 @@ private:
     void updateOutputOntologicalTerms();
 
     void genericLookUp(const QString &pRdfTripleInformation = QString(),
-                       const Type &pType = No,
-                       const bool &pRetranslate = false);
+                       const Type &pType = No);
 
     QString rdfTripleInformation(const int &pRow) const;
 
 Q_SIGNALS:
-    void qualifierLookUpRequested(const QString &pQualifier,
-                                  const bool &pRetranslate);
-    void resourceLookUpRequested(const QString &pResource,
-                                 const bool &pRetranslate);
-    void idLookUpRequested(const QString &pResource, const QString &pId,
-                           const bool &pRetranslate);
+    void qualifierLookUpRequested(const QString &pQualifier);
+    void resourceLookUpRequested(const QString &pResource);
+    void idLookUpRequested(const QString &pResource, const QString &pId);
     void noLookUpRequested();
 
     void rdfTripleRemoved(CellMLSupport::CellmlFileRdfTriple *pRdfTriple);
