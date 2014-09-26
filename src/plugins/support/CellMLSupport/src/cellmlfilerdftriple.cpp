@@ -594,7 +594,7 @@ CellmlFileRdfTriple * CellmlFileRdfTriples::add(CellmlFileRdfTriple *pRdfTriple)
 
 //==============================================================================
 
-void CellmlFileRdfTriples::removeRdfTriples(const CellmlFileRdfTriples &pRdfTriples)
+bool CellmlFileRdfTriples::removeRdfTriples(const CellmlFileRdfTriples &pRdfTriples)
 {
     // Remove all the given RDF triples
 
@@ -617,12 +617,16 @@ void CellmlFileRdfTriples::removeRdfTriples(const CellmlFileRdfTriples &pRdfTrip
         // Some RDF triples have been removed, so...
 
         mCellmlFile->setModified(true);
+
+        return true;
+    } else {
+        return false;
     }
 }
 
 //==============================================================================
 
-void CellmlFileRdfTriples::remove(CellmlFileRdfTriple *pRdfTriple)
+bool CellmlFileRdfTriples::remove(CellmlFileRdfTriple *pRdfTriple)
 {
     // Call our generic remove function
 
@@ -630,27 +634,27 @@ void CellmlFileRdfTriples::remove(CellmlFileRdfTriple *pRdfTriple)
 
     rdfTriples << pRdfTriple;
 
-    removeRdfTriples(rdfTriples);
+    return removeRdfTriples(rdfTriples);
     // Note: yes, we must declare rdfTriples and add pRdfTriple to it before
     //       passing it to removeRdfTriples()...
 }
 
 //==============================================================================
 
-void CellmlFileRdfTriples::remove(iface::cellml_api::CellMLElement *pElement)
+bool CellmlFileRdfTriples::remove(iface::cellml_api::CellMLElement *pElement)
 {
     // Call our generic remove function
 
-    removeRdfTriples(contains(pElement));
+    return removeRdfTriples(contains(pElement));
 }
 
 //==============================================================================
 
-void CellmlFileRdfTriples::removeAll()
+bool CellmlFileRdfTriples::removeAll()
 {
     // Call our generic remove function
 
-    removeRdfTriples(*this);
+    return removeRdfTriples(*this);
 }
 
 //==============================================================================

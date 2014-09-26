@@ -607,6 +607,8 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::linkClicked()
         // with it
 
 //---GRY--- TO BE DONE...
+
+//        mCellmlFile->rdfTriples().
     } else {
         // We have clicked on a qualifier/resource/id link, so start by enabling
         // the looking up of any RDF triple information

@@ -374,14 +374,14 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(iface::cellml_api:
 
         if (mQualifierValue->currentIndex() < CellMLSupport::CellmlFileRdfTriple::LastBioQualifier)
             mAddTermButton->setEnabled(    fileReadableAndWritable
-                                       && !mCellmlFile->rdfTripleExists(mElement,
-                                                                        CellMLSupport::CellmlFileRdfTriple::BioQualifier(mQualifierValue->currentIndex()+1),
-                                                                        termInformation[0], termInformation[1]));
+                                       && !mCellmlFile->rdfTriple(mElement,
+                                                                  CellMLSupport::CellmlFileRdfTriple::BioQualifier(mQualifierValue->currentIndex()+1),
+                                                                  termInformation[0], termInformation[1]));
         else
             mAddTermButton->setEnabled(    fileReadableAndWritable
-                                       && !mCellmlFile->rdfTripleExists(mElement,
-                                                                        CellMLSupport::CellmlFileRdfTriple::ModelQualifier(mQualifierValue->currentIndex()-CellMLSupport::CellmlFileRdfTriple::LastBioQualifier+1),
-                                                                        termInformation[0], termInformation[1]));
+                                       && !mCellmlFile->rdfTriple(mElement,
+                                                                  CellMLSupport::CellmlFileRdfTriple::ModelQualifier(mQualifierValue->currentIndex()-CellMLSupport::CellmlFileRdfTriple::LastBioQualifier+1),
+                                                                  termInformation[0], termInformation[1]));
     } else {
         mAddTermButton->setEnabled(false);
     }
@@ -409,14 +409,14 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(iface::cellml_api:
 
         if (mQualifierValue->currentIndex() < CellMLSupport::CellmlFileRdfTriple::LastBioQualifier)
             enabledButton =     fileReadableAndWritable
-                            && !mCellmlFile->rdfTripleExists(mElement,
-                                                             CellMLSupport::CellmlFileRdfTriple::BioQualifier(mQualifierValue->currentIndex()+1),
-                                                             item.resource, item.id);
+                            && !mCellmlFile->rdfTriple(mElement,
+                                                       CellMLSupport::CellmlFileRdfTriple::BioQualifier(mQualifierValue->currentIndex()+1),
+                                                       item.resource, item.id);
         else
             enabledButton =     fileReadableAndWritable
-                            && !mCellmlFile->rdfTripleExists(mElement,
-                                                             CellMLSupport::CellmlFileRdfTriple::ModelQualifier(mQualifierValue->currentIndex()-CellMLSupport::CellmlFileRdfTriple::LastBioQualifier+1),
-                                                             item.resource, item.id);
+                            && !mCellmlFile->rdfTriple(mElement,
+                                                       CellMLSupport::CellmlFileRdfTriple::ModelQualifier(mQualifierValue->currentIndex()-CellMLSupport::CellmlFileRdfTriple::LastBioQualifier+1),
+                                                       item.resource, item.id);
 
         if (enabledButton != mEnabledItems.value(itemInformationSha1)) {
             mEnabledItems.insert(itemInformationSha1, enabledButton);
