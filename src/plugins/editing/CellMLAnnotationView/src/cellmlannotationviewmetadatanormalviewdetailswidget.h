@@ -92,7 +92,7 @@ public:
     void updateGui(iface::cellml_api::CellMLElement *pElement,
                    const QString &pRdfTripleInformation = QString(),
                    const InformationType &pInformationType = None,
-                   const Information &pLookUpInformation = First);
+                   const Information &pLookUpRdfTripleInformation = First);
 
     void addRdfTriple(CellMLSupport::CellmlFileRdfTriple *pRdfTriple);
 
@@ -116,7 +116,7 @@ private:
     QString mRdfTripleInformation;
     InformationType mInformationType;
 
-    Information mLookUpInformation;
+    Information mLookUpRdfTripleInformation;
 
     int mVerticalScrollBarPosition;
     int mNeighbourRow;

@@ -41,13 +41,13 @@ specific language governing permissions and limitations under the License.
 #include <QClipboard>
 #include <QCursor>
 #include <QMenu>
-//#include <QPoint>
-//#include <QRegularExpression>
 #include <QScrollArea>
 #include <QStackedWidget>
 #include <QString>
+#include <QTimer>
 #include <QWebElement>
 #include <QWebFrame>
+#include <QWebPage>
 
 //==============================================================================
 
@@ -64,7 +64,7 @@ CellmlAnnotationViewMetadataNormalViewDetailsWidget::CellmlAnnotationViewMetadat
     mElement(0),
     mRdfTripleInformation(QString()),
     mInformationType(None),
-    mLookUpInformation(First),
+    mLookUpRdfTripleInformation(First),
     mVerticalScrollBarPosition(0),
     mNeighbourRow(0),
     mRdfTriplesMapping(QMap<QObject *, CellMLSupport::CellmlFileRdfTriple *>()),
@@ -184,7 +184,7 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::updateOutputOntologica
 void CellmlAnnotationViewMetadataNormalViewDetailsWidget::updateGui(iface::cellml_api::CellMLElement *pElement,
                                                                     const QString &pRdfTripleInformation,
                                                                     const InformationType &pInformationType,
-                                                                    const Information &pLookUpInformation)
+                                                                    const Information &pLookUpRdfTripleInformation)
 {
     if (!pElement)
         return;
@@ -288,16 +288,16 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::updateGui(iface::cellm
 
     // Request for something to be looked up, if needed
 
-    if (pLookUpInformation != No) {
+    if (pLookUpRdfTripleInformation != No) {
         if (rdfTriples.count()) {
             // Request for the first resource id, the last resource id or an
             // 'old' qualifier, resource or resource id to be looked up
 
-            if (pLookUpInformation == First)
+            if (pLookUpRdfTripleInformation == First)
                 // Look up the first resource id
 
                 genericLookUp(firstRdfTripleInformation, Id);
-            else if (pLookUpInformation == Last)
+            else if (pLookUpRdfTripleInformation == Last)
                 // Look up the last resource id
 
                 genericLookUp(lastRdfTripleInformation, Id);
@@ -323,20 +323,13 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::addRdfTriple(CellMLSup
     if (!pRdfTriple)
         return;
 
-    // Make sure that the given RDF triple will be visible, this by handling the
-    // change in the range of our vertical scroll bar which will result in
-    // showLastRdfTriple() being called
+    // Enable the looking up of the last RDF triple information
 
-//    connect(verticalScrollBar(), SIGNAL(rangeChanged(int, int)),
-//            this, SLOT(showLastRdfTriple()));
-
-    // Enable the looking up of the last information
-
-    mLookUpInformation = Last;
+    mLookUpRdfTripleInformation = Last;
 
     // Update the GUI to reflect the addition of the given RDF triple
 
-    updateGui(mElement, QString(), None, mLookUpInformation);
+    updateGui(mElement, QString(), None, mLookUpRdfTripleInformation);
 }
 
 //==============================================================================
@@ -348,8 +341,8 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::genericLookUp(const QS
 
     QStringList rdfTripleInformation = pRdfTripleInformation.split("|");
     QString qualifier = pRdfTripleInformation.isEmpty()?QString():rdfTripleInformation[0];
-    QString resource = pRdfTripleInformation.isEmpty()?QString():rdfTripleInformation[0];
-    QString id = pRdfTripleInformation.isEmpty()?QString():rdfTripleInformation[1];
+    QString resource = pRdfTripleInformation.isEmpty()?QString():rdfTripleInformation[1];
+    QString id = pRdfTripleInformation.isEmpty()?QString():rdfTripleInformation[2];
 
     // Keep track of the RDF triple information and type
 
@@ -406,10 +399,22 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::genericLookUp(const QS
     mInformationType = pInformationType;
 
     // Check whether we have something to look up
+    // Note: there is nothing nothing do for Any...
 
-    if (mLookUpInformation == No)
-        // Nothing to look up, so...
+    if (mLookUpRdfTripleInformation == First)
+        mOutputOntologicalTerms->page()->triggerAction(QWebPage::MoveToStartOfDocument);
+    else if (mLookUpRdfTripleInformation == Last)
+        // Note #1: normally, we would use
+        //             mOutputOntologicalTerms->page()->triggerAction(QWebPage::MoveToEndOfDocument);
+        //          but this doesn't work...
+        // Note #2: another option would be to use
+        //              QWebFrame *outputFrame = mOutputOntologicalTerms->page()->mainFrame();
+        //
+        //              outputFrame->setScrollBarValue(Qt::Vertical, outputFrame->scrollBarMaximum(Qt::Vertical));
+        //          but this doesnt' get us exactly to the bottom of the page...
 
+        QTimer::singleShot(1, this, SLOT(showLastRdfTriple()));
+    else if (mLookUpRdfTripleInformation == No)
         return;
 
     // Let people know that we want to look something up
@@ -438,9 +443,9 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::genericLookUp(const QS
 
 void CellmlAnnotationViewMetadataNormalViewDetailsWidget::disableLookUpInformation()
 {
-    // Disable the looking up of information
+    // Disable the looking up of RDF triple information
 
-    mLookUpInformation = No;
+    mLookUpRdfTripleInformation = No;
 
     // Update the GUI by pretending to be interested in looking something up
 
@@ -555,7 +560,7 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::removeRdfTriple()
 
     // Update the GUI to reflect the removal of the RDF triple
 
-    updateGui(mElement, mRdfTripleInformation, mInformationType, mLookUpInformation);
+    updateGui(mElement, mRdfTripleInformation, mInformationType, mLookUpRdfTripleInformation);
 
     // Let people know that an RDF triple has been removed
 
@@ -580,24 +585,11 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::showNeighbourRdfTriple
 
 void CellmlAnnotationViewMetadataNormalViewDetailsWidget::showLastRdfTriple()
 {
-//    // No need to show our last RDF triple, so...
+    // Show our last RDF triple by scrolling to the end of the page
 
-//    disconnect(verticalScrollBar(), SIGNAL(rangeChanged(int, int)),
-//               this, SLOT(showLastRdfTriple()));
+    QWebFrame *outputFrame = mOutputOntologicalTerms->page()->mainFrame();
 
-//    // Determine the number of rows in our grid layout
-//    // Note: to use mGridLayout->rowCount() isn't an option since no matter
-//    //       whether we remove rows (in updateGui()), the returned value will be
-//    //       the maximum number of rows that there has ever been, so...
-
-//    int row = 0;
-
-//    while (mGridLayout->itemAtPosition(++row, 0))
-//        ;
-
-//    // Make sure that the last RDF triple is visible
-
-//    ensureWidgetVisible(mGridLayout->itemAtPosition(row-1, 0)->widget());
+    outputFrame->setScrollBarValue(Qt::Vertical, outputFrame->scrollBarMaximum(Qt::Vertical));
 }
 
 //==============================================================================
@@ -617,9 +609,9 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::linkClicked()
 //---GRY--- TO BE DONE...
     } else {
         // We have clicked on a qualifier/resource/id link, so start by enabling
-        // the looking up of any information
+        // the looking up of any RDF triple information
 
-        mLookUpInformation = Any;
+        mLookUpRdfTripleInformation = Any;
 
         // Call our generic look up function
 
