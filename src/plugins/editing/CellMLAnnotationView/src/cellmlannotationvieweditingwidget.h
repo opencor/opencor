@@ -113,8 +113,6 @@ Q_SIGNALS:
 
 private Q_SLOTS:
     void emitSplitterMoved();
-
-    void addRdfTriple(CellMLSupport::CellmlFileRdfTriple *pRdfTriple) const;
 };
 
 //==============================================================================

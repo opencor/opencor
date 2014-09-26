@@ -112,7 +112,7 @@ CellmlAnnotationViewEditingWidget::CellmlAnnotationViewEditingWidget(CellMLAnnot
     // A connection to handle the fact that an RDF triple has been added
 
     connect(mMetadataDetails->metadataEditDetails(), SIGNAL(rdfTripleAdded(CellMLSupport::CellmlFileRdfTriple *)),
-            this, SLOT(addRdfTriple(CellMLSupport::CellmlFileRdfTriple *)));
+            mMetadataDetails, SLOT(addRdfTriple(CellMLSupport::CellmlFileRdfTriple *)));
 
     // Make our CellML list widget our focus proxy
 
@@ -347,15 +347,6 @@ void CellmlAnnotationViewEditingWidget::updateWebViewerWithIdDetails(QWebView *p
     // identifiers.org
 
     pWebView->setUrl("http://identifiers.org/"+pResource+"/"+pId+"?profile=most_reliable&redirect=true");
-}
-
-//==============================================================================
-
-void CellmlAnnotationViewEditingWidget::addRdfTriple(CellMLSupport::CellmlFileRdfTriple *pRdfTriple) const
-{
-    // Add the given RDF triple to our details widget
-
-    mMetadataDetails->addRdfTriple(pRdfTriple);
 }
 
 //==============================================================================

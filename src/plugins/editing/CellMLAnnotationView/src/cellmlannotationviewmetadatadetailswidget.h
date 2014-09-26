@@ -72,8 +72,6 @@ public:
 
     virtual void retranslateUi();
 
-    void addRdfTriple(CellMLSupport::CellmlFileRdfTriple *pRdfTriple);
-
     QSplitter * splitter() const;
 
     CellmlAnnotationViewMetadataEditDetailsWidget * metadataEditDetails() const;
@@ -111,6 +109,8 @@ Q_SIGNALS:
 
 public Q_SLOTS:
     void updateGui(iface::cellml_api::CellMLElement *pElement);
+
+    void addRdfTriple(CellMLSupport::CellmlFileRdfTriple *pRdfTriple);
 
 private Q_SLOTS:
     void emitSplitterMoved();
