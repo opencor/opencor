@@ -121,7 +121,7 @@ private:
     int mVerticalScrollBarPosition;
     int mNeighbourRow;
 
-    QMap<QObject *, CellMLSupport::CellmlFileRdfTriple *> mRdfTriplesMapping;
+    QMap<QString, CellMLSupport::CellmlFileRdfTriple *> mRdfTriplesMapping;
 
     QMap<QString, QString> mUrls;
     QStringList mRdfTripleInformationSha1s;
@@ -137,8 +137,6 @@ private:
     void genericLookUp(const QString &pRdfTripleInformation = QString(),
                        const InformationType &pInformationType = None);
 
-    QString rdfTripleInformation(const int &pRow) const;
-
 Q_SIGNALS:
     void qualifierLookUpRequested(const QString &pQualifier);
     void resourceLookUpRequested(const QString &pResource);
@@ -151,8 +149,6 @@ private Q_SLOTS:
     void on_actionCopy_triggered();
 
     void disableLookUpInformation();
-
-    void removeRdfTriple();
 
     void showNeighbourRdfTriple();
     void showLastRdfTriple();

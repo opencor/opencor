@@ -504,6 +504,9 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateItemsGui(const Items &
     mUrls.clear();
     mItemInformationSha1s.clear();
 
+    mItemsMapping.clear();
+    mEnabledItems.clear();
+
     mOutputOntologicalTerms->setHtml(QString());
 
     // Populate mOutputOntologicalTerms, but only if there is at least one item
@@ -517,8 +520,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateItemsGui(const Items &
         QString ontologicalTerms = QString();
 
         foreach (const Item &item, pItems) {
-            // Keep track of the item information and its SHA-1 value, as well
-            // as of the URLs for the resource and id
+            // Keep track of some information
 
             QString itemInformation = item.resource+"|"+item.id;
             QString itemInformationSha1 = Core::sha1(itemInformation);
