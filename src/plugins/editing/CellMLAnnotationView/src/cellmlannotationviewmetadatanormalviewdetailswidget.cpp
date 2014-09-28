@@ -508,13 +508,13 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::linkClicked()
         if (mRdfTriplesMapping.isEmpty()) {
             mRdfTripleInformation = QString();
             mInformationType = None;
-        } else {
+        } else if (!mLink.compare(mRdfTripleInformationSha1)) {
             QWebElement documentElement = mOutputOntologicalTerms->page()->mainFrame()->documentElement();
             QWebElement currentRdfTripleElement = documentElement.findFirst(QString("tr[id=item_%1]").arg(mLink));
-            QWebElement neighbouringRdfTripleEment = currentRdfTripleElement.previousSibling();
+            QWebElement neighbouringRdfTripleEment = currentRdfTripleElement.nextSibling();
 
             if (neighbouringRdfTripleEment.isNull())
-                neighbouringRdfTripleEment = currentRdfTripleElement.nextSibling();
+                neighbouringRdfTripleEment = currentRdfTripleElement.previousSibling();
 
             CellMLSupport::CellmlFileRdfTriple *neighbouringRdfTriple = mRdfTriplesMapping.value(neighbouringRdfTripleEment.attribute("id").remove(QRegularExpression("^item_")));
             QString qualifier = (neighbouringRdfTriple->modelQualifier() != CellMLSupport::CellmlFileRdfTriple::ModelUnknown)?
@@ -526,7 +526,14 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::linkClicked()
 
         // Update the GUI to reflect the removal of the RDF triple
 
+        QWebFrame *outputFrame = mOutputOntologicalTerms->page()->mainFrame();
+        int horizontalScrollBarValue = outputFrame->scrollBarValue(Qt::Horizontal);
+        int verticalScrollBarValue = outputFrame->scrollBarValue(Qt::Vertical);
+
         updateGui(mElement, mRdfTripleInformation, mInformationType, mLookUpRdfTripleInformation);
+
+        outputFrame->setScrollBarValue(Qt::Horizontal, horizontalScrollBarValue);
+        outputFrame->setScrollBarValue(Qt::Vertical, verticalScrollBarValue);
 
         // Let people know that an RDF triple has been removed
 
