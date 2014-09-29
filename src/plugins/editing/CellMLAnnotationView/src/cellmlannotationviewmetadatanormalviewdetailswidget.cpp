@@ -204,7 +204,6 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::updateGui(iface::cellm
 
     mRdfTriplesMapping.clear();
 
-    mOutputOntologicalTerms->setHtml(QString());
 
     // Populate mOutputOntologicalTerms, but only if there is at least one RDF
     // triple
@@ -220,7 +219,6 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::updateGui(iface::cellm
 
         // Add the RDF triples
 
-        static const QString indent = "                ";
         QString ontologicalTerms = QString();
 
         bool firstRdfTriple = true;
@@ -257,23 +255,23 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::updateGui(iface::cellm
 
             // Add the item
 
-            ontologicalTerms +=  indent+"<tr id=\"item_"+rdfTripleInformationSha1+"\">\n"
-                                +indent+"    <td id=\"qualifier_"+rdfTripleInformationSha1+"\">\n"
-                                +indent+"        <a href=\""+rdfTripleInformation+"\">"+qualifier+"</a>\n"
-                                +indent+"    </td>\n"
-                                +indent+"    <td id=\"resource_"+rdfTripleInformationSha1+"\">\n"
-                                +indent+"        <a href=\""+rdfTripleInformation+"\">"+rdfTriple->resource()+"</a>\n"
-                                +indent+"    </td>\n"
-                                +indent+"    <td id=\"id_"+rdfTripleInformationSha1+"\">\n"
-                                +indent+"        <a href=\""+rdfTripleInformation+"\">"+rdfTriple->id()+"</a>\n"
-                                +indent+"    </td>\n"
-                                +indent+"    <td id=\"button_"+rdfTripleInformationSha1+"\">\n"
-                                +indent+"        <a class=\"noHover\" href=\""+rdfTripleInformationSha1+"\"><img class=\"button\"/></a>\n"
-                                +indent+"    </td>\n"
-                                +indent+"    <td id=\"disabledButton_"+rdfTripleInformationSha1+"\" style=\"display: none;\">\n"
-                                +indent+"        <img class=\"disabledButton\"/>\n"
-                                +indent+"    </td>\n"
-                                +indent+"</tr>\n";
+            ontologicalTerms +=  "<tr id=\"item_"+rdfTripleInformationSha1+"\">\n"
+                                +"    <td id=\"qualifier_"+rdfTripleInformationSha1+"\">\n"
+                                +"        <a href=\""+rdfTripleInformation+"\">"+qualifier+"</a>\n"
+                                +"    </td>\n"
+                                +"    <td id=\"resource_"+rdfTripleInformationSha1+"\">\n"
+                                +"        <a href=\""+rdfTripleInformation+"\">"+rdfTriple->resource()+"</a>\n"
+                                +"    </td>\n"
+                                +"    <td id=\"id_"+rdfTripleInformationSha1+"\">\n"
+                                +"        <a href=\""+rdfTripleInformation+"\">"+rdfTriple->id()+"</a>\n"
+                                +"    </td>\n"
+                                +"    <td id=\"button_"+rdfTripleInformationSha1+"\">\n"
+                                +"        <a class=\"noHover\" href=\""+rdfTripleInformationSha1+"\"><img class=\"button\"/></a>\n"
+                                +"    </td>\n"
+                                +"    <td id=\"disabledButton_"+rdfTripleInformationSha1+"\" style=\"display: none;\">\n"
+                                +"        <img class=\"disabledButton\"/>\n"
+                                +"    </td>\n"
+                                +"</tr>\n";
         }
 
         mOutputOntologicalTerms->setHtml(mOutputOntologicalTermsTemplate.arg(Core::iconDataUri(":/oxygen/actions/list-remove.png", 16, 16),
@@ -281,6 +279,8 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::updateGui(iface::cellm
                                                                              ontologicalTerms));
 
         updateOutputOntologicalTerms();
+    } else {
+        mOutputOntologicalTerms->setHtml(QString());
     }
 
     // Hide our old output widget and show our new one

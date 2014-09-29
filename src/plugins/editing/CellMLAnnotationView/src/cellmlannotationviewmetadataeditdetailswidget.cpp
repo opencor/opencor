@@ -519,7 +519,6 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateItemsGui(const Items &
     if (pItems.count()) {
         // Add the items
 
-        static const QString indent = "                ";
         QString ontologicalTerms = QString();
 
         foreach (const Item &item, pItems) {
@@ -542,23 +541,23 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateItemsGui(const Items &
             mItemsMapping.insert(itemInformationSha1, item);
             mEnabledItems.insert(itemInformationSha1, true);
 
-            ontologicalTerms +=  indent+"<tr id=\"item_"+itemInformationSha1+"\">\n"
-                                +indent+"    <td>\n"
-                                +indent+"        "+item.name+"\n"
-                                +indent+"    </td>\n"
-                                +indent+"    <td id=\"resource_"+itemInformationSha1+"\">\n"
-                                +indent+"        <a href=\""+itemInformation+"\">"+item.resource+"</a>\n"
-                                +indent+"    </td>\n"
-                                +indent+"    <td id=\"id_"+itemInformationSha1+"\">\n"
-                                +indent+"        <a href=\""+itemInformation+"\">"+item.id+"</a>\n"
-                                +indent+"    </td>\n"
-                                +indent+"    <td id=\"button_"+itemInformationSha1+"\">\n"
-                                +indent+"        <a class=\"noHover\" href=\""+itemInformationSha1+"\"><img class=\"button\"/></a>\n"
-                                +indent+"    </td>\n"
-                                +indent+"    <td id=\"disabledButton_"+itemInformationSha1+"\" style=\"display: none;\">\n"
-                                +indent+"        <img class=\"disabledButton\"/>\n"
-                                +indent+"    </td>\n"
-                                +indent+"</tr>\n";
+            ontologicalTerms +=  "<tr id=\"item_"+itemInformationSha1+"\">\n"
+                                +"    <td>\n"
+                                +"        "+item.name+"\n"
+                                +"    </td>\n"
+                                +"    <td id=\"resource_"+itemInformationSha1+"\">\n"
+                                +"        <a href=\""+itemInformation+"\">"+item.resource+"</a>\n"
+                                +"    </td>\n"
+                                +"    <td id=\"id_"+itemInformationSha1+"\">\n"
+                                +"        <a href=\""+itemInformation+"\">"+item.id+"</a>\n"
+                                +"    </td>\n"
+                                +"    <td id=\"button_"+itemInformationSha1+"\">\n"
+                                +"        <a class=\"noHover\" href=\""+itemInformationSha1+"\"><img class=\"button\"/></a>\n"
+                                +"    </td>\n"
+                                +"    <td id=\"disabledButton_"+itemInformationSha1+"\" style=\"display: none;\">\n"
+                                +"        <img class=\"disabledButton\"/>\n"
+                                +"    </td>\n"
+                                +"</tr>\n";
         }
 
         mOutputOntologicalTerms->setHtml(mOutputOntologicalTermsTemplate.arg(Core::iconDataUri(":/oxygen/actions/list-add.png", 16, 16),
