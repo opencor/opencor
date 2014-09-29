@@ -364,14 +364,6 @@
         <translation>(%1 termes)</translation>
     </message>
     <message>
-        <source>Remove the term</source>
-        <translation>Supprimer le terme</translation>
-    </message>
-    <message>
-        <source>Remove</source>
-        <translation>Supprimer</translation>
-    </message>
-    <message>
         <source>There is no metadata associated with the current CellML element...</source>
         <translation>Il n&apos;y a pas de métadonnées associées à l&apos;élément CellML actuel...</translation>
     </message>

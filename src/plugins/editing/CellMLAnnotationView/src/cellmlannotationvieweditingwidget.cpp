@@ -109,11 +109,6 @@ CellmlAnnotationViewEditingWidget::CellmlAnnotationViewEditingWidget(CellMLAnnot
     connect(mCellmlList, SIGNAL(metadataDetailsRequested(iface::cellml_api::CellMLElement *)),
             mMetadataDetails, SLOT(updateGui(iface::cellml_api::CellMLElement *)));
 
-    // A connection to handle the fact that an RDF triple has been added
-
-    connect(mMetadataDetails->metadataEditDetails(), SIGNAL(rdfTripleAdded(CellMLSupport::CellmlFileRdfTriple *)),
-            mMetadataDetails, SLOT(addRdfTriple(CellMLSupport::CellmlFileRdfTriple *)));
-
     // Make our CellML list widget our focus proxy
 
     setFocusProxy(mCellmlList);

@@ -110,8 +110,6 @@ Q_SIGNALS:
 public Q_SLOTS:
     void updateGui(iface::cellml_api::CellMLElement *pElement);
 
-    void addRdfTriple(CellMLSupport::CellmlFileRdfTriple *pRdfTriple);
-
 private Q_SLOTS:
     void emitSplitterMoved();
 

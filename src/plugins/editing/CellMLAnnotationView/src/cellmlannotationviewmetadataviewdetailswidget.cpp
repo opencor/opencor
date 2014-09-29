@@ -92,18 +92,6 @@ void CellmlAnnotationViewMetadataViewDetailsWidget::updateGui(iface::cellml_api:
 
 //==============================================================================
 
-void CellmlAnnotationViewMetadataViewDetailsWidget::addRdfTriple(CellMLSupport::CellmlFileRdfTriple *pRdfTriple)
-{
-    if (!pRdfTriple)
-        return;
-
-    // Add the given RDF triple to our normal view
-
-    mNormalView->addRdfTriple(pRdfTriple);
-}
-
-//==============================================================================
-
 CellmlAnnotationViewMetadataRawViewDetailsWidget * CellmlAnnotationViewMetadataViewDetailsWidget::rawView() const
 {
     // Return our raw view

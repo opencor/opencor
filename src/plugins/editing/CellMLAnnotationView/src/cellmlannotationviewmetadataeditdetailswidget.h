@@ -179,8 +179,6 @@ Q_SIGNALS:
     void idLookUpRequested(const QString &pResource, const QString &pId);
     void noLookUpRequested();
 
-    void rdfTripleAdded(CellMLSupport::CellmlFileRdfTriple *pRdfTriple);
-
 public Q_SLOTS:
     void updateGui(iface::cellml_api::CellMLElement *pElement,
                    const bool &pResetItemsGui = false);

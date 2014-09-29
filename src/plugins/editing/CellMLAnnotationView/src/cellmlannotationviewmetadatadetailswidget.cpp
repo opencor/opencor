@@ -257,18 +257,6 @@ void CellmlAnnotationViewMetadataDetailsWidget::updateGui(iface::cellml_api::Cel
 
 //==============================================================================
 
-void CellmlAnnotationViewMetadataDetailsWidget::addRdfTriple(CellMLSupport::CellmlFileRdfTriple *pRdfTriple)
-{
-    if (!pRdfTriple)
-        return;
-
-    // Add the given RDF triple to our metadata view details
-
-    mMetadataViewDetails->addRdfTriple(pRdfTriple);
-}
-
-//==============================================================================
-
 void CellmlAnnotationViewMetadataDetailsWidget::emitSplitterMoved()
 {
     // Let people know that our splitter has been moved

@@ -21,7 +21,10 @@ specific language governing permissions and limitations under the License.
 
 #include "cellmlannotationviewcellmllistwidget.h"
 #include "cellmlannotationvieweditingwidget.h"
+#include "cellmlannotationviewmetadatadetailswidget.h"
 #include "cellmlannotationviewmetadataeditdetailswidget.h"
+#include "cellmlannotationviewmetadataviewdetailswidget.h"
+#include "cellmlannotationviewmetadatanormalviewdetailswidget.h"
 #include "cellmlannotationviewmetadatawebviewwidget.h"
 #include "cellmlannotationviewwidget.h"
 #include "cellmlfilerdftriple.h"
@@ -806,9 +809,9 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::linkClicked()
         documentElement.findFirst(QString("td[id=button_%1]").arg(mLink)).setStyleProperty("display", "none");
         documentElement.findFirst(QString("td[id=disabledButton_%1]").arg(mLink)).setStyleProperty("display", "table-cell");
 
-        // Let people know that we have added an RDF triple
+        // Ask our parent to update its GUI with the added RDF triple
 
-        emit rdfTripleAdded(rdfTriple);
+        mParent->metadataDetails()->metadataViewDetails()->normalView()->addRdfTriple(rdfTriple);
     } else {
         // We have clicked on a resource/id link, so start by enabling the
         // looking up of information
@@ -993,9 +996,9 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::addTerm()
 
     updateItemsGui(Items(), !isDirectTerm(mTermValue->text()), QString());
 
-    // Let people know that we have added an RDF triple
+    // Ask our parent to update its GUI with the added RDF triple
 
-    emit rdfTripleAdded(rdfTriple);
+    mParent->metadataDetails()->metadataViewDetails()->normalView()->addRdfTriple(rdfTriple);
 }
 
 //==============================================================================
