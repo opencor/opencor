@@ -247,8 +247,6 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::updateGui(iface::cellm
 
     mRdfTripleInformationSha1 = QString();
 
-    mLastRdfTripleInformation = QString();
-
     mRdfTriplesMapping.clear();
 
     mItemsCount = 0;
@@ -263,12 +261,8 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::updateGui(iface::cellm
     if (rdfTriples.count()) {
         // Add the RDF triples
 
-        foreach (CellMLSupport::CellmlFileRdfTriple *rdfTriple, rdfTriples) {
+        foreach (CellMLSupport::CellmlFileRdfTriple *rdfTriple, rdfTriples)
             addRdfTriple(rdfTriple, false);
-
-            if (mFirstRdfTripleInformation.isEmpty())
-                mFirstRdfTripleInformation = mLastRdfTripleInformation;
-        }
     } else {
         mOutputOntologicalTerms->setHtml(QString());
     }
@@ -339,6 +333,9 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::addRdfTriple(CellMLSup
     mRdfTripleInformationSha1s << rdfTripleInformationSha1;
 
     mRdfTriplesMapping.insert(rdfTripleInformationSha1, pRdfTriple);
+
+    if (mFirstRdfTripleInformation.isEmpty())
+        mFirstRdfTripleInformation = rdfTripleInformation;
 
     mLastRdfTripleInformation = rdfTripleInformation;
 
@@ -493,50 +490,65 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::linkClicked()
     // Check whether we have clicked a resource/id link or a button link
 
     if (mTextContent.isEmpty()) {
-        // We have clicked on a button link, so retrieve the RDF triple
-        // associated with it
+        // Update some information
 
         CellMLSupport::CellmlFileRdfTriple *rdfTriple = mRdfTriplesMapping.value(mLink);
 
+        QString qualifier = (rdfTriple->modelQualifier() != CellMLSupport::CellmlFileRdfTriple::ModelUnknown)?
+                                rdfTriple->modelQualifierAsString():
+                                rdfTriple->bioQualifierAsString();
+        QString rdfTripleInformation = qualifier+"|"+rdfTriple->resource()+"|"+rdfTriple->id();
+
+        mUrls.remove(rdfTripleInformation);
+
+        mRdfTripleInformationSha1s.removeOne(mLink);
+
         mRdfTriplesMapping.remove(mLink);
 
-        // Remove the RDF triple from the CellML file and from our set of RDF
-        // triples this widget uses
+        --mItemsCount;
 
-        mCellmlFile->rdfTriples().remove(rdfTriple);
+        // Determine the 'new' RDF triple information to look up, based on
+        // whether there are RDF triples left and whether the current RDF triple
+        // is the one being highlighted
 
-        // Determine the 'new' RDF triple information to look up, depending on
-        // whether there is any RDF triple left
+        QWebElement rdfTripleElement = mOutputOntologicalTerms->page()->mainFrame()->documentElement().findFirst(QString("tr[id=item_%1]").arg(mLink));
 
-        if (mRdfTriplesMapping.isEmpty()) {
+        if (!mItemsCount) {
             mRdfTripleInformation = QString();
             mInformationType = None;
         } else if (!mLink.compare(mRdfTripleInformationSha1)) {
-            QWebElement documentElement = mOutputOntologicalTerms->page()->mainFrame()->documentElement();
-            QWebElement currentRdfTripleElement = documentElement.findFirst(QString("tr[id=item_%1]").arg(mLink));
-            QWebElement neighbouringRdfTripleEment = currentRdfTripleElement.nextSibling();
+            QWebElement newRdfTripleEment = rdfTripleElement.nextSibling();
 
-            if (neighbouringRdfTripleEment.isNull())
-                neighbouringRdfTripleEment = currentRdfTripleElement.previousSibling();
+            if (newRdfTripleEment.isNull())
+                newRdfTripleEment = rdfTripleElement.previousSibling();
 
-            CellMLSupport::CellmlFileRdfTriple *neighbouringRdfTriple = mRdfTriplesMapping.value(neighbouringRdfTripleEment.attribute("id").remove(QRegularExpression("^item_")));
-            QString qualifier = (neighbouringRdfTriple->modelQualifier() != CellMLSupport::CellmlFileRdfTriple::ModelUnknown)?
-                                    neighbouringRdfTriple->modelQualifierAsString():
-                                    neighbouringRdfTriple->bioQualifierAsString();
+            CellMLSupport::CellmlFileRdfTriple *newRdfTriple = mRdfTriplesMapping.value(newRdfTripleEment.attribute("id").remove(QRegularExpression("^item_")));
+            QString newQualifier = (newRdfTriple->modelQualifier() != CellMLSupport::CellmlFileRdfTriple::ModelUnknown)?
+                                       newRdfTriple->modelQualifierAsString():
+                                       newRdfTriple->bioQualifierAsString();
 
-            mRdfTripleInformation = qualifier+"|"+neighbouringRdfTriple->resource()+"|"+neighbouringRdfTriple->id();
+            mRdfTripleInformation = newQualifier+"|"+newRdfTriple->resource()+"|"+newRdfTriple->id();
+
+            if (!rdfTripleInformation.compare(mFirstRdfTripleInformation))
+                mFirstRdfTripleInformation = mRdfTripleInformation;
+
+            if (!rdfTripleInformation.compare(mLastRdfTripleInformation))
+                mLastRdfTripleInformation = mRdfTripleInformation;
         }
 
-        // Update the GUI to reflect the removal of the RDF triple
+        // Remove the RDF triple from our GUI
 
-        QWebFrame *outputFrame = mOutputOntologicalTerms->page()->mainFrame();
-        int horizontalScrollBarValue = outputFrame->scrollBarValue(Qt::Horizontal);
-        int verticalScrollBarValue = outputFrame->scrollBarValue(Qt::Vertical);
+        rdfTripleElement.removeFromDocument();
 
-        updateGui(mElement, mRdfTripleInformation, mInformationType, mLookUpRdfTripleInformation);
+        // Do some additional GUI updates
 
-        outputFrame->setScrollBarValue(Qt::Horizontal, horizontalScrollBarValue);
-        outputFrame->setScrollBarValue(Qt::Vertical, verticalScrollBarValue);
+        mLookUpRdfTripleInformation = Any;
+
+        additionalGuiUpdates(mRdfTripleInformation, mInformationType, mLookUpRdfTripleInformation);
+
+        // Remove the RDF triple from the CellML file
+
+        mCellmlFile->rdfTriples().remove(rdfTriple);
 
         // Let people know that an RDF triple has been removed
 
