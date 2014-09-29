@@ -65,8 +65,6 @@ CellmlAnnotationViewMetadataNormalViewDetailsWidget::CellmlAnnotationViewMetadat
     mRdfTripleInformation(QString()),
     mInformationType(None),
     mLookUpRdfTripleInformation(First),
-    mVerticalScrollBarPosition(0),
-    mNeighbourRow(0),
     mRdfTriplesMapping(QMap<QString, CellMLSupport::CellmlFileRdfTriple *>()),
     mUrls(QMap<QString, QString>()),
     mRdfTripleInformationSha1s(QStringList()),
@@ -452,20 +450,6 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::disableLookUpInformati
     // Update the GUI by pretending to be interested in looking something up
 
     genericLookUp();
-}
-
-//==============================================================================
-
-void CellmlAnnotationViewMetadataNormalViewDetailsWidget::showNeighbourRdfTriple()
-{
-//    // No need to show our neighbour RDF triple, so...
-
-//    disconnect(verticalScrollBar(), SIGNAL(rangeChanged(int, int)),
-//               this, SLOT(showNeighbourRdfTriple()));
-
-//    // Make sure that the neighbour RDF triple is visible
-
-//    ensureWidgetVisible(mGridLayout->itemAtPosition(mNeighbourRow, 0)->widget());
 }
 
 //==============================================================================

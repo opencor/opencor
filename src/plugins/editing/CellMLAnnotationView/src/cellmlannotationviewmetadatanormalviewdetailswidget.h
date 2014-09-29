@@ -118,9 +118,6 @@ private:
 
     Information mLookUpRdfTripleInformation;
 
-    int mVerticalScrollBarPosition;
-    int mNeighbourRow;
-
     QMap<QString, CellMLSupport::CellmlFileRdfTriple *> mRdfTriplesMapping;
 
     QMap<QString, QString> mUrls;
@@ -150,7 +147,6 @@ private Q_SLOTS:
 
     void disableLookUpInformation();
 
-    void showNeighbourRdfTriple();
     void showLastRdfTriple();
 
     void linkClicked();
