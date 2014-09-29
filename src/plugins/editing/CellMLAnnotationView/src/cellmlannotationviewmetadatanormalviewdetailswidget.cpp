@@ -69,6 +69,8 @@ CellmlAnnotationViewMetadataNormalViewDetailsWidget::CellmlAnnotationViewMetadat
     mUrls(QMap<QString, QString>()),
     mRdfTripleInformationSha1s(QStringList()),
     mRdfTripleInformationSha1(QString()),
+    mFirstRdfTripleInformation(QString()),
+    mLastRdfTripleInformation(QString()),
     mLink(QString()),
     mTextContent(QString())
 {
@@ -152,16 +154,16 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::retranslateUi()
 
     mOutputMessage->setMessage(tr("There is no metadata associated with the current CellML element..."));
 
-    // Retranslate our output for ontological terms
+    // Retranslate our output headers
 
-    updateOutputOntologicalTerms();
+    updateOutputHeaders();
 }
 
 //==============================================================================
 
-void CellmlAnnotationViewMetadataNormalViewDetailsWidget::updateOutputOntologicalTerms()
+void CellmlAnnotationViewMetadataNormalViewDetailsWidget::updateOutputHeaders()
 {
-    // Update our output for ontological terms
+    // Update our output headers
 
     QWebElement documentElement = mOutputOntologicalTerms->page()->mainFrame()->documentElement();
 
@@ -175,6 +177,51 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::updateOutputOntologica
         countElement.setInnerXml(tr("(1 term)"));
     else
         countElement.setInnerXml(tr("(%1 terms)").arg(QLocale().toString(mItemsCount)));
+}
+
+//==============================================================================
+
+void CellmlAnnotationViewMetadataNormalViewDetailsWidget::additionalGuiUpdates(const QString &pRdfTripleInformation,
+                                                                               const InformationType &pInformationType,
+                                                                               const Information &pLookUpRdfTripleInformation)
+{
+    // Update our output headers
+
+    updateOutputHeaders();
+
+    // Show/hide our output message and output for ontological terms
+
+    mOutputMessageScrollArea->setVisible(!mItemsCount);
+    mOutputOntologicalTerms->setVisible(mItemsCount);
+
+    // Request for something to be looked up, if needed
+
+    if (pLookUpRdfTripleInformation != No) {
+        if (mItemsCount) {
+            // Request for the first resource id, the last resource id or an
+            // 'old' qualifier, resource or resource id to be looked up
+
+            if (pLookUpRdfTripleInformation == First)
+                // Look up the first resource id
+
+                genericLookUp(mFirstRdfTripleInformation, Id);
+            else if (pLookUpRdfTripleInformation == Last)
+                // Look up the last resource id
+
+                genericLookUp(mLastRdfTripleInformation, Id);
+            else
+                // Look up any 'old' qualifier, resource or resource id
+
+                genericLookUp(pRdfTripleInformation, pInformationType);
+        } else {
+            // No RDF triple left, so ask for 'nothing' to be looked up
+            // Note: we do this to let people know that there is nothing to look
+            //       up and that they can 'clean' whatever they use to show a
+            //       look up to the user...
+
+            genericLookUp();
+        }
+    }
 }
 
 //==============================================================================
@@ -200,136 +247,108 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::updateGui(iface::cellm
 
     mRdfTripleInformationSha1 = QString();
 
+    mLastRdfTripleInformation = QString();
+
     mRdfTriplesMapping.clear();
 
+    mItemsCount = 0;
 
-    // Populate mOutputOntologicalTerms, but only if there is at least one RDF
-    // triple
+    mFirstRdfTripleInformation = QString();
+    mLastRdfTripleInformation = QString();
+
+    // Populate our web view, but only if there is at least one RDF triple
 
     CellMLSupport::CellmlFileRdfTriples rdfTriples = mCellmlFile->rdfTriples(pElement);
-    QString firstRdfTripleInformation = QString();
-    QString lastRdfTripleInformation = QString();
 
     if (rdfTriples.count()) {
-        // Number of terms
-
-        mItemsCount = rdfTriples.count();
-
         // Add the RDF triples
 
-        QString ontologicalTerms = QString();
-
-        bool firstRdfTriple = true;
-
         foreach (CellMLSupport::CellmlFileRdfTriple *rdfTriple, rdfTriples) {
-            // Keep track of some information
+            addRdfTriple(rdfTriple, false);
 
-            QString qualifier = (rdfTriple->modelQualifier() != CellMLSupport::CellmlFileRdfTriple::ModelUnknown)?
-                                    rdfTriple->modelQualifierAsString():
-                                    rdfTriple->bioQualifierAsString();
-            QString rdfTripleInformation = qualifier+"|"+rdfTriple->resource()+"|"+rdfTriple->id();
-            QString rdfTripleInformationSha1 = Core::sha1(rdfTripleInformation);
-            QString resourceUrl = "http://identifiers.org/"+rdfTriple->resource()+"/?redirect=true";
-            QString idUrl = "http://identifiers.org/"+rdfTriple->resource()+"/"+rdfTriple->id()+"/?profile=most_reliable&redirect=true";
-
-            if (!mUrls.contains(rdfTriple->resource()))
-                mUrls.insert(rdfTriple->resource(), resourceUrl);
-
-            mUrls.insert(rdfTripleInformation, idUrl);
-
-            mRdfTripleInformationSha1s << rdfTripleInformationSha1;
-
-            mRdfTriplesMapping.insert(rdfTripleInformationSha1, rdfTriple);
-
-            // Keep track of the first and last RDF triple information
-
-            if (firstRdfTriple) {
-                firstRdfTripleInformation = rdfTripleInformation;
-
-                firstRdfTriple = false;
-            }
-
-            lastRdfTripleInformation = rdfTripleInformation;
-
-            // Add the item
-
-            ontologicalTerms +=  "<tr id=\"item_"+rdfTripleInformationSha1+"\">\n"
-                                +"    <td id=\"qualifier_"+rdfTripleInformationSha1+"\">\n"
-                                +"        <a href=\""+rdfTripleInformation+"\">"+qualifier+"</a>\n"
-                                +"    </td>\n"
-                                +"    <td id=\"resource_"+rdfTripleInformationSha1+"\">\n"
-                                +"        <a href=\""+rdfTripleInformation+"\">"+rdfTriple->resource()+"</a>\n"
-                                +"    </td>\n"
-                                +"    <td id=\"id_"+rdfTripleInformationSha1+"\">\n"
-                                +"        <a href=\""+rdfTripleInformation+"\">"+rdfTriple->id()+"</a>\n"
-                                +"    </td>\n"
-                                +"    <td id=\"button_"+rdfTripleInformationSha1+"\">\n"
-                                +"        <a class=\"noHover\" href=\""+rdfTripleInformationSha1+"\"><img class=\"button\"/></a>\n"
-                                +"    </td>\n"
-                                +"    <td id=\"disabledButton_"+rdfTripleInformationSha1+"\" style=\"display: none;\">\n"
-                                +"        <img class=\"disabledButton\"/>\n"
-                                +"    </td>\n"
-                                +"</tr>\n";
+            if (mFirstRdfTripleInformation.isEmpty())
+                mFirstRdfTripleInformation = mLastRdfTripleInformation;
         }
-
-        mOutputOntologicalTerms->setHtml(mOutputOntologicalTermsTemplate.arg(Core::iconDataUri(":/oxygen/actions/list-remove.png", 16, 16),
-                                                                             Core::iconDataUri(":/oxygen/actions/list-remove.png", 16, 16, QIcon::Disabled),
-                                                                             ontologicalTerms));
-
-        updateOutputOntologicalTerms();
     } else {
         mOutputOntologicalTerms->setHtml(QString());
     }
 
-    // Hide our old output widget and show our new one
+    // Do additional GUI updates
 
-    mOutputMessageScrollArea->setVisible(!rdfTriples.count());
-    mOutputOntologicalTerms->setVisible(rdfTriples.count());
-
-    // Request for something to be looked up, if needed
-
-    if (pLookUpRdfTripleInformation != No) {
-        if (rdfTriples.count()) {
-            // Request for the first resource id, the last resource id or an
-            // 'old' qualifier, resource or resource id to be looked up
-
-            if (pLookUpRdfTripleInformation == First)
-                // Look up the first resource id
-
-                genericLookUp(firstRdfTripleInformation, Id);
-            else if (pLookUpRdfTripleInformation == Last)
-                // Look up the last resource id
-
-                genericLookUp(lastRdfTripleInformation, Id);
-            else
-                // Look up any 'old' qualifier, resource or resource id
-
-                genericLookUp(pRdfTripleInformation, pInformationType);
-        } else {
-            // No RDF triple left, so ask for 'nothing' to be looked up
-            // Note: we do this to let people know that there is nothing to look
-            //       up and that they can 'clean' whatever they use to show a
-            //       look up to the user...
-
-            genericLookUp();
-        }
-    }
+    additionalGuiUpdates(pRdfTripleInformation, pInformationType,
+                         pLookUpRdfTripleInformation);
 }
 
 //==============================================================================
 
-void CellmlAnnotationViewMetadataNormalViewDetailsWidget::addRdfTriple(CellMLSupport::CellmlFileRdfTriple *pRdfTriple)
+void CellmlAnnotationViewMetadataNormalViewDetailsWidget::addRdfTriple(CellMLSupport::CellmlFileRdfTriple *pRdfTriple,
+                                                                       const bool &pNeedAdditionalGuiUpdates)
 {
     if (!pRdfTriple)
         return;
 
-    // Enable the looking up of the last RDF triple information
+    // Initialise our web view, if needed
 
-    mLookUpRdfTripleInformation = Last;
+    if (!mItemsCount)
+        mOutputOntologicalTerms->setHtml(mOutputOntologicalTermsTemplate.arg(Core::iconDataUri(":/oxygen/actions/list-remove.png", 16, 16),
+                                                                             Core::iconDataUri(":/oxygen/actions/list-remove.png", 16, 16, QIcon::Disabled)));
 
-    // Update the GUI to reflect the addition of the given RDF triple
+    // Add the item
 
-    updateGui(mElement, QString(), None, mLookUpRdfTripleInformation);
+    ++mItemsCount;
+
+    QString qualifier = (pRdfTriple->modelQualifier() != CellMLSupport::CellmlFileRdfTriple::ModelUnknown)?
+                            pRdfTriple->modelQualifierAsString():
+                            pRdfTriple->bioQualifierAsString();
+    QString rdfTripleInformation = qualifier+"|"+pRdfTriple->resource()+"|"+pRdfTriple->id();
+    QString rdfTripleInformationSha1 = Core::sha1(rdfTripleInformation);
+
+    QString ontologicalTerm =  "<tr id=\"item_"+rdfTripleInformationSha1+"\">\n"
+                              +"    <td id=\"qualifier_"+rdfTripleInformationSha1+"\">\n"
+                              +"        <a href=\""+rdfTripleInformation+"\">"+qualifier+"</a>\n"
+                              +"    </td>\n"
+                              +"    <td id=\"resource_"+rdfTripleInformationSha1+"\">\n"
+                              +"        <a href=\""+rdfTripleInformation+"\">"+pRdfTriple->resource()+"</a>\n"
+                              +"    </td>\n"
+                              +"    <td id=\"id_"+rdfTripleInformationSha1+"\">\n"
+                              +"        <a href=\""+rdfTripleInformation+"\">"+pRdfTriple->id()+"</a>\n"
+                              +"    </td>\n"
+                              +"    <td id=\"button_"+rdfTripleInformationSha1+"\">\n"
+                              +"        <a class=\"noHover\" href=\""+rdfTripleInformationSha1+"\"><img class=\"button\"/></a>\n"
+                              +"    </td>\n"
+                              +"    <td id=\"disabledButton_"+rdfTripleInformationSha1+"\" style=\"display: none;\">\n"
+                              +"        <img class=\"disabledButton\"/>\n"
+                              +"    </td>\n"
+                              +"</tr>\n";
+
+    if (mItemsCount == 1)
+        mOutputOntologicalTerms->page()->mainFrame()->documentElement().findFirst("tbody").appendInside(ontologicalTerm);
+    else
+        mOutputOntologicalTerms->page()->mainFrame()->documentElement().findFirst(QString("tr[id=item_%1]").arg(mRdfTripleInformationSha1s.last())).appendOutside(ontologicalTerm);
+
+    // Keep track of some information
+
+    QString resourceUrl = "http://identifiers.org/"+pRdfTriple->resource()+"/?redirect=true";
+    QString idUrl = "http://identifiers.org/"+pRdfTriple->resource()+"/"+pRdfTriple->id()+"/?profile=most_reliable&redirect=true";
+
+    if (!mUrls.contains(pRdfTriple->resource()))
+        mUrls.insert(pRdfTriple->resource(), resourceUrl);
+
+    mUrls.insert(rdfTripleInformation, idUrl);
+
+    mRdfTripleInformationSha1s << rdfTripleInformationSha1;
+
+    mRdfTriplesMapping.insert(rdfTripleInformationSha1, pRdfTriple);
+
+    mLastRdfTripleInformation = rdfTripleInformation;
+
+    // Do some additional GUI updates, if needed
+
+    if (pNeedAdditionalGuiUpdates) {
+        mLookUpRdfTripleInformation = Last;
+
+        additionalGuiUpdates(QString(), None, mLookUpRdfTripleInformation);
+    }
 }
 
 //==============================================================================

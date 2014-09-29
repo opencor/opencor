@@ -344,9 +344,9 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::retranslateUi()
 
     upudateOutputMessage(mLookUpTerm, mErrorMessage);
 
-    // Retranslate our output for ontological terms
+    // Retranslate our output headers
 
-    updateOutputOntologicalTerms();
+    updateOutputHeaders();
 }
 
 //==============================================================================
@@ -471,9 +471,9 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::upudateOutputMessage(const b
 
 //==============================================================================
 
-void CellmlAnnotationViewMetadataEditDetailsWidget::updateOutputOntologicalTerms()
+void CellmlAnnotationViewMetadataEditDetailsWidget::updateOutputHeaders()
 {
-    // Update our output for ontological terms
+    // Update our output headers
 
     QWebElement documentElement = mOutputOntologicalTerms->page()->mainFrame()->documentElement();
 
@@ -512,11 +512,16 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateItemsGui(const Items &
 
     mOutputOntologicalTerms->setHtml(QString());
 
-    // Populate mOutputOntologicalTerms, but only if there is at least one item
+    // Populate our web view, but only if there is at least one item
 
     bool showBusyWidget = false;
 
     if (pItems.count()) {
+        // Initialise our web view
+
+        mOutputOntologicalTerms->setHtml(mOutputOntologicalTermsTemplate.arg(Core::iconDataUri(":/oxygen/actions/list-add.png", 16, 16),
+                                                                             Core::iconDataUri(":/oxygen/actions/list-add.png", 16, 16, QIcon::Disabled)));
+
         // Add the items
 
         QString ontologicalTerms = QString();
@@ -560,11 +565,9 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateItemsGui(const Items &
                                 +"</tr>\n";
         }
 
-        mOutputOntologicalTerms->setHtml(mOutputOntologicalTermsTemplate.arg(Core::iconDataUri(":/oxygen/actions/list-add.png", 16, 16),
-                                                                             Core::iconDataUri(":/oxygen/actions/list-add.png", 16, 16, QIcon::Disabled),
-                                                                             ontologicalTerms));
+        mOutputOntologicalTerms->page()->mainFrame()->documentElement().findFirst("tbody").appendInside(ontologicalTerms);
 
-        updateOutputOntologicalTerms();
+        updateOutputHeaders();
     } else {
         // No items to show, so either there is no data available or an error
         // occurred, so update our output message

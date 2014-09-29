@@ -160,7 +160,7 @@ private:
     void upudateOutputMessage(const bool &pLookUpTerm,
                               const QString &pErrorMessage,
                               bool *pShowBusyWidget = 0);
-    void updateOutputOntologicalTerms();
+    void updateOutputHeaders();
 
     void updateItemsGui(const Items &pItems, const bool &pLookUpTerm,
                         const QString &pErrorMessage);

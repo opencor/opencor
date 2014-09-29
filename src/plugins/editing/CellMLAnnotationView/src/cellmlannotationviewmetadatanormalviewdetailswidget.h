@@ -94,7 +94,8 @@ public:
                    const InformationType &pInformationType = None,
                    const Information &pLookUpRdfTripleInformation = First);
 
-    void addRdfTriple(CellMLSupport::CellmlFileRdfTriple *pRdfTriple);
+    void addRdfTriple(CellMLSupport::CellmlFileRdfTriple *pRdfTriple,
+                      const bool &pNeedAdditionalGuiUpdates = true);
 
 private:
     CellMLSupport::CellmlFile *mCellmlFile;
@@ -124,12 +125,19 @@ private:
     QStringList mRdfTripleInformationSha1s;
     QString mRdfTripleInformationSha1;
 
+    QString mFirstRdfTripleInformation;
+    QString mLastRdfTripleInformation;
+
     QString mLink;
     QString mTextContent;
 
     QMenu *mContextMenu;
 
-    void updateOutputOntologicalTerms();
+    void additionalGuiUpdates(const QString &pRdfTripleInformation,
+                              const InformationType &pInformationType,
+                              const Information &pLookUpRdfTripleInformation);
+
+    void updateOutputHeaders();
 
     void genericLookUp(const QString &pRdfTripleInformation = QString(),
                        const InformationType &pInformationType = None);
