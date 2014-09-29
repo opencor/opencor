@@ -584,12 +584,12 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateItemsGui(const Items &
 
     mParent->parent()->hideBusyWidget();
 
-    // Hide our old output widget and show our new one
+    // Show/hide our output message and output for ontological terms
 
     mOutputMessageScrollArea->setVisible(!pItems.count());
     mOutputOntologicalTerms->setVisible(pItems.count());
 
-    // show our busy widget instead, if needed
+    // Show our busy widget instead, if needed
 
     if (showBusyWidget)
         mParent->parent()->showBusyWidget(mOutput);
