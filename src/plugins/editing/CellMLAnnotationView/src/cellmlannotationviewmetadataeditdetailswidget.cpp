@@ -242,12 +242,12 @@ CellmlAnnotationViewMetadataEditDetailsWidget::CellmlAnnotationViewMetadataEditD
     mQualifierLabel = new QLabel(formWidget);
     mTermLabel = new QLabel(formWidget);
 
-    QFont font = mQualifierLabel->font();
+    QFont newFont = mQualifierLabel->font();
 
-    font.setBold(true);
+    newFont.setBold(true);
 
-    mQualifierLabel->setFont(font);
-    mTermLabel->setFont(font);
+    mQualifierLabel->setFont(newFont);
+    mTermLabel->setFont(newFont);
 
     formWidgetLayout->addRow(mQualifierLabel, qualifierWidget);
     formWidgetLayout->addRow(mTermLabel, termWidget);
