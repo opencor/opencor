@@ -86,22 +86,6 @@ QFrame CORE_EXPORT * newLineWidget(const bool &pHorizontal, QWidget *pParent);
 QFrame CORE_EXPORT * newLineWidget(const QColor &pColor, QWidget *pParent);
 QFrame CORE_EXPORT * newLineWidget(QWidget *pParent);
 
-QLabel CORE_EXPORT * newLabel(const QString &pText,
-                              const double &pFontPercentage,
-                              const bool &pBold, const bool &pItalic,
-                              const Qt::Alignment &pAlignment,
-                              QWidget *pParent);
-QLabel CORE_EXPORT * newLabel(const QString &pText,
-                              const double &pFontPercentage,
-                              const bool &pBold, const bool &pItalic,
-                              QWidget *pParent);
-QLabel CORE_EXPORT * newLabel(const QString &pText,
-                              const double &pFontPercentage,
-                              const bool &pBold, QWidget *pParent);
-QLabel CORE_EXPORT * newLabel(const QString &pText,
-                              const double &pFontPercentage, QWidget *pParent);
-QLabel CORE_EXPORT * newLabel(const QString &pText, QWidget *pParent);
-
 QString CORE_EXPORT iconDataUri(const QString &pIcon, const int &pWidth = -1,
                                 const int &pHeight = -1,
                                 const QIcon::Mode &pMode = QIcon::Normal);

@@ -49,9 +49,11 @@ specific language governing permissions and limitations under the License.
 #include <QClipboard>
 #include <QComboBox>
 #include <QCursor>
+#include <QFont>
 #include <QFormLayout>
 #include <QJsonDocument>
 #include <QJsonObject>
+#include <QLabel>
 #include <QLineEdit>
 #include <QLocale>
 #include <QMenu>
@@ -237,8 +239,15 @@ CellmlAnnotationViewMetadataEditDetailsWidget::CellmlAnnotationViewMetadataEditD
 
     // Add both our qualifier and term widgets to our form widget layout
 
-    mQualifierLabel = Core::newLabel(QString(), 1.0, true, formWidget);
-    mTermLabel = Core::newLabel(QString(), 1.0, true, formWidget);
+    mQualifierLabel = new QLabel(formWidget);
+    mTermLabel = new QLabel(formWidget);
+
+    QFont font = mQualifierLabel->font();
+
+    font.setBold(true);
+
+    mQualifierLabel->setFont(font);
+    mTermLabel->setFont(font);
 
     formWidgetLayout->addRow(mQualifierLabel, qualifierWidget);
     formWidgetLayout->addRow(mTermLabel, termWidget);
