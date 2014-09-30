@@ -544,7 +544,15 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::linkClicked()
 
         mLookUpRdfTripleInformation = Any;
 
-        additionalGuiUpdates(mRdfTripleInformation, mInformationType, mLookUpRdfTripleInformation);
+        if (!mLink.compare(mRdfTripleInformationSha1))
+            additionalGuiUpdates(mRdfTripleInformation, mInformationType, mLookUpRdfTripleInformation);
+        else
+            // The looked up information is the same, so no need to look it up
+            // again
+            // Note: indeed, to look it up again would result in the web view
+            //       flashing (since a 'new' web page would be loaded)...
+
+            additionalGuiUpdates(mRdfTripleInformation, mInformationType, No);
 
         // Remove the RDF triple from the CellML file
 
