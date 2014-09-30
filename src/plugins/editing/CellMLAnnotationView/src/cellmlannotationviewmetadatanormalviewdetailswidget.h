@@ -25,12 +25,11 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include "cellmlfile.h"
-#include "commonwidget.h"
+#include "widget.h"
 
 //==============================================================================
 
 #include <QMap>
-#include <QScrollArea>
 
 //==============================================================================
 
@@ -40,37 +39,45 @@ namespace Ui {
 
 //==============================================================================
 
-class QGridLayout;
 class QLabel;
 class QMenu;
-class QStackedWidget;
+class QScrollArea;
 
 //==============================================================================
 
 namespace OpenCOR {
+
+//==============================================================================
+
+namespace Core {
+    class UserMessageWidget;
+}   // namespace Core
+
+//==============================================================================
+
 namespace CellMLAnnotationView {
 
 //==============================================================================
 
 class CellmlAnnotationViewEditingWidget;
+class CellmlAnnotationViewMetadataWebViewWidget;
 
 //==============================================================================
 
-class CellmlAnnotationViewMetadataNormalViewDetailsWidget : public QScrollArea,
-                                                            public Core::CommonWidget
+class CellmlAnnotationViewMetadataNormalViewDetailsWidget : public Core::Widget
 {
     Q_OBJECT
 
 private:
     enum Information {
-        None,
+        No,
         First,
         Any,
         Last
     };
 
-    enum Type {
-        No,
+    enum InformationType {
+        None,
         Qualifier,
         Resource,
         Id
@@ -84,71 +91,73 @@ public:
 
     void updateGui(iface::cellml_api::CellMLElement *pElement,
                    const QString &pRdfTripleInformation = QString(),
-                   const Type &pType = No,
-                   const Information &pLookupInformation = First,
-                   const int &pVerticalScrollBarPosition = 0,
-                   const bool &pRetranslate = false);
+                   const InformationType &pInformationType = None,
+                   const Information &pLookUpRdfTripleInformation = First);
 
-    void addRdfTriple(CellMLSupport::CellmlFileRdfTriple *pRdfTriple);
+    void addRdfTriple(CellMLSupport::CellmlFileRdfTriple *pRdfTriple,
+                      const bool &pNeedAdditionalGuiUpdates = true);
 
 private:
     CellMLSupport::CellmlFile *mCellmlFile;
 
     Ui::CellmlAnnotationViewMetadataNormalViewDetailsWidget *mGui;
 
-    QStackedWidget *mWidget;
+    int mItemsCount;
 
-    QWidget *mGridWidget;
-    QGridLayout *mGridLayout;
+    Core::Widget *mOutput;
+
+    QScrollArea *mOutputMessageScrollArea;
+    Core::UserMessageWidget *mOutputMessage;
+
+    QString mOutputOntologicalTermsTemplate;
+    CellmlAnnotationViewMetadataWebViewWidget *mOutputOntologicalTerms;
 
     ObjRef<iface::cellml_api::CellMLElement> mElement;
 
     QString mRdfTripleInformation;
-    Type mType;
+    InformationType mInformationType;
 
-    Information mLookupInformation;
+    Information mLookUpRdfTripleInformation;
 
-    int mVerticalScrollBarPosition;
-    int mNeighbourRow;
+    QMap<QString, CellMLSupport::CellmlFileRdfTriple *> mRdfTriplesMapping;
 
-    QMap<QObject *, CellMLSupport::CellmlFileRdfTriple *> mRdfTriplesMapping;
+    QMap<QString, QString> mUrls;
+    QStringList mRdfTripleInformationSha1s;
+    QString mRdfTripleInformationSha1;
 
-    QLabel *mCurrentResourceOrIdLabel;
+    QString mFirstRdfTripleInformation;
+    QString mLastRdfTripleInformation;
+
+    QString mLink;
+    QString mTextContent;
 
     QMenu *mContextMenu;
 
-    void genericLookup(const QString &pRdfTripleInformation = QString(),
-                       const Type &pType = No,
-                       const bool &pRetranslate = false);
+    void additionalGuiUpdates(const QString &pRdfTripleInformation,
+                              const InformationType &pInformationType,
+                              const Information &pLookUpRdfTripleInformation);
 
-    QString rdfTripleInformation(const int &pRow) const;
+    void updateOutputHeaders();
+
+    void genericLookUp(const QString &pRdfTripleInformation = QString(),
+                       const InformationType &pInformationType = None);
 
 Q_SIGNALS:
-    void qualifierLookupRequested(const QString &pQualifier,
-                                  const bool &pRetranslate);
-    void resourceLookupRequested(const QString &pResource,
-                                 const bool &pRetranslate);
-    void idLookupRequested(const QString &pResource, const QString &pId,
-                           const bool &pRetranslate);
-    void noLookupRequested();
+    void qualifierLookUpRequested(const QString &pQualifier);
+    void resourceLookUpRequested(const QString &pResource);
+    void idLookUpRequested(const QString &pResource, const QString &pId);
+    void noLookUpRequested();
 
     void rdfTripleRemoved(CellMLSupport::CellmlFileRdfTriple *pRdfTriple);
 
 private Q_SLOTS:
     void on_actionCopy_triggered();
 
-    void disableLookupInformation();
+    void disableLookUpInformation();
 
-    void lookupQualifier(const QString &pRdfTripleInformation);
-    void lookupResource(const QString &pRdfTripleInformation);
-    void lookupId(const QString &pRdfTripleInformation);
-
-    void removeRdfTriple();
-
-    void showNeighbourRdfTriple();
     void showLastRdfTriple();
 
-    void trackVerticalScrollBarPosition(const int &pPosition);
+    void linkClicked();
 
     void showCustomContextMenu(const QPoint &pPosition);
 };

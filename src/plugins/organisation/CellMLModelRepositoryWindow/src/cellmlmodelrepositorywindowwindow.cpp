@@ -148,40 +148,39 @@ void CellmlModelRepositoryWindowWindow::outputModelList(const QStringList &pMode
     mModelList = pModelList;
 
     QString contents = QString();
-    static const QString indent = "    ";
 
     if (mModelList.count()) {
         // We have models to list
 
-        contents += indent+indent+"<p>\n";
+        contents += "<p>\n";
 
         if (mModelList.count() == 1)
-            contents += indent+indent+indent+tr("<strong>1</strong> CellML model was found:")+"\n";
+            contents += "    "+tr("<strong>1</strong> CellML model was found:")+"\n";
         else
-            contents += indent+indent+indent+tr("<strong>%1</strong> CellML models were found:").arg(mModelList.count())+"\n";
+            contents += "    "+tr("<strong>%1</strong> CellML models were found:").arg(mModelList.count())+"\n";
 
-        contents += indent+indent+"</p>\n";
+        contents += "</p>\n";
         contents += "\n";
-        contents += indent+indent+"<ul>\n";
+        contents += "<ul>\n";
 
         foreach (const QString &model, mModelList)
-            contents += indent+indent+indent+"<li><a href=\""+mModelUrls[mModelNames.indexOf(model)]+"\">"+model+"</a></li>\n";
+            contents += "    <li><a href=\""+mModelUrls[mModelNames.indexOf(model)]+"\">"+model+"</a></li>\n";
 
-        contents += indent+indent+"</ul>";
+        contents += "</ul>";
     } else if (mModelNames.empty()) {
         if (mErrorMessage.count()) {
             // Something went wrong while trying to retrieve the list of models
 
-            contents += indent+indent+"<p>\n";
-            contents += indent+indent+indent+tr("<strong>Error:</strong> ")+Core::formatErrorMessage(mErrorMessage);
-            contents += indent+indent+"</p>\n";
+            contents += "<p>\n";
+            contents += "    "+tr("<strong>Error:</strong> ")+Core::formatErrorMessage(mErrorMessage, true, true);
+            contents += "</p>\n";
         }
     } else {
         // No model could be found
 
-        contents += indent+indent+"<p>\n";
-        contents += indent+indent+indent+tr("No CellML model matches your criteria");
-        contents += indent+indent+"</p>\n";
+        contents += "<p>\n";
+        contents += "    "+tr("No CellML model matches your criteria");
+        contents += "</p>\n";
     }
 
     // Show/hide our busy widget and output the list matching the search

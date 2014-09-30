@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+
+        <style type="text/css">
+            body {
+                -webkit-user-select: none;
+                font-family: arial, sans-serif;
+                font-size: 10pt;
+                margin: 0px;
+            }
+
+            a {
+                outline: 0px;
+                color: rgb(54, 96, 146);
+                text-decoration: none;
+            }
+
+            a:visited {
+                color: rgb(54, 96, 146);
+            }
+
+            a:hover {
+                margin: -1px;
+                border: 1px solid rgba(54, 96, 146, 0.13);
+                background-color: rgba(54, 96, 146, 0.05);
+                color: rgb(54, 96, 146);
+            }
+
+            a.noHover:hover {
+                margin: 0px;
+                border: 0px;
+                background: rgba(255, 255, 255, 0);
+                cursor: default;
+            }
+
+            img.button, img.disabledButton {
+                position: relative;
+                top: 1px;
+                border: 1px solid rgb(219, 219, 219);
+                border-radius: 5px;
+                padding: 2px;
+                background: linear-gradient(to bottom, rgba(249, 249, 249, 0.2), rgb(233, 233, 233));
+                cursor: default;
+            }
+
+            img.button {
+                content: url("%1");
+            }
+
+            img.disabledButton {
+                content: url("%2");
+            }
+
+            img.button:hover {
+                border: 1px solid rgb(189, 189, 189);
+            }
+
+            img.button:active {
+                background: linear-gradient(to bottom, rgba(233, 233, 233, 0.2), rgb(249, 249, 249));
+            }
+
+            table {
+                position: relative;
+                top: 4px;
+                width: 100%;
+                border-spacing: 0px;
+            }
+
+            th {
+                font-size: 12pt;
+                white-space: nowrap;
+            }
+
+            th.count {
+                font-size: 10pt;
+                font-weight: normal;
+                font-style: italic;
+            }
+
+            tr.highlighted {
+                background-color: rgba(54, 96, 146, 0.05);
+            }
+
+            td {
+                padding-top: 2px;
+                text-align: center;
+                white-space: nowrap;
+            }
+
+            td.selected {
+                background-color: rgba(54, 96, 146, 0.05);
+            }
+        </style>
+    </head>
+    <body ondragstart="return false;" ondrop="return false;">
+        <table>
+            <thead>
+                <tr>
+                   <th id="nameOrQualifier"/>
+                   <th id="resource"/>
+                   <th id="id"/>
+                   <th class="count" id="count"/>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </body>
+</html>

@@ -28,6 +28,7 @@ specific language governing permissions and limitations under the License.
 #include <QFileInfo>
 #include <QHelpEvent>
 #include <QMimeData>
+#include <QModelIndex>
 #include <QSettings>
 #include <QUrl>
 

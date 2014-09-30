@@ -216,8 +216,8 @@ private:
 
     void checkCodeInformation(iface::cellml_services::CodeInformation *pCodeInformation);
 
-    void getOdeCodeInformation(iface::cellml_api::Model *pModel);
-    void getDaeCodeInformation(iface::cellml_api::Model *pModel);
+    void retrieveOdeCodeInformation(iface::cellml_api::Model *pModel);
+    void retrieveDaeCodeInformation(iface::cellml_api::Model *pModel);
 
     QString functionCode(const QString &pFunctionSignature,
                          const QString &pFunctionBody,

@@ -83,15 +83,12 @@ public:
     CellmlAnnotationViewMetadataDetailsWidget * metadataDetails() const;
 
     void updateWebViewerWithQualifierDetails(QWebView *pWebView,
-                                             const QString &pQualifier,
-                                             const bool &pRetranslate);
+                                             const QString &pQualifier);
     void updateWebViewerWithResourceDetails(QWebView *pWebView,
-                                            const QString &pResource,
-                                            const bool &pRetranslate);
+                                            const QString &pResource);
     void updateWebViewerWithIdDetails(QWebView *pWebView,
                                       const QString &pResource,
-                                      const QString &pId,
-                                      const bool &pRetranslate);
+                                      const QString &pId);
 
     void fileReloaded();
 
@@ -111,15 +108,11 @@ private:
 
     QString mQualifierInformationTemplate;
 
-    QMap<QWebView *, QUrl> oldWebViewUrls;
-
 Q_SIGNALS:
     void splitterMoved(const QIntList &pSizes);
 
 private Q_SLOTS:
     void emitSplitterMoved();
-
-    void addRdfTriple(CellMLSupport::CellmlFileRdfTriple *pRdfTriple) const;
 };
 
 //==============================================================================

@@ -97,6 +97,8 @@ QString CORE_EXPORT locale();
 qulonglong CORE_EXPORT totalMemory();
 qulonglong CORE_EXPORT freeMemory();
 
+QString CORE_EXPORT digitGroupNumber(const QString &pNumber);
+
 QString CORE_EXPORT sizeAsString(const double &pSize,
                                  const int &pPrecision = 1);
 
@@ -133,7 +135,8 @@ QString CORE_EXPORT activeDirectory();
 QString CORE_EXPORT nativeCanonicalFileName(const QString &pFileName);
 
 QString CORE_EXPORT formatErrorMessage(const QString &pErrorMessage,
-                                       const bool &pDotDotDot = true);
+                                       const bool &pLowerCase = true,
+                                       const bool &pDotDotDot = false);
 
 QString CORE_EXPORT nonDiacriticString(const QString &pString);
 

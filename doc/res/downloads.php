@@ -31,7 +31,7 @@
         <script src="../res/common.js" type="text/javascript"></script>
         <script src="../res/menu.js" type="text/javascript"></script>
     </head>
-    <body>
+    <body ondragstart="return false;" ondrop="return false;">
         <script type="text/javascript">
 <?php
     if ($oldSnapshots) {

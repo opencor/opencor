@@ -85,12 +85,12 @@ public:
     CellmlFileRdfTriples & rdfTriples();
     CellmlFileRdfTriples rdfTriples(iface::cellml_api::CellMLElement *pElement) const;
 
-    bool rdfTripleExists(iface::cellml_api::CellMLElement *pElement,
-                         const CellmlFileRdfTriple::ModelQualifier &pModelQualifier,
-                         const QString &pResource, const QString &pId) const;
-    bool rdfTripleExists(iface::cellml_api::CellMLElement *pElement,
-                         const CellmlFileRdfTriple::BioQualifier &pBioQualifier,
-                         const QString &pResource, const QString &pId) const;
+    CellmlFileRdfTriple * rdfTriple(iface::cellml_api::CellMLElement *pElement,
+                                    const CellmlFileRdfTriple::ModelQualifier &pModelQualifier,
+                                    const QString &pResource, const QString &pId) const;
+    CellmlFileRdfTriple * rdfTriple(iface::cellml_api::CellMLElement *pElement,
+                                    const CellmlFileRdfTriple::BioQualifier &pBioQualifier,
+                                    const QString &pResource, const QString &pId) const;
 
     CellmlFileRdfTriple * addRdfTriple(iface::cellml_api::CellMLElement *pElement,
                                        const CellmlFileRdfTriple::ModelQualifier &pModelQualifier,
@@ -100,6 +100,13 @@ public:
                                        const CellmlFileRdfTriple::BioQualifier &pBioQualifier,
                                        const QString &pResource,
                                        const QString &pId);
+
+    bool removeRdfTriple(iface::cellml_api::CellMLElement *pElement,
+                         const CellmlFileRdfTriple::ModelQualifier &pModelQualifier,
+                         const QString &pResource, const QString &pId);
+    bool removeRdfTriple(iface::cellml_api::CellMLElement *pElement,
+                         const CellmlFileRdfTriple::BioQualifier &pBioQualifier,
+                         const QString &pResource, const QString &pId);
 
     QString xmlBase() const;
 
@@ -145,9 +152,10 @@ private:
 
     bool doIsValid(iface::cellml_api::Model *pModel, CellmlFileIssues &pIssues);
 
-    bool rdfTripleExists(iface::cellml_api::CellMLElement *pElement,
-                         const QString &pQualifier,
-                         const QString &pResource, const QString &pId) const;
+    CellmlFileRdfTriple * rdfTriple(iface::cellml_api::CellMLElement *pElement,
+                                    const QString &pQualifier,
+                                    const QString &pResource,
+                                    const QString &pId) const;
 
     QString rdfTripleSubject(iface::cellml_api::CellMLElement *pElement) const;
 };

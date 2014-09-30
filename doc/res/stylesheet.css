@@ -53,7 +53,7 @@ div.withoutInfo {
 
 img.downloads {
     margin: 0px;
-    border: none;
+    border: 0px;
     padding: 3px 7px 3px 7px;
     position: fixed;
     top: 3px;

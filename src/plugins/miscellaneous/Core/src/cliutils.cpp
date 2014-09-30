@@ -37,6 +37,7 @@ specific language governing permissions and limitations under the License.
 #include <QEventLoop>
 #include <QFile>
 #include <QIODevice>
+#include <QLocale>
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
 #include <QNetworkRequest>
@@ -350,6 +351,24 @@ qulonglong freeMemory()
 
 //==============================================================================
 
+QString digitGroupNumber(const QString &pNumber)
+{
+    // Digit group the given number (which we assume to be specified in the "C"
+    // locale), if possible, and return the result of the digit grouping (which
+    // is done keeping in mind the current locale)
+
+    QString res = pNumber;
+    bool validNumber;
+    double number = res.toDouble(&validNumber);
+
+    if (validNumber)
+        res = QLocale().toString(number);
+
+    return res;
+}
+
+//==============================================================================
+
 QString sizeAsString(const double &pSize, const int &pPrecision)
 {
     // Note: pSize is a double rather than a qulonglong, in case we need to
@@ -365,7 +384,7 @@ QString sizeAsString(const double &pSize, const int &pPrecision)
 
     size = qRound(scaling*size)/scaling;
 
-    return QString::number(size)+" "+units[i];
+    return QLocale().toString(size)+" "+units[i];
 }
 
 //==============================================================================
@@ -648,7 +667,8 @@ QString nativeCanonicalFileName(const QString &pFileName)
 
 //==============================================================================
 
-QString formatErrorMessage(const QString &pErrorMessage, const bool &pDotDotDot)
+QString formatErrorMessage(const QString &pErrorMessage, const bool &pLowerCase,
+                           const bool &pDotDotDot)
 {
     static const QString DotDotDot = "...";
 
@@ -659,16 +679,19 @@ QString formatErrorMessage(const QString &pErrorMessage, const bool &pDotDotDot)
 
     QString errorMessage = pErrorMessage;
 
-    // Lower the case of the first character, but if the message is one
-    // character long (!!) or if its second character is not in upper case
+    // Upper/lower the case of the first character, unless the message is one
+    // character long (!!) or unless its second character is in lower case
 
     if (    (errorMessage.size() <= 1)
-        || ((errorMessage.size() > 1) && !errorMessage[1].isUpper())) {
-        errorMessage[0] = errorMessage[0].toLower();
+        || ((errorMessage.size() > 1) && errorMessage[1].isLower())) {
+        if (pLowerCase)
+            errorMessage[0] = errorMessage[0].toLower();
+        else
+            errorMessage[0] = errorMessage[0].toUpper();
     }
 
     // Return the error message after making sure that its end finishes with
-    // "..."
+    // "...", if requested
 
     int subsize = errorMessage.size();
 

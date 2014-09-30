@@ -1,13 +1,14 @@
 body {
-    font-family: arial, sans-serif;
-    font-size: 10pt;
     padding: 13px 0px 9px 0px;
     /* Note: the padding is determined from the height of div.header and */
     /*       div.copyright minus the same number of pixels each...       */
+    font-family: arial, sans-serif;
+    font-size: 10pt;
 }
 
 a {
     color: rgb(103, 103, 103);
+    outline: 0px;
     text-decoration: none;
 }
 
@@ -26,8 +27,8 @@ a.noHover:hover {
     /* This prevents anchors from looking like a link */
 
     margin: 0px;
-    border: none;
-    background: rgb(255, 255, 255);
+    border: 0px;
+    background: rgba(255, 255, 255, 0);
 }
 
 div.copyright {
@@ -54,9 +55,9 @@ div.copyright div.left {
 }
 
 div.copyright div.center {
-	position: absolute;
-	left: 50%;
-	top: 50%;
+    position: absolute;
+    left: 50%;
+    top: 50%;
 }
 
 div.copyright div.right {
@@ -65,20 +66,20 @@ div.copyright div.right {
 
 div.copyright div a.copyright:hover {
     margin: 0px;
-    border: none;
+    border: 0px;
     background: none;
 }
 
 div.copyright div img.twitter {
     position: relative;
     top: -15px;
-    border: none;
+    border: 0px;
 }
 
 div.copyright div img.vpr {
     position: relative;
     top: 4px;
-    border: none;
+    border: 0px;
 }
 
 div.header {

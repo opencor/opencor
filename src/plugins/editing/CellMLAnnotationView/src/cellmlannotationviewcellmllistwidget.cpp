@@ -35,11 +35,14 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#include <QAbstractItemView>
 #include <QDir>
 #include <QFileInfo>
+#include <QFont>
 #include <QMenu>
 #include <QPoint>
 #include <QStandardItemModel>
+#include <QStyle>
 
 //==============================================================================
 
@@ -66,9 +69,9 @@ void CellmlAnnotationViewCellmlElementItemDelegate::paint(QPainter *pPainter,
 
     if (   (cellmlElementItem->type() == CellmlAnnotationViewCellmlElementItem::Error)
         || (cellmlElementItem->type() == CellmlAnnotationViewCellmlElementItem::Warning)) {
-        // This is an error/warning item, so prevent it from hoverable and make
-        // it look enabled since it's actually disabled (so we can't select it),
-        // yet we want to see it as if it was enabled, so...
+        // This is an error/warning item, so prevent it from being hoverable and
+        // make it look enabled since it's actually disabled (so we can't select
+        // it), yet we want to see it as if it was enabled, so...
 
         option.state &= ~QStyle::State_MouseOver;
         option.state |=  QStyle::State_Enabled;
@@ -100,7 +103,8 @@ void CellmlAnnotationViewCellmlElementItem::constructor(const bool &pCategory,
 
 //==============================================================================
 
-CellmlAnnotationViewCellmlElementItem::CellmlAnnotationViewCellmlElementItem(const bool &pError, const QString &pText) :
+CellmlAnnotationViewCellmlElementItem::CellmlAnnotationViewCellmlElementItem(const bool &pError,
+                                                                             const QString &pText) :
     QStandardItem(pText)
 {
     // Constructor for either an error or a warning
@@ -335,11 +339,11 @@ CellmlAnnotationViewCellmlListWidget::CellmlAnnotationViewCellmlListWidget(Cellm
     // imports, units, components, groups and connections from a CellML file
 
     mTreeViewWidget = new Core::TreeViewWidget(this);
-    mModel          = new QStandardItemModel(mTreeViewWidget);
-    mItemDelegate   = new CellmlAnnotationViewCellmlElementItemDelegate();
+    mTreeViewModel = new QStandardItemModel(mTreeViewWidget);
+    mTreeViewItemDelegate = new CellmlAnnotationViewCellmlElementItemDelegate();
 
-    mTreeViewWidget->setModel(mModel);
-    mTreeViewWidget->setItemDelegate(mItemDelegate);
+    mTreeViewWidget->setModel(mTreeViewModel);
+    mTreeViewWidget->setItemDelegate(mTreeViewItemDelegate);
 
     mTreeViewWidget->setEditTriggers(QAbstractItemView::NoEditTriggers);
     mTreeViewWidget->setHeaderHidden(true);
@@ -404,7 +408,7 @@ void CellmlAnnotationViewCellmlListWidget::retranslateUi()
 
     // Retranslate some of the CellML elements in our tree view widget
 
-    retranslateDataItem(static_cast<CellmlAnnotationViewCellmlElementItem *>(mModel->invisibleRootItem()));
+    retranslateDataItem(static_cast<CellmlAnnotationViewCellmlElementItem *>(mTreeViewModel->invisibleRootItem()));
 }
 
 //==============================================================================
@@ -516,10 +520,10 @@ void CellmlAnnotationViewCellmlListWidget::populateModel()
         // the issue(s) and leave
 
         for (int i = 0; i < issuesCount; ++i)
-            mModel->invisibleRootItem()->appendRow(new CellmlAnnotationViewCellmlElementItem(issues[i].type() == CellMLSupport::CellmlFileIssue::Error,
-                                                                                             QString("[%1:%2] %3").arg(QString::number(issues[i].line()),
-                                                                                                                       QString::number(issues[i].column()),
-                                                                                                                       issues[i].formattedMessage())));
+            mTreeViewModel->invisibleRootItem()->appendRow(new CellmlAnnotationViewCellmlElementItem(issues[i].type() == CellMLSupport::CellmlFileIssue::Error,
+                                                                                                     QString("[%1:%2] %3").arg(QString::number(issues[i].line()),
+                                                                                                                               QString::number(issues[i].column()),
+                                                                                                                               issues[i].formattedMessage())));
 
         return;
     }
@@ -529,7 +533,7 @@ void CellmlAnnotationViewCellmlListWidget::populateModel()
     CellmlAnnotationViewCellmlElementItem *modelItem = new CellmlAnnotationViewCellmlElementItem(CellmlAnnotationViewCellmlElementItem::Model,
                                                                                                  mCellmlFile->model());
 
-    mModel->invisibleRootItem()->appendRow(modelItem);
+    mTreeViewModel->invisibleRootItem()->appendRow(modelItem);
 
     // Retrieve the model's imports
 
@@ -855,7 +859,7 @@ void CellmlAnnotationViewCellmlListWidget::updateMetadataDetails(const QModelInd
     // Let people know that we want to see the metadata associated with the
     // CellML element
 
-    emit metadataDetailsRequested(static_cast<CellmlAnnotationViewCellmlElementItem *>(mModel->itemFromIndex(pNewIndex))->element());
+    emit metadataDetailsRequested(static_cast<CellmlAnnotationViewCellmlElementItem *>(mTreeViewModel->itemFromIndex(pNewIndex))->element());
 }
 
 //==============================================================================
@@ -865,7 +869,7 @@ void CellmlAnnotationViewCellmlListWidget::showCustomContextMenu(const QPoint &p
     // Determine whether to show the context menu based on whether we are over
     // an item
 
-    CellmlAnnotationViewCellmlElementItem *posItem = static_cast<CellmlAnnotationViewCellmlElementItem *>(mModel->itemFromIndex(mTreeViewWidget->indexAt(pPosition)));
+    CellmlAnnotationViewCellmlElementItem *posItem = static_cast<CellmlAnnotationViewCellmlElementItem *>(mTreeViewModel->itemFromIndex(mTreeViewWidget->indexAt(pPosition)));
 
     if (posItem) {
         // We are over an item, so create a custom context menu for our current
@@ -982,7 +986,7 @@ void CellmlAnnotationViewCellmlListWidget::indexExpandAll(const QModelIndex &pIn
     if (pIndex.child(0, 0).isValid()) {
         mTreeViewWidget->expand(pIndex);
 
-        QStandardItem *item = mModel->itemFromIndex(pIndex);
+        QStandardItem *item = mTreeViewModel->itemFromIndex(pIndex);
 
         for (int i = 0, iMax = item->rowCount(); i < iMax; ++i)
             indexExpandAll(item->child(i)->index());
@@ -997,7 +1001,7 @@ void CellmlAnnotationViewCellmlListWidget::indexCollapseAll(const QModelIndex &p
     // Note: see the note in indexExpandAll() above...
 
     if (pIndex.child(0, 0).isValid()) {
-        QStandardItem *item = mModel->itemFromIndex(pIndex);
+        QStandardItem *item = mTreeViewModel->itemFromIndex(pIndex);
 
         for (int i = 0, iMax = item->rowCount(); i < iMax; ++i)
             indexCollapseAll(item->child(i)->index());
@@ -1015,7 +1019,7 @@ bool CellmlAnnotationViewCellmlListWidget::indexIsAllExpanded(const QModelIndex 
     // Note: see the note in indexExpandAll() above...
 
     if (pIndex.child(0, 0).isValid()) {
-        QStandardItem *item = mModel->itemFromIndex(pIndex);
+        QStandardItem *item = mTreeViewModel->itemFromIndex(pIndex);
 
         for (int i = 0, iMax = item->rowCount(); i < iMax; ++i)
             if (!indexIsAllExpanded(item->child(i)->index()))
@@ -1042,7 +1046,7 @@ CellmlAnnotationViewCellmlElementItem * CellmlAnnotationViewCellmlListWidget::cu
 {
     // Return the current CellML element item
 
-    return static_cast<CellmlAnnotationViewCellmlElementItem *>(mModel->itemFromIndex(mTreeViewWidget->currentIndex()));
+    return static_cast<CellmlAnnotationViewCellmlElementItem *>(mTreeViewModel->itemFromIndex(mTreeViewWidget->currentIndex()));
 }
 
 //==============================================================================
@@ -1068,7 +1072,7 @@ void CellmlAnnotationViewCellmlListWidget::fileReloaded()
     // The file has been reloaded, so we need to clear our tree view widget
     // (i.e. the model associated with it) and (re)initialise it
 
-    mModel->clear();
+    mTreeViewModel->clear();
 
     initializeTreeViewWidget();
 }

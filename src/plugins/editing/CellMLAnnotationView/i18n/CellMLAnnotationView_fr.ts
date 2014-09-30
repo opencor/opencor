@@ -266,16 +266,16 @@
 <context>
     <name>OpenCOR::CellMLAnnotationView::CellmlAnnotationViewMetadataDetailsWidget</name>
     <message>
-        <source>Sorry, but the &lt;strong&gt;%1&lt;/strong&gt; view does not support this type of metadata...</source>
-        <translation>Désolé, mais la vue&lt;strong&gt; %1&lt;/strong&gt; ne supporte pas ce type de métadonnée...</translation>
+        <source>The &lt;strong&gt;%1&lt;/strong&gt; view does not support this type of metadata...</source>
+        <translation>La vue&lt;strong&gt; %1&lt;/strong&gt; ne supporte pas ce type de métadonnée...</translation>
     </message>
     <message>
-        <source>Please click &lt;a href=&quot;here&quot;&gt;here&lt;/a&gt; if you want to remove the existing metadata.</source>
-        <translation>Veuillez cliquer &lt;a href=&quot;ici&quot;&gt;ici&lt;/a&gt; si vous voulez supprimer la ou les métadonnées actuelles.</translation>
+        <source>Click &lt;a href=&quot;here&quot;&gt;here&lt;/a&gt; if you want to remove the existing metadata.</source>
+        <translation>Cliquez &lt;a href=&quot;ici&quot;&gt;ici&lt;/a&gt; si vous voulez supprimer la ou les métadonnées actuelles.</translation>
     </message>
     <message>
-        <source>Please select a CellML element...</source>
-        <translation>Veuillez sélectionner un élément CellML...</translation>
+        <source>Select a CellML element...</source>
+        <translation>Sélectionnez un élément CellML...</translation>
     </message>
 </context>
 <context>
@@ -309,14 +309,6 @@
         <translation></translation>
     </message>
     <message>
-        <source>(1 term)</source>
-        <translation>(1 terme)</translation>
-    </message>
-    <message>
-        <source>(%1 terms)</source>
-        <translation>(%1 termes)</translation>
-    </message>
-    <message>
         <source>Add the term</source>
         <translation>Ajouter le terme</translation>
     </message>
@@ -325,24 +317,28 @@
         <translation>Ajouter</translation>
     </message>
     <message>
-        <source>Please enter a term to search above...</source>
-        <translation>Veuillez entrer un terme à chercher plus haut...</translation>
+        <source>Enter a term above...</source>
+        <translation>Entrez un terme plus haut...</translation>
     </message>
     <message>
-        <source>Sorry, but no terms were found for &lt;strong&gt;%1&lt;/strong&gt;...</source>
-        <translation>Désolé, mais aucuns termes n&apos;ont été trouvés pour &lt;strong&gt;%1&lt;/strong&gt;...</translation>
+        <source>No terms were found for &lt;strong&gt;%1&lt;/strong&gt;...</source>
+        <translation>Aucuns termes n&apos;ont été trouvés pour &lt;strong&gt;%1&lt;/strong&gt;...</translation>
     </message>
     <message>
-        <source>&lt;strong&gt;Error:&lt;/strong&gt; </source>
-        <translation>&lt;strong&gt;Erreur :&lt;/strong&gt; </translation>
+        <source>You can directly add the term &lt;strong&gt;%1&lt;/strong&gt;...</source>
+        <translation>Vous pouvez directement ajouter le terme &lt;strong&gt;%1&lt;/strong&gt;...</translation>
     </message>
     <message>
-        <source>&lt;strong&gt;Information:&lt;/strong&gt; you can directly add the term &lt;strong&gt;%1&lt;/strong&gt;...</source>
-        <translation>&lt;strong&gt;Information :&lt;/strong&gt; vous pouvez directement ajouter le terme &lt;strong&gt;%1&lt;/strong&gt;...</translation>
+        <source>The term &lt;strong&gt;%1&lt;/strong&gt; has already been added using the above qualifier...</source>
+        <translation>Le terme &lt;strong&gt;%1&lt;/strong&gt; a déjà été ajouté avec le qualificatif ci-dessus...</translation>
     </message>
     <message>
-        <source>&lt;strong&gt;Information:&lt;/strong&gt; the term &lt;strong&gt;%1&lt;/strong&gt; has already been added using the above qualifier...</source>
-        <translation>&lt;strong&gt;Information :&lt;/strong&gt; le terme &lt;strong&gt;%1&lt;/strong&gt; a déjà été ajouté avec le qualificatif ci-dessus...</translation>
+        <source>(1 term)</source>
+        <translation>(1 terme)</translation>
+    </message>
+    <message>
+        <source>(%1 terms)</source>
+        <translation>(%1 termes)</translation>
     </message>
 </context>
 <context>
@@ -366,14 +362,6 @@
     <message>
         <source>(%1 terms)</source>
         <translation>(%1 termes)</translation>
-    </message>
-    <message>
-        <source>Remove the term</source>
-        <translation>Supprimer le terme</translation>
-    </message>
-    <message>
-        <source>Remove</source>
-        <translation>Supprimer</translation>
     </message>
     <message>
         <source>There is no metadata associated with the current CellML element...</source>

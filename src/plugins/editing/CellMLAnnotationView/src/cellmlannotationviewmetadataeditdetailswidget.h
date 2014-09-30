@@ -25,12 +25,15 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include "cellmlfile.h"
-#include "commonwidget.h"
+#include "widget.h"
 
 //==============================================================================
 
 #include <QMap>
-#include <QScrollArea>
+#include <QModelIndex>
+#include <QStandardItem>
+#include <QStyledItemDelegate>
+#include <QStyleOptionViewItem>
 
 //==============================================================================
 
@@ -41,30 +44,36 @@ namespace Ui {
 //==============================================================================
 
 class QComboBox;
-class QFormLayout;
-class QGridLayout;
 class QLabel;
 class QLineEdit;
 class QMenu;
 class QNetworkAccessManager;
 class QNetworkReply;
 class QPushButton;
-class QStackedWidget;
-class QVBoxLayout;
+class QScrollArea;
 
 //==============================================================================
 
 namespace OpenCOR {
+
+//==============================================================================
+
+namespace Core {
+    class UserMessageWidget;
+}   // namespace Core
+
+//==============================================================================
+
 namespace CellMLAnnotationView {
 
 //==============================================================================
 
 class CellmlAnnotationViewEditingWidget;
+class CellmlAnnotationViewMetadataWebViewWidget;
 
 //==============================================================================
 
-class CellmlAnnotationViewMetadataEditDetailsWidget : public QScrollArea,
-                                                      public Core::CommonWidget
+class CellmlAnnotationViewMetadataEditDetailsWidget : public Core::Widget
 {
     Q_OBJECT
 
@@ -77,8 +86,8 @@ public:
     void fileReloaded();
 
 private:
-    enum Type {
-        No,
+    enum InformationType {
+        None,
         Qualifier,
         Resource,
         Id
@@ -100,80 +109,75 @@ private:
 
     Ui::CellmlAnnotationViewMetadataEditDetailsWidget *mGui;
 
-    QStackedWidget *mWidget;
-
-    QWidget *mMainWidget;
-    QVBoxLayout *mMainLayout;
-
-    QWidget *mFormWidget;
-    QFormLayout *mFormLayout;
-
-    QScrollArea *mItemsScrollArea;
-
-    QGridLayout *mGridLayout;
-
     QNetworkAccessManager *mNetworkAccessManager;
 
+    QLabel *mQualifierLabel;
     QComboBox *mQualifierValue;
-    QPushButton *mLookupQualifierButton;
+    QPushButton *mLookUpQualifierButton;
 
-    int mQualifierIndex;
-    bool mLookupQualifierButtonIsChecked;
-
+    QLabel *mTermLabel;
     QLineEdit *mTermValue;
     QPushButton *mAddTermButton;
 
     QString mTerm;
     QStringList mTerms;
-    bool mTermIsDirect;
 
-    Items mItems;
+    int mItemsCount;
+
     QString mErrorMessage;
-    bool mLookupTerm;
+    bool mLookUpTerm;
 
-    QString mInformation;
-    Type mType;
+    Core::Widget *mOutput;
 
-    bool mLookupInformation;
+    QScrollArea *mOutputMessageScrollArea;
+    Core::UserMessageWidget *mOutputMessage;
 
-    QMap<QObject *, Item> mItemsMapping;
+    QString mOutputOntologicalTermsTemplate;
+    CellmlAnnotationViewMetadataWebViewWidget *mOutputOntologicalTerms;
 
-    int mItemsVerticalScrollBarPosition;
+    InformationType mInformationType;
+
+    bool mLookUpInformation;
+
+    QMap<QString, Item> mItemsMapping;
+    QMap<QString, bool> mEnabledItems;
 
     CellMLSupport::CellmlFile *mCellmlFile;
 
     ObjRef<iface::cellml_api::CellMLElement> mElement;
 
-    QLabel *mCurrentResourceOrIdLabel;
+    QMap<QString, QString> mUrls;
+    QStringList mItemInformationSha1s;
+    QString mItemInformationSha1;
+
+    QString mLink;
+    QString mTextContent;
 
     QMenu *mContextMenu;
 
     QNetworkReply *mNetworkReply;
 
-    void updateGui(const Items &pItems, const QString &pErrorMessage,
-                   const bool &pLookupTerm,
-                   const int &pItemsVerticalScrollBarPosition,
-                   const bool &pRetranslate);
-    void updateItemsGui(const Items &pItems, const QString &pErrorMessage,
-                        const bool &pLookupTerm);
+    void upudateOutputMessage(const bool &pLookUpTerm,
+                              const QString &pErrorMessage,
+                              bool *pShowBusyWidget = 0);
+    void updateOutputHeaders();
+
+    void updateItemsGui(const Items &pItems, const bool &pLookUpTerm,
+                        const QString &pErrorMessage);
 
     static Item item(const QString &pName,
                      const QString &pResource, const QString &pId);
 
-    void genericLookup(const QString &pItemInformation = QString(),
-                       const Type &pType = No,
-                       const bool &pRetranslate = false);
+    void genericLookUp(const QString &pItemInformation = QString(),
+                       const InformationType &pInformationType = None);
+
+    bool isDirectTerm(const QString &pTerm) const;
 
 Q_SIGNALS:
-    void qualifierLookupRequested(const QString &pQualifier,
-                                  const bool &pRetranslate);
-    void resourceLookupRequested(const QString &pResource,
-                                 const bool &pRetranslate);
-    void idLookupRequested(const QString &pResource, const QString &pId,
-                           const bool &pRetranslate);
-    void noLookupRequested();
-
-    void rdfTripleAdded(CellMLSupport::CellmlFileRdfTriple *pRdfTriple);
+    void qualifierLookUpRequested(const QString &pQualifier);
+    void resourceLookUpRequested(const QString &pResource);
+    void idLookUpRequested(const QString &pResource, const QString &pId);
+    void noLookUpRequested();
 
 public Q_SLOTS:
     void updateGui(iface::cellml_api::CellMLElement *pElement,
@@ -182,24 +186,20 @@ public Q_SLOTS:
 private Q_SLOTS:
     void on_actionCopy_triggered();
 
-    void disableLookupInformation();
+    void disableLookUpInformation();
 
-    void qualifierChanged(const int &pQualifierIndex);
     void qualifierChanged(const QString &pQualifier);
 
-    void lookupQualifier();
-    void lookupResource(const QString &pItemInformation);
-    void lookupId(const QString &pItemInformation);
+    void lookUpQualifier();
 
-    void lookupTerm();
+    void linkClicked();
+
+    void lookUpTerm();
 
     void termChanged(const QString &pTerm);
     void termLookedUp(QNetworkReply *pNetworkReply);
 
     void addTerm();
-    void addRetrievedTerm();
-
-    void trackItemsVerticalScrollBarPosition(const int &pPosition);
 
     void showCustomContextMenu(const QPoint &pPosition);
 

@@ -150,11 +150,11 @@ bool CliApplication::command(const QStringList &pArguments, int *pRes) const
                 }
 
             if (!pluginFound) {
-                std::cout << "Sorry, but the " << commandPlugin.toStdString() << " plugin could not be found." << std::endl;
+                std::cout << "The " << commandPlugin.toStdString() << " plugin could not be found." << std::endl;
 
                 return true;
             } else if (!pluginHasCliSupport) {
-                std::cout << "Sorry, but the " << commandPlugin.toStdString() << " plugin does not support the execution of commands." << std::endl;
+                std::cout << "The " << commandPlugin.toStdString() << " plugin does not support the execution of commands." << std::endl;
 
                 return true;
             }
@@ -171,7 +171,7 @@ bool CliApplication::command(const QStringList &pArguments, int *pRes) const
     // Make sure that we have at least one CLI-enabled plugin
 
     if (mLoadedCliPlugins.isEmpty()) {
-        std::cout << "Sorry, but no plugins could be found to run the command." << std::endl;
+        std::cout << "No plugins could be found to run the command." << std::endl;
 
         return true;
     }
@@ -225,7 +225,7 @@ void CliApplication::plugins() const
     // have at least one of them
 
     if (mLoadedCliPlugins.isEmpty()) {
-        std::cout << "Sorry, but no CLI plugins could be found." << std::endl;
+        std::cout << "No CLI plugins could be found." << std::endl;
 
         return;
     }
@@ -269,7 +269,7 @@ void CliApplication::status() const
     // loaded, so first make sure that we have at least one of them
 
     if (mPluginManager->loadedPlugins().isEmpty()) {
-        std::cout << "Sorry, but no plugins could be found." << std::endl;
+        std::cout << "No plugins could be found." << std::endl;
 
         return;
     }
@@ -295,7 +295,7 @@ void CliApplication::status() const
 
             break;
         case Plugin::NotLoaded:
-            pluginInfo += QString("the plugin could not be loaded due to the following problem: %1.").arg(Core::formatErrorMessage(plugin->statusErrors(), false));
+            pluginInfo += QString("the plugin could not be loaded due to the following problem: %1.").arg(Core::formatErrorMessage(plugin->statusErrors()));
 
             break;
         case Plugin::NotPlugin:

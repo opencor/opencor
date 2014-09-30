@@ -38,6 +38,7 @@ specific language governing permissions and limitations under the License.
 #include <QDesktopServices>
 #include <QDialogButtonBox>
 #include <QMessageBox>
+#include <QModelIndex>
 #include <QPushButton>
 #include <QSettings>
 #include <QStandardItemModel>
@@ -122,7 +123,7 @@ PluginsWindow::PluginsWindow(PluginManager *pPluginManager,
     // cannot decide whether they should be loaded)
 
     mModel = new QStandardItemModel(mGui->pluginsTreeView);
-    mPluginItemDelegate = new PluginItemDelegate();
+    mItemDelegate = new PluginItemDelegate();
 
 #ifdef Q_OS_MAC
     mGui->pluginsTreeView->setAttribute(Qt::WA_MacShowFocusRect, false);
@@ -130,7 +131,7 @@ PluginsWindow::PluginsWindow(PluginManager *pPluginManager,
     //       our plugins tree view widget...
 #endif
     mGui->pluginsTreeView->setModel(mModel);
-    mGui->pluginsTreeView->setItemDelegate(mPluginItemDelegate);
+    mGui->pluginsTreeView->setItemDelegate(mItemDelegate);
 
     // Populate the data model with our different categories of plugins, making
     // sure that they are in alphabetical order, no matter the locale
@@ -359,7 +360,7 @@ QString PluginsWindow::statusDescription(Plugin *pPlugin) const
     case Plugin::NotNeeded:
         return tr("the plugin is not needed.");
     case Plugin::NotLoaded:
-        return tr("the plugin could not be loaded due to the following problem: %1.").arg(Core::formatErrorMessage(pPlugin->statusErrors(), false));
+        return tr("the plugin could not be loaded due to the following problem: %1.").arg(Core::formatErrorMessage(pPlugin->statusErrors()));
     case Plugin::NotPlugin:
         return tr("this is not a plugin.");
     case Plugin::NotCorePlugin:

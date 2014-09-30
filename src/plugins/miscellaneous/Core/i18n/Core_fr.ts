@@ -16,8 +16,8 @@
         <translation>Analyse</translation>
     </message>
     <message>
-        <source>Sorry, but the &lt;strong&gt;%1&lt;/strong&gt; view does not support this type of file...</source>
-        <translation>Désolé, mais la vue &lt;strong&gt;%1&lt;/strong&gt; ne supporte pas ce type de fichier...</translation>
+        <source>The &lt;strong&gt;%1&lt;/strong&gt; view does not support this type of file...</source>
+        <translation>La vue &lt;strong&gt;%1&lt;/strong&gt; ne supporte pas ce type de fichier...</translation>
     </message>
     <message>
         <source>Open File</source>
@@ -28,8 +28,8 @@
         <translation>Sauvegarder Fichier</translation>
     </message>
     <message>
-        <source>Sorry, but &lt;strong&gt;%1&lt;/strong&gt; could not be saved.</source>
-        <translation>Désolé, mais &lt;strong&gt;%1&lt;/strong&gt; n&apos;a pas pu être sauvegardé.</translation>
+        <source>&lt;strong&gt;%1&lt;/strong&gt; could not be saved.</source>
+        <translation>&lt;strong&gt;%1&lt;/strong&gt; n&apos;a pas pu être sauvegardé.</translation>
     </message>
     <message>
         <source>&lt;strong&gt;%1&lt;/strong&gt; is new. Do you want to save it before closing it?</source>
@@ -60,8 +60,8 @@
         <translation>&lt;strong&gt;%1&lt;/strong&gt; a été modifié. Voulez-vous quand même le recharger ?</translation>
     </message>
     <message>
-        <source>Sorry, but the &lt;strong&gt;%1&lt;/strong&gt; view could not save &lt;strong&gt;%2&lt;/strong&gt;.</source>
-        <translation>Désolé, mais la vue &lt;strong&gt;%1&lt;/strong&gt; n&apos;a pas pu sauvegarder &lt;strong&gt;%2&lt;/strong&gt;.</translation>
+        <source>The &lt;strong&gt;%1&lt;/strong&gt; view could not save &lt;strong&gt;%2&lt;/strong&gt;.</source>
+        <translation>La vue &lt;strong&gt;%1&lt;/strong&gt; n&apos;a pas pu sauvegarder &lt;strong&gt;%2&lt;/strong&gt;.</translation>
     </message>
     <message>
         <source>Unlock File</source>
@@ -72,8 +72,8 @@
         <translation>Vérouiller Fichier</translation>
     </message>
     <message>
-        <source>Sorry, but &lt;strong&gt;%1&lt;/strong&gt; could not be %2.</source>
-        <translation>Désolé, mais &lt;strong&gt;%1&lt;/strong&gt; n&apos;a pas pu être %2.</translation>
+        <source>&lt;strong&gt;%1&lt;/strong&gt; could not be %2.</source>
+        <translation>&lt;strong&gt;%1&lt;/strong&gt; n&apos;a pas pu être %2.</translation>
     </message>
     <message>
         <source>unlocked</source>
@@ -96,20 +96,20 @@
         <translation>URL :</translation>
     </message>
     <message>
-        <source>Sorry, but &lt;strong&gt;%1&lt;/strong&gt; could not be opened (%2).</source>
-        <translation>Désolé, mais &lt;strong&gt;%1&lt;/strong&gt; n&apos;a pas pu être ouvert (%2).</translation>
+        <source>&lt;strong&gt;%1&lt;/strong&gt; could not be opened (%2).</source>
+        <translation>&lt;strong&gt;%1&lt;/strong&gt; n&apos;a pas pu être ouvert (%2).</translation>
     </message>
     <message>
         <source>Reload Remote File</source>
         <translation>Recharger Fichier À Distance</translation>
     </message>
     <message>
-        <source>Sorry, but &lt;strong&gt;%1&lt;/strong&gt; could not be reloaded (%2).</source>
-        <translation>Désolé, mais &lt;strong&gt;%1&lt;/strong&gt; n&apos;a pas pu être rechargé (%2).</translation>
+        <source>&lt;strong&gt;%1&lt;/strong&gt; could not be reloaded (%2).</source>
+        <translation>&lt;strong&gt;%1&lt;/strong&gt; n&apos;a pas pu être rechargé (%2).</translation>
     </message>
     <message>
-        <source>Sorry, but the &lt;strong&gt;%1&lt;/strong&gt; view does not support saving files.</source>
-        <translation>Désolé, mais la vue &lt;strong&gt;%1&lt;/strong&gt; ne supporte pas la sauvegarde de fichiers.</translation>
+        <source>The &lt;strong&gt;%1&lt;/strong&gt; view does not support saving files.</source>
+        <translation>La vue &lt;strong&gt;%1&lt;/strong&gt; ne supporte pas la sauvegarde de fichiers.</translation>
     </message>
     <message>
         <source>Sample</source>
@@ -183,8 +183,8 @@
         <translation>Réouvrir Fichier</translation>
     </message>
     <message>
-        <source>Sorry, but &lt;strong&gt;%1&lt;/strong&gt; does not exist anymore.</source>
-        <translation>Désolé, mais &lt;strong&gt;%1&lt;/strong&gt; n&apos;existe plus.</translation>
+        <source>&lt;strong&gt;%1&lt;/strong&gt; does not exist anymore.</source>
+        <translation>&lt;strong&gt;%1&lt;/strong&gt; n&apos;existe plus.</translation>
     </message>
     <message>
         <source>Open...</source>

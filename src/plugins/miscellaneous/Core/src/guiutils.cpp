@@ -33,12 +33,14 @@ specific language governing permissions and limitations under the License.
 
 #include <QAction>
 #include <QApplication>
+#include <QBuffer>
 #include <QColor>
 #include <QDate>
 #include <QFileDialog>
 #include <QFileInfo>
 #include <QFont>
 #include <QFrame>
+#include <QIODevice>
 #include <QLabel>
 #include <QMenu>
 #include <QMessageBox>
@@ -405,7 +407,7 @@ QLabel * newLabel(const QString &pText, const double &pFontPercentage,
 
     font.setBold(pBold);
     font.setItalic(pItalic);
-    font.setPointSize(pFontPercentage*font.pointSize());
+    font.setPointSizeF(pFontPercentage*font.pointSize());
 
     res->setAlignment(pAlignment);
     res->setFont(font);
@@ -461,6 +463,31 @@ QLabel * newLabel(const QString &pText, QWidget *pParent)
 
     return newLabel(pText, 1.0, false, false, Qt::AlignLeft|Qt::AlignVCenter,
                     pParent);
+}
+
+//==============================================================================
+
+QString iconDataUri(const QString &pIcon, const int &pWidth, const int &pHeight,
+                    const QIcon::Mode &pMode)
+{
+    // Convert an icon, which resource name is given, to a data URI, after
+    // having resized it, if requested
+
+    QIcon icon(pIcon);
+
+    if (icon.isNull())
+        return QString();
+
+    QByteArray data;
+    QBuffer buffer(&data);
+    QSize iconSize = icon.availableSizes().first();
+
+    buffer.open(QIODevice::WriteOnly);
+    icon.pixmap((pWidth == -1)?iconSize.width():pWidth,
+                (pHeight == -1)?iconSize.height():pHeight,
+                pMode).save(&buffer, "PNG");
+
+    return QString("data:image/png;base64,%1").arg(QString(data.toBase64()));
 }
 
 //==============================================================================
@@ -533,6 +560,7 @@ void updateColors()
     settings.beginGroup(SettingsGlobal);
         settings.setValue(SettingsBaseColor, qApp->palette().color(QPalette::Base));
         settings.setValue(SettingsHighlightColor, qApp->palette().color(QPalette::Highlight));
+        settings.setValue(SettingsLinkColor, qApp->palette().color(QPalette::Link));
         settings.setValue(SettingsShadowColor, qApp->palette().color(QPalette::Shadow));
         settings.setValue(SettingsWindowColor, qApp->palette().color(QPalette::Window));
     settings.endGroup();
@@ -585,6 +613,17 @@ QColor highlightColor()
     //       itself (see CorePlugin::changeEvent())...
 
     return specificColor(SettingsHighlightColor);
+}
+
+//==============================================================================
+
+QColor linkColor()
+{
+    // Return the link colour
+    // Note: we retrieve it from our settings, which is updated by our plugin
+    //       itself (see CorePlugin::changeEvent())...
+
+    return specificColor(SettingsLinkColor);
 }
 
 //==============================================================================

@@ -428,35 +428,35 @@ void CorePlugin::initializePlugin(QMainWindow *pMainWindow)
 
     // Some connections to handle our different File actions
 
-    connect(mFileOpenAction, SIGNAL(triggered()),
+    connect(mFileOpenAction, SIGNAL(triggered(bool)),
             mCentralWidget, SLOT(openFile()));
-    connect(mFileOpenRemoteAction, SIGNAL(triggered()),
+    connect(mFileOpenRemoteAction, SIGNAL(triggered(bool)),
             mCentralWidget, SLOT(openRemoteFile()));
 
-    connect(mFileReloadAction, SIGNAL(triggered()),
+    connect(mFileReloadAction, SIGNAL(triggered(bool)),
             mCentralWidget, SLOT(reloadFile()));
 
-    connect(mFileDuplicateAction, SIGNAL(triggered()),
+    connect(mFileDuplicateAction, SIGNAL(triggered(bool)),
             mCentralWidget, SLOT(duplicateFile()));
 
-    connect(mFileLockedAction, SIGNAL(triggered()),
+    connect(mFileLockedAction, SIGNAL(triggered(bool)),
             mCentralWidget, SLOT(toggleLockedFile()));
 
-    connect(mFileSaveAction, SIGNAL(triggered()),
+    connect(mFileSaveAction, SIGNAL(triggered(bool)),
             mCentralWidget, SLOT(saveFile()));
-    connect(mFileSaveAsAction, SIGNAL(triggered()),
+    connect(mFileSaveAsAction, SIGNAL(triggered(bool)),
             mCentralWidget, SLOT(saveFileAs()));
-    connect(mFileSaveAllAction, SIGNAL(triggered()),
+    connect(mFileSaveAllAction, SIGNAL(triggered(bool)),
             mCentralWidget, SLOT(saveAllFiles()));
 
-    connect(mFilePreviousAction, SIGNAL(triggered()),
+    connect(mFilePreviousAction, SIGNAL(triggered(bool)),
             mCentralWidget, SLOT(previousFile()));
-    connect(mFileNextAction, SIGNAL(triggered()),
+    connect(mFileNextAction, SIGNAL(triggered(bool)),
             mCentralWidget, SLOT(nextFile()));
 
-    connect(mFileCloseAction, SIGNAL(triggered()),
+    connect(mFileCloseAction, SIGNAL(triggered(bool)),
             mCentralWidget, SLOT(closeFile()));
-    connect(mFileCloseAllAction, SIGNAL(triggered()),
+    connect(mFileCloseAllAction, SIGNAL(triggered(bool)),
             mCentralWidget, SLOT(closeAllFiles()));
 
     // Some connections to update the enabled state of our various actions
@@ -487,7 +487,7 @@ void CorePlugin::initializePlugin(QMainWindow *pMainWindow)
 
     // A connection related to our Reopen sub-menu
 
-    connect(mFileClearReopenSubMenuAction, SIGNAL(triggered()),
+    connect(mFileClearReopenSubMenuAction, SIGNAL(triggered(bool)),
             this, SLOT(clearReopenSubMenu()));
 }
 
@@ -596,7 +596,7 @@ void CorePlugin::updateFileReopenMenu(const bool &pEnabled)
 
     foreach (QAction *action, mFileReopenSubMenu->actions()) {
         if (action != mFileReopenSubMenuSeparator)
-            disconnect(action, SIGNAL(triggered()),
+            disconnect(action, SIGNAL(triggered(bool)),
                        this, SLOT(openRecentFile()));
         else
             // We have reached our Reopen sub-menu separator, so...
@@ -616,7 +616,7 @@ void CorePlugin::updateFileReopenMenu(const bool &pEnabled)
         action->setEnabled(pEnabled);
         action->setText(recentFile);
 
-        connect(action, SIGNAL(triggered()),
+        connect(action, SIGNAL(triggered(bool)),
                 this, SLOT(openRecentFile()));
 
         mFileReopenSubMenu->insertAction(mFileReopenSubMenuSeparator, action);
@@ -676,7 +676,7 @@ void CorePlugin::openRecentFile()
             // The file doesn't exist anymore, so let the user know about it
 
             QMessageBox::warning(mMainWindow, tr("Reopen File"),
-                                 tr("Sorry, but <strong>%1</strong> does not exist anymore.").arg(fileNameOrUrl));
+                                 tr("<strong>%1</strong> does not exist anymore.").arg(fileNameOrUrl));
     } else {
         // Open the recent remote file
 

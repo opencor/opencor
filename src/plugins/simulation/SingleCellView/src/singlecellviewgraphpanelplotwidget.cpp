@@ -425,6 +425,15 @@ void SingleCellViewGraphPanelPlotOverlayWidget::drawCoordinates(QPainter *pPaint
 
 //==============================================================================
 
+void SingleCellViewGraphPanelPlotScaleDraw::retranslateUi()
+{
+    // Retranslate ourselves by invalidating our cache
+
+    invalidateCache();
+}
+
+//==============================================================================
+
 QwtText SingleCellViewGraphPanelPlotScaleDraw::label(double pValue) const
 {
     if (qFuzzyCompare(pValue, 0.0))
@@ -494,8 +503,11 @@ SingleCellViewGraphPanelPlotWidget::SingleCellViewGraphPanelPlotWidget(QWidget *
 
     setCanvasBackground(Qt::white);
 
-    setAxisScaleDraw(QwtPlot::xBottom, new SingleCellViewGraphPanelPlotScaleDraw());
-    setAxisScaleDraw(QwtPlot::yLeft, new SingleCellViewGraphPanelPlotScaleDraw());
+    mAxisX = new SingleCellViewGraphPanelPlotScaleDraw();
+    mAxisY = new SingleCellViewGraphPanelPlotScaleDraw();
+
+    setAxisScaleDraw(QwtPlot::xBottom, mAxisX);
+    setAxisScaleDraw(QwtPlot::yLeft, mAxisY);
 
     // We don't want a frame around ourselves
 
@@ -550,6 +562,13 @@ void SingleCellViewGraphPanelPlotWidget::retranslateUi()
     // Retranslate our GUI
 
     mGui->retranslateUi(this);
+
+    // Replot ourselves
+    // Note: we do this because we want to display numbers using digit grouping,
+    //       this respecting the current locale...
+
+    mAxisX->retranslateUi();
+    mAxisY->retranslateUi();
 }
 
 //==============================================================================

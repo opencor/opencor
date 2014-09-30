@@ -852,7 +852,7 @@ void CentralWidget::openRemoteFile(const QString &pUrl,
 
             if (pShowWarning)
                 QMessageBox::warning(this, tr("Open Remote File"),
-                                     tr("Sorry, but <strong>%1</strong> could not be opened (%2).").arg(fileNameOrUrl, Core::formatErrorMessage(errorMessage, false)));
+                                     tr("<strong>%1</strong> could not be opened (%2).").arg(fileNameOrUrl, Core::formatErrorMessage(errorMessage)));
         }
     } else {
         openFile(fileName);
@@ -935,7 +935,7 @@ void CentralWidget::reloadFile(const int &pIndex, const bool &pForce)
                         fileManagerInstance->reload(fileName);
                     } else {
                         QMessageBox::warning(this, tr("Reload Remote File"),
-                                             tr("Sorry, but <strong>%1</strong> could not be reloaded (%2).").arg(url, Core::formatErrorMessage(errorMessage, false)));
+                                             tr("<strong>%1</strong> could not be reloaded (%2).").arg(url, Core::formatErrorMessage(errorMessage)));
                     }
                 } else {
                     fileManagerInstance->reload(fileName);
@@ -992,7 +992,7 @@ void CentralWidget::toggleLockedFile()
 
     if (fileManagerInstance->setLocked(fileName, !fileLocked) == FileManager::LockedNotSet)
         QMessageBox::warning(mMainWindow, fileLocked?tr("Unlock File"):tr("Lock File"),
-                             tr("Sorry, but <strong>%1</strong> could not be %2.").arg(fileName, fileLocked?tr("unlocked"):tr("locked")));
+                             tr("<strong>%1</strong> could not be %2.").arg(fileName, fileLocked?tr("unlocked"):tr("locked")));
 }
 
 //==============================================================================
@@ -1012,7 +1012,7 @@ bool CentralWidget::saveFile(const int &pIndex, const bool &pNeedNewFileName)
 
     if (!fileHandlingInterface) {
         QMessageBox::warning(mMainWindow, tr("Save File"),
-                             tr("Sorry, but the <strong>%1</strong> view does not support saving files.").arg(viewInterface->viewName()));
+                             tr("The <strong>%1</strong> view does not support saving files.").arg(viewInterface->viewName()));
 
         return false;
     }
@@ -1087,7 +1087,7 @@ bool CentralWidget::saveFile(const int &pIndex, const bool &pNeedNewFileName)
                 // The file couldn't be saved, so...
 
                 QMessageBox::warning(mMainWindow, tr("Save File"),
-                                     tr("Sorry, but the <strong>%1</strong> view could not save <strong>%2</strong>.").arg(viewInterface->viewName(), newFileName));
+                                     tr("The <strong>%1</strong> view could not save <strong>%2</strong>.").arg(viewInterface->viewName(), newFileName));
 
                 return false;
             }
@@ -1102,7 +1102,7 @@ bool CentralWidget::saveFile(const int &pIndex, const bool &pNeedNewFileName)
 
             if (!QFile::copy(oldFileName, newFileName)) {
                 QMessageBox::warning(mMainWindow, tr("Save File"),
-                                     tr("Sorry, but <strong>%1</strong> could not be saved.").arg(newFileName));
+                                     tr("<strong>%1</strong> could not be saved.").arg(newFileName));
 
                 return false;
             }
@@ -1802,7 +1802,7 @@ void CentralWidget::updateNoViewMsg()
     } else {
         CentralWidgetMode *mode = mModes.value(mModeTabIndexModes.value(fileModeTabIndex));
 
-        mNoViewMsg->setMessage(tr("Sorry, but the <strong>%1</strong> view does not support this type of file...").arg(qobject_cast<ViewInterface *>(mode->viewPlugins()->value(mode->viewTabs()->currentIndex())->instance())->viewName()));
+        mNoViewMsg->setMessage(tr("The <strong>%1</strong> view does not support this type of file...").arg(qobject_cast<ViewInterface *>(mode->viewPlugins()->value(mode->viewTabs()->currentIndex())->instance())->viewName()));
     }
 }
 

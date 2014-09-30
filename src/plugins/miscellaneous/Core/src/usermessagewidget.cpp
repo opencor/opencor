@@ -19,6 +19,7 @@ specific language governing permissions and limitations under the License.
 // User message widget
 //==============================================================================
 
+#include "guiutils.h"
 #include "usermessagewidget.h"
 
 //==============================================================================
@@ -27,7 +28,9 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#include <QBuffer>
 #include <QFont>
+#include <QIcon>
 #include <QSizePolicy>
 #include <QWidget>
 
@@ -39,12 +42,14 @@ namespace Core {
 //==============================================================================
 
 void UserMessageWidget::constructor(const QString &pIcon,
-                                    const QString &pMessage)
+                                    const QString &pMessage,
+                                    const QString &pExtraMessage)
 {
     // Some initialisations
 
-    mIcon = pIcon;
-    mMessage = pMessage;
+    mIcon = QString();
+    mMessage = QString();
+    mExtraMessage = QString();
 
     // Customise our background
 
@@ -55,7 +60,7 @@ void UserMessageWidget::constructor(const QString &pIcon,
 
     QFont newFont = font();
 
-    newFont.setPointSize(1.5*newFont.pointSize());
+    newFont.setPointSizeF(1.35*newFont.pointSize());
 
     setFont(newFont);
 
@@ -67,7 +72,20 @@ void UserMessageWidget::constructor(const QString &pIcon,
 
     // 'Initialise' our message
 
-    updateMessage();
+    setIconMessage(pIcon, pMessage, pExtraMessage);
+}
+
+//==============================================================================
+
+UserMessageWidget::UserMessageWidget(const QString &pIcon,
+                                     const QString &pMessage,
+                                     const QString &pExtraMessage,
+                                     QWidget *pParent) :
+    QLabel(pParent)
+{
+    // Construct our object
+
+    constructor(pIcon, pMessage, pExtraMessage);
 }
 
 //==============================================================================
@@ -94,47 +112,84 @@ UserMessageWidget::UserMessageWidget(const QString &pIcon, QWidget *pParent) :
 
 //==============================================================================
 
-void UserMessageWidget::updateMessage()
+UserMessageWidget::UserMessageWidget(QWidget *pParent) :
+    QLabel(pParent)
 {
-    // Update our message by setting the icon to the left and the message itself
-    // to the right
+    // Construct our object
 
-    setText(QString("<table align=center>"
-                    "    <tr valign=middle>"
-                    "        <td align=right>"
-                    "            <img src=\"%1\"/>"
-                    "        </td>"
-                    "        <td align=left>"
-                    "            %2"
-                    "        </td>"
-                    "    </tr>"
-                    "</table>").arg(mIcon, mMessage));
+    constructor();
 }
 
 //==============================================================================
 
-void UserMessageWidget::setIcon(const QString &pIcon)
+void UserMessageWidget::setIconMessage(const QString &pIcon,
+                                       const QString &pMessage,
+                                       const QString &pExtraMessage)
 {
-    // Set the icon
+    // Set our message, if needed
 
-    if (pIcon.compare(mIcon)) {
+    if (   pIcon.compare(mIcon)
+        || pMessage.compare(mMessage)
+        || pExtraMessage.compare(mExtraMessage)) {
+        // Keep track of the new values for our icon, message and extra message
+
         mIcon = pIcon;
+        mMessage = pMessage;
+        mExtraMessage = pExtraMessage;
 
-        updateMessage();
+        // Set our text as HTML
+        // Note: we want our icon to have a final size of 32px by 32px. However,
+        //       it may be that it has a different size to begin with. Normally,
+        //       we would rely on QLabel's HTML support (and in particular on
+        //       the width and height attributes of the img element) to have our
+        //       icon resized for us, but this results in a pixelated and
+        //       therefore ugly image. So, instead, we retrieve a data URI for
+        //       our resized icon...
+
+        if (mExtraMessage.isEmpty())
+            setText(QString("<table align=center>"
+                            "    <tbody>"
+                            "        <tr valign=middle>"
+                            "            <td>"
+                            "                <img src=\"%1\"/>"
+                            "            </td>"
+                            "            <td>"
+                            "                <p style=\"margin: 0px;\">"
+                            "                    %2"
+                            "                </p>"
+                            "            </td>"
+                            "        </tr>"
+                            "    </tbody>"
+                            "</table>").arg(iconDataUri(mIcon, 32, 32), mMessage));
+        else
+            setText(QString("<table align=center>"
+                            "    <tbody>"
+                            "        <tr valign=middle>"
+                            "            <td>"
+                            "                <img src=\"%1\"/>"
+                            "            </td>"
+                            "            <td>"
+                            "                <p style=\"margin: 0px;\">"
+                            "                    %2"
+                            "                </p>"
+                            "                <p style=\"margin: 0px;\">"
+                            "                    <small><em>(%3)</em></small>"
+                            "                </p>"
+                            "            </td>"
+                            "        </tr>"
+                            "    </tbody>"
+                            "</table>").arg(iconDataUri(mIcon, 32, 32), mMessage, mExtraMessage));
     }
 }
 
 //==============================================================================
 
-void UserMessageWidget::setMessage(const QString &pMessage)
+void UserMessageWidget::setMessage(const QString &pMessage,
+                                   const QString &pExtraMessage)
 {
-    // Set the message
+    // Set our message
 
-    if (pMessage.compare(mMessage)) {
-        mMessage = pMessage;
-
-        updateMessage();
-    }
+    setIconMessage(mIcon, pMessage, pExtraMessage);
 }
 
 //==============================================================================

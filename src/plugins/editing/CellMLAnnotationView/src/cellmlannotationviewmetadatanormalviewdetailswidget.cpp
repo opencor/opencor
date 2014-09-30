@@ -21,8 +21,11 @@ specific language governing permissions and limitations under the License.
 
 #include "cellmlannotationvieweditingwidget.h"
 #include "cellmlannotationviewmetadatanormalviewdetailswidget.h"
+#include "cellmlannotationviewmetadatawebviewwidget.h"
+#include "cliutils.h"
 #include "filemanager.h"
 #include "guiutils.h"
+#include "usermessagewidget.h"
 
 //==============================================================================
 
@@ -34,15 +37,17 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#include <QApplication>
 #include <QClipboard>
-#include <QGridLayout>
-#include <QLabel>
-#include <QLayoutItem>
+#include <QCursor>
 #include <QMenu>
-#include <QPushButton>
-#include <QRegularExpression>
-#include <QScrollBar>
+#include <QScrollArea>
 #include <QStackedWidget>
+#include <QString>
+#include <QTimer>
+#include <QWebElement>
+#include <QWebFrame>
+#include <QWebPage>
 
 //==============================================================================
 
@@ -52,45 +57,80 @@ namespace CellMLAnnotationView {
 //==============================================================================
 
 CellmlAnnotationViewMetadataNormalViewDetailsWidget::CellmlAnnotationViewMetadataNormalViewDetailsWidget(CellmlAnnotationViewEditingWidget *pParent) :
-    QScrollArea(pParent),
-    Core::CommonWidget(pParent),
+    Core::Widget(pParent),
     mCellmlFile(pParent->cellmlFile()),
     mGui(new Ui::CellmlAnnotationViewMetadataNormalViewDetailsWidget),
-    mGridWidget(0),
-    mGridLayout(0),
+    mItemsCount(0),
     mElement(0),
     mRdfTripleInformation(QString()),
-    mType(No),
-    mLookupInformation(First),
-    mVerticalScrollBarPosition(0),
-    mNeighbourRow(0),
-    mRdfTriplesMapping(QMap<QObject *, CellMLSupport::CellmlFileRdfTriple *>()),
-    mCurrentResourceOrIdLabel(0)
+    mInformationType(None),
+    mLookUpRdfTripleInformation(First),
+    mRdfTriplesMapping(QMap<QString, CellMLSupport::CellmlFileRdfTriple *>()),
+    mUrls(QMap<QString, QString>()),
+    mRdfTripleInformationSha1s(QStringList()),
+    mRdfTripleInformationSha1(QString()),
+    mFirstRdfTripleInformation(QString()),
+    mLastRdfTripleInformation(QString()),
+    mLink(QString()),
+    mTextContent(QString())
 {
     // Set up the GUI
 
     mGui->setupUi(this);
-
-    // Create a stacked widget which will contain our GUI
-
-    mWidget = new QStackedWidget(this);
-
-    // Add our stacked widget to our scroll area
-
-    setWidget(mWidget);
-
-    // Keep track of the position of our vertical scroll bar
-    // Note: this is required to make sure that the position doesn't get reset
-    //       as a result of retranslating the GUI...
-
-    connect(verticalScrollBar(), SIGNAL(sliderMoved(int)),
-            this, SLOT(trackVerticalScrollBarPosition(const int &)));
 
     // Create and populate our context menu
 
     mContextMenu = new QMenu(this);
 
     mContextMenu->addAction(mGui->actionCopy);
+
+    // Create an output widget that will contain our output message and output
+    // for ontological terms
+
+    mOutput = new Core::Widget(this);
+
+    mOutput->setLayout(new QVBoxLayout(mOutput));
+
+    mOutput->layout()->setMargin(0);
+
+    // Create our output message (within a scroll area, in case the label is too
+    // wide)
+
+    mOutputMessageScrollArea = new QScrollArea(mOutput);
+
+    mOutputMessageScrollArea->setFrameShape(QFrame::NoFrame);
+    mOutputMessageScrollArea->setWidgetResizable(true);
+
+    mOutputMessage = new Core::UserMessageWidget(":/oxygen/actions/help-about.png",
+                                                 mOutputMessageScrollArea);
+
+    mOutputMessageScrollArea->setWidget(mOutputMessage);
+
+    // Create our output for ontological terms
+
+    Core::readTextFromFile(":/ontologicalTerms.html", mOutputOntologicalTermsTemplate);
+
+    mOutputOntologicalTerms = new CellmlAnnotationViewMetadataWebViewWidget(mOutput);
+
+    mOutputOntologicalTerms->setContextMenuPolicy(Qt::CustomContextMenu);
+
+    connect(mOutputOntologicalTerms, SIGNAL(customContextMenuRequested(const QPoint &)),
+            this, SLOT(showCustomContextMenu(const QPoint &)));
+
+    mOutputOntologicalTerms->page()->setLinkDelegationPolicy(QWebPage::DelegateAllLinks);
+
+    connect(mOutputOntologicalTerms->page(), SIGNAL(linkClicked(const QUrl &)),
+            this, SLOT(linkClicked()));
+
+    // Add our output message and output for ontological terms to our output
+    // widget
+
+    mOutput->layout()->addWidget(mOutputMessageScrollArea);
+    mOutput->layout()->addWidget(mOutputOntologicalTerms);
+
+    // Add our output widget to our main layout
+
+    mGui->layout->addWidget(mOutput);
 }
 
 //==============================================================================
@@ -110,560 +150,434 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::retranslateUi()
 
     mGui->retranslateUi(this);
 
-    // For the rest of our GUI, it's easier to just update it, so...
+    // Retranslate our output message
 
-    updateGui(mElement, mRdfTripleInformation, mType, mLookupInformation,
-              mVerticalScrollBarPosition, true);
+    mOutputMessage->setMessage(tr("There is no metadata associated with the current CellML element..."));
+
+    // Retranslate our output headers
+
+    updateOutputHeaders();
+}
+
+//==============================================================================
+
+void CellmlAnnotationViewMetadataNormalViewDetailsWidget::updateOutputHeaders()
+{
+    // Update our output headers
+
+    QWebElement documentElement = mOutputOntologicalTerms->page()->mainFrame()->documentElement();
+
+    documentElement.findFirst("th[id=nameOrQualifier]").setInnerXml(tr("Qualifier"));
+    documentElement.findFirst("th[id=resource]").setInnerXml(tr("Resource"));
+    documentElement.findFirst("th[id=id]").setInnerXml(tr("Id"));
+
+    QWebElement countElement = documentElement.findFirst("th[id=count]");
+
+    if (mItemsCount == 1)
+        countElement.setInnerXml(tr("(1 term)"));
+    else
+        countElement.setInnerXml(tr("(%1 terms)").arg(QLocale().toString(mItemsCount)));
+}
+
+//==============================================================================
+
+void CellmlAnnotationViewMetadataNormalViewDetailsWidget::additionalGuiUpdates(const QString &pRdfTripleInformation,
+                                                                               const InformationType &pInformationType,
+                                                                               const Information &pLookUpRdfTripleInformation)
+{
+    // Update our output headers
+
+    updateOutputHeaders();
+
+    // Show/hide our output message and output for ontological terms
+
+    mOutputMessageScrollArea->setVisible(!mItemsCount);
+    mOutputOntologicalTerms->setVisible(mItemsCount);
+
+    // Request for something to be looked up, if needed
+
+    if (pLookUpRdfTripleInformation != No) {
+        if (mItemsCount) {
+            // Request for the first resource id, the last resource id or an
+            // 'old' qualifier, resource or resource id to be looked up
+
+            if (pLookUpRdfTripleInformation == First)
+                // Look up the first resource id
+
+                genericLookUp(mFirstRdfTripleInformation, Id);
+            else if (pLookUpRdfTripleInformation == Last)
+                // Look up the last resource id
+
+                genericLookUp(mLastRdfTripleInformation, Id);
+            else
+                // Look up any 'old' qualifier, resource or resource id
+
+                genericLookUp(pRdfTripleInformation, pInformationType);
+        } else {
+            // No RDF triple left, so ask for 'nothing' to be looked up
+            // Note: we do this to let people know that there is nothing to look
+            //       up and that they can 'clean' whatever they use to show a
+            //       look up to the user...
+
+            genericLookUp();
+        }
+    }
 }
 
 //==============================================================================
 
 void CellmlAnnotationViewMetadataNormalViewDetailsWidget::updateGui(iface::cellml_api::CellMLElement *pElement,
                                                                     const QString &pRdfTripleInformation,
-                                                                    const Type &pType,
-                                                                    const Information &pLookupInformation,
-                                                                    const int &pVerticalScrollBarPosition,
-                                                                    const bool &pRetranslate)
+                                                                    const InformationType &pInformationType,
+                                                                    const Information &pLookUpRdfTripleInformation)
 {
     if (!pElement)
         return;
-
-    // Note: we are using a grid layout to dislay the contents of our view, but
-    //       this unfortunately results in some very bad flickering on OS X.
-    //       This can, however, be addressed using a stacked widget, so...
-
-    // Prevent ourselves from being updated (to avoid flickering)
-
-    setUpdatesEnabled(false);
 
     // Keep track of the CellML element
 
     mElement = pElement;
 
-    // Create a new widget and layout
+    // Reset various properties
+    // Note: we might only do that before adding new items, but then again there
+    //       is no need to waste memory, so...
 
-    QWidget *newGridWidget = new QWidget(mWidget);
-    QGridLayout *newGridLayout = new QGridLayout(newGridWidget);
+    mUrls.clear();
+    mRdfTripleInformationSha1s.clear();
 
-    newGridWidget->setLayout(newGridLayout);
+    mRdfTripleInformationSha1 = QString();
 
-    // Populate our new layout, but only if there is at least one RDF triple
+    mRdfTriplesMapping.clear();
+
+    mItemsCount = 0;
+
+    mFirstRdfTripleInformation = QString();
+    mLastRdfTripleInformation = QString();
+
+    // Populate our web view, but only if there is at least one RDF triple
 
     CellMLSupport::CellmlFileRdfTriples rdfTriples = mCellmlFile->rdfTriples(pElement);
-    QString firstRdfTripleInformation = QString();
-    QString lastRdfTripleInformation = QString();
 
     if (rdfTriples.count()) {
-        // Create labels to act as headers
+        // Add the RDF triples
 
-        newGridLayout->addWidget(Core::newLabel(tr("Qualifier"),
-                                                1.25, true, false,
-                                                Qt::AlignCenter,
-                                                newGridWidget),
-                                 0, 0);
-        newGridLayout->addWidget(Core::newLabel(tr("Resource"),
-                                                1.25, true, false,
-                                                Qt::AlignCenter,
-                                                newGridWidget),
-                                 0, 1);
-        newGridLayout->addWidget(Core::newLabel(tr("Id"),
-                                                1.25, true, false,
-                                                Qt::AlignCenter,
-                                                newGridWidget),
-                                 0, 2);
-
-        // Number of terms
-
-        newGridLayout->addWidget(Core::newLabel((rdfTriples.count() == 1)?
-                                                    tr("(1 term)"):
-                                                    tr("(%1 terms)").arg(QString::number(rdfTriples.count())),
-                                                1.0, false, true,
-                                                Qt::AlignCenter,
-                                                newGridWidget),
-                                 0, 3);
-
-        // Add the RDF triples information to our layout
-        // Note: for the RDF triple's subject, we try to remove the CellML
-        //       file's URI base, thus only leaving the equivalent of a CellML
-        //       element cmeta:id which will speak more to the user than a
-        //       possibly long URI reference...
-
-        int row = 0;
-
-        foreach (CellMLSupport::CellmlFileRdfTriple *rdfTriple, rdfTriples) {
-            // Qualifier
-
-            QString qualifierAsString = (rdfTriple->modelQualifier() != CellMLSupport::CellmlFileRdfTriple::ModelUnknown)?
-                                            rdfTriple->modelQualifierAsString():
-                                            rdfTriple->bioQualifierAsString();
-            QString rdfTripleInformation = qualifierAsString+"|"+rdfTriple->resource()+"|"+rdfTriple->id()+"|"+QString::number(++row);
-
-            QLabel *qualifierLabel = Core::newLabel("<a href=\""+rdfTripleInformation+"\">"+qualifierAsString+"</a>",
-                                                    1.0, false, false,
-                                                    Qt::AlignCenter,
-                                                    newGridWidget);
-
-            connect(qualifierLabel, SIGNAL(linkActivated(const QString &)),
-                    this, SLOT(lookupQualifier(const QString &)));
-
-            newGridLayout->addWidget(qualifierLabel, row, 0);
-
-            // Resource
-
-            QLabel *resourceLabel = Core::newLabel("<a href=\""+rdfTripleInformation+"\">"+rdfTriple->resource()+"</a>",
-                                                   1.0, false, false,
-                                                   Qt::AlignCenter,
-                                                   newGridWidget);
-
-            resourceLabel->setAccessibleDescription("http://identifiers.org/"+rdfTriple->resource()+"/?redirect=true");
-            resourceLabel->setContextMenuPolicy(Qt::CustomContextMenu);
-
-            connect(resourceLabel, SIGNAL(customContextMenuRequested(const QPoint &)),
-                    this, SLOT(showCustomContextMenu(const QPoint &)));
-            connect(resourceLabel, SIGNAL(linkActivated(const QString &)),
-                    this, SLOT(lookupResource(const QString &)));
-
-            newGridLayout->addWidget(resourceLabel, row, 1);
-
-            // Id
-
-            QLabel *idLabel = Core::newLabel("<a href=\""+rdfTripleInformation+"\">"+rdfTriple->id()+"</a>",
-                                             1.0, false, false,
-                                             Qt::AlignCenter,
-                                             newGridWidget);
-
-            connect(idLabel, SIGNAL(customContextMenuRequested(const QPoint &)),
-                    this, SLOT(showCustomContextMenu(const QPoint &)));
-            connect(idLabel, SIGNAL(linkActivated(const QString &)),
-                    this, SLOT(lookupId(const QString &)));
-
-            idLabel->setAccessibleDescription("http://identifiers.org/"+rdfTriple->resource()+"/"+rdfTriple->id()+"/?profile=most_reliable&redirect=true");
-            idLabel->setContextMenuPolicy(Qt::CustomContextMenu);
-
-            newGridLayout->addWidget(idLabel, row, 2);
-
-            // Remove button
-
-            QPushButton *removeButton = new QPushButton(newGridWidget);
-            // Note #1: ideally, we could assign a QAction to our
-            //          QPushButton, but this cannot be done, so... we
-            //          assign a few properties by hand...
-            // Note #2: to use a QToolButton would allow us to assign a
-            //          QAction to it, but a QToolButton doesn't look quite
-            //          the same as a QPushButton on some platforms, so...
-
-            removeButton->setEnabled(Core::FileManager::instance()->isReadableAndWritable(mCellmlFile->fileName()));
-            removeButton->setIcon(QIcon(":/oxygen/actions/list-remove.png"));
-            removeButton->setStatusTip(tr("Remove the term"));
-            removeButton->setToolTip(tr("Remove"));
-            removeButton->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
-
-            mRdfTriplesMapping.insert(removeButton, rdfTriple);
-
-            connect(removeButton, SIGNAL(clicked()),
-                    this, SLOT(removeRdfTriple()));
-
-            newGridLayout->addWidget(removeButton, row, 3, Qt::AlignCenter);
-
-            // Keep track of the very first resource id and update the last one
-
-            if (row == 1)
-                firstRdfTripleInformation = rdfTripleInformation;
-
-            lastRdfTripleInformation = rdfTripleInformation;
-        }
-
-        // Have the remove buttons column take as little horizontal space as
-        // possible compared to the other columns
-
-        newGridLayout->setColumnStretch(0, 1);
-        newGridLayout->setColumnStretch(1, 1);
-        newGridLayout->setColumnStretch(2, 1);
-
-        // Have all the rows take a minimum of vertical space
-
-        newGridLayout->setRowStretch(++row, 1);
+        foreach (CellMLSupport::CellmlFileRdfTriple *rdfTriple, rdfTriples)
+            addRdfTriple(rdfTriple, false);
     } else {
-        // No RDF triples, so...
-
-        newGridLayout->addWidget(Core::newLabel(tr("There is no metadata associated with the current CellML element..."),
-                                                1.25, false, false,
-                                                Qt::AlignCenter,
-                                                newGridWidget),
-                                 0, 0);
+        mOutputOntologicalTerms->setHtml(QString());
     }
 
-    // Add our new widget to our stacked widget
+    // Do additional GUI updates
 
-    mWidget->addWidget(newGridWidget);
-
-    // Get rid of our old widget and layout (and its contents)
-
-    if (mGridWidget) {
-        mWidget->removeWidget(mGridWidget);
-
-        for (int i = 0, iMax = mGridLayout->count(); i < iMax; ++i) {
-            QLayoutItem *item = mGridLayout->takeAt(0);
-
-            delete item->widget();
-            delete item;
-        }
-
-        delete mGridWidget;
-    }
-
-    // Keep track of our new widget and layout
-
-    mGridWidget = newGridWidget;
-    mGridLayout = newGridLayout;
-
-    // Allow ourselves to be updated again
-
-    setUpdatesEnabled(true);
-
-    // Request for something to be looked up, if needed
-
-    if (pLookupInformation != None) {
-        if (rdfTriples.count()) {
-            // Request for the first resource id, the last resource id or an
-            // 'old' qualifier, resource or resource id to be looked up
-
-            if (pLookupInformation == First)
-                // Look up the first resource id
-
-                genericLookup(firstRdfTripleInformation, Id, pRetranslate);
-            else if (pLookupInformation == Last)
-                // Look up the last resource id
-
-                genericLookup(lastRdfTripleInformation, Id, pRetranslate);
-            else
-                // Look up any 'old' qualifier, resource or resource id
-
-                genericLookup(pRdfTripleInformation, pType, pRetranslate);
-        } else {
-            // No RDF triple left, so ask for 'nothing' to be looked up
-            // Note: we do this to let people know that there is nothing to look
-            //       up and that they can 'clean' whatever they use to show a
-            //       lookup to the user...
-
-            genericLookup();
-        }
-    }
-
-    // Set the position of our vertical scroll bar
-
-    verticalScrollBar()->setValue(pVerticalScrollBarPosition);
+    additionalGuiUpdates(pRdfTripleInformation, pInformationType,
+                         pLookUpRdfTripleInformation);
 }
 
 //==============================================================================
 
-void CellmlAnnotationViewMetadataNormalViewDetailsWidget::addRdfTriple(CellMLSupport::CellmlFileRdfTriple *pRdfTriple)
+void CellmlAnnotationViewMetadataNormalViewDetailsWidget::addRdfTriple(CellMLSupport::CellmlFileRdfTriple *pRdfTriple,
+                                                                       const bool &pNeedAdditionalGuiUpdates)
 {
     if (!pRdfTriple)
         return;
 
-    // Make sure that the given RDF triple will be visible, this by handling the
-    // change in the range of our vertical scroll bar which will result in
-    // showLastRdfTriple() being called
+    // Initialise our web view, if needed
 
-    connect(verticalScrollBar(), SIGNAL(rangeChanged(int, int)),
-            this, SLOT(showLastRdfTriple()));
+    if (!mItemsCount)
+        mOutputOntologicalTerms->setHtml(mOutputOntologicalTermsTemplate.arg(Core::iconDataUri(":/oxygen/actions/list-remove.png", 16, 16),
+                                                                             Core::iconDataUri(":/oxygen/actions/list-remove.png", 16, 16, QIcon::Disabled)));
 
-    // Enable the looking up of the last information
+    // Add the item
 
-    mLookupInformation = Last;
+    ++mItemsCount;
 
-    // Update the GUI to reflect the addition of the given RDF triple
+    QString qualifier = (pRdfTriple->modelQualifier() != CellMLSupport::CellmlFileRdfTriple::ModelUnknown)?
+                            pRdfTriple->modelQualifierAsString():
+                            pRdfTriple->bioQualifierAsString();
+    QString rdfTripleInformation = qualifier+"|"+pRdfTriple->resource()+"|"+pRdfTriple->id();
+    QString rdfTripleInformationSha1 = Core::sha1(rdfTripleInformation);
 
-    updateGui(mElement, QString(), No, mLookupInformation);
+    QString ontologicalTerm =  "<tr id=\"item_"+rdfTripleInformationSha1+"\">\n"
+                              +"    <td id=\"qualifier_"+rdfTripleInformationSha1+"\">\n"
+                              +"        <a href=\""+rdfTripleInformation+"\">"+qualifier+"</a>\n"
+                              +"    </td>\n"
+                              +"    <td id=\"resource_"+rdfTripleInformationSha1+"\">\n"
+                              +"        <a href=\""+rdfTripleInformation+"\">"+pRdfTriple->resource()+"</a>\n"
+                              +"    </td>\n"
+                              +"    <td id=\"id_"+rdfTripleInformationSha1+"\">\n"
+                              +"        <a href=\""+rdfTripleInformation+"\">"+pRdfTriple->id()+"</a>\n"
+                              +"    </td>\n"
+                              +"    <td id=\"button_"+rdfTripleInformationSha1+"\">\n"
+                              +"        <a class=\"noHover\" href=\""+rdfTripleInformationSha1+"\"><img class=\"button\"/></a>\n"
+                              +"    </td>\n"
+                              +"    <td id=\"disabledButton_"+rdfTripleInformationSha1+"\" style=\"display: none;\">\n"
+                              +"        <img class=\"disabledButton\"/>\n"
+                              +"    </td>\n"
+                              +"</tr>\n";
+
+    if (mItemsCount == 1)
+        mOutputOntologicalTerms->page()->mainFrame()->documentElement().findFirst("tbody").appendInside(ontologicalTerm);
+    else
+        mOutputOntologicalTerms->page()->mainFrame()->documentElement().findFirst(QString("tr[id=item_%1]").arg(mRdfTripleInformationSha1s.last())).appendOutside(ontologicalTerm);
+
+    // Keep track of some information
+
+    QString resourceUrl = "http://identifiers.org/"+pRdfTriple->resource()+"/?redirect=true";
+    QString idUrl = "http://identifiers.org/"+pRdfTriple->resource()+"/"+pRdfTriple->id()+"/?profile=most_reliable&redirect=true";
+
+    if (!mUrls.contains(pRdfTriple->resource()))
+        mUrls.insert(pRdfTriple->resource(), resourceUrl);
+
+    mUrls.insert(rdfTripleInformation, idUrl);
+
+    mRdfTripleInformationSha1s << rdfTripleInformationSha1;
+
+    mRdfTriplesMapping.insert(rdfTripleInformationSha1, pRdfTriple);
+
+    if (mFirstRdfTripleInformation.isEmpty())
+        mFirstRdfTripleInformation = rdfTripleInformation;
+
+    mLastRdfTripleInformation = rdfTripleInformation;
+
+    // Do some additional GUI updates, if needed
+
+    if (pNeedAdditionalGuiUpdates) {
+        mLookUpRdfTripleInformation = Last;
+
+        additionalGuiUpdates(QString(), None, mLookUpRdfTripleInformation);
+    }
 }
 
 //==============================================================================
 
-void CellmlAnnotationViewMetadataNormalViewDetailsWidget::genericLookup(const QString &pRdfTripleInformation,
-                                                                        const Type &pType,
-                                                                        const bool &pRetranslate)
+void CellmlAnnotationViewMetadataNormalViewDetailsWidget::genericLookUp(const QString &pRdfTripleInformation,
+                                                                        const InformationType &pInformationType)
 {
     // Retrieve the RDF triple information
 
-    QStringList rdfTripleInformationAsStringList = pRdfTripleInformation.split("|");
-    QString qualifierAsString = pRdfTripleInformation.isEmpty()?QString():rdfTripleInformationAsStringList[0];
-    QString resourceAsString = pRdfTripleInformation.isEmpty()?QString():rdfTripleInformationAsStringList[1];
-    QString idAsString = pRdfTripleInformation.isEmpty()?QString():rdfTripleInformationAsStringList[2];
-    int rowAsInt = pRdfTripleInformation.isEmpty()?0:rdfTripleInformationAsStringList[3].toInt();
+    QStringList rdfTripleInformation = pRdfTripleInformation.split("|");
+    QString qualifier = pRdfTripleInformation.isEmpty()?QString():rdfTripleInformation[0];
+    QString resource = pRdfTripleInformation.isEmpty()?QString():rdfTripleInformation[1];
+    QString id = pRdfTripleInformation.isEmpty()?QString():rdfTripleInformation[2];
 
     // Keep track of the RDF triple information and type
 
     mRdfTripleInformation = pRdfTripleInformation;
-    mType = pType;
 
-    // Make the row corresponding to the qualifier, resource or id bold (and
-    // italic in some cases)
-    // Note: to use mGridLayout->rowCount() to determine the number of rows
-    //       isn't an option since no matter whether we remove rows (in
-    //       updateGui()), the returned value will be the maximum number of rows
-    //       that there has ever been, so...
+    // (Un)highlight/(un)select our various RDF triple information
 
-    for (int row = 0; mGridLayout->itemAtPosition(++row, 0);) {
-        QLabel *qualifierLabel = qobject_cast<QLabel *>(mGridLayout->itemAtPosition(row, 0)->widget());
-        QLabel *resourceLabel = qobject_cast<QLabel *>(mGridLayout->itemAtPosition(row, 1)->widget());
-        QLabel *idLabel = qobject_cast<QLabel *>(mGridLayout->itemAtPosition(row, 2)->widget());
+    static const QString Highlighted = "highlighted";
+    static const QString Selected = "selected";
 
-        QFont font = idLabel->font();
+    QWebElement documentElement = mOutputOntologicalTerms->page()->mainFrame()->documentElement();
+    QString rdfTripleInformationSha1 = pRdfTripleInformation.isEmpty()?QString():Core::sha1(pRdfTripleInformation);
 
-        font.setBold((mLookupInformation != None) && (row == rowAsInt));
-        font.setItalic(false);
+    if (rdfTripleInformationSha1.compare(mRdfTripleInformationSha1)) {
+        if (!mRdfTripleInformationSha1.isEmpty()) {
+            documentElement.findFirst(QString("tr[id=item_%1]").arg(mRdfTripleInformationSha1)).removeClass(Highlighted);
 
-        QFont italicFont = idLabel->font();
+            if (mInformationType == Qualifier)
+                documentElement.findFirst(QString("td[id=qualifier_%1]").arg(mRdfTripleInformationSha1)).removeClass(Selected);
+            else if (mInformationType == Resource)
+                documentElement.findFirst(QString("td[id=resource_%1]").arg(mRdfTripleInformationSha1)).removeClass(Selected);
+            else if (mInformationType == Id)
+                documentElement.findFirst(QString("td[id=id_%1]").arg(mRdfTripleInformationSha1)).removeClass(Selected);
+        }
 
-        italicFont.setBold(font.bold());
-        italicFont.setItalic(font.bold());
+        if (!rdfTripleInformationSha1.isEmpty()) {
+            documentElement.findFirst(QString("tr[id=item_%1]").arg(rdfTripleInformationSha1)).addClass(Highlighted);
 
-        qualifierLabel->setFont((pType == Qualifier)?italicFont:font);
-        resourceLabel->setFont((pType == Resource)?italicFont:font);
-        idLabel->setFont((pType == Id)?italicFont:font);
+            if (pInformationType == Qualifier)
+                documentElement.findFirst(QString("td[id=qualifier_%1]").arg(rdfTripleInformationSha1)).addClass(Selected);
+            else if (pInformationType == Resource)
+                documentElement.findFirst(QString("td[id=resource_%1]").arg(rdfTripleInformationSha1)).addClass(Selected);
+            else if (pInformationType == Id)
+                documentElement.findFirst(QString("td[id=id_%1]").arg(rdfTripleInformationSha1)).addClass(Selected);
+        }
+
+        mRdfTripleInformationSha1 = rdfTripleInformationSha1;
+    } else if (!rdfTripleInformationSha1.isEmpty()) {
+        if (pInformationType == Qualifier) {
+            documentElement.findFirst(QString("td[id=qualifier_%1]").arg(rdfTripleInformationSha1)).addClass(Selected);
+            documentElement.findFirst(QString("td[id=resource_%1]").arg(rdfTripleInformationSha1)).removeClass(Selected);
+            documentElement.findFirst(QString("td[id=id_%1]").arg(rdfTripleInformationSha1)).removeClass(Selected);
+        } else if (pInformationType == Resource) {
+            documentElement.findFirst(QString("td[id=qualifier_%1]").arg(rdfTripleInformationSha1)).removeClass(Selected);
+            documentElement.findFirst(QString("td[id=resource_%1]").arg(rdfTripleInformationSha1)).addClass(Selected);
+            documentElement.findFirst(QString("td[id=id_%1]").arg(rdfTripleInformationSha1)).removeClass(Selected);
+        } else if (pInformationType == Id) {
+            documentElement.findFirst(QString("td[id=qualifier_%1]").arg(rdfTripleInformationSha1)).removeClass(Selected);
+            documentElement.findFirst(QString("td[id=resource_%1]").arg(rdfTripleInformationSha1)).removeClass(Selected);
+            documentElement.findFirst(QString("td[id=id_%1]").arg(rdfTripleInformationSha1)).addClass(Selected);
+        }
     }
 
+    mInformationType = pInformationType;
+
     // Check whether we have something to look up
+    // Note: there is nothing nothing do for Any...
 
-    if (mLookupInformation == None)
-        // Nothing to look up, so...
+    if (mLookUpRdfTripleInformation == First)
+        mOutputOntologicalTerms->page()->triggerAction(QWebPage::MoveToStartOfDocument);
+    else if (mLookUpRdfTripleInformation == Last)
+        // Note #1: normally, we would use
+        //             mOutputOntologicalTerms->page()->triggerAction(QWebPage::MoveToEndOfDocument);
+        //          but this doesn't work...
+        // Note #2: another option would be to use
+        //              QWebFrame *outputFrame = mOutputOntologicalTerms->page()->mainFrame();
+        //
+        //              outputFrame->setScrollBarValue(Qt::Vertical, outputFrame->scrollBarMaximum(Qt::Vertical));
+        //          but this doesnt' get us exactly to the bottom of the page...
 
+        QTimer::singleShot(1, this, SLOT(showLastRdfTriple()));
+    else if (mLookUpRdfTripleInformation == No)
         return;
 
     // Let people know that we want to look something up
 
-    switch (pType) {
+    switch (pInformationType) {
     case Qualifier:
-        emit qualifierLookupRequested(qualifierAsString, pRetranslate);
+        emit qualifierLookUpRequested(qualifier);
 
         break;
     case Resource:
-        emit resourceLookupRequested(resourceAsString, pRetranslate);
+        emit resourceLookUpRequested(resource);
 
         break;
     case Id:
-        emit idLookupRequested(resourceAsString, idAsString, pRetranslate);
+        emit idLookUpRequested(resource, id);
 
         break;
     default:
-        // No
+        // None
 
-        emit noLookupRequested();
+        emit noLookUpRequested();
     }
 }
 
 //==============================================================================
 
-void CellmlAnnotationViewMetadataNormalViewDetailsWidget::disableLookupInformation()
+void CellmlAnnotationViewMetadataNormalViewDetailsWidget::disableLookUpInformation()
 {
-    // Disable the looking up of information
+    // Disable the looking up of RDF triple information
 
-    mLookupInformation = None;
+    mLookUpRdfTripleInformation = No;
 
     // Update the GUI by pretending to be interested in looking something up
 
-    genericLookup();
-}
-
-//==============================================================================
-
-void CellmlAnnotationViewMetadataNormalViewDetailsWidget::lookupQualifier(const QString &pRdfTripleInformation)
-{
-    // Enable the looking up of any information
-
-    mLookupInformation = Any;
-
-    // Call our generic lookup function
-
-    genericLookup(pRdfTripleInformation, Qualifier);
-}
-
-//==============================================================================
-
-void CellmlAnnotationViewMetadataNormalViewDetailsWidget::lookupResource(const QString &pRdfTripleInformation)
-{
-    // Enable the looking up of any information
-
-    mLookupInformation = Any;
-
-    // Call our generic lookup function
-
-    genericLookup(pRdfTripleInformation, Resource);
-}
-
-//==============================================================================
-
-void CellmlAnnotationViewMetadataNormalViewDetailsWidget::lookupId(const QString &pRdfTripleInformation)
-{
-    // Enable the looking up of any information
-
-    mLookupInformation = Any;
-
-    // Call our generic lookup function
-
-    genericLookup(pRdfTripleInformation, Id);
-}
-
-//==============================================================================
-
-QString CellmlAnnotationViewMetadataNormalViewDetailsWidget::rdfTripleInformation(const int &pRow) const
-{
-    // Return the RDF triple information for the given row
-
-    QString res = QString();
-
-    // Retrieve the item for the first label link from the given row
-
-    QLayoutItem *item = mGridLayout->itemAtPosition(pRow, 0);
-
-    if (!item)
-        // No item could be retrieved, so...
-
-        return res;
-
-    // Retrieve the text from the item's widget which is a QLabel
-
-    res = static_cast<QLabel *>(item->widget())->text();
-
-    // Extract the RDF triple information from the text
-
-    res.remove(QRegularExpression("^[^\"]*\""));
-    res.remove(QRegularExpression("\"[^\"]*$"));
-
-    // We are done with retrieving the RDF triple information for the given row,
-    // so...
-
-    return res;
-}
-
-//==============================================================================
-
-void CellmlAnnotationViewMetadataNormalViewDetailsWidget::removeRdfTriple()
-{
-    // Retrieve the RDF triple associated with the remove button
-
-    CellMLSupport::CellmlFileRdfTriple *rdfTriple = mRdfTriplesMapping.value(sender());
-
-    mRdfTriplesMapping.remove(sender());
-
-    // Remove the RDF triple from the CellML file and from our set of RDF
-    // triples this widget uses
-
-    mCellmlFile->rdfTriples().remove(rdfTriple);
-
-    // Retrieve the number of the row we want to delete, as well as the total
-    // number of rows
-    // Note: should some RDF triples have been removed, then to call
-    //       mGridLayout->rowCount() won't give us the correct number of rows,
-    //       so...
-
-    int row = 0;
-    int rowMax = mGridLayout->rowCount();
-
-    for (int i = 1; i < rowMax; ++i) {
-        QLayoutItem *item = mGridLayout->itemAtPosition(i, 3);
-
-        if (!item) {
-            // The row doesn't exist anymore, so...
-
-            rowMax = i;
-
-            break;
-        }
-
-        if (item->widget() == sender())
-            // This is the row we want to remove
-
-            row = i;
-    }
-
-    // Make sure that row and rowMax have meaningful values
-
-    Q_ASSERT(row > 0);
-    Q_ASSERT(rowMax > row);
-
-    // Determine the neighbour row which we want to be visible
-
-    mNeighbourRow = (rowMax-1 > row)?row:row-1;
-
-    // Determine the 'new' RDF triple information to look up, depending on
-    // whether there is any RDF triple left
-
-    if (mRdfTriplesMapping.isEmpty()) {
-        // There are no RDF triples left, so...
-
-        mRdfTripleInformation = QString();
-        mType = No;
-    } else if (!rdfTripleInformation(row).compare(mRdfTripleInformation)) {
-        // The RDF triple information is related to the row we want to delete,
-        // so we need to find a new one
-
-        mRdfTripleInformation = rdfTripleInformation((rowMax-1 > row)?row+1:row-1);
-    }
-
-    // Make sure that the neighbour of our removed RDF triple will be made
-    // visible and we do this by handling the change in the range of our
-    // vertical scroll bar which will result in showNeighbourRdfTriple() being
-    // called
-
-    connect(verticalScrollBar(), SIGNAL(rangeChanged(int, int)),
-            this, SLOT(showNeighbourRdfTriple()));
-
-    // Update the GUI to reflect the removal of the RDF triple
-
-    updateGui(mElement, mRdfTripleInformation, mType, mLookupInformation);
-
-    // Let people know that an RDF triple has been removed
-
-    emit rdfTripleRemoved(rdfTriple);
-}
-
-//==============================================================================
-
-void CellmlAnnotationViewMetadataNormalViewDetailsWidget::showNeighbourRdfTriple()
-{
-    // No need to show our neighbour RDF triple, so...
-
-    disconnect(verticalScrollBar(), SIGNAL(rangeChanged(int, int)),
-               this, SLOT(showNeighbourRdfTriple()));
-
-    // Make sure that the neighbour RDF triple is visible
-
-    ensureWidgetVisible(mGridLayout->itemAtPosition(mNeighbourRow, 0)->widget());
+    genericLookUp();
 }
 
 //==============================================================================
 
 void CellmlAnnotationViewMetadataNormalViewDetailsWidget::showLastRdfTriple()
 {
-    // No need to show our last RDF triple, so...
+    // Show our last RDF triple by scrolling to the end of the page
 
-    disconnect(verticalScrollBar(), SIGNAL(rangeChanged(int, int)),
-               this, SLOT(showLastRdfTriple()));
+    QWebFrame *outputFrame = mOutputOntologicalTerms->page()->mainFrame();
 
-    // Determine the number of rows in our grid layout
-    // Note: to use mGridLayout->rowCount() isn't an option since no matter
-    //       whether we remove rows (in updateGui()), the returned value will be
-    //       the maximum number of rows that there has ever been, so...
-
-    int row = 0;
-
-    while (mGridLayout->itemAtPosition(++row, 0))
-        ;
-
-    // Make sure that the last RDF triple is visible
-
-    ensureWidgetVisible(mGridLayout->itemAtPosition(row-1, 0)->widget());
+    outputFrame->setScrollBarValue(Qt::Vertical, outputFrame->scrollBarMaximum(Qt::Vertical));
 }
 
 //==============================================================================
 
-void CellmlAnnotationViewMetadataNormalViewDetailsWidget::trackVerticalScrollBarPosition(const int &pPosition)
+void CellmlAnnotationViewMetadataNormalViewDetailsWidget::linkClicked()
 {
-    // Keep track of the new position of our vertical scroll bar
+    // Retrieve some information about the link
 
-    mVerticalScrollBarPosition = pPosition;
+    mOutputOntologicalTerms->retrieveLinkInformation(mLink, mTextContent);
+
+    // Check whether we have clicked a resource/id link or a button link
+
+    if (mTextContent.isEmpty()) {
+        // Update some information
+
+        CellMLSupport::CellmlFileRdfTriple *rdfTriple = mRdfTriplesMapping.value(mLink);
+
+        QString qualifier = (rdfTriple->modelQualifier() != CellMLSupport::CellmlFileRdfTriple::ModelUnknown)?
+                                rdfTriple->modelQualifierAsString():
+                                rdfTriple->bioQualifierAsString();
+        QString rdfTripleInformation = qualifier+"|"+rdfTriple->resource()+"|"+rdfTriple->id();
+
+        mUrls.remove(rdfTripleInformation);
+
+        mRdfTripleInformationSha1s.removeOne(mLink);
+
+        mRdfTriplesMapping.remove(mLink);
+
+        --mItemsCount;
+
+        // Determine the 'new' RDF triple information to look up, based on
+        // whether there are RDF triples left and whether the current RDF triple
+        // is the one being highlighted
+
+        QWebElement rdfTripleElement = mOutputOntologicalTerms->page()->mainFrame()->documentElement().findFirst(QString("tr[id=item_%1]").arg(mLink));
+
+        if (!mItemsCount) {
+            mRdfTripleInformation = QString();
+            mInformationType = None;
+        } else if (!mLink.compare(mRdfTripleInformationSha1)) {
+            QWebElement newRdfTripleEment = rdfTripleElement.nextSibling();
+
+            if (newRdfTripleEment.isNull())
+                newRdfTripleEment = rdfTripleElement.previousSibling();
+
+            CellMLSupport::CellmlFileRdfTriple *newRdfTriple = mRdfTriplesMapping.value(newRdfTripleEment.attribute("id").remove(QRegularExpression("^item_")));
+            QString newQualifier = (newRdfTriple->modelQualifier() != CellMLSupport::CellmlFileRdfTriple::ModelUnknown)?
+                                       newRdfTriple->modelQualifierAsString():
+                                       newRdfTriple->bioQualifierAsString();
+
+            mRdfTripleInformation = newQualifier+"|"+newRdfTriple->resource()+"|"+newRdfTriple->id();
+
+            if (!rdfTripleInformation.compare(mFirstRdfTripleInformation))
+                mFirstRdfTripleInformation = mRdfTripleInformation;
+
+            if (!rdfTripleInformation.compare(mLastRdfTripleInformation))
+                mLastRdfTripleInformation = mRdfTripleInformation;
+        }
+
+        // Remove the RDF triple from our GUI
+
+        rdfTripleElement.removeFromDocument();
+
+        // Do some additional GUI updates
+
+        mLookUpRdfTripleInformation = Any;
+
+        if (!mLink.compare(mRdfTripleInformationSha1))
+            additionalGuiUpdates(mRdfTripleInformation, mInformationType, mLookUpRdfTripleInformation);
+        else
+            // The looked up information is the same, so no need to look it up
+            // again
+            // Note: indeed, to look it up again would result in the web view
+            //       flashing (since a 'new' web page would be loaded)...
+
+            additionalGuiUpdates(mRdfTripleInformation, mInformationType, No);
+
+        // Remove the RDF triple from the CellML file
+
+        mCellmlFile->rdfTriples().remove(rdfTriple);
+
+        // Let people know that an RDF triple has been removed
+
+        emit rdfTripleRemoved(rdfTriple);
+    } else {
+        // We have clicked on a qualifier/resource/id link, so start by enabling
+        // the looking up of any RDF triple information
+
+        mLookUpRdfTripleInformation = Any;
+
+        // Call our generic look up function
+
+        QStringList rdfTripleInformation = mLink.split("|");
+
+        genericLookUp(mLink,
+                      (!rdfTripleInformation[0].compare(mTextContent))?
+                          Qualifier:
+                          !rdfTripleInformation[1].compare(mTextContent)?
+                              Resource:
+                              Id);
+    }
 }
 
 //==============================================================================
@@ -672,23 +586,32 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::showCustomContextMenu(
 {
     Q_UNUSED(pPosition);
 
-    // Keep track of the resource or id
+    // Retrieve some information about the link
 
-    mCurrentResourceOrIdLabel = qobject_cast<QLabel *>(qApp->widgetAt(QCursor::pos()));
+    mOutputOntologicalTerms->retrieveLinkInformation(mLink, mTextContent);
 
-    // Should our context menu to allow the copying of the URL of the resource
-    // or id
+    // Show our context menu to allow the copying of the URL of the resource or
+    // id, but only if we are over a link, i.e. if both mLink and mTextContent
+    // are not empty
 
-    mContextMenu->exec(QCursor::pos());
+    if (!mLink.isEmpty() && !mTextContent.isEmpty())
+        mContextMenu->exec(QCursor::pos());
 }
 
 //==============================================================================
 
 void CellmlAnnotationViewMetadataNormalViewDetailsWidget::on_actionCopy_triggered()
 {
-    // Copy the URL of the resource or id to the clipboard
+    // Copy the qualifier or the URL of the resource or id to the clipboard
 
-    QApplication::clipboard()->setText(mCurrentResourceOrIdLabel->accessibleDescription());
+    QStringList rdfTripleInformation = mLink.split("|");
+
+    if (!rdfTripleInformation[0].compare(mTextContent))
+        QApplication::clipboard()->setText(mTextContent);
+    else if (!rdfTripleInformation[1].compare(mTextContent))
+        QApplication::clipboard()->setText(mUrls.value(mTextContent));
+    else
+        QApplication::clipboard()->setText(mUrls.value(mLink));
 }
 
 //==============================================================================

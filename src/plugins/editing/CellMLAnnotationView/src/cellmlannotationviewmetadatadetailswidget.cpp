@@ -62,9 +62,9 @@ CellmlAnnotationViewMetadataDetailsWidget::CellmlAnnotationViewMetadataDetailsWi
 
     // Create our unsupported metadata message widget
 
-    mCategoryMessage = new Core::UserMessageWidget(":/oxygen/actions/help-about.png", this);
+    mCategoryMessage = new Core::UserMessageWidget(":/oxygen/actions/help-hint.png", this);
     mBorderedCategoryMessage = new Core::BorderedWidget(mCategoryMessage,
-                                                        false, true, true, false);
+                                                        false, true, false, false);
 
     mBorderedCategoryMessage->setVisible(false);
     // Note: we don't initially want to see it, so...
@@ -99,52 +99,52 @@ CellmlAnnotationViewMetadataDetailsWidget::CellmlAnnotationViewMetadataDetailsWi
                                                 true, true, false, false);
 
     // Some connections to handle the looking up of a qualifier from our
-    // metadata edit details view, as well as the disabling of information
-    // lookup for the metadata view details widget
+    // metadata edit details view, as well as the disabling of information look
+    // up for the metadata view details widget
 
-    connect(mMetadataEditDetails, SIGNAL(qualifierLookupRequested(const QString &, const bool &)),
-            mMetadataViewDetails->normalView(), SLOT(disableLookupInformation()));
-    connect(mMetadataEditDetails, SIGNAL(qualifierLookupRequested(const QString &, const bool &)),
-            this, SLOT(lookupQualifier(const QString &, const bool &)));
+    connect(mMetadataEditDetails, SIGNAL(qualifierLookUpRequested(const QString &)),
+            mMetadataViewDetails->normalView(), SLOT(disableLookUpInformation()));
+    connect(mMetadataEditDetails, SIGNAL(qualifierLookUpRequested(const QString &)),
+            this, SLOT(lookUpQualifier(const QString &)));
 
-    connect(mMetadataEditDetails, SIGNAL(resourceLookupRequested(const QString &, const bool &)),
-            mMetadataViewDetails->normalView(), SLOT(disableLookupInformation()));
-    connect(mMetadataEditDetails, SIGNAL(resourceLookupRequested(const QString &, const bool &)),
-            this, SLOT(lookupResource(const QString &, const bool &)));
+    connect(mMetadataEditDetails, SIGNAL(resourceLookUpRequested(const QString &)),
+            mMetadataViewDetails->normalView(), SLOT(disableLookUpInformation()));
+    connect(mMetadataEditDetails, SIGNAL(resourceLookUpRequested(const QString &)),
+            this, SLOT(lookUpResource(const QString &)));
 
-    connect(mMetadataEditDetails, SIGNAL(idLookupRequested(const QString &, const QString &, const bool &)),
-            mMetadataViewDetails->normalView(), SLOT(disableLookupInformation()));
-    connect(mMetadataEditDetails, SIGNAL(idLookupRequested(const QString &, const QString &, const bool &)),
-            this, SLOT(lookupId(const QString &, const QString &, const bool &)));
+    connect(mMetadataEditDetails, SIGNAL(idLookUpRequested(const QString &, const QString &)),
+            mMetadataViewDetails->normalView(), SLOT(disableLookUpInformation()));
+    connect(mMetadataEditDetails, SIGNAL(idLookUpRequested(const QString &, const QString &)),
+            this, SLOT(lookUpId(const QString &, const QString &)));
 
-    connect(mMetadataEditDetails, SIGNAL(noLookupRequested()),
-            mMetadataViewDetails->normalView(), SLOT(disableLookupInformation()));
-    connect(mMetadataEditDetails, SIGNAL(noLookupRequested()),
-            this, SLOT(lookupNothing()));
+    connect(mMetadataEditDetails, SIGNAL(noLookUpRequested()),
+            mMetadataViewDetails->normalView(), SLOT(disableLookUpInformation()));
+    connect(mMetadataEditDetails, SIGNAL(noLookUpRequested()),
+            this, SLOT(lookUpNothing()));
 
     // Some connections to handle the looking up of a qualifier, resource and
     // resource id from our normal view, as well as the disabling of information
-    // lookup for the metadata edit details widget
+    // look up for the metadata edit details widget
 
-    connect(mMetadataViewDetails->normalView(), SIGNAL(qualifierLookupRequested(const QString &, const bool &)),
-            mMetadataEditDetails, SLOT(disableLookupInformation()));
-    connect(mMetadataViewDetails->normalView(), SIGNAL(qualifierLookupRequested(const QString &, const bool &)),
-            this, SLOT(lookupQualifier(const QString &, const bool &)));
+    connect(mMetadataViewDetails->normalView(), SIGNAL(qualifierLookUpRequested(const QString &)),
+            mMetadataEditDetails, SLOT(disableLookUpInformation()));
+    connect(mMetadataViewDetails->normalView(), SIGNAL(qualifierLookUpRequested(const QString &)),
+            this, SLOT(lookUpQualifier(const QString &)));
 
-    connect(mMetadataViewDetails->normalView(), SIGNAL(resourceLookupRequested(const QString &, const bool &)),
-            mMetadataEditDetails, SLOT(disableLookupInformation()));
-    connect(mMetadataViewDetails->normalView(), SIGNAL(resourceLookupRequested(const QString &, const bool &)),
-            this, SLOT(lookupResource(const QString &, const bool &)));
+    connect(mMetadataViewDetails->normalView(), SIGNAL(resourceLookUpRequested(const QString &)),
+            mMetadataEditDetails, SLOT(disableLookUpInformation()));
+    connect(mMetadataViewDetails->normalView(), SIGNAL(resourceLookUpRequested(const QString &)),
+            this, SLOT(lookUpResource(const QString &)));
 
-    connect(mMetadataViewDetails->normalView(), SIGNAL(idLookupRequested(const QString &, const QString &, const bool &)),
-            mMetadataEditDetails, SLOT(disableLookupInformation()));
-    connect(mMetadataViewDetails->normalView(), SIGNAL(idLookupRequested(const QString &, const QString &, const bool &)),
-            this, SLOT(lookupId(const QString &, const QString &, const bool &)));
+    connect(mMetadataViewDetails->normalView(), SIGNAL(idLookUpRequested(const QString &, const QString &)),
+            mMetadataEditDetails, SLOT(disableLookUpInformation()));
+    connect(mMetadataViewDetails->normalView(), SIGNAL(idLookUpRequested(const QString &, const QString &)),
+            this, SLOT(lookUpId(const QString &, const QString &)));
 
-    connect(mMetadataViewDetails->normalView(), SIGNAL(noLookupRequested()),
-            mMetadataEditDetails, SLOT(disableLookupInformation()));
-    connect(mMetadataViewDetails->normalView(), SIGNAL(noLookupRequested()),
-            this, SLOT(lookupNothing()));
+    connect(mMetadataViewDetails->normalView(), SIGNAL(noLookUpRequested()),
+            mMetadataEditDetails, SLOT(disableLookUpInformation()));
+    connect(mMetadataViewDetails->normalView(), SIGNAL(noLookUpRequested()),
+            this, SLOT(lookUpNothing()));
 
     // A connection to handle the removal of an RDF triple from our normal view
     // and to have our metadata edit details widget update itself with regards
@@ -205,26 +205,14 @@ void CellmlAnnotationViewMetadataDetailsWidget::retranslateUi()
 
     // Retranslate our category message
 
-    mCategoryMessage->setMessage( "<div align=center>"
-                                  "    <p>"
-                                  "        "+tr("Please select a CellML element...")
-                                 +"    </p>"
-                                  "</div>");
+    mCategoryMessage->setMessage(tr("Select a CellML element..."));
 
     // Retranslate our unsupported metadata message
 
-    QString extraMessage = Core::FileManager::instance()->isReadableAndWritable(mCellmlFile->fileName())?
-                               "    <p>"
-                               "        <small><em>("+tr("Please click <a href=\"here\">here</a> if you want to remove the existing metadata.")+")</em></small>"
-                               "    </p>":
-                               QString();
-
-    mUnsupportedMetadataMessage->setMessage( "<div align=center>"
-                                             "    <p>"
-                                             "        "+tr("Sorry, but the <strong>%1</strong> view does not support this type of metadata...").arg(mParent->pluginParent()->viewName())
-                                            +"    </p>"
-                                            +extraMessage
-                                            +"</div>");
+    mUnsupportedMetadataMessage->setMessage(tr("The <strong>%1</strong> view does not support this type of metadata...").arg(mParent->pluginParent()->viewName()),
+                                            Core::FileManager::instance()->isReadableAndWritable(mCellmlFile->fileName())?
+                                                tr("Click <a href=\"here\">here</a> if you want to remove the existing metadata."):
+                                                QString());
 }
 
 //==============================================================================
@@ -269,18 +257,6 @@ void CellmlAnnotationViewMetadataDetailsWidget::updateGui(iface::cellml_api::Cel
 
 //==============================================================================
 
-void CellmlAnnotationViewMetadataDetailsWidget::addRdfTriple(CellMLSupport::CellmlFileRdfTriple *pRdfTriple)
-{
-    if (!pRdfTriple)
-        return;
-
-    // Add the given RDF triple to our metadata view details
-
-    mMetadataViewDetails->addRdfTriple(pRdfTriple);
-}
-
-//==============================================================================
-
 void CellmlAnnotationViewMetadataDetailsWidget::emitSplitterMoved()
 {
     // Let people know that our splitter has been moved
@@ -317,38 +293,35 @@ CellmlAnnotationViewMetadataViewDetailsWidget * CellmlAnnotationViewMetadataDeta
 
 //==============================================================================
 
-void CellmlAnnotationViewMetadataDetailsWidget::lookupQualifier(const QString &pQualifier,
-                                                                const bool &pRetranslate)
+void CellmlAnnotationViewMetadataDetailsWidget::lookUpQualifier(const QString &pQualifier)
 {
     // Ask our parent to update our web viewer for us
 
-    mParent->updateWebViewerWithQualifierDetails(mWebView, pQualifier, pRetranslate);
+    mParent->updateWebViewerWithQualifierDetails(mWebView, pQualifier);
 }
 
 //==============================================================================
 
-void CellmlAnnotationViewMetadataDetailsWidget::lookupResource(const QString &pResource,
-                                                               const bool &pRetranslate)
+void CellmlAnnotationViewMetadataDetailsWidget::lookUpResource(const QString &pResource)
 {
     // Ask our parent to update our web viewer for us
 
-    mParent->updateWebViewerWithResourceDetails(mWebView, pResource, pRetranslate);
+    mParent->updateWebViewerWithResourceDetails(mWebView, pResource);
 }
 
 //==============================================================================
 
-void CellmlAnnotationViewMetadataDetailsWidget::lookupId(const QString &pResource,
-                                                         const QString &pId,
-                                                         const bool &pRetranslate)
+void CellmlAnnotationViewMetadataDetailsWidget::lookUpId(const QString &pResource,
+                                                         const QString &pId)
 {
     // Ask our parent to update our web viewer for us
 
-    mParent->updateWebViewerWithIdDetails(mWebView, pResource, pId, pRetranslate);
+    mParent->updateWebViewerWithIdDetails(mWebView, pResource, pId);
 }
 
 //==============================================================================
 
-void CellmlAnnotationViewMetadataDetailsWidget::lookupNothing()
+void CellmlAnnotationViewMetadataDetailsWidget::lookUpNothing()
 {
     // We are 'asked' to look nothing up, so 'clean up' our web view
 

@@ -11,6 +11,8 @@
 
             a {
                 color: rgb(54, 96, 146);
+                outline: 0px;
+                text-decoration: none;
             }
 
             a:visited {
@@ -18,6 +20,7 @@
             }
 
             a:hover {
+                margin: -1px;
                 border: 1px solid rgba(54, 96, 146, 0.13);
                 background-color: rgba(54, 96, 146, 0.05);
                 color: rgb(54, 96, 146);
@@ -31,12 +34,13 @@
                 margin: 0px;
             }
 
-            ul li {
+            li {
+                list-style-type: square;
                 margin-left: -1em;
             }
         </style>
     </head>
-    <body>
+    <body ondragstart="return false;" ondrop="return false;">
 %1
     </body>
 </html>

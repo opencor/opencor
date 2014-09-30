@@ -16,37 +16,43 @@ specific language governing permissions and limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// Core settings
+// CellML annotation view metadata web view widget
 //==============================================================================
 
-#ifndef CORESETTINGS_H
-#define CORESETTINGS_H
+#ifndef CELLMLANNOTATIONVIEWMETADATAWEBVIEWWIDGET_H
+#define CELLMLANNOTATIONVIEWMETADATAWEBVIEWWIDGET_H
 
 //==============================================================================
 
 #include <QString>
+#include <QWebView>
 
 //==============================================================================
 
 namespace OpenCOR {
+namespace CellMLAnnotationView {
 
 //==============================================================================
 
-static const auto SettingsGlobal          = QStringLiteral("Global");
-static const auto SettingsLocale          = QStringLiteral("Locale");
-static const auto SettingsActiveDirectory = QStringLiteral("ActiveDirectory");
+class CellmlAnnotationViewMetadataWebViewWidget : public QWebView
+{
+    Q_OBJECT
+
+public:
+    explicit CellmlAnnotationViewMetadataWebViewWidget(QWidget *pParent);
+
+    void retrieveLinkInformation(QString &pLink, QString &pTextContent);
+
+protected:
+    virtual bool event(QEvent *pEvent);
+
+protected:
+    bool mResettingCursor;
+};
 
 //==============================================================================
 
-static const auto SettingsBaseColor      = QStringLiteral("BaseColor");
-static const auto SettingsBorderColor    = QStringLiteral("BorderColor");
-static const auto SettingsHighlightColor = QStringLiteral("HighlightColor");
-static const auto SettingsLinkColor      = QStringLiteral("LinkColor");
-static const auto SettingsShadowColor    = QStringLiteral("Shadow");
-static const auto SettingsWindowColor    = QStringLiteral("WindowColor");
-
-//==============================================================================
-
+}   // namespace CellMLAnnotationView
 }   // namespace OpenCOR
 
 //==============================================================================

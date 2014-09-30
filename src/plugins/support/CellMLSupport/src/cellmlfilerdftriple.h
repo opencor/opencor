@@ -119,10 +119,12 @@ public:
     QString qualifierAsString() const;
 
     ModelQualifier modelQualifier() const;
+    static ModelQualifier modelQualifier(const QString &pModelQualifier);
     QString modelQualifierAsString() const;
     static QString modelQualifierAsString(const ModelQualifier &pModelQualifier);
 
     BioQualifier bioQualifier() const;
+    static BioQualifier bioQualifier(const QString &pBioQualifier);
     QString bioQualifierAsString() const;
     static QString bioQualifierAsString(const BioQualifier &pBioQualifier);
 
@@ -170,9 +172,9 @@ public:
 
     CellmlFileRdfTriple * add(CellmlFileRdfTriple *pRdfTriple);
 
-    void remove(CellmlFileRdfTriple *pRdfTriple);
-    void remove(iface::cellml_api::CellMLElement *pElement);
-    void removeAll();
+    bool remove(CellmlFileRdfTriple *pRdfTriple);
+    bool remove(iface::cellml_api::CellMLElement *pElement);
+    bool removeAll();
 
 private:
     CellmlFile *mCellmlFile;
@@ -180,7 +182,7 @@ private:
     void recursiveContains(CellmlFileRdfTriples &pRdfTriples,
                            CellmlFileRdfTriple *pRdfTriple) const;
 
-    void removeRdfTriples(const CellmlFileRdfTriples &pRdfTriples);
+    bool removeRdfTriples(const CellmlFileRdfTriples &pRdfTriples);
 };
 
 //==============================================================================

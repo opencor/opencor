@@ -58,6 +58,7 @@ specific language governing permissions and limitations under the License.
 #include <QDesktopServices>
 #include <QDesktopWidget>
 #include <QFileDialog>
+#include <QLocale>
 #include <QMenu>
 #include <QMenuBar>
 #include <QMessageBox>
@@ -181,9 +182,9 @@ Core::showEnableAction(mGui->actionPreferences, false);
 
     // Some connections to handle our various menu items
 
-    connect(mGui->actionQuit, SIGNAL(triggered()),
+    connect(mGui->actionQuit, SIGNAL(triggered(bool)),
             this, SLOT(close()));
-    connect(mGui->actionResetAll, SIGNAL(triggered()),
+    connect(mGui->actionResetAll, SIGNAL(triggered(bool)),
             this, SLOT(resetAll()));
 
     // Set the shortcuts of some actions
@@ -773,6 +774,8 @@ void MainWindow::setLocale(const QString &pLocale, const bool &pForceSetting)
     if (oldLocale.compare(newLocale) || pForceSetting) {
         // Specify the language to be used by OpenCOR
 
+        QLocale::setDefault(QLocale(newLocale));
+
         qApp->removeTranslator(&mQtTranslator);
         mQtTranslator.load(":qt_"+newLocale);
         qApp->installTranslator(&mQtTranslator);
@@ -1152,7 +1155,7 @@ void MainWindow::on_actionPlugins_triggered()
         // There are no plugins, so...
 
         QMessageBox::warning(this, tr("Plugins"),
-                             tr("Sorry, but no plugin could be found."));
+                             tr("No plugin could be found."));
     }
 }
 

@@ -68,6 +68,7 @@ MACRO(INITIALISE_PROJECT)
         Help
         ${MAC_EXTRAS}
         Network
+        OpenGL
         PrintSupport
         Svg
         UiTools

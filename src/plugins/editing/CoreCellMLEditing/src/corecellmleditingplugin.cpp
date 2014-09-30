@@ -132,12 +132,12 @@ void CoreCellMLEditingPlugin::initializePlugin(QMainWindow *pMainWindow)
 
     // Some connections to handle our different actions
 
-    connect(mFileNewCellml1_0FileAction, SIGNAL(triggered()),
+    connect(mFileNewCellml1_0FileAction, SIGNAL(triggered(bool)),
             this, SLOT(newCellml1_0File()));
-    connect(mFileNewCellml1_1FileAction, SIGNAL(triggered()),
+    connect(mFileNewCellml1_1FileAction, SIGNAL(triggered(bool)),
             this, SLOT(newCellml1_1File()));
 
-    connect(mToolsCellmlValidationAction, SIGNAL(triggered()),
+    connect(mToolsCellmlValidationAction, SIGNAL(triggered(bool)),
             this, SLOT(cellmlValidation()));
 }
 

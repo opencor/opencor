@@ -136,6 +136,9 @@ private:
 
 class SingleCellViewGraphPanelPlotScaleDraw : public QwtScaleDraw
 {
+public:
+    void retranslateUi();
+
 protected:
     virtual QwtText label(double pValue) const;
 };
@@ -218,6 +221,9 @@ private:
 
     bool mNeedContextMenu;
     QMenu *mContextMenu;
+
+    SingleCellViewGraphPanelPlotScaleDraw *mAxisX;
+    SingleCellViewGraphPanelPlotScaleDraw *mAxisY;
 
     void handleMouseDoubleClickEvent(QMouseEvent *pEvent);
 

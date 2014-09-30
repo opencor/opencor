@@ -721,17 +721,17 @@ CellmlFileRdfTriples CellmlFile::rdfTriples(iface::cellml_api::CellMLElement *pE
 
 //==============================================================================
 
-bool CellmlFile::rdfTripleExists(iface::cellml_api::CellMLElement *pElement,
-                                 const QString &pQualifier,
-                                 const QString &pResource,
-                                 const QString &pId) const
+CellmlFileRdfTriple * CellmlFile::rdfTriple(iface::cellml_api::CellMLElement *pElement,
+                                            const QString &pQualifier,
+                                            const QString &pResource,
+                                            const QString &pId) const
 {
     // Return whether the given RDF triple is associated with the CellML element
 
     if (QString::fromStdWString(pElement->cmetaId()).isEmpty())
         // The CellML element doesn't have a 'proper' cmeta:id, so...
 
-        return false;
+        return 0;
 
     // Go through the RDF triples associated with the CellML element and check
     // whether one of them corresponds to the given RDF triple
@@ -742,38 +742,40 @@ bool CellmlFile::rdfTripleExists(iface::cellml_api::CellMLElement *pElement,
             && !pId.compare(rdfTriple->id())) {
             // This is the RDF triple we are after, so...
 
-            return true;
+            return rdfTriple;
         }
 
     // We couldn't find the RDF triple, so...
 
-    return false;
+    return 0;
 }
 
 //==============================================================================
 
-bool CellmlFile::rdfTripleExists(iface::cellml_api::CellMLElement *pElement,
-                                 const CellmlFileRdfTriple::ModelQualifier &pModelQualifier,
-                                 const QString &pResource, const QString &pId) const
+CellmlFileRdfTriple * CellmlFile::rdfTriple(iface::cellml_api::CellMLElement *pElement,
+                                            const CellmlFileRdfTriple::ModelQualifier &pModelQualifier,
+                                            const QString &pResource,
+                                            const QString &pId) const
 {
-    // Call our generic rdfTripleExists() function
+    // Call our generic rdfTriple() function
 
-    return rdfTripleExists(pElement,
-                           CellmlFileRdfTriple::modelQualifierAsString(pModelQualifier),
-                           pResource, pId);
+    return rdfTriple(pElement,
+                     CellmlFileRdfTriple::modelQualifierAsString(pModelQualifier),
+                     pResource, pId);
 }
 
 //==============================================================================
 
-bool CellmlFile::rdfTripleExists(iface::cellml_api::CellMLElement *pElement,
-                                 const CellmlFileRdfTriple::BioQualifier &pBioQualifier,
-                                 const QString &pResource, const QString &pId) const
+CellmlFileRdfTriple * CellmlFile::rdfTriple(iface::cellml_api::CellMLElement *pElement,
+                                            const CellmlFileRdfTriple::BioQualifier &pBioQualifier,
+                                            const QString &pResource,
+                                            const QString &pId) const
 {
-    // Call our generic rdfTripleExists() function
+    // Call our generic rdfTriple() function
 
-    return rdfTripleExists(pElement,
-                           CellmlFileRdfTriple::bioQualifierAsString(pBioQualifier),
-                           pResource, pId);
+    return rdfTriple(pElement,
+                     CellmlFileRdfTriple::bioQualifierAsString(pBioQualifier),
+                     pResource, pId);
 }
 
 //==============================================================================
@@ -848,6 +850,28 @@ CellmlFileRdfTriple * CellmlFile::addRdfTriple(iface::cellml_api::CellMLElement 
 
     return mRdfTriples.add(new CellmlFileRdfTriple(this, rdfTripleSubject(pElement),
                                                    pBioQualifier, pResource, pId));
+}
+
+//==============================================================================
+
+bool CellmlFile::removeRdfTriple(iface::cellml_api::CellMLElement *pElement,
+                                 const CellmlFileRdfTriple::ModelQualifier &pModelQualifier,
+                                 const QString &pResource, const QString &pId)
+{
+    // Remove an RDF triple from our CellML file
+
+    return mRdfTriples.remove(rdfTriple(pElement, pModelQualifier, pResource, pId));
+}
+
+//==============================================================================
+
+bool CellmlFile::removeRdfTriple(iface::cellml_api::CellMLElement *pElement,
+                                 const CellmlFileRdfTriple::BioQualifier &pBioQualifier,
+                                 const QString &pResource, const QString &pId)
+{
+    // Remove an RDF triple from our CellML file
+
+    return mRdfTriples.remove(rdfTriple(pElement, pBioQualifier, pResource, pId));
 }
 
 //==============================================================================
