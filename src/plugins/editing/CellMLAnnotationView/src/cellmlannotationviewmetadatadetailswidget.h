@@ -77,8 +77,6 @@ public:
     CellmlAnnotationViewMetadataEditDetailsWidget * metadataEditDetails() const;
     CellmlAnnotationViewMetadataViewDetailsWidget * metadataViewDetails() const;
 
-    void fileReloaded();
-
 private:
     CellmlAnnotationViewEditingWidget *mParent;
 

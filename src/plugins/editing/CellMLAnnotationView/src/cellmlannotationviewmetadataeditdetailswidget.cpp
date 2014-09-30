@@ -1044,18 +1044,6 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::on_actionCopy_triggered()
 
 //==============================================================================
 
-void CellmlAnnotationViewMetadataEditDetailsWidget::fileReloaded()
-{
-    // The file has been reloaded, so we need to reset our various user fields
-
-    mQualifierValue->setCurrentIndex(0);
-    mLookUpQualifierButton->setChecked(false);
-
-    mTermValue->setText(QString());
-}
-
-//==============================================================================
-
 void CellmlAnnotationViewMetadataEditDetailsWidget::recenterBusyWidget()
 {
     // Recenter our busy widget

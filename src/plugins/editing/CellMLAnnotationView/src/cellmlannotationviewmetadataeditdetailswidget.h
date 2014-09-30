@@ -83,8 +83,6 @@ public:
 
     virtual void retranslateUi();
 
-    void fileReloaded();
-
 private:
     enum InformationType {
         None,

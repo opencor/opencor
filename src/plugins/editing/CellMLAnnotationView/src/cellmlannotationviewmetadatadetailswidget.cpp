@@ -351,17 +351,6 @@ void CellmlAnnotationViewMetadataDetailsWidget::updateMetadataEditDetails()
 
 //==============================================================================
 
-void CellmlAnnotationViewMetadataDetailsWidget::fileReloaded()
-{
-    // Let our metadata edit details widget know that the file has been reloaded
-    // Note: we don't need to let our metadata view details widget know about it
-    //       since it only presents information to the user...
-
-    mMetadataEditDetails->fileReloaded();
-}
-
-//==============================================================================
-
 }   // namespace CellMLAnnotationView
 }   // namespace OpenCOR
 

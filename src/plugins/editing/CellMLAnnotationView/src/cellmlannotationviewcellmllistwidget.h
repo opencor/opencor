@@ -138,8 +138,6 @@ public:
 
     CellmlAnnotationViewCellmlElementItem * currentCellmlElementItem() const;
 
-    void fileReloaded();
-
 private:
     CellMLSupport::CellmlFile *mCellmlFile;
 

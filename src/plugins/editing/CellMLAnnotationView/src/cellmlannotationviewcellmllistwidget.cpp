@@ -1067,18 +1067,6 @@ void CellmlAnnotationViewCellmlListWidget::on_actionOpenImport_triggered()
 
 //==============================================================================
 
-void CellmlAnnotationViewCellmlListWidget::fileReloaded()
-{
-    // The file has been reloaded, so we need to clear our tree view widget
-    // (i.e. the model associated with it) and (re)initialise it
-
-    mTreeViewModel->clear();
-
-    initializeTreeViewWidget();
-}
-
-//==============================================================================
-
 }   // namespace CellMLAnnotationView
 }   // namespace OpenCOR
 

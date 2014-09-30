@@ -346,22 +346,6 @@ void CellmlAnnotationViewEditingWidget::updateWebViewerWithIdDetails(QWebView *p
 
 //==============================================================================
 
-void CellmlAnnotationViewEditingWidget::fileReloaded()
-{
-    // Let our CellML list and metadata details widgets know that the file has
-    // been reloaded
-
-    mCellmlList->fileReloaded();
-    mMetadataDetails->fileReloaded();
-
-    // Set the focus back to our CellML list widget (so that it looks like we
-    // are really starting over)
-
-    mCellmlList->setFocus();
-}
-
-//==============================================================================
-
 }   // namespace CellMLAnnotationView
 }   // namespace OpenCOR
 
