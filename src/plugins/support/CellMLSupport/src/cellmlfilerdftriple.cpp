@@ -257,10 +257,17 @@ QString CellmlFileRdfTriple::metadataId() const
 {
     // Return the RDF triple's metadata id, if its subject is a URI reference
 
-    if (mSubject->type() == CellmlFileRdfTripleElement::UriReference)
-        return mSubject->uriReference().remove(QRegularExpression("^"+QRegularExpression::escape(mCellmlFile->xmlBase())+"#?"));
-    else
+    if (mSubject->type() == CellmlFileRdfTripleElement::UriReference) {
+        QString uriReference = mSubject->uriReference();
+        int hashPosition = uriReference.lastIndexOf("#");
+
+        if (hashPosition != -1)
+            return uriReference.right(uriReference.length()-hashPosition-1);
+        else
+            return QString();
+    } else {
         return QString();
+    }
 }
 
 //==============================================================================
@@ -546,8 +553,8 @@ void CellmlFileRdfTriples::recursiveContains(CellmlFileRdfTriples &pRdfTriples,
 
     pRdfTriples << pRdfTriple;
 
-    // Recursively add all the RDF triples which subject matches pRdfTriple's
-    // object
+    // Recursively add all the RDF triples, which subject matches that of
+    // pRdfTriple's object
 
     foreach (CellmlFileRdfTriple *rdfTriple, *this)
         if (!rdfTriple->subject()->asString().compare(pRdfTriple->object()->asString()))

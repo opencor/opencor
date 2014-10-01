@@ -23,6 +23,10 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#include <Qt>
+
+//==============================================================================
+
 namespace OpenCOR {
 namespace CellMLSupport {
 
