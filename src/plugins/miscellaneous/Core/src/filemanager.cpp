@@ -414,7 +414,7 @@ FileManager::Status FileManager::setLocked(const QString &pFileName,
         File::Status status = file->setLocked(pLocked);
 
         if (status == File::LockedSet)
-            emit filePermissionsChanged(nativeFileName);
+            emitFilePermissionsChanged(nativeFileName);
 
         if (status == File::LockedNotNeeded)
             return LockedNotNeeded;
@@ -573,6 +573,19 @@ int FileManager::count() const
 
 //==============================================================================
 
+void FileManager::emitFilePermissionsChanged(const QString &pFileName)
+{
+    // Update our internals and let people know that the given file has had its
+    // permissions changed
+
+    mFilesReadable.insert(pFileName, isReadable(pFileName));
+    mFilesWritable.insert(pFileName, isWritable(pFileName));
+
+    emit filePermissionsChanged(pFileName);
+}
+
+//==============================================================================
+
 void FileManager::checkFiles()
 {
     // We only want to check our files if we can check files and if there is no
@@ -607,18 +620,11 @@ void FileManager::checkFiles()
             // The file has neither changed nor been deleted, so check whether
             // its permissions have changed
 
-            bool fileReadable = isReadable(fileName);
-            bool fileWritable = isWritable(fileName);
-
-            if (    (fileReadable != mFilesReadable.value(fileName, false))
-                ||  (fileWritable != mFilesWritable.value(fileName, false))
+            if (    (mFilesReadable.value(fileName, false) != isReadable(fileName))
+                ||  (mFilesWritable.value(fileName, false) != isWritable(fileName))
                 || !(   mFilesReadable.contains(fileName)
                      && mFilesWritable.contains(fileName))) {
-
-                emit filePermissionsChanged(fileName);
-
-                mFilesReadable.insert(fileName, fileReadable);
-                mFilesWritable.insert(fileName, fileWritable);
+                emitFilePermissionsChanged(fileName);
             }
         }
     }

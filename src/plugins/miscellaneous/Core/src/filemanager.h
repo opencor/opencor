@@ -139,6 +139,8 @@ public:
 
     int count() const;
 
+    void emitFilePermissionsChanged(const QString &pFileName);
+
 private:
     bool mCanCheckFiles;
 
