@@ -143,8 +143,8 @@ Q_SIGNALS:
     void listPropertyChanged(Core::Property *pProperty, const QString &pValue);
     void booleanPropertyChanged(Core::Property *pProperty, const QString &pValue);
     // Note: strictly speaking, we don't need to specify the Core namespace, but
-    //       then if we were to do that we wouldn't be able to use the property
-    //       editor outside of the Core namespace, so...
+    //       then if we were no to specify it, we wouldn't be able to use the
+    //       property editor outside of the Core namespace...
 
 private Q_SLOTS:
     void emitListPropertyChanged(const QString &pValue);
