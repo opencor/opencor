@@ -207,6 +207,15 @@ void CellmlAnnotationViewMetadataDetailsWidget::retranslateUi()
 
     // Retranslate our unsupported metadata message
 
+    retranslateUnsupportedMetadataMessage();
+}
+
+//==============================================================================
+
+void CellmlAnnotationViewMetadataDetailsWidget::retranslateUnsupportedMetadataMessage()
+{
+    // Retranslate our unsupported metadata message
+
     mUnsupportedMetadataMessage->setMessage(tr("The <strong>%1</strong> view does not support this type of metadata...").arg(mParent->pluginParent()->viewName()),
                                             Core::FileManager::instance()->isReadableAndWritable(mCellmlFile->fileName())?
                                                 tr("Click <a href=\"here\">here</a> if you want to remove the existing metadata."):
@@ -345,6 +354,22 @@ void CellmlAnnotationViewMetadataDetailsWidget::updateMetadataEditDetails()
     // Update our metadata edit details widget
 
     mMetadataEditDetails->updateGui(mElement);
+}
+
+//==============================================================================
+
+void CellmlAnnotationViewMetadataDetailsWidget::filePermissionsChanged()
+{
+    // Retranslate our unsupported metadata message since part of it depends on
+    // whether the file is un/locked
+
+    retranslateUnsupportedMetadataMessage();
+
+    // Let our metadata edit and view details widgets know that the file has
+    // been un/locked
+
+    mMetadataEditDetails->filePermissionsChanged();
+    mMetadataViewDetails->filePermissionsChanged();
 }
 
 //==============================================================================

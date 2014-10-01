@@ -77,6 +77,8 @@ public:
     CellmlAnnotationViewMetadataEditDetailsWidget * metadataEditDetails() const;
     CellmlAnnotationViewMetadataViewDetailsWidget * metadataViewDetails() const;
 
+    void filePermissionsChanged();
+
 private:
     CellmlAnnotationViewEditingWidget *mParent;
 
@@ -101,6 +103,8 @@ private:
     CellMLSupport::CellmlFile *mCellmlFile;
 
     ObjRef<iface::cellml_api::CellMLElement> mElement;
+
+    void retranslateUnsupportedMetadataMessage();
 
 Q_SIGNALS:
     void splitterMoved(const QIntList &pSizes);

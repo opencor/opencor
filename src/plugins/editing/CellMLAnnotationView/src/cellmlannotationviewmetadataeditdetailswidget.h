@@ -83,6 +83,8 @@ public:
 
     virtual void retranslateUi();
 
+    void filePermissionsChanged();
+
 private:
     enum InformationType {
         None,

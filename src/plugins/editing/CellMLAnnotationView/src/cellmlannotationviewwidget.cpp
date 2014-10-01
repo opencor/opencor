@@ -19,6 +19,7 @@ specific language governing permissions and limitations under the License.
 // CellML annotation view widget
 //==============================================================================
 
+#include "cellmlannotationviewcellmllistwidget.h"
 #include "cellmlannotationvieweditingwidget.h"
 #include "cellmlannotationviewmetadatadetailswidget.h"
 #include "cellmlannotationviewplugin.h"
@@ -202,6 +203,19 @@ void CellmlAnnotationViewWidget::finalize(const QString &pFileName)
         if (editingWidget == mEditingWidget)
             mEditingWidget = 0;
     }
+}
+
+//==============================================================================
+
+void CellmlAnnotationViewWidget::filePermissionsChanged(const QString &pFileName)
+{
+    // The given file has been un/locked, so enable/disable parts of our GUI,
+    // should the given file be managed
+
+    CellmlAnnotationViewEditingWidget *editingWidget = mEditingWidgets.value(pFileName);
+
+    if (editingWidget)
+        editingWidget->filePermissionsChanged();
 }
 
 //==============================================================================

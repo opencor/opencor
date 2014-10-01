@@ -346,6 +346,18 @@ void CellmlAnnotationViewEditingWidget::updateWebViewerWithIdDetails(QWebView *p
 
 //==============================================================================
 
+void CellmlAnnotationViewEditingWidget::filePermissionsChanged()
+{
+    // Let our metadata details widget know that the file has been un/locked
+    // Note: we don't need to let our CellML list widget know about it since
+    //       anything that is related to file permissions is done on the fly (to
+    //       show a context menu)...
+
+    mMetadataDetails->filePermissionsChanged();
+}
+
+//==============================================================================
+
 }   // namespace CellMLAnnotationView
 }   // namespace OpenCOR
 

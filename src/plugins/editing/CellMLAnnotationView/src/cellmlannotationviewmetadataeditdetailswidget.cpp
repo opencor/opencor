@@ -316,7 +316,7 @@ CellmlAnnotationViewMetadataEditDetailsWidget::CellmlAnnotationViewMetadataEditD
     mGui->layout->addWidget(Core::newLineWidget(this));
     mGui->layout->addWidget(mOutput);
 
-    // Update the enabled state of our various add buttons
+    // Update our GUI (incl. its enabled state)
 
     updateGui(mElement, true);
 }
@@ -367,18 +367,10 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(iface::cellml_api:
 
     mElement = pElement;
 
-    // Enable/disable some of our user fields
-
-    bool fileReadableAndWritable = Core::FileManager::instance()->isReadableAndWritable(mCellmlFile->fileName());
-
-    mQualifierValue->setEnabled(fileReadableAndWritable);
-    mLookUpQualifierButton->setEnabled(fileReadableAndWritable);
-
-    mTermValue->setEnabled(fileReadableAndWritable);
-
     // Enable/disable our add term button, depending on whether the direct term
     // is already associated with the CellML element
 
+    bool fileReadableAndWritable = Core::FileManager::instance()->isReadableAndWritable(mCellmlFile->fileName());
     bool termIsDirect = isDirectTerm(mTermValue->text());
 
     if (termIsDirect) {
@@ -388,12 +380,14 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(iface::cellml_api:
             mAddTermButton->setEnabled(    fileReadableAndWritable
                                        && !mCellmlFile->rdfTriple(mElement,
                                                                   CellMLSupport::CellmlFileRdfTriple::BioQualifier(mQualifierValue->currentIndex()+1),
-                                                                  termInformation[0], termInformation[1]));
+                                                                  termInformation[0],
+                                                                  termInformation[1]));
         else
             mAddTermButton->setEnabled(    fileReadableAndWritable
                                        && !mCellmlFile->rdfTriple(mElement,
                                                                   CellMLSupport::CellmlFileRdfTriple::ModelQualifier(mQualifierValue->currentIndex()-CellMLSupport::CellmlFileRdfTriple::LastBioQualifier+1),
-                                                                  termInformation[0], termInformation[1]));
+                                                                  termInformation[0],
+                                                                  termInformation[1]));
     } else {
         mAddTermButton->setEnabled(false);
     }
@@ -411,7 +405,8 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(iface::cellml_api:
         updateItemsGui(Items(), !termIsDirect, QString());
 
     // Enable or disable the add buttons for our retrieved terms, depending on
-    // whether they are already associated with the CellML element
+    // whether the file is un/locked and whether they are already associated
+    // with the CellML element
 
     QWebElement documentElement = mOutputOntologicalTerms->page()->mainFrame()->documentElement();
 
@@ -452,6 +447,9 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::upudateOutputMessage(const b
 
     if (!Core::FileManager::instance()->isReadableAndWritable(mCellmlFile->fileName())) {
         mOutputMessage->setIconMessage(QString(), QString());
+
+        if (pShowBusyWidget && pLookUpTerm && !mTermValue->text().isEmpty())
+            *pShowBusyWidget = true;
     } else if (mTermValue->text().isEmpty()) {
         mOutputMessage->setIconMessage(":/oxygen/actions/help-hint.png",
                                        tr("Enter a term above..."));
@@ -755,7 +753,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::qualifierChanged(const QStri
         genericLookUp(pQualifier, Qualifier);
     }
 
-    // Update the enabled state of our various add buttons
+    // Update our GUI (incl. its enabled state)
 
     updateGui(mElement);
 }
@@ -850,7 +848,7 @@ bool CellmlAnnotationViewMetadataEditDetailsWidget::isDirectTerm(const QString &
 
 void CellmlAnnotationViewMetadataEditDetailsWidget::termChanged(const QString &pTerm)
 {
-    // Update the enabled state of our various add buttons
+    // Update our GUI (incl. its enabled state)
 
     updateGui(mElement, true);
 
@@ -966,7 +964,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::termLookedUp(QNetworkReply *
 
     updateItemsGui(items, false, errorMessage);
 
-    // Update the enabled state of our various add buttons
+    // Update our GUI (incl. its enabled state)
 
     updateGui(mElement);
 
@@ -1043,6 +1041,15 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::recenterBusyWidget()
     // Recenter our busy widget
 
     mParent->parent()->centerBusyWidget();
+}
+
+//==============================================================================
+
+void CellmlAnnotationViewMetadataEditDetailsWidget::filePermissionsChanged()
+{
+    // Update our GUI (incl. its enabled state)
+
+    updateGui(mElement, !mItemsCount);
 }
 
 //==============================================================================

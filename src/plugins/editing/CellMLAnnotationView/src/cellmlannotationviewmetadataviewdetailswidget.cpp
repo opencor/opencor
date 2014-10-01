@@ -110,6 +110,17 @@ CellmlAnnotationViewMetadataNormalViewDetailsWidget * CellmlAnnotationViewMetada
 
 //==============================================================================
 
+void CellmlAnnotationViewMetadataViewDetailsWidget::filePermissionsChanged()
+{
+    // Let our normal view widget know that the file has been un/locked
+    // Note: we don't need to let our raw view widget know about it since it
+    //       only presents information to the user...
+
+    mNormalView->filePermissionsChanged();
+}
+
+//==============================================================================
+
 }   // namespace CellMLAnnotationView
 }   // namespace OpenCOR
 

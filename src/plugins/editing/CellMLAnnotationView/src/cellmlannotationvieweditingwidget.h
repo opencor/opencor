@@ -90,6 +90,7 @@ public:
                                       const QString &pResource,
                                       const QString &pId);
 
+    void filePermissionsChanged();
 
 private:
     Ui::CellmlAnnotationViewEditingWidget *mGui;

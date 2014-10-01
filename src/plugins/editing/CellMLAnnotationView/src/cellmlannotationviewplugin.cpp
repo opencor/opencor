@@ -77,14 +77,9 @@ void CellMLAnnotationViewPlugin::fileOpened(const QString &pFileName)
 
 void CellMLAnnotationViewPlugin::filePermissionsChanged(const QString &pFileName)
 {
-    // The given file has been un/locked, so retranslate ourselves (since some
-    // messages may be locked-dependent)
-    // Note: our plugin is such that retranslating it will update the GUI (since
-    //       it was easier/faster to do it that way), so all we had to do was to
-    //       make those updateGui() methods locked-dependent...
+    // The given file has been un/locked, so let our view widget know about it
 
-    if (mViewWidget->contains(pFileName))
-        retranslateUi();
+    mViewWidget->filePermissionsChanged(pFileName);
 }
 
 //==============================================================================

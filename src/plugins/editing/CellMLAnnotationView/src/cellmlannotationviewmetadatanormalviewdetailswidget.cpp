@@ -616,6 +616,22 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::on_actionCopy_triggere
 
 //==============================================================================
 
+void CellmlAnnotationViewMetadataNormalViewDetailsWidget::filePermissionsChanged()
+{
+    // Enable or disable the remove buttons for our RDF triples, depending on
+    // whether the file is un/locked
+
+    bool fileReadableAndWritable = Core::FileManager::instance()->isReadableAndWritable(mCellmlFile->fileName());
+    QWebElement documentElement = mOutputOntologicalTerms->page()->mainFrame()->documentElement();
+
+    foreach (const QString &rdfTripleInformationSha1, mRdfTripleInformationSha1s) {
+        documentElement.findFirst(QString("td[id=button_%1]").arg(rdfTripleInformationSha1)).setStyleProperty("display", fileReadableAndWritable?"table-cell":"none");
+        documentElement.findFirst(QString("td[id=disabledButton_%1]").arg(rdfTripleInformationSha1)).setStyleProperty("display", !fileReadableAndWritable?"table-cell":"none");
+    }
+}
+
+//==============================================================================
+
 }   // namespace CellMLAnnotationView
 }   // namespace OpenCOR
 

@@ -87,10 +87,12 @@ public:
 
     CellmlFileRdfTriple * rdfTriple(iface::cellml_api::CellMLElement *pElement,
                                     const CellmlFileRdfTriple::ModelQualifier &pModelQualifier,
-                                    const QString &pResource, const QString &pId) const;
+                                    const QString &pResource,
+                                    const QString &pId) const;
     CellmlFileRdfTriple * rdfTriple(iface::cellml_api::CellMLElement *pElement,
                                     const CellmlFileRdfTriple::BioQualifier &pBioQualifier,
-                                    const QString &pResource, const QString &pId) const;
+                                    const QString &pResource,
+                                    const QString &pId) const;
 
     CellmlFileRdfTriple * addRdfTriple(iface::cellml_api::CellMLElement *pElement,
                                        const CellmlFileRdfTriple::ModelQualifier &pModelQualifier,

@@ -97,6 +97,8 @@ public:
     void addRdfTriple(CellMLSupport::CellmlFileRdfTriple *pRdfTriple,
                       const bool &pNeedAdditionalGuiUpdates = true);
 
+    void filePermissionsChanged();
+
 private:
     CellMLSupport::CellmlFile *mCellmlFile;
 
