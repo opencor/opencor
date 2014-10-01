@@ -169,13 +169,11 @@ bool HelpWindowPage::acceptNavigationRequest(QWebFrame*,
     // resource of sorts
 
     if (!urlScheme.compare("qthelp")) {
-        // This an OpenCOR document, so...
-
         return true;
     } else if (!urlScheme.compare("gui")) {
         // This is an action which we want OpenCOR or one of its plugins to
         // execute
-        // Note: a qobject_cast is not good enough on Windows and OS X, so...
+        // Note: a qobject_cast is not good enough on Windows and OS X...
 
         static_cast<SharedTools::QtSingleApplication *>(qApp)->handleAction(url);
 
@@ -216,7 +214,7 @@ HelpWindowWidget::HelpWindowWidget(QHelpEngine *pHelpEngine,
                   "}");
     // Note: not sure why, but no matter how many pixels are specified for the
     //       margin, no margin actually exists, but it addresses the issue with
-    //       the border drawn by drawBorderIfDocked, so...
+    //       the border drawn by drawBorderIfDocked...
 
     // Use our own help page and help network access manager classes
 
@@ -226,7 +224,7 @@ HelpWindowWidget::HelpWindowWidget(QHelpEngine *pHelpEngine,
 
     // Prevent objects from being dropped on us
     // Note: by default, QWebView allows for objects to be dropped on itself,
-    //       so...
+    //       while we don't want that...
 
     setAcceptDrops(false);
 
@@ -236,7 +234,7 @@ HelpWindowWidget::HelpWindowWidget(QHelpEngine *pHelpEngine,
 
     // Set our initial zoom level to the default value
     // Note: to set mZoomLevel directly is not good enough since one of the
-    //       things setZoomLevel does is to set our zoom factor, so...
+    //       things setZoomLevel does is to set our zoom factor...
 
     setZoomLevel(DefaultZoomLevel);
 
@@ -265,7 +263,7 @@ void HelpWindowWidget::retranslateUi()
     // Retranslate the current document, but only if it is an error document
     // since a valid document is hard-coded and therefore cannot be translated
     // Note: we use setUrl() rather than reload() since the latter won't work
-    //       upon starting OpenCOR with a non-system locale, so...
+    //       upon starting OpenCOR with a non-system locale...
 
     if (!mHelpEngine->findFile(url()).isValid())
         setUrl(url());

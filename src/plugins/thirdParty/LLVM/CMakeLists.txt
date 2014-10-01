@@ -21,7 +21,7 @@ MACRO(RETRIEVE_LLVM_SETTINGS)
     ENDIF()
 
     # Ignore some warnings on Windows, as well as allow for big objects
-    # Note: we have nothing to do with those warnings, so...
+    # Note: we have nothing to do with those warnings...
 
     IF(WIN32)
         SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /wd4244 /wd4267")
@@ -415,7 +415,7 @@ ELSE()
 # Note: we don't need the above, but we leave them so we know about them next
 #       time we update LLVM. Indeed, Intel JIT API support is only available on
 #       Linux and Windows, and it requires additional features that may or not
-#       be present on a build machine, so...
+#       be present on a build machine...
 
             lib/ExecutionEngine/Interpreter/Execution.cpp
             lib/ExecutionEngine/Interpreter/ExternalFunctions.cpp
@@ -433,7 +433,7 @@ ELSE()
 # Note: we don't need the above, but we leave them so we know about them next
 #       time we update LLVM. Indeed, OProfile support is only available on
 #       Linux, and it requires additional features that may or not be present
-#       on a build machine, so...
+#       on a build machine...
 
             lib/ExecutionEngine/RuntimeDyld/GDBRegistrar.cpp
             lib/ExecutionEngine/RuntimeDyld/RuntimeDyld.cpp

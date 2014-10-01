@@ -60,23 +60,21 @@ CellmlAnnotationViewMetadataDetailsWidget::CellmlAnnotationViewMetadataDetailsWi
 
     mGui->setupUi(this);
 
-    // Create our unsupported metadata message widget
+    // Create and hide our category message widget
 
     mCategoryMessage = new Core::UserMessageWidget(":/oxygen/actions/help-hint.png", this);
     mBorderedCategoryMessage = new Core::BorderedWidget(mCategoryMessage,
                                                         false, true, false, false);
 
     mBorderedCategoryMessage->setVisible(false);
-    // Note: we don't initially want to see it, so...
 
-    // Create our unsupported metadata message widget
+    // Create and hide our unsupported metadata message widget
 
     mUnsupportedMetadataMessage = new Core::UserMessageWidget(":/oxygen/actions/help-about.png", this);
     mBorderedUnsupportedMetadataMessage = new Core::BorderedWidget(mUnsupportedMetadataMessage,
                                                                    false, true, true, false);
 
     mBorderedUnsupportedMetadataMessage->setVisible(false);
-    // Note: we don't initially want to see it, so...
 
     // Create our splitter widget
 

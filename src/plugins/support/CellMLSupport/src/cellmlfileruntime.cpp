@@ -490,10 +490,7 @@ void CellmlFileRuntime::unknownProblemDuringModelCodeGenerationIssue()
 
 void CellmlFileRuntime::checkCodeInformation(iface::cellml_services::CodeInformation *pCodeInformation)
 {
-    if (!pCodeInformation)
-        // No code information was provided, so...
-
-        return;
+    Q_ASSERT(pCodeInformation);
 
     // Retrieve the code information's latest error message
 
@@ -514,8 +511,6 @@ void CellmlFileRuntime::checkCodeInformation(iface::cellml_services::CodeInforma
             mIssues << CellmlFileIssue(CellmlFileIssue::Error,
                                        tr("the model is overconstrained (i.e. some variables are either both initialised and computed or computed more than once)"));
     } else {
-        // The code generation didn't work, so...
-
         mIssues << CellmlFileIssue(CellmlFileIssue::Error,
                                    tr("a problem occurred during the generation of the model code"));
     }
@@ -547,8 +542,6 @@ void CellmlFileRuntime::retrieveOdeCodeInformation(iface::cellml_api::Model *pMo
     // Check the outcome of the ODE code generation
 
     if (mIssues.count())
-        // Something went wrong at some point, so...
-
         resetOdeCodeInformation();
 }
 
@@ -578,8 +571,6 @@ void CellmlFileRuntime::retrieveDaeCodeInformation(iface::cellml_api::Model *pMo
     // Check the outcome of the DAE code generation
 
     if (mIssues.count())
-        // Something went wrong at some point, so...
-
         resetDaeCodeInformation();
 }
 
@@ -636,19 +627,11 @@ bool sortParameters(CellmlFileRuntimeParameter *pParameter1,
     QString componentHierarchy2 = pParameter2->formattedComponentHierarchy();
 
     if (!componentHierarchy1.compare(componentHierarchy2)) {
-        // The parameters are in the same component, so check their name
-
         if (!pParameter1->name().compare(pParameter2->name()))
-            // The parameters have the same name, so check their degree
-
             return pParameter1->degree() < pParameter2->degree();
         else
-            // The parameters have different names, so...
-
             return pParameter1->name().compare(pParameter2->name(), Qt::CaseInsensitive) < 0;
     } else {
-        // The parameters are in different components, so...
-
         return componentHierarchy1.compare(componentHierarchy2, Qt::CaseInsensitive) < 0;
     }
 }
@@ -672,7 +655,8 @@ QStringList CellmlFileRuntime::componentHierarchy(iface::cellml_api::CellMLEleme
     ObjRef<iface::cellml_api::CellMLComponent> parentComponent = QueryInterface(parent);
 
     if (!component && !parentComponent)
-        // The element isn't a component and neither is its parent, so...
+        // The element isn't a component and neither is its parent, so it
+        // doesn't have a hierarchy
 
         return QStringList();
 
@@ -732,13 +716,11 @@ void CellmlFileRuntime::update()
     //          equations were flagged as needing a Newton-Raphson evaluation,
     //          in which case we would be dealing with a DAE model...
     // Note #3: ideally, there would be a more convenient way to determine the
-    //          type of a model, but well... there isn't, so...
+    //          type of a model, but there isn't...
 
     iface::cellml_api::Model *model = mCellmlFile->model();
 
     if (!model)
-        // No model is available, so...
-
         return;
 
     // Retrieve the model's type
@@ -926,7 +908,7 @@ void CellmlFileRuntime::update()
     QString functionsString = QString::fromStdWString(genericCodeInformation->functionsString());
 
     if (!functionsString.isEmpty()) {
-        // We will need to solve at least one NLA system, so...
+        // We will need to solve at least one NLA system
 
         mAtLeastOneNlaSystem = true;
 
@@ -958,9 +940,8 @@ void CellmlFileRuntime::update()
     // Retrieve the body of the function that initialises constants and extract
     // the statements that are related to computed variables (since we want to
     // be able to recompute those whenever the user modifies a parameter)
-    // Note: ideally, we wouldn't have to do that, but the fact is that the
-    //       CellML API doesn't distinguish between 'proper' and 'computed'
-    //       constants, so...
+    // Note: ideally, we wouldn't have to do that, but the CellML API doesn't
+    //       distinguish between 'proper' and 'computed' constants...
     //       (See https://tracker.physiomeproject.org/show_bug.cgi?id=3499)
 
     QStringList initConstsList = QString::fromStdWString(genericCodeInformation->initConstsString()).split("\r\n");
@@ -1031,8 +1012,6 @@ void CellmlFileRuntime::update()
     // Keep track of the ODE/DAE functions, but only if no issues were reported
 
     if (mIssues.count()) {
-        // Some issues were reported, so...
-
         reset(true, false);
     } else {
         // Add the symbol of any required external function, if any

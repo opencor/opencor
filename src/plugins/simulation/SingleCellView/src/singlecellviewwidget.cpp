@@ -615,7 +615,7 @@ void SingleCellViewWidget::initialize(const QString &pFileName,
     mDelayWidget->setValue(mDelays.value(pFileName));
 
     // Reset our file tab icon and update our progress bar
-    // Note: they may not both be necessary, but we never know, so...
+    // Note: they may not both be necessary, but we never know...
 
     resetFileTabIcon(pFileName);
 
@@ -744,8 +744,6 @@ void SingleCellViewWidget::initialize(const QString &pFileName,
                     simulationError(tr("the model needs both a DAE and an NLA solver, but no DAE solver is available"),
                                     InvalidSimulationEnvironment);
             } else {
-                // We have the solvers we need, so...
-
                 validSimulationEnvironment = true;
             }
         } else if (   cellmlFileRuntime->needOdeSolver()
@@ -757,8 +755,6 @@ void SingleCellViewWidget::initialize(const QString &pFileName,
             simulationError(tr("the model needs a DAE solver, but none is available"),
                             InvalidSimulationEnvironment);
         } else {
-            // We have the solver we need, so...
-
             validSimulationEnvironment = true;
         }
     }
@@ -958,7 +954,8 @@ QIcon SingleCellViewWidget::fileTabIcon(const QString &pFileName) const
 
         return QIcon(tabBarPixmap);
     } else {
-        // No simulation object currently exists for the model, so...
+        // No simulation object currently exists for the model, so return a null
+        // icon
 
         return QIcon();
     }
@@ -1052,7 +1049,7 @@ QVariant SingleCellViewWidget::value(Core::Property *pProperty) const
     case Core::Property::Boolean:
         return pProperty->booleanValue();
     default:
-        // Not a property type we are interested in, so...
+        // Not a property type in which we are interested
 
         return QVariant();
     }
@@ -1135,8 +1132,6 @@ void SingleCellViewWidget::on_actionRunPauseResumeSimulation_triggered()
                     QMessageBox::warning(qApp->activeWindow(), tr("Run Simulation"),
                                          tr("We could not allocate the %1 of memory required for the simulation.").arg(Core::sizeAsString(requiredMemory)));
             }
-
-            // We are done handling the action, so...
 
             handlingAction = false;
         }

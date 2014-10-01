@@ -202,9 +202,10 @@ void RawCellmlViewWidget::initialize(const QString &pFileName)
 
     // Set our focus proxy to our 'new' editing widget and make sure that the
     // latter immediately gets the focus
-    // Note: if we were not to immediately give our 'new' editing widget the
-    //       focus, then the central widget would give the focus to our 'old'
-    //       editing widget (see CentralWidget::updateGui()), so...
+    // Note: if we were not to immediately give the focus to our 'new' editing
+    //       widget, then the central widget would give the focus to our 'old'
+    //       editing widget (see CentralWidget::updateGui()), which is clearly
+    //       not what we want...
 
     setFocusProxy(mEditingWidget->editor());
 
@@ -462,13 +463,13 @@ QString RawCellmlViewWidget::retrieveContentMathmlEquation(const QString &pConte
 
             return domDocument.toString(-1);
         } else {
-            // We are not within a child node, so...
+            // We are not within a child node
 
             return QString();
         }
     } else {
         // No DOM representation of the given Content MathML block could be
-        // retrieved, so...
+        // retrieved
 
         return QString();
     }
@@ -558,8 +559,7 @@ void RawCellmlViewWidget::updateViewer()
                     }
                 }
             } else {
-                // Our current position is not within a Content MathML equation,
-                // so...
+                // Our current position is not within a Content MathML equation
 
                 mContentMathmlEquation = QString();
 
@@ -567,7 +567,7 @@ void RawCellmlViewWidget::updateViewer()
             }
         }
     } else {
-        // We couldn't find any Content MathML block, so...
+        // We couldn't find any Content MathML block
 
         mContentMathmlEquation = QString();
 

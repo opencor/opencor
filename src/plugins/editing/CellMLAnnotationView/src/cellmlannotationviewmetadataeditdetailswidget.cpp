@@ -186,10 +186,10 @@ CellmlAnnotationViewMetadataEditDetailsWidget::CellmlAnnotationViewMetadataEditD
 
     mLookUpQualifierButton = new QPushButton(qualifierWidget);
     // Note #1: ideally, we could assign a QAction to our QPushButton, but this
-    //          cannot be done, so... we assign a few properties by hand...
+    //          cannot be done, so instead we assign a few properties by hand...
     // Note #2: to use a QToolButton would allow us to assign a QAction to it,
     //          but a QToolButton doesn't look quite the same as a QPushButton
-    //          on some platforms, so...
+    //          on some platforms, so use a QPushButton instead...
 
     mLookUpQualifierButton->setCheckable(true);
     mLookUpQualifierButton->setIcon(QIcon(":/oxygen/categories/applications-internet.png"));
@@ -256,7 +256,7 @@ CellmlAnnotationViewMetadataEditDetailsWidget::CellmlAnnotationViewMetadataEditD
     // Note: ideally, we would take advantage of Qt's signal/slot approach with
     //       the signal being emitted here and the slot being implemented in
     //       mParent, but this wouldn't work here since updateGui() gets called
-    //       as part of the creation of this metadata details widget, so...
+    //       as part of the creation of this metadata details widget...
 
     setTabOrder(qobject_cast<QWidget *>(mParent->cellmlList()->treeViewWidget()),
                 mQualifierValue);
@@ -511,7 +511,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateItemsGui(const Items &
 
     // Reset various properties
     // Note: we might only do that before adding new items, but then again there
-    //       is no need to waste memory, so...
+    //       is no need to waste memory...
 
     mUrls.clear();
     mItemInformationSha1s.clear();
@@ -699,11 +699,9 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::genericLookUp(const QString 
 
     mInformationType = pInformationType;
 
-    // Check that we have something to look up
+    // Make sure that we have something to look up
 
     if (!mLookUpInformation)
-        // Nothing to look up, so...
-
         return;
 
     // Let people know that we want to look something up
@@ -773,11 +771,11 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::lookUpQualifier()
     // Call our generic look up function
 
     if (mLookUpQualifierButton->isChecked())
-        // We want to look something up, so...
+        // We want to look something up
 
         genericLookUp(mQualifierValue->currentText(), Qualifier);
     else
-        // We don't want to look anything up anymore, so...
+        // We don't want to look anything up anymore
 
         genericLookUp();
 }
@@ -953,13 +951,9 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::termLookedUp(QNetworkReply *
                 }
             }
         } else {
-            // Something went wrong, so...
-
             errorMessage = jsonParseError.errorString();
         }
     } else {
-        // Something went wrong, so...
-
         errorMessage = pNetworkReply->errorString();
     }
 

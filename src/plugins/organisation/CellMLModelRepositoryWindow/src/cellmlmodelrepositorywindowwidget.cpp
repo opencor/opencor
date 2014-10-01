@@ -47,7 +47,7 @@ CellmlModelRepositoryWindowWidget::CellmlModelRepositoryWindowWidget(QWidget *pP
                   "}");
     // Note: not sure why, but no matter how many pixels are specified for the
     //       margin, no margin actually exists, but it addresses the issue with
-    //       the border drawn by drawBorderIfDocked, so...
+    //       the border drawn by drawBorderIfDocked...
 
     // Prevent objects from being dropped on us
 

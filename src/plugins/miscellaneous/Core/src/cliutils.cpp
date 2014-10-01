@@ -157,8 +157,6 @@ bool SynchronousTextFileDownloader::readTextFromUrl(const QString &pUrl,
 
     networkReply->deleteLater();
 
-    // We are all done, so...
-
     return res;
 }
 #endif
@@ -216,7 +214,8 @@ QString osName()
     QString os = exec("uname", QStringList() << "-o");
 
     if (os.isEmpty())
-        // We couldn't find uname or something went wrong, so...
+        // We couldn't find uname or something went wrong, so simple return
+        // "Linux" as the OS name
 
         return "Linux";
     else
@@ -482,8 +481,6 @@ QByteArray resourceAsByteArray(const QString &pResource)
                               resource.size());
     }
     else {
-        // The resource doesn't exist, so...
-
         return QByteArray();
     }
 }

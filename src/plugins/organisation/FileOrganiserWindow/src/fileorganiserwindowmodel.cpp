@@ -112,8 +112,6 @@ QByteArray FileOrganiserWindowModel::encodeData(const QModelIndexList &pIndexes)
             encodeHierarchyData(index, stream);
     }
 
-    // We are all done, so...
-
     return res;
 }
 
@@ -139,8 +137,6 @@ QModelIndex FileOrganiserWindowModel::decodeHierarchyData(QDataStream &pStream) 
 
         crtItem = crtItem->child(row, 0);
     }
-
-    // We are all done, so...
 
     return indexFromItem(crtItem);
 }
@@ -179,8 +175,6 @@ QModelIndexList FileOrganiserWindowModel::decodeData(QByteArray &pData) const
             res << decodeHierarchyData(stream);
     }
 
-    // We are all done, so...
-
     return res;
 }
 
@@ -212,8 +206,6 @@ QMimeData * FileOrganiserWindowModel::mimeData(const QModelIndexList &pIndexes) 
     //       folder and file items around
 
     res->setData(FileOrganiserWindowMimeType, encodeData(pIndexes));
-
-    // All done, so...
 
     return res;
 }

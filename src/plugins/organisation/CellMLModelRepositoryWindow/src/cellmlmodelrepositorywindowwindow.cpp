@@ -83,8 +83,8 @@ CellmlModelRepositoryWindowWindow::CellmlModelRepositoryWindowWindow(QWidget *pP
     mContextMenu->addAction(mGui->actionCopy);
 
     // We want our own context menu for the help widget (indeed, we don't want
-    // the default one which has the reload menu item and not the other actions
-    // that we have in our tool bar widget, so...)
+    // the default one, which has the reload menu item and not the other actions
+    // that we have in our tool bar widget)
 
     mCellmlModelRepositoryWidget->setContextMenuPolicy(Qt::CustomContextMenu);
 
@@ -271,17 +271,11 @@ void CellmlModelRepositoryWindowWindow::finished(QNetworkReply *pNetworkReply)
                 mModelUrls << modelDetailsVariant[1].toString();
             }
 
-            // Everything went fine, so...
-
             mErrorMessage = QString();
         } else {
-            // Something went wrong, so...
-
             mErrorMessage = jsonParseError.errorString();
         }
     } else {
-        // Something went wrong, so...
-
         mErrorMessage = pNetworkReply->errorString();
     }
 

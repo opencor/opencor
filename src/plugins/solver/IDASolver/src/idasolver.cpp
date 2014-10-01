@@ -56,8 +56,6 @@ int residualFunction(double pVoi, N_Vector pStates, N_Vector pRates,
                                  userData->oldStates(), userData->algebraic(),
                                  userData->condVar(), residuals);
 
-    // Everything went fine, so...
-
     return 0;
 }
 
@@ -76,8 +74,6 @@ int rootFindingFunction(double pVoi, N_Vector pStates, N_Vector pRates,
                                        N_VGetArrayPointer(pStates),
                                        userData->oldStates(),
                                        userData->algebraic(), pRoots);
-
-    // Everything went fine, so...
 
     return 0;
 }
@@ -206,9 +202,9 @@ IdaSolver::IdaSolver() :
 
 IdaSolver::~IdaSolver()
 {
-    if (!mSolver)
-        // The solver hasn't been initialised, so...
+    // Make sure that the solver has been initialised
 
+    if (!mSolver)
         return;
 
     // Delete some internal objects

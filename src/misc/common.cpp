@@ -55,7 +55,8 @@ void initPluginsPath(const QString &pAppFileName)
         // using something like "[OpenCOR]/OpenCOR", in which case QFileInfo()
         // will get lost when trying to retrieve the canonical path for OpenCOR.
         // Now, when use something like "[OpenCOR]/OpenCOR", it's as if we were
-        // to use something like "[OpenCOR]/OpenCOR.com", so...
+        // to use something like "[OpenCOR]/OpenCOR.com", so update appFileInfo
+        // accordingly
 
         appFileInfo = pAppFileName+".com";
 #endif
@@ -149,9 +150,7 @@ QString shortVersion(QCoreApplication *pApp)
     else if (SizeOfPointer == 8)
         bitVersion = "64-bit";
     else
-        // Not a size that we could recognise, so...
-
-        bitVersion = "";
+        bitVersion = QString();
 
     if (!appVersion.contains("-"))
         res += "Version ";

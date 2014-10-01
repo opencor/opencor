@@ -95,8 +95,8 @@ void SingleCellViewGraphPanelsWidget::loadSettings(QSettings *pSettings)
     int graphPanelsCount = splitterSizes.count();
 
     if (!graphPanelsCount)
-        // For some reason, the settings for the number of graph panels to be
-        // created got messed up, so...
+        // For some reasons, the settings for the number of graph panels to be
+        // created got messed up, so reset it
 
         graphPanelsCount = 1;
 

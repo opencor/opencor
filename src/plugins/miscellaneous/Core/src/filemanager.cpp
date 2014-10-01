@@ -94,8 +94,6 @@ FileManager::Status FileManager::manage(const QString &pFileName,
 
     if (QFile::exists(nativeFileName)) {
         if (isManaged(nativeFileName)) {
-            // The file is already managed, so...
-
             return AlreadyManaged;
         } else {
             // The file isn't already managed, so add it to our list of managed
@@ -111,8 +109,6 @@ FileManager::Status FileManager::manage(const QString &pFileName,
             return Added;
         }
     } else {
-        // The file doesn't exist, so...
-
         return DoesNotExist;
     }
 }
@@ -140,8 +136,6 @@ FileManager::Status FileManager::unmanage(const QString &pFileName)
 
         return Removed;
     } else {
-        // The file isn't managed, so...
-
         return NotManaged;
     }
 }

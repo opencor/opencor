@@ -91,7 +91,7 @@ QString CellMLSupportPlugin::fileTypeDescription(const QString &pMimeType) const
     if (!pMimeType.compare(CellmlMimeType))
         return tr("CellML File");
     else
-        // Not a MIME type that we can recognise, so...
+        // Not a MIME type that we can recognise
 
         return QString();
 }
@@ -178,9 +178,6 @@ bool isCellmlFile(const QString &pFileName)
     // Return whether the file is a CellML file
 
     if (!QFileInfo(pFileName).completeSuffix().compare(CellmlFileExtension))
-        // We are dealing with a file which file extension is that of a CellML
-        // file, so...
-
         return true;
 
     // The file doesn't have the 'correct' file extension, so check whether it's
@@ -204,8 +201,6 @@ bool isCellmlFile(const QString &pFileName)
     QFile file(pFileName);
 
     if (!file.open(QIODevice::ReadOnly))
-        // We can't open the file, so...
-
         return false;
 
     // Try to read the file as if it was an XML file
@@ -225,9 +220,6 @@ bool isCellmlFile(const QString &pFileName)
             if (   !xml.name().toString().compare("model")
                 &&  (   (!xml.namespaceUri().toString().compare(Cellml_1_0_Namespace))
                      || (!xml.namespaceUri().toString().compare(Cellml_1_1_Namespace)))) {
-                // All the requirements are gathered for the file to be
-                // considered a CellML file, so...
-
                 res = true;
             }
 
@@ -236,8 +228,6 @@ bool isCellmlFile(const QString &pFileName)
     }
 
     file.close();
-
-    // We are done, so...
 
     return res;
 }

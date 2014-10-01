@@ -191,15 +191,11 @@ QString PluginManager::pluginsDir() const
 
 Plugin * PluginManager::plugin(const QString &pName) const
 {
-    // Return the plugin which name is the one we have been passed
+    // Return the plugin, which name is the one we have been passed, if any
 
     foreach (Plugin *plugin, mPlugins)
         if (!pName.compare(plugin->name()))
-            // This is the plugin we are after, so...
-
             return plugin;
-
-    // The plugin we are after wasn't found, so...
 
     return 0;
 }

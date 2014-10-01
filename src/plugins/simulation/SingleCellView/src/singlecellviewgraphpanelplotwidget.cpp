@@ -350,7 +350,7 @@ void SingleCellViewGraphPanelPlotOverlayWidget::drawCoordinates(QPainter *pPaint
     //       always add/subtract a rounded number), it happens that it's not
     //       always the case. Indeed, we should always have a gap of one pixel
     //       between the coordinates and pPoint, but it could happen that we
-    //       have either no gap or one of two pixels, so...
+    //       have either no gap or one of two pixels...
 
     pPainter->setFont(mOwner->axisFont(QwtPlot::xBottom));
 
@@ -581,12 +581,10 @@ bool SingleCellViewGraphPanelPlotWidget::eventFilter(QObject *pObject,
     bool res = QwtPlot::eventFilter(pObject, pEvent);
 
     // We want to handle a double mouse click, but for some reasons to override
-    // mouseDoubleClickEvent() doesn't work, so...
+    // mouseDoubleClickEvent() doesn't work, so we do it ourselves
 
     if (pEvent->type() == QEvent::MouseButtonDblClick)
         handleMouseDoubleClickEvent(static_cast<QMouseEvent *>(pEvent));
-
-    // We are all done, so...
 
     return res;
 }

@@ -88,7 +88,7 @@ int CellMLToolsPlugin::executeCommand(const QString &pCommand,
 
         return runExportCommand(pArguments);
     } else {
-        // Not a CLI command that we support, so...
+        // Not a CLI command that we support
 
         runHelpCommand();
 

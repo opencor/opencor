@@ -194,7 +194,7 @@ Core::showEnableAction(mGui->actionPreferences, false);
 #if defined(Q_OS_WIN) || defined(Q_OS_LINUX)
     // Note: normally, we would be using QKeySequence::Quit, but we want to
     //       support both Alt+F4 and Ctrl+Q on Windows and Linux, and the
-    //       default key sequence doesn't, so...
+    //       default key sequence doesn't, so we set them ourselves...
 
     mGui->actionQuit->setShortcuts(QList<QKeySequence>()
                                        << QKeySequence(Qt::ALT|Qt::Key_F4)
@@ -208,7 +208,7 @@ Core::showEnableAction(mGui->actionPreferences, false);
 #ifdef Q_OS_MAC
     // A special shortcut to have OpenCOR minimised on OS X when pressing Cmd+M
     // Note: indeed, when pressing Cmd+M on OS X, the active application is
-    //       expected to minimise itself, so...
+    //       expected to minimise itself, but it doesn't using Qt only...
 
     new QShortcut(QKeySequence("Ctrl+M"),
                   this, SLOT(showMinimized()));
@@ -216,7 +216,7 @@ Core::showEnableAction(mGui->actionPreferences, false);
     // Note: we used to have a shortcut (the Escape key) to have OpenCOR resume
     //       from full screen mode, but this conflicted with EditorWidget where
     //       the Escape key is used to hide the find/replace widget. So, we
-    //       decided to remove the shortcut. In the end, we are actually being
+    //       decided to remove it. This being said, we are, in the end, being
     //       consistent with other editing tools such as Qt Creator and
     //       TextWrangler...
 #endif
@@ -280,13 +280,13 @@ MainWindow::~MainWindow()
     // Finalise our various plugins
     // Note: we only need to test for our default interface since we want to
     //       call the finalize method and this method is not overriden by any
-    //       other interface, so...
+    //       other interface...
 
     foreach (Plugin *plugin, mLoadedPluginPlugins)
         qobject_cast<PluginInterface *>(plugin->instance())->finalizePlugin();
 
     // Delete our central widget
-    // Note: if we don't have one, then nothing will happen, so...
+    // Note: if we don't have one, then nothing will happen...
 
     delete centralWidget();
 
@@ -447,7 +447,7 @@ void MainWindow::initializeGuiPlugin(Plugin *pPlugin)
 
                     break;
                 default:
-                    // Not a type in which we are interested, so do nothing...
+                    // Not a type in which we are interested, so do nothing
 
                     ;
                 }
@@ -494,7 +494,7 @@ void MainWindow::initializeGuiPlugin(Plugin *pPlugin)
                 break;
             }
             default:
-                // Not a type in which we are interested, so do nothing...
+                // Not a type in which we are interested, so do nothing
 
                 ;
             }
@@ -512,7 +512,7 @@ void MainWindow::initializeGuiPlugin(Plugin *pPlugin)
 
                     break;
                 default:
-                    // Not a type in which we are interested, so do nothing...
+                    // Not a type in which we are interested, so do nothing
 
                     ;
                 }
@@ -559,7 +559,7 @@ void MainWindow::initializeGuiPlugin(Plugin *pPlugin)
 
                 break;
             default:
-                // Not a type in which we are interested, so do nothing...
+                // Not a type in which we are interested, so do nothing
 
                 ;
             }
@@ -678,8 +678,7 @@ void MainWindow::loadSettings()
 
     // Remove the File menu when on OS X, should no plugins be loaded
     // Note: our File menu should only contain the Exit menu item, but on OS X
-    //       that menu item gets automatically moved to the application menu,
-    //       so...
+    //       that menu item gets automatically moved to the application menu...
 
 #ifdef Q_OS_MAC
     mGui->menuFile->menuAction()->setVisible(mPluginManager->loadedPlugins().count());
@@ -817,7 +816,7 @@ void MainWindow::setLocale(const QString &pLocale, const bool &pForceSetting)
 
     // Update the checked menu item
     // Note: it has to be done every single time, since selecting a menu item
-    //       will automatically toggle its checked status, so...
+    //       will automatically toggle its checked status...
 
     mGui->actionSystem->setChecked(!pLocale.compare(SystemLocale));
 
@@ -914,8 +913,8 @@ void MainWindow::showSelf()
 {
     // Note: to show ourselves, one would normally use activateWindow() (and
     //       possibly raise()), but depending on the operating system it may or
-    //       not bring OpenCOR to the foreground, so... instead we do what
-    //       follows, depending on the operating system...
+    //       not bring OpenCOR to the foreground, so instead we do what follows,
+    //       depending on the operating system...
 
 #if defined(Q_OS_WIN)
     // Show ourselves the Windows way
@@ -1015,7 +1014,7 @@ void MainWindow::handleAction(const QUrl &pUrl)
         // OpenCOR
         // Note: the file name is contained in the path of the URL minus the
         //       leading forward slash. Indeed, an open file request will look
-        //       something like gui://openFiles//home/user/file, so...
+        //       like gui://openFiles//home/user/file...
 
         handleArguments(pUrl.path().remove(0, 1));
     } else if (!authority.compare("openFiles", Qt::CaseInsensitive)) {
@@ -1023,9 +1022,7 @@ void MainWindow::handleAction(const QUrl &pUrl)
         // that were passed to OpenCOR
         // Note: the file names are contained in the path of the URL minus the
         //       leading forward slash. Indeed, an open files request  will look
-        //       something like
-        //           gui://openFiles//home/user/file1|/home/user/file2
-        //       so...
+        //       like gui://openFiles//home/user/file1|/home/user/file2...
 
         handleArguments(pUrl.path().remove(0, 1));
     } else {
@@ -1152,8 +1149,6 @@ void MainWindow::on_actionPlugins_triggered()
             pluginsWindow.saveSettings(mSettings);
         mSettings->endGroup();
     } else {
-        // There are no plugins, so...
-
         QMessageBox::warning(this, tr("Plugins"),
                              tr("No plugin could be found."));
     }

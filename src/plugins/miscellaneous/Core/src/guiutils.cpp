@@ -165,8 +165,6 @@ QString getSaveFileName(const QString &pCaption, const QString &pFileName,
                                       QObject::tr("<strong>%1</strong> already exists. Do you want to overwrite it?").arg(res),
                                       QMessageBox::Yes|QMessageBox::No,
                                       QMessageBox::Yes) == QMessageBox::No )
-                // We don't want to overwrite the save file, so...
-
                 return QString();
     }
 

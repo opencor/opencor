@@ -70,8 +70,8 @@ void CellmlAnnotationViewCellmlElementItemDelegate::paint(QPainter *pPainter,
     if (   (cellmlElementItem->type() == CellmlAnnotationViewCellmlElementItem::Error)
         || (cellmlElementItem->type() == CellmlAnnotationViewCellmlElementItem::Warning)) {
         // This is an error/warning item, so prevent it from being hoverable and
-        // make it look enabled since it's actually disabled (so we can't select
-        // it), yet we want to see it as if it was enabled, so...
+        // make it look enabled since it's actually disabled (so that it can't
+        // be selected) and yet we want to see it as if it wasn't
 
         option.state &= ~QStyle::State_MouseOver;
         option.state |=  QStyle::State_Enabled;
@@ -282,7 +282,7 @@ void CellmlAnnotationViewCellmlElementItem::setIcon(const Type &pType)
 
         break;
     default:
-        // Type which doesn't require an icon, so...
+        // Type that doesn't require an icon
 
         ;
     }

@@ -249,7 +249,7 @@ void SingleCellViewSimulationWorker::started()
     }
 
     // Make sure that we have found our ODE/DAE solver
-    // Note: this should never happen, but we never know, so...
+    // Note: this should never happen, but we never know...
 
     if (!voiSolver) {
         if (mRuntime->needOdeSolver())
@@ -285,7 +285,7 @@ void SingleCellViewSimulationWorker::started()
             }
 
         // Make sure that we have found our NLA solver
-        // Note #1: this should never happen, but we never know, so...
+        // Note #1: this should never happen, but we never know...
         // Note #2: see the end of this method about we do before returning...
 
         if (!nlaSolver) {
@@ -389,8 +389,7 @@ void SingleCellViewSimulationWorker::started()
         //       loop doesn't emit any signal, be it directly or indirectly,
         //       unless it is to let people know that we are pausing or running.
         //       Indeed, the signal/slot mechanism adds a certain level of
-        //       overhead and, here, we want things to be as fast as possible,
-        //       so...
+        //       overhead and, here, we want things to be as fast as possible...
 
         QMutex pausedMutex;
 
@@ -487,15 +486,11 @@ void SingleCellViewSimulationWorker::started()
         // Retrieve the total elapsed time, should no error have occurred
 
         if (mError)
-            // An error occurred, so...
-
             elapsedTime = -1;
             // Note: we use -1 as a way to indicate that something went wrong...
         else
             elapsedTime += timer.elapsed();
     } else {
-        // An error occurred, so...
-
         elapsedTime = -1;
         // Note: we use -1 as a way to indicate that something went wrong...
     }
@@ -512,8 +507,8 @@ void SingleCellViewSimulationWorker::started()
 
     // Reset our simulation owner's knowledge of us
     // Note: if we were to do it the Qt way, our simulation owner would have a
-    //       slot for our finished() signal, but we want it to know as quickly
-    //       as possible that we are done, so...
+    //       slot for our finished() signal, but we want our simulation owner to
+    //       know as quickly as possible that we are done...
 
     *mSelf = 0;
 

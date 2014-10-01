@@ -48,8 +48,8 @@ MACRO(RETRIEVE_CELLML_API_SETTINGS)
 
     IF(WIN32)
         SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4091 /wd4290")
-        # Note: on Windows, some warnings get generated. Yet, we have nothing to
-        #       do with them, so...
+        # Note: on Windows, some warnings get generated, but we have nothing to
+        #       do with them...
     ENDIF()
 ENDMACRO()
 

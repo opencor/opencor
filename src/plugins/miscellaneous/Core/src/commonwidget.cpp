@@ -89,7 +89,7 @@ void CommonWidget::drawBorder(const bool &pDockedTop, const bool &pDockedLeft,
                               const bool &pFloatingBottom, const bool &pFloatingRight)
 {
     // Draw a border around the widget
-    // Note: a qobject_cast is not good enough for mParent on OS X, so...
+    // Note: a qobject_cast is not good enough for mParent on OS X...
 
     QDockWidget *dockWidget = dynamic_cast<QDockWidget *>(mParent);
     QWidget *widget = dynamic_cast<QWidget *>(this);

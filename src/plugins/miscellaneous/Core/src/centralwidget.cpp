@@ -197,7 +197,6 @@ CentralWidget::CentralWidget(QMainWindow *pMainWindow) :
     mNoViewMsg = new UserMessageWidget(":/oxygen/actions/help-about.png", this);
 
     mNoViewMsg->setVisible(false);
-    // Note: we don't initially want to see our no view message widget, so...
 
     // Create and set up our central widget
 
@@ -307,7 +306,7 @@ CentralWidget::~CentralWidget()
     // Close all the files
     // Note: we force the closing of all the files since canClose() will have
     //       been called before to decide what needs to be done with modified
-    //       files, so...
+    //       files...
 
     closeAllFiles(true);
 
@@ -698,9 +697,9 @@ void CentralWidget::updateFileTab(const int &pIndex)
 void CentralWidget::openFile(const QString &pFileName, const File::Type &pType,
                              const QString &pUrl)
 {
-    if (!mModeTabs->count() || !QFile::exists(pFileName))
-        // No modes are available or the file doesn't exist, so...
+    // Make sure that modes are available and that the file exists
 
+    if (!mModeTabs->count() || !QFile::exists(pFileName))
         return;
 
     // Check whether the file is already opened and, if so, select it and leave
@@ -733,8 +732,9 @@ void CentralWidget::openFile(const QString &pFileName, const File::Type &pType,
     //          the tabs...
     // Note #2: rather than using mFileNames, we could have used a tab's tool
     //          tip, but this makes it a bit tricky to handle with regards to
-    //          connections and therefore some events triggering updateGui() to
-    //          be called when the tool tip has not yet been assigned, so...
+    //          connections and therefore with regards to some events triggering
+    //          updateGui() to be called when the tool tip has not yet been
+    //          assigned...
 
     int fileTabIndex = mFileTabs->currentIndex()+1;
 
@@ -1084,8 +1084,6 @@ bool CentralWidget::saveFile(const int &pIndex, const bool &pNeedNewFileName)
 
                 emit fileManagerInstance->fileSaved(oldFileName);
             } else {
-                // The file couldn't be saved, so...
-
                 QMessageBox::warning(mMainWindow, tr("Save File"),
                                      tr("The <strong>%1</strong> view could not save <strong>%2</strong>.").arg(viewInterface->viewName(), newFileName));
 
@@ -1148,12 +1146,8 @@ bool CentralWidget::saveFile(const int &pIndex, const bool &pNeedNewFileName)
 
         fileManagerInstance->setCanCheckFiles(true);
 
-        // Everything went fine, so...
-
         return true;
     } else {
-        // Nothing to save, so...
-
         return false;
     }
 }
@@ -1217,7 +1211,7 @@ bool CentralWidget::canCloseFile(const int &pIndex)
     FileManager *fileManagerInstance = FileManager::instance();
     QString fileName = mFileNames[pIndex];
 
-    if (fileManagerInstance->isNewOrModified(fileName))
+    if (fileManagerInstance->isNewOrModified(fileName)) {
         // The current file is modified, so ask the user whether to save it or
         // ignore it
 
@@ -1228,22 +1222,15 @@ bool CentralWidget::canCloseFile(const int &pIndex)
                                       QMessageBox::Yes|QMessageBox::No|QMessageBox::Cancel,
                                       QMessageBox::Yes)) {
         case QMessageBox::Yes:
-            // The user wants to save the file, so...
-
             return saveFile(pIndex);
         case QMessageBox::No:
-            // The user doesn't want to save the file, so...
-
             return true;
         default:   // QMessageBox::Cancel
-            // The user wants to cancel, so...
-
             return false;
         }
-    else
-        // The current file is not modified, so...
-
+    } else {
         return true;
+    }
 }
 
 //==============================================================================
@@ -1275,8 +1262,6 @@ bool CentralWidget::closeFile(const int &pIndex, const bool &pForceClosing)
         //       file can be closed...
 
         if (!closingAllFiles && !pForceClosing && !canCloseFile(realIndex))
-            // The file cannot be closed, so...
-
             return false;
 
         // Retrieve the file name
@@ -1327,12 +1312,8 @@ bool CentralWidget::closeFile(const int &pIndex, const bool &pForceClosing)
 
         updateModifiedSettings();
 
-        // Everything went fine, so...
-
         return true;
     } else {
-        // The file is not currently opened, so...
-
         return false;
     }
 }
@@ -1344,8 +1325,6 @@ void CentralWidget::closeAllFiles(const bool &pForceClosing)
     // Check whether we can close all the files
 
     if (!pForceClosing && !canClose())
-        // We can't close all the files, so...
-
         return;
 
     // Close all the files
@@ -1373,8 +1352,6 @@ bool CentralWidget::canClose()
     for (int i = 0, iMax = mFileTabs->count(); i < iMax; ++i)
         if (!canCloseFile(i))
             return false;
-
-    // We checked all the opened files, so...
 
     return true;
 }
@@ -1711,7 +1688,7 @@ void CentralWidget::updateGui()
     //          the same view) with the status bar visible and the mouse pointer
     //          over a button-like widget within the current view (see
     //          https://github.com/opencor/opencor/issues/405). It's not neat,
-    //          but it seems like it might be an issue with Qt itself, so...
+    //          but it seems like it might be an issue with Qt itself...
 
     bool statusBarVisible = mMainWindow->statusBar()->isVisible();
 
@@ -1729,7 +1706,7 @@ void CentralWidget::updateGui()
         // The new view has a focused widget, so just focus it (indeed, say that
         // we are using the CellML Annotation view and that we are editing some
         // metadata, then we don't want the CellML element list to get the focus
-        // back, so...)
+        // back)
 
         newView->focusWidget()->setFocus();
     else
@@ -1754,8 +1731,6 @@ void CentralWidget::updateGui()
     emit atLeastOneFile(mFileTabs->count());
     emit atLeastTwoFiles(mFileTabs->count() > 1);
 
-    // We are done with updating the GUI, so...
-
     mState = Idling;
 }
 
@@ -1771,17 +1746,16 @@ QTabBar * CentralWidget::newTabBar(const QTabBar::Shape &pShape,
 
     res->setExpanding(false);
     // Note: if the above property is not enabled and many files are opened,
-    //       then the central widget will widen reducing the width of any docked
-    //       window which is clearly not what we want, so...
+    //       then the central widget will widen, reducing the width of any
+    //       docked window, which is clearly not what we want...
     res->setFocusPolicy(Qt::NoFocus);
     res->setMovable(pMovable);
     res->setShape(pShape);
     res->setTabsClosable(pTabsClosable);
     res->setUsesScrollButtons(true);
     // Note: the above property is style dependent and it happens that it's not
-    //       enabled on OS X, so... set it in all cases, even though it's
-    //       already set on Windows and Linux, but one can never know what the
-    //       future holds, so...
+    //       enabled on OS X, so set it in all cases, even though it's already
+    //       set on Windows and Linux, but better be safe than sorry...
 
     return res;
 }

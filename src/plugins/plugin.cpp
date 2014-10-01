@@ -59,7 +59,7 @@ Plugin::Plugin(const QString &pFileName, PluginInfo *pInfo,
             //       loaded before the shared library itself can be loaded,
             //       while on Linux / OS X, it's possible to load a shared
             //       library even if its dependencies are not loaded. Still, it
-            //       doesn't harm doing the same on Linux / OS X, so...
+            //       doesn't harm doing the same on Linux / OS X...
 
             bool pluginDependenciesLoaded = true;
 
@@ -72,7 +72,7 @@ Plugin::Plugin(const QString &pFileName, PluginInfo *pInfo,
                     || (   pluginDependency
                         && (pluginDependency->status() != Loaded))) {
                     // Either the plugin dependency couldn't be found or it
-                    // could be found but it isn't loaded, so...
+                    // could be found but it isn't loaded
 
                     pluginDependenciesLoaded = false;
 
@@ -111,24 +111,22 @@ Plugin::Plugin(const QString &pFileName, PluginInfo *pInfo,
 
                     if (coreInterface && mName.compare(CorePluginName)) {
                         // We are dealing with a plugin that supports the Core
-                        // interface, but it's not the Core plugin, so...
+                        // interface, but it's not the Core plugin
 
                         mStatus = NotCorePlugin;
                     } else if (!coreInterface && !mName.compare(CorePluginName)) {
                         // We are dealing with the Core plugin, but it doesn't
-                        // support the Core interface, so...
+                        // support the Core interface
 
                         mStatus = InvalidCorePlugin;
                     } else if (cliInterface && !pInfo->hasCliSupport()) {
                         // We are dealing with a plugin that supports the CLI
-                        // interface, but it doesn't claim to have CLI support,
-                        // so...
+                        // interface, but it doesn't claim to have CLI support
 
                         mStatus = NotCliPluginNoCliSupport;
                     } else if (!cliInterface && pInfo->hasCliSupport()) {
                         // We are dealing with a plugin that is supposed to have
-                        // CLI support, yet it doesn't support the CLI interface,
-                        // so...
+                        // CLI support, but it doesn't support the CLI interface
 
                         mStatus = NotCliPluginNoCliInterface;
                     } else {
@@ -340,8 +338,7 @@ bool Plugin::load(const QString &pName)
     //       own QSettings rather than that of MainWindow since the latter might
     //       not point to ~ when reaching this point. Indeed, we may come here
     //       from PluginManager::PluginManager (which points to ~) or
-    //       PluginsWindow::PluginsWindow (which points to ~/PluginsWindow),
-    //       so...
+    //       PluginsWindow::PluginsWindow (which points to ~/PluginsWindow)...
 
     QSettings settings(SettingsOrganization, SettingsApplication);
 

@@ -162,9 +162,10 @@ void RawViewWidget::initialize(const QString &pFileName)
 
     // Set our focus proxy to our 'new' editor and make sure that the latter
     // immediately gets the focus
-    // Note: if we were not to immediately give our 'new' editor the focus, then
-    //       the central widget would give the focus to our 'old' editor (see
-    //       CentralWidget::updateGui()), so...
+    // Note: if we were not to immediately give the focus to our 'new' editor,
+    //       then the central widget would give the focus to our 'old' editor
+    //       (see CentralWidget::updateGui()), which is clearly not what we
+    //       want...
 
     setFocusProxy(mEditor);
 

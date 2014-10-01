@@ -664,7 +664,7 @@ void SingleCellViewInformationGraphsWidget::populateContextMenu(QMenu *pContextM
         }
 
         // Make sure that we have a 'current' component menu
-        // Note: this should never happen, but we never know, so...
+        // Note: this should never happen, but we never know...
 
         if (!componentMenu)
             continue;

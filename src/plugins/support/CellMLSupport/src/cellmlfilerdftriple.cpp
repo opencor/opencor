@@ -134,8 +134,8 @@ CellmlFileRdfTriple::CellmlFileRdfTriple(CellmlFile *pCellmlFile,
 
         if (!decodeTerm(mObject->asString(), mResource, mId)) {
             // The object is neither a valid MIRIAM URN nor a valid
-            // identifiers.org URI which means that the RDF triple is not a
-            // valid model/bio(logy) qualifier, so...
+            // identifiers.org URI, which means that the RDF triple is not a
+            // valid model/bio(logy) qualifier
 
             mType = Unknown;
 
@@ -255,16 +255,11 @@ CellmlFileRdfTriple::Type CellmlFileRdfTriple::type() const
 
 QString CellmlFileRdfTriple::metadataId() const
 {
-    // Return the RDF triple's metadata id
+    // Return the RDF triple's metadata id, if its subject is a URI reference
 
     if (mSubject->type() == CellmlFileRdfTripleElement::UriReference)
-        // The subject of our RDF triple is a URI reference, so we can retrieve
-        // its metadata id
-
         return mSubject->uriReference().remove(QRegularExpression("^"+QRegularExpression::escape(mCellmlFile->xmlBase())+"#?"));
     else
-        // We don't recognise the subject of our RDF triple, so...
-
         return QString();
 }
 
@@ -467,8 +462,6 @@ CellmlFileRdfTriple::Type CellmlFileRdfTriples::type() const
     //       type is considered to be unknown
 
     if (isEmpty()) {
-        // There are no RDF triples, so...
-
         return CellmlFileRdfTriple::Empty;
     } else {
         // There is at least one RDF triple, so retrieve the subject and type of
@@ -487,12 +480,11 @@ CellmlFileRdfTriple::Type CellmlFileRdfTriples::type() const
             if (   rdfTriple->subject()->asString().compare(subject)
                 || (rdfTriple->type() != res)) {
                 // The subject and/or the type of the current RDF triple is
-                // different from that of the first RDF triple, so...
+                // different from that of the first RDF triple, so consider the
+                // overall type of the RDF triples to be unknown
 
                 return CellmlFileRdfTriple::Unknown;
             }
-
-        // All of the RDF triples have the same type, so...
 
         return res;
     }
@@ -530,7 +522,7 @@ bool CellmlFileRdfTriple::decodeTerm(const QString &pTerm, QString &pResource,
 
         return true;
     } else {
-        // Not a term we can recognise, so...
+        // Not a term we can recognise
 
         pResource = "???";
         pId       = "???";
@@ -546,7 +538,7 @@ void CellmlFileRdfTriples::recursiveContains(CellmlFileRdfTriples &pRdfTriples,
 {
     // Add pRdfTriple to pRdfTriples, but only if it's not already part of
     // pRdfTriples
-    // Note: indeed, a given RDF triple may be referenced more than once, so...
+    // Note: indeed, a given RDF triple may be referenced more than once...
 
     foreach (CellmlFileRdfTriple *rdfTriple, pRdfTriples)
         if (pRdfTriple == rdfTriple)
@@ -612,7 +604,7 @@ CellmlFileRdfTriple * CellmlFileRdfTriples::add(CellmlFileRdfTriple *pRdfTriple)
 
     pRdfTriple->setRdfTriple(rdfTriple);
 
-    // An RDF triple has been added, so...
+    // An RDF triple has been added, so set the CellML file as modified
 
     mCellmlFile->setModified(true);
 
@@ -641,7 +633,8 @@ bool CellmlFileRdfTriples::removeRdfTriples(const CellmlFileRdfTriples &pRdfTrip
             delete rdfTriple;
         }
 
-        // Some RDF triples have been removed, so...
+        // Some RDF triples have been removed, so set the CellML file as
+        // modified
 
         mCellmlFile->setModified(true);
 

@@ -44,14 +44,10 @@ Qt::ItemFlags FileBrowserWindowModel::flags(const QModelIndex &pIndex) const
 
     Qt::ItemFlags res = QFileSystemModel::flags(pIndex);
 
-    // Prevent some features for the item in case it's a folder
+    // Prevent folders from being draggable
 
     if (QFileInfo(filePath(pIndex)).isDir())
-        // We don't want a folder to be draggable
-
         res &= ~Qt::ItemIsDragEnabled;
-
-    // We are all done, so...
 
     return res;
 }

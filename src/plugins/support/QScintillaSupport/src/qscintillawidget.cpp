@@ -78,8 +78,8 @@ QScintillaWidget::QScintillaWidget(QsciLexer *pLexer, QWidget *pParent) :
 
         setLexer(pLexer);
 
-        // Specify the type of tree folding to be used. Some lexers may indeed
-        // use that feature, so...
+        // Specify the type of tree folding to be used (some lexers may indeed
+        // use that feature)
 
         setFolding(QsciScintilla::BoxedTreeFoldStyle);
     } else {
@@ -93,7 +93,7 @@ QScintillaWidget::QScintillaWidget(QsciLexer *pLexer, QWidget *pParent) :
     // Note: by default QScintilla will use EolWindows on Windows and EolUnix on
     //       Linux and OS X. However, the fact that it uses EolWindows on
     //       Windows can cause problems on that platform (with files not using a
-    //       Windows EOL mode), so...
+    //       Windows EOL mode), so to be safe we use EolUnix on all platforms...
 
     setEolMode(EolUnix);
 
@@ -105,7 +105,7 @@ QScintillaWidget::QScintillaWidget(QsciLexer *pLexer, QWidget *pParent) :
     // Note #1: indeed, QsciScintilla handles some shortcuts (e.g. Ctrl+L),
     //          which we don't want to see handled (e.g. Ctrl+L is used by
     //          QsciScintilla to delete the current line while we want OpenCOR
-    //          to be able to use it to (un)lock the current file), so...
+    //          to be able to use it to (un)lock the current file)...
     // Note #2: even though we are clearing those key mappings, we must also
     //          bypass QsciScintilla's handling of event() (see below). Indeed,
     //          not to do so would mean that if, for example, the user was to
@@ -282,8 +282,6 @@ int QScintillaWidget::findTextInRange(const int &pStartRange,
     SendScintilla(SCI_SETTARGETSTART, currentTargetStart);
     SendScintilla(SCI_SETTARGETEND, currentTargetEnd);
 
-    // We are all done, so...
-
     return res;
 }
 
@@ -439,7 +437,7 @@ void QScintillaWidget::dragEnterEvent(QDragEnterEvent *pEvent)
     // Note: this is not (currently?) needed on Windows and OS X, but if we
     //       don't have that check on Linux, then to drop some files on our
     //       Scintilla editor will result in the text/plain version of the data
-    //       (e.g. file:///home/me/myFile) to be inserted in the text, so...
+    //       (e.g. file:///home/me/myFile) to be inserted in the text...
 
     if (!pEvent->mimeData()->hasFormat(Core::FileSystemMimeType))
         pEvent->acceptProposedAction();

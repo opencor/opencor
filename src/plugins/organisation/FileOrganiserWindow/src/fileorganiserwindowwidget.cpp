@@ -174,7 +174,7 @@ void FileOrganiserWindowWidget::loadItemSettings(QSettings *pSettings,
 
                 mFileManager->manage(textOrPath);
 
-                // A file cannot have child items, so...
+                // A file cannot have child items
 
                 childParentItem = 0;
             }
@@ -183,7 +183,7 @@ void FileOrganiserWindowWidget::loadItemSettings(QSettings *pSettings,
         // Retrieve any child item
         // Note: the test on childParentItem is not necessary (since
         //       childItemsCount will be equal to -1 in the case of a file
-        //       item), but it doesn't harm having it, so...
+        //       item), but it doesn't harm having it...
 
         if (childParentItem)
             for (int i = 0; i < childItemsCount; ++i)
@@ -288,8 +288,6 @@ void FileOrganiserWindowWidget::saveSettings(QSettings *pSettings) const
 
             crtIndexParent = crtIndexParent.parent();
         } else {
-            // The current parent is not expanded, so...
-
             crtItemVisible = false;
 
             break;
@@ -322,7 +320,7 @@ void FileOrganiserWindowWidget::dragMoveEvent(QDragMoveEvent *pEvent)
     //       but should we be dragging external objects over our file organiser
     //       widget, then the state will (obviously) not be set. This wouldn't
     //       be a problem in itself if it was for the fact that this prevents
-    //       the drop indicator from being painted, so...
+    //       the drop indicator from being painted...
 
     setState(QAbstractItemView::DraggingState);
 
@@ -387,7 +385,7 @@ void FileOrganiserWindowWidget::dropEvent(QDropEvent *pEvent)
     DropIndicatorPosition dropPosition = dropIndicatorPosition();
 
     if (dropPosition == QAbstractItemView::OnViewport) {
-        // We dropped the files on the viewport, so...
+        // We dropped the files on the viewport
 
         dropItem = mModel->invisibleRootItem();
 
@@ -396,8 +394,7 @@ void FileOrganiserWindowWidget::dropEvent(QDropEvent *pEvent)
 
         dropPosition = QAbstractItemView::OnItem;
     } else {
-        // We dropped the files above/on/below a folder or above/below a file,
-        // so...
+        // We dropped the files above/on/below a folder or above/below a file
 
         dropItem = mModel->itemFromIndex(indexAt(pEvent->pos()));
     }
@@ -416,7 +413,7 @@ void FileOrganiserWindowWidget::dropEvent(QDropEvent *pEvent)
         // Convert our list of indexes to a list of items
         // Note: indeed, by moving the item corresponding to a particular index,
         //       we may mess up the other indexes, meaning that we may not be
-        //       able to retrieve their corresponding item, so...
+        //       able to retrieve their corresponding item...
 
         QList<QStandardItem *> items;
 
@@ -462,8 +459,8 @@ void FileOrganiserWindowWidget::dropEvent(QDropEvent *pEvent)
     // Reset the state of the widget
     // Note: there doesn't seem to be and there shouldn't be a need to reset the
     //       state after the widget (the resetting seems to be done elsewhere),
-    //       but if don't reset the state of the widget, then the drop indicator
-    //       may, in some cases, remain visible (a bug in Qt?), so...
+    //       but then if we don't reset the state of the widget, then the drop
+    //       indicator may, in some cases, remain visible (a bug in Qt?)...
 
     setState(QAbstractItemView::NoState);
 }
@@ -527,8 +524,6 @@ bool FileOrganiserWindowWidget::parentIndexExists(const QModelIndex &pIndex,
         // in the list
 
         if (pIndexes.indexOf(parentIndex) != -1)
-            // The parent index could be found, so...
-
             return true;
         else
             // The parent index couldn't be found, but what about the parent
@@ -536,8 +531,6 @@ bool FileOrganiserWindowWidget::parentIndexExists(const QModelIndex &pIndex,
 
             return parentIndexExists(parentIndex, pIndexes);
     } else {
-        // The current index doesn't have a valid parent, so...
-
         return false;
     }
 }
@@ -547,7 +540,7 @@ bool FileOrganiserWindowWidget::parentIndexExists(const QModelIndex &pIndex,
 QModelIndexList FileOrganiserWindowWidget::cleanIndexList(const QModelIndexList &pIndexes) const
 {
     // A list of indexes may contain indexes that are not relevant or
-    // effectively the duplicate of another existing index, so...
+    // effectively the duplicate of another existing index
 
     QModelIndexList res;
 
@@ -617,8 +610,6 @@ QModelIndexList FileOrganiserWindowWidget::cleanIndexList(const QModelIndexList 
             }
     }
 
-    // We are all done, so...
-
     return res;
 }
 
@@ -627,25 +618,20 @@ QModelIndexList FileOrganiserWindowWidget::cleanIndexList(const QModelIndexList 
 bool FileOrganiserWindowWidget::itemIsOrIsChildOf(QStandardItem *pItem,
                                                   QStandardItem *pOtherItem) const
 {
-    if (pItem == pOtherItem) {
-        // pItem is the same as pOtherItem, so...
+    // Check whether the given items are the same or whether one of them is the
+    // (in)direct child of the other
 
+    if (pItem == pOtherItem) {
         return true;
     } else if (pOtherItem->rowCount()) {
         // pOtherItem has children, so check against them
 
         for (int i = 0, iMax = pOtherItem->rowCount(); i < iMax; ++i)
             if (itemIsOrIsChildOf(pItem, pOtherItem->child(i)))
-                // pItem is a (in)direct child of pOtherItem, so...
-
                 return true;
-
-        // pItem is not the (in)direct child of pOtherItem, so...
 
         return false;
     } else {
-        // pOtherItem doesn't have any children, so...
-
         return false;
     }
 }
@@ -723,9 +709,9 @@ QString FileOrganiserWindowWidget::newFolderName(QStandardItem *pFolderItem) con
 
 void FileOrganiserWindowWidget::newFolder()
 {
-    if (!canCreateNewFolder())
-        // The conditions are not met to create a new folder, so...
+    // Make sure that the conditions are met to create a new folder
 
+    if (!canCreateNewFolder())
         return;
 
     // Either create a folder item below the current folder item or below the
@@ -795,8 +781,6 @@ bool FileOrganiserWindowWidget::ownedBy(const QString &pFileName,
         }
     }
 
-    // We couldn't find a file with pFileName as its name in pItem, so...
-
     return false;
 }
 
@@ -811,20 +795,14 @@ void FileOrganiserWindowWidget::dropItems(QStandardItem *pDropItem,
 
     switch (pDropPosition) {
         case QAbstractItemView::AboveItem:
-            // We dropped pItems above pDropItem, so...
-
             pNewParentItem->insertRow(pDropItem->row(), pItems);
 
             break;
         case QAbstractItemView::BelowItem:
-            // We dropped pItems below pDropItem, so...
-
             pNewParentItem->insertRow(pDropItem->row()+1, pItems);
 
             break;
         default:
-            // We directly dropped pItems on pDropItem, so...
-
             pNewParentItem->appendRow(pItems);
 
             // Expand pNewParentItem, so the user knows that the item has been
@@ -853,18 +831,16 @@ void FileOrganiserWindowWidget::addFile(const QString &pFileName,
                                         QStandardItem *pDropItem,
                                         const QAbstractItemView::DropIndicatorPosition &pDropPosition)
 {
-    if (!pDropItem)
-        // pDropItem is not valid, so...
+    // Make sure that we have a drop item
 
+    if (!pDropItem)
         return;
 
-    // Check that we are indeed dealing with a file
+    // Make sure that we are indeed dealing with a file
 
     QFileInfo fileInfo = pFileName;
 
     if (!fileInfo.isFile())
-        // We are not dealing with a file, so...
-
         return;
 
     // Check whether we are dropping a symbolic link
@@ -919,9 +895,9 @@ void FileOrganiserWindowWidget::moveItem(QStandardItem *pItem,
                                          QStandardItem *pDropItem,
                                          const QAbstractItemView::DropIndicatorPosition &pDropPosition)
 {
-    if (!pDropItem)
-        // pDropItem is not valid, so...
+    // Make sure that we have a drop item
 
+    if (!pDropItem)
         return;
 
     // Move pItem above/on/below pDropItem, depending on the drop position, but
@@ -1001,18 +977,16 @@ void FileOrganiserWindowWidget::collapseEmptyFolders(QStandardItem *pFolder)
 
 void FileOrganiserWindowWidget::deleteItems()
 {
-    // Remove all the selected items
+    // Check whether whether there are selected items to delete
 
     QModelIndexList selectedIndexes = selectionModel()->selectedIndexes();
 
     if (selectedIndexes.isEmpty())
-        // Nothing to delete, so...
-
         return;
 
-    // Delete the items one by one, making sure that we update our list of items
-    // every time (this is because the row value of the remaining selected items
-    // may become different after deleting an item)
+    // Delete the selected items one by one, making sure that we update our list
+    // of items every time (this is because the row value of the remaining
+    // selected items may become different after deleting an item)
 
     while (!selectedIndexes.isEmpty()) {
         // Remove the file from our file manager, should the index refer to a
@@ -1189,7 +1163,8 @@ void FileOrganiserWindowWidget::fileChanged(const QString &pFileName) const
 
 void FileOrganiserWindowWidget::fileDeleted(const QString &pFileName) const
 {
-    // A file has been deleted, so...
+    // A file has been deleted, so go through all the (file) items and update
+    // the icon of the ones that refer to the file in question
 
     updateFileItems(mModel->invisibleRootItem(), pFileName,
                     Core::File::Deleted);

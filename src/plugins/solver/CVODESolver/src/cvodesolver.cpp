@@ -44,8 +44,6 @@ int rhsFunction(double pVoi, N_Vector pStates, N_Vector pRates, void *pUserData)
                              N_VGetArrayPointer_Serial(pStates),
                              userData->algebraic());
 
-    // Everything went fine, so...
-
     return 0;
 }
 
@@ -118,9 +116,9 @@ CvodeSolver::CvodeSolver() :
 
 CvodeSolver::~CvodeSolver()
 {
-    if (!mSolver)
-        // The solver hasn't been initialised, so...
+    // Make sure that the solver has been initialised
 
+    if (!mSolver)
         return;
 
     // Delete some internal objects
@@ -252,10 +250,9 @@ void CvodeSolver::solve(double &pVoi, const double &pVoiEnd) const
     // Compute the rates one more time to get up to date values for the rates
     // Note: another way of doing this would be to copy the contents of the
     //       calculated rates in rhsFunction, but that's bound to be more time
-    //       consuming since a call to CVode is likely to generate at least a
-    //       few calls to rhsFunction, so that would be quite a few memory
-    //       transfers while here we 'only' compute the rates one more time,
-    //       so...
+    //       consuming since a call to CVode() is likely to generate at least a
+    //       few calls to rhsFunction(), so that would be quite a few memory
+    //       transfers while here we 'only' compute the rates one more time...
 
     mComputeRates(pVoiEnd, mConstants, mRates,
                   N_VGetArrayPointer_Serial(mStatesVector), mAlgebraic);

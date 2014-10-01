@@ -43,8 +43,6 @@ int systemFunction(N_Vector pY, N_Vector pF, void *pUserData)
                               N_VGetArrayPointer_Serial(pF),
                               userData->userData());
 
-    // Everything went fine, so...
-
     return 0;
 }
 
@@ -112,9 +110,9 @@ KinsolSolver::~KinsolSolver()
 
 void KinsolSolver::reset()
 {
-    if (!mSolver)
-        // The solver hasn't been initialised, so...
+    // Make sure that the solver has been initialised
 
+    if (!mSolver)
         return;
 
     N_VDestroy_Serial(mParametersVector);

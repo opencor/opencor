@@ -101,21 +101,21 @@ bool File::setFileName(const QString &pFileName)
 
 File::Status File::check()
 {
-    // Retrieve the SHA-1 value of our file and compare it to its stored value
+    // Retrieve the 'new' SHA-1 value of our file and check whether it's
+    // different from the one we currently have
 
     QString newSha1 = sha1();
 
     if (!newSha1.compare(mSha1) || !mUrl.isEmpty()) {
-        // The SHA-1 values are the same or we are a remote file, so...
+        // The SHA-1 values are the same or we are a remote file, which means
+        // that our hasn't been changed
 
         return File::Unchanged;
     } else {
-        // We have a new SHA-1 value
-
         if (newSha1.isEmpty()) {
             // The SHA-1 value of our file is now empty, which means that either
-            // our file has been either deleted or that it is unreadable (which,
-            // in effect, means that it has changed)
+            // our file has been deleted or that it is unreadable (which, in
+            // effect, means that it has changed)
 
             if (QFile::exists(mFileName))
                 return File::Changed;

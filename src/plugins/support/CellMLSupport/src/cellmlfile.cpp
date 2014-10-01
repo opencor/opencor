@@ -49,7 +49,7 @@ specific language governing permissions and limitations under the License.
     //           currently experimental, and must be enabled with the -std=c++0x
     //           or -std=gnu++0x compiler options.
     //       and well, we don't want to enable either of these options since
-    //       support is still only experimental, so...
+    //       support is still only experimental...
 #endif
 
 //==============================================================================
@@ -261,8 +261,7 @@ bool CellmlFile::fullyInstantiateImports(iface::cellml_api::Model *pModel,
                 }
             }
         } catch (...) {
-            // Something went wrong with the full instantiation of the imports,
-            // so...
+            // Something went wrong with the full instantiation of the imports
 
             pIssues << CellmlFileIssue(CellmlFileIssue::Error,
                                        tr("the imports could not be fully instantiated"));
@@ -297,7 +296,7 @@ bool CellmlFile::doLoad(const QString &pFileName, const QString &pFileContents,
         else
             *pModel = modelLoader->createFromText(pFileContents.toStdWString());
     } catch (iface::cellml_api::CellMLException &) {
-        // Something went wrong with the loading of the model, so...
+        // Something went wrong with the loading of the model
 
         if (pFileContents.isEmpty())
             pIssues << CellmlFileIssue(CellmlFileIssue::Error,
@@ -333,9 +332,9 @@ bool CellmlFile::doLoad(const QString &pFileName, const QString &pFileContents,
 
 bool CellmlFile::load()
 {
-    if (!mLoadingNeeded)
-        // The file is already loaded, so...
+    // Check whether the file is already loaded
 
+    if (!mLoadingNeeded)
         return true;
 
     // Consider the file loaded
@@ -388,9 +387,9 @@ bool CellmlFile::reload()
 
 bool CellmlFile::save(const QString &pNewFileName)
 {
-    if (mLoadingNeeded || !mIssues.isEmpty())
-        // The file isn't loaded or contains some issues, so...
+    // Check whether the file needs loading or contains issues
 
+    if (mLoadingNeeded || !mIssues.isEmpty())
         return false;
 
     // Determine the file name to use for the CellML file
@@ -407,7 +406,7 @@ bool CellmlFile::save(const QString &pNewFileName)
     QFile file(newFileName);
 
     if (!file.open(QIODevice::WriteOnly)) {
-        // The file can't be opened, so...
+        // The file can't be opened, so delete it
 
         file.remove();
 
@@ -433,7 +432,7 @@ bool CellmlFile::save(const QString &pNewFileName)
 
     mFileName = newFileName;
 
-    // Everything went fine, so...
+    // Everything went fine
 
     return true;
 }
@@ -570,9 +569,9 @@ bool CellmlFile::doIsValid(iface::cellml_api::Model *pModel,
 
 bool CellmlFile::isValid()
 {
-    if (!mValidNeeded)
-        // The file has already been validated, so...
+    // Check whether the file has already been validated
 
+    if (!mValidNeeded)
         return mValid;
 
     // Load (but not reload!) the file, if needed
@@ -654,9 +653,9 @@ CellmlFileIssues CellmlFile::issues() const
 
 CellmlFileRuntime * CellmlFile::runtime()
 {
-    if (!mRuntimeUpdateNeeded)
-        // There is no need for the runtime to be updated, so...
+    // Check whether the runtime needs to be updated
 
+    if (!mRuntimeUpdateNeeded)
         return mRuntime;
 
     // Load (but not reload!) the file, if needed
@@ -677,8 +676,6 @@ CellmlFileRuntime * CellmlFile::runtime()
             return 0;
         }
     } else {
-        // The file coudln't be loaded, so...
-
         return 0;
     }
 }
@@ -726,26 +723,28 @@ CellmlFileRdfTriple * CellmlFile::rdfTriple(iface::cellml_api::CellMLElement *pE
                                             const QString &pResource,
                                             const QString &pId) const
 {
-    // Return whether the given RDF triple is associated with the CellML element
+    // Return the RDF triple, associated with the given CellML element, which
+    // qualifier, resource and id match those given
 
     if (QString::fromStdWString(pElement->cmetaId()).isEmpty())
-        // The CellML element doesn't have a 'proper' cmeta:id, so...
+        // The given CellML element doesn't have a 'proper' cmeta:id, so it
+        // cannot have RDF triples associated with it
 
         return 0;
 
-    // Go through the RDF triples associated with the CellML element and check
-    // whether one of them corresponds to the given RDF triple
+    // Go through the RDF triples associated with the given CellML element and
+    // check whether it is the one we are after
 
     foreach (CellmlFileRdfTriple *rdfTriple, rdfTriples(pElement))
         if (   !pQualifier.compare(rdfTriple->qualifierAsString())
             && !pResource.compare(rdfTriple->resource())
             && !pId.compare(rdfTriple->id())) {
-            // This is the RDF triple we are after, so...
+            // This is the RDF triple we are after
 
             return rdfTriple;
         }
 
-    // We couldn't find the RDF triple, so...
+    // We couldn't find the RDF triple
 
     return 0;
 }
@@ -904,8 +903,6 @@ bool CellmlFile::exportTo(const QString &pFileName, const Version &pVersion)
             // format
 
             if (!QString::fromStdWString(mModel->cellmlVersion()).compare(CellMLSupport::Cellml_1_1))
-                // We are already dealing with a CellML 1.1 model, so...
-
                 return false;
 
             break;
@@ -915,8 +912,6 @@ bool CellmlFile::exportTo(const QString &pFileName, const Version &pVersion)
             // format
 
             if (!QString::fromStdWString(mModel->cellmlVersion()).compare(CellMLSupport::Cellml_1_0))
-                // We are already dealing with a CellML 1.0 model, so...
-
                 return false;
         }
 
@@ -974,7 +969,7 @@ bool CellmlFile::exportTo(const QString &pFileName,
 
         // Make sure that the user-defined format file is valid XML
         // Note: you would normally expect CeLEDSExporter to check this, but all
-        //       it does in case of an invalid XML file is crash, so...
+        //       it does in case of an invalid XML file is crash...
 
         QString userDefinedFormatFileContents;
 

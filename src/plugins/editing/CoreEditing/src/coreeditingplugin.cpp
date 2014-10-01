@@ -125,8 +125,8 @@ void CoreEditingPlugin::fileReloaded(const QString &pFileName)
     //       know at this stage whether a new editor will have been assigned to
     //       the given file. Indeed, upon reloading a file, a 'proper' editing
     //       plugin may decide to 'close' and 'reopen' the file, meaning that
-    //       its original editor will be discarded and a new one assigned to it,
-    //       so...
+    //       its original editor will be discarded and a new one assigned to
+    //       it, hence we need to reset things...
 
     if (!pFileName.compare(mFileName)) {
         mEditor = 0;

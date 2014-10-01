@@ -279,8 +279,6 @@ SingleCellViewInformationSolversWidgetData * SingleCellViewInformationSolversWid
                                                               solversListProperty,
                                                               solversProperties);
     } else {
-        // We don't have a solvers list property, so...
-
         return 0;
     }
 }

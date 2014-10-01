@@ -114,7 +114,8 @@ int main(int pArgC, char *pArgV[])
         delete cliApp;
 
         if (runCliApplication) {
-            // OpenCOR was run as a CLI application, so...
+            // OpenCOR was run as a CLI application, so remove all our global
+            // instances and leave
 
             OpenCOR::removeGlobalInstances();
 
@@ -217,7 +218,7 @@ int main(int pArgC, char *pArgV[])
     // Make sure that our main window is in the foreground, unless the user
     // decided to close our main window while we were showing our splash screen
     // Note: indeed, on Linux, to show our splash screen may result in our main
-    //       window being shown in the background, so...
+    //       window being shown in the background...
 
     if (!win->shuttingDown())
         win->showSelf();
@@ -292,7 +293,7 @@ int main(int pArgC, char *pArgV[])
         QProcess::startDetached(appFilePath, QStringList(), appDirPath);
     }
 
-    // We are done, so...
+    // We are done running the GUI version of OpenCOR, so leave
 
     return res;
 }

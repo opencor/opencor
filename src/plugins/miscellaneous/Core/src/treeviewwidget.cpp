@@ -136,7 +136,7 @@ void TreeViewWidget::keyPressEvent(QKeyEvent *pEvent)
             QModelIndex currIndex = currentIndex();
 
             if (currIndex.column())
-                // We are not dealing with the (row, 0) item, so...
+                // We are not dealing with the (row, 0) item, so make sure we do
 
                 currIndex = currIndex.sibling(currIndex.row(), 0);
 
@@ -172,7 +172,7 @@ void TreeViewWidget::keyPressEvent(QKeyEvent *pEvent)
             QModelIndex currIndex = currentIndex();
 
             if (currIndex.column())
-                // We are not dealing with the (row, 0) item, so...
+                // We are not dealing with the (row, 0) item, so make sure we do
 
                 currIndex = currIndex.sibling(currIndex.row(), 0);
 
@@ -238,8 +238,8 @@ void TreeViewWidget::startDrag(Qt::DropActions pSupportedActions)
     // provide OpenCOR with a better pixmap for the drag object
     // Note: indeed, on Windows, the pixmap only shows the dragged item that are
     //       visible in the QTreeView. Also, if an item covers several columns,
-    //       then the pixmap will show several 'cells' some of them empty if a
-    //       column is empty, so... instead we want to provide a generic pixmap
+    //       then the pixmap will show several 'cells', some of them empty if a
+    //       column is empty, so instead we want to provide a generic pixmap
     //       that looks 'good' on all platforms...
 
     // Retrieve the selected draggable items, if any

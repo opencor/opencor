@@ -141,8 +141,7 @@ MACRO(INITIALISE_PROJECT)
             SET(LINK_FLAGS_PROPERTIES "${LINK_FLAGS_PROPERTIES} -Wl,-s")
             # Note #1: -Wl,-s strips all the symbols, thus reducing the final
             #          size of OpenCOR or one its shared libraries...
-            # Note #2: the above linking option has become obsolete on OS X,
-            #          so...
+            # Note #2: the above linking option has become obsolete on OS X...
         ENDIF()
 
         # Make sure that debugging is off in Qt
@@ -304,7 +303,7 @@ MACRO(UPDATE_LANGUAGE_FILES TARGET_NAME)
     #       current CMake project, even if that means that these variables are
     #       to be empty (the case with some plugins for example). Indeed, since
     #       otherwise the value of these variables, as defined in a previous
-    #       project, may be used, so...
+    #       project, may be used...
 
     SET(LANGUAGE_FILES
         ${TARGET_NAME}_fr
@@ -355,7 +354,7 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
             # control over
             # Note: for some reasons, MSVC eventually uses /W1, so we can't
             #       replace /W3 /WX with /w since this would conflict with
-            #       /W1 and generate a warning, so...
+            #       /W1 and generate a warning...
 
             IF(WIN32)
                 STRING(REPLACE "/W3 /WX" "" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")

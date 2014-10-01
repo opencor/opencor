@@ -423,7 +423,7 @@ void SingleCellViewSimulationData::reset(const bool &pInitialize)
             }
 
         // Make sure that we have found our NLA solver
-        // Note: this should never happen, but we never know, so...
+        // Note: this should never happen, but we never know...
 
         if (!nlaSolver) {
             emit error(tr("the NLA solver could not be found"));
@@ -461,8 +461,8 @@ void SingleCellViewSimulationData::reset(const bool &pInitialize)
     //       https://gist.github.com/agarny/b051897560031a2591a2,
     //       x=3.0000006396753 after calling
     //       recomputeComputedConstantsAndVariables(), but then if we call
-    //       recomputeComputedConstantsAndVariables() again, then we get
-    //       x=3.00000000000007, so...
+    //       recomputeComputedConstantsAndVariables() again, we get
+    //       x=3.00000000000007...
 
     if (mRuntime->needNlaSolver())
         recomputeComputedConstantsAndVariables(mStartingPoint, pInitialize);
@@ -639,8 +639,6 @@ bool SingleCellViewSimulationResults::createDataStore()
         mStates = mDataStore->addVariables(mRuntime->statesCount(), mSimulation->data()->states());
         mAlgebraic = mDataStore->addVariables(mRuntime->algebraicCount(), mSimulation->data()->algebraic());
     } catch (...) {
-        // Something went wrong, so...
-
         deleteDataStore();
 
         return false;
@@ -677,7 +675,7 @@ bool SingleCellViewSimulationResults::createDataStore()
 
             break;
         default:
-            // Not a type in which we are interested, so...
+            // Not a type in which we are interested, so do nothing
 
             ;
         }
@@ -689,8 +687,6 @@ bool SingleCellViewSimulationResults::createDataStore()
             variable->setUnit(parameter->formattedUnit(mRuntime->variableOfIntegration()->unit()));
         }
     }
-
-    // We could create our data store, so...
 
     return true;
 }
@@ -974,18 +970,14 @@ bool SingleCellViewSimulation::simulationSettingsOk(const bool &pEmitError)
 
 double SingleCellViewSimulation::size()
 {
-    // Return the size of our simulation (i.e. the number of data points which
-    // should be generated)
+    // Return the size of our simulation (i.e. the number of data points that
+    // should be generated), if possible
     // Note: we return a double rather than a qulonglong in case the simulation
     //       requires an insane amount of memory...
 
     if (simulationSettingsOk(false))
-        // Our simulation settings are fine, so...
-
         return ceil((mData->endingPoint()-mData->startingPoint())/mData->pointInterval())+1.0;
     else
-        // Something wrong with our simulation settings, so...
-
         return 0.0;
 }
 
@@ -1004,8 +996,6 @@ bool SingleCellViewSimulation::run()
         // Make sure that that the simulation settings we were given are sound
 
         if (!simulationSettingsOk())
-            // Something wrong with our simulation settings, so...
-
             return false;
 
         // Create our worker

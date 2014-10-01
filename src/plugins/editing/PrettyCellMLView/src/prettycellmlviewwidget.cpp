@@ -170,9 +170,10 @@ void PrettyCellmlViewWidget::initialize(const QString &pFileName)
 
     // Set our focus proxy to our 'new' editing widget and make sure that the
     // latter immediately gets the focus
-    // Note: if we were not to immediately give our 'new' editing widget the
-    //       focus, then the central widget would give the focus to our 'old'
-    //       editing widget (see CentralWidget::updateGui()), so...
+    // Note: if we were not to immediately give the focus to our 'new' editing
+    //       widget, then the central widget would give the focus to our 'old'
+    //       editing widget (see CentralWidget::updateGui()), which is clearly
+    //       not what we want...
 
     setFocusProxy(mEditingWidget->editor());
 

@@ -240,7 +240,7 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::updateGui(iface::cellm
 
     // Reset various properties
     // Note: we might only do that before adding new items, but then again there
-    //       is no need to waste memory, so...
+    //       is no need to waste memory...
 
     mUrls.clear();
     mRdfTripleInformationSha1s.clear();

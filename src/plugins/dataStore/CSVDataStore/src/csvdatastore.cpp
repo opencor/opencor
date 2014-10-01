@@ -44,7 +44,7 @@ bool exportDataStore(CoreDataStore::CoreDataStore *pDataStore,
     QFile file(pFileName);
 
     if (!file.open(QIODevice::WriteOnly)) {
-        // The file can't be opened, so...
+        // The file can't be opened, so delete it
 
         file.remove();
 

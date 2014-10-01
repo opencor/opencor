@@ -131,12 +131,12 @@ void FileBrowserWindowWidget::loadSettings(QSettings *pSettings)
         //       and then select the file
 
         if (initPathFileInfo.isDir()) {
-            // We are dealing with a folder, so...
+            // We are dealing with a folder
 
             mInitPathDir = initPathFileInfo.canonicalFilePath();
             mInitPath    = "";
         } else {
-            // We are dealing with a file, so...
+            // We are dealing with a file
 
             mInitPathDir = initPathFileInfo.canonicalPath();
             mInitPath    = initPathFileInfo.canonicalFilePath();
@@ -149,7 +149,7 @@ void FileBrowserWindowWidget::loadSettings(QSettings *pSettings)
     // retrieve the different folders), so we must make sure that that
     // mInitPathDir contains a trailing separator
     // Note: this is clearly not needed on Linux and OS X, but it doesn't harm
-    //       doing it for these platforms too, so...
+    //       doing it for these platforms too...
 
     mInitPathDir = QDir(mInitPathDir+QDir::separator()).canonicalPath();
 
@@ -164,16 +164,15 @@ void FileBrowserWindowWidget::loadSettings(QSettings *pSettings)
     while (initPathDir.cdUp())
         mInitPathDirs << initPathDir.canonicalPath();
 
-    // Set the current index to that of the folder (and file, if it exists) we
-    // are interested in
+    // Set the current index to that of the folder (and file, if it exists) in
+    // which we are interested
     // Note: this will result in the directoryLoaded signal being emitted and,
-    //       us, to take advantage of it to scroll to the right directory/file
+    //       us, to take advantage of it to scroll to the right
+    //       directory/file...
 
     setCurrentIndex(mModel->index(mInitPathDir));
 
     if (!mInitPath.isEmpty())
-        // The initial path is that of a file, so...
-
         setCurrentIndex(mModel->index(mInitPath));
 
     // Make sure that the current path is expanded
@@ -382,8 +381,6 @@ void FileBrowserWindowWidget::goToOtherItem(QStringList &pItems,
                     newItemPath = "";
             }
         } else {
-            // The list is empty, so...
-
             newItemPath = "";
         }
     }
@@ -519,7 +516,7 @@ void FileBrowserWindowWidget::directoryLoaded(const QString &pPath)
         // mModel is still loading the initial path, so we try to expand it and
         // scroll to it, but first we process any pending event (indeed, though
         // Windows doesn't need this, Linux and OS X definitely do and it can't
-        // harm having it for all three environments, so...)
+        // harm having it for all three environments)
 
         qApp->processEvents();
 
@@ -547,12 +544,12 @@ void FileBrowserWindowWidget::directoryLoaded(const QString &pPath)
         // Remove the loaded directory from mInitPathDirs
 
         mInitPathDirs.removeOne(QDir(pPath+QDir::separator()).canonicalPath());
-        // Note: it is very important, on Windows, to add QDir::separator() to
-        //       pPath. Indeed, say that mInitPathDir is on the C: drive, then
-        //       eventually pPath will be equal to "C:" while mInitPathDirs will
-        //       know about "C:/", so... (note: this is clearly not needed on
-        //       Linux and OS X, but it doesn't harm adding it for these
-        //       platforms too, so...)
+        // Note #1: it is very important, on Windows, to add QDir::separator()
+        //          to pPath. Indeed, say that mInitPathDir is on the C: drive,
+        //          then eventually pPath will be equal to "C:" while
+        //          mInitPathDirs will know about "C:/"...
+        // Note #2: this is clearly not needed on Linux and OS X, but it doesn't
+        //          harm adding it for these platforms too...
 
         // Check whether we are done initializing
 
@@ -562,8 +559,6 @@ void FileBrowserWindowWidget::directoryLoaded(const QString &pPath)
 
             connect(selectionModel(), SIGNAL(currentChanged(const QModelIndex &, const QModelIndex &)),
                     this, SLOT(itemChanged(const QModelIndex &, const QModelIndex &)));
-
-            // We are done initalising, so...
 
             needInitializing = false;
         }

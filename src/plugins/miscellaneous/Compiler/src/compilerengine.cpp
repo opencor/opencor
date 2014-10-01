@@ -280,8 +280,6 @@ bool CompilerEngine::compileCode(const QString &pCode)
         return false;
     }
 
-    // Everything went fine, so...
-
     return true;
 }
 

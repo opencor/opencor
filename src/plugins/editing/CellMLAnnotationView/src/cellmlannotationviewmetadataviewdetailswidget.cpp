@@ -43,8 +43,8 @@ CellmlAnnotationViewMetadataViewDetailsWidget::CellmlAnnotationViewMetadataViewD
 
     // Make our raw view the default widget
     // Note: for the GUI to be properly initialised, we must add and immediately
-    //       remove the views which we don't yet need. Not to do that may mess
-    //       things up in our parent, so...
+    //       remove the views that we don't yet need. Not to do that may mess
+    //       things up in our parent...
 
     addWidget(mRawView);
 
@@ -81,7 +81,7 @@ void CellmlAnnotationViewMetadataViewDetailsWidget::updateGui(iface::cellml_api:
 
         break;
     default:
-        // Unknown type, so...
+        // Unknown type
 
         removeWidget(mNormalView);
         addWidget(mRawView);

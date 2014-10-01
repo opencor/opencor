@@ -34,12 +34,14 @@ specific language governing permissions and limitations under the License.
 #include <QAbstractItemDelegate>
 #include <QAbstractItemView>
 #include <QHeaderView>
+#include <QEvent>
 #include <QKeyEvent>
 #include <QModelIndex>
 #include <QRegularExpressionValidator>
 #include <QScrollBar>
 #include <QSettings>
 #include <QStandardItem>
+#include <QStyle>
 #include <QStyleOptionViewItem>
 #include <QVariant>
 
@@ -239,8 +241,6 @@ void ListEditorWidget::mousePressEvent(QMouseEvent *pEvent)
         // if so, whether we ore over it
 
         if (subControlRect.isValid() && subControlRect.contains(pEvent->pos()))
-            // The sub control exists and we are over it, so...
-
             break;
 
         // Either the sub control doesn't exist or we are not over it, so try
@@ -252,12 +252,8 @@ void ListEditorWidget::mousePressEvent(QMouseEvent *pEvent)
     // Check whether the 'current' sub control is the arrow we are after
 
     if (QStyle::SubControl(subControl) == QStyle::SC_ComboBoxArrow)
-        // It is the arrow we are after, so...
-
         QComboBox::mousePressEvent(pEvent);
     else
-        // Accept the event
-
         pEvent->accept();
 }
 
@@ -370,7 +366,7 @@ QWidget * PropertyItemDelegate::createEditor(QWidget *pParent,
 
 bool PropertyItemDelegate::eventFilter(QObject *pObject, QEvent *pEvent)
 {
-    // We want to handle key events ourselves, so...
+    // Ignore events resulting from a key being pressed
 
     if (pEvent->type() == QEvent::KeyPress)
         return false;
@@ -697,8 +693,6 @@ int Property::integerValue() const
     if (mType == Integer)
         return mValue->text().toInt();
     else
-        // Our value is not of integer type, so...
-
         return 0;
 }
 
@@ -721,8 +715,6 @@ double Property::doubleValue() const
     if (mType == Double)
         return mValue->text().toDouble();
     else
-        // Our value is not of double type, so...
-
         return 0.0;
 }
 
@@ -867,8 +859,6 @@ bool Property::booleanValue() const
     if (mType == Boolean)
         return !mValue->text().compare(TrueValue);
     else
-        // Our value is not of boolean type, so...
-
         return false;
 }
 
@@ -1842,9 +1832,10 @@ void PropertyEditorWidget::editorOpened(QWidget *pEditor)
 
     // Next, we need to use the property's editor as our focus proxy and make
     // sure that it immediately gets the focus
-    // Note: if we were not to immediately give the editor the focus, then the
-    //       central widget would give the focus to the previously focused
-    //       widget (see CentralWidget::updateGui()), so...
+    // Note: if we were not to immediately give the focus to our editor, then
+    //       the central widget would give the focus to the previously focused
+    //       widget (see CentralWidget::updateGui()), which is clearly not what
+    //       we want...
 
     setFocusProxy(pEditor);
 
@@ -2097,9 +2088,6 @@ Property * PropertyEditorWidget::property(const QModelIndex &pIndex) const
     foreach (Property *property, mProperties)
         if (property->hasIndex(pIndex))
             return property;
-
-    // Somehow, we couldn't find the property (how is that even possible?!),
-    // so...
 
     return 0;
 }

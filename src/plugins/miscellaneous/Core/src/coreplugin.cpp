@@ -91,7 +91,7 @@ void CorePlugin::settingsLoaded(const Plugins &pLoadedPlugins)
 
 void CorePlugin::handleArguments(const QStringList &pArguments)
 {
-    // All the arguments are currently assumed to be files to open, so...
+    // All the arguments are currently assumed to be files to open
 
     foreach (const QString &argument, pArguments)
         if (!argument.isEmpty()) {
@@ -599,7 +599,7 @@ void CorePlugin::updateFileReopenMenu(const bool &pEnabled)
             disconnect(action, SIGNAL(triggered(bool)),
                        this, SLOT(openRecentFile()));
         else
-            // We have reached our Reopen sub-menu separator, so...
+            // We have reached our Reopen sub-menu separator
 
             break;
 

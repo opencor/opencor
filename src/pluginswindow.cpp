@@ -306,16 +306,12 @@ void PluginsWindow::selectFirstVisibleCategory()
     foreach (QStandardItem *categoryItem, mPluginCategories)
         if (!mGui->pluginsTreeView->isRowHidden(categoryItem->row(),
                                                 mModel->invisibleRootItem()->index())) {
-            // We have found the first visible category, so...
-
             mGui->pluginsTreeView->setCurrentIndex(categoryItem->index());
-
-            // We are done, so...
 
             return;
         }
 
-    // No visible category could be found, so...
+    // No visible category could be found
 
     mGui->pluginsTreeView->setCurrentIndex(QModelIndex());
 }
@@ -393,7 +389,7 @@ void PluginsWindow::updateInformation(const QModelIndex &pNewIndex,
     // Make sure that we have a valid index
     // Note: it may happen (e.g. there are only non-selectable plugins and we
     //       only want to see selectable plugins) that no categories/plugins are
-    //       shown, so...
+    //       shown...
 
     bool atLeastOneItem = pNewIndex.isValid();
     bool pluginItem = false;
@@ -522,7 +518,7 @@ void PluginsWindow::updateInformation(const QModelIndex &pNewIndex,
 
             break;
         default:
-            // Not a category we can recognise, so...
+            // Not a category we can recognise
 
             mGui->fieldTwoValue->setText("???");
         }
@@ -592,9 +588,6 @@ void PluginsWindow::updatePluginsSelectedState(QStandardItem *pItem,
                 foreach (const QString &requiredPlugin,
                          mPluginManager->plugin(selectablePluginItem->text())->info()->fullDependencies())
                     if (!requiredPlugin.compare(unselectablePluginItem->text())) {
-                        // The selectable plugin requires our unselectable
-                        // plugin, so...
-
                         unselectablePluginItem->setCheckState(Qt::Checked);
 
                         break;
@@ -658,8 +651,6 @@ void PluginsWindow::updatePluginsSelectedState(QStandardItem *pItem,
     foreach (QStandardItem *plugin, mSelectablePluginItems+mUnselectablePluginItems)
         if (   mInitialLoadingStates.value(plugin->text())
             != (plugin->checkState() == Qt::Checked)) {
-            // The loading state of the plugin has changed, so...
-
             buttonsEnabled = true;
 
             break;
@@ -769,8 +760,6 @@ void PluginsWindow::on_selectablePluginsCheckBox_toggled(bool pChecked)
             for (int i = 0, iMax = categoryItem->rowCount(); i < iMax; ++i)
                 if (!mGui->pluginsTreeView->isRowHidden(categoryItem->child(i)->row(),
                                                         categoryItem->index())) {
-                    // There is at least one plugin which is visible, so...
-
                     hideCategory = false;
 
                     break;

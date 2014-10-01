@@ -124,8 +124,8 @@ HelpWindowWindow::HelpWindowWindow(QWidget *pParent) :
     mContextMenu->addAction(mGui->actionPrint);
 
     // We want our own context menu for the help widget (indeed, we don't want
-    // the default one which has the reload menu item and not the other actions
-    // that we have in our tool bar widget, so...)
+    // the default one, which has the reload menu item and not the other actions
+    // that we have in our tool bar widget)
 
     mHelpWidget->setContextMenuPolicy(Qt::CustomContextMenu);
 

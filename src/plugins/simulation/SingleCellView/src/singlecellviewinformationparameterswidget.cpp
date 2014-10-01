@@ -269,7 +269,7 @@ void SingleCellViewInformationParametersWidget::propertyChanged(Core::Property *
 
             break;
         default:
-            // Not a type in which we are interested, so...
+            // Not a type in which we are interested, so do nothing
 
             ;
         }
@@ -278,8 +278,8 @@ void SingleCellViewInformationParametersWidget::propertyChanged(Core::Property *
     // Note #1: we would normally call
     //          mSimulation->data()->checkForModifications() after recomputing
     //          our 'computed constants' and 'variables, but the recomputation
-    //          will eventually result in updateParameters() above to be called
-    //          and it will check for modifications, so...
+    //          will eventually result in updateParameters() above to be called,
+    //          which will check for modifications...
     // Note #2: some state variables may be considered as computed constants by
     //          the CellML API. This is fine when we need to initialise things,
     //          but not after the user has modified one or several model
@@ -531,7 +531,7 @@ void SingleCellViewInformationParametersWidget::populateContextMenu(QMenu *pCont
         }
 
         // Make sure that we have a 'current' component menu
-        // Note: this should never happen, but we never know, so...
+        // Note: this should never happen, but we never know...
 
         if (!componentMenu)
             continue;
