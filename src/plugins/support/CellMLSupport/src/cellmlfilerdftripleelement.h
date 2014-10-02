@@ -76,6 +76,8 @@ private:
     QString mLexicalForm;
     QString mLanguage;
     QString mDataTypeUri;
+
+    QString mAsString;
 };
 
 //==============================================================================

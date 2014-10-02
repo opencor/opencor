@@ -109,6 +109,31 @@ CellmlFileRdfTripleElement::CellmlFileRdfTripleElement(iface::rdf_api::Node *pRd
             }
         }
     }
+
+    // Keep track of the RDF triple element's value as a string, which is based
+    // on its type
+    // Note: indeed, this value is constant, so it's better to generate it once
+    //       and for all than generate it every time we need it (which could
+    //       take some time if it's needed a lot)...
+
+    switch (mType) {
+    case UriReference:
+        mAsString = mUriReference;
+
+        break;
+    case PlainLiteral:
+        mAsString = mLexicalForm+" ["+mLanguage+"]";
+
+        break;
+    case TypedLiteral:
+        mAsString = mLexicalForm+" ["+mDataTypeUri+"]";
+
+        break;
+    default:
+        // Id
+
+        mAsString = mId;
+    }
 }
 
 //==============================================================================
@@ -119,7 +144,8 @@ CellmlFileRdfTripleElement::CellmlFileRdfTripleElement(const QString &pUriRefere
     mUriReference(pUriReference),
     mLexicalForm(QString()),
     mLanguage(QString()),
-    mDataTypeUri(QString())
+    mDataTypeUri(QString()),
+    mAsString(pUriReference)
 {
 }
 
@@ -181,20 +207,9 @@ QString CellmlFileRdfTripleElement::dataTypeUri() const
 
 QString CellmlFileRdfTripleElement::asString() const
 {
-    // Return the RDF triple element's value as a string, based on its type
+    // Return the RDF triple element's value as a string
 
-    switch (mType) {
-    case UriReference:
-        return mUriReference;
-    case PlainLiteral:
-        return mLexicalForm+" ["+mLanguage+"]";
-    case TypedLiteral:
-        return mLexicalForm+" ["+mDataTypeUri+"]";
-    default:
-        // Id
-
-        return mId;
-    }
+    return mAsString;
 }
 
 //==============================================================================
