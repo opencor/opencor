@@ -580,21 +580,11 @@ void PluginsWindow::updatePluginsSelectedState(QStandardItem *pItem,
         // needs our unselectable plugin
 
         foreach (QStandardItem *selectablePluginItem, mSelectablePluginItems)
-            if (selectablePluginItem->checkState() == Qt::Checked) {
-                // The selectable plugin is selected, so go through its plugin
-                // dependencies and check whether one of them is our
-                // unselectable plugin
+            if (   (selectablePluginItem->checkState() == Qt::Checked)
+                && (mPluginManager->plugin(selectablePluginItem->text())->info()->fullDependencies().contains(unselectablePluginItem->text()))) {
+                unselectablePluginItem->setCheckState(Qt::Checked);
 
-                foreach (const QString &requiredPlugin,
-                         mPluginManager->plugin(selectablePluginItem->text())->info()->fullDependencies())
-                    if (!requiredPlugin.compare(unselectablePluginItem->text())) {
-                        unselectablePluginItem->setCheckState(Qt::Checked);
-
-                        break;
-                    }
-
-                if (unselectablePluginItem->checkState() == Qt::Checked)
-                    break;
+                break;
             }
     }
 
