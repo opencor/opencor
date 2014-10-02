@@ -168,7 +168,7 @@ public:
 
     CellmlFileRdfTriple::Type type() const;
 
-    CellmlFileRdfTriples contains(iface::cellml_api::CellMLElement *pElement) const;
+    CellmlFileRdfTriples associatedWith(iface::cellml_api::CellMLElement *pElement) const;
 
     CellmlFileRdfTriple * add(CellmlFileRdfTriple *pRdfTriple);
 
@@ -179,8 +179,8 @@ public:
 private:
     CellmlFile *mCellmlFile;
 
-    void recursiveContains(CellmlFileRdfTriples &pRdfTriples,
-                           CellmlFileRdfTriple *pRdfTriple) const;
+    void recursiveAssociatedWith(CellmlFileRdfTriples &pRdfTriples,
+                                 CellmlFileRdfTriple *pRdfTriple) const;
 
     bool removeRdfTriples(const CellmlFileRdfTriples &pRdfTriples);
 };

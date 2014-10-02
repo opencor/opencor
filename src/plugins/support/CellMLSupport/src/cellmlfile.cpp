@@ -713,7 +713,7 @@ CellmlFileRdfTriples CellmlFile::rdfTriples(iface::cellml_api::CellMLElement *pE
 {
     // Return all the RDF triples associated with the given element
 
-    return mRdfTriples.contains(pElement);
+    return mRdfTriples.associatedWith(pElement);
 }
 
 //==============================================================================

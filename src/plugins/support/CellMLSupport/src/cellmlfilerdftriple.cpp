@@ -540,33 +540,34 @@ bool CellmlFileRdfTriple::decodeTerm(const QString &pTerm, QString &pResource,
 
 //==============================================================================
 
-void CellmlFileRdfTriples::recursiveContains(CellmlFileRdfTriples &pRdfTriples,
-                                             CellmlFileRdfTriple *pRdfTriple) const
+void CellmlFileRdfTriples::recursiveAssociatedWith(CellmlFileRdfTriples &pRdfTriples,
+                                                   CellmlFileRdfTriple *pRdfTriple) const
 {
     // Add pRdfTriple to pRdfTriples, but only if it's not already part of
     // pRdfTriples
     // Note: indeed, a given RDF triple may be referenced more than once...
 
-    foreach (CellmlFileRdfTriple *rdfTriple, pRdfTriples)
-        if (pRdfTriple == rdfTriple)
-            return;
+    if (pRdfTriples.contains(pRdfTriple))
+        return;
 
     pRdfTriples << pRdfTriple;
 
     // Recursively add all the RDF triples, which subject matches that of
     // pRdfTriple's object
 
+    QString rdfTripleObject = pRdfTriple->object()->asString();
+
     foreach (CellmlFileRdfTriple *rdfTriple, *this)
-        if (!rdfTriple->subject()->asString().compare(pRdfTriple->object()->asString()))
-            recursiveContains(pRdfTriples, rdfTriple);
+        if (!rdfTriple->subject()->asString().compare(rdfTripleObject))
+            recursiveAssociatedWith(pRdfTriples, rdfTriple);
 }
 
 //==============================================================================
 
-CellmlFileRdfTriples CellmlFileRdfTriples::contains(iface::cellml_api::CellMLElement *pElement) const
+CellmlFileRdfTriples CellmlFileRdfTriples::associatedWith(iface::cellml_api::CellMLElement *pElement) const
 {
-    // Return all the RDF triples which are directly or indirectly associated
-    // with the given metadata id
+    // Return all the RDF triples that are directly or indirectly associated
+    // with the given element's metadata id
 
     CellmlFileRdfTriples res = CellmlFileRdfTriples(mCellmlFile);
     QString cmetaId = QString::fromStdWString(pElement->cmetaId());
@@ -578,7 +579,7 @@ CellmlFileRdfTriples CellmlFileRdfTriples::contains(iface::cellml_api::CellMLEle
         if (!cmetaId.compare(rdfTriple->metadataId()))
             // It's the correct metadata id, so add it to our list
 
-            recursiveContains(res, rdfTriple);
+            recursiveAssociatedWith(res, rdfTriple);
 
     return res;
 }
@@ -672,7 +673,7 @@ bool CellmlFileRdfTriples::remove(iface::cellml_api::CellMLElement *pElement)
 {
     // Call our generic remove function
 
-    return removeRdfTriples(contains(pElement));
+    return removeRdfTriples(associatedWith(pElement));
 }
 
 //==============================================================================
