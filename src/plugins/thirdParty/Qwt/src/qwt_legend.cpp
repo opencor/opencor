@@ -681,7 +681,7 @@ void QwtLegend::renderLegend( QPainter *painter,
         {
             painter->save();
 
-            painter->setClipRect( itemRects[index] );
+            painter->setClipRect( itemRects[index], Qt::IntersectClip );
             renderItem( painter, w, itemRects[index], fillBackground );
 
             index++;

@@ -49,10 +49,6 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-#include "qwt_mathml_text_engine.h"
-
-//==============================================================================
-
 namespace OpenCOR {
 namespace Viewer {
 
