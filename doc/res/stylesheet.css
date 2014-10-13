@@ -68,6 +68,12 @@ img.downloads:hover {
     background: rgba(103, 103, 103, 0.05);
 }
 
+div.main {
+    position: relative;
+    margin-top: -200px;
+    margin-left: 330px;
+}
+
 table.version {
     width: 100%;
 }
