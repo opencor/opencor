@@ -155,9 +155,9 @@ ELSEIF(APPLE)
 
     SET(MACOSX_BUNDLE_ICON_FILE ${IconFile})
 
-    SET_SOURCE_FILES_PROPERTIES(res/boomy/${IconFile} PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
+    SET_SOURCE_FILES_PROPERTIES(res/${IconFile} PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
 
-    LIST(APPEND SOURCES res/boomy/${IconFile})
+    LIST(APPEND SOURCES res/${IconFile})
 ENDIF()
 
 # Check whether tests are required and, if so, set the destination tests
