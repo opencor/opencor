@@ -511,6 +511,14 @@ IF(WIN32)
 
     SET(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_SOURCE_DIR}/LICENSE.txt")
 
+    # Specify the default installation directory
+
+    IF(${ARCHITECTURE} EQUAL 32)
+        SET(CPACK_NSIS_INSTALL_ROOT "$PROGRAMFILES")
+    ELSE()
+        SET(CPACK_NSIS_INSTALL_ROOT "$PROGRAMFILES64")
+    ENDIF()
+
     # Install both the GUI and CLI versions of OpenCOR
 
     INSTALL(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION bin)
