@@ -46,6 +46,7 @@ specific language governing permissions and limitations under the License.
 #include <QSettings>
 #include <QString>
 #include <QStringList>
+#include <QSysInfo>
 
 //==============================================================================
 
@@ -221,9 +222,6 @@ QString osName()
     else
         return os+" "+exec("uname", QStringList() << "-r");
 #elif defined(Q_OS_MAC)
-    // Note: from version 10.8, Apple officially uses OS X rather than Mac OS
-    //       X...
-
     switch (QSysInfo::MacintoshVersion) {
     case QSysInfo::MV_9:
         return "Mac OS 9";
@@ -248,9 +246,16 @@ QString osName()
     case QSysInfo::MV_10_9:
         return "OS X 10.9 (Mavericks)";
     default:
-        return "Mac OS";
-        // Note: we return Mac OS rather than Mac OS X or even OS X since only
-        //       old versions are not handled...
+//---GRY--- THE BELOW IS BECAUSE Qt DOESN'T CURRENTLY SUPPORT OS X 10.10
+//          (Yosemite), SO ONCE IT DOES, WE SHOULD BE ABLE TO HAVE A CASE FOR
+//          QSysInfo::MV_10_10 OR SOMETHING SIMILAR...
+        if (QSysInfo::MacintoshVersion == 12)
+            return "OS X 10.10 (Yosemite)";
+        else
+            return "Mac OS";
+            // Note: we return "Mac OS" rather than "Mac OS X" or even "OS X"
+            //       since only versions prior to (Mac) OS X are not
+            //       recognised...
     }
 #else
     #error Unsupported platform
