@@ -1079,25 +1079,11 @@ void MainWindow::messageReceived(const QString &pMessage, QObject *pSocket)
 void MainWindow::on_actionFullScreen_triggered()
 {
     // Switch to / back from full screen mode
-    // Note: some black magic is needed for OS X. Indeed, on that platform,
-    //       OpenCOR can be switched to / back from full screen mode either
-    //       through its menu or using its full screen mode button (located in
-    //       the top right of its title bar). If we use only method, then to
-    //       simply use showFullScreen() and showNormal() is fine, but if for
-    //       some reasons the user decides to mix both methods, then our black
-    //       magic is needed...
 
-    if (isFullScreen()) {
+    if (isFullScreen())
         showNormal();
-#ifdef Q_OS_MAC
+    else
         showFullScreen();
-#endif
-    } else {
-        showFullScreen();
-#ifdef Q_OS_MAC
-        showNormal();
-#endif
-    }
 }
 
 //==============================================================================
