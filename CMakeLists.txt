@@ -503,9 +503,17 @@ SET(CPACK_PACKAGE_INSTALL_DIRECTORY "${PROJECT_NAME}")
 SET(CPACK_PACKAGE_EXECUTABLES "${PROJECT_NAME}" "${PROJECT_NAME}")
 
 IF(WIN32)
-    # Select NSIS and ZIP as the packagers on Windows
+    # Select NSIS, if available, and ZIP as the packagers on Windows
 
-    SET(CPACK_GENERATOR NSIS ZIP)
+    IF(EXISTS $ENV{PROGRAMFILES}/NSIS/makensis.exe)
+        SET(NSIS_FOUND TRUE)
+        SET(NSIS_GENERATOR NSIS)
+    ELSE()
+        SET(NSIS_FOUND FALSE)
+        SET(NSIS_GENERATOR)
+    ENDIF()
+
+    SET(CPACK_GENERATOR ${NSIS_GENERATOR} ZIP)
 
     SET(CPACK_SYSTEM_NAME "Windows${ARCHITECTURE}")
 
@@ -513,10 +521,12 @@ IF(WIN32)
 
     # Specify the default installation directory
 
-    IF(${ARCHITECTURE} EQUAL 32)
-        SET(CPACK_NSIS_INSTALL_ROOT "$PROGRAMFILES")
-    ELSE()
-        SET(CPACK_NSIS_INSTALL_ROOT "$PROGRAMFILES64")
+    IF(NSIS_FOUND)
+        IF(${ARCHITECTURE} EQUAL 32)
+            SET(CPACK_NSIS_INSTALL_ROOT "$PROGRAMFILES")
+        ELSE()
+            SET(CPACK_NSIS_INSTALL_ROOT "$PROGRAMFILES64")
+        ENDIF()
     ENDIF()
 
     # Install both the GUI and CLI versions of OpenCOR
@@ -566,16 +576,18 @@ IF(WIN32)
     #       file icons (so that it is clear to the user that an extension has
     #       been (un)registered...
 
-    SET(CPACK_NSIS_DEFINES "!include ${CMAKE_SOURCE_DIR}\\\\distrib\\\\windows\\\\FileAssociation.nsh")
+    IF(NSIS_FOUND)
+        SET(CPACK_NSIS_DEFINES "!include ${CMAKE_SOURCE_DIR}\\\\distrib\\\\windows\\\\FileAssociation.nsh")
 
-    SET(CPACK_NSIS_EXTRA_INSTALL_COMMANDS "
-        \\\${RegisterExtension} \\\"\\\$INSTDIR\\\\bin\\\\${PROJECT_NAME}${CMAKE_EXECUTABLE_SUFFIX}\\\" \\\".cellml\\\" \\\"CellML File\\\"
-        System::Call \\\"Shell32::SHChangeNotify(i 0x08000000, i 0, i 0, i 0)\\\"
-    ")
-    SET(CPACK_NSIS_EXTRA_UNINSTALL_COMMANDS "
-        \\\${UnregisterExtension} \\\".cellml\\\" \\\"CellML File\\\"
-        System::Call \\\"Shell32::SHChangeNotify(i 0x08000000, i 0, i 0, i 0)\\\"
-    ")
+        SET(CPACK_NSIS_EXTRA_INSTALL_COMMANDS "
+            \\\${RegisterExtension} \\\"\\\$INSTDIR\\\\bin\\\\${PROJECT_NAME}${CMAKE_EXECUTABLE_SUFFIX}\\\" \\\".cellml\\\" \\\"CellML File\\\"
+            System::Call \\\"Shell32::SHChangeNotify(i 0x08000000, i 0, i 0, i 0)\\\"
+        ")
+        SET(CPACK_NSIS_EXTRA_UNINSTALL_COMMANDS "
+            \\\${UnregisterExtension} \\\".cellml\\\" \\\"CellML File\\\"
+            System::Call \\\"Shell32::SHChangeNotify(i 0x08000000, i 0, i 0, i 0)\\\"
+        ")
+    ENDIF()
 ELSEIF(APPLE)
     # Select PackageMaker and ZIP as the packagers on OS X
 
