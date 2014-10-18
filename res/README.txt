@@ -1,0 +1,5 @@
+Some information on the OpenCOR logo:
+ - OpenCOR.svg: this was created from the original VPH logo, saving the resulting SVG file as an optimised SVG file (using Inkscape), and beautifying the SVG file using http://xmlbeautifier.com/.
+ - splashscreen.png (as well as [OpenCOR]/doc/res/pics/logo.png and [OpenCOR]/src/plugins/miscellaneous/Core/res/logo.png though the size of the OpenCOR logo was set to 35% of its original size): this was created by opening OpenCOR.svg in Inkscape, setting the size of the OpenCOR logo to 50% of its original size, making a screenshot, extracting the part that is inside the box, and making its background transparent (using GIMP).
+ - OpenCOR.pptx: this was created by using a screenshot version of the OpenCOR.svg, adding some space around it (e.g. 50 pixels) and making sure that it's square,
+ - OpenCOR[.ico|.png|.icns]: these were created by saving a 100% version of OpenCOR.pptx as a PNG file, using that PNG file as an input to http://iconverticons.com/online/, and downloading the corresponding .ico, .png (the 256x256 pixel version) and .icns versions of the OpenCOR logo.
