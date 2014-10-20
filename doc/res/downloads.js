@@ -92,7 +92,7 @@ function versions(versions, downloads) {
         document.write("                <td>\n");
         document.write("                    "+versionTitle+"\n");
 
-        if (downloads) 
+        if (downloads)
             document.write("                    <span class=\"whatIsNew\"><a href=\"../user/whatIsNew.html#"+versionFolder+"\">What is new?</a></span>\n");
 
         document.write("                </td>\n");
