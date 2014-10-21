@@ -37,14 +37,45 @@ function month(month) {
 }
 
 function fileSize(size) {
-    var units = [ "B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB" ];
-    var index = Math.floor(Math.log(size)/Math.log(1024));
+    if (typeof size !== "undefined") {
+        var units = [ "B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB" ];
+        var index = Math.floor(Math.log(size)/Math.log(1024));
 
-    return Math.ceil(size/Math.pow(1024, index))+" "+units[index];
+        return Math.ceil(size/Math.pow(1024, index))+" "+units[index];
+    } else {
+        return "???";
+    }
 }
 
 function versions(versions, downloads) {
-    downloads = (typeof downloads !== "undefined")?downloads:true;
+    // Retrieve the size of our various downloadable files, should we be 
+    // running this script from opencor.ws
+    // Note: the URL used in the request must be based on the value of
+    //       location.hostname rather than on www.opencor.ws or opencor.ws.
+    //       Indeed, if the user was to use www.opencor.ws to look up a page
+    //       and we were to use opencor.ws for our request, then the request
+    //       would fail because we don't use the exact same hostname...
+
+    var fileSizes = {};
+    
+    if (location.hostname.substring(location.hostname.length-10) === "opencor.ws") {
+        var request = new XMLHttpRequest();
+        
+        request.open("GET", "http://"+location.hostname+"/res/downloads.php", false);
+        request.send();
+
+        if ((request.status === 200) && (request.readyState === 4)) {
+            var retrievedFileSizes = request.responseText.split("\n");
+            
+            for (var i = 0, iMax = retrievedFileSizes.length; i < iMax; ++i) {
+                var retrievedFileSize = retrievedFileSizes[i].split(",");
+            
+                fileSizes[retrievedFileSize[0]] = retrievedFileSize[1];
+            }
+        }
+    }
+
+    // Output the various requested downloadable files
 
     var versionIndex = 0;
 
@@ -213,8 +244,7 @@ function versions(versions, downloads) {
                     // Retrieve some information about the platform file
 
                     platformFileExtension = platformFile[0];
-                    platformFileSize      = platformFile[1];
-                    platformFileExtraInfo = platformFile[2];
+                    platformFileExtraInfo = platformFile[1];
 
                     // Determine the file name, type and extra info, if any
 
@@ -237,7 +267,7 @@ function versions(versions, downloads) {
 
                     // List the file for download
 
-                    document.write("                            <li><a href=\""+platformFileName+"\">"+platformFileType+"</a>"+platformFileExtraInfo+" <span class=\"fileSize\">("+fileSize(platformFileSize)+")</span></li>\n");
+                    document.write("                            <li><a href=\""+platformFileName+"\">"+platformFileType+"</a>"+platformFileExtraInfo+" <span class=\"fileSize\">("+fileSize(fileSizes[platformFileName])+")</span></li>\n");
 
                     // Go to the next platform file
 
