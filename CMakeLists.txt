@@ -101,8 +101,6 @@ SET(RESOURCES
 
 IF(WIN32)
     SET(WINDOWS_CLI_SOURCES
-        windows/main.cpp
-
         src/misc/cliapplication.cpp
         src/misc/common.cpp
 
@@ -111,6 +109,8 @@ IF(WIN32)
         src/plugins/pluginmanager.cpp
 
         src/plugins/miscellaneous/Core/src/cliutils.cpp
+
+        src/windows/main.cpp
     )
 
     SET(WINDOWS_CLI_HEADERS_MOC
@@ -179,7 +179,7 @@ IF(ENABLE_TESTS)
     SET(RUNTESTS_NAME runtests)
 
     ADD_EXECUTABLE(${RUNTESTS_NAME}
-        tests/main.cpp
+        src/tests/main.cpp
     )
 
     TARGET_LINK_LIBRARIES(${RUNTESTS_NAME}

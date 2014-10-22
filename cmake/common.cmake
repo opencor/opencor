@@ -605,7 +605,7 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
                 )
 
                 ADD_EXECUTABLE(${TEST_NAME}
-                    ../../../../tests/testsutils.cpp
+                    ../../../tests/testsutils.cpp
 
                     ../../plugin.cpp
                     ../../plugininfo.cpp
