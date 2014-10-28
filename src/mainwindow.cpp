@@ -64,9 +64,7 @@ specific language governing permissions and limitations under the License.
 #include <QMessageBox>
 #include <QRect>
 #include <QSettings>
-#ifdef Q_OS_MAC
-    #include <QShortcut>
-#endif
+#include <QShortcut>
 #include <QUrl>
 
 //==============================================================================
@@ -162,18 +160,30 @@ Core::showEnableAction(mGui->actionPreferences, false);
     setWindowTitle(qApp->applicationName());
 
     // Customise our docked windows action and handle it through a connection
-    // Note: Ctrl+Space doesn't work on OS X, so ideally we would add the Alt
-    //       key (since it's next to it, but it doesn't work either), so in the
-    //       we add the Meta key...
+    // Note #1: the reason for having several shortcuts is because one or
+    //          several of them are bound to be already used on the target
+    //          system...
+    // Note #2: normally we would call setShortcuts() rather than setShortcut()
+    //          and then manually creating several QShortcut objects, but it
+    //          doesn't work (bug?)...
 
-#if defined(Q_OS_MAC)
-    mGui->actionDockedWindows->setShortcut(QKeySequence(Qt::CTRL|Qt::META|Qt::Key_Space));
-#else
     mGui->actionDockedWindows->setShortcut(QKeySequence(Qt::CTRL|Qt::Key_Space));
-#endif
 
     connect(mGui->actionDockedWindows, SIGNAL(triggered(bool)),
             this, SLOT(showDockedWindows(const bool &)));
+
+    new QShortcut(QKeySequence(Qt::META|Qt::Key_Space),
+                  this, SLOT(toggleDockedWindows()));
+    new QShortcut(QKeySequence(Qt::ALT|Qt::Key_Space),
+                  this, SLOT(toggleDockedWindows()));
+    new QShortcut(QKeySequence(Qt::CTRL|Qt::META|Qt::Key_Space),
+                  this, SLOT(toggleDockedWindows()));
+    new QShortcut(QKeySequence(Qt::CTRL|Qt::ALT|Qt::Key_Space),
+                  this, SLOT(toggleDockedWindows()));
+    new QShortcut(QKeySequence(Qt::META|Qt::ALT|Qt::Key_Space),
+                  this, SLOT(toggleDockedWindows()));
+    new QShortcut(QKeySequence(Qt::CTRL|Qt::META|Qt::ALT|Qt::Key_Space),
+                  this, SLOT(toggleDockedWindows()));
 
     // A connection to handle the status bar
 
@@ -210,15 +220,8 @@ Core::showEnableAction(mGui->actionPreferences, false);
     // Note: indeed, when pressing Cmd+M on OS X, the active application is
     //       expected to minimise itself, but it doesn't using Qt only...
 
-    new QShortcut(QKeySequence("Ctrl+M"),
+    new QShortcut(QKeySequence(Qt::CTRL|Qt::Key_M),
                   this, SLOT(showMinimized()));
-
-    // Note: we used to have a shortcut (the Escape key) to have OpenCOR resume
-    //       from full screen mode, but this conflicted with EditorWidget where
-    //       the Escape key is used to hide the find/replace widget. So, we
-    //       decided to remove it. This being said, we are, in the end, being
-    //       consistent with other editing tools such as Qt Creator and
-    //       TextWrangler...
 #endif
 
     mGui->actionFullScreen->setShortcut(QKeySequence::FullScreen);
@@ -1278,6 +1281,15 @@ void MainWindow::showDockedWindows(const bool &pShow,
     // Update the checked state of our docked windows action
 
     mGui->actionDockedWindows->setChecked(pShow);
+}
+
+//==============================================================================
+
+void MainWindow::toggleDockedWindows()
+{
+    // Toggle the visible state of our docked windows
+
+    showDockedWindows(!mGui->actionDockedWindows->isChecked());
 }
 
 //==============================================================================

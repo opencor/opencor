@@ -157,6 +157,7 @@ private Q_SLOTS:
 
     void showDockedWindows(const bool &pShow,
                            const bool &pInitialisation = false);
+    void toggleDockedWindows();
 
     void updateDockWidgetsVisibility();
 
