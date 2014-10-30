@@ -100,7 +100,7 @@ ADD_PLUGIN(SampleTools
 )</pre>
 
         <p>
-            Some of the interfaces our plugin implements come with a <code>.cpp</code> file, so we reference them (lines 7 and 8). Then, our plugin needs the <a href="Sample.html"><strong>Sample</strong></a> plugin (to be able to use its <code>add()</code> function), so it is referenced (line 17) using the <code>PLUGINS</code> keyword (line 16). Finally, we reference the <a href="http://qt-project.org/">Qt</a> module (line 19) and libraries (lines 21-23) needed by our plugin.
+            Some of the interfaces our plugin implements come with a <code>.cpp</code> file, so we reference them (lines 7 and 8). Then, our plugin needs the <a href="Sample.html"><strong>Sample</strong></a> plugin (to be able to use its <code>add()</code> function), so it is referenced (line 17) using the <code>PLUGINS</code> keyword (line 16). Finally, we reference the <a href="http://www.qt.io/">Qt</a> module (line 19) and libraries (lines 21-23) needed by our plugin.
         </p>
 
         <div class="section">
@@ -174,7 +174,7 @@ private Q_SLOTS:
 #endif</pre>
 
         <p>
-            As mentioned above, our plugin implements some interfaces, which means that their header file is included (lines 27-29 and 31). It also means that our plugin class inherits from those interfaces (lines 44-46), as well as make calls to the <code>Q_INTERFACES()</code> macro to let <a href-="http://qt-project.org/">Qt</a> know which interfaces it implements (lines 52-55). Finally, we include the inline files (lines 58-61) that declare various methods that must be implemented by our plugin (see the <a href="#Interfaces%20implementation">next section</a>). (The rest of the class definition is specific to our plugin and is discussed <a href="#Plugin%20specific">below</a>.)
+            As mentioned above, our plugin implements some interfaces, which means that their header file is included (lines 27-29 and 31). It also means that our plugin class inherits from those interfaces (lines 44-46), as well as make calls to the <code>Q_INTERFACES()</code> macro to let <a href="http://www.qt.io/">Qt</a> know which interfaces it implements (lines 52-55). Finally, we include the inline files (lines 58-61) that declare various methods that must be implemented by our plugin (see the <a href="#Interfaces%20implementation">next section</a>). (The rest of the class definition is specific to our plugin and is discussed <a href="#Plugin%20specific">below</a>.)
         </p>
 
         <p>
@@ -484,7 +484,7 @@ void SampleToolsPlugin::addTwoNumbers()
         </p>
 
         <p>
-            <code>addTwoNumbers()</code> (lines 244-260) is a <a href="http://qt-project.org/">Qt</a> slot that is executed whenever the user selects our menu item (see <code>mAddTwoNumbersAction</code>). Using a GUI approach, it asks the user to provide two numbers and returns their sum, unless the user decides to cancel the action.
+            <code>addTwoNumbers()</code> (lines 244-260) is a <a href="http://www.qt.io/">Qt</a> slot that is executed whenever the user selects our menu item (see <code>mAddTwoNumbersAction</code>). Using a GUI approach, it asks the user to provide two numbers and returns their sum, unless the user decides to cancel the action.
         </p>
 
         <script type="text/javascript">

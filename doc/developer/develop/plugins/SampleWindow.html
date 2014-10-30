@@ -109,7 +109,7 @@ ADD_PLUGIN(SampleWindow
 )</pre>
 
         <p>
-            One of the interfaces our plugin implements comes with a <code>.cpp</code> file, so we reference it (line 7). Then, our plugin needs both the <strong>Core</strong> and <a href="Sample.html"><strong>Sample</strong></a> plugins (the latter, to be able to use its <code>add()</code> function), so  they are referenced (lines 20-21) using the <code>PLUGINS</code> keyword (line 19). Our plugin comes with a dockable window, which is implemented using various files (lines 11, 14 and 16). One of those files is a <code>.ui</code> file, which is referenced using the <code>UIS</code> keyword (line 15). Finally, we reference the <a href="http://qt-project.org/">Qt</a> module (line 23) and libraries (lines 25-29) needed by our plugin.
+            One of the interfaces our plugin implements comes with a <code>.cpp</code> file, so we reference it (line 7). Then, our plugin needs both the <strong>Core</strong> and <a href="Sample.html"><strong>Sample</strong></a> plugins (the latter, to be able to use its <code>add()</code> function), so  they are referenced (lines 20-21) using the <code>PLUGINS</code> keyword (line 19). Our plugin comes with a dockable window, which is implemented using various files (lines 11, 14 and 16). One of those files is a <code>.ui</code> file, which is referenced using the <code>UIS</code> keyword (line 15). Finally, we reference the <a href="http://www.qt.io/">Qt</a> module (line 23) and libraries (lines 25-29) needed by our plugin.
         </p>
 
         <div class="section">
@@ -177,7 +177,7 @@ private:
 #endif</pre>
 
         <p>
-            As mentioned above, our plugin implements some interfaces, which means that their header file is included (lines 27 and 29-30). It also means that our plugin class inherits from those interfaces (lines 47-48), as well as make calls to the <code>Q_INTERFACES()</code> macro to let <a href-="http://qt-project.org/">Qt</a> know which interfaces it implements (lines 54-56). Finally, we include the inline files (lines 59-61) that declare various methods that must be implemented by our plugin (see the <a href="#Interfaces%20implementation">next section</a>). (The rest of the class definition is specific to our plugin and is discussed <a href="#Plugin%20specific">below</a>.)
+            As mentioned above, our plugin implements some interfaces, which means that their header file is included (lines 27 and 29-30). It also means that our plugin class inherits from those interfaces (lines 47-48), as well as make calls to the <code>Q_INTERFACES()</code> macro to let <a href="http://www.qt.io/">Qt</a> know which interfaces it implements (lines 54-56). Finally, we include the inline files (lines 59-61) that declare various methods that must be implemented by our plugin (see the <a href="#Interfaces%20implementation">next section</a>). (The rest of the class definition is specific to our plugin and is discussed <a href="#Plugin%20specific">below</a>.)
         </p>
 
         <p>
@@ -395,7 +395,7 @@ private Q_SLOTS:
 #endif</pre>
 
         <p>
-            <code>SampleWindowWindow</code> inherits from <code>Core::WindowWidget</code>, which is defined in the <strong>Core</strong> plugin and is an extended version of <a href="http://qt-project.org/">Qt</a>'s <code>QDockWidget</code> (line 42). It also comes with a GUI file, which describes the layout of our plugin window (<a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/SampleWindow/src/samplewindowwindow.ui"><code>samplewindowwindow.ui</code></a>).
+            <code>SampleWindowWindow</code> inherits from <code>Core::WindowWidget</code>, which is defined in the <strong>Core</strong> plugin and is an extended version of <a href="http://www.qt.io/">Qt</a>'s <code>QDockWidget</code> (line 42). It also comes with a GUI file, which describes the layout of our plugin window (<a href="https://github.com/opencor/opencor/blob/master/src/plugins/sample/SampleWindow/src/samplewindowwindow.ui"><code>samplewindowwindow.ui</code></a>).
         </p>
 
         <p>

@@ -116,8 +116,8 @@
             <li><code>DEFINITIONS</code>: definitions needed to build the plugin.</li>
             <li><code>PLUGINS</code>: plugins needed by the plugin.</li>
             <li><code>PLUGIN_BINARIES</code>: the binary version of plugins needed by the plugin.</li>
-            <li><code>QT_MODULES</code>: <a href="http://qt-project.org/">Qt</a> modules needed by the plugin.</li>
-            <li><code>QT_LIBRARIES</code>: <a href="http://qt-project.org/">Qt</a> libraries needed by the plugin.</li>
+            <li><code>QT_MODULES</code>: <a href="http://www.qt.io/">Qt</a> modules needed by the plugin.</li>
+            <li><code>QT_LIBRARIES</code>: <a href="http://www.qt.io/">Qt</a> libraries needed by the plugin.</li>
             <li><code>EXTERNAL_BINARIES_DIR</code>: location where external binaries needed by the plugin can be found.</li>
             <li><code>EXTERNAL_BINARIES</code>: external binaries needed by the plugin.</li>
             <li><code>TESTS</code>: <a href="../tests.html">tests</a> for the plugin.</li>
@@ -128,7 +128,7 @@
         </p>
 
         <p class="note">
-            due to the intrinsic nature of OS X binaries, it is critical that you list <em>all</em> the <a href="http://qt-project.org/">Qt</a> libraries needed by a plugin. Failure to do so may result in OpenCOR not behaving as expected.
+            due to the intrinsic nature of OS X binaries, it is critical that you list <em>all</em> the <a href="http://www.qt.io/">Qt</a> libraries needed by a plugin. Failure to do so may result in OpenCOR not behaving as expected.
         </p>
 
         <span class="anchor" id="Plugin information"></span>
@@ -217,7 +217,7 @@ namespace Core {
 }</pre>
 
         <p class="note">
-            support for the internationalisation of a plugin's description would normally be done using <a href="http://qt-project.org/">Qt</a>'s <code>tr()</code> function, but the C nature of the function means that it cannot be done. So, instead, we use a <code>QMap</code>-based approach.
+            support for the internationalisation of a plugin's description would normally be done using <a href="http://www.qt.io/">Qt</a>'s <code>tr()</code> function, but the C nature of the function means that it cannot be done. So, instead, we use a <code>QMap</code>-based approach.
         </p>
 
         <span class="anchor" id="Plugin class"></span>
@@ -227,7 +227,7 @@ namespace Core {
         </div>
 
         <p>
-            We rely on <a href="http://qt-project.org/">Qt</a>'s support for plugins, which means that plugins must define a specific class. The class must inherit from <code>QObject</code>, as well as from any interface the plugin implements. For example, the <strong>Core</strong> plugin implements the <a href="https://github.com/opencor/opencor/blob/master/src/plugins/coreinterface.inl">core</a>, <a href="https://github.com/opencor/opencor/blob/master/src/plugins/filehandlinginterface.inl">file handling</a>, <a href="https://github.com/opencor/opencor/blob/master/src/plugins/guiinterface.inl">GUI</a>, <a href="https://github.com/opencor/opencor/blob/master/src/plugins/i18ninterface.inl">internationalisation</a> and <a href="https://github.com/opencor/opencor/blob/master/src/plugins/plugininterface.inl">plugin</a> interfaces, so its class definition is:
+            We rely on <a href="http://www.qt.io/">Qt</a>'s support for plugins, which means that plugins must define a specific class. The class must inherit from <code>QObject</code>, as well as from any interface the plugin implements. For example, the <strong>Core</strong> plugin implements the <a href="https://github.com/opencor/opencor/blob/master/src/plugins/coreinterface.inl">core</a>, <a href="https://github.com/opencor/opencor/blob/master/src/plugins/filehandlinginterface.inl">file handling</a>, <a href="https://github.com/opencor/opencor/blob/master/src/plugins/guiinterface.inl">GUI</a>, <a href="https://github.com/opencor/opencor/blob/master/src/plugins/i18ninterface.inl">internationalisation</a> and <a href="https://github.com/opencor/opencor/blob/master/src/plugins/plugininterface.inl">plugin</a> interfaces, so its class definition is:
         </p>
 
         <pre class="prettyprint">...
