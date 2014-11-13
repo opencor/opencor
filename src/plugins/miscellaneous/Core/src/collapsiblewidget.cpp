@@ -165,6 +165,15 @@ void CollapsibleHeaderWidget::setLastHeader(const bool &pLastHeader)
 
 //==============================================================================
 
+bool CollapsibleHeaderWidget::isCollapsable() const
+{
+    // Return wheter we are collapsable
+
+    return !mButton->icon().isNull();
+}
+
+//==============================================================================
+
 bool CollapsibleHeaderWidget::isCollapsed() const
 {
     // Return wheter we are collapsed
@@ -290,7 +299,8 @@ void CollapsibleWidget::loadSettings(QSettings *pSettings)
     // Retrieve our collapsable state
 
     for (int i = 0, iMax = mHeaders.count(); i < iMax; ++i)
-        setCollapsed(i, pSettings->value(SettingsCollapsed.arg(i), false).toBool());
+        if (mHeaders[i]->isCollapsable())
+            setCollapsed(i, pSettings->value(SettingsCollapsed.arg(i), false).toBool());
 }
 
 //==============================================================================

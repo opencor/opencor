@@ -76,6 +76,8 @@ public:
     void setFirstHeader(const bool &pFirstHeader);
     void setLastHeader(const bool &pFirstHeader);
 
+    bool isCollapsable() const;
+
     bool isCollapsed() const;
     void setCollapsed(const bool &pCollapsed);
 
