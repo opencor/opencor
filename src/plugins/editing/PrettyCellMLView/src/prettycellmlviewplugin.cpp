@@ -71,6 +71,18 @@ Editor::EditorWidget * PrettyCellMLViewPlugin::editor(const QString &pFileName) 
 }
 
 //==============================================================================
+
+bool PrettyCellMLViewPlugin::editorContentsModified(const QString &pFileName) const
+{
+    // Return whether the requested editor has been modified, which here is done
+    // by comparing its contents to that of the given file
+
+    Editor::EditorWidget *currentEditor = editor(pFileName);
+
+    return currentEditor?currentEditor->isUndoAvailable():false;
+}
+
+//==============================================================================
 // File handling interface
 //==============================================================================
 

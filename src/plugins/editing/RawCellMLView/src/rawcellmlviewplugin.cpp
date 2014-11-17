@@ -22,6 +22,7 @@ specific language governing permissions and limitations under the License.
 #include "cellmlfilemanager.h"
 #include "cellmlsupportplugin.h"
 #include "cliutils.h"
+#include "filemanager.h"
 #include "rawcellmlviewplugin.h"
 #include "rawcellmlviewwidget.h"
 
@@ -69,6 +70,20 @@ Editor::EditorWidget * RawCellMLViewPlugin::editor(const QString &pFileName) con
     // Return the requested editor
 
     return mViewWidget->editor(pFileName);
+}
+
+//==============================================================================
+
+bool RawCellMLViewPlugin::editorContentsModified(const QString &pFileName) const
+{
+    // Return whether the requested editor has been modified, which here is done
+    // by comparing its contents to that of the given file
+
+    Editor::EditorWidget *currentEditor = editor(pFileName);
+
+    return currentEditor?
+               Core::FileManager::instance()->isDifferent(pFileName, currentEditor->contents()):
+               false;
 }
 
 //==============================================================================

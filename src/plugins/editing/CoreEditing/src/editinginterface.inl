@@ -5,5 +5,6 @@
 #endif
 
     virtual Editor::EditorWidget * editor(const QString &pFileName) const PURE;
+    virtual bool editorContentsModified(const QString &pFileName) const PURE;
 
 #undef PURE
