@@ -35,6 +35,7 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#include <QApplication>
 #include <QDomDocument>
 #include <QLabel>
 #include <QLayout>
