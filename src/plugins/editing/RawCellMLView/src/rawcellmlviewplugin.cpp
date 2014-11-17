@@ -74,6 +74,17 @@ Editor::EditorWidget * RawCellMLViewPlugin::editor(const QString &pFileName) con
 
 //==============================================================================
 
+bool RawCellMLViewPlugin::isEditorUseable(const QString &pFileName) const
+{
+    Q_UNUSED(pFileName);
+
+    // We don't handle this interface...
+
+    return true;
+}
+
+//==============================================================================
+
 bool RawCellMLViewPlugin::isEditorContentsModified(const QString &pFileName) const
 {
     // Return whether the requested editor has been modified, which here is done

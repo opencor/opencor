@@ -82,6 +82,8 @@ public:
 
     Editor::EditorWidget * editor(const QString &pFileName) const;
 
+    bool isEditorUseable(const QString &pFileName) const;
+
     virtual QList<QWidget *> statusBarWidgets() const;
 
 private:

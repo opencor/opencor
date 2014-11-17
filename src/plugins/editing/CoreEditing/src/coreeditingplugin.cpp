@@ -101,7 +101,8 @@ void CoreEditingPlugin::filePermissionsChanged(const QString &pFileName)
         // Make our editor read-only or writable
 
         if (mEditor)
-            mEditor->setReadOnly(!Core::FileManager::instance()->isReadableAndWritable(pFileName));
+            mEditor->setReadOnly(   !Core::FileManager::instance()->isReadableAndWritable(pFileName)
+                                 || !mEditingInterface->isEditorUseable(pFileName));
     }
 }
 

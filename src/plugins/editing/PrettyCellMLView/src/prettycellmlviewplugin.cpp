@@ -79,6 +79,15 @@ Editor::EditorWidget * PrettyCellMLViewPlugin::editor(const QString &pFileName) 
 
 //==============================================================================
 
+bool PrettyCellMLViewPlugin::isEditorUseable(const QString &pFileName) const
+{
+    // Return whether the requested editor is useable
+
+    return mViewWidget->isEditorUseable(pFileName);
+}
+
+//==============================================================================
+
 bool PrettyCellMLViewPlugin::isEditorContentsModified(const QString &pFileName) const
 {
     // Return whether the requested editor has been modified, which here is done

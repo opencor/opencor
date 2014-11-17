@@ -61,6 +61,17 @@ Editor::EditorWidget * RawViewPlugin::editor(const QString &pFileName) const
 
 //==============================================================================
 
+bool RawViewPlugin::isEditorUseable(const QString &pFileName) const
+{
+    Q_UNUSED(pFileName);
+
+    // We don't handle this interface...
+
+    return true;
+}
+
+//==============================================================================
+
 bool RawViewPlugin::isEditorContentsModified(const QString &pFileName) const
 {
     // Return whether the requested editor has been modified, which here is done

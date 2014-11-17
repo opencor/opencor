@@ -256,6 +256,17 @@ Editor::EditorWidget * PrettyCellmlViewWidget::editor(const QString &pFileName) 
 
 //==============================================================================
 
+bool PrettyCellmlViewWidget::isEditorUseable(const QString &pFileName) const
+{
+    // Return whether the requested editor is useable
+Q_UNUSED(pFileName);
+//---GRY--- TO BE DONE...
+
+    return false;
+}
+
+//==============================================================================
+
 QList<QWidget *> PrettyCellmlViewWidget::statusBarWidgets() const
 {
     // Return our status bar widgets
