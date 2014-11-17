@@ -20,6 +20,7 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include "corecellmleditingwidget.h"
+#include "editorlistwidget.h"
 #include "editorwidget.h"
 #include "filemanager.h"
 #include "prettycellmlviewcellmltoprettycellmlconverter.h"
@@ -37,6 +38,7 @@ specific language governing permissions and limitations under the License.
 #include <QLayout>
 #include <QMetaType>
 #include <QSettings>
+#include <QTimer>
 #include <QVariant>
 
 //==============================================================================
@@ -56,7 +58,8 @@ PrettyCellmlViewWidget::PrettyCellmlViewWidget(QWidget *pParent) :
     mNeedLoadingSettings(true),
     mSettingsGroup(QString()),
     mEditingWidget(0),
-    mEditingWidgets(QMap<QString, CoreCellMLEditing::CoreCellmlEditingWidget *>())
+    mEditingWidgets(QMap<QString, CoreCellMLEditing::CoreCellmlEditingWidget *>()),
+    mSuccessfulConversions(QMap<QString, bool>())
 {
     // Set up the GUI
 
@@ -128,19 +131,33 @@ void PrettyCellmlViewWidget::initialize(const QString &pFileName)
         // populate it with its pretty CellML version
 
         PrettyCellMLViewCellmlToPrettyCellmlConverter converter(pFileName);
-        QString fileContents = QString();
+        bool successfulConversion = converter.execute();
 
-        if (converter.execute())
-            fileContents = converter.output();
-
-        mEditingWidget = new CoreCellMLEditing::CoreCellmlEditingWidget(fileContents,
+        mEditingWidget = new CoreCellMLEditing::CoreCellmlEditingWidget(converter.output(),
                                                                         !Core::FileManager::instance()->isReadableAndWritable(pFileName),
                                                                         new QsciLexerXML(this),
                                                                         parentWidget());
 
-        // Keep track of our editing widget and add it to ourselves
+        if (!successfulConversion) {
+            mEditingWidget->editor()->setReadOnly(true);
+            // Note: CoreEditingPlugin::filePermissionsChanged() will do the
+            //       same as above, however it will be done after a wee bit of
+            //       time while we want the editor to look unuseable
+            //       straightaway...
+
+            mEditingWidget->editorList()->addItem(EditorList::EditorListItem::Error,
+                                                  converter.errorLine(),
+                                                  converter.errorColumn(),
+                                                  tr("The CellML file could not be parsed. You might want to use the Raw (CellML) view to edit it."));
+
+            QTimer::singleShot(0, this, SIGNAL(selectFirstItemInEditorList()));
+        }
+
+        // Keep track of our editing widget (and of whether the conversion was
+        // successful) and add it to ourselves
 
         mEditingWidgets.insert(pFileName, mEditingWidget);
+        mSuccessfulConversions.insert(pFileName, successfulConversion);
 
         layout()->addWidget(mEditingWidget);
     }
@@ -236,10 +253,14 @@ void PrettyCellmlViewWidget::fileRenamed(const QString &pOldFileName,
     // The given file has been renamed, so update our editing widgets mapping
 
     CoreCellMLEditing::CoreCellmlEditingWidget *editingWidget = mEditingWidgets.value(pOldFileName);
+    bool successfulConversion = mSuccessfulConversions.value(pOldFileName);
 
     if (editingWidget) {
         mEditingWidgets.insert(pNewFileName, editingWidget);
+        mSuccessfulConversions.insert(pNewFileName, successfulConversion);
+
         mEditingWidgets.remove(pOldFileName);
+        mSuccessfulConversions.remove(pOldFileName);
     }
 }
 
@@ -259,10 +280,8 @@ Editor::EditorWidget * PrettyCellmlViewWidget::editor(const QString &pFileName) 
 bool PrettyCellmlViewWidget::isEditorUseable(const QString &pFileName) const
 {
     // Return whether the requested editor is useable
-Q_UNUSED(pFileName);
-//---GRY--- TO BE DONE...
 
-    return false;
+    return mSuccessfulConversions.value(pFileName);
 }
 
 //==============================================================================
@@ -276,6 +295,15 @@ QList<QWidget *> PrettyCellmlViewWidget::statusBarWidgets() const
                                   << mEditingWidget->editor()->editingModeWidget();
     else
         return QList<QWidget *>();
+}
+
+//==============================================================================
+
+void PrettyCellmlViewWidget::selectFirstItemInEditorList()
+{
+    // Select the first item in the current editor list
+
+    mEditingWidget->editorList()->selectFirstItem();
 }
 
 //==============================================================================

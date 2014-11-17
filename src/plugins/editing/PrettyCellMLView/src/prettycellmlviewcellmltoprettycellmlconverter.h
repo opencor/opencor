@@ -42,10 +42,16 @@ public:
 
     QString output() const;
 
+    int errorLine() const;
+    int errorColumn() const;
+
 private:
     QString mFileName;
 
     QString mOutput;
+
+    int mErrorLine;
+    int mErrorColumn;
 };
 
 //==============================================================================

@@ -19,6 +19,7 @@ specific language governing permissions and limitations under the License.
 // CellML to pretty CellML converter
 //==============================================================================
 
+#include "cliutils.h"
 #include "prettycellmlviewcellmltoprettycellmlconverter.h"
 
 //==============================================================================
@@ -34,7 +35,9 @@ namespace PrettyCellMLView {
 
 PrettyCellMLViewCellmlToPrettyCellmlConverter::PrettyCellMLViewCellmlToPrettyCellmlConverter(const QString &pFileName) :
     mFileName(pFileName),
-    mOutput(QString())
+    mOutput(QString()),
+    mErrorLine(-1),
+    mErrorColumn(-1)
 {
 }
 
@@ -42,9 +45,23 @@ PrettyCellMLViewCellmlToPrettyCellmlConverter::PrettyCellMLViewCellmlToPrettyCel
 
 bool PrettyCellMLViewCellmlToPrettyCellmlConverter::execute()
 {
-    // Convert the CellML file to pretty CellML
+    // Convert the CellML file to pretty CellML by first getting a DOM
+    // representation of the file
 
-    return true;
+    QString fileContents;
+    QDomDocument domDocument;
+
+    Core::readTextFromFile(mFileName, fileContents);
+
+    if (domDocument.setContent(fileContents, 0, &mErrorLine, &mErrorColumn)) {
+        mOutput = QString();
+
+        return true;
+    } else {
+        mOutput = fileContents;
+
+        return false;
+    }
 }
 
 //==============================================================================
@@ -54,6 +71,24 @@ QString PrettyCellMLViewCellmlToPrettyCellmlConverter::output() const
     // Return our output
 
     return mOutput;
+}
+
+//==============================================================================
+
+int PrettyCellMLViewCellmlToPrettyCellmlConverter::errorLine() const
+{
+    // Return our error line
+
+    return mErrorLine;
+}
+
+//==============================================================================
+
+int PrettyCellMLViewCellmlToPrettyCellmlConverter::errorColumn() const
+{
+    // Return our error column
+
+    return mErrorColumn;
 }
 
 //==============================================================================

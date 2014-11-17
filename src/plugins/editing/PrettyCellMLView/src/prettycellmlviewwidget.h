@@ -94,6 +94,11 @@ private:
 
     CoreCellMLEditing::CoreCellmlEditingWidget *mEditingWidget;
     QMap<QString, CoreCellMLEditing::CoreCellmlEditingWidget *> mEditingWidgets;
+
+    QMap<QString, bool> mSuccessfulConversions;
+
+private Q_SLOTS:
+    void selectFirstItemInEditorList();
 };
 
 //==============================================================================
