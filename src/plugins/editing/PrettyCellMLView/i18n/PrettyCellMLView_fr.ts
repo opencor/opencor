@@ -7,5 +7,9 @@
         <source>Pretty CellML</source>
         <translation>Joli CellML</translation>
     </message>
+    <message>
+        <source>CellML Validation</source>
+        <translation>Validation CellML</translation>
+    </message>
 </context>
 </TS>

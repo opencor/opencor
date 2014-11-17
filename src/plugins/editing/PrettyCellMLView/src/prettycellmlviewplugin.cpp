@@ -26,7 +26,9 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#include <QApplication>
 #include <QMainWindow>
+#include <QMessageBox>
 #include <QSettings>
 
 //==============================================================================
@@ -52,11 +54,16 @@ PLUGININFO_FUNC PrettyCellMLViewPluginInfo()
 // CellML editing interface
 //==============================================================================
 
-void PrettyCellMLViewPlugin::validate(const QString &pFileName) const
+void PrettyCellMLViewPlugin::validateCellml(const QString &pFileName) const
 {
-    Q_UNUSED(pFileName);
+//---GRY--- TO BE IMPLEMENTED...
 
-    // We don't handle this interface...
+Q_UNUSED(pFileName);
+
+QMessageBox::information(qApp->activeWindow(),
+                         tr("CellML Validation"),
+                         "Validation is not yet available for the <strong>Pretty CellML</strong> view.",
+                         QMessageBox::Ok);
 }
 
 //==============================================================================
