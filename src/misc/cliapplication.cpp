@@ -81,9 +81,8 @@ QString CliApplication::pluginDescription(Plugin *pPlugin) const
 {
     // Retrieve and return the plugin's default description, stripped out of all
     // its HTML (should it have some)
-    // Note: we enclose the CLI plugin's default description within an html
-    //       tag so that the stripping out can proceed without any
-    //       problem...
+    // Note: we enclose the CLI plugin's default description within an html tag
+    //       so that the stripping out can proceed without any problem...
 
     QXmlStreamReader description("<html>"+pPlugin->info()->description()+"</html>");
     QString res = QString();
