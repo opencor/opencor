@@ -22,6 +22,7 @@ specific language governing permissions and limitations under the License.
 #include "corecellmleditingwidget.h"
 #include "editorwidget.h"
 #include "filemanager.h"
+#include "prettycellmlviewcellmltoprettycellmlconverter.h"
 #include "prettycellmlviewwidget.h"
 #include "settings.h"
 #include "viewerwidget.h"
@@ -123,11 +124,14 @@ void PrettyCellmlViewWidget::initialize(const QString &pFileName)
     mEditingWidget = mEditingWidgets.value(pFileName);
 
     if (!mEditingWidget) {
-        // No editing widget exists for the given file, so create one
+        // No editing widget exists for the given file, so create one and
+        // populate it with its pretty CellML version
 
-        QString fileContents;
+        PrettyCellMLViewCellmlToPrettyCellmlConverter converter(pFileName);
+        QString fileContents = QString();
 
-        Core::readTextFromFile(pFileName, fileContents);
+        if (converter.execute())
+            fileContents = converter.output();
 
         mEditingWidget = new CoreCellMLEditing::CoreCellmlEditingWidget(fileContents,
                                                                         !Core::FileManager::instance()->isReadableAndWritable(pFileName),
