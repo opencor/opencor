@@ -507,7 +507,7 @@ void CoreEditingPlugin::updateUndoAndRedoActions()
         mEditRedoAction->setEnabled(editorAndFileReadableAndWritable && mEditor->isRedoAvailable());
 
         fileManagerInstance->setModified(mFileName,
-                                         mEditor && mEditingInterface->editorContentsModified(mFileName));
+                                         mEditor && mEditingInterface->isEditorContentsModified(mFileName));
     }
 }
 

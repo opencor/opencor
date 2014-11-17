@@ -79,7 +79,7 @@ Editor::EditorWidget * PrettyCellMLViewPlugin::editor(const QString &pFileName) 
 
 //==============================================================================
 
-bool PrettyCellMLViewPlugin::editorContentsModified(const QString &pFileName) const
+bool PrettyCellMLViewPlugin::isEditorContentsModified(const QString &pFileName) const
 {
     // Return whether the requested editor has been modified, which here is done
     // by comparing its contents to that of the given file

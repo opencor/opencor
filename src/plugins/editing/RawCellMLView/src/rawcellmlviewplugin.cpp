@@ -74,7 +74,7 @@ Editor::EditorWidget * RawCellMLViewPlugin::editor(const QString &pFileName) con
 
 //==============================================================================
 
-bool RawCellMLViewPlugin::editorContentsModified(const QString &pFileName) const
+bool RawCellMLViewPlugin::isEditorContentsModified(const QString &pFileName) const
 {
     // Return whether the requested editor has been modified, which here is done
     // by comparing its contents to that of the given file
