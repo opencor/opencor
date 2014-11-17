@@ -34,6 +34,11 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+class QAction;
+class QMenu;
+
+//==============================================================================
+
 namespace OpenCOR {
 namespace EditorList {
 
