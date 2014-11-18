@@ -181,7 +181,7 @@ void PrettyCellmlViewWidget::initialize(const QString &pFileName)
 
     mEditingWidget->show();
 
-    if (oldEditingWidget)
+    if (oldEditingWidget && (oldEditingWidget != mEditingWidget))
         oldEditingWidget->hide();
 
     // Set our focus proxy to our 'new' editing widget and make sure that the

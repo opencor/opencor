@@ -185,16 +185,16 @@ void RawCellmlViewWidget::initialize(const QString &pFileName)
         mEditingWidget->updateSettings(oldEditingWidget);
     }
 
+    // Update our viewer
+
+    updateViewer();
+
     // Show/hide our editing widgets
 
     mEditingWidget->show();
 
-    if (oldEditingWidget)
+    if (oldEditingWidget && (oldEditingWidget != mEditingWidget))
         oldEditingWidget->hide();
-
-    // Update our viewer
-
-    updateViewer();
 
     // Set our focus proxy to our 'new' editing widget and make sure that the
     // latter immediately gets the focus

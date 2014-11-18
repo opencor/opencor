@@ -152,7 +152,7 @@ void RawViewWidget::initialize(const QString &pFileName)
 
     mEditor->show();
 
-    if (oldEditor)
+    if (oldEditor && (oldEditor != mEditor))
         oldEditor->hide();
 
     // Set our focus proxy to our 'new' editor and make sure that the latter
