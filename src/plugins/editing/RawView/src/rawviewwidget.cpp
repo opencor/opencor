@@ -150,15 +150,10 @@ void RawViewWidget::initialize(const QString &pFileName)
 
     // Show/hide our editors
 
-    foreach (Editor::EditorWidget *editor, mEditors)
-        if (editor == mEditor)
-            // This is the editor we are after, so show it
+    mEditor->show();
 
-            editor->show();
-        else
-            // Not the editor we are after, so hide it
-
-            editor->hide();
+    if (oldEditor)
+        oldEditor->hide();
 
     // Set our focus proxy to our 'new' editor and make sure that the latter
     // immediately gets the focus

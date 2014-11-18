@@ -187,15 +187,10 @@ void RawCellmlViewWidget::initialize(const QString &pFileName)
 
     // Show/hide our editing widgets
 
-    foreach (CoreCellMLEditing::CoreCellmlEditingWidget *editingWidget, mEditingWidgets)
-        if (editingWidget == mEditingWidget)
-            // This is the editing widget we are after, so show it
+    mEditingWidget->show();
 
-            editingWidget->show();
-        else
-            // Not the editing widget we are after, so hide it
-
-            editingWidget->hide();
+    if (oldEditingWidget)
+        oldEditingWidget->hide();
 
     // Update our viewer
 
