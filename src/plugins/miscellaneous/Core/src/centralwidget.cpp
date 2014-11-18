@@ -1699,8 +1699,8 @@ void CentralWidget::updateGui()
 
     mMainWindow->statusBar()->setVisible(statusBarVisible);
 
-    // Give the focus to the new view after first checking whether it has a
-    // focused widget
+    // Give the focus to the new view after first checking that it has a focused
+    // widget
 
     if (newView->focusWidget())
         // The new view has a focused widget, so just focus it (indeed, say that
