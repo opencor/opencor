@@ -149,8 +149,6 @@ void PrettyCellmlViewWidget::initialize(const QString &pFileName)
                                                   converter.errorLine(),
                                                   converter.errorColumn(),
                                                   tr("The CellML file could not be parsed. You might want to use the Raw (CellML) view to edit it."));
-
-            QTimer::singleShot(0, this, SIGNAL(selectFirstItemInEditorList()));
         }
 
         // Keep track of our editing widget (and of whether the conversion was
@@ -176,6 +174,13 @@ void PrettyCellmlViewWidget::initialize(const QString &pFileName)
     } else {
         mEditingWidget->updateSettings(oldEditingWidget);
     }
+
+    // Select the first issue, if any, with the current file
+    // Note: we use a single shot to give time to the setting up of the editing
+    //       widget to complete...
+
+    if (!mSuccessfulConversions.value(pFileName))
+        QTimer::singleShot(0, this, SIGNAL(selectFirstItemInEditorList()));
 
     // Show/hide our editing widgets
 
