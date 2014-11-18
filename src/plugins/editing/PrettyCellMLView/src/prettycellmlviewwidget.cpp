@@ -180,7 +180,7 @@ void PrettyCellmlViewWidget::initialize(const QString &pFileName)
     //       widget to complete...
 
     if (!mSuccessfulConversions.value(pFileName))
-        QTimer::singleShot(0, this, SIGNAL(selectFirstItemInEditorList()));
+        QTimer::singleShot(0, this, SLOT(selectFirstItemInEditorList()));
 
     // Show/hide our editing widgets
 
