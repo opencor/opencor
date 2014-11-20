@@ -1668,13 +1668,6 @@ void CentralWidget::updateGui()
         updateStatusBarWidgets(QList<QWidget *>());
     }
 
-    // and also create a connection for it, should it be be of
-    // the right type
-    // Note: we pass Qt::UniqueConnection in all our calls to connect()
-    //       to ensure that we don't have several identical connections
-    //       (something that might happen if we were to switch views and
-    //       back)...
-
     // Let people know that we are about to update the GUI
 
     emit guiUpdated(fileViewPlugin, fileName);
