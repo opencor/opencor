@@ -188,7 +188,7 @@ void CellmlAnnotationViewWidget::finalize(const QString &pFileName)
 {
     // Remove the editing widget, should there be one for the given file
 
-    CellmlAnnotationViewEditingWidget *editingWidget  = mEditingWidgets.value(pFileName);
+    CellmlAnnotationViewEditingWidget *editingWidget = mEditingWidgets.value(pFileName);
 
     if (editingWidget) {
         // There is an editing widget for the given file name, so delete it and

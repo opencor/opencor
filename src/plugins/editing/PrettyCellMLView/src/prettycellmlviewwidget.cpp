@@ -207,7 +207,7 @@ void PrettyCellmlViewWidget::finalize(const QString &pFileName)
 {
     // Remove the editing widget, should there be one for the given file
 
-    CoreCellMLEditing::CoreCellmlEditingWidget *editingWidget  = mEditingWidgets.value(pFileName);
+    CoreCellMLEditing::CoreCellmlEditingWidget *editingWidget = mEditingWidgets.value(pFileName);
 
     if (editingWidget) {
         // There is an editing widget for the given file name, so save our
