@@ -454,7 +454,7 @@ bool CellmlFile::save(const QString &pNewFileName)
 
     QTextStream out(&file);
 
-    out << domDocument.toString(4);
+    domDocument.save(out, 4);
 
     file.close();
 
