@@ -396,11 +396,6 @@ bool CellmlFile::save(const QString &pNewFileName)
 
     QString newFileName = pNewFileName.isEmpty()?mFileName:pNewFileName;
 
-    // Make sure that the RDF API representation is up to date by updating its
-    // data source
-
-    mRdfApiRepresentation->source(mRdfDataSource);
-
     // (Create and) open the file for writing
 
     QFile file(newFileName);
@@ -412,6 +407,11 @@ bool CellmlFile::save(const QString &pNewFileName)
 
         return false;
     }
+
+    // Make sure that the RDF API representation is up to date by updating its
+    // data source
+
+    mRdfApiRepresentation->source(mRdfDataSource);
 
     // Write out the contents of the CellML file to the file
 
