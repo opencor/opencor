@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?>
-<model name="noble_model_1962" cmeta:id="noble_model_1962" xmlns="http://www.cellml.org/cellml/1.0#" xmlns:cellml="http://www.cellml.org/cellml/1.0#" xmlns:cmeta="http://www.cellml.org/metadata/1.0#">
+<?xml version='1.0'?>
+<model xmlns="http://www.cellml.org/cellml/1.0#" xmlns:cellml="http://www.cellml.org/cellml/1.0#" name="noble_model_1962" cmeta:id="noble_model_1962" xmlns:cmeta="http://www.cellml.org/metadata/1.0#" xml:base="file:///Users/Alan/Work/Programming/OpenCOR/models/noble_model_1962.cellml">
     <units name="millisecond">
         <unit prefix="milli" units="second"/>
     </units>
@@ -10,7 +10,7 @@
         <unit prefix="milli" units="volt"/>
     </units>
     <units name="per_millivolt">
-        <unit exponent="-1" prefix="milli" units="volt"/>
+        <unit prefix="milli" exponent="-1" units="volt"/>
     </units>
     <units name="per_millivolt_millisecond">
         <unit exponent="-1" units="millivolt"/>
@@ -18,15 +18,15 @@
     </units>
     <units name="milliS_per_cm2">
         <unit prefix="milli" units="siemens"/>
-        <unit exponent="-2" prefix="centi" units="metre"/>
+        <unit prefix="centi" exponent="-2" units="metre"/>
     </units>
     <units name="microF_per_cm2">
         <unit prefix="micro" units="farad"/>
-        <unit exponent="-2" prefix="centi" units="metre"/>
+        <unit prefix="centi" exponent="-2" units="metre"/>
     </units>
     <units name="microA_per_cm2">
         <unit prefix="micro" units="ampere"/>
-        <unit exponent="-2" prefix="centi" units="metre"/>
+        <unit prefix="centi" exponent="-2" units="metre"/>
     </units>
     <component name="environment">
         <variable name="time" units="millisecond" public_interface="out"/>
@@ -69,10 +69,10 @@
         <variable name="g_Na_max" initial_value="400" units="milliS_per_cm2"/>
         <variable name="g_Na" units="milliS_per_cm2"/>
         <variable name="E_Na" initial_value="40" units="millivolt"/>
-        <variable name="time" units="millisecond" public_interface="in" private_interface="out"/>
-        <variable name="V" units="millivolt" public_interface="in" private_interface="out"/>
-        <variable name="m" units="dimensionless" private_interface="in"/>
-        <variable name="h" units="dimensionless" private_interface="in"/>
+        <variable private_interface="out" name="time" units="millisecond" public_interface="in"/>
+        <variable private_interface="out" name="V" units="millivolt" public_interface="in"/>
+        <variable private_interface="in" name="m" units="dimensionless"/>
+        <variable private_interface="in" name="h" units="dimensionless"/>
         <math xmlns="http://www.w3.org/1998/Math/MathML">
             <apply>
                 <eq/>
@@ -303,9 +303,9 @@
         <variable name="i_K" units="microA_per_cm2" public_interface="out"/>
         <variable name="g_K1" units="milliS_per_cm2"/>
         <variable name="g_K2" units="milliS_per_cm2"/>
-        <variable name="time" units="millisecond" public_interface="in" private_interface="out"/>
-        <variable name="V" units="millivolt" public_interface="in" private_interface="out"/>
-        <variable name="n" units="dimensionless" private_interface="in"/>
+        <variable private_interface="out" name="time" units="millisecond" public_interface="in"/>
+        <variable private_interface="out" name="V" units="millivolt" public_interface="in"/>
+        <variable private_interface="in" name="n" units="dimensionless"/>
         <math xmlns="http://www.w3.org/1998/Math/MathML">
             <apply>
                 <eq/>
@@ -572,4 +572,11 @@
         <map_variables variable_1="time" variable_2="time"/>
         <map_variables variable_1="V" variable_2="V"/>
     </connection>
-<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"/></model>
+    <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+        <rdf:Description rdf:about="#noble_model_1962">
+            <encodes xmlns="http://biomodels.net/biology-qualifiers/">
+                <rdf:Description rdf:about="http://identifiers.org/go/GO:0034704"/>
+            </encodes>
+        </rdf:Description>
+    </rdf:RDF>
+</model>

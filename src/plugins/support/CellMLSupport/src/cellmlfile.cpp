@@ -413,11 +413,17 @@ bool CellmlFile::save(const QString &pNewFileName)
 
     mRdfApiRepresentation->source(mRdfDataSource);
 
+    // Beautify the serialised version of the CellML file
+
+    QDomDocument domDocument;
+
+    domDocument.setContent(QString::fromStdWString(mModel->serialisedText()));
+
     // Write out the contents of the CellML file to the file
 
     QTextStream out(&file);
 
-    out << QString::fromStdWString(mModel->serialisedText());
+    out << domDocument.toString(4);
 
     file.close();
 
