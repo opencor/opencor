@@ -370,20 +370,21 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(iface::cellml_api:
     // Enable/disable our add term button, depending on whether the direct term
     // is already associated with the CellML element
 
-    bool fileReadableAndWritable = Core::FileManager::instance()->isReadableAndWritable(mCellmlFile->fileName());
+    bool fileReadableAndWritableAndNoIssues =     Core::FileManager::instance()->isReadableAndWritable(mCellmlFile->fileName())
+                                              && !mCellmlFile->issues().count();
     bool termIsDirect = isDirectTerm(mTermValue->text());
 
     if (termIsDirect) {
         QStringList termInformation = mTermValue->text().split("/");
 
         if (mQualifierValue->currentIndex() < CellMLSupport::CellmlFileRdfTriple::LastBioQualifier)
-            mAddTermButton->setEnabled(    fileReadableAndWritable
+            mAddTermButton->setEnabled(    fileReadableAndWritableAndNoIssues
                                        && !mCellmlFile->rdfTriple(mElement,
                                                                   CellMLSupport::CellmlFileRdfTriple::BioQualifier(mQualifierValue->currentIndex()+1),
                                                                   termInformation[0],
                                                                   termInformation[1]));
         else
-            mAddTermButton->setEnabled(    fileReadableAndWritable
+            mAddTermButton->setEnabled(    fileReadableAndWritableAndNoIssues
                                        && !mCellmlFile->rdfTriple(mElement,
                                                                   CellMLSupport::CellmlFileRdfTriple::ModelQualifier(mQualifierValue->currentIndex()-CellMLSupport::CellmlFileRdfTriple::LastBioQualifier+1),
                                                                   termInformation[0],
@@ -415,12 +416,12 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::updateGui(iface::cellml_api:
         bool enabledButton;
 
         if (mQualifierValue->currentIndex() < CellMLSupport::CellmlFileRdfTriple::LastBioQualifier)
-            enabledButton =     fileReadableAndWritable
+            enabledButton =     fileReadableAndWritableAndNoIssues
                             && !mCellmlFile->rdfTriple(mElement,
                                                        CellMLSupport::CellmlFileRdfTriple::BioQualifier(mQualifierValue->currentIndex()+1),
                                                        item.resource, item.id);
         else
-            enabledButton =     fileReadableAndWritable
+            enabledButton =     fileReadableAndWritableAndNoIssues
                             && !mCellmlFile->rdfTriple(mElement,
                                                        CellMLSupport::CellmlFileRdfTriple::ModelQualifier(mQualifierValue->currentIndex()-CellMLSupport::CellmlFileRdfTriple::LastBioQualifier+1),
                                                        item.resource, item.id);
@@ -445,7 +446,8 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::upudateOutputMessage(const b
     if (pShowBusyWidget)
         *pShowBusyWidget = false;
 
-    if (!Core::FileManager::instance()->isReadableAndWritable(mCellmlFile->fileName())) {
+    if (   !Core::FileManager::instance()->isReadableAndWritable(mCellmlFile->fileName())
+        ||  mCellmlFile->issues().count()) {
         mOutputMessage->setIconMessage(QString(), QString());
 
         if (pShowBusyWidget && pLookUpTerm && !mTermValue->text().isEmpty())

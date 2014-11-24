@@ -866,6 +866,12 @@ void CellmlAnnotationViewCellmlListWidget::updateMetadataDetails(const QModelInd
 
 void CellmlAnnotationViewCellmlListWidget::showCustomContextMenu(const QPoint &pPosition) const
 {
+    // Make sure that we are dealing with a CellML files that doesn't have any
+    // issues
+
+    if (mCellmlFile->issues().count())
+        return;
+
     // Determine whether to show the context menu based on whether we are over
     // an item
 
