@@ -414,7 +414,8 @@ bool CellmlFile::save(const QString &pNewFileName)
     mRdfApiRepresentation->source(mRdfDataSource);
 
     // Beautify the serialised version of the CellML file, after having removed
-    // the model's XML base value
+    // the model's XML base value and its RDF child node, should there be no
+    // annotations
     // Note: as part of good practices, a CellML file should never contain an
     //       XML base value. Yet, upon loading a CellML file, we set one (see
     //       doLoad()), so that we can properly import CellML files, if needed.
@@ -431,6 +432,19 @@ bool CellmlFile::save(const QString &pNewFileName)
             // Remove the model's XML base value
 
             domNode.attributes().removeNamedItem("xml:base");
+
+            // Remove the model's RDF child node, should there be no annotations
+
+            for (int j = 0, jMax = domNode.childNodes().count(); j < jMax; ++j) {
+                QDomNode domChildNode = domNode.childNodes().at(j);
+
+                if (!domChildNode.nodeName().compare("rdf:RDF")) {
+                    if (!domChildNode.childNodes().count())
+                        domNode.removeChild(domChildNode);
+
+                    break;
+                }
+            }
 
             break;
         }
