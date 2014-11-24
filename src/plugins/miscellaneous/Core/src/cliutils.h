@@ -31,9 +31,11 @@ specific language governing permissions and limitations under the License.
 
 #include <QAbstractMessageHandler>
 #include <QByteArray>
+#include <QDomDocument>
 #include <QSourceLocation>
 #include <QSslError>
 #include <QUrl>
+#include <QXmlStreamWriter>
 
 //==============================================================================
 
@@ -150,6 +152,9 @@ QString CORE_EXPORT stringToPercentEncoding(const QString &pString);
 QString CORE_EXPORT stringFromPercentEncoding(const QString &pString);
 
 QString CORE_EXPORT eolString();
+
+void CORE_EXPORT prettyPrintXml(QDomDocument &pDomDocument,
+                                QXmlStreamWriter &pXmlStreamWriter);
 
 //==============================================================================
 

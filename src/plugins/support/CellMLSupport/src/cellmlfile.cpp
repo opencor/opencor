@@ -31,8 +31,8 @@ specific language governing permissions and limitations under the License.
 #include <QFile>
 #include <QIODevice>
 #include <QStringList>
-#include <QTextStream>
 #include <QUrl>
+#include <QXmlStreamWriter>
 
 //==============================================================================
 
@@ -452,9 +452,11 @@ bool CellmlFile::save(const QString &pNewFileName)
 
     // Write out the contents of the CellML file to the file
 
-    QTextStream out(&file);
+    QXmlStreamWriter out(&file);
 
-    domDocument.save(out, 4);
+    out.setAutoFormatting(true);
+
+    Core::prettyPrintXml(domDocument, out);
 
     file.close();
 

@@ -79,12 +79,14 @@ ADD_PLUGIN(Core
     QT_MODULES
         Network
         Widgets
+        Xml
         XmlPatterns
     QT_LIBRARIES
         QtCore
         QtGui
         QtNetwork
         QtWidgets
+        QtXml
         QtXmlPatterns
     TESTS
         tests

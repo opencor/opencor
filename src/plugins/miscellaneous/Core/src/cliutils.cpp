@@ -38,6 +38,7 @@ specific language governing permissions and limitations under the License.
 #include <QFile>
 #include <QIODevice>
 #include <QLocale>
+#include <QMap>
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
 #include <QNetworkRequest>
@@ -816,6 +817,48 @@ QString eolString()
 
     return "\n";
 #endif
+}
+
+//==============================================================================
+
+void prettyPrintXmlNode(QDomNode pDomNode, QXmlStreamWriter &pXmlStreamWriter)
+{
+    if (pDomNode.isText()) {
+        pXmlStreamWriter.writeCharacters(pDomNode.toText().nodeValue());
+    } else {
+        pXmlStreamWriter.writeStartElement(pDomNode.nodeName());
+
+        QMap<QString, QString> attributes;
+
+        for (int i = 0, iMax = pDomNode.attributes().count(); i < iMax; ++i)
+            attributes.insert(pDomNode.attributes().item(i).nodeName(),
+                              pDomNode.attributes().item(i).nodeValue());
+
+        for (int i = 0, iMax = attributes.count(); i < iMax; ++i)
+            pXmlStreamWriter.writeAttribute(attributes.keys().at(i),
+                                            attributes.values().at(i));
+
+        for (int i = 0, iMax = pDomNode.childNodes().count(); i < iMax; ++i)
+            prettyPrintXmlNode(pDomNode.childNodes().at(i), pXmlStreamWriter);
+
+        pXmlStreamWriter.writeEndElement();
+    }
+}
+
+//==============================================================================
+
+void prettyPrintXml(QDomDocument &pDomDocument,
+                    QXmlStreamWriter &pXmlStreamWriter)
+{
+    //
+
+    pXmlStreamWriter.writeStartDocument();
+
+    for (int i = 0, iMax = pDomDocument.childNodes().count(); i < iMax; ++i)
+        if (pDomDocument.childNodes().at(i).nodeName().compare("xml"))
+            prettyPrintXmlNode(pDomDocument.childNodes().at(i), pXmlStreamWriter);
+
+    pXmlStreamWriter.writeEndDocument();
 }
 
 //==============================================================================
