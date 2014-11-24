@@ -1,5 +1,5 @@
 <?xml version='1.0'?>
-<model xmlns="http://www.cellml.org/cellml/1.0#" xmlns:cellml="http://www.cellml.org/cellml/1.0#" name="noble_model_1962" cmeta:id="noble_model_1962" xmlns:cmeta="http://www.cellml.org/metadata/1.0#" xml:base="file:///Users/Alan/Work/Programming/OpenCOR/models/noble_model_1962.cellml">
+<model xmlns="http://www.cellml.org/cellml/1.0#" xmlns:cellml="http://www.cellml.org/cellml/1.0#" xmlns:cmeta="http://www.cellml.org/metadata/1.0#" name="noble_model_1962" cmeta:id="noble_model_1962">
     <units name="millisecond">
         <unit prefix="milli" units="second"/>
     </units>
@@ -32,8 +32,8 @@
         <variable name="time" units="millisecond" public_interface="out"/>
     </component>
     <component name="membrane">
-        <variable name="V" initial_value="-87" units="millivolt" public_interface="out"/>
-        <variable name="Cm" initial_value="12" units="microF_per_cm2"/>
+        <variable name="V" units="millivolt" public_interface="out" initial_value="-87"/>
+        <variable name="Cm" units="microF_per_cm2" initial_value="12"/>
         <variable name="time" units="millisecond" public_interface="in"/>
         <variable name="i_Na" units="microA_per_cm2" public_interface="in"/>
         <variable name="i_K" units="microA_per_cm2" public_interface="in"/>
@@ -66,13 +66,13 @@
     </component>
     <component name="sodium_channel">
         <variable name="i_Na" units="microA_per_cm2" public_interface="out"/>
-        <variable name="g_Na_max" initial_value="400" units="milliS_per_cm2"/>
+        <variable name="g_Na_max" units="milliS_per_cm2" initial_value="400"/>
         <variable name="g_Na" units="milliS_per_cm2"/>
-        <variable name="E_Na" initial_value="40" units="millivolt"/>
-        <variable private_interface="out" name="time" units="millisecond" public_interface="in"/>
-        <variable private_interface="out" name="V" units="millivolt" public_interface="in"/>
-        <variable private_interface="in" name="m" units="dimensionless"/>
-        <variable private_interface="in" name="h" units="dimensionless"/>
+        <variable name="E_Na" units="millivolt" initial_value="40"/>
+        <variable name="time" private_interface="out" units="millisecond" public_interface="in"/>
+        <variable name="V" private_interface="out" units="millivolt" public_interface="in"/>
+        <variable name="m" private_interface="in" units="dimensionless"/>
+        <variable name="h" private_interface="in" units="dimensionless"/>
         <math xmlns="http://www.w3.org/1998/Math/MathML">
             <apply>
                 <eq/>
@@ -108,7 +108,7 @@
         </math>
     </component>
     <component name="sodium_channel_m_gate">
-        <variable name="m" initial_value="0.01" units="dimensionless" public_interface="out"/>
+        <variable name="m" units="dimensionless" public_interface="out" initial_value="0.01"/>
         <variable name="alpha_m" units="per_millisecond"/>
         <variable name="beta_m" units="per_millisecond"/>
         <variable name="V" units="millivolt" public_interface="in"/>
@@ -214,7 +214,7 @@
         </math>
     </component>
     <component name="sodium_channel_h_gate">
-        <variable name="h" initial_value="0.8" units="dimensionless" public_interface="out"/>
+        <variable name="h" units="dimensionless" public_interface="out" initial_value="0.8"/>
         <variable name="alpha_h" units="per_millisecond"/>
         <variable name="beta_h" units="per_millisecond"/>
         <variable name="V" units="millivolt" public_interface="in"/>
@@ -303,9 +303,9 @@
         <variable name="i_K" units="microA_per_cm2" public_interface="out"/>
         <variable name="g_K1" units="milliS_per_cm2"/>
         <variable name="g_K2" units="milliS_per_cm2"/>
-        <variable private_interface="out" name="time" units="millisecond" public_interface="in"/>
-        <variable private_interface="out" name="V" units="millivolt" public_interface="in"/>
-        <variable private_interface="in" name="n" units="dimensionless"/>
+        <variable name="time" private_interface="out" units="millisecond" public_interface="in"/>
+        <variable name="V" private_interface="out" units="millivolt" public_interface="in"/>
+        <variable name="n" private_interface="in" units="dimensionless"/>
         <math xmlns="http://www.w3.org/1998/Math/MathML">
             <apply>
                 <eq/>
@@ -382,7 +382,7 @@
         </math>
     </component>
     <component name="potassium_channel_n_gate">
-        <variable name="n" initial_value="0.01" units="dimensionless" public_interface="out"/>
+        <variable name="n" units="dimensionless" public_interface="out" initial_value="0.01"/>
         <variable name="alpha_n" units="per_millisecond"/>
         <variable name="beta_n" units="per_millisecond"/>
         <variable name="V" units="millivolt" public_interface="in"/>
@@ -480,8 +480,8 @@
     </component>
     <component name="leakage_current">
         <variable name="i_Leak" units="microA_per_cm2" public_interface="out"/>
-        <variable name="g_L" initial_value="0.075" units="milliS_per_cm2"/>
-        <variable name="E_L" initial_value="-60" units="millivolt"/>
+        <variable name="g_L" units="milliS_per_cm2" initial_value="0.075"/>
+        <variable name="E_L" units="millivolt" initial_value="-60"/>
         <variable name="time" units="millisecond" public_interface="in"/>
         <variable name="V" units="millivolt" public_interface="in"/>
         <math xmlns="http://www.w3.org/1998/Math/MathML">
@@ -572,11 +572,5 @@
         <map_variables variable_1="time" variable_2="time"/>
         <map_variables variable_1="V" variable_2="V"/>
     </connection>
-    <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
-        <rdf:Description rdf:about="#noble_model_1962">
-            <encodes xmlns="http://biomodels.net/biology-qualifiers/">
-                <rdf:Description rdf:about="http://identifiers.org/go/GO:0034704"/>
-            </encodes>
-        </rdf:Description>
-    </rdf:RDF>
+    <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"/>
 </model>

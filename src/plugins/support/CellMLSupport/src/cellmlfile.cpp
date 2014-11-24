@@ -413,11 +413,28 @@ bool CellmlFile::save(const QString &pNewFileName)
 
     mRdfApiRepresentation->source(mRdfDataSource);
 
-    // Beautify the serialised version of the CellML file
+    // Beautify the serialised version of the CellML file, after having removed
+    // the model's XML base value
+    // Note: as part of good practices, a CellML file should never contain an
+    //       XML base value. Yet, upon loading a CellML file, we set one (see
+    //       doLoad()), so that we can properly import CellML files, if needed.
+    //       So, now, we need to undo what we did...
 
     QDomDocument domDocument;
 
     domDocument.setContent(QString::fromStdWString(mModel->serialisedText()));
+
+    for (int i = 0, iMax = domDocument.childNodes().count(); i < iMax; ++i) {
+        QDomNode domNode = domDocument.childNodes().at(i);
+
+        if (!domNode.nodeName().compare("model")) {
+            // Remove the model's XML base value
+
+            domNode.attributes().removeNamedItem("xml:base");
+
+            break;
+        }
+    }
 
     // Write out the contents of the CellML file to the file
 
