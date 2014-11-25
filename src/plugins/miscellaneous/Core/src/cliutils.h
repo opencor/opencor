@@ -35,7 +35,6 @@ specific language governing permissions and limitations under the License.
 #include <QSourceLocation>
 #include <QSslError>
 #include <QUrl>
-#include <QXmlStreamWriter>
 
 //==============================================================================
 
@@ -45,6 +44,8 @@ typedef QList<int> QIntList;
 
 QIntList CORE_EXPORT qVariantListToIntList(const QVariantList &pVariantList);
 QVariantList CORE_EXPORT qIntListToVariantList(const QIntList &pIntList);
+
+QString CORE_EXPORT qDomDocumentToString(const QDomDocument &pDomDocument);
 
 //==============================================================================
 
@@ -152,9 +153,6 @@ QString CORE_EXPORT stringToPercentEncoding(const QString &pString);
 QString CORE_EXPORT stringFromPercentEncoding(const QString &pString);
 
 QString CORE_EXPORT eolString();
-
-void CORE_EXPORT prettyPrintXml(QDomDocument &pDomDocument,
-                                QXmlStreamWriter &pXmlStreamWriter);
 
 //==============================================================================
 

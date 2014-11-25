@@ -25,6 +25,7 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#include <Qt>
 #include <QtMath>
 
 //==============================================================================
@@ -48,6 +49,7 @@ specific language governing permissions and limitations under the License.
 #include <QString>
 #include <QStringList>
 #include <QSysInfo>
+#include <QTextStream>
 
 //==============================================================================
 
@@ -85,6 +87,117 @@ QVariantList qIntListToVariantList(const QIntList &pIntList)
 
     foreach (const int &nb, pIntList)
         res << nb;
+
+    return res;
+}
+
+//==============================================================================
+
+bool sortSerialisedAttributes(const QString &pSerialisedAttribute1,
+                              const QString &pSerialisedAttribute2)
+{
+    // Determine which of the two serialised attributes should be first based on
+    // the attribute name, i.e. ignoring the "=<AttributeValue>" bit
+
+    return pSerialisedAttribute1.left(pSerialisedAttribute1.indexOf("=")).compare(pSerialisedAttribute2.left(pSerialisedAttribute2.indexOf("=")), Qt::CaseInsensitive) < 0;
+}
+
+//==============================================================================
+
+void cleanDomNode(QDomNode &pDomNode,
+                  QMap<QString, QString> &pElementsAttributes)
+{
+    // Serialise all the node's attributes and sort their serialised version
+    // before removing them from the node and adding a new attribute that will
+    // later on be used for string replacement
+
+    static qulonglong attributeNumber = 0;
+    static const int ULLONG_WIDTH = ceil(log(ULLONG_MAX));
+
+    if (pDomNode.hasAttributes()) {
+        QStringList serialisedAttributes = QStringList();
+        QDomNamedNodeMap domNodeAttributes = pDomNode.attributes();
+        QDomNode attributeNode;
+        QString serialisedAttribute;
+        QTextStream textStream(&serialisedAttribute, QIODevice::WriteOnly);
+
+        while (domNodeAttributes.count()) {
+            // Serialise the node's attribute
+
+            attributeNode = domNodeAttributes.item(0);
+
+            serialisedAttribute = QString();
+
+            attributeNode.save(textStream, 4);
+
+            serialisedAttributes << serialisedAttribute;
+
+            // Remove the attribute from the node
+
+            domNodeAttributes.removeNamedItem(attributeNode.nodeName());
+        }
+
+        // Sort the serialised attributes using the attributes' name
+
+        std::sort(serialisedAttributes.begin(), serialisedAttributes.end(), sortSerialisedAttributes);
+
+        // Keep track of the serialisation of the node's attribute
+
+        QString elementAttributes = QString("Element%1Attributes").arg(++attributeNumber, ULLONG_WIDTH, 10, QChar('0'));
+
+        pElementsAttributes.insert(elementAttributes, serialisedAttributes.join(" "));
+
+        // Add a new attribute to the node
+        // Note: this attribute, once serialised by QDomDocument::save(), will
+        //       be used to do a string replacement (see
+        //       qDomDocumentToString())...
+
+        domNodeAttributes.setNamedItem(pDomNode.ownerDocument().createAttribute(elementAttributes));
+    }
+
+    // Recursively clean ourselves
+
+    for (int i = 0, iMax = pDomNode.childNodes().count(); i < iMax; ++i) {
+        QDomNode childNode = pDomNode.childNodes().at(i);
+
+        cleanDomNode(childNode, pElementsAttributes);
+    }
+}
+
+//==============================================================================
+
+QString qDomDocumentToString(const QDomDocument &pDomDocument)
+{
+    // Serialise the given DOM document
+    // Note: normally, we would simply be using QDomDocument::save(), but we
+    //       want elements' attributes to be sorted when serialised (so that it
+    //       is easier to compare two different XML documents). Unfortunately,
+    //       QDomDocument::save() doesn't provide such a functionality (since
+    //       the order of attributes doesn't matter in XML), so we make a call
+    //       to QDomDocument::save(), but only after having removed all the
+    //       elements' attributes, which we serialise manually ourselves...
+
+    QString res = QString();
+
+    // Make a deep copy of the given DOM document and remove all the elements'
+    // attributes (but keep track of them, so that we can later on serialise
+    // them manually ourselves)
+
+    QDomDocument domDocument = pDomDocument.cloneNode().toDocument();
+    QMap<QString, QString> elementsAttributes = QMap<QString, QString>();
+
+    cleanDomNode(domDocument, elementsAttributes);
+
+    // Serialise our 'reduced' DOM document
+
+    QTextStream textStream(&res, QIODevice::WriteOnly);
+
+    domDocument.save(textStream, 4);
+
+    // Manually serialise the elements' attributes
+
+    foreach (const QString &elementAttribute, elementsAttributes.keys())
+        res.replace(elementAttribute+"=\"\"", elementsAttributes.value(elementAttribute));
 
     return res;
 }
@@ -817,48 +930,6 @@ QString eolString()
 
     return "\n";
 #endif
-}
-
-//==============================================================================
-
-void prettyPrintXmlNode(QDomNode pDomNode, QXmlStreamWriter &pXmlStreamWriter)
-{
-    if (pDomNode.isText()) {
-        pXmlStreamWriter.writeCharacters(pDomNode.toText().nodeValue());
-    } else {
-        pXmlStreamWriter.writeStartElement(pDomNode.nodeName());
-
-        QMap<QString, QString> attributes;
-
-        for (int i = 0, iMax = pDomNode.attributes().count(); i < iMax; ++i)
-            attributes.insert(pDomNode.attributes().item(i).nodeName(),
-                              pDomNode.attributes().item(i).nodeValue());
-
-        for (int i = 0, iMax = attributes.count(); i < iMax; ++i)
-            pXmlStreamWriter.writeAttribute(attributes.keys().at(i),
-                                            attributes.values().at(i));
-
-        for (int i = 0, iMax = pDomNode.childNodes().count(); i < iMax; ++i)
-            prettyPrintXmlNode(pDomNode.childNodes().at(i), pXmlStreamWriter);
-
-        pXmlStreamWriter.writeEndElement();
-    }
-}
-
-//==============================================================================
-
-void prettyPrintXml(QDomDocument &pDomDocument,
-                    QXmlStreamWriter &pXmlStreamWriter)
-{
-    //
-
-    pXmlStreamWriter.writeStartDocument();
-
-    for (int i = 0, iMax = pDomDocument.childNodes().count(); i < iMax; ++i)
-        if (pDomDocument.childNodes().at(i).nodeName().compare("xml"))
-            prettyPrintXmlNode(pDomDocument.childNodes().at(i), pXmlStreamWriter);
-
-    pXmlStreamWriter.writeEndDocument();
 }
 
 //==============================================================================
