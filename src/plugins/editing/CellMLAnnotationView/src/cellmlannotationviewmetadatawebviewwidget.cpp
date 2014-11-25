@@ -76,7 +76,7 @@ void CellmlAnnotationViewMetadataWebViewWidget::retrieveLinkInformation(QString 
 {
     // Retrieve the link and text content values for the link, if any, below our
     // mouse pointer
-    // Note: normally, one would want handle the linkHovered() signal, but it
+    // Note: normally, one would want to handle the linkHovered() signal, but it
     //       may provide the wrong information. Indeed, say that you are over a
     //       link and then scroll down/up using your mouse wheel, and end up
     //       over another link and click it. Now, because your mouse didn't
