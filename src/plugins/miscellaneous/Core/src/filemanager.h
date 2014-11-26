@@ -135,6 +135,8 @@ public:
     Status rename(const QString &pOldFileName, const QString &pNewFileName);
     Status duplicate(const QString &pFileName);
 
+    void save(const QString &pFileName);
+
     int count() const;
 
     void emitFilePermissionsChanged(const QString &pFileName);

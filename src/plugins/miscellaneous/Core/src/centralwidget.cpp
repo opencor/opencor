@@ -1072,15 +1072,10 @@ bool CentralWidget::saveFile(const int &pIndex, const bool &pNeedNewFileName)
             // it
 
             if (fileHandlingInterface->saveFile(oldFileName, newFileName)) {
-                // The file has been saved, so ask our file manager to reset its
-                // settings
+                // The file has been saved, so ask our file manager to 'save' it
+                // too
 
-                fileManagerInstance->reset(oldFileName);
-
-                // Let people know, through the file manager, that the file has
-                // been saved
-
-                emit fileManagerInstance->fileSaved(oldFileName);
+                fileManagerInstance->save(oldFileName);
             } else {
                 QMessageBox::warning(mMainWindow, tr("Save File"),
                                      tr("The <strong>%1</strong> view could not save <strong>%2</strong>.").arg(viewInterface->viewName(), newFileName));

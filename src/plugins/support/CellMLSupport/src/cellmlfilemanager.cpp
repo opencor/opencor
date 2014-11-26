@@ -53,11 +53,6 @@ CellmlFileManager::CellmlFileManager() :
 
     connect(fileManagerInstance, SIGNAL(fileRenamed(const QString &, const QString &)),
             this, SLOT(renameFile(const QString &, const QString &)));
-
-    connect(fileManagerInstance, SIGNAL(fileSaved(const QString &)),
-            this, SLOT(unmanageFile(const QString &)));
-    connect(fileManagerInstance, SIGNAL(fileSaved(const QString &)),
-            this, SLOT(manageFile(const QString &)));
 }
 
 //==============================================================================
