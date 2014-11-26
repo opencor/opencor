@@ -336,20 +336,6 @@ void FileManager::setModified(const QString &pFileName, const bool &pModified)
 
 //==============================================================================
 
-void FileManager::setConsiderModified(const QString &pFileName,
-                                      const bool &pConsiderModified)
-{
-    // Set the consider modified state of the given file, should it be managed
-
-    QString nativeFileName = nativeCanonicalFileName(pFileName);
-    File *file = isManaged(nativeFileName);
-
-    if (file && file->setConsiderModified(pConsiderModified))
-        emit fileModified(nativeFileName);
-}
-
-//==============================================================================
-
 bool FileManager::isReadable(const QString &pFileName) const
 {
     // Return whether the given file, if it is being managed, is readable

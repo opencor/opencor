@@ -1806,7 +1806,7 @@ void CentralWidget::fileChanged(const QString &pFileName)
             // The user doesn't want to reload the file, so consider it as
             // modified
 
-            fileManagerInstance->setConsiderModified(pFileName, true);
+            fileManagerInstance->setModified(pFileName, true);
         }
     }
 }

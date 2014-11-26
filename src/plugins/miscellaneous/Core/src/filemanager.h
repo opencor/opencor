@@ -120,8 +120,6 @@ public:
     void makeNew(const QString &pFileName);
 
     void setModified(const QString &pFileName, const bool &pModified);
-    void setConsiderModified(const QString &pFileName,
-                             const bool &pConsiderModified);
 
     bool isReadable(const QString &pFileName) const;
     bool isWritable(const QString &pFileName) const;

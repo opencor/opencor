@@ -165,7 +165,7 @@ private:
     bool indexIsAllExpanded(const QModelIndex &pIndex) const;
 
 Q_SIGNALS:
-    void metadataDetailsRequested(iface::cellml_api::CellMLElement *pCellFileElement);
+    void metadataDetailsRequested(iface::cellml_api::CellMLElement *pCellElement);
 
 private Q_SLOTS:
     void resizeTreeViewToContents();
