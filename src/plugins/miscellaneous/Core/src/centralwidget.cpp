@@ -1071,9 +1071,7 @@ bool CentralWidget::saveFile(const int &pIndex, const bool &pNeedNewFileName)
             // The file is or has been modified, so ask the current view to save
             // it
 
-            bool fileSaved = fileHandlingInterface->saveFile(oldFileName, newFileName);
-
-            if (fileSaved) {
+            if (fileHandlingInterface->saveFile(oldFileName, newFileName)) {
                 // The file has been saved, so ask our file manager to reset its
                 // settings
 
@@ -1940,7 +1938,7 @@ void CentralWidget::fileReloaded(const QString &pFileName)
         if (fileManagerInstance->canCheckFiles() || (plugin != fileViewPlugin))
             qobject_cast<FileHandlingInterface *>(plugin->instance())->fileReloaded(pFileName);
 
-    // Now, because of the way some our views may reload a file (see
+    // Now, because of the way some of our views may reload a file (see
     // CoreEditingPlugin::fileReloaded()), we need to tell them to update their
     // GUI
 
