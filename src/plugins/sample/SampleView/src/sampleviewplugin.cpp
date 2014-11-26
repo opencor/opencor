@@ -128,6 +128,15 @@ void SampleViewPlugin::fileRenamed(const QString &pOldFileName,
 
 //==============================================================================
 
+void SampleViewPlugin::fileSaved(const QString &pFileName)
+{
+    Q_UNUSED(pFileName);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
 void SampleViewPlugin::fileClosed(const QString &pFileName)
 {
     // The given file has been closed, so update our internals, if needed
