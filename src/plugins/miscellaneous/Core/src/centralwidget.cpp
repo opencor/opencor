@@ -1135,6 +1135,9 @@ bool CentralWidget::saveFile(const int &pIndex, const bool &pNeedNewFileName)
 
         // Let people know that the file has been saved, if needed, by reloading
         // it
+        // Note: this will indirectly let the views (except the current one)
+        //       know that the file has been reloaded and that they therefore
+        //       need to do something about it...
 
         reloadFile(pIndex, true);
 
