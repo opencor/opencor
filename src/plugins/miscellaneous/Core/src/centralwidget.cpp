@@ -358,6 +358,9 @@ void CentralWidget::loadSettings(QSettings *pSettings)
     connect(fileManagerInstance, SIGNAL(fileRenamed(const QString &, const QString &)),
             this, SLOT(fileRenamed(const QString &, const QString &)));
 
+    connect(fileManagerInstance, SIGNAL(fileSaved(const QString &)),
+            this, SLOT(fileSaved(const QString &)));
+
     // Let the user know of a few default things about ourselves by emitting a
     // few signals
 
@@ -1071,12 +1074,7 @@ bool CentralWidget::saveFile(const int &pIndex, const bool &pNeedNewFileName)
             // The file is or has been modified, so ask the current view to save
             // it
 
-            if (fileHandlingInterface->saveFile(oldFileName, newFileName)) {
-                // The file has been saved, so ask our file manager to 'save' it
-                // too
-
-                fileManagerInstance->save(oldFileName);
-            } else {
+            if (!fileHandlingInterface->saveFile(oldFileName, newFileName)) {
                 QMessageBox::warning(mMainWindow, tr("Save File"),
                                      tr("The <strong>%1</strong> view could not save <strong>%2</strong>.").arg(viewInterface->viewName(), newFileName));
 
@@ -1126,13 +1124,15 @@ bool CentralWidget::saveFile(const int &pIndex, const bool &pNeedNewFileName)
 #endif
         }
 
-        // Let people know that the file has been saved, if needed, by reloading
-        // it
-        // Note: this will indirectly let the views (except the current one)
-        //       know that the file has been reloaded and that they therefore
-        //       need to do something about it...
+        // The file has been saved, so ask our file manager to 'save' it too
 
-        reloadFile(pIndex, true);
+        fileManagerInstance->save(newFileName);
+
+        // Let the other views (except the current one) know that the file has
+        // been saved, which for those views is equivalent to doing whatever is
+        // done whenever a file has been reloaded
+
+        fileReloaded(newFileName);
 
         // Update our modified settings
 
@@ -1995,6 +1995,25 @@ void CentralWidget::fileRenamed(const QString &pOldFileName,
 
             foreach (Plugin *plugin, mLoadedFileHandlingPlugins)
                 qobject_cast<FileHandlingInterface *>(plugin->instance())->fileRenamed(pOldFileName, pNewFileName);
+
+            break;
+        }
+}
+
+//==============================================================================
+
+void CentralWidget::fileSaved(const QString &pFileName)
+{
+    // Let the current view plugin know that a file has been saved
+    // Note: the other view plugins don't need to be told about the file having
+    //       been saved since, in their case, they will, instead, be told that
+    //       the file has been 'reloaded' (see saveFile())...
+
+    Plugin *fileViewPlugin = viewPlugin(pFileName);
+
+    foreach (Plugin *plugin, mLoadedFileHandlingPlugins)
+        if (plugin == fileViewPlugin) {
+            qobject_cast<FileHandlingInterface *>(plugin->instance())->fileSaved(pFileName);
 
             break;
         }

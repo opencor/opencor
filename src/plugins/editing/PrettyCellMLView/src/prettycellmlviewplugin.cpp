@@ -21,6 +21,7 @@ specific language governing permissions and limitations under the License.
 
 #include "cellmlfilemanager.h"
 #include "cellmlsupportplugin.h"
+#include "filemanager.h"
 #include "prettycellmlviewplugin.h"
 #include "prettycellmlviewwidget.h"
 
@@ -157,6 +158,22 @@ void PrettyCellMLViewPlugin::fileRenamed(const QString &pOldFileName,
     // The given file has been renamed, so let our view widget know about it
 
     mViewWidget->fileRenamed(pOldFileName, pNewFileName);
+}
+
+//==============================================================================
+
+void PrettyCellMLViewPlugin::fileSaved(const QString &pFileName)
+{
+    // The given file has been saved, but because it was done directly by
+    // manipulating the file, we need to ask our file manager to unmanage it and
+    // manage it back, so that anyone that relies on an internal representation
+    // of the file (e.g. the CellML Annotation view plugin) will get properly
+    // updated
+
+    Core::FileManager *fileManagerInstance = Core::FileManager::instance();
+
+    fileManagerInstance->unmanage(pFileName);
+    fileManagerInstance->manage(pFileName);
 }
 
 //==============================================================================

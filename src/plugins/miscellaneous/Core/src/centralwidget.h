@@ -239,6 +239,8 @@ private Q_SLOTS:
     void fileDuplicated(const QString &pFileName);
     void fileRenamed(const QString &pOldFileName, const QString &pNewFileName);
 
+    void fileSaved(const QString &pFileName);
+
     void saveFile();
     void saveFileAs();
     void saveAllFiles();

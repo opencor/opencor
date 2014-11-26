@@ -148,6 +148,15 @@ void CoreEditingPlugin::fileRenamed(const QString &pOldFileName,
 
 //==============================================================================
 
+void CoreEditingPlugin::fileSaved(const QString &pFileName)
+{
+    Q_UNUSED(pFileName);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
 void CoreEditingPlugin::fileClosed(const QString &pFileName)
 {
     // A file has been closed, so update our internals, if needed
