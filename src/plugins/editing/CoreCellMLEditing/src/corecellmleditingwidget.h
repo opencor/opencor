@@ -24,6 +24,7 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#include "cliutils.h"
 #include "commonwidget.h"
 #include "corecellmleditingglobal.h"
 
@@ -93,6 +94,8 @@ public:
     Editor::EditorWidget * editor() const;
     EditorList::EditorListWidget * editorList() const;
 
+    QIntList editingWidgetSizes() const;
+
 private:
     Ui::CoreCellmlEditingWidget *mGui;
 
@@ -100,7 +103,10 @@ private:
     Editor::EditorWidget *mEditor;
     EditorList::EditorListWidget *mEditorList;
 
+    QIntList mEditingWidgetSizes;
+
 private Q_SLOTS:
+    void splitterMoved();
     void itemRequested(EditorList::EditorListItem *pItem);
 };
 
