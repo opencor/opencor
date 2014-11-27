@@ -155,7 +155,7 @@ void CoreCellmlEditingWidget::updateSettings(CoreCellmlEditingWidget *pCoreCellm
 {
     // Make sure that we are given another editing widget
 
-    if (!pCoreCellmlEditingWidget)
+    if (!pCoreCellmlEditingWidget || (pCoreCellmlEditingWidget == this))
         return;
 
     // Update our sizes, viewer settings and editor settings

@@ -74,7 +74,7 @@ public:
 
     bool contains(const QString &pFileName) const;
 
-    void initialize(const QString &pFileName);
+    void initialize(const QString &pFileName, const bool &pUpdate = true);
     void finalize(const QString &pFileName);
 
     void fileReloaded(const QString &pFileName);

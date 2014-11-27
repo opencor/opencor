@@ -107,64 +107,75 @@ bool RawViewWidget::contains(const QString &pFileName) const
 
 //==============================================================================
 
-void RawViewWidget::initialize(const QString &pFileName)
+void RawViewWidget::initialize(const QString &pFileName,
+                               const bool &pUpdate)
 {
     // Retrieve the editor associated with the given file, if any
 
-    Editor::EditorWidget *oldEditor = mEditor;
+    Editor::EditorWidget *newEditor = mEditors.value(pFileName);
 
-    mEditor = mEditors.value(pFileName);
-
-    if (!mEditor) {
+    if (!newEditor) {
         // No editor exists for the given file, so create one
 
         QString fileContents;
 
         Core::readTextFromFile(pFileName, fileContents);
 
-        mEditor = new Editor::EditorWidget(fileContents,
-                                           !Core::FileManager::instance()->isReadableAndWritable(pFileName),
-                                           0, parentWidget());
+        newEditor = new Editor::EditorWidget(fileContents,
+                                             !Core::FileManager::instance()->isReadableAndWritable(pFileName),
+                                             0, parentWidget());
 
         // Keep track of our editor and add it to ourselves
 
-        mEditors.insert(pFileName, mEditor);
+        mEditors.insert(pFileName, newEditor);
 
-        layout()->addWidget(mEditor);
+        layout()->addWidget(newEditor);
     }
 
-    // Load our settings, if needed, or reset our editing widget using the old
-    // one
+    // Update our editor, if required
 
-    if (mNeedLoadingSettings) {
-        QSettings settings(SettingsOrganization, SettingsApplication);
+    if (pUpdate) {
+        Editor::EditorWidget *oldEditor = mEditor;
 
-        settings.beginGroup(mSettingsGroup);
-            mEditor->loadSettings(&settings);
-        settings.endGroup();
+        mEditor = newEditor;
 
-        mNeedLoadingSettings = false;
+        // Load our settings, if needed, or reset our editing widget using the
+        // 'old' one
+
+        if (mNeedLoadingSettings) {
+            QSettings settings(SettingsOrganization, SettingsApplication);
+
+            settings.beginGroup(mSettingsGroup);
+                newEditor->loadSettings(&settings);
+            settings.endGroup();
+
+            mNeedLoadingSettings = false;
+        } else {
+            newEditor->updateSettings(oldEditor);
+        }
+
+        // Show/hide our editors
+
+        newEditor->show();
+
+        if (oldEditor && (newEditor != oldEditor))
+            oldEditor->hide();
+
+        // Set our focus proxy to our 'new' editor and make sure that the latter
+        // immediately gets the focus
+        // Note: if we were not to immediately give the focus to our 'new'
+        //       editor, then the central widget would give the focus to our
+        //       'old' editor (see CentralWidget::updateGui()), which is clearly
+        //       not what we want...
+
+        setFocusProxy(newEditor);
+
+        newEditor->setFocus();
     } else {
-        mEditor->updateSettings(oldEditor);
+        // Hide our 'new' editor
+
+        newEditor->hide();
     }
-
-    // Show/hide our editors
-
-    mEditor->show();
-
-    if (oldEditor && (oldEditor != mEditor))
-        oldEditor->hide();
-
-    // Set our focus proxy to our 'new' editor and make sure that the latter
-    // immediately gets the focus
-    // Note: if we were not to immediately give the focus to our 'new' editor,
-    //       then the central widget would give the focus to our 'old' editor
-    //       (see CentralWidget::updateGui()), which is clearly not what we
-    //       want...
-
-    setFocusProxy(mEditor);
-
-    mEditor->setFocus();
 }
 
 //==============================================================================
@@ -179,11 +190,11 @@ void RawViewWidget::finalize(const QString &pFileName)
         // There is an editor for the given file name, so save our settings and
         // reset our memory of the current editor, if needed
 
-        if (editor == mEditor) {
+        if (mEditor == editor) {
             QSettings settings(SettingsOrganization, SettingsApplication);
 
             settings.beginGroup(mSettingsGroup);
-                mEditor->saveSettings(&settings);
+                editor->saveSettings(&settings);
             settings.endGroup();
 
             mNeedLoadingSettings = true;
@@ -203,10 +214,17 @@ void RawViewWidget::finalize(const QString &pFileName)
 void RawViewWidget::fileReloaded(const QString &pFileName)
 {
     // The given file has been reloaded, so reload it, should it be managed
+    // Note: if the view for the given file is not the active view, then to call
+    //       call finalize() and then initialize() would activate the contents
+    //       of the view (but the file tab would still point to the previously
+    //       active file). However, we want to the 'old' file to remain the
+    //       active one, hence the extra argument we pass to initialize()...
 
     if (contains(pFileName)) {
+        bool update = mEditor == mEditors.value(pFileName);
+
         finalize(pFileName);
-        initialize(pFileName);
+        initialize(pFileName, update);
     }
 }
 

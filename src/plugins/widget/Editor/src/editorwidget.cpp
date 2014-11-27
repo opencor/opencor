@@ -181,7 +181,7 @@ void EditorWidget::updateSettings(EditorWidget *pEditorWidget)
 {
     // Make sure that we are given another widget
 
-    if (!pEditorWidget)
+    if (!pEditorWidget || (pEditorWidget == this))
         return;
 
     // Update our zoom level

@@ -136,76 +136,87 @@ bool RawCellmlViewWidget::contains(const QString &pFileName) const
 
 //==============================================================================
 
-void RawCellmlViewWidget::initialize(const QString &pFileName)
+void RawCellmlViewWidget::initialize(const QString &pFileName,
+                                     const bool &pUpdate)
 {
     // Retrieve the editing widget associated with the given file, if any
 
-    CoreCellMLEditing::CoreCellmlEditingWidget *oldEditingWidget = mEditingWidget;
+    CoreCellMLEditing::CoreCellmlEditingWidget *newEditingWidget = mEditingWidgets.value(pFileName);
 
-    mEditingWidget = mEditingWidgets.value(pFileName);
-
-    if (!mEditingWidget) {
+    if (!newEditingWidget) {
         // No editing widget exists for the given file, so create one
 
         QString fileContents;
 
         Core::readTextFromFile(pFileName, fileContents);
 
-        mEditingWidget = new CoreCellMLEditing::CoreCellmlEditingWidget(fileContents,
-                                                                        !Core::FileManager::instance()->isReadableAndWritable(pFileName),
-                                                                        new QsciLexerXML(this),
-                                                                        parentWidget());
+        newEditingWidget = new CoreCellMLEditing::CoreCellmlEditingWidget(fileContents,
+                                                                          !Core::FileManager::instance()->isReadableAndWritable(pFileName),
+                                                                          new QsciLexerXML(this),
+                                                                          parentWidget());
 
         // Update our viewer whenever necessary
 
-        connect(mEditingWidget->editor(), SIGNAL(textChanged()),
+        connect(newEditingWidget->editor(), SIGNAL(textChanged()),
                 this, SLOT(updateViewer()));
-        connect(mEditingWidget->editor(), SIGNAL(cursorPositionChanged(const int &, const int &)),
+        connect(newEditingWidget->editor(), SIGNAL(cursorPositionChanged(const int &, const int &)),
                 this, SLOT(updateViewer()));
 
         // Keep track of our editing widget and add it to ourselves
 
-        mEditingWidgets.insert(pFileName, mEditingWidget);
+        mEditingWidgets.insert(pFileName, newEditingWidget);
 
-        layout()->addWidget(mEditingWidget);
+        layout()->addWidget(newEditingWidget);
     }
 
-    // Load our settings, if needed, or reset our editing widget using the old
-    // one
+    // Update our editing widget, if required
 
-    if (mNeedLoadingSettings) {
-        QSettings settings(SettingsOrganization, SettingsApplication);
+    if (pUpdate) {
+        CoreCellMLEditing::CoreCellmlEditingWidget *oldEditingWidget = mEditingWidget;
 
-        settings.beginGroup(mSettingsGroup);
-            mEditingWidget->loadSettings(&settings);
-        settings.endGroup();
+        mEditingWidget = newEditingWidget;
 
-        mNeedLoadingSettings = false;
+        // Load our settings, if needed, or reset our editing widget using the
+        // 'old' one
+
+        if (mNeedLoadingSettings) {
+            QSettings settings(SettingsOrganization, SettingsApplication);
+
+            settings.beginGroup(mSettingsGroup);
+                newEditingWidget->loadSettings(&settings);
+            settings.endGroup();
+
+            mNeedLoadingSettings = false;
+        } else {
+            newEditingWidget->updateSettings(oldEditingWidget);
+        }
+
+        // Update our viewer
+
+        updateViewer();
+
+        // Show/hide our editing widgets
+
+        newEditingWidget->show();
+
+        if (oldEditingWidget && (newEditingWidget != oldEditingWidget))
+            oldEditingWidget->hide();
+
+        // Set our focus proxy to our 'new' editing widget and make sure that
+        // the latter immediately gets the focus
+        // Note: if we were not to immediately give the focus to our 'new'
+        //       editing widget, then the central widget would give the focus to
+        //       our 'old' editing widget (see CentralWidget::updateGui()),
+        //       which is clearly not what we want...
+
+        setFocusProxy(newEditingWidget->editor());
+
+        newEditingWidget->editor()->setFocus();
     } else {
-        mEditingWidget->updateSettings(oldEditingWidget);
+        // Hide our 'new' editing widget
+
+        newEditingWidget->hide();
     }
-
-    // Update our viewer
-
-    updateViewer();
-
-    // Show/hide our editing widgets
-
-    mEditingWidget->show();
-
-    if (oldEditingWidget && (oldEditingWidget != mEditingWidget))
-        oldEditingWidget->hide();
-
-    // Set our focus proxy to our 'new' editing widget and make sure that the
-    // latter immediately gets the focus
-    // Note: if we were not to immediately give the focus to our 'new' editing
-    //       widget, then the central widget would give the focus to our 'old'
-    //       editing widget (see CentralWidget::updateGui()), which is clearly
-    //       not what we want...
-
-    setFocusProxy(mEditingWidget->editor());
-
-    mEditingWidget->editor()->setFocus();
 }
 
 //==============================================================================
@@ -221,11 +232,11 @@ void RawCellmlViewWidget::finalize(const QString &pFileName)
         // settings and reset our memory of the current editing widget, if
         // needed
 
-        if (editingWidget == mEditingWidget) {
+        if (mEditingWidget == editingWidget) {
             QSettings settings(SettingsOrganization, SettingsApplication);
 
             settings.beginGroup(mSettingsGroup);
-                mEditingWidget->saveSettings(&settings);
+                editingWidget->saveSettings(&settings);
             settings.endGroup();
 
             mNeedLoadingSettings = true;
@@ -245,10 +256,17 @@ void RawCellmlViewWidget::finalize(const QString &pFileName)
 void RawCellmlViewWidget::fileReloaded(const QString &pFileName)
 {
     // The given file has been reloaded, so reload it, should it be managed
+    // Note: if the view for the given file is not the active view, then to call
+    //       call finalize() and then initialize() would activate the contents
+    //       of the view (but the file tab would still point to the previously
+    //       active file). However, we want to the 'old' file to remain the
+    //       active one, hence the extra argument we pass to initialize()...
 
     if (contains(pFileName)) {
+        bool update = mEditingWidget == mEditingWidgets.value(pFileName);
+
         finalize(pFileName);
-        initialize(pFileName);
+        initialize(pFileName, update);
     }
 }
 
