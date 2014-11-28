@@ -179,10 +179,14 @@ public:
 private:
     CellmlFile *mCellmlFile;
 
+    QList<CellmlFileRdfTriple *> mOriginalRdfTriples;
+
     void recursiveAssociatedWith(CellmlFileRdfTriples &pRdfTriples,
                                  CellmlFileRdfTriple *pRdfTriple) const;
 
     bool removeRdfTriples(const CellmlFileRdfTriples &pRdfTriples);
+
+    void updateCellmlFileModifiedStatus();
 };
 
 //==============================================================================

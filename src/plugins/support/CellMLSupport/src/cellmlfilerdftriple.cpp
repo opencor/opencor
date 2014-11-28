@@ -456,8 +456,13 @@ QString CellmlFileRdfTriple::id() const
 //==============================================================================
 
 CellmlFileRdfTriples::CellmlFileRdfTriples(CellmlFile *pCellmlFile) :
-    mCellmlFile(pCellmlFile)
+    mCellmlFile(pCellmlFile),
+    mOriginalRdfTriples(QList<CellmlFileRdfTriple *>())
 {
+    // Keep track of our original RDF triples
+
+    foreach (CellmlFileRdfTriple *rdfTriple, *this)
+        mOriginalRdfTriples << rdfTriple;
 }
 
 //==============================================================================
@@ -612,9 +617,9 @@ CellmlFileRdfTriple * CellmlFileRdfTriples::add(CellmlFileRdfTriple *pRdfTriple)
 
     pRdfTriple->setRdfTriple(rdfTriple);
 
-    // An RDF triple has been added, so set the CellML file as modified
+    // An RDF triple has been added, so update the CellML file's modified status
 
-    mCellmlFile->setModified(true);
+    updateCellmlFileModifiedStatus();
 
     return pRdfTriple;
 }
@@ -641,10 +646,10 @@ bool CellmlFileRdfTriples::removeRdfTriples(const CellmlFileRdfTriples &pRdfTrip
             delete rdfTriple;
         }
 
-        // Some RDF triples have been removed, so set the CellML file as
-        // modified
+        // Some RDF triples have been removed, so update the CellML file's
+        // modified status
 
-        mCellmlFile->setModified(true);
+        updateCellmlFileModifiedStatus();
 
         return true;
     } else {
@@ -663,8 +668,6 @@ bool CellmlFileRdfTriples::remove(CellmlFileRdfTriple *pRdfTriple)
     rdfTriples << pRdfTriple;
 
     return removeRdfTriples(rdfTriples);
-    // Note: yes, we must declare rdfTriples and add pRdfTriple to it before
-    //       passing it to removeRdfTriples()...
 }
 
 //==============================================================================
@@ -683,6 +686,30 @@ bool CellmlFileRdfTriples::removeAll()
     // Call our generic remove function
 
     return removeRdfTriples(*this);
+}
+
+//==============================================================================
+
+void CellmlFileRdfTriples::updateCellmlFileModifiedStatus()
+{
+    Q_ASSERT(mCellmlFile);
+
+    // Determine whether our CellML file should be considered modified based on
+    // whether our current RDF triples are the same as our original ones
+
+    int imax = count();
+
+    if (imax != mOriginalRdfTriples.count()) {
+        mCellmlFile->setModified(true);
+    } else {
+        int i = 0;
+
+        for (; i < imax; ++i)
+            if (this->at(i) != mOriginalRdfTriples.at(i))
+                break;
+
+        mCellmlFile->setModified(i != imax);
+    }
 }
 
 //==============================================================================
