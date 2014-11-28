@@ -48,7 +48,7 @@ function fileSize(size) {
 }
 
 function versions(versions, downloads) {
-    // Retrieve the size of our various downloadable files, should we be 
+    // Retrieve the size of our various downloadable files, should we be
     // running this script from opencor.ws
     // Note: the URL used in the request must be based on the value of
     //       location.hostname rather than on www.opencor.ws or opencor.ws.
@@ -57,19 +57,19 @@ function versions(versions, downloads) {
     //       would fail because we don't use the exact same hostname...
 
     var fileSizes = {};
-    
+
     if (location.hostname.substring(location.hostname.length-10) === "opencor.ws") {
         var request = new XMLHttpRequest();
-        
+
         request.open("GET", "http://"+location.hostname+"/res/downloads.php", false);
         request.send();
 
         if ((request.status === 200) && (request.readyState === 4)) {
             var retrievedFileSizes = request.responseText.split("\n");
-            
+
             for (var i = 0, iMax = retrievedFileSizes.length; i < iMax; ++i) {
                 var retrievedFileSize = retrievedFileSizes[i].split(",");
-            
+
                 fileSizes[retrievedFileSize[0]] = retrievedFileSize[1];
             }
         }
