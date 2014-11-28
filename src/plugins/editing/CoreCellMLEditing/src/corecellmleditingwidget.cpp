@@ -218,8 +218,8 @@ void CoreCellmlEditingWidget::splitterMoved()
 void CoreCellmlEditingWidget::itemRequested(EditorList::EditorListItem *pItem)
 {
     // Set our editor's cursor position to the line/column of the given item and
-    // give our editor the focuse so that we can see the exact location of the
-    // item (otherwise it will mEditorList that will have the focus since we
+    // give our editor the focus so that we can see the exact location of the
+    // item (otherwise it will be mEditorList that will have the focus since we
     // just double-clicked on it)
 
     mEditor->setCursorPosition(pItem->line()-1, pItem->column()-1);
