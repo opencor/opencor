@@ -247,10 +247,13 @@ SET(PLUGINS
     widget/EditorList
     widget/Viewer
 
+    # Plugins that provide some generic features
+
+    editing/CoreEditing
+
     # Plugins that have dependencies on others
 
     editing/CoreCellMLEditing
-    editing/CoreEditing
 
     # Selectable plugins
 
