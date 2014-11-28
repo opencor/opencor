@@ -465,7 +465,7 @@ void CoreEditingPlugin::unpopulateEditMenu()
     mEditMenu->removeAction(mEditFindNextAction);
     mEditMenu->removeAction(mEditFindPreviousAction);
 
-    mEditMenu->addAction(mEditSelectAllAction);
+    mEditMenu->removeAction(mEditSelectAllAction);
 }
 
 //==============================================================================
