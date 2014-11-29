@@ -349,7 +349,8 @@ bool CellmlFile::load()
     if (!doLoad(mFileName, QString(), &mModel, mIssues))
         return false;
 
-    // Retrieve all the RDF triples associated with the model
+    // Retrieve all the RDF triples associated with the model and initialise our
+    // list of original RDF triples
 
     ObjRef<iface::cellml_api::RDFRepresentation> rdfRepresentation = mModel->getRDFRepresentation(L"http://www.cellml.org/RDF/API");
 
@@ -364,6 +365,8 @@ bool CellmlFile::load()
             for (ObjRef<iface::rdf_api::Triple> rdfTriple = rdfTriplesEnumerator->getNextTriple();
                  rdfTriple; rdfTriple = rdfTriplesEnumerator->getNextTriple())
                 mRdfTriples << new CellmlFileRdfTriple(this, rdfTriple);
+
+            mRdfTriples.updateOriginalRdfTriples();
         }
     }
 
@@ -412,6 +415,10 @@ bool CellmlFile::save(const QString &pNewFileName)
     // data source
 
     mRdfApiRepresentation->source(mRdfDataSource);
+
+    // Update our list of original RDF triples
+
+    mRdfTriples.updateOriginalRdfTriples();
 
     // Beautify the serialised version of the CellML file, after having removed
     // the model's XML base value and its RDF child node, should there be no

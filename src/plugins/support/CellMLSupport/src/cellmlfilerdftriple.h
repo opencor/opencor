@@ -31,6 +31,7 @@ specific language governing permissions and limitations under the License.
 
 #include <QList>
 #include <QSet>
+#include <QStringList>
 #include <QUrl>
 #include <QVector>
 
@@ -176,15 +177,19 @@ public:
     bool remove(iface::cellml_api::CellMLElement *pElement);
     bool removeAll();
 
+    void updateOriginalRdfTriples();
+
 private:
     CellmlFile *mCellmlFile;
 
-    QList<CellmlFileRdfTriple *> mOriginalRdfTriples;
+    QStringList mOriginalRdfTriples;
 
     void recursiveAssociatedWith(CellmlFileRdfTriples &pRdfTriples,
                                  CellmlFileRdfTriple *pRdfTriple) const;
 
     bool removeRdfTriples(const CellmlFileRdfTriples &pRdfTriples);
+
+    QStringList asStringList() const;
 
     void updateCellmlFileModifiedStatus();
 };

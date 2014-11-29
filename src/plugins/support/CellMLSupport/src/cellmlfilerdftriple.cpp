@@ -457,12 +457,8 @@ QString CellmlFileRdfTriple::id() const
 
 CellmlFileRdfTriples::CellmlFileRdfTriples(CellmlFile *pCellmlFile) :
     mCellmlFile(pCellmlFile),
-    mOriginalRdfTriples(QList<CellmlFileRdfTriple *>())
+    mOriginalRdfTriples(QStringList())
 {
-    // Keep track of our original RDF triples
-
-    foreach (CellmlFileRdfTriple *rdfTriple, *this)
-        mOriginalRdfTriples << rdfTriple;
 }
 
 //==============================================================================
@@ -690,26 +686,44 @@ bool CellmlFileRdfTriples::removeAll()
 
 //==============================================================================
 
+QStringList CellmlFileRdfTriples::asStringList() const
+{
+    // Return the RDF triples as a list of sorted strings
+
+    QStringList res = QStringList();
+
+    foreach (CellmlFileRdfTriple *rdfTriple, *this)
+        res << QString("%1|%2|%3").arg(rdfTriple->subject()->asString(),
+                                       rdfTriple->predicate()->asString(),
+                                       rdfTriple->object()->asString());
+
+    res.sort();
+
+    return res;
+}
+
+//==============================================================================
+
+void CellmlFileRdfTriples::updateOriginalRdfTriples()
+{
+    // Keep track of our current RDF triples, which will be considered as our
+    // original RDF triples, so we can determine whether a CellML file should be
+    // considered modified (see updateCellmlFileModifiedStatus())
+
+    mOriginalRdfTriples = asStringList();
+}
+
+//==============================================================================
+
 void CellmlFileRdfTriples::updateCellmlFileModifiedStatus()
 {
-    Q_ASSERT(mCellmlFile);
-
     // Determine whether our CellML file should be considered modified based on
     // whether our current RDF triples are the same as our original ones
 
-    int imax = count();
-
-    if (imax != mOriginalRdfTriples.count()) {
+    if (count() != mOriginalRdfTriples.count())
         mCellmlFile->setModified(true);
-    } else {
-        int i = 0;
-
-        for (; i < imax; ++i)
-            if (this->at(i) != mOriginalRdfTriples.at(i))
-                break;
-
-        mCellmlFile->setModified(i != imax);
-    }
+    else
+        mCellmlFile->setModified(asStringList() != mOriginalRdfTriples);
 }
 
 //==============================================================================
