@@ -25,17 +25,10 @@ ADD_PLUGIN(CellMLModelRepositoryWindow
     QT_LIBRARIES
         QtCore
         QtGui
-        QtMultimedia
-        QtMultimediaWidgets
         QtNetwork
-        QtOpenGL
-        QtPositioning
-        QtPrintSupport
-        QtQml
-        QtQuick
-        QtSensors
         QtWebKit
         QtWebKitWidgets
         QtWidgets
+        QtXml
         QtXmlPatterns
 )

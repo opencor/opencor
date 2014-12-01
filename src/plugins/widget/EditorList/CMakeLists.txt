@@ -22,5 +22,6 @@ ADD_PLUGIN(EditorList
         QtGui
         QtNetwork
         QtWidgets
+        QtXml
         QtXmlPatterns
 )

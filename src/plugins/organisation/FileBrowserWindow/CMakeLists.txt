@@ -27,5 +27,6 @@ ADD_PLUGIN(FileBrowserWindow
         QtGui
         QtNetwork
         QtWidgets
+        QtXml
         QtXmlPatterns
 )

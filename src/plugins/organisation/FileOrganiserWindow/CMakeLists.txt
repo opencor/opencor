@@ -27,5 +27,6 @@ ADD_PLUGIN(FileOrganiserWindow
         QtGui
         QtNetwork
         QtWidgets
+        QtXml
         QtXmlPatterns
 )

@@ -33,17 +33,11 @@ ADD_PLUGIN(HelpWindow
         QtCore
         QtGui
         QtHelp
-        QtMultimedia
-        QtMultimediaWidgets
         QtNetwork
-        QtOpenGL
-        QtPositioning
         QtPrintSupport
-        QtQml
-        QtQuick
-        QtSensors
         QtWebKit
         QtWebKitWidgets
         QtWidgets
+        QtXml
         QtXmlPatterns
 )
