@@ -11,454 +11,81 @@
 
         <script src="../3rdparty/jQuery/jquery.js" type="text/javascript"></script>
         <script src="../res/common.js" type="text/javascript"></script>
+        <script src="whatisNew.js" type="text/javascript"></script>
         <script src="res/menu.js" type="text/javascript"></script>
     </head>
     <body ondragstart="return false;" ondrop="return false;">
         <script type="text/javascript">
             headerAndContentsMenu("What Is New?", "..");
-        </script>
 
-        <span class="anchor" id="latest"></span>
+            var versions = jsonData.versions;
+            var typeWidths = { "Added": 37, "Improved": 51, "Fixed": 31 };
+    
+            for (var versionIndex = 0; versionIndex < versions.length; ++versionIndex) {
+                var version = versions[versionIndex];
 
-        <div class="section">
-            <table>
-                <tbody>
-                    <tr>
-                        <td>
-                            Latest snapshot
-                        </td>
-                        <td class="date">
-                            (27 November 2014)
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+                document.write("<span class=\"anchor\" id=\""+version.anchor+"\"></span>\n");
 
-        <ul>
-            <li>
-                General:
-                <ul>
-                    <li><img src="res/pics/added.png" class="vcenter" width=36 height=15 alt="Added"> Support for 64-bit <a href="http://en.wikipedia.org/wiki/Microsoft_Windows">Windows</a>.</li>
-                    <li><img src="res/pics/added.png" class="vcenter" width=36 height=15 alt="Added"> Support for <a href="http://en.wikipedia.org/wiki/OS_X">OS X</a> 10.10 (Yosemite).</li>
-                    <li><img src="res/pics/improved.png" class="vcenter" width=50 height=15 alt="Improved"> OpenCOR logo.</li>
-                    <li><img src="res/pics/improved.png" class="vcenter" width=50 height=15 alt="Improved"> Binaries on <a href="http://en.wikipedia.org/wiki/OS_X">OS X</a>.</li>
-                    <li><img src="res/pics/improved.png" class="vcenter" width=50 height=15 alt="Improved"> <a href="http://en.wikipedia.org/wiki/Zip_(file_format)">ZIP</a> packaging on <a href="http://en.wikipedia.org/wiki/OS_X">OS X</a>.</li>
-                    <li><img src="res/pics/improved.png" class="vcenter" width=50 height=15 alt="Improved"> Displaying of numbers.</li>
-                </ul>
-            </li>
-        </ul>
-        <ul>
-            <li>
-                Data store:
-                <ul>
-                    <li><img src="res/pics/added.png" class="vcenter" width=36 height=15 alt="Added"> <a href="http://en.wikipedia.org/wiki/Comma-separated_values">CSV</a> data store.</li>
-                </ul>
-            </li>
-        </ul>
-        <ul>
-            <li>
-                Editing:
-                <ul>
-                    <li>
-                        CellML annotation view:
-                        <ul>
-                            <li><img src="res/pics/added.png" class="vcenter" width=36 height=15 alt="Added"> Two new <a href="http://biomodels.net/qualifiers/">BioModels.net qualifiers</a> (<code>model:isInstanceOf</code> and <code>model:hasInstance</code>).</li>
-                            <li><img src="res/pics/improved.png" class="vcenter" width=50 height=15 alt="Improved"> GUI for locked CellML files.</li>
-                            <li><img src="res/pics/improved.png" class="vcenter" width=50 height=15 alt="Improved"> Responsiveness of the GUI.</li>
-                            <li><img src="res/pics/improved.png" class="vcenter" width=50 height=15 alt="Improved"> Listing of component variables.</li>
-                            <li><img src="res/pics/improved.png" class="vcenter" width=50 height=15 alt="Improved"> Translation of views for inactive CellML files.</li>
-                            <li><img src="res/pics/improved.png" class="vcenter" width=50 height=15 alt="Improved"> Setting of the modified state of the CellML file.</li>
-                            <li><img src="res/pics/improved.png" class="vcenter" width=50 height=15 alt="Improved"> Detection of direct ontological terms.</li>
-                            <li><img src="res/pics/improved.png" class="vcenter" width=50 height=15 alt="Improved"> Retrieval of ontological terms.</li>
-                            <li><img src="res/pics/improved.png" class="vcenter" width=50 height=15 alt="Improved"> Listing of ontological terms.</li>
-                            <li><img src="res/pics/fixed.png" class="vcenter" width=36 height=15 alt="Fixed"> Editing a malformed CellML files.</li>
-                            <li><img src="res/pics/fixed.png" class="vcenter" width=36 height=15 alt="Fixed"> Further editing after saving a CellML file.</li>
-                        </ul>
-                    </li>
-                    <li>
-                        Raw CellML view:
-                        <ul>
-                            <li><img src="res/pics/improved.png" class="vcenter" width=50 height=15 alt="Improved"> Context menu.</li>
-                            <li><img src="res/pics/fixed.png" class="vcenter" width=36 height=15 alt="Fixed"> Retrieval of view settings.</li>
-                        </ul>
-                    </li>
-                </ul>
-            </li>
-        </ul>
-        <ul>
-            <li>
-                Organisation:
-                <ul>
-                    <li>
-                        CellML Model Repository window:
-                        <ul>
-                            <li><img src="res/pics/improved.png" class="vcenter" width=50 height=15 alt="Improved"> Retrieval of CellML files.</li>
-                            <li><img src="res/pics/improved.png" class="vcenter" width=50 height=15 alt="Improved"> Listing of CellML files.</li>
-                        </ul>
-                    </li>
-                </ul>
-            </li>
-        </ul>
-        <ul>
-            <li>
-                Simulation:
-                <ul>
-                    <li>
-                        Single cell (simulation) view:
-                        <ul>
-                            <li><img src="res/pics/improved.png" class="vcenter" width=50 height=15 alt="Improved"> Export to CSV.</li>
-                            <li><img src="res/pics/improved.png" class="vcenter" width=50 height=15 alt="Improved"> GUI for the parameters section.</li>
-                        </ul>
-                    </li>
-                </ul>
-            </li>
-        </ul>
-        <ul>
-            <li>
-                Support:
-                <ul>
-                    <li>
-                        CellML support:
-                        <ul>
-                            <li><img src="res/pics/improved.png" class="vcenter" width=50 height=15 alt="Improved"> Serialisation of CellML files.</li>
-                        </ul>
-                    </li>
-                </ul>
-            </li>
-        </ul>
+                document.write("<div class=\"section\">\n");
+                document.write("    <table>\n");
+                document.write("        <tbody>\n");
+                document.write("            <tr>\n");
+                document.write("                <td>\n");
+                document.write("                    "+version.description+"\n");
+                document.write("                </td>\n");
+                document.write("                <td class=\"date\">\n");
+                document.write("                    ("+version.date+")\n");
+                document.write("                </td>\n");
+                document.write("            </tr>\n");
+                document.write("        </tbody>\n");
+                document.write("    </table>\n");
+                document.write("</div>\n");
 
-        <span class="anchor" id="0.3"></span>
+                var categories = version.categories;
 
-        <div class="section">
-            <table>
-                <tbody>
-                    <tr>
-                        <td>
-                            Version 0.3
-                        </td>
-                        <td class="date">
-                            (19 August 2014)
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+                for (var categoryIndex = 0; categoryIndex < categories.length; ++categoryIndex) {
+                    var category = categories[categoryIndex];
+                    var entries = category.entries;
+                    var realCategory = typeof entries !== "undefined";
 
-        <ul>
-            <li>
-                General:
-                <ul>
-                    <li><img src="res/pics/added.png" class="vcenter" width=36 height=15 alt="Added"> Create a new blank file.</li>
-                    <li><img src="res/pics/added.png" class="vcenter" width=36 height=15 alt="Added"> Create a new CellML 1.0 file.</li>
-                    <li><img src="res/pics/added.png" class="vcenter" width=36 height=15 alt="Added"> Create a new CellML 1.1 file.</li>
-                    <li><img src="res/pics/added.png" class="vcenter" width=36 height=15 alt="Added"> Open a remote file.</li>
-                    <li><img src="res/pics/added.png" class="vcenter" width=36 height=15 alt="Added"> Duplicate a file.</li>
-                    <li><img src="res/pics/added.png" class="vcenter" width=36 height=15 alt="Added"> (Un)lock a file.</li>
-                    <li><img src="res/pics/added.png" class="vcenter" width=36 height=15 alt="Added"> Close a file by pressing <code>Ctrl+W</code> on <a href="http://en.wikipedia.org/wiki/Microsoft_Windows">Windows</a>.</li>
-                    <li><img src="res/pics/improved.png" class="vcenter" width=50 height=15 alt="Improved"> <a href="http://en.wikipedia.org/wiki/Command-line_interface">CLI</a> support on Linux and <a href="http://en.wikipedia.org/wiki/OS_X">OS X</a>.</li>
-                    <li><img src="res/pics/improved.png" class="vcenter" width=50 height=15 alt="Improved"> <a href="userInterfaces/commandLineInterface.html">CLI</a> with improved <a href="plugins/miscellaneous/CellMLTools.html">CellML tools</a>.</li>
-                    <li><img src="res/pics/improved.png" class="vcenter" width=50 height=15 alt="Improved"> <a href="http://en.wikipedia.org/wiki/Graphical_user_interface">GUI</a> support.</li>
-                    <li><img src="res/pics/improved.png" class="vcenter" width=50 height=15 alt="Improved"> Plugin framework.</li>
-                    <li><img src="res/pics/improved.png" class="vcenter" width=50 height=15 alt="Improved"> Plugins window.</li>
-                    <li><img src="res/pics/improved.png" class="vcenter" width=50 height=15 alt="Improved"> File handling.</li>
-                    <li><img src="res/pics/improved.png" class="vcenter" width=50 height=15 alt="Improved"> Mode/view philosophy.</li>
-                    <li><img src="res/pics/improved.png" class="vcenter" width=50 height=15 alt="Improved"> Keyboard navigation in tree views.</li>
-                    <li><img src="res/pics/improved.png" class="vcenter" width=50 height=15 alt="Improved"> Save a file using any file extension.</li>
-                </ul>
-            </li>
-        </ul>
-        <ul>
-            <li>
-                Development:
-                <ul>
-                    <li>
-                        Examples of <a href="http://www.opencor.ws/developer/develop/plugins/index.html">how to write plugins</a>:
-                        <ul>
-                            <li><img src="res/pics/added.png" class="vcenter" width=36 height=15 alt="Added"> <a href="http://www.opencor.ws/developer/develop/plugins/Sample.html">Sample</a> plugin.</li>
-                            <li><img src="res/pics/added.png" class="vcenter" width=36 height=15 alt="Added"> <a href="http://www.opencor.ws/developer/develop/plugins/SampleTools.html">SampleTools</a> plugin.</li>
-                            <li><img src="res/pics/added.png" class="vcenter" width=36 height=15 alt="Added"> <a href="http://www.opencor.ws/developer/develop/plugins/SampleView.html">SampleView</a> plugin.</li>
-                            <li><img src="res/pics/added.png" class="vcenter" width=36 height=15 alt="Added"> <a href="http://www.opencor.ws/developer/develop/plugins/SampleWindow.html">SampleWindow</a> plugin.</li>
-                        </ul>
-                    </li>
-                </ul>
-            </li>
-        </ul>
-        <ul>
-            <li>
-                Editing:
-                <ul>
-                    <li>
-                        CellML annotation view:
-                        <ul>
-                            <li><img src="res/pics/improved.png" class="vcenter" width=50 height=15 alt="Improved"> Retrieval of possible ontological terms.</li>
-                            <li><img src="res/pics/fixed.png" class="vcenter" width=36 height=15 alt="Fixed"> Listing of some unrecognisable metadata.</li>
-                            <li><img src="res/pics/fixed.png" class="vcenter" width=36 height=15 alt="Fixed"> Listing of suggested ontological terms.</li>
-                        </ul>
-                    </li>
-                    <li><img src="res/pics/added.png" class="vcenter" width=36 height=15 alt="Added"> <a href="plugins/editing/RawView.html">Raw view</a>.</li>
-                    <li><img src="res/pics/added.png" class="vcenter" width=36 height=15 alt="Added"> <a href="plugins/editing/RawCellMLView.html">Raw CellML view</a>.</li>
-                </ul>
-            </li>
-        </ul>
-        <ul>
-            <li>
-                Miscellaneous:
-                <ul>
-                    <li>
-                        CellML tools:
-                        <ul>
-                            <li><img src="res/pics/added.png" class="vcenter" width=36 height=15 alt="Added"> Export of a CellML file to a user-defined format.</li>
-                            <li><img src="res/pics/added.png" class="vcenter" width=36 height=15 alt="Added"> User-defined format for <a href="http://en.wikipedia.org/wiki/C_(programming_language)">C</a>.</li>
-                            <li><img src="res/pics/added.png" class="vcenter" width=36 height=15 alt="Added"> User-defined format for <a href="http://en.wikipedia.org/wiki/Fortran#FORTRAN_77">FORTRAN 77</a>.</li>
-                            <li><img src="res/pics/added.png" class="vcenter" width=36 height=15 alt="Added"> User-defined format for <a href="http://en.wikipedia.org/wiki/MATLAB">MATLAB</a>.</li>
-                            <li><img src="res/pics/added.png" class="vcenter" width=36 height=15 alt="Added"> User-defined format for <a href="http://en.wikipedia.org/wiki/Python_(programming_language)">Python</a>.</li>
-                        </ul>
-                    </li>
-                </ul>
-            </li>
-        </ul>
-        <ul>
-            <li>
-                Organisation:
-                <ul>
-                    <li>
-                        CellML Model Repository window:
-                        <ul>
-                            <li><img src="res/pics/improved.png" class="vcenter" width=50 height=15 alt="Improved"> Retrieval of CellML files.</li>
-                        </ul>
-                    </li>
-                    <li>
-                        File Browser window:
-                        <ul>
-                            <li><img src="res/pics/added.png" class="vcenter" width=36 height=15 alt="Added"> Open a file by pressing <code>Enter</code> on (Mac) <a href="http://en.wikipedia.org/wiki/OS_X">OS X</a>.</li>
-                        </ul>
-                    </li>
-                    <li>
-                        File Organiser window:
-                        <ul>
-                            <li><img src="res/pics/added.png" class="vcenter" width=36 height=15 alt="Added"> Open a file by pressing <code>Enter</code> on (Mac) <a href="http://en.wikipedia.org/wiki/OS_X">OS X</a>.</li>
-                            <li><img src="res/pics/fixed.png" class="vcenter" width=36 height=15 alt="Fixed"> Retrieval of the contents of the file organiser.</li>
-                        </ul>
-                    </li>
-                </ul>
-            </li>
-        </ul>
-        <ul>
-            <li>
-                Simulation:
-                <ul>
-                    <li>
-                        Single cell (simulation) view:
-                        <ul>
-                            <li><img src="res/pics/improved.png" class="vcenter" width=50 height=15 alt="Improved"> View settings upon reloading a CellML file.</li>
-                            <li><img src="res/pics/improved.png" class="vcenter" width=50 height=15 alt="Improved"> Delay between two data points.</li>
-                            <li><img src="res/pics/improved.png" class="vcenter" width=50 height=15 alt="Improved"> CellML file information.</li>
-                            <li><img src="res/pics/improved.png" class="vcenter" width=50 height=15 alt="Improved"> Export to CSV.</li>
-                            <li><img src="res/pics/fixed.png" class="vcenter" width=36 height=15 alt="Fixed"> Removal of a graph panel that is selected by another CellML file.</li>
-                            <li><img src="res/pics/fixed.png" class="vcenter" width=36 height=15 alt="Fixed"> Property settings of a CellML file that requires a non-linear algebraic solver.</li>
-                        </ul>
-                    </li>
-                    <li>
-                        <a href="http://computation.llnl.gov/casc/sundials/description/description.html#descr_cvode">CVODE</a> solver:
-                        <ul>
-                            <li><img src="res/pics/added.png" class="vcenter" width=36 height=15 alt="Added"> Choice to interpolate the solution.</li>
-                        </ul>
-                    </li>
-                    <li>
-                        <a href="http://computation.llnl.gov/casc/sundials/description/description.html#descr_ida">IDA</a> solver:
-                        <ul>
-                            <li><img src="res/pics/added.png" class="vcenter" width=36 height=15 alt="Added"> Choice to interpolate the solution.</li>
-                        </ul>
-                    </li>
-                </ul>
-            </li>
-        </ul>
+                    document.write("<ul>\n");
+                    document.write("    <li>\n");
+                    document.write("        "+category.name+(realCategory?":":".")+"\n");
+                    
+                    if (realCategory) {
+                        document.write("        <ul>\n");
 
-        <span class="anchor" id="0.2"></span>
+                        for (var entryIndex = 0; entryIndex < entries.length; ++entryIndex) {
+                            var entry = entries[entryIndex];
 
-        <div class="section">
-            <table>
-                <tbody>
-                    <tr>
-                        <td>
-                            Version 0.2
-                        </td>
-                        <td class="date">
-                            (19 November 2013)
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+                            if (entry.type === "subCategory") {
+                                document.write("            <li>\n");
+                                document.write("                "+entry.name+":\n");
+                                document.write("                <ul>\n");
+                                
+                                var subEntries = entry.entries;
+                                
+                                for (var subEntryIndex = 0; subEntryIndex < subEntries.length; ++subEntryIndex) {
+                                    var subEntry = subEntries[subEntryIndex];
 
-        <ul>
-            <li>
-                General:
-                <ul>
-                    <li><img src="res/pics/added.png" class="vcenter" width=36 height=15 alt="Added"> <a href="licensing.html">Open source license</a>.</li>
-                    <li><img src="res/pics/added.png" class="vcenter" width=36 height=15 alt="Added"> Support for Mac <a href="http://en.wikipedia.org/wiki/OS_X">OS X</a> 10.7 (Lion) and later.</li>
-                    <li><img src="res/pics/added.png" class="vcenter" width=36 height=15 alt="Added"> Reload a file (either as a result of a direct action or because it got modified outside OpenCOR).</li>
-                    <li><img src="res/pics/added.png" class="vcenter" width=36 height=15 alt="Added"> Show/hide all the recent/current docked widgets at once.</li>
-                    <li><img src="res/pics/added.png" class="vcenter" width=36 height=15 alt="Added"> <a href="http://www.ncbi.nlm.nih.gov/pmc/articles/PMC1359535/">Noble 1962</a> as one of the CellML file examples.</li>
-                    <li><img src="res/pics/improved.png" class="vcenter" width=50 height=15 alt="Improved"> Keyboard navigation in tree views.</li>
-                    <li><img src="res/pics/improved.png" class="vcenter" width=50 height=15 alt="Improved"> <a href="userInterfaces/commandLineInterface.html">CLI</a> with <a href="plugins/miscellaneous/CellMLTools.html">CellML tools</a>.</li>
-                    <li><img src="res/pics/improved.png" class="vcenter" width=50 height=15 alt="Improved"> Plugins window.</li>
-                    <li><img src="res/pics/improved.png" class="vcenter" width=50 height=15 alt="Improved"> File handling.</li>
-                </ul>
-            </li>
-        </ul>
-        <ul>
-            <li>
-                Editing:
-                <ul>
-                    <li>
-                        CellML annotation view:
-                        <ul>
-                            <li><img src="res/pics/added.png" class="vcenter" width=36 height=15 alt="Added"> Open an imported CellML file.</li>
-                        </ul>
-                    </li>
-                </ul>
-            </li>
-        </ul>
-        <ul>
-            <li>
-                Miscellaneous:
-                <ul>
-                    <li><img src="res/pics/added.png" class="vcenter" width=36 height=15 alt="Added"> <a href="plugins/miscellaneous/CellMLTools.html">CellML tools</a>.</li>
-                </ul>
-            </li>
-        </ul>
-        <ul>
-            <li>
-                Organisation:
-                <ul>
-                    <li>
-                        CellML Model Repository window:
-                        <ul>
-                            <li class="feature"><img src="res/pics/improved.png" class="vcenter" width=50 height=15 alt="Improved"> Retrieval of CellML files.</li>
-                        </ul>
-                    </li>
-                </ul>
-            </li>
-        </ul>
-        <ul>
-            <li>
-                Simulation:
-                <ul>
-                    <li><img src="res/pics/added.png" class="vcenter" width=36 height=15 alt="Added"> <a href="http://en.wikipedia.org/wiki/Heun%27s_method">Heun</a> solver.</li>
-                    <li><img src="res/pics/added.png" class="vcenter" width=36 height=15 alt="Added"> Second-order <a href="http://en.wikipedia.org/wiki/Runge–Kutta_methods">Runge-Kutta</a> solver.</li>
-                    <li><img src="res/pics/added.png" class="vcenter" width=36 height=15 alt="Added"> Fourth-order <a href="http://en.wikipedia.org/wiki/Runge–Kutta_methods">Runge-Kutta</a> solver.</li>
-                    <li>
-                        Single cell (simulation) view:
-                        <ul>
-                            <li class="feature"><img src="res/pics/added.png" class="vcenter" width=36 height=15 alt="Added"> Have several graph panels.</li>
-                            <li class="feature"><img src="res/pics/added.png" class="vcenter" width=36 height=15 alt="Added"> Plot any model parameter against any other.</li>
-                            <li class="feature"><img src="res/pics/added.png" class="vcenter" width=36 height=15 alt="Added"> Plot simulation data from another simulation.</li>
-                            <li class="feature"><img src="res/pics/improved.png" class="vcenter" width=50 height=15 alt="Improved"> Various listings.</li>
-                            <li class="feature"><img src="res/pics/improved.png" class="vcenter" width=50 height=15 alt="Improved"> Simulation speed.</li>
-                            <li class="feature"><img src="res/pics/improved.png" class="vcenter" width=50 height=15 alt="Improved"> Graph panel features.</li>
-                            <li class="feature"><img src="res/pics/improved.png" class="vcenter" width=50 height=15 alt="Improved"> Support for <a href="http://en.wikipedia.org/wiki/Retina_Display">Retina displays</a>.</li>
-                            <li class="feature"><img src="res/pics/improved.png" class="vcenter" width=50 height=15 alt="Improved"> Support for a wider range of CellML files.</li>
-                        </ul>
-                    </li>
-                </ul>
-            </li>
-        </ul>
+                                    document.write("                    <li><img src=\"res/pics/"+subEntry.type.toLowerCase()+".png\" class=\"vcenter\" width="+typeWidths[subEntry.type]+" height=15 alt=\""+subEntry.type+"\"> "+subEntry.description+"</li>\n");
+                                }
+                                
+                                document.write("                </ul>\n");
+                                document.write("            </li>\n");
+                            } else {
+                                document.write("            <li><img src=\"res/pics/"+entry.type.toLowerCase()+".png\" class=\"vcenter\" width="+typeWidths[entry.type]+" height=15 alt=\""+entry.type+"\"> "+entry.description+"</li>\n");
+                            }
+                        }
+                
+                        document.write("        </ul>\n");
+                    }
+                    
+                    document.write("    </li>\n");
+                    document.write("</ul>\n");
+                }
+            }
 
-        <span class="anchor" id="0.1.2"></span>
-
-        <div class="section">
-            <table>
-                <tbody>
-                    <tr>
-                        <td>
-                            Version 0.1.2
-                        </td>
-                        <td class="date">
-                            (29 May 2013)
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-
-        <ul>
-            <li>
-                Simulation:
-                <ul>
-                    <li>
-                        Single cell (simulation) view:
-                        <ul>
-                            <li class="feature"><img src="res/pics/fixed.png" class="vcenter" width=30 height=15 alt="Fixed"> Runtime generation of some CellML files.</li>
-                        </ul>
-                    </li>
-                </ul>
-            </li>
-        </ul>
-
-        <span class="anchor" id="0.1.1"></span>
-
-        <div class="section">
-            <table>
-                <tbody>
-                    <tr>
-                        <td>
-                            Version 0.1.1
-                        </td>
-                        <td class="date">
-                            (17 April 2013)
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-
-        <ul>
-            <li>
-                General:
-                <ul>
-                    <li><img src="res/pics/improved.png" class="vcenter" width=50 height=15 alt="Improved"> Plugin framework.</li>
-                </ul>
-            </li>
-        </ul>
-        <ul>
-            <li>
-                Simulation:
-                <ul>
-                    <li>
-                        Single cell (simulation) view:
-                        <ul>
-                            <li><img src="res/pics/improved.png" class="vcenter" width=50 height=15 alt="Improved"> Editing of property values.</li>
-                            <li><img src="res/pics/fixed.png" class="vcenter" width=30 height=15 alt="Fixed"> Plotting of property values.</li>
-                        </ul>
-                    </li>
-                </ul>
-            </li>
-        </ul>
-
-        <span class="anchor" id="0.1"></span>
-
-        <div class="section">
-            <table>
-                <tbody>
-                    <tr>
-                        <td>
-                            Version 0.1
-                        </td>
-                        <td class="date">
-                            (1 April 2013)
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-
-        <ul>
-            <li>Original version of OpenCOR.</li>
-        </ul>
-
-        <script type="text/javascript">
             copyright("..");
         </script>
     </body>
