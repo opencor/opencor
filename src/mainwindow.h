@@ -151,6 +151,7 @@ private Q_SLOTS:
     void on_actionPlugins_triggered();
     void on_actionPreferences_triggered();
     void on_actionHomePage_triggered();
+    void on_actionUpdate_triggered();
     void on_actionAbout_triggered();
 
     void updateGui(Plugin *pViewPlugin, const QString &pFileName);

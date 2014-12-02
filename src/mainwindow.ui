@@ -62,6 +62,8 @@
     <addaction name="actionHomePage"/>
     <addaction name="separator"/>
     <addaction name="actionAbout"/>
+    <addaction name="separator"/>
+    <addaction name="actionUpdate"/>
    </widget>
    <widget class="QMenu" name="menuView">
     <property name="title">
@@ -257,6 +259,21 @@
    </property>
    <property name="statusTip">
     <string>Preferences for OpenCOR and its plugins</string>
+   </property>
+  </action>
+  <action name="actionUpdate">
+   <property name="icon">
+    <iconset resource="../res/ui.qrc">
+     <normaloff>:/oxygen/actions/system-software-update.png</normaloff>:/oxygen/actions/system-software-update.png</iconset>
+   </property>
+   <property name="text">
+    <string>Update...</string>
+   </property>
+   <property name="toolTip">
+    <string>Update</string>
+   </property>
+   <property name="statusTip">
+    <string>Check for updates</string>
    </property>
   </action>
  </widget>

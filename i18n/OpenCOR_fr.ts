@@ -131,6 +131,18 @@
         <source>Quit OpenCOR</source>
         <translation>Quitter OpenCOR</translation>
     </message>
+    <message>
+        <source>Update...</source>
+        <translation>Mise à Jour...</translation>
+    </message>
+    <message>
+        <source>Update</source>
+        <translation>Mise à Jour</translation>
+    </message>
+    <message>
+        <source>Check for updates</source>
+        <translation>Vérifier pour des mises à jour</translation>
+    </message>
 </context>
 <context>
     <name>OpenCOR::MainWindow</name>
