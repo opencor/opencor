@@ -47,7 +47,12 @@ function fileSize(size) {
     }
 }
 
-function versions(jsonFileName, downloads) {
+function versions(downloads) {
+    // Make sure that the jsonData variable is available
+    
+    if (typeof jsonData === "undefined")
+        return;
+
     // Retrieve the size of our various downloadable files, should we be
     // running this script from opencor.ws
     // Note: the URL used in the request must be based on the value of
@@ -75,11 +80,6 @@ function versions(jsonFileName, downloads) {
 
     // Output the various requested downloadable files, using the information
     // contained in the given JSON file
-
-    var jsonData;
-
-    $.ajax({ url: jsonFileName, dataType: "json", async: false,
-             success: function(data) { jsonData = data; } });
 
     var versionIndex = 0;
 
