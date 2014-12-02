@@ -81,10 +81,11 @@ function versions(downloads) {
     // Output the various requested downloadable files, using the information
     // contained in the given JSON file
 
+    var versions = jsonData.versions;
     var versionIndex = 0;
 
-    while (versionIndex !== jsonData.versions.length) {
-        var version = jsonData.versions[versionIndex];
+    while (versionIndex !== versions.length) {
+        var version = versions[versionIndex];
 
         // Retrieve some information about the version
 
