@@ -82,9 +82,8 @@ function versions(downloads) {
     // contained in the given JSON file
 
     var versions = jsonData.versions;
-    var versionIndex = 0;
-
-    while (versionIndex !== versions.length) {
+    
+    for (var versionIndex = 0; versionIndex < versions.length; ++versionIndex) {
         var version = versions[versionIndex];
 
         // Retrieve some information about the version
@@ -178,9 +177,7 @@ function versions(downloads) {
 
         // Go through our different platforms
 
-        var platformIndex = 0;
-
-        while (platformIndex !== nbOfPlatforms) {
+        for (var platformIndex = 0; platformIndex < nbOfPlatforms; ++platformIndex) {
             var platformLocalIndex = platformIndex % nbOfPlatformsPerRow;
 
             // 'Close' the current platform if there is a previous platform
@@ -242,9 +239,7 @@ function versions(downloads) {
 
                 // List the files
 
-                var fileIndex = 0;
-
-                while (fileIndex !== platformFiles.length) {
+                for (var fileIndex = 0; fileIndex < platformFiles.length; ++fileIndex) {
                     var file = platformFiles[fileIndex];
 
                     // Retrieve some information about the file
@@ -274,16 +269,8 @@ function versions(downloads) {
                     // List the file for download
 
                     document.write("                            <li><a href=\""+fileName+"\">"+fileType+"</a>"+fileBitness+" <span class=\"fileSize\">("+fileSize(fileSizes[fileName])+")</span></li>\n");
-
-                    // Go to the next file
-
-                    ++fileIndex;
                 }
             }
-
-            // Go to the next platform
-
-            ++platformIndex;
         }
 
         // 'Close' the last platform
@@ -316,9 +303,5 @@ function versions(downloads) {
             document.write("    "+versionInformation+"\n");
             document.write("</div>\n");
         }
-
-        // Go to the next version
-
-        ++versionIndex;
     }
 }
