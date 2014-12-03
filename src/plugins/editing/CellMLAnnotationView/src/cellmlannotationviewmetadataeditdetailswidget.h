@@ -31,6 +31,7 @@ specific language governing permissions and limitations under the License.
 
 #include <QMap>
 #include <QModelIndex>
+#include <QSslError>
 #include <QStandardItem>
 #include <QStyledItemDelegate>
 #include <QStyleOptionViewItem>
