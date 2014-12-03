@@ -639,6 +639,20 @@ bool writeResourceToFile(const QString &pFilename, const QString &pResource)
 
 //==============================================================================
 
+#ifndef OpenCOR_MAIN
+bool readTextFromUrl(const QString &pUrl, QString &pText,
+                     QString *pErrorMessage)
+{
+    // Read the contents of the file, which URL is given, as a string
+
+    static SynchronousTextFileDownloader synchronousTextFileDownloader;
+
+    return synchronousTextFileDownloader.readTextFromUrl(pUrl, pText, pErrorMessage);
+}
+#endif
+
+//==============================================================================
+
 bool readTextFromFile(const QString &pFileName, QString &pText)
 {
     // Read the contents of the file, which file name is given, as a string
@@ -657,20 +671,6 @@ bool readTextFromFile(const QString &pFileName, QString &pText)
         return false;
     }
 }
-
-//==============================================================================
-
-#ifndef OpenCOR_MAIN
-bool readTextFromUrl(const QString &pUrl, QString &pText,
-                     QString *pErrorMessage)
-{
-    // Read the contents of the file, which URL is given, as a string
-
-    static SynchronousTextFileDownloader synchronousTextFileDownloader;
-
-    return synchronousTextFileDownloader.readTextFromUrl(pUrl, pText, pErrorMessage);
-}
-#endif
 
 //==============================================================================
 
