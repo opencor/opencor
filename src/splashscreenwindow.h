@@ -55,8 +55,6 @@ protected:
 
 private:
     Ui::SplashScreenWindow *mGui;
-
-    QColor borderColor();
 };
 
 //==============================================================================

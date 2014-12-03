@@ -70,7 +70,6 @@ SET(SOURCES
     src/plugins/pluginmanager.cpp
 
     src/plugins/miscellaneous/Core/src/cliutils.cpp
-    src/plugins/miscellaneous/Core/src/commonwidget.cpp
     src/plugins/miscellaneous/Core/src/guiutils.cpp
 )
 

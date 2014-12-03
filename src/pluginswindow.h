@@ -24,7 +24,6 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-#include "commonwidget.h"
 #include "coreinterface.h"
 #include "plugininfo.h"
 
@@ -35,6 +34,7 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+class QSettings;
 class QStandardItem;
 class QStandardItemModel;
 
@@ -64,7 +64,7 @@ public:
 
 //==============================================================================
 
-class PluginsWindow : public QDialog, public Core::CommonWidget
+class PluginsWindow : public QDialog
 {
     Q_OBJECT
 
@@ -73,8 +73,8 @@ public:
                            MainWindow *pMainWindow = 0);
     ~PluginsWindow();
 
-    virtual void loadSettings(QSettings *pSettings);
-    virtual void saveSettings(QSettings *pSettings) const;
+    void loadSettings(QSettings *pSettings);
+    void saveSettings(QSettings *pSettings) const;
 
 private:
     Ui::PluginsWindow *mGui;

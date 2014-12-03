@@ -93,7 +93,6 @@ bool sortPlugins(Plugin *pPlugin1, Plugin *pPlugin2)
 PluginsWindow::PluginsWindow(PluginManager *pPluginManager,
                              MainWindow *pMainWindow) :
     QDialog(pMainWindow),
-    Core::CommonWidget(pMainWindow),
     mGui(new Ui::PluginsWindow),
     mMainWindow(pMainWindow),
     mPluginManager(pPluginManager),

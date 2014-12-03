@@ -24,10 +24,6 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-#include "commonwidget.h"
-
-//==============================================================================
-
 #include <QDialog>
 
 //==============================================================================
@@ -46,7 +42,7 @@ class MainWindow;
 
 //==============================================================================
 
-class PreferencesWindow : public QDialog, public Core::CommonWidget
+class PreferencesWindow : public QDialog
 {
     Q_OBJECT
 
