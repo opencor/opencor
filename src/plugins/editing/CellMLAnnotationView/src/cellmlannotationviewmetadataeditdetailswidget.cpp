@@ -149,6 +149,8 @@ CellmlAnnotationViewMetadataEditDetailsWidget::CellmlAnnotationViewMetadataEditD
 
     connect(mNetworkAccessManager, SIGNAL(finished(QNetworkReply *)),
             this, SLOT(termLookedUp(QNetworkReply *)));
+    connect(mNetworkAccessManager, SIGNAL(sslErrors(QNetworkReply *, const QList<QSslError> &)),
+            this, SLOT(sslErrors(QNetworkReply *, const QList<QSslError> &)) );
 
     // Create and populate our context menu
 
@@ -973,6 +975,17 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::termLookedUp(QNetworkReply *
     // Delete (later) the network reply
 
     pNetworkReply->deleteLater();
+}
+
+//==============================================================================
+
+void CellmlAnnotationViewMetadataEditDetailsWidget::sslErrors(QNetworkReply *pNetworkReply,
+                                                              const QList<QSslError> &pSslErrors)
+{
+    // Ignore the SSL errors since we trust the website and therefore its
+    // certificate (even if it is invalid, e.g. it has expired)
+
+    pNetworkReply->ignoreSslErrors(pSslErrors);
 }
 
 //==============================================================================

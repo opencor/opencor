@@ -198,6 +198,8 @@ private Q_SLOTS:
 
     void termChanged(const QString &pTerm);
     void termLookedUp(QNetworkReply *pNetworkReply);
+    void sslErrors(QNetworkReply *pNetworkReply,
+                   const QList<QSslError> &pSslErrors);
 
     void addTerm();
 
