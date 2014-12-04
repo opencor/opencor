@@ -79,6 +79,20 @@ void SynchronousTextFileDownloader::networkAccessManagerSslErrors(QNetworkReply 
 
 //==============================================================================
 
+QString exec(const QString &pProgram, const QStringList &pArgs = QStringList())
+{
+    // Execute and return the output of a program given its arguments
+
+    QProcess process;
+
+    process.start(pProgram, pArgs);
+    process.waitForFinished();
+
+    return process.readAll().trimmed();
+}
+
+//==============================================================================
+
 QString osName()
 {
 #if defined(Q_OS_WIN)
@@ -104,7 +118,7 @@ QString osName()
     QString os = exec("uname", QStringList() << "-o");
 
     if (os.isEmpty())
-        // We couldn't find uname or something went wrong, so simple return
+        // We couldn't find uname or something went wrong, so simply return
         // "Linux" as the OS name
 
         return "Linux";

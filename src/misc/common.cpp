@@ -37,6 +37,7 @@ specific language governing permissions and limitations under the License.
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
 #include <QNetworkRequest>
+#include <QProcess>
 #include <QRegularExpression>
 #include <QSettings>
 #include <QStackedWidget>

@@ -228,20 +228,6 @@ void DummyMessageHandler::handleMessage(QtMsgType pType,
 
 //==============================================================================
 
-QString exec(const QString &pProgram, const QStringList &pArgs = QStringList())
-{
-    // Execute and return the output of a program given its arguments
-
-    QProcess process;
-
-    process.start(pProgram, pArgs);
-    process.waitForFinished();
-
-    return process.readAll().trimmed();
-}
-
-//==============================================================================
-
 QString locale()
 {
     // Return our current locale
