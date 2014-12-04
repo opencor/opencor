@@ -95,7 +95,7 @@ SET(RESOURCES
 IF(WIN32)
     SET(WINDOWS_CLI_SOURCES
         src/misc/cliapplication.cpp
-        src/misc/common.cpp
+        src/misc/cliutils.cpp
 
         src/plugins/plugin.cpp
         src/plugins/plugininfo.cpp
@@ -105,7 +105,7 @@ IF(WIN32)
     )
 
     SET(WINDOWS_CLI_HEADERS_MOC
-        src/misc/common.h
+        src/misc/cliutils.h
 
         src/plugins/plugin.h
         src/plugins/pluginmanager.h
