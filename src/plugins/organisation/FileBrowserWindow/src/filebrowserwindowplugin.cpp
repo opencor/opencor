@@ -19,9 +19,9 @@ specific language governing permissions and limitations under the License.
 // FileBrowserWindow plugin
 //==============================================================================
 
+#include "coreguiutils.h"
 #include "filebrowserwindowplugin.h"
 #include "filebrowserwindowwindow.h"
-#include "guiutils.h"
 
 //==============================================================================
 

@@ -28,9 +28,9 @@ specific language governing permissions and limitations under the License.
 #include "cellmlannotationviewmetadatawebviewwidget.h"
 #include "cellmlannotationviewwidget.h"
 #include "cellmlfilerdftriple.h"
-#include "cliutils.h"
+#include "corecliutils.h"
+#include "coreguiutils.h"
 #include "filemanager.h"
-#include "guiutils.h"
 #include "treeviewwidget.h"
 #include "usermessagewidget.h"
 

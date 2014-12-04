@@ -19,7 +19,7 @@ specific language governing permissions and limitations under the License.
 // HelpWindow plugin
 //==============================================================================
 
-#include "guiutils.h"
+#include "coreguiutils.h"
 #include "helpwindowplugin.h"
 #include "helpwindowwindow.h"
 

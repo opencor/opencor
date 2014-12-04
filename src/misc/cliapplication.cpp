@@ -21,7 +21,7 @@ specific language governing permissions and limitations under the License.
 
 #include "cliapplication.h"
 #include "cliinterface.h"
-#include "common.h"
+#include "cliutils.h"
 #include "pluginmanager.h"
 
 //==============================================================================

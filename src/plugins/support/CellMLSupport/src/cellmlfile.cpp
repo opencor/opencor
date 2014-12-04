@@ -22,7 +22,7 @@ specific language governing permissions and limitations under the License.
 #include "cellmlfile.h"
 #include "cellmlfilecellml10exporter.h"
 #include "cellmlfilecellml11exporter.h"
-#include "cliutils.h"
+#include "corecliutils.h"
 #include "filemanager.h"
 
 //==============================================================================

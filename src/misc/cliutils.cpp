@@ -16,32 +16,24 @@ specific language governing permissions and limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// Some common methods between the CLI and GUI versions of OpenCOR
+// CLI utilities
 //==============================================================================
 
 #include "cliapplication.h"
-#include "common.h"
+#include "cliutils.h"
 #include "coresettings.h"
-#include "plugin.h"
 #include "settings.h"
 
 //==============================================================================
 
-#include <QApplication>
-#include <QDate>
+#include <QCoreApplication>
 #include <QDir>
-#include <QFile>
 #include <QFileInfo>
-#include <QFrame>
-#include <QIODevice>
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
 #include <QNetworkRequest>
 #include <QProcess>
-#include <QRegularExpression>
 #include <QSettings>
-#include <QStackedWidget>
-#include <QString>
 
 //==============================================================================
 
@@ -49,8 +41,7 @@ namespace OpenCOR {
 
 //==============================================================================
 
-#include "cliutils.cpp.inl"
-#include "guiutils.cpp.inl"
+#include "corecliutils.cpp.inl"
 
 //==============================================================================
 

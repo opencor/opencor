@@ -19,7 +19,8 @@ specific language governing permissions and limitations under the License.
 // Main
 //==============================================================================
 
-#include "common.h"
+#include "cliutils.h"
+#include "guiutils.h"
 #include "mainwindow.h"
 #include "settings.h"
 #include "splashscreenwindow.h"

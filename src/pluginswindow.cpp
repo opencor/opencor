@@ -19,7 +19,7 @@ specific language governing permissions and limitations under the License.
 // Plugins window
 //==============================================================================
 
-#include "common.h"
+#include "cliutils.h"
 #include "mainwindow.h"
 #include "plugin.h"
 #include "pluginmanager.h"

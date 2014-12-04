@@ -19,10 +19,10 @@ specific language governing permissions and limitations under the License.
 // Editor widget
 //==============================================================================
 
+#include "coreguiutils.h"
 #include "editorfindreplacewidget.h"
 #include "editorwidget.h"
 #include "filemanager.h"
-#include "guiutils.h"
 #include "qscintillawidget.h"
 
 //==============================================================================

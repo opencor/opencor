@@ -19,9 +19,9 @@ specific language governing permissions and limitations under the License.
 // FileOrganiserWindow plugin
 //==============================================================================
 
+#include "coreguiutils.h"
 #include "fileorganiserwindowplugin.h"
 #include "fileorganiserwindowwindow.h"
-#include "guiutils.h"
 
 //==============================================================================
 

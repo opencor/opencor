@@ -16,11 +16,11 @@ specific language governing permissions and limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// CLI utilities
+// Core CLI utilities
 //==============================================================================
 
-#ifndef CLIUTILS_H
-#define CLIUTILS_H
+#ifndef CORECLIUTILS_H
+#define CORECLIUTILS_H
 
 //==============================================================================
 
@@ -60,7 +60,7 @@ namespace Core {
 
 //==============================================================================
 
-#include "cliutils.h.inl"
+#include "corecliutils.h.inl"
 
 //==============================================================================
 
@@ -75,7 +75,7 @@ protected:
 };
 
 //==============================================================================
-// Note: both common.h and cliutils.h must specifically define
+// Note: both cliutils.h and corecliutils.h must specifically define
 //       SynchronousTextFileDownloader. To have it in cliutils.h.inl is NOT good
 //       enough since the MOC won't pick it up...
 

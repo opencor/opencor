@@ -21,7 +21,7 @@ specific language governing permissions and limitations under the License.
 
 #include "cellmlfile.h"
 #include "cellmlfilerdftriple.h"
-#include "cliutils.h"
+#include "corecliutils.h"
 
 //==============================================================================
 

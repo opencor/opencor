@@ -20,12 +20,12 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include "centralwidget.h"
-#include "cliutils.h"
+#include "corecliutils.h"
+#include "coreguiutils.h"
 #include "coresettings.h"
 #include "filehandlinginterface.h"
 #include "filemanager.h"
 #include "guiinterface.h"
-#include "guiutils.h"
 #include "usermessagewidget.h"
 #include "viewinterface.h"
 #include "viewwidget.h"

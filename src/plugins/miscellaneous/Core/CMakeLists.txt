@@ -31,13 +31,13 @@ ADD_PLUGIN(Core
         src/busysupportwidget.cpp
         src/busywidget.cpp
         src/centralwidget.cpp
-        src/cliutils.cpp
         src/collapsiblewidget.cpp
         src/commonwidget.cpp
+        src/corecliutils.cpp
+        src/coreguiutils.cpp
         src/coreplugin.cpp
         src/file.cpp
         src/filemanager.cpp
-        src/guiutils.cpp
         src/organisationwidget.cpp
         src/progressbarwidget.cpp
         src/propertyeditorwidget.cpp
@@ -58,8 +58,8 @@ ADD_PLUGIN(Core
         src/borderedwidget.h
         src/busywidget.h
         src/centralwidget.h
-        src/cliutils.h
         src/collapsiblewidget.h
+        src/corecliutils.h
         src/coreplugin.h
         src/filemanager.h
         src/organisationwidget.h

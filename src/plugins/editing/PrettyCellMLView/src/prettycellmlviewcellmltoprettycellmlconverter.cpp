@@ -19,7 +19,7 @@ specific language governing permissions and limitations under the License.
 // CellML to pretty CellML converter
 //==============================================================================
 
-#include "cliutils.h"
+#include "corecliutils.h"
 #include "prettycellmlviewcellmltoprettycellmlconverter.h"
 
 //==============================================================================

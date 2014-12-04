@@ -20,12 +20,12 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include "borderedwidget.h"
-#include "cliutils.h"
 #include "corecellmleditingwidget.h"
+#include "corecliutils.h"
+#include "coreguiutils.h"
 #include "editorlistwidget.h"
 #include "editorwidget.h"
 #include "filemanager.h"
-#include "guiutils.h"
 #include "viewerwidget.h"
 
 //==============================================================================

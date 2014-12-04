@@ -16,7 +16,7 @@ specific language governing permissions and limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// CLI utilities
+// Core CLI utilities
 //==============================================================================
 
 bool SynchronousTextFileDownloader::readTextFromUrl(const QString &pUrl,

@@ -19,8 +19,8 @@ specific language governing permissions and limitations under the License.
 // QScintillaWidget class
 //==============================================================================
 
+#include "coreguiutils.h"
 #include "filemanager.h"
-#include "guiutils.h"
 #include "qscintillawidget.h"
 
 //==============================================================================

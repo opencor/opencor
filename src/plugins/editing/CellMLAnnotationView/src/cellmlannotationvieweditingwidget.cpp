@@ -29,7 +29,7 @@ specific language governing permissions and limitations under the License.
 #include "cellmlannotationviewplugin.h"
 #include "cellmlannotationviewwidget.h"
 #include "cellmlfilemanager.h"
-#include "cliutils.h"
+#include "corecliutils.h"
 #include "treeviewwidget.h"
 
 //==============================================================================

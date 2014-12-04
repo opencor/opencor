@@ -20,10 +20,11 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include "centralwidget.h"
-#include "common.h"
+#include "cliutils.h"
 #include "coreinterface.h"
 #include "coresettings.h"
 #include "guiinterface.h"
+#include "guiutils.h"
 #include "i18ninterface.h"
 #include "mainwindow.h"
 #include "plugininterface.h"

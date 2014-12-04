@@ -19,7 +19,7 @@ specific language governing permissions and limitations under the License.
 // Progress bar widget
 //==============================================================================
 
-#include "guiutils.h"
+#include "coreguiutils.h"
 #include "progressbarwidget.h"
 
 //==============================================================================

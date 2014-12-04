@@ -19,23 +19,28 @@ specific language governing permissions and limitations under the License.
 // GUI utilities
 //==============================================================================
 
-#ifndef CORE_EXPORT
-    #define CORE_EXPORT
-#endif
+#ifndef GUIUTILS_H
+#define GUIUTILS_H
 
 //==============================================================================
 
-void CORE_EXPORT updateColors();
+#include <QAction>
 
-void CORE_EXPORT showEnableAction(QAction *pAction, const bool &pVisible,
-                                  const bool &pEnabled = true);
+//==============================================================================
 
-QColor CORE_EXPORT baseColor();
-QColor CORE_EXPORT borderColor();
-QColor CORE_EXPORT highlightColor();
-QColor CORE_EXPORT linkColor();
-QColor CORE_EXPORT shadowColor();
-QColor CORE_EXPORT windowColor();
+namespace OpenCOR {
+
+//==============================================================================
+
+#include "coreguiutils.h.inl"
+
+//==============================================================================
+
+}   // namespace OpenCOR
+
+//==============================================================================
+
+#endif
 
 //==============================================================================
 // End of file

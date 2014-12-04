@@ -19,8 +19,8 @@ specific language governing permissions and limitations under the License.
 // Editor find/replace widget
 //==============================================================================
 
+#include "coreguiutils.h"
 #include "editorfindreplacewidget.h"
-#include "guiutils.h"
 #include "i18ninterface.h"
 
 //==============================================================================

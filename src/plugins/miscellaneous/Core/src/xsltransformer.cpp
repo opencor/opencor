@@ -19,7 +19,7 @@ specific language governing permissions and limitations under the License.
 // XSL transformation
 //==============================================================================
 
-#include "cliutils.h"
+#include "corecliutils.h"
 #include "xsltransformer.h"
 
 //==============================================================================

@@ -19,10 +19,10 @@ specific language governing permissions and limitations under the License.
 // GUI utilities
 //==============================================================================
 
-#include "cliutils.h"
+#include "corecliutils.h"
 #include "commonwidget.h"
 #include "coresettings.h"
-#include "guiutils.h"
+#include "coreguiutils.h"
 #include "settings.h"
 
 //==============================================================================
@@ -56,7 +56,7 @@ namespace Core {
 
 //==============================================================================
 
-#include "guiutils.cpp.inl"
+#include "coreguiutils.cpp.inl"
 
 //==============================================================================
 

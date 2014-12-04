@@ -19,7 +19,7 @@ specific language governing permissions and limitations under the License.
 // Core tests
 //==============================================================================
 
-#include "cliutils.h"
+#include "corecliutils.h"
 #include "tests.h"
 
 //==============================================================================

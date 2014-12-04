@@ -20,7 +20,7 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include "cellmlmodelrepositorywindowwidget.h"
-#include "cliutils.h"
+#include "corecliutils.h"
 
 //==============================================================================
 

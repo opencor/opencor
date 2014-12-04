@@ -56,7 +56,8 @@ SET(SOURCES
     src/splashscreenwindow.cpp
 
     src/misc/cliapplication.cpp
-    src/misc/common.cpp
+    src/misc/cliutils.cpp
+    src/misc/guiutils.cpp
 
     src/plugins/guiinterface.cpp
     src/plugins/i18ninterface.cpp
@@ -71,7 +72,7 @@ SET(HEADERS_MOC
     src/preferenceswindow.h
     src/splashscreenwindow.h
 
-    src/misc/common.h
+    src/misc/cliutils.h
 
     src/plugins/plugin.h
     src/plugins/pluginmanager.h

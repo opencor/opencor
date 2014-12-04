@@ -19,7 +19,7 @@ specific language governing permissions and limitations under the License.
 // CLI utilities
 //==============================================================================
 
-#include "cliutils.h"
+#include "corecliutils.h"
 #include "coresettings.h"
 #include "settings.h"
 
@@ -209,7 +209,7 @@ namespace Core {
 
 //==============================================================================
 
-#include "cliutils.cpp.inl"
+#include "corecliutils.cpp.inl"
 
 //==============================================================================
 

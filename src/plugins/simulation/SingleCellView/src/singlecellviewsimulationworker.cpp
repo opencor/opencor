@@ -20,7 +20,7 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include "cellmlfileruntime.h"
-#include "cliutils.h"
+#include "corecliutils.h"
 #include "coredaesolver.h"
 #include "corenlasolver.h"
 #include "coreodesolver.h"

@@ -25,7 +25,7 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include "coreglobal.h"
-#include "guiutils.h"
+#include "coreguiutils.h"
 #include "widget.h"
 
 //==============================================================================

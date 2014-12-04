@@ -19,7 +19,7 @@ specific language governing permissions and limitations under the License.
 // RawView plugin
 //==============================================================================
 
-#include "cliutils.h"
+#include "corecliutils.h"
 #include "filemanager.h"
 #include "rawviewplugin.h"
 #include "rawviewwidget.h"

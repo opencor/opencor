@@ -19,7 +19,7 @@ specific language governing permissions and limitations under the License.
 // SampleWindow plugin
 //==============================================================================
 
-#include "guiutils.h"
+#include "coreguiutils.h"
 #include "samplewindowplugin.h"
 #include "samplewindowwindow.h"
 

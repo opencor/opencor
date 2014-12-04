@@ -22,9 +22,9 @@ specific language governing permissions and limitations under the License.
 #include "cellmlfilemanager.h"
 #include "cellmlsupportplugin.h"
 #include "cellmltoolsplugin.h"
-#include "cliutils.h"
+#include "corecliutils.h"
+#include "coreguiutils.h"
 #include "filemanager.h"
-#include "guiutils.h"
 
 //==============================================================================
 

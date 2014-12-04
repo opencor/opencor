@@ -19,7 +19,8 @@ specific language governing permissions and limitations under the License.
 // Splash screen window
 //==============================================================================
 
-#include "common.h"
+#include "cliutils.h"
+#include "guiutils.h"
 #include "splashscreenwindow.h"
 
 //==============================================================================

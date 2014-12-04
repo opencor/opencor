@@ -20,10 +20,10 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include "coreeditingplugin.h"
+#include "coreguiutils.h"
 #include "editinginterface.h"
 #include "editorwidget.h"
 #include "filemanager.h"
-#include "guiutils.h"
 
 //==============================================================================
 

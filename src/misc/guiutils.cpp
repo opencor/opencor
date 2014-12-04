@@ -16,27 +16,30 @@ specific language governing permissions and limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// CLI utilities
+// GUI utilities
 //==============================================================================
 
-#ifndef CORE_EXPORT
-    #define CORE_EXPORT
-#endif
+#include "coresettings.h"
+#include "guiutils.h"
+#include "settings.h"
 
 //==============================================================================
 
-QString CORE_EXPORT osName();
+#include <QApplication>
+#include <QSettings>
+#include <QStackedWidget>
 
-QString CORE_EXPORT copyright();
+//==============================================================================
 
-QString CORE_EXPORT formatErrorMessage(const QString &pErrorMessage,
-                                       const bool &pLowerCase = true,
-                                       const bool &pDotDotDot = false);
+namespace OpenCOR {
 
-bool CORE_EXPORT readTextFromUrl(const QString &pUrl, QString &pText,
-                                 QString *pErrorMessage = 0);
+//==============================================================================
 
-QString CORE_EXPORT nonDiacriticString(const QString &pString);
+#include "coreguiutils.cpp.inl"
+
+//==============================================================================
+
+}   // namespace OpenCOR
 
 //==============================================================================
 // End of file

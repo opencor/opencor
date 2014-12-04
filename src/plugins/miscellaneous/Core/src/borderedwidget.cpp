@@ -20,7 +20,7 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include "borderedwidget.h"
-#include "guiutils.h"
+#include "coreguiutils.h"
 
 //==============================================================================
 

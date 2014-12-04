@@ -19,7 +19,7 @@ specific language governing permissions and limitations under the License.
 // Sample view widget
 //==============================================================================
 
-#include "cliutils.h"
+#include "corecliutils.h"
 #include "filemanager.h"
 #include "sampleviewwidget.h"
 

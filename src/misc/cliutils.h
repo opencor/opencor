@@ -16,11 +16,11 @@ specific language governing permissions and limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// Some common methods between the CLI and GUI versions of OpenCOR
+// CLI utilities
 //==============================================================================
 
-#ifndef COMMON_H
-#define COMMON_H
+#ifndef CLIUTILS_H
+#define CLIUTILS_H
 
 //==============================================================================
 
@@ -39,11 +39,10 @@ namespace OpenCOR {
 
 //==============================================================================
 
-#include "cliutils.h.inl"
-#include "guiutils.h.inl"
+#include "corecliutils.h.inl"
 
 //==============================================================================
-// Note: both common.h and cliutils.h must specifically define
+// Note: both cliutils.h and corecliutils.h must specifically define
 //       SynchronousTextFileDownloader. To have it in cliutils.h.inl is NOT good
 //       enough since the MOC won't pick it up...
 

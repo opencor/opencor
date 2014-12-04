@@ -24,9 +24,9 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-#include "cliutils.h"
 #include "commonwidget.h"
 #include "corecellmleditingglobal.h"
+#include "corecliutils.h"
 
 //==============================================================================
 

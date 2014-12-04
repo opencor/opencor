@@ -19,7 +19,7 @@ specific language governing permissions and limitations under the License.
 // Raw view widget
 //==============================================================================
 
-#include "cliutils.h"
+#include "corecliutils.h"
 #include "editorwidget.h"
 #include "filemanager.h"
 #include "rawviewwidget.h"
