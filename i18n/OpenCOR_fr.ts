@@ -132,12 +132,8 @@
         <translation>Quitter OpenCOR</translation>
     </message>
     <message>
-        <source>Update...</source>
-        <translation>Mise à Jour...</translation>
-    </message>
-    <message>
-        <source>Update</source>
-        <translation>Mise à Jour</translation>
+        <source>Check for Updates...</source>
+        <translation>Vérifier pour des mises à jour...</translation>
     </message>
     <message>
         <source>Check for updates</source>

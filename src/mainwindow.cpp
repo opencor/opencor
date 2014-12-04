@@ -152,7 +152,7 @@ Core::showEnableAction(mGui->actionPreferences, false);
     mGui->actionQuit->setMenuRole(QAction::QuitRole);
     mGui->actionPreferences->setMenuRole(QAction::PreferencesRole);
     mGui->actionAbout->setMenuRole(QAction::AboutRole);
-    mGui->actionUpdate->setMenuRole(QAction::ApplicationSpecificRole);
+    mGui->actionCheckForUpdates->setMenuRole(QAction::ApplicationSpecificRole);
 
     // Title of our main window
     // Note: we don't set it in our .ui file since this will require
@@ -1170,7 +1170,7 @@ void MainWindow::on_actionHomePage_triggered()
 
 //==============================================================================
 
-void MainWindow::on_actionUpdate_triggered()
+void MainWindow::on_actionCheckForUpdates_triggered()
 {
     // Download the JSON file that contains information about the different
     // versions of OpenCOR, as well as the latest snapshot, if any
