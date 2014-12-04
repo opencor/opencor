@@ -94,48 +94,46 @@
 </ccgs:mapping>
   <ccgs:mapping keyname="assignConstantPattern">    &lt;LHS&gt; = &lt;RHS&gt;
 </ccgs:mapping>
-  <ccgs:mapping keyname="solvePattern"><![CDATA[    algebraic = rootfind_<ID>(voi, constants, states, algebraic)
+  <ccgs:mapping keyname="solvePattern"><![CDATA[    rootfind_<ID>(voi, constants, rates, states, algebraic)
 <SUP>initialGuess<ID> = None
 def rootfind_<ID>(voi, constants, states, algebraic):
     """Calculate value of algebraic variable for DAE"""
     from scipy.optimize import fsolve
     global initialGuess<ID>
-    if (initialGuess<ID> == None): initialGuess<ID> = 0.1
+    if initialGuess<ID> is None: initialGuess<ID> = 0.1
     if not iterable(voi):
-        <VAR> = fsolve(residualSN_<ID>, initialGuess<ID>, args=(algebraic, voi, constants, states), xtol=1E-6, warning=False)
+        <VAR> = fsolve(residualSN_<ID>, initialGuess<ID>, args=(algebraic, voi, constants, rates, states), xtol=1E-6)
         initialGuess<ID> = <VAR>
     else:
         for (i,t) in enumerate(voi):
-            <VAR>[i] = fsolve(residualSN_<ID>, initialGuess<ID>, args=(algebraic[:,i], voi[i], constants, states[:,i]), xtol=1E-6, warning=False)
+            <VAR>[i] = fsolve(residualSN_<ID>, initialGuess<ID>, args=(algebraic[:,i], voi[i], constants, rates, states[:,i]), xtol=1E-6)
             initialGuess<ID> = <VAR>[i]
-    return algebraic
 
-def residualSN_<ID>(algebraicCandidate, algebraic, voi, constants, states):
+def residualSN_<ID>(algebraicCandidate, algebraic, voi, constants, rates, states):
     <VAR> = algebraicCandidate
     return (<LHS>) - (<RHS>)
 
 ]]></ccgs:mapping>
-  <ccgs:mapping keyname="solveNLSystemPattern"><![CDATA[    algebraic = rootfind_<ID>(voi, constants, states, algebraic)
+  <ccgs:mapping keyname="solveNLSystemPattern"><![CDATA[    rootfind_<ID>(voi, constants, rates, states, algebraic)
 <SUP>initialGuess<ID> = None
-def rootfind_<ID>(voi, constants, states, algebraic):
+def rootfind_<ID>(voi, constants, rates, states, algebraic):
     """Calculate values of algebraic variables for DAE"""
     from scipy.optimize import fsolve
     global initialGuess<ID>
-    if (initialGuess<ID> == None): initialGuess<ID> = ones(<COUNT>)*0.1
+    if initialGuess<ID> is None: initialGuess<ID> = ones(<COUNT>)*0.1
     if not iterable(voi):
-        soln = fsolve(residualSN_<ID>, initialGuess<ID>, args=(algebraic, voi, constants, states), xtol=1E-6, warning=False)
+        soln = fsolve(residualSN_<ID>, initialGuess<ID>, args=(algebraic, voi, constants, rates, states), xtol=1E-6)
         initialGuess<ID> = soln
         <EQUATIONS><VAR> = soln[<INDEX>]<JOIN>
         </EQUATIONS>
     else:
         for (i,t) in enumerate(voi):
-            soln = fsolve(residualSN_<ID>, initialGuess<ID>, args=(algebraic[:,i], voi[i], constants, states[:,i]), xtol=1E-6, warning=False)
+            soln = fsolve(residualSN_<ID>, initialGuess<ID>, args=(algebraic[:,i], voi[i], constants, rates[:i], states[:,i]), xtol=1E-6)
             initialGuess<ID> = soln
             <EQUATIONS><VAR>[i] = soln[<INDEX>]<JOIN>
             </EQUATIONS>
-    return algebraic
 
-def residualSN_<ID>(algebraicCandidate, algebraic, voi, constants, states):
+def residualSN_<ID>(algebraicCandidate, algebraic, voi, constants, rates, states):
     resid = array([0.0] * <COUNT>)
     <EQUATIONS><VAR> = algebraicCandidate[<INDEX>]<JOIN>
     </EQUATIONS>
@@ -281,3 +279,4 @@ if __name__ == "__main__":
 </extrafunctions>
 
 </language>
+
