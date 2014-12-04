@@ -24,7 +24,6 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-#include <QAction>
 #include <QSslError>
 #include <QString>
 
@@ -36,6 +35,10 @@ class QNetworkReply;
 //==============================================================================
 
 namespace OpenCOR {
+
+//==============================================================================
+
+#include "coreglobal.h"
 
 //==============================================================================
 

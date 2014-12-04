@@ -19,12 +19,6 @@ specific language governing permissions and limitations under the License.
 // Core GUI utilities
 //==============================================================================
 
-#ifndef CORE_EXPORT
-    #define CORE_EXPORT
-#endif
-
-//==============================================================================
-
 void CORE_EXPORT updateColors();
 
 void CORE_EXPORT showEnableAction(QAction *pAction, const bool &pVisible,
