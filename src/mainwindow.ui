@@ -61,9 +61,9 @@
     </property>
     <addaction name="actionHomePage"/>
     <addaction name="separator"/>
-    <addaction name="actionAbout"/>
-    <addaction name="separator"/>
     <addaction name="actionCheckForUpdates"/>
+    <addaction name="separator"/>
+    <addaction name="actionAbout"/>
    </widget>
    <widget class="QMenu" name="menuView">
     <property name="title">
