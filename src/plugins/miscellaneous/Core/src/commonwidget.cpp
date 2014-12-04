@@ -19,8 +19,8 @@ specific language governing permissions and limitations under the License.
 // Common widget
 //==============================================================================
 
-#include "commonwidget.h"
 #include "cliutils.h"
+#include "commonwidget.h"
 #include "guiutils.h"
 
 //==============================================================================

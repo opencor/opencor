@@ -24,15 +24,41 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#include <QAction>
+#include <QSslError>
 #include <QString>
 
 //==============================================================================
 
 class QCoreApplication;
+class QNetworkReply;
 
 //==============================================================================
 
 namespace OpenCOR {
+
+//==============================================================================
+
+#include "cliutils.h.inl"
+#include "guiutils.h.inl"
+
+//==============================================================================
+// Note: both common.h and cliutils.h must specifically define
+//       SynchronousTextFileDownloader. To have it in cliutils.h.inl is NOT good
+//       enough since the MOC won't pick it up...
+
+class SynchronousTextFileDownloader : public QObject
+{
+    Q_OBJECT
+
+public:
+    bool readTextFromUrl(const QString &pUrl, QString &pText,
+                         QString *pErrorMessage) const;
+
+private Q_SLOTS:
+    void networkAccessManagerSslErrors(QNetworkReply *pNetworkReply,
+                                       const QList<QSslError> &pSslErrors);
+};
 
 //==============================================================================
 

@@ -16,23 +16,27 @@ specific language governing permissions and limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// Core global
+// CLI utilities
 //==============================================================================
 
-#ifndef COREGLOBAL_H
-#define COREGLOBAL_H
-
-#ifdef _WIN32
-    #ifdef Core_PLUGIN
-        #define CORE_EXPORT __declspec(dllexport)
-    #else
-        #define CORE_EXPORT __declspec(dllimport)
-    #endif
-#else
+#ifndef CORE_EXPORT
     #define CORE_EXPORT
 #endif
 
-#endif
+//==============================================================================
+
+QString CORE_EXPORT osName();
+
+QString CORE_EXPORT copyright();
+
+QString CORE_EXPORT formatErrorMessage(const QString &pErrorMessage,
+                                       const bool &pLowerCase = true,
+                                       const bool &pDotDotDot = false);
+
+bool CORE_EXPORT readTextFromUrl(const QString &pUrl, QString &pText,
+                                 QString *pErrorMessage = 0);
+
+QString CORE_EXPORT nonDiacriticString(const QString &pString);
 
 //==============================================================================
 // End of file

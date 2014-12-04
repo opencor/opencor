@@ -47,11 +47,6 @@ ENDIF()
 FILE(WRITE ${CMAKE_BINARY_DIR}/version.txt ${VERSION})
 
 # Files that make up the GUI version of OpenCOR
-# Note: when it comes to using some of the Core plugin features, we don't want
-#       any of them to require a MOC file to be generated. Indeed, should this
-#       happen, then some build systems (e.g. Ninja) will warn that there exist
-#       multiple rules to generate it. In practice, it's fine, but it's still a
-#       warning and we don't like (and want) warnings...
 
 SET(SOURCES
     src/main.cpp
@@ -68,9 +63,6 @@ SET(SOURCES
     src/plugins/plugin.cpp
     src/plugins/plugininfo.cpp
     src/plugins/pluginmanager.cpp
-
-    src/plugins/miscellaneous/Core/src/cliutils.cpp
-    src/plugins/miscellaneous/Core/src/guiutils.cpp
 )
 
 SET(HEADERS_MOC
@@ -78,6 +70,8 @@ SET(HEADERS_MOC
     src/pluginswindow.h
     src/preferenceswindow.h
     src/splashscreenwindow.h
+
+    src/misc/common.h
 
     src/plugins/plugin.h
     src/plugins/pluginmanager.h
@@ -96,7 +90,6 @@ SET(RESOURCES
 )
 
 # Files that make up the CLI version of OpenCOR (Windows specific)
-# Note: see the note about using Core plugin features above...
 
 IF(WIN32)
     SET(WINDOWS_CLI_SOURCES
@@ -107,12 +100,12 @@ IF(WIN32)
         src/plugins/plugininfo.cpp
         src/plugins/pluginmanager.cpp
 
-        src/plugins/miscellaneous/Core/src/cliutils.cpp
-
         src/windows/main.cpp
     )
 
     SET(WINDOWS_CLI_HEADERS_MOC
+        src/misc/common.h
+
         src/plugins/plugin.h
         src/plugins/pluginmanager.h
     )
@@ -123,14 +116,10 @@ IF(WIN32)
 ENDIF()
 
 # Various include directories
-# Note: the OpenCOR executable uses bits of the Core plugin, hence we include
-#       its directory so that we can build OpenCOR without any plugin, should we
-#       ever want/need to do that...
 
 INCLUDE_DIRECTORIES(
     src/misc
     src/plugins
-    src/plugins/miscellaneous/Core/src
 )
 
 # Update the translation (.ts) files and generate the language (.qm) files

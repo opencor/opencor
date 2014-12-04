@@ -48,6 +48,10 @@ namespace Core {
 
 //==============================================================================
 
+#include "guiutils.h.inl"
+
+//==============================================================================
+
 QString CORE_EXPORT getOpenFileName(const QString &pCaption,
                                     const QString &pFilters = QString());
 QStringList CORE_EXPORT getOpenFileNames(const QString &pCaption,
@@ -90,19 +94,8 @@ QString CORE_EXPORT iconDataUri(const QString &pIcon, const int &pWidth = -1,
                                 const int &pHeight = -1,
                                 const QIcon::Mode &pMode = QIcon::Normal);
 
-void CORE_EXPORT showEnableAction(QAction *pAction, const bool &pVisible,
-                                  const bool &pEnabled = true);
 void CORE_EXPORT showEnableWidget(QWidget *pWidget, const bool &pVisible,
                                   const bool &pEnabled = true);
-
-void CORE_EXPORT updateColors();
-
-QColor CORE_EXPORT baseColor();
-QColor CORE_EXPORT borderColor();
-QColor CORE_EXPORT highlightColor();
-QColor CORE_EXPORT linkColor();
-QColor CORE_EXPORT shadowColor();
-QColor CORE_EXPORT windowColor();
 
 QColor CORE_EXPORT lockedColor(const QColor &pColor);
 

@@ -19,7 +19,7 @@ specific language governing permissions and limitations under the License.
 // Plugins window
 //==============================================================================
 
-#include "cliutils.h"
+#include "common.h"
 #include "mainwindow.h"
 #include "plugin.h"
 #include "pluginmanager.h"
@@ -153,7 +153,7 @@ PluginsWindow::PluginsWindow(PluginManager *pPluginManager,
     QMap<QString, QString> diacriticCategories = QMap<QString, QString>();
 
     foreach (const QString &diacriticCategory, mMappedCategories.keys())
-        diacriticCategories.insert(Core::nonDiacriticString(diacriticCategory), diacriticCategory);
+        diacriticCategories.insert(nonDiacriticString(diacriticCategory), diacriticCategory);
 
     QStringList nonDiacriticCategories = diacriticCategories.keys();
 
@@ -355,7 +355,7 @@ QString PluginsWindow::statusDescription(Plugin *pPlugin) const
     case Plugin::NotNeeded:
         return tr("the plugin is not needed.");
     case Plugin::NotLoaded:
-        return tr("the plugin could not be loaded due to the following problem: %1.").arg(Core::formatErrorMessage(pPlugin->statusErrors()));
+        return tr("the plugin could not be loaded due to the following problem: %1.").arg(formatErrorMessage(pPlugin->statusErrors()));
     case Plugin::NotPlugin:
         return tr("this is not a plugin.");
     case Plugin::NotCorePlugin:

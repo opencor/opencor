@@ -19,9 +19,7 @@ specific language governing permissions and limitations under the License.
 // Splash screen window
 //==============================================================================
 
-#include "cliutils.h"
 #include "common.h"
-#include "guiutils.h"
 #include "splashscreenwindow.h"
 
 //==============================================================================
@@ -68,7 +66,7 @@ SplashScreenWindow::SplashScreenWindow() :
 
     mGui->setupUi(this);
 
-    QColor borderRgb = Core::borderColor();
+    QColor borderRgb = borderColor();
     QString borderStyle = "1px solid rgb("+QString::number(borderRgb.red())+", "+QString::number(borderRgb.green())+", "+QString::number(borderRgb.blue())+");";
 
     setStyleSheet("QLabel#splashScreenImage {"
@@ -106,7 +104,7 @@ SplashScreenWindow::SplashScreenWindow() :
     mGui->copyrightValue->setFont(newFont);
     mGui->versionValue->setFont(newFont);
 
-    mGui->copyrightValue->setText(Core::copyright());
+    mGui->copyrightValue->setText(copyright());
     mGui->versionValue->setText(shortVersion(qApp));
 
     // Adjust the size of our splash screen and then move it to the center of

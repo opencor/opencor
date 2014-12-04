@@ -19,8 +19,8 @@ specific language governing permissions and limitations under the License.
 // Core plugin
 //==============================================================================
 
-#include "cliutils.h"
 #include "centralwidget.h"
+#include "cliutils.h"
 #include "coreplugin.h"
 #include "filetypeinterface.h"
 #include "filemanager.h"

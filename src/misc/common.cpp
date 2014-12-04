@@ -20,25 +20,36 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include "cliapplication.h"
-#include "coresettings.h"
 #include "common.h"
+#include "coresettings.h"
 #include "plugin.h"
 #include "settings.h"
 
 //==============================================================================
 
-#include <QCoreApplication>
+#include <QApplication>
+#include <QDate>
 #include <QDir>
 #include <QFile>
 #include <QFileInfo>
+#include <QFrame>
 #include <QIODevice>
+#include <QNetworkAccessManager>
+#include <QNetworkReply>
+#include <QNetworkRequest>
 #include <QRegularExpression>
 #include <QSettings>
+#include <QStackedWidget>
 #include <QString>
 
 //==============================================================================
 
 namespace OpenCOR {
+
+//==============================================================================
+
+#include "cliutils.cpp.inl"
+#include "guiutils.cpp.inl"
 
 //==============================================================================
 

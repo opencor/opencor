@@ -20,7 +20,6 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include "common.h"
-#include "guiutils.h"
 #include "mainwindow.h"
 #include "settings.h"
 #include "splashscreenwindow.h"
@@ -154,7 +153,7 @@ int main(int pArgC, char *pArgV[])
 
     // Initialise our colours by 'updating' them
 
-    OpenCOR::Core::updateColors();
+    OpenCOR::updateColors();
 
     // Create and show our splash screen, if we are not in debug mode
 

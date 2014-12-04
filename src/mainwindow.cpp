@@ -20,12 +20,10 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include "centralwidget.h"
-#include "cliutils.h"
 #include "common.h"
 #include "coreinterface.h"
 #include "coresettings.h"
 #include "guiinterface.h"
-#include "guiutils.h"
 #include "i18ninterface.h"
 #include "mainwindow.h"
 #include "plugininterface.h"
@@ -144,7 +142,7 @@ MainWindow::MainWindow(SharedTools::QtSingleApplication *pApp) :
 
     mGui->setupUi(this);
 //---GRY--- DISABLED UNTIL WE ACTUALLY SUPPORT USER PREFERENCES...
-Core::showEnableAction(mGui->actionPreferences, false);
+showEnableAction(mGui->actionPreferences, false);
 
     // Set the role of some of our menu items, so that OS X can move them into
     // the application menu
@@ -265,7 +263,7 @@ Core::showEnableAction(mGui->actionPreferences, false);
     // Show/hide and enable/disable the windows action depending on whether
     // there are window widgets
 
-    Core::showEnableAction(mGui->actionDockedWindows, mLoadedWindowPlugins.count());
+    showEnableAction(mGui->actionDockedWindows, mLoadedWindowPlugins.count());
 
     // Retrieve the user settings from the previous session, if any
 
@@ -332,7 +330,7 @@ void MainWindow::changeEvent(QEvent *pEvent)
     } else if (pEvent->type() == QEvent::PaletteChange) {
         // The palette has changed, so update our colours
 
-        Core::updateColors();
+        updateColors();
     }
 }
 
@@ -1186,8 +1184,8 @@ void MainWindow::on_actionAbout_triggered()
 
     QMessageBox::about(this, tr("About"),
                         "<h1 align=center><strong>"+version(qApp)+"</strong></h1>"
-                       +"<h3 align=center><em>"+Core::osName()+"</em></h3>"
-                       +"<p align=center><em>"+Core::copyright()+"</em></p>"
+                       +"<h3 align=center><em>"+osName()+"</em></h3>"
+                       +"<p align=center><em>"+copyright()+"</em></p>"
                        +"<a href=\""+QString(OpencorHomePageUrl)+"\"><strong>"+qApp->applicationName()+"</strong></a> "+tr("is a cross-platform modelling environment, which can be used to organise, edit, simulate and analyse <a href=\"http://www.cellml.org/\">CellML</a> files."));
 }
 
@@ -1232,7 +1230,7 @@ void MainWindow::showEnableActions(const QList<QAction *> &pActions)
                     break;
                 }
 
-            Core::showEnableAction(action, showEnable);
+            showEnableAction(action, showEnable);
         }
     }
 }
