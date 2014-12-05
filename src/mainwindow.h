@@ -48,7 +48,7 @@ class QSettings;
 
 namespace SharedTools {
     class QtSingleApplication;
-}
+}   // namespace SharedTools
 
 //==============================================================================
 
