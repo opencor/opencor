@@ -24,7 +24,9 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-#include <QWidget>
+#include <QDialog>
+#include <QJsonDocument>
+#include <QString>
 
 //==============================================================================
 
@@ -38,16 +40,51 @@ namespace OpenCOR {
 
 //==============================================================================
 
-class CheckForUpdatesWindow : public QWidget
+class MainWindow;
+
+//==============================================================================
+
+class CheckForUpdatesEngine
+{
+public:
+    explicit CheckForUpdatesEngine(const QString &pApplicationVersion,
+                                   const QString &pApplicationDate);
+
+    bool check();
+    bool updateAvailable(const bool &pDoCheck = false);
+
+private:
+    QString mApplicationVersion;
+    QString mApplicationDate;
+
+    QJsonDocument mVersions;
+    QJsonDocument mWhatIsNew;
+
+    QStringList mNewerVersions;
+};
+
+//==============================================================================
+
+class CheckForUpdatesWindow : public QDialog
 {
     Q_OBJECT
 
 public:
-    explicit CheckForUpdatesWindow();
+    explicit CheckForUpdatesWindow(const QString &pApplicationVersion,
+                                   const QString &pApplicationDate,
+                                   MainWindow *pMainWindow = 0);
+    explicit CheckForUpdatesWindow(CheckForUpdatesEngine *pEngine,
+                                   MainWindow *pMainWindow = 0);
     ~CheckForUpdatesWindow();
 
 private:
     Ui::CheckForUpdatesWindow *mGui;
+
+    CheckForUpdatesEngine *mEngine;
+
+    void constructor(const QString &pApplicationVersion,
+                     const QString &pApplicationDate,
+                     CheckForUpdatesEngine *pEngine);
 };
 
 //==============================================================================

@@ -73,7 +73,8 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    explicit MainWindow(SharedTools::QtSingleApplication *pApp);
+    explicit MainWindow(SharedTools::QtSingleApplication *pApplication,
+                        const QString &pApplicationDate);
     ~MainWindow();
 
     QString locale() const;
@@ -93,6 +94,8 @@ protected:
 
 private:
     Ui::MainWindow *mGui;
+
+    QString mApplicationDate;
 
     bool mShuttingDown;
 

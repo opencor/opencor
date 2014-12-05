@@ -20,6 +20,7 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include "centralwidget.h"
+#include "checkforupdateswindow.h"
 #include "cliutils.h"
 #include "coreinterface.h"
 #include "coresettings.h"
@@ -82,9 +83,11 @@ static const auto FrenchLocale  = QStringLiteral("fr");
 
 //==============================================================================
 
-MainWindow::MainWindow(SharedTools::QtSingleApplication *pApp) :
+MainWindow::MainWindow(SharedTools::QtSingleApplication *pApplication,
+                       const QString &pApplicationDate) :
     QMainWindow(),
     mGui(new Ui::MainWindow),
+    mApplicationDate(pApplicationDate),
     mShuttingDown(false),
     mLoadedPluginPlugins(Plugins()),
     mLoadedI18nPlugins(Plugins()),
@@ -104,9 +107,9 @@ MainWindow::MainWindow(SharedTools::QtSingleApplication *pApp) :
     // operating system), as well as a message sent by another instance of
     // itself
 
-    QObject::connect(pApp, SIGNAL(fileOpenRequest(const QString &)),
+    QObject::connect(pApplication, SIGNAL(fileOpenRequest(const QString &)),
                      this, SLOT(fileOpenRequest(const QString &)));
-    QObject::connect(pApp, SIGNAL(messageReceived(const QString &, QObject *)),
+    QObject::connect(pApplication, SIGNAL(messageReceived(const QString &, QObject *)),
                      this, SLOT(messageReceived(const QString &, QObject *)));
 
     // Create our settings object
@@ -1171,10 +1174,12 @@ void MainWindow::on_actionHomePage_triggered()
 
 void MainWindow::on_actionCheckForUpdates_triggered()
 {
-    // Download the JSON file that contains information about the different
-    // versions of OpenCOR, as well as the latest snapshot, if any
+    // Show the check for updates window
 
-    QMessageBox::information(this, "Update", "Coming soon...");
+    CheckForUpdatesWindow checkForUpdatesWindow(qApp->applicationVersion(),
+                                                mApplicationDate, this);
+
+    checkForUpdatesWindow.exec();
 }
 
 //==============================================================================

@@ -19,6 +19,7 @@ specific language governing permissions and limitations under the License.
 // Main
 //==============================================================================
 
+#include "checkforupdateswindow.h"
 #include "cliutils.h"
 #include "guiutils.h"
 #include "mainwindow.h"
@@ -149,8 +150,24 @@ int main(int pArgC, char *pArgV[])
 
     SharedTools::QtSingleApplication *guiApp = new SharedTools::QtSingleApplication(QFileInfo(pArgV[0]).baseName(),
                                                                                     pArgC, pArgV);
+    QString appDate = QString();
 
-    OpenCOR::initApplication(guiApp);
+    OpenCOR::initApplication(guiApp, &appDate);
+
+    // Check whether a new version of OpenCOR is available
+
+    OpenCOR::CheckForUpdatesEngine *checkForUpdatesEngine = new OpenCOR::CheckForUpdatesEngine(guiApp->applicationVersion(), appDate);
+
+    if (checkForUpdatesEngine->updateAvailable(true)) {
+        // Show the check for updates window
+        // Note: checkForUpdatesEngine gets deleted by checkForUpdatesWindow...
+
+        OpenCOR::CheckForUpdatesWindow checkForUpdatesWindow(checkForUpdatesEngine);
+
+        checkForUpdatesWindow.exec();
+    } else {
+        delete checkForUpdatesEngine;
+    }
 
     // Initialise our colours by 'updating' them
 
@@ -190,7 +207,7 @@ int main(int pArgC, char *pArgV[])
 
     // Create our main window
 
-    OpenCOR::MainWindow *win = new OpenCOR::MainWindow(guiApp);
+    OpenCOR::MainWindow *win = new OpenCOR::MainWindow(guiApp, appDate);
 
     // Keep track of our main window (required by QtSingleApplication so that it
     // can do what it's supposed to be doing)
