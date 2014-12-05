@@ -29,6 +29,7 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#include <QApplication>
 #include <QCheckBox>
 #include <QJsonObject>
 #include <QLabel>
@@ -69,6 +70,7 @@ void CheckForUpdatesEngine::check()
     mWhatIsNew = QJsonDocument();
 
     mNewerVersions.clear();
+qDebug("---[CHECKING FOR UPDATES]---");
 
     if (   OpenCOR::readTextFromUrl("http://www.opencor.ws/downloads/index.js", fileVersionsContents, &errorMessage)
         && OpenCOR::readTextFromUrl("http://www.opencor.ws/user/whatisNew.js", fileWhatIsNewContents, &errorMessage)) {
@@ -110,14 +112,12 @@ void CheckForUpdatesEngine::check()
             // Check whether the version is newer and, if so, add it to our list
 
             if (mApplicationDate.compare(date) < 0) {
-                if (!version.compare(date))
-                    // We are dealing with the latest snapshot
+                mNewerVersions << version;
 
-                    mNewerVersions << "latest";
-                else
-                    // We are dealing with an official version of OpenCOR
-
-                    mNewerVersions << version;
+if (!version.compare(date))
+    qDebug(">>> New snapshot: %s", qPrintable(version));
+else
+    qDebug(">>> New version: %s", qPrintable(version));
             }
         }
     } else {
@@ -195,7 +195,7 @@ bool CheckForUpdatesEngine::hasNewerOfficialVersion() const
     // Return whether we have a newer official version
 
     foreach (const QString &newerVersion, mNewerVersions)
-        if (newerVersion.compare("latest"))
+        if (!newerVersion.contains("-"))
             return true;
 
     return false;
@@ -291,12 +291,31 @@ void CheckForUpdatesWindow::updateGui()
     // Determine the status of our check
 
     if (mEngine->status().isEmpty()) {
-        if (mGui->includeSnapshotsCheckBox->checkState() == Qt::Checked)
-            mGui->statusLabel->setText("Either a new official version or a new snapshot is available...");
-        else if (mEngine->hasNewerOfficialVersion())
-            mGui->statusLabel->setText("A new official version is available...");
-        else
-            mGui->statusLabel->setText("No new version is available...");
+        if (mGui->includeSnapshotsCheckBox->checkState() == Qt::Checked) {
+            if (mEngine->hasNewerVersion()) {
+                QString version = mEngine->newerVersions().first();
+
+                if (version.contains("-"))
+                    mGui->statusLabel->setText(tr("Snapshot %1 of %2 is ready for you to download.").arg(version, qApp->applicationName()));
+                else
+                    mGui->statusLabel->setText(tr("Version %1 of %2 is ready for you to download.").arg(version, qApp->applicationName()));
+            } else {
+                mGui->statusLabel->setText(tr("No newer version of %1 or snapshot is available.").arg(qApp->applicationName()));
+            }
+        } else if (mEngine->hasNewerOfficialVersion()) {
+            QString version = QString();
+
+            foreach (const QString &newerVersion, mEngine->newerVersions())
+                if (!newerVersion.contains("-")) {
+                    version = newerVersion;
+
+                    break;
+                }
+
+            mGui->statusLabel->setText(tr("Version %1 of %2 is ready for you to download.").arg(version, qApp->applicationName()));
+        } else {
+            mGui->statusLabel->setText(tr("No newer version of %1 is available.").arg(qApp->applicationName()));
+        }
     } else {
         mGui->statusLabel->setText(mEngine->status());
     }
