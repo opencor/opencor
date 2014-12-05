@@ -30,11 +30,11 @@ SET(VERSION_MAJOR 0)
 SET(VERSION_MINOR 3)
 SET(VERSION_PATCH 0)
 
-IF(SNAPSHOT)
-    TRY_RUN(DATE_RUN DATE_COMPILE
-            ${CMAKE_BINARY_DIR} ${CMAKE_SOURCE_DIR}/cmake/date.c
-            RUN_OUTPUT_VARIABLE DATE)
+TRY_RUN(DATE_RUN DATE_COMPILE
+        ${CMAKE_BINARY_DIR} ${CMAKE_SOURCE_DIR}/cmake/date.c
+        RUN_OUTPUT_VARIABLE DATE)
 
+IF(SNAPSHOT)
     SET(VERSION ${DATE})
 ELSE()
     SET(VERSION ${VERSION_MAJOR}.${VERSION_MINOR})
@@ -44,11 +44,12 @@ ELSE()
     ENDIF()
 ENDIF()
 
-FILE(WRITE ${CMAKE_BINARY_DIR}/version.txt ${VERSION})
+FILE(WRITE ${CMAKE_BINARY_DIR}/versiondate.txt "${VERSION}\n${DATE}")
 
 # Files that make up the GUI version of OpenCOR
 
 SET(SOURCES
+    src/checkforupdateswindow.cpp
     src/main.cpp
     src/mainwindow.cpp
     src/pluginswindow.cpp
@@ -67,6 +68,7 @@ SET(SOURCES
 )
 
 SET(HEADERS_MOC
+    src/checkforupdateswindow.h
     src/mainwindow.h
     src/pluginswindow.h
     src/preferenceswindow.h
@@ -79,6 +81,7 @@ SET(HEADERS_MOC
 )
 
 SET(UIS
+    src/checkforupdateswindow.ui
     src/mainwindow.ui
     src/pluginswindow.ui
     src/preferenceswindow.ui

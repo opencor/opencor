@@ -1,5 +1,5 @@
 <RCC>
     <qresource prefix="/">
-        <file alias="app_version">../build/version.txt</file>
+        <file alias="app_versiondate">../build/versiondate.txt</file>
     </qresource>
 </RCC>

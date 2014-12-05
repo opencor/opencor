@@ -28,6 +28,7 @@ specific language governing permissions and limitations under the License.
 
 #include <QCoreApplication>
 #include <QDir>
+#include <QFile>
 #include <QFileInfo>
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
@@ -94,7 +95,7 @@ void initPluginsPath(const QString &pAppFileName)
 
 //==============================================================================
 
-void initApplication(QCoreApplication *pApp)
+void initApplication(QCoreApplication *pApp, QString *pAppDate)
 {
     // Set the name of the application
 
@@ -102,13 +103,16 @@ void initApplication(QCoreApplication *pApp)
 
     // Retrieve and set the version of the application
 
-    QFile versionFile(":app_version");
+    QFile versionDateFile(":app_versiondate");
 
-    versionFile.open(QIODevice::ReadOnly);
+    versionDateFile.open(QIODevice::ReadOnly);
 
-    pApp->setApplicationVersion(QString(versionFile.readLine()).trimmed());
+    pApp->setApplicationVersion(QString(versionDateFile.readLine()).trimmed());
 
-    versionFile.close();
+    if (pAppDate)
+        *pAppDate = "2013-07-03";//QString(versionDateFile.readLine()).trimmed();
+
+    versionDateFile.close();
 }
 
 //==============================================================================

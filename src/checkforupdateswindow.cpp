@@ -16,21 +16,14 @@ specific language governing permissions and limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// CLI utilities
+// Check for updates window
 //==============================================================================
 
-#ifndef CLIUTILS_H
-#define CLIUTILS_H
-
-//==============================================================================
-
-#include <QSslError>
-#include <QString>
+#include "checkforupdateswindow.h"
 
 //==============================================================================
 
-class QCoreApplication;
-class QNetworkReply;
+#include "ui_checkforupdateswindow.h"
 
 //==============================================================================
 
@@ -38,50 +31,28 @@ namespace OpenCOR {
 
 //==============================================================================
 
-#include "coreglobal.h"
-
-//==============================================================================
-
-#include "corecliutils.h.inl"
-
-//==============================================================================
-// Note: both cliutils.h and corecliutils.h must specifically define
-//       SynchronousTextFileDownloader. To have it in cliutils.h.inl is NOT good
-//       enough since the MOC won't pick it up...
-
-class SynchronousTextFileDownloader : public QObject
+CheckForUpdatesWindow::CheckForUpdatesWindow() :
+    QWidget(0),
+    mGui(new Ui::CheckForUpdatesWindow)
 {
-    Q_OBJECT
+    // Set up the GUI
 
-public:
-    bool readTextFromUrl(const QString &pUrl, QString &pText,
-                         QString *pErrorMessage) const;
+    mGui->setupUi(this);
 
-private Q_SLOTS:
-    void networkAccessManagerSslErrors(QNetworkReply *pNetworkReply,
-                                       const QList<QSslError> &pSslErrors);
-};
+}
 
 //==============================================================================
 
-void initPluginsPath(const QString &pAppFileName);
+CheckForUpdatesWindow::~CheckForUpdatesWindow()
+{
+    // Delete the GUI
 
-void initApplication(QCoreApplication *pApp, QString *pAppDate = 0);
-
-bool cliApplication(QCoreApplication *pApp, int *pRes);
-
-void removeGlobalInstances();
-
-QString shortVersion(QCoreApplication *pApp);
-QString version(QCoreApplication *pApp);
+    delete mGui;
+}
 
 //==============================================================================
 
 }   // namespace OpenCOR
-
-//==============================================================================
-
-#endif
 
 //==============================================================================
 // End of file

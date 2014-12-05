@@ -16,21 +16,21 @@ specific language governing permissions and limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// CLI utilities
+// Check for updates window
 //==============================================================================
 
-#ifndef CLIUTILS_H
-#define CLIUTILS_H
-
-//==============================================================================
-
-#include <QSslError>
-#include <QString>
+#ifndef CHECKFORUPDATESWINDOW_H
+#define CHECKFORUPDATESWINDOW_H
 
 //==============================================================================
 
-class QCoreApplication;
-class QNetworkReply;
+#include <QWidget>
+
+//==============================================================================
+
+namespace Ui {
+    class CheckForUpdatesWindow;
+}
 
 //==============================================================================
 
@@ -38,42 +38,17 @@ namespace OpenCOR {
 
 //==============================================================================
 
-#include "coreglobal.h"
-
-//==============================================================================
-
-#include "corecliutils.h.inl"
-
-//==============================================================================
-// Note: both cliutils.h and corecliutils.h must specifically define
-//       SynchronousTextFileDownloader. To have it in cliutils.h.inl is NOT good
-//       enough since the MOC won't pick it up...
-
-class SynchronousTextFileDownloader : public QObject
+class CheckForUpdatesWindow : public QWidget
 {
     Q_OBJECT
 
 public:
-    bool readTextFromUrl(const QString &pUrl, QString &pText,
-                         QString *pErrorMessage) const;
+    explicit CheckForUpdatesWindow();
+    ~CheckForUpdatesWindow();
 
-private Q_SLOTS:
-    void networkAccessManagerSslErrors(QNetworkReply *pNetworkReply,
-                                       const QList<QSslError> &pSslErrors);
+private:
+    Ui::CheckForUpdatesWindow *mGui;
 };
-
-//==============================================================================
-
-void initPluginsPath(const QString &pAppFileName);
-
-void initApplication(QCoreApplication *pApp, QString *pAppDate = 0);
-
-bool cliApplication(QCoreApplication *pApp, int *pRes);
-
-void removeGlobalInstances();
-
-QString shortVersion(QCoreApplication *pApp);
-QString version(QCoreApplication *pApp);
 
 //==============================================================================
 
