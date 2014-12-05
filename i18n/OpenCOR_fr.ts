@@ -411,11 +411,4 @@
         <translation>Préférences</translation>
     </message>
 </context>
-<context>
-    <name>QObject</name>
-    <message>
-        <source>&lt;strong&gt;Error:&lt;/strong&gt;</source>
-        <translation>&lt;strong&gt;Erreur :&lt;/strong&gt;</translation>
-    </message>
-</context>
 </TS>

@@ -108,7 +108,7 @@ void CheckForUpdatesEngine::check()
                 mNewerVersions << versionVersion;
         }
     } else {
-        mStatus = QObject::tr("<strong>Error:</strong>")+" "+formatErrorMessage(errorMessage, true, true);
+        mStatus = formatErrorMessage(errorMessage, false, true);
     }
 }
 
