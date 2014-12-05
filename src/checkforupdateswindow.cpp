@@ -31,6 +31,7 @@ specific language governing permissions and limitations under the License.
 
 #include <QJsonObject>
 #include <QLabel>
+#include <QSettings>
 #include <QTextEdit>
 #include <QVariantMap>
 
@@ -121,15 +122,20 @@ void CheckForUpdatesEngine::check()
 
 //==============================================================================
 
-bool CheckForUpdatesEngine::updateAvailable(const bool &pDoCheck)
+QString CheckForUpdatesEngine::applicationVersion() const
 {
-    // Return whether one or several updates are available, after checking if
-    // required
+    // Return our application version
 
-    if (pDoCheck)
-        check();
+    return mApplicationVersion;
+}
 
-    return !mNewerVersions.isEmpty();
+//==============================================================================
+
+QString CheckForUpdatesEngine::applicationDate() const
+{
+    // Return our application date
+
+    return mApplicationDate;
 }
 
 //==============================================================================
@@ -157,6 +163,37 @@ QJsonDocument CheckForUpdatesEngine::whatIsNew() const
     // Return the JSON document for our what is new
 
     return mWhatIsNew;
+}
+
+//==============================================================================
+
+QStringList CheckForUpdatesEngine::newerVersions() const
+{
+    // Return our newer versions
+
+    return mNewerVersions;
+}
+
+//==============================================================================
+
+bool CheckForUpdatesEngine::hasNewerVersion() const
+{
+    // Return whether we have a newer version
+
+    return mNewerVersions.size();
+}
+
+//==============================================================================
+
+bool CheckForUpdatesEngine::hasNewerOfficialVersion() const
+{
+    // Return whether we have a newer official version
+
+    foreach (const QString &newerVersion, mNewerVersions)
+        if (newerVersion.compare("latest"))
+            return true;
+
+    return false;
 }
 
 //==============================================================================
@@ -218,6 +255,28 @@ CheckForUpdatesWindow::~CheckForUpdatesWindow()
     // Delete some internal objects
 
     delete mEngine;
+}
+
+//==============================================================================
+
+void CheckForUpdatesWindow::loadSettings(QSettings *pSettings)
+{
+    // Retrieve and set some properties
+
+    mGui->checkForUpdatesAtStartupCheckBox->setChecked(pSettings->value(SettingsCheckForUpdatesAtStartup, true).toBool());
+    mGui->includeSnapshotsCheckBox->setChecked(pSettings->value(SettingsIncludeSnapshots, false).toBool());
+}
+
+//==============================================================================
+
+void CheckForUpdatesWindow::saveSettings(QSettings *pSettings) const
+{
+    // Keep track of some properties
+
+    pSettings->setValue(SettingsCheckForUpdatesAtStartup,
+                        mGui->checkForUpdatesAtStartupCheckBox->isChecked());
+    pSettings->setValue(SettingsIncludeSnapshots,
+                        mGui->includeSnapshotsCheckBox->isChecked());
 }
 
 //==============================================================================

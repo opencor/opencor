@@ -33,6 +33,7 @@ specific language governing permissions and limitations under the License.
 #include <QLocale>
 #include <QProcess>
 #include <QSettings>
+#include <QVariant>
 
 #ifdef Q_OS_WIN
     #include <QWebSettings>
@@ -156,39 +157,63 @@ int main(int pArgC, char *pArgV[])
 
     OpenCOR::initApplication(guiApp, &appDate);
 
+    // Check whether we want to check for new versions at startup
+
+    QSettings settings(OpenCOR::SettingsOrganization, OpenCOR::SettingsApplication);
+
+    settings.beginGroup("CheckForUpdatesWindow");
+        bool checkForUpdatesAtStartup = settings.value(OpenCOR::SettingsCheckForUpdatesAtStartup, true).toBool();
+        bool includeSnapshots = settings.value(OpenCOR::SettingsIncludeSnapshots, false).toBool();
+    settings.endGroup();
+
     // Check whether a new version of OpenCOR is available
 
-    OpenCOR::CheckForUpdatesEngine *checkForUpdatesEngine = new OpenCOR::CheckForUpdatesEngine(guiApp->applicationVersion(), appDate);
+    if (checkForUpdatesAtStartup) {
+        OpenCOR::CheckForUpdatesEngine *checkForUpdatesEngine = new OpenCOR::CheckForUpdatesEngine(guiApp->applicationVersion(), appDate);
 
-    if (checkForUpdatesEngine->updateAvailable(true)) {
-        // Retrieve the language to be used to show the check for updates window
+        checkForUpdatesEngine->check();
 
-        const QString systemLocale = QLocale::system().name().left(2);
+        if (   ( includeSnapshots && checkForUpdatesEngine->hasNewerVersion())
+            || (!includeSnapshots && checkForUpdatesEngine->hasNewerOfficialVersion())) {
+            // Retrieve the language to be used to show the check for updates
+            // window
 
-        QString locale = QSettings(OpenCOR::SettingsOrganization, OpenCOR::SettingsApplication).value(OpenCOR::SettingsLocale, QString()).toString();
+            const QString systemLocale = QLocale::system().name().left(2);
 
-        if (locale.isEmpty())
-            locale = systemLocale;
+            QString locale = settings.value(OpenCOR::SettingsLocale, QString()).toString();
 
-        QLocale::setDefault(QLocale(locale));
+            if (locale.isEmpty())
+                locale = systemLocale;
 
-        QTranslator qtTranslator;
-        QTranslator appTranslator;
+            QLocale::setDefault(QLocale(locale));
 
-        qtTranslator.load(":qt_"+locale);
-        qApp->installTranslator(&qtTranslator);
+            QTranslator qtTranslator;
+            QTranslator appTranslator;
 
-        appTranslator.load(":app_"+locale);
-        qApp->installTranslator(&appTranslator);
+            qtTranslator.load(":qt_"+locale);
+            qApp->installTranslator(&qtTranslator);
 
-        // Show the check for updates window
-        // Note: checkForUpdatesEngine gets deleted by checkForUpdatesWindow...
+            appTranslator.load(":app_"+locale);
+            qApp->installTranslator(&appTranslator);
 
-        OpenCOR::CheckForUpdatesWindow checkForUpdatesWindow(checkForUpdatesEngine);
+            // Show the check for updates window
+            // Note: checkForUpdatesEngine gets deleted by
+            //       checkForUpdatesWindow...
 
-        checkForUpdatesWindow.exec();
-    } else {
-        delete checkForUpdatesEngine;
+            OpenCOR::CheckForUpdatesWindow checkForUpdatesWindow(checkForUpdatesEngine);
+
+            settings.beginGroup(checkForUpdatesWindow.objectName());
+                checkForUpdatesWindow.loadSettings(&settings);
+            settings.endGroup();
+
+            checkForUpdatesWindow.exec();
+
+            settings.beginGroup(checkForUpdatesWindow.objectName());
+                checkForUpdatesWindow.saveSettings(&settings);
+            settings.endGroup();
+        } else {
+            delete checkForUpdatesEngine;
+        }
     }
 
     // Initialise our colours by 'updating' them
@@ -324,7 +349,7 @@ int main(int pArgC, char *pArgV[])
             // this will ensure that the various windows are, for instance,
             // properly reset with regards to their dimensions)
 
-            QSettings(OpenCOR::SettingsOrganization, OpenCOR::SettingsApplication).clear();
+            settings.clear();
 
         // Restart OpenCOR, but without providing any of the arguments that were
         // originally passed to us since we want to reset everything

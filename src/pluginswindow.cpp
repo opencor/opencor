@@ -325,8 +325,7 @@ void PluginsWindow::loadSettings(QSettings *pSettings)
 {
     // Retrieve whether to show selectable plugins
 
-    mGui->selectablePluginsCheckBox->setChecked(pSettings->value(SettingsShowOnlySelectablePlugins,
-                                                                 true).toBool());
+    mGui->selectablePluginsCheckBox->setChecked(pSettings->value(SettingsShowOnlySelectablePlugins, true).toBool());
 
     // Show/hide our unselectable plugins
 

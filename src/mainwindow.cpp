@@ -1179,7 +1179,15 @@ void MainWindow::on_actionCheckForUpdates_triggered()
     CheckForUpdatesWindow checkForUpdatesWindow(qApp->applicationVersion(),
                                                 mApplicationDate, this);
 
+    mSettings->beginGroup(checkForUpdatesWindow.objectName());
+        checkForUpdatesWindow.loadSettings(mSettings);
+    mSettings->endGroup();
+
     checkForUpdatesWindow.exec();
+
+    mSettings->beginGroup(checkForUpdatesWindow.objectName());
+        checkForUpdatesWindow.saveSettings(mSettings);
+    mSettings->endGroup();
 }
 
 //==============================================================================

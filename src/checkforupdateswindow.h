@@ -36,7 +36,16 @@ namespace Ui {
 
 //==============================================================================
 
+class QSettings;
+
+//==============================================================================
+
 namespace OpenCOR {
+
+//==============================================================================
+
+static const auto SettingsCheckForUpdatesAtStartup = QStringLiteral("CheckForUpdatesAtStartup");
+static const auto SettingsIncludeSnapshots         = QStringLiteral("IncludeSnapshots");
 
 //==============================================================================
 
@@ -51,12 +60,19 @@ public:
                                    const QString &pApplicationDate);
 
     void check();
-    bool updateAvailable(const bool &pDoCheck = false);
+
+    QString applicationVersion() const;
+    QString applicationDate() const;
 
     QString status() const;
 
     QJsonDocument versions() const;
     QJsonDocument whatIsNew() const;
+
+    QStringList newerVersions() const;
+
+    bool hasNewerVersion() const;
+    bool hasNewerOfficialVersion() const;
 
 private:
     QString mApplicationVersion;
@@ -83,6 +99,9 @@ public:
     explicit CheckForUpdatesWindow(CheckForUpdatesEngine *pEngine,
                                    MainWindow *pMainWindow = 0);
     ~CheckForUpdatesWindow();
+
+    void loadSettings(QSettings *pSettings);
+    void saveSettings(QSettings *pSettings) const;
 
 private:
     Ui::CheckForUpdatesWindow *mGui;
