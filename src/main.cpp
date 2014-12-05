@@ -21,6 +21,7 @@ specific language governing permissions and limitations under the License.
 
 #include "checkforupdateswindow.h"
 #include "cliutils.h"
+#include "coresettings.h"
 #include "guiutils.h"
 #include "mainwindow.h"
 #include "settings.h"
@@ -29,6 +30,7 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include <QDir>
+#include <QLocale>
 #include <QProcess>
 #include <QSettings>
 
@@ -159,6 +161,26 @@ int main(int pArgC, char *pArgV[])
     OpenCOR::CheckForUpdatesEngine *checkForUpdatesEngine = new OpenCOR::CheckForUpdatesEngine(guiApp->applicationVersion(), appDate);
 
     if (checkForUpdatesEngine->updateAvailable(true)) {
+        // Retrieve the language to be used to show the check for updates window
+
+        const QString systemLocale = QLocale::system().name().left(2);
+
+        QString locale = QSettings(OpenCOR::SettingsOrganization, OpenCOR::SettingsApplication).value(OpenCOR::SettingsLocale, QString()).toString();
+
+        if (locale.isEmpty())
+            locale = systemLocale;
+
+        QLocale::setDefault(QLocale(locale));
+
+        QTranslator qtTranslator;
+        QTranslator appTranslator;
+
+        qtTranslator.load(":qt_"+locale);
+        qApp->installTranslator(&qtTranslator);
+
+        appTranslator.load(":app_"+locale);
+        qApp->installTranslator(&appTranslator);
+
         // Show the check for updates window
         // Note: checkForUpdatesEngine gets deleted by checkForUpdatesWindow...
 

@@ -2,6 +2,13 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="fr_FR" sourcelanguage="en_GB">
 <context>
+    <name>CheckForUpdatesWindow</name>
+    <message>
+        <source>Check for updates...</source>
+        <translation>Vérifier pour des mises à jour...</translation>
+    </message>
+</context>
+<context>
     <name>MainWindow</name>
     <message>
         <source>&amp;File</source>
@@ -133,7 +140,7 @@
     </message>
     <message>
         <source>Check for Updates...</source>
-        <translation>Vérifier pour des mises à jour...</translation>
+        <translation>Vérifier pour des Mises à Jour...</translation>
     </message>
     <message>
         <source>Check for updates</source>
