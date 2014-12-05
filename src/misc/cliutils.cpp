@@ -110,7 +110,7 @@ void initApplication(QCoreApplication *pApp, QString *pAppDate)
     pApp->setApplicationVersion(QString(versionDateFile.readLine()).trimmed());
 
     if (pAppDate)
-        *pAppDate = "2013-07-03";//QString(versionDateFile.readLine()).trimmed();
+        *pAppDate = QString(versionDateFile.readLine()).trimmed();
 
     versionDateFile.close();
 }

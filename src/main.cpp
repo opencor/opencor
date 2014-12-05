@@ -169,7 +169,7 @@ int main(int pArgC, char *pArgV[])
     // Check whether a new version of OpenCOR is available
 
     if (checkForUpdatesAtStartup) {
-        OpenCOR::CheckForUpdatesEngine *checkForUpdatesEngine = new OpenCOR::CheckForUpdatesEngine(guiApp->applicationVersion(), appDate);
+        OpenCOR::CheckForUpdatesEngine *checkForUpdatesEngine = new OpenCOR::CheckForUpdatesEngine(appDate);
 
         checkForUpdatesEngine->check();
 

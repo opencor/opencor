@@ -25,7 +25,6 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include <QDialog>
-#include <QJsonDocument>
 #include <QString>
 
 //==============================================================================
@@ -56,18 +55,11 @@ class MainWindow;
 class CheckForUpdatesEngine
 {
 public:
-    explicit CheckForUpdatesEngine(const QString &pApplicationVersion,
-                                   const QString &pApplicationDate);
+    explicit CheckForUpdatesEngine(const QString &pApplicationDate);
 
     void check();
 
-    QString applicationVersion() const;
-    QString applicationDate() const;
-
     QString status() const;
-
-    QJsonDocument versions() const;
-    QJsonDocument whatIsNew() const;
 
     QStringList newerVersions() const;
 
@@ -75,13 +67,9 @@ public:
     bool hasNewerOfficialVersion() const;
 
 private:
-    QString mApplicationVersion;
     QString mApplicationDate;
 
     QString mStatus;
-
-    QJsonDocument mVersions;
-    QJsonDocument mWhatIsNew;
 
     QStringList mNewerVersions;
 };
@@ -93,8 +81,7 @@ class CheckForUpdatesWindow : public QDialog
     Q_OBJECT
 
 public:
-    explicit CheckForUpdatesWindow(const QString &pApplicationVersion,
-                                   const QString &pApplicationDate,
+    explicit CheckForUpdatesWindow(const QString &pApplicationDate,
                                    MainWindow *pMainWindow = 0);
     explicit CheckForUpdatesWindow(CheckForUpdatesEngine *pEngine,
                                    MainWindow *pMainWindow = 0);
@@ -108,13 +95,14 @@ private:
 
     CheckForUpdatesEngine *mEngine;
 
-    void constructor(const QString &pApplicationVersion,
-                     const QString &pApplicationDate,
+    void constructor(const QString &pApplicationDate,
                      CheckForUpdatesEngine *pEngine);
 
     void updateGui();
 
 private Q_SLOTS:
+    void on_buttonBox_accepted();
+    void on_statusLabel_linkActivated(const QString &pLink);
     void on_recheckButton_clicked();
     void on_includeSnapshotsCheckBox_toggled(bool pChecked);
 };

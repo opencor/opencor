@@ -1176,8 +1176,7 @@ void MainWindow::on_actionCheckForUpdates_triggered()
 {
     // Show the check for updates window
 
-    CheckForUpdatesWindow checkForUpdatesWindow(qApp->applicationVersion(),
-                                                mApplicationDate, this);
+    CheckForUpdatesWindow checkForUpdatesWindow(mApplicationDate, this);
 
     mSettings->beginGroup(checkForUpdatesWindow.objectName());
         checkForUpdatesWindow.loadSettings(mSettings);

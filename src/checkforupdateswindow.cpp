@@ -31,6 +31,8 @@ specific language governing permissions and limitations under the License.
 
 #include <QApplication>
 #include <QCheckBox>
+#include <QDesktopServices>
+#include <QJsonDocument>
 #include <QJsonObject>
 #include <QLabel>
 #include <QSettings>
@@ -43,13 +45,9 @@ namespace OpenCOR {
 
 //==============================================================================
 
-CheckForUpdatesEngine::CheckForUpdatesEngine(const QString &pApplicationVersion,
-                                             const QString &pApplicationDate) :
-    mApplicationVersion(pApplicationVersion),
+CheckForUpdatesEngine::CheckForUpdatesEngine(const QString &pApplicationDate) :
     mApplicationDate(pApplicationDate),
     mStatus(QString()),
-    mVersions(QJsonDocument()),
-    mWhatIsNew(QJsonDocument()),
     mNewerVersions(QStringList())
 {
 }
@@ -62,85 +60,56 @@ void CheckForUpdatesEngine::check()
     // are available
 
     QString fileVersionsContents = QString();
-    QString fileWhatIsNewContents = QString();
     QString errorMessage = QString();
+    QJsonDocument versions = QJsonDocument();
 
     mStatus = QString();
-    mVersions = QJsonDocument();
-    mWhatIsNew = QJsonDocument();
 
     mNewerVersions.clear();
-qDebug("---[CHECKING FOR UPDATES]---");
 
-    if (   OpenCOR::readTextFromUrl("http://www.opencor.ws/downloads/index.js", fileVersionsContents, &errorMessage)
-        && OpenCOR::readTextFromUrl("http://www.opencor.ws/user/whatisNew.js", fileWhatIsNewContents, &errorMessage)) {
-        mVersions = QJsonDocument::fromJson(QString(fileVersionsContents.mid(15, fileVersionsContents.length()-17)).toUtf8());
-        mWhatIsNew = QJsonDocument::fromJson(QString(fileWhatIsNewContents.mid(15, fileWhatIsNewContents.length()-17)).toUtf8());
+    if (OpenCOR::readTextFromUrl("http://www.opencor.ws/downloads/index.js", fileVersionsContents, &errorMessage)) {
+        versions = QJsonDocument::fromJson(QString(fileVersionsContents.mid(15, fileVersionsContents.length()-17)).toUtf8());
 
-        QVariantMap versionsMap;
-        int major, minor, patch;
-        int day, month, year;
-        QString version;
-        QString date;
+        QVariantMap versionMap;
+        int versionMajor, versionMinor, versionPatch;
+        int versionDay, versionMonth, versionYear;
+        QString versionVersion;
+        QString versionDate;
 
-        foreach (const QVariant &versions, mVersions.object().toVariantMap()["versions"].toList()) {
+        foreach (const QVariant &version, versions.object().toVariantMap()["versions"].toList()) {
             // Retrieve the version and date of the current version
 
-            versionsMap = versions.toMap();
+            versionMap = version.toMap();
 
-            major = versionsMap["major"].toInt();
-            minor = versionsMap["minor"].toInt();
-            patch = versionsMap["patch"].toInt();
+            versionMajor = versionMap["major"].toInt();
+            versionMinor = versionMap["minor"].toInt();
+            versionPatch = versionMap["patch"].toInt();
 
-            day   = versionsMap["day"].toInt();
-            month = versionsMap["month"].toInt();
-            year  = versionsMap["year"].toInt();
+            versionDay   = versionMap["day"].toInt();
+            versionMonth = versionMap["month"].toInt();
+            versionYear  = versionMap["year"].toInt();
 
-            date = QString("%1-%2-%3").arg(year)
-                                      .arg(month, 2, 10, QChar('0'))
-                                      .arg(day, 2, 10, QChar('0'));
+            versionDate = QString("%1-%2-%3").arg(versionYear)
+                                             .arg(versionMonth, 2, 10, QChar('0'))
+                                             .arg(versionDay, 2, 10, QChar('0'));
 
-            if (!major && !minor && !patch) {
-                version = date;
+            if (!versionMajor && !versionMinor && !versionPatch) {
+                versionVersion = versionDate;
             } else {
-                version = QString("%1.%2").arg(major).arg(minor);
+                versionVersion = QString("%1.%2").arg(versionMajor).arg(versionMinor);
 
-                if (patch)
-                    version = QString("%1.%2").arg(version).arg(patch);
+                if (versionPatch)
+                    versionVersion = QString("%1.%2").arg(versionVersion).arg(versionPatch);
             }
 
             // Check whether the version is newer and, if so, add it to our list
 
-            if (mApplicationDate.compare(date) < 0) {
-                mNewerVersions << version;
-
-if (!version.compare(date))
-    qDebug(">>> New snapshot: %s", qPrintable(version));
-else
-    qDebug(">>> New version: %s", qPrintable(version));
-            }
+            if (mApplicationDate.compare(versionDate) < 0)
+                mNewerVersions << versionVersion;
         }
     } else {
         mStatus = QObject::tr("<strong>Error:</strong>")+" "+formatErrorMessage(errorMessage, true, true);
     }
-}
-
-//==============================================================================
-
-QString CheckForUpdatesEngine::applicationVersion() const
-{
-    // Return our application version
-
-    return mApplicationVersion;
-}
-
-//==============================================================================
-
-QString CheckForUpdatesEngine::applicationDate() const
-{
-    // Return our application date
-
-    return mApplicationDate;
 }
 
 //==============================================================================
@@ -150,24 +119,6 @@ QString CheckForUpdatesEngine::status() const
     // Return our status
 
     return mStatus;
-}
-
-//==============================================================================
-
-QJsonDocument CheckForUpdatesEngine::versions() const
-{
-    // Return the JSON document for our versions
-
-    return mVersions;
-}
-
-//==============================================================================
-
-QJsonDocument CheckForUpdatesEngine::whatIsNew() const
-{
-    // Return the JSON document for our what is new
-
-    return mWhatIsNew;
 }
 
 //==============================================================================
@@ -203,8 +154,7 @@ bool CheckForUpdatesEngine::hasNewerOfficialVersion() const
 
 //==============================================================================
 
-void CheckForUpdatesWindow::constructor(const QString &pApplicationVersion,
-                                        const QString &pApplicationDate,
+void CheckForUpdatesWindow::constructor(const QString &pApplicationDate,
                                         CheckForUpdatesEngine *pEngine)
 {
     // Set up the GUI
@@ -218,7 +168,7 @@ void CheckForUpdatesWindow::constructor(const QString &pApplicationVersion,
     if (pEngine) {
         mEngine = pEngine;
     } else {
-        mEngine = new CheckForUpdatesEngine(pApplicationVersion, pApplicationDate);
+        mEngine = new CheckForUpdatesEngine(pApplicationDate);
 
         mEngine->check();
     }
@@ -228,14 +178,13 @@ void CheckForUpdatesWindow::constructor(const QString &pApplicationVersion,
 
 //==============================================================================
 
-CheckForUpdatesWindow::CheckForUpdatesWindow(const QString &pApplicationVersion,
-                                             const QString &pApplicationDate,
+CheckForUpdatesWindow::CheckForUpdatesWindow(const QString &pApplicationDate,
                                              MainWindow *pMainWindow) :
     QDialog(pMainWindow)
 {
     // Construct our window
 
-    constructor(pApplicationVersion, pApplicationDate, 0);
+    constructor(pApplicationDate, 0);
 }
 
 //==============================================================================
@@ -246,7 +195,7 @@ CheckForUpdatesWindow::CheckForUpdatesWindow(CheckForUpdatesEngine *pEngine,
 {
     // Construct our window
 
-    constructor(QString(), QString(), pEngine);
+    constructor(QString(), pEngine);
 }
 
 //==============================================================================
@@ -290,19 +239,41 @@ void CheckForUpdatesWindow::updateGui()
 {
     // Determine the status of our check
 
+    static const QString WhatIsNewUrl = "http://localhost/user/whatIsNew.html?#";
+
+    QString versionInformation = tr("<a href=\"%1\">%2 %3</a> is ready for you to <a href=\"http://opencor.ws/downloads/\">download</a>.");
+    QString snapshotInformation = tr("The <a href=\"%1\">latest snapshot</a> is ready for you to <a href=\"http://opencor.ws/downloads/\">download</a>.");
+
     if (mEngine->status().isEmpty()) {
         if (mGui->includeSnapshotsCheckBox->checkState() == Qt::Checked) {
             if (mEngine->hasNewerVersion()) {
-                QString version = mEngine->newerVersions().first();
+                // The user is after either an official version or a snapshot of
+                // OpenCOR, so first look for a snapshot and go for an official
+                // version, if no snapshot is available
+
+                QString version = QString();
+
+                foreach (const QString &newerVersion, mEngine->newerVersions())
+                    if (newerVersion.contains("-")) {
+                        version = newerVersion;
+
+                        break;
+                    }
+
+                if (version.isEmpty())
+                    version = mEngine->newerVersions().first();
 
                 if (version.contains("-"))
-                    mGui->statusLabel->setText(tr("Snapshot %1 of %2 is ready for you to download.").arg(version, qApp->applicationName()));
+                    mGui->statusLabel->setText(snapshotInformation.arg(WhatIsNewUrl+"latest"));
                 else
-                    mGui->statusLabel->setText(tr("Version %1 of %2 is ready for you to download.").arg(version, qApp->applicationName()));
+                    mGui->statusLabel->setText(versionInformation.arg(WhatIsNewUrl+version, qApp->applicationName(), version));
             } else {
-                mGui->statusLabel->setText(tr("No newer version of %1 or snapshot is available.").arg(qApp->applicationName()));
+                mGui->statusLabel->setText(tr("No newer version or snapshot of %1 is available.").arg(qApp->applicationName()));
             }
         } else if (mEngine->hasNewerOfficialVersion()) {
+            // The user is only after an official version of OpenCOR, so look
+            // for the first one available
+
             QString version = QString();
 
             foreach (const QString &newerVersion, mEngine->newerVersions())
@@ -312,13 +283,31 @@ void CheckForUpdatesWindow::updateGui()
                     break;
                 }
 
-            mGui->statusLabel->setText(tr("Version %1 of %2 is ready for you to download.").arg(version, qApp->applicationName()));
+            mGui->statusLabel->setText(versionInformation.arg(WhatIsNewUrl+version, qApp->applicationName(), version));
         } else {
             mGui->statusLabel->setText(tr("No newer version of %1 is available.").arg(qApp->applicationName()));
         }
     } else {
         mGui->statusLabel->setText(mEngine->status());
     }
+}
+
+//==============================================================================
+
+void CheckForUpdatesWindow::on_buttonBox_accepted()
+{
+    // Simply close ourselves
+
+    close();
+}
+
+//==============================================================================
+
+void CheckForUpdatesWindow::on_statusLabel_linkActivated(const QString &pLink)
+{
+    // Open the link in the user's browser
+
+    QDesktopServices::openUrl(pLink);
 }
 
 //==============================================================================
