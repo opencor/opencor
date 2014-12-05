@@ -49,7 +49,7 @@ function fileSize(size) {
 
 function versions(downloads) {
     // Make sure that the jsonData variable is available
-    
+
     if (typeof jsonData === "undefined")
         return;
 
@@ -82,7 +82,7 @@ function versions(downloads) {
     // contained in the given JSON file
 
     var versions = jsonData.versions;
-    
+
     for (var versionIndex = 0; versionIndex < versions.length; ++versionIndex) {
         var version = versions[versionIndex];
 

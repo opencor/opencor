@@ -20,7 +20,7 @@
 
             var versions = jsonData.versions;
             var typeWidths = { "Added": 37, "Improved": 51, "Fixed": 31 };
-    
+
             for (var versionIndex = 0; versionIndex < versions.length; ++versionIndex) {
                 var version = versions[versionIndex];
 
@@ -51,7 +51,7 @@
                     document.write("<ul>\n");
                     document.write("    <li>\n");
                     document.write("        "+category.name+(realCategory?":":".")+"\n");
-                    
+
                     if (realCategory) {
                         document.write("        <ul>\n");
 
@@ -62,25 +62,25 @@
                                 document.write("            <li>\n");
                                 document.write("                "+entry.name+":\n");
                                 document.write("                <ul>\n");
-                                
+
                                 var subEntries = entry.entries;
-                                
+
                                 for (var subEntryIndex = 0; subEntryIndex < subEntries.length; ++subEntryIndex) {
                                     var subEntry = subEntries[subEntryIndex];
 
                                     document.write("                    <li><img src=\"res/pics/"+subEntry.type.toLowerCase()+".png\" class=\"vcenter\" width="+typeWidths[subEntry.type]+" height=15 alt=\""+subEntry.type+"\"> "+subEntry.description+"</li>\n");
                                 }
-                                
+
                                 document.write("                </ul>\n");
                                 document.write("            </li>\n");
                             } else {
                                 document.write("            <li><img src=\"res/pics/"+entry.type.toLowerCase()+".png\" class=\"vcenter\" width="+typeWidths[entry.type]+" height=15 alt=\""+entry.type+"\"> "+entry.description+"</li>\n");
                             }
                         }
-                
+
                         document.write("        </ul>\n");
                     }
-                    
+
                     document.write("    </li>\n");
                     document.write("</ul>\n");
                 }
