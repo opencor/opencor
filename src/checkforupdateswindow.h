@@ -116,8 +116,7 @@ private:
 
 private Q_SLOTS:
     void on_recheckButton_clicked();
-    void on_checkForUpdatesAtStartupCheckBox_clicked();
-    void on_includeSnapshotsCheckBox_clicked();
+    void on_includeSnapshotsCheckBox_toggled(bool pChecked);
 };
 
 //==============================================================================

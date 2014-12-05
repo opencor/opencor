@@ -29,6 +29,7 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#include <QCheckBox>
 #include <QJsonObject>
 #include <QLabel>
 #include <QSettings>
@@ -59,16 +60,20 @@ void CheckForUpdatesEngine::check()
     // Retrieve some information about the different versions of OpenCOR that
     // are available
 
-    QString fileContents = QString();
+    QString fileVersionsContents = QString();
+    QString fileWhatIsNewContents = QString();
     QString errorMessage = QString();
 
     mStatus = QString();
     mVersions = QJsonDocument();
+    mWhatIsNew = QJsonDocument();
 
     mNewerVersions.clear();
 
-    if (OpenCOR::readTextFromUrl("http://www.opencor.ws/downloads/index.js", fileContents, &errorMessage)) {
-        mVersions = QJsonDocument::fromJson(QString(fileContents.mid(15, fileContents.length()-17)).toUtf8());
+    if (   OpenCOR::readTextFromUrl("http://www.opencor.ws/downloads/index.js", fileVersionsContents, &errorMessage)
+        && OpenCOR::readTextFromUrl("http://www.opencor.ws/user/whatisNew.js", fileWhatIsNewContents, &errorMessage)) {
+        mVersions = QJsonDocument::fromJson(QString(fileVersionsContents.mid(15, fileVersionsContents.length()-17)).toUtf8());
+        mWhatIsNew = QJsonDocument::fromJson(QString(fileWhatIsNewContents.mid(15, fileWhatIsNewContents.length()-17)).toUtf8());
 
         QVariantMap versionsMap;
         int major, minor, patch;
@@ -286,7 +291,12 @@ void CheckForUpdatesWindow::updateGui()
     // Determine the status of our check
 
     if (mEngine->status().isEmpty()) {
-        mGui->statusLabel->setText(QString());
+        if (mGui->includeSnapshotsCheckBox->checkState() == Qt::Checked)
+            mGui->statusLabel->setText("Either a new official version or a new snapshot is available...");
+        else if (mEngine->hasNewerOfficialVersion())
+            mGui->statusLabel->setText("A new official version is available...");
+        else
+            mGui->statusLabel->setText("No new version is available...");
     } else {
         mGui->statusLabel->setText(mEngine->status());
     }
@@ -305,14 +315,10 @@ void CheckForUpdatesWindow::on_recheckButton_clicked()
 
 //==============================================================================
 
-void CheckForUpdatesWindow::on_checkForUpdatesAtStartupCheckBox_clicked()
+void CheckForUpdatesWindow::on_includeSnapshotsCheckBox_toggled(bool pChecked)
 {
-}
+    Q_UNUSED(pChecked);
 
-//==============================================================================
-
-void CheckForUpdatesWindow::on_includeSnapshotsCheckBox_clicked()
-{
     // Update the GUI
 
     updateGui();
