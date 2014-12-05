@@ -30,6 +30,7 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include <QJsonObject>
+#include <QLabel>
 #include <QTextEdit>
 #include <QVariantMap>
 
@@ -43,6 +44,7 @@ CheckForUpdatesEngine::CheckForUpdatesEngine(const QString &pApplicationVersion,
                                              const QString &pApplicationDate) :
     mApplicationVersion(pApplicationVersion),
     mApplicationDate(pApplicationDate),
+    mStatus(QString()),
     mVersions(QJsonDocument()),
     mWhatIsNew(QJsonDocument()),
     mNewerVersions(QStringList())
@@ -51,22 +53,20 @@ CheckForUpdatesEngine::CheckForUpdatesEngine(const QString &pApplicationVersion,
 
 //==============================================================================
 
-bool CheckForUpdatesEngine::check()
+void CheckForUpdatesEngine::check()
 {
     // Retrieve some information about the different versions of OpenCOR that
     // are available
 
     QString fileContents = QString();
+    QString errorMessage = QString();
 
-    bool res = OpenCOR::readTextFromUrl("http://www.opencor.ws/downloads/index.js", fileContents);
-
-    // Determine which versions are newer than the current version of OpenCOR
-
+    mStatus = QString();
     mVersions = QJsonDocument();
 
     mNewerVersions.clear();
 
-    if (res) {
+    if (OpenCOR::readTextFromUrl("http://www.opencor.ws/downloads/index.js", fileContents, &errorMessage)) {
         mVersions = QJsonDocument::fromJson(QString(fileContents.mid(15, fileContents.length()-17)).toUtf8());
 
         QVariantMap versionsMap;
@@ -114,9 +114,9 @@ bool CheckForUpdatesEngine::check()
                     mNewerVersions << version;
             }
         }
+    } else {
+        mStatus = QObject::tr("<strong>Error:</strong>")+" "+formatErrorMessage(errorMessage, true, true);
     }
-
-    return res;
 }
 
 //==============================================================================
@@ -134,6 +134,33 @@ bool CheckForUpdatesEngine::updateAvailable(const bool &pDoCheck)
 
 //==============================================================================
 
+QString CheckForUpdatesEngine::status() const
+{
+    // Return our status
+
+    return mStatus;
+}
+
+//==============================================================================
+
+QJsonDocument CheckForUpdatesEngine::versions() const
+{
+    // Return the JSON document for our versions
+
+    return mVersions;
+}
+
+//==============================================================================
+
+QJsonDocument CheckForUpdatesEngine::whatIsNew() const
+{
+    // Return the JSON document for our what is new
+
+    return mWhatIsNew;
+}
+
+//==============================================================================
+
 void CheckForUpdatesWindow::constructor(const QString &pApplicationVersion,
                                         const QString &pApplicationDate,
                                         CheckForUpdatesEngine *pEngine)
@@ -144,19 +171,17 @@ void CheckForUpdatesWindow::constructor(const QString &pApplicationVersion,
 
     mGui->setupUi(this);
 
-    // Create and initialise our engine, if needed
+    // Create and initialise our engine, if needed, and update our GUI
 
     if (pEngine) {
         mEngine = pEngine;
     } else {
         mEngine = new CheckForUpdatesEngine(pApplicationVersion, pApplicationDate);
 
-        if (!mEngine->check())
-            mGui->textEdit->setText("Problem with the Internet connection?...");
+        mEngine->check();
     }
 
-    if (mGui->textEdit->toPlainText().isEmpty())
-        mGui->textEdit->setText(mEngine->updateAvailable()?"An update is available...":"No update is available...");
+    updateGui();
 }
 
 //==============================================================================
@@ -193,6 +218,45 @@ CheckForUpdatesWindow::~CheckForUpdatesWindow()
     // Delete some internal objects
 
     delete mEngine;
+}
+
+//==============================================================================
+
+void CheckForUpdatesWindow::updateGui()
+{
+    // Determine the status of our check
+
+    if (mEngine->status().isEmpty()) {
+        mGui->statusLabel->setText(QString());
+    } else {
+        mGui->statusLabel->setText(mEngine->status());
+    }
+}
+
+//==============================================================================
+
+void CheckForUpdatesWindow::on_recheckButton_clicked()
+{
+    // Recheck for updates and then update our GUI accordingly
+
+    mEngine->check();
+
+    updateGui();
+}
+
+//==============================================================================
+
+void CheckForUpdatesWindow::on_checkForUpdatesAtStartupCheckBox_clicked()
+{
+}
+
+//==============================================================================
+
+void CheckForUpdatesWindow::on_includeSnapshotsCheckBox_clicked()
+{
+    // Update the GUI
+
+    updateGui();
 }
 
 //==============================================================================

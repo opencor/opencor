@@ -7,6 +7,22 @@
         <source>Check for updates...</source>
         <translation>Vérifier pour des mises à jour...</translation>
     </message>
+    <message>
+        <source>Recheck</source>
+        <translation>Revérifier</translation>
+    </message>
+    <message>
+        <source>Recheck for updates</source>
+        <translation>Revérifier pour des mises à jour</translation>
+    </message>
+    <message>
+        <source>Check for updates at startup</source>
+        <translation>Vérifier pour des mises à jour au démarrage</translation>
+    </message>
+    <message>
+        <source>Include snapshots</source>
+        <translation>Inclure les instantanés</translation>
+    </message>
 </context>
 <context>
     <name>MainWindow</name>
@@ -374,6 +390,13 @@
     <message>
         <source>Preferences</source>
         <translation>Préférences</translation>
+    </message>
+</context>
+<context>
+    <name>QObject</name>
+    <message>
+        <source>&lt;strong&gt;Error:&lt;/strong&gt;</source>
+        <translation>&lt;strong&gt;Erreur :&lt;/strong&gt;</translation>
     </message>
 </context>
 </TS>

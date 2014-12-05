@@ -160,9 +160,6 @@
      <property name="text">
       <string>Show only selectable plugins</string>
      </property>
-     <property name="checked">
-      <bool>true</bool>
-     </property>
     </widget>
    </item>
    <item>

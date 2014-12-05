@@ -50,12 +50,19 @@ public:
     explicit CheckForUpdatesEngine(const QString &pApplicationVersion,
                                    const QString &pApplicationDate);
 
-    bool check();
+    void check();
     bool updateAvailable(const bool &pDoCheck = false);
+
+    QString status() const;
+
+    QJsonDocument versions() const;
+    QJsonDocument whatIsNew() const;
 
 private:
     QString mApplicationVersion;
     QString mApplicationDate;
+
+    QString mStatus;
 
     QJsonDocument mVersions;
     QJsonDocument mWhatIsNew;
@@ -85,6 +92,13 @@ private:
     void constructor(const QString &pApplicationVersion,
                      const QString &pApplicationDate,
                      CheckForUpdatesEngine *pEngine);
+
+    void updateGui();
+
+private Q_SLOTS:
+    void on_recheckButton_clicked();
+    void on_checkForUpdatesAtStartupCheckBox_clicked();
+    void on_includeSnapshotsCheckBox_clicked();
 };
 
 //==============================================================================
