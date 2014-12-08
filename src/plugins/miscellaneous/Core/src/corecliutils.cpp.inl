@@ -197,8 +197,8 @@ QString formatErrorMessage(const QString &pErrorMessage, const bool &pLowerCase,
             errorMessage[0] = errorMessage[0].toUpper();
     }
 
-    // Return the error message after making sure that its end finishes with
-    // "...", if requested
+    // Return the error message after making sure that it ends with "...", if
+    // requested
 
     int subsize = errorMessage.size();
 
