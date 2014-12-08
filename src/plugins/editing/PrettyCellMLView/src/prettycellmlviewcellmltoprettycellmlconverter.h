@@ -45,6 +45,8 @@ public:
     int errorLine() const;
     int errorColumn() const;
 
+    QString errorMessage() const;
+
 private:
     QString mFileName;
 
@@ -52,6 +54,8 @@ private:
 
     int mErrorLine;
     int mErrorColumn;
+
+    QString mErrorMessage;
 };
 
 //==============================================================================

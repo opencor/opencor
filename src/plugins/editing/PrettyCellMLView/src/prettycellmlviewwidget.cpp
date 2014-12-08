@@ -19,6 +19,7 @@ specific language governing permissions and limitations under the License.
 // Pretty CellML view widget
 //==============================================================================
 
+#include "corecliutils.h"
 #include "corecellmleditingwidget.h"
 #include "editorlistwidget.h"
 #include "editorwidget.h"
@@ -140,13 +141,15 @@ void PrettyCellmlViewWidget::initialize(const QString &pFileName,
         if (!successfulConversion) {
             newEditingWidget->editor()->setReadOnly(true);
             // Note: CoreEditingPlugin::filePermissionsChanged() will do the
-            //       same as above, however it will be done after a wee bit of
-            //       time while we want the editor to look unuseable
-            //       straightaway...
+            //       same as above, but this will take a wee bit of time
+            //       while we want it done straightaway...
 
             newEditingWidget->editorList()->addItem(EditorList::EditorListItem::Error,
                                                     converter.errorLine(),
                                                     converter.errorColumn(),
+                                                    Core::formatErrorMessage(converter.errorMessage(), false)+".");
+
+            newEditingWidget->editorList()->addItem(EditorList::EditorListItem::Hint,
                                                     tr("The CellML file could not be parsed. You might want to use the Raw (CellML) view to edit it."));
         }
 

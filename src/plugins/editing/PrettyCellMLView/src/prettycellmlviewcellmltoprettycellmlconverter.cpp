@@ -37,7 +37,8 @@ PrettyCellMLViewCellmlToPrettyCellmlConverter::PrettyCellMLViewCellmlToPrettyCel
     mFileName(pFileName),
     mOutput(QString()),
     mErrorLine(-1),
-    mErrorColumn(-1)
+    mErrorColumn(-1),
+    mErrorMessage(QString())
 {
 }
 
@@ -53,7 +54,7 @@ bool PrettyCellMLViewCellmlToPrettyCellmlConverter::execute()
 
     Core::readTextFromFile(mFileName, fileContents);
 
-    if (domDocument.setContent(fileContents, 0, &mErrorLine, &mErrorColumn)) {
+    if (domDocument.setContent(fileContents, &mErrorMessage, &mErrorLine, &mErrorColumn)) {
         mOutput = QString();
 
         return true;
@@ -89,6 +90,15 @@ int PrettyCellMLViewCellmlToPrettyCellmlConverter::errorColumn() const
     // Return our error column
 
     return mErrorColumn;
+}
+
+//==============================================================================
+
+QString PrettyCellMLViewCellmlToPrettyCellmlConverter::errorMessage() const
+{
+    // Return our error message
+
+    return mErrorMessage;
 }
 
 //==============================================================================
