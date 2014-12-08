@@ -849,7 +849,7 @@ QString CellmlFile::rdfTripleSubject(iface::cellml_api::CellMLElement *pElement)
         int counter = 0;
 
         while (true) {
-            cmetaId = QString("id_%1").arg(++counter, 5, 10, QChar('0'));
+            cmetaId = QString("id_%1").arg(++counter, 9, 10, QChar('0'));
 
             if (!cmetaIds.contains(cmetaId)) {
                 // We have found a unique cmeta:id, so update our CellML element
