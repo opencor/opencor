@@ -161,13 +161,16 @@ int main(int pArgC, char *pArgV[])
 
     QSettings settings(OpenCOR::SettingsOrganization, OpenCOR::SettingsApplication);
 
+#ifndef QT_DEBUG
     settings.beginGroup("CheckForUpdatesWindow");
         bool checkForUpdatesAtStartup = settings.value(OpenCOR::SettingsCheckForUpdatesAtStartup, true).toBool();
         bool includeSnapshots = settings.value(OpenCOR::SettingsIncludeSnapshots, false).toBool();
     settings.endGroup();
+#endif
 
     // Check whether a new version of OpenCOR is available
 
+#ifndef QT_DEBUG
     if (checkForUpdatesAtStartup) {
         OpenCOR::CheckForUpdatesEngine *checkForUpdatesEngine = new OpenCOR::CheckForUpdatesEngine(appDate);
 
@@ -215,6 +218,7 @@ int main(int pArgC, char *pArgV[])
             delete checkForUpdatesEngine;
         }
     }
+#endif
 
     // Initialise our colours by 'updating' them
 
