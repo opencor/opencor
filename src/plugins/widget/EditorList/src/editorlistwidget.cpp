@@ -129,6 +129,25 @@ void EditorListWidget::addItem(const EditorListItem::Type &pType,
 
 //==============================================================================
 
+void EditorListWidget::addItem(const EditorListItem::Type &pType,
+                               const QString &pMessage)
+{
+    // Add the given item to our list
+
+    addItem(pType, -1, -1, pMessage);
+}
+
+//==============================================================================
+
+int EditorListWidget::count() const
+{
+    // Return the number of items we hold
+
+    return mModel->invisibleRootItem()->rowCount();
+}
+
+//==============================================================================
+
 void EditorListWidget::selectFirstItem()
 {
     // Select the first item in our list and 'request' it
@@ -179,7 +198,20 @@ void EditorListWidget::copyToClipboard()
 
     for (int i = 0, iMax = mModel->rowCount(); i < iMax; ++i) {
         EditorListItem *item = static_cast<EditorListItem *>(mModel->item(i));
-        QString itemType = (item->type() == EditorListItem::Error)?tr("Error"):tr("Warning");
+        QString itemType;
+
+        switch (item->type()) {
+        case EditorListItem::Error:
+            itemType = tr("Error");
+
+            break;
+        case EditorListItem::Warning:
+            itemType = tr("Warning");
+
+            break;
+        default:
+            itemType = tr("Hint");
+        }
 
         list << "["+itemType+"] "+item->text();
     }

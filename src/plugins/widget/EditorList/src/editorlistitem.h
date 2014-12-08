@@ -29,6 +29,7 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include <QStandardItem>
+#include <QString>
 
 //==============================================================================
 
@@ -42,7 +43,8 @@ class EDITORLIST_EXPORT EditorListItem : public QStandardItem
 public:
     enum Type {
         Error   = QStandardItem::UserType,
-        Warning = QStandardItem::UserType+1
+        Warning = QStandardItem::UserType+1,
+        Hint    = QStandardItem::UserType+2
     };
 
     explicit EditorListItem(const Type &pType, const int &pLine,

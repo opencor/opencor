@@ -1,5 +1,6 @@
 <RCC>
     <qresource prefix="/">
+        <file>oxygen/actions/help-hint.png</file>
         <file>oxygen/emblems/emblem-important.png</file>
         <file>oxygen/status/task-attention.png</file>
         <file alias="EditorList_fr">../../../../../build/EditorList_fr.qm</file>

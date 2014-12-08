@@ -38,13 +38,26 @@ EditorListItem::EditorListItem(const Type &pType, const int &pLine,
 {
     // Customise ourselves
 
-    setText(QString("[%1:%2] %3").arg(QString::number(pLine), QString::number(pColumn), pMessage));
+    if ((pLine == -1) && (pColumn == -1))
+        setText(QString("%1").arg(pMessage));
+    else
+        setText(QString("[%1:%2] %3").arg(pLine).arg(pColumn).arg(pMessage));
+
     setToolTip(text());
 
-    if (pType == Error)
+    switch (pType) {
+    case Error:
         setIcon(QIcon(":/oxygen/emblems/emblem-important.png"));
-    else
+
+        break;
+    case Warning:
         setIcon(QIcon(":/oxygen/status/task-attention.png"));
+
+        break;
+    default:   // Hint
+        setIcon(QIcon(":/oxygen/actions/help-hint.png"));
+    }
+
 }
 
 //==============================================================================

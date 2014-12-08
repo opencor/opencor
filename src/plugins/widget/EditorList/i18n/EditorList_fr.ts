@@ -27,5 +27,9 @@
         <source>Clear the list</source>
         <translation>Effacer la liste</translation>
     </message>
+    <message>
+        <source>Hint</source>
+        <translation>Conseil</translation>
+    </message>
 </context>
 </TS>
