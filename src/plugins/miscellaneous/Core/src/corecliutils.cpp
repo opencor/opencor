@@ -173,15 +173,15 @@ QString qDomDocumentToString(const QDomDocument &pDomDocument)
     //       want elements' attributes to be sorted when serialised (so that it
     //       is easier to compare two different XML documents). Unfortunately,
     //       QDomDocument::save() doesn't provide such a functionality (since
-    //       the order of attributes doesn't matter in XML), so we make a call
+    //       the order of attributes doesn't matter in XML). So, we make a call
     //       to QDomDocument::save(), but only after having removed all the
-    //       elements' attributes, which we serialise manually ourselves...
+    //       elements' attributes, which we serialise manually afterwards...
 
     QString res = QString();
 
     // Make a deep copy of the given DOM document and remove all the elements'
     // attributes (but keep track of them, so that we can later on serialise
-    // them manually ourselves)
+    // them manually)
 
     QDomDocument domDocument = pDomDocument.cloneNode().toDocument();
     QMap<QString, QString> elementsAttributes = QMap<QString, QString>();
