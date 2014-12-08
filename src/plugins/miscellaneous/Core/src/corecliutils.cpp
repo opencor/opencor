@@ -104,27 +104,27 @@ bool sortSerialisedAttributes(const QString &pSerialisedAttribute1,
 
 //==============================================================================
 
-void cleanDomNode(QDomNode &pDomNode,
-                  QMap<QString, QString> &pElementsAttributes)
+void cleanDomElement(QDomElement &pDomElement,
+                     QMap<QString, QString> &pElementsAttributes)
 {
-    // Serialise all the node's attributes and sort their serialised version
-    // before removing them from the node and adding a new attribute that will
-    // later on be used for string replacement
+    // Serialise all the element's attributes and sort their serialised version
+    // before removing them from the element and adding a new attribute that
+    // will later on be used for string replacement
 
     static qulonglong attributeNumber = 0;
     static const int ULLONG_WIDTH = ceil(log(ULLONG_MAX));
 
-    if (pDomNode.hasAttributes()) {
+    if (pDomElement.hasAttributes()) {
         QStringList serialisedAttributes = QStringList();
-        QDomNamedNodeMap domNodeAttributes = pDomNode.attributes();
+        QDomNamedNodeMap domElementAttributes = pDomElement.attributes();
         QDomNode attributeNode;
         QString serialisedAttribute;
         QTextStream textStream(&serialisedAttribute, QIODevice::WriteOnly);
 
-        while (domNodeAttributes.count()) {
-            // Serialise the node's attribute
+        while (domElementAttributes.count()) {
+            // Serialise the element's attribute
 
-            attributeNode = domNodeAttributes.item(0);
+            attributeNode = domElementAttributes.item(0);
 
             serialisedAttribute = QString();
 
@@ -132,36 +132,33 @@ void cleanDomNode(QDomNode &pDomNode,
 
             serialisedAttributes << serialisedAttribute;
 
-            // Remove the attribute from the node
+            // Remove the attribute from the element
 
-            domNodeAttributes.removeNamedItem(attributeNode.nodeName());
+            domElementAttributes.removeNamedItem(attributeNode.nodeName());
         }
 
         // Sort the serialised attributes using the attributes' name
 
         std::sort(serialisedAttributes.begin(), serialisedAttributes.end(), sortSerialisedAttributes);
 
-        // Keep track of the serialisation of the node's attribute
+        // Keep track of the serialisation of the element's attribute
 
         QString elementAttributes = QString("Element%1Attributes").arg(++attributeNumber, ULLONG_WIDTH, 10, QChar('0'));
 
         pElementsAttributes.insert(elementAttributes, serialisedAttributes.join(" "));
 
-        // Add a new attribute to the node
+        // Add a new attribute to the element
         // Note: this attribute, once serialised by QDomDocument::save(), will
         //       be used to do a string replacement (see
         //       qDomDocumentToString())...
 
-        domNodeAttributes.setNamedItem(pDomNode.ownerDocument().createAttribute(elementAttributes));
+        domElementAttributes.setNamedItem(pDomElement.ownerDocument().createAttribute(elementAttributes));
     }
 
     // Recursively clean ourselves
 
-    for (int i = 0, iMax = pDomNode.childNodes().count(); i < iMax; ++i) {
-        QDomNode childNode = pDomNode.childNodes().at(i);
-
-        cleanDomNode(childNode, pElementsAttributes);
-    }
+    for (QDomElement childElement = pDomElement.firstChildElement(); !childElement.isNull(); childElement = childElement.nextSiblingElement())
+        cleanDomElement(childElement, pElementsAttributes);
 }
 
 //==============================================================================
@@ -186,7 +183,8 @@ QString qDomDocumentToString(const QDomDocument &pDomDocument)
     QDomDocument domDocument = pDomDocument.cloneNode().toDocument();
     QMap<QString, QString> elementsAttributes = QMap<QString, QString>();
 
-    cleanDomNode(domDocument, elementsAttributes);
+    for (QDomElement childElement = domDocument.firstChildElement(); !childElement.isNull(); childElement = childElement.nextSiblingElement())
+        cleanDomElement(childElement, elementsAttributes);
 
     // Serialise our 'reduced' DOM document
 
