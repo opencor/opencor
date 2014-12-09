@@ -649,6 +649,8 @@ void CellmlAnnotationViewCellmlListWidget::populateModel()
                 CellmlAnnotationViewCellmlElementItem *variablesItem = new CellmlAnnotationViewCellmlElementItem(CellmlAnnotationViewCellmlElementItem::Variable,
                                                                                                                  tr("Variables"));
 
+                componentItem->appendRow(variablesItem);
+
                 // Retrieve the model's component's variables themselves
 
                 ObjRef<iface::cellml_api::CellMLVariableIterator> componentVariablesIterator = componentVariables->iterateVariables();
@@ -657,8 +659,6 @@ void CellmlAnnotationViewCellmlListWidget::populateModel()
                      componentVariable; componentVariable = componentVariablesIterator->nextVariable())
                         variablesItem->appendRow(new CellmlAnnotationViewCellmlElementItem(CellmlAnnotationViewCellmlElementItem::Variable,
                                                                                            componentVariable));
-
-                componentItem->appendRow(variablesItem);
             }
         }
     }
