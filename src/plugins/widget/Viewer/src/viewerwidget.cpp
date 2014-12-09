@@ -509,8 +509,8 @@ QString ViewerWidget::greekSymbolize(const QString &pValue) const
 
 //==============================================================================
 
-QDomNode ViewerWidget::newMiNode(const QDomNode &pDomNode,
-                                 const QString &pValue) const
+QDomElement ViewerWidget::newMiNode(const QDomNode &pDomNode,
+                                    const QString &pValue) const
 {
     // Create and return an mi element with a text child node, which value if
     // the one given
@@ -535,8 +535,9 @@ void ViewerWidget::processNode(const QDomNode &pDomNode) const
 
         // Check whether the current node has only one child of type text
 
-        if (   (domNode.childNodes().count() == 1)
-            && (domNode.firstChild().nodeType() == QDomNode::TextNode)) {
+        QDomNode childNode = domNode.firstChild();
+
+        if ((domNode.childNodes().count() == 1) && (childNode.isText())) {
             // Check whether we want to use subscripts and/or Greek symbols and
             // the current node is an mi element, or whether we want to do digit
             // grouping and the current node is an mn element
@@ -547,20 +548,20 @@ void ViewerWidget::processNode(const QDomNode &pDomNode) const
                 // current node is an mi element, so check whether we want to
                 // use subscripts
 
-                QString domChildNodeValue = domNode.firstChild().nodeValue();
+                QString childNodeValue = childNode.nodeValue();
 
                 if (subscripts()) {
                     // We want to use subscripts (and maybe also Greek symbols),
                     // so remove leading, trailing and duplicate underscores
 
-                    domChildNodeValue.remove(QRegularExpression("^_+"));
-                    domChildNodeValue.remove(QRegularExpression("_+$"));
-                    domChildNodeValue.replace(QRegularExpression("_+"), "_");
+                    childNodeValue.remove(QRegularExpression("^_+"));
+                    childNodeValue.remove(QRegularExpression("_+$"));
+                    childNodeValue.replace(QRegularExpression("_+"), "_");
 
                     // Split the value of the child node using the underscore as
                     // a separator
 
-                    QStringList domChildNodeSubValues = domChildNodeValue.split("_");
+                    QStringList domChildNodeSubValues = childNodeValue.split("_");
 
                     // Create a new node that is going to contain the subscript
                     // version of our current node
@@ -570,48 +571,48 @@ void ViewerWidget::processNode(const QDomNode &pDomNode) const
                     int domChildNodeSubValuesCount = domChildNodeSubValues.count();
 
                     if (domChildNodeSubValuesCount >= 2) {
-                        QDomNode newDomNode = domNode.ownerDocument().createElement("msub");
+                        QDomElement newDomElement = domNode.ownerDocument().createElement("msub");
 
-                        newDomNode.appendChild(newMiNode(domNode, domChildNodeSubValues[domChildNodeSubValuesCount-2]));
-                        newDomNode.appendChild(newMiNode(domNode, domChildNodeSubValues[domChildNodeSubValuesCount-1]));
+                        newDomElement.appendChild(newMiNode(domNode, domChildNodeSubValues[domChildNodeSubValuesCount-2]));
+                        newDomElement.appendChild(newMiNode(domNode, domChildNodeSubValues[domChildNodeSubValuesCount-1]));
 
                         if (domChildNodeSubValuesCount > 2)
                             for (int j = domChildNodeSubValuesCount-3; j >= 0; --j) {
-                                QDomNode newerDomNode = domNode.ownerDocument().createElement("msub");
+                                QDomElement newerDomElement = domNode.ownerDocument().createElement("msub");
 
-                                newerDomNode.appendChild(newMiNode(domNode, domChildNodeSubValues[j]));
-                                newerDomNode.appendChild(newDomNode);
+                                newerDomElement.appendChild(newMiNode(domNode, domChildNodeSubValues[j]));
+                                newerDomElement.appendChild(newDomElement);
 
-                                newDomNode = newerDomNode;
+                                newDomElement = newerDomElement;
                             }
 
                         // Replace the current node with our new one
 
-                        domNode.parentNode().replaceChild(newDomNode, domNode);
+                        domNode.parentNode().replaceChild(newDomElement, domNode);
                     }
                 } else if (greekSymbols()) {
                     // We want to use Greek symbols, so go through the value of
                     // the child node (from the end) and replace whatever can be
                     // replaced with Greek symbols
                     // Note: we start from the end because it makes the
-                    //       algorithm (since replacing a string of character
-                    //       with a Greek symbol will shorten the value of our
-                    //       child node)...
+                    //       algorithm faster (since replacing a string of
+                    //       character with a Greek symbol will shorten the
+                    //       value of our child node)...
 
-                    int fromPos = domChildNodeValue.size();
+                    int fromPos = childNodeValue.size();
                     int startPos;
                     int endPos;
                     QString domChildNodeSubValue;
 
                     while (fromPos != -1) {
-                        endPos = domChildNodeValue.lastIndexOf(QRegularExpression("[^_]"), fromPos);
+                        endPos = childNodeValue.lastIndexOf(QRegularExpression("[^_]"), fromPos);
 
                         if (endPos != -1) {
-                            startPos = domChildNodeValue.lastIndexOf(QRegularExpression("_"), endPos);
+                            startPos = childNodeValue.lastIndexOf(QRegularExpression("_"), endPos);
 
-                            domChildNodeSubValue = domChildNodeValue.mid(startPos+1, endPos-startPos);
+                            domChildNodeSubValue = childNodeValue.mid(startPos+1, endPos-startPos);
 
-                            domChildNodeValue.replace(startPos+1, endPos-startPos, greekSymbolize(domChildNodeSubValue));
+                            childNodeValue.replace(startPos+1, endPos-startPos, greekSymbolize(domChildNodeSubValue));
 
                             fromPos = startPos;
                         } else {
@@ -619,7 +620,7 @@ void ViewerWidget::processNode(const QDomNode &pDomNode) const
                         }
                     }
 
-                    domNode.firstChild().setNodeValue(domChildNodeValue);
+                    childNode.setNodeValue(childNodeValue);
                 }
 
                 processDomNode = false;
@@ -628,7 +629,7 @@ void ViewerWidget::processNode(const QDomNode &pDomNode) const
                 // We want to do digit grouping and the current node is an mn
                 // element, so we can go ahead
 
-                domNode.firstChild().setNodeValue(Core::digitGroupNumber(domNode.firstChild().nodeValue()));
+                childNode.setNodeValue(Core::digitGroupNumber(childNode.nodeValue()));
 
                 processDomNode = false;
             }
@@ -653,9 +654,7 @@ QString ViewerWidget::processedContents() const
     QDomDocument domDocument;
 
     if (domDocument.setContent(mContents)) {
-        QDomNode domNode = domDocument.documentElement();
-
-        processNode(domNode);
+        processNode(domDocument.documentElement());
 
         return domDocument.toString(-1);
     } else {

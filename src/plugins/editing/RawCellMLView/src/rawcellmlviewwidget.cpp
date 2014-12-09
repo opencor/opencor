@@ -355,11 +355,11 @@ void RawCellmlViewWidget::validate(const QString &pFileName) const
 
 //==============================================================================
 
-void RawCellmlViewWidget::cleanUpXml(const QDomNode &pDomNode) const
+void RawCellmlViewWidget::cleanUpXml(const QDomElement &pDomElement) const
 {
-    // Clean up the current node
+    // Clean up the current element
 
-    QDomNamedNodeMap domNodeAttributes = pDomNode.attributes();
+    QDomNamedNodeMap domNodeAttributes = pDomElement.attributes();
 
     QStringList attributeNames = QStringList();
 
@@ -373,10 +373,10 @@ void RawCellmlViewWidget::cleanUpXml(const QDomNode &pDomNode) const
     foreach (const QString &attributeName, attributeNames)
         domNodeAttributes.removeNamedItem(attributeName);
 
-    // Go through the node's children, if any, and clean them up
+    // Go through the element's child elements, if any, and clean them up
 
-    for (QDomNode domNode = pDomNode.firstChild(); !domNode.isNull(); domNode = domNode.nextSibling())
-        cleanUpXml(domNode);
+    for (QDomElement domElement = pDomElement.firstChildElement(); !domElement.isNull(); domElement = domElement.nextSiblingElement())
+        cleanUpXml(domElement);
 }
 
 //==============================================================================
@@ -388,9 +388,7 @@ QString RawCellmlViewWidget::cleanUpXml(const QString &pMathml) const
     QDomDocument domDocument;
 
     if (domDocument.setContent(pMathml)) {
-        QDomNode domNode = domDocument.documentElement();
-
-        cleanUpXml(domNode);
+        cleanUpXml(domDocument.documentElement());
 
         return domDocument.toString(-1);
     } else {
@@ -410,10 +408,10 @@ QString RawCellmlViewWidget::retrieveContentMathmlEquation(const QString &pConte
     if (domDocument.setContent(pContentMathmlBlock)) {
         // Look for the child node within which our position is located, if any
 
-        QDomNode domNode = domDocument.documentElement();
-        QDomNode foundChildNode = QDomNode();
+        QDomElement domElement = domDocument.documentElement();
+        QDomElement foundChildElement = QDomElement();
 
-        for (QDomNode childNode = domNode.firstChild(); !childNode.isNull(); childNode = childNode.nextSibling()) {
+        for (QDomElement childElement = domElement.firstChildElement(); !childElement.isNull(); childElement = childElement.nextSiblingElement()) {
             // Retrieve the start position of the current child node
             // Note: it needs to be corrected since the line and column numbers
             //       we are getting for the current child node correspond to the
@@ -424,38 +422,38 @@ QString RawCellmlViewWidget::retrieveContentMathmlEquation(const QString &pConte
 
             Core::stringLineColumnAsPosition(pContentMathmlBlock,
                                              mEditingWidget->editor()->eolString(),
-                                             childNode.lineNumber(),
-                                             childNode.columnNumber(),
+                                             childElement.lineNumber(),
+                                             childElement.columnNumber(),
                                              childNodeStartPosition);
 
-            childNodeStartPosition = pContentMathmlBlock.lastIndexOf("<"+childNode.nodeName(), childNodeStartPosition);
+            childNodeStartPosition = pContentMathmlBlock.lastIndexOf("<"+childElement.nodeName(), childNodeStartPosition);
 
             // Retrieve the end position of the current child node
 
             int childNodeEndPosition = -1;
 
-            if (childNode != domNode.lastChild()) {
+            if (childElement != domElement.lastChildElement()) {
                 // We are not dealing with the last child node, so update the
                 // position from which we are to look for the closing tag, which
                 // here must be the start position of the next child node and
                 // not the end of the given Content MathML block
 
-                QDomNode nextChildNode = childNode.nextSibling();
+                QDomElement nextChildElement = childElement.nextSiblingElement();
 
                 Core::stringLineColumnAsPosition(pContentMathmlBlock,
                                                  mEditingWidget->editor()->eolString(),
-                                                 nextChildNode.lineNumber(),
-                                                 nextChildNode.columnNumber(),
+                                                 nextChildElement.lineNumber(),
+                                                 nextChildElement.columnNumber(),
                                                  childNodeEndPosition);
             }
 
-            childNodeEndPosition = pContentMathmlBlock.lastIndexOf("</"+childNode.nodeName()+">", childNodeEndPosition)+2+childNode.nodeName().length();
+            childNodeEndPosition = pContentMathmlBlock.lastIndexOf("</"+childElement.nodeName()+">", childNodeEndPosition)+2+childElement.nodeName().length();
 
             // Check whether our position is within the start and end positions
             // of the current child node
 
             if ((pPosition >= childNodeStartPosition) && (pPosition <= childNodeEndPosition)) {
-                foundChildNode = childNode;
+                foundChildElement = childElement;
 
                 break;
             }
@@ -463,16 +461,16 @@ QString RawCellmlViewWidget::retrieveContentMathmlEquation(const QString &pConte
 
         // Check whether our position is within a child node
 
-        if (!foundChildNode.isNull()) {
+        if (!foundChildElement.isNull()) {
             // We are within a childe node, so remove all the other child nodes
             // and return the string representation of the resulting DOM
             // document
 
-            for (QDomNode childNode = domNode.firstChild(); childNode != foundChildNode; childNode = domNode.firstChild())
-                domNode.removeChild(childNode);
+            for (QDomElement childElement = domElement.firstChildElement(); childElement != foundChildElement; childElement = domElement.firstChildElement())
+                domElement.removeChild(childElement);
 
-            for (QDomNode childNode = domNode.lastChild(); childNode != foundChildNode; childNode = domNode.lastChild())
-                domNode.removeChild(childNode);
+            for (QDomElement childElement = domElement.lastChildElement(); childElement != foundChildElement; childElement = domElement.lastChildElement())
+                domElement.removeChild(childElement);
 
             return domDocument.toString(-1);
         } else {

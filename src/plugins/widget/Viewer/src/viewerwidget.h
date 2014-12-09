@@ -105,7 +105,8 @@ private:
 
     QString greekSymbolize(const QString &pValue) const;
 
-    QDomNode newMiNode(const QDomNode &pDomNode, const QString &pValue) const;
+    QDomElement newMiNode(const QDomNode &pDomNode,
+                          const QString &pValue) const;
 
     void processNode(const QDomNode &pDomNode) const;
     QString processedContents() const;
