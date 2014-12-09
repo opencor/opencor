@@ -120,6 +120,8 @@ void CellmlFile::reset()
     mRuntimeUpdateNeeded = true;
 
     mImportContents.clear();
+
+    mUsedCmetaIds.clear();
 }
 
 //==============================================================================
@@ -330,6 +332,49 @@ bool CellmlFile::doLoad(const QString &pFileName, const QString &pFileContents,
 
 //==============================================================================
 
+void CellmlFile::retrieveCmetaIdsFromCellmlElement(iface::cellml_api::CellMLElement *pElement)
+{
+    // Keep track of the given CellML element's cmeta:id
+
+    QString cmetaId = QString::fromStdWString(pElement->cmetaId());
+
+    if (!cmetaId.isEmpty())
+        mUsedCmetaIds << cmetaId;
+
+    // Do the same for all the child elements of the given CellML element
+
+    ObjRef<iface::cellml_api::CellMLElementSet> childElements = pElement->childElements();
+    ObjRef<iface::cellml_api::CellMLElementIterator> childElementsIterator = childElements->iterate();
+
+    for (ObjRef<iface::cellml_api::CellMLElement> childElement = childElementsIterator->next();
+         childElement; childElement = childElementsIterator->next()) {
+        retrieveCmetaIdsFromCellmlElement(childElement);
+    }
+}
+
+//==============================================================================
+
+void CellmlFile::clearCmetaIdsFromCellmlElement(const QDomElement &pElement,
+                                                const QStringList &pUsedCmetaIds)
+{
+    // Remove the given CellML element's cmeta:id, if it is not actually being
+    // used
+
+    static const QString CmetaId = "cmeta:id";
+
+    if (!pUsedCmetaIds.contains(pElement.attribute(CmetaId)))
+        pElement.attributes().removeNamedItem(CmetaId);
+
+    // Do the same for all the child elements of the given CellML element
+
+    for (QDomElement childElement = pElement.firstChildElement();
+         !childElement.isNull(); childElement = childElement.nextSiblingElement()) {
+        clearCmetaIdsFromCellmlElement(childElement, pUsedCmetaIds);
+    }
+}
+
+//==============================================================================
+
 bool CellmlFile::load()
 {
     // Check whether the file is already loaded
@@ -363,12 +408,23 @@ bool CellmlFile::load()
             ObjRef<iface::rdf_api::TripleEnumerator> rdfTriplesEnumerator = rdfTriples->enumerateTriples();
 
             for (ObjRef<iface::rdf_api::Triple> rdfTriple = rdfTriplesEnumerator->getNextTriple();
-                 rdfTriple; rdfTriple = rdfTriplesEnumerator->getNextTriple())
+                 rdfTriple; rdfTriple = rdfTriplesEnumerator->getNextTriple()) {
                 mRdfTriples << new CellmlFileRdfTriple(this, rdfTriple);
+            }
 
             mRdfTriples.updateOriginalRdfTriples();
         }
     }
+
+    // Determine which cmeta:ids are currently in use, be they in the various
+    // CellML elements or RDF triples
+
+    retrieveCmetaIdsFromCellmlElement(mModel);
+
+    foreach (CellmlFileRdfTriple *rdfTriple, mRdfTriples)
+        mUsedCmetaIds << rdfTriple->metadataId();
+
+    mUsedCmetaIds.removeDuplicates();
 
     return true;
 }
@@ -420,8 +476,9 @@ bool CellmlFile::save(const QString &pNewFileName)
 
     mRdfTriples.updateOriginalRdfTriples();
 
-    // Beautify the serialised version of the CellML file, after having removed
-    // the model's XML base value and its RDF child node, should there be no
+    // Get a DOM representation of our CellML file and remove its XML base
+    // value, its RDF child node (should there be no annotations) and all
+    // cmeta:ids (in CellML elements) that are not used in the CellML file's
     // annotations
     // Note: as part of good practices, a CellML file should never contain an
     //       XML base value. Yet, upon loading a CellML file, we set one (see
@@ -446,7 +503,16 @@ bool CellmlFile::save(const QString &pNewFileName)
         }
     }
 
-    // Write out the contents of the CellML file to the file
+    QStringList usedCmetaIds = QStringList();
+
+    foreach (CellmlFileRdfTriple *rdfTriple, mRdfTriples)
+        usedCmetaIds << rdfTriple->metadataId();
+
+    usedCmetaIds.removeDuplicates();
+
+    clearCmetaIdsFromCellmlElement(modelElement, usedCmetaIds);
+
+    // Write out the contents of our DOM document to our CellML file
 
     QTextStream out(&file);
 
@@ -454,7 +520,7 @@ bool CellmlFile::save(const QString &pNewFileName)
 
     file.close();
 
-    // The CellML file being saved, it cannot be modified (should it have been
+    // Our CellML file being saved, it cannot be modified (should it have been
     // before)
     // Note: we must do this before updating mFileName (should it be given a new
     //       value) since we use it to update our modified status...
@@ -812,41 +878,32 @@ CellmlFileRdfTriple * CellmlFile::rdfTriple(iface::cellml_api::CellMLElement *pE
 
 //==============================================================================
 
-QString CellmlFile::rdfTripleSubject(iface::cellml_api::CellMLElement *pElement) const
+QString CellmlFile::rdfTripleSubject(iface::cellml_api::CellMLElement *pElement)
 {
     // Make sure that we have a 'proper' cmeta:id or generate one, if needed
 
     QString cmetaId = QString::fromStdWString(pElement->cmetaId());
 
     if (cmetaId.isEmpty()) {
-        // We don't have a 'proper' cmeta:id for the element, so we need to
-        // generate one and in order to do so, we need to know what cmeta:ids
-        // are currently in use in the CellML file
-
-        QStringList cmetaIds = QStringList();
-
-        foreach (CellmlFileRdfTriple *rdfTriple, mRdfTriples) {
-            QString cmetaId = rdfTriple->metadataId();
-
-            if (!cmetaIds.contains(cmetaId))
-                cmetaIds << cmetaId;
-        }
-
-        // Now, we try different cmeta:id values until we find one which is not
-        // present in our list
+        // We don't have a 'proper' cmeta:id for the CellML element, so we need
+        // to generate one and in order to do so, we need to try different
+        // cmeta:id values until we find one that is not used
 
         int counter = 0;
 
         while (true) {
             cmetaId = QString("id_%1").arg(++counter, 9, 10, QChar('0'));
 
-            if (!cmetaIds.contains(cmetaId)) {
-                // We have found a unique cmeta:id, so update our CellML element
-                // and leave
+            if (!mUsedCmetaIds.contains(cmetaId)) {
+                // We have found a unique cmeta:id, so update our CellML
+                // element, consider ourselves modified, update our list of
+                // cmeta:ids and leave
 
                 pElement->cmetaId(cmetaId.toStdWString());
 
                 setModified(true);
+
+                mUsedCmetaIds << cmetaId;
 
                 break;
             }

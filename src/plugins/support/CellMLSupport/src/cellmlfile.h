@@ -31,6 +31,7 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#include <QDomElement>
 #include <QMap>
 #include <QObject>
 
@@ -138,6 +139,8 @@ private:
 
     QMap<QString, QString> mImportContents;
 
+    QStringList mUsedCmetaIds;
+
     void reset();
 
     void retrieveImports(iface::cellml_api::Model *pModel,
@@ -152,6 +155,10 @@ private:
                 ObjRef<iface::cellml_api::Model> *pModel,
                 CellmlFileIssues &pIssues);
 
+    void retrieveCmetaIdsFromCellmlElement(iface::cellml_api::CellMLElement *pElement);
+    void clearCmetaIdsFromCellmlElement(const QDomElement &pElement,
+                                        const QStringList &pUsedCmetaIds);
+
     bool doIsValid(iface::cellml_api::Model *pModel, CellmlFileIssues &pIssues);
 
     CellmlFileRdfTriple * rdfTriple(iface::cellml_api::CellMLElement *pElement,
@@ -159,7 +166,7 @@ private:
                                     const QString &pResource,
                                     const QString &pId) const;
 
-    QString rdfTripleSubject(iface::cellml_api::CellMLElement *pElement) const;
+    QString rdfTripleSubject(iface::cellml_api::CellMLElement *pElement);
 };
 
 //==============================================================================

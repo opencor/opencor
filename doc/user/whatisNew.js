@@ -30,8 +30,9 @@ var jsonData = {"versions":[
                                   {"type":"Improved", "description":"Detection of direct ontological terms."},
                                   {"type":"Improved", "description":"Retrieval of ontological terms."},
                                   {"type":"Improved", "description":"Listing of ontological terms."},
-                                  {"type":"Fixed", "description":"Editing a malformed CellML files."},
-                                  {"type":"Fixed", "description":"Further editing after saving a CellML file."}
+                                  {"type":"Fixed", "description":"Editing of malformed CellML files."},
+                                  {"type":"Fixed", "description":"Further editing after saving a CellML file."},
+                                  {"type":"Fixed", "description":"Risk of the same <code>cmeta:id</code> value being used for two different CellML elements."}
                               ]
                              },
                              {"type":"subCategory", "name":"Raw CellML view",
