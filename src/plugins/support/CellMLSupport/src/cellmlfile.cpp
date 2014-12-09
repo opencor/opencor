@@ -436,7 +436,8 @@ bool CellmlFile::save(const QString &pNewFileName)
 
     modelElement.attributes().removeNamedItem("xml:base");
 
-    for (QDomElement childElement = modelElement.firstChildElement(); !childElement.isNull(); childElement = childElement.nextSiblingElement()) {
+    for (QDomElement childElement = modelElement.firstChildElement();
+         !childElement.isNull(); childElement = childElement.nextSiblingElement()) {
         if (!childElement.nodeName().compare("rdf:RDF")) {
             if (!childElement.childNodes().count())
                 modelElement.removeChild(childElement);

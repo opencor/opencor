@@ -157,8 +157,10 @@ void cleanDomElement(QDomElement &pDomElement,
 
     // Recursively clean ourselves
 
-    for (QDomElement childElement = pDomElement.firstChildElement(); !childElement.isNull(); childElement = childElement.nextSiblingElement())
+    for (QDomElement childElement = pDomElement.firstChildElement();
+         !childElement.isNull(); childElement = childElement.nextSiblingElement()) {
         cleanDomElement(childElement, pElementsAttributes);
+    }
 }
 
 //==============================================================================
@@ -183,8 +185,10 @@ QString qDomDocumentToString(const QDomDocument &pDomDocument)
     QDomDocument domDocument = pDomDocument.cloneNode().toDocument();
     QMap<QString, QString> elementsAttributes = QMap<QString, QString>();
 
-    for (QDomElement childElement = domDocument.firstChildElement(); !childElement.isNull(); childElement = childElement.nextSiblingElement())
+    for (QDomElement childElement = domDocument.firstChildElement();
+         !childElement.isNull(); childElement = childElement.nextSiblingElement()) {
         cleanDomElement(childElement, elementsAttributes);
+    }
 
     // Serialise our 'reduced' DOM document
 
