@@ -375,8 +375,8 @@ void RawCellmlViewWidget::cleanUpXml(const QDomNode &pDomNode) const
 
     // Go through the node's children, if any, and clean them up
 
-    for (int i = 0, iMax = pDomNode.childNodes().count(); i < iMax; ++i)
-        cleanUpXml(pDomNode.childNodes().at(i));
+    for (QDomNode domNode = pDomNode.firstChild(); !domNode.isNull(); domNode = domNode.nextSibling())
+        cleanUpXml(domNode);
 }
 
 //==============================================================================
@@ -410,12 +410,10 @@ QString RawCellmlViewWidget::retrieveContentMathmlEquation(const QString &pConte
     if (domDocument.setContent(pContentMathmlBlock)) {
         // Look for the child node within which our position is located, if any
 
-        int childNodeIndex = -1;
         QDomNode domNode = domDocument.documentElement();
+        QDomNode foundChildNode = QDomNode();
 
-        for (int i = 0, iMax = domNode.childNodes().count(); i < iMax; ++i) {
-            QDomNode childNode = domNode.childNodes().at(i);
-
+        for (QDomNode childNode = domNode.firstChild(); !childNode.isNull(); childNode = childNode.nextSibling()) {
             // Retrieve the start position of the current child node
             // Note: it needs to be corrected since the line and column numbers
             //       we are getting for the current child node correspond to the
@@ -436,13 +434,13 @@ QString RawCellmlViewWidget::retrieveContentMathmlEquation(const QString &pConte
 
             int childNodeEndPosition = -1;
 
-            if (i < iMax-1) {
+            if (childNode != domNode.lastChild()) {
                 // We are not dealing with the last child node, so update the
                 // position from which we are to look for the closing tag, which
                 // here must be the start position of the next child node and
                 // not the end of the given Content MathML block
 
-                QDomNode nextChildNode = domNode.childNodes().at(i+1);
+                QDomNode nextChildNode = childNode.nextSibling();
 
                 Core::stringLineColumnAsPosition(pContentMathmlBlock,
                                                  mEditingWidget->editor()->eolString(),
@@ -457,7 +455,7 @@ QString RawCellmlViewWidget::retrieveContentMathmlEquation(const QString &pConte
             // of the current child node
 
             if ((pPosition >= childNodeStartPosition) && (pPosition <= childNodeEndPosition)) {
-                childNodeIndex = i;
+                foundChildNode = childNode;
 
                 break;
             }
@@ -465,15 +463,16 @@ QString RawCellmlViewWidget::retrieveContentMathmlEquation(const QString &pConte
 
         // Check whether our position is within a child node
 
-        if (childNodeIndex != -1) {
+        if (!foundChildNode.isNull()) {
             // We are within a childe node, so remove all the other child nodes
-            // and the string representation of the resulting DOM document
+            // and return the string representation of the resulting DOM
+            // document
 
-            for (int i = 0, iMax = domNode.childNodes().count()-1-childNodeIndex; i < iMax; ++i)
-                domNode.removeChild(domNode.lastChild());
+            for (QDomNode childNode = domNode.firstChild(); childNode != foundChildNode; childNode = domNode.firstChild())
+                domNode.removeChild(childNode);
 
-            for (int i = 0; i < childNodeIndex; ++i)
-                domNode.removeChild(domNode.firstChild());
+            for (QDomNode childNode = domNode.lastChild(); childNode != foundChildNode; childNode = domNode.lastChild())
+                domNode.removeChild(childNode);
 
             return domDocument.toString(-1);
         } else {

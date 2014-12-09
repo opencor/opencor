@@ -432,26 +432,14 @@ bool CellmlFile::save(const QString &pNewFileName)
 
     domDocument.setContent(QString::fromStdWString(mModel->serialisedText()));
 
-    for (int i = 0, iMax = domDocument.childNodes().count(); i < iMax; ++i) {
-        QDomNode domNode = domDocument.childNodes().at(i);
+    QDomElement modelElement = domDocument.documentElement();
 
-        if (!domNode.nodeName().compare("model")) {
-            // Remove the model's XML base value
+    modelElement.attributes().removeNamedItem("xml:base");
 
-            domNode.attributes().removeNamedItem("xml:base");
-
-            // Remove the model's RDF child node, should there be no annotations
-
-            for (int j = 0, jMax = domNode.childNodes().count(); j < jMax; ++j) {
-                QDomNode domChildNode = domNode.childNodes().at(j);
-
-                if (!domChildNode.nodeName().compare("rdf:RDF")) {
-                    if (!domChildNode.childNodes().count())
-                        domNode.removeChild(domChildNode);
-
-                    break;
-                }
-            }
+    for (QDomNode childElement = modelElement.firstChildElement(); !childElement.isNull(); childElement = childElement.nextSiblingElement()) {
+        if (!childElement.nodeName().compare("rdf:RDF")) {
+            if (!childElement.childNodes().count())
+                modelElement.removeChild(childElement);
 
             break;
         }

@@ -530,9 +530,8 @@ void ViewerWidget::processNode(const QDomNode &pDomNode) const
 {
     // Go through the node's children and process them
 
-    for (int i = 0, iMax = pDomNode.childNodes().count(); i < iMax; ++i) {
+    for (QDomNode domNode = pDomNode.firstChild(); !domNode.isNull(); domNode = domNode.nextSibling()) {
         bool processDomNode = true;
-        QDomNode domNode = pDomNode.childNodes().at(i);
 
         // Check whether the current node has only one child of type text
 
