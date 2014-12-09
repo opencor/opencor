@@ -189,12 +189,12 @@ bool CellmlFile::fullyInstantiateImports(iface::cellml_api::Model *pModel,
 
             // Retrieve the list of imports, together with their XML base values
 
-            ObjRef<iface::cellml_api::URI> uri = pModel->xmlBase();
+            ObjRef<iface::cellml_api::URI> baseUri = pModel->xmlBase();
             QList<iface::cellml_api::CellMLImport *> importList = QList<iface::cellml_api::CellMLImport *>();
             QStringList importXmlBaseList = QStringList();
 
             retrieveImports(pModel, importList, importXmlBaseList,
-                            QString::fromStdWString(uri->asText()));
+                            QString::fromStdWString(baseUri->asText()));
 
             // Instantiate all the imports in our list
 
@@ -308,22 +308,22 @@ bool CellmlFile::doLoad(const QString &pFileName, const QString &pFileContents,
         return false;
     }
 
-    // Update the XML base value, should the CellML file be a remote one or its
+    // Update the base URI, should the CellML file be a remote one or its
     // contents be directly passed onto us
 
     Core::FileManager *fileManagerInstance = Core::FileManager::instance();
-    ObjRef<iface::cellml_api::URI> uri = (*pModel)->xmlBase();
+    ObjRef<iface::cellml_api::URI> baseUri = (*pModel)->xmlBase();
 
     if (fileManagerInstance->isRemote(pFileName))
         // We are dealing with a remote file, so its XML base value should point
         // to its remote location
 
-        uri->asText(fileManagerInstance->url(pFileName).toStdWString());
+        baseUri->asText(fileManagerInstance->url(pFileName).toStdWString());
     else if (!pFileContents.isEmpty())
         // We are dealing with a file which contents was directly passed onto
         // us, so its XML base value should point to its actual location
 
-        uri->asText(pFileName.toStdWString());
+        baseUri->asText(pFileName.toStdWString());
 
     return true;
 }
@@ -909,11 +909,11 @@ bool CellmlFile::removeRdfTriple(iface::cellml_api::CellMLElement *pElement,
 
 QString CellmlFile::xmlBase() const
 {
-    // Return the CellML file's URI base
+    // Return the CellML file's base URI
 
-    ObjRef<iface::cellml_api::URI> uri = mModel->xmlBase();
+    ObjRef<iface::cellml_api::URI> baseUri = mModel->xmlBase();
 
-    return QString::fromStdWString(uri->asText());
+    return QString::fromStdWString(baseUri->asText());
 }
 
 //==============================================================================

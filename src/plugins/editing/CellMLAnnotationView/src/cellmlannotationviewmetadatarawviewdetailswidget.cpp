@@ -79,7 +79,7 @@ void CellmlAnnotationViewMetadataRawViewDetailsWidget::updateGui(iface::cellml_a
 
     // Add the 'new' RDF triples to our tree view widget
     // Note: for the RDF triple's subject, we try to remove the CellML file's
-    //       URI base, thus only leaving the equivalent of a CellML element
+    //       base URI, thus only leaving the equivalent of a CellML element
     //       cmeta:id which will speak more to the user than a possibly long URI
     //       reference...
 
