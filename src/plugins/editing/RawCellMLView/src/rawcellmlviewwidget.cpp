@@ -355,29 +355,29 @@ void RawCellmlViewWidget::validate(const QString &pFileName) const
 
 //==============================================================================
 
-void RawCellmlViewWidget::cleanUpXml(const QDomElement &pDomElement) const
+void RawCellmlViewWidget::cleanUpXml(const QDomElement &pElement) const
 {
     // Clean up the current element
 
-    QDomNamedNodeMap domNodeAttributes = pDomElement.attributes();
+    QDomNamedNodeMap attributes = pElement.attributes();
 
     QStringList attributeNames = QStringList();
 
-    for (int j = 0, jMax = domNodeAttributes.count(); j < jMax; ++j) {
-        QString attributeName = domNodeAttributes.item(j).nodeName();
+    for (int j = 0, jMax = attributes.count(); j < jMax; ++j) {
+        QString attributeName = attributes.item(j).nodeName();
 
         if (attributeName.contains(":"))
             attributeNames << attributeName;
     }
 
     foreach (const QString &attributeName, attributeNames)
-        domNodeAttributes.removeNamedItem(attributeName);
+        attributes.removeNamedItem(attributeName);
 
     // Go through the element's child elements, if any, and clean them up
 
-    for (QDomElement domElement = pDomElement.firstChildElement();
-         !domElement.isNull(); domElement = domElement.nextSiblingElement()) {
-        cleanUpXml(domElement);
+    for (QDomElement childElement = pElement.firstChildElement();
+         !childElement.isNull(); childElement = childElement.nextSiblingElement()) {
+        cleanUpXml(childElement);
     }
 }
 
