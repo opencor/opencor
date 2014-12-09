@@ -1,14 +1,15 @@
-<?xml version="1.0" encoding="utf-8"?>
-<model name="unsuitablyconstrained_model" cmeta:id="unsuitablyconstrained_model" xmlns="http://www.cellml.org/cellml/1.0#" xmlns:cellml="http://www.cellml.org/cellml/1.0#" xmlns:cmeta="http://www.cellml.org/metadata/1.0#">
+<?xml version='1.0'?>
+<model name="unsuitablyconstrained_model" xmlns="http://www.cellml.org/cellml/1.0#" xmlns:cellml="http://www.cellml.org/cellml/1.0#" xmlns:cmeta="http://www.cellml.org/metadata/1.0#">
     <component name="main">
         <variable name="time" units="dimensionless"/>
-        <variable name="offset" initial_value="3" units="dimensionless"/>
+        <variable initial_value="3" name="offset" units="dimensionless"/>
         <variable name="x" units="dimensionless"/>
-        <variable name="y" initial_value="offset" units="dimensionless"/>
+        <variable initial_value="offset" name="y" units="dimensionless"/>
         <variable name="z" units="dimensionless"/>
         <variable name="extra" units="dimensionless"/>
         <math xmlns="http://www.w3.org/1998/Math/MathML">
-            <apply><eq/>
+            <apply>
+                <eq/>
                 <apply>
                     <diff/>
                     <bvar>
@@ -25,7 +26,8 @@
             </apply>
         </math>
         <math xmlns="http://www.w3.org/1998/Math/MathML">
-            <apply><eq/>
+            <apply>
+                <eq/>
                 <ci>x</ci>
                 <apply>
                     <plus/>

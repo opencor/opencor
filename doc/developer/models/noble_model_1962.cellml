@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?>
-<model name="noble_model_1962" cmeta:id="noble_model_1962" xmlns="http://www.cellml.org/cellml/1.0#" xmlns:cellml="http://www.cellml.org/cellml/1.0#" xmlns:cmeta="http://www.cellml.org/metadata/1.0#">
+<?xml version='1.0'?>
+<model name="noble_model_1962" xmlns="http://www.cellml.org/cellml/1.0#" xmlns:cellml="http://www.cellml.org/cellml/1.0#" xmlns:cmeta="http://www.cellml.org/metadata/1.0#">
     <units name="millisecond">
         <unit prefix="milli" units="second"/>
     </units>
@@ -29,15 +29,15 @@
         <unit exponent="-2" prefix="centi" units="metre"/>
     </units>
     <component name="environment">
-        <variable name="time" units="millisecond" public_interface="out"/>
+        <variable name="time" public_interface="out" units="millisecond"/>
     </component>
     <component name="membrane">
-        <variable name="V" initial_value="-87" units="millivolt" public_interface="out"/>
-        <variable name="Cm" initial_value="12" units="microF_per_cm2"/>
-        <variable name="time" units="millisecond" public_interface="in"/>
-        <variable name="i_Na" units="microA_per_cm2" public_interface="in"/>
-        <variable name="i_K" units="microA_per_cm2" public_interface="in"/>
-        <variable name="i_Leak" units="microA_per_cm2" public_interface="in"/>
+        <variable initial_value="-87" name="V" public_interface="out" units="millivolt"/>
+        <variable initial_value="12" name="Cm" units="microF_per_cm2"/>
+        <variable name="time" public_interface="in" units="millisecond"/>
+        <variable name="i_Na" public_interface="in" units="microA_per_cm2"/>
+        <variable name="i_K" public_interface="in" units="microA_per_cm2"/>
+        <variable name="i_Leak" public_interface="in" units="microA_per_cm2"/>
         <math xmlns="http://www.w3.org/1998/Math/MathML">
             <apply>
                 <eq/>
@@ -65,14 +65,14 @@
         </math>
     </component>
     <component name="sodium_channel">
-        <variable name="i_Na" units="microA_per_cm2" public_interface="out"/>
-        <variable name="g_Na_max" initial_value="400" units="milliS_per_cm2"/>
+        <variable name="i_Na" public_interface="out" units="microA_per_cm2"/>
+        <variable initial_value="400" name="g_Na_max" units="milliS_per_cm2"/>
         <variable name="g_Na" units="milliS_per_cm2"/>
-        <variable name="E_Na" initial_value="40" units="millivolt"/>
-        <variable name="time" units="millisecond" public_interface="in" private_interface="out"/>
-        <variable name="V" units="millivolt" public_interface="in" private_interface="out"/>
-        <variable name="m" units="dimensionless" private_interface="in"/>
-        <variable name="h" units="dimensionless" private_interface="in"/>
+        <variable initial_value="40" name="E_Na" units="millivolt"/>
+        <variable name="time" private_interface="out" public_interface="in" units="millisecond"/>
+        <variable name="V" private_interface="out" public_interface="in" units="millivolt"/>
+        <variable name="m" private_interface="in" units="dimensionless"/>
+        <variable name="h" private_interface="in" units="dimensionless"/>
         <math xmlns="http://www.w3.org/1998/Math/MathML">
             <apply>
                 <eq/>
@@ -108,11 +108,11 @@
         </math>
     </component>
     <component name="sodium_channel_m_gate">
-        <variable name="m" initial_value="0.01" units="dimensionless" public_interface="out"/>
+        <variable initial_value="0.01" name="m" public_interface="out" units="dimensionless"/>
         <variable name="alpha_m" units="per_millisecond"/>
         <variable name="beta_m" units="per_millisecond"/>
-        <variable name="V" units="millivolt" public_interface="in"/>
-        <variable name="time" units="millisecond" public_interface="in"/>
+        <variable name="V" public_interface="in" units="millivolt"/>
+        <variable name="time" public_interface="in" units="millisecond"/>
         <math xmlns="http://www.w3.org/1998/Math/MathML">
             <apply>
                 <eq/>
@@ -214,11 +214,11 @@
         </math>
     </component>
     <component name="sodium_channel_h_gate">
-        <variable name="h" initial_value="0.8" units="dimensionless" public_interface="out"/>
+        <variable initial_value="0.8" name="h" public_interface="out" units="dimensionless"/>
         <variable name="alpha_h" units="per_millisecond"/>
         <variable name="beta_h" units="per_millisecond"/>
-        <variable name="V" units="millivolt" public_interface="in"/>
-        <variable name="time" units="millisecond" public_interface="in"/>
+        <variable name="V" public_interface="in" units="millivolt"/>
+        <variable name="time" public_interface="in" units="millisecond"/>
         <math xmlns="http://www.w3.org/1998/Math/MathML">
             <apply>
                 <eq/>
@@ -300,12 +300,12 @@
         </math>
     </component>
     <component name="potassium_channel">
-        <variable name="i_K" units="microA_per_cm2" public_interface="out"/>
+        <variable name="i_K" public_interface="out" units="microA_per_cm2"/>
         <variable name="g_K1" units="milliS_per_cm2"/>
         <variable name="g_K2" units="milliS_per_cm2"/>
-        <variable name="time" units="millisecond" public_interface="in" private_interface="out"/>
-        <variable name="V" units="millivolt" public_interface="in" private_interface="out"/>
-        <variable name="n" units="dimensionless" private_interface="in"/>
+        <variable name="time" private_interface="out" public_interface="in" units="millisecond"/>
+        <variable name="V" private_interface="out" public_interface="in" units="millivolt"/>
+        <variable name="n" private_interface="in" units="dimensionless"/>
         <math xmlns="http://www.w3.org/1998/Math/MathML">
             <apply>
                 <eq/>
@@ -382,11 +382,11 @@
         </math>
     </component>
     <component name="potassium_channel_n_gate">
-        <variable name="n" initial_value="0.01" units="dimensionless" public_interface="out"/>
+        <variable initial_value="0.01" name="n" public_interface="out" units="dimensionless"/>
         <variable name="alpha_n" units="per_millisecond"/>
         <variable name="beta_n" units="per_millisecond"/>
-        <variable name="V" units="millivolt" public_interface="in"/>
-        <variable name="time" units="millisecond" public_interface="in"/>
+        <variable name="V" public_interface="in" units="millivolt"/>
+        <variable name="time" public_interface="in" units="millisecond"/>
         <math xmlns="http://www.w3.org/1998/Math/MathML">
             <apply>
                 <eq/>
@@ -479,11 +479,11 @@
         </math>
     </component>
     <component name="leakage_current">
-        <variable name="i_Leak" units="microA_per_cm2" public_interface="out"/>
-        <variable name="g_L" initial_value="0.075" units="milliS_per_cm2"/>
-        <variable name="E_L" initial_value="-60" units="millivolt"/>
-        <variable name="time" units="millisecond" public_interface="in"/>
-        <variable name="V" units="millivolt" public_interface="in"/>
+        <variable name="i_Leak" public_interface="out" units="microA_per_cm2"/>
+        <variable initial_value="0.075" name="g_L" units="milliS_per_cm2"/>
+        <variable initial_value="-60" name="E_L" units="millivolt"/>
+        <variable name="time" public_interface="in" units="millisecond"/>
+        <variable name="V" public_interface="in" units="millivolt"/>
         <math xmlns="http://www.w3.org/1998/Math/MathML">
             <apply>
                 <eq/>
@@ -572,4 +572,4 @@
         <map_variables variable_1="time" variable_2="time"/>
         <map_variables variable_1="V" variable_2="V"/>
     </connection>
-<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"/></model>
+</model>

@@ -1,11 +1,11 @@
-<?xml version="1.0" encoding="utf-8"?>
-<model name="definiteintegral_model" cmeta:id="definiteintegral_model" xmlns="http://www.cellml.org/cellml/1.0#" xmlns:cellml="http://www.cellml.org/cellml/1.0#" xmlns:cmeta="http://www.cellml.org/metadata/1.0#">
+<?xml version='1.0'?>
+<model name="definiteintegral_model" xmlns="http://www.cellml.org/cellml/1.0#" xmlns:cellml="http://www.cellml.org/cellml/1.0#" xmlns:cmeta="http://www.cellml.org/metadata/1.0#">
     <component name="main">
         <units name="per_second">
-            <unit units="second" exponent="-1"/>
+            <unit exponent="-1" units="second"/>
         </units>
         <variable name="time" units="second"/>
-        <variable name="x" initial_value="0" units="dimensionless"/>
+        <variable initial_value="0" name="x" units="dimensionless"/>
         <variable name="y" units="dimensionless"/>
         <variable name="z" units="dimensionless"/>
         <math xmlns="http://www.w3.org/1998/Math/MathML">
@@ -25,7 +25,9 @@
                 <ci>y</ci>
                 <apply>
                     <int/>
-                    <bvar><ci>z</ci></bvar>
+                    <bvar>
+                        <ci>z</ci>
+                    </bvar>
                     <lowlimit>
                         <cn cellml:units="dimensionless">0</cn>
                     </lowlimit>

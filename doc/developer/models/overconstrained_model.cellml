@@ -1,8 +1,8 @@
-<?xml version="1.0" encoding="utf-8"?>
-<model name="overconstrained_model_2" cmeta:id="overconstrained_model_2" xmlns="http://www.cellml.org/cellml/1.0#" xmlns:cellml="http://www.cellml.org/cellml/1.0#" xmlns:cmeta="http://www.cellml.org/metadata/1.0#">
+<?xml version='1.0'?>
+<model name="overconstrained_model_2" xmlns="http://www.cellml.org/cellml/1.0#" xmlns:cellml="http://www.cellml.org/cellml/1.0#" xmlns:cmeta="http://www.cellml.org/metadata/1.0#">
     <component name="main">
         <units name="per_second">
-            <unit units="second" exponent="-1"/>
+            <unit exponent="-1" units="second"/>
         </units>
         <variable name="time" units="second"/>
         <variable name="x" units="dimensionless"/>

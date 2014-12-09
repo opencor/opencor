@@ -1,117 +1,111 @@
-<?xml version="1.0" encoding="iso-8859-1"?>
-<model xmlns="http://www.cellml.org/cellml/1.1#" xmlns:cellml="http://www.cellml.org/cellml/1.1#" xmlns:xlink="http://www.w3.org/1999/xlink" name="periodic_stimulus">
-  <!-- this block of XML is used by CSim to execute a simulation (https://code.google.com/p/cellml-simulator/) -->
-  <simulation xmlns="http://cellml.sourceforge.net/csim/simulation/0.1#" id="simulation1">
-        <boundVariable start="0.0" end="220.0" maxStep="0.05" tabulationStep="0.1"/>
-        <outputVariable component="outputs" variable="time" column="1"/>
-        <outputVariable component="outputs" variable="INa" column="2"/>
-        <outputVariable component="outputs" variable="IK" column="3"/>
-        <outputVariable component="outputs" variable="Ileak" column="4"/>
-        <outputVariable component="outputs" variable="V" column="5"/>
-        <outputVariable component="outputs" variable="minus_V" column="6"/>
-        <outputVariable component="outputs" variable="h" column="7"/>
-        <outputVariable component="outputs" variable="m" column="8"/>
-        <outputVariable component="outputs" variable="n" column="9"/>
-  </simulation>
-  <import xlink:href="../components/units.xml">
-    <units name="ms" units_ref="ms"/>
-    <units name="uA_per_cmsq" units_ref="uA_per_cmsq"/>
-  </import>
-  <import xlink:href="../components/stimulated.xml">
-    <component name="model" component_ref="action_potential"/>
-  </import>
-  <import xlink:href="periodic-IStim-protocol.xml">
-    <component name="stimulus_protocol" component_ref="stimulus_protocol"/>
-  </import>
-  <import xlink:href="time.xml">
-    <component name="time" component_ref="time"/>
-  </import>
-  <import xlink:href="../components/default-variable-values.xml">
-    <component name="default_parameters" component_ref="parameters"/>
-    <component name="default_initial_conditions" component_ref="initial_conditions"/>
-  </import>
-
-  <!-- Connect the time source variable to the model and stimulus protocol -->
-  <connection>
-    <map_components component_1="model" component_2="time"/>
-    <map_variables variable_1="time" variable_2="time"/>
-  </connection>
-  <connection>
-    <map_components component_1="time" component_2="stimulus_protocol"/>
-    <map_variables variable_1="time" variable_2="time"/>
-  </connection>
-  <!-- Define the stimulus protocol parameter values -->
-  <component name="stimulus_protocol_params">
-    <variable name="stimPeriod" initial_value="50" public_interface="out" units="ms"/>
-    <variable name="stimDuration" initial_value="0.5" public_interface="out" units="ms"/>
-    <variable name="stimCurrent" initial_value="-10.0" public_interface="out" units="uA_per_cmsq"/>
-  </component>
-  <!-- and connect the parameters to the protocol definition -->
-  <connection>
-    <map_components component_1="stimulus_protocol_params" component_2="stimulus_protocol"/>
-    <map_variables variable_1="stimPeriod" variable_2="stimPeriod"/>
-    <map_variables variable_1="stimDuration" variable_2="stimDuration"/>
-    <map_variables variable_1="stimCurrent" variable_2="stimCurrent"/>
-  </connection>
-  <!-- and connect the actual stimulus current to the model -->
-  <connection>
-    <map_components component_1="model" component_2="stimulus_protocol"/>
-    <map_variables variable_1="Istim" variable_2="IStim"/>
-  </connection>
-
-  <!-- Here we could define any parameters that we want to differ from the default -->
-  <component name="parameters">
-
-  </component>
-  <!-- but since we want all default parameters we just connect the default values through to the model -->
-  <connection>
-    <map_components component_1="model" component_2="default_parameters"/>
-    <map_variables variable_1="Cm" variable_2="Cm"/>
-    <map_variables variable_1="VNa" variable_2="VNa"/>
-    <map_variables variable_1="VK" variable_2="VK"/>
-    <map_variables variable_1="Vleak" variable_2="Vleak"/>
-    <map_variables variable_1="gNa_max" variable_2="gNa_max"/>
-    <map_variables variable_1="gK_max" variable_2="gK_max"/>
-    <map_variables variable_1="gleak_max" variable_2="gleak_max"/>
-  </connection>
-  <!-- similarly for the initial conditions -->
-  <component name="initial_conditions">
-
-  </component>
-  <connection>
-    <map_components component_1="model" component_2="default_initial_conditions"/>
-    <map_variables variable_1="V_initial" variable_2="V_initial"/>
-    <map_variables variable_1="m_initial" variable_2="m_initial"/>
-    <map_variables variable_1="h_initial" variable_2="h_initial"/>
-    <map_variables variable_1="n_initial" variable_2="n_initial"/>
-  </connection>
-  <!-- SED-ML (and CSim simulation description above) is only able to address variables at the top level of the model hierarchy, so we need to define the variables we want SED-ML to be able to address here. -->
-  <component name="outputs">
-    <variable name="time" public_interface="in" units="ms"/>
-    <variable name="INa" public_interface="in" units="uA_per_cmsq"/>
-    <variable name="IK" public_interface="in" units="uA_per_cmsq"/>
-    <variable name="Ileak" public_interface="in" units="uA_per_cmsq"/>
-    <variable name="V" public_interface="in" units="mV"/>
-    <variable name="minus_V" public_interface="in" units="mV"/>
-    <variable name="h" public_interface="in" units="dimensionless"/>
-    <variable name="m" public_interface="in" units="dimensionless"/>
-    <variable name="n" public_interface="in" units="dimensionless"/>
-  </component>
-  <!-- and connect the output variable definitions to their actual source in the model -->
-  <connection>
-    <map_components component_1="outputs" component_2="model"/>
-    <map_variables variable_1="INa" variable_2="INa"/>
-    <map_variables variable_1="IK" variable_2="IK"/>
-    <map_variables variable_1="Ileak" variable_2="Ileak"/>
-    <map_variables variable_1="V" variable_2="V"/>
-    <map_variables variable_1="minus_V" variable_2="minus_V"/>
-    <map_variables variable_1="h" variable_2="h"/>
-    <map_variables variable_1="m" variable_2="m"/>
-    <map_variables variable_1="n" variable_2="n"/>
-  </connection>
-  <!-- and connect the time output to the source time variable -->
-  <connection>
-    <map_components component_1="outputs" component_2="time"/>
-    <map_variables variable_1="time" variable_2="time"/>
-  </connection>
+<?xml version='1.0'?>
+<model name="periodic_stimulus" xmlns="http://www.cellml.org/cellml/1.1#" xmlns:cellml="http://www.cellml.org/cellml/1.1#" xmlns:cmeta="http://www.cellml.org/metadata/1.0#" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- this block of XML is used by CSim to execute a simulation (https://code.google.com/p/cellml-simulator/) -->
+    <simulation id="simulation1" xmlns="http://cellml.sourceforge.net/csim/simulation/0.1#">
+        <boundVariable end="220.0" maxStep="0.05" start="0.0" tabulationStep="0.1"/>
+        <outputVariable column="1" component="outputs" variable="time"/>
+        <outputVariable column="2" component="outputs" variable="INa"/>
+        <outputVariable column="3" component="outputs" variable="IK"/>
+        <outputVariable column="4" component="outputs" variable="Ileak"/>
+        <outputVariable column="5" component="outputs" variable="V"/>
+        <outputVariable column="6" component="outputs" variable="minus_V"/>
+        <outputVariable column="7" component="outputs" variable="h"/>
+        <outputVariable column="8" component="outputs" variable="m"/>
+        <outputVariable column="9" component="outputs" variable="n"/>
+    </simulation>
+    <import xlink:href="../components/units.xml">
+        <units name="ms" units_ref="ms"/>
+        <units name="uA_per_cmsq" units_ref="uA_per_cmsq"/>
+    </import>
+    <import xlink:href="../components/stimulated.xml">
+        <component component_ref="action_potential" name="model"/>
+    </import>
+    <import xlink:href="periodic-IStim-protocol.xml">
+        <component component_ref="stimulus_protocol" name="stimulus_protocol"/>
+    </import>
+    <import xlink:href="time.xml">
+        <component component_ref="time" name="time"/>
+    </import>
+    <import xlink:href="../components/default-variable-values.xml">
+        <component component_ref="parameters" name="default_parameters"/>
+        <component component_ref="initial_conditions" name="default_initial_conditions"/>
+    </import>
+    <!-- Connect the time source variable to the model and stimulus protocol -->
+    <connection>
+        <map_components component_1="model" component_2="time"/>
+        <map_variables variable_1="time" variable_2="time"/>
+    </connection>
+    <connection>
+        <map_components component_1="time" component_2="stimulus_protocol"/>
+        <map_variables variable_1="time" variable_2="time"/>
+    </connection>
+    <!-- Define the stimulus protocol parameter values -->
+    <component name="stimulus_protocol_params">
+        <variable initial_value="50" name="stimPeriod" public_interface="out" units="ms"/>
+        <variable initial_value="0.5" name="stimDuration" public_interface="out" units="ms"/>
+        <variable initial_value="-10.0" name="stimCurrent" public_interface="out" units="uA_per_cmsq"/>
+    </component>
+    <!-- and connect the parameters to the protocol definition -->
+    <connection>
+        <map_components component_1="stimulus_protocol_params" component_2="stimulus_protocol"/>
+        <map_variables variable_1="stimPeriod" variable_2="stimPeriod"/>
+        <map_variables variable_1="stimDuration" variable_2="stimDuration"/>
+        <map_variables variable_1="stimCurrent" variable_2="stimCurrent"/>
+    </connection>
+    <!-- and connect the actual stimulus current to the model -->
+    <connection>
+        <map_components component_1="model" component_2="stimulus_protocol"/>
+        <map_variables variable_1="Istim" variable_2="IStim"/>
+    </connection>
+    <!-- Here we could define any parameters that we want to differ from the default -->
+    <component name="parameters"/>
+    <!-- but since we want all default parameters we just connect the default values through to the model -->
+    <connection>
+        <map_components component_1="model" component_2="default_parameters"/>
+        <map_variables variable_1="Cm" variable_2="Cm"/>
+        <map_variables variable_1="VNa" variable_2="VNa"/>
+        <map_variables variable_1="VK" variable_2="VK"/>
+        <map_variables variable_1="Vleak" variable_2="Vleak"/>
+        <map_variables variable_1="gNa_max" variable_2="gNa_max"/>
+        <map_variables variable_1="gK_max" variable_2="gK_max"/>
+        <map_variables variable_1="gleak_max" variable_2="gleak_max"/>
+    </connection>
+    <!-- similarly for the initial conditions -->
+    <component name="initial_conditions"/>
+    <connection>
+        <map_components component_1="model" component_2="default_initial_conditions"/>
+        <map_variables variable_1="V_initial" variable_2="V_initial"/>
+        <map_variables variable_1="m_initial" variable_2="m_initial"/>
+        <map_variables variable_1="h_initial" variable_2="h_initial"/>
+        <map_variables variable_1="n_initial" variable_2="n_initial"/>
+    </connection>
+    <!-- SED-ML (and CSim simulation description above) is only able to address variables at the top level of the model hierarchy, so we need to define the variables we want SED-ML to be able to address here. -->
+    <component name="outputs">
+        <variable name="time" public_interface="in" units="ms"/>
+        <variable name="INa" public_interface="in" units="uA_per_cmsq"/>
+        <variable name="IK" public_interface="in" units="uA_per_cmsq"/>
+        <variable name="Ileak" public_interface="in" units="uA_per_cmsq"/>
+        <variable name="V" public_interface="in" units="mV"/>
+        <variable name="minus_V" public_interface="in" units="mV"/>
+        <variable name="h" public_interface="in" units="dimensionless"/>
+        <variable name="m" public_interface="in" units="dimensionless"/>
+        <variable name="n" public_interface="in" units="dimensionless"/>
+    </component>
+    <!-- and connect the output variable definitions to their actual source in the model -->
+    <connection>
+        <map_components component_1="outputs" component_2="model"/>
+        <map_variables variable_1="INa" variable_2="INa"/>
+        <map_variables variable_1="IK" variable_2="IK"/>
+        <map_variables variable_1="Ileak" variable_2="Ileak"/>
+        <map_variables variable_1="V" variable_2="V"/>
+        <map_variables variable_1="minus_V" variable_2="minus_V"/>
+        <map_variables variable_1="h" variable_2="h"/>
+        <map_variables variable_1="m" variable_2="m"/>
+        <map_variables variable_1="n" variable_2="n"/>
+    </connection>
+    <!-- and connect the time output to the source time variable -->
+    <connection>
+        <map_components component_1="outputs" component_2="time"/>
+        <map_variables variable_1="time" variable_2="time"/>
+    </connection>
 </model>

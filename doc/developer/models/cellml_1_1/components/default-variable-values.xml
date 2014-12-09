@@ -1,25 +1,25 @@
-<?xml version="1.0" encoding="iso-8859-1"?>
-<model xmlns="http://www.cellml.org/cellml/1.1#" xmlns:cellml="http://www.cellml.org/cellml/1.1#" xmlns:xlink="http://www.w3.org/1999/xlink" name="variable_values_model">
-  <import xlink:href="units.xml">
-    <units name="ms" units_ref="ms"/>
-    <units name="mV" units_ref="mV"/>
-    <units name="uA_per_cmsq" units_ref="uA_per_cmsq"/>
-    <units name="mS_per_cmsq" units_ref="mS_per_cmsq"/>
-    <units name="uF_per_cmsq" units_ref="uF_per_cmsq"/>
-  </import>
-  <component name="parameters">
-    <variable name="VK" public_interface="out" private_interface="out" units="mV" initial_value="12.0"/>
-    <variable name="VNa" public_interface="out" private_interface="out" units="mV" initial_value="-115.0"/>
-    <variable name="Vleak" public_interface="out" private_interface="out" units="mV" initial_value="-10.613"/>
-    <variable name="gK_max" public_interface="out" private_interface="out" units="mS_per_cmsq" initial_value="36.0"/>
-    <variable name="gNa_max" public_interface="out" private_interface="out" units="mS_per_cmsq" initial_value="120.0"/>
-    <variable name="gleak_max" public_interface="out" private_interface="out" units="mS_per_cmsq" initial_value="0.3"/>
-    <variable name="Cm" public_interface="out" private_interface="out" units="uF_per_cmsq" initial_value="1.0"/>
-  </component>
-  <component name="initial_conditions">
-    <variable name="V_initial" public_interface="out" private_interface="out" units="mV" initial_value="0.0"/>
-    <variable name="n_initial" public_interface="out" private_interface="out" units="dimensionless" initial_value="0.315"/>
-    <variable name="m_initial" public_interface="out" private_interface="out" units="dimensionless" initial_value="0.042"/>
-    <variable name="h_initial" public_interface="out" private_interface="out" units="dimensionless" initial_value="0.608"/>
-  </component>
+<?xml version='1.0'?>
+<model name="variable_values_model" xmlns="http://www.cellml.org/cellml/1.1#" xmlns:cellml="http://www.cellml.org/cellml/1.1#" xmlns:cmeta="http://www.cellml.org/metadata/1.0#" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <import xlink:href="units.xml">
+        <units name="ms" units_ref="ms"/>
+        <units name="mV" units_ref="mV"/>
+        <units name="uA_per_cmsq" units_ref="uA_per_cmsq"/>
+        <units name="mS_per_cmsq" units_ref="mS_per_cmsq"/>
+        <units name="uF_per_cmsq" units_ref="uF_per_cmsq"/>
+    </import>
+    <component name="parameters">
+        <variable initial_value="12.0" name="VK" private_interface="out" public_interface="out" units="mV"/>
+        <variable initial_value="-115.0" name="VNa" private_interface="out" public_interface="out" units="mV"/>
+        <variable initial_value="-10.613" name="Vleak" private_interface="out" public_interface="out" units="mV"/>
+        <variable initial_value="36.0" name="gK_max" private_interface="out" public_interface="out" units="mS_per_cmsq"/>
+        <variable initial_value="120.0" name="gNa_max" private_interface="out" public_interface="out" units="mS_per_cmsq"/>
+        <variable initial_value="0.3" name="gleak_max" private_interface="out" public_interface="out" units="mS_per_cmsq"/>
+        <variable initial_value="1.0" name="Cm" private_interface="out" public_interface="out" units="uF_per_cmsq"/>
+    </component>
+    <component name="initial_conditions">
+        <variable initial_value="0.0" name="V_initial" private_interface="out" public_interface="out" units="mV"/>
+        <variable initial_value="0.315" name="n_initial" private_interface="out" public_interface="out" units="dimensionless"/>
+        <variable initial_value="0.042" name="m_initial" private_interface="out" public_interface="out" units="dimensionless"/>
+        <variable initial_value="0.608" name="h_initial" private_interface="out" public_interface="out" units="dimensionless"/>
+    </component>
 </model>

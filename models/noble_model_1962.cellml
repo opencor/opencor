@@ -1,5 +1,5 @@
 <?xml version='1.0'?>
-<model cmeta:id="noble_model_1962" name="noble_model_1962" xmlns="http://www.cellml.org/cellml/1.0#" xmlns:cellml="http://www.cellml.org/cellml/1.0#" xmlns:cmeta="http://www.cellml.org/metadata/1.0#">
+<model name="noble_model_1962" xmlns="http://www.cellml.org/cellml/1.0#" xmlns:cellml="http://www.cellml.org/cellml/1.0#" xmlns:cmeta="http://www.cellml.org/metadata/1.0#">
     <units name="millisecond">
         <unit prefix="milli" units="second"/>
     </units>

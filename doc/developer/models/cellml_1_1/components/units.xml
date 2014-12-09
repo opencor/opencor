@@ -1,44 +1,44 @@
-<?xml version="1.0" encoding="iso-8859-1"?>
-<model xmlns="http://www.cellml.org/cellml/1.1#" xmlns:cellml="http://www.cellml.org/cellml/1.1#" name="units">
-  <units name="ms">
-    <unit units="second" prefix="milli"/>
-  </units>
-  <units name="per_ms">
-    <unit units="ms" exponent="-1"/>
-  </units>
-  <units name="per_ms_mV">
-    <unit units="ms" exponent="-1"/>
-    <unit units="mV" exponent="-1"/>
-  </units>
-  <units name="mV">
-    <unit units="volt" prefix="milli"/>
-  </units>
-  <units name="mV_per_ms">
-    <unit units="mV"/>
-    <unit units="ms" exponent="-1"/>
-  </units>
-  <units name="cm">
-    <unit units="metre" prefix="centi"/>
-  </units>
-  <units name="uA">
-    <unit units="ampere" prefix="micro"/>
-  </units>
-  <units name="uA_per_cmsq">
-    <unit units="uA"/>
-    <unit units="cm" exponent="-2"/>
-  </units>
-  <units name="mS">
-    <unit units="siemens" prefix="milli"/>
-  </units>
-  <units name="mS_per_cmsq">
-    <unit units="mS"/>
-    <unit units="cm" exponent="-2"/>
-  </units>
-  <units name="uF">
-    <unit units="farad" prefix="micro"/>
-  </units>
-  <units name="uF_per_cmsq">
-    <unit units="uF"/>
-    <unit units="cm" exponent="-2"/>
-  </units>
+<?xml version='1.0'?>
+<model name="units" xmlns="http://www.cellml.org/cellml/1.1#" xmlns:cellml="http://www.cellml.org/cellml/1.1#" xmlns:cmeta="http://www.cellml.org/metadata/1.0#">
+    <units name="ms">
+        <unit prefix="milli" units="second"/>
+    </units>
+    <units name="per_ms">
+        <unit exponent="-1" units="ms"/>
+    </units>
+    <units name="per_ms_mV">
+        <unit exponent="-1" units="ms"/>
+        <unit exponent="-1" units="mV"/>
+    </units>
+    <units name="mV">
+        <unit prefix="milli" units="volt"/>
+    </units>
+    <units name="mV_per_ms">
+        <unit units="mV"/>
+        <unit exponent="-1" units="ms"/>
+    </units>
+    <units name="cm">
+        <unit prefix="centi" units="metre"/>
+    </units>
+    <units name="uA">
+        <unit prefix="micro" units="ampere"/>
+    </units>
+    <units name="uA_per_cmsq">
+        <unit units="uA"/>
+        <unit exponent="-2" units="cm"/>
+    </units>
+    <units name="mS">
+        <unit prefix="milli" units="siemens"/>
+    </units>
+    <units name="mS_per_cmsq">
+        <unit units="mS"/>
+        <unit exponent="-2" units="cm"/>
+    </units>
+    <units name="uF">
+        <unit prefix="micro" units="farad"/>
+    </units>
+    <units name="uF_per_cmsq">
+        <unit units="uF"/>
+        <unit exponent="-2" units="cm"/>
+    </units>
 </model>

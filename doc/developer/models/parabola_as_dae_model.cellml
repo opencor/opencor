@@ -1,14 +1,16 @@
-<?xml version="1.0" encoding="utf-8"?>
-<model name="parabola_as_dae_model" cmeta:id="parabola_as_dae_model" xmlns="http://www.cellml.org/cellml/1.0#" xmlns:cellml="http://www.cellml.org/cellml/1.0#" xmlns:cmeta="http://www.cellml.org/metadata/1.0#">
+<?xml version='1.0'?>
+<model name="parabola_as_dae_model" xmlns="http://www.cellml.org/cellml/1.0#" xmlns:cellml="http://www.cellml.org/cellml/1.0#" xmlns:cmeta="http://www.cellml.org/metadata/1.0#">
     <component name="main">
         <variable name="time" units="dimensionless"/>
-        <variable name="offset" initial_value="123" units="dimensionless"/>
+        <variable initial_value="123" name="offset" units="dimensionless"/>
         <variable name="x" units="dimensionless"/>
-        <variable name="y" initial_value="offset" units="dimensionless"/>
+        <variable initial_value="offset" name="y" units="dimensionless"/>
         <variable name="z" units="dimensionless"/>
         <math xmlns="http://www.w3.org/1998/Math/MathML">
-            <apply><eq/>
-                <apply><power/>
+            <apply>
+                <eq/>
+                <apply>
+                    <power/>
                     <ci>offset</ci>
                     <cn cellml:units="dimensionless">2</cn>
                 </apply>
@@ -16,22 +18,30 @@
             </apply>
         </math>
         <math xmlns="http://www.w3.org/1998/Math/MathML">
-            <apply><eq/>
-                <apply><diff/>
-                    <bvar><ci>time</ci></bvar>
+            <apply>
+                <eq/>
+                <apply>
+                    <diff/>
+                    <bvar>
+                        <ci>time</ci>
+                    </bvar>
                     <ci>y</ci>
                 </apply>
-                <apply><times/>
+                <apply>
+                    <times/>
                     <cn cellml:units="dimensionless">2</cn>
                     <ci>time</ci>
                 </apply>
             </apply>
         </math>
         <math xmlns="http://www.w3.org/1998/Math/MathML">
-            <apply><eq/>
+            <apply>
+                <eq/>
                 <ci>x</ci>
-                <apply><plus/>
-                    <apply><power/>
+                <apply>
+                    <plus/>
+                    <apply>
+                        <power/>
                         <ci>time</ci>
                         <cn cellml:units="dimensionless">2</cn>
                     </apply>
@@ -40,17 +50,24 @@
             </apply>
         </math>
         <math xmlns="http://www.w3.org/1998/Math/MathML">
-            <apply><eq/>
+            <apply>
+                <eq/>
                 <ci>z</ci>
                 <piecewise>
                     <piece>
-                        <apply><sin/><ci>offset</ci></apply>
-                        <apply><and/>
-                            <apply><gt/>
+                        <apply>
+                            <sin/>
+                            <ci>offset</ci>
+                        </apply>
+                        <apply>
+                            <and/>
+                            <apply>
+                                <gt/>
                                 <ci>offset</ci>
                                 <cn cellml:units="dimensionless">1</cn>
                             </apply>
-                            <apply><leq/>
+                            <apply>
+                                <leq/>
                                 <ci>offset</ci>
                                 <cn cellml:units="dimensionless">3</cn>
                             </apply>
@@ -58,7 +75,8 @@
                     </piece>
                     <piece>
                         <cn cellml:units="dimensionless">3</cn>
-                        <apply><gt/>
+                        <apply>
+                            <gt/>
                             <ci>offset</ci>
                             <cn cellml:units="dimensionless">3</cn>
                         </apply>

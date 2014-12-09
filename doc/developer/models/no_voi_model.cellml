@@ -1,6 +1,6 @@
-<?xml version="1.0" encoding="utf-8"?>
-<model name="no_voi_model" cmeta:id="no_voi_model" xmlns="http://www.cellml.org/cellml/1.0#" xmlns:cellml="http://www.cellml.org/cellml/1.0#" xmlns:cmeta="http://www.cellml.org/metadata/1.0#">
+<?xml version='1.0'?>
+<model name="no_voi_model" xmlns="http://www.cellml.org/cellml/1.0#" xmlns:cellml="http://www.cellml.org/cellml/1.0#" xmlns:cmeta="http://www.cellml.org/metadata/1.0#">
     <component name="main">
-        <variable name="x" initial_value="3" units="dimensionless"/>
+        <variable initial_value="3" name="x" units="dimensionless"/>
     </component>
 </model>
