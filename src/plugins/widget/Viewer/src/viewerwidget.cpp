@@ -589,6 +589,12 @@ void ViewerWidget::processNode(const QDomNode &pDomNode) const
                         // Replace the current node with our new one
 
                         domNode.parentNode().replaceChild(newDomElement, domNode);
+                    } else if (greekSymbols()) {
+                        // There are no subscripts to be processed, but we want
+                        // to use Greek symbols, so try to Greek symbolise our
+                        // child node value
+
+                        childNode.setNodeValue(greekSymbolize(childNodeValue));
                     }
                 } else if (greekSymbols()) {
                     // We want to use Greek symbols, so go through the value of
