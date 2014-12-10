@@ -327,14 +327,14 @@ int main(int pArgC, char *pArgV[])
     QWebSettings::clearMemoryCaches();
 #endif
 
-    // Delete our application
-
-    delete guiApp;
-
     // Remove all 'global' instances that were created and used during this
     // session
 
     OpenCOR::removeGlobalInstances();
+
+    // Delete our application
+
+    delete guiApp;
 
     // We are done with the execution of our application, so now the question is
     // whether we need to restart
