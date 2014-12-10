@@ -1,4 +1,4 @@
-We build our own copy of OpenSSL, which requires the following:
+We build our own copy of OpenSSL (indeed, http://slproweb.com/products/Win32OpenSSL.html only provides binaries built with MSVC 2008 while we use and need MSVC 2013), which requires the following:
  - Perl (see http://www.perl.org/); and
  - the OpenSSL source code (see https://www.openssl.org/source/).
 
