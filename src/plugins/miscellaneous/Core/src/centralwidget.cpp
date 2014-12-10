@@ -40,7 +40,7 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-#include <QApplication>
+#include <QCoreApplication>
 #include <QDesktopWidget>
 #include <QDialog>
 #include <QDialogButtonBox>
@@ -913,7 +913,7 @@ void CentralWidget::reloadFile(const int &pIndex, const bool &pForce)
                 // The current file is modified, so ask the user whether s/he
                 // still wants to reload it
 
-                doReloadFile = QMessageBox::question(mMainWindow, qApp->applicationName(),
+                doReloadFile = QMessageBox::question(mMainWindow, qAppName(),
                                                      tr("<strong>%1</strong> has been modified. Do you still want to reload it?").arg(fileName),
                                                      QMessageBox::Yes|QMessageBox::No,
                                                      QMessageBox::Yes) == QMessageBox::Yes;
@@ -1211,7 +1211,7 @@ bool CentralWidget::canCloseFile(const int &pIndex)
         // The current file is modified, so ask the user whether to save it or
         // ignore it
 
-        switch (QMessageBox::question(mMainWindow, qApp->applicationName(),
+        switch (QMessageBox::question(mMainWindow, qAppName(),
                                       fileManagerInstance->isNew(fileName)?
                                           tr("<strong>%1</strong> is new. Do you want to save it before closing it?").arg(mFileTabs->tabToolTip(pIndex)):
                                           tr("<strong>%1</strong> has been modified. Do you want to save it before closing it?").arg(fileName),
@@ -1783,7 +1783,7 @@ void CentralWidget::fileChanged(const QString &pFileName)
         &&  fileManagerInstance->isDifferent(pFileName)) {
         // The given file has been changed, so ask the user whether to reload it
 
-        if (QMessageBox::question(mMainWindow, qApp->applicationName(),
+        if (QMessageBox::question(mMainWindow, qAppName(),
                                   tr("<strong>%1</strong> has been modified. Do you want to reload it?").arg(pFileName),
                                   QMessageBox::Yes|QMessageBox::No,
                                   QMessageBox::Yes) == QMessageBox::Yes) {
@@ -1812,7 +1812,7 @@ void CentralWidget::fileDeleted(const QString &pFileName)
 {
     // The given file doesn't exist anymore, so ask the user whether to close it
 
-    if (QMessageBox::question(mMainWindow, qApp->applicationName(),
+    if (QMessageBox::question(mMainWindow, qAppName(),
                               tr("<strong>%1</strong> does not exist anymore. Do you want to close it?").arg(pFileName),
                               QMessageBox::Yes|QMessageBox::No,
                               QMessageBox::Yes) == QMessageBox::Yes) {

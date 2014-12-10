@@ -29,7 +29,7 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-#include <QApplication>
+#include <QCoreApplication>
 #include <QCheckBox>
 #include <QDesktopServices>
 #include <QJsonDocument>
@@ -266,9 +266,9 @@ void CheckForUpdatesWindow::updateGui()
                 if (version.contains("-"))
                     mGui->statusLabel->setText(snapshotInformation.arg(WhatIsNewUrl+"latest"));
                 else
-                    mGui->statusLabel->setText(versionInformation.arg(WhatIsNewUrl+version, qApp->applicationName(), version));
+                    mGui->statusLabel->setText(versionInformation.arg(WhatIsNewUrl+version, qAppName(), version));
             } else {
-                mGui->statusLabel->setText(tr("No newer version or snapshot of %1 is available.").arg(qApp->applicationName()));
+                mGui->statusLabel->setText(tr("No newer version or snapshot of %1 is available.").arg(qAppName()));
             }
         } else if (mEngine->hasNewerOfficialVersion()) {
             // The user is only after an official version of OpenCOR, so look
@@ -283,9 +283,9 @@ void CheckForUpdatesWindow::updateGui()
                     break;
                 }
 
-            mGui->statusLabel->setText(versionInformation.arg(WhatIsNewUrl+version, qApp->applicationName(), version));
+            mGui->statusLabel->setText(versionInformation.arg(WhatIsNewUrl+version, qAppName(), version));
         } else {
-            mGui->statusLabel->setText(tr("No newer version of %1 is available.").arg(qApp->applicationName()));
+            mGui->statusLabel->setText(tr("No newer version of %1 is available.").arg(qAppName()));
         }
     } else {
         mGui->statusLabel->setText(mEngine->status());
