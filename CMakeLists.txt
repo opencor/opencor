@@ -395,6 +395,7 @@ IF(APPLE)
         QtQuick
         QtSensors
         QtSvg
+        QtWebChannel
         QtWebKit
         QtWebKitWidgets
         QtWidgets
@@ -414,7 +415,6 @@ IF(APPLE)
 
     # Deploy some plugins
 
-    OS_X_DEPLOY_QT_PLUGIN(accessible qtaccessiblewidgets)
     OS_X_DEPLOY_QT_PLUGIN(imageformats qjpeg)
     OS_X_DEPLOY_QT_PLUGIN(platforms qcocoa)
     OS_X_DEPLOY_QT_PLUGIN(printsupport cocoaprintersupport)
@@ -538,8 +538,8 @@ IF(WIN32)
 
     # Qt libraries required by OpenCOR
 
-    WINDOWS_DEPLOY_QT_LIBRARIES(Qt5CLucene Qt5Core Qt5Gui Qt5Help Qt5Multimedia Qt5MultimediaWidgets Qt5Network Qt5OpenGL Qt5Positioning Qt5PrintSupport Qt5Qml Qt5Quick Qt5Sensors Qt5Sql Qt5Svg Qt5WebKit Qt5WebKitWidgets Qt5Widgets Qt5Xml Qt5XmlPatterns)
-    WINDOWS_DEPLOY_QT_LIBRARIES(icudt52 icuin52 icuuc52)
+    WINDOWS_DEPLOY_QT_LIBRARIES(Qt5CLucene Qt5Core Qt5Gui Qt5Help Qt5Multimedia Qt5MultimediaWidgets Qt5Network Qt5OpenGL Qt5Positioning Qt5PrintSupport Qt5Qml Qt5Quick Qt5Sensors Qt5Sql Qt5Svg Qt5WebChannel Qt5WebKit Qt5WebKitWidgets Qt5Widgets Qt5Xml Qt5XmlPatterns)
+    WINDOWS_DEPLOY_QT_LIBRARIES(icudt53 icuin53 icuuc53)
 
     IF(ENABLE_TESTS)
         WINDOWS_DEPLOY_QT_LIBRARIES(Qt5Test)
@@ -547,7 +547,6 @@ IF(WIN32)
 
     # Qt plugins required by OpenCOR
 
-    WINDOWS_DEPLOY_QT_PLUGIN(accessible qtaccessiblewidgets)
     WINDOWS_DEPLOY_QT_PLUGIN(imageformats qjpeg)
     WINDOWS_DEPLOY_QT_PLUGIN(platforms qwindows)
     WINDOWS_DEPLOY_QT_PLUGIN(printsupport windowsprintersupport)
@@ -626,21 +625,20 @@ ELSE()
     #       its suffix, so unless making the macro unnecessarily cumbersome to
     #       use, it's better to do things ourselves...
 
-    FOREACH(QT_LIBRARY CLucene Core DBus Gui Help Network OpenGL Positioning PrintSupport Qml Quick Sensors Sql Svg WebKit WebKitWidgets Widgets Xml XmlPatterns)
+    FOREACH(QT_LIBRARY CLucene Core DBus Gui Help Network OpenGL Positioning PrintSupport Qml Quick Sensors Sql Svg WebChannel WebKit WebKitWidgets Widgets Xml XmlPatterns)
         INSTALL(FILES ${QT_LIBRARY_DIR}/${CMAKE_SHARED_LIBRARY_PREFIX}Qt${QT_VERSION_MAJOR}${QT_LIBRARY}${CMAKE_SHARED_LIBRARY_SUFFIX}.${QT_VERSION_MAJOR}.${QT_VERSION_MINOR}.${QT_VERSION_PATCH}
                 DESTINATION lib
                 RENAME ${CMAKE_SHARED_LIBRARY_PREFIX}Qt${QT_VERSION_MAJOR}${QT_LIBRARY}${CMAKE_SHARED_LIBRARY_SUFFIX}.${QT_VERSION_MAJOR})
     ENDFOREACH()
 
     FOREACH(QT_FILE icudata icui18n icuuc)
-        INSTALL(FILES ${QT_LIBRARY_DIR}/${CMAKE_SHARED_LIBRARY_PREFIX}${QT_FILE}${CMAKE_SHARED_LIBRARY_SUFFIX}.52.1
+        INSTALL(FILES ${QT_LIBRARY_DIR}/${CMAKE_SHARED_LIBRARY_PREFIX}${QT_FILE}${CMAKE_SHARED_LIBRARY_SUFFIX}.53.1
                 DESTINATION lib
-                RENAME ${CMAKE_SHARED_LIBRARY_PREFIX}${QT_FILE}${CMAKE_SHARED_LIBRARY_SUFFIX}.52)
+                RENAME ${CMAKE_SHARED_LIBRARY_PREFIX}${QT_FILE}${CMAKE_SHARED_LIBRARY_SUFFIX}.53)
     ENDFOREACH()
 
     # Qt plugins required by OpenCOR
 
-    LINUX_DEPLOY_QT_PLUGIN(accessible qtaccessiblewidgets)
     LINUX_DEPLOY_QT_PLUGIN(imageformats qjpeg)
     LINUX_DEPLOY_QT_PLUGIN(platforms qxcb)
     LINUX_DEPLOY_QT_PLUGIN(printsupport cupsprintersupport)
