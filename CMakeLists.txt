@@ -353,7 +353,7 @@ IF(WIN32)
     )
 ENDIF()
 
-# Some post-processing specific
+# Some post-processing specific stuff
 
 IF(APPLE)
     # Configure and use our own Info.plist file
