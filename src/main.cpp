@@ -55,13 +55,13 @@ int main(int pArgC, char *pArgV[])
     // Determine whether we should try the CLI version of OpenCOR:
     //  - Windows: we never try the CLI version of OpenCOR. We go straight for
     //             its GUI version.
-    //  - Linux: we always try the CLI version of OpenCOR and then go for its
-    //           GUI version, if needed.
-    //  - OS X: we try the CLI version of OpenCOR unless the user double clicks
-    //          on the OpenCOR bundle or opens it from the command line by
-    //          entering something like:
+    //  - Linux: we try the CLI version of OpenCOR if at least one argument was
+    //           passed, and then go for its GUI version, if needed.
+    //  - OS X: we try the CLI version of OpenCOR if at least one argument was
+    //          passed unless the user double clicks on the OpenCOR bundle or
+    //          opens it from the command line by entering something like:
     //              open OpenCOR.app
-    //          in which case we go for its GUI version.
+    //          in which case we go straight for its GUI version.
     // Note #1: on Windows, we have two binaries (.com and .exe that are for the
     //          CLI and GUI versions of OpenCOR, respectively). This means that
     //          when a console window is open, to enter something like:
@@ -85,9 +85,9 @@ int main(int pArgC, char *pArgV[])
 #if defined(Q_OS_WIN)
     bool tryCliVersion = false;
 #elif defined(Q_OS_LINUX)
-    bool tryCliVersion = true;
+    bool tryCliVersion = pArgC > 1;
 #elif defined(Q_OS_MAC)
-    bool tryCliVersion = (pArgC == 1) || memcmp(pArgV[1], "-psn_", 5);
+    bool tryCliVersion = (pArgC > 1) && memcmp(pArgV[1], "-psn_", 5);
 #else
     #error Unsupported platform
 #endif
