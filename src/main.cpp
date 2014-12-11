@@ -35,10 +35,6 @@ specific language governing permissions and limitations under the License.
 #include <QSettings>
 #include <QVariant>
 
-#ifdef Q_OS_WIN
-    #include <QWebSettings>
-#endif
-
 //==============================================================================
 
 #include <QtSingleApplication>
@@ -312,20 +308,6 @@ int main(int pArgC, char *pArgV[])
     // Delete our main window
 
     delete win;
-
-    // If we use QtWebKit, and QWebPage in particular, then leak messages will
-    // get generated on Windows when leaving OpenCOR. This is because an object
-    // cache is shared between all QWebPage instances. So to destroy a QWebPage
-    // instance won't clear the cache, hence the leak messages. However, these
-    // messages are 'only' warnings, so we can safely live with them. Still, it
-    // doesn't look 'good', so we clear the memory caches, thus avoiding those
-    // leak messages...
-    // Note: the below must absolutely be done after calling guiApp->exec() and
-    //       before deleting guiApp...
-
-#ifdef Q_OS_WIN
-    QWebSettings::clearMemoryCaches();
-#endif
 
     // Remove all 'global' instances that were created and used during this
     // session
