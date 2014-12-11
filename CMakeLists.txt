@@ -380,6 +380,7 @@ IF(APPLE)
     # Clean up the OpenCOR executable
 
     SET(QT_LIBRARIES
+        QtCLucene
         QtConcurrent
         QtCore
         QtGui
@@ -394,6 +395,7 @@ IF(APPLE)
         QtQml
         QtQuick
         QtSensors
+        QtSql
         QtSvg
         QtWebChannel
         QtWebKit
@@ -407,7 +409,7 @@ IF(APPLE)
 
     # Deploy our Qt libraries
 
-    OS_X_DEPLOY_QT_LIBRARIES(${QT_LIBRARIES} QtCLucene QtSql)
+    OS_X_DEPLOY_QT_LIBRARIES(${QT_LIBRARIES})
 
     IF(ENABLE_TESTS)
         OS_X_DEPLOY_QT_LIBRARIES(QtTest)

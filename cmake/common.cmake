@@ -786,7 +786,7 @@ ENDMACRO()
 #===============================================================================
 
 MACRO(COPY_FILE_TO_BUILD_DIR PROJECT_TARGET ORIG_DIRNAME DEST_DIRNAME FILENAME)
-    # Copy the file (renaming it if needed) to the destination folder
+    # Copy the file (renaming it, if needed) to the destination folder
     # Note: DIRECT_COPY is used to copy a file that doesn't first need to be
     #       built. This means that we can then use EXECUTE_PROCESS() rather than
     #       ADD_CUSTOM_COMMAND(), and thus reduce the length of the
