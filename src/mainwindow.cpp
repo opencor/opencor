@@ -191,7 +191,7 @@ showEnableAction(mGui->actionPreferences, false);
     // A connection to handle the status bar
 
     connect(mGui->actionStatusBar, SIGNAL(triggered(bool)),
-            statusBar(), SLOT(setVisible(bool)));
+            mGui->statusBar, SLOT(setVisible(bool)));
 
     // Some connections to handle our various menu items
 
@@ -398,9 +398,9 @@ void MainWindow::showEvent(QShowEvent *pEvent)
         // all of OpenCOR to be visible in order to be able to determine whether
         // the status bar is visible...
 
-        statusBar()->setVisible(mStatusBarVisible);
+        mGui->statusBar->setVisible(mStatusBarVisible);
 
-        mGui->actionStatusBar->setChecked(statusBar()->isVisible());
+        mGui->actionStatusBar->setChecked(mGui->statusBar->isVisible());
     }
 }
 
