@@ -79,8 +79,8 @@ int main(int pArgC, char *pArgV[])
     //          opening it from the command line, a special argument in the form
     //          of -psn_0_1234567 is passed to OpenCOR, so we can use that to
     //          determine whether we need to force OpenCOR to be run in GUI mode
-    //          or whether we first try the CLI version of OpenCOR, and then the
-    //          GUI version if needed...
+    //          or whether we first try the CLI version of OpenCOR, and then its
+    //          GUI version, if needed...
 
 #if defined(Q_OS_WIN)
     bool tryCliVersion = false;

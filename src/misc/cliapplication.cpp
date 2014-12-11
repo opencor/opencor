@@ -373,7 +373,7 @@ bool CliApplication::run(int *pRes)
 
     QStringList commandArguments = QStringList();
 
-    foreach (const QString &argument, mApp->arguments())
+    foreach (const QString &argument, mApp->arguments()) {
         if (!argument.compare("-a") || !argument.compare("--about")) {
             aboutOption = true;
         } else if (!argument.compare("-c") || !argument.compare("--command")) {
@@ -399,6 +399,7 @@ bool CliApplication::run(int *pRes)
 
             commandArguments << argument;
         }
+    }
 
     // Handle the option the user requested, if any
 
