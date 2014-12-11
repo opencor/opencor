@@ -6,7 +6,7 @@ branches:
 
 os:
   - linux
-#  - osx
+  - osx
 
 env:
   - CONFIG=Release
@@ -30,9 +30,9 @@ install:
          ;
        fi
     && if [ "`uname -s`" = "Linux" ]; then
-            sudo apt-add-repository -y ppa:beineri/opt-qt532
+            sudo apt-add-repository -y ppa:beineri/opt-qt54
          && sudo apt-get -qq update
-         && sudo apt-get -qq install qt53tools qt53svg qt53webkit
+         && sudo apt-get -qq install qt54tools qt54svg qt54webkit
          ;
        else
             brew update
@@ -44,7 +44,7 @@ install:
 script:
   -    cd build
     && if [ "`uname -s`" = "Linux" ]; then
-         cmake -DCMAKE_BUILD_TYPE=$CONFIG -DCMAKE_PREFIX_PATH=/opt/qt53/lib/cmake -DENABLE_TESTS=ON -DENABLE_SAMPLES=ON ..
+         cmake -DCMAKE_BUILD_TYPE=$CONFIG -DCMAKE_PREFIX_PATH=/opt/qt54/lib/cmake -DENABLE_TESTS=ON -DENABLE_SAMPLES=ON ..
          ;
        else
          cmake -DCMAKE_BUILD_TYPE=$CONFIG -DCMAKE_PREFIX_PATH=/usr/local/opt/qt5/lib/cmake -DENABLE_TESTS=ON -DENABLE_SAMPLES=ON ..
