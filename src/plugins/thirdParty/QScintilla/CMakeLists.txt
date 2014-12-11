@@ -69,10 +69,8 @@ ELSE()
 
     IF(APPLE)
         SET(MAC_EXTRAS MacExtras)
-        SET(QT_MAC_EXTRAS QtMacExtras)
     ELSE()
         SET(MAC_EXTRAS)
-        SET(QT_MAC_EXTRAS)
     ENDIF()
 
     SET(QSCINTILLA_PLUGIN QScintilla PARENT_SCOPE)
