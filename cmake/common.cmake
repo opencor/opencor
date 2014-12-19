@@ -290,7 +290,7 @@ MACRO(INITIALISE_PROJECT)
 
         SET(CMAKE_INSTALL_RPATH "@executable_path/../Frameworks;@executable_path/../PlugIns/${PROJECT_NAME}")
     ELSEIF(NOT WIN32)
-        SET(CMAKE_INSTALL_RPATH "$ORIGIN/../lib")
+        SET(CMAKE_INSTALL_RPATH "$ORIGIN/../lib:$ORIGIN/../plugins/${PROJECT_NAME}")
     ENDIF()
 ENDMACRO()
 
