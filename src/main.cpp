@@ -45,10 +45,6 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-#include <stdlib.h>
-
-//==============================================================================
-
 int main(int pArgC, char *pArgV[])
 {
     // Remove all 'global' instances, in case OpenCOR previously crashed or
@@ -140,7 +136,7 @@ int main(int pArgC, char *pArgV[])
     //       using indirect rendering...
 
 #ifdef Q_OS_LINUX
-        setenv("LIBGL_ALWAYS_INDIRECT", "1", 1);
+    qputenv("LIBGL_ALWAYS_INDIRECT", "1");
 #endif
 
     // Initialise the plugins path
