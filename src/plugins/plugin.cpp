@@ -54,12 +54,12 @@ Plugin::Plugin(const QString &pFileName, PluginInfo *pInfo,
         if (pLoad) {
             // Make sure that the plugin's dependencies, if any, are loaded
             // before loading the plugin itself
-            // Note: normally, we would only do this on non-Windows systems
-            //       since, on Windows, a shared library's dependencies must be
-            //       loaded before the shared library itself can be loaded,
-            //       while on Linux / OS X, it's possible to load a shared
-            //       library even if its dependencies are not loaded. Still, it
-            //       doesn't harm doing the same on Linux / OS X...
+            // Note: normally, we would only do this on Windows systems since,
+            //       on Windows, a shared library's dependencies must be loaded
+            //       before the shared library itself can be loaded, while on
+            //       Linux / OS X, it's possible to load a shared library even
+            //       if its dependencies are not loaded. Still, it doesn't harm
+            //       doing the same on Linux / OS X...
 
             bool pluginDependenciesLoaded = true;
 
