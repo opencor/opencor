@@ -31,6 +31,9 @@ ADD_PLUGIN(Compiler
     QT_LIBRARIES
         QtCore
         QtGui
+        QtNetwork
+        QtXml
+        QtXmlPatterns
         QtWidgets
     TESTS
         tests
