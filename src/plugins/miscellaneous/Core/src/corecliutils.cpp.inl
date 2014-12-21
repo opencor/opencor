@@ -249,35 +249,51 @@ QString temporaryFileName(const QString &pExtension)
 
 //==============================================================================
 
-bool writeResourceToFile(const QString &pFilename, const QString &pResource)
+bool writeByteArrayToFile(const QString &pFileName,
+                          const QByteArray &pByteArray)
 {
-    if (QResource(pResource).isValid()) {
-        // The resource exists, so write a file with name pFilename and which
-        // contents is that of the resource which is retrieved as a QByteArray
+    // Write the given byte array to a temporary file and rename it to the given
+    // file name, if successful
 
-        QFile file(pFilename);
+    QFile file(temporaryFileName());
 
-        if (file.open(QIODevice::WriteOnly)) {
-            QByteArray resource = resourceAsByteArray(pResource);
-            bool res;
+    if (file.open(QIODevice::WriteOnly)) {
+        bool res = file.write(pByteArray) != -1;
 
-            res = file.write(resource) == resource.size();
+        file.close();
 
-            file.close();
+        // Rename the temporary file name to the given file name, if everything
+        // went fine
 
-            // Remove the newly created file in case not all the resource was
-            // written to it
+        if (res) {
+            if (QFile::exists(pFileName))
+                QFile::remove(pFileName);
 
-            if (!res)
-                file.remove();
-
-            return res;
-        } else {
-            return false;
+            res = file.rename(pFileName);
         }
+
+        // Remove the temporary file, if either we couldn't rename it or the
+        // initial saving didn't work
+
+        if (!res)
+            file.remove();
+
+        return res;
     } else {
         return false;
     }
+}
+
+//==============================================================================
+
+bool writeResourceToFile(const QString &pFileName, const QString &pResource)
+{
+    if (QResource(pResource).isValid())
+        // The resource exists, so write it to the given file
+
+        return writeByteArrayToFile(pFileName, resourceAsByteArray(pResource));
+    else
+        return false;
 }
 
 //==============================================================================
@@ -303,27 +319,11 @@ bool readTextFromFile(const QString &pFileName, QString &pText)
 
 //==============================================================================
 
-bool writeTextToFile(const QString &pFilename, const QString &pText)
+bool writeTextToFile(const QString &pFileName, const QString &pText)
 {
-    // Write the given string to a file with the given file name
+    // Write the given string to the given file
 
-    QFile file(pFilename);
-
-    if (file.open(QIODevice::WriteOnly)) {
-        bool res = file.write(pText.toUtf8()) != -1;
-
-        file.close();
-
-        // Remove the newly created file in case the string couldn't be written
-        // to it
-
-        if (!res)
-            file.remove();
-
-        return res;
-    } else {
-        return false;
-    }
+    return writeByteArrayToFile(pFileName, pText.toUtf8());
 }
 
 //==============================================================================
