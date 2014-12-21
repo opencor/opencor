@@ -122,28 +122,17 @@ bool CompilerEngine::compileCode(const QString &pCode)
 
     reset();
 
-    // Create a temporary file that will contain our code
-    // Note: for some reasons, a temporary file created using QTemporaryFile
-    //       doesn't work straightaway with stat(), which LLVM uses in its call
-    //       to CompilerInstance::ExecuteAction()). So, instead, we use
-    //       QTemporaryFile to get a temporary file name and then use QFile to
-    //       'properly' create our temporary file. For more information, see
-    //       https://bugreports.qt-project.org/browse/QTBUG-33727...
+    // Create a temporary file with the given code as its contents
 
     QString temporaryFileName = Core::temporaryFileName(".c");
-    QFile file(temporaryFileName);
 
-    if (!file.open(QIODevice::WriteOnly)) {
+    if (!Core::writeTextToFile(temporaryFileName, pCode)) {
         mError = tr("<strong>%1</strong> could not be created").arg(temporaryFileName);
+
+        QFile::remove(temporaryFileName);
 
         return false;
     }
-
-    // Save the code in our temporary file
-
-    file.write(pCode.toUtf8());
-
-    file.close();
 
     // Get a driver to compile our code
 
@@ -177,7 +166,7 @@ bool CompilerEngine::compileCode(const QString &pCode)
     if (!compilation) {
         mError = tr("the compilation object could not be created");
 
-        file.remove();
+        QFile::remove(temporaryFileName);
 
         return false;
     }
@@ -191,7 +180,7 @@ bool CompilerEngine::compileCode(const QString &pCode)
         || !llvm::isa<clang::driver::Command>(*jobList.begin())) {
         mError = tr("the compilation object must contain only one command");
 
-        file.remove();
+        QFile::remove(temporaryFileName);
 
         return false;
     }
@@ -204,7 +193,7 @@ bool CompilerEngine::compileCode(const QString &pCode)
     if (commandName.compare("clang")) {
         mError = tr("a <strong>clang</strong> command was expected, but a <strong>%1</strong> command was found instead").arg(commandName);
 
-        file.remove();
+        QFile::remove(temporaryFileName);
 
         return false;
     }
@@ -232,7 +221,7 @@ bool CompilerEngine::compileCode(const QString &pCode)
     if (!compilerInstance.hasDiagnostics()) {
         mError = tr("the diagnostics engine could not be created");
 
-        file.remove();
+        QFile::remove(temporaryFileName);
 
         return false;
     }
@@ -248,7 +237,7 @@ bool CompilerEngine::compileCode(const QString &pCode)
     if (!compilerInstance.ExecuteAction(*codeGenerationAction, outputStream)) {
         mError = tr("the code could not be compiled");
 
-        file.remove();
+        QFile::remove(temporaryFileName);
 
         reset(false);
 
@@ -257,7 +246,7 @@ bool CompilerEngine::compileCode(const QString &pCode)
 
     // We are done with the temporary file, so we can remove it
 
-    file.remove();
+    QFile::remove(temporaryFileName);
 
     // Keep track of the LLVM bitcode module
 
