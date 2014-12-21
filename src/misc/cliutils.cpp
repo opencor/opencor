@@ -34,7 +34,9 @@ specific language governing permissions and limitations under the License.
 #include <QNetworkReply>
 #include <QNetworkRequest>
 #include <QProcess>
+#include <QResource>
 #include <QSettings>
+#include <QTemporaryFile>
 
 //==============================================================================
 

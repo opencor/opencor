@@ -205,6 +205,129 @@ QString formatErrorMessage(const QString &pErrorMessage, const bool &pLowerCase,
 
 //==============================================================================
 
+QByteArray resourceAsByteArray(const QString &pResource)
+{
+    // Retrieve a resource as a QByteArray
+
+    QResource resource(pResource);
+
+    if (resource.isValid()) {
+        if (resource.isCompressed())
+            // The resource is compressed, so uncompress it before returning it
+
+            return qUncompress(resource.data(), resource.size());
+        else
+            // The resource is not compressed, so just return it after doing the
+            // right conversion
+
+            return QByteArray(reinterpret_cast<const char *>(resource.data()),
+                              resource.size());
+    }
+    else {
+        return QByteArray();
+    }
+}
+
+//==============================================================================
+
+QString temporaryFileName(const QString &pExtension)
+{
+    // Get and return a temporary file name
+
+    QTemporaryFile file(QDir::tempPath()+QDir::separator()+"XXXXXX"+pExtension);
+
+    file.open();
+
+    file.setAutoRemove(false);
+    // Note: by default, a temporary file is to autoremove itself, but we
+    //       clearly don't want that here...
+
+    file.close();
+
+    return file.fileName();
+}
+
+//==============================================================================
+
+bool writeResourceToFile(const QString &pFilename, const QString &pResource)
+{
+    if (QResource(pResource).isValid()) {
+        // The resource exists, so write a file with name pFilename and which
+        // contents is that of the resource which is retrieved as a QByteArray
+
+        QFile file(pFilename);
+
+        if (file.open(QIODevice::WriteOnly)) {
+            QByteArray resource = resourceAsByteArray(pResource);
+            bool res;
+
+            res = file.write(resource) == resource.size();
+
+            file.close();
+
+            // Remove the newly created file in case not all the resource was
+            // written to it
+
+            if (!res)
+                file.remove();
+
+            return res;
+        } else {
+            return false;
+        }
+    } else {
+        return false;
+    }
+}
+
+//==============================================================================
+
+bool readTextFromFile(const QString &pFileName, QString &pText)
+{
+    // Read the contents of the file, which file name is given, as a string
+
+    QFile file(pFileName);
+
+    if (file.open(QIODevice::ReadOnly)) {
+        pText = file.readAll();
+
+        file.close();
+
+        return true;
+    } else {
+        pText = QString();
+
+        return false;
+    }
+}
+
+//==============================================================================
+
+bool writeTextToFile(const QString &pFilename, const QString &pText)
+{
+    // Write the given string to a file with the given file name
+
+    QFile file(pFilename);
+
+    if (file.open(QIODevice::WriteOnly)) {
+        bool res = file.write(pText.toUtf8()) != -1;
+
+        file.close();
+
+        // Remove the newly created file in case the string couldn't be written
+        // to it
+
+        if (!res)
+            file.remove();
+
+        return res;
+    } else {
+        return false;
+    }
+}
+
+//==============================================================================
+
 bool readTextFromUrl(const QString &pUrl, QString &pText,
                      QString *pErrorMessage)
 {

@@ -27,6 +27,17 @@ QString CORE_EXPORT formatErrorMessage(const QString &pErrorMessage,
                                        const bool &pLowerCase = true,
                                        const bool &pDotDotDot = false);
 
+QByteArray CORE_EXPORT resourceAsByteArray(const QString &pResource);
+
+QString CORE_EXPORT temporaryFileName(const QString &pExtension = ".tmp");
+
+bool CORE_EXPORT writeResourceToFile(const QString &pFilename,
+                                     const QString &pResource);
+
+bool CORE_EXPORT readTextFromFile(const QString &pFileName, QString &pText);
+bool CORE_EXPORT writeTextToFile(const QString &pFilename,
+                                 const QString &pText);
+
 bool CORE_EXPORT readTextFromUrl(const QString &pUrl, QString &pText,
                                  QString *pErrorMessage = 0);
 
