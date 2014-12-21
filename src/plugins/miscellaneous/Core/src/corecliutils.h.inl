@@ -41,6 +41,8 @@ bool CORE_EXPORT writeTextToFile(const QString &pFilename,
 bool CORE_EXPORT readTextFromUrl(const QString &pUrl, QString &pText,
                                  QString *pErrorMessage = 0);
 
+QString CORE_EXPORT eolString();
+
 QString CORE_EXPORT nonDiacriticString(const QString &pString);
 
 //==============================================================================

@@ -340,6 +340,23 @@ bool readTextFromUrl(const QString &pUrl, QString &pText,
 
 //==============================================================================
 
+QString eolString()
+{
+    // Return the end of line to use
+
+#ifdef Q_OS_WIN
+    return "\r\n";
+#else
+    // Note: before OS X, the EOL string would have been "\r", but since OS X it
+    //       is the same as on Linux (i.e. "\n") and since we don't support
+    //       versions prior to OS X...
+
+    return "\n";
+#endif
+}
+
+//==============================================================================
+
 QString nonDiacriticString(const QString &pString)
 {
     // Remove and return a non-accentuated version of the given string

@@ -105,16 +105,16 @@ void initApplication(QCoreApplication *pApp, QString *pAppDate)
 
     // Retrieve and set the version of the application
 
-    QFile versionDateFile(":app_versiondate");
+    QString versionData;
 
-    versionDateFile.open(QIODevice::ReadOnly);
+    readTextFromFile(":app_versiondate", versionData);
 
-    pApp->setApplicationVersion(QString(versionDateFile.readLine()).trimmed());
+    QStringList versionDataList = versionData.split(eolString());
+
+    pApp->setApplicationVersion(versionDataList.first());
 
     if (pAppDate)
-        *pAppDate = QString(versionDateFile.readLine()).trimmed();
-
-    versionDateFile.close();
+        *pAppDate = versionDataList.last();
 }
 
 //==============================================================================
