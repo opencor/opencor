@@ -22,6 +22,7 @@ ADD_PLUGIN(Compiler
     DEFINITIONS
         ${LLVM_DEFINITIONS}
     PLUGINS
+        Core
         ${LLVM_PLUGIN}
     PLUGIN_BINARIES
         ${LLVM_PLUGIN_BINARY}

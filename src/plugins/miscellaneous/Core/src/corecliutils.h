@@ -116,6 +116,9 @@ void CORE_EXPORT stringLineColumnAsPosition(const QString &pString,
                                             const int &pColumn, int &pPosition);
 
 QByteArray CORE_EXPORT resourceAsByteArray(const QString &pResource);
+
+QString CORE_EXPORT temporaryFileName(const QString &pExtension = ".tmp");
+
 bool CORE_EXPORT writeResourceToFile(const QString &pFilename,
                                      const QString &pResource);
 

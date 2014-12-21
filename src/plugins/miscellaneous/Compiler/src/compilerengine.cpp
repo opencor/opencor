@@ -21,6 +21,7 @@ specific language governing permissions and limitations under the License.
 
 #include "compilerengine.h"
 #include "compilermath.h"
+#include "corecliutils.h"
 
 //==============================================================================
 
@@ -121,19 +122,7 @@ bool CompilerEngine::compileCode(const QString &pCode)
 
     reset();
 
-    // Determine the name of the temporary file that will contain our code
-
-    QTemporaryFile tempFile(QDir::tempPath()+QDir::separator()+"XXXXXX.c");
-
-    if (!tempFile.open()) {
-        mError = tr("<strong>%1</strong> could not be created").arg(tempFile.fileName());
-
-        return false;
-    }
-
-    tempFile.close();
-
-    // 'Properly' create our temporary file
+    // Create a temporary file that will contain our code
     // Note: for some reasons, a temporary file created using QTemporaryFile
     //       doesn't work straightaway with stat(), which LLVM uses in its call
     //       to CompilerInstance::ExecuteAction()). So, instead, we use
@@ -141,13 +130,11 @@ bool CompilerEngine::compileCode(const QString &pCode)
     //       'properly' create our temporary file. For more information, see
     //       https://bugreports.qt-project.org/browse/QTBUG-33727...
 
-    QFile file(tempFile.fileName());
-    // Note: we don't have to delete the file ourselves afterwards since it has
-    //       the same name as our temporary file above, which will get
-    //       automatically deleted...
+    QString temporaryFileName = Core::temporaryFileName(".c");
+    QFile file(temporaryFileName);
 
     if (!file.open(QIODevice::WriteOnly)) {
-        mError = tr("<strong>%1</strong> could not be created").arg(tempFile.fileName());
+        mError = tr("<strong>%1</strong> could not be created").arg(temporaryFileName);
 
         return false;
     }
@@ -174,7 +161,7 @@ bool CompilerEngine::compileCode(const QString &pCode)
 
     // Get a compilation object to which we pass some arguments
 
-    QByteArray tempFileByteArray = tempFile.fileName().toUtf8();
+    QByteArray tempFileByteArray = temporaryFileName.toUtf8();
 
     llvm::SmallVector<const char *, 16> compilationArguments;
 
@@ -190,6 +177,8 @@ bool CompilerEngine::compileCode(const QString &pCode)
     if (!compilation) {
         mError = tr("the compilation object could not be created");
 
+        file.remove();
+
         return false;
     }
 
@@ -202,6 +191,8 @@ bool CompilerEngine::compileCode(const QString &pCode)
         || !llvm::isa<clang::driver::Command>(*jobList.begin())) {
         mError = tr("the compilation object must contain only one command");
 
+        file.remove();
+
         return false;
     }
 
@@ -212,6 +203,8 @@ bool CompilerEngine::compileCode(const QString &pCode)
 
     if (commandName.compare("clang")) {
         mError = tr("a <strong>clang</strong> command was expected, but a <strong>%1</strong> command was found instead").arg(commandName);
+
+        file.remove();
 
         return false;
     }
@@ -239,6 +232,8 @@ bool CompilerEngine::compileCode(const QString &pCode)
     if (!compilerInstance.hasDiagnostics()) {
         mError = tr("the diagnostics engine could not be created");
 
+        file.remove();
+
         return false;
     }
 
@@ -253,10 +248,16 @@ bool CompilerEngine::compileCode(const QString &pCode)
     if (!compilerInstance.ExecuteAction(*codeGenerationAction, outputStream)) {
         mError = tr("the code could not be compiled");
 
+        file.remove();
+
         reset(false);
 
         return false;
     }
+
+    // We are done with the temporary file, so we can remove it
+
+    file.remove();
 
     // Keep track of the LLVM bitcode module
 

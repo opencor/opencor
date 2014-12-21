@@ -49,6 +49,7 @@ specific language governing permissions and limitations under the License.
 #include <QString>
 #include <QStringList>
 #include <QSysInfo>
+#include <QTemporaryFile>
 #include <QTextStream>
 
 //==============================================================================
@@ -447,6 +448,25 @@ QByteArray resourceAsByteArray(const QString &pResource)
     else {
         return QByteArray();
     }
+}
+
+//==============================================================================
+
+QString temporaryFileName(const QString &pExtension)
+{
+    // Get and return a temporary file name
+
+    QTemporaryFile file(QDir::tempPath()+QDir::separator()+"XXXXXX"+pExtension);
+
+    file.open();
+
+    file.setAutoRemove(false);
+    // Note: by default, a temporary file is to autoremove itself, but we
+    //       clearly don't want that here...
+
+    file.close();
+
+    return file.fileName();
 }
 
 //==============================================================================

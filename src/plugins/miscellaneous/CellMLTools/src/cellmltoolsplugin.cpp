@@ -35,7 +35,6 @@ specific language governing permissions and limitations under the License.
 #include <QMainWindow>
 #include <QMenu>
 #include <QMessageBox>
-#include <QTemporaryFile>
 
 //==============================================================================
 
@@ -357,22 +356,10 @@ int CellMLToolsPlugin::runExportCommand(const QStringList &pArguments)
             // We were able to retrieve the contents of the remote file, so save
             // it locally to a 'temporary' file
 
-            QTemporaryFile localFile(QDir::tempPath()+QDir::separator()+"XXXXXX.tmp");
+            inFileName = Core::temporaryFileName();
 
-            if (localFile.open()) {
-                localFile.setAutoRemove(false);
-                // Note: by default, a temporary file is to autoremove itself,
-                //       but we clearly don't want that here...
-
-                localFile.close();
-
-                inFileName = localFile.fileName();
-
-                if (!Core::writeTextToFile(inFileName, fileContents))
-                    errorMessage = "The input file could not be saved locally.";
-            } else {
+            if (!Core::writeTextToFile(inFileName, fileContents))
                 errorMessage = "The input file could not be saved locally.";
-            }
         } else {
             errorMessage = QString("The input file could not be opened (%1).").arg(Core::formatErrorMessage(errorMessage));
         }
