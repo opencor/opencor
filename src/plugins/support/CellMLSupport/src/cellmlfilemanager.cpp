@@ -26,10 +26,6 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-#include <QDir>
-
-//==============================================================================
-
 namespace OpenCOR {
 namespace CellMLSupport {
 

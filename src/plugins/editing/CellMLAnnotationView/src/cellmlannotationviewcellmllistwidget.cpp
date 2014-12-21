@@ -36,7 +36,6 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include <QAbstractItemView>
-#include <QDir>
 #include <QFileInfo>
 #include <QFont>
 #include <QMenu>

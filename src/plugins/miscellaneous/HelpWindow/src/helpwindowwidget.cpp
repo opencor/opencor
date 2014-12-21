@@ -30,7 +30,6 @@ specific language governing permissions and limitations under the License.
 
 #include <QAction>
 #include <QDesktopServices>
-#include <QDir>
 #include <QHelpEngine>
 #include <QIODevice>
 #include <QMouseEvent>

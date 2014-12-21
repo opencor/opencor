@@ -50,7 +50,6 @@ specific language governing permissions and limitations under the License.
 #include <QApplication>
 #include <QBrush>
 #include <QDesktopWidget>
-#include <QDir>
 #include <QFileDialog>
 #include <QFrame>
 #include <QLabel>
