@@ -19,6 +19,7 @@ specific language governing permissions and limitations under the License.
 // CSV data store class
 //==============================================================================
 
+#include "corecliutils.h"
 #include "coredatastore.h"
 #include "csvdatastore.h"
 #include "datastorevariable.h"
@@ -41,19 +42,7 @@ bool exportDataStore(CoreDataStore::CoreDataStore *pDataStore,
 {
     // Export the given data store to a CSV file with the given file name
 
-    QFile file(pFileName);
-
-    if (!file.open(QIODevice::WriteOnly)) {
-        // The file can't be opened, so delete it
-
-        file.remove();
-
-        return false;
-    }
-
-    // Write out the contents of the data store to the file
-
-    QTextStream out(&file);
+    QString data = QString();
 
     // Header
 
@@ -62,27 +51,27 @@ bool exportDataStore(CoreDataStore::CoreDataStore *pDataStore,
     CoreDataStore::DataStoreVariable *voi = pDataStore->voi();
     CoreDataStore::DataStoreVariables variables = pDataStore->variables();
 
-    out << Header.arg(voi->uri().replace("/prime", "'").replace("/", " | "),
-                      voi->unit());
+    data += Header.arg(voi->uri().replace("/prime", "'").replace("/", " | "),
+                       voi->unit());
 
     auto variableBegin = variables.begin();
     auto variableEnd = variables.end();
 
     for (auto variable = variableBegin; variable != variableEnd; ++variable)
-        out << "," << Header.arg((*variable)->uri().replace("/prime", "'").replace("/", " | "),
-                                 (*variable)->unit());
+        data += ","+Header.arg((*variable)->uri().replace("/prime", "'").replace("/", " | "),
+                               (*variable)->unit());
 
-    out << "\n";
+    data += "\n";
 
     // Data itself
 
    for (qulonglong i = 0; i < pDataStore->size(); ++i) {
-       out << voi->value(i);
+       data += QString::number(voi->value(i));
 
        for (auto variable = variableBegin; variable != variableEnd; ++variable)
-           out << "," << (*variable)->value(i);
+           data += ","+QString::number((*variable)->value(i));
 
-       out << "\n";
+       data += "\n";
 
        qApp->processEvents();
 //---GRY--- THE CALL TO qApp->processEvents() IS TEMPORARY, I.E. UNTIL WE HAVE
@@ -92,11 +81,9 @@ bool exportDataStore(CoreDataStore::CoreDataStore *pDataStore,
 //          LONG TIME)...
    }
 
-   // We are done...
+   // The data is ready, so write it to the file
 
-   file.close();
-
-   return true;
+   return Core::writeTextToFile(pFileName, data);
 }
 
 //==============================================================================

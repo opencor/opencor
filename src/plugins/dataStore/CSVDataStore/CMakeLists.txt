@@ -13,11 +13,15 @@ ADD_PLUGIN(CSVDataStore
     INCLUDE_DIRS
         src
     PLUGINS
+        Core
         CoreDataStore
     QT_MODULES
         Widgets
     QT_LIBRARIES
         QtCore
         QtGui
+        QtNetwork
         QtWidgets
+        QtXml
+        QtXmlPatterns
 )
