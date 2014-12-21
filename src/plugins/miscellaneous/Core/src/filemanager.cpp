@@ -313,12 +313,8 @@ void FileManager::makeNew(const QString &pFileName)
 
     File *file = isManaged(nativeCanonicalFileName(pFileName));
 
-    if (file) {
-        QString newFileName;
-
-        if (newFile(QString(), newFileName))
-            file->makeNew(newFileName);
-    }
+    if (file)
+        file->makeNew(newFile());
 }
 
 //==============================================================================
@@ -434,31 +430,25 @@ void FileManager::reload(const QString &pFileName)
 
 //==============================================================================
 
-bool FileManager::newFile(const QString &pContents, QString &pFileName)
+QString FileManager::newFile(const QString &pContents)
 {
     // Create a new file
 
     QTemporaryFile file(QDir::tempPath()+QDir::separator()+"XXXXXX.tmp");
 
-    if (file.open()) {
-        file.setAutoRemove(false);
-        // Note: by default, a temporary file is to autoremove itself, but we
-        //       clearly don't want that here...
+    file.open();
 
-        QTextStream fileOut(&file);
+    file.setAutoRemove(false);
+    // Note: by default, a temporary file is to autoremove itself, but we
+    //       clearly don't want that here...
 
-        fileOut << pContents;
+    QTextStream fileOut(&file);
 
-        file.close();
+    fileOut << pContents;
 
-        pFileName = file.fileName();
+    file.close();
 
-        return true;
-    } else {
-        pFileName = QString();
-
-        return false;
-    }
+    return file.fileName();
 }
 
 //==============================================================================
@@ -466,19 +456,11 @@ bool FileManager::newFile(const QString &pContents, QString &pFileName)
 FileManager::Status FileManager::create(const QString &pUrl,
                                         const QString &pContents)
 {
-    // Create a new file
+    // Create a new file and let people know that we have created a file
 
-    QString createdFileName;
+    emit fileCreated(newFile(pContents), pUrl);
 
-    if (newFile(pContents, createdFileName)) {
-        // Let people know that we have created a file
-
-        emit fileCreated(createdFileName, pUrl);
-
-        return Created;
-    } else {
-        return NotCreated;
-    }
+    return Created;
 }
 
 //==============================================================================
@@ -527,19 +509,11 @@ FileManager::Status FileManager::duplicate(const QString &pFileName)
 
         if (Core::readTextFromFile(pFileName, fileContents)) {
             // Now, we can create a new file, which contents will be that of our
-            // given file
+            // given file, and let people know that we have duplicated a file
 
-            QString duplicatedFileName;
+            emit fileDuplicated(newFile(fileContents));
 
-            if (newFile(fileContents, duplicatedFileName)) {
-                // Let people know that we have duplicated a file
-
-                emit fileDuplicated(duplicatedFileName);
-
-                return Duplicated;
-            } else {
-                return NotDuplicated;
-            }
+            return Duplicated;
         } else {
             return NotDuplicated;
         }

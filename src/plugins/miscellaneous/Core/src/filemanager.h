@@ -73,7 +73,6 @@ public:
         // As a result of creating a file
 
         Created,
-        NotCreated,
 
         // As a result of renaming a file
 
@@ -151,7 +150,7 @@ private:
     QMap<QString, bool> mFilesReadable;
     QMap<QString, bool> mFilesWritable;
 
-    bool newFile(const QString &pContents, QString &pFileName);
+    QString newFile(const QString &pContents = QString());
 
 Q_SIGNALS:
     void fileManaged(const QString &pFileName);
