@@ -501,7 +501,6 @@ bool CellmlFile::save(const QString &pNewFileName)
     QString newFileName = pNewFileName.isEmpty()?mFileName:pNewFileName;
 
     // Write out the contents of our DOM document to our CellML file
-qDebug("Saving the CellML file...");
 
     if (!Core::writeTextToFile(newFileName, qDomDocumentToString(domDocument)))
         return false;
