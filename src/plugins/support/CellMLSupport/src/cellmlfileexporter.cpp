@@ -20,6 +20,7 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include "cellmlfileexporter.h"
+#include "corecliutils.h"
 
 //==============================================================================
 
@@ -66,26 +67,12 @@ bool CellmlFileExporter::saveModel(iface::cellml_api::Model *pModel,
     // Save the given model, adding an empty line at the end, if needed (i.e.
     // what is expected from various tools, e.g. GitHub)
 
-    QFile file(pFileName);
+    QString serialisedText = QString::fromStdWString(pModel->serialisedText());
 
-    if (!file.open(QIODevice::WriteOnly)) {
-        file.remove();
+    if (!serialisedText.endsWith("\n"))
+        serialisedText += "\n";
 
-        return false;
-    } else {
-        QTextStream out(&file);
-
-        QString serialisedText = QString::fromStdWString(pModel->serialisedText());
-
-        if (!serialisedText.endsWith("\n"))
-            serialisedText += "\n";
-
-        out << serialisedText;
-
-        file.close();
-
-        return true;
-    }
+    return Core::writeTextToFile(pFileName, serialisedText);
 }
 
 //==============================================================================

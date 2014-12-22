@@ -451,22 +451,6 @@ bool CellmlFile::save(const QString &pNewFileName)
     if (mLoadingNeeded || !mIssues.isEmpty())
         return false;
 
-    // Determine the file name to use for the CellML file
-
-    QString newFileName = pNewFileName.isEmpty()?mFileName:pNewFileName;
-
-    // (Create and) open the file for writing
-
-    QFile file(newFileName);
-
-    if (!file.open(QIODevice::WriteOnly)) {
-        // The file can't be opened, so delete it
-
-        file.remove();
-
-        return false;
-    }
-
     // Make sure that the RDF API representation is up to date by updating its
     // data source
 
@@ -512,13 +496,15 @@ bool CellmlFile::save(const QString &pNewFileName)
 
     clearCmetaIdsFromCellmlElement(modelElement, usedCmetaIds);
 
+    // Determine the file name to use for the CellML file
+
+    QString newFileName = pNewFileName.isEmpty()?mFileName:pNewFileName;
+
     // Write out the contents of our DOM document to our CellML file
+qDebug("Saving the CellML file...");
 
-    QTextStream out(&file);
-
-    out << qDomDocumentToString(domDocument);
-
-    file.close();
+    if (!Core::writeTextToFile(newFileName, qDomDocumentToString(domDocument)))
+        return false;
 
     // Our CellML file being saved, it cannot be modified (should it have been
     // before)
