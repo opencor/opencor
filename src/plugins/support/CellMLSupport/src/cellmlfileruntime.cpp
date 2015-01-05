@@ -475,7 +475,7 @@ void CellmlFileRuntime::reset(const bool &pRecreateCompilerEngine,
 void CellmlFileRuntime::couldNotGenerateModelCodeIssue()
 {
     mIssues << CellmlFileIssue(CellmlFileIssue::Error,
-                               tr("the model code could not be generated"));
+                               QObject::tr("the model code could not be generated"));
 }
 
 //==============================================================================
@@ -483,7 +483,7 @@ void CellmlFileRuntime::couldNotGenerateModelCodeIssue()
 void CellmlFileRuntime::unknownProblemDuringModelCodeGenerationIssue()
 {
     mIssues << CellmlFileIssue(CellmlFileIssue::Error,
-                               tr("an unknown problem occurred while trying to generate the model code"));
+                               QObject::tr("an unknown problem occurred while trying to generate the model code"));
 }
 
 //==============================================================================
@@ -503,16 +503,16 @@ void CellmlFileRuntime::checkCodeInformation(iface::cellml_services::CodeInforma
 
         if (constraintLevel == iface::cellml_services::UNDERCONSTRAINED)
             mIssues << CellmlFileIssue(CellmlFileIssue::Error,
-                                       tr("the model is underconstrained (i.e. some variables need to be initialised or computed)"));
+                                       QObject::tr("the model is underconstrained (i.e. some variables need to be initialised or computed)"));
         else if (constraintLevel == iface::cellml_services::UNSUITABLY_CONSTRAINED)
             mIssues << CellmlFileIssue(CellmlFileIssue::Error,
-                                       tr("the model is unsuitably constrained (i.e. some variables could not be found and/or some equations could not be used)"));
+                                       QObject::tr("the model is unsuitably constrained (i.e. some variables could not be found and/or some equations could not be used)"));
         else if (constraintLevel == iface::cellml_services::OVERCONSTRAINED)
             mIssues << CellmlFileIssue(CellmlFileIssue::Error,
-                                       tr("the model is overconstrained (i.e. some variables are either both initialised and computed or computed more than once)"));
+                                       QObject::tr("the model is overconstrained (i.e. some variables are either both initialised and computed or computed more than once)"));
     } else {
         mIssues << CellmlFileIssue(CellmlFileIssue::Error,
-                                   tr("a problem occurred during the generation of the model code"));
+                                   QObject::tr("a problem occurred during the generation of the model code"));
     }
 }
 
@@ -1004,7 +1004,7 @@ void CellmlFileRuntime::update()
 
     if (modelCode.contains("defint(func"))
         mIssues << CellmlFileIssue(CellmlFileIssue::Error,
-                                   tr("definite integrals are not yet supported"));
+                                   QObject::tr("definite integrals are not yet supported"));
     else if (!mCompilerEngine->compileCode(modelCode))
         mIssues << CellmlFileIssue(CellmlFileIssue::Error,
                                    QString("%1").arg(mCompilerEngine->error()));
@@ -1056,7 +1056,7 @@ void CellmlFileRuntime::update()
 
         if (!functionsOk) {
             mIssues << CellmlFileIssue(CellmlFileIssue::Error,
-                                       tr("an unexpected problem occurred while trying to retrieve the model functions"));
+                                       QObject::tr("an unexpected problem occurred while trying to retrieve the model functions"));
 
             reset(true, false);
         }

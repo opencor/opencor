@@ -9,7 +9,7 @@
     </message>
 </context>
 <context>
-    <name>OpenCOR::CellMLSupport::CellmlFile</name>
+    <name>QObject</name>
     <message>
         <source>the model could not be loaded (%1)</source>
         <translation>le modèle n&apos;a pas pu être lu (%1)</translation>
@@ -38,9 +38,6 @@
         <source>the model could not be created (%1)</source>
         <translation>le modèle n&apos;a pas pu être créé (%1)</translation>
     </message>
-</context>
-<context>
-    <name>OpenCOR::CellMLSupport::CellmlFileRuntime</name>
     <message>
         <source>an unknown problem occurred while trying to generate the model code</source>
         <translation>un problème inconnu s&apos;est produit lors de la génération du code pour le modèle</translation>
@@ -73,9 +70,6 @@
         <source>definite integrals are not yet supported</source>
         <translation>les intégrales définies ne sont pas encore supportées</translation>
     </message>
-</context>
-<context>
-    <name>QObject</name>
     <message>
         <source>CeVAS error: %1</source>
         <translation>Erreur CeVAS : %1</translation>

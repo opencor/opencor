@@ -25,9 +25,7 @@ ADD_PLUGIN(CellMLSupport
         src/cellmlfileruntime.cpp
         src/cellmlsupportplugin.cpp
     HEADERS_MOC
-        src/cellmlfile.h
         src/cellmlfilemanager.h
-        src/cellmlfileruntime.h
         src/cellmlsupportplugin.h
     INCLUDE_DIRS
         src

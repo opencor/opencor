@@ -33,7 +33,6 @@ specific language governing permissions and limitations under the License.
 
 #include <QDomElement>
 #include <QMap>
-#include <QObject>
 
 //==============================================================================
 
@@ -47,10 +46,8 @@ static const auto Cellml_1_1_Namespace = QStringLiteral("http://www.cellml.org/c
 
 //==============================================================================
 
-class CELLMLSUPPORT_EXPORT CellmlFile : public QObject
+class CELLMLSUPPORT_EXPORT CellmlFile
 {
-    Q_OBJECT
-
 public:
     enum Version {
         Cellml_1_0,
