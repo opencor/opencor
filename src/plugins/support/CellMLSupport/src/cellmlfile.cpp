@@ -950,7 +950,7 @@ bool CellmlFile::removeRdfTriple(iface::cellml_api::CellMLElement *pElement,
 
 //==============================================================================
 
-QString CellmlFile::xmlBase() const
+QString CellmlFile::xmlBase()
 {
     // Return the CellML file's base URI
 

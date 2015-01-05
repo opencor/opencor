@@ -108,7 +108,7 @@ public:
                          const CellmlFileRdfTriple::BioQualifier &pBioQualifier,
                          const QString &pResource, const QString &pId);
 
-    QString xmlBase() const;
+    QString xmlBase();
 
     bool exportTo(const QString &pFileName, const Version &pVersion);
     bool exportTo(const QString &pFileName,
