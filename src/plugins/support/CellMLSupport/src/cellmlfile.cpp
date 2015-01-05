@@ -377,10 +377,10 @@ void CellmlFile::clearCmetaIdsFromCellmlElement(const QDomElement &pElement,
 
 bool CellmlFile::load()
 {
-    // Check whether the file is already loaded
+    // Check whether the file is already loaded and without any issues
 
     if (!mLoadingNeeded)
-        return true;
+        return mIssues.isEmpty();
 
     // Consider the file loaded
     // Note: even when we can't load the file, we still consider it 'loaded'
@@ -954,9 +954,13 @@ QString CellmlFile::xmlBase() const
 {
     // Return the CellML file's base URI
 
-    ObjRef<iface::cellml_api::URI> baseUri = mModel->xmlBase();
+    if (load()) {
+        ObjRef<iface::cellml_api::URI> baseUri = mModel->xmlBase();
 
-    return QString::fromStdWString(baseUri->asText());
+        return QString::fromStdWString(baseUri->asText());
+    } else {
+        return QString();
+    }
 }
 
 //==============================================================================
@@ -966,10 +970,6 @@ bool CellmlFile::exportTo(const QString &pFileName, const Version &pVersion)
     // Export the model to the required format, after loading it if necessary
 
     if (load()) {
-        // Reset any issues that we may have found before
-
-        mIssues.clear();
-
         // Check that it actually makes sense to export the model
 
         switch (pVersion) {
@@ -1029,10 +1029,6 @@ bool CellmlFile::exportTo(const QString &pFileName,
     // Export the model to the required format, after loading it if necessary
 
     if (load()) {
-        // Reset any issues that we may have found before
-
-        mIssues.clear();
-
         // Check that the user-defined format file actually exists
 
         if (!QFile::exists(pUserDefinedFormatFileName)) {
