@@ -257,10 +257,10 @@ void RawCellmlViewWidget::fileReloaded(const QString &pFileName)
 {
     // The given file has been reloaded, so reload it, should it be managed
     // Note: if the view for the given file is not the active view, then to call
-    //       call finalize() and then initialize() would activate the contents
-    //       of the view (but the file tab would still point to the previously
-    //       active file). However, we want to the 'old' file to remain the
-    //       active one, hence the extra argument we pass to initialize()...
+    //       finalize() and then initialize() would activate the contents of the
+    //       view (but the file tab would still point to the previously active
+    //       file). However, we want to the 'old' file to remain the active one,
+    //       hence the extra argument we pass to initialize()...
 
     if (contains(pFileName)) {
         bool update = mEditingWidget == mEditingWidgets.value(pFileName);
