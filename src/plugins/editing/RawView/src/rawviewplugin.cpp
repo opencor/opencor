@@ -93,7 +93,11 @@ bool RawViewPlugin::saveFile(const QString &pOldFileName,
 {
     // Save the given file
 
-    return Core::writeTextToFile(pNewFileName, editor(pOldFileName)->contents());
+    Editor::EditorWidget *currentEditor = editor(pOldFileName);
+
+    return currentEditor?
+               Core::writeTextToFile(pNewFileName, currentEditor->contents()):
+               false;
 }
 
 //==============================================================================
