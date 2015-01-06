@@ -1789,7 +1789,7 @@ void CentralWidget::fileChanged(const QString &pFileName)
                                   QMessageBox::Yes) == QMessageBox::Yes) {
             // The user wants to reload the file
 
-            for (int i = 0, iMax = mFileNames.count(); i < iMax; ++i)
+            for (int i = 0, iMax = mFileNames.count(); i < iMax; ++i) {
                 if (!mFileNames[i].compare(pFileName)) {
                     // We have found the file to reload
 
@@ -1797,6 +1797,7 @@ void CentralWidget::fileChanged(const QString &pFileName)
 
                     break;
                 }
+            }
         } else {
             // The user doesn't want to reload the file, so consider it as
             // modified
@@ -1933,9 +1934,9 @@ void CentralWidget::fileReloaded(const QString &pFileName)
         if (fileManagerInstance->canCheckFiles() || (plugin != fileViewPlugin))
             qobject_cast<FileHandlingInterface *>(plugin->instance())->fileReloaded(pFileName);
 
-    // Now, because of the way some of our views may reload a file (see
-    // CoreEditingPlugin::fileReloaded()), we need to tell them to update their
-    // GUI
+    // Now, because of the way some of our views may reload a file (see, for
+    // example, CoreEditingPlugin::fileReloaded()), we need to tell them to
+    // update their GUI
 
     foreach (Plugin *plugin, mLoadedGuiPlugins)
         if (fileManagerInstance->canCheckFiles() || (plugin != fileViewPlugin))

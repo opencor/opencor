@@ -180,7 +180,7 @@ bool isCellmlFile(const QString &pFileName)
     if (!QFileInfo(pFileName).completeSuffix().compare(CellmlFileExtension))
         return true;
 
-    // The file doesn't have the 'correct' file extension, so check whether it's
+    // The file doesn't have the expected file extension, so check whether it's
     // a new file
 
     if (Core::FileManager::instance()->isNew(pFileName))
