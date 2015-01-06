@@ -33,6 +33,10 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#include "CellMLBootstrap.hpp"
+
+//==============================================================================
+
 namespace OpenCOR {
 namespace CellMLSupport {
 
@@ -187,49 +191,28 @@ bool isCellmlFile(const QString &pFileName)
         return true;
 
     // Check whether we are dealing with an empty file or a file that contains
-    // spaces of sorts
+    // spaces of sorts and, if not, whether we can load it using the CellML API
 
     QString fileContents;
 
-    if (   Core::readTextFromFile(pFileName, fileContents)
-        && fileContents.trimmed().isEmpty())
-        return true;
+    if (Core::readTextFromFile(pFileName, fileContents)) {
+        if (fileContents.trimmed().isEmpty())
+            return true;
 
-    // The file neither has the 'correct' file extension nor is a new file, so
-    // quickly check its contents
+        ObjRef<iface::cellml_api::CellMLBootstrap> cellmlBootstrap = CreateCellMLBootstrap();
+        ObjRef<iface::cellml_api::DOMModelLoader> modelLoader = cellmlBootstrap->modelLoader();
+        ObjRef<iface::cellml_api::Model> model;
 
-    QFile file(pFileName);
+        try {
+            model = modelLoader->createFromText(fileContents.toStdWString());
 
-    if (!file.open(QIODevice::ReadOnly))
-        return false;
-
-    // Try to read the file as if it was an XML file
-
-    QXmlStreamReader xml(&file);
-
-    bool res = false;
-
-    while (!xml.atEnd()) {
-        xml.readNext();
-
-        if (xml.isStartElement()) {
-            // This is our root element, so for the file to be considered a
-            // CellML file it should be a model element in either the CellML 1.0
-            // or 1.1 namespace
-
-            if (   !xml.name().toString().compare("model")
-                &&  (   (!xml.namespaceUri().toString().compare(Cellml_1_0_Namespace))
-                     || (!xml.namespaceUri().toString().compare(Cellml_1_1_Namespace)))) {
-                res = true;
-            }
-
-            break;
+            return true;
+        } catch (iface::cellml_api::CellMLException &) {
+            return false;
         }
+    } else {
+        return false;
     }
-
-    file.close();
-
-    return res;
 }
 
 //==============================================================================
