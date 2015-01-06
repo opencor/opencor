@@ -88,9 +88,9 @@ void CellmlFileManager::manageFile(const QString &pFileName)
 {
     QString nativeFileName = Core::nativeCanonicalFileName(pFileName);
 
-    if (isCellmlFile(nativeFileName))
-        // We are dealing with a CellML file, so we can add it to our list of
-        // managed CellML files
+    if (!cellmlFile(nativeFileName) && isCellmlFile(nativeFileName))
+        // We are dealing with a CellML file, which is not already managed, so
+        // we can add it to our list of managed CellML files
 
         mCellmlFiles.insert(nativeFileName, new CellmlFile(nativeFileName));
 }
@@ -117,12 +117,31 @@ void CellmlFileManager::reloadFile(const QString &pFileName)
 {
     // The file is to be reloaded, so reload it
     // Note: to reload a file here ensures that our different CellML-based views
-    //       won't each do it, thus saving time, etc.
+    //       won't each do it, thus saving time and ensuring that a CellML-based
+    //       view doesn't forget to do it...
 
     CellmlFile *crtCellmlFile = cellmlFile(pFileName);
 
-    if (crtCellmlFile)
-        crtCellmlFile->reload();
+    if (crtCellmlFile) {
+        // The file is managed, but should it still be (i.e. can it still be
+        // considered as being a CellML file)?
+
+        if (isCellmlFile(pFileName))
+            crtCellmlFile->reload();
+        else
+            unmanageFile(pFileName);
+    } else {
+        // The file is not managed, which means that previously it wasn't
+        // considered as being a CellML file, but things may be different now,
+        // so try to remanage it and load it, if possible
+
+        manageFile(pFileName);
+
+        crtCellmlFile = cellmlFile(pFileName);
+
+        if (crtCellmlFile)
+            crtCellmlFile->load();
+    }
 }
 
 //==============================================================================
