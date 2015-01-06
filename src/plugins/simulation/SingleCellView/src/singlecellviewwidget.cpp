@@ -21,6 +21,7 @@ specific language governing permissions and limitations under the License.
 
 #include "cellmlfilemanager.h"
 #include "cellmlfileruntime.h"
+#include "cellmlsupportplugin.h"
 #include "corecliutils.h"
 #include "coreguiutils.h"
 #include "filemanager.h"
@@ -996,7 +997,7 @@ void SingleCellViewWidget::fileReloaded(const QString &pFileName)
     //       session), but hasn't yet been selected, in which case it won't have
     //       a simulation associated with it...
 
-    bool needReloadView = true;
+    bool needReloadView = CellMLSupport::isCellmlFile(pFileName);
     SingleCellViewSimulation *simulation = mSimulations.value(pFileName);
 
     mNeedReloadViews << pFileName;

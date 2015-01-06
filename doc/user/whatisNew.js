@@ -69,6 +69,7 @@ var jsonData = {"versions":[
                              {"type":"subCategory", "name":"CellML support",
                               "entries":[
                                   {"type":"Improved", "description":"Serialisation of CellML files."},
+                                  {"type":"Improved", "description":"Reloading of CellML files."},
                                   {"type":"Fixed", "description":"Loading of CellML files."}
                               ]
                              }

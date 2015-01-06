@@ -19,6 +19,7 @@ specific language governing permissions and limitations under the License.
 // Pretty CellML view widget
 //==============================================================================
 
+#include "cellmlsupportplugin.h"
 #include "corecliutils.h"
 #include "corecellmleditingwidget.h"
 #include "editorlistwidget.h"
@@ -262,7 +263,9 @@ void PrettyCellmlViewWidget::fileReloaded(const QString &pFileName)
         bool update = mEditingWidget == mEditingWidgets.value(pFileName);
 
         finalize(pFileName);
-        initialize(pFileName, update);
+
+        if (CellMLSupport::isCellmlFile(pFileName))
+            initialize(pFileName, update);
     }
 }
 

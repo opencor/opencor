@@ -20,6 +20,7 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include "cellmlfilemanager.h"
+#include "cellmlsupportplugin.h"
 #include "corecellmleditingwidget.h"
 #include "editorlistwidget.h"
 #include "editorwidget.h"
@@ -266,7 +267,9 @@ void RawCellmlViewWidget::fileReloaded(const QString &pFileName)
         bool update = mEditingWidget == mEditingWidgets.value(pFileName);
 
         finalize(pFileName);
-        initialize(pFileName, update);
+
+        if (CellMLSupport::isCellmlFile(pFileName))
+            initialize(pFileName, update);
     }
 }
 
