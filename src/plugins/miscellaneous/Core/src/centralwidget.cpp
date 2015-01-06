@@ -1368,8 +1368,7 @@ void CentralWidget::addView(Plugin *pPlugin)
 {
     // Make sure that our list of required modes is up to date
 
-    ViewInterface *viewInterface = qobject_cast<ViewInterface *>(pPlugin->instance());
-    ViewInterface::Mode viewMode = viewInterface->viewMode();
+    ViewInterface::Mode viewMode = qobject_cast<ViewInterface *>(pPlugin->instance())->viewMode();
 
     if (!mModes.value(viewMode)->isEnabled()) {
         // There is no tab for the mode, so add one and enable it
