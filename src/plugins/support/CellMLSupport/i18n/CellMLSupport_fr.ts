@@ -55,8 +55,8 @@
         <translation>Le modèle est trop constraint (i.e. des variables sont soit à la fois initialisées et calculées soit calculées plus d&apos;une fois)</translation>
     </message>
     <message>
-        <source>the model code could not be generated</source>
-        <translation>Le code pour le modèle n&apos;a pas pu être généré</translation>
+        <source>the model code could not be generated (%1)</source>
+        <translation>Le code pour le modèle n&apos;a pas pu être généré (%1)</translation>
     </message>
     <message>
         <source>a problem occurred during the generation of the model code</source>

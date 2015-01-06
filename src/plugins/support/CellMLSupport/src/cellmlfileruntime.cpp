@@ -472,10 +472,10 @@ void CellmlFileRuntime::reset(const bool &pRecreateCompilerEngine,
 
 //==============================================================================
 
-void CellmlFileRuntime::couldNotGenerateModelCodeIssue()
+void CellmlFileRuntime::couldNotGenerateModelCodeIssue(const QString &pExtraInfo)
 {
     mIssues << CellmlFileIssue(CellmlFileIssue::Error,
-                               QObject::tr("the model code could not be generated"));
+                               QObject::tr("the model code could not be generated (%1)").arg(pExtraInfo));
 }
 
 //==============================================================================
@@ -533,8 +533,8 @@ void CellmlFileRuntime::retrieveOdeCodeInformation(iface::cellml_api::Model *pMo
         // Check that the code generation went fine
 
         checkCodeInformation(mOdeCodeInformation);
-    } catch (iface::cellml_api::CellMLException &) {
-        couldNotGenerateModelCodeIssue();
+    } catch (iface::cellml_api::CellMLException &exception) {
+        couldNotGenerateModelCodeIssue(Core::formatErrorMessage(QString::fromStdWString(exception.explanation)));
     } catch (...) {
         unknownProblemDuringModelCodeGenerationIssue();
     }
@@ -562,8 +562,8 @@ void CellmlFileRuntime::retrieveDaeCodeInformation(iface::cellml_api::Model *pMo
         // Check that the code generation went fine
 
         checkCodeInformation(mDaeCodeInformation);
-    } catch (iface::cellml_api::CellMLException &) {
-        couldNotGenerateModelCodeIssue();
+    } catch (iface::cellml_api::CellMLException &exception) {
+        couldNotGenerateModelCodeIssue(Core::formatErrorMessage(QString::fromStdWString(exception.explanation)));
     } catch (...) {
         unknownProblemDuringModelCodeGenerationIssue();
     }
