@@ -1479,7 +1479,7 @@ Plugin * CentralWidget::viewPlugin(const int &pIndex) const
     if (pIndex != -1) {
         CentralWidgetMode *mode = mModes.value(mModeTabIndexModes.value(mFileModeTabIndexes.value(mFileNames[pIndex])));
 
-        return mode->viewPlugins()->value(mode->viewTabs()->currentIndex());
+        return mode?mode->viewPlugins()->value(mode->viewTabs()->currentIndex()):0;
     } else {
         return 0;
     }
@@ -1595,8 +1595,7 @@ void CentralWidget::updateGui()
     // Ask the GUI interface for the widget to use for the current file (should
     // there be one)
 
-    CentralWidgetMode *mode = mModes.value(mModeTabIndexModes.value(fileModeTabIndex));
-    Plugin *fileViewPlugin = mode?mode->viewPlugins()->value(mode->viewTabs()->currentIndex()):0;
+    Plugin *fileViewPlugin = viewPlugin(mFileTabs->currentIndex());
     ViewInterface *viewInterface = fileViewPlugin?qobject_cast<ViewInterface *>(fileViewPlugin->instance()):0;
     QWidget *newView;
 
@@ -1756,17 +1755,10 @@ void CentralWidget::updateNoViewMsg()
     // Customise, if possible, our no view widget so that it shows a relevant
     // warning message
 
-    int fileModeTabIndex = mModeTabs->currentIndex();
+    Plugin *fileViewPlugin = viewPlugin(mFileTabs->currentIndex());
 
-    if (fileModeTabIndex == -1) {
-        // There are no modes (and therefore no views) available, so leave
-
-        return;
-    } else {
-        CentralWidgetMode *mode = mModes.value(mModeTabIndexModes.value(fileModeTabIndex));
-
-        mNoViewMsg->setMessage(tr("The <strong>%1</strong> view does not support this type of file...").arg(qobject_cast<ViewInterface *>(mode->viewPlugins()->value(mode->viewTabs()->currentIndex())->instance())->viewName()));
-    }
+    if (fileViewPlugin)
+        mNoViewMsg->setMessage(tr("The <strong>%1</strong> view does not support this type of file...").arg(qobject_cast<ViewInterface *>(fileViewPlugin->instance())->viewName()));
 }
 
 //==============================================================================
