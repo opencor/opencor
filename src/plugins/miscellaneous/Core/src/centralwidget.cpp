@@ -1020,10 +1020,20 @@ bool CentralWidget::saveFile(const int &pIndex, const bool &pNeedNewFileName)
         return false;
     }
 
+    // Make sure that we have a valid view for the file
+
+    QString oldFileName = mFileNames[pIndex];
+
+    if (!viewInterface->viewWidget(oldFileName)){
+        QMessageBox::warning(mMainWindow, tr("Save File"),
+                             tr("The <strong>%1</strong> view cannot save <strong>%2</strong>.").arg(viewInterface->viewName(), oldFileName));
+
+        return false;
+    }
+
     // Make sure that we have a file name
 
     FileManager *fileManagerInstance = FileManager::instance();
-    QString oldFileName = mFileNames[pIndex];
     QString newFileName = oldFileName;
     bool fileIsNew = fileManagerInstance->isNew(oldFileName);
     bool hasNewFileName = false;
