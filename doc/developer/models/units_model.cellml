@@ -1,0 +1,29 @@
+<?xml version='1.0'?>
+<model name="van_der_pol_model_1928" xmlns="http://www.cellml.org/cellml/1.0#" xmlns:cellml="http://www.cellml.org/cellml/1.0#" xmlns:cmeta="http://www.cellml.org/metadata/1.0#">
+    <units base_units="yes" name="unit1"/>
+    <units name="unit2">
+        <unit exponent="1" multiplier="3" offset="10" prefix="milli" units="second"/>
+    </units>
+    <units name="unit3">
+        <unit exponent="-1" units="second"/>
+    </units>
+    <units base_units="yes" name="unit4"/>
+    <units base_units="yes" name="unit5"/>
+    <units name="unit6">
+        <unit exponent="-1" units="second"/>
+    </units>
+    <component name="main">
+        <units base_units="yes" name="mainunit1"/>
+        <units name="mainunit2">
+            <unit exponent="1" multiplier="3" offset="10" prefix="milli" units="second"/>
+        </units>
+        <units name="mainunit3">
+            <unit exponent="-1" units="second"/>
+        </units>
+        <units base_units="yes" name="mainunit4"/>
+        <units base_units="yes" name="mainunit5"/>
+        <units name="mainunit6">
+            <unit exponent="-1" units="second"/>
+        </units>
+    </component>
+</model>

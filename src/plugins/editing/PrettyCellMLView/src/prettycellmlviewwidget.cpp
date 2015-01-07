@@ -151,7 +151,7 @@ void PrettyCellmlViewWidget::initialize(const QString &pFileName,
                                                     Core::formatErrorMessage(converter.errorMessage(), false)+".");
 
             newEditingWidget->editorList()->addItem(EditorList::EditorListItem::Hint,
-                                                    tr("The CellML file could not be parsed. You might want to use the Raw (CellML) view to edit it."));
+                                                    tr("You might want to use the Raw (CellML) view to edit the file."));
         }
 
         // Keep track of our editing widget (and of whether the conversion was

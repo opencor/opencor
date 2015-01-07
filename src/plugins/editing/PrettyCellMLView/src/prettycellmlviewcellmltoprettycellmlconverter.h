@@ -66,11 +66,12 @@ private:
 
     QString cmetaId(const QDomNode &pDomNode) const;
 
-    void processModelNode(const QDomNode &pDomNode);
-    void processUnitsNode(const QDomNode &pDomNode);
-    void processComponentNode(const QDomNode &pDomNode);
+    bool processModelNode(const QDomNode &pDomNode);
+    bool processUnitsNode(const QDomNode &pDomNode);
+    bool processUnitNode(const QDomNode &pDomNode);
+    bool processComponentNode(const QDomNode &pDomNode);
 
-    void processNode(const QDomNode &pDomNode);
+    bool processNode(const QDomNode &pDomNode);
 };
 
 //==============================================================================

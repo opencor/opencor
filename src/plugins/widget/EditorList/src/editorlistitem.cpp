@@ -40,6 +40,8 @@ EditorListItem::EditorListItem(const Type &pType, const int &pLine,
 
     if ((pLine == -1) && (pColumn == -1))
         setText(QString("%1").arg(pMessage));
+    else if (pColumn == -1)
+        setText(QString("[%1] %2").arg(pLine).arg(pMessage));
     else
         setText(QString("[%1:%2] %3").arg(pLine).arg(pColumn).arg(pMessage));
 

@@ -15,8 +15,15 @@
 <context>
     <name>OpenCOR::PrettyCellMLView::PrettyCellmlViewWidget</name>
     <message>
-        <source>The CellML file could not be parsed. You might want to use the Raw (CellML) view to edit it.</source>
-        <translation>Le fichier CellML n&apos;a pas pu être analysé. Vous pouvez utiliser la vue (CellML) Brut pour l&apos;éditer.</translation>
+        <source>You might want to use the Raw (CellML) view to edit the file.</source>
+        <translation>Vous pouvez utiliser la vue (CellML) Brut pour éditer le fichier.</translation>
+    </message>
+</context>
+<context>
+    <name>QObject</name>
+    <message>
+        <source>the &apos;base_units&apos; attribute must have a value equal to &apos;yes&apos; or &apos;no&apos;.</source>
+        <translation>L&apos;attribut &apos;base_units&apos; doit avoir une valeur égale à &apos;yes&apos; ou &apos;no&apos;.</translation>
     </message>
 </context>
 </TS>

@@ -57,10 +57,15 @@ bool PrettyCellMLViewCellmlToPrettyCellmlConverter::execute()
 
     if (domDocument.setContent(fileContents, &mErrorMessage, &mErrorLine, &mErrorColumn)) {
         mOutput = QString();
+        mIndent = QString();
 
-        processNode(domDocument.documentElement());
+        if (!processNode(domDocument.documentElement())) {
+            mOutput = fileContents;
 
-        return true;
+            return false;
+        } else {
+            return true;
+        }
     } else {
         mOutput = fileContents;
 
@@ -158,7 +163,7 @@ QString PrettyCellMLViewCellmlToPrettyCellmlConverter::cmetaId(const QDomNode &p
 
 //==============================================================================
 
-void PrettyCellMLViewCellmlToPrettyCellmlConverter::processModelNode(const QDomNode &pDomNode)
+bool PrettyCellMLViewCellmlToPrettyCellmlConverter::processModelNode(const QDomNode &pDomNode)
 {
     // Start processing the given model node
 
@@ -171,49 +176,110 @@ void PrettyCellMLViewCellmlToPrettyCellmlConverter::processModelNode(const QDomN
 
     for (QDomNode domNode = pDomNode.firstChild();
          !domNode.isNull(); domNode = domNode.nextSibling())
-        processNode(domNode);
+        if (!processNode(domNode))
+            return false;
 
     // Finish processing the given model node
 
     unindent();
 
     outputString("enddef;");
+
+    return true;
 }
 
 //==============================================================================
 
-void PrettyCellMLViewCellmlToPrettyCellmlConverter::processUnitsNode(const QDomNode &pDomNode)
+bool PrettyCellMLViewCellmlToPrettyCellmlConverter::processUnitsNode(const QDomNode &pDomNode)
 {
     // Start processing the given units node
 
-    if (mOutput.endsWith(";"+Core::eolString()))
+    QString baseUnits = pDomNode.attributes().namedItem("base_units").nodeValue();
+
+    if (baseUnits.compare(QString()) && baseUnits.compare("yes") && baseUnits.compare("no")) {
+        mErrorLine = pDomNode.lineNumber();
+        mErrorMessage = QObject::tr("the 'base_units' attribute must have a value equal to 'yes' or 'no'.");
+
+        return false;
+    }
+
+    bool isBaseUnits = !baseUnits.compare("yes");
+
+    if (    mOutput.endsWith("enddef;"+Core::eolString())
+        || (mOutput.endsWith("as base unit;"+Core::eolString()) && !isBaseUnits)) {
         outputString();
+    }
 
-    outputString(QString("def unit%1 %2 as").arg(cmetaId(pDomNode),
-                                                 pDomNode.attributes().namedItem("name").nodeValue()));
+    outputString(QString("def unit%1 %2 as%3").arg(cmetaId(pDomNode))
+                                              .arg(pDomNode.attributes().namedItem("name").nodeValue())
+                                              .arg(isBaseUnits?" base unit;":QString()));
 
-    indent();
+    if (!isBaseUnits) {
+        indent();
 
-    // Process the given units node's children
+        // Process the given units node's children
 
-    for (QDomNode domNode = pDomNode.firstChild();
-         !domNode.isNull(); domNode = domNode.nextSibling())
-        processNode(domNode);
+        for (QDomNode domNode = pDomNode.firstChild();
+             !domNode.isNull(); domNode = domNode.nextSibling())
+            if (!processNode(domNode))
+                return false;
 
-    // Finish processing the given units node
+        // Finish processing the given units node
 
-    unindent();
+        unindent();
 
-    outputString("enddef;");
+        outputString("enddef;");
+    }
+
+    return true;
 }
 
 //==============================================================================
 
-void PrettyCellMLViewCellmlToPrettyCellmlConverter::processComponentNode(const QDomNode &pDomNode)
+bool PrettyCellMLViewCellmlToPrettyCellmlConverter::processUnitNode(const QDomNode &pDomNode)
+{
+    // Process the given unit node
+
+    QString parameters = QString();
+
+    if (!pDomNode.attributes().namedItem("prefix").nodeValue().isEmpty())
+        parameters += "pref: "+pDomNode.attributes().namedItem("prefix").nodeValue();
+
+    if (!pDomNode.attributes().namedItem("exponent").nodeValue().isEmpty()) {
+        if (!parameters.isEmpty())
+            parameters += ", ";
+
+        parameters += "expo: "+pDomNode.attributes().namedItem("exponent").nodeValue();
+    }
+
+    if (!pDomNode.attributes().namedItem("multiplier").nodeValue().isEmpty()) {
+        if (!parameters.isEmpty())
+            parameters += ", ";
+
+        parameters += "mult: "+pDomNode.attributes().namedItem("multiplier").nodeValue();
+    }
+
+    if (!pDomNode.attributes().namedItem("offset").nodeValue().isEmpty()) {
+        if (!parameters.isEmpty())
+            parameters += ", ";
+
+        parameters += "off: "+pDomNode.attributes().namedItem("offset").nodeValue();
+    }
+
+    outputString(QString("unit%1 %2%3;").arg(cmetaId(pDomNode))
+                                        .arg(pDomNode.attributes().namedItem("units").nodeValue())
+                                        .arg(parameters.isEmpty()?QString():" {"+parameters+"}"));
+
+    return true;
+}
+
+//==============================================================================
+
+bool PrettyCellMLViewCellmlToPrettyCellmlConverter::processComponentNode(const QDomNode &pDomNode)
 {
     // Start processing the given component node
 
-    if (mOutput.endsWith(";"+Core::eolString()))
+    if (mOutput.endsWith("enddef;"+Core::eolString()))
         outputString();
 
     outputString(QString("def comp%1 %2 as").arg(cmetaId(pDomNode),
@@ -225,31 +291,38 @@ void PrettyCellMLViewCellmlToPrettyCellmlConverter::processComponentNode(const Q
 
     for (QDomNode domNode = pDomNode.firstChild();
          !domNode.isNull(); domNode = domNode.nextSibling())
-        processNode(domNode);
+        if (!processNode(domNode))
+            return false;
 
     // Finish processing the given component node
 
     unindent();
 
     outputString("enddef;");
+
+    return true;
 }
 
 //==============================================================================
 
-void PrettyCellMLViewCellmlToPrettyCellmlConverter::processNode(const QDomNode &pDomNode)
+bool PrettyCellMLViewCellmlToPrettyCellmlConverter::processNode(const QDomNode &pDomNode)
 {
     // Start processing the given node
 
     QString nodeName = pDomNode.nodeName();
 
     if (!nodeName.compare("model"))
-        processModelNode(pDomNode);
+        return processModelNode(pDomNode);
     else if (!nodeName.compare("units"))
-        processUnitsNode(pDomNode);
+        return processUnitsNode(pDomNode);
+    else if (!nodeName.compare("unit"))
+        return processUnitNode(pDomNode);
     else if (!nodeName.compare("component"))
-        processComponentNode(pDomNode);
-    else
-        qWarning("Unsupported node: %s", qPrintable(pDomNode.nodeName()));
+        return processComponentNode(pDomNode);
+
+    qWarning("Unsupported node: %s", qPrintable(pDomNode.nodeName()));
+
+    return true;
 }
 
 //==============================================================================
