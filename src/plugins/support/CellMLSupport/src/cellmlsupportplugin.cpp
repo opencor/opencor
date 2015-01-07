@@ -179,13 +179,7 @@ void CellMLSupportPlugin::handleAction(const QUrl &pUrl)
 
 bool isCellmlFile(const QString &pFileName)
 {
-    // Return whether the file is a CellML file
-
-    if (!QFileInfo(pFileName).completeSuffix().compare(CellmlFileExtension))
-        return true;
-
-    // The file doesn't have the expected file extension, so check whether it's
-    // a new file
+    // If the file is new, then we consider it as a CellML file
 
     if (Core::FileManager::instance()->isNew(pFileName))
         return true;
