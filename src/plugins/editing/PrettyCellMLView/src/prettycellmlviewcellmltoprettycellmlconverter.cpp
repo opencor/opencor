@@ -142,39 +142,114 @@ void PrettyCellMLViewCellmlToPrettyCellmlConverter::outputString(const QString &
 
 //==============================================================================
 
+static const auto CmetaId = QStringLiteral("cmeta:id");
+
+//==============================================================================
+
+QString PrettyCellMLViewCellmlToPrettyCellmlConverter::cmetaId(const QDomNode &pDomNode) const
+{
+    // Return the cmeta:id, if any, of the given node
+
+    if (pDomNode.attributes().contains(CmetaId))
+        return QString("{%1}").arg(pDomNode.attributes().namedItem(CmetaId).nodeValue());
+    else
+        return QString();
+}
+
+//==============================================================================
+
+void PrettyCellMLViewCellmlToPrettyCellmlConverter::processModelNode(const QDomNode &pDomNode)
+{
+    // Start processing the given model node
+
+    outputString(QString("def model%1 %2 as").arg(cmetaId(pDomNode),
+                                                  pDomNode.attributes().namedItem("name").nodeValue()));
+
+    indent();
+
+    // Process the given model node's children
+
+    for (QDomNode domNode = pDomNode.firstChild();
+         !domNode.isNull(); domNode = domNode.nextSibling())
+        processNode(domNode);
+
+    // Finish processing the given model node
+
+    unindent();
+
+    outputString("enddef;");
+}
+
+//==============================================================================
+
+void PrettyCellMLViewCellmlToPrettyCellmlConverter::processUnitsNode(const QDomNode &pDomNode)
+{
+    // Start processing the given units node
+
+    if (mOutput.endsWith(";"+Core::eolString()))
+        outputString();
+
+    outputString(QString("def unit%1 %2 as").arg(cmetaId(pDomNode),
+                                                 pDomNode.attributes().namedItem("name").nodeValue()));
+
+    indent();
+
+    // Process the given units node's children
+
+    for (QDomNode domNode = pDomNode.firstChild();
+         !domNode.isNull(); domNode = domNode.nextSibling())
+        processNode(domNode);
+
+    // Finish processing the given units node
+
+    unindent();
+
+    outputString("enddef;");
+}
+
+//==============================================================================
+
+void PrettyCellMLViewCellmlToPrettyCellmlConverter::processComponentNode(const QDomNode &pDomNode)
+{
+    // Start processing the given component node
+
+    if (mOutput.endsWith(";"+Core::eolString()))
+        outputString();
+
+    outputString(QString("def comp%1 %2 as").arg(cmetaId(pDomNode),
+                                                 pDomNode.attributes().namedItem("name").nodeValue()));
+
+    indent();
+
+    // Process the given component node's children
+
+    for (QDomNode domNode = pDomNode.firstChild();
+         !domNode.isNull(); domNode = domNode.nextSibling())
+        processNode(domNode);
+
+    // Finish processing the given component node
+
+    unindent();
+
+    outputString("enddef;");
+}
+
+//==============================================================================
+
 void PrettyCellMLViewCellmlToPrettyCellmlConverter::processNode(const QDomNode &pDomNode)
 {
     // Start processing the given node
 
     QString nodeName = pDomNode.nodeName();
-    bool needEndDef = false;
 
-    if (!nodeName.compare("model")) {
-        outputString(QString("def model %1 as").arg(pDomNode.attributes().namedItem("name").nodeValue()));
-
-        needEndDef = true;
-
-        indent();
-    } else {
-        qDebug(">>> pDomNode.nodeName(): %s", qPrintable(pDomNode.nodeName()));
-    }
-
-    // Process the given node's children
-
-    for (QDomNode domNode = pDomNode.firstChild();
-         !domNode.isNull(); domNode = domNode.nextSibling()) {
-        // Process the current node itself
-
-        processNode(domNode);
-    }
-
-    // Finish processing the given node
-
-    if (needEndDef) {
-        unindent();
-
-        outputString("enddef;");
-    }
+    if (!nodeName.compare("model"))
+        processModelNode(pDomNode);
+    else if (!nodeName.compare("units"))
+        processUnitsNode(pDomNode);
+    else if (!nodeName.compare("component"))
+        processComponentNode(pDomNode);
+    else
+        qWarning("Unsupported node: %s", qPrintable(pDomNode.nodeName()));
 }
 
 //==============================================================================

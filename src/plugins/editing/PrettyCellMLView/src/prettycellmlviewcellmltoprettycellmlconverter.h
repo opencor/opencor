@@ -64,6 +64,12 @@ private:
 
     void outputString(const QString &pString = QString());
 
+    QString cmetaId(const QDomNode &pDomNode) const;
+
+    void processModelNode(const QDomNode &pDomNode);
+    void processUnitsNode(const QDomNode &pDomNode);
+    void processComponentNode(const QDomNode &pDomNode);
+
     void processNode(const QDomNode &pDomNode);
 };
 
