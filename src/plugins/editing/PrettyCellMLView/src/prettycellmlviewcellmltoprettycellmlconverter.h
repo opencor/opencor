@@ -24,6 +24,7 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#include <QDomNode>
 #include <QString>
 
 //==============================================================================
@@ -51,11 +52,19 @@ private:
     QString mFileName;
 
     QString mOutput;
+    QString mIndent;
 
     int mErrorLine;
     int mErrorColumn;
 
     QString mErrorMessage;
+
+    void indent();
+    void unindent();
+
+    void outputString(const QString &pString = QString());
+
+    void processNode(const QDomNode &pDomNode);
 };
 
 //==============================================================================

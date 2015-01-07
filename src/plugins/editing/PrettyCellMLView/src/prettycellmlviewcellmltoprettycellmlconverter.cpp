@@ -36,6 +36,7 @@ namespace PrettyCellMLView {
 PrettyCellMLViewCellmlToPrettyCellmlConverter::PrettyCellMLViewCellmlToPrettyCellmlConverter(const QString &pFileName) :
     mFileName(pFileName),
     mOutput(QString()),
+    mIndent(QString()),
     mErrorLine(-1),
     mErrorColumn(-1),
     mErrorMessage(QString())
@@ -56,6 +57,8 @@ bool PrettyCellMLViewCellmlToPrettyCellmlConverter::execute()
 
     if (domDocument.setContent(fileContents, &mErrorMessage, &mErrorLine, &mErrorColumn)) {
         mOutput = QString();
+
+        processNode(domDocument.documentElement());
 
         return true;
     } else {
@@ -99,6 +102,79 @@ QString PrettyCellMLViewCellmlToPrettyCellmlConverter::errorMessage() const
     // Return our error message
 
     return mErrorMessage;
+}
+
+//==============================================================================
+
+static const auto Indent = QStringLiteral("    ");
+
+//==============================================================================
+
+void PrettyCellMLViewCellmlToPrettyCellmlConverter::indent()
+{
+    // Indent our output
+
+    mIndent += Indent;
+}
+
+//==============================================================================
+
+void PrettyCellMLViewCellmlToPrettyCellmlConverter::unindent()
+{
+    // Unindent our output
+
+    mIndent.chop(Indent.size());
+}
+
+//==============================================================================
+
+void PrettyCellMLViewCellmlToPrettyCellmlConverter::outputString(const QString &pString)
+{
+    // Output the given string
+
+    if (pString.isEmpty()) {
+        if (!mOutput.endsWith(Core::eolString()+Core::eolString()))
+            mOutput += Core::eolString();
+    } else {
+        mOutput += mIndent+pString+Core::eolString();
+    }
+}
+
+//==============================================================================
+
+void PrettyCellMLViewCellmlToPrettyCellmlConverter::processNode(const QDomNode &pDomNode)
+{
+    // Start processing the given node
+
+    QString nodeName = pDomNode.nodeName();
+    bool needEndDef = false;
+
+    if (!nodeName.compare("model")) {
+        outputString(QString("def model %1 as").arg(pDomNode.attributes().namedItem("name").nodeValue()));
+
+        needEndDef = true;
+
+        indent();
+    } else {
+        qDebug(">>> pDomNode.nodeName(): %s", qPrintable(pDomNode.nodeName()));
+    }
+
+    // Process the given node's children
+
+    for (QDomNode domNode = pDomNode.firstChild();
+         !domNode.isNull(); domNode = domNode.nextSibling()) {
+        // Process the current node itself
+
+        processNode(domNode);
+    }
+
+    // Finish processing the given node
+
+    if (needEndDef) {
+        unindent();
+
+        outputString("enddef;");
+    }
 }
 
 //==============================================================================
