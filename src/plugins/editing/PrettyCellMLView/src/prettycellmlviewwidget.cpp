@@ -26,6 +26,7 @@ specific language governing permissions and limitations under the License.
 #include "editorwidget.h"
 #include "filemanager.h"
 #include "prettycellmlviewcellmltoprettycellmlconverter.h"
+#include "prettycellmlviewlexer.h"
 #include "prettycellmlviewwidget.h"
 #include "settings.h"
 #include "viewerwidget.h"
@@ -42,10 +43,6 @@ specific language governing permissions and limitations under the License.
 #include <QSettings>
 #include <QTimer>
 #include <QVariant>
-
-//==============================================================================
-
-#include "Qsci/qscilexerxml.h"
 
 //==============================================================================
 
@@ -136,7 +133,7 @@ void PrettyCellmlViewWidget::initialize(const QString &pFileName,
 
         newEditingWidget = new CoreCellMLEditing::CoreCellmlEditingWidget(converter.output(),
                                                                           !Core::FileManager::instance()->isReadableAndWritable(pFileName),
-                                                                          new QsciLexerXML(this),
+                                                                          0,//---GRY---new PrettyCellmlViewLexer(this),
                                                                           parentWidget());
 
         if (!successfulConversion) {

@@ -20,9 +20,13 @@ ADD_PLUGIN(PrettyCellMLView
         ../../viewinterface.cpp
 
         src/prettycellmlviewcellmltoprettycellmlconverter.cpp
+#---GRY---
+#        src/prettycellmlviewlexer.cpp
         src/prettycellmlviewplugin.cpp
         src/prettycellmlviewwidget.cpp
     HEADERS_MOC
+#---GRY---
+#        src/prettycellmlviewlexer.h
         src/prettycellmlviewplugin.h
         src/prettycellmlviewwidget.h
     UIS

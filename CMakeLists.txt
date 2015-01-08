@@ -17,6 +17,9 @@ OPTION(USE_PREBUILT_LLVM_PLUGIN "Use the pre-built version of the LLVM plugin" O
 OPTION(USE_PREBUILT_QSCINTILLA_PLUGIN "Use the pre-built version of the QScintilla plugin" ON)
 OPTION(USE_PREBUILT_QWT_PLUGIN "Use the pre-built version of the Qwt plugin" ON)
 OPTION(USE_PREBUILT_SUNDIALS_PLUGIN "Use the pre-built version of the SUNDIALS plugin" ON)
+SET(USE_PREBUILT_QSCINTILLA_PLUGIN OFF)
+#---GRY--- THE ABOVE IS TO BE REMOVED ONCE WE HAVE MANAGED TO GET SYNTAX
+#          HIGHLIGHTING TO WORK FOR THE PRETTY CellML VIEW...
 
 # Initialise the project
 

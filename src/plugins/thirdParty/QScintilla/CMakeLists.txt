@@ -102,6 +102,7 @@ ELSE()
             Qt4Qt5/qscidocument.cpp
             Qt4Qt5/qscilexer.cpp
             Qt4Qt5/qscilexercpp.cpp
+            Qt4Qt5/qscilexercustom.cpp
             Qt4Qt5/qscilexerhtml.cpp
             Qt4Qt5/qscilexerjavascript.cpp
             Qt4Qt5/qscilexerpython.cpp
@@ -145,6 +146,7 @@ ELSE()
             Qt4Qt5/Qsci/qsciapis.h
             Qt4Qt5/Qsci/qscilexer.h
             Qt4Qt5/Qsci/qscilexercpp.h
+            Qt4Qt5/Qsci/qscilexercustom.h
             Qt4Qt5/Qsci/qscilexerhtml.h
             Qt4Qt5/Qsci/qscilexerjavascript.h
             Qt4Qt5/Qsci/qscilexerpython.h
