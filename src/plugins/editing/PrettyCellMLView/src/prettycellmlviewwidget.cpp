@@ -58,6 +58,7 @@ PrettyCellmlViewWidget::PrettyCellmlViewWidget(QWidget *pParent) :
     mSettingsGroup(QString()),
     mEditingWidget(0),
     mEditingWidgets(QMap<QString, CoreCellMLEditing::CoreCellmlEditingWidget *>()),
+    mEditingWidgetsSha1(QMap<QString, QString>()),
     mSuccessfulConversions(QMap<QString, bool>())
 {
     // Set up the GUI
@@ -137,6 +138,10 @@ void PrettyCellmlViewWidget::initialize(const QString &pFileName,
                                                                           parentWidget());
 
         if (!successfulConversion) {
+            // The conversion wasn't successful, so make the editor read-only
+            // (since its contents is that of the file itself) and add a couple
+            // of messages to our editor list
+
             newEditingWidget->editor()->setReadOnly(true);
             // Note: CoreEditingPlugin::filePermissionsChanged() will do the
             //       same as above, but this will take a wee bit of time
@@ -155,6 +160,7 @@ void PrettyCellmlViewWidget::initialize(const QString &pFileName,
         // successful) and add it to ourselves
 
         mEditingWidgets.insert(pFileName, newEditingWidget);
+        mEditingWidgetsSha1.insert(pFileName, Core::sha1(newEditingWidget->editor()->contents()));
         mSuccessfulConversions.insert(pFileName, successfulConversion);
 
         layout()->addWidget(newEditingWidget);
@@ -274,13 +280,16 @@ void PrettyCellmlViewWidget::fileRenamed(const QString &pOldFileName,
     // The given file has been renamed, so update our editing widgets mapping
 
     CoreCellMLEditing::CoreCellmlEditingWidget *editingWidget = mEditingWidgets.value(pOldFileName);
+    QString editingWidgetSha1 = mEditingWidgetsSha1.value(pOldFileName);
     bool successfulConversion = mSuccessfulConversions.value(pOldFileName);
 
     if (editingWidget) {
         mEditingWidgets.insert(pNewFileName, editingWidget);
+        mEditingWidgetsSha1.insert(pNewFileName, editingWidgetSha1);
         mSuccessfulConversions.insert(pNewFileName, successfulConversion);
 
         mEditingWidgets.remove(pOldFileName);
+        mEditingWidgetsSha1.remove(pOldFileName);
         mSuccessfulConversions.remove(pOldFileName);
     }
 }
@@ -303,6 +312,17 @@ bool PrettyCellmlViewWidget::isEditorUseable(const QString &pFileName) const
     // Return whether the requested editor is useable
 
     return mSuccessfulConversions.value(pFileName);
+}
+
+//==============================================================================
+
+bool PrettyCellmlViewWidget::isEditorContentsModified(const QString &pFileName) const
+{
+    // Return whether the contents of the requested editor has been modified
+
+    CoreCellMLEditing::CoreCellmlEditingWidget *editingWidget = mEditingWidgets.value(pFileName);
+
+    return editingWidget?Core::sha1(editingWidget->editor()->contents()).compare(mEditingWidgetsSha1.value(pFileName)):false;
 }
 
 //==============================================================================

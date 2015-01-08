@@ -83,6 +83,7 @@ public:
     Editor::EditorWidget * editor(const QString &pFileName) const;
 
     bool isEditorUseable(const QString &pFileName) const;
+    bool isEditorContentsModified(const QString &pFileName) const;
 
     virtual QList<QWidget *> statusBarWidgets() const;
 
@@ -93,8 +94,9 @@ private:
     QString mSettingsGroup;
 
     CoreCellMLEditing::CoreCellmlEditingWidget *mEditingWidget;
-    QMap<QString, CoreCellMLEditing::CoreCellmlEditingWidget *> mEditingWidgets;
 
+    QMap<QString, CoreCellMLEditing::CoreCellmlEditingWidget *> mEditingWidgets;
+    QMap<QString, QString> mEditingWidgetsSha1;
     QMap<QString, bool> mSuccessfulConversions;
 
 private Q_SLOTS:
