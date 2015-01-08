@@ -55,6 +55,7 @@ QScintillaWidget::QScintillaWidget(QsciLexer *pLexer, QWidget *pParent) :
     setCaretLineVisible(true);
     setFrameShape(QFrame::NoFrame);
     setMarginWidth(SC_MARGIN_NUMBER, 0);
+    setTabWidth(4);
     setUtf8(true);
 
     // Associate a lexer to our Scintilla editor, should one be provided
