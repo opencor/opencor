@@ -19,7 +19,6 @@ specific language governing permissions and limitations under the License.
 // Lexer for the pretty CellML format
 //==============================================================================
 
-#include "corecliutils.h"
 #include "prettycellmlviewlexer.h"
 
 //==============================================================================

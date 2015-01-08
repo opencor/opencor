@@ -24,7 +24,6 @@ ADD_PLUGIN(PrettyCellMLView
         src/prettycellmlviewplugin.cpp
         src/prettycellmlviewwidget.cpp
     HEADERS_MOC
-        src/prettycellmlviewlexer.h
         src/prettycellmlviewplugin.h
         src/prettycellmlviewwidget.h
     UIS

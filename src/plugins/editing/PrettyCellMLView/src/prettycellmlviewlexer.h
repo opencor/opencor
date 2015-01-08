@@ -35,8 +35,6 @@ namespace PrettyCellMLView {
 
 class PrettyCellmlViewLexer : public QsciLexerCustom
 {
-    Q_OBJECT
-
 public:
     virtual const char * language() const;
 
