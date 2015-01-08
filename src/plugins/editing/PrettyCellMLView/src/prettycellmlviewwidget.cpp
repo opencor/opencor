@@ -133,7 +133,7 @@ void PrettyCellmlViewWidget::initialize(const QString &pFileName,
 
         newEditingWidget = new CoreCellMLEditing::CoreCellmlEditingWidget(converter.output(),
                                                                           !Core::FileManager::instance()->isReadableAndWritable(pFileName),
-                                                                          0,//---GRY---new PrettyCellmlViewLexer(this),
+                                                                          new PrettyCellmlViewLexer(this),
                                                                           parentWidget());
 
         if (!successfulConversion) {

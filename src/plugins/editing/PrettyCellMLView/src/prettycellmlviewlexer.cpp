@@ -20,11 +20,22 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include "prettycellmlviewlexer.h"
+#include "qscintillawidget.h"
 
 //==============================================================================
 
 namespace OpenCOR {
 namespace PrettyCellMLView {
+
+//==============================================================================
+
+PrettyCellmlViewLexer::PrettyCellmlViewLexer(QObject *pParent) :
+    QsciLexerCustom(pParent)
+{
+    // Some initialisations
+
+    mKeywords = QStringList() << "as" << "comp" << "def" << "model" << "unit";
+}
 
 //==============================================================================
 
@@ -39,19 +50,74 @@ const char * PrettyCellmlViewLexer::language() const
 
 QString PrettyCellmlViewLexer::description(int pStyle) const
 {
-    Q_UNUSED(pStyle);
-
     // Return the given style's description
+
+    switch (pStyle) {
+    case Default:
+        return QObject::tr("Default");
+    case Comment:
+        return QObject::tr("Comment");
+    case Keyword:
+        return QObject::tr("Keyword");
+    }
 
     return QString();
 }
 
 //==============================================================================
 
+QColor PrettyCellmlViewLexer::defaultColor(int pStyle) const
+{
+    // Return the given style's default colour
+
+    switch (pStyle) {
+    case Default:
+        return QColor(0x80, 0x80, 0x80);
+    case Comment:
+        return QColor(0x00, 0x7f, 0x00);
+    case Keyword:
+        return QColor(0x00, 0x00, 0x7f);
+    }
+
+    return QsciLexerCustom::defaultColor(pStyle);
+}
+
+//==============================================================================
+
 void PrettyCellmlViewLexer::styleText(int pStart, int pEnd)
 {
-Q_UNUSED(pStart);
-Q_UNUSED(pEnd);
+    // Make sure that we have an editor
+
+    if (!editor())
+        return;
+
+    // Retrieve the test to style
+
+    char *data = new char[pEnd-pStart+1];
+
+    editor()->SendScintilla(QsciScintilla::SCI_GETTEXTRANGE, pStart, pEnd, data);
+
+    QString text = QString(data);
+
+    delete[] data;
+
+    if (text.isEmpty())
+        return;
+
+    startStyling(pStart, 0x1f);
+
+    QStringList lines = text.split(qobject_cast<QScintillaSupport::QScintillaWidget *>(editor())->eolString());
+
+    foreach (QString line, lines) {
+        int lineLength = line.length();
+
+        line = line.trimmed();
+
+        if (line.startsWith("//"))
+            setStyling(lineLength, Comment);
+        else
+            setStyling(lineLength, Default);
+    }
 }
 
 //==============================================================================

@@ -25,5 +25,17 @@
         <source>the &apos;base_units&apos; attribute must have a value equal to &apos;yes&apos; or &apos;no&apos;.</source>
         <translation>L&apos;attribut &apos;base_units&apos; doit avoir une valeur égale à &apos;yes&apos; ou &apos;no&apos;.</translation>
     </message>
+    <message>
+        <source>Default</source>
+        <translation>Défaut</translation>
+    </message>
+    <message>
+        <source>Comment</source>
+        <translation>Commentaire</translation>
+    </message>
+    <message>
+        <source>Keyword</source>
+        <translation>Mot-clef</translation>
+    </message>
 </context>
 </TS>

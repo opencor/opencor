@@ -36,11 +36,24 @@ namespace PrettyCellMLView {
 class PrettyCellmlViewLexer : public QsciLexerCustom
 {
 public:
+    enum {
+        Default,
+        Comment,
+        Keyword
+    };
+
+    explicit PrettyCellmlViewLexer(QObject *pParent);
+
     virtual const char * language() const;
 
     virtual QString description(int pStyle) const;
 
+    virtual QColor defaultColor(int pStyle) const;
+
     virtual void styleText(int pStart, int pEnd);
+
+private:
+    QStringList mKeywords;
 };
 
 //==============================================================================
