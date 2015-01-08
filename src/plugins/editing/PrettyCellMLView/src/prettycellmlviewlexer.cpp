@@ -40,6 +40,8 @@ const char * PrettyCellmlViewLexer::language() const
 
 QString PrettyCellmlViewLexer::description(int pStyle) const
 {
+    Q_UNUSED(pStyle);
+
     // Return the given style's description
 
     return QString();
