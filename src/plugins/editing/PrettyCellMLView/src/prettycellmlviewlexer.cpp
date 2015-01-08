@@ -72,11 +72,11 @@ QColor PrettyCellmlViewLexer::defaultColor(int pStyle) const
 
     switch (pStyle) {
     case Default:
-        return QColor(0x80, 0x80, 0x80);
+        return QColor(0x00, 0x00, 0x00);
     case Comment:
         return QColor(0x00, 0x7f, 0x00);
     case Keyword:
-        return QColor(0x00, 0x00, 0x7f);
+        return QColor(0x7f, 0x7f, 0x00);
     }
 
     return QsciLexerCustom::defaultColor(pStyle);
@@ -91,7 +91,7 @@ void PrettyCellmlViewLexer::styleText(int pStart, int pEnd)
     if (!editor())
         return;
 
-    // Retrieve the test to style
+    // Retrieve the text to style
 
     char *data = new char[pEnd-pStart+1];
 
@@ -104,19 +104,40 @@ void PrettyCellmlViewLexer::styleText(int pStart, int pEnd)
     if (text.isEmpty())
         return;
 
-    startStyling(pStart, 0x1f);
+    // Retrieve the various lines that make up the text
 
     QStringList lines = text.split(qobject_cast<QScintillaSupport::QScintillaWidget *>(editor())->eolString());
 
+    // Style our various lines
+
+    int startShift = 0;
+
     foreach (QString line, lines) {
+        // Check whether our line contains a comment
+
+        int commentPosition = line.indexOf("//");
         int lineLength = line.length();
+        int commentLength = 0;
 
-        line = line.trimmed();
+        if (commentPosition != -1) {
+            // We have a comment, so style it and remove it from our line
 
-        if (line.startsWith("//"))
-            setStyling(lineLength, Comment);
-        else
-            setStyling(lineLength, Default);
+            commentLength = line.length()-commentPosition;
+
+            startStyling(pStart+startShift+commentPosition, 0x1f);
+            setStyling(commentLength, Comment);
+
+            line.chop(commentLength);
+
+            lineLength -= commentLength;
+        }
+
+        // Style the rest of our line using default styling
+
+        startStyling(pStart+startShift, 0x1f);
+        setStyling(line.length(), Default);
+
+        startShift += lineLength+commentLength;
     }
 }
 
