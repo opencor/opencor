@@ -58,10 +58,9 @@ QScintillaWidget::QScintillaWidget(QsciLexer *pLexer, QWidget *pParent) :
     setUtf8(true);
 
     // Associate a lexer to our Scintilla editor, should one be provided
-    // Note: the default font family and size come from Qt Creator...
 
 #if defined(Q_OS_WIN)
-    mFont = QFont("Courier", 10);
+    mFont = QFont("Lucida Console", 11);
 #elif defined(Q_OS_LINUX)
     mFont = QFont("Monospace", 9);
 #elif defined(Q_OS_MAC)
