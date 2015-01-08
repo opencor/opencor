@@ -71,10 +71,10 @@ QScintillaWidget::QScintillaWidget(QsciLexer *pLexer, QWidget *pParent) :
 #endif
 
     if (pLexer) {
-        // A lexer was provided, so specify its fonts and associate it with our
-        // Scintilla editor
+        // A lexer was provided, so specify its default font and associate it
+        // with our Scintilla editor
 
-        pLexer->setFont(mFont);
+        pLexer->setDefaultFont(mFont);
 
         setLexer(pLexer);
 
@@ -112,6 +112,7 @@ QScintillaWidget::QScintillaWidget(QsciLexer *pLexer, QWidget *pParent) :
     //          press Ctrl+L, then nothing would happen while we would have
     //          expected the current file to be (un)locked...
 
+    SendScintilla(SCI_CLEARCMDKEY, (SCMOD_CTRL << 16)+'/');
     SendScintilla(SCI_CLEARCMDKEY, (SCMOD_CTRL << 16)+'D');
     SendScintilla(SCI_CLEARCMDKEY, (SCMOD_CTRL << 16)+'L');
     SendScintilla(SCI_CLEARCMDKEY, (SCMOD_CTRL << 16)+(SCMOD_SHIFT << 16)+'L');

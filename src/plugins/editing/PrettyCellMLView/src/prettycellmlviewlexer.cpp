@@ -59,6 +59,8 @@ QString PrettyCellmlViewLexer::description(int pStyle) const
         return QObject::tr("Comment");
     case Keyword:
         return QObject::tr("Keyword");
+    case Parameters:
+        return QObject::tr("Parameters");
     }
 
     return QString();
@@ -77,9 +79,29 @@ QColor PrettyCellmlViewLexer::defaultColor(int pStyle) const
         return QColor(0x00, 0x7f, 0x00);
     case Keyword:
         return QColor(0x7f, 0x7f, 0x00);
+    case Parameters:
+        return QColor(0x00, 0x00, 0x7f);
     }
 
     return QsciLexerCustom::defaultColor(pStyle);
+}
+
+//==============================================================================
+
+QFont PrettyCellmlViewLexer::defaultFont(int pStyle) const
+{
+    // Return the given style's default colour
+
+    QFont res = QsciLexer::defaultFont(pStyle);
+
+    switch (pStyle) {
+    case Parameters:
+        res.setItalic(true);
+
+        break;
+    }
+
+    return res;
 }
 
 //==============================================================================
@@ -106,11 +128,14 @@ void PrettyCellmlViewLexer::styleText(int pStart, int pEnd)
 
     // Retrieve the various lines that make up the text
 
-    QStringList lines = text.split(qobject_cast<QScintillaSupport::QScintillaWidget *>(editor())->eolString());
+    QScintillaSupport::QScintillaWidget *currentEditor = qobject_cast<QScintillaSupport::QScintillaWidget *>(editor());
+    int eolStringSize = currentEditor->eolString().size();
+
+    QStringList lines = text.split(currentEditor->eolString());
 
     // Style our various lines
 
-    int startShift = 0;
+    int lineShift = 0;
 
     foreach (QString line, lines) {
         // Check whether our line contains a comment
@@ -124,7 +149,7 @@ void PrettyCellmlViewLexer::styleText(int pStart, int pEnd)
 
             commentLength = line.length()-commentPosition;
 
-            startStyling(pStart+startShift+commentPosition, 0x1f);
+            startStyling(pStart+lineShift+commentPosition, 0x1f);
             setStyling(commentLength, Comment);
 
             line.chop(commentLength);
@@ -134,10 +159,31 @@ void PrettyCellmlViewLexer::styleText(int pStart, int pEnd)
 
         // Style the rest of our line using default styling
 
-        startStyling(pStart+startShift, 0x1f);
+        startStyling(pStart+lineShift, 0x1f);
         setStyling(line.length(), Default);
 
-        startShift += lineLength+commentLength;
+        // Check whether the rest of our line contains some keywords and, if so,
+        // style them
+
+//---GRY--- TO BE DONE...
+
+        // Check whether some of our line contains some parameters and, if so,
+        // style them
+
+        int istart = -1;
+
+        for (int i = 0, imax = line.length(); i < imax; ++i) {
+            if ((line[i] == '{') && (istart == -1)) {
+                istart = i;
+            } else if ((line[i] == '}') && (istart != -1)) {
+                startStyling(pStart+lineShift+istart, 0x1f);
+                setStyling(i-istart+1, Parameters);
+
+                istart = -1;
+            }
+        }
+
+        lineShift += lineLength+commentLength+eolStringSize;
     }
 }
 

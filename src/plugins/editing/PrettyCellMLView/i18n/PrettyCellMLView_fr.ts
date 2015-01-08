@@ -37,5 +37,9 @@
         <source>Keyword</source>
         <translation>Mot-clef</translation>
     </message>
+    <message>
+        <source>Parameters</source>
+        <translation>Paramètres</translation>
+    </message>
 </context>
 </TS>

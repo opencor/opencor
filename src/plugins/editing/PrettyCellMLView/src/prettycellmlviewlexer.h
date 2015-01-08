@@ -39,7 +39,8 @@ public:
     enum {
         Default,
         Comment,
-        Keyword
+        Keyword,
+        Parameters
     };
 
     explicit PrettyCellmlViewLexer(QObject *pParent);
@@ -49,6 +50,7 @@ public:
     virtual QString description(int pStyle) const;
 
     virtual QColor defaultColor(int pStyle) const;
+    virtual QFont defaultFont(int pStyle) const;
 
     virtual void styleText(int pStart, int pEnd);
 
