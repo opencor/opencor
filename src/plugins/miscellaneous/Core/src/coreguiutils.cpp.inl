@@ -19,6 +19,17 @@ specific language governing permissions and limitations under the License.
 // Core GUI utilities
 //==============================================================================
 
+void showEnableAction(QAction *pAction, const bool &pVisible,
+                      const bool &pEnabled)
+{
+    // Show/enable or hide/disable the given action
+
+    pAction->setVisible(pVisible);
+    pAction->setEnabled(pVisible && pEnabled);
+}
+
+//==============================================================================
+
 void updateColors()
 {
     // Retrieve the colour used for a 'normal' border
@@ -69,17 +80,6 @@ void updateColors()
         settings.setValue(SettingsShadowColor, qApp->palette().color(QPalette::Shadow));
         settings.setValue(SettingsWindowColor, qApp->palette().color(QPalette::Window));
     settings.endGroup();
-}
-
-//==============================================================================
-
-void showEnableAction(QAction *pAction, const bool &pVisible,
-                      const bool &pEnabled)
-{
-    // Show/enable or hide/disable the given action
-
-    pAction->setVisible(pVisible);
-    pAction->setEnabled(pVisible && pEnabled);
 }
 
 //==============================================================================
