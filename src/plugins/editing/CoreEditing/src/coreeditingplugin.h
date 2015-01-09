@@ -100,6 +100,8 @@ private:
 
     QString mFileName;
 
+    void updateGui(const QString &pFileName);
+
     void unpopulateEditMenu();
     void populateEditMenu(QAction *pBeforeAction = 0);
 

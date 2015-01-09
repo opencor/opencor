@@ -35,10 +35,16 @@ var jsonData = {"versions":[
                                   {"type":"Fixed", "description":"Risk of the same <code>cmeta:id</code> value being used for two different CellML elements."}
                               ]
                              },
+                             {"type":"subCategory", "name":"Raw view",
+                              "entries":[
+                                  {"type":"Improved", "description":"File permissions changes."}
+                              ]
+                             },
                              {"type":"subCategory", "name":"Raw CellML view",
                               "entries":[
                                   {"type":"Improved", "description":"Context menu."},
                                   {"type":"Improved", "description":"Equation rendering."},
+                                  {"type":"Improved", "description":"File permissions changes."},
                                   {"type":"Fixed", "description":"Retrieval of view settings."}
                               ]
                              }
