@@ -92,7 +92,10 @@ public:
 
     QString eolString() const;
 
+    QColor backgroundColor(const int &pStyle);
     void setBackgroundColor(const int &pStyle, const QColor &pBackgroundColor);
+
+    QColor foregroundColor(const int &pStyle);
     void setForegroundColor(const int &pStyle, const QColor &pForegroundColor);
 
     int zoomLevel() const;

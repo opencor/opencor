@@ -470,26 +470,6 @@ QString EditorWidget::eolString() const
 
 //==============================================================================
 
-void EditorWidget::setBackgroundColor(const int &pStyle,
-                                      const QColor &pBackgroundColor)
-{
-    // Set the background color for the given style in our editor
-
-    mEditor->setBackgroundColor(pStyle, pBackgroundColor);
-}
-
-//==============================================================================
-
-void EditorWidget::setForegroundColor(const int &pStyle,
-                                      const QColor &pForegroundColor)
-{
-    // Set the foreground color for the given style in our editor
-
-    mEditor->setForegroundColor(pStyle, pForegroundColor);
-}
-
-//==============================================================================
-
 int EditorWidget::zoomLevel() const
 {
     // Return the zoom level of our editor

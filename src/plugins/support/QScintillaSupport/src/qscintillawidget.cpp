@@ -376,12 +376,30 @@ QString QScintillaWidget::eolString() const
 
 //==============================================================================
 
+QColor QScintillaWidget::backgroundColor(const int &pStyle)
+{
+    // Return the background color for the given style
+
+    return SendScintilla(SCI_STYLEGETBACK, pStyle);
+}
+
+//==============================================================================
+
 void QScintillaWidget::setBackgroundColor(const int &pStyle,
                                           const QColor &pBackgroundColor)
 {
     // Set the background color for the given style
 
     SendScintilla(SCI_STYLESETBACK, pStyle, pBackgroundColor);
+}
+
+//==============================================================================
+
+QColor QScintillaWidget::foregroundColor(const int &pStyle)
+{
+    // Return the foreground color for the given style
+
+    return SendScintilla(SCI_STYLEGETFORE, pStyle);
 }
 
 //==============================================================================

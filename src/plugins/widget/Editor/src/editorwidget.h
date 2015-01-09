@@ -131,9 +131,6 @@ public:
 
     QString eolString() const;
 
-    void setBackgroundColor(const int &pStyle, const QColor &pBackgroundColor);
-    void setForegroundColor(const int &pStyle, const QColor &pForegroundColor);
-
     int zoomLevel() const;
     void setZoomLevel(const int &pZoomLevel);
 
