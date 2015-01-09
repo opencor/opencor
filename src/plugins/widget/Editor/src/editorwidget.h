@@ -24,6 +24,7 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#include "corecliutils.h"
 #include "editorglobal.h"
 #include "widget.h"
 
@@ -149,6 +150,8 @@ private:
     int mCurrentColumn;
 
     bool mFindReplaceVisible;
+
+    QIntList mReadOnlyStyles;
 
     EditorFindReplaceWidget * findReplace();
 

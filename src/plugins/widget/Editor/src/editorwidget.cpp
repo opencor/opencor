@@ -56,7 +56,8 @@ EditorWidget::EditorWidget(const QString &pContents, const bool &pReadOnly,
     mGui(new Ui::EditorWidget),
     mCurrentLine(0),
     mCurrentColumn(0),
-    mFindReplaceVisible(false)
+    mFindReplaceVisible(false),
+    mReadOnlyStyles(QIntList())
 {
     // Set up the GUI
 
@@ -67,6 +68,16 @@ EditorWidget::EditorWidget(const QString &pContents, const bool &pReadOnly,
     mEditor = new QScintillaSupport::QScintillaWidget(pLexer, this);
     mSeparator = Core::newLineWidget(this);
     mFindReplace = new EditorFindReplaceWidget(this);
+
+    // Check which styles can have their background changed when making them
+    // read-only or writable
+
+    QColor baseColor = Core::baseColor();
+
+    for (int i = 0; i < QsciScintillaBase::STYLE_MAX; ++i) {
+        if (mEditor->backgroundColor(i) == baseColor)
+            mReadOnlyStyles << i;
+    }
 
     // Set our contents and our read-only state
 
@@ -284,12 +295,14 @@ void EditorWidget::setReadOnly(const bool &pReadOnly)
     mEditor->setReadOnly(pReadOnly);
     mFindReplace->setReadOnly(pReadOnly);
 
-    // Update our background
+    // Update our background colour
 
-    QColor backgroundColor = pReadOnly?Core::lockedColor(Core::baseColor()):Core::baseColor();
+    QColor baseColor = Core::baseColor();
+    QColor lockedColor = Core::lockedColor(baseColor);
+    QColor newBackgroundColor = pReadOnly?lockedColor:baseColor;
 
-    for (int i = 0; i < QsciScintillaBase::STYLE_MAX; ++i)
-        mEditor->setBackgroundColor(i, backgroundColor);
+    foreach (const int &readOnlyStyle, mReadOnlyStyles)
+        mEditor->setBackgroundColor(readOnlyStyle, newBackgroundColor);
 }
 
 //==============================================================================

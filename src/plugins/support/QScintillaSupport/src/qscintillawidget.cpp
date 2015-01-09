@@ -71,10 +71,10 @@ QScintillaWidget::QScintillaWidget(QsciLexer *pLexer, QWidget *pParent) :
 #endif
 
     if (pLexer) {
-        // A lexer was provided, so specify its default font and associate it
-        // with our Scintilla editor
+        // A lexer was provided, so specify its font and associate it with our
+        // Scintilla editor
 
-        pLexer->setDefaultFont(mFont);
+        pLexer->setFont(mFont);
 
         setLexer(pLexer);
 

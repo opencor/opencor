@@ -68,9 +68,9 @@ QString PrettyCellmlViewLexer::description(int pStyle) const
 
 //==============================================================================
 
-QColor PrettyCellmlViewLexer::defaultColor(int pStyle) const
+QColor PrettyCellmlViewLexer::color(int pStyle) const
 {
-    // Return the given style's default colour
+    // Return the given style's colour
 
     switch (pStyle) {
     case Default:
@@ -83,16 +83,16 @@ QColor PrettyCellmlViewLexer::defaultColor(int pStyle) const
         return QColor(0x00, 0x00, 0x7f);
     }
 
-    return QsciLexerCustom::defaultColor(pStyle);
+    return QsciLexerCustom::color(pStyle);
 }
 
 //==============================================================================
 
-QFont PrettyCellmlViewLexer::defaultFont(int pStyle) const
+QFont PrettyCellmlViewLexer::font(int pStyle) const
 {
-    // Return the given style's default colour
+    // Return the given style's colour
 
-    QFont res = QsciLexer::defaultFont(pStyle);
+    QFont res = QsciLexer::font(pStyle);
 
     switch (pStyle) {
     case Parameters:

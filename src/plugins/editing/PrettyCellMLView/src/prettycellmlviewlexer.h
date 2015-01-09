@@ -49,8 +49,8 @@ public:
 
     virtual QString description(int pStyle) const;
 
-    virtual QColor defaultColor(int pStyle) const;
-    virtual QFont defaultFont(int pStyle) const;
+    virtual QColor color(int pStyle) const;
+    virtual QFont font(int pStyle) const;
 
     virtual void styleText(int pStart, int pEnd);
 
