@@ -216,6 +216,15 @@ void EditorWidget::updateSettings(EditorWidget *pEditorWidget)
 
 //==============================================================================
 
+QScintillaSupport::QScintillaWidget * EditorWidget::editor() const
+{
+    // Return our editor
+
+    return mEditor;
+}
+
+//==============================================================================
+
 QMenu * EditorWidget::contextMenu() const
 {
     // Return the context menu of our editor

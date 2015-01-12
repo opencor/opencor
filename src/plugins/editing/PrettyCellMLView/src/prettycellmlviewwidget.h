@@ -100,6 +100,8 @@ private:
     QMap<QString, bool> mSuccessfulConversions;
 
 private Q_SLOTS:
+    void editorKeyPressed(QKeyEvent *pEvent, bool &pHandled);
+
     void selectFirstItemInEditorList();
 };
 

@@ -28,6 +28,7 @@ specific language governing permissions and limitations under the License.
 #include "prettycellmlviewcellmltoprettycellmlconverter.h"
 #include "prettycellmlviewlexer.h"
 #include "prettycellmlviewwidget.h"
+#include "qscintillawidget.h"
 #include "settings.h"
 #include "viewerwidget.h"
 
@@ -38,6 +39,7 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include <QLabel>
+#include <QKeyEvent>
 #include <QLayout>
 #include <QMetaType>
 #include <QSettings>
@@ -164,6 +166,11 @@ void PrettyCellmlViewWidget::initialize(const QString &pFileName,
         mSuccessfulConversions.insert(pFileName, successfulConversion);
 
         layout()->addWidget(newEditingWidget);
+
+        // Add support for some key mappings to our editor
+
+        connect(newEditingWidget->editor()->editor(), SIGNAL(keyPressed(QKeyEvent *, bool &)),
+                this, SLOT(editorKeyPressed(QKeyEvent *, bool &)));
     }
 
     // Update our editing widget, if required
@@ -336,6 +343,26 @@ QList<QWidget *> PrettyCellmlViewWidget::statusBarWidgets() const
                                   << mEditingWidget->editor()->editingModeWidget();
     else
         return QList<QWidget *>();
+}
+
+//==============================================================================
+
+void PrettyCellmlViewWidget::editorKeyPressed(QKeyEvent *pEvent, bool &pHandled)
+{
+    // Some key combinations from our editor
+
+    if (   !(pEvent->modifiers() & Qt::ShiftModifier)
+        &&  (pEvent->modifiers() & Qt::ControlModifier)
+        && !(pEvent->modifiers() & Qt::AltModifier)
+        && !(pEvent->modifiers() & Qt::MetaModifier)
+        &&  (pEvent->key() == Qt::Key_Slash)) {
+//---GRY--- TO BE DONE...
+qDebug(">>> (UN)COMMENTING...");
+
+        pHandled = true;
+    } else {
+        pHandled = false;
+    }
 }
 
 //==============================================================================

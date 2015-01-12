@@ -85,6 +85,8 @@ public:
 
     void updateSettings(EditorWidget *pEditorWidget);
 
+    QScintillaSupport::QScintillaWidget * editor() const;
+
     QMenu * contextMenu() const;
     void setContextMenu(const QList<QAction *> &pContextMenuActions);
 
