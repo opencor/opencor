@@ -356,53 +356,93 @@ void PrettyCellmlViewWidget::editorKeyPressed(QKeyEvent *pEvent, bool &pHandled)
         && !(pEvent->modifiers() & Qt::AltModifier)
         && !(pEvent->modifiers() & Qt::MetaModifier)
         &&  (pEvent->key() == Qt::Key_Slash)) {
-        // We want to (un)comment the current line
+        // We want to (un)comment the selected text, if any, or the current line
 
-        static const QString Comment = "//";
-        static const int CommentLength = Comment.length();
+        QScintillaSupport::QScintillaWidget *editor = qobject_cast<QScintillaSupport::QScintillaWidget *>(sender());
 
         // Retrieve the position of our cursor within the editor
 
-        QScintillaSupport::QScintillaWidget *editor = qobject_cast<QScintillaSupport::QScintillaWidget *>(sender());
         int lineNumber, columnNumber;
 
         editor->getCursorPosition(&lineNumber, &columnNumber);
 
-        // (Un)comment the current line
+        // Check whether some text is selected
 
-        QString line = editor->text(lineNumber).trimmed();
+        if (editor->hasSelectedText()) {
+            // Some text is selected, so (un)comment it
 
-        editor->replaceSelectedText(QString());
+            static const QString StartComment = "/*";
+            static const QString EndComment = "*/";
+            static const int StartCommentLength = StartComment.length();
+            static const int EndCommentLength = EndComment.length();
 
-        if (!line.isEmpty()) {
-            // We are not dealing with an empty line, so we can (un)comment it
+            QString selectedText = editor->selectedText();
+            int lineFrom, columnFrom, lineTo, columnTo;
+            bool isCommented =    selectedText.startsWith(StartComment)
+                               && selectedText.endsWith(EndComment);
 
-            if (editor->text(lineNumber).trimmed().startsWith(Comment)) {
-                // The line is already commented, so uncomment it
+            editor->getSelection(&lineFrom, &columnFrom, &lineTo, &columnTo);
 
-                QString editorEolString = editor->eolString();
-                int commentLineNumber, commentColumnNumber;
+            if (isCommented) {
+                // The selected text is commented, so uncomment it
 
-                editor->lineIndexFromPosition(editor->findTextInRange(editor->findTextInRange(editor->currentPosition(), 0, editorEolString)+editorEolString.length(),
-                                                                      editor->contentsSize(), Comment),
-                                              &commentLineNumber, &commentColumnNumber);
-
-                editor->setSelection(commentLineNumber, commentColumnNumber,
-                                     commentLineNumber, commentColumnNumber+CommentLength);
-                editor->removeSelectedText();
-
-                // Go back to our original position (since uncommenting the line
-                // will have shifted it)
-                // Note: to use QScintillaWidget::setCursorPosition() will
-                //       ensure that the cursor is visible and vertically center
-                //       it while we only want to set its position, hence we use
-                //       QsciScintilla::setCursorPosition() instead...
-
-                editor->QsciScintilla::setCursorPosition(lineNumber, columnNumber-CommentLength);
+                editor->replaceSelectedText(selectedText.mid(StartCommentLength, selectedText.length()-StartCommentLength-EndCommentLength));
             } else {
-                // The line is not commented, so comment it
+                // The selected text is not commented, so comment it
 
-                editor->insertAt(Comment, lineNumber, 0);
+                editor->replaceSelectedText(StartComment+selectedText+EndComment);
+            }
+
+            // Reselect the text
+
+            columnTo += (isCommented?-1:1)*(StartCommentLength+(lineFrom == lineTo)*EndCommentLength);
+
+            if ((lineNumber == lineFrom) && (columnNumber == columnFrom))
+                editor->setSelection(lineTo, columnTo, lineFrom, columnFrom);
+            else
+                editor->setSelection(lineFrom, columnFrom, lineTo, columnTo);
+        } else {
+            // No text is selected, so (un)comment the current line
+
+            static const QString Comment = "//";
+            static const int CommentLength = Comment.length();
+
+            // (Un)comment the current line
+
+            QString line = editor->text(lineNumber).trimmed();
+
+            if (!line.isEmpty()) {
+                // We are not dealing with an empty line, so we can (un)comment
+                // it
+
+                if (editor->text(lineNumber).trimmed().startsWith(Comment)) {
+                    // The line is already commented, so uncomment it
+
+                    QString editorEolString = editor->eolString();
+                    int commentLineNumber, commentColumnNumber;
+
+                    editor->lineIndexFromPosition(editor->findTextInRange(editor->findTextInRange(editor->currentPosition(), 0, editorEolString)+editorEolString.length(),
+                                                                          editor->contentsSize(), Comment),
+                                                  &commentLineNumber, &commentColumnNumber);
+
+                    editor->setSelection(commentLineNumber, commentColumnNumber,
+                                         commentLineNumber, commentColumnNumber+CommentLength);
+                    editor->removeSelectedText();
+
+                    // Go back to our original position (since uncommenting the
+                    // line will have shifted it)
+                    // Note: to use QScintillaWidget::setCursorPosition() will
+                    //       ensure that the cursor is visible and vertically
+                    //       center it while we only want to set its position,
+                    //       hence we use QsciScintilla::setCursorPosition()
+                    //       instead...
+
+                    editor->QsciScintilla::setCursorPosition(lineNumber, columnNumber-CommentLength);
+                } else {
+                    // The line is not commented, so comment it
+
+                    editor->insertAt(Comment, lineNumber, 0);
+                }
             }
         }
 
