@@ -106,6 +106,56 @@ QFont PrettyCellmlViewLexer::font(int pStyle) const
 
 //==============================================================================
 
+void PrettyCellmlViewLexer::doStyleText(int pStart, int pEnd,
+                                        const QString &pText)
+{
+    // Make sure that we are given some text to style
+
+    if (pText.isEmpty())
+        return;
+
+    // Check whether the given text contains a comment
+
+    static const QString CommentString = "//";
+    static const QString StartComment = "/*";
+    static const QString EndComment = "*/";
+
+    int commentPosition = pText.indexOf(CommentString);
+
+    if (commentPosition == -1) {
+        // Default styling
+
+        startStyling(pStart, 0x1f);
+        setStyling(pEnd-pStart, Default);
+    } else {
+        // There is a comment to style, so first style everything that is before
+        // the comment
+
+        doStyleText(pStart, pStart+commentPosition, pText.left(commentPosition));
+
+        // Now, style everything that is after the comment, if anything, by
+        // looking for the end of the line on which the comment is
+
+        QScintillaSupport::QScintillaWidget *currentEditor = qobject_cast<QScintillaSupport::QScintillaWidget *>(editor());
+        int eolPosition = pText.indexOf(currentEditor->eolString(), commentPosition);
+
+        if (eolPosition != -1) {
+            int start = pStart+eolPosition+currentEditor->eolString().length();
+
+            doStyleText(start, pEnd, pText.right(pEnd-start));
+        }
+
+        // Style the comment itself
+
+        int start = pStart+commentPosition;
+
+        startStyling(start, 0x1f);
+        setStyling(((eolPosition == -1)?pEnd:pStart+eolPosition)-start, Comment);
+    }
+}
+
+//==============================================================================
+
 void PrettyCellmlViewLexer::styleText(int pStart, int pEnd)
 {
     // Make sure that we have an editor
@@ -126,65 +176,9 @@ void PrettyCellmlViewLexer::styleText(int pStart, int pEnd)
     if (text.isEmpty())
         return;
 
-    // Retrieve the various lines that make up the text
+    // Effectively style our text
 
-    QScintillaSupport::QScintillaWidget *currentEditor = qobject_cast<QScintillaSupport::QScintillaWidget *>(editor());
-    int eolStringSize = currentEditor->eolString().size();
-
-    QStringList lines = text.split(currentEditor->eolString());
-
-    // Style our various lines
-
-    int lineShift = 0;
-
-    foreach (QString line, lines) {
-        // Check whether our line contains a comment
-
-        int commentPosition = line.indexOf("//");
-        int lineLength = line.length();
-        int commentLength = 0;
-
-        if (commentPosition != -1) {
-            // We have a comment, so style it and remove it from our line
-
-            commentLength = line.length()-commentPosition;
-
-            startStyling(pStart+lineShift+commentPosition, 0x1f);
-            setStyling(commentLength, Comment);
-
-            line.chop(commentLength);
-
-            lineLength -= commentLength;
-        }
-
-        // Style the rest of our line using default styling
-
-        startStyling(pStart+lineShift, 0x1f);
-        setStyling(line.length(), Default);
-
-        // Check whether the rest of our line contains some keywords and, if so,
-        // style them
-
-//---GRY--- TO BE DONE...
-
-        // Check whether some of our line contains some parameters and, if so,
-        // style them
-
-        int istart = -1;
-
-        for (int i = 0, imax = line.length(); i < imax; ++i) {
-            if ((line[i] == '{') && (istart == -1)) {
-                istart = i;
-            } else if ((line[i] == '}') && (istart != -1)) {
-                startStyling(pStart+lineShift+istart, 0x1f);
-                setStyling(i-istart+1, Parameters);
-
-                istart = -1;
-            }
-        }
-
-        lineShift += lineLength+commentLength+eolStringSize;
-    }
+    doStyleText(pStart, pEnd, text);
 }
 
 //==============================================================================

@@ -56,6 +56,8 @@ public:
 
 private:
     QStringList mKeywords;
+
+    void doStyleText(int pStart, int pEnd, const QString &pText);
 };
 
 //==============================================================================
