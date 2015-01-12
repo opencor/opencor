@@ -511,7 +511,7 @@ void RawCellmlViewWidget::updateViewer()
     // Retrieve the Content MathML block around our current position, if any
 
     static const QString StartMathTag = "<math ";
-    static const QByteArray EndMathTag = "</math>";
+    static const QString EndMathTag = "</math>";
 
     Editor::EditorWidget *editor = mEditingWidget->editor();
     int currentPosition = editor->currentPosition();
