@@ -233,8 +233,8 @@ int QScintillaWidget::contentsSize() const
 QString QScintillaWidget::textInRange(const int &pStartRange,
                                       const int &pEndRange) const
 {
-    // Retrieve and return the text in the given range, making sure that the
-    // given range makes sense
+    // Retrieve and return the text in the given range, after making sure that
+    // the given range makes sense
 
     int maxRange = contentsSize();
 
