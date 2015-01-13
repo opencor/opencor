@@ -107,50 +107,115 @@ QFont PrettyCellmlViewLexer::font(int pStyle) const
 //==============================================================================
 
 void PrettyCellmlViewLexer::doStyleText(int pStart, int pEnd,
-                                        const QString &pText)
+                                        const QString &pText,
+                                        const QString &pFullText)
 {
     // Make sure that we are given some text to style
 
     if (pText.isEmpty())
         return;
 
-    // Check whether the given text contains a comment
+    // Check whether a /* XXX */ comment started before the given text
+qDebug("[%s]", qPrintable(pText));
+
+    static const QString StartCommentString = "/*";
+    static const QString EndCommentString = "*/";
+    static const int StartCommentLength = StartCommentString.length();
+    static const int EndCommentLength = EndCommentString.length();
+
+    int commentStartPosition = pFullText.lastIndexOf(StartCommentString, pStart+StartCommentLength);
+
+    if (commentStartPosition != -1) {
+        // A /* XXX */ comment started before the given text, so look for where
+        // it ends
+
+        int commentEndPosition = pFullText.indexOf(EndCommentString, commentStartPosition+StartCommentLength);
+
+        if (commentEndPosition == -1)
+            commentEndPosition = pFullText.length();
+qDebug(">>> Starting within a comment?... [%d|%d|%d]", pStart, commentStartPosition, commentEndPosition);
+
+        if ((commentStartPosition <= pStart) && (pStart <= commentEndPosition)) {
+            // The beginning of the given text is a comment
+qDebug(">>> Starting within a comment...");
+
+            int end = qMin(pEnd, commentEndPosition+EndCommentLength);
+
+            startStyling(pStart, 0x1f);
+            setStyling(end-pStart, Comment);
+
+            // Style everything that is behind the comment, if anything
+
+            if (end == commentEndPosition+EndCommentLength)
+                doStyleText(commentEndPosition+EndCommentLength, pEnd, pText.right(pEnd-commentEndPosition-EndCommentLength), pFullText);
+
+            return;
+        }
+    }
+
+    // Check whether the given text contains a // comment
 
     static const QString CommentString = "//";
-    static const QString StartComment = "/*";
-    static const QString EndComment = "*/";
 
     int commentPosition = pText.indexOf(CommentString);
 
-    if (commentPosition == -1) {
-        // Default styling
+    if (commentPosition != -1) {
+        // There is a // comment to style, so first style everything that is
+        // before the // comment
 
-        startStyling(pStart, 0x1f);
-        setStyling(pEnd-pStart, Default);
-    } else {
-        // There is a comment to style, so first style everything that is before
-        // the comment
+        doStyleText(pStart, pStart+commentPosition, pText.left(commentPosition), pFullText);
 
-        doStyleText(pStart, pStart+commentPosition, pText.left(commentPosition));
+        // Now, style everything that is after the // comment, if anything, by
+        // looking for the end of the line on which the // comment is
 
-        // Now, style everything that is after the comment, if anything, by
-        // looking for the end of the line on which the comment is
-
-        QScintillaSupport::QScintillaWidget *currentEditor = qobject_cast<QScintillaSupport::QScintillaWidget *>(editor());
-        int eolPosition = pText.indexOf(currentEditor->eolString(), commentPosition);
+        QString eolString = qobject_cast<QScintillaSupport::QScintillaWidget *>(editor())->eolString();
+        int eolStringLength = eolString.length();
+        int eolPosition = pText.indexOf(eolString, commentPosition+eolStringLength);
 
         if (eolPosition != -1) {
-            int start = pStart+eolPosition+currentEditor->eolString().length();
+            int start = pStart+eolPosition+eolStringLength;
 
-            doStyleText(start, pEnd, pText.right(pEnd-start));
+            doStyleText(start, pEnd, pText.right(pEnd-start), pFullText);
         }
 
-        // Style the comment itself
+        // Style the // comment itself
 
         int start = pStart+commentPosition;
 
         startStyling(start, 0x1f);
         setStyling(((eolPosition == -1)?pEnd:pStart+eolPosition)-start, Comment);
+    } else {
+        commentStartPosition = pText.indexOf(StartCommentString);
+
+        if (commentStartPosition != -1) {
+            // There is a /* XXX */ comment to style, so first style everything
+            // that is before the comment
+
+            doStyleText(pStart, pStart+commentStartPosition, pText.left(commentStartPosition), pFullText);
+
+            // Now, style everything that is after the comment, if anything, by
+            // looking for the end of the line on which the comment is
+
+            int commentEndPosition = pText.indexOf(EndCommentString, commentStartPosition+StartCommentLength);
+
+            if (commentEndPosition != -1) {
+                int start = pStart+commentEndPosition+EndCommentLength;
+
+                doStyleText(start, pEnd, pText.right(pEnd-start), pFullText);
+            }
+
+            // Style the /* XXX */ comment itself
+
+            int start = pStart+commentStartPosition;
+
+            startStyling(start, 0x1f);
+            setStyling(((commentEndPosition == -1)?editor()->length():pStart+commentEndPosition+EndCommentLength)-start, Comment);
+        } else {
+            // Default styling
+
+            startStyling(pStart, 0x1f);
+            setStyling(pEnd-pStart, Default);
+        }
     }
 }
 
@@ -178,7 +243,7 @@ void PrettyCellmlViewLexer::styleText(int pStart, int pEnd)
 
     // Effectively style our text
 
-    doStyleText(pStart, pEnd, text);
+    doStyleText(pStart, pEnd, text, editor()->text());
 }
 
 //==============================================================================
