@@ -417,10 +417,11 @@ void PrettyCellmlViewWidget::editorKeyPressed(QKeyEvent *pEvent, bool &pHandled)
             int selectedTextEndPosition = editor->positionFromLineIndex(lineTo, columnTo);
             QString editorEolString = editor->eolString();
 
-            if (    (!columnFrom && !columnTo)
-                ||  (selectedTextEndPosition == editor->length())
-                || !editor->textInRange(selectedTextEndPosition, selectedTextEndPosition+editorEolString.length()).compare(editorEolString)
-                || !editor->textInRange(selectedTextEndPosition, selectedTextEndPosition+1).compare("\0")) {
+            if (    !columnFrom
+                && (   !columnTo
+                    ||  (selectedTextEndPosition == editor->length())
+                    || !editor->textInRange(selectedTextEndPosition, selectedTextEndPosition+editorEolString.length()).compare(editorEolString)
+                    || !editor->textInRange(selectedTextEndPosition, selectedTextEndPosition+1).compare("\0"))) {
                 // The selected text consists of full lines, so (un)comment
                 // them
 
