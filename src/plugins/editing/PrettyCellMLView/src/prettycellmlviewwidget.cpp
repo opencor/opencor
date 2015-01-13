@@ -352,6 +352,13 @@ static const int CommentLength = Comment.length();
 
 //==============================================================================
 
+static const auto StartComment = QStringLiteral("/*");
+static const auto EndComment = QStringLiteral("*/");
+static const int StartCommentLength = StartComment.length();
+static const int EndCommentLength = EndComment.length();
+
+//==============================================================================
+
 void PrettyCellmlViewWidget::commentOrUncommentLine(QScintillaSupport::QScintillaWidget *pEditor,
                                                     const int &pLineNumber,
                                                     const bool &pCommentLine)
@@ -422,43 +429,57 @@ void PrettyCellmlViewWidget::editorKeyPressed(QKeyEvent *pEvent, bool &pHandled)
                     ||  (selectedTextEndPosition == editor->length())
                     || !editor->textInRange(selectedTextEndPosition, selectedTextEndPosition+editorEolString.length()).compare(editorEolString)
                     || !editor->textInRange(selectedTextEndPosition, selectedTextEndPosition+1).compare("\0"))) {
-                // The selected text consists of full lines, so (un)comment
-                // them
+                // The selected text consists of full lines, so check whether
+                // it's surrounded by /* XXX */
 
-                bool commentLine = false;
-                QString line;
-                int iMax = columnTo?lineTo:lineTo-1;
+                QString trimmedSelectedText = editor->selectedText().trimmed();
 
-                // Determine whether we should be commenting or uncommenting the
-                // lines
+                if (   trimmedSelectedText.startsWith(StartComment)
+                    && trimmedSelectedText.endsWith(EndComment)) {
+                    // The full lines are surrounded by /* XXX */, so simply
+                    // remove them
 
-                for (int i = lineFrom; i <= iMax; ++i) {
-                    line = editor->text(i).trimmed();
+                    QString selectedText = editor->selectedText();
 
-                    commentLine = commentLine || (!line.isEmpty() && !line.startsWith(Comment));
+                    selectedText.remove(selectedText.indexOf(StartComment), StartCommentLength);
+                    selectedText.remove(selectedText.indexOf(EndComment), EndCommentLength);
+
+                    editor->replaceSelectedText(selectedText);
+                } else {
+                    // The full lines are not surrounded by /* XXX */, so simply
+                    // (un)comment them
+
+                    bool commentLine = false;
+                    QString line;
+                    int iMax = columnTo?lineTo:lineTo-1;
+
+                    // Determine whether we should be commenting or uncommenting the
+                    // lines
+
+                    for (int i = lineFrom; i <= iMax; ++i) {
+                        line = editor->text(i).trimmed();
+
+                        commentLine = commentLine || (!line.isEmpty() && !line.startsWith(Comment));
+                    }
+
+                    // (Un)comment the lines as one 'big' action
+
+                    editor->beginUndoAction();
+
+                    for (int i = lineFrom; i <= iMax; ++i)
+                        commentOrUncommentLine(editor, i, commentLine);
+
+                    editor->endUndoAction();
+
+                    // Prepare ourselves for reselecting the lines
+
+                    columnTo += columnTo?
+                                    commentLine?CommentLength:-CommentLength:
+                                    0;
                 }
-
-                // (Un)comment the lines as one 'big' action
-
-                editor->beginUndoAction();
-
-                for (int i = lineFrom; i <= iMax; ++i)
-                    commentOrUncommentLine(editor, i, commentLine);
-
-                editor->endUndoAction();
-
-                // Prepare ourselves for reselecting the lines
-
-                columnTo += columnTo?
-                                commentLine?CommentLength:-CommentLength:
-                                0;
             } else {
+                // The selected text doesn't consist of full lines, so simply
                 // (un)comment it
-
-                static const QString StartComment = "/*";
-                static const QString EndComment = "*/";
-                static const int StartCommentLength = StartComment.length();
-                static const int EndCommentLength = EndComment.length();
 
                 QString selectedText = editor->selectedText();
                 bool commentSelectedText =    !selectedText.startsWith(StartComment)
