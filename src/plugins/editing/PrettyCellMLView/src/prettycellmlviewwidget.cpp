@@ -445,6 +445,10 @@ void PrettyCellmlViewWidget::editorKeyPressed(QKeyEvent *pEvent, bool &pHandled)
                     selectedText.remove(selectedText.indexOf(EndComment), EndCommentLength);
 
                     editor->replaceSelectedText(selectedText);
+
+                    // Prepare ourselves for reselecting the lines
+
+                    columnTo -= EndCommentLength;
                 } else {
                     // The full lines are not surrounded by /* XXX */, so simply
                     // (un)comment them
