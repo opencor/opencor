@@ -112,10 +112,11 @@ void PrettyCellmlViewLexer::doStyleText(int pStart, int pEnd,
 {
     // Make sure that we are given some text to style
 
-    if (pText.isEmpty())
+    if (pText.trimmed().isEmpty())
         return;
 
-    // Check whether a /* XXX */ comment started before the given text
+    // Check whether a /* XXX */ comment started before or at the beginning of
+    // the given text
 
     static const QString StartCommentString = "/*";
     static const QString EndCommentString = "*/";
@@ -125,8 +126,8 @@ void PrettyCellmlViewLexer::doStyleText(int pStart, int pEnd,
     int commentStartPosition = pFullText.lastIndexOf(StartCommentString, pStart+StartCommentLength);
 
     if (commentStartPosition != -1) {
-        // A /* XXX */ comment started before the given text, so look for where
-        // it ends
+        // A /* XXX */ comment started before or at the beginning of the given
+        // text, so now look for where it ends
 
         int commentEndPosition = pFullText.indexOf(EndCommentString, commentStartPosition+StartCommentLength);
 
@@ -134,7 +135,7 @@ void PrettyCellmlViewLexer::doStyleText(int pStart, int pEnd,
             commentEndPosition = pFullText.length();
 
         if ((commentStartPosition <= pStart) && (pStart <= commentEndPosition)) {
-            // The beginning of the given text is a comment
+            // The beginning of the given text is a comment, so style it
 
             int end = qMin(pEnd, commentEndPosition+EndCommentLength);
 
@@ -190,25 +191,14 @@ void PrettyCellmlViewLexer::doStyleText(int pStart, int pEnd,
 
             doStyleText(pStart, pStart+commentStartPosition, pText.left(commentStartPosition), pFullText);
 
-            // Now, style everything that is after the comment, if anything, by
-            // looking for the end of the line on which the comment is
+            // Now style everything from the comment onwards
+            // Note: by styling everything from the comment onwards means that
+            //       we will find that a /* XXX */ comment starts at the
+            //       beginning of the 'new' given text...
 
-            int commentEndPosition = pText.indexOf(EndCommentString, commentStartPosition+StartCommentLength);
-
-            if (commentEndPosition != -1) {
-                int start = pStart+commentEndPosition+EndCommentLength;
-
-                doStyleText(start, pEnd, pText.right(pEnd-start), pFullText);
-            }
-
-            // Style the /* XXX */ comment itself
-
-            int start = pStart+commentStartPosition;
-
-            startStyling(start, 0x1f);
-            setStyling(((commentEndPosition == -1)?editor()->length():pStart+commentEndPosition+EndCommentLength)-start, Comment);
+            doStyleText(pStart+commentStartPosition, pEnd, pText.right(pEnd-pStart-commentStartPosition), pFullText);
         } else {
-            // Default styling
+            // Not something that we can recognise, so use a default style
 
             startStyling(pStart, 0x1f);
             setStyling(pEnd-pStart, Default);
