@@ -461,22 +461,22 @@ void PrettyCellmlViewWidget::editorKeyPressed(QKeyEvent *pEvent, bool &pHandled)
                 static const int EndCommentLength = EndComment.length();
 
                 QString selectedText = editor->selectedText();
-                bool isCommented =    selectedText.startsWith(StartComment)
-                                   && selectedText.endsWith(EndComment);
+                bool commentSelectedText =    !selectedText.startsWith(StartComment)
+                                           || !selectedText.endsWith(EndComment);
 
-                if (isCommented) {
-                    // The selected text is commented, so uncomment it
-
-                    editor->replaceSelectedText(selectedText.mid(StartCommentLength, selectedText.length()-StartCommentLength-EndCommentLength));
-                } else {
+                if (commentSelectedText) {
                     // The selected text is not commented, so comment it
 
                     editor->replaceSelectedText(StartComment+selectedText+EndComment);
+                } else {
+                    // The selected text is commented, so uncomment it
+
+                    editor->replaceSelectedText(selectedText.mid(StartCommentLength, selectedText.length()-StartCommentLength-EndCommentLength));
                 }
 
                 // Prepare ourselves for reselecting the text
 
-                columnTo += (isCommented?-1:1)*(StartCommentLength+(lineFrom == lineTo)*EndCommentLength);
+                columnTo += (commentSelectedText?1:-1)*(StartCommentLength+(lineFrom == lineTo)*EndCommentLength);
             }
 
             // Reselect the text/lines
