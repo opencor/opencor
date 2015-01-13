@@ -116,7 +116,6 @@ void PrettyCellmlViewLexer::doStyleText(int pStart, int pEnd,
         return;
 
     // Check whether a /* XXX */ comment started before the given text
-qDebug("[%s]", qPrintable(pText));
 
     static const QString StartCommentString = "/*";
     static const QString EndCommentString = "*/";
@@ -133,11 +132,9 @@ qDebug("[%s]", qPrintable(pText));
 
         if (commentEndPosition == -1)
             commentEndPosition = pFullText.length();
-qDebug(">>> Starting within a comment?... [%d|%d|%d]", pStart, commentStartPosition, commentEndPosition);
 
         if ((commentStartPosition <= pStart) && (pStart <= commentEndPosition)) {
             // The beginning of the given text is a comment
-qDebug(">>> Starting within a comment...");
 
             int end = qMin(pEnd, commentEndPosition+EndCommentLength);
 
