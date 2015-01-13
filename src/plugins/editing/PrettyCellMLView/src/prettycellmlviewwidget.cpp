@@ -347,6 +347,44 @@ QList<QWidget *> PrettyCellmlViewWidget::statusBarWidgets() const
 
 //==============================================================================
 
+static const auto Comment = QStringLiteral("//");
+static const int CommentLength = Comment.length();
+
+//==============================================================================
+
+void PrettyCellmlViewWidget::commentOrUncommentLine(QScintillaSupport::QScintillaWidget *pEditor,
+                                                    const int &pLineNumber,
+                                                    const bool &pCommentLine)
+{
+    // (Un)comment the current line
+
+    QString line = pEditor->text(pLineNumber).trimmed();
+
+    if (!line.isEmpty()) {
+        // We are not dealing with an empty line, so we can (un)comment it
+
+        if (pCommentLine) {
+            pEditor->insertAt(Comment, pLineNumber, 0);
+        } else {
+            // Uncomment the line, should it be commented
+
+            if (line.startsWith(Comment)) {
+                int commentLineNumber, commentColumnNumber;
+
+                pEditor->lineIndexFromPosition(pEditor->findTextInRange(pEditor->positionFromLineIndex(pLineNumber, 0),
+                                                                        pEditor->contentsSize(), Comment),
+                                               &commentLineNumber, &commentColumnNumber);
+
+                pEditor->setSelection(commentLineNumber, commentColumnNumber,
+                                      commentLineNumber, commentColumnNumber+CommentLength);
+                pEditor->removeSelectedText();
+            }
+        }
+    }
+}
+
+//==============================================================================
+
 void PrettyCellmlViewWidget::editorKeyPressed(QKeyEvent *pEvent, bool &pHandled)
 {
     // Some key combinations from our editor
@@ -369,80 +407,102 @@ void PrettyCellmlViewWidget::editorKeyPressed(QKeyEvent *pEvent, bool &pHandled)
         // Check whether some text is selected
 
         if (editor->hasSelectedText()) {
-            // Some text is selected, so (un)comment it
+            // Some text is selected, so check whether full lines are selected
+            // or 'random' text
 
-            static const QString StartComment = "/*";
-            static const QString EndComment = "*/";
-            static const int StartCommentLength = StartComment.length();
-            static const int EndCommentLength = EndComment.length();
-
-            QString selectedText = editor->selectedText();
             int lineFrom, columnFrom, lineTo, columnTo;
-            bool isCommented =    selectedText.startsWith(StartComment)
-                               && selectedText.endsWith(EndComment);
 
             editor->getSelection(&lineFrom, &columnFrom, &lineTo, &columnTo);
 
-            if (isCommented) {
-                // The selected text is commented, so uncomment it
+            int selectedTextEndPosition = editor->positionFromLineIndex(lineTo, columnTo);
+            QString editorEolString = editor->eolString();
 
-                editor->replaceSelectedText(selectedText.mid(StartCommentLength, selectedText.length()-StartCommentLength-EndCommentLength));
+            if (    (!columnFrom && !columnTo)
+                ||  (selectedTextEndPosition == editor->length())
+                || !editor->textInRange(selectedTextEndPosition, selectedTextEndPosition+editorEolString.length()).compare(editorEolString)
+                || !editor->textInRange(selectedTextEndPosition, selectedTextEndPosition+1).compare("\0")) {
+                // The selected text consists of full lines, so (un)comment
+                // them
+
+                bool commentLine = false;
+                QString line;
+                int iMax = columnTo?lineTo:lineTo-1;
+
+                // Determine whether we should be commenting or uncommenting the
+                // lines
+
+                for (int i = lineFrom; i <= iMax; ++i) {
+                    line = editor->text(i).trimmed();
+
+                    commentLine = commentLine || (!line.isEmpty() && !line.startsWith(Comment));
+                }
+
+                // (Un)comment the lines as one 'big' action
+
+                editor->beginUndoAction();
+
+                for (int i = lineFrom; i <= iMax; ++i)
+                    commentOrUncommentLine(editor, i, commentLine);
+
+                editor->endUndoAction();
+
+                // Prepare ourselves for reselecting the lines
+
+                columnTo += columnTo?
+                                commentLine?CommentLength:-CommentLength:
+                                0;
             } else {
-                // The selected text is not commented, so comment it
+                // (un)comment it
 
-                editor->replaceSelectedText(StartComment+selectedText+EndComment);
+                static const QString StartComment = "/*";
+                static const QString EndComment = "*/";
+                static const int StartCommentLength = StartComment.length();
+                static const int EndCommentLength = EndComment.length();
+
+                QString selectedText = editor->selectedText();
+                bool isCommented =    selectedText.startsWith(StartComment)
+                                   && selectedText.endsWith(EndComment);
+
+                if (isCommented) {
+                    // The selected text is commented, so uncomment it
+
+                    editor->replaceSelectedText(selectedText.mid(StartCommentLength, selectedText.length()-StartCommentLength-EndCommentLength));
+                } else {
+                    // The selected text is not commented, so comment it
+
+                    editor->replaceSelectedText(StartComment+selectedText+EndComment);
+                }
+
+                // Prepare ourselves for reselecting the text
+
+                columnTo += (isCommented?-1:1)*(StartCommentLength+(lineFrom == lineTo)*EndCommentLength);
             }
 
-            // Reselect the text
-
-            columnTo += (isCommented?-1:1)*(StartCommentLength+(lineFrom == lineTo)*EndCommentLength);
+            // Reselect the text/lines
 
             if ((lineNumber == lineFrom) && (columnNumber == columnFrom))
                 editor->setSelection(lineTo, columnTo, lineFrom, columnFrom);
             else
                 editor->setSelection(lineFrom, columnFrom, lineTo, columnTo);
         } else {
-            // No text is selected, so (un)comment the current line
+            // No text is selected, so simply (un)comment the current line
 
-            static const QString Comment = "//";
-            static const int CommentLength = Comment.length();
+            bool commentLine = !editor->text(lineNumber).trimmed().startsWith(Comment);
 
-            // (Un)comment the current line
+            commentOrUncommentLine(editor, lineNumber, commentLine);
 
-            QString line = editor->text(lineNumber).trimmed();
+            if (commentLine) {
+                // We commented the line, so our position will be fine unless we
+                // were at the beginning of the line, in which case we need to
+                // update it
 
-            if (!line.isEmpty()) {
-                // We are not dealing with an empty line, so we can (un)comment
-                // it
+                if (!columnNumber)
+                    editor->QsciScintilla::setCursorPosition(lineNumber, columnNumber+CommentLength);
+            } else {
+                // We uncommented the line, so go back to our original position
+                // (since uncommenting the line will have shifted it a bit)
 
-                if (editor->text(lineNumber).trimmed().startsWith(Comment)) {
-                    // The line is already commented, so uncomment it
-
-                    QString editorEolString = editor->eolString();
-                    int commentLineNumber, commentColumnNumber;
-
-                    editor->lineIndexFromPosition(editor->findTextInRange(editor->findTextInRange(editor->currentPosition(), 0, editorEolString)+editorEolString.length(),
-                                                                          editor->contentsSize(), Comment),
-                                                  &commentLineNumber, &commentColumnNumber);
-
-                    editor->setSelection(commentLineNumber, commentColumnNumber,
-                                         commentLineNumber, commentColumnNumber+CommentLength);
-                    editor->removeSelectedText();
-
-                    // Go back to our original position (since uncommenting the
-                    // line will have shifted it)
-                    // Note: to use QScintillaWidget::setCursorPosition() will
-                    //       ensure that the cursor is visible and vertically
-                    //       center it while we only want to set its position,
-                    //       hence we use QsciScintilla::setCursorPosition()
-                    //       instead...
-
-                    editor->QsciScintilla::setCursorPosition(lineNumber, columnNumber-CommentLength);
-                } else {
-                    // The line is not commented, so comment it
-
-                    editor->insertAt(Comment, lineNumber, 0);
-                }
+                editor->QsciScintilla::setCursorPosition(lineNumber, columnNumber-CommentLength);
             }
         }
 

@@ -55,6 +55,12 @@ namespace Editor {
 
 //==============================================================================
 
+namespace QScintillaSupport {
+    class QScintillaWidget;
+}   // namespace QScintillaSupport
+
+//==============================================================================
+
 namespace PrettyCellMLView {
 
 //==============================================================================
@@ -98,6 +104,10 @@ private:
     QMap<QString, CoreCellMLEditing::CoreCellmlEditingWidget *> mEditingWidgets;
     QMap<QString, QString> mEditingWidgetsSha1;
     QMap<QString, bool> mSuccessfulConversions;
+
+    void commentOrUncommentLine(QScintillaSupport::QScintillaWidget *editor,
+                                const int &pLineNumber,
+                                const bool &pCommentLine);
 
 private Q_SLOTS:
     void editorKeyPressed(QKeyEvent *pEvent, bool &pHandled);
