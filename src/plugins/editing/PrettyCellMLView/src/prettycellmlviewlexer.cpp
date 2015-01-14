@@ -76,6 +76,8 @@ QString PrettyCellmlViewLexer::description(int pStyle) const
         return QObject::tr("Parameter keyword");
     case ParameterValueKeyword:
         return QObject::tr("Parameter value keyword");
+    case Number:
+        return QObject::tr("Number");
     }
 
     return QString();
@@ -99,6 +101,8 @@ QColor PrettyCellmlViewLexer::color(int pStyle) const
     case CellmlKeyword:
     case ParameterValueKeyword:
         return QColor(0x7f, 0x00, 0x7f);
+    case Number:
+        return QColor(0x7f, 0x7f, 0x00);
     }
 
     return QsciLexerCustom::color(pStyle);
@@ -261,36 +265,31 @@ void PrettyCellmlViewLexer::doStyleText(int pStart, int pEnd,
 
     // Check whether the given text contains keywords from various categories
 
-    doStyleTextKeywords(pStart, pText, mKeywords, Keyword);
-    doStyleTextKeywords(pStart, pText, mCellmlKeywords, CellmlKeyword);
-    doStyleTextKeywords(pStart, pText, QStringList() << "{" << "}", ParameterGroup, false);
-    doStyleTextKeywords(pStart, pText, mParameterKeywords, ParameterKeyword);
-    doStyleTextKeywords(pStart, pText, mParameterValueKeywords, ParameterValueKeyword);
+    doStyleTextKeyword(pStart, pText, mKeywords, Keyword);
+    doStyleTextKeyword(pStart, pText, mCellmlKeywords, CellmlKeyword);
+    doStyleTextKeyword(pStart, pText, mParameterKeywords, ParameterKeyword);
+    doStyleTextKeyword(pStart, pText, mParameterValueKeywords, ParameterValueKeyword);
 }
 
 //==============================================================================
 
-void PrettyCellmlViewLexer::doStyleTextKeywords(int pStart,
-                                                const QString &pText,
-                                                const QStringList pKeywords,
-                                                const int &pKeywordStyle,
-                                                const bool &pWordOnly)
+void PrettyCellmlViewLexer::doStyleTextKeyword(int pStart,
+                                               const QString &pText,
+                                               const QStringList pKeywords,
+                                               const int &pKeywordStyle)
 {
     // Check whether the given text contains some of the given keywords
 
-    int keywordPosition;
-    int from;
-
     foreach (const QString &keyword, pKeywords) {
-        from = 0;
+        QRegularExpressionMatchIterator regExMatchIter = QRegularExpression("\\b"+keyword+"\\b").globalMatch(pText);
 
-        while ((keywordPosition = pText.indexOf(QRegularExpression(pWordOnly?"\\b"+keyword+"\\b":keyword), from)) != -1) {
+        while (regExMatchIter.hasNext()) {
+            QRegularExpressionMatch regExMatch = regExMatchIter.next();
+
             // We found a keyword, so style it as such
 
-            startStyling(pStart+keywordPosition, 0x1f);
-            setStyling(keyword.length(), pKeywordStyle);
-
-            from = keywordPosition+keyword.length();
+            startStyling(pStart+regExMatch.capturedStart(), 0x1f);
+            setStyling(regExMatch.capturedLength(), pKeywordStyle);
         }
     }
 }

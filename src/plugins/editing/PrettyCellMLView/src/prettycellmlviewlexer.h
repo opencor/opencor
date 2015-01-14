@@ -43,7 +43,8 @@ public:
         CellmlKeyword,
         ParameterGroup,
         ParameterKeyword,
-        ParameterValueKeyword
+        ParameterValueKeyword,
+        Number
     };
 
     explicit PrettyCellmlViewLexer(QObject *pParent);
@@ -66,10 +67,9 @@ private:
     QStringList mParameterValueKeywords;
 
     void doStyleText(int pStart, int pEnd, const QString &pText);
-    void doStyleTextKeywords(int pStart, const QString &pText,
-                             const QStringList pKeywords,
-                             const int &pKeywordStyle,
-                             const bool &pWordOnly = true);
+    void doStyleTextKeyword(int pStart, const QString &pText,
+                            const QStringList pKeywords,
+                            const int &pKeywordStyle);
 };
 
 //==============================================================================
