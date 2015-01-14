@@ -38,8 +38,20 @@
         <translation>Mot-clef</translation>
     </message>
     <message>
-        <source>Parameters</source>
-        <translation>Paramètres</translation>
+        <source>CellML keyword</source>
+        <translation>Mot-clef CellML</translation>
+    </message>
+    <message>
+        <source>Parameter group</source>
+        <translation>Groupe paramètre</translation>
+    </message>
+    <message>
+        <source>Parameter keyword</source>
+        <translation>Mot-clef paramètre</translation>
+    </message>
+    <message>
+        <source>Parameter value keyword</source>
+        <translation>Mot-clef valeur paramètre</translation>
     </message>
 </context>
 </TS>

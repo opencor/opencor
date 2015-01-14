@@ -24,6 +24,10 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#include <QRegularExpression>
+
+//==============================================================================
+
 namespace OpenCOR {
 namespace PrettyCellMLView {
 
@@ -35,7 +39,11 @@ PrettyCellmlViewLexer::PrettyCellmlViewLexer(QObject *pParent) :
 {
     // Some initialisations
 
-    mKeywords = QStringList() << "as" << "comp" << "def" << "model" << "unit";
+    mKeywords = QStringList() << "as" << "comp" << "def" << "enddef" << "model" << "unit";
+    mCellmlKeywords = QStringList() << "base"
+                                    << "ampere" << "candela" << "coulomb" << "joule" << "kelvin" << "kilogram" << "liter" << "litre" << "lumen" << "meter" << "metre" << "mole" << "newton" << "second" << "steradian" << "volt" << "watt" << "weber";
+    mParameterKeywords = QStringList() << "pref" << "expo" << "mult" << "off";
+    mParameterValueKeywords = QStringList() << "milli";
 }
 
 //==============================================================================
@@ -60,8 +68,14 @@ QString PrettyCellmlViewLexer::description(int pStyle) const
         return QObject::tr("Comment");
     case Keyword:
         return QObject::tr("Keyword");
-    case Parameters:
-        return QObject::tr("Parameters");
+    case CellmlKeyword:
+        return QObject::tr("CellML keyword");
+    case ParameterGroup:
+        return QObject::tr("Parameter group");
+    case ParameterKeyword:
+        return QObject::tr("Parameter keyword");
+    case ParameterValueKeyword:
+        return QObject::tr("Parameter value keyword");
     }
 
     return QString();
@@ -75,13 +89,16 @@ QColor PrettyCellmlViewLexer::color(int pStyle) const
 
     switch (pStyle) {
     case Default:
-        return QColor(0x00, 0x00, 0x00);
+        return QColor(0x3f, 0x3f, 0x3f);
     case Comment:
         return QColor(0x00, 0x7f, 0x00);
     case Keyword:
-        return QColor(0x7f, 0x7f, 0x00);
-    case Parameters:
+    case ParameterGroup:
+    case ParameterKeyword:
         return QColor(0x00, 0x00, 0x7f);
+    case CellmlKeyword:
+    case ParameterValueKeyword:
+        return QColor(0x7f, 0x00, 0x7f);
     }
 
     return QsciLexerCustom::color(pStyle);
@@ -96,13 +113,44 @@ QFont PrettyCellmlViewLexer::font(int pStyle) const
     QFont res = QsciLexer::font(pStyle);
 
     switch (pStyle) {
-    case Parameters:
+    case ParameterGroup:
+    case ParameterKeyword:
+    case ParameterValueKeyword:
         res.setItalic(true);
 
         break;
     }
 
     return res;
+}
+
+//==============================================================================
+
+void PrettyCellmlViewLexer::styleText(int pStart, int pEnd)
+{
+    // Make sure that we have an editor
+
+    if (!editor())
+        return;
+
+    // Retrieve the text to style
+
+    char *data = new char[pEnd-pStart+1];
+
+    editor()->SendScintilla(QsciScintilla::SCI_GETTEXTRANGE, pStart, pEnd, data);
+
+    QString text = QString(data);
+
+    delete[] data;
+
+    if (text.isEmpty())
+        return;
+
+    // Effectively style our text
+
+    mFullText = editor()->text();
+
+    doStyleText(pStart, pEnd, text);
 }
 
 //==============================================================================
@@ -206,39 +254,45 @@ void PrettyCellmlViewLexer::doStyleText(int pStart, int pEnd,
         return;
     }
 
-    // Not something that we can recognise, so use a default style
+    // Use a default style for the given text
 
     startStyling(pStart, 0x1f);
     setStyling(pEnd-pStart, Default);
+
+    // Check whether the given text contains keywords from various categories
+
+    doStyleTextKeywords(pStart, pText, mKeywords, Keyword);
+    doStyleTextKeywords(pStart, pText, mCellmlKeywords, CellmlKeyword);
+    doStyleTextKeywords(pStart, pText, QStringList() << "{" << "}", ParameterGroup, false);
+    doStyleTextKeywords(pStart, pText, mParameterKeywords, ParameterKeyword);
+    doStyleTextKeywords(pStart, pText, mParameterValueKeywords, ParameterValueKeyword);
 }
 
 //==============================================================================
 
-void PrettyCellmlViewLexer::styleText(int pStart, int pEnd)
+void PrettyCellmlViewLexer::doStyleTextKeywords(int pStart,
+                                                const QString &pText,
+                                                const QStringList pKeywords,
+                                                const int &pKeywordStyle,
+                                                const bool &pWordOnly)
 {
-    // Make sure that we have an editor
+    // Check whether the given text contains some of the given keywords
 
-    if (!editor())
-        return;
+    int keywordPosition;
+    int from;
 
-    // Retrieve the text to style
+    foreach (const QString &keyword, pKeywords) {
+        from = 0;
 
-    char *data = new char[pEnd-pStart+1];
+        while ((keywordPosition = pText.indexOf(QRegularExpression(pWordOnly?"\\b"+keyword+"\\b":keyword), from)) != -1) {
+            // We found a keyword, so style it as such
 
-    editor()->SendScintilla(QsciScintilla::SCI_GETTEXTRANGE, pStart, pEnd, data);
+            startStyling(pStart+keywordPosition, 0x1f);
+            setStyling(keyword.length(), pKeywordStyle);
 
-    QString text = QString(data);
-
-    delete[] data;
-
-    if (text.isEmpty())
-        return;
-
-    // Effectively style our text
-
-    mFullText = editor()->text();
-
-    doStyleText(pStart, pEnd, text);
+            from = keywordPosition+keyword.length();
+        }
+    }
 }
 
 //==============================================================================
