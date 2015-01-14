@@ -55,10 +55,11 @@ public:
     virtual void styleText(int pStart, int pEnd);
 
 private:
+    QString mFullText;
+
     QStringList mKeywords;
 
-    void doStyleText(int pStart, int pEnd, const QString &pText,
-                     const QString &pFullText);
+    void doStyleText(int pStart, int pEnd, const QString &pText);
 };
 
 //==============================================================================

@@ -30,7 +30,8 @@ namespace PrettyCellMLView {
 //==============================================================================
 
 PrettyCellmlViewLexer::PrettyCellmlViewLexer(QObject *pParent) :
-    QsciLexerCustom(pParent)
+    QsciLexerCustom(pParent),
+    mFullText(QString())
 {
     // Some initialisations
 
@@ -107,8 +108,7 @@ QFont PrettyCellmlViewLexer::font(int pStyle) const
 //==============================================================================
 
 void PrettyCellmlViewLexer::doStyleText(int pStart, int pEnd,
-                                        const QString &pText,
-                                        const QString &pFullText)
+                                        const QString &pText)
 {
     // Make sure that we are given some text to style
 
@@ -123,16 +123,16 @@ void PrettyCellmlViewLexer::doStyleText(int pStart, int pEnd,
     static const int StartCommentLength = StartCommentString.length();
     static const int EndCommentLength = EndCommentString.length();
 
-    int commentStartPosition = pFullText.lastIndexOf(StartCommentString, pStart+StartCommentLength);
+    int commentStartPosition = mFullText.lastIndexOf(StartCommentString, pStart+StartCommentLength);
 
     if (commentStartPosition != -1) {
         // A /* XXX */ comment started before or at the beginning of the given
         // text, so now look for where it ends
 
-        int commentEndPosition = pFullText.indexOf(EndCommentString, commentStartPosition+StartCommentLength);
+        int commentEndPosition = mFullText.indexOf(EndCommentString, commentStartPosition+StartCommentLength);
 
         if (commentEndPosition == -1)
-            commentEndPosition = pFullText.length();
+            commentEndPosition = mFullText.length();
 
         if ((commentStartPosition <= pStart) && (pStart <= commentEndPosition)) {
             // The beginning of the given text is a comment, so style it
@@ -145,7 +145,7 @@ void PrettyCellmlViewLexer::doStyleText(int pStart, int pEnd,
             // Style everything that is behind the comment, if anything
 
             if (end == commentEndPosition+EndCommentLength)
-                doStyleText(commentEndPosition+EndCommentLength, pEnd, pText.right(pEnd-commentEndPosition-EndCommentLength), pFullText);
+                doStyleText(commentEndPosition+EndCommentLength, pEnd, pText.right(pEnd-commentEndPosition-EndCommentLength));
 
             return;
         }
@@ -161,7 +161,7 @@ void PrettyCellmlViewLexer::doStyleText(int pStart, int pEnd,
         // There is a // comment to style, so first style everything that is
         // before the // comment
 
-        doStyleText(pStart, pStart+commentPosition, pText.left(commentPosition), pFullText);
+        doStyleText(pStart, pStart+commentPosition, pText.left(commentPosition));
 
         // Now, style everything that is after the // comment, if anything, by
         // looking for the end of the line on which the // comment is
@@ -173,7 +173,7 @@ void PrettyCellmlViewLexer::doStyleText(int pStart, int pEnd,
         if (eolPosition != -1) {
             int start = pStart+eolPosition+eolStringLength;
 
-            doStyleText(start, pEnd, pText.right(pEnd-start), pFullText);
+            doStyleText(start, pEnd, pText.right(pEnd-start));
         }
 
         // Style the // comment itself
@@ -182,28 +182,34 @@ void PrettyCellmlViewLexer::doStyleText(int pStart, int pEnd,
 
         startStyling(start, 0x1f);
         setStyling(((eolPosition == -1)?pEnd:pStart+eolPosition)-start, Comment);
-    } else {
-        commentStartPosition = pText.indexOf(StartCommentString);
 
-        if (commentStartPosition != -1) {
-            // There is a /* XXX */ comment to style, so first style everything
-            // that is before the comment
-
-            doStyleText(pStart, pStart+commentStartPosition, pText.left(commentStartPosition), pFullText);
-
-            // Now style everything from the comment onwards
-            // Note: by styling everything from the comment onwards means that
-            //       we will find that a /* XXX */ comment starts at the
-            //       beginning of the 'new' given text...
-
-            doStyleText(pStart+commentStartPosition, pEnd, pText.right(pEnd-pStart-commentStartPosition), pFullText);
-        } else {
-            // Not something that we can recognise, so use a default style
-
-            startStyling(pStart, 0x1f);
-            setStyling(pEnd-pStart, Default);
-        }
+        return;
     }
+
+    // Check whether the given text contains a /* XXX */ comment
+
+    commentStartPosition = pText.indexOf(StartCommentString);
+
+    if (commentStartPosition != -1) {
+        // There is a /* XXX */ comment to style, so first style everything that
+        // is before the comment
+
+        doStyleText(pStart, pStart+commentStartPosition, pText.left(commentStartPosition));
+
+        // Now style everything from the comment onwards
+        // Note: by styling everything from the comment onwards means that we
+        //       will find that a /* XXX */ comment starts at the beginning of
+        //       the 'new' given text...
+
+        doStyleText(pStart+commentStartPosition, pEnd, pText.right(pEnd-pStart-commentStartPosition));
+
+        return;
+    }
+
+    // Not something that we can recognise, so use a default style
+
+    startStyling(pStart, 0x1f);
+    setStyling(pEnd-pStart, Default);
 }
 
 //==============================================================================
@@ -230,7 +236,9 @@ void PrettyCellmlViewLexer::styleText(int pStart, int pEnd)
 
     // Effectively style our text
 
-    doStyleText(pStart, pEnd, text, editor()->text());
+    mFullText = editor()->text();
+
+    doStyleText(pStart, pEnd, text);
 }
 
 //==============================================================================
