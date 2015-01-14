@@ -70,14 +70,16 @@ QString PrettyCellmlViewLexer::description(int pStyle) const
         return QObject::tr("Keyword");
     case CellmlKeyword:
         return QObject::tr("CellML keyword");
+    case Number:
+        return QObject::tr("Number");
     case ParameterGroup:
         return QObject::tr("Parameter group");
     case ParameterKeyword:
         return QObject::tr("Parameter keyword");
     case ParameterValueKeyword:
         return QObject::tr("Parameter value keyword");
-    case Number:
-        return QObject::tr("Number");
+    case ParameterNumber:
+        return QObject::tr("Parameter number");
     }
 
     return QString();
@@ -91,17 +93,18 @@ QColor PrettyCellmlViewLexer::color(int pStyle) const
 
     switch (pStyle) {
     case Default:
-        return QColor(0x3f, 0x3f, 0x3f);
+    case ParameterGroup:
+        return QColor(0x1f, 0x1f, 0x1f);
     case Comment:
         return QColor(0x00, 0x7f, 0x00);
     case Keyword:
-    case ParameterGroup:
     case ParameterKeyword:
         return QColor(0x00, 0x00, 0x7f);
     case CellmlKeyword:
     case ParameterValueKeyword:
         return QColor(0x7f, 0x00, 0x7f);
     case Number:
+    case ParameterNumber:
         return QColor(0x7f, 0x7f, 0x00);
     }
 
@@ -120,6 +123,7 @@ QFont PrettyCellmlViewLexer::font(int pStyle) const
     case ParameterGroup:
     case ParameterKeyword:
     case ParameterValueKeyword:
+    case ParameterNumber:
         res.setItalic(true);
 
         break;
@@ -154,18 +158,66 @@ void PrettyCellmlViewLexer::styleText(int pStart, int pEnd)
 
     mFullText = editor()->text();
 
-    doStyleText(pStart, pEnd, text);
+    doStyleText(pStart, pEnd, text, false);
 }
 
 //==============================================================================
 
-void PrettyCellmlViewLexer::doStyleText(int pStart, int pEnd,
-                                        const QString &pText)
+void PrettyCellmlViewLexer::doStyleText(int pStart, int pEnd, QString pText,
+                                        bool pParameterGroup)
 {
     // Make sure that we are given some text to style
 
     if (pText.trimmed().isEmpty())
         return;
+
+    // Check whether a parameter group started before or at the beginning of the
+    // given text
+
+    static const QString StartParameterGroupString = "{";
+    static const QString EndParameterGroupString = "}";
+    static const int StartParameterGroupLength = StartParameterGroupString.length();
+    static const int EndParameterGroupLength = EndParameterGroupString.length();
+
+    int parameterGroupStartPosition = mFullText.lastIndexOf(StartParameterGroupString, pStart+StartParameterGroupLength);
+
+    if (parameterGroupStartPosition != -1) {
+        // A parameter group started before or at the beginning of the given
+        // text, so now look for where it ends
+
+        int parameterGroupEndPosition = mFullText.indexOf(EndParameterGroupString, parameterGroupStartPosition+StartParameterGroupLength);
+
+        if (parameterGroupEndPosition == -1)
+            parameterGroupEndPosition = mFullText.length();
+
+        if ((parameterGroupStartPosition <= pStart) && (pStart <= parameterGroupEndPosition)) {
+            // The beginning of the given text is a parameter group, so style
+            // everything that is behind the parameter group, if anything
+
+            int realEnd = parameterGroupEndPosition+EndParameterGroupLength;
+            int end = qMin(pEnd, realEnd);
+
+            if (end == realEnd)
+                doStyleText(end, pEnd, pText.right(pEnd-end), pParameterGroup);
+
+            // Style the beginning and the end of the parameter group
+
+            startStyling(pStart, 0x1f);
+            setStyling(StartParameterGroupLength, ParameterGroup);
+
+            if (end == realEnd) {
+                startStyling(end-EndParameterGroupLength, 0x1f);
+                setStyling(EndParameterGroupLength, ParameterGroup);
+            }
+
+            // Now style the contents of the parameter group
+
+            pStart += StartParameterGroupLength;
+            pEnd = end-EndParameterGroupLength;
+            pText = pText.mid(StartParameterGroupLength, pEnd-pStart);
+            pParameterGroup = true;
+        }
+    }
 
     // Check whether a /* XXX */ comment started before or at the beginning of
     // the given text
@@ -189,18 +241,42 @@ void PrettyCellmlViewLexer::doStyleText(int pStart, int pEnd,
         if ((commentStartPosition <= pStart) && (pStart <= commentEndPosition)) {
             // The beginning of the given text is a comment, so style it
 
-            int end = qMin(pEnd, commentEndPosition+EndCommentLength);
+            int realEnd = commentEndPosition+EndCommentLength;
+            int end = qMin(pEnd, realEnd);
 
             startStyling(pStart, 0x1f);
             setStyling(end-pStart, Comment);
 
             // Style everything that is behind the comment, if anything
 
-            if (end == commentEndPosition+EndCommentLength)
-                doStyleText(commentEndPosition+EndCommentLength, pEnd, pText.right(pEnd-commentEndPosition-EndCommentLength));
+            if (end == realEnd)
+                doStyleText(end, pEnd, pText.right(pEnd-end), pParameterGroup);
 
             return;
         }
+    }
+
+    // Check whether the given text contains a parameter group
+
+    parameterGroupStartPosition = pText.indexOf(StartParameterGroupString);
+
+    if (parameterGroupStartPosition != -1) {
+        // There is a parameter group, so first style everything that is before
+        // it
+
+        doStyleText(pStart, pStart+parameterGroupStartPosition,
+                    pText.left(parameterGroupStartPosition), pParameterGroup);
+
+        // Now style everything from the parameter group onwards
+        // Note: to style everything from the parameter group onwards means that
+        //       we will find that a parameter group starts at the beginning of
+        //       the 'new' given text...
+
+        doStyleText(pStart+parameterGroupStartPosition, pEnd,
+                    pText.right(pEnd-pStart-parameterGroupStartPosition),
+                    pParameterGroup);
+
+        return;
     }
 
     // Check whether the given text contains a // comment
@@ -213,7 +289,8 @@ void PrettyCellmlViewLexer::doStyleText(int pStart, int pEnd,
         // There is a // comment to style, so first style everything that is
         // before the // comment
 
-        doStyleText(pStart, pStart+commentPosition, pText.left(commentPosition));
+        doStyleText(pStart, pStart+commentPosition, pText.left(commentPosition),
+                    pParameterGroup);
 
         // Now, style everything that is after the // comment, if anything, by
         // looking for the end of the line on which the // comment is
@@ -225,7 +302,7 @@ void PrettyCellmlViewLexer::doStyleText(int pStart, int pEnd,
         if (eolPosition != -1) {
             int start = pStart+eolPosition+eolStringLength;
 
-            doStyleText(start, pEnd, pText.right(pEnd-start));
+            doStyleText(start, pEnd, pText.right(pEnd-start), pParameterGroup);
         }
 
         // Style the // comment itself
@@ -244,16 +321,19 @@ void PrettyCellmlViewLexer::doStyleText(int pStart, int pEnd,
 
     if (commentStartPosition != -1) {
         // There is a /* XXX */ comment to style, so first style everything that
-        // is before the comment
+        // is before it
 
-        doStyleText(pStart, pStart+commentStartPosition, pText.left(commentStartPosition));
+        doStyleText(pStart, pStart+commentStartPosition,
+                    pText.left(commentStartPosition), pParameterGroup);
 
         // Now style everything from the comment onwards
-        // Note: by styling everything from the comment onwards means that we
-        //       will find that a /* XXX */ comment starts at the beginning of
-        //       the 'new' given text...
+        // Note: to style everything from the comment onwards means that we will
+        //       find that a /* XXX */ comment starts at the beginning of the
+        //       'new' given text...
 
-        doStyleText(pStart+commentStartPosition, pEnd, pText.right(pEnd-pStart-commentStartPosition));
+        doStyleText(pStart+commentStartPosition, pEnd,
+                    pText.right(pEnd-pStart-commentStartPosition),
+                    pParameterGroup);
 
         return;
     }
@@ -261,7 +341,7 @@ void PrettyCellmlViewLexer::doStyleText(int pStart, int pEnd,
     // Use a default style for the given text
 
     startStyling(pStart, 0x1f);
-    setStyling(pEnd-pStart, Default);
+    setStyling(pEnd-pStart, pParameterGroup?ParameterGroup:Default);
 
     // Check whether the given text contains keywords from various categories
 

@@ -42,6 +42,10 @@
         <translation>Mot-clef CellML</translation>
     </message>
     <message>
+        <source>Number</source>
+        <translation>Nombre</translation>
+    </message>
+    <message>
         <source>Parameter group</source>
         <translation>Groupe paramètre</translation>
     </message>
@@ -54,8 +58,8 @@
         <translation>Mot-clef valeur paramètre</translation>
     </message>
     <message>
-        <source>Number</source>
-        <translation>Nombre</translation>
+        <source>Parameter number</source>
+        <translation>Nombre paramètre</translation>
     </message>
 </context>
 </TS>
