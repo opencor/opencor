@@ -47,7 +47,8 @@ var jsonData = {"versions":[
                                   {"type":"Improved", "description":"File permissions changes."},
                                   {"type":"Fixed", "description":"Retrieval of view settings."}
                               ]
-                             }
+                             },
+                             {"type":"Added", "description":"<a href=\"plugins/editing/PrettyCellMLView.html\">Pretty CellML view</a> <em>(work in progress)</em>."}
                          ]
                         },
                         {"name":"Organisation",
