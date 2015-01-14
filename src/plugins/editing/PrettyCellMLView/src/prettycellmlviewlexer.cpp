@@ -347,10 +347,10 @@ void PrettyCellmlViewLexer::doStyleText(int pStart, int pEnd, QString pText,
 
     // Check whether the given text contains keywords from various categories
 
-    doStyleTextKeyword(pStart, pText, mKeywords, Keyword);
-    doStyleTextKeyword(pStart, pText, mCellmlKeywords, CellmlKeyword);
-    doStyleTextKeyword(pStart, pText, mParameterKeywords, ParameterKeyword);
-    doStyleTextKeyword(pStart, pText, mParameterValueKeywords, ParameterValueKeyword);
+    doStyleTextKeyword(pStart, pText, mKeywords, pParameterGroup?ParameterGroup:Keyword);
+    doStyleTextKeyword(pStart, pText, mCellmlKeywords, pParameterGroup?ParameterGroup:CellmlKeyword);
+    doStyleTextKeyword(pStart, pText, mParameterKeywords, pParameterGroup?ParameterKeyword:Default);
+    doStyleTextKeyword(pStart, pText, mParameterValueKeywords, pParameterGroup?ParameterValueKeyword:Default);
 }
 
 //==============================================================================
