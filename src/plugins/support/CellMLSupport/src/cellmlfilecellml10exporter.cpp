@@ -123,10 +123,10 @@ void CellmlFileCellml10Exporter::copyUnitsSet(iface::cellml_api::UnitsSet *pUnit
     //       clone them...
 
     ObjRef<iface::cellml_api::Model> model = pElement->modelElement();
-    ObjRef<iface::cellml_api::UnitsIterator> unitsIterator = pUnitsSet->iterateUnits();
+    ObjRef<iface::cellml_api::UnitsIterator> unitsIter = pUnitsSet->iterateUnits();
 
-    for (ObjRef<iface::cellml_api::Units> units = unitsIterator->nextUnits();
-         units; units = unitsIterator->nextUnits()) {
+    for (ObjRef<iface::cellml_api::Units> units = unitsIter->nextUnits();
+         units; units = unitsIter->nextUnits()) {
         // Copy the units to the model/component element, but only if it isn't
         // already in this model
 
@@ -162,10 +162,10 @@ void CellmlFileCellml10Exporter::copyUnitsSet(iface::cellml_api::UnitsSet *pUnit
         // Copy the units' unit references to the new units
 
         ObjRef<iface::cellml_api::UnitSet> unitSet = units->unitCollection();
-        ObjRef<iface::cellml_api::UnitIterator> unitIterator = unitSet->iterateUnits();
+        ObjRef<iface::cellml_api::UnitIterator> unitIter = unitSet->iterateUnits();
 
-        for (ObjRef<iface::cellml_api::Unit> unit = unitIterator->nextUnit();
-             unit; unit = unitIterator->nextUnit()) {
+        for (ObjRef<iface::cellml_api::Unit> unit = unitIter->nextUnit();
+             unit; unit = unitIter->nextUnit()) {
             // Create a new unit reference
 
             ObjRef<iface::cellml_api::Unit> newUnit = model->createUnit();
@@ -232,10 +232,10 @@ void CellmlFileCellml10Exporter::annotateImportedComponents(iface::cellml_api::M
     // by the importing model
 
     ObjRef<iface::cellml_api::CellMLImportSet> imports = pModel->imports();
-    ObjRef<iface::cellml_api::CellMLImportIterator> importsIterator = imports->iterateImports();
+    ObjRef<iface::cellml_api::CellMLImportIterator> importsIter = imports->iterateImports();
 
-    for (ObjRef<iface::cellml_api::CellMLImport> import = importsIterator->nextImport();
-         import; import = importsIterator->nextImport()) {
+    for (ObjRef<iface::cellml_api::CellMLImport> import = importsIter->nextImport();
+         import; import = importsIter->nextImport()) {
         // Recursively annotate the components imported by the given model
         // Note: depth first processing means that imported components renamed
         //       twice end up with the right name...
@@ -251,10 +251,10 @@ void CellmlFileCellml10Exporter::annotateImportedComponents(iface::cellml_api::M
         // Go through the imported components and annotate them with the name
         // they are given by the importing model
 
-        ObjRef<iface::cellml_api::ImportComponentIterator> importComponentsIterator = importComponents->iterateImportComponents();
+        ObjRef<iface::cellml_api::ImportComponentIterator> importComponentsIter = importComponents->iterateImportComponents();
 
-        for (ObjRef<iface::cellml_api::ImportComponent> importComponent = importComponentsIterator->nextImportComponent();
-             importComponent; importComponent = importComponentsIterator->nextImportComponent()) {
+        for (ObjRef<iface::cellml_api::ImportComponent> importComponent = importComponentsIter->nextImportComponent();
+             importComponent; importComponent = importComponentsIter->nextImportComponent()) {
             ObjRef<iface::cellml_api::CellMLComponent> realComponent = findRealComponent(importComponent);
 
             mAnnotationSet->setStringAnnotation(realComponent, L"renamed", importComponent->name());
@@ -438,10 +438,10 @@ void CellmlFileCellml10Exporter::copyComponent(iface::cellml_api::CellMLComponen
     // Copy the variables to our new component
 
     ObjRef<iface::cellml_api::CellMLVariableSet> componentVariables = pComponent->variables();
-    ObjRef<iface::cellml_api::CellMLVariableIterator> componentVariablesIterator = componentVariables->iterateVariables();
+    ObjRef<iface::cellml_api::CellMLVariableIterator> componentVariablesIter = componentVariables->iterateVariables();
 
-    for (ObjRef<iface::cellml_api::CellMLVariable> componentVariable = componentVariablesIterator->nextVariable();
-         componentVariable; componentVariable = componentVariablesIterator->nextVariable()) {
+    for (ObjRef<iface::cellml_api::CellMLVariable> componentVariable = componentVariablesIter->nextVariable();
+         componentVariable; componentVariable = componentVariablesIter->nextVariable()) {
         // Create a new variable and copy its attributes from the original
         // variable
 
@@ -467,10 +467,10 @@ void CellmlFileCellml10Exporter::copyComponent(iface::cellml_api::CellMLComponen
     // Copy the math nodes to our new component
 
     ObjRef<iface::cellml_api::MathList> componentMath = pComponent->math();
-    ObjRef<iface::cellml_api::MathMLElementIterator> componentMathIterator = componentMath->iterate();
+    ObjRef<iface::cellml_api::MathMLElementIterator> componentMathIter = componentMath->iterate();
 
-    for (ObjRef<iface::mathml_dom::MathMLElement> componentMathNode = componentMathIterator->next();
-         componentMathNode; componentMathNode = componentMathIterator->next()) {
+    for (ObjRef<iface::mathml_dom::MathMLElement> componentMathNode = componentMathIter->next();
+         componentMathNode; componentMathNode = componentMathIter->next()) {
         // Copy a clone of the math node into our new component
 
         ObjRef<iface::mathml_dom::MathMLElement> newComponentMathNode = QueryInterface(copyDomElement(componentMathNode));
@@ -494,10 +494,10 @@ void CellmlFileCellml10Exporter::copyComponents(iface::cellml_services::CeVAS *p
     // Copy the relevant components into our exported model, using the given
     // CeVAS to find components to copy
 
-    ObjRef<iface::cellml_api::CellMLComponentIterator> componentsIterator = pCevas->iterateRelevantComponents();
+    ObjRef<iface::cellml_api::CellMLComponentIterator> componentsIter = pCevas->iterateRelevantComponents();
 
-    for (ObjRef<iface::cellml_api::CellMLComponent> component = componentsIterator->nextComponent();
-         component; component = componentsIterator->nextComponent())
+    for (ObjRef<iface::cellml_api::CellMLComponent> component = componentsIter->nextComponent();
+         component; component = componentsIter->nextComponent())
         copyComponent(component);
 }
 
@@ -510,10 +510,10 @@ void CellmlFileCellml10Exporter::copyGroup(iface::cellml_api::Model *pModel,
     // Iterate this level of the tree
 
     ObjRef<iface::cellml_api::CellMLComponentSet> components = pModel->modelComponents();
-    ObjRef<iface::cellml_api::ComponentRefIterator> componentReferencesIterator = pComponentReferences->iterateComponentRefs();
+    ObjRef<iface::cellml_api::ComponentRefIterator> componentReferencesIter = pComponentReferences->iterateComponentRefs();
 
-    for (ObjRef<iface::cellml_api::ComponentRef> componentReference = componentReferencesIterator->nextComponentRef();
-         componentReference; componentReference = componentReferencesIterator->nextComponentRef()) {
+    for (ObjRef<iface::cellml_api::ComponentRef> componentReference = componentReferencesIter->nextComponentRef();
+         componentReference; componentReference = componentReferencesIter->nextComponentRef()) {
         // Find the referenced component
 
         ObjRef<iface::cellml_api::CellMLComponent> referencedComponent = components->getComponent(componentReference->componentName());
@@ -579,10 +579,10 @@ void CellmlFileCellml10Exporter::copyGroups(iface::cellml_api::Model *pModel)
 
     ObjRef<iface::cellml_api::GroupSet> groups = pModel->groups();
     ObjRef<iface::cellml_api::GroupSet> encapsulationGroups = groups->subsetInvolvingEncapsulation();
-    ObjRef<iface::cellml_api::GroupIterator> encapsulationGroupsIterator = encapsulationGroups->iterateGroups();
+    ObjRef<iface::cellml_api::GroupIterator> encapsulationGroupsIter = encapsulationGroups->iterateGroups();
 
-    for (ObjRef<iface::cellml_api::Group> encapsulationGroup = encapsulationGroupsIterator->nextGroup();
-         encapsulationGroup; encapsulationGroup = encapsulationGroupsIterator->nextGroup()) {
+    for (ObjRef<iface::cellml_api::Group> encapsulationGroup = encapsulationGroupsIter->nextGroup();
+         encapsulationGroup; encapsulationGroup = encapsulationGroupsIter->nextGroup()) {
         ObjRef<iface::cellml_api::ComponentRefSet> encapsulationGroupComponentReferences = encapsulationGroup->componentRefs();
 
         copyGroup(pModel, encapsulationGroupComponentReferences);
@@ -591,10 +591,10 @@ void CellmlFileCellml10Exporter::copyGroups(iface::cellml_api::Model *pModel)
     // Recursively process imported models
 
     ObjRef<iface::cellml_api::CellMLImportSet> imports = pModel->imports();
-    ObjRef<iface::cellml_api::CellMLImportIterator> importsIterator = imports->iterateImports();
+    ObjRef<iface::cellml_api::CellMLImportIterator> importsIter = imports->iterateImports();
 
-    for (ObjRef<iface::cellml_api::CellMLImport> import = importsIterator->nextImport();
-         import; import = importsIterator->nextImport()) {
+    for (ObjRef<iface::cellml_api::CellMLImport> import = importsIter->nextImport();
+         import; import = importsIter->nextImport()) {
         ObjRef<iface::cellml_api::Model> importedModel = import->importedModel();
 
         copyGroups(importedModel);
@@ -642,10 +642,10 @@ void CellmlFileCellml10Exporter::copyConnection(iface::cellml_api::Connection *p
     // Add the variable mappings
 
     ObjRef<iface::cellml_api::MapVariablesSet> variableMappings = pConnection->variableMappings();
-    ObjRef<iface::cellml_api::MapVariablesIterator> variableMappingsIterator = variableMappings->iterateMapVariables();
+    ObjRef<iface::cellml_api::MapVariablesIterator> variableMappingsIter = variableMappings->iterateMapVariables();
 
-    for (ObjRef<iface::cellml_api::MapVariables> variableMapping = variableMappingsIterator->nextMapVariables();
-         variableMapping; variableMapping = variableMappingsIterator->nextMapVariables()) {
+    for (ObjRef<iface::cellml_api::MapVariables> variableMapping = variableMappingsIter->nextMapVariables();
+         variableMapping; variableMapping = variableMappingsIter->nextMapVariables()) {
         ObjRef<iface::cellml_api::MapVariables> newVariableMapping = mExportedModel->createMapVariables();
 
         newVariableMapping->firstVariableName(variableMapping->firstVariableName());
@@ -662,19 +662,19 @@ void CellmlFileCellml10Exporter::copyConnections(iface::cellml_api::Model *pMode
     // Copy local connections into our exported model
 
     ObjRef<iface::cellml_api::ConnectionSet> connections = pModel->connections();
-    ObjRef<iface::cellml_api::ConnectionIterator> connectionsIterator = connections->iterateConnections();
+    ObjRef<iface::cellml_api::ConnectionIterator> connectionsIter = connections->iterateConnections();
 
-    for (ObjRef<iface::cellml_api::Connection> connection = connectionsIterator->nextConnection();
-         connection; connection = connectionsIterator->nextConnection())
+    for (ObjRef<iface::cellml_api::Connection> connection = connectionsIter->nextConnection();
+         connection; connection = connectionsIter->nextConnection())
         copyConnection(connection);
 
     // Recursively process imported models
 
     ObjRef<iface::cellml_api::CellMLImportSet> imports = pModel->imports();
-    ObjRef<iface::cellml_api::CellMLImportIterator> importsIterator = imports->iterateImports();
+    ObjRef<iface::cellml_api::CellMLImportIterator> importsIter = imports->iterateImports();
 
-    for (ObjRef<iface::cellml_api::CellMLImport> import = importsIterator->nextImport();
-         import; import = importsIterator->nextImport()) {
+    for (ObjRef<iface::cellml_api::CellMLImport> import = importsIter->nextImport();
+         import; import = importsIter->nextImport()) {
         ObjRef<iface::cellml_api::Model> importedModel = import->importedModel();
 
         copyConnections(importedModel);
@@ -691,17 +691,17 @@ void CellmlFileCellml10Exporter::propagateInitialValues()
     //       an unavoidable error condition...
 
     ObjRef<iface::cellml_api::CellMLComponentSet> components = mExportedModel->localComponents();
-    ObjRef<iface::cellml_api::CellMLComponentIterator> componentsIterator = components->iterateComponents();
+    ObjRef<iface::cellml_api::CellMLComponentIterator> componentsIter = components->iterateComponents();
 
-    for (ObjRef<iface::cellml_api::CellMLComponent> component = componentsIterator->nextComponent();
-         component; component = componentsIterator->nextComponent()) {
+    for (ObjRef<iface::cellml_api::CellMLComponent> component = componentsIter->nextComponent();
+         component; component = componentsIter->nextComponent()) {
         // Go through the component's variables and update their initial value
 
         ObjRef<iface::cellml_api::CellMLVariableSet> componentVariables = component->variables();
-        ObjRef<iface::cellml_api::CellMLVariableIterator> componentVariablesIterator = componentVariables->iterateVariables();
+        ObjRef<iface::cellml_api::CellMLVariableIterator> componentVariablesIter = componentVariables->iterateVariables();
 
-        for (ObjRef<iface::cellml_api::CellMLVariable> componentVariable = componentVariablesIterator->nextVariable();
-             componentVariable; componentVariable = componentVariablesIterator->nextVariable()) {
+        for (ObjRef<iface::cellml_api::CellMLVariable> componentVariable = componentVariablesIter->nextVariable();
+             componentVariable; componentVariable = componentVariablesIter->nextVariable()) {
             // Check whether the variable has an initial value
 
             std::wstring initialValue = componentVariable->initialValue();

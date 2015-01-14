@@ -158,10 +158,10 @@ void CellmlFile::retrieveImports(iface::cellml_api::Model *pModel,
     // Retrieve all the imports of the given model
 
     ObjRef<iface::cellml_api::CellMLImportSet> imports = pModel->imports();
-    ObjRef<iface::cellml_api::CellMLImportIterator> importsIterator = imports->iterateImports();
+    ObjRef<iface::cellml_api::CellMLImportIterator> importsIter = imports->iterateImports();
 
-    for (ObjRef<iface::cellml_api::CellMLImport> import = importsIterator->nextImport();
-         import; import = importsIterator->nextImport()) {
+    for (ObjRef<iface::cellml_api::CellMLImport> import = importsIter->nextImport();
+         import; import = importsIter->nextImport()) {
         import->add_ref();
 
         pImportList << import;
@@ -344,10 +344,10 @@ void CellmlFile::retrieveCmetaIdsFromCellmlElement(iface::cellml_api::CellMLElem
     // Do the same for all the child elements of the given CellML element
 
     ObjRef<iface::cellml_api::CellMLElementSet> childElements = pElement->childElements();
-    ObjRef<iface::cellml_api::CellMLElementIterator> childElementsIterator = childElements->iterate();
+    ObjRef<iface::cellml_api::CellMLElementIterator> childElementsIter = childElements->iterate();
 
-    for (ObjRef<iface::cellml_api::CellMLElement> childElement = childElementsIterator->next();
-         childElement; childElement = childElementsIterator->next()) {
+    for (ObjRef<iface::cellml_api::CellMLElement> childElement = childElementsIter->next();
+         childElement; childElement = childElementsIter->next()) {
         retrieveCmetaIdsFromCellmlElement(childElement);
     }
 }

@@ -675,10 +675,10 @@ QStringList CellmlFileRuntime::componentHierarchy(iface::cellml_api::CellMLEleme
 
         ObjRef<iface::cellml_api::CellMLImport> import = QueryInterface(componentParentParent);
         ObjRef<iface::cellml_api::ImportComponentSet> importComponents = import->components();
-        ObjRef<iface::cellml_api::ImportComponentIterator> importComponentsIterator = importComponents->iterateImportComponents();
+        ObjRef<iface::cellml_api::ImportComponentIterator> importComponentsIter = importComponents->iterateImportComponents();
 
-        for (ObjRef<iface::cellml_api::ImportComponent> importComponent = importComponentsIterator->nextImportComponent();
-             importComponent; importComponent = importComponentsIterator->nextImportComponent())
+        for (ObjRef<iface::cellml_api::ImportComponent> importComponent = importComponentsIter->nextImportComponent();
+             importComponent; importComponent = importComponentsIter->nextImportComponent())
             if (!componentName.compare(QString::fromStdWString(importComponent->componentRef()))) {
                 // This is the imported component we are after, so retrieve its
                 // imported name
@@ -770,10 +770,10 @@ void CellmlFileRuntime::update()
 
     // Retrieve all the parameters and sort them by component/variable name
 
-    ObjRef<iface::cellml_services::ComputationTargetIterator> computationTargetIterator = genericCodeInformation->iterateTargets();
+    ObjRef<iface::cellml_services::ComputationTargetIterator> computationTargetIter = genericCodeInformation->iterateTargets();
 
-    for (ObjRef<iface::cellml_services::ComputationTarget> computationTarget = computationTargetIterator->nextComputationTarget();
-         computationTarget; computationTarget = computationTargetIterator->nextComputationTarget()) {
+    for (ObjRef<iface::cellml_services::ComputationTarget> computationTarget = computationTargetIter->nextComputationTarget();
+         computationTarget; computationTarget = computationTargetIter->nextComputationTarget()) {
         // Determine the type of the parameter
 
         CellmlFileRuntimeParameter::ParameterType parameterType;
