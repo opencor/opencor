@@ -53,5 +53,9 @@
         <source>Parameter value keyword</source>
         <translation>Mot-clef valeur paramètre</translation>
     </message>
+    <message>
+        <source>Number</source>
+        <translation>Nombre</translation>
+    </message>
 </context>
 </TS>
