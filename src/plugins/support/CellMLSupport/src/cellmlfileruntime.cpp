@@ -952,7 +952,7 @@ void CellmlFileRuntime::update()
         // Add the statement either to our list of 'proper' constants or
         // 'computed' constants
 
-        if (QRegularExpression("^(CONSTANTS|RATES|STATES)\\[[0-9]*\\] = [+-]?[0-9]*\\.?[0-9]+([eE][+-]?[0-9]+)?;$").match(initConst).hasMatch()) {
+        if (QRegularExpression("^(CONSTANTS|RATES|STATES)\\[\\d*\\] = [+-]?\\d*\\.?\\d+([eE][+-]?\\d+)?;$").match(initConst).hasMatch()) {
             // We are dealing with a 'proper' constant (or a rate or a state)
 
             if (!initConsts.isEmpty())

@@ -109,7 +109,7 @@ IntegerEditorWidget::IntegerEditorWidget(QWidget *pParent) :
 {
     // Set a validator which accepts any integer
 
-    setValidator(new QRegularExpressionValidator(QRegularExpression("^[+-]?[0-9]*$"), this));
+    setValidator(new QRegularExpressionValidator(QRegularExpression("^[+-]?\\d*$"), this));
 }
 
 //==============================================================================
@@ -119,7 +119,7 @@ DoubleEditorWidget::DoubleEditorWidget(QWidget *pParent) :
 {
     // Set a validator which accepts any double
 
-    setValidator(new QRegularExpressionValidator(QRegularExpression("^[+-]?[0-9]*\\.?[0-9]+([eE][+-]?[0-9]+)?$"), this));
+    setValidator(new QRegularExpressionValidator(QRegularExpression("^[+-]?\\d*\\.?\\d+([eE][+-]?\\d+)?$"), this));
 }
 
 //==============================================================================
