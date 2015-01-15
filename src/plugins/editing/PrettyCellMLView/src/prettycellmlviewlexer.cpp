@@ -203,12 +203,15 @@ void PrettyCellmlViewLexer::doStyleText(int pStart, int pEnd, QString pText,
             startStyling(pStart, 0x1f);
             setStyling(end-pStart, Comment);
 
-            // Style everything that is behind the comment, if anything
+            // Get ready to style everything that is behind the comment, if
+            // anything
 
-            if (end == realEnd)
-                doStyleText(end, pEnd, pText.right(pEnd-end), pParameterGroup);
-
-            return;
+            if (end == realEnd) {
+                pStart = end;
+                pText = pText.right(pEnd-end);
+            } else {
+                return;
+            }
         }
     }
 
