@@ -187,8 +187,12 @@ void PrettyCellmlViewLexer::doStyleText(int pStart, int pEnd, QString pText,
 
         int commentEndPosition = mFullText.indexOf(EndCommentString, commentStartPosition+StartCommentLength);
 
-        if (commentEndPosition == -1)
+        if (commentEndPosition == -1) {
+            // The comment doesn't end as such, so consider that it 'ends' at
+            // the of the full text
+
             commentEndPosition = mFullText.length();
+        }
 
         if ((commentStartPosition <= pStart) && (pStart <= commentEndPosition)) {
             // The beginning of the given text is a comment, so style it
@@ -269,7 +273,7 @@ void PrettyCellmlViewLexer::doStyleText(int pStart, int pEnd, QString pText,
 
     if (commentPosition != -1) {
         // There is a // comment to style, so first style everything that is
-        // before the // comment
+        // before it
 
         doStyleText(pStart, pStart+commentPosition, pText.left(commentPosition),
                     pParameterGroup);
