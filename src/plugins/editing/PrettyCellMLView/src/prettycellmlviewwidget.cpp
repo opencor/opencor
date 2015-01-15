@@ -347,15 +347,15 @@ QList<QWidget *> PrettyCellmlViewWidget::statusBarWidgets() const
 
 //==============================================================================
 
-static const auto Comment = QStringLiteral("//");
-static const int CommentLength = Comment.length();
+static const auto CommentString = QStringLiteral("//");
+static const int CommentLength = CommentString.length();
 
 //==============================================================================
 
-static const auto StartComment = QStringLiteral("/*");
-static const auto EndComment = QStringLiteral("*/");
-static const int StartCommentLength = StartComment.length();
-static const int EndCommentLength = EndComment.length();
+static const auto StartCommentString = QStringLiteral("/*");
+static const auto EndCommentString = QStringLiteral("*/");
+static const int StartCommentLength = StartCommentString.length();
+static const int EndCommentLength = EndCommentString.length();
 
 //==============================================================================
 
@@ -371,15 +371,15 @@ void PrettyCellmlViewWidget::commentOrUncommentLine(QScintillaSupport::QScintill
         // We are not dealing with an empty line, so we can (un)comment it
 
         if (pCommentLine) {
-            pEditor->insertAt(Comment, pLineNumber, 0);
+            pEditor->insertAt(CommentString, pLineNumber, 0);
         } else {
             // Uncomment the line, should it be commented
 
-            if (line.startsWith(Comment)) {
+            if (line.startsWith(CommentString)) {
                 int commentLineNumber, commentColumnNumber;
 
                 pEditor->lineIndexFromPosition(pEditor->findTextInRange(pEditor->positionFromLineIndex(pLineNumber, 0),
-                                                                        pEditor->contentsSize(), Comment),
+                                                                        pEditor->contentsSize(), CommentString),
                                                &commentLineNumber, &commentColumnNumber);
 
                 pEditor->setSelection(commentLineNumber, commentColumnNumber,
@@ -434,15 +434,15 @@ void PrettyCellmlViewWidget::editorKeyPressed(QKeyEvent *pEvent, bool &pHandled)
 
                 QString trimmedSelectedText = editor->selectedText().trimmed();
 
-                if (   trimmedSelectedText.startsWith(StartComment)
-                    && trimmedSelectedText.endsWith(EndComment)) {
+                if (   trimmedSelectedText.startsWith(StartCommentString)
+                    && trimmedSelectedText.endsWith(EndCommentString)) {
                     // The full lines are surrounded by /* XXX */, so simply
                     // remove them
 
                     QString selectedText = editor->selectedText();
 
-                    selectedText.remove(selectedText.indexOf(StartComment), StartCommentLength);
-                    selectedText.remove(selectedText.indexOf(EndComment), EndCommentLength);
+                    selectedText.remove(selectedText.indexOf(StartCommentString), StartCommentLength);
+                    selectedText.remove(selectedText.indexOf(EndCommentString), EndCommentLength);
 
                     editor->replaceSelectedText(selectedText);
 
@@ -463,7 +463,7 @@ void PrettyCellmlViewWidget::editorKeyPressed(QKeyEvent *pEvent, bool &pHandled)
                     for (int i = lineFrom; i <= iMax; ++i) {
                         line = editor->text(i).trimmed();
 
-                        commentLine = commentLine || (!line.isEmpty() && !line.startsWith(Comment));
+                        commentLine = commentLine || (!line.isEmpty() && !line.startsWith(CommentString));
                     }
 
                     // (Un)comment the lines as one 'big' action
@@ -486,13 +486,13 @@ void PrettyCellmlViewWidget::editorKeyPressed(QKeyEvent *pEvent, bool &pHandled)
                 // (un)comment it
 
                 QString selectedText = editor->selectedText();
-                bool commentSelectedText =    !selectedText.startsWith(StartComment)
-                                           || !selectedText.endsWith(EndComment);
+                bool commentSelectedText =    !selectedText.startsWith(StartCommentString)
+                                           || !selectedText.endsWith(EndCommentString);
 
                 if (commentSelectedText) {
                     // The selected text is not commented, so comment it
 
-                    editor->replaceSelectedText(StartComment+selectedText+EndComment);
+                    editor->replaceSelectedText(StartCommentString+selectedText+EndCommentString);
                 } else {
                     // The selected text is commented, so uncomment it
 
@@ -513,7 +513,7 @@ void PrettyCellmlViewWidget::editorKeyPressed(QKeyEvent *pEvent, bool &pHandled)
         } else {
             // No text is selected, so simply (un)comment the current line
 
-            bool commentLine = !editor->text(lineNumber).trimmed().startsWith(Comment);
+            bool commentLine = !editor->text(lineNumber).trimmed().startsWith(CommentString);
 
             commentOrUncommentLine(editor, lineNumber, commentLine);
 
