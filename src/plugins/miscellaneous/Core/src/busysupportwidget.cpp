@@ -51,7 +51,8 @@ bool BusySupportWidget::isBusyWidgetVisible() const
 
 //==============================================================================
 
-void BusySupportWidget::showBusyWidget(QWidget *pParent, const double &pProgress)
+void BusySupportWidget::showBusyWidget(QWidget *pParent,
+                                       const double &pProgress)
 {
     // Show our busy widget, which implies deleting its previous instance (if
     // any), creating a new one and centering it
