@@ -232,7 +232,6 @@ void PrettyCellmlViewLexer::doStyleText(int pStart, int pEnd, QString pText,
     // given text
 
     int parameterGroupStartPosition = findString(StartParameterGroupString, pStart+StartParameterGroupLength-1, false);
-qDebug(">>> parameterGroupStartPosition: %d", parameterGroupStartPosition);
 
     if (parameterGroupStartPosition != -1) {
         // A parameter group started before or at the beginning of the given
