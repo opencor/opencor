@@ -163,6 +163,24 @@ void PrettyCellmlViewLexer::styleText(int pStart, int pEnd)
 
 //==============================================================================
 
+static const auto CommentString = QStringLiteral("//");
+
+//==============================================================================
+
+static const auto StartCommentString = QStringLiteral("/*");
+static const auto EndCommentString = QStringLiteral("*/");
+static const int StartCommentLength = StartCommentString.length();
+static const int EndCommentLength = EndCommentString.length();
+
+//==============================================================================
+
+static const auto StartParameterGroupString = QStringLiteral("{");
+static const auto EndParameterGroupString = QStringLiteral("}");
+static const int StartParameterGroupLength = StartParameterGroupString.length();
+static const int EndParameterGroupLength = EndParameterGroupString.length();
+
+//==============================================================================
+
 void PrettyCellmlViewLexer::doStyleText(int pStart, int pEnd, QString pText,
                                         bool pParameterGroup)
 {
@@ -173,11 +191,6 @@ void PrettyCellmlViewLexer::doStyleText(int pStart, int pEnd, QString pText,
 
     // Check whether a /* XXX */ comment started before or at the beginning of
     // the given text
-
-    static const QString StartCommentString = "/*";
-    static const QString EndCommentString = "*/";
-    static const int StartCommentLength = StartCommentString.length();
-    static const int EndCommentLength = EndCommentString.length();
 
     int commentStartPosition = mFullText.lastIndexOf(StartCommentString, pStart+StartCommentLength);
 
@@ -217,11 +230,6 @@ void PrettyCellmlViewLexer::doStyleText(int pStart, int pEnd, QString pText,
 
     // Check whether a parameter group started before or at the beginning of the
     // given text
-
-    static const QString StartParameterGroupString = "{";
-    static const QString EndParameterGroupString = "}";
-    static const int StartParameterGroupLength = StartParameterGroupString.length();
-    static const int EndParameterGroupLength = EndParameterGroupString.length();
 
     int parameterGroupStartPosition = mFullText.lastIndexOf(StartParameterGroupString, pStart+StartParameterGroupLength);
 
@@ -269,8 +277,6 @@ void PrettyCellmlViewLexer::doStyleText(int pStart, int pEnd, QString pText,
     }
 
     // Check whether the given text contains a // comment
-
-    static const QString CommentString = "//";
 
     int commentPosition = pText.indexOf(CommentString);
 
