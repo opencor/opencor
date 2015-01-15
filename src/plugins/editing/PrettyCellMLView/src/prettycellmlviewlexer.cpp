@@ -35,7 +35,8 @@ namespace PrettyCellMLView {
 
 PrettyCellmlViewLexer::PrettyCellmlViewLexer(QObject *pParent) :
     QsciLexerCustom(pParent),
-    mFullText(QString())
+    mFullText(QString()),
+    mEolString(QString())
 {
     // Some initialisations
 
@@ -157,6 +158,7 @@ void PrettyCellmlViewLexer::styleText(int pStart, int pEnd)
     // Effectively style our text
 
     mFullText = editor()->text();
+    mEolString = qobject_cast<QScintillaSupport::QScintillaWidget *>(editor())->eolString();
 
     doStyleText(pStart, pEnd, text, false);
 }
@@ -164,6 +166,7 @@ void PrettyCellmlViewLexer::styleText(int pStart, int pEnd)
 //==============================================================================
 
 static const auto CommentString = QStringLiteral("//");
+static const int CommentStringLength = CommentString.length();
 
 //==============================================================================
 
@@ -295,12 +298,10 @@ void PrettyCellmlViewLexer::doStyleText(int pStart, int pEnd, QString pText,
         // Now, style everything that is after the // comment, if anything, by
         // looking for the end of the line on which the // comment is
 
-        QString eolString = qobject_cast<QScintillaSupport::QScintillaWidget *>(editor())->eolString();
-        int eolStringLength = eolString.length();
-        int eolPosition = pText.indexOf(eolString, commentPosition+eolStringLength);
+        int eolPosition = pText.indexOf(mEolString, commentPosition+CommentStringLength);
 
         if (eolPosition != -1) {
-            int start = pStart+eolPosition+eolStringLength;
+            int start = pStart+eolPosition+mEolString.length();
 
             doStyleText(start, pEnd, pText.right(pEnd-start), pParameterGroup);
         }
@@ -399,12 +400,57 @@ void PrettyCellmlViewLexer::doStyleTextKeyword(int pStart,
 
 //==============================================================================
 
-int PrettyCellmlViewLexer::findString(const QString &pString, const int &pFrom,
+bool PrettyCellmlViewLexer::isInComment(const int &pFrom, const int &pTo) const
+{
+    // Return whether the given string located at the given location is within
+    // a comment
+
+    // Check whether we are in a /* XXX */ comment
+
+    int commentStartPosition = mFullText.lastIndexOf(StartCommentString, pFrom);
+
+    if (commentStartPosition != -1) {
+        int commentEndPosition = mFullText.indexOf(EndCommentString, commentStartPosition+StartCommentLength);
+
+        if (commentEndPosition == -1)
+            commentEndPosition = mFullText.length();
+
+        if ((commentStartPosition < pFrom) && (pTo < commentEndPosition))
+            return true;
+    }
+
+    // Check whether we are in a // comment
+
+    int commentPosition = mFullText.lastIndexOf(CommentString, pFrom);
+
+    if (commentPosition != -1) {
+        int eolPosition = mFullText.indexOf(mEolString, commentPosition+CommentStringLength);
+
+        if (eolPosition == -1)
+            eolPosition = mFullText.length();
+
+        if ((commentPosition < pFrom) && (pTo < eolPosition))
+            return true;
+    }
+
+    return false;
+}
+
+//==============================================================================
+
+int PrettyCellmlViewLexer::findString(const QString &pString, int pFrom,
                                       const bool &pForward)
 {
     // Find forward/backward the given string starting from the given position
 
-    int res = pForward?mFullText.indexOf(pString, pFrom):mFullText.lastIndexOf(pString, pFrom);
+    int stringLength = pString.length();
+    int res = pForward?pFrom-stringLength:pFrom+1;
+
+    do {
+        pFrom = pForward?res+stringLength:res-1;
+
+        res = pForward?mFullText.indexOf(pString, pFrom):mFullText.lastIndexOf(pString, pFrom);
+    } while ((res != -1) && isInComment(res, res+stringLength-1));
 
     return res;
 }

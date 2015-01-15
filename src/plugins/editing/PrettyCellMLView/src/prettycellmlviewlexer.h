@@ -61,6 +61,7 @@ public:
 
 private:
     QString mFullText;
+    QString mEolString;
 
     QStringList mKeywords;
     QStringList mCellmlKeywords;
@@ -72,7 +73,9 @@ private:
                             const QStringList pKeywords,
                             const int &pKeywordStyle);
 
-    int findString(const QString &pString, const int &pFrom,
+    bool isInComment(const int &pFrom, const int &pTo) const;
+
+    int findString(const QString &pString, int pFrom,
                    const bool &pForward = true);
 };
 
