@@ -192,7 +192,7 @@ void PrettyCellmlViewLexer::doStyleText(int pStart, int pEnd, QString pText,
     // Check whether a /* XXX */ comment started before or at the beginning of
     // the given text
 
-    int commentStartPosition = mFullText.lastIndexOf(StartCommentString, pStart+StartCommentLength);
+    int commentStartPosition = mFullText.lastIndexOf(StartCommentString, pStart+StartCommentLength-1);
 
     if (commentStartPosition != -1) {
         // A /* XXX */ comment started before or at the beginning of the given
@@ -231,13 +231,14 @@ void PrettyCellmlViewLexer::doStyleText(int pStart, int pEnd, QString pText,
     // Check whether a parameter group started before or at the beginning of the
     // given text
 
-    int parameterGroupStartPosition = mFullText.lastIndexOf(StartParameterGroupString, pStart+StartParameterGroupLength);
+    int parameterGroupStartPosition = findString(StartParameterGroupString, pStart+StartParameterGroupLength-1, false);
+qDebug(">>> parameterGroupStartPosition: %d", parameterGroupStartPosition);
 
     if (parameterGroupStartPosition != -1) {
         // A parameter group started before or at the beginning of the given
         // text, so now look for where it ends
 
-        int parameterGroupEndPosition = mFullText.indexOf(EndParameterGroupString, parameterGroupStartPosition+StartParameterGroupLength);
+        int parameterGroupEndPosition = findString(EndParameterGroupString, parameterGroupStartPosition+StartParameterGroupLength);
 
         if (parameterGroupEndPosition == -1)
             parameterGroupEndPosition = mFullText.length();
@@ -395,6 +396,18 @@ void PrettyCellmlViewLexer::doStyleTextKeyword(int pStart,
             setStyling(regExMatch.capturedLength(), pKeywordStyle);
         }
     }
+}
+
+//==============================================================================
+
+int PrettyCellmlViewLexer::findString(const QString &pString, const int &pFrom,
+                                      const bool &pForward)
+{
+    // Find forward/backward the given string starting from the given position
+
+    int res = pForward?mFullText.indexOf(pString, pFrom):mFullText.lastIndexOf(pString, pFrom);
+
+    return res;
 }
 
 //==============================================================================

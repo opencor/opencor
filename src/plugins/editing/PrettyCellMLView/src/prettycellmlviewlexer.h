@@ -71,6 +71,9 @@ private:
     void doStyleTextKeyword(int pStart, const QString &pText,
                             const QStringList pKeywords,
                             const int &pKeywordStyle);
+
+    int findString(const QString &pString, const int &pFrom,
+                   const bool &pForward = true);
 };
 
 //==============================================================================
