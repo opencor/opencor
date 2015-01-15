@@ -253,9 +253,10 @@ void PrettyCellmlViewLexer::doStyleText(int pStart, int pEnd, QString pText,
             if (hasEnd)
                 doStyleText(end, pEnd, pText.right(pEnd-end), pParameterGroup);
 
-            // Style the beginning and the end of the parameter group
+            // If possible, style the beginning and/or the end of the parameter
+            // group
 
-            bool hasBeginning = !pText.left(StartParameterGroupLength).compare(StartParameterGroupString);
+            bool hasBeginning = parameterGroupStartPosition == pStart;
 
             if (hasBeginning) {
                 startStyling(pStart, 0x1f);
@@ -269,9 +270,13 @@ void PrettyCellmlViewLexer::doStyleText(int pStart, int pEnd, QString pText,
 
             // Now style the contents of the parameter group
 
-            pStart += hasBeginning?StartParameterGroupLength:0;
-            pEnd = end-(hasEnd?EndParameterGroupLength:0);
-            pText = pText.mid(pStart, pEnd-pStart);
+            int newStart = pStart+(hasBeginning?StartParameterGroupLength:0);
+            int newEnd = end-(hasEnd?EndParameterGroupLength:0);
+
+            pText = pText.mid(newStart-pStart, newEnd-newStart);
+
+            pStart = newStart;
+            pEnd = newEnd;
             pParameterGroup = true;
         }
     }
