@@ -346,9 +346,18 @@ void CellmlFile::retrieveCmetaIdsFromCellmlElement(iface::cellml_api::CellMLElem
     ObjRef<iface::cellml_api::CellMLElementSet> childElements = pElement->childElements();
     ObjRef<iface::cellml_api::CellMLElementIterator> childElementsIter = childElements->iterate();
 
-    for (ObjRef<iface::cellml_api::CellMLElement> childElement = childElementsIter->next();
-         childElement; childElement = childElementsIter->next()) {
-        retrieveCmetaIdsFromCellmlElement(childElement);
+    try {
+        for (ObjRef<iface::cellml_api::CellMLElement> childElement = childElementsIter->next();
+             childElement; childElement = childElementsIter->next()) {
+            retrieveCmetaIdsFromCellmlElement(childElement);
+        }
+    } catch (...) {
+        // Note: we should never reach this point, but it may still happen if a
+        //       CellML file contains an child element that is not known to the
+        //       CellML API. We are taking the view that this is a limitation of
+        //       the CellML API and shouldn't therefore generate an error for
+        //       something that should have been working fine in the first
+        //       place...
     }
 }
 
