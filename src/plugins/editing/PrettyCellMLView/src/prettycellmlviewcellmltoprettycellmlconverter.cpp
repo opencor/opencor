@@ -167,8 +167,8 @@ bool PrettyCellMLViewCellmlToPrettyCellmlConverter::processModelNode(const QDomN
 {
     // Start processing the given model node
 
-    outputString(QString("def model%1 %2 as").arg(cmetaId(pDomNode),
-                                                  pDomNode.attributes().namedItem("name").nodeValue()));
+    outputString(QString("def model %1%2 as").arg(pDomNode.attributes().namedItem("name").nodeValue())
+                                             .arg(cmetaId(pDomNode)));
 
     indent();
 
@@ -210,8 +210,8 @@ bool PrettyCellMLViewCellmlToPrettyCellmlConverter::processUnitsNode(const QDomN
         outputString();
     }
 
-    outputString(QString("def unit%1 %2 as%3").arg(cmetaId(pDomNode))
-                                              .arg(pDomNode.attributes().namedItem("name").nodeValue())
+    outputString(QString("def unit %1%2 as%3").arg(pDomNode.attributes().namedItem("name").nodeValue())
+                                              .arg(cmetaId(pDomNode))
                                               .arg(isBaseUnits?" base unit;":QString()));
 
     if (!isBaseUnits) {
@@ -266,8 +266,8 @@ bool PrettyCellMLViewCellmlToPrettyCellmlConverter::processUnitNode(const QDomNo
         parameters += "off: "+pDomNode.attributes().namedItem("offset").nodeValue();
     }
 
-    outputString(QString("unit%1 %2%3;").arg(cmetaId(pDomNode))
-                                        .arg(pDomNode.attributes().namedItem("units").nodeValue())
+    outputString(QString("unit %1%2%3;").arg(pDomNode.attributes().namedItem("units").nodeValue())
+                                        .arg(cmetaId(pDomNode))
                                         .arg(parameters.isEmpty()?QString():" {"+parameters+"}"));
 
     return true;
@@ -282,8 +282,8 @@ bool PrettyCellMLViewCellmlToPrettyCellmlConverter::processComponentNode(const Q
     if (mOutput.endsWith("enddef;"+Core::eolString()))
         outputString();
 
-    outputString(QString("def comp%1 %2 as").arg(cmetaId(pDomNode),
-                                                 pDomNode.attributes().namedItem("name").nodeValue()));
+    outputString(QString("def comp %1%2 as").arg(pDomNode.attributes().namedItem("name").nodeValue())
+                                            .arg(cmetaId(pDomNode)));
 
     indent();
 
@@ -305,6 +305,39 @@ bool PrettyCellMLViewCellmlToPrettyCellmlConverter::processComponentNode(const Q
 
 //==============================================================================
 
+bool PrettyCellMLViewCellmlToPrettyCellmlConverter::processVariableNode(const QDomNode &pDomNode)
+{
+    // Process the given variable node
+
+    QString parameters = QString();
+
+    if (!pDomNode.attributes().namedItem("initial_value").nodeValue().isEmpty())
+        parameters += "init: "+pDomNode.attributes().namedItem("initial_value").nodeValue();
+
+    if (!pDomNode.attributes().namedItem("public_interface").nodeValue().isEmpty()) {
+        if (!parameters.isEmpty())
+            parameters += ", ";
+
+        parameters += "pub: "+pDomNode.attributes().namedItem("public_interface").nodeValue();
+    }
+
+    if (!pDomNode.attributes().namedItem("private_interface").nodeValue().isEmpty()) {
+        if (!parameters.isEmpty())
+            parameters += ", ";
+
+        parameters += "priv: "+pDomNode.attributes().namedItem("private_interface").nodeValue();
+    }
+
+    outputString(QString("var %1%2: %3%4;").arg(pDomNode.attributes().namedItem("name").nodeValue())
+                                         .arg(cmetaId(pDomNode))
+                                         .arg(pDomNode.attributes().namedItem("units").nodeValue())
+                                         .arg(parameters.isEmpty()?QString():" {"+parameters+"}"));
+
+    return true;
+}
+
+//==============================================================================
+
 bool PrettyCellMLViewCellmlToPrettyCellmlConverter::processNode(const QDomNode &pDomNode)
 {
     // Start processing the given node
@@ -319,6 +352,8 @@ bool PrettyCellMLViewCellmlToPrettyCellmlConverter::processNode(const QDomNode &
         return processUnitNode(pDomNode);
     else if (!nodeName.compare("component"))
         return processComponentNode(pDomNode);
+    else if (!nodeName.compare("variable"))
+        return processVariableNode(pDomNode);
 
     qWarning("Unsupported node: %s", qPrintable(pDomNode.nodeName()));
 

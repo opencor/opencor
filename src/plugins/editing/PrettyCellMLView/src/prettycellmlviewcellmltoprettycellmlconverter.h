@@ -70,6 +70,7 @@ private:
     bool processUnitsNode(const QDomNode &pDomNode);
     bool processUnitNode(const QDomNode &pDomNode);
     bool processComponentNode(const QDomNode &pDomNode);
+    bool processVariableNode(const QDomNode &pDomNode);
 
     bool processNode(const QDomNode &pDomNode);
 };
