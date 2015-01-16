@@ -40,11 +40,29 @@ PrettyCellmlViewLexer::PrettyCellmlViewLexer(QObject *pParent) :
 {
     // Some initialisations
 
-    mKeywords = QStringList() << "as" << "comp" << "def" << "enddef" << "model" << "unit";
+    mKeywords = QStringList() << "as" << "comp" << "def" << "enddef" << "model"
+                              << "unit";
     mCellmlKeywords = QStringList() << "base"
-                                    << "ampere" << "candela" << "coulomb" << "joule" << "kelvin" << "kilogram" << "liter" << "litre" << "lumen" << "meter" << "metre" << "mole" << "newton" << "second" << "steradian" << "volt" << "watt" << "weber";
+                                    // Standard units
+                                    << "ampere" << "becquerel" << "candela"
+                                    << "celsius" << "coulomb" << "dimensionless"
+                                    << "farad" << "gram" << "gray" << "henry"
+                                    << "hertz" << "joule" << "katal" << "kelvin"
+                                    << "kilogram" << "liter" << "litre"
+                                    << "lumen" << "lux" << "meter" << "metre"
+                                    << "mole" << "newton" << "ohm" << "pascal"
+                                    << "radian" << "second" << "siemens"
+                                    << "sievert" << "steradian" << "tesla"
+                                    << "volt" << "watt" << "weber";
     mParameterKeywords = QStringList() << "pref" << "expo" << "mult" << "off";
-    mParameterValueKeywords = QStringList() << "milli";
+    mParameterValueKeywords = QStringList() // Prefixes
+                                            << "yotta" << "zetta" << "exa"
+                                            << "peta" << "tera" << "giga"
+                                            << "mega" << "kilo" << "hecto"
+                                            << "deka" << "deci" << "centi"
+                                            << "milli" << "micro" << "nano"
+                                            << "pico" << "femto" << "atto"
+                                            << "zepto" << "yocto";
 }
 
 //==============================================================================
@@ -373,6 +391,8 @@ void PrettyCellmlViewLexer::doStyleText(int pStart, int pEnd, QString pText,
     doStyleTextKeyword(pStart, pText, mCellmlKeywords, pParameterGroup?ParameterGroup:CellmlKeyword);
     doStyleTextKeyword(pStart, pText, mParameterKeywords, pParameterGroup?ParameterKeyword:Default);
     doStyleTextKeyword(pStart, pText, mParameterValueKeywords, pParameterGroup?ParameterValueKeyword:Default);
+
+    // Check whether the given text contains some numbers
 }
 
 //==============================================================================
