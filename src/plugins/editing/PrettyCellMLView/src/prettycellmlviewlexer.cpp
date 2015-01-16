@@ -41,7 +41,7 @@ PrettyCellmlViewLexer::PrettyCellmlViewLexer(QObject *pParent) :
     // Some initialisations
 
     mKeywords = QStringList() << "as" << "base" << "comp" << "def" << "enddef"
-                              << "model" << "unit" << "var";
+                              << "group" << "model" << "unit" << "var";
     mCellmlKeywords = QStringList() // Standard units
                                     << "ampere" << "becquerel" << "candela"
                                     << "celsius" << "coulomb" << "dimensionless"
