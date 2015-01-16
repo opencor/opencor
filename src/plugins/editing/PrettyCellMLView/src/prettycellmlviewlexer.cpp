@@ -164,6 +164,18 @@ void PrettyCellmlViewLexer::styleText(int pStart, int pEnd)
     if (!editor())
         return;
 
+    // Make sure that pStart makes sense, i.e. that it's not before the first
+    // visible line
+    // Note: indeed, pStart is initially be equal to 0 (as you would expect).
+    //       However, if you press the down key and scroll to the end of the
+    //       file, pStart will become equal to 64 and this will in fact remain
+    //       its value forever. This means that the longer the file and the
+    //       further down the file we are, the longer it takes to style it
+    //       (since pEnd increases, as you would expect). So, could that be a
+    //       bug with QScintilla?...
+
+    pStart = qMax(pStart, editor()->positionFromLineIndex(editor()->SendScintilla(QsciScintilla::SCI_GETFIRSTVISIBLELINE), 0));
+
     // Retrieve the text to style
 
     char *data = new char[pEnd-pStart+1];
