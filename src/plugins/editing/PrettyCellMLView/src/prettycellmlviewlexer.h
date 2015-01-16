@@ -72,6 +72,8 @@ private:
     void doStyleTextKeyword(int pStart, const QString &pText,
                             const QStringList pKeywords,
                             const int &pKeywordStyle);
+    void doStyleTextNumber(int pStart, const QString &pText,
+                           const int &pNumberStyle);
 
     bool stringWithinComment(const int &pFrom, const int &pTo) const;
 

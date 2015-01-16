@@ -40,10 +40,9 @@ PrettyCellmlViewLexer::PrettyCellmlViewLexer(QObject *pParent) :
 {
     // Some initialisations
 
-    mKeywords = QStringList() << "as" << "comp" << "def" << "enddef" << "model"
-                              << "unit";
-    mCellmlKeywords = QStringList() << "base"
-                                    // Standard units
+    mKeywords = QStringList() << "as" << "base" << "comp" << "def" << "enddef"
+                              << "model" << "unit";
+    mCellmlKeywords = QStringList() // Standard units
                                     << "ampere" << "becquerel" << "candela"
                                     << "celsius" << "coulomb" << "dimensionless"
                                     << "farad" << "gram" << "gray" << "henry"
@@ -124,7 +123,7 @@ QColor PrettyCellmlViewLexer::color(int pStyle) const
         return QColor(0x7f, 0x00, 0x7f);
     case Number:
     case ParameterNumber:
-        return QColor(0x7f, 0x7f, 0x00);
+        return QColor(0x00, 0x7f, 0x7f);
     }
 
     return QsciLexerCustom::color(pStyle);
@@ -393,6 +392,8 @@ void PrettyCellmlViewLexer::doStyleText(int pStart, int pEnd, QString pText,
     doStyleTextKeyword(pStart, pText, mParameterValueKeywords, pParameterGroup?ParameterValueKeyword:Default);
 
     // Check whether the given text contains some numbers
+
+    doStyleTextNumber(pStart, pText, pParameterGroup?ParameterNumber:Number);
 }
 
 //==============================================================================
@@ -415,6 +416,25 @@ void PrettyCellmlViewLexer::doStyleTextKeyword(int pStart,
             startStyling(pStart+regExMatch.capturedStart(), 0x1f);
             setStyling(regExMatch.capturedLength(), pKeywordStyle);
         }
+    }
+}
+
+//==============================================================================
+
+void PrettyCellmlViewLexer::doStyleTextNumber(int pStart, const QString &pText,
+                                              const int &pNumberStyle)
+{
+    // Check whether the given text contains some numbers
+
+    QRegularExpressionMatchIterator regExMatchIter = QRegularExpression("\\b\\d*\\.?\\d+([eE][+-]?\\d+)?\\b").globalMatch(pText);
+
+    while (regExMatchIter.hasNext()) {
+        QRegularExpressionMatch regExMatch = regExMatchIter.next();
+
+        // We found a number, so style it as such
+
+        startStyling(pStart+regExMatch.capturedStart(), 0x1f);
+        setStyling(regExMatch.capturedLength(), pNumberStyle);
     }
 }
 
