@@ -49,10 +49,26 @@ public:
     QString errorMessage() const;
 
 private:
+    enum OutputType {
+        None,
+        EmptyLine,
+        DefModel,
+        Comment,
+        DefUnit,
+        DefBaseUnit,
+        Unit,
+        DefComp,
+        Var,
+        DefGroup,
+        EndDef
+    };
+
     QString mFileName;
 
     QString mOutput;
     QString mIndent;
+
+    OutputType mLastOutputType;
 
     int mErrorLine;
     int mErrorColumn;
@@ -62,18 +78,20 @@ private:
     void indent();
     void unindent();
 
-    void outputString(const QString &pString = QString());
+    void outputString(const OutputType &pOutputType = EmptyLine,
+                      const QString &pString = QString());
 
     QString cmetaId(const QDomNode &pDomNode) const;
 
     bool processModelNode(const QDomNode &pDomNode);
+    bool processCommentNode(const QDomNode &pDomNode);
     bool processUnitsNode(const QDomNode &pDomNode);
     bool processUnitNode(const QDomNode &pDomNode);
     bool processComponentNode(const QDomNode &pDomNode);
     bool processVariableNode(const QDomNode &pDomNode);
+    bool processMathNode(const QDomNode &pDomNode);
     bool processGroupNode(const QDomNode &pDomNode);
-
-    bool processNode(const QDomNode &pDomNode);
+    bool processUnknownNode(const QDomNode &pDomNode);
 };
 
 //==============================================================================
