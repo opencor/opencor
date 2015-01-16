@@ -338,6 +338,35 @@ bool PrettyCellMLViewCellmlToPrettyCellmlConverter::processVariableNode(const QD
 
 //==============================================================================
 
+bool PrettyCellMLViewCellmlToPrettyCellmlConverter::processGroupNode(const QDomNode &pDomNode)
+{
+    // Start processing the given group node
+
+    if (mOutput.endsWith("enddef;"+Core::eolString()))
+        outputString();
+
+    outputString(QString("def group%1 as").arg(cmetaId(pDomNode)));
+
+    indent();
+
+    // Process the given group node's children
+
+    for (QDomNode domNode = pDomNode.firstChild();
+         !domNode.isNull(); domNode = domNode.nextSibling())
+        if (!processNode(domNode))
+            return false;
+
+    // Finish processing the given group node
+
+    unindent();
+
+    outputString("enddef;");
+
+    return true;
+}
+
+//==============================================================================
+
 bool PrettyCellMLViewCellmlToPrettyCellmlConverter::processNode(const QDomNode &pDomNode)
 {
     // Start processing the given node
@@ -354,6 +383,8 @@ bool PrettyCellMLViewCellmlToPrettyCellmlConverter::processNode(const QDomNode &
         return processComponentNode(pDomNode);
     else if (!nodeName.compare("variable"))
         return processVariableNode(pDomNode);
+    else if (!nodeName.compare("group"))
+        return processGroupNode(pDomNode);
 
     qWarning("Unsupported node: %s", qPrintable(pDomNode.nodeName()));
 
