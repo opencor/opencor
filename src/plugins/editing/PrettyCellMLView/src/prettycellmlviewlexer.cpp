@@ -41,7 +41,7 @@ PrettyCellmlViewLexer::PrettyCellmlViewLexer(QObject *pParent) :
     // Some initialisations
 
     mKeywords = QStringList() << "as" << "base" << "comp" << "def" << "enddef"
-                              << "model" << "unit";
+                              << "model" << "unit" << "var";
     mCellmlKeywords = QStringList() // Standard units
                                     << "ampere" << "becquerel" << "candela"
                                     << "celsius" << "coulomb" << "dimensionless"
@@ -53,15 +53,20 @@ PrettyCellmlViewLexer::PrettyCellmlViewLexer(QObject *pParent) :
                                     << "radian" << "second" << "siemens"
                                     << "sievert" << "steradian" << "tesla"
                                     << "volt" << "watt" << "weber";
-    mParameterKeywords = QStringList() << "pref" << "expo" << "mult" << "off";
-    mParameterValueKeywords = QStringList() // Prefixes
+    mParameterKeywords = QStringList() // Unit keywords
+                                       << "pref" << "expo" << "mult" << "off"
+                                       // Variable keywords
+                                       << "init" << "pub" << "priv";
+    mParameterValueKeywords = QStringList() // Unit prefixes
                                             << "yotta" << "zetta" << "exa"
                                             << "peta" << "tera" << "giga"
                                             << "mega" << "kilo" << "hecto"
                                             << "deka" << "deci" << "centi"
                                             << "milli" << "micro" << "nano"
                                             << "pico" << "femto" << "atto"
-                                            << "zepto" << "yocto";
+                                            << "zepto" << "yocto"
+                                            // Public/private interfaces
+                                            << "in" << "out" << "none";
 }
 
 //==============================================================================
