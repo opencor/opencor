@@ -73,7 +73,7 @@ private:
                             const QStringList pKeywords,
                             const int &pKeywordStyle);
 
-    bool isInComment(const int &pFrom, const int &pTo) const;
+    bool stringWithinComment(const int &pFrom, const int &pTo) const;
 
     int findString(const QString &pString, int pFrom,
                    const bool &pForward = true);

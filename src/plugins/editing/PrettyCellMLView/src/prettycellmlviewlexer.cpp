@@ -400,12 +400,13 @@ void PrettyCellmlViewLexer::doStyleTextKeyword(int pStart,
 
 //==============================================================================
 
-bool PrettyCellmlViewLexer::isInComment(const int &pFrom, const int &pTo) const
+bool PrettyCellmlViewLexer::stringWithinComment(const int &pFrom,
+                                                const int &pTo) const
 {
     // Return whether the given string located at the given location is within
     // a comment
 
-    // Check whether we are in a /* XXX */ comment
+    // Check whether we are within a /* XXX */ comment
 
     int commentStartPosition = mFullText.lastIndexOf(StartCommentString, pFrom);
 
@@ -419,7 +420,7 @@ bool PrettyCellmlViewLexer::isInComment(const int &pFrom, const int &pTo) const
             return true;
     }
 
-    // Check whether we are in a // comment
+    // Check whether we are within a // comment
 
     int commentPosition = mFullText.lastIndexOf(CommentString, pFrom);
 
@@ -450,7 +451,7 @@ int PrettyCellmlViewLexer::findString(const QString &pString, int pFrom,
         pFrom = pForward?res+stringLength:res-1;
 
         res = pForward?mFullText.indexOf(pString, pFrom):mFullText.lastIndexOf(pString, pFrom);
-    } while ((res != -1) && isInComment(res, res+stringLength-1));
+    } while ((res != -1) && stringWithinComment(res, res+stringLength-1));
 
     return res;
 }
