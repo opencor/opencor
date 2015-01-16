@@ -238,7 +238,7 @@ void PrettyCellmlViewLexer::doStyleText(int pStart, int pEnd, QString pText,
             int realEnd = commentEndPosition+EndCommentLength;
             int end = qMin(pEnd, realEnd);
 
-            startStyling(pStart, styleBitsNeeded());
+            startStyling(pStart, 0x1f);
             setStyling(end-pStart, Comment);
 
             // Get ready to style everything that is behind the comment, if
@@ -284,12 +284,12 @@ void PrettyCellmlViewLexer::doStyleText(int pStart, int pEnd, QString pText,
             bool hasBeginning = parameterGroupStartPosition == pStart;
 
             if (hasBeginning) {
-                startStyling(pStart, styleBitsNeeded());
+                startStyling(pStart, 0x1f);
                 setStyling(StartParameterGroupLength, ParameterGroup);
             }
 
             if (hasEnd) {
-                startStyling(end-EndParameterGroupLength, styleBitsNeeded());
+                startStyling(end-EndParameterGroupLength, 0x1f);
                 setStyling(EndParameterGroupLength, ParameterGroup);
             }
 
@@ -332,7 +332,7 @@ void PrettyCellmlViewLexer::doStyleText(int pStart, int pEnd, QString pText,
 
         int start = pStart+commentPosition;
 
-        startStyling(start, styleBitsNeeded());
+        startStyling(start, 0x1f);
         setStyling(((eolPosition == -1)?pEnd:pStart+eolPosition)-start, Comment);
 
         return;
@@ -386,7 +386,7 @@ void PrettyCellmlViewLexer::doStyleText(int pStart, int pEnd, QString pText,
 
     // Use a default style for the given text
 
-    startStyling(pStart, styleBitsNeeded());
+    startStyling(pStart, 0x1f);
     setStyling(pEnd-pStart, pParameterGroup?ParameterGroup:Default);
 
     // Check whether the given text contains keywords from various categories
@@ -418,7 +418,7 @@ void PrettyCellmlViewLexer::doStyleTextKeyword(int pStart,
 
             // We found a keyword, so style it as such
 
-            startStyling(pStart+regExMatch.capturedStart(), styleBitsNeeded());
+            startStyling(pStart+regExMatch.capturedStart(), 0x1f);
             setStyling(regExMatch.capturedLength(), pKeywordStyle);
         }
     }
@@ -438,7 +438,7 @@ void PrettyCellmlViewLexer::doStyleTextNumber(int pStart, const QString &pText,
 
         // We found a number, so style it as such
 
-        startStyling(pStart+regExMatch.capturedStart(), styleBitsNeeded());
+        startStyling(pStart+regExMatch.capturedStart(), 0x1f);
         setStyling(regExMatch.capturedLength(), pNumberStyle);
     }
 }
