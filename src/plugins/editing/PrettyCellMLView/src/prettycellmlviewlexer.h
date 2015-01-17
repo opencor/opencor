@@ -24,6 +24,10 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#include <QRegularExpression>
+
+//==============================================================================
+
 #include "Qsci/qscilexercustom.h"
 
 //==============================================================================
@@ -63,14 +67,15 @@ private:
     QString mFullText;
     QString mEolString;
 
-    QStringList mKeywords;
-    QStringList mCellmlKeywords;
-    QStringList mParameterKeywords;
-    QStringList mParameterValueKeywords;
+    QRegularExpression mKeywordsRegEx;
+    QRegularExpression mCellmlKeywordsRegEx;
+    QRegularExpression mParameterKeywordsRegEx;
+    QRegularExpression mParameterValueKeywordsRegEx;
+    QRegularExpression mNumberRegEx;
 
     void doStyleText(int pStart, int pEnd, QString pText, bool pParameterGroup);
     void doStyleTextKeyword(int pStart, const QString &pText,
-                            const QStringList pKeywords,
+                            const QRegularExpression &pKeywordsRegEx,
                             const int &pKeywordStyle);
     void doStyleTextNumber(int pStart, const QString &pText,
                            const int &pNumberStyle);

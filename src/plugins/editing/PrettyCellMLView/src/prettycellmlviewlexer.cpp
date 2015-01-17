@@ -40,33 +40,49 @@ PrettyCellmlViewLexer::PrettyCellmlViewLexer(QObject *pParent) :
 {
     // Some initialisations
 
-    mKeywords = QStringList() << "as" << "base" << "comp" << "def" << "enddef"
-                              << "group" << "model" << "unit" << "var";
-    mCellmlKeywords = QStringList() // Standard units
-                                    << "ampere" << "becquerel" << "candela"
-                                    << "celsius" << "coulomb" << "dimensionless"
-                                    << "farad" << "gram" << "gray" << "henry"
-                                    << "hertz" << "joule" << "katal" << "kelvin"
-                                    << "kilogram" << "liter" << "litre"
-                                    << "lumen" << "lux" << "meter" << "metre"
-                                    << "mole" << "newton" << "ohm" << "pascal"
-                                    << "radian" << "second" << "siemens"
-                                    << "sievert" << "steradian" << "tesla"
-                                    << "volt" << "watt" << "weber";
-    mParameterKeywords = QStringList() // Unit keywords
-                                       << "pref" << "expo" << "mult" << "off"
-                                       // Variable keywords
-                                       << "init" << "pub" << "priv";
-    mParameterValueKeywords = QStringList() // Unit prefixes
-                                            << "yotta" << "zetta" << "exa"
-                                            << "peta" << "tera" << "giga"
-                                            << "mega" << "kilo" << "hecto"
-                                            << "deka" << "deci" << "centi"
-                                            << "milli" << "micro" << "nano"
-                                            << "pico" << "femto" << "atto"
-                                            << "zepto" << "yocto"
-                                            // Public/private interfaces
-                                            << "in" << "out" << "none";
+    mKeywordsRegEx = QRegularExpression(
+                         "\\b("
+                             "as|base|comp|def|enddef|group|model|unit|var"
+                         ")\\b");
+
+    mCellmlKeywordsRegEx = QRegularExpression(
+                               "\\b("
+                                   // Standard units
+
+                                   "ampere|becquerel|candela|celsius|coulomb|"
+                                   "dimensionless|farad|gram|gray|henry|hertz|"
+                                   "joule|katal|kelvin|kilogram|liter|litre|"
+                                   "lumen|lux|meter|metre|mole|newton|ohm|"
+                                   "pascal|radian|second|siemens|sievert|"
+                                   "steradian|tesla|volt|watt|weber"
+                               ")\\b");
+
+    mParameterKeywordsRegEx = QRegularExpression(
+                                  "\\b("
+                                      // Unit keywords
+
+                                      "pref|expo|mult|off|"
+
+                                      // Variable keywords
+
+                                      "init|pub|priv"
+                                  ")\\b");
+
+    mParameterValueKeywordsRegEx = QRegularExpression(
+                                       "\\b("
+                                           // Unit prefixes
+
+                                           "yotta|zetta|exa|peta|tera|giga|"
+                                           "mega|kilo|hecto|deka|deci|centi|"
+                                           "milli|micro|nano|pico|femto|atto|"
+                                           "zepto|yocto|"
+
+                                           // Public/private interfaces
+
+                                           "in|out|none"
+                                       ")\\b");
+
+    mNumberRegEx = QRegularExpression("\\b\\d*\\.?\\d+([eE][+-]?\\d+)?\\b");
 }
 
 //==============================================================================
@@ -403,10 +419,10 @@ void PrettyCellmlViewLexer::doStyleText(int pStart, int pEnd, QString pText,
 
     // Check whether the given text contains keywords from various categories
 
-    doStyleTextKeyword(pStart, pText, mKeywords, pParameterGroup?ParameterGroup:Keyword);
-    doStyleTextKeyword(pStart, pText, mCellmlKeywords, pParameterGroup?ParameterGroup:CellmlKeyword);
-    doStyleTextKeyword(pStart, pText, mParameterKeywords, pParameterGroup?ParameterKeyword:Default);
-    doStyleTextKeyword(pStart, pText, mParameterValueKeywords, pParameterGroup?ParameterValueKeyword:Default);
+    doStyleTextKeyword(pStart, pText, mKeywordsRegEx, pParameterGroup?ParameterGroup:Keyword);
+    doStyleTextKeyword(pStart, pText, mCellmlKeywordsRegEx, pParameterGroup?ParameterGroup:CellmlKeyword);
+    doStyleTextKeyword(pStart, pText, mParameterKeywordsRegEx, pParameterGroup?ParameterKeyword:Default);
+    doStyleTextKeyword(pStart, pText, mParameterValueKeywordsRegEx, pParameterGroup?ParameterValueKeyword:Default);
 
     // Check whether the given text contains some numbers
 
@@ -417,22 +433,22 @@ void PrettyCellmlViewLexer::doStyleText(int pStart, int pEnd, QString pText,
 
 void PrettyCellmlViewLexer::doStyleTextKeyword(int pStart,
                                                const QString &pText,
-                                               const QStringList pKeywords,
+                                               const QRegularExpression &pKeywordsRegEx,
                                                const int &pKeywordStyle)
 {
-    // Check whether the given text contains some of the given keywords
+    // Style the given text with the given keyword style in the cases where a
+    // match for the given regular expression is found
 
-    foreach (const QString &keyword, pKeywords) {
-        QRegularExpressionMatchIterator regExMatchIter = QRegularExpression("\\b"+keyword+"\\b").globalMatch(pText);
+    QRegularExpressionMatchIterator regExMatchIter = pKeywordsRegEx.globalMatch(pText);
+    QRegularExpressionMatch regExMatch;
 
-        while (regExMatchIter.hasNext()) {
-            QRegularExpressionMatch regExMatch = regExMatchIter.next();
+    while (regExMatchIter.hasNext()) {
+        regExMatch = regExMatchIter.next();
 
-            // We found a keyword, so style it as such
+        // We found a keyword, so style it as such
 
-            startStyling(pStart+regExMatch.capturedStart(), 0x1f);
-            setStyling(regExMatch.capturedLength(), pKeywordStyle);
-        }
+        startStyling(pStart+regExMatch.capturedStart(), 0x1f);
+        setStyling(regExMatch.capturedLength(), pKeywordStyle);
     }
 }
 
@@ -443,10 +459,11 @@ void PrettyCellmlViewLexer::doStyleTextNumber(int pStart, const QString &pText,
 {
     // Check whether the given text contains some numbers
 
-    QRegularExpressionMatchIterator regExMatchIter = QRegularExpression("\\b\\d*\\.?\\d+([eE][+-]?\\d+)?\\b").globalMatch(pText);
+    QRegularExpressionMatchIterator regExMatchIter = mNumberRegEx.globalMatch(pText);
+    QRegularExpressionMatch regExMatch;
 
     while (regExMatchIter.hasNext()) {
-        QRegularExpressionMatch regExMatch = regExMatchIter.next();
+        regExMatch = regExMatchIter.next();
 
         // We found a number, so style it as such
 
