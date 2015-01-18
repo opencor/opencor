@@ -24,7 +24,7 @@
 /* #undef LLVM_DATADIR */
 
 /* Target triple LLVM will generate code for by default */
-#define LLVM_DEFAULT_TARGET_TRIPLE "x86_64-apple-darwin13.3.0"
+#define LLVM_DEFAULT_TARGET_TRIPLE "x86_64-apple-darwin14.0.0"
 
 /* Installation directory for documentation */
 /* #undef LLVM_DOCSDIR */
@@ -39,7 +39,7 @@
 #define LLVM_HAS_ATOMICS 1
 
 /* Host triple LLVM will be executed on */
-#define LLVM_HOST_TRIPLE "x86_64-apple-darwin13.3.0"
+#define LLVM_HOST_TRIPLE "x86_64-apple-darwin14.0.0"
 
 /* Installation directory for include files */
 /* #undef LLVM_INCLUDEDIR */

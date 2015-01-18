@@ -34,4 +34,4 @@ DIAG(note_module_odr_violation_no_possible_decls, CLASS_NOTE, (unsigned)diag::Se
 DIAG(note_module_odr_violation_possible_decl, CLASS_NOTE, (unsigned)diag::Severity::Fatal, "declaration of %0 does not match", 0, SFINAE_Suppress, false, false, 13)
 DIAG(note_pch_rebuild_required, CLASS_NOTE, (unsigned)diag::Severity::Fatal, "please rebuild precompiled header '%0'", 0, SFINAE_Suppress, false, false, 13)
 DIAG(note_pch_required_by, CLASS_NOTE, (unsigned)diag::Severity::Fatal, "'%0' required by '%1'", 0, SFINAE_Suppress, false, false, 13)
-DIAG(warn_module_conflict, CLASS_WARNING, (unsigned)diag::Severity::Warning, "module '%0' conflicts with already-imported module '%1': %2", 283, SFINAE_Suppress, false, false, 13)
+DIAG(warn_module_conflict, CLASS_WARNING, (unsigned)diag::Severity::Warning, "module '%0' conflicts with already-imported module '%1': %2", 284, SFINAE_Suppress, false, false, 13)

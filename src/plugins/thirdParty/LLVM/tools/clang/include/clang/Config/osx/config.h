@@ -24,6 +24,6 @@
 #define CLANG_HAVE_LIBXML 1
 
 /* The LLVM product name and version */
-#define BACKEND_PACKAGE_STRING "LLVM 3.5.0svn"
+#define BACKEND_PACKAGE_STRING "LLVM 3.5.1svn"
 
 #endif

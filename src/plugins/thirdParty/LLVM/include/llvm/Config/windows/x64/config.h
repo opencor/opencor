@@ -7,7 +7,7 @@
 #include "llvm/Config/llvm-config.h"
 
 /* Patch version of the LLVM API */
-/* #undef LLVM_VERSION_PATCH */
+#define LLVM_VERSION_PATCH 1
 
 /* Bug report URL. */
 #define BUG_REPORT_URL "http://llvm.org/bugs/"
@@ -492,13 +492,13 @@
 #define PACKAGE_NAME "LLVM"
 
 /* Define to the full name and version of this package. */
-#define PACKAGE_STRING "LLVM 3.5.0svn"
+#define PACKAGE_STRING "LLVM 3.5.1svn"
 
 /* Define to the one symbol short name of this package. */
 #undef PACKAGE_TARNAME
 
 /* Define to the version of this package. */
-#define PACKAGE_VERSION "3.5.0svn"
+#define PACKAGE_VERSION "3.5.1svn"
 
 /* Define as the return type of signal handlers (`int' or `void'). */
 #define RETSIGTYPE void

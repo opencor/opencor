@@ -99,5 +99,5 @@ DIAG(note_odr_template_parameter_here, CLASS_NOTE, (unsigned)diag::Severity::Fat
 DIAG(note_odr_template_parameter_list, CLASS_NOTE, (unsigned)diag::Severity::Fatal, "template parameter list also declared here", 0, SFINAE_Suppress, false, false, 0)
 DIAG(note_odr_value_here, CLASS_NOTE, (unsigned)diag::Severity::Fatal, "declared here with type %0", 0, SFINAE_Suppress, false, false, 0)
 DIAG(note_odr_virtual_base, CLASS_NOTE, (unsigned)diag::Severity::Fatal, "%select{non-virtual|virtual}0 derivation here", 0, SFINAE_Suppress, false, false, 0)
-DIAG(warn_integer_constant_overflow, CLASS_WARNING, (unsigned)diag::Severity::Warning, "overflow in expression; result is %0 with type %1", 238, SFINAE_Suppress, false, false, 0)
-DIAG(warn_odr_tag_type_inconsistent, CLASS_WARNING, (unsigned)diag::Severity::Warning, "type %0 has incompatible definitions in different translation units", 331, SFINAE_Suppress, false, false, 0)
+DIAG(warn_integer_constant_overflow, CLASS_WARNING, (unsigned)diag::Severity::Warning, "overflow in expression; result is %0 with type %1", 239, SFINAE_Suppress, false, false, 0)
+DIAG(warn_odr_tag_type_inconsistent, CLASS_WARNING, (unsigned)diag::Severity::Warning, "type %0 has incompatible definitions in different translation units", 332, SFINAE_Suppress, false, false, 0)
