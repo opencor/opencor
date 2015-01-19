@@ -74,8 +74,8 @@ int main(int pArgC, char *pArgV[])
         foreach (const QString &testName, testsGroup.value()) {
             QString fullTestName = QString("%1_%2").arg(testsGroup.key(), testName);
 
-            // Go to the directory that contains our plugins, so that we can load them
-            // without any problem
+            // Go to the directory that contains our plugins, so that we can
+            // load them without any problem
 
 #ifdef Q_OS_WIN
             QDir::setCurrent(exePath+"/../plugins/OpenCOR");
