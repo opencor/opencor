@@ -1,0 +1,139 @@
+def model cellml_1_0 as
+    def unit baseunit1 as base unit;
+    def unit baseunit2 as base unit;
+
+    def unit unit1 as
+        unit ampere;
+        unit becquerel;
+        unit candela;
+        unit celsius;
+        unit coulomb;
+        unit dimensionless;
+        unit farad;
+        unit gram;
+        unit gray;
+        unit henry;
+        unit hertz;
+        unit joule;
+        unit katal;
+        unit kelvin;
+        unit kilogram;
+        unit liter;
+        unit litre;
+        unit lumen;
+        unit lux;
+        unit meter;
+        unit metre;
+        unit mole;
+        unit newton;
+        unit ohm;
+        unit pascal;
+        unit radian;
+        unit second;
+        unit siemens;
+        unit sievert;
+        unit steradian;
+        unit tesla;
+        unit volt;
+        unit watt;
+        unit weber;
+    enddef;
+
+    def unit unit2 as
+        unit someunit {pref: milli, expo: -1, mult: 3, off: 7};
+    enddef;
+
+    def unit unit3 as
+        unit someunit {pref: yotta};
+        unit someunit {pref: zetta};
+        unit someunit {pref: exa};
+        unit someunit {pref: peta};
+        unit someunit {pref: tera};
+        unit someunit {pref: giga};
+        unit someunit {pref: mega};
+        unit someunit {pref: kilo};
+        unit someunit {pref: hecto};
+        unit someunit {pref: deka};
+        unit someunit {pref: deci};
+        unit someunit {pref: centi};
+        unit someunit {pref: milli};
+        unit someunit {pref: micro};
+        unit someunit {pref: nano};
+        unit someunit {pref: milli};
+        unit someunit {pref: pico};
+        unit someunit {pref: femto};
+        unit someunit {pref: atto};
+        unit someunit {pref: zepto};
+        unit someunit {pref: yocto};
+    enddef;
+
+    def comp component1 as
+        def unit baseunit1 as base unit;
+        def unit baseunit2 as base unit;
+
+        def unit unit1 as
+            unit ampere;
+            unit becquerel;
+            unit candela;
+            unit celsius;
+            unit coulomb;
+            unit dimensionless;
+            unit farad;
+            unit gram;
+            unit gray;
+            unit henry;
+            unit hertz;
+            unit joule;
+            unit katal;
+            unit kelvin;
+            unit kilogram;
+            unit liter;
+            unit litre;
+            unit lumen;
+            unit lux;
+            unit meter;
+            unit metre;
+            unit mole;
+            unit newton;
+            unit ohm;
+            unit pascal;
+            unit radian;
+            unit second;
+            unit siemens;
+            unit sievert;
+            unit steradian;
+            unit tesla;
+            unit volt;
+            unit watt;
+            unit weber;
+        enddef;
+
+        def unit unit2 as
+            unit someunit {pref: milli, expo: -1, mult: 3, off: 7};
+        enddef;
+
+        def unit unit3 as
+            unit someunit {pref: yotta};
+            unit someunit {pref: zetta};
+            unit someunit {pref: exa};
+            unit someunit {pref: peta};
+            unit someunit {pref: tera};
+            unit someunit {pref: giga};
+            unit someunit {pref: mega};
+            unit someunit {pref: kilo};
+            unit someunit {pref: hecto};
+            unit someunit {pref: deka};
+            unit someunit {pref: deci};
+            unit someunit {pref: centi};
+            unit someunit {pref: milli};
+            unit someunit {pref: micro};
+            unit someunit {pref: nano};
+            unit someunit {pref: milli};
+            unit someunit {pref: pico};
+            unit someunit {pref: femto};
+            unit someunit {pref: atto};
+            unit someunit {pref: zepto};
+            unit someunit {pref: yocto};
+        enddef;
+    enddef;
+enddef;

@@ -360,6 +360,9 @@ bool PrettyCellMLViewCellmlToPrettyCellmlConverter::processComponentNode(const Q
         if (!nodeName.compare("#comment")) {
             if (!processCommentNode(domNode))
                 return false;
+        } else if (!nodeName.compare("units")) {
+            if (!processUnitsNode(domNode))
+                return false;
         } else if (!nodeName.compare("variable")) {
             if (!processVariableNode(domNode))
                 return false;

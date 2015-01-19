@@ -32,30 +32,30 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-void Tests::cellml10Tests()
+void Tests::cellmlCorTests()
 {
-    // Test the conversion of a CellML 1.0 model
+    // Test the conversion of a CellML file that works with COR
 
-    OpenCOR::PrettyCellMLView::PrettyCellMLViewCellmlToPrettyCellmlConverter converter("src/plugins/editing/PrettyCellMLView/tests/data/cellml_1_0.cellml");
+    OpenCOR::PrettyCellMLView::PrettyCellMLViewCellmlToPrettyCellmlConverter converter("src/plugins/editing/PrettyCellMLView/tests/data/cellml_cor.cellml");
 
     QVERIFY(converter.execute());
 
     QCOMPARE(converter.output(),
-             OpenCOR::fileContents("src/plugins/editing/PrettyCellMLView/tests/data/cellml_1_0.out"));
+             OpenCOR::fileContents("src/plugins/editing/PrettyCellMLView/tests/data/cellml_cor.out"));
 }
 
 //==============================================================================
 
-void Tests::cellml11Tests()
+void Tests::cellmlOpencorTests()
 {
-    // Test the conversion of a CellML 1.1 model
+    // Test the conversion of a CellML file that only works with OpenCOR
 
-    OpenCOR::PrettyCellMLView::PrettyCellMLViewCellmlToPrettyCellmlConverter converter("src/plugins/editing/PrettyCellMLView/tests/data/cellml_1_1.cellml");
+    OpenCOR::PrettyCellMLView::PrettyCellMLViewCellmlToPrettyCellmlConverter converter("src/plugins/editing/PrettyCellMLView/tests/data/cellml_opencor.cellml");
 
     QVERIFY(converter.execute());
 
     QCOMPARE(converter.output(),
-             OpenCOR::fileContents("src/plugins/editing/PrettyCellMLView/tests/data/cellml_1_1.out"));
+             OpenCOR::fileContents("src/plugins/editing/PrettyCellMLView/tests/data/cellml_opencor.out"));
 }
 
 //==============================================================================

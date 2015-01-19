@@ -33,8 +33,8 @@ class Tests : public QObject
     Q_OBJECT
 
 private Q_SLOTS:
-    void cellml10Tests();
-    void cellml11Tests();
+    void cellmlCorTests();
+    void cellmlOpencorTests();
 };
 
 //==============================================================================
