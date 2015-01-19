@@ -93,6 +93,10 @@ void Tests::cliCellmlExportTests()
     QCOMPARE(OpenCOR::fileContents(outFileName),
              OpenCOR::fileContents("src/plugins/miscellaneous/CellMLTools/tests/data/user_defined_format_export_on_non_windows.out"));
 #endif
+
+    // Delete the output file we generated
+
+    QFile::remove(outFileName);
 }
 
 //==============================================================================
