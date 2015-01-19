@@ -82,7 +82,7 @@ QString runCli(const QStringList pArguments)
     while (process.waitForReadyRead())
         output += process.readAll();
 
-    return output.replace("\r", "");
+    return output.remove("\r");
 }
 
 //==============================================================================
