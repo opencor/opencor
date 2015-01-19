@@ -47,9 +47,10 @@ int main(int pArgC, char *pArgV[])
 
     TestsGroups testsGroups;
 
-    testsGroups["CellMLTools"] = QStringList() << "tests";
-    testsGroups["Compiler"]    = QStringList() << "tests";
-    testsGroups["Core"]        = QStringList() << "tests";
+    testsGroups["CellMLTools"]      = QStringList() << "tests";
+    testsGroups["Compiler"]         = QStringList() << "tests";
+    testsGroups["Core"]             = QStringList() << "tests";
+    testsGroups["PrettyCellMLView"] = QStringList() << "tests";
 
     // Run the different tests
 
