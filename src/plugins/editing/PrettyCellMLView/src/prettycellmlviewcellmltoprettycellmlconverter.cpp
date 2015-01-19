@@ -217,7 +217,10 @@ bool PrettyCellMLViewCellmlToPrettyCellmlConverter::processCommentNode(const QDo
 {
     // Process the given comment node
 
-    QStringList commentLines = pDomNode.nodeValue().split(Core::eolString());
+    QStringList commentLines = pDomNode.nodeValue().replace("\r\n", "\n").split("\n");
+    // Note: we don't know which end of line string used by the file uses, so
+    //       the above code ensures that we can handle both cases, i.e. "\r\n"
+    //       on Windows and "\n" on Linux and OS X...
 
     if (   (mLastOutputType == EndDef) || (mLastOutputType == Comment)
         || (mLastOutputType == Unit) || (mLastOutputType == Var))
