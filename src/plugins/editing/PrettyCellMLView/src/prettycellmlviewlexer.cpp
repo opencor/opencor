@@ -190,7 +190,7 @@ void PrettyCellmlViewLexer::styleText(int pStart, int pEnd)
 
     delete[] data;
 
-    if (text.isEmpty())
+    if (text.trimmed().isEmpty())
         return;
 
     // Effectively style our text
