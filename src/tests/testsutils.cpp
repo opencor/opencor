@@ -60,11 +60,11 @@ QString runCli(const QStringList pArguments)
     // and return the output it has generated, if any
 
 #if defined(Q_OS_WIN)
-    QString program = "bin/OpenCOR.com";
+    QString program = "build/bin/OpenCOR.com";
 #elif defined(Q_OS_LINUX)
-    QString program = "bin/OpenCOR";
+    QString program = "build/bin/OpenCOR";
 #elif defined(Q_OS_MAC)
-    QString program = "OpenCOR.app/Contents/MacOS/OpenCOR";
+    QString program = "build/OpenCOR.app/Contents/MacOS/OpenCOR";
 #else
     #error Unsupported platform
 #endif

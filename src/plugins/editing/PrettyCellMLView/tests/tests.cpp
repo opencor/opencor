@@ -36,12 +36,12 @@ void Tests::cellml10Tests()
 {
     // Test the conversion of a CellML 1.0 model
 
-    OpenCOR::PrettyCellMLView::PrettyCellMLViewCellmlToPrettyCellmlConverter converter("../src/plugins/editing/PrettyCellMLView/tests/data/cellml_1_0.cellml");
+    OpenCOR::PrettyCellMLView::PrettyCellMLViewCellmlToPrettyCellmlConverter converter("src/plugins/editing/PrettyCellMLView/tests/data/cellml_1_0.cellml");
 
     QVERIFY(converter.execute());
 
     QCOMPARE(converter.output(),
-             OpenCOR::fileContents("../src/plugins/editing/PrettyCellMLView/tests/data/cellml_1_0.out"));
+             OpenCOR::fileContents("src/plugins/editing/PrettyCellMLView/tests/data/cellml_1_0.out"));
 }
 
 //==============================================================================
@@ -50,12 +50,12 @@ void Tests::cellml11Tests()
 {
     // Test the conversion of a CellML 1.1 model
 
-    OpenCOR::PrettyCellMLView::PrettyCellMLViewCellmlToPrettyCellmlConverter converter("../src/plugins/editing/PrettyCellMLView/tests/data/cellml_1_1.cellml");
+    OpenCOR::PrettyCellMLView::PrettyCellMLViewCellmlToPrettyCellmlConverter converter("src/plugins/editing/PrettyCellMLView/tests/data/cellml_1_1.cellml");
 
     QVERIFY(converter.execute());
 
     QCOMPARE(converter.output(),
-             OpenCOR::fileContents("../src/plugins/editing/PrettyCellMLView/tests/data/cellml_1_1.out"));
+             OpenCOR::fileContents("src/plugins/editing/PrettyCellMLView/tests/data/cellml_1_1.out"));
 }
 
 //==============================================================================
