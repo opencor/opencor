@@ -449,6 +449,19 @@ bool PrettyCellMLViewCellmlToPrettyCellmlConverter::processGroupNode(const QDomN
     // Process the given group node's children
 
 //---GRY--- TO BE DONE...
+    QString nodeName;
+
+    for (QDomNode domNode = pDomNode.firstChild();
+         !domNode.isNull(); domNode = domNode.nextSibling()) {
+        nodeName = domNode.nodeName();
+
+        if (!nodeName.compare("#comment")) {
+            if (!processCommentNode(domNode))
+                return false;
+        } else if (!processUnknownNode(domNode)) {
+            return false;
+        }
+    }
 
     // Finish processing the given group node
 

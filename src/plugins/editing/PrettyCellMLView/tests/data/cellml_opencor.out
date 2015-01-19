@@ -1,2 +1,19 @@
 def model cellml_1_1{cellml_1_1} as
+    // A comment can fit on one line...
+
+    // A comment can also fit
+    // on one, two or even
+    // more lines...
+
+    def unit unitx as
+        // Comments can be within a unit definition...
+    enddef;
+
+    def comp componentx as
+        // Comments can be within a component definition...
+    enddef;
+
+    def group as
+        // Comments can be within a group definition...
+    enddef;
 enddef;

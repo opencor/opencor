@@ -1,3 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <model name="cellml_1_1" cmeta:id="cellml_1_1" xmlns="http://www.cellml.org/cellml/1.1#" xmlns:cellml="http://www.cellml.org/cellml/1.1#" xmlns:cmeta="http://www.cellml.org/metadata/1.0#">
+    <!--A comment can fit on one line...-->
+    <!--A comment can also fit
+on one, two or even
+more lines...-->
+    <units name="unitx">
+        <!--Comments can be within a unit definition...-->
+    </units>
+    <component name="componentx">
+        <!--Comments can be within a component definition...-->
+    </component>
+    <group>
+        <!--Comments can be within a group definition...-->
+    </group>
 </model>
