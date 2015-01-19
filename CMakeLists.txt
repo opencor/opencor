@@ -179,13 +179,13 @@ IF(ENABLE_TESTS)
         Qt5::Core
     )
 
-    # Move our main test program to our tests directory
+    # Copy our main test program to our tests directory
 
     SET(MAIN_TEST_FILENAME ${RUNTESTS_NAME}${CMAKE_EXECUTABLE_SUFFIX})
 
     ADD_CUSTOM_COMMAND(TARGET ${RUNTESTS_NAME} POST_BUILD
-                       COMMAND ${CMAKE_COMMAND} -E rename ${PROJECT_BINARY_DIR}/${MAIN_TEST_FILENAME}
-                                                          ${DEST_TESTS_DIR}/${MAIN_TEST_FILENAME})
+                       COMMAND ${CMAKE_COMMAND} -E copy ${PROJECT_BINARY_DIR}/${MAIN_TEST_FILENAME}
+                                                        ${DEST_TESTS_DIR}/${MAIN_TEST_FILENAME})
 
     # Clean up our test program, but only if we are on OS X
 
