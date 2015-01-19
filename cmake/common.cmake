@@ -661,14 +661,14 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
                     ENDFOREACH()
                 ENDIF()
 
-                # Copy the test to our tests directory
+                # Move the test to our tests directory
                 # Note: DEST_TESTS_DIR is defined in our main CMake file...
 
                 SET(TEST_FILENAME ${TEST_NAME}${CMAKE_EXECUTABLE_SUFFIX})
 
                 ADD_CUSTOM_COMMAND(TARGET ${TEST_NAME} POST_BUILD
-                                   COMMAND ${CMAKE_COMMAND} -E copy ${PROJECT_BINARY_DIR}/${TEST_FILENAME}
-                                                                    ${DEST_TESTS_DIR}/${TEST_FILENAME})
+                                   COMMAND ${CMAKE_COMMAND} -E rename ${PROJECT_BINARY_DIR}/${TEST_FILENAME}
+                                                                      ${DEST_TESTS_DIR}/${TEST_FILENAME})
 
                 # A few OS X specific things
 
