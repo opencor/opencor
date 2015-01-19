@@ -1,6 +1,7 @@
 def model cellml_1_0 as
     def unit baseunit1 as base unit;
     def unit baseunit2 as base unit;
+    def unit baseunit3 as base unit;
 
     def unit unit1 as
         unit ampere;
@@ -70,6 +71,7 @@ def model cellml_1_0 as
     def comp component1 as
         def unit baseunit1 as base unit;
         def unit baseunit2 as base unit;
+        def unit baseunit3 as base unit;
 
         def unit unit1 as
             unit ampere;
@@ -135,5 +137,11 @@ def model cellml_1_0 as
             unit someunit {pref: zepto};
             unit someunit {pref: yocto};
         enddef;
+
+        var variable1: unit1;
+        var variable2: unit2 {init: 123};
+        var variable3: unit3 {pub: in};
+        var variable4: unit4 {priv: out};
+        var variable5: unit5 {pub: none, priv: none};
     enddef;
 enddef;

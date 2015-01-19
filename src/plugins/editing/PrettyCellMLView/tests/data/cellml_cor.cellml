@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <model name="cellml_1_0" xmlns="http://www.cellml.org/cellml/1.0#" xmlns:cellml="http://www.cellml.org/cellml/1.0#" xmlns:cmeta="http://www.cellml.org/metadata/1.0#">
-    <units name="baseunit1" base_units="yes"/>
-    <units name="baseunit2" base_units="yes"/>
+    <units base_units="yes" name="baseunit1"/>
+    <units base_units="yes" name="baseunit2"/>
+    <units base_units="yes" name="baseunit3"/>
     <units name="unit1">
         <unit units="ampere"/>
         <unit units="becquerel"/>
@@ -39,34 +40,35 @@
         <unit units="weber"/>
     </units>
     <units name="unit2">
-        <unit units="someunit" prefix="milli" exponent="-1" multiplier="3" offset="7"/>
+        <unit exponent="-1" multiplier="3" offset="7" prefix="milli" units="someunit"/>
     </units>
     <units name="unit3">
-        <unit units="someunit" prefix="yotta"/>
-        <unit units="someunit" prefix="zetta"/>
-        <unit units="someunit" prefix="exa"/>
-        <unit units="someunit" prefix="peta"/>
-        <unit units="someunit" prefix="tera"/>
-        <unit units="someunit" prefix="giga"/>
-        <unit units="someunit" prefix="mega"/>
-        <unit units="someunit" prefix="kilo"/>
-        <unit units="someunit" prefix="hecto"/>
-        <unit units="someunit" prefix="deka"/>
-        <unit units="someunit" prefix="deci"/>
-        <unit units="someunit" prefix="centi"/>
-        <unit units="someunit" prefix="milli"/>
-        <unit units="someunit" prefix="micro"/>
-        <unit units="someunit" prefix="nano"/>
-        <unit units="someunit" prefix="milli"/>
-        <unit units="someunit" prefix="pico"/>
-        <unit units="someunit" prefix="femto"/>
-        <unit units="someunit" prefix="atto"/>
-        <unit units="someunit" prefix="zepto"/>
-        <unit units="someunit" prefix="yocto"/>
+        <unit prefix="yotta" units="someunit"/>
+        <unit prefix="zetta" units="someunit"/>
+        <unit prefix="exa" units="someunit"/>
+        <unit prefix="peta" units="someunit"/>
+        <unit prefix="tera" units="someunit"/>
+        <unit prefix="giga" units="someunit"/>
+        <unit prefix="mega" units="someunit"/>
+        <unit prefix="kilo" units="someunit"/>
+        <unit prefix="hecto" units="someunit"/>
+        <unit prefix="deka" units="someunit"/>
+        <unit prefix="deci" units="someunit"/>
+        <unit prefix="centi" units="someunit"/>
+        <unit prefix="milli" units="someunit"/>
+        <unit prefix="micro" units="someunit"/>
+        <unit prefix="nano" units="someunit"/>
+        <unit prefix="milli" units="someunit"/>
+        <unit prefix="pico" units="someunit"/>
+        <unit prefix="femto" units="someunit"/>
+        <unit prefix="atto" units="someunit"/>
+        <unit prefix="zepto" units="someunit"/>
+        <unit prefix="yocto" units="someunit"/>
     </units>
     <component name="component1">
-        <units name="baseunit1" base_units="yes"/>
-        <units name="baseunit2" base_units="yes"/>
+        <units base_units="yes" name="baseunit1"/>
+        <units base_units="yes" name="baseunit2"/>
+        <units base_units="yes" name="baseunit3"/>
         <units name="unit1">
             <unit units="ampere"/>
             <unit units="becquerel"/>
@@ -104,30 +106,35 @@
             <unit units="weber"/>
         </units>
         <units name="unit2">
-            <unit units="someunit" prefix="milli" exponent="-1" multiplier="3" offset="7"/>
+            <unit exponent="-1" multiplier="3" offset="7" prefix="milli" units="someunit"/>
         </units>
         <units name="unit3">
-            <unit units="someunit" prefix="yotta"/>
-            <unit units="someunit" prefix="zetta"/>
-            <unit units="someunit" prefix="exa"/>
-            <unit units="someunit" prefix="peta"/>
-            <unit units="someunit" prefix="tera"/>
-            <unit units="someunit" prefix="giga"/>
-            <unit units="someunit" prefix="mega"/>
-            <unit units="someunit" prefix="kilo"/>
-            <unit units="someunit" prefix="hecto"/>
-            <unit units="someunit" prefix="deka"/>
-            <unit units="someunit" prefix="deci"/>
-            <unit units="someunit" prefix="centi"/>
-            <unit units="someunit" prefix="milli"/>
-            <unit units="someunit" prefix="micro"/>
-            <unit units="someunit" prefix="nano"/>
-            <unit units="someunit" prefix="milli"/>
-            <unit units="someunit" prefix="pico"/>
-            <unit units="someunit" prefix="femto"/>
-            <unit units="someunit" prefix="atto"/>
-            <unit units="someunit" prefix="zepto"/>
-            <unit units="someunit" prefix="yocto"/>
+            <unit prefix="yotta" units="someunit"/>
+            <unit prefix="zetta" units="someunit"/>
+            <unit prefix="exa" units="someunit"/>
+            <unit prefix="peta" units="someunit"/>
+            <unit prefix="tera" units="someunit"/>
+            <unit prefix="giga" units="someunit"/>
+            <unit prefix="mega" units="someunit"/>
+            <unit prefix="kilo" units="someunit"/>
+            <unit prefix="hecto" units="someunit"/>
+            <unit prefix="deka" units="someunit"/>
+            <unit prefix="deci" units="someunit"/>
+            <unit prefix="centi" units="someunit"/>
+            <unit prefix="milli" units="someunit"/>
+            <unit prefix="micro" units="someunit"/>
+            <unit prefix="nano" units="someunit"/>
+            <unit prefix="milli" units="someunit"/>
+            <unit prefix="pico" units="someunit"/>
+            <unit prefix="femto" units="someunit"/>
+            <unit prefix="atto" units="someunit"/>
+            <unit prefix="zepto" units="someunit"/>
+            <unit prefix="yocto" units="someunit"/>
         </units>
+        <variable name="variable1" units="unit1"/>
+        <variable initial_value="123" name="variable2" units="unit2"/>
+        <variable name="variable3" public_interface="in" units="unit3"/>
+        <variable name="variable4" private_interface="out" units="unit4"/>
+        <variable name="variable5" public_interface="none" private_interface="none" units="unit5"/>
     </component>
 </model>

@@ -218,13 +218,15 @@ bool PrettyCellMLViewCellmlToPrettyCellmlConverter::processCommentNode(const QDo
     // Process the given comment node
 
     QStringList commentLines = pDomNode.nodeValue().remove("\r").split("\n");
-    // Note: we don't know which end of line string used by the file uses, so
-    //       the above code ensures that we can handle both cases, i.e. "\r\n"
-    //       on Windows and "\n" on Linux and OS X...
+    // Note: we don't know which end of line string is used by the file uses, so
+    //       the above code ensures that we can handle both "\r\n" on Windows
+    //       and "\n" on Linux / OS X...
 
-    if (   (mLastOutputType == EndDef) || (mLastOutputType == Comment)
-        || (mLastOutputType == Unit) || (mLastOutputType == Var))
+    if (   (mLastOutputType == Comment)
+        || (mLastOutputType == DefBaseUnit) || (mLastOutputType == EndDef)
+        || (mLastOutputType == Unit) || (mLastOutputType == Var)) {
         outputString();
+    }
 
     foreach (const QString commentLine, commentLines)
         outputString(Comment, QString("// %1").arg(commentLine));
@@ -408,8 +410,10 @@ bool PrettyCellMLViewCellmlToPrettyCellmlConverter::processVariableNode(const QD
         parameters += "priv: "+pDomNode.attributes().namedItem("private_interface").nodeValue();
     }
 
-    if (mLastOutputType == Comment)
+    if (   (mLastOutputType == Comment)
+        || (mLastOutputType == DefBaseUnit) || (mLastOutputType == EndDef)) {
         outputString();
+    }
 
     outputString(Var,
                  QString("var %1%2: %3%4;").arg(pDomNode.attributes().namedItem("name").nodeValue())
