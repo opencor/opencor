@@ -727,9 +727,7 @@ void SingleCellViewSimulationResults::addPoint(const double &pPoint)
 {
     // Add the data to our data store
 
-    mDataStore->setValues(mSize, pPoint);
-
-    ++mSize;
+    mDataStore->setValues(mSize++, pPoint);
 }
 
 //==============================================================================
