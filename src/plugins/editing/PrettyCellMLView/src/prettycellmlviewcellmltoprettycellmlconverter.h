@@ -60,6 +60,7 @@ private:
         DefComp,
         Var,
         DefGroup,
+        DefMap,
         EndDef
     };
 
@@ -85,12 +86,16 @@ private:
 
     bool processModelNode(const QDomNode &pDomNode);
     bool processCommentNode(const QDomNode &pDomNode);
-    bool processUnitsNode(const QDomNode &pDomNode);
+    bool processRdfNode(const QDomNode &pDomNode);
+    bool processImportNode(const QDomNode &pDomNode);
+    bool processUnitsNode(const QDomNode &pDomNode,
+                          const bool &pInImportNode = false);
     bool processUnitNode(const QDomNode &pDomNode);
     bool processComponentNode(const QDomNode &pDomNode);
     bool processVariableNode(const QDomNode &pDomNode);
     bool processMathNode(const QDomNode &pDomNode);
     bool processGroupNode(const QDomNode &pDomNode);
+    bool processConnectionNode(const QDomNode &pDomNode);
     bool processUnknownNode(const QDomNode &pDomNode);
 };
 

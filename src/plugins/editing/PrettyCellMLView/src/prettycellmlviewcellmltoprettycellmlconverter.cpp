@@ -188,6 +188,12 @@ bool PrettyCellMLViewCellmlToPrettyCellmlConverter::processModelNode(const QDomN
         if (!nodeName.compare("#comment")) {
             if (!processCommentNode(domNode))
                 return false;
+        } else if (!nodeName.compare("rdf:RDF")) {
+            if (!processRdfNode(domNode))
+                return false;
+        } else if (!nodeName.compare("import")) {
+            if (!processImportNode(domNode))
+                return false;
         } else if (!nodeName.compare("units")) {
             if (!processUnitsNode(domNode))
                 return false;
@@ -196,6 +202,9 @@ bool PrettyCellMLViewCellmlToPrettyCellmlConverter::processModelNode(const QDomN
                 return false;
         } else if (!nodeName.compare("group")) {
             if (!processGroupNode(domNode))
+                return false;
+        } else if (!nodeName.compare("connection")) {
+            if (!processConnectionNode(domNode))
                 return false;
         } else if (!processUnknownNode(domNode)) {
             return false;
@@ -236,7 +245,34 @@ bool PrettyCellMLViewCellmlToPrettyCellmlConverter::processCommentNode(const QDo
 
 //==============================================================================
 
-bool PrettyCellMLViewCellmlToPrettyCellmlConverter::processUnitsNode(const QDomNode &pDomNode)
+bool PrettyCellMLViewCellmlToPrettyCellmlConverter::processRdfNode(const QDomNode &pDomNode)
+{
+    // Process the given RDF node
+
+//---GRY--- TO BE DONE...
+Q_UNUSED(pDomNode);
+qWarning("RDF node: not yet implemented...");
+
+    return true;
+}
+
+//==============================================================================
+
+bool PrettyCellMLViewCellmlToPrettyCellmlConverter::processImportNode(const QDomNode &pDomNode)
+{
+    // Process the given import node
+
+//---GRY--- TO BE DONE...
+Q_UNUSED(pDomNode);
+qWarning("Import node: not yet implemented...");
+
+    return true;
+}
+
+//==============================================================================
+
+bool PrettyCellMLViewCellmlToPrettyCellmlConverter::processUnitsNode(const QDomNode &pDomNode,
+                                                                     const bool &pInImportNode)
 {
     // Start processing the given units node
 
@@ -275,7 +311,11 @@ bool PrettyCellMLViewCellmlToPrettyCellmlConverter::processUnitsNode(const QDomN
             if (!nodeName.compare("#comment")) {
                 if (!processCommentNode(domNode))
                     return false;
-            } else if (!nodeName.compare("unit")) {
+            } else if (!nodeName.compare("rdf:RDF")) {
+                if (!processRdfNode(domNode))
+                    return false;
+            } else if (   !isBaseUnits && !pInImportNode
+                       && !nodeName.compare("unit")) {
                 if (!processUnitNode(domNode))
                     return false;
             } else if (!processUnknownNode(domNode)) {
@@ -297,6 +337,32 @@ bool PrettyCellMLViewCellmlToPrettyCellmlConverter::processUnitsNode(const QDomN
 
 bool PrettyCellMLViewCellmlToPrettyCellmlConverter::processUnitNode(const QDomNode &pDomNode)
 {
+    // Process the given unit node's children
+    // Note #1: unlike for most nodes, we process the node's children before
+    //          processing the node itself since it only outputs one line, so
+    //          it's not like we can put a comment within a def...enddef;
+    //          statement...
+    // Note #2: when parsed back, comments will not be in the unit node anymore,
+    //          but its parent one since we don't have a def...enddef;
+    //          statement...
+
+    QString nodeName;
+
+    for (QDomNode domNode = pDomNode.firstChild();
+         !domNode.isNull(); domNode = domNode.nextSibling()) {
+        nodeName = domNode.nodeName();
+
+        if (!nodeName.compare("#comment")) {
+            if (!processCommentNode(domNode))
+                return false;
+        } else if (!nodeName.compare("rdf:RDF")) {
+            if (!processRdfNode(domNode))
+                return false;
+        } else if (!processUnknownNode(domNode)) {
+            return false;
+        }
+    }
+
     // Process the given unit node
 
     QString parameters = QString();
@@ -362,6 +428,9 @@ bool PrettyCellMLViewCellmlToPrettyCellmlConverter::processComponentNode(const Q
         if (!nodeName.compare("#comment")) {
             if (!processCommentNode(domNode))
                 return false;
+        } else if (!nodeName.compare("rdf:RDF")) {
+            if (!processRdfNode(domNode))
+                return false;
         } else if (!nodeName.compare("units")) {
             if (!processUnitsNode(domNode))
                 return false;
@@ -389,6 +458,32 @@ bool PrettyCellMLViewCellmlToPrettyCellmlConverter::processComponentNode(const Q
 
 bool PrettyCellMLViewCellmlToPrettyCellmlConverter::processVariableNode(const QDomNode &pDomNode)
 {
+    // Process the given variable node's children
+    // Note #1: unlike for most nodes, we process the node's children before
+    //          processing the node itself since it only outputs one line, so
+    //          it's not like we can put a comment within a def...enddef;
+    //          statement...
+    // Note #2: when parsed back, comments will not be in the variable node
+    //          anymore, but its parent one since we don't have a def...enddef;
+    //          statement...
+
+    QString nodeName;
+
+    for (QDomNode domNode = pDomNode.firstChild();
+         !domNode.isNull(); domNode = domNode.nextSibling()) {
+        nodeName = domNode.nodeName();
+
+        if (!nodeName.compare("#comment")) {
+            if (!processCommentNode(domNode))
+                return false;
+        } else if (!nodeName.compare("rdf:RDF")) {
+            if (!processRdfNode(domNode))
+                return false;
+        } else if (!processUnknownNode(domNode)) {
+            return false;
+        }
+    }
+
     // Process the given variable node
 
     QString parameters = QString();
@@ -432,7 +527,7 @@ bool PrettyCellMLViewCellmlToPrettyCellmlConverter::processMathNode(const QDomNo
 
 //---GRY--- TO BE DONE...
 Q_UNUSED(pDomNode);
-    qWarning("Math node: not yet implemented...");
+qWarning("Math node: not yet implemented...");
 
     return true;
 }
@@ -441,6 +536,8 @@ Q_UNUSED(pDomNode);
 
 bool PrettyCellMLViewCellmlToPrettyCellmlConverter::processGroupNode(const QDomNode &pDomNode)
 {
+//---GRY--- TO BE DONE...
+qWarning("Group node: not yet fully implemented...");
     // Start processing the given group node
 
     if (mLastOutputType == EndDef)
@@ -452,7 +549,6 @@ bool PrettyCellMLViewCellmlToPrettyCellmlConverter::processGroupNode(const QDomN
 
     // Process the given group node's children
 
-//---GRY--- TO BE DONE...
     QString nodeName;
 
     for (QDomNode domNode = pDomNode.firstChild();
@@ -461,6 +557,52 @@ bool PrettyCellMLViewCellmlToPrettyCellmlConverter::processGroupNode(const QDomN
 
         if (!nodeName.compare("#comment")) {
             if (!processCommentNode(domNode))
+                return false;
+        } else if (!nodeName.compare("rdf:RDF")) {
+            if (!processRdfNode(domNode))
+                return false;
+        } else if (!processUnknownNode(domNode)) {
+            return false;
+        }
+    }
+
+    // Finish processing the given group node
+
+    unindent();
+
+    outputString(EndDef, "enddef;");
+
+    return true;
+}
+
+//==============================================================================
+
+bool PrettyCellMLViewCellmlToPrettyCellmlConverter::processConnectionNode(const QDomNode &pDomNode)
+{
+//---GRY--- TO BE DONE...
+qWarning("Connection node: not yet fully implemented...");
+    // Start processing the given connection node
+
+    if (mLastOutputType == EndDef)
+        outputString();
+
+    outputString(DefMap, "def map");
+
+    indent();
+
+    // Process the given connection node's children
+
+    QString nodeName;
+
+    for (QDomNode domNode = pDomNode.firstChild();
+         !domNode.isNull(); domNode = domNode.nextSibling()) {
+        nodeName = domNode.nodeName();
+
+        if (!nodeName.compare("#comment")) {
+            if (!processCommentNode(domNode))
+                return false;
+        } else if (!nodeName.compare("rdf:RDF")) {
+            if (!processRdfNode(domNode))
                 return false;
         } else if (!processUnknownNode(domNode)) {
             return false;
