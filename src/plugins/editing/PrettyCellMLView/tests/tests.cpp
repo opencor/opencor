@@ -35,6 +35,8 @@ specific language governing permissions and limitations under the License.
 void Tests::cellmlCorTests()
 {
     // Test the conversion of a CellML file that works with COR
+qDebug(">>> cellmlCorTests() | QDir::curentPath() [%s]", qPrintable(QDir::currentPath()));
+qDebug(">>> cellmlCorTests() | cellml_cor.cellml  [%s]", qPrintable(OpenCOR::fileName("src/plugins/editing/PrettyCellMLView/tests/data/cellml_cor.cellml")));
 
     OpenCOR::PrettyCellMLView::PrettyCellMLViewCellmlToPrettyCellmlConverter converter(OpenCOR::fileName("src/plugins/editing/PrettyCellMLView/tests/data/cellml_cor.cellml"));
 
