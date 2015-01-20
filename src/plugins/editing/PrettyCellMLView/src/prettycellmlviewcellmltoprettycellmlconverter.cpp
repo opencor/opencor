@@ -141,9 +141,9 @@ void PrettyCellMLViewCellmlToPrettyCellmlConverter::outputString(const OutputTyp
 
     if (pString.isEmpty()) {
         if (mLastOutputType != EmptyLine)
-            mOutput += Core::eolString();
+            mOutput += "\n";
     } else {
-        mOutput += mIndent+pString+Core::eolString();
+        mOutput += mIndent+pString+"\n";
     }
 
     mLastOutputType = pOutputType;

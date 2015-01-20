@@ -36,12 +36,12 @@ void Tests::cellmlCorTests()
 {
     // Test the conversion of a CellML file that works with COR
 
-    OpenCOR::PrettyCellMLView::PrettyCellMLViewCellmlToPrettyCellmlConverter converter("src/plugins/editing/PrettyCellMLView/tests/data/cellml_cor.cellml");
+    OpenCOR::PrettyCellMLView::PrettyCellMLViewCellmlToPrettyCellmlConverter converter(OpenCOR::fileName("src/plugins/editing/PrettyCellMLView/tests/data/cellml_cor.cellml"));
 
     QVERIFY(converter.execute());
 
     QCOMPARE(converter.output(),
-             OpenCOR::fileContents("src/plugins/editing/PrettyCellMLView/tests/data/cellml_cor.out"));
+             OpenCOR::fileContents(OpenCOR::fileName("src/plugins/editing/PrettyCellMLView/tests/data/cellml_cor.out")));
 }
 
 //==============================================================================
@@ -50,12 +50,12 @@ void Tests::cellmlOpencorTests()
 {
     // Test the conversion of a CellML file that only works with OpenCOR
 
-    OpenCOR::PrettyCellMLView::PrettyCellMLViewCellmlToPrettyCellmlConverter converter("src/plugins/editing/PrettyCellMLView/tests/data/cellml_opencor.cellml");
+    OpenCOR::PrettyCellMLView::PrettyCellMLViewCellmlToPrettyCellmlConverter converter(OpenCOR::fileName("src/plugins/editing/PrettyCellMLView/tests/data/cellml_opencor.cellml"));
 
     QVERIFY(converter.execute());
 
     QCOMPARE(converter.output(),
-             OpenCOR::fileContents("src/plugins/editing/PrettyCellMLView/tests/data/cellml_opencor.out"));
+             OpenCOR::fileContents(OpenCOR::fileName("src/plugins/editing/PrettyCellMLView/tests/data/cellml_opencor.out")));
 }
 
 //==============================================================================

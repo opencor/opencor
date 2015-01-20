@@ -33,6 +33,38 @@ namespace OpenCOR {
 
 //==============================================================================
 
+QString fileName(const QString &pFileName)
+{
+    // Format and return the given file name, so that it can be used on all our
+    // supported platforms
+
+#if defined(Q_OS_WIN)
+    return "..\\..\\..\\"+QString(pFileName).replace("/", "\\");
+#elif defined(Q_OS_LINUX) || defined(Q_OS_MAC)
+    return pFileName;
+#else
+    #error Unsupported platform
+#endif
+}
+
+//==============================================================================
+
+QString cliFileName(const QString &pFileName)
+{
+    // Format and return the given file name, so that it can be used on all our
+    // supported platforms through the CLI version of OpenCOR
+
+#if defined(Q_OS_WIN)
+    return "..\\..\\"+QString(pFileName).replace("/", "\\");
+#elif defined(Q_OS_LINUX) || defined(Q_OS_MAC)
+    return pFileName;
+#else
+    #error Unsupported platform
+#endif
+}
+
+//==============================================================================
+
 QString fileContents(const QString &pFileName)
 {
     // Read and return the contents of the given file
@@ -56,11 +88,20 @@ QString fileContents(const QString &pFileName)
 
 QString runCli(const QStringList pArguments)
 {
+    // Go to the directory where our tests are located
+    // Note: see main()...
+
+#ifdef Q_OS_WIN
+    QString currentPath = QDir::currentPath();
+
+    QDir::setCurrent(currentPath+"/../../bin");
+#endif
+
     // Execute the CLI version of OpenCOR (passing to it the given arguments)
     // and return the output it has generated, if any
 
 #if defined(Q_OS_WIN)
-    QString program = "build/bin/OpenCOR.com";
+    QString program = "OpenCOR.com";
 #elif defined(Q_OS_LINUX)
     QString program = "build/bin/OpenCOR";
 #elif defined(Q_OS_MAC)
@@ -81,6 +122,12 @@ QString runCli(const QStringList pArguments)
 
     while (process.waitForReadyRead())
         output += process.readAll();
+
+    // Go back to our original directory
+
+#ifdef Q_OS_WIN
+    QDir::setCurrent(currentPath);
+#endif
 
     return output.remove("\r");
 }
