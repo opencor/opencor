@@ -99,6 +99,11 @@ void initPluginsPath(const QString &pAppFileName)
 
 void initApplication(QCoreApplication *pApp, QString *pAppDate)
 {
+    // Remove all 'global' instances, in case OpenCOR previously crashed or
+    // something (and therefore didn't remove all of them before quitting)
+
+    OpenCOR::removeGlobalInstances();
+
     // Set the name of the application
 
     pApp->setApplicationName(QFileInfo(pApp->applicationFilePath()).baseName());

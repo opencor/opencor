@@ -47,11 +47,6 @@ specific language governing permissions and limitations under the License.
 
 int main(int pArgC, char *pArgV[])
 {
-    // Remove all 'global' instances, in case OpenCOR previously crashed or
-    // something (and therefore didn't remove all of them before quitting)
-
-    OpenCOR::removeGlobalInstances();
-
     // Determine whether we should try the CLI version of OpenCOR:
     //  - Windows: we never try the CLI version of OpenCOR. We go straight for
     //             its GUI version.
@@ -111,16 +106,14 @@ int main(int pArgC, char *pArgV[])
 
         bool runCliApplication = OpenCOR::cliApplication(cliApp, &res);
 
+        OpenCOR::removeGlobalInstances();
+
         delete cliApp;
 
-        if (runCliApplication) {
-            // OpenCOR was run as a CLI application, so remove all our global
-            // instances and leave
-
-            OpenCOR::removeGlobalInstances();
+        if (runCliApplication)
+            // OpenCOR was run as a CLI application, so leave
 
             return res;
-        }
 
         // Note: at this stage, we tried the CLI version of OpenCOR, but in the
         //       end we need to go for its GUI version, so start over but with
@@ -143,12 +136,34 @@ int main(int pArgC, char *pArgV[])
 
     OpenCOR::initPluginsPath(pArgV[0]);
 
-    // Create and initialise the GUI version of OpenCOR
-    // Note: if we tried the CLI version of OpenCOR before, then it won't have
-    //       done anything, so no need to re-remove all 'global' instances...
+    // Create the GUI version of OpenCOR
 
     SharedTools::QtSingleApplication *guiApp = new SharedTools::QtSingleApplication(QFileInfo(pArgV[0]).baseName(),
                                                                                     pArgC, pArgV);
+
+    // Send a message (containing the arguments that were passed to this
+    // instance of OpenCOR minus the first one since it corresponds to the full
+    // path to our executable, which we are not interested in) to our 'official'
+    // instance of OpenCOR, should there be one. If there is no none, then just
+    // carry on as normal, otherwise exit since we want only one instance of
+    // OpenCOR at any given time
+
+    QStringList appArguments = guiApp->arguments();
+
+    appArguments.removeFirst();
+
+    QString arguments = appArguments.join("|");
+
+    if (guiApp->isRunning()) {
+        guiApp->sendMessage(arguments);
+
+        delete guiApp;
+
+        return 0;
+    }
+
+    // Initialise the GUI version of OpenCOR
+
     QString appDate = QString();
 
     OpenCOR::initApplication(guiApp, &appDate);
@@ -230,27 +245,6 @@ int main(int pArgC, char *pArgV[])
     guiApp->processEvents();
     // Note: this ensures that our splash screen is immediately visible...
 #endif
-
-    // Send a message (containing the arguments that were passed to this
-    // instance of OpenCOR minus the first one since it corresponds to the full
-    // path to our executable, which we are not interested in) to our 'official'
-    // instance of OpenCOR, should there be one. If there is no none, then just
-    // carry on as normal, otherwise exit since we want only one instance of
-    // OpenCOR at any given time
-
-    QStringList appArguments = guiApp->arguments();
-
-    appArguments.removeFirst();
-
-    QString arguments = appArguments.join("|");
-
-    if (guiApp->isRunning()) {
-        guiApp->sendMessage(arguments);
-
-        delete guiApp;
-
-        return 0;
-    }
 
     // Create our main window
 

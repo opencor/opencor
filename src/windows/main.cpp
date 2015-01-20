@@ -47,11 +47,6 @@ void error(QCoreApplication *pApp, const QString &pMsg)
 
 int main(int pArgC, char *pArgV[])
 {
-    // Remove all 'global' instances, in case OpenCOR previously crashed or
-    // something (and therefore didn't remove all of them before quitting)
-
-    OpenCOR::removeGlobalInstances();
-
     // Initialise the plugins path
 
     OpenCOR::initPluginsPath(pArgV[0]);
@@ -98,14 +93,14 @@ int main(int pArgC, char *pArgV[])
         }
     }
 
-    // Release some memory
-
-    delete app;
-
     // Remove all 'global' instances that were created and used during this
     // session
 
     OpenCOR::removeGlobalInstances();
+
+    // Release some memory
+
+    delete app;
 
     // We are done, so...
 
