@@ -51,6 +51,7 @@ script:
          ;
        fi
     && make
+    && cd ..
     && ./runtests
 
 notifications:
