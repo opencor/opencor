@@ -13,47 +13,34 @@ env:
   - CONFIG=Debug
 
 install:
-  -    if [ "${TRAVIS_OS_NAME}" = "linux" ]; then
-            sudo apt-add-repository -y ppa:ubuntu-toolchain-r/test
-         && sudo apt-add-repository -y ppa:beineri/opt-qt54
-         && sudo apt-get -qq update
-         && sudo apt-get -qq install g++-4.8 libc6-i386 qt54tools qt54svg qt54webkit
-         && export CXX="g++-4.8"
-         && export CC="gcc-4.8"
-         && wget http://www.cmake.org/files/v3.1/cmake-3.1.0-Linux-i386.tar.gz
-         && tar -xzf cmake-3.1.0-Linux-i386.tar.gz
-         && sudo cp -fR cmake-3.1.0-Linux-i386/* /usr
-         && wget https://github.com/martine/ninja/releases/download/v1.5.3/ninja-linux.zip
-         && unzip ninja-linux.zip
-         ;
-       else
-            brew update
-         && brew install ninja qt5
-         && chmod -R 755 /usr/local/opt/qt5/*
-         && wget https://github.com/martine/ninja/releases/download/v1.5.3/ninja-mac.zip
-         && unzip ninja-mac.zip
-         ;
-       fi
-    && sudo cp -f ninja /usr/bin
+  - if [ "${TRAVIS_OS_NAME}" = "linux" ]; then
+         sudo apt-add-repository -y ppa:ubuntu-toolchain-r/test
+      && sudo apt-add-repository -y ppa:beineri/opt-qt54
+      && sudo apt-get -qq update
+      && sudo apt-get -qq install g++-4.8 libc6-i386 qt54tools qt54svg qt54webkit
+      && export CXX="g++-4.8"
+      && export CC="gcc-4.8"
+      && wget http://www.cmake.org/files/v3.1/cmake-3.1.0-Linux-i386.tar.gz
+      && tar -xzf cmake-3.1.0-Linux-i386.tar.gz
+      && sudo cp -fR cmake-3.1.0-Linux-i386/* /usr
+      ;
+    else
+         brew update
+      && brew install qt5
+      && chmod -R 755 /usr/local/opt/qt5/*
+      ;
+    fi
 
 script:
   -    cd build
     && if [ "${TRAVIS_OS_NAME}" = "linux" ]; then
-         cmake -G "Ninja" -DCMAKE_BUILD_TYPE=$CONFIG -DCMAKE_PREFIX_PATH=/opt/qt54/lib/cmake -DENABLE_TESTS=ON -DENABLE_SAMPLES=ON ..
+         cmake -DCMAKE_BUILD_TYPE=$CONFIG -DCMAKE_PREFIX_PATH=/opt/qt54/lib/cmake -DENABLE_TESTS=ON -DENABLE_SAMPLES=ON ..
          ;
        else
-         cmake -G "Ninja" -DCMAKE_BUILD_TYPE=$CONFIG -DCMAKE_PREFIX_PATH=/usr/local/opt/qt5/lib/cmake -DENABLE_TESTS=ON -DENABLE_SAMPLES=ON ..
+         cmake -DCMAKE_BUILD_TYPE=$CONFIG -DCMAKE_PREFIX_PATH=/usr/local/opt/qt5/lib/cmake -DENABLE_TESTS=ON -DENABLE_SAMPLES=ON ..
          ;
        fi
-    && for i in {1..10}; do
-         ninja
-         ;
-         if [ $? ]; then
-           break
-           ;
-         fi
-         ;
-       done
+    && make
     && cd ..
     && if [ "${TRAVIS_OS_NAME}" = "linux" ]; then
          build/bin/runtests
