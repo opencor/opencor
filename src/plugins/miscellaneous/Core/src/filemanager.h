@@ -96,7 +96,7 @@ public:
                   const QString &pUrl = QString());
     Status unmanage(const QString &pFileName);
 
-    File * isManaged(const QString &pFileName) const;
+    File * file(const QString &pFileName) const;
 
     bool canCheckFiles() const;
     void setCanCheckFiles(const bool &pCanCheckFiles);

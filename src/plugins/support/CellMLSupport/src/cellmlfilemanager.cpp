@@ -77,7 +77,7 @@ CellmlFileManager * CellmlFileManager::instance()
 
 CellmlFile * CellmlFileManager::cellmlFile(const QString &pFileName)
 {
-    // Return the CellmlFile object, if any, associated with the requested file
+    // Return the CellmlFile object, if any, associated with the given file
 
     return mCellmlFiles.value(Core::nativeCanonicalFileName(pFileName));
 }
