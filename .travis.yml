@@ -6,7 +6,7 @@ branches:
 
 os:
   - linux
-  # - osx
+  - osx
 
 env:
   - CONFIG=Release
@@ -24,14 +24,14 @@ install:
          && tar -xzf cmake-3.1.0-Linux-i386.tar.gz
          && sudo cp -fR cmake-3.1.0-Linux-i386/* /usr
          && wget https://github.com/martine/ninja/releases/download/v1.5.3/ninja-linux.zip
-         && unzip https://github.com/martine/ninja/releases/download/v1.5.3/ninja-linux.zip
+         && unzip ninja-linux.zip
          ;
        else
             brew update
          && brew install ninja qt5
          && chmod -R 755 /usr/local/opt/qt5/*
          && wget https://github.com/martine/ninja/releases/download/v1.5.3/ninja-mac.zip
-         && unzip https://github.com/martine/ninja/releases/download/v1.5.3/ninja-mac.zip
+         && unzip ninja-mac.zip
          ;
        fi
     && sudo cp -f ninja /usr/bin
