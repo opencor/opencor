@@ -40,7 +40,7 @@ script:
          cmake -G "Ninja" -DCMAKE_BUILD_TYPE=$CONFIG -DCMAKE_PREFIX_PATH=/usr/local/opt/qt5/lib/cmake -DENABLE_TESTS=ON -DENABLE_SAMPLES=ON ..
          ;
        fi
-    && ninja
+    && ninja -k 10
     && cd ..
     && if [ "`uname -s`" = "Linux" ]; then
          build/bin/runtests

@@ -4,6 +4,10 @@ PROJECT(OpenCOR)
 
 CMAKE_MINIMUM_REQUIRED(VERSION 3.0.0)
 
+# Policies that we want to use
+
+CMAKE_POLICY(SET CMP0054 NEW)
+
 # Some in-house CMake functions/macros
 
 INCLUDE(${CMAKE_SOURCE_DIR}/cmake/common.cmake)
