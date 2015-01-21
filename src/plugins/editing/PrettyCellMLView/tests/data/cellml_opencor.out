@@ -5,15 +5,31 @@ def model cellml_1_1{cellml_1_1} as
     // on one, two or even
     // more lines...
 
-    def unit unitx as
+    def unit unitsx as
         // Comments can be within a unit definition...
+
+        // Comments can also be within a unit statement,
+        // but if kept it will be serialised back in the
+        // corresponding unit definition...
+
+        unit unitx;
     enddef;
 
     def comp componentx as
         // Comments can be within a component definition...
+
+        // Comments can also be within a variable declaration,
+        // but if kept it will be serialised back in the
+        // corresponding component definition...
+
+        var variablex: ;
     enddef;
 
     def group as
         // Comments can be within a group definition...
+    enddef;
+
+    def map
+        // Comments can be within a connection definition...
     enddef;
 enddef;

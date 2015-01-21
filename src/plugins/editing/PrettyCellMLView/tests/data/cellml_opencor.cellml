@@ -4,13 +4,26 @@
     <!--A comment can also fit
 on one, two or even
 more lines...-->
-    <units name="unitx">
+    <units name="unitsx">
         <!--Comments can be within a unit definition...-->
+        <unit units="unitx">
+            <!--Comments can also be within a unit statement,
+but if kept it will be serialised back in the
+corresponding unit definition...-->
+        </unit>
     </units>
     <component name="componentx">
         <!--Comments can be within a component definition...-->
+        <variable name="variablex">
+            <!--Comments can also be within a variable declaration,
+but if kept it will be serialised back in the
+corresponding component definition...-->
+        </variable>
     </component>
     <group>
         <!--Comments can be within a group definition...-->
     </group>
+    <connection>
+        <!--Comments can be within a connection definition...-->
+    </connection>
 </model>
