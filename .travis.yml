@@ -52,7 +52,13 @@ script:
        fi
     && make
     && cd ..
-    && ./runtests
+    && if [ "`uname -s`" = "Linux" ]; then
+         build/bin/runtests
+         ;
+       else
+         build/OpenCOR.app/Contents/MacOS/runtests
+         ;
+       fi
 
 notifications:
   email:
