@@ -179,9 +179,21 @@ void CellMLSupportPlugin::handleAction(const QUrl &pUrl)
 
 bool isCellmlFile(const QString &pFileName)
 {
-    // If the file is new, then we consider it as a CellML file
+    // If the given file is already managed by our CellML file manager, then we
+    // consider that it's still a CellML file (even though it may not be a
+    // CellML file anymore after having been edited and saved, but in this case
+    // it's good to keep considering the file as a CellML file, so that the user
+    // can continue editing it for example)
 
-    if (Core::FileManager::instance()->isNew(pFileName))
+    QString nativeFileName = Core::nativeCanonicalFileName(pFileName);
+
+    if (CellMLSupport::CellmlFileManager::instance()->cellmlFile(nativeFileName))
+        return true;
+
+    // The given file is not managed by our CellML file manager, so check
+    // whether it's a new file and, if so, consider it as a CellML file
+
+    if (Core::FileManager::instance()->isNew(nativeFileName))
         return true;
 
     // Check whether we are dealing with an empty file or a file that contains
@@ -189,7 +201,7 @@ bool isCellmlFile(const QString &pFileName)
 
     QString fileContents;
 
-    if (Core::readTextFromFile(pFileName, fileContents)) {
+    if (Core::readTextFromFile(nativeFileName, fileContents)) {
         if (fileContents.trimmed().isEmpty())
             return true;
 
