@@ -51,13 +51,6 @@ script:
          ;
        fi
     && make
-    && if [ "`uname -s`" = "Linux" ]; then
-         cd bin
-         ;
-       else
-         cd OpenCOR.app/Contents/MacOS
-         ;
-       fi
     && ./runtests
 
 notifications:
