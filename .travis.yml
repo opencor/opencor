@@ -13,7 +13,7 @@ env:
   - CONFIG=Debug
 
 install:
-  - if [ "`uname -s`" = "Linux" ]; then
+  - if [ "${TRAVIS_OS_NAME}" = "linux" ]; then
          sudo apt-add-repository -y ppa:ubuntu-toolchain-r/test
       && sudo apt-add-repository -y ppa:beineri/opt-qt54
       && sudo apt-get -qq update
@@ -33,16 +33,24 @@ install:
 
 script:
   -    cd build
-    && if [ "`uname -s`" = "Linux" ]; then
+    && if [ "${TRAVIS_OS_NAME}" = "linux" ]; then
          cmake -G "Ninja" -DCMAKE_BUILD_TYPE=$CONFIG -DCMAKE_PREFIX_PATH=/opt/qt54/lib/cmake -DENABLE_TESTS=ON -DENABLE_SAMPLES=ON ..
          ;
        else
          cmake -G "Ninja" -DCMAKE_BUILD_TYPE=$CONFIG -DCMAKE_PREFIX_PATH=/usr/local/opt/qt5/lib/cmake -DENABLE_TESTS=ON -DENABLE_SAMPLES=ON ..
          ;
        fi
-    && ninja -k 10
+    && for i in {1..10}; do
+         ninja
+         ;
+         if [ $? ]; then
+           break
+           ;
+         fi
+         ;
+       done
     && cd ..
-    && if [ "`uname -s`" = "Linux" ]; then
+    && if [ "${TRAVIS_OS_NAME}" = "linux" ]; then
          build/bin/runtests
          ;
        else
