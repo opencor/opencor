@@ -63,6 +63,7 @@ public:
     void setContextMenu(const QList<QAction *> &pContextMenuActions);
 
     virtual void setCursorPosition(int pLine, int pColumn);
+    virtual void setLexer(QsciLexer *pLexer);
 
     int currentPosition() const;
     void setCurrentPosition(const int &pCurrentPosition);

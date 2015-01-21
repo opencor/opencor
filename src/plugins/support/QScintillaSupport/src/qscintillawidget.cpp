@@ -53,13 +53,14 @@ QScintillaWidget::QScintillaWidget(QsciLexer *pLexer, QWidget *pParent) :
     // Customise ourselves
 
     setCaretLineVisible(true);
+    setFolding(QsciScintilla::BoxedTreeFoldStyle);
     setFrameShape(QFrame::NoFrame);
     setIndentationsUseTabs(false);
     setMarginWidth(SC_MARGIN_NUMBER, 0);
     setTabWidth(4);
     setUtf8(true);
 
-    // Associate a lexer to our Scintilla editor, should one be provided
+    // Set our font
 
 #if defined(Q_OS_WIN)
     mFont = QFont("Lucida Console", 11);
@@ -71,24 +72,11 @@ QScintillaWidget::QScintillaWidget(QsciLexer *pLexer, QWidget *pParent) :
     #error Unsupported platform
 #endif
 
-    if (pLexer) {
-        // A lexer was provided, so specify its font and associate it with our
-        // Scintilla editor
+    setFont(mFont);
 
-        pLexer->setFont(mFont);
+    // Use the given lexer
 
-        setLexer(pLexer);
-
-        // Specify the type of tree folding to be used (some lexers may indeed
-        // use that feature)
-
-        setFolding(QsciScintilla::BoxedTreeFoldStyle);
-    } else {
-        // No lexer was provided, so simply specify a default font family and
-        // size for our Scintilla editor
-
-        setFont(mFont);
-    }
+    setLexer(pLexer);
 
     // Force the use of UNIX EOL mode
     // Note: by default QScintilla will use EolWindows on Windows and EolUnix on
@@ -182,6 +170,18 @@ void QScintillaWidget::setCursorPosition(int pLine, int pColumn)
     // Set our cursor position
 
     QsciScintilla::setCursorPosition(pLine, pColumn);
+}
+
+//==============================================================================
+
+void QScintillaWidget::setLexer(QsciLexer *pLexer)
+{
+    // Set our font to the given lexer, if any
+
+    if (pLexer)
+        pLexer->setFont(mFont);
+
+    QsciScintilla::setLexer(pLexer);
 }
 
 //==============================================================================

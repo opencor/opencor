@@ -48,6 +48,10 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#include "Qsci/qscilexerxml.h"
+
+//==============================================================================
+
 namespace OpenCOR {
 namespace PrettyCellMLView {
 
@@ -136,10 +140,14 @@ void PrettyCellmlViewWidget::initialize(const QString &pFileName,
 
         newEditingWidget = new CoreCellMLEditing::CoreCellmlEditingWidget(converter.output(),
                                                                           !Core::FileManager::instance()->isReadableAndWritable(pFileName),
-                                                                          new PrettyCellmlViewLexer(this),
-                                                                          parentWidget());
+                                                                          0, parentWidget());
 
-        if (!successfulConversion) {
+        if (successfulConversion) {
+            // The conversion was successful, so we can apply our Pretty CellML
+            // lexer to our editor
+
+            newEditingWidget->editor()->editor()->setLexer(new PrettyCellmlViewLexer(this));
+        } else {
             // The conversion wasn't successful, so make the editor read-only
             // (since its contents is that of the file itself) and add a couple
             // of messages to our editor list
@@ -156,6 +164,10 @@ void PrettyCellmlViewWidget::initialize(const QString &pFileName,
 
             newEditingWidget->editorList()->addItem(EditorList::EditorListItem::Hint,
                                                     tr("You might want to use the Raw (CellML) view to edit the file."));
+
+            // Apply an XML lexer to our editor
+
+            newEditingWidget->editor()->editor()->setLexer(new QsciLexerXML(this));
         }
 
         // Keep track of our editing widget (and of whether the conversion was
