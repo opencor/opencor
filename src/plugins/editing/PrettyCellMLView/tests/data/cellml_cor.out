@@ -157,6 +157,6 @@ def model cellml_1_0 as
     def group as
     enddef;
 
-    def map
+    def map as
     enddef;
 enddef;
