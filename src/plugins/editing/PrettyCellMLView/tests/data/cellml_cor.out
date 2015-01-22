@@ -144,4 +144,19 @@ def model cellml_1_0 as
         var variable4: unit4 {priv: out};
         var variable5: unit5 {pub: none, priv: none};
     enddef;
+
+    def group as
+    enddef;
+
+    def group as
+    enddef;
+
+    def group as
+    enddef;
+
+    def group as
+    enddef;
+
+    def map
+    enddef;
 enddef;

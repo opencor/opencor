@@ -137,4 +137,41 @@
         <variable name="variable4" private_interface="out" units="unit4"/>
         <variable name="variable5" public_interface="none" private_interface="none" units="unit5"/>
     </component>
+    <group>
+        <relationship_ref relationship="containment"/>
+        <component_ref component="component1">
+            <component_ref component="component11">
+                <component_ref component="component111"/>
+                <component_ref component="component112"/>
+            </component_ref>
+        </component_ref>
+    </group>
+    <group>
+        <relationship_ref name="containment" relationship="containment"/>
+        <component_ref component="component1">
+            <component_ref component="component12">
+                <component_ref component="component121"/>
+            </component_ref>
+            <component_ref component="component13"/>
+        </component_ref>
+    </group>
+    <group>
+        <relationship_ref relationship="encapsulation"/>
+        <component_ref component="component11">
+            <component_ref component="component111"/>
+            <component_ref component="component112"/>
+        </component_ref>
+        <component_ref component="component12">
+            <component_ref component="component121"/>
+        </component_ref>
+    </group>
+    <group>
+        <relationship_ref relationship="containment"/>
+        <relationship_ref relationship="encapsulation"/>
+        <component_ref component="component1"/>
+    </group>
+    <connection>
+        <map_components component_1="component1" component_2="component2"/>
+        <map_variables variable_1="variable1" variable_2="variable2"/>
+    </connection>
 </model>
