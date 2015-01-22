@@ -91,7 +91,8 @@ private:
     bool processUnitsNode(const QDomNode &pDomNode,
                           const bool &pInImportNode = false);
     bool processUnitNode(const QDomNode &pDomNode);
-    bool processComponentNode(const QDomNode &pDomNode);
+    bool processComponentNode(const QDomNode &pDomNode,
+                              const bool &pInImportNode = false);
     bool processVariableNode(const QDomNode &pDomNode);
     bool processMathNode(const QDomNode &pDomNode);
     bool processGroupNode(const QDomNode &pDomNode);

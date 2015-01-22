@@ -287,44 +287,52 @@ bool PrettyCellMLViewCellmlToPrettyCellmlConverter::processUnitsNode(const QDomN
 
     bool isBaseUnits = !baseUnits.compare("yes");
 
-    if (   (mLastOutputType == Comment) || (mLastOutputType == EndDef)
-        || ((mLastOutputType == DefBaseUnit) && !isBaseUnits)) {
-        outputString();
-    }
-
-    outputString(isBaseUnits?DefBaseUnit:DefUnit,
-                 QString("def unit %1%2 as%3").arg(pDomNode.attributes().namedItem("name").nodeValue())
-                                              .arg(cmetaId(pDomNode))
-                                              .arg(isBaseUnits?" base unit;":QString()));
-
     if (!isBaseUnits) {
-        indent();
-
-        // Process the given units node's children
-
-        QString nodeName;
-
-        for (QDomNode domNode = pDomNode.firstChild();
-             !domNode.isNull(); domNode = domNode.nextSibling()) {
-            nodeName = domNode.nodeName();
-
-            if (!nodeName.compare("#comment")) {
-                if (!processCommentNode(domNode))
-                    return false;
-            } else if (!nodeName.compare("rdf:RDF")) {
-                if (!processRdfNode(domNode))
-                    return false;
-            } else if (   !isBaseUnits && !pInImportNode
-                       && !nodeName.compare("unit")) {
-                if (!processUnitNode(domNode))
-                    return false;
-            } else if (!processUnknownNode(domNode)) {
-                return false;
-            }
+        if (   (mLastOutputType == Comment) || (mLastOutputType == EndDef)
+            || (mLastOutputType == DefBaseUnit)) {
+            outputString();
         }
 
-        // Finish processing the given units node
+        outputString(DefUnit,
+                     QString("def unit %1%2 as").arg(pDomNode.attributes().namedItem("name").nodeValue())
+                                                .arg(cmetaId(pDomNode)));
 
+        indent();
+    }
+
+    // Process the given units node's children
+
+    QString nodeName;
+
+    for (QDomNode domNode = pDomNode.firstChild();
+         !domNode.isNull(); domNode = domNode.nextSibling()) {
+        nodeName = domNode.nodeName();
+
+        if (!nodeName.compare("#comment")) {
+            if (!processCommentNode(domNode))
+                return false;
+        } else if (!nodeName.compare("rdf:RDF")) {
+            if (!processRdfNode(domNode))
+                return false;
+        } else if (   !isBaseUnits && !pInImportNode
+                   && !nodeName.compare("unit")) {
+            if (!processUnitNode(domNode))
+                return false;
+        } else if (!processUnknownNode(domNode)) {
+            return false;
+        }
+    }
+
+    // Finish processing the given units node
+
+    if (isBaseUnits) {
+        if ((mLastOutputType == Comment) || (mLastOutputType == EndDef))
+            outputString();
+
+        outputString(DefBaseUnit,
+                     QString("def unit %1%2 as base unit;").arg(pDomNode.attributes().namedItem("name").nodeValue())
+                                                           .arg(cmetaId(pDomNode)));
+    } else {
         unindent();
 
         outputString(EndDef, "enddef;");
@@ -404,7 +412,8 @@ bool PrettyCellMLViewCellmlToPrettyCellmlConverter::processUnitNode(const QDomNo
 
 //==============================================================================
 
-bool PrettyCellMLViewCellmlToPrettyCellmlConverter::processComponentNode(const QDomNode &pDomNode)
+bool PrettyCellMLViewCellmlToPrettyCellmlConverter::processComponentNode(const QDomNode &pDomNode,
+                                                                         const bool &pInImportNode)
 {
     // Start processing the given component node
 
@@ -431,13 +440,13 @@ bool PrettyCellMLViewCellmlToPrettyCellmlConverter::processComponentNode(const Q
         } else if (!nodeName.compare("rdf:RDF")) {
             if (!processRdfNode(domNode))
                 return false;
-        } else if (!nodeName.compare("units")) {
+        } else if (!pInImportNode && !nodeName.compare("units")) {
             if (!processUnitsNode(domNode))
                 return false;
-        } else if (!nodeName.compare("variable")) {
+        } else if (!pInImportNode && !nodeName.compare("variable")) {
             if (!processVariableNode(domNode))
                 return false;
-        } else if (!nodeName.compare("math")) {
+        } else if (!pInImportNode && !nodeName.compare("math")) {
             if (!processMathNode(domNode))
                 return false;
         } else if (!processUnknownNode(domNode)) {
@@ -586,7 +595,8 @@ qWarning("Connection node: not yet fully implemented...");
     if (mLastOutputType == EndDef)
         outputString();
 
-    outputString(DefMap, "def map");
+    outputString(DefMap,
+                 QString("def map%1").arg(cmetaId(pDomNode)));
 
     indent();
 
