@@ -30,13 +30,9 @@ ADD_PLUGIN(Viewer
     QT_MODULES
         ${XML}
     QT_LIBRARIES
-        QtConcurrent
         QtCore
         QtGui
         QtNetwork
-        QtOpenGL
-        QtPrintSupport
-        QtSvg
         QtWidgets
         QtXml
         QtXmlPatterns

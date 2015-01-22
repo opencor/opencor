@@ -7,12 +7,6 @@ RETRIEVE_LLVM_SETTINGS()
 
 # Add the plugin
 
-IF(APPLE)
-    SET(QT_MAC_EXTRAS QtMacExtras)
-ELSE()
-    SET(QT_MAC_EXTRAS)
-ENDIF()
-
 ADD_PLUGIN(PrettyCellMLView
     SOURCES
         ../../i18ninterface.cpp
@@ -52,14 +46,9 @@ ADD_PLUGIN(PrettyCellMLView
         ${QSCINTILLA_PLUGIN_BINARY}
         ${QWT_PLUGIN_BINARY}
     QT_LIBRARIES
-        QtConcurrent
         QtCore
         QtGui
-        ${QT_MAC_EXTRAS}
         QtNetwork
-        QtOpenGL
-        QtPrintSupport
-        QtSvg
         QtWidgets
         QtXml
         QtXmlPatterns

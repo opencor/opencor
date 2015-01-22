@@ -71,13 +71,9 @@ ADD_PLUGIN(SingleCellView
         ${LLVM_PLUGIN_BINARY}
         ${QWT_PLUGIN_BINARY}
     QT_LIBRARIES
-        QtConcurrent
         QtCore
         QtGui
         QtNetwork
-        QtOpenGL
-        QtPrintSupport
-        QtSvg
         QtWidgets
         QtXml
         QtXmlPatterns
