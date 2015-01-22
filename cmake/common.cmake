@@ -95,6 +95,13 @@ MACRO(INITIALISE_PROJECT)
     SET(QT_VERSION_MINOR ${Qt5Widgets_VERSION_MINOR})
     SET(QT_VERSION_PATCH ${Qt5Widgets_VERSION_PATCH})
 
+    # Retrieve the real path of the Qt library directory
+    # Note: on Travis CI, QT_LIBRARY_DIR points to a symbolic path. That
+    #       symbolic path is used by some libraries while others use the real
+    #       path instead. So, we need to know about both...
+
+    GET_FILENAME_COMPONENT(REAL_QT_LIBRARY_DIR ${QT_LIBRARY_DIR} REALPATH)
+
     # Some general build settings
     # Note: we need to use C++11, so that we can define strings as static const.
     #       Now, it happens that MSVC enables C++11 support by default, so we
@@ -941,10 +948,19 @@ MACRO(OS_X_QT_LIBRARIES FILENAME QT_LIBRARIES)
     # Retrieve the file's full-path Qt libraries as a list
 
     SET(QT_LIBRARY_DIR_FOR_GREP "\t${QT_LIBRARY_DIR}/")
+    SET(REAL_QT_LIBRARY_DIR_FOR_GREP "\t${REAL_QT_LIBRARY_DIR}/")
 
     EXECUTE_PROCESS(COMMAND otool -L ${FILENAME}
-                    COMMAND grep --colour=never ${QT_LIBRARY_DIR_FOR_GREP}
+                    COMMAND grep --colour=never -e "${QT_LIBRARY_DIR_FOR_GREP}"
+                                                -e "${REAL_QT_LIBRARY_DIR_FOR_GREP}"
                     OUTPUT_VARIABLE RAW_QT_LIBRARIES)
+MESSAGE("---------")
+MESSAGE(">>> otool -L ${FILENAME}")
+EXECUTE_PROCESS(COMMAND otool -L ${FILENAME}
+                OUTPUT_VARIABLE OTOOL_L_FILENAME)
+MESSAGE(">>> OTOOL_L_FILENAME:\n${OTOOL_L_FILENAME}")
+MESSAGE(">>> RAW_QT_LIBRARIES: ${RAW_QT_LIBRARIES}")
+MESSAGE("---------")
 
     STRING(REPLACE "\n" ";" RAW_QT_LIBRARIES "${RAW_QT_LIBRARIES}")
 
@@ -954,6 +970,7 @@ MACRO(OS_X_QT_LIBRARIES FILENAME QT_LIBRARIES)
 
     FOREACH(RAW_QT_LIBRARY ${RAW_QT_LIBRARIES})
         STRING(REPLACE ${QT_LIBRARY_DIR_FOR_GREP} "" RAW_QT_LIBRARY "${RAW_QT_LIBRARY}")
+        STRING(REPLACE ${REAL_QT_LIBRARY_DIR_FOR_GREP} "" RAW_QT_LIBRARY "${RAW_QT_LIBRARY}")
         STRING(REGEX REPLACE "\\.framework.*$" "" QT_LIBRARY "${RAW_QT_LIBRARY}")
 
         LIST(APPEND ${QT_LIBRARIES} ${QT_LIBRARY})
@@ -980,11 +997,7 @@ MACRO(OS_X_CLEAN_UP_FILE_WITH_QT_LIBRARIES PROJECT_TARGET DIRNAME FILENAME)
 
     # Make sure that the Qt file refers to our embedded version of its Qt
     # dependencies
-    # Note: on Travis CI, QT_LIBRARY_DIR points to a symbolic path. That
-    #       symbolic path is used by some libraries, but not all. Some libraries
-    #       use the real path instead. So, we need to handle both cases...
 
-    GET_FILENAME_COMPONENT(REAL_QT_LIBRARY_DIR ${QT_LIBRARY_DIR} REALPATH)
 ADD_CUSTOM_COMMAND(TARGET ${PROJECT_TARGET} POST_BUILD
                    COMMAND echo "=========")
 ADD_CUSTOM_COMMAND(TARGET ${PROJECT_TARGET} POST_BUILD
