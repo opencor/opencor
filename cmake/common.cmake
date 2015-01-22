@@ -954,13 +954,6 @@ MACRO(OS_X_QT_LIBRARIES FILENAME QT_LIBRARIES)
                     COMMAND grep --colour=never -e "${QT_LIBRARY_DIR_FOR_GREP}"
                                                 -e "${REAL_QT_LIBRARY_DIR_FOR_GREP}"
                     OUTPUT_VARIABLE RAW_QT_LIBRARIES)
-MESSAGE("---------")
-MESSAGE(">>> otool -L ${FILENAME}")
-EXECUTE_PROCESS(COMMAND otool -L ${FILENAME}
-                OUTPUT_VARIABLE OTOOL_L_FILENAME)
-MESSAGE(">>> OTOOL_L_FILENAME:\n${OTOOL_L_FILENAME}")
-MESSAGE(">>> RAW_QT_LIBRARIES: ${RAW_QT_LIBRARIES}")
-MESSAGE("---------")
 
     STRING(REPLACE "\n" ";" RAW_QT_LIBRARIES "${RAW_QT_LIBRARIES}")
 
@@ -998,23 +991,8 @@ MACRO(OS_X_CLEAN_UP_FILE_WITH_QT_LIBRARIES PROJECT_TARGET DIRNAME FILENAME)
     # Make sure that the Qt file refers to our embedded version of its Qt
     # dependencies
 
-ADD_CUSTOM_COMMAND(TARGET ${PROJECT_TARGET} POST_BUILD
-                   COMMAND echo "=========")
-ADD_CUSTOM_COMMAND(TARGET ${PROJECT_TARGET} POST_BUILD
-                   COMMAND echo "QT_LIBRARY_DIR: ${QT_LIBRARY_DIR}")
-ADD_CUSTOM_COMMAND(TARGET ${PROJECT_TARGET} POST_BUILD
-                   COMMAND echo "REAL_QT_LIBRARY_DIR: ${REAL_QT_LIBRARY_DIR}")
-STRING(REPLACE ";" " " FORMATTED_ARGN "${ARGN}")
-ADD_CUSTOM_COMMAND(TARGET ${PROJECT_TARGET} POST_BUILD
-                   COMMAND echo "ARGN: ${FORMATTED_ARGN}")
-
     FOREACH(DEPENDENCY ${ARGN})
         SET(DEPENDENCY_FILENAME ${DEPENDENCY}.framework/Versions/${QT_VERSION_MAJOR}/${DEPENDENCY})
-
-ADD_CUSTOM_COMMAND(TARGET ${PROJECT_TARGET} POST_BUILD
-                   COMMAND echo "~~~[${DEPENDENCY}]~~~")
-ADD_CUSTOM_COMMAND(TARGET ${PROJECT_TARGET} POST_BUILD
-                   COMMAND otool -L ${FULL_FILENAME})
 
         ADD_CUSTOM_COMMAND(TARGET ${PROJECT_TARGET} POST_BUILD
                            COMMAND install_name_tool -change ${QT_LIBRARY_DIR}/${DEPENDENCY_FILENAME}
@@ -1024,12 +1002,7 @@ ADD_CUSTOM_COMMAND(TARGET ${PROJECT_TARGET} POST_BUILD
                            COMMAND install_name_tool -change ${REAL_QT_LIBRARY_DIR}/${DEPENDENCY_FILENAME}
                                                              @rpath/${DEPENDENCY_FILENAME}
                                                              ${FULL_FILENAME})
-
-ADD_CUSTOM_COMMAND(TARGET ${PROJECT_TARGET} POST_BUILD
-                   COMMAND otool -L ${FULL_FILENAME})
     ENDFOREACH()
-ADD_CUSTOM_COMMAND(TARGET ${PROJECT_TARGET} POST_BUILD
-                   COMMAND echo "=========")
 ENDMACRO()
 
 #===============================================================================
