@@ -989,6 +989,11 @@ MACRO(OS_X_CLEAN_UP_FILE_WITH_QT_LIBRARIES PROJECT_TARGET DIRNAME FILENAME)
     FOREACH(DEPENDENCY ${ARGN})
         SET(DEPENDENCY_FILENAME ${DEPENDENCY}.framework/Versions/${QT_VERSION_MAJOR}/${DEPENDENCY})
 
+ADD_CUSTOM_COMMAND(TARGET ${PROJECT_TARGET} POST_BUILD
+                   COMMAND echo "---------")
+ADD_CUSTOM_COMMAND(TARGET ${PROJECT_TARGET} POST_BUILD
+                   COMMAND otool -L ${FULL_FILENAME})
+
         ADD_CUSTOM_COMMAND(TARGET ${PROJECT_TARGET} POST_BUILD
                            COMMAND install_name_tool -change ${QT_LIBRARY_DIR}/${DEPENDENCY_FILENAME}
                                                              @rpath/${DEPENDENCY_FILENAME}
@@ -997,6 +1002,11 @@ MACRO(OS_X_CLEAN_UP_FILE_WITH_QT_LIBRARIES PROJECT_TARGET DIRNAME FILENAME)
                            COMMAND install_name_tool -change ${REAL_QT_LIBRARY_DIR}/${DEPENDENCY_FILENAME}
                                                              @rpath/${DEPENDENCY_FILENAME}
                                                              ${FULL_FILENAME})
+
+ADD_CUSTOM_COMMAND(TARGET ${PROJECT_TARGET} POST_BUILD
+                   COMMAND otool -L ${FULL_FILENAME})
+ADD_CUSTOM_COMMAND(TARGET ${PROJECT_TARGET} POST_BUILD
+                   COMMAND echo "---------")
     ENDFOREACH()
 ENDMACRO()
 

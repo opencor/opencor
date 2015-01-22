@@ -46,7 +46,6 @@ script:
          build/bin/runtests
          ;
        else
-         for i in `find build/OpenCOR.app/Contents/`; do otool -L $i; done;
          build/OpenCOR.app/Contents/MacOS/runtests
          ;
        fi
