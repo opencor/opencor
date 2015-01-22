@@ -46,11 +46,11 @@ script:
          build/bin/runtests
          ;
        else
-         otool -L build/OpenCOR.app/Contents/MacOS/runtests
-         otool -L build/OpenCOR.app/Contents/MacOS/CellMLTools_tests
-         otool -L build/OpenCOR.app/Contents/MacOS/Compiler_tests
-         otool -L build/OpenCOR.app/Contents/MacOS/Core_tests
-         otool -L build/OpenCOR.app/Contents/MacOS/PrettyCellMLView_tests
+         otool -L build/OpenCOR.app/Contents/MacOS/runtests;
+         otool -L build/OpenCOR.app/Contents/MacOS/CellMLTools_tests;
+         otool -L build/OpenCOR.app/Contents/MacOS/Compiler_tests;
+         otool -L build/OpenCOR.app/Contents/MacOS/Core_tests;
+         otool -L build/OpenCOR.app/Contents/MacOS/PrettyCellMLView_tests;
          build/OpenCOR.app/Contents/MacOS/runtests
          ;
        fi
