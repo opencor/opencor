@@ -88,9 +88,9 @@ MACRO(INITIALISE_PROJECT)
 
     # Keep track of some information about Qt
 
-    SET(QT_BINARY_DIR ${_qt5Widgets_install_prefix}/bin)
-    SET(QT_LIBRARY_DIR ${_qt5Widgets_install_prefix}/lib)
-    SET(QT_PLUGINS_DIR ${_qt5Widgets_install_prefix}/plugins)
+    GET_FILENAME_COMPONENT(QT_BINARY_DIR ${_qt5Widgets_install_prefix}/bin REALPATH)
+    GET_FILENAME_COMPONENT(QT_LIBRARY_DIR ${_qt5Widgets_install_prefix}/lib REALPATH)
+    GET_FILENAME_COMPONENT(QT_PLUGINS_DIR ${_qt5Widgets_install_prefix}/plugins REALPATH)
     SET(QT_VERSION_MAJOR ${Qt5Widgets_VERSION_MAJOR})
     SET(QT_VERSION_MINOR ${Qt5Widgets_VERSION_MINOR})
     SET(QT_VERSION_PATCH ${Qt5Widgets_VERSION_PATCH})
@@ -984,10 +984,6 @@ MACRO(OS_X_CLEAN_UP_FILE_WITH_QT_LIBRARIES PROJECT_TARGET DIRNAME FILENAME)
     FOREACH(DEPENDENCY ${ARGN})
         SET(DEPENDENCY_FILENAME ${DEPENDENCY}.framework/Versions/${QT_VERSION_MAJOR}/${DEPENDENCY})
 
-MESSAGE("=========")
-MESSAGE("REPLACING: ${QT_LIBRARY_DIR}/${DEPENDENCY_FILENAME}")
-MESSAGE("WITH:      @rpath/${DEPENDENCY_FILENAME}")
-MESSAGE("=========")
         ADD_CUSTOM_COMMAND(TARGET ${PROJECT_TARGET} POST_BUILD
                            COMMAND install_name_tool -change ${QT_LIBRARY_DIR}/${DEPENDENCY_FILENAME}
                                                              @rpath/${DEPENDENCY_FILENAME}
