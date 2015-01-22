@@ -263,8 +263,41 @@ bool PrettyCellMLViewCellmlToPrettyCellmlConverter::processImportNode(const QDom
     // Process the given import node
 
 //---GRY--- TO BE DONE...
-Q_UNUSED(pDomNode);
-qWarning("Import node: not yet implemented...");
+qWarning("Import node: not yet fully implemented...");
+    // Start processing the given import node
+
+    if ((mLastOutputType == Comment) || (mLastOutputType == EndDef))
+        outputString();
+
+    outputString(DefImport,
+                 QString("def import%1").arg(cmetaId(pDomNode)));
+
+    indent();
+
+    // Process the given import node's children
+
+    QString nodeName;
+
+    for (QDomNode domNode = pDomNode.firstChild();
+         !domNode.isNull(); domNode = domNode.nextSibling()) {
+        nodeName = domNode.nodeName();
+
+        if (!nodeName.compare("#comment")) {
+            if (!processCommentNode(domNode))
+                return false;
+        } else if (!nodeName.compare("rdf:RDF")) {
+            if (!processRdfNode(domNode))
+                return false;
+        } else if (!processUnknownNode(domNode)) {
+            return false;
+        }
+    }
+
+    // Finish processing the given group node
+
+    unindent();
+
+    outputString(EndDef, "enddef;");
 
     return true;
 }
@@ -549,7 +582,7 @@ bool PrettyCellMLViewCellmlToPrettyCellmlConverter::processGroupNode(const QDomN
 qWarning("Group node: not yet fully implemented...");
     // Start processing the given group node
 
-    if (mLastOutputType == EndDef)
+    if ((mLastOutputType == Comment) || (mLastOutputType == EndDef))
         outputString();
 
     outputString(DefGroup, QString("def group%1 as").arg(cmetaId(pDomNode)));
@@ -592,7 +625,7 @@ bool PrettyCellMLViewCellmlToPrettyCellmlConverter::processConnectionNode(const 
 qWarning("Connection node: not yet fully implemented...");
     // Start processing the given connection node
 
-    if (mLastOutputType == EndDef)
+    if ((mLastOutputType == Comment) || (mLastOutputType == EndDef))
         outputString();
 
     outputString(DefMap,

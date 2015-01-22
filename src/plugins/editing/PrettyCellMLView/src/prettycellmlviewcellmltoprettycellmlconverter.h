@@ -54,6 +54,7 @@ private:
         EmptyLine,
         DefModel,
         Comment,
+        DefImport,
         DefUnit,
         DefBaseUnit,
         Unit,

@@ -9,16 +9,49 @@ more lines...-->
 			<bqbiol:isVersionOf rdf:resource="http://identifiers.org/go/GO:0034704"/>
 		</rdf:Description>
 	</rdf:RDF> 
+    <!--In between comment...-->
+    <import cmeta:id="importx" xlink:href="importedmodel.cellml">
+        <!--Comments can be within an import definition...-->
+        <rdf:RDF xmlns:bqbiol="http://biomodels.net/biology-qualifiers/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+            <rdf:Description rdf:about="#importx">
+                <bqbiol:isVersionOf rdf:resource="http://identifiers.org/go/GO:0034704"/>
+            </rdf:Description>
+        </rdf:RDF> 
+        <!--In between comment...-->
+        <units cmeta:id="unitsx" name="unitsx" units_ref="refunitsx">
+            <!--Comments can be within a unit import,
+but if kept it will be serialised back in the
+corresponding import definition...-->
+            <rdf:RDF xmlns:bqbiol="http://biomodels.net/biology-qualifiers/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+                <rdf:Description rdf:about="#unitsx">
+                    <bqbiol:isVersionOf rdf:resource="http://identifiers.org/go/GO:0034704"/>
+                </rdf:Description>
+            </rdf:RDF> 
+        </units>
+        <!--In between comment...-->
+        <component cmeta:id="componentx" name="componentx" component_ref="refcomponentx">
+            <!--Comments can be within a component import,
+but if kept it will be serialised back in the
+corresponding import definition...-->
+            <rdf:RDF xmlns:bqbiol="http://biomodels.net/biology-qualifiers/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+                <rdf:Description rdf:about="#componentx">
+                    <bqbiol:isVersionOf rdf:resource="http://identifiers.org/go/GO:0034704"/>
+                </rdf:Description>
+            </rdf:RDF> 
+        </component>
+    </import>
+    <!--In between comment...-->
     <units base_units="yes" cmeta:id="baseunitsx" name="baseunitsx">
         <!--Comments can be within a base unit definition,
 but if kept it will be serialised back in the
-corresponding unit definition...-->
+corresponding model definition...-->
         <rdf:RDF xmlns:bqbiol="http://biomodels.net/biology-qualifiers/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
             <rdf:Description rdf:about="#baseunitsx">
                 <bqbiol:isVersionOf rdf:resource="http://identifiers.org/go/GO:0034704"/>
             </rdf:Description>
         </rdf:RDF> 
     </units>
+    <!--In between comment...-->
     <units cmeta:id="unitsx" name="unitsx">
         <!--Comments can be within a unit definition...-->
         <rdf:RDF xmlns:bqbiol="http://biomodels.net/biology-qualifiers/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
@@ -26,6 +59,7 @@ corresponding unit definition...-->
                 <bqbiol:isVersionOf rdf:resource="http://identifiers.org/go/GO:0034704"/>
             </rdf:Description>
         </rdf:RDF> 
+        <!--In between comment...-->
         <unit cmeta:id="unitx" units="unitx">
             <!--Comments can also be within a unit statement,
 but if kept it will be serialised back in the
@@ -37,6 +71,7 @@ corresponding unit definition...-->
             </rdf:RDF> 
         </unit>
     </units>
+    <!--In between comment...-->
     <component cmeta:id="componentx" name="componentx">
         <!--Comments can be within a component definition...-->
         <rdf:RDF xmlns:bqbiol="http://biomodels.net/biology-qualifiers/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
@@ -44,6 +79,7 @@ corresponding unit definition...-->
                 <bqbiol:isVersionOf rdf:resource="http://identifiers.org/go/GO:0034704"/>
             </rdf:Description>
         </rdf:RDF> 
+        <!--In between comment...-->
         <variable cmeta:id="variablex" name="variablex">
             <!--Comments can also be within a variable declaration,
 but if kept it will be serialised back in the
@@ -55,6 +91,7 @@ corresponding component definition...-->
             </rdf:RDF> 
         </variable>
     </component>
+    <!--In between comment...-->
     <group cmeta:id="groupx">
         <!--Comments can be within a group definition...-->
         <rdf:RDF xmlns:bqbiol="http://biomodels.net/biology-qualifiers/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
@@ -63,6 +100,7 @@ corresponding component definition...-->
             </rdf:Description>
         </rdf:RDF> 
     </group>
+    <!--In between comment...-->
     <connection cmeta:id="connectionx">
         <!--Comments can be within a connection definition...-->
         <rdf:RDF xmlns:bqbiol="http://biomodels.net/biology-qualifiers/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
