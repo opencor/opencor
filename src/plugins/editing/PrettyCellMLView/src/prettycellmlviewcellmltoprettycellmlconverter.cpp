@@ -629,7 +629,7 @@ qWarning("Connection node: not yet fully implemented...");
         outputString();
 
     outputString(DefMap,
-                 QString("def map%1").arg(cmetaId(pDomNode)));
+                 QString("def map%1 as").arg(cmetaId(pDomNode)));
 
     indent();
 
