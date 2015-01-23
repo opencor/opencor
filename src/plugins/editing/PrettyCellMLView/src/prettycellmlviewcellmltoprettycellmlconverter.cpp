@@ -40,7 +40,8 @@ PrettyCellMLViewCellmlToPrettyCellmlConverter::PrettyCellMLViewCellmlToPrettyCel
     mLastOutputType(None),
     mErrorLine(-1),
     mErrorColumn(-1),
-    mErrorMessage(QString())
+    mErrorMessage(QString()),
+    mWarnings(QStringList())
 {
 }
 
@@ -108,6 +109,24 @@ QString PrettyCellMLViewCellmlToPrettyCellmlConverter::errorMessage() const
     // Return our error message
 
     return mErrorMessage;
+}
+
+//==============================================================================
+
+bool PrettyCellMLViewCellmlToPrettyCellmlConverter::hasWarnings() const
+{
+    // Return whether we have warnings
+
+    return mWarnings.count();
+}
+
+//==============================================================================
+
+QStringList PrettyCellMLViewCellmlToPrettyCellmlConverter::warnings() const
+{
+    // Return our warnings
+
+    return mWarnings;
 }
 
 //==============================================================================
@@ -317,7 +336,7 @@ bool PrettyCellMLViewCellmlToPrettyCellmlConverter::processUnitsNode(const QDomN
 
     if (baseUnits.compare(QString()) && baseUnits.compare("yes") && baseUnits.compare("no")) {
         mErrorLine = pDomNode.lineNumber();
-        mErrorMessage = QObject::tr("the 'base_units' attribute must have a value equal to 'yes' or 'no'.");
+        mErrorMessage = QObject::tr("The 'base_units' attribute must have a value equal to 'yes' or 'no'.");
 
         return false;
     }
@@ -689,9 +708,10 @@ qWarning("Connection node: not yet fully implemented...");
 
 bool PrettyCellMLViewCellmlToPrettyCellmlConverter::processUnknownNode(const QDomNode &pDomNode)
 {
-    // The given node is unknown, so just output a warning for now
+    // The given node is unknown, so warn the user about it
 
-    qWarning("Unknown node: '%s'...", qPrintable(pDomNode.nodeName()));
+    mWarnings << QObject::tr("[%1] The '%2' node was found in the original CellML file, but it is not known and cannot therefore be processed.").arg(pDomNode.lineNumber())
+                                                                                                                                                .arg(pDomNode.nodeName());
 
     return true;
 }

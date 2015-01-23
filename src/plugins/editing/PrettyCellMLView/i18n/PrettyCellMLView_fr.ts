@@ -22,8 +22,12 @@
 <context>
     <name>QObject</name>
     <message>
-        <source>the &apos;base_units&apos; attribute must have a value equal to &apos;yes&apos; or &apos;no&apos;.</source>
+        <source>The &apos;base_units&apos; attribute must have a value equal to &apos;yes&apos; or &apos;no&apos;.</source>
         <translation>L&apos;attribut &apos;base_units&apos; doit avoir une valeur égale à &apos;yes&apos; ou &apos;no&apos;.</translation>
+    </message>
+    <message>
+        <source>[%1] The &apos;%2&apos; node was found in the original CellML file, but it is not known and cannot therefore be processed.</source>
+        <translation>[%1] Le noeud &apos;%2&apos; a été trouvé dans le fichier CellML d&apos;origine, mais il n&apos;est pas connu et ne peut donc pas être traité.</translation>
     </message>
     <message>
         <source>Default</source>

@@ -56,6 +56,8 @@ public:
 
     void addItem(const EditorListItem::Type &pType, const int &pLine,
                  const int &pColumn, const QString &pMessage);
+    void addItem(const EditorListItem::Type &pType, const int &pLine,
+                 const QString &pMessage);
     void addItem(const EditorListItem::Type &pType, const QString &pMessage);
 
     int count() const;

@@ -25,7 +25,7 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include <QDomNode>
-#include <QString>
+#include <QStringList>
 
 //==============================================================================
 
@@ -45,8 +45,10 @@ public:
 
     int errorLine() const;
     int errorColumn() const;
-
     QString errorMessage() const;
+
+    bool hasWarnings() const;
+    QStringList warnings() const;
 
 private:
     enum OutputType {
@@ -76,8 +78,9 @@ private:
 
     int mErrorLine;
     int mErrorColumn;
-
     QString mErrorMessage;
+
+    QStringList mWarnings;
 
     void indent();
     void unindent();

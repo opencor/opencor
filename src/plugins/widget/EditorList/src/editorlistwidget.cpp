@@ -130,6 +130,16 @@ void EditorListWidget::addItem(const EditorListItem::Type &pType,
 //==============================================================================
 
 void EditorListWidget::addItem(const EditorListItem::Type &pType,
+                               const int &pLine, const QString &pMessage)
+{
+    // Add the given item to our list
+
+    addItem(pType, pLine, -1, pMessage);
+}
+
+//==============================================================================
+
+void EditorListWidget::addItem(const EditorListItem::Type &pType,
                                const QString &pMessage)
 {
     // Add the given item to our list
