@@ -46,6 +46,10 @@
         <translation>Nombre</translation>
     </message>
     <message>
+        <source>String</source>
+        <translation>Chaîne</translation>
+    </message>
+    <message>
         <source>Parameter group</source>
         <translation>Groupe paramètre</translation>
     </message>

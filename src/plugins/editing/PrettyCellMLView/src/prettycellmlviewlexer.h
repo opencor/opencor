@@ -46,6 +46,7 @@ public:
         Keyword,
         CellmlKeyword,
         Number,
+        String,
         ParameterGroup,
         ParameterKeyword,
         ParameterValueKeyword,
