@@ -42,7 +42,7 @@ PrettyCellMLViewCellmlToPrettyCellmlConverter::PrettyCellMLViewCellmlToPrettyCel
     mErrorColumn(-1),
     mErrorMessage(QString()),
     mWarnings(QStringList()),
-    mRdfNodes(QDomNode())
+    mRdfNodes(QDomDocument())
 {
 }
 
@@ -61,6 +61,12 @@ bool PrettyCellMLViewCellmlToPrettyCellmlConverter::execute()
     if (domDocument.setContent(fileContents, &mErrorMessage, &mErrorLine, &mErrorColumn)) {
         mOutput = QString();
         mIndent = QString();
+
+        mLastOutputType = None;
+
+        mWarnings = QStringList();
+
+        mRdfNodes = QDomDocument("RDF Nodes");
 
         if (!processModelNode(domDocument.documentElement())) {
             mOutput = fileContents;
@@ -132,7 +138,7 @@ QStringList PrettyCellMLViewCellmlToPrettyCellmlConverter::warnings() const
 
 //==============================================================================
 
-QDomNode PrettyCellMLViewCellmlToPrettyCellmlConverter::rdfNodes() const
+QDomDocument PrettyCellMLViewCellmlToPrettyCellmlConverter::rdfNodes() const
 {
     // Return our RDF nodes
 
@@ -215,11 +221,9 @@ bool PrettyCellMLViewCellmlToPrettyCellmlConverter::processModelNode(const QDomN
         nodeName = domNode.nodeName();
 
         if (!nodeName.compare("#comment")) {
-            if (!processCommentNode(domNode))
-                return false;
+            processCommentNode(domNode);
         } else if (!nodeName.compare("rdf:RDF")) {
-            if (!processRdfNode(domNode))
-                return false;
+            processRdfNode(domNode);
         } else if (!nodeName.compare("import")) {
             if (!processImportNode(domNode))
                 return false;
@@ -235,8 +239,8 @@ bool PrettyCellMLViewCellmlToPrettyCellmlConverter::processModelNode(const QDomN
         } else if (!nodeName.compare("connection")) {
             if (!processConnectionNode(domNode))
                 return false;
-        } else if (!processUnknownNode(domNode)) {
-            return false;
+        } else {
+            processUnknownNode(domNode);
         }
     }
 
@@ -251,7 +255,7 @@ bool PrettyCellMLViewCellmlToPrettyCellmlConverter::processModelNode(const QDomN
 
 //==============================================================================
 
-bool PrettyCellMLViewCellmlToPrettyCellmlConverter::processCommentNode(const QDomNode &pDomNode)
+void PrettyCellMLViewCellmlToPrettyCellmlConverter::processCommentNode(const QDomNode &pDomNode)
 {
     // Process the given comment node
 
@@ -269,23 +273,15 @@ bool PrettyCellMLViewCellmlToPrettyCellmlConverter::processCommentNode(const QDo
 
     foreach (const QString commentLine, commentLines)
         outputString(Comment, QString("// %1").arg(commentLine));
-
-    return true;
 }
 
 //==============================================================================
 
-bool PrettyCellMLViewCellmlToPrettyCellmlConverter::processRdfNode(const QDomNode &pDomNode)
+void PrettyCellMLViewCellmlToPrettyCellmlConverter::processRdfNode(const QDomNode &pDomNode)
 {
-    // Process the given RDF node
+    // Process the given RDF node by keeping track of it
 
-//---GRY--- TO BE DONE...
-Q_UNUSED(pDomNode);
-qWarning("RDF node: not yet implemented...");
-
-    mRdfNodes.appendChild(pDomNode);
-
-    return true;
+    mRdfNodes.appendChild(pDomNode.cloneNode());
 }
 
 //==============================================================================
@@ -312,19 +308,17 @@ bool PrettyCellMLViewCellmlToPrettyCellmlConverter::processImportNode(const QDom
         nodeName = domNode.nodeName();
 
         if (!nodeName.compare("#comment")) {
-            if (!processCommentNode(domNode))
-                return false;
+            processCommentNode(domNode);
         } else if (!nodeName.compare("rdf:RDF")) {
-            if (!processRdfNode(domNode))
-                return false;
+            processRdfNode(domNode);
         } else if (!nodeName.compare("units")) {
             if (!processUnitsNode(domNode, true))
                 return false;
         } else if (!nodeName.compare("component")) {
             if (!processComponentNode(domNode, true))
                 return false;
-        } else if (!processUnknownNode(domNode)) {
-            return false;
+        } else {
+            processUnknownNode(domNode);
         }
     }
 
@@ -377,17 +371,15 @@ bool PrettyCellMLViewCellmlToPrettyCellmlConverter::processUnitsNode(const QDomN
         nodeName = domNode.nodeName();
 
         if (!nodeName.compare("#comment")) {
-            if (!processCommentNode(domNode))
-                return false;
+            processCommentNode(domNode);
         } else if (!nodeName.compare("rdf:RDF")) {
-            if (!processRdfNode(domNode))
-                return false;
+            processRdfNode(domNode);
         } else if (   !isBaseUnits && !pInImportNode
                    && !nodeName.compare("unit")) {
             if (!processUnitNode(domNode))
                 return false;
-        } else if (!processUnknownNode(domNode)) {
-            return false;
+        } else {
+            processUnknownNode(domNode);
         }
     }
 
@@ -437,13 +429,11 @@ bool PrettyCellMLViewCellmlToPrettyCellmlConverter::processUnitNode(const QDomNo
         nodeName = domNode.nodeName();
 
         if (!nodeName.compare("#comment")) {
-            if (!processCommentNode(domNode))
-                return false;
+            processCommentNode(domNode);
         } else if (!nodeName.compare("rdf:RDF")) {
-            if (!processRdfNode(domNode))
-                return false;
-        } else if (!processUnknownNode(domNode)) {
-            return false;
+            processRdfNode(domNode);
+        } else {
+            processUnknownNode(domNode);
         }
     }
 
@@ -513,11 +503,9 @@ bool PrettyCellMLViewCellmlToPrettyCellmlConverter::processComponentNode(const Q
         nodeName = domNode.nodeName();
 
         if (!nodeName.compare("#comment")) {
-            if (!processCommentNode(domNode))
-                return false;
+            processCommentNode(domNode);
         } else if (!nodeName.compare("rdf:RDF")) {
-            if (!processRdfNode(domNode))
-                return false;
+            processRdfNode(domNode);
         } else if (!pInImportNode && !nodeName.compare("units")) {
             if (!processUnitsNode(domNode))
                 return false;
@@ -527,8 +515,8 @@ bool PrettyCellMLViewCellmlToPrettyCellmlConverter::processComponentNode(const Q
         } else if (!pInImportNode && !nodeName.compare("math")) {
             if (!processMathNode(domNode))
                 return false;
-        } else if (!processUnknownNode(domNode)) {
-            return false;
+        } else {
+            processUnknownNode(domNode);
         }
     }
 
@@ -571,13 +559,11 @@ bool PrettyCellMLViewCellmlToPrettyCellmlConverter::processVariableNode(const QD
         nodeName = domNode.nodeName();
 
         if (!nodeName.compare("#comment")) {
-            if (!processCommentNode(domNode))
-                return false;
+            processCommentNode(domNode);
         } else if (!nodeName.compare("rdf:RDF")) {
-            if (!processRdfNode(domNode))
-                return false;
-        } else if (!processUnknownNode(domNode)) {
-            return false;
+            processRdfNode(domNode);
+        } else {
+            processUnknownNode(domNode);
         }
     }
 
@@ -653,13 +639,11 @@ qWarning("Group node: not yet fully implemented...");
         nodeName = domNode.nodeName();
 
         if (!nodeName.compare("#comment")) {
-            if (!processCommentNode(domNode))
-                return false;
+            processCommentNode(domNode);
         } else if (!nodeName.compare("rdf:RDF")) {
-            if (!processRdfNode(domNode))
-                return false;
-        } else if (!processUnknownNode(domNode)) {
-            return false;
+            processRdfNode(domNode);
+        } else {
+            processUnknownNode(domNode);
         }
     }
 
@@ -697,13 +681,11 @@ qWarning("Connection node: not yet fully implemented...");
         nodeName = domNode.nodeName();
 
         if (!nodeName.compare("#comment")) {
-            if (!processCommentNode(domNode))
-                return false;
+            processCommentNode(domNode);
         } else if (!nodeName.compare("rdf:RDF")) {
-            if (!processRdfNode(domNode))
-                return false;
-        } else if (!processUnknownNode(domNode)) {
-            return false;
+            processRdfNode(domNode);
+        } else {
+            processUnknownNode(domNode);
         }
     }
 
@@ -718,14 +700,12 @@ qWarning("Connection node: not yet fully implemented...");
 
 //==============================================================================
 
-bool PrettyCellMLViewCellmlToPrettyCellmlConverter::processUnknownNode(const QDomNode &pDomNode)
+void PrettyCellMLViewCellmlToPrettyCellmlConverter::processUnknownNode(const QDomNode &pDomNode)
 {
     // The given node is unknown, so warn the user about it
 
     mWarnings << QObject::tr("[%1] The '%2' node was found in the original CellML file, but it is not known and cannot therefore be processed.").arg(pDomNode.lineNumber())
                                                                                                                                                 .arg(pDomNode.nodeName());
-
-    return true;
 }
 
 //==============================================================================

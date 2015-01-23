@@ -59,10 +59,12 @@ namespace PrettyCellMLView {
 
 PrettyCellmlViewWidgetData::PrettyCellmlViewWidgetData(CoreCellMLEditing::CoreCellmlEditingWidget *pEditingWidget,
                                                        const QString &pSha1,
-                                                       const bool &pValid) :
+                                                       const bool &pValid,
+                                                       QDomDocument pRdfNodes) :
     mEditingWidget(pEditingWidget),
     mSha1(pSha1),
-    mValid(pValid)
+    mValid(pValid),
+    mRdfNodes(pRdfNodes)
 {
 }
 
@@ -91,6 +93,15 @@ bool PrettyCellmlViewWidgetData::isValid() const
     // Return whether we are valid
 
     return mValid;
+}
+
+//==============================================================================
+
+QDomDocument PrettyCellmlViewWidgetData::rdfNodes() const
+{
+    // Return our RDF nodes
+
+    return mRdfNodes;
 }
 
 //==============================================================================
@@ -222,7 +233,8 @@ void PrettyCellmlViewWidget::initialize(const QString &pFileName,
         mData.insert(pFileName,
                      PrettyCellmlViewWidgetData(newEditingWidget,
                                                 Core::sha1(newEditingWidget->editor()->contents()),
-                                                successfulConversion));
+                                                successfulConversion,
+                                                converter.rdfNodes()));
 
         layout()->addWidget(newEditingWidget);
 

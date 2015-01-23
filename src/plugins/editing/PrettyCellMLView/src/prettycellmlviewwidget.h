@@ -70,16 +70,19 @@ class PrettyCellmlViewWidgetData
 public:
     explicit PrettyCellmlViewWidgetData(CoreCellMLEditing::CoreCellmlEditingWidget *pEditingWidget = 0,
                                         const QString &pSha1 = QString(),
-                                        const bool &pValid = false);
+                                        const bool &pValid = false,
+                                        QDomDocument pRdfNodes = QDomDocument());
 
     CoreCellMLEditing::CoreCellmlEditingWidget * editingWidget() const;
     QString sha1() const;
     bool isValid() const;
+    QDomDocument rdfNodes() const;
 
 private:
     CoreCellMLEditing::CoreCellmlEditingWidget *mEditingWidget;
     QString mSha1;
     bool mValid;
+    QDomDocument mRdfNodes;
 };
 
 //==============================================================================

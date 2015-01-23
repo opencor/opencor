@@ -50,7 +50,7 @@ public:
     bool hasWarnings() const;
     QStringList warnings() const;
 
-    QDomNode rdfNodes() const;
+    QDomDocument rdfNodes() const;
 
 private:
     enum OutputType {
@@ -84,7 +84,7 @@ private:
 
     QStringList mWarnings;
 
-    QDomNode mRdfNodes;
+    QDomDocument mRdfNodes;
 
     void indent();
     void unindent();
@@ -95,8 +95,8 @@ private:
     QString cmetaId(const QDomNode &pDomNode) const;
 
     bool processModelNode(const QDomNode &pDomNode);
-    bool processCommentNode(const QDomNode &pDomNode);
-    bool processRdfNode(const QDomNode &pDomNode);
+    void processCommentNode(const QDomNode &pDomNode);
+    void processRdfNode(const QDomNode &pDomNode);
     bool processImportNode(const QDomNode &pDomNode);
     bool processUnitsNode(const QDomNode &pDomNode,
                           const bool &pInImportNode = false);
@@ -107,7 +107,7 @@ private:
     bool processMathNode(const QDomNode &pDomNode);
     bool processGroupNode(const QDomNode &pDomNode);
     bool processConnectionNode(const QDomNode &pDomNode);
-    bool processUnknownNode(const QDomNode &pDomNode);
+    void processUnknownNode(const QDomNode &pDomNode);
 };
 
 //==============================================================================
