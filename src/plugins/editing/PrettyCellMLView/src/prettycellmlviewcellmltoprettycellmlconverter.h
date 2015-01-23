@@ -50,6 +50,8 @@ public:
     bool hasWarnings() const;
     QStringList warnings() const;
 
+    QDomNode rdfNodes() const;
+
 private:
     enum OutputType {
         None,
@@ -81,6 +83,8 @@ private:
     QString mErrorMessage;
 
     QStringList mWarnings;
+
+    QDomNode mRdfNodes;
 
     void indent();
     void unindent();

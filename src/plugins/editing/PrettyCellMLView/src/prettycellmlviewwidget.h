@@ -65,6 +65,25 @@ namespace PrettyCellMLView {
 
 //==============================================================================
 
+class PrettyCellmlViewWidgetData
+{
+public:
+    explicit PrettyCellmlViewWidgetData(CoreCellMLEditing::CoreCellmlEditingWidget *pEditingWidget = 0,
+                                        const QString &pSha1 = QString(),
+                                        const bool &pValid = false);
+
+    CoreCellMLEditing::CoreCellmlEditingWidget * editingWidget() const;
+    QString sha1() const;
+    bool isValid() const;
+
+private:
+    CoreCellMLEditing::CoreCellmlEditingWidget *mEditingWidget;
+    QString mSha1;
+    bool mValid;
+};
+
+//==============================================================================
+
 class PrettyCellmlViewWidget : public Core::ViewWidget
 {
     Q_OBJECT
@@ -101,9 +120,7 @@ private:
 
     CoreCellMLEditing::CoreCellmlEditingWidget *mEditingWidget;
 
-    QMap<QString, CoreCellMLEditing::CoreCellmlEditingWidget *> mEditingWidgets;
-    QMap<QString, QString> mEditingWidgetsSha1;
-    QMap<QString, bool> mSuccessfulConversions;
+    QMap<QString, PrettyCellmlViewWidgetData> mData;
 
     void commentOrUncommentLine(QScintillaSupport::QScintillaWidget *editor,
                                 const int &pLineNumber,

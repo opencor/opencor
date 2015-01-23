@@ -57,15 +57,51 @@ namespace PrettyCellMLView {
 
 //==============================================================================
 
+PrettyCellmlViewWidgetData::PrettyCellmlViewWidgetData(CoreCellMLEditing::CoreCellmlEditingWidget *pEditingWidget,
+                                                       const QString &pSha1,
+                                                       const bool &pValid) :
+    mEditingWidget(pEditingWidget),
+    mSha1(pSha1),
+    mValid(pValid)
+{
+}
+
+//==============================================================================
+
+CoreCellMLEditing::CoreCellmlEditingWidget * PrettyCellmlViewWidgetData::editingWidget() const
+{
+    // Return our editing widget
+
+    return mEditingWidget;
+}
+
+//==============================================================================
+
+QString PrettyCellmlViewWidgetData::sha1() const
+{
+    // Return our SHA-1 value
+
+    return mSha1;
+}
+
+//==============================================================================
+
+bool PrettyCellmlViewWidgetData::isValid() const
+{
+    // Return whether we are valid
+
+    return mValid;
+}
+
+//==============================================================================
+
 PrettyCellmlViewWidget::PrettyCellmlViewWidget(QWidget *pParent) :
     ViewWidget(pParent),
     mGui(new Ui::PrettyCellmlViewWidget),
     mNeedLoadingSettings(true),
     mSettingsGroup(QString()),
     mEditingWidget(0),
-    mEditingWidgets(QMap<QString, CoreCellMLEditing::CoreCellmlEditingWidget *>()),
-    mEditingWidgetsSha1(QMap<QString, QString>()),
-    mSuccessfulConversions(QMap<QString, bool>())
+    mData(QMap<QString, PrettyCellmlViewWidgetData>())
 {
     // Set up the GUI
 
@@ -108,8 +144,8 @@ void PrettyCellmlViewWidget::retranslateUi()
 {
     // Retranslate all our editing widgets
 
-    foreach (CoreCellMLEditing::CoreCellmlEditingWidget *editingWidget, mEditingWidgets)
-        editingWidget->retranslateUi();
+    foreach (const PrettyCellmlViewWidgetData &data, mData)
+        data.editingWidget()->retranslateUi();
 }
 
 //==============================================================================
@@ -118,7 +154,7 @@ bool PrettyCellmlViewWidget::contains(const QString &pFileName) const
 {
     // Return whether we know about the given file
 
-    return mEditingWidgets.contains(pFileName);
+    return mData.contains(pFileName);
 }
 
 //==============================================================================
@@ -128,7 +164,7 @@ void PrettyCellmlViewWidget::initialize(const QString &pFileName,
 {
     // Retrieve the editing widget associated with the given file, if any
 
-    CoreCellMLEditing::CoreCellmlEditingWidget *newEditingWidget = mEditingWidgets.value(pFileName);
+    CoreCellMLEditing::CoreCellmlEditingWidget *newEditingWidget = mData.value(pFileName).editingWidget();
 
     if (!newEditingWidget) {
         // No editing widget exists for the given file, so generate a pretty
@@ -183,9 +219,10 @@ void PrettyCellmlViewWidget::initialize(const QString &pFileName,
         // Keep track of our editing widget (and of whether the conversion was
         // successful) and add it to ourselves
 
-        mEditingWidgets.insert(pFileName, newEditingWidget);
-        mEditingWidgetsSha1.insert(pFileName, Core::sha1(newEditingWidget->editor()->contents()));
-        mSuccessfulConversions.insert(pFileName, successfulConversion);
+        mData.insert(pFileName,
+                     PrettyCellmlViewWidgetData(newEditingWidget,
+                                                Core::sha1(newEditingWidget->editor()->contents()),
+                                                successfulConversion));
 
         layout()->addWidget(newEditingWidget);
 
@@ -221,7 +258,7 @@ void PrettyCellmlViewWidget::initialize(const QString &pFileName,
         // Note: we use a single shot to give time to the setting up of the
         //       editing widget to complete...
 
-        if (!mSuccessfulConversions.value(pFileName))
+        if (!mData.value(pFileName).isValid())
             QTimer::singleShot(0, this, SLOT(selectFirstItemInEditorList()));
 
         // Show/hide our editing widgets
@@ -254,7 +291,7 @@ void PrettyCellmlViewWidget::finalize(const QString &pFileName)
 {
     // Remove the editing widget, should there be one for the given file
 
-    CoreCellMLEditing::CoreCellmlEditingWidget *editingWidget = mEditingWidgets.value(pFileName);
+    CoreCellMLEditing::CoreCellmlEditingWidget *editingWidget = mData.value(pFileName).editingWidget();
 
     if (editingWidget) {
         // There is an editing widget for the given file name, so save our
@@ -276,9 +313,7 @@ void PrettyCellmlViewWidget::finalize(const QString &pFileName)
 
         delete editingWidget;
 
-        mEditingWidgets.remove(pFileName);
-        mEditingWidgetsSha1.remove(pFileName);
-        mSuccessfulConversions.remove(pFileName);
+        mData.remove(pFileName);
     }
 }
 
@@ -294,7 +329,7 @@ void PrettyCellmlViewWidget::fileReloaded(const QString &pFileName)
     //       hence the extra argument we pass to initialize()...
 
     if (contains(pFileName)) {
-        bool update = mEditingWidget == mEditingWidgets.value(pFileName);
+        bool update = mEditingWidget == mData.value(pFileName).editingWidget();
 
         finalize(pFileName);
 
@@ -310,18 +345,11 @@ void PrettyCellmlViewWidget::fileRenamed(const QString &pOldFileName,
 {
     // The given file has been renamed, so update our editing widgets mapping
 
-    CoreCellMLEditing::CoreCellmlEditingWidget *editingWidget = mEditingWidgets.value(pOldFileName);
-    QString editingWidgetSha1 = mEditingWidgetsSha1.value(pOldFileName);
-    bool successfulConversion = mSuccessfulConversions.value(pOldFileName);
+    PrettyCellmlViewWidgetData data = mData.value(pOldFileName);
 
-    if (editingWidget) {
-        mEditingWidgets.insert(pNewFileName, editingWidget);
-        mEditingWidgetsSha1.insert(pNewFileName, editingWidgetSha1);
-        mSuccessfulConversions.insert(pNewFileName, successfulConversion);
-
-        mEditingWidgets.remove(pOldFileName);
-        mEditingWidgetsSha1.remove(pOldFileName);
-        mSuccessfulConversions.remove(pOldFileName);
+    if (data.editingWidget()) {
+        mData.insert(pNewFileName, data);
+        mData.remove(pOldFileName);
     }
 }
 
@@ -331,7 +359,7 @@ Editor::EditorWidget * PrettyCellmlViewWidget::editor(const QString &pFileName) 
 {
     // Return the requested editor
 
-    CoreCellMLEditing::CoreCellmlEditingWidget *editingWidget = mEditingWidgets.value(pFileName);
+    CoreCellMLEditing::CoreCellmlEditingWidget *editingWidget = mData.value(pFileName).editingWidget();
 
     return editingWidget?editingWidget->editor():0;
 }
@@ -342,7 +370,7 @@ bool PrettyCellmlViewWidget::isEditorUseable(const QString &pFileName) const
 {
     // Return whether the requested editor is useable
 
-    return mSuccessfulConversions.value(pFileName);
+    return mData.value(pFileName).isValid();
 }
 
 //==============================================================================
@@ -351,9 +379,9 @@ bool PrettyCellmlViewWidget::isEditorContentsModified(const QString &pFileName) 
 {
     // Return whether the contents of the requested editor has been modified
 
-    CoreCellMLEditing::CoreCellmlEditingWidget *editingWidget = mEditingWidgets.value(pFileName);
+    PrettyCellmlViewWidgetData data = mData.value(pFileName);
 
-    return editingWidget?Core::sha1(editingWidget->editor()->contents()).compare(mEditingWidgetsSha1.value(pFileName)):false;
+    return data.editingWidget()?Core::sha1(data.editingWidget()->editor()->contents()).compare(data.sha1()):false;
 }
 
 //==============================================================================

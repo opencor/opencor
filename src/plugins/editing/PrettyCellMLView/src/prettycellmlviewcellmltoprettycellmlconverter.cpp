@@ -41,7 +41,8 @@ PrettyCellMLViewCellmlToPrettyCellmlConverter::PrettyCellMLViewCellmlToPrettyCel
     mErrorLine(-1),
     mErrorColumn(-1),
     mErrorMessage(QString()),
-    mWarnings(QStringList())
+    mWarnings(QStringList()),
+    mRdfNodes(QDomNode())
 {
 }
 
@@ -127,6 +128,15 @@ QStringList PrettyCellMLViewCellmlToPrettyCellmlConverter::warnings() const
     // Return our warnings
 
     return mWarnings;
+}
+
+//==============================================================================
+
+QDomNode PrettyCellMLViewCellmlToPrettyCellmlConverter::rdfNodes() const
+{
+    // Return our RDF nodes
+
+    return mRdfNodes;
 }
 
 //==============================================================================
@@ -272,6 +282,8 @@ bool PrettyCellMLViewCellmlToPrettyCellmlConverter::processRdfNode(const QDomNod
 //---GRY--- TO BE DONE...
 Q_UNUSED(pDomNode);
 qWarning("RDF node: not yet implemented...");
+
+    mRdfNodes.appendChild(pDomNode);
 
     return true;
 }
