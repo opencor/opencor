@@ -55,6 +55,8 @@ private:
         DefModel,
         Comment,
         DefImport,
+        ImportUnit,
+        ImportComp,
         DefUnit,
         DefBaseUnit,
         Unit,

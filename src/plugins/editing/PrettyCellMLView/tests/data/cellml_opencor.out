@@ -7,12 +7,24 @@ def model{cellml_1_1} cellml_1_1 as
 
     // In between comment...
 
-    def import{importx}
+    def import{importx} using "importedmodel.cellml" for
         // Comments can be within an import definition...
 
         // In between comment...
 
+        // Comments can be within a unit import,
+        // but if kept it will be serialised back in the
+        // corresponding import definition...
+
+        unit{unitsx} unitsx using unit refunitsx;
+
         // In between comment...
+
+        // Comments can be within a component import,
+        // but if kept it will be serialised back in the
+        // corresponding import definition...
+
+        comp{componentx} componentx using comp refcomponentx;
     enddef;
 
     // In between comment...

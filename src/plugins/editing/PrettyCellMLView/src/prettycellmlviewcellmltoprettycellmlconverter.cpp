@@ -232,6 +232,7 @@ bool PrettyCellMLViewCellmlToPrettyCellmlConverter::processCommentNode(const QDo
     //       and "\n" on Linux / OS X...
 
     if (   (mLastOutputType == Comment)
+        || (mLastOutputType == ImportUnit) || (mLastOutputType == ImportComp)
         || (mLastOutputType == DefBaseUnit) || (mLastOutputType == EndDef)
         || (mLastOutputType == Unit) || (mLastOutputType == Var)) {
         outputString();
@@ -260,17 +261,14 @@ qWarning("RDF node: not yet implemented...");
 
 bool PrettyCellMLViewCellmlToPrettyCellmlConverter::processImportNode(const QDomNode &pDomNode)
 {
-    // Process the given import node
-
-//---GRY--- TO BE DONE...
-qWarning("Import node: not yet fully implemented...");
     // Start processing the given import node
 
     if ((mLastOutputType == Comment) || (mLastOutputType == EndDef))
         outputString();
 
     outputString(DefImport,
-                 QString("def import%1").arg(cmetaId(pDomNode)));
+                 QString("def import%1 using \"%2\" for").arg(cmetaId(pDomNode))
+                                                         .arg(pDomNode.attributes().namedItem("xlink:href").nodeValue()));
 
     indent();
 
@@ -287,6 +285,12 @@ qWarning("Import node: not yet fully implemented...");
                 return false;
         } else if (!nodeName.compare("rdf:RDF")) {
             if (!processRdfNode(domNode))
+                return false;
+        } else if (!nodeName.compare("units")) {
+            if (!processUnitsNode(domNode, true))
+                return false;
+        } else if (!nodeName.compare("component")) {
+            if (!processComponentNode(domNode, true))
                 return false;
         } else if (!processUnknownNode(domNode)) {
             return false;
@@ -320,7 +324,7 @@ bool PrettyCellMLViewCellmlToPrettyCellmlConverter::processUnitsNode(const QDomN
 
     bool isBaseUnits = !baseUnits.compare("yes");
 
-    if (!isBaseUnits) {
+    if (!pInImportNode && !isBaseUnits) {
         if (   (mLastOutputType == Comment) || (mLastOutputType == EndDef)
             || (mLastOutputType == DefBaseUnit)) {
             outputString();
@@ -358,7 +362,15 @@ bool PrettyCellMLViewCellmlToPrettyCellmlConverter::processUnitsNode(const QDomN
 
     // Finish processing the given units node
 
-    if (isBaseUnits) {
+    if (pInImportNode) {
+        if ((mLastOutputType == Comment) || (mLastOutputType == ImportComp))
+            outputString();
+
+        outputString(ImportUnit,
+                     QString("unit%1 %2 using unit %3;").arg(cmetaId(pDomNode))
+                                                        .arg(pDomNode.attributes().namedItem("name").nodeValue())
+                                                        .arg(pDomNode.attributes().namedItem("units_ref").nodeValue()));
+    } else if (isBaseUnits) {
         if ((mLastOutputType == Comment) || (mLastOutputType == EndDef))
             outputString();
 
@@ -450,14 +462,16 @@ bool PrettyCellMLViewCellmlToPrettyCellmlConverter::processComponentNode(const Q
 {
     // Start processing the given component node
 
-    if ((mLastOutputType == Comment) || (mLastOutputType == EndDef))
-        outputString();
+    if (!pInImportNode) {
+        if ((mLastOutputType == Comment) || (mLastOutputType == EndDef))
+            outputString();
 
-    outputString(DefComp,
-                 QString("def comp%1 %2 as").arg(cmetaId(pDomNode))
-                                            .arg(pDomNode.attributes().namedItem("name").nodeValue()));
+        outputString(DefComp,
+                     QString("def comp%1 %2 as").arg(cmetaId(pDomNode))
+                                                .arg(pDomNode.attributes().namedItem("name").nodeValue()));
 
-    indent();
+        indent();
+    }
 
     // Process the given component node's children
 
@@ -489,9 +503,19 @@ bool PrettyCellMLViewCellmlToPrettyCellmlConverter::processComponentNode(const Q
 
     // Finish processing the given component node
 
-    unindent();
+    if (pInImportNode) {
+        if ((mLastOutputType == Comment) || (mLastOutputType == ImportUnit))
+            outputString();
 
-    outputString(EndDef, "enddef;");
+        outputString(ImportComp,
+                     QString("comp%1 %2 using comp %3;").arg(cmetaId(pDomNode))
+                                                        .arg(pDomNode.attributes().namedItem("name").nodeValue())
+                                                        .arg(pDomNode.attributes().namedItem("component_ref").nodeValue()));
+    } else {
+        unindent();
+
+        outputString(EndDef, "enddef;");
+    }
 
     return true;
 }
