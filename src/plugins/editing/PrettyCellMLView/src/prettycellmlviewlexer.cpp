@@ -343,6 +343,76 @@ void PrettyCellmlViewLexer::doStyleText(int pStart, int pEnd, QString pText,
         }
     }
 
+    // Check whether the given text contains a string
+
+    int stringStartPosition = pText.indexOf(StringString);
+
+    if (stringStartPosition != -1) {
+        // There is a string to style, so first style everything that is before
+        // it
+
+        doStyleText(pStart, pStart+stringStartPosition, pText.left(stringStartPosition),
+                    pParameterGroup);
+
+        // Now, check where the string ends and
+
+        int stringEndPosition = pText.indexOf(StringString, stringStartPosition+StringStringLength);
+
+        if (stringEndPosition != -1) {
+            // The string ends somewhere, so compare its line number against
+            // that of where it started
+
+            int stringStartLineNumber, stringStartColumnNumber;
+            int stringEndLineNumber, stringEndColumnNumber;
+
+            editor()->lineIndexFromPosition(pStart+stringStartPosition,
+                                            &stringStartLineNumber, &stringStartColumnNumber);
+            editor()->lineIndexFromPosition(pStart+stringEndPosition,
+                                            &stringEndLineNumber, &stringEndColumnNumber);
+
+            if (stringStartLineNumber == stringEndLineNumber) {
+                // The string starts and ends on the same line, so style
+                // everything that is after the string
+
+                int start = pStart+stringEndPosition+StringStringLength;
+
+                doStyleText(start, pEnd, pText.right(pEnd-start), pParameterGroup);
+            } else {
+                // The string starts and ends on a different line, so consider
+                // that we couldn't find the end of the string
+
+                stringEndPosition = -1;
+            }
+        }
+
+        if (stringEndPosition == -1) {
+            // The string doesn't end or we found the beginning of another
+            // string on a different line, so style everything that is after the
+            // end of the line, if anything, on which the string started
+
+            int eolPosition = pText.indexOf(mEolString, stringStartPosition+StringStringLength);
+
+            if (eolPosition != -1) {
+                int start = pStart+eolPosition+mEolString.length();
+
+                doStyleText(start, pEnd, pText.right(pEnd-start), pParameterGroup);
+            }
+
+            // Consider the end of the line as the end of the string
+
+            stringEndPosition = eolPosition;
+        }
+
+        // Style the string itself
+
+        int start = pStart+stringStartPosition;
+
+        startStyling(start);
+        setStyling(((stringEndPosition == -1)?pEnd:pStart+stringEndPosition+StringStringLength)-start, String);
+
+        return;
+    }
+
     // Check whether the given text contains a // comment
 
     int commentPosition = pText.indexOf(CommentString);
@@ -417,76 +487,6 @@ void PrettyCellmlViewLexer::doStyleText(int pStart, int pEnd, QString pText,
         doStyleText(pStart+parameterGroupStartPosition, pEnd,
                     pText.right(pEnd-pStart-parameterGroupStartPosition),
                     pParameterGroup);
-
-        return;
-    }
-
-    // Check whether the given text contains a string
-
-    int stringStartPosition = pText.indexOf(StringString);
-
-    if (stringStartPosition != -1) {
-        // There is a string to style, so first style everything that is before
-        // it
-
-        doStyleText(pStart, pStart+stringStartPosition, pText.left(stringStartPosition),
-                    pParameterGroup);
-
-        // Now, check where the string ends and
-
-        int stringEndPosition = pText.indexOf(StringString, stringStartPosition+StringStringLength);
-
-        if (stringEndPosition != -1) {
-            // The string ends somewhere, so compare its line number against
-            // that of where it started
-
-            int stringStartLineNumber, stringStartColumnNumber;
-            int stringEndLineNumber, stringEndColumnNumber;
-
-            editor()->lineIndexFromPosition(pStart+stringStartPosition,
-                                            &stringStartLineNumber, &stringStartColumnNumber);
-            editor()->lineIndexFromPosition(pStart+stringEndPosition,
-                                            &stringEndLineNumber, &stringEndColumnNumber);
-
-            if (stringStartLineNumber == stringEndLineNumber) {
-                // The string starts and ends on the same line, so style
-                // everything that is after the string
-
-                int start = pStart+stringEndPosition+StringStringLength;
-
-                doStyleText(start, pEnd, pText.right(pEnd-start), pParameterGroup);
-            } else {
-                // The string starts and ends on a different line, so consider
-                // that we couldn't find the end of the string
-
-                stringEndPosition = -1;
-            }
-        }
-
-        if (stringEndPosition == -1) {
-            // The string doesn't end or we found the beginning of another
-            // string on a different line, so style everything that is after the
-            // end of the line, if anything, on which the string started
-
-            int eolPosition = pText.indexOf(mEolString, stringStartPosition+StringStringLength);
-
-            if (eolPosition != -1) {
-                int start = pStart+eolPosition+mEolString.length();
-
-                doStyleText(start, pEnd, pText.right(pEnd-start), pParameterGroup);
-            }
-
-            // Consider the end of the line as the end of the string
-
-            stringEndPosition = eolPosition;
-        }
-
-        // Style the string itself
-
-        int start = pStart+stringStartPosition;
-
-        startStyling(start);
-        setStyling(((stringEndPosition == -1)?pEnd:pStart+stringEndPosition+StringStringLength)-start, String);
 
         return;
     }
