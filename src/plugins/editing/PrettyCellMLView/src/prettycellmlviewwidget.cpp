@@ -119,8 +119,6 @@ bool PrettyCellmlViewWidget::contains(const QString &pFileName) const
     // Return whether we know about the given file
 
     return mEditingWidgets.contains(pFileName);
-
-    return mEditingWidgets.value(pFileName);
 }
 
 //==============================================================================
