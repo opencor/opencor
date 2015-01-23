@@ -511,10 +511,9 @@ void SingleCellViewWidget::updateInvalidModelMessageWidget()
 
 bool SingleCellViewWidget::contains(const QString &pFileName) const
 {
-    // Return whether we know about the given CellML file, i.e. whether we have
-    // a simulation for it
+    // Return whether we know about the given CellML file
 
-    return mSimulations.value(pFileName);
+    return mSimulations.contains(pFileName);
 }
 
 //==============================================================================

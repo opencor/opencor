@@ -129,10 +129,9 @@ void RawCellmlViewWidget::retranslateUi()
 
 bool RawCellmlViewWidget::contains(const QString &pFileName) const
 {
-    // Return whether we know about the given file, i.e. whether we have an
-    // editing widget for it
+    // Return whether we know about the given file
 
-    return mEditingWidgets.value(pFileName);
+    return mEditingWidgets.contains(pFileName);
 }
 
 //==============================================================================

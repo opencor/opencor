@@ -99,10 +99,9 @@ void RawViewWidget::retranslateUi()
 
 bool RawViewWidget::contains(const QString &pFileName) const
 {
-    // Return whether we know about the given file, i.e. whether we have an
-    // editor for it
+    // Return whether we know about the given file
 
-    return mEditors.value(pFileName);
+    return mEditors.contains(pFileName);
 }
 
 //==============================================================================
