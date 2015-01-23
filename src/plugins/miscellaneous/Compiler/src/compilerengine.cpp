@@ -97,20 +97,20 @@ void CompilerEngine::reset(const bool &pResetError)
 
 //==============================================================================
 
+bool CompilerEngine::hasError() const
+{
+    // Return whether an error occurred
+
+    return mError.size();
+}
+
+//==============================================================================
+
 QString CompilerEngine::error() const
 {
     // Return the compiler engine's error
 
     return mError;
-}
-
-//==============================================================================
-
-bool CompilerEngine::hasError() const
-{
-    // Return whether an error occurred
-
-    return !mError.isEmpty();
 }
 
 //==============================================================================

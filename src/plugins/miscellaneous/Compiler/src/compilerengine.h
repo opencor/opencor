@@ -53,8 +53,8 @@ public:
     explicit CompilerEngine();
     ~CompilerEngine();
 
-    QString error() const;
     bool hasError() const;
+    QString error() const;
 
     bool compileCode(const QString &pCode);
 

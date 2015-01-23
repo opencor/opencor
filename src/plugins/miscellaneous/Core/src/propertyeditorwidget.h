@@ -196,8 +196,8 @@ public:
     void add(Property *pProperty);
     void addTo(QStandardItem *pParent);
 
-    QModelIndex index() const;
     bool hasIndex(const QModelIndex &pIndex) const;
+    QModelIndex index() const;
 
     QString id() const;
     void setId(const QString &pId);

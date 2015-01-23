@@ -551,15 +551,6 @@ QList<QStandardItem *> Property::items() const
 
 //==============================================================================
 
-QModelIndex Property::index() const
-{
-    // Return our index
-
-    return mName->index();
-}
-
-//==============================================================================
-
 bool Property::hasIndex(const QModelIndex &pIndex) const
 {
     // Return whether the given is that our name, value or unit item
@@ -570,6 +561,15 @@ bool Property::hasIndex(const QModelIndex &pIndex) const
         res = res || (mUnit->index()  == pIndex);
 
     return res;
+}
+
+//==============================================================================
+
+QModelIndex Property::index() const
+{
+    // Return our index
+
+    return mName->index();
 }
 
 //==============================================================================
