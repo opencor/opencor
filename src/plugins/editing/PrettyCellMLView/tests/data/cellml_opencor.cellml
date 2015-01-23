@@ -80,7 +80,7 @@ corresponding unit definition...-->
             </rdf:Description>
         </rdf:RDF> 
         <!--In between comment...-->
-        <variable cmeta:id="variablex" name="variablex">
+        <variable cmeta:id="variablex" name="variablex" units="unitsx">
             <!--Comments can be within a variable declaration,
 but if kept it will be serialised back in the
 corresponding component definition...-->

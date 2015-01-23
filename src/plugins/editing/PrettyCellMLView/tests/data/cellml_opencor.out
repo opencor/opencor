@@ -1,4 +1,4 @@
-def model cellml_1_1{cellml_1_1} as
+def model{cellml_1_1} cellml_1_1 as
     // A comment can fit on one line...
 
     // A comment can also fit
@@ -21,11 +21,11 @@ def model cellml_1_1{cellml_1_1} as
     // but if kept it will be serialised back in the
     // corresponding model definition...
 
-    def unit baseunitsx{baseunitsx} as base unit;
+    def unit{baseunitsx} baseunitsx as base unit;
 
     // In between comment...
 
-    def unit unitsx{unitsx} as
+    def unit{unitsx} unitsx as
         // Comments can be within a unit definition...
 
         // In between comment...
@@ -34,12 +34,12 @@ def model cellml_1_1{cellml_1_1} as
         // but if kept it will be serialised back in the
         // corresponding unit definition...
 
-        unit unitx{unitx};
+        unit{unitx} unitx;
     enddef;
 
     // In between comment...
 
-    def comp componentx{componentx} as
+    def comp{componentx} componentx as
         // Comments can be within a component definition...
 
         // In between comment...
@@ -48,7 +48,7 @@ def model cellml_1_1{cellml_1_1} as
         // but if kept it will be serialised back in the
         // corresponding component definition...
 
-        var variablex{variablex}: ;
+        var{variablex} variablex: unitsx;
     enddef;
 
     // In between comment...
