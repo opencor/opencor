@@ -278,6 +278,8 @@ void PrettyCellmlViewWidget::finalize(const QString &pFileName)
         delete editingWidget;
 
         mEditingWidgets.remove(pFileName);
+        mEditingWidgetsSha1.remove(pFileName);
+        mSuccessfulConversions.remove(pFileName);
     }
 }
 
