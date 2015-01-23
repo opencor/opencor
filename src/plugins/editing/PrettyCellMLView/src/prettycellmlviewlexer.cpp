@@ -42,8 +42,8 @@ PrettyCellmlViewLexer::PrettyCellmlViewLexer(QObject *pParent) :
 
     mKeywordsRegEx = QRegularExpression(
                          "\\b("
-                             "as|base|comp|def|enddef|group|import|map|model|"
-                             "unit|var"
+                             "as|base|comp|def|enddef|for|group|import|map|"
+                             "model|unit|using|var"
                          ")\\b");
 
     mCellmlKeywordsRegEx = QRegularExpression(
