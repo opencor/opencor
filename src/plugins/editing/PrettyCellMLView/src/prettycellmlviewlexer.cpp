@@ -553,11 +553,42 @@ void PrettyCellmlViewLexer::doStyleTextNumber(int pStart, const QString &pText,
 
 //==============================================================================
 
-bool PrettyCellmlViewLexer::stringWithinComment(const int &pFrom,
-                                                const int &pTo) const
+bool PrettyCellmlViewLexer::stringWithinStringOrComment(const int &pFrom,
+                                                        const int &pTo) const
 {
-    // Return whether the given string located at the given location is within
-    // a comment
+    // Return whether the string, which range is given, is within a string or a
+    // comment
+
+    // Check whether we are within a string
+
+    int stringPosition = mFullText.lastIndexOf(StringString, pFrom);
+
+    if (stringPosition != -1) {
+        int lineNumber, columnNumber;
+        int stringStartLineNumber, stringStartColumnNumber;
+
+        editor()->lineIndexFromPosition(pFrom, &lineNumber, &columnNumber);
+        editor()->lineIndexFromPosition(stringPosition,
+                                        &stringStartLineNumber, &stringStartColumnNumber);
+
+        if (lineNumber == stringStartLineNumber) {
+            // The beginning or the end of a string was found on the same line
+            // as the given string, so check whether it's actually the beginning
+            // or the end of a string
+
+            int from = editor()->positionFromLineIndex(lineNumber, 0);
+            bool beginningOfString = false;
+
+            while (   ((stringPosition = mFullText.indexOf(StringString, from)) != -1)
+                   &&  (stringPosition < pFrom)) {
+                from = stringPosition+StringStringLength;
+                beginningOfString = !beginningOfString;
+            }
+
+            if (beginningOfString)
+                return true;
+        }
+    }
 
     // Check whether we are within a /* XXX */ comment
 
@@ -604,7 +635,7 @@ int PrettyCellmlViewLexer::findString(const QString &pString, int pFrom,
         pFrom = pForward?res+stringLength:res-1;
 
         res = pForward?mFullText.indexOf(pString, pFrom):mFullText.lastIndexOf(pString, pFrom);
-    } while ((res != -1) && stringWithinComment(res, res+stringLength-1));
+    } while ((res != -1) && stringWithinStringOrComment(res, res+stringLength-1));
 
     return res;
 }

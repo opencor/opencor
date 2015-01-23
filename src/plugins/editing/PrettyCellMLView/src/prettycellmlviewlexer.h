@@ -81,7 +81,7 @@ private:
     void doStyleTextNumber(int pStart, const QString &pText,
                            const int &pNumberStyle);
 
-    bool stringWithinComment(const int &pFrom, const int &pTo) const;
+    bool stringWithinStringOrComment(const int &pFrom, const int &pTo) const;
 
     int findString(const QString &pString, int pFrom,
                    const bool &pForward = true);
