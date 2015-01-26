@@ -65,7 +65,7 @@ QString cliFileName(const QString &pFileName)
 
 //==============================================================================
 
-QString fileContents(const QString &pFileName)
+QStringList fileContents(const QString &pFileName)
 {
     // Read and return the contents of the given file
 
@@ -81,12 +81,12 @@ QString fileContents(const QString &pFileName)
         file.close();
     }
 
-    return contents;
+    return contents.split("\n");
 }
 
 //==============================================================================
 
-QString runCli(const QStringList pArguments)
+QStringList runCli(const QStringList pArguments)
 {
     // Go to the directory where our tests are located
     // Note: see main()...
@@ -129,7 +129,7 @@ QString runCli(const QStringList pArguments)
     QDir::setCurrent(currentPath);
 #endif
 
-    return output.remove("\r");
+    return output.remove("\r").split("\n");
 }
 
 //==============================================================================

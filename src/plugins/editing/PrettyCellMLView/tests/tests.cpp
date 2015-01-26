@@ -40,7 +40,7 @@ void Tests::cellmlCorTests()
 
     QVERIFY(converter.execute());
 
-    QCOMPARE(converter.output(),
+    QCOMPARE(converter.output().split("\n"),
              OpenCOR::fileContents(OpenCOR::fileName("src/plugins/editing/PrettyCellMLView/tests/data/cellml_cor.out")));
 }
 
@@ -54,7 +54,7 @@ void Tests::cellmlOpencorTests()
 
     QVERIFY(converter.execute());
 
-    QCOMPARE(converter.output(),
+    QCOMPARE(converter.output().split("\n"),
              OpenCOR::fileContents(OpenCOR::fileName("src/plugins/editing/PrettyCellMLView/tests/data/cellml_opencor.out")));
 }
 

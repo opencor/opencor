@@ -35,7 +35,7 @@ void Tests::cliHelpTests()
 {
     // Ask for the plugin's help
 
-    QString help = OpenCOR::fileContents(OpenCOR::fileName("src/plugins/miscellaneous/CellMLTools/tests/data/help.out"));
+    QStringList help = OpenCOR::fileContents(OpenCOR::fileName("src/plugins/miscellaneous/CellMLTools/tests/data/help.out"));
 
     QCOMPARE(OpenCOR::runCli(QStringList() << "-c" << "CellMLTools::help"),
              help);
@@ -64,7 +64,7 @@ void Tests::cliCellmlExportTests()
     inFileName = OpenCOR::cliFileName("src/plugins/miscellaneous/CellMLTools/tests/data/experiments/periodic-stimulus.xml");
 
     QCOMPARE(OpenCOR::runCli(QStringList() << "-c" << "CellMLTools::export" << inFileName << OpenCOR::cliFileName(outFileName) << predefined_format),
-             QString());
+             QStringList() << QString());
     QCOMPARE(OpenCOR::fileContents(OpenCOR::fileName(outFileName)),
              OpenCOR::fileContents(OpenCOR::fileName("src/plugins/miscellaneous/CellMLTools/tests/data/cellml_1_0_export.out")));
 
@@ -85,7 +85,7 @@ void Tests::cliCellmlExportTests()
     QString userDefinedFormatFileName = OpenCOR::cliFileName("src/plugins/miscellaneous/CellMLTools/tests/data/user_defined_format.xml");
 
     QCOMPARE(OpenCOR::runCli(QStringList() << "-c" << "CellMLTools::export" << inFileName << OpenCOR::cliFileName(outFileName) << userDefinedFormatFileName),
-             QString());
+             QStringList() << QString());
 #ifdef Q_OS_WIN
     QCOMPARE(OpenCOR::fileContents(OpenCOR::fileName(outFileName)),
              OpenCOR::fileContents(OpenCOR::fileName("src/plugins/miscellaneous/CellMLTools/tests/data/user_defined_format_export_on_windows.out")));

@@ -145,18 +145,18 @@ def model cellml_1_0 as
         var variable5: unit5 {pub: none, priv: none};
     enddef;
 
-    def group as
+    def group as containment for
     enddef;
 
-    def group as
+    def group as containment containment1 for
     enddef;
 
-    def group as
+    def group as encapsulation for
     enddef;
 
-    def group as
+    def group as encapsulation and containment containment1 for
     enddef;
 
-    def map as
+    def map for
     enddef;
 enddef;

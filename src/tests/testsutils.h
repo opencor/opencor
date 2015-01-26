@@ -39,9 +39,9 @@ namespace OpenCOR {
 QString fileName(const QString &pFileName);
 QString cliFileName(const QString &pFileName);
 
-QString fileContents(const QString &pFileName);
+QStringList fileContents(const QString &pFileName);
 
-QString runCli(const QStringList pArguments);
+QStringList runCli(const QStringList pArguments);
 
 //==============================================================================
 

@@ -105,9 +105,11 @@ private:
                               const bool &pInImportNode = false);
     void processVariableNode(const QDomNode &pDomNode);
     void processMathNode(const QDomNode &pDomNode);
-    void processGroupNode(const QDomNode &pDomNode);
-    void processRelationshipRefNode(const QDomNode &pDomNode);
-    void processComponentRefNode(const QDomNode &pDomNode);
+    bool processGroupNode(const QDomNode &pDomNode);
+    bool processRelationshipRefNode(const QDomNode &pDomNode,
+                                    QString &pRelationshipReference);
+    void processComponentRefNode(const QDomNode &pDomNode,
+                                 QStringList &pComponentReferences);
     void processConnectionNode(const QDomNode &pDomNode);
     void processMapComponentsNode(const QDomNode &pDomNode);
     void processMapVariablesNode(const QDomNode &pDomNode);

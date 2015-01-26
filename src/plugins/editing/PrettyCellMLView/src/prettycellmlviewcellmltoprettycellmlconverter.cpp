@@ -186,13 +186,11 @@ void PrettyCellMLViewCellmlToPrettyCellmlConverter::outputString(const OutputTyp
 
 //==============================================================================
 
-static const auto CmetaId = QStringLiteral("cmeta:id");
-
-//==============================================================================
-
 QString PrettyCellMLViewCellmlToPrettyCellmlConverter::cmetaId(const QDomNode &pDomNode) const
 {
     // Return the cmeta:id, if any, of the given node
+
+    static const QString CmetaId = "cmeta:id";
 
     if (pDomNode.attributes().contains(CmetaId))
         return QString("{%1}").arg(pDomNode.attributes().namedItem(CmetaId).nodeValue());
@@ -234,7 +232,8 @@ bool PrettyCellMLViewCellmlToPrettyCellmlConverter::processModelNode(const QDomN
             if (!processComponentNode(domNode))
                 return false;
         } else if (!nodeName.compare("group")) {
-            processGroupNode(domNode);
+            if (!processGroupNode(domNode))
+                return false;
         } else if (!nodeName.compare("connection")) {
             processConnectionNode(domNode);
         } else {
@@ -414,8 +413,7 @@ void PrettyCellMLViewCellmlToPrettyCellmlConverter::processUnitNode(const QDomNo
     //          it's not like we can put a comment within a def...enddef;
     //          statement...
     // Note #2: when parsed back, comments will not be in the unit node anymore,
-    //          but its parent one since we don't have a def...enddef;
-    //          statement...
+    //          but in its parent...
 
     QString nodeName;
 
@@ -539,8 +537,7 @@ void PrettyCellMLViewCellmlToPrettyCellmlConverter::processVariableNode(const QD
     //          it's not like we can put a comment within a def...enddef;
     //          statement...
     // Note #2: when parsed back, comments will not be in the variable node
-    //          anymore, but its parent one since we don't have a def...enddef;
-    //          statement...
+    //          anymore, but in its parent...
 
     QString nodeName;
 
@@ -600,20 +597,69 @@ qWarning("Math node: not yet implemented...");
 
 //==============================================================================
 
-void PrettyCellMLViewCellmlToPrettyCellmlConverter::processGroupNode(const QDomNode &pDomNode)
+bool PrettyCellMLViewCellmlToPrettyCellmlConverter::processGroupNode(const QDomNode &pDomNode)
 {
 //---GRY--- TO BE DONE...
 qWarning("Group node: not yet fully implemented...");
     // Start processing the given group node
 
+    static const QString RelationshipReference = "___RELATIONSHIP_REFERENCE___";
+
     if ((mLastOutputType == Comment) || (mLastOutputType == EndDef))
         outputString();
 
-    outputString(DefGroup, QString("def group%1 as").arg(cmetaId(pDomNode)));
+    outputString(DefGroup, QString("def group%1 as %2 for").arg(cmetaId(pDomNode))
+                                                           .arg(RelationshipReference));
 
     indent();
 
     // Process the given group node's children
+
+    QString nodeName;
+    QString relationshipReference = QString();
+    QStringList componentReferences = QStringList();
+
+    for (QDomNode domNode = pDomNode.firstChild();
+         !domNode.isNull(); domNode = domNode.nextSibling()) {
+        nodeName = domNode.nodeName();
+
+        if (!nodeName.compare("#comment")) {
+            processCommentNode(domNode);
+        } else if (!nodeName.compare("rdf:RDF")) {
+            processRdfNode(domNode);
+        } else if (!nodeName.compare("relationship_ref")) {
+            if (!processRelationshipRefNode(domNode, relationshipReference))
+                return false;
+        } else if (!nodeName.compare("component_ref")) {
+            processComponentRefNode(domNode, componentReferences);
+        } else {
+            processUnknownNode(domNode);
+        }
+    }
+
+    // Finish processing the given group node
+
+    mOutput.replace(RelationshipReference, relationshipReference);
+
+    unindent();
+
+    outputString(EndDef, "enddef;");
+
+    return true;
+}
+
+//==============================================================================
+
+bool PrettyCellMLViewCellmlToPrettyCellmlConverter::processRelationshipRefNode(const QDomNode &pDomNode,
+                                                                               QString &pRelationshipReference)
+{
+    // Process the given relationship ref node's children
+    // Note #1: unlike for most nodes, we process the node's children before
+    //          processing the node itself since it doesn't output any line, so
+    //          it's not like we can put a comment within a def...enddef;
+    //          statement...
+    // Note #2: when parsed back, comments will not be in the relationship ref
+    //          node anymore, but in its parent...
 
     QString nodeName;
 
@@ -625,37 +671,73 @@ qWarning("Group node: not yet fully implemented...");
             processCommentNode(domNode);
         else if (!nodeName.compare("rdf:RDF"))
             processRdfNode(domNode);
-        else if (!nodeName.compare("relationship_ref"))
-            processRelationshipRefNode(domNode);
-        else if (!nodeName.compare("component_ref"))
-            processComponentRefNode(domNode);
         else
             processUnknownNode(domNode);
     }
 
-    // Finish processing the given group node
+    // Process the given relationship ref node
 
-    unindent();
+    QString relationship = pDomNode.attributes().namedItem("relationship").nodeValue();
+    QString name = pDomNode.attributes().namedItem("name").nodeValue();
+    bool isEncapsulation = false;
 
-    outputString(EndDef, "enddef;");
+    if (pDomNode.namespaceURI().isEmpty()) {
+        if (!relationship.compare("encapsulation")) {
+            isEncapsulation = true;
+        } else if (relationship.compare("containment")) {
+            mErrorLine = pDomNode.lineNumber();
+            mErrorMessage = QObject::tr("The 'relationship' attribute must have a value equal to 'encapsulation' or 'containment' in the CellML namespace.");
+
+            return false;
+        }
+    }
+
+    if (isEncapsulation && !name.isEmpty()) {
+        mErrorLine = pDomNode.lineNumber();
+        mErrorMessage = QObject::tr("The 'name' attribute must not be defined for an encapsulation relationship.");
+
+        return false;
+    }
+
+    if (pRelationshipReference.size())
+        pRelationshipReference += " and ";
+
+    pRelationshipReference += relationship+(name.size()?" "+name:QString());
+
+    return true;
 }
 
 //==============================================================================
 
-void PrettyCellMLViewCellmlToPrettyCellmlConverter::processRelationshipRefNode(const QDomNode &pDomNode)
+void PrettyCellMLViewCellmlToPrettyCellmlConverter::processComponentRefNode(const QDomNode &pDomNode,
+                                                                            QStringList &pComponentReferences)
 {
 //---GRY--- TO BE DONE...
 Q_UNUSED(pDomNode);
-qWarning("Relationship ref node: not yet implemented...");
-}
-
-//==============================================================================
-
-void PrettyCellMLViewCellmlToPrettyCellmlConverter::processComponentRefNode(const QDomNode &pDomNode)
-{
-//---GRY--- TO BE DONE...
-Q_UNUSED(pDomNode);
+Q_UNUSED(pComponentReferences);
 qWarning("Component ref node: not yet implemented...");
+
+    // Process the given component ref node's children
+    // Note #1: unlike for most nodes, we process the node's children before
+    //          processing the node itself since it doesn't output any line, so
+    //          it's not like we can put a comment within a def...enddef;
+    //          statement...
+    // Note #2: when parsed back, comments will not be in the component ref node
+    //          anymore, but in its parent...
+
+    QString nodeName;
+
+    for (QDomNode domNode = pDomNode.firstChild();
+         !domNode.isNull(); domNode = domNode.nextSibling()) {
+        nodeName = domNode.nodeName();
+
+        if (!nodeName.compare("#comment"))
+            processCommentNode(domNode);
+        else if (!nodeName.compare("rdf:RDF"))
+            processRdfNode(domNode);
+        else
+            processUnknownNode(domNode);
+    }
 }
 
 //==============================================================================
@@ -670,7 +752,7 @@ qWarning("Connection node: not yet fully implemented...");
         outputString();
 
     outputString(DefMap,
-                 QString("def map%1 as").arg(cmetaId(pDomNode)));
+                 QString("def map%1 for").arg(cmetaId(pDomNode)));
 
     indent();
 

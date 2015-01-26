@@ -42,12 +42,16 @@ PrettyCellmlViewLexer::PrettyCellmlViewLexer(QObject *pParent) :
 
     mKeywordsRegEx = QRegularExpression(
                          "\\b("
-                             "as|base|comp|def|enddef|for|group|import|map|"
+                             "and|as|comp|def|enddef|for|group|import|map|"
                              "model|unit|using|var"
                          ")\\b");
 
     mCellmlKeywordsRegEx = QRegularExpression(
                                "\\b("
+                                    // Miscellaneous
+
+                                   "base|encapsulation|containment|"
+
                                    // Standard units
 
                                    "ampere|becquerel|candela|celsius|coulomb|"
