@@ -8,7 +8,7 @@ more lines...-->
 		<rdf:Description rdf:about="#cellml_1_1">
 			<bqbiol:isVersionOf rdf:resource="http://identifiers.org/go/GO:0034704"/>
 		</rdf:Description>
-	</rdf:RDF> 
+	</rdf:RDF>
     <!--In between comment...-->
     <import cmeta:id="importx" xlink:href="importedmodel.cellml">
         <!--Comments can be within an import definition...-->
@@ -16,7 +16,7 @@ more lines...-->
             <rdf:Description rdf:about="#importx">
                 <bqbiol:isVersionOf rdf:resource="http://identifiers.org/go/GO:0034704"/>
             </rdf:Description>
-        </rdf:RDF> 
+        </rdf:RDF>
         <!--In between comment...-->
         <units cmeta:id="unitsx" name="unitsx" units_ref="refunitsx">
             <!--Comments can be within a unit import,
@@ -26,7 +26,7 @@ corresponding import definition...-->
                 <rdf:Description rdf:about="#unitsx">
                     <bqbiol:isVersionOf rdf:resource="http://identifiers.org/go/GO:0034704"/>
                 </rdf:Description>
-            </rdf:RDF> 
+            </rdf:RDF>
         </units>
         <!--In between comment...-->
         <component cmeta:id="componentx" name="componentx" component_ref="refcomponentx">
@@ -37,7 +37,7 @@ corresponding import definition...-->
                 <rdf:Description rdf:about="#componentx">
                     <bqbiol:isVersionOf rdf:resource="http://identifiers.org/go/GO:0034704"/>
                 </rdf:Description>
-            </rdf:RDF> 
+            </rdf:RDF>
         </component>
     </import>
     <!--In between comment...-->
@@ -49,7 +49,7 @@ corresponding model definition...-->
             <rdf:Description rdf:about="#baseunitsx">
                 <bqbiol:isVersionOf rdf:resource="http://identifiers.org/go/GO:0034704"/>
             </rdf:Description>
-        </rdf:RDF> 
+        </rdf:RDF>
     </units>
     <!--In between comment...-->
     <units cmeta:id="unitsx" name="unitsx">
@@ -58,7 +58,7 @@ corresponding model definition...-->
             <rdf:Description rdf:about="#unitsx">
                 <bqbiol:isVersionOf rdf:resource="http://identifiers.org/go/GO:0034704"/>
             </rdf:Description>
-        </rdf:RDF> 
+        </rdf:RDF>
         <!--In between comment...-->
         <unit cmeta:id="unitx" units="unitx">
             <!--Comments can be within a unit statement,
@@ -68,7 +68,7 @@ corresponding unit definition...-->
                 <rdf:Description rdf:about="#unitx">
                     <bqbiol:isVersionOf rdf:resource="http://identifiers.org/go/GO:0034704"/>
                 </rdf:Description>
-            </rdf:RDF> 
+            </rdf:RDF>
         </unit>
     </units>
     <!--In between comment...-->
@@ -78,7 +78,7 @@ corresponding unit definition...-->
             <rdf:Description rdf:about="#componentx">
                 <bqbiol:isVersionOf rdf:resource="http://identifiers.org/go/GO:0034704"/>
             </rdf:Description>
-        </rdf:RDF> 
+        </rdf:RDF>
         <!--In between comment...-->
         <variable cmeta:id="variablex" name="variablex" units="unitsx">
             <!--Comments can be within a variable declaration,
@@ -88,7 +88,7 @@ corresponding component definition...-->
                 <rdf:Description rdf:about="#variablex">
                     <bqbiol:isVersionOf rdf:resource="http://identifiers.org/go/GO:0034704"/>
                 </rdf:Description>
-            </rdf:RDF> 
+            </rdf:RDF>
         </variable>
     </component>
     <!--In between comment...-->
@@ -98,7 +98,7 @@ corresponding component definition...-->
             <rdf:Description rdf:about="#groupx">
                 <bqbiol:isVersionOf rdf:resource="http://identifiers.org/go/GO:0034704"/>
             </rdf:Description>
-        </rdf:RDF> 
+        </rdf:RDF>
         <!--In between comment...-->
         <relationship_ref cmeta:id="containmentx1" name="containmentx1" relationship="containment">
             <!--Comments can be within a relationship reference,
@@ -108,7 +108,7 @@ corresponding group definition...-->
                 <rdf:Description rdf:about="#containmentx1">
                     <bqbiol:isVersionOf rdf:resource="http://identifiers.org/go/GO:0034704"/>
                 </rdf:Description>
-            </rdf:RDF> 
+            </rdf:RDF>
         </relationship_ref>
         <!--In between comment...-->
         <relationship_ref cmeta:id="containmentx2" name="containmentx2" relationship="containment">
@@ -119,7 +119,7 @@ corresponding group definition...-->
                 <rdf:Description rdf:about="#containmentx2">
                     <bqbiol:isVersionOf rdf:resource="http://identifiers.org/go/GO:0034704"/>
                 </rdf:Description>
-            </rdf:RDF> 
+            </rdf:RDF>
         </relationship_ref>
         <!--In between comment...-->
         <relationship_ref cmeta:id="encapsulationx" relationship="encapsulation">
@@ -130,7 +130,7 @@ corresponding group definition...-->
                 <rdf:Description rdf:about="#encapsulationx">
                     <bqbiol:isVersionOf rdf:resource="http://identifiers.org/go/GO:0034704"/>
                 </rdf:Description>
-            </rdf:RDF> 
+            </rdf:RDF>
         </relationship_ref>
         <!--In between comment...-->
         <component_ref cmeta:id="componentx" component="componentx">
@@ -140,7 +140,7 @@ with component reference children...-->
                 <rdf:Description rdf:about="#componentx">
                     <bqbiol:isVersionOf rdf:resource="http://identifiers.org/go/GO:0034704"/>
                 </rdf:Description>
-            </rdf:RDF> 
+            </rdf:RDF>
             <!--In between comment...-->
             <component_ref cmeta:id="componentxx" component="componentxx">
                 <!--Comments can be within a component reference
@@ -151,7 +151,7 @@ corresponding group definition...-->
                     <rdf:Description rdf:about="#componentxx">
                         <bqbiol:isVersionOf rdf:resource="http://identifiers.org/go/GO:0034704"/>
                     </rdf:Description>
-                </rdf:RDF> 
+                </rdf:RDF>
             </component_ref>
             <!--In between comment...-->
             <component_ref cmeta:id="componentxy" component="componentxy">
@@ -163,7 +163,7 @@ corresponding group definition...-->
                     <rdf:Description rdf:about="#componentxy">
                         <bqbiol:isVersionOf rdf:resource="http://identifiers.org/go/GO:0034704"/>
                     </rdf:Description>
-                </rdf:RDF> 
+                </rdf:RDF>
             </component_ref>
             <component_ref component="componentxz"/>
         </component_ref>
@@ -175,7 +175,7 @@ with component reference children...-->
                 <rdf:Description rdf:about="#componenty">
                     <bqbiol:isVersionOf rdf:resource="http://identifiers.org/go/GO:0034704"/>
                 </rdf:Description>
-            </rdf:RDF> 
+            </rdf:RDF>
             <!--In between comment...-->
             <component_ref cmeta:id="componentyx" component="componentyx">
                 <!--Comments can be within a component reference
@@ -186,7 +186,7 @@ corresponding group definition...-->
                     <rdf:Description rdf:about="#componentyx">
                         <bqbiol:isVersionOf rdf:resource="http://identifiers.org/go/GO:0034704"/>
                     </rdf:Description>
-                </rdf:RDF> 
+                </rdf:RDF>
             </component_ref>
             <!--In between comment...-->
             <component_ref cmeta:id="componentyy" component="componentyy">
@@ -198,7 +198,7 @@ corresponding group definition...-->
                     <rdf:Description rdf:about="#componentyy">
                         <bqbiol:isVersionOf rdf:resource="http://identifiers.org/go/GO:0034704"/>
                     </rdf:Description>
-                </rdf:RDF> 
+                </rdf:RDF>
             </component_ref>
             <component_ref component="componentyz"/>
         </component_ref>
@@ -210,7 +210,7 @@ corresponding group definition...-->
             <rdf:Description rdf:about="#connectionx">
                 <bqbiol:isVersionOf rdf:resource="http://identifiers.org/go/GO:0034704"/>
             </rdf:Description>
-        </rdf:RDF> 
+        </rdf:RDF>
         <!--In between comment...-->
         <map_components cmeta:id="mapcomponentxy" component_1="componentx" component_2="componenty">
             <!--Comments can be within a component mapping,
@@ -220,7 +220,7 @@ corresponding connection definition...-->
                 <rdf:Description rdf:about="#mapcomponentxy">
                     <bqbiol:isVersionOf rdf:resource="http://identifiers.org/go/GO:0034704"/>
                 </rdf:Description>
-            </rdf:RDF> 
+            </rdf:RDF>
         </map_components>
         <!--In between comment...-->
         <map_variables cmeta:id="mapvariablesx" variable_1="variablexx" variable_2="variablexy">
@@ -231,7 +231,7 @@ corresponding connection definition...-->
                 <rdf:Description rdf:about="#mapvariablesx">
                     <bqbiol:isVersionOf rdf:resource="http://identifiers.org/go/GO:0034704"/>
                 </rdf:Description>
-            </rdf:RDF> 
+            </rdf:RDF>
         </map_variables>
         <!--In between comment...-->
         <map_variables cmeta:id="mapvariablesy" variable_1="variableyx" variable_2="variableyy">
@@ -242,7 +242,7 @@ corresponding connection definition...-->
                 <rdf:Description rdf:about="#mapvariablesy">
                     <bqbiol:isVersionOf rdf:resource="http://identifiers.org/go/GO:0034704"/>
                 </rdf:Description>
-            </rdf:RDF> 
+            </rdf:RDF>
         </map_variables>
         <map_variables variable_1="variablezx" variable_2="variablezy"/>
     </connection>
