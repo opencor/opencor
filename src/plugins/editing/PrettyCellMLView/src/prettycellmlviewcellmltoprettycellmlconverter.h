@@ -67,6 +67,9 @@ private:
         DefComp,
         Var,
         DefGroup,
+        CompIncl,
+        Comp,
+        EndComp,
         DefMap,
         EndDef
     };
@@ -108,8 +111,7 @@ private:
     bool processGroupNode(const QDomNode &pDomNode);
     bool processRelationshipRefNode(const QDomNode &pDomNode,
                                     QString &pRelationshipReference);
-    void processComponentRefNode(const QDomNode &pDomNode,
-                                 QStringList &pComponentReferences);
+    void processComponentRefNode(const QDomNode &pDomNode);
     void processConnectionNode(const QDomNode &pDomNode);
     void processMapComponentsNode(const QDomNode &pDomNode);
     void processMapVariablesNode(const QDomNode &pDomNode);

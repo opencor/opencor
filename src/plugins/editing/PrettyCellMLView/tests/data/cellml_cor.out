@@ -146,15 +146,37 @@ def model cellml_1_0 as
     enddef;
 
     def group as containment for
+        comp component1 incl
+            comp component11 incl
+                comp component111;
+                comp component112;
+            endcomp;
+        endcomp;
     enddef;
 
     def group as containment containment1 for
+        comp component1 incl
+            comp component12 incl
+                comp component121;
+            endcomp;
+
+            comp component13;
+        endcomp;
     enddef;
 
     def group as encapsulation for
+        comp component11 incl
+            comp component111;
+            comp component112;
+        endcomp;
+
+        comp component12 incl
+            comp component121;
+        endcomp;
     enddef;
 
     def group as encapsulation and containment containment1 for
+        comp component1;
     enddef;
 
     def map for

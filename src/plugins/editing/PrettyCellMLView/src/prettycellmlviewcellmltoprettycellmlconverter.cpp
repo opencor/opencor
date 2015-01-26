@@ -264,7 +264,8 @@ void PrettyCellMLViewCellmlToPrettyCellmlConverter::processCommentNode(const QDo
     if (   (mLastOutputType == Comment)
         || (mLastOutputType == ImportUnit) || (mLastOutputType == ImportComp)
         || (mLastOutputType == DefBaseUnit) || (mLastOutputType == EndDef)
-        || (mLastOutputType == Unit) || (mLastOutputType == Var)) {
+        || (mLastOutputType == Unit) || (mLastOutputType == Var)
+        || (mLastOutputType == Comp) || (mLastOutputType == EndComp)) {
         outputString();
     }
 
@@ -599,8 +600,6 @@ qWarning("Math node: not yet implemented...");
 
 bool PrettyCellMLViewCellmlToPrettyCellmlConverter::processGroupNode(const QDomNode &pDomNode)
 {
-//---GRY--- TO BE DONE...
-qWarning("Group node: not yet fully implemented...");
     // Start processing the given group node
 
     static const QString RelationshipReference = "___RELATIONSHIP_REFERENCE___";
@@ -617,7 +616,6 @@ qWarning("Group node: not yet fully implemented...");
 
     QString nodeName;
     QString relationshipReference = QString();
-    QStringList componentReferences = QStringList();
 
     for (QDomNode domNode = pDomNode.firstChild();
          !domNode.isNull(); domNode = domNode.nextSibling()) {
@@ -631,7 +629,7 @@ qWarning("Group node: not yet fully implemented...");
             if (!processRelationshipRefNode(domNode, relationshipReference))
                 return false;
         } else if (!nodeName.compare("component_ref")) {
-            processComponentRefNode(domNode, componentReferences);
+            processComponentRefNode(domNode);
         } else {
             processUnknownNode(domNode);
         }
@@ -709,21 +707,35 @@ bool PrettyCellMLViewCellmlToPrettyCellmlConverter::processRelationshipRefNode(c
 
 //==============================================================================
 
-void PrettyCellMLViewCellmlToPrettyCellmlConverter::processComponentRefNode(const QDomNode &pDomNode,
-                                                                            QStringList &pComponentReferences)
+void PrettyCellMLViewCellmlToPrettyCellmlConverter::processComponentRefNode(const QDomNode &pDomNode)
 {
-//---GRY--- TO BE DONE...
-Q_UNUSED(pDomNode);
-Q_UNUSED(pComponentReferences);
-qWarning("Component ref node: not yet implemented...");
+    // Determine whether the given component ref node has component ref children
+
+    bool hasComponentRefChildren = false;
+
+    for (QDomNode domNode = pDomNode.firstChild();
+         !domNode.isNull(); domNode = domNode.nextSibling())  {
+        if (!domNode.nodeName().compare("component_ref")) {
+            hasComponentRefChildren = true;
+
+            break;
+        }
+    }
+
+    // Start processing the given component ref node
+
+    if (hasComponentRefChildren) {
+        if ((mLastOutputType == Comment) || (mLastOutputType == EndComp))
+            outputString();
+
+        outputString(CompIncl,
+                     QString("comp%1 %2 incl").arg(cmetaId(pDomNode))
+                                              .arg(pDomNode.attributes().namedItem("component").nodeValue()));
+
+        indent();
+    }
 
     // Process the given component ref node's children
-    // Note #1: unlike for most nodes, we process the node's children before
-    //          processing the node itself since it doesn't output any line, so
-    //          it's not like we can put a comment within a def...enddef;
-    //          statement...
-    // Note #2: when parsed back, comments will not be in the component ref node
-    //          anymore, but in its parent...
 
     QString nodeName;
 
@@ -735,9 +747,27 @@ qWarning("Component ref node: not yet implemented...");
             processCommentNode(domNode);
         else if (!nodeName.compare("rdf:RDF"))
             processRdfNode(domNode);
+        else if (!nodeName.compare("component_ref"))
+            processComponentRefNode(domNode);
         else
             processUnknownNode(domNode);
     }
+
+    // Finish processing the given group node
+
+    if (hasComponentRefChildren) {
+        unindent();
+
+        outputString(EndComp, "endcomp;");
+    } else {
+        if ((mLastOutputType == Comment) || (mLastOutputType == EndComp))
+            outputString();
+
+        outputString(Comp,
+                     QString("comp%1 %2;").arg(cmetaId(pDomNode))
+                                          .arg(pDomNode.attributes().namedItem("component").nodeValue()));
+    }
+
 }
 
 //==============================================================================
