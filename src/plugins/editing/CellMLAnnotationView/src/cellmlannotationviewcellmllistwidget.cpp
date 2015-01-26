@@ -175,10 +175,14 @@ CellmlAnnotationViewCellmlElementItem::CellmlAnnotationViewCellmlElementItem(con
         setText(QObject::tr("Group #%1").arg(QString::number(pNumber)));
 
         break;
-    case RelationshipReference:
-        setText(QString::fromStdWString(dynamic_cast<iface::cellml_api::RelationshipRef *>(pElement)->relationship()));
+    case RelationshipReference: {
+        QString name = QString::fromStdWString(dynamic_cast<iface::cellml_api::RelationshipRef *>(pElement)->name());
+
+        setText( QString::fromStdWString(dynamic_cast<iface::cellml_api::RelationshipRef *>(pElement)->relationship())
+                +(name.isEmpty()?QString():" "+name));
 
         break;
+    }
     case ComponentReference:
         setText(QString::fromStdWString(dynamic_cast<iface::cellml_api::ComponentRef *>(pElement)->componentName()));
 
