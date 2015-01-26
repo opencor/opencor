@@ -179,6 +179,7 @@ def model cellml_1_0 as
         comp component1;
     enddef;
 
-    def map for
+    def map between component1 and component2 for
+        vars variable1 and variable2;
     enddef;
 enddef;

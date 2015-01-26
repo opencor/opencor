@@ -165,6 +165,7 @@ corresponding group definition...-->
                     </rdf:Description>
                 </rdf:RDF> 
             </component_ref>
+            <component_ref component="componentxz"/>
         </component_ref>
         <!--In between comment...-->
         <component_ref cmeta:id="componenty" component="componenty">
@@ -199,6 +200,7 @@ corresponding group definition...-->
                     </rdf:Description>
                 </rdf:RDF> 
             </component_ref>
+            <component_ref component="componentyz"/>
         </component_ref>
     </group>
     <!--In between comment...-->
@@ -221,15 +223,27 @@ corresponding connection definition...-->
             </rdf:RDF> 
         </map_components>
         <!--In between comment...-->
-        <map_variables cmeta:id="mapvariablexy" variable_1="variablex" variable_2="variabley">
+        <map_variables cmeta:id="mapvariablesx" variable_1="variablexx" variable_2="variablexy">
             <!--Comments can be within a variable mapping,
 but if kept it will be serialised back in the
 corresponding connection definition...-->
             <rdf:RDF xmlns:bqbiol="http://biomodels.net/biology-qualifiers/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
-                <rdf:Description rdf:about="#mapvariablexy">
+                <rdf:Description rdf:about="#mapvariablesx">
                     <bqbiol:isVersionOf rdf:resource="http://identifiers.org/go/GO:0034704"/>
                 </rdf:Description>
             </rdf:RDF> 
         </map_variables>
+        <!--In between comment...-->
+        <map_variables cmeta:id="mapvariablesy" variable_1="variableyx" variable_2="variableyy">
+            <!--Comments can be within a variable mapping,
+but if kept it will be serialised back in the
+corresponding connection definition...-->
+            <rdf:RDF xmlns:bqbiol="http://biomodels.net/biology-qualifiers/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+                <rdf:Description rdf:about="#mapvariablesy">
+                    <bqbiol:isVersionOf rdf:resource="http://identifiers.org/go/GO:0034704"/>
+                </rdf:Description>
+            </rdf:RDF> 
+        </map_variables>
+        <map_variables variable_1="variablezx" variable_2="variablezy"/>
     </connection>
 </model>

@@ -22,16 +22,20 @@
 <context>
     <name>QObject</name>
     <message>
-        <source>The &apos;base_units&apos; attribute must have a value equal to &apos;yes&apos; or &apos;no&apos;.</source>
-        <translation>L&apos;attribut &apos;base_units&apos; doit avoir une valeur égale à &apos;yes&apos; ou &apos;no&apos;.</translation>
+        <source>The value of the &apos;base_units&apos; attribute must be &apos;yes&apos; or &apos;no&apos;.</source>
+        <translation>La valeur de l&apos;attribut &apos;base_units&apos; doit être &apos;yes&apos; ou &apos;no&apos;.</translation>
     </message>
     <message>
-        <source>The &apos;relationship&apos; attribute must have a value equal to &apos;encapsulation&apos; or &apos;containment&apos; in the CellML namespace.</source>
-        <translation>L&apos;attribut &apos;relationship&apos; doit avoir une valeur égale à &apos;encapsulation&apos; ou &apos;containment&apos; dans l&apos;espace de noms CellML.</translation>
+        <source>The value of a &apos;relationship&apos; attribute in the CellML namespace must be &apos;encapsulation&apos; or &apos;containment&apos;.</source>
+        <translation>La valeur de l&apos;attribut &apos;relationship&apos; dans l&apos;espace de noms CellML doit être &apos;encapsulation&apos; ou &apos;containment&apos;.</translation>
     </message>
     <message>
-        <source>The &apos;name&apos; attribute must not be defined for an encapsulation relationship.</source>
-        <translation>L&apos;attribut &apos;nom&apos; ne doit pas être défini pour une relation d&apos;encapsulation.</translation>
+        <source>A &apos;name&apos; attribute must not be defined on a &apos;relationship_ref&apos; element with a &apos;relationship&apos; attribute value of &apos;encapsulation&apos;.</source>
+        <translation>Un attribut &apos;nom&apos; ne doit pas être défini pour un élément &apos;relationship_ref&apos; dont la valeur de l&apos;attribut &apos;relationship&apos; est &apos;encapsulation&apos;.</translation>
+    </message>
+    <message>
+        <source>A &apos;connection&apos; element must contain exactly one &apos;map_components&apos; element.</source>
+        <translation>Un élément &apos;connection&apos; doit contenir exactement un élément &apos;map_components&apos;.</translation>
     </message>
     <message>
         <source>[%1] The &apos;%2&apos; node was found in the original CellML file, but it is not known and cannot therefore be processed.</source>

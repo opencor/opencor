@@ -65,7 +65,7 @@ def model{cellml_1_1} cellml_1_1 as
 
     // In between comment...
 
-    def group{groupx} as containment containmentx1 and containment containmentx2 and encapsulation for
+    def group{groupx} as containment{containmentx1} containmentx1 and containment{containmentx2} containmentx2 and encapsulation{encapsulationx} for
         // Comments can be within a group definition...
 
         // In between comment...
@@ -109,6 +109,7 @@ def model{cellml_1_1} cellml_1_1 as
             // corresponding group definition...
 
             comp{componentxy} componentxy;
+            comp componentxz;
         endcomp;
 
         // In between comment...
@@ -134,16 +135,36 @@ def model{cellml_1_1} cellml_1_1 as
             // corresponding group definition...
 
             comp{componentyy} componentyy;
+            comp componentyz;
         endcomp;
     enddef;
 
     // In between comment...
 
-    def map{connectionx} for
+    def map{connectionx} between{mapcomponentxy} componentx and componenty for
         // Comments can be within a connection definition...
 
         // In between comment...
 
+        // Comments can be within a component mapping,
+        // but if kept it will be serialised back in the
+        // corresponding connection definition...
+
         // In between comment...
+
+        // Comments can be within a variable mapping,
+        // but if kept it will be serialised back in the
+        // corresponding connection definition...
+
+        vars{mapvariablesx} variablexx and variablexy;
+
+        // In between comment...
+
+        // Comments can be within a variable mapping,
+        // but if kept it will be serialised back in the
+        // corresponding connection definition...
+
+        vars{mapvariablesy} variableyx and variableyy;
+        vars variablezx and variablezy;
     enddef;
 enddef;
