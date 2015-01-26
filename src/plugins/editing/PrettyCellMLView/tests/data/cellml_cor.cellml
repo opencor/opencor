@@ -147,7 +147,7 @@
         </component_ref>
     </group>
     <group>
-        <relationship_ref name="containment" relationship="containment"/>
+        <relationship_ref name="containment1" relationship="containment"/>
         <component_ref component="component1">
             <component_ref component="component12">
                 <component_ref component="component121"/>
@@ -166,8 +166,8 @@
         </component_ref>
     </group>
     <group>
-        <relationship_ref relationship="containment"/>
         <relationship_ref relationship="encapsulation"/>
+        <relationship_ref name="containment1" relationship="containment"/>
         <component_ref component="component1"/>
     </group>
     <connection>

@@ -100,13 +100,17 @@ private:
     bool processImportNode(const QDomNode &pDomNode);
     bool processUnitsNode(const QDomNode &pDomNode,
                           const bool &pInImportNode = false);
-    bool processUnitNode(const QDomNode &pDomNode);
+    void processUnitNode(const QDomNode &pDomNode);
     bool processComponentNode(const QDomNode &pDomNode,
                               const bool &pInImportNode = false);
-    bool processVariableNode(const QDomNode &pDomNode);
-    bool processMathNode(const QDomNode &pDomNode);
-    bool processGroupNode(const QDomNode &pDomNode);
-    bool processConnectionNode(const QDomNode &pDomNode);
+    void processVariableNode(const QDomNode &pDomNode);
+    void processMathNode(const QDomNode &pDomNode);
+    void processGroupNode(const QDomNode &pDomNode);
+    void processRelationshipRefNode(const QDomNode &pDomNode);
+    void processComponentRefNode(const QDomNode &pDomNode);
+    void processConnectionNode(const QDomNode &pDomNode);
+    void processMapComponentsNode(const QDomNode &pDomNode);
+    void processMapVariablesNode(const QDomNode &pDomNode);
     void processUnknownNode(const QDomNode &pDomNode);
 };
 

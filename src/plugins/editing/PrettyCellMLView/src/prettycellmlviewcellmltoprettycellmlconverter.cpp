@@ -234,11 +234,9 @@ bool PrettyCellMLViewCellmlToPrettyCellmlConverter::processModelNode(const QDomN
             if (!processComponentNode(domNode))
                 return false;
         } else if (!nodeName.compare("group")) {
-            if (!processGroupNode(domNode))
-                return false;
+            processGroupNode(domNode);
         } else if (!nodeName.compare("connection")) {
-            if (!processConnectionNode(domNode))
-                return false;
+            processConnectionNode(domNode);
         } else {
             processUnknownNode(domNode);
         }
@@ -370,17 +368,14 @@ bool PrettyCellMLViewCellmlToPrettyCellmlConverter::processUnitsNode(const QDomN
          !domNode.isNull(); domNode = domNode.nextSibling()) {
         nodeName = domNode.nodeName();
 
-        if (!nodeName.compare("#comment")) {
+        if (!nodeName.compare("#comment"))
             processCommentNode(domNode);
-        } else if (!nodeName.compare("rdf:RDF")) {
+        else if (!nodeName.compare("rdf:RDF"))
             processRdfNode(domNode);
-        } else if (   !isBaseUnits && !pInImportNode
-                   && !nodeName.compare("unit")) {
-            if (!processUnitNode(domNode))
-                return false;
-        } else {
+        else if (!isBaseUnits && !pInImportNode && !nodeName.compare("unit"))
+            processUnitNode(domNode);
+        else
             processUnknownNode(domNode);
-        }
     }
 
     // Finish processing the given units node
@@ -411,7 +406,7 @@ bool PrettyCellMLViewCellmlToPrettyCellmlConverter::processUnitsNode(const QDomN
 
 //==============================================================================
 
-bool PrettyCellMLViewCellmlToPrettyCellmlConverter::processUnitNode(const QDomNode &pDomNode)
+void PrettyCellMLViewCellmlToPrettyCellmlConverter::processUnitNode(const QDomNode &pDomNode)
 {
     // Process the given unit node's children
     // Note #1: unlike for most nodes, we process the node's children before
@@ -428,13 +423,12 @@ bool PrettyCellMLViewCellmlToPrettyCellmlConverter::processUnitNode(const QDomNo
          !domNode.isNull(); domNode = domNode.nextSibling()) {
         nodeName = domNode.nodeName();
 
-        if (!nodeName.compare("#comment")) {
+        if (!nodeName.compare("#comment"))
             processCommentNode(domNode);
-        } else if (!nodeName.compare("rdf:RDF")) {
+        else if (!nodeName.compare("rdf:RDF"))
             processRdfNode(domNode);
-        } else {
+        else
             processUnknownNode(domNode);
-        }
     }
 
     // Process the given unit node
@@ -472,8 +466,6 @@ bool PrettyCellMLViewCellmlToPrettyCellmlConverter::processUnitNode(const QDomNo
                  QString("unit%1 %2%3;").arg(cmetaId(pDomNode))
                                         .arg(pDomNode.attributes().namedItem("units").nodeValue())
                                         .arg(parameters.isEmpty()?QString():" {"+parameters+"}"));
-
-    return true;
 }
 
 //==============================================================================
@@ -510,11 +502,9 @@ bool PrettyCellMLViewCellmlToPrettyCellmlConverter::processComponentNode(const Q
             if (!processUnitsNode(domNode))
                 return false;
         } else if (!pInImportNode && !nodeName.compare("variable")) {
-            if (!processVariableNode(domNode))
-                return false;
+            processVariableNode(domNode);
         } else if (!pInImportNode && !nodeName.compare("math")) {
-            if (!processMathNode(domNode))
-                return false;
+            processMathNode(domNode);
         } else {
             processUnknownNode(domNode);
         }
@@ -541,7 +531,7 @@ bool PrettyCellMLViewCellmlToPrettyCellmlConverter::processComponentNode(const Q
 
 //==============================================================================
 
-bool PrettyCellMLViewCellmlToPrettyCellmlConverter::processVariableNode(const QDomNode &pDomNode)
+void PrettyCellMLViewCellmlToPrettyCellmlConverter::processVariableNode(const QDomNode &pDomNode)
 {
     // Process the given variable node's children
     // Note #1: unlike for most nodes, we process the node's children before
@@ -558,13 +548,12 @@ bool PrettyCellMLViewCellmlToPrettyCellmlConverter::processVariableNode(const QD
          !domNode.isNull(); domNode = domNode.nextSibling()) {
         nodeName = domNode.nodeName();
 
-        if (!nodeName.compare("#comment")) {
+        if (!nodeName.compare("#comment"))
             processCommentNode(domNode);
-        } else if (!nodeName.compare("rdf:RDF")) {
+        else if (!nodeName.compare("rdf:RDF"))
             processRdfNode(domNode);
-        } else {
+        else
             processUnknownNode(domNode);
-        }
     }
 
     // Process the given variable node
@@ -598,26 +587,20 @@ bool PrettyCellMLViewCellmlToPrettyCellmlConverter::processVariableNode(const QD
                                            .arg(pDomNode.attributes().namedItem("name").nodeValue())
                                            .arg(pDomNode.attributes().namedItem("units").nodeValue())
                                            .arg(parameters.isEmpty()?QString():" {"+parameters+"}"));
-
-    return true;
 }
 
 //==============================================================================
 
-bool PrettyCellMLViewCellmlToPrettyCellmlConverter::processMathNode(const QDomNode &pDomNode)
+void PrettyCellMLViewCellmlToPrettyCellmlConverter::processMathNode(const QDomNode &pDomNode)
 {
-    // Process the given math node
-
 //---GRY--- TO BE DONE...
 Q_UNUSED(pDomNode);
 qWarning("Math node: not yet implemented...");
-
-    return true;
 }
 
 //==============================================================================
 
-bool PrettyCellMLViewCellmlToPrettyCellmlConverter::processGroupNode(const QDomNode &pDomNode)
+void PrettyCellMLViewCellmlToPrettyCellmlConverter::processGroupNode(const QDomNode &pDomNode)
 {
 //---GRY--- TO BE DONE...
 qWarning("Group node: not yet fully implemented...");
@@ -638,13 +621,16 @@ qWarning("Group node: not yet fully implemented...");
          !domNode.isNull(); domNode = domNode.nextSibling()) {
         nodeName = domNode.nodeName();
 
-        if (!nodeName.compare("#comment")) {
+        if (!nodeName.compare("#comment"))
             processCommentNode(domNode);
-        } else if (!nodeName.compare("rdf:RDF")) {
+        else if (!nodeName.compare("rdf:RDF"))
             processRdfNode(domNode);
-        } else {
+        else if (!nodeName.compare("relationship_ref"))
+            processRelationshipRefNode(domNode);
+        else if (!nodeName.compare("component_ref"))
+            processComponentRefNode(domNode);
+        else
             processUnknownNode(domNode);
-        }
     }
 
     // Finish processing the given group node
@@ -652,13 +638,29 @@ qWarning("Group node: not yet fully implemented...");
     unindent();
 
     outputString(EndDef, "enddef;");
-
-    return true;
 }
 
 //==============================================================================
 
-bool PrettyCellMLViewCellmlToPrettyCellmlConverter::processConnectionNode(const QDomNode &pDomNode)
+void PrettyCellMLViewCellmlToPrettyCellmlConverter::processRelationshipRefNode(const QDomNode &pDomNode)
+{
+//---GRY--- TO BE DONE...
+Q_UNUSED(pDomNode);
+qWarning("Relationship ref node: not yet implemented...");
+}
+
+//==============================================================================
+
+void PrettyCellMLViewCellmlToPrettyCellmlConverter::processComponentRefNode(const QDomNode &pDomNode)
+{
+//---GRY--- TO BE DONE...
+Q_UNUSED(pDomNode);
+qWarning("Component ref node: not yet implemented...");
+}
+
+//==============================================================================
+
+void PrettyCellMLViewCellmlToPrettyCellmlConverter::processConnectionNode(const QDomNode &pDomNode)
 {
 //---GRY--- TO BE DONE...
 qWarning("Connection node: not yet fully implemented...");
@@ -680,13 +682,16 @@ qWarning("Connection node: not yet fully implemented...");
          !domNode.isNull(); domNode = domNode.nextSibling()) {
         nodeName = domNode.nodeName();
 
-        if (!nodeName.compare("#comment")) {
+        if (!nodeName.compare("#comment"))
             processCommentNode(domNode);
-        } else if (!nodeName.compare("rdf:RDF")) {
+        else if (!nodeName.compare("rdf:RDF"))
             processRdfNode(domNode);
-        } else {
+        else if (!nodeName.compare("map_components"))
+            processMapComponentsNode(domNode);
+        else if (!nodeName.compare("map_variables"))
+            processMapVariablesNode(domNode);
+        else
             processUnknownNode(domNode);
-        }
     }
 
     // Finish processing the given group node
@@ -694,8 +699,24 @@ qWarning("Connection node: not yet fully implemented...");
     unindent();
 
     outputString(EndDef, "enddef;");
+}
 
-    return true;
+//==============================================================================
+
+void PrettyCellMLViewCellmlToPrettyCellmlConverter::processMapComponentsNode(const QDomNode &pDomNode)
+{
+//---GRY--- TO BE DONE...
+Q_UNUSED(pDomNode);
+qWarning("Map components node: not yet implemented...");
+}
+
+//==============================================================================
+
+void PrettyCellMLViewCellmlToPrettyCellmlConverter::processMapVariablesNode(const QDomNode &pDomNode)
+{
+//---GRY--- TO BE DONE...
+Q_UNUSED(pDomNode);
+qWarning("Map variables node: not yet implemented...");
 }
 
 //==============================================================================
