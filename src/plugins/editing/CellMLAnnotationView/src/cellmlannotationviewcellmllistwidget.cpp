@@ -769,8 +769,15 @@ void CellmlAnnotationViewCellmlListWidget::populateModel()
 
             // Component mapping
 
-            connectionItem->appendRow(new CellmlAnnotationViewCellmlElementItem(CellmlAnnotationViewCellmlElementItem::ComponentMapping,
-                                                                                connection->componentMapping()));
+            ObjRef<iface::cellml_api::MapComponents> connectionComponentMapping = connection->componentMapping();
+            QString connectionComponentMappingFirstComponentName = QString::fromStdWString(connectionComponentMapping->firstComponentName());
+            QString connectionComponentMappingSecondComponentName = QString::fromStdWString(connectionComponentMapping->secondComponentName());
+
+            if (   connectionComponentMappingFirstComponentName.size()
+                && connectionComponentMappingSecondComponentName.size()) {
+                connectionItem->appendRow(new CellmlAnnotationViewCellmlElementItem(CellmlAnnotationViewCellmlElementItem::ComponentMapping,
+                                                                                    connectionComponentMapping));
+            }
 
             // Variable mappings
 
