@@ -456,8 +456,7 @@ void * globalInstance(const QString &pObjectName, void *pDefaultGlobalInstance)
             // Note #1: for some reasons, on OS X, QSettings doesn't handle
             //          qulonglong values properly, so we do it through a
             //          QString value instead...
-            // Note #2: see
-            //          https://bugreports.qt-project.org/browse/QTBUG-29681 for
+            // Note #2: see https://bugreports.qt.io/browse/QTBUG-29681 for
             //          more information...
         }
     settings.endGroup();

@@ -264,7 +264,7 @@ CentralWidget::CentralWidget(QMainWindow *pMainWindow) :
 //---GRY--- THE ORIGINAL PLAN WAS TO HAVE A REGULAR EXPRESSION TO VALIDATE A
 //          URL, BUT IT LOOKS LIKE THERE MIGHT BE AN ISSUE WITH
 //          QRegularExpressionValidator, SO WE SIMPLY ALLOW FREE TEXT FOR NOW
-//          (SEE https://bugreports.qt-project.org/browse/QTBUG-38034)
+//          (SEE https://bugreports.qt.io/browse/QTBUG-38034)
 
     mRemoteFileDialog = new QDialog(this);
     QGridLayout *dialogLayout = new QGridLayout(mRemoteFileDialog);
