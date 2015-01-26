@@ -26,6 +26,14 @@
         <translation>L&apos;attribut &apos;base_units&apos; doit avoir une valeur égale à &apos;yes&apos; ou &apos;no&apos;.</translation>
     </message>
     <message>
+        <source>The &apos;relationship&apos; attribute must have a value equal to &apos;encapsulation&apos; or &apos;containment&apos; in the CellML namespace.</source>
+        <translation>L&apos;attribut &apos;relationship&apos; doit avoir une valeur égale à &apos;encapsulation&apos; ou &apos;containment&apos; dans l&apos;espace de noms CellML.</translation>
+    </message>
+    <message>
+        <source>The &apos;name&apos; attribute must not be defined for an encapsulation relationship.</source>
+        <translation>L&apos;attribut &apos;nom&apos; ne doit pas être défini pour une relation d&apos;encapsulation.</translation>
+    </message>
+    <message>
         <source>[%1] The &apos;%2&apos; node was found in the original CellML file, but it is not known and cannot therefore be processed.</source>
         <translation>[%1] Le noeud &apos;%2&apos; a été trouvé dans le fichier CellML d&apos;origine, mais il n&apos;est pas connu et ne peut donc pas être traité.</translation>
     </message>
