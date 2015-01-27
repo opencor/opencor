@@ -70,10 +70,6 @@
         <translation>Groupe paramètre</translation>
     </message>
     <message>
-        <source>Parameter comment</source>
-        <translation>Commentaire paramètre</translation>
-    </message>
-    <message>
         <source>Parameter keyword</source>
         <translation>Mot-clef paramètre</translation>
     </message>
