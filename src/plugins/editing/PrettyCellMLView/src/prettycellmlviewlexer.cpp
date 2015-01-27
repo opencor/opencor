@@ -263,7 +263,7 @@ void PrettyCellmlViewLexer::doStyleText(int pStart, int pEnd, QString pText,
     // at the beginning of the given text
 
     int multilineCommentStartPosition = mFullText.lastIndexOf(StartCommentString, pStart+StartCommentLength-1);
-    int parameterGroupStartPosition = findParameterGroupString(StartParameterGroupString, pStart+StartParameterGroupLength-1, false);
+    int parameterGroupStartPosition = findParameterGroupString(pStart, false);
 
     if (multilineCommentStartPosition != -1) {
         doStyleTextPreviousMultilineComment(multilineCommentStartPosition, pStart, pEnd,
@@ -387,7 +387,7 @@ void PrettyCellmlViewLexer::doStyleTextPreviousParameterGroup(const int &pPositi
     // A parameter group started before or at the beginning of the given text,
     // so now look for where it ends
 
-    int parameterGroupEndPosition = findParameterGroupString(EndParameterGroupString, pPosition+StartParameterGroupLength);
+    int parameterGroupEndPosition = findParameterGroupString(pPosition);
 
     if (parameterGroupEndPosition == -1)
         parameterGroupEndPosition = mFullText.length();
@@ -683,20 +683,20 @@ bool PrettyCellmlViewLexer::parameterGroupStringWithinStringOrComment(const int 
 
 //==============================================================================
 
-int PrettyCellmlViewLexer::findParameterGroupString(const QString &pParameterGroupString,
-                                                    int pFrom,
+int PrettyCellmlViewLexer::findParameterGroupString(int pFrom,
                                                     const bool &pForward)
 {
     // Find forward/backward the given string starting from the given position
 
-    int stringLength = pParameterGroupString.length();
-    int res = pForward?pFrom-stringLength:pFrom+1;
+    QString parameterGroupString = pForward?EndParameterGroupString:StartParameterGroupString;
+    int parameterGroupStringLength = pForward?EndParameterGroupLength:StartParameterGroupLength;
+    int res = pForward?pFrom:pFrom+parameterGroupStringLength;
 
     do {
-        pFrom = pForward?res+stringLength:res-1;
+        pFrom = pForward?res+parameterGroupStringLength:res-1;
 
-        res = pForward?mFullText.indexOf(pParameterGroupString, pFrom):mFullText.lastIndexOf(pParameterGroupString, pFrom);
-    } while ((res != -1) && parameterGroupStringWithinStringOrComment(res, res+stringLength-1));
+        res = pForward?mFullText.indexOf(parameterGroupString, pFrom):mFullText.lastIndexOf(parameterGroupString, pFrom);
+    } while ((res != -1) && parameterGroupStringWithinStringOrComment(res, res+parameterGroupStringLength-1));
 
     return res;
 }

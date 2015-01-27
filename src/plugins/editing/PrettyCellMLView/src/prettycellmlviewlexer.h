@@ -98,8 +98,7 @@ private:
 
     bool parameterGroupStringWithinStringOrComment(const int &pFrom,
                                                    const int &pTo) const;
-    int findParameterGroupString(const QString &pParameterGroupString,
-                                 int pFrom, const bool &pForward = true);
+    int findParameterGroupString(int pFrom, const bool &pForward = true);
 };
 
 //==============================================================================
