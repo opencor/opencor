@@ -263,7 +263,7 @@ void PrettyCellmlViewLexer::doStyleText(int pStart, int pEnd, QString pText,
     // at the beginning of the given text
 
     int multilineCommentStartPosition = mFullText.lastIndexOf(StartCommentString, pStart+StartCommentLength-1);
-    int parameterGroupStartPosition = findString(StartParameterGroupString, pStart+StartParameterGroupLength-1, false);
+    int parameterGroupStartPosition = findParameterGroupString(StartParameterGroupString, pStart+StartParameterGroupLength-1, false);
 
     if (multilineCommentStartPosition != -1) {
         doStyleTextPreviousMultilineComment(multilineCommentStartPosition, pStart, pEnd,
@@ -387,7 +387,7 @@ void PrettyCellmlViewLexer::doStyleTextPreviousParameterGroup(const int &pPositi
     // A parameter group started before or at the beginning of the given text,
     // so now look for where it ends
 
-    int parameterGroupEndPosition = findString(EndParameterGroupString, pPosition+StartParameterGroupLength);
+    int parameterGroupEndPosition = findParameterGroupString(EndParameterGroupString, pPosition+StartParameterGroupLength);
 
     if (parameterGroupEndPosition == -1)
         parameterGroupEndPosition = mFullText.length();
@@ -613,8 +613,8 @@ void PrettyCellmlViewLexer::doStyleTextNumber(int pStart, const QString &pText,
 
 //==============================================================================
 
-bool PrettyCellmlViewLexer::stringWithinStringOrComment(const int &pFrom,
-                                                        const int &pTo) const
+bool PrettyCellmlViewLexer::parameterGroupStringWithinStringOrComment(const int &pFrom,
+                                                                      const int &pTo) const
 {
     // Return whether the string, which range is given, is within a string or a
     // comment
@@ -652,29 +652,29 @@ bool PrettyCellmlViewLexer::stringWithinStringOrComment(const int &pFrom,
 
     // Check whether we are within a /* XXX */ comment
 
-    int commentStartPosition = mFullText.lastIndexOf(StartCommentString, pFrom);
+    int multilineCommentStartPosition = mFullText.lastIndexOf(StartCommentString, pFrom);
 
-    if (commentStartPosition != -1) {
-        int commentEndPosition = mFullText.indexOf(EndCommentString, commentStartPosition+StartCommentLength);
+    if (multilineCommentStartPosition != -1) {
+        int commentEndPosition = mFullText.indexOf(EndCommentString, multilineCommentStartPosition+StartCommentLength);
 
         if (commentEndPosition == -1)
             commentEndPosition = mFullText.length();
 
-        if ((commentStartPosition < pFrom) && (pTo < commentEndPosition))
+        if ((multilineCommentStartPosition < pFrom) && (pTo < commentEndPosition))
             return true;
     }
 
     // Check whether we are within a // comment
 
-    int commentPosition = mFullText.lastIndexOf(CommentString, pFrom);
+    int singleLineCommentPosition = mFullText.lastIndexOf(CommentString, pFrom);
 
-    if (commentPosition != -1) {
-        int eolPosition = mFullText.indexOf(mEolString, commentPosition+CommentStringLength);
+    if (singleLineCommentPosition != -1) {
+        int eolPosition = mFullText.indexOf(mEolString, singleLineCommentPosition+CommentStringLength);
 
         if (eolPosition == -1)
             eolPosition = mFullText.length();
 
-        if ((commentPosition < pFrom) && (pTo < eolPosition))
+        if ((singleLineCommentPosition < pFrom) && (pTo < eolPosition))
             return true;
     }
 
@@ -683,19 +683,20 @@ bool PrettyCellmlViewLexer::stringWithinStringOrComment(const int &pFrom,
 
 //==============================================================================
 
-int PrettyCellmlViewLexer::findString(const QString &pString, int pFrom,
-                                      const bool &pForward)
+int PrettyCellmlViewLexer::findParameterGroupString(const QString &pParameterGroupString,
+                                                    int pFrom,
+                                                    const bool &pForward)
 {
     // Find forward/backward the given string starting from the given position
 
-    int stringLength = pString.length();
+    int stringLength = pParameterGroupString.length();
     int res = pForward?pFrom-stringLength:pFrom+1;
 
     do {
         pFrom = pForward?res+stringLength:res-1;
 
-        res = pForward?mFullText.indexOf(pString, pFrom):mFullText.lastIndexOf(pString, pFrom);
-    } while ((res != -1) && stringWithinStringOrComment(res, res+stringLength-1));
+        res = pForward?mFullText.indexOf(pParameterGroupString, pFrom):mFullText.lastIndexOf(pParameterGroupString, pFrom);
+    } while ((res != -1) && parameterGroupStringWithinStringOrComment(res, res+stringLength-1));
 
     return res;
 }
