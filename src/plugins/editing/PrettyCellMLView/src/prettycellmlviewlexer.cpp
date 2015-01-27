@@ -261,37 +261,8 @@ void PrettyCellmlViewLexer::doStyleText(int pStart, int pEnd, QString pText,
     int commentStartPosition = mFullText.lastIndexOf(StartCommentString, pStart+StartCommentLength-1);
 
     if (commentStartPosition != -1) {
-        // A /* XXX */ comment started before or at the beginning of the given
-        // text, so now look for where it ends
-
-        int commentEndPosition = mFullText.indexOf(EndCommentString, commentStartPosition+StartCommentLength);
-
-        if (commentEndPosition == -1) {
-            // The comment doesn't end as such, so consider that it 'ends' at
-            // the of the full text
-
-            commentEndPosition = mFullText.length();
-        }
-
-        if ((commentStartPosition <= pStart) && (pStart <= commentEndPosition)) {
-            // The beginning of the given text is a comment, so style it
-
-            int realEnd = commentEndPosition+EndCommentLength;
-            int end = qMin(pEnd, realEnd);
-
-            startStyling(pStart);
-            setStyling(end-pStart, Comment);
-
-            // Get ready to style everything that is behind the comment, if
-            // anything
-
-            if (end == realEnd) {
-                pStart = end;
-                pText = pText.right(pEnd-end);
-            } else {
-                return;
-            }
-        }
+        doStyleTextPreviousMultilineComment(commentStartPosition, pStart, pEnd,
+                                            pText);
     }
 
     // Check whether a parameter group started before or at the beginning of the
@@ -300,51 +271,8 @@ void PrettyCellmlViewLexer::doStyleText(int pStart, int pEnd, QString pText,
     int parameterGroupStartPosition = findString(StartParameterGroupString, pStart+StartParameterGroupLength-1, false);
 
     if (parameterGroupStartPosition != -1) {
-        // A parameter group started before or at the beginning of the given
-        // text, so now look for where it ends
-
-        int parameterGroupEndPosition = findString(EndParameterGroupString, parameterGroupStartPosition+StartParameterGroupLength);
-
-        if (parameterGroupEndPosition == -1)
-            parameterGroupEndPosition = mFullText.length();
-
-        if ((parameterGroupStartPosition <= pStart) && (pStart <= parameterGroupEndPosition)) {
-            // The beginning of the given text is a parameter group, so style
-            // everything that is behind the parameter group, if anything
-
-            int realEnd = parameterGroupEndPosition+EndParameterGroupLength;
-            int end = qMin(pEnd, realEnd);
-            bool hasEnd = end == realEnd;
-
-            if (hasEnd)
-                doStyleText(end, pEnd, pText.right(pEnd-end), pParameterGroup);
-
-            // If possible, style the beginning and/or the end of the parameter
-            // group
-
-            bool hasBeginning = parameterGroupStartPosition == pStart;
-
-            if (hasBeginning) {
-                startStyling(pStart);
-                setStyling(StartParameterGroupLength, ParameterGroup);
-            }
-
-            if (hasEnd) {
-                startStyling(end-EndParameterGroupLength);
-                setStyling(EndParameterGroupLength, ParameterGroup);
-            }
-
-            // Now style the contents of the parameter group
-
-            int newStart = pStart+(hasBeginning?StartParameterGroupLength:0);
-            int newEnd = end-(hasEnd?EndParameterGroupLength:0);
-
-            pText = pText.mid(newStart-pStart, newEnd-newStart);
-
-            pStart = newStart;
-            pEnd = newEnd;
-            pParameterGroup = true;
-        }
+        doStyleTextPreviousParameterGroup(parameterGroupStartPosition, pStart,
+                                          pEnd, pText, pParameterGroup);
     }
 
     // Check whether the given text contains a string
@@ -352,67 +280,8 @@ void PrettyCellmlViewLexer::doStyleText(int pStart, int pEnd, QString pText,
     int stringStartPosition = pText.indexOf(StringString);
 
     if (stringStartPosition != -1) {
-        // There is a string to style, so first style everything that is before
-        // it
-
-        doStyleText(pStart, pStart+stringStartPosition, pText.left(stringStartPosition),
-                    pParameterGroup);
-
-        // Now, check where the string ends and
-
-        int stringEndPosition = pText.indexOf(StringString, stringStartPosition+StringStringLength);
-
-        if (stringEndPosition != -1) {
-            // The string ends somewhere, so compare its line number against
-            // that of where it started
-
-            int stringStartLineNumber, stringStartColumnNumber;
-            int stringEndLineNumber, stringEndColumnNumber;
-
-            editor()->lineIndexFromPosition(pStart+stringStartPosition,
-                                            &stringStartLineNumber, &stringStartColumnNumber);
-            editor()->lineIndexFromPosition(pStart+stringEndPosition,
-                                            &stringEndLineNumber, &stringEndColumnNumber);
-
-            if (stringStartLineNumber == stringEndLineNumber) {
-                // The string starts and ends on the same line, so style
-                // everything that is after the string
-
-                int start = pStart+stringEndPosition+StringStringLength;
-
-                doStyleText(start, pEnd, pText.right(pEnd-start), pParameterGroup);
-            } else {
-                // The string starts and ends on a different line, so consider
-                // that we couldn't find the end of the string
-
-                stringEndPosition = -1;
-            }
-        }
-
-        if (stringEndPosition == -1) {
-            // The string doesn't end or we found the beginning of another
-            // string on a different line, so style everything that is after the
-            // end of the line, if anything, on which the string started
-
-            int eolPosition = pText.indexOf(mEolString, stringStartPosition+StringStringLength);
-
-            if (eolPosition != -1) {
-                int start = pStart+eolPosition+mEolString.length();
-
-                doStyleText(start, pEnd, pText.right(pEnd-start), pParameterGroup);
-            }
-
-            // Consider the end of the line as the end of the string
-
-            stringEndPosition = eolPosition;
-        }
-
-        // Style the string itself
-
-        int start = pStart+stringStartPosition;
-
-        startStyling(start);
-        setStyling(((stringEndPosition == -1)?pEnd:pStart+stringEndPosition+StringStringLength)-start, String);
+        doStyleTextString(stringStartPosition, pStart, pEnd, pText,
+                          pParameterGroup);
 
         return;
     }
@@ -422,29 +291,8 @@ void PrettyCellmlViewLexer::doStyleText(int pStart, int pEnd, QString pText,
     int commentPosition = pText.indexOf(CommentString);
 
     if (commentPosition != -1) {
-        // There is a // comment to style, so first style everything that is
-        // before it
-
-        doStyleText(pStart, pStart+commentPosition, pText.left(commentPosition),
-                    pParameterGroup);
-
-        // Now, style everything that is after the // comment, if anything, by
-        // looking for the end of the line on which the // comment is
-
-        int eolPosition = pText.indexOf(mEolString, commentPosition+CommentStringLength);
-
-        if (eolPosition != -1) {
-            int start = pStart+eolPosition+mEolString.length();
-
-            doStyleText(start, pEnd, pText.right(pEnd-start), pParameterGroup);
-        }
-
-        // Style the // comment itself
-
-        int start = pStart+commentPosition;
-
-        startStyling(start);
-        setStyling(((eolPosition == -1)?pEnd:pStart+eolPosition)-start, Comment);
+        doStyleTextSingleLineComment(commentPosition, pStart, pEnd, pText,
+                                     pParameterGroup);
 
         return;
     }
@@ -454,20 +302,8 @@ void PrettyCellmlViewLexer::doStyleText(int pStart, int pEnd, QString pText,
     commentStartPosition = pText.indexOf(StartCommentString);
 
     if (commentStartPosition != -1) {
-        // There is a /* XXX */ comment to style, so first style everything that
-        // is before it
-
-        doStyleText(pStart, pStart+commentStartPosition,
-                    pText.left(commentStartPosition), pParameterGroup);
-
-        // Now style everything from the comment onwards
-        // Note: to style everything from the comment onwards means that we will
-        //       find that a /* XXX */ comment starts at the beginning of the
-        //       'new' given text...
-
-        doStyleText(pStart+commentStartPosition, pEnd,
-                    pText.right(pEnd-pStart-commentStartPosition),
-                    pParameterGroup);
+        doStyleTextMultilineComment(commentStartPosition, pStart, pEnd, pText,
+                                    pParameterGroup);
 
         return;
     }
@@ -477,20 +313,8 @@ void PrettyCellmlViewLexer::doStyleText(int pStart, int pEnd, QString pText,
     parameterGroupStartPosition = pText.indexOf(StartParameterGroupString);
 
     if (parameterGroupStartPosition != -1) {
-        // There is a parameter group, so first style everything that is before
-        // it
-
-        doStyleText(pStart, pStart+parameterGroupStartPosition,
-                    pText.left(parameterGroupStartPosition), pParameterGroup);
-
-        // Now style everything from the parameter group onwards
-        // Note: to style everything from the parameter group onwards means that
-        //       we will find that a parameter group starts at the beginning of
-        //       the 'new' given text...
-
-        doStyleText(pStart+parameterGroupStartPosition, pEnd,
-                    pText.right(pEnd-pStart-parameterGroupStartPosition),
-                    pParameterGroup);
+        doStyleTextParameterGroup(parameterGroupStartPosition, pStart, pEnd,
+                                  pText, pParameterGroup);
 
         return;
     }
@@ -510,6 +334,235 @@ void PrettyCellmlViewLexer::doStyleText(int pStart, int pEnd, QString pText,
     // Check whether the given text contains some numbers
 
     doStyleTextNumber(pStart, pText, pParameterGroup?ParameterNumber:Number);
+}
+
+//==============================================================================
+
+void PrettyCellmlViewLexer::doStyleTextPreviousMultilineComment(const int &pPosition,
+                                                                int &pStart,
+                                                                int pEnd,
+                                                                QString &pText)
+{
+    // A /* XXX */ comment started before or at the beginning of the given text,
+    // so now look for where it ends
+
+    int commentEndPosition = mFullText.indexOf(EndCommentString, pPosition+StartCommentLength);
+
+    if (commentEndPosition == -1) {
+        // The comment doesn't end as such, so consider that it 'ends' at the of
+        // the full text
+
+        commentEndPosition = mFullText.length();
+    }
+
+    if ((pPosition <= pStart) && (pStart <= commentEndPosition)) {
+        // The beginning of the given text is a comment, so style it
+
+        int realEnd = commentEndPosition+EndCommentLength;
+        int end = qMin(pEnd, realEnd);
+
+        startStyling(pStart);
+        setStyling(end-pStart, Comment);
+
+        // Get ready to style everything that is behind the comment
+        // Note: if there is nothing behind the comment, then it means that end
+        //       is equal to pEnd, so pText will be empty...
+
+        pStart = end;
+        pText = pText.right(pEnd-end);
+    }
+}
+
+//==============================================================================
+
+void PrettyCellmlViewLexer::doStyleTextPreviousParameterGroup(const int &pPosition,
+                                                              int &pStart,
+                                                              int &pEnd,
+                                                              QString &pText,
+                                                              bool &pParameterGroup)
+{
+    // A parameter group started before or at the beginning of the given text,
+    // so now look for where it ends
+
+    int parameterGroupEndPosition = findString(EndParameterGroupString, pPosition+StartParameterGroupLength);
+
+    if (parameterGroupEndPosition == -1)
+        parameterGroupEndPosition = mFullText.length();
+
+    if ((pPosition <= pStart) && (pStart <= parameterGroupEndPosition)) {
+        // The beginning of the given text is a parameter group, so style
+        // everything that is behind the parameter group, if anything
+
+        int realEnd = parameterGroupEndPosition+EndParameterGroupLength;
+        int end = qMin(pEnd, realEnd);
+        bool hasEnd = end == realEnd;
+
+        if (hasEnd)
+            doStyleText(end, pEnd, pText.right(pEnd-end), pParameterGroup);
+
+        // If possible, style the beginning and/or the end of the parameter
+        // group
+
+        bool hasBeginning = pPosition == pStart;
+
+        if (hasBeginning) {
+            startStyling(pStart);
+            setStyling(StartParameterGroupLength, ParameterGroup);
+        }
+
+        if (hasEnd) {
+            startStyling(end-EndParameterGroupLength);
+            setStyling(EndParameterGroupLength, ParameterGroup);
+        }
+
+        // Now style the contents of the parameter group
+
+        int newStart = pStart+(hasBeginning?StartParameterGroupLength:0);
+        int newEnd = end-(hasEnd?EndParameterGroupLength:0);
+
+        pText = pText.mid(newStart-pStart, newEnd-newStart);
+
+        pStart = newStart;
+        pEnd = newEnd;
+        pParameterGroup = true;
+    }
+}
+
+//==============================================================================
+
+void PrettyCellmlViewLexer::doStyleTextString(const int &pPosition, int pStart,
+                                              int pEnd, QString pText,
+                                              bool pParameterGroup)
+{
+    // There is a string to style, so first style everything that is before it
+
+    doStyleText(pStart, pStart+pPosition, pText.left(pPosition), pParameterGroup);
+
+    // Now, check where the string ends and
+
+    int stringEndPosition = pText.indexOf(StringString, pPosition+StringStringLength);
+
+    if (stringEndPosition != -1) {
+        // The string ends somewhere, so compare its line number against that of
+        // where it started
+
+        int stringStartLineNumber, stringStartColumnNumber;
+        int stringEndLineNumber, stringEndColumnNumber;
+
+        editor()->lineIndexFromPosition(pStart+pPosition,
+                                        &stringStartLineNumber, &stringStartColumnNumber);
+        editor()->lineIndexFromPosition(pStart+stringEndPosition,
+                                        &stringEndLineNumber, &stringEndColumnNumber);
+
+        if (stringStartLineNumber == stringEndLineNumber) {
+            // The string starts and ends on the same line, so style everything
+            // that is after the string
+
+            int start = pStart+stringEndPosition+StringStringLength;
+
+            doStyleText(start, pEnd, pText.right(pEnd-start), pParameterGroup);
+        } else {
+            // The string starts and ends on a different line, so consider that
+            // we couldn't find the end of the string
+
+            stringEndPosition = -1;
+        }
+    }
+
+    if (stringEndPosition == -1) {
+        // The string doesn't end or we found the beginning of another string on
+        // a different line, so style everything that is after the end of the
+        // line, if anything, on which the string started
+
+        int eolPosition = pText.indexOf(mEolString, pPosition+StringStringLength);
+
+        if (eolPosition != -1) {
+            int start = pStart+eolPosition+mEolString.length();
+
+            doStyleText(start, pEnd, pText.right(pEnd-start), pParameterGroup);
+        }
+
+        // Consider the end of the line as the end of the string
+
+        stringEndPosition = eolPosition;
+    }
+
+    // Style the string itself
+
+    int start = pStart+pPosition;
+
+    startStyling(start);
+    setStyling(((stringEndPosition == -1)?pEnd:pStart+stringEndPosition+StringStringLength)-start, String);
+}
+
+//==============================================================================
+
+void PrettyCellmlViewLexer::doStyleTextSingleLineComment(const int &pPosition,
+                                                         int pStart, int pEnd,
+                                                         QString pText,
+                                                         bool pParameterGroup)
+{
+    // There is a // comment to style, so first style everything that is before
+    // it
+
+    doStyleText(pStart, pStart+pPosition, pText.left(pPosition), pParameterGroup);
+
+    // Now, style everything that is after the // comment, if anything, by
+    // looking for the end of the line on which the // comment is
+
+    int eolPosition = pText.indexOf(mEolString, pPosition+CommentStringLength);
+
+    if (eolPosition != -1) {
+        int start = pStart+eolPosition+mEolString.length();
+
+        doStyleText(start, pEnd, pText.right(pEnd-start), pParameterGroup);
+    }
+
+    // Style the // comment itself
+
+    int start = pStart+pPosition;
+
+    startStyling(start);
+    setStyling(((eolPosition == -1)?pEnd:pStart+eolPosition)-start, Comment);
+}
+
+//==============================================================================
+
+void PrettyCellmlViewLexer::doStyleTextMultilineComment(const int &pPosition,
+                                                        int pStart, int pEnd,
+                                                        QString pText,
+                                                        bool pParameterGroup)
+{
+    // There is a /* XXX */ comment to style, so first style everything that is
+    // before it
+
+    doStyleText(pStart, pStart+pPosition, pText.left(pPosition), pParameterGroup);
+
+    // Now style everything from the comment onwards
+    // Note: to style everything from the comment onwards means that we will
+    //       find that a /* XXX */ comment starts at the beginning of the 'new'
+    //       given text...
+
+    doStyleText(pStart+pPosition, pEnd, pText.right(pEnd-pStart-pPosition), pParameterGroup);
+}
+
+//==============================================================================
+
+void PrettyCellmlViewLexer::doStyleTextParameterGroup(const int &pPosition,
+                                                      int pStart, int pEnd,
+                                                      QString pText,
+                                                      bool pParameterGroup)
+{
+    // There is a parameter group, so first style everything that is before it
+
+    doStyleText(pStart, pStart+pPosition, pText.left(pPosition), pParameterGroup);
+
+    // Now style everything from the parameter group onwards
+    // Note: to style everything from the parameter group onwards means that we
+    //       will find that a parameter group starts at the beginning of the
+    //       'new' given text...
+
+    doStyleText(pStart+pPosition, pEnd, pText.right(pEnd-pStart-pPosition), pParameterGroup);
 }
 
 //==============================================================================

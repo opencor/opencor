@@ -75,6 +75,20 @@ private:
     QRegularExpression mNumberRegEx;
 
     void doStyleText(int pStart, int pEnd, QString pText, bool pParameterGroup);
+    void doStyleTextPreviousMultilineComment(const int &pPosition, int &pStart,
+                                             int pEnd, QString &pText);
+    void doStyleTextPreviousParameterGroup(const int &pPosition, int &pStart,
+                                           int &pEnd, QString &pText,
+                                           bool &pParameterGroup);
+    void doStyleTextString(const int &pPosition, int pStart, int pEnd,
+                           QString pText, bool pParameterGroup);
+    void doStyleTextSingleLineComment(const int &pPosition, int pStart,
+                                      int pEnd, QString pText,
+                                      bool pParameterGroup);
+    void doStyleTextMultilineComment(const int &pPosition, int pStart, int pEnd,
+                                     QString pText, bool pParameterGroup);
+    void doStyleTextParameterGroup(const int &pPosition, int pStart, int pEnd,
+                                   QString pText, bool pParameterGroup);
     void doStyleTextKeyword(int pStart, const QString &pText,
                             const QRegularExpression &pKeywordsRegEx,
                             const int &pKeywordStyle);
