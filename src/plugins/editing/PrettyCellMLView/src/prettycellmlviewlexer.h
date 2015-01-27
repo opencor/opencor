@@ -50,7 +50,8 @@ public:
         ParameterGroup,
         ParameterKeyword,
         ParameterValueKeyword,
-        ParameterNumber
+        ParameterNumber,
+        ParameterString
     };
 
     explicit PrettyCellmlViewLexer(QObject *pParent);

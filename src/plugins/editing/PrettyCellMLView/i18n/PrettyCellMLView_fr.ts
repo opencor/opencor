@@ -81,5 +81,9 @@
         <source>Parameter number</source>
         <translation>Nombre paramètre</translation>
     </message>
+    <message>
+        <source>Parameter string</source>
+        <translation>Chaîne paramètre</translation>
+    </message>
 </context>
 </TS>

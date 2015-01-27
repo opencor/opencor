@@ -126,6 +126,8 @@ QString PrettyCellmlViewLexer::description(int pStyle) const
         return QObject::tr("Parameter value keyword");
     case ParameterNumber:
         return QObject::tr("Parameter number");
+    case ParameterString:
+        return QObject::tr("Parameter string");
     }
 
     return QString();
@@ -153,6 +155,7 @@ QColor PrettyCellmlViewLexer::color(int pStyle) const
     case ParameterNumber:
         return QColor(0x00, 0x7f, 0x7f);
     case String:
+    case ParameterString:
         return QColor(0x00, 0x7f, 0x00);
     }
 
@@ -172,6 +175,7 @@ QFont PrettyCellmlViewLexer::font(int pStyle) const
     case ParameterKeyword:
     case ParameterValueKeyword:
     case ParameterNumber:
+    case ParameterString:
         res.setItalic(true);
 
         break;
@@ -491,7 +495,7 @@ void PrettyCellmlViewLexer::doStyleTextString(const int &pPosition, int pStart,
     int start = pStart+pPosition;
 
     startStyling(start);
-    setStyling(((stringEndPosition == -1)?pEnd:pStart+stringEndPosition+StringStringLength)-start, String);
+    setStyling(((stringEndPosition == -1)?pEnd:pStart+stringEndPosition+StringStringLength)-start, pParameterGroup?ParameterString:String);
 }
 
 //==============================================================================
