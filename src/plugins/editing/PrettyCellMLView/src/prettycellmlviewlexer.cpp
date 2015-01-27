@@ -266,8 +266,8 @@ void PrettyCellmlViewLexer::doStyleText(int pStart, int pEnd, QString pText,
     int parameterGroupStartPosition = findParameterGroupString(pStart, false);
 
     if (multilineCommentStartPosition != -1) {
-        doStyleTextPreviousMultilineComment(multilineCommentStartPosition, pStart, pEnd,
-                                            pText);
+        doStyleTextPreviousMultilineComment(multilineCommentStartPosition,
+                                            pStart, pEnd, pText);
     }
 
     if (parameterGroupStartPosition != -1) {
@@ -300,16 +300,16 @@ void PrettyCellmlViewLexer::doStyleText(int pStart, int pEnd, QString pText,
                && (singleLineCommentPosition < stringStartPosition)
                && (singleLineCommentPosition < multilineCommentStartPosition)
                && (singleLineCommentPosition < parameterGroupStartPosition)) {
-        doStyleTextSingleLineComment(singleLineCommentPosition, pStart, pEnd, pText,
-                                     pParameterGroup);
+        doStyleTextSingleLineComment(singleLineCommentPosition, pStart, pEnd,
+                                     pText, pParameterGroup);
 
         return;
     } else if (   (multilineCommentStartPosition != INT_MAX)
                && (multilineCommentStartPosition < stringStartPosition)
                && (multilineCommentStartPosition < singleLineCommentPosition)
                && (multilineCommentStartPosition < parameterGroupStartPosition)) {
-        doStyleTextMultilineComment(multilineCommentStartPosition, pStart, pEnd, pText,
-                                    pParameterGroup);
+        doStyleTextMultilineComment(multilineCommentStartPosition, pStart, pEnd,
+                                    pText, pParameterGroup);
 
         return;
     } else if (   (parameterGroupStartPosition != INT_MAX)
