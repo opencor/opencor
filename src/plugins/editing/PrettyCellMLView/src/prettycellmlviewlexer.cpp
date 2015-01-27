@@ -262,8 +262,8 @@ void PrettyCellmlViewLexer::doStyleText(int pStart, int pEnd, QString pText,
     // Check whether a /* XXX */ comment or a parameter group started before or
     // at the beginning of the given text
 
-    int multilineCommentStartPosition = mFullText.lastIndexOf(StartCommentString, pStart+StartCommentLength-1);
-    int parameterGroupStartPosition = findParameterGroupString(pStart, false);
+    int multilineCommentStartPosition = findString(StartCommentString, pStart, false);
+    int parameterGroupStartPosition = findString(StartParameterGroupString, pStart, false);
 
     if (multilineCommentStartPosition != -1) {
         doStyleTextPreviousMultilineComment(multilineCommentStartPosition,
@@ -349,7 +349,7 @@ void PrettyCellmlViewLexer::doStyleTextPreviousMultilineComment(const int &pPosi
     // A /* XXX */ comment started before or at the beginning of the given text,
     // so now look for where it ends
 
-    int multilineCommentEndPosition = mFullText.indexOf(EndCommentString, pPosition+StartCommentLength);
+    int multilineCommentEndPosition = findString(EndCommentString, pPosition);
 
     if (multilineCommentEndPosition == -1) {
         // The comment doesn't end as such, so consider that it 'ends' at the of
@@ -387,7 +387,7 @@ void PrettyCellmlViewLexer::doStyleTextPreviousParameterGroup(const int &pPositi
     // A parameter group started before or at the beginning of the given text,
     // so now look for where it ends
 
-    int parameterGroupEndPosition = findParameterGroupString(pPosition);
+    int parameterGroupEndPosition = findString(EndParameterGroupString, pPosition);
 
     if (parameterGroupEndPosition == -1)
         parameterGroupEndPosition = mFullText.length();
@@ -613,10 +613,9 @@ void PrettyCellmlViewLexer::doStyleTextNumber(int pStart, const QString &pText,
 
 //==============================================================================
 
-bool PrettyCellmlViewLexer::validParameterGroupString(const int &pFrom,
-                                                      const int &pTo) const
+bool PrettyCellmlViewLexer::validString(const int &pFrom, const int &pTo) const
 {
-    // Return whether the parameter group string, which range is given, is
+    // Return whether the string, which range is given, is valid, i.e. isn't
     // within a string or a comment
 
     // Check whether we are within a string
@@ -683,20 +682,19 @@ bool PrettyCellmlViewLexer::validParameterGroupString(const int &pFrom,
 
 //==============================================================================
 
-int PrettyCellmlViewLexer::findParameterGroupString(int pFrom,
-                                                    const bool &pForward)
+int PrettyCellmlViewLexer::findString(const QString &pString, int pFrom,
+                                      const bool &pForward)
 {
     // Find forward/backward the given string starting from the given position
 
-    QString parameterGroupString = pForward?EndParameterGroupString:StartParameterGroupString;
-    int parameterGroupStringLength = pForward?EndParameterGroupLength:StartParameterGroupLength;
-    int res = pForward?pFrom:pFrom+parameterGroupStringLength;
+    int stringLength = pString.length();
+    int res = pForward?pFrom:pFrom+stringLength;
 
     do {
-        pFrom = pForward?res+parameterGroupStringLength:res-1;
+        pFrom = pForward?res+stringLength:res-1;
 
-        res = pForward?mFullText.indexOf(parameterGroupString, pFrom):mFullText.lastIndexOf(parameterGroupString, pFrom);
-    } while ((res != -1) && !validParameterGroupString(res, res+parameterGroupStringLength-1));
+        res = pForward?mFullText.indexOf(pString, pFrom):mFullText.lastIndexOf(pString, pFrom);
+    } while ((res != -1) && !validString(res, res+stringLength-1));
 
     return res;
 }
