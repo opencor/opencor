@@ -613,11 +613,11 @@ void PrettyCellmlViewLexer::doStyleTextNumber(int pStart, const QString &pText,
 
 //==============================================================================
 
-bool PrettyCellmlViewLexer::parameterGroupStringWithinStringOrComment(const int &pFrom,
-                                                                      const int &pTo) const
+bool PrettyCellmlViewLexer::validParameterGroupString(const int &pFrom,
+                                                      const int &pTo) const
 {
-    // Return whether the string, which range is given, is within a string or a
-    // comment
+    // Return whether the parameter group string, which range is given, is
+    // within a string or a comment
 
     // Check whether we are within a string
 
@@ -646,7 +646,7 @@ bool PrettyCellmlViewLexer::parameterGroupStringWithinStringOrComment(const int 
             }
 
             if (beginningOfString)
-                return true;
+                return false;
         }
     }
 
@@ -661,7 +661,7 @@ bool PrettyCellmlViewLexer::parameterGroupStringWithinStringOrComment(const int 
             commentEndPosition = mFullText.length();
 
         if ((multilineCommentStartPosition < pFrom) && (pTo < commentEndPosition))
-            return true;
+            return false;
     }
 
     // Check whether we are within a // comment
@@ -675,10 +675,10 @@ bool PrettyCellmlViewLexer::parameterGroupStringWithinStringOrComment(const int 
             eolPosition = mFullText.length();
 
         if ((singleLineCommentPosition < pFrom) && (pTo < eolPosition))
-            return true;
+            return false;
     }
 
-    return false;
+    return true;
 }
 
 //==============================================================================
@@ -696,7 +696,7 @@ int PrettyCellmlViewLexer::findParameterGroupString(int pFrom,
         pFrom = pForward?res+parameterGroupStringLength:res-1;
 
         res = pForward?mFullText.indexOf(parameterGroupString, pFrom):mFullText.lastIndexOf(parameterGroupString, pFrom);
-    } while ((res != -1) && parameterGroupStringWithinStringOrComment(res, res+parameterGroupStringLength-1));
+    } while ((res != -1) && !validParameterGroupString(res, res+parameterGroupStringLength-1));
 
     return res;
 }

@@ -96,8 +96,7 @@ private:
     void doStyleTextNumber(int pStart, const QString &pText,
                            const int &pNumberStyle);
 
-    bool parameterGroupStringWithinStringOrComment(const int &pFrom,
-                                                   const int &pTo) const;
+    bool validParameterGroupString(const int &pFrom, const int &pTo) const;
     int findParameterGroupString(int pFrom, const bool &pForward = true);
 };
 
