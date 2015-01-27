@@ -532,7 +532,7 @@ void PrettyCellmlViewLexer::doStyleTextSingleLineComment(const int &pPosition,
     int start = pStart+pPosition;
 
     startStyling(start);
-    setStyling(((eolPosition == -1)?pEnd:pStart+eolPosition)-start, pParameterGroup?ParameterGroup:Comment);
+    setStyling(((eolPosition == -1)?pEnd:pStart+eolPosition)-start, pParameterGroup?ParameterComment:Comment);
 }
 
 //==============================================================================
