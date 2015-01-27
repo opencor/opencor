@@ -279,22 +279,39 @@ void PrettyCellmlViewLexer::doStyleText(int pStart, int pEnd, QString pText,
     multilineCommentStartPosition = pText.indexOf(StartCommentString);
     parameterGroupStartPosition = pText.indexOf(StartParameterGroupString);
 
-    if (stringStartPosition != -1) {
+    stringStartPosition = (stringStartPosition == -1)?INT_MAX:stringStartPosition;
+    singleLineCommentPosition = (singleLineCommentPosition == -1)?INT_MAX:singleLineCommentPosition;
+    multilineCommentStartPosition = (multilineCommentStartPosition == -1)?INT_MAX:multilineCommentStartPosition;
+    parameterGroupStartPosition = (parameterGroupStartPosition == -1)?INT_MAX:parameterGroupStartPosition;
+
+    if (   (stringStartPosition != INT_MAX)
+        && (stringStartPosition < singleLineCommentPosition)
+        && (stringStartPosition < multilineCommentStartPosition)
+        && (stringStartPosition < parameterGroupStartPosition)) {
         doStyleTextString(stringStartPosition, pStart, pEnd, pText,
                           pParameterGroup);
 
         return;
-    } else if (singleLineCommentPosition != -1) {
+    } else if (   (singleLineCommentPosition != INT_MAX)
+               && (singleLineCommentPosition < stringStartPosition)
+               && (singleLineCommentPosition < multilineCommentStartPosition)
+               && (singleLineCommentPosition < parameterGroupStartPosition)) {
         doStyleTextSingleLineComment(singleLineCommentPosition, pStart, pEnd, pText,
                                      pParameterGroup);
 
         return;
-    } else if (multilineCommentStartPosition != -1) {
+    } else if (   (multilineCommentStartPosition != INT_MAX)
+               && (multilineCommentStartPosition < stringStartPosition)
+               && (multilineCommentStartPosition < singleLineCommentPosition)
+               && (multilineCommentStartPosition < parameterGroupStartPosition)) {
         doStyleTextMultilineComment(multilineCommentStartPosition, pStart, pEnd, pText,
                                     pParameterGroup);
 
         return;
-    } else if (parameterGroupStartPosition != -1) {
+    } else if (   (parameterGroupStartPosition != INT_MAX)
+               && (parameterGroupStartPosition < stringStartPosition)
+               && (parameterGroupStartPosition < singleLineCommentPosition)
+               && (parameterGroupStartPosition < multilineCommentStartPosition)) {
         doStyleTextParameterGroup(parameterGroupStartPosition, pStart, pEnd,
                                   pText, pParameterGroup);
 
