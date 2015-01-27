@@ -48,6 +48,7 @@ public:
         Number,
         String,
         ParameterGroup,
+        ParameterComment,
         ParameterKeyword,
         ParameterValueKeyword,
         ParameterNumber,
@@ -77,7 +78,8 @@ private:
 
     void doStyleText(int pStart, int pEnd, QString pText, bool pParameterGroup);
     void doStyleTextPreviousMultilineComment(const int &pPosition, int &pStart,
-                                             int pEnd, QString &pText);
+                                             int pEnd, QString &pText,
+                                             bool &pParameterGroup);
     void doStyleTextPreviousParameterGroup(const int &pPosition, int &pStart,
                                            int &pEnd, QString &pText,
                                            bool &pParameterGroup);

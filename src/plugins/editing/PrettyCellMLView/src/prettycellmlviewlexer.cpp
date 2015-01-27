@@ -120,6 +120,8 @@ QString PrettyCellmlViewLexer::description(int pStyle) const
         return QObject::tr("String");
     case ParameterGroup:
         return QObject::tr("Parameter group");
+    case ParameterComment:
+        return QObject::tr("Parameter comment");
     case ParameterKeyword:
         return QObject::tr("Parameter keyword");
     case ParameterValueKeyword:
@@ -144,6 +146,7 @@ QColor PrettyCellmlViewLexer::color(int pStyle) const
     case ParameterGroup:
         return QColor(0x1f, 0x1f, 0x1f);
     case Comment:
+    case ParameterComment:
         return QColor(0x7f, 0x7f, 0x7f);
     case Keyword:
     case ParameterKeyword:
@@ -172,6 +175,7 @@ QFont PrettyCellmlViewLexer::font(int pStyle) const
 
     switch (pStyle) {
     case ParameterGroup:
+    case ParameterComment:
     case ParameterKeyword:
     case ParameterValueKeyword:
     case ParameterNumber:
@@ -267,7 +271,8 @@ void PrettyCellmlViewLexer::doStyleText(int pStart, int pEnd, QString pText,
 
     if (multilineCommentStartPosition != -1) {
         doStyleTextPreviousMultilineComment(multilineCommentStartPosition,
-                                            pStart, pEnd, pText);
+                                            pStart, pEnd, pText,
+                                            pParameterGroup);
     }
 
     if (parameterGroupStartPosition != -1) {
@@ -344,7 +349,8 @@ void PrettyCellmlViewLexer::doStyleText(int pStart, int pEnd, QString pText,
 void PrettyCellmlViewLexer::doStyleTextPreviousMultilineComment(const int &pPosition,
                                                                 int &pStart,
                                                                 int pEnd,
-                                                                QString &pText)
+                                                                QString &pText,
+                                                                bool &pParameterGroup)
 {
     // A /* XXX */ comment started before or at the beginning of the given text,
     // so now look for where it ends
@@ -365,7 +371,7 @@ void PrettyCellmlViewLexer::doStyleTextPreviousMultilineComment(const int &pPosi
         int end = qMin(pEnd, realEnd);
 
         startStyling(pStart);
-        setStyling(end-pStart, Comment);
+        setStyling(end-pStart, pParameterGroup?ParameterComment:Comment);
 
         // Get ready to style everything that is behind the comment
         // Note: if there is nothing behind the comment, then it means that end
@@ -526,7 +532,7 @@ void PrettyCellmlViewLexer::doStyleTextSingleLineComment(const int &pPosition,
     int start = pStart+pPosition;
 
     startStyling(start);
-    setStyling(((eolPosition == -1)?pEnd:pStart+eolPosition)-start, Comment);
+    setStyling(((eolPosition == -1)?pEnd:pStart+eolPosition)-start, pParameterGroup?ParameterGroup:Comment);
 }
 
 //==============================================================================
