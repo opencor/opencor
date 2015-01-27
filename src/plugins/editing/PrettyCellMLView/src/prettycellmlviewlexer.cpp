@@ -255,64 +255,46 @@ void PrettyCellmlViewLexer::doStyleText(int pStart, int pEnd, QString pText,
     if (pText.trimmed().isEmpty())
         return;
 
-    // Check whether a /* XXX */ comment started before or at the beginning of
-    // the given text
+    // Check whether a /* XXX */ comment or a parameter group started before or
+    // at the beginning of the given text
 
-    int commentStartPosition = mFullText.lastIndexOf(StartCommentString, pStart+StartCommentLength-1);
+    int multilineCommentStartPosition = mFullText.lastIndexOf(StartCommentString, pStart+StartCommentLength-1);
+    int parameterGroupStartPosition = findString(StartParameterGroupString, pStart+StartParameterGroupLength-1, false);
 
-    if (commentStartPosition != -1) {
-        doStyleTextPreviousMultilineComment(commentStartPosition, pStart, pEnd,
+    if (multilineCommentStartPosition != -1) {
+        doStyleTextPreviousMultilineComment(multilineCommentStartPosition, pStart, pEnd,
                                             pText);
     }
-
-    // Check whether a parameter group started before or at the beginning of the
-    // given text
-
-    int parameterGroupStartPosition = findString(StartParameterGroupString, pStart+StartParameterGroupLength-1, false);
 
     if (parameterGroupStartPosition != -1) {
         doStyleTextPreviousParameterGroup(parameterGroupStartPosition, pStart,
                                           pEnd, pText, pParameterGroup);
     }
 
-    // Check whether the given text contains a string
+    // Check whether the given text contains a string, a // comment, a /* XXX */
+    // comment or a parameter group
 
     int stringStartPosition = pText.indexOf(StringString);
+    int singleLineCommentPosition = pText.indexOf(CommentString);
+    multilineCommentStartPosition = pText.indexOf(StartCommentString);
+    parameterGroupStartPosition = pText.indexOf(StartParameterGroupString);
 
     if (stringStartPosition != -1) {
         doStyleTextString(stringStartPosition, pStart, pEnd, pText,
                           pParameterGroup);
 
         return;
-    }
-
-    // Check whether the given text contains a // comment
-
-    int commentPosition = pText.indexOf(CommentString);
-
-    if (commentPosition != -1) {
-        doStyleTextSingleLineComment(commentPosition, pStart, pEnd, pText,
+    } else if (singleLineCommentPosition != -1) {
+        doStyleTextSingleLineComment(singleLineCommentPosition, pStart, pEnd, pText,
                                      pParameterGroup);
 
         return;
-    }
-
-    // Check whether the given text contains a /* XXX */ comment
-
-    commentStartPosition = pText.indexOf(StartCommentString);
-
-    if (commentStartPosition != -1) {
-        doStyleTextMultilineComment(commentStartPosition, pStart, pEnd, pText,
+    } else if (multilineCommentStartPosition != -1) {
+        doStyleTextMultilineComment(multilineCommentStartPosition, pStart, pEnd, pText,
                                     pParameterGroup);
 
         return;
-    }
-
-    // Check whether the given text contains a parameter group
-
-    parameterGroupStartPosition = pText.indexOf(StartParameterGroupString);
-
-    if (parameterGroupStartPosition != -1) {
+    } else if (parameterGroupStartPosition != -1) {
         doStyleTextParameterGroup(parameterGroupStartPosition, pStart, pEnd,
                                   pText, pParameterGroup);
 
@@ -346,19 +328,19 @@ void PrettyCellmlViewLexer::doStyleTextPreviousMultilineComment(const int &pPosi
     // A /* XXX */ comment started before or at the beginning of the given text,
     // so now look for where it ends
 
-    int commentEndPosition = mFullText.indexOf(EndCommentString, pPosition+StartCommentLength);
+    int multilineCommentEndPosition = mFullText.indexOf(EndCommentString, pPosition+StartCommentLength);
 
-    if (commentEndPosition == -1) {
+    if (multilineCommentEndPosition == -1) {
         // The comment doesn't end as such, so consider that it 'ends' at the of
         // the full text
 
-        commentEndPosition = mFullText.length();
+        multilineCommentEndPosition = mFullText.length();
     }
 
-    if ((pPosition <= pStart) && (pStart <= commentEndPosition)) {
+    if ((pPosition <= pStart) && (pStart <= multilineCommentEndPosition)) {
         // The beginning of the given text is a comment, so style it
 
-        int realEnd = commentEndPosition+EndCommentLength;
+        int realEnd = multilineCommentEndPosition+EndCommentLength;
         int end = qMin(pEnd, realEnd);
 
         startStyling(pStart);
