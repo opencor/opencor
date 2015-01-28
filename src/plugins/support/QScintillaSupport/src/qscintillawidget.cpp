@@ -176,7 +176,7 @@ void QScintillaWidget::setCursorPosition(int pLine, int pColumn)
 
 void QScintillaWidget::setLexer(QsciLexer *pLexer)
 {
-    // Set our font to the given lexer, if any
+    // Set our font for the given lexer, if any
 
     if (pLexer)
         pLexer->setFont(mFont);
