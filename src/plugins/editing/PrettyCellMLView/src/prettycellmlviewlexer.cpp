@@ -203,9 +203,6 @@ void PrettyCellmlViewLexer::styleText(int pStart, int pEnd)
 
     delete[] data;
 
-    if (text.trimmed().isEmpty())
-        return;
-
     // Effectively style our text
 
     mFullText = editor()->text();
@@ -256,7 +253,7 @@ void PrettyCellmlViewLexer::doStyleText(int pStart, int pEnd, QString pText,
 {
     // Make sure that we are given some text to style
 
-    if (pText.trimmed().isEmpty())
+    if (pStart == pEnd)
         return;
 
     // Check whether a /* XXX */ comment or a parameter group started before or
