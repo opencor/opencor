@@ -42,7 +42,8 @@ class PrettyCellmlViewLexer : public QsciLexerCustom
 public:
     enum {
         Default,
-        Comment,
+        SingleLineComment,
+        MultilineComment,
         Keyword,
         CellmlKeyword,
         Number,
@@ -76,11 +77,14 @@ private:
     QRegularExpression mNumberRegEx;
 
     void doStyleText(int pStart, int pEnd, QString pText, bool pParameterGroup);
-    void doStyleTextPreviousMultilineComment(const int &pPosition, int &pStart,
-                                             int pEnd, QString &pText);
-    void doStyleTextPreviousParameterGroup(const int &pPosition, int &pStart,
-                                           int &pEnd, QString &pText,
-                                           bool &pParameterGroup);
+    void doStyleTextCurrent(int pStart, int pEnd, QString pText,
+                            bool pParameterGroup);
+    void doStyleTextPreviousMultilineComment(const int &pPosition, int pStart,
+                                             int pEnd, QString pText,
+                                             bool pParameterGroup);
+    void doStyleTextPreviousParameterGroup(const int &pPosition, int pStart,
+                                           int pEnd, QString pText,
+                                           bool pParameterGroup);
     void doStyleTextString(const int &pPosition, int pStart, int pEnd,
                            QString pText, bool pParameterGroup);
     void doStyleTextSingleLineComment(const int &pPosition, int pStart,
@@ -90,8 +94,8 @@ private:
                           const QRegularExpression &pRegEx,
                           const int &pRegExStyle);
 
-    bool validString(const int &pFrom, const int &pTo) const;
-    int findString(const QString &pString, int pFrom,
+    bool validString(const int &pFrom, const int &pTo, const int &pStyle) const;
+    int findString(const QString &pString, int pFrom, const int &pStyle,
                    const bool &pForward = true);
 };
 

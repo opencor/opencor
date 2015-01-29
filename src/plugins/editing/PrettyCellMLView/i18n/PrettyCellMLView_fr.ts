@@ -46,8 +46,12 @@
         <translation>Défaut</translation>
     </message>
     <message>
-        <source>Comment</source>
-        <translation>Commentaire</translation>
+        <source>Single line comment</source>
+        <translation>Commentaire sur une ligne</translation>
+    </message>
+    <message>
+        <source>Multiline comment</source>
+        <translation>Commentaire sur plusieurs lignes</translation>
     </message>
     <message>
         <source>Keyword</source>
