@@ -847,7 +847,7 @@ void CentralWidget::openRemoteFile(const QString &pUrl,
             // Make sure that the file has indeed been created
 
             if (createStatus != Core::FileManager::Created)
-                qFatal("FATAL ERROR | %s:%d: the remote file was not created", __FILE__, __LINE__);
+                qFatal("FATAL ERROR | %s:%d: the remote file was not created.", __FILE__, __LINE__);
 #endif
         } else {
             // We were not able to retrieve the contents of the remote file, so
@@ -973,7 +973,7 @@ void CentralWidget::duplicateFile()
     // Make sure that the file has indeed been duplicated
 
     if (duplicateStatus != FileManager::Duplicated)
-        qFatal("FATAL ERROR | %s:%d: '%s' did not get duplicated", __FILE__, __LINE__, qPrintable(fileName));
+        qFatal("FATAL ERROR | %s:%d: '%s' did not get duplicated.", __FILE__, __LINE__, qPrintable(fileName));
 #endif
 }
 
@@ -1130,7 +1130,7 @@ bool CentralWidget::saveFile(const int &pIndex, const bool &pNeedNewFileName)
             // Make sure that the file has indeed been renamed
 
             if (renameStatus != FileManager::Renamed)
-                qFatal("FATAL ERROR | %s:%d: '%s' did not get renamed to '%s'", __FILE__, __LINE__, qPrintable(oldFileName), qPrintable(newFileName));
+                qFatal("FATAL ERROR | %s:%d: '%s' did not get renamed to '%s'.", __FILE__, __LINE__, qPrintable(oldFileName), qPrintable(newFileName));
 #endif
         }
 

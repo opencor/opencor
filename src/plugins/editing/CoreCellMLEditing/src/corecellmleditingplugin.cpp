@@ -253,7 +253,7 @@ void CoreCellMLEditingPlugin::newCellmlFile(const CellMLSupport::CellmlFile::Ver
     // Make sure that the file has indeed been created
 
     if (createStatus != Core::FileManager::Created)
-        qFatal("FATAL ERROR | %s:%d: the file was not created", __FILE__, __LINE__);
+        qFatal("FATAL ERROR | %s:%d: the file was not created.", __FILE__, __LINE__);
 #endif
 }
 
