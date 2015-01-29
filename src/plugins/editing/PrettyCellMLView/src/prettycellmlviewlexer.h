@@ -86,15 +86,9 @@ private:
     void doStyleTextSingleLineComment(const int &pPosition, int pStart,
                                       int pEnd, QString pText,
                                       bool pParameterGroup);
-    void doStyleTextMultilineComment(const int &pPosition, int pStart, int pEnd,
-                                     QString pText, bool pParameterGroup);
-    void doStyleTextParameterGroup(const int &pPosition, int pStart, int pEnd,
-                                   QString pText, bool pParameterGroup);
-    void doStyleTextKeyword(int pStart, const QString &pText,
-                            const QRegularExpression &pKeywordsRegEx,
-                            const int &pKeywordStyle);
-    void doStyleTextNumber(int pStart, const QString &pText,
-                           const int &pNumberStyle);
+    void doStyleTextRegEx(int pStart, const QString &pText,
+                          const QRegularExpression &pRegEx,
+                          const int &pRegExStyle);
 
     bool validString(const int &pFrom, const int &pTo) const;
     int findString(const QString &pString, int pFrom,

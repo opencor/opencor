@@ -305,16 +305,40 @@ void PrettyCellmlViewLexer::doStyleText(int pStart, int pEnd, QString pText,
                && (multilineCommentStartPosition < stringStartPosition)
                && (multilineCommentStartPosition < singleLineCommentPosition)
                && (multilineCommentStartPosition < parameterGroupStartPosition)) {
-        doStyleTextMultilineComment(multilineCommentStartPosition, pStart, pEnd,
-                                    pText, pParameterGroup);
+        // There is a /* XXX */ comment to style, so first style everything that
+        // is before it
+
+        doStyleText(pStart, pStart+multilineCommentStartPosition,
+                    pText.left(multilineCommentStartPosition), pParameterGroup);
+
+        // Now style everything from the comment onwards
+        // Note: to style everything from the comment onwards means that we will
+        //       find that a /* XXX */ comment starts at the beginning of the
+        //       'new' given text...
+
+        doStyleText(pStart+multilineCommentStartPosition, pEnd,
+                    pText.right(pEnd-pStart-multilineCommentStartPosition),
+                    pParameterGroup);
 
         return;
     } else if (   (parameterGroupStartPosition != INT_MAX)
                && (parameterGroupStartPosition < stringStartPosition)
                && (parameterGroupStartPosition < singleLineCommentPosition)
                && (parameterGroupStartPosition < multilineCommentStartPosition)) {
-        doStyleTextParameterGroup(parameterGroupStartPosition, pStart, pEnd,
-                                  pText, pParameterGroup);
+        // There is a parameter group, so first style everything that is before
+        // it
+
+        doStyleText(pStart, pStart+parameterGroupStartPosition,
+                    pText.left(parameterGroupStartPosition), pParameterGroup);
+
+        // Now style everything from the parameter group onwards
+        // Note: to style everything from the parameter group onwards means that
+        //       we will find that a parameter group starts at the beginning of
+        //       the 'new' given text...
+
+        doStyleText(pStart+parameterGroupStartPosition, pEnd,
+                    pText.right(pEnd-pStart-parameterGroupStartPosition),
+                    pParameterGroup);
 
         return;
     }
@@ -326,14 +350,14 @@ void PrettyCellmlViewLexer::doStyleText(int pStart, int pEnd, QString pText,
 
     // Check whether the given text contains keywords from various categories
 
-    doStyleTextKeyword(pStart, pText, mKeywordsRegEx, pParameterGroup?ParameterGroup:Keyword);
-    doStyleTextKeyword(pStart, pText, mCellmlKeywordsRegEx, pParameterGroup?ParameterGroup:CellmlKeyword);
-    doStyleTextKeyword(pStart, pText, mParameterKeywordsRegEx, pParameterGroup?ParameterKeyword:Default);
-    doStyleTextKeyword(pStart, pText, mParameterValueKeywordsRegEx, pParameterGroup?ParameterValueKeyword:Default);
+    doStyleTextRegEx(pStart, pText, mKeywordsRegEx, pParameterGroup?ParameterGroup:Keyword);
+    doStyleTextRegEx(pStart, pText, mCellmlKeywordsRegEx, pParameterGroup?ParameterGroup:CellmlKeyword);
+    doStyleTextRegEx(pStart, pText, mParameterKeywordsRegEx, pParameterGroup?ParameterKeyword:Default);
+    doStyleTextRegEx(pStart, pText, mParameterValueKeywordsRegEx, pParameterGroup?ParameterValueKeyword:Default);
 
     // Check whether the given text contains some numbers
 
-    doStyleTextNumber(pStart, pText, pParameterGroup?ParameterNumber:Number);
+    doStyleTextRegEx(pStart, pText, mNumberRegEx, pParameterGroup?ParameterNumber:Number);
 }
 
 //==============================================================================
@@ -528,83 +552,22 @@ void PrettyCellmlViewLexer::doStyleTextSingleLineComment(const int &pPosition,
 
 //==============================================================================
 
-void PrettyCellmlViewLexer::doStyleTextMultilineComment(const int &pPosition,
-                                                        int pStart, int pEnd,
-                                                        QString pText,
-                                                        bool pParameterGroup)
+void PrettyCellmlViewLexer::doStyleTextRegEx(int pStart, const QString &pText,
+                                             const QRegularExpression &pRegEx,
+                                             const int &pRegExStyle)
 {
-    // There is a /* XXX */ comment to style, so first style everything that is
-    // before it
+    // Style the given text using the given regular expression
 
-    doStyleText(pStart, pStart+pPosition, pText.left(pPosition), pParameterGroup);
-
-    // Now style everything from the comment onwards
-    // Note: to style everything from the comment onwards means that we will
-    //       find that a /* XXX */ comment starts at the beginning of the 'new'
-    //       given text...
-
-    doStyleText(pStart+pPosition, pEnd, pText.right(pEnd-pStart-pPosition), pParameterGroup);
-}
-
-//==============================================================================
-
-void PrettyCellmlViewLexer::doStyleTextParameterGroup(const int &pPosition,
-                                                      int pStart, int pEnd,
-                                                      QString pText,
-                                                      bool pParameterGroup)
-{
-    // There is a parameter group, so first style everything that is before it
-
-    doStyleText(pStart, pStart+pPosition, pText.left(pPosition), pParameterGroup);
-
-    // Now style everything from the parameter group onwards
-    // Note: to style everything from the parameter group onwards means that we
-    //       will find that a parameter group starts at the beginning of the
-    //       'new' given text...
-
-    doStyleText(pStart+pPosition, pEnd, pText.right(pEnd-pStart-pPosition), pParameterGroup);
-}
-
-//==============================================================================
-
-void PrettyCellmlViewLexer::doStyleTextKeyword(int pStart,
-                                               const QString &pText,
-                                               const QRegularExpression &pKeywordsRegEx,
-                                               const int &pKeywordStyle)
-{
-    // Style the given text with the given keyword style in the cases where a
-    // match for the given regular expression is found
-
-    QRegularExpressionMatchIterator regExMatchIter = pKeywordsRegEx.globalMatch(pText);
+    QRegularExpressionMatchIterator regExMatchIter = pRegEx.globalMatch(pText);
     QRegularExpressionMatch regExMatch;
 
     while (regExMatchIter.hasNext()) {
         regExMatch = regExMatchIter.next();
 
-        // We found a keyword, so style it as such
+        // We have a match, so style it
 
         startStyling(pStart+regExMatch.capturedStart());
-        setStyling(regExMatch.capturedLength(), pKeywordStyle);
-    }
-}
-
-//==============================================================================
-
-void PrettyCellmlViewLexer::doStyleTextNumber(int pStart, const QString &pText,
-                                              const int &pNumberStyle)
-{
-    // Check whether the given text contains some numbers
-
-    QRegularExpressionMatchIterator regExMatchIter = mNumberRegEx.globalMatch(pText);
-    QRegularExpressionMatch regExMatch;
-
-    while (regExMatchIter.hasNext()) {
-        regExMatch = regExMatchIter.next();
-
-        // We found a number, so style it as such
-
-        startStyling(pStart+regExMatch.capturedStart());
-        setStyling(regExMatch.capturedLength(), pNumberStyle);
+        setStyling(regExMatch.capturedLength(), pRegExStyle);
     }
 }
 
