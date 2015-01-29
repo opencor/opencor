@@ -207,7 +207,7 @@ void PrettyCellmlViewLexer::styleText(int pStart, int pEnd)
     delete[] data;
 
     // Use a default style for our text
-    // Note: this is required for validString() to work properly...
+    // Note: this is so that validString() can work properly...
 
     startStyling(pStart);
     setStyling(pEnd-pStart, Default);
@@ -631,8 +631,10 @@ bool PrettyCellmlViewLexer::validString(const int &pFrom, const int &pTo,
     // Check whether the string, which range is given, is valid, i.e. is either
     // of the default or given style
 
+    int style;
+
     for (int i = pFrom; i < pTo; ++i) {
-        int style = editor()->SendScintilla(QsciScintilla::SCI_GETSTYLEAT, i);
+        style = editor()->SendScintilla(QsciScintilla::SCI_GETSTYLEAT, i);
 
         if ((style != Default) && (style != pStyle))
             return false;
