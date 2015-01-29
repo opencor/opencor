@@ -411,15 +411,15 @@ QList<QWidget *> PrettyCellmlViewWidget::statusBarWidgets() const
 
 //==============================================================================
 
-static const auto CommentString = QStringLiteral("//");
-static const int CommentLength = CommentString.length();
+static const auto SingleLineCommentString = QStringLiteral("//");
+static const int SingleLineCommentLength = SingleLineCommentString.length();
 
 //==============================================================================
 
-static const auto StartCommentString = QStringLiteral("/*");
-static const auto EndCommentString = QStringLiteral("*/");
-static const int StartCommentLength = StartCommentString.length();
-static const int EndCommentLength = EndCommentString.length();
+static const auto StartMultilineCommentString = QStringLiteral("/*");
+static const auto EndMultilineCommentString = QStringLiteral("*/");
+static const int StartMultilineCommentLength = StartMultilineCommentString.length();
+static const int EndMultilineCommentLength = EndMultilineCommentString.length();
 
 //==============================================================================
 
@@ -435,19 +435,19 @@ void PrettyCellmlViewWidget::commentOrUncommentLine(QScintillaSupport::QScintill
         // We are not dealing with an empty line, so we can (un)comment it
 
         if (pCommentLine) {
-            pEditor->insertAt(CommentString, pLineNumber, 0);
+            pEditor->insertAt(SingleLineCommentString, pLineNumber, 0);
         } else {
             // Uncomment the line, should it be commented
 
-            if (line.startsWith(CommentString)) {
+            if (line.startsWith(SingleLineCommentString)) {
                 int commentLineNumber, commentColumnNumber;
 
                 pEditor->lineIndexFromPosition(pEditor->findTextInRange(pEditor->positionFromLineIndex(pLineNumber, 0),
-                                                                        pEditor->contentsSize(), CommentString),
+                                                                        pEditor->contentsSize(), SingleLineCommentString),
                                                &commentLineNumber, &commentColumnNumber);
 
                 pEditor->setSelection(commentLineNumber, commentColumnNumber,
-                                      commentLineNumber, commentColumnNumber+CommentLength);
+                                      commentLineNumber, commentColumnNumber+SingleLineCommentLength);
                 pEditor->removeSelectedText();
             }
         }
@@ -498,21 +498,21 @@ void PrettyCellmlViewWidget::editorKeyPressed(QKeyEvent *pEvent, bool &pHandled)
 
                 QString trimmedSelectedText = editor->selectedText().trimmed();
 
-                if (   trimmedSelectedText.startsWith(StartCommentString)
-                    && trimmedSelectedText.endsWith(EndCommentString)) {
+                if (   trimmedSelectedText.startsWith(StartMultilineCommentString)
+                    && trimmedSelectedText.endsWith(EndMultilineCommentString)) {
                     // The full lines are surrounded by /* XXX */, so simply
                     // remove them
 
                     QString selectedText = editor->selectedText();
 
-                    selectedText.remove(selectedText.indexOf(StartCommentString), StartCommentLength);
-                    selectedText.remove(selectedText.indexOf(EndCommentString), EndCommentLength);
+                    selectedText.remove(selectedText.indexOf(StartMultilineCommentString), StartMultilineCommentLength);
+                    selectedText.remove(selectedText.indexOf(EndMultilineCommentString), EndMultilineCommentLength);
 
                     editor->replaceSelectedText(selectedText);
 
                     // Prepare ourselves for reselecting the lines
 
-                    columnTo -= EndCommentLength;
+                    columnTo -= EndMultilineCommentLength;
                 } else {
                     // The full lines are not surrounded by /* XXX */, so simply
                     // (un)comment them
@@ -527,7 +527,7 @@ void PrettyCellmlViewWidget::editorKeyPressed(QKeyEvent *pEvent, bool &pHandled)
                     for (int i = lineFrom; i <= iMax; ++i) {
                         line = editor->text(i).trimmed();
 
-                        commentLine = commentLine || (!line.isEmpty() && !line.startsWith(CommentString));
+                        commentLine = commentLine || (!line.isEmpty() && !line.startsWith(SingleLineCommentString));
                     }
 
                     // (Un)comment the lines as one 'big' action
@@ -542,7 +542,7 @@ void PrettyCellmlViewWidget::editorKeyPressed(QKeyEvent *pEvent, bool &pHandled)
                     // Prepare ourselves for reselecting the lines
 
                     columnTo += columnTo?
-                                    commentLine?CommentLength:-CommentLength:
+                                    commentLine?SingleLineCommentLength:-SingleLineCommentLength:
                                     0;
                 }
             } else {
@@ -550,22 +550,22 @@ void PrettyCellmlViewWidget::editorKeyPressed(QKeyEvent *pEvent, bool &pHandled)
                 // (un)comment it
 
                 QString selectedText = editor->selectedText();
-                bool commentSelectedText =    !selectedText.startsWith(StartCommentString)
-                                           || !selectedText.endsWith(EndCommentString);
+                bool commentSelectedText =    !selectedText.startsWith(StartMultilineCommentString)
+                                           || !selectedText.endsWith(EndMultilineCommentString);
 
                 if (commentSelectedText) {
                     // The selected text is not commented, so comment it
 
-                    editor->replaceSelectedText(StartCommentString+selectedText+EndCommentString);
+                    editor->replaceSelectedText(StartMultilineCommentString+selectedText+EndMultilineCommentString);
                 } else {
                     // The selected text is commented, so uncomment it
 
-                    editor->replaceSelectedText(selectedText.mid(StartCommentLength, selectedText.length()-StartCommentLength-EndCommentLength));
+                    editor->replaceSelectedText(selectedText.mid(StartMultilineCommentLength, selectedText.length()-StartMultilineCommentLength-EndMultilineCommentLength));
                 }
 
                 // Prepare ourselves for reselecting the text
 
-                columnTo += (commentSelectedText?1:-1)*(StartCommentLength+(lineFrom == lineTo)*EndCommentLength);
+                columnTo += (commentSelectedText?1:-1)*(StartMultilineCommentLength+(lineFrom == lineTo)*EndMultilineCommentLength);
             }
 
             // Reselect the text/lines
@@ -577,7 +577,7 @@ void PrettyCellmlViewWidget::editorKeyPressed(QKeyEvent *pEvent, bool &pHandled)
         } else {
             // No text is selected, so simply (un)comment the current line
 
-            bool commentLine = !editor->text(lineNumber).trimmed().startsWith(CommentString);
+            bool commentLine = !editor->text(lineNumber).trimmed().startsWith(SingleLineCommentString);
 
             commentOrUncommentLine(editor, lineNumber, commentLine);
 
@@ -587,12 +587,12 @@ void PrettyCellmlViewWidget::editorKeyPressed(QKeyEvent *pEvent, bool &pHandled)
                 // update it
 
                 if (!columnNumber)
-                    editor->QsciScintilla::setCursorPosition(lineNumber, columnNumber+CommentLength);
+                    editor->QsciScintilla::setCursorPosition(lineNumber, columnNumber+SingleLineCommentLength);
             } else {
                 // We uncommented the line, so go back to our original position
                 // (since uncommenting the line will have shifted it a bit)
 
-                editor->QsciScintilla::setCursorPosition(lineNumber, columnNumber-CommentLength);
+                editor->QsciScintilla::setCursorPosition(lineNumber, columnNumber-SingleLineCommentLength);
             }
         }
 

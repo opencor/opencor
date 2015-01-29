@@ -224,15 +224,15 @@ void PrettyCellmlViewLexer::styleText(int pStart, int pEnd)
 
 //==============================================================================
 
-static const auto CommentString = QStringLiteral("//");
-static const int CommentStringLength = CommentString.length();
+static const auto SingleLineCommentString = QStringLiteral("//");
+static const int SingleLineCommentLength = SingleLineCommentString.length();
 
 //==============================================================================
 
-static const auto StartCommentString = QStringLiteral("/*");
-static const auto EndCommentString = QStringLiteral("*/");
-static const int StartCommentLength = StartCommentString.length();
-static const int EndCommentLength = EndCommentString.length();
+static const auto StartMultilineCommentString = QStringLiteral("/*");
+static const auto EndMultilineCommentString = QStringLiteral("*/");
+static const int StartMultilineCommentLength = StartMultilineCommentString.length();
+static const int EndMultilineCommentLength = EndMultilineCommentString.length();
 
 //==============================================================================
 
@@ -244,7 +244,7 @@ static const int EndParameterGroupLength = EndParameterGroupString.length();
 //==============================================================================
 
 static const auto StringString = QStringLiteral("\"");
-static const int StringStringLength = StringString.length();
+static const int StringLength = StringString.length();
 
 //==============================================================================
 
@@ -259,7 +259,7 @@ void PrettyCellmlViewLexer::doStyleText(int pStart, int pEnd, QString pText,
     // Check whether a /* XXX */ comment or a parameter group started before or
     // at the beginning of the given text
 
-    int multilineCommentStartPosition = findString(StartCommentString, pStart, false);
+    int multilineCommentStartPosition = findString(StartMultilineCommentString, pStart, false);
     int parameterGroupStartPosition = findString(StartParameterGroupString, pStart, false);
 
     if (multilineCommentStartPosition != -1) {
@@ -275,34 +275,38 @@ void PrettyCellmlViewLexer::doStyleText(int pStart, int pEnd, QString pText,
     // Check whether the given text contains a string, a // comment, a /* XXX */
     // comment or a parameter group
 
-    int stringStartPosition = pText.indexOf(StringString);
-    int singleLineCommentPosition = pText.indexOf(CommentString);
-    multilineCommentStartPosition = pText.indexOf(StartCommentString);
+    int stringPosition = pText.indexOf(StringString);
+    int singleLineCommentPosition = pText.indexOf(SingleLineCommentString);
+    multilineCommentStartPosition = pText.indexOf(StartMultilineCommentString);
     parameterGroupStartPosition = pText.indexOf(StartParameterGroupString);
 
-    stringStartPosition = (stringStartPosition == -1)?INT_MAX:stringStartPosition;
+    stringPosition = (stringPosition == -1)?INT_MAX:stringPosition;
     singleLineCommentPosition = (singleLineCommentPosition == -1)?INT_MAX:singleLineCommentPosition;
     multilineCommentStartPosition = (multilineCommentStartPosition == -1)?INT_MAX:multilineCommentStartPosition;
     parameterGroupStartPosition = (parameterGroupStartPosition == -1)?INT_MAX:parameterGroupStartPosition;
 
-    if (   (stringStartPosition != INT_MAX)
-        && (stringStartPosition < singleLineCommentPosition)
-        && (stringStartPosition < multilineCommentStartPosition)
-        && (stringStartPosition < parameterGroupStartPosition)) {
-        doStyleTextString(stringStartPosition, pStart, pEnd, pText,
+    if (   (stringPosition != INT_MAX)
+        && (stringPosition < singleLineCommentPosition)
+        && (stringPosition < multilineCommentStartPosition)
+        && (stringPosition < parameterGroupStartPosition)) {
+        // There is a string to style
+
+        doStyleTextString(stringPosition, pStart, pEnd, pText,
                           pParameterGroup);
 
         return;
     } else if (   (singleLineCommentPosition != INT_MAX)
-               && (singleLineCommentPosition < stringStartPosition)
+               && (singleLineCommentPosition < stringPosition)
                && (singleLineCommentPosition < multilineCommentStartPosition)
                && (singleLineCommentPosition < parameterGroupStartPosition)) {
+        // There is a // comment to style
+
         doStyleTextSingleLineComment(singleLineCommentPosition, pStart, pEnd,
                                      pText, pParameterGroup);
 
         return;
     } else if (   (multilineCommentStartPosition != INT_MAX)
-               && (multilineCommentStartPosition < stringStartPosition)
+               && (multilineCommentStartPosition < stringPosition)
                && (multilineCommentStartPosition < singleLineCommentPosition)
                && (multilineCommentStartPosition < parameterGroupStartPosition)) {
         // There is a /* XXX */ comment to style, so first style everything that
@@ -322,7 +326,7 @@ void PrettyCellmlViewLexer::doStyleText(int pStart, int pEnd, QString pText,
 
         return;
     } else if (   (parameterGroupStartPosition != INT_MAX)
-               && (parameterGroupStartPosition < stringStartPosition)
+               && (parameterGroupStartPosition < stringPosition)
                && (parameterGroupStartPosition < singleLineCommentPosition)
                && (parameterGroupStartPosition < multilineCommentStartPosition)) {
         // There is a parameter group, so first style everything that is before
@@ -370,7 +374,7 @@ void PrettyCellmlViewLexer::doStyleTextPreviousMultilineComment(const int &pPosi
     // A /* XXX */ comment started before or at the beginning of the given text,
     // so now look for where it ends
 
-    int multilineCommentEndPosition = findString(EndCommentString, pPosition);
+    int multilineCommentEndPosition = findString(EndMultilineCommentString, pPosition);
 
     if (multilineCommentEndPosition == -1) {
         // The comment doesn't end as such, so consider that it 'ends' at the of
@@ -382,7 +386,7 @@ void PrettyCellmlViewLexer::doStyleTextPreviousMultilineComment(const int &pPosi
     if ((pPosition <= pStart) && (pStart <= multilineCommentEndPosition)) {
         // The beginning of the given text is a comment, so style it
 
-        int realEnd = multilineCommentEndPosition+EndCommentLength;
+        int realEnd = multilineCommentEndPosition+EndMultilineCommentLength;
         int end = qMin(pEnd, realEnd);
 
         startStyling(pStart);
@@ -464,7 +468,7 @@ void PrettyCellmlViewLexer::doStyleTextString(const int &pPosition, int pStart,
 
     // Now, check where the string ends and
 
-    int stringEndPosition = pText.indexOf(StringString, pPosition+StringStringLength);
+    int stringEndPosition = pText.indexOf(StringString, pPosition+StringLength);
 
     if (stringEndPosition != -1) {
         // The string ends somewhere, so compare its line number against that of
@@ -482,7 +486,7 @@ void PrettyCellmlViewLexer::doStyleTextString(const int &pPosition, int pStart,
             // The string starts and ends on the same line, so style everything
             // that is after the string
 
-            int start = pStart+stringEndPosition+StringStringLength;
+            int start = pStart+stringEndPosition+StringLength;
 
             doStyleText(start, pEnd, pText.right(pEnd-start), pParameterGroup);
         } else {
@@ -498,7 +502,7 @@ void PrettyCellmlViewLexer::doStyleTextString(const int &pPosition, int pStart,
         // a different line, so style everything that is after the end of the
         // line, if anything, on which the string started
 
-        int eolPosition = pText.indexOf(mEolString, pPosition+StringStringLength);
+        int eolPosition = pText.indexOf(mEolString, pPosition+StringLength);
 
         if (eolPosition != -1) {
             int start = pStart+eolPosition+mEolString.length();
@@ -516,7 +520,7 @@ void PrettyCellmlViewLexer::doStyleTextString(const int &pPosition, int pStart,
     int start = pStart+pPosition;
 
     startStyling(start);
-    setStyling(((stringEndPosition == -1)?pEnd:pStart+stringEndPosition+StringStringLength)-start, pParameterGroup?ParameterString:String);
+    setStyling(((stringEndPosition == -1)?pEnd:pStart+stringEndPosition+StringLength)-start, pParameterGroup?ParameterString:String);
 }
 
 //==============================================================================
@@ -534,7 +538,7 @@ void PrettyCellmlViewLexer::doStyleTextSingleLineComment(const int &pPosition,
     // Now, style everything that is after the // comment, if anything, by
     // looking for the end of the line on which the // comment is
 
-    int eolPosition = pText.indexOf(mEolString, pPosition+CommentStringLength);
+    int eolPosition = pText.indexOf(mEolString, pPosition+SingleLineCommentLength);
 
     if (eolPosition != -1) {
         int start = pStart+eolPosition+mEolString.length();
@@ -575,7 +579,7 @@ void PrettyCellmlViewLexer::doStyleTextRegEx(int pStart, const QString &pText,
 
 bool PrettyCellmlViewLexer::validString(const int &pFrom, const int &pTo) const
 {
-    // Return whether the string, which range is given, is valid, i.e. isn't
+    // Return whether the string, which range is given, is valid, i.e. it isn't
     // within a string or a comment
 
     // Check whether we are within a string
@@ -600,7 +604,7 @@ bool PrettyCellmlViewLexer::validString(const int &pFrom, const int &pTo) const
 
             while (   ((stringPosition = mFullText.indexOf(StringString, from)) != -1)
                    &&  (stringPosition < pFrom)) {
-                from = stringPosition+StringStringLength;
+                from = stringPosition+StringLength;
                 beginningOfString = !beginningOfString;
             }
 
@@ -611,10 +615,10 @@ bool PrettyCellmlViewLexer::validString(const int &pFrom, const int &pTo) const
 
     // Check whether we are within a /* XXX */ comment
 
-    int multilineCommentStartPosition = mFullText.lastIndexOf(StartCommentString, pFrom);
+    int multilineCommentStartPosition = mFullText.lastIndexOf(StartMultilineCommentString, pFrom);
 
     if (multilineCommentStartPosition != -1) {
-        int commentEndPosition = mFullText.indexOf(EndCommentString, multilineCommentStartPosition+StartCommentLength);
+        int commentEndPosition = mFullText.indexOf(EndMultilineCommentString, multilineCommentStartPosition+StartMultilineCommentLength);
 
         if (commentEndPosition == -1)
             commentEndPosition = mFullText.length();
@@ -625,10 +629,10 @@ bool PrettyCellmlViewLexer::validString(const int &pFrom, const int &pTo) const
 
     // Check whether we are within a // comment
 
-    int singleLineCommentPosition = mFullText.lastIndexOf(CommentString, pFrom);
+    int singleLineCommentPosition = mFullText.lastIndexOf(SingleLineCommentString, pFrom);
 
     if (singleLineCommentPosition != -1) {
-        int eolPosition = mFullText.indexOf(mEolString, singleLineCommentPosition+CommentStringLength);
+        int eolPosition = mFullText.indexOf(mEolString, singleLineCommentPosition+SingleLineCommentLength);
 
         if (eolPosition == -1)
             eolPosition = mFullText.length();
