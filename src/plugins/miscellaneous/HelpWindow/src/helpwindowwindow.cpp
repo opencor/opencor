@@ -41,6 +41,7 @@ specific language governing permissions and limitations under the License.
 #include <QPoint>
 #include <QPrintDialog>
 #include <QPrinter>
+#include <QPrinterInfo>
 #include <QSettings>
 
 //==============================================================================
@@ -149,6 +150,11 @@ HelpWindowWindow::HelpWindowWindow(QWidget *pParent) :
 
     connect(mHelpWidget, SIGNAL(copyTextEnabled(const bool &)),
             mGui->actionCopy, SLOT(setEnabled(bool)));
+
+    // En/disable the printing action, depending on whether printers are
+    // available
+
+    mGui->actionPrint->setEnabled(QPrinterInfo::availablePrinterNames().count());
 }
 
 //==============================================================================
@@ -275,10 +281,9 @@ void HelpWindowWindow::on_actionPrint_triggered()
     // and print it, should s/he still want to go ahead with the printing
 
     QPrinter printer;
+    QPrintDialog printDialog(&printer);
 
-    QPrintDialog *dialog = new QPrintDialog(&printer);
-
-    if ( dialog->exec() == QDialog::Accepted)
+    if (printDialog.exec() == QDialog::Accepted)
           mHelpWidget->print(&printer);
 }
 

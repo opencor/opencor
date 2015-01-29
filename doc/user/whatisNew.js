@@ -51,6 +51,15 @@ var jsonData = {"versions":[
                              {"type":"Added", "description":"<a href=\"plugins/editing/PrettyCellMLView.html\">Pretty CellML view</a> <em>(work in progress)</em>."}
                          ]
                         },
+                        {"name":"Miscellaneous",
+                         "entries":[
+                             {"type":"subCategory", "name":"Help",
+                              "entries":[
+                                  {"type":"Improved", "description":"Printing."}
+                              ]
+                             }
+                         ]
+                        },
                         {"name":"Organisation",
                          "entries":[
                              {"type":"subCategory", "name":"CellML Model Repository window",
