@@ -241,9 +241,6 @@ int main(int pArgC, char *pArgV[])
     OpenCOR::SplashScreenWindow *splashScreen = new OpenCOR::SplashScreenWindow();
 
     splashScreen->show();
-
-    guiApp->processEvents();
-    // Note: this ensures that our splash screen is immediately visible...
 #endif
 
     // Create our main window
