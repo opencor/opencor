@@ -8,8 +8,9 @@ var jsonData = {"versions":[
                              {"type":"Added", "description":"Support for <a href=\"http://en.wikipedia.org/wiki/OS_X\">OS X</a> 10.10 (Yosemite)."},
                              {"type":"Improved", "description":"OpenCOR logo."},
                              {"type":"Improved", "description":"Binaries on <a href=\"http://en.wikipedia.org/wiki/OS_X\">OS X</a>."},
+                             {"type":"Improved", "description":"<a href=\"http://nsis.sourceforge.net/\">NSIS</a> packaging on <a href=\"http://en.wikipedia.org/wiki/Microsoft_Windows\">Windows</a>."},
                              {"type":"Improved", "description":"<a href=\"http://en.wikipedia.org/wiki/Zip_(file_format)\">ZIP</a> packaging on <a href=\"http://en.wikipedia.org/wiki/OS_X\">OS X</a>."},
-                             {"type":"Improved", "description":"Displaying of numbers."},
+                             {"type":"Improved", "description":"Display of numbers."},
                              {"type":"Improved", "description":"Opening of files."}
                          ]
                         },
