@@ -506,6 +506,9 @@ bool PrettyCellMLViewCellmlToPrettyCellmlConverter::processComponentNode(const Q
             processVariableNode(domNode);
         } else if (!pInImportNode && !nodeName.compare("math")) {
             processMathNode(domNode);
+        } else if (!pInImportNode && !nodeName.compare("reaction")) {
+            if (!processReactionNode(domNode))
+                return false;
         } else {
             processUnknownNode(domNode);
         }
@@ -596,6 +599,18 @@ void PrettyCellMLViewCellmlToPrettyCellmlConverter::processMathNode(const QDomNo
 //---GRY--- TO BE DONE...
 Q_UNUSED(pDomNode);
 qWarning("Math node: not yet implemented...");
+}
+
+//==============================================================================
+
+bool PrettyCellMLViewCellmlToPrettyCellmlConverter::processReactionNode(const QDomNode &pDomNode)
+{
+    // We don't support reaction elements
+
+    mErrorLine = pDomNode.lineNumber();
+    mErrorMessage = QObject::tr("A '%1' node was found, but it is not supported and cannot therefore be processed.").arg(pDomNode.nodeName());
+
+    return false;
 }
 
 //==============================================================================
@@ -914,8 +929,8 @@ void PrettyCellMLViewCellmlToPrettyCellmlConverter::processUnknownNode(const QDo
 {
     // The given node is unknown, so warn the user about it
 
-    mWarnings << QObject::tr("[%1] The '%2' node was found in the original CellML file, but it is not known and cannot therefore be processed.").arg(pDomNode.lineNumber())
-                                                                                                                                                .arg(pDomNode.nodeName());
+    mWarnings << QObject::tr("[%1] A '%2' node was found in the original CellML file, but it is not known and cannot therefore be processed.").arg(pDomNode.lineNumber())
+                                                                                                                                              .arg(pDomNode.nodeName());
 }
 
 //==============================================================================

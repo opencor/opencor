@@ -26,6 +26,10 @@
         <translation>La valeur de l&apos;attribut &apos;base_units&apos; doit être &apos;yes&apos; ou &apos;no&apos;.</translation>
     </message>
     <message>
+        <source>A &apos;%1&apos; node was found, but it is not supported and cannot therefore be processed.</source>
+        <translation>Un noeud &apos;%1&apos; a été trouvé, mais il n&apos;est pas supporté et ne peut donc pas être traité.</translation>
+    </message>
+    <message>
         <source>The value of a &apos;relationship&apos; attribute in the CellML namespace must be &apos;encapsulation&apos; or &apos;containment&apos;.</source>
         <translation>La valeur de l&apos;attribut &apos;relationship&apos; dans l&apos;espace de noms CellML doit être &apos;encapsulation&apos; ou &apos;containment&apos;.</translation>
     </message>
@@ -38,8 +42,8 @@
         <translation>Un élément &apos;connection&apos; doit contenir exactement un élément &apos;map_components&apos;.</translation>
     </message>
     <message>
-        <source>[%1] The &apos;%2&apos; node was found in the original CellML file, but it is not known and cannot therefore be processed.</source>
-        <translation>[%1] Le noeud &apos;%2&apos; a été trouvé dans le fichier CellML d&apos;origine, mais il n&apos;est pas connu et ne peut donc pas être traité.</translation>
+        <source>[%1] A &apos;%2&apos; node was found in the original CellML file, but it is not known and cannot therefore be processed.</source>
+        <translation>[%1] Un noeud &apos;%2&apos; a été trouvé dans le fichier CellML d&apos;origine, mais il n&apos;est pas connu et ne peut donc pas être traité.</translation>
     </message>
     <message>
         <source>Default</source>

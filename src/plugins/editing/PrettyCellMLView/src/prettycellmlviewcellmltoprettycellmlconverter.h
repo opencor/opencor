@@ -109,6 +109,7 @@ private:
                               const bool &pInImportNode = false);
     void processVariableNode(const QDomNode &pDomNode);
     void processMathNode(const QDomNode &pDomNode);
+    bool processReactionNode(const QDomNode &pDomNode);
     bool processGroupNode(const QDomNode &pDomNode);
     bool processRelationshipRefNode(const QDomNode &pDomNode,
                                     QString &pRelationshipRef);
