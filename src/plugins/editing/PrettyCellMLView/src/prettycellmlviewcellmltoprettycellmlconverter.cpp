@@ -41,7 +41,8 @@ PrettyCellMLViewCellmlToPrettyCellmlConverter::PrettyCellMLViewCellmlToPrettyCel
     mErrorLine(-1),
     mErrorColumn(-1),
     mErrorMessage(QString()),
-    mWarnings(QStringList()),
+    mWarningLines(QIntList()),
+    mWarningMessages(QStringList()),
     mRdfNodes(QDomDocument())
 {
 }
@@ -64,7 +65,7 @@ bool PrettyCellMLViewCellmlToPrettyCellmlConverter::execute()
 
         mLastOutputType = None;
 
-        mWarnings = QStringList();
+        mWarningMessages = QStringList();
 
         mRdfNodes = QDomDocument("RDF Nodes");
 
@@ -122,18 +123,27 @@ QString PrettyCellMLViewCellmlToPrettyCellmlConverter::errorMessage() const
 
 bool PrettyCellMLViewCellmlToPrettyCellmlConverter::hasWarnings() const
 {
-    // Return whether we have warnings
+    // Return whether we have warning messages
 
-    return mWarnings.count();
+    return mWarningMessages.count();
 }
 
 //==============================================================================
 
-QStringList PrettyCellMLViewCellmlToPrettyCellmlConverter::warnings() const
+QIntList PrettyCellMLViewCellmlToPrettyCellmlConverter::warningLines() const
 {
-    // Return our warnings
+    // Return our warning lines
 
-    return mWarnings;
+    return mWarningLines;
+}
+
+//==============================================================================
+
+QStringList PrettyCellMLViewCellmlToPrettyCellmlConverter::warningMessages() const
+{
+    // Return our warning messages
+
+    return mWarningMessages;
 }
 
 //==============================================================================
@@ -1046,8 +1056,8 @@ void PrettyCellMLViewCellmlToPrettyCellmlConverter::processUnknownNode(const QDo
 {
     // The given node is unknown, so warn the user about it
 
-    mWarnings << QObject::tr("[%1] A '%2' node was found in the original CellML file, but it is not known and cannot therefore be processed.").arg(pDomNode.lineNumber())
-                                                                                                                                              .arg(pDomNode.nodeName());
+    mWarningLines << pDomNode.lineNumber();
+    mWarningMessages << QObject::tr("A '%1' node was found%2, but it is not known and cannot therefore be processed.").arg(pDomNode.nodeName());
 }
 
 //==============================================================================
@@ -1058,8 +1068,7 @@ void PrettyCellMLViewCellmlToPrettyCellmlConverter::processUnsupportedNode(const
     // it as an error
 
     mErrorLine = pDomNode.lineNumber();
-    mErrorMessage = QObject::tr("[%1] A '%2' node was found in the original CellML file, but it is not known and cannot therefore be processed.").arg(pDomNode.lineNumber())
-                                                                                                                                                 .arg(pDomNode.nodeName());
+    mErrorMessage = QObject::tr("A '%1' node was found%2, but it is not known and cannot therefore be processed.").arg(pDomNode.nodeName());
 }
 
 //==============================================================================

@@ -24,6 +24,10 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#include "corecliutils.h"
+
+//==============================================================================
+
 #include <QDomNode>
 #include <QStringList>
 
@@ -48,7 +52,8 @@ public:
     QString errorMessage() const;
 
     bool hasWarnings() const;
-    QStringList warnings() const;
+    QIntList warningLines() const;
+    QStringList warningMessages() const;
 
     QDomDocument rdfNodes() const;
 
@@ -87,7 +92,8 @@ private:
     int mErrorColumn;
     QString mErrorMessage;
 
-    QStringList mWarnings;
+    QIntList mWarningLines;
+    QStringList mWarningMessages;
 
     QDomDocument mRdfNodes;
 

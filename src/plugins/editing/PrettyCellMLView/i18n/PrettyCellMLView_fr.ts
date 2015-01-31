@@ -18,6 +18,10 @@
         <source>You might want to use the Raw (CellML) view to edit the file.</source>
         <translation>Vous pouvez utiliser la vue (CellML) Brut pour éditer le fichier.</translation>
     </message>
+    <message>
+        <source>in the original CellML file</source>
+        <translation>dans le fichier CellML d&apos;origine</translation>
+    </message>
 </context>
 <context>
     <name>QObject</name>
@@ -42,8 +46,8 @@
         <translation>Un élément &apos;connection&apos; doit contenir exactement un élément &apos;map_components&apos;.</translation>
     </message>
     <message>
-        <source>[%1] A &apos;%2&apos; node was found in the original CellML file, but it is not known and cannot therefore be processed.</source>
-        <translation>[%1] Un noeud &apos;%2&apos; a été trouvé dans le fichier CellML d&apos;origine, mais il n&apos;est pas connu et ne peut donc pas être traité.</translation>
+        <source>A &apos;%1&apos; node was found%2, but it is not known and cannot therefore be processed.</source>
+        <translation>Un noeud &apos;%1&apos; a été trouvé%2, mais il n&apos;est pas connu et ne peut donc pas être traité.</translation>
     </message>
     <message>
         <source>[%1] The &apos;%2&apos; node must have at least one child.</source>
