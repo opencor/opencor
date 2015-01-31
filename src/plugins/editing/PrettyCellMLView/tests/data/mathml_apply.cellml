@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<model name="model" xmlns="http://www.cellml.org/cellml/1.0#" xmlns:cellml="http://www.cellml.org/cellml/1.0#" xmlns:cmeta="http://www.cellml.org/metadata/1.0#">
+    <component name="component1">
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply/>
+        </math>
+    </component>
+</model>

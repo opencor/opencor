@@ -60,6 +60,109 @@ void Tests::cellmlOpencorTests()
 
 //==============================================================================
 
+void Tests::failingTests()
+{
+    // Test the conversion of various invalid CellML files
+
+    OpenCOR::PrettyCellMLView::PrettyCellMLViewCellmlToPrettyCellmlConverter converter;
+
+    QVERIFY(!converter.execute(OpenCOR::fileName("src/plugins/editing/PrettyCellMLView/tests/data/cellml_base_units.cellml")));
+    QCOMPARE(converter.errorLine(), 3);
+    QCOMPARE(converter.errorMessage(),
+             QString("A 'base_units' attribute must have a value of 'yes' or 'no'."));
+
+    QVERIFY(!converter.execute(OpenCOR::fileName("src/plugins/editing/PrettyCellMLView/tests/data/mathml_apply.cellml")));
+    QCOMPARE(converter.errorLine(), 5);
+    QCOMPARE(converter.errorMessage(),
+             QString("An 'apply' element must have at least one child element."));
+
+    QVERIFY(!converter.execute(OpenCOR::fileName("src/plugins/editing/PrettyCellMLView/tests/data/mathml_eq.cellml")));
+    QCOMPARE(converter.errorLine(), 6);
+    QCOMPARE(converter.errorMessage(),
+             QString("An 'eq' element must have two operands."));
+
+    QVERIFY(!converter.execute(OpenCOR::fileName("src/plugins/editing/PrettyCellMLView/tests/data/mathml_cn.cellml")));
+    QCOMPARE(converter.errorLine(), 8);
+    QCOMPARE(converter.errorMessage(),
+             QString("A 'cn' element must have a value."));
+
+    QVERIFY(!converter.execute(OpenCOR::fileName("src/plugins/editing/PrettyCellMLView/tests/data/mathml_cn_e_notation_1.cellml")));
+    QCOMPARE(converter.errorLine(), 8);
+    QCOMPARE(converter.errorMessage(),
+             QString("A 'cn' element with an 'e-notation' type must have three child nodes."));
+
+    QVERIFY(!converter.execute(OpenCOR::fileName("src/plugins/editing/PrettyCellMLView/tests/data/mathml_cn_e_notation_2.cellml")));
+    QCOMPARE(converter.errorLine(), 8);
+    QCOMPARE(converter.errorMessage(),
+             QString("The first child element of a 'cn' element with an 'e-notation' type must be of 'text' type."));
+
+    QVERIFY(!converter.execute(OpenCOR::fileName("src/plugins/editing/PrettyCellMLView/tests/data/mathml_cn_e_notation_3.cellml")));
+    QCOMPARE(converter.errorLine(), 8);
+    QCOMPARE(converter.errorMessage(),
+             QString("The second child element of a 'cn' element with an 'e-notation' type must be of 'element' type."));
+
+    QVERIFY(!converter.execute(OpenCOR::fileName("src/plugins/editing/PrettyCellMLView/tests/data/mathml_cn_e_notation_4.cellml")));
+    QCOMPARE(converter.errorLine(), 8);
+    QCOMPARE(converter.errorMessage(),
+             QString("The name of the second child element of a 'cn' element with an 'e-notation' type must be 'sep'."));
+
+    QVERIFY(!converter.execute(OpenCOR::fileName("src/plugins/editing/PrettyCellMLView/tests/data/mathml_cn_e_notation_5.cellml")));
+    QCOMPARE(converter.errorLine(), 8);
+    QCOMPARE(converter.errorMessage(),
+             QString("The third child element of a 'cn' element with an 'e-notation' type must be of 'text' type."));
+
+    QVERIFY(!converter.execute(OpenCOR::fileName("src/plugins/editing/PrettyCellMLView/tests/data/mathml_cn_e_notation_unsupported_type.cellml")));
+    QCOMPARE(converter.errorLine(), 8);
+    QCOMPARE(converter.errorMessage(),
+             QString("The 'cn' element uses a 'complex-polar' type, which is unsupported."));
+
+    QVERIFY(!converter.execute(OpenCOR::fileName("src/plugins/editing/PrettyCellMLView/tests/data/mathml_cn_e_notation_unknown_type.cellml")));
+    QCOMPARE(converter.errorLine(), 8);
+    QCOMPARE(converter.errorMessage(),
+             QString("The 'cn' element uses a 'some-unknown-type' type, which is unknown."));
+
+    QVERIFY(!converter.execute(OpenCOR::fileName("src/plugins/editing/PrettyCellMLView/tests/data/mathml_ci.cellml")));
+    QCOMPARE(converter.errorLine(), 7);
+    QCOMPARE(converter.errorMessage(),
+             QString("A 'ci' element must have a value."));
+
+    QVERIFY(!converter.execute(OpenCOR::fileName("src/plugins/editing/PrettyCellMLView/tests/data/cellml_relationship.cellml")));
+    QCOMPARE(converter.errorLine(), 4);
+    QCOMPARE(converter.errorMessage(),
+             QString("A 'relationship' attribute in the CellML namespace must have a value of 'encapsulation' or 'containment'."));
+
+    QVERIFY(!converter.execute(OpenCOR::fileName("src/plugins/editing/PrettyCellMLView/tests/data/cellml_relationship_ref.cellml")));
+    QCOMPARE(converter.errorLine(), 4);
+    QCOMPARE(converter.errorMessage(),
+             QString("A 'relationship_ref' element with a 'relationship' attribute value of 'encapsulation' must not define a 'name' attribute."));
+
+    QVERIFY(!converter.execute(OpenCOR::fileName("src/plugins/editing/PrettyCellMLView/tests/data/cellml_connection.cellml")));
+    QCOMPARE(converter.errorLine(), 5);
+    QCOMPARE(converter.errorMessage(),
+             QString("A 'connection' element must contain exactly one 'map_components' element."));
+
+    QVERIFY(!converter.execute(OpenCOR::fileName("src/plugins/editing/PrettyCellMLView/tests/data/cellml_unsupported_element.cellml")));
+    QCOMPARE(converter.errorLine(), 5);
+    QCOMPARE(converter.errorMessage(),
+             QString("A 'unsupported_element' element was found in the original CellML file, but it is not supported and cannot therefore be processed."));
+}
+
+//==============================================================================
+
+void Tests::warningTests()
+{
+    // Test the conversion of various CellML files that generate warnings
+
+    OpenCOR::PrettyCellMLView::PrettyCellMLViewCellmlToPrettyCellmlConverter converter;
+
+    QVERIFY(converter.execute(OpenCOR::fileName("src/plugins/editing/PrettyCellMLView/tests/data/cellml_unknown_element.cellml")));
+    QCOMPARE(converter.warningLines().first(), 3);
+    QCOMPARE(converter.warningMessages().first(),
+             QString("A 'unknown_element' element was found%2, but it is not known and cannot therefore be processed."));
+}
+
+//==============================================================================
+
 QTEST_GUILESS_MAIN(Tests)
 
 //==============================================================================
