@@ -138,8 +138,8 @@
         <translation>Un élément &apos;%1&apos; a été trouvé%2, mais il n&apos;est pas connu et ne peut donc pas être traité.</translation>
     </message>
     <message>
-        <source>A &apos;%1&apos; element was found, but it is not supported and cannot therefore be processed.</source>
-        <translation>Un élément &apos;%1&apos; a été trouvé, mais il n&apos;est pas supporté et ne peut donc pas être traité.</translation>
+        <source>A &apos;%1&apos; element was found in the original CellML file, but it is not supported and cannot therefore be processed.</source>
+        <translation>Un élément &apos;%1&apos; a été trouvé dans le fichier CellML d&apos;origine, mais il n&apos;est pas supporté et ne peut donc pas être traité.</translation>
     </message>
 </context>
 </TS>
