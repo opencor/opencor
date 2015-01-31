@@ -143,6 +143,9 @@ def model cellml_1_0 as
         var variable3: unit3 {pub: in};
         var variable4: unit4 {priv: out};
         var variable5: unit5 {pub: none, priv: none};
+
+        a = b;
+        c = 3{dimensionless};
     enddef;
 
     def group as containment for

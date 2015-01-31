@@ -50,7 +50,7 @@ public:
         String,
         ParameterGroup,
         ParameterKeyword,
-        ParameterValueKeyword,
+        ParameterCellmlKeyword,
         ParameterNumber,
         ParameterString
     };
@@ -72,6 +72,7 @@ private:
 
     QRegularExpression mKeywordsRegEx;
     QRegularExpression mCellmlKeywordsRegEx;
+    QRegularExpression mSiUnitKeywordsRegEx;
     QRegularExpression mParameterKeywordsRegEx;
     QRegularExpression mParameterValueKeywordsRegEx;
     QRegularExpression mNumberRegEx;

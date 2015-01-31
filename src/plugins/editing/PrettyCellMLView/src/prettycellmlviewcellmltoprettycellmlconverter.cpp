@@ -505,7 +505,8 @@ bool PrettyCellMLViewCellmlToPrettyCellmlConverter::processComponentNode(const Q
         } else if (!pInImportNode && !nodeName.compare("variable")) {
             processVariableNode(domNode);
         } else if (!pInImportNode && !nodeName.compare("math")) {
-            processMathNode(domNode);
+            if (!processMathNode(domNode))
+                return false;
         } else if (!pInImportNode && !nodeName.compare("reaction")) {
             if (!processReactionNode(domNode))
                 return false;
@@ -594,11 +595,127 @@ void PrettyCellMLViewCellmlToPrettyCellmlConverter::processVariableNode(const QD
 
 //==============================================================================
 
-void PrettyCellMLViewCellmlToPrettyCellmlConverter::processMathNode(const QDomNode &pDomNode)
+bool PrettyCellMLViewCellmlToPrettyCellmlConverter::processMathNode(const QDomNode &pDomNode)
 {
-//---GRY--- TO BE DONE...
-Q_UNUSED(pDomNode);
-qWarning("Math node: not yet implemented...");
+    // Process the given math node's children
+
+    QString equation;
+    bool hasError;
+
+    for (QDomNode domNode = pDomNode.firstChild();
+         !domNode.isNull(); domNode = domNode.nextSibling()) {
+        hasError = false;
+        equation = processMathmlNode(domNode, hasError);
+
+        if (hasError) {
+            return false;
+        } else {
+            if (   (mLastOutputType == Comment)
+                || (mLastOutputType == DefBaseUnit) || (mLastOutputType == EndDef)
+                || (mLastOutputType == Var)) {
+                outputString();
+            }
+
+            outputString(Equation, equation);
+        }
+    }
+
+    return true;
+}
+
+//==============================================================================
+
+QString PrettyCellMLViewCellmlToPrettyCellmlConverter::processMathmlNode(const QDomNode &pDomNode,
+                                                                         bool &pHasError)
+{
+    // Make sure that we are not coming here with an error
+
+    if (pHasError)
+        return QString();
+
+    // Process the given MathML node and its children, if any
+
+    QString nodeName = pDomNode.nodeName();
+    QDomNodeList childNodes = pDomNode.childNodes();
+    int childNodesCount = childNodes.count();
+
+    if (!nodeName.compare("apply")) {
+        // Make sure that we have at least one child
+
+        if (!childNodesCount) {
+            mErrorMessage = QObject::tr("[%1] The '%2' node must have at least one child.").arg(pDomNode.lineNumber())
+                                                                                           .arg(nodeName);
+        } else {
+            nodeName = childNodes.at(0).nodeName();
+
+            // Relational operators
+
+            if (!nodeName.compare("eq")) {
+                // Make sure that we have two operands
+
+                if (childNodesCount != 1+2) {
+                    mErrorMessage = QObject::tr("[%1] The '%2' node must have two operands.").arg(pDomNode.lineNumber())
+                                                                                             .arg(nodeName);
+                } else {
+                    return processOperatorNode(" = ", childNodes.at(1), childNodes.at(2), pHasError);
+                }
+
+            // Unsupported node
+
+            } else {
+                processUnsupportedNode(pDomNode);
+            }
+        }
+
+    // Token elements
+
+    } else if (!nodeName.compare("cn")) {
+        if (childNodesCount != 1) {
+            mErrorMessage = QObject::tr("[%1] The '%2' node must have a value.").arg(pDomNode.lineNumber())
+                                                                                .arg(nodeName);
+        } else {
+            return childNodes.at(0).nodeValue()+"{"+pDomNode.attributes().namedItem("cellml:units").nodeValue()+"}";
+        }
+    } else if (!nodeName.compare("ci")) {
+        if (childNodesCount != 1) {
+            mErrorMessage = QObject::tr("[%1] The '%2' node must have a value.").arg(pDomNode.lineNumber())
+                                                                                .arg(nodeName);
+        } else {
+            return childNodes.at(0).nodeValue();
+        }
+
+    // Unsupported node
+
+    } else {
+        processUnsupportedNode(pDomNode);
+    }
+
+    mErrorLine = pDomNode.lineNumber();
+
+    pHasError = true;
+
+    return QString();
+}
+
+//==============================================================================
+
+QString PrettyCellMLViewCellmlToPrettyCellmlConverter::processOperatorNode(const QString &pOperator,
+                                                                           const QDomNode &pDomNode1,
+                                                                           const QDomNode &pDomNode2,
+                                                                           bool &pHasError)
+{
+    QString operand1 = processMathmlNode(pDomNode1, pHasError);
+
+    if (pHasError) {
+        return QString();
+    } else {
+        QString operand2 = processMathmlNode(pDomNode2, pHasError);
+
+        if (pHasError)
+            return QString();
+        else
+            return operand1+pOperator+operand2+";";
+    }
 }
 
 //==============================================================================
@@ -931,6 +1048,18 @@ void PrettyCellMLViewCellmlToPrettyCellmlConverter::processUnknownNode(const QDo
 
     mWarnings << QObject::tr("[%1] A '%2' node was found in the original CellML file, but it is not known and cannot therefore be processed.").arg(pDomNode.lineNumber())
                                                                                                                                               .arg(pDomNode.nodeName());
+}
+
+//==============================================================================
+
+void PrettyCellMLViewCellmlToPrettyCellmlConverter::processUnsupportedNode(const QDomNode &pDomNode)
+{
+    // The given node is unknown, yet maybe we should know about it, so consider
+    // it as an error
+
+    mErrorLine = pDomNode.lineNumber();
+    mErrorMessage = QObject::tr("[%1] A '%2' node was found in the original CellML file, but it is not known and cannot therefore be processed.").arg(pDomNode.lineNumber())
+                                                                                                                                                 .arg(pDomNode.nodeName());
 }
 
 //==============================================================================

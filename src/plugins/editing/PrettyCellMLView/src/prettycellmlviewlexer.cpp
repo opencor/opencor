@@ -50,8 +50,11 @@ PrettyCellmlViewLexer::PrettyCellmlViewLexer(QObject *pParent) :
                                "\\b("
                                     // Miscellaneous
 
-                                   "base|encapsulation|containment|"
+                                   "base|encapsulation|containment"
+                               ")\\b");
 
+    mSiUnitKeywordsRegEx = QRegularExpression(
+                               "\\b("
                                    // Standard units
 
                                    "ampere|becquerel|candela|celsius|coulomb|"
@@ -124,8 +127,8 @@ QString PrettyCellmlViewLexer::description(int pStyle) const
         return QObject::tr("Parameter group");
     case ParameterKeyword:
         return QObject::tr("Parameter keyword");
-    case ParameterValueKeyword:
-        return QObject::tr("Parameter value keyword");
+    case ParameterCellmlKeyword:
+        return QObject::tr("Parameter CellML keyword");
     case ParameterNumber:
         return QObject::tr("Parameter number");
     case ParameterString:
@@ -152,7 +155,7 @@ QColor PrettyCellmlViewLexer::color(int pStyle) const
     case ParameterKeyword:
         return QColor(0x00, 0x00, 0x7f);
     case CellmlKeyword:
-    case ParameterValueKeyword:
+    case ParameterCellmlKeyword:
         return QColor(0x7f, 0x00, 0x7f);
     case Number:
     case ParameterNumber:
@@ -176,7 +179,7 @@ QFont PrettyCellmlViewLexer::font(int pStyle) const
     switch (pStyle) {
     case ParameterGroup:
     case ParameterKeyword:
-    case ParameterValueKeyword:
+    case ParameterCellmlKeyword:
     case ParameterNumber:
     case ParameterString:
         res.setItalic(true);
@@ -383,11 +386,13 @@ void PrettyCellmlViewLexer::doStyleTextCurrent(int pStart, int pEnd,
 
         if (pParameterGroup) {
             doStyleTextRegEx(pStart, pText, mParameterKeywordsRegEx, ParameterKeyword);
-            doStyleTextRegEx(pStart, pText, mParameterValueKeywordsRegEx, ParameterValueKeyword);
+            doStyleTextRegEx(pStart, pText, mParameterValueKeywordsRegEx, ParameterCellmlKeyword);
         } else {
             doStyleTextRegEx(pStart, pText, mKeywordsRegEx, Keyword);
             doStyleTextRegEx(pStart, pText, mCellmlKeywordsRegEx, CellmlKeyword);
         }
+
+        doStyleTextRegEx(pStart, pText, mSiUnitKeywordsRegEx, pParameterGroup?ParameterCellmlKeyword:CellmlKeyword);
 
         // Check whether the given text contains some numbers
 

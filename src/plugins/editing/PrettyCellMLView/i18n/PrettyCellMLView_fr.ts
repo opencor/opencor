@@ -46,6 +46,18 @@
         <translation>[%1] Un noeud &apos;%2&apos; a été trouvé dans le fichier CellML d&apos;origine, mais il n&apos;est pas connu et ne peut donc pas être traité.</translation>
     </message>
     <message>
+        <source>[%1] The &apos;%2&apos; node must have at least one child.</source>
+        <translation>[%1] Le noeud &apos;%2&apos; doit avoir au moins un enfant.</translation>
+    </message>
+    <message>
+        <source>[%1] The &apos;%2&apos; node must have two operands.</source>
+        <translation>[%1] Le noeud &apos;%2&apos;doit avoir deux opérandes.</translation>
+    </message>
+    <message>
+        <source>[%1] The &apos;%2&apos; node must have a value.</source>
+        <translation>[%1] Le noeud &apos;%2&apos; doit avoir une valeur.</translation>
+    </message>
+    <message>
         <source>Default</source>
         <translation>Défaut</translation>
     </message>
@@ -82,8 +94,8 @@
         <translation>Mot-clef paramètre</translation>
     </message>
     <message>
-        <source>Parameter value keyword</source>
-        <translation>Mot-clef valeur paramètre</translation>
+        <source>Parameter CellML keyword</source>
+        <translation>Mot-clef CellML paramètre</translation>
     </message>
     <message>
         <source>Parameter number</source>

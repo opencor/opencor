@@ -66,6 +66,7 @@ private:
         Unit,
         DefComp,
         Var,
+        Equation,
         DefGroup,
         CompIncl,
         Comp,
@@ -108,7 +109,11 @@ private:
     bool processComponentNode(const QDomNode &pDomNode,
                               const bool &pInImportNode = false);
     void processVariableNode(const QDomNode &pDomNode);
-    void processMathNode(const QDomNode &pDomNode);
+    bool processMathNode(const QDomNode &pDomNode);
+    QString processMathmlNode(const QDomNode &pDomNode, bool &pHasError);
+    QString processOperatorNode(const QString &pOperator,
+                                const QDomNode &pDomNode1,
+                                const QDomNode &pDomNode2, bool &pHasError);
     bool processReactionNode(const QDomNode &pDomNode);
     bool processGroupNode(const QDomNode &pDomNode);
     bool processRelationshipRefNode(const QDomNode &pDomNode,
@@ -119,6 +124,7 @@ private:
                                   QString &pMapComponents);
     void processMapVariablesNode(const QDomNode &pDomNode);
     void processUnknownNode(const QDomNode &pDomNode);
+    void processUnsupportedNode(const QDomNode &pDomNode);
 };
 
 //==============================================================================

@@ -136,6 +136,18 @@
         <variable name="variable3" public_interface="in" units="unit3"/>
         <variable name="variable4" private_interface="out" units="unit4"/>
         <variable name="variable5" public_interface="none" private_interface="none" units="unit5"/>
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+                <eq/>
+                <ci>a</ci>
+                <ci>b</ci>
+            </apply>
+            <apply>
+                <eq/>
+                <ci>c</ci>
+                <cn cellml:units="dimensionless">3</cn>
+            </apply>
+        </math>
     </component>
     <group>
         <relationship_ref relationship="containment"/>
