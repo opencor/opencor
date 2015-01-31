@@ -147,6 +147,16 @@
                 <ci>c</ci>
                 <cn cellml:units="dimensionless">3</cn>
             </apply>
+            <apply>
+                <eq/>
+                <ci>d</ci>
+                <cn>5</cn>
+            </apply>
+            <apply>
+                <eq/>
+                <ci>e</ci>
+                <cn cellml:units="dimensionless" type="e-notation">12.3<sep/>5</cn>
+            </apply>
         </math>
     </component>
     <group>

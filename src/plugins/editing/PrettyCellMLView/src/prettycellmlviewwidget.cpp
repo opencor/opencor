@@ -203,7 +203,7 @@ void PrettyCellmlViewWidget::initialize(const QString &pFileName,
                 newEditingWidget->editorList()->addItem(EditorList::EditorListItem::Warning,
                                                         successfulConversion?-1:warningLine,
                                                         successfulConversion?
-                                                            QString("[%1] ").arg(warningLine+1)+warningMessage.arg(" "+tr("in the original CellML file")):
+                                                            QString("[%1] ").arg(warningLine)+warningMessage.arg(" "+tr("in the original CellML file")):
                                                             warningMessage.arg(QString()));
             }
         }

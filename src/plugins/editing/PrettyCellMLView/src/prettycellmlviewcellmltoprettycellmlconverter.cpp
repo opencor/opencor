@@ -352,7 +352,7 @@ bool PrettyCellMLViewCellmlToPrettyCellmlConverter::processUnitsNode(const QDomN
 
     if (baseUnits.compare(QString()) && baseUnits.compare("yes") && baseUnits.compare("no")) {
         mErrorLine = pDomNode.lineNumber();
-        mErrorMessage = QObject::tr("The value of the 'base_units' attribute must be 'yes' or 'no'.");
+        mErrorMessage = QObject::tr("A 'base_units' attribute must have a value of 'yes' or 'no'.");
 
         return false;
     }
@@ -649,12 +649,13 @@ QString PrettyCellMLViewCellmlToPrettyCellmlConverter::processMathmlNode(const Q
     QDomNodeList childNodes = pDomNode.childNodes();
     int childNodesCount = childNodes.count();
 
+    // Basic content elements
+
     if (!nodeName.compare("apply")) {
         // Make sure that we have at least one child
 
         if (!childNodesCount) {
-            mErrorMessage = QObject::tr("[%1] The '%2' node must have at least one child.").arg(pDomNode.lineNumber())
-                                                                                           .arg(nodeName);
+            mErrorMessage = QObject::tr("An 'apply' element must have at least one child element.");
         } else {
             nodeName = childNodes.at(0).nodeName();
 
@@ -663,12 +664,10 @@ QString PrettyCellMLViewCellmlToPrettyCellmlConverter::processMathmlNode(const Q
             if (!nodeName.compare("eq")) {
                 // Make sure that we have two operands
 
-                if (childNodesCount != 1+2) {
-                    mErrorMessage = QObject::tr("[%1] The '%2' node must have two operands.").arg(pDomNode.lineNumber())
-                                                                                             .arg(nodeName);
-                } else {
+                if (childNodesCount != 1+2)
+                    mErrorMessage = QObject::tr("An 'eq' element must have two operands.");
+                else
                     return processOperatorNode(" = ", childNodes.at(1), childNodes.at(2), pHasError);
-                }
 
             // Unsupported node
 
@@ -680,18 +679,55 @@ QString PrettyCellMLViewCellmlToPrettyCellmlConverter::processMathmlNode(const Q
     // Token elements
 
     } else if (!nodeName.compare("cn")) {
-        if (childNodesCount != 1) {
-            mErrorMessage = QObject::tr("[%1] The '%2' node must have a value.").arg(pDomNode.lineNumber())
-                                                                                .arg(nodeName);
+        QString type = pDomNode.attributes().namedItem("type").nodeValue();
+
+        if (type.isEmpty() || !type.compare("real")) {
+            // Either no type (i.e. real type by default) or real type
+
+            if (childNodesCount != 1)
+                mErrorMessage = QObject::tr("A 'cn' element must have a value.");
+            else
+                return childNodes.at(0).nodeValue().trimmed()+"{"+pDomNode.attributes().namedItem("cellml:units").nodeValue().trimmed()+"}";
+        } else if (!type.compare("e-notation")) {
+            // E-notation type
+
+            if (childNodesCount != 3) {
+                mErrorMessage = QObject::tr("A 'cn' element with an 'e-notation' type must have three child nodes.");
+            } else {
+                QDomNode childNode1 = childNodes.at(0);
+                QDomNode childNode2 = childNodes.at(1);
+                QDomNode childNode3 = childNodes.at(2);
+
+                if (childNode1.nodeType() != QDomNode::TextNode) {
+                    mErrorMessage = QObject::tr("The first child element of a 'cn' element with an 'e-notation' type must be of 'text' type.");
+                } else if (childNode2.nodeType() != QDomNode::ElementNode) {
+                    mErrorMessage = QObject::tr("The second child element of a 'cn' element with an 'e-notation' type must be of 'element' type.");
+                } else if (childNode2.nodeName().compare("sep")) {
+                    mErrorMessage = QObject::tr("The name of the second child element of a 'cn' element with an 'e-notation' type must be 'sep'.");
+                } else if (childNode3.nodeType() != QDomNode::TextNode) {
+                    mErrorMessage = QObject::tr("The third child element of a 'cn' element with an 'e-notation' type must be of 'text' type.");
+                } else {
+                    return childNode1.nodeValue().trimmed()+"e"+childNode3.nodeValue().trimmed()+"{"+pDomNode.attributes().namedItem("cellml:units").nodeValue().trimmed()+"}";
+                }
+            }
+        } else if (   !type.compare("integer")
+                   || !type.compare("rational")
+                   || !type.compare("complex-polar")
+                   || !type.compare("complex-cartesian")
+                   || !type.compare("constant")) {
+            // A known, but unsupported type
+
+            mErrorMessage = QObject::tr("The 'cn' element uses a '%1' type, which is unsupported.").arg(type);
         } else {
-            return childNodes.at(0).nodeValue()+"{"+pDomNode.attributes().namedItem("cellml:units").nodeValue()+"}";
+            // An unknown type
+
+            mErrorMessage = QObject::tr("The 'cn' element uses a '%1' type, which is unknown.").arg(type);
         }
     } else if (!nodeName.compare("ci")) {
         if (childNodesCount != 1) {
-            mErrorMessage = QObject::tr("[%1] The '%2' node must have a value.").arg(pDomNode.lineNumber())
-                                                                                .arg(nodeName);
+            mErrorMessage = QObject::tr("A 'ci' element must have a value.");
         } else {
-            return childNodes.at(0).nodeValue();
+            return childNodes.at(0).nodeValue().trimmed();
         }
 
     // Unsupported node
@@ -734,8 +770,7 @@ bool PrettyCellMLViewCellmlToPrettyCellmlConverter::processReactionNode(const QD
 {
     // We don't support reaction elements
 
-    mErrorLine = pDomNode.lineNumber();
-    mErrorMessage = QObject::tr("A '%1' node was found, but it is not supported and cannot therefore be processed.").arg(pDomNode.nodeName());
+    processUnsupportedNode(pDomNode);
 
     return false;
 }
@@ -829,7 +864,7 @@ bool PrettyCellMLViewCellmlToPrettyCellmlConverter::processRelationshipRefNode(c
             isEncapsulation = true;
         } else if (relationship.compare("containment")) {
             mErrorLine = pDomNode.lineNumber();
-            mErrorMessage = QObject::tr("The value of a 'relationship' attribute in the CellML namespace must be 'encapsulation' or 'containment'.");
+            mErrorMessage = QObject::tr("A 'relationship' attribute in the CellML namespace must have a value of 'encapsulation' or 'containment'.");
 
             return false;
         }
@@ -837,7 +872,7 @@ bool PrettyCellMLViewCellmlToPrettyCellmlConverter::processRelationshipRefNode(c
 
     if (isEncapsulation && !name.isEmpty()) {
         mErrorLine = pDomNode.lineNumber();
-        mErrorMessage = QObject::tr("A 'name' attribute must not be defined on a 'relationship_ref' element with a 'relationship' attribute value of 'encapsulation'.");
+        mErrorMessage = QObject::tr("A 'relationship_ref' element with a 'relationship' attribute value of 'encapsulation' must not define a 'name' attribute.");
 
         return false;
     }
@@ -1057,7 +1092,7 @@ void PrettyCellMLViewCellmlToPrettyCellmlConverter::processUnknownNode(const QDo
     // The given node is unknown, so warn the user about it
 
     mWarningLines << pDomNode.lineNumber();
-    mWarningMessages << QObject::tr("A '%1' node was found%2, but it is not known and cannot therefore be processed.").arg(pDomNode.nodeName());
+    mWarningMessages << QObject::tr("A '%1' element was found%2, but it is not known and cannot therefore be processed.").arg(pDomNode.nodeName());
 }
 
 //==============================================================================
@@ -1068,7 +1103,7 @@ void PrettyCellMLViewCellmlToPrettyCellmlConverter::processUnsupportedNode(const
     // it as an error
 
     mErrorLine = pDomNode.lineNumber();
-    mErrorMessage = QObject::tr("A '%1' node was found%2, but it is not known and cannot therefore be processed.").arg(pDomNode.nodeName());
+    mErrorMessage = QObject::tr("A '%1' element was found, but it is not supported and cannot therefore be processed.").arg(pDomNode.nodeName());
 }
 
 //==============================================================================

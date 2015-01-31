@@ -146,6 +146,8 @@ def model cellml_1_0 as
 
         a = b;
         c = 3{dimensionless};
+        d = 5{};
+        e = 12.3e5{dimensionless};
     enddef;
 
     def group as containment for
