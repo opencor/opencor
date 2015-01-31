@@ -41,9 +41,9 @@ namespace PrettyCellMLView {
 class PrettyCellMLViewCellmlToPrettyCellmlConverter
 {
 public:
-    explicit PrettyCellMLViewCellmlToPrettyCellmlConverter(const QString &pFileName);
+    explicit PrettyCellMLViewCellmlToPrettyCellmlConverter();
 
-    bool execute();
+    bool execute(const QString &pFileName);
 
     QString output() const;
 
@@ -80,8 +80,6 @@ private:
         Vars,
         EndDef
     };
-
-    QString mFileName;
 
     QString mOutput;
     QString mIndent;

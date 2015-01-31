@@ -181,8 +181,8 @@ void PrettyCellmlViewWidget::initialize(const QString &pFileName,
         // No editing widget exists for the given file, so generate a pretty
         // CellML version of the given CellML file
 
-        PrettyCellMLViewCellmlToPrettyCellmlConverter converter(pFileName);
-        bool successfulConversion = converter.execute();
+        PrettyCellMLViewCellmlToPrettyCellmlConverter converter;
+        bool successfulConversion = converter.execute(pFileName);
 
         // Create an editing widget for the given CellML file
 

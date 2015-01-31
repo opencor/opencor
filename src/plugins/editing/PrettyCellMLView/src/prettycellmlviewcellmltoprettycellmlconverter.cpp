@@ -33,8 +33,7 @@ namespace PrettyCellMLView {
 
 //==============================================================================
 
-PrettyCellMLViewCellmlToPrettyCellmlConverter::PrettyCellMLViewCellmlToPrettyCellmlConverter(const QString &pFileName) :
-    mFileName(pFileName),
+PrettyCellMLViewCellmlToPrettyCellmlConverter::PrettyCellMLViewCellmlToPrettyCellmlConverter() :
     mOutput(QString()),
     mIndent(QString()),
     mLastOutputType(None),
@@ -49,7 +48,7 @@ PrettyCellMLViewCellmlToPrettyCellmlConverter::PrettyCellMLViewCellmlToPrettyCel
 
 //==============================================================================
 
-bool PrettyCellMLViewCellmlToPrettyCellmlConverter::execute()
+bool PrettyCellMLViewCellmlToPrettyCellmlConverter::execute(const QString &pFileName)
 {
     // Convert the CellML file to pretty CellML by first getting a DOM
     // representation of the file
@@ -57,7 +56,7 @@ bool PrettyCellMLViewCellmlToPrettyCellmlConverter::execute()
     QString fileContents;
     QDomDocument domDocument;
 
-    Core::readTextFromFile(mFileName, fileContents);
+    Core::readTextFromFile(pFileName, fileContents);
 
     if (domDocument.setContent(fileContents, &mErrorMessage, &mErrorLine, &mErrorColumn)) {
         mOutput = QString();
@@ -65,6 +64,7 @@ bool PrettyCellMLViewCellmlToPrettyCellmlConverter::execute()
 
         mLastOutputType = None;
 
+        mWarningLines = QIntList();
         mWarningMessages = QStringList();
 
         mRdfNodes = QDomDocument("RDF Nodes");
