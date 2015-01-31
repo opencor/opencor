@@ -238,7 +238,7 @@ void EditorListWidget::requestItem(const QModelIndex &pItemIndex)
 
     EditorListItem *item = static_cast<EditorListItem *>(mModel->itemFromIndex(pItemIndex));
 
-    if (item)
+    if (item && (item->line() != -1))
         emit itemRequested(item);
 }
 
