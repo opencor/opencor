@@ -93,6 +93,7 @@ private:
     QIntList mWarningLines;
     QStringList mWarningMessages;
 
+    QDomNamedNodeMap mAttributes;
     QDomDocument mRdfNodes;
 
     void indent();

@@ -203,7 +203,7 @@ QString PrettyCellMLViewCellmlToPrettyCellmlConverter::cmetaId(const QDomNode &p
     static const QString CmetaId = "cmeta:id";
 
     if (pDomNode.attributes().contains(CmetaId))
-        return QString("{%1}").arg(pDomNode.attributes().namedItem(CmetaId).nodeValue());
+        return QString("{%1}").arg(pDomNode.attributes().namedItem(CmetaId).nodeValue().trimmed());
     else
         return QString();
 }
@@ -216,9 +216,13 @@ bool PrettyCellMLViewCellmlToPrettyCellmlConverter::processModelNode(const QDomN
 
     outputString(DefModel,
                  QString("def model%1 %2 as").arg(cmetaId(pDomNode))
-                                             .arg(pDomNode.attributes().namedItem("name").nodeValue()));
+                                             .arg(pDomNode.attributes().namedItem("name").nodeValue().trimmed()));
 
     indent();
+
+    // Keep track of the model's attributes
+
+    mAttributes = pDomNode.attributes();
 
     // Process the given model node's children
 
@@ -268,9 +272,11 @@ void PrettyCellMLViewCellmlToPrettyCellmlConverter::processCommentNode(const QDo
     // Process the given comment node
 
     QStringList commentLines = pDomNode.nodeValue().remove("\r").split("\n");
-    // Note: we don't know which end of line string is used by the file uses, so
-    //       the above code ensures that we can handle both "\r\n" on Windows
-    //       and "\n" on Linux / OS X...
+    // Note #1: we don't know which end of line string is used by the file, so
+    //          the above code ensures that we can handle both "\r\n" on Windows
+    //          and "\n" on Linux / OS X...
+    // Note #2: unlike for other nodes, we don't trim its value since leading
+    //          spaces may be used in a comment...
 
     if (   (mLastOutputType == Comment)
         || (mLastOutputType == ImportUnit) || (mLastOutputType == ImportComp)
@@ -305,7 +311,7 @@ bool PrettyCellMLViewCellmlToPrettyCellmlConverter::processImportNode(const QDom
 
     outputString(DefImport,
                  QString("def import%1 using \"%2\" for").arg(cmetaId(pDomNode))
-                                                         .arg(pDomNode.attributes().namedItem("xlink:href").nodeValue()));
+                                                         .arg(pDomNode.attributes().namedItem("xlink:href").nodeValue().trimmed()));
 
     indent();
 
@@ -348,7 +354,7 @@ bool PrettyCellMLViewCellmlToPrettyCellmlConverter::processUnitsNode(const QDomN
 {
     // Start processing the given units node
 
-    QString baseUnits = pDomNode.attributes().namedItem("base_units").nodeValue();
+    QString baseUnits = pDomNode.attributes().namedItem("base_units").nodeValue().trimmed();
 
     if (baseUnits.compare(QString()) && baseUnits.compare("yes") && baseUnits.compare("no")) {
         mErrorLine = pDomNode.lineNumber();
@@ -367,7 +373,7 @@ bool PrettyCellMLViewCellmlToPrettyCellmlConverter::processUnitsNode(const QDomN
 
         outputString(DefUnit,
                      QString("def unit%1 %2 as").arg(cmetaId(pDomNode))
-                                                .arg(pDomNode.attributes().namedItem("name").nodeValue()));
+                                                .arg(pDomNode.attributes().namedItem("name").nodeValue().trimmed()));
 
         indent();
     }
@@ -398,15 +404,15 @@ bool PrettyCellMLViewCellmlToPrettyCellmlConverter::processUnitsNode(const QDomN
 
         outputString(ImportUnit,
                      QString("unit%1 %2 using unit %3;").arg(cmetaId(pDomNode))
-                                                        .arg(pDomNode.attributes().namedItem("name").nodeValue())
-                                                        .arg(pDomNode.attributes().namedItem("units_ref").nodeValue()));
+                                                        .arg(pDomNode.attributes().namedItem("name").nodeValue().trimmed())
+                                                        .arg(pDomNode.attributes().namedItem("units_ref").nodeValue().trimmed()));
     } else if (isBaseUnits) {
         if ((mLastOutputType == Comment) || (mLastOutputType == EndDef))
             outputString();
 
         outputString(DefBaseUnit,
                      QString("def unit%1 %2 as base unit;").arg(cmetaId(pDomNode))
-                                                           .arg(pDomNode.attributes().namedItem("name").nodeValue()));
+                                                           .arg(pDomNode.attributes().namedItem("name").nodeValue().trimmed()));
     } else {
         unindent();
 
@@ -445,37 +451,29 @@ void PrettyCellMLViewCellmlToPrettyCellmlConverter::processUnitNode(const QDomNo
     // Process the given unit node
 
     QString parameters = QString();
+    QString prefix = pDomNode.attributes().namedItem("prefix").nodeValue().trimmed();
+    QString exponent = pDomNode.attributes().namedItem("exponent").nodeValue().trimmed();
+    QString multiplier = pDomNode.attributes().namedItem("multiplier").nodeValue().trimmed();
+    QString offset = pDomNode.attributes().namedItem("offset").nodeValue().trimmed();
 
-    if (!pDomNode.attributes().namedItem("prefix").nodeValue().isEmpty())
-        parameters += "pref: "+pDomNode.attributes().namedItem("prefix").nodeValue();
+    if (!prefix.isEmpty())
+        parameters += "pref: "+prefix;
 
-    if (!pDomNode.attributes().namedItem("exponent").nodeValue().isEmpty()) {
-        if (!parameters.isEmpty())
-            parameters += ", ";
+    if (!exponent.isEmpty())
+        parameters += (parameters.isEmpty()?QString():", ")+"expo: "+exponent;
 
-        parameters += "expo: "+pDomNode.attributes().namedItem("exponent").nodeValue();
-    }
+    if (!multiplier.isEmpty())
+        parameters += (parameters.isEmpty()?QString():", ")+"mult: "+multiplier;
 
-    if (!pDomNode.attributes().namedItem("multiplier").nodeValue().isEmpty()) {
-        if (!parameters.isEmpty())
-            parameters += ", ";
-
-        parameters += "mult: "+pDomNode.attributes().namedItem("multiplier").nodeValue();
-    }
-
-    if (!pDomNode.attributes().namedItem("offset").nodeValue().isEmpty()) {
-        if (!parameters.isEmpty())
-            parameters += ", ";
-
-        parameters += "off: "+pDomNode.attributes().namedItem("offset").nodeValue();
-    }
+    if (!offset.isEmpty())
+        parameters += (parameters.isEmpty()?QString():", ")+"off: "+offset;
 
     if (mLastOutputType == Comment)
         outputString();
 
     outputString(Unit,
                  QString("unit%1 %2%3;").arg(cmetaId(pDomNode))
-                                        .arg(pDomNode.attributes().namedItem("units").nodeValue())
+                                        .arg(pDomNode.attributes().namedItem("units").nodeValue().trimmed())
                                         .arg(parameters.isEmpty()?QString():" {"+parameters+"}"));
 }
 
@@ -492,7 +490,7 @@ bool PrettyCellMLViewCellmlToPrettyCellmlConverter::processComponentNode(const Q
 
         outputString(DefComp,
                      QString("def comp%1 %2 as").arg(cmetaId(pDomNode))
-                                                .arg(pDomNode.attributes().namedItem("name").nodeValue()));
+                                                .arg(pDomNode.attributes().namedItem("name").nodeValue().trimmed()));
 
         indent();
     }
@@ -533,8 +531,8 @@ bool PrettyCellMLViewCellmlToPrettyCellmlConverter::processComponentNode(const Q
 
         outputString(ImportComp,
                      QString("comp%1 %2 using comp %3;").arg(cmetaId(pDomNode))
-                                                        .arg(pDomNode.attributes().namedItem("name").nodeValue())
-                                                        .arg(pDomNode.attributes().namedItem("component_ref").nodeValue()));
+                                                        .arg(pDomNode.attributes().namedItem("name").nodeValue().trimmed())
+                                                        .arg(pDomNode.attributes().namedItem("component_ref").nodeValue().trimmed()));
     } else {
         unindent();
 
@@ -573,23 +571,18 @@ void PrettyCellMLViewCellmlToPrettyCellmlConverter::processVariableNode(const QD
     // Process the given variable node
 
     QString parameters = QString();
+    QString initialValue = pDomNode.attributes().namedItem("initial_value").nodeValue().trimmed();
+    QString publicInterface = pDomNode.attributes().namedItem("public_interface").nodeValue().trimmed();
+    QString privateInterface = pDomNode.attributes().namedItem("private_interface").nodeValue().trimmed();
 
-    if (!pDomNode.attributes().namedItem("initial_value").nodeValue().isEmpty())
-        parameters += "init: "+pDomNode.attributes().namedItem("initial_value").nodeValue();
+    if (!initialValue.isEmpty())
+        parameters += "init: "+initialValue;
 
-    if (!pDomNode.attributes().namedItem("public_interface").nodeValue().isEmpty()) {
-        if (!parameters.isEmpty())
-            parameters += ", ";
+    if (!publicInterface.isEmpty())
+        parameters += (parameters.isEmpty()?QString():", ")+"pub: "+publicInterface;
 
-        parameters += "pub: "+pDomNode.attributes().namedItem("public_interface").nodeValue();
-    }
-
-    if (!pDomNode.attributes().namedItem("private_interface").nodeValue().isEmpty()) {
-        if (!parameters.isEmpty())
-            parameters += ", ";
-
-        parameters += "priv: "+pDomNode.attributes().namedItem("private_interface").nodeValue();
-    }
+    if (!privateInterface.isEmpty())
+        parameters += (parameters.isEmpty()?QString():", ")+"priv: "+privateInterface;
 
     if (   (mLastOutputType == Comment)
         || (mLastOutputType == DefBaseUnit) || (mLastOutputType == EndDef)) {
@@ -598,8 +591,8 @@ void PrettyCellMLViewCellmlToPrettyCellmlConverter::processVariableNode(const QD
 
     outputString(Var,
                  QString("var%1 %2: %3%4;").arg(cmetaId(pDomNode))
-                                           .arg(pDomNode.attributes().namedItem("name").nodeValue())
-                                           .arg(pDomNode.attributes().namedItem("units").nodeValue())
+                                           .arg(pDomNode.attributes().namedItem("name").nodeValue().trimmed())
+                                           .arg(pDomNode.attributes().namedItem("units").nodeValue().trimmed())
                                            .arg(parameters.isEmpty()?QString():" {"+parameters+"}"));
 }
 
@@ -682,7 +675,7 @@ QString PrettyCellMLViewCellmlToPrettyCellmlConverter::processMathmlNode(const Q
     // Token elements
 
     } else if (!nodeName.compare("cn")) {
-        QString type = domNode.attributes().namedItem("type").nodeValue();
+        QString type = domNode.attributes().namedItem("type").nodeValue().trimmed();
 
         if (type.isEmpty() || !type.compare("real")) {
             // Either no type (i.e. real type by default) or real type
@@ -727,11 +720,10 @@ QString PrettyCellMLViewCellmlToPrettyCellmlConverter::processMathmlNode(const Q
             mErrorMessage = QObject::tr("The 'cn' element uses a '%1' type, which is unknown.").arg(type);
         }
     } else if (!nodeName.compare("ci")) {
-        if (childNodesCount != 1) {
+        if (childNodesCount != 1)
             mErrorMessage = QObject::tr("A 'ci' element must have a value.");
-        } else {
+        else
             return childNodes.at(0).nodeValue().trimmed();
-        }
 
     // Unsupported node
 
@@ -858,8 +850,8 @@ bool PrettyCellMLViewCellmlToPrettyCellmlConverter::processRelationshipRefNode(c
 
     // Process the given relationship ref node
 
-    QString relationship = pDomNode.attributes().namedItem("relationship").nodeValue();
-    QString name = pDomNode.attributes().namedItem("name").nodeValue();
+    QString relationship = pDomNode.attributes().namedItem("relationship").nodeValue().trimmed();
+    QString name = pDomNode.attributes().namedItem("name").nodeValue().trimmed();
     bool isEncapsulation = false;
 
     if (pDomNode.namespaceURI().isEmpty()) {
@@ -915,7 +907,7 @@ void PrettyCellMLViewCellmlToPrettyCellmlConverter::processComponentRefNode(cons
 
         outputString(CompIncl,
                      QString("comp%1 %2 incl").arg(cmetaId(pDomNode))
-                                              .arg(pDomNode.attributes().namedItem("component").nodeValue()));
+                                              .arg(pDomNode.attributes().namedItem("component").nodeValue().trimmed()));
 
         indent();
     }
@@ -950,7 +942,7 @@ void PrettyCellMLViewCellmlToPrettyCellmlConverter::processComponentRefNode(cons
 
         outputString(Comp,
                      QString("comp%1 %2;").arg(cmetaId(pDomNode))
-                                          .arg(pDomNode.attributes().namedItem("component").nodeValue()));
+                                          .arg(pDomNode.attributes().namedItem("component").nodeValue().trimmed()));
     }
 
 }
@@ -1045,8 +1037,8 @@ bool PrettyCellMLViewCellmlToPrettyCellmlConverter::processMapComponentsNode(con
     // Process the given map components node
 
     pMapComponents = QString("between%1 %2 and %3").arg(cmetaId(pDomNode))
-                                                   .arg(pDomNode.attributes().namedItem("component_1").nodeValue())
-                                                   .arg(pDomNode.attributes().namedItem("component_2").nodeValue());
+                                                   .arg(pDomNode.attributes().namedItem("component_1").nodeValue().trimmed())
+                                                   .arg(pDomNode.attributes().namedItem("component_2").nodeValue().trimmed());
 
     return true;
 }
@@ -1084,8 +1076,8 @@ void PrettyCellMLViewCellmlToPrettyCellmlConverter::processMapVariablesNode(cons
 
     outputString(Vars,
                  QString("vars%1 %2 and %3;").arg(cmetaId(pDomNode))
-                                             .arg(pDomNode.attributes().namedItem("variable_1").nodeValue())
-                                             .arg(pDomNode.attributes().namedItem("variable_2").nodeValue()));
+                                             .arg(pDomNode.attributes().namedItem("variable_1").nodeValue().trimmed())
+                                             .arg(pDomNode.attributes().namedItem("variable_2").nodeValue().trimmed()));
 }
 
 //==============================================================================
