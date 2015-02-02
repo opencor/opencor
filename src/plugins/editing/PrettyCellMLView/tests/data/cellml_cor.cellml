@@ -309,6 +309,49 @@
                     <ci>c</ci>
                 </apply>
             </apply>
+            <apply>
+                <eq/>
+                <ci>a</ci>
+                <apply>
+                    <abs/>
+                    <ci>b</ci>
+                </apply>
+            </apply>
+            <apply>
+                <eq/>
+                <ci>a</ci>
+                <apply>
+                    <exp/>
+                    <ci>b</ci>
+                </apply>
+            </apply>
+            <apply>
+                <eq/>
+                <ci>a</ci>
+                <apply>
+                    <ln/>
+                    <ci>b</ci>
+                </apply>
+            </apply>
+            <apply>
+                <eq/>
+                <ci>a</ci>
+                <apply>
+                    <log/>
+                    <ci>b</ci>
+                </apply>
+            </apply>
+            <apply>
+                <eq/>
+                <ci>a</ci>
+                <apply>
+                    <log/>
+                    <logbase>
+                        <ci>c</ci>
+                    </logbase>
+                    <ci>b</ci>
+                </apply>
+            </apply>
         </math>
     </component>
     <group>

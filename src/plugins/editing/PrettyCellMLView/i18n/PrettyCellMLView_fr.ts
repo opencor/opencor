@@ -82,7 +82,7 @@
         <translation>Un élément &apos;apply&apos; doit avoir aux moins deux éléments enfants.</translation>
     </message>
     <message>
-        <source>A &apos;cn&apos; element with an &apos;e-notation&apos; type must have three child nodes.</source>
+        <source>A &apos;cn&apos; element with an &apos;e-notation&apos; type must have three child elements.</source>
         <translation>Un élément &apos;cn&apos; avec un type &apos;e-notation&apos; doit avoir trois éléments enfants.</translation>
     </message>
     <message>
@@ -130,28 +130,32 @@
         <translation>Un élément &apos;%1&apos; a été trouvé dans le fichier CellML d&apos;origine, mais il n&apos;est pas supporté et ne peut donc pas être traité.</translation>
     </message>
     <message>
+        <source>A &apos;%1&apos; operator must have two operands.</source>
+        <translation>Un opérateur &apos;%1&apos; doit avoir deux opérandes.</translation>
+    </message>
+    <message>
+        <source>An &apos;%1&apos; operator must have two operands.</source>
+        <translation>Un opérateur &apos;%1&apos; doit avoir deux opérandes.</translation>
+    </message>
+    <message>
         <source>A &apos;%1&apos; element must have a value.</source>
         <translation>Un élément &apos;%1&apos; doit avoir une valeur.</translation>
     </message>
     <message>
-        <source>A &apos;%1&apos; element must have two operands.</source>
-        <translation>Un élément &apos;%1&apos; doit avoir deux opérandes.</translation>
+        <source>A &apos;%1&apos; element must have one child element.</source>
+        <translation>Un élément &apos;%1&apos; doit avoir un élément enfant.</translation>
     </message>
     <message>
-        <source>An &apos;%1&apos; element must have two operands.</source>
-        <translation>Un élément &apos;%1&apos; doit avoir deux opérandes.</translation>
+        <source>An &apos;%1&apos; function must have one argument.</source>
+        <translation>Une fonction &apos;%1&apos; doit avoir un argument.</translation>
     </message>
     <message>
-        <source>A &apos;%1&apos; element must have one operand.</source>
-        <translation>Un élément &apos;%1&apos; doit avoir un opérande.</translation>
+        <source>A &apos;%1&apos; function must have two arguments.</source>
+        <translation>Une fonction &apos;%1&apos; doit avoir deux arguments.</translation>
     </message>
     <message>
-        <source>An &apos;%1&apos; element must have one operand.</source>
-        <translation>Un élément &apos;%1&apos; doit avoir un opérande.</translation>
-    </message>
-    <message>
-        <source>A &apos;%1&apos; element must have either one or two operands.</source>
-        <translation>Un élément &apos;%1&apos; doit avoir un ou deux opérandes.</translation>
+        <source>A &apos;%1&apos; function must have either one or two arguments.</source>
+        <translation>Une fonction &apos;%1&apos; doit avoir un ou deux arguments.</translation>
     </message>
 </context>
 </TS>

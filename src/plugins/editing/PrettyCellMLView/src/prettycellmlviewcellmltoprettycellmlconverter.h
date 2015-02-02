@@ -121,10 +121,14 @@ private:
     QString processOperatorNode(const QString &pOperator,
                                 const QDomNode &pDomNode1,
                                 const QDomNode &pDomNode2, bool &pHasError);
-    QString processPowerNode(const QDomNode &pDomNodeA,
-                             const QDomNode &pDomNodeB, bool &pHasError);
-    QString processRootNode(const QDomNode &pDomNodeA,
-                            const QDomNode &pDomNodeB, bool &pHasError);
+    QString processFunctionNode(const QString &pFunction,
+                                const QDomNode &pDomNode, bool &pHasError);
+    QString processPowerNode(const QDomNode &pDomNode1,
+                             const QDomNode &pDomNode2, bool &pHasError);
+    QString processRootNode(const QDomNode &pDomNode1,
+                            const QDomNode &pDomNode2, bool &pHasError);
+    QString processLogNode(const QDomNode &pDomNode1, const QDomNode &pDomNode2,
+                           bool &pHasError);
     bool processReactionNode(const QDomNode &pDomNode);
     bool processGroupNode(const QDomNode &pDomNode);
     bool processRelationshipRefNode(const QDomNode &pDomNode,
