@@ -746,6 +746,21 @@ QString PrettyCellMLViewCellmlToPrettyCellmlConverter::processMathmlNode(const Q
                     mErrorMessage = QObject::tr("A '%1' function must have either one or two arguments.").arg(nodeName);
                 else
                     return processLogNode(childNodes.item(1), childNodes.item(2), pHasError);
+            } else if (!nodeName.compare("ceiling")) {
+                if (childNodesCount != 2)
+                    mErrorMessage = QObject::tr("A '%1' function must have one argument.").arg(nodeName);
+                else
+                    return processFunctionNode("ceil", childNodes.item(1), pHasError);
+            } else if (!nodeName.compare("floor")) {
+                if (childNodesCount != 2)
+                    mErrorMessage = QObject::tr("A '%1' function must have one argument.").arg(nodeName);
+                else
+                    return processFunctionNode(nodeName, childNodes.item(1), pHasError);
+            } else if (!nodeName.compare("factorial")) {
+                if (childNodesCount != 2)
+                    mErrorMessage = QObject::tr("A '%1' function must have one argument.").arg(nodeName);
+                else
+                    return processFunctionNode("fact", childNodes.item(1), pHasError);
 
             // Unsupported node
 

@@ -352,6 +352,30 @@
                     <ci>b</ci>
                 </apply>
             </apply>
+            <apply>
+                <eq/>
+                <ci>a</ci>
+                <apply>
+                    <ceiling/>
+                    <ci>b</ci>
+                </apply>
+            </apply>
+            <apply>
+                <eq/>
+                <ci>a</ci>
+                <apply>
+                    <floor/>
+                    <ci>b</ci>
+                </apply>
+            </apply>
+            <apply>
+                <eq/>
+                <ci>a</ci>
+                <apply>
+                    <factorial/>
+                    <ci>b</ci>
+                </apply>
+            </apply>
         </math>
     </component>
     <group>

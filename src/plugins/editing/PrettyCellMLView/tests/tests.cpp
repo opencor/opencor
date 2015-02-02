@@ -156,6 +156,21 @@ void Tests::failingTests()
     QCOMPARE(converter.errorMessage(),
              QString("A 'log' function must have either one or two arguments."));
 
+    QVERIFY(!converter.execute(OpenCOR::fileName("src/plugins/editing/PrettyCellMLView/tests/data/mathml_ceiling.cellml")));
+    QCOMPARE(converter.errorLine(), 6);
+    QCOMPARE(converter.errorMessage(),
+             QString("A 'ceiling' function must have one argument."));
+
+    QVERIFY(!converter.execute(OpenCOR::fileName("src/plugins/editing/PrettyCellMLView/tests/data/mathml_floor.cellml")));
+    QCOMPARE(converter.errorLine(), 6);
+    QCOMPARE(converter.errorMessage(),
+             QString("A 'floor' function must have one argument."));
+
+    QVERIFY(!converter.execute(OpenCOR::fileName("src/plugins/editing/PrettyCellMLView/tests/data/mathml_factorial.cellml")));
+    QCOMPARE(converter.errorLine(), 6);
+    QCOMPARE(converter.errorMessage(),
+             QString("A 'factorial' function must have one argument."));
+
     QVERIFY(!converter.execute(OpenCOR::fileName("src/plugins/editing/PrettyCellMLView/tests/data/mathml_cn.cellml")));
     QCOMPARE(converter.errorLine(), 8);
     QCOMPARE(converter.errorMessage(),

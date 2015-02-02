@@ -170,6 +170,9 @@ def model cellml_1_0 as
         a = ln(b);
         a = log(b);
         a = log(b, c);
+        a = ceil(b);
+        a = floor(b);
+        a = fact(b);
     enddef;
 
     def group as containment for
