@@ -272,7 +272,7 @@ void SingleCellViewInformationGraphsWidget::initialize(SingleCellViewGraphPanelW
         // Initialise our property editor's columns' width
 
         for (int i = 0, iMax = mColumnWidths.size(); i < iMax; ++i)
-            mPropertyEditor->setColumnWidth(i, mColumnWidths.at(i));
+            mPropertyEditor->setColumnWidth(i, mColumnWidths[i]);
 
         // We want our own context menu for our property editor
 

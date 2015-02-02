@@ -197,8 +197,8 @@ void PrettyCellmlViewWidget::initialize(const QString &pFileName,
             QString warningMessage;
 
             for (int i = 0, imax = converter.warningMessages().count(); i < imax; ++i) {
-                warningLine = converter.warningLines().at(i);
-                warningMessage = converter.warningMessages().at(i);
+                warningLine = converter.warningLines()[i];
+                warningMessage = converter.warningMessages()[i];
 
                 newEditingWidget->editorList()->addItem(EditorList::EditorListItem::Warning,
                                                         successfulConversion?-1:warningLine,

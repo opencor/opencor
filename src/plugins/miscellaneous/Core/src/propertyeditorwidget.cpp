@@ -791,13 +791,13 @@ void Property::setListValue(const QStringList &pListValue,
     int iMax = pListValue.count();
 
     for (; i < iMax; ++i)
-        if (!pListValue.at(i).isEmpty())
+        if (!pListValue[i].isEmpty())
             break;
 
     bool previousItemIsSeparator = false;
 
     for (; i < iMax; ++i) {
-        QString listValueItem = pListValue.at(i);
+        QString listValueItem = pListValue[i];
 
         if (!listValueItem.isEmpty()) {
             listValue << listValueItem;

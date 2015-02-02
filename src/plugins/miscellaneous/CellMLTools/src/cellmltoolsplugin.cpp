@@ -337,7 +337,7 @@ int CellMLToolsPlugin::runExportCommand(const QStringList &pArguments)
     bool inIsLocalFile;
     QString inFileNameOrUrl;
 
-    Core::checkFileNameOrUrl(pArguments.at(0), inIsLocalFile, inFileNameOrUrl);
+    Core::checkFileNameOrUrl(pArguments[0], inIsLocalFile, inFileNameOrUrl);
 
     QString inFileName = inFileNameOrUrl;
 
@@ -394,7 +394,7 @@ int CellMLToolsPlugin::runExportCommand(const QStringList &pArguments)
                     // At this stage, everything is fine with the input file, so
                     // now we need to check the type of export the user wants
 
-                    QString predefinedFormatOrUserDefinedFormatFileName = pArguments.at(2);
+                    QString predefinedFormatOrUserDefinedFormatFileName = pArguments[2];
                     bool wantExportToUserDefinedFormat = predefinedFormatOrUserDefinedFormatFileName.compare("cellml_1_0");
 
                     // If we want to export to a CellML 1.0, then we need to
@@ -411,8 +411,8 @@ int CellMLToolsPlugin::runExportCommand(const QStringList &pArguments)
                         // Everything seems to be fine, so attempt the export
                         // itself
 
-                        if (   ( wantExportToUserDefinedFormat && !inCellmlFile->exportTo(pArguments.at(1), predefinedFormatOrUserDefinedFormatFileName))
-                            || (!wantExportToUserDefinedFormat && !inCellmlFile->exportTo(pArguments.at(1), CellMLSupport::CellmlFile::Cellml_1_0))) {
+                        if (   ( wantExportToUserDefinedFormat && !inCellmlFile->exportTo(pArguments[1], predefinedFormatOrUserDefinedFormatFileName))
+                            || (!wantExportToUserDefinedFormat && !inCellmlFile->exportTo(pArguments[1], CellMLSupport::CellmlFile::Cellml_1_0))) {
                             errorMessage = "The input file could not be exported";
 
                             CellMLSupport::CellmlFileIssues issues = inCellmlFile->issues();

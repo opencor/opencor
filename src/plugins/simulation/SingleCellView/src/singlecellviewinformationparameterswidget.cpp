@@ -71,8 +71,8 @@ void SingleCellViewInformationParametersWidget::retranslateContextMenu(QMenu *pC
 {
     // Retranslate our context menu
 
-    pContextMenu->actions().at(0)->setText(tr("Plot Against Variable of Integration"));
-    pContextMenu->actions().at(1)->setText(tr("Plot Against"));
+    pContextMenu->actions()[0]->setText(tr("Plot Against Variable of Integration"));
+    pContextMenu->actions()[1]->setText(tr("Plot Against"));
 }
 
 //==============================================================================
@@ -140,7 +140,7 @@ void SingleCellViewInformationParametersWidget::initialize(const QString &pFileN
         // Initialise our property editor's columns' width
 
         for (int i = 0, iMax = mColumnWidths.size(); i < iMax; ++i)
-            mPropertyEditor->setColumnWidth(i, mColumnWidths.at(i));
+            mPropertyEditor->setColumnWidth(i, mColumnWidths[i]);
 
         // Populate our property editor
 
