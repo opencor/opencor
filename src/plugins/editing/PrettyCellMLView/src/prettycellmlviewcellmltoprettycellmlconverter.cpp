@@ -686,15 +686,15 @@ QString PrettyCellMLViewCellmlToPrettyCellmlConverter::processMathmlNode(const Q
 
                     return processOperatorNode(" = ", childNodes.item(1), childNodes.item(2), pHasError);
                 }
-            } else if (   !nodeName.compare("gt") || !nodeName.compare("geq")) {
-                if (childNodesCount != 3)
-                    mErrorMessage = QObject::tr("A '%1' operator must have two operands.").arg(nodeName);
-                else
-                    return processOperatorNode(mMappings.value(nodeName), childNodes.item(1), childNodes.item(2), pHasError);
             } else if (   !nodeName.compare("neq")
                        || !nodeName.compare("lt") || !nodeName.compare("leq")) {
                 if (childNodesCount != 3)
                     mErrorMessage = QObject::tr("An '%1' operator must have two operands.").arg(nodeName);
+                else
+                    return processOperatorNode(mMappings.value(nodeName), childNodes.item(1), childNodes.item(2), pHasError);
+            } else if (   !nodeName.compare("gt") || !nodeName.compare("geq")) {
+                if (childNodesCount != 3)
+                    mErrorMessage = QObject::tr("A '%1' operator must have two operands.").arg(nodeName);
                 else
                     return processOperatorNode(mMappings.value(nodeName), childNodes.item(1), childNodes.item(2), pHasError);
 
