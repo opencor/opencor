@@ -144,6 +144,15 @@
             </apply>
             <apply>
                 <eq/>
+                <ci>a</ci>
+                <apply>
+                    <eq/>
+                    <ci>b</ci>
+                    <ci>c</ci>
+                </apply>
+            </apply>
+            <apply>
+                <eq/>
                 <ci>c</ci>
                 <cn cellml:units="dimensionless">3</cn>
             </apply>

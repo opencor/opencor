@@ -96,6 +96,8 @@ private:
     QDomNamedNodeMap mAttributes;
     QDomDocument mRdfNodes;
 
+    bool mAssignmentDone;
+
     void indent();
     void unindent();
 

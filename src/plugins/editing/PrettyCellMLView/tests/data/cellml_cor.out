@@ -145,6 +145,7 @@ def model cellml_1_0 as
         var variable5: unit5 {pub: none, priv: none};
 
         a = b;
+        a = b == c;
         c = 3{dimensionless};
         d = 5{};
         e = 12.3e5{dimensionless};

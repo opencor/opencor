@@ -42,7 +42,8 @@ PrettyCellMLViewCellmlToPrettyCellmlConverter::PrettyCellMLViewCellmlToPrettyCel
     mErrorMessage(QString()),
     mWarningLines(QIntList()),
     mWarningMessages(QStringList()),
-    mRdfNodes(QDomDocument())
+    mRdfNodes(QDomDocument()),
+    mAssignmentDone(false)
 {
 }
 
@@ -607,7 +608,7 @@ bool PrettyCellMLViewCellmlToPrettyCellmlConverter::processMathNode(const QDomNo
 
     for (QDomNode domNode = pDomNode.firstChild();
          !domNode.isNull(); domNode = domNode.nextSibling()) {
-        hasError = false;
+        mAssignmentDone = hasError = false;
         equation = processMathmlNode(domNode, hasError);
 
         if (hasError) {
@@ -619,7 +620,7 @@ bool PrettyCellMLViewCellmlToPrettyCellmlConverter::processMathNode(const QDomNo
                 outputString();
             }
 
-            outputString(Equation, equation);
+            outputString(Equation, equation+";");
         }
     }
 
@@ -660,10 +661,15 @@ QString PrettyCellMLViewCellmlToPrettyCellmlConverter::processMathmlNode(const Q
                 // Make sure that we have two operands, i.e. 3 child nodes
                 // altogether
 
-                if (childNodesCount != 3)
+                if (childNodesCount != 3) {
                     mErrorMessage = QObject::tr("An 'eq' element must have two operands.");
-                else
+                } else if (mAssignmentDone) {
+                    return processOperatorNode(" == ", childNodes.at(1), childNodes.at(2), pHasError);
+                } else {
+                    mAssignmentDone = true;
+
                     return processOperatorNode(" = ", childNodes.at(1), childNodes.at(2), pHasError);
+                }
 
             // Unsupported node
 
@@ -755,7 +761,7 @@ QString PrettyCellMLViewCellmlToPrettyCellmlConverter::processOperatorNode(const
         if (pHasError)
             return QString();
         else
-            return operand1+pOperator+operand2+";";
+            return operand1+pOperator+operand2;
     }
 }
 
