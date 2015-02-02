@@ -79,7 +79,82 @@ void Tests::failingTests()
     QVERIFY(!converter.execute(OpenCOR::fileName("src/plugins/editing/PrettyCellMLView/tests/data/mathml_eq.cellml")));
     QCOMPARE(converter.errorLine(), 6);
     QCOMPARE(converter.errorMessage(),
-             QString("An 'eq' element must have two operands."));
+             QString("An 'eq' operator must have two operands."));
+
+    QVERIFY(!converter.execute(OpenCOR::fileName("src/plugins/editing/PrettyCellMLView/tests/data/mathml_neq.cellml")));
+    QCOMPARE(converter.errorLine(), 6);
+    QCOMPARE(converter.errorMessage(),
+             QString("An 'neq' operator must have two operands."));
+
+    QVERIFY(!converter.execute(OpenCOR::fileName("src/plugins/editing/PrettyCellMLView/tests/data/mathml_gt.cellml")));
+    QCOMPARE(converter.errorLine(), 6);
+    QCOMPARE(converter.errorMessage(),
+             QString("A 'gt' operator must have two operands."));
+
+    QVERIFY(!converter.execute(OpenCOR::fileName("src/plugins/editing/PrettyCellMLView/tests/data/mathml_lt.cellml")));
+    QCOMPARE(converter.errorLine(), 6);
+    QCOMPARE(converter.errorMessage(),
+             QString("An 'lt' operator must have two operands."));
+
+    QVERIFY(!converter.execute(OpenCOR::fileName("src/plugins/editing/PrettyCellMLView/tests/data/mathml_geq.cellml")));
+    QCOMPARE(converter.errorLine(), 6);
+    QCOMPARE(converter.errorMessage(),
+             QString("A 'geq' operator must have two operands."));
+
+    QVERIFY(!converter.execute(OpenCOR::fileName("src/plugins/editing/PrettyCellMLView/tests/data/mathml_leq.cellml")));
+    QCOMPARE(converter.errorLine(), 6);
+    QCOMPARE(converter.errorMessage(),
+             QString("An 'leq' operator must have two operands."));
+
+    QVERIFY(!converter.execute(OpenCOR::fileName("src/plugins/editing/PrettyCellMLView/tests/data/mathml_plus.cellml")));
+    QCOMPARE(converter.errorLine(), 6);
+    QCOMPARE(converter.errorMessage(),
+             QString("A 'plus' operator must have at least one operand."));
+
+    QVERIFY(!converter.execute(OpenCOR::fileName("src/plugins/editing/PrettyCellMLView/tests/data/mathml_minus.cellml")));
+    QCOMPARE(converter.errorLine(), 6);
+    QCOMPARE(converter.errorMessage(),
+             QString("A 'minus' operator must have at least one operand."));
+
+    QVERIFY(!converter.execute(OpenCOR::fileName("src/plugins/editing/PrettyCellMLView/tests/data/mathml_times.cellml")));
+    QCOMPARE(converter.errorLine(), 6);
+    QCOMPARE(converter.errorMessage(),
+             QString("A 'times' operator must have at least two operands."));
+
+    QVERIFY(!converter.execute(OpenCOR::fileName("src/plugins/editing/PrettyCellMLView/tests/data/mathml_divide.cellml")));
+    QCOMPARE(converter.errorLine(), 6);
+    QCOMPARE(converter.errorMessage(),
+             QString("A 'divide' operator must have at least two operands."));
+
+    QVERIFY(!converter.execute(OpenCOR::fileName("src/plugins/editing/PrettyCellMLView/tests/data/mathml_power.cellml")));
+    QCOMPARE(converter.errorLine(), 6);
+    QCOMPARE(converter.errorMessage(),
+             QString("A 'power' function must have two arguments."));
+
+    QVERIFY(!converter.execute(OpenCOR::fileName("src/plugins/editing/PrettyCellMLView/tests/data/mathml_root.cellml")));
+    QCOMPARE(converter.errorLine(), 6);
+    QCOMPARE(converter.errorMessage(),
+             QString("A 'root' function must have either one or two arguments."));
+
+    QVERIFY(!converter.execute(OpenCOR::fileName("src/plugins/editing/PrettyCellMLView/tests/data/mathml_abs.cellml")));
+    QCOMPARE(converter.errorLine(), 6);
+    QCOMPARE(converter.errorMessage(),
+             QString("An 'abs' function must have one argument."));
+
+    QVERIFY(!converter.execute(OpenCOR::fileName("src/plugins/editing/PrettyCellMLView/tests/data/mathml_exp.cellml")));
+    QCOMPARE(converter.errorLine(), 6);
+    QCOMPARE(converter.errorMessage(),
+             QString("An 'exp' function must have one argument."));
+
+    QVERIFY(!converter.execute(OpenCOR::fileName("src/plugins/editing/PrettyCellMLView/tests/data/mathml_ln.cellml")));
+    QCOMPARE(converter.errorLine(), 6);
+    QCOMPARE(converter.errorMessage(),
+             QString("An 'ln' function must have one argument."));
+
+    QVERIFY(!converter.execute(OpenCOR::fileName("src/plugins/editing/PrettyCellMLView/tests/data/mathml_log.cellml")));
+    QCOMPARE(converter.errorLine(), 6);
+    QCOMPARE(converter.errorMessage(),
+             QString("A 'log' function must have either one or two arguments."));
 
     QVERIFY(!converter.execute(OpenCOR::fileName("src/plugins/editing/PrettyCellMLView/tests/data/mathml_cn.cellml")));
     QCOMPARE(converter.errorLine(), 8);
@@ -89,7 +164,7 @@ void Tests::failingTests()
     QVERIFY(!converter.execute(OpenCOR::fileName("src/plugins/editing/PrettyCellMLView/tests/data/mathml_cn_e_notation_1.cellml")));
     QCOMPARE(converter.errorLine(), 8);
     QCOMPARE(converter.errorMessage(),
-             QString("A 'cn' element with an 'e-notation' type must have three child nodes."));
+             QString("A 'cn' element with an 'e-notation' type must have three child elements."));
 
     QVERIFY(!converter.execute(OpenCOR::fileName("src/plugins/editing/PrettyCellMLView/tests/data/mathml_cn_e_notation_2.cellml")));
     QCOMPARE(converter.errorLine(), 8);

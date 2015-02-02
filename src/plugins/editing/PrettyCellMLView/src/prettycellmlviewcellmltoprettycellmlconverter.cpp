@@ -697,23 +697,23 @@ QString PrettyCellMLViewCellmlToPrettyCellmlConverter::processMathmlNode(const Q
             // Arythmetic operators
 
             } else if (!nodeName.compare("plus")) {
-                if (childNodesCount != 3)
-                    mErrorMessage = QObject::tr("A '%1' operator must have two operands.").arg(nodeName);
+                if (childNodesCount < 2)
+                    mErrorMessage = QObject::tr("A '%1' operator must have at least one operand.").arg(nodeName);
                 else
                     return processOperatorNode("+", childNodes.item(1), childNodes.item(2), pHasError);
             } else if (!nodeName.compare("minus")) {
-                if (childNodesCount != 3)
-                    mErrorMessage = QObject::tr("A '%1' operator must have two operands.").arg(nodeName);
+                if (childNodesCount < 2)
+                    mErrorMessage = QObject::tr("A '%1' operator must have at least one operand.").arg(nodeName);
                 else
                     return processOperatorNode("-", childNodes.item(1), childNodes.item(2), pHasError);
             } else if (!nodeName.compare("times")) {
-                if (childNodesCount != 3)
-                    mErrorMessage = QObject::tr("A '%1' operator must have two operands.").arg(nodeName);
+                if (childNodesCount < 3)
+                    mErrorMessage = QObject::tr("A '%1' operator must have at least two operands.").arg(nodeName);
                 else
                     return processOperatorNode("*", childNodes.item(1), childNodes.item(2), pHasError);
             } else if (!nodeName.compare("divide")) {
-                if (childNodesCount != 3)
-                    mErrorMessage = QObject::tr("A '%1' operator must have two operands.").arg(nodeName);
+                if (childNodesCount < 3)
+                    mErrorMessage = QObject::tr("A '%1' operator must have at least two operands.").arg(nodeName);
                 else
                     return processOperatorNode("/", childNodes.item(1), childNodes.item(2), pHasError);
             } else if (!nodeName.compare("power")) {
