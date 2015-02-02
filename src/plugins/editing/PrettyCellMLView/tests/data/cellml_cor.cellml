@@ -144,6 +144,21 @@
             </apply>
             <apply>
                 <eq/>
+                <ci>c</ci>
+                <cn cellml:units="dimensionless">3</cn>
+            </apply>
+            <apply>
+                <eq/>
+                <ci>d</ci>
+                <cn>5</cn>
+            </apply>
+            <apply>
+                <eq/>
+                <ci>e</ci>
+                <cn cellml:units="dimensionless" type="e-notation">12.3<sep/>5</cn>
+            </apply>
+            <apply>
+                <eq/>
                 <ci>a</ci>
                 <apply>
                     <eq/>
@@ -198,18 +213,75 @@
             </apply>
             <apply>
                 <eq/>
-                <ci>c</ci>
-                <cn cellml:units="dimensionless">3</cn>
+                <ci>a</ci>
+                <apply>
+                    <plus/>
+                    <ci>b</ci>
+                    <ci>c</ci>
+                </apply>
             </apply>
             <apply>
                 <eq/>
-                <ci>d</ci>
-                <cn>5</cn>
+                <ci>a</ci>
+                <apply>
+                    <minus/>
+                    <ci>b</ci>
+                    <ci>c</ci>
+                </apply>
             </apply>
             <apply>
                 <eq/>
-                <ci>e</ci>
-                <cn cellml:units="dimensionless" type="e-notation">12.3<sep/>5</cn>
+                <ci>a</ci>
+                <apply>
+                    <times/>
+                    <ci>b</ci>
+                    <ci>c</ci>
+                </apply>
+            </apply>
+            <apply>
+                <eq/>
+                <ci>a</ci>
+                <apply>
+                    <divide/>
+                    <ci>b</ci>
+                    <ci>c</ci>
+                </apply>
+            </apply>
+            <apply>
+                <eq/>
+                <ci>a</ci>
+                <apply>
+                    <power/>
+                    <ci>b</ci>
+                    <ci>c</ci>
+                </apply>
+            </apply>
+            <apply>
+                <eq/>
+                <ci>a</ci>
+                <apply>
+                    <power/>
+                    <ci>b</ci>
+                    <cn cellml:units="dimensionless">3</cn>
+                </apply>
+            </apply>
+            <apply>
+                <eq/>
+                <ci>a</ci>
+                <apply>
+                    <power/>
+                    <ci>b</ci>
+                    <cn cellml:units="dimensionless">2</cn>
+                </apply>
+            </apply>
+            <apply>
+                <eq/>
+                <ci>a</ci>
+                <apply>
+                    <power/>
+                    <ci>b</ci>
+                    <cn cellml:units="dimensionless">0.5</cn>
+                </apply>
             </apply>
         </math>
     </component>

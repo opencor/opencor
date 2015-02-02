@@ -145,15 +145,23 @@ def model cellml_1_0 as
         var variable5: unit5 {pub: none, priv: none};
 
         a = b;
+        c = 3{dimensionless};
+        d = 5{};
+        e = 12.3e5{dimensionless};
         a = b == c;
         a = b <> c;
         a = b > c;
         a = b < c;
         a = b >= c;
         a = b <= c;
-        c = 3{dimensionless};
-        d = 5{};
-        e = 12.3e5{dimensionless};
+        a = b+c;
+        a = b-c;
+        a = b*c;
+        a = b/c;
+        a = pow(b, c);
+        a = pow(b, 3{dimensionless});
+        a = sqr(b);
+        a = sqrt(b);
     enddef;
 
     def group as containment for

@@ -25,6 +25,7 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include <QDomDocument>
+#include <QRegularExpression>
 
 //==============================================================================
 
@@ -670,29 +671,56 @@ QString PrettyCellMLViewCellmlToPrettyCellmlConverter::processMathmlNode(const Q
             } else if (!nodeName.compare("neq")) {
                 if (childNodesCount != 3)
                     mErrorMessage = QObject::tr("An 'neq' element must have two operands.");
-                else if (mAssignmentDone)
+                else
                     return processOperatorNode(" <> ", childNodes.at(1), childNodes.at(2), pHasError);
             } else if (!nodeName.compare("gt")) {
                 if (childNodesCount != 3)
                     mErrorMessage = QObject::tr("A 'gt' element must have two operands.");
-                else if (mAssignmentDone)
+                else
                     return processOperatorNode(" > ", childNodes.at(1), childNodes.at(2), pHasError);
             } else if (!nodeName.compare("lt")) {
                 if (childNodesCount != 3)
-                    mErrorMessage = QObject::tr("A 'lt' element must have two operands.");
-                else if (mAssignmentDone)
+                    mErrorMessage = QObject::tr("An 'lt' element must have two operands.");
+                else
                     return processOperatorNode(" < ", childNodes.at(1), childNodes.at(2), pHasError);
             } else if (!nodeName.compare("geq")) {
                 if (childNodesCount != 3)
                     mErrorMessage = QObject::tr("A 'geq' element must have two operands.");
-                else if (mAssignmentDone)
+                else
                     return processOperatorNode(" >= ", childNodes.at(1), childNodes.at(2), pHasError);
             } else if (!nodeName.compare("leq")) {
                 if (childNodesCount != 3)
-                    mErrorMessage = QObject::tr("A 'leq' element must have two operands.");
-                else if (mAssignmentDone)
+                    mErrorMessage = QObject::tr("An 'leq' element must have two operands.");
+                else
                     return processOperatorNode(" <= ", childNodes.at(1), childNodes.at(2), pHasError);
 
+            // Arythmetic operators
+
+            } else if (!nodeName.compare("plus")) {
+                if (childNodesCount != 3)
+                    mErrorMessage = QObject::tr("A 'plus' element must have two operands.");
+                else
+                    return processOperatorNode("+", childNodes.at(1), childNodes.at(2), pHasError);
+            } else if (!nodeName.compare("minus")) {
+                if (childNodesCount != 3)
+                    mErrorMessage = QObject::tr("A 'minus' element must have two operands.");
+                else
+                    return processOperatorNode("-", childNodes.at(1), childNodes.at(2), pHasError);
+            } else if (!nodeName.compare("times")) {
+                if (childNodesCount != 3)
+                    mErrorMessage = QObject::tr("A 'times' element must have two operands.");
+                else
+                    return processOperatorNode("*", childNodes.at(1), childNodes.at(2), pHasError);
+            } else if (!nodeName.compare("divide")) {
+                if (childNodesCount != 3)
+                    mErrorMessage = QObject::tr("A 'divide' element must have two operands.");
+                else
+                    return processOperatorNode("/", childNodes.at(1), childNodes.at(2), pHasError);
+            } else if (!nodeName.compare("power")) {
+                if (childNodesCount != 3)
+                    mErrorMessage = QObject::tr("A 'power' element must have two operands.");
+                else
+                    return processPowerNode(childNodes.at(1), childNodes.at(2), pHasError);
             // Unsupported node
 
             } else {
@@ -790,6 +818,39 @@ QString PrettyCellMLViewCellmlToPrettyCellmlConverter::processOperatorNode(const
             return QString();
         else
             return operand1+pOperator+operand2;
+    }
+}
+
+//==============================================================================
+
+QString PrettyCellMLViewCellmlToPrettyCellmlConverter::processPowerNode(const QDomNode &pDomNodeA,
+                                                                        const QDomNode &pDomNodeB,
+                                                                        bool &pHasError)
+{
+    QString a = processMathmlNode(pDomNodeA, pHasError);
+
+    if (pHasError) {
+        return QString();
+    } else {
+        QString b = processMathmlNode(pDomNodeB, pHasError);
+
+        if (pHasError) {
+            return QString();
+        } else {
+            // Determine the value of b, which we assume to be a number (i.e.
+            // something like "3{dimensionless}")
+            // Note: if b is anything but a number, then n will be equal to
+            //       zero, which is what we want in that case...
+
+            double n = QString(b).replace(QRegularExpression("{[^}]*}$"), QString()).toDouble();
+
+            if (n == 2.0)
+                return "sqr("+a+")";
+            else if (n == 0.5)
+                return "sqrt("+a+")";
+            else
+                return "pow("+a+", "+b+")";
+        }
     }
 }
 
