@@ -660,7 +660,7 @@ QString PrettyCellMLViewCellmlToPrettyCellmlConverter::processMathmlNode(const Q
 
             if (!nodeName.compare("eq")) {
                 if (childNodesCount != 3) {
-                    mErrorMessage = QObject::tr("An 'eq' element must have two operands.");
+                    mErrorMessage = QObject::tr("An '%1' element must have two operands.").arg(nodeName);
                 } else if (mAssignmentDone) {
                     return processOperatorNode(" == ", childNodes.at(1), childNodes.at(2), pHasError);
                 } else {
@@ -670,27 +670,27 @@ QString PrettyCellMLViewCellmlToPrettyCellmlConverter::processMathmlNode(const Q
                 }
             } else if (!nodeName.compare("neq")) {
                 if (childNodesCount != 3)
-                    mErrorMessage = QObject::tr("An 'neq' element must have two operands.");
+                    mErrorMessage = QObject::tr("An '%1' element must have two operands.").arg(nodeName);
                 else
                     return processOperatorNode(" <> ", childNodes.at(1), childNodes.at(2), pHasError);
             } else if (!nodeName.compare("gt")) {
                 if (childNodesCount != 3)
-                    mErrorMessage = QObject::tr("A 'gt' element must have two operands.");
+                    mErrorMessage = QObject::tr("A '%1' element must have two operands.").arg(nodeName);
                 else
                     return processOperatorNode(" > ", childNodes.at(1), childNodes.at(2), pHasError);
             } else if (!nodeName.compare("lt")) {
                 if (childNodesCount != 3)
-                    mErrorMessage = QObject::tr("An 'lt' element must have two operands.");
+                    mErrorMessage = QObject::tr("An '%1' element must have two operands.").arg(nodeName);
                 else
                     return processOperatorNode(" < ", childNodes.at(1), childNodes.at(2), pHasError);
             } else if (!nodeName.compare("geq")) {
                 if (childNodesCount != 3)
-                    mErrorMessage = QObject::tr("A 'geq' element must have two operands.");
+                    mErrorMessage = QObject::tr("A '%1' element must have two operands.").arg(nodeName);
                 else
                     return processOperatorNode(" >= ", childNodes.at(1), childNodes.at(2), pHasError);
             } else if (!nodeName.compare("leq")) {
                 if (childNodesCount != 3)
-                    mErrorMessage = QObject::tr("An 'leq' element must have two operands.");
+                    mErrorMessage = QObject::tr("An '%1' element must have two operands.").arg(nodeName);
                 else
                     return processOperatorNode(" <= ", childNodes.at(1), childNodes.at(2), pHasError);
 
@@ -698,27 +698,27 @@ QString PrettyCellMLViewCellmlToPrettyCellmlConverter::processMathmlNode(const Q
 
             } else if (!nodeName.compare("plus")) {
                 if (childNodesCount != 3)
-                    mErrorMessage = QObject::tr("A 'plus' element must have two operands.");
+                    mErrorMessage = QObject::tr("A '%1' element must have two operands.").arg(nodeName);
                 else
                     return processOperatorNode("+", childNodes.at(1), childNodes.at(2), pHasError);
             } else if (!nodeName.compare("minus")) {
                 if (childNodesCount != 3)
-                    mErrorMessage = QObject::tr("A 'minus' element must have two operands.");
+                    mErrorMessage = QObject::tr("A '%1' element must have two operands.").arg(nodeName);
                 else
                     return processOperatorNode("-", childNodes.at(1), childNodes.at(2), pHasError);
             } else if (!nodeName.compare("times")) {
                 if (childNodesCount != 3)
-                    mErrorMessage = QObject::tr("A 'times' element must have two operands.");
+                    mErrorMessage = QObject::tr("A '%1' element must have two operands.").arg(nodeName);
                 else
                     return processOperatorNode("*", childNodes.at(1), childNodes.at(2), pHasError);
             } else if (!nodeName.compare("divide")) {
                 if (childNodesCount != 3)
-                    mErrorMessage = QObject::tr("A 'divide' element must have two operands.");
+                    mErrorMessage = QObject::tr("A '%1' element must have two operands.").arg(nodeName);
                 else
                     return processOperatorNode("/", childNodes.at(1), childNodes.at(2), pHasError);
             } else if (!nodeName.compare("power")) {
                 if (childNodesCount != 3)
-                    mErrorMessage = QObject::tr("A 'power' element must have two operands.");
+                    mErrorMessage = QObject::tr("A '%1' element must have two operands.").arg(nodeName);
                 else
                     return processPowerNode(childNodes.at(1), childNodes.at(2), pHasError);
             // Unsupported node
@@ -743,7 +743,7 @@ qDebug("'otherwise' has yet to be implemented...");
             // Either no type (i.e. real type by default) or real type
 
             if (childNodesCount != 1)
-                mErrorMessage = QObject::tr("A 'cn' element must have a value.");
+                mErrorMessage = QObject::tr("A '%1' element must have a value.").arg(nodeName);
             else
                 return childNodes.at(0).nodeValue().trimmed()+"{"+domNode.attributes().namedItem("cellml:units").nodeValue().trimmed()+"}";
         } else if (!type.compare("e-notation")) {
@@ -783,7 +783,7 @@ qDebug("'otherwise' has yet to be implemented...");
         }
     } else if (!nodeName.compare("ci")) {
         if (childNodesCount != 1)
-            mErrorMessage = QObject::tr("A 'ci' element must have a value.");
+            mErrorMessage = QObject::tr("A '%1' element must have a value.").arg(nodeName);
         else
             return childNodes.at(0).nodeValue().trimmed();
 
