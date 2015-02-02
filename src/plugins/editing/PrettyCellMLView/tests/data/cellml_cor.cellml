@@ -283,6 +283,32 @@
                     <cn cellml:units="dimensionless">0.5</cn>
                 </apply>
             </apply>
+            <apply>
+                <eq/>
+                <ci>a</ci>
+                <apply>
+                    <root/>
+                    <ci>b</ci>
+                </apply>
+            </apply>
+            <apply>
+                <eq/>
+                <ci>a</ci>
+                <apply>
+                    <root/>
+                    <ci>b</ci>
+                    <cn cellml:units="dimensionless">2</cn>
+                </apply>
+            </apply>
+            <apply>
+                <eq/>
+                <ci>a</ci>
+                <apply>
+                    <root/>
+                    <ci>b</ci>
+                    <ci>c</ci>
+                </apply>
+            </apply>
         </math>
     </component>
     <group>

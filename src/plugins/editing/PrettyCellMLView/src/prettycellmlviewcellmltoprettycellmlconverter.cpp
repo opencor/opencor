@@ -721,6 +721,11 @@ QString PrettyCellMLViewCellmlToPrettyCellmlConverter::processMathmlNode(const Q
                     mErrorMessage = QObject::tr("A '%1' element must have two operands.").arg(nodeName);
                 else
                     return processPowerNode(childNodes.item(1), childNodes.item(2), pHasError);
+            } else if (!nodeName.compare("root")) {
+                if ((childNodesCount != 2) && (childNodesCount != 3))
+                    mErrorMessage = QObject::tr("A '%1' element must have either one or two operands.").arg(nodeName);
+                else
+                    return processRootNode(childNodes.item(1), childNodes.item(2), pHasError);
             // Unsupported node
 
             } else {
@@ -850,6 +855,41 @@ QString PrettyCellMLViewCellmlToPrettyCellmlConverter::processPowerNode(const QD
                 return "sqrt("+a+")";
             else
                 return "pow("+a+", "+b+")";
+        }
+    }
+}
+
+//==============================================================================
+
+QString PrettyCellMLViewCellmlToPrettyCellmlConverter::processRootNode(const QDomNode &pDomNodeA,
+                                                                       const QDomNode &pDomNodeB,
+                                                                       bool &pHasError)
+{
+    QString a = processMathmlNode(pDomNodeA, pHasError);
+
+    if (pHasError) {
+        return QString();
+    } else {
+        if (pDomNodeB.isNull()) {
+            return "sqrt("+a+")";
+        } else {
+            QString b = processMathmlNode(pDomNodeB, pHasError);
+
+            if (pHasError) {
+                return QString();
+            } else {
+                // Determine the value of b, which we assume to be a number
+                // (i.e. something like "3{dimensionless}")
+                // Note: if b isn't a number, then n will be equal to zero,
+                //       which is what we want in that case...
+
+                double n = QString(b).replace(QRegularExpression("{[^}]*}$"), QString()).toDouble();
+
+                if (n == 2.0)
+                    return "sqrt("+a+")";
+                else
+                    return "root("+a+", "+b+")";
+            }
         }
     }
 }

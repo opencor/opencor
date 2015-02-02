@@ -162,6 +162,9 @@ def model cellml_1_0 as
         a = pow(b, 3{dimensionless});
         a = sqr(b);
         a = sqrt(b);
+        a = sqrt(b);
+        a = sqrt(b);
+        a = root(b, c);
     enddef;
 
     def group as containment for

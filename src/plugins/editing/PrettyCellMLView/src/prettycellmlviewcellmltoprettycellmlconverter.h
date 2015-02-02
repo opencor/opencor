@@ -123,6 +123,8 @@ private:
                                 const QDomNode &pDomNode2, bool &pHasError);
     QString processPowerNode(const QDomNode &pDomNodeA,
                              const QDomNode &pDomNodeB, bool &pHasError);
+    QString processRootNode(const QDomNode &pDomNodeA,
+                            const QDomNode &pDomNodeB, bool &pHasError);
     bool processReactionNode(const QDomNode &pDomNode);
     bool processGroupNode(const QDomNode &pDomNode);
     bool processRelationshipRefNode(const QDomNode &pDomNode,
