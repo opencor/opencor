@@ -872,12 +872,10 @@ bool PrettyCellMLViewCellmlToPrettyCellmlConverter::processRelationshipRefNode(c
         return false;
     }
 
-    if (pRelationshipRef.size())
-        pRelationshipRef += " and ";
-
-    pRelationshipRef += QString("%1%2%3").arg(relationship)
-                                         .arg(cmetaId(pDomNode))
-                                         .arg(name.size()?" "+name:QString());
+    pRelationshipRef += QString("%1%2%3%4").arg(pRelationshipRef.size()?" and ":QString())
+                                           .arg(relationship)
+                                           .arg(cmetaId(pDomNode))
+                                           .arg(name.size()?" "+name:QString());
 
     return true;
 }
