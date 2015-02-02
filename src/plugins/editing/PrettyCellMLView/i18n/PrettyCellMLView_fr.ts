@@ -154,6 +154,10 @@
         <translation>Un élément &apos;%1&apos; doit avoir un élément enfant.</translation>
     </message>
     <message>
+        <source>A &apos;%1&apos; function must have one argument.</source>
+        <translation>Une fonction &apos;%1&apos; doit avoir un argument.</translation>
+    </message>
+    <message>
         <source>An &apos;%1&apos; function must have one argument.</source>
         <translation>Une fonction &apos;%1&apos; doit avoir un argument.</translation>
     </message>
