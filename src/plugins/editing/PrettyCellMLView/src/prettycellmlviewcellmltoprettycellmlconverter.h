@@ -98,6 +98,8 @@ private:
 
     bool mAssignmentDone;
 
+    QMap<QString, QString> mMappings;
+
     void indent();
     void unindent();
 
