@@ -146,6 +146,11 @@ def model cellml_1_0 as
 
         a = b;
         a = b == c;
+        a = b <> c;
+        a = b > c;
+        a = b < c;
+        a = b >= c;
+        a = b <= c;
         c = 3{dimensionless};
         d = 5{};
         e = 12.3e5{dimensionless};

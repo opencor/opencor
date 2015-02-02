@@ -658,9 +658,6 @@ QString PrettyCellMLViewCellmlToPrettyCellmlConverter::processMathmlNode(const Q
             // Relational operators
 
             if (!nodeName.compare("eq")) {
-                // Make sure that we have two operands, i.e. 3 child nodes
-                // altogether
-
                 if (childNodesCount != 3) {
                     mErrorMessage = QObject::tr("An 'eq' element must have two operands.");
                 } else if (mAssignmentDone) {
@@ -670,6 +667,31 @@ QString PrettyCellMLViewCellmlToPrettyCellmlConverter::processMathmlNode(const Q
 
                     return processOperatorNode(" = ", childNodes.at(1), childNodes.at(2), pHasError);
                 }
+            } else if (!nodeName.compare("neq")) {
+                if (childNodesCount != 3)
+                    mErrorMessage = QObject::tr("An 'neq' element must have two operands.");
+                else if (mAssignmentDone)
+                    return processOperatorNode(" <> ", childNodes.at(1), childNodes.at(2), pHasError);
+            } else if (!nodeName.compare("gt")) {
+                if (childNodesCount != 3)
+                    mErrorMessage = QObject::tr("A 'gt' element must have two operands.");
+                else if (mAssignmentDone)
+                    return processOperatorNode(" > ", childNodes.at(1), childNodes.at(2), pHasError);
+            } else if (!nodeName.compare("lt")) {
+                if (childNodesCount != 3)
+                    mErrorMessage = QObject::tr("A 'lt' element must have two operands.");
+                else if (mAssignmentDone)
+                    return processOperatorNode(" < ", childNodes.at(1), childNodes.at(2), pHasError);
+            } else if (!nodeName.compare("geq")) {
+                if (childNodesCount != 3)
+                    mErrorMessage = QObject::tr("A 'geq' element must have two operands.");
+                else if (mAssignmentDone)
+                    return processOperatorNode(" >= ", childNodes.at(1), childNodes.at(2), pHasError);
+            } else if (!nodeName.compare("leq")) {
+                if (childNodesCount != 3)
+                    mErrorMessage = QObject::tr("A 'leq' element must have two operands.");
+                else if (mAssignmentDone)
+                    return processOperatorNode(" <= ", childNodes.at(1), childNodes.at(2), pHasError);
 
             // Unsupported node
 
@@ -677,6 +699,12 @@ QString PrettyCellMLViewCellmlToPrettyCellmlConverter::processMathmlNode(const Q
                 processUnsupportedNode(domNode);
             }
         }
+    } else if (!nodeName.compare("piecewise")) {
+qDebug("'piecewise' has yet to be implemented...");
+    } else if (!nodeName.compare("piece")) {
+qDebug("'piece' has yet to be implemented...");
+    } else if (!nodeName.compare("otherwise")) {
+qDebug("'otherwise' has yet to be implemented...");
 
     // Token elements
 
