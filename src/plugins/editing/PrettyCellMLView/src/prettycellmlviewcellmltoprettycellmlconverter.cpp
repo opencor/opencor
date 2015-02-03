@@ -761,7 +761,15 @@ QString PrettyCellMLViewCellmlToPrettyCellmlConverter::processMathmlNode(const Q
                 if (childNodesCount != 2)
                     mErrorMessage = QObject::tr("A '%1' operator must have one operand.").arg(nodeName);
                 else
-                    return processNotNode(childNodes.item(1), pHasError);
+                    return processNotNode(pDomNode, pHasError);
+
+            // Calculus elements
+
+            } else if (!nodeName.compare("diff")) {
+                if (childNodesCount != 3)
+                    mErrorMessage = QObject::tr("A '%1' operator must have two qualifiers.").arg(nodeName);
+                else
+                    return processDiffNode(pDomNode, pHasError);
 
             // Unsupported node
 
@@ -825,11 +833,16 @@ QString PrettyCellMLViewCellmlToPrettyCellmlConverter::processMathmlNode(const Q
 
     // Qualifier elements
 
-    } else if (!nodeName.compare("logbase")) {
+    } else if (!nodeName.compare("degree") || !nodeName.compare("logbase")) {
         if (childNodesCount != 1)
             mErrorMessage = QObject::tr("A '%1' element must have one child element.").arg(nodeName);
         else
             return processMathmlNode(childNodes.item(0), pHasError);
+    } else if (!nodeName.compare("bvar")) {
+        if ((childNodesCount != 1) && (childNodesCount != 2))
+            mErrorMessage = QObject::tr("A '%1' element must have one or two child elements.").arg(nodeName);
+        else
+            return processBvarNode(pDomNode, pHasError);
 
     // Unsupported node
 
@@ -939,32 +952,48 @@ QString PrettyCellMLViewCellmlToPrettyCellmlConverter::processPowerNode(const QD
 QString PrettyCellMLViewCellmlToPrettyCellmlConverter::processRootNode(const QDomNode &pDomNode,
                                                                        bool &pHasError)
 {
-    // Process the root node
+    // Process the root node, based on its number of arguments
 
-    QString a = processMathmlNode(pDomNode.childNodes().at(1), pHasError);
+    if (pDomNode.childNodes().count() == 2) {
+        QString a = processMathmlNode(pDomNode.childNodes().at(1), pHasError);
 
-    if (pHasError) {
-        return QString();
-    } else {
-        if (pDomNode.childNodes().count() == 2) {
+        if (pHasError)
+            return QString();
+        else
             return "sqrt("+a+")";
+    } else {
+        QDomNode domNode = pDomNode.childNodes().at(1);
+
+        if (domNode.nodeName().compare("degree")){
+            mErrorMessage = QObject::tr("The first sibling of a 'root' element with two siblings must be a 'degree' element.");
+            mErrorLine = domNode.lineNumber();
+
+            pHasError = true;
+
+            return QString();
         } else {
-            QString b = processMathmlNode(pDomNode.childNodes().at(2), pHasError);
+            QString b = processMathmlNode(domNode, pHasError);
 
             if (pHasError) {
                 return QString();
             } else {
-                // Determine the value of b, which we assume to be a number
-                // (i.e. something like "3{dimensionless}")
-                // Note: if b isn't a number, then n will be equal to zero,
-                //       which is what we want in that case...
+                QString a = processMathmlNode(pDomNode.childNodes().at(2), pHasError);
 
-                double n = QString(b).replace(QRegularExpression("{[^}]*}$"), QString()).toDouble();
+                if (pHasError) {
+                    return QString();
+                } else {
+                    // Determine the value of b, which we assume to be a number
+                    // (i.e. something like "3{dimensionless}")
+                    // Note: if b isn't a number, then n will be equal to zero,
+                    //       which is what we want in that case...
 
-                if (n == 2.0)
-                    return "sqrt("+a+")";
-                else
-                    return "root("+a+", "+b+")";
+                    double n = QString(b).replace(QRegularExpression("{[^}]*}$"), QString()).toDouble();
+
+                    if (n == 2.0)
+                        return "sqrt("+a+")";
+                    else
+                        return "root("+a+", "+b+")";
+                }
             }
         }
     }
@@ -1007,12 +1036,80 @@ QString PrettyCellMLViewCellmlToPrettyCellmlConverter::processNotNode(const QDom
 
     // Process the not node
 
-    QString operand = processMathmlNode(pDomNode, pHasError);
+    QString operand = processMathmlNode(pDomNode.childNodes().at(1), pHasError);
 
     if (pHasError)
         return QString();
     else
         return "not("+operand+")";
+}
+
+//==============================================================================
+
+QString PrettyCellMLViewCellmlToPrettyCellmlConverter::processDiffNode(const QDomNode &pDomNode,
+                                                                       bool &pHasError)
+{
+    // Process the diff node
+
+    QString f = processMathmlNode(pDomNode.childNodes().at(2), pHasError);
+
+    if (pHasError) {
+        return QString();
+    } else {
+        QDomNode domNode = pDomNode.childNodes().at(1);
+
+        if (domNode.nodeName().compare("bvar")){
+            mErrorMessage = QObject::tr("The first qualifier of a 'diff' operator must be a 'bvar' element.");
+            mErrorLine = domNode.lineNumber();
+
+            pHasError = true;
+
+            return QString();
+        } else {
+            QString x = processMathmlNode(pDomNode.childNodes().at(1), pHasError);
+
+            if (pHasError)
+                return QString();
+            else
+                return "ode("+f+", "+x+")";
+        }
+    }
+}
+
+//==============================================================================
+
+QString PrettyCellMLViewCellmlToPrettyCellmlConverter::processBvarNode(const QDomNode &pDomNode,
+                                                                       bool &pHasError)
+{
+    // Process the bvar node, based on its number of child elements
+
+    if (pDomNode.childNodes().count() == 1) {
+        return processMathmlNode(pDomNode.childNodes().at(0), pHasError);
+    } else {
+        QDomNode domNode = pDomNode.childNodes().at(0);
+
+        if (domNode.nodeName().compare("degree")){
+            mErrorMessage = QObject::tr("The first child element of a 'bvar' element with two child elements must be a 'degree' element.");
+            mErrorLine = domNode.lineNumber();
+
+            pHasError = true;
+
+            return QString();
+        } else {
+            QString b = processMathmlNode(domNode, pHasError);
+
+            if (pHasError) {
+                return QString();
+            } else {
+                QString a = processMathmlNode(pDomNode.childNodes().at(1), pHasError);
+
+                if (pHasError)
+                    return QString();
+                else
+                    return a+", "+b;
+            }
+        }
+    }
 }
 
 //==============================================================================

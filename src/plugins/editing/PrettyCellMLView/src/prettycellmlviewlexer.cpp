@@ -45,7 +45,7 @@ PrettyCellmlViewLexer::PrettyCellmlViewLexer(QObject *pParent) :
                              // General keywords
 
                              "and|as|between|comp|def|endcomp|enddef|for|group|"
-                             "import|incl|map|model|unit|using|var|vars|"
+                             "import|incl|map|model|ode|unit|using|var|vars|"
 
                              // MathML keyworkds
 

@@ -326,24 +326,6 @@
                 <apply>
                     <power/>
                     <ci>b</ci>
-                    <cn cellml:units="dimensionless">3</cn>
-                </apply>
-            </apply>
-            <apply>
-                <eq/>
-                <ci>a</ci>
-                <apply>
-                    <power/>
-                    <ci>b</ci>
-                    <cn cellml:units="dimensionless">2</cn>
-                </apply>
-            </apply>
-            <apply>
-                <eq/>
-                <ci>a</ci>
-                <apply>
-                    <power/>
-                    <ci>b</ci>
                     <cn cellml:units="dimensionless">0.5</cn>
                 </apply>
             </apply>
@@ -351,15 +333,7 @@
                 <eq/>
                 <ci>a</ci>
                 <apply>
-                    <root/>
-                    <ci>b</ci>
-                </apply>
-            </apply>
-            <apply>
-                <eq/>
-                <ci>a</ci>
-                <apply>
-                    <root/>
+                    <power/>
                     <ci>b</ci>
                     <cn cellml:units="dimensionless">2</cn>
                 </apply>
@@ -368,9 +342,50 @@
                 <eq/>
                 <ci>a</ci>
                 <apply>
+                    <power/>
+                    <ci>b</ci>
+                    <cn cellml:units="dimensionless">3</cn>
+                </apply>
+            </apply>
+            <apply>
+                <eq/>
+                <ci>a</ci>
+                <apply>
                     <root/>
                     <ci>b</ci>
-                    <ci>c</ci>
+                </apply>
+            </apply>
+            <apply>
+                <eq/>
+                <ci>a</ci>
+                <apply>
+                    <root/>
+                    <degree>
+                        <cn cellml:units="dimensionless">2</cn>
+                    </degree>
+                    <ci>b</ci>
+                </apply>
+            </apply>
+            <apply>
+                <eq/>
+                <ci>a</ci>
+                <apply>
+                    <root/>
+                    <degree>
+                        <cn cellml:units="dimensionless">3</cn>
+                    </degree>
+                    <ci>b</ci>
+                </apply>
+            </apply>
+            <apply>
+                <eq/>
+                <ci>a</ci>
+                <apply>
+                    <root/>
+                    <degree>
+                        <ci>c</ci>
+                    </degree>
+                    <ci>b</ci>
                 </apply>
             </apply>
             <apply>
@@ -521,6 +536,31 @@
                         <ci>b</ci>
                         <ci>c</ci>
                     </apply>
+                </apply>
+            </apply>
+            <apply>
+                <eq/>
+                <ci>a</ci>
+                <apply>
+                    <diff/>
+                    <bvar>
+                        <ci>t</ci>
+                    </bvar>
+                    <ci>f</ci>
+                </apply>
+            </apply>
+            <apply>
+                <eq/>
+                <ci>a</ci>
+                <apply>
+                    <diff/>
+                    <bvar>
+                        <degree>
+                            <cn cellml:units="dimensionless">2</cn>
+                        </degree>
+                        <ci>t</ci>
+                    </bvar>
+                    <ci>f</ci>
                 </apply>
             </apply>
         </math>

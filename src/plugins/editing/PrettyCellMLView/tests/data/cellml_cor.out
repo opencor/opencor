@@ -165,11 +165,12 @@ def model cellml_1_0 as
         a = b/c;
         a = b/c/d/e/f;
         a = pow(b, c);
-        a = pow(b, 3{dimensionless});
+        a = sqrt(b);
         a = sqr(b);
+        a = pow(b, 3{dimensionless});
         a = sqrt(b);
         a = sqrt(b);
-        a = sqrt(b);
+        a = root(b, 3{dimensionless});
         a = root(b, c);
         a = abs(b);
         a = exp(b);
@@ -187,6 +188,8 @@ def model cellml_1_0 as
         a = b xor c xor d xor e xor f;
         a = not(b);
         a = not(b or c);
+        a = ode(f, t);
+        a = ode(f, t, 2{dimensionless});
     enddef;
 
     def group as containment for
