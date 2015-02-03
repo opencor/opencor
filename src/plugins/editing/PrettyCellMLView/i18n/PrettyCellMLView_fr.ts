@@ -181,5 +181,21 @@
         <source>The first child element of a &apos;%1&apos; element with two child elements must be a &apos;%2&apos; element.</source>
         <translation>Le premier élément enfant d&apos;un élément &apos;%1&apos; avec deux éléments enfants doit être un élément &apos;%2&apos;.</translation>
     </message>
+    <message>
+        <source>A &apos;%1&apos; element cannot have a child element.</source>
+        <translation>Un élément &apos;%1&apos; ne peut pas avoir d&apos;élément enfant.</translation>
+    </message>
+    <message>
+        <source>An &apos;%1&apos; element cannot have a child element.</source>
+        <translation>Un élément &apos;%1&apos; ne peut pas avoir d&apos;élément enfant.</translation>
+    </message>
+    <message>
+        <source>A &apos;%1&apos; element cannot have child elements.</source>
+        <translation>Un élément &apos;%1&apos; ne peut pas avoir d&apos;éléments enfants.</translation>
+    </message>
+    <message>
+        <source>An &apos;%1&apos; element cannot have child elements.</source>
+        <translation>Un élément &apos;%1&apos; ne peut pas avoir d&apos;éléments enfants.</translation>
+    </message>
 </context>
 </TS>

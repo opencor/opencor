@@ -145,9 +145,9 @@ def model cellml_1_0 as
         var variable5: unit5 {pub: none, priv: none};
 
         a = b;
-        c = 3{dimensionless};
-        d = 5{};
-        e = 12.3e5{dimensionless};
+        a = 3{dimensionless};
+        a = 5{};
+        a = 12.3e5{dimensionless};
         a = b == c;
         a = b <> c;
         a = b > c;
@@ -190,6 +190,12 @@ def model cellml_1_0 as
         a = not(b or c);
         a = ode(f, t);
         a = ode(f, t, 2{dimensionless});
+        a = true;
+        a = false;
+        a = nan;
+        a = pi;
+        a = inf;
+        a = e;
     enddef;
 
     def group as containment for

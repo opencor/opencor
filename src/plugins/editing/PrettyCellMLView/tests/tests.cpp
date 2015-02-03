@@ -306,6 +306,18 @@ void Tests::failingTests()
     QCOMPARE(converter.errorMessage(),
              QString("The first child element of a 'bvar' element with two child elements must be a 'degree' element."));
 
+    // MathML constants
+
+    QVERIFY(!converter.execute(OpenCOR::fileName("src/plugins/editing/PrettyCellMLView/tests/data/mathml_constant_1.cellml")));
+    QCOMPARE(converter.errorLine(), 5);
+    QCOMPARE(converter.errorMessage(),
+             QString("A 'pi' element cannot have a child element."));
+
+    QVERIFY(!converter.execute(OpenCOR::fileName("src/plugins/editing/PrettyCellMLView/tests/data/mathml_constant_2.cellml")));
+    QCOMPARE(converter.errorLine(), 5);
+    QCOMPARE(converter.errorMessage(),
+             QString("A 'pi' element cannot have child elements."));
+
     // Unsupported element
 
     QVERIFY(!converter.execute(OpenCOR::fileName("src/plugins/editing/PrettyCellMLView/tests/data/cellml_unsupported_element.cellml")));

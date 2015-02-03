@@ -70,6 +70,15 @@ PrettyCellMLViewCellmlToPrettyCellmlConverter::PrettyCellMLViewCellmlToPrettyCel
     mMappings.insert("and", " and ");
     mMappings.insert("or", " or ");
     mMappings.insert("xor", " xor ");
+
+    // Constants
+
+    mMappings.insert("true", "true");
+    mMappings.insert("false", "false");
+    mMappings.insert("notanumber", "nan");
+    mMappings.insert("pi", "pi");
+    mMappings.insert("infinity", "inf");
+    mMappings.insert("exponentiale", "e");
 }
 
 //==============================================================================
@@ -843,6 +852,24 @@ QString PrettyCellMLViewCellmlToPrettyCellmlConverter::processMathmlNode(const Q
             mErrorMessage = QObject::tr("A '%1' element must have one or two child elements.").arg(nodeName);
         else
             return processBvarNode(pDomNode, pHasError);
+
+    // Constants
+
+    } else if (   !nodeName.compare("true") || !nodeName.compare("false")
+               || !nodeName.compare("notanumber") || !nodeName.compare("pi")) {
+        if (childNodesCount == 1)
+            mErrorMessage = QObject::tr("A '%1' element cannot have a child element.").arg(nodeName);
+        else if (childNodesCount)
+            mErrorMessage = QObject::tr("A '%1' element cannot have child elements.").arg(nodeName);
+        else
+            return mMappings.value(nodeName);
+    } else if (!nodeName.compare("infinity") || !nodeName.compare("exponentiale")) {
+        if (childNodesCount == 1)
+            mErrorMessage = QObject::tr("An '%1' element cannot have a child element.").arg(nodeName);
+        else if (childNodesCount)
+            mErrorMessage = QObject::tr("An '%1' element cannot have child elements.").arg(nodeName);
+        else
+            return mMappings.value(nodeName);
 
     // Unsupported node
 

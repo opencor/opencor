@@ -144,17 +144,17 @@
             </apply>
             <apply>
                 <eq/>
-                <ci>c</ci>
+                <ci>a</ci>
                 <cn cellml:units="dimensionless">3</cn>
             </apply>
             <apply>
                 <eq/>
-                <ci>d</ci>
+                <ci>a</ci>
                 <cn>5</cn>
             </apply>
             <apply>
                 <eq/>
-                <ci>e</ci>
+                <ci>a</ci>
                 <cn cellml:units="dimensionless" type="e-notation">12.3<sep/>5</cn>
             </apply>
             <apply>
@@ -548,6 +548,36 @@
                     </bvar>
                     <ci>f</ci>
                 </apply>
+            </apply>
+            <apply>
+                <eq/>
+                <ci>a</ci>
+                <true/>
+            </apply>
+            <apply>
+                <eq/>
+                <ci>a</ci>
+                <false/>
+            </apply>
+            <apply>
+                <eq/>
+                <ci>a</ci>
+                <notanumber/>
+            </apply>
+            <apply>
+                <eq/>
+                <ci>a</ci>
+                <pi/>
+            </apply>
+            <apply>
+                <eq/>
+                <ci>a</ci>
+                <infinity/>
+            </apply>
+            <apply>
+                <eq/>
+                <ci>a</ci>
+                <exponentiale/>
             </apply>
         </math>
     </component>

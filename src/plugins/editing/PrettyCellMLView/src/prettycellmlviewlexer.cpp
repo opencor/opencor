@@ -50,7 +50,11 @@ PrettyCellmlViewLexer::PrettyCellmlViewLexer(QObject *pParent) :
                              // MathML keyworkds
 
                              "abs|and|ceil|exp|fact|floor|ln|log|not|or|pow|"
-                             "root|sqr|sqrt|xor"
+                             "root|sqr|sqrt|xor|"
+
+                             // MathML constants
+
+                             "true|false|nan|pi|inf|e"
                          ")\\b");
 
     mCellmlKeywordsRegEx = QRegularExpression(
