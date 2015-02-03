@@ -217,7 +217,35 @@
                 <apply>
                     <plus/>
                     <ci>b</ci>
+                </apply>
+            </apply>
+            <apply>
+                <eq/>
+                <ci>a</ci>
+                <apply>
+                    <plus/>
+                    <ci>b</ci>
                     <ci>c</ci>
+                </apply>
+            </apply>
+            <apply>
+                <eq/>
+                <ci>a</ci>
+                <apply>
+                    <plus/>
+                    <ci>b</ci>
+                    <ci>c</ci>
+                    <ci>d</ci>
+                    <ci>e</ci>
+                    <ci>f</ci>
+                </apply>
+            </apply>
+            <apply>
+                <eq/>
+                <ci>a</ci>
+                <apply>
+                    <minus/>
+                    <ci>b</ci>
                 </apply>
             </apply>
             <apply>
@@ -233,7 +261,40 @@
                 <eq/>
                 <ci>a</ci>
                 <apply>
+                    <minus/>
+                    <ci>b</ci>
+                    <ci>c</ci>
+                    <ci>d</ci>
+                    <ci>e</ci>
+                    <ci>f</ci>
+                </apply>
+            </apply>
+            <apply>
+                <eq/>
+                <ci>a</ci>
+                <apply>
                     <times/>
+                    <ci>b</ci>
+                    <ci>c</ci>
+                </apply>
+            </apply>
+            <apply>
+                <eq/>
+                <ci>a</ci>
+                <apply>
+                    <times/>
+                    <ci>b</ci>
+                    <ci>c</ci>
+                    <ci>d</ci>
+                    <ci>e</ci>
+                    <ci>f</ci>
+                </apply>
+            </apply>
+            <apply>
+                <eq/>
+                <ci>a</ci>
+                <apply>
+                    <divide/>
                     <ci>b</ci>
                     <ci>c</ci>
                 </apply>
@@ -245,6 +306,9 @@
                     <divide/>
                     <ci>b</ci>
                     <ci>c</ci>
+                    <ci>d</ci>
+                    <ci>e</ci>
+                    <ci>f</ci>
                 </apply>
             </apply>
             <apply>
@@ -389,7 +453,40 @@
                 <eq/>
                 <ci>a</ci>
                 <apply>
+                    <and/>
+                    <ci>b</ci>
+                    <ci>c</ci>
+                    <ci>d</ci>
+                    <ci>e</ci>
+                    <ci>f</ci>
+                </apply>
+            </apply>
+            <apply>
+                <eq/>
+                <ci>a</ci>
+                <apply>
                     <or/>
+                    <ci>b</ci>
+                    <ci>c</ci>
+                </apply>
+            </apply>
+            <apply>
+                <eq/>
+                <ci>a</ci>
+                <apply>
+                    <or/>
+                    <ci>b</ci>
+                    <ci>c</ci>
+                    <ci>d</ci>
+                    <ci>e</ci>
+                    <ci>f</ci>
+                </apply>
+            </apply>
+            <apply>
+                <eq/>
+                <ci>a</ci>
+                <apply>
+                    <xor/>
                     <ci>b</ci>
                     <ci>c</ci>
                 </apply>
@@ -401,6 +498,9 @@
                     <xor/>
                     <ci>b</ci>
                     <ci>c</ci>
+                    <ci>d</ci>
+                    <ci>e</ci>
+                    <ci>f</ci>
                 </apply>
             </apply>
             <apply>

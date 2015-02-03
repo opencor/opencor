@@ -154,10 +154,16 @@ def model cellml_1_0 as
         a = b < c;
         a = b >= c;
         a = b <= c;
+        a = b;
         a = b+c;
+        a = b+c+d+e+f;
+        a = -b;
         a = b-c;
+        a = b-c-d-e-f;
         a = b*c;
+        a = b*c*d*e*f;
         a = b/c;
+        a = b/c/d/e/f;
         a = pow(b, c);
         a = pow(b, 3{dimensionless});
         a = sqr(b);
@@ -174,8 +180,11 @@ def model cellml_1_0 as
         a = floor(b);
         a = fact(b);
         a = b and c;
+        a = b and c and d and e and f;
         a = b or c;
+        a = b or c or d or e or f;
         a = b xor c;
+        a = b xor c xor d xor e xor f;
         a = not(b);
         a = not(b or c);
     enddef;
