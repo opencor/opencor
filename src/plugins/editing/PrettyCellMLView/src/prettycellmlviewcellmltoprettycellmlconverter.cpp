@@ -965,7 +965,8 @@ QString PrettyCellMLViewCellmlToPrettyCellmlConverter::processRootNode(const QDo
         QDomNode domNode = pDomNode.childNodes().at(1);
 
         if (domNode.nodeName().compare("degree")){
-            mErrorMessage = QObject::tr("The first sibling of a 'root' element with two siblings must be a 'degree' element.");
+            mErrorMessage = QObject::tr("The first sibling of a '%1' element with two siblings must be a '%2' element.").arg(pDomNode.nodeName())
+                                                                                                                        .arg(domNode.nodeName());
             mErrorLine = domNode.lineNumber();
 
             pHasError = true;
@@ -1059,7 +1060,8 @@ QString PrettyCellMLViewCellmlToPrettyCellmlConverter::processDiffNode(const QDo
         QDomNode domNode = pDomNode.childNodes().at(1);
 
         if (domNode.nodeName().compare("bvar")){
-            mErrorMessage = QObject::tr("The first qualifier of a 'diff' operator must be a 'bvar' element.");
+            mErrorMessage = QObject::tr("The first sibling of a '%1' element with two siblings must be a '%2' element.").arg(pDomNode.nodeName())
+                                                                                                                        .arg(domNode.nodeName());
             mErrorLine = domNode.lineNumber();
 
             pHasError = true;
@@ -1089,7 +1091,8 @@ QString PrettyCellMLViewCellmlToPrettyCellmlConverter::processBvarNode(const QDo
         QDomNode domNode = pDomNode.childNodes().at(0);
 
         if (domNode.nodeName().compare("degree")){
-            mErrorMessage = QObject::tr("The first child element of a 'bvar' element with two child elements must be a 'degree' element.");
+            mErrorMessage = QObject::tr("The first child element of a '%1' element with two child elements must be a '%2' element.").arg(pDomNode.nodeName())
+                                                                                                                                    .arg(domNode.nodeName());
             mErrorLine = domNode.lineNumber();
 
             pHasError = true;

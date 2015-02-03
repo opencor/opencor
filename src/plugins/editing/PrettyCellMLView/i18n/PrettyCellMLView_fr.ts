@@ -78,8 +78,20 @@
         <translation>Un attribut &apos;base_units&apos; doit avoir une valeur de &apos;yes&apos; ou &apos;no&apos;.</translation>
     </message>
     <message>
+        <source>A &apos;%1&apos; element must have one child element.</source>
+        <translation>Un élément &apos;%1&apos; doit avoir un élément enfant.</translation>
+    </message>
+    <message>
+        <source>A &apos;%1&apos; element must have one or two child elements.</source>
+        <translation>Un élément &apos;%1&apos; doit avoir un ou deux éléments enfants.</translation>
+    </message>
+    <message>
         <source>An &apos;apply&apos; element must have at least one child element.</source>
         <translation>Un élément &apos;apply&apos; doit avoir aux moins deux éléments enfants.</translation>
+    </message>
+    <message>
+        <source>A &apos;%1&apos; element must have a value.</source>
+        <translation>Un élément &apos;%1&apos; doit avoir une valeur.</translation>
     </message>
     <message>
         <source>A &apos;cn&apos; element with an &apos;e-notation&apos; type must have three child elements.</source>
@@ -142,11 +154,11 @@
         <translation>Un opérateur &apos;%1&apos; doit avoir deux opérandes.</translation>
     </message>
     <message>
-        <source>A &apos;%1&apos; operator must have at least one operand.</source>
-        <translation>Un opérateur &apos;%1&apos; doit avoir au moins un opérande.</translation>
+        <source>A &apos;%1&apos; operator must have two qualifiers.</source>
+        <translation>Un opérateur &apos;%1&apos; doit avoir deux qualifiants.</translation>
     </message>
     <message>
-        <source>An &apos;%1&apos; operator must have at least two operands.</source>
+        <source>A &apos;%1&apos; operator must have at least one operand.</source>
         <translation>Un opérateur &apos;%1&apos; doit avoir au moins un opérande.</translation>
     </message>
     <message>
@@ -154,12 +166,8 @@
         <translation>Un opérateur &apos;%1&apos; doit avoir au moins deux opérandes.</translation>
     </message>
     <message>
-        <source>A &apos;%1&apos; element must have a value.</source>
-        <translation>Un élément &apos;%1&apos; doit avoir une valeur.</translation>
-    </message>
-    <message>
-        <source>A &apos;%1&apos; element must have one child element.</source>
-        <translation>Un élément &apos;%1&apos; doit avoir un élément enfant.</translation>
+        <source>An &apos;%1&apos; operator must have at least two operands.</source>
+        <translation>Un opérateur &apos;%1&apos; doit avoir au moins un opérande.</translation>
     </message>
     <message>
         <source>A &apos;%1&apos; function must have one argument.</source>
@@ -176,6 +184,14 @@
     <message>
         <source>A &apos;%1&apos; function must have either one or two arguments.</source>
         <translation>Une fonction &apos;%1&apos; doit avoir un ou deux arguments.</translation>
+    </message>
+    <message>
+        <source>The first sibling of a &apos;%1&apos; element with two siblings must be a &apos;%2&apos; element.</source>
+        <translation>Le premier frère d&apos;un élément &apos;%1&apos; avec deux éléments frères doit être un élément &apos;%2&apos;.</translation>
+    </message>
+    <message>
+        <source>The first child element of a &apos;%1&apos; element with two child elements must be a &apos;%2&apos; element.</source>
+        <translation>Le premier élément enfant d&apos;un élément &apos;%1&apos; avec deux éléments enfants doit être un élément &apos;%2&apos;.</translation>
     </message>
 </context>
 </TS>
