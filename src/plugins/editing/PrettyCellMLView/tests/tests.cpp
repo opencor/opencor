@@ -73,6 +73,72 @@ void Tests::failingTests()
     QCOMPARE(converter.errorMessage(),
              QString("A 'base_units' attribute must have a value of 'yes' or 'no'."));
 
+    // CellML group
+
+    QVERIFY(!converter.execute(OpenCOR::fileName("src/plugins/editing/PrettyCellMLView/tests/data/cellml_relationship.cellml")));
+    QCOMPARE(converter.errorLine(), 4);
+    QCOMPARE(converter.errorMessage(),
+             QString("A 'relationship' attribute in the CellML namespace must have a value of 'encapsulation' or 'containment'."));
+
+    QVERIFY(!converter.execute(OpenCOR::fileName("src/plugins/editing/PrettyCellMLView/tests/data/cellml_relationship_ref.cellml")));
+    QCOMPARE(converter.errorLine(), 4);
+    QCOMPARE(converter.errorMessage(),
+             QString("A 'relationship_ref' element with a 'relationship' attribute value of 'encapsulation' must not define a 'name' attribute."));
+
+    // CellML connection
+
+    QVERIFY(!converter.execute(OpenCOR::fileName("src/plugins/editing/PrettyCellMLView/tests/data/cellml_connection.cellml")));
+    QCOMPARE(converter.errorLine(), 5);
+    QCOMPARE(converter.errorMessage(),
+             QString("A 'connection' element must contain exactly one 'map_components' element."));
+
+    // MathML token elements
+
+    QVERIFY(!converter.execute(OpenCOR::fileName("src/plugins/editing/PrettyCellMLView/tests/data/mathml_cn.cellml")));
+    QCOMPARE(converter.errorLine(), 8);
+    QCOMPARE(converter.errorMessage(),
+             QString("A 'cn' element must have a value."));
+
+    QVERIFY(!converter.execute(OpenCOR::fileName("src/plugins/editing/PrettyCellMLView/tests/data/mathml_cn_e_notation_1.cellml")));
+    QCOMPARE(converter.errorLine(), 8);
+    QCOMPARE(converter.errorMessage(),
+             QString("A 'cn' element with an 'e-notation' type must have three child elements."));
+
+    QVERIFY(!converter.execute(OpenCOR::fileName("src/plugins/editing/PrettyCellMLView/tests/data/mathml_cn_e_notation_2.cellml")));
+    QCOMPARE(converter.errorLine(), 8);
+    QCOMPARE(converter.errorMessage(),
+             QString("The first child element of a 'cn' element with an 'e-notation' type must be of 'text' type."));
+
+    QVERIFY(!converter.execute(OpenCOR::fileName("src/plugins/editing/PrettyCellMLView/tests/data/mathml_cn_e_notation_3.cellml")));
+    QCOMPARE(converter.errorLine(), 8);
+    QCOMPARE(converter.errorMessage(),
+             QString("The second child element of a 'cn' element with an 'e-notation' type must be of 'element' type."));
+
+    QVERIFY(!converter.execute(OpenCOR::fileName("src/plugins/editing/PrettyCellMLView/tests/data/mathml_cn_e_notation_4.cellml")));
+    QCOMPARE(converter.errorLine(), 8);
+    QCOMPARE(converter.errorMessage(),
+             QString("The name of the second child element of a 'cn' element with an 'e-notation' type must be 'sep'."));
+
+    QVERIFY(!converter.execute(OpenCOR::fileName("src/plugins/editing/PrettyCellMLView/tests/data/mathml_cn_e_notation_5.cellml")));
+    QCOMPARE(converter.errorLine(), 8);
+    QCOMPARE(converter.errorMessage(),
+             QString("The third child element of a 'cn' element with an 'e-notation' type must be of 'text' type."));
+
+    QVERIFY(!converter.execute(OpenCOR::fileName("src/plugins/editing/PrettyCellMLView/tests/data/mathml_cn_e_notation_unsupported_type.cellml")));
+    QCOMPARE(converter.errorLine(), 8);
+    QCOMPARE(converter.errorMessage(),
+             QString("The 'cn' element uses a 'complex-polar' type that is unsupported."));
+
+    QVERIFY(!converter.execute(OpenCOR::fileName("src/plugins/editing/PrettyCellMLView/tests/data/mathml_cn_e_notation_unknown_type.cellml")));
+    QCOMPARE(converter.errorLine(), 8);
+    QCOMPARE(converter.errorMessage(),
+             QString("The 'cn' element uses a 'some-unknown-type' type that is unknown."));
+
+    QVERIFY(!converter.execute(OpenCOR::fileName("src/plugins/editing/PrettyCellMLView/tests/data/mathml_ci.cellml")));
+    QCOMPARE(converter.errorLine(), 7);
+    QCOMPARE(converter.errorMessage(),
+             QString("A 'ci' element must have a value."));
+
     // MathML basic content elements
 
     QVERIFY(!converter.execute(OpenCOR::fileName("src/plugins/editing/PrettyCellMLView/tests/data/mathml_apply.cellml")));
@@ -139,10 +205,15 @@ void Tests::failingTests()
     QCOMPARE(converter.errorMessage(),
              QString("A 'power' element must have two siblings."));
 
-    QVERIFY(!converter.execute(OpenCOR::fileName("src/plugins/editing/PrettyCellMLView/tests/data/mathml_root.cellml")));
+    QVERIFY(!converter.execute(OpenCOR::fileName("src/plugins/editing/PrettyCellMLView/tests/data/mathml_root_1.cellml")));
     QCOMPARE(converter.errorLine(), 6);
     QCOMPARE(converter.errorMessage(),
              QString("A 'root' element must have either one or two siblings."));
+
+    QVERIFY(!converter.execute(OpenCOR::fileName("src/plugins/editing/PrettyCellMLView/tests/data/mathml_root_2.cellml")));
+    QCOMPARE(converter.errorLine(), 7);
+    QCOMPARE(converter.errorMessage(),
+             QString("The first sibling of a 'root' element with two siblings must be a 'degree' element."));
 
     QVERIFY(!converter.execute(OpenCOR::fileName("src/plugins/editing/PrettyCellMLView/tests/data/mathml_abs.cellml")));
     QCOMPARE(converter.errorLine(), 6);
@@ -201,71 +272,39 @@ void Tests::failingTests()
     QCOMPARE(converter.errorMessage(),
              QString("A 'not' element must have one sibling."));
 
-    // MathML token elements
+    // MathML calculus elements
 
-    QVERIFY(!converter.execute(OpenCOR::fileName("src/plugins/editing/PrettyCellMLView/tests/data/mathml_cn.cellml")));
-    QCOMPARE(converter.errorLine(), 8);
+    QVERIFY(!converter.execute(OpenCOR::fileName("src/plugins/editing/PrettyCellMLView/tests/data/mathml_diff_1.cellml")));
+    QCOMPARE(converter.errorLine(), 6);
     QCOMPARE(converter.errorMessage(),
-             QString("A 'cn' element must have a value."));
+             QString("A 'diff' element must have two siblings."));
 
-    QVERIFY(!converter.execute(OpenCOR::fileName("src/plugins/editing/PrettyCellMLView/tests/data/mathml_cn_e_notation_1.cellml")));
-    QCOMPARE(converter.errorLine(), 8);
-    QCOMPARE(converter.errorMessage(),
-             QString("A 'cn' element with an 'e-notation' type must have three child elements."));
-
-    QVERIFY(!converter.execute(OpenCOR::fileName("src/plugins/editing/PrettyCellMLView/tests/data/mathml_cn_e_notation_2.cellml")));
-    QCOMPARE(converter.errorLine(), 8);
-    QCOMPARE(converter.errorMessage(),
-             QString("The first child element of a 'cn' element with an 'e-notation' type must be of 'text' type."));
-
-    QVERIFY(!converter.execute(OpenCOR::fileName("src/plugins/editing/PrettyCellMLView/tests/data/mathml_cn_e_notation_3.cellml")));
-    QCOMPARE(converter.errorLine(), 8);
-    QCOMPARE(converter.errorMessage(),
-             QString("The second child element of a 'cn' element with an 'e-notation' type must be of 'element' type."));
-
-    QVERIFY(!converter.execute(OpenCOR::fileName("src/plugins/editing/PrettyCellMLView/tests/data/mathml_cn_e_notation_4.cellml")));
-    QCOMPARE(converter.errorLine(), 8);
-    QCOMPARE(converter.errorMessage(),
-             QString("The name of the second child element of a 'cn' element with an 'e-notation' type must be 'sep'."));
-
-    QVERIFY(!converter.execute(OpenCOR::fileName("src/plugins/editing/PrettyCellMLView/tests/data/mathml_cn_e_notation_5.cellml")));
-    QCOMPARE(converter.errorLine(), 8);
-    QCOMPARE(converter.errorMessage(),
-             QString("The third child element of a 'cn' element with an 'e-notation' type must be of 'text' type."));
-
-    QVERIFY(!converter.execute(OpenCOR::fileName("src/plugins/editing/PrettyCellMLView/tests/data/mathml_cn_e_notation_unsupported_type.cellml")));
-    QCOMPARE(converter.errorLine(), 8);
-    QCOMPARE(converter.errorMessage(),
-             QString("The 'cn' element uses a 'complex-polar' type that is unsupported."));
-
-    QVERIFY(!converter.execute(OpenCOR::fileName("src/plugins/editing/PrettyCellMLView/tests/data/mathml_cn_e_notation_unknown_type.cellml")));
-    QCOMPARE(converter.errorLine(), 8);
-    QCOMPARE(converter.errorMessage(),
-             QString("The 'cn' element uses a 'some-unknown-type' type that is unknown."));
-
-    QVERIFY(!converter.execute(OpenCOR::fileName("src/plugins/editing/PrettyCellMLView/tests/data/mathml_ci.cellml")));
+    QVERIFY(!converter.execute(OpenCOR::fileName("src/plugins/editing/PrettyCellMLView/tests/data/mathml_diff_2.cellml")));
     QCOMPARE(converter.errorLine(), 7);
     QCOMPARE(converter.errorMessage(),
-             QString("A 'ci' element must have a value."));
+             QString("The first sibling of a 'diff' element with two siblings must be a 'bvar' element."));
 
-    // CellML group
+    // MathML qualifier elements
 
-    QVERIFY(!converter.execute(OpenCOR::fileName("src/plugins/editing/PrettyCellMLView/tests/data/cellml_relationship.cellml")));
-    QCOMPARE(converter.errorLine(), 4);
-    QCOMPARE(converter.errorMessage(),
-             QString("A 'relationship' attribute in the CellML namespace must have a value of 'encapsulation' or 'containment'."));
-
-    QVERIFY(!converter.execute(OpenCOR::fileName("src/plugins/editing/PrettyCellMLView/tests/data/cellml_relationship_ref.cellml")));
-    QCOMPARE(converter.errorLine(), 4);
-    QCOMPARE(converter.errorMessage(),
-             QString("A 'relationship_ref' element with a 'relationship' attribute value of 'encapsulation' must not define a 'name' attribute."));
-
-    // CellML connection
-
-    QVERIFY(!converter.execute(OpenCOR::fileName("src/plugins/editing/PrettyCellMLView/tests/data/cellml_connection.cellml")));
+    QVERIFY(!converter.execute(OpenCOR::fileName("src/plugins/editing/PrettyCellMLView/tests/data/mathml_degree.cellml")));
     QCOMPARE(converter.errorLine(), 5);
     QCOMPARE(converter.errorMessage(),
-             QString("A 'connection' element must contain exactly one 'map_components' element."));
+             QString("A 'degree' element must have one child element."));
+
+    QVERIFY(!converter.execute(OpenCOR::fileName("src/plugins/editing/PrettyCellMLView/tests/data/mathml_logbase.cellml")));
+    QCOMPARE(converter.errorLine(), 5);
+    QCOMPARE(converter.errorMessage(),
+             QString("A 'logbase' element must have one child element."));
+
+    QVERIFY(!converter.execute(OpenCOR::fileName("src/plugins/editing/PrettyCellMLView/tests/data/mathml_bvar_1.cellml")));
+    QCOMPARE(converter.errorLine(), 5);
+    QCOMPARE(converter.errorMessage(),
+             QString("A 'bvar' element must have one or two child elements."));
+
+    QVERIFY(!converter.execute(OpenCOR::fileName("src/plugins/editing/PrettyCellMLView/tests/data/mathml_bvar_2.cellml")));
+    QCOMPARE(converter.errorLine(), 6);
+    QCOMPARE(converter.errorMessage(),
+             QString("The first child element of a 'bvar' element with two child elements must be a 'degree' element."));
 
     // Unsupported element
 

@@ -965,8 +965,8 @@ QString PrettyCellMLViewCellmlToPrettyCellmlConverter::processRootNode(const QDo
         QDomNode domNode = pDomNode.childNodes().at(1);
 
         if (domNode.nodeName().compare("degree")){
-            mErrorMessage = QObject::tr("The first sibling of a '%1' element with two siblings must be a '%2' element.").arg(pDomNode.nodeName())
-                                                                                                                        .arg(domNode.nodeName());
+            mErrorMessage = QObject::tr("The first sibling of a '%1' element with two siblings must be a '%2' element.").arg("root")
+                                                                                                                        .arg("degree");
             mErrorLine = domNode.lineNumber();
 
             pHasError = true;
@@ -1060,8 +1060,8 @@ QString PrettyCellMLViewCellmlToPrettyCellmlConverter::processDiffNode(const QDo
         QDomNode domNode = pDomNode.childNodes().at(1);
 
         if (domNode.nodeName().compare("bvar")){
-            mErrorMessage = QObject::tr("The first sibling of a '%1' element with two siblings must be a '%2' element.").arg(pDomNode.nodeName())
-                                                                                                                        .arg(domNode.nodeName());
+            mErrorMessage = QObject::tr("The first sibling of a '%1' element with two siblings must be a '%2' element.").arg("diff")
+                                                                                                                        .arg("bvar");
             mErrorLine = domNode.lineNumber();
 
             pHasError = true;
@@ -1091,8 +1091,8 @@ QString PrettyCellMLViewCellmlToPrettyCellmlConverter::processBvarNode(const QDo
         QDomNode domNode = pDomNode.childNodes().at(0);
 
         if (domNode.nodeName().compare("degree")){
-            mErrorMessage = QObject::tr("The first child element of a '%1' element with two child elements must be a '%2' element.").arg(pDomNode.nodeName())
-                                                                                                                                    .arg(domNode.nodeName());
+            mErrorMessage = QObject::tr("The first child element of a '%1' element with two child elements must be a '%2' element.").arg("bvar")
+                                                                                                                                    .arg("degree");
             mErrorLine = domNode.lineNumber();
 
             pHasError = true;
