@@ -64,6 +64,12 @@ PrettyCellMLViewCellmlToPrettyCellmlConverter::PrettyCellMLViewCellmlToPrettyCel
     mMappings.insert("ceiling", "ceil");
     mMappings.insert("floor", "floor");
     mMappings.insert("factorial", "fact");
+
+    // Mappings for arithmetic operators
+
+    mMappings.insert("and", " and ");
+    mMappings.insert("or", " or ");
+    mMappings.insert("xor", " xor ");
 }
 
 //==============================================================================
@@ -739,6 +745,24 @@ QString PrettyCellMLViewCellmlToPrettyCellmlConverter::processMathmlNode(const Q
                 else
                     return processFunctionNode(mMappings.value(nodeName), childNodes.item(1), pHasError);
 
+            // Logical operators
+
+            } else if (!nodeName.compare("and") || !nodeName.compare("or")) {
+                if (childNodesCount < 3)
+                    mErrorMessage = QObject::tr("A '%1' operator must have at least two operands.").arg(nodeName);
+                else
+                    return processOperatorNode(mMappings.value(nodeName), childNodes.item(1), childNodes.item(2), pHasError);
+            } else if (!nodeName.compare("xor")) {
+                if (childNodesCount < 3)
+                    mErrorMessage = QObject::tr("A '%1' operator must have at least two operands.").arg(nodeName);
+                else
+                    return processOperatorNode(mMappings.value(nodeName), childNodes.item(1), childNodes.item(2), pHasError);
+            } else if (!nodeName.compare("not")) {
+                if (childNodesCount != 2)
+                    mErrorMessage = QObject::tr("A '%1' operator must have one operand.").arg(nodeName);
+                else
+                    return processNotNode(childNodes.item(1), pHasError);
+
             // Unsupported node
 
             } else {
@@ -945,6 +969,24 @@ QString PrettyCellMLViewCellmlToPrettyCellmlConverter::processLogNode(const QDom
                 return "log("+argument+", "+argumentOrBase+")";
         }
     }
+}
+
+//==============================================================================
+
+QString PrettyCellMLViewCellmlToPrettyCellmlConverter::processNotNode(const QDomNode &pDomNode,
+                                                                      bool &pHasError)
+{
+//---GRY--- NEED TO HANDLE IT BETTER, I.E.
+//              a = not b;
+//          BUT
+//              a = not(b or c);
+
+    QString operand = processMathmlNode(pDomNode, pHasError);
+
+    if (pHasError)
+        return QString();
+    else
+        return "not("+operand+")";
 }
 
 //==============================================================================

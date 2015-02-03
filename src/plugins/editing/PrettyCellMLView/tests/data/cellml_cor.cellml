@@ -376,6 +376,53 @@
                     <ci>b</ci>
                 </apply>
             </apply>
+            <apply>
+                <eq/>
+                <ci>a</ci>
+                <apply>
+                    <and/>
+                    <ci>b</ci>
+                    <ci>c</ci>
+                </apply>
+            </apply>
+            <apply>
+                <eq/>
+                <ci>a</ci>
+                <apply>
+                    <or/>
+                    <ci>b</ci>
+                    <ci>c</ci>
+                </apply>
+            </apply>
+            <apply>
+                <eq/>
+                <ci>a</ci>
+                <apply>
+                    <xor/>
+                    <ci>b</ci>
+                    <ci>c</ci>
+                </apply>
+            </apply>
+            <apply>
+                <eq/>
+                <ci>a</ci>
+                <apply>
+                    <not/>
+                    <ci>b</ci>
+                </apply>
+            </apply>
+            <apply>
+                <eq/>
+                <ci>a</ci>
+                <apply>
+                    <not/>
+                    <apply>
+                        <or/>
+                        <ci>b</ci>
+                        <ci>c</ci>
+                    </apply>
+                </apply>
+            </apply>
         </math>
     </component>
     <group>

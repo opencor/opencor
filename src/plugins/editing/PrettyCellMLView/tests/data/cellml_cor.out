@@ -173,6 +173,11 @@ def model cellml_1_0 as
         a = ceil(b);
         a = floor(b);
         a = fact(b);
+        a = b and c;
+        a = b or c;
+        a = b xor c;
+        a = not(b);
+        a = not(b or c);
     enddef;
 
     def group as containment for
