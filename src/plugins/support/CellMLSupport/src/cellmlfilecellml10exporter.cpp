@@ -48,7 +48,7 @@ namespace CellMLSupport {
 CellmlFileCellml10Exporter::CellmlFileCellml10Exporter(iface::cellml_api::Model *pModel,
                                                        const QString &pFileName) :
     CellmlFileCellmlExporter(pModel, L"1.0"),
-    mCopiedUnits(QSet<QPair<QString, QString> >()),
+    mCopiedUnits(QSet<QPair<QString, QString>>()),
     mComponentNames(QSet<QString>()),
     mRootGroup(0)
 {

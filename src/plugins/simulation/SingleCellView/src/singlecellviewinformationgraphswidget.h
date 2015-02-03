@@ -123,7 +123,7 @@ private:
 
     QMap<QString, CellMLSupport::CellmlFileRuntime *> mRuntimes;
     QMap<QString, SingleCellViewSimulation *> mSimulations;
-    QMap<QString, QMap<Core::Property *, bool> > mGraphPropertiesSelected;
+    QMap<QString, QMap<Core::Property *, bool>> mGraphPropertiesSelected;
 
     bool mCanEmitGraphsUpdatedSignal;
 

@@ -77,7 +77,7 @@ private:
     QMap<QString, SingleCellViewGraphPanelWidget *> mActiveGraphPanels;
     SingleCellViewGraphPanelWidget *mActiveGraphPanel;
 
-    QMap<QString, QMap<SingleCellViewGraphPanelPlotWidget *, QRectF> > mPlotsRects;
+    QMap<QString, QMap<SingleCellViewGraphPanelPlotWidget *, QRectF>> mPlotsRects;
 
     void removeGraphPanel(SingleCellViewGraphPanelWidget *pGraphPanel);
 

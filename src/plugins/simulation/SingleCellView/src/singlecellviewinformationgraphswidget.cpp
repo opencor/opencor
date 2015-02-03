@@ -67,7 +67,7 @@ SingleCellViewInformationGraphsWidget::SingleCellViewInformationGraphsWidget(QWi
     mFileName(QString()),
     mRuntimes(QMap<QString, CellMLSupport::CellmlFileRuntime *>()),
     mSimulations(QMap<QString, SingleCellViewSimulation *>()),
-    mGraphPropertiesSelected(QMap<QString, QMap<Core::Property *, bool> >()),
+    mGraphPropertiesSelected(QMap<QString, QMap<Core::Property *, bool>>()),
     mCanEmitGraphsUpdatedSignal(true)
 {
     // Set up the GUI

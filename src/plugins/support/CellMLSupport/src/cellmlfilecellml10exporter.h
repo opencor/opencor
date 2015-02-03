@@ -53,7 +53,7 @@ public:
 private:
     ObjRef<iface::cellml_services::AnnotationSet> mAnnotationSet;
 
-    QSet<QPair<QString, QString> > mCopiedUnits;
+    QSet<QPair<QString, QString>> mCopiedUnits;
 
     QSet<QString> mComponentNames;
 
