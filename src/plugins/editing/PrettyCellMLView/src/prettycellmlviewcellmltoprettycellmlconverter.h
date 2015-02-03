@@ -140,7 +140,8 @@ private:
                                   QString &pMapComponents);
     void processMapVariablesNode(const QDomNode &pDomNode);
     void processUnknownNode(const QDomNode &pDomNode);
-    void processUnsupportedNode(const QDomNode &pDomNode);
+    void processUnsupportedNode(const QDomNode &pDomNode, const bool &pError,
+                                const QString &pExtra = QString());
 };
 
 //==============================================================================

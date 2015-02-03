@@ -73,6 +73,13 @@ void Tests::failingTests()
     QCOMPARE(converter.errorMessage(),
              QString("A 'base_units' attribute must have a value of 'yes' or 'no'."));
 
+    // CellML reaction
+
+    QVERIFY(!converter.execute(OpenCOR::fileName("src/plugins/editing/PrettyCellMLView/tests/data/cellml_reaction.cellml")));
+    QCOMPARE(converter.errorLine(), 4);
+    QCOMPARE(converter.errorMessage(),
+             QString("A 'reaction' element was found in the original CellML file, but it is not supported and cannot therefore be processed."));
+
     // CellML group
 
     QVERIFY(!converter.execute(OpenCOR::fileName("src/plugins/editing/PrettyCellMLView/tests/data/cellml_relationship.cellml")));
@@ -317,20 +324,13 @@ void Tests::failingTests()
     QCOMPARE(converter.errorLine(), 5);
     QCOMPARE(converter.errorMessage(),
              QString("A 'pi' element cannot have child elements."));
-
-    // Unsupported element
-
-    QVERIFY(!converter.execute(OpenCOR::fileName("src/plugins/editing/PrettyCellMLView/tests/data/cellml_unsupported_element.cellml")));
-    QCOMPARE(converter.errorLine(), 5);
-    QCOMPARE(converter.errorMessage(),
-             QString("A 'unsupported_element' element was found in the original CellML file, but it is not supported and cannot therefore be processed."));
 }
 
 //==============================================================================
 
 void Tests::warningTests()
 {
-    // Test the conversion of various CellML files that generate warnings
+    // Unknown CellML element
 
     OpenCOR::PrettyCellMLView::PrettyCellMLViewCellmlToPrettyCellmlConverter converter;
 
@@ -338,6 +338,30 @@ void Tests::warningTests()
     QCOMPARE(converter.warningLines().first(), 3);
     QCOMPARE(converter.warningMessages().first(),
              QString("A 'unknown_element' element was found%2, but it is not known and cannot therefore be processed."));
+
+    // Unknown MathML element
+
+    QVERIFY(converter.execute(OpenCOR::fileName("src/plugins/editing/PrettyCellMLView/tests/data/mathml_unknown_element.cellml")));
+    QCOMPARE(converter.warningLines().first(), 5);
+    QCOMPARE(converter.warningMessages().first(),
+             QString("A 'unknown_element' element was found%2, but it is not known and cannot therefore be processed."));
+
+    // Known, but unsupported MathML elements
+
+    QVERIFY(converter.execute(OpenCOR::fileName("src/plugins/editing/PrettyCellMLView/tests/data/mathml_semantics.cellml")));
+    QCOMPARE(converter.warningLines().first(), 5);
+    QCOMPARE(converter.warningMessages().first(),
+             QString("A 'semantics' element was found in the original CellML file, but it is not supported and cannot therefore be processed."));
+
+    QVERIFY(converter.execute(OpenCOR::fileName("src/plugins/editing/PrettyCellMLView/tests/data/mathml_annotation.cellml")));
+    QCOMPARE(converter.warningLines().first(), 5);
+    QCOMPARE(converter.warningMessages().first(),
+             QString("An 'annotation' element was found in the original CellML file, but it is not supported and cannot therefore be processed."));
+
+    QVERIFY(converter.execute(OpenCOR::fileName("src/plugins/editing/PrettyCellMLView/tests/data/mathml_annotation-xml.cellml")));
+    QCOMPARE(converter.warningLines().first(), 5);
+    QCOMPARE(converter.warningMessages().first(),
+             QString("An 'annotation-xml' element was found in the original CellML file, but it is not supported and cannot therefore be processed."));
 }
 
 //==============================================================================

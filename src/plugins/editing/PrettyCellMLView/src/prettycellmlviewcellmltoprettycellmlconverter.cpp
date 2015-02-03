@@ -647,7 +647,11 @@ bool PrettyCellMLViewCellmlToPrettyCellmlConverter::processMathNode(const QDomNo
 
         if (hasError) {
             return false;
-        } else {
+        } else if (!equation.isEmpty()) {
+            // Note: should one or several warnings be generated, then it may be
+            //       possible that no equation has been generated, hence our
+            //       check...
+
             if (   (mLastOutputType == Comment)
                 || (mLastOutputType == DefBaseUnit) || (mLastOutputType == EndDef)
                 || (mLastOutputType == Var)) {
@@ -780,10 +784,12 @@ QString PrettyCellMLViewCellmlToPrettyCellmlConverter::processMathmlNode(const Q
                 else
                     return processDiffNode(pDomNode, pHasError);
 
-            // Unsupported node
+            // Unknown node
 
             } else {
-                processUnsupportedNode(domNode);
+                processUnknownNode(domNode);
+
+                return QString();
             }
         }
 
@@ -871,10 +877,23 @@ QString PrettyCellMLViewCellmlToPrettyCellmlConverter::processMathmlNode(const Q
         else
             return mMappings.value(nodeName);
 
-    // Unsupported node
+    // Semantics and annotation elements
+
+    } else if (!nodeName.compare("semantics")) {
+        processUnsupportedNode(domNode, false);
+
+        return QString();
+    } else if (!nodeName.compare("annotation") || !nodeName.compare("annotation-xml")) {
+        processUnsupportedNode(domNode, false, "n");
+
+        return QString();
+
+    // Unknown node
 
     } else {
-        processUnsupportedNode(domNode);
+        processUnknownNode(domNode);
+
+        return QString();
     }
 
     mErrorLine = domNode.lineNumber();
@@ -1148,7 +1167,7 @@ bool PrettyCellMLViewCellmlToPrettyCellmlConverter::processReactionNode(const QD
 {
     // We don't support reaction elements
 
-    processUnsupportedNode(pDomNode);
+    processUnsupportedNode(pDomNode, true);
 
     return false;
 }
@@ -1473,13 +1492,24 @@ void PrettyCellMLViewCellmlToPrettyCellmlConverter::processUnknownNode(const QDo
 
 //==============================================================================
 
-void PrettyCellMLViewCellmlToPrettyCellmlConverter::processUnsupportedNode(const QDomNode &pDomNode)
+void PrettyCellMLViewCellmlToPrettyCellmlConverter::processUnsupportedNode(const QDomNode &pDomNode,
+                                                                           const bool &pError,
+                                                                           const QString &pExtra)
 {
-    // The given node is unknown, yet maybe we should know about it, so consider
-    // it as an error
+    // The given node is known, but we don't support it, so consider it as an
+    // error or a warning, depending on the case
 
-    mErrorLine = pDomNode.lineNumber();
-    mErrorMessage = QObject::tr("A '%1' element was found in the original CellML file, but it is not supported and cannot therefore be processed.").arg(pDomNode.nodeName());
+    int lineNumber = pDomNode.lineNumber();
+    QString message = QObject::tr("A%1 '%2' element was found in the original CellML file, but it is not supported and cannot therefore be processed.").arg(pExtra)
+                                                                                                                                                       .arg(pDomNode.nodeName());
+
+    if (pError) {
+        mErrorLine = lineNumber;
+        mErrorMessage = message;
+    } else {
+        mWarningLines << lineNumber;
+        mWarningMessages << message;
+    }
 }
 
 //==============================================================================
