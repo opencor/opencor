@@ -66,15 +66,21 @@ void Tests::failingTests()
 
     OpenCOR::PrettyCellMLView::PrettyCellMLViewCellmlToPrettyCellmlConverter converter;
 
+    // CellML base units
+
     QVERIFY(!converter.execute(OpenCOR::fileName("src/plugins/editing/PrettyCellMLView/tests/data/cellml_base_units.cellml")));
     QCOMPARE(converter.errorLine(), 3);
     QCOMPARE(converter.errorMessage(),
              QString("A 'base_units' attribute must have a value of 'yes' or 'no'."));
 
+    // MathML basic content elements
+
     QVERIFY(!converter.execute(OpenCOR::fileName("src/plugins/editing/PrettyCellMLView/tests/data/mathml_apply.cellml")));
     QCOMPARE(converter.errorLine(), 5);
     QCOMPARE(converter.errorMessage(),
              QString("An 'apply' element must have at least one child element."));
+
+    // MathML relational operators
 
     QVERIFY(!converter.execute(OpenCOR::fileName("src/plugins/editing/PrettyCellMLView/tests/data/mathml_eq.cellml")));
     QCOMPARE(converter.errorLine(), 6);
@@ -105,6 +111,8 @@ void Tests::failingTests()
     QCOMPARE(converter.errorLine(), 6);
     QCOMPARE(converter.errorMessage(),
              QString("An 'leq' operator must have two operands."));
+
+    // MathML arithmetic operators
 
     QVERIFY(!converter.execute(OpenCOR::fileName("src/plugins/editing/PrettyCellMLView/tests/data/mathml_plus.cellml")));
     QCOMPARE(converter.errorLine(), 6);
@@ -171,6 +179,30 @@ void Tests::failingTests()
     QCOMPARE(converter.errorMessage(),
              QString("A 'factorial' function must have one argument."));
 
+    // MathML logical operators
+
+    QVERIFY(!converter.execute(OpenCOR::fileName("src/plugins/editing/PrettyCellMLView/tests/data/mathml_and.cellml")));
+    QCOMPARE(converter.errorLine(), 6);
+    QCOMPARE(converter.errorMessage(),
+             QString("An 'and' operator must have at least two operands."));
+
+    QVERIFY(!converter.execute(OpenCOR::fileName("src/plugins/editing/PrettyCellMLView/tests/data/mathml_or.cellml")));
+    QCOMPARE(converter.errorLine(), 6);
+    QCOMPARE(converter.errorMessage(),
+             QString("An 'or' operator must have at least two operands."));
+
+    QVERIFY(!converter.execute(OpenCOR::fileName("src/plugins/editing/PrettyCellMLView/tests/data/mathml_xor.cellml")));
+    QCOMPARE(converter.errorLine(), 6);
+    QCOMPARE(converter.errorMessage(),
+             QString("A 'xor' operator must have at least two operands."));
+
+    QVERIFY(!converter.execute(OpenCOR::fileName("src/plugins/editing/PrettyCellMLView/tests/data/mathml_not.cellml")));
+    QCOMPARE(converter.errorLine(), 6);
+    QCOMPARE(converter.errorMessage(),
+             QString("A 'not' operator must have one operand."));
+
+    // MathML token elements
+
     QVERIFY(!converter.execute(OpenCOR::fileName("src/plugins/editing/PrettyCellMLView/tests/data/mathml_cn.cellml")));
     QCOMPARE(converter.errorLine(), 8);
     QCOMPARE(converter.errorMessage(),
@@ -216,6 +248,8 @@ void Tests::failingTests()
     QCOMPARE(converter.errorMessage(),
              QString("A 'ci' element must have a value."));
 
+    // CellML group
+
     QVERIFY(!converter.execute(OpenCOR::fileName("src/plugins/editing/PrettyCellMLView/tests/data/cellml_relationship.cellml")));
     QCOMPARE(converter.errorLine(), 4);
     QCOMPARE(converter.errorMessage(),
@@ -226,10 +260,14 @@ void Tests::failingTests()
     QCOMPARE(converter.errorMessage(),
              QString("A 'relationship_ref' element with a 'relationship' attribute value of 'encapsulation' must not define a 'name' attribute."));
 
+    // CellML connection
+
     QVERIFY(!converter.execute(OpenCOR::fileName("src/plugins/editing/PrettyCellMLView/tests/data/cellml_connection.cellml")));
     QCOMPARE(converter.errorLine(), 5);
     QCOMPARE(converter.errorMessage(),
              QString("A 'connection' element must contain exactly one 'map_components' element."));
+
+    // Unsupported element
 
     QVERIFY(!converter.execute(OpenCOR::fileName("src/plugins/editing/PrettyCellMLView/tests/data/cellml_unsupported_element.cellml")));
     QCOMPARE(converter.errorLine(), 5);

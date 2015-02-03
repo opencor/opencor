@@ -749,7 +749,7 @@ QString PrettyCellMLViewCellmlToPrettyCellmlConverter::processMathmlNode(const Q
 
             } else if (!nodeName.compare("and") || !nodeName.compare("or")) {
                 if (childNodesCount < 3)
-                    mErrorMessage = QObject::tr("A '%1' operator must have at least two operands.").arg(nodeName);
+                    mErrorMessage = QObject::tr("An '%1' operator must have at least two operands.").arg(nodeName);
                 else
                     return processOperatorNode(mMappings.value(nodeName), childNodes.item(1), childNodes.item(2), pHasError);
             } else if (!nodeName.compare("xor")) {

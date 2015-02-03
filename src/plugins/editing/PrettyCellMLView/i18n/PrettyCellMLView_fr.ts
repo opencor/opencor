@@ -146,6 +146,10 @@
         <translation>Un opérateur &apos;%1&apos; doit avoir au moins un opérande.</translation>
     </message>
     <message>
+        <source>An &apos;%1&apos; operator must have at least two operands.</source>
+        <translation>Un opérateur &apos;%1&apos; doit avoir au moins un opérande.</translation>
+    </message>
+    <message>
         <source>A &apos;%1&apos; operator must have at least two operands.</source>
         <translation>Un opérateur &apos;%1&apos; doit avoir au moins deux opérandes.</translation>
     </message>
