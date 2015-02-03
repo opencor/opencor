@@ -130,12 +130,8 @@
         <translation>Un élément &apos;%1&apos; a été trouvé dans le fichier CellML d&apos;origine, mais il n&apos;est pas supporté et ne peut donc pas être traité.</translation>
     </message>
     <message>
-        <source>A &apos;%1&apos; operator must have at least one operand.</source>
-        <translation>Un opérateur &apos;%1&apos; doit avoir au moins un opérande.</translation>
-    </message>
-    <message>
-        <source>A &apos;%1&apos; operator must have at least two operands.</source>
-        <translation>Un opérateur &apos;%1&apos; doit avoir au moins deux opérandes.</translation>
+        <source>A &apos;%1&apos; operator must have one operand.</source>
+        <translation>Un opérateur &apos;%1&apos; doit avoir un opérande.</translation>
     </message>
     <message>
         <source>A &apos;%1&apos; operator must have two operands.</source>
@@ -144,6 +140,14 @@
     <message>
         <source>An &apos;%1&apos; operator must have two operands.</source>
         <translation>Un opérateur &apos;%1&apos; doit avoir deux opérandes.</translation>
+    </message>
+    <message>
+        <source>A &apos;%1&apos; operator must have at least one operand.</source>
+        <translation>Un opérateur &apos;%1&apos; doit avoir au moins un opérande.</translation>
+    </message>
+    <message>
+        <source>A &apos;%1&apos; operator must have at least two operands.</source>
+        <translation>Un opérateur &apos;%1&apos; doit avoir au moins deux opérandes.</translation>
     </message>
     <message>
         <source>A &apos;%1&apos; element must have a value.</source>
