@@ -684,7 +684,7 @@ QString PrettyCellMLViewCellmlToPrettyCellmlConverter::processMathmlNode(const Q
 
             if (!nodeName.compare("eq")) {
                 if (childNodesCount != 3) {
-                    mErrorMessage = QObject::tr("An '%1' operator must have two operands.").arg(nodeName);
+                    mErrorMessage = QObject::tr("An '%1' element must have two siblings.").arg(nodeName);
                 } else if (mAssignmentDone) {
                     return processOperatorNode(" == ", pDomNode, pHasError);
                 } else {
@@ -695,12 +695,12 @@ QString PrettyCellMLViewCellmlToPrettyCellmlConverter::processMathmlNode(const Q
             } else if (   !nodeName.compare("neq")
                        || !nodeName.compare("lt") || !nodeName.compare("leq")) {
                 if (childNodesCount != 3)
-                    mErrorMessage = QObject::tr("An '%1' operator must have two operands.").arg(nodeName);
+                    mErrorMessage = QObject::tr("An '%1' element must have two siblings.").arg(nodeName);
                 else
                     return processOperatorNode(mMappings.value(nodeName), pDomNode, pHasError);
             } else if (   !nodeName.compare("gt") || !nodeName.compare("geq")) {
                 if (childNodesCount != 3)
-                    mErrorMessage = QObject::tr("A '%1' operator must have two operands.").arg(nodeName);
+                    mErrorMessage = QObject::tr("A '%1' element must have two siblings.").arg(nodeName);
                 else
                     return processOperatorNode(mMappings.value(nodeName), pDomNode, pHasError);
 
@@ -708,40 +708,40 @@ QString PrettyCellMLViewCellmlToPrettyCellmlConverter::processMathmlNode(const Q
 
             } else if (!nodeName.compare("plus") || !nodeName.compare("minus")) {
                 if (childNodesCount < 2)
-                    mErrorMessage = QObject::tr("A '%1' operator must have at least one operand.").arg(nodeName);
+                    mErrorMessage = QObject::tr("A '%1' element must have at least one sibling.").arg(nodeName);
                 else
                     return processOperatorNode(mMappings.value(nodeName), pDomNode, pHasError);
             } else if (!nodeName.compare("times") || !nodeName.compare("divide")) {
                 if (childNodesCount < 3)
-                    mErrorMessage = QObject::tr("A '%1' operator must have at least two operands.").arg(nodeName);
+                    mErrorMessage = QObject::tr("A '%1' element must have at least two siblings.").arg(nodeName);
                 else
                     return processOperatorNode(mMappings.value(nodeName), pDomNode, pHasError);
             } else if (!nodeName.compare("power")) {
                 if (childNodesCount != 3)
-                    mErrorMessage = QObject::tr("A '%1' function must have two arguments.").arg(nodeName);
+                    mErrorMessage = QObject::tr("A '%1' element must have two siblings.").arg(nodeName);
                 else
                     return processPowerNode(pDomNode, pHasError);
             } else if (!nodeName.compare("root")) {
                 if ((childNodesCount != 2) && (childNodesCount != 3))
-                    mErrorMessage = QObject::tr("A '%1' function must have either one or two arguments.").arg(nodeName);
+                    mErrorMessage = QObject::tr("A '%1' element must have either one or two siblings.").arg(nodeName);
                 else
                     return processRootNode(pDomNode, pHasError);
             } else if (   !nodeName.compare("abs") || !nodeName.compare("exp")
                        || !nodeName.compare("ln")) {
                 if (childNodesCount != 2)
-                    mErrorMessage = QObject::tr("An '%1' function must have one argument.").arg(nodeName);
+                    mErrorMessage = QObject::tr("An '%1' element must have one sibling.").arg(nodeName);
                 else
                     return processFunctionNode(nodeName, pDomNode, pHasError);
             } else if (!nodeName.compare("log")) {
                 if ((childNodesCount != 2) && (childNodesCount != 3))
-                    mErrorMessage = QObject::tr("A '%1' function must have either one or two arguments.").arg(nodeName);
+                    mErrorMessage = QObject::tr("A '%1' element must have either one or two siblings.").arg(nodeName);
                 else
                     return processLogNode(pDomNode, pHasError);
             } else if (   !nodeName.compare("ceiling")
                        || !nodeName.compare("floor")
                        || !nodeName.compare("factorial")) {
                 if (childNodesCount != 2)
-                    mErrorMessage = QObject::tr("A '%1' function must have one argument.").arg(nodeName);
+                    mErrorMessage = QObject::tr("A '%1' element must have one sibling.").arg(nodeName);
                 else
                     return processFunctionNode(mMappings.value(nodeName), pDomNode, pHasError);
 
@@ -749,17 +749,17 @@ QString PrettyCellMLViewCellmlToPrettyCellmlConverter::processMathmlNode(const Q
 
             } else if (!nodeName.compare("and") || !nodeName.compare("or")) {
                 if (childNodesCount < 3)
-                    mErrorMessage = QObject::tr("An '%1' operator must have at least two operands.").arg(nodeName);
+                    mErrorMessage = QObject::tr("An '%1' element must have at least two siblings.").arg(nodeName);
                 else
                     return processOperatorNode(mMappings.value(nodeName), pDomNode, pHasError);
             } else if (!nodeName.compare("xor")) {
                 if (childNodesCount < 3)
-                    mErrorMessage = QObject::tr("A '%1' operator must have at least two operands.").arg(nodeName);
+                    mErrorMessage = QObject::tr("A '%1' element must have at least two siblings.").arg(nodeName);
                 else
                     return processOperatorNode(mMappings.value(nodeName), pDomNode, pHasError);
             } else if (!nodeName.compare("not")) {
                 if (childNodesCount != 2)
-                    mErrorMessage = QObject::tr("A '%1' operator must have one operand.").arg(nodeName);
+                    mErrorMessage = QObject::tr("A '%1' element must have one sibling.").arg(nodeName);
                 else
                     return processNotNode(pDomNode, pHasError);
 
@@ -767,7 +767,7 @@ QString PrettyCellMLViewCellmlToPrettyCellmlConverter::processMathmlNode(const Q
 
             } else if (!nodeName.compare("diff")) {
                 if (childNodesCount != 3)
-                    mErrorMessage = QObject::tr("A '%1' operator must have two qualifiers.").arg(nodeName);
+                    mErrorMessage = QObject::tr("A '%1' element must have two siblings.").arg(nodeName);
                 else
                     return processDiffNode(pDomNode, pHasError);
 
@@ -819,11 +819,11 @@ QString PrettyCellMLViewCellmlToPrettyCellmlConverter::processMathmlNode(const Q
                    || !type.compare("constant")) {
             // A known, but unsupported type
 
-            mErrorMessage = QObject::tr("The 'cn' element uses a '%1' type, which is unsupported.").arg(type);
+            mErrorMessage = QObject::tr("The 'cn' element uses a '%1' type that is unsupported.").arg(type);
         } else {
             // An unknown type
 
-            mErrorMessage = QObject::tr("The 'cn' element uses a '%1' type, which is unknown.").arg(type);
+            mErrorMessage = QObject::tr("The 'cn' element uses a '%1' type that is unknown.").arg(type);
         }
     } else if (!nodeName.compare("ci")) {
         if (childNodesCount != 1)
@@ -863,7 +863,7 @@ QString PrettyCellMLViewCellmlToPrettyCellmlConverter::processOperatorNode(const
                                                                            const QDomNode &pDomNode,
                                                                            bool &pHasError)
 {
-    // Process the operator node, based on its number of operands
+    // Process the operator node, based on its number of siblings
 
     if (pDomNode.childNodes().count() == 2) {
         QString operand = processMathmlNode(pDomNode.childNodes().at(1), pHasError);

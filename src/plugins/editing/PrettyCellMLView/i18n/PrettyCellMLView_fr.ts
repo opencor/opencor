@@ -94,6 +94,38 @@
         <translation>Un élément &apos;%1&apos; doit avoir une valeur.</translation>
     </message>
     <message>
+        <source>A &apos;%1&apos; element must have one sibling.</source>
+        <translation>Un élément &apos;%1&apos; doit avoir un frère.</translation>
+    </message>
+    <message>
+        <source>An &apos;%1&apos; element must have one sibling.</source>
+        <translation>Un élément &apos;%1&apos; doit avoir un frère.</translation>
+    </message>
+    <message>
+        <source>A &apos;%1&apos; element must have two siblings.</source>
+        <translation>Un élément &apos;%1&apos; doit avoir deux frères.</translation>
+    </message>
+    <message>
+        <source>An &apos;%1&apos; element must have two siblings.</source>
+        <translation>Un élément &apos;%1&apos; doit avoir deux frères.</translation>
+    </message>
+    <message>
+        <source>A &apos;%1&apos; element must have either one or two siblings.</source>
+        <translation>Un élément &apos;%1&apos; doit avoir un ou deux frères.</translation>
+    </message>
+    <message>
+        <source>A &apos;%1&apos; element must have at least one sibling.</source>
+        <translation>Un élément &apos;%1&apos; doit avoir au moins un frère.</translation>
+    </message>
+    <message>
+        <source>A &apos;%1&apos; element must have at least two siblings.</source>
+        <translation>Un élément &apos;%1&apos; doit avoir au moins deux frères.</translation>
+    </message>
+    <message>
+        <source>An &apos;%1&apos; element must have at least two siblings.</source>
+        <translation>Un élément &apos;%1&apos; doit avoir au moins deux frères.</translation>
+    </message>
+    <message>
         <source>A &apos;cn&apos; element with an &apos;e-notation&apos; type must have three child elements.</source>
         <translation>Un élément &apos;cn&apos; avec un type &apos;e-notation&apos; doit avoir trois éléments enfants.</translation>
     </message>
@@ -114,12 +146,12 @@
         <translation>Le troisième élément enfant d&apos;un élément &apos;cn&apos; avec un type &apos;e-notation&apos; doit être de type &apos;text&apos;.</translation>
     </message>
     <message>
-        <source>The &apos;cn&apos; element uses a &apos;%1&apos; type, which is unsupported.</source>
-        <translation>L&apos;élément &apos;cn&apos; utilise un type &apos;%1&apos;, qui n&apos;est pas supporté.</translation>
+        <source>The &apos;cn&apos; element uses a &apos;%1&apos; type that is unsupported.</source>
+        <translation>L&apos;élément &apos;cn&apos; utilise un type &apos;%1&apos; qui n&apos;est pas supporté.</translation>
     </message>
     <message>
-        <source>The &apos;cn&apos; element uses a &apos;%1&apos; type, which is unknown.</source>
-        <translation>L&apos;élément &apos;cn&apos; utilise un type &apos;%1&apos;, qui n&apos;est pas connu.</translation>
+        <source>The &apos;cn&apos; element uses a &apos;%1&apos; type that is unknown.</source>
+        <translation>L&apos;élément &apos;cn&apos; utilise un type &apos;%1&apos; qui n&apos;est pas reconnu.</translation>
     </message>
     <message>
         <source>A &apos;relationship&apos; attribute in the CellML namespace must have a value of &apos;encapsulation&apos; or &apos;containment&apos;.</source>
@@ -140,50 +172,6 @@
     <message>
         <source>A &apos;%1&apos; element was found in the original CellML file, but it is not supported and cannot therefore be processed.</source>
         <translation>Un élément &apos;%1&apos; a été trouvé dans le fichier CellML d&apos;origine, mais il n&apos;est pas supporté et ne peut donc pas être traité.</translation>
-    </message>
-    <message>
-        <source>A &apos;%1&apos; operator must have one operand.</source>
-        <translation>Un opérateur &apos;%1&apos; doit avoir un opérande.</translation>
-    </message>
-    <message>
-        <source>A &apos;%1&apos; operator must have two operands.</source>
-        <translation>Un opérateur &apos;%1&apos; doit avoir deux opérandes.</translation>
-    </message>
-    <message>
-        <source>An &apos;%1&apos; operator must have two operands.</source>
-        <translation>Un opérateur &apos;%1&apos; doit avoir deux opérandes.</translation>
-    </message>
-    <message>
-        <source>A &apos;%1&apos; operator must have two qualifiers.</source>
-        <translation>Un opérateur &apos;%1&apos; doit avoir deux qualifiants.</translation>
-    </message>
-    <message>
-        <source>A &apos;%1&apos; operator must have at least one operand.</source>
-        <translation>Un opérateur &apos;%1&apos; doit avoir au moins un opérande.</translation>
-    </message>
-    <message>
-        <source>A &apos;%1&apos; operator must have at least two operands.</source>
-        <translation>Un opérateur &apos;%1&apos; doit avoir au moins deux opérandes.</translation>
-    </message>
-    <message>
-        <source>An &apos;%1&apos; operator must have at least two operands.</source>
-        <translation>Un opérateur &apos;%1&apos; doit avoir au moins un opérande.</translation>
-    </message>
-    <message>
-        <source>A &apos;%1&apos; function must have one argument.</source>
-        <translation>Une fonction &apos;%1&apos; doit avoir un argument.</translation>
-    </message>
-    <message>
-        <source>An &apos;%1&apos; function must have one argument.</source>
-        <translation>Une fonction &apos;%1&apos; doit avoir un argument.</translation>
-    </message>
-    <message>
-        <source>A &apos;%1&apos; function must have two arguments.</source>
-        <translation>Une fonction &apos;%1&apos; doit avoir deux arguments.</translation>
-    </message>
-    <message>
-        <source>A &apos;%1&apos; function must have either one or two arguments.</source>
-        <translation>Une fonction &apos;%1&apos; doit avoir un ou deux arguments.</translation>
     </message>
     <message>
         <source>The first sibling of a &apos;%1&apos; element with two siblings must be a &apos;%2&apos; element.</source>
