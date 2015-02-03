@@ -538,20 +538,6 @@
             <apply>
                 <eq/>
                 <ci>a</ci>
-                <apply>
-                    <diff/>
-                    <bvar>
-                        <degree>
-                            <cn cellml:units="dimensionless">2</cn>
-                        </degree>
-                        <ci>t</ci>
-                    </bvar>
-                    <ci>f</ci>
-                </apply>
-            </apply>
-            <apply>
-                <eq/>
-                <ci>a</ci>
                 <true/>
             </apply>
             <apply>
@@ -562,17 +548,7 @@
             <apply>
                 <eq/>
                 <ci>a</ci>
-                <notanumber/>
-            </apply>
-            <apply>
-                <eq/>
-                <ci>a</ci>
                 <pi/>
-            </apply>
-            <apply>
-                <eq/>
-                <ci>a</ci>
-                <infinity/>
             </apply>
             <apply>
                 <eq/>

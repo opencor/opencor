@@ -189,12 +189,9 @@ def model cellml_1_0 as
         a = not(b);
         a = not(b or c);
         a = ode(f, t);
-        a = ode(f, t, 2{dimensionless});
         a = true;
         a = false;
-        a = nan;
         a = pi;
-        a = inf;
         a = e;
     enddef;
 

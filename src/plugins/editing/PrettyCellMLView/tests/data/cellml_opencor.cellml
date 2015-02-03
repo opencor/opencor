@@ -90,6 +90,32 @@ corresponding component definition...-->
                 </rdf:Description>
             </rdf:RDF>
         </variable>
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+                <eq/>
+                <ci>a</ci>
+                <apply>
+                    <diff/>
+                    <bvar>
+                        <degree>
+                            <cn cellml:units="dimensionless">2</cn>
+                        </degree>
+                        <ci>t</ci>
+                    </bvar>
+                    <ci>f</ci>
+                </apply>
+            </apply>
+            <apply>
+                <eq/>
+                <ci>a</ci>
+                <notanumber/>
+            </apply>
+            <apply>
+                <eq/>
+                <ci>a</ci>
+                <infinity/>
+            </apply>
+        </math>
     </component>
     <!--In between comment...-->
     <group cmeta:id="groupx">

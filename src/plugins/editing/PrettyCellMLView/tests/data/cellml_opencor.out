@@ -61,6 +61,10 @@ def model{cellml_1_1} cellml_1_1 as
         // corresponding component definition...
 
         var{variablex} variablex: unitsx;
+
+        a = ode(f, t, 2{dimensionless});
+        a = nan;
+        a = inf;
     enddef;
 
     // In between comment...
