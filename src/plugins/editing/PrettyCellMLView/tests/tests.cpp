@@ -153,6 +153,21 @@ void Tests::failingTests()
     QCOMPARE(converter.errorMessage(),
              QString("An 'apply' element must have at least one child element."));
 
+    QVERIFY(!converter.execute(OpenCOR::fileName("src/plugins/editing/PrettyCellMLView/tests/data/mathml_piecewise.cellml")));
+    QCOMPARE(converter.errorLine(), 5);
+    QCOMPARE(converter.errorMessage(),
+             QString("A 'piecewise' element must have at least one child element."));
+
+    QVERIFY(!converter.execute(OpenCOR::fileName("src/plugins/editing/PrettyCellMLView/tests/data/mathml_piece.cellml")));
+    QCOMPARE(converter.errorLine(), 5);
+    QCOMPARE(converter.errorMessage(),
+             QString("A 'piece' element must have two child elements."));
+
+    QVERIFY(!converter.execute(OpenCOR::fileName("src/plugins/editing/PrettyCellMLView/tests/data/mathml_otherwise.cellml")));
+    QCOMPARE(converter.errorLine(), 5);
+    QCOMPARE(converter.errorMessage(),
+             QString("An 'otherwise' element must have one child element."));
+
     // MathML relational operators
 
     QVERIFY(!converter.execute(OpenCOR::fileName("src/plugins/editing/PrettyCellMLView/tests/data/mathml_eq.cellml")));

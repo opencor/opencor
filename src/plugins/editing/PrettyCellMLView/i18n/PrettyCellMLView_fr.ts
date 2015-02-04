@@ -82,12 +82,24 @@
         <translation>Un élément &apos;%1&apos; doit avoir un élément enfant.</translation>
     </message>
     <message>
+        <source>An &apos;%1&apos; element must have one child element.</source>
+        <translation>Un élément &apos;%1&apos; doit avoir un élément enfant.</translation>
+    </message>
+    <message>
+        <source>A &apos;%1&apos; element must have two child elements.</source>
+        <translation>Un élément &apos;%1&apos; doit avoir deux éléments enfants.</translation>
+    </message>
+    <message>
         <source>A &apos;%1&apos; element must have one or two child elements.</source>
         <translation>Un élément &apos;%1&apos; doit avoir un ou deux éléments enfants.</translation>
     </message>
     <message>
-        <source>An &apos;apply&apos; element must have at least one child element.</source>
-        <translation>Un élément &apos;apply&apos; doit avoir aux moins deux éléments enfants.</translation>
+        <source>A &apos;%1&apos; element must have at least one child element.</source>
+        <translation>Un élément &apos;%1&apos; doit avoir aux moins deux éléments enfants.</translation>
+    </message>
+    <message>
+        <source>An &apos;%1&apos; element must have at least one child element.</source>
+        <translation>Un élément &apos;%1&apos; doit avoir aux moins deux éléments enfants.</translation>
     </message>
     <message>
         <source>A &apos;%1&apos; element must have a value.</source>

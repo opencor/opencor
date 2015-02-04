@@ -703,7 +703,7 @@ QString PrettyCellMLViewCellmlToPrettyCellmlConverter::processMathmlNode(const Q
         // Make sure that we have at least one child
 
         if (!childNodesCount) {
-            mErrorMessage = QObject::tr("An 'apply' element must have at least one child element.");
+            mErrorMessage = QObject::tr("An '%1' element must have at least one child element.").arg(nodeName);
         } else {
             domNode = childNodes.item(0);
             nodeName = domNode.nodeName();
@@ -826,6 +826,21 @@ QString PrettyCellMLViewCellmlToPrettyCellmlConverter::processMathmlNode(const Q
                 return QString();
             }
         }
+    } else if (!nodeName.compare("piecewise")) {
+        if (!childNodesCount)
+            mErrorMessage = QObject::tr("A '%1' element must have at least one child element.").arg(nodeName);
+        else
+            return QString();
+    } else if (!nodeName.compare("piece")) {
+        if (childNodesCount != 2)
+            mErrorMessage = QObject::tr("A '%1' element must have two child elements.").arg(nodeName);
+        else
+            return QString();
+    } else if (!nodeName.compare("otherwise")) {
+        if (childNodesCount != 1)
+            mErrorMessage = QObject::tr("An '%1' element must have one child element.").arg(nodeName);
+        else
+            return QString();
 
     // Token elements
 
