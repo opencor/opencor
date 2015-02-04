@@ -19,8 +19,37 @@
         </script>
 
         <p>
-            The PrettyCellMLView plugin can be used to edit <a href="http://www.cellml.org/">CellML</a> files using a text editor and a pretty CellML format.
+            The PrettyCellMLView plugin can be used to edit <a href="http://www.cellml.org/">CellML</a> files using a text editor and a pretty CellML format. The format is compatible with the one used in <a href="http://cor.physiol.ox.ac.uk/">COR</a>, although it has been expanded to support:
         </p>
+
+        <ul>
+            <li>Comments (both <code>// XXX</code> and <code>/* XXX */</code>).</li>
+            <li>The <code>import</code> element (i.e. CellML 1.1 compatibility).</li>
+            <li>The <code>cmeta:id</code> attribute on all CellML elements (i.e. CellML annotation support).</li>
+            <li><a href="http://www.w3.org/Math/">MathML</a>: the <code>degree</code> qualifier for the <code>diff</code> element, as well as the <code>notanumber</code> and <code>infinity</code> constants.</li>
+            <li>An unlimited number of group types (in <a href="http://cor.physiol.ox.ac.uk/">COR</a>, a group can only specify one <code>encapsulation</code> and/or one <code>containment</code> type).</li>
+        </ul>
+
+        <div class="section">
+            Limitations
+        </div>
+
+        <p>
+            The pretty CellML format has the same limitations as the <a href="http://cor.physiol.ox.ac.uk/">COR</a> format:
+        </p>
+
+        <ul>
+            <li>
+                A <code>piecewise</code> statement can only be used as part of a top <code>eq</code> statement, and nested <code>piecewise</code> statements are not allowed.
+                <p class="nomargins note note1">
+                    those are not limitations as such since an equation can always be rewritten to accommodate those 'limitations'.
+                </p>
+                <p class="nomargins note note2">
+                    those 'limitations' make it easier to read and maintain an equation that uses a <code>piecewise</code> statement.
+                </p>
+            </li>
+            <li>The <code>reaction</code> element is not supported (its use is discouraged and it will be removed from the forthcoming CellML 1.2 specifications).</li>
+        </ul>
 
         <script type="text/javascript">
             copyright("../../..");
