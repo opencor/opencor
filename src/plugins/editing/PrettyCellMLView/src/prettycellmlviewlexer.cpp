@@ -44,8 +44,9 @@ PrettyCellmlViewLexer::PrettyCellmlViewLexer(QObject *pParent) :
                          "\\b("
                              // Pretty CellML keywords
 
-                             "and|as|between|comp|def|endcomp|enddef|for|group|"
-                             "import|incl|map|model|unit|using|var|vars|"
+                             "and|as|between|case|comp|def|endcomp|enddef|"
+                             "endsel|for|group|import|incl|map|model|otherwise|"
+                             "sel|unit|using|var|vars|"
 
                              // MathML arithmetic operators
 

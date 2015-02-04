@@ -44,7 +44,9 @@ PrettyCellMLViewCellmlToPrettyCellmlConverter::PrettyCellMLViewCellmlToPrettyCel
     mWarningLines(QIntList()),
     mWarningMessages(QStringList()),
     mRdfNodes(QDomDocument()),
+    mTopMathmlNode(QDomNode()),
     mAssignmentDone(false),
+    mPiecewiseStatementUsed(false),
     mMappings(QMap<QString, QString>())
 {
     // Mappings for relational operators
@@ -657,7 +659,8 @@ bool PrettyCellMLViewCellmlToPrettyCellmlConverter::processMathNode(const QDomNo
 
     for (QDomNode domNode = pDomNode.firstChild();
          !domNode.isNull(); domNode = domNode.nextSibling()) {
-        mAssignmentDone = hasError = false;
+        mAssignmentDone = mPiecewiseStatementUsed = hasError = false;
+        mTopMathmlNode = domNode;
         equation = processMathmlNode(domNode, hasError);
 
         if (hasError) {
@@ -827,20 +830,33 @@ QString PrettyCellMLViewCellmlToPrettyCellmlConverter::processMathmlNode(const Q
             }
         }
     } else if (!nodeName.compare("piecewise")) {
-        if (!childNodesCount)
-            mErrorMessage = QObject::tr("A '%1' element must have at least one child element.").arg(nodeName);
-        else
-            return QString();
+        if (mPiecewiseStatementUsed) {
+            mErrorMessage = QObject::tr("A 'piecewise' element cannot be used within another 'piecewise' element.");
+        } else {
+            QDomNode parentNode = domNode.parentNode();
+
+            if (   (parentNode != mTopMathmlNode)
+                || parentNode.nodeName().compare("apply")
+                || parentNode.childNodes().at(0).nodeName().compare("eq")) {
+                mErrorMessage = QObject::tr("A 'piecewise' element can only be used within a top-level 'apply' element that has an 'eq' element as its first child element.");
+            } else if (!childNodesCount) {
+                mErrorMessage = QObject::tr("A '%1' element must have at least one child element.").arg(nodeName);
+            } else {
+                mPiecewiseStatementUsed = true;
+
+                return processPiecewiseNode(pDomNode, pHasError);
+            }
+        }
     } else if (!nodeName.compare("piece")) {
         if (childNodesCount != 2)
             mErrorMessage = QObject::tr("A '%1' element must have two child elements.").arg(nodeName);
         else
-            return QString();
+            return processPieceNode(pDomNode, pHasError);
     } else if (!nodeName.compare("otherwise")) {
         if (childNodesCount != 1)
             mErrorMessage = QObject::tr("An '%1' element must have one child element.").arg(nodeName);
         else
-            return QString();
+            return processOtherwiseNode(pDomNode, pHasError);
 
     // Token elements
 
@@ -950,6 +966,83 @@ QString PrettyCellMLViewCellmlToPrettyCellmlConverter::processMathmlNode(const Q
     pHasError = true;
 
     return QString();
+}
+
+//==============================================================================
+
+QString PrettyCellMLViewCellmlToPrettyCellmlConverter::processPiecewiseNode(const QDomNode &pDomNode,
+                                                                            bool &pHasError)
+{
+    // Process the piecewise node
+
+    QString res = "sel\n";
+
+    indent();
+
+    for (int i = 0, imax = pDomNode.childNodes().count(); i < imax; ++i) {
+        res += processMathmlNode(pDomNode.childNodes().at(i), pHasError);
+
+        if (pHasError)
+            return QString();
+    }
+
+    unindent();
+
+    return res+mIndent+"endsel";
+}
+
+//==============================================================================
+
+QString PrettyCellMLViewCellmlToPrettyCellmlConverter::processPieceNode(const QDomNode &pDomNode,
+                                                                        bool &pHasError)
+{
+    // Process the piece node
+
+    QString statement = processMathmlNode(pDomNode.childNodes().at(0), pHasError);
+
+    if (pHasError) {
+        return QString();
+    } else {
+        QString condition = processMathmlNode(pDomNode.childNodes().at(1), pHasError);
+
+        if (pHasError) {
+            return QString();
+        } else {
+            QString res = mIndent+"case "+condition+":\n";
+
+            indent();
+
+            res += mIndent+statement+";\n";
+
+            unindent();
+
+            return res;
+        }
+    }
+}
+
+//==============================================================================
+
+QString PrettyCellMLViewCellmlToPrettyCellmlConverter::processOtherwiseNode(const QDomNode &pDomNode,
+                                                                            bool &pHasError)
+{
+    // Process the otherwise node
+
+    QString statement = processMathmlNode(pDomNode.childNodes().at(0), pHasError);
+
+    if (pHasError) {
+        return QString();
+    } else {
+        QString res = mIndent+"otherwise:\n";
+
+        indent();
+
+        res += mIndent+statement+";\n";
+
+        unindent();
+
+        return res;
+    }
 }
 
 //==============================================================================

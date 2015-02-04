@@ -153,8 +153,18 @@ void Tests::failingTests()
     QCOMPARE(converter.errorMessage(),
              QString("An 'apply' element must have at least one child element."));
 
-    QVERIFY(!converter.execute(OpenCOR::fileName("src/plugins/editing/PrettyCellMLView/tests/data/mathml_piecewise.cellml")));
+    QVERIFY(!converter.execute(OpenCOR::fileName("src/plugins/editing/PrettyCellMLView/tests/data/mathml_piecewise_1.cellml")));
     QCOMPARE(converter.errorLine(), 5);
+    QCOMPARE(converter.errorMessage(),
+             QString("A 'piecewise' element can only be used within a top-level 'apply' element that has an 'eq' element as its first child element."));
+
+    QVERIFY(!converter.execute(OpenCOR::fileName("src/plugins/editing/PrettyCellMLView/tests/data/mathml_piecewise_2.cellml")));
+    QCOMPARE(converter.errorLine(), 10);
+    QCOMPARE(converter.errorMessage(),
+             QString("A 'piecewise' element cannot be used within another 'piecewise' element."));
+
+    QVERIFY(!converter.execute(OpenCOR::fileName("src/plugins/editing/PrettyCellMLView/tests/data/mathml_piecewise_3.cellml")));
+    QCOMPARE(converter.errorLine(), 8);
     QCOMPARE(converter.errorMessage(),
              QString("A 'piecewise' element must have at least one child element."));
 

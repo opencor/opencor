@@ -96,7 +96,10 @@ private:
     QDomNamedNodeMap mAttributes;
     QDomDocument mRdfNodes;
 
+    QDomNode mTopMathmlNode;
+
     bool mAssignmentDone;
+    bool mPiecewiseStatementUsed;
 
     QMap<QString, QString> mMappings;
 
@@ -120,6 +123,9 @@ private:
     void processVariableNode(const QDomNode &pDomNode);
     bool processMathNode(const QDomNode &pDomNode);
     QString processMathmlNode(const QDomNode &pDomNode, bool &pHasError);
+    QString processPiecewiseNode(const QDomNode &pDomNode, bool &pHasError);
+    QString processPieceNode(const QDomNode &pDomNode, bool &pHasError);
+    QString processOtherwiseNode(const QDomNode &pDomNode, bool &pHasError);
     QString processOperatorNode(const QString &pOperator,
                                 const QDomNode &pDomNode, bool &pHasError);
     QString processFunctionNode(const QString &pFunction,
