@@ -40,8 +40,8 @@ void Tests::cellmlCorTests()
 
     QVERIFY(converter.execute(OpenCOR::fileName("src/plugins/editing/PrettyCellMLView/tests/data/cellml_cor.cellml")));
 
-    QCOMPARE(converter.output().split("\n"),
-             OpenCOR::fileContents(OpenCOR::fileName("src/plugins/editing/PrettyCellMLView/tests/data/cellml_cor.out")));
+    QCOMPARELIST(converter.output().split("\n"),
+                 OpenCOR::fileContents(OpenCOR::fileName("src/plugins/editing/PrettyCellMLView/tests/data/cellml_cor.out")));
 }
 
 //==============================================================================
@@ -54,8 +54,8 @@ void Tests::cellmlOpencorTests()
 
     QVERIFY(converter.execute(OpenCOR::fileName("src/plugins/editing/PrettyCellMLView/tests/data/cellml_opencor.cellml")));
 
-    QCOMPARE(converter.output().split("\n"),
-             OpenCOR::fileContents(OpenCOR::fileName("src/plugins/editing/PrettyCellMLView/tests/data/cellml_opencor.out")));
+    QCOMPARELIST(converter.output().split("\n"),
+                 OpenCOR::fileContents(OpenCOR::fileName("src/plugins/editing/PrettyCellMLView/tests/data/cellml_opencor.out")));
 }
 
 //==============================================================================
