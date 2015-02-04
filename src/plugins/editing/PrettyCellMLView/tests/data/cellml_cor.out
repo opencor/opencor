@@ -193,6 +193,30 @@ def model cellml_1_0 as
         a = false;
         a = pi;
         a = e;
+        a = sin(b);
+        a = cos(b);
+        a = tan(b);
+        a = sec(b);
+        a = csc(b);
+        a = cot(b);
+        a = sinh(b);
+        a = cosh(b);
+        a = tanh(b);
+        a = sech(b);
+        a = csch(b);
+        a = coth(b);
+        a = asin(b);
+        a = acos(b);
+        a = atan(b);
+        a = asec(b);
+        a = acsc(b);
+        a = acot(b);
+        a = asinh(b);
+        a = acosh(b);
+        a = atanh(b);
+        a = asech(b);
+        a = acsch(b);
+        a = acoth(b);
     enddef;
 
     def group as containment for

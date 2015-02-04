@@ -313,6 +313,128 @@ void Tests::failingTests()
     QCOMPARE(converter.errorMessage(),
              QString("The first child element of a 'bvar' element with two child elements must be a 'degree' element."));
 
+    // MathML trigonometric operators
+
+    QVERIFY(!converter.execute(OpenCOR::fileName("src/plugins/editing/PrettyCellMLView/tests/data/mathml_sin.cellml")));
+    QCOMPARE(converter.errorLine(), 6);
+    QCOMPARE(converter.errorMessage(),
+             QString("A 'sin' element must have one sibling."));
+
+    QVERIFY(!converter.execute(OpenCOR::fileName("src/plugins/editing/PrettyCellMLView/tests/data/mathml_cos.cellml")));
+    QCOMPARE(converter.errorLine(), 6);
+    QCOMPARE(converter.errorMessage(),
+             QString("A 'cos' element must have one sibling."));
+
+    QVERIFY(!converter.execute(OpenCOR::fileName("src/plugins/editing/PrettyCellMLView/tests/data/mathml_tan.cellml")));
+    QCOMPARE(converter.errorLine(), 6);
+    QCOMPARE(converter.errorMessage(),
+             QString("A 'tan' element must have one sibling."));
+
+    QVERIFY(!converter.execute(OpenCOR::fileName("src/plugins/editing/PrettyCellMLView/tests/data/mathml_sec.cellml")));
+    QCOMPARE(converter.errorLine(), 6);
+    QCOMPARE(converter.errorMessage(),
+             QString("A 'sec' element must have one sibling."));
+
+    QVERIFY(!converter.execute(OpenCOR::fileName("src/plugins/editing/PrettyCellMLView/tests/data/mathml_csc.cellml")));
+    QCOMPARE(converter.errorLine(), 6);
+    QCOMPARE(converter.errorMessage(),
+             QString("A 'csc' element must have one sibling."));
+
+    QVERIFY(!converter.execute(OpenCOR::fileName("src/plugins/editing/PrettyCellMLView/tests/data/mathml_cot.cellml")));
+    QCOMPARE(converter.errorLine(), 6);
+    QCOMPARE(converter.errorMessage(),
+             QString("A 'cot' element must have one sibling."));
+
+    QVERIFY(!converter.execute(OpenCOR::fileName("src/plugins/editing/PrettyCellMLView/tests/data/mathml_sinh.cellml")));
+    QCOMPARE(converter.errorLine(), 6);
+    QCOMPARE(converter.errorMessage(),
+             QString("A 'sinh' element must have one sibling."));
+
+    QVERIFY(!converter.execute(OpenCOR::fileName("src/plugins/editing/PrettyCellMLView/tests/data/mathml_cosh.cellml")));
+    QCOMPARE(converter.errorLine(), 6);
+    QCOMPARE(converter.errorMessage(),
+             QString("A 'cosh' element must have one sibling."));
+
+    QVERIFY(!converter.execute(OpenCOR::fileName("src/plugins/editing/PrettyCellMLView/tests/data/mathml_tanh.cellml")));
+    QCOMPARE(converter.errorLine(), 6);
+    QCOMPARE(converter.errorMessage(),
+             QString("A 'tanh' element must have one sibling."));
+
+    QVERIFY(!converter.execute(OpenCOR::fileName("src/plugins/editing/PrettyCellMLView/tests/data/mathml_sech.cellml")));
+    QCOMPARE(converter.errorLine(), 6);
+    QCOMPARE(converter.errorMessage(),
+             QString("A 'sech' element must have one sibling."));
+
+    QVERIFY(!converter.execute(OpenCOR::fileName("src/plugins/editing/PrettyCellMLView/tests/data/mathml_csch.cellml")));
+    QCOMPARE(converter.errorLine(), 6);
+    QCOMPARE(converter.errorMessage(),
+             QString("A 'csch' element must have one sibling."));
+
+    QVERIFY(!converter.execute(OpenCOR::fileName("src/plugins/editing/PrettyCellMLView/tests/data/mathml_coth.cellml")));
+    QCOMPARE(converter.errorLine(), 6);
+    QCOMPARE(converter.errorMessage(),
+             QString("A 'coth' element must have one sibling."));
+
+    QVERIFY(!converter.execute(OpenCOR::fileName("src/plugins/editing/PrettyCellMLView/tests/data/mathml_arcsin.cellml")));
+    QCOMPARE(converter.errorLine(), 6);
+    QCOMPARE(converter.errorMessage(),
+             QString("An 'arcsin' element must have one sibling."));
+
+    QVERIFY(!converter.execute(OpenCOR::fileName("src/plugins/editing/PrettyCellMLView/tests/data/mathml_arccos.cellml")));
+    QCOMPARE(converter.errorLine(), 6);
+    QCOMPARE(converter.errorMessage(),
+             QString("An 'arccos' element must have one sibling."));
+
+    QVERIFY(!converter.execute(OpenCOR::fileName("src/plugins/editing/PrettyCellMLView/tests/data/mathml_arctan.cellml")));
+    QCOMPARE(converter.errorLine(), 6);
+    QCOMPARE(converter.errorMessage(),
+             QString("An 'arctan' element must have one sibling."));
+
+    QVERIFY(!converter.execute(OpenCOR::fileName("src/plugins/editing/PrettyCellMLView/tests/data/mathml_arcsec.cellml")));
+    QCOMPARE(converter.errorLine(), 6);
+    QCOMPARE(converter.errorMessage(),
+             QString("An 'arcsec' element must have one sibling."));
+
+    QVERIFY(!converter.execute(OpenCOR::fileName("src/plugins/editing/PrettyCellMLView/tests/data/mathml_arccsc.cellml")));
+    QCOMPARE(converter.errorLine(), 6);
+    QCOMPARE(converter.errorMessage(),
+             QString("An 'arccsc' element must have one sibling."));
+
+    QVERIFY(!converter.execute(OpenCOR::fileName("src/plugins/editing/PrettyCellMLView/tests/data/mathml_arccot.cellml")));
+    QCOMPARE(converter.errorLine(), 6);
+    QCOMPARE(converter.errorMessage(),
+             QString("An 'arccot' element must have one sibling."));
+
+    QVERIFY(!converter.execute(OpenCOR::fileName("src/plugins/editing/PrettyCellMLView/tests/data/mathml_arcsinh.cellml")));
+    QCOMPARE(converter.errorLine(), 6);
+    QCOMPARE(converter.errorMessage(),
+             QString("An 'arcsinh' element must have one sibling."));
+
+    QVERIFY(!converter.execute(OpenCOR::fileName("src/plugins/editing/PrettyCellMLView/tests/data/mathml_arccosh.cellml")));
+    QCOMPARE(converter.errorLine(), 6);
+    QCOMPARE(converter.errorMessage(),
+             QString("An 'arccosh' element must have one sibling."));
+
+    QVERIFY(!converter.execute(OpenCOR::fileName("src/plugins/editing/PrettyCellMLView/tests/data/mathml_arctanh.cellml")));
+    QCOMPARE(converter.errorLine(), 6);
+    QCOMPARE(converter.errorMessage(),
+             QString("An 'arctanh' element must have one sibling."));
+
+    QVERIFY(!converter.execute(OpenCOR::fileName("src/plugins/editing/PrettyCellMLView/tests/data/mathml_arcsech.cellml")));
+    QCOMPARE(converter.errorLine(), 6);
+    QCOMPARE(converter.errorMessage(),
+             QString("An 'arcsech' element must have one sibling."));
+
+    QVERIFY(!converter.execute(OpenCOR::fileName("src/plugins/editing/PrettyCellMLView/tests/data/mathml_arccsch.cellml")));
+    QCOMPARE(converter.errorLine(), 6);
+    QCOMPARE(converter.errorMessage(),
+             QString("An 'arccsch' element must have one sibling."));
+
+    QVERIFY(!converter.execute(OpenCOR::fileName("src/plugins/editing/PrettyCellMLView/tests/data/mathml_arccoth.cellml")));
+    QCOMPARE(converter.errorLine(), 6);
+    QCOMPARE(converter.errorMessage(),
+             QString("An 'arccoth' element must have one sibling."));
+
     // MathML constants
 
     QVERIFY(!converter.execute(OpenCOR::fileName("src/plugins/editing/PrettyCellMLView/tests/data/mathml_constant_1.cellml")));
