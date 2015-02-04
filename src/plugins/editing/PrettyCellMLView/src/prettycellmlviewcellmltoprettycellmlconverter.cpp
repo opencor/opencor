@@ -71,7 +71,7 @@ PrettyCellMLViewCellmlToPrettyCellmlConverter::PrettyCellMLViewCellmlToPrettyCel
     mMappings.insert("or", " or ");
     mMappings.insert("xor", " xor ");
 
-    // Constants
+    // Mappings for constants
 
     mMappings.insert("true", "true");
     mMappings.insert("false", "false");
@@ -79,6 +79,21 @@ PrettyCellMLViewCellmlToPrettyCellmlConverter::PrettyCellMLViewCellmlToPrettyCel
     mMappings.insert("pi", "pi");
     mMappings.insert("infinity", "inf");
     mMappings.insert("exponentiale", "e");
+
+    // Mappings for trigonometric operators
+
+    mMappings.insert("arcsin", "asin");
+    mMappings.insert("arccos", "acos");
+    mMappings.insert("arctan", "atan");
+    mMappings.insert("arcsec", "asec");
+    mMappings.insert("arccsc", "acsc");
+    mMappings.insert("arccot", "acot");
+    mMappings.insert("arcsinh", "asinh");
+    mMappings.insert("arccosh", "acosh");
+    mMappings.insert("arctanh", "atanh");
+    mMappings.insert("arcsech", "asech");
+    mMappings.insert("arccsch", "acsch");
+    mMappings.insert("arccoth", "acoth");
 }
 
 //==============================================================================
@@ -783,6 +798,25 @@ QString PrettyCellMLViewCellmlToPrettyCellmlConverter::processMathmlNode(const Q
                     mErrorMessage = QObject::tr("A '%1' element must have two siblings.").arg(nodeName);
                 else
                     return processDiffNode(pDomNode, pHasError);
+
+            // Trigonometric operators
+
+            } else if (   !nodeName.compare("sin") || !nodeName.compare("cos") || !nodeName.compare("tan")
+                       || !nodeName.compare("sec") || !nodeName.compare("csc") || !nodeName.compare("cot")
+                       || !nodeName.compare("sinh") || !nodeName.compare("cosh") || !nodeName.compare("tanh")
+                       || !nodeName.compare("sech") || !nodeName.compare("csch") || !nodeName.compare("coth")) {
+                if (childNodesCount != 2)
+                    mErrorMessage = QObject::tr("A '%1' element must have one sibling.").arg(nodeName);
+                else
+                    return processFunctionNode(nodeName, pDomNode, pHasError);
+            } else if (   !nodeName.compare("arcsin") || !nodeName.compare("arccos") || !nodeName.compare("arctan")
+                       || !nodeName.compare("arcsec") || !nodeName.compare("arccsc") || !nodeName.compare("arccot")
+                       || !nodeName.compare("arcsinh") || !nodeName.compare("arccosh") || !nodeName.compare("arctanh")
+                       || !nodeName.compare("arcsech") || !nodeName.compare("arccsch") || !nodeName.compare("arccoth")) {
+                if (childNodesCount != 2)
+                    mErrorMessage = QObject::tr("An '%1' element must have one sibling.").arg(nodeName);
+                else
+                    return processFunctionNode(mMappings.value(nodeName), pDomNode, pHasError);
 
             // Unknown node
 

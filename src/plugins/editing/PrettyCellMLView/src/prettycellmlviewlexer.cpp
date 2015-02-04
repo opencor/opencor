@@ -42,15 +42,28 @@ PrettyCellmlViewLexer::PrettyCellmlViewLexer(QObject *pParent) :
 
     mKeywordsRegEx = QRegularExpression(
                          "\\b("
-                             // General keywords
+                             // Pretty CellML keywords
 
                              "and|as|between|comp|def|endcomp|enddef|for|group|"
-                             "import|incl|map|model|ode|unit|using|var|vars|"
+                             "import|incl|map|model|unit|using|var|vars|"
 
-                             // MathML keyworkds
+                             // MathML arithmetic operators
 
-                             "abs|and|ceil|exp|fact|floor|ln|log|not|or|pow|"
-                             "root|sqr|sqrt|xor|"
+                             "abs|ceil|exp|fact|floor|ln|log|pow|root|sqr|sqrt|"
+
+                             // MathML logical operators
+
+                             "and|or|xor|not|"
+
+                             // MathML calculus elements
+
+                             "ode|"
+
+                             // MathML trigonometric operators
+
+                             "sin|cos|tan|sec|csc|cot|sinh|cosh|tanh|sech|csch|"
+                             "coth|asin|acos|atan|asec|acsc|acot|asinh|acosh|"
+                             "atanh|asech|acsch|acoth|"
 
                              // MathML constants
 
