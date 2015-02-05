@@ -81,6 +81,13 @@ private:
         EndDef
     };
 
+    enum NodeType {
+        UnknownNode,
+        EqNode, NeqNode, GtNode, LtNode, GeqNode, LeqNode,
+        PlusNode, MinusNode, TimesNode, DivideNode,
+        AndNode, OrNode, XorNode
+    };
+
     QString mOutput;
     QString mIndent;
 
@@ -104,6 +111,7 @@ private:
     bool mPiecewiseStatementUsed;
 
     QMap<QString, QString> mMappings;
+    QMap<QString, NodeType> mNodeTypes;
 
     void indent();
     void unindent();
@@ -112,6 +120,8 @@ private:
                       const QString &pString = QString());
 
     QString cmetaId(const QDomNode &pDomNode) const;
+
+    NodeType nodeType(const QDomNode &pDomNode) const;
 
     bool processModelNode(const QDomNode &pDomNode);
     void processCommentNode(const QDomNode &pDomNode);

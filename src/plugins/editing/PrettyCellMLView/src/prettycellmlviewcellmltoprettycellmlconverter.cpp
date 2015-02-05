@@ -48,31 +48,33 @@ PrettyCellMLViewCellmlToPrettyCellmlConverter::PrettyCellMLViewCellmlToPrettyCel
     mAssignmentDone(false),
     mOldPiecewiseStatementUsed(false),
     mPiecewiseStatementUsed(false),
-    mMappings(QMap<QString, QString>())
+    mMappings(QMap<QString, QString>()),
+    mNodeTypes(QMap<QString, NodeType>())
 {
     // Mappings for relational operators
 
-    mMappings.insert("neq", " <> ");
-    mMappings.insert("gt", " > ");
-    mMappings.insert("lt", " < ");
-    mMappings.insert("geq", " >= ");
-    mMappings.insert("leq", " <= ");
+                                           mNodeTypes.insert("eq", EqNode);
+    mMappings.insert("neq", " <> ");       mNodeTypes.insert("neq", NeqNode);
+    mMappings.insert("gt", " > ");         mNodeTypes.insert("gt", GtNode);
+    mMappings.insert("lt", " < ");         mNodeTypes.insert("lt", LtNode);
+    mMappings.insert("geq", " >= ");       mNodeTypes.insert("geq", GeqNode);
+    mMappings.insert("leq", " <= ");       mNodeTypes.insert("leq", LeqNode);
 
     // Mappings for arithmetic operators
 
-    mMappings.insert("plus", "+");
-    mMappings.insert("minus", "-");
-    mMappings.insert("times", "*");
-    mMappings.insert("divide", "/");
+    mMappings.insert("plus", "+");         mNodeTypes.insert("plus", PlusNode);
+    mMappings.insert("minus", "-");        mNodeTypes.insert("minus", MinusNode);
+    mMappings.insert("times", "*");        mNodeTypes.insert("times", TimesNode);
+    mMappings.insert("divide", "/");       mNodeTypes.insert("divide", DivideNode);
     mMappings.insert("ceiling", "ceil");
     mMappings.insert("floor", "floor");
     mMappings.insert("factorial", "fact");
 
     // Mappings for arithmetic operators
 
-    mMappings.insert("and", " and ");
-    mMappings.insert("or", " or ");
-    mMappings.insert("xor", " xor ");
+    mMappings.insert("and", " and ");      mNodeTypes.insert("and", AndNode);
+    mMappings.insert("or", " or ");        mNodeTypes.insert("or", OrNode);
+    mMappings.insert("xor", " xor ");      mNodeTypes.insert("xor", XorNode);
 
     // Mappings for constants
 
@@ -259,6 +261,18 @@ QString PrettyCellMLViewCellmlToPrettyCellmlConverter::cmetaId(const QDomNode &p
         return QString("{%1}").arg(pDomNode.attributes().namedItem(CmetaId).nodeValue().trimmed());
     else
         return QString();
+}
+
+//==============================================================================
+
+PrettyCellMLViewCellmlToPrettyCellmlConverter::NodeType PrettyCellMLViewCellmlToPrettyCellmlConverter::nodeType(const QDomNode &pDomNode) const
+{
+    // Return the type of the given node
+
+    if (!pDomNode.nodeName().compare("apply"))
+        return mNodeTypes.value(pDomNode.childNodes().item(0).nodeName());
+    else
+        return mNodeTypes.value(pDomNode.nodeName());
 }
 
 //==============================================================================
@@ -732,7 +746,7 @@ QString PrettyCellMLViewCellmlToPrettyCellmlConverter::processMathmlNode(const Q
                     mErrorMessage = QObject::tr("An '%1' element must have two siblings.").arg(nodeName);
                 else
                     return processOperatorNode(mMappings.value(nodeName), pDomNode, pHasError);
-            } else if (   !nodeName.compare("gt") || !nodeName.compare("geq")) {
+            } else if (!nodeName.compare("gt") || !nodeName.compare("geq")) {
                 if (childNodesCount != 3)
                     mErrorMessage = QObject::tr("A '%1' element must have two siblings.").arg(nodeName);
                 else
@@ -1057,14 +1071,29 @@ QString PrettyCellMLViewCellmlToPrettyCellmlConverter::processOperatorNode(const
     // Process the operator node, based on its number of siblings
 
     if (pDomNode.childNodes().count() == 2) {
-        QString operand = processMathmlNode(pDomNode.childNodes().at(1), pHasError);
+        QDomNode operandNode = pDomNode.childNodes().item(1);
+        QString operand = processMathmlNode(operandNode, pHasError);
 
-        if (pHasError)
+        if (pHasError) {
             return QString();
-        else if (!pDomNode.childNodes().at(0).nodeName().compare("plus"))
-            return operand;
-        else
-            return pOperator+operand;
+        } else {
+            if (mNodeTypes.value(pDomNode.childNodes().item(0).nodeName()) == PlusNode) {
+                return operand;
+            } else {
+                // Minus node
+
+                switch (nodeType(operandNode)) {
+                case EqNode: case NeqNode: case GtNode: case LtNode: case GeqNode: case LeqNode:
+                case PlusNode: case MinusNode:
+                case AndNode: case OrNode: case XorNode:
+                    return pOperator+"("+operand+")";
+
+                    break;
+                default:
+                    return pOperator+operand;
+                }
+            }
+        }
     } else {
         QString firstOperand = processMathmlNode(pDomNode.childNodes().item(1), pHasError);
 
@@ -1221,19 +1250,25 @@ QString PrettyCellMLViewCellmlToPrettyCellmlConverter::processLogNode(const QDom
 QString PrettyCellMLViewCellmlToPrettyCellmlConverter::processNotNode(const QDomNode &pDomNode,
                                                                       bool &pHasError)
 {
-//---GRY--- NEED TO HANDLE IT BETTER, I.E.
-//              a = not b;
-//          BUT
-//              a = not(b or c);
-
     // Process the not node
 
-    QString operand = processMathmlNode(pDomNode.childNodes().at(1), pHasError);
+    QDomNode domNode = pDomNode.childNodes().item(1);
+    QString operand = processMathmlNode(domNode, pHasError);
 
-    if (pHasError)
+    if (pHasError) {
         return QString();
-    else
-        return "not("+operand+")";
+    } else {
+        switch (nodeType(domNode)) {
+        case EqNode: case NeqNode: case GtNode: case LtNode: case GeqNode: case LeqNode:
+        case PlusNode: case MinusNode: case TimesNode: case DivideNode:
+        case AndNode: case OrNode: case XorNode:
+            return "not("+operand+")";
+
+            break;
+        default:
+            return "not "+operand;
+        }
+    }
 }
 
 //==============================================================================
