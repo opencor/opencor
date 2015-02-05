@@ -99,6 +99,8 @@ private:
     QDomNode mTopMathmlNode;
 
     bool mAssignmentDone;
+
+    bool mOldPiecewiseStatementUsed;
     bool mPiecewiseStatementUsed;
 
     QMap<QString, QString> mMappings;

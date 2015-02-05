@@ -46,6 +46,7 @@ PrettyCellMLViewCellmlToPrettyCellmlConverter::PrettyCellMLViewCellmlToPrettyCel
     mRdfNodes(QDomDocument()),
     mTopMathmlNode(QDomNode()),
     mAssignmentDone(false),
+    mOldPiecewiseStatementUsed(false),
     mPiecewiseStatementUsed(false),
     mMappings(QMap<QString, QString>())
 {
@@ -659,6 +660,7 @@ bool PrettyCellMLViewCellmlToPrettyCellmlConverter::processMathNode(const QDomNo
 
     for (QDomNode domNode = pDomNode.firstChild();
          !domNode.isNull(); domNode = domNode.nextSibling()) {
+        mOldPiecewiseStatementUsed = mPiecewiseStatementUsed;
         mAssignmentDone = mPiecewiseStatementUsed = hasError = false;
         mTopMathmlNode = domNode;
         equation = processMathmlNode(domNode, hasError);
@@ -672,7 +674,8 @@ bool PrettyCellMLViewCellmlToPrettyCellmlConverter::processMathNode(const QDomNo
 
             if (   (mLastOutputType == Comment)
                 || (mLastOutputType == DefBaseUnit) || (mLastOutputType == EndDef)
-                || (mLastOutputType == Var)) {
+                || (mLastOutputType == Var)
+                || (mPiecewiseStatementUsed != mOldPiecewiseStatementUsed)) {
                 outputString();
             }
 

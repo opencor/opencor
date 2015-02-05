@@ -148,6 +148,16 @@ def model cellml_1_0 as
         a = 3{dimensionless};
         a = 5{};
         a = 12.3e5{dimensionless};
+
+        a = sel
+            case Version == 0{dimensionless}:
+                123{dimensionless};
+            case Version == 1{dimensionless}:
+                456{dimensionless};
+            otherwise:
+                789{dimensionless};
+        endsel;
+
         a = b == c;
         a = b <> c;
         a = b > c;
