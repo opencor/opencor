@@ -687,8 +687,10 @@ bool PrettyCellMLViewCellmlToPrettyCellmlConverter::processMathNode(const QDomNo
             //       check...
 
             if (   (mLastOutputType == Comment)
-                || (mLastOutputType == DefBaseUnit) || (mLastOutputType == EndDef)
+                || (mLastOutputType == DefBaseUnit)
+                || (mLastOutputType == EndDef)
                 || (mLastOutputType == Var)
+                ||  mPiecewiseStatementUsed
                 || (mPiecewiseStatementUsed != mOldPiecewiseStatementUsed)) {
                 outputString();
             }
