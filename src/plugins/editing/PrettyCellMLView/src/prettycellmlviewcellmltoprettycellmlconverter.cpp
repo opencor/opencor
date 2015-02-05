@@ -840,7 +840,7 @@ QString PrettyCellMLViewCellmlToPrettyCellmlConverter::processMathmlNode(const Q
 
             if (   (parentNode != mTopMathmlNode)
                 || parentNode.nodeName().compare("apply")
-                || parentNode.childNodes().at(0).nodeName().compare("eq")) {
+                || parentNode.childNodes().item(0).nodeName().compare("eq")) {
                 mErrorMessage = QObject::tr("A 'piecewise' element can only be used within a top-level 'apply' element that has an 'eq' element as its first child element.");
             } else if (!childNodesCount) {
                 mErrorMessage = QObject::tr("A '%1' element must have at least one child element.").arg(nodeName);
@@ -983,7 +983,7 @@ QString PrettyCellMLViewCellmlToPrettyCellmlConverter::processPiecewiseNode(cons
     indent();
 
     for (int i = 0, imax = pDomNode.childNodes().count(); i < imax; ++i) {
-        res += processMathmlNode(pDomNode.childNodes().at(i), pHasError);
+        res += processMathmlNode(pDomNode.childNodes().item(i), pHasError);
 
         if (pHasError)
             return QString();
@@ -1001,12 +1001,12 @@ QString PrettyCellMLViewCellmlToPrettyCellmlConverter::processPieceNode(const QD
 {
     // Process the piece node
 
-    QString statement = processMathmlNode(pDomNode.childNodes().at(0), pHasError);
+    QString statement = processMathmlNode(pDomNode.childNodes().item(0), pHasError);
 
     if (pHasError) {
         return QString();
     } else {
-        QString condition = processMathmlNode(pDomNode.childNodes().at(1), pHasError);
+        QString condition = processMathmlNode(pDomNode.childNodes().item(1), pHasError);
 
         if (pHasError) {
             return QString();
@@ -1031,7 +1031,7 @@ QString PrettyCellMLViewCellmlToPrettyCellmlConverter::processOtherwiseNode(cons
 {
     // Process the otherwise node
 
-    QString statement = processMathmlNode(pDomNode.childNodes().at(0), pHasError);
+    QString statement = processMathmlNode(pDomNode.childNodes().item(0), pHasError);
 
     if (pHasError) {
         return QString();
@@ -1066,7 +1066,7 @@ QString PrettyCellMLViewCellmlToPrettyCellmlConverter::processOperatorNode(const
         else
             return pOperator+operand;
     } else {
-        QString firstOperand = processMathmlNode(pDomNode.childNodes().at(1), pHasError);
+        QString firstOperand = processMathmlNode(pDomNode.childNodes().item(1), pHasError);
 
         if (pHasError) {
             return QString();
@@ -1075,7 +1075,7 @@ QString PrettyCellMLViewCellmlToPrettyCellmlConverter::processOperatorNode(const
             QString otherOperand;
 
             for (int i = 2, imax = pDomNode.childNodes().count(); i < imax; ++i) {
-                otherOperand = processMathmlNode(pDomNode.childNodes().at(i), pHasError);
+                otherOperand = processMathmlNode(pDomNode.childNodes().item(i), pHasError);
 
                 if (pHasError)
                     return QString();
@@ -1096,7 +1096,7 @@ QString PrettyCellMLViewCellmlToPrettyCellmlConverter::processFunctionNode(const
 {
     // Process the function node
 
-    QString argument = processMathmlNode(pDomNode.childNodes().at(1), pHasError);
+    QString argument = processMathmlNode(pDomNode.childNodes().item(1), pHasError);
 
     if (pHasError)
         return QString();
@@ -1111,12 +1111,12 @@ QString PrettyCellMLViewCellmlToPrettyCellmlConverter::processPowerNode(const QD
 {
     // Process the power node
 
-    QString a = processMathmlNode(pDomNode.childNodes().at(1), pHasError);
+    QString a = processMathmlNode(pDomNode.childNodes().item(1), pHasError);
 
     if (pHasError) {
         return QString();
     } else {
-        QString b = processMathmlNode(pDomNode.childNodes().at(2), pHasError);
+        QString b = processMathmlNode(pDomNode.childNodes().item(2), pHasError);
 
         if (pHasError) {
             return QString();
@@ -1146,14 +1146,14 @@ QString PrettyCellMLViewCellmlToPrettyCellmlConverter::processRootNode(const QDo
     // Process the root node, based on its number of arguments
 
     if (pDomNode.childNodes().count() == 2) {
-        QString a = processMathmlNode(pDomNode.childNodes().at(1), pHasError);
+        QString a = processMathmlNode(pDomNode.childNodes().item(1), pHasError);
 
         if (pHasError)
             return QString();
         else
             return "sqrt("+a+")";
     } else {
-        QDomNode domNode = pDomNode.childNodes().at(1);
+        QDomNode domNode = pDomNode.childNodes().item(1);
 
         if (domNode.nodeName().compare("degree")){
             mErrorMessage = QObject::tr("The first sibling of a '%1' element with two siblings must be a '%2' element.").arg("root")
@@ -1169,7 +1169,7 @@ QString PrettyCellMLViewCellmlToPrettyCellmlConverter::processRootNode(const QDo
             if (pHasError) {
                 return QString();
             } else {
-                QString a = processMathmlNode(pDomNode.childNodes().at(2), pHasError);
+                QString a = processMathmlNode(pDomNode.childNodes().item(2), pHasError);
 
                 if (pHasError) {
                     return QString();
@@ -1198,7 +1198,7 @@ QString PrettyCellMLViewCellmlToPrettyCellmlConverter::processLogNode(const QDom
 {
     // Process the log node
 
-    QString argumentOrBase = processMathmlNode(pDomNode.childNodes().at(1), pHasError);
+    QString argumentOrBase = processMathmlNode(pDomNode.childNodes().item(1), pHasError);
 
     if (pHasError) {
         return QString();
@@ -1206,7 +1206,7 @@ QString PrettyCellMLViewCellmlToPrettyCellmlConverter::processLogNode(const QDom
         if (pDomNode.childNodes().count() == 2) {
             return "log("+argumentOrBase+")";
         } else {
-            QString argument = processMathmlNode(pDomNode.childNodes().at(2), pHasError);
+            QString argument = processMathmlNode(pDomNode.childNodes().item(2), pHasError);
 
             if (pHasError)
                 return QString();
@@ -1243,12 +1243,12 @@ QString PrettyCellMLViewCellmlToPrettyCellmlConverter::processDiffNode(const QDo
 {
     // Process the diff node
 
-    QString f = processMathmlNode(pDomNode.childNodes().at(2), pHasError);
+    QString f = processMathmlNode(pDomNode.childNodes().item(2), pHasError);
 
     if (pHasError) {
         return QString();
     } else {
-        QDomNode domNode = pDomNode.childNodes().at(1);
+        QDomNode domNode = pDomNode.childNodes().item(1);
 
         if (domNode.nodeName().compare("bvar")){
             mErrorMessage = QObject::tr("The first sibling of a '%1' element with two siblings must be a '%2' element.").arg("diff")
@@ -1259,7 +1259,7 @@ QString PrettyCellMLViewCellmlToPrettyCellmlConverter::processDiffNode(const QDo
 
             return QString();
         } else {
-            QString x = processMathmlNode(pDomNode.childNodes().at(1), pHasError);
+            QString x = processMathmlNode(pDomNode.childNodes().item(1), pHasError);
 
             if (pHasError)
                 return QString();
@@ -1277,9 +1277,9 @@ QString PrettyCellMLViewCellmlToPrettyCellmlConverter::processBvarNode(const QDo
     // Process the bvar node, based on its number of child elements
 
     if (pDomNode.childNodes().count() == 1) {
-        return processMathmlNode(pDomNode.childNodes().at(0), pHasError);
+        return processMathmlNode(pDomNode.childNodes().item(0), pHasError);
     } else {
-        QDomNode domNode = pDomNode.childNodes().at(0);
+        QDomNode domNode = pDomNode.childNodes().item(0);
 
         if (domNode.nodeName().compare("degree")){
             mErrorMessage = QObject::tr("The first child element of a '%1' element with two child elements must be a '%2' element.").arg("bvar")
@@ -1295,7 +1295,7 @@ QString PrettyCellMLViewCellmlToPrettyCellmlConverter::processBvarNode(const QDo
             if (pHasError) {
                 return QString();
             } else {
-                QString a = processMathmlNode(pDomNode.childNodes().at(1), pHasError);
+                QString a = processMathmlNode(pDomNode.childNodes().item(1), pHasError);
 
                 if (pHasError)
                     return QString();
