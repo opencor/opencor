@@ -277,6 +277,17 @@
                 <apply>
                     <minus/>
                     <apply>
+                        <exp/>
+                        <ci>b</ci>
+                    </apply>
+                </apply>
+            </apply>
+            <apply>
+                <eq/>
+                <ci>a</ci>
+                <apply>
+                    <minus/>
+                    <apply>
                         <eq/>
                         <ci>b</ci>
                         <ci>c</ci>

@@ -168,6 +168,7 @@ def model cellml_1_0 as
         a = b+c;
         a = b+c+d;
         a = -b;
+        a = -exp(b);
         a = -(b == c);
         a = -(b <> c);
         a = -(b > c);
