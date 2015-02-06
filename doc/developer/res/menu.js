@@ -22,5 +22,7 @@ function headerAndContentsMenu(pageName, relativePath) {
                              [0, "Latest commits", "https://github.com/opencor/opencor/commits", true],
                              [0, "Current bugs, feature requests, etc.", "https://github.com/opencor/opencor/issues", true],
                              [],
+                             [0, "Published article", "http://dx.doi.org/10.3389/fphys.2015.00026", true],
+                             [],
                              [0, "Contact us", "user/contactUs.html"]]);
 }
