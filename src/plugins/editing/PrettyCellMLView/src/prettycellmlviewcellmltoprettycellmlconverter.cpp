@@ -1713,7 +1713,8 @@ void PrettyCellMLViewCellmlToPrettyCellmlConverter::processComponentRefNode(cons
     // Start processing the given component ref node
 
     if (hasComponentRefChildren) {
-        if ((mLastOutputType == Comment) || (mLastOutputType == EndComp))
+        if (   (mLastOutputType == Comment)
+            || (mLastOutputType == Comp) || (mLastOutputType == EndComp))
             outputString();
 
         outputString(CompIncl,
