@@ -1072,14 +1072,17 @@ QString PrettyCellMLViewCellmlToPrettyCellmlConverter::processOperatorNode(const
 {
     // Process the operator node, based on its number of siblings
 
-    if (pDomNode.childNodes().count() == 2) {
-        QDomNode operandNode = pDomNode.childNodes().item(1);
+    QDomNodeList childNodes = pDomNode.childNodes();
+    int childNodesCount = childNodes.count();
+
+    if (childNodesCount == 2) {
+        QDomNode operandNode = childNodes.item(1);
         QString operand = processMathmlNode(operandNode, pHasError);
 
         if (pHasError) {
             return QString();
         } else {
-            if (mNodeTypes.value(pDomNode.childNodes().item(0).nodeName()) == PlusNode) {
+            if (mNodeTypes.value(childNodes.item(0).nodeName()) == PlusNode) {
                 return operand;
             } else {
                 // Minus node
@@ -1097,24 +1100,80 @@ QString PrettyCellMLViewCellmlToPrettyCellmlConverter::processOperatorNode(const
             }
         }
     } else {
-        QString firstOperand = processMathmlNode(pDomNode.childNodes().item(1), pHasError);
+        NodeType operatorNodeType = nodeType(childNodes.item(0));
+        QDomNode leftOperandNode = childNodes.item(1);
+        NodeType leftOperandNodeType = nodeType(leftOperandNode);
+        QString leftOperand = processMathmlNode(leftOperandNode, pHasError);
 
         if (pHasError) {
             return QString();
         } else {
-            QString res = firstOperand;
-            QString otherOperand;
+            QDomNode rightOperandNode;
+            QString rightOperand;
 
-            for (int i = 2, imax = pDomNode.childNodes().count(); i < imax; ++i) {
-                otherOperand = processMathmlNode(pDomNode.childNodes().item(i), pHasError);
+            for (int i = 2; i < childNodesCount; ++i) {
+                rightOperandNode = childNodes.item(i);
+                rightOperand = processMathmlNode(rightOperandNode, pHasError);
 
-                if (pHasError)
+                if (pHasError) {
                     return QString();
-                else
-                    res += pOperator+otherOperand;
+                } else {
+                    switch (operatorNodeType) {
+                    case PlusNode:
+                        switch (leftOperandNodeType) {
+                        case EqNode: case NeqNode: case GtNode: case LtNode: case GeqNode: case LeqNode:
+                        case AndNode: case OrNode: case XorNode:
+                            leftOperand = "("+leftOperand+")";
+                        default:
+                            ;
+                        }
+
+                        switch (nodeType(rightOperandNode)) {
+                        case EqNode: case NeqNode: case GtNode: case LtNode: case GeqNode: case LeqNode:
+                        case AndNode: case OrNode: case XorNode:
+                            rightOperand = "("+rightOperand+")";
+                        default:
+                            ;
+                        }
+
+                        break;
+                    case MinusNode:
+                        switch (leftOperandNodeType) {
+                        case EqNode: case NeqNode: case GtNode: case LtNode: case GeqNode: case LeqNode:
+                        case AndNode: case OrNode: case XorNode:
+                            leftOperand = "("+leftOperand+")";
+                        default:
+                            ;
+                        }
+
+                        switch (nodeType(rightOperandNode)) {
+                        case EqNode: case NeqNode: case GtNode: case LtNode: case GeqNode: case LeqNode:
+                        case MinusNode:
+                        case AndNode: case OrNode: case XorNode:
+                            rightOperand = "("+rightOperand+")";
+
+                            break;
+                        case PlusNode:
+                            if (rightOperandNode.childNodes().count() > 2)
+                                rightOperand = "("+rightOperand+")";
+
+                            break;
+                        default:
+                            ;
+                        }
+
+                        break;
+                    default:
+                        ;
+                    }
+
+                    leftOperand = leftOperand+pOperator+rightOperand;
+
+                    leftOperandNodeType = operatorNodeType;
+                }
             }
 
-            return res;
+            return leftOperand;
         }
     }
 }
