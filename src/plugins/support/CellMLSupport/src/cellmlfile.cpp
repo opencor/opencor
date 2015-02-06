@@ -229,7 +229,7 @@ bool CellmlFile::fullyInstantiateImports(iface::cellml_api::Model *pModel,
                         import->instantiateFromText(mImportContents.value(fileNameOrUrl).toStdWString());
                     } else {
                         // We haven't already loaded the import contents, so do
-                        // so
+                        // so now
 
                         QString fileContents;
 
@@ -316,16 +316,17 @@ bool CellmlFile::doLoad(const QString &pFileName, const QString &pFileContents,
     Core::FileManager *fileManagerInstance = Core::FileManager::instance();
     ObjRef<iface::cellml_api::URI> baseUri = (*pModel)->xmlBase();
 
-    if (fileManagerInstance->isRemote(pFileName))
+    if (fileManagerInstance->isRemote(pFileName)) {
         // We are dealing with a remote file, so its XML base value should point
         // to its remote location
 
         baseUri->asText(fileManagerInstance->url(pFileName).toStdWString());
-    else if (!pFileContents.isEmpty())
+    } else if (!pFileContents.isEmpty()) {
         // We are dealing with a file which contents was directly passed onto
         // us, so its XML base value should point to its actual location
 
         baseUri->asText(pFileName.toStdWString());
+    }
 
     return true;
 }
