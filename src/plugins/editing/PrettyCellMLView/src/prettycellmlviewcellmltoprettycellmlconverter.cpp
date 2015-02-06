@@ -1172,6 +1172,38 @@ QString PrettyCellMLViewCellmlToPrettyCellmlConverter::processOperatorNode(const
                         }
 
                         break;
+                    case TimesNode:
+                        switch (leftOperandNodeType) {
+                        case EqNode: case NeqNode: case GtNode: case LtNode: case GeqNode: case LeqNode:
+                        case AndNode: case OrNode: case XorNode:
+                            leftOperand = "("+leftOperand+")";
+
+                            break;
+                        case PlusNode: case MinusNode:
+                            if (leftOperandNode.childNodes().count() > 2)
+                                leftOperand = "("+leftOperand+")";
+
+                            break;
+                        default:
+                            ;
+                        }
+
+                        switch (rightOperandNodeType) {
+                        case EqNode: case NeqNode: case GtNode: case LtNode: case GeqNode: case LeqNode:
+                        case AndNode: case OrNode: case XorNode:
+                            rightOperand = "("+rightOperand+")";
+
+                            break;
+                        case PlusNode: case MinusNode:
+                            if (rightOperandNode.childNodes().count() > 2)
+                                rightOperand = "("+rightOperand+")";
+
+                            break;
+                        default:
+                            ;
+                        }
+
+                        break;
                     default:
                         ;
                     }
