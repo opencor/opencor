@@ -1110,6 +1110,7 @@ QString PrettyCellMLViewCellmlToPrettyCellmlConverter::processOperatorNode(const
         } else {
             QDomNode rightOperandNode;
             QString rightOperand;
+            NodeType rightOperandNodeType;
 
             for (int i = 2; i < childNodesCount; ++i) {
                 rightOperandNode = childNodes.item(i);
@@ -1118,20 +1119,26 @@ QString PrettyCellMLViewCellmlToPrettyCellmlConverter::processOperatorNode(const
                 if (pHasError) {
                     return QString();
                 } else {
+                    rightOperandNodeType = nodeType(rightOperandNode);
+
                     switch (operatorNodeType) {
                     case PlusNode:
                         switch (leftOperandNodeType) {
                         case EqNode: case NeqNode: case GtNode: case LtNode: case GeqNode: case LeqNode:
                         case AndNode: case OrNode: case XorNode:
                             leftOperand = "("+leftOperand+")";
+
+                            break;
                         default:
                             ;
                         }
 
-                        switch (nodeType(rightOperandNode)) {
+                        switch (rightOperandNodeType) {
                         case EqNode: case NeqNode: case GtNode: case LtNode: case GeqNode: case LeqNode:
                         case AndNode: case OrNode: case XorNode:
                             rightOperand = "("+rightOperand+")";
+
+                            break;
                         default:
                             ;
                         }
@@ -1142,11 +1149,13 @@ QString PrettyCellMLViewCellmlToPrettyCellmlConverter::processOperatorNode(const
                         case EqNode: case NeqNode: case GtNode: case LtNode: case GeqNode: case LeqNode:
                         case AndNode: case OrNode: case XorNode:
                             leftOperand = "("+leftOperand+")";
+
+                            break;
                         default:
                             ;
                         }
 
-                        switch (nodeType(rightOperandNode)) {
+                        switch (rightOperandNodeType) {
                         case EqNode: case NeqNode: case GtNode: case LtNode: case GeqNode: case LeqNode:
                         case MinusNode:
                         case AndNode: case OrNode: case XorNode:
