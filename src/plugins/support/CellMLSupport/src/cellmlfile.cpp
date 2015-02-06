@@ -222,7 +222,11 @@ bool CellmlFile::fullyInstantiateImports(iface::cellml_api::Model *pModel,
 
                     Core::checkFileNameOrUrl(url, isLocalFile, fileNameOrUrl);
 
-                    if (mImportContents.contains(fileNameOrUrl)) {
+                    if (!fileNameOrUrl.compare(mFileName))
+                        // We want to import ourselves, so...
+
+                        throw(std::exception());
+                    else if (mImportContents.contains(fileNameOrUrl)) {
                         // We have already loaded the import contents, so
                         // directly instantiate the import with it
 
