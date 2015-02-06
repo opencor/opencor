@@ -187,7 +187,6 @@ def model cellml_1_0 as
         a = -(b xor c);
         a = -not b;
         a = b-c;
-        a = b-c-d;
         a = (b and c)-(b or c);
         a = (b and c)-c;
         a = b-(b or c);
@@ -198,7 +197,6 @@ def model cellml_1_0 as
         a = b*c;
         a = b*c*d;
         a = b/c;
-        a = b/c/d;
         a = pow(b, c);
         a = sqrt(b);
         a = sqr(b);

@@ -506,16 +506,6 @@
                 <ci>a</ci>
                 <apply>
                     <minus/>
-                    <ci>b</ci>
-                    <ci>c</ci>
-                    <ci>d</ci>
-                </apply>
-            </apply>
-            <apply>
-                <eq/>
-                <ci>a</ci>
-                <apply>
-                    <minus/>
                     <apply>
                         <and/>
                         <ci>b</ci>
@@ -630,16 +620,6 @@
                     <divide/>
                     <ci>b</ci>
                     <ci>c</ci>
-                </apply>
-            </apply>
-            <apply>
-                <eq/>
-                <ci>a</ci>
-                <apply>
-                    <divide/>
-                    <ci>b</ci>
-                    <ci>c</ci>
-                    <ci>d</ci>
                 </apply>
             </apply>
             <apply>
