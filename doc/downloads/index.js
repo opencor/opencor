@@ -1,5 +1,5 @@
 var jsonData = {"versions":[
-                   {"major":0, "minor":0, "patch":0, "day":22, "month":12, "year":2014, "type":2,
+                   {"major":0, "minor":0, "patch":0, "day":7, "month":1, "year":2015, "type":2,
                     "platforms":[
                        {"name":"Windows", "supported":"Windows 7 and later",
                         "files":[
