@@ -3,10 +3,10 @@
     <component name="component">
         <math xmlns="http://www.w3.org/1998/Math/MathML">
             <bvar>
-                <ci>t</ci>
                 <degree>
                     <cn cellml:units="dimensionless">2</cn>
                 </degree>
+                <ci>t</ci>
             </bvar>
         </math>
     </component>

@@ -97,10 +97,10 @@ corresponding component definition...-->
                 <apply>
                     <diff/>
                     <bvar>
+                        <ci>t</ci>
                         <degree>
                             <cn cellml:units="dimensionless">2</cn>
                         </degree>
-                        <ci>t</ci>
                     </bvar>
                     <ci>f</ci>
                 </apply>

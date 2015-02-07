@@ -327,9 +327,9 @@ void Tests::failingTests()
              QString("A 'bvar' element must have one or two child elements."));
 
     QVERIFY(!converter.execute(OpenCOR::fileName("src/plugins/editing/PrettyCellMLView/tests/data/failing/mathml_bvar_2.cellml")));
-    QCOMPARE(converter.errorLine(), 6);
+    QCOMPARE(converter.errorLine(), 9);
     QCOMPARE(converter.errorMessage(),
-             QString("The first child element of a 'bvar' element with two child elements must be a 'degree' element."));
+             QString("The second child element of a 'bvar' element with two child elements must be a 'degree' element."));
 
     // MathML trigonometric operators
 

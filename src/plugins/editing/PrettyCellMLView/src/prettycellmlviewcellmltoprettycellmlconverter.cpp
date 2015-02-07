@@ -1545,11 +1545,11 @@ QString PrettyCellMLViewCellmlToPrettyCellmlConverter::processBvarNode(const QDo
     if (pDomNode.childNodes().count() == 1) {
         return processMathmlNode(pDomNode.childNodes().item(0), pHasError);
     } else {
-        QDomNode domNode = pDomNode.childNodes().item(0);
+        QDomNode domNode = pDomNode.childNodes().item(1);
 
         if (domNode.nodeName().compare("degree")){
-            mErrorMessage = QObject::tr("The first child element of a '%1' element with two child elements must be a '%2' element.").arg("bvar")
-                                                                                                                                    .arg("degree");
+            mErrorMessage = QObject::tr("The second child element of a '%1' element with two child elements must be a '%2' element.").arg("bvar")
+                                                                                                                                     .arg("degree");
             mErrorLine = domNode.lineNumber();
 
             pHasError = true;
@@ -1561,7 +1561,7 @@ QString PrettyCellMLViewCellmlToPrettyCellmlConverter::processBvarNode(const QDo
             if (pHasError) {
                 return QString();
             } else {
-                QString a = processMathmlNode(pDomNode.childNodes().item(1), pHasError);
+                QString a = processMathmlNode(pDomNode.childNodes().item(0), pHasError);
 
                 if (pHasError)
                     return QString();

@@ -190,8 +190,8 @@
         <translation>Le premier frère d&apos;un élément &apos;%1&apos; avec deux éléments frères doit être un élément &apos;%2&apos;.</translation>
     </message>
     <message>
-        <source>The first child element of a &apos;%1&apos; element with two child elements must be a &apos;%2&apos; element.</source>
-        <translation>Le premier élément enfant d&apos;un élément &apos;%1&apos; avec deux éléments enfants doit être un élément &apos;%2&apos;.</translation>
+        <source>The second child element of a &apos;%1&apos; element with two child elements must be a &apos;%2&apos; element.</source>
+        <translation>Le deuxième élément enfant d&apos;un élément &apos;%1&apos; avec deux éléments enfants doit être un élément &apos;%2&apos;.</translation>
     </message>
     <message>
         <source>A &apos;%1&apos; element cannot have a child element.</source>
