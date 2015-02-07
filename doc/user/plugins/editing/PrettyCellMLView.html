@@ -20,16 +20,36 @@
         </script>
 
         <p>
-            The PrettyCellMLView plugin can be used to edit <a href="http://www.cellml.org/">CellML</a> files using a text editor and a pretty CellML format. The format is compatible with the one used in <a href="http://cor.physiol.ox.ac.uk/">COR</a>, although it has been expanded to support:
+            The PrettyCellMLView plugin can be used to edit <a href="http://www.cellml.org/">CellML</a> files using a text editor and a pretty CellML format. Besides using a specific format, the text editor behaves the same way as the text editor in the <a href="RawView.html">Raw</a> and <a href="RawCellMLView.html">RawCellML</a> views. Then, like in the <a href="RawCellMLView.html">RawCellML</a> view, there is a panel above the text editor, which is used to visualise mathematical equations in real-time, and another below to list all the issues with the CellML file, if any.
+        </p>
+
+        <p class="nomargins note">
+            the PrettyCellMLView plugin is still very much work in progress. As a result, to open a CellML file will 'only' result in its conversion to the pretty CellML format, together with syntax highlighting. Editing is possible, but changes cannot be serialised back. The panels above and below the editor do not work either.
+        </p>
+
+        <div class="section">
+            Compatibility
+        </div>
+
+        <p>
+            People who are already familiar with <a href="http://cor.physiol.ox.ac.uk/">COR</a> will find that the same format is used in both cases, although the pretty CellML format has been extended to support:
         </p>
 
         <ul>
             <li>Comments (both <code>// XXX</code> and <code>/* XXX */</code>).</li>
-            <li>The <code>import</code> element (i.e. CellML 1.1 compatibility).</li>
-            <li>The <code>cmeta:id</code> attribute on all CellML elements (i.e. CellML annotation support).</li>
-            <li><a href="http://www.w3.org/Math/">MathML</a>: the <code>degree</code> qualifier for the <code>diff</code> element, as well as the <code>notanumber</code> and <code>infinity</code> constants.</li>
+            <li>The <code>import</code> element (i.e. support for CellML 1.1).</li>
+            <li>The <code>cmeta:id</code> attribute on all CellML elements (i.e. support for CellML annotation).</li>
+            <li><a href="http://www.w3.org/Math/">MathML</a>: the <code>degree</code> qualifier for the <code>diff</code> element (i.e. not limited to first derivatives), as well as the <code>notanumber</code> and <code>infinity</code> constants.</li>
             <li>An unlimited number of group types (in <a href="http://cor.physiol.ox.ac.uk/">COR</a>, a group can only specify one <code>encapsulation</code> and/or one <code>containment</code> type).</li>
         </ul>
+
+        <div class="section">
+            Format
+        </div>
+
+        <p>
+            To be done...
+        </p>
 
         <div class="section">
             Comments
