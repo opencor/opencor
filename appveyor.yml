@@ -6,4 +6,4 @@ skip_commits:
   message: /\[ci skip\]/
 
 install:
-  - dir /s
+  - maketests && runtests
