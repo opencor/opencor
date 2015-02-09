@@ -8,7 +8,7 @@ skip_commits:
 os: unstable
 
 install:
-  - set PATH=%PATH%;C:\Qt\5.4\msvc2013\bin
+  - set PATH=%PATH%;C:\Qt\5.4\msvc2013_64_opengl\bin
   - cmake --version
   - qmake --version
   - ninja --version
