@@ -17,10 +17,13 @@ install:
   - qmake --version
   - appveyor DownloadFile "http://www.cmake.org/files/v3.1/cmake-3.1.2-win32-x86.exe" -FileName cmakesetup.exe
   - cmakesetup /S /D=%CMAKEDIR%
+  - dir %CMAKEROOTDIR% /s
   - cmake --version
 
 build_script:
   - maketests
+  - type C:\projects\opencor\build\CMakeFiles\CMakeOutput.log
+  - type C:\projects\opencor\build\CMakeFiles\CMakeError.log
 
 test_script:
   - runtests
