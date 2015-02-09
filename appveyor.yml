@@ -1,0 +1,6 @@
+branches:
+  only:
+    - master
+
+skip_commits:
+  message: /\[ci skip\]/
