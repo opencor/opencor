@@ -12,16 +12,16 @@ environment:
   QTDIR: C:\Qt\5.4\msvc2013_64_opengl\bin
 
 install:
-  -    set PATH=%CMAKEROOTDIR%\bin;%QTDIR%;%PATH%
-    && appveyor DownloadFile "http://www.cmake.org/files/v3.1/cmake-3.1.2-win32-x86.exe" -FileName cmakesetup.exe
-    && cmakesetup /S /D=%CMAKEROOTDIR%
-    && call "C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\x86_amd64\vcvarsx86_amd64.bat"
+  - set PATH=%CMAKEROOTDIR%\bin;%QTDIR%;%PATH%
+  - appveyor DownloadFile "http://www.cmake.org/files/v3.1/cmake-3.1.2-win32-x86.exe" -FileName cmakesetup.exe
+  - cmakesetup /S /D=%CMAKEROOTDIR%
+  - call "C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\x86_amd64\vcvarsx86_amd64.bat"
 
 build_script:
-  -    cd build
-    && cmake -G "NMake Makefiles JOM" -DCMAKE_BUILD_TYPE=Debug -DENABLE_TESTS=ON ..
-    && jom
-    && cd ..
+  - cd build
+  - cmake -G "NMake Makefiles JOM" -DCMAKE_BUILD_TYPE=Debug -DENABLE_TESTS=ON ..
+  - jom
+  - cd ..
 
 test_script:
   - runtests
