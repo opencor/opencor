@@ -8,10 +8,10 @@ skip_commits:
 os: unstable
 
 install:
-  - dir c:\Qt
-  - dir c:\Qt\5.4
+  - set PATH=%PATH%;C:\Qt\5.4\msvc2013\bin
   - cmake --version
   - qmake --version
+  - ninja --version
 
 build_script:
   - maketests
