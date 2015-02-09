@@ -5,8 +5,12 @@ branches:
 skip_commits:
   message: /\[ci skip\]/
 
+os: unstable
+
 install:
-  - dir c:\ /s
+  - dir c:\
+  - cmake --version
+  - qmake --version
 
 build_script:
   - maketests
