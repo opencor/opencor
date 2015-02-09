@@ -15,4 +15,4 @@ Please [contact us](http://www.opencor.ws/user/contactUs.html) if you have any q
 
 #######
 
-[![Build Status](https://travis-ci.org/opencor/opencor.png)](https://travis-ci.org/opencor/opencor)
+[![Build status](https://ci.appveyor.com/api/projects/status/v8plr31p5gaafmrw)](https://ci.appveyor.com/project/opencor/opencor) [![Build Status](https://travis-ci.org/opencor/opencor.png)](https://travis-ci.org/opencor/opencor)
