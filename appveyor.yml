@@ -5,5 +5,15 @@ branches:
 skip_commits:
   message: /\[ci skip\]/
 
-install:
-  - maketests && runtests
+build_script:
+  - maketests
+
+test_script:
+  - runtests
+
+notifications:
+  - provider: Email
+    to:
+      - team@opencor.ws
+      - agarny@hellix.com
+    on_build_status_changed: true
