@@ -54,7 +54,13 @@ int main(int pArgC, char *pArgV[])
 
     // Run the different tests
 
+#ifdef Q_OS_WIN
+    QString exePath = QString(pArgV[0]).endsWith(".exe")?
+                          QFileInfo(pArgV[0]).canonicalPath():
+                          QFileInfo(QString(pArgV[0])+".exe").canonicalPath();
+#else
     QString exePath = QFileInfo(pArgV[0]).canonicalPath();
+#endif
     QStringList failedTests = QStringList();
     int res = 0;
 
