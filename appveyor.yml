@@ -5,6 +5,9 @@ branches:
 skip_commits:
   message: /\[ci skip\]/
 
+install:
+  - dir c:\ /s
+
 build_script:
   - maketests
 
