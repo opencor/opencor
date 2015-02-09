@@ -28,6 +28,10 @@ build_script:
 test_script:
   - runtests
 
+on_failure:
+  - type "C:\projects\opencor\build\CMakeFiles\CMakeOutput.log"
+  - type "C:\projects\opencor\build\CMakeFiles\CMakeError.log"
+
 notifications:
   - provider: Email
     to:
