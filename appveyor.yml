@@ -8,7 +8,8 @@ skip_commits:
 os: unstable
 
 install:
-  - dir c:\Qt\ /s
+  - dir c:\Qt
+  - dir c:\Qt\5.4
   - cmake --version
   - qmake --version
 
