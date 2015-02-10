@@ -16,14 +16,14 @@ specific language governing permissions and limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// PrettyCellMLView plugin
+// CellMLTextView plugin
 //==============================================================================
 
 #include "cellmlfilemanager.h"
 #include "cellmlsupportplugin.h"
+#include "cellmltextviewplugin.h"
+#include "cellmltextviewwidget.h"
 #include "filemanager.h"
-#include "prettycellmlviewplugin.h"
-#include "prettycellmlviewwidget.h"
 
 //==============================================================================
 
@@ -35,11 +35,11 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 namespace OpenCOR {
-namespace PrettyCellMLView {
+namespace CellMLTextView {
 
 //==============================================================================
 
-PLUGININFO_FUNC PrettyCellMLViewPluginInfo()
+PLUGININFO_FUNC CellMLTextViewPluginInfo()
 {
     Descriptions descriptions;
 
@@ -55,7 +55,7 @@ PLUGININFO_FUNC PrettyCellMLViewPluginInfo()
 // CellML editing interface
 //==============================================================================
 
-void PrettyCellMLViewPlugin::validateCellml(const QString &pFileName) const
+void CellMLTextViewPlugin::validateCellml(const QString &pFileName) const
 {
 //---GRY--- TO BE IMPLEMENTED...
 
@@ -63,7 +63,7 @@ Q_UNUSED(pFileName);
 
 QMessageBox::information(qApp->activeWindow(),
                          tr("CellML Validation"),
-                         "Validation is not yet available for the <strong>Pretty CellML</strong> view.",
+                         "Validation is not yet available for the <strong>CellML Text</strong> view.",
                          QMessageBox::Ok);
 }
 
@@ -71,7 +71,7 @@ QMessageBox::information(qApp->activeWindow(),
 // Editing interface
 //==============================================================================
 
-Editor::EditorWidget * PrettyCellMLViewPlugin::editor(const QString &pFileName) const
+Editor::EditorWidget * CellMLTextViewPlugin::editor(const QString &pFileName) const
 {
     // Return the requested editor
 
@@ -80,7 +80,7 @@ Editor::EditorWidget * PrettyCellMLViewPlugin::editor(const QString &pFileName) 
 
 //==============================================================================
 
-bool PrettyCellMLViewPlugin::isEditorUseable(const QString &pFileName) const
+bool CellMLTextViewPlugin::isEditorUseable(const QString &pFileName) const
 {
     // Return whether the requested editor is useable
 
@@ -89,7 +89,7 @@ bool PrettyCellMLViewPlugin::isEditorUseable(const QString &pFileName) const
 
 //==============================================================================
 
-bool PrettyCellMLViewPlugin::isEditorContentsModified(const QString &pFileName) const
+bool CellMLTextViewPlugin::isEditorContentsModified(const QString &pFileName) const
 {
     // Return whether the contents of the requested editor has been modified
 
@@ -100,7 +100,7 @@ bool PrettyCellMLViewPlugin::isEditorContentsModified(const QString &pFileName) 
 // File handling interface
 //==============================================================================
 
-bool PrettyCellMLViewPlugin::saveFile(const QString &pOldFileName,
+bool CellMLTextViewPlugin::saveFile(const QString &pOldFileName,
                                       const QString &pNewFileName)
 {
     Q_UNUSED(pOldFileName);
@@ -113,7 +113,7 @@ bool PrettyCellMLViewPlugin::saveFile(const QString &pOldFileName,
 
 //==============================================================================
 
-void PrettyCellMLViewPlugin::fileOpened(const QString &pFileName)
+void CellMLTextViewPlugin::fileOpened(const QString &pFileName)
 {
     Q_UNUSED(pFileName);
 
@@ -122,7 +122,7 @@ void PrettyCellMLViewPlugin::fileOpened(const QString &pFileName)
 
 //==============================================================================
 
-void PrettyCellMLViewPlugin::filePermissionsChanged(const QString &pFileName)
+void CellMLTextViewPlugin::filePermissionsChanged(const QString &pFileName)
 {
     Q_UNUSED(pFileName);
 
@@ -131,7 +131,7 @@ void PrettyCellMLViewPlugin::filePermissionsChanged(const QString &pFileName)
 
 //==============================================================================
 
-void PrettyCellMLViewPlugin::fileModified(const QString &pFileName)
+void CellMLTextViewPlugin::fileModified(const QString &pFileName)
 {
     Q_UNUSED(pFileName);
 
@@ -140,7 +140,7 @@ void PrettyCellMLViewPlugin::fileModified(const QString &pFileName)
 
 //==============================================================================
 
-void PrettyCellMLViewPlugin::fileReloaded(const QString &pFileName)
+void CellMLTextViewPlugin::fileReloaded(const QString &pFileName)
 {
     // The given file has been reloaded, so let our view widget know about it
 
@@ -149,7 +149,7 @@ void PrettyCellMLViewPlugin::fileReloaded(const QString &pFileName)
 
 //==============================================================================
 
-void PrettyCellMLViewPlugin::fileRenamed(const QString &pOldFileName,
+void CellMLTextViewPlugin::fileRenamed(const QString &pOldFileName,
                                          const QString &pNewFileName)
 {
     // The given file has been renamed, so let our view widget know about it
@@ -159,7 +159,7 @@ void PrettyCellMLViewPlugin::fileRenamed(const QString &pOldFileName,
 
 //==============================================================================
 
-void PrettyCellMLViewPlugin::fileSaved(const QString &pFileName)
+void CellMLTextViewPlugin::fileSaved(const QString &pFileName)
 {
     // The given file has been saved, but because it was done directly by
     // manipulating the file, we need to ask our file manager to reload it, so
@@ -171,7 +171,7 @@ void PrettyCellMLViewPlugin::fileSaved(const QString &pFileName)
 
 //==============================================================================
 
-void PrettyCellMLViewPlugin::fileClosed(const QString &pFileName)
+void CellMLTextViewPlugin::fileClosed(const QString &pFileName)
 {
     Q_UNUSED(pFileName);
 
@@ -182,7 +182,7 @@ void PrettyCellMLViewPlugin::fileClosed(const QString &pFileName)
 // I18n interface
 //==============================================================================
 
-void PrettyCellMLViewPlugin::retranslateUi()
+void CellMLTextViewPlugin::retranslateUi()
 {
     // Retranslate our view widget
 
@@ -193,13 +193,13 @@ void PrettyCellMLViewPlugin::retranslateUi()
 // Plugin interface
 //==============================================================================
 
-void PrettyCellMLViewPlugin::initializePlugin(QMainWindow *pMainWindow)
+void CellMLTextViewPlugin::initializePlugin(QMainWindow *pMainWindow)
 {
-    // Create our pretty CellML view widget
+    // Create our CellML text view widget
 
-    mViewWidget = new PrettyCellmlViewWidget(pMainWindow);
+    mViewWidget = new CellmlTextViewWidget(pMainWindow);
 
-    // Hide our pretty CellML view widget since it may not initially be shown in
+    // Hide our CellML text view widget since it may not initially be shown in
     // our central widget
 
     mViewWidget->setVisible(false);
@@ -207,14 +207,14 @@ void PrettyCellMLViewPlugin::initializePlugin(QMainWindow *pMainWindow)
 
 //==============================================================================
 
-void PrettyCellMLViewPlugin::finalizePlugin()
+void CellMLTextViewPlugin::finalizePlugin()
 {
     // We don't handle this interface...
 }
 
 //==============================================================================
 
-void PrettyCellMLViewPlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
+void CellMLTextViewPlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
 {
     Q_UNUSED(pLoadedPlugins);
 
@@ -223,9 +223,9 @@ void PrettyCellMLViewPlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
 
 //==============================================================================
 
-void PrettyCellMLViewPlugin::loadSettings(QSettings *pSettings)
+void CellMLTextViewPlugin::loadSettings(QSettings *pSettings)
 {
-    // Retrieve our pretty CellML view widget settings
+    // Retrieve our CellML text view widget settings
 
     pSettings->beginGroup(mViewWidget->objectName());
         mViewWidget->loadSettings(pSettings);
@@ -234,9 +234,9 @@ void PrettyCellMLViewPlugin::loadSettings(QSettings *pSettings)
 
 //==============================================================================
 
-void PrettyCellMLViewPlugin::saveSettings(QSettings *pSettings) const
+void CellMLTextViewPlugin::saveSettings(QSettings *pSettings) const
 {
-    // Keep track of our generic pretty CellML view widget settings
+    // Keep track of our generic CellML text view widget settings
 
     pSettings->beginGroup(mViewWidget->objectName());
         mViewWidget->saveSettings(pSettings);
@@ -245,7 +245,7 @@ void PrettyCellMLViewPlugin::saveSettings(QSettings *pSettings) const
 
 //==============================================================================
 
-void PrettyCellMLViewPlugin::handleAction(const QUrl &pUrl)
+void CellMLTextViewPlugin::handleAction(const QUrl &pUrl)
 {
     Q_UNUSED(pUrl);
 
@@ -256,7 +256,7 @@ void PrettyCellMLViewPlugin::handleAction(const QUrl &pUrl)
 // View interface
 //==============================================================================
 
-ViewInterface::Mode PrettyCellMLViewPlugin::viewMode() const
+ViewInterface::Mode CellMLTextViewPlugin::viewMode() const
 {
     // Return our mode
 
@@ -265,7 +265,7 @@ ViewInterface::Mode PrettyCellMLViewPlugin::viewMode() const
 
 //==============================================================================
 
-QStringList PrettyCellMLViewPlugin::viewMimeTypes() const
+QStringList CellMLTextViewPlugin::viewMimeTypes() const
 {
     // Return the MIME types we support
 
@@ -274,14 +274,14 @@ QStringList PrettyCellMLViewPlugin::viewMimeTypes() const
 
 //==============================================================================
 
-QWidget * PrettyCellMLViewPlugin::viewWidget(const QString &pFileName)
+QWidget * CellMLTextViewPlugin::viewWidget(const QString &pFileName)
 {
     // Make sure that we are dealing with a CellML file
 
     if (!CellMLSupport::CellmlFileManager::instance()->cellmlFile(pFileName))
         return 0;
 
-    // Update and return our pretty CellML view widget using the given CellML
+    // Update and return our CellML text view widget using the given CellML
     // file
 
     mViewWidget->initialize(pFileName);
@@ -291,25 +291,25 @@ QWidget * PrettyCellMLViewPlugin::viewWidget(const QString &pFileName)
 
 //==============================================================================
 
-void PrettyCellMLViewPlugin::removeViewWidget(const QString &pFileName)
+void CellMLTextViewPlugin::removeViewWidget(const QString &pFileName)
 {
-    // Ask our pretty CellML view widget to finalise the given CellML file
+    // Ask our CellML text view widget to finalise the given CellML file
 
     mViewWidget->finalize(pFileName);
 }
 
 //==============================================================================
 
-QString PrettyCellMLViewPlugin::viewName() const
+QString CellMLTextViewPlugin::viewName() const
 {
-    // Return our pretty CellML view's name
+    // Return our CellML text view's name
 
-    return tr("Pretty CellML");
+    return tr("CellML Text");
 }
 
 //==============================================================================
 
-QIcon PrettyCellMLViewPlugin::fileTabIcon(const QString &pFileName) const
+QIcon CellMLTextViewPlugin::fileTabIcon(const QString &pFileName) const
 {
     Q_UNUSED(pFileName);
 
@@ -320,7 +320,7 @@ QIcon PrettyCellMLViewPlugin::fileTabIcon(const QString &pFileName) const
 
 //==============================================================================
 
-}   // namespace PrettyCellMLView
+}   // namespace CellMLTextView
 }   // namespace OpenCOR
 
 //==============================================================================

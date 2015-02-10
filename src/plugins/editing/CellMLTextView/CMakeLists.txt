@@ -1,4 +1,4 @@
-PROJECT(PrettyCellMLViewPlugin)
+PROJECT(CellMLTextViewPlugin)
 
 # Retrieve some CellML API and LLVM settings
 
@@ -13,21 +13,21 @@ ELSE()
     SET(QT_MAC_EXTRAS)
 ENDIF()
 
-ADD_PLUGIN(PrettyCellMLView
+ADD_PLUGIN(CellMLTextView
     SOURCES
         ../../i18ninterface.cpp
         ../../plugininfo.cpp
         ../../viewinterface.cpp
 
-        src/prettycellmlviewcellmltoprettycellmlconverter.cpp
-        src/prettycellmlviewlexer.cpp
-        src/prettycellmlviewplugin.cpp
-        src/prettycellmlviewwidget.cpp
+        src/cellmltextviewconverter.cpp
+        src/cellmltextviewlexer.cpp
+        src/cellmltextviewplugin.cpp
+        src/cellmltextviewwidget.cpp
     HEADERS_MOC
-        src/prettycellmlviewplugin.h
-        src/prettycellmlviewwidget.h
+        src/cellmltextviewplugin.h
+        src/cellmltextviewwidget.h
     UIS
-        src/prettycellmlviewwidget.ui
+        src/cellmltextviewwidget.ui
     DEFINITIONS
         ${LLVM_DEFINITIONS}
     INCLUDE_DIRS

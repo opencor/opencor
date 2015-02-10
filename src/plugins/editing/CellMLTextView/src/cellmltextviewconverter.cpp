@@ -16,11 +16,11 @@ specific language governing permissions and limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// CellML to pretty CellML converter
+// Raw CellML to CellML text converter
 //==============================================================================
 
 #include "corecliutils.h"
-#include "prettycellmlviewcellmltoprettycellmlconverter.h"
+#include "cellmltextviewconverter.h"
 
 //==============================================================================
 
@@ -30,11 +30,11 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 namespace OpenCOR {
-namespace PrettyCellMLView {
+namespace CellMLTextView {
 
 //==============================================================================
 
-PrettyCellMLViewCellmlToPrettyCellmlConverter::PrettyCellMLViewCellmlToPrettyCellmlConverter() :
+CellMLTextViewConverter::CellMLTextViewConverter() :
     mOutput(QString()),
     mIndent(QString()),
     mLastOutputType(None),
@@ -103,9 +103,9 @@ PrettyCellMLViewCellmlToPrettyCellmlConverter::PrettyCellMLViewCellmlToPrettyCel
 
 //==============================================================================
 
-bool PrettyCellMLViewCellmlToPrettyCellmlConverter::execute(const QString &pFileName)
+bool CellMLTextViewConverter::execute(const QString &pFileName)
 {
-    // Convert the CellML file to pretty CellML by first getting a DOM
+    // Convert the CellML file to CellML text by first getting a DOM
     // representation of the file
 
     QString fileContents;
@@ -140,7 +140,7 @@ bool PrettyCellMLViewCellmlToPrettyCellmlConverter::execute(const QString &pFile
 
 //==============================================================================
 
-QString PrettyCellMLViewCellmlToPrettyCellmlConverter::output() const
+QString CellMLTextViewConverter::output() const
 {
     // Return our output
 
@@ -149,7 +149,7 @@ QString PrettyCellMLViewCellmlToPrettyCellmlConverter::output() const
 
 //==============================================================================
 
-int PrettyCellMLViewCellmlToPrettyCellmlConverter::errorLine() const
+int CellMLTextViewConverter::errorLine() const
 {
     // Return our error line
 
@@ -158,7 +158,7 @@ int PrettyCellMLViewCellmlToPrettyCellmlConverter::errorLine() const
 
 //==============================================================================
 
-int PrettyCellMLViewCellmlToPrettyCellmlConverter::errorColumn() const
+int CellMLTextViewConverter::errorColumn() const
 {
     // Return our error column
 
@@ -167,7 +167,7 @@ int PrettyCellMLViewCellmlToPrettyCellmlConverter::errorColumn() const
 
 //==============================================================================
 
-QString PrettyCellMLViewCellmlToPrettyCellmlConverter::errorMessage() const
+QString CellMLTextViewConverter::errorMessage() const
 {
     // Return our error message
 
@@ -176,7 +176,7 @@ QString PrettyCellMLViewCellmlToPrettyCellmlConverter::errorMessage() const
 
 //==============================================================================
 
-bool PrettyCellMLViewCellmlToPrettyCellmlConverter::hasWarnings() const
+bool CellMLTextViewConverter::hasWarnings() const
 {
     // Return whether we have warning messages
 
@@ -185,7 +185,7 @@ bool PrettyCellMLViewCellmlToPrettyCellmlConverter::hasWarnings() const
 
 //==============================================================================
 
-QIntList PrettyCellMLViewCellmlToPrettyCellmlConverter::warningLines() const
+QIntList CellMLTextViewConverter::warningLines() const
 {
     // Return our warning lines
 
@@ -194,7 +194,7 @@ QIntList PrettyCellMLViewCellmlToPrettyCellmlConverter::warningLines() const
 
 //==============================================================================
 
-QStringList PrettyCellMLViewCellmlToPrettyCellmlConverter::warningMessages() const
+QStringList CellMLTextViewConverter::warningMessages() const
 {
     // Return our warning messages
 
@@ -203,7 +203,7 @@ QStringList PrettyCellMLViewCellmlToPrettyCellmlConverter::warningMessages() con
 
 //==============================================================================
 
-QDomDocument PrettyCellMLViewCellmlToPrettyCellmlConverter::rdfNodes() const
+QDomDocument CellMLTextViewConverter::rdfNodes() const
 {
     // Return our RDF nodes
 
@@ -216,7 +216,7 @@ static const auto Indent = QStringLiteral("    ");
 
 //==============================================================================
 
-void PrettyCellMLViewCellmlToPrettyCellmlConverter::indent()
+void CellMLTextViewConverter::indent()
 {
     // Indent our output
 
@@ -225,7 +225,7 @@ void PrettyCellMLViewCellmlToPrettyCellmlConverter::indent()
 
 //==============================================================================
 
-void PrettyCellMLViewCellmlToPrettyCellmlConverter::unindent()
+void CellMLTextViewConverter::unindent()
 {
     // Unindent our output
 
@@ -234,8 +234,8 @@ void PrettyCellMLViewCellmlToPrettyCellmlConverter::unindent()
 
 //==============================================================================
 
-void PrettyCellMLViewCellmlToPrettyCellmlConverter::outputString(const OutputType &pOutputType,
-                                                                 const QString &pString)
+void CellMLTextViewConverter::outputString(const OutputType &pOutputType,
+                                           const QString &pString)
 {
     // Output the given string
 
@@ -251,7 +251,7 @@ void PrettyCellMLViewCellmlToPrettyCellmlConverter::outputString(const OutputTyp
 
 //==============================================================================
 
-QString PrettyCellMLViewCellmlToPrettyCellmlConverter::cmetaId(const QDomNode &pDomNode) const
+QString CellMLTextViewConverter::cmetaId(const QDomNode &pDomNode) const
 {
     // Return the cmeta:id, if any, of the given node
 
@@ -265,7 +265,7 @@ QString PrettyCellMLViewCellmlToPrettyCellmlConverter::cmetaId(const QDomNode &p
 
 //==============================================================================
 
-PrettyCellMLViewCellmlToPrettyCellmlConverter::NodeType PrettyCellMLViewCellmlToPrettyCellmlConverter::nodeType(const QDomNode &pDomNode) const
+CellMLTextViewConverter::NodeType CellMLTextViewConverter::nodeType(const QDomNode &pDomNode) const
 {
     // Return the type of the given node
 
@@ -277,7 +277,7 @@ PrettyCellMLViewCellmlToPrettyCellmlConverter::NodeType PrettyCellMLViewCellmlTo
 
 //==============================================================================
 
-bool PrettyCellMLViewCellmlToPrettyCellmlConverter::processModelNode(const QDomNode &pDomNode)
+bool CellMLTextViewConverter::processModelNode(const QDomNode &pDomNode)
 {
     // Start processing the given model node
 
@@ -334,7 +334,7 @@ bool PrettyCellMLViewCellmlToPrettyCellmlConverter::processModelNode(const QDomN
 
 //==============================================================================
 
-void PrettyCellMLViewCellmlToPrettyCellmlConverter::processCommentNode(const QDomNode &pDomNode)
+void CellMLTextViewConverter::processCommentNode(const QDomNode &pDomNode)
 {
     // Process the given comment node
 
@@ -360,7 +360,7 @@ void PrettyCellMLViewCellmlToPrettyCellmlConverter::processCommentNode(const QDo
 
 //==============================================================================
 
-void PrettyCellMLViewCellmlToPrettyCellmlConverter::processRdfNode(const QDomNode &pDomNode)
+void CellMLTextViewConverter::processRdfNode(const QDomNode &pDomNode)
 {
     // Process the given RDF node by keeping track of it
 
@@ -369,7 +369,7 @@ void PrettyCellMLViewCellmlToPrettyCellmlConverter::processRdfNode(const QDomNod
 
 //==============================================================================
 
-bool PrettyCellMLViewCellmlToPrettyCellmlConverter::processImportNode(const QDomNode &pDomNode)
+bool CellMLTextViewConverter::processImportNode(const QDomNode &pDomNode)
 {
     // Start processing the given import node
 
@@ -416,8 +416,8 @@ bool PrettyCellMLViewCellmlToPrettyCellmlConverter::processImportNode(const QDom
 
 //==============================================================================
 
-bool PrettyCellMLViewCellmlToPrettyCellmlConverter::processUnitsNode(const QDomNode &pDomNode,
-                                                                     const bool &pInImportNode)
+bool CellMLTextViewConverter::processUnitsNode(const QDomNode &pDomNode,
+                                               const bool &pInImportNode)
 {
     // Start processing the given units node
 
@@ -491,7 +491,7 @@ bool PrettyCellMLViewCellmlToPrettyCellmlConverter::processUnitsNode(const QDomN
 
 //==============================================================================
 
-void PrettyCellMLViewCellmlToPrettyCellmlConverter::processUnitNode(const QDomNode &pDomNode)
+void CellMLTextViewConverter::processUnitNode(const QDomNode &pDomNode)
 {
     // Process the given unit node's children
     // Note #1: unlike for most nodes, we process the node's children before
@@ -546,8 +546,8 @@ void PrettyCellMLViewCellmlToPrettyCellmlConverter::processUnitNode(const QDomNo
 
 //==============================================================================
 
-bool PrettyCellMLViewCellmlToPrettyCellmlConverter::processComponentNode(const QDomNode &pDomNode,
-                                                                         const bool &pInImportNode)
+bool CellMLTextViewConverter::processComponentNode(const QDomNode &pDomNode,
+                                                   const bool &pInImportNode)
 {
     // Start processing the given component node
 
@@ -611,7 +611,7 @@ bool PrettyCellMLViewCellmlToPrettyCellmlConverter::processComponentNode(const Q
 
 //==============================================================================
 
-void PrettyCellMLViewCellmlToPrettyCellmlConverter::processVariableNode(const QDomNode &pDomNode)
+void CellMLTextViewConverter::processVariableNode(const QDomNode &pDomNode)
 {
     // Process the given variable node's children
     // Note #1: unlike for most nodes, we process the node's children before
@@ -665,7 +665,7 @@ void PrettyCellMLViewCellmlToPrettyCellmlConverter::processVariableNode(const QD
 
 //==============================================================================
 
-bool PrettyCellMLViewCellmlToPrettyCellmlConverter::processMathNode(const QDomNode &pDomNode)
+bool CellMLTextViewConverter::processMathNode(const QDomNode &pDomNode)
 {
     // Process the given math node's children
 
@@ -704,8 +704,8 @@ bool PrettyCellMLViewCellmlToPrettyCellmlConverter::processMathNode(const QDomNo
 
 //==============================================================================
 
-QString PrettyCellMLViewCellmlToPrettyCellmlConverter::processMathmlNode(const QDomNode &pDomNode,
-                                                                         bool &pHasError)
+QString CellMLTextViewConverter::processMathmlNode(const QDomNode &pDomNode,
+                                                   bool &pHasError)
 {
     // Make sure that we are not coming here with an error
 
@@ -989,8 +989,8 @@ QString PrettyCellMLViewCellmlToPrettyCellmlConverter::processMathmlNode(const Q
 
 //==============================================================================
 
-QString PrettyCellMLViewCellmlToPrettyCellmlConverter::processPiecewiseNode(const QDomNode &pDomNode,
-                                                                            bool &pHasError)
+QString CellMLTextViewConverter::processPiecewiseNode(const QDomNode &pDomNode,
+                                                      bool &pHasError)
 {
     // Process the piecewise node
 
@@ -1012,8 +1012,8 @@ QString PrettyCellMLViewCellmlToPrettyCellmlConverter::processPiecewiseNode(cons
 
 //==============================================================================
 
-QString PrettyCellMLViewCellmlToPrettyCellmlConverter::processPieceNode(const QDomNode &pDomNode,
-                                                                        bool &pHasError)
+QString CellMLTextViewConverter::processPieceNode(const QDomNode &pDomNode,
+                                                  bool &pHasError)
 {
     // Process the piece node
 
@@ -1042,8 +1042,8 @@ QString PrettyCellMLViewCellmlToPrettyCellmlConverter::processPieceNode(const QD
 
 //==============================================================================
 
-QString PrettyCellMLViewCellmlToPrettyCellmlConverter::processOtherwiseNode(const QDomNode &pDomNode,
-                                                                            bool &pHasError)
+QString CellMLTextViewConverter::processOtherwiseNode(const QDomNode &pDomNode,
+                                                      bool &pHasError)
 {
     // Process the otherwise node
 
@@ -1066,9 +1066,9 @@ QString PrettyCellMLViewCellmlToPrettyCellmlConverter::processOtherwiseNode(cons
 
 //==============================================================================
 
-QString PrettyCellMLViewCellmlToPrettyCellmlConverter::processOperatorNode(const QString &pOperator,
-                                                                           const QDomNode &pDomNode,
-                                                                           bool &pHasError)
+QString CellMLTextViewConverter::processOperatorNode(const QString &pOperator,
+                                                     const QDomNode &pDomNode,
+                                                     bool &pHasError)
 {
     // Process the operator node, based on its number of siblings
 
@@ -1350,9 +1350,9 @@ QString PrettyCellMLViewCellmlToPrettyCellmlConverter::processOperatorNode(const
 
 //==============================================================================
 
-QString PrettyCellMLViewCellmlToPrettyCellmlConverter::processFunctionNode(const QString &pFunction,
-                                                                           const QDomNode &pDomNode,
-                                                                           bool &pHasError)
+QString CellMLTextViewConverter::processFunctionNode(const QString &pFunction,
+                                                     const QDomNode &pDomNode,
+                                                     bool &pHasError)
 {
     // Process the function node
 
@@ -1366,8 +1366,8 @@ QString PrettyCellMLViewCellmlToPrettyCellmlConverter::processFunctionNode(const
 
 //==============================================================================
 
-QString PrettyCellMLViewCellmlToPrettyCellmlConverter::processPowerNode(const QDomNode &pDomNode,
-                                                                        bool &pHasError)
+QString CellMLTextViewConverter::processPowerNode(const QDomNode &pDomNode,
+                                                  bool &pHasError)
 {
     // Process the power node
 
@@ -1400,8 +1400,8 @@ QString PrettyCellMLViewCellmlToPrettyCellmlConverter::processPowerNode(const QD
 
 //==============================================================================
 
-QString PrettyCellMLViewCellmlToPrettyCellmlConverter::processRootNode(const QDomNode &pDomNode,
-                                                                       bool &pHasError)
+QString CellMLTextViewConverter::processRootNode(const QDomNode &pDomNode,
+                                                 bool &pHasError)
 {
     // Process the root node, based on its number of arguments
 
@@ -1453,8 +1453,8 @@ QString PrettyCellMLViewCellmlToPrettyCellmlConverter::processRootNode(const QDo
 
 //==============================================================================
 
-QString PrettyCellMLViewCellmlToPrettyCellmlConverter::processLogNode(const QDomNode &pDomNode,
-                                                                      bool &pHasError)
+QString CellMLTextViewConverter::processLogNode(const QDomNode &pDomNode,
+                                                bool &pHasError)
 {
     // Process the log node
 
@@ -1478,8 +1478,8 @@ QString PrettyCellMLViewCellmlToPrettyCellmlConverter::processLogNode(const QDom
 
 //==============================================================================
 
-QString PrettyCellMLViewCellmlToPrettyCellmlConverter::processNotNode(const QDomNode &pDomNode,
-                                                                      bool &pHasError)
+QString CellMLTextViewConverter::processNotNode(const QDomNode &pDomNode,
+                                                bool &pHasError)
 {
     // Process the not node
 
@@ -1504,8 +1504,8 @@ QString PrettyCellMLViewCellmlToPrettyCellmlConverter::processNotNode(const QDom
 
 //==============================================================================
 
-QString PrettyCellMLViewCellmlToPrettyCellmlConverter::processDiffNode(const QDomNode &pDomNode,
-                                                                       bool &pHasError)
+QString CellMLTextViewConverter::processDiffNode(const QDomNode &pDomNode,
+                                                 bool &pHasError)
 {
     // Process the diff node
 
@@ -1537,8 +1537,8 @@ QString PrettyCellMLViewCellmlToPrettyCellmlConverter::processDiffNode(const QDo
 
 //==============================================================================
 
-QString PrettyCellMLViewCellmlToPrettyCellmlConverter::processBvarNode(const QDomNode &pDomNode,
-                                                                       bool &pHasError)
+QString CellMLTextViewConverter::processBvarNode(const QDomNode &pDomNode,
+                                                 bool &pHasError)
 {
     // Process the bvar node, based on its number of child elements
 
@@ -1574,7 +1574,7 @@ QString PrettyCellMLViewCellmlToPrettyCellmlConverter::processBvarNode(const QDo
 
 //==============================================================================
 
-bool PrettyCellMLViewCellmlToPrettyCellmlConverter::processReactionNode(const QDomNode &pDomNode)
+bool CellMLTextViewConverter::processReactionNode(const QDomNode &pDomNode)
 {
     // We don't support reaction elements
 
@@ -1585,7 +1585,7 @@ bool PrettyCellMLViewCellmlToPrettyCellmlConverter::processReactionNode(const QD
 
 //==============================================================================
 
-bool PrettyCellMLViewCellmlToPrettyCellmlConverter::processGroupNode(const QDomNode &pDomNode)
+bool CellMLTextViewConverter::processGroupNode(const QDomNode &pDomNode)
 {
     // Start processing the given group node
 
@@ -1636,8 +1636,8 @@ bool PrettyCellMLViewCellmlToPrettyCellmlConverter::processGroupNode(const QDomN
 
 //==============================================================================
 
-bool PrettyCellMLViewCellmlToPrettyCellmlConverter::processRelationshipRefNode(const QDomNode &pDomNode,
-                                                                               QString &pRelationshipRef)
+bool CellMLTextViewConverter::processRelationshipRefNode(const QDomNode &pDomNode,
+                                                         QString &pRelationshipRef)
 {
     // Process the given relationship ref node's children
     // Note #1: unlike for most nodes, we process the node's children before
@@ -1695,7 +1695,7 @@ bool PrettyCellMLViewCellmlToPrettyCellmlConverter::processRelationshipRefNode(c
 
 //==============================================================================
 
-void PrettyCellMLViewCellmlToPrettyCellmlConverter::processComponentRefNode(const QDomNode &pDomNode)
+void CellMLTextViewConverter::processComponentRefNode(const QDomNode &pDomNode)
 {
     // Determine whether the given component ref node has component ref children
 
@@ -1761,7 +1761,7 @@ void PrettyCellMLViewCellmlToPrettyCellmlConverter::processComponentRefNode(cons
 
 //==============================================================================
 
-bool PrettyCellMLViewCellmlToPrettyCellmlConverter::processConnectionNode(const QDomNode &pDomNode)
+bool CellMLTextViewConverter::processConnectionNode(const QDomNode &pDomNode)
 {
     // Start processing the given connection node
 
@@ -1812,8 +1812,8 @@ bool PrettyCellMLViewCellmlToPrettyCellmlConverter::processConnectionNode(const 
 
 //==============================================================================
 
-bool PrettyCellMLViewCellmlToPrettyCellmlConverter::processMapComponentsNode(const QDomNode &pDomNode,
-                                                                             QString &pMapComponents)
+bool CellMLTextViewConverter::processMapComponentsNode(const QDomNode &pDomNode,
+                                                       QString &pMapComponents)
 {
     // Make sure that we haven't already processed a map components node
 
@@ -1857,7 +1857,7 @@ bool PrettyCellMLViewCellmlToPrettyCellmlConverter::processMapComponentsNode(con
 
 //==============================================================================
 
-void PrettyCellMLViewCellmlToPrettyCellmlConverter::processMapVariablesNode(const QDomNode &pDomNode)
+void CellMLTextViewConverter::processMapVariablesNode(const QDomNode &pDomNode)
 {
     // Process the given map variables node's children
     // Note #1: unlike for most nodes, we process the node's children before
@@ -1894,7 +1894,7 @@ void PrettyCellMLViewCellmlToPrettyCellmlConverter::processMapVariablesNode(cons
 
 //==============================================================================
 
-void PrettyCellMLViewCellmlToPrettyCellmlConverter::processUnknownNode(const QDomNode &pDomNode)
+void CellMLTextViewConverter::processUnknownNode(const QDomNode &pDomNode)
 {
     // The given node is unknown, so warn the user about it
 
@@ -1904,9 +1904,9 @@ void PrettyCellMLViewCellmlToPrettyCellmlConverter::processUnknownNode(const QDo
 
 //==============================================================================
 
-void PrettyCellMLViewCellmlToPrettyCellmlConverter::processUnsupportedNode(const QDomNode &pDomNode,
-                                                                           const bool &pError,
-                                                                           const QString &pExtra)
+void CellMLTextViewConverter::processUnsupportedNode(const QDomNode &pDomNode,
+                                                     const bool &pError,
+                                                     const QString &pExtra)
 {
     // The given node is known, but we don't support it, so consider it as an
     // error or a warning, depending on the case
@@ -1926,7 +1926,7 @@ void PrettyCellMLViewCellmlToPrettyCellmlConverter::processUnsupportedNode(const
 
 //==============================================================================
 
-}   // namespace PrettyCellMLView
+}   // namespace CellMLTextView
 }   // namespace OpenCOR
 
 //==============================================================================

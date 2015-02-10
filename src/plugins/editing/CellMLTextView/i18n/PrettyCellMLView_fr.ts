@@ -2,10 +2,10 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="fr_FR" sourcelanguage="en_GB">
 <context>
-    <name>OpenCOR::PrettyCellMLView::PrettyCellMLViewPlugin</name>
+    <name>OpenCOR::CellMLTextView::CellMLTextViewPlugin</name>
     <message>
-        <source>Pretty CellML</source>
-        <translation>Joli CellML</translation>
+        <source>CellML Text</source>
+        <translation>Texte CellML</translation>
     </message>
     <message>
         <source>CellML Validation</source>
@@ -13,7 +13,7 @@
     </message>
 </context>
 <context>
-    <name>OpenCOR::PrettyCellMLView::PrettyCellmlViewWidget</name>
+    <name>OpenCOR::CellMLTextView::CellmlTextViewWidget</name>
     <message>
         <source>You might want to use the Raw (CellML) view to edit the file.</source>
         <translation>Vous pouvez utiliser la vue (CellML) Brut pour éditer le fichier.</translation>

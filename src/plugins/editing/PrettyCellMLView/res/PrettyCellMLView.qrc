@@ -1,5 +1,0 @@
-<RCC>
-    <qresource prefix="/">
-        <file alias="PrettyCellMLView_fr">../../../../../build/PrettyCellMLView_fr.qm</file>
-    </qresource>
-</RCC>

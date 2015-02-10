@@ -16,10 +16,10 @@ specific language governing permissions and limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// Lexer for the pretty CellML format
+// Lexer for the CellML text format
 //==============================================================================
 
-#include "prettycellmlviewlexer.h"
+#include "cellmltextviewlexer.h"
 #include "qscintillawidget.h"
 
 //==============================================================================
@@ -29,11 +29,11 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 namespace OpenCOR {
-namespace PrettyCellMLView {
+namespace CellMLTextView {
 
 //==============================================================================
 
-PrettyCellmlViewLexer::PrettyCellmlViewLexer(QObject *pParent) :
+CellmlTextViewLexer::CellmlTextViewLexer(QObject *pParent) :
     QsciLexerCustom(pParent),
     mFullText(QString()),
     mEolString(QString())
@@ -42,7 +42,7 @@ PrettyCellmlViewLexer::PrettyCellmlViewLexer(QObject *pParent) :
 
     mKeywordsRegEx = QRegularExpression(
                          "\\b("
-                             // Pretty CellML keywords
+                             // CellML text keywords
 
                              "and|as|between|case|comp|def|endcomp|enddef|"
                              "endsel|for|group|import|incl|map|model|otherwise|"
@@ -120,16 +120,16 @@ PrettyCellmlViewLexer::PrettyCellmlViewLexer(QObject *pParent) :
 
 //==============================================================================
 
-const char * PrettyCellmlViewLexer::language() const
+const char * CellmlTextViewLexer::language() const
 {
     // Return the language for our lexer
 
-    return "Pretty CellML";
+    return "CellML Text";
 }
 
 //==============================================================================
 
-QString PrettyCellmlViewLexer::description(int pStyle) const
+QString CellmlTextViewLexer::description(int pStyle) const
 {
     // Return the given style's description
 
@@ -165,7 +165,7 @@ QString PrettyCellmlViewLexer::description(int pStyle) const
 
 //==============================================================================
 
-QColor PrettyCellmlViewLexer::color(int pStyle) const
+QColor CellmlTextViewLexer::color(int pStyle) const
 {
     // Return the given style's colour
 
@@ -195,7 +195,7 @@ QColor PrettyCellmlViewLexer::color(int pStyle) const
 
 //==============================================================================
 
-QFont PrettyCellmlViewLexer::font(int pStyle) const
+QFont CellmlTextViewLexer::font(int pStyle) const
 {
     // Return the given style's colour
 
@@ -217,7 +217,7 @@ QFont PrettyCellmlViewLexer::font(int pStyle) const
 
 //==============================================================================
 
-void PrettyCellmlViewLexer::styleText(int pStart, int pEnd)
+void CellmlTextViewLexer::styleText(int pStart, int pEnd)
 {
     // Make sure that we have an editor
 
@@ -284,8 +284,8 @@ static const int StringLength = StringString.length();
 
 //==============================================================================
 
-void PrettyCellmlViewLexer::doStyleText(int pStart, int pEnd, QString pText,
-                                        bool pParameterGroup)
+void CellmlTextViewLexer::doStyleText(int pStart, int pEnd, QString pText,
+                                      bool pParameterGroup)
 {
     // Make sure that we are given some text to style
 
@@ -322,9 +322,9 @@ void PrettyCellmlViewLexer::doStyleText(int pStart, int pEnd, QString pText,
 
 //==============================================================================
 
-void PrettyCellmlViewLexer::doStyleTextCurrent(int pStart, int pEnd,
-                                               QString pText,
-                                               bool pParameterGroup)
+void CellmlTextViewLexer::doStyleTextCurrent(int pStart, int pEnd,
+                                             QString pText,
+                                             bool pParameterGroup)
 {
     // Make sure that we are given some text to style
 
@@ -439,11 +439,11 @@ void PrettyCellmlViewLexer::doStyleTextCurrent(int pStart, int pEnd,
 
 //==============================================================================
 
-void PrettyCellmlViewLexer::doStyleTextPreviousMultilineComment(const int &pPosition,
-                                                                int pStart,
-                                                                int pEnd,
-                                                                QString pText,
-                                                                bool pParameterGroup)
+void CellmlTextViewLexer::doStyleTextPreviousMultilineComment(const int &pPosition,
+                                                              int pStart,
+                                                              int pEnd,
+                                                              QString pText,
+                                                              bool pParameterGroup)
 {
     // A /* XXX */ comment started before or at the beginning of the given text,
     // so now look for where it ends
@@ -481,11 +481,11 @@ void PrettyCellmlViewLexer::doStyleTextPreviousMultilineComment(const int &pPosi
 
 //==============================================================================
 
-void PrettyCellmlViewLexer::doStyleTextPreviousParameterGroup(const int &pPosition,
-                                                              int pStart,
-                                                              int pEnd,
-                                                              QString pText,
-                                                              bool pParameterGroup)
+void CellmlTextViewLexer::doStyleTextPreviousParameterGroup(const int &pPosition,
+                                                            int pStart,
+                                                            int pEnd,
+                                                            QString pText,
+                                                            bool pParameterGroup)
 {
     // A parameter group started before or at the beginning of the given text,
     // so now look for where it ends
@@ -540,9 +540,9 @@ void PrettyCellmlViewLexer::doStyleTextPreviousParameterGroup(const int &pPositi
 
 //==============================================================================
 
-void PrettyCellmlViewLexer::doStyleTextString(const int &pPosition, int pStart,
-                                              int pEnd, QString pText,
-                                              bool pParameterGroup)
+void CellmlTextViewLexer::doStyleTextString(const int &pPosition, int pStart,
+                                            int pEnd, QString pText,
+                                            bool pParameterGroup)
 {
     // There is a string to style, so first style everything that is before it
 
@@ -605,10 +605,10 @@ void PrettyCellmlViewLexer::doStyleTextString(const int &pPosition, int pStart,
 
 //==============================================================================
 
-void PrettyCellmlViewLexer::doStyleTextSingleLineComment(const int &pPosition,
-                                                         int pStart, int pEnd,
-                                                         QString pText,
-                                                         bool pParameterGroup)
+void CellmlTextViewLexer::doStyleTextSingleLineComment(const int &pPosition,
+                                                       int pStart, int pEnd,
+                                                       QString pText,
+                                                       bool pParameterGroup)
 {
     // There is a // comment to style, so first style everything that is before
     // it
@@ -634,9 +634,9 @@ void PrettyCellmlViewLexer::doStyleTextSingleLineComment(const int &pPosition,
 
 //==============================================================================
 
-void PrettyCellmlViewLexer::doStyleTextRegEx(int pStart, const QString &pText,
-                                             const QRegularExpression &pRegEx,
-                                             const int &pRegExStyle)
+void CellmlTextViewLexer::doStyleTextRegEx(int pStart, const QString &pText,
+                                           const QRegularExpression &pRegEx,
+                                           const int &pRegExStyle)
 {
     // Style the given text using the given regular expression
 
@@ -655,8 +655,8 @@ void PrettyCellmlViewLexer::doStyleTextRegEx(int pStart, const QString &pText,
 
 //==============================================================================
 
-bool PrettyCellmlViewLexer::validString(const int &pFrom, const int &pTo,
-                                        const int &pStyle) const
+bool CellmlTextViewLexer::validString(const int &pFrom, const int &pTo,
+                                      const int &pStyle) const
 {
     // Check whether the string, which range is given, is valid, i.e. is either
     // of the default or given style
@@ -675,8 +675,8 @@ bool PrettyCellmlViewLexer::validString(const int &pFrom, const int &pTo,
 
 //==============================================================================
 
-int PrettyCellmlViewLexer::findString(const QString &pString, int pFrom,
-                                      const int &pStyle, const bool &pForward)
+int CellmlTextViewLexer::findString(const QString &pString, int pFrom,
+                                    const int &pStyle, const bool &pForward)
 {
     // Find forward/backward the given string starting from the given position
 
@@ -694,7 +694,7 @@ int PrettyCellmlViewLexer::findString(const QString &pString, int pFrom,
 
 //==============================================================================
 
-}   // namespace PrettyCellMLView
+}   // namespace CellMLTextView
 }   // namespace OpenCOR
 
 //==============================================================================

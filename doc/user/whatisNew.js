@@ -50,7 +50,7 @@ var jsonData = {"versions":[
                                   {"type":"Fixed", "description":"Retrieval of view settings."}
                               ]
                              },
-                             {"type":"Added", "description":"<a href=\"plugins/editing/PrettyCellMLView.html\">Pretty CellML view</a> <em>(work in progress)</em>."}
+                             {"type":"Added", "description":"<a href=\"plugins/editing/CellMLTextView.html\">CellML Text view</a> <em>(work in progress)</em>."}
                          ]
                         },
                         {"name":"Miscellaneous",

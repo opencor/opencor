@@ -2,7 +2,7 @@
 <html>
     <head>
         <title>
-            PrettyCellMLView Plugin
+            CellMLTextView Plugin
         </title>
 
         <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
@@ -25,15 +25,15 @@
     </head>
     <body ondragstart="return false;" ondrop="return false;">
         <script type="text/javascript">
-            headerAndContentsMenu("PrettyCellMLView Plugin", "../../..");
+            headerAndContentsMenu("CellMLTextView Plugin", "../../..");
         </script>
 
         <p>
-            The PrettyCellMLView plugin can be used to edit <a href="http://www.cellml.org/">CellML</a> files using a text editor and a pretty CellML format. Besides using a specific format, the text editor behaves the same way as the text editor in the <a href="RawView.html">Raw</a> and <a href="RawCellMLView.html">RawCellML</a> views. Then, like in the <a href="RawCellMLView.html">RawCellML</a> view, there is a panel above the text editor, which is used to visualise mathematical equations in real-time, and another below to list all the issues with the CellML file, if any.
+            The CellMLTextView plugin can be used to edit <a href="http://www.cellml.org/">CellML</a> files using a text editor and a CellML text format. Besides using a specific format, the text editor behaves the same way as the text editor in the <a href="RawView.html">Raw</a> and <a href="RawCellMLView.html">RawCellML</a> views. Then, like in the <a href="RawCellMLView.html">RawCellML</a> view, there is a panel above the text editor, which is used to visualise mathematical equations in real-time, and another below to list all the issues with the CellML file, if any.
         </p>
 
         <p class="nomargins note">
-            the PrettyCellMLView plugin is still very much work in progress. As a result, to open a CellML file will 'only' result in its conversion to the pretty CellML format, together with syntax highlighting. Editing is possible, but changes cannot be serialised back. The panels above and below the editor do not work either.
+            the CellMLTextView plugin is still very much work in progress. As a result, to open a CellML file will 'only' result in its conversion to the CellML text format, together with syntax highlighting. Editing is possible, but changes cannot be serialised back. The panels above and below the editor do not work either.
         </p>
 
         <div class="section">
@@ -41,7 +41,7 @@
         </div>
 
         <p>
-            People who are already familiar with <a href="http://cor.physiol.ox.ac.uk/">COR</a> will find that the same format is used in both cases, although the pretty CellML format has been extended to support:
+            People who are already familiar with <a href="http://cor.physiol.ox.ac.uk/">COR</a> will find that the same format is used in both cases, although the CellML text format has been extended to support:
         </p>
 
         <ul>
@@ -90,13 +90,13 @@
         </div>
 
         <p>
-            The pretty CellML format has the same limitations as the <a href="http://cor.physiol.ox.ac.uk/">COR</a> format:
+            The CellML text format has the same limitations as the <a href="http://cor.physiol.ox.ac.uk/">COR</a> format:
         </p>
 
         <ul>
             <li>A <code>piecewise</code> statement can only be used as part of a top-level <code>eq</code> statement, and nested <code>piecewise</code> statements are not allowed (the nested limitation is not a limitation as such since an equation can always be rewritten without nested <code>piecewise</code> statements; more importantly, it is easier to read and maintain an equation that uses only one <code>piecewise</code> statement).</li>
             <li>The <code>reaction</code> element is not supported (indeed, its use is not only discouraged, but the <code>reaction</code> element is to be removed from the forthcoming CellML 1.2 specifications).</li>
-            <li>Comments can be made anywhere in a CellML file. However, the rendering of the <code>component</code>, <code>map_components</code>, <code>map_variables</code>, <code>relationship_ref</code>, <code>unit</code>, <code>units</code> and <code>variable</code> elements using the pretty CellML format is such that when serialised back, those comments will be incorporated in the parent element of those elements.</li>
+            <li>Comments can be made anywhere in a CellML file. However, the rendering of the <code>component</code>, <code>map_components</code>, <code>map_variables</code>, <code>relationship_ref</code>, <code>unit</code>, <code>units</code> and <code>variable</code> elements using the CellML text format is such that when serialised back, those comments will be incorporated in the parent element of those elements.</li>
         </ul>
 
         <script type="text/javascript">

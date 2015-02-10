@@ -259,7 +259,7 @@ SET(PLUGINS
     dataStore/CSVDataStore
 
     editing/CellMLAnnotationView
-    editing/PrettyCellMLView
+    editing/CellMLTextView
     editing/RawCellMLView
     editing/RawView
 

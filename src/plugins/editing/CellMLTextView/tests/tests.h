@@ -16,7 +16,7 @@ specific language governing permissions and limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// Pretty CellML view tests
+// CellML Text view tests
 //==============================================================================
 
 #ifndef TESTS_H

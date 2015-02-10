@@ -16,11 +16,11 @@ specific language governing permissions and limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// CellML to pretty CellML converter
+// Raw CellML to CellML text converter
 //==============================================================================
 
-#ifndef PRETTYCELLMLVIEWCELLMLTOPRETTYCELLMLCONVERTER_H
-#define PRETTYCELLMLVIEWCELLMLTOPRETTYCELLMLCONVERTER_H
+#ifndef CELLMLTEXTVIEWCONVERTER_H
+#define CELLMLTEXTVIEWCONVERTER_H
 
 //==============================================================================
 
@@ -34,14 +34,14 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 namespace OpenCOR {
-namespace PrettyCellMLView {
+namespace CellMLTextView {
 
 //==============================================================================
 
-class PrettyCellMLViewCellmlToPrettyCellmlConverter
+class CellMLTextViewConverter
 {
 public:
-    explicit PrettyCellMLViewCellmlToPrettyCellmlConverter();
+    explicit CellMLTextViewConverter();
 
     bool execute(const QString &pFileName);
 
@@ -164,7 +164,7 @@ private:
 
 //==============================================================================
 
-}   // namespace PrettyCellMLView
+}   // namespace CellMLTextView
 }   // namespace OpenCOR
 
 //==============================================================================

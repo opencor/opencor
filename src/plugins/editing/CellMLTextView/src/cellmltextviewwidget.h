@@ -16,11 +16,11 @@ specific language governing permissions and limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// Pretty CellML view widget
+// CellML Text view widget
 //==============================================================================
 
-#ifndef PRETTYCELLMLVIEWWIDGET_H
-#define PRETTYCELLMLVIEWWIDGET_H
+#ifndef CELLMLTEXTVIEWWIDGET_H
+#define CELLMLTEXTVIEWWIDGET_H
 
 //==============================================================================
 
@@ -34,7 +34,7 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 namespace Ui {
-    class PrettyCellmlViewWidget;
+    class CellmlTextViewWidget;
 }
 
 //==============================================================================
@@ -61,17 +61,17 @@ namespace QScintillaSupport {
 
 //==============================================================================
 
-namespace PrettyCellMLView {
+namespace CellMLTextView {
 
 //==============================================================================
 
-class PrettyCellmlViewWidgetData
+class CellmlTextViewWidgetData
 {
 public:
-    explicit PrettyCellmlViewWidgetData(CoreCellMLEditing::CoreCellmlEditingWidget *pEditingWidget = 0,
-                                        const QString &pSha1 = QString(),
-                                        const bool &pValid = false,
-                                        QDomDocument pRdfNodes = QDomDocument());
+    explicit CellmlTextViewWidgetData(CoreCellMLEditing::CoreCellmlEditingWidget *pEditingWidget = 0,
+                                      const QString &pSha1 = QString(),
+                                      const bool &pValid = false,
+                                      QDomDocument pRdfNodes = QDomDocument());
 
     CoreCellMLEditing::CoreCellmlEditingWidget * editingWidget() const;
     QString sha1() const;
@@ -87,13 +87,13 @@ private:
 
 //==============================================================================
 
-class PrettyCellmlViewWidget : public Core::ViewWidget
+class CellmlTextViewWidget : public Core::ViewWidget
 {
     Q_OBJECT
 
 public:
-    explicit PrettyCellmlViewWidget(QWidget *pParent);
-    ~PrettyCellmlViewWidget();
+    explicit CellmlTextViewWidget(QWidget *pParent);
+    ~CellmlTextViewWidget();
 
     virtual void loadSettings(QSettings *pSettings);
     virtual void saveSettings(QSettings *pSettings) const;
@@ -116,14 +116,14 @@ public:
     virtual QList<QWidget *> statusBarWidgets() const;
 
 private:
-    Ui::PrettyCellmlViewWidget *mGui;
+    Ui::CellmlTextViewWidget *mGui;
 
     bool mNeedLoadingSettings;
     QString mSettingsGroup;
 
     CoreCellMLEditing::CoreCellmlEditingWidget *mEditingWidget;
 
-    QMap<QString, PrettyCellmlViewWidgetData> mData;
+    QMap<QString, CellmlTextViewWidgetData> mData;
 
     void commentOrUncommentLine(QScintillaSupport::QScintillaWidget *editor,
                                 const int &pLineNumber,
@@ -137,7 +137,7 @@ private Q_SLOTS:
 
 //==============================================================================
 
-}   // namespace PrettyCellMLView
+}   // namespace CellMLTextView
 }   // namespace OpenCOR
 
 //==============================================================================

@@ -16,11 +16,11 @@ specific language governing permissions and limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// PrettyCellMLView plugin
+// CellMLTextView plugin
 //==============================================================================
 
-#ifndef PRETTYCELLMLVIEWPLUGIN_H
-#define PRETTYCELLMLVIEWPLUGIN_H
+#ifndef CELLMLTEXTVIEWPLUGIN_H
+#define CELLMLTEXTVIEWPLUGIN_H
 
 //==============================================================================
 
@@ -35,27 +35,27 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 namespace OpenCOR {
-namespace PrettyCellMLView {
+namespace CellMLTextView {
 
 //==============================================================================
 
-PLUGININFO_FUNC PrettyCellMLViewPluginInfo();
+PLUGININFO_FUNC CellMLTextViewPluginInfo();
 
 //==============================================================================
 
-class PrettyCellmlViewWidget;
+class CellmlTextViewWidget;
 
 //==============================================================================
 
-class PrettyCellMLViewPlugin : public QObject, public CellmlEditingInterface,
-                               public EditingInterface,
-                               public FileHandlingInterface,
-                               public I18nInterface, public PluginInterface,
-                               public ViewInterface
+class CellMLTextViewPlugin : public QObject, public CellmlEditingInterface,
+                             public EditingInterface,
+                             public FileHandlingInterface,
+                             public I18nInterface, public PluginInterface,
+                             public ViewInterface
 {
     Q_OBJECT
 
-    Q_PLUGIN_METADATA(IID "OpenCOR.PrettyCellMLViewPlugin" FILE "prettycellmlviewplugin.json")
+    Q_PLUGIN_METADATA(IID "OpenCOR.CellMLTextViewPlugin" FILE "cellmltextviewplugin.json")
 
     Q_INTERFACES(OpenCOR::CellmlEditingInterface)
     Q_INTERFACES(OpenCOR::EditingInterface)
@@ -73,12 +73,12 @@ public:
 #include "viewinterface.inl"
 
 private:
-    PrettyCellmlViewWidget *mViewWidget;
+    CellmlTextViewWidget *mViewWidget;
 };
 
 //==============================================================================
 
-}   // namespace PrettyCellMLView
+}   // namespace CellMLTextView
 }   // namespace OpenCOR
 
 //==============================================================================

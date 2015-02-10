@@ -16,11 +16,11 @@ specific language governing permissions and limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// Lexer for the pretty CellML format
+// Lexer for the CellML text format
 //==============================================================================
 
-#ifndef PRETTYCELLMLVIEWLEXER_H
-#define PRETTYCELLMLVIEWLEXER_H
+#ifndef CELLMLTEXTVIEWLEXER_H
+#define CELLMLTEXTVIEWLEXER_H
 
 //==============================================================================
 
@@ -33,11 +33,11 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 namespace OpenCOR {
-namespace PrettyCellMLView {
+namespace CellMLTextView {
 
 //==============================================================================
 
-class PrettyCellmlViewLexer : public QsciLexerCustom
+class CellmlTextViewLexer : public QsciLexerCustom
 {
 public:
     enum {
@@ -55,7 +55,7 @@ public:
         ParameterString
     };
 
-    explicit PrettyCellmlViewLexer(QObject *pParent);
+    explicit CellmlTextViewLexer(QObject *pParent);
 
     virtual const char * language() const;
 
@@ -102,7 +102,7 @@ private:
 
 //==============================================================================
 
-}   // namespace PrettyCellMLView
+}   // namespace CellMLTextView
 }   // namespace OpenCOR
 
 //==============================================================================

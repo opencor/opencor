@@ -16,25 +16,25 @@ specific language governing permissions and limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// Pretty CellML view widget
+// CellML Text view widget
 //==============================================================================
 
 #include "cellmlsupportplugin.h"
+#include "cellmltextviewconverter.h"
+#include "cellmltextviewlexer.h"
+#include "cellmltextviewwidget.h"
 #include "corecliutils.h"
 #include "corecellmleditingwidget.h"
 #include "editorlistwidget.h"
 #include "editorwidget.h"
 #include "filemanager.h"
-#include "prettycellmlviewcellmltoprettycellmlconverter.h"
-#include "prettycellmlviewlexer.h"
-#include "prettycellmlviewwidget.h"
 #include "qscintillawidget.h"
 #include "settings.h"
 #include "viewerwidget.h"
 
 //==============================================================================
 
-#include "ui_prettycellmlviewwidget.h"
+#include "ui_cellmltextviewwidget.h"
 
 //==============================================================================
 
@@ -53,14 +53,14 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 namespace OpenCOR {
-namespace PrettyCellMLView {
+namespace CellMLTextView {
 
 //==============================================================================
 
-PrettyCellmlViewWidgetData::PrettyCellmlViewWidgetData(CoreCellMLEditing::CoreCellmlEditingWidget *pEditingWidget,
-                                                       const QString &pSha1,
-                                                       const bool &pValid,
-                                                       QDomDocument pRdfNodes) :
+CellmlTextViewWidgetData::CellmlTextViewWidgetData(CoreCellMLEditing::CoreCellmlEditingWidget *pEditingWidget,
+                                                   const QString &pSha1,
+                                                   const bool &pValid,
+                                                   QDomDocument pRdfNodes) :
     mEditingWidget(pEditingWidget),
     mSha1(pSha1),
     mValid(pValid),
@@ -70,7 +70,7 @@ PrettyCellmlViewWidgetData::PrettyCellmlViewWidgetData(CoreCellMLEditing::CoreCe
 
 //==============================================================================
 
-CoreCellMLEditing::CoreCellmlEditingWidget * PrettyCellmlViewWidgetData::editingWidget() const
+CoreCellMLEditing::CoreCellmlEditingWidget * CellmlTextViewWidgetData::editingWidget() const
 {
     // Return our editing widget
 
@@ -79,7 +79,7 @@ CoreCellMLEditing::CoreCellmlEditingWidget * PrettyCellmlViewWidgetData::editing
 
 //==============================================================================
 
-QString PrettyCellmlViewWidgetData::sha1() const
+QString CellmlTextViewWidgetData::sha1() const
 {
     // Return our SHA-1 value
 
@@ -88,7 +88,7 @@ QString PrettyCellmlViewWidgetData::sha1() const
 
 //==============================================================================
 
-bool PrettyCellmlViewWidgetData::isValid() const
+bool CellmlTextViewWidgetData::isValid() const
 {
     // Return whether we are valid
 
@@ -97,7 +97,7 @@ bool PrettyCellmlViewWidgetData::isValid() const
 
 //==============================================================================
 
-QDomDocument PrettyCellmlViewWidgetData::rdfNodes() const
+QDomDocument CellmlTextViewWidgetData::rdfNodes() const
 {
     // Return our RDF nodes
 
@@ -106,13 +106,13 @@ QDomDocument PrettyCellmlViewWidgetData::rdfNodes() const
 
 //==============================================================================
 
-PrettyCellmlViewWidget::PrettyCellmlViewWidget(QWidget *pParent) :
+CellmlTextViewWidget::CellmlTextViewWidget(QWidget *pParent) :
     ViewWidget(pParent),
-    mGui(new Ui::PrettyCellmlViewWidget),
+    mGui(new Ui::CellmlTextViewWidget),
     mNeedLoadingSettings(true),
     mSettingsGroup(QString()),
     mEditingWidget(0),
-    mData(QMap<QString, PrettyCellmlViewWidgetData>())
+    mData(QMap<QString, CellmlTextViewWidgetData>())
 {
     // Set up the GUI
 
@@ -121,7 +121,7 @@ PrettyCellmlViewWidget::PrettyCellmlViewWidget(QWidget *pParent) :
 
 //==============================================================================
 
-PrettyCellmlViewWidget::~PrettyCellmlViewWidget()
+CellmlTextViewWidget::~CellmlTextViewWidget()
 {
     // Delete the GUI
 
@@ -130,7 +130,7 @@ PrettyCellmlViewWidget::~PrettyCellmlViewWidget()
 
 //==============================================================================
 
-void PrettyCellmlViewWidget::loadSettings(QSettings *pSettings)
+void CellmlTextViewWidget::loadSettings(QSettings *pSettings)
 {
     // Normally, we would retrieve the editing widget's settings, but
     // mEditingWidget is not set at this stage. So, instead, we keep track of
@@ -142,7 +142,7 @@ void PrettyCellmlViewWidget::loadSettings(QSettings *pSettings)
 
 //==============================================================================
 
-void PrettyCellmlViewWidget::saveSettings(QSettings *pSettings) const
+void CellmlTextViewWidget::saveSettings(QSettings *pSettings) const
 {
     Q_UNUSED(pSettings);
     // Note: our view is such that our settings are actually saved when calling
@@ -151,17 +151,17 @@ void PrettyCellmlViewWidget::saveSettings(QSettings *pSettings) const
 
 //==============================================================================
 
-void PrettyCellmlViewWidget::retranslateUi()
+void CellmlTextViewWidget::retranslateUi()
 {
     // Retranslate all our editing widgets
 
-    foreach (const PrettyCellmlViewWidgetData &data, mData)
+    foreach (const CellmlTextViewWidgetData &data, mData)
         data.editingWidget()->retranslateUi();
 }
 
 //==============================================================================
 
-bool PrettyCellmlViewWidget::contains(const QString &pFileName) const
+bool CellmlTextViewWidget::contains(const QString &pFileName) const
 {
     // Return whether we know about the given file
 
@@ -170,18 +170,18 @@ bool PrettyCellmlViewWidget::contains(const QString &pFileName) const
 
 //==============================================================================
 
-void PrettyCellmlViewWidget::initialize(const QString &pFileName,
-                                        const bool &pUpdate)
+void CellmlTextViewWidget::initialize(const QString &pFileName,
+                                      const bool &pUpdate)
 {
     // Retrieve the editing widget associated with the given file, if any
 
     CoreCellMLEditing::CoreCellmlEditingWidget *newEditingWidget = mData.value(pFileName).editingWidget();
 
     if (!newEditingWidget) {
-        // No editing widget exists for the given file, so generate a pretty
-        // CellML version of the given CellML file
+        // No editing widget exists for the given file, so generate a CellML
+        // text version of the given CellML file
 
-        PrettyCellMLViewCellmlToPrettyCellmlConverter converter;
+        CellMLTextViewConverter converter;
         bool successfulConversion = converter.execute(pFileName);
 
         // Create an editing widget for the given CellML file
@@ -208,14 +208,14 @@ void PrettyCellmlViewWidget::initialize(const QString &pFileName,
             }
         }
 
-        // Populate our editing widget with the pretty CellML version of the
+        // Populate our editing widget with the CellML text version of the
         // given CellML file
 
         if (successfulConversion) {
-            // The conversion was successful, so we can apply our Pretty CellML
+            // The conversion was successful, so we can apply our CellML text
             // lexer to our editor
 
-            newEditingWidget->editor()->editor()->setLexer(new PrettyCellmlViewLexer(this));
+            newEditingWidget->editor()->editor()->setLexer(new CellmlTextViewLexer(this));
         } else {
             // The conversion wasn't successful, so make the editor read-only
             // (since its contents is that of the file itself) and add a couple
@@ -243,10 +243,10 @@ void PrettyCellmlViewWidget::initialize(const QString &pFileName,
         // successful) and add it to ourselves
 
         mData.insert(pFileName,
-                     PrettyCellmlViewWidgetData(newEditingWidget,
-                                                Core::sha1(newEditingWidget->editor()->contents()),
-                                                successfulConversion,
-                                                converter.rdfNodes()));
+                     CellmlTextViewWidgetData(newEditingWidget,
+                                              Core::sha1(newEditingWidget->editor()->contents()),
+                                              successfulConversion,
+                                              converter.rdfNodes()));
 
         layout()->addWidget(newEditingWidget);
 
@@ -311,7 +311,7 @@ void PrettyCellmlViewWidget::initialize(const QString &pFileName,
 
 //==============================================================================
 
-void PrettyCellmlViewWidget::finalize(const QString &pFileName)
+void CellmlTextViewWidget::finalize(const QString &pFileName)
 {
     // Remove the editing widget, should there be one for the given file
 
@@ -343,7 +343,7 @@ void PrettyCellmlViewWidget::finalize(const QString &pFileName)
 
 //==============================================================================
 
-void PrettyCellmlViewWidget::fileReloaded(const QString &pFileName)
+void CellmlTextViewWidget::fileReloaded(const QString &pFileName)
 {
     // The given file has been reloaded, so reload it, should it be managed
     // Note: if the view for the given file is not the active view, then to call
@@ -364,12 +364,12 @@ void PrettyCellmlViewWidget::fileReloaded(const QString &pFileName)
 
 //==============================================================================
 
-void PrettyCellmlViewWidget::fileRenamed(const QString &pOldFileName,
-                                         const QString &pNewFileName)
+void CellmlTextViewWidget::fileRenamed(const QString &pOldFileName,
+                                       const QString &pNewFileName)
 {
     // The given file has been renamed, so update our editing widgets mapping
 
-    PrettyCellmlViewWidgetData data = mData.value(pOldFileName);
+    CellmlTextViewWidgetData data = mData.value(pOldFileName);
 
     if (data.editingWidget()) {
         mData.insert(pNewFileName, data);
@@ -379,7 +379,7 @@ void PrettyCellmlViewWidget::fileRenamed(const QString &pOldFileName,
 
 //==============================================================================
 
-Editor::EditorWidget * PrettyCellmlViewWidget::editor(const QString &pFileName) const
+Editor::EditorWidget * CellmlTextViewWidget::editor(const QString &pFileName) const
 {
     // Return the requested editor
 
@@ -390,7 +390,7 @@ Editor::EditorWidget * PrettyCellmlViewWidget::editor(const QString &pFileName) 
 
 //==============================================================================
 
-bool PrettyCellmlViewWidget::isEditorUseable(const QString &pFileName) const
+bool CellmlTextViewWidget::isEditorUseable(const QString &pFileName) const
 {
     // Return whether the requested editor is useable
 
@@ -399,18 +399,18 @@ bool PrettyCellmlViewWidget::isEditorUseable(const QString &pFileName) const
 
 //==============================================================================
 
-bool PrettyCellmlViewWidget::isEditorContentsModified(const QString &pFileName) const
+bool CellmlTextViewWidget::isEditorContentsModified(const QString &pFileName) const
 {
     // Return whether the contents of the requested editor has been modified
 
-    PrettyCellmlViewWidgetData data = mData.value(pFileName);
+    CellmlTextViewWidgetData data = mData.value(pFileName);
 
     return data.editingWidget()?Core::sha1(data.editingWidget()->editor()->contents()).compare(data.sha1()):false;
 }
 
 //==============================================================================
 
-QList<QWidget *> PrettyCellmlViewWidget::statusBarWidgets() const
+QList<QWidget *> CellmlTextViewWidget::statusBarWidgets() const
 {
     // Return our status bar widgets
 
@@ -435,9 +435,9 @@ static const int EndMultilineCommentLength = EndMultilineCommentString.length();
 
 //==============================================================================
 
-void PrettyCellmlViewWidget::commentOrUncommentLine(QScintillaSupport::QScintillaWidget *pEditor,
-                                                    const int &pLineNumber,
-                                                    const bool &pCommentLine)
+void CellmlTextViewWidget::commentOrUncommentLine(QScintillaSupport::QScintillaWidget *pEditor,
+                                                  const int &pLineNumber,
+                                                  const bool &pCommentLine)
 {
     // (Un)comment the current line
 
@@ -468,7 +468,7 @@ void PrettyCellmlViewWidget::commentOrUncommentLine(QScintillaSupport::QScintill
 
 //==============================================================================
 
-void PrettyCellmlViewWidget::editorKeyPressed(QKeyEvent *pEvent, bool &pHandled)
+void CellmlTextViewWidget::editorKeyPressed(QKeyEvent *pEvent, bool &pHandled)
 {
     // Some key combinations from our editor
 
@@ -616,7 +616,7 @@ void PrettyCellmlViewWidget::editorKeyPressed(QKeyEvent *pEvent, bool &pHandled)
 
 //==============================================================================
 
-void PrettyCellmlViewWidget::selectFirstItemInEditorList()
+void CellmlTextViewWidget::selectFirstItemInEditorList()
 {
     // Select the first item in the current editor list
 
@@ -625,7 +625,7 @@ void PrettyCellmlViewWidget::selectFirstItemInEditorList()
 
 //==============================================================================
 
-}   // namespace PrettyCellMLView
+}   // namespace CellMLTextView
 }   // namespace OpenCOR
 
 //==============================================================================
