@@ -604,6 +604,9 @@ IF(WIN32)
     ENDIF()
 ELSEIF(APPLE)
     # Select PackageMaker and ZIP as the packagers on OS X
+    # Note: this is actually done within the package script, so that the ZIP
+    #       package can be done 'properly', i.e. we don't have the full tree
+    #       structure in the ZIP file...
 
     SET(CPACK_SYSTEM_NAME "OSX")
 
