@@ -31,8 +31,11 @@ namespace CellMLTextView {
 bool CellmlTextViewParser::execute(const QString &pContents,
                                    QDomDocument &pDomDocument)
 {
+    // Reset the given DOM document, just to be on the safe side
+
+    pDomDocument = QDomDocument(QString());
+
 Q_UNUSED(pContents);
-Q_UNUSED(pDomDocument);
     return true;
 }
 

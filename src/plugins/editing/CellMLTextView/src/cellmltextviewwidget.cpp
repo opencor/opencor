@@ -424,7 +424,7 @@ bool CellmlTextViewWidget::saveFile(const QString &pOldFileName,
         // that was in the original CellML file
 
         CellmlTextViewParser parser;
-        QDomDocument domDocument = QDomDocument(QString());
+        QDomDocument domDocument;
         bool successfulParsing = parser.execute(currentEditor->contents(), domDocument);
 
         if (successfulParsing) {
