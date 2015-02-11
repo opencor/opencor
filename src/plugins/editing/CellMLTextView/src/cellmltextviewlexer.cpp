@@ -24,10 +24,6 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-#include <QRegularExpression>
-
-//==============================================================================
-
 namespace OpenCOR {
 namespace CellMLTextView {
 
