@@ -410,6 +410,39 @@ bool CellmlTextViewWidget::isEditorContentsModified(const QString &pFileName) co
 
 //==============================================================================
 
+bool CellmlTextViewWidget::saveFile(const QString &pOldFileName,
+                                    const QString &pNewFileName) const
+{
+    // Save the given file
+
+    Editor::EditorWidget *currentEditor = editor(pOldFileName);
+
+    if (currentEditor) {
+        // Parse the contents of the editor and, if successful, serialise its
+        // corresponding DOM document, making sure that we include any metadata
+        // that was in the original CellML file
+
+        QDomDocument domDocument = QDomDocument("Model");
+        QDomDocument rdfNodes = mData.value(pOldFileName).rdfNodes();
+
+        domDocument.appendChild(rdfNodes.cloneNode());
+
+qDebug("---[SERIALISSATION]---");
+qDebug("%s ---> %s", qPrintable(pOldFileName), qPrintable(pNewFileName));
+qDebug("---------");
+qDebug("%s", qPrintable(qDomDocumentToString(domDocument)));
+qDebug("---------");
+
+//        return Core::writeTextToFile(pNewFileName, qDomDocumentToString(domDocument));
+
+//---GRY--- RETURN false FOR NOW UNTIL WE ARE DONE WITH THE SAVING OF A FILE...
+        return false;
+    } else {
+        return false;
+    }}
+
+//==============================================================================
+
 QList<QWidget *> CellmlTextViewWidget::statusBarWidgets() const
 {
     // Return our status bar widgets
