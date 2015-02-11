@@ -28,8 +28,12 @@ namespace CellMLTextView {
 
 //==============================================================================
 
-CellmlTextViewParser::CellmlTextViewParser()
+bool CellmlTextViewParser::execute(const QString &pContents,
+                                   QDomDocument &pDomDocument)
 {
+Q_UNUSED(pContents);
+Q_UNUSED(pDomDocument);
+    return true;
 }
 
 //==============================================================================

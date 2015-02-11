@@ -22,6 +22,7 @@ specific language governing permissions and limitations under the License.
 #include "cellmlsupportplugin.h"
 #include "cellmltextviewconverter.h"
 #include "cellmltextviewlexer.h"
+#include "cellmltextviewparser.h"
 #include "cellmltextviewwidget.h"
 #include "corecliutils.h"
 #include "corecellmleditingwidget.h"
@@ -422,13 +423,18 @@ bool CellmlTextViewWidget::saveFile(const QString &pOldFileName,
         // corresponding DOM document, making sure that we include any metadata
         // that was in the original CellML file
 
-        QDomDocument domDocument = QDomDocument("Model");
-        QDomDocument rdfNodes = mData.value(pOldFileName).rdfNodes();
+        CellmlTextViewParser parser;
+        QDomDocument domDocument = QDomDocument(QString());
+        bool successfulParsing = parser.execute(currentEditor->contents(), domDocument);
 
-        domDocument.appendChild(rdfNodes.cloneNode());
+        if (successfulParsing) {
+            QDomDocument rdfNodes = mData.value(pOldFileName).rdfNodes();
+
+            domDocument.appendChild(rdfNodes.cloneNode());
 
 qDebug("---[SERIALISSATION]---");
-qDebug("%s ---> %s", qPrintable(pOldFileName), qPrintable(pNewFileName));
+qDebug("FROM: %s", qPrintable(pOldFileName));
+qDebug("TO:   %s", qPrintable(pNewFileName));
 qDebug("---------");
 qDebug("%s", qPrintable(qDomDocumentToString(domDocument)));
 qDebug("---------");
@@ -436,7 +442,10 @@ qDebug("---------");
 //        return Core::writeTextToFile(pNewFileName, qDomDocumentToString(domDocument));
 
 //---GRY--- RETURN false FOR NOW UNTIL WE ARE DONE WITH THE SAVING OF A FILE...
-        return false;
+            return false;
+        } else {
+            return false;
+        }
     } else {
         return false;
     }}

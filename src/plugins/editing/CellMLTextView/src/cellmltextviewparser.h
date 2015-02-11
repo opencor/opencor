@@ -24,6 +24,11 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#include <QDomDocument>
+#include <QString>
+
+//==============================================================================
+
 namespace OpenCOR {
 namespace CellMLTextView {
 
@@ -32,7 +37,7 @@ namespace CellMLTextView {
 class CellmlTextViewParser
 {
 public:
-    explicit CellmlTextViewParser();
+    bool execute(const QString &pContents, QDomDocument &pDomDocument);
 };
 
 //==============================================================================
