@@ -21,6 +21,7 @@ ADD_PLUGIN(CellMLTextView
 
         src/cellmltextviewconverter.cpp
         src/cellmltextviewlexer.cpp
+        src/cellmltextviewparser.cpp
         src/cellmltextviewplugin.cpp
         src/cellmltextviewwidget.cpp
     HEADERS_MOC
