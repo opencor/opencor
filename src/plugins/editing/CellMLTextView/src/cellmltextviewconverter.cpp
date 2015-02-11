@@ -122,7 +122,7 @@ bool CellMLTextViewConverter::execute(const QString &pFileName)
         mWarningLines = QIntList();
         mWarningMessages = QStringList();
 
-        mRdfNodes = QDomDocument("RDF Nodes");
+        mRdfNodes = QDomDocument(QString());
 
         if (!processModelNode(domDocument.documentElement())) {
             mOutput = fileContents;
