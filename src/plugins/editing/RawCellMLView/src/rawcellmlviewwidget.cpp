@@ -357,47 +357,14 @@ void RawCellmlViewWidget::validate(const QString &pFileName) const
 
 //==============================================================================
 
-void RawCellmlViewWidget::cleanUpXml(const QDomElement &pElement) const
+QString RawCellmlViewWidget::cleanMathml(const QString &pMathml) const
 {
-    // Clean up the current element
-
-    QDomNamedNodeMap attributes = pElement.attributes();
-
-    QStringList attributeNames = QStringList();
-
-    for (int j = 0, jMax = attributes.count(); j < jMax; ++j) {
-        QString attributeName = attributes.item(j).nodeName();
-
-        if (attributeName.contains(":"))
-            attributeNames << attributeName;
-    }
-
-    foreach (const QString &attributeName, attributeNames)
-        attributes.removeNamedItem(attributeName);
-
-    // Go through the element's child elements, if any, and clean them up
-
-    for (QDomElement childElement = pElement.firstChildElement();
-         !childElement.isNull(); childElement = childElement.nextSiblingElement()) {
-        cleanUpXml(childElement);
-    }
-}
-
-//==============================================================================
-
-QString RawCellmlViewWidget::cleanUpXml(const QString &pMathml) const
-{
-    // Clean up and return the given XML string
+    // Return the given MathML code or an empty string, based on whether the
+    // given MathML code is valid
 
     QDomDocument domDocument;
 
-    if (domDocument.setContent(pMathml)) {
-        cleanUpXml(domDocument.documentElement());
-
-        return domDocument.toString(-1);
-    } else {
-        return QString();
-    }
+    return domDocument.setContent(pMathml)?pMathml:QString();
 }
 
 //==============================================================================
@@ -409,7 +376,7 @@ QString RawCellmlViewWidget::retrieveContentMathmlEquation(const QString &pConte
 
     QDomDocument domDocument;
 
-    if (domDocument.setContent(pContentMathmlBlock)) {
+    if (domDocument.setContent(pContentMathmlBlock, true)) {
         // Look for the child node within which our position is located, if any
 
         QDomElement domElement = domDocument.documentElement();
@@ -431,7 +398,7 @@ QString RawCellmlViewWidget::retrieveContentMathmlEquation(const QString &pConte
                                              childElement.columnNumber(),
                                              childNodeStartPosition);
 
-            childNodeStartPosition = pContentMathmlBlock.lastIndexOf("<"+childElement.nodeName(), childNodeStartPosition);
+            childNodeStartPosition = pContentMathmlBlock.lastIndexOf("<"+childElement.localName(), childNodeStartPosition);
 
             // Retrieve the end position of the current child node
 
@@ -452,7 +419,7 @@ QString RawCellmlViewWidget::retrieveContentMathmlEquation(const QString &pConte
                                                  childNodeEndPosition);
             }
 
-            childNodeEndPosition = pContentMathmlBlock.lastIndexOf("</"+childElement.nodeName()+">", childNodeEndPosition)+2+childElement.nodeName().length();
+            childNodeEndPosition = pContentMathmlBlock.lastIndexOf("</"+childElement.localName()+">", childNodeEndPosition)+2+childElement.localName().length();
 
             // Check whether our position is within the start and end positions
             // of the current child node
@@ -541,7 +508,7 @@ void RawCellmlViewWidget::updateViewer()
         // Note: indeed, our Content MathML block may not be valid, in which
         //       case cleaning it up will result in an empty string...
 
-        if (cleanUpXml(contentMathmlBlock).isEmpty()) {
+        if (cleanMathml(contentMathmlBlock).isEmpty()) {
             mContentMathmlEquation = QString();
 
             mEditingWidget->viewer()->setError(true);
@@ -549,7 +516,7 @@ void RawCellmlViewWidget::updateViewer()
             // A Content MathML block contains 0+ child nodes, so extract and
             // clean up the one, if any, at our current position
 
-            QString contentMathmlEquation = cleanUpXml(retrieveContentMathmlEquation(contentMathmlBlock, currentPosition-crtStartMathTagPos));
+            QString contentMathmlEquation = cleanMathml(retrieveContentMathmlEquation(contentMathmlBlock, currentPosition-crtStartMathTagPos));
 
             // Check whether we have got a Content MathML equation
 

@@ -107,8 +107,7 @@ private:
 
     QString mContentMathmlEquation;
 
-    void cleanUpXml(const QDomElement &pElement) const;
-    QString cleanUpXml(const QString &pMathml) const;
+    QString cleanMathml(const QString &pMathml) const;
 
     QString retrieveContentMathmlEquation(const QString &pContentMathmlBlock,
                                           const int &pPosition) const;
