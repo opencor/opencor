@@ -476,11 +476,11 @@ ELSE()
         ENDIF()
 
         IF(${ARCHITECTURE} EQUAL 32)
-            RETRIEVE_BINARY_FILE(distrib/${DISTRIB_DIR} libeay32.dll 1071ef3ecdee8519e6941ae8fec4afe9eb64cc33)
-            RETRIEVE_BINARY_FILE(distrib/${DISTRIB_DIR} ssleay32.dll 67736d74f062322e1fdffbd88542d27aa7dee7a3)
+            RETRIEVE_BINARY_FILE(distrib/${DISTRIB_DIR} libeay32.dll 22c9aee60cf0286f22690cf2d8cbf1cdb1f6e394)
+            RETRIEVE_BINARY_FILE(distrib/${DISTRIB_DIR} ssleay32.dll 9fd71a15fbaac87b797b3e1e7477d97a7aa30ae0)
         ELSE()
-            RETRIEVE_BINARY_FILE(distrib/${DISTRIB_DIR} libeay32.dll 635d48639f1ccb03cf6afd6c2f29b84de009ae40)
-            RETRIEVE_BINARY_FILE(distrib/${DISTRIB_DIR} ssleay32.dll 2b3a8199bc6add0e4a5a12d1015090012e239052)
+            RETRIEVE_BINARY_FILE(distrib/${DISTRIB_DIR} libeay32.dll f12d2ca58bff5813a255110a27d3eb432ad211e8)
+            RETRIEVE_BINARY_FILE(distrib/${DISTRIB_DIR} ssleay32.dll 3a9bb668e2da40a479bc23eb17df6c6763bfc43e)
         ENDIF()
 
         LIST(APPEND ADDITIONAL_FILES
