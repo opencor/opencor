@@ -374,10 +374,10 @@ void CellmlFile::clearCmetaIdsFromCellmlElement(const QDomElement &pElement,
     // Remove the given CellML element's cmeta:id, if it is not actually being
     // used
 
-    QString cmetaId = pElement.attributeNS(CmetaIdNamespace, "id");
+    static const QString CmetaId = "cmeta:id";
 
-    if (!cmetaId.isEmpty() && !pUsedCmetaIds.contains(cmetaId))
-        pElement.attributes().removeNamedItemNS(CmetaIdNamespace, "id");
+    if (!pUsedCmetaIds.contains(pElement.attribute(CmetaId)))
+        pElement.attributes().removeNamedItem(CmetaId);
 
     // Do the same for all the child elements of the given CellML element
 
@@ -485,16 +485,15 @@ bool CellmlFile::save(const QString &pNewFileName)
 
     QDomDocument domDocument;
 
-    domDocument.setContent(QString::fromStdWString(mModel->serialisedText()), true);
+    domDocument.setContent(QString::fromStdWString(mModel->serialisedText()));
 
     QDomElement documentElement = domDocument.documentElement();
 
-    documentElement.attributes().removeNamedItemNS(XmlNamespace, "base");
+    documentElement.attributes().removeNamedItem("xml:base");
 
     for (QDomElement childElement = documentElement.firstChildElement();
          !childElement.isNull(); childElement = childElement.nextSiblingElement()) {
-        if (   !childElement.namespaceURI().compare(RdfNamespace)
-            && !childElement.localName().compare("RDF")) {
+        if (!childElement.nodeName().compare("rdf:RDF")) {
             if (!childElement.childNodes().count())
                 documentElement.removeChild(childElement);
 

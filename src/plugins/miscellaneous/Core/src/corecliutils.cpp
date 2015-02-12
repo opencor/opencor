@@ -135,7 +135,7 @@ void cleanDomElement(QDomElement &pDomElement,
 
             // Remove the attribute from the element
 
-            pDomElement.removeAttributeNode(attributeNode.toAttr());
+            domElementAttributes.removeNamedItem(attributeNode.nodeName());
         }
 
         // Sort the serialised attributes using the attributes' name

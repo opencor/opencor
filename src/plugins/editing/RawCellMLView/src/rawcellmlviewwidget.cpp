@@ -376,7 +376,7 @@ QString RawCellmlViewWidget::retrieveContentMathmlEquation(const QString &pConte
 
     QDomDocument domDocument;
 
-    if (domDocument.setContent(pContentMathmlBlock, true)) {
+    if (domDocument.setContent(pContentMathmlBlock)) {
         // Look for the child node within which our position is located, if any
 
         QDomElement domElement = domDocument.documentElement();
@@ -398,7 +398,7 @@ QString RawCellmlViewWidget::retrieveContentMathmlEquation(const QString &pConte
                                              childElement.columnNumber(),
                                              childNodeStartPosition);
 
-            childNodeStartPosition = pContentMathmlBlock.lastIndexOf("<"+childElement.localName(), childNodeStartPosition);
+            childNodeStartPosition = pContentMathmlBlock.lastIndexOf("<"+childElement.nodeName(), childNodeStartPosition);
 
             // Retrieve the end position of the current child node
 
@@ -419,7 +419,7 @@ QString RawCellmlViewWidget::retrieveContentMathmlEquation(const QString &pConte
                                                  childNodeEndPosition);
             }
 
-            childNodeEndPosition = pContentMathmlBlock.lastIndexOf("</"+childElement.localName()+">", childNodeEndPosition)+2+childElement.localName().length();
+            childNodeEndPosition = pContentMathmlBlock.lastIndexOf("</"+childElement.nodeName()+">", childNodeEndPosition)+2+childElement.nodeName().length();
 
             // Check whether our position is within the start and end positions
             // of the current child node

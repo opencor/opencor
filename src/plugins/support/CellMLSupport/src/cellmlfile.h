@@ -47,7 +47,6 @@ static const auto CmetaIdNamespace     = QStringLiteral("http://www.cellml.org/m
 static const auto MathmlNamespace      = QStringLiteral("http://www.w3.org/1998/Math/MathML");
 static const auto RdfNamespace         = QStringLiteral("http://www.w3.org/1999/02/22-rdf-syntax-ns#");
 static const auto XlinkNamespace       = QStringLiteral("http://www.w3.org/1999/xlink");
-static const auto XmlNamespace         = QStringLiteral("http://www.w3.org/XML/1998/namespace");
 
 //==============================================================================
 
