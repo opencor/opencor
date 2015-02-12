@@ -357,14 +357,47 @@ void RawCellmlViewWidget::validate(const QString &pFileName) const
 
 //==============================================================================
 
+void RawCellmlViewWidget::cleanMathml(const QDomElement &pElement) const
+{
+    // Clean up the current element
+
+    QDomNamedNodeMap attributes = pElement.attributes();
+
+    QStringList attributeNames = QStringList();
+
+    for (int j = 0, jMax = attributes.count(); j < jMax; ++j) {
+        QString attributeName = attributes.item(j).nodeName();
+
+        if (attributeName.contains(":"))
+            attributeNames << attributeName;
+    }
+
+    foreach (const QString &attributeName, attributeNames)
+        attributes.removeNamedItem(attributeName);
+
+    // Go through the element's child elements, if any, and clean them up
+
+    for (QDomElement childElement = pElement.firstChildElement();
+         !childElement.isNull(); childElement = childElement.nextSiblingElement()) {
+        cleanMathml(childElement);
+    }
+}
+
+//==============================================================================
+
 QString RawCellmlViewWidget::cleanMathml(const QString &pMathml) const
 {
-    // Return the given MathML code or an empty string, based on whether the
-    // given MathML code is valid
+    // Clean up and return the given XML string
 
     QDomDocument domDocument;
 
-    return domDocument.setContent(pMathml)?pMathml:QString();
+    if (domDocument.setContent(pMathml)) {
+        cleanMathml(domDocument.documentElement());
+
+        return domDocument.toString(-1);
+    } else {
+        return QString();
+    }
 }
 
 //==============================================================================
