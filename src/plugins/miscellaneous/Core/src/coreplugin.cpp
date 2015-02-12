@@ -328,6 +328,8 @@ void CorePlugin::retranslateUi()
 
     retranslateMenu(mFileReopenSubMenu, tr("Reopen"));
 
+    retranslateAction(mFileReopenMostRecentFileAction, tr("Most Recent"),
+                      tr("Reopen the most recently closed file"));
     retranslateAction(mFileClearReopenSubMenuAction, tr("Clear Menu"),
                       tr("Clear the menu"));
 
@@ -427,12 +429,18 @@ void CorePlugin::initializePlugin(QMainWindow *pMainWindow)
     mFileReopenSubMenu = newMenu(QIcon(":/oxygen/actions/document-open-recent.png"),
                                  pMainWindow);
 
-    mFileReopenSubMenuSeparator = new QAction(pMainWindow);
+    mFileReopenMostRecentFileAction = newAction(QKeySequence(Qt::CTRL|Qt::SHIFT|Qt::Key_T),
+                                                pMainWindow);
+    mFileReopenSubMenuSeparator1 = new QAction(pMainWindow);
+    mFileReopenSubMenuSeparator2 = new QAction(pMainWindow);
     mFileClearReopenSubMenuAction = new QAction(pMainWindow);
 
-    mFileReopenSubMenuSeparator->setSeparator(true);
+    mFileReopenSubMenuSeparator1->setSeparator(true);
+    mFileReopenSubMenuSeparator2->setSeparator(true);
 
-    mFileReopenSubMenu->addAction(mFileReopenSubMenuSeparator);
+    mFileReopenSubMenu->addAction(mFileReopenMostRecentFileAction);
+    mFileReopenSubMenu->addAction(mFileReopenSubMenuSeparator1);
+    mFileReopenSubMenu->addAction(mFileReopenSubMenuSeparator2);
     mFileReopenSubMenu->addAction(mFileClearReopenSubMenuAction);
 
     // Some connections to handle our different File actions
@@ -496,6 +504,8 @@ void CorePlugin::initializePlugin(QMainWindow *pMainWindow)
 
     // A connection related to our Reopen sub-menu
 
+    connect(mFileReopenMostRecentFileAction, SIGNAL(triggered(bool)),
+            this, SLOT(reopenMostRecentFile()));
     connect(mFileClearReopenSubMenuAction, SIGNAL(triggered(bool)),
             this, SLOT(clearReopenSubMenu()));
 }
@@ -604,17 +614,18 @@ void CorePlugin::updateFileReopenMenu(const bool &pEnabled)
     // Update the contents of our Reopen sub-menu by first cleaning it
 
     foreach (QAction *action, mFileReopenSubMenu->actions()) {
-        if (action != mFileReopenSubMenuSeparator)
+        if (   (action != mFileReopenMostRecentFileAction)
+            && (action != mFileReopenSubMenuSeparator1)
+            && (action != mFileReopenSubMenuSeparator2)) {
             disconnect(action, SIGNAL(triggered(bool)),
-                       this, SLOT(openRecentFile()));
-        else
-            // We have reached our Reopen sub-menu separator
+                       this, SLOT(reopenRecentFile()));
 
+            mFileReopenSubMenu->removeAction(action);
+
+            delete action;
+        } else if (action == mFileReopenSubMenuSeparator2) {
             break;
-
-        mFileReopenSubMenu->removeAction(action);
-
-        delete action;
+        }
     }
 
     // Add the recent files to our Reopen sub-menu
@@ -626,14 +637,15 @@ void CorePlugin::updateFileReopenMenu(const bool &pEnabled)
         action->setText(recentFile);
 
         connect(action, SIGNAL(triggered(bool)),
-                this, SLOT(openRecentFile()));
+                this, SLOT(reopenRecentFile()));
 
-        mFileReopenSubMenu->insertAction(mFileReopenSubMenuSeparator, action);
+        mFileReopenSubMenu->insertAction(mFileReopenSubMenuSeparator2, action);
     }
 
-    // Enable/disable mFileClearReopenSubMenuAction depending on whether we have
+    // Enable/disable our reopen sub-menu actions depending on whether we have
     // recent file names
 
+    mFileReopenMostRecentFileAction->setEnabled(!mRecentFileNamesOrUrls.isEmpty());
     mFileClearReopenSubMenuAction->setEnabled(!mRecentFileNamesOrUrls.isEmpty());
 }
 
@@ -666,15 +678,14 @@ void CorePlugin::updateNewModifiedSensitiveActions()
 
 //==============================================================================
 
-void CorePlugin::openRecentFile()
+void CorePlugin::reopenFile(const QString &pFileName)
 {
     // Check that the recent file still exists
 
-    QString actionText = qobject_cast<QAction *>(sender())->text();
     bool isLocalFile;
     QString fileNameOrUrl;
 
-    checkFileNameOrUrl(actionText, isLocalFile, fileNameOrUrl);
+    checkFileNameOrUrl(pFileName, isLocalFile, fileNameOrUrl);
 
     if (isLocalFile) {
         if (QFile::exists(fileNameOrUrl))
@@ -697,8 +708,26 @@ void CorePlugin::openRecentFile()
     // Note: if the file was successfully opened, then it will have already been
     //       removed from our list of recent files...
 
-    if (mRecentFileNamesOrUrls.removeOne(actionText))
+    if (mRecentFileNamesOrUrls.removeOne(pFileName))
         updateFileReopenMenu();
+}
+
+//==============================================================================
+
+void CorePlugin::reopenRecentFile()
+{
+    // Reopen a recent file
+
+    reopenFile(qobject_cast<QAction *>(sender())->text());
+}
+
+//==============================================================================
+
+void CorePlugin::reopenMostRecentFile()
+{
+    // Reopen the most recently closed file
+
+    reopenFile(mRecentFileNamesOrUrls.first());
 }
 
 //==============================================================================

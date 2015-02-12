@@ -101,18 +101,22 @@ private:
 
     QMenu *mFileReopenSubMenu;
 
-    QAction *mFileReopenSubMenuSeparator;
+    QAction *mFileReopenMostRecentFileAction;
+    QAction *mFileReopenSubMenuSeparator1;
+    QAction *mFileReopenSubMenuSeparator2;
     QAction *mFileClearReopenSubMenuAction;
 
     QStringList mRecentFileNamesOrUrls;
 
     void updateNewModifiedSensitiveActions();
 
+    void reopenFile(const QString &pFileName);
+
 private Q_SLOTS:
     void updateFileReopenMenu(const bool &pEnabled = true);
 
-    void openRecentFile();
-
+    void reopenRecentFile();
+    void reopenMostRecentFile();
     void clearReopenSubMenu();
 };
 

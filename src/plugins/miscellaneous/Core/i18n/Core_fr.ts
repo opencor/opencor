@@ -238,6 +238,14 @@
         <source>Open a remote file</source>
         <translation>Ouvrir un fichier à distance</translation>
     </message>
+    <message>
+        <source>Most Recent</source>
+        <translation>Plus Récent</translation>
+    </message>
+    <message>
+        <source>Reopen the most recently closed file</source>
+        <translation>Réouvrir le fichier qui a été le plus récemment fermé</translation>
+    </message>
 </context>
 <context>
     <name>OpenCOR::Core::PropertyEditorWidget</name>
