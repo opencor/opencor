@@ -660,7 +660,7 @@ Or the Apache 2, MIT or MPL 1.1 or MPL 2.0 licences.
 <xsl:template match="apply[*[1][self::not]]
                        |apply[*[1][self::csymbol='not']]">
 <mrow>
-<mo>&#172;<!-- not --></mo>
+<mo>not</mo>
 <xsl:apply-templates select="*[2]">
   <xsl:with-param name="p" select="7"/>
 </xsl:apply-templates>
