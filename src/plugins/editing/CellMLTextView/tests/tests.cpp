@@ -32,7 +32,7 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-void Tests::successfulTests()
+void Tests::successfulConversionTests()
 {
     OpenCOR::CellMLTextView::CellMLTextViewConverter converter;
 
@@ -53,7 +53,7 @@ void Tests::successfulTests()
 
 //==============================================================================
 
-void Tests::failingTests()
+void Tests::failingConversionTests()
 {
     // Test the conversion of various invalid CellML files
 
@@ -468,7 +468,7 @@ void Tests::failingTests()
 
 //==============================================================================
 
-void Tests::warningTests()
+void Tests::warningConversionTests()
 {
     // Unknown CellML element
 

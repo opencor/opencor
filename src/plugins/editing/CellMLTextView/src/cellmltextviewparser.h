@@ -34,10 +34,26 @@ namespace CellMLTextView {
 
 //==============================================================================
 
+class CellmlTextViewScanner;
+
+//==============================================================================
+
 class CellmlTextViewParser
 {
 public:
-    bool execute(const QString &pContents, QDomDocument &pDomDocument);
+    explicit CellmlTextViewParser(const QString &pText);
+    ~CellmlTextViewParser();
+
+    bool isValid() const;
+
+    QDomDocument domDocument() const;
+
+private:
+    CellmlTextViewScanner *mScanner;
+
+    QDomDocument mDomDocument;
+
+    bool mValid;
 };
 
 //==============================================================================

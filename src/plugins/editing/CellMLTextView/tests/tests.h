@@ -33,9 +33,9 @@ class Tests : public QObject
     Q_OBJECT
 
 private Q_SLOTS:
-    void successfulTests();
-    void failingTests();
-    void warningTests();
+    void successfulConversionTests();
+    void failingConversionTests();
+    void warningConversionTests();
 };
 
 //==============================================================================

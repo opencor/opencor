@@ -16,10 +16,9 @@ specific language governing permissions and limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// Parser for the CellML text format
+// Scanner for the CellML text format
 //==============================================================================
 
-#include "cellmltextviewparser.h"
 #include "cellmltextviewscanner.h"
 
 //==============================================================================
@@ -29,38 +28,9 @@ namespace CellMLTextView {
 
 //==============================================================================
 
-CellmlTextViewParser::CellmlTextViewParser(const QString &pText) :
-    mScanner(new CellmlTextViewScanner(pText)),
-    mDomDocument(QDomDocument(QString()))
+CellmlTextViewScanner::CellmlTextViewScanner(const QString &pText) :
+    mText(pText)
 {
-    mValid = true;
-}
-
-//==============================================================================
-
-CellmlTextViewParser::~CellmlTextViewParser()
-{
-    // Delete some internal objects
-
-    delete mScanner;
-}
-
-//==============================================================================
-
-bool CellmlTextViewParser::isValid() const
-{
-    // Return whether we are valid
-
-    return mValid;
-}
-
-//==============================================================================
-
-QDomDocument CellmlTextViewParser::domDocument() const
-{
-    // Return whether our DOM document
-
-    return mDomDocument;
 }
 
 //==============================================================================
