@@ -423,9 +423,11 @@ bool CellmlTextViewWidget::saveFile(const QString &pOldFileName,
         // corresponding DOM document, making sure that we include any metadata
         // that was in the original CellML file
 
-        CellmlTextViewParser parser(currentEditor->contents());
+        static CellmlTextViewParser parser;
 
-        if (parser.isValid()) {
+        bool successfulParsing = parser.execute(currentEditor->contents());
+
+        if (successfulParsing) {
             QDomDocument domDocument = parser.domDocument();
             QDomDocument rdfNodes = mData.value(pOldFileName).rdfNodes();
 

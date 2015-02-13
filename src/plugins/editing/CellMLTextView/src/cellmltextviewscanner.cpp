@@ -28,9 +28,18 @@ namespace CellMLTextView {
 
 //==============================================================================
 
-CellmlTextViewScanner::CellmlTextViewScanner(const QString &pText) :
-    mText(pText)
+CellmlTextViewScanner::CellmlTextViewScanner() :
+    mText(QString())
 {
+}
+
+//==============================================================================
+
+void CellmlTextViewScanner::setText(const QString &pText)
+{
+    // Set our text
+
+    mText = pText;
 }
 
 //==============================================================================

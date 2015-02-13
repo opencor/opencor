@@ -41,10 +41,10 @@ class CellmlTextViewScanner;
 class CellmlTextViewParser
 {
 public:
-    explicit CellmlTextViewParser(const QString &pText);
+    explicit CellmlTextViewParser();
     ~CellmlTextViewParser();
 
-    bool isValid() const;
+    bool execute(const QString &pText);
 
     QDomDocument domDocument() const;
 
@@ -52,8 +52,6 @@ private:
     CellmlTextViewScanner *mScanner;
 
     QDomDocument mDomDocument;
-
-    bool mValid;
 };
 
 //==============================================================================

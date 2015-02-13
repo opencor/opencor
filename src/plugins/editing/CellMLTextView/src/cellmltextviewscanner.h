@@ -36,7 +36,9 @@ namespace CellMLTextView {
 class CellmlTextViewScanner
 {
 public:
-    explicit CellmlTextViewScanner(const QString &pText);
+    explicit CellmlTextViewScanner();
+
+    void setText(const QString &pText);
 
 private:
     QString mText;

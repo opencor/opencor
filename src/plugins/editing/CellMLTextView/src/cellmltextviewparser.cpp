@@ -29,11 +29,10 @@ namespace CellMLTextView {
 
 //==============================================================================
 
-CellmlTextViewParser::CellmlTextViewParser(const QString &pText) :
-    mScanner(new CellmlTextViewScanner(pText)),
-    mDomDocument(QDomDocument(QString()))
+CellmlTextViewParser::CellmlTextViewParser() :
+    mScanner(new CellmlTextViewScanner()),
+    mDomDocument(QDomDocument())
 {
-    mValid = true;
 }
 
 //==============================================================================
@@ -47,18 +46,23 @@ CellmlTextViewParser::~CellmlTextViewParser()
 
 //==============================================================================
 
-bool CellmlTextViewParser::isValid() const
+bool CellmlTextViewParser::execute(const QString &pText)
 {
-    // Return whether we are valid
+    // Get ready for the parsing by initialising both our scanner and DOM
+    // document
 
-    return mValid;
+    mScanner->setText(pText);
+
+    mDomDocument = QDomDocument(QString());
+
+    return true;
 }
 
 //==============================================================================
 
 QDomDocument CellmlTextViewParser::domDocument() const
 {
-    // Return whether our DOM document
+    // Return our DOM document
 
     return mDomDocument;
 }
