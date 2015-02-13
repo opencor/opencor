@@ -1088,6 +1088,8 @@ bool CentralWidget::saveFile(const int &pIndex, const bool &pNeedNewFileName)
                 QMessageBox::warning(mMainWindow, tr("Save File"),
                                      tr("The <strong>%1</strong> view could not save <strong>%2</strong>.").arg(viewInterface->viewName(), newFileName));
 
+                fileManagerInstance->setCanCheckFiles(true);
+
                 return false;
             }
         } else {
@@ -1102,6 +1104,8 @@ bool CentralWidget::saveFile(const int &pIndex, const bool &pNeedNewFileName)
             if (!QFile::copy(oldFileName, newFileName)) {
                 QMessageBox::warning(mMainWindow, tr("Save File"),
                                      tr("<strong>%1</strong> could not be saved.").arg(newFileName));
+
+                fileManagerInstance->setCanCheckFiles(true);
 
                 return false;
             }
