@@ -28,8 +28,55 @@ namespace CellMLTextView {
 
 //==============================================================================
 
+CellmlTextViewScannerToken::CellmlTextViewScannerToken() :
+    mSymbol(Unknown),
+    mLine(0),
+    mColumn(0),
+    mString(QString())
+{
+}
+
+//==============================================================================
+
+CellmlTextViewScannerToken::Symbol CellmlTextViewScannerToken::symbol() const
+{
+    // Return our symbol
+
+    return mSymbol;
+}
+
+//==============================================================================
+
+int CellmlTextViewScannerToken::line() const
+{
+    // Return our line number
+
+    return mLine;
+}
+
+//==============================================================================
+
+int CellmlTextViewScannerToken::column() const
+{
+    // Return our column number
+
+    return mColumn;
+}
+
+//==============================================================================
+
+QString CellmlTextViewScannerToken::string() const
+{
+    // Return our string
+
+    return mString;
+}
+
+//==============================================================================
+
 CellmlTextViewScanner::CellmlTextViewScanner() :
-    mText(QString())
+    mText(QString()),
+    mToken(CellmlTextViewScannerToken())
 {
 }
 
@@ -37,9 +84,19 @@ CellmlTextViewScanner::CellmlTextViewScanner() :
 
 void CellmlTextViewScanner::setText(const QString &pText)
 {
-    // Set our text
+    // Initialise ourselves with the text to scan
 
     mText = pText;
+    mToken = CellmlTextViewScannerToken();
+}
+
+//==============================================================================
+
+CellmlTextViewScannerToken CellmlTextViewScanner::token() const
+{
+    // Return our current token
+
+    return mToken;
 }
 
 //==============================================================================

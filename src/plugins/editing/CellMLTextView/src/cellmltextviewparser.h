@@ -25,6 +25,7 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include <QDomDocument>
+#include <QList>
 #include <QString>
 
 //==============================================================================
@@ -38,6 +39,30 @@ class CellmlTextViewScanner;
 
 //==============================================================================
 
+class CellmlTextViewParserError
+{
+public:
+    explicit CellmlTextViewParserError(const int &pLine, const int &pColumn,
+                                       const QString &pMessage);
+
+    int line() const;
+    int column() const;
+
+    QString message() const;
+
+private:
+    int mLine;
+    int mColumn;
+
+    QString mMessage;
+};
+
+//==============================================================================
+
+typedef QList<CellmlTextViewParserError> CellmlTextViewParserErrors;
+
+//==============================================================================
+
 class CellmlTextViewParser
 {
 public:
@@ -48,10 +73,16 @@ public:
 
     QDomDocument domDocument() const;
 
+    CellmlTextViewParserErrors errors() const;
+
 private:
     CellmlTextViewScanner *mScanner;
 
     QDomDocument mDomDocument;
+
+    CellmlTextViewParserErrors mErrors;
+
+    void addError(const QString &pExpected);
 };
 
 //==============================================================================

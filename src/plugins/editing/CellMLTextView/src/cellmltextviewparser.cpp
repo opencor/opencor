@@ -24,14 +24,57 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#include <QObject>
+
+//==============================================================================
+
 namespace OpenCOR {
 namespace CellMLTextView {
 
 //==============================================================================
 
+CellmlTextViewParserError::CellmlTextViewParserError(const int &pLine,
+                                                     const int &pColumn,
+                                                     const QString &pMessage) :
+    mLine(pLine),
+    mColumn(pColumn),
+    mMessage(pMessage)
+{
+}
+
+//==============================================================================
+
+int CellmlTextViewParserError::line() const
+{
+    // Return our line number
+
+    return mLine;
+}
+
+//==============================================================================
+
+int CellmlTextViewParserError::column() const
+{
+    // Return our column number
+
+    return mColumn;
+}
+
+//==============================================================================
+
+QString CellmlTextViewParserError::message() const
+{
+    // Return our message
+
+    return mMessage;
+}
+
+//==============================================================================
+
 CellmlTextViewParser::CellmlTextViewParser() :
     mScanner(new CellmlTextViewScanner()),
-    mDomDocument(QDomDocument())
+    mDomDocument(QDomDocument()),
+    mErrors(CellmlTextViewParserErrors())
 {
 }
 
@@ -48,14 +91,23 @@ CellmlTextViewParser::~CellmlTextViewParser()
 
 bool CellmlTextViewParser::execute(const QString &pText)
 {
-    // Get ready for the parsing by initialising both our scanner and DOM
-    // document
+    // Get ready for the parsing
 
     mScanner->setText(pText);
 
     mDomDocument = QDomDocument(QString());
 
-    return true;
+    mErrors = CellmlTextViewParserErrors();
+
+    // Look for "def"
+
+    if (mScanner->token().symbol() == CellmlTextViewScannerToken::Def) {
+        return true;
+    } else {
+        addError("'def'");
+
+        return false;
+    }
 }
 
 //==============================================================================
@@ -65,6 +117,26 @@ QDomDocument CellmlTextViewParser::domDocument() const
     // Return our DOM document
 
     return mDomDocument;
+}
+
+//==============================================================================
+
+CellmlTextViewParserErrors CellmlTextViewParser::errors() const
+{
+    // Return our errors
+
+    return mErrors;
+}
+
+//==============================================================================
+
+void CellmlTextViewParser::addError(const QString &pExpected)
+{
+    // Return whether we have error messages
+
+    mErrors << CellmlTextViewParserError(mScanner->token().line(),
+                                         mScanner->token().column(),
+                                         QObject::tr("%1 is expected, but '%2' was found instead.").arg(pExpected, mScanner->token().string()));
 }
 
 //==============================================================================

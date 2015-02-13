@@ -217,5 +217,9 @@
         <source>A &apos;piecewise&apos; element can only be used within a top-level &apos;apply&apos; element that has an &apos;eq&apos; element as its first child element.</source>
         <translation>Un élément &apos;piecewise&apos; peut seulement être utilisé au sein d&apos;un élément &apos;apply&apos; de top niveau qui a un élément &apos;eq&apos; comme premier élément enfant.</translation>
     </message>
+    <message>
+        <source>%1 is expected, but &apos;%2&apos; was found instead.</source>
+        <translation>%1 est espéré, mais &apos;%2&apos; a été trouvé à la place.</translation>
+    </message>
 </context>
 </TS>
