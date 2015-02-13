@@ -466,14 +466,14 @@ QList<QWidget *> CellmlTextViewWidget::statusBarWidgets() const
 //==============================================================================
 
 static const auto SingleLineCommentString = QStringLiteral("//");
-static const int SingleLineCommentLength = SingleLineCommentString.length();
+static const int SingleLineCommentLength  = SingleLineCommentString.length();
 
 //==============================================================================
 
 static const auto StartMultilineCommentString = QStringLiteral("/*");
-static const auto EndMultilineCommentString = QStringLiteral("*/");
-static const int StartMultilineCommentLength = StartMultilineCommentString.length();
-static const int EndMultilineCommentLength = EndMultilineCommentString.length();
+static const auto EndMultilineCommentString   = QStringLiteral("*/");
+static const int StartMultilineCommentLength  = StartMultilineCommentString.length();
+static const int EndMultilineCommentLength    = EndMultilineCommentString.length();
 
 //==============================================================================
 

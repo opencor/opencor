@@ -63,7 +63,7 @@ void Tests::sha1Tests()
 //==============================================================================
 
 static const auto String = QStringLiteral("1\n11\n121\n1331\n14641");
-static const auto Eol = QStringLiteral("\n");
+static const auto Eol    = QStringLiteral("\n");
 
 //==============================================================================
 
