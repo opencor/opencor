@@ -24,17 +24,36 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-#include "corecliutils.h"
-
-//==============================================================================
-
 #include <QDomNode>
+#include <QMap>
 #include <QStringList>
 
 //==============================================================================
 
 namespace OpenCOR {
 namespace CellMLTextView {
+
+//==============================================================================
+
+class CellMLTextViewConverterWarning
+{
+public:
+    explicit CellMLTextViewConverterWarning(const int &pLine,
+                                            const QString &pMessage);
+
+    int line() const;
+
+    QString message() const;
+
+private:
+    int mLine;
+
+    QString mMessage;
+};
+
+//==============================================================================
+
+typedef QList<CellMLTextViewConverterWarning> CellMLTextViewConverterWarnings;
 
 //==============================================================================
 
@@ -52,8 +71,7 @@ public:
     QString errorMessage() const;
 
     bool hasWarnings() const;
-    QIntList warningLines() const;
-    QStringList warningMessages() const;
+    CellMLTextViewConverterWarnings warnings() const;
 
     QDomDocument rdfNodes() const;
 
@@ -97,8 +115,7 @@ private:
     int mErrorColumn;
     QString mErrorMessage;
 
-    QIntList mWarningLines;
-    QStringList mWarningMessages;
+    CellMLTextViewConverterWarnings mWarnings;
 
     QDomNamedNodeMap mAttributes;
     QDomDocument mRdfNodes;

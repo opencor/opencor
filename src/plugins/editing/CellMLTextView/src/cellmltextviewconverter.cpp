@@ -34,6 +34,33 @@ namespace CellMLTextView {
 
 //==============================================================================
 
+CellMLTextViewConverterWarning::CellMLTextViewConverterWarning(const int &pLine,
+                                                               const QString &pMessage) :
+    mLine(pLine),
+    mMessage(pMessage)
+{
+}
+
+//==============================================================================
+
+int CellMLTextViewConverterWarning::line() const
+{
+    // Return our line number
+
+    return mLine;
+}
+
+//==============================================================================
+
+QString CellMLTextViewConverterWarning::message() const
+{
+    // Return our message
+
+    return mMessage;
+}
+
+//==============================================================================
+
 CellMLTextViewConverter::CellMLTextViewConverter() :
     mOutput(QString()),
     mIndent(QString()),
@@ -41,8 +68,7 @@ CellMLTextViewConverter::CellMLTextViewConverter() :
     mErrorLine(-1),
     mErrorColumn(-1),
     mErrorMessage(QString()),
-    mWarningLines(QIntList()),
-    mWarningMessages(QStringList()),
+    mWarnings(CellMLTextViewConverterWarnings()),
     mRdfNodes(QDomDocument()),
     mTopMathmlNode(QDomNode()),
     mAssignmentDone(false),
@@ -119,8 +145,7 @@ bool CellMLTextViewConverter::execute(const QString &pFileName)
 
         mLastOutputType = None;
 
-        mWarningLines = QIntList();
-        mWarningMessages = QStringList();
+        mWarnings = CellMLTextViewConverterWarnings();
 
         mRdfNodes = QDomDocument(QString());
 
@@ -178,27 +203,18 @@ QString CellMLTextViewConverter::errorMessage() const
 
 bool CellMLTextViewConverter::hasWarnings() const
 {
-    // Return whether we have warning messages
+    // Return whether we have warnings
 
-    return mWarningMessages.count();
+    return mWarnings.count();
 }
 
 //==============================================================================
 
-QIntList CellMLTextViewConverter::warningLines() const
+CellMLTextViewConverterWarnings CellMLTextViewConverter::warnings() const
 {
-    // Return our warning lines
+    // Return our warnings
 
-    return mWarningLines;
-}
-
-//==============================================================================
-
-QStringList CellMLTextViewConverter::warningMessages() const
-{
-    // Return our warning messages
-
-    return mWarningMessages;
+    return mWarnings;
 }
 
 //==============================================================================
@@ -1898,8 +1914,8 @@ void CellMLTextViewConverter::processUnknownNode(const QDomNode &pDomNode)
 {
     // The given node is unknown, so warn the user about it
 
-    mWarningLines << pDomNode.lineNumber();
-    mWarningMessages << QObject::tr("A '%1' element was found%2, but it is not known and cannot therefore be processed.").arg(pDomNode.nodeName());
+    mWarnings << CellMLTextViewConverterWarning(pDomNode.lineNumber(),
+                                                QObject::tr("A '%1' element was found%2, but it is not known and cannot therefore be processed.").arg(pDomNode.nodeName()));
 }
 
 //==============================================================================
@@ -1919,8 +1935,7 @@ void CellMLTextViewConverter::processUnsupportedNode(const QDomNode &pDomNode,
         mErrorLine = lineNumber;
         mErrorMessage = message;
     } else {
-        mWarningLines << lineNumber;
-        mWarningMessages << message;
+        mWarnings << CellMLTextViewConverterWarning(lineNumber, message);
     }
 }
 
