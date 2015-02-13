@@ -182,7 +182,7 @@ void CellmlTextViewWidget::initialize(const QString &pFileName,
         // No editing widget exists for the given file, so generate a CellML
         // text version of the given CellML file
 
-        CellMLTextViewConverter converter;
+        static CellMLTextViewConverter converter;
         bool successfulConversion = converter.execute(pFileName);
 
         // Create an editing widget for the given CellML file
