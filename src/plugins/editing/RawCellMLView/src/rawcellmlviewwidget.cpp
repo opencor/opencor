@@ -360,6 +360,10 @@ void RawCellmlViewWidget::validate(const QString &pFileName) const
 void RawCellmlViewWidget::cleanMathml(const QDomElement &pElement) const
 {
     // Clean up the current element
+    // Note: the idea is to remove all the attributes that are not in the
+    //       current (MathML) namespace. Indeed, if we were to leave them in
+    //       then the XSL transformation would either do nothing or, worst,
+    //       crash OpenCOR...
 
     QDomNamedNodeMap attributes = pElement.attributes();
 
@@ -387,7 +391,7 @@ void RawCellmlViewWidget::cleanMathml(const QDomElement &pElement) const
 
 QString RawCellmlViewWidget::cleanMathml(const QString &pMathml) const
 {
-    // Clean up and return the given XML string
+    // Clean up and return the given MathML string
 
     QDomDocument domDocument;
 
