@@ -50,6 +50,8 @@ public:
 
     QString string() const;
 
+    static QString symbolAsString(const Symbol &pSymbol);
+
 private:
     Symbol mSymbol;
 

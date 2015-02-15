@@ -24,6 +24,10 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#include "cellmltextviewscanner.h"
+
+//==============================================================================
+
 #include <QDomDocument>
 #include <QList>
 #include <QString>
@@ -82,7 +86,7 @@ private:
 
     CellmlTextViewParserErrors mErrors;
 
-    void addError(const QString &pExpected);
+    bool symbol(const CellmlTextViewScannerToken::Symbol &pSymbol);
 };
 
 //==============================================================================

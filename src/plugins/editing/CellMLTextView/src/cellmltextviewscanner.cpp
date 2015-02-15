@@ -74,6 +74,22 @@ QString CellmlTextViewScannerToken::string() const
 
 //==============================================================================
 
+QString CellmlTextViewScannerToken::symbolAsString(const Symbol &pSymbol)
+{
+    // Return the given symbol as a string
+
+    switch (pSymbol) {
+    case Def:
+        return "def";
+    default:
+        // Unknown
+
+        return "???";
+    }
+}
+
+//==============================================================================
+
 CellmlTextViewScanner::CellmlTextViewScanner() :
     mText(QString()),
     mToken(CellmlTextViewScannerToken())

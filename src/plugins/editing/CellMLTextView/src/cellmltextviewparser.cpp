@@ -20,7 +20,6 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include "cellmltextviewparser.h"
-#include "cellmltextviewscanner.h"
 
 //==============================================================================
 
@@ -101,11 +100,9 @@ bool CellmlTextViewParser::execute(const QString &pText)
 
     // Look for "def"
 
-    if (mScanner->token().symbol() == CellmlTextViewScannerToken::Def) {
+    if (symbol(CellmlTextViewScannerToken::Def)) {
         return true;
     } else {
-        addError("'def'");
-
         return false;
     }
 }
@@ -130,13 +127,27 @@ CellmlTextViewParserErrors CellmlTextViewParser::errors() const
 
 //==============================================================================
 
-void CellmlTextViewParser::addError(const QString &pExpected)
+bool CellmlTextViewParser::symbol(const CellmlTextViewScannerToken::Symbol &pSymbol)
 {
-    // Return whether we have error messages
+    // Look and handle comments, if any
 
-    mErrors << CellmlTextViewParserError(mScanner->token().line(),
-                                         mScanner->token().column(),
-                                         QObject::tr("%1 is expected, but '%2' was found instead.").arg(pExpected, mScanner->token().string()));
+//---GRY--- TO BE DONE...
+
+    // Check whether the current symbol is the one we are after
+
+    if (mScanner->token().symbol() == pSymbol) {
+        return true;
+    } else {
+        // This is not the symbol we were expecting, so let the user know about
+        // it
+
+        mErrors << CellmlTextViewParserError(mScanner->token().line(),
+                                             mScanner->token().column(),
+                                             QObject::tr("'%1' is expected, but '%2' was found instead.").arg(CellmlTextViewScannerToken::symbolAsString(pSymbol),
+                                                                                                              mScanner->token().string()));
+
+        return false;
+    }
 }
 
 //==============================================================================
