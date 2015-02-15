@@ -33,7 +33,7 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #define QCOMPARELIST(actual, expected) \
-for (int i = 0, imax = qMin((actual).count(), (expected).count()); i < imax; ++i)\
+for (int i = 0, iMax = qMin((actual).count(), (expected).count()); i < iMax; ++i)\
     QCOMPARE((actual)[i], (expected)[i]);\
 QCOMPARE((actual).count(), (expected).count());
 

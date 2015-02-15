@@ -1014,7 +1014,7 @@ QString CellMLTextViewConverter::processPiecewiseNode(const QDomNode &pDomNode,
 
     indent();
 
-    for (int i = 0, imax = pDomNode.childNodes().count(); i < imax; ++i) {
+    for (int i = 0, iMax = pDomNode.childNodes().count(); i < iMax; ++i) {
         res += processMathmlNode(pDomNode.childNodes().item(i), pHasError);
 
         if (pHasError)
