@@ -16,11 +16,11 @@ specific language governing permissions and limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// CellML Text view tests
+// CellML Text view conversion tests
 //==============================================================================
 
-#ifndef TESTS_H
-#define TESTS_H
+#ifndef CONVERSIONTESTS_H
+#define CONVERSIONTESTS_H
 
 //==============================================================================
 
@@ -28,7 +28,7 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-class Tests : public QObject
+class ConversionTests : public QObject
 {
     Q_OBJECT
 
