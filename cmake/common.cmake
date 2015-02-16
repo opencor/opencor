@@ -610,6 +610,13 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
                AND EXISTS ${PROJECT_SOURCE_DIR}/${TEST_HEADER_MOC})
                 # The test exists, so build it
 
+                SET(TEST_SOURCES_MOC)
+                # Note: we need to initialise TEST_SOURCES_MOC in case there is
+                #       more than just one test. Indeed, if we were not to do
+                #       that initialisation, then TEST_SOURCES_MOC would include
+                #       the information of all the tests up to the one we want
+                #       build...
+
                 QT5_WRAP_CPP(TEST_SOURCES_MOC
                     ../../plugin.h
                     ../../pluginmanager.h

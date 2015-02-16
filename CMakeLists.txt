@@ -191,6 +191,7 @@ IF(ENABLE_TESTS)
 
     ADD_EXECUTABLE(${RUNTESTS_NAME}
         src/tests/src/main.cpp
+
         ${RUNTESTS_SOURCES_RCS}
     )
 
