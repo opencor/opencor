@@ -95,9 +95,7 @@ private:
 
     QString mText;
 
-    int mTextPos;
-
-    QChar mCharValue;
+    const QChar *mChar;
     CharType mCharType;
 
     CellmlTextViewScannerToken mToken;

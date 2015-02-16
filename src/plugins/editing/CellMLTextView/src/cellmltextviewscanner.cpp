@@ -116,8 +116,7 @@ QString CellmlTextViewScannerToken::symbolAsString(const Symbol &pSymbol)
 
 CellmlTextViewScanner::CellmlTextViewScanner() :
     mText(QString()),
-    mTextPos(0),
-    mCharValue(QChar()),
+    mChar(0),
     mCharType(Eof),
     mToken(CellmlTextViewScannerToken())
 {
@@ -132,7 +131,7 @@ void CellmlTextViewScanner::setText(const QString &pText)
     mText = pText;
     mToken = CellmlTextViewScannerToken();
 
-    mTextPos = 0;
+    mChar = mText.constData();
 
     nextChar();
     nextToken();
@@ -151,135 +150,130 @@ CellmlTextViewScannerToken CellmlTextViewScanner::token() const
 
 void CellmlTextViewScanner::nextChar()
 {
-    // Get the next char in our text
+    // Determine the type of our 'next' character
 
-    if (mTextPos == mText.length()) {
-        // We are the end of our text
-
-        mCharValue = QChar();
+    switch (mChar->unicode()) {
+    case 0:
         mCharType = Eof;
-    } else {
-        mCharValue = mText[mTextPos++];
 
-        // Determine the type of our character
+        break;
+    case 9:
+        mCharType = Tab;
 
-        switch (mCharValue.unicode()) {
-        case 0:
-            mCharType = Eof;
+        break;
+    case 10:
+        mCharType = Lf;
 
-            break;
-        case 9:
-            mCharType = Tab;
+        break;
+    case 13:
+        mCharType = Cr;
 
-            break;
-        case 10:
-            mCharType = Lf;
+        break;
+    case 32:
+        mCharType = Space;
 
-            break;
-        case 13:
-            mCharType = Cr;
+        break;
+    case 34:
+        mCharType = DoubleQuote;
 
-            break;
-        case 32:
-            mCharType = Space;
+        break;
+    case 39:
+        mCharType = Quote;
 
-            break;
-        case 34:
-            mCharType = DoubleQuote;
+        break;
+    case 40:
+        mCharType = OpeningBracket;
 
-            break;
-        case 39:
-            mCharType = Quote;
+        break;
+    case 41:
+        mCharType = ClosingBracket;
 
-            break;
-        case 40:
-            mCharType = OpeningBracket;
+        break;
+    case 42:
+        mCharType = Times;
 
-            break;
-        case 41:
-            mCharType = ClosingBracket;
+        break;
+    case 43:
+        mCharType = Plus;
 
-            break;
-        case 42:
-            mCharType = Times;
+        break;
+    case 44:
+        mCharType = Comma;
 
-            break;
-        case 43:
-            mCharType = Plus;
+        break;
+    case 45:
+        mCharType = Minus;
 
-            break;
-        case 44:
-            mCharType = Comma;
+        break;
+    case 47:
+        mCharType = Divide;
 
-            break;
-        case 45:
-            mCharType = Minus;
+        break;
+    case 48: case 49: case 50: case 51: case 52: case 53: case 54: case 55:
+    case 56: case 57:
+        mCharType = Digit;
 
-            break;
-        case 47:
-            mCharType = Divide;
+        break;
+    case 58:
+        mCharType = Colon;
 
-            break;
-        case 48: case 49: case 50: case 51: case 52: case 53: case 54: case 55:
-        case 56: case 57:
-            mCharType = Digit;
+        break;
+    case 59:
+        mCharType = SemiColon;
 
-            break;
-        case 58:
-            mCharType = Colon;
+        break;
+    case 60:
+        mCharType = Lt;
 
-            break;
-        case 59:
-            mCharType = SemiColon;
+        break;
+    case 61:
+        mCharType = Eq;
 
-            break;
-        case 60:
-            mCharType = Lt;
+        break;
+    case 62:
+        mCharType = Gt;
 
-            break;
-        case 61:
-            mCharType = Eq;
+        break;
+    case 65: case 66: case 67: case 68: case 69: case 70: case 71: case 72:
+    case 73: case 74: case 75: case 76: case 77: case 78: case 79: case 80:
+    case 81: case 82: case 83: case 84: case 85: case 86: case 87: case 88:
+    case 89: case 90:
+        mCharType = Letter;
 
-            break;
-        case 62:
-            mCharType = Gt;
+        break;
+    case 95:
+        mCharType = Underscore;
 
-            break;
-        case 65: case 66: case 67: case 68: case 69: case 70: case 71: case 72:
-        case 73: case 74: case 75: case 76: case 77: case 78: case 79: case 80:
-        case 81: case 82: case 83: case 84: case 85: case 86: case 87: case 88:
-        case 89: case 90:
-            mCharType = Letter;
+        break;
+    case 97: case 98: case 99: case 100: case 101: case 102: case 103:
+    case 104: case 105: case 106: case 107: case 108: case 109: case 110:
+    case 111: case 112: case 113: case 114: case 115: case 116: case 117:
+    case 118: case 119: case 120: case 121: case 122:
+        mCharType = Letter;
 
-            break;
-        case 95:
-            mCharType = Underscore;
+        break;
+    case 123:
+        mCharType = OpeningCurlyBracket;
 
-            break;
-        case 97: case 98: case 99: case 100: case 101: case 102: case 103:
-        case 104: case 105: case 106: case 107: case 108: case 109: case 110:
-        case 111: case 112: case 113: case 114: case 115: case 116: case 117:
-        case 118: case 119: case 120: case 121: case 122:
-            mCharType = Letter;
+        break;
+    case 125:
+        mCharType = ClosingCurlyBracket;
 
-            break;
-        case 123:
-            mCharType = OpeningCurlyBracket;
-
-            break;
-        case 125:
-            mCharType = ClosingCurlyBracket;
-
-            break;
-        default:
-            mCharType = Other;
-        }
-
-        if (mCharType == Lf)
-            mToken.incrementLine();
-        else
-            mToken.incrementColumn();
+        break;
+    default:
+        mCharType = Other;
     }
+
+    // Update our token line and/or column numbers
+
+    if (mCharType == Lf)
+        mToken.incrementLine();
+    else
+        mToken.incrementColumn();
+
+    // Move to the next character
+
+    ++mChar;
 }
 
 //==============================================================================
