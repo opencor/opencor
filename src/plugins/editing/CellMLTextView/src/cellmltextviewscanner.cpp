@@ -32,8 +32,10 @@ CellmlTextViewScanner::CellmlTextViewScanner() :
     mText(QString()),
     mChar(0),
     mCharType(EofChar),
+    mCharLine(1),
+    mCharColumn(0),
     mTokenType(UnknownToken),
-    mTokenLine(1),
+    mTokenLine(0),
     mTokenColumn(0),
     mTokenString(QString())
 {
@@ -47,11 +49,14 @@ void CellmlTextViewScanner::setText(const QString &pText)
 
     mText = pText;
 
-    mChar = mText.constData();
+    mChar = mText.constData()-1;
+
     mCharType = EofChar;
+    mCharLine = 1;
+    mCharColumn = 0;
 
     mTokenType = UnknownToken;
-    mTokenLine = 1;
+    mTokenLine = 0;
     mTokenColumn = 0;
     mTokenString = QString();
 
@@ -119,9 +124,9 @@ QString CellmlTextViewScanner::tokenTypeAsString(const TokenType &pTokenType)
 
 void CellmlTextViewScanner::nextChar()
 {
-    // Determine the type of our 'next' character
+    // Determine the type of our next character
 
-    switch (mChar->unicode()) {
+    switch ((++mChar)->unicode()) {
     case 0:
         mCharType = EofChar;
 
@@ -236,16 +241,12 @@ void CellmlTextViewScanner::nextChar()
     // Update our token line and/or column numbers
 
     if (mCharType == LfChar) {
-        mTokenColumn = 1;
+        mCharColumn = 1;
 
-        ++mTokenLine;
+        ++mCharLine;
     } else {
-        ++mTokenColumn;
+        ++mCharColumn;
     }
-
-    // Move to the next character
-
-    ++mChar;
 }
 
 //==============================================================================
@@ -253,6 +254,18 @@ void CellmlTextViewScanner::nextChar()
 void CellmlTextViewScanner::getWord()
 {
 //---GRY--- TO BE DONE...
+    // Retrieve a string from our text
+
+    forever {
+        nextChar();
+
+        if ((mCharType == LetterChar) || (mCharType == DigitChar) || (mCharType == UnderscoreChar))
+            mTokenString += *mChar;
+        else
+            break;
+    }
+
+qDebug(">>> Word: [%s]", qPrintable(mTokenString));
 }
 
 //==============================================================================
@@ -282,6 +295,9 @@ void CellmlTextViewScanner::nextToken()
     }
 
     // Determine the type of our next token
+
+    mTokenLine = mCharLine;
+    mTokenColumn = mCharColumn;
 
     mTokenString = *mChar;
 

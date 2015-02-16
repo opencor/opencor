@@ -83,13 +83,14 @@ private:
     QString mText;
 
     const QChar *mChar;
+
     CharType mCharType;
+    int mCharLine;
+    int mCharColumn;
 
     TokenType mTokenType;
-
     int mTokenLine;
     int mTokenColumn;
-
     QString mTokenString;
 
     void nextChar();
