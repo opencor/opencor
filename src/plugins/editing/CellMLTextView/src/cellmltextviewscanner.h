@@ -28,38 +28,12 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-namespace OpenCOR {
-namespace CellMLTextView {
+#include <limits.h>
 
 //==============================================================================
 
-class CellmlTextViewScannerChar
-{
-public:
-    enum Type {
-        Other,
-        Letter, Digit, Space, Underscore,
-        DoubleQuote, Quote,
-        Comma,
-        Eq, Lt, Gt,
-        Plus, Minus, Times, Divide,
-        Colon, SemiColon,
-        OpeningBracket, ClosingBracket,
-        OpeningCurlyBracket, ClosingCurlyBracket,
-        Cr, Lf, Eof
-    };
-
-    explicit CellmlTextViewScannerChar(const QChar &pValue = QChar());
-
-    QChar value() const;
-
-    Type type() const;
-
-private:
-    QChar mValue;
-
-    Type mType;
-};
+namespace OpenCOR {
+namespace CellMLTextView {
 
 //==============================================================================
 
@@ -106,11 +80,26 @@ public:
     CellmlTextViewScannerToken token() const;
 
 private:
+    enum CharType {
+        Other,
+        Letter, Digit, Underscore,
+        DoubleQuote, Quote,
+        Comma,
+        Eq, Lt, Gt,
+        Plus, Minus, Times, Divide,
+        Colon, SemiColon,
+        OpeningBracket, ClosingBracket,
+        OpeningCurlyBracket, ClosingCurlyBracket,
+        Space, Tab, Cr, Lf, Eof
+    };
+
     QString mText;
 
     int mTextPos;
 
-    CellmlTextViewScannerChar mChar;
+    QChar mCharValue;
+    CharType mCharType;
+
     CellmlTextViewScannerToken mToken;
 
     void nextChar();
