@@ -597,7 +597,7 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
         FOREACH(TEST ${TESTS})
             # Keep track of the test (for later use by our main test program)
 
-            FILE(APPEND ${TESTS_LIST_FILENAME} "${PLUGIN_NAME}|${TEST}\n")
+            FILE(APPEND ${TESTS_LIST_FILENAME} "${PLUGIN_NAME}|${TEST}|")
 
             # Build our test, if possible
 

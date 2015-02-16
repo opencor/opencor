@@ -54,16 +54,15 @@ int main(int pArgC, char *pArgV[])
     testsFile.close();
 
     TestsGroups testsGroups;
-    QStringList testItems;
+    QStringList testItems = tests.split("|");
     QString testGroup;
 
-    foreach (const QString &test, tests.split("\n")) {
-        if (!test.isEmpty()) {
-            testItems = test.split("|");
-            testGroup = testItems.first();
+    for (int i = 0, iMax = testItems.count()-1; i < iMax; i += 2) {
+        // Note: -1 because tests ends with our separator...
 
-            testsGroups.insert(testGroup, QStringList(testsGroups.value(testGroup)) << testItems.last());
-        }
+        testGroup = testItems[i];
+
+        testsGroups.insert(testGroup, QStringList(testsGroups.value(testGroup)) << testItems[i+1]);
     }
 
     // Run the different tests
