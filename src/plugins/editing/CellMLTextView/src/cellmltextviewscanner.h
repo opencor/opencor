@@ -37,47 +37,26 @@ namespace CellMLTextView {
 
 //==============================================================================
 
-class CellmlTextViewScannerToken
+class CellmlTextViewScanner
 {
 public:
-    enum Symbol {
+    enum TokenType {
         Unknown,
         Def
     };
 
-    explicit CellmlTextViewScannerToken();
-
-    Symbol symbol() const;
-
-    void incrementLine();
-    void incrementColumn();
-
-    int line() const;
-    int column() const;
-
-    QString string() const;
-
-    static QString symbolAsString(const Symbol &pSymbol);
-
-private:
-    Symbol mSymbol;
-
-    int mLine;
-    int mColumn;
-
-    QString mString;
-};
-
-//==============================================================================
-
-class CellmlTextViewScanner
-{
-public:
     explicit CellmlTextViewScanner();
 
     void setText(const QString &pText);
 
-    CellmlTextViewScannerToken token() const;
+    TokenType tokenType() const;
+
+    int tokenLine() const;
+    int tokenColumn() const;
+
+    QString tokenString() const;
+
+    static QString tokenTypeAsString(const TokenType &pTokenType);
 
 private:
     enum CharType {
@@ -98,7 +77,12 @@ private:
     const QChar *mChar;
     CharType mCharType;
 
-    CellmlTextViewScannerToken mToken;
+    TokenType mTokenType;
+
+    int mTokenLine;
+    int mTokenColumn;
+
+    QString mTokenString;
 
     void nextChar();
     void nextToken();

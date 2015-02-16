@@ -100,7 +100,7 @@ bool CellmlTextViewParser::execute(const QString &pText)
 
     // Look for "def"
 
-    if (symbol(CellmlTextViewScannerToken::Def)) {
+    if (tokenType(CellmlTextViewScanner::Def)) {
         return true;
     } else {
         return false;
@@ -127,24 +127,24 @@ CellmlTextViewParserErrors CellmlTextViewParser::errors() const
 
 //==============================================================================
 
-bool CellmlTextViewParser::symbol(const CellmlTextViewScannerToken::Symbol &pSymbol)
+bool CellmlTextViewParser::tokenType(const CellmlTextViewScanner::TokenType &pTokenType)
 {
     // Look and handle comments, if any
 
 //---GRY--- TO BE DONE...
 
-    // Check whether the current symbol is the one we are after
+    // Check whether the current token type is the one we are after
 
-    if (mScanner->token().symbol() == pSymbol) {
+    if (mScanner->tokenType() == pTokenType) {
         return true;
     } else {
-        // This is not the symbol we were expecting, so let the user know about
-        // it
+        // This is not the token type we were expecting, so let the user know
+        // about it
 
-        mErrors << CellmlTextViewParserError(mScanner->token().line(),
-                                             mScanner->token().column(),
-                                             QObject::tr("'%1' is expected, but '%2' was found instead.").arg(CellmlTextViewScannerToken::symbolAsString(pSymbol),
-                                                                                                              mScanner->token().string()));
+        mErrors << CellmlTextViewParserError(mScanner->tokenLine(),
+                                             mScanner->tokenColumn(),
+                                             QObject::tr("'%1' is expected, but '%2' was found instead.").arg(CellmlTextViewScanner::tokenTypeAsString(pTokenType),
+                                                                                                              mScanner->tokenString()));
 
         return false;
     }

@@ -28,97 +28,14 @@ namespace CellMLTextView {
 
 //==============================================================================
 
-CellmlTextViewScannerToken::CellmlTextViewScannerToken() :
-    mSymbol(Unknown),
-    mLine(1),
-    mColumn(0),
-    mString(QString())
-{
-}
-
-//==============================================================================
-
-CellmlTextViewScannerToken::Symbol CellmlTextViewScannerToken::symbol() const
-{
-    // Return our symbol
-
-    return mSymbol;
-}
-
-//==============================================================================
-
-void CellmlTextViewScannerToken::incrementLine()
-{
-    // Increment our line number and therefore reset our column number
-
-    mColumn = 1;
-
-    ++mLine;
-}
-
-//==============================================================================
-
-void CellmlTextViewScannerToken::incrementColumn()
-{
-    // Increment our column number
-
-    ++mColumn;
-}
-
-//==============================================================================
-
-int CellmlTextViewScannerToken::line() const
-{
-    // Return our line number
-
-    return mLine;
-}
-
-//==============================================================================
-
-int CellmlTextViewScannerToken::column() const
-{
-    // Return our column number
-
-    return mColumn;
-}
-
-//==============================================================================
-
-QString CellmlTextViewScannerToken::string() const
-{
-    // Return our string
-
-    return mString;
-}
-
-//==============================================================================
-
-QString CellmlTextViewScannerToken::symbolAsString(const Symbol &pSymbol)
-{
-    // Return the given symbol as a string
-
-    switch (pSymbol) {
-    case Def:
-        return "def";
-    default:
-        // Unknown
-
-#ifdef QT_DEBUG
-        qFatal("FATAL ERROR | %s:%d: a symbol should never be unknown.", __FILE__, __LINE__);
-#endif
-
-        return "???";
-    }
-}
-
-//==============================================================================
-
 CellmlTextViewScanner::CellmlTextViewScanner() :
     mText(QString()),
     mChar(0),
     mCharType(Eof),
-    mToken(CellmlTextViewScannerToken())
+    mTokenType(Unknown),
+    mTokenLine(1),
+    mTokenColumn(0),
+    mTokenString(QString())
 {
 }
 
@@ -129,9 +46,14 @@ void CellmlTextViewScanner::setText(const QString &pText)
     // Initialise ourselves with the text to scan
 
     mText = pText;
-    mToken = CellmlTextViewScannerToken();
 
     mChar = mText.constData();
+    mCharType = Eof;
+
+    mTokenType = Unknown;
+    mTokenLine = 1;
+    mTokenColumn = 0;
+    mTokenString = QString();
 
     nextChar();
     nextToken();
@@ -139,11 +61,58 @@ void CellmlTextViewScanner::setText(const QString &pText)
 
 //==============================================================================
 
-CellmlTextViewScannerToken CellmlTextViewScanner::token() const
+CellmlTextViewScanner::TokenType CellmlTextViewScanner::tokenType() const
 {
-    // Return our current token
+    // Return our token type
 
-    return mToken;
+    return mTokenType;
+}
+
+//==============================================================================
+
+int CellmlTextViewScanner::tokenLine() const
+{
+    // Return our token line
+
+    return mTokenLine;
+}
+
+//==============================================================================
+
+int CellmlTextViewScanner::tokenColumn() const
+{
+    // Return our token column
+
+    return mTokenColumn;
+}
+
+//==============================================================================
+
+QString CellmlTextViewScanner::tokenString() const
+{
+    // Return our token string
+
+    return mTokenString;
+}
+
+//==============================================================================
+
+QString CellmlTextViewScanner::tokenTypeAsString(const TokenType &pTokenType)
+{
+    // Return the given token type as a string
+
+    switch (pTokenType) {
+    case Def:
+        return "def";
+    default:
+        // Unknown
+
+#ifdef QT_DEBUG
+        qFatal("FATAL ERROR | %s:%d: a token type should never be unknown.", __FILE__, __LINE__);
+#endif
+
+        return "???";
+    }
 }
 
 //==============================================================================
@@ -266,10 +235,13 @@ void CellmlTextViewScanner::nextChar()
 
     // Update our token line and/or column numbers
 
-    if (mCharType == Lf)
-        mToken.incrementLine();
-    else
-        mToken.incrementColumn();
+    if (mCharType == Lf) {
+        mTokenColumn = 1;
+
+        ++mTokenLine;
+    } else {
+        ++mTokenColumn;
+    }
 
     // Move to the next character
 

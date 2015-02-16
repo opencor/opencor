@@ -86,7 +86,7 @@ private:
 
     CellmlTextViewParserErrors mErrors;
 
-    bool symbol(const CellmlTextViewScannerToken::Symbol &pSymbol);
+    bool tokenType(const CellmlTextViewScanner::TokenType &pTokenType);
 };
 
 //==============================================================================
