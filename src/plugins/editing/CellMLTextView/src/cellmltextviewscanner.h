@@ -24,6 +24,7 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#include <QMap>
 #include <QString>
 
 //==============================================================================
@@ -42,9 +43,8 @@ class CellmlTextViewScanner
 public:
     enum TokenType {
         UnknownToken,
-        DefToken,
-        QuoteToken,
-        CommaToken,
+        DefToken, IdentifierToken,
+        QuoteToken, CommaToken,
         EqToken, EqEqToken, NeqToken, LtToken, LeqToken, GtToken, GeqToken,
         PlusToken, MinusToken, TimesToken, DivideToken,
         ColonToken, SemiColonToken,
@@ -70,8 +70,7 @@ private:
     enum CharType {
         OtherChar,
         LetterChar, DigitChar, UnderscoreChar,
-        DoubleQuoteChar, QuoteChar,
-        CommaChar,
+        DoubleQuoteChar, QuoteChar, CommaChar,
         EqChar, LtChar, GtChar,
         PlusChar, MinusChar, TimesChar, DivideChar,
         ColonChar, SemiColonChar,
@@ -92,6 +91,8 @@ private:
     int mTokenLine;
     int mTokenColumn;
     QString mTokenString;
+
+    QMap<QString, TokenType> mKeywords;
 
     void nextChar();
 

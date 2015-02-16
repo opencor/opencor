@@ -39,6 +39,9 @@ CellmlTextViewScanner::CellmlTextViewScanner() :
     mTokenColumn(0),
     mTokenString(QString())
 {
+    // Our various keywords
+
+    mKeywords.insert("def", DefToken);
 }
 
 //==============================================================================
@@ -254,7 +257,7 @@ void CellmlTextViewScanner::nextChar()
 void CellmlTextViewScanner::getWord()
 {
 //---GRY--- TO BE DONE...
-    // Retrieve a string from our text
+    // Retrieve a word from our text
 
     forever {
         nextChar();
@@ -266,6 +269,19 @@ void CellmlTextViewScanner::getWord()
     }
 
 qDebug(">>> Word: [%s]", qPrintable(mTokenString));
+
+    // Check what kind of word we are dealing with, i.e. a keyword, an
+    // identifier or something unknown
+
+    mTokenType = mKeywords.value(mTokenString, UnknownToken);
+
+    if (mTokenType == UnknownToken) {
+        // We are not dealing with a keyword, but it might still be an
+        // identifier, as long as it doesn't only consist of underscores
+
+        if (!QString(mTokenString).remove(QChar('_')).isEmpty())
+            mTokenType = IdentifierToken;
+    }
 }
 
 //==============================================================================
