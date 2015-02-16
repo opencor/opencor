@@ -100,7 +100,7 @@ bool CellmlTextViewParser::execute(const QString &pText)
 
     // Look for "def"
 
-    if (tokenType(CellmlTextViewScanner::Def)) {
+    if (tokenType(CellmlTextViewScanner::DefToken)) {
         return true;
     } else {
         return false;

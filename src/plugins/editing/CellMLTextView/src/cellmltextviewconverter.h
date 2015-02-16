@@ -101,7 +101,7 @@ private:
 
     enum NodeType {
         UnknownNode,
-        EqNode, NeqNode, GtNode, LtNode, GeqNode, LeqNode,
+        EqNode, NeqNode, LtNode, LeqNode, GeqNode, GtNode,
         PlusNode, MinusNode, TimesNode, DivideNode,
         AndNode, OrNode, XorNode
     };

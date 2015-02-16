@@ -41,8 +41,16 @@ class CellmlTextViewScanner
 {
 public:
     enum TokenType {
-        Unknown,
-        Def
+        UnknownToken,
+        DefToken,
+        QuoteToken,
+        CommaToken,
+        EqToken, EqEqToken, NeqToken, LtToken, LeqToken, GtToken, GeqToken,
+        PlusToken, MinusToken, TimesToken, DivideToken,
+        ColonToken, SemiColonToken,
+        OpeningBracketToken, ClosingBracketToken,
+        OpeningCurlyBracketToken, ClosingCurlyBracketToken,
+        EofToken
     };
 
     explicit CellmlTextViewScanner();
@@ -60,16 +68,16 @@ public:
 
 private:
     enum CharType {
-        Other,
-        Letter, Digit, Underscore,
-        DoubleQuote, Quote,
-        Comma,
-        Eq, Lt, Gt,
-        Plus, Minus, Times, Divide,
-        Colon, SemiColon,
-        OpeningBracket, ClosingBracket,
-        OpeningCurlyBracket, ClosingCurlyBracket,
-        Space, Tab, Cr, Lf, Eof
+        OtherChar,
+        LetterChar, DigitChar, UnderscoreChar,
+        DoubleQuoteChar, QuoteChar,
+        CommaChar,
+        EqChar, LtChar, GtChar,
+        PlusChar, MinusChar, TimesChar, DivideChar,
+        ColonChar, SemiColonChar,
+        OpeningBracketChar, ClosingBracketChar,
+        OpeningCurlyBracketChar, ClosingCurlyBracketChar,
+        SpaceChar, TabChar, CrChar, LfChar, EofChar
     };
 
     QString mText;
@@ -85,6 +93,11 @@ private:
     QString mTokenString;
 
     void nextChar();
+
+    void getWord();
+    void getNumber();
+    void getString();
+
     void nextToken();
 };
 

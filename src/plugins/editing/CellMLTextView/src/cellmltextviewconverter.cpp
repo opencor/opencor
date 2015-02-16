@@ -81,10 +81,10 @@ CellMLTextViewConverter::CellMLTextViewConverter() :
 
                                            mNodeTypes.insert("eq", EqNode);
     mMappings.insert("neq", " <> ");       mNodeTypes.insert("neq", NeqNode);
-    mMappings.insert("gt", " > ");         mNodeTypes.insert("gt", GtNode);
     mMappings.insert("lt", " < ");         mNodeTypes.insert("lt", LtNode);
-    mMappings.insert("geq", " >= ");       mNodeTypes.insert("geq", GeqNode);
     mMappings.insert("leq", " <= ");       mNodeTypes.insert("leq", LeqNode);
+    mMappings.insert("geq", " >= ");       mNodeTypes.insert("geq", GeqNode);
+    mMappings.insert("gt", " > ");         mNodeTypes.insert("gt", GtNode);
 
     // Mappings for arithmetic operators
 

@@ -31,8 +31,8 @@ namespace CellMLTextView {
 CellmlTextViewScanner::CellmlTextViewScanner() :
     mText(QString()),
     mChar(0),
-    mCharType(Eof),
-    mTokenType(Unknown),
+    mCharType(EofChar),
+    mTokenType(UnknownToken),
     mTokenLine(1),
     mTokenColumn(0),
     mTokenString(QString())
@@ -48,9 +48,9 @@ void CellmlTextViewScanner::setText(const QString &pText)
     mText = pText;
 
     mChar = mText.constData();
-    mCharType = Eof;
+    mCharType = EofChar;
 
-    mTokenType = Unknown;
+    mTokenType = UnknownToken;
     mTokenLine = 1;
     mTokenColumn = 0;
     mTokenString = QString();
@@ -102,7 +102,7 @@ QString CellmlTextViewScanner::tokenTypeAsString(const TokenType &pTokenType)
     // Return the given token type as a string
 
     switch (pTokenType) {
-    case Def:
+    case DefToken:
         return "def";
     default:
         // Unknown
@@ -123,119 +123,119 @@ void CellmlTextViewScanner::nextChar()
 
     switch (mChar->unicode()) {
     case 0:
-        mCharType = Eof;
+        mCharType = EofChar;
 
         break;
     case 9:
-        mCharType = Tab;
+        mCharType = TabChar;
 
         break;
     case 10:
-        mCharType = Lf;
+        mCharType = LfChar;
 
         break;
     case 13:
-        mCharType = Cr;
+        mCharType = CrChar;
 
         break;
     case 32:
-        mCharType = Space;
+        mCharType = SpaceChar;
 
         break;
     case 34:
-        mCharType = DoubleQuote;
+        mCharType = DoubleQuoteChar;
 
         break;
     case 39:
-        mCharType = Quote;
+        mCharType = QuoteChar;
 
         break;
     case 40:
-        mCharType = OpeningBracket;
+        mCharType = OpeningBracketChar;
 
         break;
     case 41:
-        mCharType = ClosingBracket;
+        mCharType = ClosingBracketChar;
 
         break;
     case 42:
-        mCharType = Times;
+        mCharType = TimesChar;
 
         break;
     case 43:
-        mCharType = Plus;
+        mCharType = PlusChar;
 
         break;
     case 44:
-        mCharType = Comma;
+        mCharType = CommaChar;
 
         break;
     case 45:
-        mCharType = Minus;
+        mCharType = MinusChar;
 
         break;
     case 47:
-        mCharType = Divide;
+        mCharType = DivideChar;
 
         break;
     case 48: case 49: case 50: case 51: case 52: case 53: case 54: case 55:
     case 56: case 57:
-        mCharType = Digit;
+        mCharType = DigitChar;
 
         break;
     case 58:
-        mCharType = Colon;
+        mCharType = ColonChar;
 
         break;
     case 59:
-        mCharType = SemiColon;
+        mCharType = SemiColonChar;
 
         break;
     case 60:
-        mCharType = Lt;
+        mCharType = LtChar;
 
         break;
     case 61:
-        mCharType = Eq;
+        mCharType = EqChar;
 
         break;
     case 62:
-        mCharType = Gt;
+        mCharType = GtChar;
 
         break;
     case 65: case 66: case 67: case 68: case 69: case 70: case 71: case 72:
     case 73: case 74: case 75: case 76: case 77: case 78: case 79: case 80:
     case 81: case 82: case 83: case 84: case 85: case 86: case 87: case 88:
     case 89: case 90:
-        mCharType = Letter;
+        mCharType = LetterChar;
 
         break;
     case 95:
-        mCharType = Underscore;
+        mCharType = UnderscoreChar;
 
         break;
     case 97: case 98: case 99: case 100: case 101: case 102: case 103:
     case 104: case 105: case 106: case 107: case 108: case 109: case 110:
     case 111: case 112: case 113: case 114: case 115: case 116: case 117:
     case 118: case 119: case 120: case 121: case 122:
-        mCharType = Letter;
+        mCharType = LetterChar;
 
         break;
     case 123:
-        mCharType = OpeningCurlyBracket;
+        mCharType = OpeningCurlyBracketChar;
 
         break;
     case 125:
-        mCharType = ClosingCurlyBracket;
+        mCharType = ClosingCurlyBracketChar;
 
         break;
     default:
-        mCharType = Other;
+        mCharType = OtherChar;
     }
 
     // Update our token line and/or column numbers
 
-    if (mCharType == Lf) {
+    if (mCharType == LfChar) {
         mTokenColumn = 1;
 
         ++mTokenLine;
@@ -250,13 +250,123 @@ void CellmlTextViewScanner::nextChar()
 
 //==============================================================================
 
+void CellmlTextViewScanner::getWord()
+{
+//---GRY--- TO BE DONE...
+}
+
+//==============================================================================
+
+void CellmlTextViewScanner::getNumber()
+{
+//---GRY--- TO BE DONE...
+}
+
+//==============================================================================
+
+void CellmlTextViewScanner::getString()
+{
+//---GRY--- TO BE DONE...
+}
+
+//==============================================================================
+
 void CellmlTextViewScanner::nextToken()
 {
     // Get the next token in our text by first skipping all the spaces and
     // special characters
 
-    while (   (mCharType == Space) || (mCharType == Tab)
-           || (mCharType == Cr) || (mCharType == Lf)) {
+    while (   (mCharType == SpaceChar) || (mCharType == TabChar)
+           || (mCharType == CrChar) || (mCharType == LfChar)) {
+        nextChar();
+    }
+
+    // Determine the type of our next token
+
+    mTokenString = *mChar;
+
+    switch (mCharType) {
+    case LetterChar: case UnderscoreChar:
+        getWord();
+
+        break;
+    case DigitChar:
+        getNumber();
+
+        break;
+    case DoubleQuoteChar:
+        getString();
+
+        break;
+    case EqChar:
+        mTokenType = EqToken;
+
+        nextChar();
+
+        if (mCharType == EqChar) {
+            mTokenString += *mChar;
+
+            mTokenType = EqEqToken;
+
+            nextChar();
+        }
+
+        break;
+    case LtChar:
+        mTokenType = LtToken;
+
+        nextChar();
+
+        if (mCharType == EqChar) {
+            mTokenString += *mChar;
+
+            mTokenType = LeqToken;
+
+            nextChar();
+        } else if (mCharType == GtChar) {
+            mTokenString += *mChar;
+
+            mTokenType = NeqToken;
+
+            nextChar();
+        }
+
+        break;
+    case GtChar:
+        mTokenType = GtToken;
+
+        nextChar();
+
+        if (mCharType == EqChar) {
+            mTokenString += *mChar;
+
+            mTokenType = GeqToken;
+
+            nextChar();
+        }
+
+        break;
+    case EofChar:
+        mTokenType = EofToken;
+
+        break;
+    default:
+        switch (mCharType) {
+        case QuoteChar:               mTokenType = QuoteToken; break;
+        case CommaChar:               mTokenType = CommaToken; break;
+        case PlusChar:                mTokenType = PlusToken; break;
+        case MinusChar:               mTokenType = MinusToken;               break;
+        case TimesChar:               mTokenType = TimesToken;               break;
+        case DivideChar:              mTokenType = DivideToken;              break;
+        case ColonChar:               mTokenType = ColonToken;               break;
+        case SemiColonChar:           mTokenType = SemiColonToken;           break;
+        case OpeningBracketChar:      mTokenType = OpeningBracketToken;      break;
+        case ClosingBracketChar:      mTokenType = ClosingBracketToken;      break;
+        case OpeningCurlyBracketChar: mTokenType = OpeningCurlyBracketToken; break;
+        case ClosingCurlyBracketChar: mTokenType = ClosingCurlyBracketToken; break;
+        default:                      mTokenType = UnknownToken;
+        }
+
         nextChar();
     }
 }
