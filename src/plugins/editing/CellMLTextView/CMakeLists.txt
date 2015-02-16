@@ -69,4 +69,6 @@ ADD_PLUGIN(CellMLTextView
         ${CELLML_API_EXTERNAL_BINARIES}
     TESTS
         conversiontests
+        parsingtests
+        scanningtests
 )

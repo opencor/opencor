@@ -256,7 +256,6 @@ void CellmlTextViewScanner::nextChar()
 
 void CellmlTextViewScanner::getWord()
 {
-//---GRY--- TO BE DONE...
     // Retrieve a word from our text
 
     forever {
@@ -267,8 +266,6 @@ void CellmlTextViewScanner::getWord()
         else
             break;
     }
-
-qDebug(">>> Word: [%s]", qPrintable(mTokenString));
 
     // Check what kind of word we are dealing with, i.e. a keyword, an
     // identifier or something unknown
