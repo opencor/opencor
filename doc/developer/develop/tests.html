@@ -42,24 +42,10 @@ ADD_PLUGIN(MyPlugin
         ...
 )</pre>
             </li>
-            <li>
-                Be referenced in <a href="https://github.com/opencor/opencor/blob/master/src/tests/main.cpp"><code>[OpenCOR]/src/tests/main.cpp</code></a>:
-                <pre class="prettyprint">...
-
-// The different tests that are  to be run
-
-TestsGroups testsGroups;
-
-...
-testsGroups["MyPlugin"] = QStringList() << "tests1" << "tests2" << "tests3" << ...;
-...
-
-...</pre>
-            </li>
         </ul>
 
         <p>
-            Some useful functions can be found under the main tests folder (see <a href="https://github.com/opencor/opencor/blob/master/src/tests/testsutils.cpp"><code>[OpenCOR]/src/tests/testsutils.cpp</code></a> and <a href="https://github.com/opencor/opencor/blob/master/src/tests/testsutils.h"><code>[OpenCOR]/src/tests/testsutils.h</code></a>).
+            Some useful functions can be found under the main tests folder (see <a href="https://github.com/opencor/opencor/blob/master/src/tests/src/testsutils.cpp"><code>[OpenCOR]/src/tests/src/testsutils.cpp</code></a> and <a href="https://github.com/opencor/opencor/blob/master/src/tests/src/testsutils.h"><code>[OpenCOR]/src/tests/src/testsutils.h</code></a>).
         </p>
 
         <script type="text/javascript">

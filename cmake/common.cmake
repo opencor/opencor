@@ -595,6 +595,12 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
 
     IF(ENABLE_TESTS)
         FOREACH(TEST ${TESTS})
+            # Keep track of the test (for later use by our main test program)
+
+            FILE(APPEND ${TESTS_LIST_FILENAME} "${PLUGIN_NAME}|${TEST}\n")
+
+            # Build our test, if possible
+
             SET(TEST_NAME ${PLUGIN_NAME}_${TEST})
 
             SET(TEST_SOURCE tests/${TEST}.cpp)
@@ -612,7 +618,7 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
                 )
 
                 ADD_EXECUTABLE(${TEST_NAME}
-                    ../../../tests/testsutils.cpp
+                    ../../../tests/src/testsutils.cpp
 
                     ../../plugin.cpp
                     ../../plugininfo.cpp

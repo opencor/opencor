@@ -45,12 +45,26 @@ int main(int pArgC, char *pArgV[])
 
     // The different groups of tests that are to be run
 
-    TestsGroups testsGroups;
+    QFile testsFile(":tests");
 
-    testsGroups["CellMLTextView"] = QStringList() << "conversiontests";
-    testsGroups["CellMLTools"]    = QStringList() << "tests";
-    testsGroups["Compiler"]       = QStringList() << "tests";
-    testsGroups["Core"]           = QStringList() << "tests";
+    testsFile.open(QIODevice::ReadOnly);
+
+    QString tests = testsFile.readAll();
+
+    testsFile.close();
+
+    TestsGroups testsGroups;
+    QStringList testItems;
+    QString testGroup;
+
+    foreach (const QString &test, tests.split("\n")) {
+        if (!test.isEmpty()) {
+            testItems = test.split("|");
+            testGroup = testItems.first();
+
+            testsGroups.insert(testGroup, QStringList(testsGroups.value(testGroup)) << testItems.last());
+        }
+    }
 
     // Run the different tests
 

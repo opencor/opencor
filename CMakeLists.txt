@@ -159,10 +159,16 @@ ELSEIF(APPLE)
     LIST(APPEND SOURCES res/${IconFile})
 ENDIF()
 
-# Check whether tests are required and, if so, set the destination tests
-# directory and build our main test program
+# Check whether tests are required and, if so, 'reset' our list of tests and set
+# the destination tests directory
 
 IF(ENABLE_TESTS)
+    # 'Reset' our list of tests
+
+    SET(TESTS_LIST_FILENAME ${PROJECT_BUILD_DIR}/tests.txt)
+
+    FILE(REMOVE ${TESTS_LIST_FILENAME})
+
     # Destination tests directory
     # Note: DEST_TESTS_DIR isn't only used here, but also in our ADD_PLUGIN()
     #       macro...
@@ -172,13 +178,20 @@ IF(ENABLE_TESTS)
     ELSE()
         SET(DEST_TESTS_DIR ${PROJECT_BUILD_DIR}/bin)
     ENDIF()
+ENDIF()
 
+# Check whether tests are required and, if so, build our main test program
+
+IF(ENABLE_TESTS)
     # Build our main test program
 
     SET(RUNTESTS_NAME runtests)
 
+    QT5_ADD_RESOURCES(RUNTESTS_SOURCES_RCS src/tests/res/tests.qrc)
+
     ADD_EXECUTABLE(${RUNTESTS_NAME}
-        src/tests/main.cpp
+        src/tests/src/main.cpp
+        ${RUNTESTS_SOURCES_RCS}
     )
 
     TARGET_LINK_LIBRARIES(${RUNTESTS_NAME}

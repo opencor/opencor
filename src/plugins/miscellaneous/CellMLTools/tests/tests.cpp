@@ -23,7 +23,7 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-#include "../../../../tests/testsutils.h"
+#include "../../../../tests/src/testsutils.h"
 
 //==============================================================================
 
