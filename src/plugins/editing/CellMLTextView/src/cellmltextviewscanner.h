@@ -149,7 +149,7 @@ private:
 
     void getNextChar();
 
-    void getSingleLineComment();
+    void getSingleLineComments();
     void getMultilineComment();
     void getWord();
     void getNumber();
