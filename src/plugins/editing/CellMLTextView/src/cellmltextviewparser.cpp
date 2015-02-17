@@ -73,6 +73,7 @@ QString CellmlTextViewParserError::message() const
 CellmlTextViewParser::CellmlTextViewParser() :
     mScanner(new CellmlTextViewScanner()),
     mDomDocument(QDomDocument()),
+    mDomNode(QDomNode()),
     mErrors(CellmlTextViewParserErrors())
 {
 }
@@ -95,6 +96,7 @@ bool CellmlTextViewParser::execute(const QString &pText)
     mScanner->setText(pText);
 
     mDomDocument = QDomDocument(QString());
+    mDomNode = mDomDocument.documentElement();
 
     mErrors = CellmlTextViewParserErrors();
 

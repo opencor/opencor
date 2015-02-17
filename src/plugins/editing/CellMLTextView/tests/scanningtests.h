@@ -38,6 +38,7 @@ private Q_SLOTS:
     void scanningKeywordTests();
     void scanningSiUnitKeywordTests();
     void scanningParameterKeywordTests();
+    void scanningStringTests();
 };
 
 //==============================================================================

@@ -83,6 +83,7 @@ private:
     CellmlTextViewScanner *mScanner;
 
     QDomDocument mDomDocument;
+    QDomNode mDomNode;
 
     CellmlTextViewParserErrors mErrors;
 

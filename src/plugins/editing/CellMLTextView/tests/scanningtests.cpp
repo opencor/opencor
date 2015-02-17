@@ -661,6 +661,45 @@ void ScanningTests::scanningParameterKeywordTests()
 
 //==============================================================================
 
+void ScanningTests::scanningStringTests()
+{
+    OpenCOR::CellMLTextView::CellmlTextViewScanner scanner;
+
+    scanner.setText("\"This is a string...\"");
+
+    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::StringToken);
+    QCOMPARE(scanner.tokenString(), QString("This is a string..."));
+    scanner.getNextToken();
+    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::EofToken);
+
+    scanner.setText("A string: \"This is a string...\".");
+
+    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::IdentifierToken);
+    QCOMPARE(scanner.tokenString(), QString("A"));
+    scanner.getNextToken();
+    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::IdentifierToken);
+    QCOMPARE(scanner.tokenString(), QString("string"));
+    scanner.getNextToken();
+    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::ColonToken);
+    scanner.getNextToken();
+    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::StringToken);
+    QCOMPARE(scanner.tokenString(), QString("This is a string..."));
+    scanner.getNextToken();
+    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::UnknownToken);
+    QCOMPARE(scanner.tokenString(), QString("."));
+    scanner.getNextToken();
+    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::EofToken);
+
+    scanner.setText("\"This is an incomplete string...");
+
+    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::IncompleteStringToken);
+    QCOMPARE(scanner.tokenString(), QString("This is an incomplete string..."));
+    scanner.getNextToken();
+    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::EofToken);
+}
+
+//==============================================================================
+
 QTEST_GUILESS_MAIN(ScanningTests)
 
 //==============================================================================

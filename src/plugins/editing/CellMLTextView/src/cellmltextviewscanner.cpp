@@ -407,21 +407,20 @@ void CellmlTextViewScanner::getNextChar()
 
 void CellmlTextViewScanner::getSingleLineComment()
 {
-    // Retrieve a single line comment
+    // Retrieve a single line comment by looking for the end of the current line
 
     mTokenType = SingleLineCommentToken;
     mTokenString = QString();
-
-    // Look for the end of the current line
 
     forever {
         getNextChar();
 
         if (   (mCharType == CrChar) || (mCharType == LfChar)
-            || (mCharType == EofChar))
+            || (mCharType == EofChar)) {
             break;
-        else
+        } else {
             mTokenString += *mChar;
+        }
     }
 }
 
@@ -516,7 +515,27 @@ void CellmlTextViewScanner::getString()
 {
     // Retrieve a string from our text
 
-//---GRY--- TO BE DONE...
+    mTokenString = QString();
+
+    forever {
+        getNextChar();
+
+        if (   (mCharType == DoubleQuoteChar)
+            || (mCharType == CrChar) || (mCharType == LfChar)
+            || (mCharType == EofChar)) {
+            break;
+        } else {
+            mTokenString += *mChar;
+        }
+    }
+
+    if (mCharType == DoubleQuoteChar) {
+        mTokenType = StringToken;
+
+        getNextChar();
+    } else {
+        mTokenType = IncompleteStringToken;
+    }
 }
 
 //==============================================================================

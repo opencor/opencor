@@ -43,7 +43,8 @@ class CellmlTextViewScanner
 public:
     enum TokenType {
         UnknownToken, SingleLineCommentToken, MultilineCommentToken,
-        IncompleteMultilineCommentToken, IdentifierToken,
+        IncompleteMultilineCommentToken, StringToken, IncompleteStringToken,
+        IdentifierToken,
 
         // CellML text keywords
 
