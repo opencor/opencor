@@ -42,7 +42,8 @@ class CellmlTextViewScanner
 {
 public:
     enum TokenType {
-        UnknownToken, IdentifierToken,
+        UnknownToken, SingleLineCommentToken, MultilineCommentToken,
+        IdentifierToken,
 
         // CellML text keywords
 
@@ -148,6 +149,8 @@ private:
 
     void getNextChar();
 
+    void getSingleLineComment();
+    void getMultilineComment();
     void getWord();
     void getNumber();
     void getString();

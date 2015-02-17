@@ -93,6 +93,50 @@ void ScanningTests::basicScanningTests()
     QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::UnknownToken);
     scanner.getNextToken();
     QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::EofToken);
+
+    // Miscellaneous tokens
+
+    scanner.setText("' , = == <> < <= > >= + - * / : ; ( ) { }");
+
+    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::QuoteToken);
+    scanner.getNextToken();
+    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::CommaToken);
+    scanner.getNextToken();
+    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::EqToken);
+    scanner.getNextToken();
+    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::EqEqToken);
+    scanner.getNextToken();
+    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::NeqToken);
+    scanner.getNextToken();
+    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::LtToken);
+    scanner.getNextToken();
+    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::LeqToken);
+    scanner.getNextToken();
+    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::GtToken);
+    scanner.getNextToken();
+    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::GeqToken);
+    scanner.getNextToken();
+    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::PlusToken);
+    scanner.getNextToken();
+    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::MinusToken);
+    scanner.getNextToken();
+    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::TimesToken);
+    scanner.getNextToken();
+    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::DivideToken);
+    scanner.getNextToken();
+    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::ColonToken);
+    scanner.getNextToken();
+    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::SemiColonToken);
+    scanner.getNextToken();
+    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::OpeningBracketToken);
+    scanner.getNextToken();
+    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::ClosingBracketToken);
+    scanner.getNextToken();
+    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::OpeningCurlyBracketToken);
+    scanner.getNextToken();
+    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::ClosingCurlyBracketToken);
+    scanner.getNextToken();
+    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::EofToken);
 }
 
 //==============================================================================

@@ -405,6 +405,20 @@ void CellmlTextViewScanner::getNextChar()
 
 //==============================================================================
 
+void CellmlTextViewScanner::getSingleLineComment()
+{
+//---GRY--- TO BE DONE...
+}
+
+//==============================================================================
+
+void CellmlTextViewScanner::getMultilineComment()
+{
+//---GRY--- TO BE DONE...
+}
+
+//==============================================================================
+
 void CellmlTextViewScanner::getWord()
 {
     // Retrieve a word from our text
@@ -532,13 +546,31 @@ void CellmlTextViewScanner::getNextToken()
         }
 
         break;
-    case EofChar:
-        mTokenType = EofToken;
+    case DivideChar:
+        mTokenType = DivideToken;
+
+        getNextChar();
+
+        if (mCharType == DivideChar)
+            getSingleLineComment();
+        else if (mCharType == TimesChar)
+            getMultilineComment();
 
         break;
     case OpeningCurlyBracketChar:
     case ClosingCurlyBracketChar:
+        mTokenType = (mCharType == OpeningCurlyBracketChar)?
+                         OpeningCurlyBracketToken:
+                         ClosingCurlyBracketToken;
         mWithinParameterBlock = mCharType == OpeningCurlyBracketChar;
+
+        getNextChar();
+
+        break;
+    case EofChar:
+        mTokenType = EofToken;
+
+        break;
     default:
         switch (mCharType) {
         case QuoteChar:               mTokenType = QuoteToken; break;
@@ -546,13 +578,10 @@ void CellmlTextViewScanner::getNextToken()
         case PlusChar:                mTokenType = PlusToken; break;
         case MinusChar:               mTokenType = MinusToken;               break;
         case TimesChar:               mTokenType = TimesToken;               break;
-        case DivideChar:              mTokenType = DivideToken;              break;
         case ColonChar:               mTokenType = ColonToken;               break;
         case SemiColonChar:           mTokenType = SemiColonToken;           break;
         case OpeningBracketChar:      mTokenType = OpeningBracketToken;      break;
         case ClosingBracketChar:      mTokenType = ClosingBracketToken;      break;
-        case OpeningCurlyBracketChar: mTokenType = OpeningCurlyBracketToken; break;
-        case ClosingCurlyBracketChar: mTokenType = ClosingCurlyBracketToken; break;
         default:                      mTokenType = UnknownToken;
         }
 
