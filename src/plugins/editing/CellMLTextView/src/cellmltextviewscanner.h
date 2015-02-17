@@ -43,8 +43,53 @@ class CellmlTextViewScanner
 public:
     enum TokenType {
         UnknownToken, IdentifierToken,
-        DefToken,
-        PrefToken,
+
+        // CellML text keywords
+
+        AndToken, AsToken, BetweenToken, CaseToken, CompToken, DefToken,
+        EndCompToken, EndDefToken, EndSelToken, ForToken, GroupToken,
+        ImportToken, InclToken, MapToken, ModelToken, OtherwiseToken, SelToken,
+        UnitToken, UsingToken, VarToken, VarsToken,
+
+        AbsToken, CeilToken, ExpToken, FactToken, FloorToken, LnToken, LogToken,
+        PowToken, RootToken, SqrToken, SqrtToken,
+
+        /*AndToken,*/ OrToken, XorToken, NotToken,
+
+        OdeToken,
+
+        SinToken, CosToken, TanToken, SecToken, CscToken, CotToken,
+        SinhToken, CoshToken, TanhToken, SechToken, CschToken, CothToken,
+        AsinToken, AcosToken, AtanToken, AsecToken, AcscToken, AcotToken,
+        AsinhToken, AcoshToken, AtanhToken, AsechToken, AcschToken, AcothToken,
+
+        TrueToken, FalseToken, NanToken, PiToken, InfToken, EToken,
+
+        BaseToken, EncapsulationToken, ContainmentToken,
+
+        AmpereToken, BecquerelToken, CandelaToken, CelsiusToken, CoulombToken,
+        DimensionlessToken, FaradToken, GramToken, GrayToken, HenryToken,
+        HertzToken, JouleToken, KatalToken, KelvinToken, KilogramToken,
+        LiterToken, LitreToken, LumenToken, LuxToken, MeterToken, MetreToken,
+        MoleToken, NewtonToken, OhmToken, PascalToken, RadianToken, SecondToken,
+        SiemensToken, SievertToken, SteradianToken, TeslaToken, VoltToken,
+        WattToken, WeberToken,
+
+        // CellML tests parameter keywords
+
+        PrefToken, ExpoToken, MultToken, OffToken,
+
+        InitToken, PubToken, PrivToken,
+
+        YottaToken, ZettaToken, ExaToken, PetaToken, TeraToken, GigaToken,
+        MegaToken, KiloToken, HectoToken, DekaToken, DeciToken, CentiToken,
+        MilliToken, MicroToken, NanoToken, PicoToken, FemtoToken, AttoToken,
+        ZeptoToken, YoctoToken,
+
+        InToken, OutToken, NoneToken,
+
+        // Miscellaneous
+
         QuoteToken, CommaToken,
         EqToken, EqEqToken, NeqToken, LtToken, LeqToken, GtToken, GeqToken,
         PlusToken, MinusToken, TimesToken, DivideToken,
@@ -96,6 +141,7 @@ private:
     QString mTokenString;
 
     QMap<QString, TokenType> mKeywords;
+    QMap<QString, TokenType> mSiUnitKeywords;
     QMap<QString, TokenType> mParameterKeywords;
 
     bool mWithinParameterBlock;

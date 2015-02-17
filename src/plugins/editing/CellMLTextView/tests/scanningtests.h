@@ -33,7 +33,10 @@ class ScanningTests : public QObject
     Q_OBJECT
 
 private Q_SLOTS:
-    void scanningWordTests();
+    void basicScanningTests();
+    void scanningKeywordTests();
+    void scanningSiUnitKeywordTests();
+    void scanningParameterKeywordTests();
 };
 
 //==============================================================================

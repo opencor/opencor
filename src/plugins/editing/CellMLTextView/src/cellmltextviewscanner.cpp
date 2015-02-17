@@ -42,11 +42,155 @@ CellmlTextViewScanner::CellmlTextViewScanner() :
 {
     // Our various CellML text keywords
 
+    mKeywords.insert("and", AndToken);
+    mKeywords.insert("as", AsToken);
+    mKeywords.insert("between", BetweenToken);
+    mKeywords.insert("case", CaseToken);
+    mKeywords.insert("comp", CompToken);
     mKeywords.insert("def", DefToken);
+    mKeywords.insert("endcomp", EndCompToken);
+    mKeywords.insert("enddef", EndDefToken);
+    mKeywords.insert("endsel", EndSelToken);
+    mKeywords.insert("for", ForToken);
+    mKeywords.insert("group", GroupToken);
+    mKeywords.insert("import", ImportToken);
+    mKeywords.insert("incl", InclToken);
+    mKeywords.insert("map", MapToken);
+    mKeywords.insert("model", ModelToken);
+    mKeywords.insert("otherwise", OtherwiseToken);
+    mKeywords.insert("sel", SelToken);
+    mKeywords.insert("unit", UnitToken);
+    mKeywords.insert("using", UsingToken);
+    mKeywords.insert("var", VarToken);
+    mKeywords.insert("vars", VarsToken);
+
+    mKeywords.insert("abs", AbsToken);
+    mKeywords.insert("ceil", CeilToken);
+    mKeywords.insert("exp", ExpToken);
+    mKeywords.insert("fact", FactToken);
+    mKeywords.insert("floor", FloorToken);
+    mKeywords.insert("ln", LnToken);
+    mKeywords.insert("log", LogToken);
+    mKeywords.insert("pow", PowToken);
+    mKeywords.insert("root", RootToken);
+    mKeywords.insert("sqr", SqrToken);
+    mKeywords.insert("sqrt", SqrtToken);
+
+//    mKeywords.insert("and", AndToken);
+    mKeywords.insert("or", OrToken);
+    mKeywords.insert("xor", XorToken);
+    mKeywords.insert("not", NotToken);
+
+    mKeywords.insert("ode", OdeToken);
+
+    mKeywords.insert("sin", SinToken);
+    mKeywords.insert("cos", CosToken);
+    mKeywords.insert("tan", TanToken);
+    mKeywords.insert("sec", SecToken);
+    mKeywords.insert("csc", CscToken);
+    mKeywords.insert("cot", CotToken);
+    mKeywords.insert("sinh", SinhToken);
+    mKeywords.insert("cosh", CoshToken);
+    mKeywords.insert("tanh", TanhToken);
+    mKeywords.insert("sech", SechToken);
+    mKeywords.insert("csch", CschToken);
+    mKeywords.insert("coth", CothToken);
+    mKeywords.insert("asin", AsinToken);
+    mKeywords.insert("acos", AcosToken);
+    mKeywords.insert("atan", AtanToken);
+    mKeywords.insert("asec", AsecToken);
+    mKeywords.insert("acsc", AcscToken);
+    mKeywords.insert("acot", AcotToken);
+    mKeywords.insert("asinh", AsinhToken);
+    mKeywords.insert("acosh", AcoshToken);
+    mKeywords.insert("atanh", AtanhToken);
+    mKeywords.insert("asech", AsechToken);
+    mKeywords.insert("acsch", AcschToken);
+    mKeywords.insert("acoth", AcothToken);
+
+    mKeywords.insert("true", TrueToken);
+    mKeywords.insert("false", FalseToken);
+    mKeywords.insert("nan", NanToken);
+    mKeywords.insert("pi", PiToken);
+    mKeywords.insert("inf", InfToken);
+    mKeywords.insert("e", EToken);
+
+    mKeywords.insert("base", BaseToken);
+    mKeywords.insert("encapsulation", EncapsulationToken);
+    mKeywords.insert("containment", ContainmentToken);
+
+    // Our various CellML text SI unit keywords
+
+    mSiUnitKeywords.insert("ampere", AmpereToken);
+    mSiUnitKeywords.insert("becquerel", BecquerelToken);
+    mSiUnitKeywords.insert("candela", CandelaToken);
+    mSiUnitKeywords.insert("celsius", CelsiusToken);
+    mSiUnitKeywords.insert("coulomb", CoulombToken);
+    mSiUnitKeywords.insert("dimensionless", DimensionlessToken);
+    mSiUnitKeywords.insert("farad", FaradToken);
+    mSiUnitKeywords.insert("gram", GramToken);
+    mSiUnitKeywords.insert("gray", GrayToken);
+    mSiUnitKeywords.insert("henry", HenryToken);
+    mSiUnitKeywords.insert("hertz", HertzToken);
+    mSiUnitKeywords.insert("joule", JouleToken);
+    mSiUnitKeywords.insert("katal", KatalToken);
+    mSiUnitKeywords.insert("kelvin", KelvinToken);
+    mSiUnitKeywords.insert("kilogram", KilogramToken);
+    mSiUnitKeywords.insert("liter", LiterToken);
+    mSiUnitKeywords.insert("litre", LitreToken);
+    mSiUnitKeywords.insert("lumen", LumenToken);
+    mSiUnitKeywords.insert("lux", LuxToken);
+    mSiUnitKeywords.insert("meter", MeterToken);
+    mSiUnitKeywords.insert("metre", MetreToken);
+    mSiUnitKeywords.insert("mole", MoleToken);
+    mSiUnitKeywords.insert("newton", NewtonToken);
+    mSiUnitKeywords.insert("ohm", OhmToken);
+    mSiUnitKeywords.insert("pascal", PascalToken);
+    mSiUnitKeywords.insert("radian", RadianToken);
+    mSiUnitKeywords.insert("second", SecondToken);
+    mSiUnitKeywords.insert("siemens", SiemensToken);
+    mSiUnitKeywords.insert("sievert", SievertToken);
+    mSiUnitKeywords.insert("steradian", SteradianToken);
+    mSiUnitKeywords.insert("tesla", TeslaToken);
+    mSiUnitKeywords.insert("volt", VoltToken);
+    mSiUnitKeywords.insert("watt", WattToken);
+    mSiUnitKeywords.insert("weber", WeberToken);
 
     // Our various CellML text parameter keywords
 
     mParameterKeywords.insert("pref", PrefToken);
+    mParameterKeywords.insert("expo", ExpoToken);
+    mParameterKeywords.insert("mult", MultToken);
+    mParameterKeywords.insert("off", OffToken);
+
+    mParameterKeywords.insert("init", InitToken);
+    mParameterKeywords.insert("pub", PubToken);
+    mParameterKeywords.insert("priv", PrivToken);
+
+    mParameterKeywords.insert("yotta", YottaToken);
+    mParameterKeywords.insert("zetta", ZettaToken);
+    mParameterKeywords.insert("exa", ExaToken);
+    mParameterKeywords.insert("peta", PetaToken);
+    mParameterKeywords.insert("tera", TeraToken);
+    mParameterKeywords.insert("giga", GigaToken);
+    mParameterKeywords.insert("mega", MegaToken);
+    mParameterKeywords.insert("kilo", KiloToken);
+    mParameterKeywords.insert("hecto", HectoToken);
+    mParameterKeywords.insert("deka", DekaToken);
+    mParameterKeywords.insert("deci", DeciToken);
+    mParameterKeywords.insert("centi", CentiToken);
+    mParameterKeywords.insert("milli", MilliToken);
+    mParameterKeywords.insert("micro", MicroToken);
+    mParameterKeywords.insert("nano", NanoToken);
+    mParameterKeywords.insert("pico", PicoToken);
+    mParameterKeywords.insert("femto", FemtoToken);
+    mParameterKeywords.insert("atto", AttoToken);
+    mParameterKeywords.insert("zepto", ZeptoToken);
+    mParameterKeywords.insert("yocto", YoctoToken);
+
+    mParameterKeywords.insert("in", InToken);
+    mParameterKeywords.insert("out", OutToken);
+    mParameterKeywords.insert("none", NoneToken);
 }
 
 //==============================================================================
@@ -274,13 +418,16 @@ void CellmlTextViewScanner::getWord()
             break;
     }
 
-    // Check what kind of word we are dealing with, i.e. a keyword, an
-    // identifier or something unknown
+    // Check what kind of word we are dealing with, i.e. a keyword, an SI unit
+    // keyword, a parameter keyword, an identifier or something else
 
     if (mWithinParameterBlock)
         mTokenType = mParameterKeywords.value(mTokenString, UnknownToken);
     else
         mTokenType = mKeywords.value(mTokenString, UnknownToken);
+
+    if (mTokenType == UnknownToken)
+        mTokenType = mSiUnitKeywords.value(mTokenString, UnknownToken);
 
     if (mTokenType == UnknownToken) {
         // We are not dealing with a keyword, but it might still be an
