@@ -429,12 +429,10 @@ void CellmlTextViewScanner::getSingleLineComment()
 
 void CellmlTextViewScanner::getMultilineComment()
 {
-    // Retrieve a multiline comment from our text
+    // Retrieve a multiline comment from our text by looking for the first
+    // occurrence of "*/"
 
-    mTokenType = MultilineCommentToken;
     mTokenString = QString();
-
-    // Look for the first occurrence of "*/"
 
     forever {
         getNextChar();
@@ -447,7 +445,9 @@ void CellmlTextViewScanner::getMultilineComment()
             if (mCharType == DivideChar) {
                 getNextChar();
 
-                break;
+                mTokenType = MultilineCommentToken;
+
+                return;
             } else {
                 mTokenString += timesChar;
 
@@ -462,6 +462,8 @@ void CellmlTextViewScanner::getMultilineComment()
             mTokenString += *mChar;
         }
     }
+
+    mTokenType = IncompleteMultilineCommentToken;
 }
 
 //==============================================================================
@@ -503,6 +505,8 @@ void CellmlTextViewScanner::getWord()
 
 void CellmlTextViewScanner::getNumber()
 {
+    // Retrieve a number from our text
+
 //---GRY--- TO BE DONE...
 }
 
@@ -510,6 +514,8 @@ void CellmlTextViewScanner::getNumber()
 
 void CellmlTextViewScanner::getString()
 {
+    // Retrieve a string from our text
+
 //---GRY--- TO BE DONE...
 }
 

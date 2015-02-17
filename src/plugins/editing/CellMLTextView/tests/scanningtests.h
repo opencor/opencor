@@ -34,6 +34,7 @@ class ScanningTests : public QObject
 
 private Q_SLOTS:
     void basicScanningTests();
+    void scanningCommentTests();
     void scanningKeywordTests();
     void scanningSiUnitKeywordTests();
     void scanningParameterKeywordTests();

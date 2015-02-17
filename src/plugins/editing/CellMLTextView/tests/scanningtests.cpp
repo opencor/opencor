@@ -137,6 +137,13 @@ void ScanningTests::basicScanningTests()
     QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::ClosingCurlyBracketToken);
     scanner.getNextToken();
     QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::EofToken);
+}
+
+//==============================================================================
+
+void ScanningTests::scanningCommentTests()
+{
+    OpenCOR::CellMLTextView::CellmlTextViewScanner scanner;
 
     // Single line comments
 
@@ -187,7 +194,7 @@ void ScanningTests::basicScanningTests()
 
     scanner.setText("/*A multi/*line*");
 
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::MultilineCommentToken);
+    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::IncompleteMultilineCommentToken);
     QCOMPARE(scanner.tokenString(), QString("A multi/*line*"));
     scanner.getNextToken();
     QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::EofToken);
@@ -212,6 +219,13 @@ void ScanningTests::basicScanningTests()
     QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::TimesToken);
     scanner.getNextToken();
     QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::DivideToken);
+    scanner.getNextToken();
+    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::EofToken);
+
+    scanner.setText("/*An incomplete multiline comment...");
+
+    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::IncompleteMultilineCommentToken);
+    QCOMPARE(scanner.tokenString(), QString("An incomplete multiline comment..."));
     scanner.getNextToken();
     QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::EofToken);
 }
