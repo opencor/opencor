@@ -44,7 +44,7 @@ public:
     enum TokenType {
         UnknownToken, SingleLineCommentToken, MultilineCommentToken,
         IncompleteMultilineCommentToken, StringToken, IncompleteStringToken,
-        IdentifierToken,
+        IdentifierToken, NumberToken, BigNumberToken,
 
         // CellML text keywords
 
@@ -111,6 +111,7 @@ public:
     int tokenColumn() const;
 
     QString tokenString() const;
+    double tokenNumber() const;
 
     void getNextToken();
 
@@ -123,7 +124,7 @@ private:
         DoubleQuoteChar, QuoteChar, CommaChar,
         EqChar, LtChar, GtChar,
         PlusChar, MinusChar, TimesChar, DivideChar,
-        ColonChar, SemiColonChar,
+        FullStopChar, ColonChar, SemiColonChar,
         OpeningBracketChar, ClosingBracketChar,
         OpeningCurlyBracketChar, ClosingCurlyBracketChar,
         SpaceChar, TabChar, CrChar, LfChar, EofChar
@@ -141,6 +142,7 @@ private:
     int mTokenLine;
     int mTokenColumn;
     QString mTokenString;
+    double mTokenNumber;
 
     QMap<QString, TokenType> mKeywords;
     QMap<QString, TokenType> mSiUnitKeywords;

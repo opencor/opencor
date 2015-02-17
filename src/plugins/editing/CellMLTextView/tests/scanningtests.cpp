@@ -700,6 +700,61 @@ void ScanningTests::scanningStringTests()
 
 //==============================================================================
 
+void ScanningTests::scanningNumberTests()
+{
+    OpenCOR::CellMLTextView::CellmlTextViewScanner scanner;
+
+    scanner.setText("123");
+
+    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::NumberToken);
+    QCOMPARE(scanner.tokenString(), QString("123"));
+    QCOMPARE(scanner.tokenNumber(), 123.0);
+    scanner.getNextToken();
+    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::EofToken);
+
+    scanner.setText("123.");
+
+    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::NumberToken);
+    QCOMPARE(scanner.tokenString(), QString("123."));
+    QCOMPARE(scanner.tokenNumber(), 123.0);
+    scanner.getNextToken();
+    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::EofToken);
+
+    scanner.setText("0.123");
+
+    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::NumberToken);
+    QCOMPARE(scanner.tokenString(), QString("0.123"));
+    QCOMPARE(scanner.tokenNumber(), 0.123);
+    scanner.getNextToken();
+    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::EofToken);
+
+    scanner.setText(".123");
+
+    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::NumberToken);
+    QCOMPARE(scanner.tokenString(), QString(".123"));
+    QCOMPARE(scanner.tokenNumber(), 0.123);
+    scanner.getNextToken();
+    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::EofToken);
+
+    scanner.setText("123.456");
+
+    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::NumberToken);
+    QCOMPARE(scanner.tokenString(), QString("123.456"));
+    QCOMPARE(scanner.tokenNumber(), 123.456);
+    scanner.getNextToken();
+    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::EofToken);
+
+//---GRY--- THE TEST BELOW IS TO BE ENABLED ONCE WE SUPPORT EXPONENTS...
+//    scanner.setText("123e456789");
+
+//    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::BigNumberToken);
+//    QCOMPARE(scanner.tokenNumber(), 0.0);
+//    scanner.getNextToken();
+//    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::EofToken);
+}
+
+//==============================================================================
+
 QTEST_GUILESS_MAIN(ScanningTests)
 
 //==============================================================================

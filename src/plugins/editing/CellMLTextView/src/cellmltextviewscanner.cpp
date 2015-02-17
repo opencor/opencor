@@ -38,6 +38,7 @@ CellmlTextViewScanner::CellmlTextViewScanner() :
     mTokenLine(0),
     mTokenColumn(0),
     mTokenString(QString()),
+    mTokenNumber(0.0),
     mWithinParameterBlock(false)
 {
     // Our various CellML text keywords
@@ -211,6 +212,7 @@ void CellmlTextViewScanner::setText(const QString &pText)
     mTokenLine = 0;
     mTokenColumn = 0;
     mTokenString = QString();
+    mTokenNumber = 0.0;
 
     mWithinParameterBlock = false;
 
@@ -249,9 +251,18 @@ int CellmlTextViewScanner::tokenColumn() const
 
 QString CellmlTextViewScanner::tokenString() const
 {
-    // Return our token string
+    // Return our token as a string
 
     return mTokenString;
+}
+
+//==============================================================================
+
+double CellmlTextViewScanner::tokenNumber() const
+{
+    // Return our token as a number
+
+    return mTokenNumber;
 }
 
 //==============================================================================
@@ -331,6 +342,10 @@ void CellmlTextViewScanner::getNextChar()
         break;
     case 45:
         mCharType = MinusChar;
+
+        break;
+    case 46:
+        mCharType = FullStopChar;
 
         break;
     case 47:
@@ -506,14 +521,64 @@ void CellmlTextViewScanner::getNumber()
 {
     // Retrieve a number from our text
 
-//---GRY--- TO BE DONE...
+    bool fullStopFirstChar = mCharType == FullStopChar;
+
+    forever {
+        getNextChar();
+
+        if (mCharType == DigitChar)
+            mTokenString += *mChar;
+        else
+            break;
+    }
+
+    // Check whether the first character is a full stop character and whether
+    // there are no digits following it, in which case it would mean that we are
+    // not dealing with a number after all
+
+    if (fullStopFirstChar && (mTokenString.length() == 1)) {
+        mTokenType = UnknownToken;
+
+        return;
+    }
+
+    // Look for the fractional part, if any
+
+    if (mCharType == FullStopChar) {
+        mTokenString += *mChar;
+
+        getNextChar();
+
+        if (mCharType == DigitChar) {
+            mTokenString += *mChar;
+
+            forever {
+                getNextChar();
+
+                if (mCharType == DigitChar)
+                    mTokenString += *mChar;
+                else
+                    break;
+            }
+
+//---GRY--- TO BE FINISHED...
+        }
+    }
+
+    // At this stage, we have got a number, but it may be too big
+
+    bool validNumber;
+
+    mTokenNumber = mTokenString.toDouble(&validNumber);
+
+    mTokenType = validNumber?NumberToken:BigNumberToken;
 }
 
 //==============================================================================
 
 void CellmlTextViewScanner::getString()
 {
-    // Retrieve a string from our text
+    // Retrieve a string from our text by looking for a double quote
 
     mTokenString = QString();
 
@@ -563,6 +628,7 @@ void CellmlTextViewScanner::getNextToken()
 
         break;
     case DigitChar:
+    case FullStopChar:
         getNumber();
 
         break;
