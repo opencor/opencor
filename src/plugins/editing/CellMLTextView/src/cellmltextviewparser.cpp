@@ -129,7 +129,7 @@ CellmlTextViewParserErrors CellmlTextViewParser::errors() const
 
 bool CellmlTextViewParser::tokenType(const CellmlTextViewScanner::TokenType &pTokenType)
 {
-    // Look and handle comments, if any
+    // Look for and handle comments, if any
 
 //---GRY--- TO BE DONE...
 

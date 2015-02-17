@@ -138,49 +138,67 @@ void ScanningTests::basicScanningTests()
     scanner.getNextToken();
     QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::EofToken);
 
+    // Single line comments
+
+    scanner.setText("Some stuff... // A single line comment...");
+
+    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::IdentifierToken);
+    QCOMPARE(scanner.tokenString(), QString("Some"));
+    scanner.getNextToken();
+    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::IdentifierToken);
+    QCOMPARE(scanner.tokenString(), QString("stuff"));
+    scanner.getNextToken();
+    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::UnknownToken);
+    QCOMPARE(scanner.tokenString(), QString("."));
+    scanner.getNextToken();
+    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::UnknownToken);
+    QCOMPARE(scanner.tokenString(), QString("."));
+    scanner.getNextToken();
+    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::UnknownToken);
+    QCOMPARE(scanner.tokenString(), QString("."));
+    scanner.getNextToken();
+    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::SingleLineCommentToken);
+    QCOMPARE(scanner.tokenString(), QString(" A single line comment..."));
+    scanner.getNextToken();
+    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::EofToken);
+
     // Multiline comments
 
-    scanner.setText("/*A comment can fit on one line...*/");
+    scanner.setText("/*A multiline comment...*/");
 
     QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::MultilineCommentToken);
-    QCOMPARE(scanner.tokenString(), QString("A comment can fit on one line..."));
+    QCOMPARE(scanner.tokenString(), QString("A multiline comment..."));
     scanner.getNextToken();
     QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::EofToken);
 
-    scanner.setText("/*A comment can also fit\non one, two or even\nmore lines...*/");
+    scanner.setText("/*A\nmultiline\ncomment...*/");
 
     QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::MultilineCommentToken);
-    QCOMPARE(scanner.tokenString(), QString("A comment can also fit\non one, two or even\nmore lines..."));
+    QCOMPARE(scanner.tokenString(), QString("A\nmultiline\ncomment..."));
     scanner.getNextToken();
     QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::EofToken);
 
-    scanner.setText("/*A comment /*can fit*on one line...*/");
+    scanner.setText("/*A multi/*line* comment...*/");
 
     QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::MultilineCommentToken);
-    QCOMPARE(scanner.tokenString(), QString("A comment /*can fit*on one line..."));
+    QCOMPARE(scanner.tokenString(), QString("A multi/*line* comment..."));
     scanner.getNextToken();
     QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::EofToken);
 
-    scanner.setText("/*A comment /*can fit*");
+    scanner.setText("/*A multi/*line*");
 
     QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::MultilineCommentToken);
-    QCOMPARE(scanner.tokenString(), QString("A comment /*can fit*"));
+    QCOMPARE(scanner.tokenString(), QString("A multi/*line*"));
     scanner.getNextToken();
     QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::EofToken);
 
-    scanner.setText("/*A comment /*can fit*/ on one line...*/");
+    scanner.setText("/*A multi/*line*/ comment...*/");
 
     QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::MultilineCommentToken);
-    QCOMPARE(scanner.tokenString(), QString("A comment /*can fit"));
+    QCOMPARE(scanner.tokenString(), QString("A multi/*line"));
     scanner.getNextToken();
     QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::IdentifierToken);
-    QCOMPARE(scanner.tokenString(), QString("on"));
-    scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::IdentifierToken);
-    QCOMPARE(scanner.tokenString(), QString("one"));
-    scanner.getNextToken();
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::IdentifierToken);
-    QCOMPARE(scanner.tokenString(), QString("line"));
+    QCOMPARE(scanner.tokenString(), QString("comment"));
     scanner.getNextToken();
     QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::UnknownToken);
     QCOMPARE(scanner.tokenString(), QString("."));

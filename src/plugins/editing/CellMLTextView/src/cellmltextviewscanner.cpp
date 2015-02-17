@@ -412,7 +412,17 @@ void CellmlTextViewScanner::getSingleLineComments()
     mTokenType = SingleLineCommentToken;
     mTokenString = QString();
 
-//---GRY--- TO BE DONE...
+    // Look for the end of the current line
+
+    forever {
+        getNextChar();
+
+        if (   (mCharType == CrChar) || (mCharType == LfChar)
+            || (mCharType == EofChar))
+            break;
+        else
+            mTokenString += *mChar;
+    }
 }
 
 //==============================================================================
@@ -610,16 +620,16 @@ void CellmlTextViewScanner::getNextToken()
         break;
     default:
         switch (mCharType) {
-        case QuoteChar:               mTokenType = QuoteToken; break;
-        case CommaChar:               mTokenType = CommaToken; break;
-        case PlusChar:                mTokenType = PlusToken; break;
-        case MinusChar:               mTokenType = MinusToken;               break;
-        case TimesChar:               mTokenType = TimesToken;               break;
-        case ColonChar:               mTokenType = ColonToken;               break;
-        case SemiColonChar:           mTokenType = SemiColonToken;           break;
-        case OpeningBracketChar:      mTokenType = OpeningBracketToken;      break;
-        case ClosingBracketChar:      mTokenType = ClosingBracketToken;      break;
-        default:                      mTokenType = UnknownToken;
+        case QuoteChar:          mTokenType = QuoteToken;          break;
+        case CommaChar:          mTokenType = CommaToken;          break;
+        case PlusChar:           mTokenType = PlusToken;           break;
+        case MinusChar:          mTokenType = MinusToken;          break;
+        case TimesChar:          mTokenType = TimesToken;          break;
+        case ColonChar:          mTokenType = ColonToken;          break;
+        case SemiColonChar:      mTokenType = SemiColonToken;      break;
+        case OpeningBracketChar: mTokenType = OpeningBracketToken; break;
+        case ClosingBracketChar: mTokenType = ClosingBracketToken; break;
+        default:                 mTokenType = UnknownToken;
         }
 
         getNextChar();
