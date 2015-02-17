@@ -37,11 +37,16 @@ CellmlTextViewScanner::CellmlTextViewScanner() :
     mTokenType(UnknownToken),
     mTokenLine(0),
     mTokenColumn(0),
-    mTokenString(QString())
+    mTokenString(QString()),
+    mWithinParameterBlock(false)
 {
-    // Our various keywords
+    // Our various CellML text keywords
 
     mKeywords.insert("def", DefToken);
+
+    // Our various CellML text parameter keywords
+
+    mParameterKeywords.insert("pref", PrefToken);
 }
 
 //==============================================================================
@@ -63,8 +68,10 @@ void CellmlTextViewScanner::setText(const QString &pText)
     mTokenColumn = 0;
     mTokenString = QString();
 
-    nextChar();
-    nextToken();
+    mWithinParameterBlock = false;
+
+    getNextChar();
+    getNextToken();
 }
 
 //==============================================================================
@@ -125,7 +132,7 @@ QString CellmlTextViewScanner::tokenTypeAsString(const TokenType &pTokenType)
 
 //==============================================================================
 
-void CellmlTextViewScanner::nextChar()
+void CellmlTextViewScanner::getNextChar()
 {
     // Determine the type of our next character
 
@@ -259,7 +266,7 @@ void CellmlTextViewScanner::getWord()
     // Retrieve a word from our text
 
     forever {
-        nextChar();
+        getNextChar();
 
         if ((mCharType == LetterChar) || (mCharType == DigitChar) || (mCharType == UnderscoreChar))
             mTokenString += *mChar;
@@ -270,7 +277,10 @@ void CellmlTextViewScanner::getWord()
     // Check what kind of word we are dealing with, i.e. a keyword, an
     // identifier or something unknown
 
-    mTokenType = mKeywords.value(mTokenString, UnknownToken);
+    if (mWithinParameterBlock)
+        mTokenType = mParameterKeywords.value(mTokenString, UnknownToken);
+    else
+        mTokenType = mKeywords.value(mTokenString, UnknownToken);
 
     if (mTokenType == UnknownToken) {
         // We are not dealing with a keyword, but it might still be an
@@ -297,14 +307,14 @@ void CellmlTextViewScanner::getString()
 
 //==============================================================================
 
-void CellmlTextViewScanner::nextToken()
+void CellmlTextViewScanner::getNextToken()
 {
     // Get the next token in our text by first skipping all the spaces and
     // special characters
 
     while (   (mCharType == SpaceChar) || (mCharType == TabChar)
            || (mCharType == CrChar) || (mCharType == LfChar)) {
-        nextChar();
+        getNextChar();
     }
 
     // Determine the type of our next token
@@ -330,48 +340,48 @@ void CellmlTextViewScanner::nextToken()
     case EqChar:
         mTokenType = EqToken;
 
-        nextChar();
+        getNextChar();
 
         if (mCharType == EqChar) {
             mTokenString += *mChar;
 
             mTokenType = EqEqToken;
 
-            nextChar();
+            getNextChar();
         }
 
         break;
     case LtChar:
         mTokenType = LtToken;
 
-        nextChar();
+        getNextChar();
 
         if (mCharType == EqChar) {
             mTokenString += *mChar;
 
             mTokenType = LeqToken;
 
-            nextChar();
+            getNextChar();
         } else if (mCharType == GtChar) {
             mTokenString += *mChar;
 
             mTokenType = NeqToken;
 
-            nextChar();
+            getNextChar();
         }
 
         break;
     case GtChar:
         mTokenType = GtToken;
 
-        nextChar();
+        getNextChar();
 
         if (mCharType == EqChar) {
             mTokenString += *mChar;
 
             mTokenType = GeqToken;
 
-            nextChar();
+            getNextChar();
         }
 
         break;
@@ -379,6 +389,9 @@ void CellmlTextViewScanner::nextToken()
         mTokenType = EofToken;
 
         break;
+    case OpeningCurlyBracketChar:
+    case ClosingCurlyBracketChar:
+        mWithinParameterBlock = mCharType == OpeningCurlyBracketChar;
     default:
         switch (mCharType) {
         case QuoteChar:               mTokenType = QuoteToken; break;
@@ -396,7 +409,7 @@ void CellmlTextViewScanner::nextToken()
         default:                      mTokenType = UnknownToken;
         }
 
-        nextChar();
+        getNextChar();
     }
 }
 

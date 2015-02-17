@@ -42,8 +42,9 @@ class CellmlTextViewScanner
 {
 public:
     enum TokenType {
-        UnknownToken,
-        DefToken, IdentifierToken,
+        UnknownToken, IdentifierToken,
+        DefToken,
+        PrefToken,
         QuoteToken, CommaToken,
         EqToken, EqEqToken, NeqToken, LtToken, LeqToken, GtToken, GeqToken,
         PlusToken, MinusToken, TimesToken, DivideToken,
@@ -63,6 +64,8 @@ public:
     int tokenColumn() const;
 
     QString tokenString() const;
+
+    void getNextToken();
 
     static QString tokenTypeAsString(const TokenType &pTokenType);
 
@@ -93,14 +96,15 @@ private:
     QString mTokenString;
 
     QMap<QString, TokenType> mKeywords;
+    QMap<QString, TokenType> mParameterKeywords;
 
-    void nextChar();
+    bool mWithinParameterBlock;
+
+    void getNextChar();
 
     void getWord();
     void getNumber();
     void getString();
-
-    void nextToken();
 };
 
 //==============================================================================

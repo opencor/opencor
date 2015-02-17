@@ -48,7 +48,7 @@ public:
         CellmlKeyword,
         Number,
         String,
-        ParameterGroup,
+        ParameterBlock,
         ParameterKeyword,
         ParameterCellmlKeyword,
         ParameterNumber,
@@ -77,20 +77,20 @@ private:
     QRegularExpression mParameterValueKeywordsRegEx;
     QRegularExpression mNumberRegEx;
 
-    void doStyleText(int pStart, int pEnd, QString pText, bool pParameterGroup);
+    void doStyleText(int pStart, int pEnd, QString pText, bool pParameterBlock);
     void doStyleTextCurrent(int pStart, int pEnd, QString pText,
-                            bool pParameterGroup);
+                            bool pParameterBlock);
     void doStyleTextPreviousMultilineComment(const int &pPosition, int pStart,
                                              int pEnd, QString pText,
-                                             bool pParameterGroup);
-    void doStyleTextPreviousParameterGroup(const int &pPosition, int pStart,
+                                             bool pParameterBlock);
+    void doStyleTextPreviousParameterBlock(const int &pPosition, int pStart,
                                            int pEnd, QString pText,
-                                           bool pParameterGroup);
+                                           bool pParameterBlock);
     void doStyleTextString(const int &pPosition, int pStart, int pEnd,
-                           QString pText, bool pParameterGroup);
+                           QString pText, bool pParameterBlock);
     void doStyleTextSingleLineComment(const int &pPosition, int pStart,
                                       int pEnd, QString pText,
-                                      bool pParameterGroup);
+                                      bool pParameterBlock);
     void doStyleTextRegEx(int pStart, const QString &pText,
                           const QRegularExpression &pRegEx,
                           const int &pRegExStyle);

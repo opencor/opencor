@@ -144,8 +144,8 @@ QString CellmlTextViewLexer::description(int pStyle) const
         return QObject::tr("Number");
     case String:
         return QObject::tr("String");
-    case ParameterGroup:
-        return QObject::tr("Parameter group");
+    case ParameterBlock:
+        return QObject::tr("Parameter block");
     case ParameterKeyword:
         return QObject::tr("Parameter keyword");
     case ParameterCellmlKeyword:
@@ -167,7 +167,7 @@ QColor CellmlTextViewLexer::color(int pStyle) const
 
     switch (pStyle) {
     case Default:
-    case ParameterGroup:
+    case ParameterBlock:
         return QColor(0x1f, 0x1f, 0x1f);
     case SingleLineComment:
     case MultilineComment:
@@ -198,7 +198,7 @@ QFont CellmlTextViewLexer::font(int pStyle) const
     QFont res = QsciLexer::font(pStyle);
 
     switch (pStyle) {
-    case ParameterGroup:
+    case ParameterBlock:
     case ParameterKeyword:
     case ParameterCellmlKeyword:
     case ParameterNumber:
@@ -268,10 +268,10 @@ static const int EndMultilineCommentLength    = EndMultilineCommentString.length
 
 //==============================================================================
 
-static const auto StartParameterGroupString = QStringLiteral("{");
-static const auto EndParameterGroupString   = QStringLiteral("}");
-static const int StartParameterGroupLength  = StartParameterGroupString.length();
-static const int EndParameterGroupLength    = EndParameterGroupString.length();
+static const auto StartParameterBlockString = QStringLiteral("{");
+static const auto EndParameterBlockString   = QStringLiteral("}");
+static const int StartParameterBlockLength  = StartParameterBlockString.length();
+static const int EndParameterBlockLength    = EndParameterBlockString.length();
 
 //==============================================================================
 
@@ -281,38 +281,38 @@ static const int StringLength = StringString.length();
 //==============================================================================
 
 void CellmlTextViewLexer::doStyleText(int pStart, int pEnd, QString pText,
-                                      bool pParameterGroup)
+                                      bool pParameterBlock)
 {
     // Make sure that we are given some text to style
 
     if (pStart == pEnd)
         return;
 
-    // Check whether a /* XXX */ comment or a parameter group started before or
+    // Check whether a /* XXX */ comment or a parameter block started before or
     // at the beginning of the given text
 
     int multilineCommentStartPosition = findString(StartMultilineCommentString, pStart, MultilineComment, false);
-    int parameterGroupStartPosition = findString(StartParameterGroupString, pStart, ParameterGroup, false);
+    int parameterBlockStartPosition = findString(StartParameterBlockString, pStart, ParameterBlock, false);
 
     multilineCommentStartPosition = (multilineCommentStartPosition == -1)?INT_MAX:multilineCommentStartPosition;
-    parameterGroupStartPosition = (parameterGroupStartPosition == -1)?INT_MAX:parameterGroupStartPosition;
+    parameterBlockStartPosition = (parameterBlockStartPosition == -1)?INT_MAX:parameterBlockStartPosition;
 
     if (   (multilineCommentStartPosition != INT_MAX)
-        && (   (parameterGroupStartPosition == INT_MAX)
-            || (multilineCommentStartPosition > parameterGroupStartPosition))) {
+        && (   (parameterBlockStartPosition == INT_MAX)
+            || (multilineCommentStartPosition > parameterBlockStartPosition))) {
         // There is a previous /* XXX */ comment to style
 
-        doStyleTextPreviousMultilineComment(multilineCommentStartPosition, pStart, pEnd, pText, pParameterGroup);
-    } else if (   (parameterGroupStartPosition != INT_MAX)
+        doStyleTextPreviousMultilineComment(multilineCommentStartPosition, pStart, pEnd, pText, pParameterBlock);
+    } else if (   (parameterBlockStartPosition != INT_MAX)
                && (   (multilineCommentStartPosition == INT_MAX)
-                   || (parameterGroupStartPosition > multilineCommentStartPosition))) {
-        // There is a previous parameter group to style
+                   || (parameterBlockStartPosition > multilineCommentStartPosition))) {
+        // There is a previous parameter block to style
 
-        doStyleTextPreviousParameterGroup(parameterGroupStartPosition, pStart, pEnd, pText, pParameterGroup);
+        doStyleTextPreviousParameterBlock(parameterBlockStartPosition, pStart, pEnd, pText, pParameterBlock);
     } else {
         // Style the current text
 
-        doStyleTextCurrent(pStart, pEnd, pText, pParameterGroup);
+        doStyleTextCurrent(pStart, pEnd, pText, pParameterBlock);
     }
 }
 
@@ -320,7 +320,7 @@ void CellmlTextViewLexer::doStyleText(int pStart, int pEnd, QString pText,
 
 void CellmlTextViewLexer::doStyleTextCurrent(int pStart, int pEnd,
                                              QString pText,
-                                             bool pParameterGroup)
+                                             bool pParameterBlock)
 {
     // Make sure that we are given some text to style
 
@@ -328,44 +328,44 @@ void CellmlTextViewLexer::doStyleTextCurrent(int pStart, int pEnd,
         return;
 
     // Check whether the given text contains a string, a // comment, a /* XXX */
-    // comment or a parameter group
+    // comment or a parameter block
 
     int stringPosition = pText.indexOf(StringString);
     int singleLineCommentPosition = pText.indexOf(SingleLineCommentString);
     int multilineCommentStartPosition = pText.indexOf(StartMultilineCommentString);
-    int parameterGroupStartPosition = pText.indexOf(StartParameterGroupString);
+    int parameterBlockStartPosition = pText.indexOf(StartParameterBlockString);
 
     stringPosition = (stringPosition == -1)?INT_MAX:stringPosition;
     singleLineCommentPosition = (singleLineCommentPosition == -1)?INT_MAX:singleLineCommentPosition;
     multilineCommentStartPosition = (multilineCommentStartPosition == -1)?INT_MAX:multilineCommentStartPosition;
-    parameterGroupStartPosition = (parameterGroupStartPosition == -1)?INT_MAX:parameterGroupStartPosition;
+    parameterBlockStartPosition = (parameterBlockStartPosition == -1)?INT_MAX:parameterBlockStartPosition;
 
     if (   (stringPosition != INT_MAX)
         && (stringPosition < singleLineCommentPosition)
         && (stringPosition < multilineCommentStartPosition)
-        && (stringPosition < parameterGroupStartPosition)) {
+        && (stringPosition < parameterBlockStartPosition)) {
         // There is a string to style
 
         doStyleTextString(stringPosition, pStart, pEnd, pText,
-                          pParameterGroup);
+                          pParameterBlock);
     } else if (   (singleLineCommentPosition != INT_MAX)
                && (singleLineCommentPosition < stringPosition)
                && (singleLineCommentPosition < multilineCommentStartPosition)
-               && (singleLineCommentPosition < parameterGroupStartPosition)) {
+               && (singleLineCommentPosition < parameterBlockStartPosition)) {
         // There is a // comment to style
 
         doStyleTextSingleLineComment(singleLineCommentPosition, pStart, pEnd,
-                                     pText, pParameterGroup);
+                                     pText, pParameterBlock);
     } else if (   (multilineCommentStartPosition != INT_MAX)
                && (multilineCommentStartPosition < stringPosition)
                && (multilineCommentStartPosition < singleLineCommentPosition)
-               && (multilineCommentStartPosition < parameterGroupStartPosition)) {
+               && (multilineCommentStartPosition < parameterBlockStartPosition)) {
         // There is a /* XXX */ comment to style, so first style everything that
         // is before it
 
         doStyleTextCurrent(pStart, pStart+multilineCommentStartPosition,
                            pText.left(multilineCommentStartPosition),
-                           pParameterGroup);
+                           pParameterBlock);
 
         // Now style everything from the comment onwards
         // Note: to style everything from the comment onwards means that we will
@@ -374,38 +374,38 @@ void CellmlTextViewLexer::doStyleTextCurrent(int pStart, int pEnd,
 
         doStyleText(pStart+multilineCommentStartPosition, pEnd,
                     pText.right(pEnd-pStart-multilineCommentStartPosition),
-                    pParameterGroup);
-    } else if (   (parameterGroupStartPosition != INT_MAX)
-               && (parameterGroupStartPosition < stringPosition)
-               && (parameterGroupStartPosition < singleLineCommentPosition)
-               && (parameterGroupStartPosition < multilineCommentStartPosition)) {
-        // There is a parameter group, so first style everything that is before
+                    pParameterBlock);
+    } else if (   (parameterBlockStartPosition != INT_MAX)
+               && (parameterBlockStartPosition < stringPosition)
+               && (parameterBlockStartPosition < singleLineCommentPosition)
+               && (parameterBlockStartPosition < multilineCommentStartPosition)) {
+        // There is a parameter block, so first style everything that is before
         // it
 
-        doStyleTextCurrent(pStart, pStart+parameterGroupStartPosition,
-                           pText.left(parameterGroupStartPosition),
-                           pParameterGroup);
+        doStyleTextCurrent(pStart, pStart+parameterBlockStartPosition,
+                           pText.left(parameterBlockStartPosition),
+                           pParameterBlock);
 
-        // Now style everything from the parameter group onwards
-        // Note: to style everything from the parameter group onwards means that
-        //       we will find that a parameter group starts at the beginning of
+        // Now style everything from the parameter block onwards
+        // Note: to style everything from the parameter block onwards means that
+        //       we will find that a parameter block starts at the beginning of
         //       the 'new' given text...
 
-        doStyleText(pStart+parameterGroupStartPosition, pEnd,
-                    pText.right(pEnd-pStart-parameterGroupStartPosition),
-                    pParameterGroup);
+        doStyleText(pStart+parameterBlockStartPosition, pEnd,
+                    pText.right(pEnd-pStart-parameterBlockStartPosition),
+                    pParameterBlock);
     } else {
-        // Style the given text as a parameter group, if needed
+        // Style the given text as a parameter block, if needed
 
-        if (pParameterGroup) {
+        if (pParameterBlock) {
             startStyling(pStart);
-            setStyling(pEnd-pStart, ParameterGroup);
+            setStyling(pEnd-pStart, ParameterBlock);
         }
 
         // Check whether the given text contains some keywords from various
         // categories
 
-        if (pParameterGroup) {
+        if (pParameterBlock) {
             doStyleTextRegEx(pStart, pText, mParameterKeywordsRegEx, ParameterKeyword);
             doStyleTextRegEx(pStart, pText, mParameterValueKeywordsRegEx, ParameterCellmlKeyword);
         } else {
@@ -413,11 +413,11 @@ void CellmlTextViewLexer::doStyleTextCurrent(int pStart, int pEnd,
             doStyleTextRegEx(pStart, pText, mCellmlKeywordsRegEx, CellmlKeyword);
         }
 
-        doStyleTextRegEx(pStart, pText, mSiUnitKeywordsRegEx, pParameterGroup?ParameterCellmlKeyword:CellmlKeyword);
+        doStyleTextRegEx(pStart, pText, mSiUnitKeywordsRegEx, pParameterBlock?ParameterCellmlKeyword:CellmlKeyword);
 
         // Check whether the given text contains some numbers
 
-        doStyleTextRegEx(pStart, pText, mNumberRegEx, pParameterGroup?ParameterNumber:Number);
+        doStyleTextRegEx(pStart, pText, mNumberRegEx, pParameterBlock?ParameterNumber:Number);
 
         // Let QScintilla know that we are done with the styling of the given
         // text
@@ -439,7 +439,7 @@ void CellmlTextViewLexer::doStyleTextPreviousMultilineComment(const int &pPositi
                                                               int pStart,
                                                               int pEnd,
                                                               QString pText,
-                                                              bool pParameterGroup)
+                                                              bool pParameterBlock)
 {
     // A /* XXX */ comment started before or at the beginning of the given text,
     // so now look for where it ends
@@ -466,71 +466,71 @@ void CellmlTextViewLexer::doStyleTextPreviousMultilineComment(const int &pPositi
         // anything
 
         if (end != pEnd)
-            doStyleText(end, pEnd, pText.right(pEnd-end), pParameterGroup);
+            doStyleText(end, pEnd, pText.right(pEnd-end), pParameterBlock);
     } else {
         // The beginning of the given text is not within a /* XXX */ comment, so
         // style it
 
-        doStyleTextCurrent(pStart, pEnd, pText, pParameterGroup);
+        doStyleTextCurrent(pStart, pEnd, pText, pParameterBlock);
     }
 }
 
 //==============================================================================
 
-void CellmlTextViewLexer::doStyleTextPreviousParameterGroup(const int &pPosition,
+void CellmlTextViewLexer::doStyleTextPreviousParameterBlock(const int &pPosition,
                                                             int pStart,
                                                             int pEnd,
                                                             QString pText,
-                                                            bool pParameterGroup)
+                                                            bool pParameterBlock)
 {
-    // A parameter group started before or at the beginning of the given text,
+    // A parameter block started before or at the beginning of the given text,
     // so now look for where it ends
 
-    int parameterGroupEndPosition = findString(EndParameterGroupString, pPosition, ParameterGroup);
+    int parameterBlockEndPosition = findString(EndParameterBlockString, pPosition, ParameterBlock);
 
-    if (parameterGroupEndPosition == -1)
-        parameterGroupEndPosition = mFullText.length();
+    if (parameterBlockEndPosition == -1)
+        parameterBlockEndPosition = mFullText.length();
 
-    // Check whether the beginning of the given text is within a parameter group
+    // Check whether the beginning of the given text is within a parameter block
 
-    if ((pPosition <= pStart) && (pStart <= parameterGroupEndPosition)) {
-        // The beginning of the given text is within a parameter group, so style
+    if ((pPosition <= pStart) && (pStart <= parameterBlockEndPosition)) {
+        // The beginning of the given text is within a parameter block, so style
         // it as such
 
-        int realEnd = parameterGroupEndPosition+EndParameterGroupLength;
+        int realEnd = parameterBlockEndPosition+EndParameterBlockLength;
         int end = qMin(pEnd, realEnd);
         bool hasStart = pPosition == pStart;
         bool hasEnd = end == realEnd;
 
-        // If possible, style the start of the parameter group
+        // If possible, style the start of the parameter block
 
         if (hasStart) {
             startStyling(pStart);
-            setStyling(StartParameterGroupLength, ParameterGroup);
+            setStyling(StartParameterBlockLength, ParameterBlock);
         }
 
-        // Now style the contents of the parameter group itself
+        // Now style the contents of the parameter block itself
 
-        int newStart = pStart+(hasStart?StartParameterGroupLength:0);
-        int newEnd = end-(hasEnd?EndParameterGroupLength:0);
+        int newStart = pStart+(hasStart?StartParameterBlockLength:0);
+        int newEnd = end-(hasEnd?EndParameterBlockLength:0);
 
         doStyleTextCurrent(newStart, newEnd,
                            pText.mid(newStart-pStart, newEnd-newStart), true);
 
-        // If possible, style the end of the parameter group, as well as what is
+        // If possible, style the end of the parameter block, as well as what is
         // behind it
 
         if (hasEnd) {
-            startStyling(end-EndParameterGroupLength);
-            setStyling(EndParameterGroupLength, ParameterGroup);
+            startStyling(end-EndParameterBlockLength);
+            setStyling(EndParameterBlockLength, ParameterBlock);
 
-            doStyleText(end, pEnd, pText.right(pEnd-end), pParameterGroup);
+            doStyleText(end, pEnd, pText.right(pEnd-end), pParameterBlock);
         }
     } else {
-        // The beginning of the given text is not within a parameter group, so
+        // The beginning of the given text is not within a parameter block, so
         // style it
 
-        doStyleTextCurrent(pStart, pEnd, pText, pParameterGroup);
+        doStyleTextCurrent(pStart, pEnd, pText, pParameterBlock);
     }
 }
 
@@ -538,12 +538,12 @@ void CellmlTextViewLexer::doStyleTextPreviousParameterGroup(const int &pPosition
 
 void CellmlTextViewLexer::doStyleTextString(const int &pPosition, int pStart,
                                             int pEnd, QString pText,
-                                            bool pParameterGroup)
+                                            bool pParameterBlock)
 {
     // There is a string to style, so first style everything that is before it
 
     doStyleTextCurrent(pStart, pStart+pPosition, pText.left(pPosition),
-                       pParameterGroup);
+                       pParameterBlock);
 
     // Now, check where the string ends, if anywhere
 
@@ -591,12 +591,12 @@ void CellmlTextViewLexer::doStyleTextString(const int &pPosition, int pStart,
     int start = pStart+pPosition;
 
     startStyling(start);
-    setStyling(((nextStart == -1)?pEnd:nextStart)-start, pParameterGroup?ParameterString:String);
+    setStyling(((nextStart == -1)?pEnd:nextStart)-start, pParameterBlock?ParameterString:String);
 
     // Style whatever is after the string
 
     if (nextStart != -1)
-        doStyleText(nextStart, pEnd, pText.right(pEnd-nextStart), pParameterGroup);
+        doStyleText(nextStart, pEnd, pText.right(pEnd-nextStart), pParameterBlock);
 }
 
 //==============================================================================
@@ -604,13 +604,13 @@ void CellmlTextViewLexer::doStyleTextString(const int &pPosition, int pStart,
 void CellmlTextViewLexer::doStyleTextSingleLineComment(const int &pPosition,
                                                        int pStart, int pEnd,
                                                        QString pText,
-                                                       bool pParameterGroup)
+                                                       bool pParameterBlock)
 {
     // There is a // comment to style, so first style everything that is before
     // it
 
     doStyleTextCurrent(pStart, pStart+pPosition, pText.left(pPosition),
-                       pParameterGroup);
+                       pParameterBlock);
 
     // Style the // comment itself, after having look for the end of the line,
     // if any
@@ -625,7 +625,7 @@ void CellmlTextViewLexer::doStyleTextSingleLineComment(const int &pPosition,
     // Now, style everything that is after the // comment, if anything
 
     if (eolPosition != -1)
-        doStyleText(end, pEnd, pText.right(pEnd-end), pParameterGroup);
+        doStyleText(end, pEnd, pText.right(pEnd-end), pParameterBlock);
 }
 
 //==============================================================================

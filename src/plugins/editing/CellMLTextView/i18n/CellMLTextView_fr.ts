@@ -54,8 +54,8 @@
         <translation>Chaîne</translation>
     </message>
     <message>
-        <source>Parameter group</source>
-        <translation>Groupe paramètre</translation>
+        <source>Parameter block</source>
+        <translation>Bloc paramètre</translation>
     </message>
     <message>
         <source>Parameter keyword</source>

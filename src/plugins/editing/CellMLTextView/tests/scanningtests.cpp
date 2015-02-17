@@ -32,13 +32,45 @@ void ScanningTests::scanningWordTests()
 {
     OpenCOR::CellMLTextView::CellmlTextViewScanner scanner;
 
+    // CellML text keyword
+
     scanner.setText("def");
 
     QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::DefToken);
 
+    // Non-CellML text keyword, but identifier, since within a parameter block
+
+    scanner.setText("{ def }");
+
+    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::OpeningCurlyBracketToken);
+    scanner.getNextToken();
+    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::IdentifierToken);
+    scanner.getNextToken();
+    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::ClosingCurlyBracketToken);
+
+    // Non-CellML text keyword, but identifier, since outside a parameter block
+
+    scanner.setText("pref");
+
+    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::IdentifierToken);
+
+    // CellML text parameter keyword
+
+    scanner.setText("{ pref }");
+
+    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::OpeningCurlyBracketToken);
+    scanner.getNextToken();
+    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::PrefToken);
+    scanner.getNextToken();
+    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::ClosingCurlyBracketToken);
+
+    // Identifier
+
     scanner.setText("OpenCOR");
 
     QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::IdentifierToken);
+
+    // Unknown token
 
     scanner.setText("_________");
 
