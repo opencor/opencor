@@ -405,9 +405,9 @@ void CellmlTextViewScanner::getNextChar()
 
 //==============================================================================
 
-void CellmlTextViewScanner::getSingleLineComments()
+void CellmlTextViewScanner::getSingleLineComment()
 {
-    // Retrieve a (series of single) line comment(s)
+    // Retrieve a single line comment
 
     mTokenType = SingleLineCommentToken;
     mTokenString = QString();
@@ -599,7 +599,7 @@ void CellmlTextViewScanner::getNextToken()
         getNextChar();
 
         if (mCharType == DivideChar)
-            getSingleLineComments();
+            getSingleLineComment();
         else if (mCharType == TimesChar)
             getMultilineComment();
 
