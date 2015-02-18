@@ -509,18 +509,18 @@ void CellmlTextViewLexer::doStyleTextPreviousMultilineComment(const int &pPositi
         // The beginning of the given text is within a /* XXX */ comment, so
         // style it
 
-        int realEnd = fullTextBytesPosition(multilineCommentEndPosition+EndMultilineCommentLength);
-        int end = qMin(pBytesEnd, realEnd);
+        int realBytesEnd = fullTextBytesPosition(multilineCommentEndPosition+EndMultilineCommentLength);
+        int bytesEnd = qMin(pBytesEnd, realBytesEnd);
 
         startStyling(pBytesStart);
-        setStyling(end-pBytesStart, MultilineComment);
+        setStyling(bytesEnd-pBytesStart, MultilineComment);
 
         // Now, style everything that is behind the /* XXX */ comment, if
         // anything
 
-        if (end != pBytesEnd) {
-            doStyleText(end, pBytesEnd,
-                        pText.right(fullTextLength(end, pBytesEnd-end)),
+        if (bytesEnd != pBytesEnd) {
+            doStyleText(bytesEnd, pBytesEnd,
+                        pText.right(fullTextLength(bytesEnd, pBytesEnd-bytesEnd)),
                         pParameterBlock);
         }
     } else {
@@ -549,14 +549,16 @@ void CellmlTextViewLexer::doStyleTextPreviousParameterBlock(const int &pPosition
 
     // Check whether the beginning of the given text is within a parameter block
 
-    if ((pPosition <= pBytesStart) && (pBytesStart <= parameterBlockEndPosition)) {
+    int start = fullTextPosition(pBytesStart);
+
+    if ((pPosition <= start) && (start <= parameterBlockEndPosition)) {
         // The beginning of the given text is within a parameter block, so style
         // it as such
 
-        int realEnd = parameterBlockEndPosition+EndParameterBlockLength;
-        int end = qMin(pBytesEnd, realEnd);
-        bool hasStart = pPosition == pBytesStart;
-        bool hasEnd = end == realEnd;
+        int realBytesEnd = fullTextBytesPosition(parameterBlockEndPosition+EndParameterBlockLength);
+        int bytesEnd = qMin(pBytesEnd, realBytesEnd);
+        bool hasStart = pPosition == start;
+        bool hasEnd = bytesEnd == realBytesEnd;
 
         // If possible, style the start of the parameter block
 
@@ -568,19 +570,23 @@ void CellmlTextViewLexer::doStyleTextPreviousParameterBlock(const int &pPosition
         // Now style the contents of the parameter block itself
 
         int newStart = pBytesStart+(hasStart?StartParameterBlockLength:0);
-        int newEnd = end-(hasEnd?EndParameterBlockLength:0);
+        int newEnd = bytesEnd-(hasEnd?EndParameterBlockLength:0);
 
         doStyleTextCurrent(newStart, newEnd,
-                           pText.mid(newStart-pBytesStart, newEnd-newStart), true);
+                           pText.mid(fullTextLength(pBytesStart, newStart-pBytesStart),
+                                     fullTextLength(newStart, newEnd-newStart)),
+                           true);
 
         // If possible, style the end of the parameter block, as well as what is
         // behind it
 
         if (hasEnd) {
-            startStyling(end-EndParameterBlockLength);
+            startStyling(bytesEnd-EndParameterBlockLength);
             setStyling(EndParameterBlockLength, ParameterBlock);
 
-            doStyleText(end, pBytesEnd, pText.right(pBytesEnd-end), pParameterBlock);
+            doStyleText(bytesEnd, pBytesEnd,
+                        pText.right(fullTextLength(bytesEnd, pBytesEnd-bytesEnd)),
+                        pParameterBlock);
         }
     } else {
         // The beginning of the given text is not within a parameter block, so
