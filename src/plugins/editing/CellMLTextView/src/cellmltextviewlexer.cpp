@@ -111,7 +111,10 @@ CellmlTextViewLexer::CellmlTextViewLexer(QObject *pParent) :
                                            "in|out|none"
                                        ")\\b");
 
-    mNumberRegEx = QRegularExpression("\\b\\d*\\.?\\d+([eE][+-]?\\d+)?\\b");
+    mNumberRegEx = QRegularExpression("(\\d+(\\.\\d*)?|\\.\\d+)([eE][+-]?\\d*)?");
+    // Note: this regular expression is not aimed at catching valid numbers, but
+    //       at catching something that could become a valid number (e.g. we
+    //       want to be able to catch "123e")...
 }
 
 //==============================================================================
@@ -417,7 +420,7 @@ void CellmlTextViewLexer::doStyleTextCurrent(int pStart, int pEnd,
 
         // Check whether the given text contains some numbers
 
-        doStyleTextRegEx(pStart, pText, mNumberRegEx, pParameterBlock?ParameterNumber:Number);
+        doStyleTextNumberRegEx(pStart, pText, pParameterBlock?ParameterNumber:Number);
 
         // Let QScintilla know that we are done with the styling of the given
         // text
@@ -646,6 +649,47 @@ void CellmlTextViewLexer::doStyleTextRegEx(int pStart, const QString &pText,
 
         startStyling(pStart+regExMatch.capturedStart());
         setStyling(regExMatch.capturedLength(), pRegExStyle);
+    }
+}
+
+//==============================================================================
+
+void CellmlTextViewLexer::doStyleTextNumberRegEx(int pStart,
+                                                 const QString &pText,
+                                                 const int &pRegExStyle)
+{
+    // Style the given text using the number regular expression
+
+    QRegularExpressionMatchIterator regExMatchIter = mNumberRegEx.globalMatch(pText);
+    QRegularExpressionMatch regExMatch;
+
+    while (regExMatchIter.hasNext()) {
+        regExMatch = regExMatchIter.next();
+
+        // We have a match, so style it, but only if:
+        //  - The character in front of the match is not in [0-9a-zA-Z_]
+        //  - The character following the match is not in [a-zA-Z_.]
+
+        int prevCharPos = pStart+regExMatch.capturedStart()-1;
+        int nextCharPos = prevCharPos+regExMatch.capturedLength()+1;
+
+        ushort prevChar = ((prevCharPos >= 0)?mFullText[prevCharPos]:QChar()).unicode();
+        ushort nextChar = ((nextCharPos < mFullText.length())?mFullText[nextCharPos]:QChar()).unicode();
+
+        if ((       (prevChar  <  48) || ((prevChar  >  57) && (prevChar < 65))
+                || ((prevChar  >  90) &&  (prevChar  <  95))
+                ||  (prevChar ==  96) ||  (prevChar  > 122))
+            && (    (nextChar  <  46) || ((nextChar  >  46) && (nextChar < 65))
+                || ((nextChar  >  90) &&  (nextChar  <  95))
+                ||  (nextChar ==  96) ||  (nextChar  > 122))) {
+            startStyling(pStart+regExMatch.capturedStart());
+            setStyling(regExMatch.capturedLength(), pRegExStyle);
+
+            if ((nextChar == 69) || (nextChar == 101)) {
+                startStyling(pStart+regExMatch.capturedStart()+regExMatch.capturedLength());
+                setStyling(1, pRegExStyle);
+            }
+        }
     }
 }
 

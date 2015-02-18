@@ -94,6 +94,8 @@ private:
     void doStyleTextRegEx(int pStart, const QString &pText,
                           const QRegularExpression &pRegEx,
                           const int &pRegExStyle);
+    void doStyleTextNumberRegEx(int pStart, const QString &pText,
+                                const int &pRegExStyle);
 
     bool validString(const int &pFrom, const int &pTo, const int &pStyle) const;
     int findString(const QString &pString, int pFrom, const int &pStyle,
