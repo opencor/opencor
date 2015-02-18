@@ -68,6 +68,8 @@ public:
 
 private:
     QString mFullText;
+    QByteArray mFullTextUtf8;
+
     QString mEolString;
 
     QRegularExpression mKeywordsRegEx;
@@ -100,6 +102,12 @@ private:
     bool validString(const int &pFrom, const int &pTo, const int &pStyle) const;
     int findString(const QString &pString, int pFrom, const int &pStyle,
                    const bool &pForward = true);
+
+    int fullTextPosition(const int &pBytesPosition);
+
+    int textBytesPosition(const QString &pText, const int &pPosition);
+    int textBytesLength(const QString &pText, const int &pFrom,
+                        const int &pLength);
 };
 
 //==============================================================================

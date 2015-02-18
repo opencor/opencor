@@ -32,6 +32,7 @@ namespace CellMLTextView {
 CellmlTextViewLexer::CellmlTextViewLexer(QObject *pParent) :
     QsciLexerCustom(pParent),
     mFullText(QString()),
+    mFullTextUtf8(QByteArray()),
     mEolString(QString())
 {
     // Some initialisations
@@ -242,6 +243,8 @@ void CellmlTextViewLexer::styleText(int pStart, int pEnd)
     // Effectively style our text
 
     mFullText = editor()->text();
+    mFullTextUtf8 = mFullText.toUtf8();
+
     mEolString = qobject_cast<QScintillaSupport::QScintillaWidget *>(editor())->eolString();
 
     doStyleText(pStart, pEnd, text, false);
@@ -449,7 +452,7 @@ void CellmlTextViewLexer::doStyleTextSingleLineComment(const int &pPosition,
     doStyleTextCurrent(pStart, pStart+pPosition, pText.left(pPosition),
                        pParameterBlock);
 
-    // Style the // comment itself, after having look for the end of the line,
+    // Style the // comment itself, after having looked for the end of the line,
     // if any
 
     int eolPosition = pText.indexOf(mEolString, pPosition+SingleLineCommentLength);
@@ -647,8 +650,8 @@ void CellmlTextViewLexer::doStyleTextRegEx(int pStart, const QString &pText,
 
         // We have a match, so style it
 
-        startStyling(pStart+regExMatch.capturedStart());
-        setStyling(regExMatch.capturedLength(), pRegExStyle);
+        startStyling(pStart+textBytesPosition(pText, regExMatch.capturedStart()));
+        setStyling(textBytesLength(pText, regExMatch.capturedStart(), regExMatch.capturedLength()), pRegExStyle);
     }
 }
 
@@ -672,7 +675,7 @@ void CellmlTextViewLexer::doStyleTextNumberRegEx(int pStart,
         //  - The character following the match is not in [a-zA-Z_.] and is part
         //    of the ASCII table
 
-        int prevCharPos = pStart+regExMatch.capturedStart()-1;
+        int prevCharPos = fullTextPosition(pStart)+regExMatch.capturedStart()-1;
         int nextCharPos = prevCharPos+regExMatch.capturedLength()+1;
 
         ushort prevChar = ((prevCharPos >= 0)?mFullText[prevCharPos]:QChar()).unicode();
@@ -684,8 +687,8 @@ void CellmlTextViewLexer::doStyleTextNumberRegEx(int pStart,
             && (    (nextChar  <  46) || ((nextChar  >  46) && (nextChar <  65))
                 || ((nextChar  >  90) &&  (nextChar  <  95))
                 ||  (nextChar ==  96) || ((nextChar  > 122) && (nextChar < 128)))) {
-            startStyling(pStart+regExMatch.capturedStart());
-            setStyling(regExMatch.capturedLength(), pRegExStyle);
+            startStyling(pStart+textBytesPosition(pText, regExMatch.capturedStart()));
+            setStyling(textBytesLength(pText, regExMatch.capturedStart(), regExMatch.capturedLength()), pRegExStyle);
         }
     }
 }
@@ -727,6 +730,36 @@ int CellmlTextViewLexer::findString(const QString &pString, int pFrom,
     } while ((res != -1) && !validString(res, res+stringLength, pStyle));
 
     return res;
+}
+
+//==============================================================================
+
+int CellmlTextViewLexer::fullTextPosition(const int &pBytesPosition)
+{
+    // Return the corresponding position within mFullText of the given
+    // byte-based position within mFullTextUtf8
+
+    return QString(mFullTextUtf8.left(pBytesPosition)).length();
+}
+
+//==============================================================================
+
+int CellmlTextViewLexer::textBytesPosition(const QString &pText,
+                                           const int &pPosition)
+{
+    // Return the byte-based value of the given position within the given text
+
+    return pText.left(pPosition).toUtf8().length();
+}
+
+//==============================================================================
+
+int CellmlTextViewLexer::textBytesLength(const QString &pText, const int &pFrom,
+                                         const int &pLength)
+{
+    // Return the byte-based length of a substring within the given text
+
+    return pText.mid(pFrom, pLength).toUtf8().length();
 }
 
 //==============================================================================
