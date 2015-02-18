@@ -438,6 +438,35 @@ void CellmlTextViewLexer::doStyleTextCurrent(int pStart, int pEnd,
 
 //==============================================================================
 
+void CellmlTextViewLexer::doStyleTextSingleLineComment(const int &pPosition,
+                                                       int pStart, int pEnd,
+                                                       QString pText,
+                                                       bool pParameterBlock)
+{
+    // There is a // comment to style, so first style everything that is before
+    // it
+
+    doStyleTextCurrent(pStart, pStart+pPosition, pText.left(pPosition),
+                       pParameterBlock);
+
+    // Style the // comment itself, after having look for the end of the line,
+    // if any
+
+    int eolPosition = pText.indexOf(mEolString, pPosition+SingleLineCommentLength);
+    int start = pStart+pPosition;
+    int end = (eolPosition == -1)?pEnd:pStart+eolPosition+mEolString.length();
+
+    startStyling(start);
+    setStyling(end-start, SingleLineComment);
+
+    // Now, style everything that is after the // comment, if anything
+
+    if (eolPosition != -1)
+        doStyleText(end, pEnd, pText.right(pEnd-end), pParameterBlock);
+}
+
+//==============================================================================
+
 void CellmlTextViewLexer::doStyleTextPreviousMultilineComment(const int &pPosition,
                                                               int pStart,
                                                               int pEnd,
@@ -600,35 +629,6 @@ void CellmlTextViewLexer::doStyleTextString(const int &pPosition, int pStart,
 
     if (nextStart != -1)
         doStyleText(nextStart, pEnd, pText.right(pEnd-nextStart), pParameterBlock);
-}
-
-//==============================================================================
-
-void CellmlTextViewLexer::doStyleTextSingleLineComment(const int &pPosition,
-                                                       int pStart, int pEnd,
-                                                       QString pText,
-                                                       bool pParameterBlock)
-{
-    // There is a // comment to style, so first style everything that is before
-    // it
-
-    doStyleTextCurrent(pStart, pStart+pPosition, pText.left(pPosition),
-                       pParameterBlock);
-
-    // Style the // comment itself, after having look for the end of the line,
-    // if any
-
-    int eolPosition = pText.indexOf(mEolString, pPosition+SingleLineCommentLength);
-    int start = pStart+pPosition;
-    int end = (eolPosition == -1)?pEnd:pStart+eolPosition+mEolString.length();
-
-    startStyling(start);
-    setStyling(end-start, SingleLineComment);
-
-    // Now, style everything that is after the // comment, if anything
-
-    if (eolPosition != -1)
-        doStyleText(end, pEnd, pText.right(pEnd-end), pParameterBlock);
 }
 
 //==============================================================================

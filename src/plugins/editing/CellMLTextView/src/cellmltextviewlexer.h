@@ -80,6 +80,9 @@ private:
     void doStyleText(int pStart, int pEnd, QString pText, bool pParameterBlock);
     void doStyleTextCurrent(int pStart, int pEnd, QString pText,
                             bool pParameterBlock);
+    void doStyleTextSingleLineComment(const int &pPosition, int pStart,
+                                      int pEnd, QString pText,
+                                      bool pParameterBlock);
     void doStyleTextPreviousMultilineComment(const int &pPosition, int pStart,
                                              int pEnd, QString pText,
                                              bool pParameterBlock);
@@ -88,9 +91,6 @@ private:
                                            bool pParameterBlock);
     void doStyleTextString(const int &pPosition, int pStart, int pEnd,
                            QString pText, bool pParameterBlock);
-    void doStyleTextSingleLineComment(const int &pPosition, int pStart,
-                                      int pEnd, QString pText,
-                                      bool pParameterBlock);
     void doStyleTextRegEx(int pStart, const QString &pText,
                           const QRegularExpression &pRegEx,
                           const int &pRegExStyle);
