@@ -252,7 +252,7 @@ void CellmlTextViewLexer::styleText(int pBytesStart, int pBytesEnd)
 
 #ifdef QT_DEBUG
     // Make sure that the end position of the last bit of text that we styled is
-    // pEnd
+    // pBytesEnd
     // Note: we need to ensure that it is the case, so that validString() can
     //       take advantage of the style of a given character in the editor...
 
@@ -436,8 +436,8 @@ void CellmlTextViewLexer::doStyleTextCurrent(const int &pBytesStart,
         //       the next bit of text that needs to be styled (see
         //       QsciLexerCustom::handleStyleNeeded()). Now, depending on
         //       whether keywords and/or numbers have been styled, the end
-        //       position may or not be pEnd. So, here, we make sure that it is
-        //       pEnd, so that QScintilla can work optimally...
+        //       position may or not be pBytesEnd. So, here, we make sure that
+        //       it is pBytesEnd, so that QScintilla can work optimally...
 
         startStyling(pBytesEnd);
     }
