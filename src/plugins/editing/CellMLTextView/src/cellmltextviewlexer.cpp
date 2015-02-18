@@ -300,8 +300,9 @@ void CellmlTextViewLexer::doStyleText(const int &pBytesStart,
     // Check whether a /* XXX */ comment or a parameter block started before or
     // at the beginning of the given text
 
-    int multilineCommentStartPosition = findString(StartMultilineCommentString, pBytesStart, MultilineComment, false);
-    int parameterBlockStartPosition = findString(StartParameterBlockString, pBytesStart, ParameterBlock, false);
+    int start = fullTextPosition(pBytesStart);
+    int multilineCommentStartPosition = findString(StartMultilineCommentString, start, MultilineComment, false);
+    int parameterBlockStartPosition = findString(StartParameterBlockString, start, ParameterBlock, false);
 
     multilineCommentStartPosition = (multilineCommentStartPosition == -1)?INT_MAX:multilineCommentStartPosition;
     parameterBlockStartPosition = (parameterBlockStartPosition == -1)?INT_MAX:parameterBlockStartPosition;
@@ -373,7 +374,9 @@ void CellmlTextViewLexer::doStyleTextCurrent(const int &pBytesStart,
         // There is a /* XXX */ comment to style, so first style everything that
         // is before it
 
-        doStyleTextCurrent(pBytesStart, pBytesStart+multilineCommentStartPosition,
+        int multilineCommentStartBytesPosition = fullTextBytesPosition(multilineCommentStartPosition);
+
+        doStyleTextCurrent(pBytesStart, pBytesStart+multilineCommentStartBytesPosition,
                            pText.left(multilineCommentStartPosition),
                            pParameterBlock);
 
@@ -382,8 +385,8 @@ void CellmlTextViewLexer::doStyleTextCurrent(const int &pBytesStart,
         //       find that a /* XXX */ comment starts at the beginning of the
         //       'new' given text...
 
-        doStyleText(pBytesStart+multilineCommentStartPosition, pBytesEnd,
-                    pText.right(pBytesEnd-pBytesStart-multilineCommentStartPosition),
+        doStyleText(pBytesStart+multilineCommentStartBytesPosition, pBytesEnd,
+                    pText.right(fullTextLength(pBytesStart, pBytesEnd-pBytesStart)-multilineCommentStartPosition),
                     pParameterBlock);
     } else if (   (parameterBlockStartPosition != INT_MAX)
                && (parameterBlockStartPosition < stringPosition)
@@ -392,7 +395,9 @@ void CellmlTextViewLexer::doStyleTextCurrent(const int &pBytesStart,
         // There is a parameter block, so first style everything that is before
         // it
 
-        doStyleTextCurrent(pBytesStart, pBytesStart+parameterBlockStartPosition,
+        int parameterBlockStartBytesPosition = fullTextBytesPosition(parameterBlockStartPosition);
+
+        doStyleTextCurrent(pBytesStart, pBytesStart+parameterBlockStartBytesPosition,
                            pText.left(parameterBlockStartPosition),
                            pParameterBlock);
 
@@ -401,8 +406,8 @@ void CellmlTextViewLexer::doStyleTextCurrent(const int &pBytesStart,
         //       we will find that a parameter block starts at the beginning of
         //       the 'new' given text...
 
-        doStyleText(pBytesStart+parameterBlockStartPosition, pBytesEnd,
-                    pText.right(pBytesEnd-pBytesStart-parameterBlockStartPosition),
+        doStyleText(pBytesStart+parameterBlockStartBytesPosition, pBytesEnd,
+                    pText.right(fullTextLength(pBytesStart, pBytesEnd-pBytesStart)-parameterBlockStartPosition),
                     pParameterBlock);
     } else {
         // Style the given text as a parameter block, if needed
@@ -749,6 +754,17 @@ int CellmlTextViewLexer::fullTextPosition(const int &pBytesPosition) const
     // byte-based position within mFullTextUtf8
 
     return QString(mFullTextUtf8.left(pBytesPosition)).length();
+}
+
+//==============================================================================
+
+int CellmlTextViewLexer::fullTextLength(const int &pBytesFrom,
+                                        const int &pBytesLength) const
+{
+    // Return the corresponding length within mFullText of the given byte-based
+    // length of a substring within mFullTextUtf8
+
+    return QString(mFullTextUtf8.mid(pBytesFrom, pBytesLength)).length();
 }
 
 //==============================================================================

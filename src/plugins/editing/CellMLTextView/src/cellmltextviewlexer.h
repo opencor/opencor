@@ -112,6 +112,7 @@ private:
                    const bool &pForward = true);
 
     int fullTextPosition(const int &pBytesPosition) const;
+    int fullTextLength(const int &pBytesFrom, const int &pBytesLength) const;
 
     int fullTextBytesPosition(const int &pPosition) const;
     int textBytesPosition(const QString &pText, const int &pPosition) const;
