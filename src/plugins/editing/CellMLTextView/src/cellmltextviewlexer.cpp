@@ -704,7 +704,8 @@ bool CellmlTextViewLexer::validString(const int &pFrom, const int &pTo,
     int style;
 
     for (int i = pFrom; i < pTo; ++i) {
-        style = editor()->SendScintilla(QsciScintilla::SCI_GETSTYLEAT, i);
+        style = editor()->SendScintilla(QsciScintilla::SCI_GETSTYLEAT,
+                                        fullTextBytesPosition(i));
 
         if ((style != Default) && (style != pStyle))
             return false;
@@ -734,7 +735,7 @@ int CellmlTextViewLexer::findString(const QString &pString, int pFrom,
 
 //==============================================================================
 
-int CellmlTextViewLexer::fullTextPosition(const int &pBytesPosition)
+int CellmlTextViewLexer::fullTextPosition(const int &pBytesPosition) const
 {
     // Return the corresponding position within mFullText of the given
     // byte-based position within mFullTextUtf8
@@ -744,8 +745,17 @@ int CellmlTextViewLexer::fullTextPosition(const int &pBytesPosition)
 
 //==============================================================================
 
+int CellmlTextViewLexer::fullTextBytesPosition(const int &pPosition) const
+{
+    // Return the byte-based value of the given position within mFullText
+
+    return mFullText.left(pPosition).toUtf8().length();
+}
+
+//==============================================================================
+
 int CellmlTextViewLexer::textBytesPosition(const QString &pText,
-                                           const int &pPosition)
+                                           const int &pPosition) const
 {
     // Return the byte-based value of the given position within the given text
 
@@ -755,7 +765,7 @@ int CellmlTextViewLexer::textBytesPosition(const QString &pText,
 //==============================================================================
 
 int CellmlTextViewLexer::textBytesLength(const QString &pText, const int &pFrom,
-                                         const int &pLength)
+                                         const int &pLength) const
 {
     // Return the byte-based length of a substring within the given text
 
