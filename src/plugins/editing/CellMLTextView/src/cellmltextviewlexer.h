@@ -64,7 +64,7 @@ public:
     virtual QColor color(int pStyle) const;
     virtual QFont font(int pStyle) const;
 
-    virtual void styleText(int pStart, int pEnd);
+    virtual void styleText(int pBytesStart, int pBytesEnd);
 
 private:
     QString mFullText;
@@ -79,24 +79,32 @@ private:
     QRegularExpression mParameterValueKeywordsRegEx;
     QRegularExpression mNumberRegEx;
 
-    void doStyleText(int pStart, int pEnd, QString pText, bool pParameterBlock);
-    void doStyleTextCurrent(int pStart, int pEnd, QString pText,
-                            bool pParameterBlock);
-    void doStyleTextSingleLineComment(const int &pPosition, int pStart,
-                                      int pEnd, QString pText,
-                                      bool pParameterBlock);
-    void doStyleTextPreviousMultilineComment(const int &pPosition, int pStart,
-                                             int pEnd, QString pText,
-                                             bool pParameterBlock);
-    void doStyleTextPreviousParameterBlock(const int &pPosition, int pStart,
-                                           int pEnd, QString pText,
-                                           bool pParameterBlock);
-    void doStyleTextString(const int &pPosition, int pStart, int pEnd,
-                           QString pText, bool pParameterBlock);
-    void doStyleTextRegEx(int pStart, const QString &pText,
+    void doStyleText(const int &pBytesStart, const int &pBytesEnd,
+                     const QString &pText, const bool &pParameterBlock);
+    void doStyleTextCurrent(const int &pBytesStart, const int &pBytesEnd,
+                            const QString &pText, const bool &pParameterBlock);
+    void doStyleTextSingleLineComment(const int &pPosition,
+                                      const int &pBytesStart,
+                                      const int &pBytesEnd,
+                                      const QString &pText,
+                                      const bool &pParameterBlock);
+    void doStyleTextPreviousMultilineComment(const int &pPosition,
+                                             const int &pBytesStart,
+                                             const int &pBytesEnd,
+                                             const QString &pText,
+                                             const bool &pParameterBlock);
+    void doStyleTextPreviousParameterBlock(const int &pPosition,
+                                           const int &pBytesStart,
+                                           const int &pBytesEnd,
+                                           const QString &pText,
+                                           const bool &pParameterBlock);
+    void doStyleTextString(const int &pPosition, const int &pBytesStart,
+                           const int &pBytesEnd, const QString &pText,
+                           const bool &pParameterBlock);
+    void doStyleTextRegEx(const int &pBytesStart, const QString &pText,
                           const QRegularExpression &pRegEx,
                           const int &pRegExStyle);
-    void doStyleTextNumberRegEx(int pStart, const QString &pText,
+    void doStyleTextNumberRegEx(const int &pBytesStart, const QString &pText,
                                 const int &pRegExStyle);
 
     bool validString(const int &pFrom, const int &pTo, const int &pStyle) const;
