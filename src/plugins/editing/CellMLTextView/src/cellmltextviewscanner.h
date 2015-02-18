@@ -43,8 +43,7 @@ class CellmlTextViewScanner
 public:
     enum TokenType {
         UnknownToken, SingleLineCommentToken, MultilineCommentToken,
-        IncompleteMultilineCommentToken, StringToken, IncompleteStringToken,
-        IdentifierToken, NumberToken, BigNumberToken,
+        StringToken, IdentifierToken, NumberToken, BigNumberToken, InvalidToken,
 
         // CellML text keywords
 
@@ -113,6 +112,8 @@ public:
     QString tokenString() const;
     double tokenNumber() const;
 
+    QString tokenComment() const;
+
     void getNextToken();
 
     static QString tokenTypeAsString(const TokenType &pTokenType);
@@ -143,6 +144,7 @@ private:
     int mTokenColumn;
     QString mTokenString;
     double mTokenNumber;
+    QString mTokenComment;
 
     QMap<QString, TokenType> mKeywords;
     QMap<QString, TokenType> mSiUnitKeywords;

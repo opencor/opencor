@@ -194,8 +194,9 @@ void ScanningTests::scanningCommentTests()
 
     scanner.setText("/*A multi/*line*");
 
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::IncompleteMultilineCommentToken);
+    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::InvalidToken);
     QCOMPARE(scanner.tokenString(), QString("A multi/*line*"));
+    QCOMPARE(scanner.tokenComment(), QString("the comment is incomplete"));
     scanner.getNextToken();
     QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::EofToken);
 
@@ -224,8 +225,9 @@ void ScanningTests::scanningCommentTests()
 
     scanner.setText("/*An incomplete multiline comment...");
 
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::IncompleteMultilineCommentToken);
+    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::InvalidToken);
     QCOMPARE(scanner.tokenString(), QString("An incomplete multiline comment..."));
+    QCOMPARE(scanner.tokenComment(), QString("the comment is incomplete"));
     scanner.getNextToken();
     QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::EofToken);
 }
@@ -692,8 +694,9 @@ void ScanningTests::scanningStringTests()
 
     scanner.setText("\"This is an incomplete string...");
 
-    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::IncompleteStringToken);
+    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::InvalidToken);
     QCOMPARE(scanner.tokenString(), QString("This is an incomplete string..."));
+    QCOMPARE(scanner.tokenComment(), QString("the string is incomplete"));
     scanner.getNextToken();
     QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::EofToken);
 }
@@ -744,8 +747,30 @@ void ScanningTests::scanningNumberTests()
     scanner.getNextToken();
     QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::EofToken);
 
-//---GRY--- THE TEST BELOW IS TO BE ENABLED ONCE WE SUPPORT EXPONENTS...
+//---GRY--- THE TESTS BELOW ARE TO BE ENABLED ONCE WE FULLY SUPPORT NUMBERS...
+//    scanner.setText("123e");
+
+//    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::InvalidToken);
+//    QCOMPARE(scanner.tokenString(), QString("123e"));
+//    QCOMPARE(scanner.tokenComment(), QString("the exponent has no digits"));
+//    scanner.getNextToken();
+//    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::EofToken);
+
 //    scanner.setText("123e456789");
+
+//    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::BigNumberToken);
+//    QCOMPARE(scanner.tokenNumber(), 0.0);
+//    scanner.getNextToken();
+//    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::EofToken);
+
+//    scanner.setText("123e+456789");
+
+//    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::BigNumberToken);
+//    QCOMPARE(scanner.tokenNumber(), 0.0);
+//    scanner.getNextToken();
+//    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::EofToken);
+
+//    scanner.setText("123e-456789");
 
 //    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::BigNumberToken);
 //    QCOMPARE(scanner.tokenNumber(), 0.0);

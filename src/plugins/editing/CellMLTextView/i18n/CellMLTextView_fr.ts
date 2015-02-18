@@ -221,5 +221,13 @@
         <source>&apos;%1&apos; is expected, but &apos;%2&apos; was found instead.</source>
         <translation>&apos;%1&apos; est espéré, mais &apos;%2&apos; a été trouvé à la place.</translation>
     </message>
+    <message>
+        <source>the comment is incomplete</source>
+        <translation>le commentaire est incomplet</translation>
+    </message>
+    <message>
+        <source>the string is incomplete</source>
+        <translation>la chaîne est incomplète</translation>
+    </message>
 </context>
 </TS>

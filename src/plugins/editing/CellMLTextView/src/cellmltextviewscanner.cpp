@@ -23,6 +23,10 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#include <QObject>
+
+//==============================================================================
+
 namespace OpenCOR {
 namespace CellMLTextView {
 
@@ -39,6 +43,7 @@ CellmlTextViewScanner::CellmlTextViewScanner() :
     mTokenColumn(0),
     mTokenString(QString()),
     mTokenNumber(0.0),
+    mTokenComment(QString()),
     mWithinParameterBlock(false)
 {
     // Our various CellML text keywords
@@ -267,6 +272,15 @@ double CellmlTextViewScanner::tokenNumber() const
 
 //==============================================================================
 
+QString CellmlTextViewScanner::tokenComment() const
+{
+    // Return our token comment
+
+    return mTokenComment;
+}
+
+//==============================================================================
+
 QString CellmlTextViewScanner::tokenTypeAsString(const TokenType &pTokenType)
 {
     // Return the given token type as a string
@@ -477,7 +491,8 @@ void CellmlTextViewScanner::getMultilineComment()
         }
     }
 
-    mTokenType = IncompleteMultilineCommentToken;
+    mTokenType = InvalidToken;
+    mTokenComment = QObject::tr("the comment is incomplete");
 }
 
 //==============================================================================
@@ -562,10 +577,13 @@ void CellmlTextViewScanner::getNumber()
             }
 
 //---GRY--- TO BE FINISHED...
+//mTokenType = InvalidToken;
+//mTokenComment = QObject::tr("the exponent has no digits");
         }
     }
 
     // At this stage, we have got a number, but it may be too big
+//---GRY--- OR MAYBE TOO SMALL?...
 
     bool validNumber;
 
@@ -599,7 +617,8 @@ void CellmlTextViewScanner::getString()
 
         getNextChar();
     } else {
-        mTokenType = IncompleteStringToken;
+        mTokenType = InvalidToken;
+        mTokenComment = QObject::tr("the string is incomplete");
     }
 }
 
@@ -621,6 +640,9 @@ void CellmlTextViewScanner::getNextToken()
     mTokenColumn = mCharColumn;
 
     mTokenString = *mChar;
+    mTokenNumber = 0.0;
+
+    mTokenComment = QString();
 
     switch (mCharType) {
     case LetterChar: case UnderscoreChar:
