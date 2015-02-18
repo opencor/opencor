@@ -107,7 +107,7 @@ void TextEditorWidget::keyPressEvent(QKeyEvent *pEvent)
 IntegerEditorWidget::IntegerEditorWidget(QWidget *pParent) :
     TextEditorWidget(pParent)
 {
-    // Set a validator which accepts any integer
+    // Set a validator that accepts any integer
 
     setValidator(new QRegularExpressionValidator(QRegularExpression("^[+-]?\\d*$"), this));
 }
@@ -117,9 +117,9 @@ IntegerEditorWidget::IntegerEditorWidget(QWidget *pParent) :
 DoubleEditorWidget::DoubleEditorWidget(QWidget *pParent) :
     TextEditorWidget(pParent)
 {
-    // Set a validator which accepts any double
+    // Set a validator that accepts any double
 
-    setValidator(new QRegularExpressionValidator(QRegularExpression("^[+-]?\\d*\\.?\\d+([eE][+-]?\\d+)?$"), this));
+    setValidator(new QRegularExpressionValidator(QRegularExpression("^[+-]?(\\d+(\\.\\d*)?|\\.\\d+)([eE][+-]?\\d+)?$"), this));
 }
 
 //==============================================================================
