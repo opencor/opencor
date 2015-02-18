@@ -686,11 +686,6 @@ void CellmlTextViewLexer::doStyleTextNumberRegEx(int pStart,
                 ||  (nextChar ==  96) || ((nextChar  > 122) && (nextChar < 128)))) {
             startStyling(pStart+regExMatch.capturedStart());
             setStyling(regExMatch.capturedLength(), pRegExStyle);
-
-            if ((nextChar == 69) || (nextChar == 101)) {
-                startStyling(pStart+regExMatch.capturedStart()+regExMatch.capturedLength());
-                setStyling(1, pRegExStyle);
-            }
         }
     }
 }
