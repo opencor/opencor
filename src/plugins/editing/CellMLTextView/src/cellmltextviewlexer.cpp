@@ -374,7 +374,7 @@ void CellmlTextViewLexer::doStyleTextCurrent(const int &pBytesStart,
         // There is a /* XXX */ comment to style, so first style everything that
         // is before it
 
-        int multilineCommentStartBytesPosition = fullTextBytesPosition(multilineCommentStartPosition);
+        int multilineCommentStartBytesPosition = textBytesPosition(pText, multilineCommentStartPosition);
 
         doStyleTextCurrent(pBytesStart, pBytesStart+multilineCommentStartBytesPosition,
                            pText.left(multilineCommentStartPosition),
@@ -395,7 +395,7 @@ void CellmlTextViewLexer::doStyleTextCurrent(const int &pBytesStart,
         // There is a parameter block, so first style everything that is before
         // it
 
-        int parameterBlockStartBytesPosition = fullTextBytesPosition(parameterBlockStartPosition);
+        int parameterBlockStartBytesPosition = textBytesPosition(pText, parameterBlockStartPosition);
 
         doStyleTextCurrent(pBytesStart, pBytesStart+parameterBlockStartBytesPosition,
                            pText.left(parameterBlockStartPosition),
