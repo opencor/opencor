@@ -667,8 +667,10 @@ void CellmlTextViewLexer::doStyleTextNumberRegEx(int pStart,
         regExMatch = regExMatchIter.next();
 
         // We have a match, so style it, but only if:
-        //  - The character in front of the match is not in [0-9a-zA-Z_]
-        //  - The character following the match is not in [a-zA-Z_.]
+        //  - The character in front of the match is not in [0-9a-zA-Z_] and is
+        //    part of the ASCII table
+        //  - The character following the match is not in [a-zA-Z_.] and is part
+        //    of the ASCII table
 
         int prevCharPos = pStart+regExMatch.capturedStart()-1;
         int nextCharPos = prevCharPos+regExMatch.capturedLength()+1;
@@ -676,12 +678,12 @@ void CellmlTextViewLexer::doStyleTextNumberRegEx(int pStart,
         ushort prevChar = ((prevCharPos >= 0)?mFullText[prevCharPos]:QChar()).unicode();
         ushort nextChar = ((nextCharPos < mFullText.length())?mFullText[nextCharPos]:QChar()).unicode();
 
-        if ((       (prevChar  <  48) || ((prevChar  >  57) && (prevChar < 65))
+        if ((       (prevChar  <  48) || ((prevChar  >  57) && (prevChar <  65))
                 || ((prevChar  >  90) &&  (prevChar  <  95))
-                ||  (prevChar ==  96) ||  (prevChar  > 122))
-            && (    (nextChar  <  46) || ((nextChar  >  46) && (nextChar < 65))
+                ||  (prevChar ==  96) || ((prevChar  > 122) && (prevChar < 128)))
+            && (    (nextChar  <  46) || ((nextChar  >  46) && (nextChar <  65))
                 || ((nextChar  >  90) &&  (nextChar  <  95))
-                ||  (nextChar ==  96) ||  (nextChar  > 122))) {
+                ||  (nextChar ==  96) || ((nextChar  > 122) && (nextChar < 128)))) {
             startStyling(pStart+regExMatch.capturedStart());
             setStyling(regExMatch.capturedLength(), pRegExStyle);
 
