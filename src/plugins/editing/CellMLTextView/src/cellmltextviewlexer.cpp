@@ -459,23 +459,29 @@ void CellmlTextViewLexer::doStyleTextSingleLineComment(const int &pPosition,
     // There is a // comment to style, so first style everything that is before
     // it
 
-    doStyleTextCurrent(pBytesStart, pBytesStart+pPosition, pText.left(pPosition),
-                       pParameterBlock);
+    int bytesPosition = fullTextBytesPosition(pPosition);
+
+    doStyleTextCurrent(pBytesStart, pBytesStart+bytesPosition,
+                       pText.left(pPosition), pParameterBlock);
 
     // Style the // comment itself, after having looked for the end of the line,
     // if any
 
     int eolPosition = pText.indexOf(mEolString, pPosition+SingleLineCommentLength);
-    int start = pBytesStart+pPosition;
-    int end = (eolPosition == -1)?pBytesEnd:pBytesStart+eolPosition+mEolString.length();
+    int eolBytesPosition = (eolPosition == -1)?-1:fullTextBytesPosition(eolPosition);
+    int start = pBytesStart+bytesPosition;
+    int end = (eolBytesPosition == -1)?pBytesEnd:pBytesStart+eolBytesPosition+mEolString.length();
 
     startStyling(start);
     setStyling(end-start, SingleLineComment);
 
     // Now, style everything that is after the // comment, if anything
 
-    if (eolPosition != -1)
-        doStyleText(end, pBytesEnd, pText.right(pBytesEnd-end), pParameterBlock);
+    if (eolBytesPosition != -1) {
+        doStyleText(end, pBytesEnd,
+                    pText.right(fullTextLength(end, pBytesEnd-end)),
+                    pParameterBlock);
+    }
 }
 
 //==============================================================================
@@ -497,11 +503,13 @@ void CellmlTextViewLexer::doStyleTextPreviousMultilineComment(const int &pPositi
     // Check whether the beginning of the given text is within the /* XXX */
     // comment
 
-    if ((pPosition <= pBytesStart) && (pBytesStart <= multilineCommentEndPosition)) {
+    int start = fullTextPosition(pBytesStart);
+
+    if ((pPosition <= start) && (start <= multilineCommentEndPosition)) {
         // The beginning of the given text is within a /* XXX */ comment, so
         // style it
 
-        int realEnd = multilineCommentEndPosition+EndMultilineCommentLength;
+        int realEnd = fullTextBytesPosition(multilineCommentEndPosition+EndMultilineCommentLength);
         int end = qMin(pBytesEnd, realEnd);
 
         startStyling(pBytesStart);
@@ -510,8 +518,11 @@ void CellmlTextViewLexer::doStyleTextPreviousMultilineComment(const int &pPositi
         // Now, style everything that is behind the /* XXX */ comment, if
         // anything
 
-        if (end != pBytesEnd)
-            doStyleText(end, pBytesEnd, pText.right(pBytesEnd-end), pParameterBlock);
+        if (end != pBytesEnd) {
+            doStyleText(end, pBytesEnd,
+                        pText.right(fullTextLength(end, pBytesEnd-end)),
+                        pParameterBlock);
+        }
     } else {
         // The beginning of the given text is not within a /* XXX */ comment, so
         // style it
