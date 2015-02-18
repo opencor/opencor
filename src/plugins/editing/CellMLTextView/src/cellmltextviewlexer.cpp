@@ -468,7 +468,7 @@ void CellmlTextViewLexer::doStyleTextSingleLineComment(const int &pPosition,
     // if any
 
     int eolPosition = pText.indexOf(mEolString, pPosition+SingleLineCommentLength);
-    int eolBytesPosition = (eolPosition == -1)?-1:fullTextBytesPosition(eolPosition);
+    int eolBytesPosition = (eolPosition == -1)?-1:textBytesPosition(pText, eolPosition);
     int start = pBytesStart+bytesPosition;
     int end = (eolBytesPosition == -1)?pBytesEnd:pBytesStart+eolBytesPosition+mEolString.length();
 
@@ -606,12 +606,14 @@ void CellmlTextViewLexer::doStyleTextString(const int &pPosition,
 {
     // There is a string to style, so first style everything that is before it
 
-    doStyleTextCurrent(pBytesStart, pBytesStart+pPosition, pText.left(pPosition),
-                       pParameterBlock);
+    int bytesPosition = fullTextBytesPosition(pPosition);
+
+    doStyleTextCurrent(pBytesStart, pBytesStart+bytesPosition,
+                       pText.left(pPosition), pParameterBlock);
 
     // Now, check where the string ends, if anywhere
 
-    int nextStart = -1;
+    int nextBytesStart = -1;
     int stringEndPosition = pText.indexOf(StringString, pPosition+StringLength);
 
     if (stringEndPosition != -1) {
@@ -620,17 +622,18 @@ void CellmlTextViewLexer::doStyleTextString(const int &pPosition,
 
         int stringStartLineNumber, stringStartColumnNumber;
         int stringEndLineNumber, stringEndColumnNumber;
+        int stringEndBytesPosition = textBytesPosition(pText, stringEndPosition);
 
-        editor()->lineIndexFromPosition(pBytesStart+pPosition,
+        editor()->lineIndexFromPosition(pBytesStart+bytesPosition,
                                         &stringStartLineNumber, &stringStartColumnNumber);
-        editor()->lineIndexFromPosition(pBytesStart+stringEndPosition,
+        editor()->lineIndexFromPosition(pBytesStart+stringEndBytesPosition,
                                         &stringEndLineNumber, &stringEndColumnNumber);
 
         if (stringStartLineNumber == stringEndLineNumber) {
             // The string starts and ends on the same line, so get ready to
             // style everything that is after the string
 
-            nextStart = pBytesStart+stringEndPosition+StringLength;
+            nextBytesStart = pBytesStart+stringEndBytesPosition+StringLength;
         } else {
             // The string starts and ends on a different line, so consider that
             // we couldn't find the end of the string
@@ -645,22 +648,27 @@ void CellmlTextViewLexer::doStyleTextString(const int &pPosition,
         // end of the line, if anything, on which the string started
 
         int eolPosition = pText.indexOf(mEolString, pPosition+StringLength);
+        int eolBytesPosition = (eolPosition == -1)?-1:textBytesPosition(pText, eolPosition);
 
-        if (eolPosition != -1)
-            nextStart = pBytesStart+eolPosition+mEolString.length();
+        if (eolBytesPosition != -1)
+            nextBytesStart = pBytesStart+eolBytesPosition+mEolString.length();
     }
 
     // Style the string itself
 
-    int start = pBytesStart+pPosition;
+    int bytesStart = pBytesStart+bytesPosition;
 
-    startStyling(start);
-    setStyling(((nextStart == -1)?pBytesEnd:nextStart)-start, pParameterBlock?ParameterString:String);
+    startStyling(bytesStart);
+    setStyling(((nextBytesStart == -1)?pBytesEnd:nextBytesStart)-bytesStart,
+               pParameterBlock?ParameterString:String);
 
     // Style whatever is after the string
 
-    if (nextStart != -1)
-        doStyleText(nextStart, pBytesEnd, pText.right(pBytesEnd-nextStart), pParameterBlock);
+    if (nextBytesStart != -1) {
+        doStyleText(nextBytesStart, pBytesEnd,
+                    pText.right(fullTextLength(nextBytesStart, pBytesEnd-nextBytesStart)),
+                    pParameterBlock);
+    }
 }
 
 //==============================================================================
