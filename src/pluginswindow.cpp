@@ -354,7 +354,7 @@ QString PluginsWindow::statusDescription(Plugin *pPlugin) const
     case Plugin::NotNeeded:
         return tr("the plugin is not needed.");
     case Plugin::NotLoaded:
-        return tr("the plugin could not be loaded due to the following problem: %1.").arg(formatErrorMessage(pPlugin->statusErrors()));
+        return tr("the plugin could not be loaded due to the following problem: %1.").arg(formatMessage(pPlugin->statusErrors()));
     case Plugin::NotPlugin:
         return tr("this is not a plugin.");
     case Plugin::NotCorePlugin:
