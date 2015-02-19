@@ -855,7 +855,7 @@ void CentralWidget::openRemoteFile(const QString &pUrl,
 
             if (pShowWarning)
                 QMessageBox::warning(this, tr("Open Remote File"),
-                                     tr("<strong>%1</strong> could not be opened (%2).").arg(fileNameOrUrl, Core::formatErrorMessage(errorMessage)));
+                                     tr("<strong>%1</strong> could not be opened (%2).").arg(fileNameOrUrl, Core::formatMessage(errorMessage)));
         }
     } else {
         openFile(fileName);
@@ -938,7 +938,7 @@ void CentralWidget::reloadFile(const int &pIndex, const bool &pForce)
                         fileManagerInstance->reload(fileName);
                     } else {
                         QMessageBox::warning(this, tr("Reload Remote File"),
-                                             tr("<strong>%1</strong> could not be reloaded (%2).").arg(url, Core::formatErrorMessage(errorMessage)));
+                                             tr("<strong>%1</strong> could not be reloaded (%2).").arg(url, Core::formatMessage(errorMessage)));
                     }
                 } else {
                     fileManagerInstance->reload(fileName);

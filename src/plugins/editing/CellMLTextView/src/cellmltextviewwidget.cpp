@@ -224,7 +224,7 @@ void CellmlTextViewWidget::initialize(const QString &pFileName,
             newEditingWidget->editorList()->addItem(EditorList::EditorListItem::Error,
                                                     converter.errorLine(),
                                                     converter.errorColumn(),
-                                                    Core::formatErrorMessage(converter.errorMessage(), false)+".");
+                                                    Core::formatMessage(converter.errorMessage(), false)+".");
 
             newEditingWidget->editorList()->addItem(EditorList::EditorListItem::Hint,
                                                     tr("You might want to use the Raw (CellML) view to edit the file."));

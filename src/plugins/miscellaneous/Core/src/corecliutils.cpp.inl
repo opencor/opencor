@@ -169,38 +169,38 @@ QString copyright()
 
 //==============================================================================
 
-QString formatErrorMessage(const QString &pErrorMessage, const bool &pLowerCase,
-                           const bool &pDotDotDot)
+QString formatMessage(const QString &pMessage, const bool &pLowerCase,
+                      const bool &pDotDotDot)
 {
     static const QString DotDotDot = "...";
 
-    if (pErrorMessage.isEmpty())
+    if (pMessage.isEmpty())
         return pDotDotDot?DotDotDot:QString();
 
-    // Format and return the error message
+    // Format and return the message
 
-    QString errorMessage = pErrorMessage;
+    QString message = pMessage;
 
     // Upper/lower the case of the first character, unless the message is one
     // character long (!!) or unless its second character is in lower case
 
-    if (    (errorMessage.size() <= 1)
-        || ((errorMessage.size() > 1) && errorMessage[1].isLower())) {
+    if (    (message.size() <= 1)
+        || ((message.size() > 1) && message[1].isLower())) {
         if (pLowerCase)
-            errorMessage[0] = errorMessage[0].toLower();
+            message[0] = message[0].toLower();
         else
-            errorMessage[0] = errorMessage[0].toUpper();
+            message[0] = message[0].toUpper();
     }
 
-    // Return the error message after making sure that it ends with "...", if
+    // Return the message after making sure that it ends with "...", if
     // requested
 
-    int subsize = errorMessage.size();
+    int subsize = message.size();
 
-    while (subsize && (errorMessage[subsize-1] == '.'))
+    while (subsize && (message[subsize-1] == '.'))
         --subsize;
 
-    return errorMessage.left(subsize)+(pDotDotDot?DotDotDot:QString());
+    return message.left(subsize)+(pDotDotDot?DotDotDot:QString());
 }
 
 //==============================================================================

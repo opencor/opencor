@@ -108,7 +108,7 @@ void CheckForUpdatesEngine::check()
                 mNewerVersions << versionVersion;
         }
     } else {
-        mStatus = formatErrorMessage(errorMessage, false, true);
+        mStatus = formatMessage(errorMessage, false, true);
     }
 }
 

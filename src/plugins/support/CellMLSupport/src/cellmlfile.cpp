@@ -306,10 +306,10 @@ bool CellmlFile::doLoad(const QString &pFileName, const QString &pFileContents,
 
         if (pFileContents.isEmpty())
             pIssues << CellmlFileIssue(CellmlFileIssue::Error,
-                                       QObject::tr("the model could not be loaded (%1)").arg(Core::formatErrorMessage(QString::fromStdWString(exception.explanation))));
+                                       QObject::tr("the model could not be loaded (%1)").arg(Core::formatMessage(QString::fromStdWString(exception.explanation))));
         else
             pIssues << CellmlFileIssue(CellmlFileIssue::Error,
-                                       QObject::tr("the model could not be created (%1)").arg(Core::formatErrorMessage(QString::fromStdWString(exception.explanation))));
+                                       QObject::tr("the model could not be created (%1)").arg(Core::formatMessage(QString::fromStdWString(exception.explanation))));
 
         return false;
     }

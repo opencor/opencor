@@ -534,7 +534,7 @@ void CellmlFileRuntime::retrieveOdeCodeInformation(iface::cellml_api::Model *pMo
 
         checkCodeInformation(mOdeCodeInformation);
     } catch (iface::cellml_api::CellMLException &exception) {
-        couldNotGenerateModelCodeIssue(Core::formatErrorMessage(QString::fromStdWString(exception.explanation)));
+        couldNotGenerateModelCodeIssue(Core::formatMessage(QString::fromStdWString(exception.explanation)));
     } catch (...) {
         unknownProblemDuringModelCodeGenerationIssue();
     }
@@ -563,7 +563,7 @@ void CellmlFileRuntime::retrieveDaeCodeInformation(iface::cellml_api::Model *pMo
 
         checkCodeInformation(mDaeCodeInformation);
     } catch (iface::cellml_api::CellMLException &exception) {
-        couldNotGenerateModelCodeIssue(Core::formatErrorMessage(QString::fromStdWString(exception.explanation)));
+        couldNotGenerateModelCodeIssue(Core::formatMessage(QString::fromStdWString(exception.explanation)));
     } catch (...) {
         unknownProblemDuringModelCodeGenerationIssue();
     }

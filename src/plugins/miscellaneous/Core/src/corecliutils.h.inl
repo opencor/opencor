@@ -23,9 +23,9 @@ QString CORE_EXPORT osName();
 
 QString CORE_EXPORT copyright();
 
-QString CORE_EXPORT formatErrorMessage(const QString &pErrorMessage,
-                                       const bool &pLowerCase = true,
-                                       const bool &pDotDotDot = false);
+QString CORE_EXPORT formatMessage(const QString &pMessage,
+                                  const bool &pLowerCase = true,
+                                  const bool &pDotDotDot = false);
 
 QByteArray CORE_EXPORT resourceAsByteArray(const QString &pResource);
 
