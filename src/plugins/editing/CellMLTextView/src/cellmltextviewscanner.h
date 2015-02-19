@@ -116,8 +116,6 @@ public:
 
     void getNextToken();
 
-    static QString tokenTypeAsString(const TokenType &pTokenType);
-
 private:
     enum CharType {
         OtherChar,

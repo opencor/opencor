@@ -281,26 +281,6 @@ QString CellmlTextViewScanner::tokenComment() const
 
 //==============================================================================
 
-QString CellmlTextViewScanner::tokenTypeAsString(const TokenType &pTokenType)
-{
-    // Return the given token type as a string
-
-    switch (pTokenType) {
-    case DefToken:
-        return "def";
-    default:
-        // Unknown
-
-#ifdef QT_DEBUG
-        qFatal("FATAL ERROR | %s:%d: a token type should never be unknown.", __FILE__, __LINE__);
-#endif
-
-        return "???";
-    }
-}
-
-//==============================================================================
-
 void CellmlTextViewScanner::getNextChar()
 {
     // Determine the type of our next character
@@ -492,7 +472,7 @@ void CellmlTextViewScanner::getMultilineComment()
     }
 
     mTokenType = InvalidToken;
-    mTokenComment = QObject::tr("the comment is incomplete");
+    mTokenComment = QObject::tr("The comment is incomplete.");
 }
 
 //==============================================================================
@@ -619,7 +599,7 @@ void CellmlTextViewScanner::getNumber()
             // We started an exponent part, but it isn't followed by digits
 
             mTokenType = InvalidToken;
-            mTokenComment = QObject::tr("the exponent has no digits");
+            mTokenComment = QObject::tr("The exponent has no digits.");
 
             return;
         }
@@ -634,7 +614,7 @@ void CellmlTextViewScanner::getNumber()
     mTokenType = NumberToken;
 
     if (!validNumber)
-        mTokenComment = QObject::tr("the number is invalid");
+        mTokenComment = QObject::tr("The number is not valid (e.g. too big, too small).");
 }
 
 //==============================================================================
@@ -663,7 +643,7 @@ void CellmlTextViewScanner::getString()
         getNextChar();
     } else {
         mTokenType = InvalidToken;
-        mTokenComment = QObject::tr("the string is incomplete");
+        mTokenComment = QObject::tr("The string is incomplete.");
     }
 }
 
@@ -774,6 +754,7 @@ void CellmlTextViewScanner::getNextToken()
         break;
     case EofChar:
         mTokenType = EofToken;
+        mTokenString = QObject::tr("the end of the file");
 
         break;
     default:

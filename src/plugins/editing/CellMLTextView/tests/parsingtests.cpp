@@ -19,6 +19,7 @@ specific language governing permissions and limitations under the License.
 // CellML Text view parsing tests
 //==============================================================================
 
+#include "cellmltextviewparser.h"
 #include "parsingtests.h"
 
 //==============================================================================
@@ -29,7 +30,15 @@ specific language governing permissions and limitations under the License.
 
 void ParsingTests::parsingTests()
 {
-//---GRY--- TO BE DONE...
+    OpenCOR::CellMLTextView::CellmlTextViewParser parser;
+
+    QVERIFY(!parser.execute(QString()));
+    QVERIFY(parser.hasError());
+    QCOMPARE(parser.messages().first().message(), QString("'def' is expected, but the end of the file was found instead."));
+
+    QVERIFY(!parser.execute(QString("def")));
+    QVERIFY(parser.hasError());
+    QCOMPARE(parser.messages().first().message(), QString("'model' is expected, but the end of the file was found instead."));
 }
 
 //==============================================================================

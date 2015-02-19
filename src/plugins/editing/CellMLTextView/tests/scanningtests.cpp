@@ -196,7 +196,7 @@ void ScanningTests::scanningCommentTests()
 
     QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::InvalidToken);
     QCOMPARE(scanner.tokenString(), QString("A multi/*line*"));
-    QCOMPARE(scanner.tokenComment(), QString("the comment is incomplete"));
+    QCOMPARE(scanner.tokenComment(), QString("The comment is incomplete."));
     scanner.getNextToken();
     QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::EofToken);
 
@@ -227,7 +227,7 @@ void ScanningTests::scanningCommentTests()
 
     QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::InvalidToken);
     QCOMPARE(scanner.tokenString(), QString("An incomplete multiline comment..."));
-    QCOMPARE(scanner.tokenComment(), QString("the comment is incomplete"));
+    QCOMPARE(scanner.tokenComment(), QString("The comment is incomplete."));
     scanner.getNextToken();
     QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::EofToken);
 }
@@ -696,7 +696,7 @@ void ScanningTests::scanningStringTests()
 
     QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::InvalidToken);
     QCOMPARE(scanner.tokenString(), QString("This is an incomplete string..."));
-    QCOMPARE(scanner.tokenComment(), QString("the string is incomplete"));
+    QCOMPARE(scanner.tokenComment(), QString("The string is incomplete."));
     scanner.getNextToken();
     QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::EofToken);
 }
@@ -773,7 +773,7 @@ void ScanningTests::scanningNumberTests()
 
     QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::InvalidToken);
     QCOMPARE(scanner.tokenString(), QString("123e"));
-    QCOMPARE(scanner.tokenComment(), QString("the exponent has no digits"));
+    QCOMPARE(scanner.tokenComment(), QString("The exponent has no digits."));
     scanner.getNextToken();
     QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::EofToken);
 
@@ -802,7 +802,7 @@ void ScanningTests::scanningNumberTests()
 
     QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::NumberToken);
     QCOMPARE(scanner.tokenNumber(), 0.0);
-    QCOMPARE(scanner.tokenComment(), QString("the number is invalid"));
+    QCOMPARE(scanner.tokenComment(), QString("The number is not valid (e.g. too big, too small)."));
     scanner.getNextToken();
     QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::EofToken);
 }

@@ -43,11 +43,14 @@ class CellmlTextViewScanner;
 
 //==============================================================================
 
-class CellmlTextViewParserError
+class CellmlTextViewParserMessage
 {
 public:
-    explicit CellmlTextViewParserError(const int &pLine, const int &pColumn,
-                                       const QString &pMessage);
+    explicit CellmlTextViewParserMessage(const bool &pError,
+                                         const int &pLine, const int &pColumn,
+                                         const QString &pMessage);
+
+    bool isError() const;
 
     int line() const;
     int column() const;
@@ -55,6 +58,8 @@ public:
     QString message() const;
 
 private:
+    bool mError;
+
     int mLine;
     int mColumn;
 
@@ -63,7 +68,7 @@ private:
 
 //==============================================================================
 
-typedef QList<CellmlTextViewParserError> CellmlTextViewParserErrors;
+typedef QList<CellmlTextViewParserMessage> CellmlTextViewParserMessages;
 
 //==============================================================================
 
@@ -77,7 +82,9 @@ public:
 
     QDomDocument domDocument() const;
 
-    CellmlTextViewParserErrors errors() const;
+    CellmlTextViewParserMessages messages() const;
+
+    bool hasError() const;
 
 private:
     CellmlTextViewScanner *mScanner;
@@ -85,9 +92,10 @@ private:
     QDomDocument mDomDocument;
     QDomNode mDomNode;
 
-    CellmlTextViewParserErrors mErrors;
+    CellmlTextViewParserMessages mMessages;
 
-    bool tokenType(const CellmlTextViewScanner::TokenType &pTokenType);
+    bool tokenType(const QString &pExpectedString,
+                   const CellmlTextViewScanner::TokenType &pTokenType);
 };
 
 //==============================================================================

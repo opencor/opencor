@@ -20,6 +20,7 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include "cellmltextviewparser.h"
+#include "corecliutils.h"
 
 //==============================================================================
 
@@ -32,9 +33,11 @@ namespace CellMLTextView {
 
 //==============================================================================
 
-CellmlTextViewParserError::CellmlTextViewParserError(const int &pLine,
-                                                     const int &pColumn,
-                                                     const QString &pMessage) :
+CellmlTextViewParserMessage::CellmlTextViewParserMessage(const bool &pError,
+                                                         const int &pLine,
+                                                         const int &pColumn,
+                                                         const QString &pMessage) :
+    mError(pError),
     mLine(pLine),
     mColumn(pColumn),
     mMessage(pMessage)
@@ -43,7 +46,16 @@ CellmlTextViewParserError::CellmlTextViewParserError(const int &pLine,
 
 //==============================================================================
 
-int CellmlTextViewParserError::line() const
+bool CellmlTextViewParserMessage::isError() const
+{
+    // Return whether we are an error
+
+    return mError;
+}
+
+//==============================================================================
+
+int CellmlTextViewParserMessage::line() const
 {
     // Return our line number
 
@@ -52,7 +64,7 @@ int CellmlTextViewParserError::line() const
 
 //==============================================================================
 
-int CellmlTextViewParserError::column() const
+int CellmlTextViewParserMessage::column() const
 {
     // Return our column number
 
@@ -61,7 +73,7 @@ int CellmlTextViewParserError::column() const
 
 //==============================================================================
 
-QString CellmlTextViewParserError::message() const
+QString CellmlTextViewParserMessage::message() const
 {
     // Return our message
 
@@ -74,7 +86,7 @@ CellmlTextViewParser::CellmlTextViewParser() :
     mScanner(new CellmlTextViewScanner()),
     mDomDocument(QDomDocument()),
     mDomNode(QDomNode()),
-    mErrors(CellmlTextViewParserErrors())
+    mMessages(CellmlTextViewParserMessages())
 {
 }
 
@@ -98,12 +110,24 @@ bool CellmlTextViewParser::execute(const QString &pText)
     mDomDocument = QDomDocument(QString());
     mDomNode = mDomDocument.documentElement();
 
-    mErrors = CellmlTextViewParserErrors();
+    mMessages = CellmlTextViewParserMessages();
 
     // Look for "def"
 
-    if (tokenType(CellmlTextViewScanner::DefToken)) {
-        return true;
+    if (tokenType("'def'", CellmlTextViewScanner::DefToken)) {
+        mScanner->getNextToken();
+
+        // Look for "model"
+
+        if (tokenType("'model'", CellmlTextViewScanner::ModelToken)) {
+            mScanner->getNextToken();
+
+            // Look for EOF
+
+            return tokenType("the end of the file", CellmlTextViewScanner::EofToken);
+        } else {
+            return false;
+        }
     } else {
         return false;
     }
@@ -120,16 +144,30 @@ QDomDocument CellmlTextViewParser::domDocument() const
 
 //==============================================================================
 
-CellmlTextViewParserErrors CellmlTextViewParser::errors() const
+CellmlTextViewParserMessages CellmlTextViewParser::messages() const
 {
-    // Return our errors
+    // Return our messages
 
-    return mErrors;
+    return mMessages;
 }
 
 //==============================================================================
 
-bool CellmlTextViewParser::tokenType(const CellmlTextViewScanner::TokenType &pTokenType)
+bool CellmlTextViewParser::hasError() const
+{
+    // Return whether one of our messages is an error
+
+    foreach (const CellmlTextViewParserMessage &message, mMessages)
+        if (message.isError())
+            return true;
+
+    return false;
+}
+
+//==============================================================================
+
+bool CellmlTextViewParser::tokenType(const QString &pExpectedString,
+                                     const CellmlTextViewScanner::TokenType &pTokenType)
 {
     // Look for and handle comments, if any
 
@@ -138,18 +176,41 @@ bool CellmlTextViewParser::tokenType(const CellmlTextViewScanner::TokenType &pTo
     // Check whether the current token type is the one we are after
 
     if (mScanner->tokenType() == pTokenType) {
+        // We have the correct token, so check whether a comment exists and, if
+        // so, generate a warning for it
+
+        if (!mScanner->tokenComment().isEmpty()) {
+            mMessages << CellmlTextViewParserMessage(false,
+                                                     mScanner->tokenLine(),
+                                                     mScanner->tokenColumn(),
+                                                     mScanner->tokenComment());
+        }
+
         return true;
+    } else if (mScanner->tokenType() == CellmlTextViewScanner::InvalidToken) {
+        // This is the token we were expecting, but it is invalid
+
+        mMessages << CellmlTextViewParserMessage(true,
+                                                 mScanner->tokenLine(),
+                                                 mScanner->tokenColumn(),
+                                                 mScanner->tokenComment());
     } else {
-        // This is not the token type we were expecting, so let the user know
-        // about it
+        // This is not the token we were expecting, so let the user know about
+        // it
 
-        mErrors << CellmlTextViewParserError(mScanner->tokenLine(),
-                                             mScanner->tokenColumn(),
-                                             QObject::tr("'%1' is expected, but '%2' was found instead.").arg(CellmlTextViewScanner::tokenTypeAsString(pTokenType),
-                                                                                                              mScanner->tokenString()));
+        QString foundString = mScanner->tokenString();
 
-        return false;
+        if (mScanner->tokenType() != CellmlTextViewScanner::EofToken)
+            foundString = QString("'%1'").arg(foundString);
+
+        mMessages << CellmlTextViewParserMessage(true,
+                                                 mScanner->tokenLine(),
+                                                 mScanner->tokenColumn(),
+                                                 QObject::tr("%1 is expected, but %2 was found instead.").arg(Core::formatMessage(pExpectedString, false),
+                                                                                                              foundString));
     }
+
+    return false;
 }
 
 //==============================================================================

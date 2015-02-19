@@ -218,24 +218,28 @@
         <translation>Un élément &apos;piecewise&apos; peut seulement être utilisé au sein d&apos;un élément &apos;apply&apos; de top niveau qui a un élément &apos;eq&apos; comme premier élément enfant.</translation>
     </message>
     <message>
-        <source>&apos;%1&apos; is expected, but &apos;%2&apos; was found instead.</source>
-        <translation>&apos;%1&apos; est espéré, mais &apos;%2&apos; a été trouvé à la place.</translation>
+        <source>%1 is expected, but %2 was found instead.</source>
+        <translation>%1 est espéré, mais %2 a été trouvé à la place.</translation>
     </message>
     <message>
-        <source>the comment is incomplete</source>
-        <translation>le commentaire est incomplet</translation>
+        <source>The comment is incomplete.</source>
+        <translation>Le commentaire est incomplet.</translation>
     </message>
     <message>
-        <source>the string is incomplete</source>
-        <translation>la chaîne est incomplète</translation>
+        <source>The string is incomplete.</source>
+        <translation>La chaîne est incomplète.</translation>
     </message>
     <message>
-        <source>the exponent has no digits</source>
-        <translation>l&apos;exposant n&apos;a pas de chiffres</translation>
+        <source>The exponent has no digits.</source>
+        <translation>L&apos;exposant n&apos;a pas de chiffres.</translation>
     </message>
     <message>
-        <source>the number is invalid</source>
-        <translation>le nombre est invalide</translation>
+        <source>The number is not valid (e.g. too big, too small).</source>
+        <translation>Le nombre n&apos;est pas valide (e.g. trop grand, trop petit).</translation>
+    </message>
+    <message>
+        <source>the end of the file</source>
+        <translation>la fin du fichier</translation>
     </message>
 </context>
 </TS>
