@@ -32,6 +32,8 @@ void ParsingTests::parsingTests()
 {
     OpenCOR::CellMLTextView::CellmlTextViewParser parser;
 
+    // Various tests on a minimal model definition
+
     QVERIFY(!parser.execute(QString()));
     QCOMPARE(parser.messages().first().message(), QString("'def' is expected, but the end of the file was found instead."));
 
@@ -52,6 +54,20 @@ void ParsingTests::parsingTests()
     QCOMPARE(parser.messages().first().message(), QString("';' is expected, but the end of the file was found instead."));
 
     QVERIFY(parser.execute(QString("def model my_model as\n"
+                                   "enddef;")));
+
+    // Various tests on a minimal model definition with a cmeta:id
+
+    QVERIFY(!parser.execute(QString("def model{")));
+    QCOMPARE(parser.messages().first().message(), QString("An identifier is expected, but the end of the file was found instead."));
+
+    QVERIFY(!parser.execute(QString("def model{my_cmeta_id")));
+    QCOMPARE(parser.messages().first().message(), QString("'}' is expected, but the end of the file was found instead."));
+
+    QVERIFY(!parser.execute(QString("def model{my_cmeta_id}")));
+    QCOMPARE(parser.messages().first().message(), QString("An identifier is expected, but the end of the file was found instead."));
+
+    QVERIFY(parser.execute(QString("def model{my_cmeta_id} my_model as\n"
                                    "enddef;")));
 }
 
