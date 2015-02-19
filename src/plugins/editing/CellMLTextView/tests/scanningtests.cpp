@@ -769,35 +769,42 @@ void ScanningTests::scanningNumberTests()
     scanner.getNextToken();
     QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::EofToken);
 
-//---GRY--- THE TESTS BELOW ARE TO BE ENABLED ONCE WE FULLY SUPPORT NUMBERS...
-//    scanner.setText("123e");
+    scanner.setText("123e");
 
-//    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::InvalidToken);
-//    QCOMPARE(scanner.tokenString(), QString("123e"));
-//    QCOMPARE(scanner.tokenComment(), QString("the exponent has no digits"));
-//    scanner.getNextToken();
-//    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::EofToken);
+    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::InvalidToken);
+    QCOMPARE(scanner.tokenString(), QString("123e"));
+    QCOMPARE(scanner.tokenComment(), QString("the exponent has no digits"));
+    scanner.getNextToken();
+    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::EofToken);
 
-//    scanner.setText("123e456789");
+    scanner.setText("123e45");
 
-//    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::BigNumberToken);
-//    QCOMPARE(scanner.tokenNumber(), 0.0);
-//    scanner.getNextToken();
-//    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::EofToken);
+    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::NumberToken);
+    QCOMPARE(scanner.tokenNumber(), 123e45);
+    scanner.getNextToken();
+    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::EofToken);
 
-//    scanner.setText("123e+456789");
+    scanner.setText("123e+45");
 
-//    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::BigNumberToken);
-//    QCOMPARE(scanner.tokenNumber(), 0.0);
-//    scanner.getNextToken();
-//    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::EofToken);
+    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::NumberToken);
+    QCOMPARE(scanner.tokenNumber(), 123e45);
+    scanner.getNextToken();
+    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::EofToken);
 
-//    scanner.setText("123e-456789");
+    scanner.setText("123e-45");
 
-//    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::BigNumberToken);
-//    QCOMPARE(scanner.tokenNumber(), 0.0);
-//    scanner.getNextToken();
-//    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::EofToken);
+    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::NumberToken);
+    QCOMPARE(scanner.tokenNumber(), 123e-45);
+    scanner.getNextToken();
+    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::EofToken);
+
+    scanner.setText("123e456789");
+
+    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::NumberToken);
+    QCOMPARE(scanner.tokenNumber(), 0.0);
+    QCOMPARE(scanner.tokenComment(), QString("the number is invalid"));
+    scanner.getNextToken();
+    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::EofToken);
 }
 
 //==============================================================================

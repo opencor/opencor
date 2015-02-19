@@ -229,5 +229,13 @@
         <source>the string is incomplete</source>
         <translation>la chaîne est incomplète</translation>
     </message>
+    <message>
+        <source>the exponent has no digits</source>
+        <translation>l&apos;exposant n&apos;a pas de chiffres</translation>
+    </message>
+    <message>
+        <source>the number is invalid</source>
+        <translation>le nombre est invalide</translation>
+    </message>
 </context>
 </TS>

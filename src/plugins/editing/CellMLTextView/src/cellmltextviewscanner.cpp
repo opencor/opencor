@@ -539,8 +539,8 @@ void CellmlTextViewScanner::getNumber()
     bool fullStopFirstChar = mCharType == FullStopChar;
 
     if (fullStopFirstChar) {
-        // We started a number with a full stop character, so reset mTokenString
-        // since it is going to be updated with our full stop character
+        // We started a number with a full stop, so reset mTokenString since it
+        // is going to be updated with our full stop
 
         mTokenString = QString();
     } else {
@@ -576,13 +576,9 @@ void CellmlTextViewScanner::getNumber()
                 else
                     break;
             }
-
-//---GRY--- TO BE FINISHED...
-//mTokenType = InvalidToken;
-//mTokenComment = QObject::tr("the exponent has no digits");
         } else if (fullStopFirstChar) {
-            // We started a number with a full stop character, but it's not
-            // followed by digits, so it's not a number after all
+            // We started a number with a full stop, but it's not followed by
+            // digits, so it's not a number after all
 
             mTokenType = UnknownToken;
 
@@ -590,14 +586,55 @@ void CellmlTextViewScanner::getNumber()
         }
     }
 
-    // At this stage, we have got a number, but it may be too big
-//---GRY--- OR MAYBE TOO SMALL?...
+    // Check whether we have an exponent part
+
+    if (   (mCharType == LetterChar)
+        && ((*mChar == QChar('e')) || (*mChar == QChar('E')))) {
+        mTokenString += *mChar;
+
+        getNextChar();
+
+        // Check whether we have a + or - sign
+
+        if ((mCharType == PlusChar) || (mCharType == MinusChar)) {
+            mTokenString += *mChar;
+
+            getNextChar();
+        }
+
+        // Check whether we have some digits
+
+        if (mCharType == DigitChar) {
+            mTokenString += *mChar;
+
+            forever {
+                getNextChar();
+
+                if (mCharType == DigitChar)
+                    mTokenString += *mChar;
+                else
+                    break;
+            }
+        } else {
+            // We started an exponent part, but it isn't followed by digits
+
+            mTokenType = InvalidToken;
+            mTokenComment = QObject::tr("the exponent has no digits");
+
+            return;
+        }
+    }
+
+    // At this stage, we have a number, but it may be too big
 
     bool validNumber;
 
     mTokenNumber = mTokenString.toDouble(&validNumber);
 
-    mTokenType = validNumber?NumberToken:BigNumberToken;
+    mTokenType = NumberToken;
+
+    if (!validNumber)
+        mTokenComment = QObject::tr("the number is invalid");
 }
 
 //==============================================================================
