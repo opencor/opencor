@@ -161,8 +161,14 @@ bool CellmlTextViewParser::execute(const QString &pText)
                         mScanner->getNextToken();
 
                         if (tokenType("the end of the file", CellmlTextViewScanner::EofToken)) {
-                            // We are done, so add our the CellML namespace to
-                            // our model element
+                            // We are done, so add some processing instruction
+                            // to our DOM document
+
+                            mDomDocument.insertBefore(mDomDocument.createProcessingInstruction("xml", "version='1.0'"),
+                                                      mDomDocument.documentElement());
+
+                            // Now, add the CellML namespace to our document
+                            // element
 
                             switch (mCellmlVersion) {
                             case CellMLSupport::CellmlFile::Cellml_1_1:
@@ -178,7 +184,7 @@ bool CellmlTextViewParser::execute(const QString &pText)
                             }
 
                             // Also add whatever namespace is needed by our
-                            // model
+                            // CellML file
 
                             foreach (const QString &key, mNamespaces.keys())
                                 mDomDocument.documentElement().setAttribute(key, mNamespaces.value(key));
