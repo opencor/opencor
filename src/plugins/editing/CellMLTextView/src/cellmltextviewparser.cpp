@@ -115,29 +115,29 @@ bool CellmlTextViewParser::execute(const QString &pText)
     // Look for "def"
 
     if (defToken()) {
-        mScanner->getNextToken();
-
         // Look for "model"
 
-        if (modelToken()) {
-            mScanner->getNextToken();
+        mScanner->getNextToken();
 
+        if (modelToken()) {
             // Look for an identifier
 
-            if (identifierToken()) {
-                mScanner->getNextToken();
+            mScanner->getNextToken();
 
+            if (identifierToken()) {
                 // Look for "as"
 
-                if (asToken()) {
-                    mScanner->getNextToken();
+                mScanner->getNextToken();
 
+                if (asToken()) {
                     // Look for "enddef;"
 
-                    if (enddefPlusSemiColonToken()) {
-                        mScanner->getNextToken();
+                    mScanner->getNextToken();
 
+                    if (enddefPlusSemiColonToken()) {
                         // Look for EOF
+
+                        mScanner->getNextToken();
 
                         return tokenType("the end of the file", CellmlTextViewScanner::EofToken);
                     }
@@ -241,9 +241,9 @@ bool CellmlTextViewParser::enddefPlusSemiColonToken()
     // Look for "enddef"
 
     if (tokenType("'enddef'", CellmlTextViewScanner::EndDefToken)) {
-        mScanner->getNextToken();
-
         // Look for ";"
+
+        mScanner->getNextToken();
 
         return semiColonToken();
     } else {
