@@ -20,7 +20,12 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include "cellmltextviewparser.h"
+#include "corecliutils.h"
 #include "parsingtests.h"
+
+//==============================================================================
+
+#include "../../../../tests/src/testsutils.h"
 
 //==============================================================================
 
@@ -69,6 +74,12 @@ void ParsingTests::parsingTests()
 
     QVERIFY(parser.execute(QString("def model{my_cmeta_id} my_model as\n"
                                    "enddef;")));
+
+    // Parsing of some CellML text code and conversion to raw CellML
+
+    QVERIFY(parser.execute(OpenCOR::fileContents(OpenCOR::fileName("src/plugins/editing/CellMLTextView/tests/data/parsing/my_model.in")).join("\n")));
+    QCOMPARELIST(qDomDocumentToString(parser.domDocument()).split("\n"),
+                 OpenCOR::fileContents(OpenCOR::fileName("src/plugins/editing/CellMLTextView/tests/data/parsing/my_model.cellml")));
 }
 
 //==============================================================================

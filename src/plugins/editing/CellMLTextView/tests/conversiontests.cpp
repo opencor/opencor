@@ -39,14 +39,12 @@ void ConversionTests::successfulConversionTests()
     // Test the conversion of a CellML file that works with COR
 
     QVERIFY(converter.execute(OpenCOR::fileName("src/plugins/editing/CellMLTextView/tests/data/conversion/successful/cellml_cor.cellml")));
-
     QCOMPARELIST(converter.output().split("\n"),
                  OpenCOR::fileContents(OpenCOR::fileName("src/plugins/editing/CellMLTextView/tests/data/conversion/successful/cellml_cor.out")));
 
     // Test the conversion of a CellML file that only works with OpenCOR
 
     QVERIFY(converter.execute(OpenCOR::fileName("src/plugins/editing/CellMLTextView/tests/data/conversion/successful/cellml_opencor.cellml")));
-
     QCOMPARELIST(converter.output().split("\n"),
                  OpenCOR::fileContents(OpenCOR::fileName("src/plugins/editing/CellMLTextView/tests/data/conversion/successful/cellml_opencor.out")));
 }

@@ -1,0 +1,7 @@
+def model{my_cmeta_id} my_model as
+    // A comment can fit on one line...
+
+    // A comment can also fit
+    // on one, two or even
+    // more lines...
+enddef;

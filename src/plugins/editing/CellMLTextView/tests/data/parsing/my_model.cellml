@@ -1,0 +1,6 @@
+<model cmeta:id="my_cmeta_id" name="my_model">
+    <!-- A comment can fit on one line...-->
+    <!-- A comment can also fit
+ on one, two or even
+ more lines...-->
+</model>
