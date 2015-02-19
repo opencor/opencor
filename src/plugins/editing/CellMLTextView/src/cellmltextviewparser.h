@@ -84,8 +84,6 @@ public:
 
     CellmlTextViewParserMessages messages() const;
 
-    bool hasError() const;
-
 private:
     CellmlTextViewScanner *mScanner;
 
@@ -96,6 +94,13 @@ private:
 
     bool tokenType(const QString &pExpectedString,
                    const CellmlTextViewScanner::TokenType &pTokenType);
+
+    bool asToken();
+    bool defToken();
+    bool enddefPlusSemiColonToken();
+    bool identifierToken();
+    bool modelToken();
+    bool semiColonToken();
 };
 
 //==============================================================================

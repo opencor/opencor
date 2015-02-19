@@ -114,27 +114,33 @@ bool CellmlTextViewParser::execute(const QString &pText)
 
     // Look for "def"
 
-    if (tokenType("'def'", CellmlTextViewScanner::DefToken)) {
+    if (defToken()) {
         mScanner->getNextToken();
 
         // Look for "model"
 
-        if (tokenType("'model'", CellmlTextViewScanner::ModelToken)) {
+        if (modelToken()) {
             mScanner->getNextToken();
 
-            // Look for an identifier (for the name of the model)
+            // Look for an identifier
 
-            if (tokenType("An identifier", CellmlTextViewScanner::IdentifierToken)) {
+            if (identifierToken()) {
                 mScanner->getNextToken();
 
                 // Look for "as"
 
-                if (tokenType("'as'", CellmlTextViewScanner::AsToken)) {
+                if (asToken()) {
                     mScanner->getNextToken();
 
-                    // Look for EOF
+                    // Look for "enddef;"
 
-                    return tokenType("the end of the file", CellmlTextViewScanner::EofToken);
+                    if (enddefPlusSemiColonToken()) {
+                        mScanner->getNextToken();
+
+                        // Look for EOF
+
+                        return tokenType("the end of the file", CellmlTextViewScanner::EofToken);
+                    }
                 }
             }
         }
@@ -159,19 +165,6 @@ CellmlTextViewParserMessages CellmlTextViewParser::messages() const
     // Return our messages
 
     return mMessages;
-}
-
-//==============================================================================
-
-bool CellmlTextViewParser::hasError() const
-{
-    // Return whether one of our messages is an error
-
-    foreach (const CellmlTextViewParserMessage &message, mMessages)
-        if (message.isError())
-            return true;
-
-    return false;
 }
 
 //==============================================================================
@@ -221,6 +214,68 @@ bool CellmlTextViewParser::tokenType(const QString &pExpectedString,
     }
 
     return false;
+}
+
+//==============================================================================
+
+bool CellmlTextViewParser::asToken()
+{
+    // Look for "as"
+
+    return tokenType("'as'", CellmlTextViewScanner::AsToken);
+}
+
+//==============================================================================
+
+bool CellmlTextViewParser::defToken()
+{
+    // Look for "def"
+
+    return tokenType("'def'", CellmlTextViewScanner::DefToken);
+}
+
+//==============================================================================
+
+bool CellmlTextViewParser::enddefPlusSemiColonToken()
+{
+    // Look for "enddef"
+
+    if (tokenType("'enddef'", CellmlTextViewScanner::EndDefToken)) {
+        mScanner->getNextToken();
+
+        // Look for ";"
+
+        return semiColonToken();
+    } else {
+        return false;
+    }
+}
+
+//==============================================================================
+
+bool CellmlTextViewParser::identifierToken()
+{
+    // Look for an identifier
+
+    return tokenType("An identifier", CellmlTextViewScanner::IdentifierToken);
+}
+
+//==============================================================================
+
+bool CellmlTextViewParser::modelToken()
+{
+    // Look for "model"
+
+    return tokenType("'model'", CellmlTextViewScanner::ModelToken);
+}
+
+//==============================================================================
+
+bool CellmlTextViewParser::semiColonToken()
+{
+    // Look for ";"
+
+    return tokenType("';'", CellmlTextViewScanner::SemiColonToken);
 }
 
 //==============================================================================
