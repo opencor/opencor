@@ -1,4 +1,4 @@
-<model cmeta:id="my_cmeta_id" name="my_model">
+<model cmeta:id="my_cmeta_id" name="my_model" xmlns="http://www.cellml.org/cellml/1.0#" xmlns:cellml="http://www.cellml.org/cellml/1.0#" xmlns:cmeta="http://www.cellml.org/metadata/1.0#">
     <!-- A comment can fit on one line...-->
     <!-- A comment can also fit
  on one, two or even

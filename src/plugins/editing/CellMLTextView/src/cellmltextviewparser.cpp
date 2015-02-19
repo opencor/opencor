@@ -84,9 +84,11 @@ QString CellmlTextViewParserMessage::message() const
 
 CellmlTextViewParser::CellmlTextViewParser() :
     mScanner(new CellmlTextViewScanner()),
+    mCellmlVersion(CellMLSupport::CellmlFile::Cellml_1_0),
     mDomDocument(QDomDocument()),
     mDomNode(QDomNode()),
     mDomElement(QDomElement()),
+    mNamespaces(QMap<QString, QString>()),
     mMessages(CellmlTextViewParserMessages())
 {
 }
@@ -108,9 +110,13 @@ bool CellmlTextViewParser::execute(const QString &pText)
 
     mScanner->setText(pText);
 
+    mCellmlVersion = CellMLSupport::CellmlFile::Cellml_1_0;
+
     mDomDocument = QDomDocument(QString());
     mDomNode = mDomDocument;
     mDomElement = QDomElement();
+
+    mNamespaces = QMap<QString, QString>();
 
     mMessages = CellmlTextViewParserMessages();
 
@@ -154,7 +160,31 @@ bool CellmlTextViewParser::execute(const QString &pText)
 
                         mScanner->getNextToken();
 
-                        return tokenType("the end of the file", CellmlTextViewScanner::EofToken);
+                        if (tokenType("the end of the file", CellmlTextViewScanner::EofToken)) {
+                            // We are done, so add our the CellML namespace to
+                            // our model element
+
+                            switch (mCellmlVersion) {
+                            case CellMLSupport::CellmlFile::Cellml_1_1:
+                                mDomDocument.documentElement().setAttribute("xmlns", CellMLSupport::Cellml_1_1_Namespace);
+                                mDomDocument.documentElement().setAttribute("xmlns:cellml", CellMLSupport::Cellml_1_1_Namespace);
+
+                                break;
+                            default:
+                                // CellMLSupport::CellmlFile::Cellml_1_0
+
+                                mDomDocument.documentElement().setAttribute("xmlns", CellMLSupport::Cellml_1_0_Namespace);
+                                mDomDocument.documentElement().setAttribute("xmlns:cellml", CellMLSupport::Cellml_1_0_Namespace);
+                            }
+
+                            // Also add whatever namespace is needed by our
+                            // model
+
+                            foreach (const QString &key, mNamespaces.keys())
+                                mDomDocument.documentElement().setAttribute(key, mNamespaces.value(key));
+
+                            return true;
+                        }
                     }
                 }
             }
@@ -405,8 +435,13 @@ QString CellmlTextViewParser::parseCmetaId()
 
             mScanner->getNextToken();
 
-            if (closingCurlyBracketToken())
+            if (closingCurlyBracketToken()) {
                 mScanner->getNextToken();
+
+                // Keep track of the fact that we need the cmeta:id namespace
+
+                mNamespaces.insert("xmlns:cmeta", CellMLSupport::CmetaIdNamespace);
+            }
         }
     }
 

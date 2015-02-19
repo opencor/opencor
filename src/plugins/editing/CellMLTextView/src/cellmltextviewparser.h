@@ -24,6 +24,7 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#include "cellmlfile.h"
 #include "cellmltextviewscanner.h"
 
 //==============================================================================
@@ -87,9 +88,13 @@ public:
 private:
     CellmlTextViewScanner *mScanner;
 
+    CellMLSupport::CellmlFile::Version mCellmlVersion;
+
     QDomDocument mDomDocument;
     QDomNode mDomNode;
     QDomElement mDomElement;
+
+    QMap<QString, QString> mNamespaces;
 
     CellmlTextViewParserMessages mMessages;
 
