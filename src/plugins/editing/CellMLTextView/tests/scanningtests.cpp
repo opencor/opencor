@@ -723,11 +723,18 @@ void ScanningTests::scanningNumberTests()
     scanner.getNextToken();
     QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::EofToken);
 
-    scanner.setText("0.123");
+    scanner.setText("123.456");
 
     QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::NumberToken);
-    QCOMPARE(scanner.tokenString(), QString("0.123"));
-    QCOMPARE(scanner.tokenNumber(), 0.123);
+    QCOMPARE(scanner.tokenString(), QString("123.456"));
+    QCOMPARE(scanner.tokenNumber(), 123.456);
+    scanner.getNextToken();
+    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::EofToken);
+
+    scanner.setText(".");
+
+    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::UnknownToken);
+    QCOMPARE(scanner.tokenString(), QString("."));
     scanner.getNextToken();
     QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::EofToken);
 
@@ -739,11 +746,26 @@ void ScanningTests::scanningNumberTests()
     scanner.getNextToken();
     QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::EofToken);
 
-    scanner.setText("123.456");
+    scanner.setText(".123.");
 
     QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::NumberToken);
-    QCOMPARE(scanner.tokenString(), QString("123.456"));
-    QCOMPARE(scanner.tokenNumber(), 123.456);
+    QCOMPARE(scanner.tokenString(), QString(".123"));
+    QCOMPARE(scanner.tokenNumber(), 0.123);
+    scanner.getNextToken();
+    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::UnknownToken);
+    QCOMPARE(scanner.tokenString(), QString("."));
+    scanner.getNextToken();
+    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::EofToken);
+
+    scanner.setText(".123.456");
+
+    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::NumberToken);
+    QCOMPARE(scanner.tokenString(), QString(".123"));
+    QCOMPARE(scanner.tokenNumber(), 0.123);
+    scanner.getNextToken();
+    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::NumberToken);
+    QCOMPARE(scanner.tokenString(), QString(".456"));
+    QCOMPARE(scanner.tokenNumber(), 0.456);
     scanner.getNextToken();
     QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::EofToken);
 

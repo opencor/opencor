@@ -538,23 +538,22 @@ void CellmlTextViewScanner::getNumber()
 
     bool fullStopFirstChar = mCharType == FullStopChar;
 
-    forever {
-        getNextChar();
+    if (fullStopFirstChar) {
+        // We started a number with a full stop character, so reset mTokenString
+        // since it is going to be updated with our full stop character
 
-        if (mCharType == DigitChar)
-            mTokenString += *mChar;
-        else
-            break;
-    }
+        mTokenString = QString();
+    } else {
+        // We started a number with a digit, so look for additional ones
 
-    // Check whether the first character is a full stop character and whether
-    // there are no digits following it, in which case it would mean that we are
-    // not dealing with a number after all
+        forever {
+            getNextChar();
 
-    if (fullStopFirstChar && (mTokenString.length() == 1)) {
-        mTokenType = UnknownToken;
-
-        return;
+            if (mCharType == DigitChar)
+                mTokenString += *mChar;
+            else
+                break;
+        }
     }
 
     // Look for the fractional part, if any
@@ -563,6 +562,8 @@ void CellmlTextViewScanner::getNumber()
         mTokenString += *mChar;
 
         getNextChar();
+
+        // Check whether the full stop is followed by some digits
 
         if (mCharType == DigitChar) {
             mTokenString += *mChar;
@@ -579,6 +580,13 @@ void CellmlTextViewScanner::getNumber()
 //---GRY--- TO BE FINISHED...
 //mTokenType = InvalidToken;
 //mTokenComment = QObject::tr("the exponent has no digits");
+        } else if (fullStopFirstChar) {
+            // We started a number with a full stop character, but it's not
+            // followed by digits, so it's not a number after all
+
+            mTokenType = UnknownToken;
+
+            return;
         }
     }
 
