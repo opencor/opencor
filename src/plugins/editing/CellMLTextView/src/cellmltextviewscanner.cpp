@@ -404,7 +404,7 @@ void CellmlTextViewScanner::getNextChar()
     // Update our token line and/or column numbers
 
     if (mCharType == LfChar) {
-        mCharColumn = 1;
+        mCharColumn = 0;
 
         ++mCharLine;
     } else {

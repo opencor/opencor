@@ -39,6 +39,14 @@ void ParsingTests::parsingTests()
     QVERIFY(!parser.execute(QString("def")));
     QVERIFY(parser.hasError());
     QCOMPARE(parser.messages().first().message(), QString("'model' is expected, but the end of the file was found instead."));
+
+    QVERIFY(!parser.execute(QString("def model")));
+    QVERIFY(parser.hasError());
+    QCOMPARE(parser.messages().first().message(), QString("An identifier is expected, but the end of the file was found instead."));
+
+    QVERIFY(!parser.execute(QString("def model my_model")));
+    QVERIFY(parser.hasError());
+    QCOMPARE(parser.messages().first().message(), QString("'as' is expected, but the end of the file was found instead."));
 }
 
 //==============================================================================

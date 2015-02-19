@@ -122,15 +122,25 @@ bool CellmlTextViewParser::execute(const QString &pText)
         if (tokenType("'model'", CellmlTextViewScanner::ModelToken)) {
             mScanner->getNextToken();
 
-            // Look for EOF
+            // Look for an identifier (for the name of the model)
 
-            return tokenType("the end of the file", CellmlTextViewScanner::EofToken);
-        } else {
-            return false;
+            if (tokenType("An identifier", CellmlTextViewScanner::IdentifierToken)) {
+                mScanner->getNextToken();
+
+                // Look for "as"
+
+                if (tokenType("'as'", CellmlTextViewScanner::AsToken)) {
+                    mScanner->getNextToken();
+
+                    // Look for EOF
+
+                    return tokenType("the end of the file", CellmlTextViewScanner::EofToken);
+                }
+            }
         }
-    } else {
-        return false;
     }
+
+    return false;
 }
 
 //==============================================================================
