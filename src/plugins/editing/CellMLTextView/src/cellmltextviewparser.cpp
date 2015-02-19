@@ -150,7 +150,7 @@ bool CellmlTextViewParser::execute(const QString &pText)
                     mScanner->getNextToken();
 
                     if (enddefPlusSemiColonToken()) {
-                        // Expect EOF
+                        // Expect the end of the file
 
                         mScanner->getNextToken();
 
@@ -200,9 +200,9 @@ QDomElement CellmlTextViewParser::newDomElement(const QString &pElementName)
 bool CellmlTextViewParser::tokenType(const QString &pExpectedString,
                                      const CellmlTextViewScanner::TokenType &pTokenType)
 {
-    // Look for and handle comments, if any
+    // Try to parse comments, if any
 
-//---GRY--- TO BE DONE...
+    parseComments();
 
     // Check whether the current token type is the one we are after
 
@@ -322,6 +322,63 @@ bool CellmlTextViewParser::semiColonToken()
     // Expect ";"
 
     return tokenType("';'", CellmlTextViewScanner::SemiColonToken);
+}
+
+//==============================================================================
+
+void CellmlTextViewParser::parseComments()
+{
+    // Check whether there are some comments
+
+    int previousLineCommentLine = 0;
+    QString singleLineComments = QString();
+
+    forever {
+        if (mScanner->tokenType() == CellmlTextViewScanner::SingleLineCommentToken) {
+            // Keep track of the line comment, if no previous line comments are
+            // being tracked
+
+            if (singleLineComments.isEmpty()) {
+                singleLineComments = mScanner->tokenString();
+            } else {
+                // There is at least one other line comment that is being
+                // tracked, so compare line numbers
+
+                if (mScanner->tokenLine() == previousLineCommentLine+1) {
+                    // The line comment is directly on the line following the
+                    // previous line comment, so add it to the list of tracked
+                    // line comments
+
+                    singleLineComments += "\n"+mScanner->tokenString();
+                } else {
+                    // The line comment is not directly on the line following
+                    // the previous line comment, so add the previous line
+                    // comment(s) to the current node and keep track of the new
+                    // line comment
+
+                    mDomNode.appendChild(mDomDocument.createComment(singleLineComments));
+
+                    singleLineComments = mScanner->tokenString();
+                }
+            }
+
+            previousLineCommentLine = mScanner->tokenLine();
+        } else if (mScanner->tokenType() == CellmlTextViewScanner::MultilineCommentToken) {
+            // We simply ignore the multiline comment
+
+            ;
+        } else {
+            // No (more) comment(s left), so add the tracked line comment(s) to
+            // the current node, if any, and leave
+
+            if (!singleLineComments.isEmpty())
+                mDomNode.appendChild(mDomDocument.createComment(singleLineComments));
+
+            return;
+        }
+
+        mScanner->getNextToken();
+    }
 }
 
 //==============================================================================

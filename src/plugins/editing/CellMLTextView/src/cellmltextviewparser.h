@@ -107,6 +107,7 @@ private:
     bool openingCurlyBracketToken();
     bool semiColonToken();
 
+    void parseComments();
     QString parseCmetaId();
 };
 
