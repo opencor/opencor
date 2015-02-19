@@ -89,8 +89,11 @@ private:
 
     QDomDocument mDomDocument;
     QDomNode mDomNode;
+    QDomElement mDomElement;
 
     CellmlTextViewParserMessages mMessages;
+
+    QDomElement newDomElement(const QString &pElementName);
 
     bool tokenType(const QString &pExpectedString,
                    const CellmlTextViewScanner::TokenType &pTokenType);

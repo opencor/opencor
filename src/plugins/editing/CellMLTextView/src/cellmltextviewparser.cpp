@@ -86,6 +86,7 @@ CellmlTextViewParser::CellmlTextViewParser() :
     mScanner(new CellmlTextViewScanner()),
     mDomDocument(QDomDocument()),
     mDomNode(QDomNode()),
+    mDomElement(QDomElement()),
     mMessages(CellmlTextViewParserMessages())
 {
 }
@@ -108,7 +109,8 @@ bool CellmlTextViewParser::execute(const QString &pText)
     mScanner->setText(pText);
 
     mDomDocument = QDomDocument(QString());
-    mDomNode = mDomDocument.documentElement();
+    mDomNode = mDomDocument;
+    mDomElement = QDomElement();
 
     mMessages = CellmlTextViewParserMessages();
 
@@ -125,6 +127,12 @@ bool CellmlTextViewParser::execute(const QString &pText)
             mScanner->getNextToken();
 
             if (identifierToken()) {
+                // Create the model node
+
+                mDomNode = mDomElement = newDomElement("model");
+
+                mDomElement.setAttribute("name", mScanner->tokenString());
+
                 // Look for "as"
 
                 mScanner->getNextToken();
@@ -165,6 +173,19 @@ CellmlTextViewParserMessages CellmlTextViewParser::messages() const
     // Return our messages
 
     return mMessages;
+}
+
+//==============================================================================
+
+QDomElement CellmlTextViewParser::newDomElement(const QString &pElementName)
+{
+    // Create a new DOM element with the given name and make it our new mDomNode
+
+    QDomElement domElement = mDomDocument.createElement(pElementName);
+
+    mDomNode.appendChild(domElement);
+
+    return domElement;
 }
 
 //==============================================================================
