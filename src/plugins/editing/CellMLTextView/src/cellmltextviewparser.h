@@ -99,11 +99,15 @@ private:
                    const CellmlTextViewScanner::TokenType &pTokenType);
 
     bool asToken();
+    bool closingCurlyBracketToken();
     bool defToken();
     bool enddefPlusSemiColonToken();
     bool identifierToken();
     bool modelToken();
+    bool openingCurlyBracketToken();
     bool semiColonToken();
+
+    QString parseCmetaId();
 };
 
 //==============================================================================

@@ -114,36 +114,43 @@ bool CellmlTextViewParser::execute(const QString &pText)
 
     mMessages = CellmlTextViewParserMessages();
 
-    // Look for "def"
+    // Expect "def"
 
     if (defToken()) {
-        // Look for "model"
+        // Expect "model"
 
         mScanner->getNextToken();
 
         if (modelToken()) {
-            // Look for an identifier
+            // Try to parse for a cmeta:id
 
             mScanner->getNextToken();
 
+            QString cmetaId = parseCmetaId();
+
+            // Expect an identifier
+
             if (identifierToken()) {
-                // Create the model node
+                // Create our model node
 
                 mDomNode = mDomElement = newDomElement("model");
 
                 mDomElement.setAttribute("name", mScanner->tokenString());
 
-                // Look for "as"
+                if (!cmetaId.isEmpty())
+                    mDomElement.setAttribute("cmeta:id", cmetaId);
+
+                // Expect "as"
 
                 mScanner->getNextToken();
 
                 if (asToken()) {
-                    // Look for "enddef;"
+                    // Expect "enddef;"
 
                     mScanner->getNextToken();
 
                     if (enddefPlusSemiColonToken()) {
-                        // Look for EOF
+                        // Expect EOF
 
                         mScanner->getNextToken();
 
@@ -241,16 +248,25 @@ bool CellmlTextViewParser::tokenType(const QString &pExpectedString,
 
 bool CellmlTextViewParser::asToken()
 {
-    // Look for "as"
+    // Expect "as"
 
     return tokenType("'as'", CellmlTextViewScanner::AsToken);
 }
 
 //==============================================================================
 
+bool CellmlTextViewParser::closingCurlyBracketToken()
+{
+    // Expect "}"
+
+    return tokenType("'}'", CellmlTextViewScanner::ClosingCurlyBracketToken);
+}
+
+//==============================================================================
+
 bool CellmlTextViewParser::defToken()
 {
-    // Look for "def"
+    // Expect "def"
 
     return tokenType("'def'", CellmlTextViewScanner::DefToken);
 }
@@ -259,10 +275,10 @@ bool CellmlTextViewParser::defToken()
 
 bool CellmlTextViewParser::enddefPlusSemiColonToken()
 {
-    // Look for "enddef"
+    // Expect "enddef"
 
     if (tokenType("'enddef'", CellmlTextViewScanner::EndDefToken)) {
-        // Look for ";"
+        // Expect ";"
 
         mScanner->getNextToken();
 
@@ -276,7 +292,7 @@ bool CellmlTextViewParser::enddefPlusSemiColonToken()
 
 bool CellmlTextViewParser::identifierToken()
 {
-    // Look for an identifier
+    // Expect an identifier
 
     return tokenType("An identifier", CellmlTextViewScanner::IdentifierToken);
 }
@@ -285,18 +301,59 @@ bool CellmlTextViewParser::identifierToken()
 
 bool CellmlTextViewParser::modelToken()
 {
-    // Look for "model"
+    // Expect "model"
 
     return tokenType("'model'", CellmlTextViewScanner::ModelToken);
 }
 
 //==============================================================================
 
+bool CellmlTextViewParser::openingCurlyBracketToken()
+{
+    // Expect "{"
+
+    return tokenType("'{'", CellmlTextViewScanner::OpeningCurlyBracketToken);
+}
+
+//==============================================================================
+
 bool CellmlTextViewParser::semiColonToken()
 {
-    // Look for ";"
+    // Expect ";"
 
     return tokenType("';'", CellmlTextViewScanner::SemiColonToken);
+}
+
+//==============================================================================
+
+QString CellmlTextViewParser::parseCmetaId()
+{
+    // Check whether a cmeta:id is given
+
+    QString res = QString();
+
+    // Check whether the next token is "{"
+
+    if (mScanner->tokenType() == CellmlTextViewScanner::OpeningCurlyBracketToken) {
+        // Expect an identifier
+
+        mScanner->getNextToken();
+
+        if (identifierToken()) {
+            // The identifier is our cmeta:id
+
+            res = mScanner->tokenString();
+
+            // Expect "}"
+
+            mScanner->getNextToken();
+
+            if (closingCurlyBracketToken())
+                mScanner->getNextToken();
+        }
+    }
+
+    return res;
 }
 
 //==============================================================================
