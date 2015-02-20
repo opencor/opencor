@@ -512,7 +512,7 @@ QString ViewerWidget::greekSymbolize(const QString &pValue) const
 QDomElement ViewerWidget::newMiNode(const QDomNode &pDomNode,
                                     const QString &pValue) const
 {
-    // Create and return an mi element with a text child node, which value if
+    // Create and return an mi element with a text child node, which value is
     // the one given
 
     QDomElement res = pDomNode.ownerDocument().createElement("mi");
