@@ -475,8 +475,8 @@ bool CellmlFile::save(const QString &pNewFileName)
     mRdfTriples.updateOriginalRdfTriples();
 
     // Get a DOM representation of our CellML file and remove its XML base
-    // value, its RDF child node (should there be no annotations) and all
-    // cmeta:ids (in CellML elements) that are not used in the CellML file's
+    // value, its RDF child node (should there be no annotations) and all the
+    // cmeta:id's (in CellML elements) that are not used in the CellML file's
     // annotations
     // Note: as part of good practices, a CellML file should never contain an
     //       XML base value. Yet, upon loading a CellML file, we set one (see
