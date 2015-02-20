@@ -357,27 +357,25 @@ void RawCellmlViewWidget::validate(const QString &pFileName) const
 
 //==============================================================================
 
-void RawCellmlViewWidget::cleanMathml(const QDomElement &pElement) const
+void RawCellmlViewWidget::cleanMathml(QDomElement pElement)
 {
     // Clean up the current element
     // Note: the idea is to remove all the attributes that are not in the
-    //       current (MathML) namespace. Indeed, if we were to leave them in
-    //       then the XSL transformation would either do nothing or, worst,
-    //       crash OpenCOR...
+    //       MathML namespace. Indeed, if we were to leave them in then the XSL
+    //       transformation would either do nothing or, worst, crash OpenCOR...
 
     QDomNamedNodeMap attributes = pElement.attributes();
+    QList<QDomNode> nonMathmlAttributes = QList<QDomNode>();
 
-    QStringList attributeNames = QStringList();
+    for (int i = 0, iMax = attributes.count(); i < iMax; ++i) {
+        QDomNode attribute = attributes.item(i);
 
-    for (int j = 0, jMax = attributes.count(); j < jMax; ++j) {
-        QString attributeName = attributes.item(j).nodeName();
-
-        if (attributeName.contains(":"))
-            attributeNames << attributeName;
+        if (attribute.namespaceURI().compare(CellMLSupport::MathmlNamespace))
+            nonMathmlAttributes << attribute;
     }
 
-    foreach (const QString &attributeName, attributeNames)
-        attributes.removeNamedItem(attributeName);
+    foreach (QDomNode nonMathmlAttribute, nonMathmlAttributes)
+        pElement.removeAttributeNode(nonMathmlAttribute.toAttr());
 
     // Go through the element's child elements, if any, and clean them up
 
@@ -389,13 +387,13 @@ void RawCellmlViewWidget::cleanMathml(const QDomElement &pElement) const
 
 //==============================================================================
 
-QString RawCellmlViewWidget::cleanMathml(const QString &pMathml) const
+QString RawCellmlViewWidget::cleanMathml(const QString &pMathml)
 {
     // Clean up and return the given MathML string
 
     QDomDocument domDocument;
 
-    if (domDocument.setContent(pMathml)) {
+    if (domDocument.setContent(pMathml, true)) {
         cleanMathml(domDocument.documentElement());
 
         return domDocument.toString(-1);
@@ -413,7 +411,7 @@ QString RawCellmlViewWidget::retrieveContentMathmlEquation(const QString &pConte
 
     QDomDocument domDocument;
 
-    if (domDocument.setContent(pContentMathmlBlock)) {
+    if (domDocument.setContent(pContentMathmlBlock, true)) {
         // Look for the child node within which our position is located, if any
 
         QDomElement domElement = domDocument.documentElement();
@@ -435,7 +433,7 @@ QString RawCellmlViewWidget::retrieveContentMathmlEquation(const QString &pConte
                                              childElement.columnNumber(),
                                              childNodeStartPosition);
 
-            childNodeStartPosition = pContentMathmlBlock.lastIndexOf("<"+childElement.nodeName(), childNodeStartPosition);
+            childNodeStartPosition = pContentMathmlBlock.lastIndexOf("<"+childElement.localName(), childNodeStartPosition);
 
             // Retrieve the end position of the current child node
 
@@ -456,7 +454,7 @@ QString RawCellmlViewWidget::retrieveContentMathmlEquation(const QString &pConte
                                                  childNodeEndPosition);
             }
 
-            childNodeEndPosition = pContentMathmlBlock.lastIndexOf("</"+childElement.nodeName()+">", childNodeEndPosition)+2+childElement.nodeName().length();
+            childNodeEndPosition = pContentMathmlBlock.lastIndexOf("</"+childElement.localName()+">", childNodeEndPosition)+2+childElement.localName().length();
 
             // Check whether our position is within the start and end positions
             // of the current child node

@@ -88,7 +88,6 @@ CellmlTextViewParser::CellmlTextViewParser() :
     mDomDocument(QDomDocument()),
     mDomNode(QDomNode()),
     mDomElement(QDomElement()),
-    mNamespaces(QMap<QString, QString>()),
     mMessages(CellmlTextViewParserMessages())
 {
 }
@@ -116,8 +115,6 @@ bool CellmlTextViewParser::execute(const QString &pText)
     mDomNode = mDomDocument;
     mDomElement = QDomElement();
 
-    mNamespaces = QMap<QString, QString>();
-
     mMessages = CellmlTextViewParserMessages();
 
     // Expect "def"
@@ -144,7 +141,7 @@ bool CellmlTextViewParser::execute(const QString &pText)
                 mDomElement.setAttribute("name", mScanner->tokenString());
 
                 if (!cmetaId.isEmpty())
-                    mDomElement.setAttribute("cmeta:id", cmetaId);
+                    mDomElement.setAttributeNS(CellMLSupport::CmetaIdNamespace, "cmeta:id", cmetaId);
 
                 // Expect "as"
 
@@ -182,12 +179,6 @@ bool CellmlTextViewParser::execute(const QString &pText)
                                 mDomDocument.documentElement().setAttribute("xmlns", CellMLSupport::Cellml_1_0_Namespace);
                                 mDomDocument.documentElement().setAttribute("xmlns:cellml", CellMLSupport::Cellml_1_0_Namespace);
                             }
-
-                            // Also add whatever namespace is needed by our
-                            // CellML file
-
-                            foreach (const QString &key, mNamespaces.keys())
-                                mDomDocument.documentElement().setAttribute(key, mNamespaces.value(key));
 
                             return true;
                         }
@@ -441,13 +432,8 @@ QString CellmlTextViewParser::parseCmetaId()
 
             mScanner->getNextToken();
 
-            if (closingCurlyBracketToken()) {
+            if (closingCurlyBracketToken())
                 mScanner->getNextToken();
-
-                // Keep track of the fact that we need the cmeta:id namespace
-
-                mNamespaces.insert("xmlns:cmeta", CellMLSupport::CmetaIdNamespace);
-            }
         }
     }
 

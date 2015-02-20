@@ -76,7 +76,7 @@ void ParsingTests::parsingTests()
     QVERIFY(parser.execute(QString("def model{my_cmeta_id} my_model as\n"
                                    "enddef;")));
 
-    // Parsing of some CellML text code and conversion to raw CellML...
+    // Parsing of some CellML text code and converting to raw CellML...
 
     QVERIFY(parser.execute(OpenCOR::fileContents(OpenCOR::fileName("src/plugins/editing/CellMLTextView/tests/data/parsing/my_model.in")).join("\n")));
     QCOMPARELIST(qDomDocumentToString(parser.domDocument()).split("\n"),
@@ -85,8 +85,6 @@ void ParsingTests::parsingTests()
     // ... and back
 
     OpenCOR::CellMLTextView::CellMLTextViewConverter converter;
-
-    // Test the conversion of a CellML file that works with COR
 
     QVERIFY(converter.execute(OpenCOR::fileName("src/plugins/editing/CellMLTextView/tests/data/parsing/my_model.cellml")));
     QCOMPARELIST(converter.output().split("\n"),

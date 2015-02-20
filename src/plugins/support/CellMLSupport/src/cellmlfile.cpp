@@ -478,10 +478,15 @@ bool CellmlFile::save(const QString &pNewFileName)
     // value, its RDF child node (should there be no annotations) and all the
     // cmeta:id's (in CellML elements) that are not used in the CellML file's
     // annotations
-    // Note: as part of good practices, a CellML file should never contain an
-    //       XML base value. Yet, upon loading a CellML file, we set one (see
-    //       doLoad()), so that we can properly import CellML files, if needed.
-    //       So, now, we need to undo what we did...
+    // Note #1: as part of good practices, a CellML file should never contain an
+    //          XML base value. Yet, upon loading a CellML file, we set one (see
+    //          doLoad()), so that we can properly import CellML files, if
+    //          needed. So, now, we need to undo what we did...
+    // Note #2: normally, we would be asking QDomDocument::setContent() to
+    //          process namespaces, but this would then result in a very messy
+    //          serialisation with namespaces being referenced all over the
+    //          place. So, in the end, we do everything without processing
+    //          namespaces...
 
     QDomDocument domDocument;
 

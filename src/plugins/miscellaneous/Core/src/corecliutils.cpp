@@ -118,29 +118,46 @@ void cleanDomElement(QDomElement &pDomElement,
     if (pDomElement.hasAttributes()) {
         QStringList serialisedAttributes = QStringList();
         QDomNamedNodeMap domElementAttributes = pDomElement.attributes();
-        QDomNode attributeNode;
-        QString serialisedAttribute;
-        QTextStream textStream(&serialisedAttribute, QIODevice::WriteOnly);
+        QDomAttr attributeNode;
 
         while (domElementAttributes.count()) {
-            // Serialise the element's attribute
+            // Serialise (ourselves) the element's attribute
+            // Note: to rely on QDomNode::save() to do the serialisation isn't
+            //       good enough. Indeed, if it is going to be fine for an
+            //       attribute that doesn't have a prefix, e.g.
+            //          name="my_name"
+            //       it may not be fine for an attribute with a prefix, e.g.
+            //          cmeta:id="my_cmeta_id"
+            //       since depending on how that attribute has been created
+            //       (i.e. using QDomDocument::createAttribute() or
+            //       QDomDocument::createAttributeNS()), then it may or not have
+            //       a namespace associated with it. If it does, then its
+            //       serialisation will look something like
+            //          cmeta:id="my_cmeta_id" xmlns:cmeta="http://www.cellml.org/metadata/1.0#"
+            //       which is clearly not what we want since that's effectively
+            //       two attributes in one. So, we need to separate them, which
+            //       is what we do our serialisation...
 
-            attributeNode = domElementAttributes.item(0);
+            attributeNode = domElementAttributes.item(0).toAttr();
 
-            serialisedAttribute = QString();
+            if (attributeNode.namespaceURI().isEmpty()) {
+                serialisedAttributes << attributeNode.name()+"=\""+attributeNode.value()+"\"";
+            } else {
+                serialisedAttributes << attributeNode.prefix()+":"+attributeNode.name()+"=\""+attributeNode.value()+"\"";
+                serialisedAttributes << "xmlns:"+attributeNode.prefix()+"=\""+attributeNode.namespaceURI()+"\"";
+            }
 
-            attributeNode.save(textStream, 4);
+            // Remove the attribute node from the element
 
-            serialisedAttributes << serialisedAttribute;
-
-            // Remove the attribute from the element
-
-            pDomElement.removeAttributeNode(attributeNode.toAttr());
+            pDomElement.removeAttributeNode(attributeNode);
         }
 
-        // Sort the serialised attributes using the attributes' name
+        // Sort the serialised attributes, using the attributes' name, and
+        // remove duplicates, if any
 
         std::sort(serialisedAttributes.begin(), serialisedAttributes.end(), sortSerialisedAttributes);
+
+        serialisedAttributes.removeDuplicates();
 
         // Keep track of the serialisation of the element's attribute
 

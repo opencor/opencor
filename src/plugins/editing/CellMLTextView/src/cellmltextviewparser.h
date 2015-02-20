@@ -94,8 +94,6 @@ private:
     QDomNode mDomNode;
     QDomElement mDomElement;
 
-    QMap<QString, QString> mNamespaces;
-
     CellmlTextViewParserMessages mMessages;
 
     QDomElement newDomElement(const QString &pElementName);

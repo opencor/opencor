@@ -99,11 +99,11 @@ private:
         EndDef
     };
 
-    enum NodeType {
-        UnknownNode,
-        EqNode, NeqNode, LtNode, LeqNode, GeqNode, GtNode,
-        PlusNode, MinusNode, TimesNode, DivideNode,
-        AndNode, OrNode, XorNode
+    enum MathmlNodeType {
+        UnknownMathmlNode,
+        EqMathmlNode, NeqMathmlNode, LtMathmlNode, LeqMathmlNode, GeqMathmlNode, GtMathmlNode,
+        PlusMathmlNode, MinusMathmlNode, TimesMathmlNode, DivideMathmlNode,
+        AndMathmlNode, OrMathmlNode, XorMathmlNode
     };
 
     QString mOutput;
@@ -128,7 +128,7 @@ private:
     bool mPiecewiseStatementUsed;
 
     QMap<QString, QString> mMappings;
-    QMap<QString, NodeType> mNodeTypes;
+    QMap<QString, MathmlNodeType> mMathmlNodeTypes;
 
     void indent();
     void unindent();
@@ -136,9 +136,17 @@ private:
     void outputString(const OutputType &pOutputType = EmptyLine,
                       const QString &pString = QString());
 
+    bool rdfNode(const QDomNode &pDomNode) const;
+    bool cellmlNode(const QDomNode &pDomNode, const QString &pName) const;
+    bool mathmlNode(const QDomNode &pDomNode, const QString &pName) const;
+
     QString cmetaId(const QDomNode &pDomNode) const;
 
-    NodeType nodeType(const QDomNode &pDomNode) const;
+    MathmlNodeType mathmlNodeType(const QDomNode &pDomNode) const;
+
+    QString cellmlAttributeNodeValue(const QDomNode &pDomNode,
+                                     const QString &pName,
+                                     const bool &pMustBePresent = true) const;
 
     bool processModelNode(const QDomNode &pDomNode);
     void processCommentNode(const QDomNode &pDomNode);
