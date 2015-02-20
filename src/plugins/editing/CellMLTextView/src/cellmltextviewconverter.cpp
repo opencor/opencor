@@ -581,12 +581,8 @@ void CellMLTextViewConverter::processUnitNode(const QDomNode &pDomNode)
     // Note #2: when parsed back, comments will not be in the unit node anymore,
     //          but in its parent...
 
-    QString nodeName;
-
     for (QDomNode domNode = pDomNode.firstChild();
          !domNode.isNull(); domNode = domNode.nextSibling()) {
-        nodeName = domNode.localName();
-
         if (domNode.isComment())
             processCommentNode(domNode);
         else if (rdfNode(domNode))
@@ -697,12 +693,8 @@ void CellMLTextViewConverter::processVariableNode(const QDomNode &pDomNode)
     // Note #2: when parsed back, comments will not be in the variable node
     //          anymore, but in its parent...
 
-    QString nodeName;
-
     for (QDomNode domNode = pDomNode.firstChild();
          !domNode.isNull(); domNode = domNode.nextSibling()) {
-        nodeName = domNode.localName();
-
         if (domNode.isComment())
             processCommentNode(domNode);
         else if (rdfNode(domNode))
@@ -1729,12 +1721,8 @@ bool CellMLTextViewConverter::processRelationshipRefNode(const QDomNode &pDomNod
     // Note #2: when parsed back, comments will not be in the relationship ref
     //          node anymore, but in its parent...
 
-    QString nodeName;
-
     for (QDomNode domNode = pDomNode.firstChild();
          !domNode.isNull(); domNode = domNode.nextSibling()) {
-        nodeName = domNode.localName();
-
         if (domNode.isComment())
             processCommentNode(domNode);
         else if (rdfNode(domNode))
@@ -1908,12 +1896,8 @@ bool CellMLTextViewConverter::processMapComponentsNode(const QDomNode &pDomNode,
     // Note #2: when parsed back, comments will not be in the map components
     //          node anymore, but in its parent...
 
-    QString nodeName;
-
     for (QDomNode domNode = pDomNode.firstChild();
          !domNode.isNull(); domNode = domNode.nextSibling()) {
-        nodeName = domNode.localName();
-
         if (domNode.isComment())
             processCommentNode(domNode);
         else if (rdfNode(domNode))
@@ -1943,12 +1927,8 @@ void CellMLTextViewConverter::processMapVariablesNode(const QDomNode &pDomNode)
     // Note #2: when parsed back, comments will not be in the map variables node
     //          anymore, but in its parent...
 
-    QString nodeName;
-
     for (QDomNode domNode = pDomNode.firstChild();
          !domNode.isNull(); domNode = domNode.nextSibling()) {
-        nodeName = domNode.localName();
-
         if (domNode.isComment())
             processCommentNode(domNode);
         else if (rdfNode(domNode))

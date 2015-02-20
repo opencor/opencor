@@ -306,7 +306,7 @@ iface::dom::Element * CellmlFileCellml10Exporter::copyDomElement(iface::dom::Ele
     // Create a blank DOM element
 
     iface::dom::Element *res = mExportedModel->createExtensionElement(pDomElement->namespaceURI(),
-                                                                      pDomElement->nodeName());
+                                                                      pDomElement->localName());
 
     // Copy the DOM element attributes
 
