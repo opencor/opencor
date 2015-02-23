@@ -1,9 +1,9 @@
 def model cellml_1_0 as
-    def unit baseunit1 as base unit;
-    def unit baseunit2 as base unit;
-    def unit baseunit3 as base unit;
+    def unit my_base_unit1 as base unit;
+    def unit my_base_unit2 as base unit;
+    def unit my_base_unit3 as base unit;
 
-    def unit unit1 as
+    def unit my_unit1 as
         unit ampere;
         unit becquerel;
         unit candela;
@@ -40,40 +40,40 @@ def model cellml_1_0 as
         unit weber;
     enddef;
 
-    def unit unit2 as
-        unit someunit {pref: milli, expo: -1, mult: 3, off: 7};
+    def unit my_unit2 as
+        unit some_unit {pref: milli, expo: -1, mult: 3, off: 7};
     enddef;
 
-    def unit unit3 as
-        unit someunit {pref: yotta};
-        unit someunit {pref: zetta};
-        unit someunit {pref: exa};
-        unit someunit {pref: peta};
-        unit someunit {pref: tera};
-        unit someunit {pref: giga};
-        unit someunit {pref: mega};
-        unit someunit {pref: kilo};
-        unit someunit {pref: hecto};
-        unit someunit {pref: deka};
-        unit someunit {pref: deci};
-        unit someunit {pref: centi};
-        unit someunit {pref: milli};
-        unit someunit {pref: micro};
-        unit someunit {pref: nano};
-        unit someunit {pref: milli};
-        unit someunit {pref: pico};
-        unit someunit {pref: femto};
-        unit someunit {pref: atto};
-        unit someunit {pref: zepto};
-        unit someunit {pref: yocto};
+    def unit my_unit3 as
+        unit some_unit {pref: yotta};
+        unit some_unit {pref: zetta};
+        unit some_unit {pref: exa};
+        unit some_unit {pref: peta};
+        unit some_unit {pref: tera};
+        unit some_unit {pref: giga};
+        unit some_unit {pref: mega};
+        unit some_unit {pref: kilo};
+        unit some_unit {pref: hecto};
+        unit some_unit {pref: deka};
+        unit some_unit {pref: deci};
+        unit some_unit {pref: centi};
+        unit some_unit {pref: milli};
+        unit some_unit {pref: micro};
+        unit some_unit {pref: nano};
+        unit some_unit {pref: milli};
+        unit some_unit {pref: pico};
+        unit some_unit {pref: femto};
+        unit some_unit {pref: atto};
+        unit some_unit {pref: zepto};
+        unit some_unit {pref: yocto};
     enddef;
 
-    def comp component1 as
-        def unit baseunit1 as base unit;
-        def unit baseunit2 as base unit;
-        def unit baseunit3 as base unit;
+    def comp my_component1 as
+        def unit my_base_unit1 as base unit;
+        def unit my_base_unit2 as base unit;
+        def unit my_base_unit3 as base unit;
 
-        def unit unit1 as
+        def unit my_unit1 as
             unit ampere;
             unit becquerel;
             unit candela;
@@ -110,39 +110,39 @@ def model cellml_1_0 as
             unit weber;
         enddef;
 
-        def unit unit2 as
-            unit someunit {pref: milli, expo: -1, mult: 3, off: 7};
+        def unit my_unit2 as
+            unit some_unit {pref: milli, expo: -1, mult: 3, off: 7};
         enddef;
 
-        def unit unit3 as
-            unit someunit {pref: yotta};
-            unit someunit {pref: zetta};
-            unit someunit {pref: exa};
-            unit someunit {pref: peta};
-            unit someunit {pref: tera};
-            unit someunit {pref: giga};
-            unit someunit {pref: mega};
-            unit someunit {pref: kilo};
-            unit someunit {pref: hecto};
-            unit someunit {pref: deka};
-            unit someunit {pref: deci};
-            unit someunit {pref: centi};
-            unit someunit {pref: milli};
-            unit someunit {pref: micro};
-            unit someunit {pref: nano};
-            unit someunit {pref: milli};
-            unit someunit {pref: pico};
-            unit someunit {pref: femto};
-            unit someunit {pref: atto};
-            unit someunit {pref: zepto};
-            unit someunit {pref: yocto};
+        def unit my_unit3 as
+            unit some_unit {pref: yotta};
+            unit some_unit {pref: zetta};
+            unit some_unit {pref: exa};
+            unit some_unit {pref: peta};
+            unit some_unit {pref: tera};
+            unit some_unit {pref: giga};
+            unit some_unit {pref: mega};
+            unit some_unit {pref: kilo};
+            unit some_unit {pref: hecto};
+            unit some_unit {pref: deka};
+            unit some_unit {pref: deci};
+            unit some_unit {pref: centi};
+            unit some_unit {pref: milli};
+            unit some_unit {pref: micro};
+            unit some_unit {pref: nano};
+            unit some_unit {pref: milli};
+            unit some_unit {pref: pico};
+            unit some_unit {pref: femto};
+            unit some_unit {pref: atto};
+            unit some_unit {pref: zepto};
+            unit some_unit {pref: yocto};
         enddef;
 
-        var variable1: unit1;
-        var variable2: unit2 {init: 123};
-        var variable3: unit3 {pub: in};
-        var variable4: unit4 {priv: out};
-        var variable5: unit5 {pub: none, priv: none};
+        var my_variable1: my_unit1;
+        var my_variable2: my_unit2 {init: 123};
+        var my_variable3: my_unit3 {pub: in};
+        var my_variable4: my_unit4 {priv: out};
+        var my_variable5: my_unit5 {pub: none, priv: none};
 
         a = b;
         a = 3{dimensionless};
@@ -299,40 +299,40 @@ def model cellml_1_0 as
     enddef;
 
     def group as containment for
-        comp component1 incl
-            comp component11 incl
-                comp component111;
-                comp component112;
+        comp my_component1 incl
+            comp my_component11 incl
+                comp my_component111;
+                comp my_component112;
             endcomp;
         endcomp;
     enddef;
 
-    def group as containment containment1 for
-        comp component1 incl
-            comp component12 incl
-                comp component121;
+    def group as containment my_containment1 for
+        comp my_component1 incl
+            comp my_component12 incl
+                comp my_component121;
             endcomp;
 
-            comp component13;
+            comp my_component13;
         endcomp;
     enddef;
 
     def group as encapsulation for
-        comp component11 incl
-            comp component111;
-            comp component112;
+        comp my_component11 incl
+            comp my_component111;
+            comp my_component112;
         endcomp;
 
-        comp component12 incl
-            comp component121;
+        comp my_component12 incl
+            comp my_component121;
         endcomp;
     enddef;
 
-    def group as encapsulation and containment containment1 for
-        comp component1;
+    def group as encapsulation and containment my_containment1 for
+        comp my_component1;
     enddef;
 
-    def map between component1 and component2 for
-        vars variable1 and variable2;
+    def map between my_component1 and my_component2 for
+        vars my_variable1 and my_variable2;
     enddef;
 enddef;

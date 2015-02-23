@@ -7,7 +7,7 @@ def model{cellml_1_1} cellml_1_1 as
 
     // In between comment...
 
-    def import{importx} using "importedmodel.cellml" for
+    def import{my_import_cmeta_id} using "imported_model.cellml" for
         // Comments can be within an import definition...
 
         // In between comment...
@@ -16,7 +16,7 @@ def model{cellml_1_1} cellml_1_1 as
         // but if kept it will be serialised back in the
         // corresponding import definition...
 
-        unit{unitsx} unitsx using unit refunitsx;
+        unit{my_imported_unit_cmeta_id} my_imported_unit using unit my_reference_unit;
 
         // In between comment...
 
@@ -24,7 +24,7 @@ def model{cellml_1_1} cellml_1_1 as
         // but if kept it will be serialised back in the
         // corresponding import definition...
 
-        comp{componentx} componentx using comp refcomponentx;
+        comp{my_imported_component_cmeta_id} my_imported_component using comp my_reference_component;
     enddef;
 
     // In between comment...
@@ -33,11 +33,11 @@ def model{cellml_1_1} cellml_1_1 as
     // but if kept it will be serialised back in the
     // corresponding model definition...
 
-    def unit{baseunitsx} baseunitsx as base unit;
+    def unit{my_base_unit_cmeta_id} my_base_unit as base unit;
 
     // In between comment...
 
-    def unit{unitsx} unitsx as
+    def unit{my_unit_cmeta_id} my_unit as
         // Comments can be within a unit definition...
 
         // In between comment...
@@ -46,12 +46,12 @@ def model{cellml_1_1} cellml_1_1 as
         // but if kept it will be serialised back in the
         // corresponding unit definition...
 
-        unit{unitx} unitx;
+        unit{some_unit_cmeta_id} some_unit;
     enddef;
 
     // In between comment...
 
-    def comp{componentx} componentx as
+    def comp{my_component_cmeta_id} my_component as
         // Comments can be within a component definition...
 
         // In between comment...
@@ -60,7 +60,7 @@ def model{cellml_1_1} cellml_1_1 as
         // but if kept it will be serialised back in the
         // corresponding component definition...
 
-        var{variablex} variablex: unitsx;
+        var{my_variable_cmeta_id} my_variable: my_unit;
 
         a = ode(f, t, 2{dimensionless});
         a = nan;
@@ -69,7 +69,7 @@ def model{cellml_1_1} cellml_1_1 as
 
     // In between comment...
 
-    def group{groupx} as containment{containmentx1} containmentx1 and containment{containmentx2} containmentx2 and encapsulation{encapsulationx} for
+    def group{my_group_cmeta_id} as containment{my_containment1_cmeta_id} my_containment1 and containment{my_containment2_cmeta_id} my_containment2 and encapsulation{my_encapsulation_cmeta_id} for
         // Comments can be within a group definition...
 
         // In between comment...
@@ -92,7 +92,7 @@ def model{cellml_1_1} cellml_1_1 as
 
         // In between comment...
 
-        comp{componentx} componentx incl
+        comp{my_component1_cmeta_id} my_component1 incl
             // Comments can be within a component reference
             // with component reference children...
 
@@ -103,7 +103,7 @@ def model{cellml_1_1} cellml_1_1 as
             // if kept it will be serialised back in the
             // corresponding group definition...
 
-            comp{componentxx} componentxx;
+            comp{my_component11_cmeta_id} my_component11;
 
             // In between comment...
 
@@ -112,13 +112,13 @@ def model{cellml_1_1} cellml_1_1 as
             // if kept it will be serialised back in the
             // corresponding group definition...
 
-            comp{componentxy} componentxy;
-            comp componentxz;
+            comp{my_component12_cmeta_id} my_component12;
+            comp my_component13;
         endcomp;
 
         // In between comment...
 
-        comp{componenty} componenty incl
+        comp{my_component2_cmeta_id} my_component2 incl
             // Comments can be within a component reference
             // with component reference children...
 
@@ -129,7 +129,7 @@ def model{cellml_1_1} cellml_1_1 as
             // if kept it will be serialised back in the
             // corresponding group definition...
 
-            comp{componentyx} componentyx;
+            comp{my_component21_cmeta_id} my_component21;
 
             // In between comment...
 
@@ -138,14 +138,14 @@ def model{cellml_1_1} cellml_1_1 as
             // if kept it will be serialised back in the
             // corresponding group definition...
 
-            comp{componentyy} componentyy;
-            comp componentyz;
+            comp{my_component22_cmeta_id} my_component22;
+            comp my_component23;
         endcomp;
     enddef;
 
     // In between comment...
 
-    def map{connectionx} between{mapcomponentxy} componentx and componenty for
+    def map{my_connection_cmeta_id} between{my_map_components_cmeta_id} my_component1 and my_component2 for
         // Comments can be within a connection definition...
 
         // In between comment...
@@ -160,7 +160,7 @@ def model{cellml_1_1} cellml_1_1 as
         // but if kept it will be serialised back in the
         // corresponding connection definition...
 
-        vars{mapvariablesx} variablexx and variablexy;
+        vars{my_map_variables1_cmeta_id} my_variable11 and my_variable12;
 
         // In between comment...
 
@@ -168,7 +168,7 @@ def model{cellml_1_1} cellml_1_1 as
         // but if kept it will be serialised back in the
         // corresponding connection definition...
 
-        vars{mapvariablesy} variableyx and variableyy;
-        vars variablezx and variablezy;
+        vars{my_map_variables2_cmeta_id} my_variable21 and my_variable22;
+        vars my_variable31 and my_variable32;
     enddef;
 enddef;
