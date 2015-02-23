@@ -1,9 +1,9 @@
 <?xml version='1.0'?>
 <model name="cellml_1_0" xmlns="http://www.cellml.org/cellml/1.0#" xmlns:cellml="http://www.cellml.org/cellml/1.0#" xmlns:cmeta="http://www.cellml.org/metadata/1.0#">
-    <units base_units="yes" name="baseunit1"/>
-    <units base_units="yes" name="baseunit2"/>
-    <units base_units="yes" name="baseunit3"/>
-    <units name="unit1">
+    <units base_units="yes" name="my_base_unit1"/>
+    <units base_units="yes" name="my_base_unit2"/>
+    <units base_units="yes" name="my_base_unit3"/>
+    <units name="my_unit1">
         <unit units="ampere"/>
         <unit units="becquerel"/>
         <unit units="candela"/>
@@ -39,37 +39,37 @@
         <unit units="watt"/>
         <unit units="weber"/>
     </units>
-    <units name="unit2">
-        <unit exponent="-1" multiplier="3" offset="7" prefix="milli" units="someunit"/>
+    <units name="my_unit2">
+        <unit exponent="-1" multiplier="3" offset="7" prefix="milli" units="some_unit"/>
     </units>
-    <units name="unit3">
-        <unit prefix="yotta" units="someunit"/>
-        <unit prefix="zetta" units="someunit"/>
-        <unit prefix="exa" units="someunit"/>
-        <unit prefix="peta" units="someunit"/>
-        <unit prefix="tera" units="someunit"/>
-        <unit prefix="giga" units="someunit"/>
-        <unit prefix="mega" units="someunit"/>
-        <unit prefix="kilo" units="someunit"/>
-        <unit prefix="hecto" units="someunit"/>
-        <unit prefix="deka" units="someunit"/>
-        <unit prefix="deci" units="someunit"/>
-        <unit prefix="centi" units="someunit"/>
-        <unit prefix="milli" units="someunit"/>
-        <unit prefix="micro" units="someunit"/>
-        <unit prefix="nano" units="someunit"/>
-        <unit prefix="milli" units="someunit"/>
-        <unit prefix="pico" units="someunit"/>
-        <unit prefix="femto" units="someunit"/>
-        <unit prefix="atto" units="someunit"/>
-        <unit prefix="zepto" units="someunit"/>
-        <unit prefix="yocto" units="someunit"/>
+    <units name="my_unit3">
+        <unit prefix="yotta" units="some_unit"/>
+        <unit prefix="zetta" units="some_unit"/>
+        <unit prefix="exa" units="some_unit"/>
+        <unit prefix="peta" units="some_unit"/>
+        <unit prefix="tera" units="some_unit"/>
+        <unit prefix="giga" units="some_unit"/>
+        <unit prefix="mega" units="some_unit"/>
+        <unit prefix="kilo" units="some_unit"/>
+        <unit prefix="hecto" units="some_unit"/>
+        <unit prefix="deka" units="some_unit"/>
+        <unit prefix="deci" units="some_unit"/>
+        <unit prefix="centi" units="some_unit"/>
+        <unit prefix="milli" units="some_unit"/>
+        <unit prefix="micro" units="some_unit"/>
+        <unit prefix="nano" units="some_unit"/>
+        <unit prefix="milli" units="some_unit"/>
+        <unit prefix="pico" units="some_unit"/>
+        <unit prefix="femto" units="some_unit"/>
+        <unit prefix="atto" units="some_unit"/>
+        <unit prefix="zepto" units="some_unit"/>
+        <unit prefix="yocto" units="some_unit"/>
     </units>
-    <component name="component1">
-        <units base_units="yes" name="baseunit1"/>
-        <units base_units="yes" name="baseunit2"/>
-        <units base_units="yes" name="baseunit3"/>
-        <units name="unit1">
+    <component name="my_component1">
+        <units base_units="yes" name="my_base_unit1"/>
+        <units base_units="yes" name="my_base_unit2"/>
+        <units base_units="yes" name="my_base_unit3"/>
+        <units name="my_unit1">
             <unit units="ampere"/>
             <unit units="becquerel"/>
             <unit units="candela"/>
@@ -105,37 +105,37 @@
             <unit units="watt"/>
             <unit units="weber"/>
         </units>
-        <units name="unit2">
-            <unit exponent="-1" multiplier="3" offset="7" prefix="milli" units="someunit"/>
+        <units name="my_unit2">
+            <unit exponent="-1" multiplier="3" offset="7" prefix="milli" units="some_unit"/>
         </units>
-        <units name="unit3">
-            <unit prefix="yotta" units="someunit"/>
-            <unit prefix="zetta" units="someunit"/>
-            <unit prefix="exa" units="someunit"/>
-            <unit prefix="peta" units="someunit"/>
-            <unit prefix="tera" units="someunit"/>
-            <unit prefix="giga" units="someunit"/>
-            <unit prefix="mega" units="someunit"/>
-            <unit prefix="kilo" units="someunit"/>
-            <unit prefix="hecto" units="someunit"/>
-            <unit prefix="deka" units="someunit"/>
-            <unit prefix="deci" units="someunit"/>
-            <unit prefix="centi" units="someunit"/>
-            <unit prefix="milli" units="someunit"/>
-            <unit prefix="micro" units="someunit"/>
-            <unit prefix="nano" units="someunit"/>
-            <unit prefix="milli" units="someunit"/>
-            <unit prefix="pico" units="someunit"/>
-            <unit prefix="femto" units="someunit"/>
-            <unit prefix="atto" units="someunit"/>
-            <unit prefix="zepto" units="someunit"/>
-            <unit prefix="yocto" units="someunit"/>
+        <units name="my_unit3">
+            <unit prefix="yotta" units="some_unit"/>
+            <unit prefix="zetta" units="some_unit"/>
+            <unit prefix="exa" units="some_unit"/>
+            <unit prefix="peta" units="some_unit"/>
+            <unit prefix="tera" units="some_unit"/>
+            <unit prefix="giga" units="some_unit"/>
+            <unit prefix="mega" units="some_unit"/>
+            <unit prefix="kilo" units="some_unit"/>
+            <unit prefix="hecto" units="some_unit"/>
+            <unit prefix="deka" units="some_unit"/>
+            <unit prefix="deci" units="some_unit"/>
+            <unit prefix="centi" units="some_unit"/>
+            <unit prefix="milli" units="some_unit"/>
+            <unit prefix="micro" units="some_unit"/>
+            <unit prefix="nano" units="some_unit"/>
+            <unit prefix="milli" units="some_unit"/>
+            <unit prefix="pico" units="some_unit"/>
+            <unit prefix="femto" units="some_unit"/>
+            <unit prefix="atto" units="some_unit"/>
+            <unit prefix="zepto" units="some_unit"/>
+            <unit prefix="yocto" units="some_unit"/>
         </units>
-        <variable name="variable1" units="unit1"/>
-        <variable initial_value="123" name="variable2" units="unit2"/>
-        <variable name="variable3" public_interface="in" units="unit3"/>
-        <variable name="variable4" private_interface="out" units="unit4"/>
-        <variable name="variable5" public_interface="none" private_interface="none" units="unit5"/>
+        <variable name="my_variable1" units="my_unit1"/>
+        <variable initial_value="123" name="my_variable2" units="my_unit2"/>
+        <variable name="my_variable3" public_interface="in" units="my_unit3"/>
+        <variable name="my_variable4" private_interface="out" units="my_unit4"/>
+        <variable name="my_variable5" public_interface="none" private_interface="none" units="my_unit5"/>
         <math xmlns="http://www.w3.org/1998/Math/MathML">
             <apply>
                 <eq/>
@@ -1708,39 +1708,39 @@
     </component>
     <group>
         <relationship_ref relationship="containment"/>
-        <component_ref component="component1">
-            <component_ref component="component11">
-                <component_ref component="component111"/>
-                <component_ref component="component112"/>
+        <component_ref component="my_component1">
+            <component_ref component="my_component11">
+                <component_ref component="my_component111"/>
+                <component_ref component="my_component112"/>
             </component_ref>
         </component_ref>
     </group>
     <group>
-        <relationship_ref name="containment1" relationship="containment"/>
-        <component_ref component="component1">
-            <component_ref component="component12">
-                <component_ref component="component121"/>
+        <relationship_ref name="my_containment1" relationship="containment"/>
+        <component_ref component="my_component1">
+            <component_ref component="my_component12">
+                <component_ref component="my_component121"/>
             </component_ref>
-            <component_ref component="component13"/>
+            <component_ref component="my_component13"/>
         </component_ref>
     </group>
     <group>
         <relationship_ref relationship="encapsulation"/>
-        <component_ref component="component11">
-            <component_ref component="component111"/>
-            <component_ref component="component112"/>
+        <component_ref component="my_component11">
+            <component_ref component="my_component111"/>
+            <component_ref component="my_component112"/>
         </component_ref>
-        <component_ref component="component12">
-            <component_ref component="component121"/>
+        <component_ref component="my_component12">
+            <component_ref component="my_component121"/>
         </component_ref>
     </group>
     <group>
         <relationship_ref relationship="encapsulation"/>
-        <relationship_ref name="containment1" relationship="containment"/>
-        <component_ref component="component1"/>
+        <relationship_ref name="my_containment1" relationship="containment"/>
+        <component_ref component="my_component1"/>
     </group>
     <connection>
-        <map_components component_1="component1" component_2="component2"/>
-        <map_variables variable_1="variable1" variable_2="variable2"/>
+        <map_components component_1="my_component1" component_2="my_component2"/>
+        <map_variables variable_1="my_variable1" variable_2="my_variable2"/>
     </connection>
 </model>
