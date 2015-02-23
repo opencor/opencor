@@ -91,27 +91,31 @@ private:
     CellMLSupport::CellmlFile::Version mCellmlVersion;
 
     QDomDocument mDomDocument;
-    QDomNode mDomNode;
-    QDomElement mDomElement;
 
     CellmlTextViewParserMessages mMessages;
 
-    QDomElement newDomElement(const QString &pElementName);
+    QMap<QString, QString> mNamespaces;
 
-    bool tokenType(const QString &pExpectedString,
+    QDomElement newDomElement(QDomNode &pDomNode, const QString &pElementName);
+
+    bool tokenType(QDomNode &pDomNode, const QString &pExpectedString,
                    const CellmlTextViewScanner::TokenType &pTokenType);
 
-    bool asToken();
-    bool closingCurlyBracketToken();
-    bool defToken();
-    bool enddefPlusSemiColonToken();
-    bool identifierToken();
-    bool modelToken();
-    bool openingCurlyBracketToken();
-    bool semiColonToken();
+    bool asToken(QDomNode &pDomNode);
+    bool closingCurlyBracketToken(QDomNode &pDomNode);
+    bool defToken(QDomNode &pDomNode);
+    bool enddefPlusSemiColonToken(QDomNode &pDomNode);
+    bool identifierToken(QDomNode &pDomNode);
+    bool modelToken(QDomNode &pDomNode);
+    bool openingCurlyBracketToken(QDomNode &pDomNode);
+    bool semiColonToken(QDomNode &pDomNode);
+    bool unitToken(QDomNode &pDomNode);
 
-    void parseComments();
-    QString parseCmetaId();
+    void parseComments(QDomNode &pDomNode);
+    void parseCmetaId(QDomElement &pDomElement);
+    bool parseModelDefinition(QDomNode &pDomNode);
+    QDomElement parseUnitsDefinition(QDomNode &pDomNode,
+                                     bool &pBaseUnitsDefinition);
 };
 
 //==============================================================================

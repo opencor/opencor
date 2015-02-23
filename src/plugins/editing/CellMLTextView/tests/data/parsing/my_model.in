@@ -1,7 +1,10 @@
-def model{my_cmeta_id} my_model as
+def model{my_model_cmeta_id} my_model as
     // A comment can fit on one line...
 
     // A comment can also fit
     // on one, two or even
     // more lines...
+
+    def unit{my_base_unit1_cmeta_id} my_base_unit1 as base unit;
+    def unit my_base_unit2 as base unit;
 enddef;

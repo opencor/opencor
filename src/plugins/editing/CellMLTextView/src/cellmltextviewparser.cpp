@@ -86,9 +86,8 @@ CellmlTextViewParser::CellmlTextViewParser() :
     mScanner(new CellmlTextViewScanner()),
     mCellmlVersion(CellMLSupport::CellmlFile::Cellml_1_0),
     mDomDocument(QDomDocument()),
-    mDomNode(QDomNode()),
-    mDomElement(QDomElement()),
-    mMessages(CellmlTextViewParserMessages())
+    mMessages(CellmlTextViewParserMessages()),
+    mNamespaces(QMap<QString, QString>())
 {
 }
 
@@ -112,75 +111,93 @@ bool CellmlTextViewParser::execute(const QString &pText)
     mCellmlVersion = CellMLSupport::CellmlFile::Cellml_1_0;
 
     mDomDocument = QDomDocument(QString());
-    mDomNode = mDomDocument;
-    mDomElement = QDomElement();
 
     mMessages = CellmlTextViewParserMessages();
 
+    mNamespaces = QMap<QString, QString>();
+
     // Expect "def"
 
-    if (defToken()) {
+    if (defToken(mDomDocument)) {
         // Expect "model"
 
         mScanner->getNextToken();
 
-        if (modelToken()) {
+        if (modelToken(mDomDocument)) {
+            // Create our model element
+
+            QDomElement modelElement = newDomElement(mDomDocument, "model");
+
             // Try to parse for a cmeta:id
 
             mScanner->getNextToken();
 
-            QString cmetaId = parseCmetaId();
+            parseCmetaId(modelElement);
 
             // Expect an identifier
 
-            if (identifierToken()) {
-                // Create our model node
+            if (identifierToken(mDomDocument)) {
+                // Set our model name
 
-                mDomNode = mDomElement = newDomElement("model");
-
-                mDomElement.setAttribute("name", mScanner->tokenString());
-
-                if (!cmetaId.isEmpty())
-                    mDomElement.setAttributeNS(CellMLSupport::CmetaIdNamespace, "cmeta:id", cmetaId);
+                modelElement.setAttribute("name", mScanner->tokenString());
 
                 // Expect "as"
 
                 mScanner->getNextToken();
 
-                if (asToken()) {
-                    // Expect "enddef;"
+                if (asToken(mDomDocument)) {
+                    // Try to parse for some model definition itself
 
                     mScanner->getNextToken();
 
-                    if (enddefPlusSemiColonToken()) {
-                        // Expect the end of the file
+                    if (parseModelDefinition(modelElement)) {
+                        // Expect "enddef;"
 
-                        mScanner->getNextToken();
+                        if (enddefPlusSemiColonToken(modelElement)) {
+                            // Expect the end of the file
 
-                        if (tokenType("the end of the file", CellmlTextViewScanner::EofToken)) {
-                            // We are done, so add some processing instruction
-                            // to our DOM document
+                            mScanner->getNextToken();
 
-                            mDomDocument.insertBefore(mDomDocument.createProcessingInstruction("xml", "version='1.0'"),
-                                                      mDomDocument.documentElement());
+                            if (tokenType(modelElement, "the end of the file", CellmlTextViewScanner::EofToken)) {
+                                // We are done, so add some processing
+                                // instruction to our DOM document
 
-                            // Now, add the CellML namespace to our document
-                            // element
+                                mDomDocument.insertBefore(mDomDocument.createProcessingInstruction("xml", "version='1.0'"),
+                                                          mDomDocument.documentElement());
 
-                            switch (mCellmlVersion) {
-                            case CellMLSupport::CellmlFile::Cellml_1_1:
-                                mDomDocument.documentElement().setAttribute("xmlns", CellMLSupport::Cellml_1_1_Namespace);
-                                mDomDocument.documentElement().setAttribute("xmlns:cellml", CellMLSupport::Cellml_1_1_Namespace);
+                                // Next, add the CellML namespace to our
+                                // document element
 
-                                break;
-                            default:
-                                // CellMLSupport::CellmlFile::Cellml_1_0
+                                switch (mCellmlVersion) {
+                                case CellMLSupport::CellmlFile::Cellml_1_1:
+                                    mDomDocument.documentElement().setAttribute("xmlns", CellMLSupport::Cellml_1_1_Namespace);
+                                    mDomDocument.documentElement().setAttribute("xmlns:cellml", CellMLSupport::Cellml_1_1_Namespace);
 
-                                mDomDocument.documentElement().setAttribute("xmlns", CellMLSupport::Cellml_1_0_Namespace);
-                                mDomDocument.documentElement().setAttribute("xmlns:cellml", CellMLSupport::Cellml_1_0_Namespace);
+                                    break;
+                                default:
+                                    // CellMLSupport::CellmlFile::Cellml_1_0
+
+                                    mDomDocument.documentElement().setAttribute("xmlns", CellMLSupport::Cellml_1_0_Namespace);
+                                    mDomDocument.documentElement().setAttribute("xmlns:cellml", CellMLSupport::Cellml_1_0_Namespace);
+                                }
+
+                                // Finally, add the other namespaces that we
+                                // need
+                                // Note: ideally, we wouldn't have to do this,
+                                //       but this would mean using the NS
+                                //       version of various methods (e.g.
+                                //       setAttributeNS() rather than
+                                //       setAttribute()). However, this results
+                                //       in namespace information being
+                                //       referenced all over the place, which is
+                                //       really not what we want since that
+                                //       unnecessarily pollutes things...
+
+                                foreach (const QString &key, mNamespaces.keys())
+                                    mDomDocument.documentElement().setAttribute(QString("xmlns:%1").arg(key), mNamespaces.value(key));
+
+                                return true;
                             }
-
-                            return true;
                         }
                     }
                 }
@@ -211,25 +228,28 @@ CellmlTextViewParserMessages CellmlTextViewParser::messages() const
 
 //==============================================================================
 
-QDomElement CellmlTextViewParser::newDomElement(const QString &pElementName)
+QDomElement CellmlTextViewParser::newDomElement(QDomNode &pDomNode,
+                                                const QString &pElementName)
 {
-    // Create a new DOM element with the given name and make it our new mDomNode
+    // Create a new DOM element with the given name and append it to the given
+    // DOM node before returning it
 
     QDomElement domElement = mDomDocument.createElement(pElementName);
 
-    mDomNode.appendChild(domElement);
+    pDomNode.appendChild(domElement);
 
     return domElement;
 }
 
 //==============================================================================
 
-bool CellmlTextViewParser::tokenType(const QString &pExpectedString,
+bool CellmlTextViewParser::tokenType(QDomNode &pDomNode,
+                                     const QString &pExpectedString,
                                      const CellmlTextViewScanner::TokenType &pTokenType)
 {
     // Try to parse comments, if any
 
-    parseComments();
+    parseComments(pDomNode);
 
     // Check whether the current token type is the one we are after
 
@@ -273,43 +293,43 @@ bool CellmlTextViewParser::tokenType(const QString &pExpectedString,
 
 //==============================================================================
 
-bool CellmlTextViewParser::asToken()
+bool CellmlTextViewParser::asToken(QDomNode &pDomNode)
 {
     // Expect "as"
 
-    return tokenType("'as'", CellmlTextViewScanner::AsToken);
+    return tokenType(pDomNode, "'as'", CellmlTextViewScanner::AsToken);
 }
 
 //==============================================================================
 
-bool CellmlTextViewParser::closingCurlyBracketToken()
+bool CellmlTextViewParser::closingCurlyBracketToken(QDomNode &pDomNode)
 {
     // Expect "}"
 
-    return tokenType("'}'", CellmlTextViewScanner::ClosingCurlyBracketToken);
+    return tokenType(pDomNode, "'}'", CellmlTextViewScanner::ClosingCurlyBracketToken);
 }
 
 //==============================================================================
 
-bool CellmlTextViewParser::defToken()
+bool CellmlTextViewParser::defToken(QDomNode &pDomNode)
 {
     // Expect "def"
 
-    return tokenType("'def'", CellmlTextViewScanner::DefToken);
+    return tokenType(pDomNode, "'def'", CellmlTextViewScanner::DefToken);
 }
 
 //==============================================================================
 
-bool CellmlTextViewParser::enddefPlusSemiColonToken()
+bool CellmlTextViewParser::enddefPlusSemiColonToken(QDomNode &pDomNode)
 {
     // Expect "enddef"
 
-    if (tokenType("'enddef'", CellmlTextViewScanner::EndDefToken)) {
+    if (tokenType(pDomNode, "'enddef'", CellmlTextViewScanner::EndDefToken)) {
         // Expect ";"
 
         mScanner->getNextToken();
 
-        return semiColonToken();
+        return semiColonToken(pDomNode);
     } else {
         return false;
     }
@@ -317,43 +337,52 @@ bool CellmlTextViewParser::enddefPlusSemiColonToken()
 
 //==============================================================================
 
-bool CellmlTextViewParser::identifierToken()
+bool CellmlTextViewParser::identifierToken(QDomNode &pDomNode)
 {
     // Expect an identifier
 
-    return tokenType("An identifier", CellmlTextViewScanner::IdentifierToken);
+    return tokenType(pDomNode, "An identifier", CellmlTextViewScanner::IdentifierToken);
 }
 
 //==============================================================================
 
-bool CellmlTextViewParser::modelToken()
+bool CellmlTextViewParser::modelToken(QDomNode &pDomNode)
 {
     // Expect "model"
 
-    return tokenType("'model'", CellmlTextViewScanner::ModelToken);
+    return tokenType(pDomNode, "'model'", CellmlTextViewScanner::ModelToken);
 }
 
 //==============================================================================
 
-bool CellmlTextViewParser::openingCurlyBracketToken()
+bool CellmlTextViewParser::openingCurlyBracketToken(QDomNode &pDomNode)
 {
     // Expect "{"
 
-    return tokenType("'{'", CellmlTextViewScanner::OpeningCurlyBracketToken);
+    return tokenType(pDomNode, "'{'", CellmlTextViewScanner::OpeningCurlyBracketToken);
 }
 
 //==============================================================================
 
-bool CellmlTextViewParser::semiColonToken()
+bool CellmlTextViewParser::semiColonToken(QDomNode &pDomNode)
 {
     // Expect ";"
 
-    return tokenType("';'", CellmlTextViewScanner::SemiColonToken);
+    return tokenType(pDomNode, "';'", CellmlTextViewScanner::SemiColonToken);
 }
 
 //==============================================================================
 
-void CellmlTextViewParser::parseComments()
+bool CellmlTextViewParser::unitToken(QDomNode &pDomNode)
+{
+    // Expect "unit"
+
+    return tokenType(pDomNode, "'unit'", CellmlTextViewScanner::UnitToken);
+}
+
+//==============================================================================
+
+void CellmlTextViewParser::parseComments(QDomNode &pDomNode)
 {
     // Check whether there are some comments
 
@@ -383,7 +412,7 @@ void CellmlTextViewParser::parseComments()
                     // comment(s) to the current node and keep track of the new
                     // line comment
 
-                    mDomNode.appendChild(mDomDocument.createComment(singleLineComments));
+                    pDomNode.appendChild(mDomDocument.createComment(singleLineComments));
 
                     singleLineComments = mScanner->tokenString();
                 }
@@ -399,7 +428,7 @@ void CellmlTextViewParser::parseComments()
             // the current node, if any, and leave
 
             if (!singleLineComments.isEmpty())
-                mDomNode.appendChild(mDomDocument.createComment(singleLineComments));
+                pDomNode.appendChild(mDomDocument.createComment(singleLineComments));
 
             return;
         }
@@ -410,34 +439,151 @@ void CellmlTextViewParser::parseComments()
 
 //==============================================================================
 
-QString CellmlTextViewParser::parseCmetaId()
+void CellmlTextViewParser::parseCmetaId(QDomElement &pDomElement)
 {
-    // Check whether a cmeta:id is given
+    // Check whether a cmeta:id is given by checking whether the token is "{"
 
-    QString res = QString();
-
-    // Check whether the next token is "{"
+    QString cmetaId = QString();
 
     if (mScanner->tokenType() == CellmlTextViewScanner::OpeningCurlyBracketToken) {
         // Expect an identifier
 
         mScanner->getNextToken();
 
-        if (identifierToken()) {
+        if (identifierToken(pDomElement)) {
             // The identifier is our cmeta:id
 
-            res = mScanner->tokenString();
+            cmetaId = mScanner->tokenString();
 
             // Expect "}"
 
             mScanner->getNextToken();
 
-            if (closingCurlyBracketToken())
+            if (closingCurlyBracketToken(pDomElement))
                 mScanner->getNextToken();
         }
     }
 
-    return res;
+    // Set the cmeta:id of the current DOM element
+
+    if (!cmetaId.isEmpty()) {
+        mNamespaces.insert("cmeta", CellMLSupport::CmetaIdNamespace);
+
+        pDomElement.setAttribute("cmeta:id", cmetaId);
+    }
+}
+
+//==============================================================================
+
+bool CellmlTextViewParser::parseModelDefinition(QDomNode &pDomNode)
+{
+    // Try to parse comments, if any
+
+    parseComments(pDomNode);
+
+    // Check whether we have "enddef"
+
+    while (   (mScanner->tokenType() != CellmlTextViewScanner::EndDefToken)
+           && (mScanner->tokenType() != CellmlTextViewScanner::EofToken)) {
+        // Expect "def"
+
+        if (defToken(pDomNode)) {
+            // Expect "import", "unit", "comp", "group" or "map"
+
+            mScanner->getNextToken();
+
+            bool baseUnitsDefinition = false;
+            QDomElement domElement;
+
+            switch (mScanner->tokenType()) {
+//            case CellmlTextViewScanner::ImportToken:
+//                break;
+            case CellmlTextViewScanner::UnitToken:
+                domElement = parseUnitsDefinition(pDomNode, baseUnitsDefinition);
+
+                break;
+//            case CellmlTextViewScanner::CompToken:
+//                break;
+//            case CellmlTextViewScanner::GroupToken:
+//                break;
+//            case CellmlTextViewScanner::MapToken:
+//                break;
+            default:
+                return false;
+            }
+
+            if (!domElement.isNull()) {
+                // Expect ";" or "enddef;"
+
+                if (   ( baseUnitsDefinition && semiColonToken(pDomNode))
+                    || (!baseUnitsDefinition && enddefPlusSemiColonToken(domElement))) {
+                    mScanner->getNextToken();
+                } else {
+                    return false;
+                }
+            }
+        } else {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+//==============================================================================
+
+QDomElement CellmlTextViewParser::parseUnitsDefinition(QDomNode &pDomNode,
+                                                       bool &pBaseUnitsDefinition)
+{
+    // Create our units element
+
+    QDomElement unitsElement = newDomElement(pDomNode, "units");
+
+    // Try to parse for a cmeta:id
+
+    mScanner->getNextToken();
+
+    parseCmetaId(unitsElement);
+
+    // Expect an identifier
+
+    if (identifierToken(pDomNode)) {
+        // Set our unit's name
+
+        unitsElement.setAttribute("name", mScanner->tokenString());
+
+        // Expect "as"
+
+        mScanner->getNextToken();
+
+        if (asToken(pDomNode)) {
+            // Check whether we have "base"
+
+            mScanner->getNextToken();
+
+            if (mScanner->tokenType() == CellmlTextViewScanner::BaseToken) {
+                // Expect "unit"
+
+                mScanner->getNextToken();
+
+                if (unitToken(pDomNode)) {
+                    // Make our unit a base unit
+
+                    pBaseUnitsDefinition = true;
+
+                    unitsElement.setAttribute("base_units", "yes");
+
+                    mScanner->getNextToken();
+
+                    return unitsElement;
+                }
+            } else {
+//---GRY--- TO BE DONE...
+            }
+        }
+    }
+
+    return QDomElement();
 }
 
 //==============================================================================
