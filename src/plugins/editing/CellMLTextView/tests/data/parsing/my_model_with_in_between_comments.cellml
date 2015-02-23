@@ -1,0 +1,11 @@
+<?xml version='1.0'?>
+<model name="my_model" xmlns="http://www.cellml.org/cellml/1.0#" xmlns:cellml="http://www.cellml.org/cellml/1.0#">
+    <!-- In between comment #1...-->
+    <units base_units="yes" name="my_base_unit">
+        <!-- In between comment #2...-->
+        <!-- In between comment #3...-->
+        <!-- In between comment #4...-->
+        <!-- In between comment #5...-->
+    </units>
+    <!-- In between comment #6...-->
+</model>

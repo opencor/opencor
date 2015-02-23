@@ -100,6 +100,8 @@ private:
 
     bool tokenType(QDomNode &pDomNode, const QString &pExpectedString,
                    const CellmlTextViewScanner::TokenType &pTokenType);
+    bool isTokenType(QDomNode &pDomNode,
+                     const CellmlTextViewScanner::TokenType &pTokenType);
 
     bool asToken(QDomNode &pDomNode);
     bool closingCurlyBracketToken(QDomNode &pDomNode);

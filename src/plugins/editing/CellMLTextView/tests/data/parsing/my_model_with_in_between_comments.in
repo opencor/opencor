@@ -1,0 +1,27 @@
+def model my_model as
+    def
+
+    // In between comment #1...
+
+    unit
+
+    // In between comment #2...
+
+    my_base_unit
+
+    // In between comment #3...
+
+    as
+
+    // In between comment #4...
+
+    base
+
+    // In between comment #5...
+
+    unit
+
+    // In between comment #6...
+
+    ;
+enddef;

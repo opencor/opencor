@@ -293,6 +293,20 @@ bool CellmlTextViewParser::tokenType(QDomNode &pDomNode,
 
 //==============================================================================
 
+bool CellmlTextViewParser::isTokenType(QDomNode &pDomNode,
+                                       const CellmlTextViewScanner::TokenType &pTokenType)
+{
+    // Try to parse comments, if any
+
+    parseComments(pDomNode);
+
+    // Return whether the current token type is the one we are after
+
+    return mScanner->tokenType() == pTokenType;
+}
+
+//==============================================================================
+
 bool CellmlTextViewParser::asToken(QDomNode &pDomNode)
 {
     // Expect "as"
@@ -445,7 +459,7 @@ void CellmlTextViewParser::parseCmetaId(QDomElement &pDomElement)
 
     QString cmetaId = QString();
 
-    if (mScanner->tokenType() == CellmlTextViewScanner::OpeningCurlyBracketToken) {
+    if (isTokenType(pDomElement, CellmlTextViewScanner::OpeningCurlyBracketToken)) {
         // Expect an identifier
 
         mScanner->getNextToken();
@@ -477,14 +491,10 @@ void CellmlTextViewParser::parseCmetaId(QDomElement &pDomElement)
 
 bool CellmlTextViewParser::parseModelDefinition(QDomNode &pDomNode)
 {
-    // Try to parse comments, if any
+    // Loop while we don't have "enddef" or EOF
 
-    parseComments(pDomNode);
-
-    // Check whether we have "enddef"
-
-    while (   (mScanner->tokenType() != CellmlTextViewScanner::EndDefToken)
-           && (mScanner->tokenType() != CellmlTextViewScanner::EofToken)) {
+    while (   !isTokenType(pDomNode, CellmlTextViewScanner::EndDefToken)
+           && !isTokenType(pDomNode, CellmlTextViewScanner::EofToken)) {
         // Expect "def"
 
         if (defToken(pDomNode)) {
@@ -495,20 +505,17 @@ bool CellmlTextViewParser::parseModelDefinition(QDomNode &pDomNode)
             bool baseUnitsDefinition = false;
             QDomElement domElement;
 
-            switch (mScanner->tokenType()) {
-//            case CellmlTextViewScanner::ImportToken:
-//                break;
-            case CellmlTextViewScanner::UnitToken:
+            if (isTokenType(pDomNode, CellmlTextViewScanner::ImportToken)) {
+//---GRY--- TO BE DONE...
+            } else if (isTokenType(pDomNode, CellmlTextViewScanner::UnitToken)) {
                 domElement = parseUnitsDefinition(pDomNode, baseUnitsDefinition);
-
-                break;
-//            case CellmlTextViewScanner::CompToken:
-//                break;
-//            case CellmlTextViewScanner::GroupToken:
-//                break;
-//            case CellmlTextViewScanner::MapToken:
-//                break;
-            default:
+            } else if (isTokenType(pDomNode, CellmlTextViewScanner::CompToken)) {
+//---GRY--- TO BE DONE...
+            } else if (isTokenType(pDomNode, CellmlTextViewScanner::GroupToken)) {
+//---GRY--- TO BE DONE...
+            } else if (isTokenType(pDomNode, CellmlTextViewScanner::MapToken)) {
+//---GRY--- TO BE DONE...
+            } else {
                 return false;
             }
 
@@ -547,7 +554,7 @@ QDomElement CellmlTextViewParser::parseUnitsDefinition(QDomNode &pDomNode,
 
     // Expect an identifier
 
-    if (identifierToken(pDomNode)) {
+    if (identifierToken(unitsElement)) {
         // Set our unit's name
 
         unitsElement.setAttribute("name", mScanner->tokenString());
@@ -556,17 +563,17 @@ QDomElement CellmlTextViewParser::parseUnitsDefinition(QDomNode &pDomNode,
 
         mScanner->getNextToken();
 
-        if (asToken(pDomNode)) {
+        if (asToken(unitsElement)) {
             // Check whether we have "base"
 
             mScanner->getNextToken();
 
-            if (mScanner->tokenType() == CellmlTextViewScanner::BaseToken) {
+            if (isTokenType(unitsElement, CellmlTextViewScanner::BaseToken)) {
                 // Expect "unit"
 
                 mScanner->getNextToken();
 
-                if (unitToken(pDomNode)) {
+                if (unitToken(unitsElement)) {
                     // Make our unit a base unit
 
                     pBaseUnitsDefinition = true;

@@ -6,5 +6,8 @@ def model{my_model_cmeta_id} my_model as
     // more lines...
 
     def unit{my_base_unit1_cmeta_id} my_base_unit1 as base unit;
+
+    // In between comment...
+
     def unit my_base_unit2 as base unit;
 enddef;
