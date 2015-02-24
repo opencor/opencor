@@ -167,7 +167,7 @@ IF(ENABLE_TESTS)
 
     SET(TESTS_LIST_FILENAME ${PROJECT_BUILD_DIR}/tests.txt)
 
-    FILE(REMOVE ${TESTS_LIST_FILENAME})
+    FILE(WRITE ${TESTS_LIST_FILENAME})
 
     # Destination tests directory
     # Note: DEST_TESTS_DIR isn't only used here, but also in our ADD_PLUGIN()
