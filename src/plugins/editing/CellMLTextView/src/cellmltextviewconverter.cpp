@@ -134,51 +134,35 @@ CellMLTextViewConverter::CellMLTextViewConverter() :
 bool CellMLTextViewConverter::execute(const QString &pFileName)
 {
     // Convert the CellML file to CellML text by first getting a DOM
-    // representation of the file, but that is only if the file is not new
+    // representation of the file
 
-    if (Core::FileManager::instance()->isNew(pFileName)) {
-        // The file is new, so just reset various properties of ours
+    QString fileContents;
+    QDomDocument domDocument;
 
+    Core::readTextFromFile(pFileName, fileContents);
+
+    if (domDocument.setContent(fileContents, true,
+                               &mErrorMessage, &mErrorLine, &mErrorColumn)) {
         mOutput = QString();
+        mIndent = QString();
 
-        mErrorLine = -1;
-        mErrorColumn = -1;
-        mErrorMessage = QString();
+        mLastOutputType = None;
 
         mWarnings = CellMLTextViewConverterWarnings();
 
         mRdfNodes = QDomDocument(QString());
 
-        return true;
-    } else {
-        QString fileContents;
-        QDomDocument domDocument;
-
-        Core::readTextFromFile(pFileName, fileContents);
-
-        if (domDocument.setContent(fileContents, true,
-                                   &mErrorMessage, &mErrorLine, &mErrorColumn)) {
-            mOutput = QString();
-            mIndent = QString();
-
-            mLastOutputType = None;
-
-            mWarnings = CellMLTextViewConverterWarnings();
-
-            mRdfNodes = QDomDocument(QString());
-
-            if (!processModelNode(domDocument.documentElement())) {
-                mOutput = fileContents;
-
-                return false;
-            } else {
-                return true;
-            }
-        } else {
+        if (!processModelNode(domDocument.documentElement())) {
             mOutput = fileContents;
 
             return false;
+        } else {
+            return true;
         }
+    } else {
+        mOutput = fileContents;
+
+        return false;
     }
 }
 
