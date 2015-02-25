@@ -56,8 +56,14 @@ EditorListItem::EditorListItem(const Type &pType, const int &pLine,
         setIcon(QIcon(":/oxygen/status/task-attention.png"));
 
         break;
-    default:   // Hint
+    case Hint:
         setIcon(QIcon(":/oxygen/actions/help-hint.png"));
+
+        break;
+    case Information:
+        setIcon(QIcon(":/oxygen/status/dialog-information.png"));
+
+        break;
     }
 
 }

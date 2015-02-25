@@ -42,9 +42,10 @@ class EDITORLIST_EXPORT EditorListItem : public QStandardItem
 {
 public:
     enum Type {
-        Error   = QStandardItem::UserType,
-        Warning = QStandardItem::UserType+1,
-        Hint    = QStandardItem::UserType+2
+        Error       = QStandardItem::UserType,
+        Warning     = QStandardItem::UserType+1,
+        Hint        = QStandardItem::UserType+2,
+        Information = QStandardItem::UserType+3
     };
 
     explicit EditorListItem(const Type &pType, const int &pLine,
