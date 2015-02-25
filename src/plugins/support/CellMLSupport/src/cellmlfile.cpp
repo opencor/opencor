@@ -177,7 +177,9 @@ bool CellmlFile::fullyInstantiateImports(iface::cellml_api::Model *pModel,
     // Fully instantiate all the imports, but only if we are dealing with a non
     // CellML 1.0 model
 
-    if (QString::fromStdWString(pModel->cellmlVersion()).compare(CellMLSupport::Cellml_1_0)) {
+    Version cellmlVersion = version(pModel);
+
+    if ((cellmlVersion != Unknown) && (cellmlVersion != Cellml_1_0)) {
         try {
             // Note: the below is based on CDA_Model::fullyInstantiateImports().
             //       Indeed, CDA_Model::fullyInstantiateImports() doesn't work
@@ -996,7 +998,7 @@ bool CellmlFile::exportTo(const QString &pFileName, const Version &pVersion)
             // To export to CellML 1.1, the model must be in a non CellML 1.1
             // format
 
-            if (!QString::fromStdWString(mModel->cellmlVersion()).compare(CellMLSupport::Cellml_1_1))
+            if (version(mModel) == Cellml_1_1)
                 return false;
 
             break;
@@ -1005,7 +1007,7 @@ bool CellmlFile::exportTo(const QString &pFileName, const Version &pVersion)
             // To export to CellML 1.0, the model must be in a non CellML 1.0
             // format
 
-            if (!QString::fromStdWString(mModel->cellmlVersion()).compare(CellMLSupport::Cellml_1_0))
+            if (version(mModel) == Cellml_1_0)
                 return false;
         }
 
@@ -1102,6 +1104,31 @@ bool CellmlFile::exportTo(const QString &pFileName,
     } else {
         return false;
     }
+}
+
+//==============================================================================
+
+CellmlFile::Version CellmlFile::version(iface::cellml_api::Model *pModel)
+{
+    // Return the version of the given CellML model
+
+    QString cellmlVersion = QString::fromStdWString(pModel->cellmlVersion());
+
+    if (!cellmlVersion.compare(CellMLSupport::Cellml_1_0))
+        return Cellml_1_0;
+    else if (!cellmlVersion.compare(CellMLSupport::Cellml_1_1))
+        return Cellml_1_1;
+    else
+        return Unknown;
+}
+
+//==============================================================================
+
+CellmlFile::Version CellmlFile::version(CellmlFile *pCellmlFile)
+{
+    // Return the version of the given CellML file
+
+    return version(pCellmlFile->model());
 }
 
 //==============================================================================
