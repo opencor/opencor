@@ -20,7 +20,6 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include "cellmleditinginterface.h"
-#include "cellmlfilemanager.h"
 #include "corecellmleditingplugin.h"
 #include "coreguiutils.h"
 #include "editinginterface.h"
