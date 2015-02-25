@@ -121,6 +121,7 @@ private:
     bool defToken(QDomNode &pDomNode);
     bool enddefPlusSemiColonToken(QDomNode &pDomNode);
     bool identifierToken(QDomNode &pDomNode);
+    bool modelDefinitionToken(QDomNode &pDomNode);
     bool modelToken(QDomNode &pDomNode);
     bool numberToken(QDomNode &pDomNode);
     bool numberValueToken(QDomNode &pDomNode, int &pSign);

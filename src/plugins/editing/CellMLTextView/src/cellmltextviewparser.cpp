@@ -398,6 +398,22 @@ bool CellmlTextViewParser::identifierToken(QDomNode &pDomNode)
 
 //==============================================================================
 
+bool CellmlTextViewParser::modelDefinitionToken(QDomNode &pDomNode)
+{
+    // Expect a model definition
+
+    static CellmlTextViewScanner::TokenTypes unitAttributeTokens = CellmlTextViewScanner::TokenTypes() << CellmlTextViewScanner::ImportToken
+                                                                                                       << CellmlTextViewScanner::UnitToken
+                                                                                                       << CellmlTextViewScanner::CompToken
+                                                                                                       << CellmlTextViewScanner::GroupToken
+                                                                                                       << CellmlTextViewScanner::MapToken;
+
+    return tokenType(pDomNode, QObject::tr("'%1', '%2', '%3', '%4' or '%5'").arg("import", "unit", "comp", "group", "map"),
+                     unitAttributeTokens);
+}
+
+//==============================================================================
+
 bool CellmlTextViewParser::modelToken(QDomNode &pDomNode)
 {
     // Expect "model"
@@ -648,23 +664,38 @@ bool CellmlTextViewParser::parseModelDefinition(QDomNode &pDomNode)
         // Expect "def"
 
         if (defToken(pDomNode)) {
-            // Expect "import", "unit", "comp", "group" or "map"
+            // Expect a model definition
 
             mScanner->getNextToken();
 
             bool baseUnitsDefinition = false;
             QDomElement domElement;
 
-            if (isTokenType(pDomNode, CellmlTextViewScanner::ImportToken)) {
+            if (modelDefinitionToken(pDomNode)) {
+                switch (mScanner->tokenType()) {
+                case CellmlTextViewScanner::ImportToken:
 //---GRY--- TO BE DONE...
-            } else if (isTokenType(pDomNode, CellmlTextViewScanner::UnitToken)) {
-                domElement = parseUnitsDefinition(pDomNode, baseUnitsDefinition);
-            } else if (isTokenType(pDomNode, CellmlTextViewScanner::CompToken)) {
+
+                    break;
+                case CellmlTextViewScanner::UnitToken:
+                    domElement = parseUnitsDefinition(pDomNode, baseUnitsDefinition);
+
+                    break;
+                case CellmlTextViewScanner::CompToken:
 //---GRY--- TO BE DONE...
-            } else if (isTokenType(pDomNode, CellmlTextViewScanner::GroupToken)) {
+
+                    break;
+                case CellmlTextViewScanner::GroupToken:
 //---GRY--- TO BE DONE...
-            } else if (isTokenType(pDomNode, CellmlTextViewScanner::MapToken)) {
+
+                    break;
+                default:
+                    // CellmlTextViewScanner::MapToken
+
 //---GRY--- TO BE DONE...
+
+                    ;
+                }
             } else {
                 return false;
             }
@@ -862,6 +893,8 @@ bool CellmlTextViewParser::parseUnitDefinition(QDomNode &pDomNode)
                             unitElement.setAttribute("offset", unitAttributeValue);
                         }
                     }
+                } else {
+                    return false;
                 }
 
                 mScanner->getNextToken();

@@ -85,6 +85,16 @@ void ParsingTests::basicTests()
 
     QVERIFY(parser.execute(QString("def model{my_cmeta_id} my_model as\n"
                                    "enddef;")));
+
+    // Various tests on a minimal model definition with a cmeta:id
+
+    QVERIFY(!parser.execute(QString("def model my_model as\n"
+                                    "    def invalid_stuff as"
+                                    "    enddef;"
+                                    "enddef;")));
+    QCOMPARE(parser.messages().first().type(), OpenCOR::CellMLTextView::CellmlTextViewParserMessage::Error);
+    QCOMPARE(parser.messages().first().message(), QString("'import', 'unit', 'comp', 'group' or 'map' is expected, but 'invalid_stuff' was found instead."));
+
 }
 
 //==============================================================================
