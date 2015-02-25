@@ -22,5 +22,6 @@ def model{my_model_cmeta_id} my_model as
         unit some_unit {expo: 3};
         unit some_unit {mult: 3};
         unit some_unit {off: 3};
+        unit some_unit {pref: milli, expo: 3, mult: +5, off: -7};
     enddef;
 enddef;

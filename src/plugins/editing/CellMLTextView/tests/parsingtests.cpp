@@ -206,6 +206,16 @@ void ParsingTests::unitsTests()
                                     "enddef;")));
     QCOMPARE(parser.messages().first().type(), OpenCOR::CellMLTextView::CellmlTextViewParserMessage::Error);
     QCOMPARE(parser.messages().first().message(), QString("A number is expected, but 'invalid_multiplier_value' was found instead."));
+
+    // Test the definition of a unit with twice the same attribute specification
+
+    QVERIFY(!parser.execute(QString("def model my_model as\n"
+                                    "    def unit my_unit as\n"
+                                    "        unit some_unit {pref: 3, pref: 3};\n"
+                                    "    enddef;\n"
+                                    "enddef;")));
+    QCOMPARE(parser.messages().first().type(), OpenCOR::CellMLTextView::CellmlTextViewParserMessage::Error);
+    QCOMPARE(parser.messages().first().message(), QString("The 'pref' attribute has already been specified."));
 }
 
 //==============================================================================

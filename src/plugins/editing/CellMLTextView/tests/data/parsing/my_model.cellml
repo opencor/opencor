@@ -17,5 +17,6 @@
         <unit exponent="3" units="some_unit"/>
         <unit multiplier="3" units="some_unit"/>
         <unit offset="3" units="some_unit"/>
+        <unit exponent="3" multiplier="+5" offset="-7" prefix="milli" units="some_unit"/>
     </units>
 </model>
