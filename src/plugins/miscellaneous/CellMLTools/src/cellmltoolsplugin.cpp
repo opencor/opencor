@@ -106,11 +106,13 @@ void CellMLToolsPlugin::updateGui(Plugin *pViewPlugin, const QString &pFileName)
     // CellML-based view plugin
 
     CellMLSupport::CellmlFile *cellmlFile = CellMLSupport::CellmlFileManager::instance()->cellmlFile(pFileName);
-    CellMLSupport::CellmlFile::Version cellmlVersion = CellMLSupport::CellmlFile::version(cellmlFile);
+    CellMLSupport::CellmlFile::Version cellmlVersion = cellmlFile?CellMLSupport::CellmlFile::version(cellmlFile):CellMLSupport::CellmlFile::Unknown;
 
     mExportToCellml10Action->setEnabled(   cellmlFile && cellmlFile->model()
+                                        && (cellmlVersion != CellMLSupport::CellmlFile::Unknown)
                                         && (cellmlVersion != CellMLSupport::CellmlFile::Cellml_1_0));
     mExportToCellml11Action->setEnabled(   cellmlFile && cellmlFile->model()
+                                        && (cellmlVersion != CellMLSupport::CellmlFile::Unknown)
                                         && (cellmlVersion != CellMLSupport::CellmlFile::Cellml_1_1));
 //---GRY--- DISABLED UNTIL WE ACTUALLY SUPPORT EXPORT TO CellML 1.1...
 Core::showEnableAction(mExportToCellml11Action, false);
