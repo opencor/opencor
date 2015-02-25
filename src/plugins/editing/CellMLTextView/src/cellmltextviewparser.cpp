@@ -685,6 +685,8 @@ bool CellmlTextViewParser::parseUnitDefinition(QDomNode &pDomNode)
 
         // Expect ";"
 
+        mScanner->getNextToken();
+
         if (semiColonToken(unitElement)) {
             mScanner->getNextToken();
 
