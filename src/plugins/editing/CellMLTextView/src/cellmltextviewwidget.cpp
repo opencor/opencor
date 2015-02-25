@@ -256,13 +256,6 @@ void CellmlTextViewWidget::initialize(const QString &pFileName,
                                                                CellMLSupport::CellmlFile::Cellml_1_0:
                                                                CellMLSupport::CellmlFile::version(cellmlFile);
 
-#ifdef QT_DEBUG
-        // Make sure that the CellML version isn't unknown
-
-        if (cellmlVersion == CellMLSupport::CellmlFile::Unknown)
-            qFatal("FATAL ERROR | %s:%d: the version of the CellML file cannot be unknown.", __FILE__, __LINE__);
-#endif
-
         mData.insert(pFileName,
                      CellmlTextViewWidgetData(newEditingWidget,
                                               Core::sha1(newEditingWidget->editor()->contents()),
