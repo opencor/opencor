@@ -76,6 +76,9 @@ public:
         SiemensToken, SievertToken, SteradianToken, TeslaToken, VoltToken,
         WattToken, WeberToken,
 
+        FirstUnitToken = AmpereToken,
+        LastUnitToken = WeberToken,
+
         // CellML tests parameter keywords
 
         PrefToken, ExpoToken, MultToken, OffToken,
@@ -99,6 +102,8 @@ public:
         OpeningCurlyBracketToken, ClosingCurlyBracketToken,
         EofToken
     };
+
+    typedef QList<TokenType> TokenTypes;
 
     explicit CellmlTextViewScanner();
 

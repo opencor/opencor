@@ -159,7 +159,8 @@ bool CellmlTextViewParser::execute(const QString &pText,
 
                             mScanner->getNextToken();
 
-                            if (tokenType(modelElement, "the end of the file", CellmlTextViewScanner::EofToken)) {
+                            if (tokenType(modelElement, QObject::tr("the end of the file"),
+                                          CellmlTextViewScanner::EofToken)) {
                                 // We are done, so add some processing
                                 // instruction to our DOM document
 
@@ -260,7 +261,7 @@ QDomElement CellmlTextViewParser::newDomElement(QDomNode &pDomNode,
 
 bool CellmlTextViewParser::tokenType(QDomNode &pDomNode,
                                      const QString &pExpectedString,
-                                     const CellmlTextViewScanner::TokenType &pTokenType)
+                                     const CellmlTextViewScanner::TokenTypes &pTokenTypes)
 {
     // Try to parse comments, if any
 
@@ -268,7 +269,7 @@ bool CellmlTextViewParser::tokenType(QDomNode &pDomNode,
 
     // Check whether the current token type is the one we are after
 
-    if (mScanner->tokenType() == pTokenType) {
+    if (pTokenTypes.contains(mScanner->tokenType())) {
         // We have the correct token, so check whether a comment exists and, if
         // so, generate a warning for it
 
@@ -304,6 +305,18 @@ bool CellmlTextViewParser::tokenType(QDomNode &pDomNode,
     }
 
     return false;
+}
+
+//==============================================================================
+
+bool CellmlTextViewParser::tokenType(QDomNode &pDomNode,
+                                     const QString &pExpectedString,
+                                     const CellmlTextViewScanner::TokenType &pTokenType)
+{
+    // Expect the given token
+
+    return tokenType(pDomNode, pExpectedString,
+                     CellmlTextViewScanner::TokenTypes() << pTokenType);
 }
 
 //==============================================================================
@@ -370,7 +383,8 @@ bool CellmlTextViewParser::identifierToken(QDomNode &pDomNode)
 {
     // Expect an identifier
 
-    return tokenType(pDomNode, "An identifier", CellmlTextViewScanner::IdentifierToken);
+    return tokenType(pDomNode, QObject::tr("An identifier"),
+                     CellmlTextViewScanner::IdentifierToken);
 }
 
 //==============================================================================
@@ -379,7 +393,8 @@ bool CellmlTextViewParser::modelToken(QDomNode &pDomNode)
 {
     // Expect "model"
 
-    return tokenType(pDomNode, "'model'", CellmlTextViewScanner::ModelToken);
+    return tokenType(pDomNode, "'model'",
+                     CellmlTextViewScanner::ModelToken);
 }
 
 //==============================================================================
@@ -388,7 +403,8 @@ bool CellmlTextViewParser::openingCurlyBracketToken(QDomNode &pDomNode)
 {
     // Expect "{"
 
-    return tokenType(pDomNode, "'{'", CellmlTextViewScanner::OpeningCurlyBracketToken);
+    return tokenType(pDomNode, "'{'",
+                     CellmlTextViewScanner::OpeningCurlyBracketToken);
 }
 
 //==============================================================================
@@ -397,7 +413,31 @@ bool CellmlTextViewParser::semiColonToken(QDomNode &pDomNode)
 {
     // Expect ";"
 
-    return tokenType(pDomNode, "';'", CellmlTextViewScanner::SemiColonToken);
+    return tokenType(pDomNode, "';'",
+                     CellmlTextViewScanner::SemiColonToken);
+}
+
+//==============================================================================
+
+bool CellmlTextViewParser::unitIdentifierToken(QDomNode &pDomNode)
+{
+    // Expect an identifier or an SI unit
+
+    static CellmlTextViewScanner::TokenTypes unitIdentifierTokens = CellmlTextViewScanner::TokenTypes() << CellmlTextViewScanner::IdentifierToken;
+    static bool needInitializeUnitIdentifierTokens = true;
+
+    if (needInitializeUnitIdentifierTokens) {
+        for (CellmlTextViewScanner::TokenType unitIdentifierToken = CellmlTextViewScanner::FirstUnitToken;
+             unitIdentifierToken <= CellmlTextViewScanner::LastUnitToken;
+             unitIdentifierToken = CellmlTextViewScanner::TokenType(int(unitIdentifierToken)+1)) {
+            unitIdentifierTokens << unitIdentifierToken;
+        }
+
+        needInitializeUnitIdentifierTokens = false;
+    }
+
+    return tokenType(pDomNode, QObject::tr("A unit identifier"),
+                     unitIdentifierTokens);
 }
 
 //==============================================================================
@@ -406,7 +446,8 @@ bool CellmlTextViewParser::unitToken(QDomNode &pDomNode)
 {
     // Expect "unit"
 
-    return tokenType(pDomNode, "'unit'", CellmlTextViewScanner::UnitToken);
+    return tokenType(pDomNode, "'unit'",
+                     CellmlTextViewScanner::UnitToken);
 }
 
 //==============================================================================
@@ -543,6 +584,8 @@ bool CellmlTextViewParser::parseModelDefinition(QDomNode &pDomNode)
                 } else {
                     return false;
                 }
+            } else {
+                return false;
             }
         } else {
             return false;
@@ -584,7 +627,8 @@ QDomElement CellmlTextViewParser::parseUnitsDefinition(QDomNode &pDomNode,
             mScanner->getNextToken();
 
             if (isTokenType(unitsElement, CellmlTextViewScanner::BaseToken)) {
-                // Expect "unit"
+                // We are dealing with the definition of base unit, so expect
+                // "unit"
 
                 mScanner->getNextToken();
 
@@ -600,12 +644,55 @@ QDomElement CellmlTextViewParser::parseUnitsDefinition(QDomNode &pDomNode,
                     return unitsElement;
                 }
             } else {
-//---GRY--- TO BE DONE...
+                // We are not dealing with the definition of a base unit, so
+                // expect "unit" and then loop while we have "unit"
+
+                if (unitToken(unitsElement)) {
+                    do {
+                        if (!parseUnitDefinition(unitsElement))
+                            return QDomElement();
+                    } while (isTokenType(unitsElement, CellmlTextViewScanner::UnitToken));
+
+                    return unitsElement;
+                }
             }
         }
     }
 
     return QDomElement();
+}
+
+//==============================================================================
+
+bool CellmlTextViewParser::parseUnitDefinition(QDomNode &pDomNode)
+{
+    // Create our unit element
+
+    QDomElement unitElement = newDomElement(pDomNode, "unit");
+
+    // Try to parse for a cmeta:id
+
+    mScanner->getNextToken();
+
+    parseCmetaId(unitElement);
+
+    // Expect a unit identifier
+
+    if (unitIdentifierToken(unitElement)) {
+        // Set our unit's name
+
+        unitElement.setAttribute("units", mScanner->tokenString());
+
+        // Expect ";"
+
+        if (semiColonToken(unitElement)) {
+            mScanner->getNextToken();
+
+            return true;
+        }
+    }
+
+    return false;
 }
 
 //==============================================================================

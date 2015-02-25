@@ -109,6 +109,8 @@ private:
     QDomElement newDomElement(QDomNode &pDomNode, const QString &pElementName);
 
     bool tokenType(QDomNode &pDomNode, const QString &pExpectedString,
+                   const CellmlTextViewScanner::TokenTypes &pTokenTypes);
+    bool tokenType(QDomNode &pDomNode, const QString &pExpectedString,
                    const CellmlTextViewScanner::TokenType &pTokenType);
     bool isTokenType(QDomNode &pDomNode,
                      const CellmlTextViewScanner::TokenType &pTokenType);
@@ -121,6 +123,7 @@ private:
     bool modelToken(QDomNode &pDomNode);
     bool openingCurlyBracketToken(QDomNode &pDomNode);
     bool semiColonToken(QDomNode &pDomNode);
+    bool unitIdentifierToken(QDomNode &pDomNode);
     bool unitToken(QDomNode &pDomNode);
 
     void parseComments(QDomNode &pDomNode);
@@ -128,6 +131,7 @@ private:
     bool parseModelDefinition(QDomNode &pDomNode);
     QDomElement parseUnitsDefinition(QDomNode &pDomNode,
                                      bool &pBaseUnitsDefinition);
+    bool parseUnitDefinition(QDomNode &pDomNode);
 };
 
 //==============================================================================

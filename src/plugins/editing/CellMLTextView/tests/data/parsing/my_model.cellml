@@ -7,4 +7,9 @@
     <units base_units="yes" cmeta:id="my_base_unit1_cmeta_id" name="my_base_unit1"/>
     <!-- In between comment...-->
     <units base_units="yes" name="my_base_unit2"/>
+    <!-- In between comment...-->
+    <units name="my_unit">
+        <unit units="second"/>
+        <unit units="some_unit"/>
+    </units>
 </model>

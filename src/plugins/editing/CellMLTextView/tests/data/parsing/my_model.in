@@ -10,4 +10,11 @@ def model{my_model_cmeta_id} my_model as
     // In between comment...
 
     def unit my_base_unit2 as base unit;
+
+    // In between comment...
+
+    def unit my_unit as
+        unit second;
+        unit some_unit;
+    enddef;
 enddef;

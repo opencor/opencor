@@ -146,6 +146,30 @@ void ParsingTests::miscellaneousTests()
 
 //==============================================================================
 
+void ParsingTests::unitsTests()
+{
+    OpenCOR::CellMLTextView::CellmlTextViewParser parser;
+
+    // Test the redefinition of an SI unit as a base unit
+
+    QVERIFY(!parser.execute(QString("def model my_model as\n"
+                                    "    def unit second as base unit;\n"
+                                    "enddef;")));
+    QCOMPARE(parser.messages().first().type(), OpenCOR::CellMLTextView::CellmlTextViewParserMessage::Error);
+    QCOMPARE(parser.messages().first().message(), QString("An identifier is expected, but 'second' was found instead."));
+
+    // Test the definition of a unit with no unit elements
+
+    QVERIFY(!parser.execute(QString("def model my_model as\n"
+                                    "    def unit my_unit as\n"
+                                    "    enddef;\n"
+                                    "enddef;")));
+    QCOMPARE(parser.messages().first().type(), OpenCOR::CellMLTextView::CellmlTextViewParserMessage::Error);
+    QCOMPARE(parser.messages().first().message(), QString("'unit' is expected, but 'enddef' was found instead."));
+}
+
+//==============================================================================
+
 QTEST_GUILESS_MAIN(ParsingTests)
 
 //==============================================================================

@@ -36,6 +36,7 @@ private Q_SLOTS:
     void basicTests();
     void fileTests();
     void miscellaneousTests();
+    void unitsTests();
 };
 
 //==============================================================================
