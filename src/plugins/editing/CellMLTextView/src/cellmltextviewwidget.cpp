@@ -463,10 +463,9 @@ bool CellmlTextViewWidget::saveFile(const QString &pOldFileName,
 
             domDocument.appendChild(rdfNodes.cloneNode());
 
+Q_UNUSED(pNewFileName);
+
 qDebug("---[SERIALISSATION]---");
-qDebug("FROM: %s", qPrintable(pOldFileName));
-qDebug("TO:   %s", qPrintable(pNewFileName));
-qDebug("---------");
 qDebug("%s", qPrintable(qDomDocumentToString(domDocument)));
 qDebug("---------");
 
