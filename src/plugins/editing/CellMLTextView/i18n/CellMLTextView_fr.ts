@@ -22,6 +22,10 @@
         <source>in the original CellML file</source>
         <translation>dans le fichier CellML d&apos;origine</translation>
     </message>
+    <message>
+        <source>The CellML file requires features that are not present in %1 and was therefore saved as a %2 file.</source>
+        <translation>Le fichier CellML nécessite des fonctionnalités qui ne sont pas présentes dans %1 et a donc été sauvegardé en tant que fichier %2.</translation>
+    </message>
 </context>
 <context>
     <name>QObject</name>

@@ -33,7 +33,9 @@ class ParsingTests : public QObject
     Q_OBJECT
 
 private Q_SLOTS:
-    void parsingTests();
+    void basicTests();
+    void fileTests();
+    void miscellaneousTests();
 };
 
 //==============================================================================

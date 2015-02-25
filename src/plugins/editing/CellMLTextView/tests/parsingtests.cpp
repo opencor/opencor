@@ -19,6 +19,7 @@ specific language governing permissions and limitations under the License.
 // CellML Text view parsing tests
 //==============================================================================
 
+#include "cellmlfile.h"
 #include "cellmltextviewconverter.h"
 #include "cellmltextviewparser.h"
 #include "corecliutils.h"
@@ -34,29 +35,35 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-void ParsingTests::parsingTests()
+void ParsingTests::basicTests()
 {
     OpenCOR::CellMLTextView::CellmlTextViewParser parser;
 
     // Various tests on a minimal model definition
 
     QVERIFY(!parser.execute(QString()));
+    QCOMPARE(parser.messages().first().type(), OpenCOR::CellMLTextView::CellmlTextViewParserMessage::Error);
     QCOMPARE(parser.messages().first().message(), QString("'def' is expected, but the end of the file was found instead."));
 
     QVERIFY(!parser.execute(QString("def")));
+    QCOMPARE(parser.messages().first().type(), OpenCOR::CellMLTextView::CellmlTextViewParserMessage::Error);
     QCOMPARE(parser.messages().first().message(), QString("'model' is expected, but the end of the file was found instead."));
 
     QVERIFY(!parser.execute(QString("def model")));
+    QCOMPARE(parser.messages().first().type(), OpenCOR::CellMLTextView::CellmlTextViewParserMessage::Error);
     QCOMPARE(parser.messages().first().message(), QString("An identifier is expected, but the end of the file was found instead."));
 
     QVERIFY(!parser.execute(QString("def model my_model")));
+    QCOMPARE(parser.messages().first().type(), OpenCOR::CellMLTextView::CellmlTextViewParserMessage::Error);
     QCOMPARE(parser.messages().first().message(), QString("'as' is expected, but the end of the file was found instead."));
 
     QVERIFY(!parser.execute(QString("def model my_model as")));
+    QCOMPARE(parser.messages().first().type(), OpenCOR::CellMLTextView::CellmlTextViewParserMessage::Error);
     QCOMPARE(parser.messages().first().message(), QString("'enddef' is expected, but the end of the file was found instead."));
 
     QVERIFY(!parser.execute(QString("def model my_model as\n"
                                     "enddef")));
+    QCOMPARE(parser.messages().first().type(), OpenCOR::CellMLTextView::CellmlTextViewParserMessage::Error);
     QCOMPARE(parser.messages().first().message(), QString("';' is expected, but the end of the file was found instead."));
 
     QVERIFY(parser.execute(QString("def model my_model as\n"
@@ -65,16 +72,26 @@ void ParsingTests::parsingTests()
     // Various tests on a minimal model definition with a cmeta:id
 
     QVERIFY(!parser.execute(QString("def model{")));
+    QCOMPARE(parser.messages().first().type(), OpenCOR::CellMLTextView::CellmlTextViewParserMessage::Error);
     QCOMPARE(parser.messages().first().message(), QString("An identifier is expected, but the end of the file was found instead."));
 
     QVERIFY(!parser.execute(QString("def model{my_cmeta_id")));
+    QCOMPARE(parser.messages().first().type(), OpenCOR::CellMLTextView::CellmlTextViewParserMessage::Error);
     QCOMPARE(parser.messages().first().message(), QString("'}' is expected, but the end of the file was found instead."));
 
     QVERIFY(!parser.execute(QString("def model{my_cmeta_id}")));
+    QCOMPARE(parser.messages().first().type(), OpenCOR::CellMLTextView::CellmlTextViewParserMessage::Error);
     QCOMPARE(parser.messages().first().message(), QString("An identifier is expected, but the end of the file was found instead."));
 
     QVERIFY(parser.execute(QString("def model{my_cmeta_id} my_model as\n"
                                    "enddef;")));
+}
+
+//==============================================================================
+
+void ParsingTests::fileTests()
+{
+    OpenCOR::CellMLTextView::CellmlTextViewParser parser;
 
     // Parsing of some CellML text code and converting to raw CellML...
 
@@ -105,6 +122,26 @@ void ParsingTests::parsingTests()
     QVERIFY(parser.execute(OpenCOR::fileContents(OpenCOR::fileName("src/plugins/editing/CellMLTextView/tests/data/parsing/my_model_with_in_between_comments.in")).join("\n")));
     QCOMPARELIST(qDomDocumentToString(parser.domDocument()).split("\n"),
                  OpenCOR::fileContents(OpenCOR::fileName("src/plugins/editing/CellMLTextView/tests/data/parsing/my_model_with_in_between_comments.cellml")));
+}
+
+//==============================================================================
+
+void ParsingTests::miscellaneousTests()
+{
+//    OpenCOR::CellMLTextView::CellmlTextViewParser parser;
+
+    // Test the parsing of an originally CellML 1.0 file that now requires
+    // CellML 1.1
+
+//---GRY--- TO BE ENABLED ONCE WE SUPPORT THE PARSING OF IMPORTS...
+//    QVERIFY(parser.execute(QString("def model my_model as\n"
+//                                   "    def import{my_import_cmeta_id} using \"imported_model.cellml\" for\n"
+//                                   "        unit{my_imported_unit_cmeta_id} my_imported_unit using unit my_reference_unit;\n"
+//                                   "        comp{my_imported_component_cmeta_id} my_imported_component using comp my_reference_component;\n"
+//                                   "    enddef;\n"
+//                                   "enddef;"),
+//                           OpenCOR::CellMLSupport::CellmlFile::Cellml_1_0));
+//    QCOMPARE(parser.cellmlVersion(), OpenCOR::CellMLSupport::CellmlFile::Cellml_1_1);
 }
 
 //==============================================================================

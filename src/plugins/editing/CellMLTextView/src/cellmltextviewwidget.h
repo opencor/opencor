@@ -72,20 +72,20 @@ public:
     explicit CellmlTextViewWidgetData(CoreCellMLEditing::CoreCellmlEditingWidget *pEditingWidget = 0,
                                       const QString &pSha1 = QString(),
                                       const bool &pValid = false,
-                                      const CellMLSupport::CellmlFile::Version &pVersion = CellMLSupport::CellmlFile::Cellml_1_0,
+                                      const CellMLSupport::CellmlFile::Version &pCellmlVersion = CellMLSupport::CellmlFile::Cellml_1_0,
                                       QDomDocument pRdfNodes = QDomDocument());
 
     CoreCellMLEditing::CoreCellmlEditingWidget * editingWidget() const;
     QString sha1() const;
     bool isValid() const;
-    CellMLSupport::CellmlFile::Version version() const;
+    CellMLSupport::CellmlFile::Version cellmlVersion() const;
     QDomDocument rdfNodes() const;
 
 private:
     CoreCellMLEditing::CoreCellmlEditingWidget *mEditingWidget;
     QString mSha1;
     bool mValid;
-    CellMLSupport::CellmlFile::Version mVersion;
+    CellMLSupport::CellmlFile::Version mCellmlVersion;
     QDomDocument mRdfNodes;
 };
 

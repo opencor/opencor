@@ -33,11 +33,11 @@ namespace CellMLTextView {
 
 //==============================================================================
 
-CellmlTextViewParserMessage::CellmlTextViewParserMessage(const bool &pError,
+CellmlTextViewParserMessage::CellmlTextViewParserMessage(const Type &pType,
                                                          const int &pLine,
                                                          const int &pColumn,
                                                          const QString &pMessage) :
-    mError(pError),
+    mType(pType),
     mLine(pLine),
     mColumn(pColumn),
     mMessage(pMessage)
@@ -46,11 +46,11 @@ CellmlTextViewParserMessage::CellmlTextViewParserMessage(const bool &pError,
 
 //==============================================================================
 
-bool CellmlTextViewParserMessage::isError() const
+CellmlTextViewParserMessage::Type CellmlTextViewParserMessage::type() const
 {
-    // Return whether we are an error
+    // Return our type
 
-    return mError;
+    return mType;
 }
 
 //==============================================================================
@@ -102,7 +102,8 @@ CellmlTextViewParser::~CellmlTextViewParser()
 
 //==============================================================================
 
-bool CellmlTextViewParser::execute(const QString &pText)
+bool CellmlTextViewParser::execute(const QString &pText,
+                                   const CellMLSupport::CellmlFile::Version &pCellmlVersion)
 {
     // Get ready for the parsing
 
@@ -165,6 +166,11 @@ bool CellmlTextViewParser::execute(const QString &pText)
                                 mDomDocument.insertBefore(mDomDocument.createProcessingInstruction("xml", "version='1.0'"),
                                                           mDomDocument.documentElement());
 
+                                // Use the given CellML version if it is higher
+                                // than the one we actually need
+
+                                mCellmlVersion = (pCellmlVersion > mCellmlVersion)?pCellmlVersion:mCellmlVersion;
+
                                 // Next, add the CellML namespace to our
                                 // document element
 
@@ -206,6 +212,15 @@ bool CellmlTextViewParser::execute(const QString &pText)
     }
 
     return false;
+}
+
+//==============================================================================
+
+CellMLSupport::CellmlFile::Version CellmlTextViewParser::cellmlVersion() const
+{
+    // Return our CellML version
+
+    return mCellmlVersion;
 }
 
 //==============================================================================
@@ -258,7 +273,7 @@ bool CellmlTextViewParser::tokenType(QDomNode &pDomNode,
         // so, generate a warning for it
 
         if (!mScanner->tokenComment().isEmpty()) {
-            mMessages << CellmlTextViewParserMessage(false,
+            mMessages << CellmlTextViewParserMessage(CellmlTextViewParserMessage::Warning,
                                                      mScanner->tokenLine(),
                                                      mScanner->tokenColumn(),
                                                      mScanner->tokenComment());
@@ -268,7 +283,7 @@ bool CellmlTextViewParser::tokenType(QDomNode &pDomNode,
     } else if (mScanner->tokenType() == CellmlTextViewScanner::InvalidToken) {
         // This is the token we were expecting, but it is invalid
 
-        mMessages << CellmlTextViewParserMessage(true,
+        mMessages << CellmlTextViewParserMessage(CellmlTextViewParserMessage::Error,
                                                  mScanner->tokenLine(),
                                                  mScanner->tokenColumn(),
                                                  mScanner->tokenComment());
@@ -281,7 +296,7 @@ bool CellmlTextViewParser::tokenType(QDomNode &pDomNode,
         if (mScanner->tokenType() != CellmlTextViewScanner::EofToken)
             foundString = QString("'%1'").arg(foundString);
 
-        mMessages << CellmlTextViewParserMessage(true,
+        mMessages << CellmlTextViewParserMessage(CellmlTextViewParserMessage::Error,
                                                  mScanner->tokenLine(),
                                                  mScanner->tokenColumn(),
                                                  QObject::tr("%1 is expected, but %2 was found instead.").arg(Core::formatMessage(pExpectedString, false),

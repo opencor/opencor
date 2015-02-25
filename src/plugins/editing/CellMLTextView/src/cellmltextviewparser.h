@@ -47,11 +47,18 @@ class CellmlTextViewScanner;
 class CellmlTextViewParserMessage
 {
 public:
-    explicit CellmlTextViewParserMessage(const bool &pError,
+    enum Type {
+        Error,
+        Warning,
+        Hint,
+        Information
+    };
+
+    explicit CellmlTextViewParserMessage(const Type &pType,
                                          const int &pLine, const int &pColumn,
                                          const QString &pMessage);
 
-    bool isError() const;
+    Type type() const;
 
     int line() const;
     int column() const;
@@ -59,7 +66,7 @@ public:
     QString message() const;
 
 private:
-    bool mError;
+    Type mType;
 
     int mLine;
     int mColumn;
@@ -79,7 +86,10 @@ public:
     explicit CellmlTextViewParser();
     ~CellmlTextViewParser();
 
-    bool execute(const QString &pText);
+    bool execute(const QString &pText,
+                 const CellMLSupport::CellmlFile::Version &pCellmlVersion = CellMLSupport::CellmlFile::Cellml_1_0);
+
+    CellMLSupport::CellmlFile::Version cellmlVersion() const;
 
     QDomDocument domDocument() const;
 

@@ -62,12 +62,12 @@ namespace CellMLTextView {
 CellmlTextViewWidgetData::CellmlTextViewWidgetData(CoreCellMLEditing::CoreCellmlEditingWidget *pEditingWidget,
                                                    const QString &pSha1,
                                                    const bool &pValid,
-                                                   const CellMLSupport::CellmlFile::Version &pVersion,
+                                                   const CellMLSupport::CellmlFile::Version &pCellmlVersion,
                                                    QDomDocument pRdfNodes) :
     mEditingWidget(pEditingWidget),
     mSha1(pSha1),
     mValid(pValid),
-    mVersion(pVersion),
+    mCellmlVersion(pCellmlVersion),
     mRdfNodes(pRdfNodes)
 {
 }
@@ -101,11 +101,11 @@ bool CellmlTextViewWidgetData::isValid() const
 
 //==============================================================================
 
-CellMLSupport::CellmlFile::Version CellmlTextViewWidgetData::version() const
+CellMLSupport::CellmlFile::Version CellmlTextViewWidgetData::cellmlVersion() const
 {
-    // Return our version
+    // Return our CellML version
 
-    return mVersion;
+    return mCellmlVersion;
 }
 
 //==============================================================================
@@ -188,7 +188,8 @@ void CellmlTextViewWidget::initialize(const QString &pFileName,
 {
     // Retrieve the editing widget associated with the given file, if any
 
-    CoreCellMLEditing::CoreCellmlEditingWidget *newEditingWidget = mData.value(pFileName).editingWidget();
+    CellmlTextViewWidgetData data = mData.value(pFileName);
+    CoreCellMLEditing::CoreCellmlEditingWidget *newEditingWidget = data.editingWidget();
 
     if (!newEditingWidget) {
         // No editing widget exists for the given file, so generate a CellML
@@ -297,7 +298,7 @@ void CellmlTextViewWidget::initialize(const QString &pFileName,
         // Note: we use a single shot to give time to the setting up of the
         //       editing widget to complete...
 
-        if (!mData.value(pFileName).isValid())
+        if (!data.isValid())
             QTimer::singleShot(0, this, SLOT(selectFirstItemInEditorList()));
 
         // Show/hide our editing widgets
@@ -441,11 +442,24 @@ bool CellmlTextViewWidget::saveFile(const QString &pOldFileName,
 
         mEditingWidget->editorList()->clear();
 
-        bool successfulParsing = parser.execute(currentEditor->contents());
+        CellmlTextViewWidgetData data = mData.value(pOldFileName);
+        bool successfulParsing = parser.execute(currentEditor->contents(),
+                                                data.cellmlVersion());
 
         if (successfulParsing) {
+            // Let the user know if we had to use a higher version of CellML
+
+            if (parser.cellmlVersion() > data.cellmlVersion()) {
+                mEditingWidget->editorList()->addItem(EditorList::EditorListItem::Information,
+                                                      -1, -1,
+                                                      tr("The CellML file requires features that are not present in %1 and was therefore saved as a %2 file.").arg(CellMLSupport::CellmlFile::versionAsString(data.cellmlVersion()),
+                                                                                                                                                                   CellMLSupport::CellmlFile::versionAsString(parser.cellmlVersion())));
+            }
+
+            // Serialise the file
+
             QDomDocument domDocument = parser.domDocument();
-            QDomDocument rdfNodes = mData.value(pOldFileName).rdfNodes();
+            QDomDocument rdfNodes = data.rdfNodes();
 
             domDocument.appendChild(rdfNodes.cloneNode());
 
@@ -465,7 +479,29 @@ qDebug("---------");
             // first one of them
 
             foreach (const CellmlTextViewParserMessage &message, parser.messages()) {
-                mEditingWidget->editorList()->addItem(message.isError()?EditorList::EditorListItem::Error:EditorList::EditorListItem::Warning,
+                EditorList::EditorListItem::Type messageType;
+
+                switch (message.type()) {
+                case
+                CellmlTextViewParserMessage::Error:
+                    messageType = EditorList::EditorListItem::Error;
+
+                    break;
+                case CellmlTextViewParserMessage::Warning:
+                    messageType = EditorList::EditorListItem::Warning;
+
+                    break;
+                case CellmlTextViewParserMessage::Hint:
+                    messageType = EditorList::EditorListItem::Hint;
+
+                    break;
+                case CellmlTextViewParserMessage::Information:
+                    messageType = EditorList::EditorListItem::Information;
+
+                    break;
+                }
+
+                mEditingWidget->editorList()->addItem(messageType,
                                                       message.line(), message.column(),
                                                       message.message());
             }
