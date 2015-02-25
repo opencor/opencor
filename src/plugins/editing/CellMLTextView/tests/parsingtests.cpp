@@ -195,7 +195,7 @@ void ParsingTests::unitsTests()
                                     "    enddef;\n"
                                     "enddef;")));
     QCOMPARE(parser.messages().first().type(), OpenCOR::CellMLTextView::CellmlTextViewParserMessage::Error);
-    QCOMPARE(parser.messages().first().message(), QString("A number or a prefix value (e.g. 'milli') is expected, but 'invalid_prefix_value' was found instead."));
+    QCOMPARE(parser.messages().first().message(), QString("A number or a prefix (e.g. 'milli') is expected, but 'invalid_prefix_value' was found instead."));
 
     // Test the definition of a unit with an invalid multiplier value
 
