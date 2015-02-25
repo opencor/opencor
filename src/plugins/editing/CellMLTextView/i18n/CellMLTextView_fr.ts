@@ -245,5 +245,29 @@
         <source>the end of the file</source>
         <translation>la fin du fichier</translation>
     </message>
+    <message>
+        <source>An identifier</source>
+        <translation>Un identifiant</translation>
+    </message>
+    <message>
+        <source>A number</source>
+        <translation>Un nombre</translation>
+    </message>
+    <message>
+        <source>&apos;%1&apos;, &apos;%2&apos;, &apos;%3&apos; or &apos;%4&apos;</source>
+        <translation>&apos;%1&apos;, &apos;%2&apos;, &apos;%3&apos; ou &apos;%4&apos;</translation>
+    </message>
+    <message>
+        <source>An identifier or an SI unit (e.g. &apos;second&apos;)</source>
+        <translation>Un identifiant ou une unité du SI (e.g. &apos;second&apos;)</translation>
+    </message>
+    <message>
+        <source>The &apos;%1&apos; attribute has already been specified.</source>
+        <translation>L&apos;attribut &apos;%1&apos; a déjà été spécifié.</translation>
+    </message>
+    <message>
+        <source>A number or a prefix (e.g. &apos;milli&apos;)</source>
+        <translation>Un nombre ou un préfixe (e.g. &apos;milli&apos;)</translation>
+    </message>
 </context>
 </TS>

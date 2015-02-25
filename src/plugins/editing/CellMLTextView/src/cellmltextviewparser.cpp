@@ -462,11 +462,11 @@ bool CellmlTextViewParser::prefixValueToken(QDomNode &pDomNode, int &pSign)
         return numberValueToken(pDomNode, pSign);
     } else {
         // We are not dealing with a 'proper' number value, but either a number
-        // or a prefix value
+        // or a prefix
 
         pSign = 0;
 
-        // Expect a number or a prefix value
+        // Expect a number or a prefix
 
         static CellmlTextViewScanner::TokenTypes prefixValueTokens = CellmlTextViewScanner::TokenTypes() << CellmlTextViewScanner::NumberToken;
         static bool needInitializePrefixValueTokens = true;
@@ -481,7 +481,7 @@ bool CellmlTextViewParser::prefixValueToken(QDomNode &pDomNode, int &pSign)
             needInitializePrefixValueTokens = false;
         }
 
-        return tokenType(pDomNode, QObject::tr("A number or a prefix value (e.g. 'milli')"),
+        return tokenType(pDomNode, QObject::tr("A number or a prefix (e.g. 'milli')"),
                          prefixValueTokens);
     }
 }
@@ -823,8 +823,7 @@ bool CellmlTextViewParser::parseUnitDefinition(QDomNode &pDomNode)
                         int sign;
 
                         if (unitAttributeTokenType == CellmlTextViewScanner::PrefToken) {
-                            // Expect a prefix value (i.e. a number or a proper
-                            // prefix value)
+                            // Expect a prefix value (i.e. a number or a prefix)
 
                             if (!prefixValueToken(unitElement, sign))
                                 return false;
