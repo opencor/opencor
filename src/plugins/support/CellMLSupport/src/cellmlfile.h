@@ -54,9 +54,9 @@ class CELLMLSUPPORT_EXPORT CellmlFile
 {
 public:
     enum Version {
+        Unknown,
         Cellml_1_0,
-        Cellml_1_1,
-        Unknown
+        Cellml_1_1
     };
 
     explicit CellmlFile(const QString &pFileName);
@@ -121,6 +121,8 @@ public:
 
     static Version version(iface::cellml_api::Model *pModel);
     static Version version(CellmlFile *pCellmlFile);
+
+    static QString versionAsString(const Version &pVersion);
 
 private:
     QString mFileName;

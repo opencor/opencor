@@ -1138,6 +1138,24 @@ CellmlFile::Version CellmlFile::version(CellmlFile *pCellmlFile)
 
 //==============================================================================
 
+QString CellmlFile::versionAsString(const Version &pVersion)
+{
+    // Return the string corresponding to the given version
+
+    switch (pVersion) {
+    case Cellml_1_0:
+        return "CellML 1.0";
+    case Cellml_1_1:
+        return "CellML 1.1";
+    default:
+        // Unknown
+
+        return "???";
+    }
+}
+
+//==============================================================================
+
 }   // namespace CellMLSupport
 }   // namespace OpenCOR
 
