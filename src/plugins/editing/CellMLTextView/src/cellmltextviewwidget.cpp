@@ -19,6 +19,7 @@ specific language governing permissions and limitations under the License.
 // CellML Text view widget
 //==============================================================================
 
+#include "cellmlfilemanager.h"
 #include "cellmlsupportplugin.h"
 #include "cellmltextviewconverter.h"
 #include "cellmltextviewlexer.h"
@@ -61,10 +62,12 @@ namespace CellMLTextView {
 CellmlTextViewWidgetData::CellmlTextViewWidgetData(CoreCellMLEditing::CoreCellmlEditingWidget *pEditingWidget,
                                                    const QString &pSha1,
                                                    const bool &pValid,
+                                                   const CellMLSupport::CellmlFile::Version &pVersion,
                                                    QDomDocument pRdfNodes) :
     mEditingWidget(pEditingWidget),
     mSha1(pSha1),
     mValid(pValid),
+    mVersion(pVersion),
     mRdfNodes(pRdfNodes)
 {
 }
@@ -94,6 +97,15 @@ bool CellmlTextViewWidgetData::isValid() const
     // Return whether we are valid
 
     return mValid;
+}
+
+//==============================================================================
+
+CellMLSupport::CellmlFile::Version CellmlTextViewWidgetData::version() const
+{
+    // Return our version
+
+    return mVersion;
 }
 
 //==============================================================================
@@ -239,10 +251,23 @@ void CellmlTextViewWidget::initialize(const QString &pFileName,
         // Keep track of our editing widget (and of whether the conversion was
         // successful) and add it to ourselves
 
+        CellMLSupport::CellmlFile *cellmlFile = CellMLSupport::CellmlFileManager::instance()->cellmlFile(pFileName);
+        CellMLSupport::CellmlFile::Version cellmlVersion = fileIsNew?
+                                                               CellMLSupport::CellmlFile::Cellml_1_0:
+                                                               CellMLSupport::CellmlFile::version(cellmlFile);
+
+#ifdef QT_DEBUG
+        // Make sure that the CellML version isn't unknown
+
+        if (cellmlVersion == CellMLSupport::CellmlFile::Unknown)
+            qFatal("FATAL ERROR | %s:%d: the version of the CellML file cannot be unknown.", __FILE__, __LINE__);
+#endif
+
         mData.insert(pFileName,
                      CellmlTextViewWidgetData(newEditingWidget,
                                               Core::sha1(newEditingWidget->editor()->contents()),
                                               successfulConversion,
+                                              cellmlVersion,
                                               fileIsNew?QDomDocument(QString()):converter.rdfNodes()));
 
         layout()->addWidget(newEditingWidget);

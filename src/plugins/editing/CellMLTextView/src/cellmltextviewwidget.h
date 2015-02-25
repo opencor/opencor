@@ -24,6 +24,7 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#include "cellmlfile.h"
 #include "corecliutils.h"
 #include "viewwidget.h"
 
@@ -71,17 +72,20 @@ public:
     explicit CellmlTextViewWidgetData(CoreCellMLEditing::CoreCellmlEditingWidget *pEditingWidget = 0,
                                       const QString &pSha1 = QString(),
                                       const bool &pValid = false,
+                                      const CellMLSupport::CellmlFile::Version &pVersion = CellMLSupport::CellmlFile::Cellml_1_0,
                                       QDomDocument pRdfNodes = QDomDocument());
 
     CoreCellMLEditing::CoreCellmlEditingWidget * editingWidget() const;
     QString sha1() const;
     bool isValid() const;
+    CellMLSupport::CellmlFile::Version version() const;
     QDomDocument rdfNodes() const;
 
 private:
     CoreCellMLEditing::CoreCellmlEditingWidget *mEditingWidget;
     QString mSha1;
     bool mValid;
+    CellMLSupport::CellmlFile::Version mVersion;
     QDomDocument mRdfNodes;
 };
 
