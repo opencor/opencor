@@ -10,6 +10,12 @@
     <!-- In between comment...-->
     <units name="my_unit">
         <unit units="second"/>
-        <unit units="some_unit"/>
+        <unit prefix="milli" units="some_unit"/>
+        <unit prefix="3" units="some_unit"/>
+        <unit prefix="+3" units="some_unit"/>
+        <unit prefix="-3" units="some_unit"/>
+        <unit exponent="3" units="some_unit"/>
+        <unit multiplier="3" units="some_unit"/>
+        <unit offset="3" units="some_unit"/>
     </units>
 </model>

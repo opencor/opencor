@@ -90,6 +90,9 @@ public:
         MilliToken, MicroToken, NanoToken, PicoToken, FemtoToken, AttoToken,
         ZeptoToken, YoctoToken,
 
+        FirstPrefixToken = YottaToken,
+        LastPrefixToken = YoctoToken,
+
         InToken, OutToken, NoneToken,
 
         // Miscellaneous

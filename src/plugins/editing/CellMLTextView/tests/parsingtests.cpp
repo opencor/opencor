@@ -166,6 +166,46 @@ void ParsingTests::unitsTests()
                                     "enddef;")));
     QCOMPARE(parser.messages().first().type(), OpenCOR::CellMLTextView::CellmlTextViewParserMessage::Error);
     QCOMPARE(parser.messages().first().message(), QString("'unit' is expected, but 'enddef' was found instead."));
+
+    // Test the definition of a unit with an invalid unit
+
+    QVERIFY(!parser.execute(QString("def model my_model as\n"
+                                    "    def unit my_unit as\n"
+                                    "        unit 123;\n"
+                                    "    enddef;\n"
+                                    "enddef;")));
+    QCOMPARE(parser.messages().first().type(), OpenCOR::CellMLTextView::CellmlTextViewParserMessage::Error);
+    QCOMPARE(parser.messages().first().message(), QString("An identifier or an SI unit (e.g. 'second') is expected, but '123' was found instead."));
+
+    // Test the definition of a unit with an invalid unit attribute
+
+    QVERIFY(!parser.execute(QString("def model my_model as\n"
+                                    "    def unit my_unit as\n"
+                                    "        unit some_unit {invalid_attribute: 3};\n"
+                                    "    enddef;\n"
+                                    "enddef;")));
+    QCOMPARE(parser.messages().first().type(), OpenCOR::CellMLTextView::CellmlTextViewParserMessage::Error);
+    QCOMPARE(parser.messages().first().message(), QString("'pref', 'expo', 'mult' or 'off' is expected, but 'invalid_attribute' was found instead."));
+
+    // Test the definition of a unit with an invalid prefix value
+
+    QVERIFY(!parser.execute(QString("def model my_model as\n"
+                                    "    def unit my_unit as\n"
+                                    "        unit some_unit {pref: invalid_prefix_value};\n"
+                                    "    enddef;\n"
+                                    "enddef;")));
+    QCOMPARE(parser.messages().first().type(), OpenCOR::CellMLTextView::CellmlTextViewParserMessage::Error);
+    QCOMPARE(parser.messages().first().message(), QString("A number or a prefix value (e.g. 'milli') is expected, but 'invalid_prefix_value' was found instead."));
+
+    // Test the definition of a unit with an invalid multiplier value
+
+    QVERIFY(!parser.execute(QString("def model my_model as\n"
+                                    "    def unit my_unit as\n"
+                                    "        unit some_unit {mult: invalid_multiplier_value};\n"
+                                    "    enddef;\n"
+                                    "enddef;")));
+    QCOMPARE(parser.messages().first().type(), OpenCOR::CellMLTextView::CellmlTextViewParserMessage::Error);
+    QCOMPARE(parser.messages().first().message(), QString("A number is expected, but 'invalid_multiplier_value' was found instead."));
 }
 
 //==============================================================================

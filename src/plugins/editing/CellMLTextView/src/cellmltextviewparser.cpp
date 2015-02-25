@@ -353,6 +353,15 @@ bool CellmlTextViewParser::closingCurlyBracketToken(QDomNode &pDomNode)
 
 //==============================================================================
 
+bool CellmlTextViewParser::colonToken(QDomNode &pDomNode)
+{
+    // Expect ":"
+
+    return tokenType(pDomNode, "':'", CellmlTextViewScanner::ColonToken);
+}
+
+//==============================================================================
+
 bool CellmlTextViewParser::defToken(QDomNode &pDomNode)
 {
     // Expect "def"
@@ -399,6 +408,39 @@ bool CellmlTextViewParser::modelToken(QDomNode &pDomNode)
 
 //==============================================================================
 
+bool CellmlTextViewParser::numberToken(QDomNode &pDomNode)
+{
+    // Expect a number
+
+    return tokenType(pDomNode, QObject::tr("A number"),
+                     CellmlTextViewScanner::NumberToken);
+}
+
+//==============================================================================
+
+bool CellmlTextViewParser::numberValueToken(QDomNode &pDomNode, int &pSign)
+{
+    // Check whether we have "+" or "-"
+
+    pSign = 0;
+
+    if (isTokenType(pDomNode, CellmlTextViewScanner::PlusToken)) {
+        pSign = 1;
+
+        mScanner->getNextToken();
+    } else if (isTokenType(pDomNode, CellmlTextViewScanner::MinusToken)) {
+        pSign = -1;
+
+        mScanner->getNextToken();
+    }
+
+    // Expect a number
+
+    return numberToken(pDomNode);
+}
+
+//==============================================================================
+
 bool CellmlTextViewParser::openingCurlyBracketToken(QDomNode &pDomNode)
 {
     // Expect "{"
@@ -409,12 +451,64 @@ bool CellmlTextViewParser::openingCurlyBracketToken(QDomNode &pDomNode)
 
 //==============================================================================
 
+bool CellmlTextViewParser::prefixValueToken(QDomNode &pDomNode, int &pSign)
+{
+    // Check whether we have "+" or "-"
+
+    if (   isTokenType(pDomNode, CellmlTextViewScanner::PlusToken)
+        || isTokenType(pDomNode, CellmlTextViewScanner::MinusToken)) {
+        // We are dealing with a number value
+
+        return numberValueToken(pDomNode, pSign);
+    } else {
+        // We are not dealing with a 'proper' number value, but either a number
+        // or a prefix value
+
+        pSign = 0;
+
+        // Expect a number or a prefix value
+
+        static CellmlTextViewScanner::TokenTypes prefixValueTokens = CellmlTextViewScanner::TokenTypes() << CellmlTextViewScanner::NumberToken;
+        static bool needInitializePrefixValueTokens = true;
+
+        if (needInitializePrefixValueTokens) {
+            for (CellmlTextViewScanner::TokenType prefixValueToken = CellmlTextViewScanner::FirstPrefixToken;
+                 prefixValueToken <= CellmlTextViewScanner::LastPrefixToken;
+                 prefixValueToken = CellmlTextViewScanner::TokenType(int(prefixValueToken)+1)) {
+                prefixValueTokens << prefixValueToken;
+            }
+
+            needInitializePrefixValueTokens = false;
+        }
+
+        return tokenType(pDomNode, QObject::tr("A number or a prefix value (e.g. 'milli')"),
+                         prefixValueTokens);
+    }
+}
+
+//==============================================================================
+
 bool CellmlTextViewParser::semiColonToken(QDomNode &pDomNode)
 {
     // Expect ";"
 
     return tokenType(pDomNode, "';'",
                      CellmlTextViewScanner::SemiColonToken);
+}
+
+//==============================================================================
+
+bool CellmlTextViewParser::unitAttributeToken(QDomNode &pDomNode)
+{
+    // Expect a unit attribute
+
+    static CellmlTextViewScanner::TokenTypes unitAttributeTokens = CellmlTextViewScanner::TokenTypes() << CellmlTextViewScanner::PrefToken
+                                                                                                       << CellmlTextViewScanner::ExpoToken
+                                                                                                       << CellmlTextViewScanner::MultToken
+                                                                                                       << CellmlTextViewScanner::OffToken;
+
+    return tokenType(pDomNode, QObject::tr("'%1', '%2', '%3' or '%4'").arg("pref", "expo", "mult", "off"),
+                     unitAttributeTokens);
 }
 
 //==============================================================================
@@ -436,7 +530,7 @@ bool CellmlTextViewParser::unitIdentifierToken(QDomNode &pDomNode)
         needInitializeUnitIdentifierTokens = false;
     }
 
-    return tokenType(pDomNode, QObject::tr("A unit identifier"),
+    return tokenType(pDomNode, QObject::tr("An identifier or an SI unit (e.g. 'second')"),
                      unitIdentifierTokens);
 }
 
@@ -683,9 +777,104 @@ bool CellmlTextViewParser::parseUnitDefinition(QDomNode &pDomNode)
 
         unitElement.setAttribute("units", mScanner->tokenString());
 
-        // Expect ";"
+        // Check whether we have "{"
 
         mScanner->getNextToken();
+
+        if (isTokenType(unitElement, CellmlTextViewScanner::OpeningCurlyBracketToken)) {
+            // Expect "pref", "expo", "mult" or "off"
+
+            QList<CellmlTextViewScanner::TokenType> unitAttributesDefined = QList<CellmlTextViewScanner::TokenType>();
+
+            mScanner->getNextToken();
+
+            if (unitAttributeToken(unitElement)) {
+                // Make sure that we don't already have come across the unit
+                // attribute
+
+                if (unitAttributesDefined.contains(mScanner->tokenType())) {
+                    mMessages << CellmlTextViewParserMessage(CellmlTextViewParserMessage::Error,
+                                                             mScanner->tokenLine(),
+                                                             mScanner->tokenColumn(),
+                                                             QObject::tr("The '%1' attribute has already been specified.").arg(mScanner->tokenString()));
+
+                    return false;
+                } else {
+                    // Keep track of the fact that we have come across the unit
+                    // attribute
+
+                    unitAttributesDefined << mScanner->tokenType();
+
+                    CellmlTextViewScanner::TokenType unitAttributeTokenType = mScanner->tokenType();
+
+                    // Expect ":"
+
+                    mScanner->getNextToken();
+
+                    if (!colonToken(unitElement))
+                        return false;
+
+                    // Check which unit attribute we are dealing with to
+                    // determine what to expect next
+
+                    mScanner->getNextToken();
+
+                    int sign;
+
+                    if (unitAttributeTokenType == CellmlTextViewScanner::PrefToken) {
+                        // Expect a prefix value (i.e. a number or a proper
+                        // prefix value)
+
+                        if (!prefixValueToken(unitElement, sign))
+                            return false;
+                    } else {
+                        // Expect a number value
+
+                        if (!numberValueToken(unitElement, sign))
+                            return false;
+                    }
+
+                    // Set the attribute value
+
+                    QString unitAttributeValue = mScanner->tokenString();
+
+                    if (sign == 1)
+                        unitAttributeValue = "+"+unitAttributeValue;
+                    else if (sign == -1)
+                        unitAttributeValue = "-"+unitAttributeValue;
+
+                    switch (unitAttributeTokenType) {
+                    case CellmlTextViewScanner::PrefToken:
+                        unitElement.setAttribute("prefix", unitAttributeValue);
+
+                        break;
+                    case CellmlTextViewScanner::ExpoToken:
+                        unitElement.setAttribute("exponent", unitAttributeValue);
+
+                        break;
+                    case CellmlTextViewScanner::MultToken:
+                        unitElement.setAttribute("multiplier", unitAttributeValue);
+
+                        break;
+                    default:
+                        // CellmlTextViewScanner::OffToken
+
+                        unitElement.setAttribute("offset", unitAttributeValue);
+                    }
+                }
+            }
+
+            // Expect "}"
+
+            mScanner->getNextToken();
+
+            if (!closingCurlyBracketToken(unitElement))
+                return false;
+
+            mScanner->getNextToken();
+        }
+
+        // Expect ";"
 
         if (semiColonToken(unitElement)) {
             mScanner->getNextToken();

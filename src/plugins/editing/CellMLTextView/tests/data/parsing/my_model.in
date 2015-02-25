@@ -15,6 +15,12 @@ def model{my_model_cmeta_id} my_model as
 
     def unit my_unit as
         unit second;
-        unit some_unit;
+        unit some_unit {pref: milli};
+        unit some_unit {pref: 3};
+        unit some_unit {pref: +3};
+        unit some_unit {pref: -3};
+        unit some_unit {expo: 3};
+        unit some_unit {mult: 3};
+        unit some_unit {off: 3};
     enddef;
 enddef;
