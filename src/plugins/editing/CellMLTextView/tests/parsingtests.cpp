@@ -268,13 +268,6 @@ void ParsingTests::importTests()
                                    "        comp my_imported_component using comp my_reference_component;\n"
                                    "    enddef;\n"
                                    "enddef;")));
-}
-
-//==============================================================================
-
-void ParsingTests::miscellaneousTests()
-{
-    OpenCOR::CellMLTextView::CellmlTextViewParser parser;
 
     // Test the parsing of an originally CellML 1.0 file that now requires
     // CellML 1.1
