@@ -273,5 +273,9 @@
         <source>&apos;%1&apos;, &apos;%2&apos;, &apos;%3&apos;, &apos;%4&apos; or &apos;%5&apos;</source>
         <translation>&apos;%1&apos;, &apos;%2&apos;, &apos;%3&apos;, &apos;%4&apos; ou &apos;%5&apos;</translation>
     </message>
+    <message>
+        <source>&apos;%1&apos; or &apos;%2&apos;</source>
+        <translation>&apos;%1&apos; ou &apos;%2&apos;</translation>
+    </message>
 </context>
 </TS>
