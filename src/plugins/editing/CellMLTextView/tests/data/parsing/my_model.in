@@ -45,4 +45,12 @@ def model{my_model_cmeta_id} my_model as
         unit some_unit {off: 3};
         unit some_unit {pref: milli, expo: 3, mult: +5, off: -7};
     enddef;
+
+    // In between comment...
+
+    def map between my_component1 and my_component2 for
+        vars my_variable11 and my_variable21;
+        vars my_variable12 and my_variable22;
+        vars my_variable13 and my_variable23;
+    enddef;
 enddef;

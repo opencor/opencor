@@ -30,4 +30,11 @@
         <unit offset="3" units="some_unit"/>
         <unit exponent="3" multiplier="+5" offset="-7" prefix="milli" units="some_unit"/>
     </units>
+    <!-- In between comment...-->
+    <connection>
+        <map_components component_1="my_component1" component_2="my_component2"/>
+        <map_variables variable_1="my_variable11" variable_2="my_variable21"/>
+        <map_variables variable_1="my_variable12" variable_2="my_variable22"/>
+        <map_variables variable_1="my_variable13" variable_2="my_variable23"/>
+    </connection>
 </model>

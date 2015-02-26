@@ -115,7 +115,9 @@ private:
     bool isTokenType(QDomNode &pDomNode,
                      const CellmlTextViewScanner::TokenType &pTokenType);
 
+    bool andToken(QDomNode &pDomNode);
     bool asToken(QDomNode &pDomNode);
+    bool betweenToken(QDomNode &pDomNode);
     bool closingCurlyBracketToken(QDomNode &pDomNode);
     bool colonToken(QDomNode &pDomNode);
     bool compToken(QDomNode &pDomNode);
@@ -138,6 +140,7 @@ private:
     QDomElement parseUnitsDefinition(QDomNode &pDomNode,
                                      bool &pBaseUnitsDefinition);
     bool parseUnitDefinition(QDomNode &pDomNode);
+    QDomElement parseMapDefinition(QDomNode &pDomNode);
 };
 
 //==============================================================================

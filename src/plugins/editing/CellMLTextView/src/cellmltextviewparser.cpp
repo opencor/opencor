@@ -335,12 +335,32 @@ bool CellmlTextViewParser::isTokenType(QDomNode &pDomNode,
 
 //==============================================================================
 
+bool CellmlTextViewParser::andToken(QDomNode &pDomNode)
+{
+    // Expect "and"
+
+    return tokenType(pDomNode, "'and'",
+                     CellmlTextViewScanner::AndToken);
+}
+
+//==============================================================================
+
 bool CellmlTextViewParser::asToken(QDomNode &pDomNode)
 {
     // Expect "as"
 
     return tokenType(pDomNode, "'as'",
                      CellmlTextViewScanner::AsToken);
+}
+
+//==============================================================================
+
+bool CellmlTextViewParser::betweenToken(QDomNode &pDomNode)
+{
+    // Expect "between"
+
+    return tokenType(pDomNode, "'between'",
+                     CellmlTextViewScanner::BetweenToken);
 }
 
 //==============================================================================
@@ -645,9 +665,7 @@ bool CellmlTextViewParser::parseModelDefinition(QDomNode &pDomNode)
                 default:
                     // CellmlTextViewScanner::MapToken
 
-//---GRY--- TO BE DONE...
-
-                    ;
+                    domElement = parseMapDefinition(pDomNode);
                 }
             } else {
                 return false;
@@ -1133,6 +1151,130 @@ bool CellmlTextViewParser::parseUnitDefinition(QDomNode &pDomNode)
     }
 
     return false;
+}
+
+//==============================================================================
+
+QDomElement CellmlTextViewParser::parseMapDefinition(QDomNode &pDomNode)
+{
+    // Create our connection element
+
+    QDomElement connectionElement = newDomElement(pDomNode, "connection");
+
+    // Try to parse for a cmeta:id
+
+    mScanner->getNextToken();
+
+    parseCmetaId(connectionElement);
+
+    // Expect "between"
+
+    if (betweenToken(connectionElement)) {
+        // Expect an identifier
+
+        mScanner->getNextToken();
+
+        if (identifierToken(connectionElement)) {
+            // Keep track of the first component
+
+            QString component1 = mScanner->tokenString();
+
+            // Expect "and"
+
+            mScanner->getNextToken();
+
+            if (andToken(connectionElement)) {
+                // Expect an identifier
+
+                mScanner->getNextToken();
+
+                if (identifierToken(connectionElement)) {
+                    // Keep track of the second component
+
+                    QString component2 = mScanner->tokenString();
+
+                    // Expect "for"
+
+                    mScanner->getNextToken();
+
+                    if (forToken(connectionElement)) {
+                        // Create our map components element and set its two
+                        // component attributes
+
+                        QDomElement mapComponentsElement = newDomElement(connectionElement, "map_components");
+
+                        mapComponentsElement.setAttribute("component_1", component1);
+                        mapComponentsElement.setAttribute("component_2", component2);
+
+                        // Expect a mapping, so loop while we have "vars" or
+                        // leave if we get "enddef"
+
+                        static CellmlTextViewScanner::TokenTypes tokenTypes = CellmlTextViewScanner::TokenTypes() << CellmlTextViewScanner::VarsToken
+                                                                                                                  << CellmlTextViewScanner::EndDefToken;
+
+                        mScanner->getNextToken();
+
+                        while (tokenType(connectionElement, QObject::tr("'%1' or '%2'").arg("vars", "enddef"),
+                                         tokenTypes)) {
+                            switch (mScanner->tokenType()) {
+                            case CellmlTextViewScanner::VarsToken: {
+                                // Create our map variables element
+
+                                QDomElement mapVariablesElement = newDomElement(connectionElement, "map_variables");
+
+                                // Try to parse for a cmeta:id
+
+                                mScanner->getNextToken();
+
+                                parseCmetaId(mapVariablesElement);
+
+                                // Expect an identifier
+
+                                if (identifierToken(mapVariablesElement)) {
+                                    // Set the name of the first variable
+
+                                    mapVariablesElement.setAttribute("variable_1", mScanner->tokenString());
+
+                                    // Expect "and"
+
+                                    mScanner->getNextToken();
+
+                                    if (andToken(mapVariablesElement)) {
+                                        // Expect an identifier
+
+                                        mScanner->getNextToken();
+
+                                        if (identifierToken(mapVariablesElement)) {
+                                            // Set the name of the second
+                                            // variable
+
+                                            mapVariablesElement.setAttribute("variable_2", mScanner->tokenString());
+
+                                            // Expect ";"
+
+                                            mScanner->getNextToken();
+
+                                            if (semiColonToken(mapVariablesElement))
+                                                mScanner->getNextToken();
+                                        }
+                                    }
+                                }
+
+                                break;
+                            }
+                            default:
+                                // CellmlTextViewScanner::EndDefToken
+
+                                return connectionElement;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    return QDomElement();
 }
 
 //==============================================================================
