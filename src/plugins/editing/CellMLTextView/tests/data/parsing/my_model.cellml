@@ -10,7 +10,9 @@
     <!-- In between comment...-->
     <units base_units="yes" name="my_base_unit2"/>
     <!-- In between comment...-->
-    <units name="my_unit">
+    <units name="my_unit1"/>
+    <!-- In between comment...-->
+    <units name="my_unit2">
         <unit units="second"/>
         <unit prefix="milli" units="some_unit"/>
         <unit prefix="3" units="some_unit"/>

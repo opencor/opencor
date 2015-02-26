@@ -789,7 +789,7 @@ QDomElement CellmlTextViewParser::parseUnitsDefinition(QDomNode &pDomNode,
                     }
 
                     break;
-                case CellmlTextViewScanner::UnitToken:
+                case CellmlTextViewScanner::UnitToken: {
                     // We are dealing with a 'normal' unit definition, so loop
                     // while we have "unit" and leave if we get "enddef"
 
@@ -812,6 +812,7 @@ QDomElement CellmlTextViewParser::parseUnitsDefinition(QDomNode &pDomNode,
                     }
 
                     return QDomElement();
+                }
                 default:
                     // CellmlTextViewScanner::EndDefToken
 

@@ -18,7 +18,12 @@ def model{my_model_cmeta_id} my_model as
 
     // In between comment...
 
-    def unit my_unit as
+    def unit my_unit1 as
+    enddef;
+
+    // In between comment...
+
+    def unit my_unit2 as
         unit second;
         unit some_unit {pref: milli};
         unit some_unit {pref: 3};
