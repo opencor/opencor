@@ -759,7 +759,7 @@ QDomElement CellmlTextViewParser::parseImportDefinition(QDomNode &pDomNode)
 
                         // Expect an identifier
 
-                        if (identifierToken(unitsImportElement)) {
+                        if (identifierToken(importElement)) {
                             // Set the name of the unit
 
                             unitsImportElement.setAttribute("name", mScanner->tokenString());
@@ -768,17 +768,17 @@ QDomElement CellmlTextViewParser::parseImportDefinition(QDomNode &pDomNode)
 
                             mScanner->getNextToken();
 
-                            if (usingToken(unitsImportElement)) {
+                            if (usingToken(importElement)) {
                                 // Expect "unit"
 
                                 mScanner->getNextToken();
 
-                                if (unitToken(unitsImportElement)) {
+                                if (unitToken(importElement)) {
                                     // Expect an identifier
 
                                     mScanner->getNextToken();
 
-                                    if (identifierToken(unitsImportElement)) {
+                                    if (identifierToken(importElement)) {
                                         // Set the name of the imported unit
 
                                         unitsImportElement.setAttribute("units_ref", mScanner->tokenString());
@@ -787,7 +787,7 @@ QDomElement CellmlTextViewParser::parseImportDefinition(QDomNode &pDomNode)
 
                                         mScanner->getNextToken();
 
-                                        if (semiColonToken(unitsImportElement))
+                                        if (semiColonToken(importElement))
                                             mScanner->getNextToken();
                                     }
                                 }
@@ -810,7 +810,7 @@ QDomElement CellmlTextViewParser::parseImportDefinition(QDomNode &pDomNode)
 
                         // Expect an identifier
 
-                        if (identifierToken(componentImportElement)) {
+                        if (identifierToken(importElement)) {
                             // Set the name of the component
 
                             componentImportElement.setAttribute("name", mScanner->tokenString());
@@ -819,17 +819,17 @@ QDomElement CellmlTextViewParser::parseImportDefinition(QDomNode &pDomNode)
 
                             mScanner->getNextToken();
 
-                            if (usingToken(componentImportElement)) {
+                            if (usingToken(importElement)) {
                                 // Expect "comp"
 
                                 mScanner->getNextToken();
 
-                                if (compToken(componentImportElement)) {
+                                if (compToken(importElement)) {
                                     // Expect an identifier
 
                                     mScanner->getNextToken();
 
-                                    if (identifierToken(componentImportElement)) {
+                                    if (identifierToken(importElement)) {
                                         // Set the name of the imported
                                         // component
 
@@ -839,7 +839,7 @@ QDomElement CellmlTextViewParser::parseImportDefinition(QDomNode &pDomNode)
 
                                         mScanner->getNextToken();
 
-                                        if (semiColonToken(componentImportElement))
+                                        if (semiColonToken(importElement))
                                             mScanner->getNextToken();
                                     }
                                 }
@@ -983,7 +983,7 @@ bool CellmlTextViewParser::parseUnitDefinition(QDomNode &pDomNode)
         needInitializeTokenTypes = false;
     }
 
-    if (tokenType(unitElement, QObject::tr("An identifier or an SI unit (e.g. 'second')"),
+    if (tokenType(pDomNode, QObject::tr("An identifier or an SI unit (e.g. 'second')"),
                   tokenTypes)) {
         // Set our unit's name
 
@@ -1012,7 +1012,7 @@ bool CellmlTextViewParser::parseUnitDefinition(QDomNode &pDomNode)
 
                     mScanner->getNextToken();
 
-                    if (tokenType(unitElement, QObject::tr("'%1', '%2', '%3' or '%4'").arg("pref", "expo", "mult", "off"),
+                    if (tokenType(pDomNode, QObject::tr("'%1', '%2', '%3' or '%4'").arg("pref", "expo", "mult", "off"),
                                   tokenTypes)) {
                         // Make sure that we don't already have come across the
                         // unit attribute
@@ -1036,7 +1036,7 @@ bool CellmlTextViewParser::parseUnitDefinition(QDomNode &pDomNode)
 
                             mScanner->getNextToken();
 
-                            if (!colonToken(unitElement))
+                            if (!colonToken(pDomNode))
                                 return false;
 
                             // Check which unit attribute we are dealing with to
@@ -1076,7 +1076,7 @@ bool CellmlTextViewParser::parseUnitDefinition(QDomNode &pDomNode)
                                         needInitializeTokenTypes = false;
                                     }
 
-                                    if (!tokenType(unitElement, QObject::tr("A number or a prefix (e.g. 'milli')"),
+                                    if (!tokenType(pDomNode, QObject::tr("A number or a prefix (e.g. 'milli')"),
                                                    tokenTypes)) {
                                         return false;
                                     }
@@ -1084,7 +1084,7 @@ bool CellmlTextViewParser::parseUnitDefinition(QDomNode &pDomNode)
                             } else {
                                 // Expect a number value
 
-                                if (!numberValueToken(unitElement, sign))
+                                if (!numberValueToken(pDomNode, sign))
                                     return false;
                             }
 
@@ -1125,14 +1125,14 @@ bool CellmlTextViewParser::parseUnitDefinition(QDomNode &pDomNode)
 
                 // Expect "}"
 
-                if (!closingCurlyBracketToken(unitElement))
+                if (!closingCurlyBracketToken(pDomNode))
                     return false;
 
                 // Expect ";"
 
                 mScanner->getNextToken();
 
-                if (semiColonToken(unitElement)) {
+                if (semiColonToken(pDomNode)) {
                     mScanner->getNextToken();
 
                     return true;
@@ -1170,14 +1170,23 @@ QDomElement CellmlTextViewParser::parseMapDefinition(QDomNode &pDomNode)
     // Expect "between"
 
     if (betweenToken(connectionElement)) {
-        // Expect an identifier
+        // Create our map components element and set its two
+        // component attributes
+
+        QDomElement mapComponentsElement = newDomElement(connectionElement, "map_components");
+
+        // Try to parse for a cmeta:id
 
         mScanner->getNextToken();
 
-        if (identifierToken(connectionElement)) {
-            // Keep track of the first component
+        parseCmetaId(mapComponentsElement);
 
-            QString component1 = mScanner->tokenString();
+        // Expect an identifier
+
+        if (identifierToken(connectionElement)) {
+            // Set our first component
+
+            mapComponentsElement.setAttribute("component_1", mScanner->tokenString());
 
             // Expect "and"
 
@@ -1189,23 +1198,15 @@ QDomElement CellmlTextViewParser::parseMapDefinition(QDomNode &pDomNode)
                 mScanner->getNextToken();
 
                 if (identifierToken(connectionElement)) {
-                    // Keep track of the second component
+                    // Set our second component
 
-                    QString component2 = mScanner->tokenString();
+                    mapComponentsElement.setAttribute("component_2", mScanner->tokenString());
 
                     // Expect "for"
 
                     mScanner->getNextToken();
 
                     if (forToken(connectionElement)) {
-                        // Create our map components element and set its two
-                        // component attributes
-
-                        QDomElement mapComponentsElement = newDomElement(connectionElement, "map_components");
-
-                        mapComponentsElement.setAttribute("component_1", component1);
-                        mapComponentsElement.setAttribute("component_2", component2);
-
                         // Expect a mapping, so loop while we have "vars" or
                         // leave if we get "enddef"
 
@@ -1230,7 +1231,7 @@ QDomElement CellmlTextViewParser::parseMapDefinition(QDomNode &pDomNode)
 
                                 // Expect an identifier
 
-                                if (identifierToken(mapVariablesElement)) {
+                                if (identifierToken(connectionElement)) {
                                     // Set the name of the first variable
 
                                     mapVariablesElement.setAttribute("variable_1", mScanner->tokenString());
@@ -1239,12 +1240,12 @@ QDomElement CellmlTextViewParser::parseMapDefinition(QDomNode &pDomNode)
 
                                     mScanner->getNextToken();
 
-                                    if (andToken(mapVariablesElement)) {
+                                    if (andToken(connectionElement)) {
                                         // Expect an identifier
 
                                         mScanner->getNextToken();
 
-                                        if (identifierToken(mapVariablesElement)) {
+                                        if (identifierToken(connectionElement)) {
                                             // Set the name of the second
                                             // variable
 
@@ -1254,7 +1255,7 @@ QDomElement CellmlTextViewParser::parseMapDefinition(QDomNode &pDomNode)
 
                                             mScanner->getNextToken();
 
-                                            if (semiColonToken(mapVariablesElement))
+                                            if (semiColonToken(connectionElement))
                                                 mScanner->getNextToken();
                                         }
                                     }

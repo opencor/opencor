@@ -21,21 +21,17 @@ def model{my_model_cmeta_id} my_model as
 
     // In between comment...
 
-    def unit{my_base_unit1_cmeta_id} my_base_unit1 as base unit;
+    def unit{my_base_unit_cmeta_id} my_base_unit as base unit;
 
     // In between comment...
 
-    def unit my_base_unit2 as base unit;
-
-    // In between comment...
-
-    def unit my_unit1 as
+    def unit{my_unit1_cmeta_id} my_unit1 as
     enddef;
 
     // In between comment...
 
-    def unit my_unit2 as
-        unit second;
+    def unit{my_unit2_cmeta_id} my_unit2 as
+        unit{second_cmeta_id} second;
         unit some_unit {pref: milli};
         unit some_unit {pref: 3};
         unit some_unit {pref: +3};
@@ -48,9 +44,9 @@ def model{my_model_cmeta_id} my_model as
 
     // In between comment...
 
-    def map between my_component1 and my_component2 for
-        vars my_variable11 and my_variable21;
-        vars my_variable12 and my_variable22;
-        vars my_variable13 and my_variable23;
+    def map{my_connection_cmeta_id} between{my_map_components_cmeta_id} my_component1 and my_component2 for
+        vars{my_map_variables1_cmeta_id} my_variable11 and my_variable21;
+        vars{my_map_variables2_cmeta_id} my_variable12 and my_variable22;
+        vars{my_map_variables3_cmeta_id} my_variable13 and my_variable23;
     enddef;
 enddef;

@@ -13,14 +13,12 @@
         <units cmeta:id="my_imported_unit2_cmeta_id" name="my_imported_unit2" units_ref="my_reference_unit2"/>
     </import>
     <!-- In between comment...-->
-    <units base_units="yes" cmeta:id="my_base_unit1_cmeta_id" name="my_base_unit1"/>
+    <units base_units="yes" cmeta:id="my_base_unit_cmeta_id" name="my_base_unit"/>
     <!-- In between comment...-->
-    <units base_units="yes" name="my_base_unit2"/>
+    <units cmeta:id="my_unit1_cmeta_id" name="my_unit1"/>
     <!-- In between comment...-->
-    <units name="my_unit1"/>
-    <!-- In between comment...-->
-    <units name="my_unit2">
-        <unit units="second"/>
+    <units cmeta:id="my_unit2_cmeta_id" name="my_unit2">
+        <unit cmeta:id="second_cmeta_id" units="second"/>
         <unit prefix="milli" units="some_unit"/>
         <unit prefix="3" units="some_unit"/>
         <unit prefix="+3" units="some_unit"/>
@@ -31,10 +29,10 @@
         <unit exponent="3" multiplier="+5" offset="-7" prefix="milli" units="some_unit"/>
     </units>
     <!-- In between comment...-->
-    <connection>
-        <map_components component_1="my_component1" component_2="my_component2"/>
-        <map_variables variable_1="my_variable11" variable_2="my_variable21"/>
-        <map_variables variable_1="my_variable12" variable_2="my_variable22"/>
-        <map_variables variable_1="my_variable13" variable_2="my_variable23"/>
+    <connection cmeta:id="my_connection_cmeta_id">
+        <map_components cmeta:id="my_map_components_cmeta_id" component_1="my_component1" component_2="my_component2"/>
+        <map_variables cmeta:id="my_map_variables1_cmeta_id" variable_1="my_variable11" variable_2="my_variable21"/>
+        <map_variables cmeta:id="my_map_variables2_cmeta_id" variable_1="my_variable12" variable_2="my_variable22"/>
+        <map_variables cmeta:id="my_map_variables3_cmeta_id" variable_1="my_variable13" variable_2="my_variable23"/>
     </connection>
 </model>

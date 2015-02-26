@@ -94,7 +94,7 @@
         </p>
 
         <ul>
-            <li>Comments can be made anywhere in a CellML file. However, the rendering of the <code>component</code>, <code>map_components</code>, <code>map_variables</code>, <code>relationship_ref</code>, <code>unit</code>, <code>units</code> and <code>variable</code> elements using the CellML text format is such that when serialised back, those comments will be incorporated in the parent element of those elements.</li>
+            <li>Comments can be made anywhere in a CellML file. However, the rendering of certain elements using the CellML text format is such that when serialised back, those comments will be incorporated in the parent element of those elements.</li>
             <li>The <code>reaction</code> element is not supported (indeed, its use is not only discouraged, but the <code>reaction</code> element is to be removed from the forthcoming CellML 1.2 specifications).</li>
             <li>A <code>piecewise</code> statement can only be used as part of a top-level <code>eq</code> statement, and nested <code>piecewise</code> statements are not allowed (the nested limitation is not a limitation as such since an equation can always be rewritten without nested <code>piecewise</code> statements; more importantly, it is easier to read and maintain an equation that uses only one <code>piecewise</code> statement).</li>
             <li>A <code>component</code> element may contain a set of <code>math</code> elements. However, its rendering is such that when serialised back, only one <code>math</code> element will remain, with all the equations originally distributed among the set now in that one and unique <code>math</code> element.</li>
