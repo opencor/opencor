@@ -113,13 +113,9 @@ public:
     void setText(const QString &pText);
 
     TokenType tokenType() const;
-
     int tokenLine() const;
     int tokenColumn() const;
-
     QString tokenString() const;
-    double tokenNumber() const;
-
     QString tokenComment() const;
 
     void getNextToken();
@@ -149,7 +145,6 @@ private:
     int mTokenLine;
     int mTokenColumn;
     QString mTokenString;
-    double mTokenNumber;
     QString mTokenComment;
 
     QMap<QString, TokenType> mKeywords;

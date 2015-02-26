@@ -42,7 +42,6 @@ CellmlTextViewScanner::CellmlTextViewScanner() :
     mTokenLine(0),
     mTokenColumn(0),
     mTokenString(QString()),
-    mTokenNumber(0.0),
     mTokenComment(QString()),
     mWithinParameterBlock(false)
 {
@@ -217,7 +216,6 @@ void CellmlTextViewScanner::setText(const QString &pText)
     mTokenLine = 0;
     mTokenColumn = 0;
     mTokenString = QString();
-    mTokenNumber = 0.0;
 
     mWithinParameterBlock = false;
 
@@ -259,15 +257,6 @@ QString CellmlTextViewScanner::tokenString() const
     // Return our token as a string
 
     return mTokenString;
-}
-
-//==============================================================================
-
-double CellmlTextViewScanner::tokenNumber() const
-{
-    // Return our token as a number
-
-    return mTokenNumber;
 }
 
 //==============================================================================
@@ -609,7 +598,7 @@ void CellmlTextViewScanner::getNumber()
 
     bool validNumber;
 
-    mTokenNumber = mTokenString.toDouble(&validNumber);
+    mTokenString.toDouble(&validNumber);
 
     mTokenType = NumberToken;
 
@@ -665,7 +654,6 @@ void CellmlTextViewScanner::getNextToken()
     mTokenColumn = mCharColumn;
 
     mTokenString = *mChar;
-    mTokenNumber = 0.0;
 
     mTokenComment = QString();
 
