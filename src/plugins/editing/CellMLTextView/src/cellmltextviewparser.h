@@ -121,15 +121,11 @@ private:
     bool defToken(QDomNode &pDomNode);
     bool enddefPlusSemiColonToken(QDomNode &pDomNode);
     bool identifierToken(QDomNode &pDomNode);
-    bool modelDefinitionToken(QDomNode &pDomNode);
     bool modelToken(QDomNode &pDomNode);
     bool numberToken(QDomNode &pDomNode);
     bool numberValueToken(QDomNode &pDomNode, int &pSign);
     bool openingCurlyBracketToken(QDomNode &pDomNode);
-    bool prefixValueToken(QDomNode &pDomNode, int &pSign);
     bool semiColonToken(QDomNode &pDomNode);
-    bool unitAttributeToken(QDomNode &pDomNode);
-    bool unitIdentifierToken(QDomNode &pDomNode);
     bool unitToken(QDomNode &pDomNode);
 
     void parseComments(QDomNode &pDomNode);
