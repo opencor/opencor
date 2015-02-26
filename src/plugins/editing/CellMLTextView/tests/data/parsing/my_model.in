@@ -5,7 +5,18 @@ def model{my_model_cmeta_id} my_model as
     // on one, two or even
     // more lines...
 
-    def import{my_import_cmeta_id} using "imported_model.cellml" for
+    def import{my_import1_cmeta_id} using "imported_model.cellml" for
+    enddef;
+
+    // In between comment...
+
+    def import{my_import2_cmeta_id} using "imported_model.cellml" for
+        unit{my_imported_unit1_cmeta_id} my_imported_unit1 using unit my_reference_unit1;
+
+        comp{my_imported_component1_cmeta_id} my_imported_component1 using comp my_reference_component1;
+        comp{my_imported_component2_cmeta_id} my_imported_component2 using comp my_reference_component2;
+
+        unit{my_imported_unit2_cmeta_id} my_imported_unit2 using unit my_reference_unit2;
     enddef;
 
     // In between comment...

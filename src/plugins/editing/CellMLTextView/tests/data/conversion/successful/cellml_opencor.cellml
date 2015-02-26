@@ -29,7 +29,7 @@
             </rdf:RDF>
         </units>
         <!-- In between comment...-->
-        <component cmeta:id="my_imported_component_cmeta_id" name="my_imported_component" component_ref="my_reference_component">
+        <component cmeta:id="my_imported_component_cmeta_id" component_ref="my_reference_component" name="my_imported_component">
             <!-- Comments can be within a component import,
  but if kept it will be serialised back in the
  corresponding import definition...-->

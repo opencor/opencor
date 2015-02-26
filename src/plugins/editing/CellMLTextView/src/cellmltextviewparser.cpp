@@ -365,6 +365,16 @@ bool CellmlTextViewParser::colonToken(QDomNode &pDomNode)
 
 //==============================================================================
 
+bool CellmlTextViewParser::compToken(QDomNode &pDomNode)
+{
+    // Expect "comp"
+
+    return tokenType(pDomNode, "'comp'",
+                     CellmlTextViewScanner::CompToken);
+}
+
+//==============================================================================
+
 bool CellmlTextViewParser::defToken(QDomNode &pDomNode)
 {
     // Expect "def"
@@ -691,7 +701,10 @@ QDomElement CellmlTextViewParser::parseImportDefinition(QDomNode &pDomNode)
 
         if (tokenType(importElement, QObject::tr("A string representing a URL"),
                       CellmlTextViewScanner::StringToken)) {
-            // Set the URL
+            // Set the URL, after having kept track of the fact that we need
+            // CellML 1.1 and the XLink namespace
+
+            mCellmlVersion = CellMLSupport::CellmlFile::Cellml_1_1;
 
             mNamespaces.insert("xlink", CellMLSupport::XlinkNamespace);
 
@@ -702,7 +715,8 @@ QDomElement CellmlTextViewParser::parseImportDefinition(QDomNode &pDomNode)
             mScanner->getNextToken();
 
             if (forToken(importElement)) {
-                // Expect an import definition
+                // Expect an import definition, so loop while we have "unit" or
+                // "comp", or leave if we get "enddef"
 
                 static CellmlTextViewScanner::TokenTypes tokenTypes = CellmlTextViewScanner::TokenTypes() << CellmlTextViewScanner::UnitToken
                                                                                                           << CellmlTextViewScanner::CompToken
@@ -710,15 +724,112 @@ QDomElement CellmlTextViewParser::parseImportDefinition(QDomNode &pDomNode)
 
                 mScanner->getNextToken();
 
-                if (tokenType(importElement, QObject::tr("'%1', '%2' or '%3'").arg("unit", "comp", "enddef"),
-                              tokenTypes)) {
+                while (tokenType(importElement, QObject::tr("'%1', '%2' or '%3'").arg("unit", "comp", "enddef"),
+                                 tokenTypes)) {
                     switch (mScanner->tokenType()) {
-                    case CellmlTextViewScanner::UnitToken:
+                    case CellmlTextViewScanner::UnitToken: {
+                        // We are dealing with a unit import, so create our unit
+                        // import element
+
+                        QDomElement unitsImportElement = newDomElement(importElement, "units");
+
+                        // Try to parse for a cmeta:id
+
+                        mScanner->getNextToken();
+
+                        parseCmetaId(unitsImportElement);
+
+                        // Expect an identifier
+
+                        if (identifierToken(unitsImportElement)) {
+                            // Set the name of the unit
+
+                            unitsImportElement.setAttribute("name", mScanner->tokenString());
+
+                            // Expect "using"
+
+                            mScanner->getNextToken();
+
+                            if (usingToken(unitsImportElement)) {
+                                // Expect "unit"
+
+                                mScanner->getNextToken();
+
+                                if (unitToken(unitsImportElement)) {
+                                    // Expect an identifier
+
+                                    mScanner->getNextToken();
+
+                                    if (identifierToken(unitsImportElement)) {
+                                        // Set the name of the imported unit
+
+                                        unitsImportElement.setAttribute("units_ref", mScanner->tokenString());
+
+                                        // Expect ";"
+
+                                        mScanner->getNextToken();
+
+                                        if (semiColonToken(unitsImportElement))
+                                            mScanner->getNextToken();
+                                    }
+                                }
+                            }
+                        }
 
                         break;
-                    case CellmlTextViewScanner::CompToken:
+                    }
+                    case CellmlTextViewScanner::CompToken: {
+                        // We are dealing with a component import, so create our
+                        // component import element
+
+                        QDomElement componentImportElement = newDomElement(importElement, "component");
+
+                        // Try to parse for a cmeta:id
+
+                        mScanner->getNextToken();
+
+                        parseCmetaId(componentImportElement);
+
+                        // Expect an identifier
+
+                        if (identifierToken(componentImportElement)) {
+                            // Set the name of the component
+
+                            componentImportElement.setAttribute("name", mScanner->tokenString());
+
+                            // Expect "using"
+
+                            mScanner->getNextToken();
+
+                            if (usingToken(componentImportElement)) {
+                                // Expect "comp"
+
+                                mScanner->getNextToken();
+
+                                if (compToken(componentImportElement)) {
+                                    // Expect an identifier
+
+                                    mScanner->getNextToken();
+
+                                    if (identifierToken(componentImportElement)) {
+                                        // Set the name of the imported
+                                        // component
+
+                                        componentImportElement.setAttribute("component_ref", mScanner->tokenString());
+
+                                        // Expect ";"
+
+                                        mScanner->getNextToken();
+
+                                        if (semiColonToken(componentImportElement))
+                                            mScanner->getNextToken();
+                                    }
+                                }
+                            }
+                        }
 
                         break;
+                    }
                     default:
                         // CellmlTextViewScanner::EndDefToken
 
@@ -771,7 +882,7 @@ QDomElement CellmlTextViewParser::parseUnitsDefinition(QDomNode &pDomNode,
                           tokenTypes)) {
                 switch (mScanner->tokenType()) {
                 case CellmlTextViewScanner::BaseToken:
-                    // We are dealing with the definition of base unit, so now
+                    // We are dealing with the definition of a base unit, so now
                     // expect "unit"
 
                     mScanner->getNextToken();
@@ -791,7 +902,7 @@ QDomElement CellmlTextViewParser::parseUnitsDefinition(QDomNode &pDomNode,
                     break;
                 case CellmlTextViewScanner::UnitToken: {
                     // We are dealing with a 'normal' unit definition, so loop
-                    // while we have "unit" and leave if we get "enddef"
+                    // while we have "unit" or leave if we get "enddef"
 
                     static CellmlTextViewScanner::TokenTypes tokenTypes = CellmlTextViewScanner::TokenTypes() << CellmlTextViewScanner::UnitToken
                                                                                                               << CellmlTextViewScanner::EndDefToken;

@@ -86,15 +86,14 @@ void ParsingTests::basicTests()
     QVERIFY(parser.execute(QString("def model{my_cmeta_id} my_model as\n"
                                    "enddef;")));
 
-    // Various tests on a minimal model definition with a cmeta:id
+    // Test the definition of a something unknown
 
     QVERIFY(!parser.execute(QString("def model my_model as\n"
-                                    "    def invalid_stuff as"
+                                    "    def unknown as"
                                     "    enddef;"
                                     "enddef;")));
     QCOMPARE(parser.messages().first().type(), OpenCOR::CellMLTextView::CellmlTextViewParserMessage::Error);
-    QCOMPARE(parser.messages().first().message(), QString("'import', 'unit', 'comp', 'group' or 'map' is expected, but 'invalid_stuff' was found instead."));
-
+    QCOMPARE(parser.messages().first().message(), QString("'import', 'unit', 'comp', 'group' or 'map' is expected, but 'unknown' was found instead."));
 }
 
 //==============================================================================
@@ -156,26 +155,138 @@ void ParsingTests::importTests()
                                     "    def import using \"import_model.cellml\"")));
     QCOMPARE(parser.messages().first().type(), OpenCOR::CellMLTextView::CellmlTextViewParserMessage::Error);
     QCOMPARE(parser.messages().first().message(), QString("'for' is expected, but the end of the file was found instead."));
+
+    QVERIFY(!parser.execute(QString("def model my_model as\n"
+                                    "    def import using \"import_model.cellml\" for")));
+    QCOMPARE(parser.messages().first().type(), OpenCOR::CellMLTextView::CellmlTextViewParserMessage::Error);
+    QCOMPARE(parser.messages().first().message(), QString("'unit', 'comp' or 'enddef' is expected, but the end of the file was found instead."));
+
+    QVERIFY(!parser.execute(QString("def model my_model as\n"
+                                    "    def import using \"import_model.cellml\" for\n"
+                                    "    enddef")));
+    QCOMPARE(parser.messages().first().type(), OpenCOR::CellMLTextView::CellmlTextViewParserMessage::Error);
+    QCOMPARE(parser.messages().first().message(), QString("';' is expected, but the end of the file was found instead."));
+
+    QVERIFY(!parser.execute(QString("def model my_model as\n"
+                                    "    def import using \"import_model.cellml\" for\n"
+                                    "    enddef;")));
+    QCOMPARE(parser.messages().first().type(), OpenCOR::CellMLTextView::CellmlTextViewParserMessage::Error);
+    QCOMPARE(parser.messages().first().message(), QString("'def' or 'enddef' is expected, but the end of the file was found instead."));
+
+    QVERIFY(!parser.execute(QString("def model my_model as\n"
+                                    "    def import using \"import_model.cellml\" for\n"
+                                    "    enddef;\n"
+                                    "enddef")));
+    QCOMPARE(parser.messages().first().type(), OpenCOR::CellMLTextView::CellmlTextViewParserMessage::Error);
+    QCOMPARE(parser.messages().first().message(), QString("';' is expected, but the end of the file was found instead."));
+
+    QVERIFY(parser.execute(QString("def model my_model as\n"
+                                   "    def import using \"import_model.cellml\" for\n"
+                                   "    enddef;\n"
+                                   "enddef;")));
+
+    QVERIFY(!parser.execute(QString("def model my_model as\n"
+                                    "    def import using \"import_model.cellml\" for\n"
+                                    "        unit")));
+    QCOMPARE(parser.messages().first().type(), OpenCOR::CellMLTextView::CellmlTextViewParserMessage::Error);
+    QCOMPARE(parser.messages().first().message(), QString("An identifier is expected, but the end of the file was found instead."));
+
+    QVERIFY(!parser.execute(QString("def model my_model as\n"
+                                    "    def import using \"import_model.cellml\" for\n"
+                                    "        unit my_imported_unit")));
+    QCOMPARE(parser.messages().first().type(), OpenCOR::CellMLTextView::CellmlTextViewParserMessage::Error);
+    QCOMPARE(parser.messages().first().message(), QString("'using' is expected, but the end of the file was found instead."));
+
+    QVERIFY(!parser.execute(QString("def model my_model as\n"
+                                    "    def import using \"import_model.cellml\" for\n"
+                                    "        unit my_imported_unit using")));
+    QCOMPARE(parser.messages().first().type(), OpenCOR::CellMLTextView::CellmlTextViewParserMessage::Error);
+    QCOMPARE(parser.messages().first().message(), QString("'unit' is expected, but the end of the file was found instead."));
+
+    QVERIFY(!parser.execute(QString("def model my_model as\n"
+                                    "    def import using \"import_model.cellml\" for\n"
+                                    "        unit my_imported_unit using unit")));
+    QCOMPARE(parser.messages().first().type(), OpenCOR::CellMLTextView::CellmlTextViewParserMessage::Error);
+    QCOMPARE(parser.messages().first().message(), QString("An identifier is expected, but the end of the file was found instead."));
+
+    QVERIFY(!parser.execute(QString("def model my_model as\n"
+                                    "    def import using \"import_model.cellml\" for\n"
+                                    "        unit my_imported_unit using unit my_reference_unit")));
+    QCOMPARE(parser.messages().first().type(), OpenCOR::CellMLTextView::CellmlTextViewParserMessage::Error);
+    QCOMPARE(parser.messages().first().message(), QString("';' is expected, but the end of the file was found instead."));
+
+    QVERIFY(!parser.execute(QString("def model my_model as\n"
+                                    "    def import using \"import_model.cellml\" for\n"
+                                    "        unit my_imported_unit using unit my_reference_unit;")));
+    QCOMPARE(parser.messages().first().type(), OpenCOR::CellMLTextView::CellmlTextViewParserMessage::Error);
+    QCOMPARE(parser.messages().first().message(), QString("'unit', 'comp' or 'enddef' is expected, but the end of the file was found instead."));
+
+    QVERIFY(parser.execute(QString("def model my_model as\n"
+                                   "    def import using \"import_model.cellml\" for\n"
+                                   "        unit my_imported_unit using unit my_reference_unit;\n"
+                                   "    enddef;\n"
+                                   "enddef;")));
+
+    QVERIFY(!parser.execute(QString("def model my_model as\n"
+                                    "    def import using \"import_model.cellml\" for\n"
+                                    "        comp")));
+    QCOMPARE(parser.messages().first().type(), OpenCOR::CellMLTextView::CellmlTextViewParserMessage::Error);
+    QCOMPARE(parser.messages().first().message(), QString("An identifier is expected, but the end of the file was found instead."));
+
+    QVERIFY(!parser.execute(QString("def model my_model as\n"
+                                    "    def import using \"import_model.cellml\" for\n"
+                                    "        comp my_imported_component")));
+    QCOMPARE(parser.messages().first().type(), OpenCOR::CellMLTextView::CellmlTextViewParserMessage::Error);
+    QCOMPARE(parser.messages().first().message(), QString("'using' is expected, but the end of the file was found instead."));
+
+    QVERIFY(!parser.execute(QString("def model my_model as\n"
+                                    "    def import using \"import_model.cellml\" for\n"
+                                    "        comp my_imported_component using")));
+    QCOMPARE(parser.messages().first().type(), OpenCOR::CellMLTextView::CellmlTextViewParserMessage::Error);
+    QCOMPARE(parser.messages().first().message(), QString("'comp' is expected, but the end of the file was found instead."));
+
+    QVERIFY(!parser.execute(QString("def model my_model as\n"
+                                    "    def import using \"import_model.cellml\" for\n"
+                                    "        comp my_imported_component using comp")));
+    QCOMPARE(parser.messages().first().type(), OpenCOR::CellMLTextView::CellmlTextViewParserMessage::Error);
+    QCOMPARE(parser.messages().first().message(), QString("An identifier is expected, but the end of the file was found instead."));
+
+    QVERIFY(!parser.execute(QString("def model my_model as\n"
+                                    "    def import using \"import_model.cellml\" for\n"
+                                    "        comp my_imported_component using comp my_reference_component")));
+    QCOMPARE(parser.messages().first().type(), OpenCOR::CellMLTextView::CellmlTextViewParserMessage::Error);
+    QCOMPARE(parser.messages().first().message(), QString("';' is expected, but the end of the file was found instead."));
+
+    QVERIFY(!parser.execute(QString("def model my_model as\n"
+                                    "    def import using \"import_model.cellml\" for\n"
+                                    "        comp my_imported_component using comp my_reference_component;")));
+    QCOMPARE(parser.messages().first().type(), OpenCOR::CellMLTextView::CellmlTextViewParserMessage::Error);
+    QCOMPARE(parser.messages().first().message(), QString("'unit', 'comp' or 'enddef' is expected, but the end of the file was found instead."));
+
+    QVERIFY(parser.execute(QString("def model my_model as\n"
+                                   "    def import using \"import_model.cellml\" for\n"
+                                   "        comp my_imported_component using comp my_reference_component;\n"
+                                   "    enddef;\n"
+                                   "enddef;")));
 }
 
 //==============================================================================
 
 void ParsingTests::miscellaneousTests()
 {
-//    OpenCOR::CellMLTextView::CellmlTextViewParser parser;
+    OpenCOR::CellMLTextView::CellmlTextViewParser parser;
 
     // Test the parsing of an originally CellML 1.0 file that now requires
     // CellML 1.1
 
-//---GRY--- TO BE ENABLED ONCE WE SUPPORT THE PARSING OF IMPORTS...
-//    QVERIFY(parser.execute(QString("def model my_model as\n"
-//                                   "    def import{my_import_cmeta_id} using \"imported_model.cellml\" for\n"
-//                                   "        unit{my_imported_unit_cmeta_id} my_imported_unit using unit my_reference_unit;\n"
-//                                   "        comp{my_imported_component_cmeta_id} my_imported_component using comp my_reference_component;\n"
-//                                   "    enddef;\n"
-//                                   "enddef;"),
-//                           OpenCOR::CellMLSupport::CellmlFile::Cellml_1_0));
-//    QCOMPARE(parser.cellmlVersion(), OpenCOR::CellMLSupport::CellmlFile::Cellml_1_1);
+    QVERIFY(parser.execute(QString("def model my_model as\n"
+                                   "    def import{my_import_cmeta_id} using \"imported_model.cellml\" for\n"
+                                   "        unit{my_imported_unit_cmeta_id} my_imported_unit using unit my_reference_unit;\n"
+                                   "        comp{my_imported_component_cmeta_id} my_imported_component using comp my_reference_component;\n"
+                                   "    enddef;\n"
+                                   "enddef;"),
+                           OpenCOR::CellMLSupport::CellmlFile::Cellml_1_0));
+    QCOMPARE(parser.cellmlVersion(), OpenCOR::CellMLSupport::CellmlFile::Cellml_1_1);
 }
 
 //==============================================================================

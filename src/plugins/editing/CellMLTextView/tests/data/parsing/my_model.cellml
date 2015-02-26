@@ -1,10 +1,17 @@
 <?xml version='1.0'?>
-<model cmeta:id="my_model_cmeta_id" name="my_model" xmlns="http://www.cellml.org/cellml/1.0#" xmlns:cellml="http://www.cellml.org/cellml/1.0#" xmlns:cmeta="http://www.cellml.org/metadata/1.0#" xmlns:xlink="http://www.w3.org/1999/xlink">
+<model cmeta:id="my_model_cmeta_id" name="my_model" xmlns="http://www.cellml.org/cellml/1.1#" xmlns:cellml="http://www.cellml.org/cellml/1.1#" xmlns:cmeta="http://www.cellml.org/metadata/1.0#" xmlns:xlink="http://www.w3.org/1999/xlink">
     <!-- A comment can fit on one line...-->
     <!-- A comment can also fit
  on one, two or even
  more lines...-->
-    <import cmeta:id="my_import_cmeta_id" xlink:href="imported_model.cellml"/>
+    <import cmeta:id="my_import1_cmeta_id" xlink:href="imported_model.cellml"/>
+    <!-- In between comment...-->
+    <import cmeta:id="my_import2_cmeta_id" xlink:href="imported_model.cellml">
+        <units cmeta:id="my_imported_unit1_cmeta_id" name="my_imported_unit1" units_ref="my_reference_unit1"/>
+        <component cmeta:id="my_imported_component1_cmeta_id" component_ref="my_reference_component1" name="my_imported_component1"/>
+        <component cmeta:id="my_imported_component2_cmeta_id" component_ref="my_reference_component2" name="my_imported_component2"/>
+        <units cmeta:id="my_imported_unit2_cmeta_id" name="my_imported_unit2" units_ref="my_reference_unit2"/>
+    </import>
     <!-- In between comment...-->
     <units base_units="yes" cmeta:id="my_base_unit1_cmeta_id" name="my_base_unit1"/>
     <!-- In between comment...-->

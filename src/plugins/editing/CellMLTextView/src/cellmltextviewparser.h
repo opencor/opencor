@@ -118,6 +118,7 @@ private:
     bool asToken(QDomNode &pDomNode);
     bool closingCurlyBracketToken(QDomNode &pDomNode);
     bool colonToken(QDomNode &pDomNode);
+    bool compToken(QDomNode &pDomNode);
     bool defToken(QDomNode &pDomNode);
     bool enddefPlusSemiColonToken(QDomNode &pDomNode);
     bool forToken(QDomNode &pDomNode);
