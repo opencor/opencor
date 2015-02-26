@@ -8,8 +8,10 @@
     <!-- In between comment...-->
     <import cmeta:id="my_import2_cmeta_id" xlink:href="imported_model.cellml">
         <units cmeta:id="my_imported_unit1_cmeta_id" name="my_imported_unit1" units_ref="my_reference_unit1"/>
+        <!-- In between comment...-->
         <component cmeta:id="my_imported_component1_cmeta_id" component_ref="my_reference_component1" name="my_imported_component1"/>
         <component cmeta:id="my_imported_component2_cmeta_id" component_ref="my_reference_component2" name="my_imported_component2"/>
+        <!-- In between comment...-->
         <units cmeta:id="my_imported_unit2_cmeta_id" name="my_imported_unit2" units_ref="my_reference_unit2"/>
     </import>
     <!-- In between comment...-->
@@ -19,20 +21,30 @@
     <!-- In between comment...-->
     <units cmeta:id="my_unit2_cmeta_id" name="my_unit2">
         <unit cmeta:id="second_cmeta_id" units="second"/>
+        <!-- In between comment...-->
         <unit prefix="milli" units="some_unit"/>
+        <!-- In between comment...-->
         <unit prefix="3" units="some_unit"/>
+        <!-- In between comment...-->
         <unit prefix="+3" units="some_unit"/>
+        <!-- In between comment...-->
         <unit prefix="-3" units="some_unit"/>
+        <!-- In between comment...-->
         <unit exponent="3" units="some_unit"/>
+        <!-- In between comment...-->
         <unit multiplier="3" units="some_unit"/>
+        <!-- In between comment...-->
         <unit offset="3" units="some_unit"/>
+        <!-- In between comment...-->
         <unit exponent="3" multiplier="+5" offset="-7" prefix="milli" units="some_unit"/>
     </units>
     <!-- In between comment...-->
     <connection cmeta:id="my_connection_cmeta_id">
         <map_components cmeta:id="my_map_components_cmeta_id" component_1="my_component1" component_2="my_component2"/>
         <map_variables cmeta:id="my_map_variables1_cmeta_id" variable_1="my_variable11" variable_2="my_variable21"/>
+        <!-- In between comment...-->
         <map_variables cmeta:id="my_map_variables2_cmeta_id" variable_1="my_variable12" variable_2="my_variable22"/>
+        <!-- In between comment...-->
         <map_variables cmeta:id="my_map_variables3_cmeta_id" variable_1="my_variable13" variable_2="my_variable23"/>
     </connection>
 </model>

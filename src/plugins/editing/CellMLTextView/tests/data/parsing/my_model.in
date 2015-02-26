@@ -13,8 +13,12 @@ def model{my_model_cmeta_id} my_model as
     def import{my_import2_cmeta_id} using "imported_model.cellml" for
         unit{my_imported_unit1_cmeta_id} my_imported_unit1 using unit my_reference_unit1;
 
+        // In between comment...
+
         comp{my_imported_component1_cmeta_id} my_imported_component1 using comp my_reference_component1;
         comp{my_imported_component2_cmeta_id} my_imported_component2 using comp my_reference_component2;
+
+        // In between comment...
 
         unit{my_imported_unit2_cmeta_id} my_imported_unit2 using unit my_reference_unit2;
     enddef;
@@ -32,13 +36,37 @@ def model{my_model_cmeta_id} my_model as
 
     def unit{my_unit2_cmeta_id} my_unit2 as
         unit{second_cmeta_id} second;
+
+        // In between comment...
+
         unit some_unit {pref: milli};
+
+        // In between comment...
+
         unit some_unit {pref: 3};
+
+        // In between comment...
+
         unit some_unit {pref: +3};
+
+        // In between comment...
+
         unit some_unit {pref: -3};
+
+        // In between comment...
+
         unit some_unit {expo: 3};
+
+        // In between comment...
+
         unit some_unit {mult: 3};
+
+        // In between comment...
+
         unit some_unit {off: 3};
+
+        // In between comment...
+
         unit some_unit {pref: milli, expo: 3, mult: +5, off: -7};
     enddef;
 
@@ -46,7 +74,13 @@ def model{my_model_cmeta_id} my_model as
 
     def map{my_connection_cmeta_id} between{my_map_components_cmeta_id} my_component1 and my_component2 for
         vars{my_map_variables1_cmeta_id} my_variable11 and my_variable21;
+
+        // In between comment...
+
         vars{my_map_variables2_cmeta_id} my_variable12 and my_variable22;
+
+        // In between comment...
+
         vars{my_map_variables3_cmeta_id} my_variable13 and my_variable23;
     enddef;
 enddef;

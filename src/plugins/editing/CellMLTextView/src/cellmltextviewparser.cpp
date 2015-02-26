@@ -925,7 +925,7 @@ QDomElement CellmlTextViewParser::parseUnitsDefinition(QDomNode &pDomNode,
                     static CellmlTextViewScanner::TokenTypes tokenTypes = CellmlTextViewScanner::TokenTypes() << CellmlTextViewScanner::UnitToken
                                                                                                               << CellmlTextViewScanner::EndDefToken;
 
-                    while (tokenType(pDomNode, QObject::tr("'%1' or '%2'").arg("unit", "enddef"),
+                    while (tokenType(unitsElement, QObject::tr("'%1' or '%2'").arg("unit", "enddef"),
                                      tokenTypes)) {
                         switch (mScanner->tokenType()) {
                         case CellmlTextViewScanner::UnitToken:
