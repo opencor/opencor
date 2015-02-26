@@ -136,6 +136,30 @@ void ParsingTests::fileTests()
 
 //==============================================================================
 
+void ParsingTests::importTests()
+{
+    OpenCOR::CellMLTextView::CellmlTextViewParser parser;
+
+    // Various tests on a minimal import definition
+
+    QVERIFY(!parser.execute(QString("def model my_model as\n"
+                                    "    def import")));
+    QCOMPARE(parser.messages().first().type(), OpenCOR::CellMLTextView::CellmlTextViewParserMessage::Error);
+    QCOMPARE(parser.messages().first().message(), QString("'using' is expected, but the end of the file was found instead."));
+
+    QVERIFY(!parser.execute(QString("def model my_model as\n"
+                                    "    def import using")));
+    QCOMPARE(parser.messages().first().type(), OpenCOR::CellMLTextView::CellmlTextViewParserMessage::Error);
+    QCOMPARE(parser.messages().first().message(), QString("A string representing a URL is expected, but the end of the file was found instead."));
+
+    QVERIFY(!parser.execute(QString("def model my_model as\n"
+                                    "    def import using \"import_model.cellml\"")));
+    QCOMPARE(parser.messages().first().type(), OpenCOR::CellMLTextView::CellmlTextViewParserMessage::Error);
+    QCOMPARE(parser.messages().first().message(), QString("'for' is expected, but the end of the file was found instead."));
+}
+
+//==============================================================================
+
 void ParsingTests::miscellaneousTests()
 {
 //    OpenCOR::CellMLTextView::CellmlTextViewParser parser;
@@ -160,7 +184,7 @@ void ParsingTests::unitsTests()
 {
     OpenCOR::CellMLTextView::CellmlTextViewParser parser;
 
-    // Various tests on a minimal model unit definition
+    // Various tests on a minimal unit definition
 
     QVERIFY(!parser.execute(QString("def model my_model as\n"
                                     "    def unit")));
@@ -175,7 +199,7 @@ void ParsingTests::unitsTests()
     QVERIFY(!parser.execute(QString("def model my_model as\n"
                                     "    def unit my_base_unit as")));
     QCOMPARE(parser.messages().first().type(), OpenCOR::CellMLTextView::CellmlTextViewParserMessage::Error);
-    QCOMPARE(parser.messages().first().message(), QString("'base' or 'unit' is expected, but the end of the file was found instead."));
+    QCOMPARE(parser.messages().first().message(), QString("'base', 'unit' or 'enddef' is expected, but the end of the file was found instead."));
 
     QVERIFY(!parser.execute(QString("def model my_model as\n"
                                     "    def unit my_base_unit as base")));
@@ -311,12 +335,10 @@ void ParsingTests::unitsTests()
 
     // Test the definition of a unit with no unit elements
 
-    QVERIFY(!parser.execute(QString("def model my_model as\n"
-                                    "    def unit my_unit as\n"
-                                    "    enddef;\n"
-                                    "enddef;")));
-    QCOMPARE(parser.messages().first().type(), OpenCOR::CellMLTextView::CellmlTextViewParserMessage::Error);
-    QCOMPARE(parser.messages().first().message(), QString("'base' or 'unit' is expected, but 'enddef' was found instead."));
+    QVERIFY(parser.execute(QString("def model my_model as\n"
+                                   "    def unit my_unit as\n"
+                                   "    enddef;\n"
+                                   "enddef;")));
 
     // Test the definition of a unit with an invalid unit
 

@@ -5,6 +5,11 @@ def model{my_model_cmeta_id} my_model as
     // on one, two or even
     // more lines...
 
+    def import{my_import_cmeta_id} using "imported_model.cellml" for
+    enddef;
+
+    // In between comment...
+
     def unit{my_base_unit1_cmeta_id} my_base_unit1 as base unit;
 
     // In between comment...

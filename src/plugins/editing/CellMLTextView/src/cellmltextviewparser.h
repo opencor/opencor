@@ -120,6 +120,7 @@ private:
     bool colonToken(QDomNode &pDomNode);
     bool defToken(QDomNode &pDomNode);
     bool enddefPlusSemiColonToken(QDomNode &pDomNode);
+    bool forToken(QDomNode &pDomNode);
     bool identifierToken(QDomNode &pDomNode);
     bool modelToken(QDomNode &pDomNode);
     bool numberToken(QDomNode &pDomNode);
@@ -127,10 +128,12 @@ private:
     bool openingCurlyBracketToken(QDomNode &pDomNode);
     bool semiColonToken(QDomNode &pDomNode);
     bool unitToken(QDomNode &pDomNode);
+    bool usingToken(QDomNode &pDomNode);
 
     void parseComments(QDomNode &pDomNode);
     void parseCmetaId(QDomElement &pDomElement);
     bool parseModelDefinition(QDomNode &pDomNode);
+    QDomElement parseImportDefinition(QDomNode &pDomNode);
     QDomElement parseUnitsDefinition(QDomNode &pDomNode,
                                      bool &pBaseUnitsDefinition);
     bool parseUnitDefinition(QDomNode &pDomNode);

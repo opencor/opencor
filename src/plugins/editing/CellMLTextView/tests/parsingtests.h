@@ -35,6 +35,7 @@ class ParsingTests : public QObject
 private Q_SLOTS:
     void basicTests();
     void fileTests();
+    void importTests();
     void miscellaneousTests();
     void unitsTests();
 };
