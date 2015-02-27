@@ -65,7 +65,7 @@
         <unit prefix="zepto" units="some_unit"/>
         <unit prefix="yocto" units="some_unit"/>
     </units>
-    <component name="my_component1">
+    <component name="my_component">
         <units base_units="yes" name="my_base_unit1"/>
         <units base_units="yes" name="my_base_unit2"/>
         <units base_units="yes" name="my_base_unit3"/>
@@ -1703,6 +1703,17 @@
                     <arccoth/>
                     <ci>b</ci>
                 </apply>
+            </apply>
+            <apply>
+                <eq/>
+                <apply>
+                    <diff/>
+                    <bvar>
+                        <ci>t</ci>
+                    </bvar>
+                    <ci>f</ci>
+                </apply>
+                <cn cellml:units="dimensionless">3</cn>
             </apply>
         </math>
     </component>

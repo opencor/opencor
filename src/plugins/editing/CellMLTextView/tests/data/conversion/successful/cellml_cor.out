@@ -68,7 +68,7 @@ def model cellml_1_0 as
         unit some_unit {pref: yocto};
     enddef;
 
-    def comp my_component1 as
+    def comp my_component as
         def unit my_base_unit1 as base unit;
         def unit my_base_unit2 as base unit;
         def unit my_base_unit3 as base unit;
@@ -296,6 +296,7 @@ def model cellml_1_0 as
         a = asech(b);
         a = acsch(b);
         a = acoth(b);
+        ode(f, t) = 3{dimensionless};
     enddef;
 
     def group as containment for
