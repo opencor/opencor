@@ -175,15 +175,10 @@ bool CellmlTextViewParser::execute(const QString &pText,
                                 // Next, add the CellML namespace to our
                                 // document element
 
-                                switch (mCellmlVersion) {
-                                case CellMLSupport::CellmlFile::Cellml_1_1:
+                                if (mCellmlVersion == CellMLSupport::CellmlFile::Cellml_1_1) {
                                     mDomDocument.documentElement().setAttribute("xmlns", CellMLSupport::Cellml_1_1_Namespace);
                                     mDomDocument.documentElement().setAttribute("xmlns:cellml", CellMLSupport::Cellml_1_1_Namespace);
-
-                                    break;
-                                default:
-                                    // CellMLSupport::CellmlFile::Cellml_1_0
-
+                                } else {
                                     mDomDocument.documentElement().setAttribute("xmlns", CellMLSupport::Cellml_1_0_Namespace);
                                     mDomDocument.documentElement().setAttribute("xmlns:cellml", CellMLSupport::Cellml_1_0_Namespace);
                                 }
@@ -1069,24 +1064,14 @@ bool CellmlTextViewParser::parseUnitDefinition(QDomNode &pDomNode)
                             else if (sign == -1)
                                 unitAttributeValue = "-"+unitAttributeValue;
 
-                            switch (unitAttributeTokenType) {
-                            case CellmlTextViewScanner::PrefToken:
+                            if (unitAttributeTokenType == CellmlTextViewScanner::PrefToken)
                                 unitElement.setAttribute("prefix", unitAttributeValue);
-
-                                break;
-                            case CellmlTextViewScanner::ExpoToken:
+                            else if (unitAttributeTokenType == CellmlTextViewScanner::ExpoToken)
                                 unitElement.setAttribute("exponent", unitAttributeValue);
-
-                                break;
-                            case CellmlTextViewScanner::MultToken:
+                            else if (unitAttributeTokenType == CellmlTextViewScanner::MultToken)
                                 unitElement.setAttribute("multiplier", unitAttributeValue);
-
-                                break;
-                            default:
-                                // CellmlTextViewScanner::OffToken
-
+                            else
                                 unitElement.setAttribute("offset", unitAttributeValue);
-                            }
                         }
                     } else {
                         return false;
@@ -1261,34 +1246,43 @@ bool CellmlTextViewParser::parseCompRefDefinition(QDomNode &pDomNode)
         if (tokenType(componentRefElement, QObject::tr("'%1' or '%2'").arg("incl", ";"),
                       tokenTypes)) {
             if (mScanner->tokenType() == CellmlTextViewScanner::InclToken) {
-                // Expect at least one "comp"
+                // Expect at least one "comp", then loop while we have "comp" or
+                // leave if we get "enddcomp"
+
+                static const CellmlTextViewScanner::TokenTypes tokenTypes = CellmlTextViewScanner::TokenTypes() << CellmlTextViewScanner::CompToken
+                                                                                                                << CellmlTextViewScanner::EndCompToken;
+
+                bool firstTime = true;
 
                 mScanner->getNextToken();
 
                 do {
-                    if (!compToken(componentRefElement))
-                        return false;
+                    if (firstTime) {
+                        firstTime = false;
 
-                    // Recursively parse a component reference
-
-                    if (!parseCompRefDefinition(componentRefElement))
-                        return false;
-                } while (isTokenType(componentRefElement, CellmlTextViewScanner::CompToken));
-
-                // Expect "endcomp"
-
-                if (endcompToken(componentRefElement)) {
-                    if (mScanner->tokenType() == CellmlTextViewScanner::EndCompToken) {
-                        // Expect ";"
-
-                        mScanner->getNextToken();
-
-                        if (semiColonToken(componentRefElement)) {
-                            mScanner->getNextToken();
-
-                            return true;
-                        }
+                        if (!compToken(componentRefElement))
+                            return false;
                     }
+
+                    if (mScanner->tokenType() == CellmlTextViewScanner::CompToken) {
+                        // Recursively parse a component reference
+
+                        if (!parseCompRefDefinition(componentRefElement))
+                            return false;
+                    } else {
+                        break;
+                    }
+                } while (tokenType(componentRefElement, QObject::tr("'%1' or '%2'").arg("comp", "endcomp"),
+                                   tokenTypes));
+
+                // Expect ";"
+
+                mScanner->getNextToken();
+
+                if (semiColonToken(componentRefElement)) {
+                    mScanner->getNextToken();
+
+                    return true;
                 }
             } else {
                 mScanner->getNextToken();
