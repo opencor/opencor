@@ -1145,8 +1145,13 @@ bool CellmlTextViewParser::parseComponentDefinition(QDomNode &pDomNode)
             while (tokenType(componentElement, QObject::tr("'%1', '%2', an identifier, '%3' or '%4'").arg("def", "var", "ode", "endcomp"),
                              tokenTypes)) {
                 if (mScanner->tokenType() == CellmlTextViewScanner::DefToken) {
-                    if (!parseUnitsDefinition(componentElement))
-                        return false;
+                    // Expect "units"
+
+                    mScanner->getNextToken();
+
+                    if (unitToken(componentElement))
+                        if (!parseUnitsDefinition(componentElement))
+                            return false;
                 } else if (mScanner->tokenType() == CellmlTextViewScanner::VarToken) {
                     if (!parseVariableDeclaration(componentElement))
                         return false;
@@ -1161,6 +1166,10 @@ bool CellmlTextViewParser::parseComponentDefinition(QDomNode &pDomNode)
 
                     return semiColonToken(componentElement);
                 }
+
+                // Fetch the next token
+
+                mScanner->getNextToken();
             }
         }
     }
