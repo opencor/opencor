@@ -140,6 +140,7 @@ private:
     QDomElement parseUnitsDefinition(QDomNode &pDomNode,
                                      bool &pBaseUnitsDefinition);
     bool parseUnitDefinition(QDomNode &pDomNode);
+    QDomElement parseGroupDefinition(QDomNode &pDomNode);
     QDomElement parseMapDefinition(QDomNode &pDomNode);
 };
 

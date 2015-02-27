@@ -659,7 +659,7 @@ bool CellmlTextViewParser::parseModelDefinition(QDomNode &pDomNode)
 
                     break;
                 case CellmlTextViewScanner::GroupToken:
-//---GRY--- TO BE DONE...
+                    domElement = parseGroupDefinition(pDomNode);
 
                     break;
                 default:
@@ -1151,6 +1151,95 @@ bool CellmlTextViewParser::parseUnitDefinition(QDomNode &pDomNode)
     }
 
     return false;
+}
+
+//==============================================================================
+
+QDomElement CellmlTextViewParser::parseGroupDefinition(QDomNode &pDomNode)
+{
+    // Create our group element
+
+    QDomElement groupElement = newDomElement(pDomNode, "group");
+
+    // Try to parse for a cmeta:id
+
+    mScanner->getNextToken();
+
+    parseCmetaId(groupElement);
+
+    // Expect "as"
+
+    if (asToken(groupElement)) {
+        // Expect some group information, so loop while we have "containment" or
+        // "encapsulation"
+
+        static const CellmlTextViewScanner::TokenTypes tokenTypes = CellmlTextViewScanner::TokenTypes() << CellmlTextViewScanner::ContainmentToken
+                                                                                                        << CellmlTextViewScanner::EncapsulationToken;
+
+        mScanner->getNextToken();
+
+        while (tokenType(groupElement, QObject::tr("'%1' or '%2'").arg("containment", "encapsulation"),
+                         tokenTypes)) {
+            switch (mScanner->tokenType()) {
+            case CellmlTextViewScanner::ContainmentToken: {
+                // Create our relationship reference and make it a containment
+
+                QDomElement relationshipRefElement = newDomElement(groupElement, "relationship_ref");
+
+                relationshipRefElement.setAttribute("relationship", "containment");
+
+                break;
+            }
+            default:
+                // CellmlTextViewScanner::EncapsulationToken
+
+                // Create our relationship reference and make it an
+                // encapsulation
+
+                QDomElement relationshipRefElement = newDomElement(groupElement, "relationship_ref");
+
+                relationshipRefElement.setAttribute("relationship", "encapsulation");
+            }
+
+            // Expect "and" or "for"
+
+            static const CellmlTextViewScanner::TokenTypes tokenTypes = CellmlTextViewScanner::TokenTypes() << CellmlTextViewScanner::AndToken
+                                                                                                            << CellmlTextViewScanner::ForToken;
+
+            mScanner->getNextToken();
+
+            if (tokenType(groupElement, QObject::tr("'%1' or '%2'").arg("and", "for"),
+                          tokenTypes)) {
+                if (mScanner->tokenType() == CellmlTextViewScanner::ForToken)
+                    break;
+            } else {
+                return QDomElement();
+            }
+        }
+
+        // Loop while we have "comp" or leave if we get "enddef"
+
+        static const CellmlTextViewScanner::TokenTypes nextTokenTypes = CellmlTextViewScanner::TokenTypes() << CellmlTextViewScanner::CompToken
+                                                                                                            << CellmlTextViewScanner::EndDefToken;
+
+        mScanner->getNextToken();
+
+        while (tokenType(groupElement, QObject::tr("'%1' or '%2'").arg("comp", "enddef"),
+                         nextTokenTypes)) {
+            switch (mScanner->tokenType()) {
+            case CellmlTextViewScanner::CompToken:
+//---GRY--- TO BE DONE...
+
+                break;
+            default:
+                // CellmlTextViewScanner::EndDefToken
+
+                return groupElement;
+            }
+        }
+    }
+
+    return QDomElement();
 }
 
 //==============================================================================
