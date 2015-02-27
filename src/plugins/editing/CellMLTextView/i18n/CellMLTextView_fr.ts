@@ -289,5 +289,9 @@
         <source>An identifier, &apos;%1&apos; or &apos;%2&apos;</source>
         <translation>Un identifiant, &apos;%1&apos; ou &apos;%2&apos;</translation>
     </message>
+    <message>
+        <source>&apos;%1&apos;, &apos;%2&apos;, an identifier, &apos;%3&apos; or &apos;%4&apos;</source>
+        <translation>&apos;%1&apos;, &apos;%2&apos;, un identifiant, &apos;%3&apos; ou &apos;%4&apos;</translation>
+    </message>
 </context>
 </TS>

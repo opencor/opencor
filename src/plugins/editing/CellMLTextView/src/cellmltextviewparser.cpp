@@ -152,53 +152,60 @@ bool CellmlTextViewParser::execute(const QString &pText,
                     mScanner->getNextToken();
 
                     if (parseModelDefinition(modelElement)) {
-                        // Expect "enddef;"
+                        // Expect "enddef"
 
-                        if (enddefPlusSemiColonToken(modelElement)) {
-                            // Expect the end of the file
+                        if (enddefToken(modelElement)) {
+                            // Expect ";"
 
                             mScanner->getNextToken();
 
-                            if (tokenType(modelElement, QObject::tr("the end of the file"),
-                                          CellmlTextViewScanner::EofToken)) {
-                                // We are done, so add some processing
-                                // instruction to our DOM document
+                            if (semiColonToken(modelElement)) {
+                                // Expect the end of the file
 
-                                mDomDocument.insertBefore(mDomDocument.createProcessingInstruction("xml", "version='1.0'"),
-                                                          mDomDocument.documentElement());
+                                mScanner->getNextToken();
 
-                                // Use the given CellML version if it is higher
-                                // than the one we actually need
+                                if (tokenType(modelElement, QObject::tr("the end of the file"),
+                                              CellmlTextViewScanner::EofToken)) {
+                                    // We are done, so add some processing
+                                    // instruction to our DOM document
 
-                                mCellmlVersion = (pCellmlVersion > mCellmlVersion)?pCellmlVersion:mCellmlVersion;
+                                    mDomDocument.insertBefore(mDomDocument.createProcessingInstruction("xml", "version='1.0'"),
+                                                              mDomDocument.documentElement());
 
-                                // Next, add the CellML namespace to our
-                                // document element
+                                    // Use the given CellML version if it is
+                                    // higher than the one we actually need
 
-                                if (mCellmlVersion == CellMLSupport::CellmlFile::Cellml_1_1) {
-                                    mDomDocument.documentElement().setAttribute("xmlns", CellMLSupport::Cellml_1_1_Namespace);
-                                    mDomDocument.documentElement().setAttribute("xmlns:cellml", CellMLSupport::Cellml_1_1_Namespace);
-                                } else {
-                                    mDomDocument.documentElement().setAttribute("xmlns", CellMLSupport::Cellml_1_0_Namespace);
-                                    mDomDocument.documentElement().setAttribute("xmlns:cellml", CellMLSupport::Cellml_1_0_Namespace);
+                                    mCellmlVersion = (pCellmlVersion > mCellmlVersion)?pCellmlVersion:mCellmlVersion;
+
+                                    // Next, add the CellML namespace to our
+                                    // document element
+
+                                    if (mCellmlVersion == CellMLSupport::CellmlFile::Cellml_1_1) {
+                                        mDomDocument.documentElement().setAttribute("xmlns", CellMLSupport::Cellml_1_1_Namespace);
+                                        mDomDocument.documentElement().setAttribute("xmlns:cellml", CellMLSupport::Cellml_1_1_Namespace);
+                                    } else {
+                                        mDomDocument.documentElement().setAttribute("xmlns", CellMLSupport::Cellml_1_0_Namespace);
+                                        mDomDocument.documentElement().setAttribute("xmlns:cellml", CellMLSupport::Cellml_1_0_Namespace);
+                                    }
+
+                                    // Finally, add the other namespaces that we
+                                    // need
+                                    // Note: ideally, we wouldn't have to do
+                                    //       this, but this would mean using the
+                                    //       NS version of various methods (e.g.
+                                    //       setAttributeNS() rather than
+                                    //       setAttribute()). However, this
+                                    //       results in namespace information
+                                    //       being referenced all over the
+                                    //       place, which is really not what we
+                                    //       want since that unnecessarily
+                                    //       pollutes things...
+
+                                    foreach (const QString &key, mNamespaces.keys())
+                                        mDomDocument.documentElement().setAttribute(QString("xmlns:%1").arg(key), mNamespaces.value(key));
+
+                                    return true;
                                 }
-
-                                // Finally, add the other namespaces that we
-                                // need
-                                // Note: ideally, we wouldn't have to do this,
-                                //       but this would mean using the NS
-                                //       version of various methods (e.g.
-                                //       setAttributeNS() rather than
-                                //       setAttribute()). However, this results
-                                //       in namespace information being
-                                //       referenced all over the place, which is
-                                //       really not what we want since that
-                                //       unnecessarily pollutes things...
-
-                                foreach (const QString &key, mNamespaces.keys())
-                                    mDomDocument.documentElement().setAttribute(QString("xmlns:%1").arg(key), mNamespaces.value(key));
-
-                                return true;
                             }
                         }
                     }
@@ -410,20 +417,12 @@ bool CellmlTextViewParser::endcompToken(QDomNode &pDomNode)
 
 //==============================================================================
 
-bool CellmlTextViewParser::enddefPlusSemiColonToken(QDomNode &pDomNode)
+bool CellmlTextViewParser::enddefToken(QDomNode &pDomNode)
 {
     // Expect "enddef"
 
-    if (tokenType(pDomNode, "'enddef'",
-                  CellmlTextViewScanner::EndDefToken)) {
-        // Expect ";"
-
-        mScanner->getNextToken();
-
-        return semiColonToken(pDomNode);
-    } else {
-        return false;
-    }
+    return tokenType(pDomNode, "'enddef'",
+                     CellmlTextViewScanner::EndDefToken);
 }
 
 //==============================================================================

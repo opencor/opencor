@@ -123,7 +123,7 @@ private:
     bool compToken(QDomNode &pDomNode);
     bool defToken(QDomNode &pDomNode);
     bool endcompToken(QDomNode &pDomNode);
-    bool enddefPlusSemiColonToken(QDomNode &pDomNode);
+    bool enddefToken(QDomNode &pDomNode);
     bool forToken(QDomNode &pDomNode);
     bool identifierToken(QDomNode &pDomNode);
     bool modelToken(QDomNode &pDomNode);
