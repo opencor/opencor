@@ -80,6 +80,45 @@ def model{my_model_cmeta_id} my_model as
 
     // In between comment...
 
+    def comp{my_component1_cmeta_id} my_component1 as
+    enddef;
+
+    // In between comment...
+
+    def comp{my_component2_cmeta_id} my_component2 as
+        // In between comment...
+
+        var{my_variable1_cmeta_id} my_variable1: some_unit;
+
+        // In between comment...
+
+        var{my_variable2_cmeta_id} my_variable2: second;
+
+        // In between comment...
+
+        var{my_variable3_cmeta_id} my_variable3: some_unit {init: 3};
+
+        // In between comment...
+
+        var{my_variable4_cmeta_id} my_variable4: some_unit {init: +3};
+
+        // In between comment...
+
+        var{my_variable5_cmeta_id} my_variable5: some_unit {init: -3};
+
+        // In between comment...
+
+        var{my_variable6_cmeta_id} my_variable6: some_unit {pub: in, priv: out};
+
+        // In between comment...
+
+        var{my_variable7_cmeta_id} my_variable7: some_unit {pub: none};
+
+        // In between comment...
+    enddef;
+
+    // In between comment...
+
     def group as containment for
         // In between comment...
 

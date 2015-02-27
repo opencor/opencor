@@ -1809,7 +1809,7 @@ void CellMLTextViewConverter::processComponentRefNode(const QDomNode &pDomNode)
             processUnknownNode(domNode);
     }
 
-    // Finish processing the given group node
+    // Finish processing the given component ref node
 
     if (hasComponentRefChildren) {
         unindent();

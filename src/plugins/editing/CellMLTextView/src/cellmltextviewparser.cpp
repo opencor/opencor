@@ -1089,6 +1089,8 @@ bool CellmlTextViewParser::parseUnitDefinition(QDomNode &pDomNode)
 
                     mScanner->getNextToken();
                 } while (isTokenType(unitElement, CellmlTextViewScanner::CommaToken));
+//---GRY--- WE SHOULDN'T USE isTokenType() LIKE THIS. WE NEED TO BE ABLE TO TELL
+//          THE USER THAT A COMMA (OR SOMETHING ELSE) IS EXPECTED...
 
                 // Expect "}"
 
@@ -1132,23 +1134,27 @@ bool CellmlTextViewParser::parseComponentDefinition(QDomNode &pDomNode)
     // Expect an identifier
 
     if (identifierToken(componentElement)) {
+        // Set the component's name
+
+        componentElement.setAttribute("name", mScanner->tokenString());
+
         // Expect "as"
 
         mScanner->getNextToken();
 
         if (asToken(componentElement)) {
             // Loop while we have "def", "var", an identifier or "ode", or leave
-            // if we get "endcomp"
+            // if we get "enddef"
 
             static const CellmlTextViewScanner::TokenTypes tokenTypes = CellmlTextViewScanner::TokenTypes() << CellmlTextViewScanner::DefToken
                                                                                                             << CellmlTextViewScanner::VarToken
                                                                                                             << CellmlTextViewScanner::IdentifierToken
                                                                                                             << CellmlTextViewScanner::OdeToken
-                                                                                                            << CellmlTextViewScanner::EndCompToken;
+                                                                                                            << CellmlTextViewScanner::EndDefToken;
 
             mScanner->getNextToken();
 
-            while (tokenType(componentElement, QObject::tr("'%1', '%2', an identifier, '%3' or '%4'").arg("def", "var", "ode", "endcomp"),
+            while (tokenType(componentElement, QObject::tr("'%1', '%2', an identifier, '%3' or '%4'").arg("def", "var", "ode", "enddef"),
                              tokenTypes)) {
                 if (mScanner->tokenType() == CellmlTextViewScanner::DefToken) {
                     // Expect "units"
@@ -1301,8 +1307,6 @@ bool CellmlTextViewParser::parseVariableDeclaration(QDomNode &pDomNode)
                                                                                                                                         << CellmlTextViewScanner::OutToken
                                                                                                                                         << CellmlTextViewScanner::NoneToken;
 
-                                        mScanner->getNextToken();
-
                                         if (!tokenType(variableElement, QObject::tr("'%1', '%2' or '%3'").arg("in", "out", "none"),
                                                        tokenTypes)) {
                                             return false;
@@ -1331,6 +1335,8 @@ bool CellmlTextViewParser::parseVariableDeclaration(QDomNode &pDomNode)
 
                             mScanner->getNextToken();
                         } while (isTokenType(variableElement, CellmlTextViewScanner::CommaToken));
+//---GRY--- WE SHOULDN'T USE isTokenType() LIKE THIS. WE NEED TO BE ABLE TO TELL
+//          THE USER THAT A COMMA (OR SOMETHING ELSE) IS EXPECTED...
 
                         // Expect "}"
 
@@ -1341,14 +1347,8 @@ bool CellmlTextViewParser::parseVariableDeclaration(QDomNode &pDomNode)
 
                         mScanner->getNextToken();
 
-                        if (semiColonToken(variableElement)) {
-                            mScanner->getNextToken();
-
-                            return true;
-                        }
+                        return semiColonToken(variableElement);
                     } else {
-                        mScanner->getNextToken();
-
                         return true;
                     }
                 }

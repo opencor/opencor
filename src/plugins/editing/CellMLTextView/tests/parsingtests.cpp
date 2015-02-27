@@ -528,30 +528,30 @@ void ParsingTests::componentTests()
     QVERIFY(!parser.execute(QString("def model my_model as\n"
                                     "    def comp my_component as")));
     QCOMPARE(parser.messages().first().type(), OpenCOR::CellMLTextView::CellmlTextViewParserMessage::Error);
-    QCOMPARE(parser.messages().first().message(), QString("'def', 'var', an identifier, 'ode' or 'endcomp' is expected, but the end of the file was found instead."));
+    QCOMPARE(parser.messages().first().message(), QString("'def', 'var', an identifier, 'ode' or 'enddef' is expected, but the end of the file was found instead."));
 
     QVERIFY(!parser.execute(QString("def model my_model as\n"
                                     "    def comp my_component as\n"
-                                    "    endcomp")));
+                                    "    enddef")));
     QCOMPARE(parser.messages().first().type(), OpenCOR::CellMLTextView::CellmlTextViewParserMessage::Error);
     QCOMPARE(parser.messages().first().message(), QString("';' is expected, but the end of the file was found instead."));
 
     QVERIFY(!parser.execute(QString("def model my_model as\n"
                                     "    def comp my_component as\n"
-                                    "    endcomp;")));
+                                    "    enddef;")));
     QCOMPARE(parser.messages().first().type(), OpenCOR::CellMLTextView::CellmlTextViewParserMessage::Error);
     QCOMPARE(parser.messages().first().message(), QString("'def' or 'enddef' is expected, but the end of the file was found instead."));
 
     QVERIFY(!parser.execute(QString("def model my_model as\n"
                                     "    def comp my_component as\n"
-                                    "    endcomp;\n"
+                                    "    enddef;\n"
                                     "enddef")));
     QCOMPARE(parser.messages().first().type(), OpenCOR::CellMLTextView::CellmlTextViewParserMessage::Error);
     QCOMPARE(parser.messages().first().message(), QString("';' is expected, but the end of the file was found instead."));
 
     QVERIFY(parser.execute(QString("def model my_model as\n"
                                    "    def comp my_component as\n"
-                                   "    endcomp;\n"
+                                   "    enddef;\n"
                                    "enddef;")));
     QVERIFY(!parser.domDocument().isNull());
 
@@ -594,13 +594,13 @@ void ParsingTests::componentTests()
                                     "        def unit my_unit as\n"
                                     "        enddef;")));
     QCOMPARE(parser.messages().first().type(), OpenCOR::CellMLTextView::CellmlTextViewParserMessage::Error);
-    QCOMPARE(parser.messages().first().message(), QString("'def', 'var', an identifier, 'ode' or 'endcomp' is expected, but the end of the file was found instead."));
+    QCOMPARE(parser.messages().first().message(), QString("'def', 'var', an identifier, 'ode' or 'enddef' is expected, but the end of the file was found instead."));
 
     QVERIFY(!parser.execute(QString("def model my_model as\n"
                                     "    def comp my_component as\n"
                                     "        def unit my_unit as\n"
                                     "        enddef;\n"
-                                    "    endcomp")));
+                                    "    enddef")));
     QCOMPARE(parser.messages().first().type(), OpenCOR::CellMLTextView::CellmlTextViewParserMessage::Error);
     QCOMPARE(parser.messages().first().message(), QString("';' is expected, but the end of the file was found instead."));
 
@@ -608,7 +608,7 @@ void ParsingTests::componentTests()
                                     "    def comp my_component as\n"
                                     "        def unit my_unit as\n"
                                     "        enddef;\n"
-                                    "    endcomp;")));
+                                    "    enddef;")));
     QCOMPARE(parser.messages().first().type(), OpenCOR::CellMLTextView::CellmlTextViewParserMessage::Error);
     QCOMPARE(parser.messages().first().message(), QString("'def' or 'enddef' is expected, but the end of the file was found instead."));
 
@@ -616,7 +616,7 @@ void ParsingTests::componentTests()
                                     "    def comp my_component as\n"
                                     "        def unit my_unit as\n"
                                     "        enddef;\n"
-                                    "    endcomp;\n"
+                                    "    enddef;\n"
                                     "enddef")));
     QCOMPARE(parser.messages().first().type(), OpenCOR::CellMLTextView::CellmlTextViewParserMessage::Error);
     QCOMPARE(parser.messages().first().message(), QString("';' is expected, but the end of the file was found instead."));
@@ -625,7 +625,7 @@ void ParsingTests::componentTests()
                                    "    def comp my_component as\n"
                                    "        def unit my_unit as\n"
                                    "        enddef;\n"
-                                   "    endcomp;\n"
+                                   "    enddef;\n"
                                    "enddef;")));
     QVERIFY(!parser.domDocument().isNull());
 
@@ -655,6 +655,41 @@ void ParsingTests::componentTests()
                                     "        var my_variable: second")));
     QCOMPARE(parser.messages().first().type(), OpenCOR::CellMLTextView::CellmlTextViewParserMessage::Error);
     QCOMPARE(parser.messages().first().message(), QString("'{' or ';' is expected, but the end of the file was found instead."));
+
+    QVERIFY(!parser.execute(QString("def model my_model as\n"
+                                    "    def comp my_component as\n"
+                                    "        var my_variable: second;")));
+    QCOMPARE(parser.messages().first().type(), OpenCOR::CellMLTextView::CellmlTextViewParserMessage::Error);
+    QCOMPARE(parser.messages().first().message(), QString("'def', 'var', an identifier, 'ode' or 'enddef' is expected, but the end of the file was found instead."));
+
+    QVERIFY(!parser.execute(QString("def model my_model as\n"
+                                    "    def comp my_component as\n"
+                                    "        var my_variable: second;\n"
+                                    "    enddef")));
+    QCOMPARE(parser.messages().first().type(), OpenCOR::CellMLTextView::CellmlTextViewParserMessage::Error);
+    QCOMPARE(parser.messages().first().message(), QString("';' is expected, but the end of the file was found instead."));
+
+    QVERIFY(!parser.execute(QString("def model my_model as\n"
+                                    "    def comp my_component as\n"
+                                    "        var my_variable: second;\n"
+                                    "    enddef;")));
+    QCOMPARE(parser.messages().first().type(), OpenCOR::CellMLTextView::CellmlTextViewParserMessage::Error);
+    QCOMPARE(parser.messages().first().message(), QString("'def' or 'enddef' is expected, but the end of the file was found instead."));
+
+    QVERIFY(!parser.execute(QString("def model my_model as\n"
+                                    "    def comp my_component as\n"
+                                    "        var my_variable: second;\n"
+                                    "    enddef;\n"
+                                    "enddef")));
+    QCOMPARE(parser.messages().first().type(), OpenCOR::CellMLTextView::CellmlTextViewParserMessage::Error);
+    QCOMPARE(parser.messages().first().message(), QString("';' is expected, but the end of the file was found instead."));
+
+    QVERIFY(parser.execute(QString("def model my_model as\n"
+                                   "    def comp my_component as\n"
+                                   "        var my_variable: second;\n"
+                                   "    enddef;\n"
+                                   "enddef;")));
+    QVERIFY(!parser.domDocument().isNull());
 }
 
 //==============================================================================
