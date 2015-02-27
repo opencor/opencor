@@ -307,7 +307,7 @@ def model cellml_1_0 as
         endcomp;
     enddef;
 
-    def group as containment my_containment1 for
+    def group as containment my_containment for
         comp my_component1 incl
             comp my_component12 incl
                 comp my_component121;

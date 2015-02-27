@@ -1716,7 +1716,7 @@
         </component_ref>
     </group>
     <group>
-        <relationship_ref name="my_containment1" relationship="containment"/>
+        <relationship_ref name="my_containment" relationship="containment"/>
         <component_ref component="my_component1">
             <component_ref component="my_component12">
                 <component_ref component="my_component121"/>
