@@ -41,8 +41,39 @@
     <!-- In between comment...-->
     <group>
         <relationship_ref relationship="containment"/>
+        <component_ref component="my_component1">
+            <component_ref component="my_component11">
+                <component_ref component="my_component111"/>
+                <component_ref component="my_component112"/>
+            </component_ref>
+        </component_ref>
+    </group>
+    <!-- In between comment...-->
+    <group>
         <relationship_ref name="my_containment" relationship="containment"/>
+        <component_ref component="my_component1">
+            <component_ref component="my_component12">
+                <component_ref component="my_component121"/>
+            </component_ref>
+            <component_ref component="my_component13"/>
+        </component_ref>
+    </group>
+    <!-- In between comment...-->
+    <group>
         <relationship_ref relationship="encapsulation"/>
+        <component_ref component="my_component11">
+            <component_ref component="my_component111"/>
+            <component_ref component="my_component112"/>
+        </component_ref>
+        <component_ref component="my_component12">
+            <component_ref component="my_component121"/>
+        </component_ref>
+    </group>
+    <!-- In between comment...-->
+    <group>
+        <relationship_ref relationship="encapsulation"/>
+        <relationship_ref name="my_containment" relationship="containment"/>
+        <component_ref component="my_component"/>
     </group>
     <!-- In between comment...-->
     <connection cmeta:id="my_connection_cmeta_id">

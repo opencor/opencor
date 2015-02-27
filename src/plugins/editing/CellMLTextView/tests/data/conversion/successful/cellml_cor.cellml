@@ -1736,8 +1736,8 @@
     </group>
     <group>
         <relationship_ref relationship="encapsulation"/>
-        <relationship_ref name="my_containment1" relationship="containment"/>
-        <component_ref component="my_component1"/>
+        <relationship_ref name="my_containment" relationship="containment"/>
+        <component_ref component="my_component"/>
     </group>
     <connection>
         <map_components component_1="my_component1" component_2="my_component2"/>

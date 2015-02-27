@@ -328,8 +328,8 @@ def model cellml_1_0 as
         endcomp;
     enddef;
 
-    def group as encapsulation and containment my_containment1 for
-        comp my_component1;
+    def group as encapsulation and containment my_containment for
+        comp my_component;
     enddef;
 
     def map between my_component1 and my_component2 for

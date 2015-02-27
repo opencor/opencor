@@ -122,6 +122,7 @@ private:
     bool colonToken(QDomNode &pDomNode);
     bool compToken(QDomNode &pDomNode);
     bool defToken(QDomNode &pDomNode);
+    bool endcompToken(QDomNode &pDomNode);
     bool enddefPlusSemiColonToken(QDomNode &pDomNode);
     bool forToken(QDomNode &pDomNode);
     bool identifierToken(QDomNode &pDomNode);
@@ -141,6 +142,7 @@ private:
                                      bool &pBaseUnitsDefinition);
     bool parseUnitDefinition(QDomNode &pDomNode);
     QDomElement parseGroupDefinition(QDomNode &pDomNode);
+    bool parseCompRefDefinition(QDomNode &pDomNode);
     QDomElement parseMapDefinition(QDomNode &pDomNode);
 };
 

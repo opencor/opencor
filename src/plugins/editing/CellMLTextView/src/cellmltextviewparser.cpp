@@ -405,6 +405,16 @@ bool CellmlTextViewParser::defToken(QDomNode &pDomNode)
 
 //==============================================================================
 
+bool CellmlTextViewParser::endcompToken(QDomNode &pDomNode)
+{
+    // Expect "endcomp"
+
+    return tokenType(pDomNode, "'endcomp'",
+                     CellmlTextViewScanner::EndCompToken);
+}
+
+//==============================================================================
+
 bool CellmlTextViewParser::enddefPlusSemiColonToken(QDomNode &pDomNode)
 {
     // Expect "enddef"
@@ -1218,6 +1228,77 @@ QDomElement CellmlTextViewParser::parseGroupDefinition(QDomNode &pDomNode)
     }
 
     return QDomElement();
+}
+
+//==============================================================================
+
+bool CellmlTextViewParser::parseCompRefDefinition(QDomNode &pDomNode)
+{
+    // Create our component reference element
+
+    QDomElement componentRefElement = newDomElement(pDomNode, "component_ref");
+
+    // Try to parse for a cmeta:id
+
+    mScanner->getNextToken();
+
+    parseCmetaId(componentRefElement);
+
+    // Expect an identifier
+
+    if (identifierToken(componentRefElement)) {
+        // Set the name of the component reference
+
+        componentRefElement.setAttribute("component", mScanner->tokenString());
+
+        // Expect "incl" or ";"
+
+        static const CellmlTextViewScanner::TokenTypes tokenTypes = CellmlTextViewScanner::TokenTypes() << CellmlTextViewScanner::InclToken
+                                                                                                        << CellmlTextViewScanner::SemiColonToken;
+
+        mScanner->getNextToken();
+
+        if (tokenType(componentRefElement, QObject::tr("'%1' or '%2'").arg("incl", ";"),
+                      tokenTypes)) {
+            if (mScanner->tokenType() == CellmlTextViewScanner::InclToken) {
+                // Expect at least one "comp"
+
+                mScanner->getNextToken();
+
+                do {
+                    if (!compToken(componentRefElement))
+                        return false;
+
+                    // Recursively parse a component reference
+
+                    if (!parseCompRefDefinition(componentRefElement))
+                        return false;
+                } while (isTokenType(componentRefElement, CellmlTextViewScanner::CompToken));
+
+                // Expect "endcomp"
+
+                if (endcompToken(componentRefElement)) {
+                    if (mScanner->tokenType() == CellmlTextViewScanner::EndCompToken) {
+                        // Expect ";"
+
+                        mScanner->getNextToken();
+
+                        if (semiColonToken(componentRefElement)) {
+                            mScanner->getNextToken();
+
+                            return true;
+                        }
+                    }
+                }
+            } else {
+                mScanner->getNextToken();
+
+                return true;
+            }
+        }
+    }
+
+    return false;
 }
 
 //==============================================================================

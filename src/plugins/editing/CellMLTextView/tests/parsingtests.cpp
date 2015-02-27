@@ -602,6 +602,40 @@ void ParsingTests::groupTests()
                                    "    enddef;\n"
                                    "enddef;")));
     QVERIFY(!parser.domDocument().isNull());
+
+    QVERIFY(!parser.execute(QString("def model my_model as\n"
+                                    "    def group as containment for\n"
+                                    "       comp")));
+    QCOMPARE(parser.messages().first().type(), OpenCOR::CellMLTextView::CellmlTextViewParserMessage::Error);
+    QCOMPARE(parser.messages().first().message(), QString("An identifier is expected, but the end of the file was found instead."));
+
+    QVERIFY(!parser.execute(QString("def model my_model as\n"
+                                    "    def group as containment for\n"
+                                    "       comp my_component1")));
+    QCOMPARE(parser.messages().first().type(), OpenCOR::CellMLTextView::CellmlTextViewParserMessage::Error);
+    QCOMPARE(parser.messages().first().message(), QString("'incl' or ';' is expected, but the end of the file was found instead."));
+
+    QVERIFY(!parser.execute(QString("def model my_model as\n"
+                                    "    def group as containment for\n"
+                                    "       comp my_component1;")));
+    QCOMPARE(parser.messages().first().type(), OpenCOR::CellMLTextView::CellmlTextViewParserMessage::Error);
+    QCOMPARE(parser.messages().first().message(), QString("'comp' or 'enddef' is expected, but the end of the file was found instead."));
+
+    QVERIFY(parser.execute(QString("def model my_model as\n"
+                                   "    def group as containment for\n"
+                                   "       comp my_component1;\n"
+                                   "    enddef;\n"
+                                   "enddef;")));
+    QVERIFY(!parser.domDocument().isNull());
+
+    QVERIFY(parser.execute(QString("def model my_model as\n"
+                                   "    def group as containment for\n"
+                                   "       comp my_component1;\n"
+                                   "       comp my_component2;\n"
+                                   "       comp my_component3;\n"
+                                   "    enddef;\n"
+                                   "enddef;")));
+    QVERIFY(!parser.domDocument().isNull());
 }
 
 //==============================================================================
