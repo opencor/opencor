@@ -137,16 +137,15 @@ private:
     void parseComments(QDomNode &pDomNode);
     void parseCmetaId(QDomElement &pDomElement);
     bool parseModelDefinition(QDomNode &pDomNode);
-    QDomElement parseImportDefinition(QDomNode &pDomNode);
-    QDomElement parseUnitsDefinition(QDomNode &pDomNode,
-                                     bool &pBaseUnitsDefinition);
+    bool parseImportDefinition(QDomNode &pDomNode);
+    bool parseUnitsDefinition(QDomNode &pDomNode);
     bool parseUnitDefinition(QDomNode &pDomNode);
-    QDomElement parseComponentDefinition(QDomNode &pDomNode);
+    bool parseComponentDefinition(QDomNode &pDomNode);
     bool parseVariableDeclaration(QDomNode &pDomNode);
     bool parseEquation(QDomNode &pDomNode);
-    QDomElement parseGroupDefinition(QDomNode &pDomNode);
+    bool parseGroupDefinition(QDomNode &pDomNode);
     bool parseComponentRefDefinition(QDomNode &pDomNode);
-    QDomElement parseMapDefinition(QDomNode &pDomNode);
+    bool parseMapDefinition(QDomNode &pDomNode);
 };
 
 //==============================================================================

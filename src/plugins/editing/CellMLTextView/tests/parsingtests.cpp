@@ -547,7 +547,7 @@ void ParsingTests::componentTests()
                                     "    endcomp;\n"
                                     "enddef")));
     QCOMPARE(parser.messages().first().type(), OpenCOR::CellMLTextView::CellmlTextViewParserMessage::Error);
-    QCOMPARE(parser.messages().first().message(), QString("'def' or 'enddef' is expected, but the end of the file was found instead."));
+    QCOMPARE(parser.messages().first().message(), QString("';' is expected, but the end of the file was found instead."));
 
     QVERIFY(parser.execute(QString("def model my_model as\n"
                                    "    def comp my_component as\n"

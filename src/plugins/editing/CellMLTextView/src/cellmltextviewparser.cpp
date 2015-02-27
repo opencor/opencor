@@ -644,37 +644,31 @@ bool CellmlTextViewParser::parseModelDefinition(QDomNode &pDomNode)
 
             mScanner->getNextToken();
 
-            bool baseUnitsDefinition = false;
-            QDomElement domElement;
-
             if (tokenType(pDomNode, QObject::tr("'%1', '%2', '%3', '%4' or '%5'").arg("import", "unit", "comp", "group", "map"),
                           tokenTypes)) {
-                if (mScanner->tokenType() == CellmlTextViewScanner::ImportToken)
-                    domElement = parseImportDefinition(pDomNode);
-                else if (mScanner->tokenType() == CellmlTextViewScanner::UnitToken)
-                    domElement = parseUnitsDefinition(pDomNode, baseUnitsDefinition);
-                else if (mScanner->tokenType() == CellmlTextViewScanner::CompToken)
-                    domElement = parseComponentDefinition(pDomNode);
-                else if (mScanner->tokenType() == CellmlTextViewScanner::GroupToken)
-                    domElement = parseGroupDefinition(pDomNode);
-                else
-                    domElement = parseMapDefinition(pDomNode);
-            } else {
-                return false;
-            }
-
-            if (!domElement.isNull()) {
-                // Expect ";" or "enddef;"
-
-                if (   ( baseUnitsDefinition && semiColonToken(pDomNode))
-                    || (!baseUnitsDefinition && enddefPlusSemiColonToken(pDomNode))) {
-                    mScanner->getNextToken();
+                if (mScanner->tokenType() == CellmlTextViewScanner::ImportToken) {
+                    if (!parseImportDefinition(pDomNode))
+                        return false;
+                } else if (mScanner->tokenType() == CellmlTextViewScanner::UnitToken) {
+                    if (!parseUnitsDefinition(pDomNode))
+                        return false;
+                } else if (mScanner->tokenType() == CellmlTextViewScanner::CompToken) {
+                    if (!parseComponentDefinition(pDomNode))
+                        return false;
+                } else if (mScanner->tokenType() == CellmlTextViewScanner::GroupToken) {
+                    if (!parseGroupDefinition(pDomNode))
+                        return false;
                 } else {
-                    return false;
+                    if (!parseMapDefinition(pDomNode))
+                        return false;
                 }
             } else {
                 return false;
             }
+
+            // Fetch the next token
+
+            mScanner->getNextToken();
         } else {
             return true;
         }
@@ -685,7 +679,7 @@ bool CellmlTextViewParser::parseModelDefinition(QDomNode &pDomNode)
 
 //==============================================================================
 
-QDomElement CellmlTextViewParser::parseImportDefinition(QDomNode &pDomNode)
+bool CellmlTextViewParser::parseImportDefinition(QDomNode &pDomNode)
 {
     // Create our import element
 
@@ -829,20 +823,23 @@ QDomElement CellmlTextViewParser::parseImportDefinition(QDomNode &pDomNode)
                             }
                         }
                     } else {
-                        return importElement;
+                        // Expect ";"
+
+                        mScanner->getNextToken();
+
+                        return semiColonToken(importElement);
                     }
                 }
             }
         }
     }
 
-    return QDomElement();
+    return false;
 }
 
 //==============================================================================
 
-QDomElement CellmlTextViewParser::parseUnitsDefinition(QDomNode &pDomNode,
-                                                       bool &pBaseUnitsDefinition)
+bool CellmlTextViewParser::parseUnitsDefinition(QDomNode &pDomNode)
 {
     // Create our units element
 
@@ -885,13 +882,13 @@ QDomElement CellmlTextViewParser::parseUnitsDefinition(QDomNode &pDomNode,
                     if (unitToken(unitsElement)) {
                         // Make our unit a base unit
 
-                        pBaseUnitsDefinition = true;
-
                         unitsElement.setAttribute("base_units", "yes");
+
+                        // Expect ";"
 
                         mScanner->getNextToken();
 
-                        return unitsElement;
+                        return semiColonToken(unitsElement);
                     }
                 } else if (mScanner->tokenType() == CellmlTextViewScanner::UnitToken) {
                     // We are dealing with a 'normal' unit definition, so loop
@@ -904,21 +901,29 @@ QDomElement CellmlTextViewParser::parseUnitsDefinition(QDomNode &pDomNode,
                                      tokenTypes)) {
                         if (mScanner->tokenType() == CellmlTextViewScanner::UnitToken) {
                             if (!parseUnitDefinition(unitsElement))
-                                return QDomElement();
+                                return false;
                         } else {
-                            return unitsElement;
+                            // Expect ";"
+
+                            mScanner->getNextToken();
+
+                            return semiColonToken(unitsElement);
                         }
                     }
 
-                    return QDomElement();
+                    return false;
                 } else {
-                    return unitsElement;
+                    // Expect ";"
+
+                    mScanner->getNextToken();
+
+                    return semiColonToken(unitsElement);
                 }
             }
         }
     }
 
-    return QDomElement();
+    return false;
 }
 
 //==============================================================================
@@ -1106,7 +1111,7 @@ bool CellmlTextViewParser::parseUnitDefinition(QDomNode &pDomNode)
 
 //==============================================================================
 
-QDomElement CellmlTextViewParser::parseComponentDefinition(QDomNode &pDomNode)
+bool CellmlTextViewParser::parseComponentDefinition(QDomNode &pDomNode)
 {
     // Create our component element
 
@@ -1140,35 +1145,27 @@ QDomElement CellmlTextViewParser::parseComponentDefinition(QDomNode &pDomNode)
             while (tokenType(componentElement, QObject::tr("'%1', '%2', an identifier, '%3' or '%4'").arg("def", "var", "ode", "endcomp"),
                              tokenTypes)) {
                 if (mScanner->tokenType() == CellmlTextViewScanner::DefToken) {
-                    bool baseUnitsDefinition = false;
-
-                    if (!parseUnitsDefinition(componentElement, baseUnitsDefinition).isNull()) {
-                        // Expect ";" or "enddef;"
-
-                        if (   ( baseUnitsDefinition && semiColonToken(componentElement))
-                            || (!baseUnitsDefinition && enddefPlusSemiColonToken(componentElement))) {
-                            mScanner->getNextToken();
-                        } else {
-                            return QDomElement();
-                        }
-                    } else {
-                        return QDomElement();
-                    }
+                    if (!parseUnitsDefinition(componentElement))
+                        return false;
                 } else if (mScanner->tokenType() == CellmlTextViewScanner::VarToken) {
                     if (!parseVariableDeclaration(componentElement))
-                        return QDomElement();
+                        return false;
                 } else if (   (mScanner->tokenType() == CellmlTextViewScanner::IdentifierToken)
                          || (mScanner->tokenType() == CellmlTextViewScanner::OdeToken)) {
                     if (!parseEquation(componentElement))
-                        return QDomElement();
+                        return false;
                 } else {
-                    return componentElement;
+                    // Expect ";"
+
+                    mScanner->getNextToken();
+
+                    return semiColonToken(componentElement);
                 }
             }
         }
     }
 
-    return QDomElement();
+    return false;
 }
 
 //==============================================================================
@@ -1193,7 +1190,7 @@ Q_UNUSED(pDomNode);
 
 //==============================================================================
 
-QDomElement CellmlTextViewParser::parseGroupDefinition(QDomNode &pDomNode)
+bool CellmlTextViewParser::parseGroupDefinition(QDomNode &pDomNode)
 {
     // Create our group element
 
@@ -1245,7 +1242,7 @@ QDomElement CellmlTextViewParser::parseGroupDefinition(QDomNode &pDomNode)
                         mScanner->getNextToken();
                     }
                 } else {
-                    return QDomElement();
+                    return false;
                 }
             } else {
                 // CellmlTextViewScanner::EncapsulationToken
@@ -1274,7 +1271,7 @@ QDomElement CellmlTextViewParser::parseGroupDefinition(QDomNode &pDomNode)
                 else
                     mScanner->getNextToken();
             } else {
-                return QDomElement();
+                return false;
             }
         }
 
@@ -1291,14 +1288,18 @@ QDomElement CellmlTextViewParser::parseGroupDefinition(QDomNode &pDomNode)
                 // Recursively parse our component reference
 
                 if (!parseComponentRefDefinition(groupElement))
-                    return QDomElement();
+                    return false;
             } else {
-                return groupElement;
+                // Expect ";"
+
+                mScanner->getNextToken();
+
+                return semiColonToken(groupElement);
             }
         }
     }
 
-    return QDomElement();
+    return false;
 }
 
 //==============================================================================
@@ -1383,7 +1384,7 @@ bool CellmlTextViewParser::parseComponentRefDefinition(QDomNode &pDomNode)
 
 //==============================================================================
 
-QDomElement CellmlTextViewParser::parseMapDefinition(QDomNode &pDomNode)
+bool CellmlTextViewParser::parseMapDefinition(QDomNode &pDomNode)
 {
     // Create our connection element
 
@@ -1487,7 +1488,11 @@ QDomElement CellmlTextViewParser::parseMapDefinition(QDomNode &pDomNode)
                                     }
                                 }
                             } else {
-                                return connectionElement;
+                                // Expect ";"
+
+                                mScanner->getNextToken();
+
+                                return semiColonToken(connectionElement);
                             }
                         }
                     }
@@ -1496,7 +1501,7 @@ QDomElement CellmlTextViewParser::parseMapDefinition(QDomNode &pDomNode)
         }
     }
 
-    return QDomElement();
+    return false;
 }
 
 //==============================================================================
