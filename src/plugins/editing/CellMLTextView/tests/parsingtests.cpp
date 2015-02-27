@@ -509,6 +509,64 @@ void ParsingTests::unitsTests()
 
 //==============================================================================
 
+void ParsingTests::componentTests()
+{
+    OpenCOR::CellMLTextView::CellmlTextViewParser parser;
+
+    // Various tests on a minimal component definition
+
+    QVERIFY(!parser.execute(QString("def model my_model as\n"
+                                    "    def comp")));
+    QCOMPARE(parser.messages().first().type(), OpenCOR::CellMLTextView::CellmlTextViewParserMessage::Error);
+    QCOMPARE(parser.messages().first().message(), QString("An identifier is expected, but the end of the file was found instead."));
+
+    QVERIFY(!parser.execute(QString("def model my_model as\n"
+                                    "    def comp my_component")));
+    QCOMPARE(parser.messages().first().type(), OpenCOR::CellMLTextView::CellmlTextViewParserMessage::Error);
+    QCOMPARE(parser.messages().first().message(), QString("'as' is expected, but the end of the file was found instead."));
+
+    QVERIFY(!parser.execute(QString("def model my_model as\n"
+                                    "    def comp my_component as")));
+    QCOMPARE(parser.messages().first().type(), OpenCOR::CellMLTextView::CellmlTextViewParserMessage::Error);
+    QCOMPARE(parser.messages().first().message(), QString("'def', 'var', an identifier, 'ode' or 'endcomp' is expected, but the end of the file was found instead."));
+
+    QVERIFY(!parser.execute(QString("def model my_model as\n"
+                                    "    def comp my_component as\n"
+                                    "    endcomp")));
+    QCOMPARE(parser.messages().first().type(), OpenCOR::CellMLTextView::CellmlTextViewParserMessage::Error);
+    QCOMPARE(parser.messages().first().message(), QString("';' is expected, but the end of the file was found instead."));
+
+    QVERIFY(!parser.execute(QString("def model my_model as\n"
+                                    "    def comp my_component as\n"
+                                    "    endcomp;")));
+    QCOMPARE(parser.messages().first().type(), OpenCOR::CellMLTextView::CellmlTextViewParserMessage::Error);
+    QCOMPARE(parser.messages().first().message(), QString("'def' or 'enddef' is expected, but the end of the file was found instead."));
+
+    QVERIFY(!parser.execute(QString("def model my_model as\n"
+                                    "    def comp my_component as\n"
+                                    "    endcomp;\n"
+                                    "enddef")));
+    QCOMPARE(parser.messages().first().type(), OpenCOR::CellMLTextView::CellmlTextViewParserMessage::Error);
+    QCOMPARE(parser.messages().first().message(), QString("'def' or 'enddef' is expected, but the end of the file was found instead."));
+
+    QVERIFY(parser.execute(QString("def model my_model as\n"
+                                   "    def comp my_component as\n"
+                                   "    endcomp;\n"
+                                   "enddef;")));
+    QVERIFY(!parser.domDocument().isNull());
+
+    // Various tests on a component definition with a simple (since they are
+    // already tests extensively above) units definition
+
+    QVERIFY(!parser.execute(QString("def model my_model as\n"
+                                    "    def comp my_component as\n"
+                                    "        def")));
+    QCOMPARE(parser.messages().first().type(), OpenCOR::CellMLTextView::CellmlTextViewParserMessage::Error);
+    QCOMPARE(parser.messages().first().message(), QString("'unit' is expected, but the end of the file was found instead."));
+}
+
+//==============================================================================
+
 void ParsingTests::groupTests()
 {
     OpenCOR::CellMLTextView::CellmlTextViewParser parser;
@@ -560,6 +618,8 @@ void ParsingTests::groupTests()
                                    "enddef;")));
     QVERIFY(!parser.domDocument().isNull());
 
+    // Various tests on a group definition of containment type and with a name
+
     QVERIFY(!parser.execute(QString("def model my_model as\n"
                                     "    def group as containment my_containment")));
     QCOMPARE(parser.messages().first().type(), OpenCOR::CellMLTextView::CellmlTextViewParserMessage::Error);
@@ -575,6 +635,8 @@ void ParsingTests::groupTests()
                                    "    enddef;\n"
                                    "enddef;")));
     QVERIFY(!parser.domDocument().isNull());
+
+    // Various tests on a group definition of encapsulation type
 
     QVERIFY(!parser.execute(QString("def model my_model as\n"
                                     "    def group as encapsulation")));
@@ -602,6 +664,9 @@ void ParsingTests::groupTests()
                                    "    enddef;\n"
                                    "enddef;")));
     QVERIFY(!parser.domDocument().isNull());
+
+    // Various tests on a group definition of containment type with one level of
+    // components in it
 
     QVERIFY(!parser.execute(QString("def model my_model as\n"
                                     "    def group as containment for\n"
@@ -636,6 +701,9 @@ void ParsingTests::groupTests()
                                    "    enddef;\n"
                                    "enddef;")));
     QVERIFY(!parser.domDocument().isNull());
+
+    // Various tests on a group definition of containment type with several
+    // levels of components in it
 
     QVERIFY(!parser.execute(QString("def model my_model as\n"
                                     "    def group as containment for\n"

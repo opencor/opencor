@@ -654,8 +654,7 @@ bool CellmlTextViewParser::parseModelDefinition(QDomNode &pDomNode)
                 else if (mScanner->tokenType() == CellmlTextViewScanner::UnitToken)
                     domElement = parseUnitsDefinition(pDomNode, baseUnitsDefinition);
                 else if (mScanner->tokenType() == CellmlTextViewScanner::CompToken)
-//---GRY--- TO BE DONE...
-                    ;
+                    domElement = parseComponentDefinition(pDomNode);
                 else if (mScanner->tokenType() == CellmlTextViewScanner::GroupToken)
                     domElement = parseGroupDefinition(pDomNode);
                 else
@@ -668,7 +667,7 @@ bool CellmlTextViewParser::parseModelDefinition(QDomNode &pDomNode)
                 // Expect ";" or "enddef;"
 
                 if (   ( baseUnitsDefinition && semiColonToken(pDomNode))
-                    || (!baseUnitsDefinition && enddefPlusSemiColonToken(domElement))) {
+                    || (!baseUnitsDefinition && enddefPlusSemiColonToken(pDomNode))) {
                     mScanner->getNextToken();
                 } else {
                     return false;
@@ -1107,6 +1106,93 @@ bool CellmlTextViewParser::parseUnitDefinition(QDomNode &pDomNode)
 
 //==============================================================================
 
+QDomElement CellmlTextViewParser::parseComponentDefinition(QDomNode &pDomNode)
+{
+    // Create our component element
+
+    QDomElement componentElement = newDomElement(pDomNode, "component");
+
+    // Try to parse for a cmeta:id
+
+    mScanner->getNextToken();
+
+    parseCmetaId(componentElement);
+
+    // Expect an identifier
+
+    if (identifierToken(componentElement)) {
+        // Expect "as"
+
+        mScanner->getNextToken();
+
+        if (asToken(componentElement)) {
+            // Loop while we have "def", "var", an identifier or "ode", or leave
+            // if we get "endcomp"
+
+            static const CellmlTextViewScanner::TokenTypes tokenTypes = CellmlTextViewScanner::TokenTypes() << CellmlTextViewScanner::DefToken
+                                                                                                            << CellmlTextViewScanner::VarToken
+                                                                                                            << CellmlTextViewScanner::IdentifierToken
+                                                                                                            << CellmlTextViewScanner::OdeToken
+                                                                                                            << CellmlTextViewScanner::EndCompToken;
+
+            mScanner->getNextToken();
+
+            while (tokenType(componentElement, QObject::tr("'%1', '%2', an identifier, '%3' or '%4'").arg("def", "var", "ode", "endcomp"),
+                             tokenTypes)) {
+                if (mScanner->tokenType() == CellmlTextViewScanner::DefToken) {
+                    bool baseUnitsDefinition = false;
+
+                    if (!parseUnitsDefinition(componentElement, baseUnitsDefinition).isNull()) {
+                        // Expect ";" or "enddef;"
+
+                        if (   ( baseUnitsDefinition && semiColonToken(componentElement))
+                            || (!baseUnitsDefinition && enddefPlusSemiColonToken(componentElement))) {
+                            mScanner->getNextToken();
+                        } else {
+                            return QDomElement();
+                        }
+                    } else {
+                        return QDomElement();
+                    }
+                } else if (mScanner->tokenType() == CellmlTextViewScanner::VarToken) {
+                    if (!parseVariableDeclaration(componentElement))
+                        return QDomElement();
+                } else if (   (mScanner->tokenType() == CellmlTextViewScanner::IdentifierToken)
+                         || (mScanner->tokenType() == CellmlTextViewScanner::OdeToken)) {
+                    if (!parseEquation(componentElement))
+                        return QDomElement();
+                } else {
+                    return componentElement;
+                }
+            }
+        }
+    }
+
+    return QDomElement();
+}
+
+//==============================================================================
+
+bool CellmlTextViewParser::parseVariableDeclaration(QDomNode &pDomNode)
+{
+Q_UNUSED(pDomNode);
+//---GRY--- TO BE DONE...
+
+    return false;
+}
+
+//==============================================================================
+
+bool CellmlTextViewParser::parseEquation(QDomNode &pDomNode)
+{
+Q_UNUSED(pDomNode);
+//---GRY--- TO BE DONE...
+
+    return false;
+}
+
+//==============================================================================
+
 QDomElement CellmlTextViewParser::parseGroupDefinition(QDomNode &pDomNode)
 {
     // Create our group element
@@ -1204,7 +1290,7 @@ QDomElement CellmlTextViewParser::parseGroupDefinition(QDomNode &pDomNode)
             if (mScanner->tokenType() == CellmlTextViewScanner::CompToken) {
                 // Recursively parse our component reference
 
-                if (!parseCompRefDefinition(groupElement))
+                if (!parseComponentRefDefinition(groupElement))
                     return QDomElement();
             } else {
                 return groupElement;
@@ -1217,7 +1303,7 @@ QDomElement CellmlTextViewParser::parseGroupDefinition(QDomNode &pDomNode)
 
 //==============================================================================
 
-bool CellmlTextViewParser::parseCompRefDefinition(QDomNode &pDomNode)
+bool CellmlTextViewParser::parseComponentRefDefinition(QDomNode &pDomNode)
 {
     // Create our component reference element
 
@@ -1267,7 +1353,7 @@ bool CellmlTextViewParser::parseCompRefDefinition(QDomNode &pDomNode)
                     if (mScanner->tokenType() == CellmlTextViewScanner::CompToken) {
                         // Recursively parse a component reference
 
-                        if (!parseCompRefDefinition(componentRefElement))
+                        if (!parseComponentRefDefinition(componentRefElement))
                             return false;
                     } else {
                         break;

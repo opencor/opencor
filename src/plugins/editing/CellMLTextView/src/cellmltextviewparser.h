@@ -141,8 +141,11 @@ private:
     QDomElement parseUnitsDefinition(QDomNode &pDomNode,
                                      bool &pBaseUnitsDefinition);
     bool parseUnitDefinition(QDomNode &pDomNode);
+    QDomElement parseComponentDefinition(QDomNode &pDomNode);
+    bool parseVariableDeclaration(QDomNode &pDomNode);
+    bool parseEquation(QDomNode &pDomNode);
     QDomElement parseGroupDefinition(QDomNode &pDomNode);
-    bool parseCompRefDefinition(QDomNode &pDomNode);
+    bool parseComponentRefDefinition(QDomNode &pDomNode);
     QDomElement parseMapDefinition(QDomNode &pDomNode);
 };
 
