@@ -68,6 +68,7 @@ void ParsingTests::basicTests()
 
     QVERIFY(parser.execute(QString("def model my_model as\n"
                                    "enddef;")));
+    QVERIFY(!parser.domDocument().isNull());
 
     // Various tests on a minimal model definition with a cmeta:id
 
@@ -85,6 +86,7 @@ void ParsingTests::basicTests()
 
     QVERIFY(parser.execute(QString("def model{my_cmeta_id} my_model as\n"
                                    "enddef;")));
+    QVERIFY(!parser.domDocument().isNull());
 
     // Test the definition of a something unknown
 
@@ -107,6 +109,7 @@ void ParsingTests::fileTests()
     QVERIFY(parser.execute(OpenCOR::fileContents(OpenCOR::fileName("src/plugins/editing/CellMLTextView/tests/data/parsing/my_model.in")).join("\n")));
     QCOMPARELIST(qDomDocumentToString(parser.domDocument()).split("\n"),
                  OpenCOR::fileContents(OpenCOR::fileName("src/plugins/editing/CellMLTextView/tests/data/parsing/my_model.cellml")));
+    QVERIFY(!parser.domDocument().isNull());
 
     // ... and back
     // Note: there are some in between comments that, upon being converted back
@@ -131,6 +134,7 @@ void ParsingTests::fileTests()
     QVERIFY(parser.execute(OpenCOR::fileContents(OpenCOR::fileName("src/plugins/editing/CellMLTextView/tests/data/parsing/my_model_with_in_between_comments.in")).join("\n")));
     QCOMPARELIST(qDomDocumentToString(parser.domDocument()).split("\n"),
                  OpenCOR::fileContents(OpenCOR::fileName("src/plugins/editing/CellMLTextView/tests/data/parsing/my_model_with_in_between_comments.cellml")));
+    QVERIFY(!parser.domDocument().isNull());
 }
 
 //==============================================================================
@@ -184,6 +188,7 @@ void ParsingTests::importTests()
                                    "    def import using \"import_model.cellml\" for\n"
                                    "    enddef;\n"
                                    "enddef;")));
+    QVERIFY(!parser.domDocument().isNull());
 
     QVERIFY(!parser.execute(QString("def model my_model as\n"
                                     "    def import using \"import_model.cellml\" for\n"
@@ -226,6 +231,7 @@ void ParsingTests::importTests()
                                    "        unit my_imported_unit using unit my_reference_unit;\n"
                                    "    enddef;\n"
                                    "enddef;")));
+    QVERIFY(!parser.domDocument().isNull());
 
     QVERIFY(!parser.execute(QString("def model my_model as\n"
                                     "    def import using \"import_model.cellml\" for\n"
@@ -268,6 +274,7 @@ void ParsingTests::importTests()
                                    "        comp my_imported_component using comp my_reference_component;\n"
                                    "    enddef;\n"
                                    "enddef;")));
+    QVERIFY(!parser.domDocument().isNull());
 
     // Test the parsing of an originally CellML 1.0 file that now requires
     // CellML 1.1
@@ -280,6 +287,7 @@ void ParsingTests::importTests()
                                    "enddef;"),
                            OpenCOR::CellMLSupport::CellmlFile::Cellml_1_0));
     QCOMPARE(parser.cellmlVersion(), OpenCOR::CellMLSupport::CellmlFile::Cellml_1_1);
+    QVERIFY(!parser.domDocument().isNull());
 }
 
 //==============================================================================
@@ -329,6 +337,7 @@ void ParsingTests::unitsTests()
     QVERIFY(parser.execute(QString("def model my_model as\n"
                                    "    def unit my_base_unit as base unit;\n"
                                    "enddef;")));
+    QVERIFY(!parser.domDocument().isNull());
 
     QVERIFY(!parser.execute(QString("def model my_model as\n"
                                     "    def unit my_unit as\n"
@@ -375,6 +384,7 @@ void ParsingTests::unitsTests()
                                    "       unit some_unit;\n"
                                    "    enddef;\n"
                                    "enddef;")));
+    QVERIFY(!parser.domDocument().isNull());
 
     QVERIFY(!parser.execute(QString("def model my_model as\n"
                                     "    def unit my_unit as\n"
@@ -428,6 +438,7 @@ void ParsingTests::unitsTests()
                                    "       unit some_unit;\n"
                                    "    enddef;\n"
                                    "enddef;")));
+    QVERIFY(!parser.domDocument().isNull());
 
     // Test the redefinition of an SI unit as a base unit
 
@@ -443,6 +454,7 @@ void ParsingTests::unitsTests()
                                    "    def unit my_unit as\n"
                                    "    enddef;\n"
                                    "enddef;")));
+    QVERIFY(!parser.domDocument().isNull());
 
     // Test the definition of a unit with an invalid unit
 
@@ -546,6 +558,7 @@ void ParsingTests::groupTests()
                                    "    def group as containment for\n"
                                    "    enddef;\n"
                                    "enddef;")));
+    QVERIFY(!parser.domDocument().isNull());
 
     QVERIFY(!parser.execute(QString("def model my_model as\n"
                                     "    def group as containment my_containment")));
@@ -561,6 +574,7 @@ void ParsingTests::groupTests()
                                    "    def group as containment my_containment for\n"
                                    "    enddef;\n"
                                    "enddef;")));
+    QVERIFY(!parser.domDocument().isNull());
 
     QVERIFY(!parser.execute(QString("def model my_model as\n"
                                     "    def group as encapsulation")));
@@ -576,6 +590,7 @@ void ParsingTests::groupTests()
                                    "    def group as encapsulation for\n"
                                    "    enddef;\n"
                                    "enddef;")));
+    QVERIFY(!parser.domDocument().isNull());
 
     QVERIFY(!parser.execute(QString("def model my_model as\n"
                                     "    def group as containment and")));
@@ -586,6 +601,7 @@ void ParsingTests::groupTests()
                                    "    def group as containment and containment my_containment and encapsulation for\n"
                                    "    enddef;\n"
                                    "enddef;")));
+    QVERIFY(!parser.domDocument().isNull());
 }
 
 //==============================================================================
@@ -649,6 +665,7 @@ void ParsingTests::mapTests()
                                    "    def map between my_component1 and my_component2 for\n"
                                    "    enddef;\n"
                                    "enddef;")));
+    QVERIFY(!parser.domDocument().isNull());
 
     QVERIFY(!parser.execute(QString("def model my_model as\n"
                                     "    def map between my_component1 and my_component2 for\n"
@@ -685,6 +702,7 @@ void ParsingTests::mapTests()
                                    "        vars my_variable1 and my_variable2;\n"
                                    "    enddef;\n"
                                    "enddef;")));
+    QVERIFY(!parser.domDocument().isNull());
 }
 
 //==============================================================================
