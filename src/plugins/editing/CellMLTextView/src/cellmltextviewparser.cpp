@@ -628,8 +628,7 @@ bool CellmlTextViewParser::parseModelDefinition(QDomNode &pDomNode)
 
     while (tokenType(pDomNode, QObject::tr("'%1' or '%2'").arg("def", "enddef"),
                      tokenTypes)) {
-        switch (mScanner->tokenType()) {
-        case CellmlTextViewScanner::DefToken: {
+        if (mScanner->tokenType() == CellmlTextViewScanner::DefToken) {
             // Expect a model definition
 
             static const CellmlTextViewScanner::TokenTypes tokenTypes = CellmlTextViewScanner::TokenTypes() << CellmlTextViewScanner::ImportToken
@@ -645,28 +644,17 @@ bool CellmlTextViewParser::parseModelDefinition(QDomNode &pDomNode)
 
             if (tokenType(pDomNode, QObject::tr("'%1', '%2', '%3', '%4' or '%5'").arg("import", "unit", "comp", "group", "map"),
                           tokenTypes)) {
-                switch (mScanner->tokenType()) {
-                case CellmlTextViewScanner::ImportToken:
+                if (mScanner->tokenType() == CellmlTextViewScanner::ImportToken)
                     domElement = parseImportDefinition(pDomNode);
-
-                    break;
-                case CellmlTextViewScanner::UnitToken:
+                else if (mScanner->tokenType() == CellmlTextViewScanner::UnitToken)
                     domElement = parseUnitsDefinition(pDomNode, baseUnitsDefinition);
-
-                    break;
-                case CellmlTextViewScanner::CompToken:
+                else if (mScanner->tokenType() == CellmlTextViewScanner::CompToken)
 //---GRY--- TO BE DONE...
-
-                    break;
-                case CellmlTextViewScanner::GroupToken:
+                    ;
+                else if (mScanner->tokenType() == CellmlTextViewScanner::GroupToken)
                     domElement = parseGroupDefinition(pDomNode);
-
-                    break;
-                default:
-                    // CellmlTextViewScanner::MapToken
-
+                else
                     domElement = parseMapDefinition(pDomNode);
-                }
             } else {
                 return false;
             }
@@ -683,12 +671,7 @@ bool CellmlTextViewParser::parseModelDefinition(QDomNode &pDomNode)
             } else {
                 return false;
             }
-
-            break;
-        }
-        default:
-            // CellmlTextViewScanner::EndDefToken
-
+        } else {
             return true;
         }
     }
@@ -744,8 +727,7 @@ QDomElement CellmlTextViewParser::parseImportDefinition(QDomNode &pDomNode)
 
                 while (tokenType(importElement, QObject::tr("'%1', '%2' or '%3'").arg("unit", "comp", "enddef"),
                                  tokenTypes)) {
-                    switch (mScanner->tokenType()) {
-                    case CellmlTextViewScanner::UnitToken: {
+                    if (mScanner->tokenType() == CellmlTextViewScanner::UnitToken) {
                         // We are dealing with a unit import, so create our unit
                         // import element
 
@@ -793,10 +775,7 @@ QDomElement CellmlTextViewParser::parseImportDefinition(QDomNode &pDomNode)
                                 }
                             }
                         }
-
-                        break;
-                    }
-                    case CellmlTextViewScanner::CompToken: {
+                    } else if (mScanner->tokenType() == CellmlTextViewScanner::CompToken) {
                         // We are dealing with a component import, so create our
                         // component import element
 
@@ -845,12 +824,7 @@ QDomElement CellmlTextViewParser::parseImportDefinition(QDomNode &pDomNode)
                                 }
                             }
                         }
-
-                        break;
-                    }
-                    default:
-                        // CellmlTextViewScanner::EndDefToken
-
+                    } else {
                         return importElement;
                     }
                 }
@@ -898,8 +872,7 @@ QDomElement CellmlTextViewParser::parseUnitsDefinition(QDomNode &pDomNode,
 
             if (tokenType(unitsElement, QObject::tr("'%1', '%2' or '%3'").arg("base", "unit", "enddef"),
                           tokenTypes)) {
-                switch (mScanner->tokenType()) {
-                case CellmlTextViewScanner::BaseToken:
+                if (mScanner->tokenType() == CellmlTextViewScanner::BaseToken) {
                     // We are dealing with the definition of a base unit, so now
                     // expect "unit"
 
@@ -916,9 +889,7 @@ QDomElement CellmlTextViewParser::parseUnitsDefinition(QDomNode &pDomNode,
 
                         return unitsElement;
                     }
-
-                    break;
-                case CellmlTextViewScanner::UnitToken: {
+                } else if (mScanner->tokenType() == CellmlTextViewScanner::UnitToken) {
                     // We are dealing with a 'normal' unit definition, so loop
                     // while we have "unit" or leave if we get "enddef"
 
@@ -927,24 +898,16 @@ QDomElement CellmlTextViewParser::parseUnitsDefinition(QDomNode &pDomNode,
 
                     while (tokenType(unitsElement, QObject::tr("'%1' or '%2'").arg("unit", "enddef"),
                                      tokenTypes)) {
-                        switch (mScanner->tokenType()) {
-                        case CellmlTextViewScanner::UnitToken:
+                        if (mScanner->tokenType() == CellmlTextViewScanner::UnitToken) {
                             if (!parseUnitDefinition(unitsElement))
                                 return QDomElement();
-
-                            break;
-                        default:
-                            // CellmlTextViewScanner::EndDefToken
-
+                        } else {
                             return unitsElement;
                         }
                     }
 
                     return QDomElement();
-                }
-                default:
-                    // CellmlTextViewScanner::EndDefToken
-
+                } else {
                     return unitsElement;
                 }
             }
@@ -998,8 +961,7 @@ bool CellmlTextViewParser::parseUnitDefinition(QDomNode &pDomNode)
 
         if (tokenType(pDomNode, QObject::tr("'%1' or '%2'").arg("{", ";"),
                       tokenTypes)) {
-            switch (mScanner->tokenType()) {
-            case CellmlTextViewScanner::OpeningCurlyBracketToken: {
+            if (mScanner->tokenType() == CellmlTextViewScanner::OpeningCurlyBracketToken) {
                 QList<CellmlTextViewScanner::TokenType> unitAttributesDefined = QList<CellmlTextViewScanner::TokenType>();
 
                 do {
@@ -1137,12 +1099,7 @@ bool CellmlTextViewParser::parseUnitDefinition(QDomNode &pDomNode)
 
                     return true;
                 }
-
-                break;
-            }
-            default:
-                // CellmlTextViewScanner::SemiColonToken
-
+            } else {
                 mScanner->getNextToken();
 
                 return true;
@@ -1180,8 +1137,7 @@ QDomElement CellmlTextViewParser::parseGroupDefinition(QDomNode &pDomNode)
 
         while (tokenType(groupElement, QObject::tr("'%1' or '%2'").arg("containment", "encapsulation"),
                          tokenTypes)) {
-            switch (mScanner->tokenType()) {
-            case CellmlTextViewScanner::ContainmentToken: {
+            if (mScanner->tokenType() == CellmlTextViewScanner::ContainmentToken) {
                 // Create our relationship reference and make it a containment
 
                 QDomElement relationshipRefElement = newDomElement(groupElement, "relationship_ref");
@@ -1210,10 +1166,7 @@ QDomElement CellmlTextViewParser::parseGroupDefinition(QDomNode &pDomNode)
                 } else {
                     return QDomElement();
                 }
-
-                break;
-            }
-            default:
+            } else {
                 // CellmlTextViewScanner::EncapsulationToken
 
                 // Create our relationship reference and make it an
@@ -1253,14 +1206,12 @@ QDomElement CellmlTextViewParser::parseGroupDefinition(QDomNode &pDomNode)
 
         while (tokenType(groupElement, QObject::tr("'%1' or '%2'").arg("comp", "enddef"),
                          nextTokenTypes)) {
-            switch (mScanner->tokenType()) {
-            case CellmlTextViewScanner::CompToken:
-//---GRY--- TO BE DONE...
+            if (mScanner->tokenType() == CellmlTextViewScanner::CompToken) {
+                // Recursively parse our component reference
 
-                break;
-            default:
-                // CellmlTextViewScanner::EndDefToken
-
+                if (!parseCompRefDefinition(groupElement))
+                    return QDomElement();
+            } else {
                 return groupElement;
             }
         }
@@ -1332,8 +1283,7 @@ QDomElement CellmlTextViewParser::parseMapDefinition(QDomNode &pDomNode)
 
                         while (tokenType(connectionElement, QObject::tr("'%1' or '%2'").arg("vars", "enddef"),
                                          tokenTypes)) {
-                            switch (mScanner->tokenType()) {
-                            case CellmlTextViewScanner::VarsToken: {
+                            if (mScanner->tokenType() == CellmlTextViewScanner::VarsToken) {
                                 // Create our map variables element
 
                                 QDomElement mapVariablesElement = newDomElement(connectionElement, "map_variables");
@@ -1375,12 +1325,7 @@ QDomElement CellmlTextViewParser::parseMapDefinition(QDomNode &pDomNode)
                                         }
                                     }
                                 }
-
-                                break;
-                            }
-                            default:
-                                // CellmlTextViewScanner::EndDefToken
-
+                            } else {
                                 return connectionElement;
                             }
                         }
