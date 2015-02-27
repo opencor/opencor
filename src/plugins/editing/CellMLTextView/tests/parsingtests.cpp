@@ -516,7 +516,7 @@ void ParsingTests::groupTests()
     QVERIFY(!parser.execute(QString("def model my_model as\n"
                                     "    def group as containment")));
     QCOMPARE(parser.messages().first().type(), OpenCOR::CellMLTextView::CellmlTextViewParserMessage::Error);
-    QCOMPARE(parser.messages().first().message(), QString("'and' or 'for' is expected, but the end of the file was found instead."));
+    QCOMPARE(parser.messages().first().message(), QString("An identifier, 'and' or 'for' is expected, but the end of the file was found instead."));
 
     QVERIFY(!parser.execute(QString("def model my_model as\n"
                                     "    def group as containment for")));
@@ -544,6 +544,46 @@ void ParsingTests::groupTests()
 
     QVERIFY(parser.execute(QString("def model my_model as\n"
                                    "    def group as containment for\n"
+                                   "    enddef;\n"
+                                   "enddef;")));
+
+    QVERIFY(!parser.execute(QString("def model my_model as\n"
+                                    "    def group as containment my_containment")));
+    QCOMPARE(parser.messages().first().type(), OpenCOR::CellMLTextView::CellmlTextViewParserMessage::Error);
+    QCOMPARE(parser.messages().first().message(), QString("'and' or 'for' is expected, but the end of the file was found instead."));
+
+    QVERIFY(!parser.execute(QString("def model my_model as\n"
+                                    "    def group as containment my_containment for")));
+    QCOMPARE(parser.messages().first().type(), OpenCOR::CellMLTextView::CellmlTextViewParserMessage::Error);
+    QCOMPARE(parser.messages().first().message(), QString("'comp' or 'enddef' is expected, but the end of the file was found instead."));
+
+    QVERIFY(parser.execute(QString("def model my_model as\n"
+                                   "    def group as containment my_containment for\n"
+                                   "    enddef;\n"
+                                   "enddef;")));
+
+    QVERIFY(!parser.execute(QString("def model my_model as\n"
+                                    "    def group as encapsulation")));
+    QCOMPARE(parser.messages().first().type(), OpenCOR::CellMLTextView::CellmlTextViewParserMessage::Error);
+    QCOMPARE(parser.messages().first().message(), QString("'and' or 'for' is expected, but the end of the file was found instead."));
+
+    QVERIFY(!parser.execute(QString("def model my_model as\n"
+                                    "    def group as encapsulation for")));
+    QCOMPARE(parser.messages().first().type(), OpenCOR::CellMLTextView::CellmlTextViewParserMessage::Error);
+    QCOMPARE(parser.messages().first().message(), QString("'comp' or 'enddef' is expected, but the end of the file was found instead."));
+
+    QVERIFY(parser.execute(QString("def model my_model as\n"
+                                   "    def group as encapsulation for\n"
+                                   "    enddef;\n"
+                                   "enddef;")));
+
+    QVERIFY(!parser.execute(QString("def model my_model as\n"
+                                    "    def group as containment and")));
+    QCOMPARE(parser.messages().first().type(), OpenCOR::CellMLTextView::CellmlTextViewParserMessage::Error);
+    QCOMPARE(parser.messages().first().message(), QString("'containment' or 'encapsulation' is expected, but the end of the file was found instead."));
+
+    QVERIFY(parser.execute(QString("def model my_model as\n"
+                                   "    def group as containment and containment my_containment and encapsulation for\n"
                                    "    enddef;\n"
                                    "enddef;")));
 }

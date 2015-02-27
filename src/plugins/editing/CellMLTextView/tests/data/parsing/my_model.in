@@ -72,6 +72,11 @@ def model{my_model_cmeta_id} my_model as
 
     // In between comment...
 
+    def group as containment and containment my_containment and encapsulation for
+    enddef;
+
+    // In between comment...
+
     def map{my_connection_cmeta_id} between{my_map_components_cmeta_id} my_component1 and my_component2 for
         vars{my_map_variables1_cmeta_id} my_variable11 and my_variable21;
 

@@ -39,6 +39,12 @@
         <unit exponent="3" multiplier="+5" offset="-7" prefix="milli" units="some_unit"/>
     </units>
     <!-- In between comment...-->
+    <group>
+        <relationship_ref relationship="containment"/>
+        <relationship_ref name="my_containment" relationship="containment"/>
+        <relationship_ref relationship="encapsulation"/>
+    </group>
+    <!-- In between comment...-->
     <connection cmeta:id="my_connection_cmeta_id">
         <map_components cmeta:id="my_map_components_cmeta_id" component_1="my_component1" component_2="my_component2"/>
         <map_variables cmeta:id="my_map_variables1_cmeta_id" variable_1="my_variable11" variable_2="my_variable21"/>

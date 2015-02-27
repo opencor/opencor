@@ -1188,6 +1188,29 @@ QDomElement CellmlTextViewParser::parseGroupDefinition(QDomNode &pDomNode)
 
                 relationshipRefElement.setAttribute("relationship", "containment");
 
+                // Expect an identifier, "and" or "for"
+
+                static const CellmlTextViewScanner::TokenTypes tokenTypes = CellmlTextViewScanner::TokenTypes() << CellmlTextViewScanner::IdentifierToken
+                                                                                                                << CellmlTextViewScanner::AndToken
+                                                                                                                << CellmlTextViewScanner::ForToken;
+
+                mScanner->getNextToken();
+
+                if (tokenType(groupElement, QObject::tr("An identifier, '%1' or '%2'").arg("and", "for"),
+                              tokenTypes)) {
+                    if (mScanner->tokenType() == CellmlTextViewScanner::IdentifierToken) {
+                        // Set the name of the containment
+
+                        relationshipRefElement.setAttribute("name", mScanner->tokenString());
+
+                        // Fetch the next token
+
+                        mScanner->getNextToken();
+                    }
+                } else {
+                    return QDomElement();
+                }
+
                 break;
             }
             default:
@@ -1199,6 +1222,10 @@ QDomElement CellmlTextViewParser::parseGroupDefinition(QDomNode &pDomNode)
                 QDomElement relationshipRefElement = newDomElement(groupElement, "relationship_ref");
 
                 relationshipRefElement.setAttribute("relationship", "encapsulation");
+
+                // Fetch the next token
+
+                mScanner->getNextToken();
             }
 
             // Expect "and" or "for"
@@ -1206,12 +1233,12 @@ QDomElement CellmlTextViewParser::parseGroupDefinition(QDomNode &pDomNode)
             static const CellmlTextViewScanner::TokenTypes tokenTypes = CellmlTextViewScanner::TokenTypes() << CellmlTextViewScanner::AndToken
                                                                                                             << CellmlTextViewScanner::ForToken;
 
-            mScanner->getNextToken();
-
             if (tokenType(groupElement, QObject::tr("'%1' or '%2'").arg("and", "for"),
                           tokenTypes)) {
                 if (mScanner->tokenType() == CellmlTextViewScanner::ForToken)
                     break;
+                else
+                    mScanner->getNextToken();
             } else {
                 return QDomElement();
             }
