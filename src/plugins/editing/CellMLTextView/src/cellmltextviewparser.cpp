@@ -623,8 +623,8 @@ bool CellmlTextViewParser::parseModelDefinition(QDomNode &pDomNode)
 {
     // Loop while we have "def" and leave if we get "enddef"
 
-    static CellmlTextViewScanner::TokenTypes tokenTypes = CellmlTextViewScanner::TokenTypes() << CellmlTextViewScanner::DefToken
-                                                                                              << CellmlTextViewScanner::EndDefToken;
+    static const CellmlTextViewScanner::TokenTypes tokenTypes = CellmlTextViewScanner::TokenTypes() << CellmlTextViewScanner::DefToken
+                                                                                                    << CellmlTextViewScanner::EndDefToken;
 
     while (tokenType(pDomNode, QObject::tr("'%1' or '%2'").arg("def", "enddef"),
                      tokenTypes)) {
@@ -632,11 +632,11 @@ bool CellmlTextViewParser::parseModelDefinition(QDomNode &pDomNode)
         case CellmlTextViewScanner::DefToken: {
             // Expect a model definition
 
-            static CellmlTextViewScanner::TokenTypes tokenTypes = CellmlTextViewScanner::TokenTypes() << CellmlTextViewScanner::ImportToken
-                                                                                                      << CellmlTextViewScanner::UnitToken
-                                                                                                      << CellmlTextViewScanner::CompToken
-                                                                                                      << CellmlTextViewScanner::GroupToken
-                                                                                                      << CellmlTextViewScanner::MapToken;
+            static const CellmlTextViewScanner::TokenTypes tokenTypes = CellmlTextViewScanner::TokenTypes() << CellmlTextViewScanner::ImportToken
+                                                                                                            << CellmlTextViewScanner::UnitToken
+                                                                                                            << CellmlTextViewScanner::CompToken
+                                                                                                            << CellmlTextViewScanner::GroupToken
+                                                                                                            << CellmlTextViewScanner::MapToken;
 
             mScanner->getNextToken();
 
@@ -736,9 +736,9 @@ QDomElement CellmlTextViewParser::parseImportDefinition(QDomNode &pDomNode)
                 // Expect an import definition, so loop while we have "unit" or
                 // "comp", or leave if we get "enddef"
 
-                static CellmlTextViewScanner::TokenTypes tokenTypes = CellmlTextViewScanner::TokenTypes() << CellmlTextViewScanner::UnitToken
-                                                                                                          << CellmlTextViewScanner::CompToken
-                                                                                                          << CellmlTextViewScanner::EndDefToken;
+                static const CellmlTextViewScanner::TokenTypes tokenTypes = CellmlTextViewScanner::TokenTypes() << CellmlTextViewScanner::UnitToken
+                                                                                                                << CellmlTextViewScanner::CompToken
+                                                                                                                << CellmlTextViewScanner::EndDefToken;
 
                 mScanner->getNextToken();
 
@@ -890,9 +890,9 @@ QDomElement CellmlTextViewParser::parseUnitsDefinition(QDomNode &pDomNode,
         if (asToken(unitsElement)) {
             // Expect a unit definition
 
-            static CellmlTextViewScanner::TokenTypes tokenTypes = CellmlTextViewScanner::TokenTypes() << CellmlTextViewScanner::BaseToken
-                                                                                                      << CellmlTextViewScanner::UnitToken
-                                                                                                      << CellmlTextViewScanner::EndDefToken;
+            static const CellmlTextViewScanner::TokenTypes tokenTypes = CellmlTextViewScanner::TokenTypes() << CellmlTextViewScanner::BaseToken
+                                                                                                            << CellmlTextViewScanner::UnitToken
+                                                                                                            << CellmlTextViewScanner::EndDefToken;
 
             mScanner->getNextToken();
 
@@ -922,8 +922,8 @@ QDomElement CellmlTextViewParser::parseUnitsDefinition(QDomNode &pDomNode,
                     // We are dealing with a 'normal' unit definition, so loop
                     // while we have "unit" or leave if we get "enddef"
 
-                    static CellmlTextViewScanner::TokenTypes tokenTypes = CellmlTextViewScanner::TokenTypes() << CellmlTextViewScanner::UnitToken
-                                                                                                              << CellmlTextViewScanner::EndDefToken;
+                    static const CellmlTextViewScanner::TokenTypes tokenTypes = CellmlTextViewScanner::TokenTypes() << CellmlTextViewScanner::UnitToken
+                                                                                                                    << CellmlTextViewScanner::EndDefToken;
 
                     while (tokenType(unitsElement, QObject::tr("'%1' or '%2'").arg("unit", "enddef"),
                                      tokenTypes)) {
@@ -991,8 +991,8 @@ bool CellmlTextViewParser::parseUnitDefinition(QDomNode &pDomNode)
 
         // Expect "{" or ";"
 
-        static CellmlTextViewScanner::TokenTypes tokenTypes = CellmlTextViewScanner::TokenTypes() << CellmlTextViewScanner::OpeningCurlyBracketToken
-                                                                                                  << CellmlTextViewScanner::SemiColonToken;
+        static const CellmlTextViewScanner::TokenTypes tokenTypes = CellmlTextViewScanner::TokenTypes() << CellmlTextViewScanner::OpeningCurlyBracketToken
+                                                                                                        << CellmlTextViewScanner::SemiColonToken;
 
         mScanner->getNextToken();
 
@@ -1005,10 +1005,10 @@ bool CellmlTextViewParser::parseUnitDefinition(QDomNode &pDomNode)
                 do {
                     // Expect "pref", "expo", "mult" or "off"
 
-                    static CellmlTextViewScanner::TokenTypes tokenTypes = CellmlTextViewScanner::TokenTypes() << CellmlTextViewScanner::PrefToken
-                                                                                                              << CellmlTextViewScanner::ExpoToken
-                                                                                                              << CellmlTextViewScanner::MultToken
-                                                                                                              << CellmlTextViewScanner::OffToken;
+                    static const CellmlTextViewScanner::TokenTypes tokenTypes = CellmlTextViewScanner::TokenTypes() << CellmlTextViewScanner::PrefToken
+                                                                                                                    << CellmlTextViewScanner::ExpoToken
+                                                                                                                    << CellmlTextViewScanner::MultToken
+                                                                                                                    << CellmlTextViewScanner::OffToken;
 
                     mScanner->getNextToken();
 
@@ -1170,8 +1170,7 @@ QDomElement CellmlTextViewParser::parseMapDefinition(QDomNode &pDomNode)
     // Expect "between"
 
     if (betweenToken(connectionElement)) {
-        // Create our map components element and set its two
-        // component attributes
+        // Create our map components element
 
         QDomElement mapComponentsElement = newDomElement(connectionElement, "map_components");
 
@@ -1210,8 +1209,8 @@ QDomElement CellmlTextViewParser::parseMapDefinition(QDomNode &pDomNode)
                         // Expect a mapping, so loop while we have "vars" or
                         // leave if we get "enddef"
 
-                        static CellmlTextViewScanner::TokenTypes tokenTypes = CellmlTextViewScanner::TokenTypes() << CellmlTextViewScanner::VarsToken
-                                                                                                                  << CellmlTextViewScanner::EndDefToken;
+                        static const CellmlTextViewScanner::TokenTypes tokenTypes = CellmlTextViewScanner::TokenTypes() << CellmlTextViewScanner::VarsToken
+                                                                                                                        << CellmlTextViewScanner::EndDefToken;
 
                         mScanner->getNextToken();
 
