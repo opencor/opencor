@@ -981,7 +981,7 @@ bool CellmlTextViewParser::parseUnitDefinition(QDomNode &pDomNode)
             if (mScanner->tokenType() == CellmlTextViewScanner::OpeningCurlyBracketToken) {
                 QList<CellmlTextViewScanner::TokenType> unitAttributesDefined = QList<CellmlTextViewScanner::TokenType>();
 
-                do {
+                forever {
                     // Expect "pref", "expo", "mult" or "off"
 
                     static const CellmlTextViewScanner::TokenTypes tokenTypes = CellmlTextViewScanner::TokenTypes() << CellmlTextViewScanner::PrefToken
@@ -1087,15 +1087,21 @@ bool CellmlTextViewParser::parseUnitDefinition(QDomNode &pDomNode)
                         return false;
                     }
 
+                    // Expect "," or "}"
+
+                    static const CellmlTextViewScanner::TokenTypes nextTokenTypes = CellmlTextViewScanner::TokenTypes() << CellmlTextViewScanner::CommaToken
+                                                                                                                        << CellmlTextViewScanner::ClosingCurlyBracketToken;
+
                     mScanner->getNextToken();
-                } while (isTokenType(unitElement, CellmlTextViewScanner::CommaToken));
-//---GRY--- WE SHOULDN'T USE isTokenType() LIKE THIS. WE NEED TO BE ABLE TO TELL
-//          THE USER THAT A COMMA (OR SOMETHING ELSE) IS EXPECTED...
 
-                // Expect "}"
-
-                if (!closingCurlyBracketToken(unitElement))
-                    return false;
+                    if (tokenType(unitElement, QObject::tr("'%1' or '%2'").arg(",", "}"),
+                                  nextTokenTypes)) {
+                        if (mScanner->tokenType() == CellmlTextViewScanner::ClosingCurlyBracketToken)
+                            break;
+                    } else {
+                        return false;
+                    }
+                }
 
                 // Expect ";"
 
@@ -1236,7 +1242,7 @@ bool CellmlTextViewParser::parseVariableDeclaration(QDomNode &pDomNode)
                     if (mScanner->tokenType() == CellmlTextViewScanner::OpeningCurlyBracketToken) {
                         QList<CellmlTextViewScanner::TokenType> variableAttributesDefined = QList<CellmlTextViewScanner::TokenType>();
 
-                        do {
+                        forever {
                             // Expect "init", "pub" or "priv"
 
                             static const CellmlTextViewScanner::TokenTypes tokenTypes = CellmlTextViewScanner::TokenTypes() << CellmlTextViewScanner::InitToken
@@ -1333,15 +1339,22 @@ bool CellmlTextViewParser::parseVariableDeclaration(QDomNode &pDomNode)
                                 return false;
                             }
 
+
+                            // Expect "," or "}"
+
+                            static const CellmlTextViewScanner::TokenTypes nextTokenTypes = CellmlTextViewScanner::TokenTypes() << CellmlTextViewScanner::CommaToken
+                                                                                                                                << CellmlTextViewScanner::ClosingCurlyBracketToken;
+
                             mScanner->getNextToken();
-                        } while (isTokenType(variableElement, CellmlTextViewScanner::CommaToken));
-//---GRY--- WE SHOULDN'T USE isTokenType() LIKE THIS. WE NEED TO BE ABLE TO TELL
-//          THE USER THAT A COMMA (OR SOMETHING ELSE) IS EXPECTED...
 
-                        // Expect "}"
-
-                        if (!closingCurlyBracketToken(variableElement))
-                            return false;
+                            if (tokenType(variableElement, QObject::tr("'%1' or '%2'").arg(",", "}"),
+                                          nextTokenTypes)) {
+                                if (mScanner->tokenType() == CellmlTextViewScanner::ClosingCurlyBracketToken)
+                                    break;
+                            } else {
+                                return false;
+                            }
+                        }
 
                         // Expect ";"
 
