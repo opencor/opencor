@@ -129,6 +129,7 @@ private:
     bool commaToken(QDomNode &pDomNode);
     bool compToken(QDomNode &pDomNode);
     bool defToken(QDomNode &pDomNode);
+    bool dimensionlessToken(QDomNode &pDomNode);
     bool endcompToken(QDomNode &pDomNode);
     bool enddefToken(QDomNode &pDomNode);
     bool eqToken(QDomNode &pDomNode);

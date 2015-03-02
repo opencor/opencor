@@ -267,7 +267,7 @@ QDomElement CellmlTextViewParser::newIdentifierElement(const QString &pValue)
 
     QDomElement identifierElement = mDomDocument.createElement("ci");
 
-    identifierElement.setNodeValue(pValue);
+    identifierElement.appendChild(mDomDocument.createTextNode(pValue));
 
     return identifierElement;
 }
@@ -482,6 +482,16 @@ bool CellmlTextViewParser::defToken(QDomNode &pDomNode)
 
     return tokenType(pDomNode, "'def'",
                      CellmlTextViewScanner::DefToken);
+}
+
+//==============================================================================
+
+bool CellmlTextViewParser::dimensionlessToken(QDomNode &pDomNode)
+{
+    // Expect "dimensionless"
+
+    return tokenType(pDomNode, "'dimensionless'",
+                     CellmlTextViewScanner::DimensionlessToken);
 }
 
 //==============================================================================
@@ -1335,8 +1345,11 @@ bool CellmlTextViewParser::parseComponentDefinition(QDomNode &pDomNode)
                     needMathElement = true;
                 } else if (   (mScanner->tokenType() == CellmlTextViewScanner::IdentifierToken)
                            || (mScanner->tokenType() == CellmlTextViewScanner::OdeToken)) {
-                    if (needMathElement)
+                    if (needMathElement) {
                         mathElement = newDomElement(pDomNode, "math");
+
+                        needMathElement = false;
+                    }
 
                     if (!parseEquation(mathElement))
                         return false;
@@ -1935,14 +1948,35 @@ QDomElement CellmlTextViewParser::parseDerivative(QDomNode &pDomNode)
                             mScanner->getNextToken();
 
                             if (strictlyPositiveIntegerNumberToken(pDomNode)) {
-                                // Expect ")"
+                                QString order = mScanner->tokenString();
+
+                                // Expect "{"
 
                                 mScanner->getNextToken();
 
-                                if (closingBracketToken(pDomNode)) {
-                                    // Return a derivative element with an order
+                                if (openingCurlyBracketToken(pDomNode)) {
+                                    // Expect "dimensionless"
 
-                                    return newDerivativeElement(f, x, mScanner->tokenString());
+                                    mScanner->getNextToken();
+
+                                    if (dimensionlessToken(pDomNode)) {
+                                        // Expect "}"
+
+                                        mScanner->getNextToken();
+
+                                        if (closingCurlyBracketToken(pDomNode)) {
+                                            // Expect ")"
+
+                                            mScanner->getNextToken();
+
+                                            if (closingBracketToken(pDomNode)) {
+                                                // Return a derivative element
+                                                // with an order
+
+                                                return newDerivativeElement(f, x, order);
+                                            }
+                                        }
+                                    }
                                 }
                             }
                         } else {
