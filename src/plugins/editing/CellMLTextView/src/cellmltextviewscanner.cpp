@@ -594,7 +594,7 @@ void CellmlTextViewScanner::getNumber()
         }
     }
 
-    // At this stage, we have a number, but it may be too big
+    // At this stage, we have a number, but it may be invalid
 
     bool validNumber;
 

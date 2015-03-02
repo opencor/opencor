@@ -261,6 +261,66 @@ QDomElement CellmlTextViewParser::newDomElement(QDomNode &pDomNode,
 
 //==============================================================================
 
+QDomElement CellmlTextViewParser::newIdentifierElement(const QString &pValue)
+{
+    // Create and return a new identifier element with the given value
+
+    QDomElement identifierElement = mDomDocument.createElement("ci");
+
+    identifierElement.setNodeValue(pValue);
+
+    return identifierElement;
+}
+
+//==============================================================================
+
+QDomElement CellmlTextViewParser::newDerivativeElement(const QString &pF,
+                                                       const QString &pX)
+{
+    // Create and return a new derivative element with the given parameters
+
+    QDomElement derivativeElement = mDomDocument.createElement("apply");
+    QDomElement bvarElement = mDomDocument.createElement("bvar");
+
+    derivativeElement.appendChild(mDomDocument.createElement("diff"));
+    derivativeElement.appendChild(bvarElement);
+    derivativeElement.appendChild(newIdentifierElement(pF));
+
+    bvarElement.appendChild(newIdentifierElement(pX));
+
+    return derivativeElement;
+}
+
+//==============================================================================
+
+QDomElement CellmlTextViewParser::newDerivativeElement(const QString &pF,
+                                                       const QString &pX,
+                                                       const QString &pOrder)
+{
+    // Create and return a new derivative element with the given parameters
+
+    QDomElement derivativeElement = mDomDocument.createElement("apply");
+    QDomElement bvarElement = mDomDocument.createElement("bvar");
+    QDomElement degreeElement = mDomDocument.createElement("degree");
+    QDomElement cnElement = mDomDocument.createElement("cn");
+
+    derivativeElement.appendChild(mDomDocument.createElement("diff"));
+    derivativeElement.appendChild(bvarElement);
+    derivativeElement.appendChild(newIdentifierElement(pF));
+
+    bvarElement.appendChild(newIdentifierElement(pX));
+    bvarElement.appendChild(degreeElement);
+
+    degreeElement.appendChild(cnElement);
+
+    cnElement.setAttribute("cellml:units", "dimensionless");
+    cnElement.setNodeValue(pOrder);
+
+    return derivativeElement;
+}
+
+//==============================================================================
+
 bool CellmlTextViewParser::tokenType(QDomNode &pDomNode,
                                      const QString &pExpectedString,
                                      const CellmlTextViewScanner::TokenTypes &pTokenTypes)
@@ -302,8 +362,7 @@ bool CellmlTextViewParser::tokenType(QDomNode &pDomNode,
         mMessages << CellmlTextViewParserMessage(CellmlTextViewParserMessage::Error,
                                                  mScanner->tokenLine(),
                                                  mScanner->tokenColumn(),
-                                                 QObject::tr("%1 is expected, but %2 was found instead.").arg(Core::formatMessage(pExpectedString, false),
-                                                                                                              foundString));
+                                                 QObject::tr("%1 is expected, but %2 was found instead.").arg(pExpectedString, foundString));
     }
 
     return false;
@@ -367,6 +426,16 @@ bool CellmlTextViewParser::betweenToken(QDomNode &pDomNode)
 
 //==============================================================================
 
+bool CellmlTextViewParser::closingBracketToken(QDomNode &pDomNode)
+{
+    // Expect ")"
+
+    return tokenType(pDomNode, "')'",
+                     CellmlTextViewScanner::ClosingBracketToken);
+}
+
+//==============================================================================
+
 bool CellmlTextViewParser::closingCurlyBracketToken(QDomNode &pDomNode)
 {
     // Expect "}"
@@ -383,6 +452,16 @@ bool CellmlTextViewParser::colonToken(QDomNode &pDomNode)
 
     return tokenType(pDomNode, "':'",
                      CellmlTextViewScanner::ColonToken);
+}
+
+//==============================================================================
+
+bool CellmlTextViewParser::commaToken(QDomNode &pDomNode)
+{
+    // Expect ","
+
+    return tokenType(pDomNode, "','",
+                     CellmlTextViewScanner::CommaToken);
 }
 
 //==============================================================================
@@ -423,6 +502,16 @@ bool CellmlTextViewParser::enddefToken(QDomNode &pDomNode)
 
     return tokenType(pDomNode, "'enddef'",
                      CellmlTextViewScanner::EndDefToken);
+}
+
+//==============================================================================
+
+bool CellmlTextViewParser::eqToken(QDomNode &pDomNode)
+{
+    // Expect "="
+
+    return tokenType(pDomNode, "'='",
+                     CellmlTextViewScanner::EqToken);
 }
 
 //==============================================================================
@@ -513,6 +602,16 @@ bool CellmlTextViewParser::numberValueToken(QDomNode &pDomNode, int &pSign)
 
 //==============================================================================
 
+bool CellmlTextViewParser::openingBracketToken(QDomNode &pDomNode)
+{
+    // Expect "("
+
+    return tokenType(pDomNode, "'('",
+                     CellmlTextViewScanner::OpeningBracketToken);
+}
+
+//==============================================================================
+
 bool CellmlTextViewParser::openingCurlyBracketToken(QDomNode &pDomNode)
 {
     // Expect "{"
@@ -529,6 +628,60 @@ bool CellmlTextViewParser::semiColonToken(QDomNode &pDomNode)
 
     return tokenType(pDomNode, "';'",
                      CellmlTextViewScanner::SemiColonToken);
+}
+
+//==============================================================================
+
+bool CellmlTextViewParser::strictlyPositiveIntegerNumberToken(QDomNode &pDomNode)
+{
+    // Check whether we have "+" or "-"
+
+    int sign = 0;
+
+    if (isTokenType(pDomNode, CellmlTextViewScanner::PlusToken)) {
+        sign = 1;
+
+        mScanner->getNextToken();
+    } else if (isTokenType(pDomNode, CellmlTextViewScanner::MinusToken)) {
+        sign = -1;
+
+        mScanner->getNextToken();
+    }
+
+    // Expect a strictly positive integer number
+
+    static const QString ErrorMessage = QObject::tr("A strictly positive integer number");
+
+    if (tokenType(pDomNode, ErrorMessage,
+                  CellmlTextViewScanner::NumberToken)) {
+        // We have got a number, but now the question is whether it is a
+        // strictly positive integer one
+
+        int number = mScanner->tokenString().toInt();
+
+        if (sign == -1)
+            number = -number;
+
+        if (number <= 0) {
+            QString foundString = mScanner->tokenString();
+
+            if (sign == 1)
+                foundString = "+"+foundString;
+            else if (sign == -1)
+                foundString = "-"+foundString;
+
+            mMessages << CellmlTextViewParserMessage(CellmlTextViewParserMessage::Error,
+                                                     mScanner->tokenLine(),
+                                                     mScanner->tokenColumn(),
+                                                     QObject::tr("%1 is expected, but %2 was found instead.").arg(ErrorMessage, QString("'%1'").arg(foundString)));
+
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    return false;
 }
 
 //==============================================================================
@@ -1158,6 +1311,9 @@ bool CellmlTextViewParser::parseComponentDefinition(QDomNode &pDomNode)
                                                                                                             << CellmlTextViewScanner::OdeToken
                                                                                                             << CellmlTextViewScanner::EndDefToken;
 
+            QDomElement mathElement;
+            bool needMathElement = true;
+
             mScanner->getNextToken();
 
             while (tokenType(componentElement, QObject::tr("'%1', '%2', an identifier, '%3' or '%4'").arg("def", "var", "ode", "enddef"),
@@ -1170,12 +1326,19 @@ bool CellmlTextViewParser::parseComponentDefinition(QDomNode &pDomNode)
                     if (unitToken(componentElement))
                         if (!parseUnitsDefinition(componentElement))
                             return false;
+
+                    needMathElement = true;
                 } else if (mScanner->tokenType() == CellmlTextViewScanner::VarToken) {
                     if (!parseVariableDeclaration(componentElement))
                         return false;
+
+                    needMathElement = true;
                 } else if (   (mScanner->tokenType() == CellmlTextViewScanner::IdentifierToken)
-                         || (mScanner->tokenType() == CellmlTextViewScanner::OdeToken)) {
-                    if (!parseEquation(componentElement))
+                           || (mScanner->tokenType() == CellmlTextViewScanner::OdeToken)) {
+                    if (needMathElement)
+                        mathElement = newDomElement(pDomNode, "math");
+
+                    if (!parseEquation(mathElement))
                         return false;
                 } else {
                     // Expect ";"
@@ -1376,8 +1539,35 @@ bool CellmlTextViewParser::parseVariableDeclaration(QDomNode &pDomNode)
 
 bool CellmlTextViewParser::parseEquation(QDomNode &pDomNode)
 {
-Q_UNUSED(pDomNode);
-//---GRY--- TO BE DONE...
+    // Create our apply element
+
+    QDomElement applyElement = newDomElement(pDomNode, "apply");
+
+    // Remind ourselves whether we came here as a result of an identifier being
+    // found or whether it was "ode"
+
+    QDomElement lhsElement;
+
+    if (mScanner->tokenType() == CellmlTextViewScanner::IdentifierToken)
+        lhsElement = newIdentifierElement(mScanner->tokenString());
+    else
+        lhsElement = parseDerivative(pDomNode);
+
+    if (!lhsElement.isNull()) {
+        applyElement.appendChild(lhsElement);
+
+        // Expect "="
+
+        mScanner->getNextToken();
+
+        if (eqToken(pDomNode)) {
+            newDomElement(applyElement, "eq");
+
+            applyElement.appendChild(lhsElement);
+
+            return true;
+        }
+    }
 
     return false;
 }
@@ -1696,6 +1886,77 @@ bool CellmlTextViewParser::parseMapDefinition(QDomNode &pDomNode)
     }
 
     return false;
+}
+
+//==============================================================================
+
+QDomElement CellmlTextViewParser::parseDerivative(QDomNode &pDomNode)
+{
+    // At this stage, we have already come across "ode", so now expect "("
+
+    mScanner->getNextToken();
+
+    if (openingBracketToken(pDomNode)) {
+        // Expect an identifier
+
+        mScanner->getNextToken();
+
+        if (identifierToken(pDomNode)) {
+            // Keep track of our f
+
+            QString f = mScanner->tokenString();
+
+            // Expect ","
+
+            mScanner->getNextToken();
+
+            if (commaToken(pDomNode)) {
+                // Expect an identifier
+
+                mScanner->getNextToken();
+
+                if (identifierToken(pDomNode)) {
+                    // Keep track of our x
+
+                    QString x = mScanner->tokenString();
+
+                    // Expect "," or ")"
+
+                    static const CellmlTextViewScanner::TokenTypes tokenTypes = CellmlTextViewScanner::TokenTypes() << CellmlTextViewScanner::CommaToken
+                                                                                                                    << CellmlTextViewScanner::ClosingBracketToken;
+
+                    mScanner->getNextToken();
+
+                    if (tokenType(pDomNode, QObject::tr("'%1' or '%2'").arg(",", ")"),
+                                  tokenTypes)) {
+                        if (mScanner->tokenType() == CellmlTextViewScanner::CommaToken) {
+                            // Expect a strictly positive integer number
+
+                            mScanner->getNextToken();
+
+                            if (strictlyPositiveIntegerNumberToken(pDomNode)) {
+                                // Expect ")"
+
+                                mScanner->getNextToken();
+
+                                if (closingBracketToken(pDomNode)) {
+                                    // Return a derivative element with an order
+
+                                    return newDerivativeElement(f, x, mScanner->tokenString());
+                                }
+                            }
+                        } else {
+                            // Return a derivative element with no order
+
+                            return newDerivativeElement(f, x);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    return QDomElement();
 }
 
 //==============================================================================

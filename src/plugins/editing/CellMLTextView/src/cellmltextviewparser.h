@@ -108,6 +108,11 @@ private:
 
     QDomElement newDomElement(QDomNode &pDomNode, const QString &pElementName);
 
+    QDomElement newIdentifierElement(const QString &pValue);
+    QDomElement newDerivativeElement(const QString &pF, const QString &pX);
+    QDomElement newDerivativeElement(const QString &pF, const QString &pX,
+                                     const QString &pOrder);
+
     bool tokenType(QDomNode &pDomNode, const QString &pExpectedString,
                    const CellmlTextViewScanner::TokenTypes &pTokenTypes);
     bool tokenType(QDomNode &pDomNode, const QString &pExpectedString,
@@ -118,20 +123,25 @@ private:
     bool andToken(QDomNode &pDomNode);
     bool asToken(QDomNode &pDomNode);
     bool betweenToken(QDomNode &pDomNode);
+    bool closingBracketToken(QDomNode &pDomNode);
     bool closingCurlyBracketToken(QDomNode &pDomNode);
     bool colonToken(QDomNode &pDomNode);
+    bool commaToken(QDomNode &pDomNode);
     bool compToken(QDomNode &pDomNode);
     bool defToken(QDomNode &pDomNode);
     bool endcompToken(QDomNode &pDomNode);
     bool enddefToken(QDomNode &pDomNode);
+    bool eqToken(QDomNode &pDomNode);
     bool forToken(QDomNode &pDomNode);
     bool identifierOrSiUnitToken(QDomNode &pDomNode);
     bool identifierToken(QDomNode &pDomNode);
     bool modelToken(QDomNode &pDomNode);
     bool numberToken(QDomNode &pDomNode);
     bool numberValueToken(QDomNode &pDomNode, int &pSign);
+    bool openingBracketToken(QDomNode &pDomNode);
     bool openingCurlyBracketToken(QDomNode &pDomNode);
     bool semiColonToken(QDomNode &pDomNode);
+    bool strictlyPositiveIntegerNumberToken(QDomNode &pDomNode);
     bool unitToken(QDomNode &pDomNode);
     bool usingToken(QDomNode &pDomNode);
 
@@ -147,6 +157,8 @@ private:
     bool parseGroupDefinition(QDomNode &pDomNode);
     bool parseComponentRefDefinition(QDomNode &pDomNode);
     bool parseMapDefinition(QDomNode &pDomNode);
+
+    QDomElement parseDerivative(QDomNode &pDomNode);
 };
 
 //==============================================================================
