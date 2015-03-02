@@ -293,5 +293,9 @@
         <source>&apos;%1&apos;, &apos;%2&apos;, an identifier, &apos;%3&apos; or &apos;%4&apos;</source>
         <translation>&apos;%1&apos;, &apos;%2&apos;, un identifiant, &apos;%3&apos; ou &apos;%4&apos;</translation>
     </message>
+    <message>
+        <source>A strictly positive integer number</source>
+        <translation>Un nombre entier strictement positif</translation>
+    </message>
 </context>
 </TS>
