@@ -509,7 +509,7 @@ void CellmlTextViewLexer::doStyleTextPreviousMultilineComment(const int &pPositi
         // The beginning of the given text is within a /* XXX */ comment, so
         // style it
 
-        int realBytesEnd = fullTextBytesPosition(multilineCommentEndPosition+EndMultilineCommentLength);
+        int realBytesEnd = fullTextBytesPosition(multilineCommentEndPosition)+EndMultilineCommentLength;
         int bytesEnd = qMin(pBytesEnd, realBytesEnd);
 
         startStyling(pBytesStart);
@@ -555,7 +555,7 @@ void CellmlTextViewLexer::doStyleTextPreviousParameterBlock(const int &pPosition
         // The beginning of the given text is within a parameter block, so style
         // it as such
 
-        int realBytesEnd = fullTextBytesPosition(parameterBlockEndPosition+EndParameterBlockLength);
+        int realBytesEnd = fullTextBytesPosition(parameterBlockEndPosition)+EndParameterBlockLength;
         int bytesEnd = qMin(pBytesEnd, realBytesEnd);
         bool hasStart = pPosition == start;
         bool hasEnd = bytesEnd == realBytesEnd;
