@@ -925,8 +925,8 @@ void ParsingTests::componentTests()
     QCOMPARE(parser.messages().first().type(), OpenCOR::CellMLTextView::CellmlTextViewParserMessage::Error);
     QCOMPARE(parser.messages().first().message(), QString("The 'init' attribute has already been specified."));
 
-    // Various tests on a component definition to check that we do get either
-    // an identifier or a derivative as the beginning of an equation
+    // Various tests on a component definition to check that we can get the LHS
+    // of an equation
 
     QVERIFY(!parser.execute(QString("def model my_model as\n"
                                     "    def comp my_component as\n"
@@ -1029,6 +1029,35 @@ void ParsingTests::componentTests()
                                     "        ode(f, x, 3{dimensionless})")));
     QCOMPARE(parser.messages().first().type(), OpenCOR::CellMLTextView::CellmlTextViewParserMessage::Error);
     QCOMPARE(parser.messages().first().message(), QString("'=' is expected, but the end of the file was found instead."));
+
+    // Various tests on a component definition to check that we can get the RHS
+    // of an equation
+
+    QVERIFY(!parser.execute(QString("def model my_model as\n"
+                                    "    def comp my_component as\n"
+                                    "        a = ")));
+    QCOMPARE(parser.messages().first().type(), OpenCOR::CellMLTextView::CellmlTextViewParserMessage::Error);
+    QCOMPARE(parser.messages().first().message(), QString("An identifier is expected, but the end of the file was found instead."));
+
+    QVERIFY(!parser.execute(QString("def model my_model as\n"
+                                    "    def comp my_component as\n"
+                                    "        a = b")));
+    QCOMPARE(parser.messages().first().type(), OpenCOR::CellMLTextView::CellmlTextViewParserMessage::Error);
+    QCOMPARE(parser.messages().first().message(), QString("';' is expected, but the end of the file was found instead."));
+
+    QVERIFY(!parser.execute(QString("def model my_model as\n"
+                                    "    def comp my_component as\n"
+                                    "        a = b;")));
+    QCOMPARE(parser.messages().first().type(), OpenCOR::CellMLTextView::CellmlTextViewParserMessage::Error);
+    QCOMPARE(parser.messages().first().message(), QString("'def', 'var', an identifier, 'ode' or 'enddef' is expected, but the end of the file was found instead."));
+
+
+    QVERIFY(parser.execute(QString("def model my_model as\n"
+                                   "    def comp my_component as\n"
+                                   "        a = b;\n"
+                                   "    enddef;\n"
+                                   "enddef;")));
+    QVERIFY(!parser.domDocument().isNull());
 }
 
 //==============================================================================
