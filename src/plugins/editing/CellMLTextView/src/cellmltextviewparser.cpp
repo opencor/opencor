@@ -119,102 +119,100 @@ bool CellmlTextViewParser::execute(const QString &pText,
 
     // Expect "def"
 
-    if (defToken(mDomDocument)) {
-        // Expect "model"
+    if (!defToken(mDomDocument))
+        return false;
 
-        mScanner->getNextToken();
+    // Expect "model"
 
-        if (modelToken(mDomDocument)) {
-            // Create our model element
+    mScanner->getNextToken();
 
-            QDomElement modelElement = newDomElement(mDomDocument, "model");
+    if (!modelToken(mDomDocument))
+        return false;
 
-            // Try to parse for a cmeta:id
+    // Create our model element
 
-            mScanner->getNextToken();
+    QDomElement modelElement = newDomElement(mDomDocument, "model");
 
-            parseCmetaId(modelElement);
+    // Try to parse for a cmeta:id
 
-            // Expect an identifier
+    mScanner->getNextToken();
 
-            if (identifierToken(mDomDocument)) {
-                // Set our model name
+    parseCmetaId(modelElement);
 
-                modelElement.setAttribute("name", mScanner->tokenString());
+    // Expect an identifier
 
-                // Expect "as"
+    if (!identifierToken(mDomDocument))
+        return false;
 
-                mScanner->getNextToken();
+    // Set our model name
 
-                if (asToken(mDomDocument)) {
-                    // Try to parse for some model definition itself
+    modelElement.setAttribute("name", mScanner->tokenString());
 
-                    mScanner->getNextToken();
+    // Expect "as"
 
-                    if (parseModelDefinition(modelElement)) {
-                        // Expect "enddef"
+    mScanner->getNextToken();
 
-                        if (enddefToken(modelElement)) {
-                            // Expect ";"
+    if (!asToken(mDomDocument))
+        return false;
 
-                            mScanner->getNextToken();
+    // Try to parse for some model definition itself
 
-                            if (semiColonToken(modelElement)) {
-                                // Expect the end of the file
+    mScanner->getNextToken();
 
-                                mScanner->getNextToken();
+    if (!parseModelDefinition(modelElement))
+        return false;
 
-                                if (tokenType(modelElement, QObject::tr("the end of the file"),
-                                              CellmlTextViewScanner::EofToken)) {
-                                    // We are done, so add some processing
-                                    // instruction to our DOM document
+    // Expect "enddef"
 
-                                    mDomDocument.insertBefore(mDomDocument.createProcessingInstruction("xml", "version='1.0'"),
-                                                              mDomDocument.documentElement());
+    if (!enddefToken(modelElement))
+        return false;
 
-                                    // Use the given CellML version if it is
-                                    // higher than the one we actually need
+    // Expect ";"
 
-                                    mCellmlVersion = (pCellmlVersion > mCellmlVersion)?pCellmlVersion:mCellmlVersion;
+    mScanner->getNextToken();
 
-                                    // Next, add the CellML namespace to our
-                                    // document element
+    if (!semiColonToken(modelElement))
+        return false;
 
-                                    if (mCellmlVersion == CellMLSupport::CellmlFile::Cellml_1_1) {
-                                        mDomDocument.documentElement().setAttribute("xmlns", CellMLSupport::Cellml_1_1_Namespace);
-                                        mDomDocument.documentElement().setAttribute("xmlns:cellml", CellMLSupport::Cellml_1_1_Namespace);
-                                    } else {
-                                        mDomDocument.documentElement().setAttribute("xmlns", CellMLSupport::Cellml_1_0_Namespace);
-                                        mDomDocument.documentElement().setAttribute("xmlns:cellml", CellMLSupport::Cellml_1_0_Namespace);
-                                    }
+    // Expect the end of the file
 
-                                    // Finally, add the other namespaces that we
-                                    // need
-                                    // Note: ideally, we wouldn't have to do
-                                    //       this, but this would mean using the
-                                    //       NS version of various methods (e.g.
-                                    //       setAttributeNS() rather than
-                                    //       setAttribute()). However, this
-                                    //       results in namespace information
-                                    //       being referenced all over the
-                                    //       place, which is really not what we
-                                    //       want since that unnecessarily
-                                    //       pollutes things...
+    mScanner->getNextToken();
 
-                                    foreach (const QString &key, mNamespaces.keys())
-                                        mDomDocument.documentElement().setAttribute(QString("xmlns:%1").arg(key), mNamespaces.value(key));
+    if (!tokenType(modelElement, QObject::tr("the end of the file"),
+                   CellmlTextViewScanner::EofToken))
+        return false;
 
-                                    return true;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
+    // We are done, so add some processing instruction to our DOM document
+
+    mDomDocument.insertBefore(mDomDocument.createProcessingInstruction("xml", "version='1.0'"),
+                              mDomDocument.documentElement());
+
+    // Use the given CellML version if it is higher than the one we actually
+    // need
+
+    mCellmlVersion = (pCellmlVersion > mCellmlVersion)?pCellmlVersion:mCellmlVersion;
+
+    // Next, add the CellML namespace to our document element
+
+    if (mCellmlVersion == CellMLSupport::CellmlFile::Cellml_1_1) {
+        mDomDocument.documentElement().setAttribute("xmlns", CellMLSupport::Cellml_1_1_Namespace);
+        mDomDocument.documentElement().setAttribute("xmlns:cellml", CellMLSupport::Cellml_1_1_Namespace);
+    } else {
+        mDomDocument.documentElement().setAttribute("xmlns", CellMLSupport::Cellml_1_0_Namespace);
+        mDomDocument.documentElement().setAttribute("xmlns:cellml", CellMLSupport::Cellml_1_0_Namespace);
     }
 
-    return false;
+    // Finally, add the other namespaces that we need
+    // Note: ideally, we wouldn't have to do this, but this would mean using the
+    //       NS version of various methods (e.g. setAttributeNS() rather than
+    //       setAttribute()). However, this results in namespace information
+    //       being referenced all over the place, which is really not what we
+    //       want since that unnecessarily pollutes things...
+
+    foreach (const QString &key, mNamespaces.keys())
+        mDomDocument.documentElement().setAttribute(QString("xmlns:%1").arg(key), mNamespaces.value(key));
+
+    return true;
 }
 
 //==============================================================================
@@ -2058,6 +2056,8 @@ QDomElement CellmlTextViewParser::parseNormalMathematicalEquation(QDomNode &pDom
 QDomElement CellmlTextViewParser::parsePiecewiseMathematicalEquation(QDomNode &pDomNode)
 {
     // Expect "case"
+
+    mScanner->getNextToken();
 
     if (caseToken(pDomNode)) {
         // Create our piecewise element
