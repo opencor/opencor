@@ -246,6 +246,19 @@ CellmlTextViewParserMessages CellmlTextViewParser::messages() const
 
 //==============================================================================
 
+void CellmlTextViewParser::addUnexpectedTokenErrorMessage(const QString &pExpectedString,
+                                                          const QString &pFoundString)
+{
+    // Add an error message for the given unexpected token
+
+    mMessages << CellmlTextViewParserMessage(CellmlTextViewParserMessage::Error,
+                                             mScanner->tokenLine(),
+                                             mScanner->tokenColumn(),
+                                             QObject::tr("%1 is expected, but %2 was found instead.").arg(pExpectedString, pFoundString));
+}
+
+//==============================================================================
+
 QDomElement CellmlTextViewParser::newDomElement(QDomNode &pDomNode,
                                                 const QString &pElementName)
 {
@@ -359,10 +372,7 @@ bool CellmlTextViewParser::tokenType(QDomNode &pDomNode,
         if (mScanner->tokenType() != CellmlTextViewScanner::EofToken)
             foundString = QString("'%1'").arg(foundString);
 
-        mMessages << CellmlTextViewParserMessage(CellmlTextViewParserMessage::Error,
-                                                 mScanner->tokenLine(),
-                                                 mScanner->tokenColumn(),
-                                                 QObject::tr("%1 is expected, but %2 was found instead.").arg(pExpectedString, foundString));
+        addUnexpectedTokenErrorMessage(pExpectedString, foundString);
     }
 
     return false;
@@ -680,10 +690,7 @@ bool CellmlTextViewParser::strictlyPositiveIntegerNumberToken(QDomNode &pDomNode
             else if (sign == -1)
                 foundString = "-"+foundString;
 
-            mMessages << CellmlTextViewParserMessage(CellmlTextViewParserMessage::Error,
-                                                     mScanner->tokenLine(),
-                                                     mScanner->tokenColumn(),
-                                                     QObject::tr("%1 is expected, but %2 was found instead.").arg(ErrorMessage, QString("'%1'").arg(foundString)));
+            addUnexpectedTokenErrorMessage(ErrorMessage, QString("'%1'").arg(foundString));
 
             return false;
         } else {
@@ -1574,6 +1581,8 @@ bool CellmlTextViewParser::parseEquation(QDomNode &pDomNode)
         mScanner->getNextToken();
 
         if (eqToken(pDomNode)) {
+            // Finalise our DOM tree
+
             newDomElement(applyElement, "eq");
 
             applyElement.appendChild(lhsElement);

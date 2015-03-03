@@ -106,6 +106,9 @@ private:
 
     QMap<QString, QString> mNamespaces;
 
+    void addUnexpectedTokenErrorMessage(const QString &pExpectedString,
+                                        const QString &pFoundString);
+
     QDomElement newDomElement(QDomNode &pDomNode, const QString &pElementName);
 
     QDomElement newIdentifierElement(const QString &pValue);
