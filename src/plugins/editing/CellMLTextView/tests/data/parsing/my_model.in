@@ -163,6 +163,19 @@ def model{my_model_cmeta_id} my_model as
         endsel;
 
         // In between comment...
+
+        a = b;
+
+        // In between comment...
+
+        a = ode(b, t);
+        a = ode(b, t, 2{dimensionless});
+
+        // In between comment...
+
+        a = 3.5{second};
+
+        // In between comment...
     enddef;
 
     // In between comment...

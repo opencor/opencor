@@ -137,6 +137,44 @@
                     </otherwise>
                 </piecewise>
             </apply>
+            <!-- In between comment...-->
+            <apply>
+                <eq/>
+                <ci>a</ci>
+                <ci>b</ci>
+            </apply>
+            <!-- In between comment...-->
+            <apply>
+                <eq/>
+                <ci>a</ci>
+                <apply>
+                    <diff/>
+                    <bvar>
+                        <ci>t</ci>
+                    </bvar>
+                    <ci>b</ci>
+                </apply>
+            </apply>
+            <apply>
+                <eq/>
+                <ci>a</ci>
+                <apply>
+                    <diff/>
+                    <bvar>
+                        <ci>t</ci>
+                        <degree>
+                            <cn cellml:units="dimensionless">2</cn>
+                        </degree>
+                    </bvar>
+                    <ci>b</ci>
+                </apply>
+            </apply>
+            <!-- In between comment...-->
+            <apply>
+                <eq/>
+                <ci>a</ci>
+                <cn cellml:units="second">3.5</cn>
+            </apply>
         </math>
         <!-- In between comment...-->
     </component>
