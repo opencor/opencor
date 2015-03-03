@@ -152,7 +152,7 @@ private:
     bool usingToken(QDomNode &pDomNode);
 
     void parseComments(QDomNode &pDomNode);
-    void parseCmetaId(QDomElement &pDomElement);
+    bool parseCmetaId(QDomElement &pDomElement);
     bool parseModelDefinition(QDomNode &pDomNode);
     bool parseImportDefinition(QDomNode &pDomNode);
     bool parseUnitsDefinition(QDomNode &pDomNode);

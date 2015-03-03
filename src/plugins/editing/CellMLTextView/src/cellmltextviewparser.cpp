@@ -137,7 +137,8 @@ bool CellmlTextViewParser::execute(const QString &pText,
 
     mScanner->getNextToken();
 
-    parseCmetaId(modelElement);
+    if (!parseCmetaId(modelElement))
+        return false;
 
     // Expect an identifier
 
@@ -709,8 +710,6 @@ bool CellmlTextViewParser::strictlyPositiveIntegerNumberToken(QDomNode &pDomNode
                 foundString = "-"+foundString;
 
             addUnexpectedTokenErrorMessage(ExpectedString, QString("'%1'").arg(foundString));
-
-            return false;
         } else {
             return true;
         }
@@ -792,44 +791,52 @@ void CellmlTextViewParser::parseComments(QDomNode &pDomNode)
             return;
         }
 
+        // Fetch the next token
+
         mScanner->getNextToken();
     }
 }
 
 //==============================================================================
 
-void CellmlTextViewParser::parseCmetaId(QDomElement &pDomElement)
+bool CellmlTextViewParser::parseCmetaId(QDomElement &pDomElement)
 {
     // Check whether a cmeta:id is given by checking whether the token is "{"
 
     QString cmetaId = QString();
 
-    if (isTokenType(pDomElement, CellmlTextViewScanner::OpeningCurlyBracketToken)) {
-        // Expect an identifier
+    if (!isTokenType(pDomElement, CellmlTextViewScanner::OpeningCurlyBracketToken))
+        return true;
 
-        mScanner->getNextToken();
+    // Expect an identifier
 
-        if (identifierToken(pDomElement)) {
-            // The identifier is our cmeta:id
+    mScanner->getNextToken();
 
-            cmetaId = mScanner->tokenString();
+    if (!identifierToken(pDomElement))
+        return false;
 
-            // Expect "}"
+    // The identifier is our cmeta:id
 
-            mScanner->getNextToken();
+    cmetaId = mScanner->tokenString();
 
-            if (closingCurlyBracketToken(pDomElement))
-                mScanner->getNextToken();
-        }
-    }
+    // Expect "}"
+
+    mScanner->getNextToken();
+
+    if (!closingCurlyBracketToken(pDomElement))
+        return false;
+
+    // Fetch the next token
+
+    mScanner->getNextToken();
 
     // Set the cmeta:id of the current DOM element
 
-    if (!cmetaId.isEmpty()) {
-        mNamespaces.insert("cmeta", CellMLSupport::CmetaIdNamespace);
+    mNamespaces.insert("cmeta", CellMLSupport::CmetaIdNamespace);
 
-        pDomElement.setAttribute("cmeta:id", cmetaId);
-    }
+    pDomElement.setAttribute("cmeta:id", cmetaId);
+
+    return true;
 }
 
 //==============================================================================
@@ -899,7 +906,8 @@ bool CellmlTextViewParser::parseImportDefinition(QDomNode &pDomNode)
 
     mScanner->getNextToken();
 
-    parseCmetaId(importElement);
+    if (!parseCmetaId(importElement))
+        return false;
 
     // Expect "using"
 
@@ -945,7 +953,8 @@ bool CellmlTextViewParser::parseImportDefinition(QDomNode &pDomNode)
 
                         mScanner->getNextToken();
 
-                        parseCmetaId(unitsImportElement);
+                        if (!parseCmetaId(unitsImportElement))
+                            return false;
 
                         // Expect an identifier
 
@@ -993,7 +1002,8 @@ bool CellmlTextViewParser::parseImportDefinition(QDomNode &pDomNode)
 
                         mScanner->getNextToken();
 
-                        parseCmetaId(componentImportElement);
+                        if (!parseCmetaId(componentImportElement))
+                            return false;
 
                         // Expect an identifier
 
@@ -1059,7 +1069,8 @@ bool CellmlTextViewParser::parseUnitsDefinition(QDomNode &pDomNode)
 
     mScanner->getNextToken();
 
-    parseCmetaId(unitsElement);
+    if (!parseCmetaId(unitsElement))
+        return false;
 
     // Expect an identifier
 
@@ -1148,7 +1159,8 @@ bool CellmlTextViewParser::parseUnitDefinition(QDomNode &pDomNode)
 
     mScanner->getNextToken();
 
-    parseCmetaId(unitElement);
+    if (!parseCmetaId(unitElement))
+        return false;
 
     // Expect an identifier or an SI unit
 
@@ -1323,7 +1335,8 @@ bool CellmlTextViewParser::parseComponentDefinition(QDomNode &pDomNode)
 
     mScanner->getNextToken();
 
-    parseCmetaId(componentElement);
+    if (!parseCmetaId(componentElement))
+        return false;
 
     // Expect an identifier
 
@@ -1410,7 +1423,8 @@ bool CellmlTextViewParser::parseVariableDeclaration(QDomNode &pDomNode)
 
     mScanner->getNextToken();
 
-    parseCmetaId(variableElement);
+    if (!parseCmetaId(variableElement))
+        return false;
 
     // Expect an identifier
 
@@ -1640,7 +1654,8 @@ bool CellmlTextViewParser::parseGroupDefinition(QDomNode &pDomNode)
 
     mScanner->getNextToken();
 
-    parseCmetaId(groupElement);
+    if (!parseCmetaId(groupElement))
+        return false;
 
     // Expect "as"
 
@@ -1754,7 +1769,8 @@ bool CellmlTextViewParser::parseComponentRefDefinition(QDomNode &pDomNode)
 
     mScanner->getNextToken();
 
-    parseCmetaId(componentRefElement);
+    if (!parseCmetaId(componentRefElement))
+        return false;
 
     // Expect an identifier
 
@@ -1834,7 +1850,8 @@ bool CellmlTextViewParser::parseMapDefinition(QDomNode &pDomNode)
 
     mScanner->getNextToken();
 
-    parseCmetaId(connectionElement);
+    if (!parseCmetaId(connectionElement))
+        return false;
 
     // Expect "between"
 
@@ -1847,7 +1864,8 @@ bool CellmlTextViewParser::parseMapDefinition(QDomNode &pDomNode)
 
         mScanner->getNextToken();
 
-        parseCmetaId(mapComponentsElement);
+        if (!parseCmetaId(mapComponentsElement))
+            return false;
 
         // Expect an identifier
 
@@ -1894,7 +1912,8 @@ bool CellmlTextViewParser::parseMapDefinition(QDomNode &pDomNode)
 
                                 mScanner->getNextToken();
 
-                                parseCmetaId(mapVariablesElement);
+                                if (!parseCmetaId(mapVariablesElement))
+                                    return false;
 
                                 // Expect an identifier
 

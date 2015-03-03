@@ -76,6 +76,10 @@ void ParsingTests::basicTests()
     QCOMPARE(parser.messages().first().type(), OpenCOR::CellMLTextView::CellmlTextViewParserMessage::Error);
     QCOMPARE(parser.messages().first().message(), QString("An identifier is expected, but the end of the file was found instead."));
 
+    QVERIFY(!parser.execute(QString("def model{123")));
+    QCOMPARE(parser.messages().first().type(), OpenCOR::CellMLTextView::CellmlTextViewParserMessage::Error);
+    QCOMPARE(parser.messages().first().message(), QString("An identifier is expected, but '123' was found instead."));
+
     QVERIFY(!parser.execute(QString("def model{my_cmeta_id")));
     QCOMPARE(parser.messages().first().type(), OpenCOR::CellMLTextView::CellmlTextViewParserMessage::Error);
     QCOMPARE(parser.messages().first().message(), QString("'}' is expected, but the end of the file was found instead."));
