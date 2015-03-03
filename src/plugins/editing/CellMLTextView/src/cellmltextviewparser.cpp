@@ -313,8 +313,8 @@ QDomElement CellmlTextViewParser::newDerivativeElement(const QString &pF,
 
     degreeElement.appendChild(cnElement);
 
+    cnElement.appendChild(mDomDocument.createTextNode(pOrder));
     cnElement.setAttribute("cellml:units", "dimensionless");
-    cnElement.setNodeValue(pOrder);
 
     return derivativeElement;
 }
