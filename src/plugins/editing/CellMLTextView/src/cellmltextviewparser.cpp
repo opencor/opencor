@@ -2083,14 +2083,18 @@ QDomElement CellmlTextViewParser::parsePiecewiseMathematicalEquation(QDomNode &p
 
         QDomElement piecewiseElement = newDomElement(mDomDocument, "piecewise");
 
-        // Loop while we have "case" and leave if we get "otherwise"
+        // Loop while we have "case" or "otherwise", or leave if we get "endsel"
 
         static const CellmlTextViewScanner::TokenTypes tokenTypes = CellmlTextViewScanner::TokenTypes() << CellmlTextViewScanner::CaseToken
-                                                                                                        << CellmlTextViewScanner::OtherwiseToken;
+                                                                                                        << CellmlTextViewScanner::OtherwiseToken
+                                                                                                        << CellmlTextViewScanner::EndSelToken;
 
         bool hasOtherwiseClause = false;
 
         do {
+            if (mScanner->tokenType() == CellmlTextViewScanner::EndSelToken)
+                break;
+
             bool caseClause = mScanner->tokenType() == CellmlTextViewScanner::CaseToken;
             QDomElement conditionElement = QDomElement();
 
@@ -2105,7 +2109,6 @@ QDomElement CellmlTextViewParser::parsePiecewiseMathematicalEquation(QDomNode &p
                 if (conditionElement.isNull())
                     return QDomElement();
             } else if (hasOtherwiseClause) {
-//---GRY--- NEED A TEST FOR THIS...
                 mMessages << CellmlTextViewParserMessage(CellmlTextViewParserMessage::Error,
                                                          mScanner->tokenLine(),
                                                          mScanner->tokenColumn(),
@@ -2155,15 +2158,8 @@ QDomElement CellmlTextViewParser::parsePiecewiseMathematicalEquation(QDomNode &p
             // Fetch the next token
 
             mScanner->getNextToken();
-
-            // Leave if we just dealt with an otherwise clause
-
-            if (!caseClause)
-                break;
-        } while (hasOtherwiseClause?
-                     caseToken(pDomNode):
-                     tokenType(pDomNode, QObject::tr("'%1' or '%2'").arg("case", "otherwise"),
-                               tokenTypes));
+        } while (tokenType(pDomNode, QObject::tr("'%1', '%2' or '%3'").arg("case", "otherwise", "endsel"),
+                           tokenTypes));
 
         // Expect "endsel"
 
