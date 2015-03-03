@@ -436,6 +436,16 @@ bool CellmlTextViewParser::betweenToken(QDomNode &pDomNode)
 
 //==============================================================================
 
+bool CellmlTextViewParser::caseToken(QDomNode &pDomNode)
+{
+    // Expect "case"
+
+    return tokenType(pDomNode, "'case'",
+                     CellmlTextViewScanner::CaseToken);
+}
+
+//==============================================================================
+
 bool CellmlTextViewParser::closingBracketToken(QDomNode &pDomNode)
 {
     // Expect ")"
@@ -522,6 +532,16 @@ bool CellmlTextViewParser::enddefToken(QDomNode &pDomNode)
 
     return tokenType(pDomNode, "'enddef'",
                      CellmlTextViewScanner::EndDefToken);
+}
+
+//==============================================================================
+
+bool CellmlTextViewParser::endselToken(QDomNode &pDomNode)
+{
+    // Expect "endsel"
+
+    return tokenType(pDomNode, "'endsel'",
+                     CellmlTextViewScanner::EndSelToken);
 }
 
 //==============================================================================
@@ -1575,7 +1595,7 @@ bool CellmlTextViewParser::parseMathematicalEquation(QDomNode &pDomNode)
         mScanner->getNextToken();
 
         if (eqToken(pDomNode)) {
-            // Expect either a normal or a piecewise statement
+            // Expect either a normal or a piecewise mathematical equation
 
             mScanner->getNextToken();
 
@@ -1585,16 +1605,22 @@ bool CellmlTextViewParser::parseMathematicalEquation(QDomNode &pDomNode)
 //---GRY--- SHOULD WE DO SOMETHING IF rhsElement IS NULL?...
 
             if (!rhsElement.isNull()) {
-                // Create and populate our apply element
+                // Expect ";"
 
-                QDomElement applyElement = newDomElement(pDomNode, "apply");
+                mScanner->getNextToken();
 
-                newDomElement(applyElement, "eq");
+                if (semiColonToken(pDomNode)) {
+                    // Create and populate our apply element
 
-                applyElement.appendChild(lhsElement);
-                applyElement.appendChild(rhsElement);
+                    QDomElement applyElement = newDomElement(pDomNode, "apply");
 
-                return true;
+                    newDomElement(applyElement, "eq");
+
+                    applyElement.appendChild(lhsElement);
+                    applyElement.appendChild(rhsElement);
+
+                    return true;
+                }
             }
         }
     }
@@ -2023,8 +2049,87 @@ Q_UNUSED(pDomNode);
 
 QDomElement CellmlTextViewParser::parsePiecewiseMathematicalEquation(QDomNode &pDomNode)
 {
-//---GRY--- TO BE DONE...
-Q_UNUSED(pDomNode);
+    // Expect "case"
+
+    if (caseToken(pDomNode)) {
+        // Create our piecewise element
+
+        QDomElement piecewiseElement = newDomElement(mDomDocument, "piecewise");
+
+        // Loop while we have "case" and leave if we get "otherwise"
+
+        static const CellmlTextViewScanner::TokenTypes tokenTypes = CellmlTextViewScanner::TokenTypes() << CellmlTextViewScanner::CaseToken
+                                                                                                        << CellmlTextViewScanner::OtherwiseToken;
+
+        do {
+            bool caseClause = mScanner->tokenType() == CellmlTextViewScanner::CaseToken;
+            QDomElement conditionElement = QDomElement();
+
+            if (caseClause) {
+                // Expect a condition in the form of a normal mathematical
+                // equation
+
+                mScanner->getNextToken();
+
+                conditionElement = parseNormalMathematicalEquation(pDomNode);
+
+                if (conditionElement.isNull())
+                    return QDomElement();
+            }
+
+            // Expect ":"
+
+            mScanner->getNextToken();
+
+            if (!colonToken(pDomNode))
+                return QDomElement();
+
+            // Expect an expression in the form of a normal mathematical
+            // equation
+
+            mScanner->getNextToken();
+
+            QDomElement expressionElement = parseNormalMathematicalEquation(pDomNode);
+
+            if (expressionElement.isNull())
+                return QDomElement();
+
+            // Expect ";"
+
+            mScanner->getNextToken();
+
+            if (!semiColonToken(pDomNode))
+                return QDomElement();
+
+            // Create and populate our piece/otherwise element, and add it to
+            // our piecewise element
+
+            QDomElement pieceOrOtherwiseElement = newDomElement(mDomDocument, caseClause?"piece":"otherwise");
+
+            pieceOrOtherwiseElement.appendChild(expressionElement);
+
+            if (caseClause)
+                pieceOrOtherwiseElement.appendChild(conditionElement);
+
+            piecewiseElement.appendChild(pieceOrOtherwiseElement);
+
+            // Fetch the next token
+
+            mScanner->getNextToken();
+
+            // Leave if we just dealt with an otherwise clause
+
+            if (!caseClause)
+                break;
+        } while (tokenType(pDomNode, QObject::tr("'%1' or '%2'").arg("case", "otherwise"),
+                           tokenTypes));
+
+        // Expect "endsel"
+
+        if (endselToken(pDomNode))
+            return piecewiseElement;
+    }
+
     return QDomElement();
 }
 

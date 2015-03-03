@@ -126,6 +126,7 @@ private:
     bool andToken(QDomNode &pDomNode);
     bool asToken(QDomNode &pDomNode);
     bool betweenToken(QDomNode &pDomNode);
+    bool caseToken(QDomNode &pDomNode);
     bool closingBracketToken(QDomNode &pDomNode);
     bool closingCurlyBracketToken(QDomNode &pDomNode);
     bool colonToken(QDomNode &pDomNode);
@@ -135,6 +136,7 @@ private:
     bool dimensionlessToken(QDomNode &pDomNode);
     bool endcompToken(QDomNode &pDomNode);
     bool enddefToken(QDomNode &pDomNode);
+    bool endselToken(QDomNode &pDomNode);
     bool eqToken(QDomNode &pDomNode);
     bool forToken(QDomNode &pDomNode);
     bool identifierOrSiUnitToken(QDomNode &pDomNode);
