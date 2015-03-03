@@ -1373,7 +1373,9 @@ bool CellmlTextViewParser::parseComponentDefinition(QDomNode &pDomNode)
                 } else if (   (mScanner->tokenType() == CellmlTextViewScanner::IdentifierToken)
                            || (mScanner->tokenType() == CellmlTextViewScanner::OdeToken)) {
                     if (needMathElement) {
-                        mathElement = newDomElement(pDomNode, "math");
+                        mathElement = newDomElement(componentElement, "math");
+
+                        mathElement.setAttribute("xmlns", CellMLSupport::MathmlNamespace);
 
                         needMathElement = false;
                     }
