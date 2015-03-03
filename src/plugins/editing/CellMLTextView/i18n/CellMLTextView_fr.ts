@@ -297,5 +297,9 @@
         <source>A strictly positive integer number</source>
         <translation>Un nombre entier strictement positif</translation>
     </message>
+    <message>
+        <source>There can only be one &apos;otherwise&apos; clause.</source>
+        <translation>Il ne peut y avoir qu&apos;une clause &apos;otherwise&apos;.</translation>
+    </message>
 </context>
 </TS>
