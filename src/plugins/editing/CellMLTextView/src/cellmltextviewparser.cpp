@@ -180,8 +180,9 @@ bool CellmlTextViewParser::execute(const QString &pText,
     mScanner->getNextToken();
 
     if (!tokenType(modelElement, QObject::tr("the end of the file"),
-                   CellmlTextViewScanner::EofToken))
+                   CellmlTextViewScanner::EofToken)) {
         return false;
+    }
 
     // We are done, so add some processing instruction to our DOM document
 
@@ -329,6 +330,21 @@ QDomElement CellmlTextViewParser::newDerivativeElement(const QString &pF,
     cnElement.setAttribute("cellml:units", "dimensionless");
 
     return derivativeElement;
+}
+
+//==============================================================================
+
+QDomElement CellmlTextViewParser::newNumberElement(const QString &pNumber,
+                                                   const QString &pUnit)
+{
+    // Create and return a new identifier element with the given value
+
+    QDomElement numberElement = mDomDocument.createElement("cn");
+
+    numberElement.appendChild(mDomDocument.createTextNode(pNumber));
+    numberElement.setAttribute("cellml:units", pUnit);
+
+    return numberElement;
 }
 
 //==============================================================================
@@ -691,31 +707,31 @@ bool CellmlTextViewParser::strictlyPositiveIntegerNumberToken(QDomNode &pDomNode
 
     static const QString ExpectedString = QObject::tr("A strictly positive integer number");
 
-    if (tokenType(pDomNode, ExpectedString,
-                  CellmlTextViewScanner::NumberToken)) {
-        // We have got a number, but now the question is whether it is a
-        // strictly positive integer one
+    if (!tokenType(pDomNode, ExpectedString, CellmlTextViewScanner::NumberToken))
+        return false;
 
-        int number = mScanner->tokenString().toInt();
+    // We have got a number, but now the question is whether it is a strictly
+    // positive integer one
 
-        if (sign == -1)
-            number = -number;
+    int number = mScanner->tokenString().toInt();
 
-        if (number <= 0) {
-            QString foundString = mScanner->tokenString();
+    if (sign == -1)
+        number = -number;
 
-            if (sign == 1)
-                foundString = "+"+foundString;
-            else if (sign == -1)
-                foundString = "-"+foundString;
+    if (number <= 0) {
+        QString foundString = mScanner->tokenString();
 
-            addUnexpectedTokenErrorMessage(ExpectedString, QString("'%1'").arg(foundString));
-        } else {
-            return true;
-        }
+        if (sign == 1)
+            foundString = "+"+foundString;
+        else if (sign == -1)
+            foundString = "-"+foundString;
+
+        addUnexpectedTokenErrorMessage(ExpectedString, QString("'%1'").arg(foundString));
+
+        return false;
+    } else {
+        return true;
     }
-
-    return false;
 }
 
 //==============================================================================
@@ -2070,17 +2086,184 @@ QDomElement CellmlTextViewParser::parseDerivativeIdentifier(QDomNode &pDomNode)
 
 //==============================================================================
 
-QDomElement CellmlTextViewParser::parseNormalMathematicalEquation(QDomNode &pDomNode)
+QDomElement CellmlTextViewParser::parseMathematicalEquationElement(QDomNode &pDomNode,
+                                                                   const CellmlTextViewScanner::TokenTypes &pTokenTypes,
+                                                                   ParseNormalMathematicalEquationFunction pFunction)
 {
-    // Expect an identifier
+//---GRY--- TO BE CHECKED...
 
-    if (identifierToken(pDomNode)) {
-        // Create and return our identifier element
+    QDomElement res = (this->*pFunction)(pDomNode);
 
-        return newIdentifierElement(mScanner->tokenString());
+    while (!res.isNull() && pTokenTypes.contains(mScanner->tokenType())) {
+        mScanner->getNextToken();
+
+        res = (this->*pFunction)(pDomNode);
     }
 
-    return QDomElement();
+    return res;
+}
+
+//==============================================================================
+
+QDomElement CellmlTextViewParser::parseNormalMathematicalEquation(QDomNode &pDomNode)
+{
+    // Look for "or"
+
+    return parseMathematicalEquationElement(pDomNode,
+                                            CellmlTextViewScanner::TokenTypes() << CellmlTextViewScanner::OrToken,
+                                            &CellmlTextViewParser::parseNormalMathematicalEquation2);
+}
+
+//==============================================================================
+
+QDomElement CellmlTextViewParser::parseNormalMathematicalEquation2(QDomNode &pDomNode)
+{
+    // Look for "and"
+
+    return parseMathematicalEquationElement(pDomNode,
+                                            CellmlTextViewScanner::TokenTypes() << CellmlTextViewScanner::AndToken,
+                                            &CellmlTextViewParser::parseNormalMathematicalEquation3);
+}
+
+//==============================================================================
+
+QDomElement CellmlTextViewParser::parseNormalMathematicalEquation3(QDomNode &pDomNode)
+{
+    // Look for "xor"
+
+    return parseMathematicalEquationElement(pDomNode,
+                                            CellmlTextViewScanner::TokenTypes() << CellmlTextViewScanner::XorToken,
+                                            &CellmlTextViewParser::parseNormalMathematicalEquation4);
+}
+
+//==============================================================================
+
+QDomElement CellmlTextViewParser::parseNormalMathematicalEquation4(QDomNode &pDomNode)
+{
+    // Look for "==" or "<>"
+
+    return parseMathematicalEquationElement(pDomNode,
+                                            CellmlTextViewScanner::TokenTypes() << CellmlTextViewScanner::EqEqToken
+                                                                                << CellmlTextViewScanner::NeqToken,
+                                            &CellmlTextViewParser::parseNormalMathematicalEquation5);
+}
+
+//==============================================================================
+
+QDomElement CellmlTextViewParser::parseNormalMathematicalEquation5(QDomNode &pDomNode)
+{
+    // Look for "<", ">", "<=" or ">="
+
+    return parseMathematicalEquationElement(pDomNode,
+                                            CellmlTextViewScanner::TokenTypes() << CellmlTextViewScanner::LtToken
+                                                                                << CellmlTextViewScanner::GtToken
+                                                                                << CellmlTextViewScanner::LeqToken
+                                                                                << CellmlTextViewScanner::GeqToken,
+                                            &CellmlTextViewParser::parseNormalMathematicalEquation6);
+}
+
+//==============================================================================
+
+QDomElement CellmlTextViewParser::parseNormalMathematicalEquation6(QDomNode &pDomNode)
+{
+    // Look for "+" or "-"
+
+    return parseMathematicalEquationElement(pDomNode,
+                                            CellmlTextViewScanner::TokenTypes() << CellmlTextViewScanner::PlusToken
+                                                                                << CellmlTextViewScanner::MinusToken,
+                                            &CellmlTextViewParser::parseNormalMathematicalEquation7);
+}
+
+//==============================================================================
+
+QDomElement CellmlTextViewParser::parseNormalMathematicalEquation7(QDomNode &pDomNode)
+{
+    // Look for "*" or "/"
+
+    return parseMathematicalEquationElement(pDomNode,
+                                            CellmlTextViewScanner::TokenTypes() << CellmlTextViewScanner::TimesToken
+                                                                                << CellmlTextViewScanner::DivideToken,
+                                            &CellmlTextViewParser::parseNormalMathematicalEquation8);
+}
+
+//==============================================================================
+
+QDomElement CellmlTextViewParser::parseNormalMathematicalEquation8(QDomNode &pDomNode)
+{
+    // Look for "not", unary "+" or unary "-"
+
+    static const CellmlTextViewScanner::TokenTypes tokenTypes = CellmlTextViewScanner::TokenTypes() << CellmlTextViewScanner::NotToken
+                                                                                                    << CellmlTextViewScanner::PlusToken
+                                                                                                    << CellmlTextViewScanner::MinusToken;
+
+    if (tokenTypes.contains(mScanner->tokenType())) {
+        if (mScanner->tokenType() == CellmlTextViewScanner::NotToken) {
+            mScanner->getNextToken();
+
+            return parseNormalMathematicalEquation(pDomNode);
+        } else {
+            mScanner->getNextToken();
+
+            return parseNormalMathematicalEquation9(pDomNode);
+        }
+    } else {
+        return parseNormalMathematicalEquation9(pDomNode);
+    }
+}
+
+//==============================================================================
+
+QDomElement CellmlTextViewParser::parseNormalMathematicalEquation9(QDomNode &pDomNode)
+{
+//---GRY--- TO BE DONE...
+    // Look for an identifier, "ode", a number, a mathematical function, an
+    // opening bracket or a mathematical constant
+
+    if (mScanner->tokenType() == CellmlTextViewScanner::IdentifierToken) {
+        return newIdentifierElement(mScanner->tokenString());
+    } else if (mScanner->tokenType() == CellmlTextViewScanner::OdeToken) {
+        return parseDerivativeIdentifier(pDomNode);
+    } else if (mScanner->tokenType() == CellmlTextViewScanner::NumberToken) {
+        // Keep track of our number
+
+        QString number = mScanner->tokenString();
+
+        // Expect "{"
+
+        mScanner->getNextToken();
+
+        if (!openingCurlyBracketToken(pDomNode))
+            return QDomElement();
+
+        // Expect an identifier or an SI unit
+
+        mScanner->getNextToken();
+
+        if (!identifierOrSiUnitToken(pDomNode))
+            return QDomElement();
+
+        // Keep track of the unit for our number
+
+        QString unit = mScanner->tokenString();
+
+        // Expect "}"
+
+        mScanner->getNextToken();
+
+        if (closingCurlyBracketToken(pDomNode))
+            return newNumberElement(number, unit);
+        else
+            return QDomElement();
+    } else {
+        QString foundString = mScanner->tokenString();
+
+        if (mScanner->tokenType() != CellmlTextViewScanner::EofToken)
+            foundString = QString("'%1'").arg(foundString);
+
+        addUnexpectedTokenErrorMessage("An identifier, 'ode' or a number", foundString);
+
+        return QDomElement();
+    }
 }
 
 //==============================================================================

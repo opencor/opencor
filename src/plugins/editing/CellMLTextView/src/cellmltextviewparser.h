@@ -80,6 +80,14 @@ typedef QList<CellmlTextViewParserMessage> CellmlTextViewParserMessages;
 
 //==============================================================================
 
+class CellmlTextViewParser;
+
+//==============================================================================
+
+typedef QDomElement (CellmlTextViewParser::*ParseNormalMathematicalEquationFunction)(QDomNode &pDomNode);
+
+//==============================================================================
+
 class CellmlTextViewParser
 {
 public:
@@ -115,6 +123,7 @@ private:
     QDomElement newDerivativeElement(const QString &pF, const QString &pX);
     QDomElement newDerivativeElement(const QString &pF, const QString &pX,
                                      const QString &pOrder);
+    QDomElement newNumberElement(const QString &pNumber, const QString &pUnit);
 
     bool tokenType(QDomNode &pDomNode, const QString &pExpectedString,
                    const CellmlTextViewScanner::TokenTypes &pTokenTypes);
@@ -165,7 +174,18 @@ private:
     bool parseMapDefinition(QDomNode &pDomNode);
 
     QDomElement parseDerivativeIdentifier(QDomNode &pDomNode);
+    QDomElement parseMathematicalEquationElement(QDomNode &pDomNode,
+                                                 const CellmlTextViewScanner::TokenTypes &pTokenTypes,
+                                                 ParseNormalMathematicalEquationFunction pFunction);
     QDomElement parseNormalMathematicalEquation(QDomNode &pDomNode);
+    QDomElement parseNormalMathematicalEquation2(QDomNode &pDomNode);
+    QDomElement parseNormalMathematicalEquation3(QDomNode &pDomNode);
+    QDomElement parseNormalMathematicalEquation4(QDomNode &pDomNode);
+    QDomElement parseNormalMathematicalEquation5(QDomNode &pDomNode);
+    QDomElement parseNormalMathematicalEquation6(QDomNode &pDomNode);
+    QDomElement parseNormalMathematicalEquation7(QDomNode &pDomNode);
+    QDomElement parseNormalMathematicalEquation8(QDomNode &pDomNode);
+    QDomElement parseNormalMathematicalEquation9(QDomNode &pDomNode);
     QDomElement parsePiecewiseMathematicalEquation(QDomNode &pDomNode);
 
     void moveTrailingComments(QDomNode &pFromDomNode, QDomNode &pToDomNode);
