@@ -167,6 +167,8 @@ private:
     QDomElement parseDerivativeIdentifier(QDomNode &pDomNode);
     QDomElement parseNormalMathematicalEquation(QDomNode &pDomNode);
     QDomElement parsePiecewiseMathematicalEquation(QDomNode &pDomNode);
+
+    void moveTrailingComments(QDomNode &pFromDomNode, QDomNode &pToDomNode);
 };
 
 //==============================================================================

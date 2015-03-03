@@ -61,6 +61,84 @@
         <!-- In between comment...-->
         <variable cmeta:id="my_variable7_cmeta_id" name="my_variable7" public_interface="none" units="some_unit"/>
         <!-- In between comment...-->
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+                <eq/>
+                <ci>a</ci>
+                <piecewise>
+                    <otherwise>
+                        <ci>otherid</ci>
+                    </otherwise>
+                    <piece>
+                        <ci>id1</ci>
+                        <ci>cond1</ci>
+                    </piece>
+                    <piece>
+                        <ci>id2</ci>
+                        <ci>cond2</ci>
+                    </piece>
+                </piecewise>
+            </apply>
+            <!-- In between comment...-->
+            <apply>
+                <eq/>
+                <ci>a</ci>
+                <piecewise>
+                    <piece>
+                        <ci>id1</ci>
+                        <ci>cond1</ci>
+                    </piece>
+                    <otherwise>
+                        <ci>otherid</ci>
+                    </otherwise>
+                    <piece>
+                        <ci>id2</ci>
+                        <ci>cond2</ci>
+                    </piece>
+                </piecewise>
+            </apply>
+            <!-- In between comment...-->
+            <apply>
+                <eq/>
+                <ci>a</ci>
+                <piecewise>
+                    <piece>
+                        <ci>id1</ci>
+                        <ci>cond1</ci>
+                    </piece>
+                    <piece>
+                        <ci>id2</ci>
+                        <ci>cond2</ci>
+                    </piece>
+                    <otherwise>
+                        <ci>otherid</ci>
+                    </otherwise>
+                </piecewise>
+            </apply>
+        </math>
+        <!-- In between comment...-->
+        <variable name="my_variable8" units="some_unit"/>
+        <!-- In between comment...-->
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
+            <apply>
+                <eq/>
+                <ci>a</ci>
+                <piecewise>
+                    <piece>
+                        <ci>id1</ci>
+                        <ci>cond1</ci>
+                    </piece>
+                    <piece>
+                        <ci>id2</ci>
+                        <ci>cond2</ci>
+                    </piece>
+                    <otherwise>
+                        <ci>otherid</ci>
+                    </otherwise>
+                </piecewise>
+            </apply>
+        </math>
+        <!-- In between comment...-->
     </component>
     <!-- In between comment...-->
     <group>

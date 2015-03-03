@@ -1360,14 +1360,27 @@ bool CellmlTextViewParser::parseComponentDefinition(QDomNode &pDomNode)
                                                                                                             << CellmlTextViewScanner::EndDefToken;
 
             QDomElement mathElement;
-            bool needMathElement = true;
+            bool hasMathElement = false;
 
             mScanner->getNextToken();
 
-            while (tokenType(componentElement, QObject::tr("'%1', '%2', an identifier, '%3' or '%4'").arg("def", "var", "ode", "enddef"),
+            while (tokenType(hasMathElement?mathElement:componentElement,
+                             QObject::tr("'%1', '%2', an identifier, '%3' or '%4'").arg("def", "var", "ode", "enddef"),
                              tokenTypes)) {
+                // Move trailing comment(s), if any, from mathElement to
+                // componentElement, if needed
+                // Note: indeed since comments we come across while looking for
+                //       anything but an identifier or "ode" will be related to
+                //       that other thing rather than to the math block...
+
+                if (   hasMathElement
+                    && (mScanner->tokenType() != CellmlTextViewScanner::IdentifierToken)
+                    && (mScanner->tokenType() != CellmlTextViewScanner::OdeToken)) {
+                    moveTrailingComments(mathElement, componentElement);
+                }
+
                 if (mScanner->tokenType() == CellmlTextViewScanner::DefToken) {
-                    // Expect "units"
+                    // Expect "unit"
 
                     mScanner->getNextToken();
 
@@ -1375,20 +1388,20 @@ bool CellmlTextViewParser::parseComponentDefinition(QDomNode &pDomNode)
                         if (!parseUnitsDefinition(componentElement))
                             return false;
 
-                    needMathElement = true;
+                    hasMathElement = false;
                 } else if (mScanner->tokenType() == CellmlTextViewScanner::VarToken) {
                     if (!parseVariableDeclaration(componentElement))
                         return false;
 
-                    needMathElement = true;
+                    hasMathElement = false;
                 } else if (   (mScanner->tokenType() == CellmlTextViewScanner::IdentifierToken)
                            || (mScanner->tokenType() == CellmlTextViewScanner::OdeToken)) {
-                    if (needMathElement) {
+                    if (!hasMathElement) {
                         mathElement = newDomElement(componentElement, "math");
 
                         mathElement.setAttribute("xmlns", CellMLSupport::MathmlNamespace);
 
-                        needMathElement = false;
+                        hasMathElement = true;
                     }
 
                     if (!parseMathematicalEquation(mathElement))
@@ -1398,7 +1411,7 @@ bool CellmlTextViewParser::parseComponentDefinition(QDomNode &pDomNode)
 
                     mScanner->getNextToken();
 
-                    return semiColonToken(componentElement);
+                    return semiColonToken(hasMathElement?mathElement:componentElement);
                 }
 
                 // Fetch the next token
@@ -2074,100 +2087,115 @@ QDomElement CellmlTextViewParser::parseNormalMathematicalEquation(QDomNode &pDom
 
 QDomElement CellmlTextViewParser::parsePiecewiseMathematicalEquation(QDomNode &pDomNode)
 {
-    // Expect "case"
+    // Create our piecewise element
+
+    QDomElement piecewiseElement = newDomElement(mDomDocument, "piecewise");
+
+    // Loop while we have "case" or "otherwise", or leave if we get "endsel"
+
+    static const CellmlTextViewScanner::TokenTypes tokenTypes = CellmlTextViewScanner::TokenTypes() << CellmlTextViewScanner::CaseToken
+                                                                                                    << CellmlTextViewScanner::OtherwiseToken
+                                                                                                    << CellmlTextViewScanner::EndSelToken;
+
+    bool hasOtherwiseClause = false;
 
     mScanner->getNextToken();
 
-    if (caseToken(pDomNode)) {
-        // Create our piecewise element
+    while (tokenType(pDomNode, QObject::tr("'%1', '%2' or '%3'").arg("case", "otherwise", "endsel"),
+                     tokenTypes)) {
+        if (mScanner->tokenType() == CellmlTextViewScanner::EndSelToken)
+            break;
 
-        QDomElement piecewiseElement = newDomElement(mDomDocument, "piecewise");
+        bool caseClause = mScanner->tokenType() == CellmlTextViewScanner::CaseToken;
+        QDomElement conditionElement = QDomElement();
 
-        // Loop while we have "case" or "otherwise", or leave if we get "endsel"
-
-        static const CellmlTextViewScanner::TokenTypes tokenTypes = CellmlTextViewScanner::TokenTypes() << CellmlTextViewScanner::CaseToken
-                                                                                                        << CellmlTextViewScanner::OtherwiseToken
-                                                                                                        << CellmlTextViewScanner::EndSelToken;
-
-        bool hasOtherwiseClause = false;
-
-        do {
-            if (mScanner->tokenType() == CellmlTextViewScanner::EndSelToken)
-                break;
-
-            bool caseClause = mScanner->tokenType() == CellmlTextViewScanner::CaseToken;
-            QDomElement conditionElement = QDomElement();
-
-            if (caseClause) {
-                // Expect a condition in the form of a normal mathematical
-                // equation
-
-                mScanner->getNextToken();
-
-                conditionElement = parseNormalMathematicalEquation(pDomNode);
-
-                if (conditionElement.isNull())
-                    return QDomElement();
-            } else if (hasOtherwiseClause) {
-                mMessages << CellmlTextViewParserMessage(CellmlTextViewParserMessage::Error,
-                                                         mScanner->tokenLine(),
-                                                         mScanner->tokenColumn(),
-                                                         QObject::tr("There can only be one 'otherwise' clause."));
-
-                return QDomElement();
-            } else {
-                hasOtherwiseClause = true;
-            }
-
-            // Expect ":"
-
-            mScanner->getNextToken();
-
-            if (!colonToken(pDomNode))
-                return QDomElement();
-
-            // Expect an expression in the form of a normal mathematical
+        if (caseClause) {
+            // Expect a condition in the form of a normal mathematical
             // equation
 
             mScanner->getNextToken();
 
-            QDomElement expressionElement = parseNormalMathematicalEquation(pDomNode);
+            conditionElement = parseNormalMathematicalEquation(pDomNode);
 
-            if (expressionElement.isNull())
+            if (conditionElement.isNull())
                 return QDomElement();
+        } else if (hasOtherwiseClause) {
+            mMessages << CellmlTextViewParserMessage(CellmlTextViewParserMessage::Error,
+                                                     mScanner->tokenLine(),
+                                                     mScanner->tokenColumn(),
+                                                     QObject::tr("There can only be one 'otherwise' clause."));
 
-            // Expect ";"
+            return QDomElement();
+        } else {
+            hasOtherwiseClause = true;
+        }
 
-            mScanner->getNextToken();
+        // Expect ":"
 
-            if (!semiColonToken(pDomNode))
-                return QDomElement();
+        mScanner->getNextToken();
 
-            // Create and populate our piece/otherwise element, and add it to
-            // our piecewise element
+        if (!colonToken(pDomNode))
+            return QDomElement();
 
-            QDomElement pieceOrOtherwiseElement = newDomElement(mDomDocument, caseClause?"piece":"otherwise");
+        // Expect an expression in the form of a normal mathematical
+        // equation
 
-            pieceOrOtherwiseElement.appendChild(expressionElement);
+        mScanner->getNextToken();
 
-            if (caseClause)
-                pieceOrOtherwiseElement.appendChild(conditionElement);
+        QDomElement expressionElement = parseNormalMathematicalEquation(pDomNode);
 
-            piecewiseElement.appendChild(pieceOrOtherwiseElement);
+        if (expressionElement.isNull())
+            return QDomElement();
 
-            // Fetch the next token
+        // Expect ";"
 
-            mScanner->getNextToken();
-        } while (tokenType(pDomNode, QObject::tr("'%1', '%2' or '%3'").arg("case", "otherwise", "endsel"),
-                           tokenTypes));
+        mScanner->getNextToken();
 
-        // Expect "endsel"
+        if (!semiColonToken(pDomNode))
+            return QDomElement();
 
-        if (endselToken(pDomNode))
-            return piecewiseElement;
+        // Create and populate our piece/otherwise element, and add it to
+        // our piecewise element
+
+        QDomElement pieceOrOtherwiseElement = newDomElement(mDomDocument, caseClause?"piece":"otherwise");
+
+        pieceOrOtherwiseElement.appendChild(expressionElement);
+
+        if (caseClause)
+            pieceOrOtherwiseElement.appendChild(conditionElement);
+
+        piecewiseElement.appendChild(pieceOrOtherwiseElement);
+
+        // Fetch the next token
+
+        mScanner->getNextToken();
     }
 
-    return QDomElement();
+    // Expect "endsel"
+
+    if (endselToken(pDomNode))
+        return piecewiseElement;
+    else
+        return QDomElement();
+}
+
+//==============================================================================
+
+void CellmlTextViewParser::moveTrailingComments(QDomNode &pFromDomNode,
+                                                QDomNode &pToDomNode)
+{
+    // Move trailing comments, in any, that are in pFromDomNode to pToDomNode
+
+    if (!pFromDomNode.hasChildNodes())
+        return;
+
+    int i = pFromDomNode.childNodes().count()-1;
+
+    while (pFromDomNode.childNodes().item(i).isComment())
+        --i;
+
+    for (++i; i != pFromDomNode.childNodes().count();)
+        pToDomNode.appendChild(pFromDomNode.childNodes().item(i));
 }
 
 //==============================================================================

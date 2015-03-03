@@ -115,6 +115,54 @@ def model{my_model_cmeta_id} my_model as
         var{my_variable7_cmeta_id} my_variable7: some_unit {pub: none};
 
         // In between comment...
+
+        a = sel
+            otherwise:
+                otherid;
+            case cond1:
+                id1;
+            case cond2:
+                id2;
+        endsel;
+
+        // In between comment...
+
+        a = sel
+            case cond1:
+                id1;
+            otherwise:
+                otherid;
+            case cond2:
+                id2;
+        endsel;
+
+        // In between comment...
+
+        a = sel
+            case cond1:
+                id1;
+            case cond2:
+                id2;
+            otherwise:
+                otherid;
+        endsel;
+
+        // In between comment...
+
+        var my_variable8: some_unit;
+
+        // In between comment...
+
+        a = sel
+            case cond1:
+                id1;
+            case cond2:
+                id2;
+            otherwise:
+                otherid;
+        endsel;
+
+        // In between comment...
     enddef;
 
     // In between comment...

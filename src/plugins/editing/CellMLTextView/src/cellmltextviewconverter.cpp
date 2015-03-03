@@ -437,8 +437,8 @@ void CellMLTextViewConverter::processCommentNode(const QDomNode &pDomNode)
         || (mLastOutputType == ImportUnit) || (mLastOutputType == ImportComp)
         || (mLastOutputType == DefBaseUnit) || (mLastOutputType == EndDef)
         || (mLastOutputType == Unit) || (mLastOutputType == Var)
-        || (mLastOutputType == Comp) || (mLastOutputType == EndComp)
-        || (mLastOutputType == Vars)) {
+        || (mLastOutputType == Comp) || (mLastOutputType == Equation)
+        || (mLastOutputType == EndComp) || (mLastOutputType == Vars)) {
         outputString();
     }
 
@@ -742,28 +742,34 @@ bool CellMLTextViewConverter::processMathNode(const QDomNode &pDomNode)
 
     for (QDomNode domNode = pDomNode.firstChild();
          !domNode.isNull(); domNode = domNode.nextSibling()) {
-        mOldPiecewiseStatementUsed = mPiecewiseStatementUsed;
-        mAssignmentDone = mPiecewiseStatementUsed = hasError = false;
-        mTopMathmlNode = domNode;
-        equation = processMathmlNode(domNode, hasError);
+        if (domNode.isComment()) {
+            processCommentNode(domNode);
+        } else if (rdfNode(domNode)) {
+            processRdfNode(domNode);
+        } else {
+            mOldPiecewiseStatementUsed = mPiecewiseStatementUsed;
+            mAssignmentDone = mPiecewiseStatementUsed = hasError = false;
+            mTopMathmlNode = domNode;
+            equation = processMathmlNode(domNode, hasError);
 
-        if (hasError) {
-            return false;
-        } else if (!equation.isEmpty()) {
-            // Note: should one or several warnings be generated, then it may be
-            //       possible that no equation has been generated, hence our
-            //       check...
+            if (hasError) {
+                return false;
+            } else if (!equation.isEmpty()) {
+                // Note: should one or several warnings be generated, then it may be
+                //       possible that no equation has been generated, hence our
+                //       check...
 
-            if (   (mLastOutputType == Comment)
-                || (mLastOutputType == DefBaseUnit)
-                || (mLastOutputType == EndDef)
-                || (mLastOutputType == Var)
-                ||  mPiecewiseStatementUsed
-                || (mPiecewiseStatementUsed != mOldPiecewiseStatementUsed)) {
-                outputString();
+                if (   (mLastOutputType == Comment)
+                    || (mLastOutputType == DefBaseUnit)
+                    || (mLastOutputType == EndDef)
+                    || (mLastOutputType == Var)
+                    ||  mPiecewiseStatementUsed
+                    || (mPiecewiseStatementUsed != mOldPiecewiseStatementUsed)) {
+                    outputString();
+                }
+
+                outputString(Equation, equation+";");
             }
-
-            outputString(Equation, equation+";");
         }
     }
 
