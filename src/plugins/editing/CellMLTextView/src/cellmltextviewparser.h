@@ -163,6 +163,8 @@ private:
     bool parseMapDefinition(QDomNode &pDomNode);
 
     QDomElement parseDerivativeIdentifier(QDomNode &pDomNode);
+    QDomElement parseNormalMathematicalEquation(QDomNode &pDomNode);
+    QDomElement parsePiecewiseMathematicalEquation(QDomNode &pDomNode);
 };
 
 //==============================================================================

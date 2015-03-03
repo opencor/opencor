@@ -1559,10 +1559,6 @@ bool CellmlTextViewParser::parseVariableDeclaration(QDomNode &pDomNode)
 
 bool CellmlTextViewParser::parseMathematicalEquation(QDomNode &pDomNode)
 {
-    // Create our apply element
-
-    QDomElement applyElement = newDomElement(pDomNode, "apply");
-
     // Remind ourselves whether we came here as a result of an identifier being
     // found or whether it was "ode"
 
@@ -1574,20 +1570,32 @@ bool CellmlTextViewParser::parseMathematicalEquation(QDomNode &pDomNode)
         lhsElement = parseDerivativeIdentifier(pDomNode);
 
     if (!lhsElement.isNull()) {
-        applyElement.appendChild(lhsElement);
-
         // Expect "="
 
         mScanner->getNextToken();
 
         if (eqToken(pDomNode)) {
-            // Finalise our DOM tree
+            // Expect either a normal or a piecewise statement
 
-            newDomElement(applyElement, "eq");
+            mScanner->getNextToken();
 
-            applyElement.appendChild(lhsElement);
+            QDomElement rhsElement = (mScanner->tokenType() == CellmlTextViewScanner::SelToken)?
+                                         parsePiecewiseMathematicalEquation(pDomNode):
+                                         parseNormalMathematicalEquation(pDomNode);
+//---GRY--- SHOULD WE DO SOMETHING IF rhsElement IS NULL?...
 
-            return true;
+            if (!rhsElement.isNull()) {
+                // Create and populate our apply element
+
+                QDomElement applyElement = newDomElement(pDomNode, "apply");
+
+                newDomElement(applyElement, "eq");
+
+                applyElement.appendChild(lhsElement);
+                applyElement.appendChild(rhsElement);
+
+                return true;
+            }
         }
     }
 
@@ -1999,6 +2007,24 @@ QDomElement CellmlTextViewParser::parseDerivativeIdentifier(QDomNode &pDomNode)
         }
     }
 
+    return QDomElement();
+}
+
+//==============================================================================
+
+QDomElement CellmlTextViewParser::parseNormalMathematicalEquation(QDomNode &pDomNode)
+{
+//---GRY--- TO BE DONE...
+Q_UNUSED(pDomNode);
+    return QDomElement();
+}
+
+//==============================================================================
+
+QDomElement CellmlTextViewParser::parsePiecewiseMathematicalEquation(QDomNode &pDomNode)
+{
+//---GRY--- TO BE DONE...
+Q_UNUSED(pDomNode);
     return QDomElement();
 }
 
