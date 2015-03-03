@@ -1358,7 +1358,7 @@ bool CellmlTextViewParser::parseComponentDefinition(QDomNode &pDomNode)
                         needMathElement = false;
                     }
 
-                    if (!parseEquation(mathElement))
+                    if (!parseMathematicalEquation(mathElement))
                         return false;
                 } else {
                     // Expect ";"
@@ -1557,7 +1557,7 @@ bool CellmlTextViewParser::parseVariableDeclaration(QDomNode &pDomNode)
 
 //==============================================================================
 
-bool CellmlTextViewParser::parseEquation(QDomNode &pDomNode)
+bool CellmlTextViewParser::parseMathematicalEquation(QDomNode &pDomNode)
 {
     // Create our apply element
 
@@ -1571,7 +1571,7 @@ bool CellmlTextViewParser::parseEquation(QDomNode &pDomNode)
     if (mScanner->tokenType() == CellmlTextViewScanner::IdentifierToken)
         lhsElement = newIdentifierElement(mScanner->tokenString());
     else
-        lhsElement = parseDerivative(pDomNode);
+        lhsElement = parseDerivativeIdentifier(pDomNode);
 
     if (!lhsElement.isNull()) {
         applyElement.appendChild(lhsElement);
@@ -1912,7 +1912,7 @@ bool CellmlTextViewParser::parseMapDefinition(QDomNode &pDomNode)
 
 //==============================================================================
 
-QDomElement CellmlTextViewParser::parseDerivative(QDomNode &pDomNode)
+QDomElement CellmlTextViewParser::parseDerivativeIdentifier(QDomNode &pDomNode)
 {
     // At this stage, we have already come across "ode", so now expect "("
 

@@ -157,12 +157,12 @@ private:
     bool parseUnitDefinition(QDomNode &pDomNode);
     bool parseComponentDefinition(QDomNode &pDomNode);
     bool parseVariableDeclaration(QDomNode &pDomNode);
-    bool parseEquation(QDomNode &pDomNode);
+    bool parseMathematicalEquation(QDomNode &pDomNode);
     bool parseGroupDefinition(QDomNode &pDomNode);
     bool parseComponentRefDefinition(QDomNode &pDomNode);
     bool parseMapDefinition(QDomNode &pDomNode);
 
-    QDomElement parseDerivative(QDomNode &pDomNode);
+    QDomElement parseDerivativeIdentifier(QDomNode &pDomNode);
 };
 
 //==============================================================================
