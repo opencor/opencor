@@ -670,9 +670,9 @@ bool CellmlTextViewParser::strictlyPositiveIntegerNumberToken(QDomNode &pDomNode
 
     // Expect a strictly positive integer number
 
-    static const QString ErrorMessage = QObject::tr("A strictly positive integer number");
+    static const QString ExpectedString = QObject::tr("A strictly positive integer number");
 
-    if (tokenType(pDomNode, ErrorMessage,
+    if (tokenType(pDomNode, ExpectedString,
                   CellmlTextViewScanner::NumberToken)) {
         // We have got a number, but now the question is whether it is a
         // strictly positive integer one
@@ -690,7 +690,7 @@ bool CellmlTextViewParser::strictlyPositiveIntegerNumberToken(QDomNode &pDomNode
             else if (sign == -1)
                 foundString = "-"+foundString;
 
-            addUnexpectedTokenErrorMessage(ErrorMessage, QString("'%1'").arg(foundString));
+            addUnexpectedTokenErrorMessage(ExpectedString, QString("'%1'").arg(foundString));
 
             return false;
         } else {
