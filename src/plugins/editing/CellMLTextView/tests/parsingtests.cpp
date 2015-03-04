@@ -1329,6 +1329,121 @@ void ParsingTests::componentTests()
                                    "    enddef;\n"
                                    "enddef;")));
     QVERIFY(!parser.domDocument().isNull());
+
+    // Various tests on a component definition to check that we can have
+    // equations with various operators and precedences
+
+    QVERIFY(parser.execute(QString("def model my_model as\n"
+                                   "    def comp my_component as\n"
+                                   "        a = b or c;\n"
+                                   "    enddef;\n"
+                                   "enddef;")));
+    QVERIFY(!parser.domDocument().isNull());
+
+    QVERIFY(parser.execute(QString("def model my_model as\n"
+                                   "    def comp my_component as\n"
+                                   "        a = b and c;\n"
+                                   "    enddef;\n"
+                                   "enddef;")));
+    QVERIFY(!parser.domDocument().isNull());
+
+    QVERIFY(parser.execute(QString("def model my_model as\n"
+                                   "    def comp my_component as\n"
+                                   "        a = b xor c;\n"
+                                   "    enddef;\n"
+                                   "enddef;")));
+    QVERIFY(!parser.domDocument().isNull());
+
+    QVERIFY(parser.execute(QString("def model my_model as\n"
+                                   "    def comp my_component as\n"
+                                   "        a = b == c;\n"
+                                   "    enddef;\n"
+                                   "enddef;")));
+    QVERIFY(!parser.domDocument().isNull());
+
+    QVERIFY(parser.execute(QString("def model my_model as\n"
+                                   "    def comp my_component as\n"
+                                   "        a = b <> c;\n"
+                                   "    enddef;\n"
+                                   "enddef;")));
+    QVERIFY(!parser.domDocument().isNull());
+
+    QVERIFY(parser.execute(QString("def model my_model as\n"
+                                   "    def comp my_component as\n"
+                                   "        a = b < c;\n"
+                                   "    enddef;\n"
+                                   "enddef;")));
+    QVERIFY(!parser.domDocument().isNull());
+
+    QVERIFY(parser.execute(QString("def model my_model as\n"
+                                   "    def comp my_component as\n"
+                                   "        a = b > c;\n"
+                                   "    enddef;\n"
+                                   "enddef;")));
+    QVERIFY(!parser.domDocument().isNull());
+
+    QVERIFY(parser.execute(QString("def model my_model as\n"
+                                   "    def comp my_component as\n"
+                                   "        a = b <= c;\n"
+                                   "    enddef;\n"
+                                   "enddef;")));
+    QVERIFY(!parser.domDocument().isNull());
+
+    QVERIFY(parser.execute(QString("def model my_model as\n"
+                                   "    def comp my_component as\n"
+                                   "        a = b >= c;\n"
+                                   "    enddef;\n"
+                                   "enddef;")));
+    QVERIFY(!parser.domDocument().isNull());
+
+    QVERIFY(parser.execute(QString("def model my_model as\n"
+                                   "    def comp my_component as\n"
+                                   "        a = b+c;\n"
+                                   "    enddef;\n"
+                                   "enddef;")));
+    QVERIFY(!parser.domDocument().isNull());
+
+    QVERIFY(parser.execute(QString("def model my_model as\n"
+                                   "    def comp my_component as\n"
+                                   "        a = b-c;\n"
+                                   "    enddef;\n"
+                                   "enddef;")));
+    QVERIFY(!parser.domDocument().isNull());
+
+    QVERIFY(parser.execute(QString("def model my_model as\n"
+                                   "    def comp my_component as\n"
+                                   "        a = b*c;\n"
+                                   "    enddef;\n"
+                                   "enddef;")));
+    QVERIFY(!parser.domDocument().isNull());
+
+    QVERIFY(parser.execute(QString("def model my_model as\n"
+                                   "    def comp my_component as\n"
+                                   "        a = b/c;\n"
+                                   "    enddef;\n"
+                                   "enddef;")));
+    QVERIFY(!parser.domDocument().isNull());
+
+    QVERIFY(parser.execute(QString("def model my_model as\n"
+                                   "    def comp my_component as\n"
+                                   "        a = not b;\n"
+                                   "    enddef;\n"
+                                   "enddef;")));
+    QVERIFY(!parser.domDocument().isNull());
+
+    QVERIFY(parser.execute(QString("def model my_model as\n"
+                                   "    def comp my_component as\n"
+                                   "        a = +b;\n"
+                                   "    enddef;\n"
+                                   "enddef;")));
+    QVERIFY(!parser.domDocument().isNull());
+
+    QVERIFY(parser.execute(QString("def model my_model as\n"
+                                   "    def comp my_component as\n"
+                                   "        a = -b;\n"
+                                   "    enddef;\n"
+                                   "enddef;")));
+    QVERIFY(!parser.domDocument().isNull());
 }
 
 //==============================================================================
