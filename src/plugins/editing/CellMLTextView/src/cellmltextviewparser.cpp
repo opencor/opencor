@@ -2233,8 +2233,19 @@ QDomElement CellmlTextViewParser::parseMathematicalExpressionElement(QDomNode &p
             return QDomElement();
 
         // Update our DOM tree with our operator and operand
+        // Note #1: the check against the previous operator only makes sense for
+        //          n-ary operators, i.e. "plus", "times", "and", "or" and
+        //          "xor"...
+        // Note #2: see http://www.w3.org/TR/MathML2/chapter4.html#contm.funopqual
+        //          for more information...
 
-        if (crtOperator == prevOperator) {
+        static const CellmlTextViewScanner::TokenTypes nAryOperators = CellmlTextViewScanner::TokenTypes() << CellmlTextViewScanner::PlusToken
+                                                                                                           << CellmlTextViewScanner::TimesToken
+                                                                                                           << CellmlTextViewScanner::AndToken
+                                                                                                           << CellmlTextViewScanner::OrToken
+                                                                                                           << CellmlTextViewScanner::XorToken;
+
+        if ((crtOperator == prevOperator) && nAryOperators.contains(crtOperator)) {
             res.appendChild(otherOperand);
         } else {
             // Create an apply element and populate it with our operator and two

@@ -176,6 +176,26 @@ def model{my_model_cmeta_id} my_model as
         a = 3.5{second};
 
         // In between comment...
+
+        a = b or c;
+        a = b and c;
+        a = b xor c;
+        a = b == c;
+        a = b <> c;
+        a = b < c;
+        a = b > c;
+        a = b <= c;
+        a = b >= c;
+        a = b+c;
+        a = b+c+d;
+        a = b-c;
+        a = b-c-d;
+        a = b*c;
+        a = b*c*d;
+        a = b/c;
+        a = b/c/d;
+
+        // In between comment...
     enddef;
 
     // In between comment...
