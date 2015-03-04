@@ -2413,7 +2413,11 @@ QDomElement CellmlTextViewParser::parseNormalMathematicalExpression9(QDomNode &p
 
         res = parseDerivativeIdentifier(pDomNode);
     } else if (mScanner->tokenType() == CellmlTextViewScanner::NumberToken) {
-        // Keep track of our number
+        // 'Properly' parse the number and keep track of it
+        // Note: this is useful to do in case the number is not valid (e.g. too
+        //       big, too small)...
+
+        numberToken(pDomNode);
 
         QString number = mScanner->tokenString();
 
