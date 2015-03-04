@@ -378,6 +378,8 @@ bool CellmlTextViewParser::tokenType(QDomNode &pDomNode,
                                                  mScanner->tokenLine(),
                                                  mScanner->tokenColumn(),
                                                  mScanner->tokenComment());
+
+        return false;
     } else {
         // This is not the token we were expecting, so let the user know about
         // it
@@ -388,9 +390,9 @@ bool CellmlTextViewParser::tokenType(QDomNode &pDomNode,
             foundString = QString("'%1'").arg(foundString);
 
         addUnexpectedTokenErrorMessage(pExpectedString, foundString);
-    }
 
-    return false;
+        return false;
+    }
 }
 
 //==============================================================================
@@ -927,146 +929,164 @@ bool CellmlTextViewParser::parseImportDefinition(QDomNode &pDomNode)
 
     // Expect "using"
 
-    if (usingToken(importElement)) {
-        // Expect a string representing a URL
+    if (!usingToken(importElement))
+        return false;
 
-        mScanner->getNextToken();
+    // Expect a string representing a URL
 
-        if (tokenType(importElement, QObject::tr("A string representing a URL"),
-                      CellmlTextViewScanner::StringToken)) {
-            // Set the URL, after having kept track of the fact that we need
-            // CellML 1.1 and the XLink namespace
+    mScanner->getNextToken();
 
-            mCellmlVersion = CellMLSupport::CellmlFile::Cellml_1_1;
+    if (!tokenType(importElement, QObject::tr("A string representing a URL"),
+                   CellmlTextViewScanner::StringToken))
+        return false;
 
-            mNamespaces.insert("xlink", CellMLSupport::XlinkNamespace);
+    // Set the URL, after having kept track of the fact that we need CellML 1.1
+    // and the XLink namespace
 
-            importElement.setAttribute("xlink:href", mScanner->tokenString());
+    mCellmlVersion = CellMLSupport::CellmlFile::Cellml_1_1;
 
-            // Expect "for"
+    mNamespaces.insert("xlink", CellMLSupport::XlinkNamespace);
+
+    importElement.setAttribute("xlink:href", mScanner->tokenString());
+
+    // Expect "for"
+
+    mScanner->getNextToken();
+
+    if (!forToken(importElement))
+        return false;
+
+    // Expect an import definition, so loop while we have "unit" or "comp", or
+    // leave if we get "enddef"
+
+    static const CellmlTextViewScanner::TokenTypes tokenTypes = CellmlTextViewScanner::TokenTypes() << CellmlTextViewScanner::UnitToken
+                                                                                                    << CellmlTextViewScanner::CompToken
+                                                                                                    << CellmlTextViewScanner::EndDefToken;
+
+    mScanner->getNextToken();
+
+    while (tokenType(importElement, QObject::tr("'%1', '%2' or '%3'").arg("unit", "comp", "enddef"),
+                     tokenTypes)) {
+        if (mScanner->tokenType() == CellmlTextViewScanner::UnitToken) {
+            // We are dealing with a unit import, so create our unit import
+            // element
+
+            QDomElement unitsImportElement = newDomElement(importElement, "units");
+
+            // Try to parse for a cmeta:id
 
             mScanner->getNextToken();
 
-            if (forToken(importElement)) {
-                // Expect an import definition, so loop while we have "unit" or
-                // "comp", or leave if we get "enddef"
+            if (!parseCmetaId(unitsImportElement))
+                return false;
 
-                static const CellmlTextViewScanner::TokenTypes tokenTypes = CellmlTextViewScanner::TokenTypes() << CellmlTextViewScanner::UnitToken
-                                                                                                                << CellmlTextViewScanner::CompToken
-                                                                                                                << CellmlTextViewScanner::EndDefToken;
+            // Expect an identifier
 
-                mScanner->getNextToken();
+            if (!identifierToken(importElement))
+                return false;
 
-                while (tokenType(importElement, QObject::tr("'%1', '%2' or '%3'").arg("unit", "comp", "enddef"),
-                                 tokenTypes)) {
-                    if (mScanner->tokenType() == CellmlTextViewScanner::UnitToken) {
-                        // We are dealing with a unit import, so create our unit
-                        // import element
+            // Set the name of the unit
 
-                        QDomElement unitsImportElement = newDomElement(importElement, "units");
+            unitsImportElement.setAttribute("name", mScanner->tokenString());
 
-                        // Try to parse for a cmeta:id
+            // Expect "using"
 
-                        mScanner->getNextToken();
+            mScanner->getNextToken();
 
-                        if (!parseCmetaId(unitsImportElement))
-                            return false;
+            if (!usingToken(importElement))
+                return false;
 
-                        // Expect an identifier
+            // Expect "unit"
 
-                        if (identifierToken(importElement)) {
-                            // Set the name of the unit
+            mScanner->getNextToken();
 
-                            unitsImportElement.setAttribute("name", mScanner->tokenString());
+            if (!unitToken(importElement))
+                return false;
 
-                            // Expect "using"
+            // Expect an identifier
 
-                            mScanner->getNextToken();
+            mScanner->getNextToken();
 
-                            if (usingToken(importElement)) {
-                                // Expect "unit"
+            if (!identifierToken(importElement))
+                return false;
 
-                                mScanner->getNextToken();
+            // Set the name of the imported unit
 
-                                if (unitToken(importElement)) {
-                                    // Expect an identifier
+            unitsImportElement.setAttribute("units_ref", mScanner->tokenString());
 
-                                    mScanner->getNextToken();
+            // Expect ";"
 
-                                    if (identifierToken(importElement)) {
-                                        // Set the name of the imported unit
+            mScanner->getNextToken();
 
-                                        unitsImportElement.setAttribute("units_ref", mScanner->tokenString());
+            if (!semiColonToken(importElement))
+                return false;
 
-                                        // Expect ";"
+            // Fetch the next token
 
-                                        mScanner->getNextToken();
+            mScanner->getNextToken();
+        } else if (mScanner->tokenType() == CellmlTextViewScanner::CompToken) {
+            // We are dealing with a component import, so create our component
+            // import element
 
-                                        if (semiColonToken(importElement))
-                                            mScanner->getNextToken();
-                                    }
-                                }
-                            }
-                        }
-                    } else if (mScanner->tokenType() == CellmlTextViewScanner::CompToken) {
-                        // We are dealing with a component import, so create our
-                        // component import element
+            QDomElement componentImportElement = newDomElement(importElement, "component");
 
-                        QDomElement componentImportElement = newDomElement(importElement, "component");
+            // Try to parse for a cmeta:id
 
-                        // Try to parse for a cmeta:id
+            mScanner->getNextToken();
 
-                        mScanner->getNextToken();
+            if (!parseCmetaId(componentImportElement))
+                return false;
 
-                        if (!parseCmetaId(componentImportElement))
-                            return false;
+            // Expect an identifier
 
-                        // Expect an identifier
+            if (!identifierToken(importElement))
+                return false;
 
-                        if (identifierToken(importElement)) {
-                            // Set the name of the component
+            // Set the name of the component
 
-                            componentImportElement.setAttribute("name", mScanner->tokenString());
+            componentImportElement.setAttribute("name", mScanner->tokenString());
 
-                            // Expect "using"
+            // Expect "using"
 
-                            mScanner->getNextToken();
+            mScanner->getNextToken();
 
-                            if (usingToken(importElement)) {
-                                // Expect "comp"
+            if (!usingToken(importElement))
+                return false;
 
-                                mScanner->getNextToken();
+            // Expect "comp"
 
-                                if (compToken(importElement)) {
-                                    // Expect an identifier
+            mScanner->getNextToken();
 
-                                    mScanner->getNextToken();
+            if (!compToken(importElement))
+                return false;
 
-                                    if (identifierToken(importElement)) {
-                                        // Set the name of the imported
-                                        // component
+            // Expect an identifier
 
-                                        componentImportElement.setAttribute("component_ref", mScanner->tokenString());
+            mScanner->getNextToken();
 
-                                        // Expect ";"
+            if (!identifierToken(importElement))
+                return false;
 
-                                        mScanner->getNextToken();
+            // Set the name of the imported component
 
-                                        if (semiColonToken(importElement))
-                                            mScanner->getNextToken();
-                                    }
-                                }
-                            }
-                        }
-                    } else {
-                        // Expect ";"
+            componentImportElement.setAttribute("component_ref", mScanner->tokenString());
 
-                        mScanner->getNextToken();
+            // Expect ";"
 
-                        return semiColonToken(importElement);
-                    }
-                }
-            }
+            mScanner->getNextToken();
+
+            if (!semiColonToken(importElement))
+                return false;
+
+            // Fetch the next token
+
+            mScanner->getNextToken();
+        } else {
+            // Expect ";"
+
+            mScanner->getNextToken();
+
+            return semiColonToken(importElement);
         }
     }
 
@@ -1090,77 +1110,81 @@ bool CellmlTextViewParser::parseUnitsDefinition(QDomNode &pDomNode)
 
     // Expect an identifier
 
-    if (identifierToken(unitsElement)) {
-        // Set our unit's name
+    if (!identifierToken(unitsElement))
+        return false;
 
-        unitsElement.setAttribute("name", mScanner->tokenString());
+    // Set our unit's name
 
-        // Expect "as"
+    unitsElement.setAttribute("name", mScanner->tokenString());
+
+    // Expect "as"
+
+    mScanner->getNextToken();
+
+    if (!asToken(unitsElement))
+        return false;
+
+    // Expect a unit definition
+
+    static const CellmlTextViewScanner::TokenTypes tokenTypes = CellmlTextViewScanner::TokenTypes() << CellmlTextViewScanner::BaseToken
+                                                                                                    << CellmlTextViewScanner::UnitToken
+                                                                                                    << CellmlTextViewScanner::EndDefToken;
+
+    mScanner->getNextToken();
+
+    if (!tokenType(unitsElement, QObject::tr("'%1', '%2' or '%3'").arg("base", "unit", "enddef"),
+                   tokenTypes))
+        return false;
+
+    // Check the type of unit definition we are dealing with
+
+    if (mScanner->tokenType() == CellmlTextViewScanner::BaseToken) {
+        // We are dealing with the definition of a base unit, so now expect
+        // "unit"
 
         mScanner->getNextToken();
 
-        if (asToken(unitsElement)) {
-            // Expect a unit definition
+        if (!unitToken(unitsElement))
+            return false;
 
-            static const CellmlTextViewScanner::TokenTypes tokenTypes = CellmlTextViewScanner::TokenTypes() << CellmlTextViewScanner::BaseToken
-                                                                                                            << CellmlTextViewScanner::UnitToken
-                                                                                                            << CellmlTextViewScanner::EndDefToken;
+        // Make our unit a base unit
 
-            mScanner->getNextToken();
+        unitsElement.setAttribute("base_units", "yes");
 
-            if (tokenType(unitsElement, QObject::tr("'%1', '%2' or '%3'").arg("base", "unit", "enddef"),
-                          tokenTypes)) {
-                if (mScanner->tokenType() == CellmlTextViewScanner::BaseToken) {
-                    // We are dealing with the definition of a base unit, so now
-                    // expect "unit"
+        // Expect ";"
 
-                    mScanner->getNextToken();
+        mScanner->getNextToken();
 
-                    if (unitToken(unitsElement)) {
-                        // Make our unit a base unit
+        return semiColonToken(unitsElement);
+    } else if (mScanner->tokenType() == CellmlTextViewScanner::UnitToken) {
+        // We are dealing with a 'normal' unit definition, so loop while we have
+        // "unit" or leave if we get "enddef"
 
-                        unitsElement.setAttribute("base_units", "yes");
+        static const CellmlTextViewScanner::TokenTypes tokenTypes = CellmlTextViewScanner::TokenTypes() << CellmlTextViewScanner::UnitToken
+                                                                                                        << CellmlTextViewScanner::EndDefToken;
 
-                        // Expect ";"
-
-                        mScanner->getNextToken();
-
-                        return semiColonToken(unitsElement);
-                    }
-                } else if (mScanner->tokenType() == CellmlTextViewScanner::UnitToken) {
-                    // We are dealing with a 'normal' unit definition, so loop
-                    // while we have "unit" or leave if we get "enddef"
-
-                    static const CellmlTextViewScanner::TokenTypes tokenTypes = CellmlTextViewScanner::TokenTypes() << CellmlTextViewScanner::UnitToken
-                                                                                                                    << CellmlTextViewScanner::EndDefToken;
-
-                    while (tokenType(unitsElement, QObject::tr("'%1' or '%2'").arg("unit", "enddef"),
-                                     tokenTypes)) {
-                        if (mScanner->tokenType() == CellmlTextViewScanner::UnitToken) {
-                            if (!parseUnitDefinition(unitsElement))
-                                return false;
-                        } else {
-                            // Expect ";"
-
-                            mScanner->getNextToken();
-
-                            return semiColonToken(unitsElement);
-                        }
-                    }
-
+        while (tokenType(unitsElement, QObject::tr("'%1' or '%2'").arg("unit", "enddef"),
+                         tokenTypes)) {
+            if (mScanner->tokenType() == CellmlTextViewScanner::UnitToken) {
+                if (!parseUnitDefinition(unitsElement))
                     return false;
-                } else {
-                    // Expect ";"
+            } else {
+                // Expect ";"
 
-                    mScanner->getNextToken();
+                mScanner->getNextToken();
 
-                    return semiColonToken(unitsElement);
-                }
+                return semiColonToken(unitsElement);
             }
         }
-    }
 
-    return false;
+        return false;
+    } else {
+        // Expect ";"
+
+        mScanner->getNextToken();
+
+        return semiColonToken(unitsElement);
+    }
 }
 
 //==============================================================================
