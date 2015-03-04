@@ -1390,85 +1390,87 @@ bool CellmlTextViewParser::parseComponentDefinition(QDomNode &pDomNode)
 
     // Expect an identifier
 
-    if (identifierToken(componentElement)) {
-        // Set the component's name
+    if (!identifierToken(componentElement))
+        return false;
 
-        componentElement.setAttribute("name", mScanner->tokenString());
+    // Set the component's name
 
-        // Expect "as"
+    componentElement.setAttribute("name", mScanner->tokenString());
 
-        mScanner->getNextToken();
+    // Expect "as"
 
-        if (asToken(componentElement)) {
-            // Loop while we have "def", "var", an identifier or "ode", or leave
-            // if we get "enddef"
+    mScanner->getNextToken();
 
-            static const CellmlTextViewScanner::TokenTypes tokenTypes = CellmlTextViewScanner::TokenTypes() << CellmlTextViewScanner::DefToken
-                                                                                                            << CellmlTextViewScanner::VarToken
-                                                                                                            << CellmlTextViewScanner::IdentifierToken
-                                                                                                            << CellmlTextViewScanner::OdeToken
-                                                                                                            << CellmlTextViewScanner::EndDefToken;
+    if (!asToken(componentElement))
+        return false;
 
-            QDomElement mathElement;
-            bool hasMathElement = false;
+    // Loop while we have "def", "var", an identifier or "ode", or leave if we
+    // get "enddef"
+
+    static const CellmlTextViewScanner::TokenTypes tokenTypes = CellmlTextViewScanner::TokenTypes() << CellmlTextViewScanner::DefToken
+                                                                                                    << CellmlTextViewScanner::VarToken
+                                                                                                    << CellmlTextViewScanner::IdentifierToken
+                                                                                                    << CellmlTextViewScanner::OdeToken
+                                                                                                    << CellmlTextViewScanner::EndDefToken;
+
+    QDomElement mathElement;
+    bool hasMathElement = false;
+
+    mScanner->getNextToken();
+
+    while (tokenType(hasMathElement?mathElement:componentElement,
+                     QObject::tr("'%1', '%2', an identifier, '%3' or '%4'").arg("def", "var", "ode", "enddef"),
+                     tokenTypes)) {
+        // Move trailing comment(s), if any, from mathElement to
+        // componentElement, if needed
+        // Note: indeed since comments we come across while looking for anything
+        //       but an identifier or "ode" will be related to that other thing
+        //       rather than to the math block...
+
+        if (   hasMathElement
+            && (mScanner->tokenType() != CellmlTextViewScanner::IdentifierToken)
+            && (mScanner->tokenType() != CellmlTextViewScanner::OdeToken)) {
+            moveTrailingComments(mathElement, componentElement);
+        }
+
+        if (mScanner->tokenType() == CellmlTextViewScanner::DefToken) {
+            // Expect "unit"
 
             mScanner->getNextToken();
 
-            while (tokenType(hasMathElement?mathElement:componentElement,
-                             QObject::tr("'%1', '%2', an identifier, '%3' or '%4'").arg("def", "var", "ode", "enddef"),
-                             tokenTypes)) {
-                // Move trailing comment(s), if any, from mathElement to
-                // componentElement, if needed
-                // Note: indeed since comments we come across while looking for
-                //       anything but an identifier or "ode" will be related to
-                //       that other thing rather than to the math block...
+            if (unitToken(componentElement))
+                if (!parseUnitsDefinition(componentElement))
+                    return false;
 
-                if (   hasMathElement
-                    && (mScanner->tokenType() != CellmlTextViewScanner::IdentifierToken)
-                    && (mScanner->tokenType() != CellmlTextViewScanner::OdeToken)) {
-                    moveTrailingComments(mathElement, componentElement);
-                }
+            hasMathElement = false;
+        } else if (mScanner->tokenType() == CellmlTextViewScanner::VarToken) {
+            if (!parseVariableDeclaration(componentElement))
+                return false;
 
-                if (mScanner->tokenType() == CellmlTextViewScanner::DefToken) {
-                    // Expect "unit"
+            hasMathElement = false;
+        } else if (   (mScanner->tokenType() == CellmlTextViewScanner::IdentifierToken)
+                   || (mScanner->tokenType() == CellmlTextViewScanner::OdeToken)) {
+            if (!hasMathElement) {
+                mathElement = newDomElement(componentElement, "math");
 
-                    mScanner->getNextToken();
+                mathElement.setAttribute("xmlns", CellMLSupport::MathmlNamespace);
 
-                    if (unitToken(componentElement))
-                        if (!parseUnitsDefinition(componentElement))
-                            return false;
-
-                    hasMathElement = false;
-                } else if (mScanner->tokenType() == CellmlTextViewScanner::VarToken) {
-                    if (!parseVariableDeclaration(componentElement))
-                        return false;
-
-                    hasMathElement = false;
-                } else if (   (mScanner->tokenType() == CellmlTextViewScanner::IdentifierToken)
-                           || (mScanner->tokenType() == CellmlTextViewScanner::OdeToken)) {
-                    if (!hasMathElement) {
-                        mathElement = newDomElement(componentElement, "math");
-
-                        mathElement.setAttribute("xmlns", CellMLSupport::MathmlNamespace);
-
-                        hasMathElement = true;
-                    }
-
-                    if (!parseMathematicalEquation(mathElement))
-                        return false;
-                } else {
-                    // Expect ";"
-
-                    mScanner->getNextToken();
-
-                    return semiColonToken(hasMathElement?mathElement:componentElement);
-                }
-
-                // Fetch the next token
-
-                mScanner->getNextToken();
+                hasMathElement = true;
             }
+
+            if (!parseMathematicalEquation(mathElement))
+                return false;
+        } else {
+            // Expect ";"
+
+            mScanner->getNextToken();
+
+            return semiColonToken(hasMathElement?mathElement:componentElement);
         }
+
+        // Fetch the next token
+
+        mScanner->getNextToken();
     }
 
     return false;
@@ -1491,165 +1493,167 @@ bool CellmlTextViewParser::parseVariableDeclaration(QDomNode &pDomNode)
 
     // Expect an identifier
 
-    if (identifierToken(variableElement)) {
-        // Set our variable's name
+    if (!identifierToken(variableElement))
+        return false;
 
-        variableElement.setAttribute("name", mScanner->tokenString());
+    // Set our variable's name
 
-        // Expect ":"
+    variableElement.setAttribute("name", mScanner->tokenString());
 
-        mScanner->getNextToken();
+    // Expect ":"
 
-        if (colonToken(variableElement)) {
-            // Expect an identifier or an SI unit
+    mScanner->getNextToken();
+
+    if (!colonToken(variableElement))
+        return false;
+
+    // Expect an identifier or an SI unit
+
+    mScanner->getNextToken();
+
+    if (!identifierOrSiUnitToken(variableElement))
+        return false;
+
+    // Set our variable's unit
+
+    variableElement.setAttribute("units", mScanner->tokenString());
+
+    // Expect "{" or ";"
+
+    static const CellmlTextViewScanner::TokenTypes tokenTypes = CellmlTextViewScanner::TokenTypes() << CellmlTextViewScanner::OpeningCurlyBracketToken
+                                                                                                    << CellmlTextViewScanner::SemiColonToken;
+
+    mScanner->getNextToken();
+
+    if (!tokenType(variableElement, QObject::tr("'%1' or '%2'").arg("{", ";"),
+                   tokenTypes)) {
+        return false;
+    }
+
+    // Check what we got exactly
+
+    if (mScanner->tokenType() == CellmlTextViewScanner::OpeningCurlyBracketToken) {
+        QList<CellmlTextViewScanner::TokenType> variableAttributesDefined = QList<CellmlTextViewScanner::TokenType>();
+
+        forever {
+            // Expect "init", "pub" or "priv"
+
+            static const CellmlTextViewScanner::TokenTypes tokenTypes = CellmlTextViewScanner::TokenTypes() << CellmlTextViewScanner::InitToken
+                                                                                                            << CellmlTextViewScanner::PubToken
+                                                                                                            << CellmlTextViewScanner::PrivToken;
 
             mScanner->getNextToken();
 
-            if (identifierOrSiUnitToken(variableElement)) {
-                // Set our variable's unit
+            if (!tokenType(variableElement, QObject::tr("'%1', '%2' or '%3'").arg("init", "pub", "priv"),
+                           tokenTypes)) {
+                return false;
+            }
 
-                variableElement.setAttribute("units", mScanner->tokenString());
+            // Make sure that we don't already have come across the variable
+            // attribute
 
-                // Expect "{" or ";"
+            if (variableAttributesDefined.contains(mScanner->tokenType())) {
+                mMessages << CellmlTextViewParserMessage(CellmlTextViewParserMessage::Error,
+                                                         mScanner->tokenLine(),
+                                                         mScanner->tokenColumn(),
+                                                         QObject::tr("The '%1' attribute has already been specified.").arg(mScanner->tokenString()));
 
-                static const CellmlTextViewScanner::TokenTypes tokenTypes = CellmlTextViewScanner::TokenTypes() << CellmlTextViewScanner::OpeningCurlyBracketToken
-                                                                                                                << CellmlTextViewScanner::SemiColonToken;
+                return false;
+            } else {
+                // Keep track of the fact that we have come across the variable
+                // attribute
+
+                variableAttributesDefined << mScanner->tokenType();
+
+                CellmlTextViewScanner::TokenType unitAttributeTokenType = mScanner->tokenType();
+
+                // Expect ":"
 
                 mScanner->getNextToken();
 
-                if (tokenType(variableElement, QObject::tr("'%1' or '%2'").arg("{", ";"),
-                              tokenTypes)) {
-                    if (mScanner->tokenType() == CellmlTextViewScanner::OpeningCurlyBracketToken) {
-                        QList<CellmlTextViewScanner::TokenType> variableAttributesDefined = QList<CellmlTextViewScanner::TokenType>();
+                if (!colonToken(variableElement))
+                    return false;
 
-                        forever {
-                            // Expect "init", "pub" or "priv"
+                // Check which variable attribute we are dealing with to
+                // determine what to expect next
 
-                            static const CellmlTextViewScanner::TokenTypes tokenTypes = CellmlTextViewScanner::TokenTypes() << CellmlTextViewScanner::InitToken
-                                                                                                                            << CellmlTextViewScanner::PubToken
-                                                                                                                            << CellmlTextViewScanner::PrivToken;
+                mScanner->getNextToken();
 
-                            mScanner->getNextToken();
+                int sign = 0;
 
-                            if (tokenType(variableElement, QObject::tr("'%1', '%2' or '%3'").arg("init", "pub", "priv"),
-                                          tokenTypes)) {
-                                // Make sure that we don't already have come
-                                // across the variable attribute
+                if (unitAttributeTokenType == CellmlTextViewScanner::InitToken) {
+                    // Check whether we have "+" or "-"
 
-                                if (variableAttributesDefined.contains(mScanner->tokenType())) {
-                                    mMessages << CellmlTextViewParserMessage(CellmlTextViewParserMessage::Error,
-                                                                             mScanner->tokenLine(),
-                                                                             mScanner->tokenColumn(),
-                                                                             QObject::tr("The '%1' attribute has already been specified.").arg(mScanner->tokenString()));
+                    if (   isTokenType(variableElement, CellmlTextViewScanner::PlusToken)
+                        || isTokenType(variableElement, CellmlTextViewScanner::MinusToken)) {
+                        // We are dealing with a number value
 
-                                    return false;
-                                } else {
-                                    // Keep track of the fact that we have come
-                                    // across the variable attribute
-
-                                    variableAttributesDefined << mScanner->tokenType();
-
-                                    CellmlTextViewScanner::TokenType unitAttributeTokenType = mScanner->tokenType();
-
-                                    // Expect ":"
-
-                                    mScanner->getNextToken();
-
-                                    if (!colonToken(variableElement))
-                                        return false;
-
-                                    // Check which variable attribute we are
-                                    // dealing with to determine what to expect
-                                    // next
-
-                                    mScanner->getNextToken();
-
-                                    int sign = 0;
-
-                                    if (unitAttributeTokenType == CellmlTextViewScanner::InitToken) {
-                                        // Check whether we have "+" or "-"
-
-                                        if (   isTokenType(variableElement, CellmlTextViewScanner::PlusToken)
-                                            || isTokenType(variableElement, CellmlTextViewScanner::MinusToken)) {
-                                            // We are dealing with a number
-                                            // value
-
-                                            if (!numberValueToken(variableElement, sign))
-                                                return false;
-                                        } else {
-                                            // We are not dealing with a
-                                            // 'proper' number value, but a
-                                            // number
-
-                                            // Expect a number
-
-                                            if (!numberToken(variableElement))
-                                                return false;
-                                        }
-                                    } else {
-                                        // Expect "in", "out" or "none"
-
-                                        static const CellmlTextViewScanner::TokenTypes tokenTypes = CellmlTextViewScanner::TokenTypes() << CellmlTextViewScanner::InToken
-                                                                                                                                        << CellmlTextViewScanner::OutToken
-                                                                                                                                        << CellmlTextViewScanner::NoneToken;
-
-                                        if (!tokenType(variableElement, QObject::tr("'%1', '%2' or '%3'").arg("in", "out", "none"),
-                                                       tokenTypes)) {
-                                            return false;
-                                        }
-                                    }
-
-                                    // Set the attribute value
-
-                                    QString variableAttributeValue = mScanner->tokenString();
-
-                                    if (sign == 1)
-                                        variableAttributeValue = "+"+variableAttributeValue;
-                                    else if (sign == -1)
-                                        variableAttributeValue = "-"+variableAttributeValue;
-
-                                    if (unitAttributeTokenType == CellmlTextViewScanner::InitToken)
-                                        variableElement.setAttribute("initial_value", variableAttributeValue);
-                                    else if (unitAttributeTokenType == CellmlTextViewScanner::PubToken)
-                                        variableElement.setAttribute("public_interface", variableAttributeValue);
-                                    else
-                                        variableElement.setAttribute("private_interface", variableAttributeValue);
-                                }
-                            } else {
-                                return false;
-                            }
-
-
-                            // Expect "," or "}"
-
-                            static const CellmlTextViewScanner::TokenTypes nextTokenTypes = CellmlTextViewScanner::TokenTypes() << CellmlTextViewScanner::CommaToken
-                                                                                                                                << CellmlTextViewScanner::ClosingCurlyBracketToken;
-
-                            mScanner->getNextToken();
-
-                            if (tokenType(variableElement, QObject::tr("'%1' or '%2'").arg(",", "}"),
-                                          nextTokenTypes)) {
-                                if (mScanner->tokenType() == CellmlTextViewScanner::ClosingCurlyBracketToken)
-                                    break;
-                            } else {
-                                return false;
-                            }
-                        }
-
-                        // Expect ";"
-
-                        mScanner->getNextToken();
-
-                        return semiColonToken(variableElement);
+                        if (!numberValueToken(variableElement, sign))
+                            return false;
                     } else {
-                        return true;
+                        // We are not dealing with a 'proper' number value, but
+                        // a number
+
+                        // Expect a number
+
+                        if (!numberToken(variableElement))
+                            return false;
+                    }
+                } else {
+                    // Expect "in", "out" or "none"
+
+                    static const CellmlTextViewScanner::TokenTypes tokenTypes = CellmlTextViewScanner::TokenTypes() << CellmlTextViewScanner::InToken
+                                                                                                                    << CellmlTextViewScanner::OutToken
+                                                                                                                    << CellmlTextViewScanner::NoneToken;
+
+                    if (!tokenType(variableElement, QObject::tr("'%1', '%2' or '%3'").arg("in", "out", "none"),
+                                   tokenTypes)) {
+                        return false;
                     }
                 }
-            }
-        }
-    }
 
-    return false;
+                // Set the attribute value
+
+                QString variableAttributeValue = mScanner->tokenString();
+
+                if (sign == 1)
+                    variableAttributeValue = "+"+variableAttributeValue;
+                else if (sign == -1)
+                    variableAttributeValue = "-"+variableAttributeValue;
+
+                if (unitAttributeTokenType == CellmlTextViewScanner::InitToken)
+                    variableElement.setAttribute("initial_value", variableAttributeValue);
+                else if (unitAttributeTokenType == CellmlTextViewScanner::PubToken)
+                    variableElement.setAttribute("public_interface", variableAttributeValue);
+                else
+                    variableElement.setAttribute("private_interface", variableAttributeValue);
+            }
+
+            // Expect "," or "}"
+
+            static const CellmlTextViewScanner::TokenTypes nextTokenTypes = CellmlTextViewScanner::TokenTypes() << CellmlTextViewScanner::CommaToken
+                                                                                                                << CellmlTextViewScanner::ClosingCurlyBracketToken;
+
+            mScanner->getNextToken();
+
+            if (!tokenType(variableElement, QObject::tr("'%1' or '%2'").arg(",", "}"),
+                           nextTokenTypes))
+                return false;
+
+            // Leave the loop if we got "}"
+
+            if (mScanner->tokenType() == CellmlTextViewScanner::ClosingCurlyBracketToken)
+                break;
+        }
+
+        // Expect ";"
+
+        mScanner->getNextToken();
+
+        return semiColonToken(variableElement);
+    } else {
+        return true;
+    }
 }
 
 //==============================================================================
