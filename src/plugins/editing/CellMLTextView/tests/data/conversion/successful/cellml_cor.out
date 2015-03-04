@@ -164,7 +164,7 @@ def model cellml_1_0 as
         a = b < c;
         a = b >= c;
         a = b <= c;
-        a = b;
+        a = +b;
         a = b+c;
         a = b+c+d;
         a = (b and c)+(b or c);
@@ -191,7 +191,7 @@ def model cellml_1_0 as
         a = (b and c)-c;
         a = b-(b or c);
         a = b-(c+d);
-        a = b-c;
+        a = b-+c;
         a = b-(c-d);
         a = b-(-c);
         a = b*c;
@@ -199,16 +199,16 @@ def model cellml_1_0 as
         a = (b and c)*(b or c);
         a = (b and c)*c;
         a = b*(b or c);
+        a = +b*-c;
+        a = +b*c;
         a = b*-c;
-        a = b*c;
-        a = b*-c;
-        a = b*-c*d;
+        a = +b*-c*+d;
         a = b/c;
         a = (b and c)/(b or c);
         a = (b and c)/c;
         a = b/(b or c);
-        a = b/-c;
-        a = b/c;
+        a = +b/-c;
+        a = +b/c;
         a = b/-c;
         a = b/(c*d);
         a = pow(b, c);
@@ -234,7 +234,7 @@ def model cellml_1_0 as
         a = b and (b <> c);
         a = b*c and b/c;
         a = (b+c) and (b-c);
-        a = b and -c;
+        a = +b and -c;
         a = b or c;
         a = b or c or d;
         a = (b == c) or (b <> c);
@@ -242,7 +242,7 @@ def model cellml_1_0 as
         a = b or (b <> c);
         a = b*c or b/c;
         a = (b+c) or (b-c);
-        a = b or -c;
+        a = +b or -c;
         a = b xor c;
         a = b xor c xor d;
         a = (b == c) xor (b <> c);
@@ -250,7 +250,7 @@ def model cellml_1_0 as
         a = b xor (b <> c);
         a = b*c xor b/c;
         a = (b+c) xor (b-c);
-        a = b xor -c;
+        a = +b xor -c;
         a = not b;
         a = not exp(b);
         a = not(b == c);

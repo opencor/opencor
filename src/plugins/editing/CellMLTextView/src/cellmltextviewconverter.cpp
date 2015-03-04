@@ -1166,7 +1166,7 @@ QString CellMLTextViewConverter::processOperatorNode(const QString &pOperator,
             return QString();
         } else {
             if (mMathmlNodeTypes.value(childNodes.item(0).localName()) == PlusMathmlNode) {
-                return operand;
+                return pOperator+operand;
             } else {
                 // Minus node
 
