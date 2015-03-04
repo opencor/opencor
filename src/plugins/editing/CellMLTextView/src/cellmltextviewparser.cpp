@@ -2056,88 +2056,100 @@ QDomElement CellmlTextViewParser::parseDerivativeIdentifier(QDomNode &pDomNode)
 
     mScanner->getNextToken();
 
-    if (openingBracketToken(pDomNode)) {
-        // Expect an identifier
+    if (!openingBracketToken(pDomNode))
+        return QDomElement();
+
+    // Expect an identifier
+
+    mScanner->getNextToken();
+
+    if (!identifierToken(pDomNode))
+        return QDomElement();
+
+    // Keep track of our f
+
+    QString f = mScanner->tokenString();
+
+    // Expect ","
+
+    mScanner->getNextToken();
+
+    if (!commaToken(pDomNode))
+        return QDomElement();
+
+    // Expect an identifier
+
+    mScanner->getNextToken();
+
+    if (!identifierToken(pDomNode))
+        return QDomElement();
+
+    // Keep track of our x
+
+    QString x = mScanner->tokenString();
+
+    // Expect "," or ")"
+
+    static const CellmlTextViewScanner::TokenTypes tokenTypes = CellmlTextViewScanner::TokenTypes() << CellmlTextViewScanner::CommaToken
+                                                                                                    << CellmlTextViewScanner::ClosingBracketToken;
+
+    mScanner->getNextToken();
+
+    if (!tokenType(pDomNode, QObject::tr("'%1' or '%2'").arg(",", ")"),
+                   tokenTypes)) {
+        return QDomElement();
+    }
+
+    // Check what we got exactly
+
+    if (mScanner->tokenType() == CellmlTextViewScanner::CommaToken) {
+        // Expect a strictly positive integer number
 
         mScanner->getNextToken();
 
-        if (identifierToken(pDomNode)) {
-            // Keep track of our f
+        if (!strictlyPositiveIntegerNumberToken(pDomNode))
+            return QDomElement();
 
-            QString f = mScanner->tokenString();
+        // Keep track of our order
 
-            // Expect ","
+        QString order = mScanner->tokenString();
 
-            mScanner->getNextToken();
+        // Expect "{"
 
-            if (commaToken(pDomNode)) {
-                // Expect an identifier
+        mScanner->getNextToken();
 
-                mScanner->getNextToken();
+        if (!openingCurlyBracketToken(pDomNode))
+            return QDomElement();
 
-                if (identifierToken(pDomNode)) {
-                    // Keep track of our x
+        // Expect "dimensionless"
 
-                    QString x = mScanner->tokenString();
+        mScanner->getNextToken();
 
-                    // Expect "," or ")"
+        if (!dimensionlessToken(pDomNode))
+            return QDomElement();
 
-                    static const CellmlTextViewScanner::TokenTypes tokenTypes = CellmlTextViewScanner::TokenTypes() << CellmlTextViewScanner::CommaToken
-                                                                                                                    << CellmlTextViewScanner::ClosingBracketToken;
+        // Expect "}"
 
-                    mScanner->getNextToken();
+        mScanner->getNextToken();
 
-                    if (tokenType(pDomNode, QObject::tr("'%1' or '%2'").arg(",", ")"),
-                                  tokenTypes)) {
-                        if (mScanner->tokenType() == CellmlTextViewScanner::CommaToken) {
-                            // Expect a strictly positive integer number
+        if (!closingCurlyBracketToken(pDomNode))
+            return QDomElement();
 
-                            mScanner->getNextToken();
+        // Expect ")"
 
-                            if (strictlyPositiveIntegerNumberToken(pDomNode)) {
-                                QString order = mScanner->tokenString();
+        mScanner->getNextToken();
 
-                                // Expect "{"
+        if (!closingBracketToken(pDomNode))
+            return QDomElement();
 
-                                mScanner->getNextToken();
+        // Return a derivative element with an order
 
-                                if (openingCurlyBracketToken(pDomNode)) {
-                                    // Expect "dimensionless"
+        return newDerivativeElement(f, x, order);
+    } else {
+        // Return a derivative element with no order
 
-                                    mScanner->getNextToken();
-
-                                    if (dimensionlessToken(pDomNode)) {
-                                        // Expect "}"
-
-                                        mScanner->getNextToken();
-
-                                        if (closingCurlyBracketToken(pDomNode)) {
-                                            // Expect ")"
-
-                                            mScanner->getNextToken();
-
-                                            if (closingBracketToken(pDomNode)) {
-                                                // Return a derivative element
-                                                // with an order
-
-                                                return newDerivativeElement(f, x, order);
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        } else {
-                            // Return a derivative element with no order
-
-                            return newDerivativeElement(f, x);
-                        }
-                    }
-                }
-            }
-        }
+        return newDerivativeElement(f, x);
     }
-
-    return QDomElement();
 }
 
 //==============================================================================
