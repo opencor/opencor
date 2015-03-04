@@ -84,7 +84,7 @@ class CellmlTextViewParser;
 
 //==============================================================================
 
-typedef QDomElement (CellmlTextViewParser::*ParseNormalMathematicalEquationFunction)(QDomNode &pDomNode);
+typedef QDomElement (CellmlTextViewParser::*ParseNormalMathematicalExpressionFunction)(QDomNode &pDomNode);
 
 //==============================================================================
 
@@ -168,25 +168,25 @@ private:
     bool parseUnitDefinition(QDomNode &pDomNode);
     bool parseComponentDefinition(QDomNode &pDomNode);
     bool parseVariableDeclaration(QDomNode &pDomNode);
-    bool parseMathematicalEquation(QDomNode &pDomNode);
+    bool parseMathematicalExpression(QDomNode &pDomNode);
     bool parseGroupDefinition(QDomNode &pDomNode);
     bool parseComponentRefDefinition(QDomNode &pDomNode);
     bool parseMapDefinition(QDomNode &pDomNode);
 
     QDomElement parseDerivativeIdentifier(QDomNode &pDomNode);
-    QDomElement parseMathematicalEquationElement(QDomNode &pDomNode,
-                                                 const CellmlTextViewScanner::TokenTypes &pTokenTypes,
-                                                 ParseNormalMathematicalEquationFunction pFunction);
-    QDomElement parseNormalMathematicalEquation(QDomNode &pDomNode);
-    QDomElement parseNormalMathematicalEquation2(QDomNode &pDomNode);
-    QDomElement parseNormalMathematicalEquation3(QDomNode &pDomNode);
-    QDomElement parseNormalMathematicalEquation4(QDomNode &pDomNode);
-    QDomElement parseNormalMathematicalEquation5(QDomNode &pDomNode);
-    QDomElement parseNormalMathematicalEquation6(QDomNode &pDomNode);
-    QDomElement parseNormalMathematicalEquation7(QDomNode &pDomNode);
-    QDomElement parseNormalMathematicalEquation8(QDomNode &pDomNode);
-    QDomElement parseNormalMathematicalEquation9(QDomNode &pDomNode);
-    QDomElement parsePiecewiseMathematicalEquation(QDomNode &pDomNode);
+    QDomElement parseMathematicalExpressionElement(QDomNode &pDomNode,
+                                                   const CellmlTextViewScanner::TokenTypes &pTokenTypes,
+                                                   ParseNormalMathematicalExpressionFunction pFunction);
+    QDomElement parseNormalMathematicalExpression(QDomNode &pDomNode);
+    QDomElement parseNormalMathematicalExpression2(QDomNode &pDomNode);
+    QDomElement parseNormalMathematicalExpression3(QDomNode &pDomNode);
+    QDomElement parseNormalMathematicalExpression4(QDomNode &pDomNode);
+    QDomElement parseNormalMathematicalExpression5(QDomNode &pDomNode);
+    QDomElement parseNormalMathematicalExpression6(QDomNode &pDomNode);
+    QDomElement parseNormalMathematicalExpression7(QDomNode &pDomNode);
+    QDomElement parseNormalMathematicalExpression8(QDomNode &pDomNode);
+    QDomElement parseNormalMathematicalExpression9(QDomNode &pDomNode);
+    QDomElement parsePiecewiseMathematicalExpression(QDomNode &pDomNode);
 
     void moveTrailingComments(QDomNode &pFromDomNode, QDomNode &pToDomNode);
 };
