@@ -709,8 +709,10 @@ bool CellmlTextViewParser::strictlyPositiveIntegerNumberToken(QDomNode &pDomNode
 
     static const QString ExpectedString = QObject::tr("A strictly positive integer number");
 
-    if (!tokenType(pDomNode, ExpectedString, CellmlTextViewScanner::NumberToken))
+    if (!tokenType(pDomNode, ExpectedString,
+                   CellmlTextViewScanner::NumberToken)) {
         return false;
+    }
 
     // We have got a number, but now the question is whether it is a strictly
     // positive integer one
@@ -823,8 +825,10 @@ bool CellmlTextViewParser::parseCmetaId(QDomElement &pDomElement)
 
     QString cmetaId = QString();
 
-    if (!isTokenType(pDomElement, CellmlTextViewScanner::OpeningCurlyBracketToken))
+    if (!isTokenType(pDomElement,
+                     CellmlTextViewScanner::OpeningCurlyBracketToken)) {
         return true;
+    }
 
     // Expect an identifier
 
@@ -937,8 +941,9 @@ bool CellmlTextViewParser::parseImportDefinition(QDomNode &pDomNode)
     mScanner->getNextToken();
 
     if (!tokenType(importElement, QObject::tr("A string representing a URL"),
-                   CellmlTextViewScanner::StringToken))
+                   CellmlTextViewScanner::StringToken)) {
         return false;
+    }
 
     // Set the URL, after having kept track of the fact that we need CellML 1.1
     // and the XLink namespace
@@ -1133,8 +1138,9 @@ bool CellmlTextViewParser::parseUnitsDefinition(QDomNode &pDomNode)
     mScanner->getNextToken();
 
     if (!tokenType(unitsElement, QObject::tr("'%1', '%2' or '%3'").arg("base", "unit", "enddef"),
-                   tokenTypes))
+                   tokenTypes)) {
         return false;
+    }
 
     // Check the type of unit definition we are dealing with
 
@@ -1204,163 +1210,167 @@ bool CellmlTextViewParser::parseUnitDefinition(QDomNode &pDomNode)
 
     // Expect an identifier or an SI unit
 
-    if (identifierOrSiUnitToken(unitElement)) {
-        // Set our unit's name
+    if (!identifierOrSiUnitToken(unitElement))
+        return false;
 
-        unitElement.setAttribute("units", mScanner->tokenString());
+    // Set our unit's name
 
-        // Expect "{" or ";"
+    unitElement.setAttribute("units", mScanner->tokenString());
 
-        static const CellmlTextViewScanner::TokenTypes tokenTypes = CellmlTextViewScanner::TokenTypes() << CellmlTextViewScanner::OpeningCurlyBracketToken
-                                                                                                        << CellmlTextViewScanner::SemiColonToken;
+    // Expect "{" or ";"
+
+    static const CellmlTextViewScanner::TokenTypes tokenTypes = CellmlTextViewScanner::TokenTypes() << CellmlTextViewScanner::OpeningCurlyBracketToken
+                                                                                                    << CellmlTextViewScanner::SemiColonToken;
+
+    mScanner->getNextToken();
+
+    if (!tokenType(unitElement, QObject::tr("'%1' or '%2'").arg("{", ";"),
+                   tokenTypes)) {
+        return false;
+    }
+
+    // Check what we got exactly
+
+    if (mScanner->tokenType() == CellmlTextViewScanner::OpeningCurlyBracketToken) {
+        QList<CellmlTextViewScanner::TokenType> unitAttributesDefined = QList<CellmlTextViewScanner::TokenType>();
+
+        forever {
+            // Expect "pref", "expo", "mult" or "off"
+
+            static const CellmlTextViewScanner::TokenTypes tokenTypes = CellmlTextViewScanner::TokenTypes() << CellmlTextViewScanner::PrefToken
+                                                                                                            << CellmlTextViewScanner::ExpoToken
+                                                                                                            << CellmlTextViewScanner::MultToken
+                                                                                                            << CellmlTextViewScanner::OffToken;
+
+            mScanner->getNextToken();
+
+            if (!tokenType(unitElement, QObject::tr("'%1', '%2', '%3' or '%4'").arg("pref", "expo", "mult", "off"),
+                           tokenTypes)) {
+                return false;
+            }
+
+            // Make sure that we don't already have come across the unit
+            // attribute
+
+            if (unitAttributesDefined.contains(mScanner->tokenType())) {
+                mMessages << CellmlTextViewParserMessage(CellmlTextViewParserMessage::Error,
+                                                         mScanner->tokenLine(),
+                                                         mScanner->tokenColumn(),
+                                                         QObject::tr("The '%1' attribute has already been specified.").arg(mScanner->tokenString()));
+
+                return false;
+            } else {
+                // Keep track of the fact that we have come across the unit
+                // attribute
+
+                unitAttributesDefined << mScanner->tokenType();
+
+                CellmlTextViewScanner::TokenType unitAttributeTokenType = mScanner->tokenType();
+
+                // Expect ":"
+
+                mScanner->getNextToken();
+
+                if (!colonToken(unitElement))
+                    return false;
+
+                // Check which unit attribute we are dealing with to determine
+                // what to expect next
+
+                mScanner->getNextToken();
+
+                int sign = 0;
+
+                if (unitAttributeTokenType == CellmlTextViewScanner::PrefToken) {
+                    // Check whether we have "+" or "-"
+
+                    if (   isTokenType(unitElement, CellmlTextViewScanner::PlusToken)
+                        || isTokenType(unitElement, CellmlTextViewScanner::MinusToken)) {
+                        // We are dealing with a number value
+
+                        if (!numberValueToken(unitElement, sign))
+                            return false;
+                    } else {
+                        // We are not dealing with a 'proper' number value, but
+                        // either a number or a prefix
+
+                        // Expect a number or a prefix
+
+                        static CellmlTextViewScanner::TokenTypes tokenTypes = CellmlTextViewScanner::TokenTypes() << CellmlTextViewScanner::NumberToken;
+                        static bool needInitializeTokenTypes = true;
+
+                        if (needInitializeTokenTypes) {
+                            for (CellmlTextViewScanner::TokenType tokenType = CellmlTextViewScanner::FirstPrefixToken;
+                                 tokenType <= CellmlTextViewScanner::LastPrefixToken;
+                                 tokenType = CellmlTextViewScanner::TokenType(int(tokenType)+1)) {
+                                tokenTypes << tokenType;
+                            }
+
+                            needInitializeTokenTypes = false;
+                        }
+
+                        if (!tokenType(unitElement, QObject::tr("A number or a prefix (e.g. 'milli')"),
+                                       tokenTypes)) {
+                            return false;
+                        }
+                    }
+                } else {
+                    // Expect a number value
+
+                    if (!numberValueToken(unitElement, sign))
+                        return false;
+                }
+
+                // Set the attribute value
+
+                QString unitAttributeValue = mScanner->tokenString();
+
+                if (sign == 1)
+                    unitAttributeValue = "+"+unitAttributeValue;
+                else if (sign == -1)
+                    unitAttributeValue = "-"+unitAttributeValue;
+
+                if (unitAttributeTokenType == CellmlTextViewScanner::PrefToken)
+                    unitElement.setAttribute("prefix", unitAttributeValue);
+                else if (unitAttributeTokenType == CellmlTextViewScanner::ExpoToken)
+                    unitElement.setAttribute("exponent", unitAttributeValue);
+                else if (unitAttributeTokenType == CellmlTextViewScanner::MultToken)
+                    unitElement.setAttribute("multiplier", unitAttributeValue);
+                else
+                    unitElement.setAttribute("offset", unitAttributeValue);
+            }
+
+            // Expect "," or "}"
+
+            static const CellmlTextViewScanner::TokenTypes nextTokenTypes = CellmlTextViewScanner::TokenTypes() << CellmlTextViewScanner::CommaToken
+                                                                                                                << CellmlTextViewScanner::ClosingCurlyBracketToken;
+
+            mScanner->getNextToken();
+
+            if (!tokenType(unitElement, QObject::tr("'%1' or '%2'").arg(",", "}"),
+                           nextTokenTypes)) {
+                return false;
+            }
+
+            // Leave the loop if we got "}"
+
+            if (mScanner->tokenType() == CellmlTextViewScanner::ClosingCurlyBracketToken)
+                break;
+        }
+
+        // Expect ";"
 
         mScanner->getNextToken();
 
-        if (tokenType(unitElement, QObject::tr("'%1' or '%2'").arg("{", ";"),
-                      tokenTypes)) {
-            if (mScanner->tokenType() == CellmlTextViewScanner::OpeningCurlyBracketToken) {
-                QList<CellmlTextViewScanner::TokenType> unitAttributesDefined = QList<CellmlTextViewScanner::TokenType>();
-
-                forever {
-                    // Expect "pref", "expo", "mult" or "off"
-
-                    static const CellmlTextViewScanner::TokenTypes tokenTypes = CellmlTextViewScanner::TokenTypes() << CellmlTextViewScanner::PrefToken
-                                                                                                                    << CellmlTextViewScanner::ExpoToken
-                                                                                                                    << CellmlTextViewScanner::MultToken
-                                                                                                                    << CellmlTextViewScanner::OffToken;
-
-                    mScanner->getNextToken();
-
-                    if (tokenType(unitElement, QObject::tr("'%1', '%2', '%3' or '%4'").arg("pref", "expo", "mult", "off"),
-                                  tokenTypes)) {
-                        // Make sure that we don't already have come across the
-                        // unit attribute
-
-                        if (unitAttributesDefined.contains(mScanner->tokenType())) {
-                            mMessages << CellmlTextViewParserMessage(CellmlTextViewParserMessage::Error,
-                                                                     mScanner->tokenLine(),
-                                                                     mScanner->tokenColumn(),
-                                                                     QObject::tr("The '%1' attribute has already been specified.").arg(mScanner->tokenString()));
-
-                            return false;
-                        } else {
-                            // Keep track of the fact that we have come across
-                            // the unit attribute
-
-                            unitAttributesDefined << mScanner->tokenType();
-
-                            CellmlTextViewScanner::TokenType unitAttributeTokenType = mScanner->tokenType();
-
-                            // Expect ":"
-
-                            mScanner->getNextToken();
-
-                            if (!colonToken(unitElement))
-                                return false;
-
-                            // Check which unit attribute we are dealing with to
-                            // determine what to expect next
-
-                            mScanner->getNextToken();
-
-                            int sign = 0;
-
-                            if (unitAttributeTokenType == CellmlTextViewScanner::PrefToken) {
-                                // Check whether we have "+" or "-"
-
-                                if (   isTokenType(unitElement, CellmlTextViewScanner::PlusToken)
-                                    || isTokenType(unitElement, CellmlTextViewScanner::MinusToken)) {
-                                    // We are dealing with a number value
-
-                                    if (!numberValueToken(unitElement, sign))
-                                        return false;
-                                } else {
-                                    // We are not dealing with a 'proper' number
-                                    // value, but either a number or a prefix
-
-                                    // Expect a number or a prefix
-
-                                    static CellmlTextViewScanner::TokenTypes tokenTypes = CellmlTextViewScanner::TokenTypes() << CellmlTextViewScanner::NumberToken;
-                                    static bool needInitializeTokenTypes = true;
-
-                                    if (needInitializeTokenTypes) {
-                                        for (CellmlTextViewScanner::TokenType tokenType = CellmlTextViewScanner::FirstPrefixToken;
-                                             tokenType <= CellmlTextViewScanner::LastPrefixToken;
-                                             tokenType = CellmlTextViewScanner::TokenType(int(tokenType)+1)) {
-                                            tokenTypes << tokenType;
-                                        }
-
-                                        needInitializeTokenTypes = false;
-                                    }
-
-                                    if (!tokenType(unitElement, QObject::tr("A number or a prefix (e.g. 'milli')"),
-                                                   tokenTypes)) {
-                                        return false;
-                                    }
-                                }
-                            } else {
-                                // Expect a number value
-
-                                if (!numberValueToken(unitElement, sign))
-                                    return false;
-                            }
-
-                            // Set the attribute value
-
-                            QString unitAttributeValue = mScanner->tokenString();
-
-                            if (sign == 1)
-                                unitAttributeValue = "+"+unitAttributeValue;
-                            else if (sign == -1)
-                                unitAttributeValue = "-"+unitAttributeValue;
-
-                            if (unitAttributeTokenType == CellmlTextViewScanner::PrefToken)
-                                unitElement.setAttribute("prefix", unitAttributeValue);
-                            else if (unitAttributeTokenType == CellmlTextViewScanner::ExpoToken)
-                                unitElement.setAttribute("exponent", unitAttributeValue);
-                            else if (unitAttributeTokenType == CellmlTextViewScanner::MultToken)
-                                unitElement.setAttribute("multiplier", unitAttributeValue);
-                            else
-                                unitElement.setAttribute("offset", unitAttributeValue);
-                        }
-                    } else {
-                        return false;
-                    }
-
-                    // Expect "," or "}"
-
-                    static const CellmlTextViewScanner::TokenTypes nextTokenTypes = CellmlTextViewScanner::TokenTypes() << CellmlTextViewScanner::CommaToken
-                                                                                                                        << CellmlTextViewScanner::ClosingCurlyBracketToken;
-
-                    mScanner->getNextToken();
-
-                    if (tokenType(unitElement, QObject::tr("'%1' or '%2'").arg(",", "}"),
-                                  nextTokenTypes)) {
-                        if (mScanner->tokenType() == CellmlTextViewScanner::ClosingCurlyBracketToken)
-                            break;
-                    } else {
-                        return false;
-                    }
-                }
-
-                // Expect ";"
-
-                mScanner->getNextToken();
-
-                if (semiColonToken(unitElement)) {
-                    mScanner->getNextToken();
-
-                    return true;
-                }
-            } else {
-                mScanner->getNextToken();
-
-                return true;
-            }
-        }
+        if (!semiColonToken(unitElement))
+            return false;
     }
 
-    return false;
+    // Fetch the next token
+
+    mScanner->getNextToken();
+
+    return true;
 }
 
 //==============================================================================
