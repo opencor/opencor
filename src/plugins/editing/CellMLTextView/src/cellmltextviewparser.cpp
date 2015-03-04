@@ -2079,6 +2079,8 @@ QString CellmlTextViewParser::mathmlName(const CellmlTextViewScanner::TokenType 
         return "times";
     case CellmlTextViewScanner::DivideToken:
         return "divide";
+    case CellmlTextViewScanner::NotToken:
+        return "not";
     default:
 #ifdef QT_DEBUG
         qFatal("FATAL ERROR | %s:%d: no MathML name exists for the given token type.", __FILE__, __LINE__);
@@ -2252,9 +2254,8 @@ QDomElement CellmlTextViewParser::parseMathematicalExpressionElement(QDomNode &p
             // operands
 
             QDomElement applyElement = mDomDocument.createElement("apply");
-            QDomElement operatorElement = mDomDocument.createElement(mathmlName(crtOperator));
 
-            applyElement.appendChild(operatorElement);
+            applyElement.appendChild(mDomDocument.createElement(mathmlName(crtOperator)));
             applyElement.appendChild(res);
             applyElement.appendChild(otherOperand);
 
@@ -2364,16 +2365,30 @@ QDomElement CellmlTextViewParser::parseNormalMathematicalExpression8(QDomNode &p
                                                                                                     << CellmlTextViewScanner::PlusToken
                                                                                                     << CellmlTextViewScanner::MinusToken;
 
-    if (tokenTypes.contains(mScanner->tokenType())) {
+    CellmlTextViewScanner::TokenType crtOperator = mScanner->tokenType();
+
+    if (tokenTypes.contains(crtOperator)) {
+        QDomElement operand;
+
         if (mScanner->tokenType() == CellmlTextViewScanner::NotToken) {
             mScanner->getNextToken();
 
-            return parseNormalMathematicalExpression(pDomNode);
+            operand = parseNormalMathematicalExpression(pDomNode);
         } else {
             mScanner->getNextToken();
 
-            return parseNormalMathematicalExpression9(pDomNode);
+            operand = parseNormalMathematicalExpression9(pDomNode);
         }
+
+        // Create and return an apply element that has been populated with our
+        // operator and operand
+
+        QDomElement res = mDomDocument.createElement("apply");
+
+        res.appendChild(mDomDocument.createElement(mathmlName(crtOperator)));
+        res.appendChild(operand);
+
+        return res;
     } else {
         return parseNormalMathematicalExpression9(pDomNode);
     }

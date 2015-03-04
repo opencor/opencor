@@ -194,6 +194,9 @@ def model{my_model_cmeta_id} my_model as
         a = b*c*d;
         a = b/c;
         a = b/c/d;
+        a = not b;
+        a = +b;
+        a = -b;
 
         // In between comment...
     enddef;
