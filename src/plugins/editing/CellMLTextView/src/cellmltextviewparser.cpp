@@ -1729,98 +1729,100 @@ bool CellmlTextViewParser::parseGroupDefinition(QDomNode &pDomNode)
 
     // Expect "as"
 
-    if (asToken(groupElement)) {
-        // Expect some group information, so loop while we have "containment" or
-        // "encapsulation"
+    if (!asToken(groupElement))
+        return false;
 
-        static const CellmlTextViewScanner::TokenTypes tokenTypes = CellmlTextViewScanner::TokenTypes() << CellmlTextViewScanner::ContainmentToken
-                                                                                                        << CellmlTextViewScanner::EncapsulationToken;
+    // Expect some group information, so loop while we have "containment" or
+    // "encapsulation"
 
-        mScanner->getNextToken();
+    static const CellmlTextViewScanner::TokenTypes tokenTypes = CellmlTextViewScanner::TokenTypes() << CellmlTextViewScanner::ContainmentToken
+                                                                                                    << CellmlTextViewScanner::EncapsulationToken;
 
-        while (tokenType(groupElement, QObject::tr("'%1' or '%2'").arg("containment", "encapsulation"),
-                         tokenTypes)) {
-            if (mScanner->tokenType() == CellmlTextViewScanner::ContainmentToken) {
-                // Create our relationship reference and make it a containment
+    mScanner->getNextToken();
 
-                QDomElement relationshipRefElement = newDomElement(groupElement, "relationship_ref");
+    while (tokenType(groupElement, QObject::tr("'%1' or '%2'").arg("containment", "encapsulation"),
+                     tokenTypes)) {
+        if (mScanner->tokenType() == CellmlTextViewScanner::ContainmentToken) {
+            // Create our relationship reference and make it a containment
 
-                relationshipRefElement.setAttribute("relationship", "containment");
+            QDomElement relationshipRefElement = newDomElement(groupElement, "relationship_ref");
 
-                // Expect an identifier, "and" or "for"
+            relationshipRefElement.setAttribute("relationship", "containment");
 
-                static const CellmlTextViewScanner::TokenTypes tokenTypes = CellmlTextViewScanner::TokenTypes() << CellmlTextViewScanner::IdentifierToken
-                                                                                                                << CellmlTextViewScanner::AndToken
-                                                                                                                << CellmlTextViewScanner::ForToken;
+            // Expect an identifier, "and" or "for"
 
-                mScanner->getNextToken();
+            static const CellmlTextViewScanner::TokenTypes tokenTypes = CellmlTextViewScanner::TokenTypes() << CellmlTextViewScanner::IdentifierToken
+                                                                                                            << CellmlTextViewScanner::AndToken
+                                                                                                            << CellmlTextViewScanner::ForToken;
 
-                if (tokenType(groupElement, QObject::tr("An identifier, '%1' or '%2'").arg("and", "for"),
-                              tokenTypes)) {
-                    if (mScanner->tokenType() == CellmlTextViewScanner::IdentifierToken) {
-                        // Set the name of the containment
+            mScanner->getNextToken();
 
-                        relationshipRefElement.setAttribute("name", mScanner->tokenString());
+            if (!tokenType(groupElement, QObject::tr("An identifier, '%1' or '%2'").arg("and", "for"),
+                           tokenTypes)) {
+                return false;
+            }
 
-                        // Fetch the next token
+            // Check what we got exactly
 
-                        mScanner->getNextToken();
-                    }
-                } else {
-                    return false;
-                }
-            } else {
-                // CellmlTextViewScanner::EncapsulationToken
+            if (mScanner->tokenType() == CellmlTextViewScanner::IdentifierToken) {
+                // Set the name of the containment
 
-                // Create our relationship reference and make it an
-                // encapsulation
-
-                QDomElement relationshipRefElement = newDomElement(groupElement, "relationship_ref");
-
-                relationshipRefElement.setAttribute("relationship", "encapsulation");
+                relationshipRefElement.setAttribute("name", mScanner->tokenString());
 
                 // Fetch the next token
 
                 mScanner->getNextToken();
             }
+        } else {
+            // CellmlTextViewScanner::EncapsulationToken
 
-            // Expect "and" or "for"
+            // Create our relationship reference and make it an encapsulation
 
-            static const CellmlTextViewScanner::TokenTypes tokenTypes = CellmlTextViewScanner::TokenTypes() << CellmlTextViewScanner::AndToken
-                                                                                                            << CellmlTextViewScanner::ForToken;
+            QDomElement relationshipRefElement = newDomElement(groupElement, "relationship_ref");
 
-            if (tokenType(groupElement, QObject::tr("'%1' or '%2'").arg("and", "for"),
-                          tokenTypes)) {
-                if (mScanner->tokenType() == CellmlTextViewScanner::ForToken)
-                    break;
-                else
-                    mScanner->getNextToken();
-            } else {
-                return false;
-            }
+            relationshipRefElement.setAttribute("relationship", "encapsulation");
+
+            // Fetch the next token
+
+            mScanner->getNextToken();
         }
 
-        // Loop while we have "comp" or leave if we get "enddef"
+        // Expect "and" or "for"
 
-        static const CellmlTextViewScanner::TokenTypes nextTokenTypes = CellmlTextViewScanner::TokenTypes() << CellmlTextViewScanner::CompToken
-                                                                                                            << CellmlTextViewScanner::EndDefToken;
+        static const CellmlTextViewScanner::TokenTypes tokenTypes = CellmlTextViewScanner::TokenTypes() << CellmlTextViewScanner::AndToken
+                                                                                                        << CellmlTextViewScanner::ForToken;
 
-        mScanner->getNextToken();
-
-        while (tokenType(groupElement, QObject::tr("'%1' or '%2'").arg("comp", "enddef"),
-                         nextTokenTypes)) {
-            if (mScanner->tokenType() == CellmlTextViewScanner::CompToken) {
-                // Recursively parse our component reference
-
-                if (!parseComponentRefDefinition(groupElement))
-                    return false;
-            } else {
-                // Expect ";"
-
+        if (tokenType(groupElement, QObject::tr("'%1' or '%2'").arg("and", "for"),
+                      tokenTypes)) {
+            if (mScanner->tokenType() == CellmlTextViewScanner::ForToken)
+                break;
+            else
                 mScanner->getNextToken();
+        } else {
+            return false;
+        }
+    }
 
-                return semiColonToken(groupElement);
-            }
+    // Loop while we have "comp" or leave if we get "enddef"
+
+    static const CellmlTextViewScanner::TokenTypes nextTokenTypes = CellmlTextViewScanner::TokenTypes() << CellmlTextViewScanner::CompToken
+                                                                                                        << CellmlTextViewScanner::EndDefToken;
+
+    mScanner->getNextToken();
+
+    while (tokenType(groupElement, QObject::tr("'%1' or '%2'").arg("comp", "enddef"),
+                     nextTokenTypes)) {
+        if (mScanner->tokenType() == CellmlTextViewScanner::CompToken) {
+            // Recursively parse our component reference
+
+            if (!parseComponentRefDefinition(groupElement))
+                return false;
+        } else {
+            // Expect ";"
+
+            mScanner->getNextToken();
+
+            return semiColonToken(groupElement);
         }
     }
 
@@ -1844,68 +1846,70 @@ bool CellmlTextViewParser::parseComponentRefDefinition(QDomNode &pDomNode)
 
     // Expect an identifier
 
-    if (identifierToken(componentRefElement)) {
-        // Set the name of the component reference
+    if (!identifierToken(componentRefElement))
+        return false;
 
-        componentRefElement.setAttribute("component", mScanner->tokenString());
+    // Set the name of the component reference
 
-        // Expect "incl" or ";"
+    componentRefElement.setAttribute("component", mScanner->tokenString());
 
-        static const CellmlTextViewScanner::TokenTypes tokenTypes = CellmlTextViewScanner::TokenTypes() << CellmlTextViewScanner::InclToken
-                                                                                                        << CellmlTextViewScanner::SemiColonToken;
+    // Expect "incl" or ";"
+
+    static const CellmlTextViewScanner::TokenTypes tokenTypes = CellmlTextViewScanner::TokenTypes() << CellmlTextViewScanner::InclToken
+                                                                                                    << CellmlTextViewScanner::SemiColonToken;
+
+    mScanner->getNextToken();
+
+    if (!tokenType(componentRefElement, QObject::tr("'%1' or '%2'").arg("incl", ";"),
+                   tokenTypes)) {
+        return false;
+    }
+
+    // Check what we got exactly
+
+    if (mScanner->tokenType() == CellmlTextViewScanner::InclToken) {
+        // Expect at least one "comp", then loop while we have "comp" or leave
+        // if we get "enddcomp"
+
+        static const CellmlTextViewScanner::TokenTypes tokenTypes = CellmlTextViewScanner::TokenTypes() << CellmlTextViewScanner::CompToken
+                                                                                                        << CellmlTextViewScanner::EndCompToken;
+
+        bool firstTime = true;
 
         mScanner->getNextToken();
 
-        if (tokenType(componentRefElement, QObject::tr("'%1' or '%2'").arg("incl", ";"),
-                      tokenTypes)) {
-            if (mScanner->tokenType() == CellmlTextViewScanner::InclToken) {
-                // Expect at least one "comp", then loop while we have "comp" or
-                // leave if we get "enddcomp"
+        do {
+            if (firstTime) {
+                firstTime = false;
 
-                static const CellmlTextViewScanner::TokenTypes tokenTypes = CellmlTextViewScanner::TokenTypes() << CellmlTextViewScanner::CompToken
-                                                                                                                << CellmlTextViewScanner::EndCompToken;
-
-                bool firstTime = true;
-
-                mScanner->getNextToken();
-
-                do {
-                    if (firstTime) {
-                        firstTime = false;
-
-                        if (!compToken(componentRefElement))
-                            return false;
-                    }
-
-                    if (mScanner->tokenType() == CellmlTextViewScanner::CompToken) {
-                        // Recursively parse a component reference
-
-                        if (!parseComponentRefDefinition(componentRefElement))
-                            return false;
-                    } else {
-                        break;
-                    }
-                } while (tokenType(componentRefElement, QObject::tr("'%1' or '%2'").arg("comp", "endcomp"),
-                                   tokenTypes));
-
-                // Expect ";"
-
-                mScanner->getNextToken();
-
-                if (semiColonToken(componentRefElement)) {
-                    mScanner->getNextToken();
-
-                    return true;
-                }
-            } else {
-                mScanner->getNextToken();
-
-                return true;
+                if (!compToken(componentRefElement))
+                    return false;
             }
-        }
+
+            if (mScanner->tokenType() == CellmlTextViewScanner::CompToken) {
+                // Recursively parse a component reference
+
+                if (!parseComponentRefDefinition(componentRefElement))
+                    return false;
+            } else {
+                break;
+            }
+        } while (tokenType(componentRefElement, QObject::tr("'%1' or '%2'").arg("comp", "endcomp"),
+                           tokenTypes));
+
+        // Expect ";"
+
+        mScanner->getNextToken();
+
+        if (!semiColonToken(componentRefElement))
+            return false;
     }
 
-    return false;
+    // Fetch the next token
+
+    mScanner->getNextToken();
+
+    return true;
 }
 
 //==============================================================================
