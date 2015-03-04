@@ -1329,9 +1329,6 @@ void ParsingTests::componentTests()
                                    "    enddef;\n"
                                    "enddef;")));
     QVERIFY(!parser.domDocument().isNull());
-
-    // Various tests on a component definition to check that we can have
-    // equations with various operators and precedences
 }
 
 //==============================================================================
