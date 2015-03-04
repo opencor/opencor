@@ -81,6 +81,8 @@ public:
     CellMLSupport::CellmlFile::Version cellmlVersion() const;
     QDomDocument rdfNodes() const;
 
+    void setSha1(const QString &pSha1);
+
 private:
     CoreCellMLEditing::CoreCellmlEditingWidget *mEditingWidget;
     QString mSha1;
