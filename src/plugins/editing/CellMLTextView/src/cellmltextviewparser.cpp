@@ -1695,8 +1695,6 @@ bool CellmlTextViewParser::parseMathematicalExpression(QDomNode &pDomNode)
 
     // Expect ";"
 
-    mScanner->getNextToken();
-
     if (!semiColonToken(pDomNode))
         return false;
 
@@ -2050,6 +2048,48 @@ bool CellmlTextViewParser::parseMapDefinition(QDomNode &pDomNode)
 
 //==============================================================================
 
+QString CellmlTextViewParser::mathmlName(const CellmlTextViewScanner::TokenType &pTokenType) const
+{
+    // Return the MathML name of the given token type
+
+    switch (pTokenType) {
+    case CellmlTextViewScanner::OrToken:
+        return "or";
+    case CellmlTextViewScanner::AndToken:
+        return "and";
+    case CellmlTextViewScanner::XorToken:
+        return "xor";
+    case CellmlTextViewScanner::EqEqToken:
+        return "eq";
+    case CellmlTextViewScanner::NeqToken:
+        return "neq";
+    case CellmlTextViewScanner::LtToken:
+        return "lt";
+    case CellmlTextViewScanner::GtToken:
+        return "gt";
+    case CellmlTextViewScanner::LeqToken:
+        return "leq";
+    case CellmlTextViewScanner::GeqToken:
+        return "geq";
+    case CellmlTextViewScanner::PlusToken:
+        return "plus";
+    case CellmlTextViewScanner::MinusToken:
+        return "minus";
+    case CellmlTextViewScanner::TimesToken:
+        return "times";
+    case CellmlTextViewScanner::DivideToken:
+        return "divide";
+    default:
+#ifdef QT_DEBUG
+        qFatal("FATAL ERROR | %s:%d: no MathML name exists for the given token type.", __FILE__, __LINE__);
+#endif
+
+        return "???";
+    }
+}
+
+//==============================================================================
+
 QDomElement CellmlTextViewParser::parseDerivativeIdentifier(QDomNode &pDomNode)
 {
     // At this stage, we have already come across "ode", so now expect "("
@@ -2158,14 +2198,63 @@ QDomElement CellmlTextViewParser::parseMathematicalExpressionElement(QDomNode &p
                                                                      const CellmlTextViewScanner::TokenTypes &pTokenTypes,
                                                                      ParseNormalMathematicalExpressionFunction pFunction)
 {
-//---GRY--- TO BE CHECKED...
+    // Try to parse something of the form:
+    //
+    //     <operand1> [<operator> <operand2> <operator> <operand3> ...]
+    //
+    // with <operandn> the result of a call to pFunction
+
+    // Expect an operand
 
     QDomElement res = (this->*pFunction)(pDomNode);
 
-    while (!res.isNull() && pTokenTypes.contains(mScanner->tokenType())) {
+    if (res.isNull())
+        return QDomElement();
+
+    // Loop while we have a valid operator and operand
+
+    CellmlTextViewScanner::TokenType prevOperator = CellmlTextViewScanner::UnknownToken;
+
+    forever {
+        // Expect an operator
+
+        CellmlTextViewScanner::TokenType crtOperator = mScanner->tokenType();
+
+        if (!pTokenTypes.contains(crtOperator))
+            return res;
+
+        // Expect an operand
+
         mScanner->getNextToken();
 
-        res = (this->*pFunction)(pDomNode);
+        QDomElement otherOperand = (this->*pFunction)(pDomNode);
+
+        if (otherOperand.isNull())
+            return QDomElement();
+
+        // Update our DOM tree with our operator and operand
+
+        if (crtOperator == prevOperator) {
+            res.appendChild(otherOperand);
+        } else {
+            // Create an apply element and populate it with our operator and two
+            // operands
+
+            QDomElement applyElement = mDomDocument.createElement("apply");
+            QDomElement operatorElement = mDomDocument.createElement(mathmlName(crtOperator));
+
+            applyElement.appendChild(operatorElement);
+            applyElement.appendChild(res);
+            applyElement.appendChild(otherOperand);
+
+            // Make our apply element our new result element
+
+            res = applyElement;
+        }
+
+        // Keep track of our operator
+
+        prevOperator = crtOperator;
     }
 
     return res;
@@ -2287,10 +2376,16 @@ QDomElement CellmlTextViewParser::parseNormalMathematicalExpression9(QDomNode &p
     // Look for an identifier, "ode", a number, a mathematical function, an
     // opening bracket or a mathematical constant
 
+    QDomElement res;
+
     if (mScanner->tokenType() == CellmlTextViewScanner::IdentifierToken) {
-        return newIdentifierElement(mScanner->tokenString());
+        // Create an identifier element
+
+        res = newIdentifierElement(mScanner->tokenString());
     } else if (mScanner->tokenType() == CellmlTextViewScanner::OdeToken) {
-        return parseDerivativeIdentifier(pDomNode);
+        // Try to parse a derivative identifier
+
+        res = parseDerivativeIdentifier(pDomNode);
     } else if (mScanner->tokenType() == CellmlTextViewScanner::NumberToken) {
         // Keep track of our number
 
@@ -2318,10 +2413,12 @@ QDomElement CellmlTextViewParser::parseNormalMathematicalExpression9(QDomNode &p
 
         mScanner->getNextToken();
 
-        if (closingCurlyBracketToken(pDomNode))
-            return newNumberElement(number, unit);
-        else
+        if (!closingCurlyBracketToken(pDomNode))
             return QDomElement();
+
+        // Create a number element
+
+        res = newNumberElement(number, unit);
     } else {
         QString foundString = mScanner->tokenString();
 
@@ -2332,6 +2429,12 @@ QDomElement CellmlTextViewParser::parseNormalMathematicalExpression9(QDomNode &p
 
         return QDomElement();
     }
+
+    // Fetch the next token and return our result element
+
+    mScanner->getNextToken();
+
+    return res;
 }
 
 //==============================================================================
@@ -2361,8 +2464,7 @@ QDomElement CellmlTextViewParser::parsePiecewiseMathematicalExpression(QDomNode 
         QDomElement conditionElement = QDomElement();
 
         if (caseClause) {
-            // Expect a condition in the form of a normal mathematical
-            // equation
+            // Expect a condition in the form of a normal mathematical equation
 
             mScanner->getNextToken();
 
@@ -2379,17 +2481,18 @@ QDomElement CellmlTextViewParser::parsePiecewiseMathematicalExpression(QDomNode 
             return QDomElement();
         } else {
             hasOtherwiseClause = true;
+
+            // Fetch the next token
+
+            mScanner->getNextToken();
         }
 
         // Expect ":"
 
-        mScanner->getNextToken();
-
         if (!colonToken(pDomNode))
             return QDomElement();
 
-        // Expect an expression in the form of a normal mathematical
-        // equation
+        // Expect an expression in the form of a normal mathematical equation
 
         mScanner->getNextToken();
 
@@ -2400,13 +2503,11 @@ QDomElement CellmlTextViewParser::parsePiecewiseMathematicalExpression(QDomNode 
 
         // Expect ";"
 
-        mScanner->getNextToken();
-
         if (!semiColonToken(pDomNode))
             return QDomElement();
 
-        // Create and populate our piece/otherwise element, and add it to
-        // our piecewise element
+        // Create and populate our piece/otherwise element, and add it to our
+        // piecewise element
 
         QDomElement pieceOrOtherwiseElement = newDomElement(mDomDocument, caseClause?"piece":"otherwise");
 
@@ -2424,10 +2525,14 @@ QDomElement CellmlTextViewParser::parsePiecewiseMathematicalExpression(QDomNode 
 
     // Expect "endsel"
 
-    if (endselToken(pDomNode))
-        return piecewiseElement;
-    else
+    if (!endselToken(pDomNode))
         return QDomElement();
+
+    // Fetch the next token and return our piecewise element
+
+    mScanner->getNextToken();
+
+    return piecewiseElement;
 }
 
 //==============================================================================

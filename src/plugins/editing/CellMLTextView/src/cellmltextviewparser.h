@@ -173,6 +173,8 @@ private:
     bool parseComponentRefDefinition(QDomNode &pDomNode);
     bool parseMapDefinition(QDomNode &pDomNode);
 
+    QString mathmlName(const CellmlTextViewScanner::TokenType &pTokenType) const;
+
     QDomElement parseDerivativeIdentifier(QDomNode &pDomNode);
     QDomElement parseMathematicalExpressionElement(QDomNode &pDomNode,
                                                    const CellmlTextViewScanner::TokenTypes &pTokenTypes,
