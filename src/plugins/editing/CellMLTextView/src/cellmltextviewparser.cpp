@@ -1929,108 +1929,119 @@ bool CellmlTextViewParser::parseMapDefinition(QDomNode &pDomNode)
 
     // Expect "between"
 
-    if (betweenToken(connectionElement)) {
-        // Create our map components element
+    if (!betweenToken(connectionElement))
+        return false;
 
-        QDomElement mapComponentsElement = newDomElement(connectionElement, "map_components");
+    // Create our map components element
 
-        // Try to parse for a cmeta:id
+    QDomElement mapComponentsElement = newDomElement(connectionElement, "map_components");
 
-        mScanner->getNextToken();
+    // Try to parse for a cmeta:id
 
-        if (!parseCmetaId(mapComponentsElement))
-            return false;
+    mScanner->getNextToken();
 
-        // Expect an identifier
+    if (!parseCmetaId(mapComponentsElement))
+        return false;
 
-        if (identifierToken(connectionElement)) {
-            // Set our first component
+    // Expect an identifier
 
-            mapComponentsElement.setAttribute("component_1", mScanner->tokenString());
+    if (!identifierToken(connectionElement))
+        return false;
+
+    // Set our first component
+
+    mapComponentsElement.setAttribute("component_1", mScanner->tokenString());
+
+    // Expect "and"
+
+    mScanner->getNextToken();
+
+    if (!andToken(connectionElement))
+        return false;
+
+    // Expect an identifier
+
+    mScanner->getNextToken();
+
+    if (!identifierToken(connectionElement))
+        return false;
+
+    // Set our second component
+
+    mapComponentsElement.setAttribute("component_2", mScanner->tokenString());
+
+    // Expect "for"
+
+    mScanner->getNextToken();
+
+    if (!forToken(connectionElement))
+        return false;
+
+    // Expect a mapping, so loop while we have "vars" or leave if we get
+    // "enddef"
+
+    static const CellmlTextViewScanner::TokenTypes tokenTypes = CellmlTextViewScanner::TokenTypes() << CellmlTextViewScanner::VarsToken
+                                                                                                    << CellmlTextViewScanner::EndDefToken;
+
+    mScanner->getNextToken();
+
+    while (tokenType(connectionElement, QObject::tr("'%1' or '%2'").arg("vars", "enddef"),
+                     tokenTypes)) {
+        if (mScanner->tokenType() == CellmlTextViewScanner::VarsToken) {
+            // Create our map variables element
+
+            QDomElement mapVariablesElement = newDomElement(connectionElement, "map_variables");
+
+            // Try to parse for a cmeta:id
+
+            mScanner->getNextToken();
+
+            if (!parseCmetaId(mapVariablesElement))
+                return false;
+
+            // Expect an identifier
+
+            if (!identifierToken(connectionElement))
+                return false;
+
+            // Set the name of the first variable
+
+            mapVariablesElement.setAttribute("variable_1", mScanner->tokenString());
 
             // Expect "and"
 
             mScanner->getNextToken();
 
-            if (andToken(connectionElement)) {
-                // Expect an identifier
+            if (!andToken(connectionElement))
+                return false;
 
-                mScanner->getNextToken();
+            // Expect an identifier
 
-                if (identifierToken(connectionElement)) {
-                    // Set our second component
+            mScanner->getNextToken();
 
-                    mapComponentsElement.setAttribute("component_2", mScanner->tokenString());
+            if (!identifierToken(connectionElement))
+                return false;
 
-                    // Expect "for"
+            // Set the name of the second variable
 
-                    mScanner->getNextToken();
+            mapVariablesElement.setAttribute("variable_2", mScanner->tokenString());
 
-                    if (forToken(connectionElement)) {
-                        // Expect a mapping, so loop while we have "vars" or
-                        // leave if we get "enddef"
+            // Expect ";"
 
-                        static const CellmlTextViewScanner::TokenTypes tokenTypes = CellmlTextViewScanner::TokenTypes() << CellmlTextViewScanner::VarsToken
-                                                                                                                        << CellmlTextViewScanner::EndDefToken;
+            mScanner->getNextToken();
 
-                        mScanner->getNextToken();
+            if (!semiColonToken(connectionElement))
+                return false;
 
-                        while (tokenType(connectionElement, QObject::tr("'%1' or '%2'").arg("vars", "enddef"),
-                                         tokenTypes)) {
-                            if (mScanner->tokenType() == CellmlTextViewScanner::VarsToken) {
-                                // Create our map variables element
+            // Fetch the next token
 
-                                QDomElement mapVariablesElement = newDomElement(connectionElement, "map_variables");
+            mScanner->getNextToken();
+        } else {
+            // Expect ";"
 
-                                // Try to parse for a cmeta:id
+            mScanner->getNextToken();
 
-                                mScanner->getNextToken();
-
-                                if (!parseCmetaId(mapVariablesElement))
-                                    return false;
-
-                                // Expect an identifier
-
-                                if (identifierToken(connectionElement)) {
-                                    // Set the name of the first variable
-
-                                    mapVariablesElement.setAttribute("variable_1", mScanner->tokenString());
-
-                                    // Expect "and"
-
-                                    mScanner->getNextToken();
-
-                                    if (andToken(connectionElement)) {
-                                        // Expect an identifier
-
-                                        mScanner->getNextToken();
-
-                                        if (identifierToken(connectionElement)) {
-                                            // Set the name of the second
-                                            // variable
-
-                                            mapVariablesElement.setAttribute("variable_2", mScanner->tokenString());
-
-                                            // Expect ";"
-
-                                            mScanner->getNextToken();
-
-                                            if (semiColonToken(connectionElement))
-                                                mScanner->getNextToken();
-                                        }
-                                    }
-                                }
-                            } else {
-                                // Expect ";"
-
-                                mScanner->getNextToken();
-
-                                return semiColonToken(connectionElement);
-                            }
-                        }
-                    }
-                }
-            }
+            return semiColonToken(connectionElement);
         }
     }
 
