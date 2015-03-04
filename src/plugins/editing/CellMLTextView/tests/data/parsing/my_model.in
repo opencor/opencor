@@ -118,33 +118,33 @@ def model{my_model_cmeta_id} my_model as
 
         a = sel
             otherwise:
-                otherid;
-            case cond1:
-                id1;
-            case cond2:
-                id2;
+                other_expression;
+            case condition1:
+                expression1;
+            case condition2:
+                expression2;
         endsel;
 
         // In between comment...
 
         a = sel
-            case cond1:
-                id1;
+            case condition1:
+                expression1;
             otherwise:
-                otherid;
-            case cond2:
-                id2;
+                other_expression;
+            case condition2:
+                expression2;
         endsel;
 
         // In between comment...
 
         a = sel
-            case cond1:
-                id1;
-            case cond2:
-                id2;
+            case condition1:
+                expression1;
+            case condition2:
+                expression2;
             otherwise:
-                otherid;
+                other_expression;
         endsel;
 
         // In between comment...
@@ -154,12 +154,12 @@ def model{my_model_cmeta_id} my_model as
         // In between comment...
 
         a = sel
-            case cond1:
-                id1;
-            case cond2:
-                id2;
+            case condition1:
+                expression1;
+            case condition2:
+                expression2;
             otherwise:
-                otherid;
+                other_expression;
         endsel;
 
         // In between comment...

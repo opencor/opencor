@@ -67,15 +67,15 @@
                 <ci>a</ci>
                 <piecewise>
                     <otherwise>
-                        <ci>otherid</ci>
+                        <ci>other_expression</ci>
                     </otherwise>
                     <piece>
-                        <ci>id1</ci>
-                        <ci>cond1</ci>
+                        <ci>expression1</ci>
+                        <ci>condition1</ci>
                     </piece>
                     <piece>
-                        <ci>id2</ci>
-                        <ci>cond2</ci>
+                        <ci>expression2</ci>
+                        <ci>condition2</ci>
                     </piece>
                 </piecewise>
             </apply>
@@ -85,15 +85,15 @@
                 <ci>a</ci>
                 <piecewise>
                     <piece>
-                        <ci>id1</ci>
-                        <ci>cond1</ci>
+                        <ci>expression1</ci>
+                        <ci>condition1</ci>
                     </piece>
                     <otherwise>
-                        <ci>otherid</ci>
+                        <ci>other_expression</ci>
                     </otherwise>
                     <piece>
-                        <ci>id2</ci>
-                        <ci>cond2</ci>
+                        <ci>expression2</ci>
+                        <ci>condition2</ci>
                     </piece>
                 </piecewise>
             </apply>
@@ -103,15 +103,15 @@
                 <ci>a</ci>
                 <piecewise>
                     <piece>
-                        <ci>id1</ci>
-                        <ci>cond1</ci>
+                        <ci>expression1</ci>
+                        <ci>condition1</ci>
                     </piece>
                     <piece>
-                        <ci>id2</ci>
-                        <ci>cond2</ci>
+                        <ci>expression2</ci>
+                        <ci>condition2</ci>
                     </piece>
                     <otherwise>
-                        <ci>otherid</ci>
+                        <ci>other_expression</ci>
                     </otherwise>
                 </piecewise>
             </apply>
@@ -125,15 +125,15 @@
                 <ci>a</ci>
                 <piecewise>
                     <piece>
-                        <ci>id1</ci>
-                        <ci>cond1</ci>
+                        <ci>expression1</ci>
+                        <ci>condition1</ci>
                     </piece>
                     <piece>
-                        <ci>id2</ci>
-                        <ci>cond2</ci>
+                        <ci>expression2</ci>
+                        <ci>condition2</ci>
                     </piece>
                     <otherwise>
-                        <ci>otherid</ci>
+                        <ci>other_expression</ci>
                     </otherwise>
                 </piecewise>
             </apply>

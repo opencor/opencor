@@ -1332,6 +1332,8 @@ void ParsingTests::componentTests()
 
     // Various tests on a component definition to check that we can have
     // equations with various operators and precedences
+    
+    
 }
 
 //==============================================================================
