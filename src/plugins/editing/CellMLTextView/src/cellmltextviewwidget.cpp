@@ -506,7 +506,7 @@ bool CellmlTextViewWidget::saveFile(const QString &pOldFileName,
 
             QDomDocument domDocument = parser.domDocument();
 
-            domDocument.appendChild(data.rdfNodes().cloneNode());
+            domDocument.firstChildElement().appendChild(data.rdfNodes().firstChildElement().cloneNode());
 
             if (Core::writeTextToFile(pNewFileName, qDomDocumentToString(domDocument))) {
                 // We could serialise the file, so update our SHA-1 value

@@ -1,4 +1,4 @@
-def model{cellml_1_1} cellml_1_1 as
+def model{cellml_1_1_cmeta_id} cellml_1_1 as
     // A comment can fit on one line...
 
     // A comment can also fit

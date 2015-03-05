@@ -20,7 +20,9 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include "cellmltextviewconverter.h"
+#include "cellmltextviewparser.h"
 #include "conversiontests.h"
+#include "corecliutils.h"
 
 //==============================================================================
 
@@ -36,11 +38,22 @@ void ConversionTests::successfulConversionTests()
 {
     OpenCOR::CellMLTextView::CellMLTextViewConverter converter;
 
-    // Test the conversion of a CellML file that works with COR
+    // Test the conversion of a CellML file that works with COR...
 
     QVERIFY(converter.execute(OpenCOR::fileName("src/plugins/editing/CellMLTextView/tests/data/conversion/successful/cellml_cor.cellml")));
     QCOMPARELIST(converter.output().split("\n"),
                  OpenCOR::fileContents(OpenCOR::fileName("src/plugins/editing/CellMLTextView/tests/data/conversion/successful/cellml_cor.out")));
+
+    // ...and back
+
+//    OpenCOR::CellMLTextView::CellmlTextViewParser parser;
+//---GRY--- TO BE ENABLED ONCE WE FULLY SUPPORT THE PARSING OF THE CellML Text
+//          FORMAT...
+
+//    QVERIFY(parser.execute(OpenCOR::fileContents(OpenCOR::fileName("src/plugins/editing/CellMLTextView/tests/data/conversion/successful/cellml_cor.out")).join("\n")));
+//    QCOMPARELIST(qDomDocumentToString(parser.domDocument()).split("\n"),
+//                 OpenCOR::fileContents(OpenCOR::fileName("src/plugins/editing/CellMLTextView/tests/data/conversion/successful/cellml_cor.cellml")));
+//    QVERIFY(!parser.domDocument().isNull());
 
     // Test the conversion of a CellML file that only works with OpenCOR
 

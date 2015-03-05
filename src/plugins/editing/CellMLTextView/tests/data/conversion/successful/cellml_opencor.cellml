@@ -1,11 +1,11 @@
 <?xml version='1.0'?>
-<model cmeta:id="cellml_1_1" name="cellml_1_1" xmlns="http://www.cellml.org/cellml/1.1#" xmlns:cellml="http://www.cellml.org/cellml/1.1#" xmlns:cmeta="http://www.cellml.org/metadata/1.0#" xmlns:xlink="http://www.w3.org/1999/xlink">
+<model cmeta:id="cellml_1_1_cmeta_id" name="cellml_1_1" xmlns="http://www.cellml.org/cellml/1.1#" xmlns:cellml="http://www.cellml.org/cellml/1.1#" xmlns:cmeta="http://www.cellml.org/metadata/1.0#" xmlns:xlink="http://www.w3.org/1999/xlink">
     <!-- A comment can fit on one line...-->
     <!-- A comment can also fit
  on one, two or even
  more lines...-->
 	<rdf:RDF xmlns:bqbiol="http://biomodels.net/biology-qualifiers/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
-		<rdf:Description rdf:about="#cellml_1_1">
+		<rdf:Description rdf:about="#cellml_1_1_cmeta_id">
 			<bqbiol:isVersionOf rdf:resource="http://identifiers.org/go/GO:0034704"/>
 		</rdf:Description>
 	</rdf:RDF>
