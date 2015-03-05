@@ -1,5 +1,5 @@
 <?xml version='1.0'?>
-<model name="cellml_1_0" xmlns="http://www.cellml.org/cellml/1.0#" xmlns:cellml="http://www.cellml.org/cellml/1.0#" xmlns:cmeta="http://www.cellml.org/metadata/1.0#">
+<model name="cellml_1_0" xmlns="http://www.cellml.org/cellml/1.0#" xmlns:cellml="http://www.cellml.org/cellml/1.0#">
     <units base_units="yes" name="my_base_unit1"/>
     <units base_units="yes" name="my_base_unit2"/>
     <units base_units="yes" name="my_base_unit3"/>
@@ -135,7 +135,7 @@
         <variable initial_value="123" name="my_variable2" units="my_unit2"/>
         <variable name="my_variable3" public_interface="in" units="my_unit3"/>
         <variable name="my_variable4" private_interface="out" units="my_unit4"/>
-        <variable name="my_variable5" public_interface="none" private_interface="none" units="my_unit5"/>
+        <variable name="my_variable5" private_interface="none" public_interface="none" units="my_unit5"/>
         <math xmlns="http://www.w3.org/1998/Math/MathML">
             <apply>
                 <eq/>
@@ -150,12 +150,7 @@
             <apply>
                 <eq/>
                 <ci>a</ci>
-                <cn>5</cn>
-            </apply>
-            <apply>
-                <eq/>
-                <ci>a</ci>
-                <cn cellml:units="dimensionless" type="e-notation">12.3<sep/>5</cn>
+                <cn cellml:units="dimensionless">12.3e5</cn>
             </apply>
             <apply>
                 <eq/>
@@ -425,24 +420,24 @@
                 <eq/>
                 <ci>a</ci>
                 <apply>
-                    <minus/>
+                    <times/>
                     <apply>
-                        <times/>
+                        <minus/>
                         <ci>b</ci>
-                        <ci>c</ci>
                     </apply>
+                    <ci>c</ci>
                 </apply>
             </apply>
             <apply>
                 <eq/>
                 <ci>a</ci>
                 <apply>
-                    <minus/>
+                    <divide/>
                     <apply>
-                        <divide/>
+                        <minus/>
                         <ci>b</ci>
-                        <ci>c</ci>
                     </apply>
+                    <ci>c</ci>
                 </apply>
             </apply>
             <apply>
@@ -831,9 +826,8 @@
                 <eq/>
                 <ci>a</ci>
                 <apply>
-                    <power/>
+                    <root/>
                     <ci>b</ci>
-                    <cn cellml:units="dimensionless">0.5</cn>
                 </apply>
             </apply>
             <apply>
@@ -867,9 +861,6 @@
                 <ci>a</ci>
                 <apply>
                     <root/>
-                    <degree>
-                        <cn cellml:units="dimensionless">2</cn>
-                    </degree>
                     <ci>b</ci>
                 </apply>
             </apply>

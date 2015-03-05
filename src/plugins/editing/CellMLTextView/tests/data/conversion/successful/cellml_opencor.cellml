@@ -94,6 +94,16 @@
             <apply>
                 <eq/>
                 <ci>a</ci>
+                <cn>5</cn>
+            </apply>
+            <apply>
+                <eq/>
+                <ci>a</ci>
+                <cn cellml:units="dimensionless" type="e-notation">12.3<sep/>5</cn>
+            </apply>
+            <apply>
+                <eq/>
+                <ci>a</ci>
                 <apply>
                     <diff/>
                     <bvar>

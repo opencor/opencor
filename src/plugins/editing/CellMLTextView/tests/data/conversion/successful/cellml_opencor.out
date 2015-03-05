@@ -62,6 +62,8 @@ def model{cellml_1_1_cmeta_id} cellml_1_1 as
 
         var{my_variable_cmeta_id} my_variable: my_unit;
 
+        a = 5{???};
+        a = 12.3e5{dimensionless};
         a = ode(f, t, 2{dimensionless});
         a = nan;
         a = inf;

@@ -46,14 +46,12 @@ void ConversionTests::successfulConversionTests()
 
     // ...and back
 
-//    OpenCOR::CellMLTextView::CellmlTextViewParser parser;
-//---GRY--- TO BE ENABLED ONCE WE FULLY SUPPORT THE PARSING OF THE CellML Text
-//          FORMAT...
+    OpenCOR::CellMLTextView::CellmlTextViewParser parser;
 
-//    QVERIFY(parser.execute(OpenCOR::fileContents(OpenCOR::fileName("src/plugins/editing/CellMLTextView/tests/data/conversion/successful/cellml_cor.out")).join("\n")));
-//    QCOMPARELIST(qDomDocumentToString(parser.domDocument()).split("\n"),
-//                 OpenCOR::fileContents(OpenCOR::fileName("src/plugins/editing/CellMLTextView/tests/data/conversion/successful/cellml_cor.cellml")));
-//    QVERIFY(!parser.domDocument().isNull());
+    QVERIFY(parser.execute(OpenCOR::fileContents(OpenCOR::fileName("src/plugins/editing/CellMLTextView/tests/data/conversion/successful/cellml_cor.out")).join("\n")));
+    QCOMPARELIST(qDomDocumentToString(parser.domDocument()).split("\n"),
+                 OpenCOR::fileContents(OpenCOR::fileName("src/plugins/editing/CellMLTextView/tests/data/conversion/successful/cellml_cor.cellml")));
+    QVERIFY(!parser.domDocument().isNull());
 
     // Test the conversion of a CellML file that only works with OpenCOR
 
