@@ -302,8 +302,8 @@
         <translation>Il ne peut y avoir qu&apos;une clause &apos;otherwise&apos;.</translation>
     </message>
     <message>
-        <source>An identifier, &apos;ode&apos;, a number, a mathematical constant or &apos;(&apos;</source>
-        <translation>Un identifiant, &apos;ode&apos;, un nombre, une constante mathématique ou &apos;(&apos;</translation>
+        <source>An identifier, &apos;ode&apos;, a number, a mathematical function, a mathematical constant or &apos;(&apos;</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 </TS>

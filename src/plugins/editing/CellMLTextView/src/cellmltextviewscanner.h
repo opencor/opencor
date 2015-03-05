@@ -52,17 +52,30 @@ public:
         ImportToken, InclToken, MapToken, ModelToken, OtherwiseToken, SelToken,
         UnitToken, UsingToken, VarToken, VarsToken,
 
-        AbsToken, CeilToken, ExpToken, FactToken, FloorToken, LnToken, LogToken,
-        PowToken, RootToken, SqrToken, SqrtToken,
-
         /*AndToken,*/ OrToken, XorToken, NotToken,
 
         OdeToken,
+
+        AbsToken, CeilToken, ExpToken, FactToken, FloorToken, LnToken, SqrToken,
+        SqrtToken,
 
         SinToken, CosToken, TanToken, SecToken, CscToken, CotToken,
         SinhToken, CoshToken, TanhToken, SechToken, CschToken, CothToken,
         AsinToken, AcosToken, AtanToken, AsecToken, AcscToken, AcotToken,
         AsinhToken, AcoshToken, AtanhToken, AsechToken, AcschToken, AcothToken,
+
+        FirstOneArgumentMathematicalFunctionToken = AbsToken,
+        LastOneArgumentMathematicalFunctionToken = AcothToken,
+
+        LogToken,
+
+        FirstOneOrTwoArgumentMathematicalFunctionToken = LogToken,
+        LastOneOrTwoArgumentMathematicalFunctionToken = LogToken,
+
+        PowToken, RootToken,
+
+        FirstTwoArgumentMathematicalFunctionToken = PowToken,
+        LastTwoArgumentMathematicalFunctionToken = RootToken,
 
         TrueToken, FalseToken, NanToken, PiToken, InfToken, EToken,
 
@@ -82,7 +95,7 @@ public:
         FirstUnitToken = AmpereToken,
         LastUnitToken = WeberToken,
 
-        // CellML tests parameter keywords
+        // CellML text parameter keywords
 
         PrefToken, ExpoToken, MultToken, OffToken,
 

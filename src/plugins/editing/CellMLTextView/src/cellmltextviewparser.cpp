@@ -359,6 +359,43 @@ QDomElement CellmlTextViewParser::newMathematicalConstantElement(const CellmlTex
 
 //==============================================================================
 
+QDomElement CellmlTextViewParser::newMathematicalFunctionElement(const CellmlTextViewScanner::TokenType &pTokenType,
+                                                                 QDomElement &pFirstArgumentElement,
+                                                                 QDomElement &pSecondArgumentElement)
+{
+    // Create and return a new mathematical function element for the given token
+    // and arguments
+
+    QDomElement mathematicalFunctionElement = mDomDocument.createElement(mathmlName(pTokenType));
+
+    mathematicalFunctionElement.appendChild(pFirstArgumentElement);
+
+    if (!pSecondArgumentElement.isNull())
+        mathematicalFunctionElement.appendChild(pSecondArgumentElement);
+
+    return mathematicalFunctionElement;
+}
+
+//==============================================================================
+
+CellmlTextViewScanner::TokenTypes CellmlTextViewParser::rangeOfTokenTypes(const CellmlTextViewScanner::TokenType &pFromTokenType,
+                                                                          const CellmlTextViewScanner::TokenType &pToTokenType)
+{
+    // Return a range of token types
+
+    CellmlTextViewScanner::TokenTypes tokenTypes = CellmlTextViewScanner::TokenTypes();
+
+    for (CellmlTextViewScanner::TokenType tokenType = pFromTokenType;
+         tokenType <= pToTokenType;
+         tokenType = CellmlTextViewScanner::TokenType(int(tokenType)+1)) {
+        tokenTypes << tokenType;
+    }
+
+    return tokenTypes;
+}
+
+//==============================================================================
+
 bool CellmlTextViewParser::tokenType(QDomNode &pDomNode,
                                      const QString &pExpectedString,
                                      const CellmlTextViewScanner::TokenTypes &pTokenTypes)
@@ -597,15 +634,12 @@ bool CellmlTextViewParser::identifierOrSiUnitToken(QDomNode &pDomNode)
 {
     // Expect an identifier or an SI unit
 
-    static CellmlTextViewScanner::TokenTypes tokenTypes = CellmlTextViewScanner::TokenTypes() << CellmlTextViewScanner::IdentifierToken;
+    static CellmlTextViewScanner::TokenTypes tokenTypes = CellmlTextViewScanner::TokenTypes();
     static bool needInitializeTokenTypes = true;
 
     if (needInitializeTokenTypes) {
-        for (CellmlTextViewScanner::TokenType tokenType = CellmlTextViewScanner::FirstUnitToken;
-             tokenType <= CellmlTextViewScanner::LastUnitToken;
-             tokenType = CellmlTextViewScanner::TokenType(int(tokenType)+1)) {
-            tokenTypes << tokenType;
-        }
+        tokenTypes = rangeOfTokenTypes(CellmlTextViewScanner::FirstUnitToken,
+                                       CellmlTextViewScanner::LastUnitToken) << CellmlTextViewScanner::IdentifierToken;
 
         needInitializeTokenTypes = false;
     }
@@ -1306,15 +1340,12 @@ bool CellmlTextViewParser::parseUnitDefinition(QDomNode &pDomNode)
 
                         // Expect a number or a prefix
 
-                        static CellmlTextViewScanner::TokenTypes tokenTypes = CellmlTextViewScanner::TokenTypes() << CellmlTextViewScanner::NumberToken;
+                        static CellmlTextViewScanner::TokenTypes tokenTypes = CellmlTextViewScanner::TokenTypes();
                         static bool needInitializeTokenTypes = true;
 
                         if (needInitializeTokenTypes) {
-                            for (CellmlTextViewScanner::TokenType tokenType = CellmlTextViewScanner::FirstPrefixToken;
-                                 tokenType <= CellmlTextViewScanner::LastPrefixToken;
-                                 tokenType = CellmlTextViewScanner::TokenType(int(tokenType)+1)) {
-                                tokenTypes << tokenType;
-                            }
+                            tokenTypes = rangeOfTokenTypes(CellmlTextViewScanner::FirstPrefixToken,
+                                                           CellmlTextViewScanner::LastPrefixToken) << CellmlTextViewScanner::NumberToken;
 
                             needInitializeTokenTypes = false;
                         }
@@ -2071,6 +2102,76 @@ QString CellmlTextViewParser::mathmlName(const CellmlTextViewScanner::TokenType 
         return "xor";
     case CellmlTextViewScanner::NotToken:
         return "not";
+    case CellmlTextViewScanner::AbsToken:
+        return "abs";
+    case CellmlTextViewScanner::CeilToken:
+        return "ceiling";
+    case CellmlTextViewScanner::ExpToken:
+        return "exp";
+    case CellmlTextViewScanner::FactToken:
+        return "factorial";
+    case CellmlTextViewScanner::FloorToken:
+        return "floor";
+    case CellmlTextViewScanner::LnToken:
+        return "ln";
+    case CellmlTextViewScanner::SqrToken:
+        return "power";
+    case CellmlTextViewScanner::SqrtToken:
+        return "root";
+    case CellmlTextViewScanner::SinToken:
+        return "sin";
+    case CellmlTextViewScanner::CosToken:
+        return "cos";
+    case CellmlTextViewScanner::TanToken:
+        return "tan";
+    case CellmlTextViewScanner::SecToken:
+        return "sec";
+    case CellmlTextViewScanner::CscToken:
+        return "csc";
+    case CellmlTextViewScanner::CotToken:
+        return "cot";
+    case CellmlTextViewScanner::SinhToken:
+        return "sinh";
+    case CellmlTextViewScanner::CoshToken:
+        return "cosh";
+    case CellmlTextViewScanner::TanhToken:
+        return "tanh";
+    case CellmlTextViewScanner::SechToken:
+        return "sech";
+    case CellmlTextViewScanner::CschToken:
+        return "csch";
+    case CellmlTextViewScanner::CothToken:
+        return "coth";
+    case CellmlTextViewScanner::AsinToken:
+        return "asin";
+    case CellmlTextViewScanner::AcosToken:
+        return "acos";
+    case CellmlTextViewScanner::AtanToken:
+        return "atan";
+    case CellmlTextViewScanner::AsecToken:
+        return "asec";
+    case CellmlTextViewScanner::AcscToken:
+        return "acsc";
+    case CellmlTextViewScanner::AcotToken:
+        return "acot";
+    case CellmlTextViewScanner::AsinhToken:
+        return "asinh";
+    case CellmlTextViewScanner::AcoshToken:
+        return "acosh";
+    case CellmlTextViewScanner::AtanhToken:
+        return "atanh";
+    case CellmlTextViewScanner::AsechToken:
+        return "asech";
+    case CellmlTextViewScanner::AcschToken:
+        return "acsch";
+    case CellmlTextViewScanner::AcothToken:
+        return "acoth";
+    case CellmlTextViewScanner::LogToken:
+        return "log";
+    case CellmlTextViewScanner::PowToken:
+        return "power";
+    case CellmlTextViewScanner::RootToken:
+        return "root";
     case CellmlTextViewScanner::TrueToken:
         return "true";
     case CellmlTextViewScanner::FalseToken:
@@ -2256,6 +2357,45 @@ QDomElement CellmlTextViewParser::parseNumber(QDomNode &pDomNode)
     // Return a number element
 
     return newNumberElement(number, unit);
+}
+
+//==============================================================================
+
+QDomElement CellmlTextViewParser::parseMathematicalFunction(QDomNode &pDomNode,
+                                                            const bool &pOneArgument,
+                                                            const bool &pTwoArguments)
+{
+Q_UNUSED(pOneArgument);
+Q_UNUSED(pTwoArguments);
+    // Keep track of the mathematical function
+
+    CellmlTextViewScanner::TokenType tokenType = mScanner->tokenType();
+
+    // Expect "("
+
+    mScanner->getNextToken();
+
+    if (!openingBracketToken(pDomNode))
+        return QDomElement();
+
+    // Try to parse a normal mathematical expression
+
+    mScanner->getNextToken();
+
+    QDomElement firstArgumentElement = parseNormalMathematicalExpression(pDomNode);
+    QDomElement secondArgumentElement = QDomElement();
+
+    if (firstArgumentElement.isNull())
+        return QDomElement();
+
+    // Expect ")"
+
+    if (!closingBracketToken(pDomNode))
+        return QDomElement();
+
+    // Return a mathematical function element
+
+    return newMathematicalFunctionElement(tokenType, firstArgumentElement, secondArgumentElement);
 }
 
 //==============================================================================
@@ -2488,21 +2628,26 @@ QDomElement CellmlTextViewParser::parseNormalMathematicalExpression8(QDomNode &p
 
 QDomElement CellmlTextViewParser::parseNormalMathematicalExpression9(QDomNode &pDomNode)
 {
-//---GRY--- TO BE COMPLETED...
-    // Look for an identifier, "ode", a number, a mathematical function, an
-    // opening bracket or a mathematical constant
+    // Look for an identifier, "ode", a number, a mathematical constant, a
+    // mathematical function or an opening bracket
 
     QDomElement res;
 
     static CellmlTextViewScanner::TokenTypes mahematicalConstantTokenTypes = CellmlTextViewScanner::TokenTypes();
+    static CellmlTextViewScanner::TokenTypes oneArgumentMathematicalFunctionTokenTypes = CellmlTextViewScanner::TokenTypes();
+    static CellmlTextViewScanner::TokenTypes oneOrTwoArgumentMathematicalFunctionTokenTypes = CellmlTextViewScanner::TokenTypes();
+    static CellmlTextViewScanner::TokenTypes twoArgumentMathematicalFunctionTokenTypes = CellmlTextViewScanner::TokenTypes();
     static bool needInitializeTokenTypes = true;
 
     if (needInitializeTokenTypes) {
-        for (CellmlTextViewScanner::TokenType tokenType = CellmlTextViewScanner::FirstMathematicalConstantToken;
-             tokenType <= CellmlTextViewScanner::LastMathematicalConstantToken;
-             tokenType = CellmlTextViewScanner::TokenType(int(tokenType)+1)) {
-            mahematicalConstantTokenTypes << tokenType;
-        }
+        mahematicalConstantTokenTypes = rangeOfTokenTypes(CellmlTextViewScanner::FirstMathematicalConstantToken,
+                                                          CellmlTextViewScanner::LastMathematicalConstantToken);
+        oneArgumentMathematicalFunctionTokenTypes = rangeOfTokenTypes(CellmlTextViewScanner::FirstOneArgumentMathematicalFunctionToken,
+                                                                      CellmlTextViewScanner::LastOneArgumentMathematicalFunctionToken);
+        oneOrTwoArgumentMathematicalFunctionTokenTypes = rangeOfTokenTypes(CellmlTextViewScanner::FirstOneOrTwoArgumentMathematicalFunctionToken,
+                                                                           CellmlTextViewScanner::LastOneOrTwoArgumentMathematicalFunctionToken);
+        twoArgumentMathematicalFunctionTokenTypes = rangeOfTokenTypes(CellmlTextViewScanner::FirstTwoArgumentMathematicalFunctionToken,
+                                                                      CellmlTextViewScanner::LastTwoArgumentMathematicalFunctionToken);
 
         needInitializeTokenTypes = false;
     }
@@ -2523,6 +2668,18 @@ QDomElement CellmlTextViewParser::parseNormalMathematicalExpression9(QDomNode &p
         // Create a mathematical constant element
 
         res = newMathematicalConstantElement(mScanner->tokenType());
+    } else if (oneArgumentMathematicalFunctionTokenTypes.contains(mScanner->tokenType())) {
+        // Try to parse a one-argument mathematical function
+
+        res = parseMathematicalFunction(pDomNode, true, false);
+    } else if (oneOrTwoArgumentMathematicalFunctionTokenTypes.contains(mScanner->tokenType())) {
+        // Try to parse a one- or two-argument mathematical function
+
+        res = parseMathematicalFunction(pDomNode, true, true);
+    } else if (twoArgumentMathematicalFunctionTokenTypes.contains(mScanner->tokenType())) {
+        // Try to parse a two-argument mathematical function
+
+        res = parseMathematicalFunction(pDomNode, false, true);
     } else if (mScanner->tokenType() == CellmlTextViewScanner::OpeningBracketToken) {
         // Try to parse a parenthesised mathematical expression
 
@@ -2533,7 +2690,7 @@ QDomElement CellmlTextViewParser::parseNormalMathematicalExpression9(QDomNode &p
         if (mScanner->tokenType() != CellmlTextViewScanner::EofToken)
             foundString = QString("'%1'").arg(foundString);
 
-        addUnexpectedTokenErrorMessage(QObject::tr("An identifier, 'ode', a number, a mathematical constant or '('"), foundString);
+        addUnexpectedTokenErrorMessage(QObject::tr("An identifier, 'ode', a number, a mathematical function, a mathematical constant or '('"), foundString);
 
         return QDomElement();
     }
