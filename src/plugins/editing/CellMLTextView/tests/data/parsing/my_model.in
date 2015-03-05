@@ -203,6 +203,7 @@ def model{my_model_cmeta_id} my_model as
         a = pi;
         a = inf;
         a = e;
+        a = b*(c+d);
 
         // In between comment...
     enddef;

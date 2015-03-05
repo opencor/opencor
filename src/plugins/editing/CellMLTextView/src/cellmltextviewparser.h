@@ -178,6 +178,7 @@ private:
 
     QDomElement parseDerivativeIdentifier(QDomNode &pDomNode);
     QDomElement parseNumber(QDomNode &pDomNode);
+    QDomElement parseParenthesizedMathematicalExpression(QDomNode &pDomNode);
 
     QDomElement parseMathematicalExpressionElement(QDomNode &pDomNode,
                                                    const CellmlTextViewScanner::TokenTypes &pTokenTypes,

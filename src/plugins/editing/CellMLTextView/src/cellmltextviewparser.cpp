@@ -2260,6 +2260,29 @@ QDomElement CellmlTextViewParser::parseNumber(QDomNode &pDomNode)
 
 //==============================================================================
 
+QDomElement CellmlTextViewParser::parseParenthesizedMathematicalExpression(QDomNode &pDomNode)
+{
+    // Try to parse a normal mathematical expression
+
+    mScanner->getNextToken();
+
+    QDomElement res = parseNormalMathematicalExpression(pDomNode);
+
+    if (res.isNull())
+        return QDomElement();
+
+    // Expect ")"
+
+    if (!closingBracketToken(pDomNode))
+        return QDomElement();
+
+    // Return our normal mathematical expression
+
+    return res;
+}
+
+//==============================================================================
+
 QDomElement CellmlTextViewParser::parseMathematicalExpressionElement(QDomNode &pDomNode,
                                                                      const CellmlTextViewScanner::TokenTypes &pTokenTypes,
                                                                      ParseNormalMathematicalExpressionFunction pFunction)
@@ -2444,6 +2467,9 @@ QDomElement CellmlTextViewParser::parseNormalMathematicalExpression8(QDomNode &p
             operand = parseNormalMathematicalExpression9(pDomNode);
         }
 
+        if (operand.isNull())
+            return QDomElement();
+
         // Create and return an apply element that has been populated with our
         // operator and operand
 
@@ -2497,13 +2523,17 @@ QDomElement CellmlTextViewParser::parseNormalMathematicalExpression9(QDomNode &p
         // Create a mathematical constant element
 
         res = newMathematicalConstantElement(mScanner->tokenType());
+    } else if (mScanner->tokenType() == CellmlTextViewScanner::OpeningBracketToken) {
+        // Try to parse a parenthesised mathematical expression
+
+        res = parseParenthesizedMathematicalExpression(pDomNode);
     } else {
         QString foundString = mScanner->tokenString();
 
         if (mScanner->tokenType() != CellmlTextViewScanner::EofToken)
             foundString = QString("'%1'").arg(foundString);
 
-        addUnexpectedTokenErrorMessage(QObject::tr("An identifier, 'ode', a number or a mathematical constant"), foundString);
+        addUnexpectedTokenErrorMessage(QObject::tr("An identifier, 'ode', a number, a mathematical constant or '('"), foundString);
 
         return QDomElement();
     }

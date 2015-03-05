@@ -393,6 +393,19 @@
                 <ci>a</ci>
                 <exponentiale/>
             </apply>
+            <apply>
+                <eq/>
+                <ci>a</ci>
+                <apply>
+                    <times/>
+                    <ci>b</ci>
+                    <apply>
+                        <plus/>
+                        <ci>c</ci>
+                        <ci>d</ci>
+                    </apply>
+                </apply>
+            </apply>
         </math>
         <!-- In between comment...-->
     </component>
