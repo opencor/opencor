@@ -1041,7 +1041,7 @@ void ParsingTests::componentTests()
                                     "    def comp my_component as\n"
                                     "        a = ")));
     QCOMPARE(parser.messages().first().type(), OpenCOR::CellMLTextView::CellmlTextViewParserMessage::Error);
-    QCOMPARE(parser.messages().first().message(), QString("An identifier, 'ode' or a number is expected, but the end of the file was found instead."));
+    QCOMPARE(parser.messages().first().message(), QString("An identifier, 'ode', a number or a mathematical constant is expected, but the end of the file was found instead."));
 
     QVERIFY(!parser.execute(QString("def model my_model as\n"
                                     "    def comp my_component as\n"
@@ -1073,7 +1073,7 @@ void ParsingTests::componentTests()
                                     "        a = sel\n"
                                     "            case")));
     QCOMPARE(parser.messages().first().type(), OpenCOR::CellMLTextView::CellmlTextViewParserMessage::Error);
-    QCOMPARE(parser.messages().first().message(), QString("An identifier, 'ode' or a number is expected, but the end of the file was found instead."));
+    QCOMPARE(parser.messages().first().message(), QString("An identifier, 'ode', a number or a mathematical constant is expected, but the end of the file was found instead."));
 
     QVERIFY(!parser.execute(QString("def model my_model as\n"
                                     "    def comp my_component as\n"
@@ -1087,7 +1087,7 @@ void ParsingTests::componentTests()
                                     "        a = sel\n"
                                     "            case cond1:")));
     QCOMPARE(parser.messages().first().type(), OpenCOR::CellMLTextView::CellmlTextViewParserMessage::Error);
-    QCOMPARE(parser.messages().first().message(), QString("An identifier, 'ode' or a number is expected, but the end of the file was found instead."));
+    QCOMPARE(parser.messages().first().message(), QString("An identifier, 'ode', a number or a mathematical constant is expected, but the end of the file was found instead."));
 
     QVERIFY(!parser.execute(QString("def model my_model as\n"
                                     "    def comp my_component as\n"
@@ -1127,7 +1127,7 @@ void ParsingTests::componentTests()
                                     "            case cond2: id2;\n"
                                     "            otherwise:")));
     QCOMPARE(parser.messages().first().type(), OpenCOR::CellMLTextView::CellmlTextViewParserMessage::Error);
-    QCOMPARE(parser.messages().first().message(), QString("An identifier, 'ode' or a number is expected, but the end of the file was found instead."));
+    QCOMPARE(parser.messages().first().message(), QString("An identifier, 'ode', a number or a mathematical constant is expected, but the end of the file was found instead."));
 
     QVERIFY(!parser.execute(QString("def model my_model as\n"
                                     "    def comp my_component as\n"

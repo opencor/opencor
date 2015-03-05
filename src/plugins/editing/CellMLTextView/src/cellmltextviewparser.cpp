@@ -349,6 +349,16 @@ QDomElement CellmlTextViewParser::newNumberElement(const QString &pNumber,
 
 //==============================================================================
 
+QDomElement CellmlTextViewParser::newMathematicalConstantElement(const CellmlTextViewScanner::TokenType &pTokenType)
+{
+    // Create and return a new mathematical constant element for the given token
+    // typewith the given value
+
+    return mDomDocument.createElement(mathmlName(pTokenType));
+}
+
+//==============================================================================
+
 bool CellmlTextViewParser::tokenType(QDomNode &pDomNode,
                                      const QString &pExpectedString,
                                      const CellmlTextViewScanner::TokenTypes &pTokenTypes)
@@ -2053,22 +2063,36 @@ QString CellmlTextViewParser::mathmlName(const CellmlTextViewScanner::TokenType 
     // Return the MathML name of the given token type
 
     switch (pTokenType) {
-    case CellmlTextViewScanner::OrToken:
-        return "or";
     case CellmlTextViewScanner::AndToken:
         return "and";
+    case CellmlTextViewScanner::OrToken:
+        return "or";
     case CellmlTextViewScanner::XorToken:
         return "xor";
+    case CellmlTextViewScanner::NotToken:
+        return "not";
+    case CellmlTextViewScanner::TrueToken:
+        return "true";
+    case CellmlTextViewScanner::FalseToken:
+        return "false";
+    case CellmlTextViewScanner::NanToken:
+        return "notanumber";
+    case CellmlTextViewScanner::PiToken:
+        return "pi";
+    case CellmlTextViewScanner::InfToken:
+        return "infinity";
+    case CellmlTextViewScanner::EToken:
+        return "exponentiale";
     case CellmlTextViewScanner::EqEqToken:
         return "eq";
     case CellmlTextViewScanner::NeqToken:
         return "neq";
     case CellmlTextViewScanner::LtToken:
         return "lt";
-    case CellmlTextViewScanner::GtToken:
-        return "gt";
     case CellmlTextViewScanner::LeqToken:
         return "leq";
+    case CellmlTextViewScanner::GtToken:
+        return "gt";
     case CellmlTextViewScanner::GeqToken:
         return "geq";
     case CellmlTextViewScanner::PlusToken:
@@ -2079,8 +2103,6 @@ QString CellmlTextViewParser::mathmlName(const CellmlTextViewScanner::TokenType 
         return "times";
     case CellmlTextViewScanner::DivideToken:
         return "divide";
-    case CellmlTextViewScanner::NotToken:
-        return "not";
     default:
 #ifdef QT_DEBUG
         qFatal("FATAL ERROR | %s:%d: no MathML name exists for the given token type.", __FILE__, __LINE__);
@@ -2192,6 +2214,48 @@ QDomElement CellmlTextViewParser::parseDerivativeIdentifier(QDomNode &pDomNode)
 
         return newDerivativeElement(f, x);
     }
+}
+
+//==============================================================================
+
+QDomElement CellmlTextViewParser::parseNumber(QDomNode &pDomNode)
+{
+    // 'Properly' parse the number and keep track of it
+    // Note: this is useful to do in case the number is not valid (e.g. too big,
+    //       too small)...
+
+    numberToken(pDomNode);
+
+    QString number = mScanner->tokenString();
+
+    // Expect "{"
+
+    mScanner->getNextToken();
+
+    if (!openingCurlyBracketToken(pDomNode))
+        return QDomElement();
+
+    // Expect an identifier or an SI unit
+
+    mScanner->getNextToken();
+
+    if (!identifierOrSiUnitToken(pDomNode))
+        return QDomElement();
+
+    // Keep track of the unit for our number
+
+    QString unit = mScanner->tokenString();
+
+    // Expect "}"
+
+    mScanner->getNextToken();
+
+    if (!closingCurlyBracketToken(pDomNode))
+        return QDomElement();
+
+    // Return a number element
+
+    return newNumberElement(number, unit);
 }
 
 //==============================================================================
@@ -2398,11 +2462,24 @@ QDomElement CellmlTextViewParser::parseNormalMathematicalExpression8(QDomNode &p
 
 QDomElement CellmlTextViewParser::parseNormalMathematicalExpression9(QDomNode &pDomNode)
 {
-//---GRY--- TO BE DONE...
+//---GRY--- TO BE COMPLETED...
     // Look for an identifier, "ode", a number, a mathematical function, an
     // opening bracket or a mathematical constant
 
     QDomElement res;
+
+    static CellmlTextViewScanner::TokenTypes mahematicalConstantTokenTypes = CellmlTextViewScanner::TokenTypes();
+    static bool needInitializeTokenTypes = true;
+
+    if (needInitializeTokenTypes) {
+        for (CellmlTextViewScanner::TokenType tokenType = CellmlTextViewScanner::FirstMathematicalConstantToken;
+             tokenType <= CellmlTextViewScanner::LastMathematicalConstantToken;
+             tokenType = CellmlTextViewScanner::TokenType(int(tokenType)+1)) {
+            mahematicalConstantTokenTypes << tokenType;
+        }
+
+        needInitializeTokenTypes = false;
+    }
 
     if (mScanner->tokenType() == CellmlTextViewScanner::IdentifierToken) {
         // Create an identifier element
@@ -2413,49 +2490,20 @@ QDomElement CellmlTextViewParser::parseNormalMathematicalExpression9(QDomNode &p
 
         res = parseDerivativeIdentifier(pDomNode);
     } else if (mScanner->tokenType() == CellmlTextViewScanner::NumberToken) {
-        // 'Properly' parse the number and keep track of it
-        // Note: this is useful to do in case the number is not valid (e.g. too
-        //       big, too small)...
+        // Try to parse a number
 
-        numberToken(pDomNode);
+        res = parseNumber(pDomNode);
+    } else if (mahematicalConstantTokenTypes.contains(mScanner->tokenType())) {
+        // Create a mathematical constant element
 
-        QString number = mScanner->tokenString();
-
-        // Expect "{"
-
-        mScanner->getNextToken();
-
-        if (!openingCurlyBracketToken(pDomNode))
-            return QDomElement();
-
-        // Expect an identifier or an SI unit
-
-        mScanner->getNextToken();
-
-        if (!identifierOrSiUnitToken(pDomNode))
-            return QDomElement();
-
-        // Keep track of the unit for our number
-
-        QString unit = mScanner->tokenString();
-
-        // Expect "}"
-
-        mScanner->getNextToken();
-
-        if (!closingCurlyBracketToken(pDomNode))
-            return QDomElement();
-
-        // Create a number element
-
-        res = newNumberElement(number, unit);
+        res = newMathematicalConstantElement(mScanner->tokenType());
     } else {
         QString foundString = mScanner->tokenString();
 
         if (mScanner->tokenType() != CellmlTextViewScanner::EofToken)
             foundString = QString("'%1'").arg(foundString);
 
-        addUnexpectedTokenErrorMessage("An identifier, 'ode' or a number", foundString);
+        addUnexpectedTokenErrorMessage(QObject::tr("An identifier, 'ode', a number or a mathematical constant"), foundString);
 
         return QDomElement();
     }

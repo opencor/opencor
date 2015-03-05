@@ -301,5 +301,9 @@
         <source>There can only be one &apos;otherwise&apos; clause.</source>
         <translation>Il ne peut y avoir qu&apos;une clause &apos;otherwise&apos;.</translation>
     </message>
+    <message>
+        <source>An identifier, &apos;ode&apos;, a number or a mathematical constant</source>
+        <translation>Un identifiant, &apos;ode&apos;, un nombre ou une constante mathématique</translation>
+    </message>
 </context>
 </TS>

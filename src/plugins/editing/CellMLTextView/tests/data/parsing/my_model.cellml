@@ -363,6 +363,36 @@
                     <ci>b</ci>
                 </apply>
             </apply>
+            <apply>
+                <eq/>
+                <ci>a</ci>
+                <true/>
+            </apply>
+            <apply>
+                <eq/>
+                <ci>a</ci>
+                <false/>
+            </apply>
+            <apply>
+                <eq/>
+                <ci>a</ci>
+                <notanumber/>
+            </apply>
+            <apply>
+                <eq/>
+                <ci>a</ci>
+                <pi/>
+            </apply>
+            <apply>
+                <eq/>
+                <ci>a</ci>
+                <infinity/>
+            </apply>
+            <apply>
+                <eq/>
+                <ci>a</ci>
+                <exponentiale/>
+            </apply>
         </math>
         <!-- In between comment...-->
     </component>

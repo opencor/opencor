@@ -66,6 +66,9 @@ public:
 
         TrueToken, FalseToken, NanToken, PiToken, InfToken, EToken,
 
+        FirstMathematicalConstantToken = TrueToken,
+        LastMathematicalConstantToken = EToken,
+
         BaseToken, EncapsulationToken, ContainmentToken,
 
         AmpereToken, BecquerelToken, CandelaToken, CelsiusToken, CoulombToken,

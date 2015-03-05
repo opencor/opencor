@@ -197,6 +197,12 @@ def model{my_model_cmeta_id} my_model as
         a = not b;
         a = +b;
         a = -b;
+        a = true;
+        a = false;
+        a = nan;
+        a = pi;
+        a = inf;
+        a = e;
 
         // In between comment...
     enddef;
