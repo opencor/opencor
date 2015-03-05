@@ -1604,8 +1604,9 @@ void CentralWidget::updateGui()
     // Ask the GUI interface for the widget to use for the current file (should
     // there be one)
 
-    Plugin *fileViewPlugin = viewPlugin(mFileTabs->currentIndex());
-    ViewInterface *viewInterface = fileViewPlugin?qobject_cast<ViewInterface *>(fileViewPlugin->instance()):0;
+    CentralWidgetMode *mode = mModes.value(mModeTabIndexModes.value(fileModeTabIndex));
+    Plugin *viewPlugin = mode?mode->viewPlugins()->value(mode->viewTabs()->currentIndex()):0;
+    ViewInterface *viewInterface = viewPlugin?qobject_cast<ViewInterface *>(viewPlugin->instance()):0;
     QWidget *newView;
 
     if (fileName.isEmpty()) {
@@ -1615,8 +1616,7 @@ void CentralWidget::updateGui()
         // widget, if necessary
 
         bool isRemoteFile = FileManager::instance()->isRemote(fileName);
-        QTabBar *viewTabs = mModes.value(mModeTabIndexModes.value(fileModeTabIndex))->viewTabs();
-        QString fileViewKey = viewKey(fileModeTabIndex, viewTabs->currentIndex(), fileName);
+        QString fileViewKey = viewKey(fileModeTabIndex, mode->viewTabs()->currentIndex(), fileName);
         bool hasView = mViews.value(fileViewKey);
 
         if (isRemoteFile && !isBusyWidgetVisible() && !hasView)
@@ -1674,7 +1674,7 @@ void CentralWidget::updateGui()
 
     // Let people know that we are about to update the GUI
 
-    emit guiUpdated(fileViewPlugin, fileName);
+    emit guiUpdated(viewPlugin, fileName);
 
     // Replace the current view with the new one
     // Note #1: the order in which the adding and removing (as well as the
