@@ -776,6 +776,7 @@ void CellmlFileRuntime::update()
          computationTarget; computationTarget = computationTargetIter->nextComputationTarget()) {
         // Determine the type of the parameter
 
+        ObjRef<iface::cellml_api::CellMLVariable> variable = computationTarget->variable();
         CellmlFileRuntimeParameter::ParameterType parameterType;
 
         switch (computationTarget->type()) {
@@ -783,13 +784,11 @@ void CellmlFileRuntime::update()
             parameterType = CellmlFileRuntimeParameter::Voi;
 
             break;
-        case iface::cellml_services::CONSTANT: {
+        case iface::cellml_services::CONSTANT:
             // We are dealing with a constant, but the question is whether that
             // constant is a 'proper' constant or a 'computed' constant and this
             // can be determined by checking whether the computed target has an
             // initial value
-
-            ObjRef<iface::cellml_api::CellMLVariable> variable = computationTarget->variable();
 
             if (QString::fromStdWString(variable->initialValue()).isEmpty())
                 // The computed target doesn't have an initial value, so it must
@@ -803,7 +802,6 @@ void CellmlFileRuntime::update()
                 parameterType = CellmlFileRuntimeParameter::Constant;
 
             break;
-        }
         case iface::cellml_services::STATE_VARIABLE:
         case iface::cellml_services::PSEUDOSTATE_VARIABLE:
             parameterType = CellmlFileRuntimeParameter::State;
@@ -836,12 +834,6 @@ void CellmlFileRuntime::update()
 
         if (   (parameterType != CellmlFileRuntimeParameter::Floating)
             && (parameterType != CellmlFileRuntimeParameter::LocallyBound)) {
-            // Retrieve the variable associated with the computation target
-
-            ObjRef<iface::cellml_api::CellMLVariable> variable = computationTarget->variable();
-
-            // Keep track of the parameter
-
             CellmlFileRuntimeParameter *parameter = new CellmlFileRuntimeParameter(QString::fromStdWString(variable->name()),
                                                                                    computationTarget->degree(),
                                                                                    QString::fromStdWString(variable->unitsName()),
