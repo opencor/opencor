@@ -77,10 +77,10 @@ bool RawViewPlugin::isEditorContentsModified(const QString &pFileName) const
     // Return whether the requested editor has been modified, which here is done
     // by comparing its contents to that of the given file
 
-    Editor::EditorWidget *currentEditor = editor(pFileName);
+    Editor::EditorWidget *crtEditor = editor(pFileName);
 
-    return currentEditor?
-               Core::FileManager::instance()->isDifferent(pFileName, currentEditor->contents()):
+    return crtEditor?
+               Core::FileManager::instance()->isDifferent(pFileName, crtEditor->contents()):
                false;
 }
 
@@ -93,10 +93,10 @@ bool RawViewPlugin::saveFile(const QString &pOldFileName,
 {
     // Save the given file
 
-    Editor::EditorWidget *currentEditor = editor(pOldFileName);
+    Editor::EditorWidget *crtEditor = editor(pOldFileName);
 
-    return currentEditor?
-               Core::writeTextToFile(pNewFileName, currentEditor->contents()):
+    return crtEditor?
+               Core::writeTextToFile(pNewFileName, crtEditor->contents()):
                false;
 }
 

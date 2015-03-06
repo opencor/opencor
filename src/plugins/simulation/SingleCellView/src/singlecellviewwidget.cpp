@@ -552,19 +552,19 @@ void SingleCellViewWidget::initialize(const QString &pFileName,
         // There is a previous simulation, so backup our simulation, solvers and
         // graph panels' settings
 
-        QString previousFileName = previousSimulation->fileName();
+        QString prevFileName = previousSimulation->fileName();
 
-        simulationWidget->backup(previousFileName);
-        solversWidget->backup(previousFileName);
-        graphsWidget->backup(previousFileName);
+        simulationWidget->backup(prevFileName);
+        solversWidget->backup(prevFileName);
+        graphsWidget->backup(prevFileName);
 
-        graphPanelsWidget->backup(previousFileName);
+        graphPanelsWidget->backup(prevFileName);
 
         // Keep track of the status of the reset action and of the value of the
         // delay widget
 
-        mResets.insert(previousFileName, mGui->actionResetModelParameters->isEnabled());
-        mDelays.insert(previousFileName, mDelayWidget->value());
+        mResets.insert(prevFileName, mGui->actionResetModelParameters->isEnabled());
+        mDelays.insert(prevFileName, mDelayWidget->value());
     }
 
     // Retrieve our simulation object for the current model, if any
@@ -761,7 +761,7 @@ void SingleCellViewWidget::initialize(const QString &pFileName,
     // Show/hide some widgets depending on whether we have a valid simulation
     // environment
 
-    bool previousValidSimulationEnvironment = mInvalidModelMessageWidget->isHidden();
+    bool prevValidSimulationEnvironment = mInvalidModelMessageWidget->isHidden();
 
     mToolBarWidget->setVisible(validSimulationEnvironment);
     mTopSeparator->setVisible(validSimulationEnvironment);
@@ -777,7 +777,7 @@ void SingleCellViewWidget::initialize(const QString &pFileName,
     //       height of our output widget, messing up the vertical scroll bar a
     //       bit (if visible), resulting in the output being shifted a bit...
 
-    if (previousValidSimulationEnvironment != validSimulationEnvironment) {
+    if (prevValidSimulationEnvironment != validSimulationEnvironment) {
         qApp->processEvents();
 
         mOutputWidget->ensureCursorVisible();

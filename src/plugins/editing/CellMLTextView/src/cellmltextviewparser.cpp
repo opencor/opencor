@@ -830,7 +830,7 @@ void CellmlTextViewParser::parseComments(QDomNode &pDomNode)
 {
     // Check whether there are some comments
 
-    int previousLineCommentLine = 0;
+    int prevLineCommentLine = 0;
     QString singleLineComments = QString();
 
     forever {
@@ -844,7 +844,7 @@ void CellmlTextViewParser::parseComments(QDomNode &pDomNode)
                 // There is at least one other line comment that is being
                 // tracked, so compare line numbers
 
-                if (mScanner->tokenLine() == previousLineCommentLine+1) {
+                if (mScanner->tokenLine() == prevLineCommentLine+1) {
                     // The line comment is directly on the line following the
                     // previous line comment, so add it to the list of tracked
                     // line comments
@@ -862,7 +862,7 @@ void CellmlTextViewParser::parseComments(QDomNode &pDomNode)
                 }
             }
 
-            previousLineCommentLine = mScanner->tokenLine();
+            prevLineCommentLine = mScanner->tokenLine();
         } else if (mScanner->tokenType() == CellmlTextViewScanner::MultilineCommentToken) {
             // We simply ignore the multiline comment
 

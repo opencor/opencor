@@ -794,7 +794,7 @@ void Property::setListValue(const QStringList &pListValue,
         if (!pListValue[i].isEmpty())
             break;
 
-    bool previousItemIsSeparator = false;
+    bool prevItemIsSeparator = false;
 
     for (; i < iMax; ++i) {
         QString listValueItem = pListValue[i];
@@ -802,11 +802,11 @@ void Property::setListValue(const QStringList &pListValue,
         if (!listValueItem.isEmpty()) {
             listValue << listValueItem;
 
-            previousItemIsSeparator = false;
-        } else if (!previousItemIsSeparator) {
+            prevItemIsSeparator = false;
+        } else if (!prevItemIsSeparator) {
             listValue << listValueItem;
 
-            previousItemIsSeparator = true;
+            prevItemIsSeparator = true;
         }
     }
 

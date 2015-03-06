@@ -515,20 +515,20 @@ void RawCellmlViewWidget::updateViewer()
     static const QString EndMathTag = "</math>";
 
     Editor::EditorWidget *editor = mEditingWidget->editor();
-    int currentPosition = editor->currentPosition();
+    int crtPosition = editor->currentPosition();
 
-    int crtStartMathTagPos = editor->findTextInRange(currentPosition+StartMathTag.length(), 0, StartMathTag);
-    int prevEndMathTagPos = editor->findTextInRange(currentPosition, 0, EndMathTag);
-    int crtEndMathTagPos = editor->findTextInRange(currentPosition-EndMathTag.length()+1, editor->contentsSize(), EndMathTag);
+    int crtStartMathTagPos = editor->findTextInRange(crtPosition+StartMathTag.length(), 0, StartMathTag);
+    int prevEndMathTagPos = editor->findTextInRange(crtPosition, 0, EndMathTag);
+    int crtEndMathTagPos = editor->findTextInRange(crtPosition-EndMathTag.length()+1, editor->contentsSize(), EndMathTag);
 
     bool foundMathmlBlock = true;
 
     if (   (crtStartMathTagPos >= 0) && (crtEndMathTagPos >= 0)
-        && (crtStartMathTagPos <= currentPosition)
-        && (currentPosition <= crtEndMathTagPos+EndMathTag.length()-1)) {
+        && (crtStartMathTagPos <= crtPosition)
+        && (crtPosition <= crtEndMathTagPos+EndMathTag.length()-1)) {
         if (   (prevEndMathTagPos >= 0)
             && (prevEndMathTagPos > crtStartMathTagPos)
-            && (prevEndMathTagPos < currentPosition))
+            && (prevEndMathTagPos < crtPosition))
             foundMathmlBlock = false;
     } else {
         foundMathmlBlock = false;
@@ -551,7 +551,7 @@ void RawCellmlViewWidget::updateViewer()
             // A Content MathML block contains 0+ child nodes, so extract and
             // clean up the one, if any, at our current position
 
-            QString contentMathmlEquation = cleanMathml(retrieveContentMathmlEquation(contentMathmlBlock, currentPosition-crtStartMathTagPos));
+            QString contentMathmlEquation = cleanMathml(retrieveContentMathmlEquation(contentMathmlBlock, crtPosition-crtStartMathTagPos));
 
             // Check whether we have got a Content MathML equation
 

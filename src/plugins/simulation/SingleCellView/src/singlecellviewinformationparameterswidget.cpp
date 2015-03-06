@@ -326,9 +326,9 @@ void SingleCellViewInformationParametersWidget::populateModel(CellMLSupport::Cel
         // Check whether the current parameter is in the same component
         // hierarchy as the previous one
 
-        QString currentComponentHierarchy = parameter->formattedComponentHierarchy();
+        QString crtComponentHierarchy = parameter->formattedComponentHierarchy();
 
-        if (currentComponentHierarchy.compare(componentHierarchy)) {
+        if (crtComponentHierarchy.compare(componentHierarchy)) {
             // The current parameter is in a different component hierarchy, so
             // create a new section hierarchy for our 'new' component, reusing
             // existing sections, whenever possible
@@ -390,7 +390,7 @@ void SingleCellViewInformationParametersWidget::populateModel(CellMLSupport::Cel
 
             // Keep track of the new component hierarchy
 
-            componentHierarchy = currentComponentHierarchy;
+            componentHierarchy = crtComponentHierarchy;
         }
 
         // Add the current parameter to the current section property, after
@@ -485,9 +485,9 @@ void SingleCellViewInformationParametersWidget::populateContextMenu(QMenu *pCont
         // Check whether the current parameter is in the same component
         // hierarchy as the previous one
 
-        QString currentComponentHierarchy = parameter->formattedComponentHierarchy();
+        QString crtComponentHierarchy = parameter->formattedComponentHierarchy();
 
-        if (currentComponentHierarchy.compare(componentHierarchy)) {
+        if (crtComponentHierarchy.compare(componentHierarchy)) {
             // The current parameter is in a different component hierarchy, so
             // create a new menu hierarchy for our 'new' component, reusing
             // existing menus, whenever possible
@@ -527,7 +527,7 @@ void SingleCellViewInformationParametersWidget::populateContextMenu(QMenu *pCont
 
             // Keep track of the new component hierarchy
 
-            componentHierarchy = currentComponentHierarchy;
+            componentHierarchy = crtComponentHierarchy;
         }
 
         // Make sure that we have a 'current' component menu
@@ -619,14 +619,14 @@ void SingleCellViewInformationParametersWidget::propertyEditorContextMenu(const 
 
     // Make that we have a current property
 
-    Core::Property *currentProperty = mPropertyEditor->currentProperty();
+    Core::Property *crtProperty = mPropertyEditor->currentProperty();
 
-    if (!currentProperty)
+    if (!crtProperty)
         return;
 
     // Make sure that our current property is not a section
 
-    if (currentProperty->type() == Core::Property::Section)
+    if (crtProperty->type() == Core::Property::Section)
         return;
 
     // Generate and show the context menu

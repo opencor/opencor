@@ -264,8 +264,8 @@ int QScintillaWidget::findTextInRange(const int &pStartRange,
 {
     // Keep track of the start and end of the current target
 
-    int currentTargetStart = SendScintilla(SCI_GETTARGETSTART);
-    int currentTargetEnd = SendScintilla(SCI_GETTARGETEND);
+    int crtTargetStart = SendScintilla(SCI_GETTARGETSTART);
+    int crtTargetEnd = SendScintilla(SCI_GETTARGETEND);
 
     // Find and return the position, if any, of the given text within the given
     // range
@@ -281,8 +281,8 @@ int QScintillaWidget::findTextInRange(const int &pStartRange,
 
     // Retrieve the start and end of the current target
 
-    SendScintilla(SCI_SETTARGETSTART, currentTargetStart);
-    SendScintilla(SCI_SETTARGETEND, currentTargetEnd);
+    SendScintilla(SCI_SETTARGETSTART, crtTargetStart);
+    SendScintilla(SCI_SETTARGETEND, crtTargetEnd);
 
     return res;
 }

@@ -422,13 +422,13 @@ void CentralWidget::loadSettings(QSettings *pSettings)
     // Select the previously selected file, if it still exists, by pretending to
     // open it (which, in turn, will select the file)
 
-    QString currentFileNameOrUrl = pSettings->value(SettingsCurrentFileNameOrUrl).toString();
-    QString currentFileName = pSettings->value(SettingsFileIsRemote.arg(currentFileNameOrUrl)).toBool()?
-                                  mRemoteLocalFileNames.value(currentFileNameOrUrl):
-                                  currentFileNameOrUrl;
+    QString crtFileNameOrUrl = pSettings->value(SettingsCurrentFileNameOrUrl).toString();
+    QString crtFileName = pSettings->value(SettingsFileIsRemote.arg(crtFileNameOrUrl)).toBool()?
+                              mRemoteLocalFileNames.value(crtFileNameOrUrl):
+                              crtFileNameOrUrl;
 
-    if (mFileNames.contains(currentFileName))
-        openFile(currentFileName);
+    if (mFileNames.contains(crtFileName))
+        openFile(crtFileName);
     else
         // The previously selected file doesn't exist anymore, so select the
         // first file (otherwise the last file will be selected)
@@ -530,18 +530,18 @@ void CentralWidget::saveSettings(QSettings *pSettings) const
     // Note: we don't rely on mFileTabs->currentIndex() since it may refer to a
     //       new file, which we will have been skipped above...
 
-    QString currentFileNameOrUrl = QString();
+    QString crtFileNameOrUrl = QString();
 
     if (fileNames.count()) {
-        QString currentFileName = mFileNames[mFileTabs->currentIndex()];
+        QString crtFileName = mFileNames[mFileTabs->currentIndex()];
 
-        if (fileNames.contains(currentFileName))
-            currentFileNameOrUrl = fileManagerInstance->isRemote(currentFileName)?
-                                       fileManagerInstance->url(currentFileName):
-                                       currentFileName;
+        if (fileNames.contains(crtFileName))
+            crtFileNameOrUrl = fileManagerInstance->isRemote(crtFileName)?
+                                   fileManagerInstance->url(crtFileName):
+                                   crtFileName;
     }
 
-    pSettings->setValue(SettingsCurrentFileNameOrUrl, currentFileNameOrUrl);
+    pSettings->setValue(SettingsCurrentFileNameOrUrl, crtFileNameOrUrl);
 
     // Keep track of the selected modes and views, should there be no files the
     // next time we use OpenCOR

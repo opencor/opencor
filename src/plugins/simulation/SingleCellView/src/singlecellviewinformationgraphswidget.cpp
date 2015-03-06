@@ -535,11 +535,11 @@ void SingleCellViewInformationGraphsWidget::propertyEditorContextMenu(const QPoi
 
     // Retrieve our current property, if any
 
-    Core::Property *currentProperty = mPropertyEditor->currentProperty();
+    Core::Property *crtProperty = mPropertyEditor->currentProperty();
 
     // Update the enabled state of some of our actions
 
-    mGui->actionRemoveCurrentGraph->setEnabled(currentProperty);
+    mGui->actionRemoveCurrentGraph->setEnabled(crtProperty);
     mGui->actionRemoveAllGraphs->setEnabled(!mPropertyEditor->properties().isEmpty());
 
     bool canSelectAllGraphs = false;
@@ -558,9 +558,9 @@ void SingleCellViewInformationGraphsWidget::propertyEditorContextMenu(const QPoi
     // Show the context menu, or not, depending ont the type of property we are
     // dealing with, if any
 
-    if (   !currentProperty
-        || (currentProperty->type() == Core::Property::Section)
-        || (!currentProperty->name().compare(tr("Model")))) {
+    if (   !crtProperty
+        || (crtProperty->type() == Core::Property::Section)
+        || (!crtProperty->name().compare(tr("Model")))) {
         mContextMenu->exec(QCursor::pos());
     } else {
         mContextMenus.value(mFileName)->exec(QCursor::pos());
@@ -618,9 +618,9 @@ void SingleCellViewInformationGraphsWidget::populateContextMenu(QMenu *pContextM
         // Check whether the current parameter is in the same component
         // hierarchy as the previous one
 
-        QString currentComponentHierarchy = parameter->formattedComponentHierarchy();
+        QString crtComponentHierarchy = parameter->formattedComponentHierarchy();
 
-        if (currentComponentHierarchy.compare(componentHierarchy)) {
+        if (crtComponentHierarchy.compare(componentHierarchy)) {
             // The current parameter is in a different component hierarchy, so
             // create a new menu hierarchy for our 'new' component, reusing
             // existing menus, whenever possible
@@ -660,7 +660,7 @@ void SingleCellViewInformationGraphsWidget::populateContextMenu(QMenu *pContextM
 
             // Keep track of the new component hierarchy
 
-            componentHierarchy = currentComponentHierarchy;
+            componentHierarchy = crtComponentHierarchy;
         }
 
         // Make sure that we have a 'current' component menu

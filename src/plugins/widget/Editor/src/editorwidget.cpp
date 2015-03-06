@@ -537,13 +537,13 @@ void EditorWidget::setFindReplaceVisible(const bool &pVisible)
     //       hence we inactivate and then reactivate our find/replace widget...
 
     if (pVisible) {
-        QString currentWord = mEditor->wordAt(mCurrentLine, mCurrentColumn);
+        QString crtWord = mEditor->wordAt(mCurrentLine, mCurrentColumn);
 
-        if (!currentWord.isEmpty()) {
+        if (!crtWord.isEmpty()) {
             mFindReplace->setActive(false);
                 mEditor->selectWordAt(mCurrentLine, mCurrentColumn);
 
-                mFindReplace->setFindText(currentWord);
+                mFindReplace->setFindText(crtWord);
             mFindReplace->setActive(true);
         } else {
             mFindReplace->selectFindText();
@@ -618,22 +618,22 @@ void EditorWidget::replace()
         // Make sure that the currently selected text is a whole word, should
         // this be requested
 
-        QString currentlySelectedText = mEditor->selectedText();
-        int currentLine;
-        int currentColumn;
+        QString crtSelectedText = mEditor->selectedText();
+        int crtLine;
+        int crtColumn;
 
-        mEditor->getCursorPosition(&currentLine, &currentColumn);
+        mEditor->getCursorPosition(&crtLine, &crtColumn);
 
         if (   mFindReplace->searchWholeWordsOnly()
-            && currentlySelectedText.compare(mEditor->wordAt(currentLine, currentColumn)))
+            && crtSelectedText.compare(mEditor->wordAt(crtLine, crtColumn)))
             return;
 
         // Replace the currently selected text if we have a match
 
-        if (!currentlySelectedText.compare(mFindReplace->findText(),
-                                           mFindReplace->isCaseSensitive()?
-                                               Qt::CaseSensitive:
-                                               Qt::CaseInsensitive))
+        if (!crtSelectedText.compare(mFindReplace->findText(),
+                                         mFindReplace->isCaseSensitive()?
+                                             Qt::CaseSensitive:
+                                             Qt::CaseInsensitive))
             mEditor->replace(mFindReplace->replaceText());
     }
 }

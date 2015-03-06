@@ -608,19 +608,19 @@ void SingleCellViewGraphPanelPlotWidget::updateActions()
 {
     // Update our actions
 
-    double currentMinX = minX();
-    double currentMaxX = maxX();
-    double currentMinY = minY();
-    double currentMaxY = maxY();
+    double crtMinX = minX();
+    double crtMaxX = maxX();
+    double crtMinY = minY();
+    double crtMaxY = maxY();
 
-    double currentRangeX = currentMaxX-currentMinX;
-    double currentRangeY = currentMaxY-currentMinY;
+    double crtRangeX = crtMaxX-crtMinX;
+    double crtRangeY = crtMaxY-crtMinY;
 
-    mCanZoomInX  = currentRangeX > MinAxisRange;
-    mCanZoomOutX = currentRangeX < MaxAxisRange;
+    mCanZoomInX  = crtRangeX > MinAxisRange;
+    mCanZoomOutX = crtRangeX < MaxAxisRange;
 
-    mCanZoomInY  = currentRangeY > MinAxisRange;
-    mCanZoomOutY = currentRangeY < MaxAxisRange;
+    mCanZoomInY  = crtRangeY > MinAxisRange;
+    mCanZoomOutY = crtRangeY < MaxAxisRange;
 
     // Update the enabled status of our actions
 
@@ -635,10 +635,10 @@ void SingleCellViewGraphPanelPlotWidget::updateActions()
     else
         dRect = optimisedRect(dRect);
 
-    mGui->actionResetZoom->setEnabled(   (currentMinX != dRect.left())
-                                      || (currentMaxX != dRect.left()+dRect.width())
-                                      || (currentMinY != dRect.top())
-                                      || (currentMaxY != dRect.top()+dRect.height()));
+    mGui->actionResetZoom->setEnabled(   (crtMinX != dRect.left())
+                                      || (crtMaxX != dRect.left()+dRect.width())
+                                      || (crtMinY != dRect.top())
+                                      || (crtMaxY != dRect.top()+dRect.height()));
 }
 
 //==============================================================================
@@ -1077,11 +1077,11 @@ void SingleCellViewGraphPanelPlotWidget::mouseMoveEvent(QMouseEvent *pEvent)
     case Pan: {
         // Determine the X/Y shifts for our panning
 
-        QPointF originPoint = canvasPoint(mPoint);
-        QPointF currentPoint = canvasPoint(pEvent->pos());
+        QPointF origPoint = canvasPoint(mPoint);
+        QPointF crtPoint = canvasPoint(pEvent->pos());
 
-        double shiftX = currentPoint.x()-originPoint.x();
-        double shiftY = currentPoint.y()-originPoint.y();
+        double shiftX = crtPoint.x()-origPoint.x();
+        double shiftY = crtPoint.y()-origPoint.y();
 
         mPoint = pEvent->pos();
 
@@ -1100,11 +1100,11 @@ void SingleCellViewGraphPanelPlotWidget::mouseMoveEvent(QMouseEvent *pEvent)
     case Zoom: {
         // Determine our X/Y delta values
 
-        QPointF originPoint = canvasPoint(mPoint);
-        QPointF currentPoint = canvasPoint(pEvent->pos());
+        QPointF origPoint = canvasPoint(mPoint);
+        QPointF crtPoint = canvasPoint(pEvent->pos());
 
-        double deltaX = currentPoint.x()-originPoint.x();
-        double deltaY = currentPoint.y()-originPoint.y();
+        double deltaX = crtPoint.x()-origPoint.x();
+        double deltaY = crtPoint.y()-origPoint.y();
 
         mPoint = pEvent->pos();
 

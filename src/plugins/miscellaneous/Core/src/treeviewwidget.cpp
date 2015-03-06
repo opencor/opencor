@@ -132,18 +132,18 @@ void TreeViewWidget::keyPressEvent(QKeyEvent *pEvent)
             // The user wants to collapse the current item or go to its parent,
             // depending on the collapsed state of the current item
 
-            QModelIndex currIndex = currentIndex();
+            QModelIndex crtIndex = currentIndex();
 
-            if (currIndex.column())
+            if (crtIndex.column())
                 // We are not dealing with the (row, 0) item, so make sure we do
 
-                currIndex = currIndex.sibling(currIndex.row(), 0);
+                crtIndex = crtIndex.sibling(crtIndex.row(), 0);
 
-            if (model()->hasChildren(currIndex) && isExpanded(currIndex)) {
+            if (model()->hasChildren(crtIndex) && isExpanded(crtIndex)) {
                 // The current item has children and it is expanded, so collapse
                 // it
 
-                setExpanded(currIndex, false);
+                setExpanded(crtIndex, false);
 
                 // Accept the event
 
@@ -152,8 +152,8 @@ void TreeViewWidget::keyPressEvent(QKeyEvent *pEvent)
                 // Either the current item has no children or it is collapsed,
                 // so select its parent, if it has one
 
-                if (currIndex.parent() != QModelIndex()) {
-                    setCurrentIndex(currIndex.parent());
+                if (crtIndex.parent() != QModelIndex()) {
+                    setCurrentIndex(crtIndex.parent());
 
                     // Accept the event
 
@@ -168,18 +168,18 @@ void TreeViewWidget::keyPressEvent(QKeyEvent *pEvent)
             // The user wants to expand the current item or go to its first
             // child, should it have children
 
-            QModelIndex currIndex = currentIndex();
+            QModelIndex crtIndex = currentIndex();
 
-            if (currIndex.column())
+            if (crtIndex.column())
                 // We are not dealing with the (row, 0) item, so make sure we do
 
-                currIndex = currIndex.sibling(currIndex.row(), 0);
+                crtIndex = crtIndex.sibling(crtIndex.row(), 0);
 
-            if (model()->hasChildren(currIndex)) {
-                if (!isExpanded(currIndex)) {
+            if (model()->hasChildren(crtIndex)) {
+                if (!isExpanded(crtIndex)) {
                     // The current item is collapsed, so expand it
 
-                    setExpanded(currIndex, true);
+                    setExpanded(crtIndex, true);
 
                     // Accept the event
 
@@ -187,7 +187,7 @@ void TreeViewWidget::keyPressEvent(QKeyEvent *pEvent)
                 } else {
                     // The current item is expanded, so select its first child
 
-                    setCurrentIndex(currIndex.child(0, 0));
+                    setCurrentIndex(crtIndex.child(0, 0));
 
                     // Accept the event
 
