@@ -786,20 +786,30 @@ void CellmlFileRuntime::update()
             break;
         case iface::cellml_services::CONSTANT:
             // We are dealing with a constant, but the question is whether that
-            // constant is a 'proper' constant or a 'computed' constant and this
-            // can be determined by checking whether the computed target has an
-            // initial value
+            // constant is a 'proper' constant, a 'computed' constant or even a
+            // rate, and this can be determined by checking whether the computed
+            // target has an initial value or even a degree
+            // Note: a state variable that is initialised using the initial
+            //       value of another variable will have its rate considered as
+            //       a constant. However, when it comes to the GUI, we really
+            //       want it to be seen as a rate hence we check for the degree
+            //       of the computed target...
 
-            if (QString::fromStdWString(variable->initialValue()).isEmpty())
+            if (QString::fromStdWString(variable->initialValue()).isEmpty()) {
                 // The computed target doesn't have an initial value, so it must
                 // be a 'computed' constant
 
                 parameterType = CellmlFileRuntimeParameter::ComputedConstant;
-            else
+            } else if (computationTarget->degree()) {
+                // The computed target has a degree, so it is effectively a rate
+
+                parameterType = CellmlFileRuntimeParameter::Rate;
+            } else {
                 // The computed target has an initial value, so it must be a
                 // 'proper' constant
 
                 parameterType = CellmlFileRuntimeParameter::Constant;
+            }
 
             break;
         case iface::cellml_services::STATE_VARIABLE:
