@@ -42,23 +42,17 @@ class PassRegistry {
   mutable sys::SmartRWMutex<true> Lock;
 
   /// PassInfoMap - Keep track of the PassInfo object for each registered pass.
-  typedef DenseMap<const void*, const PassInfo*> MapType;
+  typedef DenseMap<const void *, const PassInfo *> MapType;
   MapType PassInfoMap;
 
-  typedef StringMap<const PassInfo*> StringMapType;
+  typedef StringMap<const PassInfo *> StringMapType;
   StringMapType PassInfoStringMap;
 
-  /// AnalysisGroupInfo - Keep track of information for each analysis group.
-  struct AnalysisGroupInfo {
-    SmallPtrSet<const PassInfo *, 8> Implementations;
-  };
-  DenseMap<const PassInfo*, AnalysisGroupInfo> AnalysisGroupInfoMap;
-
   std::vector<std::unique_ptr<const PassInfo>> ToFree;
-  std::vector<PassRegistrationListener*> Listeners;
+  std::vector<PassRegistrationListener *> Listeners;
 
 public:
-  PassRegistry() { }
+  PassRegistry() {}
   ~PassRegistry();
 
   /// getPassRegistry - Access the global registry object, which is
@@ -78,15 +72,11 @@ public:
   /// registry.  Required in order to use the pass with a PassManager.
   void registerPass(const PassInfo &PI, bool ShouldFree = false);
 
-  /// registerPass - Unregister a pass (by means of its PassInfo) with the
-  /// registry.
-  void unregisterPass(const PassInfo &PI);
-
   /// registerAnalysisGroup - Register an analysis group (or a pass implementing
   // an analysis group) with the registry.  Like registerPass, this is required
   // in order for a PassManager to be able to use this group/pass.
   void registerAnalysisGroup(const void *InterfaceID, const void *PassID,
-                             PassInfo& Registeree, bool isDefault,
+                             PassInfo &Registeree, bool isDefault,
                              bool ShouldFree = false);
 
   /// enumerateWith - Enumerate the registered passes, calling the provided
