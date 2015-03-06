@@ -61,6 +61,8 @@
         <!-- In between comment...-->
         <variable cmeta:id="my_variable7_cmeta_id" name="my_variable7" public_interface="none" units="some_unit"/>
         <!-- In between comment...-->
+        <variable cmeta:id="my_variable8_cmeta_id" initial_value="my_variable7" name="my_variable8" units="some_unit"/>
+        <!-- In between comment...-->
         <math xmlns="http://www.w3.org/1998/Math/MathML">
             <apply>
                 <eq/>

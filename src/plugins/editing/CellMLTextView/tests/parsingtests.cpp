@@ -797,7 +797,7 @@ void ParsingTests::componentTests()
                                     "    def comp my_component as\n"
                                     "        var my_variable: second {init:")));
     QCOMPARE(parser.messages().first().type(), OpenCOR::CellMLTextView::CellmlTextViewParserMessage::Error);
-    QCOMPARE(parser.messages().first().message(), QString("A number is expected, but the end of the file was found instead."));
+    QCOMPARE(parser.messages().first().message(), QString("A number or an identifier is expected, but the end of the file was found instead."));
 
     QVERIFY(!parser.execute(QString("def model my_model as\n"
                                     "    def comp my_component as\n"
@@ -885,17 +885,6 @@ void ParsingTests::componentTests()
                                    "    enddef;\n"
                                    "enddef;")));
     QVERIFY(!parser.domDocument().isNull());
-
-    // Test the declaration of a variable with an invalid initial value
-    // attribute
-
-    QVERIFY(!parser.execute(QString("def model my_model as\n"
-                                    "    def comp my_component as\n"
-                                    "        var my_variable: second {init: invalid_value};\n"
-                                    "    enddef;\n"
-                                    "enddef;")));
-    QCOMPARE(parser.messages().first().type(), OpenCOR::CellMLTextView::CellmlTextViewParserMessage::Error);
-    QCOMPARE(parser.messages().first().message(), QString("A number is expected, but 'invalid_value' was found instead."));
 
     // Test the declaration of a variable with an invalid public interface
     // attribute

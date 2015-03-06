@@ -116,6 +116,10 @@ def model{my_model_cmeta_id} my_model as
 
         // In between comment...
 
+        var{my_variable8_cmeta_id} my_variable8: some_unit {init: my_variable7};
+
+        // In between comment...
+
         a = sel
             otherwise:
                 other_expression;

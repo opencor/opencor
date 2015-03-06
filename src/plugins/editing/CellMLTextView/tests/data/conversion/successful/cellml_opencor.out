@@ -60,7 +60,8 @@ def model{cellml_1_1_cmeta_id} cellml_1_1 as
         // but if kept it will be serialised back in the
         // corresponding component definition...
 
-        var{my_variable_cmeta_id} my_variable: my_unit;
+        var{my_variable1_cmeta_id} my_variable1: my_unit;
+        var{my_variable2_cmeta_id} my_variable2: my_unit {init: my_variable1};
 
         a = 5{???};
         a = 12.3e5{dimensionless};

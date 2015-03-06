@@ -80,16 +80,17 @@
             </rdf:Description>
         </rdf:RDF>
         <!-- In between comment...-->
-        <variable cmeta:id="my_variable_cmeta_id" name="my_variable" units="my_unit">
+        <variable cmeta:id="my_variable1_cmeta_id" name="my_variable1" units="my_unit">
             <!-- Comments can be within a variable declaration,
  but if kept it will be serialised back in the
  corresponding component definition...-->
             <rdf:RDF xmlns:bqbiol="http://biomodels.net/biology-qualifiers/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
-                <rdf:Description rdf:about="#my_variable_cmeta_id">
+                <rdf:Description rdf:about="#my_variable1_cmeta_id">
                     <bqbiol:isVersionOf rdf:resource="http://identifiers.org/go/GO:0034704"/>
                 </rdf:Description>
             </rdf:RDF>
         </variable>
+        <variable cmeta:id="my_variable2_cmeta_id" initial_value="my_variable1" name="my_variable2" units="my_unit"/>
         <math xmlns="http://www.w3.org/1998/Math/MathML">
             <apply>
                 <eq/>

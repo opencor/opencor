@@ -1655,12 +1655,23 @@ bool CellmlTextViewParser::parseVariableDeclaration(QDomNode &pDomNode)
                             return false;
                     } else {
                         // We are not dealing with a 'proper' number value, but
-                        // a number
+                        // either a number or an identifier
 
-                        // Expect a number
+                        // Expect a number or an identifier
 
-                        if (!numberToken(variableElement))
+                        static const CellmlTextViewScanner::TokenTypes tokenTypes = CellmlTextViewScanner::TokenTypes() << CellmlTextViewScanner::NumberToken
+                                                                                                                        << CellmlTextViewScanner::IdentifierToken;
+
+                        if (!tokenType(variableElement, QObject::tr("A number or an identifier"),
+                                       tokenTypes)) {
                             return false;
+                        }
+
+                        // If we got an identifier, then we need to kept track
+                        // of the fact that we need CellML 1.1
+
+                        if (mScanner->tokenType() == CellmlTextViewScanner::IdentifierToken)
+                            mCellmlVersion = CellMLSupport::CellmlFile::Cellml_1_1;
                     }
                 } else {
                     // Expect "in", "out" or "none"
