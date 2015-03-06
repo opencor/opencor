@@ -836,13 +836,6 @@ void CellmlFileRuntime::update()
 
         if (   (parameterType != CellmlFileRuntimeParameter::Floating)
             && (parameterType != CellmlFileRuntimeParameter::LocallyBound)) {
-            // Note: we cannot keep track of the parameter using a pointer to a
-            //       CellmlFileVariable object since our CellmlFileVariable
-            //       objects are for the current CellML file only. In other
-            //       words, it would only work for models that don't have
-            //       imports while we need a solution that works for any model,
-            //       hence we we use CellmlFileRuntimeParameter instead...
-
             // Retrieve the variable associated with the computation target
 
             ObjRef<iface::cellml_api::CellMLVariable> variable = computationTarget->variable();
