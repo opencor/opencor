@@ -303,7 +303,7 @@
     </message>
     <message>
         <source>An identifier, &apos;ode&apos;, a number, a mathematical function, a mathematical constant or &apos;(&apos;</source>
-        <translation type="unfinished"></translation>
+        <translation>Un identifiant, &apos;ode&apos;, un nombre, une fonction mathématique, une constante mathématique ou &apos;(&apos;</translation>
     </message>
 </context>
 </TS>
