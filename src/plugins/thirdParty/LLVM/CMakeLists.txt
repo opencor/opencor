@@ -503,13 +503,6 @@ ELSE()
             lib/LTO/LTOCodeGenerator.cpp
             lib/LTO/LTOModule.cpp
 
-            lib/MC/MCAnalysis/MCAtom.cpp
-            lib/MC/MCAnalysis/MCFunction.cpp
-            lib/MC/MCAnalysis/MCModule.cpp
-            lib/MC/MCAnalysis/MCModuleYAML.cpp
-            lib/MC/MCAnalysis/MCObjectDisassembler.cpp
-            lib/MC/MCAnalysis/MCObjectSymbolizer.cpp
-
             lib/MC/MCDisassembler/Disassembler.cpp
             lib/MC/MCDisassembler/MCDisassembler.cpp
             lib/MC/MCDisassembler/MCExternalSymbolizer.cpp
