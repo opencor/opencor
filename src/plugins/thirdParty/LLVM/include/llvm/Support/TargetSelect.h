@@ -135,7 +135,12 @@ namespace llvm {
 
   /// InitializeNativeTargetAsmPrinter - The main program should call
   /// this function to initialize the native target asm printer.
+/*---OPENCOR---
   inline bool InitializeNativeTargetAsmPrinter() {
+*/
+//---OPENCOR--- BEGIN
+  inline bool LLVM_EXPORT InitializeNativeTargetAsmPrinter() {
+//---OPENCOR--- END
   // If we have a native target, initialize the corresponding asm printer.
 #ifdef LLVM_NATIVE_ASMPRINTER
     LLVM_NATIVE_ASMPRINTER();

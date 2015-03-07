@@ -35,7 +35,6 @@ specific language governing permissions and limitations under the License.
 
 namespace llvm {
     class ExecutionEngine;
-    class Module;
 }   // namespace llvm
 
 //==============================================================================
@@ -61,8 +60,7 @@ public:
     void * getFunction(const QString &pFunctionName);
 
 private:
-    llvm::ExecutionEngine *mExecutionEngine;
-    llvm::Module *mModule;
+    std::unique_ptr<llvm::ExecutionEngine> mExecutionEngine;
 
     QString mError;
 
