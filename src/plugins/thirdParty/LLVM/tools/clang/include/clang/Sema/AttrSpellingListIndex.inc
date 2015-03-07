@@ -10,6 +10,16 @@
   default:
     llvm_unreachable("Unknown attribute kind!");
     break;
+  case AT_AMDGPUNumSGPR: {
+    if (Name == "amdgpu_num_sgpr" && SyntaxUsed == 0 && Scope == "")
+        return 0;
+    break;
+  }
+  case AT_AMDGPUNumVGPR: {
+    if (Name == "amdgpu_num_vgpr" && SyntaxUsed == 0 && Scope == "")
+        return 0;
+    break;
+  }
   case AT_Interrupt: {
     if (Name == "interrupt" && SyntaxUsed == 0 && Scope == "")
         return 0;
@@ -50,6 +60,11 @@
         return 0;
     if (Name == "alias" && SyntaxUsed == 1 && Scope == "gnu")
         return 1;
+    break;
+  }
+  case AT_AlignValue: {
+    if (Name == "align_value" && SyntaxUsed == 0 && Scope == "")
+        return 0;
     break;
   }
   case AT_Aligned: {
@@ -117,6 +132,13 @@
         return 0;
     break;
   }
+  case AT_AssumeAligned: {
+    if (Name == "assume_aligned" && SyntaxUsed == 0 && Scope == "")
+        return 0;
+    if (Name == "assume_aligned" && SyntaxUsed == 1 && Scope == "gnu")
+        return 1;
+    break;
+  }
   case AT_Availability: {
     if (Name == "availability" && SyntaxUsed == 0 && Scope == "")
         return 0;
@@ -181,6 +203,9 @@
   case AT_CUDAHost: {
     if (Name == "host" && SyntaxUsed == 0 && Scope == "")
         return 0;
+    break;
+  }
+  case AT_CUDAInvalidTarget: {
     break;
   }
   case AT_CUDALaunchBounds: {
@@ -432,6 +457,8 @@
         return 0;
     if (Name == "unroll" && SyntaxUsed == 4 && Scope == "")
         return 1;
+    if (Name == "nounroll" && SyntaxUsed == 4 && Scope == "")
+        return 2;
     break;
   }
   case AT_MSABI: {
@@ -546,6 +573,8 @@
   case AT_NoDebug: {
     if (Name == "nodebug" && SyntaxUsed == 0 && Scope == "")
         return 0;
+    if (Name == "nodebug" && SyntaxUsed == 1 && Scope == "gnu")
+        return 1;
     break;
   }
   case AT_NoDuplicate: {
@@ -720,6 +749,13 @@
     if (Name == "__constant" && SyntaxUsed == 3 && Scope == "")
         return 0;
     if (Name == "constant" && SyntaxUsed == 3 && Scope == "")
+        return 1;
+    break;
+  }
+  case AT_OpenCLGenericAddressSpace: {
+    if (Name == "__generic" && SyntaxUsed == 3 && Scope == "")
+        return 0;
+    if (Name == "generic" && SyntaxUsed == 3 && Scope == "")
         return 1;
     break;
   }
@@ -1064,6 +1100,15 @@
   case AT_VecTypeHint: {
     if (Name == "vec_type_hint" && SyntaxUsed == 0 && Scope == "")
         return 0;
+    break;
+  }
+  case AT_VectorCall: {
+    if (Name == "vectorcall" && SyntaxUsed == 0 && Scope == "")
+        return 0;
+    if (Name == "__vectorcall" && SyntaxUsed == 3 && Scope == "")
+        return 1;
+    if (Name == "_vectorcall" && SyntaxUsed == 3 && Scope == "")
+        return 2;
     break;
   }
   case AT_VectorSize: {
