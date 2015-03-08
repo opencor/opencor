@@ -103,9 +103,8 @@ MACRO(INITIALISE_PROJECT)
     GET_FILENAME_COMPONENT(REAL_QT_LIBRARY_DIR ${QT_LIBRARY_DIR} REALPATH)
 
     # Some general build settings
-    # Note: we need to use C++11, so that we can define strings as static const.
-    #       Now, it happens that MSVC enables C++11 support by default, so we
-    #       just need to enable it on Linux and OS X...
+    # Note: MSVC enables C++11 support by default, so we just need to enable it
+    #       on Linux and OS X...
 
     IF(WIN32)
         STRING(REPLACE "/W3" "/W3 /WX" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")

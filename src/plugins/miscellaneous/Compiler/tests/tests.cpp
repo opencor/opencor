@@ -29,18 +29,6 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-#if defined(Q_OS_LINUX) || defined(Q_OS_MAC)
-    #pragma GCC diagnostic ignored "-Wunused-parameter"
-#endif
-
-#include "llvm/ExecutionEngine/ExecutionEngine.h"
-
-#if defined(Q_OS_LINUX) || defined(Q_OS_MAC)
-    #pragma GCC diagnostic error "-Wunused-parameter"
-#endif
-
-//==============================================================================
-
 static const double A = 5.0;
 static const double B = 7.9;
 

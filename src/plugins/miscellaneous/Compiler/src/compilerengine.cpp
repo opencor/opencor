@@ -35,9 +35,9 @@ specific language governing permissions and limitations under the License.
 
 #if defined(Q_OS_LINUX) || defined(Q_OS_MAC)
     #pragma GCC diagnostic ignored "-Wunused-parameter"
+    #pragma GCC diagnostic ignored "-Wstrict-aliasing"
 #endif
 
-#include "llvm/ExecutionEngine/ExecutionEngine.h"
 #include "llvm/IR/LLVMContext.h"
 #include "llvm/IR/Module.h"
 #include "llvm/Support/TargetSelect.h"
@@ -53,6 +53,7 @@ specific language governing permissions and limitations under the License.
 
 #if defined(Q_OS_LINUX) || defined(Q_OS_MAC)
     #pragma GCC diagnostic error "-Wunused-parameter"
+    #pragma GCC diagnostic error "-Wstrict-aliasing"
 #endif
 
 //==============================================================================
