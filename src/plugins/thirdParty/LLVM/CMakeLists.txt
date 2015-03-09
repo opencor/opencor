@@ -1,31 +1,35 @@
 PROJECT(LLVMPlugin)
 
 MACRO(RETRIEVE_LLVM_SETTINGS)
+    # Note: check the calls to the add_llvm_definitions() macro in the original
+    #       [LLVM]/cmake/modules/HandleLLVMOptions.cmake file...
+
     # Retrieve some LLVM settings
 
-    IF(WIN32)
-        SET(LLVM_DEFINITIONS)
-    ELSE()
-        SET(LLVM_DEFINITIONS
-            __STDC_CONSTANT_MACROS
-            __STDC_LIMIT_MACROS
-        )
+    SET(LLVM_DEFINITIONS
+        __STDC_CONSTANT_MACROS
+        __STDC_FORMAT_MACROS
+        __STDC_LIMIT_MACROS
+    )
 
-        IF(NOT APPLE)
-            LIST(APPEND LLVM_DEFINITIONS
-                __STDC_FORMAT_MACROS
-                # Note: this is to address a couple of issues with PRIx64 in
-                #       [LLVM]/lib/CodeGen/AsmPrinter/AsmPrinter.cpp...
-            )
-        ENDIF()
+    IF(WIN32)
+        LIST(APPEND LLVM_DEFINITIONS
+            _CRT_SECURE_NO_DEPRECATE
+            _CRT_SECURE_NO_WARNINGS
+            _CRT_NONSTDC_NO_DEPRECATE
+            _CRT_NONSTDC_NO_WARNINGS
+            _SCL_SECURE_NO_DEPRECATE
+            _SCL_SECURE_NO_WARNINGS
+        )
     ENDIF()
 
     # Ignore some warnings on Windows, as well as allow for big objects
-    # Note: we have nothing to do with those warnings...
 
     IF(WIN32)
-        SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /wd4244 /wd4267")
-        SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /bigobj /wd4180 /wd4244 /wd4291 /wd4351 /wd4624 /wd4661 /wd4722 /wd4996")
+        SET(COMPILATION_FLAGS "/bigobj /wd4146 /wd4180 /wd4244 /wd4258 /wd4267 /wd4291 /wd4345 /wd4351 /wd4355 /wd4456 /wd4457 /wd4458 /wd4459 /wd4503 /wd4624 /wd4722 /wd4800 /w14062 /we4238")
+
+        SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${COMPILATION_FLAGS}")
+        SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${COMPILATION_FLAGS}")
     ENDIF()
 ENDMACRO()
 
@@ -212,7 +216,6 @@ ELSE()
             lib/Analysis/ScalarEvolutionNormalization.cpp
             lib/Analysis/ScopedNoAliasAA.cpp
             lib/Analysis/SparsePropagation.cpp
-            lib/Analysis/StratifiedSets.h
             lib/Analysis/TargetTransformInfo.cpp
             lib/Analysis/Trace.cpp
             lib/Analysis/TypeBasedAliasAnalysis.cpp
@@ -503,21 +506,6 @@ ELSE()
             lib/LTO/LTOCodeGenerator.cpp
             lib/LTO/LTOModule.cpp
 
-            lib/MC/MCDisassembler/Disassembler.cpp
-            lib/MC/MCDisassembler/MCDisassembler.cpp
-            lib/MC/MCDisassembler/MCExternalSymbolizer.cpp
-            lib/MC/MCDisassembler/MCRelocationInfo.cpp
-
-            lib/MC/MCParser/AsmLexer.cpp
-            lib/MC/MCParser/AsmParser.cpp
-            lib/MC/MCParser/COFFAsmParser.cpp
-            lib/MC/MCParser/DarwinAsmParser.cpp
-            lib/MC/MCParser/ELFAsmParser.cpp
-            lib/MC/MCParser/MCAsmLexer.cpp
-            lib/MC/MCParser/MCAsmParser.cpp
-            lib/MC/MCParser/MCAsmParserExtension.cpp
-            lib/MC/MCParser/MCTargetAsmParser.cpp
-
             lib/MC/ConstantPools.cpp
             lib/MC/ELFObjectWriter.cpp
             lib/MC/MachObjectWriter.cpp
@@ -565,6 +553,21 @@ ELSE()
             lib/MC/WinCOFFObjectWriter.cpp
             lib/MC/WinCOFFStreamer.cpp
             lib/MC/YAML.cpp
+
+            lib/MC/MCDisassembler/Disassembler.cpp
+            lib/MC/MCDisassembler/MCDisassembler.cpp
+            lib/MC/MCDisassembler/MCExternalSymbolizer.cpp
+            lib/MC/MCDisassembler/MCRelocationInfo.cpp
+
+            lib/MC/MCParser/AsmLexer.cpp
+            lib/MC/MCParser/AsmParser.cpp
+            lib/MC/MCParser/COFFAsmParser.cpp
+            lib/MC/MCParser/DarwinAsmParser.cpp
+            lib/MC/MCParser/ELFAsmParser.cpp
+            lib/MC/MCParser/MCAsmLexer.cpp
+            lib/MC/MCParser/MCAsmParser.cpp
+            lib/MC/MCParser/MCAsmParserExtension.cpp
+            lib/MC/MCParser/MCTargetAsmParser.cpp
 
             lib/Object/Archive.cpp
             lib/Object/Binary.cpp
