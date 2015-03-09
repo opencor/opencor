@@ -107,7 +107,7 @@ MACRO(INITIALISE_PROJECT)
     #       on Linux and OS X...
 
     IF(WIN32)
-        STRING(REPLACE "/W3" "/W3 /WX" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
+        SET(CMAKE_CXX_FLAGS "/DWIN32 /D_WINDOWS /W3 /WX /GR /EHsc")
         # Note: MSVC has a /Wall flag, but it results in MSVC being very
         #       pedantic, so instead we use what MSVC recommends for production
         #       code, which is /W3 and which is also what CMake uses by
@@ -125,7 +125,7 @@ MACRO(INITIALISE_PROJECT)
         ENDIF()
     ENDIF()
 
-    # Some build settings that depend on whether we want a debug or release
+    # Some build settings that depend on whether we want a release or a debug
     # version of OpenCOR
 
     IF(RELEASE_MODE)
