@@ -142,7 +142,15 @@ bool CompilerEngine::compileCode(const QString &pCode)
     clang::DiagnosticsEngine diagnosticsEngine(llvm::IntrusiveRefCntPtr<clang::DiagnosticIDs>(new clang::DiagnosticIDs()),
                                                &*diagnosticOptions,
                                                new clang::TextDiagnosticPrinter(outputStream, &*diagnosticOptions));
-    clang::driver::Driver driver("clang", llvm::sys::getProcessTriple(), diagnosticsEngine);
+    std::string targetTriple = llvm::sys::getProcessTriple();
+
+#ifdef Q_OS_WIN
+    // For now, on Windows, MCJIT only works through the ELF object format
+
+    targetTriple += "-elf";
+#endif
+
+    clang::driver::Driver driver("clang", targetTriple, diagnosticsEngine);
 
     // Get a compilation object to which we pass some arguments
 
