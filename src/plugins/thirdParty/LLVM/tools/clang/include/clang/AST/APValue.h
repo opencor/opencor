@@ -19,6 +19,9 @@
 #include "llvm/ADT/APSInt.h"
 #include "llvm/ADT/PointerIntPair.h"
 #include "llvm/ADT/PointerUnion.h"
+//---OPENCOR--- BEGIN
+#include "llvmglobal.h"
+//---OPENCOR--- END
 
 namespace clang {
   class AddrLabelExpr;
@@ -35,7 +38,12 @@ namespace clang {
 /// APValue - This class implements a discriminated union of [uninitialized]
 /// [APSInt] [APFloat], [Complex APSInt] [Complex APFloat], [Expr + Offset],
 /// [Vector: N * APValue], [Array: N * APValue]
+/*---OPENCOR---
 class APValue {
+*/
+//---OPENCOR--- BEGIN
+class LLVM_EXPORT APValue {
+//---OPENCOR--- END
   typedef llvm::APSInt APSInt;
   typedef llvm::APFloat APFloat;
 public:

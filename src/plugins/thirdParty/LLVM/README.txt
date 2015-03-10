@@ -12,6 +12,7 @@ To address this shortcoming, we must 'manually' expose the classes/methods that 
     include/llvm/Support/TargetSelect.h
     lib/Object/Error.cpp
     lib/Support/Windows/WindowsSupport.h
+    tools/clang/include/clang/AST/APValue.h
     tools/clang/include/clang/Basic/Diagnostic.h
     tools/clang/include/clang/Basic/DiagnosticIDs.h
     tools/clang/include/clang/CodeGen/CodeGenAction.h

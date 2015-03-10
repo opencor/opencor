@@ -495,7 +495,12 @@ namespace EngineKind {
 /// Builder class for ExecutionEngines. Use this by stack-allocating a builder,
 /// chaining the various set* methods, and terminating it with a .create()
 /// call.
+/*---OPENCOR---
 class EngineBuilder {
+*/
+//---OPENCOR--- BEGIN
+class LLVM_EXPORT EngineBuilder {
+//---OPENCOR--- END
 private:
   std::unique_ptr<Module> M;
   EngineKind::Kind WhichEngine;
