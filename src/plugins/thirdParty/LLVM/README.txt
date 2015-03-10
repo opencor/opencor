@@ -21,6 +21,7 @@ To address this shortcoming, we must 'manually' expose the classes/methods that 
     tools/clang/include/clang/Frontend/CompilerInvocation.h
     tools/clang/include/clang/Frontend/FrontendAction.h
     tools/clang/include/clang/Frontend/TextDiagnosticPrinter.h
+    tools/clang/lib/Driver/MSVCToolChain.cpp
     tools/clang/lib/Frontend/CompilerInstance.cpp
 
 In case LLVM is to be built (by setting the USE_PREBUILT_LLVM_PLUGIN option to OFF), then keep in mind the following:
