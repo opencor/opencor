@@ -125,6 +125,21 @@ ELSE()
                        COPYONLY)
     ENDFOREACH()
 
+    # Build a special assembly file on 64-bit Windows
+
+    IF(WIN32 AND ${ARCHITECTURE} EQUAL 64)
+        ENABLE_LANGUAGE(ASM_MASM)
+
+        ADD_CUSTOM_COMMAND(OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/X86CompilationCallback_Win64.obj
+                           MAIN_DEPENDENCY ${PROJECT_SOURCE_DIR}/lib/Target/X86/X86CompilationCallback_Win64.asm
+                           COMMAND ${CMAKE_ASM_MASM_COMPILER} /Fo ${CMAKE_CURRENT_BINARY_DIR}/X86CompilationCallback_Win64.obj /c ${PROJECT_SOURCE_DIR}/lib/Target/X86/X86CompilationCallback_Win64.asm
+        )
+
+        SET(ASM_OBJECT ${CMAKE_CURRENT_BINARY_DIR}/X86CompilationCallback_Win64.obj)
+    ELSE()
+        SET(ASM_OBJECT)
+    ENDIF()
+
     # Retrieve some LLVM settings
 
     RETRIEVE_LLVM_SETTINGS()
@@ -137,6 +152,8 @@ ELSE()
         THIRD_PARTY
         SOURCES
             ../../plugininfo.cpp
+
+            ${ASM_OBJECT}
 
             lib/Analysis/AliasAnalysis.cpp
             lib/Analysis/AliasAnalysisCounter.cpp
