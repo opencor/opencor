@@ -32,6 +32,27 @@ specific language governing permissions and limitations under the License.
     #define LLVM_EXPORT
 #endif
 
+//==============================================================================
+
+namespace llvm {
+
+//==============================================================================
+
+class LLVM_EXPORT NonCopyable
+{
+    protected:
+        NonCopyable() = default;
+        ~NonCopyable() = default;
+        NonCopyable(const NonCopyable&) = delete;
+        const NonCopyable& operator=(const NonCopyable&) = delete;
+};
+
+//==============================================================================
+
+}   // namespace clang
+
+//==============================================================================
+
 #endif
 
 //==============================================================================

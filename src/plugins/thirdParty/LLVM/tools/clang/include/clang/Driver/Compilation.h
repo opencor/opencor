@@ -38,7 +38,7 @@ namespace driver {
 class Compilation {
 */
 //---OPENCOR--- BEGIN
-class LLVM_EXPORT Compilation {
+class LLVM_EXPORT Compilation : private llvm::NonCopyable {
 //---OPENCOR--- END
   /// The driver we were created by.
   const Driver &TheDriver;
