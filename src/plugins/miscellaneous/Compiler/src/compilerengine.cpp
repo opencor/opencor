@@ -172,7 +172,7 @@ bool CompilerEngine::compileCode(const QString &pCode)
 
     const clang::driver::JobList &jobList = compilation->getJobs();
 
-    if (   (jobList.size() != 1)
+    if (    (jobList.size() != 1)
         || !llvm::isa<clang::driver::Command>(*jobList.begin())) {
         mError = tr("the compilation object must contain only one command");
 
