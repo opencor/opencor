@@ -2,7 +2,7 @@ PROJECT(OpenCOR)
 
 # Minimum required version of CMake
 
-CMAKE_MINIMUM_REQUIRED(VERSION 3.0.0)
+CMAKE_MINIMUM_REQUIRED(VERSION 3.0)
 
 # Policies that we want to use
 
