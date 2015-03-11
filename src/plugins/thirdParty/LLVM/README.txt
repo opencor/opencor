@@ -1,29 +1,6 @@
 We need to build LLVM (incl. Clang) ourselves so that it can be used as a 'proper' plugin within OpenCOR. The problem with the latter is that it's not possible to build LLVM as a shared library using MSVC (because of the need to expose classes/methods as __declspec(dllexport) or __declspec(dllimport) depending on whether LLVM is being built or referenced, respectively).
 
-To address this shortcoming, we must 'manually' expose the classes/methods that are needed by OpenCOR (grep for ---OPENCOR--- to find out which ones those are). Should OpenCOR ever need direct access to another class/method, then that class/method will obviously have to be exposed, and LLVM rebuilt. In addition to exposing some classes/methods, we also had to 'fix' a few things. Again, those are highlighted (just look for ---OPENCOR---). The files currently affected by those changes are:
-    include/llvm/ADT/SmallVector.h
-    include/llvm/ExecutionEngine/ExecutionEngine.h
-    include/llvm/IR/Function.h
-    include/llvm/IR/LLVMContext.h
-    include/llvm/IR/Module.h
-    include/llvm/Support/DynamicLibrary.h
-    include/llvm/Support/Host.h
-    include/llvm/Support/raw_ostream.h
-    include/llvm/Support/TargetSelect.h
-    lib/Object/Error.cpp
-    lib/Support/Windows/WindowsSupport.h
-    tools/clang/include/clang/AST/APValue.h
-    tools/clang/include/clang/Basic/Diagnostic.h
-    tools/clang/include/clang/Basic/DiagnosticIDs.h
-    tools/clang/include/clang/CodeGen/CodeGenAction.h
-    tools/clang/include/clang/Driver/Compilation.h
-    tools/clang/include/clang/Driver/Driver.h
-    tools/clang/include/clang/Frontend/CompilerInstance.h
-    tools/clang/include/clang/Frontend/CompilerInvocation.h
-    tools/clang/include/clang/Frontend/FrontendAction.h
-    tools/clang/include/clang/Frontend/TextDiagnosticPrinter.h
-    tools/clang/lib/Driver/MSVCToolChain.cpp
-    tools/clang/lib/Frontend/CompilerInstance.cpp
+To address this shortcoming, we must 'manually' expose the classes/methods that are needed by OpenCOR (grep for ---OPENCOR--- to find out which ones those are). Should OpenCOR ever need direct access to another class/method, then that class/method will obviously have to be exposed, and LLVM rebuilt. In addition to exposing some classes/methods, we also had to 'fix' a few things. Again, those are highlighted (just look for ---OPENCOR---).
 
 In case LLVM is to be built (by setting the USE_PREBUILT_LLVM_PLUGIN option to OFF), then keep in mind the following:
  - Configuration files are to be generated using CMake (on Windows, this may require installing Python 2.7.x, which can be downloaded from http://www.python.org/download/):
