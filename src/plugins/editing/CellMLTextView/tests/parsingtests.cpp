@@ -111,8 +111,8 @@ void ParsingTests::fileTests()
     // Parsing of some CellML text code and converting to raw CellML...
 
     QVERIFY(parser.execute(OpenCOR::fileContents(OpenCOR::fileName("src/plugins/editing/CellMLTextView/tests/data/parsing/my_model.in")).join("\n")));
-    QCOMPARELIST(qDomDocumentToString(parser.domDocument()).split("\n"),
-                 OpenCOR::fileContents(OpenCOR::fileName("src/plugins/editing/CellMLTextView/tests/data/parsing/my_model.cellml")));
+    QCOMPARE(qDomDocumentToString(parser.domDocument()).split("\n"),
+             OpenCOR::fileContents(OpenCOR::fileName("src/plugins/editing/CellMLTextView/tests/data/parsing/my_model.cellml")));
     QVERIFY(!parser.domDocument().isNull());
 
     // ... and back
@@ -125,8 +125,8 @@ void ParsingTests::fileTests()
     OpenCOR::CellMLTextView::CellMLTextViewConverter converter;
 
     QVERIFY(converter.execute(OpenCOR::fileName("src/plugins/editing/CellMLTextView/tests/data/parsing/my_model.cellml")));
-    QCOMPARELIST(converter.output().split("\n"),
-                 OpenCOR::fileContents(OpenCOR::fileName("src/plugins/editing/CellMLTextView/tests/data/parsing/my_model.in")));
+    QCOMPARE(converter.output().split("\n"),
+             OpenCOR::fileContents(OpenCOR::fileName("src/plugins/editing/CellMLTextView/tests/data/parsing/my_model.in")));
 
     // Parsing of some CellML text code (with some in between comments) and
     // converting it to raw CellML
@@ -136,8 +136,8 @@ void ParsingTests::fileTests()
     //       while we would normally have them before and/or after...
 
     QVERIFY(parser.execute(OpenCOR::fileContents(OpenCOR::fileName("src/plugins/editing/CellMLTextView/tests/data/parsing/my_model_with_in_between_comments.in")).join("\n")));
-    QCOMPARELIST(qDomDocumentToString(parser.domDocument()).split("\n"),
-                 OpenCOR::fileContents(OpenCOR::fileName("src/plugins/editing/CellMLTextView/tests/data/parsing/my_model_with_in_between_comments.cellml")));
+    QCOMPARE(qDomDocumentToString(parser.domDocument()).split("\n"),
+             OpenCOR::fileContents(OpenCOR::fileName("src/plugins/editing/CellMLTextView/tests/data/parsing/my_model_with_in_between_comments.cellml")));
     QVERIFY(!parser.domDocument().isNull());
 }
 
