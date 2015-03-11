@@ -24,28 +24,33 @@ namespace clang {
 
 /// \brief Represents a version number in the form major[.minor[.subminor]].
 class VersionTuple {
-  unsigned Major;
+  unsigned Major : 31;
   unsigned Minor : 31;
   unsigned Subminor : 31;
   unsigned HasMinor : 1;
   unsigned HasSubminor : 1;
+  unsigned UsesUnderscores : 1;
 
 public:
   VersionTuple()
-    : Major(0), Minor(0), Subminor(0), HasMinor(false), HasSubminor(false) { }
+    : Major(0), Minor(0), Subminor(0), HasMinor(false), HasSubminor(false),
+      UsesUnderscores(false) { }
 
   explicit VersionTuple(unsigned Major)
-    : Major(Major), Minor(0), Subminor(0), HasMinor(false), HasSubminor(false)
+    : Major(Major), Minor(0), Subminor(0), HasMinor(false), HasSubminor(false),
+      UsesUnderscores(false)
   { }
 
-  explicit VersionTuple(unsigned Major, unsigned Minor)
+  explicit VersionTuple(unsigned Major, unsigned Minor,
+                        bool UsesUnderscores = false)
     : Major(Major), Minor(Minor), Subminor(0), HasMinor(true),
-      HasSubminor(false)
+      HasSubminor(false), UsesUnderscores(UsesUnderscores)
   { }
 
-  explicit VersionTuple(unsigned Major, unsigned Minor, unsigned Subminor)
+  explicit VersionTuple(unsigned Major, unsigned Minor, unsigned Subminor,
+                        bool UsesUnderscores = false)
     : Major(Major), Minor(Minor), Subminor(Subminor), HasMinor(true),
-      HasSubminor(true)
+      HasSubminor(true), UsesUnderscores(UsesUnderscores)
   { }
 
   /// \brief Determine whether this version information is empty
@@ -67,6 +72,14 @@ public:
     if (!HasSubminor)
       return None;
     return Subminor;
+  }
+
+  bool usesUnderscores() const {
+    return UsesUnderscores;
+  }
+
+  void UseDotAsSeparator() {
+    UsesUnderscores = false;
   }
 
   /// \brief Determine if two version numbers are equivalent. If not

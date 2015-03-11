@@ -35,9 +35,9 @@ specific language governing permissions and limitations under the License.
 
 #if defined(Q_OS_LINUX) || defined(Q_OS_MAC)
     #pragma GCC diagnostic ignored "-Wunused-parameter"
+    #pragma GCC diagnostic ignored "-Wstrict-aliasing"
 #endif
 
-#include "llvm/ExecutionEngine/ExecutionEngine.h"
 #include "llvm/IR/LLVMContext.h"
 #include "llvm/IR/Module.h"
 #include "llvm/Support/TargetSelect.h"
@@ -53,6 +53,7 @@ specific language governing permissions and limitations under the License.
 
 #if defined(Q_OS_LINUX) || defined(Q_OS_MAC)
     #pragma GCC diagnostic error "-Wunused-parameter"
+    #pragma GCC diagnostic error "-Wstrict-aliasing"
 #endif
 
 //==============================================================================
@@ -63,8 +64,7 @@ namespace Compiler {
 //==============================================================================
 
 CompilerEngine::CompilerEngine() :
-    mExecutionEngine(0),
-    mModule(0),
+    mExecutionEngine(std::unique_ptr<llvm::ExecutionEngine>()),
     mError(QString())
 {
 }
@@ -83,13 +83,10 @@ CompilerEngine::~CompilerEngine()
 void CompilerEngine::reset(const bool &pResetError)
 {
     // Reset some internal objects
-    // Note: mModule is owned by mExecutionEngine, so we don't need to delete it
-    //       ourselves...
 
-    delete mExecutionEngine;
+    delete mExecutionEngine.release();
 
-    mExecutionEngine = 0;
-    mModule = 0;
+    mExecutionEngine = std::unique_ptr<llvm::ExecutionEngine>();
 
     if (pResetError)
         mError = QString();
@@ -145,7 +142,15 @@ bool CompilerEngine::compileCode(const QString &pCode)
     clang::DiagnosticsEngine diagnosticsEngine(llvm::IntrusiveRefCntPtr<clang::DiagnosticIDs>(new clang::DiagnosticIDs()),
                                                &*diagnosticOptions,
                                                new clang::TextDiagnosticPrinter(outputStream, &*diagnosticOptions));
-    clang::driver::Driver driver("clang", llvm::sys::getProcessTriple(), diagnosticsEngine);
+    std::string targetTriple = llvm::sys::getProcessTriple();
+
+#ifdef Q_OS_WIN
+    // For now, on Windows, MCJIT only works through the ELF object format
+
+    targetTriple += "-elf";
+#endif
+
+    clang::driver::Driver driver("clang", targetTriple, diagnosticsEngine);
 
     // Get a compilation object to which we pass some arguments
 
@@ -175,7 +180,7 @@ bool CompilerEngine::compileCode(const QString &pCode)
 
     const clang::driver::JobList &jobList = compilation->getJobs();
 
-    if (   (jobList.size() != 1)
+    if (    (jobList.size() != 1)
         || !llvm::isa<clang::driver::Command>(*jobList.begin())) {
         mError = tr("the compilation object must contain only one command");
 
@@ -186,8 +191,8 @@ bool CompilerEngine::compileCode(const QString &pCode)
 
     // Retrieve the command job
 
-    const clang::driver::Command *command = llvm::cast<clang::driver::Command>(*jobList.begin());
-    QString commandName = command->getCreator().getName();
+    const clang::driver::Command &command = llvm::cast<clang::driver::Command>(*jobList.begin());
+    QString commandName = command.getCreator().getName();
 
     if (commandName.compare("clang")) {
         mError = tr("a <strong>clang</strong> command was expected, but a <strong>%1</strong> command was found instead").arg(commandName);
@@ -199,7 +204,7 @@ bool CompilerEngine::compileCode(const QString &pCode)
 
     // Create a compiler invocation using our command's arguments
 
-    const clang::driver::ArgStringList &commandArguments = command->getArguments();
+    const clang::driver::ArgStringList &commandArguments = command.getArguments();
     std::unique_ptr<clang::CompilerInvocation> compilerInvocation(new clang::CompilerInvocation());
 
     clang::CompilerInvocation::CreateFromArgs(*compilerInvocation,
@@ -247,24 +252,25 @@ bool CompilerEngine::compileCode(const QString &pCode)
 
     QFile::remove(tempFileName);
 
-    // Keep track of the LLVM bitcode module
+    // Retrieve the LLVM bitcode module
 
-    mModule = codeGenerationAction->takeModule();
+    std::unique_ptr<llvm::Module> module = codeGenerationAction->takeModule();
 
-    // Initialise the native target, so not only can we then create a JIT
-    // execution engine, but more importantly its data layout will match that of
-    // our target platform...
+    // Initialise the native target (and its ASM printer), so not only can we
+    // then create an execution engine, but more importantly its data layout
+    // will match that of our target platform
 
     llvm::InitializeNativeTarget();
+    llvm::InitializeNativeTargetAsmPrinter();
 
-    // Create a JIT execution engine and keep track of it
+    // Create and keep track of an execution engine
 
-    mExecutionEngine = llvm::ExecutionEngine::createJIT(mModule);
+    mExecutionEngine = std::unique_ptr<llvm::ExecutionEngine>(llvm::EngineBuilder(std::move(module)).setEngineKind(llvm::EngineKind::JIT).create());
 
     if (!mExecutionEngine) {
-        mError = tr("the JIT execution engine could not be created");
+        mError = tr("the execution engine could not be created");
 
-        delete mModule;
+        delete module.release();
 
         return false;
     }
@@ -276,18 +282,12 @@ bool CompilerEngine::compileCode(const QString &pCode)
 
 void * CompilerEngine::getFunction(const QString &pFunctionName)
 {
-    // Return the requested function
+    // Return the address of the requested function
 
-    if (mExecutionEngine) {
-        llvm::Function *function = mModule->getFunction(qPrintable(pFunctionName));
-
-        if (function)
-            return mExecutionEngine->getPointerToFunction(function);
-        else
-            return 0;
-    } else {
+    if (mExecutionEngine)
+        return (void *) mExecutionEngine->getFunctionAddress(qPrintable(pFunctionName));
+    else
         return 0;
-    }
 }
 
 //==============================================================================

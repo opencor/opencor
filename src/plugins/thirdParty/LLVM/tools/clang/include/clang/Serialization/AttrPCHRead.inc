@@ -9,6 +9,26 @@
   switch (Kind) {
   default:
     llvm_unreachable("Unknown attribute!");
+  case attr::AMDGPUNumSGPR: {
+    bool isInherited = Record[Idx++];
+    bool isImplicit = Record[Idx++];
+    unsigned Spelling = Record[Idx++];
+    unsigned numSGPR = Record[Idx++];
+    New = new (Context) AMDGPUNumSGPRAttr(Range, Context, numSGPR, Spelling);
+    cast<InheritableAttr>(New)->setInherited(isInherited);
+    New->setImplicit(isImplicit);
+    break;
+  }
+  case attr::AMDGPUNumVGPR: {
+    bool isInherited = Record[Idx++];
+    bool isImplicit = Record[Idx++];
+    unsigned Spelling = Record[Idx++];
+    unsigned numVGPR = Record[Idx++];
+    New = new (Context) AMDGPUNumVGPRAttr(Range, Context, numVGPR, Spelling);
+    cast<InheritableAttr>(New)->setInherited(isInherited);
+    New->setImplicit(isImplicit);
+    break;
+  }
   case attr::ARMInterrupt: {
     bool isInherited = Record[Idx++];
     bool isImplicit = Record[Idx++];
@@ -75,6 +95,14 @@
     unsigned Spelling = Record[Idx++];
     New = new (Context) AlignMac68kAttr(Range, Context, Spelling);
     cast<InheritableAttr>(New)->setInherited(isInherited);
+    New->setImplicit(isImplicit);
+    break;
+  }
+  case attr::AlignValue: {
+    bool isImplicit = Record[Idx++];
+    unsigned Spelling = Record[Idx++];
+    Expr * alignment = ReadExpr(F);
+    New = new (Context) AlignValueAttr(Range, Context, alignment, Spelling);
     New->setImplicit(isImplicit);
     break;
   }
@@ -187,6 +215,17 @@
     for (unsigned i = argsSize; i; --i)
     args.push_back(ReadExpr(F));
     New = new (Context) AssertSharedLockAttr(Range, Context, args.data(), argsSize, Spelling);
+    cast<InheritableAttr>(New)->setInherited(isInherited);
+    New->setImplicit(isImplicit);
+    break;
+  }
+  case attr::AssumeAligned: {
+    bool isInherited = Record[Idx++];
+    bool isImplicit = Record[Idx++];
+    unsigned Spelling = Record[Idx++];
+    Expr * alignment = ReadExpr(F);
+    Expr * offset = ReadExpr(F);
+    New = new (Context) AssumeAlignedAttr(Range, Context, alignment, offset, Spelling);
     cast<InheritableAttr>(New)->setInherited(isInherited);
     New->setImplicit(isImplicit);
     break;
@@ -315,6 +354,15 @@
     New->setImplicit(isImplicit);
     break;
   }
+  case attr::CUDAInvalidTarget: {
+    bool isInherited = Record[Idx++];
+    bool isImplicit = Record[Idx++];
+    unsigned Spelling = Record[Idx++];
+    New = new (Context) CUDAInvalidTargetAttr(Range, Context, Spelling);
+    cast<InheritableAttr>(New)->setInherited(isInherited);
+    New->setImplicit(isImplicit);
+    break;
+  }
   case attr::CUDALaunchBounds: {
     bool isInherited = Record[Idx++];
     bool isImplicit = Record[Idx++];
@@ -364,6 +412,15 @@
     unsigned Spelling = Record[Idx++];
     std::string name= ReadString(Record, Idx);
     New = new (Context) CapabilityAttr(Range, Context, name, Spelling);
+    cast<InheritableAttr>(New)->setInherited(isInherited);
+    New->setImplicit(isImplicit);
+    break;
+  }
+  case attr::CapturedRecord: {
+    bool isInherited = Record[Idx++];
+    bool isImplicit = Record[Idx++];
+    unsigned Spelling = Record[Idx++];
+    New = new (Context) CapturedRecordAttr(Range, Context, Spelling);
     cast<InheritableAttr>(New)->setInherited(isInherited);
     New->setImplicit(isImplicit);
     break;
@@ -692,8 +749,9 @@
     bool isImplicit = Record[Idx++];
     unsigned Spelling = Record[Idx++];
     LoopHintAttr::OptionType option(static_cast<LoopHintAttr::OptionType>(Record[Idx++]));
-    int value = Record[Idx++];
-    New = new (Context) LoopHintAttr(Range, Context, option, value, Spelling);
+    LoopHintAttr::LoopHintState state(static_cast<LoopHintAttr::LoopHintState>(Record[Idx++]));
+    Expr * value = ReadExpr(F);
+    New = new (Context) LoopHintAttr(Range, Context, option, state, value, Spelling);
     New->setImplicit(isImplicit);
     break;
   }
@@ -980,6 +1038,15 @@
     for (unsigned i = argsSize; i; --i)
     args.push_back(Record[Idx++]);
     New = new (Context) NonNullAttr(Range, Context, args.data(), argsSize, Spelling);
+    cast<InheritableAttr>(New)->setInherited(isInherited);
+    New->setImplicit(isImplicit);
+    break;
+  }
+  case attr::OMPThreadPrivateDecl: {
+    bool isInherited = Record[Idx++];
+    bool isImplicit = Record[Idx++];
+    unsigned Spelling = Record[Idx++];
+    New = new (Context) OMPThreadPrivateDeclAttr(Range, Context, Spelling);
     cast<InheritableAttr>(New)->setInherited(isInherited);
     New->setImplicit(isImplicit);
     break;
@@ -1530,6 +1597,15 @@
     unsigned Spelling = Record[Idx++];
     TypeSourceInfo * typeHint = GetTypeSourceInfo(F, Record, Idx);
     New = new (Context) VecTypeHintAttr(Range, Context, typeHint, Spelling);
+    cast<InheritableAttr>(New)->setInherited(isInherited);
+    New->setImplicit(isImplicit);
+    break;
+  }
+  case attr::VectorCall: {
+    bool isInherited = Record[Idx++];
+    bool isImplicit = Record[Idx++];
+    unsigned Spelling = Record[Idx++];
+    New = new (Context) VectorCallAttr(Range, Context, Spelling);
     cast<InheritableAttr>(New)->setInherited(isInherited);
     New->setImplicit(isImplicit);
     break;

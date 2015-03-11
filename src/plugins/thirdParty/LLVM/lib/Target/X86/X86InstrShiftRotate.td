@@ -49,6 +49,7 @@ def SHL64ri  : RIi8<0xC1, MRM4r, (outs GR64:$dst),
                     "shl{q}\t{$src2, $dst|$dst, $src2}",
                     [(set GR64:$dst, (shl GR64:$src1, (i8 imm:$src2)))],
                     IIC_SR>;
+} // isConvertibleToThreeAddress = 1
 
 // NOTE: We don't include patterns for shifts of a register by one, because
 // 'add reg,reg' is cheaper (and we have a Pat pattern for shift-by-one).
@@ -62,7 +63,6 @@ def SHL32r1  : I<0xD1, MRM4r, (outs GR32:$dst), (ins GR32:$src1),
 def SHL64r1  : RI<0xD1, MRM4r, (outs GR64:$dst), (ins GR64:$src1),
                  "shl{q}\t$dst", [], IIC_SR>;
 } // hasSideEffects = 0
-} // isConvertibleToThreeAddress = 1
 } // Constraints = "$src = $dst", SchedRW
 
 
@@ -859,7 +859,7 @@ def ROT64L2R_imm8  : SDNodeXForm<imm, [{
 }]>;
 
 multiclass bmi_rotate<string asm, RegisterClass RC, X86MemOperand x86memop> {
-let neverHasSideEffects = 1 in {
+let hasSideEffects = 0 in {
   def ri : Ii8<0xF0, MRMSrcReg, (outs RC:$dst), (ins RC:$src1, i8imm:$src2),
                !strconcat(asm, "\t{$src2, $src1, $dst|$dst, $src1, $src2}"),
                []>, TAXD, VEX, Sched<[WriteShift]>;
@@ -872,7 +872,7 @@ let neverHasSideEffects = 1 in {
 }
 
 multiclass bmi_shift<string asm, RegisterClass RC, X86MemOperand x86memop> {
-let neverHasSideEffects = 1 in {
+let hasSideEffects = 0 in {
   def rr : I<0xF7, MRMSrcReg, (outs RC:$dst), (ins RC:$src1, RC:$src2),
              !strconcat(asm, "\t{$src2, $src1, $dst|$dst, $src1, $src2}"), []>,
              VEX_4VOp3, Sched<[WriteShift]>;

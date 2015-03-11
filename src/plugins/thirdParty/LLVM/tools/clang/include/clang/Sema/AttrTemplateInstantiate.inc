@@ -14,6 +14,14 @@ Attr *instantiateTemplateAttribute(const Attr *At, ASTContext &C, Sema &S,
   switch (At->getKind()) {
     default:
       break;
+    case attr::AMDGPUNumSGPR: {
+      const AMDGPUNumSGPRAttr *A = cast<AMDGPUNumSGPRAttr>(At);
+      return A->clone(C);
+    }
+    case attr::AMDGPUNumVGPR: {
+      const AMDGPUNumVGPRAttr *A = cast<AMDGPUNumVGPRAttr>(At);
+      return A->clone(C);
+    }
     case attr::ARMInterrupt: {
       const ARMInterruptAttr *A = cast<ARMInterruptAttr>(At);
       return A->clone(C);
@@ -69,6 +77,10 @@ Attr *instantiateTemplateAttribute(const Attr *At, ASTContext &C, Sema &S,
     }
     case attr::AlignMac68k: {
       const AlignMac68kAttr *A = cast<AlignMac68kAttr>(At);
+      return A->clone(C);
+    }
+    case attr::AlignValue: {
+      const AlignValueAttr *A = cast<AlignValueAttr>(At);
       return A->clone(C);
     }
     case attr::Aligned: {
@@ -139,6 +151,10 @@ Attr *instantiateTemplateAttribute(const Attr *At, ASTContext &C, Sema &S,
       }
       return new (C) AssertSharedLockAttr(A->getLocation(), C, tempInstArgs, A->args_size(), A->getSpellingListIndex());
     }
+    case attr::AssumeAligned: {
+      const AssumeAlignedAttr *A = cast<AssumeAlignedAttr>(At);
+      return A->clone(C);
+    }
     case attr::Availability: {
       const AvailabilityAttr *A = cast<AvailabilityAttr>(At);
       return A->clone(C);
@@ -191,6 +207,10 @@ Attr *instantiateTemplateAttribute(const Attr *At, ASTContext &C, Sema &S,
       const CUDAHostAttr *A = cast<CUDAHostAttr>(At);
       return A->clone(C);
     }
+    case attr::CUDAInvalidTarget: {
+      const CUDAInvalidTargetAttr *A = cast<CUDAInvalidTargetAttr>(At);
+      return A->clone(C);
+    }
     case attr::CUDALaunchBounds: {
       const CUDALaunchBoundsAttr *A = cast<CUDALaunchBoundsAttr>(At);
       return A->clone(C);
@@ -209,6 +229,10 @@ Attr *instantiateTemplateAttribute(const Attr *At, ASTContext &C, Sema &S,
     }
     case attr::Capability: {
       const CapabilityAttr *A = cast<CapabilityAttr>(At);
+      return A->clone(C);
+    }
+    case attr::CapturedRecord: {
+      const CapturedRecordAttr *A = cast<CapturedRecordAttr>(At);
       return A->clone(C);
     }
     case attr::CarriesDependency: {
@@ -517,6 +541,10 @@ Attr *instantiateTemplateAttribute(const Attr *At, ASTContext &C, Sema &S,
       const NonNullAttr *A = cast<NonNullAttr>(At);
       return A->clone(C);
     }
+    case attr::OMPThreadPrivateDecl: {
+      const OMPThreadPrivateDeclAttr *A = cast<OMPThreadPrivateDeclAttr>(At);
+      return A->clone(C);
+    }
     case attr::ObjCBridge: {
       const ObjCBridgeAttr *A = cast<ObjCBridgeAttr>(At);
       return A->clone(C);
@@ -800,6 +828,10 @@ Attr *instantiateTemplateAttribute(const Attr *At, ASTContext &C, Sema &S,
     }
     case attr::VecTypeHint: {
       const VecTypeHintAttr *A = cast<VecTypeHintAttr>(At);
+      return A->clone(C);
+    }
+    case attr::VectorCall: {
+      const VectorCallAttr *A = cast<VectorCallAttr>(At);
       return A->clone(C);
     }
     case attr::Visibility: {

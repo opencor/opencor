@@ -8,6 +8,9 @@
 /* Bug report URL. */
 #define BUG_REPORT_URL "http://llvm.org/bugs/"
 
+/* Multilib suffix for libdir. */
+#define CLANG_LIBDIR_SUFFIX ""
+
 /* Relative directory for resource files */
 #define CLANG_RESOURCE_DIR ""
 
@@ -24,6 +27,9 @@
 /* #undef CLANG_HAVE_LIBXML */
 
 /* The LLVM product name and version */
-#define BACKEND_PACKAGE_STRING "LLVM 3.5.1svn"
+#define BACKEND_PACKAGE_STRING "LLVM 3.6.0"
+
+/* Linker version detected at compile time. */
+/* #undef HOST_LINK_VERSION */
 
 #endif

@@ -358,7 +358,7 @@ static AttributeList::Kind getAttrKind(StringRef Name, AttributeList::Syntax Syn
       return AttributeList::AT_VecReturn;	 // "vecreturn"
     }
     break;
-  case 10:	 // 8 strings to match.
+  case 10:	 // 9 strings to match.
     switch (Name[0]) {
     default: break;
     case 'c':	 // 2 strings to match.
@@ -406,15 +406,28 @@ static AttributeList::Kind getAttrKind(StringRef Name, AttributeList::Syntax Syn
         return AttributeList::AT_GuardedBy;	 // "guarded_by"
       }
       break;
-    case 'v':	 // 1 string to match.
-      if (memcmp(Name.data()+1, "isibility", 9))
-        break;
-      return AttributeList::AT_Visibility;	 // "visibility"
+    case 'v':	 // 2 strings to match.
+      switch (Name[1]) {
+      default: break;
+      case 'e':	 // 1 string to match.
+        if (memcmp(Name.data()+2, "ctorcall", 8))
+          break;
+        return AttributeList::AT_VectorCall;	 // "vectorcall"
+      case 'i':	 // 1 string to match.
+        if (memcmp(Name.data()+2, "sibility", 8))
+          break;
+        return AttributeList::AT_Visibility;	 // "visibility"
+      }
+      break;
     }
     break;
-  case 11:	 // 10 strings to match.
+  case 11:	 // 11 strings to match.
     switch (Name[0]) {
     default: break;
+    case 'a':	 // 1 string to match.
+      if (memcmp(Name.data()+1, "lign_value", 10))
+        break;
+      return AttributeList::AT_AlignValue;	 // "align_value"
     case 'c':	 // 2 strings to match.
       switch (Name[1]) {
       default: break;
@@ -540,13 +553,22 @@ static AttributeList::Kind getAttrKind(StringRef Name, AttributeList::Syntax Syn
       return AttributeList::AT_VecTypeHint;	 // "vec_type_hint"
     }
     break;
-  case 14:	 // 8 strings to match.
+  case 14:	 // 9 strings to match.
     switch (Name[0]) {
     default: break;
-    case 'a':	 // 1 string to match.
-      if (memcmp(Name.data()+1, "cquired_after", 13))
-        break;
-      return AttributeList::AT_AcquiredAfter;	 // "acquired_after"
+    case 'a':	 // 2 strings to match.
+      switch (Name[1]) {
+      default: break;
+      case 'c':	 // 1 string to match.
+        if (memcmp(Name.data()+2, "quired_after", 12))
+          break;
+        return AttributeList::AT_AcquiredAfter;	 // "acquired_after"
+      case 's':	 // 1 string to match.
+        if (memcmp(Name.data()+2, "sume_aligned", 12))
+          break;
+        return AttributeList::AT_AssumeAligned;	 // "assume_aligned"
+      }
+      break;
     case 'i':	 // 1 string to match.
       if (memcmp(Name.data()+1, "ntel_ocl_bicc", 13))
         break;
@@ -584,13 +606,33 @@ static AttributeList::Kind getAttrKind(StringRef Name, AttributeList::Syntax Syn
       return AttributeList::AT_TestTypestate;	 // "test_typestate"
     }
     break;
-  case 15:	 // 10 strings to match.
+  case 15:	 // 12 strings to match.
     switch (Name[0]) {
     default: break;
-    case 'a':	 // 1 string to match.
-      if (memcmp(Name.data()+1, "cquired_before", 14))
+    case 'a':	 // 3 strings to match.
+      switch (Name[1]) {
+      default: break;
+      case 'c':	 // 1 string to match.
+        if (memcmp(Name.data()+2, "quired_before", 13))
+          break;
+        return AttributeList::AT_AcquiredBefore;	 // "acquired_before"
+      case 'm':	 // 2 strings to match.
+        if (memcmp(Name.data()+2, "dgpu_num_", 9))
+          break;
+        switch (Name[11]) {
+        default: break;
+        case 's':	 // 1 string to match.
+          if (memcmp(Name.data()+12, "gpr", 3))
+            break;
+          return AttributeList::AT_AMDGPUNumSGPR;	 // "amdgpu_num_sgpr"
+        case 'v':	 // 1 string to match.
+          if (memcmp(Name.data()+12, "gpr", 3))
+            break;
+          return AttributeList::AT_AMDGPUNumVGPR;	 // "amdgpu_num_vgpr"
+        }
         break;
-      return AttributeList::AT_AcquiredBefore;	 // "acquired_before"
+      }
+      break;
     case 'e':	 // 1 string to match.
       if (memcmp(Name.data()+1, "xt_vector_type", 14))
         break;
@@ -1219,14 +1261,14 @@ static AttributeList::Kind getAttrKind(StringRef Name, AttributeList::Syntax Syn
       return AttributeList::AT_Unused;	 // "gnu::unused"
     }
     break;
-  case 12:	 // 11 strings to match.
+  case 12:	 // 12 strings to match.
     switch (Name[0]) {
     default: break;
     case ':':	 // 1 string to match.
       if (memcmp(Name.data()+1, ":deprecated", 11))
         break;
       return AttributeList::AT_Deprecated;	 // "::deprecated"
-    case 'g':	 // 10 strings to match.
+    case 'g':	 // 11 strings to match.
       if (memcmp(Name.data()+1, "nu::", 4))
         break;
       switch (Name[5]) {
@@ -1247,11 +1289,15 @@ static AttributeList::Kind getAttrKind(StringRef Name, AttributeList::Syntax Syn
         if (memcmp(Name.data()+6, "latten", 6))
           break;
         return AttributeList::AT_Flatten;	 // "gnu::flatten"
-      case 'n':	 // 2 strings to match.
+      case 'n':	 // 3 strings to match.
         if (Name[6] != 'o')
           break;
         switch (Name[7]) {
         default: break;
+        case 'd':	 // 1 string to match.
+          if (memcmp(Name.data()+8, "ebug", 4))
+            break;
+          return AttributeList::AT_NoDebug;	 // "gnu::nodebug"
         case 'n':	 // 1 string to match.
           if (memcmp(Name.data()+8, "null", 4))
             break;
@@ -1474,10 +1520,21 @@ static AttributeList::Kind getAttrKind(StringRef Name, AttributeList::Syntax Syn
       break;
     }
     break;
-  case 19:	 // 1 string to match.
-    if (memcmp(Name.data()+0, "gnu::no_split_stack", 19))
+  case 19:	 // 2 strings to match.
+    if (memcmp(Name.data()+0, "gnu::", 5))
       break;
-    return AttributeList::AT_NoSplitStack;	 // "gnu::no_split_stack"
+    switch (Name[5]) {
+    default: break;
+    case 'a':	 // 1 string to match.
+      if (memcmp(Name.data()+6, "ssume_aligned", 13))
+        break;
+      return AttributeList::AT_AssumeAligned;	 // "gnu::assume_aligned"
+    case 'n':	 // 1 string to match.
+      if (memcmp(Name.data()+6, "o_split_stack", 13))
+        break;
+      return AttributeList::AT_NoSplitStack;	 // "gnu::no_split_stack"
+    }
+    break;
   case 20:	 // 2 strings to match.
     switch (Name[0]) {
     default: break;
@@ -1662,7 +1719,7 @@ static AttributeList::Kind getAttrKind(StringRef Name, AttributeList::Syntax Syn
       return AttributeList::AT_OpenCLKernel;	 // "kernel"
     }
     break;
-  case 7:	 // 7 strings to match.
+  case 7:	 // 8 strings to match.
     switch (Name[0]) {
     default: break;
     case '_':	 // 5 strings to match.
@@ -1706,6 +1763,10 @@ static AttributeList::Kind getAttrKind(StringRef Name, AttributeList::Syntax Syn
       if (memcmp(Name.data()+1, "lignas", 6))
         break;
       return AttributeList::AT_Aligned;	 // "alignas"
+    case 'g':	 // 1 string to match.
+      if (memcmp(Name.data()+1, "eneric", 6))
+        break;
+      return AttributeList::AT_OpenCLGenericAddressSpace;	 // "generic"
     case 'p':	 // 1 string to match.
       if (memcmp(Name.data()+1, "rivate", 6))
         break;
@@ -1751,15 +1812,19 @@ static AttributeList::Kind getAttrKind(StringRef Name, AttributeList::Syntax Syn
       return AttributeList::AT_OpenCLConstantAddressSpace;	 // "constant"
     }
     break;
-  case 9:	 // 5 strings to match.
+  case 9:	 // 6 strings to match.
     switch (Name[0]) {
     default: break;
-    case '_':	 // 4 strings to match.
+    case '_':	 // 5 strings to match.
       switch (Name[1]) {
       default: break;
-      case '_':	 // 2 strings to match.
+      case '_':	 // 3 strings to match.
         switch (Name[2]) {
         default: break;
+        case 'g':	 // 1 string to match.
+          if (memcmp(Name.data()+3, "eneric", 6))
+            break;
+          return AttributeList::AT_OpenCLGenericAddressSpace;	 // "__generic"
         case 'p':	 // 1 string to match.
           if (memcmp(Name.data()+3, "rivate", 6))
             break;
@@ -1818,22 +1883,31 @@ static AttributeList::Kind getAttrKind(StringRef Name, AttributeList::Syntax Syn
       return AttributeList::AT_OpenCLImageAccess;	 // "write_only"
     }
     break;
-  case 11:	 // 2 strings to match.
-    if (memcmp(Name.data()+0, "__", 2))
+  case 11:	 // 3 strings to match.
+    if (Name[0] != '_')
       break;
-    switch (Name[2]) {
+    switch (Name[1]) {
     default: break;
-    case 'r':	 // 1 string to match.
-      if (memcmp(Name.data()+3, "ead_only", 8))
+    case '_':	 // 2 strings to match.
+      switch (Name[2]) {
+      default: break;
+      case 'r':	 // 1 string to match.
+        if (memcmp(Name.data()+3, "ead_only", 8))
+          break;
+        return AttributeList::AT_OpenCLImageAccess;	 // "__read_only"
+      case 'u':	 // 1 string to match.
+        if (memcmp(Name.data()+3, "naligned", 8))
+          break;
+        return AttributeList::IgnoredAttribute;	 // "__unaligned"
+      }
+      break;
+    case 'v':	 // 1 string to match.
+      if (memcmp(Name.data()+2, "ectorcall", 9))
         break;
-      return AttributeList::AT_OpenCLImageAccess;	 // "__read_only"
-    case 'u':	 // 1 string to match.
-      if (memcmp(Name.data()+3, "naligned", 8))
-        break;
-      return AttributeList::IgnoredAttribute;	 // "__unaligned"
+      return AttributeList::AT_VectorCall;	 // "_vectorcall"
     }
     break;
-  case 12:	 // 2 strings to match.
+  case 12:	 // 3 strings to match.
     if (memcmp(Name.data()+0, "__", 2))
       break;
     switch (Name[2]) {
@@ -1842,6 +1916,10 @@ static AttributeList::Kind getAttrKind(StringRef Name, AttributeList::Syntax Syn
       if (memcmp(Name.data()+3, "ead_write", 9))
         break;
       return AttributeList::AT_OpenCLImageAccess;	 // "__read_write"
+    case 'v':	 // 1 string to match.
+      if (memcmp(Name.data()+3, "ectorcall", 9))
+        break;
+      return AttributeList::AT_VectorCall;	 // "__vectorcall"
     case 'w':	 // 1 string to match.
       if (memcmp(Name.data()+3, "rite_only", 9))
         break;
@@ -1880,6 +1958,10 @@ static AttributeList::Kind getAttrKind(StringRef Name, AttributeList::Syntax Syn
     if (memcmp(Name.data()+0, "unroll", 6))
       break;
     return AttributeList::AT_LoopHint;	 // "unroll"
+  case 8:	 // 1 string to match.
+    if (memcmp(Name.data()+0, "nounroll", 8))
+      break;
+    return AttributeList::AT_LoopHint;	 // "nounroll"
   }
   }
   return AttributeList::UnknownAttribute;

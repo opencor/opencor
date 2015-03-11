@@ -6,9 +6,6 @@
 /* Exported configuration */
 #include "llvm/Config/llvm-config.h"
 
-/* Patch version of the LLVM API */
-#define LLVM_VERSION_PATCH 1
-
 /* Bug report URL. */
 #define BUG_REPORT_URL "http://llvm.org/bugs/"
 
@@ -17,6 +14,9 @@
 
 /* Define to enable crash overrides */
 #define ENABLE_CRASH_OVERRIDES
+
+/* Define to disable C++ atexit */
+#define DISABLE_LLVM_DYLIB_ATEXIT
 
 /* Define if position independent code is enabled */
 #define ENABLE_PIC
@@ -188,6 +188,9 @@
 /* Define to 1 if you have the <limits.h> header file. */
 #define HAVE_LIMITS_H 1
 
+/* Define to 1 if you have the <link.h> header file. */
+/* #undef HAVE_LINK_H */
+
 /* Define if you can use -rdynamic. */
 #define HAVE_LINK_EXPORT_DYNAMIC 1
 
@@ -351,7 +354,7 @@
 #define HAVE_SYS_IOCTL_H 1
 
 /* Define to 1 if you have the <sys/mman.h> header file. */
-#define HAVE_SYS_MMAN_H
+#define HAVE_SYS_MMAN_H 
 
 /* Define to 1 if you have the <sys/ndir.h> header file, and it defines `DIR'.
    */
@@ -456,9 +459,6 @@
 /* Have host's ___chkstk */
 /* #undef HAVE____CHKSTK */
 
-/* Linker version detected at compile time. */
-#undef HOST_LINK_VERSION
-
 /* Define if we link Polly to the tools */
 /* #undef LINK_POLLY_INTO_TOOLS */
 
@@ -492,13 +492,13 @@
 #define PACKAGE_NAME "LLVM"
 
 /* Define to the full name and version of this package. */
-#define PACKAGE_STRING "LLVM 3.5.1svn"
+#define PACKAGE_STRING "LLVM 3.6.0"
 
 /* Define to the one symbol short name of this package. */
 #undef PACKAGE_TARNAME
 
 /* Define to the version of this package. */
-#define PACKAGE_VERSION "3.5.1svn"
+#define PACKAGE_VERSION "3.6.0"
 
 /* Define as the return type of signal handlers (`int' or `void'). */
 #define RETSIGTYPE void
@@ -517,9 +517,6 @@
 
 /* Type of 1st arg on ELM Callback */
 /* #undef WIN32_ELMCB_PCSTR */
-
-/* Define to empty if `const' does not conform to ANSI C. */
-#undef const
 
 /* Define to `int' if <sys/types.h> does not define. */
 #undef pid_t
@@ -541,8 +538,5 @@
 
 /* Define to 1 if you have the `_chsize_s' function. */
 /* #undef HAVE__CHSIZE_S */
-
-/* Maximum path length */
-#define MAXPATHLEN 2024
 
 #endif

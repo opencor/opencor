@@ -28,8 +28,8 @@
         <translation>le code n&apos;a pas pu être compilé</translation>
     </message>
     <message>
-        <source>the JIT execution engine could not be created</source>
-        <translation>le moteur d&apos;exécution JIT n&apos;a pas pu être créé</translation>
+        <source>the execution engine could not be created</source>
+        <translation>le moteur d&apos;exécution n&apos;a pas pu être créé</translation>
     </message>
 </context>
 </TS>

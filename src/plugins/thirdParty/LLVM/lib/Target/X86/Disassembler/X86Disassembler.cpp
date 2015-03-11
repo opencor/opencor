@@ -23,7 +23,6 @@
 #include "llvm/MC/MCInstrInfo.h"
 #include "llvm/MC/MCSubtargetInfo.h"
 #include "llvm/Support/Debug.h"
-#include "llvm/Support/MemoryObject.h"
 #include "llvm/Support/TargetRegistry.h"
 #include "llvm/Support/raw_ostream.h"
 
@@ -97,16 +96,26 @@ X86GenericDisassembler::X86GenericDisassembler(
   }
 }
 
-/// regionReader - a callback function that wraps the readByte method from
-///   MemoryObject.
+struct Region {
+  ArrayRef<uint8_t> Bytes;
+  uint64_t Base;
+  Region(ArrayRef<uint8_t> Bytes, uint64_t Base) : Bytes(Bytes), Base(Base) {}
+};
+
+/// A callback function that wraps the readByte method from Region.
 ///
-/// @param arg      - The generic callback parameter.  In this case, this should
-///                   be a pointer to a MemoryObject.
-/// @param byte     - A pointer to the byte to be read.
-/// @param address  - The address to be read.
-static int regionReader(const void* arg, uint8_t* byte, uint64_t address) {
-  const MemoryObject* region = static_cast<const MemoryObject*>(arg);
-  return region->readByte(address, byte);
+/// @param Arg      - The generic callback parameter.  In this case, this should
+///                   be a pointer to a Region.
+/// @param Byte     - A pointer to the byte to be read.
+/// @param Address  - The address to be read.
+static int regionReader(const void *Arg, uint8_t *Byte, uint64_t Address) {
+  auto *R = static_cast<const Region *>(Arg);
+  ArrayRef<uint8_t> Bytes = R->Bytes;
+  unsigned Index = Address - R->Base;
+  if (Bytes.size() <= Index)
+    return -1;
+  *Byte = Bytes[Index];
+  return 0;
 }
 
 /// logger - a callback function that wraps the operator<< method from
@@ -127,38 +136,29 @@ static void logger(void* arg, const char* log) {
 // Public interface for the disassembler
 //
 
-MCDisassembler::DecodeStatus
-X86GenericDisassembler::getInstruction(MCInst &instr,
-                                       uint64_t &size,
-                                       const MemoryObject &region,
-                                       uint64_t address,
-                                       raw_ostream &vStream,
-                                       raw_ostream &cStream) const {
-  CommentStream = &cStream;
+MCDisassembler::DecodeStatus X86GenericDisassembler::getInstruction(
+    MCInst &Instr, uint64_t &Size, ArrayRef<uint8_t> Bytes, uint64_t Address,
+    raw_ostream &VStream, raw_ostream &CStream) const {
+  CommentStream = &CStream;
 
-  InternalInstruction internalInstr;
+  InternalInstruction InternalInstr;
 
-  dlog_t loggerFn = logger;
-  if (&vStream == &nulls())
-    loggerFn = nullptr; // Disable logging completely if it's going to nulls().
+  dlog_t LoggerFn = logger;
+  if (&VStream == &nulls())
+    LoggerFn = nullptr; // Disable logging completely if it's going to nulls().
 
-  int ret = decodeInstruction(&internalInstr,
-                              regionReader,
-                              (const void*)&region,
-                              loggerFn,
-                              (void*)&vStream,
-                              (const void*)MII.get(),
-                              address,
-                              fMode);
+  Region R(Bytes, Address);
 
-  if (ret) {
-    size = internalInstr.readerCursor - address;
+  int Ret = decodeInstruction(&InternalInstr, regionReader, (const void *)&R,
+                              LoggerFn, (void *)&VStream,
+                              (const void *)MII.get(), Address, fMode);
+
+  if (Ret) {
+    Size = InternalInstr.readerCursor - Address;
     return Fail;
-  }
-  else {
-    size = internalInstr.length;
-    return (!translateInstruction(instr, internalInstr, this)) ?
-            Success : Fail;
+  } else {
+    Size = InternalInstr.length;
+    return (!translateInstruction(Instr, InternalInstr, this)) ? Success : Fail;
   }
 }
 
@@ -349,6 +349,54 @@ static void translateImmediate(MCInst &mcInst, uint64_t immediate,
       break;
     case ENCODING_IO:
       break;
+    }
+  } else if (type == TYPE_IMM3) {
+    // Check for immediates that printSSECC can't handle.
+    if (immediate >= 8) {
+      unsigned NewOpc;
+      switch (mcInst.getOpcode()) {
+      default: llvm_unreachable("unexpected opcode");
+      case X86::CMPPDrmi: NewOpc = X86::CMPPDrmi_alt; break;
+      case X86::CMPPDrri: NewOpc = X86::CMPPDrri_alt; break;
+      case X86::CMPPSrmi: NewOpc = X86::CMPPSrmi_alt; break;
+      case X86::CMPPSrri: NewOpc = X86::CMPPSrri_alt; break;
+      case X86::CMPSDrm:  NewOpc = X86::CMPSDrm_alt;  break;
+      case X86::CMPSDrr:  NewOpc = X86::CMPSDrr_alt;  break;
+      case X86::CMPSSrm:  NewOpc = X86::CMPSSrm_alt;  break;
+      case X86::CMPSSrr:  NewOpc = X86::CMPSSrr_alt;  break;
+      }
+      // Switch opcode to the one that doesn't get special printing.
+      mcInst.setOpcode(NewOpc);
+    }
+  } else if (type == TYPE_IMM5) {
+    // Check for immediates that printAVXCC can't handle.
+    if (immediate >= 32) {
+      unsigned NewOpc;
+      switch (mcInst.getOpcode()) {
+      default: llvm_unreachable("unexpected opcode");
+      case X86::VCMPPDrmi:  NewOpc = X86::VCMPPDrmi_alt;  break;
+      case X86::VCMPPDrri:  NewOpc = X86::VCMPPDrri_alt;  break;
+      case X86::VCMPPSrmi:  NewOpc = X86::VCMPPSrmi_alt;  break;
+      case X86::VCMPPSrri:  NewOpc = X86::VCMPPSrri_alt;  break;
+      case X86::VCMPSDrm:   NewOpc = X86::VCMPSDrm_alt;   break;
+      case X86::VCMPSDrr:   NewOpc = X86::VCMPSDrr_alt;   break;
+      case X86::VCMPSSrm:   NewOpc = X86::VCMPSSrm_alt;   break;
+      case X86::VCMPSSrr:   NewOpc = X86::VCMPSSrr_alt;   break;
+      case X86::VCMPPDYrmi: NewOpc = X86::VCMPPDYrmi_alt; break;
+      case X86::VCMPPDYrri: NewOpc = X86::VCMPPDYrri_alt; break;
+      case X86::VCMPPSYrmi: NewOpc = X86::VCMPPSYrmi_alt; break;
+      case X86::VCMPPSYrri: NewOpc = X86::VCMPPSYrri_alt; break;
+      case X86::VCMPPDZrmi: NewOpc = X86::VCMPPDZrmi_alt; break;
+      case X86::VCMPPDZrri: NewOpc = X86::VCMPPDZrri_alt; break;
+      case X86::VCMPPSZrmi: NewOpc = X86::VCMPPSZrmi_alt; break;
+      case X86::VCMPPSZrri: NewOpc = X86::VCMPPSZrri_alt; break;
+      case X86::VCMPSDZrm:  NewOpc = X86::VCMPSDZrmi_alt; break;
+      case X86::VCMPSDZrr:  NewOpc = X86::VCMPSDZrri_alt; break;
+      case X86::VCMPSSZrm:  NewOpc = X86::VCMPSSZrmi_alt; break;
+      case X86::VCMPSSZrr:  NewOpc = X86::VCMPSSZrri_alt; break;
+      }
+      // Switch opcode to the one that doesn't get special printing.
+      mcInst.setOpcode(NewOpc);
     }
   }
 
@@ -633,8 +681,6 @@ static bool translateRM(MCInst &mcInst, const OperandSpecifier &operand,
   case TYPE_R32:
   case TYPE_R64:
   case TYPE_Rv:
-  case TYPE_MM:
-  case TYPE_MM32:
   case TYPE_MM64:
   case TYPE_XMM:
   case TYPE_XMM32:
@@ -660,9 +706,6 @@ static bool translateRM(MCInst &mcInst, const OperandSpecifier &operand,
   case TYPE_M32FP:
   case TYPE_M64FP:
   case TYPE_M80FP:
-  case TYPE_M16INT:
-  case TYPE_M32INT:
-  case TYPE_M64INT:
   case TYPE_M1616:
   case TYPE_M1632:
   case TYPE_M1664:
