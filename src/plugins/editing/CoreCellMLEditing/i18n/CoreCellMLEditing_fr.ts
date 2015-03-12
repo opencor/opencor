@@ -27,5 +27,9 @@
         <source>Validate the CellML file</source>
         <translation>Valider le fichier CellML</translation>
     </message>
+    <message>
+        <source>The CellML file is valid.</source>
+        <translation>Le fichier CellML est valide.</translation>
+    </message>
 </context>
 </TS>

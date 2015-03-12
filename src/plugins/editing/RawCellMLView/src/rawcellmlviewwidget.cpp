@@ -36,11 +36,9 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-#include <QApplication>
 #include <QDomDocument>
 #include <QLabel>
 #include <QLayout>
-#include <QMessageBox>
 #include <QMetaType>
 #include <QSettings>
 #include <QVariant>
@@ -313,7 +311,7 @@ QList<QWidget *> RawCellmlViewWidget::statusBarWidgets() const
 
 //==============================================================================
 
-void RawCellmlViewWidget::validate(const QString &pFileName) const
+bool RawCellmlViewWidget::validate(const QString &pFileName) const
 {
     // Validate the given file
 
@@ -334,10 +332,7 @@ void RawCellmlViewWidget::validate(const QString &pFileName) const
         if (cellmlFile->isValid(pFileName, editingWidget->editor()->contents(), cellmlFileIssues)) {
             // There are no CellML issues, so the CellML file is valid
 
-            QMessageBox::information(qApp->activeWindow(),
-                                     tr("CellML Validation"),
-                                     tr("The CellML file is valid."),
-                                     QMessageBox::Ok);
+            return true;
         } else {
             // There are some CellML issues, so add them to our list and select
             // the first one
@@ -351,7 +346,13 @@ void RawCellmlViewWidget::validate(const QString &pFileName) const
                                     qPrintable(cellmlFileIssue.formattedMessage()));
 
             editorList->selectFirstItem();
+
+            return false;
         }
+    } else {
+        // The file doesn't exist, so it can't be validated
+
+        return false;
     }
 }
 

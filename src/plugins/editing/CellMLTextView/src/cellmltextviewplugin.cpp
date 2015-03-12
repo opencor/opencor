@@ -29,7 +29,6 @@ specific language governing permissions and limitations under the License.
 
 #include <QApplication>
 #include <QMainWindow>
-#include <QMessageBox>
 #include <QSettings>
 
 //==============================================================================
@@ -55,16 +54,11 @@ PLUGININFO_FUNC CellMLTextViewPluginInfo()
 // CellML editing interface
 //==============================================================================
 
-void CellMLTextViewPlugin::validateCellml(const QString &pFileName) const
+bool CellMLTextViewPlugin::validCellml(const QString &pFileName) const
 {
-//---GRY--- TO BE IMPLEMENTED...
+    // Validate the given file
 
-Q_UNUSED(pFileName);
-
-QMessageBox::information(qApp->activeWindow(),
-                         tr("CellML Validation"),
-                         "Validation is not yet available for the <strong>CellML Text</strong> view.",
-                         QMessageBox::Ok);
+    return mViewWidget->validate(pFileName);
 }
 
 //==============================================================================

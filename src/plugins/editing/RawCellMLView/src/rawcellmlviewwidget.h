@@ -90,7 +90,7 @@ public:
 
     virtual QList<QWidget *> statusBarWidgets() const;
 
-    void validate(const QString &pFileName) const;
+    bool validate(const QString &pFileName) const;
 
 private:
     Ui::RawCellmlViewWidget *mGui;

@@ -7,10 +7,6 @@
         <source>CellML Text</source>
         <translation>Texte CellML</translation>
     </message>
-    <message>
-        <source>CellML Validation</source>
-        <translation>Validation CellML</translation>
-    </message>
 </context>
 <context>
     <name>OpenCOR::CellMLTextView::CellmlTextViewWidget</name>

@@ -25,6 +25,7 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include "cellmlfile.h"
+#include "cellmltextviewparser.h"
 #include "corecliutils.h"
 #include "viewwidget.h"
 
@@ -53,6 +54,12 @@ namespace CoreCellMLEditing {
 namespace Editor {
     class EditorWidget;
 }   // namespace Editor
+
+//==============================================================================
+
+namespace EditorList {
+    class EditorListWidget;
+}   // namespace EditorList
 
 //==============================================================================
 
@@ -123,6 +130,8 @@ public:
 
     virtual QList<QWidget *> statusBarWidgets() const;
 
+    bool validate(const QString &pFileName);
+
 private:
     Ui::CellmlTextViewWidget *mGui;
 
@@ -133,14 +142,20 @@ private:
 
     QMap<QString, CellmlTextViewWidgetData> mData;
 
+    CellmlTextViewParser mParser;
+
+    QList<EditorList::EditorListWidget *> mEditorLists;
+
     void commentOrUncommentLine(QScintillaSupport::QScintillaWidget *editor,
                                 const int &pLineNumber,
                                 const bool &pCommentLine);
 
+    bool parse(const QString &pFileName);
+
 private Q_SLOTS:
     void editorKeyPressed(QKeyEvent *pEvent, bool &pHandled);
 
-    void selectFirstItemInEditorList();
+    void selectFirstItemInEditorList(EditorList::EditorListWidget *pEditorList = 0);
 };
 
 //==============================================================================

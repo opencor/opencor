@@ -28,8 +28,10 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include <QAction>
+#include <QApplication>
 #include <QMainWindow>
 #include <QMenu>
+#include <QMessageBox>
 
 //==============================================================================
 
@@ -282,8 +284,16 @@ void CoreCellMLEditingPlugin::cellmlValidation()
 {
     // Validate the current CellML file
 
-    if (mCellmlEditingInterface)
-        mCellmlEditingInterface->validateCellml(mFileName);
+    if (mCellmlEditingInterface) {
+        if (mCellmlEditingInterface->validCellml(mFileName)) {
+            // There are no CellML issues, so the CellML file is valid
+
+            QMessageBox::information(qApp->activeWindow(),
+                                     tr("CellML Validation"),
+                                     tr("The CellML file is valid."),
+                                     QMessageBox::Ok);
+        }
+    }
 }
 
 //==============================================================================
