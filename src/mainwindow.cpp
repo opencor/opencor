@@ -474,35 +474,23 @@ void MainWindow::initializeGuiPlugin(Plugin *pPlugin)
         menuActionIter.toBack();
 
         while (menuActionIter.hasPrevious()) {
-            // Insert the action/separator to the right menu
+            // Insert the action/separator to the right menu, if any
 
+            QMenu *menu = 0;
             Gui::MenuAction menuAction = menuActionIter.previous();
 
-            switch (menuAction.type()) {
-            case Gui::MenuAction::File: {
+            if (menuAction.type() == Gui::MenuAction::File)
+                menu = mGui->menuFile;
+            else if (menuAction.type() == Gui::MenuAction::Tools)
+                menu = mGui->menuTools;
+
+            if (menu) {
                 QAction *action = menuAction.action();
 
                 if (action)
-                    mGui->menuFile->insertAction(mGui->menuFile->actions().first(), action);
+                    menu->insertAction(menu->actions().first(), action);
                 else
-                    mGui->menuFile->insertSeparator(mGui->menuFile->actions().first());
-
-                break;
-            }
-            case Gui::MenuAction::Tools: {
-                QAction *action = menuAction.action();
-
-                if (action)
-                    mGui->menuTools->insertAction(mGui->menuTools->actions().first(), action);
-                else
-                    mGui->menuTools->insertSeparator(mGui->menuTools->actions().first());
-
-                break;
-            }
-            default:
-                // Not a type in which we are interested, so do nothing
-
-                ;
+                    menu->insertSeparator(menu->actions().first());
             }
         }
 
