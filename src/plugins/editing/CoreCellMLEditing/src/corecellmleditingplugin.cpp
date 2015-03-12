@@ -158,6 +158,8 @@ void CoreCellMLEditingPlugin::initializePlugin(QMainWindow *pMainWindow)
 
     mToolsCellmlValidationAction = new QAction(pMainWindow);
 
+    mToolsCellmlValidationAction->setShortcut(QKeySequence(Qt::CTRL|Qt::Key_T));
+
     // Some connections to handle our different actions
 
     connect(mFileNewCellml1_0FileAction, SIGNAL(triggered(bool)),
