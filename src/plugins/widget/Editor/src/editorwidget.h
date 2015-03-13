@@ -90,6 +90,7 @@ public:
     QMenu * contextMenu() const;
     void setContextMenu(const QList<QAction *> &pContextMenuActions);
 
+    void cursorPosition(int &pLine, int &pColumn);
     void setCursorPosition(const int &pLine, const int &pColumn);
 
     int currentPosition() const;

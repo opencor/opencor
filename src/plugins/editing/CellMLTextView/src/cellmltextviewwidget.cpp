@@ -513,9 +513,15 @@ void CellmlTextViewWidget::reformat(const QString &pFileName)
     CoreCellMLEditing::CoreCellmlEditingWidget *editingWidget = mData.value(pFileName).editingWidget();
 
     if (editingWidget && parse(pFileName, true)) {
+        int cursorLine;
+        int cursorColumn;
+
+        editingWidget->editor()->cursorPosition(cursorLine, cursorColumn);
+
         mConverter.execute(qDomDocumentToString(mParser.domDocument()));
 
         editingWidget->editor()->setContentsWithHistory(mConverter.output());
+        editingWidget->editor()->setCursorPosition(cursorLine, cursorColumn);
     }
 }
 

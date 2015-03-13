@@ -318,11 +318,17 @@ void RawCellmlViewWidget::reformat(const QString &pFileName)
     CoreCellMLEditing::CoreCellmlEditingWidget *editingWidget = mEditingWidgets.value(pFileName);
 
     if (editingWidget && validate(pFileName, true)) {
+        int cursorLine;
+        int cursorColumn;
+
+        editingWidget->editor()->cursorPosition(cursorLine, cursorColumn);
+
         QDomDocument domDocument;
 
         domDocument.setContent(editingWidget->editor()->contents());
 
         editingWidget->editor()->setContentsWithHistory(qDomDocumentToString(domDocument));
+        editingWidget->editor()->setCursorPosition(cursorLine, cursorColumn);
     }
 }
 

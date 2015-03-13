@@ -62,6 +62,8 @@ public:
     QMenu * contextMenu() const;
     void setContextMenu(const QList<QAction *> &pContextMenuActions);
 
+    void cursorPosition(int &pLine, int &pColumn);
+
     virtual void setCursorPosition(int pLine, int pColumn);
     virtual void setLexer(QsciLexer *pLexer);
 

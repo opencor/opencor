@@ -160,8 +160,22 @@ void QScintillaWidget::setContextMenu(const QList<QAction *> &pContextMenuAction
 
 //==============================================================================
 
+void QScintillaWidget::cursorPosition(int &pLine, int &pColumn)
+{
+    // Retrieve our cursor position
+
+    QsciScintilla::getCursorPosition(&pLine, &pColumn);
+}
+
+//==============================================================================
+
 void QScintillaWidget::setCursorPosition(int pLine, int pColumn)
 {
+    // Make sure that the line and column numbers make sense
+
+    pLine = qMin(qMax(0, pLine), lines()-1);
+    pColumn = qMin(qMax(0, pColumn), text(pLine).size()-1);
+
     // Make sure that the line is not within a folded block
 
     ensureLineVisible(pLine);
