@@ -494,6 +494,11 @@ void MainWindow::initializeGuiPlugin(Plugin *pPlugin)
             }
         }
 
+        // Make sure that our language menu item is first in our tools menu
+
+        mGui->menuTools->insertSeparator(mGui->menuTools->actions().first());
+        mGui->menuTools->insertAction(mGui->menuTools->actions().first(), mGui->menuLanguage->menuAction());
+
         // Add some sub-menus before some menu items
 
         foreach (const Gui::Menu &menu, guiInterface->guiMenus()) {
