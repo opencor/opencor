@@ -45,6 +45,7 @@ var jsonData = {"versions":[
                              {"type":"subCategory", "name":"Raw CellML view",
                               "entries":[
                                   {"type":"Added", "description":"Reformatting the contents of the editor."},
+                                  {"type":"Improved", "description":"File validation."},
                                   {"type":"Improved", "description":"Context menu."},
                                   {"type":"Improved", "description":"Equation rendering."},
                                   {"type":"Improved", "description":"File permissions changes."},
