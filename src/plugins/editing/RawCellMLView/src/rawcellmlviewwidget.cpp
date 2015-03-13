@@ -329,7 +329,7 @@ void RawCellmlViewWidget::reformat(const QString &pFileName)
 //==============================================================================
 
 bool RawCellmlViewWidget::validate(const QString &pFileName,
-                                   const bool &pIgnoreWarnings) const
+                                   const bool &pOnlyErrors) const
 {
     // Validate the given file
 
@@ -356,7 +356,7 @@ bool RawCellmlViewWidget::validate(const QString &pFileName,
             // the first one
 
             foreach (const CellMLSupport::CellmlFileIssue &cellmlFileIssue, cellmlFileIssues) {
-                if (   !pIgnoreWarnings
+                if (   !pOnlyErrors
                     || (cellmlFileIssue.type() == CellMLSupport::CellmlFileIssue::Error)) {
                     editorList->addItem((cellmlFileIssue.type() == CellMLSupport::CellmlFileIssue::Error)?
                                             EditorList::EditorListItem::Error:
