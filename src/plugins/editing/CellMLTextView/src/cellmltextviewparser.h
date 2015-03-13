@@ -49,9 +49,7 @@ class CellmlTextViewParserMessage
 public:
     enum Type {
         Error,
-        Warning,
-        Hint,
-        Information
+        Warning
     };
 
     explicit CellmlTextViewParserMessage(const Type &pType,

@@ -152,7 +152,7 @@ private:
                                 const int &pLineNumber,
                                 const bool &pCommentLine);
 
-    bool parse(const QString &pFileName);
+    bool parse(const QString &pFileName, const bool &pOnlyErrors = false);
 
 private Q_SLOTS:
     void editorKeyPressed(QKeyEvent *pEvent, bool &pHandled);
