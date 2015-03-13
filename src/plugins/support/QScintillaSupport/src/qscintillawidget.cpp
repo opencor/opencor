@@ -106,6 +106,7 @@ QScintillaWidget::QScintillaWidget(QsciLexer *pLexer, QWidget *pParent) :
     SendScintilla(SCI_CLEARCMDKEY, (SCMOD_CTRL << 16)+'D');
     SendScintilla(SCI_CLEARCMDKEY, (SCMOD_CTRL << 16)+'L');
     SendScintilla(SCI_CLEARCMDKEY, (SCMOD_CTRL << 16)+(SCMOD_SHIFT << 16)+'L');
+    SendScintilla(SCI_CLEARCMDKEY, (SCMOD_CTRL << 16)+'R');
     SendScintilla(SCI_CLEARCMDKEY, (SCMOD_CTRL << 16)+'T');
 
     // Empty context menu by default

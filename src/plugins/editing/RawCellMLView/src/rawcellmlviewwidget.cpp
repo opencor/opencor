@@ -311,6 +311,20 @@ QList<QWidget *> RawCellmlViewWidget::statusBarWidgets() const
 
 //==============================================================================
 
+void RawCellmlViewWidget::reformat(const QString &pFileName)
+{
+    // Reformat the contents of the given file's editor
+
+    CoreCellMLEditing::CoreCellmlEditingWidget *editingWidget = mEditingWidgets.value(pFileName);
+
+    if (editingWidget) {
+//---GRY--- TO BE DONE...
+qDebug(">>> RawCellmlViewWidget::reformat(): to be done...");
+    }
+}
+
+//==============================================================================
+
 bool RawCellmlViewWidget::validate(const QString &pFileName) const
 {
     // Validate the given file

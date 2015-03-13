@@ -54,6 +54,15 @@ PLUGININFO_FUNC RawCellMLViewPluginInfo()
 // CellML editing interface
 //==============================================================================
 
+void RawCellMLViewPlugin::reformat(const QString &pFileName) const
+{
+    // Reformat the contents of the given file's editor
+
+    mViewWidget->reformat(pFileName);
+}
+
+//==============================================================================
+
 bool RawCellMLViewPlugin::validCellml(const QString &pFileName) const
 {
     // Validate the given file

@@ -54,6 +54,15 @@ PLUGININFO_FUNC CellMLTextViewPluginInfo()
 // CellML editing interface
 //==============================================================================
 
+void CellMLTextViewPlugin::reformat(const QString &pFileName) const
+{
+    // Reformat the contents of the given file's editor
+
+    mViewWidget->reformat(pFileName);
+}
+
+//==============================================================================
+
 bool CellMLTextViewPlugin::validCellml(const QString &pFileName) const
 {
     // Validate the given file

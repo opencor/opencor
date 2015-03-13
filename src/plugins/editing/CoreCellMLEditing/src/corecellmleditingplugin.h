@@ -72,6 +72,8 @@ private:
     QAction *mFileNewCellml1_0FileAction;
     QAction *mFileNewCellml1_1FileAction;
 
+    QAction *mEditReformatAction;
+
     QAction *mToolsCellmlValidationAction;
 
     QString mFileName;
@@ -82,6 +84,8 @@ private:
 private Q_SLOTS:
     void newCellml1_0File();
     void newCellml1_1File();
+
+    void reformat();
 
     void cellmlValidation();
 };

@@ -75,6 +75,8 @@ void CoreCellMLEditingPlugin::updateGui(Plugin *pViewPlugin,
     Core::showEnableAction(mFileNewCellml1_0FileAction, mCellmlEditingInterface);
     Core::showEnableAction(mFileNewCellml1_1FileAction, mCellmlEditingInterface);
 
+    Core::showEnableAction(mEditReformatAction, mCellmlEditingInterface, !pFileName.isEmpty());
+
     Core::showEnableAction(mToolsCellmlValidationAction, mCellmlEditingInterface, !pFileName.isEmpty());
 
     // Update our editor's context menu
@@ -90,6 +92,13 @@ void CoreCellMLEditingPlugin::updateGui(Plugin *pViewPlugin,
             QList<QAction *> contextMenuActions = editor->contextMenu()->actions();
 
             QAction *separatorAction = new QAction(mMainWindow);
+
+            separatorAction->setSeparator(true);
+
+            contextMenuActions.append(separatorAction);
+            contextMenuActions.append(mEditReformatAction);
+
+            separatorAction = new QAction(mMainWindow);
 
             separatorAction->setSeparator(true);
 
@@ -122,6 +131,8 @@ Gui::MenuActions CoreCellMLEditingPlugin::guiMenuActions() const
 
     return Gui::MenuActions() << Gui::MenuAction(Gui::MenuAction::FileNew, mFileNewCellml1_0FileAction)
                               << Gui::MenuAction(Gui::MenuAction::FileNew, mFileNewCellml1_1FileAction)
+                              << Gui::MenuAction(Gui::MenuAction::Tools, mEditReformatAction)
+                              << Gui::MenuAction(Gui::MenuAction::Tools)
                               << Gui::MenuAction(Gui::MenuAction::Tools, mToolsCellmlValidationAction)
                               << Gui::MenuAction(Gui::MenuAction::Tools);
 }
@@ -138,6 +149,9 @@ void CoreCellMLEditingPlugin::retranslateUi()
                       tr("Create a new CellML 1.0 file"));
     retranslateAction(mFileNewCellml1_1FileAction, tr("CellML 1.1 File"),
                       tr("Create a new CellML 1.1 file"));
+
+    retranslateAction(mEditReformatAction, tr("Reformat"),
+                      tr("Reformat the contents of the editor"));
 
     retranslateAction(mToolsCellmlValidationAction, tr("CellML Validation"),
                       tr("Validate the CellML file"));
@@ -158,6 +172,10 @@ void CoreCellMLEditingPlugin::initializePlugin(QMainWindow *pMainWindow)
     mFileNewCellml1_0FileAction = new QAction(pMainWindow);
     mFileNewCellml1_1FileAction = new QAction(pMainWindow);
 
+    mEditReformatAction = new QAction(pMainWindow);
+
+    mEditReformatAction->setShortcut(QKeySequence(Qt::CTRL|Qt::Key_R));
+
     mToolsCellmlValidationAction = new QAction(pMainWindow);
 
     mToolsCellmlValidationAction->setShortcut(QKeySequence(Qt::CTRL|Qt::Key_T));
@@ -168,6 +186,9 @@ void CoreCellMLEditingPlugin::initializePlugin(QMainWindow *pMainWindow)
             this, SLOT(newCellml1_0File()));
     connect(mFileNewCellml1_1FileAction, SIGNAL(triggered(bool)),
             this, SLOT(newCellml1_1File()));
+
+    connect(mEditReformatAction, SIGNAL(triggered(bool)),
+            this, SLOT(reformat()));
 
     connect(mToolsCellmlValidationAction, SIGNAL(triggered(bool)),
             this, SLOT(cellmlValidation()));
@@ -276,6 +297,16 @@ void CoreCellMLEditingPlugin::newCellml1_1File()
     // Create a new CellML 1.1 file
 
     newCellmlFile(CellMLSupport::CellmlFile::Cellml_1_1);
+}
+
+//==============================================================================
+
+void CoreCellMLEditingPlugin::reformat()
+{
+    // Reformat the contents of the editor
+
+    if (mCellmlEditingInterface)
+        mCellmlEditingInterface->reformat(mFileName);
 }
 
 //==============================================================================

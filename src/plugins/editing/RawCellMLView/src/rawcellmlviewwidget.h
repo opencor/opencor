@@ -90,6 +90,8 @@ public:
 
     virtual QList<QWidget *> statusBarWidgets() const;
 
+    void reformat(const QString &pFileName);
+
     bool validate(const QString &pFileName) const;
 
 private:
