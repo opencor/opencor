@@ -347,30 +347,26 @@ bool RawCellmlViewWidget::validate(const QString &pFileName,
         CellMLSupport::CellmlFile *cellmlFile = CellMLSupport::CellmlFileManager::instance()->cellmlFile(pFileName);
         CellMLSupport::CellmlFileIssues cellmlFileIssues;
 
-        if (cellmlFile->isValid(pFileName, editingWidget->editor()->contents(), cellmlFileIssues)) {
-            // There are no CellML issues, so the CellML file is valid
+        bool res = cellmlFile->isValid(pFileName, editingWidget->editor()->contents(), cellmlFileIssues);
 
-            return true;
-        } else {
-            // There are some CellML issues, so add them to our list and select
-            // the first one
+        // Add whatever issue there may be to our list and select the first one
+        // of them
 
-            foreach (const CellMLSupport::CellmlFileIssue &cellmlFileIssue, cellmlFileIssues) {
-                if (   !pOnlyErrors
-                    || (cellmlFileIssue.type() == CellMLSupport::CellmlFileIssue::Error)) {
-                    editorList->addItem((cellmlFileIssue.type() == CellMLSupport::CellmlFileIssue::Error)?
-                                            EditorList::EditorListItem::Error:
-                                            EditorList::EditorListItem::Warning,
-                                        cellmlFileIssue.line(),
-                                        cellmlFileIssue.column(),
-                                        qPrintable(cellmlFileIssue.formattedMessage()));
-                }
+        foreach (const CellMLSupport::CellmlFileIssue &cellmlFileIssue, cellmlFileIssues) {
+            if (   !pOnlyErrors
+                || (cellmlFileIssue.type() == CellMLSupport::CellmlFileIssue::Error)) {
+                editorList->addItem((cellmlFileIssue.type() == CellMLSupport::CellmlFileIssue::Error)?
+                                        EditorList::EditorListItem::Error:
+                                        EditorList::EditorListItem::Warning,
+                                    cellmlFileIssue.line(),
+                                    cellmlFileIssue.column(),
+                                    qPrintable(cellmlFileIssue.formattedMessage()));
             }
-
-            editorList->selectFirstItem();
-
-            return false;
         }
+
+        editorList->selectFirstItem();
+
+        return res;
     } else {
         // The file doesn't exist, so it can't be validated
 
