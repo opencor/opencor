@@ -92,7 +92,8 @@ public:
 
     void reformat(const QString &pFileName);
 
-    bool validate(const QString &pFileName) const;
+    bool validate(const QString &pFileName,
+                  const bool &pIgnoreWarnings = false) const;
 
 private:
     Ui::RawCellmlViewWidget *mGui;

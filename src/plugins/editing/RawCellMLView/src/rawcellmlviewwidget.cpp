@@ -317,7 +317,7 @@ void RawCellmlViewWidget::reformat(const QString &pFileName)
 
     CoreCellMLEditing::CoreCellmlEditingWidget *editingWidget = mEditingWidgets.value(pFileName);
 
-    if (editingWidget && validate(pFileName)) {
+    if (editingWidget && validate(pFileName, true)) {
         QDomDocument domDocument;
 
         domDocument.setContent(editingWidget->editor()->contents());
@@ -328,7 +328,8 @@ void RawCellmlViewWidget::reformat(const QString &pFileName)
 
 //==============================================================================
 
-bool RawCellmlViewWidget::validate(const QString &pFileName) const
+bool RawCellmlViewWidget::validate(const QString &pFileName,
+                                   const bool &pIgnoreWarnings) const
 {
     // Validate the given file
 
@@ -354,13 +355,17 @@ bool RawCellmlViewWidget::validate(const QString &pFileName) const
             // There are some CellML issues, so add them to our list and select
             // the first one
 
-            foreach (const CellMLSupport::CellmlFileIssue &cellmlFileIssue, cellmlFileIssues)
-                editorList->addItem((cellmlFileIssue.type() == CellMLSupport::CellmlFileIssue::Error)?
-                                        EditorList::EditorListItem::Error:
-                                        EditorList::EditorListItem::Warning,
-                                    cellmlFileIssue.line(),
-                                    cellmlFileIssue.column(),
-                                    qPrintable(cellmlFileIssue.formattedMessage()));
+            foreach (const CellMLSupport::CellmlFileIssue &cellmlFileIssue, cellmlFileIssues) {
+                if (   !pIgnoreWarnings
+                    || (cellmlFileIssue.type() == CellMLSupport::CellmlFileIssue::Error)) {
+                    editorList->addItem((cellmlFileIssue.type() == CellMLSupport::CellmlFileIssue::Error)?
+                                            EditorList::EditorListItem::Error:
+                                            EditorList::EditorListItem::Warning,
+                                        cellmlFileIssue.line(),
+                                        cellmlFileIssue.column(),
+                                        qPrintable(cellmlFileIssue.formattedMessage()));
+                }
+            }
 
             editorList->selectFirstItem();
 
