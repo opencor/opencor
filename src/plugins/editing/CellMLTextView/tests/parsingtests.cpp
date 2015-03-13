@@ -124,7 +124,7 @@ void ParsingTests::fileTests()
 
     OpenCOR::CellMLTextView::CellMLTextViewConverter converter;
 
-    QVERIFY(converter.execute(OpenCOR::fileName("src/plugins/editing/CellMLTextView/tests/data/parsing/my_model.cellml")));
+    QVERIFY(converter.execute(OpenCOR::fileContents(OpenCOR::fileName("src/plugins/editing/CellMLTextView/tests/data/parsing/my_model.cellml")).join("\n")));
     QCOMPARE(converter.output().split("\n"),
              OpenCOR::fileContents(OpenCOR::fileName("src/plugins/editing/CellMLTextView/tests/data/parsing/my_model.in")));
 
