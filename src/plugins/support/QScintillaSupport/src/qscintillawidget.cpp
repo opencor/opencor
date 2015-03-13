@@ -225,6 +225,18 @@ void QScintillaWidget::setContents(const QString &pContents)
 
 //==============================================================================
 
+void QScintillaWidget::setContentsWithHistory(const QString &pContents)
+{
+    // Set our contents while keeping our history
+
+    if (isReadOnly())
+        return;
+
+    SendScintilla(SCI_SETTEXT, ScintillaBytesConstData(textAsBytes(pContents)));
+}
+
+//==============================================================================
+
 int QScintillaWidget::contentsSize() const
 {
     // Return the size of our contents

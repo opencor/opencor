@@ -61,6 +61,91 @@ CoreCellMLEditingPlugin::CoreCellMLEditingPlugin() :
 }
 
 //==============================================================================
+// File handling interface
+//==============================================================================
+
+bool CoreCellMLEditingPlugin::saveFile(const QString &pOldFileName,
+                                       const QString &pNewFileName)
+{
+    Q_UNUSED(pOldFileName);
+    Q_UNUSED(pNewFileName);
+
+    // We don't handle this interface...
+
+    return false;
+}
+
+//==============================================================================
+
+void CoreCellMLEditingPlugin::fileOpened(const QString &pFileName)
+{
+    Q_UNUSED(pFileName);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void CoreCellMLEditingPlugin::filePermissionsChanged(const QString &pFileName)
+{
+    // The given file has been un/locked, so show/enable or hide/disable our
+    // reformat action, if needed
+
+    if (!pFileName.compare(mFileName)) {
+        bool fileReadableAndWritable = Core::FileManager::instance()->isReadableAndWritable(pFileName);
+
+        Core::showEnableAction(mEditReformatAction, mCellmlEditingInterface, !pFileName.isEmpty() && fileReadableAndWritable);
+    }
+}
+
+//==============================================================================
+
+void CoreCellMLEditingPlugin::fileModified(const QString &pFileName)
+{
+    Q_UNUSED(pFileName);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void CoreCellMLEditingPlugin::fileReloaded(const QString &pFileName)
+{
+    Q_UNUSED(pFileName);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void CoreCellMLEditingPlugin::fileRenamed(const QString &pOldFileName,
+                                          const QString &pNewFileName)
+{
+    Q_UNUSED(pOldFileName);
+    Q_UNUSED(pNewFileName);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void CoreCellMLEditingPlugin::fileSaved(const QString &pFileName)
+{
+    Q_UNUSED(pFileName);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void CoreCellMLEditingPlugin::fileClosed(const QString &pFileName)
+{
+    Q_UNUSED(pFileName);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
 // GUI interface
 //==============================================================================
 
@@ -75,7 +160,9 @@ void CoreCellMLEditingPlugin::updateGui(Plugin *pViewPlugin,
     Core::showEnableAction(mFileNewCellml1_0FileAction, mCellmlEditingInterface);
     Core::showEnableAction(mFileNewCellml1_1FileAction, mCellmlEditingInterface);
 
-    Core::showEnableAction(mEditReformatAction, mCellmlEditingInterface, !pFileName.isEmpty());
+    bool fileReadableAndWritable = Core::FileManager::instance()->isReadableAndWritable(pFileName);
+
+    Core::showEnableAction(mEditReformatAction, mCellmlEditingInterface, !pFileName.isEmpty() && fileReadableAndWritable);
 
     Core::showEnableAction(mToolsCellmlValidationAction, mCellmlEditingInterface, !pFileName.isEmpty());
 

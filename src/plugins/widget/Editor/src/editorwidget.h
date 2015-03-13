@@ -96,6 +96,7 @@ public:
 
     QString contents() const;
     void setContents(const QString &pContents);
+    void setContentsWithHistory(const QString &pContents);
 
     int contentsSize() const;
 

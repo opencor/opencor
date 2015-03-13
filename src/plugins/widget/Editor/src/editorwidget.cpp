@@ -279,6 +279,15 @@ void EditorWidget::setContents(const QString &pContents)
 
 //==============================================================================
 
+void EditorWidget::setContentsWithHistory(const QString &pContents)
+{
+    // Set the contents of our editor while keeping the editor's history
+
+    mEditor->setContentsWithHistory(pContents);
+}
+
+//==============================================================================
+
 int EditorWidget::contentsSize() const
 {
     // Return the size of the contents of our editor

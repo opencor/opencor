@@ -31,5 +31,13 @@
         <source>The CellML file is valid.</source>
         <translation>Le fichier CellML est valide.</translation>
     </message>
+    <message>
+        <source>Reformat</source>
+        <translation>Reformatter</translation>
+    </message>
+    <message>
+        <source>Reformat the contents of the editor</source>
+        <translation>Reformatter le contenu de l&apos;éditeur</translation>
+    </message>
 </context>
 </TS>

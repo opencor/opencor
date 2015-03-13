@@ -317,9 +317,12 @@ void RawCellmlViewWidget::reformat(const QString &pFileName)
 
     CoreCellMLEditing::CoreCellmlEditingWidget *editingWidget = mEditingWidgets.value(pFileName);
 
-    if (editingWidget) {
-//---GRY--- TO BE DONE...
-qDebug(">>> RawCellmlViewWidget::reformat(): to be done...");
+    if (editingWidget && validate(pFileName)) {
+        QDomDocument domDocument;
+
+        domDocument.setContent(editingWidget->editor()->contents());
+
+        editingWidget->editor()->setContentsWithHistory(qDomDocumentToString(domDocument));
     }
 }
 
