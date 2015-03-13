@@ -52,6 +52,7 @@ QScintillaWidget::QScintillaWidget(QsciLexer *pLexer, QWidget *pParent) :
 {
     // Customise ourselves
 
+    setAutoIndent(true);
     setCaretLineVisible(true);
     setFolding(QsciScintilla::BoxedTreeFoldStyle);
     setFrameShape(QFrame::NoFrame);
