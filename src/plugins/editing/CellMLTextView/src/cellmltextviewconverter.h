@@ -62,7 +62,7 @@ class CellMLTextViewConverter
 public:
     explicit CellMLTextViewConverter();
 
-    bool execute(const QString &pFileName);
+    bool execute(const QString &pRawCellml);
 
     QString output() const;
 

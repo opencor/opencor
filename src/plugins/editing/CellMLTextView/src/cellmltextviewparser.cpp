@@ -102,12 +102,12 @@ CellmlTextViewParser::~CellmlTextViewParser()
 
 //==============================================================================
 
-bool CellmlTextViewParser::execute(const QString &pText,
+bool CellmlTextViewParser::execute(const QString &pCellmlText,
                                    const CellMLSupport::CellmlFile::Version &pCellmlVersion)
 {
     // Get ready for the parsing
 
-    mScanner->setText(pText);
+    mScanner->setText(pCellmlText);
 
     mCellmlVersion = CellMLSupport::CellmlFile::Cellml_1_0;
 

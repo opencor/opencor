@@ -130,17 +130,14 @@ CellMLTextViewConverter::CellMLTextViewConverter() :
 
 //==============================================================================
 
-bool CellMLTextViewConverter::execute(const QString &pFileName)
+bool CellMLTextViewConverter::execute(const QString &pRawCellml)
 {
-    // Convert the CellML file to CellML text by first getting a DOM
+    // Convert the raw CellML to CellML text by first getting a DOM
     // representation of the file
 
-    QString fileContents;
     QDomDocument domDocument;
 
-    Core::readTextFromFile(pFileName, fileContents);
-
-    if (domDocument.setContent(fileContents, true,
+    if (domDocument.setContent(pRawCellml, true,
                                &mErrorMessage, &mErrorLine, &mErrorColumn)) {
         mOutput = QString();
         mIndent = QString();
@@ -152,14 +149,14 @@ bool CellMLTextViewConverter::execute(const QString &pFileName)
         mRdfNodes = QDomDocument(QString());
 
         if (!processModelNode(domDocument.documentElement())) {
-            mOutput = fileContents;
+            mOutput = pRawCellml;
 
             return false;
         } else {
             return true;
         }
     } else {
-        mOutput = fileContents;
+        mOutput = pRawCellml;
 
         return false;
     }

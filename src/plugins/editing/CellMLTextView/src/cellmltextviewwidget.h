@@ -25,6 +25,7 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include "cellmlfile.h"
+#include "cellmltextviewconverter.h"
 #include "cellmltextviewparser.h"
 #include "corecliutils.h"
 #include "viewwidget.h"
@@ -144,6 +145,7 @@ private:
 
     QMap<QString, CellmlTextViewWidgetData> mData;
 
+    CellMLTextViewConverter mConverter;
     CellmlTextViewParser mParser;
 
     QList<EditorList::EditorListWidget *> mEditorLists;

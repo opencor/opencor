@@ -92,7 +92,7 @@ public:
     explicit CellmlTextViewParser();
     ~CellmlTextViewParser();
 
-    bool execute(const QString &pText,
+    bool execute(const QString &pCellmlText,
                  const CellMLSupport::CellmlFile::Version &pCellmlVersion = CellMLSupport::CellmlFile::Cellml_1_0);
 
     CellMLSupport::CellmlFile::Version cellmlVersion() const;
