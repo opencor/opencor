@@ -746,6 +746,9 @@ void CellmlFileRuntime::update()
     } else {
         retrieveDaeCodeInformation(model);
 
+        if (!mDaeCodeInformation)
+            return;
+
         genericCodeInformation = mDaeCodeInformation;
     }
 
