@@ -1,5 +1,5 @@
 <?xml version='1.0'?>
-<model name="periodic_stimulus" xmlns="http://www.cellml.org/cellml/1.1#" xmlns:cellml="http://www.cellml.org/cellml/1.1#" xmlns:cmeta="http://www.cellml.org/metadata/1.0#" xmlns:xlink="http://www.w3.org/1999/xlink">
+<model name="periodic_stimulus" xmlns="http://www.cellml.org/cellml/1.1#" xmlns:cellml="http://www.cellml.org/cellml/1.1#" xmlns:xlink="http://www.w3.org/1999/xlink">
     <!-- this block of XML is used by CSim to execute a simulation (https://code.google.com/p/cellml-simulator/) -->
     <simulation id="simulation1" xmlns="http://cellml.sourceforge.net/csim/simulation/0.1#">
         <boundVariable end="220.0" maxStep="0.05" start="0.0" tabulationStep="0.1"/>
@@ -18,7 +18,7 @@
         <units name="uA_per_cmsq" units_ref="uA_per_cmsq"/>
     </import>
     <import xlink:href="../components/stimulated.xml">
-        <component component_ref="action_potential" name="model"/>
+        <component component_ref="action_potential" name="_model"/>
     </import>
     <import xlink:href="periodic-IStim-protocol.xml">
         <component component_ref="stimulus_protocol" name="stimulus_protocol"/>
@@ -32,7 +32,7 @@
     </import>
     <!-- Connect the time source variable to the model and stimulus protocol -->
     <connection>
-        <map_components component_1="model" component_2="time"/>
+        <map_components component_1="_model" component_2="time"/>
         <map_variables variable_1="time" variable_2="time"/>
     </connection>
     <connection>
@@ -54,14 +54,14 @@
     </connection>
     <!-- and connect the actual stimulus current to the model -->
     <connection>
-        <map_components component_1="model" component_2="stimulus_protocol"/>
+        <map_components component_1="_model" component_2="stimulus_protocol"/>
         <map_variables variable_1="Istim" variable_2="IStim"/>
     </connection>
     <!-- Here we could define any parameters that we want to differ from the default -->
     <component name="parameters"/>
     <!-- but since we want all default parameters we just connect the default values through to the model -->
     <connection>
-        <map_components component_1="model" component_2="default_parameters"/>
+        <map_components component_1="_model" component_2="default_parameters"/>
         <map_variables variable_1="Cm" variable_2="Cm"/>
         <map_variables variable_1="VNa" variable_2="VNa"/>
         <map_variables variable_1="VK" variable_2="VK"/>
@@ -73,7 +73,7 @@
     <!-- similarly for the initial conditions -->
     <component name="initial_conditions"/>
     <connection>
-        <map_components component_1="model" component_2="default_initial_conditions"/>
+        <map_components component_1="_model" component_2="default_initial_conditions"/>
         <map_variables variable_1="V_initial" variable_2="V_initial"/>
         <map_variables variable_1="m_initial" variable_2="m_initial"/>
         <map_variables variable_1="h_initial" variable_2="h_initial"/>
@@ -93,7 +93,7 @@
     </component>
     <!-- and connect the output variable definitions to their actual source in the model -->
     <connection>
-        <map_components component_1="outputs" component_2="model"/>
+        <map_components component_1="outputs" component_2="_model"/>
         <map_variables variable_1="INa" variable_2="INa"/>
         <map_variables variable_1="IK" variable_2="IK"/>
         <map_variables variable_1="Ileak" variable_2="Ileak"/>
