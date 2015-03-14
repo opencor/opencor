@@ -1,22 +1,12 @@
 <?xml version='1.0'?>
-<model name="parabola_as_dae_model" xmlns="http://www.cellml.org/cellml/1.0#" xmlns:cellml="http://www.cellml.org/cellml/1.0#" xmlns:cmeta="http://www.cellml.org/metadata/1.0#">
+<model name="unsuitably_constrained_ode_model" xmlns="http://www.cellml.org/cellml/1.1#" xmlns:cellml="http://www.cellml.org/cellml/1.1#">
     <component name="main">
         <variable name="time" units="dimensionless"/>
-        <variable initial_value="123" name="offset" units="dimensionless"/>
+        <variable initial_value="3" name="offset" units="dimensionless"/>
         <variable name="x" units="dimensionless"/>
         <variable initial_value="offset" name="y" units="dimensionless"/>
         <variable name="z" units="dimensionless"/>
-        <math xmlns="http://www.w3.org/1998/Math/MathML">
-            <apply>
-                <eq/>
-                <apply>
-                    <power/>
-                    <ci>offset</ci>
-                    <cn cellml:units="dimensionless">2</cn>
-                </apply>
-                <cn cellml:units="dimensionless">9</cn>
-            </apply>
-        </math>
+        <variable name="extra" units="dimensionless"/>
         <math xmlns="http://www.w3.org/1998/Math/MathML">
             <apply>
                 <eq/>
@@ -31,10 +21,9 @@
                     <times/>
                     <cn cellml:units="dimensionless">2</cn>
                     <ci>time</ci>
+                    <ci>extra</ci>
                 </apply>
             </apply>
-        </math>
-        <math xmlns="http://www.w3.org/1998/Math/MathML">
             <apply>
                 <eq/>
                 <ci>x</ci>
@@ -48,8 +37,6 @@
                     <ci>offset</ci>
                 </apply>
             </apply>
-        </math>
-        <math xmlns="http://www.w3.org/1998/Math/MathML">
             <apply>
                 <eq/>
                 <ci>z</ci>
