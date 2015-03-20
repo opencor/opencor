@@ -2427,7 +2427,12 @@ QDomElement CellmlTextViewParser::parseMathematicalFunction(QDomNode &pDomNode,
 
         if (   (   pOneArgument && pTwoArguments
                 && isTokenType(pDomNode, CellmlTextViewScanner::CommaToken))
-            || (!pOneArgument && pTwoArguments && commaToken(pDomNode))) {
+            || (!pOneArgument && pTwoArguments)) {
+            // Expect ",", should we always be expecting a second argument
+
+            if (!pOneArgument && pTwoArguments && !commaToken(pDomNode))
+                return QDomElement();
+
             // Try to parse the second argument as a normal mathematical
             // expression
 
