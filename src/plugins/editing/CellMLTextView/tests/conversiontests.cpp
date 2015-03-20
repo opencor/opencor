@@ -239,6 +239,11 @@ void ConversionTests::failingConversionTests()
     QCOMPARE(converter.errorMessage(),
              QString("A 'power' element must have two siblings."));
 
+    QVERIFY(!converter.execute(OpenCOR::fileContents(OpenCOR::fileName("src/plugins/editing/CellMLTextView/tests/data/conversion/failing/mathml_rem.cellml")).join("\n")));
+    QCOMPARE(converter.errorLine(), 6);
+    QCOMPARE(converter.errorMessage(),
+             QString("A 'rem' element must have two siblings."));
+
     QVERIFY(!converter.execute(OpenCOR::fileContents(OpenCOR::fileName("src/plugins/editing/CellMLTextView/tests/data/conversion/failing/mathml_root_1.cellml")).join("\n")));
     QCOMPARE(converter.errorLine(), 6);
     QCOMPARE(converter.errorMessage(),

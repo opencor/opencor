@@ -77,6 +77,7 @@ CellmlTextViewScanner::CellmlTextViewScanner() :
     mKeywords.insert("ln", LnToken);
     mKeywords.insert("log", LogToken);
     mKeywords.insert("pow", PowToken);
+    mKeywords.insert("rem", RemToken);
     mKeywords.insert("root", RootToken);
     mKeywords.insert("sqr", SqrToken);
     mKeywords.insert("sqrt", SqrtToken);

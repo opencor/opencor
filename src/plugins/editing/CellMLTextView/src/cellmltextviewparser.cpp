@@ -2202,6 +2202,8 @@ QString CellmlTextViewParser::mathmlName(const CellmlTextViewScanner::TokenType 
         return "log";
     case CellmlTextViewScanner::PowToken:
         return "power";
+    case CellmlTextViewScanner::RemToken:
+        return "rem";
     case CellmlTextViewScanner::RootToken:
         return "root";
     case CellmlTextViewScanner::TrueToken:

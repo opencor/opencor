@@ -284,7 +284,7 @@ void ScanningTests::scanningKeywordTests()
     scanner.getNextToken();
     QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::EofToken);
 
-    scanner.setText("abs ceil exp fact floor ln log pow root sqr sqrt");
+    scanner.setText("abs ceil exp fact floor ln log pow rem root sqr sqrt");
 
     QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::AbsToken);
     scanner.getNextToken();
@@ -301,6 +301,8 @@ void ScanningTests::scanningKeywordTests()
     QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::LogToken);
     scanner.getNextToken();
     QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::PowToken);
+    scanner.getNextToken();
+    QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::RemToken);
     scanner.getNextToken();
     QCOMPARE(scanner.tokenType(), OpenCOR::CellMLTextView::CellmlTextViewScanner::RootToken);
     scanner.getNextToken();

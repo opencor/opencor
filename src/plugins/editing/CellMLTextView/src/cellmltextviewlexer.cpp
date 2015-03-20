@@ -65,7 +65,11 @@ CellmlTextViewLexer::CellmlTextViewLexer(QObject *pParent) :
 
                              // MathML constants
 
-                             "true|false|nan|pi|inf|e"
+                             "true|false|nan|pi|inf|e|"
+
+                             // Extra operators
+
+                             "rem"
                          ")\\b");
 
     mCellmlKeywordsRegEx = QRegularExpression(

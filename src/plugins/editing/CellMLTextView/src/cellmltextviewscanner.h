@@ -72,7 +72,7 @@ public:
         FirstOneOrTwoArgumentMathematicalFunctionToken = LogToken,
         LastOneOrTwoArgumentMathematicalFunctionToken = LogToken,
 
-        PowToken, RootToken,
+        PowToken, RemToken, RootToken,
 
         FirstTwoArgumentMathematicalFunctionToken = PowToken,
         LastTwoArgumentMathematicalFunctionToken = RootToken,
