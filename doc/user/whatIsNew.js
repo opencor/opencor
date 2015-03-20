@@ -10,6 +10,7 @@ var jsonData = {"versions":[
                              {"type":"Improved", "description":"Binaries on <a href=\"http://en.wikipedia.org/wiki/OS_X\">OS X</a>."},
                              {"type":"Improved", "description":"<a href=\"http://nsis.sourceforge.net/\">NSIS</a> packaging on <a href=\"http://en.wikipedia.org/wiki/Microsoft_Windows\">Windows</a>."},
                              {"type":"Improved", "description":"<a href=\"http://en.wikipedia.org/wiki/Zip_(file_format)\">ZIP</a> packaging on <a href=\"http://en.wikipedia.org/wiki/OS_X\">OS X</a>."},
+                             {"type":"Improved", "description":"File handling."},
                              {"type":"Improved", "description":"Display of numbers."},
                              {"type":"Improved", "description":"Opening and reopening of files."}
                          ]

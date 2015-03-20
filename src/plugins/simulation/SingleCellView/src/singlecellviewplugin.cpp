@@ -240,6 +240,20 @@ QStringList SingleCellViewPlugin::viewMimeTypes() const
 
 //==============================================================================
 
+bool SingleCellViewPlugin::hasViewWidget(const QString &pFileName)
+{
+    // Make sure that we are dealing with a CellML file
+
+    if (!CellMLSupport::CellmlFileManager::instance()->cellmlFile(pFileName))
+        return false;
+
+    // Return whether we have a view widget for the given CellML file
+
+    return mViewWidget->contains(pFileName);
+}
+
+//==============================================================================
+
 QWidget * SingleCellViewPlugin::viewWidget(const QString &pFileName)
 {
     // Make sure that we are dealing with a CellML file
