@@ -168,7 +168,7 @@ def model{my_model_cmeta_id} my_model as
 
         // In between comment...
 
-        a = b;
+        a ={my_equation_cmeta_id} b;
 
         // In between comment...
 

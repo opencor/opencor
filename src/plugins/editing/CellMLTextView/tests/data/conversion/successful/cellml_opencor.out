@@ -63,11 +63,11 @@ def model{cellml_1_1_cmeta_id} cellml_1_1 as
         var{my_variable1_cmeta_id} my_variable1: my_unit;
         var{my_variable2_cmeta_id} my_variable2: my_unit {init: my_variable1};
 
-        a = 5{???};
-        a = 12.3e5{dimensionless};
-        a = ode(f, t, 2{dimensionless});
-        a = nan;
-        a = inf;
+        a ={my_equation1_cmeta_id} 5{???};
+        a ={my_equation2_cmeta_id} 12.3e5{dimensionless};
+        a ={my_equation3_cmeta_id} ode(f, t, 2{dimensionless});
+        a ={my_equation4_cmeta_id} nan;
+        a ={my_equation5_cmeta_id} inf;
     enddef;
 
     // In between comment...

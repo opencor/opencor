@@ -1755,9 +1755,18 @@ bool CellmlTextViewParser::parseMathematicalExpression(QDomNode &pDomNode)
     if (!eqToken(pDomNode))
         return false;
 
-    // Expect either a normal or a piecewise mathematical expression
+    // Create our apply element
+
+    QDomElement applyElement = newDomElement(pDomNode, "apply");
+
+    // Try to parse for a cmeta:id
 
     mScanner->getNextToken();
+
+    if (!parseCmetaId(applyElement))
+        return false;
+
+    // Expect either a normal or a piecewise mathematical expression
 
     QDomElement rhsElement = (mScanner->tokenType() == CellmlTextViewScanner::SelToken)?
                                  parsePiecewiseMathematicalExpression(pDomNode):
@@ -1771,9 +1780,7 @@ bool CellmlTextViewParser::parseMathematicalExpression(QDomNode &pDomNode)
     if (!semiColonToken(pDomNode))
         return false;
 
-    // Create and populate our apply element
-
-    QDomElement applyElement = newDomElement(pDomNode, "apply");
+    // Populate our apply element
 
     newDomElement(applyElement, "eq");
 

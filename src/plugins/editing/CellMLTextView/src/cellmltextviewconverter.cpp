@@ -809,7 +809,7 @@ QString CellMLTextViewConverter::processMathmlNode(const QDomNode &pDomNode,
                 } else {
                     mAssignmentDone = true;
 
-                    return processOperatorNode(" = ", pDomNode, pHasError);
+                    return processOperatorNode(QString(" =%1 ").arg(cmetaId(pDomNode)), pDomNode, pHasError);
                 }
             } else if (   mathmlNode(domNode, "neq")
                        || mathmlNode(domNode, "lt")

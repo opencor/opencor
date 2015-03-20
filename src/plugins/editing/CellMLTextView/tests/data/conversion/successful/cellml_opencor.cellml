@@ -92,17 +92,17 @@
         </variable>
         <variable cmeta:id="my_variable2_cmeta_id" initial_value="my_variable1" name="my_variable2" units="my_unit"/>
         <math xmlns="http://www.w3.org/1998/Math/MathML">
-            <apply>
+            <apply cmeta:id="my_equation1_cmeta_id">
                 <eq/>
                 <ci>a</ci>
                 <cn>5</cn>
             </apply>
-            <apply>
+            <apply cmeta:id="my_equation2_cmeta_id">
                 <eq/>
                 <ci>a</ci>
                 <cn cellml:units="dimensionless" type="e-notation">12.3<sep/>5</cn>
             </apply>
-            <apply>
+            <apply cmeta:id="my_equation3_cmeta_id">
                 <eq/>
                 <ci>a</ci>
                 <apply>
@@ -116,12 +116,12 @@
                     <ci>f</ci>
                 </apply>
             </apply>
-            <apply>
+            <apply cmeta:id="my_equation4_cmeta_id">
                 <eq/>
                 <ci>a</ci>
                 <notanumber/>
             </apply>
-            <apply>
+            <apply cmeta:id="my_equation5_cmeta_id">
                 <eq/>
                 <ci>a</ci>
                 <infinity/>
