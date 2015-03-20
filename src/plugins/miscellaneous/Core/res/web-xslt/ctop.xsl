@@ -563,12 +563,13 @@ Or the Apache 2, MIT or MPL 1.1 or MPL 2.0 licences.
 <!-- 4.4.3.8 remainder -->
 <xsl:template match="apply[*[1][self::rem]]
                        |apply[*[1][self::csymbol='rem']]">
-  <xsl:param name="p" select="0"/>
-<xsl:call-template name="binary">
-  <xsl:with-param name="mo"><mo>mod</mo></xsl:with-param>
-  <xsl:with-param name="p" select="$p"/>
-  <xsl:with-param name="this-p" select="3"/>
-</xsl:call-template>
+<mrow>
+  <mi>rem</mi>
+  <xsl:call-template name="set">
+   <xsl:with-param name="o" select="'('"/>
+   <xsl:with-param name="c" select="')'"/>
+  </xsl:call-template>
+</mrow>
 </xsl:template>
 
 <!-- 4.4.3.9 times -->
