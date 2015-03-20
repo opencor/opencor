@@ -1,5 +1,5 @@
 <?xml version='1.0'?>
-<model name="stimulated" xmlns="http://www.cellml.org/cellml/1.1#" xmlns:cellml="http://www.cellml.org/cellml/1.1#" xmlns:xlink="http://www.w3.org/1999/xlink">
+<model name="stimulated" xmlns="http://www.cellml.org/cellml/1.1#" xmlns:cellml="http://www.cellml.org/cellml/1.1#" xmlns:cmeta="http://www.cellml.org/metadata/1.0#" xmlns:xlink="http://www.w3.org/1999/xlink">
     <import xlink:href="units.xml">
         <units name="mV" units_ref="mV"/>
         <units name="ms" units_ref="ms"/>
@@ -39,7 +39,7 @@
         <variable name="Cm" private_interface="out" public_interface="in" units="uF_per_cmsq"/>
         <variable name="time" private_interface="out" public_interface="in" units="ms"/>
         <math xmlns="http://www.w3.org/1998/Math/MathML">
-            <apply id="V_calculation">
+            <apply cmeta:id="V_calculation">
                 <eq/>
                 <apply>
                     <diff/>
@@ -65,7 +65,7 @@
             </apply>
         </math>
         <math xmlns="http://www.w3.org/1998/Math/MathML">
-            <apply id="minus_V_calculation">
+            <apply cmeta:id="minus_V_calculation">
                 <eq/>
                 <ci>minus_V</ci>
                 <apply>
