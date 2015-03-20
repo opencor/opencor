@@ -1486,9 +1486,10 @@ Plugin * CentralWidget::viewPlugin(const int &pIndex) const
     // Return the view plugin associated with the file, which index is given
 
     if (pIndex != -1) {
-        CentralWidgetMode *mode = mModes.value(mModeTabIndexModes.value(mFileModeTabIndexes.value(mFileNames[pIndex])));
+        int modeTabIndex = mFileModeTabIndexes.value(mFileNames[pIndex]);
+        CentralWidgetMode *mode = mModes.value(mModeTabIndexModes.value(modeTabIndex));
 
-        return mode?mode->viewPlugins()->value(mode->viewTabs()->currentIndex()):0;
+        return mode?mode->viewPlugins()->value(mFileModeViewTabIndexes.value(mFileNames[pIndex]).value(modeTabIndex)):0;
     } else {
         return 0;
     }
