@@ -265,7 +265,7 @@ QStringList RawViewPlugin::viewMimeTypes() const
 
 bool RawViewPlugin::hasViewWidget(const QString &pFileName)
 {
-    // Return whether we have a view widget for the given CellML file
+    // Return whether we have a view widget for the given file
 
     return mViewWidget->contains(pFileName);
 }
