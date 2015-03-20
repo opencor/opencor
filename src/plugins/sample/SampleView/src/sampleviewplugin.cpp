@@ -238,6 +238,18 @@ QStringList SampleViewPlugin::viewMimeTypes() const
 
 //==============================================================================
 
+bool SampleViewPlugin::hasViewWidget(const QString &pFileName)
+{
+    // Return whether we have a view widget for the given file, which is always
+    // going to be the case since all we do is update some fields
+
+    Q_UNUSED(pFileName);
+
+    return true;
+}
+
+//==============================================================================
+
 QWidget * SampleViewPlugin::viewWidget(const QString &pFileName)
 {
     // Update and return our sample view widget using the given file
