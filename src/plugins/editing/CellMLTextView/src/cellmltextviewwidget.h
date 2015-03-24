@@ -159,6 +159,8 @@ private:
 private Q_SLOTS:
     void editorKeyPressed(QKeyEvent *pEvent, bool &pHandled);
 
+    void updateViewer();
+
     void selectFirstItemInEditorList(EditorList::EditorListWidget *pEditorList = 0);
 };
 

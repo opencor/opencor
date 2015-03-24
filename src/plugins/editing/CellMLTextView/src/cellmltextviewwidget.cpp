@@ -240,6 +240,13 @@ void CellmlTextViewWidget::initialize(const QString &pFileName,
             // lexer to our editor
 
             newEditingWidget->editor()->editor()->setLexer(new CellmlTextViewLexer(this));
+
+            // Update our viewer whenever necessary
+
+            connect(newEditingWidget->editor(), SIGNAL(textChanged()),
+                    this, SLOT(updateViewer()));
+            connect(newEditingWidget->editor(), SIGNAL(cursorPositionChanged(const int &, const int &)),
+                    this, SLOT(updateViewer()));
         } else {
             // The conversion wasn't successful, so make the editor read-only
             // (since its contents is that of the file itself) and add a couple
@@ -307,6 +314,11 @@ void CellmlTextViewWidget::initialize(const QString &pFileName,
         } else {
             newEditingWidget->updateSettings(oldEditingWidget);
         }
+
+        // Update our viewer
+
+        if (data.isValid())
+            updateViewer();
 
         // Select the first issue, if any, with the current file
         // Note: we use a single shot to give time to the setting up of the
@@ -774,6 +786,21 @@ void CellmlTextViewWidget::editorKeyPressed(QKeyEvent *pEvent, bool &pHandled)
     } else {
         pHandled = false;
     }
+}
+
+//==============================================================================
+
+void CellmlTextViewWidget::updateViewer()
+{
+    // Make sure that we still have an editing widget (i.e. it hasn't been
+    // closed since the signal was emitted)
+
+    if (!mEditingWidget)
+        return;
+
+//---GRY--- TO BE DONE...
+static int counter = 0;
+qDebug("[%03d] CellmlTextViewWidget - Need to update the viewer...", ++counter);
 }
 
 //==============================================================================
