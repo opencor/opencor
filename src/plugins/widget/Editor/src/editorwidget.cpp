@@ -575,7 +575,7 @@ void EditorWidget::setFindReplaceVisible(const bool &pVisible)
     mSeparator->setVisible(pVisible);
     mFindReplace->setVisible(pVisible);
 
-    // Give the focus to our find/replace widget our to our editor, depending on
+    // Give the focus to our find/replace widget or to our editor, depending on
     // the case
 
     if (pVisible)
