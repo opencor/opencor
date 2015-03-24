@@ -289,7 +289,9 @@ QString QScintillaWidget::textInRange(const int &pStartRange,
 int QScintillaWidget::findTextInRange(const int &pStartRange,
                                       const int &pEndRange,
                                       const QString &pText,
-                                      const bool &pCaseSensitive) const
+                                      const bool &pRegularExpression,
+                                      const bool &pCaseSensitive,
+                                      const bool &pWholeWordsOnly) const
 {
     // Keep track of the start and end of the current target
 
@@ -299,7 +301,10 @@ int QScintillaWidget::findTextInRange(const int &pStartRange,
     // Find and return the position, if any, of the given text within the given
     // range
 
-    SendScintilla(SCI_SETSEARCHFLAGS, pCaseSensitive?SCFIND_MATCHCASE:0);
+    SendScintilla(SCI_SETSEARCHFLAGS,
+                   (pRegularExpression?SCFIND_REGEXP:0)
+                  +(pCaseSensitive?SCFIND_MATCHCASE:0)
+                  +(pWholeWordsOnly?SCFIND_WHOLEWORD:0));
 
     SendScintilla(SCI_SETTARGETSTART, pStartRange);
     SendScintilla(SCI_SETTARGETEND, pEndRange);

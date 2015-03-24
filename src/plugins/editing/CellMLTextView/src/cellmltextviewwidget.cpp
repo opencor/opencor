@@ -591,7 +591,8 @@ void CellmlTextViewWidget::commentOrUncommentLine(QScintillaSupport::QScintillaW
                 int commentLineNumber, commentColumnNumber;
 
                 pEditor->lineIndexFromPosition(pEditor->findTextInRange(pEditor->positionFromLineIndex(pLineNumber, 0),
-                                                                        pEditor->contentsSize(), SingleLineCommentString),
+                                                                        pEditor->contentsSize(), SingleLineCommentString,
+                                                                        false, false, false),
                                                &commentLineNumber, &commentColumnNumber);
 
                 pEditor->setSelection(commentLineNumber, commentColumnNumber,
@@ -792,15 +793,27 @@ void CellmlTextViewWidget::editorKeyPressed(QKeyEvent *pEvent, bool &pHandled)
 
 void CellmlTextViewWidget::updateViewer()
 {
+//---GRY--- TO BE COMPLETED...
     // Make sure that we still have an editing widget (i.e. it hasn't been
     // closed since the signal was emitted)
 
     if (!mEditingWidget)
         return;
 
-//---GRY--- TO BE DONE...
-static int counter = 0;
-qDebug("[%03d] CellmlTextViewWidget - Need to update the viewer...", ++counter);
+    // Retrieve the current equation
+
+    static const QString AsTag = "as";
+    static const QString SemiColonTag = ";";
+
+    Editor::EditorWidget *editor = mEditingWidget->editor();
+    int crtPosition = editor->currentPosition();
+
+    int prevAsPos = editor->findTextInRange(crtPosition, 0, AsTag, false, true, true);
+    int prevSemiColonPos = editor->findTextInRange(crtPosition, 0, SemiColonTag, false, false, false);
+    int nextSemiColonPos = editor->findTextInRange(crtPosition-SemiColonTag.length()+1, editor->contentsSize(), SemiColonTag, false, false, false);
+
+qDebug("---------");
+qDebug("[%s]", qPrintable(editor->textInRange(qMax(prevAsPos, prevSemiColonPos), nextSemiColonPos+SemiColonTag.length())));
 }
 
 //==============================================================================

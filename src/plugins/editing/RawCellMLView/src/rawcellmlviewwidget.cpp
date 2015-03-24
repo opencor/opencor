@@ -542,9 +542,9 @@ void RawCellmlViewWidget::updateViewer()
     Editor::EditorWidget *editor = mEditingWidget->editor();
     int crtPosition = editor->currentPosition();
 
-    int crtStartMathTagPos = editor->findTextInRange(crtPosition+StartMathTag.length(), 0, StartMathTag);
-    int prevEndMathTagPos = editor->findTextInRange(crtPosition, 0, EndMathTag);
-    int crtEndMathTagPos = editor->findTextInRange(crtPosition-EndMathTag.length()+1, editor->contentsSize(), EndMathTag);
+    int crtStartMathTagPos = editor->findTextInRange(crtPosition+StartMathTag.length(), 0, StartMathTag, false, true, false);
+    int prevEndMathTagPos = editor->findTextInRange(crtPosition, 0, EndMathTag, false, true, false);
+    int crtEndMathTagPos = editor->findTextInRange(crtPosition-EndMathTag.length()+1, editor->contentsSize(), EndMathTag, false, true, false);
 
     bool foundMathmlBlock = true;
 

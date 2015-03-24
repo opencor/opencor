@@ -365,12 +365,16 @@ QString EditorWidget::textInRange(const int &pStartRange,
 
 int EditorWidget::findTextInRange(const int &pStartRange, const int &pEndRange,
                                   const QString &pText,
-                                  const bool &pCaseSensitive) const
+                                  const bool &pRegularExpression,
+                                  const bool &pCaseSensitive,
+                                  const bool &pWholeWordsOnly) const
 {
     // Find and return the position, if any, of the given text within the given
     // range in our editor
 
-    return mEditor->findTextInRange(pStartRange, pEndRange, pText, pCaseSensitive);
+    return mEditor->findTextInRange(pStartRange, pEndRange, pText,
+                                    pRegularExpression, pCaseSensitive,
+                                    pWholeWordsOnly);
 }
 
 //==============================================================================

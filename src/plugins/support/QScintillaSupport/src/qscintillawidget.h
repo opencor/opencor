@@ -78,8 +78,8 @@ public:
 
     QString textInRange(const int &pStartRange, const int &pEndRange) const;
     int findTextInRange(const int &pStartRange, const int &pEndRange,
-                        const QString &pText,
-                        const bool &pCaseSensitive = true) const;
+                        const QString &pText, const bool &pRegularExpression,
+                        const bool &pCaseSensitive, const bool &pWholeWordsOnly) const;
 
     QString wordAt(const int &pLine, const int &pColumn) const;
 
