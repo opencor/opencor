@@ -584,11 +584,7 @@ void RawCellmlViewWidget::updateViewer()
                 // Now, check whether our Content MathML equation is the same as
                 // our previous one
 
-                if (!contentMathmlEquation.compare(mContentMathmlEquation)) {
-                    // It's the same, so leave
-
-                    return;
-                } else {
+                if (contentMathmlEquation.compare(mContentMathmlEquation)) {
                     // It's a different one, so check whether we have already
                     // retrieved its Presentation MathML version
 
