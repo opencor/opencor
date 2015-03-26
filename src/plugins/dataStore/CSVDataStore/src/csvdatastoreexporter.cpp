@@ -16,7 +16,7 @@ specific language governing permissions and limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// CSV data store class
+// CSV data store exporter class
 //==============================================================================
 
 #include "corecliutils.h"

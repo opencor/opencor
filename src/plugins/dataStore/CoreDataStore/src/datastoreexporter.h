@@ -16,7 +16,7 @@ specific language governing permissions and limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// Core data store class
+// Core data store exporter class
 //==============================================================================
 
 #ifndef DATASTOREEXPORTER_H
@@ -37,6 +37,8 @@ namespace CoreDataStore {
 class COREDATASTORE_EXPORT DataStoreExporter
 {
 public:
+    explicit DataStoreExporter();
+
     virtual void execute(CoreDataStore *pDataStore) const = 0;
 };
 
