@@ -88,6 +88,7 @@ SingleCellViewWidget::SingleCellViewWidget(SingleCellViewPlugin *pPluginParent,
     mGui(new Ui::SingleCellViewWidget),
     mPluginParent(pPluginParent),
     mSolverInterfaces(SolverInterfaces()),
+    mDataStoreInterfaces(DataStoreInterfaces()),
     mSimulation(0),
     mSimulations(QMap<QString, SingleCellViewSimulation *>()),
     mStoppedSimulations(QList<SingleCellViewSimulation *>()),
@@ -166,7 +167,7 @@ SingleCellViewWidget::SingleCellViewWidget(SingleCellViewPlugin *pPluginParent,
     mToolBarWidget->addAction(mGui->actionAddGraphPanel);
     mToolBarWidget->addWidget(removeGraphPanelToolButton);
     mToolBarWidget->addSeparator();
-    mToolBarWidget->addAction(mGui->actionSimulationDataCsvExport);
+    mToolBarWidget->addAction(mGui->actionSimulationDataExport);
 
     mTopSeparator = Core::newLineWidget(this);
 
@@ -414,6 +415,15 @@ void SingleCellViewWidget::setSolverInterfaces(const SolverInterfaces &pSolverIn
 
 //==============================================================================
 
+void SingleCellViewWidget::setDataStoreInterfaces(const DataStoreInterfaces &pDataStoreInterfaces)
+{
+    // Keep track of the data store interfaces
+
+    mDataStoreInterfaces = pDataStoreInterfaces;
+}
+
+//==============================================================================
+
 void SingleCellViewWidget::output(const QString &pMessage)
 {
     // Move to the end of the output
@@ -451,8 +461,8 @@ void SingleCellViewWidget::updateSimulationMode()
 
     mGui->actionClearSimulationData->setEnabled(    mSimulation->results()->size()
                                                 && !simulationModeEnabled);
-    mGui->actionSimulationDataCsvExport->setEnabled(    mSimulation->results()->size()
-                                                    && !simulationModeEnabled);
+    mGui->actionSimulationDataExport->setEnabled(    mSimulation->results()->size()
+                                                 && !simulationModeEnabled);
 
     // Give the focus to our focus proxy, in case we leave our simulation mode
     // (so that the user can modify simulation data, etc.)
@@ -1220,23 +1230,17 @@ void SingleCellViewWidget::on_actionRemoveAllGraphPanels_triggered()
 
 //==============================================================================
 
-void SingleCellViewWidget::on_actionSimulationDataCsvExport_triggered()
+void SingleCellViewWidget::on_actionSimulationDataExport_triggered()
 {
-    // Export our simulation data results to a CSV file
+    // Export our simulation data results
 
-    QString fileName = Core::getSaveFileName(tr("Export to a CSV file"),
-                                             QString(),
-                                             tr("CSV File")+" (*.csv)");
+    setEnabled(false);
+    showBusyWidget(this);
 
-    if (!fileName.isEmpty()) {
-        setEnabled(false);
-        showBusyWidget(this);
+//    mSimulation->results()->exportToCsv(fileName);
 
-        mSimulation->results()->exportToCsv(fileName);
-
-        hideBusyWidget();
-        setEnabled(true);
-    }
+    hideBusyWidget();
+    setEnabled(true);
 }
 
 //==============================================================================

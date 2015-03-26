@@ -22,7 +22,6 @@ specific language governing permissions and limitations under the License.
 #include "cellmlfileruntime.h"
 #include "coredatastore.h"
 #include "corenlasolver.h"
-#include "csvdatastore.h"
 #include "singlecellviewcontentswidget.h"
 #include "singlecellviewinformationsimulationwidget.h"
 #include "singlecellviewinformationwidget.h"
@@ -782,15 +781,6 @@ double * SingleCellViewSimulationResults::algebraic(const int &pIndex) const
     // Return our algebraic data at the given index
 
     return mAlgebraic.isEmpty()?0:mAlgebraic[pIndex]->values();
-}
-
-//==============================================================================
-
-bool SingleCellViewSimulationResults::exportToCsv(const QString &pFileName) const
-{
-    // Export of all of our data to a CSV file
-
-    return CSVDataStore::exportDataStore(mDataStore, pFileName);
 }
 
 //==============================================================================

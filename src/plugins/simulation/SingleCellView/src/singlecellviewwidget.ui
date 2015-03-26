@@ -127,16 +127,16 @@
     <string>Clear the simulation data</string>
    </property>
   </action>
-  <action name="actionSimulationDataCsvExport">
+  <action name="actionSimulationDataExport">
    <property name="icon">
     <iconset resource="../res/SingleCellView.qrc">
-     <normaloff>:/oxygen/mimetypes/text-csv.png</normaloff>:/oxygen/mimetypes/text-csv.png</iconset>
+     <normaloff>:/oxygen/actions/document-export.png</normaloff>:/oxygen/actions/document-export.png</iconset>
    </property>
    <property name="text">
-    <string>Simulation Data CSV Export</string>
+    <string>Simulation Data Export</string>
    </property>
    <property name="statusTip">
-    <string>Export the simulation data to CSV</string>
+    <string>Export the simulation data</string>
    </property>
   </action>
  </widget>

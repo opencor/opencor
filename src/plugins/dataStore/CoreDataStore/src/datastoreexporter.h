@@ -16,47 +16,33 @@ specific language governing permissions and limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// CSVDataStore plugin
+// Core data store class
 //==============================================================================
 
-#ifndef CSVDATASTOREPLUGIN_H
-#define CSVDATASTOREPLUGIN_H
+#ifndef DATASTOREEXPORTER_H
+#define DATASTOREEXPORTER_H
 
 //==============================================================================
 
-#include "datastoreinterface.h"
-#include "i18ninterface.h"
-#include "plugininfo.h"
+#include "coredatastore.h"
+#include "coredatastoreglobal.h"
 
 //==============================================================================
 
 namespace OpenCOR {
-namespace CSVDataStore {
+namespace CoreDataStore {
 
 //==============================================================================
 
-PLUGININFO_FUNC CSVDataStorePluginInfo();
-
-//==============================================================================
-
-class CSVDataStorePlugin : public QObject, public I18nInterface,
-                           public DataStoreInterface
+class COREDATASTORE_EXPORT DataStoreExporter
 {
-    Q_OBJECT
-
-    Q_PLUGIN_METADATA(IID "OpenCOR.CSVDataStorePlugin" FILE "csvdatastoreplugin.json")
-
-    Q_INTERFACES(OpenCOR::I18nInterface)
-    Q_INTERFACES(OpenCOR::DataStoreInterface)
-
 public:
-#include "i18ninterface.inl"
-#include "datastoreinterface.inl"
+    virtual void execute(CoreDataStore *pDataStore) const = 0;
 };
 
 //==============================================================================
 
-}   // namespace CSVDataStore
+}   // namespace CoreDataStore
 }   // namespace OpenCOR
 
 //==============================================================================

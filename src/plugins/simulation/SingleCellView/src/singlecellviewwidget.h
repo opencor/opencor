@@ -26,6 +26,7 @@ specific language governing permissions and limitations under the License.
 
 #include "cellmlfileruntime.h"
 #include "corecliutils.h"
+#include "datastoreinterface.h"
 #include "solverinterface.h"
 #include "viewwidget.h"
 
@@ -93,6 +94,7 @@ public:
     virtual void retranslateUi();
 
     void setSolverInterfaces(const SolverInterfaces &pSolverInterfaces);
+    void setDataStoreInterfaces(const DataStoreInterfaces &pDataStoreInterfaces);
 
     virtual void loadSettings(QSettings *pSettings);
     virtual void saveSettings(QSettings *pSettings) const;
@@ -124,6 +126,7 @@ private:
     SingleCellViewPlugin *mPluginParent;
 
     SolverInterfaces mSolverInterfaces;
+    DataStoreInterfaces mDataStoreInterfaces;
 
     SingleCellViewSimulation *mSimulation;
     QMap<QString, SingleCellViewSimulation *> mSimulations;
@@ -217,7 +220,7 @@ private Q_SLOTS:
     void on_actionRemoveCurrentGraphPanel_triggered();
     void on_actionRemoveAllGraphPanels_triggered();
 
-    void on_actionSimulationDataCsvExport_triggered();
+    void on_actionSimulationDataExport_triggered();
 
     void updateDelayValue(const double &pDelayValue);
 

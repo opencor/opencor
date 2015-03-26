@@ -263,14 +263,6 @@
         <translation>aucun</translation>
     </message>
     <message>
-        <source>Export to a CSV file</source>
-        <translation>Exporter vers un fichier CSV</translation>
-    </message>
-    <message>
-        <source>CSV File</source>
-        <translation>Fichier CSV</translation>
-    </message>
-    <message>
         <source>The simulation requires %1 of memory and you have only %2 left.</source>
         <translation>La simulation requiert %1 de mémoire et il ne vous en reste que %2.</translation>
     </message>
@@ -420,8 +412,8 @@
         <translation></translation>
     </message>
     <message>
-        <source>Export the simulation data to CSV</source>
-        <translation>Exporter les données de la simulation vers CSV</translation>
+        <source>Export the simulation data</source>
+        <translation>Exporter les données de la simulation</translation>
     </message>
     <message>
         <source>Enable the debug mode</source>
@@ -456,8 +448,8 @@
         <translation>Réinitialiser Paramètres Modèle</translation>
     </message>
     <message>
-        <source>Simulation Data CSV Export</source>
-        <translation>Exporter CSV Données Simulation</translation>
+        <source>Simulation Data Export</source>
+        <translation>Exporter Données Simulation</translation>
     </message>
     <message>
         <source>Remove Graph Panel</source>

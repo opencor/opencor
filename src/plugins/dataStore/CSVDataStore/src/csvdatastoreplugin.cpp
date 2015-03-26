@@ -19,6 +19,7 @@ specific language governing permissions and limitations under the License.
 // CSVDataStore plugin
 //==============================================================================
 
+#include "csvdatastoreexporter.h"
 #include "csvdatastoreplugin.h"
 
 //==============================================================================
@@ -41,6 +42,39 @@ PLUGININFO_FUNC CSVDataStorePluginInfo()
     return new PluginInfo(PluginInfo::DataStore, false, false,
                           QStringList() << "CoreDataStore",
                           descriptions);
+}
+
+//==============================================================================
+// Data store interface
+//==============================================================================
+
+void * CSVDataStorePlugin::dataStoreExporterInstance() const
+{
+    // Create and return an instance of the data store exporter
+
+    return new CsvDataStoreExporter();
+}
+
+
+//==============================================================================
+
+QString CSVDataStorePlugin::dataStoreName() const
+{
+    // Return the name of the data store
+
+    return "CSV";
+}
+
+//==============================================================================
+// I18n interface
+//==============================================================================
+
+void CSVDataStorePlugin::retranslateUi()
+{
+    // We don't handle this interface...
+    // Note: even though we don't handle this interface, we still want to
+    //       support it since some other aspects of our plugin are
+    //       multilingual...
 }
 
 //==============================================================================

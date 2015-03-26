@@ -16,19 +16,15 @@ specific language governing permissions and limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// CSV data store class
+// Data store interface
 //==============================================================================
 
-#ifndef CSVDATASTORE_H
-#define CSVDATASTORE_H
-
-//==============================================================================
-
-#include "csvdatastoreglobal.h"
+#ifndef DATASTOREINTERFACE_H
+#define DATASTOREINTERFACE_H
 
 //==============================================================================
 
-#include <QString>
+#include "plugininfo.h"
 
 //==============================================================================
 
@@ -36,23 +32,25 @@ namespace OpenCOR {
 
 //==============================================================================
 
-namespace CoreDataStore {
-    class CoreDataStore;
-}   // namespace CoreDataStore
+class DataStoreInterface
+{
+public:
+#define INTERFACE_DEFINITION
+    #include "datastoreinterface.inl"
+#undef INTERFACE_DEFINITION
+};
 
 //==============================================================================
 
-namespace CSVDataStore {
+typedef QList<DataStoreInterface *> DataStoreInterfaces;
 
 //==============================================================================
 
-bool CSVDATASTORE_EXPORT exportDataStore(CoreDataStore::CoreDataStore *pDataStore,
-                                         const QString &pFileName);
-
-//==============================================================================
-
-}   // namespace CSVDataStore
 }   // namespace OpenCOR
+
+//==============================================================================
+
+Q_DECLARE_INTERFACE(OpenCOR::DataStoreInterface, "OpenCOR::DataStoreInterface")
 
 //==============================================================================
 

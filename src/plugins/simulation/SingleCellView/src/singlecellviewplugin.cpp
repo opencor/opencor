@@ -21,6 +21,7 @@ specific language governing permissions and limitations under the License.
 
 #include "cellmlfilemanager.h"
 #include "cellmlsupportplugin.h"
+#include "datastoreinterface.h"
 #include "singlecellviewplugin.h"
 #include "singlecellviewwidget.h"
 #include "solverinterface.h"
@@ -170,21 +171,29 @@ void SingleCellViewPlugin::finalizePlugin()
 
 void SingleCellViewPlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
 {
-    // Retrieve the different solvers that are available to us
+    // Retrieve the different solvers and data store exporters that are
+    // available to us
 
     SolverInterfaces solverInterfaces = SolverInterfaces();
+    DataStoreInterfaces dataStoreInterfaces = DataStoreInterfaces();
 
     foreach (Plugin *plugin, pLoadedPlugins) {
         SolverInterface *solverInterface = qobject_cast<SolverInterface *>(plugin->instance());
 
         if (solverInterface)
             solverInterfaces << solverInterface;
+
+        DataStoreInterface *dataStoreInterface = qobject_cast<DataStoreInterface *>(plugin->instance());
+
+        if (dataStoreInterface)
+            dataStoreInterfaces << dataStoreInterface;
     }
 
-    // Initialise our view widget with the different solvers that are available
-    // to us
+    // Initialise our view widget with the different solvers and data store
+    // exporters that are available to us
 
     mViewWidget->setSolverInterfaces(solverInterfaces);
+    mViewWidget->setDataStoreInterfaces(dataStoreInterfaces);
 }
 
 //==============================================================================

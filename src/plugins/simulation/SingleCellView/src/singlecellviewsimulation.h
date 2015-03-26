@@ -176,8 +176,6 @@ public:
     double * states(const int &pIndex) const;
     double * algebraic(const int &pIndex) const;
 
-    bool exportToCsv(const QString &pFileName) const;
-
 private:
     CellMLSupport::CellmlFileRuntime *mRuntime;
 

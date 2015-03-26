@@ -20,8 +20,9 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include "corecliutils.h"
+#include "coreguiutils.h"
 #include "coredatastore.h"
-#include "csvdatastore.h"
+#include "csvdatastoreexporter.h"
 #include "datastorevariable.h"
 
 //==============================================================================
@@ -37,53 +38,58 @@ namespace CSVDataStore {
 
 //==============================================================================
 
-bool exportDataStore(CoreDataStore::CoreDataStore *pDataStore,
-                     const QString &pFileName)
+void CsvDataStoreExporter::execute(CoreDataStore::CoreDataStore *pDataStore) const
 {
-    // Export the given data store to a CSV file with the given file name
+    // Export the given data store to a CSV file
 
-    QString data = QString();
+    QString fileName = Core::getSaveFileName(QObject::tr("Export to a CSV file"),
+                                             QString(),
+                                             QObject::tr("CSV File")+" (*.csv)");
 
-    // Header
+    if (!fileName.isEmpty()) {
+        // Header
 
-    static const QString Header = "%1 (%2)";
+        static const QString Header = "%1 (%2)";
 
-    CoreDataStore::DataStoreVariable *voi = pDataStore->voi();
-    CoreDataStore::DataStoreVariables variables = pDataStore->variables();
+        CoreDataStore::DataStoreVariable *voi = pDataStore->voi();
+        CoreDataStore::DataStoreVariables variables = pDataStore->variables();
 
-    data += Header.arg(voi->uri().replace("/prime", "'").replace("/", " | "),
-                       voi->unit());
+        QString data = QString();
 
-    auto variableBegin = variables.begin();
-    auto variableEnd = variables.end();
+        data += Header.arg(voi->uri().replace("/prime", "'").replace("/", " | "),
+                           voi->unit());
 
-    for (auto variable = variableBegin; variable != variableEnd; ++variable)
-        data += ","+Header.arg((*variable)->uri().replace("/prime", "'").replace("/", " | "),
-                               (*variable)->unit());
+        auto variableBegin = variables.begin();
+        auto variableEnd = variables.end();
 
-    data += "\n";
+        for (auto variable = variableBegin; variable != variableEnd; ++variable)
+            data += ","+Header.arg((*variable)->uri().replace("/prime", "'").replace("/", " | "),
+                                   (*variable)->unit());
 
-    // Data itself
+        data += "\n";
 
-   for (qulonglong i = 0; i < pDataStore->size(); ++i) {
-       data += QString::number(voi->value(i));
+        // Data itself
 
-       for (auto variable = variableBegin; variable != variableEnd; ++variable)
-           data += ","+QString::number((*variable)->value(i));
+        for (qulonglong i = 0; i < pDataStore->size(); ++i) {
+            data += QString::number(voi->value(i));
 
-       data += "\n";
+            for (auto variable = variableBegin; variable != variableEnd; ++variable)
+                data += ","+QString::number((*variable)->value(i));
 
-       qApp->processEvents();
+            data += "\n";
+
+            qApp->processEvents();
 //---GRY--- THE CALL TO qApp->processEvents() IS TEMPORARY, I.E. UNTIL WE HAVE
 //          IMPLEMENTED ISSUE #451 (see https://github.com/opencor/opencor/issues/451)
 //          AND THEREFORE HAVE THOSE DATA STORES DO THE EXPORT IN THEIR OWN
 //          THREAD THUS NOT BLOCKING THE MAIN THREAD (IN CASE THE EXPORT TAKES A
 //          LONG TIME)...
-   }
+        }
 
-   // The data is ready, so write it to the file
+        // The data is ready, so write it to the file
 
-   return Core::writeTextToFile(pFileName, data);
+        Core::writeTextToFile(fileName, data);
+    }
 }
 
 //==============================================================================
