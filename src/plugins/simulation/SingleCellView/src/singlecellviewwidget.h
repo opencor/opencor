@@ -34,6 +34,7 @@ specific language governing permissions and limitations under the License.
 
 class QFrame;
 class QLabel;
+class QMenu;
 class QSettings;
 class QSplitter;
 class QTextEdit;
@@ -126,7 +127,8 @@ private:
     SingleCellViewPlugin *mPluginParent;
 
     SolverInterfaces mSolverInterfaces;
-    DataStoreInterfaces mDataStoreInterfaces;
+
+    QMap<QObject *, DataStoreInterface *> mDataStoreInterfaces;
 
     SingleCellViewSimulation *mSimulation;
     QMap<QString, SingleCellViewSimulation *> mSimulations;
@@ -141,6 +143,8 @@ private:
     QMap<QString, int> mDelays;
 
     Core::ToolBarWidget *mToolBarWidget;
+
+    QMenu *mSimulationDataExportDropDownMenu;
 
     QFrame *mTopSeparator;
     QFrame *mBottomSeparator;
@@ -220,7 +224,7 @@ private Q_SLOTS:
     void on_actionRemoveCurrentGraphPanel_triggered();
     void on_actionRemoveAllGraphPanels_triggered();
 
-    void on_actionSimulationDataExport_triggered();
+    void simulationDataExport();
 
     void updateDelayValue(const double &pDelayValue);
 

@@ -79,11 +79,10 @@ void CsvDataStoreExporter::execute(CoreDataStore::CoreDataStore *pDataStore) con
             data += "\n";
 
             qApp->processEvents();
-//---GRY--- THE CALL TO qApp->processEvents() IS TEMPORARY, I.E. UNTIL WE HAVE
-//          IMPLEMENTED ISSUE #451 (see https://github.com/opencor/opencor/issues/451)
-//          AND THEREFORE HAVE THOSE DATA STORES DO THE EXPORT IN THEIR OWN
-//          THREAD THUS NOT BLOCKING THE MAIN THREAD (IN CASE THE EXPORT TAKES A
-//          LONG TIME)...
+//---GRY--- THE CALL TO qApp->processEvents() SHOULD BE REMOVED AND THE EXPORTER
+//          BE SUCH THAT IT DOESN'T BLOCK THE MAIN THREAD (E.G. WHEN EXPORTING
+//          LONG SIMULATIONS). MAYBE THIS COULD BE DONE BY MAKING THE EXPORTER
+//          WORK IN ITS OWN THREAD?...
         }
 
         // The data is ready, so write it to the file

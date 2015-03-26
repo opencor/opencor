@@ -24,6 +24,7 @@ specific language governing permissions and limitations under the License.
 #include "cellmlsupportplugin.h"
 #include "corecliutils.h"
 #include "coreguiutils.h"
+#include "datastoreinterface.h"
 #include "filemanager.h"
 #include "progressbarwidget.h"
 #include "propertyeditorwidget.h"
@@ -88,7 +89,7 @@ SingleCellViewWidget::SingleCellViewWidget(SingleCellViewPlugin *pPluginParent,
     mGui(new Ui::SingleCellViewWidget),
     mPluginParent(pPluginParent),
     mSolverInterfaces(SolverInterfaces()),
-    mDataStoreInterfaces(DataStoreInterfaces()),
+    mDataStoreInterfaces(QMap<QObject *, DataStoreInterface *>()),
     mSimulation(0),
     mSimulations(QMap<QString, SingleCellViewSimulation *>()),
     mStoppedSimulations(QList<SingleCellViewSimulation *>()),
@@ -148,6 +149,14 @@ SingleCellViewWidget::SingleCellViewWidget(SingleCellViewPlugin *pPluginParent,
     removeGraphPanelToolButton->setMenu(removeGraphPanelDropDownMenu);
     removeGraphPanelToolButton->setPopupMode(QToolButton::MenuButtonPopup);
 
+    QToolButton *simulationDataExportToolButton = new QToolButton(mToolBarWidget);
+
+    mSimulationDataExportDropDownMenu = new QMenu(simulationDataExportToolButton);
+
+    simulationDataExportToolButton->setDefaultAction(mGui->actionSimulationDataExport);
+    simulationDataExportToolButton->setMenu(mSimulationDataExportDropDownMenu);
+    simulationDataExportToolButton->setPopupMode(QToolButton::MenuButtonPopup);
+
     mToolBarWidget->addAction(mGui->actionRunPauseResumeSimulation);
     mToolBarWidget->addAction(mGui->actionStopSimulation);
     mToolBarWidget->addSeparator();
@@ -167,7 +176,7 @@ SingleCellViewWidget::SingleCellViewWidget(SingleCellViewPlugin *pPluginParent,
     mToolBarWidget->addAction(mGui->actionAddGraphPanel);
     mToolBarWidget->addWidget(removeGraphPanelToolButton);
     mToolBarWidget->addSeparator();
-    mToolBarWidget->addAction(mGui->actionSimulationDataExport);
+    mToolBarWidget->addWidget(simulationDataExportToolButton);
 
     mTopSeparator = Core::newLineWidget(this);
 
@@ -417,9 +426,17 @@ void SingleCellViewWidget::setSolverInterfaces(const SolverInterfaces &pSolverIn
 
 void SingleCellViewWidget::setDataStoreInterfaces(const DataStoreInterfaces &pDataStoreInterfaces)
 {
-    // Keep track of the data store interfaces
+    // Populate our simulation data export drop-down menu with the given data
+    // store interfaces
 
-    mDataStoreInterfaces = pDataStoreInterfaces;
+    foreach (DataStoreInterface *dataStoreInterface, pDataStoreInterfaces) {
+        QAction *action = mSimulationDataExportDropDownMenu->addAction(dataStoreInterface->dataStoreName());
+
+        mDataStoreInterfaces.insert(action, dataStoreInterface);
+
+        connect(action, SIGNAL(triggered()),
+                this, SLOT(simulationDataExport()));
+    }
 }
 
 //==============================================================================
@@ -1230,8 +1247,9 @@ void SingleCellViewWidget::on_actionRemoveAllGraphPanels_triggered()
 
 //==============================================================================
 
-void SingleCellViewWidget::on_actionSimulationDataExport_triggered()
+void SingleCellViewWidget::simulationDataExport()
 {
+qDebug(">>> EXPORTING... to %s...", qPrintable(mDataStoreInterfaces.value(sender())->dataStoreName()));
     // Export our simulation data results
 
     setEnabled(false);
