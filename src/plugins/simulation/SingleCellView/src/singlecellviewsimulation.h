@@ -169,6 +169,8 @@ public:
 
     qulonglong size() const;
 
+    CoreDataStore::CoreDataStore * dataStore() const;
+
     double * points() const;
 
     double * constants(const int &pIndex) const;
@@ -186,6 +188,7 @@ private:
     CoreDataStore::CoreDataStore *mDataStore;
 
     CoreDataStore::DataStoreVariable *mPoints;
+
     CoreDataStore::DataStoreVariables mConstants;
     CoreDataStore::DataStoreVariables mRates;
     CoreDataStore::DataStoreVariables mStates;

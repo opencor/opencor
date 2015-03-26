@@ -740,6 +740,15 @@ qulonglong SingleCellViewSimulationResults::size() const
 
 //==============================================================================
 
+CoreDataStore::CoreDataStore * SingleCellViewSimulationResults::dataStore() const
+{
+    // Return our data store
+
+    return mDataStore;
+}
+
+//==============================================================================
+
 double * SingleCellViewSimulationResults::points() const
 {
     // Return our points

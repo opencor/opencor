@@ -24,6 +24,7 @@ specific language governing permissions and limitations under the License.
 #include "cellmlsupportplugin.h"
 #include "corecliutils.h"
 #include "coreguiutils.h"
+#include "datastoreexporter.h"
 #include "datastoreinterface.h"
 #include "filemanager.h"
 #include "progressbarwidget.h"
@@ -1250,13 +1251,12 @@ void SingleCellViewWidget::on_actionRemoveAllGraphPanels_triggered()
 
 void SingleCellViewWidget::simulationDataExport()
 {
-qDebug(">>> EXPORTING... to %s...", qPrintable(mDataStoreInterfaces.value(sender())->dataStoreName()));
     // Export our simulation data results
 
     setEnabled(false);
     showBusyWidget(this);
 
-//    mSimulation->results()->exportToCsv(fileName);
+    static_cast<CoreDataStore::DataStoreExporter *>(mDataStoreInterfaces.value(sender())->dataStoreExporterInstance())->execute(mSimulation->results()->dataStore());
 
     hideBusyWidget();
     setEnabled(true);
