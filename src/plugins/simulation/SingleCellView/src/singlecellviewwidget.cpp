@@ -155,7 +155,7 @@ SingleCellViewWidget::SingleCellViewWidget(SingleCellViewPlugin *pPluginParent,
 
     simulationDataExportToolButton->setDefaultAction(mGui->actionSimulationDataExport);
     simulationDataExportToolButton->setMenu(mSimulationDataExportDropDownMenu);
-    simulationDataExportToolButton->setPopupMode(QToolButton::MenuButtonPopup);
+    simulationDataExportToolButton->setPopupMode(QToolButton::InstantPopup);
 
     mToolBarWidget->addAction(mGui->actionRunPauseResumeSimulation);
     mToolBarWidget->addAction(mGui->actionStopSimulation);
@@ -478,7 +478,8 @@ void SingleCellViewWidget::updateSimulationMode()
 
     mGui->actionClearSimulationData->setEnabled(    mSimulation->results()->size()
                                                 && !simulationModeEnabled);
-    mGui->actionSimulationDataExport->setEnabled(    mSimulation->results()->size()
+    mGui->actionSimulationDataExport->setEnabled(    mSimulationDataExportDropDownMenu->actions().count()
+                                                 &&  mSimulation->results()->size()
                                                  && !simulationModeEnabled);
 
     // Give the focus to our focus proxy, in case we leave our simulation mode
