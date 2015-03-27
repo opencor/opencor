@@ -19,6 +19,7 @@ specific language governing permissions and limitations under the License.
 // CellML Text view conversion tests
 //==============================================================================
 
+#include "cellmlfile.h"
 #include "cellmltextviewconverter.h"
 #include "cellmltextviewparser.h"
 #include "conversiontests.h"
@@ -48,7 +49,8 @@ void ConversionTests::successfulConversionTests()
 
     OpenCOR::CellMLTextView::CellmlTextViewParser parser;
 
-    QVERIFY(parser.execute(OpenCOR::fileContents(OpenCOR::fileName("src/plugins/editing/CellMLTextView/tests/data/conversion/successful/cellml_cor.out")).join("\n")));
+    QVERIFY(parser.execute(OpenCOR::fileContents(OpenCOR::fileName("src/plugins/editing/CellMLTextView/tests/data/conversion/successful/cellml_cor.out")).join("\n"),
+                           OpenCOR::CellMLSupport::CellmlFile::Cellml_1_0));
     QCOMPARE(qDomDocumentToString(parser.domDocument()).split("\n"),
              OpenCOR::fileContents(OpenCOR::fileName("src/plugins/editing/CellMLTextView/tests/data/conversion/successful/cellml_cor.cellml")));
     QVERIFY(!parser.domDocument().isNull());
