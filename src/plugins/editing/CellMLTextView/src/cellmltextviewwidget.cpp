@@ -812,8 +812,21 @@ void CellmlTextViewWidget::updateViewer()
     int prevSemiColonPos = editor->findTextInRange(crtPosition, 0, SemiColonTag, false, false, false);
     int nextSemiColonPos = editor->findTextInRange(crtPosition-SemiColonTag.length()+1, editor->contentsSize(), SemiColonTag, false, false, false);
 
+    int fromPos = (prevAsPos > prevSemiColonPos)?
+                      prevAsPos+AsTag.length():
+                      prevSemiColonPos+SemiColonTag.length();
+    int toPos = nextSemiColonPos+SemiColonTag.length();
+
+    static const QString NonSpaceRegEx = "[^\\s]";
+
+    fromPos = editor->findTextInRange(fromPos, editor->contentsSize(), NonSpaceRegEx, true, false, false);
+
+    QString equation = ((crtPosition >= fromPos) && (crtPosition < toPos))?
+                           editor->textInRange(fromPos, toPos):
+                           QString();
+
 qDebug("---------");
-qDebug("[%s]", qPrintable(editor->textInRange(qMax(prevAsPos, prevSemiColonPos), nextSemiColonPos+SemiColonTag.length())));
+qDebug("[%s]", qPrintable(equation));
 }
 
 //==============================================================================
