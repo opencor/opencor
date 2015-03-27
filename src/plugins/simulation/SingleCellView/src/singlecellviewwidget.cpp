@@ -558,9 +558,8 @@ static const auto OutputBrLn = QStringLiteral("<br/>\n");
 void SingleCellViewWidget::initialize(const QString &pFileName,
                                       const bool &pReloadingView)
 {
-    // Stop keeping track of certain things (so that updatePlot() doesn't get
-    // called unnecessarily)
-    // Note: see the corresponding code at the end of this method...
+    // Keep track of our simulation data for our previous model and finalise a
+    // few things, if needed
 
     SingleCellViewInformationWidget *informationWidget = mContentsWidget->informationWidget();
     SingleCellViewGraphPanelsWidget *graphPanelsWidget = mContentsWidget->graphPanelsWidget();
@@ -568,12 +567,6 @@ void SingleCellViewWidget::initialize(const QString &pFileName,
     SingleCellViewInformationSimulationWidget *simulationWidget = informationWidget->simulationWidget();
     SingleCellViewInformationSolversWidget *solversWidget = informationWidget->solversWidget();
     SingleCellViewInformationGraphsWidget *graphsWidget = informationWidget->graphsWidget();
-
-    disconnect(simulationWidget, SIGNAL(propertyChanged(Core::Property *)),
-               this, SLOT(simulationPropertyChanged(Core::Property *)));
-
-    // Keep track of our simulation data for our previous model and finalise a
-    // few things, if needed
 
     SingleCellViewSimulation *previousSimulation = mSimulation;
 
@@ -595,6 +588,13 @@ void SingleCellViewWidget::initialize(const QString &pFileName,
         mResets.insert(prevFileName, mGui->actionResetModelParameters->isEnabled());
         mDelays.insert(prevFileName, mDelayWidget->value());
     }
+
+    // Stop keeping track of certain things (so that updatePlot() doesn't get
+    // called unnecessarily)
+    // Note: see the corresponding code at the end of this method...
+
+    disconnect(simulationWidget, SIGNAL(propertyChanged(Core::Property *)),
+               this, SLOT(simulationPropertyChanged(Core::Property *)));
 
     // Retrieve our simulation object for the current model, if any
 

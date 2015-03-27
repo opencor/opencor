@@ -80,7 +80,8 @@ var jsonData = {"versions":[
                              {"type":"subCategory", "name":"Single cell (simulation) view",
                               "entries":[
                                   {"type":"Improved", "description":"Export to <a href=\"http://en.wikipedia.org/wiki/Comma-separated_values\">CSV</a>."},
-                                  {"type":"Improved", "description":"GUI for the parameters section."}
+                                  {"type":"Improved", "description":"GUI for the parameters section."},
+                                  {"type":"Fixed", "description":"Tracking of simulation properties."}
                               ]
                              }
                          ]
