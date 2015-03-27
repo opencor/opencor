@@ -553,8 +553,9 @@ void RawCellmlViewWidget::updateViewer()
         && (crtPosition <= crtEndMathTagPos+EndMathTag.length()-1)) {
         if (   (prevEndMathTagPos >= 0)
             && (prevEndMathTagPos > crtStartMathTagPos)
-            && (prevEndMathTagPos < crtPosition))
+            && (prevEndMathTagPos < crtPosition)) {
             foundMathmlBlock = false;
+        }
     } else {
         foundMathmlBlock = false;
     }
