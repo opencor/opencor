@@ -860,8 +860,9 @@ qDebug("[%s]", qPrintable(equation));
             // version of our equation and check whether it's the same as our
             // previous one
 
-            QString contentMathmlEquation = Core::cleanMathml(qDomDocumentToString(mParser.domDocument()));
-qDebug("[%s]", qPrintable(contentMathmlEquation));
+            QString contentMathmlEquation =  "<math xmlns=\"http://www.w3.org/1998/Math/MathML\">"
+                                            +Core::cleanMathml(qDomDocumentToString(mParser.domDocument()))
+                                            +"</math>";
 
             if (contentMathmlEquation.compare(mContentMathmlEquation)) {
                 // It's a different one, so check whether we have already
