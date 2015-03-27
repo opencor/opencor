@@ -18,11 +18,15 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 // CellML Text view widget
 //==============================================================================
+// Note: this view and the Raw CellML view work in the same way when it comes to
+//       updating the viewer (e.g. see the XSL transformation)...
+//==============================================================================
 
 #include "cellmlfilemanager.h"
 #include "cellmlsupportplugin.h"
 #include "cellmltextviewconverter.h"
 #include "cellmltextviewlexer.h"
+#include "cellmltextviewparser.h"
 #include "cellmltextviewwidget.h"
 #include "corecliutils.h"
 #include "corecellmleditingwidget.h"
@@ -32,6 +36,7 @@ specific language governing permissions and limitations under the License.
 #include "qscintillawidget.h"
 #include "settings.h"
 #include "viewerwidget.h"
+#include "xsltransformer.h"
 
 //==============================================================================
 
@@ -136,11 +141,21 @@ CellmlTextViewWidget::CellmlTextViewWidget(QWidget *pParent) :
     mData(QMap<QString, CellmlTextViewWidgetData>()),
     mConverter(CellMLTextViewConverter()),
     mParser(CellmlTextViewParser()),
-    mEditorLists(QList<EditorList::EditorListWidget *>())
+    mEditorLists(QList<EditorList::EditorListWidget *>()),
+    mPresentationMathmlEquations(QMap<QString, QString>()),
+    mContentMathmlEquation(QString())
 {
     // Set up the GUI
 
     mGui->setupUi(this);
+
+    // Create our XSL transformer and create a connection to retrieve the result
+    // of its XSL transformations
+
+    mXslTransformer = new Core::XslTransformer();
+
+    connect(mXslTransformer, SIGNAL(done(const QString &, const QString &)),
+            this, SLOT(xslTransformationDone(const QString &, const QString &)));
 }
 
 //==============================================================================
@@ -825,6 +840,54 @@ void CellmlTextViewWidget::updateViewer()
                            editor->textInRange(fromPos, toPos):
                            QString();
 
+    // Update the contents of our viewer
+
+    if (equation.isEmpty()) {
+        // There is no equation, so clear our viewer
+
+        mContentMathmlEquation = QString();
+
+        mEditingWidget->viewer()->setContents(QString());
+    } else {
+        // There is an equation, so try to parse it
+
+        bool res = mParser.execute(equation);
+
+        if (res) {
+            // The parsing was successful, so retrieve the Content MathML
+            // version of our equation and check whether it's the same as our
+            // previous one
+
+            QString contentMathmlEquation = qDomDocumentToString(mParser.domDocument());
+
+            if (contentMathmlEquation.compare(mContentMathmlEquation)) {
+                // It's a different one, so check whether we have already
+                // retrieved its Presentation MathML version
+
+                mContentMathmlEquation = contentMathmlEquation;
+
+                QString presentationMathmlEquation = mPresentationMathmlEquations.value(contentMathmlEquation);
+
+                if (!presentationMathmlEquation.isEmpty()) {
+                    mEditingWidget->viewer()->setContents(presentationMathmlEquation);
+                } else {
+                    // We haven't already retrieved its Presentation MathML
+                    // version, so do it now
+
+                    static const QString CtopXsl = Core::resourceAsByteArray(":/web-xslt/ctop.xsl");
+
+                    mXslTransformer->transform(contentMathmlEquation, CtopXsl);
+                }
+            }
+        } else {
+            // The parsing wasn't successful
+
+            mContentMathmlEquation = QString();
+
+            mEditingWidget->viewer()->setError(true);
+        }
+    }
+
 qDebug("---------");
 qDebug("[%s]", qPrintable(equation));
 }
@@ -847,6 +910,34 @@ void CellmlTextViewWidget::selectFirstItemInEditorList(EditorList::EditorListWid
 
         editorList->selectFirstItem();
     }
+}
+
+//==============================================================================
+
+void CellmlTextViewWidget::xslTransformationDone(const QString &pInput,
+                                                 const QString &pOutput)
+{
+    // Make sure that we still have an editing widget (i.e. it hasn't been
+    // closed since the signal was emitted)
+
+    if (!mEditingWidget)
+        return;
+
+    // The XSL transformation is done, so update our viewer and keep track of
+    // the mapping between the Content and Presentation MathML
+    // Note: before setting the contents of our viewer, we need to make sure
+    //       that pInput is still our current Content MathML equation. Indeed,
+    //       say that updateViewer() gets called many times in a short period of
+    //       time (e.g. as a result of replacing all the occurences of a
+    //       particular string with another one) and that some of those calls
+    //       don't require an XSL transformation, then we may end up in a case
+    //       where pInput is not our current Content MathML equation anymore, in
+    //       which case the contents of our viewer shouldn't be updated...
+
+    if (!pInput.compare(mContentMathmlEquation))
+        mEditingWidget->viewer()->setContents(pOutput);
+
+    mPresentationMathmlEquations.insert(pInput, pOutput);
 }
 
 //==============================================================================

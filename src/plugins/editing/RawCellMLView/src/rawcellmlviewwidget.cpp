@@ -18,6 +18,9 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 // Raw CellML view widget
 //==============================================================================
+// Note: this view and the CellML Text view work in the same way when it comes
+//       to updating the viewer (e.g. see the XSL transformation)...
+//==============================================================================
 
 #include "cellmlfilemanager.h"
 #include "cellmlsupportplugin.h"

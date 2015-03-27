@@ -46,6 +46,12 @@ namespace OpenCOR {
 
 //==============================================================================
 
+namespace Core {
+    class XslTransformer;
+}   // namespace Core
+
+//==============================================================================
+
 namespace CoreCellMLEditing {
     class CoreCellmlEditingWidget;
 }   // namespace CoreCellMLEditing
@@ -150,6 +156,12 @@ private:
 
     QList<EditorList::EditorListWidget *> mEditorLists;
 
+    QMap<QString, QString> mPresentationMathmlEquations;
+
+    Core::XslTransformer *mXslTransformer;
+
+    QString mContentMathmlEquation;
+
     void commentOrUncommentLine(QScintillaSupport::QScintillaWidget *editor,
                                 const int &pLineNumber,
                                 const bool &pCommentLine);
@@ -162,6 +174,8 @@ private Q_SLOTS:
     void updateViewer();
 
     void selectFirstItemInEditorList(EditorList::EditorListWidget *pEditorList = 0);
+
+    void xslTransformationDone(const QString &pInput, const QString &pOutput);
 };
 
 //==============================================================================
