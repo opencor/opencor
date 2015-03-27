@@ -105,7 +105,7 @@ CellmlTextViewParser::~CellmlTextViewParser()
 bool CellmlTextViewParser::execute(const QString &pCellmlText,
                                    const CellMLSupport::CellmlFile::Version &pCellmlVersion)
 {
-    // Get ready for the parsing
+    // Get ready for the parsing of a model definition
 
     mScanner->setText(pCellmlText);
 
@@ -213,6 +213,39 @@ bool CellmlTextViewParser::execute(const QString &pCellmlText,
 
     foreach (const QString &key, mNamespaces.keys())
         mDomDocument.documentElement().setAttribute(QString("xmlns:%1").arg(key), mNamespaces.value(key));
+
+    return true;
+}
+
+//==============================================================================
+
+bool CellmlTextViewParser::execute(const QString &pCellmlText)
+{
+    // Get ready for the parsing of a mathematical expression
+
+    mScanner->setText(pCellmlText);
+
+    mCellmlVersion = CellMLSupport::CellmlFile::Cellml_1_0;
+
+    mDomDocument = QDomDocument(QString());
+
+    mMessages = CellmlTextViewParserMessages();
+
+    mNamespaces = QMap<QString, QString>();
+
+    // Try to parse for some model definition itself
+
+    if (!parseMathematicalExpression(mDomDocument))
+        return false;
+
+    // Expect the end of the file
+
+    mScanner->getNextToken();
+
+    if (!tokenType(mDomDocument, QObject::tr("the end of the file"),
+                   CellmlTextViewScanner::EofToken)) {
+        return false;
+    }
 
     return true;
 }

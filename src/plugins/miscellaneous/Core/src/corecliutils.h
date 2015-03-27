@@ -132,6 +132,8 @@ void CORE_EXPORT checkFileNameOrUrl(const QString &pInFileNameOrUrl,
 QString CORE_EXPORT stringToPercentEncoding(const QString &pString);
 QString CORE_EXPORT stringFromPercentEncoding(const QString &pString);
 
+QString CORE_EXPORT cleanMathml(const QString &pMathml);
+
 //==============================================================================
 
 }   // namespace Core

@@ -110,9 +110,6 @@ private:
 
     QString mContentMathmlEquation;
 
-    void cleanMathml(QDomElement pElement);
-    QString cleanMathml(const QString &pMathml);
-
     QString retrieveContentMathmlEquation(const QString &pContentMathmlBlock,
                                           const int &pPosition) const;
 

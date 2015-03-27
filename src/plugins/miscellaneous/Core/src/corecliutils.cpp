@@ -608,6 +608,55 @@ QString stringFromPercentEncoding(const QString &pString)
 
 //==============================================================================
 
+void cleanMathml(QDomElement pElement)
+{
+    // Clean up the current element
+    // Note: the idea is to remove all the attributes that are not in the
+    //       MathML namespace. Indeed, if we were to leave them in then the XSL
+    //       transformation would either do nothing or, worst, crash OpenCOR...
+
+    static const QString MathmlNamespace = "http://www.w3.org/1998/Math/MathML";
+
+    QDomNamedNodeMap attributes = pElement.attributes();
+    QList<QDomNode> nonMathmlAttributes = QList<QDomNode>();
+
+    for (int i = 0, iMax = attributes.count(); i < iMax; ++i) {
+        QDomNode attribute = attributes.item(i);
+
+        if (attribute.namespaceURI().compare(MathmlNamespace))
+            nonMathmlAttributes << attribute;
+    }
+
+    foreach (QDomNode nonMathmlAttribute, nonMathmlAttributes)
+        pElement.removeAttributeNode(nonMathmlAttribute.toAttr());
+
+    // Go through the element's child elements, if any, and clean them up
+
+    for (QDomElement childElement = pElement.firstChildElement();
+         !childElement.isNull(); childElement = childElement.nextSiblingElement()) {
+        cleanMathml(childElement);
+    }
+}
+
+//==============================================================================
+
+QString cleanMathml(const QString &pMathml)
+{
+    // Clean up and return the given MathML string
+
+    QDomDocument domDocument;
+
+    if (domDocument.setContent(pMathml, true)) {
+        cleanMathml(domDocument.documentElement());
+
+        return domDocument.toString(-1);
+    } else {
+        return QString();
+    }
+}
+
+//==============================================================================
+
 }   // namespace Core
 }   // namespace OpenCOR
 

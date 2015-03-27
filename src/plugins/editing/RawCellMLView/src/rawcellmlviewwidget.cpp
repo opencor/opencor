@@ -24,6 +24,7 @@ specific language governing permissions and limitations under the License.
 
 #include "cellmlfilemanager.h"
 #include "cellmlsupportplugin.h"
+#include "cliutils.h"
 #include "corecellmleditingwidget.h"
 #include "editorlistwidget.h"
 #include "editorwidget.h"
@@ -385,53 +386,6 @@ bool RawCellmlViewWidget::validate(const QString &pFileName,
 
 //==============================================================================
 
-void RawCellmlViewWidget::cleanMathml(QDomElement pElement)
-{
-    // Clean up the current element
-    // Note: the idea is to remove all the attributes that are not in the
-    //       MathML namespace. Indeed, if we were to leave them in then the XSL
-    //       transformation would either do nothing or, worst, crash OpenCOR...
-
-    QDomNamedNodeMap attributes = pElement.attributes();
-    QList<QDomNode> nonMathmlAttributes = QList<QDomNode>();
-
-    for (int i = 0, iMax = attributes.count(); i < iMax; ++i) {
-        QDomNode attribute = attributes.item(i);
-
-        if (attribute.namespaceURI().compare(CellMLSupport::MathmlNamespace))
-            nonMathmlAttributes << attribute;
-    }
-
-    foreach (QDomNode nonMathmlAttribute, nonMathmlAttributes)
-        pElement.removeAttributeNode(nonMathmlAttribute.toAttr());
-
-    // Go through the element's child elements, if any, and clean them up
-
-    for (QDomElement childElement = pElement.firstChildElement();
-         !childElement.isNull(); childElement = childElement.nextSiblingElement()) {
-        cleanMathml(childElement);
-    }
-}
-
-//==============================================================================
-
-QString RawCellmlViewWidget::cleanMathml(const QString &pMathml)
-{
-    // Clean up and return the given MathML string
-
-    QDomDocument domDocument;
-
-    if (domDocument.setContent(pMathml, true)) {
-        cleanMathml(domDocument.documentElement());
-
-        return domDocument.toString(-1);
-    } else {
-        return QString();
-    }
-}
-
-//==============================================================================
-
 QString RawCellmlViewWidget::retrieveContentMathmlEquation(const QString &pContentMathmlBlock,
                                                            const int &pPosition) const
 {
@@ -572,7 +526,7 @@ void RawCellmlViewWidget::updateViewer()
         // Note: indeed, our Content MathML block may not be valid, in which
         //       case cleaning it up will result in an empty string...
 
-        if (cleanMathml(contentMathmlBlock).isEmpty()) {
+        if (Core::cleanMathml(contentMathmlBlock).isEmpty()) {
             mContentMathmlEquation = QString();
 
             mEditingWidget->viewer()->setError(true);
@@ -580,7 +534,7 @@ void RawCellmlViewWidget::updateViewer()
             // A Content MathML block contains 0+ child nodes, so extract and
             // clean up the one, if any, at our current position
 
-            QString contentMathmlEquation = cleanMathml(retrieveContentMathmlEquation(contentMathmlBlock, crtPosition-crtStartMathTagPos));
+            QString contentMathmlEquation = Core::cleanMathml(retrieveContentMathmlEquation(contentMathmlBlock, crtPosition-crtStartMathTagPos));
 
             // Check whether we have got a Content MathML equation
 

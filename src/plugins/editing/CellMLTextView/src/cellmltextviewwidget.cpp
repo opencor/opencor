@@ -841,6 +841,8 @@ void CellmlTextViewWidget::updateViewer()
                            QString();
 
     // Update the contents of our viewer
+qDebug("---------");
+qDebug("[%s]", qPrintable(equation));
 
     if (equation.isEmpty()) {
         // There is no equation, so clear our viewer
@@ -858,7 +860,8 @@ void CellmlTextViewWidget::updateViewer()
             // version of our equation and check whether it's the same as our
             // previous one
 
-            QString contentMathmlEquation = qDomDocumentToString(mParser.domDocument());
+            QString contentMathmlEquation = Core::cleanMathml(qDomDocumentToString(mParser.domDocument()));
+qDebug("[%s]", qPrintable(contentMathmlEquation));
 
             if (contentMathmlEquation.compare(mContentMathmlEquation)) {
                 // It's a different one, so check whether we have already
@@ -887,9 +890,6 @@ void CellmlTextViewWidget::updateViewer()
             mEditingWidget->viewer()->setError(true);
         }
     }
-
-qDebug("---------");
-qDebug("[%s]", qPrintable(equation));
 }
 
 //==============================================================================
