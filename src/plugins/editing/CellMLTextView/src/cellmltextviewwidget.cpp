@@ -841,7 +841,8 @@ void CellmlTextViewWidget::updateViewer()
                            QString();
 
     // Update the contents of our viewer
-qDebug("---------");
+static int counter = 0;
+qDebug("---[%05d]---", ++counter);
 qDebug("[%s]", qPrintable(equation));
 
     if (equation.isEmpty()) {

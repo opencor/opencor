@@ -23,7 +23,7 @@ bool SynchronousTextFileDownloader::readTextFromUrl(const QString &pUrl,
                                                     QString &pText,
                                                     QString *pErrorMessage) const
 {
-    // Create a network access manager so that we can then retrieve the contents
+    // Create a network access manager so that we can retrieve the contents
     // of the remote file
 
     QNetworkAccessManager networkAccessManager;
