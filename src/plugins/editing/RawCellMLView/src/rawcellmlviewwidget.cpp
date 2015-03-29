@@ -533,8 +533,6 @@ void RawCellmlViewWidget::updateViewer()
         } else {
             // A Content MathML block contains 0+ child nodes, so extract and
             // clean up the one, if any, at our current position
-qDebug("---------");
-qDebug("[%s]", qPrintable(contentMathmlBlock));
 
             QString contentMathmlEquation = Core::cleanMathml(retrieveContentMathmlEquation(contentMathmlBlock, crtPosition-crtStartMathTagPos));
 
@@ -559,8 +557,6 @@ qDebug("[%s]", qPrintable(contentMathmlBlock));
                         // version, so do it now
 
                         static const QString CtopXsl = Core::resourceAsByteArray(":/web-xslt/ctop.xsl");
-qDebug("---------");
-qDebug("[%s]", qPrintable(contentMathmlEquation));
 
                         mXslTransformer->transform(contentMathmlEquation, CtopXsl);
                     }
@@ -603,9 +599,6 @@ void RawCellmlViewWidget::xslTransformationDone(const QString &pInput,
     //       don't require an XSL transformation, then we may end up in a case
     //       where pInput is not our current Content MathML equation anymore, in
     //       which case the contents of our viewer shouldn't be updated...
-qDebug("---------");
-qDebug("Input:  [%s]", qPrintable(pInput));
-qDebug("Output: [%s]", qPrintable(pOutput));
 
     if (!pInput.compare(mContentMathmlEquation))
         mEditingWidget->viewer()->setContents(pOutput);
