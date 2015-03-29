@@ -431,11 +431,11 @@ void CellMLTextViewConverter::processCommentNode(const QDomNode &pDomNode)
     //          spaces may be used in a comment...
 
     if (   (mLastOutputType == Comment)
-        || (mLastOutputType == ImportUnit) || (mLastOutputType == ImportComp)
-        || (mLastOutputType == DefBaseUnit) || (mLastOutputType == EndDef)
-        || (mLastOutputType == Unit) || (mLastOutputType == Var)
-        || (mLastOutputType == Comp) || (mLastOutputType == Equation)
-        || (mLastOutputType == EndComp) || (mLastOutputType == Vars)) {
+        || (mLastOutputType == Comp) || (mLastOutputType == DefBaseUnit)
+        || (mLastOutputType == EndComp) || (mLastOutputType == EndDef)
+        || (mLastOutputType == Equation) || (mLastOutputType == ImportComp)
+        || (mLastOutputType == ImportUnit) || (mLastOutputType == Unit)
+        || (mLastOutputType == Var) || (mLastOutputType == Vars)) {
         outputString();
     }
 
@@ -458,8 +458,10 @@ bool CellMLTextViewConverter::processImportNode(const QDomNode &pDomNode)
 {
     // Start processing the given import node
 
-    if ((mLastOutputType == Comment) || (mLastOutputType == EndDef))
+    if (   (mLastOutputType == Comment)
+        || (mLastOutputType == EndDef)) {
         outputString();
+    }
 
     outputString(DefImport,
                  QString("def import%1 using \"%2\" for").arg(cmetaId(pDomNode))
@@ -514,8 +516,9 @@ bool CellMLTextViewConverter::processUnitsNode(const QDomNode &pDomNode,
     bool isBaseUnits = !baseUnits.compare("yes");
 
     if (!pInImportNode && !isBaseUnits) {
-        if (   (mLastOutputType == Comment) || (mLastOutputType == EndDef)
-            || (mLastOutputType == DefBaseUnit)) {
+        if (   (mLastOutputType == Comment)
+            || (mLastOutputType == DefBaseUnit) || (mLastOutputType == EndDef)
+            || (mLastOutputType == Equation) || (mLastOutputType == Var)) {
             outputString();
         }
 
@@ -543,16 +546,21 @@ bool CellMLTextViewConverter::processUnitsNode(const QDomNode &pDomNode,
     // Finish processing the given units node
 
     if (pInImportNode) {
-        if ((mLastOutputType == Comment) || (mLastOutputType == ImportComp))
+        if (   (mLastOutputType == Comment)
+            || (mLastOutputType == ImportComp)) {
             outputString();
+        }
 
         outputString(ImportUnit,
                      QString("unit%1 %2 using unit %3;").arg(cmetaId(pDomNode))
                                                         .arg(cellmlAttributeNodeValue(pDomNode, "name"))
                                                         .arg(cellmlAttributeNodeValue(pDomNode, "units_ref")));
     } else if (isBaseUnits) {
-        if ((mLastOutputType == Comment) || (mLastOutputType == EndDef))
+        if (   (mLastOutputType == Comment)
+            || (mLastOutputType == EndDef) || (mLastOutputType == Equation)
+            || (mLastOutputType == Var)) {
             outputString();
+        }
 
         outputString(DefBaseUnit,
                      QString("def unit%1 %2 as base unit;").arg(cmetaId(pDomNode))
@@ -625,8 +633,10 @@ bool CellMLTextViewConverter::processComponentNode(const QDomNode &pDomNode,
     // Start processing the given component node
 
     if (!pInImportNode) {
-        if ((mLastOutputType == Comment) || (mLastOutputType == EndDef))
+        if (   (mLastOutputType == Comment)
+            || (mLastOutputType == EndDef)) {
             outputString();
+        }
 
         outputString(DefComp,
                      QString("def comp%1 %2 as").arg(cmetaId(pDomNode))
@@ -662,8 +672,10 @@ bool CellMLTextViewConverter::processComponentNode(const QDomNode &pDomNode,
     // Finish processing the given component node
 
     if (pInImportNode) {
-        if ((mLastOutputType == Comment) || (mLastOutputType == ImportUnit))
+        if (   (mLastOutputType == Comment)
+            || (mLastOutputType == ImportUnit)) {
             outputString();
+        }
 
         outputString(ImportComp,
                      QString("comp%1 %2 using comp %3;").arg(cmetaId(pDomNode))
@@ -717,7 +729,8 @@ void CellMLTextViewConverter::processVariableNode(const QDomNode &pDomNode)
         parameters += (parameters.isEmpty()?QString():", ")+"priv: "+privateInterface;
 
     if (   (mLastOutputType == Comment)
-        || (mLastOutputType == DefBaseUnit) || (mLastOutputType == EndDef)) {
+        || (mLastOutputType == DefBaseUnit) || (mLastOutputType == EndDef)
+        || (mLastOutputType == Equation)) {
         outputString();
     }
 
@@ -1701,8 +1714,10 @@ bool CellMLTextViewConverter::processGroupNode(const QDomNode &pDomNode)
 
     static const QString RelationshipRef = "___RELATIONSHIP_REF___";
 
-    if ((mLastOutputType == Comment) || (mLastOutputType == EndDef))
+    if (   (mLastOutputType == Comment)
+        || (mLastOutputType == EndDef)) {
         outputString();
+    }
 
     outputString(DefGroup,
                  QString("def group%1 as %2 for").arg(cmetaId(pDomNode))
@@ -1849,8 +1864,10 @@ void CellMLTextViewConverter::processComponentRefNode(const QDomNode &pDomNode)
 
         outputString(EndComp, "endcomp;");
     } else {
-        if ((mLastOutputType == Comment) || (mLastOutputType == EndComp))
+        if (   (mLastOutputType == Comment)
+            || (mLastOutputType == EndComp)) {
             outputString();
+        }
 
         outputString(Comp,
                      QString("comp%1 %2;").arg(cmetaId(pDomNode))
@@ -1867,8 +1884,10 @@ bool CellMLTextViewConverter::processConnectionNode(const QDomNode &pDomNode)
 
     static const QString MapComponents = "___MAP_COMPONENTS___";
 
-    if ((mLastOutputType == Comment) || (mLastOutputType == EndDef))
+    if (   (mLastOutputType == Comment)
+        || (mLastOutputType == EndDef)) {
         outputString();
+    }
 
     outputString(DefMap,
                  QString("def map%1 %2 for").arg(cmetaId(pDomNode))

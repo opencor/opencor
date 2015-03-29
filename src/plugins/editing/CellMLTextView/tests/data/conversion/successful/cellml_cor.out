@@ -139,13 +139,23 @@ def model cellml_1_0 as
         enddef;
 
         var my_variable1: my_unit1;
+
+        def unit my_base_unit4 as base unit;
+
         var my_variable2: my_unit2 {init: 123};
+
+        a = b;
+
         var my_variable3: my_unit3 {pub: in};
         var my_variable4: my_unit4 {priv: out};
         var my_variable5: my_unit5 {pub: none, priv: none};
 
-        a = b;
+        def unit my_base_unit5 as base unit;
+
         a = 3{dimensionless};
+
+        def unit my_base_unit6 as base unit;
+
         a = 12.3e5{dimensionless};
 
         a = sel

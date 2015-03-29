@@ -132,21 +132,28 @@
             <unit prefix="yocto" units="some_unit"/>
         </units>
         <variable name="my_variable1" units="my_unit1"/>
+        <units base_units="yes" name="my_base_unit4"/>
         <variable initial_value="123" name="my_variable2" units="my_unit2"/>
-        <variable name="my_variable3" public_interface="in" units="my_unit3"/>
-        <variable name="my_variable4" private_interface="out" units="my_unit4"/>
-        <variable name="my_variable5" private_interface="none" public_interface="none" units="my_unit5"/>
         <math xmlns="http://www.w3.org/1998/Math/MathML">
             <apply>
                 <eq/>
                 <ci>a</ci>
                 <ci>b</ci>
             </apply>
+        </math>
+        <variable name="my_variable3" public_interface="in" units="my_unit3"/>
+        <variable name="my_variable4" private_interface="out" units="my_unit4"/>
+        <variable name="my_variable5" private_interface="none" public_interface="none" units="my_unit5"/>
+        <units base_units="yes" name="my_base_unit5"/>
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
             <apply>
                 <eq/>
                 <ci>a</ci>
                 <cn cellml:units="dimensionless">3</cn>
             </apply>
+        </math>
+        <units base_units="yes" name="my_base_unit6"/>
+        <math xmlns="http://www.w3.org/1998/Math/MathML">
             <apply>
                 <eq/>
                 <ci>a</ci>
