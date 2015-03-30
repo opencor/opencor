@@ -961,10 +961,10 @@ QString CellmlTextViewWidget::endOfPiecewiseAssignment(Editor::EditorWidget *pEd
 
     QString res = QString();
     int crtPosition = pFromPosition;
-    QString crtCommand = QString();
+    QString crtStatement = QString();
 
     forever {
-        // Look for the end of the current command
+        // Look for the end of the current statement
 
         int semiColonPos = pEditor->findTextInRange(crtPosition, pEditor->contentsSize(), SemiColonTag, false, false, false);
 qDebug(">>> semiColonPos: %d", semiColonPos);
@@ -972,12 +972,12 @@ qDebug(">>> semiColonPos: %d", semiColonPos);
         if (semiColonPos == -1) {
             break;
         } else {
-            // Retrieve the current command
+            // Retrieve the current statement
 
-            crtCommand = pEditor->textInRange(crtPosition, semiColonPos+SemiColonTag.length());
-qDebug(">>> [%s]", qPrintable(crtCommand));
+            crtStatement = pEditor->textInRange(crtPosition, semiColonPos+SemiColonTag.length());
+qDebug(">>> [%s]", qPrintable(crtStatement));
 
-            res += crtCommand;
+            res += crtStatement;
 
             // Skip spaces
 
@@ -991,7 +991,7 @@ qDebug(">>> [%s]", qPrintable(crtCommand));
 
                 static const QRegularExpression KeywordRegEx = QRegularExpression("\\w+");
 
-                QString keyword = KeywordRegEx.match(crtCommand).captured(0);
+                QString keyword = KeywordRegEx.match(crtStatement).captured(0);
 
                 if (!keyword.compare("endsel"))
                     break;
