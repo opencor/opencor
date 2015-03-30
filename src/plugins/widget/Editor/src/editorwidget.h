@@ -140,8 +140,9 @@ public:
     void setZoomLevel(const int &pZoomLevel);
 
     bool findReplaceIsVisible() const;
-
     void setFindReplaceVisible(const bool &pVisible);
+
+    int styleAt(const int &pPosition) const;
 
 private:
     Ui::EditorWidget *mGui;

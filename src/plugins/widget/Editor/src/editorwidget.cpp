@@ -590,6 +590,16 @@ void EditorWidget::setFindReplaceVisible(const bool &pVisible)
 
 //==============================================================================
 
+int EditorWidget::styleAt(const int &pPosition) const
+{
+    // Return the style used at the given position
+
+    return mEditor->SendScintilla(QsciScintilla::SCI_GETSTYLEAT,
+                                  mEditor->text().left(pPosition).toUtf8().length());
+}
+
+//==============================================================================
+
 bool EditorWidget::findPrevious()
 {
     // Find the previous occurrence of the text in our editor

@@ -809,7 +809,9 @@ void CellmlTextViewWidget::editorKeyPressed(QKeyEvent *pEvent, bool &pHandled)
 
 void CellmlTextViewWidget::updateViewer()
 {
-//---GRY--- TO BE COMPLETED...
+//---GRY--- TO BE COMPLETED... TO START WITH, WE DO THIS ASSUMING THERE ARE NO
+//          COMMENTS. THEN, WE WILL HAVE TO HANDLE THE CASE WHERE THERE ARE
+//          COMMENTS, INCLUDING WITHIN AN EQUATION...
     // Make sure that we still have an editing widget (i.e. it hasn't been
     // closed since the signal was emitted)
 
@@ -833,6 +835,8 @@ void CellmlTextViewWidget::updateViewer()
                       prevSemiColonPos+SemiColonTag.length();
     int toPos = nextSemiColonPos+SemiColonTag.length();
 
+    // Skip spaces
+
     static const QString NonSpaceRegEx = "[^\\s]";
 
     fromPos = editor->findTextInRange(fromPos, editor->contentsSize(), NonSpaceRegEx, true, false, false);
@@ -841,10 +845,59 @@ void CellmlTextViewWidget::updateViewer()
                            editor->textInRange(fromPos, toPos):
                            QString();
 
-    // Update the contents of our viewer
+    // Check whether we really have an equation
 static int counter = 0;
 qDebug("---[%05d]---", ++counter);
 qDebug("[%s]", qPrintable(equation));
+
+    if (!equation.isEmpty()) {
+        // There seems to be an equation, so make sure that it's really the case
+        // by checking the style at the beginning of our equation
+
+        int style = editor->styleAt(fromPos);
+qDebug("{%d}", style);
+
+        if (style == CellmlTextViewLexer::Keyword) {
+            // Our equation starts with a keyword, so check which one it is
+
+            static const QRegularExpression KeywordRegEx = QRegularExpression("\\w+");
+
+            QString keyword = KeywordRegEx.match(equation).captured(0);
+qDebug("[%s]", qPrintable(keyword));
+
+            if (!keyword.compare("ode")) {
+
+            } else {
+                // Not a recognised keyword
+
+                equation = QString();
+            }
+        } else if (style == CellmlTextViewLexer::Default) {
+            // It looks like our first word could be an identifier, so check
+            // whether we have a normal or a piecewise assignment
+
+            static const QRegularExpression normalAssignmentRegEx = QRegularExpression("^\\w+\\s*=");
+            static const QRegularExpression piecewiseAssignmentRegEx = QRegularExpression("^\\w+\\s*=\\s*sel\\s*");
+
+            if (piecewiseAssignmentRegEx.match(equation).hasMatch()) {
+                // We are dealing with a piecewise assignment, so we need to
+                // look for its end
+
+                equation += endOfPiecewiseAssignment(editor, toPos+1);
+qDebug("[%s]", qPrintable(equation));
+            } else if (!normalAssignmentRegEx.match(equation).hasMatch()) {
+                // Neither a normal nor a piecewise assignment
+
+                equation = QString();
+            }
+        } else {
+            // Our first word is neither a keyword nor of a default style
+
+            equation = QString();
+        }
+    }
+
+    // Update the contents of our viewer
 
     if (equation.isEmpty()) {
         // There is no equation, so clear our viewer
@@ -853,14 +906,6 @@ qDebug("[%s]", qPrintable(equation));
 
         mEditingWidget->viewer()->setContents(QString());
     } else {
-        // There seems to be an equation, so make sure that it's really the case
-        // by checking its first word
-
-        static const QRegularExpression FirstWordRegEx = QRegularExpression("\\w+");
-
-        QString firstWord = FirstWordRegEx.match(equation).captured(0);
-qDebug("[%s]", qPrintable(firstWord));
-
         // There is an equation, so try to parse it
 
         bool res = mParser.execute(equation);
@@ -901,6 +946,62 @@ qDebug("[%s]", qPrintable(firstWord));
             mEditingWidget->viewer()->setError(true);
         }
     }
+}
+
+//==============================================================================
+
+QString CellmlTextViewWidget::endOfPiecewiseAssignment(Editor::EditorWidget *pEditor,
+                                                       const int &pFromPosition)
+{
+    // Look for the end of a piecewise assignment in the given editor, starting
+    // from the given position
+
+    static const QString SemiColonTag = ";";
+    static const QString NonSpaceRegEx = "[^\\s]";
+
+    QString res = QString();
+    int crtPosition = pFromPosition;
+    QString crtCommand = QString();
+
+    forever {
+        // Look for the end of the current command
+
+        int semiColonPos = pEditor->findTextInRange(crtPosition, pEditor->contentsSize(), SemiColonTag, false, false, false);
+qDebug(">>> semiColonPos: %d", semiColonPos);
+
+        if (semiColonPos == -1) {
+            break;
+        } else {
+            // Retrieve the current command
+
+            crtCommand = pEditor->textInRange(crtPosition, semiColonPos+SemiColonTag.length());
+qDebug(">>> [%s]", qPrintable(crtCommand));
+
+            res += crtCommand;
+
+            // Skip spaces
+
+            crtPosition = pEditor->findTextInRange(crtPosition, pEditor->contentsSize(), NonSpaceRegEx, true, false, false);
+
+            // Check whether we are dealing with a keyword
+
+            if (pEditor->styleAt(crtPosition) == CellmlTextViewLexer::Keyword) {
+                // Check whether that keyword is "endsel", in which case we
+                // would have found the end of our piecewise assignment
+
+                static const QRegularExpression KeywordRegEx = QRegularExpression("\\w+");
+
+                QString keyword = KeywordRegEx.match(crtCommand).captured(0);
+
+                if (!keyword.compare("endsel"))
+                    break;
+            }
+
+            crtPosition = semiColonPos+SemiColonTag.length();
+        }
+    }
+
+    return res;
 }
 
 //==============================================================================
