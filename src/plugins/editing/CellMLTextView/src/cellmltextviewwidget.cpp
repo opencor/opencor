@@ -852,6 +852,14 @@ qDebug("[%s]", qPrintable(equation));
 
         mEditingWidget->viewer()->setContents(QString());
     } else {
+        // There seems to be an equation, so make sure that it's really the case
+        // by checking its first word
+
+        static const QRegularExpression firstWordRegEx = QRegularExpression("\\w+");
+
+        QString firstWord = firstWordRegEx.match(equation).captured(0);
+qDebug("[%s]", qPrintable(firstWord));
+
         // There is an equation, so try to parse it
 
         bool res = mParser.execute(equation);
