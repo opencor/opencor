@@ -113,6 +113,8 @@ private:
 
     QMap<QString, QString> mNamespaces;
 
+    void initialize(const QString &pCellmlText);
+
     void addUnexpectedTokenErrorMessage(const QString &pExpectedString,
                                         const QString &pFoundString);
 

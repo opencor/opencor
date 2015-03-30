@@ -107,15 +107,7 @@ bool CellmlTextViewParser::execute(const QString &pCellmlText,
 {
     // Get ready for the parsing of a model definition
 
-    mScanner->setText(pCellmlText);
-
-    mCellmlVersion = CellMLSupport::CellmlFile::Cellml_1_0;
-
-    mDomDocument = QDomDocument(QString());
-
-    mMessages = CellmlTextViewParserMessages();
-
-    mNamespaces = QMap<QString, QString>();
+    initialize(pCellmlText);
 
     // Expect "def"
 
@@ -221,17 +213,9 @@ bool CellmlTextViewParser::execute(const QString &pCellmlText,
 
 bool CellmlTextViewParser::execute(const QString &pCellmlText)
 {
-    // Get ready for the parsing of a mathematical expression
+    // Get ready for the parsing of a model definition
 
-    mScanner->setText(pCellmlText);
-
-    mCellmlVersion = CellMLSupport::CellmlFile::Cellml_1_0;
-
-    mDomDocument = QDomDocument(QString());
-
-    mMessages = CellmlTextViewParserMessages();
-
-    mNamespaces = QMap<QString, QString>();
+    initialize(pCellmlText);
 
     // Try to parse for some model definition itself
 
@@ -275,6 +259,23 @@ CellmlTextViewParserMessages CellmlTextViewParser::messages() const
     // Return our messages
 
     return mMessages;
+}
+
+//==============================================================================
+
+void CellmlTextViewParser::initialize(const QString &pCellmlText)
+{
+    // Initialize ourselves with the given CellML text
+
+    mScanner->setText(pCellmlText);
+
+    mCellmlVersion = CellMLSupport::CellmlFile::Cellml_1_0;
+
+    mDomDocument = QDomDocument(QString());
+
+    mMessages = CellmlTextViewParserMessages();
+
+    mNamespaces = QMap<QString, QString>();
 }
 
 //==============================================================================
