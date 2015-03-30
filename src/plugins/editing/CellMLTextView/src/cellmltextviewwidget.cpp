@@ -807,28 +807,20 @@ void CellmlTextViewWidget::editorKeyPressed(QKeyEvent *pEvent, bool &pHandled)
 
 //==============================================================================
 
-void CellmlTextViewWidget::updateViewer()
+QString CellmlTextViewWidget::statement(const int &pPosition) const
 {
-//---GRY--- TO BE COMPLETED... TO START WITH, WE DO THIS ASSUMING THERE ARE NO
-//          COMMENTS. THEN, WE WILL HAVE TO HANDLE THE CASE WHERE THERE ARE
-//          COMMENTS, INCLUDING WITHIN AN EQUATION...
-    // Make sure that we still have an editing widget (i.e. it hasn't been
-    // closed since the signal was emitted)
-
-    if (!mEditingWidget)
-        return;
-
-    // Retrieve the current equation
+    // Retrieve the statement around the given position
+    // Note: a statement is a piece of text that is bounded by "as" or ";" at
+    //       either of its ends...
 
     static const QString AsTag = "as";
     static const QString SemiColonTag = ";";
 
     Editor::EditorWidget *editor = mEditingWidget->editor();
-    int crtPosition = editor->currentPosition();
 
-    int prevAsPos = editor->findTextInRange(crtPosition, 0, AsTag, false, true, true);
-    int prevSemiColonPos = editor->findTextInRange(crtPosition, 0, SemiColonTag, false, false, false);
-    int nextSemiColonPos = editor->findTextInRange(crtPosition-SemiColonTag.length()+1, editor->contentsSize(), SemiColonTag, false, false, false);
+    int prevAsPos = editor->findTextInRange(pPosition, 0, AsTag, false, true, true);
+    int prevSemiColonPos = editor->findTextInRange(pPosition, 0, SemiColonTag, false, false, false);
+    int nextSemiColonPos = editor->findTextInRange(pPosition-SemiColonTag.length()+1, editor->contentsSize(), SemiColonTag, false, false, false);
 
     int fromPos = (prevAsPos > prevSemiColonPos)?
                       prevAsPos+AsTag.length():
@@ -841,78 +833,47 @@ void CellmlTextViewWidget::updateViewer()
 
     fromPos = editor->findTextInRange(fromPos, editor->contentsSize(), NonSpaceRegEx, true, false, false);
 
-    QString equation = ((crtPosition >= fromPos) && (crtPosition < toPos))?
-                           editor->textInRange(fromPos, toPos):
-                           QString();
+    return ((pPosition >= fromPos) && (pPosition < toPos))?
+               editor->textInRange(fromPos, toPos):
+               QString();
+}
 
-    // Check whether we really have an equation
+//==============================================================================
+
+void CellmlTextViewWidget::updateViewer()
+{
+//---GRY--- TO BE COMPLETED... TO START WITH, WE DO THIS ASSUMING THERE ARE NO
+//          COMMENTS. THEN, WE WILL HAVE TO HANDLE THE CASE WHERE THERE ARE
+//          COMMENTS, INCLUDING WITHIN AN EQUATION...
+    // Make sure that we still have an editing widget (i.e. it hasn't been
+    // closed since the signal was emitted)
+
+    if (!mEditingWidget)
+        return;
+
+    // Retrieve the statement, if any, around our current position
+
+    QString currentStatement = statement(mEditingWidget->editor()->currentPosition());
 static int counter = 0;
 qDebug("---[%05d]---", ++counter);
-qDebug("[%s]", qPrintable(equation));
-
-    if (!equation.isEmpty()) {
-        // There seems to be an equation, so make sure that it's really the case
-        // by checking the style at the beginning of our equation
-
-        int style = editor->styleAt(fromPos);
-qDebug("{%d}", style);
-
-        if (style == CellmlTextViewLexer::Keyword) {
-            // Our equation starts with a keyword, so check which one it is
-
-            static const QRegularExpression KeywordRegEx = QRegularExpression("\\w+");
-
-            QString keyword = KeywordRegEx.match(equation).captured(0);
-qDebug("[%s]", qPrintable(keyword));
-
-            if (!keyword.compare("ode")) {
-
-            } else {
-                // Not a recognised keyword
-
-                equation = QString();
-            }
-        } else if (style == CellmlTextViewLexer::Default) {
-            // It looks like our first word could be an identifier, so check
-            // whether we have a normal or a piecewise assignment
-
-            static const QRegularExpression normalAssignmentRegEx = QRegularExpression("^\\w+\\s*=");
-            static const QRegularExpression piecewiseAssignmentRegEx = QRegularExpression("^\\w+\\s*=\\s*sel\\s*");
-
-            if (piecewiseAssignmentRegEx.match(equation).hasMatch()) {
-                // We are dealing with a piecewise assignment, so we need to
-                // look for its end
-
-                equation += endOfPiecewiseAssignment(editor, toPos+1);
-qDebug("[%s]", qPrintable(equation));
-            } else if (!normalAssignmentRegEx.match(equation).hasMatch()) {
-                // Neither a normal nor a piecewise assignment
-
-                equation = QString();
-            }
-        } else {
-            // Our first word is neither a keyword nor of a default style
-
-            equation = QString();
-        }
-    }
+qDebug("[%s]", qPrintable(currentStatement));
 
     // Update the contents of our viewer
 
-    if (equation.isEmpty()) {
-        // There is no equation, so clear our viewer
+    if (currentStatement.isEmpty()) {
+        // There is no statement, so clear our viewer
 
         mContentMathmlEquation = QString();
 
         mEditingWidget->viewer()->setContents(QString());
     } else {
-        // There is an equation, so try to parse it
+        // There is a statement, so try to parse it
 
-        bool res = mParser.execute(equation);
+        bool res = mParser.execute(currentStatement);
 
         if (res) {
             // The parsing was successful, so retrieve the Content MathML
-            // version of our equation and check whether it's the same as our
+            // version of our statement and check whether it's the same as our
             // previous one
 
             QString contentMathmlEquation =  "<math xmlns=\"http://www.w3.org/1998/Math/MathML\">"

@@ -168,6 +168,8 @@ private:
 
     bool parse(const QString &pFileName, const bool &pOnlyErrors = false);
 
+    QString statement(const int &pPosition) const;
+
     QString endOfPiecewiseAssignment(Editor::EditorWidget *pEditor,
                                      const int &pFromPosition);
 

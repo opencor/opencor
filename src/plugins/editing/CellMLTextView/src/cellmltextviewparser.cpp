@@ -211,27 +211,34 @@ bool CellmlTextViewParser::execute(const QString &pCellmlText,
 
 //==============================================================================
 
-bool CellmlTextViewParser::execute(const QString &pCellmlText)
+bool CellmlTextViewParser::execute(const QString &pCellmlText,
+                                   const bool &pFullParsing)
 {
-    // Get ready for the parsing of a model definition
+    // Get ready for the parsing of a mathematical expression
 
     initialize(pCellmlText);
 
-    // Try to parse for some model definition itself
+    // Either fully parse or partially parse a mathematical expression
 
-    if (!parseMathematicalExpression(mDomDocument))
-        return false;
+    if (pFullParsing) {
+        // Parse a mathematical expression
 
-    // Expect the end of the file
+        if (!parseMathematicalExpression(mDomDocument))
+            return false;
 
-    mScanner->getNextToken();
+        // Expect the end of the file
 
-    if (!tokenType(mDomDocument, QObject::tr("the end of the file"),
-                   CellmlTextViewScanner::EofToken)) {
+        mScanner->getNextToken();
+
+        if (!tokenType(mDomDocument, QObject::tr("the end of the file"),
+                       CellmlTextViewScanner::EofToken)) {
+            return false;
+        }
+
+        return true;
+    } else {
         return false;
     }
-
-    return true;
 }
 
 //==============================================================================

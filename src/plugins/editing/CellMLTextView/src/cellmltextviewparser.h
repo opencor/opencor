@@ -94,7 +94,7 @@ public:
 
     bool execute(const QString &pCellmlText,
                  const CellMLSupport::CellmlFile::Version &pCellmlVersion);
-    bool execute(const QString &pCellmlText);
+    bool execute(const QString &pCellmlText, const bool &pFullParsing = true);
 
     CellMLSupport::CellmlFile::Version cellmlVersion() const;
 
