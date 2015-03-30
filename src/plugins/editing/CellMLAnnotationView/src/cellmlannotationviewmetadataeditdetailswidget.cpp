@@ -844,7 +844,9 @@ bool CellmlAnnotationViewMetadataEditDetailsWidget::isDirectTerm(const QString &
 {
     // Return whether the given term is a direct one
 
-    return    QRegularExpression("^"+CellMLSupport::ResourceRegExp+"/"+CellMLSupport::IdRegExp+"$").match(pTerm).hasMatch()
+    static const QRegularExpression DirectTermRegEx = QRegularExpression("^"+CellMLSupport::ResourceRegExp+"/"+CellMLSupport::IdRegExp+"$");
+
+    return    DirectTermRegEx.match(pTerm).hasMatch()
            && (pTerm.count("/") == 1);
 }
 

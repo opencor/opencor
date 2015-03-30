@@ -72,13 +72,6 @@ private:
 
     QString mEolString;
 
-    QRegularExpression mKeywordsRegEx;
-    QRegularExpression mCellmlKeywordsRegEx;
-    QRegularExpression mSiUnitKeywordsRegEx;
-    QRegularExpression mParameterKeywordsRegEx;
-    QRegularExpression mParameterValueKeywordsRegEx;
-    QRegularExpression mNumberRegEx;
-
     void doStyleText(const int &pBytesStart, const int &pBytesEnd,
                      const QString &pText, const bool &pParameterBlock);
     void doStyleTextCurrent(const int &pBytesStart, const int &pBytesEnd,

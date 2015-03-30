@@ -104,8 +104,11 @@ CellmlFileRdfTriple::CellmlFileRdfTriple(CellmlFile *pCellmlFile,
     //       URIs. Still, we should and do support both formats and keep track
     //       of their information in the form of a resource and an id...
 
+    static const QRegularExpression ModelRegEx = QRegularExpression("^model:");
+    static const QRegularExpression BioRegEx = QRegularExpression("^bio:");
+
     for (int i = FirstModelQualifier; i <= LastModelQualifier; ++i)
-        if (!mPredicate->asString().compare(QString("http://biomodels.net/model-qualifiers/%1").arg(modelQualifierAsString(ModelQualifier(i)).remove(QRegularExpression("^model:"))))) {
+        if (!mPredicate->asString().compare(QString("http://biomodels.net/model-qualifiers/%1").arg(modelQualifierAsString(ModelQualifier(i)).remove(ModelRegEx)))) {
             // It looks like we might be dealing with a model qualifier
 
             mType = BioModelsDotNetQualifier;
@@ -117,7 +120,7 @@ CellmlFileRdfTriple::CellmlFileRdfTriple(CellmlFile *pCellmlFile,
 
     if (mType == Unknown)
         for (int i = FirstBioQualifier; i <= LastBioQualifier; ++i)
-            if (!mPredicate->asString().compare(QString("http://biomodels.net/biology-qualifiers/%1").arg(bioQualifierAsString(BioQualifier(i)).remove(QRegularExpression("^bio:"))))){
+            if (!mPredicate->asString().compare(QString("http://biomodels.net/biology-qualifiers/%1").arg(bioQualifierAsString(BioQualifier(i)).remove(BioRegEx)))){
                 // It looks like we might be dealing with a model qualifier
 
                 mType = BioModelsDotNetQualifier;
@@ -160,8 +163,10 @@ CellmlFileRdfTriple::CellmlFileRdfTriple(CellmlFile *pCellmlFile,
 
     // Create our RDF triple elements
 
+    static const QRegularExpression ModelRegEx = QRegularExpression("^model:");
+
     mSubject   = new CellmlFileRdfTripleElement(pSubject);
-    mPredicate = new CellmlFileRdfTripleElement(QString("http://biomodels.net/model-qualifiers/%1").arg(modelQualifierAsString(pModelQualifier).remove(QRegularExpression("^model:"))));
+    mPredicate = new CellmlFileRdfTripleElement(QString("http://biomodels.net/model-qualifiers/%1").arg(modelQualifierAsString(pModelQualifier).remove(ModelRegEx)));
     mObject    = new CellmlFileRdfTripleElement(QString("http://identifiers.org/%1/%2").arg(pResource, pId));
 }
 
@@ -180,8 +185,10 @@ CellmlFileRdfTriple::CellmlFileRdfTriple(CellmlFile *pCellmlFile,
 
     // Create our RDF triple elements
 
+    static const QRegularExpression BioRegEx = QRegularExpression("^bio:");
+
     mSubject   = new CellmlFileRdfTripleElement(pSubject);
-    mPredicate = new CellmlFileRdfTripleElement(QString("http://biomodels.net/biology-qualifiers/%1").arg(bioQualifierAsString(pBioQualifier).remove(QRegularExpression("^bio:"))));
+    mPredicate = new CellmlFileRdfTripleElement(QString("http://biomodels.net/biology-qualifiers/%1").arg(bioQualifierAsString(pBioQualifier).remove(BioRegEx)));
     mObject    = new CellmlFileRdfTripleElement(QString("http://identifiers.org/%1/%2").arg(pResource, pId));
 }
 
@@ -506,7 +513,10 @@ bool CellmlFileRdfTriple::decodeTerm(const QString &pTerm, QString &pResource,
     // Decode the term, based on whether it matches that of a MIRIAN URN or an
     // identifiers.org URI
 
-    if (QRegularExpression("^urn:miriam:"+ResourceRegExp+":"+IdRegExp).match(pTerm).hasMatch()) {
+    static const QRegularExpression MiriamUrnRegEx = QRegularExpression("^urn:miriam:"+ResourceRegExp+":"+IdRegExp);
+    static const QRegularExpression IdentifierDotOrgRegEx = QRegularExpression("^http://identifiers.org/"+ResourceRegExp+"/#?"+IdRegExp);
+
+    if (MiriamUrnRegEx.match(pTerm).hasMatch()) {
         // The term is a MIRIAM URN, so retrieve its corresponding resource and
         // id
 
@@ -516,7 +526,7 @@ bool CellmlFileRdfTriple::decodeTerm(const QString &pTerm, QString &pResource,
         pId       = Core::stringFromPercentEncoding(miriamUrnList[3]);
 
         return true;
-    } else if (QRegularExpression("^http://identifiers.org/"+ResourceRegExp+"/#?"+IdRegExp).match(pTerm).hasMatch()) {
+    } else if (IdentifierDotOrgRegEx.match(pTerm).hasMatch()) {
         // The term is an identifiers.org URI, so retrieve its corresponding
         // resource and id
 

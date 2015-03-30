@@ -41,6 +41,7 @@ specific language governing permissions and limitations under the License.
 #include <QClipboard>
 #include <QCursor>
 #include <QMenu>
+#include <QRegularExpression>
 #include <QScrollArea>
 #include <QStackedWidget>
 #include <QString>
@@ -522,7 +523,9 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::linkClicked()
             if (newRdfTripleEment.isNull())
                 newRdfTripleEment = rdfTripleElement.previousSibling();
 
-            CellMLSupport::CellmlFileRdfTriple *newRdfTriple = mRdfTriplesMapping.value(newRdfTripleEment.attribute("id").remove(QRegularExpression("^item_")));
+            static const QRegularExpression ItemRegEx = QRegularExpression("^item_");
+
+            CellMLSupport::CellmlFileRdfTriple *newRdfTriple = mRdfTriplesMapping.value(newRdfTripleEment.attribute("id").remove(ItemRegEx));
             QString newQualifier = (newRdfTriple->modelQualifier() != CellMLSupport::CellmlFileRdfTriple::ModelUnknown)?
                                        newRdfTriple->modelQualifierAsString():
                                        newRdfTriple->bioQualifierAsString();

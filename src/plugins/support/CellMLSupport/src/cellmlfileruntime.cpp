@@ -942,15 +942,17 @@ void CellmlFileRuntime::update()
     //       distinguish between 'proper' and 'computed' constants...
     //       (See https://tracker.physiomeproject.org/show_bug.cgi?id=3499)
 
+    static const QRegularExpression InitializationStatementRegEx = QRegularExpression("^(CONSTANTS|RATES|STATES)\\[\\d*\\] = [+-]?\\d*\\.?\\d+([eE][+-]?\\d+)?;$");
+
     QStringList initConstsList = QString::fromStdWString(genericCodeInformation->initConstsString()).split("\r\n");
     QString initConsts = QString();
     QString compCompConsts = QString();
 
-    foreach (const QString &initConst, initConstsList)
+    foreach (const QString &initConst, initConstsList) {
         // Add the statement either to our list of 'proper' constants or
         // 'computed' constants
 
-        if (QRegularExpression("^(CONSTANTS|RATES|STATES)\\[\\d*\\] = [+-]?\\d*\\.?\\d+([eE][+-]?\\d+)?;$").match(initConst).hasMatch()) {
+        if (InitializationStatementRegEx.match(initConst).hasMatch()) {
             // We are dealing with a 'proper' constant (or a rate or a state)
 
             if (!initConsts.isEmpty())
@@ -965,6 +967,7 @@ void CellmlFileRuntime::update()
 
             compCompConsts += initConst;
         }
+    }
 
     modelCode += functionCode("int initializeConstants(double *CONSTANTS, double *RATES, double *STATES)",
                               initConsts, true);

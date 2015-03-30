@@ -530,6 +530,10 @@ void ViewerWidget::processNode(const QDomNode &pDomNode) const
 {
     // Go through the node's children and process them
 
+    static const QRegularExpression LeadingAndTrailingUnderscoresRegEx = QRegularExpression("(^_+|_+$)");
+    static const QRegularExpression MultipleUnderscoresRegEx = QRegularExpression("_+");
+    static const QRegularExpression NotUnderscoreRegEx = QRegularExpression("[^_]");
+
     for (QDomNode domNode = pDomNode.firstChild();
          !domNode.isNull(); domNode = domNode.nextSibling()) {
         bool processDomNode = true;
@@ -555,9 +559,8 @@ void ViewerWidget::processNode(const QDomNode &pDomNode) const
                     // We want to use subscripts (and maybe also Greek symbols),
                     // so remove leading, trailing and duplicate underscores
 
-                    childNodeValue.remove(QRegularExpression("^_+"));
-                    childNodeValue.remove(QRegularExpression("_+$"));
-                    childNodeValue.replace(QRegularExpression("_+"), "_");
+                    childNodeValue.remove(LeadingAndTrailingUnderscoresRegEx);
+                    childNodeValue.replace(MultipleUnderscoresRegEx, "_");
 
                     // Split the value of the child node using the underscore as
                     // a separator
@@ -612,10 +615,10 @@ void ViewerWidget::processNode(const QDomNode &pDomNode) const
                     QString domChildNodeSubValue;
 
                     while (fromPos != -1) {
-                        endPos = childNodeValue.lastIndexOf(QRegularExpression("[^_]"), fromPos);
+                        endPos = childNodeValue.lastIndexOf(NotUnderscoreRegEx, fromPos);
 
                         if (endPos != -1) {
-                            startPos = childNodeValue.lastIndexOf(QRegularExpression("_"), endPos);
+                            startPos = childNodeValue.lastIndexOf("_", endPos);
 
                             domChildNodeSubValue = childNodeValue.mid(startPos+1, endPos-startPos);
 

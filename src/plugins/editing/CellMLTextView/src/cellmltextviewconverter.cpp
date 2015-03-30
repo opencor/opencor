@@ -1509,7 +1509,9 @@ QString CellMLTextViewConverter::processPowerNode(const QDomNode &pDomNode,
             // Note: if b isn't a number, then n will be equal to zero, which is
             //       what we want in that case...
 
-            double n = QString(b).replace(QRegularExpression("{[^}]*}$"), QString()).toDouble();
+            static const QRegularExpression UnitRegEx = QRegularExpression("{[^}]*}$");
+
+            double n = QString(b).replace(UnitRegEx, QString()).toDouble();
 
             if (n == 2.0)
                 return "sqr("+a+")";
@@ -1562,7 +1564,9 @@ QString CellMLTextViewConverter::processRootNode(const QDomNode &pDomNode,
                     // Note: if b isn't a number, then n will be equal to zero,
                     //       which is what we want in that case...
 
-                    double n = QString(b).replace(QRegularExpression("{[^}]*}$"), QString()).toDouble();
+                    static const QRegularExpression UnitRegEx = QRegularExpression("{[^}]*}$");
+
+                    double n = QString(b).replace(UnitRegEx, QString()).toDouble();
 
                     if (n == 2.0)
                         return "sqrt("+a+")";

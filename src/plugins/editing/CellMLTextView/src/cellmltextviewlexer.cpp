@@ -35,91 +35,6 @@ CellmlTextViewLexer::CellmlTextViewLexer(QObject *pParent) :
     mFullTextUtf8(QByteArray()),
     mEolString(QString())
 {
-    // Some initialisations
-
-    mKeywordsRegEx = QRegularExpression(
-                         "\\b("
-                             // CellML text keywords
-
-                             "and|as|between|case|comp|def|endcomp|enddef|"
-                             "endsel|for|group|import|incl|map|model|otherwise|"
-                             "sel|unit|using|var|vars|"
-
-                             // MathML arithmetic operators
-
-                             "abs|ceil|exp|fact|floor|ln|log|pow|root|sqr|sqrt|"
-
-                             // MathML logical operators
-
-                             "and|or|xor|not|"
-
-                             // MathML calculus elements
-
-                             "ode|"
-
-                             // MathML trigonometric operators
-
-                             "sin|cos|tan|sec|csc|cot|sinh|cosh|tanh|sech|csch|"
-                             "coth|asin|acos|atan|asec|acsc|acot|asinh|acosh|"
-                             "atanh|asech|acsch|acoth|"
-
-                             // MathML constants
-
-                             "true|false|nan|pi|inf|e|"
-
-                             // Extra operators
-
-                             "rem"
-                         ")\\b");
-
-    mCellmlKeywordsRegEx = QRegularExpression(
-                               "\\b("
-                                    // Miscellaneous
-
-                                   "base|encapsulation|containment"
-                               ")\\b");
-
-    mSiUnitKeywordsRegEx = QRegularExpression(
-                               "\\b("
-                                   // Standard units
-
-                                   "ampere|becquerel|candela|celsius|coulomb|"
-                                   "dimensionless|farad|gram|gray|henry|hertz|"
-                                   "joule|katal|kelvin|kilogram|liter|litre|"
-                                   "lumen|lux|meter|metre|mole|newton|ohm|"
-                                   "pascal|radian|second|siemens|sievert|"
-                                   "steradian|tesla|volt|watt|weber"
-                               ")\\b");
-
-    mParameterKeywordsRegEx = QRegularExpression(
-                                  "\\b("
-                                      // Unit keywords
-
-                                      "pref|expo|mult|off|"
-
-                                      // Variable keywords
-
-                                      "init|pub|priv"
-                                  ")\\b");
-
-    mParameterValueKeywordsRegEx = QRegularExpression(
-                                       "\\b("
-                                           // Unit prefixes
-
-                                           "yotta|zetta|exa|peta|tera|giga|"
-                                           "mega|kilo|hecto|deka|deci|centi|"
-                                           "milli|micro|nano|pico|femto|atto|"
-                                           "zepto|yocto|"
-
-                                           // Public/private interfaces
-
-                                           "in|out|none"
-                                       ")\\b");
-
-    mNumberRegEx = QRegularExpression("(\\d+(\\.\\d*)?|\\.\\d+)([eE][+-]?\\d*)?");
-    // Note: this regular expression is not aimed at catching valid numbers, but
-    //       at catching something that could become a valid number (e.g. we
-    //       want to be able to catch "123e")...
 }
 
 //==============================================================================
@@ -424,15 +339,88 @@ void CellmlTextViewLexer::doStyleTextCurrent(const int &pBytesStart,
         // Check whether the given text contains some keywords from various
         // categories
 
+        static const QRegularExpression KeywordsRegEx = QRegularExpression(
+            "\\b("
+                // CellML text keywords
+
+                "and|as|between|case|comp|def|endcomp|enddef|endsel|for|group|"
+                "import|incl|map|model|otherwise|sel|unit|using|var|vars|"
+
+                // MathML arithmetic operators
+
+                "abs|ceil|exp|fact|floor|ln|log|pow|root|sqr|sqrt|"
+
+                // MathML logical operators
+
+                "and|or|xor|not|"
+
+                // MathML calculus elements
+
+                "ode|"
+
+                // MathML trigonometric operators
+
+                "sin|cos|tan|sec|csc|cot|sinh|cosh|tanh|sech|csch|coth|asin|"
+                "acos|atan|asec|acsc|acot|asinh|acosh|atanh|asech|acsch|acoth|"
+
+                // MathML constants
+
+                "true|false|nan|pi|inf|e|"
+
+                // Extra operators
+
+                "rem"
+            ")\\b");
+
+        static const QRegularExpression CellmlKeywordsRegEx = QRegularExpression(
+            "\\b("
+                 // Miscellaneous
+
+                "base|encapsulation|containment"
+            ")\\b");
+
+        static const QRegularExpression ParameterKeywordsRegEx = QRegularExpression(
+            "\\b("
+                // Unit keywords
+
+                "pref|expo|mult|off|"
+
+                // Variable keywords
+
+                "init|pub|priv"
+            ")\\b");
+
+        static const QRegularExpression ParameterValueKeywordsRegEx = QRegularExpression(
+            "\\b("
+                // Unit prefixes
+
+                "yotta|zetta|exa|peta|tera|giga|mega|kilo|hecto|deka|deci|"
+                "centi|milli|micro|nano|pico|femto|atto|zepto|yocto|"
+
+                // Public/private interfaces
+
+                "in|out|none"
+            ")\\b");
+
+        static const QRegularExpression SiUnitKeywordsRegEx = QRegularExpression(
+            "\\b("
+                // Standard units
+
+                "ampere|becquerel|candela|celsius|coulomb|dimensionless|farad|"
+                "gram|gray|henry|hertz|joule|katal|kelvin|kilogram|liter|litre|"
+                "lumen|lux|meter|metre|mole|newton|ohm|pascal|radian|second|"
+                "siemens|sievert|steradian|tesla|volt|watt|weber"
+            ")\\b");
+
         if (pParameterBlock) {
-            doStyleTextRegEx(pBytesStart, pText, mParameterKeywordsRegEx, ParameterKeyword);
-            doStyleTextRegEx(pBytesStart, pText, mParameterValueKeywordsRegEx, ParameterCellmlKeyword);
+            doStyleTextRegEx(pBytesStart, pText, ParameterKeywordsRegEx, ParameterKeyword);
+            doStyleTextRegEx(pBytesStart, pText, ParameterValueKeywordsRegEx, ParameterCellmlKeyword);
         } else {
-            doStyleTextRegEx(pBytesStart, pText, mKeywordsRegEx, Keyword);
-            doStyleTextRegEx(pBytesStart, pText, mCellmlKeywordsRegEx, CellmlKeyword);
+            doStyleTextRegEx(pBytesStart, pText, KeywordsRegEx, Keyword);
+            doStyleTextRegEx(pBytesStart, pText, CellmlKeywordsRegEx, CellmlKeyword);
         }
 
-        doStyleTextRegEx(pBytesStart, pText, mSiUnitKeywordsRegEx, pParameterBlock?ParameterCellmlKeyword:CellmlKeyword);
+        doStyleTextRegEx(pBytesStart, pText, SiUnitKeywordsRegEx, pParameterBlock?ParameterCellmlKeyword:CellmlKeyword);
 
         // Check whether the given text contains some numbers
 
@@ -705,7 +693,12 @@ void CellmlTextViewLexer::doStyleTextNumberRegEx(const int &pBytesStart,
 {
     // Style the given text using the number regular expression
 
-    QRegularExpressionMatchIterator regExMatchIter = mNumberRegEx.globalMatch(pText);
+    static const QRegularExpression NumberRegEx = QRegularExpression("(\\d+(\\.\\d*)?|\\.\\d+)([eE][+-]?\\d*)?");
+    // Note: this regular expression is not aimed at catching valid numbers, but
+    //       at catching something that could become a valid number (e.g. we
+    //       want to be able to catch "123e")...
+
+    QRegularExpressionMatchIterator regExMatchIter = NumberRegEx.globalMatch(pText);
     QRegularExpressionMatch regExMatch;
 
     while (regExMatchIter.hasNext()) {

@@ -48,6 +48,7 @@ specific language governing permissions and limitations under the License.
 #include <QKeyEvent>
 #include <QLayout>
 #include <QMetaType>
+#include <QRegularExpression>
 #include <QSettings>
 #include <QTimer>
 #include <QVariant>
@@ -855,9 +856,9 @@ qDebug("[%s]", qPrintable(equation));
         // There seems to be an equation, so make sure that it's really the case
         // by checking its first word
 
-        static const QRegularExpression firstWordRegEx = QRegularExpression("\\w+");
+        static const QRegularExpression FirstWordRegEx = QRegularExpression("\\w+");
 
-        QString firstWord = firstWordRegEx.match(equation).captured(0);
+        QString firstWord = FirstWordRegEx.match(equation).captured(0);
 qDebug("[%s]", qPrintable(firstWord));
 
         // There is an equation, so try to parse it
