@@ -225,7 +225,21 @@ bool CellmlTextViewParser::execute(const QString &pCellmlText,
     } else {
         // Partially parse a mathematical expression
 
-        return parseMathematicalExpression(mDomDocument, pFullParsing);
+        if (mScanner.tokenType() == CellmlTextViewScanner::CaseToken) {
+            mStatementType = PiecewiseCase;
+
+            return true;
+        } else if (mScanner.tokenType() == CellmlTextViewScanner::OtherwiseToken) {
+            mStatementType = PiecewiseOtherwise;
+
+            return true;
+        } if (mScanner.tokenType() == CellmlTextViewScanner::EndSelToken) {
+            mStatementType = PiecewiseEndSel;
+
+            return true;
+        } else {
+            return parseMathematicalExpression(mDomDocument, pFullParsing);
+        }
     }
 }
 
@@ -1810,7 +1824,7 @@ bool CellmlTextViewParser::parseMathematicalExpression(QDomNode &pDomNode,
     // At this stage, we are done when it comes to partial parsing
 
     if (!pFullParsing) {
-        mStatementType = (mScanner.tokenType() == CellmlTextViewScanner::SelToken)?Piecewise:Normal;
+        mStatementType = (mScanner.tokenType() == CellmlTextViewScanner::SelToken)?PiecewiseSel:Normal;
 
         return true;
     }

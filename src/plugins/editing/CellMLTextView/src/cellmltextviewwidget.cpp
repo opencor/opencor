@@ -900,7 +900,7 @@ QString CellmlTextViewWidget::statement(const int &pPosition) const
         CellmlTextViewParser parser;
 
         if (parser.execute(currentStatement, false)) {
-            if (parser.statementType() == CellmlTextViewParser::Piecewise) {
+            if (parser.statementType() == CellmlTextViewParser::PiecewiseSel) {
 // Need to get the rest of the statement...
             }
 

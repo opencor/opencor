@@ -88,7 +88,10 @@ public:
     enum StatementType {
         Unknown,
         Normal,
-        Piecewise
+        PiecewiseSel,
+        PiecewiseCase,
+        PiecewiseOtherwise,
+        PiecewiseEndSel
     };
 
     explicit CellmlTextViewParser();
