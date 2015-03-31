@@ -40,10 +40,6 @@ namespace CellMLTextView {
 
 //==============================================================================
 
-class CellmlTextViewScanner;
-
-//==============================================================================
-
 class CellmlTextViewParserMessage
 {
 public:
@@ -90,7 +86,6 @@ class CellmlTextViewParser
 {
 public:
     explicit CellmlTextViewParser();
-    ~CellmlTextViewParser();
 
     bool execute(const QString &pCellmlText,
                  const CellMLSupport::CellmlFile::Version &pCellmlVersion);
@@ -103,7 +98,7 @@ public:
     CellmlTextViewParserMessages messages() const;
 
 private:
-    CellmlTextViewScanner *mScanner;
+    CellmlTextViewScanner mScanner;
 
     CellMLSupport::CellmlFile::Version mCellmlVersion;
 
