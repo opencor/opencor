@@ -807,11 +807,13 @@ void CellmlTextViewWidget::editorKeyPressed(QKeyEvent *pEvent, bool &pHandled)
 
 //==============================================================================
 
-QString CellmlTextViewWidget::statement(const int &pPosition) const
+QString CellmlTextViewWidget::partialStatement(const int &pPosition,
+                                               int &pFromPosition,
+                                               int &pToPosition) const
 {
-    // Retrieve the statement around the given position
-    // Note: a statement is a piece of text that is bounded by either "as" or
-    //       ";", and this at both ends...
+    // Retrieve the (partial) statement around the given position
+    // Note: a (partial) statement is a piece of text that is bounded by either
+    //       "as" or ";", and this at both ends...
 
     static const QString AsTag = "as";
     static const QString SemiColonTag = ";";
@@ -856,31 +858,45 @@ QString CellmlTextViewWidget::statement(const int &pPosition) const
 
     // Determine the start and end of our current statement
 
-    int fromPos = (prevAsPos > prevSemiColonPos)?
-                      prevAsPos+AsTag.length():
-                      prevSemiColonPos+SemiColonTag.length();
-    int toPos = (nextAsPos < nextSemiColonPos)?
-                    nextAsPos+AsTag.length():
-                    nextSemiColonPos+SemiColonTag.length();
-//qDebug("===[%05d]===================", pPosition);
-//qDebug("[%d/%d]--->[%d/%d]", prevAsPos, prevSemiColonPos, nextAsPos, nextSemiColonPos);
-//qDebug("[%d--->%d][%s]", fromPos, toPos, qPrintable(editor->textInRange(fromPos, toPos)));
+    pFromPosition = (prevAsPos > prevSemiColonPos)?
+                        prevAsPos+AsTag.length():
+                        prevSemiColonPos+SemiColonTag.length();
+    pToPosition = (nextAsPos < nextSemiColonPos)?
+                      nextAsPos+AsTag.length():
+                      nextSemiColonPos+SemiColonTag.length();
+qDebug("===[%05d]===================", pPosition);
+qDebug("[%d/%d]--->[%d/%d]", prevAsPos, prevSemiColonPos, nextAsPos, nextSemiColonPos);
+qDebug("[%d--->%d][%s]", pFromPosition, pToPosition, qPrintable(editor->textInRange(pFromPosition, pToPosition)));
 
-    // Skip spaces and comments to determine the real start of our current
+    return editor->textInRange(pFromPosition, pToPosition);
+}
+
+//==============================================================================
+
+QString CellmlTextViewWidget::statement(const int &pPosition) const
+{
+    // Retrieve the (partial) statement around the given position
+
+    int fromPosition;
+    int toPosition;
+
+    QString currentStatement = partialStatement(pPosition, fromPosition, toPosition);
+
+    // Skip spaces and comments to determine the real start of our (partial)
     // statement
 
-    QString currentStatement = editor->textInRange(fromPos, toPos);
+    Editor::EditorWidget *editor = mEditingWidget->editor();
     int shift = 0;
     int style;
 
     forever {
-        style = editor->styleAt(fromPos);
+        style = editor->styleAt(fromPosition);
 //qDebug("[%s][%d]", qPrintable(res[shift]), style);
 
         if (   (style == CellmlTextViewLexer::SingleLineComment)
             || (style == CellmlTextViewLexer::MultilineComment)
             || currentStatement[shift].isSpace()) {
-            ++fromPos;
+            ++fromPosition;
             ++shift;
         } else {
             break;
@@ -891,11 +907,11 @@ QString CellmlTextViewWidget::statement(const int &pPosition) const
 
     // Make sure that we are within our current statement
 
-    if ((pPosition >= fromPos) && (pPosition < toPos)) {
+    if ((pPosition >= fromPosition) && (pPosition < toPosition)) {
         // Check, using our CellML Text parser, whether our current statement
         // contains something that we can recognise
 
-        currentStatement = editor->textInRange(fromPos, toPos);
+        currentStatement = editor->textInRange(fromPosition, toPosition);
 
         CellmlTextViewParser parser;
 
@@ -986,62 +1002,6 @@ qDebug("[%s]", qPrintable(currentStatement));
             mEditingWidget->viewer()->setError(true);
         }
     }
-}
-
-//==============================================================================
-
-QString CellmlTextViewWidget::endOfPiecewiseAssignment(Editor::EditorWidget *pEditor,
-                                                       const int &pFromPosition)
-{
-    // Look for the end of a piecewise assignment in the given editor, starting
-    // from the given position
-
-    static const QString SemiColonTag = ";";
-    static const QString NonSpaceRegEx = "[^\\s]";
-
-    QString res = QString();
-    int crtPosition = pFromPosition;
-    QString crtStatement = QString();
-
-    forever {
-        // Look for the end of the current statement
-
-        int semiColonPos = pEditor->findTextInRange(crtPosition, pEditor->contentsSize(), SemiColonTag, false, false, false);
-qDebug(">>> semiColonPos: %d", semiColonPos);
-
-        if (semiColonPos == -1) {
-            break;
-        } else {
-            // Retrieve the current statement
-
-            crtStatement = pEditor->textInRange(crtPosition, semiColonPos+SemiColonTag.length());
-qDebug(">>> [%s]", qPrintable(crtStatement));
-
-            res += crtStatement;
-
-            // Skip spaces
-
-            crtPosition = pEditor->findTextInRange(crtPosition, pEditor->contentsSize(), NonSpaceRegEx, true, false, false);
-
-            // Check whether we are dealing with a keyword
-
-            if (pEditor->styleAt(crtPosition) == CellmlTextViewLexer::Keyword) {
-                // Check whether that keyword is "endsel", in which case we
-                // would have found the end of our piecewise assignment
-
-                static const QRegularExpression KeywordRegEx = QRegularExpression("\\w+");
-
-                QString keyword = KeywordRegEx.match(crtStatement).captured(0);
-
-                if (!keyword.compare("endsel"))
-                    break;
-            }
-
-            crtPosition = semiColonPos+SemiColonTag.length();
-        }
-    }
-
-    return res;
 }
 
 //==============================================================================
