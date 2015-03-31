@@ -217,18 +217,15 @@ bool CellmlTextViewParser::execute(const QString &pCellmlText,
         if (!parseMathematicalExpression(mDomDocument))
             return false;
 
-        // Expect the end of the file
+        // Expect the end of the mathematical expression
 
         mScanner.getNextToken();
 
-        if (!tokenType(mDomDocument, QObject::tr("the end of the file"),
-                       CellmlTextViewScanner::EofToken)) {
-            return false;
-        }
-
-        return true;
+        return mScanner.tokenType() == CellmlTextViewScanner::EofToken;
     } else {
-        return false;
+        // Partially parse a mathematical expression
+
+        return parseMathematicalExpression(mDomDocument, pFullParsing);
     }
 }
 
@@ -261,6 +258,15 @@ CellmlTextViewParserMessages CellmlTextViewParser::messages() const
 
 //==============================================================================
 
+CellmlTextViewParser::StatementType CellmlTextViewParser::statementType() const
+{
+    // Return our statement type
+
+    return mStatementType;
+}
+
+//==============================================================================
+
 void CellmlTextViewParser::initialize(const QString &pCellmlText)
 {
     // Initialize ourselves with the given CellML text
@@ -274,6 +280,8 @@ void CellmlTextViewParser::initialize(const QString &pCellmlText)
     mMessages = CellmlTextViewParserMessages();
 
     mNamespaces = QMap<QString, QString>();
+
+    mStatementType = Unknown;
 }
 
 //==============================================================================
@@ -1764,15 +1772,16 @@ bool CellmlTextViewParser::parseVariableDeclaration(QDomNode &pDomNode)
 
 //==============================================================================
 
-bool CellmlTextViewParser::parseMathematicalExpression(QDomNode &pDomNode)
+bool CellmlTextViewParser::parseMathematicalExpression(QDomNode &pDomNode,
+                                                       const bool &pFullParsing)
 {
     // Check whether we got an identifier or "ode"
 
-    QDomElement lhsElement;
+    QDomElement lhsElement = QDomElement();
 
     if (mScanner.tokenType() == CellmlTextViewScanner::IdentifierToken)
         lhsElement = newIdentifierElement(mScanner.tokenString());
-    else
+    else if (mScanner.tokenType() == CellmlTextViewScanner::OdeToken)
         lhsElement = parseDerivativeIdentifier(pDomNode);
 
     // Check whether we got a LHS element
@@ -1796,7 +1805,15 @@ bool CellmlTextViewParser::parseMathematicalExpression(QDomNode &pDomNode)
     mScanner.getNextToken();
 
     if (!parseCmetaId(applyElement))
-        return false;
+        return pFullParsing?false:true;
+
+    // At this stage, we are done when it comes to partial parsing
+
+    if (!pFullParsing) {
+        mStatementType = (mScanner.tokenType() == CellmlTextViewScanner::SelToken)?Piecewise:Normal;
+
+        return true;
+    }
 
     // Expect either a normal or a piecewise mathematical expression
 

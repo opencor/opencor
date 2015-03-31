@@ -866,10 +866,10 @@ QString CellmlTextViewWidget::statement(const int &pPosition) const
 //qDebug("[%d/%d]--->[%d/%d]", prevAsPos, prevSemiColonPos, nextAsPos, nextSemiColonPos);
 //qDebug("[%d--->%d][%s]", fromPos, toPos, qPrintable(editor->textInRange(fromPos, toPos)));
 
-    // Determine the real start of our current statement by skipping spaces and
-    // comments
+    // Skip spaces and comments to determine the real start of our current
+    // statement
 
-    QString res = editor->textInRange(fromPos, toPos);
+    QString currentStatement = editor->textInRange(fromPos, toPos);
     int shift = 0;
     int style;
 
@@ -879,7 +879,7 @@ QString CellmlTextViewWidget::statement(const int &pPosition) const
 
         if (   (style == CellmlTextViewLexer::SingleLineComment)
             || (style == CellmlTextViewLexer::MultilineComment)
-            || res[shift].isSpace()) {
+            || currentStatement[shift].isSpace()) {
             ++fromPos;
             ++shift;
         } else {
@@ -889,9 +889,32 @@ QString CellmlTextViewWidget::statement(const int &pPosition) const
 //qDebug("[%d--->%d][%s]", fromPos, toPos, qPrintable(editor->textInRange(fromPos, toPos)));
 //qDebug(">>> [%s]", qPrintable(((pPosition >= fromPos) && (pPosition < toPos))?res:QString()));
 
-    return ((pPosition >= fromPos) && (pPosition < toPos))?
-               editor->textInRange(fromPos, toPos):
-               QString();
+    // Make sure that we are within our current statement
+
+    if ((pPosition >= fromPos) && (pPosition < toPos)) {
+        // Check, using our CellML Text parser, whether our current statement
+        // contains something that we can recognise
+
+        currentStatement = editor->textInRange(fromPos, toPos);
+
+        CellmlTextViewParser parser;
+
+        if (parser.execute(currentStatement, false)) {
+            if (parser.statementType() == CellmlTextViewParser::Piecewise) {
+// Need to get the rest of the statement...
+            }
+
+            return currentStatement;
+        } else {
+            // This is not something that we can recognise
+
+            return QString();
+        }
+    } else {
+        // We are not within our current statement
+
+        return QString();
+    }
 }
 
 //==============================================================================

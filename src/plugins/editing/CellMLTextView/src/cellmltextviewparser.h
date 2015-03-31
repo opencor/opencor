@@ -85,6 +85,12 @@ typedef QDomElement (CellmlTextViewParser::*ParseNormalMathematicalExpressionFun
 class CellmlTextViewParser
 {
 public:
+    enum StatementType {
+        Unknown,
+        Normal,
+        Piecewise
+    };
+
     explicit CellmlTextViewParser();
 
     bool execute(const QString &pCellmlText,
@@ -97,6 +103,8 @@ public:
 
     CellmlTextViewParserMessages messages() const;
 
+    StatementType statementType() const;
+
 private:
     CellmlTextViewScanner mScanner;
 
@@ -107,6 +115,8 @@ private:
     CellmlTextViewParserMessages mMessages;
 
     QMap<QString, QString> mNamespaces;
+
+    StatementType mStatementType;
 
     void initialize(const QString &pCellmlText);
 
@@ -171,7 +181,8 @@ private:
     bool parseUnitDefinition(QDomNode &pDomNode);
     bool parseComponentDefinition(QDomNode &pDomNode);
     bool parseVariableDeclaration(QDomNode &pDomNode);
-    bool parseMathematicalExpression(QDomNode &pDomNode);
+    bool parseMathematicalExpression(QDomNode &pDomNode,
+                                     const bool &pFullParsing = true);
     bool parseGroupDefinition(QDomNode &pDomNode);
     bool parseComponentRefDefinition(QDomNode &pDomNode);
     bool parseMapDefinition(QDomNode &pDomNode);
