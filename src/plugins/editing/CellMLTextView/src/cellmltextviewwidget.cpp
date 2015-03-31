@@ -810,28 +810,84 @@ void CellmlTextViewWidget::editorKeyPressed(QKeyEvent *pEvent, bool &pHandled)
 QString CellmlTextViewWidget::statement(const int &pPosition) const
 {
     // Retrieve the statement around the given position
-    // Note: a statement is a piece of text that is bounded by "as" or ";" at
-    //       either of its ends...
+    // Note: a statement is a piece of text that is bounded by either "as" or
+    //       ";", and this at both ends...
 
     static const QString AsTag = "as";
     static const QString SemiColonTag = ";";
 
     Editor::EditorWidget *editor = mEditingWidget->editor();
+    int editorContentsSize = editor->contentsSize();
 
-    int prevAsPos = editor->findTextInRange(pPosition, 0, AsTag, false, true, true);
-    int prevSemiColonPos = editor->findTextInRange(pPosition, 0, SemiColonTag, false, false, false);
-    int nextSemiColonPos = editor->findTextInRange(pPosition-SemiColonTag.length()+1, editor->contentsSize(), SemiColonTag, false, false, false);
+    // Look for "as" and ";" before the given position
+
+    int prevAsPos = pPosition;
+
+    do {
+        prevAsPos = editor->findTextInRange(prevAsPos, 0, AsTag, false, true, true);
+    } while (   (prevAsPos != -1)
+             && (editor->styleAt(prevAsPos) != CellmlTextViewLexer::Keyword));
+
+    int prevSemiColonPos = pPosition;
+
+    do {
+        prevSemiColonPos = editor->findTextInRange(prevSemiColonPos, 0, SemiColonTag, false, false, false);
+    } while (   (prevSemiColonPos != -1)
+             && (editor->styleAt(prevSemiColonPos) != CellmlTextViewLexer::Default));
+
+    // Look for "as" and ";" after the given position
+
+    int nextAsPos = pPosition-AsTag.length();
+
+    do {
+        nextAsPos = editor->findTextInRange(nextAsPos+1, editorContentsSize, AsTag, false, true, true);
+    } while (   (nextAsPos != -1)
+             && (editor->styleAt(nextAsPos) != CellmlTextViewLexer::Keyword));
+
+    int nextSemiColonPos = pPosition-SemiColonTag.length();
+
+    do {
+        nextSemiColonPos = editor->findTextInRange(nextSemiColonPos+1, editorContentsSize, SemiColonTag, false, false, false);
+    } while (   (nextSemiColonPos != -1)
+             && (editor->styleAt(nextSemiColonPos) != CellmlTextViewLexer::Default));
+
+    nextAsPos = (nextAsPos == -1)?editorContentsSize:nextAsPos;
+    nextSemiColonPos = (nextSemiColonPos == -1)?editorContentsSize:nextSemiColonPos;
+
+    // Determine the start and end of our current statement
 
     int fromPos = (prevAsPos > prevSemiColonPos)?
                       prevAsPos+AsTag.length():
                       prevSemiColonPos+SemiColonTag.length();
-    int toPos = nextSemiColonPos+SemiColonTag.length();
+    int toPos = (nextAsPos < nextSemiColonPos)?
+                    nextAsPos+AsTag.length():
+                    nextSemiColonPos+SemiColonTag.length();
+//qDebug("===[%05d]===================", pPosition);
+//qDebug("[%d/%d]--->[%d/%d]", prevAsPos, prevSemiColonPos, nextAsPos, nextSemiColonPos);
+//qDebug("[%d--->%d][%s]", fromPos, toPos, qPrintable(editor->textInRange(fromPos, toPos)));
 
-    // Skip spaces
+    // Determine the real start of our current statement by skipping spaces and
+    // comments
 
-    static const QString NonSpaceRegEx = "[^\\s]";
+    QString res = editor->textInRange(fromPos, toPos);
+    int shift = 0;
+    int style;
 
-    fromPos = editor->findTextInRange(fromPos, editor->contentsSize(), NonSpaceRegEx, true, false, false);
+    forever {
+        style = editor->styleAt(fromPos);
+//qDebug("[%s][%d]", qPrintable(res[shift]), style);
+
+        if (   (style == CellmlTextViewLexer::SingleLineComment)
+            || (style == CellmlTextViewLexer::MultilineComment)
+            || res[shift].isSpace()) {
+            ++fromPos;
+            ++shift;
+        } else {
+            break;
+        }
+    }
+//qDebug("[%d--->%d][%s]", fromPos, toPos, qPrintable(editor->textInRange(fromPos, toPos)));
+//qDebug(">>> [%s]", qPrintable(((pPosition >= fromPos) && (pPosition < toPos))?res:QString()));
 
     return ((pPosition >= fromPos) && (pPosition < toPos))?
                editor->textInRange(fromPos, toPos):
