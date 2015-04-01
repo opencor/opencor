@@ -943,7 +943,7 @@ QString CellmlTextViewWidget::statement(const int &pPosition) const
 
     QString currentStatement = partialStatement(pPosition, fromPosition, toPosition);
 
-    // Check, using our CellML Text parser, whether our current statement
+    // Check, using our CellML Text parser, whether our (partial) statement
     // contains something that we can recognise
 
     CellmlTextViewParser parser;
@@ -962,12 +962,12 @@ QString CellmlTextViewWidget::statement(const int &pPosition) const
             currentStatement = beginningOfPiecewiseStatement(fromPosition)+currentStatement+endOfPiecewiseStatement(toPosition);
         } else if (parser.statementType() == CellmlTextViewParser::PiecewiseEndSel) {
             // We are at the beginning of a piecewise statement, so retrieve its
-            // end
+            // beginning
 
             currentStatement = beginningOfPiecewiseStatement(fromPosition)+currentStatement;
         }
 
-        // Skip spaces and comments to determine the real start of our (partial)
+        // Skip spaces and comments to determine the real start of our current
         // statement
 
         Editor::EditorWidget *editor = mEditingWidget->editor();
@@ -993,7 +993,7 @@ QString CellmlTextViewWidget::statement(const int &pPosition) const
                    editor->textInRange(fromPosition, toPosition):
                    QString();
     } else {
-        // Not something that we can recognise
+        // Our current statement doesn't contain something that we can recognise
 
         return QString();
     }
