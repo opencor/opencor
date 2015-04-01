@@ -873,6 +873,70 @@ qDebug("[%d--->%d][%s]", pFromPosition, pToPosition, qPrintable(editor->textInRa
 
 //==============================================================================
 
+QString CellmlTextViewWidget::beginningOfPiecewiseStatement(int &pPosition) const
+{
+    // Retrieve the beginning of a piecewise statement
+
+    int localFromPosition;
+    int localToPosition;
+
+    QString currentStatement = QString();
+    QString localCurrentStatement;
+
+    CellmlTextViewParser parser;
+
+    forever {
+        localCurrentStatement = partialStatement(pPosition-1, localFromPosition, localToPosition);
+
+        currentStatement = localCurrentStatement+currentStatement;
+
+        pPosition = localFromPosition;
+
+        if (parser.execute(localCurrentStatement, false)) {
+            if (parser.statementType() == CellmlTextViewParser::PiecewiseSel)
+                break;
+        } else {
+            break;
+        }
+    }
+
+    return currentStatement;
+}
+
+//==============================================================================
+
+QString CellmlTextViewWidget::endOfPiecewiseStatement(int &pPosition) const
+{
+    // Retrieve the end of a piecewise statement
+
+    int localFromPosition;
+    int localToPosition;
+
+    QString currentStatement = QString();
+    QString localCurrentStatement;
+
+    CellmlTextViewParser parser;
+
+    forever {
+        localCurrentStatement = partialStatement(pPosition, localFromPosition, localToPosition);
+
+        currentStatement += localCurrentStatement;
+
+        pPosition = localToPosition;
+
+        if (parser.execute(localCurrentStatement, false)) {
+            if (parser.statementType() == CellmlTextViewParser::PiecewiseEndSel)
+                break;
+        } else {
+            break;
+        }
+    }
+
+    return currentStatement;
+}
+
+//==============================================================================
+
 QString CellmlTextViewWidget::statement(const int &pPosition) const
 {
     // Retrieve the (partial) statement around the given position
@@ -882,52 +946,60 @@ QString CellmlTextViewWidget::statement(const int &pPosition) const
 
     QString currentStatement = partialStatement(pPosition, fromPosition, toPosition);
 
-    // Skip spaces and comments to determine the real start of our (partial)
-    // statement
+    // Check, using our CellML Text parser, whether our current statement
+    // contains something that we can recognise
 
-    Editor::EditorWidget *editor = mEditingWidget->editor();
-    int shift = 0;
-    int style;
+    CellmlTextViewParser parser;
 
-    forever {
-        style = editor->styleAt(fromPosition);
-//qDebug("[%s][%d]", qPrintable(res[shift]), style);
+    if (parser.execute(currentStatement, false)) {
+        if (parser.statementType() == CellmlTextViewParser::PiecewiseSel) {
+            // We are at the beginning of a piecewise statement, so retrieve its
+            // end
 
-        if (   (style == CellmlTextViewLexer::SingleLineComment)
-            || (style == CellmlTextViewLexer::MultilineComment)
-            || currentStatement[shift].isSpace()) {
-            ++fromPosition;
-            ++shift;
-        } else {
-            break;
+            currentStatement += endOfPiecewiseStatement(toPosition);
+        } else if (   (parser.statementType() == CellmlTextViewParser::PiecewiseCase)
+                   || (parser.statementType() == CellmlTextViewParser::PiecewiseOtherwise)) {
+            // We are in the middle of a piecewise statement, so retrieve both
+            // its beginning and end
+
+            currentStatement = beginningOfPiecewiseStatement(fromPosition)+currentStatement+endOfPiecewiseStatement(toPosition);
+        } else if (parser.statementType() == CellmlTextViewParser::PiecewiseEndSel) {
+            // We are at the beginning of a piecewise statement, so retrieve its
+            // end
+
+            currentStatement = beginningOfPiecewiseStatement(fromPosition)+currentStatement;
         }
-    }
-//qDebug("[%d--->%d][%s]", fromPos, toPos, qPrintable(editor->textInRange(fromPos, toPos)));
-//qDebug(">>> [%s]", qPrintable(((pPosition >= fromPos) && (pPosition < toPos))?res:QString()));
 
-    // Make sure that we are within our current statement
+        // Skip spaces and comments to determine the real start of our (partial)
+        // statement
 
-    if ((pPosition >= fromPosition) && (pPosition < toPosition)) {
-        // Check, using our CellML Text parser, whether our current statement
-        // contains something that we can recognise
+        Editor::EditorWidget *editor = mEditingWidget->editor();
+        int shift = 0;
+        int style;
 
-        currentStatement = editor->textInRange(fromPosition, toPosition);
+        forever {
+            style = editor->styleAt(fromPosition);
+qDebug("[%s][%d]", qPrintable(currentStatement[shift]), style);
 
-        CellmlTextViewParser parser;
-
-        if (parser.execute(currentStatement, false)) {
-            if (parser.statementType() == CellmlTextViewParser::PiecewiseSel) {
-// Need to get the rest of the statement...
+            if (   (style == CellmlTextViewLexer::SingleLineComment)
+                || (style == CellmlTextViewLexer::MultilineComment)
+                || currentStatement[shift].isSpace()) {
+                ++fromPosition;
+                ++shift;
+            } else {
+                break;
             }
-
-            return currentStatement;
-        } else {
-            // This is not something that we can recognise
-
-            return QString();
         }
+qDebug("[%d--->%d][%s]", fromPosition, toPosition, qPrintable(editor->textInRange(fromPosition, toPosition)));
+qDebug(">>> [%s]", qPrintable(((pPosition >= fromPosition) && (pPosition < toPosition))?editor->textInRange(fromPosition, toPosition):QString()));
+
+        // Make sure that we are within our current statement
+
+        return ((pPosition >= fromPosition) && (pPosition < toPosition))?
+                   editor->textInRange(fromPosition, toPosition):
+                   QString();
     } else {
-        // We are not within our current statement
+        // Not something that we can recognise
 
         return QString();
     }

@@ -170,6 +170,8 @@ private:
 
     QString partialStatement(const int &pPosition, int &pFromPosition,
                              int &pToPosition) const;
+    QString beginningOfPiecewiseStatement(int &pPosition) const;
+    QString endOfPiecewiseStatement(int &pPosition) const;
     QString statement(const int &pPosition) const;
 
 private Q_SLOTS:
