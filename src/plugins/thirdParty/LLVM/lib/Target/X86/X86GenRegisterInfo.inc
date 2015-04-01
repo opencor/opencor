@@ -1048,792 +1048,792 @@ extern const MCPhysReg X86RegUnitRoots[][2] = {
 namespace {     // Register classes...
   // GR8 Register Class...
   const MCPhysReg GR8[] = {
-    X86::AL, X86::CL, X86::DL, X86::AH, X86::CH, X86::DH, X86::BL, X86::BH, X86::SIL, X86::DIL, X86::BPL, X86::SPL, X86::R8B, X86::R9B, X86::R10B, X86::R11B, X86::R14B, X86::R15B, X86::R12B, X86::R13B, 
+    X86::AL, X86::CL, X86::DL, X86::AH, X86::CH, X86::DH, X86::BL, X86::BH, X86::SIL, X86::DIL, X86::BPL, X86::SPL, X86::R8B, X86::R9B, X86::R10B, X86::R11B, X86::R14B, X86::R15B, X86::R12B, X86::R13B,
   };
 
   // GR8 Bit set.
   const uint8_t GR8Bits[] = {
-    0xb6, 0xa6, 0x01, 0x00, 0x00, 0x40, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xfc, 0x03, 
+    0xb6, 0xa6, 0x01, 0x00, 0x00, 0x40, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xfc, 0x03,
   };
 
   // GR8_NOREX Register Class...
   const MCPhysReg GR8_NOREX[] = {
-    X86::AL, X86::CL, X86::DL, X86::AH, X86::CH, X86::DH, X86::BL, X86::BH, 
+    X86::AL, X86::CL, X86::DL, X86::AH, X86::CH, X86::DH, X86::BL, X86::BH,
   };
 
   // GR8_NOREX Bit set.
   const uint8_t GR8_NOREXBits[] = {
-    0x36, 0x26, 0x01, 
+    0x36, 0x26, 0x01,
   };
 
   // GR8_ABCD_H Register Class...
   const MCPhysReg GR8_ABCD_H[] = {
-    X86::AH, X86::CH, X86::DH, X86::BH, 
+    X86::AH, X86::CH, X86::DH, X86::BH,
   };
 
   // GR8_ABCD_H Bit set.
   const uint8_t GR8_ABCD_HBits[] = {
-    0x12, 0x22, 
+    0x12, 0x22,
   };
 
   // GR8_ABCD_L Register Class...
   const MCPhysReg GR8_ABCD_L[] = {
-    X86::AL, X86::CL, X86::DL, X86::BL, 
+    X86::AL, X86::CL, X86::DL, X86::BL,
   };
 
   // GR8_ABCD_L Bit set.
   const uint8_t GR8_ABCD_LBits[] = {
-    0x24, 0x04, 0x01, 
+    0x24, 0x04, 0x01,
   };
 
   // GR16 Register Class...
   const MCPhysReg GR16[] = {
-    X86::AX, X86::CX, X86::DX, X86::SI, X86::DI, X86::BX, X86::BP, X86::SP, X86::R8W, X86::R9W, X86::R10W, X86::R11W, X86::R14W, X86::R15W, X86::R12W, X86::R13W, 
+    X86::AX, X86::CX, X86::DX, X86::SI, X86::DI, X86::BX, X86::BP, X86::SP, X86::R8W, X86::R9W, X86::R10W, X86::R11W, X86::R14W, X86::R15W, X86::R12W, X86::R13W,
   };
 
   // GR16 Bit set.
   const uint8_t GR16Bits[] = {
-    0x48, 0x51, 0x04, 0x00, 0x00, 0xa0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xfc, 0x03, 
+    0x48, 0x51, 0x04, 0x00, 0x00, 0xa0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xfc, 0x03,
   };
 
   // GR16_NOREX Register Class...
   const MCPhysReg GR16_NOREX[] = {
-    X86::AX, X86::CX, X86::DX, X86::SI, X86::DI, X86::BX, X86::BP, X86::SP, 
+    X86::AX, X86::CX, X86::DX, X86::SI, X86::DI, X86::BX, X86::BP, X86::SP,
   };
 
   // GR16_NOREX Bit set.
   const uint8_t GR16_NOREXBits[] = {
-    0x48, 0x51, 0x04, 0x00, 0x00, 0xa0, 
+    0x48, 0x51, 0x04, 0x00, 0x00, 0xa0,
   };
 
   // VK1 Register Class...
   const MCPhysReg VK1[] = {
-    X86::K0, X86::K1, X86::K2, X86::K3, X86::K4, X86::K5, X86::K6, X86::K7, 
+    X86::K0, X86::K1, X86::K2, X86::K3, X86::K4, X86::K5, X86::K6, X86::K7,
   };
 
   // VK1 Bit set.
   const uint8_t VK1Bits[] = {
-    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xfc, 0x03, 
+    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xfc, 0x03,
   };
 
   // VK16 Register Class...
   const MCPhysReg VK16[] = {
-    X86::K0, X86::K1, X86::K2, X86::K3, X86::K4, X86::K5, X86::K6, X86::K7, 
+    X86::K0, X86::K1, X86::K2, X86::K3, X86::K4, X86::K5, X86::K6, X86::K7,
   };
 
   // VK16 Bit set.
   const uint8_t VK16Bits[] = {
-    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xfc, 0x03, 
+    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xfc, 0x03,
   };
 
   // VK2 Register Class...
   const MCPhysReg VK2[] = {
-    X86::K0, X86::K1, X86::K2, X86::K3, X86::K4, X86::K5, X86::K6, X86::K7, 
+    X86::K0, X86::K1, X86::K2, X86::K3, X86::K4, X86::K5, X86::K6, X86::K7,
   };
 
   // VK2 Bit set.
   const uint8_t VK2Bits[] = {
-    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xfc, 0x03, 
+    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xfc, 0x03,
   };
 
   // VK4 Register Class...
   const MCPhysReg VK4[] = {
-    X86::K0, X86::K1, X86::K2, X86::K3, X86::K4, X86::K5, X86::K6, X86::K7, 
+    X86::K0, X86::K1, X86::K2, X86::K3, X86::K4, X86::K5, X86::K6, X86::K7,
   };
 
   // VK4 Bit set.
   const uint8_t VK4Bits[] = {
-    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xfc, 0x03, 
+    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xfc, 0x03,
   };
 
   // VK8 Register Class...
   const MCPhysReg VK8[] = {
-    X86::K0, X86::K1, X86::K2, X86::K3, X86::K4, X86::K5, X86::K6, X86::K7, 
+    X86::K0, X86::K1, X86::K2, X86::K3, X86::K4, X86::K5, X86::K6, X86::K7,
   };
 
   // VK8 Bit set.
   const uint8_t VK8Bits[] = {
-    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xfc, 0x03, 
+    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xfc, 0x03,
   };
 
   // VK16WM Register Class...
   const MCPhysReg VK16WM[] = {
-    X86::K1, X86::K2, X86::K3, X86::K4, X86::K5, X86::K6, X86::K7, 
+    X86::K1, X86::K2, X86::K3, X86::K4, X86::K5, X86::K6, X86::K7,
   };
 
   // VK16WM Bit set.
   const uint8_t VK16WMBits[] = {
-    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xf8, 0x03, 
+    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xf8, 0x03,
   };
 
   // VK1WM Register Class...
   const MCPhysReg VK1WM[] = {
-    X86::K1, X86::K2, X86::K3, X86::K4, X86::K5, X86::K6, X86::K7, 
+    X86::K1, X86::K2, X86::K3, X86::K4, X86::K5, X86::K6, X86::K7,
   };
 
   // VK1WM Bit set.
   const uint8_t VK1WMBits[] = {
-    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xf8, 0x03, 
+    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xf8, 0x03,
   };
 
   // VK2WM Register Class...
   const MCPhysReg VK2WM[] = {
-    X86::K1, X86::K2, X86::K3, X86::K4, X86::K5, X86::K6, X86::K7, 
+    X86::K1, X86::K2, X86::K3, X86::K4, X86::K5, X86::K6, X86::K7,
   };
 
   // VK2WM Bit set.
   const uint8_t VK2WMBits[] = {
-    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xf8, 0x03, 
+    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xf8, 0x03,
   };
 
   // VK4WM Register Class...
   const MCPhysReg VK4WM[] = {
-    X86::K1, X86::K2, X86::K3, X86::K4, X86::K5, X86::K6, X86::K7, 
+    X86::K1, X86::K2, X86::K3, X86::K4, X86::K5, X86::K6, X86::K7,
   };
 
   // VK4WM Bit set.
   const uint8_t VK4WMBits[] = {
-    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xf8, 0x03, 
+    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xf8, 0x03,
   };
 
   // VK8WM Register Class...
   const MCPhysReg VK8WM[] = {
-    X86::K1, X86::K2, X86::K3, X86::K4, X86::K5, X86::K6, X86::K7, 
+    X86::K1, X86::K2, X86::K3, X86::K4, X86::K5, X86::K6, X86::K7,
   };
 
   // VK8WM Bit set.
   const uint8_t VK8WMBits[] = {
-    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xf8, 0x03, 
+    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xf8, 0x03,
   };
 
   // SEGMENT_REG Register Class...
   const MCPhysReg SEGMENT_REG[] = {
-    X86::CS, X86::DS, X86::SS, X86::ES, X86::FS, X86::GS, 
+    X86::CS, X86::DS, X86::SS, X86::ES, X86::FS, X86::GS,
   };
 
   // SEGMENT_REG Bit set.
   const uint8_t SEGMENT_REGBits[] = {
-    0x00, 0x08, 0x02, 0x10, 0x03, 0x00, 0x02, 
+    0x00, 0x08, 0x02, 0x10, 0x03, 0x00, 0x02,
   };
 
   // GR16_ABCD Register Class...
   const MCPhysReg GR16_ABCD[] = {
-    X86::AX, X86::CX, X86::DX, X86::BX, 
+    X86::AX, X86::CX, X86::DX, X86::BX,
   };
 
   // GR16_ABCD Bit set.
   const uint8_t GR16_ABCDBits[] = {
-    0x08, 0x11, 0x04, 
+    0x08, 0x11, 0x04,
   };
 
   // FPCCR Register Class...
   const MCPhysReg FPCCR[] = {
-    X86::FPSW, 
+    X86::FPSW,
   };
 
   // FPCCR Bit set.
   const uint8_t FPCCRBits[] = {
-    0x00, 0x00, 0x00, 0x80, 
+    0x00, 0x00, 0x00, 0x80,
   };
 
   // FR32X Register Class...
   const MCPhysReg FR32X[] = {
-    X86::XMM0, X86::XMM1, X86::XMM2, X86::XMM3, X86::XMM4, X86::XMM5, X86::XMM6, X86::XMM7, X86::XMM8, X86::XMM9, X86::XMM10, X86::XMM11, X86::XMM12, X86::XMM13, X86::XMM14, X86::XMM15, X86::XMM16, X86::XMM17, X86::XMM18, X86::XMM19, X86::XMM20, X86::XMM21, X86::XMM22, X86::XMM23, X86::XMM24, X86::XMM25, X86::XMM26, X86::XMM27, X86::XMM28, X86::XMM29, X86::XMM30, X86::XMM31, 
+    X86::XMM0, X86::XMM1, X86::XMM2, X86::XMM3, X86::XMM4, X86::XMM5, X86::XMM6, X86::XMM7, X86::XMM8, X86::XMM9, X86::XMM10, X86::XMM11, X86::XMM12, X86::XMM13, X86::XMM14, X86::XMM15, X86::XMM16, X86::XMM17, X86::XMM18, X86::XMM19, X86::XMM20, X86::XMM21, X86::XMM22, X86::XMM23, X86::XMM24, X86::XMM25, X86::XMM26, X86::XMM27, X86::XMM28, X86::XMM29, X86::XMM30, X86::XMM31,
   };
 
   // FR32X Bit set.
   const uint8_t FR32XBits[] = {
-    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xfc, 0xff, 0xff, 0xff, 0x03, 
+    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xfc, 0xff, 0xff, 0xff, 0x03,
   };
 
   // FR32 Register Class...
   const MCPhysReg FR32[] = {
-    X86::XMM0, X86::XMM1, X86::XMM2, X86::XMM3, X86::XMM4, X86::XMM5, X86::XMM6, X86::XMM7, X86::XMM8, X86::XMM9, X86::XMM10, X86::XMM11, X86::XMM12, X86::XMM13, X86::XMM14, X86::XMM15, 
+    X86::XMM0, X86::XMM1, X86::XMM2, X86::XMM3, X86::XMM4, X86::XMM5, X86::XMM6, X86::XMM7, X86::XMM8, X86::XMM9, X86::XMM10, X86::XMM11, X86::XMM12, X86::XMM13, X86::XMM14, X86::XMM15,
   };
 
   // FR32 Bit set.
   const uint8_t FR32Bits[] = {
-    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xfc, 0xff, 0x03, 
+    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xfc, 0xff, 0x03,
   };
 
   // GR32 Register Class...
   const MCPhysReg GR32[] = {
-    X86::EAX, X86::ECX, X86::EDX, X86::ESI, X86::EDI, X86::EBX, X86::EBP, X86::ESP, X86::R8D, X86::R9D, X86::R10D, X86::R11D, X86::R14D, X86::R15D, X86::R12D, X86::R13D, 
+    X86::EAX, X86::ECX, X86::EDX, X86::ESI, X86::EDI, X86::EBX, X86::EBP, X86::ESP, X86::R8D, X86::R9D, X86::R10D, X86::R11D, X86::R14D, X86::R15D, X86::R12D, X86::R13D,
   };
 
   // GR32 Bit set.
   const uint8_t GR32Bits[] = {
-    0x00, 0x00, 0xf8, 0x61, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xfc, 0x03, 
+    0x00, 0x00, 0xf8, 0x61, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xfc, 0x03,
   };
 
   // GR32_NOAX Register Class...
   const MCPhysReg GR32_NOAX[] = {
-    X86::ECX, X86::EDX, X86::ESI, X86::EDI, X86::EBX, X86::EBP, X86::ESP, X86::R8D, X86::R9D, X86::R10D, X86::R11D, X86::R14D, X86::R15D, X86::R12D, X86::R13D, 
+    X86::ECX, X86::EDX, X86::ESI, X86::EDI, X86::EBX, X86::EBP, X86::ESP, X86::R8D, X86::R9D, X86::R10D, X86::R11D, X86::R14D, X86::R15D, X86::R12D, X86::R13D,
   };
 
   // GR32_NOAX Bit set.
   const uint8_t GR32_NOAXBits[] = {
-    0x00, 0x00, 0xf0, 0x61, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xfc, 0x03, 
+    0x00, 0x00, 0xf0, 0x61, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xfc, 0x03,
   };
 
   // GR32_NOSP Register Class...
   const MCPhysReg GR32_NOSP[] = {
-    X86::EAX, X86::ECX, X86::EDX, X86::ESI, X86::EDI, X86::EBX, X86::EBP, X86::R8D, X86::R9D, X86::R10D, X86::R11D, X86::R14D, X86::R15D, X86::R12D, X86::R13D, 
+    X86::EAX, X86::ECX, X86::EDX, X86::ESI, X86::EDI, X86::EBX, X86::EBP, X86::R8D, X86::R9D, X86::R10D, X86::R11D, X86::R14D, X86::R15D, X86::R12D, X86::R13D,
   };
 
   // GR32_NOSP Bit set.
   const uint8_t GR32_NOSPBits[] = {
-    0x00, 0x00, 0xf8, 0x21, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xfc, 0x03, 
+    0x00, 0x00, 0xf8, 0x21, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xfc, 0x03,
   };
 
   // GR32_NOAX_and_GR32_NOSP Register Class...
   const MCPhysReg GR32_NOAX_and_GR32_NOSP[] = {
-    X86::ECX, X86::EDX, X86::ESI, X86::EDI, X86::EBX, X86::EBP, X86::R8D, X86::R9D, X86::R10D, X86::R11D, X86::R14D, X86::R15D, X86::R12D, X86::R13D, 
+    X86::ECX, X86::EDX, X86::ESI, X86::EDI, X86::EBX, X86::EBP, X86::R8D, X86::R9D, X86::R10D, X86::R11D, X86::R14D, X86::R15D, X86::R12D, X86::R13D,
   };
 
   // GR32_NOAX_and_GR32_NOSP Bit set.
   const uint8_t GR32_NOAX_and_GR32_NOSPBits[] = {
-    0x00, 0x00, 0xf0, 0x21, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xfc, 0x03, 
+    0x00, 0x00, 0xf0, 0x21, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xfc, 0x03,
   };
 
   // DEBUG_REG Register Class...
   const MCPhysReg DEBUG_REG[] = {
-    X86::DR0, X86::DR1, X86::DR2, X86::DR3, X86::DR4, X86::DR5, X86::DR6, X86::DR7, 
+    X86::DR0, X86::DR1, X86::DR2, X86::DR3, X86::DR4, X86::DR5, X86::DR6, X86::DR7,
   };
 
   // DEBUG_REG Bit set.
   const uint8_t DEBUG_REGBits[] = {
-    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xfc, 0x03, 
+    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xfc, 0x03,
   };
 
   // GR32_NOREX Register Class...
   const MCPhysReg GR32_NOREX[] = {
-    X86::EAX, X86::ECX, X86::EDX, X86::ESI, X86::EDI, X86::EBX, X86::EBP, X86::ESP, 
+    X86::EAX, X86::ECX, X86::EDX, X86::ESI, X86::EDI, X86::EBX, X86::EBP, X86::ESP,
   };
 
   // GR32_NOREX Bit set.
   const uint8_t GR32_NOREXBits[] = {
-    0x00, 0x00, 0xf8, 0x61, 
+    0x00, 0x00, 0xf8, 0x61,
   };
 
   // VK32 Register Class...
   const MCPhysReg VK32[] = {
-    X86::K0, X86::K1, X86::K2, X86::K3, X86::K4, X86::K5, X86::K6, X86::K7, 
+    X86::K0, X86::K1, X86::K2, X86::K3, X86::K4, X86::K5, X86::K6, X86::K7,
   };
 
   // VK32 Bit set.
   const uint8_t VK32Bits[] = {
-    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xfc, 0x03, 
+    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xfc, 0x03,
   };
 
   // GR32_NOAX_and_GR32_NOREX Register Class...
   const MCPhysReg GR32_NOAX_and_GR32_NOREX[] = {
-    X86::ECX, X86::EDX, X86::ESI, X86::EDI, X86::EBX, X86::EBP, X86::ESP, 
+    X86::ECX, X86::EDX, X86::ESI, X86::EDI, X86::EBX, X86::EBP, X86::ESP,
   };
 
   // GR32_NOAX_and_GR32_NOREX Bit set.
   const uint8_t GR32_NOAX_and_GR32_NOREXBits[] = {
-    0x00, 0x00, 0xf0, 0x61, 
+    0x00, 0x00, 0xf0, 0x61,
   };
 
   // GR32_NOREX_NOSP Register Class...
   const MCPhysReg GR32_NOREX_NOSP[] = {
-    X86::EAX, X86::ECX, X86::EDX, X86::ESI, X86::EDI, X86::EBX, X86::EBP, 
+    X86::EAX, X86::ECX, X86::EDX, X86::ESI, X86::EDI, X86::EBX, X86::EBP,
   };
 
   // GR32_NOREX_NOSP Bit set.
   const uint8_t GR32_NOREX_NOSPBits[] = {
-    0x00, 0x00, 0xf8, 0x21, 
+    0x00, 0x00, 0xf8, 0x21,
   };
 
   // RFP32 Register Class...
   const MCPhysReg RFP32[] = {
-    X86::FP0, X86::FP1, X86::FP2, X86::FP3, X86::FP4, X86::FP5, X86::FP6, 
+    X86::FP0, X86::FP1, X86::FP2, X86::FP3, X86::FP4, X86::FP5, X86::FP6,
   };
 
   // RFP32 Bit set.
   const uint8_t RFP32Bits[] = {
-    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xfc, 0x01, 
+    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xfc, 0x01,
   };
 
   // VK32WM Register Class...
   const MCPhysReg VK32WM[] = {
-    X86::K1, X86::K2, X86::K3, X86::K4, X86::K5, X86::K6, X86::K7, 
+    X86::K1, X86::K2, X86::K3, X86::K4, X86::K5, X86::K6, X86::K7,
   };
 
   // VK32WM Bit set.
   const uint8_t VK32WMBits[] = {
-    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xf8, 0x03, 
+    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xf8, 0x03,
   };
 
   // GR32_NOAX_and_GR32_NOREX_NOSP Register Class...
   const MCPhysReg GR32_NOAX_and_GR32_NOREX_NOSP[] = {
-    X86::ECX, X86::EDX, X86::ESI, X86::EDI, X86::EBX, X86::EBP, 
+    X86::ECX, X86::EDX, X86::ESI, X86::EDI, X86::EBX, X86::EBP,
   };
 
   // GR32_NOAX_and_GR32_NOREX_NOSP Bit set.
   const uint8_t GR32_NOAX_and_GR32_NOREX_NOSPBits[] = {
-    0x00, 0x00, 0xf0, 0x21, 
+    0x00, 0x00, 0xf0, 0x21,
   };
 
   // GR32_ABCD Register Class...
   const MCPhysReg GR32_ABCD[] = {
-    X86::EAX, X86::ECX, X86::EDX, X86::EBX, 
+    X86::EAX, X86::ECX, X86::EDX, X86::EBX,
   };
 
   // GR32_ABCD Bit set.
   const uint8_t GR32_ABCDBits[] = {
-    0x00, 0x00, 0x68, 0x01, 
+    0x00, 0x00, 0x68, 0x01,
   };
 
   // GR32_ABCD_and_GR32_NOAX Register Class...
   const MCPhysReg GR32_ABCD_and_GR32_NOAX[] = {
-    X86::ECX, X86::EDX, X86::EBX, 
+    X86::ECX, X86::EDX, X86::EBX,
   };
 
   // GR32_ABCD_and_GR32_NOAX Bit set.
   const uint8_t GR32_ABCD_and_GR32_NOAXBits[] = {
-    0x00, 0x00, 0x60, 0x01, 
+    0x00, 0x00, 0x60, 0x01,
   };
 
   // GR32_TC Register Class...
   const MCPhysReg GR32_TC[] = {
-    X86::EAX, X86::ECX, X86::EDX, 
+    X86::EAX, X86::ECX, X86::EDX,
   };
 
   // GR32_TC Bit set.
   const uint8_t GR32_TCBits[] = {
-    0x00, 0x00, 0x48, 0x01, 
+    0x00, 0x00, 0x48, 0x01,
   };
 
   // GR32_AD Register Class...
   const MCPhysReg GR32_AD[] = {
-    X86::EAX, X86::EDX, 
+    X86::EAX, X86::EDX,
   };
 
   // GR32_AD Bit set.
   const uint8_t GR32_ADBits[] = {
-    0x00, 0x00, 0x08, 0x01, 
+    0x00, 0x00, 0x08, 0x01,
   };
 
   // GR32_NOAX_and_GR32_TC Register Class...
   const MCPhysReg GR32_NOAX_and_GR32_TC[] = {
-    X86::ECX, X86::EDX, 
+    X86::ECX, X86::EDX,
   };
 
   // GR32_NOAX_and_GR32_TC Bit set.
   const uint8_t GR32_NOAX_and_GR32_TCBits[] = {
-    0x00, 0x00, 0x40, 0x01, 
+    0x00, 0x00, 0x40, 0x01,
   };
 
   // CCR Register Class...
   const MCPhysReg CCR[] = {
-    X86::EFLAGS, 
+    X86::EFLAGS,
   };
 
   // CCR Bit set.
   const uint8_t CCRBits[] = {
-    0x00, 0x00, 0x00, 0x02, 
+    0x00, 0x00, 0x00, 0x02,
   };
 
   // GR32_AD_and_GR32_NOAX Register Class...
   const MCPhysReg GR32_AD_and_GR32_NOAX[] = {
-    X86::EDX, 
+    X86::EDX,
   };
 
   // GR32_AD_and_GR32_NOAX Bit set.
   const uint8_t GR32_AD_and_GR32_NOAXBits[] = {
-    0x00, 0x00, 0x00, 0x01, 
+    0x00, 0x00, 0x00, 0x01,
   };
 
   // RFP64 Register Class...
   const MCPhysReg RFP64[] = {
-    X86::FP0, X86::FP1, X86::FP2, X86::FP3, X86::FP4, X86::FP5, X86::FP6, 
+    X86::FP0, X86::FP1, X86::FP2, X86::FP3, X86::FP4, X86::FP5, X86::FP6,
   };
 
   // RFP64 Bit set.
   const uint8_t RFP64Bits[] = {
-    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xfc, 0x01, 
+    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xfc, 0x01,
   };
 
   // FR64X Register Class...
   const MCPhysReg FR64X[] = {
-    X86::XMM0, X86::XMM1, X86::XMM2, X86::XMM3, X86::XMM4, X86::XMM5, X86::XMM6, X86::XMM7, X86::XMM8, X86::XMM9, X86::XMM10, X86::XMM11, X86::XMM12, X86::XMM13, X86::XMM14, X86::XMM15, X86::XMM16, X86::XMM17, X86::XMM18, X86::XMM19, X86::XMM20, X86::XMM21, X86::XMM22, X86::XMM23, X86::XMM24, X86::XMM25, X86::XMM26, X86::XMM27, X86::XMM28, X86::XMM29, X86::XMM30, X86::XMM31, 
+    X86::XMM0, X86::XMM1, X86::XMM2, X86::XMM3, X86::XMM4, X86::XMM5, X86::XMM6, X86::XMM7, X86::XMM8, X86::XMM9, X86::XMM10, X86::XMM11, X86::XMM12, X86::XMM13, X86::XMM14, X86::XMM15, X86::XMM16, X86::XMM17, X86::XMM18, X86::XMM19, X86::XMM20, X86::XMM21, X86::XMM22, X86::XMM23, X86::XMM24, X86::XMM25, X86::XMM26, X86::XMM27, X86::XMM28, X86::XMM29, X86::XMM30, X86::XMM31,
   };
 
   // FR64X Bit set.
   const uint8_t FR64XBits[] = {
-    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xfc, 0xff, 0xff, 0xff, 0x03, 
+    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xfc, 0xff, 0xff, 0xff, 0x03,
   };
 
   // GR64 Register Class...
   const MCPhysReg GR64[] = {
-    X86::RAX, X86::RCX, X86::RDX, X86::RSI, X86::RDI, X86::R8, X86::R9, X86::R10, X86::R11, X86::RBX, X86::R14, X86::R15, X86::R12, X86::R13, X86::RBP, X86::RSP, X86::RIP, 
+    X86::RAX, X86::RCX, X86::RDX, X86::RSI, X86::RDI, X86::R8, X86::R9, X86::R10, X86::R11, X86::RBX, X86::R14, X86::R15, X86::R12, X86::R13, X86::RBP, X86::RSP, X86::RIP,
   };
 
   // GR64 Bit set.
   const uint8_t GR64Bits[] = {
-    0x00, 0x00, 0x00, 0x00, 0xf8, 0x1b, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xfc, 0x03, 
+    0x00, 0x00, 0x00, 0x00, 0xf8, 0x1b, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xfc, 0x03,
   };
 
   // CONTROL_REG Register Class...
   const MCPhysReg CONTROL_REG[] = {
-    X86::CR0, X86::CR1, X86::CR2, X86::CR3, X86::CR4, X86::CR5, X86::CR6, X86::CR7, X86::CR8, X86::CR9, X86::CR10, X86::CR11, X86::CR12, X86::CR13, X86::CR14, X86::CR15, 
+    X86::CR0, X86::CR1, X86::CR2, X86::CR3, X86::CR4, X86::CR5, X86::CR6, X86::CR7, X86::CR8, X86::CR9, X86::CR10, X86::CR11, X86::CR12, X86::CR13, X86::CR14, X86::CR15,
   };
 
   // CONTROL_REG Bit set.
   const uint8_t CONTROL_REGBits[] = {
-    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xfc, 0xff, 0x03, 
+    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xfc, 0xff, 0x03,
   };
 
   // FR64 Register Class...
   const MCPhysReg FR64[] = {
-    X86::XMM0, X86::XMM1, X86::XMM2, X86::XMM3, X86::XMM4, X86::XMM5, X86::XMM6, X86::XMM7, X86::XMM8, X86::XMM9, X86::XMM10, X86::XMM11, X86::XMM12, X86::XMM13, X86::XMM14, X86::XMM15, 
+    X86::XMM0, X86::XMM1, X86::XMM2, X86::XMM3, X86::XMM4, X86::XMM5, X86::XMM6, X86::XMM7, X86::XMM8, X86::XMM9, X86::XMM10, X86::XMM11, X86::XMM12, X86::XMM13, X86::XMM14, X86::XMM15,
   };
 
   // FR64 Bit set.
   const uint8_t FR64Bits[] = {
-    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xfc, 0xff, 0x03, 
+    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xfc, 0xff, 0x03,
   };
 
   // GR64_with_sub_8bit Register Class...
   const MCPhysReg GR64_with_sub_8bit[] = {
-    X86::RAX, X86::RCX, X86::RDX, X86::RSI, X86::RDI, X86::R8, X86::R9, X86::R10, X86::R11, X86::RBX, X86::R14, X86::R15, X86::R12, X86::R13, X86::RBP, X86::RSP, 
+    X86::RAX, X86::RCX, X86::RDX, X86::RSI, X86::RDI, X86::R8, X86::R9, X86::R10, X86::R11, X86::RBX, X86::R14, X86::R15, X86::R12, X86::R13, X86::RBP, X86::RSP,
   };
 
   // GR64_with_sub_8bit Bit set.
   const uint8_t GR64_with_sub_8bitBits[] = {
-    0x00, 0x00, 0x00, 0x00, 0xf8, 0x19, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xfc, 0x03, 
+    0x00, 0x00, 0x00, 0x00, 0xf8, 0x19, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xfc, 0x03,
   };
 
   // GR64_NOSP Register Class...
   const MCPhysReg GR64_NOSP[] = {
-    X86::RAX, X86::RCX, X86::RDX, X86::RSI, X86::RDI, X86::R8, X86::R9, X86::R10, X86::R11, X86::RBX, X86::R14, X86::R15, X86::R12, X86::R13, X86::RBP, 
+    X86::RAX, X86::RCX, X86::RDX, X86::RSI, X86::RDI, X86::R8, X86::R9, X86::R10, X86::R11, X86::RBX, X86::R14, X86::R15, X86::R12, X86::R13, X86::RBP,
   };
 
   // GR64_NOSP Bit set.
   const uint8_t GR64_NOSPBits[] = {
-    0x00, 0x00, 0x00, 0x00, 0xf8, 0x09, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xfc, 0x03, 
+    0x00, 0x00, 0x00, 0x00, 0xf8, 0x09, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xfc, 0x03,
   };
 
   // GR64_with_sub_32bit_in_GR32_NOAX Register Class...
   const MCPhysReg GR64_with_sub_32bit_in_GR32_NOAX[] = {
-    X86::RCX, X86::RDX, X86::RSI, X86::RDI, X86::R8, X86::R9, X86::R10, X86::R11, X86::RBX, X86::R14, X86::R15, X86::R12, X86::R13, X86::RBP, X86::RSP, 
+    X86::RCX, X86::RDX, X86::RSI, X86::RDI, X86::R8, X86::R9, X86::R10, X86::R11, X86::RBX, X86::R14, X86::R15, X86::R12, X86::R13, X86::RBP, X86::RSP,
   };
 
   // GR64_with_sub_32bit_in_GR32_NOAX Bit set.
   const uint8_t GR64_with_sub_32bit_in_GR32_NOAXBits[] = {
-    0x00, 0x00, 0x00, 0x00, 0xf0, 0x19, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xfc, 0x03, 
+    0x00, 0x00, 0x00, 0x00, 0xf0, 0x19, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xfc, 0x03,
   };
 
   // GR64_with_sub_32bit_in_GR32_NOAX_and_GR32_NOSP Register Class...
   const MCPhysReg GR64_with_sub_32bit_in_GR32_NOAX_and_GR32_NOSP[] = {
-    X86::RCX, X86::RDX, X86::RSI, X86::RDI, X86::R8, X86::R9, X86::R10, X86::R11, X86::RBX, X86::R14, X86::R15, X86::R12, X86::R13, X86::RBP, 
+    X86::RCX, X86::RDX, X86::RSI, X86::RDI, X86::R8, X86::R9, X86::R10, X86::R11, X86::RBX, X86::R14, X86::R15, X86::R12, X86::R13, X86::RBP,
   };
 
   // GR64_with_sub_32bit_in_GR32_NOAX_and_GR32_NOSP Bit set.
   const uint8_t GR64_with_sub_32bit_in_GR32_NOAX_and_GR32_NOSPBits[] = {
-    0x00, 0x00, 0x00, 0x00, 0xf0, 0x09, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xfc, 0x03, 
+    0x00, 0x00, 0x00, 0x00, 0xf0, 0x09, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xfc, 0x03,
   };
 
   // GR64_NOREX Register Class...
   const MCPhysReg GR64_NOREX[] = {
-    X86::RAX, X86::RCX, X86::RDX, X86::RSI, X86::RDI, X86::RBX, X86::RBP, X86::RSP, X86::RIP, 
+    X86::RAX, X86::RCX, X86::RDX, X86::RSI, X86::RDI, X86::RBX, X86::RBP, X86::RSP, X86::RIP,
   };
 
   // GR64_NOREX Bit set.
   const uint8_t GR64_NOREXBits[] = {
-    0x00, 0x00, 0x00, 0x00, 0xf8, 0x1b, 
+    0x00, 0x00, 0x00, 0x00, 0xf8, 0x1b,
   };
 
   // GR64_TC Register Class...
   const MCPhysReg GR64_TC[] = {
-    X86::RAX, X86::RCX, X86::RDX, X86::RSI, X86::RDI, X86::R8, X86::R9, X86::R11, X86::RIP, 
+    X86::RAX, X86::RCX, X86::RDX, X86::RSI, X86::RDI, X86::R8, X86::R9, X86::R11, X86::RIP,
   };
 
   // GR64_TC Bit set.
   const uint8_t GR64_TCBits[] = {
-    0x00, 0x00, 0x00, 0x00, 0xc8, 0x0b, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x2c, 
+    0x00, 0x00, 0x00, 0x00, 0xc8, 0x0b, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x2c,
   };
 
   // GR64_NOSP_and_GR64_TC Register Class...
   const MCPhysReg GR64_NOSP_and_GR64_TC[] = {
-    X86::RAX, X86::RCX, X86::RDX, X86::RSI, X86::RDI, X86::R8, X86::R9, X86::R11, 
+    X86::RAX, X86::RCX, X86::RDX, X86::RSI, X86::RDI, X86::R8, X86::R9, X86::R11,
   };
 
   // GR64_NOSP_and_GR64_TC Bit set.
   const uint8_t GR64_NOSP_and_GR64_TCBits[] = {
-    0x00, 0x00, 0x00, 0x00, 0xc8, 0x09, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x2c, 
+    0x00, 0x00, 0x00, 0x00, 0xc8, 0x09, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x2c,
   };
 
   // GR64_with_sub_16bit_in_GR16_NOREX Register Class...
   const MCPhysReg GR64_with_sub_16bit_in_GR16_NOREX[] = {
-    X86::RAX, X86::RCX, X86::RDX, X86::RSI, X86::RDI, X86::RBX, X86::RBP, X86::RSP, 
+    X86::RAX, X86::RCX, X86::RDX, X86::RSI, X86::RDI, X86::RBX, X86::RBP, X86::RSP,
   };
 
   // GR64_with_sub_16bit_in_GR16_NOREX Bit set.
   const uint8_t GR64_with_sub_16bit_in_GR16_NOREXBits[] = {
-    0x00, 0x00, 0x00, 0x00, 0xf8, 0x19, 
+    0x00, 0x00, 0x00, 0x00, 0xf8, 0x19,
   };
 
   // VK64 Register Class...
   const MCPhysReg VK64[] = {
-    X86::K0, X86::K1, X86::K2, X86::K3, X86::K4, X86::K5, X86::K6, X86::K7, 
+    X86::K0, X86::K1, X86::K2, X86::K3, X86::K4, X86::K5, X86::K6, X86::K7,
   };
 
   // VK64 Bit set.
   const uint8_t VK64Bits[] = {
-    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xfc, 0x03, 
+    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xfc, 0x03,
   };
 
   // VR64 Register Class...
   const MCPhysReg VR64[] = {
-    X86::MM0, X86::MM1, X86::MM2, X86::MM3, X86::MM4, X86::MM5, X86::MM6, X86::MM7, 
+    X86::MM0, X86::MM1, X86::MM2, X86::MM3, X86::MM4, X86::MM5, X86::MM6, X86::MM7,
   };
 
   // VR64 Bit set.
   const uint8_t VR64Bits[] = {
-    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xfc, 0x03, 
+    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xfc, 0x03,
   };
 
   // GR64_NOREX_NOSP Register Class...
   const MCPhysReg GR64_NOREX_NOSP[] = {
-    X86::RAX, X86::RCX, X86::RDX, X86::RSI, X86::RDI, X86::RBX, X86::RBP, 
+    X86::RAX, X86::RCX, X86::RDX, X86::RSI, X86::RDI, X86::RBX, X86::RBP,
   };
 
   // GR64_NOREX_NOSP Bit set.
   const uint8_t GR64_NOREX_NOSPBits[] = {
-    0x00, 0x00, 0x00, 0x00, 0xf8, 0x09, 
+    0x00, 0x00, 0x00, 0x00, 0xf8, 0x09,
   };
 
   // GR64_TC_and_GR64_with_sub_32bit_in_GR32_NOAX Register Class...
   const MCPhysReg GR64_TC_and_GR64_with_sub_32bit_in_GR32_NOAX[] = {
-    X86::RCX, X86::RDX, X86::RSI, X86::RDI, X86::R8, X86::R9, X86::R11, 
+    X86::RCX, X86::RDX, X86::RSI, X86::RDI, X86::R8, X86::R9, X86::R11,
   };
 
   // GR64_TC_and_GR64_with_sub_32bit_in_GR32_NOAX Bit set.
   const uint8_t GR64_TC_and_GR64_with_sub_32bit_in_GR32_NOAXBits[] = {
-    0x00, 0x00, 0x00, 0x00, 0xc0, 0x09, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x2c, 
+    0x00, 0x00, 0x00, 0x00, 0xc0, 0x09, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x2c,
   };
 
   // GR64_with_sub_32bit_in_GR32_NOAX_and_GR32_NOREX Register Class...
   const MCPhysReg GR64_with_sub_32bit_in_GR32_NOAX_and_GR32_NOREX[] = {
-    X86::RCX, X86::RDX, X86::RSI, X86::RDI, X86::RBX, X86::RBP, X86::RSP, 
+    X86::RCX, X86::RDX, X86::RSI, X86::RDI, X86::RBX, X86::RBP, X86::RSP,
   };
 
   // GR64_with_sub_32bit_in_GR32_NOAX_and_GR32_NOREX Bit set.
   const uint8_t GR64_with_sub_32bit_in_GR32_NOAX_and_GR32_NOREXBits[] = {
-    0x00, 0x00, 0x00, 0x00, 0xf0, 0x19, 
+    0x00, 0x00, 0x00, 0x00, 0xf0, 0x19,
   };
 
   // VK64WM Register Class...
   const MCPhysReg VK64WM[] = {
-    X86::K1, X86::K2, X86::K3, X86::K4, X86::K5, X86::K6, X86::K7, 
+    X86::K1, X86::K2, X86::K3, X86::K4, X86::K5, X86::K6, X86::K7,
   };
 
   // VK64WM Bit set.
   const uint8_t VK64WMBits[] = {
-    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xf8, 0x03, 
+    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xf8, 0x03,
   };
 
   // GR64_NOREX_and_GR64_TC Register Class...
   const MCPhysReg GR64_NOREX_and_GR64_TC[] = {
-    X86::RAX, X86::RCX, X86::RDX, X86::RSI, X86::RDI, X86::RIP, 
+    X86::RAX, X86::RCX, X86::RDX, X86::RSI, X86::RDI, X86::RIP,
   };
 
   // GR64_NOREX_and_GR64_TC Bit set.
   const uint8_t GR64_NOREX_and_GR64_TCBits[] = {
-    0x00, 0x00, 0x00, 0x00, 0xc8, 0x0b, 
+    0x00, 0x00, 0x00, 0x00, 0xc8, 0x0b,
   };
 
   // GR64_TCW64 Register Class...
   const MCPhysReg GR64_TCW64[] = {
-    X86::RAX, X86::RCX, X86::RDX, X86::R8, X86::R9, X86::R11, 
+    X86::RAX, X86::RCX, X86::RDX, X86::R8, X86::R9, X86::R11,
   };
 
   // GR64_TCW64 Bit set.
   const uint8_t GR64_TCW64Bits[] = {
-    0x00, 0x00, 0x00, 0x00, 0x48, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x2c, 
+    0x00, 0x00, 0x00, 0x00, 0x48, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x2c,
   };
 
   // GR64_with_sub_32bit_in_GR32_NOAX_and_GR32_NOREX_NOSP Register Class...
   const MCPhysReg GR64_with_sub_32bit_in_GR32_NOAX_and_GR32_NOREX_NOSP[] = {
-    X86::RCX, X86::RDX, X86::RSI, X86::RDI, X86::RBX, X86::RBP, 
+    X86::RCX, X86::RDX, X86::RSI, X86::RDI, X86::RBX, X86::RBP,
   };
 
   // GR64_with_sub_32bit_in_GR32_NOAX_and_GR32_NOREX_NOSP Bit set.
   const uint8_t GR64_with_sub_32bit_in_GR32_NOAX_and_GR32_NOREX_NOSPBits[] = {
-    0x00, 0x00, 0x00, 0x00, 0xf0, 0x09, 
+    0x00, 0x00, 0x00, 0x00, 0xf0, 0x09,
   };
 
   // GR64_NOREX_NOSP_and_GR64_TC Register Class...
   const MCPhysReg GR64_NOREX_NOSP_and_GR64_TC[] = {
-    X86::RAX, X86::RCX, X86::RDX, X86::RSI, X86::RDI, 
+    X86::RAX, X86::RCX, X86::RDX, X86::RSI, X86::RDI,
   };
 
   // GR64_NOREX_NOSP_and_GR64_TC Bit set.
   const uint8_t GR64_NOREX_NOSP_and_GR64_TCBits[] = {
-    0x00, 0x00, 0x00, 0x00, 0xc8, 0x09, 
+    0x00, 0x00, 0x00, 0x00, 0xc8, 0x09,
   };
 
   // GR64_TCW64_and_GR64_with_sub_32bit_in_GR32_NOAX Register Class...
   const MCPhysReg GR64_TCW64_and_GR64_with_sub_32bit_in_GR32_NOAX[] = {
-    X86::RCX, X86::RDX, X86::R8, X86::R9, X86::R11, 
+    X86::RCX, X86::RDX, X86::R8, X86::R9, X86::R11,
   };
 
   // GR64_TCW64_and_GR64_with_sub_32bit_in_GR32_NOAX Bit set.
   const uint8_t GR64_TCW64_and_GR64_with_sub_32bit_in_GR32_NOAXBits[] = {
-    0x00, 0x00, 0x00, 0x00, 0x40, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x2c, 
+    0x00, 0x00, 0x00, 0x00, 0x40, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x2c,
   };
 
   // GR64_ABCD Register Class...
   const MCPhysReg GR64_ABCD[] = {
-    X86::RAX, X86::RCX, X86::RDX, X86::RBX, 
+    X86::RAX, X86::RCX, X86::RDX, X86::RBX,
   };
 
   // GR64_ABCD Bit set.
   const uint8_t GR64_ABCDBits[] = {
-    0x00, 0x00, 0x00, 0x00, 0x68, 0x01, 
+    0x00, 0x00, 0x00, 0x00, 0x68, 0x01,
   };
 
   // GR64_TC_and_GR64_with_sub_32bit_in_GR32_NOAX_and_GR32_NOREX Register Class...
   const MCPhysReg GR64_TC_and_GR64_with_sub_32bit_in_GR32_NOAX_and_GR32_NOREX[] = {
-    X86::RCX, X86::RDX, X86::RSI, X86::RDI, 
+    X86::RCX, X86::RDX, X86::RSI, X86::RDI,
   };
 
   // GR64_TC_and_GR64_with_sub_32bit_in_GR32_NOAX_and_GR32_NOREX Bit set.
   const uint8_t GR64_TC_and_GR64_with_sub_32bit_in_GR32_NOAX_and_GR32_NOREXBits[] = {
-    0x00, 0x00, 0x00, 0x00, 0xc0, 0x09, 
+    0x00, 0x00, 0x00, 0x00, 0xc0, 0x09,
   };
 
   // GR64_with_sub_32bit_in_GR32_ABCD_and_GR32_NOAX Register Class...
   const MCPhysReg GR64_with_sub_32bit_in_GR32_ABCD_and_GR32_NOAX[] = {
-    X86::RCX, X86::RDX, X86::RBX, 
+    X86::RCX, X86::RDX, X86::RBX,
   };
 
   // GR64_with_sub_32bit_in_GR32_ABCD_and_GR32_NOAX Bit set.
   const uint8_t GR64_with_sub_32bit_in_GR32_ABCD_and_GR32_NOAXBits[] = {
-    0x00, 0x00, 0x00, 0x00, 0x60, 0x01, 
+    0x00, 0x00, 0x00, 0x00, 0x60, 0x01,
   };
 
   // GR64_with_sub_32bit_in_GR32_TC Register Class...
   const MCPhysReg GR64_with_sub_32bit_in_GR32_TC[] = {
-    X86::RAX, X86::RCX, X86::RDX, 
+    X86::RAX, X86::RCX, X86::RDX,
   };
 
   // GR64_with_sub_32bit_in_GR32_TC Bit set.
   const uint8_t GR64_with_sub_32bit_in_GR32_TCBits[] = {
-    0x00, 0x00, 0x00, 0x00, 0x48, 0x01, 
+    0x00, 0x00, 0x00, 0x00, 0x48, 0x01,
   };
 
   // GR64_with_sub_32bit_in_GR32_AD Register Class...
   const MCPhysReg GR64_with_sub_32bit_in_GR32_AD[] = {
-    X86::RAX, X86::RDX, 
+    X86::RAX, X86::RDX,
   };
 
   // GR64_with_sub_32bit_in_GR32_AD Bit set.
   const uint8_t GR64_with_sub_32bit_in_GR32_ADBits[] = {
-    0x00, 0x00, 0x00, 0x00, 0x08, 0x01, 
+    0x00, 0x00, 0x00, 0x00, 0x08, 0x01,
   };
 
   // GR64_with_sub_32bit_in_GR32_NOAX_and_GR32_TC Register Class...
   const MCPhysReg GR64_with_sub_32bit_in_GR32_NOAX_and_GR32_TC[] = {
-    X86::RCX, X86::RDX, 
+    X86::RCX, X86::RDX,
   };
 
   // GR64_with_sub_32bit_in_GR32_NOAX_and_GR32_TC Bit set.
   const uint8_t GR64_with_sub_32bit_in_GR32_NOAX_and_GR32_TCBits[] = {
-    0x00, 0x00, 0x00, 0x00, 0x40, 0x01, 
+    0x00, 0x00, 0x00, 0x00, 0x40, 0x01,
   };
 
   // GR64_with_sub_32bit_in_GR32_AD_and_GR32_NOAX Register Class...
   const MCPhysReg GR64_with_sub_32bit_in_GR32_AD_and_GR32_NOAX[] = {
-    X86::RDX, 
+    X86::RDX,
   };
 
   // GR64_with_sub_32bit_in_GR32_AD_and_GR32_NOAX Bit set.
   const uint8_t GR64_with_sub_32bit_in_GR32_AD_and_GR32_NOAXBits[] = {
-    0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 
+    0x00, 0x00, 0x00, 0x00, 0x00, 0x01,
   };
 
   // RST Register Class...
   const MCPhysReg RST[] = {
-    X86::ST0, X86::ST1, X86::ST2, X86::ST3, X86::ST4, X86::ST5, X86::ST6, X86::ST7, 
+    X86::ST0, X86::ST1, X86::ST2, X86::ST3, X86::ST4, X86::ST5, X86::ST6, X86::ST7,
   };
 
   // RST Bit set.
   const uint8_t RSTBits[] = {
-    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xfc, 0x03, 
+    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xfc, 0x03,
   };
 
   // RFP80 Register Class...
   const MCPhysReg RFP80[] = {
-    X86::FP0, X86::FP1, X86::FP2, X86::FP3, X86::FP4, X86::FP5, X86::FP6, 
+    X86::FP0, X86::FP1, X86::FP2, X86::FP3, X86::FP4, X86::FP5, X86::FP6,
   };
 
   // RFP80 Bit set.
   const uint8_t RFP80Bits[] = {
-    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xfc, 0x01, 
+    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xfc, 0x01,
   };
 
   // VR128X Register Class...
   const MCPhysReg VR128X[] = {
-    X86::XMM0, X86::XMM1, X86::XMM2, X86::XMM3, X86::XMM4, X86::XMM5, X86::XMM6, X86::XMM7, X86::XMM8, X86::XMM9, X86::XMM10, X86::XMM11, X86::XMM12, X86::XMM13, X86::XMM14, X86::XMM15, X86::XMM16, X86::XMM17, X86::XMM18, X86::XMM19, X86::XMM20, X86::XMM21, X86::XMM22, X86::XMM23, X86::XMM24, X86::XMM25, X86::XMM26, X86::XMM27, X86::XMM28, X86::XMM29, X86::XMM30, X86::XMM31, 
+    X86::XMM0, X86::XMM1, X86::XMM2, X86::XMM3, X86::XMM4, X86::XMM5, X86::XMM6, X86::XMM7, X86::XMM8, X86::XMM9, X86::XMM10, X86::XMM11, X86::XMM12, X86::XMM13, X86::XMM14, X86::XMM15, X86::XMM16, X86::XMM17, X86::XMM18, X86::XMM19, X86::XMM20, X86::XMM21, X86::XMM22, X86::XMM23, X86::XMM24, X86::XMM25, X86::XMM26, X86::XMM27, X86::XMM28, X86::XMM29, X86::XMM30, X86::XMM31,
   };
 
   // VR128X Bit set.
   const uint8_t VR128XBits[] = {
-    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xfc, 0xff, 0xff, 0xff, 0x03, 
+    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xfc, 0xff, 0xff, 0xff, 0x03,
   };
 
   // VR128 Register Class...
   const MCPhysReg VR128[] = {
-    X86::XMM0, X86::XMM1, X86::XMM2, X86::XMM3, X86::XMM4, X86::XMM5, X86::XMM6, X86::XMM7, X86::XMM8, X86::XMM9, X86::XMM10, X86::XMM11, X86::XMM12, X86::XMM13, X86::XMM14, X86::XMM15, 
+    X86::XMM0, X86::XMM1, X86::XMM2, X86::XMM3, X86::XMM4, X86::XMM5, X86::XMM6, X86::XMM7, X86::XMM8, X86::XMM9, X86::XMM10, X86::XMM11, X86::XMM12, X86::XMM13, X86::XMM14, X86::XMM15,
   };
 
   // VR128 Bit set.
   const uint8_t VR128Bits[] = {
-    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xfc, 0xff, 0x03, 
+    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xfc, 0xff, 0x03,
   };
 
   // VR256X Register Class...
   const MCPhysReg VR256X[] = {
-    X86::YMM0, X86::YMM1, X86::YMM2, X86::YMM3, X86::YMM4, X86::YMM5, X86::YMM6, X86::YMM7, X86::YMM8, X86::YMM9, X86::YMM10, X86::YMM11, X86::YMM12, X86::YMM13, X86::YMM14, X86::YMM15, X86::YMM16, X86::YMM17, X86::YMM18, X86::YMM19, X86::YMM20, X86::YMM21, X86::YMM22, X86::YMM23, X86::YMM24, X86::YMM25, X86::YMM26, X86::YMM27, X86::YMM28, X86::YMM29, X86::YMM30, X86::YMM31, 
+    X86::YMM0, X86::YMM1, X86::YMM2, X86::YMM3, X86::YMM4, X86::YMM5, X86::YMM6, X86::YMM7, X86::YMM8, X86::YMM9, X86::YMM10, X86::YMM11, X86::YMM12, X86::YMM13, X86::YMM14, X86::YMM15, X86::YMM16, X86::YMM17, X86::YMM18, X86::YMM19, X86::YMM20, X86::YMM21, X86::YMM22, X86::YMM23, X86::YMM24, X86::YMM25, X86::YMM26, X86::YMM27, X86::YMM28, X86::YMM29, X86::YMM30, X86::YMM31,
   };
 
   // VR256X Bit set.
   const uint8_t VR256XBits[] = {
-    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xfc, 0xff, 0xff, 0xff, 0x03, 
+    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xfc, 0xff, 0xff, 0xff, 0x03,
   };
 
   // VR256 Register Class...
   const MCPhysReg VR256[] = {
-    X86::YMM0, X86::YMM1, X86::YMM2, X86::YMM3, X86::YMM4, X86::YMM5, X86::YMM6, X86::YMM7, X86::YMM8, X86::YMM9, X86::YMM10, X86::YMM11, X86::YMM12, X86::YMM13, X86::YMM14, X86::YMM15, 
+    X86::YMM0, X86::YMM1, X86::YMM2, X86::YMM3, X86::YMM4, X86::YMM5, X86::YMM6, X86::YMM7, X86::YMM8, X86::YMM9, X86::YMM10, X86::YMM11, X86::YMM12, X86::YMM13, X86::YMM14, X86::YMM15,
   };
 
   // VR256 Bit set.
   const uint8_t VR256Bits[] = {
-    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xfc, 0xff, 0x03, 
+    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xfc, 0xff, 0x03,
   };
 
   // VR512 Register Class...
   const MCPhysReg VR512[] = {
-    X86::ZMM0, X86::ZMM1, X86::ZMM2, X86::ZMM3, X86::ZMM4, X86::ZMM5, X86::ZMM6, X86::ZMM7, X86::ZMM8, X86::ZMM9, X86::ZMM10, X86::ZMM11, X86::ZMM12, X86::ZMM13, X86::ZMM14, X86::ZMM15, X86::ZMM16, X86::ZMM17, X86::ZMM18, X86::ZMM19, X86::ZMM20, X86::ZMM21, X86::ZMM22, X86::ZMM23, X86::ZMM24, X86::ZMM25, X86::ZMM26, X86::ZMM27, X86::ZMM28, X86::ZMM29, X86::ZMM30, X86::ZMM31, 
+    X86::ZMM0, X86::ZMM1, X86::ZMM2, X86::ZMM3, X86::ZMM4, X86::ZMM5, X86::ZMM6, X86::ZMM7, X86::ZMM8, X86::ZMM9, X86::ZMM10, X86::ZMM11, X86::ZMM12, X86::ZMM13, X86::ZMM14, X86::ZMM15, X86::ZMM16, X86::ZMM17, X86::ZMM18, X86::ZMM19, X86::ZMM20, X86::ZMM21, X86::ZMM22, X86::ZMM23, X86::ZMM24, X86::ZMM25, X86::ZMM26, X86::ZMM27, X86::ZMM28, X86::ZMM29, X86::ZMM30, X86::ZMM31,
   };
 
   // VR512 Bit set.
   const uint8_t VR512Bits[] = {
-    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xfc, 0xff, 0xff, 0xff, 0x03, 
+    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xfc, 0xff, 0xff, 0xff, 0x03,
   };
 
   // VR512_with_sub_xmm_in_FR32 Register Class...
   const MCPhysReg VR512_with_sub_xmm_in_FR32[] = {
-    X86::ZMM0, X86::ZMM1, X86::ZMM2, X86::ZMM3, X86::ZMM4, X86::ZMM5, X86::ZMM6, X86::ZMM7, X86::ZMM8, X86::ZMM9, X86::ZMM10, X86::ZMM11, X86::ZMM12, X86::ZMM13, X86::ZMM14, X86::ZMM15, 
+    X86::ZMM0, X86::ZMM1, X86::ZMM2, X86::ZMM3, X86::ZMM4, X86::ZMM5, X86::ZMM6, X86::ZMM7, X86::ZMM8, X86::ZMM9, X86::ZMM10, X86::ZMM11, X86::ZMM12, X86::ZMM13, X86::ZMM14, X86::ZMM15,
   };
 
   // VR512_with_sub_xmm_in_FR32 Bit set.
   const uint8_t VR512_with_sub_xmm_in_FR32Bits[] = {
-    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xfc, 0xff, 0x03, 
+    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xfc, 0xff, 0x03,
   };
 
 }
@@ -3662,350 +3662,350 @@ static const unsigned SubRegIndexLaneMaskTable[] = {
 static const TargetRegisterClass *const NullRegClasses[] = { nullptr };
 
 static const uint32_t GR8SubClassMask[] = {
-  0x0000000f, 0x00000000, 0x00000000, 
+  0x0000000f, 0x00000000, 0x00000000,
   0x35e20030, 0xf399e0bf, 0x0000007f, // sub_8bit
   0x00020000, 0x000000be, 0x0000007d, // sub_8bit_hi
 };
 
 static const uint32_t GR8_NOREXSubClassMask[] = {
-  0x0000000e, 0x00000000, 0x00000000, 
+  0x0000000e, 0x00000000, 0x00000000,
   0x00020000, 0x000000be, 0x0000007d, // sub_8bit
   0x00020000, 0x000000be, 0x0000007d, // sub_8bit_hi
 };
 
 static const uint32_t GR8_ABCD_HSubClassMask[] = {
-  0x00000004, 0x00000000, 0x00000000, 
+  0x00000004, 0x00000000, 0x00000000,
   0x00020000, 0x000000be, 0x0000007d, // sub_8bit_hi
 };
 
 static const uint32_t GR8_ABCD_LSubClassMask[] = {
-  0x00000008, 0x00000000, 0x00000000, 
+  0x00000008, 0x00000000, 0x00000000,
   0x00020000, 0x000000be, 0x0000007d, // sub_8bit
 };
 
 static const uint32_t GR16SubClassMask[] = {
-  0x00020030, 0x00000000, 0x00000000, 
+  0x00020030, 0x00000000, 0x00000000,
   0x35e00000, 0xf399e0bf, 0x0000007f, // sub_16bit
 };
 
 static const uint32_t GR16_NOREXSubClassMask[] = {
-  0x00020020, 0x00000000, 0x00000000, 
+  0x00020020, 0x00000000, 0x00000000,
   0x34000000, 0x629000bf, 0x0000007f, // sub_16bit
 };
 
 static const uint32_t VK1SubClassMask[] = {
-  0x8800ffc0, 0x04200000, 0x00000000, 
+  0x8800ffc0, 0x04200000, 0x00000000,
 };
 
 static const uint32_t VK16SubClassMask[] = {
-  0x8800ffc0, 0x04200000, 0x00000000, 
+  0x8800ffc0, 0x04200000, 0x00000000,
 };
 
 static const uint32_t VK2SubClassMask[] = {
-  0x8800ffc0, 0x04200000, 0x00000000, 
+  0x8800ffc0, 0x04200000, 0x00000000,
 };
 
 static const uint32_t VK4SubClassMask[] = {
-  0x8800ffc0, 0x04200000, 0x00000000, 
+  0x8800ffc0, 0x04200000, 0x00000000,
 };
 
 static const uint32_t VK8SubClassMask[] = {
-  0x8800ffc0, 0x04200000, 0x00000000, 
+  0x8800ffc0, 0x04200000, 0x00000000,
 };
 
 static const uint32_t VK16WMSubClassMask[] = {
-  0x8000f800, 0x04000000, 0x00000000, 
+  0x8000f800, 0x04000000, 0x00000000,
 };
 
 static const uint32_t VK1WMSubClassMask[] = {
-  0x8000f800, 0x04000000, 0x00000000, 
+  0x8000f800, 0x04000000, 0x00000000,
 };
 
 static const uint32_t VK2WMSubClassMask[] = {
-  0x8000f800, 0x04000000, 0x00000000, 
+  0x8000f800, 0x04000000, 0x00000000,
 };
 
 static const uint32_t VK4WMSubClassMask[] = {
-  0x8000f800, 0x04000000, 0x00000000, 
+  0x8000f800, 0x04000000, 0x00000000,
 };
 
 static const uint32_t VK8WMSubClassMask[] = {
-  0x8000f800, 0x04000000, 0x00000000, 
+  0x8000f800, 0x04000000, 0x00000000,
 };
 
 static const uint32_t SEGMENT_REGSubClassMask[] = {
-  0x00010000, 0x00000000, 0x00000000, 
+  0x00010000, 0x00000000, 0x00000000,
 };
 
 static const uint32_t GR16_ABCDSubClassMask[] = {
-  0x00020000, 0x00000000, 0x00000000, 
+  0x00020000, 0x00000000, 0x00000000,
   0x00000000, 0x000000be, 0x0000007d, // sub_16bit
 };
 
 static const uint32_t FPCCRSubClassMask[] = {
-  0x00040000, 0x00000000, 0x00000000, 
+  0x00040000, 0x00000000, 0x00000000,
 };
 
 static const uint32_t FR32XSubClassMask[] = {
-  0x00180000, 0x00001200, 0x00000600, 
+  0x00180000, 0x00001200, 0x00000600,
   0x00000000, 0x00000000, 0x00007800, // sub_xmm
 };
 
 static const uint32_t FR32SubClassMask[] = {
-  0x00100000, 0x00001000, 0x00000400, 
+  0x00100000, 0x00001000, 0x00000400,
   0x00000000, 0x00000000, 0x00005000, // sub_xmm
 };
 
 static const uint32_t GR32SubClassMask[] = {
-  0x35e00000, 0x000000bf, 0x00000000, 
+  0x35e00000, 0x000000bf, 0x00000000,
   0x00000000, 0xf399e000, 0x0000007f, // sub_32bit
 };
 
 static const uint32_t GR32_NOAXSubClassMask[] = {
-  0x11400000, 0x000000a5, 0x00000000, 
+  0x11400000, 0x000000a5, 0x00000000,
   0x00000000, 0xa3018000, 0x00000066, // sub_32bit
 };
 
 static const uint32_t GR32_NOSPSubClassMask[] = {
-  0x21800000, 0x000000bf, 0x00000000, 
+  0x21800000, 0x000000bf, 0x00000000,
   0x00000000, 0xf1894000, 0x0000007f, // sub_32bit
 };
 
 static const uint32_t GR32_NOAX_and_GR32_NOSPSubClassMask[] = {
-  0x01000000, 0x000000a5, 0x00000000, 
+  0x01000000, 0x000000a5, 0x00000000,
   0x00000000, 0xa1010000, 0x00000066, // sub_32bit
 };
 
 static const uint32_t DEBUG_REGSubClassMask[] = {
-  0x02000000, 0x00000000, 0x00000000, 
+  0x02000000, 0x00000000, 0x00000000,
 };
 
 static const uint32_t GR32_NOREXSubClassMask[] = {
-  0x34000000, 0x000000bf, 0x00000000, 
+  0x34000000, 0x000000bf, 0x00000000,
   0x00000000, 0x62900000, 0x0000007f, // sub_32bit
 };
 
 static const uint32_t VK32SubClassMask[] = {
-  0x88000000, 0x04200000, 0x00000000, 
+  0x88000000, 0x04200000, 0x00000000,
 };
 
 static const uint32_t GR32_NOAX_and_GR32_NOREXSubClassMask[] = {
-  0x10000000, 0x000000a5, 0x00000000, 
+  0x10000000, 0x000000a5, 0x00000000,
   0x00000000, 0x22000000, 0x00000066, // sub_32bit
 };
 
 static const uint32_t GR32_NOREX_NOSPSubClassMask[] = {
-  0x20000000, 0x000000bf, 0x00000000, 
+  0x20000000, 0x000000bf, 0x00000000,
   0x00000000, 0x60800000, 0x0000007f, // sub_32bit
 };
 
 static const uint32_t RFP32SubClassMask[] = {
-  0x40000000, 0x00000100, 0x00000100, 
+  0x40000000, 0x00000100, 0x00000100,
 };
 
 static const uint32_t VK32WMSubClassMask[] = {
-  0x80000000, 0x04000000, 0x00000000, 
+  0x80000000, 0x04000000, 0x00000000,
 };
 
 static const uint32_t GR32_NOAX_and_GR32_NOREX_NOSPSubClassMask[] = {
-  0x00000000, 0x000000a5, 0x00000000, 
+  0x00000000, 0x000000a5, 0x00000000,
   0x00000000, 0x20000000, 0x00000066, // sub_32bit
 };
 
 static const uint32_t GR32_ABCDSubClassMask[] = {
-  0x00000000, 0x000000be, 0x00000000, 
+  0x00000000, 0x000000be, 0x00000000,
   0x00000000, 0x00000000, 0x0000007d, // sub_32bit
 };
 
 static const uint32_t GR32_ABCD_and_GR32_NOAXSubClassMask[] = {
-  0x00000000, 0x000000a4, 0x00000000, 
+  0x00000000, 0x000000a4, 0x00000000,
   0x00000000, 0x00000000, 0x00000064, // sub_32bit
 };
 
 static const uint32_t GR32_TCSubClassMask[] = {
-  0x00000000, 0x000000b8, 0x00000000, 
+  0x00000000, 0x000000b8, 0x00000000,
   0x00000000, 0x00000000, 0x00000078, // sub_32bit
 };
 
 static const uint32_t GR32_ADSubClassMask[] = {
-  0x00000000, 0x00000090, 0x00000000, 
+  0x00000000, 0x00000090, 0x00000000,
   0x00000000, 0x00000000, 0x00000050, // sub_32bit
 };
 
 static const uint32_t GR32_NOAX_and_GR32_TCSubClassMask[] = {
-  0x00000000, 0x000000a0, 0x00000000, 
+  0x00000000, 0x000000a0, 0x00000000,
   0x00000000, 0x00000000, 0x00000060, // sub_32bit
 };
 
 static const uint32_t CCRSubClassMask[] = {
-  0x00000000, 0x00000040, 0x00000000, 
+  0x00000000, 0x00000040, 0x00000000,
 };
 
 static const uint32_t GR32_AD_and_GR32_NOAXSubClassMask[] = {
-  0x00000000, 0x00000080, 0x00000000, 
+  0x00000000, 0x00000080, 0x00000000,
   0x00000000, 0x00000000, 0x00000040, // sub_32bit
 };
 
 static const uint32_t RFP64SubClassMask[] = {
-  0x00000000, 0x00000100, 0x00000100, 
+  0x00000000, 0x00000100, 0x00000100,
 };
 
 static const uint32_t FR64XSubClassMask[] = {
-  0x00000000, 0x00001200, 0x00000600, 
+  0x00000000, 0x00001200, 0x00000600,
   0x00000000, 0x00000000, 0x00007800, // sub_xmm
 };
 
 static const uint32_t GR64SubClassMask[] = {
-  0x00000000, 0xfb9fe400, 0x0000007f, 
+  0x00000000, 0xfb9fe400, 0x0000007f,
 };
 
 static const uint32_t CONTROL_REGSubClassMask[] = {
-  0x00000000, 0x00000800, 0x00000000, 
+  0x00000000, 0x00000800, 0x00000000,
 };
 
 static const uint32_t FR64SubClassMask[] = {
-  0x00000000, 0x00001000, 0x00000400, 
+  0x00000000, 0x00001000, 0x00000400,
   0x00000000, 0x00000000, 0x00005000, // sub_xmm
 };
 
 static const uint32_t GR64_with_sub_8bitSubClassMask[] = {
-  0x00000000, 0xf399e000, 0x0000007f, 
+  0x00000000, 0xf399e000, 0x0000007f,
 };
 
 static const uint32_t GR64_NOSPSubClassMask[] = {
-  0x00000000, 0xf1894000, 0x0000007f, 
+  0x00000000, 0xf1894000, 0x0000007f,
 };
 
 static const uint32_t GR64_with_sub_32bit_in_GR32_NOAXSubClassMask[] = {
-  0x00000000, 0xa3018000, 0x00000066, 
+  0x00000000, 0xa3018000, 0x00000066,
 };
 
 static const uint32_t GR64_with_sub_32bit_in_GR32_NOAX_and_GR32_NOSPSubClassMask[] = {
-  0x00000000, 0xa1010000, 0x00000066, 
+  0x00000000, 0xa1010000, 0x00000066,
 };
 
 static const uint32_t GR64_NOREXSubClassMask[] = {
-  0x00000000, 0x6a920000, 0x0000007f, 
+  0x00000000, 0x6a920000, 0x0000007f,
 };
 
 static const uint32_t GR64_TCSubClassMask[] = {
-  0x00000000, 0xd90c0000, 0x0000007a, 
+  0x00000000, 0xd90c0000, 0x0000007a,
 };
 
 static const uint32_t GR64_NOSP_and_GR64_TCSubClassMask[] = {
-  0x00000000, 0xd1080000, 0x0000007a, 
+  0x00000000, 0xd1080000, 0x0000007a,
 };
 
 static const uint32_t GR64_with_sub_16bit_in_GR16_NOREXSubClassMask[] = {
-  0x00000000, 0x62900000, 0x0000007f, 
+  0x00000000, 0x62900000, 0x0000007f,
 };
 
 static const uint32_t VK64SubClassMask[] = {
-  0x00000000, 0x04200000, 0x00000000, 
+  0x00000000, 0x04200000, 0x00000000,
 };
 
 static const uint32_t VR64SubClassMask[] = {
-  0x00000000, 0x00400000, 0x00000000, 
+  0x00000000, 0x00400000, 0x00000000,
 };
 
 static const uint32_t GR64_NOREX_NOSPSubClassMask[] = {
-  0x00000000, 0x60800000, 0x0000007f, 
+  0x00000000, 0x60800000, 0x0000007f,
 };
 
 static const uint32_t GR64_TC_and_GR64_with_sub_32bit_in_GR32_NOAXSubClassMask[] = {
-  0x00000000, 0x81000000, 0x00000062, 
+  0x00000000, 0x81000000, 0x00000062,
 };
 
 static const uint32_t GR64_with_sub_32bit_in_GR32_NOAX_and_GR32_NOREXSubClassMask[] = {
-  0x00000000, 0x22000000, 0x00000066, 
+  0x00000000, 0x22000000, 0x00000066,
 };
 
 static const uint32_t VK64WMSubClassMask[] = {
-  0x00000000, 0x04000000, 0x00000000, 
+  0x00000000, 0x04000000, 0x00000000,
 };
 
 static const uint32_t GR64_NOREX_and_GR64_TCSubClassMask[] = {
-  0x00000000, 0x48000000, 0x0000007a, 
+  0x00000000, 0x48000000, 0x0000007a,
 };
 
 static const uint32_t GR64_TCW64SubClassMask[] = {
-  0x00000000, 0x90000000, 0x00000078, 
+  0x00000000, 0x90000000, 0x00000078,
 };
 
 static const uint32_t GR64_with_sub_32bit_in_GR32_NOAX_and_GR32_NOREX_NOSPSubClassMask[] = {
-  0x00000000, 0x20000000, 0x00000066, 
+  0x00000000, 0x20000000, 0x00000066,
 };
 
 static const uint32_t GR64_NOREX_NOSP_and_GR64_TCSubClassMask[] = {
-  0x00000000, 0x40000000, 0x0000007a, 
+  0x00000000, 0x40000000, 0x0000007a,
 };
 
 static const uint32_t GR64_TCW64_and_GR64_with_sub_32bit_in_GR32_NOAXSubClassMask[] = {
-  0x00000000, 0x80000000, 0x00000060, 
+  0x00000000, 0x80000000, 0x00000060,
 };
 
 static const uint32_t GR64_ABCDSubClassMask[] = {
-  0x00000000, 0x00000000, 0x0000007d, 
+  0x00000000, 0x00000000, 0x0000007d,
 };
 
 static const uint32_t GR64_TC_and_GR64_with_sub_32bit_in_GR32_NOAX_and_GR32_NOREXSubClassMask[] = {
-  0x00000000, 0x00000000, 0x00000062, 
+  0x00000000, 0x00000000, 0x00000062,
 };
 
 static const uint32_t GR64_with_sub_32bit_in_GR32_ABCD_and_GR32_NOAXSubClassMask[] = {
-  0x00000000, 0x00000000, 0x00000064, 
+  0x00000000, 0x00000000, 0x00000064,
 };
 
 static const uint32_t GR64_with_sub_32bit_in_GR32_TCSubClassMask[] = {
-  0x00000000, 0x00000000, 0x00000078, 
+  0x00000000, 0x00000000, 0x00000078,
 };
 
 static const uint32_t GR64_with_sub_32bit_in_GR32_ADSubClassMask[] = {
-  0x00000000, 0x00000000, 0x00000050, 
+  0x00000000, 0x00000000, 0x00000050,
 };
 
 static const uint32_t GR64_with_sub_32bit_in_GR32_NOAX_and_GR32_TCSubClassMask[] = {
-  0x00000000, 0x00000000, 0x00000060, 
+  0x00000000, 0x00000000, 0x00000060,
 };
 
 static const uint32_t GR64_with_sub_32bit_in_GR32_AD_and_GR32_NOAXSubClassMask[] = {
-  0x00000000, 0x00000000, 0x00000040, 
+  0x00000000, 0x00000000, 0x00000040,
 };
 
 static const uint32_t RSTSubClassMask[] = {
-  0x00000000, 0x00000000, 0x00000080, 
+  0x00000000, 0x00000000, 0x00000080,
 };
 
 static const uint32_t RFP80SubClassMask[] = {
-  0x00000000, 0x00000000, 0x00000100, 
+  0x00000000, 0x00000000, 0x00000100,
 };
 
 static const uint32_t VR128XSubClassMask[] = {
-  0x00000000, 0x00000000, 0x00000600, 
+  0x00000000, 0x00000000, 0x00000600,
   0x00000000, 0x00000000, 0x00007800, // sub_xmm
 };
 
 static const uint32_t VR128SubClassMask[] = {
-  0x00000000, 0x00000000, 0x00000400, 
+  0x00000000, 0x00000000, 0x00000400,
   0x00000000, 0x00000000, 0x00005000, // sub_xmm
 };
 
 static const uint32_t VR256XSubClassMask[] = {
-  0x00000000, 0x00000000, 0x00001800, 
+  0x00000000, 0x00000000, 0x00001800,
   0x00000000, 0x00000000, 0x00006000, // sub_ymm
 };
 
 static const uint32_t VR256SubClassMask[] = {
-  0x00000000, 0x00000000, 0x00001000, 
+  0x00000000, 0x00000000, 0x00001000,
   0x00000000, 0x00000000, 0x00004000, // sub_ymm
 };
 
 static const uint32_t VR512SubClassMask[] = {
-  0x00000000, 0x00000000, 0x00006000, 
+  0x00000000, 0x00000000, 0x00006000,
 };
 
 static const uint32_t VR512_with_sub_xmm_in_FR32SubClassMask[] = {
-  0x00000000, 0x00000000, 0x00004000, 
+  0x00000000, 0x00000000, 0x00004000,
 };
 
 static const uint16_t SuperRegIdxSeqs[] = {

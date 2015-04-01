@@ -998,7 +998,7 @@ static bool CC_X86_64_C(unsigned ValNo, MVT ValVT,
 
   if (LocVT == MVT::f80) {
     unsigned Offset7 = State.AllocateStack(
-      State.getMachineFunction().getSubtarget().getDataLayout()->getTypeAllocSize(EVT(LocVT).getTypeForEVT(State.getContext())), 
+      State.getMachineFunction().getSubtarget().getDataLayout()->getTypeAllocSize(EVT(LocVT).getTypeForEVT(State.getContext())),
       State.getMachineFunction().getSubtarget().getDataLayout()->getABITypeAlignment(EVT(LocVT).getTypeForEVT(State.getContext())));
     State.addLoc(CCValAssign::getMem(ValNo, ValVT, Offset7, LocVT, LocInfo));
     return false;
@@ -1303,7 +1303,7 @@ static bool CC_X86_Win64_C(unsigned ValNo, MVT ValVT,
 
   if (LocVT == MVT::f80) {
     unsigned Offset10 = State.AllocateStack(
-      State.getMachineFunction().getSubtarget().getDataLayout()->getTypeAllocSize(EVT(LocVT).getTypeForEVT(State.getContext())), 
+      State.getMachineFunction().getSubtarget().getDataLayout()->getTypeAllocSize(EVT(LocVT).getTypeForEVT(State.getContext())),
       State.getMachineFunction().getSubtarget().getDataLayout()->getABITypeAlignment(EVT(LocVT).getTypeForEVT(State.getContext())));
     State.addLoc(CCValAssign::getMem(ValNo, ValVT, Offset10, LocVT, LocInfo));
     return false;
