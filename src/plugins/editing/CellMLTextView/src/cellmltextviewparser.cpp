@@ -214,8 +214,16 @@ bool CellmlTextViewParser::execute(const QString &pCellmlText,
     if (pFullParsing) {
         // Parse a mathematical expression
 
-        if (!parseMathematicalExpression(mDomDocument))
+        static const CellmlTextViewScanner::TokenTypes tokenTypes = CellmlTextViewScanner::TokenTypes() << CellmlTextViewScanner::IdentifierToken
+                                                                                                        << CellmlTextViewScanner::OdeToken;
+
+        if (tokenType(mDomDocument, QObject::tr("An identifier or '%1'").arg("ode"),
+                      tokenTypes)) {
+            if (!parseMathematicalExpression(mDomDocument))
+                return false;
+        } else {
             return false;
+        }
 
         // Expect the end of the mathematical expression
 
@@ -225,20 +233,31 @@ bool CellmlTextViewParser::execute(const QString &pCellmlText,
     } else {
         // Partially parse a mathematical expression
 
-        if (mScanner.tokenType() == CellmlTextViewScanner::CaseToken) {
-            mStatementType = PiecewiseCase;
+        static const CellmlTextViewScanner::TokenTypes tokenTypes = CellmlTextViewScanner::TokenTypes() << CellmlTextViewScanner::IdentifierToken
+                                                                                                        << CellmlTextViewScanner::OdeToken
+                                                                                                        << CellmlTextViewScanner::CaseToken
+                                                                                                        << CellmlTextViewScanner::OtherwiseToken
+                                                                                                        << CellmlTextViewScanner::EndSelToken;
 
-            return true;
-        } else if (mScanner.tokenType() == CellmlTextViewScanner::OtherwiseToken) {
-            mStatementType = PiecewiseOtherwise;
+        if (tokenType(mDomDocument, QObject::tr("An identifier, '%1', '%2', '%3' or '%4'").arg("ode", "case", "otherwise", "endsel"),
+                      tokenTypes)) {
+            if (mScanner.tokenType() == CellmlTextViewScanner::CaseToken) {
+                mStatementType = PiecewiseCase;
 
-            return true;
-        } if (mScanner.tokenType() == CellmlTextViewScanner::EndSelToken) {
-            mStatementType = PiecewiseEndSel;
+                return true;
+            } else if (mScanner.tokenType() == CellmlTextViewScanner::OtherwiseToken) {
+                mStatementType = PiecewiseOtherwise;
 
-            return true;
+                return true;
+            } if (mScanner.tokenType() == CellmlTextViewScanner::EndSelToken) {
+                mStatementType = PiecewiseEndSel;
+
+                return true;
+            } else {
+                return parseMathematicalExpression(mDomDocument, pFullParsing);
+            }
         } else {
-            return parseMathematicalExpression(mDomDocument, pFullParsing);
+            return false;
         }
     }
 }
@@ -1798,7 +1817,7 @@ bool CellmlTextViewParser::parseMathematicalExpression(QDomNode &pDomNode,
     else if (mScanner.tokenType() == CellmlTextViewScanner::OdeToken)
         lhsElement = parseDerivativeIdentifier(pDomNode);
 
-    // Check whether we got a LHS element
+    // Check whether we have got an LHS element
 
     if (lhsElement.isNull())
         return false;
