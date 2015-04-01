@@ -864,9 +864,6 @@ QString CellmlTextViewWidget::partialStatement(const int &pPosition,
     pToPosition = (nextAsPos < nextSemiColonPos)?
                       nextAsPos+AsTag.length():
                       nextSemiColonPos+SemiColonTag.length();
-qDebug("===[%05d]===================", pPosition);
-qDebug("[%d/%d]--->[%d/%d]", prevAsPos, prevSemiColonPos, nextAsPos, nextSemiColonPos);
-qDebug("[%d--->%d][%s]", pFromPosition, pToPosition, qPrintable(editor->textInRange(pFromPosition, pToPosition)));
 
     return editor->textInRange(pFromPosition, pToPosition);
 }
@@ -979,7 +976,6 @@ QString CellmlTextViewWidget::statement(const int &pPosition) const
 
         forever {
             style = editor->styleAt(fromPosition);
-qDebug("[%s][%d]", qPrintable(currentStatement[shift]), style);
 
             if (   (style == CellmlTextViewLexer::SingleLineComment)
                 || (style == CellmlTextViewLexer::MultilineComment)
@@ -990,8 +986,6 @@ qDebug("[%s][%d]", qPrintable(currentStatement[shift]), style);
                 break;
             }
         }
-qDebug("[%d--->%d][%s]", fromPosition, toPosition, qPrintable(editor->textInRange(fromPosition, toPosition)));
-qDebug(">>> [%s]", qPrintable(((pPosition >= fromPosition) && (pPosition < toPosition))?editor->textInRange(fromPosition, toPosition):QString()));
 
         // Make sure that we are within our current statement
 
@@ -1009,9 +1003,6 @@ qDebug(">>> [%s]", qPrintable(((pPosition >= fromPosition) && (pPosition < toPos
 
 void CellmlTextViewWidget::updateViewer()
 {
-//---GRY--- TO BE COMPLETED... TO START WITH, WE DO THIS ASSUMING THERE ARE NO
-//          COMMENTS. THEN, WE WILL HAVE TO HANDLE THE CASE WHERE THERE ARE
-//          COMMENTS, INCLUDING WITHIN AN EQUATION...
     // Make sure that we still have an editing widget (i.e. it hasn't been
     // closed since the signal was emitted)
 
@@ -1021,9 +1012,6 @@ void CellmlTextViewWidget::updateViewer()
     // Retrieve the statement, if any, around our current position
 
     QString currentStatement = statement(mEditingWidget->editor()->currentPosition());
-static int counter = 0;
-qDebug("---[%05d]---", ++counter);
-qDebug("[%s]", qPrintable(currentStatement));
 
     // Update the contents of our viewer
 
