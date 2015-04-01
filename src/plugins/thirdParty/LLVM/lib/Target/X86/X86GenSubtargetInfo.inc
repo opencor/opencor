@@ -76,7 +76,7 @@ namespace X86 {
   const uint64_t ProcIntelAtom = 1ULL << 62;
   const uint64_t ProcIntelSLM = 1ULL << 63;
 }
-} // End llvm namespace 
+} // End llvm namespace
 #endif // GET_SUBTARGETINFO_ENUM
 
 
@@ -6671,12 +6671,12 @@ extern const llvm::SubtargetInfoKV X86ProcSchedKV[] = {
 };
 #undef DBGFIELD
 static inline void InitX86MCSubtargetInfo(MCSubtargetInfo *II, StringRef TT, StringRef CPU, StringRef FS) {
-  II->InitMCSubtargetInfo(TT, CPU, FS, X86FeatureKV, X86SubTypeKV, 
-                      X86ProcSchedKV, X86WriteProcResTable, X86WriteLatencyTable, X86ReadAdvanceTable, 
+  II->InitMCSubtargetInfo(TT, CPU, FS, X86FeatureKV, X86SubTypeKV,
+                      X86ProcSchedKV, X86WriteProcResTable, X86WriteLatencyTable, X86ReadAdvanceTable,
                       X86Stages, X86OperandCycles, X86ForwardingPaths);
 }
 
-} // End llvm namespace 
+} // End llvm namespace
 #endif // GET_SUBTARGETINFO_MC_DESC
 
 
@@ -6768,7 +6768,7 @@ public:
   unsigned resolveSchedClass(unsigned SchedClass, const MachineInstr *DefMI, const TargetSchedModel *SchedModel) const override;
   DFAPacketizer *createDFAPacketizer(const InstrItineraryData *IID) const;
 };
-} // End llvm namespace 
+} // End llvm namespace
 #endif // GET_SUBTARGETINFO_HEADER
 
 
@@ -6787,8 +6787,8 @@ extern const unsigned X86OperandCycles[];
 extern const unsigned X86ForwardingPaths[];
 X86GenSubtargetInfo::X86GenSubtargetInfo(StringRef TT, StringRef CPU, StringRef FS)
   : TargetSubtargetInfo() {
-  InitMCSubtargetInfo(TT, CPU, FS, makeArrayRef(X86FeatureKV, 64), makeArrayRef(X86SubTypeKV, 65), 
-                      X86ProcSchedKV, X86WriteProcResTable, X86WriteLatencyTable, X86ReadAdvanceTable, 
+  InitMCSubtargetInfo(TT, CPU, FS, makeArrayRef(X86FeatureKV, 64), makeArrayRef(X86SubTypeKV, 65),
+                      X86ProcSchedKV, X86WriteProcResTable, X86WriteLatencyTable, X86ReadAdvanceTable,
                       X86Stages, X86OperandCycles, X86ForwardingPaths);
 }
 
@@ -6796,6 +6796,6 @@ unsigned X86GenSubtargetInfo
 ::resolveSchedClass(unsigned SchedClass, const MachineInstr *MI, const TargetSchedModel *SchedModel) const {
   report_fatal_error("Expected a variant SchedClass");
 } // X86GenSubtargetInfo::resolveSchedClass
-} // End llvm namespace 
+} // End llvm namespace
 #endif // GET_SUBTARGETINFO_CTOR
 

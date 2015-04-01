@@ -18518,471 +18518,471 @@ void X86ATTInstPrinter::printInstruction(const MCInst *MI, raw_ostream &O) {
     break;
   case 1:
     // AAD8i8, AAM8i8, ADC16i16, ADC32i32, ADC64i32, ADC8i8, ADD16i16, ADD32i...
-    printOperand(MI, 0, O); 
+    printOperand(MI, 0, O);
     break;
   case 2:
     // ADC16mi, ADC16mi8, ADC16mr, ADC32mi, ADC32mi8, ADC32mr, ADC64mi32, ADC...
-    printOperand(MI, 5, O); 
-    O << ", "; 
+    printOperand(MI, 5, O);
+    O << ", ";
     break;
   case 3:
     // ADC16ri, ADC16ri8, ADC16rr, ADC16rr_REV, ADC32ri, ADC32ri8, ADC32rr, A...
-    printOperand(MI, 2, O); 
-    O << ", "; 
+    printOperand(MI, 2, O);
+    O << ", ";
     break;
   case 4:
     // ADC16rm, ADD16rm, AND16rm, CMOVA16rm, CMOVAE16rm, CMOVB16rm, CMOVBE16r...
-    printi16mem(MI, 2, O); 
-    O << ", "; 
+    printi16mem(MI, 2, O);
+    O << ", ";
     break;
   case 5:
     // ADC32rm, ADCX32rm, ADD32rm, AND32rm, ANDN32rm, CMOVA32rm, CMOVAE32rm, ...
-    printi32mem(MI, 2, O); 
+    printi32mem(MI, 2, O);
     break;
   case 6:
     // ADC64rm, ADCX64rm, ADD64rm, AND64rm, ANDN64rm, CMOVA64rm, CMOVAE64rm, ...
-    printi64mem(MI, 2, O); 
+    printi64mem(MI, 2, O);
     break;
   case 7:
     // ADC8rm, ADD8rm, AND8rm, CRC32r32m8, CRC32r64m8, OR8rm, SBB8rm, SUB8rm,...
-    printi8mem(MI, 2, O); 
-    O << ", "; 
-    printOperand(MI, 1, O); 
+    printi8mem(MI, 2, O);
+    O << ", ";
+    printOperand(MI, 1, O);
     return;
     break;
   case 8:
     // ADDPDrm, ADDPSrm, ADDSUBPDrm, ADDSUBPSrm, ANDNPDrm, ANDNPSrm, ANDPDrm,...
-    printf128mem(MI, 2, O); 
-    O << ", "; 
+    printf128mem(MI, 2, O);
+    O << ", ";
     break;
   case 9:
     // ADDSDrm, ADDSDrm_Int, DIVSDrm, DIVSDrm_Int, Int_CVTSD2SSrm, Int_VCVTSD...
-    printf64mem(MI, 2, O); 
+    printf64mem(MI, 2, O);
     break;
   case 10:
     // ADDSSrm, ADDSSrm_Int, DIVSSrm, DIVSSrm_Int, Int_CVTSS2SDrm, Int_VCVTSS...
-    printf32mem(MI, 2, O); 
+    printf32mem(MI, 2, O);
     break;
   case 11:
     // ADD_F32m, DIVR_F32m, DIV_F32m, FBLDm, FBSTPm, FCOM32m, FCOMP32m, FLDEN...
-    printf32mem(MI, 0, O); 
+    printf32mem(MI, 0, O);
     return;
     break;
   case 12:
     // ADD_F64m, DIVR_F64m, DIV_F64m, FCOM64m, FCOMP64m, LD_F64m, MUL_F64m, S...
-    printf64mem(MI, 0, O); 
+    printf64mem(MI, 0, O);
     return;
     break;
   case 13:
     // ADD_FI16m, CALL16m, DEC16m, DIV16m, DIVR_FI16m, DIV_FI16m, FICOM16m, F...
-    printi16mem(MI, 0, O); 
+    printi16mem(MI, 0, O);
     return;
     break;
   case 14:
     // ADD_FI32m, CALL32m, DEC32m, DIV32m, DIVR_FI32m, DIV_FI32m, FICOM32m, F...
-    printi32mem(MI, 0, O); 
+    printi32mem(MI, 0, O);
     break;
   case 15:
     // ADOX32rm, BLCFILL32rm, BLCI32rm, BLCIC32rm, BLCMSK32rm, BLCS32rm, BLSF...
-    printi32mem(MI, 1, O); 
+    printi32mem(MI, 1, O);
     break;
   case 16:
     // ADOX32rr, ADOX64rr, AESIMCrr, ARPL16rr, BLCFILL32rr, BLCFILL64rr, BLCI...
-    printOperand(MI, 1, O); 
-    O << ", "; 
+    printOperand(MI, 1, O);
+    O << ", ";
     break;
   case 17:
     // ADOX64rm, BLCFILL64rm, BLCI64rm, BLCIC64rm, BLCMSK64rm, BLCS64rm, BLSF...
-    printi64mem(MI, 1, O); 
+    printi64mem(MI, 1, O);
     break;
   case 18:
     // AESDECLASTrm, AESDECrm, AESENCLASTrm, AESENCrm, PACKSSDWrm, PACKSSWBrm...
-    printi128mem(MI, 2, O); 
-    O << ", "; 
+    printi128mem(MI, 2, O);
+    O << ", ";
     break;
   case 19:
     // AESIMCrm, CVTDQ2PSrm, INVEPT32, INVEPT64, INVPCID32, INVPCID64, INVVPI...
-    printi128mem(MI, 1, O); 
-    O << ", "; 
-    printOperand(MI, 0, O); 
+    printi128mem(MI, 1, O);
+    O << ", ";
+    printOperand(MI, 0, O);
     return;
     break;
   case 20:
     // AESKEYGENASSIST128rm, BEXTR32rm, BEXTR64rm, BEXTRI32mi, BEXTRI64mi, BZ...
-    printOperand(MI, 6, O); 
-    O << ", "; 
+    printOperand(MI, 6, O);
+    O << ", ";
     break;
   case 21:
     // BLENDPDrmi, BLENDPSrmi, CMPPDrmi_alt, CMPPSrmi_alt, CMPSDrm_alt, CMPSS...
-    printOperand(MI, 7, O); 
-    O << ", "; 
+    printOperand(MI, 7, O);
+    O << ", ";
     break;
   case 22:
     // BLENDPDrri, BLENDPSrri, CMPPDrri_alt, CMPPSrri_alt, CMPSDrr_alt, CMPSS...
-    printOperand(MI, 3, O); 
-    O << ", "; 
+    printOperand(MI, 3, O);
+    O << ", ";
     break;
   case 23:
     // BOUNDS16rm, BSF16rm, BSR16rm, CMP16rm, KMOVWkm, LAR16rm, LAR32rm, LAR6...
-    printi16mem(MI, 1, O); 
-    O << ", "; 
-    printOperand(MI, 0, O); 
+    printi16mem(MI, 1, O);
+    O << ", ";
+    printOperand(MI, 0, O);
     return;
     break;
   case 24:
     // CALL64m, CMPXCHG8B, DEC64m, DIV64m, IDIV64m, ILD_F64m, IMUL64m, INC64m...
-    printi64mem(MI, 0, O); 
+    printi64mem(MI, 0, O);
     break;
   case 25:
     // CALL64pcrel32, CALLpcrel16, CALLpcrel32, EH_SjLj_Setup, JAE_1, JAE_2, ...
-    printPCRelImm(MI, 0, O); 
+    printPCRelImm(MI, 0, O);
     break;
   case 26:
     // CLFLUSH, DEC8m, DIV8m, IDIV8m, IMUL8m, INC8m, INVLPG, LOCK_DEC8m, LOCK...
-    printi8mem(MI, 0, O); 
+    printi8mem(MI, 0, O);
     return;
     break;
   case 27:
     // CMP8rm, KMOVBkm, MOV8rm, MOV8rm_NOREX, MOVSX16rm8, MOVSX32_NOREXrm8, M...
-    printi8mem(MI, 1, O); 
-    O << ", "; 
-    printOperand(MI, 0, O); 
+    printi8mem(MI, 1, O);
+    O << ", ";
+    printOperand(MI, 0, O);
     break;
   case 28:
     // CMPPDrmi, CMPPSrmi, CMPSDrm, CMPSSrm, Int_CMPSDrm, Int_CMPSSrm
-    printSSECC(MI, 7, O); 
+    printSSECC(MI, 7, O);
     break;
   case 29:
     // CMPPDrri, CMPPSrri, CMPSDrr, CMPSSrr, Int_CMPSDrr, Int_CMPSSrr
-    printSSECC(MI, 3, O); 
+    printSSECC(MI, 3, O);
     break;
   case 30:
     // CMPSB, INSB, SCASB, STOSB
-    printDstIdx8(MI, 0, O); 
+    printDstIdx8(MI, 0, O);
     break;
   case 31:
     // CMPSL, INSL, SCASL, STOSL
-    printDstIdx32(MI, 0, O); 
+    printDstIdx32(MI, 0, O);
     break;
   case 32:
     // CMPSQ, SCASQ, STOSQ
-    printDstIdx64(MI, 0, O); 
+    printDstIdx64(MI, 0, O);
     break;
   case 33:
     // CMPSW, INSW, SCASW, STOSW
-    printDstIdx16(MI, 0, O); 
+    printDstIdx16(MI, 0, O);
     break;
   case 34:
     // CMPXCHG16B, LCMPXCHG16B
-    printi128mem(MI, 0, O); 
+    printi128mem(MI, 0, O);
     return;
     break;
   case 35:
     // COMISDrm, COMISSrm, CVTPD2DQrm, CVTPD2PSrm, CVTPS2DQrm, CVTTPD2DQrm, C...
-    printf128mem(MI, 1, O); 
-    O << ", "; 
-    printOperand(MI, 0, O); 
+    printf128mem(MI, 1, O);
+    O << ", ";
+    printOperand(MI, 0, O);
     break;
   case 36:
     // CVTPS2PDrm, CVTSD2SI64rm, CVTSD2SIrm, CVTSD2SSrm, CVTTSD2SI64rm, CVTTS...
-    printf64mem(MI, 1, O); 
+    printf64mem(MI, 1, O);
     break;
   case 37:
     // CVTSS2SDrm, CVTSS2SI64rm, CVTSS2SIrm, CVTTSS2SI64rm, CVTTSS2SIrm, Int_...
-    printf32mem(MI, 1, O); 
+    printf32mem(MI, 1, O);
     break;
   case 38:
     // FARCALL16m, FARCALL32m, FARCALL64, FARJMP16m, FARJMP32m, FARJMP64, FXR...
-    printopaquemem(MI, 0, O); 
+    printopaquemem(MI, 0, O);
     return;
     break;
   case 39:
     // INSERTQI, VADDPDZ128rrk, VADDPDZ256rrk, VADDPDZrrk, VADDPSZ128rrk, VAD...
-    printOperand(MI, 4, O); 
-    O << ", "; 
-    printOperand(MI, 3, O); 
-    O << ", "; 
+    printOperand(MI, 4, O);
+    O << ", ";
+    printOperand(MI, 3, O);
+    O << ", ";
     break;
   case 40:
     // Int_VCMPSDrm, Int_VCMPSSrm, VCMPPDYrmi, VCMPPDZrmi, VCMPPDrmi, VCMPPSY...
-    printAVXCC(MI, 7, O); 
+    printAVXCC(MI, 7, O);
     break;
   case 41:
     // Int_VCMPSDrr, Int_VCMPSSrr, VCMPPDYrri, VCMPPDZrri, VCMPPDZrrib, VCMPP...
-    printAVXCC(MI, 3, O); 
+    printAVXCC(MI, 3, O);
     break;
   case 42:
     // LDS16rm, LDS32rm, LES16rm, LES32rm, LFS16rm, LFS32rm, LFS64rm, LGS16rm...
-    printopaquemem(MI, 1, O); 
-    O << ", "; 
-    printOperand(MI, 0, O); 
+    printopaquemem(MI, 1, O);
+    O << ", ";
+    printOperand(MI, 0, O);
     return;
     break;
   case 43:
     // LD_F80m, ST_FP80m
-    printf80mem(MI, 0, O); 
+    printf80mem(MI, 0, O);
     return;
     break;
   case 44:
     // LEA16r, LEA32r, LEA64_32r, LEA64r
-    printanymem(MI, 1, O); 
-    O << ", "; 
-    printOperand(MI, 0, O); 
+    printanymem(MI, 1, O);
+    O << ", ";
+    printOperand(MI, 0, O);
     return;
     break;
   case 45:
     // LODSB, OUTSB
-    printSrcIdx8(MI, 0, O); 
+    printSrcIdx8(MI, 0, O);
     break;
   case 46:
     // LODSL, OUTSL
-    printSrcIdx32(MI, 0, O); 
+    printSrcIdx32(MI, 0, O);
     break;
   case 47:
     // LODSQ
-    printSrcIdx64(MI, 0, O); 
-    O << ", %rax"; 
+    printSrcIdx64(MI, 0, O);
+    O << ", %rax";
     return;
     break;
   case 48:
     // LODSW, OUTSW
-    printSrcIdx16(MI, 0, O); 
+    printSrcIdx16(MI, 0, O);
     break;
   case 49:
     // MOV16ao16, MOV16ao32, MOV16ao64, MOV16o16a, MOV16o32a, MOV16o64a
-    printMemOffs16(MI, 0, O); 
+    printMemOffs16(MI, 0, O);
     break;
   case 50:
     // MOV32ao16, MOV32ao32, MOV32ao64, MOV32o16a, MOV32o32a, MOV32o64a
-    printMemOffs32(MI, 0, O); 
+    printMemOffs32(MI, 0, O);
     break;
   case 51:
     // MOV64ao32, MOV64ao64, MOV64o32a, MOV64o64a
-    printMemOffs64(MI, 0, O); 
+    printMemOffs64(MI, 0, O);
     break;
   case 52:
     // MOV8ao16, MOV8ao32, MOV8ao64, MOV8o16a, MOV8o32a, MOV8o64a
-    printMemOffs8(MI, 0, O); 
+    printMemOffs8(MI, 0, O);
     break;
   case 53:
     // MOVSB
-    printSrcIdx8(MI, 1, O); 
-    O << ", "; 
-    printDstIdx8(MI, 0, O); 
+    printSrcIdx8(MI, 1, O);
+    O << ", ";
+    printDstIdx8(MI, 0, O);
     return;
     break;
   case 54:
     // MOVSL
-    printSrcIdx32(MI, 1, O); 
-    O << ", "; 
-    printDstIdx32(MI, 0, O); 
+    printSrcIdx32(MI, 1, O);
+    O << ", ";
+    printDstIdx32(MI, 0, O);
     return;
     break;
   case 55:
     // MOVSQ
-    printSrcIdx64(MI, 1, O); 
-    O << ", "; 
-    printDstIdx64(MI, 0, O); 
+    printSrcIdx64(MI, 1, O);
+    O << ", ";
+    printDstIdx64(MI, 0, O);
     return;
     break;
   case 56:
     // MOVSW
-    printSrcIdx16(MI, 1, O); 
-    O << ", "; 
-    printDstIdx16(MI, 0, O); 
+    printSrcIdx16(MI, 1, O);
+    O << ", ";
+    printDstIdx16(MI, 0, O);
     return;
     break;
   case 57:
     // VADDPDYrm, VADDPDZ256rm, VADDPSYrm, VADDPSZ256rm, VADDSUBPDYrm, VADDSU...
-    printf256mem(MI, 2, O); 
-    O << ", "; 
+    printf256mem(MI, 2, O);
+    O << ", ";
     break;
   case 58:
     // VADDPDZ128rmbk, VADDPDZ256rmbk, VADDPDZrmbk, VDIVPDZ128rmbk, VDIVPDZ25...
-    printf64mem(MI, 4, O); 
+    printf64mem(MI, 4, O);
     break;
   case 59:
     // VADDPDZ128rmbkz, VADDPDZ256rmbkz, VADDPDZrmbkz, VBLENDMPDZ128rmbk, VBL...
-    printf64mem(MI, 3, O); 
+    printf64mem(MI, 3, O);
     break;
   case 60:
     // VADDPDZ128rmk, VADDPSZ128rmk, VDIVPDZ128rmk, VDIVPSZ128rmk, VFMADDPDZ1...
-    printf128mem(MI, 4, O); 
-    O << ", "; 
-    printOperand(MI, 3, O); 
-    O << ", "; 
-    printOperand(MI, 0, O); 
-    O << " {"; 
-    printOperand(MI, 2, O); 
+    printf128mem(MI, 4, O);
+    O << ", ";
+    printOperand(MI, 3, O);
+    O << ", ";
+    printOperand(MI, 0, O);
+    O << " {";
+    printOperand(MI, 2, O);
     break;
   case 61:
     // VADDPDZ128rmkz, VADDPSZ128rmkz, VBLENDMPDZ128rmk, VBLENDMPDZ128rmkz, V...
-    printf128mem(MI, 3, O); 
-    O << ", "; 
+    printf128mem(MI, 3, O);
+    O << ", ";
     break;
   case 62:
     // VADDPDZ256rmk, VADDPSZ256rmk, VDIVPDZ256rmk, VDIVPSZ256rmk, VFMADDPDZ2...
-    printf256mem(MI, 4, O); 
-    O << ", "; 
-    printOperand(MI, 3, O); 
-    O << ", "; 
-    printOperand(MI, 0, O); 
-    O << " {"; 
-    printOperand(MI, 2, O); 
+    printf256mem(MI, 4, O);
+    O << ", ";
+    printOperand(MI, 3, O);
+    O << ", ";
+    printOperand(MI, 0, O);
+    O << " {";
+    printOperand(MI, 2, O);
     break;
   case 63:
     // VADDPDZ256rmkz, VADDPSZ256rmkz, VBLENDMPDZ256rmk, VBLENDMPDZ256rmkz, V...
-    printf256mem(MI, 3, O); 
-    O << ", "; 
+    printf256mem(MI, 3, O);
+    O << ", ";
     break;
   case 64:
     // VADDPDZrm, VADDPSZrm, VBLENDMPDZrm, VBLENDMPSZrm, VDIVPDZrm, VDIVPSZrm...
-    printf512mem(MI, 2, O); 
-    O << ", "; 
+    printf512mem(MI, 2, O);
+    O << ", ";
     break;
   case 65:
     // VADDPDZrmk, VADDPSZrmk, VDIVPDZrmk, VDIVPSZrmk, VFMADDPDZv213rmk, VFMA...
-    printf512mem(MI, 4, O); 
-    O << ", "; 
-    printOperand(MI, 3, O); 
-    O << ", "; 
-    printOperand(MI, 0, O); 
-    O << " {"; 
-    printOperand(MI, 2, O); 
+    printf512mem(MI, 4, O);
+    O << ", ";
+    printOperand(MI, 3, O);
+    O << ", ";
+    printOperand(MI, 0, O);
+    O << " {";
+    printOperand(MI, 2, O);
     break;
   case 66:
     // VADDPDZrmkz, VADDPSZrmkz, VBLENDMPDZrmk, VBLENDMPDZrmkz, VBLENDMPSZrmk...
-    printf512mem(MI, 3, O); 
-    O << ", "; 
+    printf512mem(MI, 3, O);
+    O << ", ";
     break;
   case 67:
     // VADDPSZ128rmbk, VADDPSZ256rmbk, VADDPSZrmbk, VDIVPSZ128rmbk, VDIVPSZ25...
-    printf32mem(MI, 4, O); 
+    printf32mem(MI, 4, O);
     break;
   case 68:
     // VADDPSZ128rmbkz, VADDPSZ256rmbkz, VADDPSZrmbkz, VBLENDMPSZ128rmbk, VBL...
-    printf32mem(MI, 3, O); 
+    printf32mem(MI, 3, O);
     break;
   case 69:
     // VBROADCASTI64X4krm, VMOVDQA32Z256rmkz, VMOVDQA64Z256rmkz, VMOVDQU16Z25...
-    printi256mem(MI, 2, O); 
-    O << ", "; 
+    printi256mem(MI, 2, O);
+    O << ", ";
     break;
   case 70:
     // VBROADCASTI64X4rm, VCVTDQ2PDZrm, VCVTDQ2PSYrm, VLDDQUYrm, VMOVDQA32Z25...
-    printi256mem(MI, 1, O); 
-    O << ", "; 
-    printOperand(MI, 0, O); 
+    printi256mem(MI, 1, O);
+    O << ", ";
+    printOperand(MI, 0, O);
     return;
     break;
   case 71:
     // VCVTDQ2PSZrm, VMOVDQA32Zrm, VMOVDQA64Zrm, VMOVDQU16Zrm, VMOVDQU32Zrm, ...
-    printi512mem(MI, 1, O); 
-    O << ", "; 
-    printOperand(MI, 0, O); 
+    printi512mem(MI, 1, O);
+    O << ", ";
+    printOperand(MI, 0, O);
     return;
     break;
   case 72:
     // VCVTDQ2PSZrrb, VCVTPD2DQZrrb, VCVTPD2PSZrrb, VCVTPD2UDQZrrb, VCVTPS2DQ...
-    printRoundingControl(MI, 2, O); 
-    O << ", "; 
-    printOperand(MI, 1, O); 
-    O << ", "; 
-    printOperand(MI, 0, O); 
+    printRoundingControl(MI, 2, O);
+    O << ", ";
+    printOperand(MI, 1, O);
+    O << ", ";
+    printOperand(MI, 0, O);
     return;
     break;
   case 73:
     // VCVTPD2DQYrm, VCVTPD2PSYrm, VCVTPH2PSZrm, VCVTPS2DQYrm, VCVTPS2PDZrm, ...
-    printf256mem(MI, 1, O); 
-    O << ", "; 
-    printOperand(MI, 0, O); 
+    printf256mem(MI, 1, O);
+    O << ", ";
+    printOperand(MI, 0, O);
     break;
   case 74:
     // VCVTPD2DQZrm, VCVTPD2PSZrm, VCVTPD2UDQZrm, VCVTPS2DQZrm, VCVTPS2UDQZrm...
-    printf512mem(MI, 1, O); 
-    O << ", "; 
-    printOperand(MI, 0, O); 
+    printf512mem(MI, 1, O);
+    O << ", ";
+    printOperand(MI, 0, O);
     break;
   case 75:
     // VGATHERDPDYrm, VGATHERDPDrm, VGATHERDPSYrm, VGATHERDPSrm, VGATHERQPDYr...
-    printOperand(MI, 8, O); 
-    O << ", "; 
+    printOperand(MI, 8, O);
+    O << ", ";
     break;
   case 76:
     // VGATHERDPDZrm, VGATHERQPDZrm, VGATHERQPSZrm, VPADDQZ128rmbk, VPADDQZ25...
-    printi64mem(MI, 4, O); 
+    printi64mem(MI, 4, O);
     break;
   case 77:
     // VGATHERDPSZrm, VPADDDZ128rmbk, VPADDDZ256rmbk, VPADDDZrmbk, VPANDDZ128...
-    printi32mem(MI, 4, O); 
+    printi32mem(MI, 4, O);
     break;
   case 78:
     // VMOVDQA32Z128rmk, VMOVDQA64Z128rmk, VMOVDQU16Z128rmk, VMOVDQU32Z128rmk...
-    printi128mem(MI, 3, O); 
-    O << ", "; 
+    printi128mem(MI, 3, O);
+    O << ", ";
     break;
   case 79:
     // VMOVDQA32Z256rmk, VMOVDQA64Z256rmk, VMOVDQU16Z256rmk, VMOVDQU32Z256rmk...
-    printi256mem(MI, 3, O); 
-    O << ", "; 
+    printi256mem(MI, 3, O);
+    O << ", ";
     break;
   case 80:
     // VMOVDQA32Zrmk, VMOVDQA64Zrmk, VMOVDQU16Zrmk, VMOVDQU32Zrmk, VMOVDQU64Z...
-    printi512mem(MI, 3, O); 
-    O << ", "; 
+    printi512mem(MI, 3, O);
+    O << ", ";
     break;
   case 81:
     // VMOVDQA32Zrmkz, VMOVDQA64Zrmkz, VMOVDQU16Zrmkz, VMOVDQU32Zrmkz, VMOVDQ...
-    printi512mem(MI, 2, O); 
-    O << ", "; 
+    printi512mem(MI, 2, O);
+    O << ", ";
     break;
   case 82:
     // VPADDBZ128rmk, VPADDDZ128rmk, VPADDQZ128rmk, VPADDWZ128rmk, VPANDDZ128...
-    printi128mem(MI, 4, O); 
-    O << ", "; 
-    printOperand(MI, 3, O); 
-    O << ", "; 
-    printOperand(MI, 0, O); 
-    O << " {"; 
-    printOperand(MI, 2, O); 
+    printi128mem(MI, 4, O);
+    O << ", ";
+    printOperand(MI, 3, O);
+    O << ", ";
+    printOperand(MI, 0, O);
+    O << " {";
+    printOperand(MI, 2, O);
     break;
   case 83:
     // VPADDBZ256rmk, VPADDDZ256rmk, VPADDQZ256rmk, VPADDWZ256rmk, VPANDDZ256...
-    printi256mem(MI, 4, O); 
-    O << ", "; 
-    printOperand(MI, 3, O); 
-    O << ", "; 
-    printOperand(MI, 0, O); 
-    O << " {"; 
-    printOperand(MI, 2, O); 
-    O << '}'; 
+    printi256mem(MI, 4, O);
+    O << ", ";
+    printOperand(MI, 3, O);
+    O << ", ";
+    printOperand(MI, 0, O);
+    O << " {";
+    printOperand(MI, 2, O);
+    O << '}';
     return;
     break;
   case 84:
     // VPADDBZrmk, VPADDDZrmk, VPADDQZrmk, VPADDWZrmk, VPANDDZrmk, VPANDNDZrm...
-    printi512mem(MI, 4, O); 
-    O << ", "; 
-    printOperand(MI, 3, O); 
-    O << ", "; 
-    printOperand(MI, 0, O); 
-    O << " {"; 
-    printOperand(MI, 2, O); 
+    printi512mem(MI, 4, O);
+    O << ", ";
+    printOperand(MI, 3, O);
+    O << ", ";
+    printOperand(MI, 0, O);
+    O << " {";
+    printOperand(MI, 2, O);
     break;
   case 85:
     // VPADDDZ128rmbkz, VPADDDZ256rmbkz, VPADDDZrmbkz, VPANDDZ128rmbkz, VPAND...
-    printi32mem(MI, 3, O); 
+    printi32mem(MI, 3, O);
     break;
   case 86:
     // VPADDQZ128rmbkz, VPADDQZ256rmbkz, VPADDQZrmbkz, VPANDNQZ128rmbkz, VPAN...
-    printi64mem(MI, 3, O); 
+    printi64mem(MI, 3, O);
     break;
   case 87:
     // VPCMPBZ128rmik, VPCMPBZ256rmik, VPCMPBZrmik, VPCMPDZ128rmibk, VPCMPDZ1...
-    printAVXCC(MI, 8, O); 
+    printAVXCC(MI, 8, O);
     break;
   case 88:
     // VPCMPBZ128rrik, VPCMPBZ256rrik, VPCMPBZrrik, VPCMPDZ128rrik, VPCMPDZ25...
-    printAVXCC(MI, 4, O); 
+    printAVXCC(MI, 4, O);
     break;
   }
 
@@ -18996,425 +18996,425 @@ void X86ATTInstPrinter::printInstruction(const MCInst *MI, raw_ostream &O) {
     break;
   case 1:
     // ADC16i16, ADD16i16, AND16i16, CMP16i16, IN16ri, LODSW, MOV16ao16, MOV1...
-    O << ", %ax"; 
+    O << ", %ax";
     return;
     break;
   case 2:
     // ADC16mi, ADC16mi8, ADC16mr, ADD16mi, ADD16mi8, ADD16mr, AND16mi, AND16...
-    printi16mem(MI, 0, O); 
+    printi16mem(MI, 0, O);
     return;
     break;
   case 3:
     // ADC16ri, ADC16ri8, ADC16rm, ADC16rr, ADC32ri, ADC32ri8, ADC32rr, ADC64...
-    printOperand(MI, 1, O); 
+    printOperand(MI, 1, O);
     break;
   case 4:
     // ADC16rr_REV, ADC32rr_REV, ADC64rr_REV, ADC8rr_REV, ADCX32rr, ADCX64rr,...
-    printOperand(MI, 0, O); 
+    printOperand(MI, 0, O);
     break;
   case 5:
     // ADC32i32, ADD32i32, AND32i32, CMP32i32, IN32ri, LODSL, MOV32ao16, MOV3...
-    O << ", %eax"; 
+    O << ", %eax";
     return;
     break;
   case 6:
     // ADC32mi, ADC32mi8, ADC32mr, ADD32mi, ADD32mi8, ADD32mr, AND32mi, AND32...
-    printi32mem(MI, 0, O); 
+    printi32mem(MI, 0, O);
     return;
     break;
   case 7:
     // ADC32rm, ADC64rm, ADCX32rm, ADCX64rm, ADD32rm, ADD64rm, ADDSDrm, ADDSD...
-    O << ", "; 
+    O << ", ";
     break;
   case 8:
     // ADC64i32, ADD64i32, AND64i32, CMP64i32, MOV64ao32, MOV64ao64, OR64i32,...
-    O << ", %rax"; 
+    O << ", %rax";
     return;
     break;
   case 9:
     // ADC64mi32, ADC64mi8, ADC64mr, ADD64mi32, ADD64mi8, ADD64mr, AND64mi32,...
-    printi64mem(MI, 0, O); 
+    printi64mem(MI, 0, O);
     return;
     break;
   case 10:
     // ADC8i8, ADD8i8, AND8i8, CMP8i8, IN8ri, LODSB, MOV8ao16, MOV8ao32, MOV8...
-    O << ", %al"; 
+    O << ", %al";
     return;
     break;
   case 11:
     // ADC8mi, ADC8mi8, ADC8mr, ADD8mi, ADD8mi8, ADD8mr, AND8mi, AND8mi8, AND...
-    printi8mem(MI, 0, O); 
+    printi8mem(MI, 0, O);
     break;
   case 12:
     // AESKEYGENASSIST128rm, PCMPESTRIrm, PCMPESTRM128rm, PCMPISTRIrm, PCMPIS...
-    printi128mem(MI, 1, O); 
-    O << ", "; 
-    printOperand(MI, 0, O); 
+    printi128mem(MI, 1, O);
+    O << ", ";
+    printOperand(MI, 0, O);
     return;
     break;
   case 13:
     // BEXTR32rm, BEXTRI32mi, BZHI32rm, IMUL32rmi, IMUL32rmi8, RORX32mi, SARX...
-    printi32mem(MI, 1, O); 
+    printi32mem(MI, 1, O);
     break;
   case 14:
     // BEXTR64rm, BEXTRI64mi, BZHI64rm, IMUL64rmi32, IMUL64rmi8, MMX_PSHUFWmi...
-    printi64mem(MI, 1, O); 
+    printi64mem(MI, 1, O);
     break;
   case 15:
     // BLENDPDrmi, BLENDPSrmi, CMPPDrmi_alt, CMPPSrmi_alt, DPPDrmi, DPPSrmi, ...
-    printf128mem(MI, 2, O); 
-    O << ", "; 
+    printf128mem(MI, 2, O);
+    O << ", ";
     break;
   case 16:
     // BLENDPDrri, BLENDPSrri, CMPPDrri_alt, CMPPSrri_alt, CMPSDrr_alt, CMPSS...
-    printOperand(MI, 2, O); 
+    printOperand(MI, 2, O);
     break;
   case 17:
     // CMOVBE_F, CMOVB_F, CMOVE_F, CMOVNBE_F, CMOVNB_F, CMOVNE_F, CMOVNP_F, C...
-    O << ", %st(0)"; 
+    O << ", %st(0)";
     return;
     break;
   case 18:
     // CMPPDrmi, CMPPDrri, VCMPPDYrmi, VCMPPDYrri, VCMPPDZrmi, VCMPPDZrri, VC...
-    O << "pd\t"; 
+    O << "pd\t";
     break;
   case 19:
     // CMPPSrmi, CMPPSrri, VCMPPSYrmi, VCMPPSYrri, VCMPPSZrmi, VCMPPSZrri, VC...
-    O << "ps\t"; 
+    O << "ps\t";
     break;
   case 20:
     // CMPSDrm, CMPSDrr, Int_CMPSDrm, Int_CMPSDrr, Int_VCMPSDrm, Int_VCMPSDrr...
-    O << "sd\t"; 
+    O << "sd\t";
     break;
   case 21:
     // CMPSDrm_alt, ROUNDSDm, VCMPSDZrmi_alt, VCMPSDrm_alt, VFMADDSD4mr, VFMA...
-    printf64mem(MI, 2, O); 
-    O << ", "; 
+    printf64mem(MI, 2, O);
+    O << ", ";
     break;
   case 22:
     // CMPSSrm, CMPSSrr, Int_CMPSSrm, Int_CMPSSrr, Int_VCMPSSrm, Int_VCMPSSrr...
-    O << "ss\t"; 
+    O << "ss\t";
     break;
   case 23:
     // CMPSSrm_alt, INSERTPSrm, ROUNDSSm, VCMPSSZrmi_alt, VCMPSSrm_alt, VFMAD...
-    printf32mem(MI, 2, O); 
-    O << ", "; 
+    printf32mem(MI, 2, O);
+    O << ", ";
     break;
   case 24:
     // EXTRACTPSmr, PEXTRBmr, PEXTRDmr, PEXTRQmr, PEXTRWmr, SHLD16mri8, SHLD3...
-    printOperand(MI, 5, O); 
-    O << ", "; 
+    printOperand(MI, 5, O);
+    O << ", ";
     break;
   case 25:
     // IMUL16rmi, IMUL16rmi8
-    printi16mem(MI, 1, O); 
-    O << ", "; 
-    printOperand(MI, 0, O); 
+    printi16mem(MI, 1, O);
+    O << ", ";
+    printOperand(MI, 0, O);
     return;
     break;
   case 26:
     // LXADD16, MMX_PINSRWirmi, PINSRWrmi, VPINSRWrmi, XCHG16rm
-    printi16mem(MI, 2, O); 
+    printi16mem(MI, 2, O);
     break;
   case 27:
     // LXADD32, PINSRDrm, VPCMPDZ128rmib_alt, VPCMPDZ256rmib_alt, VPCMPDZrmib...
-    printi32mem(MI, 2, O); 
+    printi32mem(MI, 2, O);
     break;
   case 28:
     // LXADD64, MMX_PALIGNR64irm, PINSRQrm, VPCMPQZ128rmib_alt, VPCMPQZ256rmi...
-    printi64mem(MI, 2, O); 
+    printi64mem(MI, 2, O);
     break;
   case 29:
     // LXADD8, PINSRBrm, VPINSRBrm, XCHG8rm
-    printi8mem(MI, 2, O); 
+    printi8mem(MI, 2, O);
     break;
   case 30:
     // MOV8rm_NOREX, MOVSX32_NOREXrm8, MOVZX32_NOREXrm8
-    O << "  # NOREX"; 
+    O << "  # NOREX";
     return;
     break;
   case 31:
     // MOVAPDmr, MOVAPSmr, MOVNTDQmr, MOVNTPDmr, MOVNTPSmr, MOVUPDmr, MOVUPSm...
-    printf128mem(MI, 0, O); 
+    printf128mem(MI, 0, O);
     break;
   case 32:
     // MOVDQAmr, MOVDQUmr, VMOVDQA32Z128mr, VMOVDQA32Z128mrk, VMOVDQA64Z128mr...
-    printi128mem(MI, 0, O); 
+    printi128mem(MI, 0, O);
     break;
   case 33:
     // MOVHPDmr, MOVHPSmr, MOVLPDmr, MOVLPSmr, MOVNTSD, MOVSDmr, VMOVHPDmr, V...
-    printf64mem(MI, 0, O); 
+    printf64mem(MI, 0, O);
     break;
   case 34:
     // MOVNTSS, MOVSSmr, VMOVSSZmr, VMOVSSZmrk, VMOVSSmr
-    printf32mem(MI, 0, O); 
+    printf32mem(MI, 0, O);
     break;
   case 35:
     // MPSADBWrmi, PALIGNR128rm, PBLENDWrmi, PCLMULQDQrm, SHA1RNDS4rmi, VINSE...
-    printi128mem(MI, 2, O); 
-    O << ", "; 
+    printi128mem(MI, 2, O);
+    O << ", ";
     break;
   case 36:
     // OUTSB, OUTSL, OUTSW
-    O << ", %dx"; 
+    O << ", %dx";
     return;
     break;
   case 37:
     // ROUNDPDm, ROUNDPSm, VPERMILPDmi, VPERMILPSmi, VROUNDPDm, VROUNDPSm
-    printf128mem(MI, 1, O); 
-    O << ", "; 
-    printOperand(MI, 0, O); 
+    printf128mem(MI, 1, O);
+    O << ", ";
+    printOperand(MI, 0, O);
     return;
     break;
   case 38:
     // TAILJMPd, TAILJMPd64, TAILJMPm, TAILJMPm64, TAILJMPr64
-    O << "  # TAILCALL"; 
+    O << "  # TAILCALL";
     return;
     break;
   case 39:
     // VADDPDZ128rmb, VADDPDZ128rmbk, VADDPDZ128rmbkz, VBLENDMPDZ128rmb, VBLE...
-    O << "{1to2}, "; 
+    O << "{1to2}, ";
     break;
   case 40:
     // VADDPDZ128rmk, VADDPDZ256rmk, VADDPDZrmk, VADDPSZ128rmk, VADDPSZ256rmk...
-    O << '}'; 
+    O << '}';
     return;
     break;
   case 41:
     // VADDPDZ256rmb, VADDPDZ256rmbk, VADDPDZ256rmbkz, VADDPSZ128rmb, VADDPSZ...
-    O << "{1to4}, "; 
+    O << "{1to4}, ";
     break;
   case 42:
     // VADDPDZrmb, VADDPDZrmbk, VADDPDZrmbkz, VADDPSZ256rmb, VADDPSZ256rmbk, ...
-    O << "{1to8}, "; 
+    O << "{1to8}, ";
     break;
   case 43:
     // VADDPSZrmb, VADDPSZrmbk, VADDPSZrmbkz, VBLENDMPSZrmb, VBLENDMPSZrmbk, ...
-    O << "{1to16}, "; 
+    O << "{1to16}, ";
     break;
   case 44:
     // VALIGNDrmi, VALIGNQrmi, VPCMPBZrmi_alt, VPCMPDZrmi_alt, VPCMPQZrmi_alt...
-    printi512mem(MI, 2, O); 
-    O << ", "; 
+    printi512mem(MI, 2, O);
+    O << ", ";
     break;
   case 45:
     // VALIGNDrrik, VALIGNQrrik
-    printOperand(MI, 4, O); 
-    O << ", "; 
-    printOperand(MI, 3, O); 
-    O << ", "; 
-    printOperand(MI, 0, O); 
-    O << " {"; 
-    printOperand(MI, 2, O); 
-    O << '}'; 
+    printOperand(MI, 4, O);
+    O << ", ";
+    printOperand(MI, 3, O);
+    O << ", ";
+    printOperand(MI, 0, O);
+    O << " {";
+    printOperand(MI, 2, O);
+    O << '}';
     return;
     break;
   case 46:
     // VBLENDPDYrmi, VBLENDPSYrmi, VBLENDVPDYrm, VBLENDVPSYrm, VCMPPDYrmi_alt...
-    printf256mem(MI, 2, O); 
-    O << ", "; 
-    printOperand(MI, 1, O); 
-    O << ", "; 
-    printOperand(MI, 0, O); 
+    printf256mem(MI, 2, O);
+    O << ", ";
+    printOperand(MI, 1, O);
+    O << ", ";
+    printOperand(MI, 0, O);
     return;
     break;
   case 47:
     // VCMPPDZrmi_alt, VCMPPSZrmi_alt, VSHUFPDZrmi, VSHUFPSZrmi
-    printf512mem(MI, 2, O); 
-    O << ", "; 
-    printOperand(MI, 1, O); 
-    O << ", "; 
-    printOperand(MI, 0, O); 
+    printf512mem(MI, 2, O);
+    O << ", ";
+    printOperand(MI, 1, O);
+    O << ", ";
+    printOperand(MI, 0, O);
     return;
     break;
   case 48:
     // VCMPPDZrrib
-    O << "pd\t{sae}, "; 
-    printOperand(MI, 2, O); 
-    O << ", "; 
-    printOperand(MI, 1, O); 
-    O << ", "; 
-    printOperand(MI, 0, O); 
+    O << "pd\t{sae}, ";
+    printOperand(MI, 2, O);
+    O << ", ";
+    printOperand(MI, 1, O);
+    O << ", ";
+    printOperand(MI, 0, O);
     return;
     break;
   case 49:
     // VCMPPSZrrib
-    O << "ps\t{sae}, "; 
-    printOperand(MI, 2, O); 
-    O << ", "; 
-    printOperand(MI, 1, O); 
-    O << ", "; 
-    printOperand(MI, 0, O); 
+    O << "ps\t{sae}, ";
+    printOperand(MI, 2, O);
+    O << ", ";
+    printOperand(MI, 1, O);
+    O << ", ";
+    printOperand(MI, 0, O);
     return;
     break;
   case 50:
     // VCOMPRESSPDZ256mrk, VCOMPRESSPSZ256mrk, VMOVAPDYmr, VMOVAPDZ256mr, VMO...
-    printf256mem(MI, 0, O); 
+    printf256mem(MI, 0, O);
     break;
   case 51:
     // VCOMPRESSPDZmrk, VCOMPRESSPSZmrk, VMOVAPDZmr, VMOVAPDZmrk, VMOVAPSZmr,...
-    printf512mem(MI, 0, O); 
+    printf512mem(MI, 0, O);
     break;
   case 52:
     // VDPPSYrmi, VINSERTI32x8rm, VINSERTI64x4rm, VMPSADBWYrmi, VPALIGNR256rm...
-    printi256mem(MI, 2, O); 
-    O << ", "; 
-    printOperand(MI, 1, O); 
-    O << ", "; 
-    printOperand(MI, 0, O); 
+    printi256mem(MI, 2, O);
+    O << ", ";
+    printOperand(MI, 1, O);
+    O << ", ";
+    printOperand(MI, 0, O);
     return;
     break;
   case 53:
     // VEXP2PDm, VEXP2PDmb, VEXP2PSm, VEXP2PSmb, VRCP14PDZ128m, VRCP14PDZ256m...
-    O << ' '; 
+    O << ' ';
     return;
     break;
   case 54:
     // VFMADDPDZ128v213rmkz, VFMADDPDZ128v231rmkz, VFMADDPDZ256v213rmkz, VFMA...
-    O << "} {z}"; 
+    O << "} {z}";
     return;
     break;
   case 55:
     // VGATHERDPDYrm, VGATHERDPDrm, VGATHERQPDYrm, VGATHERQPDrm, VPCMPQZ128rm...
-    printi64mem(MI, 3, O); 
+    printi64mem(MI, 3, O);
     break;
   case 56:
     // VGATHERDPSYrm, VGATHERDPSrm, VGATHERQPSYrm, VGATHERQPSrm, VPCMPDZ128rm...
-    printi32mem(MI, 3, O); 
+    printi32mem(MI, 3, O);
     break;
   case 57:
     // VGATHERPF0DPDm, VGATHERPF0DPSm, VGATHERPF0QPDm, VGATHERPF0QPSm, VGATHE...
-    O << " {"; 
-    printOperand(MI, 0, O); 
-    O << '}'; 
+    O << " {";
+    printOperand(MI, 0, O);
+    O << '}';
     return;
     break;
   case 58:
     // VMOVDQA32Z256mr, VMOVDQA32Z256mrk, VMOVDQA64Z256mr, VMOVDQA64Z256mrk, ...
-    printi256mem(MI, 0, O); 
+    printi256mem(MI, 0, O);
     break;
   case 59:
     // VMOVDQA32Zmr, VMOVDQA32Zmrk, VMOVDQA64Zmr, VMOVDQA64Zmrk, VMOVDQU16Zmr...
-    printi512mem(MI, 0, O); 
+    printi512mem(MI, 0, O);
     break;
   case 60:
     // VPCMPBZ128rmi, VPCMPBZ128rmik, VPCMPBZ128rri, VPCMPBZ128rrik, VPCMPBZ2...
-    O << "b\t"; 
+    O << "b\t";
     break;
   case 61:
     // VPCMPBZ128rmik_alt, VPCMPDZ128rmik_alt, VPCMPQZ128rmik_alt, VPCMPUBZ12...
-    printi128mem(MI, 3, O); 
-    O << ", "; 
-    printOperand(MI, 2, O); 
-    O << ", "; 
-    printOperand(MI, 0, O); 
-    O << " {"; 
-    printOperand(MI, 1, O); 
-    O << '}'; 
+    printi128mem(MI, 3, O);
+    O << ", ";
+    printOperand(MI, 2, O);
+    O << ", ";
+    printOperand(MI, 0, O);
+    O << " {";
+    printOperand(MI, 1, O);
+    O << '}';
     return;
     break;
   case 62:
     // VPCMPBZ256rmik_alt, VPCMPDZ256rmik_alt, VPCMPQZ256rmik_alt, VPCMPUBZ25...
-    printi256mem(MI, 3, O); 
-    O << ", "; 
-    printOperand(MI, 2, O); 
-    O << ", "; 
-    printOperand(MI, 0, O); 
-    O << " {"; 
-    printOperand(MI, 1, O); 
-    O << '}'; 
+    printi256mem(MI, 3, O);
+    O << ", ";
+    printOperand(MI, 2, O);
+    O << ", ";
+    printOperand(MI, 0, O);
+    O << " {";
+    printOperand(MI, 1, O);
+    O << '}';
     return;
     break;
   case 63:
     // VPCMPBZrmik_alt, VPCMPDZrmik_alt, VPCMPQZrmik_alt, VPCMPUBZrmik_alt, V...
-    printi512mem(MI, 3, O); 
-    O << ", "; 
+    printi512mem(MI, 3, O);
+    O << ", ";
     break;
   case 64:
     // VPCMPDZ128rmi, VPCMPDZ128rmib, VPCMPDZ128rmibk, VPCMPDZ128rmik, VPCMPD...
-    O << "d\t"; 
+    O << "d\t";
     break;
   case 65:
     // VPCMPQZ128rmi, VPCMPQZ128rmib, VPCMPQZ128rmibk, VPCMPQZ128rmik, VPCMPQ...
-    O << "q\t"; 
+    O << "q\t";
     break;
   case 66:
     // VPCMPUBZ128rmi, VPCMPUBZ128rmik, VPCMPUBZ128rri, VPCMPUBZ128rrik, VPCM...
-    O << "ub\t"; 
+    O << "ub\t";
     break;
   case 67:
     // VPCMPUDZ128rmi, VPCMPUDZ128rmib, VPCMPUDZ128rmibk, VPCMPUDZ128rmik, VP...
-    O << "ud\t"; 
+    O << "ud\t";
     break;
   case 68:
     // VPCMPUQZ128rmi, VPCMPUQZ128rmib, VPCMPUQZ128rmibk, VPCMPUQZ128rmik, VP...
-    O << "uq\t"; 
+    O << "uq\t";
     break;
   case 69:
     // VPCMPUWZ128rmi, VPCMPUWZ128rmik, VPCMPUWZ128rri, VPCMPUWZ128rrik, VPCM...
-    O << "uw\t"; 
+    O << "uw\t";
     break;
   case 70:
     // VPCMPWZ128rmi, VPCMPWZ128rmik, VPCMPWZ128rri, VPCMPWZ128rrik, VPCMPWZ2...
-    O << "w\t"; 
+    O << "w\t";
     break;
   case 71:
     // VPERMIL2PDmr, VPERMIL2PDmrY, VPERMIL2PSmr, VPERMIL2PSmrY
-    printOperand(MI, 7, O); 
-    O << ", "; 
+    printOperand(MI, 7, O);
+    O << ", ";
     break;
   case 72:
     // VPERMIL2PDrm, VPERMIL2PSrm
-    printf128mem(MI, 3, O); 
-    O << ", "; 
-    printOperand(MI, 2, O); 
-    O << ", "; 
-    printOperand(MI, 1, O); 
-    O << ", "; 
-    printOperand(MI, 0, O); 
+    printf128mem(MI, 3, O);
+    O << ", ";
+    printOperand(MI, 2, O);
+    O << ", ";
+    printOperand(MI, 1, O);
+    O << ", ";
+    printOperand(MI, 0, O);
     return;
     break;
   case 73:
     // VPERMIL2PDrmY, VPERMIL2PSrmY
-    printf256mem(MI, 3, O); 
-    O << ", "; 
-    printOperand(MI, 2, O); 
-    O << ", "; 
-    printOperand(MI, 1, O); 
-    O << ", "; 
-    printOperand(MI, 0, O); 
+    printf256mem(MI, 3, O);
+    O << ", ";
+    printOperand(MI, 2, O);
+    O << ", ";
+    printOperand(MI, 1, O);
+    O << ", ";
+    printOperand(MI, 0, O);
     return;
     break;
   case 74:
     // VPERMILPDYmi, VPERMILPSYmi, VROUNDYPDm, VROUNDYPSm
-    printf256mem(MI, 1, O); 
-    O << ", "; 
-    printOperand(MI, 0, O); 
+    printf256mem(MI, 1, O);
+    O << ", ";
+    printOperand(MI, 0, O);
     return;
     break;
   case 75:
     // VPERMILPDZmi, VPERMILPSZmi, VPERMPDZmi, VRNDSCALEPDZm, VRNDSCALEPSZm
-    printf512mem(MI, 1, O); 
-    O << ", "; 
-    printOperand(MI, 0, O); 
+    printf512mem(MI, 1, O);
+    O << ", ";
+    printOperand(MI, 0, O);
     return;
     break;
   case 76:
     // VPERMPDYmi, VPERMQYmi, VPSHUFDYmi, VPSHUFHWYmi, VPSHUFLWYmi
-    printi256mem(MI, 1, O); 
-    O << ", "; 
-    printOperand(MI, 0, O); 
+    printi256mem(MI, 1, O);
+    O << ", ";
+    printOperand(MI, 0, O);
     return;
     break;
   case 77:
     // VPERMQZmi, VPSHUFDZmi, VPSLLDZmi, VPSLLQZmi, VPSRADZmi, VPSRAQZmi, VPS...
-    printi512mem(MI, 1, O); 
-    O << ", "; 
-    printOperand(MI, 0, O); 
+    printi512mem(MI, 1, O);
+    O << ", ";
+    printOperand(MI, 0, O);
     break;
   case 78:
     // VPSLLDZrmk, VPSLLQZrmk, VPSLLVDZrmk, VPSLLVQZrmk, VPSRADZrmk, VPSRAQZr...
-    O << "} "; 
+    O << "} ";
     return;
     break;
   }
@@ -19429,257 +19429,257 @@ void X86ATTInstPrinter::printInstruction(const MCInst *MI, raw_ostream &O) {
     break;
   case 1:
     // ADC32rm, ADC64rm, ADD32rm, ADD64rm, AND32rm, AND64rm, ANDN32rm, ANDN64...
-    printOperand(MI, 1, O); 
+    printOperand(MI, 1, O);
     break;
   case 2:
     // ADCX32rm, ADCX64rm, ADDSDrm, ADDSDrm_Int, ADDSSrm, ADDSSrm_Int, ADOX32...
-    printOperand(MI, 0, O); 
+    printOperand(MI, 0, O);
     break;
   case 3:
     // AESKEYGENASSIST128rr, ANDN32rr, ANDN64rr, BEXTR32rm, BEXTR32rr, BEXTR6...
-    O << ", "; 
+    O << ", ";
     break;
   case 4:
     // CMPPDrmi, CMPPSrmi, VCMPPDrmi, VCMPPSrmi, VPERMIL2PDmr, VPERMIL2PSmr
-    printf128mem(MI, 2, O); 
-    O << ", "; 
+    printf128mem(MI, 2, O);
+    O << ", ";
     break;
   case 5:
     // CMPPDrri, CMPPSrri, CMPSDrr, CMPSSrr, Int_CMPSDrr, Int_CMPSSrr, Int_VC...
-    printOperand(MI, 2, O); 
-    O << ", "; 
+    printOperand(MI, 2, O);
+    O << ", ";
     break;
   case 6:
     // CMPSB
-    printSrcIdx8(MI, 1, O); 
+    printSrcIdx8(MI, 1, O);
     return;
     break;
   case 7:
     // CMPSDrm, Int_CMPSDrm, Int_VCMPSDrm, VCMPSDZrm, VCMPSDrm
-    printf64mem(MI, 2, O); 
-    O << ", "; 
+    printf64mem(MI, 2, O);
+    O << ", ";
     break;
   case 8:
     // CMPSL
-    printSrcIdx32(MI, 1, O); 
+    printSrcIdx32(MI, 1, O);
     return;
     break;
   case 9:
     // CMPSQ
-    printSrcIdx64(MI, 1, O); 
+    printSrcIdx64(MI, 1, O);
     return;
     break;
   case 10:
     // CMPSSrm, Int_CMPSSrm, Int_VCMPSSrm, VCMPSSZrm, VCMPSSrm
-    printf32mem(MI, 2, O); 
-    O << ", "; 
+    printf32mem(MI, 2, O);
+    O << ", ";
     break;
   case 11:
     // CMPSW
-    printSrcIdx16(MI, 1, O); 
+    printSrcIdx16(MI, 1, O);
     return;
     break;
   case 12:
     // EXTRACTPSmr, VEXTRACTPSmr, VEXTRACTPSzmr
-    printf32mem(MI, 0, O); 
+    printf32mem(MI, 0, O);
     return;
     break;
   case 13:
     // MOV8mr_NOREX, MOV8rr_NOREX, MOVSX32_NOREXrr8, MOVZX32_NOREXrr8
-    O << "  # NOREX"; 
+    O << "  # NOREX";
     return;
     break;
   case 14:
     // PEXTRBmr, VPEXTRBmr
-    printi8mem(MI, 0, O); 
+    printi8mem(MI, 0, O);
     return;
     break;
   case 15:
     // PEXTRDmr, SHLD32mri8, SHRD32mri8, VPEXTRDmr
-    printi32mem(MI, 0, O); 
+    printi32mem(MI, 0, O);
     return;
     break;
   case 16:
     // PEXTRQmr, SHLD64mri8, SHRD64mri8, VPEXTRQmr
-    printi64mem(MI, 0, O); 
+    printi64mem(MI, 0, O);
     return;
     break;
   case 17:
     // PEXTRWmr, SHLD16mri8, SHRD16mri8, VPEXTRWmr
-    printi16mem(MI, 0, O); 
+    printi16mem(MI, 0, O);
     return;
     break;
   case 18:
     // VAARG_64
-    printi8mem(MI, 1, O); 
-    O << ", "; 
-    printOperand(MI, 6, O); 
-    O << ", "; 
-    printOperand(MI, 7, O); 
-    O << ", "; 
-    printOperand(MI, 8, O); 
+    printi8mem(MI, 1, O);
+    O << ", ";
+    printOperand(MI, 6, O);
+    O << ", ";
+    printOperand(MI, 7, O);
+    O << ", ";
+    printOperand(MI, 8, O);
     return;
     break;
   case 19:
     // VADDPDZ128rmbk, VADDPDZ256rmbk, VADDPDZrmbk, VADDPSZ128rmbk, VADDPSZ25...
-    printOperand(MI, 3, O); 
-    O << ", "; 
+    printOperand(MI, 3, O);
+    O << ", ";
     break;
   case 20:
     // VADDPDZ128rrk, VADDPDZ256rrk, VADDPDZrrk, VADDPSZ128rrk, VADDPSZ256rrk...
-    O << " {"; 
+    O << " {";
     break;
   case 21:
     // VBROADCASTSDZ256r, VBROADCASTSDZr, VBROADCASTSSZ128r, VBROADCASTSSZ256...
-    O << ' '; 
+    O << ' ';
     return;
     break;
   case 22:
     // VCMPPDYrmi, VCMPPSYrmi, VPERMIL2PDmrY, VPERMIL2PSmrY
-    printf256mem(MI, 2, O); 
-    O << ", "; 
-    printOperand(MI, 1, O); 
-    O << ", "; 
-    printOperand(MI, 0, O); 
+    printf256mem(MI, 2, O);
+    O << ", ";
+    printOperand(MI, 1, O);
+    O << ", ";
+    printOperand(MI, 0, O);
     return;
     break;
   case 23:
     // VCMPPDZrmi, VCMPPSZrmi
-    printf512mem(MI, 2, O); 
-    O << ", "; 
-    printOperand(MI, 1, O); 
-    O << ", "; 
-    printOperand(MI, 0, O); 
+    printf512mem(MI, 2, O);
+    O << ", ";
+    printOperand(MI, 1, O);
+    O << ", ";
+    printOperand(MI, 0, O);
     return;
     break;
   case 24:
     // VCVTPS2PHYmr, VEXTRACTF128mr, VEXTRACTF32x4rm, VMASKMOVPDmr, VMASKMOVP...
-    printf128mem(MI, 0, O); 
+    printf128mem(MI, 0, O);
     return;
     break;
   case 25:
     // VCVTPS2PHZmr, VEXTRACTF64x4rm, VMASKMOVPDYmr, VMASKMOVPSYmr
-    printf256mem(MI, 0, O); 
+    printf256mem(MI, 0, O);
     return;
     break;
   case 26:
     // VCVTPS2PHmr
-    printf64mem(MI, 0, O); 
+    printf64mem(MI, 0, O);
     return;
     break;
   case 27:
     // VEXP2PDrb, VEXP2PSrb, VRCP28PDrb, VRCP28PSrb, VRSQRT28PDrb, VRSQRT28PS...
-    O << " {sae}"; 
+    O << " {sae}";
     return;
     break;
   case 28:
     // VEXTRACTI128mr, VEXTRACTI32x4rm, VPMASKMOVDmr, VPMASKMOVQmr
-    printi128mem(MI, 0, O); 
+    printi128mem(MI, 0, O);
     return;
     break;
   case 29:
     // VEXTRACTI64x4rm, VPMASKMOVDYmr, VPMASKMOVQYmr
-    printi256mem(MI, 0, O); 
+    printi256mem(MI, 0, O);
     return;
     break;
   case 30:
     // VPCMPBZ128rmi, VPCMPDZ128rmi, VPCMPQZ128rmi, VPCMPUBZ128rmi, VPCMPUDZ1...
-    printi128mem(MI, 2, O); 
-    O << ", "; 
-    printOperand(MI, 1, O); 
-    O << ", "; 
-    printOperand(MI, 0, O); 
+    printi128mem(MI, 2, O);
+    O << ", ";
+    printOperand(MI, 1, O);
+    O << ", ";
+    printOperand(MI, 0, O);
     return;
     break;
   case 31:
     // VPCMPBZ128rmik, VPCMPDZ128rmik, VPCMPQZ128rmik, VPCMPUBZ128rmik, VPCMP...
-    printi128mem(MI, 3, O); 
-    O << ", "; 
-    printOperand(MI, 2, O); 
-    O << ", "; 
-    printOperand(MI, 0, O); 
-    O << " {"; 
-    printOperand(MI, 1, O); 
-    O << '}'; 
+    printi128mem(MI, 3, O);
+    O << ", ";
+    printOperand(MI, 2, O);
+    O << ", ";
+    printOperand(MI, 0, O);
+    O << " {";
+    printOperand(MI, 1, O);
+    O << '}';
     return;
     break;
   case 32:
     // VPCMPBZ256rmi, VPCMPDZ256rmi, VPCMPQZ256rmi, VPCMPUBZ256rmi, VPCMPUDZ2...
-    printi256mem(MI, 2, O); 
-    O << ", "; 
-    printOperand(MI, 1, O); 
-    O << ", "; 
-    printOperand(MI, 0, O); 
+    printi256mem(MI, 2, O);
+    O << ", ";
+    printOperand(MI, 1, O);
+    O << ", ";
+    printOperand(MI, 0, O);
     return;
     break;
   case 33:
     // VPCMPBZ256rmik, VPCMPDZ256rmik, VPCMPQZ256rmik, VPCMPUBZ256rmik, VPCMP...
-    printi256mem(MI, 3, O); 
-    O << ", "; 
-    printOperand(MI, 2, O); 
-    O << ", "; 
-    printOperand(MI, 0, O); 
-    O << " {"; 
-    printOperand(MI, 1, O); 
-    O << '}'; 
+    printi256mem(MI, 3, O);
+    O << ", ";
+    printOperand(MI, 2, O);
+    O << ", ";
+    printOperand(MI, 0, O);
+    O << " {";
+    printOperand(MI, 1, O);
+    O << '}';
     return;
     break;
   case 34:
     // VPCMPBZrmi, VPCMPDZrmi, VPCMPQZrmi, VPCMPUBZrmi, VPCMPUDZrmi, VPCMPUQZ...
-    printi512mem(MI, 2, O); 
-    O << ", "; 
-    printOperand(MI, 1, O); 
-    O << ", "; 
-    printOperand(MI, 0, O); 
+    printi512mem(MI, 2, O);
+    O << ", ";
+    printOperand(MI, 1, O);
+    O << ", ";
+    printOperand(MI, 0, O);
     return;
     break;
   case 35:
     // VPCMPBZrmik, VPCMPDZrmik, VPCMPQZrmik, VPCMPUBZrmik, VPCMPUDZrmik, VPC...
-    printi512mem(MI, 3, O); 
-    O << ", "; 
-    printOperand(MI, 2, O); 
-    O << ", "; 
-    printOperand(MI, 0, O); 
-    O << " {"; 
-    printOperand(MI, 1, O); 
-    O << '}'; 
+    printi512mem(MI, 3, O);
+    O << ", ";
+    printOperand(MI, 2, O);
+    O << ", ";
+    printOperand(MI, 0, O);
+    O << " {";
+    printOperand(MI, 1, O);
+    O << '}';
     return;
     break;
   case 36:
     // VPCMPDZ128rmib, VPCMPDZ256rmib, VPCMPDZrmib, VPCMPUDZ128rmib, VPCMPUDZ...
-    printi32mem(MI, 2, O); 
+    printi32mem(MI, 2, O);
     break;
   case 37:
     // VPCMPDZ128rmib_alt, VPCMPDZ128rmibk_alt, VPCMPQZ256rmib_alt, VPCMPQZ25...
-    O << "{1to4}, "; 
+    O << "{1to4}, ";
     break;
   case 38:
     // VPCMPDZ128rmibk, VPCMPDZ256rmibk, VPCMPDZrmibk, VPCMPUDZ128rmibk, VPCM...
-    printi32mem(MI, 3, O); 
+    printi32mem(MI, 3, O);
     break;
   case 39:
     // VPCMPDZ256rmib_alt, VPCMPDZ256rmibk_alt, VPCMPQZrmib_alt, VPCMPQZrmibk...
-    O << "{1to8}, "; 
+    O << "{1to8}, ";
     break;
   case 40:
     // VPCMPDZrmib_alt, VPCMPDZrmibk_alt, VPCMPUDZrmib_alt, VPCMPUDZrmibk_alt
-    O << "{1to16}, "; 
+    O << "{1to16}, ";
     break;
   case 41:
     // VPCMPQZ128rmib, VPCMPQZ256rmib, VPCMPQZrmib, VPCMPUQZ128rmib, VPCMPUQZ...
-    printi64mem(MI, 2, O); 
+    printi64mem(MI, 2, O);
     break;
   case 42:
     // VPCMPQZ128rmib_alt, VPCMPQZ128rmibk_alt, VPCMPUQZ128rmib_alt, VPCMPUQZ...
-    O << "{1to2}, "; 
+    O << "{1to2}, ";
     break;
   case 43:
     // VPCMPQZ128rmibk, VPCMPQZ256rmibk, VPCMPQZrmibk, VPCMPUQZ128rmibk, VPCM...
-    printi64mem(MI, 3, O); 
+    printi64mem(MI, 3, O);
     break;
   case 44:
     // VPSLLDZmi, VPSLLQZmi, VPSRADZmi, VPSRAQZmi, VPSRLDZmi, VPSRLQZmi
-    O << "  "; 
+    O << "  ";
     return;
     break;
   }
@@ -19694,53 +19694,53 @@ void X86ATTInstPrinter::printInstruction(const MCInst *MI, raw_ostream &O) {
     break;
   case 1:
     // AESKEYGENASSIST128rr, ANDN32rr, ANDN64rr, BEXTR32rm, BEXTR32rr, BEXTR6...
-    printOperand(MI, 0, O); 
+    printOperand(MI, 0, O);
     break;
   case 2:
     // ANDN32rm, ANDN64rm, Int_VCVTSD2SSrm, Int_VCVTSI2SD64Zrm, Int_VCVTSI2SD...
-    O << ", "; 
+    O << ", ";
     break;
   case 3:
     // EXTRQI, INSERTQI, Int_VCMPSDrm, Int_VCMPSDrr, Int_VCMPSSrm, Int_VCMPSS...
-    printOperand(MI, 1, O); 
+    printOperand(MI, 1, O);
     break;
   case 4:
     // VADDPDZ128rrk, VADDPDZ256rrk, VADDPDZrrk, VADDPSZ128rrk, VADDPSZ256rrk...
-    printOperand(MI, 2, O); 
+    printOperand(MI, 2, O);
     break;
   case 5:
     // VBROADCASTSDZ256m, VBROADCASTSDZm, VBROADCASTSSZ128m, VBROADCASTSSZ256...
-    O << ' '; 
+    O << ' ';
     return;
     break;
   case 6:
     // VBROADCASTSDZ256mk, VBROADCASTSDZ256mkz, VBROADCASTSDZmk, VBROADCASTSD...
-    O << " {"; 
+    O << " {";
     break;
   case 7:
     // VCOMPRESSPDZ128mrk, VCOMPRESSPDZ256mrk, VCOMPRESSPDZmrk, VCOMPRESSPSZ1...
-    printOperand(MI, 5, O); 
+    printOperand(MI, 5, O);
     break;
   case 8:
     // VPCMPDZ128rmib, VPCMPDZ128rmibk, VPCMPQZ256rmib, VPCMPQZ256rmibk, VPCM...
-    O << "{1to4}, "; 
+    O << "{1to4}, ";
     break;
   case 9:
     // VPCMPDZ256rmib, VPCMPDZ256rmibk, VPCMPQZrmib, VPCMPQZrmibk, VPCMPUDZ25...
-    O << "{1to8}, "; 
+    O << "{1to8}, ";
     break;
   case 10:
     // VPCMPDZrmib, VPCMPDZrmibk, VPCMPUDZrmib, VPCMPUDZrmibk
-    O << "{1to16}, "; 
+    O << "{1to16}, ";
     break;
   case 11:
     // VPCMPQZ128rmib, VPCMPQZ128rmibk, VPCMPUQZ128rmib, VPCMPUQZ128rmibk
-    O << "{1to2}, "; 
+    O << "{1to2}, ";
     break;
   case 12:
     // VPSCATTERDDZmr, VPSCATTERDQZmr, VPSCATTERQDZmr, VPSCATTERQQZmr, VSCATT...
-    printOperand(MI, 6, O); 
-    O << '}'; 
+    printOperand(MI, 6, O);
+    O << '}';
     return;
     break;
   }
@@ -19755,74 +19755,74 @@ void X86ATTInstPrinter::printInstruction(const MCInst *MI, raw_ostream &O) {
     break;
   case 1:
     // ANDN32rm, ANDN64rm, Int_VCVTSD2SSrm, Int_VCVTSI2SD64Zrm, Int_VCVTSI2SD...
-    printOperand(MI, 0, O); 
+    printOperand(MI, 0, O);
     break;
   case 2:
     // Int_VCMPSDrm, Int_VCMPSDrr, Int_VCMPSSrm, Int_VCMPSSrr, VALIGNDrri, VA...
-    O << ", "; 
-    printOperand(MI, 0, O); 
+    O << ", ";
+    printOperand(MI, 0, O);
     break;
   case 3:
     // VADDPDZ128rm, VADDPDZ128rr, VADDPDZ256rm, VADDPDZ256rr, VADDPDZrm, VAD...
-    O << ' '; 
+    O << ' ';
     return;
     break;
   case 4:
     // VADDPDZ128rmbk, VADDPDZ128rmbkz, VADDPDZ128rmkz, VADDPDZ128rrkz, VADDP...
-    O << " {"; 
+    O << " {";
     break;
   case 5:
     // VADDPDZ128rrk, VADDPDZ256rrk, VADDPDZrrk, VADDPSZ128rrk, VADDPSZ256rrk...
-    O << '}'; 
+    O << '}';
     return;
     break;
   case 6:
     // VASTART_SAVE_XMM_REGS, VBROADCASTSDZ256mk, VBROADCASTSDZmk, VBROADCAST...
-    printOperand(MI, 2, O); 
+    printOperand(MI, 2, O);
     break;
   case 7:
     // VBROADCASTI32X4krm, VBROADCASTI64X4krm, VBROADCASTSDZ256rkz, VBROADCAS...
-    O << "} {z}"; 
+    O << "} {z}";
     return;
     break;
   case 8:
     // VBROADCASTSDZ256mkz, VBROADCASTSDZmkz, VBROADCASTSSZ128mkz, VBROADCAST...
-    printOperand(MI, 1, O); 
+    printOperand(MI, 1, O);
     break;
   case 9:
     // VCOMPRESSPDZ128mrk, VCOMPRESSPDZ128rrk, VCOMPRESSPDZ256mrk, VCOMPRESSP...
-    O << "} "; 
+    O << "} ";
     return;
     break;
   case 10:
     // VEXP2PDrbk, VEXP2PSrbk, VRCP28PDrbk, VRCP28PSrbk, VRCP28SDrbk, VRCP28S...
-    O << "}{sae}"; 
+    O << "}{sae}";
     return;
     break;
   case 11:
     // VEXP2PDrbkz, VEXP2PSrbkz, VRCP28PDrbkz, VRCP28PSrbkz, VRSQRT28PDrbkz, ...
-    O << "} {z}{sae}"; 
+    O << "} {z}{sae}";
     return;
     break;
   case 12:
     // VGATHERDPDZrm, VGATHERDPSZrm, VGATHERQPDZrm, VGATHERQPSZrm, VPGATHERDD...
-    printOperand(MI, 3, O); 
-    O << '}'; 
+    printOperand(MI, 3, O);
+    O << '}';
     return;
     break;
   case 13:
     // VPERMI2Drrkz, VPERMI2PDrrkz, VPERMI2PSrrkz, VPERMI2Qrrkz, VPERMT2Drrkz...
-    O << "} {z} "; 
+    O << "} {z} ";
     return;
     break;
   case 14:
     // VPSLLDZri, VPSLLDZrm, VPSLLDZrr, VPSLLQZri, VPSLLQZrm, VPSLLQZrr, VPSL...
-    O << "  "; 
+    O << "  ";
     return;
     break;
   case 15:
     // VRCP28SDrb, VRCP28SSrb, VRSQRT28SDrb, VRSQRT28SSrb
-    O << " {sae}"; 
+    O << " {sae}";
     return;
     break;
   }
@@ -19837,47 +19837,47 @@ void X86ATTInstPrinter::printInstruction(const MCInst *MI, raw_ostream &O) {
     break;
   case 1:
     // VADDPDZ128rmb, VADDPDZ256rmb, VADDPDZrmb, VADDPSZ128rmb, VADDPSZ256rmb...
-    O << ' '; 
+    O << ' ';
     return;
     break;
   case 2:
     // VADDPDZ128rmbk, VADDPDZ256rmbk, VADDPDZrmbk, VADDPSZ128rmbk, VADDPSZ25...
-    printOperand(MI, 2, O); 
+    printOperand(MI, 2, O);
     break;
   case 3:
     // VADDPDZ128rmbkz, VADDPDZ128rmkz, VADDPDZ128rrkz, VADDPDZ256rmbkz, VADD...
-    printOperand(MI, 1, O); 
+    printOperand(MI, 1, O);
     break;
   case 4:
     // VBROADCASTSDZ256mk, VBROADCASTSDZmk, VBROADCASTSSZ128mk, VBROADCASTSSZ...
-    O << '}'; 
+    O << '}';
     return;
     break;
   case 5:
     // VBROADCASTSDZ256mkz, VBROADCASTSDZmkz, VBROADCASTSSZ128mkz, VBROADCAST...
-    O << "} {z}"; 
+    O << "} {z}";
     return;
     break;
   case 6:
     // VPCMPBZ128rrik, VPCMPBZ256rrik, VPCMPBZrrik, VPCMPDZ128rmibk_alt, VPCM...
-    O << " {"; 
-    printOperand(MI, 1, O); 
-    O << '}'; 
+    O << " {";
+    printOperand(MI, 1, O);
+    O << '}';
     return;
     break;
   case 7:
     // VPCMPDZ128rmib, VPCMPDZ128rmibk, VPCMPDZ256rmib, VPCMPDZ256rmibk, VPCM...
-    O << ", "; 
-    printOperand(MI, 0, O); 
+    O << ", ";
+    printOperand(MI, 0, O);
     break;
   case 8:
     // VPSLLDZmik, VPSLLQZmik, VPSRADZmik, VPSRAQZmik, VPSRLDZmik, VPSRLQZmik
-    O << "} "; 
+    O << "} ";
     return;
     break;
   case 9:
     // VPSLLDZmikz, VPSLLQZmikz, VPSRADZmikz, VPSRAQZmikz, VPSRLDZmikz, VPSRL...
-    O << "} {z} "; 
+    O << "} {z} ";
     return;
     break;
   }
@@ -19888,12 +19888,12 @@ void X86ATTInstPrinter::printInstruction(const MCInst *MI, raw_ostream &O) {
   default: llvm_unreachable("Invalid command number.");
   case 0:
     // VADDPDZ128rmbk, VADDPDZ256rmbk, VADDPDZrmbk, VADDPSZ128rmbk, VADDPSZ25...
-    O << '}'; 
+    O << '}';
     return;
     break;
   case 1:
     // VADDPDZ128rmbkz, VADDPDZ128rmkz, VADDPDZ128rrkz, VADDPDZ256rmbkz, VADD...
-    O << "} {z}"; 
+    O << "} {z}";
     return;
     break;
   case 2:
@@ -19902,19 +19902,19 @@ void X86ATTInstPrinter::printInstruction(const MCInst *MI, raw_ostream &O) {
     break;
   case 3:
     // VPCMPDZ128rmibk, VPCMPDZ256rmibk, VPCMPDZrmibk, VPCMPQZ128rmibk, VPCMP...
-    O << " {"; 
-    printOperand(MI, 1, O); 
-    O << '}'; 
+    O << " {";
+    printOperand(MI, 1, O);
+    O << '}';
     return;
     break;
   case 4:
     // VPSLLDZrikz, VPSLLDZrmkz, VPSLLDZrrkz, VPSLLQZrikz, VPSLLQZrmkz, VPSLL...
-    O << "} {z} "; 
+    O << "} {z} ";
     return;
     break;
   case 5:
     // VRCP28SDrbkz, VRCP28SSrbkz, VRSQRT28SDrbkz, VRSQRT28SSrbkz
-    O << "} {z}{sae}"; 
+    O << "} {z}{sae}";
     return;
     break;
   }
@@ -20147,24 +20147,24 @@ const char *X86ATTInstPrinter::getRegisterName(unsigned RegNo) {
   };
 
   static const uint16_t RegAsmOffset[] = {
-    866, 894, 1011, 869, 897, 923, 914, 1019, 872, 900, 946, 1027, 875, 879, 
-    906, 903, 949, 1035, 1010, 922, 1018, 1026, 878, 1034, 958, 930, 1042, 952, 
-    886, 938, 1005, 955, 961, 931, 1014, 926, 1022, 1030, 882, 1038, 934, 1046, 
-    890, 942, 887, 910, 939, 918, 964, 134, 228, 304, 380, 456, 532, 598, 
-    664, 723, 782, 66, 160, 254, 330, 406, 482, 138, 232, 308, 384, 460, 
-    536, 602, 668, 727, 786, 71, 165, 259, 335, 411, 487, 130, 224, 300, 
-    376, 452, 528, 594, 660, 112, 206, 282, 358, 434, 510, 576, 642, 116, 
-    210, 286, 362, 438, 514, 580, 646, 724, 783, 67, 161, 255, 331, 407, 
-    483, 0, 6, 12, 18, 24, 30, 36, 42, 115, 209, 285, 361, 437, 
-    513, 579, 645, 708, 767, 48, 142, 236, 312, 388, 464, 540, 606, 672, 
-    731, 76, 170, 264, 340, 416, 492, 558, 624, 690, 749, 94, 188, 120, 
-    214, 290, 366, 442, 518, 584, 650, 713, 772, 54, 148, 242, 318, 394, 
-    470, 546, 612, 678, 737, 82, 176, 270, 346, 422, 498, 564, 630, 696, 
-    755, 100, 194, 125, 219, 295, 371, 447, 523, 589, 655, 718, 777, 60, 
-    154, 248, 324, 400, 476, 552, 618, 684, 743, 88, 182, 276, 352, 428, 
-    504, 570, 636, 702, 761, 106, 200, 820, 824, 790, 795, 800, 805, 810, 
-    815, 858, 862, 828, 833, 838, 843, 848, 853, 997, 1001, 967, 972, 977, 
-    982, 987, 992, 
+    866, 894, 1011, 869, 897, 923, 914, 1019, 872, 900, 946, 1027, 875, 879,
+    906, 903, 949, 1035, 1010, 922, 1018, 1026, 878, 1034, 958, 930, 1042, 952,
+    886, 938, 1005, 955, 961, 931, 1014, 926, 1022, 1030, 882, 1038, 934, 1046,
+    890, 942, 887, 910, 939, 918, 964, 134, 228, 304, 380, 456, 532, 598,
+    664, 723, 782, 66, 160, 254, 330, 406, 482, 138, 232, 308, 384, 460,
+    536, 602, 668, 727, 786, 71, 165, 259, 335, 411, 487, 130, 224, 300,
+    376, 452, 528, 594, 660, 112, 206, 282, 358, 434, 510, 576, 642, 116,
+    210, 286, 362, 438, 514, 580, 646, 724, 783, 67, 161, 255, 331, 407,
+    483, 0, 6, 12, 18, 24, 30, 36, 42, 115, 209, 285, 361, 437,
+    513, 579, 645, 708, 767, 48, 142, 236, 312, 388, 464, 540, 606, 672,
+    731, 76, 170, 264, 340, 416, 492, 558, 624, 690, 749, 94, 188, 120,
+    214, 290, 366, 442, 518, 584, 650, 713, 772, 54, 148, 242, 318, 394,
+    470, 546, 612, 678, 737, 82, 176, 270, 346, 422, 498, 564, 630, 696,
+    755, 100, 194, 125, 219, 295, 371, 447, 523, 589, 655, 718, 777, 60,
+    154, 248, 324, 400, 476, 552, 618, 684, 743, 88, 182, 276, 352, 428,
+    504, 570, 636, 702, 761, 106, 200, 820, 824, 790, 795, 800, 805, 810,
+    815, 858, 862, 828, 833, 838, 843, 848, 853, 997, 1001, 967, 972, 977,
+    982, 987, 992,
   };
 
   assert (*(AsmStrs+RegAsmOffset[RegNo-1]) &&

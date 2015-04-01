@@ -1080,7 +1080,7 @@ static llvm::StringRef getPrettyPlatformName(llvm::StringRef Platform) {
              .Case("ios", "iOS")
              .Case("macosx", "OS X")
              .Default(llvm::StringRef());
-} 
+}
 
   static bool classof(const Attr *A) { return A->getKind() == attr::Availability; }
   bool isLateParsed() const override { return 0; }
@@ -1700,7 +1700,7 @@ public:
 
     bool isMutex() const { return getName().equals_lower("mutex"); }
     bool isRole() const { return getName().equals_lower("role"); }
-  
+
 
   static bool classof(const Attr *A) { return A->getKind() == attr::Capability; }
   bool isLateParsed() const override { return 0; }
@@ -2788,7 +2788,7 @@ public:
   void printPrettyPragma(raw_ostream &OS, const PrintingPolicy &Policy) const {
     OS << '(' << getSection() << ')';
   }
-  
+
 
   static bool classof(const Attr *A) { return A->getKind() == attr::InitSeg; }
   bool isLateParsed() const override { return 0; }
@@ -3090,7 +3090,7 @@ public:
     assert(SpellingIndex == Pragma_clang_loop && "Unexpected spelling");
     return getOptionName(option) + getValueString(Policy);
   }
-  
+
 
   static bool classof(const Attr *A) { return A->getKind() == attr::LoopHint; }
   bool isLateParsed() const override { return 0; }
@@ -3198,7 +3198,7 @@ public:
       return Inheritance <= Keyword_single_inheritance;
     return Inheritance <= Keyword_multiple_inheritance;
   }
-  
+
 
   static bool classof(const Attr *A) { return A->getKind() == attr::MSInheritance; }
   bool isLateParsed() const override { return 0; }
@@ -3276,7 +3276,7 @@ public:
   };
 
   Mode getVtorDispMode() const { return Mode(vdm); }
-  
+
 
   static bool classof(const Attr *A) { return A->getKind() == attr::MSVtorDisp; }
   bool isLateParsed() const override { return 0; }
@@ -4040,7 +4040,7 @@ bool isNonNull(unsigned idx) const {
       if (V == idx)
         return true;
     return false;
-  } 
+  }
 
   static bool classof(const Attr *A) { return A->getKind() == attr::NonNull; }
   bool isLateParsed() const override { return 0; }
@@ -4777,7 +4777,7 @@ public:
              isTakes() ? Takes :
              Returns;
     }
-  
+
 
   static bool classof(const Attr *A) { return A->getKind() == attr::Ownership; }
   bool isLateParsed() const override { return 0; }
