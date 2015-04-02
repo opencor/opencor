@@ -52,7 +52,6 @@ void * CSVDataStorePlugin::dataStoreExporterInstance() const
     return new CsvDataStoreExporter();
 }
 
-
 //==============================================================================
 
 QString CSVDataStorePlugin::dataStoreName() const
