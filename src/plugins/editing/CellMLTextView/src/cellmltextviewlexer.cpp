@@ -272,8 +272,7 @@ void CellmlTextViewLexer::doStyleTextCurrent(const int &pBytesStart,
 
     if (   (stringPosition != INT_MAX)
         && (stringPosition < singleLineCommentPosition)
-        && (stringPosition < multilineCommentStartPosition)
-        && (stringPosition < parameterBlockStartPosition)) {
+        && (stringPosition < multilineCommentStartPosition)) {
         // There is a string to style
 
         doStyleTextString(stringPosition, pBytesStart, pBytesEnd, pText,
