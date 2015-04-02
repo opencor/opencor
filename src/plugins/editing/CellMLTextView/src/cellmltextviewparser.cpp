@@ -1808,7 +1808,7 @@ bool CellmlTextViewParser::parseVariableDeclaration(QDomNode &pDomNode)
 bool CellmlTextViewParser::parseMathematicalExpression(QDomNode &pDomNode,
                                                        const bool &pFullParsing)
 {
-    // Check whether we got an identifier or "ode"
+    // Check whether we have got an identifier or "ode"
 
     QDomElement lhsElement = QDomElement();
 
@@ -2444,11 +2444,9 @@ QDomElement CellmlTextViewParser::parseDerivativeIdentifier(QDomNode &pDomNode)
 
 QDomElement CellmlTextViewParser::parseNumber(QDomNode &pDomNode)
 {
-    // 'Properly' parse the number and keep track of it
+    // Keep track of the number
     // Note: this is useful to do in case the number is not valid (e.g. too big,
     //       too small)...
-
-    numberToken(pDomNode);
 
     QString number = mScanner.tokenString();
 
