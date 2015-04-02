@@ -286,8 +286,7 @@ void CellmlTextViewLexer::doStyleTextCurrent(const int &pBytesStart,
                                      pText, pParameterBlock);
     } else if (   (multilineCommentStartPosition != INT_MAX)
                && (multilineCommentStartPosition < stringPosition)
-               && (multilineCommentStartPosition < singleLineCommentPosition)
-               && (multilineCommentStartPosition < parameterBlockStartPosition)) {
+               && (multilineCommentStartPosition < singleLineCommentPosition)) {
         // There is a /* XXX */ comment to style, so first style everything that
         // is before it
 
@@ -298,13 +297,17 @@ void CellmlTextViewLexer::doStyleTextCurrent(const int &pBytesStart,
                            pParameterBlock);
 
         // Now style everything from the comment onwards
-        // Note: to style everything from the comment onwards means that we will
-        //       find that a /* XXX */ comment starts at the beginning of the
-        //       'new' given text...
+        // Note #1: to style everything from the comment onwards means that we
+        //          will find that a /* XXX */ comment starts at the beginning
+        //          of the 'new' given text...
+        // Note #2: for the parameter block value, we check whether a parameter
+        //          block was started before the /* XXX */ comment line since
+        //          we need to finish styling it (which is effectively done in
+        //          doStyleTextPreviousMultilineComment())...
 
         doStyleText(pBytesStart+multilineCommentStartBytesPosition, pBytesEnd,
                     pText.right(fullTextLength(pBytesStart, pBytesEnd-pBytesStart)-multilineCommentStartPosition),
-                    pParameterBlock);
+                    parameterBlockStartPosition < multilineCommentStartPosition);
     } else if (   (parameterBlockStartPosition != INT_MAX)
                && (parameterBlockStartPosition < stringPosition)
                && (parameterBlockStartPosition < singleLineCommentPosition)
@@ -509,9 +512,18 @@ void CellmlTextViewLexer::doStyleTextPreviousMultilineComment(const int &pPositi
         // anything
 
         if (bytesEnd != pBytesEnd) {
-            doStyleText(bytesEnd, pBytesEnd,
-                        pText.right(fullTextLength(bytesEnd, pBytesEnd-bytesEnd)),
-                        pParameterBlock);
+            if (pParameterBlock) {
+                // Our /* XXX */ comment is within a parameter block, so finish
+                // styling our parameter block
+
+                doStyleTextPreviousParameterBlock(fullTextPosition(bytesEnd), bytesEnd, pBytesEnd,
+                                                  pText.right(fullTextLength(bytesEnd, pBytesEnd-bytesEnd)),
+                                                  false);
+            } else {
+                doStyleText(bytesEnd, pBytesEnd,
+                            pText.right(fullTextLength(bytesEnd, pBytesEnd-bytesEnd)),
+                            pParameterBlock);
+            }
         }
     } else {
         // The beginning of the given text is not within a /* XXX */ comment, so
@@ -547,7 +559,8 @@ void CellmlTextViewLexer::doStyleTextPreviousParameterBlock(const int &pPosition
 
         int realBytesEnd = fullTextBytesPosition(parameterBlockEndPosition)+EndParameterBlockLength;
         int bytesEnd = qMin(pBytesEnd, realBytesEnd);
-        bool hasStart = pPosition == start;
+        bool hasStart =    (pPosition == start)
+                        && !mFullText.mid(pPosition, StartParameterBlockLength).compare(StartParameterBlockString);
         bool hasEnd = bytesEnd == realBytesEnd;
 
         // If possible, style the start of the parameter block
