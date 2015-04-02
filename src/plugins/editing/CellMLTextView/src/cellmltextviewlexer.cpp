@@ -280,8 +280,7 @@ void CellmlTextViewLexer::doStyleTextCurrent(const int &pBytesStart,
                           pParameterBlock);
     } else if (   (singleLineCommentPosition != INT_MAX)
                && (singleLineCommentPosition < stringPosition)
-               && (singleLineCommentPosition < multilineCommentStartPosition)
-               && (singleLineCommentPosition < parameterBlockStartPosition)) {
+               && (singleLineCommentPosition < multilineCommentStartPosition)) {
         // There is a // comment to style
 
         doStyleTextSingleLineComment(singleLineCommentPosition, pBytesStart, pBytesEnd,
