@@ -313,5 +313,57 @@
         <source>An identifier, &apos;%1&apos;, &apos;%2&apos;, &apos;%3&apos; or &apos;%4&apos;</source>
         <translation>Un identifiant, &apos;%1&apos;, &apos;%2&apos;, &apos;%3&apos; ou &apos;%4&apos;</translation>
     </message>
+    <message>
+        <source>An attribute was found%1, but it was not processed.</source>
+        <translation>Un attribut a été trouvé%1, mais il n&apos;a pas été traité.</translation>
+    </message>
+    <message>
+        <source>Some text was found%1, but it was not processed.</source>
+        <translation>Du texte a été trouvé%1, mais il n&apos;a pas été traité.</translation>
+    </message>
+    <message>
+        <source>A CDATA section was found%1, but it was not processed.</source>
+        <translation>Une section CDATA a été trouvée%1, mais elle n&apos;a pas été traitée.</translation>
+    </message>
+    <message>
+        <source>An entity reference was found%1, but it was not processed.</source>
+        <translation>Une référence d&apos;entité a été trouvée%1, mais elle n&apos;a pas été traitée.</translation>
+    </message>
+    <message>
+        <source>An entity was found%1, but it was not processed.</source>
+        <translation>Une entité a été trouvée%1, mais elle n&apos;a pas été traitée.</translation>
+    </message>
+    <message>
+        <source>A processing instruction was found%1, but it is not known and cannot therefore be processed.</source>
+        <translation>Une instruction de traitement a été trouvée%1, mais elle n&apos;a pas été traitée.</translation>
+    </message>
+    <message>
+        <source>A comment was found%1, but it was not processed.</source>
+        <translation>Un commentaire a été trouvé%1, mais il n&apos;a pas été traité.</translation>
+    </message>
+    <message>
+        <source>A document was found%1, but it was not processed.</source>
+        <translation>Un document a été trouvé%1, mais il n&apos;a pas été traité.</translation>
+    </message>
+    <message>
+        <source>A document type was found%1, but it was not processed.</source>
+        <translation>Un type de document a été trouvé%1, mais il n&apos;a pas été traité.</translation>
+    </message>
+    <message>
+        <source>A document fragment was found%1, but it was not processed.</source>
+        <translation>Un morceau de document a été trouvé%1, mais il n&apos;a pas été traité.</translation>
+    </message>
+    <message>
+        <source>A notation was found%1, but it was not processed.</source>
+        <translation>Une notation a été trouvée%1, mais elle n&apos;a pas été traitée.</translation>
+    </message>
+    <message>
+        <source>A base was found%1, but it was not processed.</source>
+        <translation>Une base a été trouvée%1, mais elle n&apos;a pas été traitée.</translation>
+    </message>
+    <message>
+        <source>Some character data was found%1, but it is not known and cannot therefore be processed.</source>
+        <translation>Des données de caractères ont été trouvées%1, mais elles n&apos;ont pas été traitées.</translation>
+    </message>
 </context>
 </TS>

@@ -2010,10 +2010,80 @@ void CellMLTextViewConverter::processUnknownNode(const QDomNode &pDomNode)
 {
     // The given node is unknown, so warn the user about it
 
-    mWarnings << CellMLTextViewConverterWarning(pDomNode.lineNumber(),
-                                                QObject::tr("A '%1' element was found%2, but it is not known and cannot therefore be processed.").arg(pDomNode.prefix().isEmpty()?
-                                                                                                                                                          pDomNode.localName():
-                                                                                                                                                          pDomNode.prefix()+":"+pDomNode.localName()));
+    switch (pDomNode.nodeType()) {
+    case QDomNode::ElementNode:
+        mWarnings << CellMLTextViewConverterWarning(pDomNode.lineNumber(),
+                                                    QObject::tr("A '%1' element was found%2, but it is not known and cannot therefore be processed.").arg(pDomNode.prefix().isEmpty()?
+                                                                                                                                                              pDomNode.localName():
+                                                                                                                                                              pDomNode.prefix()+":"+pDomNode.localName()));
+
+        break;
+    case QDomNode::AttributeNode:
+        mWarnings << CellMLTextViewConverterWarning(pDomNode.lineNumber(),
+                                                    QObject::tr("An attribute was found%1, but it was not processed."));
+
+        break;
+    case QDomNode::TextNode:
+        mWarnings << CellMLTextViewConverterWarning(pDomNode.lineNumber(),
+                                                    QObject::tr("Some text was found%1, but it was not processed."));
+
+        break;
+    case QDomNode::CDATASectionNode:
+        mWarnings << CellMLTextViewConverterWarning(pDomNode.lineNumber(),
+                                                    QObject::tr("A CDATA section was found%1, but it was not processed."));
+
+        break;
+    case QDomNode::EntityReferenceNode:
+        mWarnings << CellMLTextViewConverterWarning(pDomNode.lineNumber(),
+                                                    QObject::tr("An entity reference was found%1, but it was not processed."));
+
+        break;
+    case QDomNode::EntityNode:
+        mWarnings << CellMLTextViewConverterWarning(pDomNode.lineNumber(),
+                                                    QObject::tr("An entity was found%1, but it was not processed."));
+
+        break;
+    case QDomNode::ProcessingInstructionNode:
+        mWarnings << CellMLTextViewConverterWarning(pDomNode.lineNumber(),
+                                                    QObject::tr("A processing instruction was found%1, but it is not known and cannot therefore be processed."));
+
+        break;
+    case QDomNode::CommentNode:
+        mWarnings << CellMLTextViewConverterWarning(pDomNode.lineNumber(),
+                                                    QObject::tr("A comment was found%1, but it was not processed."));
+
+        break;
+    case QDomNode::DocumentNode:
+        mWarnings << CellMLTextViewConverterWarning(pDomNode.lineNumber(),
+                                                    QObject::tr("A document was found%1, but it was not processed."));
+
+        break;
+    case QDomNode::DocumentTypeNode:
+        mWarnings << CellMLTextViewConverterWarning(pDomNode.lineNumber(),
+                                                    QObject::tr("A document type was found%1, but it was not processed."));
+
+        break;
+    case QDomNode::DocumentFragmentNode:
+        mWarnings << CellMLTextViewConverterWarning(pDomNode.lineNumber(),
+                                                    QObject::tr("A document fragment was found%1, but it was not processed."));
+
+        break;
+    case QDomNode::NotationNode:
+        mWarnings << CellMLTextViewConverterWarning(pDomNode.lineNumber(),
+                                                    QObject::tr("A notation was found%1, but it was not processed."));
+
+        break;
+    case QDomNode::BaseNode:
+        mWarnings << CellMLTextViewConverterWarning(pDomNode.lineNumber(),
+                                                    QObject::tr("A base was found%1, but it was not processed."));
+
+        break;
+    case QDomNode::CharacterDataNode:
+        mWarnings << CellMLTextViewConverterWarning(pDomNode.lineNumber(),
+                                                    QObject::tr("Some character data was found%1, but it is not known and cannot therefore be processed."));
+
+        break;
+    }
 }
 
 //==============================================================================
