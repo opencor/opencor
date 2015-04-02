@@ -757,7 +757,7 @@ int CellmlTextViewLexer::findString(const QString &pString, int pFrom,
     // Find forward/backward the given string starting from the given position
 
     int stringLength = pString.length();
-    int res = pForward?pFrom:pFrom+stringLength;
+    int res = pForward?pFrom:pFrom+1;
 
     do {
         pFrom = pForward?res+stringLength:res-1;
