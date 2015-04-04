@@ -5,7 +5,7 @@
             <apply>
                 <eq/>
                 <ci>e</ci>
-                <cn cellml:units="dimensionless" type="e-notation">12.3<!-- sep -->5</cn>
+                <cn cellml:units="dimensionless" type="e-notation">12.3<![CDATA[sep]]>5</cn>
             </apply>
         </math>
     </component>

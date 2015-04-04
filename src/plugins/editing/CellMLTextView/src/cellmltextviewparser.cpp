@@ -1850,7 +1850,7 @@ bool CellmlTextViewParser::parseMathematicalExpression(QDomNode &pDomNode,
 
     // Expect either a normal or a piecewise mathematical expression
 
-    QDomElement rhsElement = (mScanner.tokenType() == CellmlTextViewScanner::SelToken)?
+    QDomElement rhsElement = isTokenType(applyElement, CellmlTextViewScanner::SelToken)?
                                  parsePiecewiseMathematicalExpression(pDomNode):
                                  parseNormalMathematicalExpression(pDomNode);
 
@@ -2591,6 +2591,10 @@ QDomElement CellmlTextViewParser::parseMathematicalExpressionElement(QDomNode &p
     CellmlTextViewScanner::TokenType prevOperator = CellmlTextViewScanner::UnknownToken;
 
     forever {
+        // Try to parse comments, if any
+
+        parseComments(pDomNode);
+
         // Expect an operator
 
         CellmlTextViewScanner::TokenType crtOperator = mScanner.tokenType();
@@ -2732,6 +2736,10 @@ QDomElement CellmlTextViewParser::parseNormalMathematicalExpression7(QDomNode &p
 
 QDomElement CellmlTextViewParser::parseNormalMathematicalExpression8(QDomNode &pDomNode)
 {
+    // Try to parse comments, if any
+
+    parseComments(pDomNode);
+
     // Look for "not", unary "+" or unary "-"
 
     static const CellmlTextViewScanner::TokenTypes tokenTypes = CellmlTextViewScanner::TokenTypes() << CellmlTextViewScanner::NotToken
@@ -2866,7 +2874,7 @@ QDomElement CellmlTextViewParser::parsePiecewiseMathematicalExpression(QDomNode 
 
     mScanner.getNextToken();
 
-    while (tokenType(pDomNode, QObject::tr("'%1', '%2' or '%3'").arg("case", "otherwise", "endsel"),
+    while (tokenType(piecewiseElement, QObject::tr("'%1', '%2' or '%3'").arg("case", "otherwise", "endsel"),
                      tokenTypes)) {
         if (mScanner.tokenType() == CellmlTextViewScanner::EndSelToken)
             break;
@@ -2879,7 +2887,7 @@ QDomElement CellmlTextViewParser::parsePiecewiseMathematicalExpression(QDomNode 
 
             mScanner.getNextToken();
 
-            conditionElement = parseNormalMathematicalExpression(pDomNode);
+            conditionElement = parseNormalMathematicalExpression(piecewiseElement);
 
             if (conditionElement.isNull())
                 return QDomElement();
@@ -2900,21 +2908,21 @@ QDomElement CellmlTextViewParser::parsePiecewiseMathematicalExpression(QDomNode 
 
         // Expect ":"
 
-        if (!colonToken(pDomNode))
+        if (!colonToken(piecewiseElement))
             return QDomElement();
 
         // Expect an expression in the form of a normal mathematical equation
 
         mScanner.getNextToken();
 
-        QDomElement expressionElement = parseNormalMathematicalExpression(pDomNode);
+        QDomElement expressionElement = parseNormalMathematicalExpression(piecewiseElement);
 
         if (expressionElement.isNull())
             return QDomElement();
 
         // Expect ";"
 
-        if (!semiColonToken(pDomNode))
+        if (!semiColonToken(piecewiseElement))
             return QDomElement();
 
         // Create and populate our piece/otherwise element, and add it to our
@@ -2951,7 +2959,7 @@ QDomElement CellmlTextViewParser::parsePiecewiseMathematicalExpression(QDomNode 
 void CellmlTextViewParser::moveTrailingComments(QDomNode &pFromDomNode,
                                                 QDomNode &pToDomNode)
 {
-    // Move trailing comments, in any, that are in pFromDomNode to pToDomNode
+    // Move trailing comments, if any, from pFromDomNode to pToDomNode
 
     if (!pFromDomNode.hasChildNodes())
         return;

@@ -24,4 +24,6 @@ def model my_model as
     // In between comment #6...
 
     ;
+
+    // In between comment #7...
 enddef;
