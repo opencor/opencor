@@ -225,7 +225,6 @@ def model cellml_1_0 as
         a = sqr(b);
         a = pow(b, 3{dimensionless});
         a = sqrt(b);
-        a = sqrt(b);
         a = root(b, 3{dimensionless});
         a = root(b, c);
         a = abs(b);

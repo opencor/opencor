@@ -868,14 +868,6 @@
                 <ci>a</ci>
                 <apply>
                     <root/>
-                    <ci>b</ci>
-                </apply>
-            </apply>
-            <apply>
-                <eq/>
-                <ci>a</ci>
-                <apply>
-                    <root/>
                     <degree>
                         <cn cellml:units="dimensionless">3</cn>
                     </degree>
