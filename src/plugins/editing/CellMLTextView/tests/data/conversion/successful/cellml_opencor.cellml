@@ -9,7 +9,7 @@
 			<bqbiol:isVersionOf rdf:resource="http://identifiers.org/go/GO:0034704"/>
 		</rdf:Description>
 	</rdf:RDF>
-    <!-- In between comment...-->
+    <!-- In between comment #1...-->
     <import cmeta:id="my_import_cmeta_id" xlink:href="imported_model.cellml">
         <!-- Comments can be within an import definition...-->
         <rdf:RDF xmlns:bqbiol="http://biomodels.net/biology-qualifiers/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
@@ -17,7 +17,7 @@
                 <bqbiol:isVersionOf rdf:resource="http://identifiers.org/go/GO:0034704"/>
             </rdf:Description>
         </rdf:RDF>
-        <!-- In between comment...-->
+        <!-- In between comment #2...-->
         <units cmeta:id="my_imported_unit_cmeta_id" name="my_imported_unit" units_ref="my_reference_unit">
             <!-- Comments can be within a unit import,
  but if kept it will be serialised back in the
@@ -28,7 +28,7 @@
                 </rdf:Description>
             </rdf:RDF>
         </units>
-        <!-- In between comment...-->
+        <!-- In between comment #3...-->
         <component cmeta:id="my_imported_component_cmeta_id" component_ref="my_reference_component" name="my_imported_component">
             <!-- Comments can be within a component import,
  but if kept it will be serialised back in the
@@ -40,7 +40,7 @@
             </rdf:RDF>
         </component>
     </import>
-    <!-- In between comment...-->
+    <!-- In between comment #4...-->
     <units base_units="yes" cmeta:id="my_base_unit_cmeta_id" name="my_base_unit">
         <!-- Comments can be within a base unit definition,
  but if kept it will be serialised back in the
@@ -51,7 +51,7 @@
             </rdf:Description>
         </rdf:RDF>
     </units>
-    <!-- In between comment...-->
+    <!-- In between comment #5...-->
     <units cmeta:id="my_unit_cmeta_id" name="my_unit">
         <!-- Comments can be within a unit definition...-->
         <rdf:RDF xmlns:bqbiol="http://biomodels.net/biology-qualifiers/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
@@ -59,7 +59,7 @@
                 <bqbiol:isVersionOf rdf:resource="http://identifiers.org/go/GO:0034704"/>
             </rdf:Description>
         </rdf:RDF>
-        <!-- In between comment...-->
+        <!-- In between comment #6...-->
         <unit cmeta:id="some_unit_cmeta_id" units="some_unit">
             <!-- Comments can be within a unit statement,
  but if kept it will be serialised back in the
@@ -71,7 +71,7 @@
             </rdf:RDF>
         </unit>
     </units>
-    <!-- In between comment...-->
+    <!-- In between comment #7...-->
     <component cmeta:id="my_component_cmeta_id" name="my_component">
         <!-- Comments can be within a component definition...-->
         <rdf:RDF xmlns:bqbiol="http://biomodels.net/biology-qualifiers/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
@@ -79,7 +79,7 @@
                 <bqbiol:isVersionOf rdf:resource="http://identifiers.org/go/GO:0034704"/>
             </rdf:Description>
         </rdf:RDF>
-        <!-- In between comment...-->
+        <!-- In between comment #8...-->
         <variable cmeta:id="my_variable1_cmeta_id" name="my_variable1" units="my_unit">
             <!-- Comments can be within a variable declaration,
  but if kept it will be serialised back in the
@@ -128,7 +128,7 @@
             </apply>
         </math>
     </component>
-    <!-- In between comment...-->
+    <!-- In between comment #9...-->
     <group cmeta:id="my_group_cmeta_id">
         <!-- Comments can be within a group definition...-->
         <rdf:RDF xmlns:bqbiol="http://biomodels.net/biology-qualifiers/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
@@ -136,7 +136,7 @@
                 <bqbiol:isVersionOf rdf:resource="http://identifiers.org/go/GO:0034704"/>
             </rdf:Description>
         </rdf:RDF>
-        <!-- In between comment...-->
+        <!-- In between comment #10...-->
         <relationship_ref cmeta:id="my_containment1_cmeta_id" name="my_containment1" relationship="containment">
             <!-- Comments can be within a relationship reference,
  but if kept it will be serialised back in the
@@ -147,7 +147,7 @@
                 </rdf:Description>
             </rdf:RDF>
         </relationship_ref>
-        <!-- In between comment...-->
+        <!-- In between comment #11...-->
         <relationship_ref cmeta:id="my_containment2_cmeta_id" name="my_containment2" relationship="containment">
             <!-- Comments can be within a relationship reference,
  but if kept it will be serialised back in the
@@ -158,7 +158,7 @@
                 </rdf:Description>
             </rdf:RDF>
         </relationship_ref>
-        <!-- In between comment...-->
+        <!-- In between comment #12...-->
         <relationship_ref cmeta:id="my_encapsulation_cmeta_id" relationship="encapsulation">
             <!-- Comments can be within a relationship reference,
  but if kept it will be serialised back in the
@@ -169,7 +169,7 @@
                 </rdf:Description>
             </rdf:RDF>
         </relationship_ref>
-        <!-- In between comment...-->
+        <!-- In between comment #13...-->
         <component_ref cmeta:id="my_component1_cmeta_id" component="my_component1">
             <!-- Comments can be within a component reference
  with component reference children...-->
@@ -178,7 +178,7 @@
                     <bqbiol:isVersionOf rdf:resource="http://identifiers.org/go/GO:0034704"/>
                 </rdf:Description>
             </rdf:RDF>
-            <!-- In between comment...-->
+            <!-- In between comment #14...-->
             <component_ref cmeta:id="my_component11_cmeta_id" component="my_component11">
                 <!-- Comments can be within a component reference
  without component reference children, but
@@ -190,7 +190,7 @@
                     </rdf:Description>
                 </rdf:RDF>
             </component_ref>
-            <!-- In between comment...-->
+            <!-- In between comment #15...-->
             <component_ref cmeta:id="my_component12_cmeta_id" component="my_component12">
                 <!-- Comments can be within a component reference
  without component reference children, but
@@ -204,7 +204,7 @@
             </component_ref>
             <component_ref component="my_component13"/>
         </component_ref>
-        <!-- In between comment...-->
+        <!-- In between comment #16...-->
         <component_ref cmeta:id="my_component2_cmeta_id" component="my_component2">
             <!-- Comments can be within a component reference
  with component reference children...-->
@@ -213,7 +213,7 @@
                     <bqbiol:isVersionOf rdf:resource="http://identifiers.org/go/GO:0034704"/>
                 </rdf:Description>
             </rdf:RDF>
-            <!-- In between comment...-->
+            <!-- In between comment #17...-->
             <component_ref cmeta:id="my_component21_cmeta_id" component="my_component21">
                 <!-- Comments can be within a component reference
  without component reference children, but
@@ -225,7 +225,7 @@
                     </rdf:Description>
                 </rdf:RDF>
             </component_ref>
-            <!-- In between comment...-->
+            <!-- In between comment #18...-->
             <component_ref cmeta:id="my_component22_cmeta_id" component="my_component22">
                 <!-- Comments can be within a component reference
  without component reference children, but
@@ -240,7 +240,7 @@
             <component_ref component="my_component23"/>
         </component_ref>
     </group>
-    <!-- In between comment...-->
+    <!-- In between comment #19...-->
     <connection cmeta:id="my_connection_cmeta_id">
         <!-- Comments can be within a connection definition...-->
         <rdf:RDF xmlns:bqbiol="http://biomodels.net/biology-qualifiers/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
@@ -248,7 +248,7 @@
                 <bqbiol:isVersionOf rdf:resource="http://identifiers.org/go/GO:0034704"/>
             </rdf:Description>
         </rdf:RDF>
-        <!-- In between comment...-->
+        <!-- In between comment #20...-->
         <map_components cmeta:id="my_map_components_cmeta_id" component_1="my_component1" component_2="my_component2">
             <!-- Comments can be within a component mapping,
  but if kept it will be serialised back in the
@@ -259,7 +259,7 @@
                 </rdf:Description>
             </rdf:RDF>
         </map_components>
-        <!-- In between comment...-->
+        <!-- In between comment #21...-->
         <map_variables cmeta:id="my_map_variables1_cmeta_id" variable_1="my_variable11" variable_2="my_variable12">
             <!-- Comments can be within a variable mapping,
  but if kept it will be serialised back in the
@@ -270,7 +270,7 @@
                 </rdf:Description>
             </rdf:RDF>
         </map_variables>
-        <!-- In between comment...-->
+        <!-- In between comment #22...-->
         <map_variables cmeta:id="my_map_variables2_cmeta_id" variable_1="my_variable21" variable_2="my_variable22">
             <!-- Comments can be within a variable mapping,
  but if kept it will be serialised back in the
