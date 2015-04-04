@@ -5,64 +5,64 @@
  on one, two or even
  more lines...-->
     <import cmeta:id="my_import1_cmeta_id" xlink:href="imported_model.cellml"/>
-    <!-- In between comment...-->
+    <!-- In between comment #1...-->
     <import cmeta:id="my_import2_cmeta_id" xlink:href="imported_model.cellml">
-        <!-- In between comment...-->
+        <!-- In between comment #2...-->
         <units cmeta:id="my_imported_unit1_cmeta_id" name="my_imported_unit1" units_ref="my_reference_unit1"/>
-        <!-- In between comment...-->
+        <!-- In between comment #3...-->
         <component cmeta:id="my_imported_component1_cmeta_id" component_ref="my_reference_component1" name="my_imported_component1"/>
         <component cmeta:id="my_imported_component2_cmeta_id" component_ref="my_reference_component2" name="my_imported_component2"/>
-        <!-- In between comment...-->
+        <!-- In between comment #4...-->
         <units cmeta:id="my_imported_unit2_cmeta_id" name="my_imported_unit2" units_ref="my_reference_unit2"/>
-        <!-- In between comment...-->
+        <!-- In between comment #5...-->
     </import>
-    <!-- In between comment...-->
+    <!-- In between comment #6...-->
     <units base_units="yes" cmeta:id="my_base_unit_cmeta_id" name="my_base_unit"/>
-    <!-- In between comment...-->
+    <!-- In between comment #7...-->
     <units cmeta:id="my_unit1_cmeta_id" name="my_unit1"/>
-    <!-- In between comment...-->
+    <!-- In between comment #8...-->
     <units cmeta:id="my_unit2_cmeta_id" name="my_unit2">
-        <!-- In between comment...-->
+        <!-- In between comment #9...-->
         <unit cmeta:id="second_cmeta_id" units="second"/>
-        <!-- In between comment...-->
+        <!-- In between comment #10...-->
         <unit prefix="milli" units="some_unit"/>
-        <!-- In between comment...-->
+        <!-- In between comment #11...-->
         <unit prefix="3" units="some_unit"/>
-        <!-- In between comment...-->
+        <!-- In between comment #12...-->
         <unit prefix="+3" units="some_unit"/>
-        <!-- In between comment...-->
+        <!-- In between comment #13...-->
         <unit prefix="-3" units="some_unit"/>
-        <!-- In between comment...-->
+        <!-- In between comment #14...-->
         <unit exponent="3" units="some_unit"/>
-        <!-- In between comment...-->
+        <!-- In between comment #15...-->
         <unit multiplier="3" units="some_unit"/>
-        <!-- In between comment...-->
+        <!-- In between comment #16...-->
         <unit offset="3" units="some_unit"/>
-        <!-- In between comment...-->
+        <!-- In between comment #17...-->
         <unit exponent="3" multiplier="+5" offset="-7" prefix="milli" units="some_unit"/>
-        <!-- In between comment...-->
+        <!-- In between comment #18...-->
     </units>
-    <!-- In between comment...-->
+    <!-- In between comment #19...-->
     <component cmeta:id="my_component1_cmeta_id" name="my_component1"/>
-    <!-- In between comment...-->
+    <!-- In between comment #20...-->
     <component cmeta:id="my_component2_cmeta_id" name="my_component2">
-        <!-- In between comment...-->
+        <!-- In between comment #21...-->
         <variable cmeta:id="my_variable1_cmeta_id" name="my_variable1" units="some_unit"/>
-        <!-- In between comment...-->
+        <!-- In between comment #22...-->
         <variable cmeta:id="my_variable2_cmeta_id" name="my_variable2" units="second"/>
-        <!-- In between comment...-->
+        <!-- In between comment #23...-->
         <variable cmeta:id="my_variable3_cmeta_id" initial_value="3" name="my_variable3" units="some_unit"/>
-        <!-- In between comment...-->
+        <!-- In between comment #24...-->
         <variable cmeta:id="my_variable4_cmeta_id" initial_value="+3" name="my_variable4" units="some_unit"/>
-        <!-- In between comment...-->
+        <!-- In between comment #25...-->
         <variable cmeta:id="my_variable5_cmeta_id" initial_value="-3" name="my_variable5" units="some_unit"/>
-        <!-- In between comment...-->
+        <!-- In between comment #26...-->
         <variable cmeta:id="my_variable6_cmeta_id" name="my_variable6" private_interface="out" public_interface="in" units="some_unit"/>
-        <!-- In between comment...-->
+        <!-- In between comment #27...-->
         <variable cmeta:id="my_variable7_cmeta_id" name="my_variable7" public_interface="none" units="some_unit"/>
-        <!-- In between comment...-->
+        <!-- In between comment #28...-->
         <variable cmeta:id="my_variable8_cmeta_id" initial_value="my_variable7" name="my_variable8" units="some_unit"/>
-        <!-- In between comment...-->
+        <!-- In between comment #29...-->
         <math xmlns="http://www.w3.org/1998/Math/MathML">
             <apply>
                 <eq/>
@@ -81,7 +81,7 @@
                     </piece>
                 </piecewise>
             </apply>
-            <!-- In between comment...-->
+            <!-- In between comment #30...-->
             <apply>
                 <eq/>
                 <ci>a</ci>
@@ -99,7 +99,7 @@
                     </piece>
                 </piecewise>
             </apply>
-            <!-- In between comment...-->
+            <!-- In between comment #31...-->
             <apply>
                 <eq/>
                 <ci>a</ci>
@@ -118,9 +118,9 @@
                 </piecewise>
             </apply>
         </math>
-        <!-- In between comment...-->
+        <!-- In between comment #32...-->
         <variable name="my_variable8" units="some_unit"/>
-        <!-- In between comment...-->
+        <!-- In between comment #33...-->
         <math xmlns="http://www.w3.org/1998/Math/MathML">
             <apply>
                 <eq/>
@@ -139,13 +139,13 @@
                     </otherwise>
                 </piecewise>
             </apply>
-            <!-- In between comment...-->
+            <!-- In between comment #34...-->
             <apply cmeta:id="my_equation_cmeta_id">
                 <eq/>
                 <ci>a</ci>
                 <ci>b</ci>
             </apply>
-            <!-- In between comment...-->
+            <!-- In between comment #35...-->
             <apply>
                 <eq/>
                 <ci>a</ci>
@@ -171,13 +171,13 @@
                     <ci>b</ci>
                 </apply>
             </apply>
-            <!-- In between comment...-->
+            <!-- In between comment #36...-->
             <apply>
                 <eq/>
                 <ci>a</ci>
                 <cn cellml:units="second">3.5</cn>
             </apply>
-            <!-- In between comment...-->
+            <!-- In between comment #37...-->
             <apply>
                 <eq/>
                 <ci>a</ci>
@@ -705,26 +705,26 @@
                 </apply>
             </apply>
         </math>
-        <!-- In between comment...-->
+        <!-- In between comment #38...-->
     </component>
-    <!-- In between comment...-->
+    <!-- In between comment #39...-->
     <group>
         <relationship_ref relationship="containment"/>
-        <!-- In between comment...-->
+        <!-- In between comment #40...-->
         <component_ref component="my_component1">
-            <!-- In between comment...-->
+            <!-- In between comment #41...-->
             <component_ref component="my_component11">
-                <!-- In between comment...-->
+                <!-- In between comment #42...-->
                 <component_ref component="my_component111"/>
-                <!-- In between comment...-->
+                <!-- In between comment #43...-->
                 <component_ref component="my_component112"/>
-                <!-- In between comment...-->
+                <!-- In between comment #44...-->
             </component_ref>
-            <!-- In between comment...-->
+            <!-- In between comment #45...-->
         </component_ref>
-        <!-- In between comment...-->
+        <!-- In between comment #46...-->
     </group>
-    <!-- In between comment...-->
+    <!-- In between comment #47...-->
     <group>
         <relationship_ref name="my_containment" relationship="containment"/>
         <component_ref component="my_component1">
@@ -734,7 +734,7 @@
             <component_ref component="my_component13"/>
         </component_ref>
     </group>
-    <!-- In between comment...-->
+    <!-- In between comment #48...-->
     <group>
         <relationship_ref relationship="encapsulation"/>
         <component_ref component="my_component11">
@@ -745,21 +745,22 @@
             <component_ref component="my_component121"/>
         </component_ref>
     </group>
-    <!-- In between comment...-->
+    <!-- In between comment #49...-->
     <group>
         <relationship_ref relationship="encapsulation"/>
         <relationship_ref name="my_containment" relationship="containment"/>
         <component_ref component="my_component"/>
     </group>
-    <!-- In between comment...-->
+    <!-- In between comment #50...-->
     <connection cmeta:id="my_connection_cmeta_id">
         <map_components cmeta:id="my_map_components_cmeta_id" component_1="my_component1" component_2="my_component2"/>
-        <!-- In between comment...-->
+        <!-- In between comment #51...-->
         <map_variables cmeta:id="my_map_variables1_cmeta_id" variable_1="my_variable11" variable_2="my_variable21"/>
-        <!-- In between comment...-->
+        <!-- In between comment #52...-->
         <map_variables cmeta:id="my_map_variables2_cmeta_id" variable_1="my_variable12" variable_2="my_variable22"/>
-        <!-- In between comment...-->
+        <!-- In between comment #53...-->
         <map_variables cmeta:id="my_map_variables3_cmeta_id" variable_1="my_variable13" variable_2="my_variable23"/>
-        <!-- In between comment...-->
+        <!-- In between comment #54...-->
     </connection>
+    <!-- In between comment #55...-->
 </model>
