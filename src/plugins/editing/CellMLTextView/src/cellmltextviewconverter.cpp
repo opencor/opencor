@@ -64,6 +64,7 @@ QString CellMLTextViewConverterWarning::message() const
 
 CellMLTextViewConverter::CellMLTextViewConverter() :
     mOutput(QString()),
+    mPrevIndent(QString()),
     mIndent(QString()),
     mLastOutputType(None),
     mErrorLine(-1),
@@ -231,11 +232,14 @@ static const auto Indent = QStringLiteral("    ");
 
 //==============================================================================
 
-void CellMLTextViewConverter::indent()
+void CellMLTextViewConverter::indent(const bool &pForceTracking)
 {
-    // Indent our output
+    // Indent our output and keep track of it, if required
 
     mIndent += Indent;
+
+    if (pForceTracking)
+        mPrevIndent = mIndent;
 }
 
 //==============================================================================
@@ -258,7 +262,17 @@ void CellMLTextViewConverter::outputString(const OutputType &pOutputType,
         if (mLastOutputType != EmptyLine)
             mOutput += "\n";
     } else {
-        mOutput += mIndent+pString+"\n";
+        if (pOutputType == Comment) {
+            // When converting a comment that is within a piecewise equation,
+            // mIndent will be wrong (since it will have been 'incremented'), so
+            // we need to rely on the indent that we previously used
+
+            mOutput += mPrevIndent+pString+"\n";
+        } else {
+            mOutput += mIndent+pString+"\n";
+
+            mPrevIndent = mIndent;
+        }
     }
 
     mLastOutputType = pOutputType;
@@ -358,7 +372,7 @@ CellMLTextViewConverter::MathmlNodeType CellMLTextViewConverter::mathmlNodeType(
 
     if (   !pDomNode.localName().compare("apply")
         && !pDomNode.namespaceURI().compare(CellMLSupport::MathmlNamespace)) {
-        return mMathmlNodeTypes.value(pDomNode.childNodes().item(0).localName());
+        return mMathmlNodeTypes.value(childNode(pDomNode, 0).localName());
     } else {
         return mMathmlNodeTypes.value(pDomNode.localName());
     }
@@ -788,6 +802,44 @@ bool CellMLTextViewConverter::processMathNode(const QDomNode &pDomNode)
 
 //==============================================================================
 
+int CellMLTextViewConverter::childNodesCount(const QDomNode &pDomNode) const
+{
+    // Return the number of child elements in the given node
+
+    int res = 0;
+    QDomNodeList domNodeChildNodes = pDomNode.childNodes();
+
+    for (int i = 0, iMax = domNodeChildNodes.count(); i < iMax; ++i)
+        if (!domNodeChildNodes.item(i).isComment())
+            ++res;
+
+    return res;
+}
+
+//==============================================================================
+
+QDomNode CellMLTextViewConverter::childNode(const QDomNode &pDomNode,
+                                            const int &pChildNodeIndex) const
+{
+    // Return the nth child element of the given node
+
+    int childNodeIndex = 0;
+    QDomNodeList domNodeChildNodes = pDomNode.childNodes();
+
+    for (int i = 0, iMax = domNodeChildNodes.count(); i < iMax; ++i) {
+        if (!domNodeChildNodes.item(i).isComment()) {
+            if (childNodeIndex == pChildNodeIndex)
+                return domNodeChildNodes.item(i);
+            else
+                ++childNodeIndex;
+        }
+    }
+
+    return QDomNode();
+}
+
+//==============================================================================
+
 QString CellMLTextViewConverter::processMathmlNode(const QDomNode &pDomNode,
                                                    bool &pHasError)
 {
@@ -799,23 +851,26 @@ QString CellMLTextViewConverter::processMathmlNode(const QDomNode &pDomNode,
     // Process the given MathML node and its children, if any
 
     QDomNode domNode = pDomNode;
-    QDomNodeList childNodes = domNode.childNodes();
-    int childNodesCount = childNodes.count();
+    int currentChildNodesCount = childNodesCount(domNode);
 
     // Basic content elements
 
-    if (mathmlNode(domNode, "apply")) {
+    if (domNode.isComment()) {
+        processCommentNode(domNode);
+
+        return QString();
+    } else if (mathmlNode(domNode, "apply")) {
         // Make sure that we have at least one child
 
-        if (!childNodesCount) {
+        if (!currentChildNodesCount) {
             mErrorMessage = QObject::tr("An '%1' element must have at least one child element.").arg(domNode.localName());
         } else {
-            domNode = childNodes.item(0);
+            domNode = childNode(domNode, 0);
 
             // Relational operators
 
             if (mathmlNode(domNode, "eq")) {
-                if (childNodesCount != 3) {
+                if (currentChildNodesCount != 3) {
                     mErrorMessage = QObject::tr("An '%1' element must have two siblings.").arg(domNode.localName());
                 } else if (mAssignmentDone) {
                     return processOperatorNode(" == ", pDomNode, pHasError);
@@ -827,13 +882,13 @@ QString CellMLTextViewConverter::processMathmlNode(const QDomNode &pDomNode,
             } else if (   mathmlNode(domNode, "neq")
                        || mathmlNode(domNode, "lt")
                        || mathmlNode(domNode, "leq")) {
-                if (childNodesCount != 3)
+                if (currentChildNodesCount != 3)
                     mErrorMessage = QObject::tr("An '%1' element must have two siblings.").arg(domNode.localName());
                 else
                     return processOperatorNode(mMappings.value(domNode.localName()), pDomNode, pHasError);
             } else if (   mathmlNode(domNode, "gt")
                        || mathmlNode(domNode, "geq")) {
-                if (childNodesCount != 3)
+                if (currentChildNodesCount != 3)
                     mErrorMessage = QObject::tr("A '%1' element must have two siblings.").arg(domNode.localName());
                 else
                     return processOperatorNode(mMappings.value(domNode.localName()), pDomNode, pHasError);
@@ -842,42 +897,42 @@ QString CellMLTextViewConverter::processMathmlNode(const QDomNode &pDomNode,
 
             } else if (   mathmlNode(domNode, "plus")
                        || mathmlNode(domNode, "minus")) {
-                if (childNodesCount < 2)
+                if (currentChildNodesCount < 2)
                     mErrorMessage = QObject::tr("A '%1' element must have at least one sibling.").arg(domNode.localName());
                 else
                     return processOperatorNode(mMappings.value(domNode.localName()), pDomNode, pHasError);
             } else if (   mathmlNode(domNode, "times")
                        || mathmlNode(domNode, "divide")) {
-                if (childNodesCount < 3)
+                if (currentChildNodesCount < 3)
                     mErrorMessage = QObject::tr("A '%1' element must have at least two siblings.").arg(domNode.localName());
                 else
                     return processOperatorNode(mMappings.value(domNode.localName()), pDomNode, pHasError);
             } else if (mathmlNode(domNode, "power")) {
-                if (childNodesCount != 3)
+                if (currentChildNodesCount != 3)
                     mErrorMessage = QObject::tr("A '%1' element must have two siblings.").arg(domNode.localName());
                 else
                     return processPowerNode(pDomNode, pHasError);
             } else if (mathmlNode(domNode, "root")) {
-                if ((childNodesCount != 2) && (childNodesCount != 3))
+                if ((currentChildNodesCount != 2) && (currentChildNodesCount != 3))
                     mErrorMessage = QObject::tr("A '%1' element must have either one or two siblings.").arg(domNode.localName());
                 else
                     return processRootNode(pDomNode, pHasError);
             } else if (   mathmlNode(domNode, "abs")
                        || mathmlNode(domNode, "exp")
                        || mathmlNode(domNode, "ln")) {
-                if (childNodesCount != 2)
+                if (currentChildNodesCount != 2)
                     mErrorMessage = QObject::tr("An '%1' element must have one sibling.").arg(domNode.localName());
                 else
                     return processOneParameterFunctionNode(domNode.localName(), pDomNode, pHasError);
             } else if (mathmlNode(domNode, "log")) {
-                if ((childNodesCount != 2) && (childNodesCount != 3))
+                if ((currentChildNodesCount != 2) && (currentChildNodesCount != 3))
                     mErrorMessage = QObject::tr("A '%1' element must have either one or two siblings.").arg(domNode.localName());
                 else
                     return processLogNode(pDomNode, pHasError);
             } else if (   mathmlNode(domNode, "ceiling")
                        || mathmlNode(domNode, "floor")
                        || mathmlNode(domNode, "factorial")) {
-                if (childNodesCount != 2)
+                if (currentChildNodesCount != 2)
                     mErrorMessage = QObject::tr("A '%1' element must have one sibling.").arg(domNode.localName());
                 else
                     return processOneParameterFunctionNode(mMappings.value(domNode.localName()), pDomNode, pHasError);
@@ -886,17 +941,17 @@ QString CellMLTextViewConverter::processMathmlNode(const QDomNode &pDomNode,
 
             } else if (   mathmlNode(domNode, "and")
                        || mathmlNode(domNode, "or")) {
-                if (childNodesCount < 3)
+                if (currentChildNodesCount < 3)
                     mErrorMessage = QObject::tr("An '%1' element must have at least two siblings.").arg(domNode.localName());
                 else
                     return processOperatorNode(mMappings.value(domNode.localName()), pDomNode, pHasError);
             } else if (mathmlNode(domNode, "xor")) {
-                if (childNodesCount < 3)
+                if (currentChildNodesCount < 3)
                     mErrorMessage = QObject::tr("A '%1' element must have at least two siblings.").arg(domNode.localName());
                 else
                     return processOperatorNode(mMappings.value(domNode.localName()), pDomNode, pHasError);
             } else if (mathmlNode(domNode, "not")) {
-                if (childNodesCount != 2)
+                if (currentChildNodesCount != 2)
                     mErrorMessage = QObject::tr("A '%1' element must have one sibling.").arg(domNode.localName());
                 else
                     return processNotNode(pDomNode, pHasError);
@@ -904,7 +959,7 @@ QString CellMLTextViewConverter::processMathmlNode(const QDomNode &pDomNode,
             // Calculus elements
 
             } else if (mathmlNode(domNode, "diff")) {
-                if (childNodesCount != 3)
+                if (currentChildNodesCount != 3)
                     mErrorMessage = QObject::tr("A '%1' element must have two siblings.").arg(domNode.localName());
                 else
                     return processDiffNode(pDomNode, pHasError);
@@ -915,7 +970,7 @@ QString CellMLTextViewConverter::processMathmlNode(const QDomNode &pDomNode,
                        || mathmlNode(domNode,  "sec") || mathmlNode(domNode,  "csc") || mathmlNode(domNode,  "cot")
                        || mathmlNode(domNode, "sinh") || mathmlNode(domNode, "cosh") || mathmlNode(domNode, "tanh")
                        || mathmlNode(domNode, "sech") || mathmlNode(domNode, "csch") || mathmlNode(domNode, "coth")) {
-                if (childNodesCount != 2)
+                if (currentChildNodesCount != 2)
                     mErrorMessage = QObject::tr("A '%1' element must have one sibling.").arg(domNode.localName());
                 else
                     return processOneParameterFunctionNode(domNode.localName(), pDomNode, pHasError);
@@ -923,7 +978,7 @@ QString CellMLTextViewConverter::processMathmlNode(const QDomNode &pDomNode,
                        || mathmlNode(domNode,  "arcsec") || mathmlNode(domNode,  "arccsc") || mathmlNode(domNode,  "arccot")
                        || mathmlNode(domNode, "arcsinh") || mathmlNode(domNode, "arccosh") || mathmlNode(domNode, "arctanh")
                        || mathmlNode(domNode, "arcsech") || mathmlNode(domNode, "arccsch") || mathmlNode(domNode, "arccoth")) {
-                if (childNodesCount != 2)
+                if (currentChildNodesCount != 2)
                     mErrorMessage = QObject::tr("An '%1' element must have one sibling.").arg(domNode.localName());
                 else
                     return processOneParameterFunctionNode(mMappings.value(domNode.localName()), pDomNode, pHasError);
@@ -931,7 +986,7 @@ QString CellMLTextViewConverter::processMathmlNode(const QDomNode &pDomNode,
             // Extra operators
 
             } else if (mathmlNode(domNode, "rem")) {
-                if (childNodesCount != 3)
+                if (currentChildNodesCount != 3)
                     mErrorMessage = QObject::tr("A '%1' element must have two siblings.").arg(domNode.localName());
                 else
                     return processTwoParameterFunctionNode(domNode.localName(), pDomNode, pHasError);
@@ -952,9 +1007,9 @@ QString CellMLTextViewConverter::processMathmlNode(const QDomNode &pDomNode,
 
             if (   (parentNode != mTopMathmlNode)
                 || parentNode.localName().compare("apply")
-                || parentNode.childNodes().item(0).localName().compare("eq")) {
+                || childNode(parentNode, 0).localName().compare("eq")) {
                 mErrorMessage = QObject::tr("A 'piecewise' element can only be used within a top-level 'apply' element that has an 'eq' element as its first child element.");
-            } else if (!childNodesCount) {
+            } else if (!currentChildNodesCount) {
                 mErrorMessage = QObject::tr("A '%1' element must have at least one child element.").arg(domNode.localName());
             } else {
                 mPiecewiseStatementUsed = true;
@@ -963,12 +1018,12 @@ QString CellMLTextViewConverter::processMathmlNode(const QDomNode &pDomNode,
             }
         }
     } else if (mathmlNode(domNode, "piece")) {
-        if (childNodesCount != 2)
+        if (currentChildNodesCount != 2)
             mErrorMessage = QObject::tr("A '%1' element must have two child elements.").arg(domNode.localName());
         else
             return processPieceNode(pDomNode, pHasError);
     } else if (mathmlNode(domNode, "otherwise")) {
-        if (childNodesCount != 1)
+        if (currentChildNodesCount != 1)
             mErrorMessage = QObject::tr("An '%1' element must have one child element.").arg(domNode.localName());
         else
             return processOtherwiseNode(pDomNode, pHasError);
@@ -981,19 +1036,19 @@ QString CellMLTextViewConverter::processMathmlNode(const QDomNode &pDomNode,
         if (type.isEmpty() || !type.compare("real")) {
             // Either no type (i.e. real type by default) or real type
 
-            if (childNodesCount != 1)
+            if (currentChildNodesCount != 1)
                 mErrorMessage = QObject::tr("A '%1' element must have a value.").arg(domNode.localName());
             else
-                return childNodes.item(0).nodeValue().trimmed()+"{"+cellmlAttributeNodeValue(domNode, "units")+"}";
+                return childNode(domNode, 0).nodeValue().trimmed()+"{"+cellmlAttributeNodeValue(domNode, "units")+"}";
         } else if (!type.compare("e-notation")) {
             // E-notation type
 
-            if (childNodesCount != 3) {
+            if (currentChildNodesCount != 3) {
                 mErrorMessage = QObject::tr("A 'cn' element with an 'e-notation' type must have three child elements.");
             } else {
-                QDomNode childNode1 = childNodes.item(0);
-                QDomNode childNode2 = childNodes.item(1);
-                QDomNode childNode3 = childNodes.item(2);
+                QDomNode childNode1 = childNode(domNode, 0);
+                QDomNode childNode2 = childNode(domNode, 1);
+                QDomNode childNode3 = childNode(domNode, 2);
 
                 if (childNode1.nodeType() != QDomNode::TextNode) {
                     mErrorMessage = QObject::tr("The first child element of a 'cn' element with an 'e-notation' type must be of 'text' type.");
@@ -1021,21 +1076,21 @@ QString CellMLTextViewConverter::processMathmlNode(const QDomNode &pDomNode,
             mErrorMessage = QObject::tr("The 'cn' element uses a '%1' type that is unknown.").arg(type);
         }
     } else if (mathmlNode(domNode, "ci")) {
-        if (childNodesCount != 1)
+        if (currentChildNodesCount != 1)
             mErrorMessage = QObject::tr("A '%1' element must have a value.").arg(domNode.localName());
         else
-            return childNodes.item(0).nodeValue().trimmed();
+            return childNode(domNode, 0).nodeValue().trimmed();
 
     // Qualifier elements
 
     } else if (   mathmlNode(domNode, "degree")
                || mathmlNode(domNode, "logbase")) {
-        if (childNodesCount != 1)
+        if (currentChildNodesCount != 1)
             mErrorMessage = QObject::tr("A '%1' element must have one child element.").arg(domNode.localName());
         else
-            return processMathmlNode(childNodes.item(0), pHasError);
+            return processMathmlNode(childNode(domNode, 0), pHasError);
     } else if (mathmlNode(domNode, "bvar")) {
-        if ((childNodesCount != 1) && (childNodesCount != 2))
+        if ((currentChildNodesCount != 1) && (currentChildNodesCount != 2))
             mErrorMessage = QObject::tr("A '%1' element must have one or two child elements.").arg(domNode.localName());
         else
             return processBvarNode(pDomNode, pHasError);
@@ -1046,17 +1101,17 @@ QString CellMLTextViewConverter::processMathmlNode(const QDomNode &pDomNode,
                || mathmlNode(domNode, "false")
                || mathmlNode(domNode, "notanumber")
                || mathmlNode(domNode, "pi")) {
-        if (childNodesCount == 1)
+        if (currentChildNodesCount == 1)
             mErrorMessage = QObject::tr("A '%1' element cannot have a child element.").arg(domNode.localName());
-        else if (childNodesCount)
+        else if (currentChildNodesCount)
             mErrorMessage = QObject::tr("A '%1' element cannot have child elements.").arg(domNode.localName());
         else
             return mMappings.value(domNode.localName());
     } else if (   mathmlNode(domNode, "infinity")
                || mathmlNode(domNode, "exponentiale")) {
-        if (childNodesCount == 1)
+        if (currentChildNodesCount == 1)
             mErrorMessage = QObject::tr("An '%1' element cannot have a child element.").arg(domNode.localName());
-        else if (childNodesCount)
+        else if (currentChildNodesCount)
             mErrorMessage = QObject::tr("An '%1' element cannot have child elements.").arg(domNode.localName());
         else
             return mMappings.value(domNode.localName());
@@ -1096,11 +1151,12 @@ QString CellMLTextViewConverter::processPiecewiseNode(const QDomNode &pDomNode,
     // Process the piecewise node
 
     QString res = "sel\n";
+    QDomNodeList domNodeChildNodes = pDomNode.childNodes();
 
-    indent();
+    indent(false);
 
-    for (int i = 0, iMax = pDomNode.childNodes().count(); i < iMax; ++i) {
-        res += processMathmlNode(pDomNode.childNodes().item(i), pHasError);
+    for (int i = 0, iMax = domNodeChildNodes.count(); i < iMax; ++i) {
+        res += processMathmlNode(domNodeChildNodes.item(i), pHasError);
 
         if (pHasError)
             return QString();
@@ -1118,27 +1174,44 @@ QString CellMLTextViewConverter::processPieceNode(const QDomNode &pDomNode,
 {
     // Process the piece node
 
-    QString statement = processMathmlNode(pDomNode.childNodes().item(0), pHasError);
+    QString res = QString();
+    QDomNodeList domNodeChildNodes = pDomNode.childNodes();
+    QDomNode childNode = QDomNode();
+    int childElementNodeNumber = 0;
+    QString statement = QString();
 
-    if (pHasError) {
-        return QString();
-    } else {
-        QString condition = processMathmlNode(pDomNode.childNodes().item(1), pHasError);
+    for (int i = 0, iMax = domNodeChildNodes.count(); i < iMax; ++i) {
+        childNode = domNodeChildNodes.item(i);
 
-        if (pHasError) {
-            return QString();
+        if (childNode.isComment()) {
+            processCommentNode(childNode);
         } else {
-            QString res = mIndent+"case "+condition+":\n";
+            if (childElementNodeNumber == 0) {
+                statement = processMathmlNode(childNode, pHasError);
 
-            indent();
+                if (pHasError)
+                    return QString();
+            } else {
+                QString condition = processMathmlNode(childNode, pHasError);
 
-            res += mIndent+statement+";\n";
+                if (pHasError) {
+                    return QString();
+                } else {
+                    res += mIndent+"case "+condition+":\n";
 
-            unindent();
+                    indent(false);
 
-            return res;
+                    res += mIndent+statement+";\n";
+
+                    unindent();
+                }
+            }
+
+            ++childElementNodeNumber;
         }
     }
+
+    return res;
 }
 
 //==============================================================================
@@ -1148,21 +1221,33 @@ QString CellMLTextViewConverter::processOtherwiseNode(const QDomNode &pDomNode,
 {
     // Process the otherwise node
 
-    QString statement = processMathmlNode(pDomNode.childNodes().item(0), pHasError);
+    QString res = QString();
+    QDomNodeList domNodeChildNodes = pDomNode.childNodes();
+    QDomNode childNode;
 
-    if (pHasError) {
-        return QString();
-    } else {
-        QString res = mIndent+"otherwise:\n";
+    for (int i = 0, iMax = domNodeChildNodes.count(); i < iMax; ++i) {
+        childNode = domNodeChildNodes.item(i);
 
-        indent();
+        if (childNode.isComment()) {
+            processCommentNode(childNode);
+        } else {
+            QString statement = processMathmlNode(childNode, pHasError);
 
-        res += mIndent+statement+";\n";
+            if (pHasError) {
+                return QString();
+            } else {
+                res += mIndent+"otherwise:\n";
 
-        unindent();
+                indent(false);
 
-        return res;
+                res += mIndent+statement+";\n";
+
+                unindent();
+            }
+        }
     }
+
+    return res;
 }
 
 //==============================================================================
@@ -1173,280 +1258,310 @@ QString CellMLTextViewConverter::processOperatorNode(const QString &pOperator,
 {
     // Process the operator node, based on its number of siblings
 
-    QDomNodeList childNodes = pDomNode.childNodes();
-    int childNodesCount = childNodes.count();
+    QString res = QString();
+    QDomNodeList domNodeChildNodes = pDomNode.childNodes();
+    QDomNode childNode;
 
-    if (childNodesCount == 2) {
-        QDomNode operandNode = childNodes.item(1);
-        QString operand = processMathmlNode(operandNode, pHasError);
+    if (childNodesCount(pDomNode) == 2) {
+        int childElementNodeNumber = 0;
+        MathmlNodeType operatorNodeType = UnknownMathmlNode;
 
-        if (pHasError) {
-            return QString();
-        } else {
-            if (mMathmlNodeTypes.value(childNodes.item(0).localName()) == PlusMathmlNode) {
-                return pOperator+operand;
+        for (int i = 0, iMax = domNodeChildNodes.count(); i < iMax; ++i) {
+            childNode = domNodeChildNodes.item(i);
+
+            if (childNode.isComment()) {
+                processCommentNode(childNode);
             } else {
-                // Minus node
+                if (childElementNodeNumber == 0) {
+                    operatorNodeType = mMathmlNodeTypes.value(childNode.localName());
+                } else {
+                    QString operand = processMathmlNode(childNode, pHasError);
 
-                switch (mathmlNodeType(operandNode)) {
-                case EqMathmlNode: case NeqMathmlNode: case GtMathmlNode: case LtMathmlNode: case GeqMathmlNode: case LeqMathmlNode:
-                case PlusMathmlNode: case MinusMathmlNode:
-                case AndMathmlNode: case OrMathmlNode: case XorMathmlNode:
-                    return pOperator+"("+operand+")";
+                    if (pHasError)
+                        return QString();
+                    else {
+                        if (operatorNodeType == PlusMathmlNode) {
+                            res = pOperator+operand;
+                        } else if (operatorNodeType == MinusMathmlNode) {
+                            // Minus node
 
-                    break;
-                default:
-                    return pOperator+operand;
+                            switch (mathmlNodeType(childNode)) {
+                            case EqMathmlNode: case NeqMathmlNode: case GtMathmlNode: case LtMathmlNode: case GeqMathmlNode: case LeqMathmlNode:
+                            case PlusMathmlNode: case MinusMathmlNode:
+                            case AndMathmlNode: case OrMathmlNode: case XorMathmlNode:
+                                res = pOperator+"("+operand+")";
+
+                                break;
+                            default:
+                                res = pOperator+operand;
+                            }
+                        } else {
+                            return QString();
+                        }
+                    }
                 }
+
+                ++childElementNodeNumber;
             }
         }
     } else {
-        MathmlNodeType operatorNodeType = mathmlNodeType(childNodes.item(0));
-        QDomNode leftOperandNode = childNodes.item(1);
-        MathmlNodeType leftOperandNodeType = mathmlNodeType(leftOperandNode);
-        QString leftOperand = processMathmlNode(leftOperandNode, pHasError);
+        int childElementNodeNumber = 0;
+        MathmlNodeType operatorNodeType = UnknownMathmlNode;
+        QDomNode leftOperandNode = QDomNode();
+        MathmlNodeType leftOperandNodeType = UnknownMathmlNode;
+        QString leftOperand = QString();
 
-        if (pHasError) {
-            return QString();
-        } else {
-            QDomNode rightOperandNode;
-            QString rightOperand;
-            MathmlNodeType rightOperandNodeType;
+        for (int i = 0, iMax = domNodeChildNodes.count(); i < iMax; ++i) {
+            childNode = domNodeChildNodes.item(i);
 
-            for (int i = 2; i < childNodesCount; ++i) {
-                rightOperandNode = childNodes.item(i);
-                rightOperand = processMathmlNode(rightOperandNode, pHasError);
+            if (childNode.isComment()) {
+                processCommentNode(childNode);
+            } else {
+                if (childElementNodeNumber == 0) {
+                    operatorNodeType = mathmlNodeType(childNode);
+                } else if (childElementNodeNumber == 1) {
+                    leftOperandNode = childNode;
+                    leftOperandNodeType = mathmlNodeType(leftOperandNode);
+                    leftOperand = processMathmlNode(leftOperandNode, pHasError);
 
-                if (pHasError) {
-                    return QString();
+                    if (pHasError)
+                        return QString();
                 } else {
-                    rightOperandNodeType = mathmlNodeType(rightOperandNode);
+                    QDomNode rightOperandNode = childNode;
+                    MathmlNodeType rightOperandNodeType = mathmlNodeType(rightOperandNode);
+                    QString rightOperand = processMathmlNode(rightOperandNode, pHasError);
 
-                    switch (operatorNodeType) {
-                    case PlusMathmlNode:
-                        switch (leftOperandNodeType) {
-                        case EqMathmlNode: case NeqMathmlNode: case GtMathmlNode: case LtMathmlNode: case GeqMathmlNode: case LeqMathmlNode:
-                        case AndMathmlNode: case OrMathmlNode: case XorMathmlNode:
-                            leftOperand = "("+leftOperand+")";
-
-                            break;
-                        default:
-                            ;
-                        }
-
-                        switch (rightOperandNodeType) {
-                        case EqMathmlNode: case NeqMathmlNode: case GtMathmlNode: case LtMathmlNode: case GeqMathmlNode: case LeqMathmlNode:
-                        case AndMathmlNode: case OrMathmlNode: case XorMathmlNode:
-                            rightOperand = "("+rightOperand+")";
-
-                            break;
-                        default:
-                            ;
-                        }
-
-                        break;
-                    case MinusMathmlNode:
-                        switch (leftOperandNodeType) {
-                        case EqMathmlNode: case NeqMathmlNode: case GtMathmlNode: case LtMathmlNode: case GeqMathmlNode: case LeqMathmlNode:
-                        case AndMathmlNode: case OrMathmlNode: case XorMathmlNode:
-                            leftOperand = "("+leftOperand+")";
-
-                            break;
-                        default:
-                            ;
-                        }
-
-                        switch (rightOperandNodeType) {
-                        case EqMathmlNode: case NeqMathmlNode: case GtMathmlNode: case LtMathmlNode: case GeqMathmlNode: case LeqMathmlNode:
-                        case MinusMathmlNode:
-                        case AndMathmlNode: case OrMathmlNode: case XorMathmlNode:
-                            rightOperand = "("+rightOperand+")";
-
-                            break;
+                    if (pHasError) {
+                        return QString();
+                    } else {
+                        switch (operatorNodeType) {
                         case PlusMathmlNode:
-                            if (rightOperandNode.childNodes().count() > 2)
-                                rightOperand = "("+rightOperand+")";
-
-                            break;
-                        default:
-                            ;
-                        }
-
-                        break;
-                    case TimesMathmlNode:
-                        switch (leftOperandNodeType) {
-                        case EqMathmlNode: case NeqMathmlNode: case GtMathmlNode: case LtMathmlNode: case GeqMathmlNode: case LeqMathmlNode:
-                        case AndMathmlNode: case OrMathmlNode: case XorMathmlNode:
-                            leftOperand = "("+leftOperand+")";
-
-                            break;
-                        case PlusMathmlNode: case MinusMathmlNode:
-                            if (leftOperandNode.childNodes().count() > 2)
+                            switch (leftOperandNodeType) {
+                            case EqMathmlNode: case NeqMathmlNode: case GtMathmlNode: case LtMathmlNode: case GeqMathmlNode: case LeqMathmlNode:
+                            case AndMathmlNode: case OrMathmlNode: case XorMathmlNode:
                                 leftOperand = "("+leftOperand+")";
 
-                            break;
-                        default:
-                            ;
-                        }
+                                break;
+                            default:
+                                ;
+                            }
 
-                        switch (rightOperandNodeType) {
-                        case EqMathmlNode: case NeqMathmlNode: case GtMathmlNode: case LtMathmlNode: case GeqMathmlNode: case LeqMathmlNode:
-                        case AndMathmlNode: case OrMathmlNode: case XorMathmlNode:
-                            rightOperand = "("+rightOperand+")";
-
-                            break;
-                        case PlusMathmlNode: case MinusMathmlNode:
-                            if (rightOperandNode.childNodes().count() > 2)
+                            switch (rightOperandNodeType) {
+                            case EqMathmlNode: case NeqMathmlNode: case GtMathmlNode: case LtMathmlNode: case GeqMathmlNode: case LeqMathmlNode:
+                            case AndMathmlNode: case OrMathmlNode: case XorMathmlNode:
                                 rightOperand = "("+rightOperand+")";
 
-                            break;
-                        default:
-                            ;
-                        }
-
-                        break;
-                    case DivideMathmlNode:
-                        switch (leftOperandNodeType) {
-                        case EqMathmlNode: case NeqMathmlNode: case GtMathmlNode: case LtMathmlNode: case GeqMathmlNode: case LeqMathmlNode:
-                        case AndMathmlNode: case OrMathmlNode: case XorMathmlNode:
-                            leftOperand = "("+leftOperand+")";
+                                break;
+                            default:
+                                ;
+                            }
 
                             break;
-                        case PlusMathmlNode: case MinusMathmlNode:
-                            if (leftOperandNode.childNodes().count() > 2)
+                        case MinusMathmlNode:
+                            switch (leftOperandNodeType) {
+                            case EqMathmlNode: case NeqMathmlNode: case GtMathmlNode: case LtMathmlNode: case GeqMathmlNode: case LeqMathmlNode:
+                            case AndMathmlNode: case OrMathmlNode: case XorMathmlNode:
                                 leftOperand = "("+leftOperand+")";
 
-                            break;
-                        default:
-                            ;
-                        }
+                                break;
+                            default:
+                                ;
+                            }
 
-                        switch (rightOperandNodeType) {
-                        case EqMathmlNode: case NeqMathmlNode: case GtMathmlNode: case LtMathmlNode: case GeqMathmlNode: case LeqMathmlNode:
-                        case TimesMathmlNode: case DivideMathmlNode:
-                        case AndMathmlNode: case OrMathmlNode: case XorMathmlNode:
-                            rightOperand = "("+rightOperand+")";
-
-                            break;
-                        case PlusMathmlNode: case MinusMathmlNode:
-                            if (rightOperandNode.childNodes().count() > 2)
+                            switch (rightOperandNodeType) {
+                            case EqMathmlNode: case NeqMathmlNode: case GtMathmlNode: case LtMathmlNode: case GeqMathmlNode: case LeqMathmlNode:
+                            case MinusMathmlNode:
+                            case AndMathmlNode: case OrMathmlNode: case XorMathmlNode:
                                 rightOperand = "("+rightOperand+")";
 
-                            break;
-                        default:
-                            ;
-                        }
+                                break;
+                            case PlusMathmlNode:
+                                if (childNodesCount(rightOperandNode) > 2)
+                                    rightOperand = "("+rightOperand+")";
 
-                        break;
-                    case AndMathmlNode:
-                        switch (leftOperandNodeType) {
-                        case EqMathmlNode: case NeqMathmlNode: case GtMathmlNode: case LtMathmlNode: case GeqMathmlNode: case LeqMathmlNode:
-                        case OrMathmlNode: case XorMathmlNode:
-                            leftOperand = "("+leftOperand+")";
+                                break;
+                            default:
+                                ;
+                            }
 
                             break;
-                        case PlusMathmlNode: case MinusMathmlNode:
-                            if (leftOperandNode.childNodes().count() > 2)
+                        case TimesMathmlNode:
+                            switch (leftOperandNodeType) {
+                            case EqMathmlNode: case NeqMathmlNode: case GtMathmlNode: case LtMathmlNode: case GeqMathmlNode: case LeqMathmlNode:
+                            case AndMathmlNode: case OrMathmlNode: case XorMathmlNode:
                                 leftOperand = "("+leftOperand+")";
 
-                            break;
-                        default:
-                            ;
-                        }
+                                break;
+                            case PlusMathmlNode: case MinusMathmlNode:
+                                if (childNodesCount(leftOperandNode) > 2)
+                                    leftOperand = "("+leftOperand+")";
 
-                        switch (rightOperandNodeType) {
-                        case EqMathmlNode: case NeqMathmlNode: case GtMathmlNode: case LtMathmlNode: case GeqMathmlNode: case LeqMathmlNode:
-                        case OrMathmlNode: case XorMathmlNode:
-                            rightOperand = "("+rightOperand+")";
+                                break;
+                            default:
+                                ;
+                            }
 
-                            break;
-                        case PlusMathmlNode: case MinusMathmlNode:
-                            if (rightOperandNode.childNodes().count() > 2)
+                            switch (rightOperandNodeType) {
+                            case EqMathmlNode: case NeqMathmlNode: case GtMathmlNode: case LtMathmlNode: case GeqMathmlNode: case LeqMathmlNode:
+                            case AndMathmlNode: case OrMathmlNode: case XorMathmlNode:
                                 rightOperand = "("+rightOperand+")";
 
-                            break;
-                        default:
-                            ;
-                        }
+                                break;
+                            case PlusMathmlNode: case MinusMathmlNode:
+                                if (childNodesCount(rightOperandNode) > 2)
+                                    rightOperand = "("+rightOperand+")";
 
-                        break;
-                    case OrMathmlNode:
-                        switch (leftOperandNodeType) {
-                        case EqMathmlNode: case NeqMathmlNode: case GtMathmlNode: case LtMathmlNode: case GeqMathmlNode: case LeqMathmlNode:
-                        case AndMathmlNode: case XorMathmlNode:
-                            leftOperand = "("+leftOperand+")";
+                                break;
+                            default:
+                                ;
+                            }
 
                             break;
-                        case PlusMathmlNode: case MinusMathmlNode:
-                            if (leftOperandNode.childNodes().count() > 2)
+                        case DivideMathmlNode:
+                            switch (leftOperandNodeType) {
+                            case EqMathmlNode: case NeqMathmlNode: case GtMathmlNode: case LtMathmlNode: case GeqMathmlNode: case LeqMathmlNode:
+                            case AndMathmlNode: case OrMathmlNode: case XorMathmlNode:
                                 leftOperand = "("+leftOperand+")";
 
-                            break;
-                        default:
-                            ;
-                        }
+                                break;
+                            case PlusMathmlNode: case MinusMathmlNode:
+                                if (childNodesCount(leftOperandNode) > 2)
+                                    leftOperand = "("+leftOperand+")";
 
-                        switch (rightOperandNodeType) {
-                        case EqMathmlNode: case NeqMathmlNode: case GtMathmlNode: case LtMathmlNode: case GeqMathmlNode: case LeqMathmlNode:
-                        case AndMathmlNode: case XorMathmlNode:
-                            rightOperand = "("+rightOperand+")";
+                                break;
+                            default:
+                                ;
+                            }
 
-                            break;
-                        case PlusMathmlNode: case MinusMathmlNode:
-                            if (rightOperandNode.childNodes().count() > 2)
+                            switch (rightOperandNodeType) {
+                            case EqMathmlNode: case NeqMathmlNode: case GtMathmlNode: case LtMathmlNode: case GeqMathmlNode: case LeqMathmlNode:
+                            case TimesMathmlNode: case DivideMathmlNode:
+                            case AndMathmlNode: case OrMathmlNode: case XorMathmlNode:
                                 rightOperand = "("+rightOperand+")";
 
-                            break;
-                        default:
-                            ;
-                        }
+                                break;
+                            case PlusMathmlNode: case MinusMathmlNode:
+                                if (childNodesCount(rightOperandNode) > 2)
+                                    rightOperand = "("+rightOperand+")";
 
-                        break;
-                    case XorMathmlNode:
-                        switch (leftOperandNodeType) {
-                        case EqMathmlNode: case NeqMathmlNode: case GtMathmlNode: case LtMathmlNode: case GeqMathmlNode: case LeqMathmlNode:
-                        case AndMathmlNode: case OrMathmlNode:
-                            leftOperand = "("+leftOperand+")";
+                                break;
+                            default:
+                                ;
+                            }
 
                             break;
-                        case PlusMathmlNode: case MinusMathmlNode:
-                            if (leftOperandNode.childNodes().count() > 2)
+                        case AndMathmlNode:
+                            switch (leftOperandNodeType) {
+                            case EqMathmlNode: case NeqMathmlNode: case GtMathmlNode: case LtMathmlNode: case GeqMathmlNode: case LeqMathmlNode:
+                            case OrMathmlNode: case XorMathmlNode:
                                 leftOperand = "("+leftOperand+")";
 
-                            break;
-                        default:
-                            ;
-                        }
+                                break;
+                            case PlusMathmlNode: case MinusMathmlNode:
+                                if (childNodesCount(leftOperandNode) > 2)
+                                    leftOperand = "("+leftOperand+")";
 
-                        switch (rightOperandNodeType) {
-                        case EqMathmlNode: case NeqMathmlNode: case GtMathmlNode: case LtMathmlNode: case GeqMathmlNode: case LeqMathmlNode:
-                        case AndMathmlNode: case OrMathmlNode:
-                            rightOperand = "("+rightOperand+")";
+                                break;
+                            default:
+                                ;
+                            }
 
-                            break;
-                        case PlusMathmlNode: case MinusMathmlNode:
-                            if (rightOperandNode.childNodes().count() > 2)
+                            switch (rightOperandNodeType) {
+                            case EqMathmlNode: case NeqMathmlNode: case GtMathmlNode: case LtMathmlNode: case GeqMathmlNode: case LeqMathmlNode:
+                            case OrMathmlNode: case XorMathmlNode:
                                 rightOperand = "("+rightOperand+")";
 
+                                break;
+                            case PlusMathmlNode: case MinusMathmlNode:
+                                if (childNodesCount(rightOperandNode) > 2)
+                                    rightOperand = "("+rightOperand+")";
+
+                                break;
+                            default:
+                                ;
+                            }
+
+                            break;
+                        case OrMathmlNode:
+                            switch (leftOperandNodeType) {
+                            case EqMathmlNode: case NeqMathmlNode: case GtMathmlNode: case LtMathmlNode: case GeqMathmlNode: case LeqMathmlNode:
+                            case AndMathmlNode: case XorMathmlNode:
+                                leftOperand = "("+leftOperand+")";
+
+                                break;
+                            case PlusMathmlNode: case MinusMathmlNode:
+                                if (childNodesCount(leftOperandNode) > 2)
+                                    leftOperand = "("+leftOperand+")";
+
+                                break;
+                            default:
+                                ;
+                            }
+
+                            switch (rightOperandNodeType) {
+                            case EqMathmlNode: case NeqMathmlNode: case GtMathmlNode: case LtMathmlNode: case GeqMathmlNode: case LeqMathmlNode:
+                            case AndMathmlNode: case XorMathmlNode:
+                                rightOperand = "("+rightOperand+")";
+
+                                break;
+                            case PlusMathmlNode: case MinusMathmlNode:
+                                if (childNodesCount(rightOperandNode) > 2)
+                                    rightOperand = "("+rightOperand+")";
+
+                                break;
+                            default:
+                                ;
+                            }
+
+                            break;
+                        case XorMathmlNode:
+                            switch (leftOperandNodeType) {
+                            case EqMathmlNode: case NeqMathmlNode: case GtMathmlNode: case LtMathmlNode: case GeqMathmlNode: case LeqMathmlNode:
+                            case AndMathmlNode: case OrMathmlNode:
+                                leftOperand = "("+leftOperand+")";
+
+                                break;
+                            case PlusMathmlNode: case MinusMathmlNode:
+                                if (childNodesCount(leftOperandNode) > 2)
+                                    leftOperand = "("+leftOperand+")";
+
+                                break;
+                            default:
+                                ;
+                            }
+
+                            switch (rightOperandNodeType) {
+                            case EqMathmlNode: case NeqMathmlNode: case GtMathmlNode: case LtMathmlNode: case GeqMathmlNode: case LeqMathmlNode:
+                            case AndMathmlNode: case OrMathmlNode:
+                                rightOperand = "("+rightOperand+")";
+
+                                break;
+                            case PlusMathmlNode: case MinusMathmlNode:
+                                if (childNodesCount(rightOperandNode) > 2)
+                                    rightOperand = "("+rightOperand+")";
+
+                                break;
+                            default:
+                                ;
+                            }
+
                             break;
                         default:
                             ;
                         }
 
-                        break;
-                    default:
-                        ;
+                        res = leftOperand = leftOperand+pOperator+rightOperand;
+
+                        leftOperandNodeType = operatorNodeType;
                     }
-
-                    leftOperand = leftOperand+pOperator+rightOperand;
-
-                    leftOperandNodeType = operatorNodeType;
                 }
-            }
 
-            return leftOperand;
+                ++childElementNodeNumber;
+            }
         }
     }
+
+    return res;
 }
 
 //==============================================================================
@@ -1457,7 +1572,7 @@ QString CellMLTextViewConverter::processOneParameterFunctionNode(const QString &
 {
     // Process the one-parameter function node
 
-    QString argument = processMathmlNode(pDomNode.childNodes().item(1), pHasError);
+    QString argument = processMathmlNode(childNode(pDomNode, 1), pHasError);
 
     if (pHasError)
         return QString();
@@ -1473,12 +1588,12 @@ QString CellMLTextViewConverter::processTwoParameterFunctionNode(const QString &
 {
     // Process the two-parameter function node
 
-    QString argument1 = processMathmlNode(pDomNode.childNodes().item(1), pHasError);
+    QString argument1 = processMathmlNode(childNode(pDomNode, 1), pHasError);
 
     if (pHasError) {
         return QString();
     } else {
-        QString argument2 = processMathmlNode(pDomNode.childNodes().item(2), pHasError);
+        QString argument2 = processMathmlNode(childNode(pDomNode, 2), pHasError);
 
         if (pHasError)
             return QString();
@@ -1494,12 +1609,12 @@ QString CellMLTextViewConverter::processPowerNode(const QDomNode &pDomNode,
 {
     // Process the power node
 
-    QString a = processMathmlNode(pDomNode.childNodes().item(1), pHasError);
+    QString a = processMathmlNode(childNode(pDomNode, 1), pHasError);
 
     if (pHasError) {
         return QString();
     } else {
-        QString b = processMathmlNode(pDomNode.childNodes().item(2), pHasError);
+        QString b = processMathmlNode(childNode(pDomNode, 2), pHasError);
 
         if (pHasError) {
             return QString();
@@ -1530,15 +1645,15 @@ QString CellMLTextViewConverter::processRootNode(const QDomNode &pDomNode,
 {
     // Process the root node, based on its number of arguments
 
-    if (pDomNode.childNodes().count() == 2) {
-        QString a = processMathmlNode(pDomNode.childNodes().item(1), pHasError);
+    if (childNodesCount(pDomNode) == 2) {
+        QString a = processMathmlNode(childNode(pDomNode, 1), pHasError);
 
         if (pHasError)
             return QString();
         else
             return "sqrt("+a+")";
     } else {
-        QDomNode domNode = pDomNode.childNodes().item(1);
+        QDomNode domNode = childNode(pDomNode, 1);
 
         if (domNode.localName().compare("degree")){
             mErrorMessage = QObject::tr("The first sibling of a '%1' element with two siblings must be a '%2' element.").arg("root")
@@ -1554,7 +1669,7 @@ QString CellMLTextViewConverter::processRootNode(const QDomNode &pDomNode,
             if (pHasError) {
                 return QString();
             } else {
-                QString a = processMathmlNode(pDomNode.childNodes().item(2), pHasError);
+                QString a = processMathmlNode(childNode(pDomNode, 2), pHasError);
 
                 if (pHasError) {
                     return QString();
@@ -1585,15 +1700,15 @@ QString CellMLTextViewConverter::processLogNode(const QDomNode &pDomNode,
 {
     // Process the log node
 
-    QString argumentOrBase = processMathmlNode(pDomNode.childNodes().item(1), pHasError);
+    QString argumentOrBase = processMathmlNode(childNode(pDomNode, 1), pHasError);
 
     if (pHasError) {
         return QString();
     } else {
-        if (pDomNode.childNodes().count() == 2) {
+        if (childNodesCount(pDomNode) == 2) {
             return "log("+argumentOrBase+")";
         } else {
-            QString argument = processMathmlNode(pDomNode.childNodes().item(2), pHasError);
+            QString argument = processMathmlNode(childNode(pDomNode, 2), pHasError);
 
             if (pHasError)
                 return QString();
@@ -1610,7 +1725,7 @@ QString CellMLTextViewConverter::processNotNode(const QDomNode &pDomNode,
 {
     // Process the not node
 
-    QDomNode domNode = pDomNode.childNodes().item(1);
+    QDomNode domNode = childNode(pDomNode, 1);
     QString operand = processMathmlNode(domNode, pHasError);
 
     if (pHasError) {
@@ -1636,12 +1751,12 @@ QString CellMLTextViewConverter::processDiffNode(const QDomNode &pDomNode,
 {
     // Process the diff node
 
-    QString f = processMathmlNode(pDomNode.childNodes().item(2), pHasError);
+    QString f = processMathmlNode(childNode(pDomNode, 2), pHasError);
 
     if (pHasError) {
         return QString();
     } else {
-        QDomNode domNode = pDomNode.childNodes().item(1);
+        QDomNode domNode = childNode(pDomNode, 1);
 
         if (domNode.localName().compare("bvar")){
             mErrorMessage = QObject::tr("The first sibling of a '%1' element with two siblings must be a '%2' element.").arg("diff")
@@ -1652,7 +1767,7 @@ QString CellMLTextViewConverter::processDiffNode(const QDomNode &pDomNode,
 
             return QString();
         } else {
-            QString x = processMathmlNode(pDomNode.childNodes().item(1), pHasError);
+            QString x = processMathmlNode(domNode, pHasError);
 
             if (pHasError)
                 return QString();
@@ -1669,10 +1784,10 @@ QString CellMLTextViewConverter::processBvarNode(const QDomNode &pDomNode,
 {
     // Process the bvar node, based on its number of child elements
 
-    if (pDomNode.childNodes().count() == 1) {
-        return processMathmlNode(pDomNode.childNodes().item(0), pHasError);
+    if (childNodesCount(pDomNode) == 1) {
+        return processMathmlNode(childNode(pDomNode, 0), pHasError);
     } else {
-        QDomNode domNode = pDomNode.childNodes().item(1);
+        QDomNode domNode = childNode(pDomNode, 1);
 
         if (domNode.localName().compare("degree")){
             mErrorMessage = QObject::tr("The second child element of a '%1' element with two child elements must be a '%2' element.").arg("bvar")
@@ -1688,7 +1803,7 @@ QString CellMLTextViewConverter::processBvarNode(const QDomNode &pDomNode,
             if (pHasError) {
                 return QString();
             } else {
-                QString a = processMathmlNode(pDomNode.childNodes().item(0), pHasError);
+                QString a = processMathmlNode(childNode(pDomNode, 0), pHasError);
 
                 if (pHasError)
                     return QString();

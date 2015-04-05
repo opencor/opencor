@@ -107,6 +107,7 @@ private:
     };
 
     QString mOutput;
+    QString mPrevIndent;
     QString mIndent;
 
     OutputType mLastOutputType;
@@ -130,7 +131,7 @@ private:
     QMap<QString, QString> mMappings;
     QMap<QString, MathmlNodeType> mMathmlNodeTypes;
 
-    void indent();
+    void indent(const bool &pForceTracking = true);
     void unindent();
 
     void outputString(const OutputType &pOutputType = EmptyLine,
@@ -159,6 +160,9 @@ private:
                               const bool &pInImportNode = false);
     void processVariableNode(const QDomNode &pDomNode);
     bool processMathNode(const QDomNode &pDomNode);
+    int childNodesCount(const QDomNode &pDomNode) const;
+    QDomNode childNode(const QDomNode &pDomNode,
+                       const int &pChildNodeIndex) const;
     QString processMathmlNode(const QDomNode &pDomNode, bool &pHasError);
     QString processPiecewiseNode(const QDomNode &pDomNode, bool &pHasError);
     QString processPieceNode(const QDomNode &pDomNode, bool &pHasError);

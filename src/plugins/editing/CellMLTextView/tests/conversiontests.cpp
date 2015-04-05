@@ -41,7 +41,9 @@ void ConversionTests::successfulConversionTests()
 
     // Test the conversion of a CellML file that works with COR...
 
-    QVERIFY(converter.execute(OpenCOR::fileContents(OpenCOR::fileName("src/plugins/editing/CellMLTextView/tests/data/conversion/successful/cellml_cor.cellml")).join("\n")));
+    QStringList cellmlCorCellmlContents = OpenCOR::fileContents(OpenCOR::fileName("src/plugins/editing/CellMLTextView/tests/data/conversion/successful/cellml_cor.cellml"));
+
+    QVERIFY(converter.execute(cellmlCorCellmlContents.join("\n")));
     QCOMPARE(converter.output().split("\n"),
              OpenCOR::fileContents(OpenCOR::fileName("src/plugins/editing/CellMLTextView/tests/data/conversion/successful/cellml_cor.out")));
 
@@ -52,7 +54,7 @@ void ConversionTests::successfulConversionTests()
     QVERIFY(parser.execute(OpenCOR::fileContents(OpenCOR::fileName("src/plugins/editing/CellMLTextView/tests/data/conversion/successful/cellml_cor.out")).join("\n"),
                            OpenCOR::CellMLSupport::CellmlFile::Cellml_1_0));
     QCOMPARE(qDomDocumentToString(parser.domDocument()).split("\n"),
-             OpenCOR::fileContents(OpenCOR::fileName("src/plugins/editing/CellMLTextView/tests/data/conversion/successful/cellml_cor.cellml")));
+             cellmlCorCellmlContents);
     QVERIFY(!parser.domDocument().isNull());
 
     // Test the conversion of a CellML file that only works with OpenCOR
@@ -60,6 +62,30 @@ void ConversionTests::successfulConversionTests()
     QVERIFY(converter.execute(OpenCOR::fileContents(OpenCOR::fileName("src/plugins/editing/CellMLTextView/tests/data/conversion/successful/cellml_opencor.cellml")).join("\n")));
     QCOMPARE(converter.output().split("\n"),
              OpenCOR::fileContents(OpenCOR::fileName("src/plugins/editing/CellMLTextView/tests/data/conversion/successful/cellml_opencor.out")));
+
+    // Retest the conversion of a CellML file that works with COR, except that
+    // we insert comments everywhere
+
+    const QString comment = QString("<!-- In between comment #%1...-->");
+
+    QStringList cellmlCorWithCommentsCellmlContents = QStringList() << cellmlCorCellmlContents[0];
+    QString currentLine;
+    int commentNumber = 0;
+
+    for (int i = 1;; ++i) {
+        currentLine = cellmlCorCellmlContents[i];
+
+        cellmlCorWithCommentsCellmlContents.append(currentLine);
+
+        if (currentLine.compare("</model>"))
+            cellmlCorWithCommentsCellmlContents.append(comment.arg(++commentNumber));
+        else
+            break;
+    }
+
+    QVERIFY(converter.execute(cellmlCorWithCommentsCellmlContents.join("\n")));
+    QCOMPARE(converter.output().split("\n"),
+             OpenCOR::fileContents(OpenCOR::fileName("src/plugins/editing/CellMLTextView/tests/data/conversion/successful/cellml_cor_with_comments.out")));
 }
 
 //==============================================================================

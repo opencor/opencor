@@ -26,4 +26,200 @@ def model my_model as
     ;
 
     // In between comment #7...
+
+    def comp my_component as
+        // In between comment #8...
+
+        i_Stim = sel
+            // In between comment #9...
+
+            case (time >= 10{millisecond}) and (time <= 10.5{millisecond}):
+                // In between comment #10...
+
+                -20{microA_per_cm2};
+
+                // In between comment #11...
+            otherwise:
+                // In between comment #12...
+
+                0{microA_per_cm2};
+
+            // In between comment #13...
+        endsel;
+
+        // In between comment #14...
+
+        ode(V, time) =
+
+        // In between comment #15...
+
+        -(-i_Stim+i_Na+
+
+        // In between comment #16...
+
+        i_K+i_L)/Cm;
+
+        // In between comment #17...
+
+        /* comment */ ode /* comment */ ( /* comment */ V /* comment */ , /* comment */ time /* comment */ ) /* comment */ = /* comment */ - /* comment */ ( /* comment */ - /* comment */ i_Stim /* comment */ + /* comment */ i_Na /* comment */ + /* comment */ i_K /* comment */ + /* comment */ i_L /* comment */ ) /* comment */ / /* comment */ Cm /* comment */ ; /* comment */
+
+        // In between comment #18...
+
+        /* comment */ a /* comment */ = /* comment */ b /* comment */ ; /* comment */
+        /* comment */ a /* comment */ = /* comment */ 3 /* comment */ { /* comment */ dimensionless /* comment */ } /* comment */ ; /* comment */
+        /* comment */ a /* comment */ = /* comment */ 12.3e5 /* comment */ { /* comment */ dimensionless /* comment */ } /* comment */ ; /* comment */
+
+        /* comment */ a /* comment */ = /* comment */ sel /* comment */
+            /* comment */ case /* comment */ Version /* comment */ == /* comment */ 0 /* comment */ { /* comment */ dimensionless /* comment */ } /* comment */ : /* comment */
+                /* comment */ 123 /* comment */ { /* comment */ dimensionless /* comment */ } /* comment */ ; /* comment */
+            /* comment */ case /* comment */ Version /* comment */ == /* comment */ 1 /* comment */ { /* comment */ dimensionless /* comment */ } /* comment */ : /* comment */
+                /* comment */ 456 /* comment */ { /* comment */ dimensionless /* comment */ } /* comment */ ; /* comment */
+            /* comment */ otherwise /* comment */ : /* comment */
+                /* comment */ 789 /* comment */ { /* comment */ dimensionless /* comment */ } /* comment */ ; /* comment */
+        /* comment */ endsel /* comment */ ; /* comment */
+
+        /* comment */ a /* comment */ = /* comment */ b /* comment */ == /* comment */ c /* comment */ ; /* comment */
+        /* comment */ a /* comment */ = /* comment */ b /* comment */ <> /* comment */ c /* comment */ ; /* comment */
+        /* comment */ a /* comment */ = /* comment */ b /* comment */ > /* comment */ c /* comment */ ; /* comment */
+        /* comment */ a /* comment */ = /* comment */ b /* comment */ < /* comment */ c /* comment */ ; /* comment */
+        /* comment */ a /* comment */ = /* comment */ b /* comment */ >= /* comment */ c /* comment */ ; /* comment */
+        /* comment */ a /* comment */ = /* comment */ b /* comment */ <= /* comment */ c /* comment */ ; /* comment */
+        /* comment */ a /* comment */ = /* comment */ + /* comment */ b /* comment */ ; /* comment */
+        /* comment */ a /* comment */ = /* comment */ b /* comment */ + /* comment */ c /* comment */ ; /* comment */
+        /* comment */ a /* comment */ = /* comment */ b /* comment */ + /* comment */ c /* comment */ + /* comment */ d /* comment */ ; /* comment */
+        /* comment */ a /* comment */ = /* comment */ ( /* comment */ b /* comment */ and /* comment */ c /* comment */ ) /* comment */ + /* comment */ ( /* comment */ b /* comment */ or /* comment */ c /* comment */ ) /* comment */ ; /* comment */
+        /* comment */ a /* comment */ = /* comment */ ( /* comment */ b /* comment */ and /* comment */ c /* comment */ ) /* comment */ + /* comment */ c /* comment */ ; /* comment */
+        /* comment */ a /* comment */ = /* comment */ b /* comment */ + /* comment */ ( /* comment */ b /* comment */ or /* comment */ c /* comment */ ) /* comment */ ; /* comment */
+        /* comment */ a /* comment */ = /* comment */ - /* comment */ b /* comment */ ; /* comment */
+        /* comment */ a /* comment */ = /* comment */ - /* comment */ exp /* comment */ ( /* comment */ b /* comment */ ) /* comment */ ; /* comment */
+        /* comment */ a /* comment */ = /* comment */ - /* comment */ ( /* comment */ b /* comment */ == /* comment */ c /* comment */ ) /* comment */ ; /* comment */
+        /* comment */ a /* comment */ = /* comment */ - /* comment */ ( /* comment */ b /* comment */ <> /* comment */ c /* comment */ ) /* comment */ ; /* comment */
+        /* comment */ a /* comment */ = /* comment */ - /* comment */ ( /* comment */ b /* comment */ > /* comment */ c /* comment */ ) /* comment */ ; /* comment */
+        /* comment */ a /* comment */ = /* comment */ - /* comment */ ( /* comment */ b /* comment */ < /* comment */ c /* comment */ ) /* comment */ ; /* comment */
+        /* comment */ a /* comment */ = /* comment */ - /* comment */ ( /* comment */ b /* comment */ >= /* comment */ c /* comment */ ) /* comment */ ; /* comment */
+        /* comment */ a /* comment */ = /* comment */ - /* comment */ ( /* comment */ b /* comment */ <= /* comment */ c /* comment */ ) /* comment */ ; /* comment */
+        /* comment */ a /* comment */ = /* comment */ - /* comment */ ( /* comment */ b /* comment */ + /* comment */ c /* comment */ ) /* comment */ ; /* comment */
+        /* comment */ a /* comment */ = /* comment */ - /* comment */ ( /* comment */ b /* comment */ - /* comment */ c /* comment */ ) /* comment */ ; /* comment */
+        /* comment */ a /* comment */ = /* comment */ - /* comment */ b /* comment */ * /* comment */ c /* comment */ ; /* comment */
+        /* comment */ a /* comment */ = /* comment */ - /* comment */ b /* comment */ / /* comment */ c /* comment */ ; /* comment */
+        /* comment */ a /* comment */ = /* comment */ - /* comment */ ( /* comment */ b /* comment */ and /* comment */ c /* comment */ ) /* comment */ ; /* comment */
+        /* comment */ a /* comment */ = /* comment */ - /* comment */ ( /* comment */ b /* comment */ or /* comment */ c /* comment */ ) /* comment */ ; /* comment */
+        /* comment */ a /* comment */ = /* comment */ - /* comment */ ( /* comment */ b /* comment */ xor /* comment */ c /* comment */ ) /* comment */ ; /* comment */
+        /* comment */ a /* comment */ = /* comment */ - /* comment */ not /* comment */ b /* comment */ ; /* comment */
+        /* comment */ a /* comment */ = /* comment */ b /* comment */ - /* comment */ c /* comment */ ; /* comment */
+        /* comment */ a /* comment */ = /* comment */ ( /* comment */ b /* comment */ and /* comment */ c /* comment */ ) /* comment */ - /* comment */ ( /* comment */ b /* comment */ or /* comment */ c /* comment */ ) /* comment */ ; /* comment */
+        /* comment */ a /* comment */ = /* comment */ ( /* comment */ b /* comment */ and /* comment */ c /* comment */ ) /* comment */ - /* comment */ c /* comment */ ; /* comment */
+        /* comment */ a /* comment */ = /* comment */ b /* comment */ - /* comment */ ( /* comment */ b /* comment */ or /* comment */ c /* comment */ ) /* comment */ ; /* comment */
+        /* comment */ a /* comment */ = /* comment */ b /* comment */ - /* comment */ ( /* comment */ c /* comment */ + /* comment */ d /* comment */ ) /* comment */ ; /* comment */
+        /* comment */ a /* comment */ = /* comment */ b /* comment */ - /* comment */ + /* comment */ c /* comment */ ; /* comment */
+        /* comment */ a /* comment */ = /* comment */ b /* comment */ - /* comment */ ( /* comment */ c /* comment */ - /* comment */ d /* comment */ ) /* comment */ ; /* comment */
+        /* comment */ a /* comment */ = /* comment */ b /* comment */ - /* comment */ ( /* comment */ - /* comment */ c /* comment */ ) /* comment */ ; /* comment */
+        /* comment */ a /* comment */ = /* comment */ b /* comment */ * /* comment */ c /* comment */ ; /* comment */
+        /* comment */ a /* comment */ = /* comment */ b /* comment */ * /* comment */ c /* comment */ * /* comment */ d /* comment */ ; /* comment */
+        /* comment */ a /* comment */ = /* comment */ ( /* comment */ b /* comment */ and /* comment */ c /* comment */ ) /* comment */ * /* comment */ ( /* comment */ b /* comment */ or /* comment */ c /* comment */ ) /* comment */ ; /* comment */
+        /* comment */ a /* comment */ = /* comment */ ( /* comment */ b /* comment */ and /* comment */ c /* comment */ ) /* comment */ * /* comment */ c /* comment */ ; /* comment */
+        /* comment */ a /* comment */ = /* comment */ b /* comment */ * /* comment */ ( /* comment */ b /* comment */ or /* comment */ c /* comment */ ) /* comment */ ; /* comment */
+        /* comment */ a /* comment */ = /* comment */ + /* comment */ b /* comment */ * /* comment */ - /* comment */ c /* comment */ ; /* comment */
+        /* comment */ a /* comment */ = /* comment */ + /* comment */ b /* comment */ * /* comment */ c /* comment */ ; /* comment */
+        /* comment */ a /* comment */ = /* comment */ b /* comment */ * /* comment */ - /* comment */ c /* comment */ ; /* comment */
+        /* comment */ a /* comment */ = /* comment */ + /* comment */ b /* comment */ * /* comment */ - /* comment */ c /* comment */ * /* comment */ + /* comment */ d /* comment */ ; /* comment */
+        /* comment */ a /* comment */ = /* comment */ b /* comment */ / /* comment */ c /* comment */ ; /* comment */
+        /* comment */ a /* comment */ = /* comment */ ( /* comment */ b /* comment */ and /* comment */ c /* comment */ ) /* comment */ / /* comment */ ( /* comment */ b /* comment */ or /* comment */ c /* comment */ ) /* comment */ ; /* comment */
+        /* comment */ a /* comment */ = /* comment */ ( /* comment */ b /* comment */ and /* comment */ c /* comment */ ) /* comment */ / /* comment */ c /* comment */ ; /* comment */
+        /* comment */ a /* comment */ = /* comment */ b /* comment */ / /* comment */ ( /* comment */ b /* comment */ or /* comment */ c /* comment */ ) /* comment */ ; /* comment */
+        /* comment */ a /* comment */ = /* comment */ + /* comment */ b /* comment */ / /* comment */ - /* comment */ c /* comment */ ; /* comment */
+        /* comment */ a /* comment */ = /* comment */ + /* comment */ b /* comment */ / /* comment */ c /* comment */ ; /* comment */
+        /* comment */ a /* comment */ = /* comment */ b /* comment */ / /* comment */ - /* comment */ c /* comment */ ; /* comment */
+        /* comment */ a /* comment */ = /* comment */ b /* comment */ / /* comment */ ( /* comment */ c /* comment */ * /* comment */ d /* comment */ ) /* comment */ ; /* comment */
+        /* comment */ a /* comment */ = /* comment */ pow /* comment */ ( /* comment */ b /* comment */ , /* comment */ c /* comment */ ) /* comment */ ; /* comment */
+        /* comment */ a /* comment */ = /* comment */ sqrt /* comment */ ( /* comment */ b /* comment */ ) /* comment */ ; /* comment */
+        /* comment */ a /* comment */ = /* comment */ sqr /* comment */ ( /* comment */ b /* comment */ ) /* comment */ ; /* comment */
+        /* comment */ a /* comment */ = /* comment */ pow /* comment */ ( /* comment */ b /* comment */ , /* comment */ 3 /* comment */ { /* comment */ dimensionless /* comment */ } /* comment */ ) /* comment */ ; /* comment */
+        /* comment */ a /* comment */ = /* comment */ sqrt /* comment */ ( /* comment */ b /* comment */ ) /* comment */ ; /* comment */
+        /* comment */ a /* comment */ = /* comment */ root /* comment */ ( /* comment */ b /* comment */ , /* comment */ 3 /* comment */ { /* comment */ dimensionless /* comment */ } /* comment */ ) /* comment */ ; /* comment */
+        /* comment */ a /* comment */ = /* comment */ root /* comment */ ( /* comment */ b /* comment */ , /* comment */ c /* comment */ ) /* comment */ ; /* comment */
+        /* comment */ a /* comment */ = /* comment */ abs /* comment */ ( /* comment */ b /* comment */ ) /* comment */ ; /* comment */
+        /* comment */ a /* comment */ = /* comment */ exp /* comment */ ( /* comment */ b /* comment */ ) /* comment */ ; /* comment */
+        /* comment */ a /* comment */ = /* comment */ ln /* comment */ ( /* comment */ b /* comment */ ) /* comment */ ; /* comment */
+        /* comment */ a /* comment */ = /* comment */ log /* comment */ ( /* comment */ b /* comment */ ) /* comment */ ; /* comment */
+        /* comment */ a /* comment */ = /* comment */ log /* comment */ ( /* comment */ b /* comment */ , /* comment */ c /* comment */ ) /* comment */ ; /* comment */
+        /* comment */ a /* comment */ = /* comment */ ceil /* comment */ ( /* comment */ b /* comment */ ) /* comment */ ; /* comment */
+        /* comment */ a /* comment */ = /* comment */ floor /* comment */ ( /* comment */ b /* comment */ ) /* comment */ ; /* comment */
+        /* comment */ a /* comment */ = /* comment */ fact /* comment */ ( /* comment */ b /* comment */ ) /* comment */ ; /* comment */
+        /* comment */ a /* comment */ = /* comment */ b /* comment */ and /* comment */ c /* comment */ ; /* comment */
+        /* comment */ a /* comment */ = /* comment */ b /* comment */ and /* comment */ c /* comment */ and /* comment */ d /* comment */ ; /* comment */
+        /* comment */ a /* comment */ = /* comment */ ( /* comment */ b /* comment */ == /* comment */ c /* comment */ ) /* comment */ and /* comment */ ( /* comment */ b /* comment */ <> /* comment */ c /* comment */ ) /* comment */ ; /* comment */
+        /* comment */ a /* comment */ = /* comment */ ( /* comment */ b /* comment */ == /* comment */ c /* comment */ ) /* comment */ and /* comment */ c /* comment */ ; /* comment */
+        /* comment */ a /* comment */ = /* comment */ b /* comment */ and /* comment */ ( /* comment */ b /* comment */ <> /* comment */ c /* comment */ ) /* comment */ ; /* comment */
+        /* comment */ a /* comment */ = /* comment */ b /* comment */ * /* comment */ c /* comment */ and /* comment */ b /* comment */ / /* comment */ c /* comment */ ; /* comment */
+        /* comment */ a /* comment */ = /* comment */ ( /* comment */ b /* comment */ + /* comment */ c /* comment */ ) /* comment */ and /* comment */ ( /* comment */ b /* comment */ - /* comment */ c /* comment */ ) /* comment */ ; /* comment */
+        /* comment */ a /* comment */ = /* comment */ + /* comment */ b /* comment */ and /* comment */ - /* comment */ c /* comment */ ; /* comment */
+        /* comment */ a /* comment */ = /* comment */ b /* comment */ or /* comment */ c /* comment */ ; /* comment */
+        /* comment */ a /* comment */ = /* comment */ b /* comment */ or /* comment */ c /* comment */ or /* comment */ d /* comment */ ; /* comment */
+        /* comment */ a /* comment */ = /* comment */ ( /* comment */ b /* comment */ == /* comment */ c /* comment */ ) /* comment */ or /* comment */ ( /* comment */ b /* comment */ <> /* comment */ c /* comment */ ) /* comment */ ; /* comment */
+        /* comment */ a /* comment */ = /* comment */ ( /* comment */ b /* comment */ == /* comment */ c /* comment */ ) /* comment */ or /* comment */ c /* comment */ ; /* comment */
+        /* comment */ a /* comment */ = /* comment */ b /* comment */ or /* comment */ ( /* comment */ b /* comment */ <> /* comment */ c /* comment */ ) /* comment */ ; /* comment */
+        /* comment */ a /* comment */ = /* comment */ b /* comment */ * /* comment */ c /* comment */ or /* comment */ b /* comment */ / /* comment */ c /* comment */ ; /* comment */
+        /* comment */ a /* comment */ = /* comment */ ( /* comment */ b /* comment */ + /* comment */ c /* comment */ ) /* comment */ or /* comment */ ( /* comment */ b /* comment */ - /* comment */ c /* comment */ ) /* comment */ ; /* comment */
+        /* comment */ a /* comment */ = /* comment */ + /* comment */ b /* comment */ or /* comment */ - /* comment */ c /* comment */ ; /* comment */
+        /* comment */ a /* comment */ = /* comment */ b /* comment */ xor /* comment */ c /* comment */ ; /* comment */
+        /* comment */ a /* comment */ = /* comment */ b /* comment */ xor /* comment */ c /* comment */ xor /* comment */ d /* comment */ ; /* comment */
+        /* comment */ a /* comment */ = /* comment */ ( /* comment */ b /* comment */ == /* comment */ c /* comment */ ) /* comment */ xor /* comment */ ( /* comment */ b /* comment */ <> /* comment */ c /* comment */ ) /* comment */ ; /* comment */
+        /* comment */ a /* comment */ = /* comment */ ( /* comment */ b /* comment */ == /* comment */ c /* comment */ ) /* comment */ xor /* comment */ c /* comment */ ; /* comment */
+        /* comment */ a /* comment */ = /* comment */ b /* comment */ xor /* comment */ ( /* comment */ b /* comment */ <> /* comment */ c /* comment */ ) /* comment */ ; /* comment */
+        /* comment */ a /* comment */ = /* comment */ b /* comment */ * /* comment */ c /* comment */ xor /* comment */ b /* comment */ / /* comment */ c /* comment */ ; /* comment */
+        /* comment */ a /* comment */ = /* comment */ ( /* comment */ b /* comment */ + /* comment */ c /* comment */ ) /* comment */ xor /* comment */ ( /* comment */ b /* comment */ - /* comment */ c /* comment */ ) /* comment */ ; /* comment */
+        /* comment */ a /* comment */ = /* comment */ + /* comment */ b /* comment */ xor /* comment */ - /* comment */ c /* comment */ ; /* comment */
+        /* comment */ a /* comment */ = /* comment */ not /* comment */ b /* comment */ ; /* comment */
+        /* comment */ a /* comment */ = /* comment */ not /* comment */ exp /* comment */ ( /* comment */ b /* comment */ ) /* comment */ ; /* comment */
+        /* comment */ a /* comment */ = /* comment */ not /* comment */ ( /* comment */ b /* comment */ == /* comment */ c /* comment */ ) /* comment */ ; /* comment */
+        /* comment */ a /* comment */ = /* comment */ not /* comment */ ( /* comment */ b /* comment */ <> /* comment */ c /* comment */ ) /* comment */ ; /* comment */
+        /* comment */ a /* comment */ = /* comment */ not /* comment */ ( /* comment */ b /* comment */ > /* comment */ c /* comment */ ) /* comment */ ; /* comment */
+        /* comment */ a /* comment */ = /* comment */ not /* comment */ ( /* comment */ b /* comment */ < /* comment */ c /* comment */ ) /* comment */ ; /* comment */
+        /* comment */ a /* comment */ = /* comment */ not /* comment */ ( /* comment */ b /* comment */ >= /* comment */ c /* comment */ ) /* comment */ ; /* comment */
+        /* comment */ a /* comment */ = /* comment */ not /* comment */ ( /* comment */ b /* comment */ <= /* comment */ c /* comment */ ) /* comment */ ; /* comment */
+        /* comment */ a /* comment */ = /* comment */ not /* comment */ ( /* comment */ b /* comment */ + /* comment */ c /* comment */ ) /* comment */ ; /* comment */
+        /* comment */ a /* comment */ = /* comment */ not /* comment */ ( /* comment */ b /* comment */ - /* comment */ c /* comment */ ) /* comment */ ; /* comment */
+        /* comment */ a /* comment */ = /* comment */ not /* comment */ ( /* comment */ b /* comment */ * /* comment */ c /* comment */ ) /* comment */ ; /* comment */
+        /* comment */ a /* comment */ = /* comment */ not /* comment */ ( /* comment */ b /* comment */ / /* comment */ c /* comment */ ) /* comment */ ; /* comment */
+        /* comment */ a /* comment */ = /* comment */ not /* comment */ ( /* comment */ b /* comment */ and /* comment */ c /* comment */ ) /* comment */ ; /* comment */
+        /* comment */ a /* comment */ = /* comment */ not /* comment */ ( /* comment */ b /* comment */ or /* comment */ c /* comment */ ) /* comment */ ; /* comment */
+        /* comment */ a /* comment */ = /* comment */ not /* comment */ ( /* comment */ b /* comment */ xor /* comment */ c /* comment */ ) /* comment */ ; /* comment */
+        /* comment */ a /* comment */ = /* comment */ not /* comment */ not /* comment */ b /* comment */ ; /* comment */
+        /* comment */ a /* comment */ = /* comment */ ode /* comment */ ( /* comment */ f /* comment */ , /* comment */ t /* comment */ ) /* comment */ ; /* comment */
+        /* comment */ a /* comment */ = /* comment */ true /* comment */ ; /* comment */
+        /* comment */ a /* comment */ = /* comment */ false /* comment */ ; /* comment */
+        /* comment */ a /* comment */ = /* comment */ pi /* comment */ ; /* comment */
+        /* comment */ a /* comment */ = /* comment */ e /* comment */ ; /* comment */
+        /* comment */ a /* comment */ = /* comment */ nan /* comment */ ; /* comment */
+        /* comment */ a /* comment */ = /* comment */ inf /* comment */ ; /* comment */
+        /* comment */ a /* comment */ = /* comment */ sin /* comment */ ( /* comment */ b /* comment */ ) /* comment */ ; /* comment */
+        /* comment */ a /* comment */ = /* comment */ cos /* comment */ ( /* comment */ b /* comment */ ) /* comment */ ; /* comment */
+        /* comment */ a /* comment */ = /* comment */ tan /* comment */ ( /* comment */ b /* comment */ ) /* comment */ ; /* comment */
+        /* comment */ a /* comment */ = /* comment */ sec /* comment */ ( /* comment */ b /* comment */ ) /* comment */ ; /* comment */
+        /* comment */ a /* comment */ = /* comment */ csc /* comment */ ( /* comment */ b /* comment */ ) /* comment */ ; /* comment */
+        /* comment */ a /* comment */ = /* comment */ cot /* comment */ ( /* comment */ b /* comment */ ) /* comment */ ; /* comment */
+        /* comment */ a /* comment */ = /* comment */ sinh /* comment */ ( /* comment */ b /* comment */ ) /* comment */ ; /* comment */
+        /* comment */ a /* comment */ = /* comment */ cosh /* comment */ ( /* comment */ b /* comment */ ) /* comment */ ; /* comment */
+        /* comment */ a /* comment */ = /* comment */ tanh /* comment */ ( /* comment */ b /* comment */ ) /* comment */ ; /* comment */
+        /* comment */ a /* comment */ = /* comment */ sech /* comment */ ( /* comment */ b /* comment */ ) /* comment */ ; /* comment */
+        /* comment */ a /* comment */ = /* comment */ csch /* comment */ ( /* comment */ b /* comment */ ) /* comment */ ; /* comment */
+        /* comment */ a /* comment */ = /* comment */ coth /* comment */ ( /* comment */ b /* comment */ ) /* comment */ ; /* comment */
+        /* comment */ a /* comment */ = /* comment */ asin /* comment */ ( /* comment */ b /* comment */ ) /* comment */ ; /* comment */
+        /* comment */ a /* comment */ = /* comment */ acos /* comment */ ( /* comment */ b /* comment */ ) /* comment */ ; /* comment */
+        /* comment */ a /* comment */ = /* comment */ atan /* comment */ ( /* comment */ b /* comment */ ) /* comment */ ; /* comment */
+        /* comment */ a /* comment */ = /* comment */ asec /* comment */ ( /* comment */ b /* comment */ ) /* comment */ ; /* comment */
+        /* comment */ a /* comment */ = /* comment */ acsc /* comment */ ( /* comment */ b /* comment */ ) /* comment */ ; /* comment */
+        /* comment */ a /* comment */ = /* comment */ acot /* comment */ ( /* comment */ b /* comment */ ) /* comment */ ; /* comment */
+        /* comment */ a /* comment */ = /* comment */ asinh /* comment */ ( /* comment */ b /* comment */ ) /* comment */ ; /* comment */
+        /* comment */ a /* comment */ = /* comment */ acosh /* comment */ ( /* comment */ b /* comment */ ) /* comment */ ; /* comment */
+        /* comment */ a /* comment */ = /* comment */ atanh /* comment */ ( /* comment */ b /* comment */ ) /* comment */ ; /* comment */
+        /* comment */ a /* comment */ = /* comment */ asech /* comment */ ( /* comment */ b /* comment */ ) /* comment */ ; /* comment */
+        /* comment */ a /* comment */ = /* comment */ acsch /* comment */ ( /* comment */ b /* comment */ ) /* comment */ ; /* comment */
+        /* comment */ a /* comment */ = /* comment */ acoth /* comment */ ( /* comment */ b /* comment */ ) /* comment */ ; /* comment */
+        /* comment */ ode /* comment */ ( /* comment */ f /* comment */ , /* comment */ t /* comment */ ) /* comment */ = /* comment */ 3 /* comment */ { /* comment */ dimensionless /* comment */ } /* comment */ ; /* comment */
+        /* comment */ a /* comment */ = /* comment */ ode /* comment */ ( /* comment */ f /* comment */ , /* comment */ t /* comment */ , /* comment */ 2 /* comment */ { /* comment */ dimensionless /* comment */ } /* comment */ ) /* comment */ ; /* comment */
+
+        // In between comment #19...
+    enddef;
 enddef;
