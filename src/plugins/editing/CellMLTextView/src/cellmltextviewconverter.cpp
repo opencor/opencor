@@ -1655,33 +1655,56 @@ QString CellMLTextViewConverter::processPowerNode(const QDomNode &pDomNode,
 {
     // Process the power node
 
-    QString a = processMathmlNode(childNode(pDomNode, 1), pHasError);
+    QString res = QString();
+    QDomNodeList childNodes = pDomNode.childNodes();
+    QDomNode childNode = QDomNode();
+    int childElementNodeNumber = 0;
+    QString a = QString();
 
-    if (pHasError) {
-        return QString();
-    } else {
-        QString b = processMathmlNode(childNode(pDomNode, 2), pHasError);
+    for (int i = 0, iMax = childNodes.count(); i < iMax; ++i) {
+        childNode = childNodes.item(i);
 
-        if (pHasError) {
-            return QString();
+        if (childNode.isComment()) {
+            processCommentNode(childNode);
         } else {
-            // Determine the value of b, which we assume to be a number (i.e.
-            // something like "3{dimensionless}")
-            // Note: if b isn't a number, then n will be equal to zero, which is
-            //       what we want in that case...
+            if (childElementNodeNumber == 0) {
+                // This is the function element, so nothing to process as such
 
-            static const QRegularExpression UnitRegEx = QRegularExpression("{[^}]*}$");
+                ;
+            } else if (childElementNodeNumber == 1) {
+                a = processMathmlNode(childNode, pHasError);
 
-            double n = QString(b).replace(UnitRegEx, QString()).toDouble();
+                if (pHasError)
+                    return QString();
+            } else if (childElementNodeNumber == 2) {
+                QString b = processMathmlNode(childNode, pHasError);
 
-            if (n == 2.0)
-                return "sqr("+a+")";
-            else if (n == 0.5)
-                return "sqrt("+a+")";
-            else
-                return "pow("+a+", "+b+")";
+                if (pHasError) {
+                    return QString();
+                } else {
+                    // Determine the value of b, which we assume to be a number
+                    // (i.e. something like "3{dimensionless}")
+                    // Note: if b isn't a number, then n will be equal to zero,
+                    //       which is what we want in that case...
+
+                    static const QRegularExpression UnitRegEx = QRegularExpression("{[^}]*}$");
+
+                    double n = QString(b).replace(UnitRegEx, QString()).toDouble();
+
+                    if (n == 2.0)
+                        res = "sqr("+a+")";
+                    else if (n == 0.5)
+                        res = "sqrt("+a+")";
+                    else
+                        res = "pow("+a+", "+b+")";
+                }
+            }
+
+            ++childElementNodeNumber;
         }
     }
+
+    return res;
 }
 
 //==============================================================================
@@ -1746,22 +1769,44 @@ QString CellMLTextViewConverter::processLogNode(const QDomNode &pDomNode,
 {
     // Process the log node
 
-    QString argumentOrBase = processMathmlNode(childNode(pDomNode, 1), pHasError);
+    QString res = QString();
+    QDomNodeList childNodes = pDomNode.childNodes();
+    int currentChildNodesCount = childNodesCount(pDomNode);
+    QDomNode childNode = QDomNode();
+    int childElementNodeNumber = 0;
+    QString argumentOrBase = QString();
 
-    if (pHasError) {
-        return QString();
-    } else {
-        if (childNodesCount(pDomNode) == 2) {
-            return "log("+argumentOrBase+")";
+    for (int i = 0, iMax = childNodes.count(); i < iMax; ++i) {
+        childNode = childNodes.item(i);
+
+        if (childNode.isComment()) {
+            processCommentNode(childNode);
         } else {
-            QString argument = processMathmlNode(childNode(pDomNode, 2), pHasError);
+            if (childElementNodeNumber == 0) {
+                // This is the function element, so nothing to process as such
 
-            if (pHasError)
-                return QString();
-            else
-                return "log("+argument+", "+argumentOrBase+")";
+                ;
+            } else if (childElementNodeNumber == 1) {
+                argumentOrBase = processMathmlNode(childNode, pHasError);
+
+                if (pHasError)
+                    return QString();
+                else if (currentChildNodesCount == 2)
+                    res = "log("+argumentOrBase+")";
+            } else if (childElementNodeNumber == 2) {
+                QString argument = processMathmlNode(childNode, pHasError);
+
+                if (pHasError)
+                    return QString();
+                else if (currentChildNodesCount == 3)
+                    res = "log("+argument+", "+argumentOrBase+")";
+            }
+
+            ++childElementNodeNumber;
         }
     }
+
+    return res;
 }
 
 //==============================================================================
@@ -1771,23 +1816,45 @@ QString CellMLTextViewConverter::processNotNode(const QDomNode &pDomNode,
 {
     // Process the not node
 
-    QDomNode domNode = childNode(pDomNode, 1);
-    QString operand = processMathmlNode(domNode, pHasError);
+    QString res = QString();
+    QDomNodeList childNodes = pDomNode.childNodes();
+    QDomNode childNode = QDomNode();
+    int childElementNodeNumber = 0;
 
-    if (pHasError) {
-        return QString();
-    } else {
-        switch (mathmlNodeType(domNode)) {
-        case EqMathmlNode: case NeqMathmlNode: case GtMathmlNode: case LtMathmlNode: case GeqMathmlNode: case LeqMathmlNode:
-        case PlusMathmlNode: case MinusMathmlNode: case TimesMathmlNode: case DivideMathmlNode:
-        case AndMathmlNode: case OrMathmlNode: case XorMathmlNode:
-            return "not("+operand+")";
+    for (int i = 0, iMax = childNodes.count(); i < iMax; ++i) {
+        childNode = childNodes.item(i);
 
-            break;
-        default:
-            return "not "+operand;
+        if (childNode.isComment()) {
+            processCommentNode(childNode);
+        } else {
+            if (childElementNodeNumber == 0) {
+                // This is the function element, so nothing to process as such
+
+                ;
+            } else if (childElementNodeNumber == 1) {
+                QString operand = processMathmlNode(childNode, pHasError);
+
+                if (pHasError) {
+                    return QString();
+                } else {
+                    switch (mathmlNodeType(childNode)) {
+                    case EqMathmlNode: case NeqMathmlNode: case GtMathmlNode: case LtMathmlNode: case GeqMathmlNode: case LeqMathmlNode:
+                    case PlusMathmlNode: case MinusMathmlNode: case TimesMathmlNode: case DivideMathmlNode:
+                    case AndMathmlNode: case OrMathmlNode: case XorMathmlNode:
+                        res = "not("+operand+")";
+
+                        break;
+                    default:
+                        res = "not "+operand;
+                    }
+                }
+            }
+
+            ++childElementNodeNumber;
         }
     }
+
+    return res;
 }
 
 //==============================================================================
