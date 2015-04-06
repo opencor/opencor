@@ -1186,12 +1186,12 @@ QString CellMLTextViewConverter::processPieceNode(const QDomNode &pDomNode,
         if (childNode.isComment()) {
             processCommentNode(childNode);
         } else {
-            if (childElementNodeNumber == 0) {
+            if (!childElementNodeNumber) {
                 statement = processMathmlNode(childNode, pHasError);
 
                 if (pHasError)
                     return QString();
-            } else if (childElementNodeNumber == 1) {
+            } else {
                 QString condition = processMathmlNode(childNode, pHasError);
 
                 if (pHasError) {
@@ -1223,7 +1223,7 @@ QString CellMLTextViewConverter::processOtherwiseNode(const QDomNode &pDomNode,
 
     QString res = QString();
     QDomNodeList childNodes = pDomNode.childNodes();
-    QDomNode childNode;
+    QDomNode childNode = QDomNode();
 
     for (int i = 0, iMax = childNodes.count(); i < iMax; ++i) {
         childNode = childNodes.item(i);
@@ -1260,11 +1260,11 @@ QString CellMLTextViewConverter::processOperatorNode(const QString &pOperator,
 
     QString res = QString();
     QDomNodeList childNodes = pDomNode.childNodes();
-    QDomNode childNode;
+    QDomNode childNode = QDomNode();
+    int childElementNodeNumber = 0;
+    MathmlNodeType operatorNodeType = UnknownMathmlNode;
 
     if (childNodesCount(pDomNode) == 2) {
-        int childElementNodeNumber = 0;
-        MathmlNodeType operatorNodeType = UnknownMathmlNode;
 
         for (int i = 0, iMax = childNodes.count(); i < iMax; ++i) {
             childNode = childNodes.item(i);
@@ -1272,9 +1272,9 @@ QString CellMLTextViewConverter::processOperatorNode(const QString &pOperator,
             if (childNode.isComment()) {
                 processCommentNode(childNode);
             } else {
-                if (childElementNodeNumber == 0) {
+                if (!childElementNodeNumber) {
                     operatorNodeType = mMathmlNodeTypes.value(childNode.localName());
-                } else if (childElementNodeNumber == 1) {
+                } else {
                     QString operand = processMathmlNode(childNode, pHasError);
 
                     if (pHasError)
@@ -1305,8 +1305,6 @@ QString CellMLTextViewConverter::processOperatorNode(const QString &pOperator,
             }
         }
     } else {
-        int childElementNodeNumber = 0;
-        MathmlNodeType operatorNodeType = UnknownMathmlNode;
         QDomNode leftOperandNode = QDomNode();
         MathmlNodeType leftOperandNodeType = UnknownMathmlNode;
         QString leftOperand = QString();
@@ -1317,7 +1315,7 @@ QString CellMLTextViewConverter::processOperatorNode(const QString &pOperator,
             if (childNode.isComment()) {
                 processCommentNode(childNode);
             } else {
-                if (childElementNodeNumber == 0) {
+                if (!childElementNodeNumber) {
                     operatorNodeType = mathmlNodeType(childNode);
                 } else if (childElementNodeNumber == 1) {
                     leftOperandNode = childNode;
@@ -1583,11 +1581,11 @@ QString CellMLTextViewConverter::processOneParameterFunctionNode(const QString &
         if (childNode.isComment()) {
             processCommentNode(childNode);
         } else {
-            if (childElementNodeNumber == 0) {
+            if (!childElementNodeNumber) {
                 // This is the function element, so nothing to process as such
 
                 ;
-            } else if (childElementNodeNumber == 1) {
+            } else {
                 QString argument = processMathmlNode(childNode, pHasError);
 
                 if (pHasError)
@@ -1623,7 +1621,7 @@ QString CellMLTextViewConverter::processTwoParameterFunctionNode(const QString &
         if (childNode.isComment()) {
             processCommentNode(childNode);
         } else {
-            if (childElementNodeNumber == 0) {
+            if (!childElementNodeNumber) {
                 // This is the function element, so nothing to process as such
 
                 ;
@@ -1632,7 +1630,7 @@ QString CellMLTextViewConverter::processTwoParameterFunctionNode(const QString &
 
                 if (pHasError)
                     return QString();
-            } else if (childElementNodeNumber == 2) {
+            } else {
                 QString argument2 = processMathmlNode(childNode, pHasError);
 
                 if (pHasError)
@@ -1667,7 +1665,7 @@ QString CellMLTextViewConverter::processPowerNode(const QDomNode &pDomNode,
         if (childNode.isComment()) {
             processCommentNode(childNode);
         } else {
-            if (childElementNodeNumber == 0) {
+            if (!childElementNodeNumber) {
                 // This is the function element, so nothing to process as such
 
                 ;
@@ -1676,7 +1674,7 @@ QString CellMLTextViewConverter::processPowerNode(const QDomNode &pDomNode,
 
                 if (pHasError)
                     return QString();
-            } else if (childElementNodeNumber == 2) {
+            } else {
                 QString b = processMathmlNode(childNode, pHasError);
 
                 if (pHasError) {
@@ -1714,31 +1712,49 @@ QString CellMLTextViewConverter::processRootNode(const QDomNode &pDomNode,
 {
     // Process the root node, based on its number of arguments
 
-    if (childNodesCount(pDomNode) == 2) {
-        QString a = processMathmlNode(childNode(pDomNode, 1), pHasError);
+    QString res = QString();
+    QDomNodeList childNodes = pDomNode.childNodes();
+    int currentChildNodesCount = childNodesCount(pDomNode);
+    QDomNode childNode = QDomNode();
+    int childElementNodeNumber = 0;
+    QString b = QString();
 
-        if (pHasError)
-            return QString();
-        else
-            return "sqrt("+a+")";
-    } else {
-        QDomNode domNode = childNode(pDomNode, 1);
+    for (int i = 0, iMax = childNodes.count(); i < iMax; ++i) {
+        childNode = childNodes.item(i);
 
-        if (domNode.localName().compare("degree")){
-            mErrorMessage = QObject::tr("The first sibling of a '%1' element with two siblings must be a '%2' element.").arg("root")
-                                                                                                                        .arg("degree");
-            mErrorLine = domNode.lineNumber();
-
-            pHasError = true;
-
-            return QString();
+        if (childNode.isComment()) {
+            processCommentNode(childNode);
         } else {
-            QString b = processMathmlNode(domNode, pHasError);
+            if (!childElementNodeNumber) {
+                // This is the function element, so nothing to process as such
 
-            if (pHasError) {
-                return QString();
+                ;
+            } else if (childElementNodeNumber == 1) {
+                if (currentChildNodesCount == 2) {
+                    QString a = processMathmlNode(childNode, pHasError);
+
+                    if (pHasError)
+                        return QString();
+                    else
+                        res = "sqrt("+a+")";
+                } else {
+                    if (childNode.localName().compare("degree")){
+                        mErrorMessage = QObject::tr("The first sibling of a '%1' element with two siblings must be a '%2' element.").arg("root")
+                                                                                                                                    .arg("degree");
+                        mErrorLine = childNode.lineNumber();
+
+                        pHasError = true;
+
+                        return QString();
+                    } else {
+                        b = processMathmlNode(childNode, pHasError);
+
+                        if (pHasError)
+                            return QString();
+                    }
+                }
             } else {
-                QString a = processMathmlNode(childNode(pDomNode, 2), pHasError);
+                QString a = processMathmlNode(childNode, pHasError);
 
                 if (pHasError) {
                     return QString();
@@ -1753,13 +1769,17 @@ QString CellMLTextViewConverter::processRootNode(const QDomNode &pDomNode,
                     double n = QString(b).replace(UnitRegEx, QString()).toDouble();
 
                     if (n == 2.0)
-                        return "sqrt("+a+")";
+                        res = "sqrt("+a+")";
                     else
-                        return "root("+a+", "+b+")";
+                        res = "root("+a+", "+b+")";
                 }
             }
+
+            ++childElementNodeNumber;
         }
     }
+
+    return res;
 }
 
 //==============================================================================
@@ -1782,7 +1802,7 @@ QString CellMLTextViewConverter::processLogNode(const QDomNode &pDomNode,
         if (childNode.isComment()) {
             processCommentNode(childNode);
         } else {
-            if (childElementNodeNumber == 0) {
+            if (!childElementNodeNumber) {
                 // This is the function element, so nothing to process as such
 
                 ;
@@ -1793,12 +1813,12 @@ QString CellMLTextViewConverter::processLogNode(const QDomNode &pDomNode,
                     return QString();
                 else if (currentChildNodesCount == 2)
                     res = "log("+argumentOrBase+")";
-            } else if (childElementNodeNumber == 2) {
+            } else {
                 QString argument = processMathmlNode(childNode, pHasError);
 
                 if (pHasError)
                     return QString();
-                else if (currentChildNodesCount == 3)
+                else
                     res = "log("+argument+", "+argumentOrBase+")";
             }
 
@@ -1827,11 +1847,11 @@ QString CellMLTextViewConverter::processNotNode(const QDomNode &pDomNode,
         if (childNode.isComment()) {
             processCommentNode(childNode);
         } else {
-            if (childElementNodeNumber == 0) {
+            if (!childElementNodeNumber) {
                 // This is the function element, so nothing to process as such
 
                 ;
-            } else if (childElementNodeNumber == 1) {
+            } else {
                 QString operand = processMathmlNode(childNode, pHasError);
 
                 if (pHasError) {
@@ -1876,7 +1896,7 @@ QString CellMLTextViewConverter::processDiffNode(const QDomNode &pDomNode,
         if (childNode.isComment()) {
             processCommentNode(childNode);
         } else {
-            if (childElementNodeNumber == 0) {
+            if (!childElementNodeNumber) {
                 // This is the 'diff' element, so nothing to process as such
 
                 ;
@@ -1895,7 +1915,7 @@ QString CellMLTextViewConverter::processDiffNode(const QDomNode &pDomNode,
                     if (pHasError)
                         return QString();
                 }
-            } else if (childElementNodeNumber == 2) {
+            } else {
                 QString f = processMathmlNode(childNode, pHasError);
 
                 if (pHasError)
@@ -1921,7 +1941,6 @@ QString CellMLTextViewConverter::processChildNode(const QDomNode &pDomNode,
     QString res = QString();
     QDomNodeList childNodes = pDomNode.childNodes();
     QDomNode childNode = QDomNode();
-    int childElementNodeNumber = 0;
 
     for (int i = 0, iMax = childNodes.count(); i < iMax; ++i) {
         childNode = childNodes.item(i);
@@ -1929,14 +1948,10 @@ QString CellMLTextViewConverter::processChildNode(const QDomNode &pDomNode,
         if (childNode.isComment()) {
             processCommentNode(childNode);
         } else {
-            if (childElementNodeNumber == 0) {
-                res = processMathmlNode(childNode, pHasError);
+            res = processMathmlNode(childNode, pHasError);
 
-                if (pHasError)
-                    return QString();
-            }
-
-            ++childElementNodeNumber;
+            if (pHasError)
+                return QString();
         }
     }
 
@@ -1963,7 +1978,7 @@ QString CellMLTextViewConverter::processBvarNode(const QDomNode &pDomNode,
         if (childNode.isComment()) {
             processCommentNode(childNode);
         } else {
-            if (childElementNodeNumber == 0) {
+            if (!childElementNodeNumber) {
                 if (currentChildNodesCount == 1)
                     res = processMathmlNode(childNode, pHasError);
                 else
@@ -1971,24 +1986,22 @@ QString CellMLTextViewConverter::processBvarNode(const QDomNode &pDomNode,
 
                 if (pHasError)
                     return QString();
-            } else if (childElementNodeNumber == 1) {
-                if (currentChildNodesCount == 2) {
-                    if (childNode.localName().compare("degree")){
-                        mErrorMessage = QObject::tr("The second child element of a '%1' element with two child elements must be a '%2' element.").arg("bvar")
-                                                                                                                                                 .arg("degree");
-                        mErrorLine = childNode.lineNumber();
+            } else {
+                if (childNode.localName().compare("degree")){
+                    mErrorMessage = QObject::tr("The second child element of a '%1' element with two child elements must be a '%2' element.").arg("bvar")
+                                                                                                                                             .arg("degree");
+                    mErrorLine = childNode.lineNumber();
 
-                        pHasError = true;
+                    pHasError = true;
 
+                    return QString();
+                } else {
+                    QString b = processMathmlNode(childNode, pHasError);
+
+                    if (pHasError)
                         return QString();
-                    } else {
-                        QString b = processMathmlNode(childNode, pHasError);
-
-                        if (pHasError)
-                            return QString();
-                        else
-                            res = a+", "+b;
-                    }
+                    else
+                        res = a+", "+b;
                 }
             }
 
