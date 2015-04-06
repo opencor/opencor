@@ -219,6 +219,7 @@ def model my_model as
         /* comment */ a /* comment */ = /* comment */ acoth /* comment */ ( /* comment */ b /* comment */ ) /* comment */ ; /* comment */
         /* comment */ ode /* comment */ ( /* comment */ f /* comment */ , /* comment */ t /* comment */ ) /* comment */ = /* comment */ 3 /* comment */ { /* comment */ dimensionless /* comment */ } /* comment */ ; /* comment */
         /* comment */ a /* comment */ = /* comment */ ode /* comment */ ( /* comment */ f /* comment */ , /* comment */ t /* comment */ , /* comment */ 2 /* comment */ { /* comment */ dimensionless /* comment */ } /* comment */ ) /* comment */ ; /* comment */
+        /* comment */ a /* comment */ = /* comment */ rem /* comment */ ( /* comment */ b /* comment */ , /* comment */ c /* comment */ ) /* comment */ ; /* comment */
 
         // In between comment #19...
     enddef;

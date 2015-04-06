@@ -704,6 +704,15 @@
                     <ci>b</ci>
                 </apply>
             </apply>
+            <apply>
+                <eq/>
+                <ci>a</ci>
+                <apply>
+                    <rem/>
+                    <ci>b</ci>
+                    <ci>c</ci>
+                </apply>
+            </apply>
         </math>
         <!-- In between comment #38...-->
     </component>
