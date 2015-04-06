@@ -100,8 +100,7 @@ MainWindow::MainWindow(SharedTools::QtSingleApplication *pApplication,
     mViewSeparator(0),
     mViewPlugin(0),
     mDockedWindowsVisible(true),
-    mDockedWindowsState(QByteArray()),
-    mStatusBarVisible(false)
+    mDockedWindowsState(QByteArray())
 {
     // Make sure that OpenCOR can handle a file opening request (from the
     // operating system), as well as a message sent by another instance of
@@ -374,38 +373,6 @@ void MainWindow::closeEvent(QCloseEvent *pEvent)
 
 //==============================================================================
 
-void MainWindow::showEvent(QShowEvent *pEvent)
-{
-    // Default handling of the event
-
-    QMainWindow::showEvent(pEvent);
-
-    // Things that need to be done and can only be done once the main window is
-    // fully initialised
-
-    static bool firstTime = true;
-
-    if (firstTime) {
-        firstTime = false;
-
-        // The first time we show OpenCOR, we want to make sure that its menu is
-        // fine (i.e. it respects OpenCOR's settings that were loaded in the
-        // constructor). Various connections (set in the constructor) take care
-        // of this, but there is still one menu item (that tells us whether the
-        // status bar is to be shown) for which no connection can be set. So, we
-        // have to 'manually' set the status of that menu item here (as opposed
-        // to, say, the constructor), since we may need (on Windows at least)
-        // all of OpenCOR to be visible in order to be able to determine whether
-        // the status bar is visible...
-
-        mGui->statusBar->setVisible(mStatusBarVisible);
-
-        mGui->actionStatusBar->setChecked(mGui->statusBar->isVisible());
-    }
-}
-
-//==============================================================================
-
 void MainWindow::initializeGuiPlugin(Plugin *pPlugin)
 {
     // Retrieve and apply the plugin's GUI settings, if any
@@ -652,10 +619,6 @@ void MainWindow::loadSettings()
 
     mDockedWindowsState = mSettings->value(SettingsDockedWindowsState, QByteArray()).toByteArray();
 
-    // Retrieve whether the status bar is to be shown
-
-    mStatusBarVisible = mSettings->value(SettingsStatusBarVisible, true).toBool();
-
     // Retrieve the settings of our various plugins
 
     foreach (Plugin *plugin, mLoadedPluginPlugins) {
@@ -682,6 +645,13 @@ void MainWindow::loadSettings()
 #ifdef Q_OS_MAC
     mGui->menuFile->menuAction()->setVisible(mPluginManager->loadedPlugins().count());
 #endif
+
+    // Retrieve whether the status bar is to be shown
+
+    bool statusBarVisible = mSettings->value(SettingsStatusBarVisible, true).toBool();
+
+    mGui->statusBar->setVisible(statusBarVisible);
+    mGui->actionStatusBar->setChecked(statusBarVisible);
 
     // Retrieve and set the language to be used by OpenCOR
     // Note #1: the setting is forced in order to account for locale-dependent
