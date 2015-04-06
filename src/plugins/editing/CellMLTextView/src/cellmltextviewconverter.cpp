@@ -807,10 +807,10 @@ int CellMLTextViewConverter::childNodesCount(const QDomNode &pDomNode) const
     // Return the number of child elements in the given node
 
     int res = 0;
-    QDomNodeList domNodeChildNodes = pDomNode.childNodes();
+    QDomNodeList childNodes = pDomNode.childNodes();
 
-    for (int i = 0, iMax = domNodeChildNodes.count(); i < iMax; ++i)
-        if (!domNodeChildNodes.item(i).isComment())
+    for (int i = 0, iMax = childNodes.count(); i < iMax; ++i)
+        if (!childNodes.item(i).isComment())
             ++res;
 
     return res;
@@ -824,12 +824,12 @@ QDomNode CellMLTextViewConverter::childNode(const QDomNode &pDomNode,
     // Return the nth child element of the given node
 
     int childNodeIndex = 0;
-    QDomNodeList domNodeChildNodes = pDomNode.childNodes();
+    QDomNodeList childNodes = pDomNode.childNodes();
 
-    for (int i = 0, iMax = domNodeChildNodes.count(); i < iMax; ++i) {
-        if (!domNodeChildNodes.item(i).isComment()) {
+    for (int i = 0, iMax = childNodes.count(); i < iMax; ++i) {
+        if (!childNodes.item(i).isComment()) {
             if (childNodeIndex == pChildNodeIndex)
-                return domNodeChildNodes.item(i);
+                return childNodes.item(i);
             else
                 ++childNodeIndex;
         }
@@ -1151,12 +1151,12 @@ QString CellMLTextViewConverter::processPiecewiseNode(const QDomNode &pDomNode,
     // Process the piecewise node
 
     QString res = "sel\n";
-    QDomNodeList domNodeChildNodes = pDomNode.childNodes();
+    QDomNodeList childNodes = pDomNode.childNodes();
 
     indent(false);
 
-    for (int i = 0, iMax = domNodeChildNodes.count(); i < iMax; ++i) {
-        res += processMathmlNode(domNodeChildNodes.item(i), pHasError);
+    for (int i = 0, iMax = childNodes.count(); i < iMax; ++i) {
+        res += processMathmlNode(childNodes.item(i), pHasError);
 
         if (pHasError)
             return QString();
@@ -1175,13 +1175,13 @@ QString CellMLTextViewConverter::processPieceNode(const QDomNode &pDomNode,
     // Process the piece node
 
     QString res = QString();
-    QDomNodeList domNodeChildNodes = pDomNode.childNodes();
+    QDomNodeList childNodes = pDomNode.childNodes();
     QDomNode childNode = QDomNode();
     int childElementNodeNumber = 0;
     QString statement = QString();
 
-    for (int i = 0, iMax = domNodeChildNodes.count(); i < iMax; ++i) {
-        childNode = domNodeChildNodes.item(i);
+    for (int i = 0, iMax = childNodes.count(); i < iMax; ++i) {
+        childNode = childNodes.item(i);
 
         if (childNode.isComment()) {
             processCommentNode(childNode);
@@ -1222,11 +1222,11 @@ QString CellMLTextViewConverter::processOtherwiseNode(const QDomNode &pDomNode,
     // Process the otherwise node
 
     QString res = QString();
-    QDomNodeList domNodeChildNodes = pDomNode.childNodes();
+    QDomNodeList childNodes = pDomNode.childNodes();
     QDomNode childNode;
 
-    for (int i = 0, iMax = domNodeChildNodes.count(); i < iMax; ++i) {
-        childNode = domNodeChildNodes.item(i);
+    for (int i = 0, iMax = childNodes.count(); i < iMax; ++i) {
+        childNode = childNodes.item(i);
 
         if (childNode.isComment()) {
             processCommentNode(childNode);
@@ -1259,15 +1259,15 @@ QString CellMLTextViewConverter::processOperatorNode(const QString &pOperator,
     // Process the operator node, based on its number of siblings
 
     QString res = QString();
-    QDomNodeList domNodeChildNodes = pDomNode.childNodes();
+    QDomNodeList childNodes = pDomNode.childNodes();
     QDomNode childNode;
 
     if (childNodesCount(pDomNode) == 2) {
         int childElementNodeNumber = 0;
         MathmlNodeType operatorNodeType = UnknownMathmlNode;
 
-        for (int i = 0, iMax = domNodeChildNodes.count(); i < iMax; ++i) {
-            childNode = domNodeChildNodes.item(i);
+        for (int i = 0, iMax = childNodes.count(); i < iMax; ++i) {
+            childNode = childNodes.item(i);
 
             if (childNode.isComment()) {
                 processCommentNode(childNode);
@@ -1311,8 +1311,8 @@ QString CellMLTextViewConverter::processOperatorNode(const QString &pOperator,
         MathmlNodeType leftOperandNodeType = UnknownMathmlNode;
         QString leftOperand = QString();
 
-        for (int i = 0, iMax = domNodeChildNodes.count(); i < iMax; ++i) {
-            childNode = domNodeChildNodes.item(i);
+        for (int i = 0, iMax = childNodes.count(); i < iMax; ++i) {
+            childNode = childNodes.item(i);
 
             if (childNode.isComment()) {
                 processCommentNode(childNode);
