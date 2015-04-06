@@ -851,7 +851,7 @@ QString CellMLTextViewConverter::processMathmlNode(const QDomNode &pDomNode,
     // Process the given MathML node and its children, if any
 
     QDomNode domNode = pDomNode;
-    int currentChildNodesCount = childNodesCount(domNode);
+    int currentChildNodesCount = childNodesCount(pDomNode);
 
     // Basic content elements
 
@@ -1088,7 +1088,7 @@ QString CellMLTextViewConverter::processMathmlNode(const QDomNode &pDomNode,
         if (currentChildNodesCount != 1)
             mErrorMessage = QObject::tr("A '%1' element must have one child element.").arg(domNode.localName());
         else
-            return processMathmlNode(childNode(domNode, 0), pHasError);
+            return processChildNode(pDomNode, pHasError);
     } else if (mathmlNode(domNode, "bvar")) {
         if ((currentChildNodesCount != 1) && (currentChildNodesCount != 2))
             mErrorMessage = QObject::tr("A '%1' element must have one or two child elements.").arg(domNode.localName());
@@ -1751,30 +1751,83 @@ QString CellMLTextViewConverter::processDiffNode(const QDomNode &pDomNode,
 {
     // Process the diff node
 
-    QString f = processMathmlNode(childNode(pDomNode, 2), pHasError);
+    QString res = QString();
+    QDomNodeList childNodes = pDomNode.childNodes();
+    QDomNode childNode = QDomNode();
+    int childElementNodeNumber = 0;
+    QString x = QString();
 
-    if (pHasError) {
-        return QString();
-    } else {
-        QDomNode domNode = childNode(pDomNode, 1);
+    for (int i = 0, iMax = childNodes.count(); i < iMax; ++i) {
+        childNode = childNodes.item(i);
 
-        if (domNode.localName().compare("bvar")){
-            mErrorMessage = QObject::tr("The first sibling of a '%1' element with two siblings must be a '%2' element.").arg("diff")
-                                                                                                                        .arg("bvar");
-            mErrorLine = domNode.lineNumber();
-
-            pHasError = true;
-
-            return QString();
+        if (childNode.isComment()) {
+            processCommentNode(childNode);
         } else {
-            QString x = processMathmlNode(domNode, pHasError);
+            if (childElementNodeNumber == 0) {
+                // This is the 'diff' element, so nothing to process as such
 
-            if (pHasError)
-                return QString();
-            else
-                return "ode("+f+", "+x+")";
+                ;
+            } else if (childElementNodeNumber == 1) {
+                if (childNode.localName().compare("bvar")){
+                    mErrorMessage = QObject::tr("The first sibling of a '%1' element with two siblings must be a '%2' element.").arg("diff")
+                                                                                                                                .arg("bvar");
+                    mErrorLine = childNode.lineNumber();
+
+                    pHasError = true;
+
+                    return QString();
+                } else {
+                    x = processMathmlNode(childNode, pHasError);
+
+                    if (pHasError)
+                        return QString();
+                }
+            } else {
+                QString f = processMathmlNode(childNode, pHasError);
+
+                if (pHasError)
+                    return QString();
+                else
+                    res = "ode("+f+", "+x+")";
+            }
+
+            ++childElementNodeNumber;
         }
     }
+
+    return res;
+}
+
+//==============================================================================
+
+QString CellMLTextViewConverter::processChildNode(const QDomNode &pDomNode,
+                                                  bool &pHasError)
+{
+    // Process the node's child
+
+    QString res = QString();
+    QDomNodeList childNodes = pDomNode.childNodes();
+    QDomNode childNode = QDomNode();
+    int childElementNodeNumber = 0;
+
+    for (int i = 0, iMax = childNodes.count(); i < iMax; ++i) {
+        childNode = childNodes.item(i);
+
+        if (childNode.isComment()) {
+            processCommentNode(childNode);
+        } else {
+            if (childElementNodeNumber == 0) {
+                res = processMathmlNode(childNode, pHasError);
+
+                if (pHasError)
+                    return QString();
+            }
+
+            ++childElementNodeNumber;
+        }
+    }
+
+    return res;
 }
 
 //==============================================================================
@@ -1784,34 +1837,53 @@ QString CellMLTextViewConverter::processBvarNode(const QDomNode &pDomNode,
 {
     // Process the bvar node, based on its number of child elements
 
-    if (childNodesCount(pDomNode) == 1) {
-        return processMathmlNode(childNode(pDomNode, 0), pHasError);
-    } else {
-        QDomNode domNode = childNode(pDomNode, 1);
+    QString res = QString();
+    QDomNodeList childNodes = pDomNode.childNodes();
+    int currentChildNodesCount = childNodesCount(pDomNode);
+    QDomNode childNode = QDomNode();
+    int childElementNodeNumber = 0;
+    QString a = QString();
 
-        if (domNode.localName().compare("degree")){
-            mErrorMessage = QObject::tr("The second child element of a '%1' element with two child elements must be a '%2' element.").arg("bvar")
-                                                                                                                                     .arg("degree");
-            mErrorLine = domNode.lineNumber();
+    for (int i = 0, iMax = childNodes.count(); i < iMax; ++i) {
+        childNode = childNodes.item(i);
 
-            pHasError = true;
-
-            return QString();
+        if (childNode.isComment()) {
+            processCommentNode(childNode);
         } else {
-            QString b = processMathmlNode(domNode, pHasError);
-
-            if (pHasError) {
-                return QString();
-            } else {
-                QString a = processMathmlNode(childNode(pDomNode, 0), pHasError);
+            if (childElementNodeNumber == 0) {
+                if (currentChildNodesCount == 1)
+                    res = processMathmlNode(childNode, pHasError);
+                else
+                    a = processMathmlNode(childNode, pHasError);
 
                 if (pHasError)
                     return QString();
-                else
-                    return a+", "+b;
+            } else {
+                if (currentChildNodesCount == 2) {
+                    if (childNode.localName().compare("degree")){
+                        mErrorMessage = QObject::tr("The second child element of a '%1' element with two child elements must be a '%2' element.").arg("bvar")
+                                                                                                                                                 .arg("degree");
+                        mErrorLine = childNode.lineNumber();
+
+                        pHasError = true;
+
+                        return QString();
+                    } else {
+                        QString b = processMathmlNode(childNode, pHasError);
+
+                        if (pHasError)
+                            return QString();
+                        else
+                            res = a+", "+b;
+                    }
+                }
             }
+
+            ++childElementNodeNumber;
         }
     }
+
+    return res;
 }
 
 //==============================================================================

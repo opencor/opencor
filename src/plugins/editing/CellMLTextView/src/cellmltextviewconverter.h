@@ -180,6 +180,7 @@ private:
     QString processLogNode(const QDomNode &pDomNode, bool &pHasError);
     QString processNotNode(const QDomNode &pDomNode, bool &pHasError);
     QString processDiffNode(const QDomNode &pDomNode, bool &pHasError);
+    QString processChildNode(const QDomNode &pDomNode, bool &pHasError);
     QString processBvarNode(const QDomNode &pDomNode, bool &pHasError);
     bool processReactionNode(const QDomNode &pDomNode);
     bool processGroupNode(const QDomNode &pDomNode);
