@@ -1,5 +1,5 @@
 var jsonData = {"versions":[
-                   {"major":0, "minor":0, "patch":0, "day":1, "month":4, "year":2015, "type":2,
+                   {"major":0, "minor":0, "patch":0, "day":7, "month":4, "year":2015, "type":2,
                     "platforms":[
                        {"name":"Windows", "supported":"Windows 7 and later",
                         "files":[
@@ -19,7 +19,7 @@ var jsonData = {"versions":[
                         ]
                        }
                     ],
-                    "information":"<strong>Note:</strong> this version is getting close to our next official release, so we would recommend using it, especially if you want to get access to OpenCOR's latest features.</br><strong>Warning:</strong> there is a known issue with a third-party library (<a href=\"http://llvm.org/\">LLVM</a>) used by OpenCOR. It affects the 32-bit Windows version of OpenCOR by preventing it from running more than one CellML file in a given session. Other versions of OpenCOR are not affected."
+                    "information":"<strong>Note:</strong> this version is getting close to our next official release, so we would recommend using it, especially if you want to get access to OpenCOR's latest features."
                    },
                    {"major":0, "minor":3, "patch":0, "day":19, "month":8, "year":2014, "type":1,
                     "platforms":[
