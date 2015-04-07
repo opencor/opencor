@@ -54,12 +54,13 @@ CoreCellmlEditingWidget::CoreCellmlEditingWidget(const QString &pContents,
                                                  QWidget *pParent) :
     QSplitter(pParent),
     Core::CommonWidget(pParent),
-    mGui(new Ui::CoreCellmlEditingWidget),
     mEditingWidgetSizes(QIntList())
 {
-    // Set up the GUI
+    // Set our orientation
 
-    mGui->setupUi(this);
+    setOrientation(Qt::Vertical);
+
+    // Keep track of our movement
 
     connect(this, SIGNAL(splitterMoved(int, int)),
             this, SLOT(splitterMoved()));
@@ -82,15 +83,6 @@ CoreCellmlEditingWidget::CoreCellmlEditingWidget(const QString &pContents,
     // Set our focus proxy to our editor
 
     setFocusProxy(mEditor);
-}
-
-//==============================================================================
-
-CoreCellmlEditingWidget::~CoreCellmlEditingWidget()
-{
-    // Delete the GUI
-
-    delete mGui;
 }
 
 //==============================================================================

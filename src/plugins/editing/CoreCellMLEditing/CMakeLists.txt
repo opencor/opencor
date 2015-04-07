@@ -29,8 +29,6 @@ ADD_PLUGIN(CoreCellMLEditing
 
         src/corecellmleditingplugin.h
         src/corecellmleditingwidget.h
-    UIS
-        src/corecellmleditingwidget.ui
     INCLUDE_DIRS
         src
     DEFINITIONS

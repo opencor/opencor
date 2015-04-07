@@ -35,12 +35,6 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-namespace Ui {
-    class CoreCellmlEditingWidget;
-}
-
-//==============================================================================
-
 class QsciLexer;
 
 //==============================================================================
@@ -81,7 +75,6 @@ public:
     explicit CoreCellmlEditingWidget(const QString &pContents,
                                      const bool &pReadOnly, QsciLexer *pLexer,
                                      QWidget *pParent);
-    ~CoreCellmlEditingWidget();
 
     virtual void loadSettings(QSettings *pSettings);
     virtual void saveSettings(QSettings *pSettings) const;
@@ -97,8 +90,6 @@ public:
     QIntList editingWidgetSizes() const;
 
 private:
-    Ui::CoreCellmlEditingWidget *mGui;
-
     Viewer::ViewerWidget *mViewer;
     Editor::EditorWidget *mEditor;
     EditorList::EditorListWidget *mEditorList;
