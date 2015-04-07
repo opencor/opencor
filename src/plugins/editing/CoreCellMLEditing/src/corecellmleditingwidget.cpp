@@ -30,10 +30,7 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-#include "ui_corecellmleditingwidget.h"
-
-//==============================================================================
-
+#include <QApplication>
 #include <QDesktopWidget>
 #include <QFileInfo>
 #include <QListView>
