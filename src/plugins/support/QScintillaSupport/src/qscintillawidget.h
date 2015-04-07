@@ -71,8 +71,8 @@ public:
     void setCurrentPosition(const int &pCurrentPosition);
 
     QString contents() const;
-    void setContents(const QString &pContents);
-    void setContentsWithHistory(const QString &pContents);
+    void setContents(const QString &pContents,
+                     const bool &pKeepHistory = false);
 
     int contentsSize() const;
 

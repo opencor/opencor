@@ -279,20 +279,12 @@ QString EditorWidget::contents() const
 
 //==============================================================================
 
-void EditorWidget::setContents(const QString &pContents)
+void EditorWidget::setContents(const QString &pContents,
+                               const bool &pKeepHistory)
 {
     // Set the contents of our editor
 
-    mEditor->setContents(pContents);
-}
-
-//==============================================================================
-
-void EditorWidget::setContentsWithHistory(const QString &pContents)
-{
-    // Set the contents of our editor while keeping the editor's history
-
-    mEditor->setContentsWithHistory(pContents);
+    mEditor->setContents(pContents, pKeepHistory);
 }
 
 //==============================================================================

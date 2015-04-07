@@ -548,7 +548,7 @@ void CellmlTextViewWidget::reformat(const QString &pFileName)
 
         mConverter.execute(qDomDocumentToString(mParser.domDocument()));
 
-        editingWidget->editor()->setContentsWithHistory(mConverter.output());
+        editingWidget->editor()->setContents(mConverter.output(), true);
         editingWidget->editor()->setCursorPosition(cursorLine, cursorColumn);
     }
 }

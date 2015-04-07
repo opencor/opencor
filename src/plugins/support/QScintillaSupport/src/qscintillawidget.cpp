@@ -230,23 +230,23 @@ QString QScintillaWidget::contents() const
 
 //==============================================================================
 
-void QScintillaWidget::setContents(const QString &pContents)
+void QScintillaWidget::setContents(const QString &pContents,
+                                   const bool &pKeepHistory)
 {
-    // Set our contents
+    // Set our contents and keep our history, if required
 
-    setText(pContents);
-}
+    if (pKeepHistory) {
+        bool readOnly = isReadOnly();
 
-//==============================================================================
+        if (readOnly)
+            setReadOnly(false);
 
-void QScintillaWidget::setContentsWithHistory(const QString &pContents)
-{
-    // Set our contents while keeping our history
+        SendScintilla(SCI_SETTEXT, ScintillaBytesConstData(textAsBytes(pContents)));
 
-    if (isReadOnly())
-        return;
-
-    SendScintilla(SCI_SETTEXT, ScintillaBytesConstData(textAsBytes(pContents)));
+        setReadOnly(readOnly);
+    } else {
+        setText(pContents);
+    }
 }
 
 //==============================================================================
