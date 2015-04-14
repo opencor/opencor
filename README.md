@@ -11,6 +11,10 @@
 
 #######
 
+You might also be interested in our [published article](http://dx.doi.org/10.3389/fphys.2015.00026).
+
+#######
+
 Please [contact us](http://www.opencor.ws/user/contactUs.html) if you have any questions about OpenCOR.
 
 #######
