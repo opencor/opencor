@@ -267,5 +267,14 @@ def model{cellml_1_1_cmeta_id} cellml_1_1 as
 
         vars{my_map_variables2_cmeta_id} my_variable21 and my_variable22;
         vars my_variable31 and my_variable32;
+
+        // In between comment #67...
     enddef;
+
+    // In between comment #68...
+
+    def comp my_component_with_an_empty_cmeta_id as
+    enddef;
+
+    // In between comment #69...
 enddef;

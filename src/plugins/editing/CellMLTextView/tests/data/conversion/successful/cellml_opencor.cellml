@@ -335,5 +335,10 @@
             </rdf:RDF>
         </map_variables>
         <map_variables variable_1="my_variable31" variable_2="my_variable32"/>
+        <!-- In between comment #67...-->
     </connection>
+    <!-- In between comment #68...-->
+    <component cmeta:id="" name="my_component_with_an_empty_cmeta_id">
+    </component>
+    <!-- In between comment #69...-->
 </model>

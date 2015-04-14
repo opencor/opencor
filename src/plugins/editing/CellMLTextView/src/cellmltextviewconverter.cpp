@@ -332,10 +332,16 @@ QString CellMLTextViewConverter::cmetaId(const QDomNode &pDomNode) const
         cmetaIdAttributeNode = domNodeAttributes.namedItem("id");
     }
 
-    if (!cmetaIdAttributeNode.isNull())
-        return QString("{%1}").arg(cmetaIdAttributeNode.nodeValue().trimmed());
-    else
+    if (!cmetaIdAttributeNode.isNull()) {
+        QString cmetaIdValue = cmetaIdAttributeNode.nodeValue().trimmed();
+
+        if (!cmetaIdValue.isEmpty())
+            return QString("{%1}").arg(cmetaIdValue);
+        else
+            return QString();
+    } else {
         return QString();
+    }
 }
 
 //==============================================================================
