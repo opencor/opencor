@@ -144,28 +144,49 @@ void CellmlModelRepositoryWindowWindow::retranslateUi()
 void CellmlModelRepositoryWindowWindow::outputModelList(const QStringList &pModelList)
 {
     // Output a given list of models
+    // Note: we remove any duplicates since they are dealt with when compiling
+    //       the models listing...
 
     mModelList = pModelList;
+
+    mModelList.removeDuplicates();
 
     QString contents = QString();
 
     if (mModelList.count()) {
         // We have models to list
 
+        int numberOfModels = 0;
+        QString modelsListing = QString();
+        int modelIndex;
+
+        foreach (const QString &model, mModelList) {
+            modelIndex = -1;
+
+            forever {
+                modelIndex = mModelNames.indexOf(model, ++modelIndex);
+
+                if (modelIndex == -1) {
+                    break;
+                } else {
+                    ++numberOfModels;
+
+                    modelsListing += "    <li><a href=\""+mModelUrls[modelIndex]+"\">"+model+"</a></li>\n";
+                }
+            }
+        }
+
         contents += "<p>\n";
 
-        if (mModelList.count() == 1)
+        if (numberOfModels == 1)
             contents += "    "+tr("<strong>1</strong> CellML model was found:")+"\n";
         else
-            contents += "    "+tr("<strong>%1</strong> CellML models were found:").arg(mModelList.count())+"\n";
+            contents += "    "+tr("<strong>%1</strong> CellML models were found:").arg(numberOfModels)+"\n";
 
         contents += "</p>\n";
         contents += "\n";
         contents += "<ul>\n";
-
-        foreach (const QString &model, mModelList)
-            contents += "    <li><a href=\""+mModelUrls[mModelNames.indexOf(model)]+"\">"+model+"</a></li>\n";
-
+        contents += modelsListing;
         contents += "</ul>";
     } else if (mModelNames.empty()) {
         if (mErrorMessage.count()) {
@@ -236,7 +257,12 @@ void CellmlModelRepositoryWindowWindow::on_refreshButton_clicked()
 
     // Get the list of CellML models
 
-    mNetworkAccessManager->get(QNetworkRequest(QUrl("https://models.physiomeproject.org/cellml/workspace/rest/contents.json")));
+    QNetworkRequest networkRequest;
+
+    networkRequest.setRawHeader("Accept", "application/vnd.physiome.pmr2.json.1");
+    networkRequest.setUrl(QUrl("https://models.physiomeproject.org/exposure"));
+
+    mNetworkAccessManager->get(networkRequest);
 }
 
 //==============================================================================
@@ -263,12 +289,13 @@ void CellmlModelRepositoryWindowWindow::finished(QNetworkReply *pNetworkReply)
             // Retrieve the list of CellML models
 
             QVariantMap resultMap = jsonDocument.object().toVariantMap();
+            QVariantMap exposureDetailsVariant;
 
-            foreach (const QVariant &modelVariant, resultMap["values"].toList()) {
-                QVariantList modelDetailsVariant = modelVariant.toList();
+            foreach (const QVariant &exposureVariant, resultMap["collection"].toMap()["links"].toList()) {
+                exposureDetailsVariant = exposureVariant.toMap();
 
-                mModelNames << modelDetailsVariant[0].toString();
-                mModelUrls << modelDetailsVariant[1].toString();
+                mModelNames << exposureDetailsVariant["prompt"].toString().trimmed();
+                mModelUrls << exposureDetailsVariant["href"].toString().trimmed();
             }
 
             mErrorMessage = QString();
