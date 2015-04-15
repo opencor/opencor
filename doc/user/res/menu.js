@@ -42,6 +42,7 @@ function headerAndContentsMenu(pageName, relativePath) {
                              [0, "Supported platforms", "user/supportedPlatforms.html"],
                              [],
                              [0, "Licensing", "user/licensing.html"],
+                             [],
                              [0, "Team", "user/team.html"],
                              [],
                              [0, "Published article", "http://dx.doi.org/10.3389/fphys.2015.00026", true],
