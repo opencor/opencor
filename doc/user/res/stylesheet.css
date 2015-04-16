@@ -5,13 +5,17 @@ a {
     color: rgb(54, 96, 146);
 }
 
+a:hover {
+    border: 1px solid rgba(54, 96, 146, 0.13);
+    background: rgba(54, 96, 146, 0.05);
+    color: rgb(54, 96, 146);
+}
+
 a:visited {
     color: rgb(54, 96, 146);
 }
 
-a:hover {
-    border: 1px solid rgba(54, 96, 146, 0.13);
-    background: rgba(54, 96, 146, 0.05);
+code {
     color: rgb(54, 96, 146);
 }
 
@@ -25,19 +29,6 @@ div.section {
 }
 
 div.subsection {
-    color: rgb(54, 96, 146);
-}
-
-p.center {
-    text-align: center;
-}
-
-pre {
-    border: 1px solid rgba(54, 96, 146, 0.13);
-    background: rgba(54, 96, 146, 0.05);
-}
-
-code {
     color: rgb(54, 96, 146);
 }
 
@@ -58,6 +49,15 @@ img.link:hover {
 
 img.vcenter {
     vertical-align: -2px;
+}
+
+p.center {
+    text-align: center;
+}
+
+pre {
+    border: 1px solid rgba(54, 96, 146, 0.13);
+    background: rgba(54, 96, 146, 0.05);
 }
 
 table.legend th {
