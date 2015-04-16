@@ -19,20 +19,40 @@
         </script>
 
         <p>
-            The CellMLTools plugin consists of various <a href="http://www.cellml.org/">CellML</a>-related tools, which can be accessed through the <code>Tools</code> menu.
+            The CellMLTools plugin consists of various <a href="http://www.cellml.org/">CellML</a>-related tools, which can be accessed both through the <a href="../../userInterfaces/commandLineInterface.html">CLI</a> and the <a href="../../userInterfaces/graphicalUserInterface.html">GUI</a>.
         </p>
 
         <div class="section">
-            CellML File Export To...
+            CellML File Export
         </div>
 
         <p>
-            These tools can be used to export a CellML model to various formats:
+            A CellML file can be exported to:
         </p>
 
         <ul>
-            <li><strong>CellML 1.0:</strong> to flatten a CellML 1.1 model.</li>
-            <li><strong>User-defined format:</strong> to export a CellML model to some user-defined format.</li>
+            <li>CellML 1.0</li>
+            <li>A user-defined format</li>
+        </ul>
+
+        <p>
+            An export can be initiated by selecting the <code>Tools</code> | <code>CellML File Export To</code> menu or by entering the following command:
+        </p>
+
+        <pre class="prettyprint">$ ./OpenCOR -c CellMLTools::export <span class="nocode">in.cellml out.cellml cellml_1_0</span></pre>
+
+        <p>
+            to export <code>in.cellml</code> to CellML 1.0 as <code>out.cellml</code>, or by entering:
+        </p>
+
+        <pre class="prettyprint">$ ./OpenCOR -c CellMLTools::export <span class="nocode">http://mydomain.com/in.cellml out.txt format.xml</span></pre>
+
+        <p>
+            to export <code>http://mydomain.com/in.cellml</code> file to <code>out.cellml</code> using the user-defined format described in <code>format.xml</code>.
+        </p>
+
+        <p>
+            Some sample user-defined formats can be found in the OpenCOR distribution package. They are for <a href="https://raw.githubusercontent.com/opencor/opencor/master/formats/C.xml"><code>C</code></a>, <a href="https://raw.githubusercontent.com/opencor/opencor/master/formats/F77.xml"><code>FORTRAN 77</code></a>, <a href="https://raw.githubusercontent.com/opencor/opencor/master/formats/MATLAB.xml"><code>MATLAB</code></a> and <a href="https://raw.githubusercontent.com/opencor/opencor/master/formats/Python.xml"><code>Python</code></a>.
         </ul>
 
         <p class="note">
