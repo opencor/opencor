@@ -94,13 +94,6 @@ div.header {
     font-weight: bold;
 }
 
-span.anchor {
-    display: block;
-    height: 23px;
-    margin-top: -23px;
-    visibility: hidden;
-}
-
 div.section {
     margin: 1.5em 0em 0.5em 0em;
     /* Note: the margin is so that it is rendered like a <p>, which is  */
@@ -179,4 +172,11 @@ pre {
     padding: 3px;
     background: rgba(103, 103, 103, 0.05);
     white-space: pre-wrap;
+}
+
+span.anchor {
+    display: block;
+    height: 23px;
+    margin-top: -23px;
+    visibility: hidden;
 }
