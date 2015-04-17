@@ -1,8 +1,20 @@
 $(window).load(function() {
     jQuery(document).ready(function($) {
+        // Create a div for our popup image
+
         $("body").append("<div class=\"imagepopup\"><img class=\"popup\"></div>");
 
+        // Disable the mousewheel when the div for our popup image is visible
+
+        $("div.imagepopup").bind("mousewheel", function() {
+            return false;
+        });
+
+        // Initially hide the div for our popup image
+
         hideImagePopup();
+
+        // Show and update the contents of the div for our popup image
 
         $("[imagepopup]").click(function() {
             $("div.imagepopup").css("visibility", "visible");
@@ -36,14 +48,33 @@ $(window).load(function() {
             });
         });
 
+        // Hide the div for our popup image when clicking on it
+
         $("div.imagepopup").click(function() {
             hideImagePopup();
         });
 
-        $(document).keyup(function(event) {
-            if (event.keyCode === 27)
-                hideImagePopup();
+        // Ignore all key strokes, except the ESC key, when the div for our
+        // popup image is visible
+
+        $(document).keydown(function(event) {
+            if ($("div.imagepopup").css("visibility") === "visible") {
+                if (event.keyCode !== 27)
+                    event.preventDefault();
+            }
         });
+
+        // Hide the div for our popup image if ESC is pressed when our div is
+        // visible
+
+        $(document).keyup(function(event) {
+            if (   ($("div.imagepopup").css("visibility") === "visible")
+                && (event.keyCode === 27)) {
+                    hideImagePopup();
+            }
+        });
+
+        // Hide the div for our popup image
 
         function hideImagePopup() {
             $("div.imagepopup").css("visibility", "hidden");
