@@ -9,13 +9,30 @@ $(window).load(function() {
 
             var imagepopup = $("div.imagepopup img.popup");
 
+            // Retrieve the size of our image and its padding
+            // Note: to use $(imagepopup).width() and $(imagepopup).height() to
+            //       retrieve the size of our image is not good enough since
+            //       our image won't be loaded yet, so we would effectively be
+            //       retrieving the size of our previous image. Now, when it
+            //       comes to the padding, it will always be the same for all
+            //       our images, hence we can safely use $(imagepopup)...
+
+            var image = new Image();
+
+            image.src = $(this).attr("src");
+
+            var imageWidth = image.width;
+            var imageHeight = image.height;
+            var imagePaddingX = $(imagepopup).innerWidth()-$(imagepopup).width();
+            var imagePaddingY = $(imagepopup).innerHeight()-$(imagepopup).height();
+
             $(imagepopup).attr("src", $(this).attr("src"));
 
             $(imagepopup).css({
-                "width": $(imagepopup).width(),
-                "height": $(imagepopup).height(),
-                "margin-top": -0.5*$(imagepopup).innerHeight(),
-                "margin-left": -0.5*($(imagepopup).innerWidth())
+                "width": imageWidth,
+                "height": imageHeight,
+                "margin-top": -0.5*(imageHeight+imagePaddingY),
+                "margin-left": -0.5*(imageWidth+imagePaddingX)
             });
         });
 
