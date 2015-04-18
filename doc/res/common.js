@@ -71,10 +71,15 @@ if (   document.location.protocol !== "file:"
 // Context menu
 
 function doHeaderAndContentsMenu(pageName, relativePath, r, g, b, data) {
+    // Header
+
     document.write("<div class=\"header\">");
     document.write("    "+pageName);
     document.write("</div>");
     document.write("");
+
+    // CSS styling for our contents menu
+
     document.write("<style>");
     document.write("    ul.contentsMenu {");
     document.write("        margin: 0px;");
@@ -102,7 +107,7 @@ function doHeaderAndContentsMenu(pageName, relativePath, r, g, b, data) {
     document.write("    }");
     document.write("");
     document.write("    ul.contentsMenu li ul li {");
-    document.write("        margin: 2px;");
+    document.write("        margin: 1px;");
     document.write("        font-size: 9pt;");
     document.write("        font-weight: normal;");
     document.write("    }");
@@ -119,16 +124,19 @@ function doHeaderAndContentsMenu(pageName, relativePath, r, g, b, data) {
     document.write("");
     document.write("    ul.contentsMenu li ul li a {");
     document.write("        display: block;");
+    document.write("        padding: 1px;");
     document.write("    }");
     document.write("");
     document.write("    ul.contentsMenu li ul li a:hover {");
+    document.write("        margin: 0px;");
+    document.write("        border: 0px;");
     document.write("        background-color: rgba("+r+", "+g+", "+b+", 0.79);");
     document.write("        color: rgb(255, 255, 255);");
-    document.write("        text-decoration: none;");
     document.write("    }");
     document.write("");
-    document.write("    ul.contentsMenu li ul li.menuSeparator {");
+    document.write("    ul.contentsMenu li ul li.separator {");
     document.write("        margin: 0px;");
+    document.write("        padding: 0px;");
     document.write("        border-top: 1px solid rgb("+r+", "+g+", "+b+");");
     document.write("    }");
     document.write("");
@@ -137,12 +145,15 @@ function doHeaderAndContentsMenu(pageName, relativePath, r, g, b, data) {
     document.write("    }");
     document.write("</style>");
     document.write("");
+
+    // Contents menu
+
     document.write("<ul class=\"contentsMenu\">");
     document.write("    <li>");
     document.write("        <img src=\""+relativePath+"/res/pics/oxygen/actions/help-about.png\" width=24 height=24 alt=\"Contents\">");
     document.write("        <ul>");
 
-    for (i = 0; i < data.length; ++i)
+    for (i = 0; i < data.length; ++i) {
         if (data[i].length) {
             // We are dealing with a menu item
 
@@ -156,37 +167,27 @@ function doHeaderAndContentsMenu(pageName, relativePath, r, g, b, data) {
 
             if (   (data[i][1].toLowerCase() === pageName.toLowerCase())
                 || ((pageName === "OpenCOR") && (data[i][1] === "Home"))
-                || (pageName === data[i][1]+" Plugin"))
+                || (pageName === data[i][1]+" Plugin")) {
                 currentMenuItem = true;
+            }
 
-            if (i !== data.length-1) {
-                // A 'normal' menu item
+            var liClass = (i === data.length-1)?" class=\"lastMenuItem\"":"";
 
-                if (currentMenuItem) {
-                    document.write("            <li><span class=\"selectedMenuItem\">"+indent+data[i][1]+"</span></li>");
-                } else {
-                    if (data[i][2].length)
-                        document.write("            <li><a href=\""+path+"\">"+indent+data[i][1]+"</a></li>");
-                    else
-                        document.write("            <li>"+indent+data[i][1]+"</li>");
-                }
+            if (currentMenuItem) {
+                document.write("            <li"+liClass+"><span class=\"selectedMenuItem\">"+indent+data[i][1]+"</span></li>");
             } else {
-                // The last menu item, so we have some special rendering for it
-
-                if (currentMenuItem) {
-                    document.write("            <li class=\"lastMenuItem\"><span class=\"selectedMenuItem\">"+indent+data[i][1]+"</span></li>");
+                if (data[i][2].length) {
+                    document.write("            <li"+liClass+"><a href=\""+path+"\">"+indent+data[i][1]+"</a></li>");
                 } else {
-                    if (data[i][2].length)
-                        document.write("            <li class=\"lastMenuItem\"><a href=\""+path+"\">"+indent+data[i][1]+"</a></li>");
-                    else
-                        document.write("            <li class=\"lastMenuItem\">"+indent+data[i][1]+"</li>");
+                    document.write("            <li"+liClass+">"+indent+data[i][1]+"</li>");
                 }
             }
         } else {
             // We are dealing with a menu separator
 
-            document.write("            <li class=\"menuSeparator\"></li>");
+            document.write("            <li class=\"separator\"></li>");
         }
+    }
 
     document.write("        </ul>");
     document.write("    </li>");
