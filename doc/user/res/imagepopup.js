@@ -64,8 +64,8 @@ $(window).load(function() {
             }
         });
 
-        // Hide the div for our popup image if ESC is pressed when our div is
-        // visible
+        // Hide the div for our popup image if the ESC key is pressed when our
+        // div is visible
 
         $(document).keyup(function(event) {
             if (   ($("div.imagepopup").css("visibility") === "visible")

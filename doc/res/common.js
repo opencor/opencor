@@ -196,17 +196,43 @@ function doHeaderAndContentsMenu(pageName, relativePath, r, g, b, data) {
     document.write("        </ul>");
     document.write("    </li>");
     document.write("</ul>");
-}
 
-$(document).ready(function() {
+    // Show/hide our contents menu
+
     $("ul.contentsMenu > li").mouseenter(function() {
-        $(this).find("ul").css("visibility", "visible");
+        $("ul.contentsMenu > li > ul").css("visibility", "visible");
     });
 
     $("ul.contentsMenu > li").mouseleave(function() {
-        $(this).find("ul").css("visibility", "hidden");
+        $("ul.contentsMenu > li > ul").css("visibility", "hidden");
     });
-});
+
+    // Disable the mousewheel when our contents menu is visible
+
+    $("ul.contentsMenu > li > ul").bind("mousewheel", function() {
+        return false;
+    });
+
+    // Ignore all key strokes, except the ESC key, when our contents menu is
+    // visible
+
+    $(document).keydown(function(event) {
+        if ($("ul.contentsMenu > li > ul").css("visibility") === "visible") {
+            if (event.keyCode !== 27)
+                event.preventDefault();
+        }
+    });
+
+    // Hide our contents menu if the ESC key is pressed when our contents menu
+    // is visible
+
+    $(document).keyup(function(event) {
+        if (   ($("ul.contentsMenu > li > ul").css("visibility") === "visible")
+            && (event.keyCode === 27)) {
+            $("ul.contentsMenu > li > ul").css("visibility", "hidden");
+        }
+    });
+}
 
 // Copyright information
 
