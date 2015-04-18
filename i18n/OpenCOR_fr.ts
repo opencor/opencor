@@ -385,8 +385,8 @@
         <translation>Magasin de Données</translation>
     </message>
     <message>
-        <source>Plugins to store and manipulate simulation data.</source>
-        <translation>Extensions pour stocker et manipuler les données d&apos;une simulation.</translation>
+        <source>Plugins to store and manipulate data.</source>
+        <translation>Extensions pour stocker et manipuler des données.</translation>
     </message>
 </context>
 <context>

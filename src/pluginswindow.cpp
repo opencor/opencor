@@ -476,7 +476,7 @@ void PluginsWindow::updateInformation(const QModelIndex &pNewIndex,
 
             break;
         case PluginInfo::DataStore:
-            mGui->fieldTwoValue->setText(tr("Plugins to store and manipulate simulation data."));
+            mGui->fieldTwoValue->setText(tr("Plugins to store and manipulate data."));
 
             break;
         case PluginInfo::Editing:
