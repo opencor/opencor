@@ -209,7 +209,7 @@ function doHeaderAndContentsMenu(pageName, relativePath, r, g, b, data) {
 
     // Disable the mousewheel when our contents menu is visible
 
-    $("ul.contentsMenu > li > ul").bind("mousewheel", function() {
+    $("ul.contentsMenu > li").bind("mousewheel", function() {
         return false;
     });
 
