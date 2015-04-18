@@ -153,39 +153,43 @@ function doHeaderAndContentsMenu(pageName, relativePath, r, g, b, data) {
     document.write("        <img src=\""+relativePath+"/res/pics/oxygen/actions/help-about.png\" width=24 height=24 alt=\"Contents\">");
     document.write("        <ul>");
 
-    for (i = 0; i < data.length; ++i) {
-        if (data[i].length) {
+    var items = data.items;
+
+    for (i = 0; i < items.length; ++i) {
+        if (items[i].separator) {
+            // We are dealing with a menu separator
+
+            document.write("            <li class=\"separator\"></li>");
+        } else {
             // We are dealing with a menu item
 
-            var path = data[i][3]?data[i][2]:relativePath+"/"+data[i][2];
+            var path = items[i].directLink?items[i].link:relativePath+"/"+items[i].link;
             var indent = "";
 
-            for (j = 0; j < data[i][0]; ++j)
+            for (j = 0; j < items[i].level; ++j)
                 indent += "&nbsp;&nbsp;&nbsp;&nbsp;"
 
             var currentMenuItem = false;
 
-            if (   (data[i][1].toLowerCase() === pageName.toLowerCase())
-                || ((pageName === "OpenCOR") && (data[i][1] === "Home"))
-                || (pageName === data[i][1]+" Plugin")) {
+            if (   (   (typeof items[i].label !== "undefined")
+                    && (items[i].label.toLowerCase() === pageName.toLowerCase()))
+                || ((pageName === "OpenCOR") && (items[i].label === "Home"))
+                || (pageName === items[i].label+" Plugin")) {
                 currentMenuItem = true;
             }
 
-            var liClass = (i === data.length-1)?" class=\"lastMenuItem\"":"";
+            var liClass = (i === items.length-1)?" class=\"lastMenuItem\"":"";
 
             if (currentMenuItem) {
-                document.write("            <li"+liClass+"><span class=\"selectedMenuItem\">"+indent+data[i][1]+"</span></li>");
+                document.write("            <li"+liClass+"><span class=\"selectedMenuItem\">"+indent+items[i].label+"</span></li>");
             } else {
-                if (data[i][2].length) {
-                    document.write("            <li"+liClass+"><a href=\""+path+"\">"+indent+data[i][1]+"</a></li>");
+                if (   (typeof items[i].link !== "undefined")
+                    &&  items[i].link.length) {
+                    document.write("            <li"+liClass+"><a href=\""+path+"\">"+indent+items[i].label+"</a></li>");
                 } else {
-                    document.write("            <li"+liClass+">"+indent+data[i][1]+"</li>");
+                    document.write("            <li"+liClass+">"+indent+items[i].label+"</li>");
                 }
             }
-        } else {
-            // We are dealing with a menu separator
-
-            document.write("            <li class=\"separator\"></li>");
         }
     }
 
