@@ -101,11 +101,12 @@ function doHeaderAndContentsMenu(pageName, relativePath, r, g, b, data) {
     document.write("        right: 3px;");
     document.write("    }");
     document.write("");
-    document.write("    ul.contentsMenu li {");
+    document.write("    ul.contentsMenu > li,");
+    document.write("    ul.contentsMenu > li > ul > li {");
     document.write("        list-style: none;");
     document.write("    }");
     document.write("");
-    document.write("    ul.contentsMenu li ul {");
+    document.write("    ul.contentsMenu > li > ul {");
     document.write("        visibility: hidden;");
     document.write("        margin: 0px;");
     document.write("        padding: 0px;");
@@ -119,60 +120,63 @@ function doHeaderAndContentsMenu(pageName, relativePath, r, g, b, data) {
     document.write("        box-shadow: 0px 5px 5px -5px rgb(103, 103, 103);");
     document.write("    }");
     document.write("");
-    document.write("    ul.contentsMenu li ul li {");
+    document.write("    ul.contentsMenu > li > ul > li {");
     document.write("        cursor: default;");
     document.write("        margin: 1px;");
     document.write("        font-size: 9pt;");
     document.write("        font-weight: normal;");
     document.write("    }");
     document.write("");
-    document.write("    ul.contentsMenu li ul li div.menuItemTable {");
+    document.write("    ul.contentsMenu > li > ul > li div.clickableMenuItem {");
+    document.write("        color: rgb("+r+", "+g+", "+b+");");
+    document.write("    }");
+    document.write("");
+    document.write("    ul.contentsMenu > li > ul > li div.clickableMenuItem:hover {");
+    document.write("        background-color: rgba("+r+", "+g+", "+b+", 0.79);");
+    document.write("        color: rgb(255, 255, 255);");
+    document.write("    }");
+    document.write("");
+    document.write("    ul.contentsMenu > li > ul > li div.clickableMenuItem:hover a {");
+    document.write("        color: rgb(255, 255, 255);");
+    document.write("    }");
+    document.write("");
+    document.write("    ul.contentsMenu > li > ul > li div.lastMenuItem a {");
+    document.write("        border-radius: 0px 0px 30px 30px;");
+    document.write("        font-size: 19pt;");
+    document.write("    }");
+    document.write("");
+    document.write("    ul.contentsMenu > li > ul > li div.menuItemLabel {");
+    document.write("        display: table-cell;");
+    document.write("    }");
+    document.write("");
+    document.write("    ul.contentsMenu > li > ul > li div.menuItemTable {");
     document.write("        display: table;");
     document.write("        width: 100%;");
     document.write("        height: 16px;");
     document.write("    }");
     document.write("");
-    document.write("    ul.contentsMenu li ul li div.menuItemTableRow {");
+    document.write("    ul.contentsMenu > li > ul > li div.menuItemTableRow {");
     document.write("        display: table-row;");
     document.write("        vertical-align: middle;");
     document.write("    }");
     document.write("");
-    document.write("    ul.contentsMenu li ul li div.menuItemTableRow.clickableMenuItem {");
-    document.write("        color: rgb("+r+", "+g+", "+b+");");
-    document.write("    }");
-    document.write("");
-    document.write("    ul.contentsMenu li ul li div.menuItemTableRow.clickableMenuItem:hover {");
-    document.write("        background-color: rgba("+r+", "+g+", "+b+", 0.79);");
-    document.write("        color: rgb(255, 255, 255);");
-    document.write("    }");
-    document.write("");
-    document.write("    ul.contentsMenu li ul li div.menuItemTableRow.clickableMenuItem:hover a {");
-    document.write("        color: rgb(255, 255, 255);");
-    document.write("    }");
-    document.write("");
-    document.write("    ul.contentsMenu li ul li div.menuItemTableRow.nonClickableMenuItem a {");
+    document.write("    ul.contentsMenu > li > ul > li div.nonClickableMenuItem a {");
+    document.write("        cursor: default;");
     document.write("        background: rgb(249, 249, 249);");
     document.write("        color: rgb(0, 0, 0);");
     document.write("    }");
     document.write("");
-    document.write("    ul.contentsMenu li ul li div.menuItemTableRow.selectedMenuItem a {");
+    document.write("    ul.contentsMenu > li > ul > li div.selectedMenuItem a {");
+    document.write("        cursor: default;");
     document.write("        background-color: rgba("+r+", "+g+", "+b+", 0.13);");
     document.write("        color: rgb("+r+", "+g+", "+b+");");
     document.write("    }");
     document.write("");
-    document.write("    ul.contentsMenu li ul li div.menuItemLabel {");
-    document.write("        display: table-cell;");
-    document.write("    }");
-    document.write("");
-    document.write("    ul.contentsMenu li ul li div.subMenuOpened,");
-    document.write("    ul.contentsMenu li ul li div.subMenuClosed {");
+    document.write("    ul.contentsMenu > li > ul > li div.subMenuOpened,");
+    document.write("    ul.contentsMenu > li > ul > li div.subMenuClosed {");
     document.write("        cursor: pointer;");
     document.write("        display: table-cell;");
     document.write("        width: 1px;");
-    document.write("    }");
-    document.write("");
-    document.write("    ul.contentsMenu li ul li.lastMenuItem div.menuItemTableRow {");
-    document.write("        border-radius: 0px 0px 3px 3px;");
     document.write("    }");
     document.write("");
     document.write("    ul.contentsMenu li ul li a {");
@@ -213,7 +217,6 @@ function doHeaderAndContentsMenu(pageName, relativePath, r, g, b, data) {
         } else {
             // We are dealing with a menu item
 
-            var path = menuItem.directLink?menuItem.link:relativePath+"/"+menuItem.link;
             var indent = "";
 
             for (j = 0; j < menuItem.level; ++j)
@@ -228,35 +231,49 @@ function doHeaderAndContentsMenu(pageName, relativePath, r, g, b, data) {
                 currentMenuItem = true;
             }
 
-            var liClass = (i === menuItems.length-1)?" class=\"lastMenuItem\"":"";
-            var tableRowClasses = "menuItemTableRow";
-            var menuItemLabel = "";
-            var subMenuButton = "";
 //---GRY--- ADD SUB MENU ITEMS...
+            var menuItemLink = "";
+
+            if (   (typeof menuItem.link !== "undefined")
+                &&  menuItem.link.length) {
+                menuItemLink = menuItem.directLink?menuItem.link:relativePath+"/"+menuItem.link;
+            }
+
+            var tableRowClasses = "menuItemTableRow";
+
+            if (i === menuItems.length-1)
+                tableRowClasses += " lastMenuItem";
+
+            if (currentMenuItem) {
+                tableRowClasses += " selectedMenuItem";
+            } else {
+                if (menuItemLink.length) {
+                    tableRowClasses += " clickableMenuItem";
+                } else {
+                    tableRowClasses += " nonClickableMenuItem";
+                }
+            }
+
+            var subMenuButton = "";
 
             if (   (typeof menuItem.subMenu !== "undefined")
                 &&  menuItem.subMenu.length) {
                 subMenuButton = "<div class=\"subMenuClosed\">...</div>";
            }
 
-            if (currentMenuItem) {
-                menuItemLabel = "<a>"+indent+menuItem.label+"</a>";
+            document.write("            <li>");
+            document.write("                <div class=\"menuItemTable\">");
+            document.write("                    <div class=\""+tableRowClasses+"\">");
+            document.write("                        <div class=\"menuItemLabel\">");
+            document.write("                            <a href=\""+menuItemLink+"\">"+indent+menuItem.label+"</a>");
+            document.write("                        </div>");
 
-                tableRowClasses += " selectedMenuItem";
-            } else {
-                if (   (typeof menuItem.link !== "undefined")
-                    &&  menuItem.link.length) {
-                    menuItemLabel = "<a href=\""+path+"\">"+indent+menuItem.label+"</a>";
+            if (subMenuButton.length)
+                document.write("                        "+subMenuButton);
 
-                    tableRowClasses += " clickableMenuItem";
-                } else {
-                    menuItemLabel = "<a>"+indent+menuItem.label+"</a>";
-
-                    tableRowClasses += " nonClickableMenuItem";
-                }
-            }
-
-            document.write("            <li"+liClass+"><div class=\"menuItemTable\"><div class=\""+tableRowClasses+"\"><div class=\"menuItemLabel\">"+menuItemLabel+"</div>"+subMenuButton+"</div></div></li>");
+            document.write("                    </div>");
+            document.write("                </div>");
+            document.write("            </li>");
         }
     }
 
@@ -281,10 +298,16 @@ function doHeaderAndContentsMenu(pageName, relativePath, r, g, b, data) {
     });
 
     // Prevent our contents menu from being hidden when clicking on a menu item
-    // that is selected or that doesn't have a link
+    // that is selected or that is non-clickable
 
-    $("ul.contentsMenu > li > ul > li").click(function(event) {
-        event.stopPropagation();
+    $("ul.contentsMenu > li > ul > li > div > div.selectedMenuItem > div > a").click(function() {
+console.log("I am selected...");
+        return false;
+    });
+
+    $("ul.contentsMenu > li > ul > li > div > div.nonClickableMenuItem > div > a").click(function() {
+console.log("I am non-clickable");
+        return false;
     });
 
     // Hide our contents menu if the ESC key is pressed when our contents menu
@@ -310,6 +333,8 @@ console.log("I am closed...");
             $(this).removeClass("subMenuClosed");
             $(this).addClass("subMenuOpened");
         }
+
+        event.stopPropagation();
     });
 }
 
