@@ -219,19 +219,19 @@ function doHeaderAndContentsMenu(pageName, relativePath, r, g, b, data) {
         } else {
             // We are dealing with a menu item
 
-            var indent = "";
-
-            for (j = 0; j < menuItem.level; ++j)
-                indent += "&nbsp;&nbsp;&nbsp;&nbsp;"
-
-            var currentMenuItem = false;
+            var selectedMenuItem = false;
 
             if (   (   (typeof menuItem.label !== "undefined")
                     && (menuItem.label.toLowerCase() === pageName.toLowerCase()))
                 || ((pageName === "OpenCOR") && (menuItem.label === "Home"))
                 || (pageName === menuItem.label+" Plugin")) {
-                currentMenuItem = true;
+                selectedMenuItem = true;
             }
+
+            var menuItemIndent = "";
+
+            for (j = 0; j < menuItem.level; ++j)
+                menuItemIndent += "&nbsp;&nbsp;&nbsp;&nbsp;"
 
 //---GRY--- ADD SUB MENU ITEMS...
             var menuItemLink = "";
@@ -246,7 +246,7 @@ function doHeaderAndContentsMenu(pageName, relativePath, r, g, b, data) {
             if (i === menuItems.length-1)
                 tableRowClasses += " lastMenuItem";
 
-            if (currentMenuItem) {
+            if (selectedMenuItem) {
                 tableRowClasses += " selectedMenuItem";
             } else {
                 if (menuItemLink.length) {
@@ -267,7 +267,7 @@ function doHeaderAndContentsMenu(pageName, relativePath, r, g, b, data) {
             document.write("                <div class=\"menuItemTable\">");
             document.write("                    <div class=\""+tableRowClasses+"\">");
             document.write("                        <div class=\"menuItemLabel\">");
-            document.write("                            <a href=\""+menuItemLink+"\">"+indent+menuItem.label+"</a>");
+            document.write("                            <a href=\""+menuItemLink+"\">"+menuItemIndent+menuItem.label+"</a>");
             document.write("                        </div>");
 
             if (subMenuButton.length)
