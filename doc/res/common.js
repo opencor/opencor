@@ -140,6 +140,14 @@ function doHeaderAndContentsMenu(pageName, relativePath, r, g, b, data) {
     document.write("        color: rgb(255, 255, 255);");
     document.write("    }");
     document.write("");
+    document.write("    ul.contentsMenu > li > ul > li div.lastMenuItem.clickableMenuItem:hover {");
+    document.write("        background: rgb(249, 249, 249);");
+    document.write("    }");
+    document.write("");
+    document.write("    ul.contentsMenu > li > ul > li div.lastMenuItem.clickableMenuItem > div:hover {");
+    document.write("        background-color: rgba("+r+", "+g+", "+b+", 0.79);");
+    document.write("    }");
+    document.write("");
     document.write("    ul.contentsMenu > li > ul > li div.lastMenuItem.clickableMenuItem > div:hover,");
     document.write("    ul.contentsMenu > li > ul > li div.lastMenuItem.selectedMenuItem > div a {");
     document.write("        border-radius: 0px 0px 3px 3px;");
