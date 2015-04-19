@@ -89,6 +89,12 @@ function doHeaderAndContentsMenu(pageName, relativePath, r, g, b, data) {
 
     document.write("<style>");
     document.write("    ul.contentsMenu {");
+    document.write("        -khtml-user-select: none;");
+    document.write("        -moz-user-select: none;");
+    document.write("        -ms-user-select: none;");
+    document.write("        -webkit-touch-callout: none;");
+    document.write("        -webkit-user-select: none;");
+    document.write("        user-select: none;");
     document.write("        margin: 0px;");
     document.write("        position: fixed;");
     document.write("        top: 3px;");
@@ -120,7 +126,6 @@ function doHeaderAndContentsMenu(pageName, relativePath, r, g, b, data) {
     document.write("        font-weight: normal;");
     document.write("    }");
     document.write("");
-    document.write("    ul.contentsMenu li ul li span.selectedMenuItem {");
     document.write("    ul.contentsMenu li ul li div.menuItemTable {");
     document.write("        display: table;");
     document.write("        width: 100%;");
@@ -132,6 +137,10 @@ function doHeaderAndContentsMenu(pageName, relativePath, r, g, b, data) {
     document.write("        vertical-align: middle;");
     document.write("    }");
     document.write("");
+    document.write("    ul.contentsMenu li ul li div.menuItemTableRow.clickableMenuItem {");
+    document.write("        color: rgb("+r+", "+g+", "+b+");");
+    document.write("    }");
+    document.write("");
     document.write("    ul.contentsMenu li ul li div.menuItemTableRow.clickableMenuItem:hover {");
     document.write("        background-color: rgba("+r+", "+g+", "+b+", 0.79);");
     document.write("        color: rgb(255, 255, 255);");
@@ -141,12 +150,16 @@ function doHeaderAndContentsMenu(pageName, relativePath, r, g, b, data) {
     document.write("        color: rgb(255, 255, 255);");
     document.write("    }");
     document.write("");
-    document.write("        display: block;");
+    document.write("    ul.contentsMenu li ul li div.menuItemTableRow.nonClickableMenuItem a {");
+    document.write("        background: rgb(249, 249, 249);");
+    document.write("        color: rgb(0, 0, 0);");
+    document.write("    }");
+    document.write("");
+    document.write("    ul.contentsMenu li ul li div.menuItemTableRow.selectedMenuItem a {");
     document.write("        background-color: rgba("+r+", "+g+", "+b+", 0.13);");
     document.write("        color: rgb("+r+", "+g+", "+b+");");
     document.write("    }");
     document.write("");
-    document.write("    ul.contentsMenu li ul li.lastMenuItem span.selectedMenuItem {");
     document.write("    ul.contentsMenu li ul li div.menuItemLabel {");
     document.write("        display: table-cell;");
     document.write("    }");
@@ -158,6 +171,7 @@ function doHeaderAndContentsMenu(pageName, relativePath, r, g, b, data) {
     document.write("        width: 1px;");
     document.write("    }");
     document.write("");
+    document.write("    ul.contentsMenu li ul li.lastMenuItem div.menuItemTableRow {");
     document.write("        border-radius: 0px 0px 3px 3px;");
     document.write("    }");
     document.write("");
@@ -176,14 +190,11 @@ function doHeaderAndContentsMenu(pageName, relativePath, r, g, b, data) {
     document.write("        padding: 0px;");
     document.write("        border-top: 1px solid rgb("+r+", "+g+", "+b+");");
     document.write("    }");
-    document.write("");
-    document.write("    ul.contentsMenu li ul li.lastMenuItem a {");
-    document.write("        border-radius: 0px 0px 3px 3px;");
-    document.write("    }");
     document.write("</style>");
     document.write("");
 
     // Contents menu
+//---GRY--- LAST ITEM DOESN'T HAVE ROUND CORNERS AT THE BOTTOM...
 
     document.write("<ul class=\"contentsMenu\">");
     document.write("    <li>");
@@ -229,15 +240,19 @@ function doHeaderAndContentsMenu(pageName, relativePath, r, g, b, data) {
            }
 
             if (currentMenuItem) {
-                menuItemLabel = "<span class=\"selectedMenuItem\">"+indent+menuItem.label+"</span>";
+                menuItemLabel = "<a>"+indent+menuItem.label+"</a>";
+
+                tableRowClasses += " selectedMenuItem";
             } else {
                 if (   (typeof menuItem.link !== "undefined")
                     &&  menuItem.link.length) {
                     menuItemLabel = "<a href=\""+path+"\">"+indent+menuItem.label+"</a>";
 
-                    tableRowClasses += " clickableItem";
+                    tableRowClasses += " clickableMenuItem";
                 } else {
-                    menuItemLabel = indent+menuItem.label;
+                    menuItemLabel = "<a>"+indent+menuItem.label+"</a>";
+
+                    tableRowClasses += " nonClickableMenuItem";
                 }
             }
 
