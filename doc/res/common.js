@@ -206,12 +206,18 @@ function doHeaderAndContentsMenu(pageName, relativePath, r, g, b, data) {
 
     // Show/hide our contents menu
 
-    $("ul.contentsMenu > li").mouseenter(function() {
-        $("ul.contentsMenu > li > ul").css("visibility", "visible");
+    $(document).click(function() {
+        if ($("ul.contentsMenu > li > ul").css("visibility") === "visible")
+            $("ul.contentsMenu > li > ul").css("visibility", "hidden");
     });
 
-    $("ul.contentsMenu > li").mouseleave(function() {
-        $("ul.contentsMenu > li > ul").css("visibility", "hidden");
+    $("ul.contentsMenu > li > img").click(function(event) {
+        if ($("ul.contentsMenu > li > ul").css("visibility") === "visible")
+            $("ul.contentsMenu > li > ul").css("visibility", "hidden");
+        else
+            $("ul.contentsMenu > li > ul").css("visibility", "visible");
+
+        event.stopPropagation();
     });
 
     // Hide our contents menu if the ESC key is pressed when our contents menu
