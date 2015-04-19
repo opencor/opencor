@@ -114,6 +114,7 @@ function doHeaderAndContentsMenu(pageName, relativePath, r, g, b, data) {
     document.write("    }");
     document.write("");
     document.write("    ul.contentsMenu li ul li {");
+    document.write("        cursor: default;");
     document.write("        margin: 1px;");
     document.write("        font-size: 9pt;");
     document.write("        font-weight: normal;");
@@ -217,6 +218,13 @@ function doHeaderAndContentsMenu(pageName, relativePath, r, g, b, data) {
         else
             $("ul.contentsMenu > li > ul").css("visibility", "visible");
 
+        event.stopPropagation();
+    });
+
+    // Prevent our contents menu from being hidden when clicking on a menu item
+    // that is selected or that doesn't have a link
+
+    $("ul.contentsMenu > li > ul > li").click(function(event) {
         event.stopPropagation();
     });
 
