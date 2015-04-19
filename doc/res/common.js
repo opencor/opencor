@@ -140,9 +140,12 @@ function doHeaderAndContentsMenu(pageName, relativePath, r, g, b, data) {
     document.write("        color: rgb(255, 255, 255);");
     document.write("    }");
     document.write("");
-    document.write("    ul.contentsMenu > li > ul > li div.lastMenuItem a {");
-    document.write("        border-radius: 0px 0px 30px 30px;");
-    document.write("        font-size: 19pt;");
+    document.write("    ul.contentsMenu > li > ul > li div.lastMenuItem > div {");
+    document.write("        border-radius: 0px 0px 3px 3px;");
+    document.write("    }");
+    document.write("");
+    document.write("    ul.contentsMenu > li > ul > li div.lastMenuItem > div a {");
+    document.write("        border-radius: 0px 0px 3px 3px;");
     document.write("    }");
     document.write("");
     document.write("    ul.contentsMenu > li > ul > li div.menuItemLabel {");
@@ -198,7 +201,6 @@ function doHeaderAndContentsMenu(pageName, relativePath, r, g, b, data) {
     document.write("");
 
     // Contents menu
-//---GRY--- LAST ITEM DOESN'T HAVE ROUND CORNERS AT THE BOTTOM...
 
     document.write("<ul class=\"contentsMenu\">");
     document.write("    <li>");
