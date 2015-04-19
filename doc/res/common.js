@@ -213,6 +213,7 @@ function doHeaderAndContentsMenu(pageName, relativePath, r, g, b, data) {
     document.write("        <ul>");
 
     var menuItems = data.menuItems;
+    var subMenuCounter = 0;
 
     for (i = 0; i < menuItems.length; ++i) {
         var menuItem = menuItems[i];
@@ -238,7 +239,6 @@ function doHeaderAndContentsMenu(pageName, relativePath, r, g, b, data) {
             for (j = 0; j < menuItem.level; ++j)
                 menuItemIndent += "&nbsp;&nbsp;&nbsp;&nbsp;"
 
-//---GRY--- ADD SUB MENU ITEMS...
             var menuItemLink = "";
 
             if (   (typeof menuItem.link !== "undefined")
@@ -265,10 +265,19 @@ function doHeaderAndContentsMenu(pageName, relativePath, r, g, b, data) {
 
             if (   (typeof menuItem.subMenuHeader !== "undefined")
                 &&  menuItem.subMenuHeader) {
-                subMenuButton = "<div class=\"subMenuClosed\">...</div>";
-           }
+                subMenuButton = "<div class=\"subMenuClosed\" menu=\""+(++subMenuCounter)+"\">...</div>";
+            }
 
-            document.write("            <li>");
+            var liId = "";
+            var liClass = "";
+
+            if (   (typeof menuItem.subMenuItem !== "undefined")
+                &&  menuItem.subMenuItem) {
+                liId = "subMenu"+subMenuCounter;
+                liClass = " class=\"subMenuItem\"";
+            }
+
+            document.write("            <li"+(liId.length?" id=\""+liId+"\"":"")+liClass+">");
             document.write("                <div class=\"menuItemTable\">");
             document.write("                    <div class=\""+tableRowClasses+"\">");
             document.write("                        <div class=\"menuItemLabel\">");
@@ -281,6 +290,9 @@ function doHeaderAndContentsMenu(pageName, relativePath, r, g, b, data) {
             document.write("                    </div>");
             document.write("                </div>");
             document.write("            </li>");
+
+            if (liId.length)
+                $("ul.contentsMenu > li > ul > li.subMenuItem#"+liId).css("display", "none");
         }
     }
 
@@ -308,12 +320,10 @@ function doHeaderAndContentsMenu(pageName, relativePath, r, g, b, data) {
     // that is selected or that is non-clickable
 
     $("ul.contentsMenu > li > ul > li > div > div.selectedMenuItem > div > a").click(function() {
-console.log("I am selected...");
         return false;
     });
 
     $("ul.contentsMenu > li > ul > li > div > div.nonClickableMenuItem > div > a").click(function() {
-console.log("I am non-clickable");
         return false;
     });
 
@@ -328,17 +338,18 @@ console.log("I am non-clickable");
     });
 
     // Show/hide a given sub-menu
-//---GRY--- TO BE FINISHED...
 
     $("ul.contentsMenu > li > ul > li > div > div > div").click(function() {
         if ($(this).hasClass("subMenuOpened")) {
-console.log("I am opened...");
             $(this).removeClass("subMenuOpened");
             $(this).addClass("subMenuClosed");
+
+            $("ul.contentsMenu > li > ul > li.subMenuItem#subMenu"+$(this).attr("menu")).css("display", "none");
         } else if ($(this).hasClass("subMenuClosed")) {
-console.log("I am closed...");
             $(this).removeClass("subMenuClosed");
             $(this).addClass("subMenuOpened");
+
+            $("ul.contentsMenu > li > ul > li.subMenuItem#subMenu"+$(this).attr("menu")).css("display", "list-item");
         }
 
         event.stopPropagation();
