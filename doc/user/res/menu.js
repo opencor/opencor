@@ -12,42 +12,30 @@ function headerAndContentsMenu(pageName, relativePath) {
                                 { "level": 1, "label": "Graphical user interface (GUI)", "link": "user/userInterfaces/graphicalUserInterface.html" },
                                 { "separator": true },
                                 { "level": 0, "label": "Plugins", "link": "user/plugins/index.html" },
-                                { "level": 1, "label": "Data Store", "subMenu": [
-                                    { "level": 2, "label": "CSVDataStore", "link": "user/plugins/dataStore/CSVDataStore.html" },
-                                  ]
-                                },
-                                { "level": 1, "label": "Editing", "subMenu": [
-                                    { "level": 2, "label": "CellMLAnnotationView", "link": "user/plugins/editing/CellMLAnnotationView.html" },
-                                    { "level": 2, "label": "CellMLTextView", "link": "user/plugins/editing/CellMLTextView.html" },
-                                    { "level": 2, "label": "RawCellMLView", "link": "user/plugins/editing/RawCellMLView.html" },
-                                    { "level": 2, "label": "RawView", "link": "user/plugins/editing/RawView.html" },
-                                  ]
-                                },
-                                { "level": 1, "label": "Miscellaneous", "subMenu": [
-                                    { "level": 2, "label": "CellMLTools", "link": "user/plugins/miscellaneous/CellMLTools.html" },
-                                    { "level": 2, "label": "HelpWindow", "link": "user/plugins/miscellaneous/HelpWindow.html" },
-                                  ]
-                                },
-                                { "level": 1, "label": "Organisation", "subMenu": [
-                                    { "level": 2, "label": "CellMLModelRepositoryWindow", "link": "user/plugins/organisation/CellMLModelRepositoryWindow.html" },
-                                    { "level": 2, "label": "FileBrowserWindow", "link": "user/plugins/organisation/FileBrowserWindow.html" },
-                                    { "level": 2, "label": "FileOrganiserWindow", "link": "user/plugins/organisation/FileOrganiserWindow.html" },
-                                  ]
-                                },
-                                { "level": 1, "label": "Simulation", "subMenu": [
-                                    { "level": 2, "label": "SingleCellView", "link": "user/plugins/simulation/SingleCellView.html" },
-                                  ]
-                                },
-                                { "level": 1, "label": "Solver", "subMenu": [
-                                    { "level": 2, "label": "CVODESolver", "link": "user/plugins/solver/CVODESolver.html" },
-                                    { "level": 2, "label": "ForwardEulerSolver", "link": "user/plugins/solver/ForwardEulerSolver.html" },
-                                    { "level": 2, "label": "FourthOrderRungeKuttaSolver", "link": "user/plugins/solver/FourthOrderRungeKuttaSolver.html" },
-                                    { "level": 2, "label": "HeunSolver", "link": "user/plugins/solver/HeunSolver.html" },
-                                    { "level": 2, "label": "IDASolver", "link": "user/plugins/solver/IDASolver.html" },
-                                    { "level": 2, "label": "KINSOLSolver", "link": "user/plugins/solver/KINSOLSolver.html" },
-                                    { "level": 2, "label": "SecondOrderRungeKuttaSolver", "link": "user/plugins/solver/SecondOrderRungeKuttaSolver.html" },
-                                  ]
-                                },
+                                { "level": 1, "label": "Data Store", "subMenuHeader": true },
+                                { "level": 2, "label": "CSVDataStore", "link": "user/plugins/dataStore/CSVDataStore.html", "subMenuItem": true },
+                                { "level": 1, "label": "Editing", "subMenuHeader": true },
+                                { "level": 2, "label": "CellMLAnnotationView", "link": "user/plugins/editing/CellMLAnnotationView.html", "subMenuItem": true },
+                                { "level": 2, "label": "CellMLTextView", "link": "user/plugins/editing/CellMLTextView.html", "subMenuItem": true },
+                                { "level": 2, "label": "RawCellMLView", "link": "user/plugins/editing/RawCellMLView.html", "subMenuItem": true },
+                                { "level": 2, "label": "RawView", "link": "user/plugins/editing/RawView.html", "subMenuItem": true },
+                                { "level": 1, "label": "Miscellaneous", "subMenuHeader": true },
+                                { "level": 2, "label": "CellMLTools", "link": "user/plugins/miscellaneous/CellMLTools.html", "subMenuItem": true },
+                                { "level": 2, "label": "HelpWindow", "link": "user/plugins/miscellaneous/HelpWindow.html", "subMenuItem": true },
+                                { "level": 1, "label": "Organisation", "subMenuHeader": true },
+                                { "level": 2, "label": "CellMLModelRepositoryWindow", "link": "user/plugins/organisation/CellMLModelRepositoryWindow.html", "subMenuItem": true },
+                                { "level": 2, "label": "FileBrowserWindow", "link": "user/plugins/organisation/FileBrowserWindow.html", "subMenuItem": true },
+                                { "level": 2, "label": "FileOrganiserWindow", "link": "user/plugins/organisation/FileOrganiserWindow.html", "subMenuItem": true },
+                                { "level": 1, "label": "Simulation", "subMenuHeader": true },
+                                { "level": 2, "label": "SingleCellView", "link": "user/plugins/simulation/SingleCellView.html", "subMenuItem": true },
+                                { "level": 1, "label": "Solver", "subMenuHeader": true },
+                                { "level": 2, "label": "CVODESolver", "link": "user/plugins/solver/CVODESolver.html", "subMenuItem": true },
+                                { "level": 2, "label": "ForwardEulerSolver", "link": "user/plugins/solver/ForwardEulerSolver.html", "subMenuItem": true },
+                                { "level": 2, "label": "FourthOrderRungeKuttaSolver", "link": "user/plugins/solver/FourthOrderRungeKuttaSolver.html", "subMenuItem": true },
+                                { "level": 2, "label": "HeunSolver", "link": "user/plugins/solver/HeunSolver.html", "subMenuItem": true },
+                                { "level": 2, "label": "IDASolver", "link": "user/plugins/solver/IDASolver.html", "subMenuItem": true },
+                                { "level": 2, "label": "KINSOLSolver", "link": "user/plugins/solver/KINSOLSolver.html", "subMenuItem": true },
+                                { "level": 2, "label": "SecondOrderRungeKuttaSolver", "link": "user/plugins/solver/SecondOrderRungeKuttaSolver.html", "subMenuItem": true },
                                 { "separator": true },
                                 { "level": 0, "label": "Known issues", "link": "user/knownIssues.html" },
                                 { "level": 0, "label": "Known limitations", "link": "user/knownLimitations.html" },

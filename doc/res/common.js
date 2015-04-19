@@ -263,8 +263,8 @@ function doHeaderAndContentsMenu(pageName, relativePath, r, g, b, data) {
 
             var subMenuButton = "";
 
-            if (   (typeof menuItem.subMenu !== "undefined")
-                &&  menuItem.subMenu.length) {
+            if (   (typeof menuItem.subMenuHeader !== "undefined")
+                &&  menuItem.subMenuHeader) {
                 subMenuButton = "<div class=\"subMenuClosed\">...</div>";
            }
 

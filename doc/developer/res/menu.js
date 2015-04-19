@@ -9,13 +9,11 @@ function headerAndContentsMenu(pageName, relativePath) {
                                 { "separator": true },
                                 { "level": 0, "label": "Develop", "link": "developer/develop/index.html" },
                                 { "level": 1, "label": "Coding style", "link": "developer/develop/codingStyle.html" },
-                                { "level": 1, "label": "Plugins", "link": "developer/develop/plugins/index.html", "subMenu": [
-                                    { "level": 2, "label": "Sample", "link": "developer/develop/plugins/Sample.html" },
-                                    { "level": 2, "label": "SampleTools", "link": "developer/develop/plugins/SampleTools.html" },
-                                    { "level": 2, "label": "SampleWindow", "link": "developer/develop/plugins/SampleWindow.html" },
-                                    { "level": 2, "label": "SampleView", "link": "developer/develop/plugins/SampleView.html" },
-                                  ]
-                                },
+                                { "level": 1, "label": "Plugins", "link": "developer/develop/plugins/index.html", "subMenuHeader": true },
+                                { "level": 2, "label": "Sample", "link": "developer/develop/plugins/Sample.html", "subMenuItem": true },
+                                { "level": 2, "label": "SampleTools", "link": "developer/develop/plugins/SampleTools.html", "subMenuItem": true },
+                                { "level": 2, "label": "SampleWindow", "link": "developer/develop/plugins/SampleWindow.html", "subMenuItem": true },
+                                { "level": 2, "label": "SampleView", "link": "developer/develop/plugins/SampleView.html", "subMenuItem": true },
                                 { "level": 1, "label": "Internationalisation", "link": "developer/develop/internationalisation.html" },
                                 { "level": 1, "label": "Tests", "link": "developer/develop/tests.html" },
                                 { "level": 0, "label": "Build, test and run", "link": "developer/buildTestAndRun.html" },
