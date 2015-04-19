@@ -136,7 +136,7 @@ function doHeaderAndContentsMenu(pageName, relativePath, r, g, b, data) {
     document.write("        color: rgb(255, 255, 255);");
     document.write("    }");
     document.write("");
-    document.write("    ul.contentsMenu > li > ul > li div.clickableMenuItem:hover a {");
+    document.write("    ul.contentsMenu > li > ul > li div.clickableMenuItem:hover div > a {");
     document.write("        color: rgb(255, 255, 255);");
     document.write("    }");
     document.write("");
@@ -163,13 +163,13 @@ function doHeaderAndContentsMenu(pageName, relativePath, r, g, b, data) {
     document.write("        vertical-align: middle;");
     document.write("    }");
     document.write("");
-    document.write("    ul.contentsMenu > li > ul > li div.nonClickableMenuItem a {");
+    document.write("    ul.contentsMenu > li > ul > li div.nonClickableMenuItem > div a {");
     document.write("        cursor: default;");
     document.write("        background: rgb(249, 249, 249);");
     document.write("        color: rgb(0, 0, 0);");
     document.write("    }");
     document.write("");
-    document.write("    ul.contentsMenu > li > ul > li div.selectedMenuItem a {");
+    document.write("    ul.contentsMenu > li > ul > li div.selectedMenuItem > div a {");
     document.write("        cursor: default;");
     document.write("        background-color: rgba("+r+", "+g+", "+b+", 0.13);");
     document.write("        color: rgb("+r+", "+g+", "+b+");");
