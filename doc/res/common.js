@@ -88,31 +88,32 @@ function doHeaderAndContentsMenu(pageName, relativePath, r, g, b, data) {
     // CSS styling for our contents menu
 
     document.write("<style>");
-    document.write("    div.menuItemTable {");
+    document.write("    ul.contentsMenu li ul li div.menuItemTable {");
     document.write("        display: table;");
     document.write("        width: 100%;");
     document.write("        height: 16px;");
     document.write("    }");
     document.write("");
-    document.write("    div.menuItemTableRow {");
+    document.write("    ul.contentsMenu li ul li div.menuItemTableRow {");
     document.write("        display: table-row;");
     document.write("        vertical-align: middle;");
     document.write("    }");
     document.write("");
-    document.write("    div.menuItemTableRow.clickableItem:hover {");
+    document.write("    ul.contentsMenu li ul li div.menuItemTableRow.clickableMenuItem:hover {");
     document.write("        background-color: rgba("+r+", "+g+", "+b+", 0.79);");
     document.write("        color: rgb(255, 255, 255);");
     document.write("    }");
     document.write("");
-    document.write("    div.menuItemTableRow.clickableItem:hover a {");
+    document.write("    ul.contentsMenu li ul li div.menuItemTableRow.clickableMenuItem:hover a {");
     document.write("        color: rgb(255, 255, 255);");
     document.write("    }");
     document.write("");
-    document.write("    div.menuItemLabel {");
+    document.write("    ul.contentsMenu li ul li div.menuItemLabel {");
     document.write("        display: table-cell;");
     document.write("    }");
     document.write("");
-    document.write("    div.subMenuOpened, div.subMenuClosed {");
+    document.write("    ul.contentsMenu li ul li div.subMenuOpened,");
+    document.write("    ul.contentsMenu li ul li div.subMenuClosed {");
     document.write("        cursor: pointer;");
     document.write("        display: table-cell;");
     document.write("        width: 1px;");
