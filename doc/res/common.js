@@ -88,6 +88,36 @@ function doHeaderAndContentsMenu(pageName, relativePath, r, g, b, data) {
     // CSS styling for our contents menu
 
     document.write("<style>");
+    document.write("    div.menuItemTable {");
+    document.write("        display: table;");
+    document.write("        width: 100%;");
+    document.write("        height: 16px;");
+    document.write("    }");
+    document.write("");
+    document.write("    div.menuItemTableRow {");
+    document.write("        display: table-row;");
+    document.write("        vertical-align: middle;");
+    document.write("    }");
+    document.write("");
+    document.write("    div.menuItemTableRow.clickableItem:hover {");
+    document.write("        background-color: rgba("+r+", "+g+", "+b+", 0.79);");
+    document.write("        color: rgb(255, 255, 255);");
+    document.write("    }");
+    document.write("");
+    document.write("    div.menuItemTableRow.clickableItem:hover a {");
+    document.write("        color: rgb(255, 255, 255);");
+    document.write("    }");
+    document.write("");
+    document.write("    div.menuItemLabel {");
+    document.write("        display: table-cell;");
+    document.write("    }");
+    document.write("");
+    document.write("    div.subMenuOpened, div.subMenuClosed {");
+    document.write("        cursor: pointer;");
+    document.write("        display: table-cell;");
+    document.write("        width: 1px;");
+    document.write("    }");
+    document.write("");
     document.write("    ul.contentsMenu {");
     document.write("        margin: 0px;");
     document.write("        position: fixed;");
@@ -138,8 +168,6 @@ function doHeaderAndContentsMenu(pageName, relativePath, r, g, b, data) {
     document.write("    ul.contentsMenu li ul li a:hover {");
     document.write("        margin: 0px;");
     document.write("        border: 0px;");
-    document.write("        background-color: rgba("+r+", "+g+", "+b+", 0.79);");
-    document.write("        color: rgb(255, 255, 255);");
     document.write("    }");
     document.write("");
     document.write("    ul.contentsMenu li ul li.separator {");
@@ -161,43 +189,58 @@ function doHeaderAndContentsMenu(pageName, relativePath, r, g, b, data) {
     document.write("        <img src=\""+relativePath+"/res/pics/oxygen/actions/help-about.png\" width=24 height=24 alt=\"Contents\">");
     document.write("        <ul>");
 
-    var items = data.items;
+    var menuItems = data.menuItems;
 
-    for (i = 0; i < items.length; ++i) {
-        if (items[i].separator) {
+    for (i = 0; i < menuItems.length; ++i) {
+        var menuItem = menuItems[i];
+
+        if (menuItem.separator) {
             // We are dealing with a menu separator
 
             document.write("            <li class=\"separator\"></li>");
         } else {
             // We are dealing with a menu item
 
-            var path = items[i].directLink?items[i].link:relativePath+"/"+items[i].link;
+            var path = menuItem.directLink?menuItem.link:relativePath+"/"+menuItem.link;
             var indent = "";
 
-            for (j = 0; j < items[i].level; ++j)
+            for (j = 0; j < menuItem.level; ++j)
                 indent += "&nbsp;&nbsp;&nbsp;&nbsp;"
 
             var currentMenuItem = false;
 
-            if (   (   (typeof items[i].label !== "undefined")
-                    && (items[i].label.toLowerCase() === pageName.toLowerCase()))
-                || ((pageName === "OpenCOR") && (items[i].label === "Home"))
-                || (pageName === items[i].label+" Plugin")) {
+            if (   (   (typeof menuItem.label !== "undefined")
+                    && (menuItem.label.toLowerCase() === pageName.toLowerCase()))
+                || ((pageName === "OpenCOR") && (menuItem.label === "Home"))
+                || (pageName === menuItem.label+" Plugin")) {
                 currentMenuItem = true;
             }
 
-            var liClass = (i === items.length-1)?" class=\"lastMenuItem\"":"";
+            var liClass = (i === menuItems.length-1)?" class=\"lastMenuItem\"":"";
+            var tableRowClasses = "menuItemTableRow";
+            var menuItemLabel = "";
+            var subMenuButton = "";
+//---GRY--- ADD SUB MENU ITEMS...
+
+            if (   (typeof menuItem.subMenu !== "undefined")
+                &&  menuItem.subMenu.length) {
+                subMenuButton = "<div class=\"subMenuClosed\">...</div>";
+           }
 
             if (currentMenuItem) {
-                document.write("            <li"+liClass+"><span class=\"selectedMenuItem\">"+indent+items[i].label+"</span></li>");
+                menuItemLabel = "<span class=\"selectedMenuItem\">"+indent+menuItem.label+"</span>";
             } else {
-                if (   (typeof items[i].link !== "undefined")
-                    &&  items[i].link.length) {
-                    document.write("            <li"+liClass+"><a href=\""+path+"\">"+indent+items[i].label+"</a></li>");
+                if (   (typeof menuItem.link !== "undefined")
+                    &&  menuItem.link.length) {
+                    menuItemLabel = "<a href=\""+path+"\">"+indent+menuItem.label+"</a>";
+
+                    tableRowClasses += " clickableItem";
                 } else {
-                    document.write("            <li"+liClass+">"+indent+items[i].label+"</li>");
+                    menuItemLabel = indent+menuItem.label;
                 }
             }
+
+            document.write("            <li"+liClass+"><div class=\"menuItemTable\"><div class=\""+tableRowClasses+"\"><div class=\"menuItemLabel\">"+menuItemLabel+"</div>"+subMenuButton+"</div></div></li>");
         }
     }
 
@@ -235,6 +278,21 @@ function doHeaderAndContentsMenu(pageName, relativePath, r, g, b, data) {
         if (   ($("ul.contentsMenu > li > ul").css("visibility") === "visible")
             && (event.keyCode === 27)) {
             $("ul.contentsMenu > li > ul").css("visibility", "hidden");
+        }
+    });
+
+    // Show/hide a given sub-menu
+//---GRY--- TO BE FINISHED...
+
+    $("ul.contentsMenu > li > ul > li > div > div > div").click(function() {
+        if ($(this).hasClass("subMenuOpened")) {
+console.log("I am opened...");
+            $(this).removeClass("subMenuOpened");
+            $(this).addClass("subMenuClosed");
+        } else if ($(this).hasClass("subMenuClosed")) {
+console.log("I am closed...");
+            $(this).removeClass("subMenuClosed");
+            $(this).addClass("subMenuOpened");
         }
     });
 }

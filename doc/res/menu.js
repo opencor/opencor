@@ -1,6 +1,6 @@
 function headerAndContentsMenu(pageName, relativePath) {
     doHeaderAndContentsMenu(pageName, relativePath, 103, 103, 103,
-                            { "items": [
+                            { "menuItems": [
                                 { "level": 0, "label": "Home", "link": "index.html" },
                                 { "separator": true },
                                 { "level": 0, "label": "User documentation", "link": "user/index.html" },
