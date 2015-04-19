@@ -21,51 +21,58 @@ if (   document.location.protocol !== "file:"
         s.parentNode.insertBefore(ga, s);
     })();
 
-    // Support for the tracking of emails, downloads and external links in
-    // Google Analytics
+    // Support the tracking of emails, downloads and external links in Google
+    // Analytics
 
-    if (typeof jQuery !== "undefined") {
-        jQuery(document).ready(function($) {
-            jQuery("a").on("click", function(event) {
-                var el = jQuery(this);
-                var href = (typeof(el.attr("href")) !== "undefined")?el.attr("href"):"";
-                var track = true;
+    $(document).ready(function($) {
+        $("a").on("click", function() {
+            var element = $(this);
+            var href = (typeof element.attr("href") !== "undefined")?element.attr("href"):"";
+            var track = true;
 
-                if (!href.match(/^javascript:/i)) {
-                    var elEv = [];
+            if (!href.match(/^javascript:/i)) {
+                var elementEvent = [];
 
-                    elEv.label = href.replace(/%20/g, " ");
-                    elEv.nonInter = false;
-                    elEv.loc = href;
+                elementEvent.label = href.replace(/%20/g, " ");
+                elementEvent.nonInter = false;
+                elementEvent.loc = href;
 
-                    if (href.match(/^mailto\:/i)) {
-                        elEv.category = "Emails";
-                        elEv.action = "Click email address";
-                        elEv.label = elEv.label.replace(/^mailto\: /, "");
-                    } else if (href.match(/\.(exe|zip|tar\.gz|dmg)$/i)) {
-                        elEv.category = "Downloads";
-                        elEv.action = "Click download file";
-                    } else if (    href.match(/^https?\:/i)
-                               && !href.match(/opencor\.ws/i)) {
-                        elEv.category = "External links";
-                        elEv.action = "Click external link";
-                        elEv.nonInter = true;
-                    } else
-                        track = false;
+                if (href.match(/^mailto\:/i)) {
+                    elementEvent.category = "Emails";
+                    elementEvent.action = "Click email address";
+                    elementEvent.label = elementEvent.label.replace(/^mailto\: /, "");
+                } else if (href.match(/\.(exe|zip|tar\.gz|dmg)$/i)) {
+                    elementEvent.category = "Downloads";
+                    elementEvent.action = "Click download file";
+                } else if (    href.match(/^https?\:/i)
+                           && !href.match(/opencor\.ws/i)) {
+                    elementEvent.category = "External links";
+                    elementEvent.action = "Click external link";
+                    elementEvent.nonInter = true;
+                } else
+                    track = false;
 
-                    if (track) {
-                        _gaq.push(["_trackEvent", elEv.category, elEv.action, elEv.label, 0, elEv.nonInter]);
+                if (track) {
+                    _gaq.push([ "_trackEvent",
+                                elementEvent.category,
+                                elementEvent.action,
+                                elementEvent.label,
+                                0,
+                                elementEvent.nonInter
+                             ]);
 
-                        if ((el.attr("target") === undefined) || (el.attr("target").toLowerCase() !== "_blank")) {
-                            setTimeout(function() { location.href = elEv.loc; }, 400);
+                    if (   (element.attr("target") === "undefined")
+                        || (element.attr("target").toLowerCase() !== "_blank")) {
+                        setTimeout(function() {
+                            location.href = elementEvent.loc;
+                        }, 400);
 
-                            return false;
-                        }
+                        return false;
                     }
                 }
-            });
+            }
         });
-    }
+    });
 }
 
 // Context menu
