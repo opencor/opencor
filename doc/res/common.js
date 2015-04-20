@@ -221,6 +221,7 @@ function doHeaderAndContentsMenu(pageName, relativePath, r, g, b, data) {
 
     var menuItems = data.menuItems;
     var subMenuCounter = 0;
+    var subMenuSelected = 0;
 
     for (i = 0; i < menuItems.length; ++i) {
         var menuItem = menuItems[i];
@@ -239,6 +240,15 @@ function doHeaderAndContentsMenu(pageName, relativePath, r, g, b, data) {
                 || ((pageName === "OpenCOR") && (menuItem.label === "Home"))
                 || (pageName === menuItem.label+" Plugin")) {
                 selectedMenuItem = true;
+            }
+
+            var liId = "";
+            var liClass = "";
+
+            if (   (typeof menuItem.subMenuItem !== "undefined")
+                &&  menuItem.subMenuItem) {
+                liId = "subMenu"+subMenuCounter;
+                liClass = " class=\"subMenuItem\"";
             }
 
             var menuItemIndent = "";
@@ -260,6 +270,9 @@ function doHeaderAndContentsMenu(pageName, relativePath, r, g, b, data) {
 
             if (selectedMenuItem) {
                 tableRowClasses += " selectedMenuItem";
+
+                if (liId.length)
+                    subMenuSelected = subMenuCounter;
             } else {
                 if (menuItemLink.length) {
                     tableRowClasses += " clickableMenuItem";
@@ -273,15 +286,6 @@ function doHeaderAndContentsMenu(pageName, relativePath, r, g, b, data) {
             if (   (typeof menuItem.subMenuHeader !== "undefined")
                 &&  menuItem.subMenuHeader) {
                 subMenuButton = "<div id=\"subMenu"+(++subMenuCounter)+"\" class=\"subMenuClosed\">...</div>";
-            }
-
-            var liId = "";
-            var liClass = "";
-
-            if (   (typeof menuItem.subMenuItem !== "undefined")
-                &&  menuItem.subMenuItem) {
-                liId = "subMenu"+subMenuCounter;
-                liClass = " class=\"subMenuItem\"";
             }
 
             document.write("            <li"+(liId.length?" id=\""+liId+"\"":"")+liClass+">");
@@ -310,12 +314,11 @@ function doHeaderAndContentsMenu(pageName, relativePath, r, g, b, data) {
 
     // Show/hide our sub-menus, depending on whether one of them contains the
     // selected menu item
-//---GRY--- TO BE FINISHED...
 
     for (i = 1; i <= subMenuCounter; ++i) {
         var subMenuButton = $("ul.contentsMenu > li > ul > li > div > div > div#subMenu"+i);
 
-        showContentsSubMenu(subMenuButton, false);
+        showContentsSubMenu(subMenuButton, i === subMenuSelected);
     }
 
     // Show/hide our contents menu
