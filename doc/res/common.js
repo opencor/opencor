@@ -75,7 +75,14 @@ if (   document.location.protocol !== "file:"
     });
 }
 
-// Context menu
+// Header and contents menu
+
+function showContentsSubMenu(subMenuButton, showSubMenu) {
+    subMenuButton.removeClass(showSubMenu?"subMenuClosed":"subMenuOpened");
+    subMenuButton.addClass(showSubMenu?"subMenuOpened":"subMenuClosed");
+
+    $("ul.contentsMenu > li > ul > li.subMenuItem#"+subMenuButton.attr("id")).css("display", showSubMenu?"list-item":"none");
+}
 
 function doHeaderAndContentsMenu(pageName, relativePath, r, g, b, data) {
     // Header
@@ -265,7 +272,7 @@ function doHeaderAndContentsMenu(pageName, relativePath, r, g, b, data) {
 
             if (   (typeof menuItem.subMenuHeader !== "undefined")
                 &&  menuItem.subMenuHeader) {
-                subMenuButton = "<div class=\"subMenuClosed\" menu=\""+(++subMenuCounter)+"\">...</div>";
+                subMenuButton = "<div id=\"subMenu"+(++subMenuCounter)+"\" class=\"subMenuClosed\">...</div>";
             }
 
             var liId = "";
@@ -299,6 +306,8 @@ function doHeaderAndContentsMenu(pageName, relativePath, r, g, b, data) {
     document.write("        </ul>");
     document.write("    </li>");
     document.write("</ul>");
+
+    $("ul.contentsMenu > li > ul").attr("subMenus", subMenuCounter);
 
     // Show/hide our contents menu
 
@@ -341,15 +350,16 @@ function doHeaderAndContentsMenu(pageName, relativePath, r, g, b, data) {
 
     $("ul.contentsMenu > li > ul > li > div > div > div").click(function() {
         if ($(this).hasClass("subMenuOpened")) {
-            $(this).removeClass("subMenuOpened");
-            $(this).addClass("subMenuClosed");
-
-            $("ul.contentsMenu > li > ul > li.subMenuItem#subMenu"+$(this).attr("menu")).css("display", "none");
+            showContentsSubMenu($(this), false);
         } else if ($(this).hasClass("subMenuClosed")) {
-            $(this).removeClass("subMenuClosed");
-            $(this).addClass("subMenuOpened");
+            for (i = 1; i <= $("ul.contentsMenu > li > ul").attr("subMenus"); ++i) {
+                var subMenuButton = $("ul.contentsMenu > li > ul > li > div > div > div#subMenu"+i);
 
-            $("ul.contentsMenu > li > ul > li.subMenuItem#subMenu"+$(this).attr("menu")).css("display", "list-item");
+                if (subMenuButton.hasClass("subMenuOpened"))
+                    showContentsSubMenu(subMenuButton, false);
+            }
+
+            showContentsSubMenu($(this), true);
         }
 
         event.stopPropagation();
