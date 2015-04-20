@@ -371,7 +371,7 @@ function doHeaderAndContentsMenu(pageName, relativePath, r, g, b, data) {
 
     // Show/hide a given sub-menu
 
-    $("ul.contentsMenu > li > ul > li > div > div > div").click(function() {
+    $("ul.contentsMenu > li > ul > li > div > div > div").click(function(event) {
         if ($(this).hasClass("subMenuOpened")) {
             showContentsSubMenu($(this), false);
         } else if ($(this).hasClass("subMenuClosed")) {
