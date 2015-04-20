@@ -297,9 +297,6 @@ function doHeaderAndContentsMenu(pageName, relativePath, r, g, b, data) {
             document.write("                    </div>");
             document.write("                </div>");
             document.write("            </li>");
-
-            if (liId.length)
-                $("ul.contentsMenu > li > ul > li.subMenuItem#"+liId).css("display", "none");
         }
     }
 
@@ -307,7 +304,19 @@ function doHeaderAndContentsMenu(pageName, relativePath, r, g, b, data) {
     document.write("    </li>");
     document.write("</ul>");
 
+    // Keep track of our number of sub-menus
+
     $("ul.contentsMenu > li > ul").attr("subMenus", subMenuCounter);
+
+    // Show/hide our sub-menus, depending on whether one of them contains the
+    // selected menu item
+//---GRY--- TO BE FINISHED...
+
+    for (i = 1; i <= subMenuCounter; ++i) {
+        var subMenuButton = $("ul.contentsMenu > li > ul > li > div > div > div#subMenu"+i);
+
+        showContentsSubMenu(subMenuButton, false);
+    }
 
     // Show/hide our contents menu
 
@@ -325,8 +334,12 @@ function doHeaderAndContentsMenu(pageName, relativePath, r, g, b, data) {
         event.stopPropagation();
     });
 
-    // Prevent our contents menu from being hidden when clicking on a menu item
-    // that is selected or that is non-clickable
+    // Prevent our contents menu from being hidden when clicking on it or on a
+    // menu item that is selected or non-clickable
+
+    $("ul.contentsMenu > li > ul").click(function() {
+        return false;
+    });
 
     $("ul.contentsMenu > li > ul > li > div > div.selectedMenuItem > div > a").click(function() {
         return false;
