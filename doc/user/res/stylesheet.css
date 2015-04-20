@@ -17,7 +17,6 @@ a:visited {
 
 code {
     color: rgb(54, 96, 146);
-    vertical-align: top;
 }
 
 div.header {
@@ -82,16 +81,6 @@ pre {
 
 table.legend th {
     padding: 0px 13px 0px 13px;
-}
-
-table.legend th.text {
-    text-align: left;
-    vertical-align: top;
-    white-space: nowrap;
-}
-
-table.legend td {
-    vertical-align: top;
 }
 
 table.team {
