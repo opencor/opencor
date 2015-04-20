@@ -287,9 +287,9 @@ else {
                 <ul>
                     <li>
                         Keep lines shorter than 80 characters whenever possible.
-                        <div>
-                            <strong>Note:</strong> <a href="http://www.qt.io/ide/">Qt Creator</a> can be configured to display a right margin by selecting the <code>Tools|Options...</code> menu, then the <code>Text Editor</code> section, and finally the <code>Display</code> tab under the <code>Text Wrapping</code> group box.
-                        </div>
+                        <p class="nomargins note">
+                            <a href="http://www.qt.io/ide/">Qt Creator</a> can be configured to display a right margin by selecting the <code>Tools|Options...</code> menu, then the <code>Text Editor</code> section, and finally the <code>Display</code> tab under the <code>Text Wrapping</code> group box.
+                        </p>
                     </li>
                     <li>Insert line breaks if necessary.</li>
                     <li>Commas go at the end of a broken line.</li>
@@ -417,14 +417,14 @@ void foo()
 {
     s()->append("moo");
 }</pre>
-                        <div>
-                            <strong>Note #1:</strong> static objects in function scope are not a problem. The constructor will be run the first time the function is entered. The code is not re-entrant, though.
-                        </div>
-                        <div>
-                            <strong>Note #2:</strong> using <a href="http://www.qt.io/">Qt</a> 5 and <a href="http://en.wikipedia.org/wiki/C++11">C++11</a>, it is now possible to (indirectly) have a <code>static const QString</code> (see <a href="http://www.macieira.org/blog/2011/07/qstring-improved/">here</a> for more information on <code>QString</code>), thus making it possible for a variable to be both read-only and sharable.
+                        <p class="nomargins note note1">
+                            static objects in function scope are not a problem. The constructor will be run the first time the function is entered. The code is not re-entrant, though.
+                        </p>
+                        <p class="nomargins note note2">
+                            using <a href="http://www.qt.io/">Qt</a> 5 and <a href="http://en.wikipedia.org/wiki/C++11">C++11</a>, it is now possible to (indirectly) have a <code>static const QString</code> (see <a href="http://www.macieira.org/blog/2011/07/qstring-improved/">here</a> for more information on <code>QString</code>), thus making it possible for a variable to be both read-only and sharable.
                             <pre class="good prettyprint">static const auto s = QStringLiteral("Hello, World!");</pre>
                             <pre class="bad prettyprint">static const QString s = "Hello, World!";</pre>
-                        </div>
+                        </p>
                     </li>
                     <li>
                         A <code>char</code> is signed or unsigned, depending on the architecture. Use <code>signed  char</code> or <code>uchar</code> if you explicitely want a signed or unsigned char. The following code will break on PowerPC, for example:

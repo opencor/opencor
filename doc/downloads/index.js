@@ -19,7 +19,7 @@ var jsonData = { "versions": [
                          ]
                        }
                      ],
-                     "information": "<strong>Note: </strong> this version is getting close to our next official release, so we would recommend using it, especially if you want to get access to OpenCOR's latest features."
+                     "information": "<strong>Note:</strong> this version is getting close to our next official release, so we would recommend using it, especially if you want to get access to OpenCOR's latest features."
                    },
                    { "major": 0, "minor": 3, "patch": 0, "day": 19, "month": 8, "year": 2014, "type": 1,
                      "platforms": [
