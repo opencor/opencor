@@ -318,6 +318,9 @@ function doHeaderAndContentsMenu(pageName, relativePath, r, g, b, data) {
     for (i = 1; i <= subMenuCounter; ++i) {
         var subMenuButton = $("ul.contentsMenu > li > ul > li > div > div > div#subMenu"+i);
 
+        if (i === subMenuSelected)
+            subMenuButton.css("display", "none");
+
         showContentsSubMenu(subMenuButton, i === subMenuSelected);
     }
 
@@ -329,10 +332,14 @@ function doHeaderAndContentsMenu(pageName, relativePath, r, g, b, data) {
     });
 
     $("ul.contentsMenu > li > img").click(function(event) {
-        if ($("ul.contentsMenu > li > ul").css("visibility") === "visible")
+        if ($("ul.contentsMenu > li > ul").css("visibility") === "visible") {
             $("ul.contentsMenu > li > ul").css("visibility", "hidden");
-        else
+        } else {
+            for (i = 1; i <= $("ul.contentsMenu > li > ul").attr("subMenus"); ++i)
+                showContentsSubMenu($("ul.contentsMenu > li > ul > li > div > div > div#subMenu"+i), i === subMenuSelected);
+
             $("ul.contentsMenu > li > ul").css("visibility", "visible");
+        }
 
         event.stopPropagation();
     });
@@ -372,7 +379,7 @@ function doHeaderAndContentsMenu(pageName, relativePath, r, g, b, data) {
                 var subMenuButton = $("ul.contentsMenu > li > ul > li > div > div > div#subMenu"+i);
 
                 if (subMenuButton.hasClass("subMenuOpened"))
-                    showContentsSubMenu(subMenuButton, false);
+                    showContentsSubMenu(subMenuButton, i === subMenuSelected);
             }
 
             showContentsSubMenu($(this), true);
