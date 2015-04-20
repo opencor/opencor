@@ -183,12 +183,15 @@ function doHeaderAndContentsMenu(pageName, relativePath, r, g, b, data) {
     document.write("");
     document.write("    ul.contentsMenu > li > ul > li div.selectedMenuItem > div a {");
     document.write("        cursor: default;");
+    document.write("    }");
+    document.write("");
+    document.write("    ul.contentsMenu > li > ul > li div.selectedMenuItem > div a,");
+    document.write("    ul.contentsMenu > li > ul > li div.selectedMenuItem > div.subMenuButton {");
     document.write("        background-color: rgba("+r+", "+g+", "+b+", 0.13);");
     document.write("        color: rgb("+r+", "+g+", "+b+");");
     document.write("    }");
     document.write("");
-    document.write("    ul.contentsMenu > li > ul > li div.subMenuOpened,");
-    document.write("    ul.contentsMenu > li > ul > li div.subMenuClosed {");
+    document.write("    ul.contentsMenu > li > ul > li div.subMenuButton {");
     document.write("        cursor: pointer;");
     document.write("        display: table-cell;");
     document.write("        width: 1px;");
@@ -285,7 +288,7 @@ function doHeaderAndContentsMenu(pageName, relativePath, r, g, b, data) {
 
             if (   (typeof menuItem.subMenuHeader !== "undefined")
                 &&  menuItem.subMenuHeader) {
-                subMenuButton = "<div id=\"subMenu"+(++subMenuCounter)+"\" class=\"subMenuClosed\">...</div>";
+                subMenuButton = "<div id=\"subMenu"+(++subMenuCounter)+"\" class=\"subMenuButton subMenuClosed\">...</div>";
             }
 
             document.write("            <li"+(liId.length?" id=\""+liId+"\"":"")+liClass+">");
