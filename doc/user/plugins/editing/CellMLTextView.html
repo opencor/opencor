@@ -71,7 +71,7 @@
         </script>
 
         <p>
-            The CellMLTextView plugin can be used to edit <a href="http://www.cellml.org/">CellML</a> files using a text editor that supports the <a href="#CellML%20Text%20format">CellML text format</a>. If you open a file, it will look something like:
+            The CellMLTextView plugin can be used to edit <a href="http://www.cellml.org/">CellML</a> files using a text editor that supports the <a href="#CellML Text format">CellML text format</a>. If you open a file, it will look something like:
         </p>
 
         <p class="center">
@@ -87,7 +87,7 @@
         </div>
 
         <p>
-            People familiar with <a href="http://cor.physiol.ox.ac.uk/">COR</a> will find that the <a href="#CellML%20Text%20format">CellML text format</a> is backward compatible with the COR format and that it has been extended to support:
+            People familiar with <a href="http://cor.physiol.ox.ac.uk/">COR</a> will find that the <a href="#CellML Text format">CellML text format</a> is backward compatible with the COR format and that it has been extended to support:
         </p>
 
         <ul>
@@ -100,7 +100,7 @@
         </ul>
 
         <p>
-            The <a href="http://cor.physiol.ox.ac.uk/">COR</a> format has some limitations that are also present in the <a href="#CellML%20Text%20format">CellML text format</a>:
+            The <a href="http://cor.physiol.ox.ac.uk/">COR</a> format has some limitations that are also present in the <a href="#CellML Text format">CellML text format</a>:
         </p>
 
         <ul>
@@ -143,7 +143,7 @@
         </p>
 
         <p>
-             <code>// XXX</code> comments can also be inserted anywhere, but unlike <code>/* XXX */</code> comments they are serialised back. However, the rendering of certain elements using the <a href="#CellML%20Text%20format">CellML text format</a> is such that when serialised back, <code>// XXX</code> comments may be included in the parent element of those elements, and either before or after those elements, depending on the case.
+             <code>// XXX</code> comments can also be inserted anywhere, but unlike <code>/* XXX */</code> comments they are serialised back. However, the rendering of certain elements using the <a href="#CellML Text format">CellML text format</a> is such that when serialised back, <code>// XXX</code> comments may be included in the parent element of those elements, and either before or after those elements, depending on the case.
         </p>
 
         <span class="anchor" id="CellML Text format"></span>
@@ -157,7 +157,7 @@
         </p>
 
         <div class="subSection">
-            Model
+            Model structure
         </div>
 
         <p>
@@ -168,9 +168,11 @@
     ...
 <span class="keyword">endef</span>;</pre>
 
-        <p class="note">
-            the model definition itself is to sit between <code>as</code> and <code>enddef;</code>.
+        <p>
+            The model definition itself sits between <code>as</code> and <code>enddef;</code>, and it can consists of <a href="#Imports">imports</a>, <a href="#Unit definitions">unit definitions</a>, <a href="#Component definitions">component definitions</a>, <a href="#Group definitions">group definitions</a> and <a href="#Mapping definitions">mapping definitions</a>.
         </p>
+
+        <span class="anchor" id="Imports"></span>
 
         <div class="subSection">
             Imports
@@ -205,8 +207,10 @@
     <span class="keyword">comp</span> my_imported_component <span class="keyword">using comp</span> my_reference_component;
 <span class="keyword">endef</span>;</pre>
 
+        <span class="anchor" id="Unit definitions"></span>
+
         <div class="subSection">
-            Units
+            Unit definitions
         </div>
 
         <p>
@@ -366,6 +370,18 @@
             </tr>
         </table>
 
+        <span class="anchor" id="Component definitions"></span>
+
+        <div class="subSection">
+            Component definitions
+        </div>
+
+        <p>
+            To be done...
+        </p>
+
+        <span class="anchor" id="Mathematics"></span>
+
         <div class="subSection">
             Mathematics
         </div>
@@ -374,8 +390,20 @@
             To be done...
         </p>
 
+        <span class="anchor" id="Group definitions"></span>
+
         <div class="subSection">
-            Grouping
+            Group definitions
+        </div>
+
+        <p>
+            To be done...
+        </p>
+
+        <span class="anchor" id="Mapping definitions"></span>
+
+        <div class="subSection">
+            Mapping definitions
         </div>
 
         <p>

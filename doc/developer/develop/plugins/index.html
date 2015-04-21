@@ -95,7 +95,7 @@
         </p>
 
         <p class="note">
-            the <strong><a href="https://github.com/opencor/opencor/blob/master/src/plugins/coreinterface.inl">core</a></strong> interface is a special interface in that it is only, and can only be, implemented by the <strong>Core</strong> plugin. Any plugin, besides the <strong>Core</strong> plugin, that tries to implement the <strong><a href="https://github.com/opencor/opencor/blob/master/src/plugins/coreinterface.inl">core</a></strong> interface will be reported by OpenCOR as being invalid.
+            the <a href="https://github.com/opencor/opencor/blob/master/src/plugins/coreinterface.inl">core</a> interface is a special interface in that it is only, and can only be, implemented by the <strong>Core</strong> plugin. Any plugin, besides the <strong>Core</strong> plugin, that tries to implement the <a href="https://github.com/opencor/opencor/blob/master/src/plugins/coreinterface.inl">core</a> interface will be reported by OpenCOR as being invalid.
         </p>
 
         <span class="anchor" id="CMake project"></span>
@@ -138,7 +138,7 @@
         </div>
 
         <p>
-            For a plugin to be recognisable by OpenCOR, it must provide some <a href="#Basic%20information">basic information</a> about itself, as well as define a <a href="#Plugin%20class">plugin class</a>. For this, we need a <code>.cpp</code>, a <code>.h</code> and <code>.json</code> file, such as <a href="https://github.com/opencor/opencor/blob/master/src/plugins/miscellaneous/Core/src/coreplugin.cpp"><code>[OpenCOR]/src/plugins/miscellaneous/Core/src/coreplugin.cpp</code></a>, <a href="https://github.com/opencor/opencor/blob/master/src/plugins/miscellaneous/Core/src/coreplugin.h"><code>[OpenCOR]/src/plugins/miscellaneous/Core/src/coreplugin.h</code></a> and <a href="https://github.com/opencor/opencor/blob/master/src/plugins/miscellaneous/Core/src/coreplugin.json"><code>[OpenCOR]/src/plugins/miscellaneous/Core/src/coreplugin.json</code></a> for the <strong>Core</strong> plugin.
+            For a plugin to be recognisable by OpenCOR, it must provide some <a href="#Basic information">basic information</a> about itself, as well as define a <a href="#Plugin class">plugin class</a>. For this, we need a <code>.cpp</code>, a <code>.h</code> and <code>.json</code> file, such as <a href="https://github.com/opencor/opencor/blob/master/src/plugins/miscellaneous/Core/src/coreplugin.cpp"><code>[OpenCOR]/src/plugins/miscellaneous/Core/src/coreplugin.cpp</code></a>, <a href="https://github.com/opencor/opencor/blob/master/src/plugins/miscellaneous/Core/src/coreplugin.h"><code>[OpenCOR]/src/plugins/miscellaneous/Core/src/coreplugin.h</code></a> and <a href="https://github.com/opencor/opencor/blob/master/src/plugins/miscellaneous/Core/src/coreplugin.json"><code>[OpenCOR]/src/plugins/miscellaneous/Core/src/coreplugin.json</code></a> for the <strong>Core</strong> plugin.
         </p>
 
         <span class="anchor" id=".json file"></span>
@@ -161,7 +161,7 @@
         </div>
 
         <p>
-            The code for the <a href="#Basic%20information">basic information</a> and <a href="#Plugin%20class">plugin class</a> must be in the plugin's own namespace within the <code>OpenCOR</code> namespace. More generally, any plugin-related code should be within those two namespaces, this to ensure the integrity of the plugin's code. Thus, in the case of the <strong>Core</strong> plugin, we must have:
+            The code for the <a href="#Basic information">basic information</a> and <a href="#Plugin class">plugin class</a> must be in the plugin's own namespace within the <code>OpenCOR</code> namespace. More generally, any plugin-related code should be within those two namespaces, this to ensure the integrity of the plugin's code. Thus, in the case of the <strong>Core</strong> plugin, we must have:
         </p>
 
         <pre class="prettyprint">...
