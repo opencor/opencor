@@ -26,6 +26,10 @@
             span.keyword {
                 color: rgb(0, 0, 127);
             }
+
+            span.string {
+                color: rgb(0, 127, 0);
+            }
         </style>
     </head>
     <body ondragstart="return false;" ondrop="return false;">
@@ -140,8 +144,33 @@
         </div>
 
         <p>
-            To be done...
+            To <code>def</code>ine an <code>import</code> for units and components defined in a CellML file, which <a href="http://en.wikipedia.org/wiki/Uniform_resource_identifier">URI</a> is <code>my_imported_model_uri</code>, we use:
         </p>
+
+        <pre><span class="keyword">def import using</span> <span class="string">"my_imported_model_uri"</span> <span class="keyword">for</span>
+    ...
+<span class="keyword">endef</span>;</pre>
+
+        <p>
+            To import a <code>unit</code> originally named <code>my_reference_unit</code> and renamed <code>my_imported_unit</code> in our model, we use:
+        </p>
+
+        <pre><span class="keyword">unit</span> my_imported_unit <span class="keyword">using unit</span> my_reference_unit;</pre>
+
+        <p>
+            Similarly, to import a <code>component</code> originally named <code>my_reference_component</code> and renamed <code>my_imported_component</code> in our model, we use:
+        </p>
+
+        <pre><span class="keyword">comp</span> my_imported_component <span class="keyword">using comp</span> my_reference_component;</pre>
+
+        <p>
+            Putting everything together, we get:
+        </p>
+
+        <pre><span class="keyword">def import</span> <span class="keyword">using</span> <span class="string">"my_imported_model_uri"</span> <span class="keyword">for</span>
+    <span class="keyword">unit</span> my_imported_unit <span class="keyword">using unit</span> my_reference_unit;
+    <span class="keyword">comp</span> my_imported_component <span class="keyword">using comp</span> my_reference_component;
+<span class="keyword">endef</span>;</pre>
 
         <div class="subSection">
             Units
@@ -182,7 +211,10 @@
         </p>
 
         <pre><span class="keyword">def model</span><span class="cmetaid">{my_model_cmeta_id}</span> my_model <span class="keyword">as</span>
-    ...
+    <span class="keyword">def import</span><span class="cmetaid">{my_import_cmeta_id}</span> <span class="keyword">using</span> <span class="string">"my_imported_model_uri"</span> <span class="keyword">for</span>
+        <span class="keyword">unit</span><span class="cmetaid">{my_imported_unit_cmeta_id}</span> my_imported_unit <span class="keyword">using unit</span> my_reference_unit;
+        <span class="keyword">comp</span><span class="cmetaid">{my_imported_component_cmeta_id}</span> my_imported_component <span class="keyword">using comp</span> my_reference_component;
+    <span class="keyword">endef</span>;
 <span class="keyword">endef</span>;</pre>
 
         <script type="text/javascript">
