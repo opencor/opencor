@@ -51,6 +51,18 @@
                 padding: 0em 1em;
                 text-align: center;
             }
+
+            table > tbody > tr > td.siBaseUnit {
+                font-weight: bold;
+            }
+
+            table > tbody > tr > td.convenienceUnit {
+                font-style: italic;
+            }
+
+            table > tbody > tr > td.number {
+                text-align: left;
+            }
         </style>
     </head>
     <body ondragstart="return false;" ondrop="return false;">
@@ -220,16 +232,16 @@
 
         <table>
             <tr>
-                <td><strong>ampere</strong></td>
+                <td class="siBaseUnit">ampere</td>
                 <td>becquerel</td>
-                <td><strong>candela</strong></td>
+                <td class="siBaseUnit">candela</td>
                 <td>celsius</td>
                 <td>coulomb</td>
-                <td><em>dimensionless</em></td>
+                <td class="convenienceUnit">dimensionless</td>
             </tr>
             <tr>
                 <td>farad</td>
-                <td><em>gram</em></td>
+                <td class="convenienceUnit">gram</td>
                 <td>gray</td>
                 <td>henry</td>
                 <td>hertz</td>
@@ -237,24 +249,24 @@
             </tr>
             <tr>
                 <td>katal</td>
-                <td><strong>kelvin</strong></td>
-                <td><strong>kilogram</strong></td>
-                <td><em>liter</em></td>
-                <td><em>litre</em></td>
+                <td class="siBaseUnit">kelvin</td>
+                <td class="siBaseUnit">kilogram</td>
+                <td class="convenienceUnit">liter</td>
+                <td class="convenienceUnit">litre</td>
                 <td>lumen</td>
             </tr>
             <tr>
                 <td>lux</td>
-                <td><strong>meter</strong></td>
-                <td><strong>metre</strong></td>
-                <td><strong>mole</strong></td>
+                <td class="siBaseUnit">meter</td>
+                <td class="siBaseUnit">metre</td>
+                <td class="siBaseUnit">mole</td>
                 <td>newton</td>
                 <td>ohm</td>
             </tr>
             <tr>
                 <td>pascal</td>
                 <td>radian</td>
-                <td><strong>second</strong></td>
+                <td class="siBaseUnit">second</td>
                 <td>siemens</td>
                 <td>sievert</td>
                 <td>steradian</td>
@@ -270,7 +282,7 @@
         </table>
 
         <p id="unitsEquations">
-            <code>pref</code>ix, <code>expo</code>nent, <code>mult</code>iplier and <code>off</code>set values of $p$, $e$, $m$ and $o$ can be used on a unit $u$ to define a new unit equivalent to $m \cdot (p \cdot u)^e+o$. For example, to define <code>my_unit</code> as being equivalent to $3 \cdot (milli \cdot other\_unit)^{-1}+7$, we would use:
+            <code>pref</code>ix, <code>expo</code>nent, <code>mult</code>iplier and <code>off</code>set values of $p$, $e$, $m$ and $o$ can be used on a unit $u$ to define a new unit equivalent to $m \cdot (p \cdot u)^e+o$. For example, to define <code>my_unit</code> as being equal to $3 \cdot (milli \cdot other\_unit)^{-1}+7$, we would use:
         </p>
 
         <script type="text/javascript">
@@ -280,6 +292,91 @@
         <pre><span class="keyword">def unit</span> my_unit <span class="keyword">as</span>
     <span class="keyword">unit</span> other_unit <span class="parameterblock">{<span class="keyword">pref</span>: <span class="cellmlkeyword">milli</span>, <span class="keyword">expo</span>: -<span class="number">1</span>, <span class="keyword">mult</span>: <span class="number">3</span>, <span class="keyword">off</span>: <span class="number">7</span>}</span>;
 <span class="keyword">enddef</span>;</pre>
+
+        <p id="unitsDefaultValues">
+            By default, <code>pref</code>ix, <code>expo</code>nent, <code>mult</code>iplier and <code>off</code>set have a value of $0$, $1.0$, $1.0$ and $0.0$, respectively. A <code>pref</code>ix value can either be an integer or any of the following names:
+        </p>
+
+        <script type="text/javascript">
+            renderMathematicalEquations("unitsDefaultValues");
+        </script>
+
+        <table id="unitsPrefixes">
+            <tr>
+                <td>yotta</td>
+                <td class="number">$10^{24}$</td>
+                <td/>
+                <td>deci</td>
+                <td class="number">$10^{-1}$</td>
+            </tr>
+            <tr>
+                <td>zetta</td>
+                <td class="number">$10^{21}$</td>
+                <td/>
+                <td>centi</td>
+                <td class="number">$10^{-2}$</td>
+            </tr>
+            <tr>
+                <td>exa</td>
+                <td class="number">$10^{18}$</td>
+                <td/>
+                <td>milli</td>
+                <td class="number">$10^{-3}$</td>
+            </tr>
+            <tr>
+                <td>peta</td>
+                <td class="number">$10^{15}$</td>
+                <td/>
+                <td>micro</td>
+                <td class="number">$10^{-6}$</td>
+            </tr>
+            <tr>
+                <td>tera</td>
+                <td class="number">$10^{12}$</td>
+                <td/>
+                <td>nano</td>
+                <td class="number">$10^{-9}$</td>
+            </tr>
+            <tr>
+                <td>giga</td>
+                <td class="number">$10^{9}$</td>
+                <td/>
+                <td>pico</td>
+                <td class="number">$10^{-12}$</td>
+            </tr>
+            <tr>
+                <td>mega</td>
+                <td class="number">$10^{6}$</td>
+                <td/>
+                <td>femto</td>
+                <td class="number">$10^{-15}$</td>
+            </tr>
+            <tr>
+                <td>kilo</td>
+                <td class="number">$10^{3}$</td>
+                <td/>
+                <td>atto</td>
+                <td class="number">$10^{-18}$</td>
+            </tr>
+            <tr>
+                <td>hecto</td>
+                <td class="number">$10^{2}$</td>
+                <td/>
+                <td>zepto</td>
+                <td class="number">$10^{-21}$</td>
+            </tr>
+            <tr>
+                <td>deka</td>
+                <td class="number">$10^{1}$</td>
+                <td/>
+                <td>yocto</td>
+                <td class="number">$10^{-24}$</td>
+            </tr>
+        </table>
+
+        <script type="text/javascript">
+            renderMathematicalEquations("unitsPrefixes");
+        </script>
 
         <div class="subSection">
             Mathematics
