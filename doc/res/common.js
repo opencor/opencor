@@ -96,6 +96,7 @@ function doHeaderAndContentsMenu(pageName, relativePath, r, g, b, data) {
 
     document.write("<style>");
     document.write("    ul.contentsMenu {");
+    document.write("        z-index: 999;");
     document.write("        -khtml-user-select: none;");
     document.write("        -moz-user-select: none;");
     document.write("        -ms-user-select: none;");
