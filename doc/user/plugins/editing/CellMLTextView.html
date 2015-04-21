@@ -169,7 +169,7 @@
 <span class="keyword">endef</span>;</pre>
 
         <p>
-            The model definition itself sits between <code>as</code> and <code>enddef;</code>, and it can consists of <a href="#Imports">imports</a>, <a href="#Unit definitions">unit definitions</a>, <a href="#Component definitions">component definitions</a>, <a href="#Group definitions">group definitions</a> and <a href="#Mapping definitions">mapping definitions</a>.
+            The model definition itself sits between <code>as</code> and <code>enddef;</code>, and can consists of <a href="#Imports">imports</a>, <a href="#Unit definitions">unit definitions</a>, <a href="#Component definitions">component definitions</a>, <a href="#Group definitions">group definitions</a> and <a href="#Mapping definitions">mapping definitions</a>.
         </p>
 
         <span class="anchor" id="Imports"></span>
@@ -224,14 +224,14 @@
         </p>
 
         <pre><span class="keyword">def unit</span> my_unit <span class="keyword">as</span>
-    <span class="keyword">unit</span> other_unit <span class="parameterblock">{...}</span>;
+    <span class="keyword">unit</span> my_other_unit <span class="parameterblock">{...}</span>;
     <span class="keyword">unit</span> <span class="cellmlkeyword">second</span> <span class="parameterblock">{...}</span>;
     <span class="keyword">unit</span> <span class="cellmlkeyword">litre</span> <span class="parameterblock">{...}</span>;
     ...
 <span class="keyword">enddef</span>;</pre>
 
         <p>
-            <code>other_unit</code> refers to a user-defined unit while <code>second</code> is an <a href="http://en.wikipedia.org/wiki/International_System_of_Units">SI</a> base unit and <code>litre</code> an <a href="http://en.wikipedia.org/wiki/International_System_of_Units">SI</a> derived unit. The following <a href="http://en.wikipedia.org/wiki/International_System_of_Units">SI</a> base (in bold) and derived units, as well as convenience units (in italics), can be used:
+            <code>my_other_unit</code> refers to a user-defined unit while <code>second</code> is an <a href="http://en.wikipedia.org/wiki/International_System_of_Units">SI</a> base unit and <code>litre</code> an <a href="http://en.wikipedia.org/wiki/International_System_of_Units">SI</a> derived unit. The following <a href="http://en.wikipedia.org/wiki/International_System_of_Units">SI</a> base (in bold) and derived units, as well as convenience units (in italics), can be used:
         </p>
 
         <table>
@@ -286,11 +286,11 @@
         </table>
 
         <p class="mathematicalEquations">
-            <code>pref</code>ix, <code>expo</code>nent, <code>mult</code>iplier and <code>off</code>set values of $p$, $e$, $m$ and $o$ can be used on a unit $u$ to define a new unit equivalent to $m \cdot (p \cdot u)^e+o$. For example, to define <code>my_unit</code> as being equal to $3 \cdot (milli \cdot other\_unit)^{-1}+7$, we would use:
+            <code>pref</code>ix, <code>expo</code>nent, <code>mult</code>iplier and <code>off</code>set values of $p$, $e$, $m$ and $o$ can be used on a unit $u$ to define a new unit equal to $m \cdot (p \cdot u)^e+o$. For example, to define <code>my_unit</code> as being equal to $3 \cdot (milli \cdot my\_other\_unit)^{-1}+7$, we would use:
         </p>
 
         <pre><span class="keyword">def unit</span> my_unit <span class="keyword">as</span>
-    <span class="keyword">unit</span> other_unit <span class="parameterblock">{<span class="keyword">pref</span>: <span class="cellmlkeyword">milli</span>, <span class="keyword">expo</span>: -<span class="number">1</span>, <span class="keyword">mult</span>: <span class="number">3</span>, <span class="keyword">off</span>: <span class="number">7</span>}</span>;
+    <span class="keyword">unit</span> my_other_unit <span class="parameterblock">{<span class="keyword">pref</span>: <span class="cellmlkeyword">milli</span>, <span class="keyword">expo</span>: -<span class="number">1</span>, <span class="keyword">mult</span>: <span class="number">3</span>, <span class="keyword">off</span>: <span class="number">7</span>}</span>;
 <span class="keyword">enddef</span>;</pre>
 
         <p class="mathematicalEquations">
@@ -429,6 +429,12 @@
         <span class="keyword">unit</span><span class="cmetaid">{my_imported_unit_cmeta_id}</span> my_imported_unit <span class="keyword">using unit</span> my_reference_unit;
         <span class="keyword">comp</span><span class="cmetaid">{my_imported_component_cmeta_id}</span> my_imported_component <span class="keyword">using comp</span> my_reference_component;
     <span class="keyword">endef</span>;
+
+    <span class="keyword">def unit</span><span class="cmetaid">{my_base_unit_cmeta_id}</span> my_base_unit <span class="keyword">as</span> <span class="cellmlkeyword">base</span> <span class="keyword">unit</span>;
+
+    <span class="keyword">def unit</span><span class="cmetaid">{my_unit_cmeta_id}</span> my_unit <span class="keyword">as</span>
+        <span class="keyword">unit</span><span class="cmetaid">{my_other_unit_cmeta_id}</span> my_other_unit <span class="parameterblock">{<span class="keyword">pref</span>: <span class="cellmlkeyword">milli</span>, <span class="keyword">expo</span>: -<span class="number">1</span>, <span class="keyword">mult</span>: <span class="number">3</span>, <span class="keyword">off</span>: <span class="number">7</span>}</span>;
+    <span class="keyword">enddef</span>;
 <span class="keyword">endef</span>;</pre>
 
         <script type="text/javascript">
