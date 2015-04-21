@@ -15,6 +15,10 @@
         <script src="../../res/imagepopup.js" type="text/javascript"></script>
 
         <style>
+            span.cmetaid {
+                font-style: italic;
+            }
+
             span.comment {
                 color: rgb(127, 127, 127);
             }
@@ -112,8 +116,74 @@
         </div>
 
         <p>
+            The CellML Text format offers, for the large part, a one-to-one mapping to the CellML format with the view of making it easier to create and edit CellML files.
+        </p>
+
+        <div class="subSection">
+            Model structure
+        </div>
+
+        <p>
+            To <code>def</code>ine a <code>model</code> with the name <code>my_model</code>, we use:
+        </p>
+
+        <pre><span class="keyword">def model</span> my_model <span class="keyword">as</span>
+    ...
+<span class="keyword">endef</span>;</pre>
+
+        <p class="note">
+            the model definition itself is to sit between <code>as</code> and <code>enddef;</code>.
+        </p>
+
+        <div class="subSection">
+            Imports
+        </div>
+
+        <p>
             To be done...
         </p>
+
+        <div class="subSection">
+            Units
+        </div>
+
+        <p>
+            To be done...
+        </p>
+
+        <div class="subSection">
+            Mathematics
+        </div>
+
+        <p>
+            To be done...
+        </p>
+
+        <div class="subSection">
+            Grouping
+        </div>
+
+        <p>
+            To be done...
+        </p>
+
+        <div class="subSection">
+            Metadata
+        </div>
+
+        <p>
+            The CellML Text format does not support the editing of CellML annotations. However, <code>cmeta:id</code>'s are used to make the link between CellML elements and CellML annotations. So, we need the CellML Text format to support the use of <code>cmeta:id</code>'s and this is done by enclosing a <code>cmeta:id</code> value (e.g. <code>my_cmeta_id</code>) within curly brackets:
+        </p>
+
+        <pre><span class="cmetaid">{my_cmeta_id}</span></pre>
+
+        <p>
+            which can then be used to annotate various CellML elements:
+        </p>
+
+        <pre><span class="keyword">def model</span><span class="cmetaid">{my_model_cmeta_id}</span> my_model <span class="keyword">as</span>
+    ...
+<span class="keyword">endef</span>;</pre>
 
         <script type="text/javascript">
             copyright("../../..");
