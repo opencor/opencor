@@ -32,6 +32,7 @@ a.noHover:hover {
 }
 
 div.copyright {
+    z-index: 999;
     position: fixed;
     bottom: 0px;
     left: 0px;
@@ -83,6 +84,7 @@ div.copyright div img.vpr {
 }
 
 div.header {
+    z-index: 999;
     padding: 3px;
     position: fixed;
     top: 0px;

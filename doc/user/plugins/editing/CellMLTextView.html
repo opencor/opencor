@@ -7,15 +7,22 @@
 
         <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
 
+        <link href="../../../3rdparty/KaTeX/katex.min.css" rel="stylesheet" type="text/css"/>
         <link href="../../res/stylesheet.css" rel="stylesheet" type="text/css"/>
 
         <script src="../../../3rdparty/jQuery/jquery.js" type="text/javascript"></script>
+        <script src="../../../3rdparty/KaTeX/katex.min.js" type="text/javascript"></script>
         <script src="../../../res/common.js" type="text/javascript"></script>
         <script src="../../res/menu.js" type="text/javascript"></script>
         <script src="../../res/imagepopup.js" type="text/javascript"></script>
 
         <style>
-            span.cmetaid {
+            span.cellmlkeyword {
+                color: rgb(127, 0, 127);
+            }
+
+            span.cmetaid,
+            span.parameterblock {
                 font-style: italic;
             }
 
@@ -27,8 +34,21 @@
                 color: rgb(0, 0, 127);
             }
 
+            span.number {
+                color: rgb(0, 127, 127);
+            }
+
             span.string {
                 color: rgb(0, 127, 0);
+            }
+
+            table {
+                margin: 1em 0em;
+            }
+
+            table > tbody > tr > td {
+                padding: 0em 1em;
+                text-align: center;
             }
         </style>
     </head>
@@ -124,11 +144,11 @@
         </p>
 
         <div class="subSection">
-            Model structure
+            Model
         </div>
 
         <p>
-            To <code>def</code>ine a <code>model</code> with the name <code>my_model</code>, we use:
+            To <code>def</code>ine a <code>model</code> of name <code>my_model</code>, we use:
         </p>
 
         <pre><span class="keyword">def model</span> my_model <span class="keyword">as</span>
@@ -177,8 +197,94 @@
         </div>
 
         <p>
-            To be done...
+            To <code>def</code>ine a <code>base unit</code> of name <code>my_base_unit</code>, we use:
         </p>
+
+        <pre><span class="keyword">def unit</span> my_base_unit <span class="keyword">as</span> <span class="cellmlkeyword">base</span> <span class="keyword">unit</span>;</pre>
+
+        <p>
+            To <code>def</code>ine a <code>unit</code>, of name <code>my_unit</code>, based on some other units, we use:
+        </p>
+
+        <pre><span class="keyword">def unit</span> my_unit <span class="keyword">as</span>
+    <span class="keyword">unit</span> other_unit <span class="parameterblock">{...}</span>;
+    <span class="keyword">unit</span> <span class="cellmlkeyword">second</span> <span class="parameterblock">{...}</span>;
+    <span class="keyword">unit</span> <span class="cellmlkeyword">litre</span> <span class="parameterblock">{...}</span>;
+    ...
+<span class="keyword">enddef</span>;</pre>
+
+        <p>
+            <code>other_unit</code> refers to a user-defined unit while <code>second</code> is an <a href="http://en.wikipedia.org/wiki/International_System_of_Units">SI</a> base unit and <code>litre</code> an <a href="http://en.wikipedia.org/wiki/International_System_of_Units">SI</a> derived unit. The following <a href="http://en.wikipedia.org/wiki/International_System_of_Units">SI</a> base (in bold) and derived units, as well as convenience units (in italics), can be used:
+        </p>
+
+        <table>
+            <tr>
+                <td><strong>ampere</strong></td>
+                <td>becquerel</td>
+                <td><strong>candela</strong></td>
+                <td>celsius</td>
+                <td>coulomb</td>
+                <td><em>dimensionless</em></td>
+            </tr>
+            <tr>
+                <td>farad</td>
+                <td><em>gram</em></td>
+                <td>gray</td>
+                <td>henry</td>
+                <td>hertz</td>
+                <td>joule</td>
+            </tr>
+            <tr>
+                <td>katal</td>
+                <td><strong>kelvin</strong></td>
+                <td><strong>kilogram</strong></td>
+                <td><em>liter</em></td>
+                <td><em>litre</em></td>
+                <td>lumen</td>
+            </tr>
+            <tr>
+                <td>lux</td>
+                <td><strong>meter</strong></td>
+                <td><strong>metre</strong></td>
+                <td><strong>mole</strong></td>
+                <td>newton</td>
+                <td>ohm</td>
+            </tr>
+            <tr>
+                <td>pascal</td>
+                <td>radian</td>
+                <td><strong>second</strong></td>
+                <td>siemens</td>
+                <td>sievert</td>
+                <td>steradian</td>
+            </tr>
+            <tr>
+                <td>tesla</td>
+                <td>volt</td>
+                <td>watt</td>
+                <td>weber</td>
+                <td/>
+                <td/>
+            </tr>
+        </table>
+
+        <p>
+            <code>pref</code>ix, <code>expo</code>nent, <code>mult</code>iplier and <code>off</code>set values of <span id="katex_p"></span>, <span id="katex_e"></span>, <span id="katex_m"></span> and <span id="katex_o"></span> can be used on a unit <span id="katex_u"></span> to define a new unit equivalent to <span id="katex_new_unit"></span>. For example, to define <code>my_unit</code> as being equivalent to <span id="katex_my_unit"></span>, we would use:
+        </p>
+
+        <script type="text/javascript">
+            katex.render("p", katex_p);
+            katex.render("e", katex_e);
+            katex.render("m", katex_m);
+            katex.render("o", katex_o);
+            katex.render("u", katex_u);
+            katex.render("m \\cdot (p \\cdot u)^e+o", katex_new_unit);
+            katex.render("3 \\cdot (milli \\cdot other\\_unit)^{-1}+7", katex_my_unit);
+        </script>
+
+        <pre><span class="keyword">def unit</span> my_unit <span class="keyword">as</span>
+    <span class="keyword">unit</span> other_unit <span class="parameterblock">{<span class="keyword">pref</span>: <span class="cellmlkeyword">milli</span>, <span class="keyword">expo</span>: -<span class="number">1</span>, <span class="keyword">mult</span>: <span class="number">3</span>, <span class="keyword">off</span>: <span class="number">7</span>}</span>;
+<span class="keyword">enddef</span>;</pre>
 
         <div class="subSection">
             Mathematics
