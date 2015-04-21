@@ -12,6 +12,7 @@
 
         <script src="../../../3rdparty/jQuery/jquery.js" type="text/javascript"></script>
         <script src="../../../3rdparty/KaTeX/katex.min.js" type="text/javascript"></script>
+        <script src="../../../3rdparty/KaTeX/contrib/auto-render.min.js" type="text/javascript"></script>
         <script src="../../../res/common.js" type="text/javascript"></script>
         <script src="../../res/menu.js" type="text/javascript"></script>
         <script src="../../res/imagepopup.js" type="text/javascript"></script>
@@ -268,18 +269,12 @@
             </tr>
         </table>
 
-        <p>
-            <code>pref</code>ix, <code>expo</code>nent, <code>mult</code>iplier and <code>off</code>set values of <span id="katex_p"></span>, <span id="katex_e"></span>, <span id="katex_m"></span> and <span id="katex_o"></span> can be used on a unit <span id="katex_u"></span> to define a new unit equivalent to <span id="katex_new_unit"></span>. For example, to define <code>my_unit</code> as being equivalent to <span id="katex_my_unit"></span>, we would use:
+        <p id="unitsEquations">
+            <code>pref</code>ix, <code>expo</code>nent, <code>mult</code>iplier and <code>off</code>set values of $p$, $e$, $m$ and $o$ can be used on a unit $u$ to define a new unit equivalent to $m \cdot (p \cdot u)^e+o$. For example, to define <code>my_unit</code> as being equivalent to $3 \cdot (milli \cdot other\_unit)^{-1}+7$, we would use:
         </p>
 
         <script type="text/javascript">
-            katex.render("p", katex_p);
-            katex.render("e", katex_e);
-            katex.render("m", katex_m);
-            katex.render("o", katex_o);
-            katex.render("u", katex_u);
-            katex.render("m \\cdot (p \\cdot u)^e+o", katex_new_unit);
-            katex.render("3 \\cdot (milli \\cdot other\\_unit)^{-1}+7", katex_my_unit);
+            renderMathematicalEquations("unitsEquations");
         </script>
 
         <pre><span class="keyword">def unit</span> my_unit <span class="keyword">as</span>

@@ -410,3 +410,18 @@ function copyright(relativePath) {
     document.write("    </div>");
     document.write("</div>");
 }
+
+// Render, using KaTeX, all the mathematical equations found in the element,
+// which id is given
+
+function renderMathematicalEquations(elementId) {
+    renderMathInElement(document.getElementById(elementId),
+                        {
+                            delimiters: [
+                                { left: "$$", right: "$$", display: true },
+                                { left: "\\[", right: "\\]", display: true },
+                                { left: "$", right: "$", display: false },
+                                { left: "\\(", right: "\\)", display: false }
+                            ]
+                        });
+}
