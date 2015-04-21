@@ -451,7 +451,7 @@ if (c >= 0) {
                 For example, library <code>A</code> has <code>class Q_EXPORT X: public QList&lt;QVariant&gt; {};</code> and library <code>B</code> has <code>class Q_EXPORT Y: public QList&lt;QVariant&gt; {};</code>. Suddenly, <code>QList</code> symbols are exported from two libraries, which results in a clash.
             </li>
             <li>
-                <strong>Aestethics:</strong>
+                <strong>Aesthetics:</strong>
                 <ul>
                     <li>Put the body of a function in a <code>.cpp</code> file, not in its <code>.h</code> file. There is a reason for having both a <code>.cpp</code> file and a <code>.h</code> file.</li>
                     <li>Prefer <code>enum</code> to define constants over <code>static const int</code> or <code>#define</code>. Enumeration values will be replaced by the compiler at compile time, resulting in faster code. Also, <code>#define</code> is not namespace safe.</li>

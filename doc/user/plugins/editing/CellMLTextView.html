@@ -30,7 +30,7 @@
         </script>
 
         <p>
-            The CellMLTextView plugin can be used to edit <a href="http://www.cellml.org/">CellML</a> files using a text editor that supports the CellML text format. If you open a file, it will look something like:
+            The CellMLTextView plugin can be used to edit <a href="http://www.cellml.org/">CellML</a> files using a text editor that supports the <a href="#CellML%20Text%20format">CellML text format</a>. If you open a file, it will look something like:
         </p>
 
         <p class="center">
@@ -42,28 +42,23 @@
         </p>
 
         <div class="section">
-            Compatibility
+            Compatibility with COR
         </div>
 
         <p>
-            People who are already familiar with <a href="http://cor.physiol.ox.ac.uk/">COR</a> will find that the CellML Text format is backward compatible with the COR format and that it has been extended to support:
+            People familiar with <a href="http://cor.physiol.ox.ac.uk/">COR</a> will find that the <a href="#CellML%20Text%20format">CellML text format</a> is backward compatible with the COR format and that it has been extended to support:
         </p>
 
         <ul>
-            <li>Comments (both <code>// XXX</code> and <code>/* XXX */</code>).</li>
-            <li>The <code>import</code> element (i.e. support for CellML 1.1).</li>
-            <li>The <code>cmeta:id</code> attribute on all CellML elements (i.e. support for CellML annotation).</li>
-            <li><a href="http://www.w3.org/Math/">MathML</a>: the <code>degree</code> qualifier for the <code>diff</code> element (i.e. not limited to first derivatives), as well as the <code>notanumber</code> and <code>infinity</code> constants.</li>
-            <li>An unlimited number of group types (in <a href="http://cor.physiol.ox.ac.uk/">COR</a>, a group can only specify one <code>encapsulation</code> and/or one <code>containment</code> type).</li>
+            <li><a href="#Comments">Comments</a></li>
+            <li>The <code>import</code> element (i.e. support for CellML 1.1)</li>
+            <li>The <code>cmeta:id</code> attribute on all CellML elements (i.e. support for CellML annotation)</li>
+            <li>The <code>degree</code> qualifier for the <code>diff</code> element (i.e. not limited to first derivatives)</li>
+            <li>The <code>notanumber</code> and <code>infinity</code> constants</li>
+            <li>An unlimited number of group types (in <a href="http://cor.physiol.ox.ac.uk/">COR</a>, a group can only specify one <code>encapsulation</code> and/or one <code>containment</code> type)</li>
         </ul>
 
-        <div class="section">
-            Format
-        </div>
-
-        <p>
-            To be done...
-        </p>
+        <span class="anchor" id="Comments"></span>
 
         <div class="section">
             Comments
@@ -90,16 +85,26 @@
             Note that <code>/* XXX */</code> comments are only for convenience and are not serialised back.
         </p>
 
+        <span class="anchor" id="CellML Text format"></span>
+
+        <div class="section">
+            CellML Text format
+        </div>
+
+        <p>
+            To be done...
+        </p>
+
         <div class="section">
             Limitations
         </div>
 
         <p>
-            The CellML text format has the same limitations as the <a href="http://cor.physiol.ox.ac.uk/">COR</a> format:
+            The <a href="#CellML%20Text%20format">CellML text format</a> has the same limitations as the <a href="http://cor.physiol.ox.ac.uk/">COR</a> format:
         </p>
 
         <ul>
-            <li>Comments can be made anywhere in a CellML file. However, the rendering of certain elements using the CellML text format is such that when serialised back, those comments will be incorporated in the parent element of those elements and either before or after those elements, depending on the case.</li>
+            <li>Comments can be made anywhere in a CellML file. However, the rendering of certain elements using the <a href="#CellML%20Text%20format">CellML text format</a> is such that when serialised back, those comments will be incorporated in the parent element of those elements and either before or after those elements, depending on the case.</li>
             <li>The <code>reaction</code> element is not supported (indeed, its use is not only discouraged, but the <code>reaction</code> element is to be removed from the forthcoming CellML 1.2 specifications).</li>
             <li>A <code>piecewise</code> statement can only be used as part of a top-level <code>eq</code> statement, and nested <code>piecewise</code> statements are not allowed (the nested limitation is not a limitation as such since an equation can always be rewritten without nested <code>piecewise</code> statements; more importantly, it is easier to read and maintain an equation that uses only one <code>piecewise</code> statement).</li>
             <li>A <code>component</code> element may contain a set of <code>math</code> elements. However, its rendering is such that when serialised back, only one <code>math</code> element will remain, with all the equations originally distributed among the set now in that one and unique <code>math</code> element.</li>
