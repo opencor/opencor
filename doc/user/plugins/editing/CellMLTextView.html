@@ -281,27 +281,19 @@
             </tr>
         </table>
 
-        <p id="unitsEquations">
+        <p class="mathematicalEquations">
             <code>pref</code>ix, <code>expo</code>nent, <code>mult</code>iplier and <code>off</code>set values of $p$, $e$, $m$ and $o$ can be used on a unit $u$ to define a new unit equivalent to $m \cdot (p \cdot u)^e+o$. For example, to define <code>my_unit</code> as being equal to $3 \cdot (milli \cdot other\_unit)^{-1}+7$, we would use:
         </p>
-
-        <script type="text/javascript">
-            renderMathematicalEquations("unitsEquations");
-        </script>
 
         <pre><span class="keyword">def unit</span> my_unit <span class="keyword">as</span>
     <span class="keyword">unit</span> other_unit <span class="parameterblock">{<span class="keyword">pref</span>: <span class="cellmlkeyword">milli</span>, <span class="keyword">expo</span>: -<span class="number">1</span>, <span class="keyword">mult</span>: <span class="number">3</span>, <span class="keyword">off</span>: <span class="number">7</span>}</span>;
 <span class="keyword">enddef</span>;</pre>
 
-        <p id="unitsDefaultValues">
-            By default, <code>pref</code>ix, <code>expo</code>nent, <code>mult</code>iplier and <code>off</code>set have a value of $0$, $1.0$, $1.0$ and $0.0$, respectively. A <code>pref</code>ix value can either be an integer or any of the following names:
+        <p class="mathematicalEquations">
+            By default, <code>pref</code>ix, <code>expo</code>nent, <code>mult</code>iplier and <code>off</code>set have a value of $0$, $1.0$, $1.0$ and $0.0$, respectively. A <code>pref</code>ix value can either be an integer or any of the following prefix names:
         </p>
 
-        <script type="text/javascript">
-            renderMathematicalEquations("unitsDefaultValues");
-        </script>
-
-        <table id="unitsPrefixes">
+        <table class="mathematicalEquations">
             <tr>
                 <td>yotta</td>
                 <td class="number">$10^{24}$</td>
@@ -374,10 +366,6 @@
             </tr>
         </table>
 
-        <script type="text/javascript">
-            renderMathematicalEquations("unitsPrefixes");
-        </script>
-
         <div class="subSection">
             Mathematics
         </div>
@@ -416,6 +404,8 @@
 <span class="keyword">endef</span>;</pre>
 
         <script type="text/javascript">
+            renderMathematicalEquations();
+
             copyright("../../..");
         </script>
     </body>

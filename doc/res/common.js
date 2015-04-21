@@ -411,17 +411,21 @@ function copyright(relativePath) {
     document.write("</div>");
 }
 
-// Render, using KaTeX, all the mathematical equations found in the element,
-// which id is given
+// Render, using KaTeX, all the mathematical equations found in elements that
+// 'support' the "mathematicalEquations" class
 
-function renderMathematicalEquations(elementId) {
-    renderMathInElement(document.getElementById(elementId),
-                        {
-                            delimiters: [
-                                { left: "$$", right: "$$", display: true },
-                                { left: "\\[", right: "\\]", display: true },
-                                { left: "$", right: "$", display: false },
-                                { left: "\\(", right: "\\)", display: false }
-                            ]
-                        });
+function renderMathematicalEquations() {
+    var mathematicalEquationsElements = document.getElementsByClassName("mathematicalEquations");
+
+    for (i = 0; i < mathematicalEquationsElements.length; ++i) {
+        renderMathInElement(mathematicalEquationsElements[i],
+                            {
+                                delimiters: [
+                                    { left: "$$", right: "$$", display: true },
+                                    { left: "\\[", right: "\\]", display: true },
+                                    { left: "$", right: "$", display: false },
+                                    { left: "\\(", right: "\\)", display: false }
+                                ]
+                            });
+    }
 }
