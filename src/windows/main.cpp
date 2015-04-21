@@ -47,6 +47,10 @@ void error(QCoreApplication *pApp, const QString &pMsg)
 
 int main(int pArgC, char *pArgV[])
 {
+    // Initialise Qt's message pattern
+
+    OpenCOR::initQtMessagePattern();
+
     // Initialise the plugins path
 
     OpenCOR::initPluginsPath(pArgV[0]);

@@ -64,6 +64,8 @@ private Q_SLOTS:
 
 //==============================================================================
 
+void initQtMessagePattern();
+
 void initPluginsPath(const QString &pAppFileName);
 
 void initApplication(QCoreApplication *pApp, QString *pAppDate = 0);

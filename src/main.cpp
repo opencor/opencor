@@ -47,6 +47,10 @@ specific language governing permissions and limitations under the License.
 
 int main(int pArgC, char *pArgV[])
 {
+    // Initialise Qt's message pattern
+
+    OpenCOR::initQtMessagePattern();
+
     // Determine whether we should try the CLI version of OpenCOR:
     //  - Windows: we never try the CLI version of OpenCOR. We go straight for
     //             its GUI version.
