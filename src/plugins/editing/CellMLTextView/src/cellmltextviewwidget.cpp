@@ -294,12 +294,13 @@ void CellmlTextViewWidget::initialize(const QString &pFileName,
                                                                CellMLSupport::CellmlFile::Cellml_1_0:
                                                                CellMLSupport::CellmlFile::version(cellmlFile);
 
-        mData.insert(pFileName,
-                     CellmlTextViewWidgetData(newEditingWidget,
-                                              Core::sha1(newEditingWidget->editor()->contents()),
-                                              successfulConversion,
-                                              cellmlVersion,
-                                              fileIsEmpty?QDomDocument(QString()):mConverter.rdfNodes()));
+        data = CellmlTextViewWidgetData(newEditingWidget,
+                                        Core::sha1(newEditingWidget->editor()->contents()),
+                                        successfulConversion,
+                                        cellmlVersion,
+                                        fileIsEmpty?QDomDocument(QString()):mConverter.rdfNodes());
+
+        mData.insert(pFileName, data);
 
         layout()->addWidget(newEditingWidget);
 
