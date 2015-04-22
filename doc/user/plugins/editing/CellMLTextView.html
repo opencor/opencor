@@ -501,8 +501,22 @@
         </div>
 
         <p>
-            To be done...
+            To <code>def</code>ine some <code>map</code>pings between two components of name <code>my_component1</code> and <code>my_component2</code>, we use:
         </p>
+
+        <pre><span class="keyword">def map between</span> my_component1 <span class="keyword">and</span> my_component2</span> <span class="keyword">for</span>
+    ...
+<span class="keyword">enddef</span>;</pre>
+
+        <p>
+            To map variables <code>my_variable1a</code> with <code>my_variable2a</code>, <code>my_variable1b</code> with <code>my_variable2b</code>, and <code>my_variable1c</code> with <code>my_variable2c</code> from components <code>my_component1</code> and <code>my_component2</code>, respectively, we would use:
+        </p>
+
+        <pre><span class="keyword">def map between</span> my_component1 <span class="keyword">and</span> my_component2</span> <span class="keyword">for</span>
+    <span class="keyword">vars</span> my_variable1a <span class="keyword">and</span> my_variable2a;
+    <span class="keyword">vars</span> my_variable1b <span class="keyword">and</span> my_variable2b;
+    <span class="keyword">vars</span> my_variable1c <span class="keyword">and</span> my_variable2c;
+<span class="keyword">enddef</span>;</pre>
 
         <div class="subSection">
             Metadata
@@ -534,7 +548,7 @@
         <span class="keyword">var</span><span class="cmetaId">{my_variable_cmeta_id}</span> my_variable: my_unit <span class="parameterblock">{<span class="keyword">init</span>: <span class="number">3</span>, <span class="keyword">pub</span>: <span class="cellmlkeyword">in</span>, <span class="keyword">priv</span>: <span class="cellmlkeyword">out</span>}</span>;
     <span class="keyword">enddef</span>;
 
-    <span class="keyword">def group<span class="cmetaId">{my_group_cmeta_id}</span> as</span> <span class="cellmlkeyword">encapsulation</span><span class="cmetaId">{my_encapsulation_cmeta_id}</span> <span class="keyword">and</span> <span class="cellmlkeyword">containment</span><span class="cmetaId">{my_containment_cmeta_id}</span> my_containment <span class="keyword">for</span>
+    <span class="keyword">def group</span><span class="cmetaId">{my_group_cmeta_id}</span> <span class="keyword">as</span> <span class="cellmlkeyword">encapsulation</span><span class="cmetaId">{my_encapsulation_cmeta_id}</span> <span class="keyword">and</span> <span class="cellmlkeyword">containment</span><span class="cmetaId">{my_containment_cmeta_id}</span> my_containment <span class="keyword">for</span>
         <span class="keyword">comp</span><span class="cmetaId">{my_component1_cmeta_id}</span> my_component1 <span class="keyword">incl</span>
             <span class="keyword">comp</span><span class="cmetaId">{my_component11_cmeta_id}</span> my_component11;
             <span class="keyword">comp</span><span class="cmetaId">{my_component12_cmeta_id}</span> my_component12;
@@ -542,6 +556,12 @@
         <span class="keyword">endcomp</span>;
 
         <span class="keyword">comp</span><span class="cmetaId">{my_component2_cmeta_id}</span> my_component2;
+    <span class="keyword">enddef</span>;
+
+    <span class="keyword">def map</span><span class="cmetaId">{my_map_cmeta_id}</span> <span class="keyword">between</span><span class="cmetaId">{my_between_cmeta_id}</span> my_component1 <span class="keyword">and</span> my_component2</span> <span class="keyword">for</span>
+        <span class="keyword">vars</span><span class="cmetaId">{my_varsa_cmeta_id}</span> my_variable1a <span class="keyword">and</span> my_variable2a;
+        <span class="keyword">vars</span><span class="cmetaId">{my_varsb_cmeta_id}</span> my_variable1b <span class="keyword">and</span> my_variable2b;
+        <span class="keyword">vars</span><span class="cmetaId">{my_varsc_cmeta_id}</span> my_variable1c <span class="keyword">and</span> my_variable2c;
     <span class="keyword">enddef</span>;
 <span class="keyword">enddef</span>;</pre>
 
