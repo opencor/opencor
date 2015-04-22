@@ -122,7 +122,7 @@
         <pre><span class="keyword">def model</span> my_model <span class="keyword">as</span>
     <span class="comment">// A single line comment</span>
     ...
-<span class="keyword">endef</span>;</pre>
+<span class="keyword">enddef</span>;</pre>
 
         <p>
             Alternatively, if some text is selected and it does not consist of one or several full lines, then the comment will be rendered as <code>/* XXX */</code>, e.g.
@@ -130,7 +130,7 @@
 
         <pre><span class="keyword">def model</span> my_<span class="comment">/*super_duper_*/</span>model <span class="keyword">as</span>
     ...
-<span class="keyword">endef</span>;</pre>
+<span class="keyword">enddef</span>;</pre>
 
         <p>
             Note that <code>/* XXX */</code> comments are only for convenience and are not serialised back to CellML. Indeed, such comments can be inserted anywhere, including within an equation, e.g.:
@@ -166,7 +166,7 @@
 
         <pre><span class="keyword">def model</span> my_model <span class="keyword">as</span>
     ...
-<span class="keyword">endef</span>;</pre>
+<span class="keyword">enddef</span>;</pre>
 
         <p>
             The model definition itself sits between <code>as</code> and <code>enddef;</code>, and can consist of <a href="#Imports">imports</a>, <a href="#Unit definitions">unit definitions</a>, <a href="#Component definitions">component definitions</a>, <a href="#Group definitions">group definitions</a> and <a href="#Mapping definitions">mapping definitions</a>.
@@ -184,7 +184,7 @@
 
         <pre><span class="keyword">def import using</span> <span class="string">"my_imported_model_uri"</span> <span class="keyword">for</span>
     ...
-<span class="keyword">endef</span>;</pre>
+<span class="keyword">enddef</span>;</pre>
 
         <p>
             To import a <code>unit</code> originally named <code>my_reference_unit</code> and renamed <code>my_imported_unit</code> in our model, we use:
@@ -205,7 +205,7 @@
         <pre><span class="keyword">def import</span> <span class="keyword">using</span> <span class="string">"my_imported_model_uri"</span> <span class="keyword">for</span>
     <span class="keyword">unit</span> my_imported_unit <span class="keyword">using unit</span> my_reference_unit;
     <span class="keyword">comp</span> my_imported_component <span class="keyword">using comp</span> my_reference_component;
-<span class="keyword">endef</span>;</pre>
+<span class="keyword">enddef</span>;</pre>
 
         <span class="anchor" id="Unit definitions"></span>
 
@@ -382,7 +382,7 @@
 
         <pre><span class="keyword">def comp</span> my_component <span class="keyword">as</span>
     ...
-<span class="keyword">endef</span>;</pre>
+<span class="keyword">enddef</span>;</pre>
 
         <p>
             The component definition itself sits between <code>as</code> and <code>enddef;</code>, and can consist of <a href="#Unit definitions">unit definitions</a>, <a href="#Variable definitions">variable definitions</a> and <a href="#Mathematical equations">mathematical equations</a>.
@@ -427,8 +427,44 @@
         </div>
 
         <p>
-            To be done...
+            To <code>def</code>ine a <code>group</code>, we use:
         </p>
+
+        <pre><span class="keyword">def group as</span> ... <span class="keyword">for</span>
+    ...
+<span class="keyword">enddef</span>;</pre>
+
+        <p>
+            A group must be typed using either <code>containment</code> and/or <code>encapsulation</code>. For example, to define a containment group, we would use:
+        </p>
+
+        <pre><span class="keyword">def group as</span> <span class="cellmlkeyword">containment</span> <span class="keyword">for</span>
+    ...
+<span class="keyword">enddef</span>;</pre>
+
+        <p>
+            A containment group can be named. For example, to define a containment group of name <code>my_containment</code>, we would use:
+        </p>
+
+        <pre><span class="keyword">def group as</span> <span class="cellmlkeyword">containment</span> my_containment <span class="keyword">for</span>
+    ...
+<span class="keyword">enddef</span>;</pre>
+
+        <p>
+            An encapsulation group is always nameless, so to define an encapsulation group, we would use:
+        </p>
+
+        <pre><span class="keyword">def group as</span> <span class="cellmlkeyword">encapsulation</span> <span class="keyword">for</span>
+    ...
+<span class="keyword">enddef</span>;</pre>
+
+        <p>
+            A group can have more than one type. For example, to define a group as both an encapsulation group and a containment group (of name <code>my_containment</code>), we would use:
+        </p>
+
+        <pre><span class="keyword">def group as</span> <span class="cellmlkeyword">encapsulation</span> <span class="keyword">and</span> <span class="cellmlkeyword">containment</span> my_containment <span class="keyword">for</span>
+    ...
+<span class="keyword">enddef</span>;</pre>
 
         <span class="anchor" id="Mapping definitions"></span>
 
@@ -468,7 +504,7 @@
 
     <span class="keyword">def comp</span><span class="cmetaId">{my_component_cmeta_id}</span> my_component <span class="keyword">as</span>
         <span class="keyword">def var</span><span class="cmetaId">{my_variable_cmeta_id}</span> my_variable: my_unit <span class="parameterblock">{<span class="keyword">init</span>: <span class="number">3</span>, <span class="keyword">pub</span>: <span class="cellmlkeyword">in</span>, <span class="keyword">priv</span>: <span class="cellmlkeyword">out</span>}</span>;
-    <span class="keyword">endef</span>;
+    <span class="keyword">enddef</span>;
 <span class="keyword">enddef</span>;</pre>
 
         <br/>
