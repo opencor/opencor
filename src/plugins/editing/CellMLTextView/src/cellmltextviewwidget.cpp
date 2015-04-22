@@ -341,7 +341,7 @@ void CellmlTextViewWidget::initialize(const QString &pFileName,
             // Note: we use a single shot to give time to the setting up of the
             //       editing widget to complete...
 
-            mEditorLists << mEditingWidget->editorList();
+            mEditorLists << newEditingWidget->editorList();
 
             QTimer::singleShot(0, this, SLOT(selectFirstItemInEditorList()));
         }
@@ -1074,13 +1074,21 @@ void CellmlTextViewWidget::selectFirstItemInEditorList(EditorList::EditorListWid
         pEditorList->selectFirstItem();
     } else {
         // We came here through a single shot (see initialize()), so rely on the
-        // contents of mEditorLists
+        // contents of mEditorLists by selecting the first item of the first
+        // first editor list, assuming it's still current (i.e. it's still
+        // referenced in mData)
 
         EditorList::EditorListWidget *editorList = mEditorLists.first();
 
         mEditorLists.removeFirst();
 
-        editorList->selectFirstItem();
+        foreach (const CellmlTextViewWidgetData &data, mData.values()) {
+            if (data.editingWidget()->editorList() == editorList) {
+                editorList->selectFirstItem();
+
+                break;
+            }
+        }
     }
 }
 
