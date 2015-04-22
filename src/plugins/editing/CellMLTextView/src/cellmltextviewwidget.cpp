@@ -331,16 +331,14 @@ void CellmlTextViewWidget::initialize(const QString &pFileName,
             newEditingWidget->updateSettings(oldEditingWidget);
         }
 
-        // Update our viewer
+        // Update our viewer or select the first issue with the current file
 
-        if (data.isValid())
+        if (data.isValid()) {
             updateViewer();
+        } else {
+            // Note: we use a single shot to give time to the setting up of the
+            //       editing widget to complete...
 
-        // Select the first issue, if any, with the current file
-        // Note: we use a single shot to give time to the setting up of the
-        //       editing widget to complete...
-
-        if (!data.isValid()) {
             mEditorLists << mEditingWidget->editorList();
 
             QTimer::singleShot(0, this, SLOT(selectFirstItemInEditorList()));
