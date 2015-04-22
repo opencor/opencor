@@ -318,22 +318,22 @@ def model cellml_1_0 as
 
     def group as containment my_containment for
         comp my_component1 incl
-            comp my_component12 incl
-                comp my_component121;
+            comp my_component11 incl
+                comp my_component111;
             endcomp;
 
-            comp my_component13;
+            comp my_component12;
         endcomp;
     enddef;
 
     def group as encapsulation for
-        comp my_component11 incl
-            comp my_component111;
-            comp my_component112;
+        comp my_component1 incl
+            comp my_component11;
+            comp my_component12;
         endcomp;
 
-        comp my_component12 incl
-            comp my_component121;
+        comp my_component2 incl
+            comp my_component21;
         endcomp;
     enddef;
 

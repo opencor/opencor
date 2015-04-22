@@ -4008,17 +4008,17 @@ def model cellml_1_0 as
         comp my_component1 incl
             // In between comment #1720...
 
-            comp my_component12 incl
+            comp my_component11 incl
                 // In between comment #1721...
 
-                comp my_component121;
+                comp my_component111;
 
                 // In between comment #1722...
             endcomp;
 
             // In between comment #1723...
 
-            comp my_component13;
+            comp my_component12;
 
             // In between comment #1724...
         endcomp;
@@ -4033,24 +4033,24 @@ def model cellml_1_0 as
 
         // In between comment #1728...
 
-        comp my_component11 incl
+        comp my_component1 incl
             // In between comment #1729...
 
-            comp my_component111;
+            comp my_component11;
 
             // In between comment #1730...
 
-            comp my_component112;
+            comp my_component12;
 
             // In between comment #1731...
         endcomp;
 
         // In between comment #1732...
 
-        comp my_component12 incl
+        comp my_component2 incl
             // In between comment #1733...
 
-            comp my_component121;
+            comp my_component21;
 
             // In between comment #1734...
         endcomp;
