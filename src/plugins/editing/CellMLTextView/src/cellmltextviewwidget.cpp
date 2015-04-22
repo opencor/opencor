@@ -331,7 +331,8 @@ void CellmlTextViewWidget::initialize(const QString &pFileName,
             newEditingWidget->updateSettings(oldEditingWidget);
         }
 
-        // Update our viewer or select the first issue with the current file
+        // Update our viewer, if everything is fine, or select the first issue
+        // with the current file
 
         if (data.isValid()) {
             updateViewer();
