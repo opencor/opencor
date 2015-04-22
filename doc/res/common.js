@@ -412,10 +412,10 @@ function copyright(relativePath) {
 }
 
 // Render, using KaTeX, all the mathematical equations found in elements that
-// 'support' the "mathematicalEquations" class
+// 'support' the "katexRendering" class
 
-function renderMathematicalEquations() {
-    var mathematicalEquationsElements = document.getElementsByClassName("mathematicalEquations");
+function katexRendering() {
+    var mathematicalEquationsElements = document.getElementsByClassName("katexRendering ");
 
     for (i = 0; i < mathematicalEquationsElements.length; ++i) {
         renderMathInElement(mathematicalEquationsElements[i],

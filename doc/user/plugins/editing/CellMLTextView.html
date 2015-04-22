@@ -22,7 +22,7 @@
                 color: rgb(127, 0, 127);
             }
 
-            span.cmetaid,
+            span.cmetaId,
             span.parameterblock {
                 font-style: italic;
             }
@@ -220,7 +220,7 @@
         <pre><span class="keyword">def unit</span> my_base_unit <span class="keyword">as</span> <span class="cellmlkeyword">base</span> <span class="keyword">unit</span>;</pre>
 
         <p>
-            To <code>def</code>ine a <code>unit</code>, of name <code>my_unit</code>, based on some other units, we use:
+            To <code>def</code>ine a <code>unit</code> of name <code>my_unit</code>, based on some other units, we use:
         </p>
 
         <pre><span class="keyword">def unit</span> my_unit <span class="keyword">as</span>
@@ -285,19 +285,19 @@
             </tr>
         </table>
 
-        <p class="mathematicalEquations">
-            <code>pref</code>ix, <code>expo</code>nent, <code>mult</code>iplier and <code>off</code>set values of $p$, $e$, $m$ and $o$ can be used on a unit $u$ to define a new unit equal to $m \cdot (p \cdot u)^e+o$. For example, to define <code>my_unit</code> as being equal to $3 \cdot (milli \cdot my\_other\_unit)^{-1}+7$, we would use:
+        <p class="katexRendering">
+            Additional information can be provided within the curly brackets. Thus, <code>pref</code>ix, <code>expo</code>nent, <code>mult</code>iplier and <code>off</code>set values of $p$, $e$, $m$ and $o$ can be used on a unit $u$ to define a new unit equal to $m \cdot (p \cdot u)^e+o$. For example, to define <code>my_unit</code> as being equal to $3 \cdot (milli \cdot my\_other\_unit)^{-1}+7$, we would use:
         </p>
 
         <pre><span class="keyword">def unit</span> my_unit <span class="keyword">as</span>
     <span class="keyword">unit</span> my_other_unit <span class="parameterblock">{<span class="keyword">pref</span>: <span class="cellmlkeyword">milli</span>, <span class="keyword">expo</span>: -<span class="number">1</span>, <span class="keyword">mult</span>: <span class="number">3</span>, <span class="keyword">off</span>: <span class="number">7</span>}</span>;
 <span class="keyword">enddef</span>;</pre>
 
-        <p class="mathematicalEquations">
-            By default, <code>pref</code>ix, <code>expo</code>nent, <code>mult</code>iplier and <code>off</code>set have a value of $0$, $1.0$, $1.0$ and $0.0$, respectively. A <code>pref</code>ix value can either be an integer or any of the following prefix names:
+        <p class="katexRendering">
+            By default, <code>pref</code>, <code>expo</code>, <code>mult</code> and <code>off</code> have a value of $0$, $1.0$, $1.0$ and $0.0$, respectively. <code>pref</code> can either be an integer or have any of the following value:
         </p>
 
-        <table class="mathematicalEquations">
+        <table class="katexRendering">
             <tr>
                 <td>yotta</td>
                 <td class="number">$10^{24}$</td>
@@ -395,7 +395,19 @@
         </div>
 
         <p>
-            To be done...
+            To <code>def</code>ine a <code>var</code>iable of name <code>my_variable</code> and of unit <code>my_unit</code>, we use:
+        </p>
+
+        <pre><span class="keyword">def var</span> my_variable: my_unit <span class="parameterblock">{...}</span>;</pre>
+
+        <p class="katexRendering">
+            Additional information can be provided within the curly brackets: an <code>init</code>ial value, a <code>pub</code>lic interface and/or a <code>priv</code>ate interface. For example, to initialise <code>my_variable</code> to $3$ and set its public and private interfaces to <code>in</code> and <code>out</code>, respectively, we would use:
+        </p>
+
+        <pre><span class="keyword">def var</span> my_variable: my_unit <span class="parameterblock">{<span class="keyword">init</span>: <span class="number">3</span>, <span class="keyword">pub</span>: <span class="cellmlkeyword">in</span>, <span class="keyword">priv</span>: <span class="cellmlkeyword">out</span>}</span>;</pre>
+
+        <p>
+            By default, <code>init</code> has no value (i.e. the variable is not initialised) while <code>pub</code> and <code>priv</code> have a value of <code>none</code> (i.e. the variable belongs to the current component and is not visible to other components in the model). <code>init</code> can either take a real number as a value or the name of a variable defined in the current component. Both <code>pub</code> and <code>priv</code> can take any of the following values: <code>none</code>, <code>in</code> or <code>out</code>.
         </p>
 
         <span class="anchor" id="Mathematical equations"></span>
@@ -436,29 +448,33 @@
             The CellML Text format does not support the editing of CellML annotations. However, <code>cmeta:id</code>'s are used to make the link between CellML elements and CellML annotations. So, we need the CellML Text format to support the use of <code>cmeta:id</code>'s and this is done by enclosing a <code>cmeta:id</code> value (e.g. <code>my_cmeta_id</code>) within curly brackets:
         </p>
 
-        <pre><span class="cmetaid">{my_cmeta_id}</span></pre>
+        <pre><span class="cmetaId">{my_cmeta_id}</span></pre>
 
         <p>
             which can then be used to annotate various CellML elements:
         </p>
 
-        <pre><span class="keyword">def model</span><span class="cmetaid">{my_model_cmeta_id}</span> my_model <span class="keyword">as</span>
-    <span class="keyword">def import</span><span class="cmetaid">{my_import_cmeta_id}</span> <span class="keyword">using</span> <span class="string">"my_imported_model_uri"</span> <span class="keyword">for</span>
-        <span class="keyword">unit</span><span class="cmetaid">{my_imported_unit_cmeta_id}</span> my_imported_unit <span class="keyword">using unit</span> my_reference_unit;
-        <span class="keyword">comp</span><span class="cmetaid">{my_imported_component_cmeta_id}</span> my_imported_component <span class="keyword">using comp</span> my_reference_component;
+        <pre><span class="keyword">def model</span><span class="cmetaId">{my_model_cmeta_id}</span> my_model <span class="keyword">as</span>
+    <span class="keyword">def import</span><span class="cmetaId">{my_import_cmeta_id}</span> <span class="keyword">using</span> <span class="string">"my_imported_model_uri"</span> <span class="keyword">for</span>
+        <span class="keyword">unit</span><span class="cmetaId">{my_imported_unit_cmeta_id}</span> my_imported_unit <span class="keyword">using unit</span> my_reference_unit;
+        <span class="keyword">comp</span><span class="cmetaId">{my_imported_component_cmeta_id}</span> my_imported_component <span class="keyword">using comp</span> my_reference_component;
     <span class="keyword">enddef</span>;
 
-    <span class="keyword">def unit</span><span class="cmetaid">{my_base_unit_cmeta_id}</span> my_base_unit <span class="keyword">as</span> <span class="cellmlkeyword">base</span> <span class="keyword">unit</span>;
+    <span class="keyword">def unit</span><span class="cmetaId">{my_base_unit_cmeta_id}</span> my_base_unit <span class="keyword">as</span> <span class="cellmlkeyword">base</span> <span class="keyword">unit</span>;
 
-    <span class="keyword">def unit</span><span class="cmetaid">{my_unit_cmeta_id}</span> my_unit <span class="keyword">as</span>
-        <span class="keyword">unit</span><span class="cmetaid">{my_other_unit_cmeta_id}</span> my_other_unit <span class="parameterblock">{<span class="keyword">pref</span>: <span class="cellmlkeyword">milli</span>, <span class="keyword">expo</span>: -<span class="number">1</span>, <span class="keyword">mult</span>: <span class="number">3</span>, <span class="keyword">off</span>: <span class="number">7</span>}</span>;
+    <span class="keyword">def unit</span><span class="cmetaId">{my_unit_cmeta_id}</span> my_unit <span class="keyword">as</span>
+        <span class="keyword">unit</span><span class="cmetaId">{my_other_unit_cmeta_id}</span> my_other_unit <span class="parameterblock">{<span class="keyword">pref</span>: <span class="cellmlkeyword">milli</span>, <span class="keyword">expo</span>: -<span class="number">1</span>, <span class="keyword">mult</span>: <span class="number">3</span>, <span class="keyword">off</span>: <span class="number">7</span>}</span>;
     <span class="keyword">enddef</span>;
+
+    <span class="keyword">def comp</span><span class="cmetaId">{my_component_cmeta_id}</span> my_component <span class="keyword">as</span>
+        <span class="keyword">def var</span><span class="cmetaId">{my_variable_cmeta_id}</span> my_variable: my_unit <span class="parameterblock">{<span class="keyword">init</span>: <span class="number">3</span>, <span class="keyword">pub</span>: <span class="cellmlkeyword">in</span>, <span class="keyword">priv</span>: <span class="cellmlkeyword">out</span>}</span>;
+    <span class="keyword">endef</span>;
 <span class="keyword">enddef</span>;</pre>
 
         <br/>
 
         <script type="text/javascript">
-            renderMathematicalEquations();
+            katexRendering();
 
             copyright("../../..");
         </script>
