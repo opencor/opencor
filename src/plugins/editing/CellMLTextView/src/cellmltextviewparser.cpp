@@ -1909,13 +1909,18 @@ bool CellmlTextViewParser::parseGroupDefinition(QDomNode &pDomNode)
 
             relationshipRefElement.setAttribute("relationship", "containment");
 
+            // Try to parse for a cmeta:id
+
+            mScanner.getNextToken();
+
+            if (!parseCmetaId(relationshipRefElement))
+                return false;
+
             // Expect an identifier, "and" or "for"
 
             static const CellmlTextViewScanner::TokenTypes tokenTypes = CellmlTextViewScanner::TokenTypes() << CellmlTextViewScanner::IdentifierToken
                                                                                                             << CellmlTextViewScanner::AndToken
                                                                                                             << CellmlTextViewScanner::ForToken;
-
-            mScanner.getNextToken();
 
             if (!tokenType(groupElement, QObject::tr("An identifier, '%1' or '%2'").arg("and", "for"),
                            tokenTypes)) {
@@ -1942,9 +1947,12 @@ bool CellmlTextViewParser::parseGroupDefinition(QDomNode &pDomNode)
 
             relationshipRefElement.setAttribute("relationship", "encapsulation");
 
-            // Fetch the next token
+            // Try to parse for a cmeta:id
 
             mScanner.getNextToken();
+
+            if (!parseCmetaId(relationshipRefElement))
+                return false;
         }
 
         // Expect "and" or "for"

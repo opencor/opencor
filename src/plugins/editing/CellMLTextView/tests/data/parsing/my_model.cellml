@@ -755,10 +755,10 @@
         </component_ref>
     </group>
     <!-- In between comment #49...-->
-    <group>
-        <relationship_ref relationship="encapsulation"/>
-        <relationship_ref name="my_containment" relationship="containment"/>
-        <component_ref component="my_component"/>
+    <group cmeta:id="my_group_cmeta_id">
+        <relationship_ref cmeta:id="my_encapsulation_cmeta_id" relationship="encapsulation"/>
+        <relationship_ref cmeta:id="my_containment_cmeta_id" name="my_containment" relationship="containment"/>
+        <component_ref cmeta:id="my_component_cmeta_id" component="my_component"/>
     </group>
     <!-- In between comment #50...-->
     <connection cmeta:id="my_connection_cmeta_id">

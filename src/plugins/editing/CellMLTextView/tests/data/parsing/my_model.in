@@ -302,8 +302,8 @@ def model{my_model_cmeta_id} my_model as
 
     // In between comment #49...
 
-    def group as encapsulation and containment my_containment for
-        comp my_component;
+    def group{my_group_cmeta_id} as encapsulation{my_encapsulation_cmeta_id} and containment{my_containment_cmeta_id} my_containment for
+        comp{my_component_cmeta_id} my_component;
     enddef;
 
     // In between comment #50...
