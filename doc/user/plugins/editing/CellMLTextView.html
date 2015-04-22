@@ -467,7 +467,7 @@
 <span class="keyword">enddef</span>;</pre>
 
         <p>
-            A group definition is used whenever there is a need for a hierarchy of components. Some components may be included in others. For example, to define a group where both <code>my_component1</code> and <code>my_component2</code> are at the same level, and where <code>my_component11</code>, <code>my_component12</code> and <code>my_component13</code> are included in <code>my_component1</code>, we would use:
+            A group definition is used whenever there is a need for a hierarchy of components. Some components may be included in others. For example, to define a group where both <code>my_component1</code> and <code>my_component2</code> are at the top level, and where <code>my_component1</code> includes <code>my_component11</code>, <code>my_component12</code> and <code>my_component13</code>, we would use:
         </p>
 
         <pre><span class="keyword">def group as</span> ... <span class="keyword">for</span>
@@ -478,6 +478,20 @@
     <span class="keyword">endcomp</span>;
 
     <span class="keyword">comp</span> my_component2;
+<span class="keyword">enddef</span>;</pre>
+
+        <p>
+            Similarly, to define a group where <code>my_component1</code> is at the top level, where <code>my_component1</code> includes <code>my_component11</code> and <code>my_component12</code>, and where <code>my_component11</code> includes <code>my_component111</code>, we would use:
+        </p>
+
+        <pre><span class="keyword">def group as</span> ... <span class="keyword">for</span>
+    <span class="keyword">comp</span> my_component1 <span class="keyword">incl</span>
+        <span class="keyword">comp</span> my_component11 <span class="keyword">incl</span>
+            <span class="keyword">comp</span> my_component111;
+        <span class="keyword">endcomp</span>;
+
+        <span class="keyword">comp</span> my_component12;
+    <span class="keyword">endcomp</span>;
 <span class="keyword">enddef</span>;</pre>
 
         <span class="anchor" id="Mapping definitions"></span>
