@@ -415,7 +415,7 @@ function copyright(relativePath) {
 // 'support' the "katexRendering" class
 
 function katexRendering() {
-    var mathematicalEquationsElements = document.getElementsByClassName("katexRendering ");
+    var mathematicalEquationsElements = document.getElementsByClassName("katexRendering");
 
     for (i = 0; i < mathematicalEquationsElements.length; ++i) {
         renderMathInElement(mathematicalEquationsElements[i],
