@@ -444,7 +444,7 @@
 ...</pre>
 
         <p>
-            As can be seen, constant values must have a unit. For example, to define <code>3</code> as being <code>dimensionless</code> and <code>5</code> as having units of <code>my_unit</code>, we would use:
+            As can be seen, constant values must have a unit. For example, to define <code>3</code> as being <code>dimensionless</code> and <code>5</code> as having <code>my_unit</code> as a unit, we would use:
         </p>
 
         <pre><span class="number">3</span><span class="unit">{<span class="cellmlkeyword">dimensionless</span>}</span>
@@ -576,6 +576,9 @@
 
     <span class="keyword">def comp</span><span class="cmetaId">{my_component_cmeta_id}</span> my_component <span class="keyword">as</span>
         <span class="keyword">var</span><span class="cmetaId">{my_variable_cmeta_id}</span> my_variable: my_unit <span class="parameterblock">{<span class="keyword">init</span>: <span class="number">3</span>, <span class="keyword">pub</span>: <span class="cellmlkeyword">in</span>, <span class="keyword">priv</span>: <span class="cellmlkeyword">out</span>}</span>;
+
+        a =<span class="cmetaId">{my_a_equation_cmeta_id}</span> b+c;
+        <span class="keyword">ode</span>(d, t) =<span class="cmetaId">{my_d_equation_cmeta_id}</span> e+f;
     <span class="keyword">enddef</span>;
 
     <span class="keyword">def group</span><span class="cmetaId">{my_group_cmeta_id}</span> <span class="keyword">as</span> <span class="cellmlkeyword">encapsulation</span><span class="cmetaId">{my_encapsulation_cmeta_id}</span> <span class="keyword">and</span> <span class="cellmlkeyword">containment</span><span class="cmetaId">{my_containment_cmeta_id}</span> my_containment <span class="keyword">for</span>
