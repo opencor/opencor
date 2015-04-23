@@ -436,12 +436,19 @@
         <pre><span class="keyword">ode</span>(f, t, <span class="number">1</span><span class="unit">{<span class="cellmlkeyword">dimensionless</span>}</span>) = ...;</pre>
 
         <p class="katexRendering">
-            which means that to write $\frac{d^2 f}{dt^2}=...$, $\frac{d^3 f}{dt^3}=...$, etc., we would use:
+            This means that to write $\frac{d^2 f}{dt^2}=...$, $\frac{d^3 f}{dt^3}=...$, etc., we would use:
         </p>
 
         <pre><span class="keyword">ode</span>(f, t, <span class="number">2</span><span class="unit">{<span class="cellmlkeyword">dimensionless</span>}</span>) = ...;
 <span class="keyword">ode</span>(f, t, <span class="number">3</span><span class="unit">{<span class="cellmlkeyword">dimensionless</span>}</span>) = ...;
 ...</pre>
+
+        <p>
+            As can be seen, constant values must have a unit. For example, to define <code>3</code> as being <code>dimensionless</code> and <code>5</code> as having units of <code>my_unit</code>, we would use:
+        </p>
+
+        <pre><span class="number">3</span><span class="unit">{<span class="cellmlkeyword">dimensionless</span>}</span>
+<span class="number">5</span><span class="unit">{my_unit}</span></pre>
 
         <span class="anchor" id="Group definitions"></span>
 
