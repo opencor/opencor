@@ -93,7 +93,7 @@
         </p>
 
         <p>
-            Save the model using <code>Save</code> under the <code>File</code> menu (or press <code>Ctrl</code>+<code>S</code> on Windows and Linux, or <code>Cmd</code>+<code>S</code> on OS X) and choosing <code>.cellml</code> as the file format (<code>.cellml</code> is not strictly required but is best practice). With the model saved, the other editing views become available. One is the <em><a href="plugins/editing/CellMLTextView.html">CellML Text</a></em> view (the view used to enter the code above). Another is the <em><a href="plugins/editing/RawCellMLView.html">Raw CellML</a></em> view that displays the way the model is stored (note that positioning the cursor over part of the code shows the mathematics in this view also), and another is the <em><a href="plugins/editing/RawView.html">Raw</a></em> view that can be used to edit any text-based file.
+            Save the model using <code>Save</code> under the <code>File</code> menu (or press <code>Ctrl</code>+<code>S</code> on Windows and Linux, or <code>Command</code>+<code>S</code> on OS X) and choosing <code>.cellml</code> as the file format (<code>.cellml</code> is not strictly required but is best practice). With the model saved, the other editing views become available. One is the <em><a href="plugins/editing/CellMLTextView.html">CellML Text</a></em> view (the view used to enter the code above). Another is the <em><a href="plugins/editing/RawCellMLView.html">Raw CellML</a></em> view that displays the way the model is stored (note that positioning the cursor over part of the code shows the mathematics in this view also), and another is the <em><a href="plugins/editing/RawView.html">Raw</a></em> view that can be used to edit any text-based file.
         </p>
 
         <p>
@@ -234,6 +234,46 @@
 
         <p class="center">
             <img class="link" src="res/pics/howToGetStartedScreenshot02.png" width=360 height=270 imagepopup>
+        </p>
+
+        <div class="section">
+            Opening an existing CellML file
+        </div>
+
+        <p>
+            Go to the <code>File</code> menu and select the <code>Open...</code> menu item. Browse to the folder containing CellML files and select one. Note that this brings up a new tabbed window and you can have any number of CellML files open at the same time in order to quickly move between them. A CellML file can be closed by clicking on the close button in the corresponding file tab, or by selecting the <code>File</code> | <code>Close</code> menu or by pressing <code>Ctrl</code>+<code>W</code> (on Windows and Linux) or <code>Command</code>+<code>W</code> (on OS X).
+        </p>
+
+        <p>
+            You can also access CellML files from the left hand windows in the first screenshot above. If those windows are not currently visible, use <code>Ctrl</code>+<code>Space</code> (on Windows and Linux) or <code>Alt</code>+<code>Space</code> (on OS X) to make them reappear (or use the <code>View</code> | <code>Windows</code> menu). CellML files can then be accessed from any one of those three windows – <em><a href="plugins/organisation/CellMLModelRepositoryWindow.html">CellML Model Repository</a></em>, <em><a href="plugins/organisation/FileBrowserWindow.html">File Browser</a></em> or <em><a href="plugins/organisation/FileOrganiserWindow.html">File Organiser</a></em>. For a CellML file under the <em>File Browser</em> or <em>File Organiser</em> window, either double click it or 'drag and drop' it over the central area to open it.
+        </p>
+
+        <p>
+            To click on a model in the <em>CellML Model Repository</em> window opens a new browser window with the latest published <a href="https://abi-software-book.readthedocs.org/en/latest/glossary.html#term-exposure">exposure</a> for that model. To open this model in OpenCOR, retrieve the <a href="http://en.wikipedia.org/wiki/Uniform_resource_identifier">URI</a> of the required CellML file and copy it into the text box that appears under <code>Open Remote...</code> in the <code>File</code> menu. For example, to click on the <a href="https://models.physiomeproject.org/exposure/812eeafbc8ebe97bef435340c80cfcce">Noble, 1962</a> link opens the following page:
+        </p>
+
+        <p class="center">
+            <img class="link" src="res/pics/howToGetStartedScreenshot03.png" width=360 height=270 imagepopup>
+        </p>
+
+        <p>
+            The <a href="https://abi-software-book.readthedocs.org/en/latest/glossary.html#term-workspace">workspace</a> for that exposure is:
+        </p>
+
+        <p class="center">
+            <img class="link" src="res/pics/howToGetStartedScreenshot04.png" width=360 height=270 imagepopup>
+        </p>
+
+        <p>
+            We want the URI of the CellML file that describes the <a href="http://www.ncbi.nlm.nih.gov/pmc/articles/PMC1359535/">Noble 1962</a> model, so we need to click on the <code>noble_1962.cellml</code> link:
+        </p>
+
+        <p class="center">
+            <img class="link" src="res/pics/howToGetStartedScreenshot05.png" width=360 height=270 imagepopup>
+        </p>
+
+        <p>
+            The URI we are after is: <code>https://models.physiomeproject.org/workspace/noble_1962/rawfile/a241a010538a2815877572e8ac0c016cc121e0e3/noble_1962.cellml</code>.
         </p>
 
         <script type="text/javascript">
