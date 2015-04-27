@@ -426,7 +426,7 @@
         </div>
 
         <p class="katexRendering">
-            A mathematical equation must either have an identifier or an ODE on its left hand side (LHS), i.e. $x=...$ and $\frac{dx}{dt}=...$, respectively. To write such equations, we would use:
+            A mathematical equation must either have an identifier or an ODE on its left hand side, i.e. $x=...$ and $\frac{dx}{dt}=...$, respectively. To write such equations, we would use:
         </p>
 
         <pre>x = ...;</pre>
@@ -459,7 +459,7 @@
 <span class="number">5</span><span class="unit">{my_unit}</span></pre>
 
         <p>
-            Mathematical equations can make use of the following mathematical operators, elements, etc.:
+            A mathematical equation can use any of the following mathematical operators, elements and constants:
         </p>
 
         <ul>
@@ -531,7 +531,7 @@
                     <tr>
                         <td class="center"><code>pow</code></td>
                         <td>Exponentiation (generic)</td>
-                        <td><pre class="sampleCode"><span class="keyword">pow</span>(x, <span class="number">3</span><span class="unit">{dimensionless}</span>)</pre></td>
+                        <td><pre class="sampleCode"><span class="keyword">pow</span>(x, <span class="number">3</span><span class="unit">{<span class="cellmlKeyword">dimensionless</span>}</span>)</pre></td>
                     </tr>
                     <tr>
                         <td class="center"><code>sqr</code></td>
@@ -541,7 +541,7 @@
                     <tr>
                         <td class="center"><code>root</code></td>
                         <td>Root (generic)</td>
-                        <td><pre class="sampleCode"><span class="keyword">root</span>(x, <span class="number">3</span><span class="unit">{dimensionless}</span>)</pre></td>
+                        <td><pre class="sampleCode"><span class="keyword">root</span>(x, <span class="number">3</span><span class="unit">{<span class="cellmlKeyword">dimensionless</span>}</span>)</pre></td>
                     </tr>
                     <tr>
                         <td class="center"><code>sqrt</code></td>
@@ -567,7 +567,7 @@
                         <td class="center"><code>log</code></td>
                         <td>Logarithm</td>
                         <td><pre class="sampleCode"><span class="keyword">log</span>(x)
-<span class="keyword">log</span>(x, <span class="number">3</span><span class="unit">{dimensionless}</span>)</pre></td>
+<span class="keyword">log</span>(x, <span class="number">3</span><span class="unit">{<span class="cellmlKeyword">dimensionless</span>}</span>)</pre></td>
                     </tr>
                     <tr>
                         <td class="center"><code>floor</code></td>
@@ -583,6 +583,11 @@
                         <td class="center"><code>fact</code></td>
                         <td>Factorial</td>
                         <td><pre class="sampleCode"><span class="keyword">fact</span>(x)</pre></td>
+                    </tr>
+                    <tr>
+                        <td class="center"><code>rem</code></td>
+                        <td>Remainder</td>
+                        <td><pre class="sampleCode"><span class="keyword">rem</span>(x, <span class="number">3</span><span class="unit">{<span class="cellmlKeyword">dimensionless</span>}</span>)</pre></td>
                     </tr>
                 </table>
             </li>
@@ -621,7 +626,7 @@
                         <td class="center"><code>ode</code></td>
                         <td>Differentiation</td>
                         <td><pre class="sampleCode"><span class="keyword">ode</span>(x, t)
-<span class="keyword">ode</span>(x, t, <span class="number">2</span><span class="unit">{dimensionless}</span>)</pre></td>
+<span class="keyword">ode</span>(x, t, <span class="number">2</span><span class="unit">{<span class="cellmlKeyword">dimensionless</span>}</span>)</pre></td>
                     </tr>
                 </table>
             </li>
@@ -776,6 +781,17 @@
                 </table>
             </li>
         </ul>
+
+        <p class="katexRendering">
+            A piecewise statement can also be used in the top-level of the right hand side of a mathematical equation. For example, to define $x$ as being equal to $y+z$ when $x > 0$ and $y-z$ otherwise, we would use:
+        </p>
+
+        <pre>x = <span class="keyword">sel</span>
+    <span class="keyword">case</span> x > <span class="number">0</span><span class="unit">{<span class="cellmlKeyword">dimensionless</span>}</span>:
+        y+z;
+    <span class="keyword">otherwise</span>:
+        y-z;
+<span class="keyword">endsel</span>;</pre>
 
         <span class="anchor" id="Group definitions"></span>
 
