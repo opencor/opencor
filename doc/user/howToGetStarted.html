@@ -12,6 +12,7 @@
         <script src="../3rdparty/jQuery/jquery.js" type="text/javascript"></script>
         <script src="../res/common.js" type="text/javascript"></script>
         <script src="res/menu.js" type="text/javascript"></script>
+        <script src="res/imagepopup.js" type="text/javascript"></script>
     </head>
     <body ondragstart="return false;" ondrop="return false;">
         <script type="text/javascript">
@@ -19,8 +20,30 @@
         </script>
 
         <p>
-            To be done...
+            To get you sarted with <a href="http://www.opencor.ws/">OpenCOR</a>, we show you how to install and run the software, and how to author and edit models. We start by creating a simple model from scratch, saving it as a <a href="http://www.cellml.org/">CellML</a> file and running model simulations. We next try opening existing CellML models, both from a local directory and from the <a href="http://models.cellml.org/">CellML Model Repository</a>.
         </p>
+
+        <div class="section">
+            Downloading, installing and launching OpenCOR
+        </div>
+
+        <ul>
+            <li>Download OpenCOR from <a href="http://www.opencor.ws/downloads/">www.opencor.ws/downloads</a> (versions are available for <a href="http://en.wikipedia.org/wiki/Microsoft_Windows">Windows</a>, <a href="http://en.wikipedia.org/wiki/Linux">Linux</a> and <a href="http://en.wikipedia.org/wiki/OS_X">OS X</a>).</li>
+            <li>Install OpenCOR by running its installer (on Windows and OS X), or by uncompressing its ZIP (on Windows and OS X) or Tarball (on Linux) file.</li>
+            <li>
+                Launch OpenCOR through your system (if you ran the installer) or by double clicking on <code>[OpenCOR]/OpenCOR.vbs</code> (or <code>[OpenCOR]/bin/OpenCOR.exe</code>), <code>[OpenCOR]/bin/OpenCOR</code> or <code>[OpenCOR]/OpenCOR</code> on Windows, Linux and OS X, respectively. A window will appear that looks like:
+
+                <p class="center">
+                    <img class="link" src="userInterfaces/res/pics/screenshot01.png" width=360 height=270 imagepopup>
+                </p>
+
+                The central area is used to interact with files. By default, no files are open, hence the OpenCOR logo is shown instead. To the sides, there are dockable windows, which provide additional features. Those windows can be dragged and dropped to the top or bottom of the central area, as shown below, or they can be individually undocked or closed. All closed windows can be re-displayed by enabling them in the <code>View</code> | <code>Windows</code> menu, or by selecting the <code>Tools</code> | <code>Reset All</code> menu. To click on <code>Ctrl+Space</code> (on Windows and Linux) or on <code>Alt+Space</code> (on OS X) removes (for less clutter) or restores those side windows.
+
+                <p class="center">
+                    <img class="link" src="userInterfaces/res/pics/screenshot02.png" width=360 height=270 imagepopup>
+                </p>
+            </li>
+        </ul>
 
         <script type="text/javascript">
             copyright("..");
