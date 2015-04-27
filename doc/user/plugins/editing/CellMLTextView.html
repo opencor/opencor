@@ -18,12 +18,17 @@
         <script src="../../res/imagepopup.js" type="text/javascript"></script>
 
         <style>
-            span.cellmlkeyword {
+            pre.sampleCode {
+                margin: 0px;
+                padding: 0px;
+            }
+
+            span.cellmlKeyword {
                 color: rgb(127, 0, 127);
             }
 
             span.cmetaId,
-            span.parameterblock,
+            span.parameterBlock,
             span.unit {
                 font-style: italic;
             }
@@ -221,16 +226,16 @@
             To <code>def</code>ine a <code>base unit</code> of name <code>my_base_unit</code>, we use:
         </p>
 
-        <pre><span class="keyword">def unit</span> my_base_unit <span class="keyword">as</span> <span class="cellmlkeyword">base</span> <span class="keyword">unit</span>;</pre>
+        <pre><span class="keyword">def unit</span> my_base_unit <span class="keyword">as</span> <span class="cellmlKeyword">base</span> <span class="keyword">unit</span>;</pre>
 
         <p>
             To <code>def</code>ine a <code>unit</code> of name <code>my_unit</code>, based on some other units, we use:
         </p>
 
         <pre><span class="keyword">def unit</span> my_unit <span class="keyword">as</span>
-    <span class="keyword">unit</span> my_other_unit <span class="parameterblock">{...}</span>;
-    <span class="keyword">unit</span> <span class="cellmlkeyword">second</span> <span class="parameterblock">{...}</span>;
-    <span class="keyword">unit</span> <span class="cellmlkeyword">litre</span> <span class="parameterblock">{...}</span>;
+    <span class="keyword">unit</span> my_other_unit <span class="parameterBlock">{...}</span>;
+    <span class="keyword">unit</span> <span class="cellmlKeyword">second</span> <span class="parameterBlock">{...}</span>;
+    <span class="keyword">unit</span> <span class="cellmlKeyword">litre</span> <span class="parameterBlock">{...}</span>;
     ...
 <span class="keyword">enddef</span>;</pre>
 
@@ -294,7 +299,7 @@
         </p>
 
         <pre><span class="keyword">def unit</span> my_unit <span class="keyword">as</span>
-    <span class="keyword">unit</span> my_other_unit <span class="parameterblock">{<span class="keyword">pref</span>: <span class="cellmlkeyword">milli</span>, <span class="keyword">expo</span>: -<span class="number">1</span>, <span class="keyword">mult</span>: <span class="number">3</span>, <span class="keyword">off</span>: <span class="number">7</span>}</span>;
+    <span class="keyword">unit</span> my_other_unit <span class="parameterBlock">{<span class="keyword">pref</span>: <span class="cellmlKeyword">milli</span>, <span class="keyword">expo</span>: -<span class="number">1</span>, <span class="keyword">mult</span>: <span class="number">3</span>, <span class="keyword">off</span>: <span class="number">7</span>}</span>;
 <span class="keyword">enddef</span>;</pre>
 
         <p class="katexRendering">
@@ -402,13 +407,13 @@
             To <code>def</code>ine a <code>var</code>iable of name <code>my_variable</code> and of unit <code>my_unit</code>, we use:
         </p>
 
-        <pre><span class="keyword">var</span> my_variable: my_unit <span class="parameterblock">{...}</span>;</pre>
+        <pre><span class="keyword">var</span> my_variable: my_unit <span class="parameterBlock">{...}</span>;</pre>
 
         <p class="katexRendering">
             Additional information can be provided within the curly brackets: an <code>init</code>ial value, a <code>pub</code>lic interface and/or a <code>priv</code>ate interface. For example, to initialise <code>my_variable</code> to $3$ and set its public and private interfaces to <code>in</code> and <code>out</code>, respectively, we would use:
         </p>
 
-        <pre><span class="keyword">var</span> my_variable: my_unit <span class="parameterblock">{<span class="keyword">init</span>: <span class="number">3</span>, <span class="keyword">pub</span>: <span class="cellmlkeyword">in</span>, <span class="keyword">priv</span>: <span class="cellmlkeyword">out</span>}</span>;</pre>
+        <pre><span class="keyword">var</span> my_variable: my_unit <span class="parameterBlock">{<span class="keyword">init</span>: <span class="number">3</span>, <span class="keyword">pub</span>: <span class="cellmlKeyword">in</span>, <span class="keyword">priv</span>: <span class="cellmlKeyword">out</span>}</span>;</pre>
 
         <p>
             By default, <code>init</code> has no value (i.e. the variable is not initialised) while <code>pub</code> and <code>priv</code> have a value of <code>none</code> (i.e. the variable belongs to the current component and is not visible to other components in the model). <code>init</code> can either take a real number as a value or the name of a variable defined in the current component. Both <code>pub</code> and <code>priv</code> can take any of the following values: <code>none</code>, <code>in</code> or <code>out</code>.
@@ -436,57 +441,178 @@
             Here, the ODE is a first-order ODE and it could have been written:
         </p>
 
-        <pre><span class="keyword">ode</span>(f, t, <span class="number">1</span><span class="unit">{<span class="cellmlkeyword">dimensionless</span>}</span>)</pre>
+        <pre><span class="keyword">ode</span>(f, t, <span class="number">1</span><span class="unit">{<span class="cellmlKeyword">dimensionless</span>}</span>)</pre>
 
         <p class="katexRendering">
             This means that to write $\frac{d^2 f}{dt^2}$, $\frac{d^3 f}{dt^3}$, etc., we would use:
         </p>
 
-        <pre><span class="keyword">ode</span>(f, t, <span class="number">2</span><span class="unit">{<span class="cellmlkeyword">dimensionless</span>}</span>)
-<span class="keyword">ode</span>(f, t, <span class="number">3</span><span class="unit">{<span class="cellmlkeyword">dimensionless</span>}</span>)
+        <pre><span class="keyword">ode</span>(f, t, <span class="number">2</span><span class="unit">{<span class="cellmlKeyword">dimensionless</span>}</span>)
+<span class="keyword">ode</span>(f, t, <span class="number">3</span><span class="unit">{<span class="cellmlKeyword">dimensionless</span>}</span>)
 ...</pre>
 
         <p>
             As can be seen, constant values must have a unit. For example, to define <code>3</code> as being <code>dimensionless</code> and <code>5</code> as having <code>my_unit</code> as a unit, we would use:
         </p>
 
-        <pre><span class="number">3</span><span class="unit">{<span class="cellmlkeyword">dimensionless</span>}</span>
+        <pre><span class="number">3</span><span class="unit">{<span class="cellmlKeyword">dimensionless</span>}</span>
 <span class="number">5</span><span class="unit">{my_unit}</span></pre>
 
         <p>
-            <a href="http://www.cellml.org/">CellML</a>, via <a href="http://www.w3.org/Math/">MathML</a>, supports various relational operators:
+            Mathematical equations can make use of the following mathematical operators, elements, etc.:
         </p>
 
-        <table>
-            <tr>
-                <td class="center">=</td>
-                <td>Equality (assignment)</td>
-            </tr>
-            <tr>
-                <td class="center">==</td>
-                <td>Equality (binary)</td>
-            </tr>
-            <tr>
-                <td class="center">&lt;&gt;</td>
-                <td>Inequality</td>
-            </tr>
-            <tr>
-                <td class="center">&gt;</td>
-                <td>Greater than</td>
-            </tr>
-            <tr>
-                <td class="center">&lt;</td>
-                <td>Lower than</td>
-            </tr>
-            <tr>
-                <td class="center">&gt;=</td>
-                <td>Greater than or equal to</td>
-            </tr>
-            <tr>
-                <td class="center">&lt;=</td>
-                <td>Lower than or equal to</td>
-            </tr>
-        </table>
+        <ul>
+            <li>
+                Relational operators:
+
+                <table>
+                    <tr>
+                        <td class="center"><code>=</code></td>
+                        <td>Equality (assignment)</td>
+                        <td><pre class="sampleCode">x = y</td>
+                    </tr>
+                    <tr>
+                        <td class="center"><code>==</code></td>
+                        <td>Equality (binary)</td>
+                        <td><pre class="sampleCode">x == y</td>
+                    </tr>
+                    <tr>
+                        <td class="center"><code>&lt;&gt;</code></td>
+                        <td>Inequality</td>
+                        <td><pre class="sampleCode">x &lt;&gt; y</td>
+                    </tr>
+                    <tr>
+                        <td class="center"><code>&gt;</code></td>
+                        <td>Greater than</td>
+                        <td><pre class="sampleCode">x &gt; y</td>
+                    </tr>
+                    <tr>
+                        <td class="center"><code>&lt;</code></td>
+                        <td>Lower than</td>
+                        <td><pre class="sampleCode">x &lt; y</td>
+                    </tr>
+                    <tr>
+                        <td class="center"><code>&gt;=</code></td>
+                        <td>Greater than or equal to</td>
+                        <td><pre class="sampleCode">x &gt;= y</td>
+                    </tr>
+                    <tr>
+                        <td class="center"><code>&lt;=</code></td>
+                        <td>Lower than or equal to</td>
+                        <td><pre class="sampleCode">x &lt;= y</td>
+                    </tr>
+                </table>
+            </li>
+            <li>
+                Arithmetic operators:
+
+                <table>
+                    <tr>
+                        <td class="center"><code>+</code></td>
+                        <td>Addition</td>
+                        <td><pre class="sampleCode">x+y</td>
+                    </tr>
+                    <tr>
+                        <td class="center"><code>-</code></td>
+                        <td>Subtraction</td>
+                        <td><pre class="sampleCode">x-y</td>
+                    </tr>
+                    <tr>
+                        <td class="center"><code>*</code></td>
+                        <td>Multiplication</td>
+                        <td><pre class="sampleCode">x*y</td>
+                    </tr>
+                    <tr>
+                        <td class="center"><code>/</code></td>
+                        <td>Division</td>
+                        <td><pre class="sampleCode">x/y</td>
+                    </tr>
+                    <tr>
+                        <td class="center"><code>pow</code></td>
+                        <td>Exponentiation (generic)</td>
+                        <td><pre class="sampleCode"><span class="keyword">pow</span>(x, <span class="number">3</span><span class="unit">{dimensionless}</span>)</pre></td>
+                    </tr>
+                    <tr>
+                        <td class="center"><code>sqr</code></td>
+                        <td>Exponentiation (square)</td>
+                        <td><pre class="sampleCode"><span class="keyword">sqr</span>(x)</pre></td>
+                    </tr>
+                    <tr>
+                        <td class="center"><code>root</code></td>
+                        <td>Root (generic)</td>
+                        <td><pre class="sampleCode"><span class="keyword">root</span>(x, <span class="number">3</span><span class="unit">{dimensionless}</span>)</pre></td>
+                    </tr>
+                    <tr>
+                        <td class="center"><code>sqrt</code></td>
+                        <td>Root (square)</td>
+                        <td><pre class="sampleCode"><span class="keyword">sqrt</span>(x)</pre></td>
+                    </tr>
+                    <tr>
+                        <td class="center"><code>abs</code></td>
+                        <td>Absolute value</td>
+                        <td><pre class="sampleCode"><span class="keyword">abs</span>(x)</pre></td>
+                    </tr>
+                    <tr>
+                        <td class="center"><code>exp</code></td>
+                        <td>Exponential</td>
+                        <td><pre class="sampleCode"><span class="keyword">exp</span>(x)</pre></td>
+                    </tr>
+                    <tr>
+                        <td class="center"><code>ln</code></td>
+                        <td>Natural logarithm</td>
+                        <td><pre class="sampleCode"><span class="keyword">ln</span>(x)</pre></td>
+                    </tr>
+                    <tr>
+                        <td class="center"><code>log</code></td>
+                        <td>Logarithm</td>
+                        <td><pre class="sampleCode"><span class="keyword">log</span>(x)</pre></td>
+                    </tr>
+                    <tr>
+                        <td class="center"><code>floor</code></td>
+                        <td>Floor</td>
+                        <td><pre class="sampleCode"><span class="keyword">floor</span>(x)</pre></td>
+                    </tr>
+                    <tr>
+                        <td class="center"><code>ceil</code></td>
+                        <td>Ceiling</td>
+                        <td><pre class="sampleCode"><span class="keyword">ceil</span>(x)</pre></td>
+                    </tr>
+                    <tr>
+                        <td class="center"><code>fact</code></td>
+                        <td>Factorial</td>
+                        <td><pre class="sampleCode"><span class="keyword">fact</span>(x)</pre></td>
+                    </tr>
+                </table>
+            </li>
+            <li>
+                Logical operators:
+
+                <table>
+                    <tr>
+                        <td class="center"><code>and</code></td>
+                        <td>And</td>
+                        <td><pre class="sampleCode">x <span class="keyword">and</span> y</td>
+                    </tr>
+                    <tr>
+                        <td class="center"><code>or</code></td>
+                        <td>Or</td>
+                        <td><pre class="sampleCode">x <span class="keyword">or</span> y</td>
+                    </tr>
+                    <tr>
+                        <td class="center"><code>xor</code></td>
+                        <td>Exclusive or</td>
+                        <td><pre class="sampleCode">x <span class="keyword">xor</span> y</td>
+                    </tr>
+                    <tr>
+                        <td class="center"><code>not</code></td>
+                        <td>Not</td>
+                        <td><pre class="sampleCode"><span class="keyword">not</span> x
+<span class="keyword">not</span>(x+y)</td>
+                    </tr>
+                </table>
+            </li>
+        </ul>
 
         <span class="anchor" id="Group definitions"></span>
 
@@ -506,7 +632,7 @@
             A group must be typed using either <code>containment</code> and/or <code>encapsulation</code>. For example, to define a containment group, we would use:
         </p>
 
-        <pre><span class="keyword">def group as</span> <span class="cellmlkeyword">containment</span> <span class="keyword">for</span>
+        <pre><span class="keyword">def group as</span> <span class="cellmlKeyword">containment</span> <span class="keyword">for</span>
     ...
 <span class="keyword">enddef</span>;</pre>
 
@@ -514,7 +640,7 @@
             A containment group can be named. For example, to define a containment group of name <code>my_containment</code>, we would use:
         </p>
 
-        <pre><span class="keyword">def group as</span> <span class="cellmlkeyword">containment</span> my_containment <span class="keyword">for</span>
+        <pre><span class="keyword">def group as</span> <span class="cellmlKeyword">containment</span> my_containment <span class="keyword">for</span>
     ...
 <span class="keyword">enddef</span>;</pre>
 
@@ -522,7 +648,7 @@
             An encapsulation group is always nameless, so to define an encapsulation group, we would use:
         </p>
 
-        <pre><span class="keyword">def group as</span> <span class="cellmlkeyword">encapsulation</span> <span class="keyword">for</span>
+        <pre><span class="keyword">def group as</span> <span class="cellmlKeyword">encapsulation</span> <span class="keyword">for</span>
     ...
 <span class="keyword">enddef</span>;</pre>
 
@@ -530,7 +656,7 @@
             A group can have more than one type. For example, to define a group as both an encapsulation group and a containment group (of name <code>my_containment</code>), we would use:
         </p>
 
-        <pre><span class="keyword">def group as</span> <span class="cellmlkeyword">encapsulation</span> <span class="keyword">and</span> <span class="cellmlkeyword">containment</span> my_containment <span class="keyword">for</span>
+        <pre><span class="keyword">def group as</span> <span class="cellmlKeyword">encapsulation</span> <span class="keyword">and</span> <span class="cellmlKeyword">containment</span> my_containment <span class="keyword">for</span>
     ...
 <span class="keyword">enddef</span>;</pre>
 
@@ -606,20 +732,20 @@
         <span class="keyword">comp</span><span class="cmetaId">{my_imported_component_cmeta_id}</span> my_imported_component <span class="keyword">using comp</span> my_reference_component;
     <span class="keyword">enddef</span>;
 
-    <span class="keyword">def unit</span><span class="cmetaId">{my_base_unit_cmeta_id}</span> my_base_unit <span class="keyword">as</span> <span class="cellmlkeyword">base</span> <span class="keyword">unit</span>;
+    <span class="keyword">def unit</span><span class="cmetaId">{my_base_unit_cmeta_id}</span> my_base_unit <span class="keyword">as</span> <span class="cellmlKeyword">base</span> <span class="keyword">unit</span>;
 
     <span class="keyword">def unit</span><span class="cmetaId">{my_unit_cmeta_id}</span> my_unit <span class="keyword">as</span>
-        <span class="keyword">unit</span><span class="cmetaId">{my_other_unit_cmeta_id}</span> my_other_unit <span class="parameterblock">{<span class="keyword">pref</span>: <span class="cellmlkeyword">milli</span>, <span class="keyword">expo</span>: -<span class="number">1</span>, <span class="keyword">mult</span>: <span class="number">3</span>, <span class="keyword">off</span>: <span class="number">7</span>}</span>;
+        <span class="keyword">unit</span><span class="cmetaId">{my_other_unit_cmeta_id}</span> my_other_unit <span class="parameterBlock">{<span class="keyword">pref</span>: <span class="cellmlKeyword">milli</span>, <span class="keyword">expo</span>: -<span class="number">1</span>, <span class="keyword">mult</span>: <span class="number">3</span>, <span class="keyword">off</span>: <span class="number">7</span>}</span>;
     <span class="keyword">enddef</span>;
 
     <span class="keyword">def comp</span><span class="cmetaId">{my_component_cmeta_id}</span> my_component <span class="keyword">as</span>
-        <span class="keyword">var</span><span class="cmetaId">{my_variable_cmeta_id}</span> my_variable: my_unit <span class="parameterblock">{<span class="keyword">init</span>: <span class="number">3</span>, <span class="keyword">pub</span>: <span class="cellmlkeyword">in</span>, <span class="keyword">priv</span>: <span class="cellmlkeyword">out</span>}</span>;
+        <span class="keyword">var</span><span class="cmetaId">{my_variable_cmeta_id}</span> my_variable: my_unit <span class="parameterBlock">{<span class="keyword">init</span>: <span class="number">3</span>, <span class="keyword">pub</span>: <span class="cellmlKeyword">in</span>, <span class="keyword">priv</span>: <span class="cellmlKeyword">out</span>}</span>;
 
         a =<span class="cmetaId">{my_a_equation_cmeta_id}</span> b+c;
         <span class="keyword">ode</span>(d, t) =<span class="cmetaId">{my_d_equation_cmeta_id}</span> e+f;
     <span class="keyword">enddef</span>;
 
-    <span class="keyword">def group</span><span class="cmetaId">{my_group_cmeta_id}</span> <span class="keyword">as</span> <span class="cellmlkeyword">encapsulation</span><span class="cmetaId">{my_encapsulation_cmeta_id}</span> <span class="keyword">and</span> <span class="cellmlkeyword">containment</span><span class="cmetaId">{my_containment_cmeta_id}</span> my_containment <span class="keyword">for</span>
+    <span class="keyword">def group</span><span class="cmetaId">{my_group_cmeta_id}</span> <span class="keyword">as</span> <span class="cellmlKeyword">encapsulation</span><span class="cmetaId">{my_encapsulation_cmeta_id}</span> <span class="keyword">and</span> <span class="cellmlKeyword">containment</span><span class="cmetaId">{my_containment_cmeta_id}</span> my_containment <span class="keyword">for</span>
         <span class="keyword">comp</span><span class="cmetaId">{my_component1_cmeta_id}</span> my_component1 <span class="keyword">incl</span>
             <span class="keyword">comp</span><span class="cmetaId">{my_component11_cmeta_id}</span> my_component11;
             <span class="keyword">comp</span><span class="cmetaId">{my_component12_cmeta_id}</span> my_component12;
