@@ -19,7 +19,7 @@ var jsonData = { "versions": [
                          ]
                        }
                      ],
-                     "information": "<strong>Warning:</strong> there is a known issue with a third-party library (<a href=\"http: //llvm.org/\">LLVM</a>) used by OpenCOR. It affects the 32-bit Windows version of OpenCOR by preventing it from running more than one CellML file in a given session. Other versions of OpenCOR are not affected."
+                     "information": "<strong>Warning:</strong> there is a known issue with a third-party library (<a href=\"http://llvm.org/\">LLVM</a>) used by OpenCOR. It affects the 32-bit Windows version of OpenCOR by preventing it from running more than one CellML file in a given session. Other versions of OpenCOR are not affected."
                    },
                    { "major": 0, "minor": 0, "patch": 0, "day": 5, "month": 3, "year": 2015, "type": 0,
                      "platforms": [
