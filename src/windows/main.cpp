@@ -90,7 +90,15 @@ int main(int pArgC, char *pArgV[])
 
                 res = -1;
             } else {
-                QProcess().startDetached(guiAppFilePath, app->arguments(), QProcess().workingDirectory());
+                // We found the GUI version of OpenCOR, so run it with our
+                // arguments, minus the first one since it corresponds to the
+                // full path to our executable, which we are not interested in
+
+                QStringList appArguments = app->arguments();
+
+                appArguments.removeFirst();
+
+                QProcess().startDetached(guiAppFilePath, appArguments, QProcess().workingDirectory());
 
                 res = 0;
             }
