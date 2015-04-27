@@ -698,23 +698,29 @@ void CentralWidget::updateFileTab(const int &pIndex)
 //==============================================================================
 
 void CentralWidget::openFile(const QString &pFileName, const File::Type &pType,
-                             const QString &pUrl)
+                             const QString &pUrl,
+                             const bool &pFromOpenRemoteFile)
 {
     // Make sure that modes are available and that the file exists
 
-    if (!mModeTabs->count() || !QFile::exists(pFileName))
+    if (!mModeTabs->count() || !QFile::exists(pFileName)) {
+        QMessageBox::warning(this, pFromOpenRemoteFile?tr("Open Remote File"):tr("Open File"),
+                             tr("<strong>%1</strong> could not be opened.").arg(pFileName));
+
         return;
+    }
 
     // Check whether the file is already opened and, if so, select it and leave
 
     QString nativeFileName = nativeCanonicalFileName(pFileName);
 
-    for (int i = 0, iMax = mFileNames.count(); i < iMax; ++i)
+    for (int i = 0, iMax = mFileNames.count(); i < iMax; ++i) {
         if (!mFileNames[i].compare(nativeFileName)) {
             mFileTabs->setCurrentIndex(i);
 
             return;
         }
+    }
 
     // Register the file with our file manager
 
@@ -811,7 +817,7 @@ void CentralWidget::openRemoteFile(const QString &pUrl,
         //     /home/me/mymodel.cellml
         // so open the file as a local file and leave
 
-        openFile(fileNameOrUrl);
+        openFile(fileNameOrUrl, File::Local, QString(), true);
 
         return;
     }
@@ -853,9 +859,10 @@ void CentralWidget::openRemoteFile(const QString &pUrl,
             // We were not able to retrieve the contents of the remote file, so
             // let the user know about it
 
-            if (pShowWarning)
+            if (pShowWarning) {
                 QMessageBox::warning(this, tr("Open Remote File"),
                                      tr("<strong>%1</strong> could not be opened (%2).").arg(fileNameOrUrl, Core::formatMessage(errorMessage)));
+            }
         }
     } else {
         openFile(fileName);

@@ -119,6 +119,10 @@
         <source>The &lt;strong&gt;%1&lt;/strong&gt; view cannot save &lt;strong&gt;%2&lt;/strong&gt;.</source>
         <translation>La vue &lt;strong&gt;%1&lt;/strong&gt; ne peut pas sauvegarder &lt;strong&gt;%2&lt;/strong&gt;.</translation>
     </message>
+    <message>
+        <source>&lt;strong&gt;%1&lt;/strong&gt; could not be opened.</source>
+        <translation>&lt;strong&gt;%1&lt;/strong&gt; n&apos;a pas pu être ouvert.</translation>
+    </message>
 </context>
 <context>
     <name>OpenCOR::Core::CorePlugin</name>
