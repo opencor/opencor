@@ -61,7 +61,7 @@
         </p>
 
         <p>
-            Make sure that you are in Editing mode (check the tabs to the left of the central area) and that the CellML Text view is selected (check the tabs to the right of the central area). Next, under the <code>File</code> | <code>New</code> menu, select the <code>CellML 1.0 File</code> menu item and type in the following lines of code:
+            Make sure that you are in Editing mode (check the tabs to the left of the central area) and that the <a href="plugins/editing/CellMLTextView.html">CellML Text view</a> is selected (check the tabs to the right of the central area). Next, under the <code>File</code> | <code>New</code> menu, select the <code>CellML 1.0 File</code> menu item and type in the following lines of code:
         </p>
 
         <pre><span class="keyword">def model</span> van_der_pol_model <span class="keyword">as</span>
@@ -77,7 +77,19 @@
 <span class="keyword">enddef</span>;</pre>
 
         <p class="katexRendering">
-            Things to note are: (i) the closing semicolon at the end of each line (apart from the first two <code>def</code> statements that are opening a CellML construct), (ii) the need to indicate dimensions for each variable and constant (all <code>dimensionless</code> in this example – but more on dimensions later), (iii) the use of <code>ode(x,t)</code> to indicate a first-order ODE in <code>x</code> and <code>t</code>, and (iv) the use of the convenient squaring function <code>sqr(x)</code> for $x^2$ (a full list of mathematical operators, elements and constants can be found <a href="plugins/editing/CellMLTextView.html?#mathematicalOperatorsElementsAndConstants">here</a>).
+            Things to note are: (i) the closing semicolon at the end of each line (apart from the first two <code>def</code> statements that are opening a CellML construct), (ii) the need to indicate dimensions for each variable and constant (all <code>dimensionless</code> in this example – but more on dimensions later), (iii) the use of <code>ode(x,t)</code> to indicate a first-order ODE in <code>x</code> and <code>t</code>, and (iv) the use of the convenient squaring function <code>sqr(x)</code> for $x^2$ (a full list of mathematical operators, elements and constants supported by the <a href="plugins/editing/CellMLTextView.html">CellML Text view</a> can be found <a href="plugins/editing/CellMLTextView.html?#mathematicalOperatorsElementsAndConstants">here</a>).
+        </p>
+
+        <p>
+            To move the cursor over either of the ODEs renders the mathematics in standard form above the code:
+        </p>
+
+        <p class="center">
+            <img class="link" src="res/pics/howToGetStartedScreenshot01.png" width=360 height=270 imagepopup>
+        </p>
+
+        <p>
+            Save the model using <code>Save</code> under the <code>File</code> menu (or press <code>Ctrl</code>+<code>S</code>) and choosing <code>.cellml</code> as the file format (<code>.cellml</code> is not strictly required but is best practice). With the model saved, the other editing views become available. One is the <a href="plugins/editing/CellMLTextView.html">CellML Text view</a> (the view used to enter the code above). Others are the <a href="plugins/editing/RawCellMLView.html">Raw CellML view</a> that displays the way the model is stored (note that positioning the cursor over part of the code shows the mathematics in this view also), and the <a href="plugins/editing/RawView.html">Raw view</a> that can be used to edit any text-based file.
         </p>
 
         <script type="text/javascript">
