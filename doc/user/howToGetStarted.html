@@ -61,7 +61,11 @@
         </p>
 
         <p>
-            Make sure that you are in Editing mode (check the tabs to the left of the central area) and that the <a href="plugins/editing/CellMLTextView.html">CellML Text view</a> is selected (check the tabs to the right of the central area). Next, under the <code>File</code> | <code>New</code> menu, select the <code>CellML 1.0 File</code> menu item and type in the following lines of code:
+            Now, before going further, we need to ensure that we are in <em>Editing</em> mode and that the <em><a href="plugins/editing/CellMLTextView.html">CellML Text</a></em> view is selected. To do this, and if needed, click on the Editing tab on the left hand edge of the central area, and click on the CellML Text tab on the right hand edge of that same central area.
+        </p>
+
+        <p>
+            Being in the correct mode and view, we can now create a CellML file for the above system of ordinary differential equations (ODEs): under the <code>File</code> | <code>New</code> menu, select the <code>CellML 1.0 File</code> menu item and type in the following lines of code:
         </p>
 
         <pre><span class="keyword">def model</span> van_der_pol_model <span class="keyword">as</span>
@@ -77,7 +81,7 @@
 <span class="keyword">enddef</span>;</pre>
 
         <p class="katexRendering">
-            Things to note are: (i) the closing semicolon at the end of each line (apart from the first two <code>def</code> statements that are opening a CellML construct), (ii) the need to indicate dimensions for each variable and constant (all <code>dimensionless</code> in this example – but more on dimensions later), (iii) the use of <code>ode(x,t)</code> to indicate a first-order ODE in <code>x</code> and <code>t</code>, and (iv) the use of the convenient squaring function <code>sqr(x)</code> for $x^2$ (a full list of mathematical operators, elements and constants supported by the <a href="plugins/editing/CellMLTextView.html">CellML Text view</a> can be found <a href="plugins/editing/CellMLTextView.html?#mathematicalOperatorsElementsAndConstants">here</a>).
+            Things to note are: (i) the closing semicolon at the end of each line (apart from the first two <code>def</code> statements that are opening a CellML construct), (ii) the need to indicate dimensions for each variable and constant (all <code>dimensionless</code> in this example – but more on dimensions later), (iii) the use of <code>ode(x,t)</code> to indicate a first-order ODE in <code>x</code> and <code>t</code>, and (iv) the use of the convenient squaring function <code>sqr(x)</code> for $x^2$ (a full list of mathematical operators, elements and constants supported by the <em><a href="plugins/editing/CellMLTextView.html">CellML Text</a></em> view can be found <a href="plugins/editing/CellMLTextView.html?#mathematicalOperatorsElementsAndConstants">here</a>).
         </p>
 
         <p>
@@ -89,7 +93,147 @@
         </p>
 
         <p>
-            Save the model using <code>Save</code> under the <code>File</code> menu (or press <code>Ctrl</code>+<code>S</code> on Windows and Linux, or <code>Cmd</code>+<code>S</code> on OS X) and choosing <code>.cellml</code> as the file format (<code>.cellml</code> is not strictly required but is best practice). With the model saved, the other editing views become available. One is the <a href="plugins/editing/CellMLTextView.html">CellML Text view</a> (the view used to enter the code above). Others are the <a href="plugins/editing/RawCellMLView.html">Raw CellML view</a> that displays the way the model is stored (note that positioning the cursor over part of the code shows the mathematics in this view also), and the <a href="plugins/editing/RawView.html">Raw view</a> that can be used to edit any text-based file.
+            Save the model using <code>Save</code> under the <code>File</code> menu (or press <code>Ctrl</code>+<code>S</code> on Windows and Linux, or <code>Cmd</code>+<code>S</code> on OS X) and choosing <code>.cellml</code> as the file format (<code>.cellml</code> is not strictly required but is best practice). With the model saved, the other editing views become available. One is the <em><a href="plugins/editing/CellMLTextView.html">CellML Text</a></em> view (the view used to enter the code above). Another is the <em><a href="plugins/editing/RawCellMLView.html">Raw CellML</a></em> view that displays the way the model is stored (note that positioning the cursor over part of the code shows the mathematics in this view also), and another is the <em><a href="plugins/editing/RawView.html">Raw</a></em> view that can be used to edit any text-based file.
+        </p>
+
+        <p>
+            With the equations and initial conditions defined, we are ready to run the model. To do this, click on the Simulation tab on the left hand edge of the window. You will see three main areas - at the left hand side of the window are the <em>Simulation</em>, <em>Solvers</em>, <em>Graphs</em> and <em>Parameters</em> panels. At the right hand side is the graph panel, and running along the bottom of the window is a status area, where status messages are displayed.
+        </p>
+
+        <div class="subSection">
+            Simulation panel
+        </div>
+
+        <p>
+            This area is used to set up the simulation settings:
+        </p>
+
+        <ul>
+            <li><strong>Starting point:</strong> the value of the variable of integration (often time) at which the simulation will begin. Leave this at <code>0</code>.</li>
+            <li><strong>Ending point:</strong> the point at which the simulation will end. Set to <code>100</code>.</li>
+            <li><strong>Point interval:</strong> the interval between data points on the variable of integration. Set to <code>0.1</code>.</li>
+        </ul>
+
+        <p>
+            Just above the <em>Simulation</em> panel are controls for running the simulation. These are:
+        </p>
+
+        <table class="legend">
+            <tbody>
+                <tr>
+                    <th>
+                        <img src="plugins/res/pics/oxygen/actions/media-playback-start.png" width=24 height=24>
+                    </th>
+                    <td>
+                        Run the simulation
+                    </td>
+                </tr>
+                <tr>
+                    <th>
+                        <img src="plugins/res/pics/oxygen/actions/media-playback-pause.png" width=24 height=24>
+                    </th>
+                    <td>
+                        Pause the simulation
+                    </td>
+                </tr>
+                <tr>
+                    <th>
+                        <img src="plugins/res/pics/oxygen/actions/media-playback-stop.png" width=24 height=24>
+                    </th>
+                    <td>
+                        Stop the simulation
+                    </td>
+                </tr>
+                <tr>
+                    <th>
+                        <img src="plugins/res/pics/oxygen/actions/view-refresh.png" width=24 height=24>
+                    </th>
+                    <td>
+                        Reset all the model parameters
+                    </td>
+                </tr>
+                <tr>
+                    <th>
+                        <img src="plugins/res/pics/oxygen/actions/trash-empty.png" width=24 height=24>
+                    </th>
+                    <td>
+                        Clear the simulation data
+                    </td>
+                </tr>
+                <tr>
+                    <th>
+                        <img src="plugins/res/pics/oxygen/actions/list-add.png" width=24 height=24>
+                    </th>
+                    <td>
+                        Add a graph panel
+                    </td>
+                </tr>
+                <tr>
+                    <th>
+                        <img src="plugins/res/pics/oxygen/actions/list-remove.png" width=24 height=24>
+                    </th>
+                    <td>
+                        Remove the current graph panel or all the graph panels
+                    </td>
+                </tr>
+                <tr>
+                    <th>
+                        <img src="plugins/res/pics/oxygen/actions/document-export.png" width=24 height=24>
+                    </th>
+                    <td>
+                        Export the simulation data
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <p>
+            The wheel between the <img src="plugins/res/pics/oxygen/actions/trash-empty.png" width=24 height=24 align=absmiddle> and <img src="plugins/res/pics/oxygen/actions/list-add.png" width=24 height=24 align=absmiddle> buttons can also be used to get some delay between the rendering of two data points.
+        </p>
+
+        <p>
+            For this model, we suggest that you create three graph panels using the <img src="plugins/res/pics/oxygen/actions/list-add.png" width=24 height=24 align=absmiddle> button.
+        </p>
+
+        <div class="subSection">
+            Solvers panel
+        </div>
+
+        <p>
+            This area is used to configure the solver that will run the simulation:
+        </p>
+
+        <ul>
+            <li><strong>Name:</strong> this is used to set the solver algorithm. OpenCOR will only allow you to choose solvers appropriate to the type of problem you are simulating. For example, <a href="plugins/solver/CVODESolver.html">CVODE</a> for ODE problems, <a href="plugins/solver/IDASolver.html">IDA</a> for differential algebraic equation problems, and <a href="plugins/solver/KINSOLSolver.html">KINSOL</a> for non-linear algebraic problems (other solvers include <a href="plugins/solver/ForwardEulerSolver.html">Forward Euler</a>, <a href="plugins/solver/HeunSolver.html">Heun</a> and Runga-Kutta solvers (<a href="plugins/solver/SecondOrderRungeKuttaSolver.html">RK2</a> and <a href="plugins/solver/FourthOrderRungeKuttaSolver.html">RK4</a>)).</li>
+            <li><strong>Other parameters for the chosen solver:</strong> e.g. maximum step, maximum number of steps, and tolerance settings for <a href="plugins/solver/CVODESolver.html">CVODE</a> and <a href="plugins/solver/IDASolver.html">IDA</a>. For more information on the solver parameters, please refer to the documentation for the particular solver.</li>
+        </ul>
+
+        <p>
+            These can all be left at their default values for our simple demo problem (note that a model that requires a stimulus protocol should have the maximum step value of the <a href="plugins/solver/CVODESolver.html">CVODE</a> solver set to the length of the stimulus).
+        </p>
+
+        <div class="subSection">
+            Graphs panel
+        </div>
+
+        <p>
+            This shows what parameters are being plotted once these have been defined in the <em>Parameters</em> panel. These can be selected/deselected by clicking in the box next to a parameter.
+        </p>
+
+        <div class="subSection">
+            Parameters panel
+        </div>
+
+        <p class="katexRendering">
+            This panel lists all the model parameters, and allows you to select one or more to plot against the variable of integration or another parameter in the graph panels. OpenCOR supports graphing of any parameter against any other. All variables from the model are listed here, arranged by the components in which they appear, and in alphabetical order. Parameters are displayed with their variable name, their value, and their units. Right clicking on a parameter provides the options for displaying that parameter in the currently selected graph panel. With the cursor highlighting the top graph panel (a blue line appears next to it), select $x$ then the variable of integration $t$ in order to plot $x(t)$. Now, move the cursor to the second graph panel and select $y$ then $t$ to plot $y(t)$. Finally, select the bottom graph panel and select $y$ then $x$ to plot $y(x)$.
+        </p>
+
+        <p>
+            Now, click on the <img src="plugins/res/pics/oxygen/actions/media-playback-start.png" width=24 height=24 align=absmiddle> button. You will see a progress bar running along the bottom of the status window. Status messages about the successful simulation will be displayed. Use the simulation delay wheel to slow down the plotting.
+        </p>
+
+        <p class="center">
+            <img class="link" src="res/pics/howToGetStartedScreenshot02.png" width=360 height=270 imagepopup>
         </p>
 
         <script type="text/javascript">
