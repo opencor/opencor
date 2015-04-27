@@ -426,29 +426,29 @@
         </div>
 
         <p class="katexRendering">
-            A mathematical equation must either have an identifier or an ODE on its left hand side (LHS), i.e. $f=...$ and $\frac{df}{dt}=...$, respectively. To write such equations, we would use:
+            A mathematical equation must either have an identifier or an ODE on its left hand side (LHS), i.e. $x=...$ and $\frac{dx}{dt}=...$, respectively. To write such equations, we would use:
         </p>
 
-        <pre>f = ...;</pre>
+        <pre>x = ...;</pre>
 
         <p>
             and
         </p>
 
-        <pre><span class="keyword">ode</span>(f, t) = ...;</pre>
+        <pre><span class="keyword">ode</span>(x, t) = ...;</pre>
 
         <p>
             Here, the ODE is a first-order ODE and it could have been written:
         </p>
 
-        <pre><span class="keyword">ode</span>(f, t, <span class="number">1</span><span class="unit">{<span class="cellmlKeyword">dimensionless</span>}</span>)</pre>
+        <pre><span class="keyword">ode</span>(x, t, <span class="number">1</span><span class="unit">{<span class="cellmlKeyword">dimensionless</span>}</span>)</pre>
 
         <p class="katexRendering">
-            This means that to write $\frac{d^2 f}{dt^2}$, $\frac{d^3 f}{dt^3}$, etc., we would use:
+            This means that to write $\frac{d^2 x}{dt^2}$, $\frac{d^3 x}{dt^3}$, etc., we would use:
         </p>
 
-        <pre><span class="keyword">ode</span>(f, t, <span class="number">2</span><span class="unit">{<span class="cellmlKeyword">dimensionless</span>}</span>)
-<span class="keyword">ode</span>(f, t, <span class="number">3</span><span class="unit">{<span class="cellmlKeyword">dimensionless</span>}</span>)
+        <pre><span class="keyword">ode</span>(x, t, <span class="number">2</span><span class="unit">{<span class="cellmlKeyword">dimensionless</span>}</span>)
+<span class="keyword">ode</span>(x, t, <span class="number">3</span><span class="unit">{<span class="cellmlKeyword">dimensionless</span>}</span>)
 ...</pre>
 
         <p>
@@ -609,6 +609,18 @@
                         <td>Not</td>
                         <td><pre class="sampleCode"><span class="keyword">not</span> x
 <span class="keyword">not</span>(x+y)</td>
+                    </tr>
+                </table>
+            </li>
+            <li>
+                Calculus elements:
+
+                <table>
+                    <tr>
+                        <td class="center"><code>ode</code></td>
+                        <td>Differentiation</td>
+                        <td><pre class="sampleCode"><span class="keyword">ode</span>(x, t)
+<span class="keyword">ode</span>(x, t, <span class="number">2</span><span class="unit">{dimensionless}</span>)</td>
                     </tr>
                 </table>
             </li>
