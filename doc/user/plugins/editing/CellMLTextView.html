@@ -470,37 +470,37 @@
                     <tr>
                         <td class="center"><code>=</code></td>
                         <td>Equality (assignment)</td>
-                        <td><pre class="sampleCode">x = y</td>
+                        <td><pre class="sampleCode">x = y</pre></td>
                     </tr>
                     <tr>
                         <td class="center"><code>==</code></td>
                         <td>Equality (binary)</td>
-                        <td><pre class="sampleCode">x == y</td>
+                        <td><pre class="sampleCode">x == y</pre></td>
                     </tr>
                     <tr>
                         <td class="center"><code>&lt;&gt;</code></td>
                         <td>Inequality</td>
-                        <td><pre class="sampleCode">x &lt;&gt; y</td>
+                        <td><pre class="sampleCode">x &lt;&gt; y</pre></td>
                     </tr>
                     <tr>
                         <td class="center"><code>&gt;</code></td>
                         <td>Greater than</td>
-                        <td><pre class="sampleCode">x &gt; y</td>
+                        <td><pre class="sampleCode">x &gt; y</pre></td>
                     </tr>
                     <tr>
                         <td class="center"><code>&lt;</code></td>
                         <td>Lower than</td>
-                        <td><pre class="sampleCode">x &lt; y</td>
+                        <td><pre class="sampleCode">x &lt; y</pre></td>
                     </tr>
                     <tr>
                         <td class="center"><code>&gt;=</code></td>
                         <td>Greater than or equal to</td>
-                        <td><pre class="sampleCode">x &gt;= y</td>
+                        <td><pre class="sampleCode">x &gt;= y</pre></td>
                     </tr>
                     <tr>
                         <td class="center"><code>&lt;=</code></td>
                         <td>Lower than or equal to</td>
-                        <td><pre class="sampleCode">x &lt;= y</td>
+                        <td><pre class="sampleCode">x &lt;= y</pre></td>
                     </tr>
                 </table>
             </li>
@@ -511,22 +511,22 @@
                     <tr>
                         <td class="center"><code>+</code></td>
                         <td>Addition</td>
-                        <td><pre class="sampleCode">x+y</td>
+                        <td><pre class="sampleCode">x+y</pre></td>
                     </tr>
                     <tr>
                         <td class="center"><code>-</code></td>
                         <td>Subtraction</td>
-                        <td><pre class="sampleCode">x-y</td>
+                        <td><pre class="sampleCode">x-y</pre></td>
                     </tr>
                     <tr>
                         <td class="center"><code>*</code></td>
                         <td>Multiplication</td>
-                        <td><pre class="sampleCode">x*y</td>
+                        <td><pre class="sampleCode">x*y</pre></td>
                     </tr>
                     <tr>
                         <td class="center"><code>/</code></td>
                         <td>Division</td>
-                        <td><pre class="sampleCode">x/y</td>
+                        <td><pre class="sampleCode">x/y</pre></td>
                     </tr>
                     <tr>
                         <td class="center"><code>pow</code></td>
@@ -566,7 +566,8 @@
                     <tr>
                         <td class="center"><code>log</code></td>
                         <td>Logarithm</td>
-                        <td><pre class="sampleCode"><span class="keyword">log</span>(x)</pre></td>
+                        <td><pre class="sampleCode"><span class="keyword">log</span>(x)
+<span class="keyword">log</span>(x, <span class="number">3</span><span class="unit">{dimensionless}</span>)</pre></td>
                     </tr>
                     <tr>
                         <td class="center"><code>floor</code></td>
@@ -592,23 +593,23 @@
                     <tr>
                         <td class="center"><code>and</code></td>
                         <td>And</td>
-                        <td><pre class="sampleCode">x <span class="keyword">and</span> y</td>
+                        <td><pre class="sampleCode">x <span class="keyword">and</span> y</pre></td>
                     </tr>
                     <tr>
                         <td class="center"><code>or</code></td>
                         <td>Or</td>
-                        <td><pre class="sampleCode">x <span class="keyword">or</span> y</td>
+                        <td><pre class="sampleCode">x <span class="keyword">or</span> y</pre></td>
                     </tr>
                     <tr>
                         <td class="center"><code>xor</code></td>
                         <td>Exclusive or</td>
-                        <td><pre class="sampleCode">x <span class="keyword">xor</span> y</td>
+                        <td><pre class="sampleCode">x <span class="keyword">xor</span> y</pre></td>
                     </tr>
                     <tr>
                         <td class="center"><code>not</code></td>
                         <td>Not</td>
                         <td><pre class="sampleCode"><span class="keyword">not</span> x
-<span class="keyword">not</span>(x+y)</td>
+<span class="keyword">not</span>(x+y)</pre></td>
                     </tr>
                 </table>
             </li>
@@ -620,7 +621,157 @@
                         <td class="center"><code>ode</code></td>
                         <td>Differentiation</td>
                         <td><pre class="sampleCode"><span class="keyword">ode</span>(x, t)
-<span class="keyword">ode</span>(x, t, <span class="number">2</span><span class="unit">{dimensionless}</span>)</td>
+<span class="keyword">ode</span>(x, t, <span class="number">2</span><span class="unit">{dimensionless}</span>)</pre></td>
+                    </tr>
+                </table>
+            </li>
+            <li>
+                Trigonometric operators:
+
+                <table>
+                    <tr>
+                        <td class="center">
+                            <code>sin</code><br/>
+                            <code>sinh</code><br/>
+                            <code>asin</code><br/>
+                            <code>asinh</code>
+                        </td>
+                        <td>
+                            Sine<br/>
+                            Hyperbolic sine<br/>
+                            Inverse sine<br/>
+                            Inverse hyperbolic sine
+                        </td>
+                        <td><pre class="sampleCode"><span class="keyword">sin</span>(x)
+<span class="keyword">sinh</span>(x)
+<span class="keyword">asin</span>(x)
+<span class="keyword">asinh</span>(x)</pre></td>
+                    </tr>
+                    <tr>
+                        <td class="center">
+                            <code>cos</code><br/>
+                            <code>cosh</code><br/>
+                            <code>acos</code><br/>
+                            <code>acosh</code>
+                        </td>
+                        <td>
+                            Cosine<br/>
+                            Hyperbolic cosine<br/>
+                            Inverse cosine<br/>
+                            Inverse hyperbolic cosine
+                        </td>
+                        <td><pre class="sampleCode"><span class="keyword">cos</span>(x)
+<span class="keyword">cosh</span>(x)
+<span class="keyword">acos</span>(x)
+<span class="keyword">acosh</span>(x)</pre></td>
+                    </tr>
+                    <tr>
+                        <td class="center">
+                            <code>tan</code><br/>
+                            <code>tanh</code><br/>
+                            <code>atan</code><br/>
+                            <code>atanh</code>
+                        </td>
+                        <td>
+                            Tangent<br/>
+                            Hyperbolic tangent<br/>
+                            Inverse tangent<br/>
+                            Inverse hyperbolic tangent
+                        </td>
+                        <td><pre class="sampleCode"><span class="keyword">tan</span>(x)
+<span class="keyword">tanh</span>(x)
+<span class="keyword">atan</span>(x)
+<span class="keyword">atanh</span>(x)</pre></td>
+                    </tr>
+                    <tr>
+                        <td class="center">
+                            <code>sec</code><br/>
+                            <code>sech</code><br/>
+                            <code>asec</code><br/>
+                            <code>asech</code>
+                        </td>
+                        <td>
+                            Secant<br/>
+                            Hyperbolic secant<br/>
+                            Inverse secant<br/>
+                            Inverse hyperbolic secant
+                        </td>
+                        <td><pre class="sampleCode"><span class="keyword">sec</span>(x)
+<span class="keyword">sech</span>(x)
+<span class="keyword">asec</span>(x)
+<span class="keyword">asech</span>(x)</pre></td>
+                    </tr>
+                    <tr>
+                        <td class="center">
+                            <code>csc</code><br/>
+                            <code>csch</code><br/>
+                            <code>acsc</code><br/>
+                            <code>acsch</code>
+                        </td>
+                        <td>
+                            Cosecant<br/>
+                            Hyperbolic cosecant<br/>
+                            Inverse cosecant<br/>
+                            Inverse hyperbolic cosecant
+                        </td>
+                        <td><pre class="sampleCode"><span class="keyword">csc</span>(x)
+<span class="keyword">csch</span>(x)
+<span class="keyword">acsc</span>(x)
+<span class="keyword">acsch</span>(x)</pre></td>
+                    </tr>
+                    <tr>
+                        <td class="center">
+                            <code>cot</code><br/>
+                            <code>coth</code><br/>
+                            <code>acot</code><br/>
+                            <code>acoth</code>
+                        </td>
+                        <td>
+                            Cotangent<br/>
+                            Hyperbolic cotangent<br/>
+                            Inverse cotangent<br/>
+                            Inverse hyperbolic cotangent
+                        </td>
+                        <td><pre class="sampleCode"><span class="keyword">cot</span>(x)
+<span class="keyword">coth</span>(x)
+<span class="keyword">acot</span>(x)
+<span class="keyword">acoth</span>(x)</pre></td>
+                    </tr>
+                </table>
+            </li>
+            <li>
+                Constants:
+
+                <table>
+                    <tr>
+                        <td class="center"><code>true</code></td>
+                        <td>True</td>
+                        <td><pre class="sampleCode"><span class="keyword">true</span></pre></td>
+                    </tr>
+                    <tr>
+                        <td class="center"><code>false</code></td>
+                        <td>False</td>
+                        <td><pre class="sampleCode"><span class="keyword">false</span></pre></td>
+                    </tr>
+                    <tr>
+                        <td class="center"><code>nan</code></td>
+                        <td>Not a number</td>
+                        <td><pre class="sampleCode"><span class="keyword">nan</span></pre></td>
+                    </tr>
+                    <tr>
+                        <td class="center"><code>pi</code></td>
+                        <td>Pi</td>
+                        <td><pre class="sampleCode"><span class="keyword">pi</span></pre></td>
+                    </tr>
+                    <tr>
+                        <td class="center"><code>inf</code></td>
+                        <td>Infinity</td>
+                        <td><pre class="sampleCode"><span class="keyword">inf</span></pre></td>
+                    </tr>
+                    <tr>
+                        <td class="center"><code>e</code></td>
+                        <td>Euler's number</td>
+                        <td><pre class="sampleCode"><span class="keyword">e</span></pre></td>
                     </tr>
                 </table>
             </li>
