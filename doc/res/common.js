@@ -220,7 +220,7 @@ function doHeaderAndContentsMenu(pageName, relativePath, r, g, b, data) {
 
     document.write("<ul class=\"contentsMenu\">");
     document.write("    <li>");
-    document.write("        <img src=\""+relativePath+"/res/pics/oxygen/actions/help-about.png\" width=24 height=24 alt=\"Contents\">");
+    document.write("        <img src=\""+relativePath+"/res/pics/oxygen/actions/help-about.png\" width=24 height=24>");
     document.write("        <ul>");
 
     var menuItems = data.menuItems;
@@ -403,10 +403,10 @@ function copyright(relativePath) {
     document.write("        Copyright 2011-"+date.getFullYear());
     document.write("    </div>");
     document.write("    <div class=\"center\">");
-    document.write("        <a class=\"copyright\" href=\"https://twitter.com/TeamOpenCOR/\"><img class=\"twitter\" src=\""+relativePath+"/res/pics/twitter.png\" width=30 height=30 alt=\"Twitter\"></a>");
+    document.write("        <a class=\"copyright\" href=\"https://twitter.com/TeamOpenCOR/\"><img class=\"twitter\" src=\""+relativePath+"/res/pics/twitter.png\" width=30 height=30></a>");
     document.write("    </div>");
     document.write("    <div class=\"right\">");
-    document.write("        <a class=\"copyright\" href=\"http://www.virtualrat.org/\"><img class=\"vpr\" src=\""+relativePath+"/res/pics/vprLogo.png\" width=60 height=18 alt=\"VPR\"></a>");
+    document.write("        <a class=\"copyright\" href=\"http://www.virtualrat.org/\"><img class=\"vpr\" src=\""+relativePath+"/res/pics/vprLogo.png\" width=60 height=18></a>");
     document.write("    </div>");
     document.write("</div>");
 }

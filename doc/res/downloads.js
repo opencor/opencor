@@ -226,7 +226,7 @@ function versions(downloads) {
                 document.write("                <tbody>\n");
                 document.write("                    <tr>\n");
                 document.write("                        <td class=\"logo\">\n");
-                document.write("                            <img src=\"../res/pics/"+platformName.replace(" ", "").toLowerCase()+".png\" width=72 height=72 alt=\""+platformName+"\">\n");
+                document.write("                            <img src=\"../res/pics/"+platformName.replace(" ", "").toLowerCase()+".png\" width=72 height=72>\n");
                 document.write("                        </td>\n");
                 document.write("                        <td>\n");
                 document.write("                            <div class=\"name\">\n");

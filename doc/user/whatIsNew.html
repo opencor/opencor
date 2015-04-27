@@ -68,13 +68,13 @@
                                 for (var subEntryIndex = 0; subEntryIndex < subEntries.length; ++subEntryIndex) {
                                     var subEntry = subEntries[subEntryIndex];
 
-                                    document.write("                    <li><img src=\"res/pics/"+subEntry.type.toLowerCase()+".png\" class=\"vcenter\" width="+typeWidths[subEntry.type]+" height=15 alt=\""+subEntry.type+"\"> "+subEntry.description+"</li>\n");
+                                    document.write("                    <li><img src=\"res/pics/"+subEntry.type.toLowerCase()+".png\" class=\"vcenter\" width="+typeWidths[subEntry.type]+" height=15> "+subEntry.description+"</li>\n");
                                 }
 
                                 document.write("                </ul>\n");
                                 document.write("            </li>\n");
                             } else {
-                                document.write("            <li><img src=\"res/pics/"+entry.type.toLowerCase()+".png\" class=\"vcenter\" width="+typeWidths[entry.type]+" height=15 alt=\""+entry.type+"\"> "+entry.description+"</li>\n");
+                                document.write("            <li><img src=\"res/pics/"+entry.type.toLowerCase()+".png\" class=\"vcenter\" width="+typeWidths[entry.type]+" height=15> "+entry.description+"</li>\n");
                             }
                         }
 
