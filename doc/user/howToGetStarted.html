@@ -24,12 +24,12 @@
         </script>
 
         <p>
-            To get you sarted with <a href="http://www.opencor.ws/">OpenCOR</a>, we show you how to install and run the software, and how to author and edit models. We start by creating a simple model from scratch, saving it as a <a href="http://www.cellml.org/">CellML</a> file and running model simulations. We next try opening existing CellML models, both from a local directory and from the <a href="http://models.cellml.org/">CellML Model Repository</a>:
+            To get you sarted with <a href="http://www.opencor.ws/">OpenCOR</a>, we show you how to install and run the software, and how to author and edit models. We start by creating a simple model from scratch, saving it as a <a href="http://www.cellml.org/">CellML</a> file and running model simulations. We next try opening existing CellML files, both from a local directory and from the <a href="http://models.cellml.org/">CellML Model Repository</a>.
         </p>
 
         <ul>
             <li><a href="#DownloadingInstallingAndLaunchingOpenCOR">Downloading, installing and launching OpenCOR</a></li>
-            <li><a href="#CreatingAndRunningASimpleCellMLModel">Creating and running a simple CellML model</a></li>
+            <li><a href="#CreatingAndRunningASimpleCellMLFile">Creating and running a simple CellML file</a></li>
             <li><a href="#OpeningAnExistingCellMLFile">Opening an existing CellML file</a></li>
         </ul>
 
@@ -39,30 +39,32 @@
             Downloading, installing and launching OpenCOR
         </div>
 
-        Download OpenCOR from <a href="http://www.opencor.ws/downloads/">www.opencor.ws/downloads</a> (versions are available for <a href="http://en.wikipedia.org/wiki/Microsoft_Windows">Windows</a>, <a href="http://en.wikipedia.org/wiki/Linux">Linux</a> and <a href="http://en.wikipedia.org/wiki/OS_X">OS X</a>). Install it by running its installer (on Windows and OS X), or by uncompressing its ZIP (on Windows and OS X) or Tarball (on Linux) file. Launch OpenCOR through your system (if you ran the installer) or by double clicking on <code>[OpenCOR]/OpenCOR.vbs</code> (or <code>[OpenCOR]/bin/OpenCOR.exe</code>), <code>[OpenCOR]/bin/OpenCOR</code> or <code>[OpenCOR]/OpenCOR</code> on Windows, Linux and OS X, respectively. A window will appear that looks like:
+        Download OpenCOR from <a href="http://www.opencor.ws/downloads/">www.opencor.ws/downloads</a> (versions are available for <a href="http://en.wikipedia.org/wiki/Microsoft_Windows">Windows</a>, <a href="http://en.wikipedia.org/wiki/Linux">Linux</a> and <a href="http://en.wikipedia.org/wiki/OS_X">OS X</a>). Install it by running its installer (on Windows and OS X), or by uncompressing its ZIP file (on Windows and OS X) or Tarball file (on Linux). Launch OpenCOR through your system (if you ran the installer) or by double clicking on <code>[OpenCOR]/OpenCOR.vbs</code> (or <code>[OpenCOR]/bin/OpenCOR.exe</code>) on Windows, <code>[OpenCOR]/bin/OpenCOR</code> on Linux or <code>[OpenCOR]/OpenCOR</code> on OS X. A window will appear that looks like:
+
+        <span class="anchor" id="DefaultOpenCOR"></span>
 
         <p class="center">
             <img class="link" src="userInterfaces/res/pics/screenshot01.png" width=360 height=270 imagepopup>
         </p>
 
-        The central area is used to interact with files. By default, no files are open, hence the OpenCOR logo is shown instead. To the sides, there are dockable windows, which provide additional features. Those windows can be dragged and dropped to the top or bottom of the central area, as shown below, or they can be individually undocked or closed. All closed windows can be re-displayed by enabling them in the <code>View</code> | <code>Windows</code> menu, or by selecting the <code>Tools</code> | <code>Reset All</code> menu. To click on <code>Ctrl</code>+<code>Space</code> (on Windows and Linux) or on <code>Alt</code>+<code>Space</code> (on OS X) removes (for less clutter) or restores those side windows.
+        The central area is used to interact with files. By default, no files are open, hence the OpenCOR logo is shown instead. To the sides, there are dockable windows, which provide additional features. Those windows can be dragged and dropped anywhere around the central area, as shown below, or they can be individually undocked or closed. All closed windows can be re-displayed by enabling them in the <code>View</code> | <code>Windows</code> menu, or by selecting the <code>Tools</code> | <code>Reset All</code> menu. To click on <code>Ctrl</code>+<code>Space</code> (on Windows and Linux) or on <code>Alt</code>+<code>Space</code> (on OS X) removes (for less clutter) or restores those side windows.
 
         <p class="center">
             <img class="link" src="userInterfaces/res/pics/screenshot02.png" width=360 height=270 imagepopup>
         </p>
 
-        <span class="anchor" id="CreatingAndRunningASimpleCellMLModel"></span>
+        <span class="anchor" id="CreatingAndRunningASimpleCellMLFile"></span>
 
         <div class="section">
-            Creating and running a simple CellML model
+            Creating and running a simple CellML file
         </div>
 
         <p class="katexRendering">
-            In this example, we create a simple CellML model from scratch and run it. The model is the <a href="http://en.wikipedia.org/wiki/Van_der_Pol_oscillator">Van der Pol oscillator</a> defined by the second order equation:
+            In this example, we create a simple model from scratch and run it. The model is the <a href="http://en.wikipedia.org/wiki/Van_der_Pol_oscillator">Van der Pol oscillator</a> defined by the second-order equation:
 
             $$\frac{d^2 x}{dt^2}-\mu(1-x^2)\frac{dx}{dt}+x=0$$
 
-            with initial conditions $x=-2$ and $\frac{dx}{dt}=0$. The parameter $\mu$ controls the magnitude of the damping term. To create a CellML model, we need to convert this to two first-order equations by defining the velocity $\frac{dx}{dt}$ as a new variable $y$:
+            with initial conditions $x=-2$ and $\frac{dx}{dt}=0$. The parameter $\mu$ controls the magnitude of the damping term. To create a CellML file, we need to convert the second-order equation to two first-order equations by defining the velocity $\frac{dx}{dt}$ as a new variable $y$:
 
             $$\frac{dx}{dt}=y$$
             $$\frac{dy}{dt}=\mu(1-x^2)y-x$$
@@ -71,11 +73,11 @@
         </p>
 
         <p>
-            Now, before going further, we need to ensure that we are in <em>Editing</em> mode and that the <em><a href="plugins/editing/CellMLTextView.html">CellML Text</a></em> view is selected. To do this, and if needed, click on the Editing tab on the left hand edge of the central area, and click on the CellML Text tab on the right hand edge of that same central area.
+            Now, before we can actually create a CellML file for that model, we need to ensure that we are in <em>Editing</em> mode and that the <em><a href="plugins/editing/CellMLTextView.html">CellML Text</a></em> view is selected. To do this, make sure that the <em>Editing</em> tab on the left hand edge of the central area is selected, and the same with the <em>CellML Text</em> tab on the right hand edge of the central area.
         </p>
 
         <p>
-            Being in the correct mode and view, we can now create a CellML file for the above system of ordinary differential equations (ODEs): under the <code>File</code> | <code>New</code> menu, select the <code>CellML 1.0 File</code> menu item and type in the following lines of code:
+            Being in the correct mode and view, we can now create a CellML file for the above system of ordinary differential equations (ODEs). Under the <code>File</code> | <code>New</code> menu, select <code>CellML 1.0 File</code> and type in the following lines of code:
         </p>
 
         <pre><span class="keyword">def model</span> van_der_pol_model <span class="keyword">as</span>
@@ -91,7 +93,7 @@
 <span class="keyword">enddef</span>;</pre>
 
         <p class="katexRendering">
-            Things to note are: (i) the closing semicolon at the end of each line (apart from the first two <code>def</code> statements that are opening a CellML construct), (ii) the need to indicate dimensions for each variable and constant (all <code>dimensionless</code> in this example – but more on dimensions later), (iii) the use of <code>ode(x,t)</code> to indicate a first-order ODE in <code>x</code> and <code>t</code>, and (iv) the use of the convenient squaring function <code>sqr(x)</code> for $x^2$ (a full list of mathematical operators, elements and constants supported by the <em><a href="plugins/editing/CellMLTextView.html">CellML Text</a></em> view can be found <a href="plugins/editing/CellMLTextView.html?#mathematicalOperatorsElementsAndConstants">here</a>).
+            Things to note are: (i) the closing semicolon at the end of each line (apart from the first two <code>def</code> statements that are opening a CellML construct), (ii) the need to indicate dimensions for each variable and constant (all <code>dimensionless</code> in this example), (iii) the use of <code>ode(x,t)</code> to indicate a first-order ODE in <code>x</code> and <code>t</code>, and (iv) the use of the convenient squaring function <code>sqr(x)</code> for $x^2$ (a full list of mathematical operators, elements and constants supported by the <a href="plugins/editing/CellMLTextView.html#CellML Text format">CellML Text format</a> can be found <a href="plugins/editing/CellMLTextView.html?#mathematicalOperatorsElementsAndConstants">here</a>).
         </p>
 
         <p>
@@ -103,11 +105,11 @@
         </p>
 
         <p>
-            Save the model using <code>Save</code> under the <code>File</code> menu (or press <code>Ctrl</code>+<code>S</code> on Windows and Linux, or <code>Command</code>+<code>S</code> on OS X) and choosing <code>.cellml</code> as the file format (<code>.cellml</code> is not strictly required but is best practice). With the model saved, the other editing views become available. One is the <em><a href="plugins/editing/CellMLTextView.html">CellML Text</a></em> view (the view used to enter the code above). Another is the <em><a href="plugins/editing/RawCellMLView.html">Raw CellML</a></em> view that displays the way the model is stored (note that positioning the cursor over part of the code shows the mathematics in this view also), and another is the <em><a href="plugins/editing/RawView.html">Raw</a></em> view that can be used to edit any text-based file.
+            Save the model using <code>Save</code> under the <code>File</code> menu (or press <code>Ctrl</code>+<code>S</code> on Windows and Linux, or <code>Command</code>+<code>S</code> on OS X) and choosing <code>.cellml</code> as the file format (<code>.cellml</code> is not strictly required but is best practice). With the model saved, all the editing views become available. One is the <em><a href="plugins/editing/CellMLTextView.html">CellML Text</a></em> view (the view used to enter the code above). Another is the <em><a href="plugins/editing/RawCellMLView.html">Raw CellML</a></em> view that displays the way the model is stored (note that positioning the cursor over part of the code shows the mathematics in this view also), and another is the <em><a href="plugins/editing/RawView.html">Raw</a></em> view that can be used to edit any text-based file.
         </p>
 
         <p>
-            With the equations and initial conditions defined, we are ready to run the model. To do this, click on the Simulation tab on the left hand edge of the window. You will see three main areas - at the left hand side of the window are the <em>Simulation</em>, <em>Solvers</em>, <em>Graphs</em> and <em>Parameters</em> panels. At the right hand side is the graph panel, and running along the bottom of the window is a status area, where status messages are displayed.
+            With the equations and initial conditions defined, we are ready to run the model. To do this, click on the <em>Simulation</em> tab on the left hand edge of the central area. You will see three main areas - at the left hand side of the view are the <em>Simulation</em>, <em>Solvers</em>, <em>Graphs</em> and <em>Parameters</em> panels. At the right hand side is the graph panel, and running along the bottom of the view is a status area, where status messages are displayed.
         </p>
 
         <div class="subSection">
@@ -219,7 +221,7 @@
         </ul>
 
         <p>
-            These can all be left at their default values for our simple demo problem (note that a model that requires a stimulus protocol should have the maximum step value of the <a href="plugins/solver/CVODESolver.html">CVODE</a> solver set to the length of the stimulus).
+            These can all be left at their default values for our simple model (note that a model that requires a stimulus protocol should have the maximum step value of the <a href="plugins/solver/CVODESolver.html">CVODE</a>/<a href="plugins/solver/IDASolver.html">IDA</a> solver set to the length of the stimulus, while the maximum number of steps might have to be increased in case of a stiff model).
         </p>
 
         <div class="subSection">
@@ -227,7 +229,7 @@
         </div>
 
         <p>
-            This shows what parameters are being plotted once these have been defined in the <em>Parameters</em> panel. These can be selected/deselected by clicking in the box next to a parameter.
+            This shows what parameters are being plotted once these have been defined in the <em>Graphs</em> or <em>Parameters</em> panel. These can be selected/deselected by clicking in the box next to a parameter.
         </p>
 
         <div class="subSection">
@@ -253,15 +255,15 @@
         </div>
 
         <p>
-            Go to the <code>File</code> menu and select the <code>Open...</code> menu item. Browse to the folder containing CellML files and select one. Note that this brings up a new tabbed window and you can have any number of CellML files open at the same time in order to quickly move between them. A CellML file can be closed by clicking on the close button in the corresponding file tab, or by selecting the <code>File</code> | <code>Close</code> menu or by pressing <code>Ctrl</code>+<code>W</code> (on Windows and Linux) or <code>Command</code>+<code>W</code> (on OS X).
+            Go to the <code>File</code> menu and select <code>Open...</code>. Browse to the folder containing CellML files and select one. Note that this brings up a new tabbed window and that you can have any number of CellML files open at the same time, in order to quickly move between them. A CellML file can be closed by clicking on the close button in the corresponding file tab, or by selecting the <code>File</code> | <code>Close</code> menu or by pressing <code>Ctrl</code>+<code>W</code> (on Windows and Linux) or <code>Command</code>+<code>W</code> (on OS X).
         </p>
 
         <p>
-            You can also access CellML files from the left hand windows in the first screenshot above. If those windows are not currently visible, use <code>Ctrl</code>+<code>Space</code> (on Windows and Linux) or <code>Alt</code>+<code>Space</code> (on OS X) to make them reappear (or use the <code>View</code> | <code>Windows</code> menu). CellML files can then be accessed from any one of those three windows – <em><a href="plugins/organisation/CellMLModelRepositoryWindow.html">CellML Model Repository</a></em>, <em><a href="plugins/organisation/FileBrowserWindow.html">File Browser</a></em> or <em><a href="plugins/organisation/FileOrganiserWindow.html">File Organiser</a></em>. For a CellML file under the <em>File Browser</em> or <em>File Organiser</em> window, either double click it or 'drag and drop' it over the central area to open it.
+            You can also access CellML files from the <a href="#DefaultOpenCOR">left hand windows</a>. If those windows are not currently visible, use <code>Ctrl</code>+<code>Space</code> (on Windows and Linux) or <code>Alt</code>+<code>Space</code> (on OS X) to make them reappear (or use the <code>View</code> | <code>Windows</code> menu). CellML files can then be accessed from any one of those three windows – <em><a href="plugins/organisation/CellMLModelRepositoryWindow.html">CellML Model Repository</a></em>, <em><a href="plugins/organisation/FileBrowserWindow.html">File Browser</a></em> or <em><a href="plugins/organisation/FileOrganiserWindow.html">File Organiser</a></em>. For a CellML file under the <em>File Browser</em> or <em>File Organiser</em> window, either double click it or 'drag and drop' it over the central area to open it.
         </p>
 
         <p>
-            To click on a model in the <em>CellML Model Repository</em> window opens a new browser window with the latest published <a href="https://abi-software-book.readthedocs.org/en/latest/glossary.html#term-exposure">exposure</a> for that model. To open this model in OpenCOR, retrieve the <a href="http://en.wikipedia.org/wiki/Uniform_resource_identifier">URI</a> of the required CellML file and copy it into the text box that appears under <code>Open Remote...</code> in the <code>File</code> menu. For example, to click on the <a href="https://models.physiomeproject.org/exposure/812eeafbc8ebe97bef435340c80cfcce">Noble, 1962</a> link opens the following page:
+            To click on a model in the <em><a href="plugins/organisation/CellMLModelRepositoryWindow.html">CellML Model Repository</a></em> window opens a new browser window with the latest published <a href="https://abi-software-book.readthedocs.org/en/latest/glossary.html#term-exposure">exposure</a> for that model. To open this model in OpenCOR, you need to retrieve the <a href="http://en.wikipedia.org/wiki/Uniform_resource_identifier">URI</a> of the corresponding CellML file and copy it into the text box that appears when selecting <code>Open Remote...</code> in the <code>File</code> menu. For example, to click on the <a href="https://models.physiomeproject.org/exposure/812eeafbc8ebe97bef435340c80cfcce">Noble, 1962</a> link in the <em><a href="plugins/organisation/CellMLModelRepositoryWindow.html">CellML Model Repository</a></em> window opens the following page in your browser:
         </p>
 
         <p class="center">
@@ -269,7 +271,7 @@
         </p>
 
         <p>
-            The <a href="https://abi-software-book.readthedocs.org/en/latest/glossary.html#term-workspace">workspace</a> for that exposure is:
+            The <a href="https://abi-software-book.readthedocs.org/en/latest/glossary.html#term-workspace">workspace</a> for that <a href="https://abi-software-book.readthedocs.org/en/latest/glossary.html#term-exposure">exposure</a> is:
         </p>
 
         <p class="center">
@@ -277,7 +279,7 @@
         </p>
 
         <p>
-            We want the URI of the CellML file that describes the <a href="http://www.ncbi.nlm.nih.gov/pmc/articles/PMC1359535/">Noble 1962</a> model, so we need to click on the <code>noble_1962.cellml</code> link:
+            We want the <a href="http://en.wikipedia.org/wiki/Uniform_resource_identifier">URI</a> of the CellML file that describes the <a href="http://www.ncbi.nlm.nih.gov/pmc/articles/PMC1359535/">Noble 1962</a> model, so we need to click on the <a href="https://models.physiomeproject.org/workspace/noble_1962/file/a241a010538a2815877572e8ac0c016cc121e0e3/noble_1962.cellml">noble_1962.cellml</a> link:
         </p>
 
         <p class="center">
@@ -285,7 +287,7 @@
         </p>
 
         <p>
-            The URI we are after is: <code>https://models.physiomeproject.org/workspace/noble_1962/rawfile/a241a010538a2815877572e8ac0c016cc121e0e3/noble_1962.cellml</code>.
+            That last page contains the <a href="http://en.wikipedia.org/wiki/Uniform_resource_identifier">URI</a> of the CellML file we are after: <code>https://models.physiomeproject.org/workspace/noble_1962/rawfile/a241a010538a2815877572e8ac0c016cc121e0e3/noble_1962.cellml</code>.
         </p>
 
         <script type="text/javascript">
