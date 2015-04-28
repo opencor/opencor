@@ -704,8 +704,14 @@ void CentralWidget::openFile(const QString &pFileName, const File::Type &pType,
     // Make sure that modes are available and that the file exists
 
     if (!mModeTabs->count() || !QFile::exists(pFileName)) {
-        QMessageBox::warning(this, pFromOpenRemoteFile?tr("Open Remote File"):tr("Open File"),
-                             tr("<strong>%1</strong> could not be opened.").arg(pFileName));
+        // Let the user know about us not being able to open the file, but only
+        // if we are not starting OpenCOR, i.e. only if our main window is
+        // visible
+
+        if (mMainWindow->isVisible()) {
+            QMessageBox::warning(this, pFromOpenRemoteFile?tr("Open Remote File"):tr("Open File"),
+                                 tr("<strong>%1</strong> could not be opened.").arg(pFileName));
+        }
 
         return;
     }
