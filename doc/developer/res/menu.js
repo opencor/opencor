@@ -1,15 +1,15 @@
 function headerAndContentsMenu(pageName, relativePath) {
     doHeaderAndContentsMenu(pageName, relativePath, 49, 133, 155,
                             { "menuItems": [
-                                { "level": 0, "label": "Home", "link": "developer" },
+                                { "level": 0, "label": "Home", "link": "developer/index.html" },
                                 { "separator": true },
                                 { "level": 0, "label": "Prerequisites", "link": "developer/prerequisites.html" },
                                 { "separator": true },
                                 { "level": 0, "label": "File structure", "link": "developer/fileStructure.html" },
                                 { "separator": true },
-                                { "level": 0, "label": "Develop", "link": "developer/develop" },
+                                { "level": 0, "label": "Develop", "link": "developer/develop/index.html" },
                                 { "level": 1, "label": "Coding style", "link": "developer/develop/codingStyle.html" },
-                                { "level": 1, "label": "Plugins", "link": "developer/develop/plugins", "subMenuHeader": true },
+                                { "level": 1, "label": "Plugins", "link": "developer/develop/plugins/index.html", "subMenuHeader": true },
                                 { "level": 2, "label": "Sample", "link": "developer/develop/plugins/Sample.html", "subMenuItem": true },
                                 { "level": 2, "label": "SampleTools", "link": "developer/develop/plugins/SampleTools.html", "subMenuItem": true },
                                 { "level": 2, "label": "SampleWindow", "link": "developer/develop/plugins/SampleWindow.html", "subMenuItem": true },
