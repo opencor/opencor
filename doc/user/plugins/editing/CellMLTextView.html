@@ -40,14 +40,14 @@
         </div>
 
         <p>
-            People familiar with <a href="http://cor.physiol.ox.ac.uk/">COR</a> will find that the <a href="#CellML Text format">CellML text format</a> is backward compatible with the COR format and that it has been extended to support:
+            People familiar with <a href="http://cor.physiol.ox.ac.uk/">COR</a> will find that the <a href="#CellML Text format">CellML text format</a> is backward compatible with the COR format, although it has been extended to support:
         </p>
 
         <ul>
             <li><a href="#Comments">Comments</a>;</li>
             <li>The <code>import</code> element (i.e. support for CellML 1.1);</li>
             <li>The <code>cmeta:id</code> attribute on all CellML elements (i.e. support for CellML annotation);</li>
-            <li>The <code>degree</code> qualifier for the <code>diff</code> element (i.e. not limited to first derivatives);</li>
+            <li>The <code>degree</code> qualifier for the <code>diff</code> element (i.e. support for higher-order derivatives);</li>
             <li>The <code>notanumber</code> and <code>infinity</code> constants; and</li>
             <li>An unlimited number of group types (in <a href="http://cor.physiol.ox.ac.uk/">COR</a>, a group can only specify one <code>encapsulation</code> and/or one <code>containment</code> type).</li>
         </ul>
@@ -57,7 +57,7 @@
         </p>
 
         <ul>
-            <li>The <code>reaction</code> element is not supported (its use is not only discouraged, but it is also to be removed from the forthcoming CellML 1.2 specifications);</li>
+            <li>The <code>reaction</code> element is not supported (its use is not only discouraged, but it has also been proposed that it be removed from the next CellML specifications);</li>
             <li>A <code>piecewise</code> statement can only be used as part of a top-level <code>eq</code> statement, and nested <code>piecewise</code> statements are not allowed (the latter is not a limitation per se since an equation can always be rewritten without the need for nested <code>piecewise</code> statements; more importantly, it is easier to read and maintain an equation that uses only one top-level <code>piecewise</code> statement); and</li>
             <li>A <code>component</code> element may contain a set of <code>math</code> elements, but its rendering is such that when serialised back, only one <code>math</code> element will remain, with all the equations in that one and unique <code>math</code> element.</li>
         </ul>
@@ -86,7 +86,7 @@
 <span class="keyword">enddef</span>;</pre>
 
         <p>
-            Note that <code>/* XXX */</code> comments are only for convenience and are not serialised back to CellML. Indeed, such comments can be inserted anywhere, including within an equation, e.g.:
+            Note that <code>/* XXX */</code> comments are only for convenience and are not serialised back to CellML. Indeed, such comments can be inserted anywhere, including within an equation, e.g.
         </p>
 
         <pre><span class="keyword">ode</span>(V, time) = -(i_Na+i_K+i_Leak<span class="comment">/*+i_Stim*/</span>)/Cm;</pre>
@@ -114,7 +114,7 @@
         </div>
 
         <p>
-            To <code>def</code>ine a <code>model</code> of name <code>my_model</code>, we use:
+            To <code>def</code>ine a <code>model</code> of name <code>my_model</code>, we would use:
         </p>
 
         <pre><span class="keyword">def model</span> my_model <span class="keyword">as</span>
@@ -132,7 +132,7 @@
         </div>
 
         <p>
-            To <code>def</code>ine an <code>import</code> for units and components defined in a CellML file, which <a href="http://en.wikipedia.org/wiki/Uniform_resource_identifier">URI</a> is <code>my_imported_model_uri</code>, we use:
+            To <code>def</code>ine an <code>import</code> for units and components defined in a CellML file, which <a href="http://en.wikipedia.org/wiki/Uniform_resource_identifier">URI</a> is <code>my_imported_model_uri</code>, we would use:
         </p>
 
         <pre><span class="keyword">def import using</span> <span class="string">"my_imported_model_uri"</span> <span class="keyword">for</span>
@@ -140,19 +140,19 @@
 <span class="keyword">enddef</span>;</pre>
 
         <p>
-            To import a <code>unit</code> originally named <code>my_reference_unit</code> and renamed <code>my_imported_unit</code> in our model, we use:
+            To import a <code>unit</code> originally named <code>my_reference_unit</code> and renamed <code>my_imported_unit</code> in our model, we would use:
         </p>
 
         <pre><span class="keyword">unit</span> my_imported_unit <span class="keyword">using unit</span> my_reference_unit;</pre>
 
         <p>
-            Similarly, to import a <code>component</code> originally named <code>my_reference_component</code> and renamed <code>my_imported_component</code> in our model, we use:
+            Similarly, to import a <code>component</code> originally named <code>my_reference_component</code> and renamed <code>my_imported_component</code> in our model, we would use:
         </p>
 
         <pre><span class="keyword">comp</span> my_imported_component <span class="keyword">using comp</span> my_reference_component;</pre>
 
         <p>
-            Putting everything together, we get:
+            Putting everything together, we would get:
         </p>
 
         <pre><span class="keyword">def import</span> <span class="keyword">using</span> <span class="string">"my_imported_model_uri"</span> <span class="keyword">for</span>
@@ -167,24 +167,25 @@
         </div>
 
         <p>
-            To <code>def</code>ine a <code>base unit</code> of name <code>my_base_unit</code>, we use:
+            To <code>def</code>ine a <code>base unit</code> of name <code>my_base_unit</code>, we would use:
         </p>
 
         <pre><span class="keyword">def unit</span> my_base_unit <span class="keyword">as</span> <span class="cellmlKeyword">base</span> <span class="keyword">unit</span>;</pre>
 
         <p>
-            To <code>def</code>ine a <code>unit</code> of name <code>my_unit</code>, based on some other units, we use:
+            To <code>def</code>ine a <code>unit</code> of name <code>my_unit</code>, based on some other units, we would use:
         </p>
 
         <pre><span class="keyword">def unit</span> my_unit <span class="keyword">as</span>
     <span class="keyword">unit</span> my_other_unit <span class="parameterBlock">{...}</span>;
     <span class="keyword">unit</span> <span class="cellmlKeyword">second</span> <span class="parameterBlock">{...}</span>;
     <span class="keyword">unit</span> <span class="cellmlKeyword">litre</span> <span class="parameterBlock">{...}</span>;
+    <span class="keyword">unit</span> <span class="cellmlKeyword">volt</span> <span class="parameterBlock">{...}</span>;
     ...
 <span class="keyword">enddef</span>;</pre>
 
         <p>
-            <code>my_other_unit</code> refers to a user-defined unit while <code>second</code> is an <a href="http://en.wikipedia.org/wiki/International_System_of_Units">SI</a> base unit and <code>litre</code> an <a href="http://en.wikipedia.org/wiki/International_System_of_Units">SI</a> derived unit. The following <a href="http://en.wikipedia.org/wiki/International_System_of_Units">SI</a> base (in bold) and derived units, as well as convenience units (in italics), can be used:
+            <code>my_other_unit</code> refers to a user-defined unit while <code>second</code> is an <a href="http://en.wikipedia.org/wiki/International_System_of_Units">SI</a> base unit, <code>litre</code> a convenience unit and <code>volt</code> an <a href="http://en.wikipedia.org/wiki/International_System_of_Units">SI</a> derived unit . The following <a href="http://en.wikipedia.org/wiki/International_System_of_Units">SI</a> base (in bold) and derived units, as well as convenience units (in italics), can be used:
         </p>
 
         <table>
@@ -239,7 +240,7 @@
         </table>
 
         <p class="katexRendering">
-            Additional information can be provided within the curly brackets. Thus, <code>pref</code>ix, <code>expo</code>nent, <code>mult</code>iplier and <code>off</code>set values of $p$, $e$, $m$ and $o$ can be used on a unit $u$ to define a new unit equal to $m \cdot (p \cdot u)^e+o$. For example, to define <code>my_unit</code> as being equal to $3 \cdot (milli \cdot my\_other\_unit)^{-1}+7$, we would use:
+            Additional information can be provided within curly brackets. Thus, <code>pref</code>ix, <code>expo</code>nent, <code>mult</code>iplier and <code>off</code>set values of $p$, $e$, $m$ and $o$ can be used on a unit $u$ to define a new unit equal to $m \cdot (p \cdot u)^e+o$. For example, to define <code>my_unit</code> as being equal to $3(milli \cdot my\_other\_unit)^{-1}+7$, we would use:
         </p>
 
         <pre><span class="keyword">def unit</span> my_unit <span class="keyword">as</span>
@@ -247,7 +248,7 @@
 <span class="keyword">enddef</span>;</pre>
 
         <p class="katexRendering">
-            By default, <code>pref</code>, <code>expo</code>, <code>mult</code> and <code>off</code> have a value of $0$, $1.0$, $1.0$ and $0.0$, respectively. <code>pref</code> can either be an integer or have any of the following value:
+            By default, <code>pref</code>, <code>expo</code>, <code>mult</code> and <code>off</code> have a value of $0$, $1.0$, $1.0$ and $0.0$, respectively. <code>pref</code> can either be an integer or have any of the following values:
         </p>
 
         <table class="katexRendering">
@@ -330,7 +331,7 @@
         </div>
 
         <p>
-            To <code>def</code>ine a <code>comp</code>onent of name <code>my_component</code>, we use:
+            To <code>def</code>ine a <code>comp</code>onent of name <code>my_component</code>, we would use:
         </p>
 
         <pre><span class="keyword">def comp</span> my_component <span class="keyword">as</span>
@@ -348,13 +349,13 @@
         </div>
 
         <p>
-            To <code>def</code>ine a <code>var</code>iable of name <code>my_variable</code> and of unit <code>my_unit</code>, we use:
+            To <code>def</code>ine a <code>var</code>iable of name <code>my_variable</code> and of unit <code>my_unit</code>, we would use:
         </p>
 
         <pre><span class="keyword">var</span> my_variable: my_unit <span class="parameterBlock">{...}</span>;</pre>
 
         <p class="katexRendering">
-            Additional information can be provided within the curly brackets: an <code>init</code>ial value, a <code>pub</code>lic interface and/or a <code>priv</code>ate interface. For example, to initialise <code>my_variable</code> to $3$ and set its public and private interfaces to <code>in</code> and <code>out</code>, respectively, we would use:
+            Additional information can be provided within curly brackets: an <code>init</code>ial value, a <code>pub</code>lic interface and/or a <code>priv</code>ate interface. For example, to initialise <code>my_variable</code> to $3$ and set its public and private interfaces to <code>in</code> and <code>out</code>, respectively, we would use:
         </p>
 
         <pre><span class="keyword">var</span> my_variable: my_unit <span class="parameterBlock">{<span class="keyword">init</span>: <span class="number">3</span>, <span class="keyword">pub</span>: <span class="cellmlKeyword">in</span>, <span class="keyword">priv</span>: <span class="cellmlKeyword">out</span>}</span>;</pre>
@@ -382,30 +383,23 @@
         <pre><span class="keyword">ode</span>(x, t) = ...;</pre>
 
         <p>
-            Here, the ODE is a first-order ODE and it could have been written:
+            The ODE is a first-order ODE and could also be written:
         </p>
 
         <pre><span class="keyword">ode</span>(x, t, <span class="number">1</span><span class="unit">{<span class="cellmlKeyword">dimensionless</span>}</span>)</pre>
 
         <p class="katexRendering">
-            This means that to write $\frac{d^2 x}{dt^2}$, $\frac{d^3 x}{dt^3}$, etc., we would use:
+            As can be seen, the order of the ODE is specified using a constant value of unit <code>dimensionless</code>, which means that to write $\frac{d^2 x}{dt^2}$, $\frac{d^3 x}{dt^3}$, etc., we would use:
         </p>
 
         <pre><span class="keyword">ode</span>(x, t, <span class="number">2</span><span class="unit">{<span class="cellmlKeyword">dimensionless</span>}</span>)
 <span class="keyword">ode</span>(x, t, <span class="number">3</span><span class="unit">{<span class="cellmlKeyword">dimensionless</span>}</span>)
 ...</pre>
 
-        <p>
-            As can be seen, constant values must have a unit. For example, to define <code>3</code> as being <code>dimensionless</code> and <code>5</code> as having <code>my_unit</code> as a unit, we would use:
-        </p>
-
-        <pre><span class="number">3</span><span class="unit">{<span class="cellmlKeyword">dimensionless</span>}</span>
-<span class="number">5</span><span class="unit">{my_unit}</span></pre>
-
         <span class="anchor" id="mathematicalOperatorsElementsAndConstants"></span>
 
         <p>
-            A mathematical equation can use any of the following mathematical operators, elements and constants:
+            The right hand side of a mathematical equation can use any of the following mathematical operators, elements and constants:
         </p>
 
         <ul>
@@ -511,9 +505,13 @@
                     </tr>
                     <tr>
                         <td class="center"><code>log</code></td>
-                        <td>Logarithm</td>
-                        <td><pre class="sampleCode"><span class="keyword">log</span>(x)
-<span class="keyword">log</span>(x, <span class="number">3</span><span class="unit">{<span class="cellmlKeyword">dimensionless</span>}</span>)</pre></td>
+                        <td>Logarithm (generic)</td>
+                        <td><pre class="sampleCode"><span class="keyword">log</span>(x, <span class="number">3</span><span class="unit">{<span class="cellmlKeyword">dimensionless</span>}</span>)</pre></td>
+                    </tr>
+                    <tr>
+                        <td class="center"><code>log</code></td>
+                        <td>Logarithm (common)</td>
+                        <td><pre class="sampleCode"><span class="keyword">log</span>(x)</pre></td>
                     </tr>
                     <tr>
                         <td class="center"><code>floor</code></td>
@@ -560,7 +558,7 @@
                         <td class="center"><code>not</code></td>
                         <td>Not</td>
                         <td><pre class="sampleCode"><span class="keyword">not</span> x
-<span class="keyword">not</span>(x+y)</pre></td>
+<span class="keyword">not</span>(x <span class="keyword">and</span> y)</pre></td>
                     </tr>
                 </table>
             </li>
@@ -746,7 +744,7 @@
         </div>
 
         <p>
-            To <code>def</code>ine a <code>group</code>, we use:
+            To <code>def</code>ine a <code>group</code>, we would use:
         </p>
 
         <pre><span class="keyword">def group as</span> ... <span class="keyword">for</span>
@@ -754,7 +752,7 @@
 <span class="keyword">enddef</span>;</pre>
 
         <p>
-            A group must be typed using either <code>containment</code> and/or <code>encapsulation</code>. For example, to define a containment group, we would use:
+            A group must be typed as a <code>containment</code> and/or an <code>encapsulation</code>. For example, to define a containment group, we would use:
         </p>
 
         <pre><span class="keyword">def group as</span> <span class="cellmlKeyword">containment</span> <span class="keyword">for</span>
@@ -786,7 +784,7 @@
 <span class="keyword">enddef</span>;</pre>
 
         <p>
-            A group definition is used whenever there is a need for a hierarchy of components. Some components may be included in others. For example, to define a group where both <code>my_component1</code> and <code>my_component2</code> are at the top level, and where <code>my_component1</code> includes <code>my_component11</code>, <code>my_component12</code> and <code>my_component13</code>, we would use:
+            A group definition is used whenever there is a need for a hierarchy of components. Some components may include others. For example, to define a group where both <code>my_component1</code> and <code>my_component2</code> are at the top level, and where <code>my_component1</code> includes <code>my_component11</code>, <code>my_component12</code> and <code>my_component13</code>, we would use:
         </p>
 
         <pre><span class="keyword">def group as</span> ... <span class="keyword">for</span>
@@ -800,7 +798,7 @@
 <span class="keyword">enddef</span>;</pre>
 
         <p>
-            Similarly, to define a group where <code>my_component1</code> is at the top level, where <code>my_component1</code> includes <code>my_component11</code> and <code>my_component12</code>, and where <code>my_component11</code> includes <code>my_component111</code>, we would use:
+            Similarly, to define a group where <code>my_component1</code> is at the top level, and where <code>my_component1</code> includes <code>my_component11</code> and <code>my_component12</code>, and where <code>my_component11</code> includes <code>my_component111</code>, we would use:
         </p>
 
         <pre><span class="keyword">def group as</span> ... <span class="keyword">for</span>
@@ -820,7 +818,7 @@
         </div>
 
         <p>
-            To <code>def</code>ine some <code>map</code>pings between two components of name <code>my_component1</code> and <code>my_component2</code>, we use:
+            To <code>def</code>ine some <code>map</code>pings between two components of name <code>my_component1</code> and <code>my_component2</code>, we would use:
         </p>
 
         <pre><span class="keyword">def map between</span> my_component1 <span class="keyword">and</span> my_component2</span> <span class="keyword">for</span>
@@ -866,8 +864,8 @@
     <span class="keyword">def comp</span><span class="cmetaId">{my_component_cmeta_id}</span> my_component <span class="keyword">as</span>
         <span class="keyword">var</span><span class="cmetaId">{my_variable_cmeta_id}</span> my_variable: my_unit <span class="parameterBlock">{<span class="keyword">init</span>: <span class="number">3</span>, <span class="keyword">pub</span>: <span class="cellmlKeyword">in</span>, <span class="keyword">priv</span>: <span class="cellmlKeyword">out</span>}</span>;
 
-        a =<span class="cmetaId">{my_a_equation_cmeta_id}</span> b+c;
-        <span class="keyword">ode</span>(d, t) =<span class="cmetaId">{my_d_equation_cmeta_id}</span> e+f;
+        a =<span class="cmetaId">{my_algebraic_equation_cmeta_id}</span> b+c;
+        <span class="keyword">ode</span>(d, t) =<span class="cmetaId">{my_ode_equation_cmeta_id}</span> e+f;
     <span class="keyword">enddef</span>;
 
     <span class="keyword">def group</span><span class="cmetaId">{my_group_cmeta_id}</span> <span class="keyword">as</span> <span class="cellmlKeyword">encapsulation</span><span class="cmetaId">{my_encapsulation_cmeta_id}</span> <span class="keyword">and</span> <span class="cellmlKeyword">containment</span><span class="cmetaId">{my_containment_cmeta_id}</span> my_containment <span class="keyword">for</span>
