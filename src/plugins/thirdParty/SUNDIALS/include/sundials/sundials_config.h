@@ -88,6 +88,7 @@
  * In all other cases (other platforms or static libraries under
  * Windows), the SUNDIALS_EXPORT macro is empty
  */
+//---OPENCOR--- BEGIN
 #ifdef _WIN32
     #ifdef BUILD_SUNDIALS_LIBRARY
         #define SUNDIALS_EXPORT __declspec(dllexport)
@@ -97,3 +98,4 @@
 #else
     #define SUNDIALS_EXPORT
 #endif
+//---OPENCOR--- END
