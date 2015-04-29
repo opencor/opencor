@@ -145,6 +145,9 @@ ELSE()
         HEADERS_MOC
             Qt4Qt5/SciClasses.h
 
+            Qt4Qt5/SciClasses.h
+            Qt4Qt5/ScintillaQt.h
+
             Qt4Qt5/Qsci/qsciabstractapis.h
             Qt4Qt5/Qsci/qsciapis.h
             Qt4Qt5/Qsci/qscilexer.h
