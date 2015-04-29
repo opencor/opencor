@@ -124,10 +124,13 @@ ELSE()
             src/ContractionState.cpp
             src/Decoration.cpp
             src/Document.cpp
+            src/EditModel.cpp
             src/Editor.cpp
+            src/EditView.cpp
             src/Indicator.cpp
             src/KeyMap.cpp
             src/LineMarker.cpp
+            src/MarginView.cpp
             src/PerLine.cpp
             src/PositionCache.cpp
             src/qscintillaplugin.cpp

@@ -16,8 +16,8 @@ namespace Scintilla {
  */
 class AutoComplete {
 	bool active;
-	char stopChars[256];
-	char fillUpChars[256];
+	std::string stopChars;
+	std::string fillUpChars;
 	char separator;
 	char typesep; // Type seperator
 	enum { maxItemLen=1000 };
@@ -65,7 +65,7 @@ public:
 	void SetSeparator(char separator_);
 	char GetSeparator() const;
 
-	/// The typesep character is used for seperating the word from the type
+	/// The typesep character is used for separating the word from the type
 	void SetTypesep(char separator_);
 	char GetTypesep() const;
 

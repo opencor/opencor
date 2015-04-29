@@ -8,9 +8,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
-#include <ctype.h>
 #include <stdarg.h>
 #include <assert.h>
+#include <ctype.h>
 
 #include <vector>
 
@@ -81,6 +81,7 @@ int Scintilla_LinkLexers() {
 	LINK_LEXER(lmAbaqus);
 	LINK_LEXER(lmAda);
 	LINK_LEXER(lmAPDL);
+	LINK_LEXER(lmAs);
 	LINK_LEXER(lmAsm);
 	LINK_LEXER(lmAsn1);
 	LINK_LEXER(lmASY);
@@ -90,6 +91,7 @@ int Scintilla_LinkLexers() {
 	LINK_LEXER(lmBaan);
 	LINK_LEXER(lmBash);
 	LINK_LEXER(lmBatch);
+	LINK_LEXER(lmBibTeX);
 	LINK_LEXER(lmBlitzBasic);
 	LINK_LEXER(lmBullant);
 	LINK_LEXER(lmCaml);
@@ -105,6 +107,8 @@ int Scintilla_LinkLexers() {
 	LINK_LEXER(lmCss);
 	LINK_LEXER(lmD);
 	LINK_LEXER(lmDiff);
+	LINK_LEXER(lmDMAP);
+	LINK_LEXER(lmDMIS);
 	LINK_LEXER(lmECL);
 	LINK_LEXER(lmEiffel);
 	LINK_LEXER(lmEiffelkw);
@@ -120,6 +124,7 @@ int Scintilla_LinkLexers() {
 	LINK_LEXER(lmGui4Cli);
 	LINK_LEXER(lmHaskell);
 	LINK_LEXER(lmHTML);
+	LINK_LEXER(lmIHex);
 	LINK_LEXER(lmInno);
 	LINK_LEXER(lmKix);
 	LINK_LEXER(lmKVIrc);
@@ -161,6 +166,7 @@ int Scintilla_LinkLexers() {
 	LINK_LEXER(lmPython);
 	LINK_LEXER(lmR);
 	LINK_LEXER(lmREBOL);
+	LINK_LEXER(lmRegistry);
 	LINK_LEXER(lmRuby);
 	LINK_LEXER(lmRust);
 	LINK_LEXER(lmScriptol);
@@ -170,12 +176,14 @@ int Scintilla_LinkLexers() {
 	LINK_LEXER(lmSpecman);
 	LINK_LEXER(lmSpice);
 	LINK_LEXER(lmSQL);
+	LINK_LEXER(lmSrec);
 	LINK_LEXER(lmSTTXT);
 	LINK_LEXER(lmTACL);
 	LINK_LEXER(lmTADS3);
 	LINK_LEXER(lmTAL);
 	LINK_LEXER(lmTCL);
 	LINK_LEXER(lmTCMD);
+	LINK_LEXER(lmTEHex);
 	LINK_LEXER(lmTeX);
 	LINK_LEXER(lmTxt2tags);
 	LINK_LEXER(lmVB);
