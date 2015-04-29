@@ -1,15 +1,20 @@
 /*
  * -----------------------------------------------------------------
- * $Revision: 1.13 $
- * $Date: 2011/03/23 22:27:43 $
+ * $Revision: 4272 $
+ * $Date: 2014-12-02 11:19:41 -0800 (Tue, 02 Dec 2014) $
  * -----------------------------------------------------------------
  * Programmer(s): Scott D. Cohen, Alan C. Hindmarsh and
  *                Radu Serban @ LLNL
  * -----------------------------------------------------------------
- * Copyright (c) 2002, The Regents of the University of California.
+ * LLNS Copyright Start
+ * Copyright (c) 2014, Lawrence Livermore National Security
+ * This work was performed under the auspices of the U.S. Department
+ * of Energy by Lawrence Livermore National Laboratory in part under
+ * Contract W-7405-Eng-48 and in part under Contract DE-AC52-07NA27344.
  * Produced at the Lawrence Livermore National Laboratory.
  * All rights reserved.
  * For details, see the LICENSE file.
+ * LLNS Copyright End
  * -----------------------------------------------------------------
  * This is the implementation file for the CVBAND linear solver.
  * -----------------------------------------------------------------
@@ -111,14 +116,14 @@ int CVBand(void *cvode_mem, long int N, long int mupper, long int mlower)
 
   /* Return immediately if cvode_mem is NULL */
   if (cvode_mem == NULL) {
-    CVProcessError(NULL, CVDLS_MEM_NULL, "CVBAND", "CVBand", MSGD_CVMEM_NULL);
+    cvProcessError(NULL, CVDLS_MEM_NULL, "CVBAND", "CVBand", MSGD_CVMEM_NULL);
     return(CVDLS_MEM_NULL);
   }
   cv_mem = (CVodeMem) cvode_mem;
 
   /* Test if the NVECTOR package is compatible with the BAND solver */
   if (vec_tmpl->ops->nvgetarraypointer == NULL) {
-    CVProcessError(cv_mem, CVDLS_ILL_INPUT, "CVBAND", "CVBand", MSGD_BAD_NVECTOR);
+    cvProcessError(cv_mem, CVDLS_ILL_INPUT, "CVBAND", "CVBand", MSGD_BAD_NVECTOR);
     return(CVDLS_ILL_INPUT);
   }
 
@@ -134,7 +139,7 @@ int CVBand(void *cvode_mem, long int N, long int mupper, long int mlower)
   cvdls_mem = NULL;
   cvdls_mem = (CVDlsMem) malloc(sizeof(struct CVDlsMemRec));
   if (cvdls_mem == NULL) {
-    CVProcessError(cv_mem, CVDLS_MEM_FAIL, "CVBAND", "CVBand", MSGD_MEM_FAIL);
+    cvProcessError(cv_mem, CVDLS_MEM_FAIL, "CVBAND", "CVBand", MSGD_MEM_FAIL);
     return(CVDLS_MEM_FAIL);
   }
 
@@ -159,26 +164,26 @@ int CVBand(void *cvode_mem, long int N, long int mupper, long int mlower)
 
   /* Test ml and mu for legality */
   if ((ml < 0) || (mu < 0) || (ml >= N) || (mu >= N)) {
-    CVProcessError(cv_mem, CVDLS_ILL_INPUT, "CVBAND", "CVBand", MSGD_BAD_SIZES);
+    cvProcessError(cv_mem, CVDLS_ILL_INPUT, "CVBAND", "CVBand", MSGD_BAD_SIZES);
     free(cvdls_mem); cvdls_mem = NULL;
     return(CVDLS_ILL_INPUT);
   }
 
   /* Set extended upper half-bandwith for M (required for pivoting) */
-  smu = MIN(N-1, mu + ml);
+  smu = SUNMIN(N-1, mu + ml);
 
   /* Allocate memory for M, savedJ, and pivot arrays */
   M = NULL;
   M = NewBandMat(N, mu, ml, smu);
   if (M == NULL) {
-    CVProcessError(cv_mem, CVDLS_MEM_FAIL, "CVBAND", "CVBand", MSGD_MEM_FAIL);
+    cvProcessError(cv_mem, CVDLS_MEM_FAIL, "CVBAND", "CVBand", MSGD_MEM_FAIL);
     free(cvdls_mem); cvdls_mem = NULL;
     return(CVDLS_MEM_FAIL);
   }
   savedJ = NULL;
   savedJ = NewBandMat(N, mu, ml, mu);
   if (savedJ == NULL) {
-    CVProcessError(cv_mem, CVDLS_MEM_FAIL, "CVBAND", "CVBand", MSGD_MEM_FAIL);
+    cvProcessError(cv_mem, CVDLS_MEM_FAIL, "CVBAND", "CVBand", MSGD_MEM_FAIL);
     DestroyMat(M);
     free(cvdls_mem); cvdls_mem = NULL;
     return(CVDLS_MEM_FAIL);
@@ -186,7 +191,7 @@ int CVBand(void *cvode_mem, long int N, long int mupper, long int mlower)
   lpivots = NULL;
   lpivots = NewLintArray(N);
   if (lpivots == NULL) {
-    CVProcessError(cv_mem, CVDLS_MEM_FAIL, "CVBAND", "CVBand", MSGD_MEM_FAIL);
+    cvProcessError(cv_mem, CVDLS_MEM_FAIL, "CVBAND", "CVBand", MSGD_MEM_FAIL);
     DestroyMat(M);
     DestroyMat(savedJ);
     free(cvdls_mem); cvdls_mem = NULL;
@@ -257,7 +262,7 @@ static int cvBandSetup(CVodeMem cv_mem, int convfail, N_Vector ypred,
 
   /* Use nst, gamma/gammap, and convfail to set J eval. flag jok */
 
-  dgamma = ABS((gamma/gammap) - ONE);
+  dgamma = SUNRabs((gamma/gammap) - ONE);
   jbad = (nst == 0) || (nst > nstlj + CVD_MSBJ) ||
          ((convfail == CV_FAIL_BAD_J) && (dgamma < CVD_DGMAX)) ||
          (convfail == CV_FAIL_OTHER);
@@ -279,7 +284,7 @@ static int cvBandSetup(CVodeMem cv_mem, int convfail, N_Vector ypred,
 
     retval = jac(n, mu, ml, tn, ypred, fpred, M, J_data, vtemp1, vtemp2, vtemp3);
     if (retval < 0) {
-      CVProcessError(cv_mem, CVDLS_JACFUNC_UNRECVR, "CVBAND", "cvBandSetup", MSGD_JACFUNC_FAILED);
+      cvProcessError(cv_mem, CVDLS_JACFUNC_UNRECVR, "CVBAND", "cvBandSetup", MSGD_JACFUNC_FAILED);
       last_flag = CVDLS_JACFUNC_UNRECVR;
       return(-1);
     }

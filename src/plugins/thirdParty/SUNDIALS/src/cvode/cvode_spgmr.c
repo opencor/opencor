@@ -1,15 +1,20 @@
 /*
  * -----------------------------------------------------------------
- * $Revision: 1.10 $
- * $Date: 2011/03/23 22:27:43 $
+ * $Revision: 4272 $
+ * $Date: 2014-12-02 11:19:41 -0800 (Tue, 02 Dec 2014) $
  * -----------------------------------------------------------------
  * Programmer(s): Scott D. Cohen, Alan C. Hindmarsh and
  *                Radu Serban @ LLNL
  * -----------------------------------------------------------------
- * Copyright (c) 2002, The Regents of the University of California.
+ * LLNS Copyright Start
+ * Copyright (c) 2014, Lawrence Livermore National Security
+ * This work was performed under the auspices of the U.S. Department
+ * of Energy by Lawrence Livermore National Laboratory in part under
+ * Contract W-7405-Eng-48 and in part under Contract DE-AC52-07NA27344.
  * Produced at the Lawrence Livermore National Laboratory.
  * All rights reserved.
  * For details, see the LICENSE file.
+ * LLNS Copyright End
  * -----------------------------------------------------------------
  * This is the implementation file for the CVSPGMR linear solver.
  * -----------------------------------------------------------------
@@ -113,14 +118,14 @@ int CVSpgmr(void *cvode_mem, int pretype, int maxl)
 
   /* Return immediately if cvode_mem is NULL */
   if (cvode_mem == NULL) {
-    CVProcessError(NULL, CVSPILS_MEM_NULL, "CVSPGMR", "CVSpgmr", MSGS_CVMEM_NULL);
+    cvProcessError(NULL, CVSPILS_MEM_NULL, "CVSPGMR", "CVSpgmr", MSGS_CVMEM_NULL);
     return(CVSPILS_MEM_NULL);
   }
   cv_mem = (CVodeMem) cvode_mem;
 
   /* Check if N_VDotProd is present */
   if(vec_tmpl->ops->nvdotprod == NULL) {
-    CVProcessError(cv_mem, CVSPILS_ILL_INPUT, "CVSPGMR", "CVSpgmr", MSGS_BAD_NVECTOR);
+    cvProcessError(cv_mem, CVSPILS_ILL_INPUT, "CVSPGMR", "CVSpgmr", MSGS_BAD_NVECTOR);
     return(CVSPILS_ILL_INPUT);
   }
 
@@ -136,7 +141,7 @@ int CVSpgmr(void *cvode_mem, int pretype, int maxl)
   cvspils_mem = NULL;
   cvspils_mem = (CVSpilsMem) malloc(sizeof(struct CVSpilsMemRec));
   if (cvspils_mem == NULL) {
-    CVProcessError(cv_mem, CVSPILS_MEM_FAIL, "CVSPGMR", "CVSpgmr", MSGS_MEM_FAIL);
+    cvProcessError(cv_mem, CVSPILS_MEM_FAIL, "CVSPGMR", "CVSpgmr", MSGS_MEM_FAIL);
     return(CVSPILS_MEM_FAIL);
   }
 
@@ -169,7 +174,7 @@ int CVSpgmr(void *cvode_mem, int pretype, int maxl)
   /* Check for legal pretype */
   if ((pretype != PREC_NONE) && (pretype != PREC_LEFT) &&
       (pretype != PREC_RIGHT) && (pretype != PREC_BOTH)) {
-    CVProcessError(cv_mem, CVSPILS_ILL_INPUT, "CVSPGMR", "CVSpgmr", MSGS_BAD_PRETYPE);
+    cvProcessError(cv_mem, CVSPILS_ILL_INPUT, "CVSPGMR", "CVSpgmr", MSGS_BAD_PRETYPE);
     free(cvspils_mem); cvspils_mem = NULL;
     return(CVSPILS_ILL_INPUT);
   }
@@ -178,14 +183,14 @@ int CVSpgmr(void *cvode_mem, int pretype, int maxl)
 
   ytemp = N_VClone(vec_tmpl);
   if (ytemp == NULL) {
-    CVProcessError(cv_mem, CVSPILS_MEM_FAIL, "CVSPGMR", "CVSpgmr", MSGS_MEM_FAIL);
+    cvProcessError(cv_mem, CVSPILS_MEM_FAIL, "CVSPGMR", "CVSpgmr", MSGS_MEM_FAIL);
     free(cvspils_mem); cvspils_mem = NULL;
     return(CVSPILS_MEM_FAIL);
   }
 
   x = N_VClone(vec_tmpl);
   if (x == NULL) {
-    CVProcessError(cv_mem, CVSPILS_MEM_FAIL, "CVSPGMR", "CVSpgmr", MSGS_MEM_FAIL);
+    cvProcessError(cv_mem, CVSPILS_MEM_FAIL, "CVSPGMR", "CVSpgmr", MSGS_MEM_FAIL);
     N_VDestroy(ytemp);
     free(cvspils_mem); cvspils_mem = NULL;
     return(CVSPILS_MEM_FAIL);
@@ -193,13 +198,13 @@ int CVSpgmr(void *cvode_mem, int pretype, int maxl)
 
   /* Compute sqrtN from a dot product */
   N_VConst(ONE, ytemp);
-  sqrtN = RSqrt( N_VDotProd(ytemp, ytemp) );
+  sqrtN = SUNRsqrt( N_VDotProd(ytemp, ytemp) );
 
   /* Call SpgmrMalloc to allocate workspace for Spgmr */
   spgmr_mem = NULL;
   spgmr_mem = SpgmrMalloc(mxl, vec_tmpl);
   if (spgmr_mem == NULL) {
-    CVProcessError(cv_mem, CVSPILS_MEM_FAIL, "CVSPGMR", "CVSpgmr", MSGS_MEM_FAIL);
+    cvProcessError(cv_mem, CVSPILS_MEM_FAIL, "CVSPGMR", "CVSpgmr", MSGS_MEM_FAIL);
     N_VDestroy(ytemp);
     N_VDestroy(x);
     free(cvspils_mem); cvspils_mem = NULL;
@@ -246,7 +251,7 @@ static int CVSpgmrInit(CVodeMem cv_mem)
 
   /* Check for legal combination pretype - psolve */
   if ((pretype != PREC_NONE) && (psolve == NULL)) {
-    CVProcessError(cv_mem, -1, "CVSPGMR", "CVSpgmrInit", MSGS_PSOLVE_REQ);
+    cvProcessError(cv_mem, -1, "CVSPGMR", "CVSpgmrInit", MSGS_PSOLVE_REQ);
     last_flag = CVSPILS_ILL_INPUT;
     return(-1);
   }
@@ -292,7 +297,7 @@ static int CVSpgmrSetup(CVodeMem cv_mem, int convfail, N_Vector ypred,
   cvspils_mem = (CVSpilsMem) lmem;
 
   /* Use nst, gamma/gammap, and convfail to set J eval. flag jok */
-  dgamma = ABS((gamma/gammap) - ONE);
+  dgamma = SUNRabs((gamma/gammap) - ONE);
   jbad = (nst == 0) || (nst > nstlpre + CVSPILS_MSBPRE) ||
     ((convfail == CV_FAIL_BAD_J) && (dgamma < CVSPILS_DGMAX)) ||
     (convfail == CV_FAIL_OTHER);
@@ -303,7 +308,7 @@ static int CVSpgmrSetup(CVodeMem cv_mem, int convfail, N_Vector ypred,
   retval = pset(tn, ypred, fpred, jok, jcurPtr, gamma, P_data,
                 vtemp1, vtemp2, vtemp3);
   if (retval < 0) {
-    CVProcessError(cv_mem, SPGMR_PSET_FAIL_UNREC, "CVSPGMR", "CVSpgmrSetup", MSGS_PSET_FAILED);
+    cvProcessError(cv_mem, SPGMR_PSET_FAIL_UNREC, "CVSPGMR", "CVSpgmrSetup", MSGS_PSET_FAILED);
     last_flag = SPGMR_PSET_FAIL_UNREC;
   }
   if (retval > 0) {
@@ -416,11 +421,11 @@ static int CVSpgmrSolve(CVodeMem cv_mem, N_Vector b, N_Vector weight,
     return(-1);
     break;
   case SPGMR_ATIMES_FAIL_UNREC:
-    CVProcessError(cv_mem, SPGMR_ATIMES_FAIL_UNREC, "CVSPGMR", "CVSpgmrSolve", MSGS_JTIMES_FAILED);
+    cvProcessError(cv_mem, SPGMR_ATIMES_FAIL_UNREC, "CVSPGMR", "CVSpgmrSolve", MSGS_JTIMES_FAILED);
     return(-1);
     break;
   case SPGMR_PSOLVE_FAIL_UNREC:
-    CVProcessError(cv_mem, SPGMR_PSOLVE_FAIL_UNREC, "CVSPGMR", "CVSpgmrSolve", MSGS_PSOLVE_FAILED);
+    cvProcessError(cv_mem, SPGMR_PSOLVE_FAIL_UNREC, "CVSPGMR", "CVSpgmrSolve", MSGS_PSOLVE_FAILED);
     return(-1);
     break;
   case SPGMR_GS_FAIL:

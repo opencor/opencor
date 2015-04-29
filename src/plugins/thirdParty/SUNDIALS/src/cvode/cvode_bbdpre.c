@@ -1,15 +1,20 @@
 /*
  * -----------------------------------------------------------------
- * $Revision: 1.9 $
- * $Date: 2010/12/01 22:21:04 $
+ * $Revision: 4272 $
+ * $Date: 2014-12-02 11:19:41 -0800 (Tue, 02 Dec 2014) $
  * -----------------------------------------------------------------
  * Programmer(s): Michael Wittman, Alan C. Hindmarsh, Radu Serban,
  *                and Aaron Collier @ LLNL
  * -----------------------------------------------------------------
- * Copyright (c) 2002, The Regents of the University of California.
+ * LLNS Copyright Start
+ * Copyright (c) 2014, Lawrence Livermore National Security
+ * This work was performed under the auspices of the U.S. Department
+ * of Energy by Lawrence Livermore National Laboratory in part under
+ * Contract W-7405-Eng-48 and in part under Contract DE-AC52-07NA27344.
  * Produced at the Lawrence Livermore National Laboratory.
  * All rights reserved.
  * For details, see the LICENSE file.
+ * LLNS Copyright End
  * -----------------------------------------------------------------
  * This file contains implementations of routines for a
  * band-block-diagonal preconditioner, i.e. a block-diagonal
@@ -82,21 +87,21 @@ int CVBBDPrecInit(void *cvode_mem, long int Nlocal,
   int flag;
 
   if (cvode_mem == NULL) {
-    CVProcessError(NULL, CVSPILS_MEM_NULL, "CVBBDPRE", "CVBBDPrecInit", MSGBBD_MEM_NULL);
+    cvProcessError(NULL, CVSPILS_MEM_NULL, "CVBBDPRE", "CVBBDPrecInit", MSGBBD_MEM_NULL);
     return(CVSPILS_MEM_NULL);
   }
   cv_mem = (CVodeMem) cvode_mem;
 
   /* Test if one of the SPILS linear solvers has been attached */
   if (cv_mem->cv_lmem == NULL) {
-    CVProcessError(cv_mem, CVSPILS_LMEM_NULL, "CVBBDPRE", "CVBBDPrecInit", MSGBBD_LMEM_NULL);
+    cvProcessError(cv_mem, CVSPILS_LMEM_NULL, "CVBBDPRE", "CVBBDPrecInit", MSGBBD_LMEM_NULL);
     return(CVSPILS_LMEM_NULL);
   }
   cvspils_mem = (CVSpilsMem) cv_mem->cv_lmem;
 
   /* Test if the NVECTOR package is compatible with the BLOCK BAND preconditioner */
   if(vec_tmpl->ops->nvgetarraypointer == NULL) {
-    CVProcessError(cv_mem, CVSPILS_ILL_INPUT, "CVBBDPRE", "CVBBDPrecInit", MSGBBD_BAD_NVECTOR);
+    cvProcessError(cv_mem, CVSPILS_ILL_INPUT, "CVBBDPRE", "CVBBDPrecInit", MSGBBD_BAD_NVECTOR);
     return(CVSPILS_ILL_INPUT);
   }
 
@@ -104,7 +109,7 @@ int CVBBDPrecInit(void *cvode_mem, long int Nlocal,
   pdata = NULL;
   pdata = (CVBBDPrecData) malloc(sizeof *pdata);
   if (pdata == NULL) {
-    CVProcessError(cv_mem, CVSPILS_MEM_FAIL, "CVBBDPRE", "CVBBDPrecInit", MSGBBD_MEM_FAIL);
+    cvProcessError(cv_mem, CVSPILS_MEM_FAIL, "CVBBDPRE", "CVBBDPrecInit", MSGBBD_MEM_FAIL);
     return(CVSPILS_MEM_FAIL);
   }
 
@@ -112,10 +117,10 @@ int CVBBDPrecInit(void *cvode_mem, long int Nlocal,
   pdata->cvode_mem = cvode_mem;
   pdata->gloc = gloc;
   pdata->cfn = cfn;
-  pdata->mudq = MIN(Nlocal-1, MAX(0,mudq));
-  pdata->mldq = MIN(Nlocal-1, MAX(0,mldq));
-  muk = MIN(Nlocal-1, MAX(0,mukeep));
-  mlk = MIN(Nlocal-1, MAX(0,mlkeep));
+  pdata->mudq = SUNMIN(Nlocal-1, SUNMAX(0,mudq));
+  pdata->mldq = SUNMIN(Nlocal-1, SUNMAX(0,mldq));
+  muk = SUNMIN(Nlocal-1, SUNMAX(0,mukeep));
+  mlk = SUNMIN(Nlocal-1, SUNMAX(0,mlkeep));
   pdata->mukeep = muk;
   pdata->mlkeep = mlk;
 
@@ -123,18 +128,18 @@ int CVBBDPrecInit(void *cvode_mem, long int Nlocal,
   pdata->savedJ = NewBandMat(Nlocal, muk, mlk, muk);
   if (pdata->savedJ == NULL) {
     free(pdata); pdata = NULL;
-    CVProcessError(cv_mem, CVSPILS_MEM_FAIL, "CVBBDPRE", "CVBBDPrecInit", MSGBBD_MEM_FAIL);
+    cvProcessError(cv_mem, CVSPILS_MEM_FAIL, "CVBBDPRE", "CVBBDPrecInit", MSGBBD_MEM_FAIL);
     return(CVSPILS_MEM_FAIL);
   }
 
   /* Allocate memory for preconditioner matrix */
-  storage_mu = MIN(Nlocal-1, muk + mlk);
+  storage_mu = SUNMIN(Nlocal-1, muk + mlk);
   pdata->savedP = NULL;
   pdata->savedP = NewBandMat(Nlocal, muk, mlk, storage_mu);
   if (pdata->savedP == NULL) {
     DestroyMat(pdata->savedJ);
     free(pdata); pdata = NULL;
-    CVProcessError(cv_mem, CVSPILS_MEM_FAIL, "CVBBDPRE", "CVBBDPrecInit", MSGBBD_MEM_FAIL);
+    cvProcessError(cv_mem, CVSPILS_MEM_FAIL, "CVBBDPRE", "CVBBDPrecInit", MSGBBD_MEM_FAIL);
     return(CVSPILS_MEM_FAIL);
   }
   /* Allocate memory for lpivots */
@@ -144,12 +149,12 @@ int CVBBDPrecInit(void *cvode_mem, long int Nlocal,
     DestroyMat(pdata->savedP);
     DestroyMat(pdata->savedJ);
     free(pdata); pdata = NULL;
-    CVProcessError(cv_mem, CVSPILS_MEM_FAIL, "CVBBDPRE", "CVBBDPrecInit", MSGBBD_MEM_FAIL);
+    cvProcessError(cv_mem, CVSPILS_MEM_FAIL, "CVBBDPRE", "CVBBDPrecInit", MSGBBD_MEM_FAIL);
     return(CVSPILS_MEM_FAIL);
   }
 
   /* Set pdata->dqrely based on input dqrely (0 implies default). */
-  pdata->dqrely = (dqrely > ZERO) ? dqrely : RSqrt(uround);
+  pdata->dqrely = (dqrely > ZERO) ? dqrely : SUNRsqrt(uround);
 
   /* Store Nlocal to be used in CVBBDPrecSetup */
   pdata->n_local = Nlocal;
@@ -182,32 +187,32 @@ int CVBBDPrecReInit(void *cvode_mem,
   long int Nlocal;
 
   if (cvode_mem == NULL) {
-    CVProcessError(NULL, CVSPILS_MEM_NULL, "CVBBDPRE", "CVBBDPrecReInit", MSGBBD_MEM_NULL);
+    cvProcessError(NULL, CVSPILS_MEM_NULL, "CVBBDPRE", "CVBBDPrecReInit", MSGBBD_MEM_NULL);
     return(CVSPILS_MEM_NULL);
   }
   cv_mem = (CVodeMem) cvode_mem;
 
   /* Test if one of the SPILS linear solvers has been attached */
   if (cv_mem->cv_lmem == NULL) {
-    CVProcessError(cv_mem, CVSPILS_LMEM_NULL, "CVBBDPRE", "CVBBDPrecReInit", MSGBBD_LMEM_NULL);
+    cvProcessError(cv_mem, CVSPILS_LMEM_NULL, "CVBBDPRE", "CVBBDPrecReInit", MSGBBD_LMEM_NULL);
     return(CVSPILS_LMEM_NULL);
   }
   cvspils_mem = (CVSpilsMem) cv_mem->cv_lmem;
 
   /* Test if the preconditioner data is non-NULL */
   if (cvspils_mem->s_P_data == NULL) {
-    CVProcessError(cv_mem, CVSPILS_PMEM_NULL, "CVBBDPRE", "CVBBDPrecReInit", MSGBBD_PMEM_NULL);
+    cvProcessError(cv_mem, CVSPILS_PMEM_NULL, "CVBBDPRE", "CVBBDPrecReInit", MSGBBD_PMEM_NULL);
     return(CVSPILS_PMEM_NULL);
   }
   pdata = (CVBBDPrecData) cvspils_mem->s_P_data;
 
   /* Load half-bandwidths */
   Nlocal = pdata->n_local;
-  pdata->mudq = MIN(Nlocal-1, MAX(0,mudq));
-  pdata->mldq = MIN(Nlocal-1, MAX(0,mldq));
+  pdata->mudq = SUNMIN(Nlocal-1, SUNMAX(0,mudq));
+  pdata->mldq = SUNMIN(Nlocal-1, SUNMAX(0,mldq));
 
   /* Set pdata->dqrely based on input dqrely (0 implies default). */
-  pdata->dqrely = (dqrely > ZERO) ? dqrely : RSqrt(uround);
+  pdata->dqrely = (dqrely > ZERO) ? dqrely : SUNRsqrt(uround);
 
   /* Re-initialize nge */
   pdata->nge = 0;
@@ -222,19 +227,19 @@ int CVBBDPrecGetWorkSpace(void *cvode_mem, long int *lenrwBBDP, long int *leniwB
   CVBBDPrecData pdata;
 
   if (cvode_mem == NULL) {
-    CVProcessError(NULL, CVSPILS_MEM_NULL, "CVBBDPRE", "CVBBDPrecGetWorkSpace", MSGBBD_MEM_NULL);
+    cvProcessError(NULL, CVSPILS_MEM_NULL, "CVBBDPRE", "CVBBDPrecGetWorkSpace", MSGBBD_MEM_NULL);
     return(CVSPILS_MEM_NULL);
   }
   cv_mem = (CVodeMem) cvode_mem;
 
   if (cv_mem->cv_lmem == NULL) {
-    CVProcessError(cv_mem, CVSPILS_LMEM_NULL, "CVBBDPRE", "CVBBDPrecGetWorkSpace", MSGBBD_LMEM_NULL);
+    cvProcessError(cv_mem, CVSPILS_LMEM_NULL, "CVBBDPRE", "CVBBDPrecGetWorkSpace", MSGBBD_LMEM_NULL);
     return(CVSPILS_LMEM_NULL);
   }
   cvspils_mem = (CVSpilsMem) cv_mem->cv_lmem;
 
   if (cvspils_mem->s_P_data == NULL) {
-    CVProcessError(cv_mem, CVSPILS_PMEM_NULL, "CVBBDPRE", "CVBBDPrecGetWorkSpace", MSGBBD_PMEM_NULL);
+    cvProcessError(cv_mem, CVSPILS_PMEM_NULL, "CVBBDPRE", "CVBBDPrecGetWorkSpace", MSGBBD_PMEM_NULL);
     return(CVSPILS_PMEM_NULL);
   }
   pdata = (CVBBDPrecData) cvspils_mem->s_P_data;
@@ -252,19 +257,19 @@ int CVBBDPrecGetNumGfnEvals(void *cvode_mem, long int *ngevalsBBDP)
   CVBBDPrecData pdata;
 
   if (cvode_mem == NULL) {
-    CVProcessError(NULL, CVSPILS_MEM_NULL, "CVBBDPRE", "CVBBDPrecGetNumGfnEvals", MSGBBD_MEM_NULL);
+    cvProcessError(NULL, CVSPILS_MEM_NULL, "CVBBDPRE", "CVBBDPrecGetNumGfnEvals", MSGBBD_MEM_NULL);
     return(CVSPILS_MEM_NULL);
   }
   cv_mem = (CVodeMem) cvode_mem;
 
   if (cv_mem->cv_lmem == NULL) {
-    CVProcessError(cv_mem, CVSPILS_LMEM_NULL, "CVBBDPRE", "CVBBDPrecGetNumGfnEvals", MSGBBD_LMEM_NULL);
+    cvProcessError(cv_mem, CVSPILS_LMEM_NULL, "CVBBDPRE", "CVBBDPrecGetNumGfnEvals", MSGBBD_LMEM_NULL);
     return(CVSPILS_LMEM_NULL);
   }
   cvspils_mem = (CVSpilsMem) cv_mem->cv_lmem;
 
   if (cvspils_mem->s_P_data == NULL) {
-    CVProcessError(cv_mem, CVSPILS_PMEM_NULL, "CVBBDPRE", "CVBBDPrecGetNumGfnEvals", MSGBBD_PMEM_NULL);
+    cvProcessError(cv_mem, CVSPILS_PMEM_NULL, "CVBBDPRE", "CVBBDPrecGetNumGfnEvals", MSGBBD_PMEM_NULL);
     return(CVSPILS_PMEM_NULL);
   }
   pdata = (CVBBDPrecData) cvspils_mem->s_P_data;
@@ -370,7 +375,7 @@ static int CVBBDPrecSetup(realtype t, N_Vector y, N_Vector fy,
 
     retval = CVBBDDQJac(pdata, t, y, tmp1, tmp2, tmp3);
     if (retval < 0) {
-      CVProcessError(cv_mem, -1, "CVBBDPRE", "CVBBDPrecSetup", MSGBBD_FUNC_FAILED);
+      cvProcessError(cv_mem, -1, "CVBBDPRE", "CVBBDPrecSetup", MSGBBD_FUNC_FAILED);
       return(-1);
     }
     if (retval > 0) {
@@ -512,18 +517,18 @@ static int CVBBDDQJac(CVBBDPrecData pdata, realtype t,
   /* Set minimum increment based on uround and norm of g */
   gnorm = N_VWrmsNorm(gy, ewt);
   minInc = (gnorm != ZERO) ?
-           (MIN_INC_MULT * ABS(h) * uround * Nlocal * gnorm) : ONE;
+           (MIN_INC_MULT * SUNRabs(h) * uround * Nlocal * gnorm) : ONE;
 
   /* Set bandwidth and number of column groups for band differencing */
   width = mldq + mudq + 1;
-  ngroups = MIN(width, Nlocal);
+  ngroups = SUNMIN(width, Nlocal);
 
   /* Loop over groups */
   for (group=1; group <= ngroups; group++) {
 
     /* Increment all y_j in group */
     for(j=group-1; j < Nlocal; j+=width) {
-      inc = MAX(dqrely*ABS(y_data[j]), minInc/ewt_data[j]);
+      inc = SUNMAX(dqrely*SUNRabs(y_data[j]), minInc/ewt_data[j]);
       ytemp_data[j] += inc;
     }
 
@@ -536,10 +541,10 @@ static int CVBBDDQJac(CVBBDPrecData pdata, realtype t,
     for (j=group-1; j < Nlocal; j+=width) {
       ytemp_data[j] = y_data[j];
       col_j = BAND_COL(savedJ,j);
-      inc = MAX(dqrely*ABS(y_data[j]), minInc/ewt_data[j]);
+      inc = SUNMAX(dqrely*SUNRabs(y_data[j]), minInc/ewt_data[j]);
       inc_inv = ONE/inc;
-      i1 = MAX(0, j-mukeep);
-      i2 = MIN(j+mlkeep, Nlocal-1);
+      i1 = SUNMAX(0, j-mukeep);
+      i2 = SUNMIN(j+mlkeep, Nlocal-1);
       for (i=i1; i <= i2; i++)
         BAND_COL_ELEM(col_j,i,j) =
           inc_inv * (gtemp_data[i] - gy_data[i]);

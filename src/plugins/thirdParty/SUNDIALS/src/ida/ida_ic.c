@@ -1,14 +1,19 @@
 /*
  * -----------------------------------------------------------------
- * $Revision: 1.3 $
- * $Date: 2007/04/30 19:29:00 $
+ * $Revision: 4272 $
+ * $Date: 2014-12-02 11:19:41 -0800 (Tue, 02 Dec 2014) $
  * -----------------------------------------------------------------
  * Programmers: Alan C. Hindmarsh, and Radu Serban @ LLNL
  * -----------------------------------------------------------------
- * Copyright (c) 2002, The Regents of the University of California
- * Produced at the Lawrence Livermore National Laboratory
- * All rights reserved
- * For details, see the LICENSE file
+ * LLNS Copyright Start
+ * Copyright (c) 2014, Lawrence Livermore National Security
+ * This work was performed under the auspices of the U.S. Department
+ * of Energy by Lawrence Livermore National Laboratory in part under
+ * Contract W-7405-Eng-48 and in part under Contract DE-AC52-07NA27344.
+ * Produced at the Lawrence Livermore National Laboratory.
+ * All rights reserved.
+ * For details, see the LICENSE file.
+ * LLNS Copyright End
  * -----------------------------------------------------------------
  * This is the implementation file for the IC calculation for IDA.
  * It is independent of the linear solver in use.
@@ -193,8 +198,8 @@ int IDACalcIC(void *ida_mem, int icopt, realtype tout1)
     return(IDA_ILL_INPUT);
   }
 
-  tdist = ABS(tout1 - tn);
-  troundoff = TWO*uround*(ABS(tn) + ABS(tout1));
+  tdist = SUNRabs(tout1 - tn);
+  troundoff = TWO*uround*(SUNRabs(tn) + SUNRabs(tout1));
   if(tdist < troundoff) {
     IDAProcessError(IDA_mem, IDA_ILL_INPUT, "IDA", "IDACalcIC", MSG_IC_TOO_CLOSE);
     return(IDA_ILL_INPUT);
@@ -434,7 +439,7 @@ static int IDANewtonIC(IDAMem IDA_mem)
 
   /* Compute the norm of the step; return now if this is small. */
   fnorm = IDAWrmsNorm(IDA_mem, delta, ewt, FALSE);
-  if(sysindex == 0) fnorm *= tscale*ABS(cj);
+  if(sysindex == 0) fnorm *= tscale*SUNRabs(cj);
   if(fnorm <= epsNewt) return(IDA_SUCCESS);
 //---OPENCOR--- BEGIN
 // Note #1: when trying to retrieve consistent initial conditions, the user may
@@ -626,7 +631,7 @@ static int IDAfnorm(IDAMem IDA_mem, realtype *fnorm)
 
   /* Compute the WRMS-norm; rescale if index = 0. */
   *fnorm = IDAWrmsNorm(IDA_mem, delnew, ewt, FALSE);
-  if(sysindex == 0) (*fnorm) *= tscale*ABS(cj);
+  if(sysindex == 0) (*fnorm) *= tscale*SUNRabs(cj);
 
   return(IDA_SUCCESS);
 

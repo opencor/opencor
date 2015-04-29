@@ -1,14 +1,19 @@
 /*
  * -----------------------------------------------------------------
- * $Revision: 1.25 $
- * $Date: 2012/03/06 21:58:52 $
+ * $Revision: 4321 $
+ * $Date: 2015-01-14 16:53:35 -0800 (Wed, 14 Jan 2015) $
  * -----------------------------------------------------------------
  * Programmer(s): Alan Hindmarsh, Radu Serban and Aaron Collier @ LLNL
  * -----------------------------------------------------------------
- * Copyright (c) 2002, The Regents of the University of California.
+ * LLNS Copyright Start
+ * Copyright (c) 2014, Lawrence Livermore National Security
+ * This work was performed under the auspices of the U.S. Department
+ * of Energy by Lawrence Livermore National Laboratory in part under
+ * Contract W-7405-Eng-48 and in part under Contract DE-AC52-07NA27344.
  * Produced at the Lawrence Livermore National Laboratory.
  * All rights reserved.
  * For details, see the LICENSE file.
+ * LLNS Copyright End
  * -----------------------------------------------------------------
  * This is the implementation file for the main IDA solver.
  * It is independent of the linear solver in use.
@@ -340,7 +345,7 @@ void *IDACreate(void)
   IDA_mem->ida_maxnj   = MAXNJ;
   IDA_mem->ida_maxnit  = MAXNI;
   IDA_mem->ida_lsoff   = FALSE;
-  IDA_mem->ida_steptol = RPowerR(IDA_mem->ida_uround, TWOTHIRDS);
+  IDA_mem->ida_steptol = SUNRpowerR(IDA_mem->ida_uround, TWOTHIRDS);
 
   /* Initialize lrw and liw */
   IDA_mem->ida_lrw = 25 + 5*MXORDP1;
@@ -505,7 +510,7 @@ int IDAInit(void *ida_mem, IDAResFn res,
  * IDAReInit re-initializes IDA's memory for a problem, assuming
  * it has already beeen allocated in a prior IDAInit call.
  * All problem specification inputs are checked for errors.
- * The problem size Neq is assumed to be unchaged since the call
+ * The problem size Neq is assumed to be unchanged since the call
  * to IDAInit, and the maximum order maxord must not be larger.
  * If any error occurs during reinitialization, it is reported to
  * the error handler function.
@@ -947,6 +952,7 @@ int IDARootInit(void *ida_mem, int nrtfn, IDARootFn g)
 #define netf           (IDA_mem->ida_netf)
 #define nni            (IDA_mem->ida_nni)
 #define nsetups        (IDA_mem->ida_nsetups)
+
 #define ns             (IDA_mem->ida_ns)
 #define linit          (IDA_mem->ida_linit)
 #define lsetup         (IDA_mem->ida_lsetup)
@@ -1089,12 +1095,12 @@ int IDASolve(void *ida_mem, realtype tout, realtype *tret,
        check for approach to tstop, and scale phi[1] by hh.
        Also check for zeros of root function g at and near t0.    */
 
-    tdist = ABS(tout - tn);
+    tdist = SUNRabs(tout - tn);
     if (tdist == ZERO) {
       IDAProcessError(IDA_mem, IDA_ILL_INPUT, "IDA", "IDASolve", MSG_TOO_CLOSE);
       return(IDA_ILL_INPUT);
     }
-    troundoff = TWO*uround*(ABS(tn) + ABS(tout));
+    troundoff = TWO*uround*(SUNRabs(tn) + SUNRabs(tout));
     if (tdist < troundoff) {
       IDAProcessError(IDA_mem, IDA_ILL_INPUT, "IDA", "IDASolve", MSG_TOO_CLOSE);
       return(IDA_ILL_INPUT);
@@ -1113,11 +1119,11 @@ int IDASolve(void *ida_mem, realtype tout, realtype *tret,
       if (tout < tn) hh = -hh;
     }
 
-    rh = ABS(hh)*hmax_inv;
+    rh = SUNRabs(hh)*hmax_inv;
     if (rh > ONE) hh /= rh;
 
     if (tstopset) {
-      if ( (tstop - tn)*hh < ZERO) {
+      if ( (tstop - tn)*hh <= ZERO) {
         IDAProcessError(IDA_mem, IDA_ILL_INPUT, "IDA", "IDASolve", MSG_BAD_TSTOP, tstop, tn);
         return(IDA_ILL_INPUT);
       }
@@ -1177,8 +1183,8 @@ int IDASolve(void *ida_mem, realtype tout, realtype *tret,
 
       /* If tn is distinct from tretlast (within roundoff),
          check remaining interval for roots */
-      troundoff = HUNDRED*uround*(ABS(tn) + ABS(hh));
-      if ( ABS(tn - tretlast) > troundoff ) {
+      troundoff = HUNDRED*uround*(SUNRabs(tn) + SUNRabs(hh));
+      if ( SUNRabs(tn - tretlast) > troundoff ) {
         ier = IDARcheck3(IDA_mem);
         if (ier == IDA_SUCCESS) {     /* no root found */
           irfnd = 0;
@@ -1371,7 +1377,7 @@ int IDAGetDky(void *ida_mem, realtype t, int k, N_Vector dky)
 
   /* Check t for legality.  Here tn - hused is t_{n-1}. */
 
-  tfuzz = HUNDRED * uround * (ABS(tn) + ABS(hh));
+  tfuzz = HUNDRED * uround * (SUNRabs(tn) + SUNRabs(hh));
   if (hh < ZERO) tfuzz = - tfuzz;
   tp = tn - hused - tfuzz;
   if ((t - tp)*hh < ZERO) {
@@ -1574,7 +1580,7 @@ static booleantype IDAAllocVectors(IDAMem IDA_mem, N_Vector tmpl)
   /* Allocate phi[0] ... phi[maxord].  Make sure phi[2] and phi[3] are
   allocated (for use as temporary vectors), regardless of maxord.       */
 
-  maxcol = MAX(maxord,3);
+  maxcol = SUNMAX(maxord,3);
   for (j=0; j <= maxcol; j++) {
     phi[j] = N_VClone(tmpl);
     if (phi[j] == NULL) {
@@ -1613,7 +1619,7 @@ static void IDAFreeVectors(IDAMem IDA_mem)
   N_VDestroy(delta);
   N_VDestroy(tempv1);
   N_VDestroy(tempv2);
-  maxcol = MAX(IDA_mem->ida_maxord_alloc,3);
+  maxcol = SUNMAX(IDA_mem->ida_maxord_alloc,3);
   for(j=0; j <= maxcol; j++) N_VDestroy(phi[j]);
 
   lrw -= (maxcol + 6)*lrw1;
@@ -1652,7 +1658,7 @@ static void IDAFreeVectors(IDAMem IDA_mem)
  * It performs all checks on optional inputs and inputs to
  * IDAInit/IDAReInit that could not be done before.
  *
- * If no merror is encountered, IDAInitialSetup returns IDA_SUCCESS.
+ * If no error is encountered, IDAInitialSetup returns IDA_SUCCESS.
  * Otherwise, it returns an error flag and reported to the error
  * handler function.
  */
@@ -1664,7 +1670,7 @@ int IDAInitialSetup(IDAMem IDA_mem)
 
   /* Test for more vector operations, depending on options */
   if (suppressalg)
-    if (id->ops->nvwrmsnormmask == NULL) {
+    if (phi[0]->ops->nvwrmsnormmask == NULL) {
       IDAProcessError(IDA_mem, IDA_ILL_INPUT, "IDA", "IDAInitialSetup", MSG_BAD_NVECTOR);
       return(IDA_ILL_INPUT);
   }
@@ -1726,9 +1732,9 @@ int IDAInitialSetup(IDAMem IDA_mem)
  *
  * This routine is responsible for loading the error weight vector
  * ewt, according to itol, as follows:
- * (1) ewt[i] = 1 / (rtol * ABS(ycur[i]) + atol), i=0,...,Neq-1
+ * (1) ewt[i] = 1 / (rtol * SUNRabs(ycur[i]) + atol), i=0,...,Neq-1
  *     if itol = IDA_SS
- * (2) ewt[i] = 1 / (rtol * ABS(ycur[i]) + atol[i]), i=0,...,Neq-1
+ * (2) ewt[i] = 1 / (rtol * SUNRabs(ycur[i]) + atol[i]), i=0,...,Neq-1
  *     if itol = IDA_SV
  *
  *  IDAEwtSet returns 0 if ewt is successfully set as above to a
@@ -1854,8 +1860,8 @@ static int IDAStopTest1(IDAMem IDA_mem, realtype tout, realtype *tret,
     }
 
     if (tstopset) {
-      troundoff = HUNDRED*uround*(ABS(tn) + ABS(hh));
-      if (ABS(tn - tstop) <= troundoff) {
+      troundoff = HUNDRED*uround*(SUNRabs(tn) + SUNRabs(hh));
+      if (SUNRabs(tn - tstop) <= troundoff) {
         ier = IDAGetSolution(IDA_mem, tstop, yret, ypret);
         if (ier != IDA_SUCCESS) {
           IDAProcessError(IDA_mem, IDA_ILL_INPUT, "IDA", "IDASolve", MSG_BAD_TSTOP, tstop, tn);
@@ -1889,8 +1895,8 @@ static int IDAStopTest1(IDAMem IDA_mem, realtype tout, realtype *tret,
     }
 
     if (tstopset) {
-      troundoff = HUNDRED*uround*(ABS(tn) + ABS(hh));
-      if (ABS(tn - tstop) <= troundoff) {
+      troundoff = HUNDRED*uround*(SUNRabs(tn) + SUNRabs(hh));
+      if (SUNRabs(tn - tstop) <= troundoff) {
         ier = IDAGetSolution(IDA_mem, tstop, yret, ypret);
         if (ier != IDA_SUCCESS) {
           IDAProcessError(IDA_mem, IDA_ILL_INPUT, "IDA", "IDASolve", MSG_BAD_TSTOP, tstop, tn);
@@ -1950,8 +1956,8 @@ static int IDAStopTest2(IDAMem IDA_mem, realtype tout, realtype *tret,
 
       if (tstopset) {
         /* Test for tn at tstop and for tn near tstop */
-        troundoff = HUNDRED*uround*(ABS(tn) + ABS(hh));
-        if (ABS(tn - tstop) <= troundoff) {
+        troundoff = HUNDRED*uround*(SUNRabs(tn) + SUNRabs(hh));
+        if (SUNRabs(tn - tstop) <= troundoff) {
           ier = IDAGetSolution(IDA_mem, tstop, yret, ypret);
           *tret = tretlast = tstop;
           tstopset = FALSE;
@@ -1967,8 +1973,8 @@ static int IDAStopTest2(IDAMem IDA_mem, realtype tout, realtype *tret,
 
       if (tstopset) {
         /* Test for tn at tstop and for tn near tstop */
-        troundoff = HUNDRED*uround*(ABS(tn) + ABS(hh));
-        if (ABS(tn - tstop) <= troundoff) {
+        troundoff = HUNDRED*uround*(SUNRabs(tn) + SUNRabs(hh));
+        if (SUNRabs(tn - tstop) <= troundoff) {
           ier = IDAGetSolution(IDA_mem, tstop, yret, ypret);
           *tret = tretlast = tstop;
           tstopset = FALSE;
@@ -2212,7 +2218,7 @@ static void IDASetCoeffs(IDAMem IDA_mem, realtype *ck)
   /* Set coefficients for the current stepsize h */
 
   if (hh != hused || kk != kused) ns = 0;
-  ns = MIN(ns+1,kused+2);
+  ns = SUNMIN(ns+1,kused+2);
   if (kk+1 >= ns){
     beta[0] = ONE;
     alpha[0] = ONE;
@@ -2244,8 +2250,8 @@ static void IDASetCoeffs(IDAMem IDA_mem, realtype *ck)
 
   /* compute variable stepsize error coefficient ck */
 
-  *ck = ABS(alpha[kk] + alphas - alpha0);
-  *ck = MAX(*ck, alpha[kk]);
+  *ck = SUNRabs(alpha[kk] + alphas - alpha0);
+  *ck = SUNMAX(*ck, alpha[kk]);
 
  /* change phi to phi-star  */
 
@@ -2376,7 +2382,7 @@ static int IDANls(IDAMem IDA_mem)
         N_VLinearSum(ONE, phi[0], -ONE, yy, tempv1);
         N_VProd(mm, tempv1, tempv1);
         rr = PT9*N_VMinQuotient(phi[0], tempv1);
-        rr = MAX(rr,PT1);
+        rr = SUNMAX(rr,PT1);
         return(IDA_CONSTR_RECVR);
       }
     }
@@ -2461,7 +2467,7 @@ static int IDANewtonIter(IDAMem IDA_mem)
        if (delnrm <= toldel) return(IDA_SUCCESS);
     }
     else {
-      rate = RPowerR( delnrm/oldnrm, ONE/mnewt );
+      rate = SUNRpowerR( delnrm/oldnrm, ONE/mnewt );
       if (rate > RATEMAX) return(IDA_NCONV_RECVR);
       ss = rate/(ONE - rate);
     }
@@ -2534,7 +2540,7 @@ static int IDATestError(IDAMem IDA_mem, realtype ck,
       terr_km2 = (kk-1) * err_km2;
 
       /* Decrease order if errors are reduced */
-      if (MAX(terr_km1, terr_km2) <= terr_k)  knew = kk - 1;
+      if (SUNMAX(terr_km1, terr_km2) <= terr_k)  knew = kk - 1;
 
     } else {
 
@@ -2665,8 +2671,8 @@ static int IDAHandleNFlag(IDAMem IDA_mem, int nflag, realtype err_k, realtype er
       err_knew = (kk==knew)? err_k : err_km1;
 
       kk = knew;
-      rr = PT9 * RPowerR( TWO * err_knew + PT0001,(-ONE/(kk+1)) );
-      rr = MAX(QUARTER, MIN(PT9,rr));
+      rr = PT9 * SUNRpowerR( TWO * err_knew + PT0001,(-ONE/(kk+1)) );
+      rr = SUNMAX(QUARTER, SUNMIN(PT9,rr));
       hh *=rr;
       return(PREDICT_AGAIN);
 
@@ -2755,7 +2761,7 @@ static void IDACompleteStep(IDAMem IDA_mem, realtype err_k, realtype err_km1)
     if(nst > 1) {
       kk++;
       hnew = TWO * hh;
-      if( (tmp = ABS(hnew)*hmax_inv) > ONE ) hnew /= tmp;
+      if( (tmp = SUNRabs(hnew)*hmax_inv) > ONE ) hnew /= tmp;
       hh = hnew;
     }
 
@@ -2787,7 +2793,7 @@ static void IDACompleteStep(IDAMem IDA_mem, realtype err_k, realtype err_km1)
       else                                   {action = RAISE;    goto takeaction;}
     } else {
       terr_km1 = kk * err_km1;
-      if (terr_km1 <= MIN(terr_k, terr_kp1)) {action = LOWER;    goto takeaction;}
+      if (terr_km1 <= SUNMIN(terr_k, terr_kp1)) {action = LOWER;    goto takeaction;}
       else if (terr_kp1 >= terr_k)           {action = MAINTAIN; goto takeaction;}
       else                                   {action = RAISE;    goto takeaction;}
     }
@@ -2804,13 +2810,13 @@ static void IDACompleteStep(IDAMem IDA_mem, realtype err_k, realtype err_km1)
        If hh is reduced, hnew/hh is restricted to be between .5 and .9. */
 
     hnew = hh;
-    rr = RPowerR( (TWO * err_knew + PT0001) , (-ONE/(kk+1) ) );
+    rr = SUNRpowerR( (TWO * err_knew + PT0001) , (-ONE/(kk+1) ) );
 
     if (rr >= TWO) {
       hnew = TWO * hh;
-      if( (tmp = ABS(hnew)*hmax_inv) > ONE ) hnew /= tmp;
+      if( (tmp = SUNRabs(hnew)*hmax_inv) > ONE ) hnew /= tmp;
     } else if (rr <= ONE ) {
-      rr = MAX(HALF, MIN(PT9,rr));
+      rr = SUNMAX(HALF, SUNMIN(PT9,rr));
       hnew = hh * rr;
     }
 
@@ -2867,7 +2873,7 @@ int IDAGetSolution(void *ida_mem, realtype t, N_Vector yret, N_Vector ypret)
 
   /* Check t for legality.  Here tn - hused is t_{n-1}. */
 
-  tfuzz = HUNDRED * uround * (ABS(tn) + ABS(hh));
+  tfuzz = HUNDRED * uround * (SUNRabs(tn) + SUNRabs(hh));
   if (hh < ZERO) tfuzz = - tfuzz;
   tp = tn - hused - tfuzz;
   if ((t - tp)*hh < ZERO) {
@@ -2941,8 +2947,8 @@ realtype IDAWrmsNorm(IDAMem IDA_mem, N_Vector x, N_Vector w,
  * the initial point of the IVP.
  *
  * This routine returns an int equal to:
- *  IDA_RTFUNC_FAIL < 0  if the g function failed, or
- *  IDA_SUCCESS     = 0  otherwise.
+ *  IDA_RTFUNC_FAIL < 0 if the g function failed, or
+ *  IDA_SUCCESS     = 0 otherwise.
  */
 
 static int IDARcheck1(IDAMem IDA_mem)
@@ -2953,7 +2959,7 @@ static int IDARcheck1(IDAMem IDA_mem)
 
   for (i = 0; i < nrtfn; i++) iroots[i] = 0;
   tlo = tn;
-  ttol = (ABS(tn) + ABS(hh))*uround*HUNDRED;
+  ttol = (SUNRabs(tn) + SUNRabs(hh))*uround*HUNDRED;
 
   /* Evaluate g at initial t and check for zero values. */
   retval = gfun (tlo, phi[0], phi[1], glo, user_data);
@@ -2962,7 +2968,7 @@ static int IDARcheck1(IDAMem IDA_mem)
 
   zroot = FALSE;
   for (i = 0; i < nrtfn; i++) {
-    if (ABS(glo[i]) == ZERO) {
+    if (SUNRabs(glo[i]) == ZERO) {
       zroot = TRUE;
       gactive[i] = FALSE;
     }
@@ -2970,7 +2976,7 @@ static int IDARcheck1(IDAMem IDA_mem)
   if (!zroot) return(IDA_SUCCESS);
 
   /* Some g_i is zero at t0; look at g at t0+(small increment). */
-  hratio = MAX(ttol/ABS(hh), PT1);
+  hratio = SUNMAX(ttol/SUNRabs(hh), PT1);
   smallh = hratio*hh;
   tplus = tlo + smallh;
   N_VLinearSum(ONE, phi[0], smallh, phi[1], yy);
@@ -2981,12 +2987,11 @@ static int IDARcheck1(IDAMem IDA_mem)
   /* We check now only the components of g which were exactly 0.0 at t0
    * to see if we can 'activate' them. */
   for (i = 0; i < nrtfn; i++) {
-    if (!gactive[i] && ABS(ghi[i]) != ZERO) {
+    if (!gactive[i] && SUNRabs(ghi[i]) != ZERO) {
       gactive[i] = TRUE;
       glo[i] = ghi[i];
     }
   }
-
   return(IDA_SUCCESS);
 }
 
@@ -3005,10 +3010,10 @@ static int IDARcheck1(IDAMem IDA_mem)
  * or the last root location.
  *
  * This routine returns an int equal to:
- *     IDA_RTFUNC_FAIL (<0) if the g function failed, or
- *     CLOSERT     (>0) if a close pair of zeros was found, or
- *     RTFOUND     (>0) if a new zero of g was found near tlo, or
- *     IDA_SUCCESS (=0) otherwise.
+ *     IDA_RTFUNC_FAIL < 0 if the g function failed, or
+ *     CLOSERT         = 3 if a close pair of zeros was found, or
+ *     RTFOUND         = 1 if a new zero of g was found near tlo, or
+ *     IDA_SUCCESS     = 0 otherwise.
  */
 
 static int IDARcheck2(IDAMem IDA_mem)
@@ -3028,7 +3033,7 @@ static int IDARcheck2(IDAMem IDA_mem)
   for (i = 0; i < nrtfn; i++) iroots[i] = 0;
   for (i = 0; i < nrtfn; i++) {
     if (!gactive[i]) continue;
-    if (ABS(glo[i]) == ZERO) {
+    if (SUNRabs(glo[i]) == ZERO) {
       zroot = TRUE;
       iroots[i] = 1;
     }
@@ -3036,7 +3041,7 @@ static int IDARcheck2(IDAMem IDA_mem)
   if (!zroot) return(IDA_SUCCESS);
 
   /* One or more g_i has a zero at tlo.  Check g at tlo+smallh. */
-  ttol = (ABS(tn) + ABS(hh))*uround*HUNDRED;
+  ttol = (SUNRabs(tn) + SUNRabs(hh))*uround*HUNDRED;
   smallh = (hh > ZERO) ? ttol : -ttol;
   tplus = tlo + smallh;
   if ( (tplus - tn)*hh >= ZERO) {
@@ -3054,7 +3059,7 @@ static int IDARcheck2(IDAMem IDA_mem)
   zroot = FALSE;
   for (i = 0; i < nrtfn; i++) {
     if (!gactive[i]) continue;
-    if (ABS(ghi[i]) == ZERO) {
+    if (SUNRabs(ghi[i]) == ZERO) {
       if (iroots[i] == 1) return(CLOSERT);
       zroot = TRUE;
       iroots[i] = 1;
@@ -3074,9 +3079,9 @@ static int IDARcheck2(IDAMem IDA_mem)
  * Only roots beyond tlo in the direction of integration are sought.
  *
  * This routine returns an int equal to:
- *     IDA_RTFUNC_FAIL (<0) if the g function failed, or
- *     RTFOUND     (>0) if a root of g was found, or
- *     IDA_SUCCESS (=0) otherwise.
+ *     IDA_RTFUNC_FAIL < 0 if the g function failed, or
+ *     RTFOUND         = 1 if a root of g was found, or
+ *     IDA_SUCCESS     = 0 otherwise.
  */
 
 static int IDARcheck3(IDAMem IDA_mem)
@@ -3098,7 +3103,7 @@ static int IDARcheck3(IDAMem IDA_mem)
   nge++;
   if (retval != 0) return(IDA_RTFUNC_FAIL);
 
-  ttol = (ABS(tn) + ABS(hh))*uround*HUNDRED;
+  ttol = (SUNRabs(tn) + SUNRabs(hh))*uround*HUNDRED;
   ier = IDARootfind(IDA_mem);
   if (ier == IDA_RTFUNC_FAIL) return(IDA_RTFUNC_FAIL);
   for(i=0; i<nrtfn; i++) {
@@ -3113,7 +3118,6 @@ static int IDARcheck3(IDAMem IDA_mem)
   /* If a root was found, interpolate to get y(trout) and return.  */
   (void) IDAGetSolution(IDA_mem, trout, yy, yp);
   return(RTFOUND);
-
 }
 
 /*
@@ -3125,7 +3129,7 @@ static int IDARcheck3(IDAMem IDA_mem)
  * Here the sign of tlo - thi is arbitrary, but if multiple roots
  * are found, the one closest to tlo is returned.
  *
- *  The method used is the Illinois algorithm, a modified secant method.
+ * The method used is the Illinois algorithm, a modified secant method.
  * Reference: Kathie L. Hiebert and Lawrence F. Shampine, Implicitly
  * Defined Output Points for Solutions of ODEs, Sandia National
  * Laboratory Report SAND80-0180, February 1980.
@@ -3136,7 +3140,7 @@ static int IDARcheck3(IDAMem IDA_mem)
  *            the vector-valued function g(t).  Input only.
  *
  * gfun     = user-defined function for g(t).  Its form is
- *           (void) gfun(t, y, yp, gt, user_data)
+ *            (void) gfun(t, y, yp, gt, user_data)
  *
  * rootdir  = in array specifying the direction of zero-crossings.
  *            If rootdir[i] > 0, search for roots of g_i only if
@@ -3158,11 +3162,11 @@ static int IDARcheck3(IDAMem IDA_mem)
  *            When a root at trout is found, it is located only to
  *            within a tolerance of ttol.  Typically, ttol should
  *            be set to a value on the order of
- *              100 * UROUND * max (ABS(tlo), ABS(thi))
+ *               100 * UROUND * max (SUNRabs(tlo), SUNRabs(thi))
  *            where UROUND is the unit roundoff of the machine.
  *
  * tlo, thi = endpoints of the interval in which roots are sought.
- *            On input, and must be distinct, but tlo - thi may
+ *            On input, these must be distinct, but tlo - thi may
  *            be of either sign.  The direction of integration is
  *            assumed to be from tlo to thi.  On return, tlo and thi
  *            are the endpoints of the final relevant interval.
@@ -3188,9 +3192,9 @@ static int IDARcheck3(IDAMem IDA_mem)
  *            to that indicated by rootdir[i].
  *
  * This routine returns an int equal to:
- *      IDA_RTFUNC_FAIL (<0) if the g function failed, or
- *      RTFOUND = 1 if a root of g was found, or
- *      IDA_SUCCESS = 0 otherwise.
+ *      IDA_RTFUNC_FAIL < 0 if the g function failed, or
+ *      RTFOUND         = 1 if a root of g was found, or
+ *      IDA_SUCCESS     = 0 otherwise.
  *
  */
 
@@ -3208,13 +3212,13 @@ static int IDARootfind(IDAMem IDA_mem)
   sgnchg = FALSE;
   for (i = 0;  i < nrtfn; i++) {
     if(!gactive[i]) continue;
-    if (ABS(ghi[i]) == ZERO) {
+    if (SUNRabs(ghi[i]) == ZERO) {
       if(rootdir[i]*glo[i] <= ZERO) {
         zroot = TRUE;
       }
     } else {
       if ( (glo[i]*ghi[i] < ZERO) && (rootdir[i]*glo[i] <= ZERO) ) {
-        gfrac = ABS(ghi[i]/(ghi[i] - glo[i]));
+        gfrac = SUNRabs(ghi[i]/(ghi[i] - glo[i]));
         if (gfrac > maxfrac) {
           sgnchg = TRUE;
           maxfrac = gfrac;
@@ -3233,7 +3237,8 @@ static int IDARootfind(IDAMem IDA_mem)
     for (i = 0; i < nrtfn; i++) {
       iroots[i] = 0;
       if(!gactive[i]) continue;
-      if (ABS(ghi[i]) == ZERO) iroots[i] = glo[i] > 0 ? -1:1;
+      if ( (SUNRabs(ghi[i]) == ZERO) && (rootdir[i]*glo[i] <= ZERO) )
+        iroots[i] = glo[i] > 0 ? -1:1;
     }
     return(RTFOUND);
   }
@@ -3245,6 +3250,9 @@ static int IDARootfind(IDAMem IDA_mem)
 
   side = 0;  sideprev = -1;
   loop {                                    /* Looping point */
+
+    /* If interval size is already less than tolerance ttol, break. */
+      if (SUNRabs(thi - tlo) <= ttol) break;
 
     /* Set weight alph.
        On the first two passes, set alph = 1.  Thereafter, reset alph
@@ -3266,13 +3274,13 @@ static int IDARootfind(IDAMem IDA_mem)
        If tmid is too close to tlo or thi, adjust it inward,
        by a fractional distance that is between 0.1 and 0.5.  */
     tmid = thi - (thi - tlo)*ghi[imax]/(ghi[imax] - alph*glo[imax]);
-    if (ABS(tmid - tlo) < HALF*ttol) {
-      fracint = ABS(thi - tlo)/ttol;
+    if (SUNRabs(tmid - tlo) < HALF*ttol) {
+      fracint = SUNRabs(thi - tlo)/ttol;
       fracsub = (fracint > FIVE) ? PT1 : HALF/fracint;
       tmid = tlo + fracsub*(thi - tlo);
     }
-    if (ABS(thi - tmid) < HALF*ttol) {
-      fracint = ABS(thi - tlo)/ttol;
+    if (SUNRabs(thi - tmid) < HALF*ttol) {
+      fracint = SUNRabs(thi - tlo)/ttol;
       fracsub = (fracint > FIVE) ? PT1 : HALF/fracint;
       tmid = thi - fracsub*(thi - tlo);
     }
@@ -3290,13 +3298,11 @@ static int IDARootfind(IDAMem IDA_mem)
     sideprev = side;
     for (i = 0;  i < nrtfn; i++) {
       if(!gactive[i]) continue;
-      if (ABS(grout[i]) == ZERO) {
-        if(rootdir[i]*glo[i] <= ZERO) {
-          zroot = TRUE;
-        }
+      if (SUNRabs(grout[i]) == ZERO) {
+        if(rootdir[i]*glo[i] <= ZERO) zroot = TRUE;
       } else {
         if ( (glo[i]*grout[i] < ZERO) && (rootdir[i]*glo[i] <= ZERO) ) {
-          gfrac = ABS(grout[i]/(grout[i] - glo[i]));
+          gfrac = SUNRabs(grout[i]/(grout[i] - glo[i]));
           if (gfrac > maxfrac) {
             sgnchg = TRUE;
             maxfrac = gfrac;
@@ -3311,8 +3317,8 @@ static int IDARootfind(IDAMem IDA_mem)
       for (i = 0; i < nrtfn; i++) ghi[i] = grout[i];
       side = 1;
       /* Stop at root thi if converged; otherwise loop. */
-      if (ABS(thi - tlo) <= ttol) break;
-    continue;  /* Return to looping point. */
+      if (SUNRabs(thi - tlo) <= ttol) break;
+      continue;  /* Return to looping point. */
     }
 
     if (zroot) {
@@ -3328,7 +3334,7 @@ static int IDARootfind(IDAMem IDA_mem)
     for (i = 0; i < nrtfn; i++) glo[i] = grout[i];
     side = 2;
     /* Stop at root thi if converged; otherwise loop back. */
-    if (ABS(thi - tlo) <= ttol) break;
+    if (SUNRabs(thi - tlo) <= ttol) break;
 
   } /* End of root-search loop */
 
@@ -3338,7 +3344,7 @@ static int IDARootfind(IDAMem IDA_mem)
     grout[i] = ghi[i];
     iroots[i] = 0;
     if(!gactive[i]) continue;
-    if ( (ABS(ghi[i]) == ZERO) && (rootdir[i]*glo[i] <= ZERO) )
+    if ( (SUNRabs(ghi[i]) == ZERO) && (rootdir[i]*glo[i] <= ZERO) )
       iroots[i] = glo[i] > 0 ? -1:1;
     if ( (glo[i]*ghi[i] < ZERO) && (rootdir[i]*glo[i] <= ZERO) )
       iroots[i] = glo[i] > 0 ? -1:1;
@@ -3353,10 +3359,10 @@ static int IDARootfind(IDAMem IDA_mem)
  */
 
 /*
- * IDAProcessError is a high level error handling function
- * - if ida_mem==NULL it prints the error message to stderr
- * - otherwise, it sets-up and calls the error hadling function
- *   pointed to by ida_ehfun
+ * IDAProcessError is a high level error handling function.
+ * - If ida_mem==NULL it prints the error message to stderr.
+ * - Otherwise, it sets up and calls the error handling function
+ *   pointed to by ida_ehfun.
  */
 
 #define ehfun   (IDA_mem->ida_ehfun)
@@ -3374,32 +3380,24 @@ void IDAProcessError(IDAMem IDA_mem,
 
   va_start(ap, msgfmt);
 
-  if (IDA_mem == NULL) {    /* We write to stderr */
+  /* Compose the message */
 
+  vsprintf(msg, msgfmt, ap);
+
+  if (IDA_mem == NULL) {    /* We write to stderr */
 #ifndef NO_FPRINTF_OUTPUT
     fprintf(stderr, "\n[%s ERROR]  %s\n  ", module, fname);
-    fprintf(stderr, msgfmt);
-    fprintf(stderr, "\n\n");
+    fprintf(stderr, "%s\n\n", msg);
 #endif
 
   } else {                 /* We can call ehfun */
-
-    /* Compose the message */
-
-    vsprintf(msg, msgfmt, ap);
-
-    /* Call ehfun */
-
     ehfun(error_code, module, fname, msg, eh_data);
-
   }
 
   /* Finalize argument processing */
-
   va_end(ap);
 
   return;
-
 }
 
 /* IDAErrHandler is the default error handling function.
