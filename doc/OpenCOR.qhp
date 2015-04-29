@@ -28,8 +28,8 @@
             <file>user/plugins/res/pics/*.*</file>
             <file>user/plugins/res/pics/oxygen/actions/*.*</file>
             <file>user/plugins/res/pics/oxygen/categories/*.*</file>
-            <file>user/plugins/res/pics/oxygen/mimetypes/*.*</file>
             <file>user/plugins/res/pics/oxygen/places/*.*</file>
+            <file>user/plugins/res/pics/oxygen/status/*.*</file>
             <file>user/plugins/simulation/*.*</file>
             <file>user/plugins/simulation/res/pics/*.*</file>
             <file>user/plugins/solver/*.*</file>
