@@ -65,6 +65,21 @@ ELSE()
 
             src/sundialsplugin.cpp
 
+            src/arkode/arkode.c
+            src/arkode/arkode_bandpre.c
+            src/arkode/arkode_butcher.c
+            src/arkode/arkode_direct.c
+            src/arkode/arkode_pcg.c
+            src/arkode/arkode_spfgmr.c
+            src/arkode/arkode_spils.c
+            src/arkode/arkode_band.c
+            src/arkode/arkode_bbdpre.c
+            src/arkode/arkode_dense.c
+            src/arkode/arkode_io.c
+            src/arkode/arkode_spbcgs.c
+            src/arkode/arkode_spgmr.c
+            src/arkode/arkode_sptfqmr.c
+
             src/cvode/cvode.c
             src/cvode/cvode_band.c
             src/cvode/cvode_bandpre.c
@@ -109,7 +124,9 @@ ELSE()
             src/sundials/sundials_iterative.c
             src/sundials/sundials_math.c
             src/sundials/sundials_nvector.c
+            src/sundials/sundials_pcg.c
             src/sundials/sundials_spbcgs.c
+            src/sundials/sundials_spfgmr.c
             src/sundials/sundials_spgmr.c
             src/sundials/sundials_sptfqmr.c
         HEADERS_MOC
