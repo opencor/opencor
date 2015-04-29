@@ -1458,7 +1458,7 @@ void EditView::DrawForeground(Surface *surface, const EditModel &model, const Vi
 					if (indicatorValue) {
 						const Indicator &indicator = vsDraw.indicators[deco->indicator];
 						const bool hover = indicator.IsDynamic() &&
-							((model.hoverIndicatorPos >= ts.start + posLineStart) && 
+							((model.hoverIndicatorPos >= ts.start + posLineStart) &&
 							(model.hoverIndicatorPos <= ts.end() + posLineStart));
 						if (hover) {
 							if (indicator.sacHover.style == INDIC_TEXTFORE) {

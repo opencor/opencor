@@ -375,7 +375,7 @@ public:
 	struct CharacterExtracted {
 		unsigned int character;
 		unsigned int widthBytes;
-		CharacterExtracted(unsigned int character_, unsigned int widthBytes_) : 
+		CharacterExtracted(unsigned int character_, unsigned int widthBytes_) :
 			character(character_), widthBytes(widthBytes_) {
 		}
 	};
@@ -422,7 +422,7 @@ public:
 	void AnnotationSetStyles(int line, const unsigned char *styles);
 	int AnnotationLines(int line) const;
 	void AnnotationClearAll();
-	
+
 	bool AddWatcher(DocWatcher *watcher, void *userData);
 	bool RemoveWatcher(DocWatcher *watcher, void *userData);
 
