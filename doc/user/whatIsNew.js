@@ -4,6 +4,7 @@ var jsonData = { "versions": [
                        { "name": "General",
                          "entries": [
                            { "type": "Added", "description": "Checking for updates." },
+                           { "type": "Added", "description": "<a href=\"howToGetStarted.html\">How to get started</a> section." },
                            { "type": "Added", "description": "Support for 64-bit <a href=\"http://en.wikipedia.org/wiki/Microsoft_Windows\">Windows</a>." },
                            { "type": "Added", "description": "Support for <a href=\"http://en.wikipedia.org/wiki/OS_X\">OS X</a> 10.10 (Yosemite)." },
                            { "type": "Improved", "description": "OpenCOR logo." },
