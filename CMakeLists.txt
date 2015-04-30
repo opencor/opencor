@@ -277,7 +277,6 @@ SET(PLUGINS
     editing/RawCellMLView
     editing/RawView
 
-    miscellaneous/CellMLTools
     miscellaneous/HelpWindow
 
     organisation/CellMLModelRepositoryWindow
@@ -293,6 +292,8 @@ SET(PLUGINS
     solver/IDASolver
     solver/KINSOLSolver
     solver/SecondOrderRungeKuttaSolver
+
+    tools/CellMLTools
 
     # Sample plugins
 

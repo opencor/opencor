@@ -388,6 +388,14 @@
         <source>plugins to store and manipulate data.</source>
         <translation>extensions pour stocker et manipuler des données.</translation>
     </message>
+    <message>
+        <source>Tool</source>
+        <translation>Outil</translation>
+    </message>
+    <message>
+        <source>plugins to access various tools.</source>
+        <translation>extensions pour accéder différents outils.</translation>
+    </message>
 </context>
 <context>
     <name>PluginsWindow</name>

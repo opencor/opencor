@@ -148,6 +148,7 @@ PluginsWindow::PluginsWindow(PluginManager *pPluginManager,
     mMappedCategories.insert(tr("Solver"), PluginInfo::Solver);
     mMappedCategories.insert(tr("Support"), PluginInfo::Support);
     mMappedCategories.insert(tr("Third-party"), PluginInfo::ThirdParty);
+    mMappedCategories.insert(tr("Tool"), PluginInfo::Tool);
     mMappedCategories.insert(tr("Widget"), PluginInfo::Widget);
 
     QMap<QString, QString> diacriticCategories = QMap<QString, QString>();
@@ -509,6 +510,10 @@ void PluginsWindow::updateInformation(const QModelIndex &pNewIndex,
             break;
         case PluginInfo::ThirdParty:
             mGui->fieldTwoValue->setText(tr("plugins to access various third-party libraries."));
+
+            break;
+        case PluginInfo::Tool:
+            mGui->fieldTwoValue->setText(tr("plugins to access various tools."));
 
             break;
         case PluginInfo::Widget:

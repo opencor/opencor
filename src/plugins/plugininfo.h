@@ -72,6 +72,7 @@ public:
         Solver,
         Support,
         ThirdParty,
+        Tool,
         Widget
     };
 
