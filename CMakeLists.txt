@@ -293,7 +293,7 @@ SET(PLUGINS
     solver/KINSOLSolver
     solver/SecondOrderRungeKuttaSolver
 
-    tools/CellMLTools
+    tool/CellMLTools
 
     # Sample plugins
 
