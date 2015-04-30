@@ -468,51 +468,51 @@ void PluginsWindow::updateInformation(const QModelIndex &pNewIndex,
 
         switch (mMappedCategories.value(itemText)) {
         case PluginInfo::Analysis:
-            mGui->fieldTwoValue->setText(tr("Plugins to analyse files."));
+            mGui->fieldTwoValue->setText(tr("plugins to analyse files."));
 
             break;
         case PluginInfo::Api:
-            mGui->fieldTwoValue->setText(tr("Plugins to access various APIs."));
+            mGui->fieldTwoValue->setText(tr("plugins to access various APIs."));
 
             break;
         case PluginInfo::DataStore:
-            mGui->fieldTwoValue->setText(tr("Plugins to store and manipulate data."));
+            mGui->fieldTwoValue->setText(tr("plugins to store and manipulate data."));
 
             break;
         case PluginInfo::Editing:
-            mGui->fieldTwoValue->setText(tr("Plugins to edit files."));
+            mGui->fieldTwoValue->setText(tr("plugins to edit files."));
 
             break;
         case PluginInfo::Miscellaneous:
-            mGui->fieldTwoValue->setText(tr("Plugins that do not fit in any other category."));
+            mGui->fieldTwoValue->setText(tr("plugins that do not fit in any other category."));
 
             break;
         case PluginInfo::Organisation:
-            mGui->fieldTwoValue->setText(tr("Plugins to organise files."));
+            mGui->fieldTwoValue->setText(tr("plugins to organise files."));
 #ifdef ENABLE_SAMPLES
         case PluginInfo::Sample:
-            mGui->fieldTwoValue->setText(tr("Plugins that illustrate various plugin-related aspects."));
+            mGui->fieldTwoValue->setText(tr("plugins that illustrate various plugin-related aspects."));
 
             break;
 #endif
         case PluginInfo::Simulation:
-            mGui->fieldTwoValue->setText(tr("Plugins to simulate files."));
+            mGui->fieldTwoValue->setText(tr("plugins to simulate files."));
 
             break;
         case PluginInfo::Solver:
-            mGui->fieldTwoValue->setText(tr("Plugins to access various solvers."));
+            mGui->fieldTwoValue->setText(tr("plugins to access various solvers."));
 
             break;
         case PluginInfo::Support:
-            mGui->fieldTwoValue->setText(tr("Plugins to support various third-party libraries and APIs."));
+            mGui->fieldTwoValue->setText(tr("plugins to support various third-party libraries and APIs."));
 
             break;
         case PluginInfo::ThirdParty:
-            mGui->fieldTwoValue->setText(tr("Plugins to access various third-party libraries."));
+            mGui->fieldTwoValue->setText(tr("plugins to access various third-party libraries."));
 
             break;
         case PluginInfo::Widget:
-            mGui->fieldTwoValue->setText(tr("Plugins to access various <em>ad hoc</em> widgets."));
+            mGui->fieldTwoValue->setText(tr("plugins to access various <em>ad hoc</em> widgets."));
 
             break;
         default:

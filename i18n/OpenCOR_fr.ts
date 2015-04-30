@@ -313,44 +313,44 @@
         <translation>Gadget</translation>
     </message>
     <message>
-        <source>Plugins to analyse files.</source>
-        <translation>Extensions pour analyser des fichiers.</translation>
+        <source>plugins to analyse files.</source>
+        <translation>extensions pour analyser des fichiers.</translation>
     </message>
     <message>
-        <source>Plugins to access various APIs.</source>
-        <translation>Extensions pour accéder différentes APIs.</translation>
+        <source>plugins to access various APIs.</source>
+        <translation>extensions pour accéder différentes APIs.</translation>
     </message>
     <message>
-        <source>Plugins to edit files.</source>
-        <translation>Extensions pour éditer des fichiers.</translation>
+        <source>plugins to edit files.</source>
+        <translation>extensions pour éditer des fichiers.</translation>
     </message>
     <message>
-        <source>Plugins that do not fit in any other category.</source>
-        <translation>Extensions qui n&apos;entrent dans aucune autre catégorie.</translation>
+        <source>plugins that do not fit in any other category.</source>
+        <translation>extensions qui n&apos;entrent dans aucune autre catégorie.</translation>
     </message>
     <message>
-        <source>Plugins to organise files.</source>
-        <translation>Extensions pour organiser des fichiers.</translation>
+        <source>plugins to organise files.</source>
+        <translation>extensions pour organiser des fichiers.</translation>
     </message>
     <message>
-        <source>Plugins to simulate files.</source>
-        <translation>Extensions pour simuler des fichiers.</translation>
+        <source>plugins to simulate files.</source>
+        <translation>extensions pour simuler des fichiers.</translation>
     </message>
     <message>
-        <source>Plugins to access various solvers.</source>
-        <translation>Extensions pour accéder différents solveurs.</translation>
+        <source>plugins to access various solvers.</source>
+        <translation>extensions pour accéder différents solveurs.</translation>
     </message>
     <message>
-        <source>Plugins to support various third-party libraries and APIs.</source>
-        <translation>Extensions pour supporter différentes librairies externes et APIs.</translation>
+        <source>plugins to support various third-party libraries and APIs.</source>
+        <translation>extensions pour supporter différentes librairies externes et APIs.</translation>
     </message>
     <message>
-        <source>Plugins to access various third-party libraries.</source>
-        <translation>Extensions pour donner accéder différentes librairies externes.</translation>
+        <source>plugins to access various third-party libraries.</source>
+        <translation>extensions pour accéder différentes librairies externes.</translation>
     </message>
     <message>
-        <source>Plugins to access various &lt;em&gt;ad hoc&lt;/em&gt; widgets.</source>
-        <translation>Extensions pour accéder différents gadgets &lt;em&gt;ad hoc&lt;/em&gt;.</translation>
+        <source>plugins to access various &lt;em&gt;ad hoc&lt;/em&gt; widgets.</source>
+        <translation>extensions pour accéder différents gadgets &lt;em&gt;ad hoc&lt;/em&gt;.</translation>
     </message>
     <message>
         <source>Error:</source>
@@ -361,8 +361,8 @@
         <translation>Exemple</translation>
     </message>
     <message>
-        <source>Plugins that illustrate various plugin-related aspects.</source>
-        <translation>Extensions qui illustrent diverses fonctionalités relatives à une extension.</translation>
+        <source>plugins that illustrate various plugin-related aspects.</source>
+        <translation>extensions qui illustrent diverses fonctionalités relatives à une extension.</translation>
     </message>
     <message>
         <source>the plugin claims to be the core plugin, but it is not.</source>
@@ -385,8 +385,8 @@
         <translation>Magasin de Données</translation>
     </message>
     <message>
-        <source>Plugins to store and manipulate data.</source>
-        <translation>Extensions pour stocker et manipuler des données.</translation>
+        <source>plugins to store and manipulate data.</source>
+        <translation>extensions pour stocker et manipuler des données.</translation>
     </message>
 </context>
 <context>
