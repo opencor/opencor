@@ -157,6 +157,14 @@ void CvodeSolver::initialize(const double &pVoiStart,
             return;
         }
 
+        if (mProperties.contains(MethodId)) {
+            mMethod = mProperties.value(MethodId).toString();
+        } else {
+            emit error(QObject::tr("the 'method' property value could not be retrieved"));
+
+            return;
+        }
+
         if (mProperties.contains(RelativeToleranceId)) {
             mRelativeTolerance = mProperties.value(RelativeToleranceId).toDouble();
         } else {
@@ -195,7 +203,8 @@ void CvodeSolver::initialize(const double &pVoiStart,
 
         // Create the CVODE solver
 
-        mSolver = CVodeCreate(CV_BDF, CV_NEWTON);
+        mSolver = CVodeCreate(!mMethod.compare(BdfMethod)?CV_BDF:CV_ADAMS,
+                              CV_NEWTON);
 
         // Use our own error handler
 

@@ -46,6 +46,11 @@ static const auto InterpolateSolutionId  = QStringLiteral("InterpolateSolution")
 
 //==============================================================================
 
+static const auto AdamsMoultonMethod = QStringLiteral("Adams-Moulton");
+static const auto BdfMethod          = QStringLiteral("BDF");
+
+//==============================================================================
+
 // Default CVODE parameter values
 // Note #1: a maximum step of 0 means that there is no maximum step as such and
 //          that CVODE can use whatever step it sees fit...
@@ -58,7 +63,7 @@ enum {
     MaximumNumberOfStepsDefaultValue = 500,
 };
 
-static const auto MethodDefaultValue = QStringLiteral("BDF");
+static const auto MethodDefaultValue = BdfMethod;
 
 static const double RelativeToleranceDefaultValue = 1.0e-7;
 static const double AbsoluteToleranceDefaultValue = 1.0e-7;
@@ -107,6 +112,7 @@ private:
 
     double mMaximumStep;
     int mMaximumNumberOfSteps;
+    QString mMethod;
     double mRelativeTolerance;
     double mAbsoluteTolerance;
     bool mInterpolateSolution;

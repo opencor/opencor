@@ -113,8 +113,8 @@ Solver::Properties CVODESolverPlugin::solverProperties() const
     InterpolateSolutionDescriptions.insert("en", QString::fromUtf8("Interpolate solution"));
     InterpolateSolutionDescriptions.insert("fr", QString::fromUtf8("Interpoler solution"));
 
-    QStringList MethodListValues = QStringList() << "Adams-Moulton"
-                                                 << "BDF";
+    QStringList MethodListValues = QStringList() << AdamsMoultonMethod
+                                                 << BdfMethod;
 
     return Solver::Properties() << Solver::Property(Solver::Property::Double, MaximumStepId, MaximumStepDescriptions, QStringList(), MaximumStepDefaultValue, true)
                                 << Solver::Property(Solver::Property::Integer, MaximumNumberOfStepsId, MaximumNumberOfStepsDescriptions, QStringList(), MaximumNumberOfStepsDefaultValue, false)

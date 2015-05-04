@@ -229,10 +229,14 @@ public:
                   const bool &pEmitSignal = true);
 
     QStringList listValues() const;
-    void setListValues(const QStringList &pListValues, const QString &pValue,
+    void setListValues(const QStringList &pListValues,
+                       const QString &pListValue,
                        const bool &pEmitSignal = true);
     void setListValues(const QStringList &pListValues,
                        const bool &pEmitSignal = true);
+
+    QString listValue() const;
+    void setListValue(const QString &pListValue);
 
     QString emptyListValue() const;
     void setEmptyListValue(const QString &pEmptyListValue);

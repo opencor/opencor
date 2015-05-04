@@ -777,7 +777,7 @@ QStringList Property::listValues() const
 //==============================================================================
 
 void Property::setListValues(const QStringList &pListValues,
-                             const QString &pValue, const bool &pEmitSignal)
+                             const QString &pListValue, const bool &pEmitSignal)
 {
     // Make sure that there would be a point in setting the list values
 
@@ -825,11 +825,13 @@ void Property::setListValues(const QStringList &pListValues,
         // Update our value using the first item of our new list, if it isn't
         // empty, otherwise use our empty list value
 
+        int listValueIndex = mListValues.indexOf(pListValue);
+
         setValue(mListValues.isEmpty()?
                      mEmptyListValue:
-                     pValue.isEmpty()?
+                     (pListValue.isEmpty() || (listValueIndex == -1))?
                          mListValues.first():
-                         mListValues[mListValues.indexOf(pValue)],
+                         mListValues[listValueIndex],
                  false, pEmitSignal);
     }
 }
@@ -842,6 +844,30 @@ void Property::setListValues(const QStringList &pListValues,
     // Set our list values with no default value
 
     setListValues(pListValues, QString(), pEmitSignal);
+}
+
+//==============================================================================
+
+QString Property::listValue() const
+{
+    // Return our list value
+
+    return mValue->text();
+}
+
+//==============================================================================
+
+void Property::setListValue(const QString &pListValue)
+{
+    // Set our list value, if appropriate
+
+    if (    (mType == List)
+        && !mListValues.isEmpty() && mValue->text().compare(pListValue)) {
+        int listValueIndex = mListValues.indexOf(pListValue);
+
+        if (listValueIndex != -1)
+            setValue(mListValues[listValueIndex]);
+    }
 }
 
 //==============================================================================

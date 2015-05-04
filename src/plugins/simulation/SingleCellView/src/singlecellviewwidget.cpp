@@ -1074,6 +1074,8 @@ QVariant SingleCellViewWidget::value(Core::Property *pProperty) const
         return pProperty->integerValue();
     case Core::Property::Double:
         return pProperty->doubleValue();
+    case Core::Property::List:
+        return pProperty->listValue();
     case Core::Property::Boolean:
         return pProperty->booleanValue();
     default:
