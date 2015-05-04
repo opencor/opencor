@@ -106,6 +106,8 @@ CvodeSolver::CvodeSolver() :
     mUserData(0),
     mMaximumStep(MaximumStepDefaultValue),
     mMaximumNumberOfSteps(MaximumNumberOfStepsDefaultValue),
+    mMethod(BdfMethod),
+    mIterator(NewtonIterator),
     mRelativeTolerance(RelativeToleranceDefaultValue),
     mAbsoluteTolerance(AbsoluteToleranceDefaultValue),
     mInterpolateSolution(InterpolateSolutionDefaultValue)
@@ -165,6 +167,14 @@ void CvodeSolver::initialize(const double &pVoiStart,
             return;
         }
 
+        if (mProperties.contains(IteratorId)) {
+            mIterator = mProperties.value(IteratorId).toString();
+        } else {
+            emit error(QObject::tr("the 'iterator' property value could not be retrieved"));
+
+            return;
+        }
+
         if (mProperties.contains(RelativeToleranceId)) {
             mRelativeTolerance = mProperties.value(RelativeToleranceId).toDouble();
         } else {
@@ -204,7 +214,7 @@ void CvodeSolver::initialize(const double &pVoiStart,
         // Create the CVODE solver
 
         mSolver = CVodeCreate(!mMethod.compare(BdfMethod)?CV_BDF:CV_ADAMS,
-                              CV_NEWTON);
+                              !mIterator.compare(NewtonIterator)?CV_NEWTON:CV_FUNCTIONAL);
 
         // Use our own error handler
 

@@ -40,6 +40,7 @@ namespace CVODESolver {
 static const auto MaximumStepId          = QStringLiteral("MaximumStep");
 static const auto MaximumNumberOfStepsId = QStringLiteral("MaximumNumberOfSteps");
 static const auto MethodId               = QStringLiteral("Method");
+static const auto IteratorId             = QStringLiteral("Iterator");
 static const auto RelativeToleranceId    = QStringLiteral("RelativeTolerance");
 static const auto AbsoluteToleranceId    = QStringLiteral("AbsoluteTolerance");
 static const auto InterpolateSolutionId  = QStringLiteral("InterpolateSolution");
@@ -48,6 +49,11 @@ static const auto InterpolateSolutionId  = QStringLiteral("InterpolateSolution")
 
 static const auto AdamsMoultonMethod = QStringLiteral("Adams-Moulton");
 static const auto BdfMethod          = QStringLiteral("BDF");
+
+//==============================================================================
+
+static const auto FunctionalIterator = QStringLiteral("Functional");
+static const auto NewtonIterator     = QStringLiteral("Newton");
 
 //==============================================================================
 
@@ -64,6 +70,7 @@ enum {
 };
 
 static const auto MethodDefaultValue = BdfMethod;
+static const auto IteratorDefaultValue = NewtonIterator;
 
 static const double RelativeToleranceDefaultValue = 1.0e-7;
 static const double AbsoluteToleranceDefaultValue = 1.0e-7;
@@ -113,6 +120,7 @@ private:
     double mMaximumStep;
     int mMaximumNumberOfSteps;
     QString mMethod;
+    QString mIterator;
     double mRelativeTolerance;
     double mAbsoluteTolerance;
     bool mInterpolateSolution;
