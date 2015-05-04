@@ -58,14 +58,14 @@ public:
 
     explicit Property(const Type &pType, const QString &pId,
                       const Descriptions &pDescriptions,
-                      const QStringList &pListValues,
+                      const QStringList &pListValue,
                       const QVariant &pDefaultValue,
                       const bool &pHasVoiUnit);
 
     Type type() const;
     QString id() const;
     Descriptions descriptions() const;
-    QStringList listValues() const;
+    QStringList listValue() const;
     QVariant defaultValue() const;
     bool hasVoiUnit() const;
 
@@ -73,7 +73,7 @@ private:
     Type mType;
     QString mId;
     Descriptions mDescriptions;
-    QStringList mListValues;
+    QStringList mListValue;
     QVariant mDefaultValue;
     bool mHasVoiUnit;
 };

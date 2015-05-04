@@ -81,7 +81,7 @@ SingleCellViewInformationSolversWidget::SingleCellViewInformationSolversWidget(Q
     // Keep track of changes to list properties
 
     connect(this, SIGNAL(listPropertyChanged(Core::Property *, const QString &)),
-            this, SLOT(solverChanged(Core::Property *, const QString &)));
+            this, SLOT(listPropertyChanged(Core::Property *, const QString &)));
 }
 
 //==============================================================================
@@ -223,7 +223,7 @@ SingleCellViewInformationSolversWidgetData * SingleCellViewInformationSolversWid
 
                     break;
                 case Solver::Property::List:
-                    property = addListProperty(solverInterfaceProperty.listValues(),
+                    property = addListProperty(solverInterfaceProperty.listValue(),
                                                solverInterfaceProperty.defaultValue().toInt(),
                                                solversProperty);
 
@@ -489,18 +489,20 @@ void SingleCellViewInformationSolversWidget::doSolverChanged(SingleCellViewInfor
 
 //==============================================================================
 
-void SingleCellViewInformationSolversWidget::solverChanged(Core::Property *pProperty,
-                                                           const QString &pValue)
+void SingleCellViewInformationSolversWidget::listPropertyChanged(Core::Property *pProperty,
+                                                                 const QString &pValue)
 {
     // Try, for the ODE, DAE and NLA solvers list property, to handle the change
     // in the list property
 
-    doSolverChanged((pProperty == mOdeSolverData->solversListProperty())?
-                        mOdeSolverData:
-                        (pProperty == mDaeSolverData->solversListProperty())?
-                            mDaeSolverData:
-                            mNlaSolverData,
-                    pValue);
+    if (!pProperty->row()) {
+        doSolverChanged((pProperty == mOdeSolverData->solversListProperty())?
+                            mOdeSolverData:
+                            (pProperty == mDaeSolverData->solversListProperty())?
+                                mDaeSolverData:
+                                mNlaSolverData,
+                        pValue);
+    }
 }
 
 //==============================================================================
