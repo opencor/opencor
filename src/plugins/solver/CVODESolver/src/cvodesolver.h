@@ -56,8 +56,9 @@ static const double MaximumStepDefaultValue = 0.0;
 
 enum {
     MaximumNumberOfStepsDefaultValue = 500,
-    MethodDefaultValue = 1
 };
+
+static const auto MethodDefaultValue = QStringLiteral("BDF");
 
 static const double RelativeToleranceDefaultValue = 1.0e-7;
 static const double AbsoluteToleranceDefaultValue = 1.0e-7;

@@ -228,9 +228,11 @@ public:
     void setValue(const QString &pValue, const bool &pForce = false,
                   const bool &pEmitSignal = true);
 
-    QStringList listValue() const;
-    void setListValue(const QStringList &pListValue, const int &pValue = 0,
-                      const bool &pEmitSignal = true);
+    QStringList listValues() const;
+    void setListValues(const QStringList &pListValues, const QString &pValue,
+                       const bool &pEmitSignal = true);
+    void setListValues(const QStringList &pListValues,
+                       const bool &pEmitSignal = true);
 
     QString emptyListValue() const;
     void setEmptyListValue(const QString &pEmptyListValue);
@@ -264,7 +266,7 @@ private:
     PropertyItem *mValue;
     PropertyItem *mUnit;
 
-    QStringList mListValue;
+    QStringList mListValues;
     QString mEmptyListValue;
 
     QString mExtraInfo;
@@ -368,9 +370,9 @@ public:
     Property * addDoubleProperty(const double &pValue, Property *pParent = 0);
     Property * addDoubleProperty(Property *pParent = 0);
 
-    Property * addListProperty(const QStringList &pStringList,
-                               const int &pValue, Property *pParent = 0);
-    Property * addListProperty(const QStringList &pStringList,
+    Property * addListProperty(const QStringList &pValues,
+                               const QString &pValue, Property *pParent = 0);
+    Property * addListProperty(const QStringList &pValues,
                                Property *pParent = 0);
     Property * addListProperty(Property *pParent = 0);
 

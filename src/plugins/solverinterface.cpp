@@ -34,13 +34,13 @@ namespace Solver {
 
 Property::Property(const Property::Type &pType, const QString &pId,
                    const Descriptions &pDescriptions,
-                   const QStringList &pListValue,
+                   const QStringList &pListValues,
                    const QVariant &pDefaultValue,
                    const bool &pHasVoiUnit) :
     mType(pType),
     mId(pId),
     mDescriptions(pDescriptions),
-    mListValue(pListValue),
+    mListValues(pListValues),
     mDefaultValue(pDefaultValue),
     mHasVoiUnit(pHasVoiUnit)
 {
@@ -75,11 +75,11 @@ Descriptions Property::descriptions() const
 
 //==============================================================================
 
-QStringList Property::listValue() const
+QStringList Property::listValues() const
 {
-    // Return our list value
+    // Return our list values
 
-    return mListValue;
+    return mListValues;
 }
 
 //==============================================================================

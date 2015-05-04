@@ -317,7 +317,7 @@ QWidget * PropertyItemDelegate::createEditor(QWidget *pParent,
 
         // Add the value items to the list, keeping in mind separators
 
-        foreach (const QString &valueItem, property->listValue())
+        foreach (const QString &valueItem, property->listValues())
             if (valueItem.isEmpty())
                 listEditor->insertSeparator(listEditor->count());
             else
@@ -451,7 +451,7 @@ Property::Property(const Type &pType, PropertyEditorWidget *pParent) :
     mName(new PropertyItem(this)),
     mValue(new PropertyItem(this)),
     mUnit(mHasUnit?new PropertyItem(this):0),
-    mListValue(QStringList()),
+    mListValues(QStringList()),
     mEmptyListValue(UnknownValue),
     mExtraInfo(QString()),
     mParentProperty(0),
@@ -767,66 +767,81 @@ void Property::setValue(const QString &pValue, const bool &pForce,
 
 //==============================================================================
 
-QStringList Property::listValue() const
+QStringList Property::listValues() const
 {
-    // Return our list value, if any
+    // Return our list values, if any
 
-    return (mType == List)?mListValue:QStringList();
+    return (mType == List)?mListValues:QStringList();
 }
 
 //==============================================================================
 
-void Property::setListValue(const QStringList &pListValue, const int &pValue,
-                            const bool &pEmitSignal)
+void Property::setListValues(const QStringList &pListValues,
+                             const QString &pValue, const bool &pEmitSignal)
 {
-    // Make sure that there would be a point in setting the list value
+    // Make sure that there would be a point in setting the list values
 
     if (mType != List)
         return;
 
-    // Clean up the list value we were given:
+    // Clean up the list values we were given:
     //  - Remove leading empty items
     //  - Add items, making sure that only one empty item (i.e. separator) can
     //    be used at once
     //  - Remove the trailing empty item, if any
 
-    QStringList listValue = QStringList();
+    QStringList listValues = QStringList();
     int i = 0;
-    int iMax = pListValue.count();
+    int iMax = pListValues.count();
 
     for (; i < iMax; ++i)
-        if (!pListValue[i].isEmpty())
+        if (!pListValues[i].isEmpty())
             break;
 
     bool prevItemIsSeparator = false;
 
     for (; i < iMax; ++i) {
-        QString listValueItem = pListValue[i];
+        QString listValue = pListValues[i];
 
-        if (!listValueItem.isEmpty()) {
-            listValue << listValueItem;
+        if (!listValue.isEmpty()) {
+            listValues << listValue;
 
             prevItemIsSeparator = false;
         } else if (!prevItemIsSeparator) {
-            listValue << listValueItem;
+            listValues << listValue;
 
             prevItemIsSeparator = true;
         }
     }
 
-    if (!listValue.isEmpty() && listValue.last().isEmpty())
-        listValue.removeLast();
+    if (!listValues.isEmpty() && listValues.last().isEmpty())
+        listValues.removeLast();
 
-    // Set our list value, if appropriate
+    // Set our list values, if appropriate
 
-    if (listValue != mListValue) {
-        mListValue = listValue;
+    if (listValues != mListValues) {
+        mListValues = listValues;
 
         // Update our value using the first item of our new list, if it isn't
         // empty, otherwise use our empty list value
 
-        setValue(mListValue.isEmpty()?mEmptyListValue:mListValue[pValue], false, pEmitSignal);
+        setValue(mListValues.isEmpty()?
+                     mEmptyListValue:
+                     pValue.isEmpty()?
+                         mListValues.first():
+                         mListValues[mListValues.indexOf(pValue)],
+                 false, pEmitSignal);
     }
+}
+
+//==============================================================================
+
+void Property::setListValues(const QStringList &pListValues,
+                             const bool &pEmitSignal)
+{
+    // Set our list values with no default value
+
+    setListValues(pListValues, QString(), pEmitSignal);
 }
 
 //==============================================================================
@@ -850,7 +865,7 @@ void Property::setEmptyListValue(const QString &pEmptyListValue)
         // Keep our current value, if the list is not empty, otherwise update it
         // with our new empty list value
 
-        setValue(mListValue.isEmpty()?mEmptyListValue:mValue->text());
+        setValue(mListValues.isEmpty()?mEmptyListValue:mValue->text());
     }
 }
 
@@ -1227,7 +1242,7 @@ void PropertyEditorWidget::retranslateEmptyListProperties(QStandardItem *pItem)
 
     Property *prop = property(pItem->index());
 
-    if (prop && (prop->type() == Property::List) && prop->listValue().isEmpty())
+    if (prop && (prop->type() == Property::List) && prop->listValues().isEmpty())
         prop->setValue(prop->emptyListValue());
 
     // Retranslate the current item's children, if any
@@ -1529,8 +1544,8 @@ Property * PropertyEditorWidget::addDoubleProperty(Property *pParent)
 
 //==============================================================================
 
-Property * PropertyEditorWidget::addListProperty(const QStringList &pStringList,
-                                                 const int &pValue,
+Property * PropertyEditorWidget::addListProperty(const QStringList &pValues,
+                                                 const QString &pValue,
                                                  Property *pParent)
 {
     // Add a list property and return its information
@@ -1539,19 +1554,19 @@ Property * PropertyEditorWidget::addListProperty(const QStringList &pStringList,
     Property *res = addProperty(Property::List, pParent);
 
     res->setEditable(true);
-    res->setListValue(pStringList, pValue);
+    res->setListValues(pValues, pValue);
 
     return res;
 }
 
 //==============================================================================
 
-Property * PropertyEditorWidget::addListProperty(const QStringList &pStringList,
+Property * PropertyEditorWidget::addListProperty(const QStringList &pValues,
                                                  Property *pParent)
 {
     // Add a list property and return its information
 
-    return addListProperty(pStringList, 0, pParent);
+    return addListProperty(pValues, 0, pParent);
 }
 
 //==============================================================================
@@ -1835,15 +1850,16 @@ void PropertyEditorWidget::editorOpened(QWidget *pEditor)
 
     if (mProperty->type() == Property::List) {
         QString propertyValue = mProperty->value();
-        QStringList propertyListValue = mProperty->listValue();
+        QStringList propertyListValues = mProperty->listValues();
         ListEditorWidget *propertyEditor = static_cast<ListEditorWidget *>(mPropertyEditor);
 
-        for (int i = 0, iMax = propertyListValue.count(); i < iMax; ++i)
-            if (!propertyValue.compare(propertyListValue[i])) {
+        for (int i = 0, iMax = propertyListValues.count(); i < iMax; ++i) {
+            if (!propertyValue.compare(propertyListValues[i])) {
                 propertyEditor->setCurrentIndex(i);
 
                 break;
             }
+        }
     }
 
     // Next, we need to use the property's editor as our focus proxy and make
@@ -1876,7 +1892,7 @@ void PropertyEditorWidget::editorClosed()
     //       more things (e.g. update the tool tip)...
 
     if (mProperty->type() == Property::List) {
-        mProperty->setValue(mProperty->listValue().isEmpty()?
+        mProperty->setValue(mProperty->listValues().isEmpty()?
                                 mProperty->emptyListValue():
                                 static_cast<ListEditorWidget *>(mPropertyEditor)->currentText(),
                             true);

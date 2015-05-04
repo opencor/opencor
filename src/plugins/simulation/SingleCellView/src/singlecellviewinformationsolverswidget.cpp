@@ -223,8 +223,8 @@ SingleCellViewInformationSolversWidgetData * SingleCellViewInformationSolversWid
 
                     break;
                 case Solver::Property::List:
-                    property = addListProperty(solverInterfaceProperty.listValue(),
-                                               solverInterfaceProperty.defaultValue().toInt(),
+                    property = addListProperty(solverInterfaceProperty.listValues(),
+                                               solverInterfaceProperty.defaultValue().toString(),
                                                solversProperty);
 
                     break;
@@ -273,7 +273,7 @@ SingleCellViewInformationSolversWidgetData * SingleCellViewInformationSolversWid
 
         // Assign the list of solvers to our list property
 
-        solversListProperty->setListValue(solvers);
+        solversListProperty->setListValues(solvers);
 
         // Create and return our solver data
 
@@ -421,7 +421,7 @@ QStringList SingleCellViewInformationSolversWidget::odeSolvers() const
 {
     // Return the available ODE solvers, if any
 
-    return mOdeSolverData?mOdeSolverData->solversListProperty()->listValue():QStringList();
+    return mOdeSolverData?mOdeSolverData->solversListProperty()->listValues():QStringList();
 }
 
 //==============================================================================
@@ -430,7 +430,7 @@ QStringList SingleCellViewInformationSolversWidget::daeSolvers() const
 {
     // Return the available DAE solvers, if any
 
-    return mDaeSolverData?mDaeSolverData->solversListProperty()->listValue():QStringList();
+    return mDaeSolverData?mDaeSolverData->solversListProperty()->listValues():QStringList();
 }
 
 //==============================================================================
@@ -439,7 +439,7 @@ QStringList SingleCellViewInformationSolversWidget::nlaSolvers() const
 {
     // Return the available NLA solvers, if any
 
-    return mNlaSolverData?mNlaSolverData->solversListProperty()->listValue():QStringList();
+    return mNlaSolverData?mNlaSolverData->solversListProperty()->listValues():QStringList();
 }
 
 //==============================================================================

@@ -900,17 +900,17 @@ void SingleCellViewInformationGraphsWidget::updateGraphsInfo(Core::Property *pSe
             if (property->type() == Core::Property::Section)
                 graphProperties << property;
 
-    // Determine the model list value
+    // Determine the model list values
 
-    QStringList modelListValue = QStringList();
+    QStringList modelListValues = QStringList();
 
     foreach (const QString &fileName, mFileNames)
-        modelListValue << QFileInfo(fileName).fileName()+PropertySeparator+fileName;
+        modelListValues << QFileInfo(fileName).fileName()+PropertySeparator+fileName;
 
-    modelListValue.sort();
+    modelListValues.sort();
 
-    modelListValue.prepend(QString());
-    modelListValue.prepend(tr("Current"));
+    modelListValues.prepend(QString());
+    modelListValues.prepend(tr("Current"));
 
     // Prevent updateGraphInfo(), which is going to be called when updating the
     // information of our graph properies below, from emitting the
@@ -933,14 +933,14 @@ void SingleCellViewInformationGraphsWidget::updateGraphsInfo(Core::Property *pSe
         graphProperty->properties()[2]->setName(tr("Y"));
 
         // Keep track of the current model value, so that we can safely update
-        // its list value and then select the correct model value back
+        // its list values and then select the correct model value back
 
         QString oldModelValue = graphProperty->properties()[0]->value();
         QString newModelValue = oldModelValue;
 
-        graphProperty->properties()[0]->setListValue(modelListValue, false);
-        // Note: we don't want setListValue() to emit a signal since one will be
-        //       emitted as a result of our call to setValue() below...
+        graphProperty->properties()[0]->setListValues(modelListValues, false);
+        // Note: we don't want setListValues() to emit a signal since one will
+        //       be emitted as a result of our call to setValue() below...
 
         if (newModelValue.isEmpty()) {
             // newModelValue is empty, which means that this is the first time
@@ -948,8 +948,8 @@ void SingleCellViewInformationGraphsWidget::updateGraphsInfo(Core::Property *pSe
             // our model property
 
             newModelValue = graphProperty->properties()[0]->value();
-        } else if (!modelListValue.contains(oldModelValue)) {
-            // Our old model value is not in our new model list value, which
+        } else if (!modelListValues.contains(oldModelValue)) {
+            // Our old model value is not in our new model list values, which
             // means that either the value of the model property was "Current"
             // (and the locale got changed) or the current file got renamed, so
             // we use that instead
