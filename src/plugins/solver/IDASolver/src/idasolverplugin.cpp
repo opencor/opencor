@@ -111,11 +111,11 @@ Solver::Properties IDASolverPlugin::solverProperties() const
     InterpolateSolutionDescriptions.insert("en", QString::fromUtf8("Interpolate solution"));
     InterpolateSolutionDescriptions.insert("fr", QString::fromUtf8("Interpoler solution"));
 
-    return Solver::Properties() << Solver::Property(Solver::Property::Double, MaximumStepId, MaximumStepDescriptions, MaximumStepDefaultValue, true)
-                                << Solver::Property(Solver::Property::Integer, MaximumNumberOfStepsId, MaximumNumberOfStepsDescriptions, MaximumNumberOfStepsDefaultValue)
-                                << Solver::Property(Solver::Property::Double, RelativeToleranceId, RelativeToleranceDescriptions, RelativeToleranceDefaultValue)
-                                << Solver::Property(Solver::Property::Double, AbsoluteToleranceId, AbsoluteToleranceDescriptions, AbsoluteToleranceDefaultValue)
-                                << Solver::Property(Solver::Property::Boolean, InterpolateSolutionId, InterpolateSolutionDescriptions, InterpolateSolutionDefaultValue);
+    return Solver::Properties() << Solver::Property(Solver::Property::Double, MaximumStepId, MaximumStepDescriptions, QStringList(), MaximumStepDefaultValue, true)
+                                << Solver::Property(Solver::Property::Integer, MaximumNumberOfStepsId, MaximumNumberOfStepsDescriptions, QStringList(), MaximumNumberOfStepsDefaultValue, false)
+                                << Solver::Property(Solver::Property::Double, RelativeToleranceId, RelativeToleranceDescriptions, QStringList(), RelativeToleranceDefaultValue, false)
+                                << Solver::Property(Solver::Property::Double, AbsoluteToleranceId, AbsoluteToleranceDescriptions, QStringList(), AbsoluteToleranceDefaultValue, false)
+                                << Solver::Property(Solver::Property::Boolean, InterpolateSolutionId, InterpolateSolutionDescriptions, QStringList(), InterpolateSolutionDefaultValue, false);
 }
 
 //==============================================================================

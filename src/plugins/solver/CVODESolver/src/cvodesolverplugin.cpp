@@ -90,6 +90,7 @@ Solver::Properties CVODESolverPlugin::solverProperties() const
 
     Descriptions MaximumStepDescriptions;
     Descriptions MaximumNumberOfStepsDescriptions;
+    Descriptions MethodDescriptions;
     Descriptions RelativeToleranceDescriptions;
     Descriptions AbsoluteToleranceDescriptions;
     Descriptions InterpolateSolutionDescriptions;
@@ -100,6 +101,9 @@ Solver::Properties CVODESolverPlugin::solverProperties() const
     MaximumNumberOfStepsDescriptions.insert("en", QString::fromUtf8("Maximum number of steps"));
     MaximumNumberOfStepsDescriptions.insert("fr", QString::fromUtf8("Nombre maximum de pas"));
 
+    MethodDescriptions.insert("en", QString::fromUtf8("Method"));
+    MethodDescriptions.insert("fr", QString::fromUtf8("Méthode"));
+
     RelativeToleranceDescriptions.insert("en", QString::fromUtf8("Relative tolerance"));
     RelativeToleranceDescriptions.insert("fr", QString::fromUtf8("Tolérance relative"));
 
@@ -109,11 +113,15 @@ Solver::Properties CVODESolverPlugin::solverProperties() const
     InterpolateSolutionDescriptions.insert("en", QString::fromUtf8("Interpolate solution"));
     InterpolateSolutionDescriptions.insert("fr", QString::fromUtf8("Interpoler solution"));
 
-    return Solver::Properties() << Solver::Property(Solver::Property::Double, MaximumStepId, MaximumStepDescriptions, MaximumStepDefaultValue, true)
-                                << Solver::Property(Solver::Property::Integer, MaximumNumberOfStepsId, MaximumNumberOfStepsDescriptions, MaximumNumberOfStepsDefaultValue)
-                                << Solver::Property(Solver::Property::Double, RelativeToleranceId, RelativeToleranceDescriptions, RelativeToleranceDefaultValue)
-                                << Solver::Property(Solver::Property::Double, AbsoluteToleranceId, AbsoluteToleranceDescriptions, AbsoluteToleranceDefaultValue)
-                                << Solver::Property(Solver::Property::Boolean, InterpolateSolutionId, InterpolateSolutionDescriptions, InterpolateSolutionDefaultValue);
+    QStringList MethodListValues = QStringList() << "Adams-Moulton"
+                                                 << "BDF";
+
+    return Solver::Properties() << Solver::Property(Solver::Property::Double, MaximumStepId, MaximumStepDescriptions, QStringList(), MaximumStepDefaultValue, true)
+                                << Solver::Property(Solver::Property::Integer, MaximumNumberOfStepsId, MaximumNumberOfStepsDescriptions, QStringList(), MaximumNumberOfStepsDefaultValue, false)
+                                << Solver::Property(Solver::Property::List, MethodId, MethodDescriptions, MethodListValues, MethodDefaultValue, false)
+                                << Solver::Property(Solver::Property::Double, RelativeToleranceId, RelativeToleranceDescriptions, QStringList(), RelativeToleranceDefaultValue, false)
+                                << Solver::Property(Solver::Property::Double, AbsoluteToleranceId, AbsoluteToleranceDescriptions, QStringList(), AbsoluteToleranceDefaultValue, false)
+                                << Solver::Property(Solver::Property::Boolean, InterpolateSolutionId, InterpolateSolutionDescriptions, QStringList(), InterpolateSolutionDefaultValue, false);
 }
 
 //==============================================================================

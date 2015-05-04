@@ -52,17 +52,20 @@ public:
     enum Type {
         Boolean,
         Integer,
-        Double
+        Double,
+        List
     };
 
     explicit Property(const Type &pType, const QString &pId,
                       const Descriptions &pDescriptions,
+                      const QStringList &pListValues,
                       const QVariant &pDefaultValue,
-                      const bool &pHasVoiUnit = false);
+                      const bool &pHasVoiUnit);
 
     Type type() const;
     QString id() const;
     Descriptions descriptions() const;
+    QStringList listValues() const;
     QVariant defaultValue() const;
     bool hasVoiUnit() const;
 
@@ -70,6 +73,7 @@ private:
     Type mType;
     QString mId;
     Descriptions mDescriptions;
+    QStringList mListValues;
     QVariant mDefaultValue;
     bool mHasVoiUnit;
 };
