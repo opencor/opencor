@@ -1431,10 +1431,11 @@ Property * PropertyEditorWidget::addProperty(const Property::Type &pType,
 
     // Span ourselves if we are of section type
 
-    if (pType == Property::Section)
+    if (pType == Property::Section) {
         setFirstColumnSpanned(res->row(),
                               pParent?pParent->index():mModel->invisibleRootItem()->index(),
                               true);
+    }
 
     // Keep track of our property's change of visibility
 

@@ -1527,15 +1527,15 @@ void SingleCellViewWidget::solversPropertyChanged(Core::Property *pProperty)
     SingleCellViewInformationSolversWidgetData *nlaSolverData = mContentsWidget->informationWidget()->solversWidget()->nlaSolverData();
 
     if (nlaSolverData) {
-        if (pProperty == nlaSolverData->solversListProperty())
+        if (pProperty == nlaSolverData->solversListProperty()) {
             // The property for selecting a particular NLA solver
 
             mSimulation->data()->setNlaSolverName(pProperty->value());
-        else
+        } else {
             // We are dealing with one of the selected NLA solver's properties,
             // so go through them and check which one it is
 
-            foreach (Core::Property *property, nlaSolverData->solversProperties().value(mSimulation->data()->nlaSolverName()))
+            foreach (Core::Property *property, nlaSolverData->solversProperties().value(mSimulation->data()->nlaSolverName())) {
                 if (pProperty == property) {
                     // We have found the NLA solver's property that got changed,
                     // so keep track of the new value
@@ -1544,6 +1544,8 @@ void SingleCellViewWidget::solversPropertyChanged(Core::Property *pProperty)
 
                     break;
                 }
+            }
+        }
     }
 }
 
