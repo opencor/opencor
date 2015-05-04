@@ -776,7 +776,7 @@ QStringList Property::listValue() const
 
 //==============================================================================
 
-void Property::setListValue(const QStringList &pListValue,
+void Property::setListValue(const QStringList &pListValue, const int &pValue,
                             const bool &pEmitSignal)
 {
     // Make sure that there would be a point in setting the list value
@@ -825,7 +825,7 @@ void Property::setListValue(const QStringList &pListValue,
         // Update our value using the first item of our new list, if it isn't
         // empty, otherwise use our empty list value
 
-        setValue(mListValue.isEmpty()?mEmptyListValue:mListValue.first(), false, pEmitSignal);
+        setValue(mListValue.isEmpty()?mEmptyListValue:mListValue[pValue], false, pEmitSignal);
     }
 }
 
@@ -1529,6 +1529,7 @@ Property * PropertyEditorWidget::addDoubleProperty(Property *pParent)
 //==============================================================================
 
 Property * PropertyEditorWidget::addListProperty(const QStringList &pStringList,
+                                                 const int &pValue,
                                                  Property *pParent)
 {
     // Add a list property and return its information
@@ -1537,9 +1538,19 @@ Property * PropertyEditorWidget::addListProperty(const QStringList &pStringList,
     Property *res = addProperty(Property::List, pParent);
 
     res->setEditable(true);
-    res->setListValue(pStringList);
+    res->setListValue(pStringList, pValue);
 
     return res;
+}
+
+//==============================================================================
+
+Property * PropertyEditorWidget::addListProperty(const QStringList &pStringList,
+                                                 Property *pParent)
+{
+    // Add a list property and return its information
+
+    return addListProperty(pStringList, 0, pParent);
 }
 
 //==============================================================================
@@ -1548,7 +1559,7 @@ Property * PropertyEditorWidget::addListProperty(Property *pParent)
 {
     // Add a list property and return its information
 
-    return addListProperty(QStringList(), pParent);
+    return addListProperty(QStringList(), 0, pParent);
 }
 
 //==============================================================================

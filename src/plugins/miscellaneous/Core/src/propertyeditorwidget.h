@@ -229,7 +229,7 @@ public:
                   const bool &pEmitSignal = true);
 
     QStringList listValue() const;
-    void setListValue(const QStringList &pListValue,
+    void setListValue(const QStringList &pListValue, const int &pValue = 0,
                       const bool &pEmitSignal = true);
 
     QString emptyListValue() const;
@@ -368,6 +368,8 @@ public:
     Property * addDoubleProperty(const double &pValue, Property *pParent = 0);
     Property * addDoubleProperty(Property *pParent = 0);
 
+    Property * addListProperty(const QStringList &pStringList,
+                               const int &pValue, Property *pParent = 0);
     Property * addListProperty(const QStringList &pStringList,
                                Property *pParent = 0);
     Property * addListProperty(Property *pParent = 0);
