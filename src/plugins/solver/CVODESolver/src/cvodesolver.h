@@ -117,12 +117,6 @@ private:
     N_Vector mStatesVector;
     CvodeSolverUserData *mUserData;
 
-    double mMaximumStep;
-    int mMaximumNumberOfSteps;
-    QString mMethod;
-    QString mIterator;
-    double mRelativeTolerance;
-    double mAbsoluteTolerance;
     bool mInterpolateSolution;
 };
 

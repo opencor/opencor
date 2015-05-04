@@ -104,12 +104,6 @@ CvodeSolver::CvodeSolver() :
     mSolver(0),
     mStatesVector(0),
     mUserData(0),
-    mMaximumStep(MaximumStepDefaultValue),
-    mMaximumNumberOfSteps(MaximumNumberOfStepsDefaultValue),
-    mMethod(BdfMethod),
-    mIterator(NewtonIterator),
-    mRelativeTolerance(RelativeToleranceDefaultValue),
-    mAbsoluteTolerance(AbsoluteToleranceDefaultValue),
     mInterpolateSolution(InterpolateSolutionDefaultValue)
 {
 }
@@ -143,48 +137,60 @@ void CvodeSolver::initialize(const double &pVoiStart,
     if (!mSolver) {
         // Retrieve some of the CVODE properties
 
+        double maximumStep;
+
         if (mProperties.contains(MaximumStepId)) {
-            mMaximumStep = mProperties.value(MaximumStepId).toDouble();
+            maximumStep = mProperties.value(MaximumStepId).toDouble();
         } else {
             emit error(QObject::tr("the 'maximum step' property value could not be retrieved"));
 
             return;
         }
 
+        int maximumNumberOfSteps;
+
         if (mProperties.contains(MaximumNumberOfStepsId)) {
-            mMaximumNumberOfSteps = mProperties.value(MaximumNumberOfStepsId).toInt();
+            maximumNumberOfSteps = mProperties.value(MaximumNumberOfStepsId).toInt();
         } else {
             emit error(QObject::tr("the 'maximum number of steps' property value could not be retrieved"));
 
             return;
         }
 
+        QString method;
+
         if (mProperties.contains(MethodId)) {
-            mMethod = mProperties.value(MethodId).toString();
+            method = mProperties.value(MethodId).toString();
         } else {
             emit error(QObject::tr("the 'method' property value could not be retrieved"));
 
             return;
         }
 
+        QString iterator;
+
         if (mProperties.contains(IteratorId)) {
-            mIterator = mProperties.value(IteratorId).toString();
+            iterator = mProperties.value(IteratorId).toString();
         } else {
             emit error(QObject::tr("the 'iterator' property value could not be retrieved"));
 
             return;
         }
 
+        double relativeTolerance;
+
         if (mProperties.contains(RelativeToleranceId)) {
-            mRelativeTolerance = mProperties.value(RelativeToleranceId).toDouble();
+            relativeTolerance = mProperties.value(RelativeToleranceId).toDouble();
         } else {
             emit error(QObject::tr("the 'relative tolerance' property value could not be retrieved"));
 
             return;
         }
 
+        double absoluteTolerance;
+
         if (mProperties.contains(AbsoluteToleranceId)) {
-            mAbsoluteTolerance = mProperties.value(AbsoluteToleranceId).toDouble();
+            absoluteTolerance = mProperties.value(AbsoluteToleranceId).toDouble();
         } else {
             emit error(QObject::tr("the 'absolute tolerance' property value could not be retrieved"));
 
@@ -213,8 +219,8 @@ void CvodeSolver::initialize(const double &pVoiStart,
 
         // Create the CVODE solver
 
-        mSolver = CVodeCreate(!mMethod.compare(BdfMethod)?CV_BDF:CV_ADAMS,
-                              !mIterator.compare(NewtonIterator)?CV_NEWTON:CV_FUNCTIONAL);
+        mSolver = CVodeCreate(!method.compare(BdfMethod)?CV_BDF:CV_ADAMS,
+                              !iterator.compare(NewtonIterator)?CV_NEWTON:CV_FUNCTIONAL);
 
         // Use our own error handler
 
@@ -239,15 +245,15 @@ void CvodeSolver::initialize(const double &pVoiStart,
 
         // Set the maximum step
 
-        CVodeSetMaxStep(mSolver, mMaximumStep);
+        CVodeSetMaxStep(mSolver, maximumStep);
 
         // Set the maximum number of steps
 
-        CVodeSetMaxNumSteps(mSolver, mMaximumNumberOfSteps);
+        CVodeSetMaxNumSteps(mSolver, maximumNumberOfSteps);
 
         // Set the relative and absolute tolerances
 
-        CVodeSStolerances(mSolver, mRelativeTolerance, mAbsoluteTolerance);
+        CVodeSStolerances(mSolver, relativeTolerance, absoluteTolerance);
     } else {
         // Reinitialise the CVODE object
 
