@@ -138,6 +138,11 @@ void CvodeSolver::initialize(const double &pVoiStart,
         // Retrieve some of the CVODE properties
 
         double maximumStep;
+        int maximumNumberOfSteps;
+        QString method;
+        QString iterator;
+        double relativeTolerance;
+        double absoluteTolerance;
 
         if (mProperties.contains(MaximumStepId)) {
             maximumStep = mProperties.value(MaximumStepId).toDouble();
@@ -147,8 +152,6 @@ void CvodeSolver::initialize(const double &pVoiStart,
             return;
         }
 
-        int maximumNumberOfSteps;
-
         if (mProperties.contains(MaximumNumberOfStepsId)) {
             maximumNumberOfSteps = mProperties.value(MaximumNumberOfStepsId).toInt();
         } else {
@@ -156,8 +159,6 @@ void CvodeSolver::initialize(const double &pVoiStart,
 
             return;
         }
-
-        QString method;
 
         if (mProperties.contains(MethodId)) {
             method = mProperties.value(MethodId).toString();
@@ -167,8 +168,6 @@ void CvodeSolver::initialize(const double &pVoiStart,
             return;
         }
 
-        QString iterator;
-
         if (mProperties.contains(IteratorId)) {
             iterator = mProperties.value(IteratorId).toString();
         } else {
@@ -177,8 +176,6 @@ void CvodeSolver::initialize(const double &pVoiStart,
             return;
         }
 
-        double relativeTolerance;
-
         if (mProperties.contains(RelativeToleranceId)) {
             relativeTolerance = mProperties.value(RelativeToleranceId).toDouble();
         } else {
@@ -186,8 +183,6 @@ void CvodeSolver::initialize(const double &pVoiStart,
 
             return;
         }
-
-        double absoluteTolerance;
 
         if (mProperties.contains(AbsoluteToleranceId)) {
             absoluteTolerance = mProperties.value(AbsoluteToleranceId).toDouble();

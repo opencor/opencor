@@ -229,6 +229,9 @@ void IdaSolver::initialize(const double &pVoiStart, const double &pVoiEnd,
         // Retrieve some of the IDA properties
 
         double maximumStep;
+        int maximumNumberOfSteps;
+        double relativeTolerance;
+        double absoluteTolerance;
 
         if (mProperties.contains(MaximumStepId)) {
             maximumStep = mProperties.value(MaximumStepId).toDouble();
@@ -238,8 +241,6 @@ void IdaSolver::initialize(const double &pVoiStart, const double &pVoiEnd,
             return;
         }
 
-        int maximumNumberOfSteps;
-
         if (mProperties.contains(MaximumNumberOfStepsId)) {
             maximumNumberOfSteps = mProperties.value(MaximumNumberOfStepsId).toInt();
         } else {
@@ -248,8 +249,6 @@ void IdaSolver::initialize(const double &pVoiStart, const double &pVoiEnd,
             return;
         }
 
-        double relativeTolerance;
-
         if (mProperties.contains(RelativeToleranceId)) {
             relativeTolerance = mProperties.value(RelativeToleranceId).toDouble();
         } else {
@@ -257,8 +256,6 @@ void IdaSolver::initialize(const double &pVoiStart, const double &pVoiEnd,
 
             return;
         }
-
-        double absoluteTolerance;
 
         if (mProperties.contains(AbsoluteToleranceId)) {
             absoluteTolerance = mProperties.value(AbsoluteToleranceId).toDouble();
