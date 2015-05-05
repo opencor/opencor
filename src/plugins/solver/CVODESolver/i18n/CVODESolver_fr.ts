@@ -24,12 +24,12 @@
         <translation>la valeur de la propriété &apos;interpoler solution&apos; n&apos;a pas pu être retrouvée</translation>
     </message>
     <message>
-        <source>the &apos;method&apos; property value could not be retrieved</source>
-        <translation>la valeur de la propriété &apos;méthode&apos; n&apos;a pas pu être retrouvée</translation>
+        <source>the &apos;integration method&apos; property value could not be retrieved</source>
+        <translation>la valeur de la propriété &apos;méthode d&apos;intégration&apos; n&apos;a pas pu être retrouvée</translation>
     </message>
     <message>
-        <source>the &apos;iterator&apos; property value could not be retrieved</source>
-        <translation>la valeur de la propriété &apos;itérateur&apos; n&apos;a pas pu être retrouvée</translation>
+        <source>the &apos;iterator type&apos; property value could not be retrieved</source>
+        <translation>la valeur de la propriété &apos;type d&apos;itérateur&apos; n&apos;a pas pu être retrouvée</translation>
     </message>
 </context>
 </TS>

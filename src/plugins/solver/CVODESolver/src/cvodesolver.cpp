@@ -139,8 +139,8 @@ void CvodeSolver::initialize(const double &pVoiStart,
 
         double maximumStep;
         int maximumNumberOfSteps;
-        QString method;
-        QString iterator;
+        QString integrationMethod;
+        QString iteratorType;
         double relativeTolerance;
         double absoluteTolerance;
 
@@ -160,18 +160,18 @@ void CvodeSolver::initialize(const double &pVoiStart,
             return;
         }
 
-        if (mProperties.contains(MethodId)) {
-            method = mProperties.value(MethodId).toString();
+        if (mProperties.contains(IntegrationMethodId)) {
+            integrationMethod = mProperties.value(IntegrationMethodId).toString();
         } else {
-            emit error(QObject::tr("the 'method' property value could not be retrieved"));
+            emit error(QObject::tr("the 'integration method' property value could not be retrieved"));
 
             return;
         }
 
-        if (mProperties.contains(IteratorId)) {
-            iterator = mProperties.value(IteratorId).toString();
+        if (mProperties.contains(IteratorTypeId)) {
+            iteratorType = mProperties.value(IteratorTypeId).toString();
         } else {
-            emit error(QObject::tr("the 'iterator' property value could not be retrieved"));
+            emit error(QObject::tr("the 'iterator type' property value could not be retrieved"));
 
             return;
         }
@@ -214,8 +214,8 @@ void CvodeSolver::initialize(const double &pVoiStart,
 
         // Create the CVODE solver
 
-        mSolver = CVodeCreate(!method.compare(BdfMethod)?CV_BDF:CV_ADAMS,
-                              !iterator.compare(NewtonIterator)?CV_NEWTON:CV_FUNCTIONAL);
+        mSolver = CVodeCreate(!integrationMethod.compare(BdfMethod)?CV_BDF:CV_ADAMS,
+                              !iteratorType.compare(NewtonIterator)?CV_NEWTON:CV_FUNCTIONAL);
 
         // Use our own error handler
 
@@ -232,9 +232,10 @@ void CvodeSolver::initialize(const double &pVoiStart,
 
         CVodeSetUserData(mSolver, mUserData);
 
-        // Set the linear solver
+        // Set the linear solver, should we be using a Newton iterator
 
-        CVDense(mSolver, pRatesStatesCount);
+        if (!iteratorType.compare(NewtonIterator))
+            CVDense(mSolver, pRatesStatesCount);
 
         // Set the maximum step
 

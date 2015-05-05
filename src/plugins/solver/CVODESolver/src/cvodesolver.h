@@ -39,8 +39,8 @@ namespace CVODESolver {
 
 static const auto MaximumStepId          = QStringLiteral("MaximumStep");
 static const auto MaximumNumberOfStepsId = QStringLiteral("MaximumNumberOfSteps");
-static const auto MethodId               = QStringLiteral("Method");
-static const auto IteratorId             = QStringLiteral("Iterator");
+static const auto IntegrationMethodId    = QStringLiteral("IntegrationMethod");
+static const auto IteratorTypeId         = QStringLiteral("IteratorType");
 static const auto RelativeToleranceId    = QStringLiteral("RelativeTolerance");
 static const auto AbsoluteToleranceId    = QStringLiteral("AbsoluteTolerance");
 static const auto InterpolateSolutionId  = QStringLiteral("InterpolateSolution");
@@ -69,8 +69,8 @@ enum {
     MaximumNumberOfStepsDefaultValue = 500,
 };
 
-static const auto MethodDefaultValue = BdfMethod;
-static const auto IteratorDefaultValue = NewtonIterator;
+static const auto IntegrationMethodDefaultValue = BdfMethod;
+static const auto IteratorTypeDefaultValue = NewtonIterator;
 
 static const double RelativeToleranceDefaultValue = 1.0e-7;
 static const double AbsoluteToleranceDefaultValue = 1.0e-7;

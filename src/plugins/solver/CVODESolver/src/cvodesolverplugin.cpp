@@ -90,8 +90,8 @@ Solver::Properties CVODESolverPlugin::solverProperties() const
 
     Descriptions MaximumStepDescriptions;
     Descriptions MaximumNumberOfStepsDescriptions;
-    Descriptions MethodDescriptions;
-    Descriptions IteratorDescriptions;
+    Descriptions IntegrationMethodDescriptions;
+    Descriptions IteratorTypeDescriptions;
     Descriptions RelativeToleranceDescriptions;
     Descriptions AbsoluteToleranceDescriptions;
     Descriptions InterpolateSolutionDescriptions;
@@ -102,11 +102,11 @@ Solver::Properties CVODESolverPlugin::solverProperties() const
     MaximumNumberOfStepsDescriptions.insert("en", QString::fromUtf8("Maximum number of steps"));
     MaximumNumberOfStepsDescriptions.insert("fr", QString::fromUtf8("Nombre maximum de pas"));
 
-    MethodDescriptions.insert("en", QString::fromUtf8("Method"));
-    MethodDescriptions.insert("fr", QString::fromUtf8("Méthode"));
+    IntegrationMethodDescriptions.insert("en", QString::fromUtf8("Integration method"));
+    IntegrationMethodDescriptions.insert("fr", QString::fromUtf8("Méthode d'intégration"));
 
-    IteratorDescriptions.insert("en", QString::fromUtf8("Iterator"));
-    IteratorDescriptions.insert("fr", QString::fromUtf8("Itérateur"));
+    IteratorTypeDescriptions.insert("en", QString::fromUtf8("Iterator type"));
+    IteratorTypeDescriptions.insert("fr", QString::fromUtf8("Type d'itérateur"));
 
     RelativeToleranceDescriptions.insert("en", QString::fromUtf8("Relative tolerance"));
     RelativeToleranceDescriptions.insert("fr", QString::fromUtf8("Tolérance relative"));
@@ -117,16 +117,16 @@ Solver::Properties CVODESolverPlugin::solverProperties() const
     InterpolateSolutionDescriptions.insert("en", QString::fromUtf8("Interpolate solution"));
     InterpolateSolutionDescriptions.insert("fr", QString::fromUtf8("Interpoler solution"));
 
-    QStringList MethodListValues = QStringList() << AdamsMoultonMethod
-                                                 << BdfMethod;
+    QStringList IntegrationMethodListValues = QStringList() << AdamsMoultonMethod
+                                                            << BdfMethod;
 
-    QStringList IteratorListValues = QStringList() << FunctionalIterator
-                                                   << NewtonIterator;
+    QStringList IteratorTypeListValues = QStringList() << FunctionalIterator
+                                                       << NewtonIterator;
 
     return Solver::Properties() << Solver::Property(Solver::Property::Double, MaximumStepId, MaximumStepDescriptions, QStringList(), MaximumStepDefaultValue, true)
                                 << Solver::Property(Solver::Property::Integer, MaximumNumberOfStepsId, MaximumNumberOfStepsDescriptions, QStringList(), MaximumNumberOfStepsDefaultValue, false)
-                                << Solver::Property(Solver::Property::List, MethodId, MethodDescriptions, MethodListValues, MethodDefaultValue, false)
-                                << Solver::Property(Solver::Property::List, IteratorId, IteratorDescriptions, IteratorListValues, IteratorDefaultValue, false)
+                                << Solver::Property(Solver::Property::List, IntegrationMethodId, IntegrationMethodDescriptions, IntegrationMethodListValues, IntegrationMethodDefaultValue, false)
+                                << Solver::Property(Solver::Property::List, IteratorTypeId, IteratorTypeDescriptions, IteratorTypeListValues, IteratorTypeDefaultValue, false)
                                 << Solver::Property(Solver::Property::Double, RelativeToleranceId, RelativeToleranceDescriptions, QStringList(), RelativeToleranceDefaultValue, false)
                                 << Solver::Property(Solver::Property::Double, AbsoluteToleranceId, AbsoluteToleranceDescriptions, QStringList(), AbsoluteToleranceDefaultValue, false)
                                 << Solver::Property(Solver::Property::Boolean, InterpolateSolutionId, InterpolateSolutionDescriptions, QStringList(), InterpolateSolutionDefaultValue, false);
