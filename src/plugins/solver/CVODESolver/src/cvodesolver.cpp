@@ -227,8 +227,6 @@ void CvodeSolver::initialize(const double &pVoiStart,
 
         // Set some user data
 
-        delete mUserData;   // Just in case the solver got initialised before
-
         mUserData = new CvodeSolverUserData(pConstants, pAlgebraic,
                                             pComputeRates);
 

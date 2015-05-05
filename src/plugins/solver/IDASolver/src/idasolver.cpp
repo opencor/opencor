@@ -311,8 +311,6 @@ void IdaSolver::initialize(const double &pVoiStart, const double &pVoiEnd,
 
         // Set some user data
 
-        delete mUserData;   // Just in case the solver got initialised before
-
         mUserData = new IdaSolverUserData(pConstants, mOldRates, mOldStates,
                                           pAlgebraic, pCondVar,
                                           pComputeEssentialVariables,
