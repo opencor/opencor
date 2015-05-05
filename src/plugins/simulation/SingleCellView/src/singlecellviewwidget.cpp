@@ -1520,7 +1520,8 @@ void SingleCellViewWidget::solversPropertyChanged(Core::Property *pProperty)
     // Check whether any of our ODE solver properties has been modified and, if
     // so, update our simulation data object accordingly
 
-    SingleCellViewInformationSolversWidgetData *odeSolverData = mContentsWidget->informationWidget()->solversWidget()->odeSolverData();
+    SingleCellViewInformationSolversWidget *solversWidget = mContentsWidget->informationWidget()->solversWidget();
+    SingleCellViewInformationSolversWidgetData *odeSolverData = solversWidget->odeSolverData();
 
     if (odeSolverData) {
         if (pProperty == odeSolverData->solversListProperty()) {
@@ -1541,7 +1542,7 @@ void SingleCellViewWidget::solversPropertyChanged(Core::Property *pProperty)
     // Check whether any of our DAE solver properties has been modified and, if
     // so, update our simulation data object accordingly
 
-    SingleCellViewInformationSolversWidgetData *daeSolverData = mContentsWidget->informationWidget()->solversWidget()->daeSolverData();
+    SingleCellViewInformationSolversWidgetData *daeSolverData = solversWidget->daeSolverData();
 
     if (daeSolverData) {
         if (pProperty == daeSolverData->solversListProperty()) {
@@ -1562,7 +1563,7 @@ void SingleCellViewWidget::solversPropertyChanged(Core::Property *pProperty)
     // Check whether any of our NLA solver properties has been modified and, if
     // so, update our simulation data object accordingly
 
-    SingleCellViewInformationSolversWidgetData *nlaSolverData = mContentsWidget->informationWidget()->solversWidget()->nlaSolverData();
+    SingleCellViewInformationSolversWidgetData *nlaSolverData = solversWidget->nlaSolverData();
 
     if (nlaSolverData) {
         if (pProperty == nlaSolverData->solversListProperty()) {
