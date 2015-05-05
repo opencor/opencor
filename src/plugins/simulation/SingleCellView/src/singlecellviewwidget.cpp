@@ -865,16 +865,13 @@ void SingleCellViewWidget::initialize(const QString &pFileName,
         //       simulationPropertyChanged() and solversPropertyChanged()...
 
         if (pReloadingView) {
-            // Retrieve our simulation's properties
+            // Retrieve our simulation properties
 
             SingleCellViewInformationSimulationWidget *simulationWidget = mContentsWidget->informationWidget()->simulationWidget();
 
             mSimulation->data()->setStartingPoint(simulationWidget->startingPointProperty()->doubleValue());
             mSimulation->data()->setEndingPoint(simulationWidget->endingPointProperty()->doubleValue());
             mSimulation->data()->setPointInterval(simulationWidget->pointIntervalProperty()->doubleValue());
-
-            foreach (SingleCellViewGraphPanelPlotWidget *plot, mPlots)
-                updatePlot(plot);
 
             // Retrieve our NLA solver's properties
 
@@ -884,6 +881,12 @@ void SingleCellViewWidget::initialize(const QString &pFileName,
 
             foreach (Core::Property *property, nlaSolverData->solversProperties().value(mSimulation->data()->nlaSolverName()))
                 mSimulation->data()->addNlaSolverProperty(property->id(), value(property));
+
+            // Update our plots since our 'new' simulation properties may have
+            // affected them
+
+            foreach (SingleCellViewGraphPanelPlotWidget *plot, mPlots)
+                updatePlot(plot);
         }
     }
 
