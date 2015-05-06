@@ -63,9 +63,14 @@ void RawCellMLViewPlugin::reformat(const QString &pFileName) const
 
 //==============================================================================
 
-bool RawCellMLViewPlugin::validCellml(const QString &pFileName) const
+bool RawCellMLViewPlugin::validCellml(const QString &pFileName,
+                                      QString &pExtra) const
 {
     // Validate the given file
+
+//---GRY--- THE BELOW EXTRA INFORMATION SHOULD BE REMOVED ONCE WE USE libCellML
+//          AND ONCE WE CAN TRULY DO CellML VALIDATION...
+    pExtra = tr("the <a href=\"http://cellml-api.sourceforge.net/\">CellML validation service</a> is known to have limitations and may therefore incorrectly (in)validate certain CellML files.");
 
     return mViewWidget->validate(pFileName);
 }

@@ -63,9 +63,14 @@ void CellMLTextViewPlugin::reformat(const QString &pFileName) const
 
 //==============================================================================
 
-bool CellMLTextViewPlugin::validCellml(const QString &pFileName) const
+bool CellMLTextViewPlugin::validCellml(const QString &pFileName,
+                                       QString &pExtra) const
 {
     // Validate the given file
+
+//---GRY--- THE BELOW EXTRA INFORMATION SHOULD BE REMOVED ONCE WE USE libCellML
+//          AND ONCE WE CAN TRULY DO CellML VALIDATION...
+    pExtra = tr("the <a href=\"http://cellml-api.sourceforge.net/\">CellML validation service</a> cannot be used in this view, so only validation against the <a href=\"http://opencor.ws/user/plugins/editing/CellMLTextView.html#CellML Text format\">CellML Text format</a> was performed. For full CellML validation, you might want to use the Raw CellML view instead.");
 
     return mViewWidget->validate(pFileName);
 }

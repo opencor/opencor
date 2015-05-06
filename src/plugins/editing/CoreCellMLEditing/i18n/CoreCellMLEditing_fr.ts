@@ -39,5 +39,9 @@
         <source>Reformat the contents of the editor</source>
         <translation>Reformatter le contenu de l&apos;éditeur</translation>
     </message>
+    <message>
+        <source>&lt;strong&gt;Note:&lt;/strong&gt; %1.</source>
+        <translation>&lt;strong&gt;Note :&lt;/strong&gt; %1.</translation>
+    </message>
 </context>
 </TS>

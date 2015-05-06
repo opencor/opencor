@@ -1,4 +1,22 @@
 var jsonData = { "versions": [
+                   { "anchor": "latest", "description": "Latest snapshot", "date": "???",
+                     "categories": [
+                       { "name": "Editing",
+                         "entries": [
+                           { "type": "subCategory", "name": "Raw CellML view",
+                             "entries": [
+                               { "type": "Improved", "description": "CellML validation." }
+                             ]
+                           },
+                           { "type": "subCategory", "name": "CellML Text view",
+                             "entries": [
+                               { "type": "Improved", "description": "CellML validation." }
+                             ]
+                           }
+                         ]
+                       }
+                     ]
+                   },
                    { "anchor": "0.4", "description": "Version 0.4", "date": "29 April 2015",
                      "categories": [
                        { "name": "General",
@@ -47,8 +65,8 @@ var jsonData = { "versions": [
                            { "type": "subCategory", "name": "Raw CellML view",
                              "entries": [
                                { "type": "Added", "description": "Reformatting the contents of the editor." },
-                               { "type": "Improved", "description": "File validation." },
                                { "type": "Improved", "description": "Context menu." },
+                               { "type": "Improved", "description": "CellML validation." },
                                { "type": "Improved", "description": "Equation rendering." },
                                { "type": "Improved", "description": "File permissions changes." },
                                { "type": "Fixed", "description": "Retrieval of view settings." }

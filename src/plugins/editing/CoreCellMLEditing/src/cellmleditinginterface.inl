@@ -6,6 +6,7 @@
 
     virtual void reformat(const QString &pFileName) const PURE;
 
-    virtual bool validCellml(const QString &pFileName) const PURE;
+    virtual bool validCellml(const QString &pFileName,
+                             QString &pExtra) const PURE;
 
 #undef PURE
