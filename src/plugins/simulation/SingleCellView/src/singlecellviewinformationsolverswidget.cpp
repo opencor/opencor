@@ -492,8 +492,12 @@ void SingleCellViewInformationSolversWidget::doSolverChanged(SingleCellViewInfor
 void SingleCellViewInformationSolversWidget::solverChanged(Core::Property *pProperty,
                                                            const QString &pValue)
 {
-    // Try, for the ODE, DAE and NLA solvers list property, to handle the change
-    // in the list property
+    // Try, for the ODE/DAE/NLA solvers list property, to handle the change in
+    // the list property
+    // Note: the ODE/DAE/NLA solvers list property is our first property, hence
+    //       we make sure that its row number is equal to zero (in case there is
+    //       one or several other list properties, as is the case for the CVODE
+    //       and IDA solvers)...
 
     if (!pProperty->row()) {
         doSolverChanged((pProperty == mOdeSolverData->solversListProperty())?
