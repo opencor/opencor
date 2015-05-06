@@ -1548,14 +1548,14 @@ void SingleCellViewWidget::solversPropertyChanged(Core::Property *pProperty)
 
     if (odeSolverData) {
         if (pProperty == odeSolverData->solversListProperty()) {
-qDebug("   ---> ODE solver [%s]", qPrintable(pProperty->name()));
+qDebug("   ---> ODE solver [%s]", qPrintable(pProperty->value()));
             mSimulation->data()->setOdeSolverName(pProperty->value());
 
             initializeSolversProperties(odeSolverData);
 
             return;
         } else {
-qDebug("   ---> ODE solver property [%s]", qPrintable(pProperty->name()));
+qDebug("   ---> ODE solver property [%s ---> %s]", qPrintable(pProperty->name()), qPrintable(pProperty->value()));
             foreach (Core::Property *property, odeSolverData->solversProperties().value(mSimulation->data()->odeSolverName())) {
                 if (pProperty == property) {
                     mSimulation->data()->addOdeSolverProperty(pProperty->id(), value(property));
@@ -1573,14 +1573,14 @@ qDebug("   ---> ODE solver property [%s]", qPrintable(pProperty->name()));
 
     if (daeSolverData) {
         if (pProperty == daeSolverData->solversListProperty()) {
-qDebug("   ---> DAE solver [%s]", qPrintable(pProperty->name()));
+qDebug("   ---> DAE solver [%s]", qPrintable(pProperty->value()));
             mSimulation->data()->setDaeSolverName(pProperty->value());
 
             initializeSolversProperties(daeSolverData);
 
             return;
         } else {
-qDebug("   ---> DAE solver property [%s]", qPrintable(pProperty->name()));
+qDebug("   ---> DAE solver property [%s ---> %s]", qPrintable(pProperty->name()), qPrintable(pProperty->value()));
             foreach (Core::Property *property, daeSolverData->solversProperties().value(mSimulation->data()->daeSolverName())) {
                 if (pProperty == property) {
                     mSimulation->data()->addDaeSolverProperty(pProperty->id(), value(property));
@@ -1598,14 +1598,14 @@ qDebug("   ---> DAE solver property [%s]", qPrintable(pProperty->name()));
 
     if (nlaSolverData) {
         if (pProperty == nlaSolverData->solversListProperty()) {
-qDebug("   ---> NLA solver [%s]", qPrintable(pProperty->name()));
+qDebug("   ---> NLA solver [%s]", qPrintable(pProperty->value()));
             mSimulation->data()->setNlaSolverName(pProperty->value());
 
             initializeSolversProperties(nlaSolverData);
 
             return;
         } else {
-qDebug("   ---> NLA solver property [%s]", qPrintable(pProperty->name()));
+qDebug("   ---> NLA solver property [%s ---> %s]", qPrintable(pProperty->name()), qPrintable(pProperty->value()));
             foreach (Core::Property *property, nlaSolverData->solversProperties().value(mSimulation->data()->nlaSolverName())) {
                 if (pProperty == property) {
                     mSimulation->data()->addNlaSolverProperty(pProperty->id(), value(property));
