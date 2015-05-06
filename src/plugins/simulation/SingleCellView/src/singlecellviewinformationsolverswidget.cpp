@@ -80,8 +80,8 @@ SingleCellViewInformationSolversWidget::SingleCellViewInformationSolversWidget(Q
 {
     // Keep track of changes to list properties
 
-    connect(this, SIGNAL(listPropertyChanged(Core::Property *, const QString &)),
-            this, SLOT(solverChanged(Core::Property *, const QString &)));
+    connect(this, SIGNAL(propertyChanged(Core::Property *)),
+            this, SLOT(solverChanged(Core::Property *)));
 }
 
 //==============================================================================
@@ -187,7 +187,7 @@ SingleCellViewInformationSolversWidgetData * SingleCellViewInformationSolversWid
     QStringList solvers = QStringList();
     QMap<QString, Core::Properties> solversProperties = QMap<QString, Core::Properties>();
 
-    foreach (SolverInterface *solverInterface, pSolverInterfaces)
+    foreach (SolverInterface *solverInterface, pSolverInterfaces) {
         if (solverInterface->solverType() == pSolverType) {
             // Keep track of the solver's name
 
@@ -262,6 +262,7 @@ SingleCellViewInformationSolversWidgetData * SingleCellViewInformationSolversWid
 
             solversProperties.insert(solverInterface->solverName(), properties);
         }
+    }
 
     // Check whether we have at least one solver
 
@@ -360,15 +361,13 @@ void SingleCellViewInformationSolversWidget::initialize(const QString &pFileName
     // Make sure that the CellML file runtime is valid
 
     if (pRuntime->isValid()) {
-        // Show/hide the ODE/DAE solver information
+        // Show/hide the ODE/DAE/NLA solver information
 
         if (mOdeSolverData)
             mOdeSolverData->solversProperty()->setVisible(pRuntime->needOdeSolver());
 
         if (mDaeSolverData)
             mDaeSolverData->solversProperty()->setVisible(pRuntime->needDaeSolver());
-
-        // Show/hide the NLA solver information
 
         if (mNlaSolverData)
             mNlaSolverData->solversProperty()->setVisible(pRuntime->needNlaSolver());
@@ -474,8 +473,14 @@ SingleCellViewInformationSolversWidgetData * SingleCellViewInformationSolversWid
 void SingleCellViewInformationSolversWidget::doSolverChanged(SingleCellViewInformationSolversWidgetData *pSolverData,
                                                              const QString &pSolverName)
 {
+    // Make sure that we have some solver data
+
+    if (!pSolverData)
+        return;
+
     // Go through the different properties for the given type of solver and
     // show/hide whatever needs showing/hiding
+qDebug(">>> Updating solver... [%s]", qPrintable(pSolverName));
 
     for (auto solverProperties = pSolverData->solversProperties().constBegin(),
               solverPropertiesEnd = pSolverData->solversProperties().constEnd();
@@ -489,8 +494,7 @@ void SingleCellViewInformationSolversWidget::doSolverChanged(SingleCellViewInfor
 
 //==============================================================================
 
-void SingleCellViewInformationSolversWidget::solverChanged(Core::Property *pProperty,
-                                                           const QString &pValue)
+void SingleCellViewInformationSolversWidget::solverChanged(Core::Property *pProperty)
 {
     // Try, for the ODE/DAE/NLA solvers list property, to handle the change in
     // the list property
@@ -500,12 +504,12 @@ void SingleCellViewInformationSolversWidget::solverChanged(Core::Property *pProp
     //       and IDA solvers)...
 
     if (!pProperty->row()) {
-        doSolverChanged((pProperty == mOdeSolverData->solversListProperty())?
+        doSolverChanged((mOdeSolverData && (pProperty == mOdeSolverData->solversListProperty()))?
                             mOdeSolverData:
-                            (pProperty == mDaeSolverData->solversListProperty())?
+                            (mDaeSolverData && (pProperty == mDaeSolverData->solversListProperty()))?
                                 mDaeSolverData:
                                 mNlaSolverData,
-                        pValue);
+                        pProperty->value());
     }
 }
 

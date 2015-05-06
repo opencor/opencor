@@ -116,7 +116,7 @@ private:
                            const QString &pVoiUnit);
 
 private Q_SLOTS:
-    void solverChanged(Core::Property *pProperty, const QString &pValue);
+    void solverChanged(Core::Property *pProperty);
 };
 
 //==============================================================================

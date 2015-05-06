@@ -140,16 +140,9 @@ Q_SIGNALS:
     void goToPreviousPropertyRequested();
     void goToNextPropertyRequested();
 
-    void propertyChanged(Core::Property *pProperty);
-    void listPropertyChanged(Core::Property *pProperty, const QString &pValue);
-    void booleanPropertyChanged(Core::Property *pProperty, const bool &pValue);
-    // Note: strictly speaking, we don't need to specify the Core namespace, but
-    //       then if we were not to specify it, we wouldn't be able to use the
-    //       property editor outside of the Core namespace...
-
 private Q_SLOTS:
-    void emitListPropertyChanged(const QString &pValue);
-    void emitBooleanPropertyChanged(const QString &pValue);
+    void listPropertyChanged(const QString &pValue);
+    void booleanPropertyChanged(const QString &pValue);
 };
 
 //==============================================================================
@@ -440,8 +433,6 @@ private:
 
 Q_SIGNALS:
     void propertyChanged(Core::Property *pProperty);
-    void listPropertyChanged(Core::Property *pProperty, const QString &pValue);
-    void booleanPropertyChanged(Core::Property *pProperty, const bool &pValue);
     // Note: see the comment for the same signal in PropertyItemDelegate...
 
 private Q_SLOTS:

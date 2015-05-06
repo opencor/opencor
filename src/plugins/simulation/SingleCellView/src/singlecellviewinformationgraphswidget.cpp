@@ -288,8 +288,8 @@ void SingleCellViewInformationGraphsWidget::initialize(SingleCellViewGraphPanelW
 
         // Keep track of changes to list properties
 
-        connect(mPropertyEditor, SIGNAL(listPropertyChanged(Core::Property *, const QString &)),
-                this, SLOT(modelChanged(Core::Property *, const QString &)));
+        connect(mPropertyEditor, SIGNAL(propertyChanged(Core::Property *)),
+                this, SLOT(modelChanged(Core::Property *)));
 
         // Keep track of when the user changes a property value
 
@@ -365,8 +365,8 @@ void SingleCellViewInformationGraphsWidget::addGraph(SingleCellViewGraphPanelPlo
     //       before adding the properties (and then reconnect ourselves to
     //       them)...
 
-    disconnect(mPropertyEditor, SIGNAL(listPropertyChanged(Core::Property *, const QString &)),
-               this, SLOT(modelChanged(Core::Property *, const QString &)));
+    disconnect(mPropertyEditor, SIGNAL(propertyChanged(Core::Property *)),
+               this, SLOT(modelChanged(Core::Property *)));
     disconnect(mPropertyEditor, SIGNAL(propertyChanged(Core::Property *)),
                this, SLOT(graphChanged(Core::Property *)));
 
@@ -377,8 +377,8 @@ void SingleCellViewInformationGraphsWidget::addGraph(SingleCellViewGraphPanelPlo
     xProperty->setEditable(true);
     yProperty->setEditable(true);
 
-    connect(mPropertyEditor, SIGNAL(listPropertyChanged(Core::Property *, const QString &)),
-            this, SLOT(modelChanged(Core::Property *, const QString &)));
+    connect(mPropertyEditor, SIGNAL(propertyChanged(Core::Property *)),
+            this, SLOT(modelChanged(Core::Property *)));
     connect(mPropertyEditor, SIGNAL(propertyChanged(Core::Property *)),
             this, SLOT(graphChanged(Core::Property *)));
 
@@ -758,6 +758,11 @@ static const auto PropertySeparator = QStringLiteral(" | ");
 void SingleCellViewInformationGraphsWidget::updateGraphInfo(Core::Property *pProperty,
                                                             const QString &pFileName)
 {
+    // Make sure that we have a property
+
+    if (!pProperty)
+        return;
+
     // Update the graph information by checking the new value of the given
     // section property
 
@@ -834,13 +839,12 @@ void SingleCellViewInformationGraphsWidget::updateGraphInfo(Core::Property *pPro
 
 //==============================================================================
 
-void SingleCellViewInformationGraphsWidget::modelChanged(Core::Property *pProperty,
-                                                         const QString &pValue)
+void SingleCellViewInformationGraphsWidget::modelChanged(Core::Property *pProperty)
 {
     // Update the graph information associated with the given property's
     // corresponding section property and the given value
 
-    updateGraphInfo(pProperty->parentProperty(), pValue);
+    updateGraphInfo(pProperty->parentProperty(), pProperty->value());
 }
 
 //==============================================================================

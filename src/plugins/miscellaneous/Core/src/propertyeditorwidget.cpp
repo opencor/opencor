@@ -328,7 +328,7 @@ QWidget * PropertyItemDelegate::createEditor(QWidget *pParent,
         // changed
 
         connect(listEditor, SIGNAL(currentIndexChanged(const QString &)),
-                this, SLOT(emitListPropertyChanged(const QString &)));
+                this, SLOT(listPropertyChanged(const QString &)));
 
         break;
     }
@@ -341,7 +341,7 @@ QWidget * PropertyItemDelegate::createEditor(QWidget *pParent,
         // changed
 
         connect(booleanEditor, SIGNAL(currentIndexChanged(const QString &)),
-                this, SLOT(emitBooleanPropertyChanged(const QString &)));
+                this, SLOT(booleanPropertyChanged(const QString &)));
 
         break;
     }
@@ -404,26 +404,22 @@ void PropertyItemDelegate::paint(QPainter *pPainter,
 
 //==============================================================================
 
-void PropertyItemDelegate::emitListPropertyChanged(const QString &pValue)
+void PropertyItemDelegate::listPropertyChanged(const QString &pValue)
 {
-    // Let people know about the list property value having changed
+    // Force the updating of our list property value
+qDebug("---------%s", qPrintable(pValue));
 
-    Property *currentProperty = qobject_cast<PropertyEditorWidget *>(parent())->currentProperty();
-
-    emit propertyChanged(currentProperty);
-    emit listPropertyChanged(currentProperty, pValue);
+    qobject_cast<PropertyEditorWidget *>(parent())->currentProperty()->setValue(pValue);
 }
 
 //==============================================================================
 
-void PropertyItemDelegate::emitBooleanPropertyChanged(const QString &pValue)
+void PropertyItemDelegate::booleanPropertyChanged(const QString &pValue)
 {
-    // Let people know about the boolean property value having changed
+    // Force the updating of our boolean property value
+qDebug("---------%s", qPrintable(pValue));
 
-    Property *currentProperty = qobject_cast<PropertyEditorWidget *>(parent())->currentProperty();
-
-    emit propertyChanged(currentProperty);
-    emit booleanPropertyChanged(currentProperty, !pValue.compare(TrueValue));
+    qobject_cast<PropertyEditorWidget *>(parent())->currentProperty()->setValue(pValue);
 }
 
 //==============================================================================
@@ -827,8 +823,8 @@ void Property::setListValues(const QStringList &pListValues,
     if (listValues != mListValues) {
         mListValues = listValues;
 
-        // Update our value using the first item of our new list, if it isn't
-        // empty, otherwise use our empty list value
+        // Update our value using the requested item from our new list, if it
+        // isn't empty, otherwise use our empty list value
 
         int listValueIndex = mListValues.indexOf(pListValue);
 
@@ -1190,13 +1186,6 @@ void PropertyEditorWidget::constructor(const bool &pShowUnits,
             this, SLOT(goToPreviousProperty()));
     connect(propertyItemDelegate, SIGNAL(goToNextPropertyRequested()),
             this, SLOT(goToNextProperty()));
-
-    connect(propertyItemDelegate, SIGNAL(propertyChanged(Core::Property *)),
-            this, SIGNAL(propertyChanged(Core::Property *)));
-    connect(propertyItemDelegate, SIGNAL(listPropertyChanged(Core::Property *, const QString &)),
-            this, SIGNAL(listPropertyChanged(Core::Property *, const QString &)));
-    connect(propertyItemDelegate, SIGNAL(booleanPropertyChanged(Core::Property *, const bool &)),
-            this, SIGNAL(booleanPropertyChanged(Core::Property *, const bool &)));
 
     setItemDelegate(propertyItemDelegate);
 
@@ -1921,22 +1910,20 @@ void PropertyEditorWidget::editorClosed()
     if (!mPropertyEditor)
         return;
 
-    // We have stopped editing a property, so make sure that if we were editing
-    // a list item, then its value gets properly set
-    // Note: we should always set (and force) the value of the property, even if
-    //       we are not dealing with an 'empty' integer or double property since
-    //       only the text of the property item has been updated (through
-    //       QTreeView) at this stage, while Property::setValue() will do a few
-    //       more things (e.g. update the tool tip)...
+    // We have stopped editing a property, so make sure that its value is
+    // updated
+    // Note #1: we don't need to do this for a list property or a boolean
+    //          property since such a property will have already been updated
+    //          (see listPropertyChanged() and booleanPropertyChanged())...
+    // Note #2: we should always set (and force) the value of the property, even
+    //          if we are not dealing with an 'empty' integer or double property
+    //          since only the text of the property item will have been updated
+    //          (through QTreeView) while Property::setValue() will do a few
+    //          more things (e.g. update the tool tip)...
 
-    if (mProperty->type() == Property::List) {
-        mProperty->setValue(mProperty->listValues().isEmpty()?
-                                mProperty->emptyListValue():
-                                static_cast<ListEditorWidget *>(mPropertyEditor)->currentText(),
-                            true);
-    } else {
-        // Not a list item, but still need to call setPropertyItem() so that the
-        // item's tool tip gets updated
+    if (   (mProperty->type() != Property::List)
+        && (mProperty->type() != Property::Boolean)) {
+        // Not a list or boolean item, so set its value
 
         QString value = mProperty->value();
 

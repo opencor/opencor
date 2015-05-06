@@ -1580,9 +1580,9 @@ qDebug("   ---> ODE solver [%s]", qPrintable(pProperty->value()));
 
             return;
         } else {
-qDebug("   ---> ODE solver property [%s ---> %s]", qPrintable(pProperty->name()), qPrintable(pProperty->value()));
             foreach (Core::Property *property, odeSolverData->solversProperties().value(mSimulation->data()->odeSolverName())) {
                 if (pProperty == property) {
+qDebug("   ---> ODE solver property [%s ---> %s]", qPrintable(pProperty->name()), qPrintable(pProperty->value()));
                     mSimulation->data()->addOdeSolverProperty(pProperty->id(), value(property));
 
                     updateSolversPropertiesVisibility(odeSolverData);
@@ -1607,9 +1607,9 @@ qDebug("   ---> DAE solver [%s]", qPrintable(pProperty->value()));
 
             return;
         } else {
-qDebug("   ---> DAE solver property [%s ---> %s]", qPrintable(pProperty->name()), qPrintable(pProperty->value()));
             foreach (Core::Property *property, daeSolverData->solversProperties().value(mSimulation->data()->daeSolverName())) {
                 if (pProperty == property) {
+qDebug("   ---> DAE solver property [%s ---> %s]", qPrintable(pProperty->name()), qPrintable(pProperty->value()));
                     mSimulation->data()->addDaeSolverProperty(pProperty->id(), value(property));
 
                     updateSolversPropertiesVisibility(daeSolverData);
@@ -1634,9 +1634,9 @@ qDebug("   ---> NLA solver [%s]", qPrintable(pProperty->value()));
 
             return;
         } else {
-qDebug("   ---> NLA solver property [%s ---> %s]", qPrintable(pProperty->name()), qPrintable(pProperty->value()));
             foreach (Core::Property *property, nlaSolverData->solversProperties().value(mSimulation->data()->nlaSolverName())) {
                 if (pProperty == property) {
+qDebug("   ---> NLA solver property [%s ---> %s]", qPrintable(pProperty->name()), qPrintable(pProperty->value()));
                     mSimulation->data()->addNlaSolverProperty(pProperty->id(), value(property));
 
                     updateSolversPropertiesVisibility(nlaSolverData);
