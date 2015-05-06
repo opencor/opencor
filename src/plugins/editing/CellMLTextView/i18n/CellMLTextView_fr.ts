@@ -7,6 +7,10 @@
         <source>CellML Text</source>
         <translation>Texte CellML</translation>
     </message>
+    <message>
+        <source>the &lt;a href=&quot;http://cellml-api.sourceforge.net/&quot;&gt;CellML validation service&lt;/a&gt; cannot be used in this view, so only validation against the &lt;a href=&quot;http://opencor.ws/user/plugins/editing/CellMLTextView.html#CellML Text format&quot;&gt;CellML Text format&lt;/a&gt; was performed. For full CellML validation, you might want to use the Raw CellML view instead.</source>
+        <translation>le &lt;a href=&quot;http://cellml-api.sourceforge.net/&quot;&gt;service de validation CellML&lt;/a&gt; ne peut pas être utilisé dans cette vue, donc seule une validation du &lt;a href=&quot;http://opencor.ws/user/plugins/editing/CellMLTextView.html#CellML Text format&quot;&gt;format CellML Text&lt;/a&gt; a été faite. Pour une validation CellML complète, vous pouvez utiliser la vue CellML Brut.</translation>
+    </message>
 </context>
 <context>
     <name>OpenCOR::CellMLTextView::CellmlTextViewWidget</name>
