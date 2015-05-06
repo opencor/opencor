@@ -317,11 +317,12 @@ QWidget * PropertyItemDelegate::createEditor(QWidget *pParent,
 
         // Add the value items to the list, keeping in mind separators
 
-        foreach (const QString &valueItem, property->listValues())
+        foreach (const QString &valueItem, property->listValues()) {
             if (valueItem.isEmpty())
                 listEditor->insertSeparator(listEditor->count());
             else
                 listEditor->addItem(valueItem);
+        }
 
         // Propagate the signal telling us about the list property value having
         // changed
