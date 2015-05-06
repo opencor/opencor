@@ -1244,21 +1244,24 @@ void SingleCellViewWidget::initializeSolversProperties(SingleCellViewInformation
 
     SingleCellViewInformationSolversWidget *solversWidget = mContentsWidget->informationWidget()->solversWidget();
 
-    if (!pSolverData || (pSolverData == solversWidget->odeSolverData())) {
+    if (   solversWidget->odeSolverData()
+        && (!pSolverData || (pSolverData == solversWidget->odeSolverData()))) {
         mSimulation->data()->setOdeSolverName(solversWidget->odeSolverData()->solversListProperty()->value());
 
         foreach (Core::Property *property, solversWidget->odeSolverData()->solversProperties().value(mSimulation->data()->odeSolverName()))
             mSimulation->data()->addOdeSolverProperty(property->id(), value(property));
     }
 
-    if (!pSolverData || (pSolverData == solversWidget->daeSolverData())) {
+    if (   solversWidget->daeSolverData()
+        && (!pSolverData || (pSolverData == solversWidget->daeSolverData()))) {
         mSimulation->data()->setDaeSolverName(solversWidget->daeSolverData()->solversListProperty()->value());
 
         foreach (Core::Property *property, solversWidget->daeSolverData()->solversProperties().value(mSimulation->data()->daeSolverName()))
             mSimulation->data()->addDaeSolverProperty(property->id(), value(property));
     }
 
-    if (!pSolverData || (pSolverData == solversWidget->nlaSolverData())) {
+    if (   solversWidget->nlaSolverData()
+        && (!pSolverData || (pSolverData == solversWidget->nlaSolverData()))) {
         mSimulation->data()->setNlaSolverName(solversWidget->nlaSolverData()->solversListProperty()->value());
 
         foreach (Core::Property *property, solversWidget->nlaSolverData()->solversProperties().value(mSimulation->data()->nlaSolverName()))
@@ -1278,15 +1281,18 @@ void SingleCellViewWidget::updateSolversPropertiesVisibility(SingleCellViewInfor
 
     SingleCellViewInformationSolversWidget *solversWidget = mContentsWidget->informationWidget()->solversWidget();
 
-    if (!pSolverData || (pSolverData == solversWidget->odeSolverData())) {
+    if (   solversWidget->odeSolverData()
+        && (!pSolverData || (pSolverData == solversWidget->odeSolverData()))) {
 qDebug(">>> Updating ODE solver...");
     }
 
-    if (!pSolverData || (pSolverData == solversWidget->daeSolverData())) {
+    if (   solversWidget->daeSolverData()
+        && (!pSolverData || (pSolverData == solversWidget->daeSolverData()))) {
 qDebug(">>> Updating DAE solver...");
     }
 
-    if (!pSolverData || (pSolverData == solversWidget->nlaSolverData())) {
+    if (   solversWidget->nlaSolverData()
+        && (!pSolverData || (pSolverData == solversWidget->nlaSolverData()))) {
 qDebug(">>> Updating NLA solver...");
     }
 }
