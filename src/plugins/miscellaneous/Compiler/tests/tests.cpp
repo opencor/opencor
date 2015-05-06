@@ -43,18 +43,6 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-static const double A = 5.0;
-static const double B = 7.9;
-
-static const double MinusA = -5.0;
-static const double MinusB = -7.9;
-
-static const double BigA = 3.0*5.0*7.0*11.0*13.0;
-static const double BigB = 2.0*3.0*7.0*13.0*17.0;
-static const double BigC = 5.0*7.0*17.0;
-
-//==============================================================================
-
 void Tests::initTestCase()
 {
     // Create our compiler engine
