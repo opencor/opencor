@@ -408,8 +408,10 @@ void PropertyItemDelegate::emitListPropertyChanged(const QString &pValue)
 {
     // Let people know about the list property value having changed
 
-    emit listPropertyChanged(qobject_cast<PropertyEditorWidget *>(parent())->currentProperty(),
-                             pValue);
+    Property *currentProperty = qobject_cast<PropertyEditorWidget *>(parent())->currentProperty();
+
+    emit propertyChanged(currentProperty);
+    emit listPropertyChanged(currentProperty, pValue);
 }
 
 //==============================================================================
@@ -418,8 +420,10 @@ void PropertyItemDelegate::emitBooleanPropertyChanged(const QString &pValue)
 {
     // Let people know about the boolean property value having changed
 
-    emit booleanPropertyChanged(qobject_cast<PropertyEditorWidget *>(parent())->currentProperty(),
-                                !pValue.compare(TrueValue));
+    Property *currentProperty = qobject_cast<PropertyEditorWidget *>(parent())->currentProperty();
+
+    emit propertyChanged(currentProperty);
+    emit booleanPropertyChanged(currentProperty, !pValue.compare(TrueValue));
 }
 
 //==============================================================================
@@ -1187,6 +1191,8 @@ void PropertyEditorWidget::constructor(const bool &pShowUnits,
     connect(propertyItemDelegate, SIGNAL(goToNextPropertyRequested()),
             this, SLOT(goToNextProperty()));
 
+    connect(propertyItemDelegate, SIGNAL(propertyChanged(Core::Property *)),
+            this, SIGNAL(propertyChanged(Core::Property *)));
     connect(propertyItemDelegate, SIGNAL(listPropertyChanged(Core::Property *, const QString &)),
             this, SIGNAL(listPropertyChanged(Core::Property *, const QString &)));
     connect(propertyItemDelegate, SIGNAL(booleanPropertyChanged(Core::Property *, const bool &)),

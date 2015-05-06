@@ -140,6 +140,7 @@ Q_SIGNALS:
     void goToPreviousPropertyRequested();
     void goToNextPropertyRequested();
 
+    void propertyChanged(Core::Property *pProperty);
     void listPropertyChanged(Core::Property *pProperty, const QString &pValue);
     void booleanPropertyChanged(Core::Property *pProperty, const bool &pValue);
     // Note: strictly speaking, we don't need to specify the Core namespace, but

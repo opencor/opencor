@@ -226,6 +226,7 @@ private Q_SLOTS:
     void on_actionRemoveAllGraphPanels_triggered();
 
     void initializeSolversProperties(SingleCellViewInformationSolversWidgetData *pSolverData = 0);
+    void updateSolversPropertiesVisibility(SingleCellViewInformationSolversWidgetData *pSolverData);
 
     void simulationDataExport();
 
