@@ -78,6 +78,7 @@ class SingleCellViewContentsWidget;
 class SingleCellViewGraphPanelPlotGraph;
 class SingleCellViewGraphPanelPlotWidget;
 class SingleCellViewGraphPanelWidget;
+class SingleCellViewInformationSolversWidgetData;
 class SingleCellViewPlugin;
 class SingleCellViewSimulation;
 
@@ -223,6 +224,8 @@ private Q_SLOTS:
     void on_actionRemoveGraphPanel_triggered();
     void on_actionRemoveCurrentGraphPanel_triggered();
     void on_actionRemoveAllGraphPanels_triggered();
+
+    void initializeSolversProperties(SingleCellViewInformationSolversWidgetData *pSolverData = 0);
 
     void simulationDataExport();
 
