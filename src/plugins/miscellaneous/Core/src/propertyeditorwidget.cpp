@@ -418,7 +418,7 @@ void PropertyItemDelegate::emitBooleanPropertyChanged(const QString &pValue)
     // Let people know about the boolean property value having changed
 
     emit booleanPropertyChanged(qobject_cast<PropertyEditorWidget *>(parent())->currentProperty(),
-                                pValue);
+                                !pValue.compare(TrueValue));
 }
 
 //==============================================================================

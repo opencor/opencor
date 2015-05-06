@@ -81,7 +81,7 @@ SingleCellViewInformationSolversWidget::SingleCellViewInformationSolversWidget(Q
     // Keep track of changes to list properties
 
     connect(this, SIGNAL(listPropertyChanged(Core::Property *, const QString &)),
-            this, SLOT(listPropertyChanged(Core::Property *, const QString &)));
+            this, SLOT(solverChanged(Core::Property *, const QString &)));
 }
 
 //==============================================================================
@@ -489,8 +489,8 @@ void SingleCellViewInformationSolversWidget::doSolverChanged(SingleCellViewInfor
 
 //==============================================================================
 
-void SingleCellViewInformationSolversWidget::listPropertyChanged(Core::Property *pProperty,
-                                                                 const QString &pValue)
+void SingleCellViewInformationSolversWidget::solverChanged(Core::Property *pProperty,
+                                                           const QString &pValue)
 {
     // Try, for the ODE, DAE and NLA solvers list property, to handle the change
     // in the list property
