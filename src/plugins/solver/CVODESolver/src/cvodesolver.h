@@ -41,6 +41,10 @@ static const auto MaximumStepId          = QStringLiteral("MaximumStep");
 static const auto MaximumNumberOfStepsId = QStringLiteral("MaximumNumberOfSteps");
 static const auto IntegrationMethodId    = QStringLiteral("IntegrationMethod");
 static const auto IteratorTypeId         = QStringLiteral("IteratorType");
+static const auto LinearSolverId         = QStringLiteral("LinearSolver");
+static const auto PreconditionerId       = QStringLiteral("Preconditioner");
+static const auto UpperHalfBandwidthId   = QStringLiteral("UpperHalfBandwidth");
+static const auto LowerHalfBandwidthId   = QStringLiteral("LowerHalfBandwidth");
 static const auto RelativeToleranceId    = QStringLiteral("RelativeTolerance");
 static const auto AbsoluteToleranceId    = QStringLiteral("AbsoluteTolerance");
 static const auto InterpolateSolutionId  = QStringLiteral("InterpolateSolution");
@@ -54,6 +58,20 @@ static const auto BdfMethod          = QStringLiteral("BDF");
 
 static const auto FunctionalIterator = QStringLiteral("Functional");
 static const auto NewtonIterator     = QStringLiteral("Newton");
+
+//==============================================================================
+
+static const auto DenseLinearSolver    = QStringLiteral("Dense");
+static const auto BandedLinearSolver   = QStringLiteral("Banded");
+static const auto DiagonalLinearSolver = QStringLiteral("Diagonal");
+static const auto GmresLinearSolver    = QStringLiteral("GMRES");
+static const auto BiCgStabLinearSolver = QStringLiteral("BiCGStab");
+static const auto TfqmrLinearSolver    = QStringLiteral("TFQMR");
+
+//==============================================================================
+
+static const auto NoPreconditioner     = QStringLiteral("None");
+static const auto BandedPreconditioner = QStringLiteral("Banded");
 
 //==============================================================================
 
@@ -71,6 +89,10 @@ enum {
 
 static const auto IntegrationMethodDefaultValue = BdfMethod;
 static const auto IteratorTypeDefaultValue = NewtonIterator;
+static const auto LinearSolverDefaultValue = DenseLinearSolver;
+static const auto PreconditionerDefaultValue = BandedPreconditioner;
+static const int UpperHalfBandwidthDefaultValue = 1;
+static const int LowerHalfBandwidthDefaultValue = 1;
 
 static const double RelativeToleranceDefaultValue = 1.0e-7;
 static const double AbsoluteToleranceDefaultValue = 1.0e-7;
