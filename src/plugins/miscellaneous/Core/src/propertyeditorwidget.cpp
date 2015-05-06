@@ -1275,10 +1275,13 @@ void PropertyEditorWidget::retranslateEmptyListProperties(QStandardItem *pItem)
 {
     // Retranslate the current item, should it be an empty list
 
-    Property *prop = property(pItem->index());
+    Property *currentProperty = property(pItem->index());
 
-    if (prop && (prop->type() == Property::List) && prop->listValues().isEmpty())
-        prop->setValue(prop->emptyListValue());
+    if (    currentProperty
+        && (currentProperty->type() == Property::List)
+        && currentProperty->listValues().isEmpty()) {
+        currentProperty->setValue(currentProperty->emptyListValue());
+    }
 
     // Retranslate the current item's children, if any
 
