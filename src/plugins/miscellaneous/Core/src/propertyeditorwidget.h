@@ -440,6 +440,7 @@ private:
 Q_SIGNALS:
     void propertyChanged(Core::Property *pProperty);
     void listPropertyChanged(Core::Property *pProperty, const QString &pValue);
+    void booleanPropertyChanged(Core::Property *pProperty, const bool &pValue);
     // Note: see the comment for the same signal in PropertyItemDelegate...
 
 private Q_SLOTS:

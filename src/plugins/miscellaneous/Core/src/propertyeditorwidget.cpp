@@ -1188,6 +1188,8 @@ void PropertyEditorWidget::constructor(const bool &pShowUnits,
 
     connect(propertyItemDelegate, SIGNAL(listPropertyChanged(Core::Property *, const QString &)),
             this, SIGNAL(listPropertyChanged(Core::Property *, const QString &)));
+    connect(propertyItemDelegate, SIGNAL(booleanPropertyChanged(Core::Property *, const bool &)),
+            this, SIGNAL(booleanPropertyChanged(Core::Property *, const bool &)));
 
     setItemDelegate(propertyItemDelegate);
 
