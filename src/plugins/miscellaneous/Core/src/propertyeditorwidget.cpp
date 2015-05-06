@@ -1855,18 +1855,18 @@ void PropertyEditorWidget::checkCheckState(QStandardItem *pItem)
 {
     // Let people know whether the check state of the given property has changed
 
-    Property *prop = property(pItem->index());
-    bool oldPropertyChecked = mPropertyChecked.value(prop, false);
-    bool newPropertyChecked = prop->isChecked();
+    Property *currentProperty = property(pItem->index());
+    bool oldPropertyChecked = mPropertyChecked.value(currentProperty, false);
+    bool newPropertyChecked = currentProperty->isChecked();
 
     if (oldPropertyChecked != newPropertyChecked) {
         // Keep track of the property's new check state
 
-        mPropertyChecked.insert(prop, newPropertyChecked);
+        mPropertyChecked.insert(currentProperty, newPropertyChecked);
 
         // The property's check state has changed, so let people know about it
 
-        emit propertyChanged(prop);
+        emit propertyChanged(currentProperty);
     }
 }
 
