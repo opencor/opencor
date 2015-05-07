@@ -98,6 +98,17 @@ Solver::Properties SecondOrderRungeKuttaSolverPlugin::solverProperties() const
 
 //==============================================================================
 
+QMap<QString, bool> SecondOrderRungeKuttaSolverPlugin::solverPropertiesVisibility(const QMap<QString, QString> &pSolverPropertiesValues) const
+{
+    Q_UNUSED(pSolverPropertiesValues);
+
+    // We don't handle this interface...
+
+    return QMap<QString, bool>();
+}
+
+//==============================================================================
+
 }   // namespace SecondOrderRungeKuttaSolver
 }   // namespace OpenCOR
 

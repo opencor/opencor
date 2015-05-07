@@ -120,6 +120,17 @@ Solver::Properties IDASolverPlugin::solverProperties() const
 
 //==============================================================================
 
+QMap<QString, bool> IDASolverPlugin::solverPropertiesVisibility(const QMap<QString, QString> &pSolverPropertiesValues) const
+{
+    Q_UNUSED(pSolverPropertiesValues);
+
+    // We don't handle this interface...
+
+    return QMap<QString, bool>();
+}
+
+//==============================================================================
+
 }   // namespace IDASolver
 }   // namespace OpenCOR
 

@@ -100,6 +100,17 @@ Solver::Properties HeunSolverPlugin::solverProperties() const
 
 //==============================================================================
 
+QMap<QString, bool> HeunSolverPlugin::solverPropertiesVisibility(const QMap<QString, QString> &pSolverPropertiesValues) const
+{
+    Q_UNUSED(pSolverPropertiesValues);
+
+    // We don't handle this interface...
+
+    return QMap<QString, bool>();
+}
+
+//==============================================================================
+
 }   // namespace HeunSolver
 }   // namespace OpenCOR
 

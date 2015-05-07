@@ -10,6 +10,6 @@
     virtual QString solverName() const PURE;
     virtual Solver::Properties solverProperties() const PURE;
 
-//    virtual QMap<QString, bool> solverPropertiesVisibility(const QMap<QString, QString> &pSolverPropertiesValues) const PURE;
+    virtual QMap<QString, bool> solverPropertiesVisibility(const QMap<QString, QString> &pSolverPropertiesValues) const PURE;
 
 #undef PURE

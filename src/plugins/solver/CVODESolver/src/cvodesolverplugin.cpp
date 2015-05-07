@@ -164,6 +164,19 @@ Solver::Properties CVODESolverPlugin::solverProperties() const
 
 //==============================================================================
 
+QMap<QString, bool> CVODESolverPlugin::solverPropertiesVisibility(const QMap<QString, QString> &pSolverPropertiesValues) const
+{
+    // Return the visibility of our properties based on the given properties
+    // values
+Q_UNUSED(pSolverPropertiesValues);
+
+    QMap<QString, bool> res = QMap<QString, bool>();
+
+    return res;
+}
+
+//==============================================================================
+
 }   // namespace CVODESolver
 }   // namespace OpenCOR
 

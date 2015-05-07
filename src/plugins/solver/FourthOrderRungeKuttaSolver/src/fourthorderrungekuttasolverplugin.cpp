@@ -100,6 +100,17 @@ Solver::Properties FourthOrderRungeKuttaSolverPlugin::solverProperties() const
 
 //==============================================================================
 
+QMap<QString, bool> FourthOrderRungeKuttaSolverPlugin::solverPropertiesVisibility(const QMap<QString, QString> &pSolverPropertiesValues) const
+{
+    Q_UNUSED(pSolverPropertiesValues);
+
+    // We don't handle this interface...
+
+    return QMap<QString, bool>();
+}
+
+//==============================================================================
+
 }   // namespace FourthOrderRungeKuttaSolver
 }   // namespace OpenCOR
 

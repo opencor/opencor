@@ -499,7 +499,7 @@ void SingleCellViewInformationSolversWidget::updateSolverGui(SingleCellViewInfor
 qDebug(">>> Updating solver [%s]...", qPrintable(pSolverData->solversListProperty()->value()));
 
     QString solverName = pSolverData->solversListProperty()->value();
-//    SolverInterface *solverInterface = pSolverData->solversInterfaces().value(solverName);
+    SolverInterface *solverInterface = pSolverData->solversInterfaces().value(solverName);
     Core::Properties solverProperties = pSolverData->solversProperties().value(solverName);
 
     // Retrieve our solver properties values
@@ -516,12 +516,14 @@ qDebug("^^^^^^^^^");
     // Ask our solver interface to tell us about the visibility of its
     // properties based on their values
 
-//    QMap<QString, bool> solverPropertiesVisibility = solverInterface->solverPropertiesVisibility(solverPropertiesValues);
+    QMap<QString, bool> solverPropertiesVisibility = solverInterface->solverPropertiesVisibility(solverPropertiesValues);
 
     // Update the visilibity of our solver properties
+    // Note: if there is no visibility information for a given solver property,
+    //       then it means that it should be visible...
 
-//    foreach (Core::Property *solverProperty, solverProperties)
-//        solverProperty->setVisible(solverPropertiesVisibility.value(solverProperty->id()));
+    foreach (Core::Property *solverProperty, solverProperties)
+        solverProperty->setVisible(solverPropertiesVisibility.value(solverProperty->id(), true));
 }
 
 //==============================================================================
