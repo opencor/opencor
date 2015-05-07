@@ -24,7 +24,13 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include "cvode/cvode.h"
+#include "cvode/cvode_band.h"
+#include "cvode/cvode_bandpre.h"
 #include "cvode/cvode_dense.h"
+#include "cvode/cvode_diag.h"
+#include "cvode/cvode_spbcgs.h"
+#include "cvode/cvode_spgmr.h"
+#include "cvode/cvode_sptfqmr.h"
 
 //==============================================================================
 
@@ -104,10 +110,6 @@ CvodeSolver::CvodeSolver() :
     mSolver(0),
     mStatesVector(0),
     mUserData(0),
-    mMaximumStep(MaximumStepDefaultValue),
-    mMaximumNumberOfSteps(MaximumNumberOfStepsDefaultValue),
-    mRelativeTolerance(RelativeToleranceDefaultValue),
-    mAbsoluteTolerance(AbsoluteToleranceDefaultValue),
     mInterpolateSolution(InterpolateSolutionDefaultValue)
 {
 }
@@ -141,8 +143,19 @@ void CvodeSolver::initialize(const double &pVoiStart,
     if (!mSolver) {
         // Retrieve some of the CVODE properties
 
+        double maximumStep = MaximumStepDefaultValue;
+        int maximumNumberOfSteps = MaximumNumberOfStepsDefaultValue;
+        QString integrationMethod = IntegrationMethodDefaultValue;
+        QString iterationType = IterationTypeDefaultValue;
+        QString linearSolver = LinearSolverDefaultValue;
+        QString preconditioner = PreconditionerDefaultValue;
+        int upperHalfBandwidth = UpperHalfBandwidthDefaultValue;
+        int lowerHalfBandwidth = LowerHalfBandwidthDefaultValue;
+        double relativeTolerance = RelativeToleranceDefaultValue;
+        double absoluteTolerance = AbsoluteToleranceDefaultValue;
+
         if (mProperties.contains(MaximumStepId)) {
-            mMaximumStep = mProperties.value(MaximumStepId).toDouble();
+            maximumStep = mProperties.value(MaximumStepId).toDouble();
         } else {
             emit error(QObject::tr("the 'maximum step' property value could not be retrieved"));
 
@@ -150,15 +163,113 @@ void CvodeSolver::initialize(const double &pVoiStart,
         }
 
         if (mProperties.contains(MaximumNumberOfStepsId)) {
-            mMaximumNumberOfSteps = mProperties.value(MaximumNumberOfStepsId).toInt();
+            maximumNumberOfSteps = mProperties.value(MaximumNumberOfStepsId).toInt();
         } else {
             emit error(QObject::tr("the 'maximum number of steps' property value could not be retrieved"));
 
             return;
         }
 
+        if (mProperties.contains(IntegrationMethodId)) {
+            integrationMethod = mProperties.value(IntegrationMethodId).toString();
+        } else {
+            emit error(QObject::tr("the 'integration method' property value could not be retrieved"));
+
+            return;
+        }
+
+        if (mProperties.contains(IterationTypeId)) {
+            iterationType = mProperties.value(IterationTypeId).toString();
+
+            if (!iterationType.compare(NewtonIteration)) {
+                // We are dealing with a Newton iteration, so retrieve and check
+                // its linear solver
+
+                if (mProperties.contains(LinearSolverId)) {
+                    linearSolver = mProperties.value(LinearSolverId).toString();
+                } else {
+                    emit error(QObject::tr("the 'linear solver' property value could not be retrieved"));
+
+                    return;
+                }
+
+                bool needUpperAndLowerHalfBandwidths = false;
+
+                if (   !linearSolver.compare(DenseLinearSolver)
+                    || !linearSolver.compare(DiagonalLinearSolver)) {
+                    // We are dealing with a dense/diagonal linear solver, so
+                    // nothing more to do
+                } else if (!linearSolver.compare(BandedLinearSolver)) {
+                    // We are dealing with a banded linear solver, so retrieve
+                    // its upper/lower half bandwidth
+
+                    needUpperAndLowerHalfBandwidths = true;
+                } else {
+                    // We are dealing with a GMRES/Bi-CGStab/TFQMR linear
+                    // solver, so retrieve and check its preconditioner
+
+                    if (mProperties.contains(PreconditionerId)) {
+                        preconditioner = mProperties.value(PreconditionerId).toString();
+                    } else {
+                        emit error(QObject::tr("the 'preconditioner' property value could not be retrieved"));
+
+                        return;
+                    }
+
+                    if (!preconditioner.compare(BandedPreconditioner)) {
+                        // We are dealing with a banded preconditioner, so
+                        // retrieve its upper/lower half bandwidth
+
+                        needUpperAndLowerHalfBandwidths = true;
+                    }
+                }
+
+                if (needUpperAndLowerHalfBandwidths) {
+                    if (mProperties.contains(UpperHalfBandwidthId)) {
+                        upperHalfBandwidth = mProperties.value(UpperHalfBandwidthId).toInt();
+
+                        if (   (upperHalfBandwidth < 0)
+                            || (upperHalfBandwidth >= pRatesStatesCount)) {
+                            emit error(QObject::tr("the 'upper half-bandwidth' property must have a value between 0 and %1").arg(pRatesStatesCount-1));
+
+                            return;
+                        }
+                    } else {
+                        emit error(QObject::tr("the 'upper half-bandwidth' property value could not be retrieved"));
+
+                        return;
+                    }
+
+                    if (mProperties.contains(LowerHalfBandwidthId)) {
+                        lowerHalfBandwidth = mProperties.value(LowerHalfBandwidthId).toInt();
+
+                        if (   (lowerHalfBandwidth < 0)
+                            || (lowerHalfBandwidth >= pRatesStatesCount)) {
+                            emit error(QObject::tr("the 'lower half-bandwidth' property must have a value between 0 and %1").arg(pRatesStatesCount-1));
+
+                            return;
+                        }
+                    } else {
+                        emit error(QObject::tr("the 'lower half-bandwidth' property value could not be retrieved"));
+
+                        return;
+                    }
+                }
+            }
+        } else {
+            emit error(QObject::tr("the 'iteration type' property value could not be retrieved"));
+
+            return;
+        }
+
         if (mProperties.contains(RelativeToleranceId)) {
-            mRelativeTolerance = mProperties.value(RelativeToleranceId).toDouble();
+            relativeTolerance = mProperties.value(RelativeToleranceId).toDouble();
+
+            if (relativeTolerance < 0) {
+                emit error(QObject::tr("the 'relative tolerance' property must have a value greater than or equal to 0"));
+
+                return;
+            }
         } else {
             emit error(QObject::tr("the 'relative tolerance' property value could not be retrieved"));
 
@@ -166,7 +277,13 @@ void CvodeSolver::initialize(const double &pVoiStart,
         }
 
         if (mProperties.contains(AbsoluteToleranceId)) {
-            mAbsoluteTolerance = mProperties.value(AbsoluteToleranceId).toDouble();
+            absoluteTolerance = mProperties.value(AbsoluteToleranceId).toDouble();
+
+            if (absoluteTolerance < 0) {
+                emit error(QObject::tr("the 'absolute tolerance' property must have a value greater than or equal to 0"));
+
+                return;
+            }
         } else {
             emit error(QObject::tr("the 'absolute tolerance' property value could not be retrieved"));
 
@@ -195,7 +312,10 @@ void CvodeSolver::initialize(const double &pVoiStart,
 
         // Create the CVODE solver
 
-        mSolver = CVodeCreate(CV_BDF, CV_NEWTON);
+        bool newtonIteration = !iterationType.compare(NewtonIteration);
+
+        mSolver = CVodeCreate(!integrationMethod.compare(BdfMethod)?CV_BDF:CV_ADAMS,
+                              newtonIteration?CV_NEWTON:CV_FUNCTIONAL);
 
         // Use our own error handler
 
@@ -207,28 +327,68 @@ void CvodeSolver::initialize(const double &pVoiStart,
 
         // Set some user data
 
-        delete mUserData;   // Just in case the solver got initialised before
-
         mUserData = new CvodeSolverUserData(pConstants, pAlgebraic,
                                             pComputeRates);
 
         CVodeSetUserData(mSolver, mUserData);
 
-        // Set the linear solver
-
-        CVDense(mSolver, pRatesStatesCount);
-
         // Set the maximum step
 
-        CVodeSetMaxStep(mSolver, mMaximumStep);
+        CVodeSetMaxStep(mSolver, maximumStep);
 
         // Set the maximum number of steps
 
-        CVodeSetMaxNumSteps(mSolver, mMaximumNumberOfSteps);
+        CVodeSetMaxNumSteps(mSolver, maximumNumberOfSteps);
+
+        // Set the linear solver, if needed
+
+        if (newtonIteration) {
+            // We are dealing with a Newton iteration
+
+            if (!linearSolver.compare(DenseLinearSolver)) {
+                // We are dealing with a dense linear solver
+
+                CVDense(mSolver, pRatesStatesCount);
+            } else if (!linearSolver.compare(BandedLinearSolver)) {
+                // We are dealing with a banded linear solver
+
+                CVBand(mSolver, pRatesStatesCount, upperHalfBandwidth, lowerHalfBandwidth);
+            } else if (!linearSolver.compare(DiagonalLinearSolver)) {
+                // We are dealing with a diagonal linear solver
+
+                CVDiag(mSolver);
+            } else {
+                // We are dealing with a GMRES/Bi-CGStab/TFQMR linear solver
+
+                if (!preconditioner.compare(BandedPreconditioner)) {
+                    // We are using a banded preconditioner with our
+                    // GMRES/Bi-CGStab/TFQMR linear solver
+
+                    if (!linearSolver.compare(GmresLinearSolver))
+                        CVSpgmr(mSolver, PREC_LEFT, 0);
+                    else if (!linearSolver.compare(BiCgStabLinearSolver))
+                        CVSpbcg(mSolver, PREC_LEFT, 0);
+                    else
+                        CVSptfqmr(mSolver, PREC_LEFT, 0);
+
+                    CVBandPrecInit(mSolver, pRatesStatesCount, upperHalfBandwidth, lowerHalfBandwidth);
+                } else {
+                    // We are not using any preconditioner with our
+                    // GMRES/Bi-CGStab/TFQMR linear solver
+
+                    if (!linearSolver.compare(GmresLinearSolver))
+                        CVSpgmr(mSolver, PREC_NONE, 0);
+                    else if (!linearSolver.compare(BiCgStabLinearSolver))
+                        CVSpbcg(mSolver, PREC_NONE, 0);
+                    else
+                        CVSptfqmr(mSolver, PREC_NONE, 0);
+                }
+            }
+        }
 
         // Set the relative and absolute tolerances
 
-        CVodeSStolerances(mSolver, mRelativeTolerance, mAbsoluteTolerance);
+        CVodeSStolerances(mSolver, relativeTolerance, absoluteTolerance);
     } else {
         // Reinitialise the CVODE object
 

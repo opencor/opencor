@@ -93,7 +93,18 @@ Solver::Properties ForwardEulerSolverPlugin::solverProperties() const
     stepDescriptions.insert("en", QString::fromUtf8("Step"));
     stepDescriptions.insert("fr", QString::fromUtf8("Pas"));
 
-    return Solver::Properties() << Solver::Property(Solver::Property::Double, StepId, stepDescriptions, StepDefaultValue, true);
+    return Solver::Properties() << Solver::Property(Solver::Property::Double, StepId, stepDescriptions, QStringList(), StepDefaultValue, true);
+}
+
+//==============================================================================
+
+QMap<QString, bool> ForwardEulerSolverPlugin::solverPropertiesVisibility(const QMap<QString, QString> &pSolverPropertiesValues) const
+{
+    Q_UNUSED(pSolverPropertiesValues);
+
+    // We don't handle this interface...
+
+    return QMap<QString, bool>();
 }
 
 //==============================================================================

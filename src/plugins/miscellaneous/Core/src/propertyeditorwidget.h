@@ -140,15 +140,9 @@ Q_SIGNALS:
     void goToPreviousPropertyRequested();
     void goToNextPropertyRequested();
 
-    void listPropertyChanged(Core::Property *pProperty, const QString &pValue);
-    void booleanPropertyChanged(Core::Property *pProperty, const QString &pValue);
-    // Note: strictly speaking, we don't need to specify the Core namespace, but
-    //       then if we were no to specify it, we wouldn't be able to use the
-    //       property editor outside of the Core namespace...
-
 private Q_SLOTS:
-    void emitListPropertyChanged(const QString &pValue);
-    void emitBooleanPropertyChanged(const QString &pValue);
+    void listPropertyChanged(const QString &pValue);
+    void booleanPropertyChanged(const QString &pValue);
 };
 
 //==============================================================================
@@ -228,9 +222,15 @@ public:
     void setValue(const QString &pValue, const bool &pForce = false,
                   const bool &pEmitSignal = true);
 
-    QStringList listValue() const;
-    void setListValue(const QStringList &pListValue,
-                      const bool &pEmitSignal = true);
+    QStringList listValues() const;
+    void setListValues(const QStringList &pListValues,
+                       const QString &pListValue,
+                       const bool &pEmitSignal = true);
+    void setListValues(const QStringList &pListValues,
+                       const bool &pEmitSignal = true);
+
+    QString listValue() const;
+    void setListValue(const QString &pListValue);
 
     QString emptyListValue() const;
     void setEmptyListValue(const QString &pEmptyListValue);
@@ -264,7 +264,7 @@ private:
     PropertyItem *mValue;
     PropertyItem *mUnit;
 
-    QStringList mListValue;
+    QStringList mListValues;
     QString mEmptyListValue;
 
     QString mExtraInfo;
@@ -368,7 +368,9 @@ public:
     Property * addDoubleProperty(const double &pValue, Property *pParent = 0);
     Property * addDoubleProperty(Property *pParent = 0);
 
-    Property * addListProperty(const QStringList &pStringList,
+    Property * addListProperty(const QStringList &pValues,
+                               const QString &pValue, Property *pParent = 0);
+    Property * addListProperty(const QStringList &pValues,
                                Property *pParent = 0);
     Property * addListProperty(Property *pParent = 0);
 
@@ -431,7 +433,6 @@ private:
 
 Q_SIGNALS:
     void propertyChanged(Core::Property *pProperty);
-    void listPropertyChanged(Core::Property *pProperty, const QString &pValue);
     // Note: see the comment for the same signal in PropertyItemDelegate...
 
 private Q_SLOTS:

@@ -43,6 +43,16 @@ class Tests : public QObject
 private:
     OpenCOR::Compiler::CompilerEngine *mCompilerEngine;
 
+    double mA;
+    double mB;
+
+    double mMinusA;
+    double mMinusB;
+
+    double mBigA;
+    double mBigB;
+    double mBigC;
+
 private Q_SLOTS:
     void initTestCase();
     void cleanupTestCase();

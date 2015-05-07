@@ -14,6 +14,15 @@ var jsonData = { "versions": [
                              ]
                            }
                          ]
+                       },
+                       { "name": "Simulation",
+                         "entries": [
+                           { "type": "subCategory", "name": "<a href=\"http://computation.llnl.gov/casc/sundials/description/description.html#descr_cvode\">CVODE</a> solver",
+                             "entries": [
+                               { "type": "Improved", "description": "Parametrisation of the solver." }
+                             ]
+                           }
+                         ]
                        }
                      ]
                    },

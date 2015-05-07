@@ -47,7 +47,7 @@ CoreDataStore::~CoreDataStore()
 
     delete mVoi;
 
-    for (auto variable = mVariables.begin(), variableEnd = mVariables.end();
+    for (auto variable = mVariables.constBegin(), variableEnd = mVariables.constEnd();
          variable != variableEnd; ++variable) {
         delete *variable;
     }
@@ -147,7 +147,7 @@ void CoreDataStore::setValues(const qulonglong &pPosition, const double &pValue)
     if (mVoi)
         mVoi->setValue(pPosition, pValue);
 
-    for (auto variable = mVariables.begin(), variableEnd = mVariables.end();
+    for (auto variable = mVariables.constBegin(), variableEnd = mVariables.constEnd();
          variable != variableEnd; ++variable) {
         (*variable)->setValue(pPosition);
     }

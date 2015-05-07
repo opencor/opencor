@@ -190,10 +190,6 @@ IdaSolver::IdaSolver() :
     mRatesVector(0),
     mStatesVector(0),
     mUserData(0),
-    mMaximumStep(MaximumStepDefaultValue),
-    mMaximumNumberOfSteps(MaximumNumberOfStepsDefaultValue),
-    mRelativeTolerance(RelativeToleranceDefaultValue),
-    mAbsoluteTolerance(AbsoluteToleranceDefaultValue),
     mInterpolateSolution(InterpolateSolutionDefaultValue)
 {
 }
@@ -232,8 +228,13 @@ void IdaSolver::initialize(const double &pVoiStart, const double &pVoiEnd,
     if (!mSolver) {
         // Retrieve some of the IDA properties
 
+        double maximumStep;
+        int maximumNumberOfSteps;
+        double relativeTolerance;
+        double absoluteTolerance;
+
         if (mProperties.contains(MaximumStepId)) {
-            mMaximumStep = mProperties.value(MaximumStepId).toDouble();
+            maximumStep = mProperties.value(MaximumStepId).toDouble();
         } else {
             emit error(QObject::tr("the 'maximum step' property value could not be retrieved"));
 
@@ -241,7 +242,7 @@ void IdaSolver::initialize(const double &pVoiStart, const double &pVoiEnd,
         }
 
         if (mProperties.contains(MaximumNumberOfStepsId)) {
-            mMaximumNumberOfSteps = mProperties.value(MaximumNumberOfStepsId).toInt();
+            maximumNumberOfSteps = mProperties.value(MaximumNumberOfStepsId).toInt();
         } else {
             emit error(QObject::tr("the 'maximum number of steps' property value could not be retrieved"));
 
@@ -249,7 +250,7 @@ void IdaSolver::initialize(const double &pVoiStart, const double &pVoiEnd,
         }
 
         if (mProperties.contains(RelativeToleranceId)) {
-            mRelativeTolerance = mProperties.value(RelativeToleranceId).toDouble();
+            relativeTolerance = mProperties.value(RelativeToleranceId).toDouble();
         } else {
             emit error(QObject::tr("the 'relative tolerance' property value could not be retrieved"));
 
@@ -257,7 +258,7 @@ void IdaSolver::initialize(const double &pVoiStart, const double &pVoiEnd,
         }
 
         if (mProperties.contains(AbsoluteToleranceId)) {
-            mAbsoluteTolerance = mProperties.value(AbsoluteToleranceId).toDouble();
+            absoluteTolerance = mProperties.value(AbsoluteToleranceId).toDouble();
         } else {
             emit error(QObject::tr("the 'absolute tolerance' property value could not be retrieved"));
 
@@ -310,8 +311,6 @@ void IdaSolver::initialize(const double &pVoiStart, const double &pVoiEnd,
 
         // Set some user data
 
-        delete mUserData;   // Just in case the solver got initialised before
-
         mUserData = new IdaSolverUserData(pConstants, mOldRates, mOldStates,
                                           pAlgebraic, pCondVar,
                                           pComputeEssentialVariables,
@@ -326,15 +325,15 @@ void IdaSolver::initialize(const double &pVoiStart, const double &pVoiEnd,
 
         // Set the maximum step
 
-        IDASetMaxStep(mSolver, mMaximumStep);
+        IDASetMaxStep(mSolver, maximumStep);
 
         // Set the maximum number of steps
 
-        IDASetMaxNumSteps(mSolver, mMaximumNumberOfSteps);
+        IDASetMaxNumSteps(mSolver, maximumNumberOfSteps);
 
         // Set the relative and absolute tolerances
 
-        IDASStolerances(mSolver, mRelativeTolerance, mAbsoluteTolerance);
+        IDASStolerances(mSolver, relativeTolerance, absoluteTolerance);
     } else {
         // Reinitialise the IDA object
 

@@ -209,7 +209,6 @@ SingleCellViewWidget::SingleCellViewWidget(SingleCellViewPlugin *pPluginParent,
     // Keep track of changes to some of our simulation and solvers properties
 
     SingleCellViewInformationWidget *informationWidget = mContentsWidget->informationWidget();
-    SingleCellViewGraphPanelsWidget *graphPanelsWidget = mContentsWidget->graphPanelsWidget();
 
     connect(informationWidget->simulationWidget(), SIGNAL(propertyChanged(Core::Property *)),
             this, SLOT(simulationPropertyChanged(Core::Property *)));
@@ -217,6 +216,8 @@ SingleCellViewWidget::SingleCellViewWidget(SingleCellViewPlugin *pPluginParent,
             this, SLOT(solversPropertyChanged(Core::Property *)));
 
     // Keep track of whether we can remove graph panels
+
+    SingleCellViewGraphPanelsWidget *graphPanelsWidget = mContentsWidget->graphPanelsWidget();
 
     connect(graphPanelsWidget, SIGNAL(removeGraphPanelsEnabled(const bool &)),
             mGui->actionRemoveGraphPanel, SLOT(setEnabled(bool)));
@@ -857,15 +858,12 @@ void SingleCellViewWidget::initialize(const QString &pFileName,
             mSimulation->results()->reset(false);
         }
 
-        // Retrieve our simulation and NLA solver's properties, in case we are
-        // reloading the file
-        // Note: unlike for other properties, we need to retrieve our simulation
-        //       and NLA solver's properties 'manually' since the rest of the
-        //       time they are automatically retrieved through
-        //       simulationPropertyChanged() and solversPropertyChanged()...
+        // Retrieve our simulation and solvers properties since they may have
+        // an effect on our parameter values (as well as result in some solver
+        // properties being shown/hidden)
 
-        if (pReloadingView) {
-            // Retrieve our simulation's properties
+        if (newSimulation || pReloadingView) {
+            // Initialise/retrieve our simulation properties
 
             SingleCellViewInformationSimulationWidget *simulationWidget = mContentsWidget->informationWidget()->simulationWidget();
 
@@ -873,17 +871,15 @@ void SingleCellViewWidget::initialize(const QString &pFileName,
             mSimulation->data()->setEndingPoint(simulationWidget->endingPointProperty()->doubleValue());
             mSimulation->data()->setPointInterval(simulationWidget->pointIntervalProperty()->doubleValue());
 
+            // Initialise/retrieve our solvers properties
+
+            initializeSolversProperties();
+
+            // Update our plots since our 'new' simulation properties may have
+            // affected them
+
             foreach (SingleCellViewGraphPanelPlotWidget *plot, mPlots)
                 updatePlot(plot);
-
-            // Retrieve our NLA solver's properties
-
-            SingleCellViewInformationSolversWidgetData *nlaSolverData = mContentsWidget->informationWidget()->solversWidget()->nlaSolverData();
-
-            mSimulation->data()->setNlaSolverName(nlaSolverData->solversListProperty()->value());
-
-            foreach (Core::Property *property, nlaSolverData->solversProperties().value(mSimulation->data()->nlaSolverName()))
-                mSimulation->data()->addNlaSolverProperty(property->id(), value(property));
         }
     }
 
@@ -1074,6 +1070,8 @@ QVariant SingleCellViewWidget::value(Core::Property *pProperty) const
         return pProperty->integerValue();
     case Core::Property::Double:
         return pProperty->doubleValue();
+    case Core::Property::List:
+        return pProperty->listValue();
     case Core::Property::Boolean:
         return pProperty->booleanValue();
     default:
@@ -1110,24 +1108,10 @@ void SingleCellViewWidget::on_actionRunPauseResumeSimulation_triggered()
 
             mContentsWidget->informationWidget()->finishEditing();
 
-            // Now, we would normally retrieve our simulation's properties, but
-            // there is no need for it since they have already been retrieved,
-            // thanks to simulationPropertyChanged()
-
-            // Retrieve our solvers' properties
-            // Note: we don't need to retrieve the NLA solver's properties since
-            //       we already have them, thanks to solversPropertyChanged()...
-
-            SingleCellViewInformationSolversWidget *solversWidget = mContentsWidget->informationWidget()->solversWidget();
-
-            mSimulation->data()->setOdeSolverName(solversWidget->odeSolverData()->solversListProperty()->value());
-            mSimulation->data()->setDaeSolverName(solversWidget->daeSolverData()->solversListProperty()->value());
-
-            foreach (Core::Property *property, solversWidget->odeSolverData()->solversProperties().value(mSimulation->data()->odeSolverName()))
-                mSimulation->data()->addOdeSolverProperty(property->id(), value(property));
-
-            foreach (Core::Property *property, solversWidget->daeSolverData()->solversProperties().value(mSimulation->data()->daeSolverName()))
-                mSimulation->data()->addDaeSolverProperty(property->id(), value(property));
+            // Now, we would normally retrieve our simulation and solvers
+            // properties, but there is no need for it since they have already
+            // been retrieved, thanks to simulationPropertyChanged() and to
+            // solversPropertyChanged()
 
             // Check that we have enough memory to run our simulation
 
@@ -1245,6 +1229,57 @@ void SingleCellViewWidget::on_actionRemoveAllGraphPanels_triggered()
     // Ask our graph panels widget to remove the current graph panel
 
     mContentsWidget->graphPanelsWidget()->removeAllGraphPanels();
+}
+
+//==============================================================================
+
+void SingleCellViewWidget::initializeSolversProperties(SingleCellViewInformationSolversWidgetData *pSolverData)
+{
+    // Make sure that we have a simulation object
+
+    if (!mSimulation)
+        return;
+
+    // Initialise our solver(s) properties
+
+    SingleCellViewInformationSolversWidget *solversWidget = mContentsWidget->informationWidget()->solversWidget();
+
+    if (   solversWidget->odeSolverData()
+        && (!pSolverData || (pSolverData == solversWidget->odeSolverData()))) {
+        mSimulation->data()->setOdeSolverName(solversWidget->odeSolverData()->solversListProperty()->value());
+
+        foreach (Core::Property *property, solversWidget->odeSolverData()->solversProperties().value(mSimulation->data()->odeSolverName()))
+            mSimulation->data()->addOdeSolverProperty(property->id(), value(property));
+    }
+
+    if (   solversWidget->daeSolverData()
+        && (!pSolverData || (pSolverData == solversWidget->daeSolverData()))) {
+        mSimulation->data()->setDaeSolverName(solversWidget->daeSolverData()->solversListProperty()->value());
+
+        foreach (Core::Property *property, solversWidget->daeSolverData()->solversProperties().value(mSimulation->data()->daeSolverName()))
+            mSimulation->data()->addDaeSolverProperty(property->id(), value(property));
+    }
+
+    if (   solversWidget->nlaSolverData()
+        && (!pSolverData || (pSolverData == solversWidget->nlaSolverData()))) {
+        mSimulation->data()->setNlaSolverName(solversWidget->nlaSolverData()->solversListProperty()->value());
+
+        foreach (Core::Property *property, solversWidget->nlaSolverData()->solversProperties().value(mSimulation->data()->nlaSolverName()))
+            mSimulation->data()->addNlaSolverProperty(property->id(), value(property));
+    }
+
+    // Update the solver(s) properties visibility
+
+    updateSolversPropertiesVisibility(pSolverData);
+}
+
+//==============================================================================
+
+void SingleCellViewWidget::updateSolversPropertiesVisibility(SingleCellViewInformationSolversWidgetData *pSolverData)
+{
+    // Update our solver(s) properties visibility
+
+    mContentsWidget->informationWidget()->solversWidget()->updateGui(pSolverData);
 }
 
 //==============================================================================
@@ -1516,34 +1551,85 @@ void SingleCellViewWidget::simulationPropertyChanged(Core::Property *pProperty)
 
 void SingleCellViewWidget::solversPropertyChanged(Core::Property *pProperty)
 {
-    // Check whether any of our NLA solver's properties has been modified and,
-    // if so, then update our simulation data object accordingly
-    // Note #1: we only need to check our NLA solver's properties since they are
-    //          the only ones that can potentially have an effect on the value
-    //          of our 'computed constants' and 'variables'...
-    // Note #2: we must check that we have some NLA solver data since there may
-    //          may be no NLA solver (and therefore no NLA solver data)...
+    // Make sure that we have a simulation object
 
-    SingleCellViewInformationSolversWidgetData *nlaSolverData = mContentsWidget->informationWidget()->solversWidget()->nlaSolverData();
+    if (!mSimulation)
+        return;
+
+    // Check whether any of our ODE solver properties has been modified and, if
+    // so, update our simulation data object accordingly
+
+    SingleCellViewInformationSolversWidget *solversWidget = mContentsWidget->informationWidget()->solversWidget();
+    SingleCellViewInformationSolversWidgetData *odeSolverData = solversWidget->odeSolverData();
+
+    if (odeSolverData) {
+        if (pProperty == odeSolverData->solversListProperty()) {
+            mSimulation->data()->setOdeSolverName(pProperty->value());
+
+            initializeSolversProperties(odeSolverData);
+
+            return;
+        } else {
+            foreach (Core::Property *property, odeSolverData->solversProperties().value(mSimulation->data()->odeSolverName())) {
+                if (pProperty == property) {
+                    mSimulation->data()->addOdeSolverProperty(pProperty->id(), value(property));
+
+                    updateSolversPropertiesVisibility(odeSolverData);
+
+                    return;
+                }
+            }
+        }
+    }
+
+    // Check whether any of our DAE solver properties has been modified and, if
+    // so, update our simulation data object accordingly
+
+    SingleCellViewInformationSolversWidgetData *daeSolverData = solversWidget->daeSolverData();
+
+    if (daeSolverData) {
+        if (pProperty == daeSolverData->solversListProperty()) {
+            mSimulation->data()->setDaeSolverName(pProperty->value());
+
+            initializeSolversProperties(daeSolverData);
+
+            return;
+        } else {
+            foreach (Core::Property *property, daeSolverData->solversProperties().value(mSimulation->data()->daeSolverName())) {
+                if (pProperty == property) {
+                    mSimulation->data()->addDaeSolverProperty(pProperty->id(), value(property));
+
+                    updateSolversPropertiesVisibility(daeSolverData);
+
+                    return;
+                }
+            }
+        }
+    }
+
+    // Check whether any of our NLA solver properties has been modified and, if
+    // so, update our simulation data object accordingly
+
+    SingleCellViewInformationSolversWidgetData *nlaSolverData = solversWidget->nlaSolverData();
 
     if (nlaSolverData) {
-        if (pProperty == nlaSolverData->solversListProperty())
-            // The property for selecting a particular NLA solver
-
+        if (pProperty == nlaSolverData->solversListProperty()) {
             mSimulation->data()->setNlaSolverName(pProperty->value());
-        else
-            // We are dealing with one of the selected NLA solver's properties,
-            // so go through them and check which one it is
 
-            foreach (Core::Property *property, nlaSolverData->solversProperties().value(mSimulation->data()->nlaSolverName()))
+            initializeSolversProperties(nlaSolverData);
+
+            return;
+        } else {
+            foreach (Core::Property *property, nlaSolverData->solversProperties().value(mSimulation->data()->nlaSolverName())) {
                 if (pProperty == property) {
-                    // We have found the NLA solver's property that got changed,
-                    // so keep track of the new value
-
                     mSimulation->data()->addNlaSolverProperty(pProperty->id(), value(property));
 
-                    break;
+                    updateSolversPropertiesVisibility(nlaSolverData);
+
+                    return;
                 }
+            }
+        }
     }
 }
 

@@ -32,7 +32,13 @@ class Tests : public QObject
 {
     Q_OBJECT
 
+private:
+    QString mString;
+    QString mEol;
+
 private Q_SLOTS:
+    void initTestCase();
+
     void sizeAsStringTests();
     void sha1Tests();
     void stringPositionAsLineColumnTests();

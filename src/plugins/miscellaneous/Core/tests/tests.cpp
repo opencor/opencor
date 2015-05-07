@@ -28,6 +28,16 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+void Tests::initTestCase()
+{
+    // Initialise some constants
+
+    mString = "1\n11\n121\n1331\n14641";
+    mEol = "\n";
+}
+
+//==============================================================================
+
 void Tests::sizeAsStringTests()
 {
     // Test the sizeAsString() method
@@ -62,11 +72,6 @@ void Tests::sha1Tests()
 
 //==============================================================================
 
-static const auto String = QStringLiteral("1\n11\n121\n1331\n14641");
-static const auto Eol    = QStringLiteral("\n");
-
-//==============================================================================
-
 void Tests::stringPositionAsLineColumnTests()
 {
     // Test the stringPositionAsLineColumn() method
@@ -74,27 +79,27 @@ void Tests::stringPositionAsLineColumnTests()
     int line;
     int column;
 
-    OpenCOR::Core::stringPositionAsLineColumn(String, Eol, -1, line, column);
+    OpenCOR::Core::stringPositionAsLineColumn(mString, mEol, -1, line, column);
 
     QCOMPARE(line, -1);
     QCOMPARE(column, -1);
 
-    OpenCOR::Core::stringPositionAsLineColumn(String, Eol, String.length(), line, column);
+    OpenCOR::Core::stringPositionAsLineColumn(mString, mEol, mString.length(), line, column);
 
     QCOMPARE(line, -1);
     QCOMPARE(column, -1);
 
-    OpenCOR::Core::stringPositionAsLineColumn(String, Eol, 0, line, column);
+    OpenCOR::Core::stringPositionAsLineColumn(mString, mEol, 0, line, column);
 
     QCOMPARE(line, 1);
     QCOMPARE(column, 1);
 
-    OpenCOR::Core::stringPositionAsLineColumn(String, Eol, String.length()-1, line, column);
+    OpenCOR::Core::stringPositionAsLineColumn(mString, mEol, mString.length()-1, line, column);
 
     QCOMPARE(line, 5);
     QCOMPARE(column, 5);
 
-    OpenCOR::Core::stringPositionAsLineColumn(String, Eol, 7, line, column);
+    OpenCOR::Core::stringPositionAsLineColumn(mString, mEol, 7, line, column);
 
     QCOMPARE(line, 3);
     QCOMPARE(column, 3);
@@ -108,35 +113,35 @@ void Tests::stringLineColumnAsPositionTests()
 
     int position;
 
-    OpenCOR::Core::stringLineColumnAsPosition(String, Eol, 0, 0, position);
+    OpenCOR::Core::stringLineColumnAsPosition(mString, mEol, 0, 0, position);
 
     QCOMPARE(position, -1);
 
-    OpenCOR::Core::stringLineColumnAsPosition(String, Eol, 1, 0, position);
+    OpenCOR::Core::stringLineColumnAsPosition(mString, mEol, 1, 0, position);
 
     QCOMPARE(position, -1);
 
-    OpenCOR::Core::stringLineColumnAsPosition(String, Eol, 0, 1, position);
+    OpenCOR::Core::stringLineColumnAsPosition(mString, mEol, 0, 1, position);
 
     QCOMPARE(position, -1);
 
-    OpenCOR::Core::stringLineColumnAsPosition(String, Eol, 13, 1, position);
+    OpenCOR::Core::stringLineColumnAsPosition(mString, mEol, 13, 1, position);
 
     QCOMPARE(position, -1);
 
-    OpenCOR::Core::stringLineColumnAsPosition(String, Eol, 1, 13, position);
+    OpenCOR::Core::stringLineColumnAsPosition(mString, mEol, 1, 13, position);
 
     QCOMPARE(position, -1);
 
-    OpenCOR::Core::stringLineColumnAsPosition(String, Eol, 1, 1, position);
+    OpenCOR::Core::stringLineColumnAsPosition(mString, mEol, 1, 1, position);
 
     QCOMPARE(position, 0);
 
-    OpenCOR::Core::stringLineColumnAsPosition(String, Eol, 5, 5, position);
+    OpenCOR::Core::stringLineColumnAsPosition(mString, mEol, 5, 5, position);
 
-    QCOMPARE(position, String.length()-1);
+    QCOMPARE(position, mString.length()-1);
 
-    OpenCOR::Core::stringLineColumnAsPosition(String, Eol, 3, 3, position);
+    OpenCOR::Core::stringLineColumnAsPosition(mString, mEol, 3, 3, position);
 
     QCOMPARE(position, 7);
 }

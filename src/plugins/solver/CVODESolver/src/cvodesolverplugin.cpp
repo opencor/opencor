@@ -90,6 +90,12 @@ Solver::Properties CVODESolverPlugin::solverProperties() const
 
     Descriptions MaximumStepDescriptions;
     Descriptions MaximumNumberOfStepsDescriptions;
+    Descriptions IntegrationMethodDescriptions;
+    Descriptions IterationTypeDescriptions;
+    Descriptions LinearSolverDescriptions;
+    Descriptions PreconditionerDescriptions;
+    Descriptions UpperHalfBandwidthDescriptions;
+    Descriptions LowerHalfBandwidthDescriptions;
     Descriptions RelativeToleranceDescriptions;
     Descriptions AbsoluteToleranceDescriptions;
     Descriptions InterpolateSolutionDescriptions;
@@ -100,6 +106,24 @@ Solver::Properties CVODESolverPlugin::solverProperties() const
     MaximumNumberOfStepsDescriptions.insert("en", QString::fromUtf8("Maximum number of steps"));
     MaximumNumberOfStepsDescriptions.insert("fr", QString::fromUtf8("Nombre maximum de pas"));
 
+    IntegrationMethodDescriptions.insert("en", QString::fromUtf8("Integration method"));
+    IntegrationMethodDescriptions.insert("fr", QString::fromUtf8("Méthode d'intégration"));
+
+    IterationTypeDescriptions.insert("en", QString::fromUtf8("Iteration type"));
+    IterationTypeDescriptions.insert("fr", QString::fromUtf8("Type d'itération"));
+
+    LinearSolverDescriptions.insert("en", QString::fromUtf8("Linear solver"));
+    LinearSolverDescriptions.insert("fr", QString::fromUtf8("Solveur linéaire"));
+
+    PreconditionerDescriptions.insert("en", QString::fromUtf8("Preconditioner"));
+    PreconditionerDescriptions.insert("fr", QString::fromUtf8("Préconditionneur"));
+
+    UpperHalfBandwidthDescriptions.insert("en", QString::fromUtf8("Upper half-bandwidth"));
+    UpperHalfBandwidthDescriptions.insert("fr", QString::fromUtf8("Demi largeur de bande supérieure"));
+
+    LowerHalfBandwidthDescriptions.insert("en", QString::fromUtf8("Lower half-bandwidth"));
+    LowerHalfBandwidthDescriptions.insert("fr", QString::fromUtf8("Demi largeur de bande inférieure"));
+
     RelativeToleranceDescriptions.insert("en", QString::fromUtf8("Relative tolerance"));
     RelativeToleranceDescriptions.insert("fr", QString::fromUtf8("Tolérance relative"));
 
@@ -109,11 +133,91 @@ Solver::Properties CVODESolverPlugin::solverProperties() const
     InterpolateSolutionDescriptions.insert("en", QString::fromUtf8("Interpolate solution"));
     InterpolateSolutionDescriptions.insert("fr", QString::fromUtf8("Interpoler solution"));
 
-    return Solver::Properties() << Solver::Property(Solver::Property::Double, MaximumStepId, MaximumStepDescriptions, MaximumStepDefaultValue, true)
-                                << Solver::Property(Solver::Property::Integer, MaximumNumberOfStepsId, MaximumNumberOfStepsDescriptions, MaximumNumberOfStepsDefaultValue)
-                                << Solver::Property(Solver::Property::Double, RelativeToleranceId, RelativeToleranceDescriptions, RelativeToleranceDefaultValue)
-                                << Solver::Property(Solver::Property::Double, AbsoluteToleranceId, AbsoluteToleranceDescriptions, AbsoluteToleranceDefaultValue)
-                                << Solver::Property(Solver::Property::Boolean, InterpolateSolutionId, InterpolateSolutionDescriptions, InterpolateSolutionDefaultValue);
+    QStringList IntegrationMethodListValues = QStringList() << AdamsMoultonMethod
+                                                            << BdfMethod;
+
+    QStringList IterationTypeListValues = QStringList() << FunctionalIteration
+                                                        << NewtonIteration;
+
+    QStringList LinearSolverListValues = QStringList() << DenseLinearSolver
+                                                       << BandedLinearSolver
+                                                       << DiagonalLinearSolver
+                                                       << GmresLinearSolver
+                                                       << BiCgStabLinearSolver
+                                                       << TfqmrLinearSolver;
+
+    QStringList PreconditionerListValues = QStringList() << NoPreconditioner
+                                                         << BandedPreconditioner;
+
+    return Solver::Properties() << Solver::Property(Solver::Property::Double, MaximumStepId, MaximumStepDescriptions, QStringList(), MaximumStepDefaultValue, true)
+                                << Solver::Property(Solver::Property::Integer, MaximumNumberOfStepsId, MaximumNumberOfStepsDescriptions, QStringList(), MaximumNumberOfStepsDefaultValue, false)
+                                << Solver::Property(Solver::Property::List, IntegrationMethodId, IntegrationMethodDescriptions, IntegrationMethodListValues, IntegrationMethodDefaultValue, false)
+                                << Solver::Property(Solver::Property::List, IterationTypeId, IterationTypeDescriptions, IterationTypeListValues, IterationTypeDefaultValue, false)
+                                << Solver::Property(Solver::Property::List, LinearSolverId, LinearSolverDescriptions, LinearSolverListValues, LinearSolverDefaultValue, false)
+                                << Solver::Property(Solver::Property::List, PreconditionerId, PreconditionerDescriptions, PreconditionerListValues, PreconditionerDefaultValue, false)
+                                << Solver::Property(Solver::Property::Integer, UpperHalfBandwidthId, UpperHalfBandwidthDescriptions, QStringList(), UpperHalfBandwidthDefaultValue, false)
+                                << Solver::Property(Solver::Property::Integer, LowerHalfBandwidthId, LowerHalfBandwidthDescriptions, QStringList(), LowerHalfBandwidthDefaultValue, false)
+                                << Solver::Property(Solver::Property::Double, RelativeToleranceId, RelativeToleranceDescriptions, QStringList(), RelativeToleranceDefaultValue, false)
+                                << Solver::Property(Solver::Property::Double, AbsoluteToleranceId, AbsoluteToleranceDescriptions, QStringList(), AbsoluteToleranceDefaultValue, false)
+                                << Solver::Property(Solver::Property::Boolean, InterpolateSolutionId, InterpolateSolutionDescriptions, QStringList(), InterpolateSolutionDefaultValue, false);
+}
+
+//==============================================================================
+
+QMap<QString, bool> CVODESolverPlugin::solverPropertiesVisibility(const QMap<QString, QString> &pSolverPropertiesValues) const
+{
+    // Return the visibility of our properties based on the given properties
+    // values
+
+    QMap<QString, bool> res = QMap<QString, bool>();
+
+    if (!pSolverPropertiesValues.value(IterationTypeId).compare(NewtonIteration)) {
+        // Newton iteration
+
+        res.insert(LinearSolverId, true);
+
+        QString linearSolver = pSolverPropertiesValues.value(LinearSolverId);
+
+        if (   !linearSolver.compare(DenseLinearSolver)
+            || !linearSolver.compare(DiagonalLinearSolver)) {
+            // Dense/diagonal linear solver
+
+            res.insert(PreconditionerId, false);
+            res.insert(UpperHalfBandwidthId, false);
+            res.insert(LowerHalfBandwidthId, false);
+        } else if (!linearSolver.compare(BandedLinearSolver)) {
+            // Banded linear solver
+
+            res.insert(PreconditionerId, false);
+            res.insert(UpperHalfBandwidthId, true);
+            res.insert(LowerHalfBandwidthId, true);
+        } else {
+            // GMRES/Bi-CGStab/TFQMR linear solver
+
+            res.insert(PreconditionerId, true);
+
+            if (!pSolverPropertiesValues.value(PreconditionerId).compare(BandedPreconditioner)) {
+                // Banded preconditioner
+
+                res.insert(UpperHalfBandwidthId, true);
+                res.insert(LowerHalfBandwidthId, true);
+            } else {
+                // No preconditioner
+
+                res.insert(UpperHalfBandwidthId, false);
+                res.insert(LowerHalfBandwidthId, false);
+            }
+        }
+    } else {
+        // Functional iteration
+
+        res.insert(LinearSolverId, false);
+        res.insert(PreconditionerId, false);
+        res.insert(UpperHalfBandwidthId, false);
+        res.insert(LowerHalfBandwidthId, false);
+    }
+
+    return res;
 }
 
 //==============================================================================

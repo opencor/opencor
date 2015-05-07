@@ -50,9 +50,12 @@ class SingleCellViewSimulation;
 class SingleCellViewInformationSolversWidgetData
 {
 public:
-    explicit SingleCellViewInformationSolversWidgetData(Core::Property *pSolversProperty,
+    explicit SingleCellViewInformationSolversWidgetData(const QMap<QString, SolverInterface *> &pSolversInterfaces,
+                                                        Core::Property *pSolversProperty,
                                                         Core::Property *pSolversListProperty,
                                                         const QMap<QString, Core::Properties> &pSolversProperties);
+
+    QMap<QString, SolverInterface *> solversInterfaces() const;
 
     Core::Property * solversProperty() const;
     Core::Property * solversListProperty() const;
@@ -60,6 +63,8 @@ public:
     QMap<QString, Core::Properties> solversProperties() const;
 
 private:
+    QMap<QString, SolverInterface *> mSolversInterfaces;
+
     Core::Property *mSolversProperty;
     Core::Property *mSolversListProperty;
 
@@ -94,6 +99,8 @@ public:
     SingleCellViewInformationSolversWidgetData * daeSolverData() const;
     SingleCellViewInformationSolversWidgetData * nlaSolverData() const;
 
+    void updateGui(SingleCellViewInformationSolversWidgetData *pSolverData);
+
 private:
     SingleCellViewInformationSolversWidgetData *mOdeSolverData;
     SingleCellViewInformationSolversWidgetData *mDaeSolverData;
@@ -103,6 +110,8 @@ private:
     Core::PropertyEditorWidgetGuiState *mDefaultGuiState;
 
     QMap<Core::Property *, Descriptions> mDescriptions;
+
+    void updateSolverGui(SingleCellViewInformationSolversWidgetData *pSolverData);
 
     void resetAllGuiStates();
 
@@ -116,7 +125,7 @@ private:
                            const QString &pVoiUnit);
 
 private Q_SLOTS:
-    void solverChanged(Core::Property *pProperty, const QString &pValue);
+    void solverChanged(Core::Property *pProperty);
 };
 
 //==============================================================================

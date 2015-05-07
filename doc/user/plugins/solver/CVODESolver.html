@@ -44,6 +44,78 @@
 
         <ul>
             <li>
+                <strong>Integration method:</strong> the integration method used by the solver (default: <code>BDF</code>)
+
+                <p class="nomargins note">
+                    <code>BDF</code> should be used with stiff models and <code>Adams-Moulton</code> with non-stiff models.
+                </p>
+            </li>
+        </ul>
+
+        <ul>
+            <li>
+                <strong>Iteration type:</strong> the type of iteration used by the solver (default: <code>Newton</code>).
+
+                <p class="nomargins note note1">
+                    <code>Newton</code> can be used with either stiff or non-stiff models while <code>Functional</code> should only be used with non-stiff models.
+                </p>
+                <p class="nomargins note note2">
+                    to use a <code>Newton</code> iteration requires solving a system of linear equations and therefore requires specifying a linear solver.
+                </p>
+            </li>
+        </ul>
+
+        <ul>
+            <li>
+                <strong>Linear solver:</strong> the linear solver used by the solver during a <code>Newton</code> iteration (default: <code>Dense</code>).
+
+                <p class="nomargins note note1">
+                    <code>Dense</code>, <code>Banded</code>, <code>Diagonal</code>, <code>GMRES</code>, <code>BiCGStab</code> or <code>TFQMR</code> can be used.
+                </p>
+                <p class="nomargins note note2">
+                    <code>Banded</code> requires specifying both an upper and a lower half-bandwidth value.
+                </p>
+                <p class="nomargins note note3">
+                    <code>GMRES</code>, <code>BiCGStab</code> and <code>TFQMR</code> require specifying whether to use a preconditioner.
+                </p>
+            </li>
+        </ul>
+
+        <ul>
+            <li>
+                <strong>Preconditioner:</strong> the preconditioner, if any, used by the solver when using a <code>GMRES</code>, <code>BiCGStab</code> or <code>TFQMR</code> linear solver during a <code>Newton</code> iteration (default: <code>Banded</code>).
+
+                <p class="nomargins note note1">
+                    <code>Banded</code> or <code>None</code> can be used.
+                </p>
+                <p class="nomargins note note2">
+                    <code>Banded</code> requires specifying both an upper and a lower half-bandwidth value.
+                </p>
+            </li>
+        </ul>
+
+        <ul>
+            <li>
+                <strong>Upper half-bandwidth:</strong> the upper half-bandwidth value used by the <code>Banded</code> linear solver or preconditioner (default: <code>0</code>).
+
+                <p class="nomargins note">
+                    the upper half-bandwidth value must be between <code>0</code> and <code>n-1</code> with <code>n</code> the number of ODEs in the model.
+                </p>
+            </li>
+        </ul>
+
+        <ul>
+            <li>
+                <strong>Lower half-bandwidth:</strong> the lower half-bandwidth value used by the <code>Banded</code> linear solver or preconditioner (default: <code>0</code>).
+
+                <p class="nomargins note">
+                    the lower half-bandwidth value must be between <code>0</code> and <code>n-1</code> with <code>n</code> the number of ODEs in the model.
+                </p>
+            </li>
+        </ul>
+
+        <ul>
+            <li>
                 <strong>Relative tolerance:</strong> the relative tolerance used by the solver (default: <code>10<sup>-7</sup></code>).
             </li>
         </ul>
@@ -56,7 +128,7 @@
 
         <ul>
             <li>
-                <strong>Interpolate solution:</strong> whether the solver returns an interpolated solution (default: <code>true</code>).
+                <strong>Interpolate solution:</strong> whether the solver returns an interpolated solution (default: <code>True</code>).
 
                 <p class="nomargins note">
                     to interpolate the solution will yield (slightly) less accurate results, but they will be obtained (much) faster.

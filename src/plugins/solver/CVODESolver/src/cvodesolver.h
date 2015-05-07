@@ -39,9 +39,39 @@ namespace CVODESolver {
 
 static const auto MaximumStepId          = QStringLiteral("MaximumStep");
 static const auto MaximumNumberOfStepsId = QStringLiteral("MaximumNumberOfSteps");
+static const auto IntegrationMethodId    = QStringLiteral("IntegrationMethod");
+static const auto IterationTypeId        = QStringLiteral("IterationType");
+static const auto LinearSolverId         = QStringLiteral("LinearSolver");
+static const auto PreconditionerId       = QStringLiteral("Preconditioner");
+static const auto UpperHalfBandwidthId   = QStringLiteral("UpperHalfBandwidth");
+static const auto LowerHalfBandwidthId   = QStringLiteral("LowerHalfBandwidth");
 static const auto RelativeToleranceId    = QStringLiteral("RelativeTolerance");
 static const auto AbsoluteToleranceId    = QStringLiteral("AbsoluteTolerance");
 static const auto InterpolateSolutionId  = QStringLiteral("InterpolateSolution");
+
+//==============================================================================
+
+static const auto AdamsMoultonMethod = QStringLiteral("Adams-Moulton");
+static const auto BdfMethod          = QStringLiteral("BDF");
+
+//==============================================================================
+
+static const auto FunctionalIteration = QStringLiteral("Functional");
+static const auto NewtonIteration     = QStringLiteral("Newton");
+
+//==============================================================================
+
+static const auto DenseLinearSolver    = QStringLiteral("Dense");
+static const auto BandedLinearSolver   = QStringLiteral("Banded");
+static const auto DiagonalLinearSolver = QStringLiteral("Diagonal");
+static const auto GmresLinearSolver    = QStringLiteral("GMRES");
+static const auto BiCgStabLinearSolver = QStringLiteral("BiCGStab");
+static const auto TfqmrLinearSolver    = QStringLiteral("TFQMR");
+
+//==============================================================================
+
+static const auto NoPreconditioner     = QStringLiteral("None");
+static const auto BandedPreconditioner = QStringLiteral("Banded");
 
 //==============================================================================
 
@@ -54,8 +84,15 @@ static const auto InterpolateSolutionId  = QStringLiteral("InterpolateSolution")
 static const double MaximumStepDefaultValue = 0.0;
 
 enum {
-    MaximumNumberOfStepsDefaultValue = 500
+    MaximumNumberOfStepsDefaultValue = 500,
 };
+
+static const auto IntegrationMethodDefaultValue = BdfMethod;
+static const auto IterationTypeDefaultValue = NewtonIteration;
+static const auto LinearSolverDefaultValue = DenseLinearSolver;
+static const auto PreconditionerDefaultValue = BandedPreconditioner;
+static const int UpperHalfBandwidthDefaultValue = 0;
+static const int LowerHalfBandwidthDefaultValue = 0;
 
 static const double RelativeToleranceDefaultValue = 1.0e-7;
 static const double AbsoluteToleranceDefaultValue = 1.0e-7;
@@ -102,10 +139,6 @@ private:
     N_Vector mStatesVector;
     CvodeSolverUserData *mUserData;
 
-    double mMaximumStep;
-    int mMaximumNumberOfSteps;
-    double mRelativeTolerance;
-    double mAbsoluteTolerance;
     bool mInterpolateSolution;
 };
 

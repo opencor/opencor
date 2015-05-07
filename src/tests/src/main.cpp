@@ -30,10 +30,6 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-typedef QMap<QString, QStringList> TestsGroups;
-
-//==============================================================================
-
 int main(int pArgC, char *pArgV[])
 {
     // Retrieve the different arguments that were passed
@@ -53,7 +49,7 @@ int main(int pArgC, char *pArgV[])
 
     testsFile.close();
 
-    TestsGroups testsGroups;
+    QMap<QString, QStringList> testsGroups;
     QStringList testItems = tests.split("|");
     QString testGroup;
 

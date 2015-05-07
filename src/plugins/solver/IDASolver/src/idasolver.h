@@ -122,10 +122,6 @@ private:
     N_Vector mStatesVector;
     IdaSolverUserData *mUserData;
 
-    double mMaximumStep;
-    int mMaximumNumberOfSteps;
-    double mRelativeTolerance;
-    double mAbsoluteTolerance;
     bool mInterpolateSolution;
 };
 

@@ -59,12 +59,13 @@ void CsvDataStoreExporter::execute(CoreDataStore::CoreDataStore *pDataStore) con
         data += Header.arg(voi->uri().replace("/prime", "'").replace("/", " | "),
                            voi->unit());
 
-        auto variableBegin = variables.begin();
-        auto variableEnd = variables.end();
+        auto variableBegin = variables.constBegin();
+        auto variableEnd = variables.constEnd();
 
-        for (auto variable = variableBegin; variable != variableEnd; ++variable)
+        for (auto variable = variableBegin; variable != variableEnd; ++variable) {
             data += ","+Header.arg((*variable)->uri().replace("/prime", "'").replace("/", " | "),
                                    (*variable)->unit());
+        }
 
         data += "\n";
 
