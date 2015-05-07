@@ -50,9 +50,12 @@ class SingleCellViewSimulation;
 class SingleCellViewInformationSolversWidgetData
 {
 public:
-    explicit SingleCellViewInformationSolversWidgetData(Core::Property *pSolversProperty,
+    explicit SingleCellViewInformationSolversWidgetData(const SolverInterfaces &pSolversInterfaces,
+                                                        Core::Property *pSolversProperty,
                                                         Core::Property *pSolversListProperty,
                                                         const QMap<QString, Core::Properties> &pSolversProperties);
+
+    SolverInterfaces solversInterfaces() const;
 
     Core::Property * solversProperty() const;
     Core::Property * solversListProperty() const;
@@ -60,6 +63,8 @@ public:
     QMap<QString, Core::Properties> solversProperties() const;
 
 private:
+    SolverInterfaces mSolversInterfaces;
+
     Core::Property *mSolversProperty;
     Core::Property *mSolversListProperty;
 
@@ -93,6 +98,8 @@ public:
     SingleCellViewInformationSolversWidgetData * odeSolverData() const;
     SingleCellViewInformationSolversWidgetData * daeSolverData() const;
     SingleCellViewInformationSolversWidgetData * nlaSolverData() const;
+
+    void updateGui(SingleCellViewInformationSolversWidgetData *pSolverData);
 
 private:
     SingleCellViewInformationSolversWidgetData *mOdeSolverData;

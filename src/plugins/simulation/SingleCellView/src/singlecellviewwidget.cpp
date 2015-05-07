@@ -1279,22 +1279,7 @@ void SingleCellViewWidget::updateSolversPropertiesVisibility(SingleCellViewInfor
 {
     // Update our solver(s) properties visibility
 
-    SingleCellViewInformationSolversWidget *solversWidget = mContentsWidget->informationWidget()->solversWidget();
-
-    if (   solversWidget->odeSolverData()
-        && (!pSolverData || (pSolverData == solversWidget->odeSolverData()))) {
-qDebug(">>> Updating ODE solver...");
-    }
-
-    if (   solversWidget->daeSolverData()
-        && (!pSolverData || (pSolverData == solversWidget->daeSolverData()))) {
-qDebug(">>> Updating DAE solver...");
-    }
-
-    if (   solversWidget->nlaSolverData()
-        && (!pSolverData || (pSolverData == solversWidget->nlaSolverData()))) {
-qDebug(">>> Updating NLA solver...");
-    }
+    mContentsWidget->informationWidget()->solversWidget()->updateGui(pSolverData);
 }
 
 //==============================================================================
