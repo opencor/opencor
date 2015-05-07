@@ -143,16 +143,16 @@ void CvodeSolver::initialize(const double &pVoiStart,
     if (!mSolver) {
         // Retrieve some of the CVODE properties
 
-        double maximumStep;
-        int maximumNumberOfSteps;
-        QString integrationMethod;
-        QString iterationType;
-        QString linearSolver;
-        QString preconditioner;
-        int upperHalfBandwidth;
-        int lowerHalfBandwidth;
-        double relativeTolerance;
-        double absoluteTolerance;
+        double maximumStep = MaximumStepDefaultValue;
+        int maximumNumberOfSteps = MaximumNumberOfStepsDefaultValue;
+        QString integrationMethod = IntegrationMethodDefaultValue;
+        QString iterationType = IterationTypeDefaultValue;
+        QString linearSolver = LinearSolverDefaultValue;
+        QString preconditioner = PreconditionerDefaultValue;
+        int upperHalfBandwidth = UpperHalfBandwidthDefaultValue;
+        int lowerHalfBandwidth = LowerHalfBandwidthDefaultValue;
+        double relativeTolerance = RelativeToleranceDefaultValue;
+        double absoluteTolerance = AbsoluteToleranceDefaultValue;
 
         if (mProperties.contains(MaximumStepId)) {
             maximumStep = mProperties.value(MaximumStepId).toDouble();
