@@ -41,17 +41,17 @@ class Tests : public QObject
     Q_OBJECT
 
 private:
-    static constexpr double A = 5.0;
-    static constexpr double B = 7.9;
-
-    static constexpr double MinusA = -5.0;
-    static constexpr double MinusB = -7.9;
-
-    static constexpr double BigA = 3.0*5.0*7.0*11.0*13.0;
-    static constexpr double BigB = 2.0*3.0*7.0*13.0*17.0;
-    static constexpr double BigC = 5.0*7.0*17.0;
-
     OpenCOR::Compiler::CompilerEngine *mCompilerEngine;
+
+    double mA;
+    double mB;
+
+    double mMinusA;
+    double mMinusB;
+
+    double mBigA;
+    double mBigB;
+    double mBigC;
 
 private Q_SLOTS:
     void initTestCase();
