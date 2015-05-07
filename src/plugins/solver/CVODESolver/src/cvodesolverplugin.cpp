@@ -168,9 +168,54 @@ QMap<QString, bool> CVODESolverPlugin::solverPropertiesVisibility(const QMap<QSt
 {
     // Return the visibility of our properties based on the given properties
     // values
-Q_UNUSED(pSolverPropertiesValues);
 
     QMap<QString, bool> res = QMap<QString, bool>();
+
+    if (!pSolverPropertiesValues.value(IteratorTypeId).compare(NewtonIterator)) {
+        // Newton iterator
+
+        res.insert(LinearSolverId, true);
+
+        QString linearSolver = pSolverPropertiesValues.value(LinearSolverId);
+
+        if (   !linearSolver.compare(DenseLinearSolver)
+            || !linearSolver.compare(DiagonalLinearSolver)) {
+            // Dense/diagonal linear solver
+
+            res.insert(PreconditionerId, false);
+            res.insert(UpperHalfBandwidthId, false);
+            res.insert(LowerHalfBandwidthId, false);
+        } else if (!linearSolver.compare(BandedLinearSolver)) {
+            // Banded linear solver
+
+            res.insert(PreconditionerId, false);
+            res.insert(UpperHalfBandwidthId, true);
+            res.insert(LowerHalfBandwidthId, true);
+        } else {
+            // GMRES/Bi-CGStab/TFQMR linear solver
+
+            res.insert(PreconditionerId, true);
+
+            if (!pSolverPropertiesValues.value(PreconditionerId).compare(BandedPreconditioner)) {
+                // Banded preconditioner
+
+                res.insert(UpperHalfBandwidthId, true);
+                res.insert(LowerHalfBandwidthId, true);
+            } else {
+                // No preconditioner
+
+                res.insert(UpperHalfBandwidthId, false);
+                res.insert(LowerHalfBandwidthId, false);
+            }
+        }
+    } else {
+        // Functional iterator
+
+        res.insert(LinearSolverId, false);
+        res.insert(PreconditionerId, false);
+        res.insert(UpperHalfBandwidthId, false);
+        res.insert(LowerHalfBandwidthId, false);
+    }
 
     return res;
 }
