@@ -31,7 +31,7 @@ namespace SingleCellView {
 
 //==============================================================================
 
-SingleCellViewInformationSolversWidgetData::SingleCellViewInformationSolversWidgetData(const SolverInterfaces &pSolversInterfaces,
+SingleCellViewInformationSolversWidgetData::SingleCellViewInformationSolversWidgetData(const QMap<QString, SolverInterface *> &pSolversInterfaces,
                                                                                        Core::Property *pSolversProperty,
                                                                                        Core::Property *pSolversListProperty,
                                                                                        const QMap<QString, Core::Properties> &pSolversProperties) :
@@ -44,7 +44,7 @@ SingleCellViewInformationSolversWidgetData::SingleCellViewInformationSolversWidg
 
 //==============================================================================
 
-SolverInterfaces SingleCellViewInformationSolversWidgetData::solversInterfaces() const
+QMap<QString, SolverInterface *> SingleCellViewInformationSolversWidgetData::solversInterfaces() const
 {
     // Return our solvers interfaces
 
@@ -193,21 +193,21 @@ SingleCellViewInformationSolversWidgetData * SingleCellViewInformationSolversWid
     // Retrieve the name of the solvers which type is the one in which we are
     // interested
 
-    SolverInterfaces solversInterfaces = SolverInterfaces();
+    QMap<QString, SolverInterface *> solversInterfaces = QMap<QString, SolverInterface *>();
     Core::Property *solversProperty = 0;
     Core::Property *solversListProperty = 0;
-    QStringList solvers = QStringList();
+    QStringList solversNames = QStringList();
     QMap<QString, Core::Properties> solversProperties = QMap<QString, Core::Properties>();
 
     foreach (SolverInterface *solverInterface, pSolverInterfaces) {
         if (solverInterface->solverType() == pSolverType) {
             // Keep track of the solver's interface
 
-            solversInterfaces << solverInterface;
+            solversInterfaces.insert(solverInterface->solverName(), solverInterface);
 
             // Keep track of the solver's name
 
-            solvers << solverInterface->solverName();
+            solversNames << solverInterface->solverName();
 
             // Add our solvers section property and list property for our
             // solvers, if needed
@@ -286,11 +286,11 @@ SingleCellViewInformationSolversWidgetData * SingleCellViewInformationSolversWid
         // We have a solvers list property, which means that we have at least
         // one solver, so sort our list
 
-        solvers.sort();
+        solversNames.sort();
 
         // Assign the list of solvers to our list property
 
-        solversListProperty->setListValues(solvers);
+        solversListProperty->setListValues(solversNames);
 
         // Create and return our solver data
 
@@ -404,12 +404,13 @@ void SingleCellViewInformationSolversWidget::initialize(const QString &pFileName
     if (mNlaSolverData) {
         pSimulation->data()->setNlaSolverName(mNlaSolverData->solversListProperty()->value(), false);
 
-        foreach (Core::Property *property, mNlaSolverData->solversProperties().value(pSimulation->data()->nlaSolverName()))
+        foreach (Core::Property *property, mNlaSolverData->solversProperties().value(pSimulation->data()->nlaSolverName())) {
             pSimulation->data()->addNlaSolverProperty(property->id(),
                                                       (property->type() == Core::Property::Integer)?
                                                           property->integerValue():
                                                           property->doubleValue(),
                                                       false);
+        }
     }
 }
 
@@ -487,21 +488,56 @@ SingleCellViewInformationSolversWidgetData * SingleCellViewInformationSolversWid
 
 //==============================================================================
 
+void SingleCellViewInformationSolversWidget::updateSolverGui(SingleCellViewInformationSolversWidgetData *pSolverData)
+{
+    // Make sure that we have some solver data
+
+    if (!pSolverData)
+        return;
+
+    // Update our solver properties visibility
+qDebug(">>> Updating solver [%s]...", qPrintable(pSolverData->solversListProperty()->value()));
+
+    QString solverName = pSolverData->solversListProperty()->value();
+//    SolverInterface *solverInterface = pSolverData->solversInterfaces().value(solverName);
+    Core::Properties solverProperties = pSolverData->solversProperties().value(solverName);
+
+    // Retrieve our solver properties values
+qDebug("vvvvvvvvv");
+foreach (Core::Property *solverProperty, solverProperties)
+    qDebug(">>> %s: %s", qPrintable(solverProperty->id()), qPrintable(solverProperty->value()));
+qDebug("^^^^^^^^^");
+
+    QMap<QString, QString> solverPropertiesValues = QMap<QString, QString>();
+
+    foreach (Core::Property *solverProperty, solverProperties)
+        solverPropertiesValues.insert(solverProperty->id(),solverProperty->value());
+
+    // Ask our solver interface to tell us about the visibility of its
+    // properties based on their values
+
+//    QMap<QString, bool> solverPropertiesVisibility = solverInterface->solverPropertiesVisibility(solverPropertiesValues);
+
+    // Update the visilibity of our solver properties
+
+//    foreach (Core::Property *solverProperty, solverProperties)
+//        solverProperty->setVisible(solverPropertiesVisibility.value(solverProperty->id()));
+}
+
+//==============================================================================
+
 void SingleCellViewInformationSolversWidget::updateGui(SingleCellViewInformationSolversWidgetData *pSolverData)
 {
     // Update our solver(s) properties visibility
 
-    if (mOdeSolverData && (!pSolverData || (pSolverData == mOdeSolverData))) {
-qDebug(">>> Updating ODE solver [%s]...", qPrintable(mOdeSolverData->solversListProperty()->value()));
-    }
+    if (mOdeSolverData && (!pSolverData || (pSolverData == mOdeSolverData)))
+        updateSolverGui(mOdeSolverData);
 
-    if (mDaeSolverData && (!pSolverData || (pSolverData == mDaeSolverData))) {
-qDebug(">>> Updating DAE solver [%s]...", qPrintable(mDaeSolverData->solversListProperty()->value()));
-    }
+    if (mDaeSolverData && (!pSolverData || (pSolverData == mDaeSolverData)))
+        updateSolverGui(mDaeSolverData);
 
-    if (mNlaSolverData && (!pSolverData || (pSolverData == mNlaSolverData))) {
-qDebug(">>> Updating NLA solver [%s]...", qPrintable(mNlaSolverData->solversListProperty()->value()));
-    }
+    if (mNlaSolverData && (!pSolverData || (pSolverData == mNlaSolverData)))
+        updateSolverGui(mNlaSolverData);
 }
 
 //==============================================================================
@@ -521,10 +557,10 @@ qDebug(">>> Updating solver... [%s]", qPrintable(pSolverName));
     for (auto solverProperties = pSolverData->solversProperties().constBegin(),
               solverPropertiesEnd = pSolverData->solversProperties().constEnd();
          solverProperties != solverPropertiesEnd; ++solverProperties) {
-        bool solverPropertyVisible = !solverProperties.key().compare(pSolverName);
+        bool solverPropertiesVisible = !solverProperties.key().compare(pSolverName);
 
         foreach (Core::Property *solverProperty, solverProperties.value())
-            solverProperty->setVisible(solverPropertyVisible);
+            solverProperty->setVisible(solverPropertiesVisible);
     }
 }
 
