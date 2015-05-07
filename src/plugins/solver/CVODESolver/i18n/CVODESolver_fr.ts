@@ -31,5 +31,37 @@
         <source>the &apos;iterator type&apos; property value could not be retrieved</source>
         <translation>la valeur de la propriété &apos;type d&apos;itérateur&apos; n&apos;a pas pu être retrouvée</translation>
     </message>
+    <message>
+        <source>the &apos;linear solver&apos; property value could not be retrieved</source>
+        <translation>la valeur de la propriété &apos;solveur linéaire&apos; n&apos;a pas pu être retrouvée</translation>
+    </message>
+    <message>
+        <source>the &apos;preconditioner&apos; property value could not be retrieved</source>
+        <translation>la valeur de la propriété &apos;préconditionneur&apos; n&apos;a pas pu être retrouvée</translation>
+    </message>
+    <message>
+        <source>the &apos;upper half-bandwidth&apos; property must have a value between 0 and %1</source>
+        <translation>la propriété &apos;demi largeur de bande supérieure&apos; doit avoir une valeur comprise entre 0 et %1</translation>
+    </message>
+    <message>
+        <source>the &apos;upper half-bandwidth&apos; property value could not be retrieved</source>
+        <translation>la valeur de la propriété &apos;demi largeur de bande supérieure&apos; n&apos;a pas pu être retrouvée</translation>
+    </message>
+    <message>
+        <source>the &apos;lower half-bandwidth&apos; property must have a value between 0 and %1</source>
+        <translation>la propriété &apos;demi largeur de bande inférieure&apos; doit avoir une valeur comprise entre 0 et %1</translation>
+    </message>
+    <message>
+        <source>the &apos;lower half-bandwidth&apos; property value could not be retrieved</source>
+        <translation>la valeur de la propriété &apos;demi largeur de bande inférieure&apos; n&apos;a pas pu être retrouvée</translation>
+    </message>
+    <message>
+        <source>the &apos;relative tolerance&apos; property must have a value greater than or equal to 0</source>
+        <translation>la propriété &apos;tolérance relative&apos; doit avoir une valeur plus grande que ou égale à 0</translation>
+    </message>
+    <message>
+        <source>the &apos;absolute tolerance&apos; property must have a value greater than or equal to 0</source>
+        <translation>la propriété &apos;tolérance absolue&apos; doit avoir une valeur plus grande que ou égale à 0</translation>
+    </message>
 </context>
 </TS>
