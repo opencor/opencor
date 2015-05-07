@@ -40,7 +40,7 @@ namespace CVODESolver {
 static const auto MaximumStepId          = QStringLiteral("MaximumStep");
 static const auto MaximumNumberOfStepsId = QStringLiteral("MaximumNumberOfSteps");
 static const auto IntegrationMethodId    = QStringLiteral("IntegrationMethod");
-static const auto IteratorTypeId         = QStringLiteral("IteratorType");
+static const auto IterationTypeId        = QStringLiteral("IterationType");
 static const auto LinearSolverId         = QStringLiteral("LinearSolver");
 static const auto PreconditionerId       = QStringLiteral("Preconditioner");
 static const auto UpperHalfBandwidthId   = QStringLiteral("UpperHalfBandwidth");
@@ -56,8 +56,8 @@ static const auto BdfMethod          = QStringLiteral("BDF");
 
 //==============================================================================
 
-static const auto FunctionalIterator = QStringLiteral("Functional");
-static const auto NewtonIterator     = QStringLiteral("Newton");
+static const auto FunctionalIteration = QStringLiteral("Functional");
+static const auto NewtonIteration     = QStringLiteral("Newton");
 
 //==============================================================================
 
@@ -88,11 +88,11 @@ enum {
 };
 
 static const auto IntegrationMethodDefaultValue = BdfMethod;
-static const auto IteratorTypeDefaultValue = NewtonIterator;
+static const auto IterationTypeDefaultValue = NewtonIteration;
 static const auto LinearSolverDefaultValue = DenseLinearSolver;
 static const auto PreconditionerDefaultValue = BandedPreconditioner;
-static const int UpperHalfBandwidthDefaultValue = 1;
-static const int LowerHalfBandwidthDefaultValue = 1;
+static const int UpperHalfBandwidthDefaultValue = 0;
+static const int LowerHalfBandwidthDefaultValue = 0;
 
 static const double RelativeToleranceDefaultValue = 1.0e-7;
 static const double AbsoluteToleranceDefaultValue = 1.0e-7;

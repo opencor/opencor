@@ -146,7 +146,7 @@ void CvodeSolver::initialize(const double &pVoiStart,
         double maximumStep;
         int maximumNumberOfSteps;
         QString integrationMethod;
-        QString iteratorType;
+        QString iterationType;
         QString linearSolver;
         QString preconditioner;
         int upperHalfBandwidth;
@@ -178,11 +178,11 @@ void CvodeSolver::initialize(const double &pVoiStart,
             return;
         }
 
-        if (mProperties.contains(IteratorTypeId)) {
-            iteratorType = mProperties.value(IteratorTypeId).toString();
+        if (mProperties.contains(IterationTypeId)) {
+            iterationType = mProperties.value(IterationTypeId).toString();
 
-            if (!iteratorType.compare(NewtonIterator)) {
-                // We are dealing with a Newton iterator, so retrieve and check
+            if (!iterationType.compare(NewtonIteration)) {
+                // We are dealing with a Newton iteration, so retrieve and check
                 // its linear solver
 
                 if (mProperties.contains(LinearSolverId)) {
@@ -257,7 +257,7 @@ void CvodeSolver::initialize(const double &pVoiStart,
                 }
             }
         } else {
-            emit error(QObject::tr("the 'iterator type' property value could not be retrieved"));
+            emit error(QObject::tr("the 'iteration type' property value could not be retrieved"));
 
             return;
         }
@@ -312,10 +312,10 @@ void CvodeSolver::initialize(const double &pVoiStart,
 
         // Create the CVODE solver
 
-        bool newtonIterator = !iteratorType.compare(NewtonIterator);
+        bool newtonIteration = !iterationType.compare(NewtonIteration);
 
         mSolver = CVodeCreate(!integrationMethod.compare(BdfMethod)?CV_BDF:CV_ADAMS,
-                              newtonIterator?CV_NEWTON:CV_FUNCTIONAL);
+                              newtonIteration?CV_NEWTON:CV_FUNCTIONAL);
 
         // Use our own error handler
 
@@ -342,8 +342,8 @@ void CvodeSolver::initialize(const double &pVoiStart,
 
         // Set the linear solver, if needed
 
-        if (newtonIterator) {
-            // We are dealing with a Newton iterator
+        if (newtonIteration) {
+            // We are dealing with a Newton iteration
 
             if (!linearSolver.compare(DenseLinearSolver)) {
                 // We are dealing with a dense linear solver

@@ -28,8 +28,8 @@
         <translation>la valeur de la propriété &apos;méthode d&apos;intégration&apos; n&apos;a pas pu être retrouvée</translation>
     </message>
     <message>
-        <source>the &apos;iterator type&apos; property value could not be retrieved</source>
-        <translation>la valeur de la propriété &apos;type d&apos;itérateur&apos; n&apos;a pas pu être retrouvée</translation>
+        <source>the &apos;iteration type&apos; property value could not be retrieved</source>
+        <translation>la valeur de la propriété &apos;type d&apos;itération&apos; n&apos;a pas pu être retrouvée</translation>
     </message>
     <message>
         <source>the &apos;linear solver&apos; property value could not be retrieved</source>

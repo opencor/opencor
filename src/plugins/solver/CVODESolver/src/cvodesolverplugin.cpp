@@ -91,7 +91,7 @@ Solver::Properties CVODESolverPlugin::solverProperties() const
     Descriptions MaximumStepDescriptions;
     Descriptions MaximumNumberOfStepsDescriptions;
     Descriptions IntegrationMethodDescriptions;
-    Descriptions IteratorTypeDescriptions;
+    Descriptions IterationTypeDescriptions;
     Descriptions LinearSolverDescriptions;
     Descriptions PreconditionerDescriptions;
     Descriptions UpperHalfBandwidthDescriptions;
@@ -109,8 +109,8 @@ Solver::Properties CVODESolverPlugin::solverProperties() const
     IntegrationMethodDescriptions.insert("en", QString::fromUtf8("Integration method"));
     IntegrationMethodDescriptions.insert("fr", QString::fromUtf8("Méthode d'intégration"));
 
-    IteratorTypeDescriptions.insert("en", QString::fromUtf8("Iterator type"));
-    IteratorTypeDescriptions.insert("fr", QString::fromUtf8("Type d'itérateur"));
+    IterationTypeDescriptions.insert("en", QString::fromUtf8("Iteration type"));
+    IterationTypeDescriptions.insert("fr", QString::fromUtf8("Type d'itération"));
 
     LinearSolverDescriptions.insert("en", QString::fromUtf8("Linear solver"));
     LinearSolverDescriptions.insert("fr", QString::fromUtf8("Solveur linéaire"));
@@ -136,8 +136,8 @@ Solver::Properties CVODESolverPlugin::solverProperties() const
     QStringList IntegrationMethodListValues = QStringList() << AdamsMoultonMethod
                                                             << BdfMethod;
 
-    QStringList IteratorTypeListValues = QStringList() << FunctionalIterator
-                                                       << NewtonIterator;
+    QStringList IterationTypeListValues = QStringList() << FunctionalIteration
+                                                        << NewtonIteration;
 
     QStringList LinearSolverListValues = QStringList() << DenseLinearSolver
                                                        << BandedLinearSolver
@@ -152,7 +152,7 @@ Solver::Properties CVODESolverPlugin::solverProperties() const
     return Solver::Properties() << Solver::Property(Solver::Property::Double, MaximumStepId, MaximumStepDescriptions, QStringList(), MaximumStepDefaultValue, true)
                                 << Solver::Property(Solver::Property::Integer, MaximumNumberOfStepsId, MaximumNumberOfStepsDescriptions, QStringList(), MaximumNumberOfStepsDefaultValue, false)
                                 << Solver::Property(Solver::Property::List, IntegrationMethodId, IntegrationMethodDescriptions, IntegrationMethodListValues, IntegrationMethodDefaultValue, false)
-                                << Solver::Property(Solver::Property::List, IteratorTypeId, IteratorTypeDescriptions, IteratorTypeListValues, IteratorTypeDefaultValue, false)
+                                << Solver::Property(Solver::Property::List, IterationTypeId, IterationTypeDescriptions, IterationTypeListValues, IterationTypeDefaultValue, false)
                                 << Solver::Property(Solver::Property::List, LinearSolverId, LinearSolverDescriptions, LinearSolverListValues, LinearSolverDefaultValue, false)
                                 << Solver::Property(Solver::Property::List, PreconditionerId, PreconditionerDescriptions, PreconditionerListValues, PreconditionerDefaultValue, false)
                                 << Solver::Property(Solver::Property::Integer, UpperHalfBandwidthId, UpperHalfBandwidthDescriptions, QStringList(), UpperHalfBandwidthDefaultValue, false)
@@ -171,8 +171,8 @@ QMap<QString, bool> CVODESolverPlugin::solverPropertiesVisibility(const QMap<QSt
 
     QMap<QString, bool> res = QMap<QString, bool>();
 
-    if (!pSolverPropertiesValues.value(IteratorTypeId).compare(NewtonIterator)) {
-        // Newton iterator
+    if (!pSolverPropertiesValues.value(IterationTypeId).compare(NewtonIteration)) {
+        // Newton iteration
 
         res.insert(LinearSolverId, true);
 
@@ -209,7 +209,7 @@ QMap<QString, bool> CVODESolverPlugin::solverPropertiesVisibility(const QMap<QSt
             }
         }
     } else {
-        // Functional iterator
+        // Functional iteration
 
         res.insert(LinearSolverId, false);
         res.insert(PreconditionerId, false);
