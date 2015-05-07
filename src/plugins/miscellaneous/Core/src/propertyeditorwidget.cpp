@@ -407,7 +407,6 @@ void PropertyItemDelegate::paint(QPainter *pPainter,
 void PropertyItemDelegate::listPropertyChanged(const QString &pValue)
 {
     // Force the updating of our list property value
-qDebug("---------%s", qPrintable(pValue));
 
     qobject_cast<PropertyEditorWidget *>(parent())->currentProperty()->setValue(pValue);
 }
@@ -417,7 +416,6 @@ qDebug("---------%s", qPrintable(pValue));
 void PropertyItemDelegate::booleanPropertyChanged(const QString &pValue)
 {
     // Force the updating of our boolean property value
-qDebug("---------%s", qPrintable(pValue));
 
     qobject_cast<PropertyEditorWidget *>(parent())->currentProperty()->setValue(pValue);
 }

@@ -496,17 +496,12 @@ void SingleCellViewInformationSolversWidget::updateSolverGui(SingleCellViewInfor
         return;
 
     // Update our solver properties visibility
-qDebug(">>> Updating solver [%s]...", qPrintable(pSolverData->solversListProperty()->value()));
 
     QString solverName = pSolverData->solversListProperty()->value();
     SolverInterface *solverInterface = pSolverData->solversInterfaces().value(solverName);
     Core::Properties solverProperties = pSolverData->solversProperties().value(solverName);
 
     // Retrieve our solver properties values
-qDebug("vvvvvvvvv");
-foreach (Core::Property *solverProperty, solverProperties)
-    qDebug(">>> %s: %s", qPrintable(solverProperty->id()), qPrintable(solverProperty->value()));
-qDebug("^^^^^^^^^");
 
     QMap<QString, QString> solverPropertiesValues = QMap<QString, QString>();
 
@@ -554,7 +549,6 @@ void SingleCellViewInformationSolversWidget::doSolverChanged(SingleCellViewInfor
 
     // Go through the different properties for the given type of solver and
     // show/hide whatever needs showing/hiding
-qDebug(">>> Updating solver... [%s]", qPrintable(pSolverName));
 
     for (auto solverProperties = pSolverData->solversProperties().constBegin(),
               solverPropertiesEnd = pSolverData->solversProperties().constEnd();
