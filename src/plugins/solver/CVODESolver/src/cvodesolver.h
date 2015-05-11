@@ -84,7 +84,7 @@ static const auto BandedPreconditioner = QStringLiteral("Banded");
 static const double MaximumStepDefaultValue = 0.0;
 
 enum {
-    MaximumNumberOfStepsDefaultValue = 500,
+    MaximumNumberOfStepsDefaultValue = 500
 };
 
 static const auto IntegrationMethodDefaultValue = BdfMethod;
