@@ -192,11 +192,11 @@ void CvodeSolver::initialize(const double &pVoiStart,
 
                     if (   !linearSolver.compare(DenseLinearSolver)
                         || !linearSolver.compare(DiagonalLinearSolver)) {
-                        // We are dealing with a dense/diagonal linear solver, so
-                        // nothing more to do
+                        // We are dealing with a dense/diagonal linear solver,
+                        // so nothing more to do
                     } else if (!linearSolver.compare(BandedLinearSolver)) {
-                        // We are dealing with a banded linear solver, so retrieve
-                        // its upper/lower half bandwidth
+                        // We are dealing with a banded linear solver, so
+                        // retrieve its upper/lower half bandwidth
 
                         needUpperAndLowerHalfBandwidths = true;
                     } else {
