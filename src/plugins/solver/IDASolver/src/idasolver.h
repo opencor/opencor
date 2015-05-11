@@ -39,13 +39,24 @@ namespace IDASolver {
 
 static const auto MaximumStepId          = QStringLiteral("MaximumStep");
 static const auto MaximumNumberOfStepsId = QStringLiteral("MaximumNumberOfSteps");
+static const auto LinearSolverId         = QStringLiteral("LinearSolver");
+static const auto UpperHalfBandwidthId   = QStringLiteral("UpperHalfBandwidth");
+static const auto LowerHalfBandwidthId   = QStringLiteral("LowerHalfBandwidth");
 static const auto RelativeToleranceId    = QStringLiteral("RelativeTolerance");
 static const auto AbsoluteToleranceId    = QStringLiteral("AbsoluteTolerance");
 static const auto InterpolateSolutionId  = QStringLiteral("InterpolateSolution");
 
 //==============================================================================
 
-// Default IDA parameter values
+static const auto DenseLinearSolver    = QStringLiteral("Dense");
+static const auto BandedLinearSolver   = QStringLiteral("Banded");
+static const auto GmresLinearSolver    = QStringLiteral("GMRES");
+static const auto BiCgStabLinearSolver = QStringLiteral("BiCGStab");
+static const auto TfqmrLinearSolver    = QStringLiteral("TFQMR");
+
+//==============================================================================
+
+// Default CVODE parameter values
 // Note #1: a maximum step of 0 means that there is no maximum step as such and
 //          that IDA can use whatever step it sees fit...
 // Note #2: IDA's default maximum number of steps is 500 which ought to be big
@@ -56,6 +67,10 @@ static const double MaximumStepDefaultValue = 0.0;
 enum {
     MaximumNumberOfStepsDefaultValue = 500
 };
+
+static const auto LinearSolverDefaultValue = DenseLinearSolver;
+static const int UpperHalfBandwidthDefaultValue = 0;
+static const int LowerHalfBandwidthDefaultValue = 0;
 
 static const double RelativeToleranceDefaultValue = 1.0e-7;
 static const double AbsoluteToleranceDefaultValue = 1.0e-7;

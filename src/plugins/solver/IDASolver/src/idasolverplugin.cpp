@@ -92,6 +92,9 @@ Solver::Properties IDASolverPlugin::solverProperties() const
 
     Descriptions MaximumStepDescriptions;
     Descriptions MaximumNumberOfStepsDescriptions;
+    Descriptions LinearSolverDescriptions;
+    Descriptions UpperHalfBandwidthDescriptions;
+    Descriptions LowerHalfBandwidthDescriptions;
     Descriptions RelativeToleranceDescriptions;
     Descriptions AbsoluteToleranceDescriptions;
     Descriptions InterpolateSolutionDescriptions;
@@ -102,6 +105,15 @@ Solver::Properties IDASolverPlugin::solverProperties() const
     MaximumNumberOfStepsDescriptions.insert("en", QString::fromUtf8("Maximum number of steps"));
     MaximumNumberOfStepsDescriptions.insert("fr", QString::fromUtf8("Nombre maximum de pas"));
 
+    LinearSolverDescriptions.insert("en", QString::fromUtf8("Linear solver"));
+    LinearSolverDescriptions.insert("fr", QString::fromUtf8("Solveur linéaire"));
+
+    UpperHalfBandwidthDescriptions.insert("en", QString::fromUtf8("Upper half-bandwidth"));
+    UpperHalfBandwidthDescriptions.insert("fr", QString::fromUtf8("Demi largeur de bande supérieure"));
+
+    LowerHalfBandwidthDescriptions.insert("en", QString::fromUtf8("Lower half-bandwidth"));
+    LowerHalfBandwidthDescriptions.insert("fr", QString::fromUtf8("Demi largeur de bande inférieure"));
+
     RelativeToleranceDescriptions.insert("en", QString::fromUtf8("Relative tolerance"));
     RelativeToleranceDescriptions.insert("fr", QString::fromUtf8("Tolérance relative"));
 
@@ -111,8 +123,17 @@ Solver::Properties IDASolverPlugin::solverProperties() const
     InterpolateSolutionDescriptions.insert("en", QString::fromUtf8("Interpolate solution"));
     InterpolateSolutionDescriptions.insert("fr", QString::fromUtf8("Interpoler solution"));
 
+    QStringList LinearSolverListValues = QStringList() << DenseLinearSolver
+                                                       << BandedLinearSolver
+                                                       << GmresLinearSolver
+                                                       << BiCgStabLinearSolver
+                                                       << TfqmrLinearSolver;
+
     return Solver::Properties() << Solver::Property(Solver::Property::Double, MaximumStepId, MaximumStepDescriptions, QStringList(), MaximumStepDefaultValue, true)
                                 << Solver::Property(Solver::Property::Integer, MaximumNumberOfStepsId, MaximumNumberOfStepsDescriptions, QStringList(), MaximumNumberOfStepsDefaultValue, false)
+                                << Solver::Property(Solver::Property::List, LinearSolverId, LinearSolverDescriptions, LinearSolverListValues, LinearSolverDefaultValue, false)
+                                << Solver::Property(Solver::Property::Integer, UpperHalfBandwidthId, UpperHalfBandwidthDescriptions, QStringList(), UpperHalfBandwidthDefaultValue, false)
+                                << Solver::Property(Solver::Property::Integer, LowerHalfBandwidthId, LowerHalfBandwidthDescriptions, QStringList(), LowerHalfBandwidthDefaultValue, false)
                                 << Solver::Property(Solver::Property::Double, RelativeToleranceId, RelativeToleranceDescriptions, QStringList(), RelativeToleranceDefaultValue, false)
                                 << Solver::Property(Solver::Property::Double, AbsoluteToleranceId, AbsoluteToleranceDescriptions, QStringList(), AbsoluteToleranceDefaultValue, false)
                                 << Solver::Property(Solver::Property::Boolean, InterpolateSolutionId, InterpolateSolutionDescriptions, QStringList(), InterpolateSolutionDefaultValue, false);
@@ -122,11 +143,26 @@ Solver::Properties IDASolverPlugin::solverProperties() const
 
 QMap<QString, bool> IDASolverPlugin::solverPropertiesVisibility(const QMap<QString, QString> &pSolverPropertiesValues) const
 {
-    Q_UNUSED(pSolverPropertiesValues);
+    // Return the visibility of our properties based on the given properties
+    // values
 
-    // We don't handle this interface...
+    QMap<QString, bool> res = QMap<QString, bool>();
 
-    return QMap<QString, bool>();
+    QString linearSolver = pSolverPropertiesValues.value(LinearSolverId);
+
+    if (!linearSolver.compare(BandedLinearSolver)) {
+        // Banded linear solver
+
+        res.insert(UpperHalfBandwidthId, true);
+        res.insert(LowerHalfBandwidthId, true);
+    } else {
+        // Dense/GMRES/Bi-CGStab/TFQMR linear solver
+
+        res.insert(UpperHalfBandwidthId, false);
+        res.insert(LowerHalfBandwidthId, false);
+    }
+
+    return res;
 }
 
 //==============================================================================
