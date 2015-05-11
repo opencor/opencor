@@ -21,6 +21,11 @@ var jsonData = { "versions": [
                              "entries": [
                                { "type": "Improved", "description": "Parametrisation of the solver." }
                              ]
+                           },
+                           { "type": "subCategory", "name": "<a href=\"http://computation.llnl.gov/casc/sundials/description/description.html#descr_ida\">IDA</a> solver",
+                             "entries": [
+                               { "type": "Improved", "description": "Parametrisation of the solver." }
+                             ]
                            }
                          ]
                        }
