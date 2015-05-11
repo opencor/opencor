@@ -64,7 +64,7 @@ void errorHandler(int pErrorCode, const char *pModule, const char *pFunction,
     if (pErrorCode != CV_WARNING)
         // CVODE generated an error, so forward it to the CvodeSolver object
 
-        reinterpret_cast<CvodeSolver *>(pUserData)->emitError(pErrorMessage);
+        static_cast<CvodeSolver *>(pUserData)->emitError(pErrorMessage);
 }
 
 //==============================================================================
