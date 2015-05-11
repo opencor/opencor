@@ -195,8 +195,8 @@ void CvodeSolver::initialize(const double &pVoiStart,
                         // We are dealing with a dense/diagonal linear solver,
                         // so nothing more to do
                     } else if (!linearSolver.compare(BandedLinearSolver)) {
-                        // We are dealing with a banded linear solver, so
-                        // retrieve its upper/lower half bandwidth
+                        // We are dealing with a banded linear solver, so we
+                        // need both an upper and a lower half bandwidth
 
                         needUpperAndLowerHalfBandwidths = true;
                     } else {
@@ -213,7 +213,7 @@ void CvodeSolver::initialize(const double &pVoiStart,
 
                         if (!preconditioner.compare(BandedPreconditioner)) {
                             // We are dealing with a banded preconditioner, so
-                            // retrieve its upper/lower half bandwidth
+                            // we need both an upper and a lower half bandwidth
 
                             needUpperAndLowerHalfBandwidths = true;
                         }
@@ -343,27 +343,16 @@ void CvodeSolver::initialize(const double &pVoiStart,
         // Set the linear solver, if needed
 
         if (newtonIteration) {
-            // We are dealing with a Newton iteration
-
             if (!linearSolver.compare(DenseLinearSolver)) {
-                // We are dealing with a dense linear solver
-
                 CVDense(mSolver, pRatesStatesCount);
             } else if (!linearSolver.compare(BandedLinearSolver)) {
-                // We are dealing with a banded linear solver
-
                 CVBand(mSolver, pRatesStatesCount, upperHalfBandwidth, lowerHalfBandwidth);
             } else if (!linearSolver.compare(DiagonalLinearSolver)) {
-                // We are dealing with a diagonal linear solver
-
                 CVDiag(mSolver);
             } else {
                 // We are dealing with a GMRES/Bi-CGStab/TFQMR linear solver
 
                 if (!preconditioner.compare(BandedPreconditioner)) {
-                    // We are using a banded preconditioner with our
-                    // GMRES/Bi-CGStab/TFQMR linear solver
-
                     if (!linearSolver.compare(GmresLinearSolver))
                         CVSpgmr(mSolver, PREC_LEFT, 0);
                     else if (!linearSolver.compare(BiCgStabLinearSolver))
@@ -373,9 +362,6 @@ void CvodeSolver::initialize(const double &pVoiStart,
 
                     CVBandPrecInit(mSolver, pRatesStatesCount, upperHalfBandwidth, lowerHalfBandwidth);
                 } else {
-                    // We are not using any preconditioner with our
-                    // GMRES/Bi-CGStab/TFQMR linear solver
-
                     if (!linearSolver.compare(GmresLinearSolver))
                         CVSpgmr(mSolver, PREC_NONE, 0);
                     else if (!linearSolver.compare(BiCgStabLinearSolver))
