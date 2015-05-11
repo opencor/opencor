@@ -187,73 +187,73 @@ void CvodeSolver::initialize(const double &pVoiStart,
 
                 if (mProperties.contains(LinearSolverId)) {
                     linearSolver = mProperties.value(LinearSolverId).toString();
+
+                    bool needUpperAndLowerHalfBandwidths = false;
+
+                    if (   !linearSolver.compare(DenseLinearSolver)
+                        || !linearSolver.compare(DiagonalLinearSolver)) {
+                        // We are dealing with a dense/diagonal linear solver, so
+                        // nothing more to do
+                    } else if (!linearSolver.compare(BandedLinearSolver)) {
+                        // We are dealing with a banded linear solver, so retrieve
+                        // its upper/lower half bandwidth
+
+                        needUpperAndLowerHalfBandwidths = true;
+                    } else {
+                        // We are dealing with a GMRES/Bi-CGStab/TFQMR linear
+                        // solver, so retrieve and check its preconditioner
+
+                        if (mProperties.contains(PreconditionerId)) {
+                            preconditioner = mProperties.value(PreconditionerId).toString();
+                        } else {
+                            emit error(QObject::tr("the 'preconditioner' property value could not be retrieved"));
+
+                            return;
+                        }
+
+                        if (!preconditioner.compare(BandedPreconditioner)) {
+                            // We are dealing with a banded preconditioner, so
+                            // retrieve its upper/lower half bandwidth
+
+                            needUpperAndLowerHalfBandwidths = true;
+                        }
+                    }
+
+                    if (needUpperAndLowerHalfBandwidths) {
+                        if (mProperties.contains(UpperHalfBandwidthId)) {
+                            upperHalfBandwidth = mProperties.value(UpperHalfBandwidthId).toInt();
+
+                            if (   (upperHalfBandwidth < 0)
+                                || (upperHalfBandwidth >= pRatesStatesCount)) {
+                                emit error(QObject::tr("the 'upper half-bandwidth' property must have a value between 0 and %1").arg(pRatesStatesCount-1));
+
+                                return;
+                            }
+                        } else {
+                            emit error(QObject::tr("the 'upper half-bandwidth' property value could not be retrieved"));
+
+                            return;
+                        }
+
+                        if (mProperties.contains(LowerHalfBandwidthId)) {
+                            lowerHalfBandwidth = mProperties.value(LowerHalfBandwidthId).toInt();
+
+                            if (   (lowerHalfBandwidth < 0)
+                                || (lowerHalfBandwidth >= pRatesStatesCount)) {
+                                emit error(QObject::tr("the 'lower half-bandwidth' property must have a value between 0 and %1").arg(pRatesStatesCount-1));
+
+                                return;
+                            }
+                        } else {
+                            emit error(QObject::tr("the 'lower half-bandwidth' property value could not be retrieved"));
+
+                            return;
+                        }
+                    }
                 } else {
                     emit error(QObject::tr("the 'linear solver' property value could not be retrieved"));
 
                     return;
-                }
-
-                bool needUpperAndLowerHalfBandwidths = false;
-
-                if (   !linearSolver.compare(DenseLinearSolver)
-                    || !linearSolver.compare(DiagonalLinearSolver)) {
-                    // We are dealing with a dense/diagonal linear solver, so
-                    // nothing more to do
-                } else if (!linearSolver.compare(BandedLinearSolver)) {
-                    // We are dealing with a banded linear solver, so retrieve
-                    // its upper/lower half bandwidth
-
-                    needUpperAndLowerHalfBandwidths = true;
-                } else {
-                    // We are dealing with a GMRES/Bi-CGStab/TFQMR linear
-                    // solver, so retrieve and check its preconditioner
-
-                    if (mProperties.contains(PreconditionerId)) {
-                        preconditioner = mProperties.value(PreconditionerId).toString();
-                    } else {
-                        emit error(QObject::tr("the 'preconditioner' property value could not be retrieved"));
-
-                        return;
-                    }
-
-                    if (!preconditioner.compare(BandedPreconditioner)) {
-                        // We are dealing with a banded preconditioner, so
-                        // retrieve its upper/lower half bandwidth
-
-                        needUpperAndLowerHalfBandwidths = true;
-                    }
-                }
-
-                if (needUpperAndLowerHalfBandwidths) {
-                    if (mProperties.contains(UpperHalfBandwidthId)) {
-                        upperHalfBandwidth = mProperties.value(UpperHalfBandwidthId).toInt();
-
-                        if (   (upperHalfBandwidth < 0)
-                            || (upperHalfBandwidth >= pRatesStatesCount)) {
-                            emit error(QObject::tr("the 'upper half-bandwidth' property must have a value between 0 and %1").arg(pRatesStatesCount-1));
-
-                            return;
-                        }
-                    } else {
-                        emit error(QObject::tr("the 'upper half-bandwidth' property value could not be retrieved"));
-
-                        return;
-                    }
-
-                    if (mProperties.contains(LowerHalfBandwidthId)) {
-                        lowerHalfBandwidth = mProperties.value(LowerHalfBandwidthId).toInt();
-
-                        if (   (lowerHalfBandwidth < 0)
-                            || (lowerHalfBandwidth >= pRatesStatesCount)) {
-                            emit error(QObject::tr("the 'lower half-bandwidth' property must have a value between 0 and %1").arg(pRatesStatesCount-1));
-
-                            return;
-                        }
-                    } else {
-                        emit error(QObject::tr("the 'lower half-bandwidth' property value could not be retrieved"));
-
-                        return;
-                    }
                 }
             }
         } else {
