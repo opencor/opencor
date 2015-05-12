@@ -55,6 +55,14 @@ ELSE()
 
     RETRIEVE_LIBGIT2_SETTINGS()
 
+    # Ignore some warnings on Windows
+
+    IF(WIN32)
+        SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /wd4133 /wd4244 /wd4267")
+        # Note: on Windows, some warnings get generated, but we have nothing to
+        #       do with them...
+    ENDIF()
+
     # Determine which dependencies to build, if any
 
     SET(DEPENDENCIES_SOURCES
