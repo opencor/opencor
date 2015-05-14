@@ -22,6 +22,9 @@
 #include "llvm/Support/ErrorOr.h"
 #include <memory>
 #include <system_error>
+//---OPENCOR--- BEGIN
+#include "llvmglobal.h"
+//---OPENCOR--- END
 
 namespace llvm {
 class MemoryBufferRef;
@@ -36,7 +39,12 @@ class MemoryBufferRef;
 /// be more efficient for clients which are reading all the data to stop
 /// reading when they encounter a '\0' than to continually check the file
 /// position to see if it has reached the end of the file.
+/*---OPENCOR---
 class MemoryBuffer {
+*/
+//---OPENCOR--- BEGIN
+class LLVM_EXPORT MemoryBuffer {
+//---OPENCOR--- END
   const char *BufferStart; // Start of the buffer.
   const char *BufferEnd;   // End of the buffer.
 
