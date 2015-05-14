@@ -33,16 +33,25 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-#if defined(Q_OS_LINUX) || defined(Q_OS_MAC)
+#if defined(Q_OS_WIN)
+    #pragma warning(push)
+    #pragma warning(disable: 4291)
+#elif defined(Q_OS_LINUX) || defined(Q_OS_MAC)
     #pragma GCC diagnostic ignored "-Wunused-parameter"
     #pragma GCC diagnostic ignored "-Wstrict-aliasing"
+#else
+    #error Unsupported platform
 #endif
 
 #include "llvm/ExecutionEngine/ExecutionEngine.h"
 
-#if defined(Q_OS_LINUX) || defined(Q_OS_MAC)
+#if defined(Q_OS_WIN)
+    #pragma warning(pop)
+#elif defined(Q_OS_LINUX) || defined(Q_OS_MAC)
     #pragma GCC diagnostic error "-Wunused-parameter"
     #pragma GCC diagnostic error "-Wstrict-aliasing"
+#else
+    #error Unsupported platform
 #endif
 
 //==============================================================================
