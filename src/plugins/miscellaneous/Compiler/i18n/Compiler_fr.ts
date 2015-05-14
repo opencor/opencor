@@ -4,10 +4,6 @@
 <context>
     <name>OpenCOR::Compiler::CompilerEngine</name>
     <message>
-        <source>&lt;strong&gt;%1&lt;/strong&gt; could not be created</source>
-        <translation>&lt;strong&gt;%1&lt;/strong&gt; n&apos;a pas pu être créé</translation>
-    </message>
-    <message>
         <source>the compilation object could not be created</source>
         <translation>l&apos;objet compilation n&apos;a pas pu être créé</translation>
     </message>
