@@ -22,6 +22,8 @@ specific language governing permissions and limitations under the License.
 #ifndef LLVMGLOBAL_H
 #define LLVMGLOBAL_H
 
+//==============================================================================
+
 #ifdef _WIN32
     #ifdef LLVM_PLUGIN
         #define LLVM_EXPORT __declspec(dllexport)
@@ -49,7 +51,7 @@ class LLVM_EXPORT NonCopyable
 
 //==============================================================================
 
-}   // namespace clang
+}   // namespace llvm
 
 //==============================================================================
 

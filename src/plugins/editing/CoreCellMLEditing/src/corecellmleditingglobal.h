@@ -22,6 +22,8 @@ specific language governing permissions and limitations under the License.
 #ifndef CORECELLMLEDITINGGLOBAL_H
 #define CORECELLMLEDITINGGLOBAL_H
 
+//==============================================================================
+
 #ifdef _WIN32
     #ifdef CoreCellMLEditing_PLUGIN
         #define CORECELLMLEDITING_EXPORT __declspec(dllexport)
@@ -31,6 +33,8 @@ specific language governing permissions and limitations under the License.
 #else
     #define CORECELLMLEDITING_EXPORT
 #endif
+
+//==============================================================================
 
 #endif
 

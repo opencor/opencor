@@ -22,6 +22,8 @@ specific language governing permissions and limitations under the License.
 #ifndef CORESOLVERGLOBAL_H
 #define CORESOLVERGLOBAL_H
 
+//==============================================================================
+
 #ifdef _WIN32
     #ifdef CoreSolver_PLUGIN
         #define CORESOLVER_EXPORT __declspec(dllexport)
@@ -31,6 +33,8 @@ specific language governing permissions and limitations under the License.
 #else
     #define CORESOLVER_EXPORT
 #endif
+
+//==============================================================================
 
 #endif
 

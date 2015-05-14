@@ -22,6 +22,8 @@ specific language governing permissions and limitations under the License.
 #ifndef QSCINTILLASUPPORTGLOBAL_H
 #define QSCINTILLASUPPORTGLOBAL_H
 
+//==============================================================================
+
 #ifdef _WIN32
     #ifdef QScintillaSupport_PLUGIN
         #define QSCINTILLASUPPORT_EXPORT __declspec(dllexport)
@@ -31,6 +33,8 @@ specific language governing permissions and limitations under the License.
 #else
     #define QSCINTILLASUPPORT_EXPORT
 #endif
+
+//==============================================================================
 
 #endif
 

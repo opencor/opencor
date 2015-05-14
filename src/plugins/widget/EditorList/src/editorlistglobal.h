@@ -22,6 +22,8 @@ specific language governing permissions and limitations under the License.
 #ifndef EDITORLISTGLOBAL_H
 #define EDITORLISTGLOBAL_H
 
+//==============================================================================
+
 #ifdef _WIN32
     #ifdef EditorList_PLUGIN
         #define EDITORLIST_EXPORT __declspec(dllexport)
@@ -31,6 +33,8 @@ specific language governing permissions and limitations under the License.
 #else
     #define EDITORLIST_EXPORT
 #endif
+
+//==============================================================================
 
 #endif
 
