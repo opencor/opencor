@@ -34,8 +34,10 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-#include "IfaceAnnoTools.hxx"
-#include "IfaceCeVAS.hxx"
+#include "cellmlapidisablewarnings.h"
+    #include "IfaceAnnoTools.hxx"
+    #include "IfaceCeVAS.hxx"
+#include "cellmlapienablewarnings.h"
 
 //==============================================================================
 

@@ -54,12 +54,14 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-#include "IfaceCeLEDSExporter.hxx"
-#include "IfaceVACSS.hxx"
+#include "cellmlapidisablewarnings.h"
+    #include "IfaceCeLEDSExporter.hxx"
+    #include "IfaceVACSS.hxx"
 
-#include "CeLEDSExporterBootstrap.hpp"
-#include "CellMLBootstrap.hpp"
-#include "VACSSBootstrap.hpp"
+    #include "CeLEDSExporterBootstrap.hpp"
+    #include "CellMLBootstrap.hpp"
+    #include "VACSSBootstrap.hpp"
+#include "cellmlapienablewarnings.h"
 
 //==============================================================================
 

@@ -37,12 +37,16 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-#include "CCGSBootstrap.hpp"
+#include "cellmlapidisablewarnings.h"
+    #include "CCGSBootstrap.hpp"
+#include "cellmlapienablewarnings.h"
 
 //==============================================================================
 
-#include "llvm/ADT/StringRef.h"
-#include "llvm/Support/DynamicLibrary.h"
+#include "llvmdisablewarnings.h"
+    #include "llvm/ADT/StringRef.h"
+    #include "llvm/Support/DynamicLibrary.h"
+#include "llvmenablewarnings.h"
 
 //==============================================================================
 

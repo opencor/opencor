@@ -35,8 +35,10 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-#include "AnnoToolsBootstrap.hpp"
-#include "CeVASBootstrap.hpp"
+#include "cellmlapidisablewarnings.h"
+    #include "AnnoToolsBootstrap.hpp"
+    #include "CeVASBootstrap.hpp"
+#include "cellmlapienablewarnings.h"
 
 //==============================================================================
 

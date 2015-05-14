@@ -34,10 +34,12 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-#include "cellml-api-cxx-support.hpp"
+#include "cellmlapidisablewarnings.h"
+    #include "cellml-api-cxx-support.hpp"
 
-#include "IfaceCCGS.hxx"
-#include "IfaceCellML_APISPEC.hxx"
+    #include "IfaceCCGS.hxx"
+    #include "IfaceCellML_APISPEC.hxx"
+#include "cellmlapienablewarnings.h"
 
 //==============================================================================
 

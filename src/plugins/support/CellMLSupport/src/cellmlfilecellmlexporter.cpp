@@ -23,7 +23,9 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-#include "CellMLBootstrap.hpp"
+#include "cellmlapidisablewarnings.h"
+    #include "CellMLBootstrap.hpp"
+#include "cellmlapienablewarnings.h"
 
 //==============================================================================
 

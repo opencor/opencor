@@ -19,6 +19,11 @@ specific language governing permissions and limitations under the License.
 // LLVM disable warnings
 //==============================================================================
 
+#if !defined(LLVMENABLEWARNINGS_H) && !defined(LLVMDISABLEWARNINGS_H)
+#define LLVMDISABLEWARNINGS_H
+
+//==============================================================================
+
 #if defined(Q_OS_WIN)
     #pragma warning(push)
     #pragma warning(disable: 4291)
@@ -27,6 +32,10 @@ specific language governing permissions and limitations under the License.
     #pragma GCC diagnostic ignored "-Wstrict-aliasing"
 #else
     #error Unsupported platform
+#endif
+
+//==============================================================================
+
 #endif
 
 //==============================================================================

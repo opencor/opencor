@@ -16,50 +16,17 @@ specific language governing permissions and limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// CellML file exporter
+// CellML API enable warnings
 //==============================================================================
 
-#ifndef CELLMLFILEEXPORTER_H
-#define CELLMLFILEEXPORTER_H
-
-//==============================================================================
-
-#include <QString>
+#if defined(CELLMLAPIENABLEWARNINGS_H) && !defined(CELLMLAPIDISABLEWARNINGS_H)
+#define CELLMLAPIENABLEWARNINGS_H
 
 //==============================================================================
 
-#include "cellmlapidisablewarnings.h"
-    #include "IfaceCellML_APISPEC.hxx"
-#include "cellmlapienablewarnings.h"
-
-//==============================================================================
-
-namespace OpenCOR {
-namespace CellMLSupport {
-
-//==============================================================================
-
-class CellmlFileExporter
-{
-public:
-    explicit CellmlFileExporter();
-
-    bool result() const;
-
-    QString errorMessage() const;
-
-protected:
-    bool mResult;
-
-    QString mErrorMessage;
-
-    bool saveModel(iface::cellml_api::Model *pModel, const QString &pFileName);
-};
-
-//==============================================================================
-
-}   // namespace CellMLSupport
-}   // namespace OpenCOR
+#if defined(Q_OS_WIN)
+    #pragma warning(pop)
+#endif
 
 //==============================================================================
 
