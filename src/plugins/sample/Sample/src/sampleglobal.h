@@ -22,6 +22,8 @@ specific language governing permissions and limitations under the License.
 #ifndef SAMPLEGLOBAL_H
 #define SAMPLEGLOBAL_H
 
+//==============================================================================
+
 #ifdef _WIN32
     #ifdef Sample_PLUGIN
         #define SAMPLE_EXPORT __declspec(dllexport)
@@ -31,6 +33,8 @@ specific language governing permissions and limitations under the License.
 #else
     #define SAMPLE_EXPORT
 #endif
+
+//==============================================================================
 
 #endif
 

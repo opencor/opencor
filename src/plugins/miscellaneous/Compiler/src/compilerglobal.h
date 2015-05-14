@@ -22,6 +22,8 @@ specific language governing permissions and limitations under the License.
 #ifndef COMPILERGLOBAL_H
 #define COMPILERGLOBAL_H
 
+//==============================================================================
+
 #ifdef _WIN32
     #ifdef Compiler_PLUGIN
         #define COMPILER_EXPORT __declspec(dllexport)
@@ -31,6 +33,8 @@ specific language governing permissions and limitations under the License.
 #else
     #define COMPILER_EXPORT
 #endif
+
+//==============================================================================
 
 #endif
 

@@ -22,6 +22,8 @@ specific language governing permissions and limitations under the License.
 #ifndef VIEWERGLOBAL_H
 #define VIEWERGLOBAL_H
 
+//==============================================================================
+
 #ifdef _WIN32
     #ifdef Viewer_PLUGIN
         #define VIEWER_EXPORT __declspec(dllexport)
@@ -31,6 +33,8 @@ specific language governing permissions and limitations under the License.
 #else
     #define VIEWER_EXPORT
 #endif
+
+//==============================================================================
 
 #endif
 

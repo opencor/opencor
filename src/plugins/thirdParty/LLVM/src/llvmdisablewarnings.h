@@ -16,50 +16,23 @@ specific language governing permissions and limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// CellML file exporter
+// LLVM disable warnings
 //==============================================================================
 
-#ifndef CELLMLFILEEXPORTER_H
-#define CELLMLFILEEXPORTER_H
-
-//==============================================================================
-
-#include <QString>
+#if !defined(LLVMENABLEWARNINGS_H) && !defined(LLVMDISABLEWARNINGS_H)
+#define LLVMDISABLEWARNINGS_H
 
 //==============================================================================
 
-#include "cellmlapidisablewarnings.h"
-    #include "IfaceCellML_APISPEC.hxx"
-#include "cellmlapienablewarnings.h"
-
-//==============================================================================
-
-namespace OpenCOR {
-namespace CellMLSupport {
-
-//==============================================================================
-
-class CellmlFileExporter
-{
-public:
-    explicit CellmlFileExporter();
-
-    bool result() const;
-
-    QString errorMessage() const;
-
-protected:
-    bool mResult;
-
-    QString mErrorMessage;
-
-    bool saveModel(iface::cellml_api::Model *pModel, const QString &pFileName);
-};
-
-//==============================================================================
-
-}   // namespace CellMLSupport
-}   // namespace OpenCOR
+#if defined(Q_OS_WIN)
+    #pragma warning(push)
+    #pragma warning(disable: 4291)
+#elif defined(Q_OS_LINUX) || defined(Q_OS_MAC)
+    #pragma GCC diagnostic ignored "-Wunused-parameter"
+    #pragma GCC diagnostic ignored "-Wstrict-aliasing"
+#else
+    #error Unsupported platform
+#endif
 
 //==============================================================================
 

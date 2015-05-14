@@ -43,14 +43,6 @@ MACRO(RETRIEVE_CELLML_API_SETTINGS)
             ${CMAKE_SHARED_LIBRARY_PREFIX}vacss${CMAKE_SHARED_LIBRARY_SUFFIX}.1
         )
     ENDIF()
-
-    # Ignore some warnings on Windows
-
-    IF(WIN32)
-        SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4091 /wd4290")
-        # Note: on Windows, some warnings get generated, but we have nothing to
-        #       do with them...
-    ENDIF()
 ENDMACRO()
 
 # Retrieve the plugin's binary file(s)
@@ -178,6 +170,14 @@ ENDIF()
 SET(CELLML_API_EXTERNAL_BINARIES_DIR ${PROJECT_SOURCE_DIR}/bin/${DISTRIB_BINARY_DIR})
 
 RETRIEVE_CELLML_API_SETTINGS()
+
+# Ignore some warnings on Windows
+
+IF(WIN32)
+    SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4091 /wd4290")
+    # Note: on Windows, some warnings get generated, but we have nothing to do
+    #       with them...
+ENDIF()
 
 # Add the plugin
 

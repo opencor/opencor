@@ -22,6 +22,8 @@ specific language governing permissions and limitations under the License.
 #ifndef COREGLOBAL_H
 #define COREGLOBAL_H
 
+//==============================================================================
+
 #ifdef OpenCOR_MAIN
     #define CORE_EXPORT
 #else
@@ -35,6 +37,8 @@ specific language governing permissions and limitations under the License.
         #define CORE_EXPORT
     #endif
 #endif
+
+//==============================================================================
 
 #endif
 

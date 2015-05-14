@@ -32,7 +32,9 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-#include "IfaceRDF_APISPEC.hxx"
+#include "cellmlapidisablewarnings.h"
+    #include "IfaceRDF_APISPEC.hxx"
+#include "cellmlapienablewarnings.h"
 
 //==============================================================================
 
