@@ -449,9 +449,9 @@ void SingleCellViewSimulationWorker::started()
 
                 emit running(true);
 
-                // Restart our timer
+                // (Re)start our timer
 
-                timer.restart();
+                timer.start();
             }
 
             // Reinitialise our solver, if (really) needed
