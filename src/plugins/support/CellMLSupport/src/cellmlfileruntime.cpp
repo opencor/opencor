@@ -868,11 +868,11 @@ void CellmlFileRuntime::update()
     std::sort(mParameters.begin(), mParameters.end(), sortParameters);
 
     // Generate the model code, after having prepended to it all the external
-    // functions which may, or not, be needed
+    // functions that may, or not, be needed
     // Note: indeed, we cannot include header files since we don't (and don't
     //       want in order to avoid complications) deploy them with OpenCOR. So,
     //       instead, we must declare as external functions all the functions
-    //       which we would normally use through header files...
+    //       that we would normally use through header files...
 
     QString modelCode = "extern double fabs(double);\n"
                         "\n"
