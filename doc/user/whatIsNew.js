@@ -1,4 +1,22 @@
 var jsonData = { "versions": [
+                   { "anchor": "0.4.1", "description": "Version 0.4.1", "date": "???",
+                     "categories": [
+                       { "name": "Editing",
+                         "entries": [
+                           { "type": "subCategory", "name": "Raw CellML view",
+                             "entries": [
+                               { "type": "Improved", "description": "CellML validation." }
+                             ]
+                           },
+                           { "type": "subCategory", "name": "CellML Text view",
+                             "entries": [
+                               { "type": "Improved", "description": "CellML validation." }
+                             ]
+                           }
+                         ]
+                       }
+                     ]
+                   },
                    { "anchor": "0.4", "description": "Version 0.4", "date": "29 April 2015",
                      "categories": [
                        { "name": "General",
