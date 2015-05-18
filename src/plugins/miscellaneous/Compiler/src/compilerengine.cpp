@@ -130,6 +130,38 @@ bool CompilerEngine::compileCode(const QString &pCode)
         return false;
     }
 
+    // Determine our target triple
+    // Note: normally, we would call llvm::sys::getProcessTriple(), but this
+    //       returns the information about the system on which LLVM was built.
+    //       In most cases it is fine, but on OS X it may be a problem. Indeed,
+    //       with OS X 10.9, Apple decided to extend the C standard by adding
+    //       some functions (e.g. __exp10()). So, if the given code needs one of
+    //       those functions, then OpenCOR will crash if run on an 'old' version
+    //       of OS X. So, to avoid this issue, we set the target triple
+    //       ourselves, based on the system on which OpenCOR is being used...
+
+    std::string targetTripleString;
+
+#if defined(Q_OS_WIN)
+    targetTripleString = (sizeof(void *) == 4)?"i686-pc-win32":"x86_64-pc-win32";
+#elif defined(Q_OS_LINUX)
+    targetTripleString = (sizeof(void *) == 4)?"i686-pc-linux-gnu":"x86_64-pc-linux-gnu";
+#elif defined(Q_OS_MAC)
+    targetTripleString = "x86_64-apple-darwin"+std::to_string(QSysInfo::MacintoshVersion+2);
+#else
+    #error Unsupported platform
+#endif
+
+    llvm::Triple targetTriple(targetTripleString);
+
+    // Check whether the target triple supports the COFF binary format and, if
+    // so, set its object format to ELF
+    // Note: indeed, for now, MCJIT only works through the ELF object format on
+    //       Windows...
+
+    if (targetTriple.isOSBinFormatCOFF())
+        targetTriple.setObjectFormat(llvm::Triple::ELF);
+
     // Get a driver to compile our code
 
 #ifdef QT_DEBUG
@@ -142,15 +174,8 @@ bool CompilerEngine::compileCode(const QString &pCode)
     clang::DiagnosticsEngine diagnosticsEngine(llvm::IntrusiveRefCntPtr<clang::DiagnosticIDs>(new clang::DiagnosticIDs()),
                                                &*diagnosticOptions,
                                                new clang::TextDiagnosticPrinter(outputStream, &*diagnosticOptions));
-    std::string targetTriple = llvm::sys::getProcessTriple();
 
-#ifdef Q_OS_WIN
-    // For now, on Windows, MCJIT only works through the ELF object format
-
-    targetTriple += "-elf";
-#endif
-
-    clang::driver::Driver driver("clang", targetTriple, diagnosticsEngine);
+    clang::driver::Driver driver("clang", targetTriple.str(), diagnosticsEngine);
 
     // Get a compilation object to which we pass some arguments
 
