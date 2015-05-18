@@ -24,10 +24,12 @@ OPTION(USE_PREBUILT_QSCINTILLA_PLUGIN "Use the pre-built version of the QScintil
 OPTION(USE_PREBUILT_QWT_PLUGIN "Use the pre-built version of the Qwt plugin" ON)
 OPTION(USE_PREBUILT_SUNDIALS_PLUGIN "Use the pre-built version of the SUNDIALS plugin" ON)
 
-# Force the building of some third-party libraries since the 0.4 branch is not
-# in sync with the master branch anymore
+# Force the building of all our third-party libraries since the 0.4 branch may
+# not be in sync with the master branch anymore
 
+SET(USE_PREBUILT_LLVM_PLUGIN OFF)
 SET(USE_PREBUILT_QSCINTILLA_PLUGIN OFF)
+SET(USE_PREBUILT_QWT_PLUGIN OFF)
 SET(USE_PREBUILT_SUNDIALS_PLUGIN OFF)
 
 # Initialise the project
