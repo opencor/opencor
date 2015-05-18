@@ -1,20 +1,6 @@
 var jsonData = { "versions": [
                    { "anchor": "latest", "description": "Latest snapshot", "date": "???",
                      "categories": [
-                       { "name": "Editing",
-                         "entries": [
-                           { "type": "subCategory", "name": "Raw CellML view",
-                             "entries": [
-                               { "type": "Improved", "description": "CellML validation." }
-                             ]
-                           },
-                           { "type": "subCategory", "name": "CellML Text view",
-                             "entries": [
-                               { "type": "Improved", "description": "CellML validation." }
-                             ]
-                           }
-                         ]
-                       },
                        { "name": "Simulation",
                          "entries": [
                            { "type": "subCategory", "name": "<a href=\"http://computation.llnl.gov/casc/sundials/description/description.html#descr_cvode\">CVODE</a> solver",
