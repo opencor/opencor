@@ -140,27 +140,19 @@ bool CompilerEngine::compileCode(const QString &pCode)
     //       of OS X. So, to avoid this issue, we set the target triple
     //       ourselves, based on the system on which OpenCOR is being used...
 
-    std::string targetTripleString;
+    std::string targetTriple;
 
 #if defined(Q_OS_WIN)
-    targetTripleString = (sizeof(void *) == 4)?"i686-pc-win32":"x86_64-pc-win32";
+    targetTriple = (sizeof(void *) == 4)?"i686-pc-win32-elf":"x86_64-pc-win32-elf";
+    // Note: MCJIT currently works only through the ELF object format, hence we
+    //       are appending "-elf"...
 #elif defined(Q_OS_LINUX)
-    targetTripleString = (sizeof(void *) == 4)?"i686-pc-linux-gnu":"x86_64-pc-linux-gnu";
+    targetTriple = (sizeof(void *) == 4)?"i686-pc-linux-gnu":"x86_64-pc-linux-gnu";
 #elif defined(Q_OS_MAC)
-    targetTripleString = "x86_64-apple-darwin"+std::to_string(QSysInfo::MacintoshVersion+2);
+    targetTriple = "x86_64-apple-darwin"+std::to_string(QSysInfo::MacintoshVersion+2);
 #else
     #error Unsupported platform
 #endif
-
-    llvm::Triple targetTriple(targetTripleString);
-
-    // Check whether the target triple supports the COFF binary format and, if
-    // so, set its object format to ELF
-    // Note: indeed, for now, MCJIT only works through the ELF object format on
-    //       Windows...
-
-    if (targetTriple.isOSBinFormatCOFF())
-        targetTriple.setObjectFormat(llvm::Triple::ELF);
 
     // Get a driver to compile our code
 
@@ -175,7 +167,7 @@ bool CompilerEngine::compileCode(const QString &pCode)
                                                &*diagnosticOptions,
                                                new clang::TextDiagnosticPrinter(outputStream, &*diagnosticOptions));
 
-    clang::driver::Driver driver("clang", targetTriple.str(), diagnosticsEngine);
+    clang::driver::Driver driver("clang", targetTriple, diagnosticsEngine);
 
     // Get a compilation object to which we pass some arguments
 
