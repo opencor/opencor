@@ -271,6 +271,7 @@ SET(PLUGINS
     # Selectable plugins
 
     dataStore/CSVDataStore
+    dataStore/BSMLDataStore
 
     editing/CellMLAnnotationView
     editing/CellMLTextView
