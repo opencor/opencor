@@ -17,6 +17,33 @@ var jsonData = { "versions": [
                        }
                      ]
                    },
+                   { "anchor": "0.4.1", "description": "Version 0.4.1", "date": "20 May 2015",
+                     "categories": [
+                       { "name": "Editing",
+                         "entries": [
+                           { "type": "subCategory", "name": "Raw CellML view",
+                             "entries": [
+                               { "type": "Improved", "description": "CellML validation." }
+                             ]
+                           },
+                           { "type": "subCategory", "name": "CellML Text view",
+                             "entries": [
+                               { "type": "Improved", "description": "CellML validation." }
+                             ]
+                           }
+                         ]
+                       },
+                       { "name": "Simulation",
+                         "entries": [
+                           { "type": "subCategory", "name": "Single cell (simulation) view",
+                             "entries": [
+                               { "type": "Fixed", "description": "Mac <a href=\"http://en.wikipedia.org/wiki/OS_X\">OS X</a> 10.7 and <a href=\"http://en.wikipedia.org/wiki/OS_X\">OS X</a> 10.8 issue with models that need to compute 10<sup>x</sup>." }
+                             ]
+                           }
+                         ]
+                       }
+                     ]
+                   },
                    { "anchor": "0.4", "description": "Version 0.4", "date": "29 April 2015",
                      "categories": [
                        { "name": "General",
