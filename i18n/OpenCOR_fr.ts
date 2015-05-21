@@ -346,7 +346,7 @@
     </message>
     <message>
         <source>Plugins to access various third-party libraries.</source>
-        <translation>Extensions pour donner accéder différentes librairies externes.</translation>
+        <translation>Extensions pour accéder différentes librairies externes.</translation>
     </message>
     <message>
         <source>Plugins to access various &lt;em&gt;ad hoc&lt;/em&gt; widgets.</source>
