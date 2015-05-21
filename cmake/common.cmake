@@ -525,11 +525,19 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
 
     # External binaries
 
-    IF(NOT "${EXTERNAL_BINARIES_DIR}" STREQUAL "")
+    IF(NOT "${EXTERNAL_BINARIES}" STREQUAL "")
         FOREACH(EXTERNAL_BINARY ${EXTERNAL_BINARIES})
-            TARGET_LINK_LIBRARIES(${PROJECT_NAME}
-                ${EXTERNAL_BINARIES_DIR}/${EXTERNAL_BINARY}
-            )
+            IF("${EXTERNAL_BINARIES_DIR}" STREQUAL "")
+                SET(FULL_EXTERNAL_BINARY ${EXTERNAL_BINARY})
+            ELSE()
+                SET(FULL_EXTERNAL_BINARY "${EXTERNAL_BINARIES_DIR}/${EXTERNAL_BINARY}")
+            ENDIF()
+
+            IF(EXISTS ${FULL_EXTERNAL_BINARY})
+                TARGET_LINK_LIBRARIES(${PROJECT_NAME}
+                    ${FULL_EXTERNAL_BINARY}
+                )
+            ENDIF()
         ENDFOREACH()
     ENDIF()
 
@@ -672,11 +680,19 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
 
                 # External binaries
 
-                IF(NOT "${EXTERNAL_BINARIES_DIR}" STREQUAL "")
+                IF(NOT "${EXTERNAL_BINARIES}" STREQUAL "")
                     FOREACH(EXTERNAL_BINARY ${EXTERNAL_BINARIES})
-                        TARGET_LINK_LIBRARIES(${TEST_NAME}
-                            ${EXTERNAL_BINARIES_DIR}/${EXTERNAL_BINARY}
-                        )
+                        IF("${EXTERNAL_BINARIES_DIR}" STREQUAL "")
+                            SET(FULL_EXTERNAL_BINARY ${EXTERNAL_BINARY})
+                        ELSE()
+                            SET(FULL_EXTERNAL_BINARY "${EXTERNAL_BINARIES_DIR}/${EXTERNAL_BINARY}")
+                        ENDIF()
+
+                        IF(EXISTS ${FULL_EXTERNAL_BINARY})
+                            TARGET_LINK_LIBRARIES(${TEST_NAME}
+                                ${FULL_EXTERNAL_BINARY}
+                            )
+                        ENDIF()
                     ENDFOREACH()
                 ENDIF()
 
