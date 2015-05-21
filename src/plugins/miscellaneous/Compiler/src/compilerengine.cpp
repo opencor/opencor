@@ -50,6 +50,10 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#include <string>
+
+//==============================================================================
+
 namespace OpenCOR {
 namespace Compiler {
 
@@ -110,6 +114,40 @@ bool CompilerEngine::compileCode(const QString &pCode)
 
     reset();
 
+    // Determine our target triple
+    // Note: normally, we would call llvm::sys::getProcessTriple(), but this
+    //       returns the information about the system on which LLVM was built.
+    //       In most cases it is fine, but on OS X it may be a problem. Indeed,
+    //       with OS X 10.9, Apple decided to extend the C standard by adding
+    //       some functions (e.g. __exp10()). So, if the given code needs one of
+    //       those functions, then OpenCOR will crash if run on an 'old' version
+    //       of OS X. So, to avoid this issue, we set the target triple
+    //       ourselves, based on the system on which OpenCOR is being used...
+
+    std::string targetTriple;
+
+#if defined(Q_OS_WIN)
+    targetTriple = (sizeof(void *) == 4)?"i686-pc-windows-msvc-elf":"x86_64-pc-windows-msvc-elf";
+    // Note: MCJIT currently works only through the ELF object format, hence we
+    //       are appending "-elf"...
+    //---GRY--- WE WERE ORIGINALLY TRYING TO USE i686-pc-win32-elf AND
+    //          x86_64-pc-win32-elf FOR WIN32 AND WIN64, RESPECTIVELY, BUT
+    //          THOUGH IT WORKS FINE ON WIN64, IT DOESN'T ON WIN32. INDEED, ON
+    //          THAT PLATFORM, WE GET THE SAME PROBLEM AS THE ONE REPORTED IN
+    //          ISSUE #583 (SEE https://github.com/opencor/opencor/issues/583).
+    //          NOW, THINGS MIGHT BE DIFFERENT ONCE LLVM 3.6.1 IS OUT, SO WE
+    //          MIGHT WANT TO REVISIT THE SITUATION THEN. UNTIL THEN, WE USE
+    //          i686-pc-windows-msvc-elf AND x86_64-pc-windows-msvc-elf SINCE
+    //          WE KNOW THEM TO WORK FINE (THANKS TO THE LLVM PATCH USED TO FIX
+    //          ISSUE #583)...
+#elif defined(Q_OS_LINUX)
+    targetTriple = (sizeof(void *) == 4)?"i686-pc-linux-gnu":"x86_64-pc-linux-gnu";
+#elif defined(Q_OS_MAC)
+    targetTriple = "x86_64-apple-darwin"+std::to_string(QSysInfo::MacintoshVersion+2);
+#else
+    #error Unsupported platform
+#endif
+
     // Get a driver to compile our code
 
 #ifdef QT_DEBUG
@@ -122,13 +160,6 @@ bool CompilerEngine::compileCode(const QString &pCode)
     clang::DiagnosticsEngine diagnosticsEngine(llvm::IntrusiveRefCntPtr<clang::DiagnosticIDs>(new clang::DiagnosticIDs()),
                                                &*diagnosticOptions,
                                                new clang::TextDiagnosticPrinter(outputStream, &*diagnosticOptions));
-    std::string targetTriple = llvm::sys::getProcessTriple();
-
-#ifdef Q_OS_WIN
-    // For now, on Windows, MCJIT only works through the ELF object format
-
-    targetTriple += "-elf";
-#endif
 
     clang::driver::Driver driver("clang", targetTriple, diagnosticsEngine);
 
