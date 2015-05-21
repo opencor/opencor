@@ -66,7 +66,7 @@ int git_annotated_commit_from_ref(
 
 	if ((error = git_reference_resolve(&resolved, ref)) < 0)
 		return error;
-	
+
 	error = annotated_commit_init(out, repo, git_reference_target(resolved),
 		git_reference_name(ref), NULL);
 

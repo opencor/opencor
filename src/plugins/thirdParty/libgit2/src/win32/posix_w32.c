@@ -656,7 +656,7 @@ int p_rename(const char *from, const char *to)
 			rename_succeeded = 1;
 			break;
 		}
-		
+
 		error = GetLastError();
 		if (error == ERROR_SHARING_VIOLATION || error == ERROR_ACCESS_DENIED) {
 			Sleep(5);
@@ -664,7 +664,7 @@ int p_rename(const char *from, const char *to)
 		} else
 			break;
 	}
-	
+
 	return rename_succeeded ? 0 : -1;
 }
 

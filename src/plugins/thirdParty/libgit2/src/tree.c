@@ -870,7 +870,7 @@ int git_tree_entry_bypath(
 			return GIT_ENOTFOUND;
 		}
 
-		/* If there's only a slash left in the path, we 
+		/* If there's only a slash left in the path, we
 		 * return the current entry; otherwise, we keep
 		 * walking down the path */
 		if (path[filename_len + 1] != '\0')

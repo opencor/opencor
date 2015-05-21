@@ -2100,7 +2100,7 @@ static int write_merge_msg(
 	assert(repo && heads);
 
 	entries = git__calloc(heads_len, sizeof(struct merge_msg_entry));
-	GITERR_CHECK_ALLOC(entries); 
+	GITERR_CHECK_ALLOC(entries);
 
 	if (git_vector_init(&matching, heads_len, NULL) < 0) {
 		git__free(entries);
@@ -2154,7 +2154,7 @@ static int write_merge_msg(
 
 	if (matching.length)
 		sep =',';
-	
+
 	if ((error = merge_msg_entries(&matching, entries, heads_len, msg_entry_is_tag)) < 0 ||
 		(error = merge_msg_write_tags(&file, &matching, sep)) < 0)
 		goto cleanup;

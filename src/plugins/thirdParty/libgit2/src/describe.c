@@ -390,7 +390,7 @@ static int find_unique_abbrev_size(
 
 	/* If we didn't find any shorter prefix, we have to do the whole thing */
 	*out = GIT_OID_HEXSZ;
-	
+
 	return 0;
 }
 
@@ -561,14 +561,14 @@ static int describe(
 			goto cleanup;
 		}
 		if (unannotated_cnt) {
-			error = describe_not_found(git_commit_id(commit), 
+			error = describe_not_found(git_commit_id(commit),
 				"Cannot describe - "
 				"No annotated tags can describe '%s'."
 			    "However, there were unannotated tags.");
 			goto cleanup;
 		}
 		else {
-			error = describe_not_found(git_commit_id(commit), 
+			error = describe_not_found(git_commit_id(commit),
 				"Cannot describe - "
 				"No tags can describe '%s'.");
 			goto cleanup;

@@ -463,11 +463,11 @@ static int parse_unauthorized_response(
 	*allowed_types = 0;
 	*auth_mechanism = 0;
 
-	/* WinHttpQueryHeaders() must be called before WinHttpQueryAuthSchemes(). 
-	 * We can assume this was already done, since we know we are unauthorized. 
+	/* WinHttpQueryHeaders() must be called before WinHttpQueryAuthSchemes().
+	 * We can assume this was already done, since we know we are unauthorized.
 	 */
 	if (!WinHttpQueryAuthSchemes(request, &supported, &first, &target)) {
-		giterr_set(GITERR_OS, "Failed to parse supported auth schemes"); 
+		giterr_set(GITERR_OS, "Failed to parse supported auth schemes");
 		return -1;
 	}
 
@@ -594,7 +594,7 @@ static int winhttp_connect(
 		goto on_error;
 	}
 
-	
+
 	/* Establish connection */
 	t->connection = WinHttpConnect(
 		t->session,
@@ -669,7 +669,7 @@ static int send_request(winhttp_stream *s, size_t len, int ignore_length)
 		return 0;
 
 	ignore_flags = no_check_cert_flags;
-	
+
 	if (!WinHttpSetOption(s->request, WINHTTP_OPTION_SECURITY_FLAGS, &ignore_flags, sizeof(ignore_flags))) {
 		giterr_set(GITERR_OS, "failed to set security options");
 		return -1;

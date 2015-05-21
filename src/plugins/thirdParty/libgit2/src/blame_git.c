@@ -242,7 +242,7 @@ static void split_blame(git_blame *blame, git_blame__entry *split, git_blame__en
 	}
 }
 
-/* 
+/*
  * After splitting the blame, the origins used by the on-stack blame_entry
  * should lose one refcnt each.
  */
