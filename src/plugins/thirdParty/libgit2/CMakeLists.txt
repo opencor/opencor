@@ -44,12 +44,74 @@ MACRO(RETRIEVE_LIBGIT2_SETTINGS)
     ENDIF()
 ENDMACRO()
 
+# Determine to which dependencies we must have access
+
+SET(DEPENDENCIES_INCLUDE_DIRS
+    deps/http-parser
+    deps/zlib
+)
+
+IF(WIN32)
+    LIST(APPEND DEPENDENCIES_INCLUDE_DIRS
+        deps/regex
+    )
+ENDIF()
+
 # Use our pre-built version unless instructed otherwise
 
 IF(USE_PREBUILT_LIBGIT2_PLUGIN)
     # Retrieve the plugin's binary file(s)
 
-    MESSAGE(FATAL_ERROR "Binaries do not yet exist for libgit2...")
+    STRING(REPLACE "${${CMAKE_PROJECT_NAME}_SOURCE_DIR}/" "" RELATIVE_PROJECT_SOURCE_DIR "${PROJECT_SOURCE_DIR}/bin/${DISTRIB_BINARY_DIR}")
+
+    IF(WIN32)
+        IF(${ARCHITECTURE} EQUAL 32)
+            IF(RELEASE_MODE)
+                RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} libgit2.dll c71fc7862f34f0d98e44f952c854f847525bb926)
+                RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} libgit2.lib dd6e280e256162139a8454fc807653d3a7f4a9d0)
+            ELSE()
+                RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} libgit2.dll 797a9038c8c556dcd5ecbfbbd72493637cca0f3d)
+                RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} libgit2.lib 48cee789ce7ecab5b3baf8c7fddd3ee2182ebab5)
+            ENDIF()
+        ELSE()
+            IF(RELEASE_MODE)
+                RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} libgit2.dll 0a135237d0d12bb3adcdd4c689d0417bedd84d08)
+                RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} libgit2.lib 580825915a4e7533319aeefd2d9cb1d3cb2db27a)
+            ELSE()
+                RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} libgit2.dll 5e9a7014f3e909e2c5fa74f3826ffc32ee81f937)
+                RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} libgit2.lib da6d11798c74081478ccc5e94760bc9d81e1261a)
+            ENDIF()
+        ENDIF()
+    ELSEIF(APPLE)
+        RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} liblibgit2.dylib 61fe7a55c55a9ce9c3fbda7705a66e2741bfd414)
+    ELSE()
+        IF(${ARCHITECTURE} EQUAL 32)
+            RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} liblibgit2.so 7c5f4fe27622dbf9e5cf610c64ee0699ee83d18b)
+        ELSE()
+            RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} liblibgit2.so bf3c709c698b378324a4ed44d5901fe7217844bd)
+        ENDIF()
+    ENDIF()
+
+    # Add the plugin as a binary
+    # Note: in the case of Windows, we must refer to the distribution directory
+    #       as opposed to the plugins directory since we need the .lib file and
+    #       it's only there...
+
+    IF(WIN32)
+        SET(LIBGIT2_PLUGIN_BINARY ${PROJECT_SOURCE_DIR}/bin/${DISTRIB_BINARY_DIR}/${CMAKE_IMPORT_LIBRARY_PREFIX}LIBGIT2${CMAKE_IMPORT_LIBRARY_SUFFIX} PARENT_SCOPE)
+    ELSE()
+        SET(LIBGIT2_PLUGIN_BINARY ${DEST_PLUGINS_DIR}/${CMAKE_SHARED_LIBRARY_PREFIX}LIBGIT2${CMAKE_SHARED_LIBRARY_SUFFIX} PARENT_SCOPE)
+    ENDIF()
+
+    ADD_PLUGIN_BINARY(libgit2
+        INCLUDE_DIRS
+            ${DEPENDENCIES_INCLUDE_DIRS}
+
+            include
+            src
+        QT_LIBRARIES
+            QtCore
+    )
 ELSE()
     # Retrieve some libgit2 settings
 
@@ -63,7 +125,7 @@ ELSE()
         #       do with them...
     ENDIF()
 
-    # Determine which dependencies to build, if any
+    # Determine which dependencies we must build
 
     SET(DEPENDENCIES_SOURCES
         deps/http-parser/http_parser.c
@@ -80,18 +142,9 @@ ELSE()
         deps/zlib/zutil.c
     )
 
-    SET(DEPENDENCIES_INCLUDE_DIRS
-        deps/http-parser
-        deps/zlib
-    )
-
     IF(WIN32)
         LIST(APPEND DEPENDENCIES_SOURCES
             deps/regex/regex.c
-        )
-
-        LIST(APPEND DEPENDENCIES_INCLUDE_DIRS
-            deps/regex
         )
     ENDIF()
 
