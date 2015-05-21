@@ -34,7 +34,12 @@
                 document.write("                    "+version.description+"\n");
                 document.write("                </td>\n");
                 document.write("                <td class=\"date\">\n");
-                document.write("                    ("+version.date+")\n");
+
+                if (version.day && version.month && version.year)
+                    document.write("                    ("+version.day+" "+month(version.month)+" "+version.year+")\n");
+                else
+                    document.write("                    (???)\n");
+
                 document.write("                </td>\n");
                 document.write("            </tr>\n");
                 document.write("        </tbody>\n");

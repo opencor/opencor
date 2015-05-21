@@ -1,5 +1,5 @@
 var jsonData = { "versions": [
-                   { "anchor": "latest", "description": "Latest snapshot", "date": "???",
+                   { "anchor": "latest", "description": "Latest snapshot", "day": 0, "month": 0, "year": 0,
                      "categories": [
                        { "name": "Simulation",
                          "entries": [
@@ -17,7 +17,7 @@ var jsonData = { "versions": [
                        }
                      ]
                    },
-                   { "anchor": "0.4.1", "description": "Version 0.4.1", "date": "20 May 2015",
+                   { "anchor": "0.4.1", "description": "Version 0.4.1", "day": 20, "month": 5, "year": 2015,
                      "categories": [
                        { "name": "Editing",
                          "entries": [
@@ -44,7 +44,7 @@ var jsonData = { "versions": [
                        }
                      ]
                    },
-                   { "anchor": "0.4", "description": "Version 0.4", "date": "29 April 2015",
+                   { "anchor": "0.4", "description": "Version 0.4", "day": 29, "month": 4, "year": 2015,
                      "categories": [
                        { "name": "General",
                          "entries": [
@@ -146,7 +146,7 @@ var jsonData = { "versions": [
                        }
                      ]
                    },
-                   { "anchor": "0.3", "description": "Version 0.3", "date": "19 August 2014",
+                   { "anchor": "0.3", "description": "Version 0.3", "day": 19, "month": 8, "year": 2014,
                      "categories": [
                        { "name": "General",
                          "entries": [
@@ -252,7 +252,7 @@ var jsonData = { "versions": [
                        }
                      ]
                    },
-                   { "anchor": "0.2", "description": "Version 0.2", "date": "19 November 2013",
+                   { "anchor": "0.2", "description": "Version 0.2", "day": 19, "month": 11, "year": 2013,
                      "categories": [
                        { "name": "General",
                          "entries": [
@@ -311,7 +311,7 @@ var jsonData = { "versions": [
                        }
                      ]
                    },
-                   { "anchor": "0.1.2", "description": "Version 0.1.2", "date": "29 May 2013",
+                   { "anchor": "0.1.2", "description": "Version 0.1.2", "day": 29, "month": 5, "year": 2013,
                      "categories": [
                        { "name": "Simulation",
                          "entries": [
@@ -324,7 +324,7 @@ var jsonData = { "versions": [
                        }
                      ]
                    },
-                   { "anchor": "0.1.1", "description": "Version 0.1.1", "date": "17 April 2013",
+                   { "anchor": "0.1.1", "description": "Version 0.1.1", "day": 17, "month": 4, "year": 2013,
                      "categories": [
                        { "name": "General",
                          "entries": [
@@ -343,7 +343,7 @@ var jsonData = { "versions": [
                        }
                      ]
                    },
-                   { "anchor": "0.1", "description": "Version 0.1", "date": "1 April 2013",
+                   { "anchor": "0.1", "description": "Version 0.1", "day": 1, "month": 4, "year": 2013,
                      "categories": [
                        { "name": "Original version of OpenCOR" }
                      ]
