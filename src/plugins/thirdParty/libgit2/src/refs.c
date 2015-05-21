@@ -438,7 +438,7 @@ int git_reference_create_matching(
 {
 	int error;
 	git_signature *who = NULL;
-	
+
 	assert(id);
 
 	if (!signature) {

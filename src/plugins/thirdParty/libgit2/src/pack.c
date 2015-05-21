@@ -609,7 +609,7 @@ static int pack_dependency_chain(git_dependency_chain *chain_out,
 		elem_pos++;
 	}
 
-	
+
 	*stack_sz = elem_pos + 1;
 	*chain_out = chain;
 	return error;

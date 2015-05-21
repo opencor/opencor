@@ -222,7 +222,7 @@ int git_win32_path_from_utf8(git_win32_path out, const char *src)
 			return -1;
 		}
 
-		/* Skip the drive letter specification ("C:") */	
+		/* Skip the drive letter specification ("C:") */
 		if (git__utf8_to_16(dest + 2, MAX_PATH - 2, src) < 0)
 			return -1;
 	}

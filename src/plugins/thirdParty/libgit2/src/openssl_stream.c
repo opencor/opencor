@@ -294,7 +294,7 @@ ssize_t openssl_write(git_stream *stream, const char *data, size_t len, int flag
 			return ssl_set_error(st->ssl, ret);
 
 		off += ret;
-	}	
+	}
 
 	return off;
 }

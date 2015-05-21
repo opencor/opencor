@@ -20,7 +20,7 @@ int git_hash_buf(git_oid *out, const void *data, size_t len)
 		error = git_hash_final(out, &ctx);
 
 	git_hash_ctx_cleanup(&ctx);
-	
+
 	return error;
 }
 

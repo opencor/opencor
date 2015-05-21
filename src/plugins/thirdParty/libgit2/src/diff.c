@@ -92,7 +92,7 @@ static int diff_delta__from_one(
 	if (status == GIT_DELTA_UNTRACKED &&
 		DIFF_FLAG_ISNT_SET(diff, GIT_DIFF_INCLUDE_UNTRACKED))
 		return 0;
-	
+
 	if (status == GIT_DELTA_UNREADABLE &&
 		DIFF_FLAG_ISNT_SET(diff, GIT_DIFF_INCLUDE_UNREADABLE))
 		return 0;

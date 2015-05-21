@@ -1598,7 +1598,7 @@ static int refdb_reflog_fs__read(git_reflog **out, git_refdb_backend *_backend, 
 	if ((error == GIT_ENOTFOUND) &&
 		((error = create_new_reflog_file(git_buf_cstr(&log_path))) < 0))
 		goto cleanup;
- 
+
 	if ((error = reflog_parse(log,
 		git_buf_cstr(&log_file), git_buf_len(&log_file))) < 0)
 		goto cleanup;
@@ -1845,7 +1845,7 @@ static int refdb_reflog_fs__rename(git_refdb_backend *_backend, const char *old_
 		goto cleanup;
 	}
 
-	if (git_path_isdir(git_buf_cstr(&new_path)) && 
+	if (git_path_isdir(git_buf_cstr(&new_path)) &&
 		(git_futils_rmdir_r(git_buf_cstr(&new_path), NULL, GIT_RMDIR_SKIP_NONEMPTY) < 0)) {
 		error = -1;
 		goto cleanup;

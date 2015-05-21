@@ -97,7 +97,7 @@ int git_transaction_lock_ref(git_transaction *tx, const char *refname)
 		return error;
 
 	git_strmap_insert(tx->locks, node->name, node, error);
-	if (error < 0) 
+	if (error < 0)
 		goto cleanup;
 
 	return 0;

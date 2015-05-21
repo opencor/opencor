@@ -38,7 +38,7 @@ MAX(size_t a, size_t b)
 	return (a > b ? a : b);
 }
 #endif
-
+
 /* Functions for string operation.  */
 
 /* This function allocate the buffers.  It is necessary to call
@@ -963,7 +963,7 @@ re_string_context_at (const re_string_t *input, int idx, int eflags)
       return IS_NEWLINE (c) && input->newline_anchor ? CONTEXT_NEWLINE : 0;
     }
 }
-
+
 /* Functions for set operation.  */
 
 static reg_errcode_t
@@ -1413,7 +1413,7 @@ re_node_set_remove_at (re_node_set *set, int idx)
   for (; idx < set->nelem; idx++)
     set->elems[idx] = set->elems[idx + 1];
 }
-
+
 
 /* Add the token TOKEN to dfa->nodes, and return the index of the token.
    Or return -1, if an error will be occured.  */
