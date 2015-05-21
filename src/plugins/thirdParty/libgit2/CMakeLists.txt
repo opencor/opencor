@@ -17,9 +17,11 @@ MACRO(RETRIEVE_LIBGIT2_SETTINGS)
     ELSEIF(APPLE)
         SET(LIBGIT2_DEFINITIONS
             GIT_COMMON_CRYPTO
+            GIT_SSL
         )
     ELSE()
         SET(LIBGIT2_DEFINITIONS
+            GIT_SSL
             OPENSSL_SHA1
         )
     ENDIF()
@@ -43,6 +45,12 @@ MACRO(RETRIEVE_LIBGIT2_SETTINGS)
         )
     ENDIF()
 ENDMACRO()
+
+# Make sure that OpenSSL is available on Linux and OS X
+
+IF(NOT WIN32)
+    FIND_PACKAGE(OpenSSL REQUIRED)
+ENDIF()
 
 # Determine to which dependencies we must have access
 
@@ -117,12 +125,16 @@ ELSE()
 
     RETRIEVE_LIBGIT2_SETTINGS()
 
-    # Ignore some warnings on Windows
+    # Ignore some warnings on Windows and OS X
 
     IF(WIN32)
         SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /wd4133 /wd4244 /wd4267")
         # Note: on Windows, some warnings get generated, but we have nothing to
         #       do with them...
+    ELSEIF(APPLE)
+        SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wno-deprecated-declarations")
+        # Note: on OS X, some warnings get generated, but we have nothing to do
+        #       with them...
     ENDIF()
 
     # Determine which dependencies we must build
@@ -325,5 +337,7 @@ ELSE()
             Core
         QT_LIBRARIES
             QtCore
+        EXTERNAL_BINARIES
+            ${OPENSSL_LIBRARIES}
     )
 ENDIF()
