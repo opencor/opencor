@@ -120,7 +120,7 @@
         <string>Find Previous</string>
        </property>
        <property name="icon">
-        <iconset resource="../../../miscellaneous/Core/res/Core.qrc">
+        <iconset resource="../res/CellMLAnnotationView.qrc">
          <normaloff>:/oxygen/actions/go-previous.png</normaloff>:/oxygen/actions/go-previous.png</iconset>
        </property>
       </widget>
@@ -131,7 +131,7 @@
         <string>Find Next</string>
        </property>
        <property name="icon">
-        <iconset resource="../../../miscellaneous/Core/res/Core.qrc">
+        <iconset resource="../res/CellMLAnnotationView.qrc">
          <normaloff>:/oxygen/actions/go-next.png</normaloff>:/oxygen/actions/go-next.png</iconset>
        </property>
       </widget>
@@ -157,7 +157,7 @@
   <tabstop>replaceAllButton</tabstop>
  </tabstops>
  <resources>
-  <include location="../../../miscellaneous/Core/res/Core.qrc"/>
+  <include location="../res/CellMLAnnotationView.qrc"/>
  </resources>
  <connections/>
 </ui>
