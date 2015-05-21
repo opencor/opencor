@@ -35,6 +35,7 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include <QClipboard>
+#include <QDir>
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QMenu>
@@ -43,6 +44,10 @@ specific language governing permissions and limitations under the License.
 #include <QNetworkRequest>
 #include <QPoint>
 #include <QRegularExpression>
+
+//==============================================================================
+
+#include "git2.h"
 
 //==============================================================================
 
@@ -263,6 +268,36 @@ void CellmlModelRepositoryWindowWindow::on_refreshButton_clicked()
     networkRequest.setUrl(QUrl("https://models.physiomeproject.org/exposure"));
 
     mNetworkAccessManager->get(networkRequest);
+}
+
+//==============================================================================
+
+void CellmlModelRepositoryWindowWindow::on_gitButton_clicked()
+{
+    // Simple git clone test...
+
+    git_libgit2_init();
+
+    git_repository *gitRepository = 0;
+
+    int res = git_clone(&gitRepository,
+                        "https://models.physiomeproject.org/workspace/noble_1962",
+                        qPrintable(QDir::homePath()+QDir::separator()+"Desktop/GitCloneTest"),
+                        0);
+
+    if (res) {
+        const git_error *gitError = giterr_last();
+
+        if (gitError)
+            qDebug("Error %d: %s.", gitError->klass, gitError->message);
+        else
+            qDebug("Error %d: no detailed information.", res);
+    } else {
+        if (gitRepository)
+            git_repository_free(gitRepository);
+    }
+
+    git_libgit2_shutdown();
 }
 
 //==============================================================================

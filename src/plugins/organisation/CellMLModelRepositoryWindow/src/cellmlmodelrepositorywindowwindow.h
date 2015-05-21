@@ -87,6 +87,7 @@ private Q_SLOTS:
     void on_filterValue_textChanged(const QString &text);
     void on_actionCopy_triggered();
     void on_refreshButton_clicked();
+    void on_gitButton_clicked();
 
     void finished(QNetworkReply *pNetworkReply);
     void sslErrors(QNetworkReply *pNetworkReply,

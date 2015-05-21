@@ -27,6 +27,10 @@
         <source>Copy</source>
         <translation>Copier</translation>
     </message>
+    <message>
+        <source>Git</source>
+        <translation></translation>
+    </message>
 </context>
 <context>
     <name>OpenCOR::CellMLModelRepositoryWindow::CellMLModelRepositoryWindowPlugin</name>
