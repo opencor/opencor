@@ -276,14 +276,17 @@ void CellmlModelRepositoryWindowWindow::on_gitButton_clicked()
 {
     // Simple git clone test...
 
+    QString gitCloneTestDir = QDir::homePath()+QDir::separator()+"Desktop/GitCloneTest";
+
+    QDir(gitCloneTestDir).removeRecursively();
+
     git_libgit2_init();
 
     git_repository *gitRepository = 0;
 
     int res = git_clone(&gitRepository,
                         "https://models.physiomeproject.org/workspace/noble_1962",
-                        qPrintable(QDir::homePath()+QDir::separator()+"Desktop/GitCloneTest"),
-                        0);
+                        qPrintable(gitCloneTestDir), 0);
 
     if (res) {
         const git_error *gitError = giterr_last();
