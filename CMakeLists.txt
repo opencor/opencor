@@ -250,73 +250,73 @@ ENDIF()
 SET(PLUGINS
     # Plugins that have no dependencies
 
-    api/CellMLAPI
+#    api/CellMLAPI
 
-    dataStore/CoreDataStore
+#    dataStore/CoreDataStore
 
-    miscellaneous/Core
+#    miscellaneous/Core
 
-    solver/CoreSolver
+#    solver/CoreSolver
 
-    thirdParty/libgit2
-    thirdParty/LLVM
-    thirdParty/QScintilla
-    thirdParty/Qwt
-    thirdParty/SUNDIALS
+#    thirdParty/libgit2
+#    thirdParty/LLVM
+#    thirdParty/QScintilla
+#    thirdParty/Qwt
+#    thirdParty/SUNDIALS
 
     # Plugins that build on top of some third-party libraries
 
-    miscellaneous/Compiler
+#    miscellaneous/Compiler
 
     # Plugins that provide support for some third-party libraries
 
-    support/CellMLSupport
-    support/QScintillaSupport
+#    support/CellMLSupport
+#    support/QScintillaSupport
 
     # Plugins that extend some libraries (incl. third-party ones)
 
-    widget/Editor
-    widget/EditorList
-    widget/Viewer
+#    widget/Editor
+#    widget/EditorList
+#    widget/Viewer
 
     # Plugins that provide some generic features
 
-    editing/CoreEditing
+#    editing/CoreEditing
 
     # Plugins that have dependencies on others
 
-    editing/CoreCellMLEditing
+#    editing/CoreCellMLEditing
 
     # Selectable plugins
 
-    dataStore/CSVDataStore
+#    dataStore/CSVDataStore
 
-    editing/CellMLAnnotationView
-    editing/CellMLTextView
-    editing/RawCellMLView
-    editing/RawView
+#    editing/CellMLAnnotationView
+#    editing/CellMLTextView
+#    editing/RawCellMLView
+#    editing/RawView
 
-    miscellaneous/HelpWindow
+#    miscellaneous/HelpWindow
 
-    organisation/CellMLModelRepositoryWindow
-    organisation/FileBrowserWindow
-    organisation/FileOrganiserWindow
+#    organisation/CellMLModelRepositoryWindow
+#    organisation/FileBrowserWindow
+#    organisation/FileOrganiserWindow
 
-    simulation/SingleCellView
+#    simulation/SingleCellView
 
-    solver/CVODESolver
-    solver/ForwardEulerSolver
-    solver/FourthOrderRungeKuttaSolver
-    solver/HeunSolver
-    solver/IDASolver
-    solver/KINSOLSolver
-    solver/SecondOrderRungeKuttaSolver
+#    solver/CVODESolver
+#    solver/ForwardEulerSolver
+#    solver/FourthOrderRungeKuttaSolver
+#    solver/HeunSolver
+#    solver/IDASolver
+#    solver/KINSOLSolver
+#    solver/SecondOrderRungeKuttaSolver
 
-    tool/CellMLTools
+#    tool/CellMLTools
 
     # Sample plugins
 
-    ${SAMPLE_PLUGINS}
+#    ${SAMPLE_PLUGINS}
 )
 
 FOREACH(PLUGIN ${PLUGINS})
