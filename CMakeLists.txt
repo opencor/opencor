@@ -258,7 +258,7 @@ SET(PLUGINS
 
 #    solver/CoreSolver
 
-#    thirdParty/libgit2
+    thirdParty/libgit2
 #    thirdParty/LLVM
 #    thirdParty/QScintilla
 #    thirdParty/Qwt
