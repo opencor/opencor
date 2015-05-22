@@ -1,7 +1,3 @@
-PROJECT(OpenCOR)
-
-# Minimum required version of CMake
-
 CMAKE_MINIMUM_REQUIRED(VERSION 3.0)
 
 # Policies that we want to use
@@ -9,6 +5,10 @@ CMAKE_MINIMUM_REQUIRED(VERSION 3.0)
 IF(POLICY CMP0054)
     CMAKE_POLICY(SET CMP0054 NEW)
 ENDIF()
+
+# Project definition
+
+PROJECT(OpenCOR)
 
 # Some in-house CMake functions/macros
 
