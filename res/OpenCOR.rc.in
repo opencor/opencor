@@ -1,0 +1,23 @@
+#include <Windows.h>
+
+IDI_ICON1 ICON DISCARDABLE "${CMAKE_SOURCE_DIR}/res/OpenCOR.ico"
+
+VS_VERSION_INFO VERSIONINFO
+FILEVERSION ${FILE_VERSION}
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "040904E4"
+        BEGIN
+            VALUE "FileDescription", "${PROJECT_DESCRIPTION}"
+            VALUE "ProductName", "${PROJECT_NAME}"
+            VALUE "ProductVersion", "${PRODUCT_VERSION}"
+            VALUE "LegalCopyright", "Copyright 2011-${YEAR}"
+            VALUE "OriginalFilename", "${PROJECT_NAME}.exe"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x809, 1200
+    END
+END
