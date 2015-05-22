@@ -172,7 +172,8 @@ int main(int pArgC, char *pArgV[])
 
     OpenCOR::initApplication(guiApp, &appDate);
 
-    // Check whether we want to check for new versions at startup
+    // Check whether we want to check for new versions at startup and, if so,
+    // whether a new version of OpenCOR is available
 
     QSettings settings(OpenCOR::SettingsOrganization, OpenCOR::SettingsApplication);
 
@@ -181,11 +182,7 @@ int main(int pArgC, char *pArgV[])
         bool checkForUpdatesAtStartup = settings.value(OpenCOR::SettingsCheckForUpdatesAtStartup, true).toBool();
         bool includeSnapshots = settings.value(OpenCOR::SettingsIncludeSnapshots, false).toBool();
     settings.endGroup();
-#endif
 
-    // Check whether a new version of OpenCOR is available
-
-#ifndef QT_DEBUG
     if (checkForUpdatesAtStartup) {
         OpenCOR::CheckForUpdatesEngine *checkForUpdatesEngine = new OpenCOR::CheckForUpdatesEngine(appDate);
 
