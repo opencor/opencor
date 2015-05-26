@@ -184,6 +184,11 @@ void SingleCellViewInformationParametersWidget::initialize(const QString &pFileN
         mContextMenus.insert(pFileName, contextMenu);
     }
 
+    // Set our property editor's columns' width
+
+    for (int i = 0, iMax = mColumnWidths.count(); i < iMax; ++i)
+        mPropertyEditor->setColumnWidth(i, mColumnWidths[i]);
+
     // Set our retrieved property editor as our current widget
 
     setCurrentWidget(mPropertyEditor);
@@ -642,28 +647,9 @@ void SingleCellViewInformationParametersWidget::propertyEditorSectionResized(con
 {
     Q_UNUSED(pOldSize);
 
-    // Prevent all our property editors from responding to an updating of their
-    // columns' width
-
-    foreach (Core::PropertyEditorWidget *propertyEditor, mPropertyEditors)
-        disconnect(propertyEditor->header(), SIGNAL(sectionResized(int, int, int)),
-                   this, SLOT(propertyEditorSectionResized(const int &, const int &, const int &)));
-
-    // Update the column width of all our property editors
-
-    foreach (Core::PropertyEditorWidget *propertyEditor, mPropertyEditors)
-        propertyEditor->header()->resizeSection(pLogicalIndex, pNewSize);
-
     // Keep track of the new column width
 
     mColumnWidths[pLogicalIndex] = pNewSize;
-
-    // Re-allow all our property editors to respond to an updating of their
-    // columns' width
-
-    foreach (Core::PropertyEditorWidget *propertyEditor, mPropertyEditors)
-        connect(propertyEditor->header(), SIGNAL(sectionResized(int, int, int)),
-                this, SLOT(propertyEditorSectionResized(const int &, const int &, const int &)));
 }
 
 //==============================================================================
