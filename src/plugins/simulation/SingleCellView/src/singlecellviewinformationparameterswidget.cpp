@@ -34,6 +34,7 @@ specific language governing permissions and limitations under the License.
 #include <QHeaderView>
 #include <QMenu>
 #include <QMetaType>
+#include <QScrollBar>
 #include <QSettings>
 
 //==============================================================================
@@ -53,7 +54,8 @@ SingleCellViewInformationParametersWidget::SingleCellViewInformationParametersWi
     mParameterActions(QMap<QAction *, CellMLSupport::CellmlFileRuntimeParameter *>()),
     mColumnWidths(QIntList()),
     mFileName(QString()),
-    mSimulation(0)
+    mSimulation(0),
+    mHorizontalScrollBarValue(0)
 {
     // Determine the default width of each column of our property editors
 
@@ -154,6 +156,11 @@ void SingleCellViewInformationParametersWidget::initialize(const QString &pFileN
         connect(mPropertyEditor, SIGNAL(customContextMenuRequested(const QPoint &)),
                 this, SLOT(propertyEditorContextMenu(const QPoint &)));
 
+        // Keep track of changes to the horizontal bar's value
+
+        connect(mPropertyEditor->horizontalScrollBar(), SIGNAL(valueChanged(int)),
+                this, SLOT(propertyEditorHorizontalScrollBarValueChanged(const int &)));
+
         // Keep track of changes to columns' width
 
         connect(mPropertyEditor->header(), SIGNAL(sectionResized(int, int, int)),
@@ -178,6 +185,10 @@ void SingleCellViewInformationParametersWidget::initialize(const QString &pFileN
         mPropertyEditors.insert(pFileName, mPropertyEditor);
         mContextMenus.insert(pFileName, contextMenu);
     }
+
+    // Set the value of the property editor's horizontal scroll bar
+
+    mPropertyEditor->horizontalScrollBar()->setValue(mHorizontalScrollBarValue);
 
     // Set our property editor's columns' width
 
@@ -632,6 +643,15 @@ void SingleCellViewInformationParametersWidget::propertyEditorContextMenu(const 
     // Generate and show the context menu
 
     mContextMenus.value(mFileName)->exec(QCursor::pos());
+}
+
+//==============================================================================
+
+void SingleCellViewInformationParametersWidget::propertyEditorHorizontalScrollBarValueChanged(const int &pValue)
+{
+    // Keep track of the property editor's horizontal scroll bar value
+
+    mHorizontalScrollBarValue = pValue;
 }
 
 //==============================================================================
