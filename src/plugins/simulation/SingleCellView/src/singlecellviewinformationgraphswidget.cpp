@@ -314,7 +314,6 @@ void SingleCellViewInformationGraphsWidget::initialize(SingleCellViewGraphPanelW
         mGraphPanels.insert(mPropertyEditor, pGraphPanel);
         mPropertyEditors.insert(pGraphPanel, mPropertyEditor);
     } else {
-
         // Set the value of the property editor's horizontal scroll bar
 
         mPropertyEditor->horizontalScrollBar()->setValue(mHorizontalScrollBarValue);
