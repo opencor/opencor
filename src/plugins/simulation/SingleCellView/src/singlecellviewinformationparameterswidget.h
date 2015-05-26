@@ -102,6 +102,8 @@ private:
 
     SingleCellViewSimulation *mSimulation;
 
+    int mHorizontalScrollBarValue;
+
     void populateModel(CellMLSupport::CellmlFileRuntime *pRuntime);
     void populateContextMenu(QMenu *pContextMenu,
                              CellMLSupport::CellmlFileRuntime *pRuntime);
@@ -119,6 +121,9 @@ public Q_SLOTS:
 
 private Q_SLOTS:
     void propertyEditorContextMenu(const QPoint &pPosition) const;
+
+    void propertyEditorHorizontalScrollBarValueChanged(const int &pValue);
+
     void propertyEditorSectionResized(const int &pLogicalIndex,
                                       const int &pOldSize, const int &pNewSize);
 
