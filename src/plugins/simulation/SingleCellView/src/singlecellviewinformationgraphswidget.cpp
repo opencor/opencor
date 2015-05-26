@@ -176,10 +176,11 @@ void SingleCellViewInformationGraphsWidget::initialize(const QString &pFileName,
 
     QMap<Core::Property *, bool> graphsPropertiesSelected = mGraphPropertiesSelected.value(pFileName);
 
-    foreach (Core::Property *graphProperty, mGraphProperties)
+    foreach (Core::Property *graphProperty, mGraphProperties) {
         graphProperty->setChecked(graphsPropertiesSelected.value(graphProperty, true));
         // Note: by default, we want graphs to be selected, hence our use of
         //       true as the default value...
+    }
 }
 
 //==============================================================================
@@ -371,6 +372,7 @@ void SingleCellViewInformationGraphsWidget::addGraph(SingleCellViewGraphPanelPlo
                this, SLOT(graphChanged(Core::Property *)));
 
     mPropertyEditor->addListProperty(graphProperty);
+
     Core::Property *xProperty = mPropertyEditor->addStringProperty(pGraph->parameterX()?pGraph->parameterX()->fullyFormattedName():Core::UnknownValue, graphProperty);
     Core::Property *yProperty = mPropertyEditor->addStringProperty(pGraph->parameterY()?pGraph->parameterY()->fullyFormattedName():Core::UnknownValue, graphProperty);
 
@@ -897,12 +899,13 @@ void SingleCellViewInformationGraphsWidget::updateGraphsInfo(Core::Property *pSe
 
     QList<Core::Property *> graphProperties = QList<Core::Property *>();
 
-    if (pSectionProperty)
+    if (pSectionProperty) {
         graphProperties << pSectionProperty;
-    else
+    } else {
         foreach (Core::Property *property, mPropertyEditor->properties())
             if (property->type() == Core::Property::Section)
                 graphProperties << property;
+    }
 
     // Determine the model list values
 

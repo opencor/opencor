@@ -383,11 +383,12 @@ void SingleCellViewGraphPanelsWidget::updateGraphPanels(SingleCellViewGraphPanel
     for (int i = 0, iMax = count(); i < iMax; ++i) {
         SingleCellViewGraphPanelWidget *graphPanel = qobject_cast<SingleCellViewGraphPanelWidget *>(widget(i));
 
-        if (graphPanel != pGraphPanel)
+        if (graphPanel != pGraphPanel) {
             // We are not dealing with the graph panel that just got activated,
             // so inactivate it
 
             graphPanel->setActive(false);
+        }
     }
 }
 
