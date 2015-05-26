@@ -182,12 +182,12 @@ void SingleCellViewInformationParametersWidget::initialize(const QString &pFileN
 
         mPropertyEditors.insert(pFileName, mPropertyEditor);
         mContextMenus.insert(pFileName, contextMenu);
+    } else {
+        // Set our property editor's columns' width
+
+        for (int i = 0, iMax = mColumnWidths.count(); i < iMax; ++i)
+            mPropertyEditor->setColumnWidth(i, mColumnWidths[i]);
     }
-
-    // Set our property editor's columns' width
-
-    for (int i = 0, iMax = mColumnWidths.count(); i < iMax; ++i)
-        mPropertyEditor->setColumnWidth(i, mColumnWidths[i]);
 
     // Set our retrieved property editor as our current widget
 
