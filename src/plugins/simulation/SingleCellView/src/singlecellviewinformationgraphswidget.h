@@ -127,6 +127,8 @@ private:
 
     bool mCanEmitGraphsUpdatedSignal;
 
+    int mHorizontalScrollBarValue;
+
     void populateContextMenu(QMenu *pContextMenu,
                              CellMLSupport::CellmlFileRuntime *pRuntime);
 
@@ -165,6 +167,9 @@ private Q_SLOTS:
     void on_actionUnselectAllGraphs_triggered();
 
     void propertyEditorContextMenu(const QPoint &pPosition) const;
+
+    void propertyEditorHorizontalScrollBarValueChanged(const int &pValue);
+
     void propertyEditorSectionResized(const int &pLogicalIndex,
                                       const int &pOldSize, const int &pNewSize);
 
