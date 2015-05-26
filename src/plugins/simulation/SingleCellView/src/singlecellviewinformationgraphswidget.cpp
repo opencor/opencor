@@ -272,11 +272,6 @@ void SingleCellViewInformationGraphsWidget::initialize(SingleCellViewGraphPanelW
 
         mPropertyEditor = new Core::PropertyEditorWidget(false, false, this);
 
-        // Initialise our property editor's columns' width
-
-        for (int i = 0, iMax = mColumnWidths.size(); i < iMax; ++i)
-            mPropertyEditor->setColumnWidth(i, mColumnWidths[i]);
-
         // We want our own context menu for our property editor
 
         mPropertyEditor->setContextMenuPolicy(Qt::CustomContextMenu);
@@ -313,16 +308,16 @@ void SingleCellViewInformationGraphsWidget::initialize(SingleCellViewGraphPanelW
 
         mGraphPanels.insert(mPropertyEditor, pGraphPanel);
         mPropertyEditors.insert(pGraphPanel, mPropertyEditor);
-    } else {
-        // Set the value of the property editor's horizontal scroll bar
-
-        mPropertyEditor->horizontalScrollBar()->setValue(mHorizontalScrollBarValue);
-
-        // Set our property editor's columns' width
-
-        for (int i = 0, iMax = mColumnWidths.count(); i < iMax; ++i)
-            mPropertyEditor->setColumnWidth(i, mColumnWidths[i]);
     }
+
+    // Set the value of the property editor's horizontal scroll bar
+
+    mPropertyEditor->horizontalScrollBar()->setValue(mHorizontalScrollBarValue);
+
+    // Set our property editor's columns' width
+
+    for (int i = 0, iMax = mColumnWidths.count(); i < iMax; ++i)
+        mPropertyEditor->setColumnWidth(i, mColumnWidths[i]);
 
     // Set our retrieved property editor as our current widget
 
