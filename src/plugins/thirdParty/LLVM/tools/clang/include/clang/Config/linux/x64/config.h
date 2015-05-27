@@ -27,7 +27,7 @@
 /* #undef CLANG_HAVE_LIBXML */
 
 /* The LLVM product name and version */
-#define BACKEND_PACKAGE_STRING "LLVM 3.6.0"
+#define BACKEND_PACKAGE_STRING "LLVM 3.6.1"
 
 /* Linker version detected at compile time. */
 /* #undef HOST_LINK_VERSION */

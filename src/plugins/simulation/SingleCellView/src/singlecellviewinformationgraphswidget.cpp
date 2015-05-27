@@ -38,6 +38,7 @@ specific language governing permissions and limitations under the License.
 #include <QLabel>
 #include <QMenu>
 #include <QMetaType>
+#include <QScrollBar>
 #include <QSettings>
 
 //==============================================================================
@@ -68,7 +69,8 @@ SingleCellViewInformationGraphsWidget::SingleCellViewInformationGraphsWidget(QWi
     mRuntimes(QMap<QString, CellMLSupport::CellmlFileRuntime *>()),
     mSimulations(QMap<QString, SingleCellViewSimulation *>()),
     mGraphPropertiesSelected(QMap<QString, QMap<Core::Property *, bool>>()),
-    mCanEmitGraphsUpdatedSignal(true)
+    mCanEmitGraphsUpdatedSignal(true),
+    mHorizontalScrollBarValue(0)
 {
     // Set up the GUI
 
@@ -176,10 +178,11 @@ void SingleCellViewInformationGraphsWidget::initialize(const QString &pFileName,
 
     QMap<Core::Property *, bool> graphsPropertiesSelected = mGraphPropertiesSelected.value(pFileName);
 
-    foreach (Core::Property *graphProperty, mGraphProperties)
+    foreach (Core::Property *graphProperty, mGraphProperties) {
         graphProperty->setChecked(graphsPropertiesSelected.value(graphProperty, true));
         // Note: by default, we want graphs to be selected, hence our use of
         //       true as the default value...
+    }
 }
 
 //==============================================================================
@@ -269,17 +272,17 @@ void SingleCellViewInformationGraphsWidget::initialize(SingleCellViewGraphPanelW
 
         mPropertyEditor = new Core::PropertyEditorWidget(false, false, this);
 
-        // Initialise our property editor's columns' width
-
-        for (int i = 0, iMax = mColumnWidths.size(); i < iMax; ++i)
-            mPropertyEditor->setColumnWidth(i, mColumnWidths[i]);
-
         // We want our own context menu for our property editor
 
         mPropertyEditor->setContextMenuPolicy(Qt::CustomContextMenu);
 
         connect(mPropertyEditor, SIGNAL(customContextMenuRequested(const QPoint &)),
                 this, SLOT(propertyEditorContextMenu(const QPoint &)));
+
+        // Keep track of changes to the horizontal bar's value
+
+        connect(mPropertyEditor->horizontalScrollBar(), SIGNAL(valueChanged(int)),
+                this, SLOT(propertyEditorHorizontalScrollBarValueChanged(const int &)));
 
         // Keep track of changes to columns' width
 
@@ -306,6 +309,15 @@ void SingleCellViewInformationGraphsWidget::initialize(SingleCellViewGraphPanelW
         mGraphPanels.insert(mPropertyEditor, pGraphPanel);
         mPropertyEditors.insert(pGraphPanel, mPropertyEditor);
     }
+
+    // Set the value of the property editor's horizontal scroll bar
+
+    mPropertyEditor->horizontalScrollBar()->setValue(mHorizontalScrollBarValue);
+
+    // Set our property editor's columns' width
+
+    for (int i = 0, iMax = mColumnWidths.count(); i < iMax; ++i)
+        mPropertyEditor->setColumnWidth(i, mColumnWidths[i]);
 
     // Set our retrieved property editor as our current widget
 
@@ -371,6 +383,7 @@ void SingleCellViewInformationGraphsWidget::addGraph(SingleCellViewGraphPanelPlo
                this, SLOT(graphChanged(Core::Property *)));
 
     mPropertyEditor->addListProperty(graphProperty);
+
     Core::Property *xProperty = mPropertyEditor->addStringProperty(pGraph->parameterX()?pGraph->parameterX()->fullyFormattedName():Core::UnknownValue, graphProperty);
     Core::Property *yProperty = mPropertyEditor->addStringProperty(pGraph->parameterY()?pGraph->parameterY()->fullyFormattedName():Core::UnknownValue, graphProperty);
 
@@ -463,7 +476,7 @@ void SingleCellViewInformationGraphsWidget::on_actionRemoveAllGraphs_triggered()
 void SingleCellViewInformationGraphsWidget::selectAllGraphs(const bool &pSelect)
 {
     // (Un)select all the graphs
-    // Note: normall, we would only update the checked state of our graph
+    // Note: normally, we would only update the checked state of our graph
     //       properties, which would in turn update the selected state of our
     //       graphs and let people know that they have been updated. Now, the
     //       problem with this is that every single graph is going to be shown/
@@ -569,34 +582,24 @@ void SingleCellViewInformationGraphsWidget::propertyEditorContextMenu(const QPoi
 
 //==============================================================================
 
+void SingleCellViewInformationGraphsWidget::propertyEditorHorizontalScrollBarValueChanged(const int &pValue)
+{
+    // Keep track of the property editor's horizontal scroll bar value
+
+    mHorizontalScrollBarValue = pValue;
+}
+
+//==============================================================================
+
 void SingleCellViewInformationGraphsWidget::propertyEditorSectionResized(const int &pLogicalIndex,
-                                                                             const int &pOldSize,
-                                                                             const int &pNewSize)
+                                                                         const int &pOldSize,
+                                                                         const int &pNewSize)
 {
     Q_UNUSED(pOldSize);
-
-    // Prevent all our property editors from responding to an updating of their
-    // columns' width
-
-    foreach (Core::PropertyEditorWidget *propertyEditor, mPropertyEditors)
-        disconnect(propertyEditor->header(), SIGNAL(sectionResized(int, int, int)),
-                   this, SLOT(propertyEditorSectionResized(const int &, const int &, const int &)));
-
-    // Update the column width of all our property editors
-
-    foreach (Core::PropertyEditorWidget *propertyEditor, mPropertyEditors)
-        propertyEditor->header()->resizeSection(pLogicalIndex, pNewSize);
 
     // Keep track of the new column width
 
     mColumnWidths[pLogicalIndex] = pNewSize;
-
-    // Re-allow all our property editors to respond to an updating of their
-    // columns' width
-
-    foreach (Core::PropertyEditorWidget *propertyEditor, mPropertyEditors)
-        connect(propertyEditor->header(), SIGNAL(sectionResized(int, int, int)),
-                this, SLOT(propertyEditorSectionResized(const int &, const int &, const int &)));
 }
 
 //==============================================================================
@@ -897,12 +900,13 @@ void SingleCellViewInformationGraphsWidget::updateGraphsInfo(Core::Property *pSe
 
     QList<Core::Property *> graphProperties = QList<Core::Property *>();
 
-    if (pSectionProperty)
+    if (pSectionProperty) {
         graphProperties << pSectionProperty;
-    else
+    } else {
         foreach (Core::Property *property, mPropertyEditor->properties())
             if (property->type() == Core::Property::Section)
                 graphProperties << property;
+    }
 
     // Determine the model list values
 

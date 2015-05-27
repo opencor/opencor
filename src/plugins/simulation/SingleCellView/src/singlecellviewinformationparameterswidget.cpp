@@ -34,6 +34,7 @@ specific language governing permissions and limitations under the License.
 #include <QHeaderView>
 #include <QMenu>
 #include <QMetaType>
+#include <QScrollBar>
 #include <QSettings>
 
 //==============================================================================
@@ -53,7 +54,8 @@ SingleCellViewInformationParametersWidget::SingleCellViewInformationParametersWi
     mParameterActions(QMap<QAction *, CellMLSupport::CellmlFileRuntimeParameter *>()),
     mColumnWidths(QIntList()),
     mFileName(QString()),
-    mSimulation(0)
+    mSimulation(0),
+    mHorizontalScrollBarValue(0)
 {
     // Determine the default width of each column of our property editors
 
@@ -137,11 +139,6 @@ void SingleCellViewInformationParametersWidget::initialize(const QString &pFileN
 
         mPropertyEditor = new Core::PropertyEditorWidget(this);
 
-        // Initialise our property editor's columns' width
-
-        for (int i = 0, iMax = mColumnWidths.size(); i < iMax; ++i)
-            mPropertyEditor->setColumnWidth(i, mColumnWidths[i]);
-
         // Populate our property editor
 
         populateModel(pRuntime);
@@ -158,6 +155,11 @@ void SingleCellViewInformationParametersWidget::initialize(const QString &pFileN
 
         connect(mPropertyEditor, SIGNAL(customContextMenuRequested(const QPoint &)),
                 this, SLOT(propertyEditorContextMenu(const QPoint &)));
+
+        // Keep track of changes to the horizontal bar's value
+
+        connect(mPropertyEditor->horizontalScrollBar(), SIGNAL(valueChanged(int)),
+                this, SLOT(propertyEditorHorizontalScrollBarValueChanged(const int &)));
 
         // Keep track of changes to columns' width
 
@@ -183,6 +185,15 @@ void SingleCellViewInformationParametersWidget::initialize(const QString &pFileN
         mPropertyEditors.insert(pFileName, mPropertyEditor);
         mContextMenus.insert(pFileName, contextMenu);
     }
+
+    // Set the value of the property editor's horizontal scroll bar
+
+    mPropertyEditor->horizontalScrollBar()->setValue(mHorizontalScrollBarValue);
+
+    // Set our property editor's columns' width
+
+    for (int i = 0, iMax = mColumnWidths.count(); i < iMax; ++i)
+        mPropertyEditor->setColumnWidth(i, mColumnWidths[i]);
 
     // Set our retrieved property editor as our current widget
 
@@ -636,34 +647,24 @@ void SingleCellViewInformationParametersWidget::propertyEditorContextMenu(const 
 
 //==============================================================================
 
+void SingleCellViewInformationParametersWidget::propertyEditorHorizontalScrollBarValueChanged(const int &pValue)
+{
+    // Keep track of the property editor's horizontal scroll bar value
+
+    mHorizontalScrollBarValue = pValue;
+}
+
+//==============================================================================
+
 void SingleCellViewInformationParametersWidget::propertyEditorSectionResized(const int &pLogicalIndex,
                                                                              const int &pOldSize,
                                                                              const int &pNewSize)
 {
     Q_UNUSED(pOldSize);
 
-    // Prevent all our property editors from responding to an updating of their
-    // columns' width
-
-    foreach (Core::PropertyEditorWidget *propertyEditor, mPropertyEditors)
-        disconnect(propertyEditor->header(), SIGNAL(sectionResized(int, int, int)),
-                   this, SLOT(propertyEditorSectionResized(const int &, const int &, const int &)));
-
-    // Update the column width of all our property editors
-
-    foreach (Core::PropertyEditorWidget *propertyEditor, mPropertyEditors)
-        propertyEditor->header()->resizeSection(pLogicalIndex, pNewSize);
-
     // Keep track of the new column width
 
     mColumnWidths[pLogicalIndex] = pNewSize;
-
-    // Re-allow all our property editors to respond to an updating of their
-    // columns' width
-
-    foreach (Core::PropertyEditorWidget *propertyEditor, mPropertyEditors)
-        connect(propertyEditor->header(), SIGNAL(sectionResized(int, int, int)),
-                this, SLOT(propertyEditorSectionResized(const int &, const int &, const int &)));
 }
 
 //==============================================================================
