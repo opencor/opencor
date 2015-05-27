@@ -423,6 +423,9 @@
 /* Have host's __chkstk */
 #define HAVE___CHKSTK 1
 
+/* Have host's __chkstk_ms */
+/* #undef HAVE___CHKSTK_MS */
+
 /* Have host's __cmpdi2 */
 /* #undef HAVE___CMPDI2 */
 
@@ -459,6 +462,9 @@
 /* Have host's ___chkstk */
 /* #undef HAVE____CHKSTK */
 
+/* Have host's ___chkstk_ms */
+/* #undef HAVE____CHKSTK_MS */
+
 /* Define if we link Polly to the tools */
 /* #undef LINK_POLLY_INTO_TOOLS */
 
@@ -492,13 +498,13 @@
 #define PACKAGE_NAME "LLVM"
 
 /* Define to the full name and version of this package. */
-#define PACKAGE_STRING "LLVM 3.6.0"
+#define PACKAGE_STRING "LLVM 3.6.1"
 
 /* Define to the one symbol short name of this package. */
 #undef PACKAGE_TARNAME
 
 /* Define to the version of this package. */
-#define PACKAGE_VERSION "3.6.0"
+#define PACKAGE_VERSION "3.6.1"
 
 /* Define as the return type of signal handlers (`int' or `void'). */
 #define RETSIGTYPE void
