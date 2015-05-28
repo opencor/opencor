@@ -5,11 +5,11 @@
     <name>QObject</name>
     <message>
         <source>Export to a BioSignalML file</source>
-        <translation>Exporter vers un fichier BioSignalML</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>BioSignalML File</source>
-        <translation>Fichier BioSignalML</translation>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 </TS>
