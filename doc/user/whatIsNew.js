@@ -12,6 +12,11 @@ var jsonData = { "versions": [
                              "entries": [
                                { "type": "Improved", "description": "Parametrisation of the solver." }
                              ]
+                           },
+                           { "type": "subCategory", "name": "Single cell (simulation) view",
+                             "entries": [
+                               { "type": "Improved", "description": "GUI rendering on <a href=\"http://en.wikipedia.org/wiki/OS_X\">OS X</a>." }
+                             ]
                            }
                          ]
                        }
