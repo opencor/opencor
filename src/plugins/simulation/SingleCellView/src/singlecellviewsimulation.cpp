@@ -20,6 +20,7 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include "cellmlfileruntime.h"
+#include "cellmlfile.h"
 #include "coredatastore.h"
 #include "corenlasolver.h"
 #include "singlecellviewcontentswidget.h"
@@ -631,6 +632,8 @@ bool SingleCellViewSimulationResults::createDataStore()
 
     try {
         mDataStore = new CoreDataStore::CoreDataStore(simulationSize);
+        mDataStore->setModelId(mRuntime->cellmlfile()->cmetaId());
+        mDataStore->setModelUri(mRuntime->cellmlfile()->xmlBase());
 
         mPoints = mDataStore->addVoi();
         mConstants = mDataStore->addVariables(mRuntime->constantsCount(), mSimulation->data()->constants());
