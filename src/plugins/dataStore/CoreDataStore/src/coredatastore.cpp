@@ -35,7 +35,9 @@ namespace CoreDataStore {
 CoreDataStore::CoreDataStore(const qulonglong &pSize) :
     mSize(pSize),
     mVoi(0),
-    mVariables(0)
+    mVariables(0),
+    mModelId(QString()),
+    mModelUri(QString())
 {
 }
 
@@ -151,6 +153,42 @@ void CoreDataStore::setValues(const qulonglong &pPosition, const double &pValue)
          variable != variableEnd; ++variable) {
         (*variable)->setValue(pPosition);
     }
+}
+
+//==============================================================================
+
+QString CoreDataStore::modelId() const
+{
+    // Return our model's Id
+
+    return mModelId;
+}
+
+//==============================================================================
+
+void CoreDataStore::setModelId(const QString &pId)
+{
+    // Set our model's Id
+
+    mModelId = pId;
+}
+
+//==============================================================================
+
+QString CoreDataStore::modelUri() const
+{
+    // Return our model's Uri
+
+    return mModelUri;
+}
+
+//==============================================================================
+
+void CoreDataStore::setModelUri(const QString &pUri)
+{
+    // Set our model's Uri
+
+    mModelUri = pUri;
 }
 
 //==============================================================================

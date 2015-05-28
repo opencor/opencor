@@ -59,11 +59,19 @@ public:
 
     void setValues(const qulonglong &pPosition, const double &pValue);
 
+    QString modelId() const;
+    void setModelId(const QString &pId);
+    QString modelUri() const;
+    void setModelUri(const QString &pUri);
+
 private:
     const qulonglong mSize;
 
     DataStoreVariable *mVoi;
     DataStoreVariables mVariables;
+
+    QString mModelId;
+    QString mModelUri;
 };
 
 //==============================================================================
