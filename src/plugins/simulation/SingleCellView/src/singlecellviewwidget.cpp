@@ -865,8 +865,6 @@ void SingleCellViewWidget::initialize(const QString &pFileName,
         if (newSimulation || pReloadingView) {
             // Initialise/retrieve our simulation properties
 
-            SingleCellViewInformationSimulationWidget *simulationWidget = mContentsWidget->informationWidget()->simulationWidget();
-
             mSimulation->data()->setStartingPoint(simulationWidget->startingPointProperty()->doubleValue());
             mSimulation->data()->setEndingPoint(simulationWidget->endingPointProperty()->doubleValue());
             mSimulation->data()->setPointInterval(simulationWidget->pointIntervalProperty()->doubleValue());
@@ -1413,7 +1411,7 @@ void SingleCellViewWidget::simulationStopped(const qint64 &pElapsedTime)
 
         updateSimulationMode();
 
-        mContentsWidget->informationWidget()->parametersWidget()->updateParameters(simulation->currentPoint());
+        mContentsWidget->informationWidget()->parametersWidget()->updateParameters(mSimulation->currentPoint());
     }
 
     // Stop keeping track of our simulation progress

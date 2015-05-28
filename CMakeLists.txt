@@ -1,14 +1,8 @@
+CMAKE_MINIMUM_REQUIRED(VERSION 3.1)
+
+# Project definition
+
 PROJECT(OpenCOR)
-
-# Minimum required version of CMake
-
-CMAKE_MINIMUM_REQUIRED(VERSION 3.0)
-
-# Policies that we want to use
-
-IF(POLICY CMP0054)
-    CMAKE_POLICY(SET CMP0054 NEW)
-ENDIF()
 
 # Some in-house CMake functions/macros
 
@@ -19,6 +13,7 @@ INCLUDE(${CMAKE_SOURCE_DIR}/cmake/common.cmake)
 OPTION(ENABLE_SAMPLES "Enable the sample plugins to be built" OFF)
 OPTION(ENABLE_TESTS "Enable the tests to be built" OFF)
 
+OPTION(USE_PREBUILT_LIBGIT2_PLUGIN "Use the pre-built version of the libgit2 plugin" ON)
 OPTION(USE_PREBUILT_LLVM_PLUGIN "Use the pre-built version of the LLVM plugin" ON)
 OPTION(USE_PREBUILT_QSCINTILLA_PLUGIN "Use the pre-built version of the QScintilla plugin" ON)
 OPTION(USE_PREBUILT_QWT_PLUGIN "Use the pre-built version of the Qwt plugin" ON)
@@ -30,24 +25,18 @@ INITIALISE_PROJECT()
 
 # Version/snapshot of OpenCOR
 
-SET(SNAPSHOT ON)
+IF ("${PROJECT_VERSION}" STREQUAL "")
+    SET(SNAPSHOT ON)
+ELSE()
+    SET(SNAPSHOT OFF)
+ENDIF()
 
-SET(VERSION_MAJOR 0)
-SET(VERSION_MINOR 4)
-SET(VERSION_PATCH 0)
-
-TRY_RUN(DATE_RUN DATE_COMPILE
-        ${CMAKE_BINARY_DIR} ${CMAKE_SOURCE_DIR}/cmake/date.c
-        RUN_OUTPUT_VARIABLE DATE)
+STRING(TIMESTAMP DATE "%Y-%m-%d")
 
 IF(SNAPSHOT)
     SET(VERSION ${DATE})
 ELSE()
-    SET(VERSION ${VERSION_MAJOR}.${VERSION_MINOR})
-
-    IF(NOT ${VERSION_PATCH} EQUAL 0)
-        SET(VERSION ${VERSION}.${VERSION_PATCH})
-    ENDIF()
+    SET(VERSION ${PROJECT_VERSION})
 ENDIF()
 
 FILE(WRITE ${CMAKE_BINARY_DIR}/versiondate.txt "${VERSION}\n${DATE}")
@@ -146,9 +135,27 @@ INCLUDE(src/3rdparty/QtSingleApplication/QtSingleApplication.cmake)
 # Set the application icon, but only for Windows and OS X, since in the case of
 # Linux, it's done through the use of app_icon (see res/ui.qrc) in
 # src/mainwindow.ui
+# Note: on Windows, we set a bit more than just the application icon. We also
+#       set its product name, version, copyright, etc.
+
+SET(PROJECT_DESCRIPTION "A cross-platform modelling environment")
+
+IF(SNAPSHOT)
+    SET(FILE_VERSION 0)
+    SET(PRODUCT_VERSION "Snapshot ${VERSION} (${ARCHITECTURE}-bit)")
+ELSE()
+    STRING(REPLACE "." "," FILE_VERSION "${VERSION}")
+    SET(PRODUCT_VERSION "Version ${VERSION} (${ARCHITECTURE}-bit)")
+ENDIF()
+
+STRING(TIMESTAMP YEAR "%Y")
 
 IF(WIN32)
-    LIST(APPEND SOURCES ${CMAKE_SOURCE_DIR}/res/${PROJECT_NAME}.rc)
+    SET(RcFile ${CMAKE_BINARY_DIR}/${PROJECT_NAME}.rc)
+
+    CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/res/${PROJECT_NAME}.rc.in ${RcFile})
+
+    LIST(APPEND SOURCES ${RcFile})
 ELSEIF(APPLE)
     SET(IconFile ${PROJECT_NAME}.icns)
 
@@ -240,6 +247,7 @@ SET(PLUGINS
 
     solver/CoreSolver
 
+    thirdParty/libgit2
     thirdParty/LLVM
     thirdParty/QScintilla
     thirdParty/Qwt
@@ -386,10 +394,6 @@ IF(APPLE)
 
     SET(InfoPlistFile ${CMAKE_BINARY_DIR}/Info.plist)
 
-    EXECUTE_PROCESS(COMMAND date "+%Y"
-                    OUTPUT_VARIABLE YEAR
-                    OUTPUT_STRIP_TRAILING_WHITESPACE)
-
     CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/distrib/osx/Info.plist.in ${InfoPlistFile})
 
     SET_TARGET_PROPERTIES(${PROJECT_NAME} PROPERTIES
@@ -518,7 +522,7 @@ ENDIF()
 
 SET(CPACK_PACKAGE_NAME "${PROJECT_NAME}")
 SET(CPACK_PACKAGE_CONTACT "Team OpenCOR (team@opencor.ws)")
-SET(CPACK_PACKAGE_DESCRIPTION_SUMMARY "A cross-platform CellML-based modelling environment")
+SET(CPACK_PACKAGE_DESCRIPTION_SUMMARY "${PROJECT_DESCRIPTION}")
 SET(CPACK_PACKAGE_DESCRIPTION_FILE "${CMAKE_SOURCE_DIR}/distrib/readMe.txt")
 SET(CPACK_PACKAGE_INSTALL_DIRECTORY "${PROJECT_NAME}")
 SET(CPACK_PACKAGE_EXECUTABLES "${PROJECT_NAME}" "${PROJECT_NAME}")
@@ -528,7 +532,7 @@ SET(CPACK_PACKAGE_VERSION "${VERSION}")
 IF(SNAPSHOT)
     SET(CPACK_PACKAGE_VERSION_PATCH "")
 ELSE()
-    SET(CPACK_PACKAGE_VERSION_PATCH "${VERSION_PATCH}")
+    SET(CPACK_PACKAGE_VERSION_PATCH "${PROJECT_VERSION_PATCH}")
 ENDIF()
 
 IF(WIN32)
@@ -699,10 +703,10 @@ ENDIF()
 IF(SNAPSHOT)
     SET(CPACK_PACKAGE_FILE_NAME ${CPACK_PACKAGE_NAME}-${DATE}-${CPACK_SYSTEM_NAME})
 ELSE()
-    SET(CPACK_PACKAGE_FILE_NAME ${CPACK_PACKAGE_NAME}-${VERSION_MAJOR}-${VERSION_MINOR})
+    SET(CPACK_PACKAGE_FILE_NAME ${CPACK_PACKAGE_NAME}-${PROJECT_VERSION_MAJOR}-${PROJECT_VERSION_MINOR})
 
-    IF(NOT ${VERSION_PATCH} EQUAL 0)
-        SET(CPACK_PACKAGE_FILE_NAME ${CPACK_PACKAGE_FILE_NAME}-${VERSION_PATCH})
+    IF(NOT "${PROJECT_VERSION_PATCH}" STREQUAL "")
+        SET(CPACK_PACKAGE_FILE_NAME ${CPACK_PACKAGE_FILE_NAME}-${PROJECT_VERSION_PATCH})
     ENDIF()
 
     SET(CPACK_PACKAGE_FILE_NAME ${CPACK_PACKAGE_FILE_NAME}-${CPACK_SYSTEM_NAME})

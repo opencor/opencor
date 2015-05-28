@@ -42,8 +42,8 @@ IF(USE_PREBUILT_QSCINTILLA_PLUGIN)
     ENDIF()
 
     # Add the plugin as a binary
-    # Note: in the case of Windows, must refer to the distribution directory as
-    #       opposed to the plugins directory since we need the .lib file and
+    # Note: in the case of Windows, we must refer to the distribution directory
+    #       as opposed to the plugins directory since we need the .lib file and
     #       it's only there...
 
     IF(WIN32)

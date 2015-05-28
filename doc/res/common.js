@@ -393,22 +393,37 @@ function doHeaderAndContentsMenu(pageName, relativePath, r, g, b, data) {
     });
 }
 
-// Copyright information
+// Return the name of a month
 
-function copyright(relativePath) {
-    var date = new Date();
-
-    document.write("<div class=\"copyright\">");
-    document.write("    <div class=\"left\">");
-    document.write("        Copyright 2011-"+date.getFullYear());
-    document.write("    </div>");
-    document.write("    <div class=\"center\">");
-    document.write("        <a class=\"copyright\" href=\"https://twitter.com/TeamOpenCOR/\"><img class=\"twitter\" src=\""+relativePath+"/res/pics/twitter.png\" width=30 height=30></a>");
-    document.write("    </div>");
-    document.write("    <div class=\"right\">");
-    document.write("        <a class=\"copyright\" href=\"http://www.virtualrat.org/\"><img class=\"vpr\" src=\""+relativePath+"/res/pics/vprLogo.png\" width=60 height=18></a>");
-    document.write("    </div>");
-    document.write("</div>");
+function month(month) {
+    switch (month) {
+    case 1:
+        return "January";
+    case 2:
+        return "February";
+    case 3:
+        return "March";
+    case 4:
+        return "April";
+    case 5:
+        return "May";
+    case 6:
+        return "June";
+    case 7:
+        return "July";
+    case 8:
+        return "August";
+    case 9:
+        return "September";
+    case 10:
+        return "October";
+    case 11:
+        return "November";
+    case 12:
+        return "December";
+    default:
+        return "???";
+    }
 }
 
 // Render, using KaTeX, all the mathematical equations found in elements that
@@ -428,4 +443,22 @@ function katexRendering() {
                                 ]
                             });
     }
+}
+
+// Copyright information
+
+function copyright(relativePath) {
+    var date = new Date();
+
+    document.write("<div class=\"copyright\">");
+    document.write("    <div class=\"left\">");
+    document.write("        Copyright 2011-"+date.getFullYear());
+    document.write("    </div>");
+    document.write("    <div class=\"center\">");
+    document.write("        <a class=\"copyright\" href=\"https://twitter.com/TeamOpenCOR/\"><img class=\"twitter\" src=\""+relativePath+"/res/pics/twitter.png\" width=30 height=30></a>");
+    document.write("    </div>");
+    document.write("    <div class=\"right\">");
+    document.write("        <a class=\"copyright\" href=\"http://www.virtualrat.org/\"><img class=\"vpr\" src=\""+relativePath+"/res/pics/vprLogo.png\" width=60 height=18></a>");
+    document.write("    </div>");
+    document.write("</div>");
 }
