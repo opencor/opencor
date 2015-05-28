@@ -132,6 +132,8 @@ public:
     explicit CellmlFileRuntime(CellmlFile *pCellmlFile);
     ~CellmlFileRuntime();
 
+    CellmlFile * cellmlfile();
+
     QString address() const;
 
     bool isValid() const;
