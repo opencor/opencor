@@ -260,11 +260,6 @@ void CollapsibleWidget::constructor(const QColor &pSeparatorColor)
     mLayout->setSpacing(0);
 
     setLayout(mLayout);
-
-    // Add a stretch to our layout so that its contents will take as little
-    // space as possible
-
-    mLayout->addStretch(1);
 }
 
 //==============================================================================
