@@ -251,9 +251,9 @@ QWidget * CellMLAnnotationViewPlugin::viewWidget(const QString &pFileName)
 
     // Update and return our CellML annotation view widget using the given
     // CellML file
-    // Note: some initialisations might result in some flickering, so we protect
-    //       ourselves by disabling, and then re-enabling, updates for our view
-    //       widget...
+    // Note: we temporarily disable updates for our CellML annotation view
+    //       widget, so as to avoid any risk of known/unknown/potential
+    //       flickering...
 
     mViewWidget->setUpdatesEnabled(false);
         mViewWidget->initialize(pFileName);

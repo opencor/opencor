@@ -275,9 +275,8 @@ bool RawViewPlugin::hasViewWidget(const QString &pFileName)
 QWidget * RawViewPlugin::viewWidget(const QString &pFileName)
 {
     // Update and return our raw view widget using the given file
-    // Note: some initialisations might result in some flickering, so we protect
-    //       ourselves by disabling, and then re-enabling, updates for our view
-    //       widget...
+    // Note: we temporarily disable updates for our raw view widget, so as to
+    //       avoid any risk of known/unknown/potential flickering...
 
     mViewWidget->setUpdatesEnabled(false);
         mViewWidget->initialize(pFileName);

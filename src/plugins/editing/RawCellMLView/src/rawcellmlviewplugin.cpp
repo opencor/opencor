@@ -312,9 +312,8 @@ QWidget * RawCellMLViewPlugin::viewWidget(const QString &pFileName)
         return 0;
 
     // Update and return our raw CellML view widget using the given CellML file
-    // Note: some initialisations might result in some flickering, so we protect
-    //       ourselves by disabling, and then re-enabling, updates for our view
-    //       widget...
+    // Note: we temporarily disable updates for our raw CellML view widget, so
+    //       as to avoid any risk of known/unknown/potential flickering...
 
     mViewWidget->setUpdatesEnabled(false);
         mViewWidget->initialize(pFileName);
