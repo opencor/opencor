@@ -113,6 +113,7 @@ public:
                          const CellmlFileRdfTriple::BioQualifier &pBioQualifier,
                          const QString &pResource, const QString &pId);
 
+    QString cmetaId();
     QString xmlBase();
 
     bool exportTo(const QString &pFileName, const Version &pVersion);
