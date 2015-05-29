@@ -167,10 +167,11 @@ bool CellmlTextViewParser::execute(const QString &pCellmlText,
         return false;
     }
 
-    // We are done, so add some processing instruction to our DOM document
+    // We are done, so add some processing instruction to our DOM document and
+    // this before any other DOM node (including comments)
 
     mDomDocument.insertBefore(mDomDocument.createProcessingInstruction("xml", "version='1.0'"),
-                              mDomDocument.documentElement());
+                              mDomDocument.firstChild());
 
     // Use the given CellML version if it is higher than the one we actually
     // need
