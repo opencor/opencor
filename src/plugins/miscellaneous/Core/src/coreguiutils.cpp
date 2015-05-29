@@ -73,13 +73,15 @@ QString allFilters(const QString &pFilters)
 
 //==============================================================================
 
-QString getOpenFileName(const QString &pCaption, const QString &pFilters)
+QString getOpenFileName(const QString &pCaption, const QString &pFilters,
+                        QString *pSelectedFilter)
 {
     // Retrieve and return one open file name
 
     QString res = QFileDialog::getOpenFileName(qApp->activeWindow(),
                                                pCaption, activeDirectory(),
-                                               allFilters(pFilters));
+                                               allFilters(pFilters),
+                                               pSelectedFilter);
 
     if (res.size()) {
         // We have retrieved a file name, so keep track of the folder in which
@@ -95,13 +97,15 @@ QString getOpenFileName(const QString &pCaption, const QString &pFilters)
 
 //==============================================================================
 
-QStringList getOpenFileNames(const QString &pCaption, const QString &pFilters)
+QStringList getOpenFileNames(const QString &pCaption, const QString &pFilters,
+                             QString *pSelectedFilter)
 {
     // Retrieve and return one or several open file names
 
     QStringList res = QFileDialog::getOpenFileNames(qApp->activeWindow(),
                                                     pCaption, activeDirectory(),
-                                                    allFilters(pFilters));
+                                                    allFilters(pFilters),
+                                                    pSelectedFilter);
 
     if (res.count()) {
         // We have retrieved at least one file name, so keep track of the folder
@@ -131,7 +135,7 @@ QStringList getOpenFileNames(const QString &pCaption, const QString &pFilters)
 //==============================================================================
 
 QString getSaveFileName(const QString &pCaption, const QString &pFileName,
-                        const QString &pFilters)
+                        const QString &pFilters, QString *pSelectedFilter)
 {
     // Retrieve and return a save file name
 
@@ -140,7 +144,8 @@ QString getSaveFileName(const QString &pCaption, const QString &pFileName,
                                                                         pFileName.isEmpty()?
                                                                             activeDirectory():
                                                                             pFileName,
-                                                                        allFilters(pFilters), 0,
+                                                                        allFilters(pFilters),
+                                                                        pSelectedFilter,
                                                                         QFileDialog::DontConfirmOverwrite));
 
     // Make sure that we have got a save file name
