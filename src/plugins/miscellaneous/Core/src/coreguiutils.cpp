@@ -83,7 +83,7 @@ QString getOpenFileName(const QString &pCaption, const QString &pFilters,
                                                allFilters(pFilters),
                                                pSelectedFilter);
 
-    if (res.size()) {
+    if (!res.isEmpty()) {
         // We have retrieved a file name, so keep track of the folder in which
         // it is
 
@@ -107,7 +107,7 @@ QStringList getOpenFileNames(const QString &pCaption, const QString &pFilters,
                                                     allFilters(pFilters),
                                                     pSelectedFilter);
 
-    if (res.count()) {
+    if (!res.isEmpty()) {
         // We have retrieved at least one file name, so keep track of the folder
         // in which it is
         // Note #1: we use the last open file name to determine the folder that
