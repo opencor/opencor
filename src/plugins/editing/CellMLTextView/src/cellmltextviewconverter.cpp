@@ -134,7 +134,7 @@ CellMLTextViewConverter::CellMLTextViewConverter() :
 bool CellMLTextViewConverter::execute(const QString &pRawCellml)
 {
     // Convert the raw CellML to CellML text by first getting a DOM
-    // representation of the file
+    // representation of it
 
     QDomDocument domDocument;
 
