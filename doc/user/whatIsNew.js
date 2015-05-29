@@ -1,6 +1,15 @@
 var jsonData = { "versions": [
                    { "anchor": "latest", "description": "Latest snapshot", "day": 0, "month": 0, "year": 0,
                      "categories": [
+                       { "name": "Editing",
+                         "entries": [
+                           { "type": "subCategory", "name": "CellML Text view",
+                             "entries": [
+                               { "type": "Improved", "description": "Comments support by allowing comments before a model definition." }
+                             ]
+                           }
+                         ]
+                       },
                        { "name": "Simulation",
                          "entries": [
                            { "type": "subCategory", "name": "<a href=\"http://computation.llnl.gov/casc/sundials/description/description.html#descr_cvode\">CVODE</a> solver",
