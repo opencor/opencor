@@ -81,11 +81,12 @@ QString getOpenFileName(const QString &pCaption, const QString &pFilters)
                                                pCaption, activeDirectory(),
                                                allFilters(pFilters));
 
-    if (res.size())
+    if (res.size()) {
         // We have retrieved a file name, so keep track of the folder in which
         // it is
 
         setActiveDirectory(QFileInfo(res).path());
+    }
 
     // Return the file name
 
@@ -102,7 +103,7 @@ QStringList getOpenFileNames(const QString &pCaption, const QString &pFilters)
                                                     pCaption, activeDirectory(),
                                                     allFilters(pFilters));
 
-    if (res.count())
+    if (res.count()) {
         // We have retrieved at least one file name, so keep track of the folder
         // in which it is
         // Note #1: we use the last open file name to determine the folder that
@@ -120,6 +121,7 @@ QStringList getOpenFileNames(const QString &pCaption, const QString &pFilters)
         //          unfortunately...
 
         setActiveDirectory(QFileInfo(res[res.count()-1]).path());
+    }
 
     // Return the file name(s)
 
@@ -161,15 +163,17 @@ QString getSaveFileName(const QString &pCaption, const QString &pFileName,
 
         // Check whether the save file already exists
 
-        if (resInfo.exists())
+        if (resInfo.exists()) {
             // The save file already exists, so ask whether we want to overwrite
             // it
 
             if (QMessageBox::question(qApp->activeWindow(), pCaption,
                                       QObject::tr("<strong>%1</strong> already exists. Do you want to overwrite it?").arg(res),
                                       QMessageBox::Yes|QMessageBox::No,
-                                      QMessageBox::Yes) == QMessageBox::No )
+                                      QMessageBox::Yes) == QMessageBox::No ) {
                 return QString();
+            }
+        }
     }
 
     // Everything went fine,so return the save file name
