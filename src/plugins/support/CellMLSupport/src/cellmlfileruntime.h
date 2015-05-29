@@ -132,7 +132,7 @@ public:
     explicit CellmlFileRuntime(CellmlFile *pCellmlFile);
     ~CellmlFileRuntime();
 
-    CellmlFile * cellmlfile();
+    CellmlFile * cellmlFile();
 
     QString address() const;
 
