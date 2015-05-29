@@ -149,13 +149,27 @@ bool CellMLTextViewConverter::execute(const QString &pRawCellml)
 
         mRdfNodes = QDomDocument(QString());
 
-        if (!processModelNode(domDocument.documentElement())) {
-            mOutput = pRawCellml;
+        // Process the DOM document's children, skipping the first one since
+        // it corresponds to a CellML file's processing instruction
 
-            return false;
-        } else {
-            return true;
+        for (QDomNode domNode = domDocument.firstChild().nextSibling();
+             !domNode.isNull(); domNode = domNode.nextSibling()) {
+            if (domNode.isComment()) {
+                processCommentNode(domNode);
+            } else if (rdfNode(domNode)) {
+                processRdfNode(domNode);
+            } else if (cellmlNode(domNode, "model")) {
+                if (!processModelNode(domNode)) {
+                    mOutput = pRawCellml;
+
+                    return false;
+                }
+            } else {
+                processUnknownNode(domNode);
+            }
         }
+
+        return true;
     } else {
         mOutput = pRawCellml;
 
@@ -389,6 +403,9 @@ CellMLTextViewConverter::MathmlNodeType CellMLTextViewConverter::mathmlNodeType(
 bool CellMLTextViewConverter::processModelNode(const QDomNode &pDomNode)
 {
     // Start processing the given model node
+
+    if (mLastOutputType == Comment)
+        outputString();
 
     outputString(DefModel,
                  QString("def model%1 %2 as").arg(cmetaId(pDomNode))
