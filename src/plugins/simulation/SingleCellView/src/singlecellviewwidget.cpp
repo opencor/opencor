@@ -1976,7 +1976,7 @@ void SingleCellViewWidget::updateResults(SingleCellViewSimulation *pSimulation,
         plotViewport = QRectF(plotMinX, plotMinY,
                               plotMaxX-plotMinX, plotMaxY-plotMinY);
 
-        foreach (SingleCellViewGraphPanelPlotGraph *graph, plot->graphs())
+        foreach (SingleCellViewGraphPanelPlotGraph *graph, plot->graphs()) {
             if (!graph->fileName().compare(pSimulation->fileName())) {
                 // Keep track of our graph's old size
 
@@ -1984,7 +1984,6 @@ void SingleCellViewWidget::updateResults(SingleCellViewSimulation *pSimulation,
 
                 // Check whether we are drawing this graph's first segment, in
                 // which case we will need to update our plot
-
 
                 needUpdatePlot = needUpdatePlot || !oldDataSize;
 
@@ -2033,6 +2032,7 @@ void SingleCellViewWidget::updateResults(SingleCellViewSimulation *pSimulation,
                         plot->drawGraphSegment(graph, dataStart, dataEnd);
                 }
             }
+        }
 
         // Check whether we need to update/replot our plot
 
@@ -2052,8 +2052,8 @@ void SingleCellViewWidget::updateResults(SingleCellViewSimulation *pSimulation,
                                    QRectF(plotMinX, plotMinY,
                                           plot->maxX()-plotMinX, plot->maxY()-plotMinY));
         } else if (!pSize) {
-            // We came here as a result of starting a simulation or clearing a
-            // our plot, so simply replot it (rather than update it)
+            // We came here as a result of starting a simulation or clearing our
+            // plot, so simply replot it (rather than update it)
             // Note: we don't want to update our plot since this is going to
             //       reset its axes' values and therefore result in some
             //       (expected) flickering, if some data is to be drawn
