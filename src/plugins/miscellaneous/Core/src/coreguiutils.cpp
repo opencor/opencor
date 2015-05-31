@@ -73,19 +73,22 @@ QString allFilters(const QString &pFilters)
 
 //==============================================================================
 
-QString getOpenFileName(const QString &pCaption, const QString &pFilters)
+QString getOpenFileName(const QString &pCaption, const QString &pFilters,
+                        QString *pSelectedFilter)
 {
     // Retrieve and return one open file name
 
     QString res = QFileDialog::getOpenFileName(qApp->activeWindow(),
                                                pCaption, activeDirectory(),
-                                               allFilters(pFilters));
+                                               allFilters(pFilters),
+                                               pSelectedFilter);
 
-    if (res.size())
+    if (!res.isEmpty()) {
         // We have retrieved a file name, so keep track of the folder in which
         // it is
 
         setActiveDirectory(QFileInfo(res).path());
+    }
 
     // Return the file name
 
@@ -94,15 +97,17 @@ QString getOpenFileName(const QString &pCaption, const QString &pFilters)
 
 //==============================================================================
 
-QStringList getOpenFileNames(const QString &pCaption, const QString &pFilters)
+QStringList getOpenFileNames(const QString &pCaption, const QString &pFilters,
+                             QString *pSelectedFilter)
 {
     // Retrieve and return one or several open file names
 
     QStringList res = QFileDialog::getOpenFileNames(qApp->activeWindow(),
                                                     pCaption, activeDirectory(),
-                                                    allFilters(pFilters));
+                                                    allFilters(pFilters),
+                                                    pSelectedFilter);
 
-    if (res.count())
+    if (!res.isEmpty()) {
         // We have retrieved at least one file name, so keep track of the folder
         // in which it is
         // Note #1: we use the last open file name to determine the folder that
@@ -120,6 +125,7 @@ QStringList getOpenFileNames(const QString &pCaption, const QString &pFilters)
         //          unfortunately...
 
         setActiveDirectory(QFileInfo(res[res.count()-1]).path());
+    }
 
     // Return the file name(s)
 
@@ -129,16 +135,17 @@ QStringList getOpenFileNames(const QString &pCaption, const QString &pFilters)
 //==============================================================================
 
 QString getSaveFileName(const QString &pCaption, const QString &pFileName,
-                        const QString &pFilters)
+                        const QString &pFilters, QString *pSelectedFilter)
 {
     // Retrieve and return a save file name
 
     QString res = QDir::toNativeSeparators(QFileDialog::getSaveFileName(qApp->activeWindow(),
                                                                         pCaption,
-                                                                        pFileName.isEmpty()?
+                                                                        !QFileInfo(pFileName).canonicalPath().compare(".")?
                                                                             activeDirectory():
                                                                             pFileName,
-                                                                        allFilters(pFilters), 0,
+                                                                        allFilters(pFilters),
+                                                                        pSelectedFilter,
                                                                         QFileDialog::DontConfirmOverwrite));
 
     // Make sure that we have got a save file name
@@ -161,15 +168,17 @@ QString getSaveFileName(const QString &pCaption, const QString &pFileName,
 
         // Check whether the save file already exists
 
-        if (resInfo.exists())
+        if (resInfo.exists()) {
             // The save file already exists, so ask whether we want to overwrite
             // it
 
             if (QMessageBox::question(qApp->activeWindow(), pCaption,
                                       QObject::tr("<strong>%1</strong> already exists. Do you want to overwrite it?").arg(res),
                                       QMessageBox::Yes|QMessageBox::No,
-                                      QMessageBox::Yes) == QMessageBox::No )
+                                      QMessageBox::Yes) == QMessageBox::No ) {
                 return QString();
+            }
+        }
     }
 
     // Everything went fine,so return the save file name

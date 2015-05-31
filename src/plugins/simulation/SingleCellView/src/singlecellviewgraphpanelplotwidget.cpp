@@ -972,12 +972,13 @@ bool SingleCellViewGraphPanelPlotWidget::resetAxes(const bool &pCanReplot)
 
     QRectF dRect = dataRect();
 
-    if (dRect == QRectF())
+    if (dRect == QRectF()) {
         return setAxes(QRectF(DefMinAxis, DefMinAxis,
                               DefMaxAxis-DefMinAxis, DefMaxAxis-DefMinAxis),
                        pCanReplot);
-    else
+    } else {
         return setAxes(optimisedRect(dRect), pCanReplot);
+    }
 }
 
 //==============================================================================

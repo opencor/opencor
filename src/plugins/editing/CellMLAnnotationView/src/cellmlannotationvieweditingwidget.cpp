@@ -162,7 +162,7 @@ CellmlAnnotationViewWidget * CellmlAnnotationViewEditingWidget::parent() const
 
 CellMLSupport::CellmlFile * CellmlAnnotationViewEditingWidget::cellmlFile() const
 {
-    // Return the CellML file
+    // Return our CellML file
 
     return mCellmlFile;
 }

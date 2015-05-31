@@ -199,8 +199,10 @@ CellmlFileRuntime::~CellmlFileRuntime()
 
 //==============================================================================
 
-CellmlFile * CellmlFileRuntime::cellmlfile()
+CellmlFile * CellmlFileRuntime::cellmlFile()
 {
+    // Return our CellML file
+
     return mCellmlFile;
 }
 
