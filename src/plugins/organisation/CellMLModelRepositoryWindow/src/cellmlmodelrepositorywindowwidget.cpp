@@ -45,9 +45,12 @@ CellmlModelRepositoryWindowWidget::CellmlModelRepositoryWindowWidget(QWidget *pP
 
     // Set some properties
 
+    setEditTriggers(QAbstractItemView::NoEditTriggers);
     setFrameShape(QFrame::StyledPanel);
-//    setHeaderHidden(true);
+    setHeaderHidden(true);
     setModel(mModel);
+    setRootIsDecorated(false);
+    setSelectionMode(QAbstractItemView::NoSelection);
 
 //---GRY---
 //    connect(this, SIGNAL(resized(const QSize &, const QSize &)),
@@ -76,8 +79,11 @@ void CellmlModelRepositoryWindowWidget::output(const QString &pMessage,
                                                const QMap<QString, QString> &pModelListing)
 {
     // Set the page to contain pOutput using our output template
-Q_UNUSED(pMessage);
 Q_UNUSED(pModelListing);
+
+    mModel->clear();
+
+    mModel->invisibleRootItem()->appendRow(new QStandardItem(pMessage));
 }
 
 //==============================================================================
