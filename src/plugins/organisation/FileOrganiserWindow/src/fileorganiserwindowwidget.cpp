@@ -58,7 +58,7 @@ FileOrganiserWindowWidget::FileOrganiserWindowWidget(QWidget *pParent) :
 
     mFileManager = new Core::FileManager();
 
-    // Set some properties for the file organiser widget itself
+    // Set some properties
 
     setDragDropMode(QAbstractItemView::DragDrop);
     setEditTriggers(QAbstractItemView::EditKeyPressed);
