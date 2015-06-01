@@ -107,9 +107,9 @@ CellmlModelRepositoryWindowWindow::CellmlModelRepositoryWindowWindow(QWidget *pP
     // website's certificate is invalid, e.g. it has expired)
 
     connect(mNetworkAccessManager, SIGNAL(finished(QNetworkReply *)),
-            this, SLOT(finished(QNetworkReply *)) );
+            this, SLOT(finished(QNetworkReply *)));
     connect(mNetworkAccessManager, SIGNAL(sslErrors(QNetworkReply *, const QList<QSslError> &)),
-            this, SLOT(sslErrors(QNetworkReply *, const QList<QSslError> &)) );
+            this, SLOT(sslErrors(QNetworkReply *, const QList<QSslError> &)));
 
     // Connection to update the enabled state of our copy action
 
