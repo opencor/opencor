@@ -24,44 +24,39 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-#include "commonwidget.h"
-
-//==============================================================================
-
-#include <QWebView>
+#include "treeviewwidget.h"
 
 //==============================================================================
 
 namespace OpenCOR {
+
+//==============================================================================
+
+namespace Core {
+    class TreeViewWidget;
+}   // namespace Core
+
+//==============================================================================
+
 namespace CellMLModelRepositoryWindow {
 
 //==============================================================================
 
-class CellmlModelRepositoryWindowWidget : public QWebView,
-                                          public Core::CommonWidget
+class CellmlModelRepositoryWindowWidget : public Core::TreeViewWidget
 {
     Q_OBJECT
 
 public:
     explicit CellmlModelRepositoryWindowWidget(QWidget *pParent);
 
-    void output(const QString &pOutput);
+    void output(const QString &pMessage,
+                const QMap<QString, QString> &pModelListing);
 
 protected:
     virtual QSize sizeHint() const;
 
-    virtual void paintEvent(QPaintEvent *pEvent);
-
 private:
-    QString mOutputTemplate;
-
-Q_SIGNALS:
-    void copyTextEnabled(const bool &pEnabled);
-
-private Q_SLOTS:
-    void openLink(const QUrl &pUrl);
-
-    void selectionChanged();
+    Core::TreeViewWidget *mModelListing;
 };
 
 //==============================================================================

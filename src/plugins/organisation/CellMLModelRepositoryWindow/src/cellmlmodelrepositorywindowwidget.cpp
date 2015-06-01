@@ -20,13 +20,13 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include "cellmlmodelrepositorywindowwidget.h"
-#include "corecliutils.h"
 
 //==============================================================================
 
 #include <QDesktopServices>
 #include <QIODevice>
 #include <QPaintEvent>
+#include <QVBoxLayout>
 
 //==============================================================================
 
@@ -36,42 +36,15 @@ namespace CellMLModelRepositoryWindow {
 //==============================================================================
 
 CellmlModelRepositoryWindowWidget::CellmlModelRepositoryWindowWidget(QWidget *pParent) :
-    QWebView(pParent),
-    Core::CommonWidget(pParent)
+    Core::TreeViewWidget(pParent)
 {
-    // Add a small margin to the widget, so that no visual trace of the border
-    // drawn by drawBorderIfDocked is left when scrolling
-
-    setStyleSheet("QWebView {"
-                  "    margin: 1px;"
-                  "}");
-    // Note: not sure why, but no matter how many pixels are specified for the
-    //       margin, no margin actually exists, but it addresses the issue with
-    //       the border drawn by drawBorderIfDocked...
-
-    // Prevent objects from being dropped on us
-
-    setAcceptDrops(false);
+//---GRY---
+//    connect(this, SIGNAL(resized(const QSize &, const QSize &)),
+//            this, SLOT(recenterBusyWidget()));
 
     // Have links opened in the user's browser rather than in our list
 
-    page()->setLinkDelegationPolicy(QWebPage::DelegateAllLinks);
-
-    // Some connections
-
-    connect(this, SIGNAL(linkClicked(const QUrl &)),
-            this, SLOT(openLink(const QUrl &)));
-
-    connect(page(), SIGNAL(selectionChanged()),
-            this, SLOT(selectionChanged()));
-
-    // Retrieve the output template
-
-    Core::readTextFromFile(":/output.html", mOutputTemplate);
-
-    // Let people know that there is nothing to copy initially
-
-    emit copyTextEnabled(false);
+//    page()->setLinkDelegationPolicy(QWebPage::DelegateAllLinks);
 }
 
 //==============================================================================
@@ -88,52 +61,12 @@ QSize CellmlModelRepositoryWindowWidget::sizeHint() const
 
 //==============================================================================
 
-void CellmlModelRepositoryWindowWidget::paintEvent(QPaintEvent *pEvent)
-{
-    // Default handling of the event
-
-    QWebView::paintEvent(pEvent);
-
-    // Draw a border
-
-    drawBorder(
-#if defined(Q_OS_WIN) || defined(Q_OS_LINUX)
-               true, true, true, true,
-#elif defined(Q_OS_MAC)
-               true, false, true, false,
-#else
-    #error Unsupported platform
-#endif
-               true, false, false, false
-              );
-}
-
-//==============================================================================
-
-void CellmlModelRepositoryWindowWidget::output(const QString &pOutput)
+void CellmlModelRepositoryWindowWidget::output(const QString &pMessage,
+                                               const QMap<QString, QString> &pModelListing)
 {
     // Set the page to contain pOutput using our output template
-
-    setHtml(mOutputTemplate.arg(pOutput));
-}
-
-//==============================================================================
-
-void CellmlModelRepositoryWindowWidget::openLink(const QUrl &pUrl)
-{
-    // Open the link in the user's browser
-
-    QDesktopServices::openUrl(pUrl);
-}
-
-//==============================================================================
-
-void CellmlModelRepositoryWindowWidget::selectionChanged()
-{
-    // The text selection has changed, so let the user know whether some text is
-    // now selected
-
-    emit copyTextEnabled(!selectedText().isEmpty());
+Q_UNUSED(pMessage);
+Q_UNUSED(pModelListing);
 }
 
 //==============================================================================

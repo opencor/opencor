@@ -79,21 +79,16 @@ private:
 
     bool mModelListRequested;
 
-    QMenu *mContextMenu;
-
     void outputModelList(const QStringList &pModelList);
 
 private Q_SLOTS:
     void on_filterValue_textChanged(const QString &text);
-    void on_actionCopy_triggered();
     void on_refreshButton_clicked();
     void on_gitButton_clicked();
 
     void finished(QNetworkReply *pNetworkReply);
     void sslErrors(QNetworkReply *pNetworkReply,
                    const QList<QSslError> &pSslErrors);
-
-    void showCustomContextMenu(const QPoint &pPosition) const;
 
     void retrieveModelList(const bool &pVisible);
 };

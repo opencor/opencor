@@ -81,21 +81,6 @@ CellmlModelRepositoryWindowWindow::CellmlModelRepositoryWindowWindow(QWidget *pP
 
     mGui->dockWidgetContents->layout()->addWidget(mCellmlModelRepositoryWidget);
 
-    // Create and populate our context menu
-
-    mContextMenu = new QMenu(this);
-
-    mContextMenu->addAction(mGui->actionCopy);
-
-    // We want our own context menu for the help widget (indeed, we don't want
-    // the default one, which has the reload menu item and not the other actions
-    // that we have in our tool bar widget)
-
-    mCellmlModelRepositoryWidget->setContextMenuPolicy(Qt::CustomContextMenu);
-
-    connect(mCellmlModelRepositoryWidget, SIGNAL(customContextMenuRequested(const QPoint &)),
-            this, SLOT(showCustomContextMenu(const QPoint &)));
-
     // Keep track of the window's visibility, so that we can request the list of
     // models, if necessary
 
@@ -112,14 +97,9 @@ CellmlModelRepositoryWindowWindow::CellmlModelRepositoryWindowWindow(QWidget *pP
     // website's certificate is invalid, e.g. it has expired)
 
     connect(mNetworkAccessManager, SIGNAL(finished(QNetworkReply *)),
-            this, SLOT(finished(QNetworkReply *)) );
+            this, SLOT(finished(QNetworkReply *)));
     connect(mNetworkAccessManager, SIGNAL(sslErrors(QNetworkReply *, const QList<QSslError> &)),
-            this, SLOT(sslErrors(QNetworkReply *, const QList<QSslError> &)) );
-
-    // Connection to update the enabled state of our copy action
-
-    connect(mCellmlModelRepositoryWidget, SIGNAL(copyTextEnabled(const bool &)),
-            mGui->actionCopy, SLOT(setEnabled(bool)));
+            this, SLOT(sslErrors(QNetworkReply *, const QList<QSslError> &)));
 }
 
 //==============================================================================
@@ -148,65 +128,52 @@ void CellmlModelRepositoryWindowWindow::retranslateUi()
 
 void CellmlModelRepositoryWindowWindow::outputModelList(const QStringList &pModelList)
 {
-    // Output a given list of models
-    // Note: we remove any duplicates since they are dealt with when compiling
-    //       the models listing...
+    // Keep track of our model list and remove any duplicates that it may
+    // contain
+    // Note: the duplicates are dealt with below when compiling determing the
+    //       model names and URLs...
 
     mModelList = pModelList;
 
     mModelList.removeDuplicates();
 
-    QString contents = QString();
+    // Determine what models should be listed (which may include 2+ models with
+    // the same name)
 
-    if (mModelList.count()) {
-        // We have models to list
+    int numberOfModels = 0;
+    QMap<QString, QString> modelListing = QMap<QString, QString>();
+    int modelIndex;
 
-        int numberOfModels = 0;
-        QString modelsListing = QString();
-        int modelIndex;
+    foreach (const QString &model, mModelList) {
+        modelIndex = -1;
 
-        foreach (const QString &model, mModelList) {
-            modelIndex = -1;
+        forever {
+            modelIndex = mModelNames.indexOf(model, ++modelIndex);
 
-            forever {
-                modelIndex = mModelNames.indexOf(model, ++modelIndex);
+            if (modelIndex == -1) {
+                break;
+            } else {
+                ++numberOfModels;
 
-                if (modelIndex == -1) {
-                    break;
-                } else {
-                    ++numberOfModels;
-
-                    modelsListing += "    <li><a href=\""+mModelUrls[modelIndex]+"\">"+model+"</a></li>\n";
-                }
+                modelListing.insertMulti(model, mModelUrls[modelIndex]);
             }
         }
+    }
 
-        contents += "<p>\n";
+    // Determine the message to be displayed
 
+    QString message = QString();
+
+    if (numberOfModels) {
         if (numberOfModels == 1)
-            contents += "    "+tr("<strong>1</strong> CellML model was found:")+"\n";
+            message = tr("<strong>1</strong> CellML model was found:");
         else
-            contents += "    "+tr("<strong>%1</strong> CellML models were found:").arg(numberOfModels)+"\n";
-
-        contents += "</p>\n";
-        contents += "\n";
-        contents += "<ul>\n";
-        contents += modelsListing;
-        contents += "</ul>";
+            message = tr("<strong>%1</strong> CellML models were found:").arg(numberOfModels);
     } else if (mModelNames.empty()) {
-        if (mErrorMessage.count()) {
-            // Something went wrong while trying to retrieve the list of models
-
-            contents += "<p>\n";
-            contents += "    "+tr("<strong>Error:</strong> ")+Core::formatMessage(mErrorMessage, true, true);
-            contents += "</p>\n";
-        }
+        if (mErrorMessage.count())
+            message = tr("<strong>Error:</strong> ")+Core::formatMessage(mErrorMessage, true, true);
     } else {
-        // No model could be found
-
-        contents += "<p>\n";
-        contents += "    "+tr("No CellML model matches your criteria");
-        contents += "</p>\n";
+        message = tr("No CellML model matches your criteria");
     }
 
     // Show/hide our busy widget and output the list matching the search
@@ -218,7 +185,7 @@ void CellmlModelRepositoryWindowWindow::outputModelList(const QStringList &pMode
     } else {
         hideBusyWidget();
 
-        mCellmlModelRepositoryWidget->output(contents);
+        mCellmlModelRepositoryWidget->output(message, modelListing);
     }
 }
 
@@ -230,15 +197,6 @@ void CellmlModelRepositoryWindowWindow::on_filterValue_textChanged(const QString
     // criteria
 
     outputModelList(mModelNames.filter(QRegularExpression(text, QRegularExpression::CaseInsensitiveOption)));
-}
-
-//==============================================================================
-
-void CellmlModelRepositoryWindowWindow::on_actionCopy_triggered()
-{
-    // Copy the current selection to the clipboard
-
-    QApplication::clipboard()->setText(mCellmlModelRepositoryWidget->selectedText());
 }
 
 //==============================================================================
@@ -258,7 +216,7 @@ void CellmlModelRepositoryWindowWindow::on_refreshButton_clicked()
     // Disable the GUI side, so that the user doesn't get confused and ask to
     // refresh over and over again while he should just be patient
 
-    mGui->dockWidgetContents->setEnabled(false);
+    mGui->filterWidget->setEnabled(false);
 
     // Get the list of CellML models
 
@@ -350,7 +308,7 @@ void CellmlModelRepositoryWindowWindow::finished(QNetworkReply *pNetworkReply)
 
     // Re-enable the GUI side
 
-    mGui->dockWidgetContents->setEnabled(true);
+    mGui->filterWidget->setEnabled(true);
 
     // Give, within the current window, the focus to mGui->filterValue, but
     // only if the current window already has the focus
@@ -371,17 +329,6 @@ void CellmlModelRepositoryWindowWindow::sslErrors(QNetworkReply *pNetworkReply,
     // certificate (even if it is invalid, e.g. it has expired)
 
     pNetworkReply->ignoreSslErrors(pSslErrors);
-}
-
-//==============================================================================
-
-void CellmlModelRepositoryWindowWindow::showCustomContextMenu(const QPoint &pPosition) const
-{
-    Q_UNUSED(pPosition);
-
-    // Show our context menu for our CellML Models Repository widget
-
-    mContextMenu->exec(QCursor::pos());
 }
 
 //==============================================================================
