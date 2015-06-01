@@ -1,3 +1,5 @@
+// A comment before the model definition itself...
+
 def model my_model as
     def
 

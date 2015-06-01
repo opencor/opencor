@@ -53,12 +53,15 @@ namespace Core {
 //==============================================================================
 
 QString CORE_EXPORT getOpenFileName(const QString &pCaption,
-                                    const QString &pFilters = QString());
+                                    const QString &pFilters = QString(),
+                                    QString *pSelectedFilter = 0);
 QStringList CORE_EXPORT getOpenFileNames(const QString &pCaption,
-                                         const QString &pFilters = QString());
+                                         const QString &pFilters = QString(),
+                                         QString *pSelectedFilter = 0);
 QString CORE_EXPORT getSaveFileName(const QString &pCaption,
                                     const QString &pFileName,
-                                    const QString &pFilters = QString());
+                                    const QString &pFilters = QString(),
+                                    QString *pSelectedFilter = 0);
 
 void CORE_EXPORT setFocusTo(QWidget *pWidget);
 

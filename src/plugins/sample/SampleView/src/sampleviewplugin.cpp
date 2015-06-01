@@ -253,10 +253,14 @@ bool SampleViewPlugin::hasViewWidget(const QString &pFileName)
 QWidget * SampleViewPlugin::viewWidget(const QString &pFileName)
 {
     // Update and return our sample view widget using the given file
+    // Note: we temporarily disable updates for our sample view widget, so as to
+    //       avoid any risk of known/unknown/potential flickering...
 
     mFileName = pFileName;
 
-    mViewWidget->update(pFileName);
+    mViewWidget->setUpdatesEnabled(false);
+        mViewWidget->update(pFileName);
+    mViewWidget->setUpdatesEnabled(true);
 
     return mViewWidget;
 }

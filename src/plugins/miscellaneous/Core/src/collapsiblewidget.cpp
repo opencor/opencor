@@ -260,11 +260,6 @@ void CollapsibleWidget::constructor(const QColor &pSeparatorColor)
     mLayout->setSpacing(0);
 
     setLayout(mLayout);
-
-    // Add a stretch to our layout so that its contents will take as little
-    // space as possible
-
-    mLayout->addStretch(1);
 }
 
 //==============================================================================
@@ -360,19 +355,16 @@ void CollapsibleWidget::addWidget(QWidget *pWidget, const bool &pCollapsible)
     if (!pWidget)
         return;
 
-    // We want to add a new widget, so we first need to add a new header to our
-    // layout
-
-    int beforeIndex = 2*mHeaders.count();
+    // We want to add a widget, so we first need to add a header to our layout
 
     CollapsibleHeaderWidget *header = new CollapsibleHeaderWidget(mSeparatorColor, pCollapsible, this);
 
     // Let our header know whether it is the first header
 
-    header->setFirstHeader(!beforeIndex);
+    header->setFirstHeader(mHeaders.isEmpty());
 
     // Let our header know that, if anything, it is our new last header, meaning
-    // that our previous header is not the last one anymore
+    // that our previous last header is not the last one anymore
 
     if (!mHeaders.isEmpty())
         mHeaders.last()->setLastHeader(false);
@@ -382,13 +374,13 @@ void CollapsibleWidget::addWidget(QWidget *pWidget, const bool &pCollapsible)
     // Now, we can actually add the header to our layout, as well as keep track
     // of it
 
-    mLayout->insertWidget(beforeIndex, header);
+    mLayout->addWidget(header);
 
     mHeaders.append(header);
 
-    // Add the new widget itself
+    // Add the widget itself
 
-    mLayout->insertWidget(++beforeIndex, pWidget);
+    mLayout->addWidget(pWidget);
 
     // Create a connection to show/hide our widget depending on the collapsed
     // state of our header

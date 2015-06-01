@@ -271,8 +271,12 @@ QWidget * SingleCellViewPlugin::viewWidget(const QString &pFileName)
         return 0;
 
     // Update and return our simulation view widget using the given CellML file
+    // Note: we temporarily disable updates for our simulation view widget, so
+    //       as to avoid any risk of known/unknown/potential flickering...
 
-    mViewWidget->initialize(pFileName);
+    mViewWidget->setUpdatesEnabled(false);
+        mViewWidget->initialize(pFileName);
+    mViewWidget->setUpdatesEnabled(true);
 
     return mViewWidget;
 }
