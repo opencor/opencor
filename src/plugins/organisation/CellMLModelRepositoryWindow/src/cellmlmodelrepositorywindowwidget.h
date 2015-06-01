@@ -28,16 +28,11 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+class QStandardItemModel;
+
+//==============================================================================
+
 namespace OpenCOR {
-
-//==============================================================================
-
-namespace Core {
-    class TreeViewWidget;
-}   // namespace Core
-
-//==============================================================================
-
 namespace CellMLModelRepositoryWindow {
 
 //==============================================================================
@@ -56,7 +51,7 @@ protected:
     virtual QSize sizeHint() const;
 
 private:
-    Core::TreeViewWidget *mModelListing;
+    QStandardItemModel *mModel;
 };
 
 //==============================================================================

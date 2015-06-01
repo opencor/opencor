@@ -12,20 +12,12 @@
         <translation>Filtre :</translation>
     </message>
     <message>
-        <source>Copy the selection to the clipboard</source>
-        <translation>Copier la sélection dans le presse-papier</translation>
-    </message>
-    <message>
         <source>Refresh the list of CellML models</source>
         <translation>Rafraîchir la liste de modèles CellML</translation>
     </message>
     <message>
         <source>Refresh</source>
         <translation>Rafraîchir</translation>
-    </message>
-    <message>
-        <source>Copy</source>
-        <translation>Copier</translation>
     </message>
     <message>
         <source>Git</source>

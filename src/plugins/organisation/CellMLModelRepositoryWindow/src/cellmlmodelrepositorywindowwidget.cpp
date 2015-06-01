@@ -26,6 +26,7 @@ specific language governing permissions and limitations under the License.
 #include <QDesktopServices>
 #include <QIODevice>
 #include <QPaintEvent>
+#include <QStandardItemModel>
 #include <QVBoxLayout>
 
 //==============================================================================
@@ -38,6 +39,16 @@ namespace CellMLModelRepositoryWindow {
 CellmlModelRepositoryWindowWidget::CellmlModelRepositoryWindowWidget(QWidget *pParent) :
     Core::TreeViewWidget(pParent)
 {
+    // Create an instance of the data model that we want to view
+
+    mModel = new QStandardItemModel(this);
+
+    // Set some properties
+
+    setFrameShape(QFrame::StyledPanel);
+//    setHeaderHidden(true);
+    setModel(mModel);
+
 //---GRY---
 //    connect(this, SIGNAL(resized(const QSize &, const QSize &)),
 //            this, SLOT(recenterBusyWidget()));
