@@ -55,7 +55,13 @@ FileBrowserWindowWidget::FileBrowserWindowWidget(QWidget *pParent) :
     // Set some properties
 
     setDragDropMode(QAbstractItemView::DragOnly);
+#if defined(Q_OS_WIN) || defined(Q_OS_LINUX)
+    setFrameShape(QFrame::StyledPanel);
+#elif defined(Q_OS_MAC)
     setFrameShape(QFrame::Panel);
+#else
+    #error Unsupported platform
+#endif
     setModel(mModel);
     setSortingEnabled(true);
 

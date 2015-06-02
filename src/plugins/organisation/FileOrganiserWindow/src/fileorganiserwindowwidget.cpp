@@ -62,7 +62,13 @@ FileOrganiserWindowWidget::FileOrganiserWindowWidget(QWidget *pParent) :
 
     setDragDropMode(QAbstractItemView::DragDrop);
     setEditTriggers(QAbstractItemView::EditKeyPressed);
+#if defined(Q_OS_WIN) || defined(Q_OS_LINUX)
+    setFrameShape(QFrame::StyledPanel);
+#elif defined(Q_OS_MAC)
     setFrameShape(QFrame::Panel);
+#else
+    #error Unsupported platform
+#endif
     setHeaderHidden(true);
     setModel(mModel);
 
