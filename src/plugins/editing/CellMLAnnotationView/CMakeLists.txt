@@ -22,7 +22,6 @@ ADD_PLUGIN(CellMLAnnotationView
         src/cellmlannotationviewmetadatanormalviewdetailswidget.cpp
         src/cellmlannotationviewmetadatarawviewdetailswidget.cpp
         src/cellmlannotationviewmetadataviewdetailswidget.cpp
-        src/cellmlannotationviewmetadatawebviewwidget.cpp
         src/cellmlannotationviewplugin.cpp
         src/cellmlannotationviewwidget.cpp
     HEADERS_MOC
@@ -36,7 +35,6 @@ ADD_PLUGIN(CellMLAnnotationView
         src/cellmlannotationviewmetadatanormalviewdetailswidget.h
         src/cellmlannotationviewmetadatarawviewdetailswidget.h
         src/cellmlannotationviewmetadataviewdetailswidget.h
-        src/cellmlannotationviewmetadatawebviewwidget.h
         src/cellmlannotationviewplugin.h
         src/cellmlannotationviewwidget.h
     UIS

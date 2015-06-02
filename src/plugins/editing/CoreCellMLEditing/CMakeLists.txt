@@ -60,6 +60,8 @@ ADD_PLUGIN(CoreCellMLEditing
         QtOpenGL
         QtPrintSupport
         QtSvg
+        QtWebKit
+        QtWebKitWidgets
         QtWidgets
         QtXml
         QtXmlPatterns

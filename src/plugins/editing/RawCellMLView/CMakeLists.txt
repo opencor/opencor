@@ -58,6 +58,8 @@ ADD_PLUGIN(RawCellMLView
         QtOpenGL
         QtPrintSupport
         QtSvg
+        QtWebKit
+        QtWebKitWidgets
         QtWidgets
         QtXml
         QtXmlPatterns

@@ -16,11 +16,11 @@ specific language governing permissions and limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// CellML annotation view metadata web view widget
+// Web view widget
 //==============================================================================
 
-#ifndef CELLMLANNOTATIONVIEWMETADATAWEBVIEWWIDGET_H
-#define CELLMLANNOTATIONVIEWMETADATAWEBVIEWWIDGET_H
+#ifndef WEBVIEWWIDGET_H
+#define WEBVIEWWIDGET_H
 
 //==============================================================================
 
@@ -30,16 +30,16 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 namespace OpenCOR {
-namespace CellMLAnnotationView {
+namespace Core {
 
 //==============================================================================
 
-class CellmlAnnotationViewMetadataWebViewWidget : public QWebView
+class WebViewWidget : public QWebView
 {
     Q_OBJECT
 
 public:
-    explicit CellmlAnnotationViewMetadataWebViewWidget(QWidget *pParent);
+    explicit WebViewWidget(QWidget *pParent);
 
     void retrieveLinkInformation(QString &pLink, QString &pTextContent);
 
@@ -52,7 +52,7 @@ protected:
 
 //==============================================================================
 
-}   // namespace CellMLAnnotationView
+}   // namespace Core
 }   // namespace OpenCOR
 
 //==============================================================================

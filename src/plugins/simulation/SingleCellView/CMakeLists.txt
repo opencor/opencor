@@ -77,6 +77,8 @@ ADD_PLUGIN(SingleCellView
         QtOpenGL
         QtPrintSupport
         QtSvg
+        QtWebKit
+        QtWebKitWidgets
         QtWidgets
         QtXml
         QtXmlPatterns

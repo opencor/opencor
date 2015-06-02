@@ -62,6 +62,8 @@ ADD_PLUGIN(CellMLTextView
         QtOpenGL
         QtPrintSupport
         QtSvg
+        QtWebKit
+        QtWebKitWidgets
         QtWidgets
         QtXml
         QtXmlPatterns

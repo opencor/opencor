@@ -26,6 +26,8 @@ ADD_PLUGIN(FileBrowserWindow
         QtCore
         QtGui
         QtNetwork
+        QtWebKit
+        QtWebKitWidgets
         QtWidgets
         QtXml
         QtXmlPatterns
