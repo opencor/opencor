@@ -52,7 +52,7 @@ FileBrowserWindowWidget::FileBrowserWindowWidget(QWidget *pParent) :
 
     mModel = new FileBrowserWindowModel(this);
 
-    // Set some properties for
+    // Set some properties
 
     setDragDropMode(QAbstractItemView::DragOnly);
     setFrameShape(QFrame::StyledPanel);
