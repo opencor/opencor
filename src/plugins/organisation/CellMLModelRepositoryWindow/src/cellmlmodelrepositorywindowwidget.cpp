@@ -20,14 +20,13 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include "cellmlmodelrepositorywindowwidget.h"
+#include "corecliutils.h"
 
 //==============================================================================
 
 #include <QDesktopServices>
 #include <QIODevice>
 #include <QPaintEvent>
-#include <QStandardItemModel>
-#include <QVBoxLayout>
 
 //==============================================================================
 
@@ -37,28 +36,42 @@ namespace CellMLModelRepositoryWindow {
 //==============================================================================
 
 CellmlModelRepositoryWindowWidget::CellmlModelRepositoryWindowWidget(QWidget *pParent) :
-    Core::TreeViewWidget(pParent)
+    QWebView(pParent),
+    Core::CommonWidget(pParent)
 {
-    // Create an instance of the data model that we want to view
+    // Add a small margin to the widget, so that no visual trace of the border
+    // drawn by drawBorderIfDocked is left when scrolling
 
-    mModel = new QStandardItemModel(this);
+    setStyleSheet("QWebView {"
+                  "    margin: 1px;"
+                  "}");
+    // Note: not sure why, but no matter how many pixels are specified for the
+    //       margin, no margin actually exists, but it addresses the issue with
+    //       the border drawn by drawBorderIfDocked...
 
-    // Set some properties
+    // Prevent objects from being dropped on us
 
-    setEditTriggers(QAbstractItemView::NoEditTriggers);
-    setFrameShape(QFrame::StyledPanel);
-    setHeaderHidden(true);
-    setModel(mModel);
-    setRootIsDecorated(false);
-    setSelectionMode(QAbstractItemView::NoSelection);
-
-//---GRY---
-//    connect(this, SIGNAL(resized(const QSize &, const QSize &)),
-//            this, SLOT(recenterBusyWidget()));
+    setAcceptDrops(false);
 
     // Have links opened in the user's browser rather than in our list
 
-//    page()->setLinkDelegationPolicy(QWebPage::DelegateAllLinks);
+    page()->setLinkDelegationPolicy(QWebPage::DelegateAllLinks);
+
+    // Some connections
+
+    connect(this, SIGNAL(linkClicked(const QUrl &)),
+            this, SLOT(openLink(const QUrl &)));
+
+    connect(page(), SIGNAL(selectionChanged()),
+            this, SLOT(selectionChanged()));
+
+    // Retrieve the output template
+
+    Core::readTextFromFile(":/output.html", mOutputTemplate);
+
+    // Let people know that there is nothing to copy initially
+
+    emit copyTextEnabled(false);
 }
 
 //==============================================================================
@@ -75,15 +88,52 @@ QSize CellmlModelRepositoryWindowWidget::sizeHint() const
 
 //==============================================================================
 
-void CellmlModelRepositoryWindowWidget::output(const QString &pMessage,
-                                               const QMap<QString, QString> &pModelListing)
+void CellmlModelRepositoryWindowWidget::paintEvent(QPaintEvent *pEvent)
+{
+    // Default handling of the event
+
+    QWebView::paintEvent(pEvent);
+
+    // Draw a border
+
+    drawBorder(
+#if defined(Q_OS_WIN) || defined(Q_OS_LINUX)
+               true, true, true, true,
+#elif defined(Q_OS_MAC)
+               true, false, true, false,
+#else
+    #error Unsupported platform
+#endif
+               true, false, false, false
+              );
+}
+
+//==============================================================================
+
+void CellmlModelRepositoryWindowWidget::output(const QString &pOutput)
 {
     // Set the page to contain pOutput using our output template
-Q_UNUSED(pModelListing);
 
-    mModel->clear();
+    setHtml(mOutputTemplate.arg(pOutput));
+}
 
-    mModel->invisibleRootItem()->appendRow(new QStandardItem(pMessage));
+//==============================================================================
+
+void CellmlModelRepositoryWindowWidget::openLink(const QUrl &pUrl)
+{
+    // Open the link in the user's browser
+
+    QDesktopServices::openUrl(pUrl);
+}
+
+//==============================================================================
+
+void CellmlModelRepositoryWindowWidget::selectionChanged()
+{
+    // The text selection has changed, so let the user know whether some text is
+    // now selected
+
+    emit copyTextEnabled(!selectedText().isEmpty());
 }
 
 //==============================================================================

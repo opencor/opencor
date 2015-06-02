@@ -24,11 +24,11 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-#include "treeviewwidget.h"
+#include "commonwidget.h"
 
 //==============================================================================
 
-class QStandardItemModel;
+#include <QWebView>
 
 //==============================================================================
 
@@ -37,21 +37,31 @@ namespace CellMLModelRepositoryWindow {
 
 //==============================================================================
 
-class CellmlModelRepositoryWindowWidget : public Core::TreeViewWidget
+class CellmlModelRepositoryWindowWidget : public QWebView,
+                                          public Core::CommonWidget
 {
     Q_OBJECT
 
 public:
     explicit CellmlModelRepositoryWindowWidget(QWidget *pParent);
 
-    void output(const QString &pMessage,
-                const QMap<QString, QString> &pModelListing);
+    void output(const QString &pOutput);
 
 protected:
     virtual QSize sizeHint() const;
 
+    virtual void paintEvent(QPaintEvent *pEvent);
+
 private:
-    QStandardItemModel *mModel;
+    QString mOutputTemplate;
+
+Q_SIGNALS:
+    void copyTextEnabled(const bool &pEnabled);
+
+private Q_SLOTS:
+    void openLink(const QUrl &pUrl);
+
+    void selectionChanged();
 };
 
 //==============================================================================
