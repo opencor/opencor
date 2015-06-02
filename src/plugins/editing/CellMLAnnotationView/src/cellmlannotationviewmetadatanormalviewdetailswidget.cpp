@@ -21,11 +21,11 @@ specific language governing permissions and limitations under the License.
 
 #include "cellmlannotationvieweditingwidget.h"
 #include "cellmlannotationviewmetadatanormalviewdetailswidget.h"
-#include "cellmlannotationviewmetadatawebviewwidget.h"
 #include "corecliutils.h"
 #include "coreguiutils.h"
 #include "filemanager.h"
 #include "usermessagewidget.h"
+#include "webviewwidget.h"
 
 //==============================================================================
 
@@ -113,7 +113,7 @@ CellmlAnnotationViewMetadataNormalViewDetailsWidget::CellmlAnnotationViewMetadat
 
     Core::readTextFromFile(":/ontologicalTerms.html", mOutputOntologicalTermsTemplate);
 
-    mOutputOntologicalTerms = new CellmlAnnotationViewMetadataWebViewWidget(mOutput);
+    mOutputOntologicalTerms = new Core::WebViewWidget(mOutput);
 
     mOutputOntologicalTerms->setContextMenuPolicy(Qt::CustomContextMenu);
 

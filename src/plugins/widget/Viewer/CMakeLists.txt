@@ -37,6 +37,8 @@ ADD_PLUGIN(Viewer
         QtOpenGL
         QtPrintSupport
         QtSvg
+        QtWebKit
+        QtWebKitWidgets
         QtWidgets
         QtXml
         QtXmlPatterns

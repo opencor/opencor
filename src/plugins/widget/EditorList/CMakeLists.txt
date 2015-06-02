@@ -21,6 +21,8 @@ ADD_PLUGIN(EditorList
         QtCore
         QtGui
         QtNetwork
+        QtWebKit
+        QtWebKitWidgets
         QtWidgets
         QtXml
         QtXmlPatterns

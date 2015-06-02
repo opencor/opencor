@@ -37,6 +37,8 @@ ADD_PLUGIN(Editor
         QtGui
         ${QT_MAC_EXTRAS}
         QtNetwork
+        QtWebKit
+        QtWebKitWidgets
         QtWidgets
         QtXml
         QtXmlPatterns
