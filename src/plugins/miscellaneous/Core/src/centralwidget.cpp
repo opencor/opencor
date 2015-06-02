@@ -1633,12 +1633,13 @@ void CentralWidget::updateGui()
         QString fileViewKey = viewKey(fileModeTabIndex, mode->viewTabs()->currentIndex(), fileName);
         bool hasView = mViews.value(fileViewKey);
 
-        if (isRemoteFile && !isBusyWidgetVisible() && !hasView)
+        if (isRemoteFile && !isBusyWidgetVisible() && !hasView) {
             // Note: we check whether the busy widget is visible since we may be
             //       coming here as a result of the user opening a remote file,
             //       as opposed to just switching files/modes/views...
 
             showBusyWidget(this);
+        }
 
         newView = viewInterface?viewInterface->viewWidget(fileName):0;
 
@@ -1691,9 +1692,8 @@ void CentralWidget::updateGui()
     emit guiUpdated(viewPlugin, fileName);
 
     // Replace the current view with the new one
-    // Note #1: the order in which the adding and removing (as well as the
-    //          showing/hiding) of view is done to ensure that the replacement
-    //          looks as good as possible...
+    // Note #1: the order in which the adding and removing of view is done to
+    //          ensure that the replacement looks as good as possible...
     // Note #2: to show/hide the status bar is to avoid some of the flickering
     //          that results from switching from one file to another (both using
     //          the same view) with the status bar visible and the mouse pointer
@@ -1704,10 +1704,8 @@ void CentralWidget::updateGui()
     bool statusBarVisible = mMainWindow->statusBar()->isVisible();
 
     mMainWindow->statusBar()->setVisible(false);
-
-    mContents->removeWidget(mContents->currentWidget());
-    mContents->addWidget(newView);
-
+        mContents->removeWidget(mContents->currentWidget());
+        mContents->addWidget(newView);
     mMainWindow->statusBar()->setVisible(statusBarVisible);
 
     // Give the focus to the new view after first checking that it has a focused

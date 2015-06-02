@@ -269,7 +269,7 @@ void SingleCellViewInformationParametersWidget::propertyChanged(Core::Property *
 
     CellMLSupport::CellmlFileRuntimeParameter *parameter = mParameters.value(pProperty);
 
-    if (parameter)
+    if (parameter) {
         switch (parameter->type()) {
         case CellMLSupport::CellmlFileRuntimeParameter::Constant:
             mSimulation->data()->constants()[parameter->index()] = pProperty->doubleValue();
@@ -284,6 +284,7 @@ void SingleCellViewInformationParametersWidget::propertyChanged(Core::Property *
 
             ;
         }
+    }
 
     // Recompute our 'computed constants' and 'variables'
     // Note #1: we would normally call
@@ -356,7 +357,7 @@ void SingleCellViewInformationParametersWidget::populateModel(CellMLSupport::Cel
 
                 QList<Core::Property *> subSections = QList<Core::Property *>();
 
-                if (section)
+                if (section) {
                     // We have a section, so go through its children and keep
                     // track of its propeties that are a section
 
@@ -368,7 +369,7 @@ void SingleCellViewInformationParametersWidget::populateModel(CellMLSupport::Cel
                             subSections << property;
                         }
                     }
-                else
+                } else {
                     // We don't have a section, so go through our property
                     // editor's properties and keep tack of those that are a
                     // section
@@ -376,6 +377,7 @@ void SingleCellViewInformationParametersWidget::populateModel(CellMLSupport::Cel
                     foreach (Core::Property *property, mPropertyEditor->properties())
                         if (property->type() == Core::Property::Section)
                             subSections << property;
+                }
 
                 // Go through the sub-sections and check if one of them is the
                 // one we are after

@@ -100,7 +100,7 @@ void CellmlModelRepositoryWindowWidget::paintEvent(QPaintEvent *pEvent)
 #if defined(Q_OS_WIN) || defined(Q_OS_LINUX)
                true, true, true, true,
 #elif defined(Q_OS_MAC)
-               true, false, true, false,
+               true, false, false, false,
 #else
     #error Unsupported platform
 #endif

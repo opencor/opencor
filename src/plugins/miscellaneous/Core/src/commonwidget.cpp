@@ -95,10 +95,6 @@ void CommonWidget::drawBorder(const bool &pDockedTop, const bool &pDockedLeft,
     QWidget *widget = dynamic_cast<QWidget *>(this);
 
     if (dockWidget && widget) {
-        // The castings were successful, so our parent is really a QDockWidget,
-        // we are really a QWidget, and to top it all our parent is floating (or
-        // we want to force the drawing), so let's go ahead...
-
         QPainter painter(widget);
 
         QPen newPen = painter.pen();
