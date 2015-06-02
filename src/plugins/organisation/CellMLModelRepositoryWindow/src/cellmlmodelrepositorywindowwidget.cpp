@@ -131,7 +131,7 @@ void CellmlModelRepositoryWindowWidget::openLink(const QUrl &pUrl)
 void CellmlModelRepositoryWindowWidget::selectionChanged()
 {
     // The text selection has changed, so let the user know whether some text is
-    // now selected
+    // now/still selected
 
     emit copyTextEnabled(!selectedText().isEmpty());
 }
