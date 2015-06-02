@@ -62,7 +62,7 @@ FileOrganiserWindowWidget::FileOrganiserWindowWidget(QWidget *pParent) :
 
     setDragDropMode(QAbstractItemView::DragDrop);
     setEditTriggers(QAbstractItemView::EditKeyPressed);
-    setFrameShape(QFrame::StyledPanel);
+    setFrameShape(QFrame::Panel);
     setHeaderHidden(true);
     setModel(mModel);
 
