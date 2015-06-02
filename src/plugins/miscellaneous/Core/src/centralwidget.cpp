@@ -1633,12 +1633,13 @@ void CentralWidget::updateGui()
         QString fileViewKey = viewKey(fileModeTabIndex, mode->viewTabs()->currentIndex(), fileName);
         bool hasView = mViews.value(fileViewKey);
 
-        if (isRemoteFile && !isBusyWidgetVisible() && !hasView)
+        if (isRemoteFile && !isBusyWidgetVisible() && !hasView) {
             // Note: we check whether the busy widget is visible since we may be
             //       coming here as a result of the user opening a remote file,
             //       as opposed to just switching files/modes/views...
 
             showBusyWidget(this);
+        }
 
         newView = viewInterface?viewInterface->viewWidget(fileName):0;
 
