@@ -44,7 +44,7 @@
     </message>
 </context>
 <context>
-    <name>OpenCOR::CellMLModelRepositoryWindow::CellmlModelRepositoryWindowWindow</name>
+    <name>OpenCOR::CellMLModelRepositoryWindow::CellmlModelRepositoryWindowWidget</name>
     <message>
         <source>&lt;strong&gt;1&lt;/strong&gt; CellML model was found:</source>
         <translation>&lt;strong&gt;1&lt;/strong&gt; modèle CellML a été trouvé :</translation>

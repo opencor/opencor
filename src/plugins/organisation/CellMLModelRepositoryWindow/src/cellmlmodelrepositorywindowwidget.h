@@ -25,10 +25,7 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include "commonwidget.h"
-
-//==============================================================================
-
-#include <QWebView>
+#include "webviewwidget.h"
 
 //==============================================================================
 
@@ -37,7 +34,7 @@ namespace CellMLModelRepositoryWindow {
 
 //==============================================================================
 
-class CellmlModelRepositoryWindowWidget : public QWebView,
+class CellmlModelRepositoryWindowWidget : public Core::WebViewWidget,
                                           public Core::CommonWidget
 {
     Q_OBJECT

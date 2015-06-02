@@ -39,7 +39,7 @@ namespace CellMLModelRepositoryWindow {
 //==============================================================================
 
 CellmlModelRepositoryWindowWidget::CellmlModelRepositoryWindowWidget(QWidget *pParent) :
-    QWebView(pParent),
+    Core::WebViewWidget(pParent),
     Core::CommonWidget(pParent)
 {
     // Add a small margin to the widget, so that no visual trace of the border
