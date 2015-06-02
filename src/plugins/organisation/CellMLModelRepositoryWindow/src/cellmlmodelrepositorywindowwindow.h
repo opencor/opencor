@@ -67,21 +67,11 @@ public:
 private:
     Ui::CellmlModelRepositoryWindowWindow *mGui;
 
-    QStringList mModelNames;
-    QStringList mModelUrls;
-
     CellmlModelRepositoryWindowWidget *mCellmlModelRepositoryWidget;
 
-    QStringList mModelList;
-
     QNetworkAccessManager *mNetworkAccessManager;
-    QString mErrorMessage;
-
-    bool mModelListRequested;
 
     QMenu *mContextMenu;
-
-    void outputModelList(const QStringList &pModelList);
 
 private Q_SLOTS:
     void on_filterValue_textChanged(const QString &text);

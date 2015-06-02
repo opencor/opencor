@@ -45,7 +45,9 @@ class CellmlModelRepositoryWindowWidget : public QWebView,
 public:
     explicit CellmlModelRepositoryWindowWidget(QWidget *pParent);
 
-    void output(const QString &pOutput);
+    void output(const QString &pFilter, const QStringList &pModelNames,
+                const QStringList &pModelUrls, const QString &pErrorMessage);
+    void filter(const QString &pFilter);
 
 protected:
     virtual QSize sizeHint() const;

@@ -58,8 +58,7 @@ namespace CellMLModelRepositoryWindow {
 
 CellmlModelRepositoryWindowWindow::CellmlModelRepositoryWindowWindow(QWidget *pParent) :
     Core::OrganisationWidget(pParent),
-    mGui(new Ui::CellmlModelRepositoryWindowWindow),
-    mModelListRequested(false)
+    mGui(new Ui::CellmlModelRepositoryWindowWindow)
 {
     // Set up the GUI
 
@@ -138,95 +137,18 @@ void CellmlModelRepositoryWindowWindow::retranslateUi()
 
     mGui->retranslateUi(this);
 
-    // Retranslate our list of models
+    // Retranslate our CellML Model Repository widget
 
-    outputModelList(mModelList);
-}
-
-//==============================================================================
-
-void CellmlModelRepositoryWindowWindow::outputModelList(const QStringList &pModelList)
-{
-    // Keep track of our model list and remove any duplicates that it may
-    // contain
-    // Note: the duplicates are dealt with below when compiling determing the
-    //       model names and URLs...
-
-    mModelList = pModelList;
-
-    mModelList.removeDuplicates();
-
-    // Check whether some models should be listed (which may include 2+ models
-    // with the same name) or whether an error occurred
-
-    QString contents = QString();
-
-    if (mModelList.count()) {
-        int numberOfModels = 0;
-        QString modelsListing = QString();
-        int modelIndex;
-
-        foreach (const QString &model, mModelList) {
-            modelIndex = -1;
-
-            forever {
-                modelIndex = mModelNames.indexOf(model, ++modelIndex);
-
-                if (modelIndex == -1) {
-                    break;
-                } else {
-                    ++numberOfModels;
-
-                    modelsListing += "    <li><a href=\""+mModelUrls[modelIndex]+"\">"+model+"</a></li>\n";
-                }
-            }
-        }
-
-        contents += "<p>\n";
-
-        if (numberOfModels == 1)
-            contents += "    "+tr("<strong>1</strong> CellML model was found:")+"\n";
-        else
-            contents += "    "+tr("<strong>%1</strong> CellML models were found:").arg(numberOfModels)+"\n";
-
-        contents += "</p>\n";
-        contents += "\n";
-        contents += "<ul>\n";
-        contents += modelsListing;
-        contents += "</ul>";
-    } else if (mModelNames.empty()) {
-        if (mErrorMessage.count()) {
-            contents += "<p>\n";
-            contents += "    "+tr("<strong>Error:</strong> ")+Core::formatMessage(mErrorMessage, true, true);
-            contents += "</p>\n";
-        }
-    } else {
-        contents += "<p>\n";
-        contents += "    "+tr("No CellML model matches your criteria");
-        contents += "</p>\n";
-    }
-
-    // Show/hide our busy widget and output the list matching the search
-    // criteria, or a message telling the user what went wrong, if anything and
-    // if needed
-
-    if (mModelListRequested) {
-        showBusyWidget(mCellmlModelRepositoryWidget);
-    } else {
-        hideBusyWidget();
-
-        mCellmlModelRepositoryWidget->output(contents);
-    }
+    mCellmlModelRepositoryWidget->retranslateUi();
 }
 
 //==============================================================================
 
 void CellmlModelRepositoryWindowWindow::on_filterValue_textChanged(const QString &text)
 {
-    // Generate a Web page that contains all the models that match our search
-    // criteria
+    // Ask our CellML Model Repository widget to filter its output
 
-    outputModelList(mModelNames.filter(QRegularExpression(text, QRegularExpression::CaseInsensitiveOption)));
+    mCellmlModelRepositoryWidget->filter(text);
 }
 
 //==============================================================================
@@ -242,15 +164,9 @@ void CellmlModelRepositoryWindowWindow::on_actionCopy_triggered()
 
 void CellmlModelRepositoryWindowWindow::on_refreshButton_clicked()
 {
-    // Output the message telling the user that the list is being downloaded
-    // Note: to clear mModelNames ensures that we get the correct message from
-    //       outputModelList...
+    // Let the user that we are downloading the list of models
 
-    mModelListRequested = true;
-
-    mModelNames.clear();
-
-    outputModelList(QStringList());
+    showBusyWidget(mCellmlModelRepositoryWidget);
 
     // Disable the GUI side, so that the user doesn't get confused and ask to
     // refresh over and over again while he should just be patient
@@ -304,15 +220,11 @@ void CellmlModelRepositoryWindowWindow::on_gitButton_clicked()
 
 void CellmlModelRepositoryWindowWindow::finished(QNetworkReply *pNetworkReply)
 {
-    // Clear some properties
+    // Check whether we were able to retrieve the list of models
 
-    mModelNames.clear();
-    mModelUrls.clear();
-
-    mModelListRequested = false;
-
-    // Output the list of models, should we have retrieved it without any
-    // problem
+    QStringList modelNames = QStringList();
+    QStringList modelUrls = QStringList();
+    QString errorMessage = QString();
 
     if (pNetworkReply->error() == QNetworkReply::NoError) {
         // Parse the JSON code
@@ -321,7 +233,7 @@ void CellmlModelRepositoryWindowWindow::finished(QNetworkReply *pNetworkReply)
         QJsonDocument jsonDocument = QJsonDocument::fromJson(pNetworkReply->readAll(), &jsonParseError);
 
         if (jsonParseError.error == QJsonParseError::NoError) {
-            // Retrieve the list of CellML models
+            // Retrieve the list of models
 
             QVariantMap resultMap = jsonDocument.object().toVariantMap();
             QVariantMap exposureDetailsVariant;
@@ -329,21 +241,24 @@ void CellmlModelRepositoryWindowWindow::finished(QNetworkReply *pNetworkReply)
             foreach (const QVariant &exposureVariant, resultMap["collection"].toMap()["links"].toList()) {
                 exposureDetailsVariant = exposureVariant.toMap();
 
-                mModelNames << exposureDetailsVariant["prompt"].toString().trimmed();
-                mModelUrls << exposureDetailsVariant["href"].toString().trimmed();
+                modelNames << exposureDetailsVariant["prompt"].toString().trimmed();
+                modelUrls << exposureDetailsVariant["href"].toString().trimmed();
             }
-
-            mErrorMessage = QString();
         } else {
-            mErrorMessage = jsonParseError.errorString();
+            errorMessage = jsonParseError.errorString();
         }
     } else {
-        mErrorMessage = pNetworkReply->errorString();
+        errorMessage = pNetworkReply->errorString();
     }
 
-    // Initialise the output using whatever search criteria is present
+    // Ask our CellML Model Repository widget to output the list of (filtered)
+    // models or the error we got
 
-    on_filterValue_textChanged(mGui->filterValue->text());
+    hideBusyWidget();
+
+    mCellmlModelRepositoryWidget->output(mGui->filterValue->text(),
+                                         modelNames, modelUrls,
+                                         errorMessage);
 
     // Re-enable the GUI side
 

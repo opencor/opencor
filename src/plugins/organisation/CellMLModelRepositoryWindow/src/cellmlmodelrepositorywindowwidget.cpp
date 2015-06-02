@@ -21,12 +21,15 @@ specific language governing permissions and limitations under the License.
 
 #include "cellmlmodelrepositorywindowwidget.h"
 #include "corecliutils.h"
+#include "coreguiutils.h"
 
 //==============================================================================
 
 #include <QDesktopServices>
 #include <QIODevice>
 #include <QPaintEvent>
+#include <QWebElement>
+#include <QWebFrame>
 
 //==============================================================================
 
@@ -69,6 +72,9 @@ CellmlModelRepositoryWindowWidget::CellmlModelRepositoryWindowWidget(QWidget *pP
 
     Core::readTextFromFile(":/output.html", mOutputTemplate);
 
+    setHtml(mOutputTemplate.arg(Core::iconDataUri(":/oxygen/places/folder-downloads.png", 16, 16),
+                                Core::iconDataUri(":/oxygen/places/folder-downloads.png", 16, 16, QIcon::Disabled)));
+
     // Let people know that there is nothing to copy initially
 
     emit copyTextEnabled(false);
@@ -110,11 +116,57 @@ void CellmlModelRepositoryWindowWidget::paintEvent(QPaintEvent *pEvent)
 
 //==============================================================================
 
-void CellmlModelRepositoryWindowWidget::output(const QString &pOutput)
+void CellmlModelRepositoryWindowWidget::output(const QString &pFilter,
+                                               const QStringList &pModelNames,
+                                               const QStringList &pModelUrls,
+                                               const QString &pErrorMessage)
+{
+    // Determine the contents of our page, i.e. either a list of models or an
+    // error message
+Q_UNUSED(pFilter);
+
+    QWebElement documentElement = page()->mainFrame()->documentElement();
+    QWebElement messageElement = documentElement.findFirst("p[id=message]");
+    int numberOfModels = pModelNames.count();
+
+    if (numberOfModels) {
+        // Output the number of models we found and then its list
+
+        if (numberOfModels == 1)
+            messageElement.setInnerXml(tr("<strong>1</strong> CellML model was found:"));
+        else
+            messageElement.setInnerXml(tr("<strong>%1</strong> CellML models were found:").arg(numberOfModels));
+
+        QString models = QString();
+
+        for (int i = 0; i < numberOfModels; ++i)
+            models =  models
+                     +"<tr>\n"
+                     +"    <td class=\"img\">\n"
+                     +"        <a class=\"noHover\" href=\"\"><img class=\"button clone\"/></a>\n"
+                     +"    </td>\n"
+                     +"    <td>\n"
+                     +"        <a href=\""+pModelUrls[i]+"\">"+pModelNames[i]+"</a>\n"
+                     +"    </td>\n"
+                     +"</tr>\n";
+
+        documentElement.findFirst("tbody").appendInside(models);
+    } else if (pErrorMessage.isEmpty()) {
+        messageElement.setInnerXml(tr("No CellML model matches your criteria"));
+    } else {
+        messageElement.setInnerXml(tr("<strong>Error:</strong> ")+Core::formatMessage(pErrorMessage, true, true));
+    }
+qDebug("---------------------------------------");
+qDebug("%s", qPrintable(documentElement.findFirst("tbody").toInnerXml()));
+}
+
+//==============================================================================
+
+void CellmlModelRepositoryWindowWidget::filter(const QString &pFilter)
 {
     // Set the page to contain pOutput using our output template
 
-    setHtml(mOutputTemplate.arg(pOutput));
+    setHtml(mOutputTemplate.arg(pFilter));
 }
 
 //==============================================================================
