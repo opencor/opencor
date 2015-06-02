@@ -49,7 +49,7 @@ ENDMACRO()
 # Make sure that OpenSSL is available on Linux and OS X
 
 IF(NOT WIN32)
-    FIND_PACKAGE(OpenSSL REQUIRED)
+    FIND_PACKAGE(OpenSSL REQUIRED QUIET)
 ENDIF()
 
 # Determine to which dependencies we must have access
