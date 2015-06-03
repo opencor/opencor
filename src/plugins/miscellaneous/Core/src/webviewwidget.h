@@ -24,6 +24,10 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#include "coreglobal.h"
+
+//==============================================================================
+
 #include <QString>
 #include <QWebView>
 
@@ -34,7 +38,7 @@ namespace Core {
 
 //==============================================================================
 
-class WebViewWidget : public QWebView
+class CORE_EXPORT WebViewWidget : public QWebView
 {
     Q_OBJECT
 
