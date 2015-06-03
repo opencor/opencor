@@ -36,12 +36,6 @@ class QFrame;
 
 //==============================================================================
 
-namespace Ui {
-    class SingleCellViewGraphPanelWidget;
-}
-
-//==============================================================================
-
 namespace OpenCOR {
 namespace SingleCellView {
 
@@ -58,7 +52,6 @@ class SingleCellViewGraphPanelWidget : public Core::Widget
 
 public:
     explicit SingleCellViewGraphPanelWidget(QWidget *pParent);
-    ~SingleCellViewGraphPanelWidget();
 
     virtual void retranslateUi();
 
@@ -77,8 +70,6 @@ protected:
     virtual void mousePressEvent(QMouseEvent *pEvent);
 
 private:
-    Ui::SingleCellViewGraphPanelWidget *mGui;
-
     QFrame *mMarker;
     SingleCellViewGraphPanelPlotWidget *mPlot;
 

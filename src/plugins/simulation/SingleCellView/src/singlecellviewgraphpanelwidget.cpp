@@ -34,10 +34,6 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-#include "ui_singlecellviewgraphpanelwidget.h"
-
-//==============================================================================
-
 namespace OpenCOR {
 namespace SingleCellView {
 
@@ -45,12 +41,14 @@ namespace SingleCellView {
 
 SingleCellViewGraphPanelWidget::SingleCellViewGraphPanelWidget(QWidget *pParent) :
     Widget(pParent),
-    mGui(new Ui::SingleCellViewGraphPanelWidget),
     mActive(false)
 {
-    // Set up the GUI
+    // Create and set our horizontal layout
 
-    mGui->setupUi(this);
+    QHBoxLayout *layout = new QHBoxLayout(this);
+
+    layout->setMargin(0);
+    layout->setSpacing(0);
 
     // Create, customise and add an inactive marker to our layout
 
@@ -66,26 +64,17 @@ SingleCellViewGraphPanelWidget::SingleCellViewGraphPanelWidget(QWidget *pParent)
 
     setActive(false);
 
-    mGui->layout->addWidget(mMarker);
+    layout->addWidget(mMarker);
 
     // Create and add a plot widget to our layout
 
     mPlot = new SingleCellViewGraphPanelPlotWidget(this);
 
-    mGui->layout->addWidget(mPlot);
+    layout->addWidget(mPlot);
 
     // Allow the graph panel to be of any vertical size
 
     setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Ignored);
-}
-
-//==============================================================================
-
-SingleCellViewGraphPanelWidget::~SingleCellViewGraphPanelWidget()
-{
-    // Delete the GUI
-
-    delete mGui;
 }
 
 //==============================================================================
