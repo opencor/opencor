@@ -33,12 +33,6 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-namespace Ui {
-    class RawCellmlViewWidget;
-}
-
-//==============================================================================
-
 namespace OpenCOR {
 
 //==============================================================================
@@ -96,8 +90,6 @@ public:
                   const bool &pOnlyErrors = false) const;
 
 private:
-    Ui::RawCellmlViewWidget *mGui;
-
     bool mNeedLoadingSettings;
     QString mSettingsGroup;
 

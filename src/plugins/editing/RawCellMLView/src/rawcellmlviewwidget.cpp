@@ -36,10 +36,6 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-#include "ui_rawcellmlviewwidget.h"
-
-//==============================================================================
-
 #include <QDomDocument>
 #include <QLabel>
 #include <QLayout>
@@ -60,7 +56,6 @@ namespace RawCellMLView {
 
 RawCellmlViewWidget::RawCellmlViewWidget(QWidget *pParent) :
     ViewWidget(pParent),
-    mGui(new Ui::RawCellmlViewWidget),
     mNeedLoadingSettings(true),
     mSettingsGroup(QString()),
     mEditingWidget(0),
@@ -68,9 +63,12 @@ RawCellmlViewWidget::RawCellmlViewWidget(QWidget *pParent) :
     mPresentationMathmlEquations(QMap<QString, QString>()),
     mContentMathmlEquation(QString())
 {
-    // Set up the GUI
+    QVBoxLayout *layout = new QVBoxLayout(this);
 
-    mGui->setupUi(this);
+    layout->setMargin(0);
+    layout->setSpacing(0);
+
+    setLayout(layout);
 
     // Create our XSL transformer and create a connection to retrieve the result
     // of its XSL transformations
@@ -90,10 +88,6 @@ RawCellmlViewWidget::~RawCellmlViewWidget()
     //       thread being stopped...
 
     mXslTransformer->stop();
-
-    // Delete the GUI
-
-    delete mGui;
 }
 
 //==============================================================================
