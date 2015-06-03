@@ -42,8 +42,12 @@ class CellmlModelRepositoryWindowWidget : public Core::WebViewWidget,
 public:
     explicit CellmlModelRepositoryWindowWidget(QWidget *pParent);
 
-    void output(const QString &pFilter, const QStringList &pModelNames,
-                const QStringList &pModelUrls, const QString &pErrorMessage);
+    virtual void retranslateUi();
+
+    void initialize(const QStringList &pModelNames,
+                    const QStringList &pModelUrls,
+                    const QString &pErrorMessage);
+
     void filter(const QString &pFilter);
 
 protected:
@@ -55,6 +59,10 @@ private:
     QString mOutputTemplate;
 
     QStringList mModelNames;
+    QString mErrorMessage;
+
+    int mNumberOfModels;
+    int mNumberOfFilteredModels;
 
 Q_SIGNALS:
     void copyTextEnabled(const bool &pEnabled);

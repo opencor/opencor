@@ -42,7 +42,10 @@ namespace CellMLModelRepositoryWindow {
 CellmlModelRepositoryWindowWidget::CellmlModelRepositoryWindowWidget(QWidget *pParent) :
     Core::WebViewWidget(pParent),
     Core::CommonWidget(pParent),
-    mModelNames(QStringList())
+    mModelNames(QStringList()),
+    mErrorMessage(QString()),
+    mNumberOfModels(0),
+    mNumberOfFilteredModels(0)
 {
     // Add a small margin to the widget, so that no visual trace of the border
     // drawn by drawBorderIfDocked is left when scrolling
@@ -84,6 +87,30 @@ CellmlModelRepositoryWindowWidget::CellmlModelRepositoryWindowWidget(QWidget *pP
 
 //==============================================================================
 
+void CellmlModelRepositoryWindowWidget::retranslateUi()
+{
+    // Retranslate our message
+
+    QWebElement messageElement = page()->mainFrame()->documentElement().findFirst("p[id=message]");
+
+    if (mErrorMessage.isEmpty()) {
+        if (!mNumberOfFilteredModels) {
+            if (!mNumberOfModels)
+                messageElement.removeAllChildren();
+            else
+                messageElement.setInnerXml(tr("No CellML model matches your criteria."));
+        } else if (mNumberOfFilteredModels == 1) {
+            messageElement.setInnerXml(tr("<strong>1</strong> CellML model was found:"));
+        } else {
+            messageElement.setInnerXml(tr("<strong>%1</strong> CellML models were found:").arg(mNumberOfFilteredModels));
+        }
+    } else {
+        messageElement.setInnerXml(tr("<strong>Error:</strong> ")+Core::formatMessage(mErrorMessage, true, true));
+    }
+}
+
+//==============================================================================
+
 QSize CellmlModelRepositoryWindowWidget::sizeHint() const
 {
     // Suggest a default size for the CellML Model Repository widget
@@ -118,61 +145,44 @@ void CellmlModelRepositoryWindowWidget::paintEvent(QPaintEvent *pEvent)
 
 //==============================================================================
 
-void CellmlModelRepositoryWindowWidget::output(const QString &pFilter,
-                                               const QStringList &pModelNames,
-                                               const QStringList &pModelUrls,
-                                               const QString &pErrorMessage)
+void CellmlModelRepositoryWindowWidget::initialize(const QStringList &pModelNames,
+                                                   const QStringList &pModelUrls,
+                                                   const QString &pErrorMessage)
 {
-    // Keep track of the model names
+    // Keep track of some properties
 
     mModelNames = pModelNames;
+    mErrorMessage = pErrorMessage;
 
-    // Determine the contents of our page, i.e. either a list of models or an
-    // error message
+    // Initialise our list of models, unless an error occurred
 
-    QWebElement documentElement = page()->mainFrame()->documentElement();
-    QWebElement messageElement = documentElement.findFirst("p[id=message]");
-    int numberOfModels = pModelNames.count();
+    if (pErrorMessage.isEmpty()) {
+        mNumberOfModels = pModelNames.count();
 
-    if (numberOfModels) {
-        // Output the number of models we found
+        if (mNumberOfModels) {
+            QString models = QString();
 
-        if (numberOfModels == 1)
-            messageElement.setInnerXml(tr("<strong>1</strong> CellML model was found:"));
-        else
-            messageElement.setInnerXml(tr("<strong>%1</strong> CellML models were found:").arg(numberOfModels));
+            for (int i = 0; i < mNumberOfModels; ++i) {
+                models =  models
+                         +"<tr id=\"model_"+QString::number(i)+"\">\n"
+                         +"    <td>\n"
+                         +"        <ul>\n"
+                         +"            <li>\n"
+                         +"                <a href=\""+pModelUrls[i]+"\">"+pModelNames[i]+"</a>\n"
+                         +"            </li>\n"
+                         +"        </ul>\n"
+                         +"    </td>\n"
+                         +"    <td class=\"button\">\n"
+                         +"        <a class=\"noHover\" href=\"\"><img class=\"button clone\"/></a>\n"
+                         +"    </td>\n"
+                         +"</tr>\n";
+            }
 
-        // Output the list of models
+            QWebElement modelsElement = page()->mainFrame()->documentElement().findFirst("tbody");
 
-        QString models = QString();
-
-        for (int i = 0; i < numberOfModels; ++i)
-            models =  models
-                     +"<tr id=\"model_"+QString::number(i)+"\">\n"
-                     +"    <td>\n"
-                     +"        <ul>\n"
-                     +"            <li>\n"
-                     +"                <a href=\""+pModelUrls[i]+"\">"+pModelNames[i]+"</a>\n"
-                     +"            </li>\n"
-                     +"        </ul>\n"
-                     +"    </td>\n"
-                     +"    <td class=\"button\">\n"
-                     +"        <a class=\"noHover\" href=\"\"><img class=\"button clone\"/></a>\n"
-                     +"    </td>\n"
-                     +"</tr>\n";
-
-        QWebElement modelsElement = documentElement.findFirst("tbody");
-
-        modelsElement.removeAllChildren();
-        modelsElement.appendInside(models);
-
-        // Apply the filter
-
-        filter(pFilter);
-    } else if (pErrorMessage.isEmpty()) {
-        messageElement.setInnerXml(tr("No CellML model matches your criteria"));
-    } else {
-        messageElement.setInnerXml(tr("<strong>Error:</strong> ")+Core::formatMessage(pErrorMessage, true, true));
+            modelsElement.removeAllChildren();
+            modelsElement.appendInside(models);
+        }
     }
 }
 
@@ -180,14 +190,23 @@ void CellmlModelRepositoryWindowWidget::output(const QString &pFilter,
 
 void CellmlModelRepositoryWindowWidget::filter(const QString &pFilter)
 {
-    // Filter our list of models and remove duplicates (they will be
-    // reintroduced in the next step)
+    // Make sure that we have something to filter (i.e. no error message)
+
+    if (!mErrorMessage.isEmpty())
+        return;
+
+    // Filter our list of models, remove duplicates (they will be reintroduced
+    // in the next step) and update our message (by retranslate ourselves)
 
     QStringList filteredModelNames = mModelNames.filter(QRegularExpression(pFilter, QRegularExpression::CaseInsensitiveOption));
 
+    mNumberOfFilteredModels = filteredModelNames.count();
+
     filteredModelNames.removeDuplicates();
 
-    // Make sure that the filtered models are visible and the others not
+    retranslateUi();
+
+    // Determine which models should be shown/hidden
 
     QIntList modelIndexes = QIntList();
     int modelIndex;
@@ -204,6 +223,8 @@ void CellmlModelRepositoryWindowWidget::filter(const QString &pFilter)
                 modelIndexes << modelIndex;
         }
     }
+
+    // Show/hide the relevant models
 
     QWebElement documentElement = page()->mainFrame()->documentElement();
 

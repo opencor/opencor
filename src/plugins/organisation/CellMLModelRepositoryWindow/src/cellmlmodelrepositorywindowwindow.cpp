@@ -250,16 +250,17 @@ void CellmlModelRepositoryWindowWindow::finished(QNetworkReply *pNetworkReply)
         errorMessage = pNetworkReply->errorString();
     }
 
-    // Ask our CellML Model Repository widget to output the list of (filtered)
-    // models or the error we got
+    // Ask our CellML Model Repository widget to initilise itself and then
+    // filter its list of models, should there be no error
 
-    hideBusyWidget();
+    mCellmlModelRepositoryWidget->initialize(modelNames, modelUrls,
+                                             errorMessage);
 
-    mCellmlModelRepositoryWidget->output(mGui->filterValue->text(),
-                                         modelNames, modelUrls,
-                                         errorMessage);
+    mCellmlModelRepositoryWidget->filter(mGui->filterValue->text());
 
     // Re-enable the GUI side
+
+    hideBusyWidget();
 
     mGui->dockWidgetContents->setEnabled(true);
 
