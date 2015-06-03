@@ -59,6 +59,17 @@ CellmlModelRepositoryWindowWidget::CellmlModelRepositoryWindowWidget(QWidget *pP
 
     mGui->setupUi(this);
 
+    // Add a small margin ourselves, so that no visual trace of the border drawn
+    // by drawBorder() in paintEvent() is left when scrolling (on Windows, but
+    // it doesn't harm doing it for all our supported platforms)
+    // Note: not sure why, but no matter how many pixels are specified for the
+    //       margin, no margin actually exists, but it addresses the issue with
+    //       the border drawn by drawBorder()...
+
+    setStyleSheet("QWebView {"
+                  "    margin: 1px;"
+                  "}");
+
     // Create and populate our context menu
 
     mContextMenu = new QMenu(this);
@@ -274,7 +285,7 @@ void CellmlModelRepositoryWindowWidget::linkClicked(const QUrl &pUrl)
     if (textContent.isEmpty()) {
         // We have clicked on a button link, so clone the model
 
-qDebug(">>> Clonging %s...", qPrintable(mLink));
+qDebug(">>> Cloning %s...", qPrintable(mLink));
     } else {
         // Open the model link in the user's browser
 
