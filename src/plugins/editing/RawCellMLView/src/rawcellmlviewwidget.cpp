@@ -38,10 +38,10 @@ specific language governing permissions and limitations under the License.
 
 #include <QDomDocument>
 #include <QLabel>
-#include <QLayout>
 #include <QMetaType>
 #include <QSettings>
 #include <QVariant>
+#include <QVBoxLayout>
 
 //==============================================================================
 
