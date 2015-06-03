@@ -40,18 +40,14 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-#include "ui_cellmltextviewwidget.h"
-
-//==============================================================================
-
 #include <QLabel>
 #include <QKeyEvent>
-#include <QLayout>
 #include <QMetaType>
 #include <QRegularExpression>
 #include <QSettings>
 #include <QTimer>
 #include <QVariant>
+#include <QVBoxLayout>
 
 //==============================================================================
 
@@ -135,7 +131,6 @@ void CellmlTextViewWidgetData::setSha1(const QString &pSha1)
 
 CellmlTextViewWidget::CellmlTextViewWidget(QWidget *pParent) :
     ViewWidget(pParent),
-    mGui(new Ui::CellmlTextViewWidget),
     mNeedLoadingSettings(true),
     mSettingsGroup(QString()),
     mEditingWidget(0),
@@ -146,9 +141,12 @@ CellmlTextViewWidget::CellmlTextViewWidget(QWidget *pParent) :
     mPresentationMathmlEquations(QMap<QString, QString>()),
     mContentMathmlEquation(QString())
 {
-    // Set up the GUI
+    QVBoxLayout *layout = new QVBoxLayout(this);
 
-    mGui->setupUi(this);
+    layout->setMargin(0);
+    layout->setSpacing(0);
+
+    setLayout(layout);
 
     // Create our XSL transformer and create a connection to retrieve the result
     // of its XSL transformations
@@ -157,15 +155,6 @@ CellmlTextViewWidget::CellmlTextViewWidget(QWidget *pParent) :
 
     connect(mXslTransformer, SIGNAL(done(const QString &, const QString &)),
             this, SLOT(xslTransformationDone(const QString &, const QString &)));
-}
-
-//==============================================================================
-
-CellmlTextViewWidget::~CellmlTextViewWidget()
-{
-    // Delete the GUI
-
-    delete mGui;
 }
 
 //==============================================================================
