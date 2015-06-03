@@ -1027,7 +1027,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::showCustomContextMenu(const 
 {
     Q_UNUSED(pPosition);
 
-    // Retrieve some information about the link
+    // Retrieve some information about the link, if any
 
     mOutputOntologicalTerms->retrieveLinkInformation(mLink, mTextContent);
 
