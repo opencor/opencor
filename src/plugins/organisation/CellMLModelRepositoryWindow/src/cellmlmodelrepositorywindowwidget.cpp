@@ -141,12 +141,16 @@ Q_UNUSED(pFilter);
 
         for (int i = 0; i < numberOfModels; ++i)
             models =  models
-                     +"<tr>\n"
-                     +"    <td class=\"img\">\n"
-                     +"        <a class=\"noHover\" href=\"\"><img class=\"button clone\"/></a>\n"
-                     +"    </td>\n"
+                     +"<tr id=\"model_"+QString::number(i)+"\">\n"
                      +"    <td>\n"
-                     +"        <a href=\""+pModelUrls[i]+"\">"+pModelNames[i]+"</a>\n"
+                     +"        <ul>\n"
+                     +"            <li>\n"
+                     +"                <a href=\""+pModelUrls[i]+"\">"+pModelNames[i]+"</a>\n"
+                     +"            </li>\n"
+                     +"        </ul>\n"
+                     +"    </td>\n"
+                     +"    <td class=\"button\">\n"
+                     +"        <a class=\"noHover\" href=\"\"><img class=\"button clone\"/></a>\n"
                      +"    </td>\n"
                      +"</tr>\n";
 
