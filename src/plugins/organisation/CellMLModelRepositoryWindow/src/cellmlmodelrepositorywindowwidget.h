@@ -35,6 +35,10 @@ namespace Ui {
 
 //==============================================================================
 
+class QMenu;
+
+//==============================================================================
+
 namespace OpenCOR {
 namespace CellMLModelRepositoryWindow {
 
@@ -65,6 +69,8 @@ protected:
 private:
     Ui::CellmlModelRepositoryWindowWidget *mGui;
 
+    QMenu *mContextMenu;
+
     QString mOutputTemplate;
 
     QStringList mModelNames;
@@ -73,8 +79,14 @@ private:
     int mNumberOfModels;
     int mNumberOfFilteredModels;
 
+    QString mLink;
+
 private Q_SLOTS:
+    void on_actionCopy_triggered();
+
     void openLink(const QUrl &pUrl);
+
+    void showCustomContextMenu(const QPoint &pPosition);
 };
 
 //==============================================================================

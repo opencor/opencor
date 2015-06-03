@@ -29,8 +29,10 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#include <QClipboard>
 #include <QDesktopServices>
 #include <QIODevice>
+#include <QMenu>
 #include <QPaintEvent>
 #include <QRegularExpression>
 #include <QWebElement>
@@ -50,11 +52,25 @@ CellmlModelRepositoryWindowWidget::CellmlModelRepositoryWindowWidget(QWidget *pP
     mModelNames(QStringList()),
     mErrorMessage(QString()),
     mNumberOfModels(0),
-    mNumberOfFilteredModels(0)
+    mNumberOfFilteredModels(0),
+    mLink(QString())
 {
     // Set up the GUI
 
     mGui->setupUi(this);
+
+    // Create and populate our context menu
+
+    mContextMenu = new QMenu(this);
+
+    mContextMenu->addAction(mGui->actionCopy);
+
+    // We want out own context menu
+
+    setContextMenuPolicy(Qt::CustomContextMenu);
+
+    connect(this, SIGNAL(customContextMenuRequested(const QPoint &)),
+            this, SLOT(showCustomContextMenu(const QPoint &)));
 
     // Prevent objects from being dropped on us
 
@@ -235,11 +251,40 @@ void CellmlModelRepositoryWindowWidget::filter(const QString &pFilter)
 
 //==============================================================================
 
+void CellmlModelRepositoryWindowWidget::on_actionCopy_triggered()
+{
+    // Copy the URL of the model to the clipboard
+
+    QApplication::clipboard()->setText(mLink);
+}
+
+//==============================================================================
+
 void CellmlModelRepositoryWindowWidget::openLink(const QUrl &pUrl)
 {
     // Open the link in the user's browser
 
     QDesktopServices::openUrl(pUrl);
+}
+
+//==============================================================================
+
+void CellmlModelRepositoryWindowWidget::showCustomContextMenu(const QPoint &pPosition)
+{
+    Q_UNUSED(pPosition);
+
+    // Retrieve some information about the link, if any
+
+    QString textContent;
+
+    retrieveLinkInformation(mLink, textContent);
+
+    // Show our context menu to allow the copying of the URL of the model, but
+    // only if we are over a link, i.e. if both mLink and textContent are not
+    // empty
+
+    if (!mLink.isEmpty() && !textContent.isEmpty())
+        mContextMenu->exec(QCursor::pos());
 }
 
 //==============================================================================

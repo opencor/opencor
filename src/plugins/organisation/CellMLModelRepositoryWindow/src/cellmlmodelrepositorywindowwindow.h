@@ -39,7 +39,6 @@ namespace Ui {
 
 //==============================================================================
 
-class QMenu;
 class QNetworkAccessManager;
 class QNetworkReply;
 

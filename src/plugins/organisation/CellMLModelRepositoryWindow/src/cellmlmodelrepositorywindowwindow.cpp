@@ -34,15 +34,12 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-#include <QClipboard>
 #include <QDir>
 #include <QJsonDocument>
 #include <QJsonObject>
-#include <QMenu>
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
 #include <QNetworkRequest>
-#include <QPoint>
 
 //==============================================================================
 
