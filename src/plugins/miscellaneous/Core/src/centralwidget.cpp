@@ -32,15 +32,11 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-#include "ui_centralwidget.h"
-
-//==============================================================================
-
 #include <Qt>
 
 //==============================================================================
 
-#include <QCoreApplication>
+#include <QApplication>
 #include <QDesktopWidget>
 #include <QDialog>
 #include <QDialogButtonBox>
@@ -48,8 +44,8 @@ specific language governing permissions and limitations under the License.
 #include <QFile>
 #include <QFileInfo>
 #include <QGridLayout>
+#include <QHBoxLayout>
 #include <QLabel>
-#include <QLayout>
 #include <QLineEdit>
 #include <QMainWindow>
 #include <QMessageBox>
@@ -130,7 +126,6 @@ CentralWidgetViewPlugins * CentralWidgetMode::viewPlugins() const
 CentralWidget::CentralWidget(QMainWindow *pMainWindow) :
     Widget(pMainWindow),
     mMainWindow(pMainWindow),
-    mGui(new Ui::CentralWidget),
     mState(Starting),
     mLoadedFileHandlingPlugins(Plugins()),
     mLoadedGuiPlugins(Plugins()),
@@ -145,9 +140,14 @@ CentralWidget::CentralWidget(QMainWindow *pMainWindow) :
     mRemoteLocalFileNames(QMap<QString, QString>()),
     mViews(QMap<QString, QWidget *>())
 {
-    // Set up the GUI
+    // Create and set our horizontal layout
 
-    mGui->setupUi(this);
+    QHBoxLayout *layout = new QHBoxLayout(this);
+
+    layout->setMargin(0);
+    layout->setSpacing(0);
+
+    setLayout(layout);
 
     // Allow for things to be dropped on us
 
@@ -213,11 +213,11 @@ CentralWidget::CentralWidget(QMainWindow *pMainWindow) :
 
     // Add the widgets to our layout
 
-    mGui->layout->addWidget(mModeTabs);
-    mGui->layout->addWidget(centralWidget);
+    layout->addWidget(mModeTabs);
+    layout->addWidget(centralWidget);
 
     foreach (CentralWidgetMode *mode, mModes)
-        mGui->layout->addWidget(mode->viewTabs());
+        layout->addWidget(mode->viewTabs());
 
     // A connection to handle the case where a file was created or duplicated
 
@@ -314,10 +314,6 @@ CentralWidget::~CentralWidget()
 
     foreach (CentralWidgetMode *mode, mModes)
         delete mode;
-
-    // Delete the GUI
-
-    delete mGui;
 }
 
 //==============================================================================

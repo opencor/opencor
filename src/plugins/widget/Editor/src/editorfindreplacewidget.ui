@@ -14,16 +14,7 @@
    <string notr="true"/>
   </property>
   <layout class="QGridLayout" name="layout">
-   <property name="leftMargin">
-    <number>2</number>
-   </property>
-   <property name="topMargin">
-    <number>2</number>
-   </property>
-   <property name="rightMargin">
-    <number>2</number>
-   </property>
-   <property name="bottomMargin">
+   <property name="margin">
     <number>2</number>
    </property>
    <property name="spacing">
@@ -120,7 +111,7 @@
         <string>Find Previous</string>
        </property>
        <property name="icon">
-        <iconset resource="../res/CellMLAnnotationView.qrc">
+        <iconset resource="../res/Editor.qrc">
          <normaloff>:/oxygen/actions/go-previous.png</normaloff>:/oxygen/actions/go-previous.png</iconset>
        </property>
       </widget>
@@ -131,7 +122,7 @@
         <string>Find Next</string>
        </property>
        <property name="icon">
-        <iconset resource="../res/CellMLAnnotationView.qrc">
+        <iconset resource="../res/Editor.qrc">
          <normaloff>:/oxygen/actions/go-next.png</normaloff>:/oxygen/actions/go-next.png</iconset>
        </property>
       </widget>
@@ -157,7 +148,7 @@
   <tabstop>replaceAllButton</tabstop>
  </tabstops>
  <resources>
-  <include location="../res/CellMLAnnotationView.qrc"/>
+  <include location="../res/Editor.qrc"/>
  </resources>
  <connections/>
 </ui>

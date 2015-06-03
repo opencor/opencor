@@ -32,12 +32,6 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-namespace Ui {
-    class SingleCellViewInformationWidget;
-}
-
-//==============================================================================
-
 namespace OpenCOR {
 
 //==============================================================================
@@ -66,7 +60,6 @@ class SingleCellViewInformationWidget : public QScrollArea,
 
 public:
     explicit SingleCellViewInformationWidget(QWidget *pParent);
-    ~SingleCellViewInformationWidget();
 
     virtual void retranslateUi();
 
@@ -81,8 +74,6 @@ public:
     void finishEditing();
 
 private:
-    Ui::SingleCellViewInformationWidget *mGui;
-
     Core::CollapsibleWidget *mCollapsibleWidget;
 
     SingleCellViewInformationSimulationWidget *mSimulationWidget;

@@ -56,6 +56,7 @@ class EDITOR_EXPORT EditorFindReplaceWidget : public Core::Widget
 
 public:
     explicit EditorFindReplaceWidget(QWidget *pParent);
+    ~EditorFindReplaceWidget();
 
     virtual void retranslateUi();
 

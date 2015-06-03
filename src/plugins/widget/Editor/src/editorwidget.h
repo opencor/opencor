@@ -46,12 +46,6 @@ class QsciLexer;
 
 //==============================================================================
 
-namespace Ui {
-    class EditorWidget;
-}
-
-//==============================================================================
-
 namespace OpenCOR {
 
 //==============================================================================
@@ -145,8 +139,6 @@ public:
     int styleAt(const int &pPosition) const;
 
 private:
-    Ui::EditorWidget *mGui;
-
     QScintillaSupport::QScintillaWidget *mEditor;
     QFrame *mSeparator;
     EditorFindReplaceWidget *mFindReplace;

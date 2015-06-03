@@ -39,11 +39,8 @@ ADD_PLUGIN(CellMLAnnotationView
         src/cellmlannotationviewwidget.h
     UIS
         src/cellmlannotationviewcellmllistwidget.ui
-        src/cellmlannotationvieweditingwidget.ui
-        src/cellmlannotationviewmetadatadetailswidget.ui
         src/cellmlannotationviewmetadataeditdetailswidget.ui
         src/cellmlannotationviewmetadatanormalviewdetailswidget.ui
-        src/cellmlannotationviewwidget.ui
     INCLUDE_DIRS
         src
     DEFINITIONS

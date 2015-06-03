@@ -100,6 +100,15 @@ SingleCellViewInformationGraphsWidget::SingleCellViewInformationGraphsWidget(QWi
 
 //==============================================================================
 
+SingleCellViewInformationGraphsWidget::~SingleCellViewInformationGraphsWidget()
+{
+    // Delete the GUI
+
+    delete mGui;
+}
+
+//==============================================================================
+
 void SingleCellViewInformationGraphsWidget::retranslateUi()
 {
     // Retranslate our GUI

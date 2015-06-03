@@ -202,13 +202,13 @@ CheckForUpdatesWindow::CheckForUpdatesWindow(CheckForUpdatesEngine *pEngine,
 
 CheckForUpdatesWindow::~CheckForUpdatesWindow()
 {
-    // Delete the GUI
-
-    delete mGui;
-
     // Delete some internal objects
 
     delete mEngine;
+
+    // Delete the GUI
+
+    delete mGui;
 }
 
 //==============================================================================

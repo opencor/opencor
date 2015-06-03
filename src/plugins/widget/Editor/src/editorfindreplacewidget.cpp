@@ -38,7 +38,6 @@ specific language governing permissions and limitations under the License.
 #include <QGridLayout>
 #include <QHBoxLayout>
 #include <QLabel>
-#include <QLayout>
 #include <QLineEdit>
 #include <QMenu>
 #include <QPainter>
@@ -150,6 +149,15 @@ EditorFindReplaceWidget::EditorFindReplaceWidget(QWidget *pParent) :
     mGui->replaceButton->setEnabled(false);
     mGui->replaceAndFindButton->setEnabled(false);
     mGui->replaceAllButton->setEnabled(false);
+}
+
+//==============================================================================
+
+EditorFindReplaceWidget::~EditorFindReplaceWidget()
+{
+    // Delete the GUI
+
+    delete mGui;
 }
 
 //==============================================================================

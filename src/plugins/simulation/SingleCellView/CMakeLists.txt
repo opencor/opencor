@@ -48,9 +48,7 @@ ADD_PLUGIN(SingleCellView
         src/singlecellviewwidget.h
     UIS
         src/singlecellviewgraphpanelplotwidget.ui
-        src/singlecellviewgraphpanelwidget.ui
         src/singlecellviewinformationgraphswidget.ui
-        src/singlecellviewinformationwidget.ui
         src/singlecellviewwidget.ui
     INCLUDE_DIRS
         src
