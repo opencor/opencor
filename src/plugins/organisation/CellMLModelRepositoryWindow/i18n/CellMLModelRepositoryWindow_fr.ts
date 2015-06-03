@@ -54,8 +54,8 @@
         <translation>&lt;strong&gt;%1&lt;/strong&gt; modèles CellML ont été trouvés :</translation>
     </message>
     <message>
-        <source>No CellML model matches your criteria</source>
-        <translation>Aucun modèle CellML ne correspond à votre critère</translation>
+        <source>No CellML model matches your criteria.</source>
+        <translation>Aucun modèle CellML ne correspond à votre critère.</translation>
     </message>
     <message>
         <source>&lt;strong&gt;Error:&lt;/strong&gt; </source>

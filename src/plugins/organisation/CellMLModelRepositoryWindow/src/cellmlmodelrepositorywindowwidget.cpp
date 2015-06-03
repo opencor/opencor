@@ -47,16 +47,6 @@ CellmlModelRepositoryWindowWidget::CellmlModelRepositoryWindowWidget(QWidget *pP
     mNumberOfModels(0),
     mNumberOfFilteredModels(0)
 {
-    // Add a small margin to the widget, so that no visual trace of the border
-    // drawn by drawBorderIfDocked is left when scrolling
-
-    setStyleSheet("QWebView {"
-                  "    margin: 1px;"
-                  "}");
-    // Note: not sure why, but no matter how many pixels are specified for the
-    //       margin, no margin actually exists, but it addresses the issue with
-    //       the border drawn by drawBorderIfDocked...
-
     // Prevent objects from being dropped on us
 
     setAcceptDrops(false);
