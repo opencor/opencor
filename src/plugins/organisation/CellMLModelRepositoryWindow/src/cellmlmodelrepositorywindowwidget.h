@@ -84,7 +84,7 @@ private:
 private Q_SLOTS:
     void on_actionCopy_triggered();
 
-    void openLink(const QUrl &pUrl);
+    void linkClicked(const QUrl &pUrl);
 
     void showCustomContextMenu(const QPoint &pPosition);
 };

@@ -82,8 +82,8 @@ CellmlModelRepositoryWindowWidget::CellmlModelRepositoryWindowWidget(QWidget *pP
 
     // Some connections
 
-    connect(this, SIGNAL(linkClicked(const QUrl &)),
-            this, SLOT(openLink(const QUrl &)));
+    connect(page(), SIGNAL(linkClicked(const QUrl &)),
+            this, SLOT(linkClicked(const QUrl &)));
 
     // Retrieve the output template
 
@@ -190,7 +190,7 @@ void CellmlModelRepositoryWindowWidget::initialize(const QStringList &pModelName
                          +"        </ul>\n"
                          +"    </td>\n"
                          +"    <td class=\"button\">\n"
-                         +"        <a class=\"noHover\" href=\"\"><img class=\"button clone\"/></a>\n"
+                         +"        <a class=\"noHover\" href=\""+pModelUrls[i]+"\"><img class=\"button clone\"/></a>\n"
                          +"    </td>\n"
                          +"</tr>\n";
             }
@@ -260,11 +260,26 @@ void CellmlModelRepositoryWindowWidget::on_actionCopy_triggered()
 
 //==============================================================================
 
-void CellmlModelRepositoryWindowWidget::openLink(const QUrl &pUrl)
+void CellmlModelRepositoryWindowWidget::linkClicked(const QUrl &pUrl)
 {
-    // Open the link in the user's browser
+    // Retrieve some information about the link
 
-    QDesktopServices::openUrl(pUrl);
+    QString textContent;
+
+    retrieveLinkInformation(mLink, textContent);
+
+    // Check whether we have clicked a model link or a button link, i.e. that we
+    // want to clone the model
+
+    if (textContent.isEmpty()) {
+        // We have clicked on a button link, so clone the model
+
+qDebug(">>> Clonging %s...", qPrintable(mLink));
+    } else {
+        // Open the model link in the user's browser
+
+        QDesktopServices::openUrl(pUrl);
+    }
 }
 
 //==============================================================================
