@@ -35,12 +35,6 @@ class QWebView;
 
 //==============================================================================
 
-namespace Ui {
-    class CellmlAnnotationViewMetadataDetailsWidget;
-}
-
-//==============================================================================
-
 namespace OpenCOR {
 
 //==============================================================================
@@ -68,7 +62,6 @@ class CellmlAnnotationViewMetadataDetailsWidget : public Core::Widget
 
 public:
     explicit CellmlAnnotationViewMetadataDetailsWidget(CellmlAnnotationViewEditingWidget *pParent);
-    ~CellmlAnnotationViewMetadataDetailsWidget();
 
     virtual void retranslateUi();
 
@@ -81,8 +74,6 @@ public:
 
 private:
     CellmlAnnotationViewEditingWidget *mParent;
-
-    Ui::CellmlAnnotationViewMetadataDetailsWidget *mGui;
 
     Core::BorderedWidget *mBorderedCategoryMessage;
     Core::UserMessageWidget *mCategoryMessage;

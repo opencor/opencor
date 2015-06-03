@@ -28,16 +28,13 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-#include "ui_cellmlannotationviewwidget.h"
-
-//==============================================================================
-
+#include <QApplication>
 #include <QDesktopWidget>
-#include <QLayout>
 #include <QMetaType>
 #include <QSettings>
 #include <QStackedWidget>
 #include <QVariant>
+#include <QVBoxLayout>
 
 //==============================================================================
 
@@ -49,31 +46,26 @@ namespace CellMLAnnotationView {
 CellmlAnnotationViewWidget::CellmlAnnotationViewWidget(CellMLAnnotationViewPlugin *pPluginParent,
                                                        QWidget *pParent) :
     ViewWidget(pParent),
-    mGui(new Ui::CellmlAnnotationViewWidget),
     mPluginParent(pPluginParent),
     mEditingWidget(0),
     mEditingWidgets(QMap<QString, CellmlAnnotationViewEditingWidget *>()),
     mEditingWidgetSizes(QIntList()),
     mMetadataDetailsWidgetSizes(QIntList())
 {
-    // Set up the GUI
+    // Create and set our vertical layout
 
-    mGui->setupUi(this);
+    QVBoxLayout *layout = new QVBoxLayout(this);
+
+    layout->setMargin(0);
+    layout->setSpacing(0);
+
+    setLayout(layout);
 
     // Add a stacked widget to our layout
 
     mContents = new QStackedWidget(this);
 
-    layout()->addWidget(mContents);
-}
-
-//==============================================================================
-
-CellmlAnnotationViewWidget::~CellmlAnnotationViewWidget()
-{
-    // Delete the GUI
-
-    delete mGui;
+    layout->addWidget(mContents);
 }
 
 //==============================================================================
