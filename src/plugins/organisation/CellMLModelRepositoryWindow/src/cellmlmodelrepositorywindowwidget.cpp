@@ -60,8 +60,8 @@ CellmlModelRepositoryWindowWidget::CellmlModelRepositoryWindowWidget(QWidget *pP
     mGui->setupUi(this);
 
     // Add a small margin ourselves, so that no visual trace of the border drawn
-    // by drawBorder() in paintEvent() is left when scrolling (on Windows, but
-    // it doesn't harm doing it for all our supported platforms)
+    // by drawBorder() in paintEvent() is left when scrolling (on Windows and
+    // Linux, but it doesn't harm doing it for all our supported platforms)
     // Note: not sure why, but no matter how many pixels are specified for the
     //       margin, no margin actually exists, but it addresses the issue with
     //       the border drawn by drawBorder()...
