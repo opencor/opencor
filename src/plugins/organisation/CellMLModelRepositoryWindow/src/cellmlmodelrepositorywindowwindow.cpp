@@ -43,7 +43,6 @@ specific language governing permissions and limitations under the License.
 #include <QNetworkReply>
 #include <QNetworkRequest>
 #include <QPoint>
-#include <QRegularExpression>
 
 //==============================================================================
 

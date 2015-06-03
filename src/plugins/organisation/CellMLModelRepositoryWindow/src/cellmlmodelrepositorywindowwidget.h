@@ -54,6 +54,8 @@ protected:
 private:
     QString mOutputTemplate;
 
+    QStringList mModelNames;
+
 Q_SIGNALS:
     void copyTextEnabled(const bool &pEnabled);
 
