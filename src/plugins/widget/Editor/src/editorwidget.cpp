@@ -53,15 +53,19 @@ namespace Editor {
 EditorWidget::EditorWidget(const QString &pContents, const bool &pReadOnly,
                            QsciLexer *pLexer, QWidget *pParent) :
     Core::Widget(pParent),
-    mGui(new Ui::EditorWidget),
     mCurrentLine(0),
     mCurrentColumn(0),
     mFindReplaceVisible(false),
     mReadOnlyStyles(QIntList())
 {
-    // Set up the GUI
+    // Create and set our vertical layout
 
-    mGui->setupUi(this);
+    QVBoxLayout *layout = new QVBoxLayout(this);
+
+    setLayout(layout);
+
+    layout->setMargin(0);
+    layout->setSpacing(0);
 
     // Create our editor and find/replace widget
 
@@ -142,9 +146,9 @@ EditorWidget::EditorWidget(const QString &pContents, const bool &pReadOnly,
 
     // Add our editor and find/replace widgets to our layout
 
-    mGui->layout->addWidget(mEditor);
-    mGui->layout->addWidget(mSeparator);
-    mGui->layout->addWidget(mFindReplace);
+    layout->addWidget(mEditor);
+    layout->addWidget(mSeparator);
+    layout->addWidget(mFindReplace);
 
     // Make our editor our focus proxy
 

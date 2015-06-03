@@ -23,7 +23,6 @@ ADD_PLUGIN(Editor
         src/editorwidget.h
     UIS
         src/editorfindreplacewidget.ui
-        src/editorwidget.ui
     INCLUDE_DIRS
         src
     PLUGINS
