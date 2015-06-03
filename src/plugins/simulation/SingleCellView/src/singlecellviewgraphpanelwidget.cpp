@@ -50,6 +50,8 @@ SingleCellViewGraphPanelWidget::SingleCellViewGraphPanelWidget(QWidget *pParent)
     layout->setMargin(0);
     layout->setSpacing(0);
 
+    setLayout(layout);
+
     // Create, customise and add an inactive marker to our layout
 
     enum {

@@ -148,6 +148,8 @@ CentralWidget::CentralWidget(QMainWindow *pMainWindow) :
     layout->setMargin(0);
     layout->setSpacing(0);
 
+    setLayout(layout);
+
     // Allow for things to be dropped on us
 
     setAcceptDrops(true);

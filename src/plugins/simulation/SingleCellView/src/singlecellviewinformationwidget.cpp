@@ -47,9 +47,10 @@ SingleCellViewInformationWidget::SingleCellViewInformationWidget(QWidget *pParen
 
     QVBoxLayout *layout = new QVBoxLayout(this);
 
-    setLayout(layout);
-
     layout->setMargin(0);
+    layout->setSpacing(0);
+
+    setLayout(layout);
 
     // Remove the frame around our scroll area
 

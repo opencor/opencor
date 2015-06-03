@@ -58,10 +58,10 @@ EditorWidget::EditorWidget(const QString &pContents, const bool &pReadOnly,
 
     QVBoxLayout *layout = new QVBoxLayout(this);
 
-    setLayout(layout);
-
     layout->setMargin(0);
     layout->setSpacing(0);
+
+    setLayout(layout);
 
     // Create our editor and find/replace widget
 
