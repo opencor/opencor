@@ -28,10 +28,10 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-#include <QLayout>
 #include <QSettings>
 #include <QToolButton>
 #include <QVariant>
+#include <QVBoxLayout>
 
 //==============================================================================
 
@@ -67,7 +67,7 @@ CollapsibleHeaderWidget::CollapsibleHeaderWidget(const QColor &pSeparatorColor,
     mCollapsed(false),
     mLastHeader(false)
 {
-    // Create our main (vertical) layout
+    // Create and set our vertical layout
 
     QVBoxLayout *layout = new QVBoxLayout(this);
 

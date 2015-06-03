@@ -45,6 +45,8 @@ RawViewWidget::RawViewWidget(QWidget *pParent) :
     mEditor(0),
     mEditors(QMap<QString, Editor::EditorWidget *>())
 {
+    // Create and set our vertical layout
+
     QVBoxLayout *layout = new QVBoxLayout(this);
 
     layout->setMargin(0);

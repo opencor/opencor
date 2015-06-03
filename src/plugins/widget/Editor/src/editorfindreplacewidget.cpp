@@ -38,7 +38,6 @@ specific language governing permissions and limitations under the License.
 #include <QGridLayout>
 #include <QHBoxLayout>
 #include <QLabel>
-#include <QLayout>
 #include <QLineEdit>
 #include <QMenu>
 #include <QPainter>

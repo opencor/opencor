@@ -63,6 +63,8 @@ RawCellmlViewWidget::RawCellmlViewWidget(QWidget *pParent) :
     mPresentationMathmlEquations(QMap<QString, QString>()),
     mContentMathmlEquation(QString())
 {
+    // Create and set our vertical layout
+
     QVBoxLayout *layout = new QVBoxLayout(this);
 
     layout->setMargin(0);

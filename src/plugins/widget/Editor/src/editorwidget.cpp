@@ -34,7 +34,6 @@ specific language governing permissions and limitations under the License.
 #include <QFrame>
 #include <QKeyEvent>
 #include <QLabel>
-#include <QLayout>
 #include <QRegularExpression>
 #include <QSettings>
 #include <QVBoxLayout>
