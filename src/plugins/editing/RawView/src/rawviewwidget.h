@@ -32,12 +32,6 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-namespace Ui {
-    class RawViewWidget;
-}
-
-//==============================================================================
-
 namespace OpenCOR {
 
 //==============================================================================
@@ -58,7 +52,6 @@ class RawViewWidget : public Core::ViewWidget
 
 public:
     explicit RawViewWidget(QWidget *pParent);
-    ~RawViewWidget();
 
     virtual void loadSettings(QSettings *pSettings);
     virtual void saveSettings(QSettings *pSettings) const;
@@ -78,8 +71,6 @@ public:
     virtual QList<QWidget *> statusBarWidgets() const;
 
 private:
-    Ui::RawViewWidget *mGui;
-
     bool mNeedLoadingSettings;
     QString mSettingsGroup;
 

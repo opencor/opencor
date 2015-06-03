@@ -27,10 +27,6 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-#include "ui_rawviewwidget.h"
-
-//==============================================================================
-
 #include <QLabel>
 #include <QLayout>
 #include <QSettings>
@@ -44,24 +40,17 @@ namespace RawView {
 
 RawViewWidget::RawViewWidget(QWidget *pParent) :
     ViewWidget(pParent),
-    mGui(new Ui::RawViewWidget),
     mNeedLoadingSettings(true),
     mSettingsGroup(QString()),
     mEditor(0),
     mEditors(QMap<QString, Editor::EditorWidget *>())
 {
-    // Set up the GUI
+    QVBoxLayout *layout = new QVBoxLayout(this);
 
-    mGui->setupUi(this);
-}
+    layout->setMargin(0);
+    layout->setSpacing(0);
 
-//==============================================================================
-
-RawViewWidget::~RawViewWidget()
-{
-    // Delete the GUI
-
-    delete mGui;
+    setLayout(layout);
 }
 
 //==============================================================================
