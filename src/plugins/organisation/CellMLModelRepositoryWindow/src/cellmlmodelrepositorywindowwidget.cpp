@@ -25,6 +25,10 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#include "ui_cellmlmodelrepositorywindowwidget.h"
+
+//==============================================================================
+
 #include <QDesktopServices>
 #include <QIODevice>
 #include <QPaintEvent>
@@ -42,11 +46,16 @@ namespace CellMLModelRepositoryWindow {
 CellmlModelRepositoryWindowWidget::CellmlModelRepositoryWindowWidget(QWidget *pParent) :
     Core::WebViewWidget(pParent),
     Core::CommonWidget(pParent),
+    mGui(new Ui::CellmlModelRepositoryWindowWidget),
     mModelNames(QStringList()),
     mErrorMessage(QString()),
     mNumberOfModels(0),
     mNumberOfFilteredModels(0)
 {
+    // Set up the GUI
+
+    mGui->setupUi(this);
+
     // Prevent objects from being dropped on us
 
     setAcceptDrops(false);
@@ -60,19 +69,21 @@ CellmlModelRepositoryWindowWidget::CellmlModelRepositoryWindowWidget(QWidget *pP
     connect(this, SIGNAL(linkClicked(const QUrl &)),
             this, SLOT(openLink(const QUrl &)));
 
-    connect(page(), SIGNAL(selectionChanged()),
-            this, SLOT(selectionChanged()));
-
     // Retrieve the output template
 
     Core::readTextFromFile(":/output.html", mOutputTemplate);
 
     setHtml(mOutputTemplate.arg(Core::iconDataUri(":/oxygen/places/folder-downloads.png", 16, 16),
                                 Core::iconDataUri(":/oxygen/places/folder-downloads.png", 16, 16, QIcon::Disabled)));
+}
 
-    // Let people know that there is nothing to copy initially
+//==============================================================================
 
-    emit copyTextEnabled(false);
+CellmlModelRepositoryWindowWidget::~CellmlModelRepositoryWindowWidget()
+{
+    // Delete the GUI
+
+    delete mGui;
 }
 
 //==============================================================================
@@ -229,16 +240,6 @@ void CellmlModelRepositoryWindowWidget::openLink(const QUrl &pUrl)
     // Open the link in the user's browser
 
     QDesktopServices::openUrl(pUrl);
-}
-
-//==============================================================================
-
-void CellmlModelRepositoryWindowWidget::selectionChanged()
-{
-    // The text selection has changed, so let the user know whether some text is
-    // now/still selected
-
-    emit copyTextEnabled(!selectedText().isEmpty());
 }
 
 //==============================================================================

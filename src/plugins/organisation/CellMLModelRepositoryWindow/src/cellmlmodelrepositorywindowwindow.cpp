@@ -79,20 +79,6 @@ CellmlModelRepositoryWindowWindow::CellmlModelRepositoryWindowWindow(QWidget *pP
 
     mGui->dockWidgetContents->layout()->addWidget(mCellmlModelRepositoryWidget);
 
-    // Create and populate our context menu
-
-    mContextMenu = new QMenu(this);
-
-    mContextMenu->addAction(mGui->actionCopy);
-
-    // We want our own context menu for our widget (indeed, we don't want the
-    // default one, which has the reload menu item)
-
-    mCellmlModelRepositoryWidget->setContextMenuPolicy(Qt::CustomContextMenu);
-
-    connect(mCellmlModelRepositoryWidget, SIGNAL(customContextMenuRequested(const QPoint &)),
-            this, SLOT(showCustomContextMenu(const QPoint &)));
-
     // Keep track of the window's visibility, so that we can request the list of
     // models, if necessary
 
@@ -112,11 +98,6 @@ CellmlModelRepositoryWindowWindow::CellmlModelRepositoryWindowWindow(QWidget *pP
             this, SLOT(finished(QNetworkReply *)));
     connect(mNetworkAccessManager, SIGNAL(sslErrors(QNetworkReply *, const QList<QSslError> &)),
             this, SLOT(sslErrors(QNetworkReply *, const QList<QSslError> &)));
-
-    // Connection to update the enabled state of our copy action
-
-    connect(mCellmlModelRepositoryWidget, SIGNAL(copyTextEnabled(const bool &)),
-            mGui->actionCopy, SLOT(setEnabled(bool)));
 }
 
 //==============================================================================
@@ -148,15 +129,6 @@ void CellmlModelRepositoryWindowWindow::on_filterValue_textChanged(const QString
     // Ask our CellML Model Repository widget to filter its output
 
     mCellmlModelRepositoryWidget->filter(text);
-}
-
-//==============================================================================
-
-void CellmlModelRepositoryWindowWindow::on_actionCopy_triggered()
-{
-    // Copy the current selection to the clipboard
-
-    QApplication::clipboard()->setText(mCellmlModelRepositoryWidget->selectedText());
 }
 
 //==============================================================================
@@ -283,17 +255,6 @@ void CellmlModelRepositoryWindowWindow::sslErrors(QNetworkReply *pNetworkReply,
     // certificate (even if it is invalid, e.g. it has expired)
 
     pNetworkReply->ignoreSslErrors(pSslErrors);
-}
-
-//==============================================================================
-
-void CellmlModelRepositoryWindowWindow::showCustomContextMenu(const QPoint &pPosition) const
-{
-    Q_UNUSED(pPosition);
-
-    // Show our context menu for our CellML Models Repository widget
-
-    mContextMenu->exec(QCursor::pos());
 }
 
 //==============================================================================

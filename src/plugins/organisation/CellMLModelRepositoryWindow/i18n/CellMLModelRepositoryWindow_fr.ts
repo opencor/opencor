@@ -2,6 +2,17 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="fr_FR" sourcelanguage="en_GB">
 <context>
+    <name>CellmlModelRepositoryWindowWidget</name>
+    <message>
+        <source>Copy</source>
+        <translation>Copier</translation>
+    </message>
+    <message>
+        <source>Copy the URL to the clipboard</source>
+        <translation>Copier la sélection dans le presse-papier</translation>
+    </message>
+</context>
+<context>
     <name>CellmlModelRepositoryWindowWindow</name>
     <message>
         <source>CellML Model Repository</source>
@@ -12,20 +23,12 @@
         <translation>Filtre :</translation>
     </message>
     <message>
-        <source>Copy the selection to the clipboard</source>
-        <translation>Copier la sélection dans le presse-papier</translation>
-    </message>
-    <message>
         <source>Refresh the list of CellML models</source>
         <translation>Rafraîchir la liste de modèles CellML</translation>
     </message>
     <message>
         <source>Refresh</source>
         <translation>Rafraîchir</translation>
-    </message>
-    <message>
-        <source>Copy</source>
-        <translation>Copier</translation>
     </message>
     <message>
         <source>Git</source>

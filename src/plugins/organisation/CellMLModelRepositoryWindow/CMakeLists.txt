@@ -19,6 +19,7 @@ ADD_PLUGIN(CellMLModelRepositoryWindow
         src/cellmlmodelrepositorywindowwidget.h
         src/cellmlmodelrepositorywindowwindow.h
     UIS
+        src/cellmlmodelrepositorywindowwidget.ui
         src/cellmlmodelrepositorywindowwindow.ui
     INCLUDE_DIRS
         src

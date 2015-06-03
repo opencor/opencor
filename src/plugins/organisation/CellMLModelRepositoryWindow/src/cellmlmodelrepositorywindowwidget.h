@@ -29,6 +29,12 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+namespace Ui {
+    class CellmlModelRepositoryWindowWidget;
+}
+
+//==============================================================================
+
 namespace OpenCOR {
 namespace CellMLModelRepositoryWindow {
 
@@ -41,6 +47,7 @@ class CellmlModelRepositoryWindowWidget : public Core::WebViewWidget,
 
 public:
     explicit CellmlModelRepositoryWindowWidget(QWidget *pParent);
+    ~CellmlModelRepositoryWindowWidget();
 
     virtual void retranslateUi();
 
@@ -56,6 +63,8 @@ protected:
     virtual void paintEvent(QPaintEvent *pEvent);
 
 private:
+    Ui::CellmlModelRepositoryWindowWidget *mGui;
+
     QString mOutputTemplate;
 
     QStringList mModelNames;
@@ -64,13 +73,8 @@ private:
     int mNumberOfModels;
     int mNumberOfFilteredModels;
 
-Q_SIGNALS:
-    void copyTextEnabled(const bool &pEnabled);
-
 private Q_SLOTS:
     void openLink(const QUrl &pUrl);
-
-    void selectionChanged();
 };
 
 //==============================================================================
