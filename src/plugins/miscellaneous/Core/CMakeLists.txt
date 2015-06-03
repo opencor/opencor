@@ -74,8 +74,6 @@ ADD_PLUGIN(Core
         src/widget.h
         src/windowwidget.h
         src/xsltransformer.h
-    UIS
-        src/centralwidget.ui
     INCLUDE_DIRS
         src
     QT_MODULES
