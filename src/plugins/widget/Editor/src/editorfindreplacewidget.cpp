@@ -154,6 +154,15 @@ EditorFindReplaceWidget::EditorFindReplaceWidget(QWidget *pParent) :
 
 //==============================================================================
 
+EditorFindReplaceWidget::~EditorFindReplaceWidget()
+{
+    // Delete the GUI
+
+    delete mGui;
+}
+
+//==============================================================================
+
 void EditorFindReplaceWidget::retranslateUi()
 {
     // Retranslate our GUI

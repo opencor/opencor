@@ -85,15 +85,15 @@ RawCellmlViewWidget::RawCellmlViewWidget(QWidget *pParent) :
 
 RawCellmlViewWidget::~RawCellmlViewWidget()
 {
-    // Delete the GUI
-
-    delete mGui;
-
     // Stop our XSL transformer
     // Note: we don't need to delete it since it will be done as part of its
     //       thread being stopped...
 
     mXslTransformer->stop();
+
+    // Delete the GUI
+
+    delete mGui;
 }
 
 //==============================================================================
