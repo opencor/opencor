@@ -151,6 +151,7 @@ void CellmlModelRepositoryWindowWindow::sendPmrRequest(const PmrRequest &pPmrReq
 
     switch (pPmrRequest) {
     case BookmarkUrls:
+    case SourceFile:
         networkRequest.setUrl(QUrl(pUrl));
 
         break;
@@ -232,17 +233,24 @@ qDebug(">>> Request type: %d", pmrRequest);
 
     if (pNetworkReply->error() == QNetworkReply::NoError) {
         // Parse the JSON code
+QByteArray byteArray = pNetworkReply->readAll();
+qDebug("---[START]---");
+qDebug("%s", qPrintable(QString(byteArray)));
+qDebug("---[END]---");
 
         QJsonParseError jsonParseError;
-        QJsonDocument jsonDocument = QJsonDocument::fromJson(pNetworkReply->readAll(), &jsonParseError);
+        QJsonDocument jsonDocument = QJsonDocument::fromJson(byteArray, &jsonParseError);
 
         if (jsonParseError.error == QJsonParseError::NoError) {
             // Check the request type to determine what we should do with the
             // data
 
+            QVariantList linksList = jsonDocument.object().toVariantMap()["collection"].toMap()["links"].toList();
+
             switch (pmrRequest) {
             case BookmarkUrls:
-//---GRY--- TO BE DONE...
+                foreach (const QVariant &linkVariant, linksList)
+                    bookmarkUrls << linkVariant.toMap()["href"].toString().trimmed();
 
                 mNumberOfUntreatedSourceFiles = bookmarkUrls.count();
 
@@ -256,14 +264,11 @@ qDebug(">>> Request type: %d", pmrRequest);
             default:   // ModelList
                 // Retrieve the list of models
 
-                QVariantMap resultMap = jsonDocument.object().toVariantMap();
-                QVariantMap exposureDetailsVariant;
+                foreach (const QVariant &linkVariant, linksList) {
+                    QVariantMap linkMap = linkVariant.toMap();
 
-                foreach (const QVariant &exposureVariant, resultMap["collection"].toMap()["links"].toList()) {
-                    exposureDetailsVariant = exposureVariant.toMap();
-
-                    models << CellmlModelRepositoryWindowModel(exposureDetailsVariant["href"].toString().trimmed(),
-                                                               exposureDetailsVariant["prompt"].toString().trimmed());
+                    models << CellmlModelRepositoryWindowModel(linkMap["href"].toString().trimmed(),
+                                                               linkMap["prompt"].toString().trimmed());
                 }
             }
         } else {
@@ -341,8 +346,10 @@ void CellmlModelRepositoryWindowWindow::cloneModel(const QString &pUrl)
 {
     // To clone a model, we need to know about its workspace URL, which first
     // requires retrieving the model's bookmark URLs
+Q_UNUSED(pUrl);
 
-    sendPmrRequest(BookmarkUrls, pUrl);
+//    sendPmrRequest(BookmarkUrls, pUrl);
+    sendPmrRequest(BookmarkUrls, "https://models.physiomeproject.org/e/71");
 }
 
 //==============================================================================
