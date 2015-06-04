@@ -224,7 +224,7 @@ void CellmlModelRepositoryWindowWidget::initialize(const CellmlModelRepositoryWi
                  +"        </ul>\n"
                  +"    </td>\n"
                  +"    <td class=\"button\">\n"
-                 +"        <a class=\"noHover\" href=\""+model.url()+"\"><img class=\"button clone\"/></a>\n"
+                 +"        <a class=\"noHover\" href=\""+model.url()+"|"+model.name()+"\"><img class=\"button clone\"/></a>\n"
                  +"    </td>\n"
                  +"</tr>\n";
 
@@ -298,10 +298,10 @@ void CellmlModelRepositoryWindowWidget::linkClicked()
 {
     // Retrieve some information about the link
 
-    QString url;
+    QString link;
     QString textContent;
 
-    retrieveLinkInformation(url, textContent);
+    retrieveLinkInformation(link, textContent);
 
     // Check whether we have clicked a model link or a button link, i.e. that we
     // want to clone the model
@@ -310,11 +310,13 @@ void CellmlModelRepositoryWindowWidget::linkClicked()
         // We have clicked on a button link, so let people know that we want to
         // clone a model
 
-        emit cloneModel(url);
+        QStringList linkList = link.split("|");
+
+        emit cloneModel(linkList.first(), linkList.last());
     } else {
         // Open the model link in the user's browser
 
-        QDesktopServices::openUrl(url);
+        QDesktopServices::openUrl(link);
     }
 }
 

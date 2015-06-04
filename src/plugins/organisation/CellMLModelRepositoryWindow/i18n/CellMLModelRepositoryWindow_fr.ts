@@ -65,4 +65,19 @@
         <translation>&lt;strong&gt;Erreur :&lt;/strong&gt; </translation>
     </message>
 </context>
+<context>
+    <name>OpenCOR::CellMLModelRepositoryWindow::CellmlModelRepositoryWindowWindow</name>
+    <message>
+        <source>Bookmark URLs</source>
+        <translation>URLs Bookmark</translation>
+    </message>
+    <message>
+        <source>No bookmark URL could be found for &lt;a href=&quot;%1&quot;&gt;%2&lt;/a&gt;.</source>
+        <translation>Aucune URL bookmark n&apos;a pu être trouvée pour &lt;a href=&quot;%1&quot;&gt;%2&lt;/a&gt;.</translation>
+    </message>
+    <message>
+        <source>&lt;strong&gt;Note:&lt;/strong&gt; you might want to check with &lt;a href=&quot;mailto: Tommy Yu &lt;tommy.yu@auckland.ac.nz&gt;&quot;&gt;Tommy Yu&lt;/a&gt; (the person behind the &lt;a href=&quot;https://models.physiomeproject.org/&quot;&gt;Physiome Model Repository&lt;/a&gt;) why this is the case.</source>
+        <translation>&lt;strong&gt;Note :&lt;/strong&gt; vous pourriez vouloir vérifier avec &lt;a href=&quot;mailto: Tommy Yu &lt;tommy.yu@auckland.ac.nz&gt;&quot;&gt;Tommy Yu&lt;/a&gt; (la personne derrière le &lt;a href=&quot;https://models.physiomeproject.org/&quot;&gt;Physiome Model Repository&lt;/a&gt;) pourquoi c&apos;est le cas.</translation>
+    </message>
+</context>
 </TS>

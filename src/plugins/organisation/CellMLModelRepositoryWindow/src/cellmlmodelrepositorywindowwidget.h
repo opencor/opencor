@@ -100,7 +100,7 @@ private:
     QString mUrl;
 
 Q_SIGNALS:
-    void cloneModel(const QString &pUrl);
+    void cloneModel(const QString &pUrl, const QString &pDescription);
 
 private Q_SLOTS:
     void on_actionCopy_triggered();

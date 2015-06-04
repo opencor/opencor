@@ -100,8 +100,8 @@ CellmlModelRepositoryWindowWindow::CellmlModelRepositoryWindowWindow(QWidget *pP
 
     // Some connections to know what our CellML Model Repository widget wants
 
-    connect(mCellmlModelRepositoryWidget, SIGNAL(cloneModel(const QString &)),
-            this, SLOT(cloneModel(const QString &)));
+    connect(mCellmlModelRepositoryWidget, SIGNAL(cloneModel(const QString &, const QString &)),
+            this, SLOT(cloneModel(const QString &, const QString &)));
 }
 
 //==============================================================================
@@ -128,12 +128,14 @@ void CellmlModelRepositoryWindowWindow::retranslateUi()
 
 //==============================================================================
 
-static const char *PmrRequestProperty = "PmrRequest";
+static const char *PmrRequestProperty  = "PmrRequest";
+static const char *DescriptionProperty = "Description";
 
 //==============================================================================
 
 void CellmlModelRepositoryWindowWindow::sendPmrRequest(const PmrRequest &pPmrRequest,
-                                                       const QString &pUrl)
+                                                       const QString &pUrl,
+                                                       const QString &pDescription)
 {
     // Let the user that we are downloading the list of models
 
@@ -162,9 +164,10 @@ void CellmlModelRepositoryWindowWindow::sendPmrRequest(const PmrRequest &pPmrReq
 
     QNetworkReply *networkReply = mNetworkAccessManager->get(networkRequest);
 
-    // Keep track of the type of request type
+    // Keep track of the type of request type and the description
 
     networkReply->setProperty(PmrRequestProperty, pPmrRequest);
+    networkReply->setProperty(DescriptionProperty, pDescription);
 }
 
 //==============================================================================
@@ -319,8 +322,8 @@ qDebug("---------");
 
         QMessageBox::information(qApp->activeWindow(),
                                  tr("Bookmark URLs"),
-                                  tr("No bookmark URL could be found for <a href=\"%1\">%1</a>.").arg(url)
-                                 +"<br/><br/>"+tr("<strong>Note:</strong> you might want to check with <a href=\"mailto: Tommy Yu <tommy.yu@auckland.ac.nz>\">Tommy Yu</a>, the person behind the <a href=\"https://models.physiomeproject.org/\">Physiome Model Repository</a>, why this is the case."),
+                                  tr("No bookmark URL could be found for <a href=\"%1\">%2</a>.").arg(url, pNetworkReply->property(DescriptionProperty).toString())
+                                 +"<br/><br/>"+tr("<strong>Note:</strong> you might want to check with <a href=\"mailto: Tommy Yu <tommy.yu@auckland.ac.nz>\">Tommy Yu</a> (the person behind the <a href=\"https://models.physiomeproject.org/\">Physiome Model Repository</a>) why this is the case."),
                                  QMessageBox::Ok);
     }
 
@@ -358,13 +361,15 @@ void CellmlModelRepositoryWindowWindow::retrieveModelList(const bool &pVisible)
 
 //==============================================================================
 
-void CellmlModelRepositoryWindowWindow::cloneModel(const QString &pUrl)
+void CellmlModelRepositoryWindowWindow::cloneModel(const QString &pUrl,
+                                                   const QString &pDescription)
 {
-    // To clone a model, we need to know about its workspace URL, which first
-    // requires retrieving the model's bookmark URLs
+    // To clone a model, we need to know about its workspace, which requires
+    // retrieving the model's bookmark URLs
 Q_UNUSED(pUrl);
+Q_UNUSED(pDescription);
 
-    sendPmrRequest(BookmarkUrls, pUrl);
+    sendPmrRequest(BookmarkUrls, pUrl, pDescription);
 //    sendPmrRequest(BookmarkUrls, "https://models.physiomeproject.org/e/71");
 }
 
