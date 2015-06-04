@@ -44,6 +44,26 @@ namespace CellMLModelRepositoryWindow {
 
 //==============================================================================
 
+class CellmlModelRepositoryWindowModel
+{
+public:
+    explicit CellmlModelRepositoryWindowModel(const QString &pUrl,
+                                              const QString &pName);
+
+    QString url() const;
+    QString name() const;
+
+private:
+    QString mUrl;
+    QString mName;
+};
+
+//==============================================================================
+
+typedef QList<CellmlModelRepositoryWindowModel> CellmlModelRepositoryWindowModels;
+
+//==============================================================================
+
 class CellmlModelRepositoryWindowWidget : public Core::WebViewWidget,
                                           public Core::CommonWidget
 {
@@ -55,8 +75,7 @@ public:
 
     virtual void retranslateUi();
 
-    void initialize(const QStringList &pModelNames,
-                    const QStringList &pModelUrls,
+    void initialize(const CellmlModelRepositoryWindowModels &pModels,
                     const QString &pErrorMessage);
 
     void filter(const QString &pFilter);
@@ -76,7 +95,6 @@ private:
     QStringList mModelNames;
     QString mErrorMessage;
 
-    int mNumberOfModels;
     int mNumberOfFilteredModels;
 
     QString mLink;

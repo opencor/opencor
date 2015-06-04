@@ -190,8 +190,7 @@ void CellmlModelRepositoryWindowWindow::finished(QNetworkReply *pNetworkReply)
 {
     // Check whether we were able to retrieve the list of models
 
-    QStringList modelNames = QStringList();
-    QStringList modelUrls = QStringList();
+    CellmlModelRepositoryWindowModels models = CellmlModelRepositoryWindowModels();
     QString errorMessage = QString();
 
     if (pNetworkReply->error() == QNetworkReply::NoError) {
@@ -209,8 +208,8 @@ void CellmlModelRepositoryWindowWindow::finished(QNetworkReply *pNetworkReply)
             foreach (const QVariant &exposureVariant, resultMap["collection"].toMap()["links"].toList()) {
                 exposureDetailsVariant = exposureVariant.toMap();
 
-                modelNames << exposureDetailsVariant["prompt"].toString().trimmed();
-                modelUrls << exposureDetailsVariant["href"].toString().trimmed();
+                models << CellmlModelRepositoryWindowModel(exposureDetailsVariant["href"].toString().trimmed(),
+                                                           exposureDetailsVariant["prompt"].toString().trimmed());
             }
         } else {
             errorMessage = jsonParseError.errorString();
@@ -222,8 +221,7 @@ void CellmlModelRepositoryWindowWindow::finished(QNetworkReply *pNetworkReply)
     // Ask our CellML Model Repository widget to initilise itself and then
     // filter its list of models, should there be no error
 
-    mCellmlModelRepositoryWidget->initialize(modelNames, modelUrls,
-                                             errorMessage);
+    mCellmlModelRepositoryWidget->initialize(models, errorMessage);
 
     mCellmlModelRepositoryWidget->filter(mGui->filterValue->text());
 

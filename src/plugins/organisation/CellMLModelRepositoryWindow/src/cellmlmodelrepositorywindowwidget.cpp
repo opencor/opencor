@@ -45,13 +45,39 @@ namespace CellMLModelRepositoryWindow {
 
 //==============================================================================
 
+CellmlModelRepositoryWindowModel::CellmlModelRepositoryWindowModel(const QString &pUrl,
+                                                                   const QString &pName) :
+    mUrl(pUrl),
+    mName(pName)
+{
+}
+
+//==============================================================================
+
+QString CellmlModelRepositoryWindowModel::url() const
+{
+    // Return our URL
+
+    return mUrl;
+}
+
+//==============================================================================
+
+QString CellmlModelRepositoryWindowModel::name() const
+{
+    // Return our name
+
+    return mName;
+}
+
+//==============================================================================
+
 CellmlModelRepositoryWindowWidget::CellmlModelRepositoryWindowWidget(QWidget *pParent) :
     Core::WebViewWidget(pParent),
     Core::CommonWidget(pParent),
     mGui(new Ui::CellmlModelRepositoryWindowWidget),
     mModelNames(QStringList()),
     mErrorMessage(QString()),
-    mNumberOfModels(0),
     mNumberOfFilteredModels(0),
     mLink(QString())
 {
@@ -123,7 +149,7 @@ void CellmlModelRepositoryWindowWidget::retranslateUi()
 
     if (mErrorMessage.isEmpty()) {
         if (!mNumberOfFilteredModels) {
-            if (!mNumberOfModels)
+            if (mModelNames.isEmpty())
                 messageElement.removeAllChildren();
             else
                 messageElement.setInnerXml(tr("No CellML model matches your criteria."));
@@ -173,45 +199,42 @@ void CellmlModelRepositoryWindowWidget::paintEvent(QPaintEvent *pEvent)
 
 //==============================================================================
 
-void CellmlModelRepositoryWindowWidget::initialize(const QStringList &pModelNames,
-                                                   const QStringList &pModelUrls,
+void CellmlModelRepositoryWindowWidget::initialize(const CellmlModelRepositoryWindowModels &pModels,
                                                    const QString &pErrorMessage)
 {
-    // Keep track of some properties
+    // Initialise / keep track of some properties
 
-    mModelNames = pModelNames;
+    mModelNames = QStringList();
     mErrorMessage = pErrorMessage;
 
-    // Initialise our list of models, unless an error occurred
+    // Initialise our list of models
 
-    if (pErrorMessage.isEmpty()) {
-        mNumberOfModels = pModelNames.count();
+    QString models = QString();
 
-        if (mNumberOfModels) {
-            QString models = QString();
+    for (int i = 0, iMax = pModels.count(); i < iMax; ++i) {
+        CellmlModelRepositoryWindowModel model = pModels[i];
 
-            for (int i = 0; i < mNumberOfModels; ++i) {
-                models =  models
-                         +"<tr id=\"model_"+QString::number(i)+"\">\n"
-                         +"    <td>\n"
-                         +"        <ul>\n"
-                         +"            <li>\n"
-                         +"                <a href=\""+pModelUrls[i]+"\">"+pModelNames[i]+"</a>\n"
-                         +"            </li>\n"
-                         +"        </ul>\n"
-                         +"    </td>\n"
-                         +"    <td class=\"button\">\n"
-                         +"        <a class=\"noHover\" href=\""+pModelUrls[i]+"\"><img class=\"button clone\"/></a>\n"
-                         +"    </td>\n"
-                         +"</tr>\n";
-            }
+        models =  models
+                 +"<tr id=\"model_"+QString::number(i)+"\">\n"
+                 +"    <td>\n"
+                 +"        <ul>\n"
+                 +"            <li>\n"
+                 +"                <a href=\""+model.url()+"\">"+model.name()+"</a>\n"
+                 +"            </li>\n"
+                 +"        </ul>\n"
+                 +"    </td>\n"
+                 +"    <td class=\"button\">\n"
+                 +"        <a class=\"noHover\" href=\""+model.url()+"\"><img class=\"button clone\"/></a>\n"
+                 +"    </td>\n"
+                 +"</tr>\n";
 
-            QWebElement modelsElement = page()->mainFrame()->documentElement().findFirst("tbody");
-
-            modelsElement.removeAllChildren();
-            modelsElement.appendInside(models);
-        }
+        mModelNames << model.name();
     }
+
+    QWebElement modelsElement = page()->mainFrame()->documentElement().findFirst("tbody");
+
+    modelsElement.removeAllChildren();
+    modelsElement.appendInside(models);
 }
 
 //==============================================================================
