@@ -54,7 +54,8 @@ namespace CellMLModelRepositoryWindow {
 
 CellmlModelRepositoryWindowWindow::CellmlModelRepositoryWindowWindow(QWidget *pParent) :
     Core::OrganisationWidget(pParent),
-    mGui(new Ui::CellmlModelRepositoryWindowWindow)
+    mGui(new Ui::CellmlModelRepositoryWindowWindow),
+    mNumberOfUntreatedSourceFiles(0)
 {
     // Set up the GUI
 
@@ -126,6 +127,46 @@ void CellmlModelRepositoryWindowWindow::retranslateUi()
 
 //==============================================================================
 
+static const char *PmrRequestProperty = "PmrRequest";
+
+//==============================================================================
+
+void CellmlModelRepositoryWindowWindow::sendPmrRequest(const PmrRequest &pPmrRequest,
+                                                       const QString &pUrl)
+{
+    // Let the user that we are downloading the list of models
+
+    showBusyWidget(mCellmlModelRepositoryWidget);
+
+    // Disable the GUI side, so that the user doesn't get confused and ask to
+    // refresh over and over again while he should just be patient
+
+    mGui->dockWidgetContents->setEnabled(false);
+
+    // Send our request to the Physiome Model Repository
+
+    QNetworkRequest networkRequest;
+
+    networkRequest.setRawHeader("Accept", "application/vnd.physiome.pmr2.json.1");
+
+    switch (pPmrRequest) {
+    case BookmarkUrls:
+        networkRequest.setUrl(QUrl(pUrl));
+
+        break;
+    default:   // ModelList
+        networkRequest.setUrl(QUrl("https://models.physiomeproject.org/exposure"));
+    }
+
+    QNetworkReply *networkReply = mNetworkAccessManager->get(networkRequest);
+
+    // Keep track of the type of request type
+
+    networkReply->setProperty(PmrRequestProperty, pPmrRequest);
+}
+
+//==============================================================================
+
 void CellmlModelRepositoryWindowWindow::on_filterValue_textChanged(const QString &text)
 {
     // Ask our CellML Model Repository widget to filter its output
@@ -137,23 +178,9 @@ void CellmlModelRepositoryWindowWindow::on_filterValue_textChanged(const QString
 
 void CellmlModelRepositoryWindowWindow::on_refreshButton_clicked()
 {
-    // Let the user that we are downloading the list of models
+    // Get the list of CellML models from the Physiome Model Repository
 
-    showBusyWidget(mCellmlModelRepositoryWidget);
-
-    // Disable the GUI side, so that the user doesn't get confused and ask to
-    // refresh over and over again while he should just be patient
-
-    mGui->dockWidgetContents->setEnabled(false);
-
-    // Get the list of CellML models
-
-    QNetworkRequest networkRequest;
-
-    networkRequest.setRawHeader("Accept", "application/vnd.physiome.pmr2.json.1");
-    networkRequest.setUrl(QUrl("https://models.physiomeproject.org/exposure"));
-
-    mNetworkAccessManager->get(networkRequest);
+    sendPmrRequest(ModelList);
 }
 
 //==============================================================================
@@ -195,8 +222,13 @@ void CellmlModelRepositoryWindowWindow::finished(QNetworkReply *pNetworkReply)
 {
     // Check whether we were able to retrieve the list of models
 
+    PmrRequest pmrRequest = PmrRequest(pNetworkReply->property(PmrRequestProperty).toInt());
+qDebug(">>> Request type: %d", pmrRequest);
+
     CellmlModelRepositoryWindowModels models = CellmlModelRepositoryWindowModels();
     QString errorMessage = QString();
+
+    QStringList bookmarkUrls = QStringList();
 
     if (pNetworkReply->error() == QNetworkReply::NoError) {
         // Parse the JSON code
@@ -205,16 +237,34 @@ void CellmlModelRepositoryWindowWindow::finished(QNetworkReply *pNetworkReply)
         QJsonDocument jsonDocument = QJsonDocument::fromJson(pNetworkReply->readAll(), &jsonParseError);
 
         if (jsonParseError.error == QJsonParseError::NoError) {
-            // Retrieve the list of models
+            // Check the request type to determine what we should do with the
+            // data
 
-            QVariantMap resultMap = jsonDocument.object().toVariantMap();
-            QVariantMap exposureDetailsVariant;
+            switch (pmrRequest) {
+            case BookmarkUrls:
+//---GRY--- TO BE DONE...
 
-            foreach (const QVariant &exposureVariant, resultMap["collection"].toMap()["links"].toList()) {
-                exposureDetailsVariant = exposureVariant.toMap();
+                mNumberOfUntreatedSourceFiles = bookmarkUrls.count();
 
-                models << CellmlModelRepositoryWindowModel(exposureDetailsVariant["href"].toString().trimmed(),
-                                                           exposureDetailsVariant["prompt"].toString().trimmed());
+                break;
+            case SourceFile:
+//---GRY--- TO BE DONE...
+
+                --mNumberOfUntreatedSourceFiles;
+
+                break;
+            default:   // ModelList
+                // Retrieve the list of models
+
+                QVariantMap resultMap = jsonDocument.object().toVariantMap();
+                QVariantMap exposureDetailsVariant;
+
+                foreach (const QVariant &exposureVariant, resultMap["collection"].toMap()["links"].toList()) {
+                    exposureDetailsVariant = exposureVariant.toMap();
+
+                    models << CellmlModelRepositoryWindowModel(exposureDetailsVariant["href"].toString().trimmed(),
+                                                               exposureDetailsVariant["prompt"].toString().trimmed());
+                }
             }
         } else {
             errorMessage = jsonParseError.errorString();
@@ -224,22 +274,34 @@ void CellmlModelRepositoryWindowWindow::finished(QNetworkReply *pNetworkReply)
     }
 
     // Ask our CellML Model Repository widget to initilise itself and then
-    // filter its list of models, should there be no error
+    // filter its list of models, should we have been asked to retrieve a list
+    // of models
 
-    mCellmlModelRepositoryWidget->initialize(models, errorMessage);
+    if (pmrRequest == ModelList) {
+        mCellmlModelRepositoryWidget->initialize(models, errorMessage);
 
-    mCellmlModelRepositoryWidget->filter(mGui->filterValue->text());
+        mCellmlModelRepositoryWidget->filter(mGui->filterValue->text());
+    }
 
-    // Re-enable the GUI side
+    // Re-enable the GUI side and give, within the current window, the focus to
+    // mGui->filterValue (only if the current window already has the focus), but
+    // only under certain conditions
 
-    hideBusyWidget();
+    if (    (pmrRequest == ModelList)
+        || ((pmrRequest == BookmarkUrls) &&  bookmarkUrls.isEmpty())
+        || ((pmrRequest == SourceFile)   && !mNumberOfUntreatedSourceFiles)) {
+        hideBusyWidget();
 
-    mGui->dockWidgetContents->setEnabled(true);
+        mGui->dockWidgetContents->setEnabled(true);
 
-    // Give, within the current window, the focus to mGui->filterValue, but
-    // only if the current window already has the focus
+        Core::setFocusTo(mGui->filterValue);
+    } else if ((pmrRequest == BookmarkUrls) && !bookmarkUrls.isEmpty()) {
+        // We got some bookmark URLs, so we now need to get their corresponding
+        // source file from the Physiome Model Repository
 
-    Core::setFocusTo(mGui->filterValue);
+        foreach (const QString &bookmarkUrl, bookmarkUrls)
+            sendPmrRequest(SourceFile, bookmarkUrl);
+    }
 
     // Delete (later) the network reply
 
@@ -277,9 +339,10 @@ void CellmlModelRepositoryWindowWindow::retrieveModelList(const bool &pVisible)
 
 void CellmlModelRepositoryWindowWindow::cloneModel(const QString &pUrl)
 {
-//---GRY--- TO BE DONE...
+    // To clone a model, we need to know about its workspace URL, which first
+    // requires retrieving the model's bookmark URLs
 
-qDebug(">>> Cloning %s...", qPrintable(pUrl));
+    sendPmrRequest(BookmarkUrls, pUrl);
 }
 
 //==============================================================================

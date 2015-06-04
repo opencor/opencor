@@ -70,6 +70,17 @@ private:
 
     QNetworkAccessManager *mNetworkAccessManager;
 
+    int mNumberOfUntreatedSourceFiles;
+
+    enum PmrRequest {
+        ModelList,
+        BookmarkUrls,
+        SourceFile
+    };
+
+    void sendPmrRequest(const PmrRequest &pPmrRequest,
+                        const QString &pUrl = QString());
+
 private Q_SLOTS:
     void on_filterValue_textChanged(const QString &text);
     void on_refreshButton_clicked();
