@@ -72,6 +72,8 @@ private:
 
     int mNumberOfUntreatedSourceFiles;
 
+    QMap<QString, QString> mWorkspaces;
+
     enum PmrRequest {
         ModelList,
         BookmarkUrls,
@@ -80,7 +82,9 @@ private:
 
     void sendPmrRequest(const PmrRequest &pPmrRequest,
                         const QString &pUrl = QString(),
-                        const QString &pDescription = QString());
+                        const QString &pExtra = QString());
+
+    void cloneWorkspace(const QString &pWorkspace);
 
 private Q_SLOTS:
     void on_filterValue_textChanged(const QString &text);

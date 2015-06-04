@@ -56,7 +56,8 @@ namespace CellMLModelRepositoryWindow {
 CellmlModelRepositoryWindowWindow::CellmlModelRepositoryWindowWindow(QWidget *pParent) :
     Core::OrganisationWidget(pParent),
     mGui(new Ui::CellmlModelRepositoryWindowWindow),
-    mNumberOfUntreatedSourceFiles(0)
+    mNumberOfUntreatedSourceFiles(0),
+    mWorkspaces(QMap<QString, QString>())
 {
     // Set up the GUI
 
@@ -128,14 +129,14 @@ void CellmlModelRepositoryWindowWindow::retranslateUi()
 
 //==============================================================================
 
-static const char *PmrRequestProperty  = "PmrRequest";
-static const char *DescriptionProperty = "Description";
+static const char *PmrRequestProperty = "PmrRequest";
+static const char *ExtraProperty      = "Extra";
 
 //==============================================================================
 
 void CellmlModelRepositoryWindowWindow::sendPmrRequest(const PmrRequest &pPmrRequest,
                                                        const QString &pUrl,
-                                                       const QString &pDescription)
+                                                       const QString &pExtra)
 {
     // Let the user that we are downloading the list of models
 
@@ -167,7 +168,16 @@ void CellmlModelRepositoryWindowWindow::sendPmrRequest(const PmrRequest &pPmrReq
     // Keep track of the type of request type and the description
 
     networkReply->setProperty(PmrRequestProperty, pPmrRequest);
-    networkReply->setProperty(DescriptionProperty, pDescription);
+    networkReply->setProperty(ExtraProperty, pExtra);
+}
+
+//==============================================================================
+
+void CellmlModelRepositoryWindowWindow::cloneWorkspace(const QString &pWorkspace)
+{
+//---GRY--- TO BE DONE...
+
+qDebug(">>> Cloning %s...", qPrintable(pWorkspace));
 }
 
 //==============================================================================
@@ -259,13 +269,25 @@ QByteArray byteArray = pNetworkReply->readAll();
                 mNumberOfUntreatedSourceFiles = bookmarkUrls.count();
 
                 break;
-            case SourceFile:
-                foreach (const QVariant &itemVariant, collectionMap["items"].toList().first().toMap()["links"].toList())
-qDebug(">>> Source file: %s", qPrintable(itemVariant.toMap()["href"].toString().trimmed()));
+            case SourceFile: {
+                QString sourceFile = collectionMap["items"].toList().first().toMap()["links"].toList().first().toMap()["href"].toString().trimmed();
+qDebug(">>> Source file: %s", qPrintable(sourceFile));
 
                 --mNumberOfUntreatedSourceFiles;
 
+                // Determine the workspace associated with the mode, now that we
+                // have retrieved all of its source files
+
+                if (!mNumberOfUntreatedSourceFiles) {
+                    QString workspace = sourceFile.remove(QRegularExpression("/rawfile/.*$"));
+
+                    mWorkspaces.insert(pNetworkReply->property(ExtraProperty).toString(), workspace);
+
+                    cloneWorkspace(workspace);
+                }
+
                 break;
+            }
             default:   // ModelList
                 // Retrieve the list of models
 
@@ -310,8 +332,10 @@ qDebug(">>> Source file: %s", qPrintable(itemVariant.toMap()["href"].toString().
         // source file from the Physiome Model Repository
 qDebug("---------");
 
+        QString url = pNetworkReply->url().toString();
+
         foreach (const QString &bookmarkUrl, bookmarkUrls)
-            sendPmrRequest(SourceFile, bookmarkUrl);
+            sendPmrRequest(SourceFile, bookmarkUrl, url);
     }
 
     // Make sure that we got at least one bookmark URL, if we were supposed to
@@ -322,7 +346,7 @@ qDebug("---------");
 
         QMessageBox::information(qApp->activeWindow(),
                                  tr("Bookmark URLs"),
-                                  tr("No bookmark URL could be found for <a href=\"%1\">%2</a>.").arg(url, pNetworkReply->property(DescriptionProperty).toString())
+                                  tr("No bookmark URL could be found for <a href=\"%1\">%2</a>.").arg(url, pNetworkReply->property(ExtraProperty).toString())
                                  +"<br/><br/>"+tr("<strong>Note:</strong> you might want to check with <a href=\"mailto: Tommy Yu <tommy.yu@auckland.ac.nz>\">Tommy Yu</a> (the person behind the <a href=\"https://models.physiomeproject.org/\">Physiome Model Repository</a>) why this is the case."),
                                  QMessageBox::Ok);
     }
@@ -364,13 +388,25 @@ void CellmlModelRepositoryWindowWindow::retrieveModelList(const bool &pVisible)
 void CellmlModelRepositoryWindowWindow::cloneModel(const QString &pUrl,
                                                    const QString &pDescription)
 {
-    // To clone a model, we need to know about its workspace, which requires
-    // retrieving the model's bookmark URLs
 Q_UNUSED(pUrl);
 Q_UNUSED(pDescription);
+    // Check whether we already know about the workspace for the given model
 
-    sendPmrRequest(BookmarkUrls, pUrl, pDescription);
-//    sendPmrRequest(BookmarkUrls, "https://models.physiomeproject.org/e/71");
+    QString workspace = mWorkspaces.value(pUrl);
+
+    if (!workspace.isEmpty()) {
+        cloneWorkspace(workspace);
+    } else {
+        // To retrieve the workspace associated with the given model, we need to
+        // retrieve its bookmark URLs
+
+        sendPmrRequest(BookmarkUrls, pUrl, pDescription);
+//        sendPmrRequest(BookmarkUrls, "https://models.physiomeproject.org/e/71");                                        // CellML and SED-ML files
+//        sendPmrRequest(BookmarkUrls, "https://models.physiomeproject.org/e/e1");                                        // HTML file
+//        sendPmrRequest(BookmarkUrls, "https://models.physiomeproject.org/e/1e");                                        // CellML 1.0 and a CellML 1.1 files
+//        sendPmrRequest(BookmarkUrls, "https://models.physiomeproject.org/exposure/42", "Broken");                       // Broken
+//        sendPmrRequest(BookmarkUrls, "https://models.physiomeproject.org/exposure/4f9511d703b55ace4780879b253777d6");   // Correct version of the above?
+    }
 }
 
 //==============================================================================
