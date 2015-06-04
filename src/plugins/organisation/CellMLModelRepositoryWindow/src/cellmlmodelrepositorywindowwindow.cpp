@@ -37,6 +37,7 @@ specific language governing permissions and limitations under the License.
 #include <QDir>
 #include <QJsonDocument>
 #include <QJsonObject>
+#include <QMessageBox>
 #include <QNetworkAccessManager>
 #include <QNetworkReply>
 #include <QNetworkRequest>
@@ -224,7 +225,7 @@ void CellmlModelRepositoryWindowWindow::finished(QNetworkReply *pNetworkReply)
     // Check whether we were able to retrieve the list of models
 
     PmrRequest pmrRequest = PmrRequest(pNetworkReply->property(PmrRequestProperty).toInt());
-qDebug(">>> Request type: %d", pmrRequest);
+//qDebug(">>> Request type: %d", pmrRequest);
 
     CellmlModelRepositoryWindowModels models = CellmlModelRepositoryWindowModels();
     QString errorMessage = QString();
@@ -234,9 +235,9 @@ qDebug(">>> Request type: %d", pmrRequest);
     if (pNetworkReply->error() == QNetworkReply::NoError) {
         // Parse the JSON code
 QByteArray byteArray = pNetworkReply->readAll();
-qDebug("---[START]---");
-qDebug("%s", qPrintable(QString(byteArray)));
-qDebug("---[END]---");
+//qDebug("---[START]---");
+//qDebug("%s", qPrintable(QString(byteArray)));
+//qDebug("---[END]---");
 
         QJsonParseError jsonParseError;
         QJsonDocument jsonDocument = QJsonDocument::fromJson(byteArray, &jsonParseError);
@@ -245,18 +246,19 @@ qDebug("---[END]---");
             // Check the request type to determine what we should do with the
             // data
 
-            QVariantList linksList = jsonDocument.object().toVariantMap()["collection"].toMap()["links"].toList();
+            QVariantMap collectionMap = jsonDocument.object().toVariantMap()["collection"].toMap();
 
             switch (pmrRequest) {
             case BookmarkUrls:
-                foreach (const QVariant &linkVariant, linksList)
+                foreach (const QVariant &linkVariant, collectionMap["links"].toList())
                     bookmarkUrls << linkVariant.toMap()["href"].toString().trimmed();
 
                 mNumberOfUntreatedSourceFiles = bookmarkUrls.count();
 
                 break;
             case SourceFile:
-//---GRY--- TO BE DONE...
+                foreach (const QVariant &itemVariant, collectionMap["items"].toList().first().toMap()["links"].toList())
+qDebug(">>> Source file: %s", qPrintable(itemVariant.toMap()["href"].toString().trimmed()));
 
                 --mNumberOfUntreatedSourceFiles;
 
@@ -264,7 +266,7 @@ qDebug("---[END]---");
             default:   // ModelList
                 // Retrieve the list of models
 
-                foreach (const QVariant &linkVariant, linksList) {
+                foreach (const QVariant &linkVariant, collectionMap["links"].toList()) {
                     QVariantMap linkMap = linkVariant.toMap();
 
                     models << CellmlModelRepositoryWindowModel(linkMap["href"].toString().trimmed(),
@@ -303,9 +305,23 @@ qDebug("---[END]---");
     } else if ((pmrRequest == BookmarkUrls) && !bookmarkUrls.isEmpty()) {
         // We got some bookmark URLs, so we now need to get their corresponding
         // source file from the Physiome Model Repository
+qDebug("---------");
 
         foreach (const QString &bookmarkUrl, bookmarkUrls)
             sendPmrRequest(SourceFile, bookmarkUrl);
+    }
+
+    // Make sure that we got at least one bookmark URL, if we were supposed to
+    // get some
+
+    if ((pmrRequest == BookmarkUrls) &&  bookmarkUrls.isEmpty()) {
+        QString url = pNetworkReply->url().toString();
+
+        QMessageBox::information(qApp->activeWindow(),
+                                 tr("Bookmark URLs"),
+                                  tr("No bookmark URL could be found for <a href=\"%1\">%1</a>.").arg(url)
+                                 +"<br/><br/>"+tr("<strong>Note:</strong> you might want to check with <a href=\"mailto: Tommy Yu <tommy.yu@auckland.ac.nz>\">Tommy Yu</a>, the person behind the <a href=\"https://models.physiomeproject.org/\">Physiome Model Repository</a>, why this is the case."),
+                                 QMessageBox::Ok);
     }
 
     // Delete (later) the network reply
@@ -348,8 +364,8 @@ void CellmlModelRepositoryWindowWindow::cloneModel(const QString &pUrl)
     // requires retrieving the model's bookmark URLs
 Q_UNUSED(pUrl);
 
-//    sendPmrRequest(BookmarkUrls, pUrl);
-    sendPmrRequest(BookmarkUrls, "https://models.physiomeproject.org/e/71");
+    sendPmrRequest(BookmarkUrls, pUrl);
+//    sendPmrRequest(BookmarkUrls, "https://models.physiomeproject.org/e/71");
 }
 
 //==============================================================================
