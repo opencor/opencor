@@ -176,8 +176,33 @@ void CellmlModelRepositoryWindowWindow::sendPmrRequest(const PmrRequest &pPmrReq
 void CellmlModelRepositoryWindowWindow::cloneWorkspace(const QString &pWorkspace)
 {
 //---GRY--- TO BE DONE...
-
 qDebug(">>> Cloning %s...", qPrintable(pWorkspace));
+
+//    QString gitCloneTestDir = QDir::homePath()+QDir::separator()+"Desktop/GitCloneTest";
+
+//    QDir(gitCloneTestDir).removeRecursively();
+
+//    git_libgit2_init();
+
+//    git_repository *gitRepository = 0;
+
+//    int res = git_clone(&gitRepository,
+//                        "https://models.physiomeproject.org/workspace/noble_1962",
+//                        qPrintable(gitCloneTestDir), 0);
+
+//    if (res) {
+//        const git_error *gitError = giterr_last();
+
+//        if (gitError)
+//            qDebug("Error %d: %s.", gitError->klass, gitError->message);
+//        else
+//            qDebug("Error %d: no detailed information.", res);
+//    } else {
+//        if (gitRepository)
+//            git_repository_free(gitRepository);
+//    }
+
+//    git_libgit2_shutdown();
 }
 
 //==============================================================================
@@ -200,45 +225,11 @@ void CellmlModelRepositoryWindowWindow::on_refreshButton_clicked()
 
 //==============================================================================
 
-void CellmlModelRepositoryWindowWindow::on_gitButton_clicked()
-{
-    // Simple git clone test...
-
-    QString gitCloneTestDir = QDir::homePath()+QDir::separator()+"Desktop/GitCloneTest";
-
-    QDir(gitCloneTestDir).removeRecursively();
-
-    git_libgit2_init();
-
-    git_repository *gitRepository = 0;
-
-    int res = git_clone(&gitRepository,
-                        "https://models.physiomeproject.org/workspace/noble_1962",
-                        qPrintable(gitCloneTestDir), 0);
-
-    if (res) {
-        const git_error *gitError = giterr_last();
-
-        if (gitError)
-            qDebug("Error %d: %s.", gitError->klass, gitError->message);
-        else
-            qDebug("Error %d: no detailed information.", res);
-    } else {
-        if (gitRepository)
-            git_repository_free(gitRepository);
-    }
-
-    git_libgit2_shutdown();
-}
-
-//==============================================================================
-
 void CellmlModelRepositoryWindowWindow::finished(QNetworkReply *pNetworkReply)
 {
     // Check whether we were able to retrieve the list of models
 
     PmrRequest pmrRequest = PmrRequest(pNetworkReply->property(PmrRequestProperty).toInt());
-//qDebug(">>> Request type: %d", pmrRequest);
 
     CellmlModelRepositoryWindowModels models = CellmlModelRepositoryWindowModels();
     QString errorMessage = QString();
@@ -247,13 +238,9 @@ void CellmlModelRepositoryWindowWindow::finished(QNetworkReply *pNetworkReply)
 
     if (pNetworkReply->error() == QNetworkReply::NoError) {
         // Parse the JSON code
-QByteArray byteArray = pNetworkReply->readAll();
-//qDebug("---[START]---");
-//qDebug("%s", qPrintable(QString(byteArray)));
-//qDebug("---[END]---");
 
         QJsonParseError jsonParseError;
-        QJsonDocument jsonDocument = QJsonDocument::fromJson(byteArray, &jsonParseError);
+        QJsonDocument jsonDocument = QJsonDocument::fromJson(pNetworkReply->readAll(), &jsonParseError);
 
         if (jsonParseError.error == QJsonParseError::NoError) {
             // Check the request type to determine what we should do with the
@@ -271,7 +258,6 @@ QByteArray byteArray = pNetworkReply->readAll();
                 break;
             case SourceFile: {
                 QString sourceFile = collectionMap["items"].toList().first().toMap()["links"].toList().first().toMap()["href"].toString().trimmed();
-qDebug(">>> Source file: %s", qPrintable(sourceFile));
 
                 --mNumberOfUntreatedSourceFiles;
 
@@ -330,7 +316,6 @@ qDebug(">>> Source file: %s", qPrintable(sourceFile));
     } else if ((pmrRequest == BookmarkUrls) && !bookmarkUrls.isEmpty()) {
         // We got some bookmark URLs, so we now need to get their corresponding
         // source file from the Physiome Model Repository
-qDebug("---------");
 
         QString url = pNetworkReply->url().toString();
 
