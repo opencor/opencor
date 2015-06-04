@@ -80,6 +80,8 @@ private Q_SLOTS:
                    const QList<QSslError> &pSslErrors);
 
     void retrieveModelList(const bool &pVisible);
+
+    void cloneModel(const QString &pUrl);
 };
 
 //==============================================================================

@@ -79,7 +79,7 @@ CellmlModelRepositoryWindowWidget::CellmlModelRepositoryWindowWidget(QWidget *pP
     mModelNames(QStringList()),
     mErrorMessage(QString()),
     mNumberOfFilteredModels(0),
-    mLink(QString())
+    mUrl(QString())
 {
     // Set up the GUI
 
@@ -107,7 +107,7 @@ CellmlModelRepositoryWindowWidget::CellmlModelRepositoryWindowWidget(QWidget *pP
     setContextMenuPolicy(Qt::CustomContextMenu);
 
     connect(this, SIGNAL(customContextMenuRequested(const QPoint &)),
-            this, SLOT(showCustomContextMenu(const QPoint &)));
+            this, SLOT(showCustomContextMenu()));
 
     // Prevent objects from being dropped on us
 
@@ -120,7 +120,7 @@ CellmlModelRepositoryWindowWidget::CellmlModelRepositoryWindowWidget(QWidget *pP
     // Some connections
 
     connect(page(), SIGNAL(linkClicked(const QUrl &)),
-            this, SLOT(linkClicked(const QUrl &)));
+            this, SLOT(linkClicked()));
 
     // Retrieve the output template
 
@@ -289,50 +289,50 @@ void CellmlModelRepositoryWindowWidget::on_actionCopy_triggered()
 {
     // Copy the URL of the model to the clipboard
 
-    QApplication::clipboard()->setText(mLink);
+    QApplication::clipboard()->setText(mUrl);
 }
 
 //==============================================================================
 
-void CellmlModelRepositoryWindowWidget::linkClicked(const QUrl &pUrl)
+void CellmlModelRepositoryWindowWidget::linkClicked()
 {
     // Retrieve some information about the link
 
+    QString url;
     QString textContent;
 
-    retrieveLinkInformation(mLink, textContent);
+    retrieveLinkInformation(url, textContent);
 
     // Check whether we have clicked a model link or a button link, i.e. that we
     // want to clone the model
 
     if (textContent.isEmpty()) {
-        // We have clicked on a button link, so clone the model
+        // We have clicked on a button link, so let people know that we want to
+        // clone a model
 
-qDebug(">>> Cloning %s...", qPrintable(mLink));
+        emit cloneModel(url);
     } else {
         // Open the model link in the user's browser
 
-        QDesktopServices::openUrl(pUrl);
+        QDesktopServices::openUrl(url);
     }
 }
 
 //==============================================================================
 
-void CellmlModelRepositoryWindowWidget::showCustomContextMenu(const QPoint &pPosition)
+void CellmlModelRepositoryWindowWidget::showCustomContextMenu()
 {
-    Q_UNUSED(pPosition);
-
     // Retrieve some information about the link, if any
 
     QString textContent;
 
-    retrieveLinkInformation(mLink, textContent);
+    retrieveLinkInformation(mUrl, textContent);
 
     // Show our context menu to allow the copying of the URL of the model, but
     // only if we are over a link, i.e. if both mLink and textContent are not
     // empty
 
-    if (!mLink.isEmpty() && !textContent.isEmpty())
+    if (!mUrl.isEmpty() && !textContent.isEmpty())
         mContextMenu->exec(QCursor::pos());
 }
 

@@ -97,14 +97,17 @@ private:
 
     int mNumberOfFilteredModels;
 
-    QString mLink;
+    QString mUrl;
+
+Q_SIGNALS:
+    void cloneModel(const QString &pUrl);
 
 private Q_SLOTS:
     void on_actionCopy_triggered();
 
-    void linkClicked(const QUrl &pUrl);
+    void linkClicked();
 
-    void showCustomContextMenu(const QPoint &pPosition);
+    void showCustomContextMenu();
 };
 
 //==============================================================================

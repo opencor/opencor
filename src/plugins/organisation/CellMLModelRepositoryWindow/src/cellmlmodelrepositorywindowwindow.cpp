@@ -95,6 +95,11 @@ CellmlModelRepositoryWindowWindow::CellmlModelRepositoryWindowWindow(QWidget *pP
             this, SLOT(finished(QNetworkReply *)));
     connect(mNetworkAccessManager, SIGNAL(sslErrors(QNetworkReply *, const QList<QSslError> &)),
             this, SLOT(sslErrors(QNetworkReply *, const QList<QSslError> &)));
+
+    // Some connections to know what our CellML Model Repository widget wants
+
+    connect(mCellmlModelRepositoryWidget, SIGNAL(cloneModel(const QString &)),
+            this, SLOT(cloneModel(const QString &)));
 }
 
 //==============================================================================
@@ -266,6 +271,15 @@ void CellmlModelRepositoryWindowWindow::retrieveModelList(const bool &pVisible)
 
         on_refreshButton_clicked();
     }
+}
+
+//==============================================================================
+
+void CellmlModelRepositoryWindowWindow::cloneModel(const QString &pUrl)
+{
+//---GRY--- TO BE DONE...
+
+qDebug(">>> Cloning %s...", qPrintable(pUrl));
 }
 
 //==============================================================================
