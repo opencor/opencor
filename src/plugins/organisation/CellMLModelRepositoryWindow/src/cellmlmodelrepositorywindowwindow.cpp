@@ -316,25 +316,12 @@ void CellmlModelRepositoryWindowWindow::finished(QNetworkReply *pNetworkReply)
         errorMessage = pNetworkReply->errorString();
     }
 
-    // Ask our CellML Model Repository widget to initilise itself and then
-    // filter its list of models, should we have been asked to retrieve a list
-    // of models
-
-    if (pmrRequest == ModelList) {
-        mCellmlModelRepositoryWidget->initialize(models, errorMessage);
-
-        mCellmlModelRepositoryWidget->filter(mGui->filterValue->text());
-    }
-
     // Some additional processing depending on the request that was sent to the
     // Physiome Model Repository
 
-    bool bookmarkUrlsPmrRequest =    (pmrRequest == BookmarkUrlsForCloning)
-                                  || (pmrRequest == BookmarkUrlsForShowingFiles);
-    bool sourceFilePmrRequest =    (pmrRequest == SourceFileForCloning)
-                                || (pmrRequest == SourceFileForShowingFiles);
-
-    if (bookmarkUrlsPmrRequest) {
+    switch (pmrRequest) {
+    case BookmarkUrlsForCloning:
+    case BookmarkUrlsForShowingFiles:
         // Make sure that we got at least one bookmark URL and retrieve their
         // corresponding source file from the Physiome Model Repository
 
@@ -355,7 +342,10 @@ void CellmlModelRepositoryWindowWindow::finished(QNetworkReply *pNetworkReply)
                                    SourceFileForShowingFiles,
                                bookmarkUrl, url);
         }
-    } else if (sourceFilePmrRequest) {
+
+        break;
+    case SourceFileForCloning:
+    case SourceFileForShowingFiles: {
         // Keep track of the model's source file
 
         QString url = pNetworkReply->property(ExtraProperty).toString();
@@ -389,13 +379,26 @@ void CellmlModelRepositoryWindowWindow::finished(QNetworkReply *pNetworkReply)
             && (pmrRequest == SourceFileForCloning)) {
                 cloneWorkspace(mWorkspaces.value(url));
         }
+
+        break;
+    }
+    default:   // ModelList
+        // Ask our CellML Model Repository widget to initilise itself and then
+        // filter its list of models, should we have been asked to retrieve a
+        // list of models
+
+        mCellmlModelRepositoryWidget->initialize(models, errorMessage);
+
+        mCellmlModelRepositoryWidget->filter(mGui->filterValue->text());
     }
 
     // Show ourselves as not busy anymore, but only under certain conditions
 
     if (    (pmrRequest == ModelList)
-        || (bookmarkUrlsPmrRequest &&  bookmarkUrls.isEmpty())
-        || (sourceFilePmrRequest   && !mNumberOfUntreatedSourceFiles)) {
+        || ((   (pmrRequest == BookmarkUrlsForCloning)
+             || (pmrRequest == BookmarkUrlsForShowingFiles)) &&  bookmarkUrls.isEmpty())
+        || ((   (pmrRequest == SourceFileForCloning)
+             || (pmrRequest == SourceFileForShowingFiles))   && !mNumberOfUntreatedSourceFiles)) {
         busy(false);
     }
 
