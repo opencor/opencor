@@ -212,54 +212,51 @@ void CellmlModelRepositoryWindowWidget::initialize(const CellmlModelRepositoryWi
 
     // Initialise our list of models
 
-    QString models = QString();
-
-    for (int i = 0, iMax = pModels.count(); i < iMax; ++i) {
-        CellmlModelRepositoryWindowModel model = pModels[i];
-
-        models =  models
-                 +"<tr id=\"model_"+QString::number(i)+"\">\n"
-                 +"    <td>\n"
-                 +"        <table class=\"fullWidth\">\n"
-                 +"            <tbody>\n"
-                 +"                <tr>\n"
-                 +"                    <td class=\"fullWidth\">\n"
-                 +"                        <ul>\n"
-                 +"                            <li class=\"model\">\n"
-                 +"                                <a href=\""+model.url()+"\">"+model.name()+"</a>\n"
-                 +"                            </li>\n"
-                 +"                        </ul>\n"
-                 +"                    </td>\n"
-                 +"                    <td class=\"button\">\n"
-                 +"                        <a class=\"noHover\" href=\"clone|"+model.url()+"|"+model.name()+"\"><img class=\"button clone\"/></a>\n"
-                 +"                    </td>\n"
-                 +"                    <td class=\"button\">\n"
-                 +"                        <a class=\"noHover\" href=\"files|"+model.url()+"|"+model.name()+"\"><img id=\"model_"+QString::number(i)+"\" class=\"button open\"/></a>\n"
-                 +"                    </td>\n"
-                 +"                </tr>\n"
-                 +"            </tbody>\n"
-                 +"        </table>\n"
-                 +"    </td>\n"
-                 +"</tr>\n"
-                 +"<tr id=\"modelFiles_"+QString::number(i)+"\" style=\"display: none;\">\n"
-                 +"    <td>\n"
-                 +"        <ul id=\"modelFiles_"+QString::number(i)+"\">\n"
-                 +"        </ul>\n"
-                 +"    </td>\n"
-                 +"</tr>\n"
-                 +"<tr>\n"
-                 +"    <td class=\"verticalSpace\">\n"
-                 +"    </td>\n"
-                 +"</tr>\n";
-
-        mModelNames << model.name();
-        mModelUrlsIds.insert(model.url(), i);
-    }
-
-    QWebElement modelsElement = page()->mainFrame()->documentElement().findFirst("tbody");
+    QWebElement modelsElement = page()->mainFrame()->documentElement().findFirst("tbody[id=models]");
 
     modelsElement.removeAllChildren();
-    modelsElement.appendInside(models);
+
+    for (int i = 0, iMax = pModels.count(); i < iMax; ++i) {
+        QString modelName = pModels[i].name();
+        QString modelUrl = pModels[i].url();
+
+        modelsElement.appendInside( "<tr id=\"model_"+QString::number(i)+"\">\n"
+                                   +"    <td>\n"
+                                   +"        <table class=\"fullWidth\">\n"
+                                   +"            <tbody>\n"
+                                   +"                <tr>\n"
+                                   +"                    <td class=\"fullWidth\">\n"
+                                   +"                        <ul>\n"
+                                   +"                            <li class=\"model\">\n"
+                                   +"                                <a href=\""+modelUrl+"\">"+modelName+"</a>\n"
+                                   +"                            </li>\n"
+                                   +"                        </ul>\n"
+                                   +"                    </td>\n"
+                                   +"                    <td class=\"button\">\n"
+                                   +"                        <a class=\"noHover\" href=\"clone|"+modelUrl+"|"+modelName+"\"><img class=\"button clone\"/></a>\n"
+                                   +"                    </td>\n"
+                                   +"                    <td class=\"button\">\n"
+                                   +"                        <a class=\"noHover\" href=\"files|"+modelUrl+"|"+modelName+"\"><img id=\"model_"+QString::number(i)+"\" class=\"button open\"/></a>\n"
+                                   +"                    </td>\n"
+                                   +"                </tr>\n"
+                                   +"            </tbody>\n"
+                                   +"        </table>\n"
+                                   +"    </td>\n"
+                                   +"</tr>\n"
+                                   +"<tr id=\"modelFiles_"+QString::number(i)+"\" style=\"display: none;\">\n"
+                                   +"    <td>\n"
+                                   +"        <ul id=\"modelFiles_"+QString::number(i)+"\">\n"
+                                   +"        </ul>\n"
+                                   +"    </td>\n"
+                                   +"</tr>\n"
+                                   +"<tr>\n"
+                                   +"    <td class=\"verticalSpace\">\n"
+                                   +"    </td>\n"
+                                   +"</tr>\n");
+
+        mModelNames << modelName;
+        mModelUrlsIds.insert(modelUrl, i);
+    }
 }
 
 //==============================================================================
@@ -284,22 +281,23 @@ void CellmlModelRepositoryWindowWidget::filter(const QString &pFilter)
 
     // Show/hide the relevant models
 
-    QWebElement documentElement = page()->mainFrame()->documentElement();
+    QWebElement element = page()->mainFrame()->documentElement().findFirst(QString("tbody[id=models]")).firstChild();
 
     for (int i = 0, iMax = mModelNames.count(); i < iMax; ++i) {
         QString displayValue = filteredModelNames.contains(mModelNames[i])?"table-row":"none";
-        QWebElement trElement = documentElement.findFirst(QString("tr[id=model_%1]").arg(i));
 
-        trElement.setStyleProperty("display", displayValue);
+        element.setStyleProperty("display", displayValue);
 
-        QWebElement nextTrElement = trElement.nextSibling();
+        element = element.nextSibling();
 
-        if (nextTrElement.hasClass("visible"))
-            nextTrElement.setStyleProperty("display", displayValue);
+        if (element.hasClass("visible"))
+            element.setStyleProperty("display", displayValue);
 
-        QWebElement nextNextTrElement = nextTrElement.nextSibling();
+        element = element.nextSibling();
 
-        nextNextTrElement.setStyleProperty("display", displayValue);
+        element.setStyleProperty("display", displayValue);
+
+        element = element.nextSibling();
     }
 }
 
