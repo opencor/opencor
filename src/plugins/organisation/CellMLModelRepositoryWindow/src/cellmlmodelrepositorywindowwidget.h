@@ -80,6 +80,9 @@ public:
 
     void filter(const QString &pFilter);
 
+    void addModelFiles(const QString &pUrl, const QStringList &pSourceFiles);
+    void showModelFiles(const QString &pUrl, const bool &pShow = true);
+
 protected:
     virtual QSize sizeHint() const;
 
@@ -93,6 +96,8 @@ private:
     QString mOutputTemplate;
 
     QStringList mModelNames;
+    QMap<QString, int> mModelUrlsIds;
+
     QString mErrorMessage;
 
     int mNumberOfFilteredModels;
@@ -101,6 +106,9 @@ private:
 
 Q_SIGNALS:
     void cloneModel(const QString &pUrl, const QString &pDescription);
+    void showModelFiles(const QString &pUrl, const QString &pDescription);
+
+    void modelFileOpenRequested(const QString &pUrl);
 
 private Q_SLOTS:
     void on_actionCopy_triggered();

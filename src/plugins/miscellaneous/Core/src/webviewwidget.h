@@ -45,7 +45,7 @@ class CORE_EXPORT WebViewWidget : public QWebView
 public:
     explicit WebViewWidget(QWidget *pParent);
 
-    void retrieveLinkInformation(QString &pLink, QString &pTextContent);
+    QWebElement retrieveLinkInformation(QString &pLink, QString &pTextContent);
 
 protected:
     virtual bool event(QEvent *pEvent);

@@ -56,7 +56,8 @@ CellmlModelRepositoryWindowWindow::CellmlModelRepositoryWindowWindow(QWidget *pP
     Core::OrganisationWidget(pParent),
     mGui(new Ui::CellmlModelRepositoryWindowWindow),
     mNumberOfUntreatedSourceFiles(0),
-    mWorkspaces(QMap<QString, QString>())
+    mWorkspaces(QMap<QString, QString>()),
+    mSourceFiles(QMap<QString, QString>())
 {
     // Set up the GUI
 
@@ -99,9 +100,15 @@ CellmlModelRepositoryWindowWindow::CellmlModelRepositoryWindowWindow(QWidget *pP
             this, SLOT(sslErrors(QNetworkReply *, const QList<QSslError> &)));
 
     // Some connections to know what our CellML Model Repository widget wants
+    // from us
 
     connect(mCellmlModelRepositoryWidget, SIGNAL(cloneModel(const QString &, const QString &)),
             this, SLOT(cloneModel(const QString &, const QString &)));
+    connect(mCellmlModelRepositoryWidget, SIGNAL(showModelFiles(const QString &, const QString &)),
+            this, SLOT(showModelFiles(const QString &, const QString &)));
+
+    connect(mCellmlModelRepositoryWidget, SIGNAL(modelFileOpenRequested(const QString &)),
+            this, SLOT(openFile(const QString &)));
 }
 
 //==============================================================================
@@ -171,8 +178,10 @@ void CellmlModelRepositoryWindowWindow::sendPmrRequest(const PmrRequest &pPmrReq
     networkRequest.setRawHeader("Accept", "application/vnd.physiome.pmr2.json.1");
 
     switch (pPmrRequest) {
-    case BookmarkUrls:
-    case SourceFile:
+    case BookmarkUrlsForCloning:
+    case BookmarkUrlsForShowingFiles:
+    case SourceFileForCloning:
+    case SourceFileForShowingFiles:
         networkRequest.setUrl(QUrl(pUrl));
 
         break;
@@ -274,14 +283,16 @@ void CellmlModelRepositoryWindowWindow::finished(QNetworkReply *pNetworkReply)
             QVariantMap collectionMap = jsonDocument.object().toVariantMap()["collection"].toMap();
 
             switch (pmrRequest) {
-            case BookmarkUrls:
+            case BookmarkUrlsForCloning:
+            case BookmarkUrlsForShowingFiles:
                 foreach (const QVariant &linkVariant, collectionMap["links"].toList())
                     bookmarkUrls << linkVariant.toMap()["href"].toString().trimmed();
 
                 mNumberOfUntreatedSourceFiles = bookmarkUrls.count();
 
                 break;
-            case SourceFile: {
+            case SourceFileForCloning:
+            case SourceFileForShowingFiles: {
                 sourceFile = collectionMap["items"].toList().first().toMap()["links"].toList().first().toMap()["href"].toString().trimmed();
 
                 --mNumberOfUntreatedSourceFiles;
@@ -318,7 +329,12 @@ void CellmlModelRepositoryWindowWindow::finished(QNetworkReply *pNetworkReply)
     // Some additional processing depending on the request that was sent to the
     // Physiome Model Repository
 
-    if (pmrRequest == BookmarkUrls) {
+    bool bookmarkUrlsPmrRequest =    (pmrRequest == BookmarkUrlsForCloning)
+                                  || (pmrRequest == BookmarkUrlsForShowingFiles);
+    bool sourceFilePmrRequest =    (pmrRequest == SourceFileForCloning)
+                                || (pmrRequest == SourceFileForShowingFiles);
+
+    if (bookmarkUrlsPmrRequest) {
         // Make sure that we got at least one bookmark URL and retrieve their
         // corresponding source file from the Physiome Model Repository
 
@@ -334,29 +350,52 @@ void CellmlModelRepositoryWindowWindow::finished(QNetworkReply *pNetworkReply)
             QString url = pNetworkReply->url().toString();
 
             foreach (const QString &bookmarkUrl, bookmarkUrls)
-                sendPmrRequest(SourceFile, bookmarkUrl, url);
+                sendPmrRequest((pmrRequest == BookmarkUrlsForCloning)?
+                                   SourceFileForCloning:
+                                   SourceFileForShowingFiles,
+                               bookmarkUrl, url);
         }
-    } else if (pmrRequest == SourceFile) {
+    } else if (sourceFilePmrRequest) {
+        // Keep track of the model's source file
+
+        QString url = pNetworkReply->property(ExtraProperty).toString();
+
+        mSourceFiles.insertMulti(url, sourceFile);
+
         // Determine the workspace associated with the model, should we have
-        // retrieved all of its source files, and clone it
-        // Note: this can be done with any source file (for a given model), but
-        //       we do it with the last one in case of a problem occuring
-        //       between the retrieval of the first and last source files...
+        // retrieved all of its source files, and ask our CellML Model
+        // Repository widget to add some source files and maybe also show them
+        // Note: this can be done with any model's source file, but we do it
+        //       with the last one in case of a problem occuring between the
+        //       retrieval of the first and last model's source files...
 
         if (!mNumberOfUntreatedSourceFiles) {
-            QString workspace = sourceFile.remove(QRegularExpression("/rawfile/.*$"));
+            mWorkspaces.insert(url, sourceFile.remove(QRegularExpression("/rawfile/.*$")));
 
-            mWorkspaces.insert(pNetworkReply->property(ExtraProperty).toString(), workspace);
+            mCellmlModelRepositoryWidget->addModelFiles(url, mSourceFiles.values(url));
 
-            cloneWorkspace(workspace);
+            if (pmrRequest == SourceFileForShowingFiles)
+                mCellmlModelRepositoryWidget->showModelFiles(url);
+
+            // Remove the model's source files since we don't need them anymore
+            // (and there is no point in wasting memory for no reason)
+
+            mSourceFiles.remove(url);
+        }
+
+        // Clone the workspace, if needed
+
+        if (    !mNumberOfUntreatedSourceFiles
+            && (pmrRequest == SourceFileForCloning)) {
+                cloneWorkspace(mWorkspaces.value(url));
         }
     }
 
     // Show ourselves as not busy anymore, but only under certain conditions
 
     if (    (pmrRequest == ModelList)
-        || ((pmrRequest == BookmarkUrls) &&  bookmarkUrls.isEmpty())
-        || ((pmrRequest == SourceFile)   && !mNumberOfUntreatedSourceFiles)) {
+        || (bookmarkUrlsPmrRequest &&  bookmarkUrls.isEmpty())
+        || (sourceFilePmrRequest   && !mNumberOfUntreatedSourceFiles)) {
         busy(false);
     }
 
@@ -408,19 +447,22 @@ void CellmlModelRepositoryWindowWindow::cloneModel(const QString &pUrl,
 
         busy(false);
     } else {
-        // To retrieve the workspace associated with the given model, we need to
-        // retrieve its bookmark URLs
+        // To retrieve the workspace associated with the given model, we first
+        // need to retrieve its bookmark URLs
 
-        sendPmrRequest(BookmarkUrls, pUrl, pDescription);
-//---GRY--- THE BELOW IS TO BE REMOVED ONCE WE HAVE IMPLEMENTED ISSUE #592...
-Q_UNUSED(pUrl);
-Q_UNUSED(pDescription);
-//        sendPmrRequest(BookmarkUrls, "https://models.physiomeproject.org/e/71");                                        // CellML and SED-ML files
-//        sendPmrRequest(BookmarkUrls, "https://models.physiomeproject.org/e/e1");                                        // HTML file
-//        sendPmrRequest(BookmarkUrls, "https://models.physiomeproject.org/e/1e");                                        // CellML 1.0 and a CellML 1.1 files
-//        sendPmrRequest(BookmarkUrls, "https://models.physiomeproject.org/exposure/42", "Broken");                       // Broken
-//        sendPmrRequest(BookmarkUrls, "https://models.physiomeproject.org/exposure/4f9511d703b55ace4780879b253777d6");   // Correct version of the above?
+        sendPmrRequest(BookmarkUrlsForCloning, pUrl, pDescription);
     }
+}
+
+//==============================================================================
+
+void CellmlModelRepositoryWindowWindow::showModelFiles(const QString &pUrl,
+                                                       const QString &pDescription)
+{
+    // To retrieve the model's files, we first need to retrieve its bookmark
+    // URLs
+
+    sendPmrRequest(BookmarkUrlsForShowingFiles, pUrl, pDescription);
 }
 
 //==============================================================================

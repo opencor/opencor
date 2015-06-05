@@ -73,11 +73,14 @@ private:
     int mNumberOfUntreatedSourceFiles;
 
     QMap<QString, QString> mWorkspaces;
+    QMap<QString, QString> mSourceFiles;
 
     enum PmrRequest {
         ModelList,
-        BookmarkUrls,
-        SourceFile
+        BookmarkUrlsForCloning,
+        BookmarkUrlsForShowingFiles,
+        SourceFileForCloning,
+        SourceFileForShowingFiles
     };
 
     void busy(const bool &pBusy);
@@ -99,6 +102,7 @@ private Q_SLOTS:
     void retrieveModelList(const bool &pVisible);
 
     void cloneModel(const QString &pUrl, const QString &pDescription);
+    void showModelFiles(const QString &pUrl, const QString &pDescription);
 };
 
 //==============================================================================

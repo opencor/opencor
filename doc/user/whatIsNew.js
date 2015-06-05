@@ -10,7 +10,8 @@ var jsonData = { "versions": [
                          "entries": [
                            { "type": "subCategory", "name": "CellML Model Repository window",
                              "entries": [
-                               { "type": "Added", "description": "Cloning of a workspace." }
+                               { "type": "Added", "description": "Cloning of a workspace." },
+                               { "type": "Added", "description": "Open a file from a published exposure." }
                              ]
                            }
                          ]
