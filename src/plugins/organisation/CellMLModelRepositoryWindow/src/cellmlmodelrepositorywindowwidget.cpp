@@ -295,24 +295,45 @@ void CellmlModelRepositoryWindowWidget::filter(const QString &pFilter)
 
 //==============================================================================
 
-void CellmlModelRepositoryWindowWidget::addModelFiles(const QString &pUrl, const QStringList &pSourceFiles)
+void CellmlModelRepositoryWindowWidget::addModelFiles(const QString &pUrl,
+                                                      const QStringList &pSourceFiles)
 {
-    // Add the source files to the model
+    // Add the given files to the model
 
-    int id = mModelUrlsIds.value(pUrl);
-    QWebElement ulElement = page()->mainFrame()->documentElement().findFirst(QString("ul[id=modelFiles_%1]").arg(id));
+    QWebElement ulElement = page()->mainFrame()->documentElement().findFirst(QString("ul[id=modelFiles_%1]").arg(mModelUrlsIds.value(pUrl)));
 
     foreach (const QString &sourceFile, pSourceFiles) {
         ulElement.appendInside(QString("<li class=\"modelFile\">"
                                        "    <a href=\"%1\">%2</a>"
                                        "</li>").arg(sourceFile, QString(sourceFile).remove(QRegularExpression(".*/"))));
     }
+}
 
-//---GRY---
-QWebElement trElement = page()->mainFrame()->documentElement().findFirst(QString("tr[id=modelFiles_%1]").arg(id));
+//==============================================================================
 
-trElement.addClass("visible");
-trElement.setStyleProperty("display", "table-row");
+void CellmlModelRepositoryWindowWidget::showModelFiles(const QString &pUrl,
+                                                       const bool &pShow)
+{
+    // Show the files for the given model
+
+    int id = mModelUrlsIds.value(pUrl);
+    QWebElement documentElement = page()->mainFrame()->documentElement();
+    QWebElement buttonElement = documentElement.findFirst(QString("img[id=model_%1]").arg(id));
+    QWebElement trElement = documentElement.findFirst(QString("tr[id=modelFiles_%1]").arg(id));
+
+    if (pShow) {
+        buttonElement.removeClass("button");
+        buttonElement.addClass("downButton");
+
+        trElement.addClass("visible");
+        trElement.setStyleProperty("display", "table-row");
+    } else {
+        buttonElement.addClass("button");
+        buttonElement.removeClass("downButton");
+
+        trElement.removeClass("visible");
+        trElement.setStyleProperty("display", "none");
+    }
 }
 
 //==============================================================================
@@ -340,32 +361,26 @@ void CellmlModelRepositoryWindowWidget::linkClicked()
 
     if (textContent.isEmpty()) {
         // We have clicked on a button link, so let people know whether we want
-        // to clone a model or show/hide its files
+        // to clone a model or whether we want to show/hide its files
 
         QStringList linkList = link.split("|");
 
         if (!linkList[0].compare("clone")) {
             emit cloneModel(linkList[1], linkList[2]);
         } else {
-            // Toggle our button link and show/hide our model's files
+            // Show/hide the model's files, if we have them, or let people know
+            // that we want them
 
-            QWebElement buttonElement = page()->mainFrame()->documentElement().findFirst(QString("img[id=model_%1]").arg(mModelUrlsIds.value(linkList[1])));
+            int id = mModelUrlsIds.value(linkList[1]);
 
-            if (buttonElement.hasClass("button")) {
-                buttonElement.removeClass("button");
-                buttonElement.addClass("downButton");
+            QWebElement ulElement = page()->mainFrame()->documentElement().findFirst(QString("ul[id=modelFiles_%1]").arg(id));
 
-//---GRY--- SHOW OUR MODEL'S FILES...
+            if (ulElement.firstChild().isNull()) {
+                emit showModelFiles(linkList[1], linkList[2]);
             } else {
-                buttonElement.addClass("button");
-                buttonElement.removeClass("downButton");
-
-//---GRY--- HIDE OUR MODEL'S FILES...
+                showModelFiles(linkList[1],
+                               page()->mainFrame()->documentElement().findFirst(QString("img[id=model_%1]").arg(id)).hasClass("button"));
             }
-
-            // Let people know that we want to show the model's files
-
-            emit showModelFiles(linkList[1], linkList[2]);
         }
     } else {
         // Open the model link in the user's browser

@@ -81,6 +81,7 @@ public:
     void filter(const QString &pFilter);
 
     void addModelFiles(const QString &pUrl, const QStringList &pSourceFiles);
+    void showModelFiles(const QString &pUrl, const bool &pShow = true);
 
 protected:
     virtual QSize sizeHint() const;

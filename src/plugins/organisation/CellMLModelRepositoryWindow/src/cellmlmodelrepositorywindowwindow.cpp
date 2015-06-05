@@ -360,8 +360,8 @@ void CellmlModelRepositoryWindowWindow::finished(QNetworkReply *pNetworkReply)
         mSourceFiles.insertMulti(url, sourceFile);
 
         // Determine the workspace associated with the model, should we have
-        // retrieved all of its source files, and let our CellML Model
-        // Repository widget know that we have files for it to show
+        // retrieved all of its source files, and ask our CellML Model
+        // Repository widget to add some source files and maybe also show them
         // Note: this can be done with any model's source file, but we do it
         //       with the last one in case of a problem occuring between the
         //       retrieval of the first and last model's source files...
@@ -370,6 +370,9 @@ void CellmlModelRepositoryWindowWindow::finished(QNetworkReply *pNetworkReply)
             mWorkspaces.insert(url, sourceFile.remove(QRegularExpression("/rawfile/.*$")));
 
             mCellmlModelRepositoryWidget->addModelFiles(url, mSourceFiles.values(url));
+
+            if (pmrRequest == SourceFileForShowingFiles)
+                mCellmlModelRepositoryWidget->showModelFiles(url);
 
             // Remove the model's source files since we don't need them anymore
             // (and there is no point in wasting memory for no reason)
