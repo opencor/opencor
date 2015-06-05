@@ -34,7 +34,6 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-#include <QDir>
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QMessageBox>
@@ -142,9 +141,6 @@ void CellmlModelRepositoryWindowWindow::sendPmrRequest(const PmrRequest &pPmrReq
 
     showBusyWidget(mCellmlModelRepositoryWidget);
 
-    // Disable the GUI side, so that the user doesn't get confused and ask to
-    // refresh over and over again while he should just be patient
-
     mGui->dockWidgetContents->setEnabled(false);
 
     // Send our request to the Physiome Model Repository
@@ -175,34 +171,40 @@ void CellmlModelRepositoryWindowWindow::sendPmrRequest(const PmrRequest &pPmrReq
 
 void CellmlModelRepositoryWindowWindow::cloneWorkspace(const QString &pWorkspace)
 {
-//---GRY--- TO BE DONE...
-qDebug(">>> Cloning %s...", qPrintable(pWorkspace));
+    // Retrieve the name of an empty directory
 
-//    QString gitCloneTestDir = QDir::homePath()+QDir::separator()+"Desktop/GitCloneTest";
+    QString dirName = Core::getExistingDirectory(tr("Select Empty Directory"),
+                                                 QString(), true);
 
-//    QDir(gitCloneTestDir).removeRecursively();
+    if (!dirName.isEmpty()) {
+        // We have got a directory name where we can clone the workspace, so
+        // clone it
 
-//    git_libgit2_init();
+        git_libgit2_init();
 
-//    git_repository *gitRepository = 0;
+        git_repository *gitRepository = 0;
+        QByteArray workspaceByteArray = pWorkspace.toUtf8();
+        QByteArray dirNameByteArray = dirName.toUtf8();
 
-//    int res = git_clone(&gitRepository,
-//                        "https://models.physiomeproject.org/workspace/noble_1962",
-//                        qPrintable(gitCloneTestDir), 0);
+        int res = git_clone(&gitRepository, workspaceByteArray.constData(),
+                            dirNameByteArray.constData(), 0);
 
-//    if (res) {
-//        const git_error *gitError = giterr_last();
+        if (res) {
+            const git_error *gitError = giterr_last();
 
-//        if (gitError)
-//            qDebug("Error %d: %s.", gitError->klass, gitError->message);
-//        else
-//            qDebug("Error %d: no detailed information.", res);
-//    } else {
-//        if (gitRepository)
-//            git_repository_free(gitRepository);
-//    }
+            QMessageBox::warning(qApp->activeWindow(),
+                                 tr("Clone Workspace"),
+                                 gitError?
+                                     tr("Error %1: %2.").arg(QString::number(gitError->klass),
+                                                             Core::formatMessage(gitError->message)):
+                                     tr("An error occurred while trying to clone the workspace."),
+                                 QMessageBox::Ok);
+        } else if (gitRepository) {
+            git_repository_free(gitRepository);
+        }
 
-//    git_libgit2_shutdown();
+        git_libgit2_shutdown();
+    }
 }
 
 //==============================================================================
@@ -236,6 +238,8 @@ void CellmlModelRepositoryWindowWindow::finished(QNetworkReply *pNetworkReply)
 
     QStringList bookmarkUrls = QStringList();
 
+    QString sourceFile = QString();
+
     if (pNetworkReply->error() == QNetworkReply::NoError) {
         // Parse the JSON code
 
@@ -257,20 +261,9 @@ void CellmlModelRepositoryWindowWindow::finished(QNetworkReply *pNetworkReply)
 
                 break;
             case SourceFile: {
-                QString sourceFile = collectionMap["items"].toList().first().toMap()["links"].toList().first().toMap()["href"].toString().trimmed();
+                sourceFile = collectionMap["items"].toList().first().toMap()["links"].toList().first().toMap()["href"].toString().trimmed();
 
                 --mNumberOfUntreatedSourceFiles;
-
-                // Determine the workspace associated with the mode, now that we
-                // have retrieved all of its source files
-
-                if (!mNumberOfUntreatedSourceFiles) {
-                    QString workspace = sourceFile.remove(QRegularExpression("/rawfile/.*$"));
-
-                    mWorkspaces.insert(pNetworkReply->property(ExtraProperty).toString(), workspace);
-
-                    cloneWorkspace(workspace);
-                }
 
                 break;
             }
@@ -301,6 +294,43 @@ void CellmlModelRepositoryWindowWindow::finished(QNetworkReply *pNetworkReply)
         mCellmlModelRepositoryWidget->filter(mGui->filterValue->text());
     }
 
+    // Some additional processing depending on the request that was sent to the
+    // Physiome Model Repository
+
+    if (pmrRequest == BookmarkUrls) {
+        // Make sure that we got at least one bookmark URL and retrieve their
+        // corresponding source file from the Physiome Model Repository
+
+        if (bookmarkUrls.isEmpty()) {
+            QString url = pNetworkReply->url().toString();
+
+            QMessageBox::information(qApp->activeWindow(),
+                                     tr("Bookmark URLs"),
+                                      tr("No bookmark URL could be found for <a href=\"%1\">%2</a>.").arg(url, pNetworkReply->property(ExtraProperty).toString())
+                                     +"<br/><br/>"+tr("<strong>Note:</strong> you might want to check with <a href=\"mailto: Tommy Yu <tommy.yu@auckland.ac.nz>\">Tommy Yu</a> (the person behind the <a href=\"https://models.physiomeproject.org/\">Physiome Model Repository</a>) why this is the case."),
+                                     QMessageBox::Ok);
+        } else {
+            QString url = pNetworkReply->url().toString();
+
+            foreach (const QString &bookmarkUrl, bookmarkUrls)
+                sendPmrRequest(SourceFile, bookmarkUrl, url);
+        }
+    } else if (pmrRequest == SourceFile) {
+        // Determine the workspace associated with the model, should we have
+        // retrieved all of its source files, and clone it
+        // Note: this can be done with any source file (for a given model), but
+        //       we do it with the last one in case of a problem occuring
+        //       between the retrieval of the first and last source files...
+
+        if (!mNumberOfUntreatedSourceFiles) {
+            QString workspace = sourceFile.remove(QRegularExpression("/rawfile/.*$"));
+
+            mWorkspaces.insert(pNetworkReply->property(ExtraProperty).toString(), workspace);
+
+            cloneWorkspace(workspace);
+        }
+    }
+
     // Re-enable the GUI side and give, within the current window, the focus to
     // mGui->filterValue (only if the current window already has the focus), but
     // only under certain conditions
@@ -313,27 +343,6 @@ void CellmlModelRepositoryWindowWindow::finished(QNetworkReply *pNetworkReply)
         mGui->dockWidgetContents->setEnabled(true);
 
         Core::setFocusTo(mGui->filterValue);
-    } else if ((pmrRequest == BookmarkUrls) && !bookmarkUrls.isEmpty()) {
-        // We got some bookmark URLs, so we now need to get their corresponding
-        // source file from the Physiome Model Repository
-
-        QString url = pNetworkReply->url().toString();
-
-        foreach (const QString &bookmarkUrl, bookmarkUrls)
-            sendPmrRequest(SourceFile, bookmarkUrl, url);
-    }
-
-    // Make sure that we got at least one bookmark URL, if we were supposed to
-    // get some
-
-    if ((pmrRequest == BookmarkUrls) &&  bookmarkUrls.isEmpty()) {
-        QString url = pNetworkReply->url().toString();
-
-        QMessageBox::information(qApp->activeWindow(),
-                                 tr("Bookmark URLs"),
-                                  tr("No bookmark URL could be found for <a href=\"%1\">%2</a>.").arg(url, pNetworkReply->property(ExtraProperty).toString())
-                                 +"<br/><br/>"+tr("<strong>Note:</strong> you might want to check with <a href=\"mailto: Tommy Yu <tommy.yu@auckland.ac.nz>\">Tommy Yu</a> (the person behind the <a href=\"https://models.physiomeproject.org/\">Physiome Model Repository</a>) why this is the case."),
-                                 QMessageBox::Ok);
     }
 
     // Delete (later) the network reply
@@ -373,8 +382,6 @@ void CellmlModelRepositoryWindowWindow::retrieveModelList(const bool &pVisible)
 void CellmlModelRepositoryWindowWindow::cloneModel(const QString &pUrl,
                                                    const QString &pDescription)
 {
-Q_UNUSED(pUrl);
-Q_UNUSED(pDescription);
     // Check whether we already know about the workspace for the given model
 
     QString workspace = mWorkspaces.value(pUrl);
@@ -386,6 +393,9 @@ Q_UNUSED(pDescription);
         // retrieve its bookmark URLs
 
         sendPmrRequest(BookmarkUrls, pUrl, pDescription);
+//---GRY--- THE BELOW IS TO BE REMOVED ONCE WE HAVE IMPLEMENTED ISSUE #592...
+Q_UNUSED(pUrl);
+Q_UNUSED(pDescription);
 //        sendPmrRequest(BookmarkUrls, "https://models.physiomeproject.org/e/71");                                        // CellML and SED-ML files
 //        sendPmrRequest(BookmarkUrls, "https://models.physiomeproject.org/e/e1");                                        // HTML file
 //        sendPmrRequest(BookmarkUrls, "https://models.physiomeproject.org/e/1e");                                        // CellML 1.0 and a CellML 1.1 files

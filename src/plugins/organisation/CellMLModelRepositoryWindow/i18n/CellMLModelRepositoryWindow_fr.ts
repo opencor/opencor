@@ -30,10 +30,6 @@
         <source>Refresh</source>
         <translation>Rafraîchir</translation>
     </message>
-    <message>
-        <source>Git</source>
-        <translation></translation>
-    </message>
 </context>
 <context>
     <name>OpenCOR::CellMLModelRepositoryWindow::CellMLModelRepositoryWindowPlugin</name>
@@ -78,6 +74,22 @@
     <message>
         <source>&lt;strong&gt;Note:&lt;/strong&gt; you might want to check with &lt;a href=&quot;mailto: Tommy Yu &lt;tommy.yu@auckland.ac.nz&gt;&quot;&gt;Tommy Yu&lt;/a&gt; (the person behind the &lt;a href=&quot;https://models.physiomeproject.org/&quot;&gt;Physiome Model Repository&lt;/a&gt;) why this is the case.</source>
         <translation>&lt;strong&gt;Note :&lt;/strong&gt; vous pourriez vouloir vérifier avec &lt;a href=&quot;mailto: Tommy Yu &lt;tommy.yu@auckland.ac.nz&gt;&quot;&gt;Tommy Yu&lt;/a&gt; (la personne derrière le &lt;a href=&quot;https://models.physiomeproject.org/&quot;&gt;Physiome Model Repository&lt;/a&gt;) pourquoi c&apos;est le cas.</translation>
+    </message>
+    <message>
+        <source>Select Empty Directory</source>
+        <translation>Sélectionner Répertoire Vide</translation>
+    </message>
+    <message>
+        <source>Error %1: %2.</source>
+        <translation>Erreur %1 : %2.</translation>
+    </message>
+    <message>
+        <source>An error occurred while trying to clone the workspace.</source>
+        <translation>Une erreur s&apos;est produite lors du clonage de l&apos;espace de travail.</translation>
+    </message>
+    <message>
+        <source>Clone Workspace</source>
+        <translation>Cloner Espace De Travail</translation>
     </message>
 </context>
 </TS>
