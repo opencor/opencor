@@ -106,6 +106,9 @@ CellmlModelRepositoryWindowWindow::CellmlModelRepositoryWindowWindow(QWidget *pP
             this, SLOT(cloneModel(const QString &, const QString &)));
     connect(mCellmlModelRepositoryWidget, SIGNAL(showModelFiles(const QString &, const QString &)),
             this, SLOT(showModelFiles(const QString &, const QString &)));
+
+    connect(mCellmlModelRepositoryWidget, SIGNAL(modelFileOpenRequested(const QString &)),
+            this, SLOT(openFile(const QString &)));
 }
 
 //==============================================================================

@@ -358,7 +358,7 @@ void CellmlModelRepositoryWindowWidget::linkClicked()
     QString link;
     QString textContent;
 
-    retrieveLinkInformation(link, textContent);
+    QWebElement element = retrieveLinkInformation(link, textContent);
 
     // Check whether we have clicked a model link or a button link, i.e. that we
     // want to clone the model
@@ -387,9 +387,13 @@ void CellmlModelRepositoryWindowWidget::linkClicked()
             }
         }
     } else {
-        // Open the model link in the user's browser
+        // Open the model link in the user's browser or ask for it to be opened
+        // in OpenCOR
 
-        QDesktopServices::openUrl(link);
+        if (element.parent().hasClass("modelFile"))
+            emit modelFileOpenRequested(link);
+        else
+            QDesktopServices::openUrl(link);
     }
 }
 

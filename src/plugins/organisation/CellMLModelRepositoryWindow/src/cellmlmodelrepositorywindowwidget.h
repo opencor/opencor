@@ -108,6 +108,8 @@ Q_SIGNALS:
     void cloneModel(const QString &pUrl, const QString &pDescription);
     void showModelFiles(const QString &pUrl, const QString &pDescription);
 
+    void modelFileOpenRequested(const QString &pUrl);
+
 private Q_SLOTS:
     void on_actionCopy_triggered();
 
