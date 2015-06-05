@@ -77,6 +77,7 @@ CellmlModelRepositoryWindowWidget::CellmlModelRepositoryWindowWidget(QWidget *pP
     Core::CommonWidget(pParent),
     mGui(new Ui::CellmlModelRepositoryWindowWidget),
     mModelNames(QStringList()),
+    mModelUrlsIds(QMap<QString, int>()),
     mErrorMessage(QString()),
     mNumberOfFilteredModels(0),
     mUrl(QString())
@@ -205,6 +206,8 @@ void CellmlModelRepositoryWindowWidget::initialize(const CellmlModelRepositoryWi
     // Initialise / keep track of some properties
 
     mModelNames = QStringList();
+    mModelUrlsIds = QMap<QString, int>();
+
     mErrorMessage = pErrorMessage;
 
     // Initialise our list of models
@@ -227,11 +230,12 @@ void CellmlModelRepositoryWindowWidget::initialize(const CellmlModelRepositoryWi
                  +"        <a class=\"noHover\" href=\"clone|"+model.url()+"|"+model.name()+"\"><img class=\"button clone\"/></a>\n"
                  +"    </td>\n"
                  +"    <td class=\"button\">\n"
-                 +"        <a class=\"noHover\" href=\"open|"+model.url()+"|"+model.name()+"\"><img class=\"button down open\"/></a>\n"
+                 +"        <a class=\"noHover\" href=\"files|"+model.url()+"|"+model.name()+"\"><img id=\"model_"+QString::number(i)+"\" class=\"button open\"/></a>\n"
                  +"    </td>\n"
                  +"</tr>\n";
 
         mModelNames << model.name();
+        mModelUrlsIds.insert(model.url(), i);
     }
 
     QWebElement modelsElement = page()->mainFrame()->documentElement().findFirst("tbody");
@@ -310,15 +314,30 @@ void CellmlModelRepositoryWindowWidget::linkClicked()
     // want to clone the model
 
     if (textContent.isEmpty()) {
-        // We have clicked on a button link, so let people know that we want to
-        // clone a model
+        // We have clicked on a button link, so let people know whether we want
+        // to clone a model or show/hide its files
 
         QStringList linkList = link.split("|");
 
-        if (!linkList[0].compare("clone"))
+        if (!linkList[0].compare("clone")) {
             emit cloneModel(linkList[1], linkList[2]);
-        else
-            emit openModel(linkList[1], linkList[2]);
+        } else {
+            // Toggle our button link
+
+            QWebElement buttonElement = page()->mainFrame()->documentElement().findFirst(QString("img[id=model_%1]").arg(mModelUrlsIds.value(linkList[1])));
+
+            if (buttonElement.hasClass("button")) {
+                buttonElement.removeClass("button");
+                buttonElement.addClass("downButton");
+            } else {
+                buttonElement.addClass("button");
+                buttonElement.removeClass("downButton");
+            }
+
+            // Let people know that we want to show the model's files
+
+            emit showModelFiles(linkList[1], linkList[2]);
+        }
     } else {
         // Open the model link in the user's browser
 
