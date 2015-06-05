@@ -242,9 +242,13 @@ void CellmlModelRepositoryWindowWidget::initialize(const CellmlModelRepositoryWi
                  +"    </td>\n"
                  +"</tr>\n"
                  +"<tr id=\"modelFiles_"+QString::number(i)+"\" style=\"display: none;\">\n"
-                 +"    <td class=\"modelFiles\" >\n"
+                 +"    <td>\n"
                  +"        <ul id=\"modelFiles_"+QString::number(i)+"\">\n"
                  +"        </ul>\n"
+                 +"    </td>\n"
+                 +"</tr>\n"
+                 +"<tr>\n"
+                 +"    <td class=\"verticalSpace\">\n"
                  +"    </td>\n"
                  +"</tr>\n";
 
