@@ -220,17 +220,31 @@ void CellmlModelRepositoryWindowWidget::initialize(const CellmlModelRepositoryWi
         models =  models
                  +"<tr id=\"model_"+QString::number(i)+"\">\n"
                  +"    <td>\n"
-                 +"        <ul>\n"
-                 +"            <li>\n"
-                 +"                <a href=\""+model.url()+"\">"+model.name()+"</a>\n"
-                 +"            </li>\n"
+                 +"        <table class=\"fullWidth\">\n"
+                 +"            <tbody>\n"
+                 +"                <tr>\n"
+                 +"                    <td class=\"fullWidth\">\n"
+                 +"                        <ul>\n"
+                 +"                            <li class=\"model\">\n"
+                 +"                                <a href=\""+model.url()+"\">"+model.name()+"</a>\n"
+                 +"                            </li>\n"
+                 +"                        </ul>\n"
+                 +"                    </td>\n"
+                 +"                    <td class=\"button\">\n"
+                 +"                        <a class=\"noHover\" href=\"clone|"+model.url()+"|"+model.name()+"\"><img class=\"button clone\"/></a>\n"
+                 +"                    </td>\n"
+                 +"                    <td class=\"button\">\n"
+                 +"                        <a class=\"noHover\" href=\"files|"+model.url()+"|"+model.name()+"\"><img id=\"model_"+QString::number(i)+"\" class=\"button open\"/></a>\n"
+                 +"                    </td>\n"
+                 +"                </tr>\n"
+                 +"            </tbody>\n"
+                 +"        </table>\n"
+                 +"    </td>\n"
+                 +"</tr>\n"
+                 +"<tr id=\"modelFiles_"+QString::number(i)+"\" style=\"display: none;\">\n"
+                 +"    <td class=\"modelFiles\" >\n"
+                 +"        <ul id=\"modelFiles_"+QString::number(i)+"\">\n"
                  +"        </ul>\n"
-                 +"    </td>\n"
-                 +"    <td class=\"button\">\n"
-                 +"        <a class=\"noHover\" href=\"clone|"+model.url()+"|"+model.name()+"\"><img class=\"button clone\"/></a>\n"
-                 +"    </td>\n"
-                 +"    <td class=\"button\">\n"
-                 +"        <a class=\"noHover\" href=\"files|"+model.url()+"|"+model.name()+"\"><img id=\"model_"+QString::number(i)+"\" class=\"button open\"/></a>\n"
                  +"    </td>\n"
                  +"</tr>\n";
 
@@ -268,18 +282,37 @@ void CellmlModelRepositoryWindowWidget::filter(const QString &pFilter)
 
     QWebElement documentElement = page()->mainFrame()->documentElement();
 
-    for (int i = 0, iMax = mModelNames.count(); i < iMax; ++i)
-        documentElement.findFirst(QString("tr[id=model_%1]").arg(i)).setStyleProperty("display", filteredModelNames.contains(mModelNames[i])?"table-row":"none");
+    for (int i = 0, iMax = mModelNames.count(); i < iMax; ++i) {
+        QString displayValue = filteredModelNames.contains(mModelNames[i])?"table-row":"none";
+        QWebElement trElement = documentElement.findFirst(QString("tr[id=model_%1]").arg(i));
+
+        trElement.setStyleProperty("display", displayValue);
+
+        if (trElement.nextSibling().hasClass("visible"))
+            trElement.nextSibling().setStyleProperty("display", displayValue);
+    }
 }
 
 //==============================================================================
 
 void CellmlModelRepositoryWindowWidget::addModelFiles(const QString &pUrl, const QStringList &pSourceFiles)
 {
-//---GRY--- TO BE DONE...
-qDebug(">>> Add model files for %s:", qPrintable(pUrl));
-for (int i = 0, iMax = pSourceFiles.count(); i < iMax; ++i)
-    qDebug(">>>    %s", qPrintable(pSourceFiles[i]));
+    // Add the source files to the model
+
+    int id = mModelUrlsIds.value(pUrl);
+    QWebElement ulElement = page()->mainFrame()->documentElement().findFirst(QString("ul[id=modelFiles_%1]").arg(id));
+
+    foreach (const QString &sourceFile, pSourceFiles) {
+        ulElement.appendInside(QString("<li class=\"modelFile\">"
+                                       "    <a href=\"%1\">%2</a>"
+                                       "</li>").arg(sourceFile, QString(sourceFile).remove(QRegularExpression(".*/"))));
+    }
+
+//---GRY---
+QWebElement trElement = page()->mainFrame()->documentElement().findFirst(QString("tr[id=modelFiles_%1]").arg(id));
+
+trElement.addClass("visible");
+trElement.setStyleProperty("display", "table-row");
 }
 
 //==============================================================================
