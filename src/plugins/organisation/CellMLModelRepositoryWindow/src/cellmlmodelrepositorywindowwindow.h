@@ -39,7 +39,6 @@ namespace Ui {
 
 //==============================================================================
 
-class QMenu;
 class QNetworkAccessManager;
 class QNetworkReply;
 
@@ -67,34 +66,39 @@ public:
 private:
     Ui::CellmlModelRepositoryWindowWindow *mGui;
 
-    QStringList mModelNames;
-    QStringList mModelUrls;
-
     CellmlModelRepositoryWindowWidget *mCellmlModelRepositoryWidget;
 
-    QStringList mModelList;
-
     QNetworkAccessManager *mNetworkAccessManager;
-    QString mErrorMessage;
 
-    bool mModelListRequested;
+    int mNumberOfUntreatedSourceFiles;
 
-    QMenu *mContextMenu;
+    QMap<QString, QString> mWorkspaces;
 
-    void outputModelList(const QStringList &pModelList);
+    enum PmrRequest {
+        ModelList,
+        BookmarkUrls,
+        SourceFile
+    };
+
+    void busy(const bool &pBusy);
+
+    void sendPmrRequest(const PmrRequest &pPmrRequest,
+                        const QString &pUrl = QString(),
+                        const QString &pExtra = QString());
+
+    void cloneWorkspace(const QString &pWorkspace);
 
 private Q_SLOTS:
     void on_filterValue_textChanged(const QString &text);
-    void on_actionCopy_triggered();
     void on_refreshButton_clicked();
 
     void finished(QNetworkReply *pNetworkReply);
     void sslErrors(QNetworkReply *pNetworkReply,
                    const QList<QSslError> &pSslErrors);
 
-    void showCustomContextMenu(const QPoint &pPosition) const;
-
     void retrieveModelList(const bool &pVisible);
+
+    void cloneModel(const QString &pUrl, const QString &pDescription);
 };
 
 //==============================================================================
