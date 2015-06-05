@@ -1,6 +1,20 @@
 var jsonData = { "versions": [
                    { "anchor": "latest", "description": "Latest snapshot", "day": 0, "month": 0, "year": 0,
                      "categories": [
+                       { "name": "General",
+                         "entries": [
+                           { "type": "Added", "description": "<a href=\"http://git-scm.com/\">Git</a> support." }
+                         ]
+                       },
+                       { "name": "Organisation",
+                         "entries": [
+                           { "type": "subCategory", "name": "CellML Model Repository window",
+                             "entries": [
+                               { "type": "Added", "description": "Cloning of a workspace." }
+                             ]
+                           }
+                         ]
+                       },
                        { "name": "Editing",
                          "entries": [
                            { "type": "subCategory", "name": "CellML Text view",
