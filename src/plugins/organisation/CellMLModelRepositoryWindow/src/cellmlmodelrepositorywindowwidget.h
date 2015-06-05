@@ -25,6 +25,7 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include "commonwidget.h"
+#include "corecliutils.h"
 #include "webviewwidget.h"
 
 //==============================================================================
@@ -96,7 +97,8 @@ private:
     QString mOutputTemplate;
 
     QStringList mModelNames;
-    QMap<QString, int> mModelUrlsIds;
+    QBoolList mModelDisplayed;
+    QMap<QString, int> mModelUrlId;
 
     QString mErrorMessage;
 

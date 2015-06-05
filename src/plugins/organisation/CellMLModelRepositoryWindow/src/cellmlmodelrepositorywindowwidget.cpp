@@ -20,7 +20,6 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include "cellmlmodelrepositorywindowwidget.h"
-#include "corecliutils.h"
 #include "coreguiutils.h"
 
 //==============================================================================
@@ -77,7 +76,8 @@ CellmlModelRepositoryWindowWidget::CellmlModelRepositoryWindowWidget(QWidget *pP
     Core::CommonWidget(pParent),
     mGui(new Ui::CellmlModelRepositoryWindowWidget),
     mModelNames(QStringList()),
-    mModelUrlsIds(QMap<QString, int>()),
+    mModelDisplayed(QBoolList()),
+    mModelUrlId(QMap<QString, int>()),
     mErrorMessage(QString()),
     mNumberOfFilteredModels(0),
     mUrl(QString())
@@ -206,7 +206,8 @@ void CellmlModelRepositoryWindowWidget::initialize(const CellmlModelRepositoryWi
     // Initialise / keep track of some properties
 
     mModelNames = QStringList();
-    mModelUrlsIds = QMap<QString, int>();
+    mModelDisplayed = QBoolList();
+    mModelUrlId = QMap<QString, int>();
 
     mErrorMessage = pErrorMessage;
 
@@ -217,8 +218,8 @@ void CellmlModelRepositoryWindowWidget::initialize(const CellmlModelRepositoryWi
     modelsElement.removeAllChildren();
 
     for (int i = 0, iMax = pModels.count(); i < iMax; ++i) {
-        QString modelName = pModels[i].name();
         QString modelUrl = pModels[i].url();
+        QString modelName = pModels[i].name();
 
         modelsElement.appendInside( "<tr id=\"model_"+QString::number(i)+"\">\n"
                                    +"    <td>\n"
@@ -255,7 +256,8 @@ void CellmlModelRepositoryWindowWidget::initialize(const CellmlModelRepositoryWi
                                    +"</tr>\n");
 
         mModelNames << modelName;
-        mModelUrlsIds.insert(modelUrl, i);
+        mModelDisplayed << true;
+        mModelUrlId.insert(modelUrl, i);
     }
 }
 
@@ -280,24 +282,33 @@ void CellmlModelRepositoryWindowWidget::filter(const QString &pFilter)
     retranslateUi();
 
     // Show/hide the relevant models
+    // Note: to call QWebElement::setStyleProperty() many times is time
+    //       consuming, hence we rely on mModelDisplayed to determine when we
+    //       should change the display property of our elements...
 
     QWebElement element = page()->mainFrame()->documentElement().findFirst(QString("tbody[id=models]")).firstChild();
 
     for (int i = 0, iMax = mModelNames.count(); i < iMax; ++i) {
-        QString displayValue = filteredModelNames.contains(mModelNames[i])?"table-row":"none";
+        if (mModelDisplayed[i] != filteredModelNames.contains(mModelNames[i])) {
+            QString displayValue = mModelDisplayed[i]?"none":"table-row";
 
-        element.setStyleProperty("display", displayValue);
-
-        element = element.nextSibling();
-
-        if (element.hasClass("visible"))
             element.setStyleProperty("display", displayValue);
 
-        element = element.nextSibling();
+            element = element.nextSibling();
 
-        element.setStyleProperty("display", displayValue);
+            if (element.hasClass("visible"))
+                element.setStyleProperty("display", displayValue);
 
-        element = element.nextSibling();
+            element = element.nextSibling();
+
+            element.setStyleProperty("display", displayValue);
+
+            element = element.nextSibling();
+
+            mModelDisplayed[i] = !mModelDisplayed[i];
+        } else {
+            element = element.nextSibling().nextSibling().nextSibling();
+        }
     }
 }
 
@@ -308,7 +319,7 @@ void CellmlModelRepositoryWindowWidget::addModelFiles(const QString &pUrl,
 {
     // Add the given files to the model
 
-    QWebElement ulElement = page()->mainFrame()->documentElement().findFirst(QString("ul[id=modelFiles_%1]").arg(mModelUrlsIds.value(pUrl)));
+    QWebElement ulElement = page()->mainFrame()->documentElement().findFirst(QString("ul[id=modelFiles_%1]").arg(mModelUrlId.value(pUrl)));
 
     foreach (const QString &sourceFile, pSourceFiles) {
         ulElement.appendInside(QString("<li class=\"modelFile\">"
@@ -324,7 +335,7 @@ void CellmlModelRepositoryWindowWidget::showModelFiles(const QString &pUrl,
 {
     // Show the files for the given model
 
-    int id = mModelUrlsIds.value(pUrl);
+    int id = mModelUrlId.value(pUrl);
     QWebElement documentElement = page()->mainFrame()->documentElement();
     QWebElement buttonElement = documentElement.findFirst(QString("img[id=model_%1]").arg(id));
     QWebElement trElement = documentElement.findFirst(QString("tr[id=modelFiles_%1]").arg(id));
@@ -379,15 +390,16 @@ void CellmlModelRepositoryWindowWidget::linkClicked()
             // Show/hide the model's files, if we have them, or let people know
             // that we want them
 
-            int id = mModelUrlsIds.value(linkList[1]);
+            int id = mModelUrlId.value(linkList[1]);
 
-            QWebElement ulElement = page()->mainFrame()->documentElement().findFirst(QString("ul[id=modelFiles_%1]").arg(id));
+            QWebElement documentElement = page()->mainFrame()->documentElement();
+            QWebElement ulElement = documentElement.findFirst(QString("ul[id=modelFiles_%1]").arg(id));
 
             if (ulElement.firstChild().isNull()) {
                 emit showModelFiles(linkList[1], linkList[2]);
             } else {
                 showModelFiles(linkList[1],
-                               page()->mainFrame()->documentElement().findFirst(QString("img[id=model_%1]").arg(id)).hasClass("button"));
+                               documentElement.findFirst(QString("img[id=model_%1]").arg(id)).hasClass("button"));
             }
         }
     } else {
