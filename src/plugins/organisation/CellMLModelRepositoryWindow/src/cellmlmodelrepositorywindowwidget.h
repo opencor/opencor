@@ -101,6 +101,7 @@ private:
 
 Q_SIGNALS:
     void cloneModel(const QString &pUrl, const QString &pDescription);
+    void openModel(const QString &pUrl, const QString &pDescription);
 
 private Q_SLOTS:
     void on_actionCopy_triggered();

@@ -127,7 +127,7 @@ CellmlModelRepositoryWindowWidget::CellmlModelRepositoryWindowWidget(QWidget *pP
     Core::readTextFromFile(":/output.html", mOutputTemplate);
 
     setHtml(mOutputTemplate.arg(Core::iconDataUri(":/oxygen/places/folder-downloads.png", 16, 16),
-                                Core::iconDataUri(":/oxygen/places/folder-downloads.png", 16, 16, QIcon::Disabled)));
+                                Core::iconDataUri(":/oxygen/actions/document-open-remote.png", 16, 16)));
 }
 
 //==============================================================================
@@ -224,7 +224,10 @@ void CellmlModelRepositoryWindowWidget::initialize(const CellmlModelRepositoryWi
                  +"        </ul>\n"
                  +"    </td>\n"
                  +"    <td class=\"button\">\n"
-                 +"        <a class=\"noHover\" href=\""+model.url()+"|"+model.name()+"\"><img class=\"button clone\"/></a>\n"
+                 +"        <a class=\"noHover\" href=\"clone|"+model.url()+"|"+model.name()+"\"><img class=\"button clone\"/></a>\n"
+                 +"    </td>\n"
+                 +"    <td class=\"button\">\n"
+                 +"        <a class=\"noHover\" href=\"open|"+model.url()+"|"+model.name()+"\"><img class=\"button down open\"/></a>\n"
                  +"    </td>\n"
                  +"</tr>\n";
 
@@ -312,7 +315,10 @@ void CellmlModelRepositoryWindowWidget::linkClicked()
 
         QStringList linkList = link.split("|");
 
-        emit cloneModel(linkList.first(), linkList.last());
+        if (!linkList[0].compare("clone"))
+            emit cloneModel(linkList[1], linkList[2]);
+        else
+            emit openModel(linkList[1], linkList[2]);
     } else {
         // Open the model link in the user's browser
 
