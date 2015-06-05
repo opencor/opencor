@@ -77,6 +77,7 @@ CellmlModelRepositoryWindowWidget::CellmlModelRepositoryWindowWidget(QWidget *pP
     Core::CommonWidget(pParent),
     mGui(new Ui::CellmlModelRepositoryWindowWidget),
     mModelNames(QStringList()),
+    mModelUrlsIds(QMap<QString, int>()),
     mErrorMessage(QString()),
     mNumberOfFilteredModels(0),
     mUrl(QString())
@@ -127,7 +128,7 @@ CellmlModelRepositoryWindowWidget::CellmlModelRepositoryWindowWidget(QWidget *pP
     Core::readTextFromFile(":/output.html", mOutputTemplate);
 
     setHtml(mOutputTemplate.arg(Core::iconDataUri(":/oxygen/places/folder-downloads.png", 16, 16),
-                                Core::iconDataUri(":/oxygen/places/folder-downloads.png", 16, 16, QIcon::Disabled)));
+                                Core::iconDataUri(":/oxygen/actions/document-open-remote.png", 16, 16)));
 }
 
 //==============================================================================
@@ -205,6 +206,8 @@ void CellmlModelRepositoryWindowWidget::initialize(const CellmlModelRepositoryWi
     // Initialise / keep track of some properties
 
     mModelNames = QStringList();
+    mModelUrlsIds = QMap<QString, int>();
+
     mErrorMessage = pErrorMessage;
 
     // Initialise our list of models
@@ -217,18 +220,40 @@ void CellmlModelRepositoryWindowWidget::initialize(const CellmlModelRepositoryWi
         models =  models
                  +"<tr id=\"model_"+QString::number(i)+"\">\n"
                  +"    <td>\n"
-                 +"        <ul>\n"
-                 +"            <li>\n"
-                 +"                <a href=\""+model.url()+"\">"+model.name()+"</a>\n"
-                 +"            </li>\n"
+                 +"        <table class=\"fullWidth\">\n"
+                 +"            <tbody>\n"
+                 +"                <tr>\n"
+                 +"                    <td class=\"fullWidth\">\n"
+                 +"                        <ul>\n"
+                 +"                            <li class=\"model\">\n"
+                 +"                                <a href=\""+model.url()+"\">"+model.name()+"</a>\n"
+                 +"                            </li>\n"
+                 +"                        </ul>\n"
+                 +"                    </td>\n"
+                 +"                    <td class=\"button\">\n"
+                 +"                        <a class=\"noHover\" href=\"clone|"+model.url()+"|"+model.name()+"\"><img class=\"button clone\"/></a>\n"
+                 +"                    </td>\n"
+                 +"                    <td class=\"button\">\n"
+                 +"                        <a class=\"noHover\" href=\"files|"+model.url()+"|"+model.name()+"\"><img id=\"model_"+QString::number(i)+"\" class=\"button open\"/></a>\n"
+                 +"                    </td>\n"
+                 +"                </tr>\n"
+                 +"            </tbody>\n"
+                 +"        </table>\n"
+                 +"    </td>\n"
+                 +"</tr>\n"
+                 +"<tr id=\"modelFiles_"+QString::number(i)+"\" style=\"display: none;\">\n"
+                 +"    <td>\n"
+                 +"        <ul id=\"modelFiles_"+QString::number(i)+"\">\n"
                  +"        </ul>\n"
                  +"    </td>\n"
-                 +"    <td class=\"button\">\n"
-                 +"        <a class=\"noHover\" href=\""+model.url()+"|"+model.name()+"\"><img class=\"button clone\"/></a>\n"
+                 +"</tr>\n"
+                 +"<tr>\n"
+                 +"    <td class=\"verticalSpace\">\n"
                  +"    </td>\n"
                  +"</tr>\n";
 
         mModelNames << model.name();
+        mModelUrlsIds.insert(model.url(), i);
     }
 
     QWebElement modelsElement = page()->mainFrame()->documentElement().findFirst("tbody");
@@ -257,30 +282,62 @@ void CellmlModelRepositoryWindowWidget::filter(const QString &pFilter)
 
     retranslateUi();
 
-    // Determine which models should be shown/hidden
-
-    QIntList modelIndexes = QIntList();
-    int modelIndex;
-
-    foreach (const QString &filteredModelName, filteredModelNames) {
-        modelIndex = -1;
-
-        forever {
-            modelIndex = mModelNames.indexOf(filteredModelName, ++modelIndex);
-
-            if (modelIndex == -1)
-                break;
-            else
-                modelIndexes << modelIndex;
-        }
-    }
-
     // Show/hide the relevant models
 
     QWebElement documentElement = page()->mainFrame()->documentElement();
 
-    for (int i = 0, iMax = mModelNames.count(); i < iMax; ++i)
-        documentElement.findFirst(QString("tr[id=model_%1]").arg(i)).setStyleProperty("display", modelIndexes.contains(i)?"table-row":"none");
+    for (int i = 0, iMax = mModelNames.count(); i < iMax; ++i) {
+        QString displayValue = filteredModelNames.contains(mModelNames[i])?"table-row":"none";
+        QWebElement trElement = documentElement.findFirst(QString("tr[id=model_%1]").arg(i));
+
+        trElement.setStyleProperty("display", displayValue);
+
+        if (trElement.nextSibling().hasClass("visible"))
+            trElement.nextSibling().setStyleProperty("display", displayValue);
+    }
+}
+
+//==============================================================================
+
+void CellmlModelRepositoryWindowWidget::addModelFiles(const QString &pUrl,
+                                                      const QStringList &pSourceFiles)
+{
+    // Add the given files to the model
+
+    QWebElement ulElement = page()->mainFrame()->documentElement().findFirst(QString("ul[id=modelFiles_%1]").arg(mModelUrlsIds.value(pUrl)));
+
+    foreach (const QString &sourceFile, pSourceFiles) {
+        ulElement.appendInside(QString("<li class=\"modelFile\">"
+                                       "    <a href=\"%1\">%2</a>"
+                                       "</li>").arg(sourceFile, QString(sourceFile).remove(QRegularExpression(".*/"))));
+    }
+}
+
+//==============================================================================
+
+void CellmlModelRepositoryWindowWidget::showModelFiles(const QString &pUrl,
+                                                       const bool &pShow)
+{
+    // Show the files for the given model
+
+    int id = mModelUrlsIds.value(pUrl);
+    QWebElement documentElement = page()->mainFrame()->documentElement();
+    QWebElement buttonElement = documentElement.findFirst(QString("img[id=model_%1]").arg(id));
+    QWebElement trElement = documentElement.findFirst(QString("tr[id=modelFiles_%1]").arg(id));
+
+    if (pShow) {
+        buttonElement.removeClass("button");
+        buttonElement.addClass("downButton");
+
+        trElement.addClass("visible");
+        trElement.setStyleProperty("display", "table-row");
+    } else {
+        buttonElement.addClass("button");
+        buttonElement.removeClass("downButton");
+
+        trElement.removeClass("visible");
+        trElement.setStyleProperty("display", "none");
+    }
 }
 
 //==============================================================================
@@ -301,22 +358,42 @@ void CellmlModelRepositoryWindowWidget::linkClicked()
     QString link;
     QString textContent;
 
-    retrieveLinkInformation(link, textContent);
+    QWebElement element = retrieveLinkInformation(link, textContent);
 
     // Check whether we have clicked a model link or a button link, i.e. that we
     // want to clone the model
 
     if (textContent.isEmpty()) {
-        // We have clicked on a button link, so let people know that we want to
-        // clone a model
+        // We have clicked on a button link, so let people know whether we want
+        // to clone a model or whether we want to show/hide its files
 
         QStringList linkList = link.split("|");
 
-        emit cloneModel(linkList.first(), linkList.last());
-    } else {
-        // Open the model link in the user's browser
+        if (!linkList[0].compare("clone")) {
+            emit cloneModel(linkList[1], linkList[2]);
+        } else {
+            // Show/hide the model's files, if we have them, or let people know
+            // that we want them
 
-        QDesktopServices::openUrl(link);
+            int id = mModelUrlsIds.value(linkList[1]);
+
+            QWebElement ulElement = page()->mainFrame()->documentElement().findFirst(QString("ul[id=modelFiles_%1]").arg(id));
+
+            if (ulElement.firstChild().isNull()) {
+                emit showModelFiles(linkList[1], linkList[2]);
+            } else {
+                showModelFiles(linkList[1],
+                               page()->mainFrame()->documentElement().findFirst(QString("img[id=model_%1]").arg(id)).hasClass("button"));
+            }
+        }
+    } else {
+        // Open the model link in the user's browser or ask for it to be opened
+        // in OpenCOR
+
+        if (element.parent().hasClass("modelFile"))
+            emit modelFileOpenRequested(link);
+        else
+            QDesktopServices::openUrl(link);
     }
 }
 
