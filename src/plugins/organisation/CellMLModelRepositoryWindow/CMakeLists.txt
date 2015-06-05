@@ -1,5 +1,9 @@
 PROJECT(CellMLModelRepositoryWindowPlugin)
 
+# Retrieve some libgit2 settings
+
+RETRIEVE_LIBGIT2_SETTINGS()
+
 # Add the plugin
 
 ADD_PLUGIN(CellMLModelRepositoryWindow
@@ -15,11 +19,17 @@ ADD_PLUGIN(CellMLModelRepositoryWindow
         src/cellmlmodelrepositorywindowwidget.h
         src/cellmlmodelrepositorywindowwindow.h
     UIS
+        src/cellmlmodelrepositorywindowwidget.ui
         src/cellmlmodelrepositorywindowwindow.ui
     INCLUDE_DIRS
         src
+    DEFINITIONS
+        ${LIBGIT2_DEFINITIONS}
     PLUGINS
         Core
+        ${LIBGIT2_PLUGIN}
+    PLUGIN_BINARIES
+        ${LIBGIT2_PLUGIN_BINARY}
     QT_MODULES
         WebKitWidgets
     QT_LIBRARIES
