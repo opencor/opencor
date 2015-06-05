@@ -274,6 +274,14 @@ void CellmlModelRepositoryWindowWidget::filter(const QString &pFilter)
 
 //==============================================================================
 
+void CellmlModelRepositoryWindowWidget::addModelFiles()
+{
+//---GRY--- TO BE DONE...
+qDebug(">>> Add model files...");
+}
+
+//==============================================================================
+
 void CellmlModelRepositoryWindowWidget::on_actionCopy_triggered()
 {
     // Copy the URL of the model to the clipboard
@@ -304,16 +312,20 @@ void CellmlModelRepositoryWindowWidget::linkClicked()
         if (!linkList[0].compare("clone")) {
             emit cloneModel(linkList[1], linkList[2]);
         } else {
-            // Toggle our button link
+            // Toggle our button link and show/hide our model's files
 
             QWebElement buttonElement = page()->mainFrame()->documentElement().findFirst(QString("img[id=model_%1]").arg(mModelUrlsIds.value(linkList[1])));
 
             if (buttonElement.hasClass("button")) {
                 buttonElement.removeClass("button");
                 buttonElement.addClass("downButton");
+
+//---GRY--- SHOW OUR MODEL'S FILES...
             } else {
                 buttonElement.addClass("button");
                 buttonElement.removeClass("downButton");
+
+//---GRY--- HIDE OUR MODEL'S FILES...
             }
 
             // Let people know that we want to show the model's files

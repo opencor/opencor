@@ -80,6 +80,8 @@ public:
 
     void filter(const QString &pFilter);
 
+    void addModelFiles();
+
 protected:
     virtual QSize sizeHint() const;
 
