@@ -128,6 +128,29 @@ void CellmlModelRepositoryWindowWindow::retranslateUi()
 
 //==============================================================================
 
+void CellmlModelRepositoryWindowWindow::busy(const bool &pBusy)
+{
+    // Show ourselves as busy or not busy anymore
+
+    if (pBusy) {
+        showBusyWidget(mCellmlModelRepositoryWidget);
+
+        mGui->dockWidgetContents->setEnabled(false);
+    } else {
+        // Re-enable the GUI side and give, within the current window, the focus
+        // to mGui->filterValue, but only if the current window already has the
+        // focus
+
+        hideBusyWidget();
+
+        mGui->dockWidgetContents->setEnabled(true);
+
+        Core::setFocusTo(mGui->filterValue);
+    }
+}
+
+//==============================================================================
+
 static const char *PmrRequestProperty = "PmrRequest";
 static const char *ExtraProperty      = "Extra";
 
@@ -137,11 +160,9 @@ void CellmlModelRepositoryWindowWindow::sendPmrRequest(const PmrRequest &pPmrReq
                                                        const QString &pUrl,
                                                        const QString &pExtra)
 {
-    // Let the user that we are downloading the list of models
+    // Let the user know that we are busy
 
-    showBusyWidget(mCellmlModelRepositoryWidget);
-
-    mGui->dockWidgetContents->setEnabled(false);
+    busy(true);
 
     // Send our request to the Physiome Model Repository
 
@@ -331,18 +352,12 @@ void CellmlModelRepositoryWindowWindow::finished(QNetworkReply *pNetworkReply)
         }
     }
 
-    // Re-enable the GUI side and give, within the current window, the focus to
-    // mGui->filterValue (only if the current window already has the focus), but
-    // only under certain conditions
+    // Show ourselves as not busy anymore, but only under certain conditions
 
     if (    (pmrRequest == ModelList)
         || ((pmrRequest == BookmarkUrls) &&  bookmarkUrls.isEmpty())
         || ((pmrRequest == SourceFile)   && !mNumberOfUntreatedSourceFiles)) {
-        hideBusyWidget();
-
-        mGui->dockWidgetContents->setEnabled(true);
-
-        Core::setFocusTo(mGui->filterValue);
+        busy(false);
     }
 
     // Delete (later) the network reply
@@ -387,7 +402,11 @@ void CellmlModelRepositoryWindowWindow::cloneModel(const QString &pUrl,
     QString workspace = mWorkspaces.value(pUrl);
 
     if (!workspace.isEmpty()) {
+        busy(true);
+
         cloneWorkspace(workspace);
+
+        busy(false);
     } else {
         // To retrieve the workspace associated with the given model, we need to
         // retrieve its bookmark URLs

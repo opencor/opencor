@@ -80,6 +80,8 @@ private:
         SourceFile
     };
 
+    void busy(const bool &pBusy);
+
     void sendPmrRequest(const PmrRequest &pPmrRequest,
                         const QString &pUrl = QString(),
                         const QString &pExtra = QString());
