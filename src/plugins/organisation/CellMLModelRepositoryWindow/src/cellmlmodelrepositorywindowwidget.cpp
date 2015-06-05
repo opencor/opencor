@@ -292,8 +292,14 @@ void CellmlModelRepositoryWindowWidget::filter(const QString &pFilter)
 
         trElement.setStyleProperty("display", displayValue);
 
-        if (trElement.nextSibling().hasClass("visible"))
-            trElement.nextSibling().setStyleProperty("display", displayValue);
+        QWebElement nextTrElement = trElement.nextSibling();
+
+        if (nextTrElement.hasClass("visible"))
+            nextTrElement.setStyleProperty("display", displayValue);
+
+        QWebElement nextNextTrElement = nextTrElement.nextSibling();
+
+        nextNextTrElement.setStyleProperty("display", displayValue);
     }
 }
 
