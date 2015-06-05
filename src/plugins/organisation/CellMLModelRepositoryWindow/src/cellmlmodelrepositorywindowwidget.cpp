@@ -274,10 +274,12 @@ void CellmlModelRepositoryWindowWidget::filter(const QString &pFilter)
 
 //==============================================================================
 
-void CellmlModelRepositoryWindowWidget::addModelFiles()
+void CellmlModelRepositoryWindowWidget::addModelFiles(const QString &pUrl, const QStringList &pSourceFiles)
 {
 //---GRY--- TO BE DONE...
-qDebug(">>> Add model files...");
+qDebug(">>> Add model files for %s:", qPrintable(pUrl));
+for (int i = 0, iMax = pSourceFiles.count(); i < iMax; ++i)
+    qDebug(">>>    %s", qPrintable(pSourceFiles[i]));
 }
 
 //==============================================================================

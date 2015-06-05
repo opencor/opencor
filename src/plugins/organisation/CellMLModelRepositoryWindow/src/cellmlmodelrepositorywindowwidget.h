@@ -80,7 +80,7 @@ public:
 
     void filter(const QString &pFilter);
 
-    void addModelFiles();
+    void addModelFiles(const QString &pUrl, const QStringList &pSourceFiles);
 
 protected:
     virtual QSize sizeHint() const;

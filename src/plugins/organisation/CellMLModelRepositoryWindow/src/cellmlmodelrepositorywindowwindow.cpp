@@ -56,7 +56,8 @@ CellmlModelRepositoryWindowWindow::CellmlModelRepositoryWindowWindow(QWidget *pP
     Core::OrganisationWidget(pParent),
     mGui(new Ui::CellmlModelRepositoryWindowWindow),
     mNumberOfUntreatedSourceFiles(0),
-    mWorkspaces(QMap<QString, QString>())
+    mWorkspaces(QMap<QString, QString>()),
+    mSourceFiles(QMap<QString, QString>())
 {
     // Set up the GUI
 
@@ -352,22 +353,35 @@ void CellmlModelRepositoryWindowWindow::finished(QNetworkReply *pNetworkReply)
                                bookmarkUrl, url);
         }
     } else if (sourceFilePmrRequest) {
+        // Keep track of the model's source file
+
+        QString url = pNetworkReply->property(ExtraProperty).toString();
+
+        mSourceFiles.insertMulti(url, sourceFile);
+
         // Determine the workspace associated with the model, should we have
-        // retrieved all of its source files, and clone it or let our CellML
-        // Model Repository widget know that we have files for it to show
-        // Note: this can be done with any source file (for a given model), but
-        //       we do it with the last one in case of a problem occuring
-        //       between the retrieval of the first and last source files...
+        // retrieved all of its source files, and let our CellML Model
+        // Repository widget know that we have files for it to show
+        // Note: this can be done with any model's source file, but we do it
+        //       with the last one in case of a problem occuring between the
+        //       retrieval of the first and last model's source files...
 
         if (!mNumberOfUntreatedSourceFiles) {
-            QString workspace = sourceFile.remove(QRegularExpression("/rawfile/.*$"));
+            mWorkspaces.insert(url, sourceFile.remove(QRegularExpression("/rawfile/.*$")));
 
-            mWorkspaces.insert(pNetworkReply->property(ExtraProperty).toString(), workspace);
+            mCellmlModelRepositoryWidget->addModelFiles(url, mSourceFiles.values(url));
 
-            if (pmrRequest == SourceFileForCloning)
-                cloneWorkspace(workspace);
-            else
-                mCellmlModelRepositoryWidget->addModelFiles();
+            // Remove the model's source files since we don't need them anymore
+            // (and there is no point in wasting memory for no reason)
+
+            mSourceFiles.remove(url);
+        }
+
+        // Clone the workspace, if needed
+
+        if (    !mNumberOfUntreatedSourceFiles
+            && (pmrRequest == SourceFileForCloning)) {
+                cloneWorkspace(mWorkspaces.value(url));
         }
     }
 
@@ -431,14 +445,6 @@ void CellmlModelRepositoryWindowWindow::cloneModel(const QString &pUrl,
         // need to retrieve its bookmark URLs
 
         sendPmrRequest(BookmarkUrlsForCloning, pUrl, pDescription);
-//---GRY--- THE BELOW IS TO BE REMOVED ONCE WE HAVE IMPLEMENTED ISSUE #592...
-Q_UNUSED(pUrl);
-Q_UNUSED(pDescription);
-//        sendPmrRequest(BookmarkUrls, "https://models.physiomeproject.org/e/71");                                        // CellML and SED-ML files
-//        sendPmrRequest(BookmarkUrls, "https://models.physiomeproject.org/e/e1");                                        // HTML file
-//        sendPmrRequest(BookmarkUrls, "https://models.physiomeproject.org/e/1e");                                        // CellML 1.0 and a CellML 1.1 files
-//        sendPmrRequest(BookmarkUrls, "https://models.physiomeproject.org/exposure/42", "Broken");                       // Broken
-//        sendPmrRequest(BookmarkUrls, "https://models.physiomeproject.org/exposure/4f9511d703b55ace4780879b253777d6");   // Correct version of the above?
     }
 }
 

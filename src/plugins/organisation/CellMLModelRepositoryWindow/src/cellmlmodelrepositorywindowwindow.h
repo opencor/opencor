@@ -73,6 +73,7 @@ private:
     int mNumberOfUntreatedSourceFiles;
 
     QMap<QString, QString> mWorkspaces;
+    QMap<QString, QString> mSourceFiles;
 
     enum PmrRequest {
         ModelList,
