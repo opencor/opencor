@@ -264,30 +264,12 @@ void CellmlModelRepositoryWindowWidget::filter(const QString &pFilter)
 
     retranslateUi();
 
-    // Determine which models should be shown/hidden
-
-    QIntList modelIndexes = QIntList();
-    int modelIndex;
-
-    foreach (const QString &filteredModelName, filteredModelNames) {
-        modelIndex = -1;
-
-        forever {
-            modelIndex = mModelNames.indexOf(filteredModelName, ++modelIndex);
-
-            if (modelIndex == -1)
-                break;
-            else
-                modelIndexes << modelIndex;
-        }
-    }
-
     // Show/hide the relevant models
 
     QWebElement documentElement = page()->mainFrame()->documentElement();
 
     for (int i = 0, iMax = mModelNames.count(); i < iMax; ++i)
-        documentElement.findFirst(QString("tr[id=model_%1]").arg(i)).setStyleProperty("display", modelIndexes.contains(i)?"table-row":"none");
+        documentElement.findFirst(QString("tr[id=model_%1]").arg(i)).setStyleProperty("display", filteredModelNames.contains(mModelNames[i])?"table-row":"none");
 }
 
 //==============================================================================
