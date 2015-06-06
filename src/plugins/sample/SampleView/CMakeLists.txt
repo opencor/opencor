@@ -26,6 +26,9 @@ ADD_PLUGIN(SampleView
         QtCore
         QtGui
         QtNetwork
+        QtWebKit
+        QtWebKitWidgets
         QtWidgets
+        QtXml
         QtXmlPatterns
 )

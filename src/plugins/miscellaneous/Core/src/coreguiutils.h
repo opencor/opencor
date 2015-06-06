@@ -63,6 +63,10 @@ QString CORE_EXPORT getSaveFileName(const QString &pCaption,
                                     const QString &pFilters = QString(),
                                     QString *pSelectedFilter = 0);
 
+QString CORE_EXPORT getExistingDirectory(const QString &pCaption,
+                                         const QString &pDirName = QString(),
+                                         const bool &pEmptyDir = false);
+
 void CORE_EXPORT setFocusTo(QWidget *pWidget);
 
 QMenu CORE_EXPORT * newMenu(const QString &pName, QWidget *pParent = 0);

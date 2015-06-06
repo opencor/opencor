@@ -24,8 +24,6 @@ ADD_PLUGIN(RawCellMLView
     HEADERS_MOC
         src/rawcellmlviewplugin.h
         src/rawcellmlviewwidget.h
-    UIS
-        src/rawcellmlviewwidget.ui
     DEFINITIONS
         ${LLVM_DEFINITIONS}
     INCLUDE_DIRS
@@ -58,6 +56,8 @@ ADD_PLUGIN(RawCellMLView
         QtOpenGL
         QtPrintSupport
         QtSvg
+        QtWebKit
+        QtWebKitWidgets
         QtWidgets
         QtXml
         QtXmlPatterns

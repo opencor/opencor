@@ -21,11 +21,11 @@ specific language governing permissions and limitations under the License.
 
 #include "cellmlannotationvieweditingwidget.h"
 #include "cellmlannotationviewmetadatanormalviewdetailswidget.h"
-#include "cellmlannotationviewmetadatawebviewwidget.h"
 #include "corecliutils.h"
 #include "coreguiutils.h"
 #include "filemanager.h"
 #include "usermessagewidget.h"
+#include "webviewwidget.h"
 
 //==============================================================================
 
@@ -90,9 +90,11 @@ CellmlAnnotationViewMetadataNormalViewDetailsWidget::CellmlAnnotationViewMetadat
 
     mOutput = new Core::Widget(this);
 
-    mOutput->setLayout(new QVBoxLayout(mOutput));
+    QVBoxLayout *outputLayout = new QVBoxLayout(mOutput);
 
-    mOutput->layout()->setMargin(0);
+    outputLayout->setMargin(0);
+
+    mOutput->setLayout(outputLayout);
 
     // Create our output message (within a scroll area, in case the label is too
     // wide)
@@ -111,7 +113,7 @@ CellmlAnnotationViewMetadataNormalViewDetailsWidget::CellmlAnnotationViewMetadat
 
     Core::readTextFromFile(":/ontologicalTerms.html", mOutputOntologicalTermsTemplate);
 
-    mOutputOntologicalTerms = new CellmlAnnotationViewMetadataWebViewWidget(mOutput);
+    mOutputOntologicalTerms = new Core::WebViewWidget(mOutput);
 
     mOutputOntologicalTerms->setContextMenuPolicy(Qt::CustomContextMenu);
 
@@ -126,8 +128,8 @@ CellmlAnnotationViewMetadataNormalViewDetailsWidget::CellmlAnnotationViewMetadat
     // Add our output message and output for ontological terms to our output
     // widget
 
-    mOutput->layout()->addWidget(mOutputMessageScrollArea);
-    mOutput->layout()->addWidget(mOutputOntologicalTerms);
+    outputLayout->addWidget(mOutputMessageScrollArea);
+    outputLayout->addWidget(mOutputOntologicalTerms);
 
     // Add our output widget to our main layout
 

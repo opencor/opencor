@@ -16,10 +16,10 @@ specific language governing permissions and limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// CellML annotation view metadata web view widget
+// Web view widget
 //==============================================================================
 
-#include "cellmlannotationviewmetadatawebviewwidget.h"
+#include "webviewwidget.h"
 
 //==============================================================================
 
@@ -31,11 +31,11 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 namespace OpenCOR {
-namespace CellMLAnnotationView {
+namespace Core {
 
 //==============================================================================
 
-CellmlAnnotationViewMetadataWebViewWidget::CellmlAnnotationViewMetadataWebViewWidget(QWidget *pParent) :
+WebViewWidget::WebViewWidget(QWidget *pParent) :
     QWebView(pParent),
     mResettingCursor(false)
 {
@@ -48,7 +48,7 @@ CellmlAnnotationViewMetadataWebViewWidget::CellmlAnnotationViewMetadataWebViewWi
 
 //==============================================================================
 
-bool CellmlAnnotationViewMetadataWebViewWidget::event(QEvent *pEvent)
+bool WebViewWidget::event(QEvent *pEvent)
 {
     // Override the change of the cursor when hovering some text
 
@@ -71,8 +71,8 @@ bool CellmlAnnotationViewMetadataWebViewWidget::event(QEvent *pEvent)
 
 //==============================================================================
 
-void CellmlAnnotationViewMetadataWebViewWidget::retrieveLinkInformation(QString &pLink,
-                                                                        QString &pTextContent)
+QWebElement WebViewWidget::retrieveLinkInformation(QString &pLink,
+                                                   QString &pTextContent)
 {
     // Retrieve the link and text content values for the link, if any, below our
     // mouse pointer
@@ -85,23 +85,25 @@ void CellmlAnnotationViewMetadataWebViewWidget::retrieveLinkInformation(QString 
     //       the click, then we will have the wrong information...
 
     QWebHitTestResult hitTestResult = page()->mainFrame()->hitTestContent(mapFromGlobal(QCursor::pos()));
-    QWebElement element = hitTestResult.element();
+    QWebElement res = hitTestResult.element();
 
-    while (!element.isNull() && element.tagName().compare("A"))
-        element = element.parent();
+    while (!res.isNull() && res.tagName().compare("A"))
+        res = res.parent();
 
-    if (element.isNull()) {
+    if (res.isNull()) {
         pLink = QString();
         pTextContent = QString();
     } else {
-        pLink = element.attribute("href");
+        pLink = res.attribute("href");
         pTextContent = hitTestResult.linkText();
     }
+
+    return res;
 }
 
 //==============================================================================
 
-}   // namespace CellMLAnnotationView
+}   // namespace Core
 }   // namespace OpenCOR
 
 //==============================================================================

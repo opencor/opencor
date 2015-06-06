@@ -25,6 +25,9 @@ ADD_PLUGIN(SampleWindow
         QtCore
         QtGui
         QtNetwork
+        QtWebKit
+        QtWebKitWidgets
         QtWidgets
+        QtXml
         QtXmlPatterns
 )

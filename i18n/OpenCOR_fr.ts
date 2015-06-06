@@ -198,7 +198,7 @@
     </message>
     <message>
         <source>No plugin could be found.</source>
-        <translation>Aucune extension n&apos;a été trouvée.</translation>
+        <translation>Aucune extension n&apos;a pu être trouvée.</translation>
     </message>
     <message>
         <source>About</source>

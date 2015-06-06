@@ -61,6 +61,7 @@ namespace OpenCOR {
 
 namespace Core {
     class UserMessageWidget;
+    class WebViewWidget;
 }   // namespace Core
 
 //==============================================================================
@@ -71,6 +72,31 @@ namespace CellMLAnnotationView {
 
 class CellmlAnnotationViewEditingWidget;
 class CellmlAnnotationViewMetadataWebViewWidget;
+
+//==============================================================================
+
+class CellmlAnnotationViewMetadataEditDetailsItem {
+public:
+    explicit CellmlAnnotationViewMetadataEditDetailsItem(const QString &pName = QString(),
+                                                         const QString &pResource = QString(),
+                                                         const QString &pId = QString());
+
+    QString name() const;
+    QString resource() const;
+    QString id() const;
+
+    bool operator==(const CellmlAnnotationViewMetadataEditDetailsItem &pItem) const;
+    bool operator<(const CellmlAnnotationViewMetadataEditDetailsItem &pItem) const;
+
+private:
+    QString mName;
+    QString mResource;
+    QString mId;
+};
+
+//==============================================================================
+
+typedef QList<CellmlAnnotationViewMetadataEditDetailsItem> CellmlAnnotationViewMetadataEditDetailsItems;
 
 //==============================================================================
 
@@ -93,18 +119,6 @@ private:
         Resource,
         Id
     };
-
-    struct Item
-    {
-        QString name;
-        QString resource;
-        QString id;
-
-        bool operator==(const Item &pItem) const;
-        bool operator<(const Item &pItem) const;
-    };
-
-    typedef QList<Item> Items;
 
     CellmlAnnotationViewEditingWidget *mParent;
 
@@ -134,13 +148,13 @@ private:
     Core::UserMessageWidget *mOutputMessage;
 
     QString mOutputOntologicalTermsTemplate;
-    CellmlAnnotationViewMetadataWebViewWidget *mOutputOntologicalTerms;
+    Core::WebViewWidget *mOutputOntologicalTerms;
 
     InformationType mInformationType;
 
     bool mLookUpInformation;
 
-    QMap<QString, Item> mItemsMapping;
+    QMap<QString, CellmlAnnotationViewMetadataEditDetailsItem> mItemsMapping;
     QMap<QString, bool> mEnabledItems;
 
     CellMLSupport::CellmlFile *mCellmlFile;
@@ -163,11 +177,8 @@ private:
                               bool *pShowBusyWidget = 0);
     void updateOutputHeaders();
 
-    void updateItemsGui(const Items &pItems, const bool &pLookUpTerm,
-                        const QString &pErrorMessage);
-
-    static Item item(const QString &pName,
-                     const QString &pResource, const QString &pId);
+    void updateItemsGui(const CellmlAnnotationViewMetadataEditDetailsItems &pItems,
+                        const bool &pLookUpTerm, const QString &pErrorMessage);
 
     void genericLookUp(const QString &pItemInformation = QString(),
                        const InformationType &pInformationType = None);

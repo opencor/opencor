@@ -36,12 +36,6 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-namespace Ui {
-    class CellmlTextViewWidget;
-}
-
-//==============================================================================
-
 namespace OpenCOR {
 
 //==============================================================================
@@ -113,7 +107,6 @@ class CellmlTextViewWidget : public Core::ViewWidget
 
 public:
     explicit CellmlTextViewWidget(QWidget *pParent);
-    ~CellmlTextViewWidget();
 
     virtual void loadSettings(QSettings *pSettings);
     virtual void saveSettings(QSettings *pSettings) const;
@@ -142,8 +135,6 @@ public:
     bool validate(const QString &pFileName);
 
 private:
-    Ui::CellmlTextViewWidget *mGui;
-
     bool mNeedLoadingSettings;
     QString mSettingsGroup;
 

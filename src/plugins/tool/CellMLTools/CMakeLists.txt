@@ -39,6 +39,8 @@ ADD_PLUGIN(CellMLTools
         QtCore
         QtGui
         QtNetwork
+        QtWebKit
+        QtWebKitWidgets
         QtWidgets
         QtXml
         QtXmlPatterns

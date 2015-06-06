@@ -31,7 +31,6 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include <QChar>
-#include <QCoreApplication>
 #include <QCryptographicHash>
 #include <QDate>
 #include <QDir>

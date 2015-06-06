@@ -52,10 +52,16 @@ FileBrowserWindowWidget::FileBrowserWindowWidget(QWidget *pParent) :
 
     mModel = new FileBrowserWindowModel(this);
 
-    // Set some properties for the file browser widget itself
+    // Set some properties
 
     setDragDropMode(QAbstractItemView::DragOnly);
+#if defined(Q_OS_WIN) || defined(Q_OS_LINUX)
     setFrameShape(QFrame::StyledPanel);
+#elif defined(Q_OS_MAC)
+    setFrameShape(QFrame::Panel);
+#else
+    #error Unsupported platform
+#endif
     setModel(mModel);
     setSortingEnabled(true);
 
@@ -434,11 +440,12 @@ void FileBrowserWindowWidget::keyPressEvent(QKeyEvent *pEvent)
     QStringList crtSelectedFiles = selectedFiles();
 
     if (   crtSelectedFiles.count()
-        && ((pEvent->key() == Qt::Key_Enter) || (pEvent->key() == Qt::Key_Return)))
+        && ((pEvent->key() == Qt::Key_Enter) || (pEvent->key() == Qt::Key_Return))) {
         // There are some files that are selected and we want to open them, so
         // let people know about it
 
         emit filesOpenRequested(crtSelectedFiles);
+    }
 }
 
 //==============================================================================

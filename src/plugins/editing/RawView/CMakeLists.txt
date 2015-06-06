@@ -19,8 +19,6 @@ ADD_PLUGIN(RawView
     HEADERS_MOC
         src/rawviewplugin.h
         src/rawviewwidget.h
-    UIS
-        src/rawviewwidget.ui
     INCLUDE_DIRS
         src
     PLUGINS
@@ -35,6 +33,8 @@ ADD_PLUGIN(RawView
         QtGui
         ${QT_MAC_EXTRAS}
         QtNetwork
+        QtWebKit
+        QtWebKitWidgets
         QtWidgets
         QtXml
         QtXmlPatterns

@@ -324,5 +324,9 @@
         <source>All Files</source>
         <translation>Tous Fichiers</translation>
     </message>
+    <message>
+        <source>Please choose an empty directory.</source>
+        <translation>Veuillez choisir un répertoire vide.</translation>
+    </message>
 </context>
 </TS>

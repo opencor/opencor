@@ -20,13 +20,22 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include "cellmlmodelrepositorywindowwidget.h"
-#include "corecliutils.h"
+#include "coreguiutils.h"
 
 //==============================================================================
 
+#include "ui_cellmlmodelrepositorywindowwidget.h"
+
+//==============================================================================
+
+#include <QClipboard>
 #include <QDesktopServices>
 #include <QIODevice>
+#include <QMenu>
 #include <QPaintEvent>
+#include <QRegularExpression>
+#include <QWebElement>
+#include <QWebFrame>
 
 //==============================================================================
 
@@ -35,19 +44,71 @@ namespace CellMLModelRepositoryWindow {
 
 //==============================================================================
 
-CellmlModelRepositoryWindowWidget::CellmlModelRepositoryWindowWidget(QWidget *pParent) :
-    QWebView(pParent),
-    Core::CommonWidget(pParent)
+CellmlModelRepositoryWindowModel::CellmlModelRepositoryWindowModel(const QString &pUrl,
+                                                                   const QString &pName) :
+    mUrl(pUrl),
+    mName(pName)
 {
-    // Add a small margin to the widget, so that no visual trace of the border
-    // drawn by drawBorderIfDocked is left when scrolling
+}
+
+//==============================================================================
+
+QString CellmlModelRepositoryWindowModel::url() const
+{
+    // Return our URL
+
+    return mUrl;
+}
+
+//==============================================================================
+
+QString CellmlModelRepositoryWindowModel::name() const
+{
+    // Return our name
+
+    return mName;
+}
+
+//==============================================================================
+
+CellmlModelRepositoryWindowWidget::CellmlModelRepositoryWindowWidget(QWidget *pParent) :
+    Core::WebViewWidget(pParent),
+    Core::CommonWidget(pParent),
+    mGui(new Ui::CellmlModelRepositoryWindowWidget),
+    mModelNames(QStringList()),
+    mModelDisplayed(QBoolList()),
+    mModelUrlId(QMap<QString, int>()),
+    mErrorMessage(QString()),
+    mNumberOfFilteredModels(0),
+    mUrl(QString())
+{
+    // Set up the GUI
+
+    mGui->setupUi(this);
+
+    // Add a small margin ourselves, so that no visual trace of the border drawn
+    // by drawBorder() in paintEvent() is left when scrolling (on Windows and
+    // Linux, but it doesn't harm doing it for all our supported platforms)
+    // Note: not sure why, but no matter how many pixels are specified for the
+    //       margin, no margin actually exists, but it addresses the issue with
+    //       the border drawn by drawBorder()...
 
     setStyleSheet("QWebView {"
                   "    margin: 1px;"
                   "}");
-    // Note: not sure why, but no matter how many pixels are specified for the
-    //       margin, no margin actually exists, but it addresses the issue with
-    //       the border drawn by drawBorderIfDocked...
+
+    // Create and populate our context menu
+
+    mContextMenu = new QMenu(this);
+
+    mContextMenu->addAction(mGui->actionCopy);
+
+    // We want out own context menu
+
+    setContextMenuPolicy(Qt::CustomContextMenu);
+
+    connect(this, SIGNAL(customContextMenuRequested(const QPoint &)),
+            this, SLOT(showCustomContextMenu()));
 
     // Prevent objects from being dropped on us
 
@@ -59,19 +120,48 @@ CellmlModelRepositoryWindowWidget::CellmlModelRepositoryWindowWidget(QWidget *pP
 
     // Some connections
 
-    connect(this, SIGNAL(linkClicked(const QUrl &)),
-            this, SLOT(openLink(const QUrl &)));
-
-    connect(page(), SIGNAL(selectionChanged()),
-            this, SLOT(selectionChanged()));
+    connect(page(), SIGNAL(linkClicked(const QUrl &)),
+            this, SLOT(linkClicked()));
 
     // Retrieve the output template
 
     Core::readTextFromFile(":/output.html", mOutputTemplate);
 
-    // Let people know that there is nothing to copy initially
+    setHtml(mOutputTemplate.arg(Core::iconDataUri(":/oxygen/places/folder-downloads.png", 16, 16),
+                                Core::iconDataUri(":/oxygen/actions/document-open-remote.png", 16, 16)));
+}
 
-    emit copyTextEnabled(false);
+//==============================================================================
+
+CellmlModelRepositoryWindowWidget::~CellmlModelRepositoryWindowWidget()
+{
+    // Delete the GUI
+
+    delete mGui;
+}
+
+//==============================================================================
+
+void CellmlModelRepositoryWindowWidget::retranslateUi()
+{
+    // Retranslate our message
+
+    QWebElement messageElement = page()->mainFrame()->documentElement().findFirst("p[id=message]");
+
+    if (mErrorMessage.isEmpty()) {
+        if (!mNumberOfFilteredModels) {
+            if (mModelNames.isEmpty())
+                messageElement.removeAllChildren();
+            else
+                messageElement.setInnerXml(tr("No CellML model matches your criteria."));
+        } else if (mNumberOfFilteredModels == 1) {
+            messageElement.setInnerXml(tr("<strong>1</strong> CellML model was found:"));
+        } else {
+            messageElement.setInnerXml(tr("<strong>%1</strong> CellML models were found:").arg(mNumberOfFilteredModels));
+        }
+    } else {
+        messageElement.setInnerXml(tr("<strong>Error:</strong> ")+Core::formatMessage(mErrorMessage, true, true));
+    }
 }
 
 //==============================================================================
@@ -100,7 +190,7 @@ void CellmlModelRepositoryWindowWidget::paintEvent(QPaintEvent *pEvent)
 #if defined(Q_OS_WIN) || defined(Q_OS_LINUX)
                true, true, true, true,
 #elif defined(Q_OS_MAC)
-               true, false, true, false,
+               true, false, false, false,
 #else
     #error Unsupported platform
 #endif
@@ -110,30 +200,222 @@ void CellmlModelRepositoryWindowWidget::paintEvent(QPaintEvent *pEvent)
 
 //==============================================================================
 
-void CellmlModelRepositoryWindowWidget::output(const QString &pOutput)
+void CellmlModelRepositoryWindowWidget::initialize(const CellmlModelRepositoryWindowModels &pModels,
+                                                   const QString &pErrorMessage)
 {
-    // Set the page to contain pOutput using our output template
+    // Initialise / keep track of some properties
 
-    setHtml(mOutputTemplate.arg(pOutput));
+    mModelNames = QStringList();
+    mModelDisplayed = QBoolList();
+    mModelUrlId = QMap<QString, int>();
+
+    mErrorMessage = pErrorMessage;
+
+    // Initialise our list of models
+
+    QWebElement modelsElement = page()->mainFrame()->documentElement().findFirst("tbody[id=models]");
+
+    modelsElement.removeAllChildren();
+
+    for (int i = 0, iMax = pModels.count(); i < iMax; ++i) {
+        QString modelUrl = pModels[i].url();
+        QString modelName = pModels[i].name();
+
+        modelsElement.appendInside( "<tr id=\"model_"+QString::number(i)+"\">\n"
+                                   +"    <td class=\"model\">\n"
+                                   +"        <table class=\"fullWidth\">\n"
+                                   +"            <tbody>\n"
+                                   +"                <tr>\n"
+                                   +"                    <td class=\"fullWidth\">\n"
+                                   +"                        <ul>\n"
+                                   +"                            <li class=\"model\">\n"
+                                   +"                                <a href=\""+modelUrl+"\">"+modelName+"</a>\n"
+                                   +"                            </li>\n"
+                                   +"                        </ul>\n"
+                                   +"                    </td>\n"
+                                   +"                    <td class=\"button\">\n"
+                                   +"                        <a class=\"noHover\" href=\"clone|"+modelUrl+"|"+modelName+"\"><img class=\"button clone\"/></a>\n"
+                                   +"                    </td>\n"
+                                   +"                    <td class=\"button\">\n"
+                                   +"                        <a class=\"noHover\" href=\"files|"+modelUrl+"|"+modelName+"\"><img id=\"model_"+QString::number(i)+"\" class=\"button open\"/></a>\n"
+                                   +"                    </td>\n"
+                                   +"                </tr>\n"
+                                   +"            </tbody>\n"
+                                   +"        </table>\n"
+                                   +"        <ul id=\"modelFiles_"+QString::number(i)+"\" style=\"display: none;\">\n"
+                                   +"        </ul>\n"
+                                   +"    </td>\n"
+                                   +"</tr>\n");
+
+        mModelNames << modelName;
+        mModelDisplayed << true;
+        mModelUrlId.insert(modelUrl, i);
+    }
 }
 
 //==============================================================================
 
-void CellmlModelRepositoryWindowWidget::openLink(const QUrl &pUrl)
+void CellmlModelRepositoryWindowWidget::filter(const QString &pFilter)
 {
-    // Open the link in the user's browser
+    // Make sure that we have something to filter (i.e. no error message)
 
-    QDesktopServices::openUrl(pUrl);
+    if (!mErrorMessage.isEmpty())
+        return;
+
+    // Filter our list of models, remove duplicates (they will be reintroduced
+    // in the next step) and update our message (by retranslate ourselves)
+
+    QStringList filteredModelNames = mModelNames.filter(QRegularExpression(pFilter, QRegularExpression::CaseInsensitiveOption));
+
+    mNumberOfFilteredModels = filteredModelNames.count();
+
+    filteredModelNames.removeDuplicates();
+
+    retranslateUi();
+
+    // Show/hide the relevant models
+    // Note: to call QWebElement::setStyleProperty() many times is time
+    //       consuming, hence we rely on mModelDisplayed to determine when we
+    //       should change the display property of our elements...
+
+    QWebElement trElement = page()->mainFrame()->documentElement().findFirst(QString("tbody[id=models]")).firstChild();
+    QWebElement ulElement;
+
+    for (int i = 0, iMax = mModelNames.count(); i < iMax; ++i) {
+        if (mModelDisplayed[i] != filteredModelNames.contains(mModelNames[i])) {
+            QString displayValue = mModelDisplayed[i]?"none":"table-row";
+
+            trElement.setStyleProperty("display", displayValue);
+
+            ulElement = trElement.firstChild().firstChild().nextSibling();
+
+            if (ulElement.hasClass("visible"))
+                ulElement.setStyleProperty("display", displayValue);
+
+            mModelDisplayed[i] = !mModelDisplayed[i];
+        }
+
+        trElement = trElement.nextSibling();
+    }
 }
 
 //==============================================================================
 
-void CellmlModelRepositoryWindowWidget::selectionChanged()
+void CellmlModelRepositoryWindowWidget::addModelFiles(const QString &pUrl,
+                                                      const QStringList &pSourceFiles)
 {
-    // The text selection has changed, so let the user know whether some text is
-    // now selected
+    // Add the given files to the model
 
-    emit copyTextEnabled(!selectedText().isEmpty());
+    QWebElement ulElement = page()->mainFrame()->documentElement().findFirst(QString("ul[id=modelFiles_%1]").arg(mModelUrlId.value(pUrl)));
+
+    foreach (const QString &sourceFile, pSourceFiles) {
+        ulElement.appendInside(QString("<li class=\"modelFile\">"
+                                       "    <a href=\"%1\">%2</a>"
+                                       "</li>").arg(sourceFile, QString(sourceFile).remove(QRegularExpression(".*/"))));
+    }
+}
+
+//==============================================================================
+
+void CellmlModelRepositoryWindowWidget::showModelFiles(const QString &pUrl,
+                                                       const bool &pShow)
+{
+    // Show the files for the given model
+
+    int id = mModelUrlId.value(pUrl);
+    QWebElement documentElement = page()->mainFrame()->documentElement();
+    QWebElement imgElement = documentElement.findFirst(QString("img[id=model_%1]").arg(id));
+    QWebElement ulElement = documentElement.findFirst(QString("ul[id=modelFiles_%1]").arg(id));
+
+    if (pShow) {
+        imgElement.removeClass("button");
+        imgElement.addClass("downButton");
+
+        ulElement.addClass("visible");
+        ulElement.setStyleProperty("display", "table-row");
+    } else {
+        imgElement.addClass("button");
+        imgElement.removeClass("downButton");
+
+        ulElement.removeClass("visible");
+        ulElement.setStyleProperty("display", "none");
+    }
+}
+
+//==============================================================================
+
+void CellmlModelRepositoryWindowWidget::on_actionCopy_triggered()
+{
+    // Copy the URL of the model to the clipboard
+
+    QApplication::clipboard()->setText(mUrl);
+}
+
+//==============================================================================
+
+void CellmlModelRepositoryWindowWidget::linkClicked()
+{
+    // Retrieve some information about the link
+
+    QString link;
+    QString textContent;
+
+    QWebElement element = retrieveLinkInformation(link, textContent);
+
+    // Check whether we have clicked a model link or a button link, i.e. that we
+    // want to clone the model
+
+    if (textContent.isEmpty()) {
+        // We have clicked on a button link, so let people know whether we want
+        // to clone a model or whether we want to show/hide its files
+
+        QStringList linkList = link.split("|");
+
+        if (!linkList[0].compare("clone")) {
+            emit cloneModel(linkList[1], linkList[2]);
+        } else {
+            // Show/hide the model's files, if we have them, or let people know
+            // that we want them
+
+            int id = mModelUrlId.value(linkList[1]);
+
+            QWebElement documentElement = page()->mainFrame()->documentElement();
+            QWebElement ulElement = documentElement.findFirst(QString("ul[id=modelFiles_%1]").arg(id));
+
+            if (ulElement.firstChild().isNull()) {
+                emit showModelFiles(linkList[1], linkList[2]);
+            } else {
+                showModelFiles(linkList[1],
+                               documentElement.findFirst(QString("img[id=model_%1]").arg(id)).hasClass("button"));
+            }
+        }
+    } else {
+        // Open the model link in the user's browser or ask for it to be opened
+        // in OpenCOR
+
+        if (element.parent().hasClass("modelFile"))
+            emit modelFileOpenRequested(link);
+        else
+            QDesktopServices::openUrl(link);
+    }
+}
+
+//==============================================================================
+
+void CellmlModelRepositoryWindowWidget::showCustomContextMenu()
+{
+    // Retrieve some information about the link, if any
+
+    QString textContent;
+
+    retrieveLinkInformation(mUrl, textContent);
+
+    // Show our context menu to allow the copying of the URL of the model, but
+    // only if we are over a link, i.e. if both mLink and textContent are not
+    // empty
+
+    if (!mUrl.isEmpty() && !textContent.isEmpty())
+        mContextMenu->exec(QCursor::pos());
 }
 
 //==============================================================================

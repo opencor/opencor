@@ -25,10 +25,18 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include "commonwidget.h"
+#include "corecliutils.h"
+#include "webviewwidget.h"
 
 //==============================================================================
 
-#include <QWebView>
+namespace Ui {
+    class CellmlModelRepositoryWindowWidget;
+}
+
+//==============================================================================
+
+class QMenu;
 
 //==============================================================================
 
@@ -37,15 +45,44 @@ namespace CellMLModelRepositoryWindow {
 
 //==============================================================================
 
-class CellmlModelRepositoryWindowWidget : public QWebView,
+class CellmlModelRepositoryWindowModel
+{
+public:
+    explicit CellmlModelRepositoryWindowModel(const QString &pUrl,
+                                              const QString &pName);
+
+    QString url() const;
+    QString name() const;
+
+private:
+    QString mUrl;
+    QString mName;
+};
+
+//==============================================================================
+
+typedef QList<CellmlModelRepositoryWindowModel> CellmlModelRepositoryWindowModels;
+
+//==============================================================================
+
+class CellmlModelRepositoryWindowWidget : public Core::WebViewWidget,
                                           public Core::CommonWidget
 {
     Q_OBJECT
 
 public:
     explicit CellmlModelRepositoryWindowWidget(QWidget *pParent);
+    ~CellmlModelRepositoryWindowWidget();
 
-    void output(const QString &pOutput);
+    virtual void retranslateUi();
+
+    void initialize(const CellmlModelRepositoryWindowModels &pModels,
+                    const QString &pErrorMessage);
+
+    void filter(const QString &pFilter);
+
+    void addModelFiles(const QString &pUrl, const QStringList &pSourceFiles);
+    void showModelFiles(const QString &pUrl, const bool &pShow = true);
 
 protected:
     virtual QSize sizeHint() const;
@@ -53,15 +90,34 @@ protected:
     virtual void paintEvent(QPaintEvent *pEvent);
 
 private:
+    Ui::CellmlModelRepositoryWindowWidget *mGui;
+
+    QMenu *mContextMenu;
+
     QString mOutputTemplate;
 
+    QStringList mModelNames;
+    QBoolList mModelDisplayed;
+    QMap<QString, int> mModelUrlId;
+
+    QString mErrorMessage;
+
+    int mNumberOfFilteredModels;
+
+    QString mUrl;
+
 Q_SIGNALS:
-    void copyTextEnabled(const bool &pEnabled);
+    void cloneModel(const QString &pUrl, const QString &pDescription);
+    void showModelFiles(const QString &pUrl, const QString &pDescription);
+
+    void modelFileOpenRequested(const QString &pUrl);
 
 private Q_SLOTS:
-    void openLink(const QUrl &pUrl);
+    void on_actionCopy_triggered();
 
-    void selectionChanged();
+    void linkClicked();
+
+    void showCustomContextMenu();
 };
 
 //==============================================================================

@@ -39,12 +39,6 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-namespace Ui {
-    class CentralWidget;
-}
-
-//==============================================================================
-
 class QDialog;
 class QLabel;
 class QLineEdit;
@@ -145,8 +139,6 @@ private:
     };
 
     QMainWindow *mMainWindow;
-
-    Ui::CentralWidget *mGui;
 
     State mState;
 

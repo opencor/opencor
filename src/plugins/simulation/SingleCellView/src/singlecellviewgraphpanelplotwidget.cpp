@@ -553,6 +553,10 @@ SingleCellViewGraphPanelPlotWidget::~SingleCellViewGraphPanelPlotWidget()
 
     foreach (SingleCellViewGraphPanelPlotGraph *graph, mGraphs)
         delete graph;
+
+    // Delete the GUI
+
+    delete mGui;
 }
 
 //==============================================================================

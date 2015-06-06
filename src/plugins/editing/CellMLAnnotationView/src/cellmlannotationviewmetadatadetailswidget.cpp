@@ -31,15 +31,12 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-#include "ui_cellmlannotationviewmetadatadetailswidget.h"
-
-//==============================================================================
-
 #include <Qt>
 
 //==============================================================================
 
 #include <QLabel>
+#include <QVBoxLayout>
 #include <QWebView>
 
 //==============================================================================
@@ -52,13 +49,17 @@ namespace CellMLAnnotationView {
 CellmlAnnotationViewMetadataDetailsWidget::CellmlAnnotationViewMetadataDetailsWidget(CellmlAnnotationViewEditingWidget *pParent) :
     Widget(pParent),
     mParent(pParent),
-    mGui(new Ui::CellmlAnnotationViewMetadataDetailsWidget),
     mCellmlFile(pParent->cellmlFile()),
     mElement(0)
 {
-    // Set up the GUI
+    // Create and set our vertical layout
 
-    mGui->setupUi(this);
+    QVBoxLayout *layout = new QVBoxLayout(this);
+
+    layout->setMargin(0);
+    layout->setSpacing(0);
+
+    setLayout(layout);
 
     // Create and hide our category message widget
 
@@ -171,9 +172,9 @@ CellmlAnnotationViewMetadataDetailsWidget::CellmlAnnotationViewMetadataDetailsWi
     // Add our unsupported metadata message widget and splitter widget to our
     // layout
 
-    mGui->layout->addWidget(mBorderedCategoryMessage);
-    mGui->layout->addWidget(mBorderedUnsupportedMetadataMessage);
-    mGui->layout->addWidget(mSplitter);
+    layout->addWidget(mBorderedCategoryMessage);
+    layout->addWidget(mBorderedUnsupportedMetadataMessage);
+    layout->addWidget(mSplitter);
 
     // Some further initialisations that are done as part of retranslating the
     // GUI (so that they can be updated when changing languages)
@@ -183,20 +184,9 @@ CellmlAnnotationViewMetadataDetailsWidget::CellmlAnnotationViewMetadataDetailsWi
 
 //==============================================================================
 
-CellmlAnnotationViewMetadataDetailsWidget::~CellmlAnnotationViewMetadataDetailsWidget()
-{
-    // Delete the GUI
-
-    delete mGui;
-}
-
-//==============================================================================
-
 void CellmlAnnotationViewMetadataDetailsWidget::retranslateUi()
 {
     // Retranslate our GUI
-
-    mGui->retranslateUi(this);
 
     mMetadataEditDetails->retranslateUi();
     mMetadataViewDetails->retranslateUi();

@@ -28,8 +28,6 @@ ADD_PLUGIN(CellMLTextView
     HEADERS_MOC
         src/cellmltextviewplugin.h
         src/cellmltextviewwidget.h
-    UIS
-        src/cellmltextviewwidget.ui
     DEFINITIONS
         ${LLVM_DEFINITIONS}
     INCLUDE_DIRS
@@ -62,6 +60,8 @@ ADD_PLUGIN(CellMLTextView
         QtOpenGL
         QtPrintSupport
         QtSvg
+        QtWebKit
+        QtWebKitWidgets
         QtWidgets
         QtXml
         QtXmlPatterns

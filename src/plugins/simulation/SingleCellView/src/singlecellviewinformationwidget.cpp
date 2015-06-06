@@ -30,10 +30,7 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include <QSettings>
-
-//==============================================================================
-
-#include "ui_singlecellviewinformationwidget.h"
+#include <QVBoxLayout>
 
 //==============================================================================
 
@@ -44,12 +41,16 @@ namespace SingleCellView {
 
 SingleCellViewInformationWidget::SingleCellViewInformationWidget(QWidget *pParent) :
     QScrollArea(pParent),
-    Core::CommonWidget(pParent),
-    mGui(new Ui::SingleCellViewInformationWidget)
+    Core::CommonWidget(pParent)
 {
-    // Set up the GUI
+    // Create and set our vertical layout
 
-    mGui->setupUi(this);
+    QVBoxLayout *layout = new QVBoxLayout(this);
+
+    layout->setMargin(0);
+    layout->setSpacing(0);
+
+    setLayout(layout);
 
     // Remove the frame around our scroll area
 
@@ -95,26 +96,13 @@ SingleCellViewInformationWidget::SingleCellViewInformationWidget(QWidget *pParen
 
     // Add our collapsible widget to our layout
 
-    mGui->layout->addWidget(mCollapsibleWidget);
-}
-
-//==============================================================================
-
-SingleCellViewInformationWidget::~SingleCellViewInformationWidget()
-{
-    // Delete the GUI
-
-    delete mGui;
+    layout->addWidget(mCollapsibleWidget);
 }
 
 //==============================================================================
 
 void SingleCellViewInformationWidget::retranslateUi()
 {
-    // Retranslate the whole widget
-
-    mGui->retranslateUi(this);
-
     // Retranslate the different titles of our collapsible widget
 
     mCollapsibleWidget->setHeaderTitle(0, tr("Simulation"));

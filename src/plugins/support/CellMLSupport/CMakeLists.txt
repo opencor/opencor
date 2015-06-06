@@ -45,6 +45,8 @@ ADD_PLUGIN(CellMLSupport
         QtCore
         QtGui
         QtNetwork
+        QtWebKit
+        QtWebKitWidgets
         QtWidgets
         QtXml
         QtXmlPatterns

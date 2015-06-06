@@ -26,6 +26,8 @@ ADD_PLUGIN(FileOrganiserWindow
         QtCore
         QtGui
         QtNetwork
+        QtWebKit
+        QtWebKitWidgets
         QtWidgets
         QtXml
         QtXmlPatterns
