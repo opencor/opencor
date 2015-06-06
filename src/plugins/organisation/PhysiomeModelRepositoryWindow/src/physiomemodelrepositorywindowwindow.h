@@ -16,113 +16,98 @@ specific language governing permissions and limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// CellML Model Repository widget
+// Physiome Model Repository window
 //==============================================================================
 
-#ifndef CELLMLMODELREPOSITORYWINDOWWIDGET_H
-#define CELLMLMODELREPOSITORYWINDOWWIDGET_H
+#ifndef PHYSIOMEMODELREPOSITORYWINDOWWINDOW_H
+#define PHYSIOMEMODELREPOSITORYWINDOWWINDOW_H
 
 //==============================================================================
 
-#include "commonwidget.h"
-#include "corecliutils.h"
-#include "webviewwidget.h"
+#include "organisationwidget.h"
+
+//==============================================================================
+
+#include <QList>
+#include <QSslError>
 
 //==============================================================================
 
 namespace Ui {
-    class CellmlModelRepositoryWindowWidget;
+    class PhysiomeModelRepositoryWindowWindow;
 }
 
 //==============================================================================
 
-class QMenu;
+class QNetworkAccessManager;
+class QNetworkReply;
 
 //==============================================================================
 
 namespace OpenCOR {
-namespace CellMLModelRepositoryWindow {
+namespace PhysiomeModelRepositoryWindow {
 
 //==============================================================================
 
-class CellmlModelRepositoryWindowModel
-{
-public:
-    explicit CellmlModelRepositoryWindowModel(const QString &pUrl,
-                                              const QString &pName);
-
-    QString url() const;
-    QString name() const;
-
-private:
-    QString mUrl;
-    QString mName;
-};
+class PhysiomeModelRepositoryWindowWidget;
 
 //==============================================================================
 
-typedef QList<CellmlModelRepositoryWindowModel> CellmlModelRepositoryWindowModels;
-
-//==============================================================================
-
-class CellmlModelRepositoryWindowWidget : public Core::WebViewWidget,
-                                          public Core::CommonWidget
+class PhysiomeModelRepositoryWindowWindow : public Core::OrganisationWidget
 {
     Q_OBJECT
 
 public:
-    explicit CellmlModelRepositoryWindowWidget(QWidget *pParent);
-    ~CellmlModelRepositoryWindowWidget();
+    explicit PhysiomeModelRepositoryWindowWindow(QWidget *pParent);
+    ~PhysiomeModelRepositoryWindowWindow();
 
     virtual void retranslateUi();
 
-    void initialize(const CellmlModelRepositoryWindowModels &pModels,
-                    const QString &pErrorMessage);
-
-    void filter(const QString &pFilter);
-
-    void addModelFiles(const QString &pUrl, const QStringList &pSourceFiles);
-    void showModelFiles(const QString &pUrl, const bool &pShow = true);
-
-protected:
-    virtual QSize sizeHint() const;
-
-    virtual void paintEvent(QPaintEvent *pEvent);
-
 private:
-    Ui::CellmlModelRepositoryWindowWidget *mGui;
+    Ui::PhysiomeModelRepositoryWindowWindow *mGui;
 
-    QMenu *mContextMenu;
+    PhysiomeModelRepositoryWindowWidget *mPhysiomeModelRepositoryWidget;
 
-    QString mOutputTemplate;
+    QNetworkAccessManager *mNetworkAccessManager;
 
-    QStringList mModelNames;
-    QBoolList mModelDisplayed;
-    QMap<QString, int> mModelUrlId;
+    int mNumberOfExposureFilesLeft;
 
-    QString mErrorMessage;
+    QMap<QString, QString> mWorkspaces;
+    QMap<QString, QString> mExposureFiles;
 
-    int mNumberOfFilteredModels;
+    enum PmrRequest {
+        ExposuresList,
+        BookmarkUrlsForCloning,
+        BookmarkUrlsForExposureFiles,
+        ExposureFileForCloning,
+        ExposureFileForExposureFiles
+    };
 
-    QString mUrl;
+    void busy(const bool &pBusy);
 
-Q_SIGNALS:
-    void cloneModel(const QString &pUrl, const QString &pDescription);
-    void showModelFiles(const QString &pUrl, const QString &pDescription);
+    void sendPmrRequest(const PmrRequest &pPmrRequest,
+                        const QString &pUrl = QString(),
+                        const QString &pExtra = QString());
 
-    void modelFileOpenRequested(const QString &pUrl);
+    void cloneWorkspace(const QString &pWorkspace);
 
 private Q_SLOTS:
-    void on_actionCopy_triggered();
+    void on_filterValue_textChanged(const QString &pText);
+    void on_refreshButton_clicked();
 
-    void linkClicked();
+    void finished(QNetworkReply *pNetworkReply);
+    void sslErrors(QNetworkReply *pNetworkReply,
+                   const QList<QSslError> &pSslErrors);
 
-    void showCustomContextMenu();
+    void retrieveExposuresList(const bool &pVisible);
+
+    void cloneWorkspace(const QString &pUrl, const QString &pDescription);
+    void showExposureFiles(const QString &pUrl, const QString &pDescription);
 };
 
 //==============================================================================
 
-}   // namespace CellMLModelRepositoryWindow
+}   // namespace PhysiomeModelRepositoryWindow
 }   // namespace OpenCOR
 
 //==============================================================================

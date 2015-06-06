@@ -1,4 +1,4 @@
-PROJECT(CellMLModelRepositoryWindowPlugin)
+PROJECT(PhysiomeModelRepositoryWindowPlugin)
 
 # Retrieve some libgit2 settings
 
@@ -6,21 +6,21 @@ RETRIEVE_LIBGIT2_SETTINGS()
 
 # Add the plugin
 
-ADD_PLUGIN(CellMLModelRepositoryWindow
+ADD_PLUGIN(PhysiomeModelRepositoryWindow
     SOURCES
         ../../i18ninterface.cpp
         ../../plugininfo.cpp
 
-        src/cellmlmodelrepositorywindowplugin.cpp
-        src/cellmlmodelrepositorywindowwidget.cpp
-        src/cellmlmodelrepositorywindowwindow.cpp
+        src/physiomemodelrepositorywindowplugin.cpp
+        src/physiomemodelrepositorywindowwidget.cpp
+        src/physiomemodelrepositorywindowwindow.cpp
     HEADERS_MOC
-        src/cellmlmodelrepositorywindowplugin.h
-        src/cellmlmodelrepositorywindowwidget.h
-        src/cellmlmodelrepositorywindowwindow.h
+        src/physiomemodelrepositorywindowplugin.h
+        src/physiomemodelrepositorywindowwidget.h
+        src/physiomemodelrepositorywindowwindow.h
     UIS
-        src/cellmlmodelrepositorywindowwidget.ui
-        src/cellmlmodelrepositorywindowwindow.ui
+        src/physiomemodelrepositorywindowwidget.ui
+        src/physiomemodelrepositorywindowwindow.ui
     INCLUDE_DIRS
         src
     DEFINITIONS

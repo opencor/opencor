@@ -16,11 +16,11 @@ specific language governing permissions and limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// CellMLModelRepositoryWindow plugin
+// PhysiomeModelRepositoryWindow plugin
 //==============================================================================
 
-#ifndef CELLMLMODELREPOSITORYWINDOWPLUGIN_H
-#define CELLMLMODELREPOSITORYWINDOWPLUGIN_H
+#ifndef PHYSIOMEMODELREPOSITORYWINDOWPLUGIN_H
+#define PHYSIOMEMODELREPOSITORYWINDOWPLUGIN_H
 
 //==============================================================================
 
@@ -32,25 +32,26 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 namespace OpenCOR {
-namespace CellMLModelRepositoryWindow {
+namespace PhysiomeModelRepositoryWindow {
 
 //==============================================================================
 
-PLUGININFO_FUNC CellMLModelRepositoryWindowPluginInfo();
+PLUGININFO_FUNC PhysiomeModelRepositoryWindowPluginInfo();
 
 //==============================================================================
 
-class CellmlModelRepositoryWindowWindow;
+class PhysiomeModelRepositoryWindowWindow;
 
 //==============================================================================
 
-class CellMLModelRepositoryWindowPlugin : public QObject, public I18nInterface,
-                                          public PluginInterface,
-                                          public WindowInterface
+class PhysiomeModelRepositoryWindowPlugin : public QObject,
+                                            public I18nInterface,
+                                            public PluginInterface,
+                                            public WindowInterface
 {
     Q_OBJECT
 
-    Q_PLUGIN_METADATA(IID "OpenCOR.CellMLModelRepositoryWindowPlugin" FILE "cellmlmodelrepositorywindowplugin.json")
+    Q_PLUGIN_METADATA(IID "OpenCOR.PhysiomeModelRepositoryWindowPlugin" FILE "physiomemodelrepositorywindowplugin.json")
 
     Q_INTERFACES(OpenCOR::I18nInterface)
     Q_INTERFACES(OpenCOR::PluginInterface)
@@ -62,14 +63,14 @@ public:
 #include "windowinterface.inl"
 
 private:
-    QAction *mCellmlModelRepositoryWindowAction;
+    QAction *mPhysiomeModelRepositoryWindowAction;
 
-    CellmlModelRepositoryWindowWindow *mCellmlModelRepositoryWindowWindow;
+    PhysiomeModelRepositoryWindowWindow *mPhysiomeModelRepositoryWindowWindow;
 };
 
 //==============================================================================
 
-}   // namespace CellMLModelRepositoryWindow
+}   // namespace PhysiomeModelRepositoryWindow
 }   // namespace OpenCOR
 
 //==============================================================================

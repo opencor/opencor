@@ -2,59 +2,29 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="fr_FR" sourcelanguage="en_GB">
 <context>
-    <name>CellmlModelRepositoryWindowWidget</name>
+    <name>OpenCOR::PhysiomeModelRepositoryWindow::PhysiomeModelRepositoryWindowPlugin</name>
     <message>
-        <source>Copy</source>
-        <translation>Copier</translation>
+        <source>Physiome Model Repository</source>
+        <translation>Répertoire De Modèles Physiome</translation>
     </message>
     <message>
-        <source>Copy the URL to the clipboard</source>
-        <translation>Copier la sélection dans le presse-papier</translation>
-    </message>
-</context>
-<context>
-    <name>CellmlModelRepositoryWindowWindow</name>
-    <message>
-        <source>CellML Model Repository</source>
-        <translation>Répertoire de Modèles CellML</translation>
-    </message>
-    <message>
-        <source>Filter:</source>
-        <translation>Filtre :</translation>
-    </message>
-    <message>
-        <source>Refresh the list of CellML models</source>
-        <translation>Rafraîchir la liste de modèles CellML</translation>
-    </message>
-    <message>
-        <source>Refresh</source>
-        <translation>Rafraîchir</translation>
+        <source>Show/hide the Physiome Model Repository window</source>
+        <translation>Montrer/cacher la fenêtre du Répertoire de Modèles Physiome</translation>
     </message>
 </context>
 <context>
-    <name>OpenCOR::CellMLModelRepositoryWindow::CellMLModelRepositoryWindowPlugin</name>
+    <name>OpenCOR::PhysiomeModelRepositoryWindow::PhysiomeModelRepositoryWindowWidget</name>
     <message>
-        <source>CellML Model Repository</source>
-        <translation>Répertoire De Modèles CellML</translation>
+        <source>&lt;strong&gt;1&lt;/strong&gt; exposure was found:</source>
+        <translation>&lt;strong&gt;1&lt;/strong&gt; exposition a été trouvée :</translation>
     </message>
     <message>
-        <source>Show/hide the CellML Model Repository window</source>
-        <translation>Montrer/cacher la fenêtre du Répertoire de Modèles CellML</translation>
-    </message>
-</context>
-<context>
-    <name>OpenCOR::CellMLModelRepositoryWindow::CellmlModelRepositoryWindowWidget</name>
-    <message>
-        <source>&lt;strong&gt;1&lt;/strong&gt; CellML model was found:</source>
-        <translation>&lt;strong&gt;1&lt;/strong&gt; modèle CellML a été trouvé :</translation>
+        <source>&lt;strong&gt;%1&lt;/strong&gt; exposures were found:</source>
+        <translation>&lt;strong&gt;%1&lt;/strong&gt; expositions ont été trouvées :</translation>
     </message>
     <message>
-        <source>&lt;strong&gt;%1&lt;/strong&gt; CellML models were found:</source>
-        <translation>&lt;strong&gt;%1&lt;/strong&gt; modèles CellML ont été trouvés :</translation>
-    </message>
-    <message>
-        <source>No CellML model matches your criteria.</source>
-        <translation>Aucun modèle CellML ne correspond à votre critère.</translation>
+        <source>No exposure matches your criteria.</source>
+        <translation>Aucune exposition ne correspond à votre critère.</translation>
     </message>
     <message>
         <source>&lt;strong&gt;Error:&lt;/strong&gt; </source>
@@ -62,7 +32,7 @@
     </message>
 </context>
 <context>
-    <name>OpenCOR::CellMLModelRepositoryWindow::CellmlModelRepositoryWindowWindow</name>
+    <name>OpenCOR::PhysiomeModelRepositoryWindow::PhysiomeModelRepositoryWindowWindow</name>
     <message>
         <source>Bookmark URLs</source>
         <translation>URLs Bookmark</translation>
@@ -90,6 +60,36 @@
     <message>
         <source>Clone Workspace</source>
         <translation>Cloner Espace De Travail</translation>
+    </message>
+</context>
+<context>
+    <name>PhysiomeModelRepositoryWindowWidget</name>
+    <message>
+        <source>Copy</source>
+        <translation>Copier</translation>
+    </message>
+    <message>
+        <source>Copy the URL to the clipboard</source>
+        <translation>Copier la sélection dans le presse-papier</translation>
+    </message>
+</context>
+<context>
+    <name>PhysiomeModelRepositoryWindowWindow</name>
+    <message>
+        <source>Physiome Model Repository</source>
+        <translation>Répertoire de Modèles Physiome</translation>
+    </message>
+    <message>
+        <source>Filter:</source>
+        <translation>Filtre :</translation>
+    </message>
+    <message>
+        <source>Refresh the list of exposures</source>
+        <translation>Rafraîchir la liste d&quot;expositions</translation>
+    </message>
+    <message>
+        <source>Refresh</source>
+        <translation>Rafraîchir</translation>
     </message>
 </context>
 </TS>
