@@ -337,18 +337,18 @@ void CellmlModelRepositoryWindowWidget::showModelFiles(const QString &pUrl,
 
     int id = mModelUrlId.value(pUrl);
     QWebElement documentElement = page()->mainFrame()->documentElement();
-    QWebElement buttonElement = documentElement.findFirst(QString("img[id=model_%1]").arg(id));
+    QWebElement imgElement = documentElement.findFirst(QString("img[id=model_%1]").arg(id));
     QWebElement trElement = documentElement.findFirst(QString("tr[id=modelFiles_%1]").arg(id));
 
     if (pShow) {
-        buttonElement.removeClass("button");
-        buttonElement.addClass("downButton");
+        imgElement.removeClass("button");
+        imgElement.addClass("downButton");
 
         trElement.addClass("visible");
         trElement.setStyleProperty("display", "table-row");
     } else {
-        buttonElement.addClass("button");
-        buttonElement.removeClass("downButton");
+        imgElement.addClass("button");
+        imgElement.removeClass("downButton");
 
         trElement.removeClass("visible");
         trElement.setStyleProperty("display", "none");
