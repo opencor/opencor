@@ -631,10 +631,9 @@ bool SingleCellViewSimulationResults::createDataStore()
     // well as with constant, rate, state and algebraic variables
 
     try {
-        mDataStore = new CoreDataStore::CoreDataStore(simulationSize);
-
-        mDataStore->setModelId(mRuntime->cellmlFile()->cmetaId());
-        mDataStore->setModelUri(mRuntime->cellmlFile()->xmlBase());
+        mDataStore = new CoreDataStore::CoreDataStore(mRuntime->cellmlFile()->cmetaId(),
+                                                      mRuntime->cellmlFile()->xmlBase(),
+                                                      simulationSize);
 
         mPoints = mDataStore->addVoi();
         mConstants = mDataStore->addVariables(mRuntime->constantsCount(), mSimulation->data()->constants());
