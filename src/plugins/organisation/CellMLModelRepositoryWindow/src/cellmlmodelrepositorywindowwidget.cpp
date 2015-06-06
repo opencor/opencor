@@ -222,7 +222,7 @@ void CellmlModelRepositoryWindowWidget::initialize(const CellmlModelRepositoryWi
         QString modelName = pModels[i].name();
 
         modelsElement.appendInside( "<tr id=\"model_"+QString::number(i)+"\">\n"
-                                   +"    <td>\n"
+                                   +"    <td class=\"model\">\n"
                                    +"        <table class=\"fullWidth\">\n"
                                    +"            <tbody>\n"
                                    +"                <tr>\n"
@@ -242,16 +242,8 @@ void CellmlModelRepositoryWindowWidget::initialize(const CellmlModelRepositoryWi
                                    +"                </tr>\n"
                                    +"            </tbody>\n"
                                    +"        </table>\n"
-                                   +"    </td>\n"
-                                   +"</tr>\n"
-                                   +"<tr id=\"modelFiles_"+QString::number(i)+"\" style=\"display: none;\">\n"
-                                   +"    <td>\n"
-                                   +"        <ul id=\"modelFiles_"+QString::number(i)+"\">\n"
+                                   +"        <ul id=\"modelFiles_"+QString::number(i)+"\" style=\"display: none;\">\n"
                                    +"        </ul>\n"
-                                   +"    </td>\n"
-                                   +"</tr>\n"
-                                   +"<tr>\n"
-                                   +"    <td class=\"verticalSpace\">\n"
                                    +"    </td>\n"
                                    +"</tr>\n");
 
@@ -286,29 +278,24 @@ void CellmlModelRepositoryWindowWidget::filter(const QString &pFilter)
     //       consuming, hence we rely on mModelDisplayed to determine when we
     //       should change the display property of our elements...
 
-    QWebElement element = page()->mainFrame()->documentElement().findFirst(QString("tbody[id=models]")).firstChild();
+    QWebElement trElement = page()->mainFrame()->documentElement().findFirst(QString("tbody[id=models]")).firstChild();
+    QWebElement ulElement;
 
     for (int i = 0, iMax = mModelNames.count(); i < iMax; ++i) {
         if (mModelDisplayed[i] != filteredModelNames.contains(mModelNames[i])) {
             QString displayValue = mModelDisplayed[i]?"none":"table-row";
 
-            element.setStyleProperty("display", displayValue);
+            trElement.setStyleProperty("display", displayValue);
 
-            element = element.nextSibling();
+            ulElement = trElement.firstChild().firstChild().nextSibling();
 
-            if (element.hasClass("visible"))
-                element.setStyleProperty("display", displayValue);
-
-            element = element.nextSibling();
-
-            element.setStyleProperty("display", displayValue);
-
-            element = element.nextSibling();
+            if (ulElement.hasClass("visible"))
+                ulElement.setStyleProperty("display", displayValue);
 
             mModelDisplayed[i] = !mModelDisplayed[i];
-        } else {
-            element = element.nextSibling().nextSibling().nextSibling();
         }
+
+        trElement = trElement.nextSibling();
     }
 }
 
@@ -338,20 +325,20 @@ void CellmlModelRepositoryWindowWidget::showModelFiles(const QString &pUrl,
     int id = mModelUrlId.value(pUrl);
     QWebElement documentElement = page()->mainFrame()->documentElement();
     QWebElement imgElement = documentElement.findFirst(QString("img[id=model_%1]").arg(id));
-    QWebElement trElement = documentElement.findFirst(QString("tr[id=modelFiles_%1]").arg(id));
+    QWebElement ulElement = documentElement.findFirst(QString("ul[id=modelFiles_%1]").arg(id));
 
     if (pShow) {
         imgElement.removeClass("button");
         imgElement.addClass("downButton");
 
-        trElement.addClass("visible");
-        trElement.setStyleProperty("display", "table-row");
+        ulElement.addClass("visible");
+        ulElement.setStyleProperty("display", "table-row");
     } else {
         imgElement.addClass("button");
         imgElement.removeClass("downButton");
 
-        trElement.removeClass("visible");
-        trElement.setStyleProperty("display", "none");
+        ulElement.removeClass("visible");
+        ulElement.setStyleProperty("display", "none");
     }
 }
 
