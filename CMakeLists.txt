@@ -287,7 +287,7 @@ SET(PLUGINS
 
     miscellaneous/HelpWindow
 
-    organisation/CellMLModelRepositoryWindow
+    organisation/PhysiomeModelRepositoryWindow
     organisation/FileBrowserWindow
     organisation/FileOrganiserWindow
 
