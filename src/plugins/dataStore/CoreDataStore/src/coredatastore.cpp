@@ -159,7 +159,7 @@ void CoreDataStore::setValues(const qulonglong &pPosition, const double &pValue)
 
 QString CoreDataStore::modelId() const
 {
-    // Return our model's Id
+    // Return our model's id
 
     return mModelId;
 }
@@ -168,7 +168,7 @@ QString CoreDataStore::modelId() const
 
 void CoreDataStore::setModelId(const QString &pId)
 {
-    // Set our model's Id
+    // Set our model's id
 
     mModelId = pId;
 }
@@ -177,7 +177,7 @@ void CoreDataStore::setModelId(const QString &pId)
 
 QString CoreDataStore::modelUri() const
 {
-    // Return our model's Uri
+    // Return our model's URI
 
     return mModelUri;
 }
@@ -186,7 +186,7 @@ QString CoreDataStore::modelUri() const
 
 void CoreDataStore::setModelUri(const QString &pUri)
 {
-    // Set our model's Uri
+    // Set our model's URI
 
     mModelUri = pUri;
 }

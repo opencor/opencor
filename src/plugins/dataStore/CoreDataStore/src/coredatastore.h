@@ -61,6 +61,7 @@ public:
 
     QString modelId() const;
     void setModelId(const QString &pId);
+
     QString modelUri() const;
     void setModelUri(const QString &pUri);
 
