@@ -70,17 +70,17 @@ private:
 
     QNetworkAccessManager *mNetworkAccessManager;
 
-    int mNumberOfUntreatedSourceFiles;
+    int mNumberOfExposureFilesLeft;
 
     QMap<QString, QString> mWorkspaces;
-    QMap<QString, QString> mSourceFiles;
+    QMap<QString, QString> mExposureFiles;
 
     enum PmrRequest {
-        ModelList,
+        ExposuresList,
         BookmarkUrlsForCloning,
-        BookmarkUrlsForShowingFiles,
-        SourceFileForCloning,
-        SourceFileForShowingFiles
+        BookmarkUrlsForExposureFiles,
+        ExposureFileForCloning,
+        ExposureFileForExposureFiles
     };
 
     void busy(const bool &pBusy);
@@ -92,17 +92,17 @@ private:
     void cloneWorkspace(const QString &pWorkspace);
 
 private Q_SLOTS:
-    void on_filterValue_textChanged(const QString &text);
+    void on_filterValue_textChanged(const QString &pText);
     void on_refreshButton_clicked();
 
     void finished(QNetworkReply *pNetworkReply);
     void sslErrors(QNetworkReply *pNetworkReply,
                    const QList<QSslError> &pSslErrors);
 
-    void retrieveModelList(const bool &pVisible);
+    void retrieveExposuresList(const bool &pVisible);
 
-    void cloneModel(const QString &pUrl, const QString &pDescription);
-    void showModelFiles(const QString &pUrl, const QString &pDescription);
+    void cloneWorkspace(const QString &pUrl, const QString &pDescription);
+    void showExposureFiles(const QString &pUrl, const QString &pDescription);
 };
 
 //==============================================================================

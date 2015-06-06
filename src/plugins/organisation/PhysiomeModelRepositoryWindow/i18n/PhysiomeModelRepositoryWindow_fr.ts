@@ -15,16 +15,16 @@
 <context>
     <name>OpenCOR::PhysiomeModelRepositoryWindow::PhysiomeModelRepositoryWindowWidget</name>
     <message>
-        <source>&lt;strong&gt;1&lt;/strong&gt; Physiome model was found:</source>
-        <translation>&lt;strong&gt;1&lt;/strong&gt; modèle Physiome a été trouvé :</translation>
+        <source>&lt;strong&gt;1&lt;/strong&gt; Physiome exposure was found:</source>
+        <translation>&lt;strong&gt;1&lt;/strong&gt; exposition Physiome a été trouvée :</translation>
     </message>
     <message>
-        <source>&lt;strong&gt;%1&lt;/strong&gt; Physiome models were found:</source>
-        <translation>&lt;strong&gt;%1&lt;/strong&gt; modèles Physiome ont été trouvés :</translation>
+        <source>&lt;strong&gt;%1&lt;/strong&gt; Physiome exposures were found:</source>
+        <translation>&lt;strong&gt;%1&lt;/strong&gt; expositions Physiome ont été trouvées :</translation>
     </message>
     <message>
-        <source>No Physiome model matches your criteria.</source>
-        <translation>Aucun modèle Physiome ne correspond à votre critère.</translation>
+        <source>No Physiome exposure matches your criteria.</source>
+        <translation>Aucune exposition Physiome ne correspond à votre critère.</translation>
     </message>
     <message>
         <source>&lt;strong&gt;Error:&lt;/strong&gt; </source>
@@ -84,8 +84,8 @@
         <translation>Filtre :</translation>
     </message>
     <message>
-        <source>Refresh the list of Physiome models</source>
-        <translation>Rafraîchir la liste de modèles Physiome</translation>
+        <source>Refresh the list of Physiome exposures</source>
+        <translation>Rafraîchir la liste d&quot;expositions Physiome</translation>
     </message>
     <message>
         <source>Refresh</source>

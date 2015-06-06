@@ -45,11 +45,11 @@ namespace PhysiomeModelRepositoryWindow {
 
 //==============================================================================
 
-class PhysiomeModelRepositoryWindowModel
+class PhysiomeModelRepositoryWindowExposure
 {
 public:
-    explicit PhysiomeModelRepositoryWindowModel(const QString &pUrl,
-                                                const QString &pName);
+    explicit PhysiomeModelRepositoryWindowExposure(const QString &pUrl,
+                                                   const QString &pName);
 
     QString url() const;
     QString name() const;
@@ -61,7 +61,7 @@ private:
 
 //==============================================================================
 
-typedef QList<PhysiomeModelRepositoryWindowModel> PhysiomeModelRepositoryWindowModels;
+typedef QList<PhysiomeModelRepositoryWindowExposure> PhysiomeModelRepositoryWindowExposures;
 
 //==============================================================================
 
@@ -76,13 +76,14 @@ public:
 
     virtual void retranslateUi();
 
-    void initialize(const PhysiomeModelRepositoryWindowModels &pModels,
+    void initialize(const PhysiomeModelRepositoryWindowExposures &pModels,
                     const QString &pErrorMessage);
 
     void filter(const QString &pFilter);
 
-    void addModelFiles(const QString &pUrl, const QStringList &pSourceFiles);
-    void showModelFiles(const QString &pUrl, const bool &pShow = true);
+    void addExposureFiles(const QString &pUrl,
+                          const QStringList &pExposureFiles);
+    void showExposureFiles(const QString &pUrl, const bool &pShow = true);
 
 protected:
     virtual QSize sizeHint() const;
@@ -96,21 +97,21 @@ private:
 
     QString mOutputTemplate;
 
-    QStringList mModelNames;
-    QBoolList mModelDisplayed;
-    QMap<QString, int> mModelUrlId;
+    QStringList mExposureNames;
+    QBoolList mExposureDisplayed;
+    QMap<QString, int> mExposureUrlId;
 
     QString mErrorMessage;
 
-    int mNumberOfFilteredModels;
+    int mNumberOfFilteredExposures;
 
-    QString mUrl;
+    QString mExposureUrl;
 
 Q_SIGNALS:
-    void cloneModel(const QString &pUrl, const QString &pDescription);
-    void showModelFiles(const QString &pUrl, const QString &pDescription);
+    void cloneWorkspace(const QString &pUrl, const QString &pDescription);
+    void showExposureFiles(const QString &pUrl, const QString &pDescription);
 
-    void modelFileOpenRequested(const QString &pUrl);
+    void exposureFileOpenRequested(const QString &pUrl);
 
 private Q_SLOTS:
     void on_actionCopy_triggered();

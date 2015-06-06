@@ -19,9 +19,9 @@ specific language governing permissions and limitations under the License.
 // PhysiomeModelRepositoryWindow plugin
 //==============================================================================
 
+#include "coreguiutils.h"
 #include "physiomemodelrepositorywindowplugin.h"
 #include "physiomemodelrepositorywindowwindow.h"
-#include "coreguiutils.h"
 
 //==============================================================================
 
@@ -57,13 +57,13 @@ PLUGININFO_FUNC PhysiomeModelRepositoryWindowPluginInfo()
 
 void PhysiomeModelRepositoryWindowPlugin::retranslateUi()
 {
-    // Retranslate our Physiome Model Repository window action
+    // Retranslate our PMR window action
 
     retranslateAction(mPhysiomeModelRepositoryWindowAction,
                       tr("Physiome Model Repository"),
                       tr("Show/hide the Physiome Model Repository window"));
 
-    // Retranslate our Physiome Model Repository window
+    // Retranslate our PMR window
 
     mPhysiomeModelRepositoryWindowWindow->retranslateUi();
 }
@@ -74,11 +74,11 @@ void PhysiomeModelRepositoryWindowPlugin::retranslateUi()
 
 void PhysiomeModelRepositoryWindowPlugin::initializePlugin(QMainWindow *pMainWindow)
 {
-    // Create an action to show/hide our Physiome Model Repository window
+    // Create an action to show/hide our PMR window
 
     mPhysiomeModelRepositoryWindowAction = Core::newAction(true, pMainWindow);
 
-    // Create our Physiome Model Repository window
+    // Create our PMR window
 
     mPhysiomeModelRepositoryWindowWindow = new PhysiomeModelRepositoryWindowWindow(pMainWindow);
 }
@@ -103,7 +103,7 @@ void PhysiomeModelRepositoryWindowPlugin::pluginsInitialized(const Plugins &pLoa
 
 void PhysiomeModelRepositoryWindowPlugin::loadSettings(QSettings *pSettings)
 {
-    // Retrieve our Physiome Model Repository window settings
+    // Retrieve our PMR window settings
 
     pSettings->beginGroup(mPhysiomeModelRepositoryWindowWindow->objectName());
         mPhysiomeModelRepositoryWindowWindow->loadSettings(pSettings);
@@ -114,7 +114,7 @@ void PhysiomeModelRepositoryWindowPlugin::loadSettings(QSettings *pSettings)
 
 void PhysiomeModelRepositoryWindowPlugin::saveSettings(QSettings *pSettings) const
 {
-    // Keep track of our Physiome Model Repository window settings
+    // Keep track of our PMR window settings
 
     pSettings->beginGroup(mPhysiomeModelRepositoryWindowWindow->objectName());
         mPhysiomeModelRepositoryWindowWindow->saveSettings(pSettings);
