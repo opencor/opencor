@@ -16,11 +16,11 @@ specific language governing permissions and limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// CellMLModelRepositoryWindow plugin
+// PhysiomeModelRepositoryWindow plugin
 //==============================================================================
 
-#include "cellmlmodelrepositorywindowplugin.h"
-#include "cellmlmodelrepositorywindowwindow.h"
+#include "physiomemodelrepositorywindowplugin.h"
+#include "physiomemodelrepositorywindowwindow.h"
 #include "coreguiutils.h"
 
 //==============================================================================
@@ -35,16 +35,16 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 namespace OpenCOR {
-namespace CellMLModelRepositoryWindow {
+namespace PhysiomeModelRepositoryWindow {
 
 //==============================================================================
 
-PLUGININFO_FUNC CellMLModelRepositoryWindowPluginInfo()
+PLUGININFO_FUNC PhysiomeModelRepositoryWindowPluginInfo()
 {
     Descriptions descriptions;
 
-    descriptions.insert("en", QString::fromUtf8("a plugin to access the <a href=\"http://models.physiomeproject.org/cellml/\">CellML Model Repository</a>."));
-    descriptions.insert("fr", QString::fromUtf8("une extension pour accéder au <a href=\"http://models.physiomeproject.org/cellml/\">Répertoire de Modèles CellML</a>."));
+    descriptions.insert("en", QString::fromUtf8("a plugin to access the <a href=\"https://models.physiomeproject.org/\">Physiome Model Repository</a>."));
+    descriptions.insert("fr", QString::fromUtf8("une extension pour accéder au <a href=\"https://models.physiomeproject.org/\">Répertoire de Modèles Physiome</a>."));
 
     return new PluginInfo(PluginInfo::Organisation, true, false,
                           QStringList() << "Core" << "libgit2",
@@ -55,44 +55,44 @@ PLUGININFO_FUNC CellMLModelRepositoryWindowPluginInfo()
 // I18n interface
 //==============================================================================
 
-void CellMLModelRepositoryWindowPlugin::retranslateUi()
+void PhysiomeModelRepositoryWindowPlugin::retranslateUi()
 {
-    // Retranslate our CellML Model Repository window action
+    // Retranslate our Physiome Model Repository window action
 
-    retranslateAction(mCellmlModelRepositoryWindowAction,
-                      tr("CellML Model Repository"),
-                      tr("Show/hide the CellML Model Repository window"));
+    retranslateAction(mPhysiomeModelRepositoryWindowAction,
+                      tr("Physiome Model Repository"),
+                      tr("Show/hide the Physiome Model Repository window"));
 
-    // Retranslate our CellML Model Repository window
+    // Retranslate our Physiome Model Repository window
 
-    mCellmlModelRepositoryWindowWindow->retranslateUi();
+    mPhysiomeModelRepositoryWindowWindow->retranslateUi();
 }
 
 //==============================================================================
 // Plugin interface
 //==============================================================================
 
-void CellMLModelRepositoryWindowPlugin::initializePlugin(QMainWindow *pMainWindow)
+void PhysiomeModelRepositoryWindowPlugin::initializePlugin(QMainWindow *pMainWindow)
 {
-    // Create an action to show/hide our CellML Model Repository window
+    // Create an action to show/hide our Physiome Model Repository window
 
-    mCellmlModelRepositoryWindowAction = Core::newAction(true, pMainWindow);
+    mPhysiomeModelRepositoryWindowAction = Core::newAction(true, pMainWindow);
 
-    // Create our CellML Model Repository window
+    // Create our Physiome Model Repository window
 
-    mCellmlModelRepositoryWindowWindow = new CellmlModelRepositoryWindowWindow(pMainWindow);
+    mPhysiomeModelRepositoryWindowWindow = new PhysiomeModelRepositoryWindowWindow(pMainWindow);
 }
 
 //==============================================================================
 
-void CellMLModelRepositoryWindowPlugin::finalizePlugin()
+void PhysiomeModelRepositoryWindowPlugin::finalizePlugin()
 {
     // We don't handle this interface...
 }
 
 //==============================================================================
 
-void CellMLModelRepositoryWindowPlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
+void PhysiomeModelRepositoryWindowPlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
 {
     Q_UNUSED(pLoadedPlugins);
 
@@ -101,29 +101,29 @@ void CellMLModelRepositoryWindowPlugin::pluginsInitialized(const Plugins &pLoade
 
 //==============================================================================
 
-void CellMLModelRepositoryWindowPlugin::loadSettings(QSettings *pSettings)
+void PhysiomeModelRepositoryWindowPlugin::loadSettings(QSettings *pSettings)
 {
-    // Retrieve our CellML Model Repository window settings
+    // Retrieve our Physiome Model Repository window settings
 
-    pSettings->beginGroup(mCellmlModelRepositoryWindowWindow->objectName());
-        mCellmlModelRepositoryWindowWindow->loadSettings(pSettings);
+    pSettings->beginGroup(mPhysiomeModelRepositoryWindowWindow->objectName());
+        mPhysiomeModelRepositoryWindowWindow->loadSettings(pSettings);
     pSettings->endGroup();
 }
 
 //==============================================================================
 
-void CellMLModelRepositoryWindowPlugin::saveSettings(QSettings *pSettings) const
+void PhysiomeModelRepositoryWindowPlugin::saveSettings(QSettings *pSettings) const
 {
-    // Keep track of our CellML Model Repository window settings
+    // Keep track of our Physiome Model Repository window settings
 
-    pSettings->beginGroup(mCellmlModelRepositoryWindowWindow->objectName());
-        mCellmlModelRepositoryWindowWindow->saveSettings(pSettings);
+    pSettings->beginGroup(mPhysiomeModelRepositoryWindowWindow->objectName());
+        mPhysiomeModelRepositoryWindowWindow->saveSettings(pSettings);
     pSettings->endGroup();
 }
 
 //==============================================================================
 
-void CellMLModelRepositoryWindowPlugin::handleAction(const QUrl &pUrl)
+void PhysiomeModelRepositoryWindowPlugin::handleAction(const QUrl &pUrl)
 {
     Q_UNUSED(pUrl);
 
@@ -134,7 +134,7 @@ void CellMLModelRepositoryWindowPlugin::handleAction(const QUrl &pUrl)
 // Window interface
 //==============================================================================
 
-Qt::DockWidgetArea CellMLModelRepositoryWindowPlugin::windowDefaultDockArea() const
+Qt::DockWidgetArea PhysiomeModelRepositoryWindowPlugin::windowDefaultDockArea() const
 {
     // Return our default dock area
 
@@ -143,25 +143,25 @@ Qt::DockWidgetArea CellMLModelRepositoryWindowPlugin::windowDefaultDockArea() co
 
 //==============================================================================
 
-QAction * CellMLModelRepositoryWindowPlugin::windowAction() const
+QAction * PhysiomeModelRepositoryWindowPlugin::windowAction() const
 {
     // Return our window action
 
-    return mCellmlModelRepositoryWindowAction;
+    return mPhysiomeModelRepositoryWindowAction;
 }
 
 //==============================================================================
 
-QDockWidget * CellMLModelRepositoryWindowPlugin::windowWidget() const
+QDockWidget * PhysiomeModelRepositoryWindowPlugin::windowWidget() const
 {
     // Return our window widget
 
-    return mCellmlModelRepositoryWindowWindow;
+    return mPhysiomeModelRepositoryWindowWindow;
 }
 
 //==============================================================================
 
-}   // namespace CellMLModelRepositoryWindow
+}   // namespace PhysiomeModelRepositoryWindow
 }   // namespace OpenCOR
 
 //==============================================================================

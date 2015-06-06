@@ -16,15 +16,15 @@ specific language governing permissions and limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// CellML Model Repository widget
+// Physiome Model Repository widget
 //==============================================================================
 
-#include "cellmlmodelrepositorywindowwidget.h"
+#include "physiomemodelrepositorywindowwidget.h"
 #include "coreguiutils.h"
 
 //==============================================================================
 
-#include "ui_cellmlmodelrepositorywindowwidget.h"
+#include "ui_physiomemodelrepositorywindowwidget.h"
 
 //==============================================================================
 
@@ -40,12 +40,12 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 namespace OpenCOR {
-namespace CellMLModelRepositoryWindow {
+namespace PhysiomeModelRepositoryWindow {
 
 //==============================================================================
 
-CellmlModelRepositoryWindowModel::CellmlModelRepositoryWindowModel(const QString &pUrl,
-                                                                   const QString &pName) :
+PhysiomeModelRepositoryWindowModel::PhysiomeModelRepositoryWindowModel(const QString &pUrl,
+                                                                       const QString &pName) :
     mUrl(pUrl),
     mName(pName)
 {
@@ -53,7 +53,7 @@ CellmlModelRepositoryWindowModel::CellmlModelRepositoryWindowModel(const QString
 
 //==============================================================================
 
-QString CellmlModelRepositoryWindowModel::url() const
+QString PhysiomeModelRepositoryWindowModel::url() const
 {
     // Return our URL
 
@@ -62,7 +62,7 @@ QString CellmlModelRepositoryWindowModel::url() const
 
 //==============================================================================
 
-QString CellmlModelRepositoryWindowModel::name() const
+QString PhysiomeModelRepositoryWindowModel::name() const
 {
     // Return our name
 
@@ -71,10 +71,10 @@ QString CellmlModelRepositoryWindowModel::name() const
 
 //==============================================================================
 
-CellmlModelRepositoryWindowWidget::CellmlModelRepositoryWindowWidget(QWidget *pParent) :
+PhysiomeModelRepositoryWindowWidget::PhysiomeModelRepositoryWindowWidget(QWidget *pParent) :
     Core::WebViewWidget(pParent),
     Core::CommonWidget(pParent),
-    mGui(new Ui::CellmlModelRepositoryWindowWidget),
+    mGui(new Ui::PhysiomeModelRepositoryWindowWidget),
     mModelNames(QStringList()),
     mModelDisplayed(QBoolList()),
     mModelUrlId(QMap<QString, int>()),
@@ -133,7 +133,7 @@ CellmlModelRepositoryWindowWidget::CellmlModelRepositoryWindowWidget(QWidget *pP
 
 //==============================================================================
 
-CellmlModelRepositoryWindowWidget::~CellmlModelRepositoryWindowWidget()
+PhysiomeModelRepositoryWindowWidget::~PhysiomeModelRepositoryWindowWidget()
 {
     // Delete the GUI
 
@@ -142,7 +142,7 @@ CellmlModelRepositoryWindowWidget::~CellmlModelRepositoryWindowWidget()
 
 //==============================================================================
 
-void CellmlModelRepositoryWindowWidget::retranslateUi()
+void PhysiomeModelRepositoryWindowWidget::retranslateUi()
 {
     // Retranslate our message
 
@@ -153,11 +153,11 @@ void CellmlModelRepositoryWindowWidget::retranslateUi()
             if (mModelNames.isEmpty())
                 messageElement.removeAllChildren();
             else
-                messageElement.setInnerXml(tr("No CellML model matches your criteria."));
+                messageElement.setInnerXml(tr("No Physiome model matches your criteria."));
         } else if (mNumberOfFilteredModels == 1) {
-            messageElement.setInnerXml(tr("<strong>1</strong> CellML model was found:"));
+            messageElement.setInnerXml(tr("<strong>1</strong> Physiome model was found:"));
         } else {
-            messageElement.setInnerXml(tr("<strong>%1</strong> CellML models were found:").arg(mNumberOfFilteredModels));
+            messageElement.setInnerXml(tr("<strong>%1</strong> Physiome models were found:").arg(mNumberOfFilteredModels));
         }
     } else {
         messageElement.setInnerXml(tr("<strong>Error:</strong> ")+Core::formatMessage(mErrorMessage, true, true));
@@ -166,10 +166,10 @@ void CellmlModelRepositoryWindowWidget::retranslateUi()
 
 //==============================================================================
 
-QSize CellmlModelRepositoryWindowWidget::sizeHint() const
+QSize PhysiomeModelRepositoryWindowWidget::sizeHint() const
 {
-    // Suggest a default size for the CellML Model Repository widget
-    // Note: this is critical if we want a docked widget, with a CellML Model
+    // Suggest a default size for our Physiome Model Repository widget
+    // Note: this is critical if we want a docked widget, with a Physiome Model
     //       Repository widget on it, to have a decent size when docked to the
     //       main window...
 
@@ -178,7 +178,7 @@ QSize CellmlModelRepositoryWindowWidget::sizeHint() const
 
 //==============================================================================
 
-void CellmlModelRepositoryWindowWidget::paintEvent(QPaintEvent *pEvent)
+void PhysiomeModelRepositoryWindowWidget::paintEvent(QPaintEvent *pEvent)
 {
     // Default handling of the event
 
@@ -200,8 +200,8 @@ void CellmlModelRepositoryWindowWidget::paintEvent(QPaintEvent *pEvent)
 
 //==============================================================================
 
-void CellmlModelRepositoryWindowWidget::initialize(const CellmlModelRepositoryWindowModels &pModels,
-                                                   const QString &pErrorMessage)
+void PhysiomeModelRepositoryWindowWidget::initialize(const PhysiomeModelRepositoryWindowModels &pModels,
+                                                     const QString &pErrorMessage)
 {
     // Initialise / keep track of some properties
 
@@ -255,7 +255,7 @@ void CellmlModelRepositoryWindowWidget::initialize(const CellmlModelRepositoryWi
 
 //==============================================================================
 
-void CellmlModelRepositoryWindowWidget::filter(const QString &pFilter)
+void PhysiomeModelRepositoryWindowWidget::filter(const QString &pFilter)
 {
     // Make sure that we have something to filter (i.e. no error message)
 
@@ -301,8 +301,8 @@ void CellmlModelRepositoryWindowWidget::filter(const QString &pFilter)
 
 //==============================================================================
 
-void CellmlModelRepositoryWindowWidget::addModelFiles(const QString &pUrl,
-                                                      const QStringList &pSourceFiles)
+void PhysiomeModelRepositoryWindowWidget::addModelFiles(const QString &pUrl,
+                                                        const QStringList &pSourceFiles)
 {
     // Add the given files to the model
 
@@ -317,8 +317,8 @@ void CellmlModelRepositoryWindowWidget::addModelFiles(const QString &pUrl,
 
 //==============================================================================
 
-void CellmlModelRepositoryWindowWidget::showModelFiles(const QString &pUrl,
-                                                       const bool &pShow)
+void PhysiomeModelRepositoryWindowWidget::showModelFiles(const QString &pUrl,
+                                                         const bool &pShow)
 {
     // Show the files for the given model
 
@@ -344,7 +344,7 @@ void CellmlModelRepositoryWindowWidget::showModelFiles(const QString &pUrl,
 
 //==============================================================================
 
-void CellmlModelRepositoryWindowWidget::on_actionCopy_triggered()
+void PhysiomeModelRepositoryWindowWidget::on_actionCopy_triggered()
 {
     // Copy the URL of the model to the clipboard
 
@@ -353,7 +353,7 @@ void CellmlModelRepositoryWindowWidget::on_actionCopy_triggered()
 
 //==============================================================================
 
-void CellmlModelRepositoryWindowWidget::linkClicked()
+void PhysiomeModelRepositoryWindowWidget::linkClicked()
 {
     // Retrieve some information about the link
 
@@ -402,7 +402,7 @@ void CellmlModelRepositoryWindowWidget::linkClicked()
 
 //==============================================================================
 
-void CellmlModelRepositoryWindowWidget::showCustomContextMenu()
+void PhysiomeModelRepositoryWindowWidget::showCustomContextMenu()
 {
     // Retrieve some information about the link, if any
 
@@ -420,7 +420,7 @@ void CellmlModelRepositoryWindowWidget::showCustomContextMenu()
 
 //==============================================================================
 
-}   // namespace CellMLModelRepositoryWindow
+}   // namespace PhysiomeModelRepositoryWindow
 }   // namespace OpenCOR
 
 //==============================================================================

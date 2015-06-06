@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>CellmlModelRepositoryWindowWindow</class>
- <widget class="QDockWidget" name="CellmlModelRepositoryWindowWindow">
+ <class>PhysiomeModelRepositoryWindowWindow</class>
+ <widget class="QDockWidget" name="PhysiomeModelRepositoryWindowWindow">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>CellML Model Repository</string>
+   <string>Physiome Model Repository</string>
   </property>
   <widget class="QWidget" name="dockWidgetContents">
    <layout class="QVBoxLayout" name="layout">
@@ -51,13 +51,13 @@
          <string>Refresh</string>
         </property>
         <property name="statusTip">
-         <string>Refresh the list of CellML models</string>
+         <string>Refresh the list of Physiome models</string>
         </property>
         <property name="text">
          <string/>
         </property>
         <property name="icon">
-         <iconset resource="../res/CellMLModelRepositoryWindow.qrc">
+         <iconset resource="../res/PhysiomeModelRepositoryWindow.qrc">
           <normaloff>:/oxygen/actions/view-refresh.png</normaloff>:/oxygen/actions/view-refresh.png</iconset>
         </property>
         <property name="iconSize">
@@ -74,7 +74,7 @@
   </widget>
  </widget>
  <resources>
-  <include location="../res/CellMLModelRepositoryWindow.qrc"/>
+  <include location="../res/PhysiomeModelRepositoryWindow.qrc"/>
  </resources>
  <connections/>
 </ui>

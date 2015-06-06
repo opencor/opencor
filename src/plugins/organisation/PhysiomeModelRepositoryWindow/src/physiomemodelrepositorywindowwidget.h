@@ -16,11 +16,11 @@ specific language governing permissions and limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// CellML Model Repository widget
+// Physiome Model Repository widget
 //==============================================================================
 
-#ifndef CELLMLMODELREPOSITORYWINDOWWIDGET_H
-#define CELLMLMODELREPOSITORYWINDOWWIDGET_H
+#ifndef PHYSIOMEMODELREPOSITORYWINDOWWIDGET_H
+#define PHYSIOMEMODELREPOSITORYWINDOWWIDGET_H
 
 //==============================================================================
 
@@ -31,7 +31,7 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 namespace Ui {
-    class CellmlModelRepositoryWindowWidget;
+    class PhysiomeModelRepositoryWindowWidget;
 }
 
 //==============================================================================
@@ -41,15 +41,15 @@ class QMenu;
 //==============================================================================
 
 namespace OpenCOR {
-namespace CellMLModelRepositoryWindow {
+namespace PhysiomeModelRepositoryWindow {
 
 //==============================================================================
 
-class CellmlModelRepositoryWindowModel
+class PhysiomeModelRepositoryWindowModel
 {
 public:
-    explicit CellmlModelRepositoryWindowModel(const QString &pUrl,
-                                              const QString &pName);
+    explicit PhysiomeModelRepositoryWindowModel(const QString &pUrl,
+                                                const QString &pName);
 
     QString url() const;
     QString name() const;
@@ -61,22 +61,22 @@ private:
 
 //==============================================================================
 
-typedef QList<CellmlModelRepositoryWindowModel> CellmlModelRepositoryWindowModels;
+typedef QList<PhysiomeModelRepositoryWindowModel> PhysiomeModelRepositoryWindowModels;
 
 //==============================================================================
 
-class CellmlModelRepositoryWindowWidget : public Core::WebViewWidget,
-                                          public Core::CommonWidget
+class PhysiomeModelRepositoryWindowWidget : public Core::WebViewWidget,
+                                            public Core::CommonWidget
 {
     Q_OBJECT
 
 public:
-    explicit CellmlModelRepositoryWindowWidget(QWidget *pParent);
-    ~CellmlModelRepositoryWindowWidget();
+    explicit PhysiomeModelRepositoryWindowWidget(QWidget *pParent);
+    ~PhysiomeModelRepositoryWindowWidget();
 
     virtual void retranslateUi();
 
-    void initialize(const CellmlModelRepositoryWindowModels &pModels,
+    void initialize(const PhysiomeModelRepositoryWindowModels &pModels,
                     const QString &pErrorMessage);
 
     void filter(const QString &pFilter);
@@ -90,7 +90,7 @@ protected:
     virtual void paintEvent(QPaintEvent *pEvent);
 
 private:
-    Ui::CellmlModelRepositoryWindowWidget *mGui;
+    Ui::PhysiomeModelRepositoryWindowWidget *mGui;
 
     QMenu *mContextMenu;
 
@@ -122,7 +122,7 @@ private Q_SLOTS:
 
 //==============================================================================
 
-}   // namespace CellMLModelRepositoryWindow
+}   // namespace PhysiomeModelRepositoryWindow
 }   // namespace OpenCOR
 
 //==============================================================================

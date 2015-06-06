@@ -16,17 +16,17 @@ specific language governing permissions and limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// CellML Model Repository window
+// Physiome Model Repository window
 //==============================================================================
 
-#include "cellmlmodelrepositorywindowwindow.h"
-#include "cellmlmodelrepositorywindowwidget.h"
+#include "physiomemodelrepositorywindowwindow.h"
+#include "physiomemodelrepositorywindowwidget.h"
 #include "corecliutils.h"
 #include "coreguiutils.h"
 
 //==============================================================================
 
-#include "ui_cellmlmodelrepositorywindowwindow.h"
+#include "ui_physiomemodelrepositorywindowwindow.h"
 
 //==============================================================================
 
@@ -48,13 +48,13 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 namespace OpenCOR {
-namespace CellMLModelRepositoryWindow {
+namespace PhysiomeModelRepositoryWindow {
 
 //==============================================================================
 
-CellmlModelRepositoryWindowWindow::CellmlModelRepositoryWindowWindow(QWidget *pParent) :
+PhysiomeModelRepositoryWindowWindow::PhysiomeModelRepositoryWindowWindow(QWidget *pParent) :
     Core::OrganisationWidget(pParent),
-    mGui(new Ui::CellmlModelRepositoryWindowWindow),
+    mGui(new Ui::PhysiomeModelRepositoryWindowWindow),
     mNumberOfUntreatedSourceFiles(0),
     mWorkspaces(QMap<QString, QString>()),
     mSourceFiles(QMap<QString, QString>())
@@ -73,11 +73,11 @@ CellmlModelRepositoryWindowWindow::CellmlModelRepositoryWindowWindow(QWidget *pP
 
     setFocusProxy(mGui->filterValue);
 
-    // Create and add the CellML Model Repository widget
+    // Create and add the Physiome Model Repository widget
 
-    mCellmlModelRepositoryWidget = new CellmlModelRepositoryWindowWidget(this);
+    mPhysiomeModelRepositoryWidget = new PhysiomeModelRepositoryWindowWidget(this);
 
-    mGui->dockWidgetContents->layout()->addWidget(mCellmlModelRepositoryWidget);
+    mGui->dockWidgetContents->layout()->addWidget(mPhysiomeModelRepositoryWidget);
 
     // Keep track of the window's visibility, so that we can request the list of
     // models, if necessary
@@ -86,7 +86,7 @@ CellmlModelRepositoryWindowWindow::CellmlModelRepositoryWindowWindow(QWidget *pP
             this, SLOT(retrieveModelList(const bool &)));
 
     // Create a network access manager so that we can then retrieve a list of
-    // CellML models from the CellML Model Repository
+    // Physiome models from the Physiome Model Repository
 
     mNetworkAccessManager = new QNetworkAccessManager(this);
 
@@ -99,21 +99,21 @@ CellmlModelRepositoryWindowWindow::CellmlModelRepositoryWindowWindow(QWidget *pP
     connect(mNetworkAccessManager, SIGNAL(sslErrors(QNetworkReply *, const QList<QSslError> &)),
             this, SLOT(sslErrors(QNetworkReply *, const QList<QSslError> &)));
 
-    // Some connections to know what our CellML Model Repository widget wants
+    // Some connections to know what our Physiome Model Repository widget wants
     // from us
 
-    connect(mCellmlModelRepositoryWidget, SIGNAL(cloneModel(const QString &, const QString &)),
+    connect(mPhysiomeModelRepositoryWidget, SIGNAL(cloneModel(const QString &, const QString &)),
             this, SLOT(cloneModel(const QString &, const QString &)));
-    connect(mCellmlModelRepositoryWidget, SIGNAL(showModelFiles(const QString &, const QString &)),
+    connect(mPhysiomeModelRepositoryWidget, SIGNAL(showModelFiles(const QString &, const QString &)),
             this, SLOT(showModelFiles(const QString &, const QString &)));
 
-    connect(mCellmlModelRepositoryWidget, SIGNAL(modelFileOpenRequested(const QString &)),
+    connect(mPhysiomeModelRepositoryWidget, SIGNAL(modelFileOpenRequested(const QString &)),
             this, SLOT(openFile(const QString &)));
 }
 
 //==============================================================================
 
-CellmlModelRepositoryWindowWindow::~CellmlModelRepositoryWindowWindow()
+PhysiomeModelRepositoryWindowWindow::~PhysiomeModelRepositoryWindowWindow()
 {
     // Delete the GUI
 
@@ -122,25 +122,25 @@ CellmlModelRepositoryWindowWindow::~CellmlModelRepositoryWindowWindow()
 
 //==============================================================================
 
-void CellmlModelRepositoryWindowWindow::retranslateUi()
+void PhysiomeModelRepositoryWindowWindow::retranslateUi()
 {
     // Retranslate the whole window
 
     mGui->retranslateUi(this);
 
-    // Retranslate our CellML Model Repository widget
+    // Retranslate our Physiome Model Repository widget
 
-    mCellmlModelRepositoryWidget->retranslateUi();
+    mPhysiomeModelRepositoryWidget->retranslateUi();
 }
 
 //==============================================================================
 
-void CellmlModelRepositoryWindowWindow::busy(const bool &pBusy)
+void PhysiomeModelRepositoryWindowWindow::busy(const bool &pBusy)
 {
     // Show ourselves as busy or not busy anymore
 
     if (pBusy) {
-        showBusyWidget(mCellmlModelRepositoryWidget);
+        showBusyWidget(mPhysiomeModelRepositoryWidget);
 
         mGui->dockWidgetContents->setEnabled(false);
     } else {
@@ -163,9 +163,9 @@ static const char *ExtraProperty      = "Extra";
 
 //==============================================================================
 
-void CellmlModelRepositoryWindowWindow::sendPmrRequest(const PmrRequest &pPmrRequest,
-                                                       const QString &pUrl,
-                                                       const QString &pExtra)
+void PhysiomeModelRepositoryWindowWindow::sendPmrRequest(const PmrRequest &pPmrRequest,
+                                                         const QString &pUrl,
+                                                         const QString &pExtra)
 {
     // Let the user know that we are busy
 
@@ -199,7 +199,7 @@ void CellmlModelRepositoryWindowWindow::sendPmrRequest(const PmrRequest &pPmrReq
 
 //==============================================================================
 
-void CellmlModelRepositoryWindowWindow::cloneWorkspace(const QString &pWorkspace)
+void PhysiomeModelRepositoryWindowWindow::cloneWorkspace(const QString &pWorkspace)
 {
     // Retrieve the name of an empty directory
 
@@ -239,31 +239,31 @@ void CellmlModelRepositoryWindowWindow::cloneWorkspace(const QString &pWorkspace
 
 //==============================================================================
 
-void CellmlModelRepositoryWindowWindow::on_filterValue_textChanged(const QString &text)
+void PhysiomeModelRepositoryWindowWindow::on_filterValue_textChanged(const QString &text)
 {
-    // Ask our CellML Model Repository widget to filter its output
+    // Ask our Physiome Model Repository widget to filter its output
 
-    mCellmlModelRepositoryWidget->filter(text);
+    mPhysiomeModelRepositoryWidget->filter(text);
 }
 
 //==============================================================================
 
-void CellmlModelRepositoryWindowWindow::on_refreshButton_clicked()
+void PhysiomeModelRepositoryWindowWindow::on_refreshButton_clicked()
 {
-    // Get the list of CellML models from the Physiome Model Repository
+    // Get the list of Physiome models from the Physiome Model Repository
 
     sendPmrRequest(ModelList);
 }
 
 //==============================================================================
 
-void CellmlModelRepositoryWindowWindow::finished(QNetworkReply *pNetworkReply)
+void PhysiomeModelRepositoryWindowWindow::finished(QNetworkReply *pNetworkReply)
 {
     // Check whether we were able to retrieve the list of models
 
     PmrRequest pmrRequest = PmrRequest(pNetworkReply->property(PmrRequestProperty).toInt());
 
-    CellmlModelRepositoryWindowModels models = CellmlModelRepositoryWindowModels();
+    PhysiomeModelRepositoryWindowModels models = PhysiomeModelRepositoryWindowModels();
     QString errorMessage = QString();
 
     QStringList bookmarkUrls = QStringList();
@@ -305,8 +305,8 @@ void CellmlModelRepositoryWindowWindow::finished(QNetworkReply *pNetworkReply)
                 foreach (const QVariant &linkVariant, collectionMap["links"].toList()) {
                     QVariantMap linkMap = linkVariant.toMap();
 
-                    models << CellmlModelRepositoryWindowModel(linkMap["href"].toString().trimmed(),
-                                                               linkMap["prompt"].toString().trimmed());
+                    models << PhysiomeModelRepositoryWindowModel(linkMap["href"].toString().trimmed(),
+                                                                 linkMap["prompt"].toString().trimmed());
                 }
             }
         } else {
@@ -353,7 +353,7 @@ void CellmlModelRepositoryWindowWindow::finished(QNetworkReply *pNetworkReply)
         mSourceFiles.insertMulti(url, sourceFile);
 
         // Determine the workspace associated with the model, should we have
-        // retrieved all of its source files, and ask our CellML Model
+        // retrieved all of its source files, and ask our Physiome Model
         // Repository widget to add some source files and maybe also show them
         // Note: this can be done with any model's source file, but we do it
         //       with the last one in case of a problem occuring between the
@@ -362,10 +362,10 @@ void CellmlModelRepositoryWindowWindow::finished(QNetworkReply *pNetworkReply)
         if (!mNumberOfUntreatedSourceFiles) {
             mWorkspaces.insert(url, sourceFile.remove(QRegularExpression("/rawfile/.*$")));
 
-            mCellmlModelRepositoryWidget->addModelFiles(url, mSourceFiles.values(url));
+            mPhysiomeModelRepositoryWidget->addModelFiles(url, mSourceFiles.values(url));
 
             if (pmrRequest == SourceFileForShowingFiles)
-                mCellmlModelRepositoryWidget->showModelFiles(url);
+                mPhysiomeModelRepositoryWidget->showModelFiles(url);
 
             // Remove the model's source files since we don't need them anymore
             // (and there is no point in wasting memory for no reason)
@@ -383,13 +383,13 @@ void CellmlModelRepositoryWindowWindow::finished(QNetworkReply *pNetworkReply)
         break;
     }
     default:   // ModelList
-        // Ask our CellML Model Repository widget to initilise itself and then
-        // filter its list of models, should we have been asked to retrieve a
-        // list of models
+        // Ask our Physiome Model Repository widget to initialise itself and
+        // then filter its list of models, should we have been asked to
+        // retrieve a list of models
 
-        mCellmlModelRepositoryWidget->initialize(models, errorMessage);
+        mPhysiomeModelRepositoryWidget->initialize(models, errorMessage);
 
-        mCellmlModelRepositoryWidget->filter(mGui->filterValue->text());
+        mPhysiomeModelRepositoryWidget->filter(mGui->filterValue->text());
     }
 
     // Show ourselves as not busy anymore, but only under certain conditions
@@ -409,8 +409,8 @@ void CellmlModelRepositoryWindowWindow::finished(QNetworkReply *pNetworkReply)
 
 //==============================================================================
 
-void CellmlModelRepositoryWindowWindow::sslErrors(QNetworkReply *pNetworkReply,
-                                                  const QList<QSslError> &pSslErrors)
+void PhysiomeModelRepositoryWindowWindow::sslErrors(QNetworkReply *pNetworkReply,
+                                                    const QList<QSslError> &pSslErrors)
 {
     // Ignore the SSL errors since we trust the website and therefore its
     // certificate (even if it is invalid, e.g. it has expired)
@@ -420,7 +420,7 @@ void CellmlModelRepositoryWindowWindow::sslErrors(QNetworkReply *pNetworkReply,
 
 //==============================================================================
 
-void CellmlModelRepositoryWindowWindow::retrieveModelList(const bool &pVisible)
+void PhysiomeModelRepositoryWindowWindow::retrieveModelList(const bool &pVisible)
 {
     // Retrieve the list of models, if we are becoming visible and the list of
     // models has never been requested before
@@ -436,8 +436,8 @@ void CellmlModelRepositoryWindowWindow::retrieveModelList(const bool &pVisible)
 
 //==============================================================================
 
-void CellmlModelRepositoryWindowWindow::cloneModel(const QString &pUrl,
-                                                   const QString &pDescription)
+void PhysiomeModelRepositoryWindowWindow::cloneModel(const QString &pUrl,
+                                                     const QString &pDescription)
 {
     // Check whether we already know about the workspace for the given model
 
@@ -459,8 +459,8 @@ void CellmlModelRepositoryWindowWindow::cloneModel(const QString &pUrl,
 
 //==============================================================================
 
-void CellmlModelRepositoryWindowWindow::showModelFiles(const QString &pUrl,
-                                                       const QString &pDescription)
+void PhysiomeModelRepositoryWindowWindow::showModelFiles(const QString &pUrl,
+                                                         const QString &pDescription)
 {
     // To retrieve the model's files, we first need to retrieve its bookmark
     // URLs
@@ -470,7 +470,7 @@ void CellmlModelRepositoryWindowWindow::showModelFiles(const QString &pUrl,
 
 //==============================================================================
 
-}   // namespace CellMLModelRepositoryWindow
+}   // namespace PhysiomeModelRepositoryWindow
 }   // namespace OpenCOR
 
 //==============================================================================

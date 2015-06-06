@@ -16,11 +16,11 @@ specific language governing permissions and limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// CellML Model Repository window
+// Physiome Model Repository window
 //==============================================================================
 
-#ifndef CELLMLMODELREPOSITORYWINDOWWINDOW_H
-#define CELLMLMODELREPOSITORYWINDOWWINDOW_H
+#ifndef PHYSIOMEMODELREPOSITORYWINDOWWINDOW_H
+#define PHYSIOMEMODELREPOSITORYWINDOWWINDOW_H
 
 //==============================================================================
 
@@ -34,7 +34,7 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 namespace Ui {
-    class CellmlModelRepositoryWindowWindow;
+    class PhysiomeModelRepositoryWindowWindow;
 }
 
 //==============================================================================
@@ -45,28 +45,28 @@ class QNetworkReply;
 //==============================================================================
 
 namespace OpenCOR {
-namespace CellMLModelRepositoryWindow {
+namespace PhysiomeModelRepositoryWindow {
 
 //==============================================================================
 
-class CellmlModelRepositoryWindowWidget;
+class PhysiomeModelRepositoryWindowWidget;
 
 //==============================================================================
 
-class CellmlModelRepositoryWindowWindow : public Core::OrganisationWidget
+class PhysiomeModelRepositoryWindowWindow : public Core::OrganisationWidget
 {
     Q_OBJECT
 
 public:
-    explicit CellmlModelRepositoryWindowWindow(QWidget *pParent);
-    ~CellmlModelRepositoryWindowWindow();
+    explicit PhysiomeModelRepositoryWindowWindow(QWidget *pParent);
+    ~PhysiomeModelRepositoryWindowWindow();
 
     virtual void retranslateUi();
 
 private:
-    Ui::CellmlModelRepositoryWindowWindow *mGui;
+    Ui::PhysiomeModelRepositoryWindowWindow *mGui;
 
-    CellmlModelRepositoryWindowWidget *mCellmlModelRepositoryWidget;
+    PhysiomeModelRepositoryWindowWidget *mPhysiomeModelRepositoryWidget;
 
     QNetworkAccessManager *mNetworkAccessManager;
 
@@ -107,7 +107,7 @@ private Q_SLOTS:
 
 //==============================================================================
 
-}   // namespace CellMLModelRepositoryWindow
+}   // namespace PhysiomeModelRepositoryWindow
 }   // namespace OpenCOR
 
 //==============================================================================
