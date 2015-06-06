@@ -251,7 +251,7 @@ void PhysiomeModelRepositoryWindowWindow::on_filterValue_textChanged(const QStri
 
 void PhysiomeModelRepositoryWindowWindow::on_refreshButton_clicked()
 {
-    // Get the list of Physiome exposures from the PMR
+    // Get the list of exposures from the PMR
 
     sendPmrRequest(ExposuresList);
 }

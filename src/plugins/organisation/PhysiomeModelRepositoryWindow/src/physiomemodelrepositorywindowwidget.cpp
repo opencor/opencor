@@ -151,11 +151,11 @@ void PhysiomeModelRepositoryWindowWidget::retranslateUi()
             if (mExposureNames.isEmpty())
                 messageElement.removeAllChildren();
             else
-                messageElement.setInnerXml(tr("No Physiome exposure matches your criteria."));
+                messageElement.setInnerXml(tr("No exposure matches your criteria."));
         } else if (mNumberOfFilteredExposures == 1) {
-            messageElement.setInnerXml(tr("<strong>1</strong> Physiome exposure was found:"));
+            messageElement.setInnerXml(tr("<strong>1</strong> exposure was found:"));
         } else {
-            messageElement.setInnerXml(tr("<strong>%1</strong> Physiome exposures were found:").arg(mNumberOfFilteredExposures));
+            messageElement.setInnerXml(tr("<strong>%1</strong> exposures were found:").arg(mNumberOfFilteredExposures));
         }
     } else {
         messageElement.setInnerXml(tr("<strong>Error:</strong> ")+Core::formatMessage(mErrorMessage, true, true));

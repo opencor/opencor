@@ -51,7 +51,7 @@
          <string>Refresh</string>
         </property>
         <property name="statusTip">
-         <string>Refresh the list of Physiome exposures</string>
+         <string>Refresh the list of exposures</string>
         </property>
         <property name="text">
          <string/>
