@@ -118,8 +118,8 @@ void CORE_EXPORT stringLineColumnAsPosition(const QString &pString,
 void CORE_EXPORT * globalInstance(const QString &pObjectName,
                                   void *pDefaultGlobalInstance);
 
-void CORE_EXPORT setActiveDirectory(const QString &pDirName);
 QString CORE_EXPORT activeDirectory();
+void CORE_EXPORT setActiveDirectory(const QString &pDirName);
 
 QString CORE_EXPORT nativeCanonicalFileName(const QString &pFileName);
 

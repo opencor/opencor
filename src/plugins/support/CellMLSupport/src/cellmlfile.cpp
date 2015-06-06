@@ -973,6 +973,15 @@ bool CellmlFile::removeRdfTriple(iface::cellml_api::CellMLElement *pElement,
 
 //==============================================================================
 
+QString CellmlFile::cmetaId()
+{
+    // Return the CellML model's cmeta:id
+
+    return QString::fromStdWString(mModel->cmetaId());
+}
+
+//==============================================================================
+
 QString CellmlFile::xmlBase()
 {
     // Return the CellML file's base URI

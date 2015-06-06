@@ -491,19 +491,6 @@ void * globalInstance(const QString &pObjectName, void *pDefaultGlobalInstance)
 
 //==============================================================================
 
-void CORE_EXPORT setActiveDirectory(const QString &pDirName)
-{
-    // Keep track of the active directory
-
-    QSettings settings(SettingsOrganization, SettingsApplication);
-
-    settings.beginGroup(SettingsGlobal);
-        settings.setValue(SettingsActiveDirectory, pDirName);
-    settings.endGroup();
-}
-
-//==============================================================================
-
 QString CORE_EXPORT activeDirectory()
 {
     // Retrieve and return the active directory
@@ -516,6 +503,19 @@ QString CORE_EXPORT activeDirectory()
     settings.endGroup();
 
     return res;
+}
+
+//==============================================================================
+
+void CORE_EXPORT setActiveDirectory(const QString &pDirName)
+{
+    // Keep track of the active directory
+
+    QSettings settings(SettingsOrganization, SettingsApplication);
+
+    settings.beginGroup(SettingsGlobal);
+        settings.setValue(SettingsActiveDirectory, pDirName);
+    settings.endGroup();
 }
 
 //==============================================================================

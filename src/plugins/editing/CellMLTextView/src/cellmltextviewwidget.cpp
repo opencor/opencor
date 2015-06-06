@@ -494,14 +494,17 @@ bool CellmlTextViewWidget::saveFile(const QString &pOldFileName,
                                                                                                                                                                    CellMLSupport::CellmlFile::versionAsString(mParser.cellmlVersion())));
             }
 
-            // Serialise the file
+            // Add the metadata to our DOM document
 
             QDomDocument domDocument = mParser.domDocument();
 
             domDocument.firstChildElement().appendChild(data.rdfNodes().firstChildElement().cloneNode());
 
+            // Serialise our DOM document
+
             if (Core::writeTextToFile(pNewFileName, qDomDocumentToString(domDocument))) {
-                // We could serialise the file, so update our SHA-1 value
+                // We could serialise our DOM document, so update our SHA-1
+                // value
 
                 data.setSha1(Core::sha1(editingWidget->editor()->contents()));
 

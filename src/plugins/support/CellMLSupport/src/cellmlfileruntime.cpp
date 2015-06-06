@@ -199,6 +199,15 @@ CellmlFileRuntime::~CellmlFileRuntime()
 
 //==============================================================================
 
+CellmlFile * CellmlFileRuntime::cellmlFile()
+{
+    // Return our CellML file
+
+    return mCellmlFile;
+}
+
+//==============================================================================
+
 QString CellmlFileRuntime::address() const
 {
     // Return our address as a string
