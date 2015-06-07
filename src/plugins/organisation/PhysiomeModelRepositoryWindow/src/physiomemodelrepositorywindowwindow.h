@@ -16,11 +16,11 @@ specific language governing permissions and limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// CellML Model Repository window
+// Physiome Model Repository window
 //==============================================================================
 
-#ifndef CELLMLMODELREPOSITORYWINDOWWINDOW_H
-#define CELLMLMODELREPOSITORYWINDOWWINDOW_H
+#ifndef PHYSIOMEMODELREPOSITORYWINDOWWINDOW_H
+#define PHYSIOMEMODELREPOSITORYWINDOWWINDOW_H
 
 //==============================================================================
 
@@ -34,7 +34,7 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 namespace Ui {
-    class CellmlModelRepositoryWindowWindow;
+    class PhysiomeModelRepositoryWindowWindow;
 }
 
 //==============================================================================
@@ -45,42 +45,42 @@ class QNetworkReply;
 //==============================================================================
 
 namespace OpenCOR {
-namespace CellMLModelRepositoryWindow {
+namespace PhysiomeModelRepositoryWindow {
 
 //==============================================================================
 
-class CellmlModelRepositoryWindowWidget;
+class PhysiomeModelRepositoryWindowWidget;
 
 //==============================================================================
 
-class CellmlModelRepositoryWindowWindow : public Core::OrganisationWidget
+class PhysiomeModelRepositoryWindowWindow : public Core::OrganisationWidget
 {
     Q_OBJECT
 
 public:
-    explicit CellmlModelRepositoryWindowWindow(QWidget *pParent);
-    ~CellmlModelRepositoryWindowWindow();
+    explicit PhysiomeModelRepositoryWindowWindow(QWidget *pParent);
+    ~PhysiomeModelRepositoryWindowWindow();
 
     virtual void retranslateUi();
 
 private:
-    Ui::CellmlModelRepositoryWindowWindow *mGui;
+    Ui::PhysiomeModelRepositoryWindowWindow *mGui;
 
-    CellmlModelRepositoryWindowWidget *mCellmlModelRepositoryWidget;
+    PhysiomeModelRepositoryWindowWidget *mPhysiomeModelRepositoryWidget;
 
     QNetworkAccessManager *mNetworkAccessManager;
 
-    int mNumberOfUntreatedSourceFiles;
+    int mNumberOfExposureFilesLeft;
 
     QMap<QString, QString> mWorkspaces;
-    QMap<QString, QString> mSourceFiles;
+    QMap<QString, QString> mExposureFiles;
 
     enum PmrRequest {
-        ModelList,
+        ExposuresList,
         BookmarkUrlsForCloning,
-        BookmarkUrlsForShowingFiles,
-        SourceFileForCloning,
-        SourceFileForShowingFiles
+        BookmarkUrlsForExposureFiles,
+        ExposureFileForCloning,
+        ExposureFileForExposureFiles
     };
 
     void busy(const bool &pBusy);
@@ -92,22 +92,22 @@ private:
     void cloneWorkspace(const QString &pWorkspace);
 
 private Q_SLOTS:
-    void on_filterValue_textChanged(const QString &text);
+    void on_filterValue_textChanged(const QString &pText);
     void on_refreshButton_clicked();
 
     void finished(QNetworkReply *pNetworkReply);
     void sslErrors(QNetworkReply *pNetworkReply,
                    const QList<QSslError> &pSslErrors);
 
-    void retrieveModelList(const bool &pVisible);
+    void retrieveExposuresList(const bool &pVisible);
 
-    void cloneModel(const QString &pUrl, const QString &pDescription);
-    void showModelFiles(const QString &pUrl, const QString &pDescription);
+    void cloneWorkspace(const QString &pUrl, const QString &pDescription);
+    void showExposureFiles(const QString &pUrl, const QString &pDescription);
 };
 
 //==============================================================================
 
-}   // namespace CellMLModelRepositoryWindow
+}   // namespace PhysiomeModelRepositoryWindow
 }   // namespace OpenCOR
 
 //==============================================================================

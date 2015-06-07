@@ -32,7 +32,10 @@ namespace CoreDataStore {
 
 //==============================================================================
 
-CoreDataStore::CoreDataStore(const qulonglong &pSize) :
+CoreDataStore::CoreDataStore(const QString &pId, const QString &pUri,
+                             const qulonglong &pSize) :
+    mId(pId),
+    mlUri(pUri),
     mSize(pSize),
     mVoi(0),
     mVariables(0)
@@ -51,6 +54,24 @@ CoreDataStore::~CoreDataStore()
          variable != variableEnd; ++variable) {
         delete *variable;
     }
+}
+
+//==============================================================================
+
+QString CoreDataStore::id() const
+{
+    // Return our id
+
+    return mId;
+}
+
+//==============================================================================
+
+QString CoreDataStore::uri() const
+{
+    // Return our URI
+
+    return mlUri;
 }
 
 //==============================================================================

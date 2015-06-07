@@ -19,6 +19,7 @@ specific language governing permissions and limitations under the License.
 // Single cell view simulation
 //==============================================================================
 
+#include "cellmlfile.h"
 #include "cellmlfileruntime.h"
 #include "coredatastore.h"
 #include "corenlasolver.h"
@@ -630,7 +631,9 @@ bool SingleCellViewSimulationResults::createDataStore()
     // well as with constant, rate, state and algebraic variables
 
     try {
-        mDataStore = new CoreDataStore::CoreDataStore(simulationSize);
+        mDataStore = new CoreDataStore::CoreDataStore(mRuntime->cellmlFile()->cmetaId(),
+                                                      mRuntime->cellmlFile()->xmlBase(),
+                                                      simulationSize);
 
         mPoints = mDataStore->addVoi();
         mConstants = mDataStore->addVariables(mRuntime->constantsCount(), mSimulation->data()->constants());

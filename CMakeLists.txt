@@ -287,9 +287,9 @@ SET(PLUGINS
 
     miscellaneous/HelpWindow
 
-    organisation/CellMLModelRepositoryWindow
     organisation/FileBrowserWindow
     organisation/FileOrganiserWindow
+    organisation/PhysiomeModelRepositoryWindow
 
     simulation/SingleCellView
 

@@ -5,6 +5,6 @@
         <file>oxygen/actions/view-refresh.png</file>
         <file>oxygen/places/folder-downloads.png</file>
         <file>output.html</file>
-        <file alias="CellMLModelRepositoryWindow_fr">../../../../../build/CellMLModelRepositoryWindow_fr.qm</file>
+        <file alias="PhysiomeModelRepositoryWindow_fr">../../../../../build/PhysiomeModelRepositoryWindow_fr.qm</file>
     </qresource>
 </RCC>

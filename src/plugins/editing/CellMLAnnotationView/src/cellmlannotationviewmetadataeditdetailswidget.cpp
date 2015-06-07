@@ -178,7 +178,7 @@ CellmlAnnotationViewMetadataEditDetailsWidget::CellmlAnnotationViewMetadataEditD
     mGui->setupUi(this);
 
     // Create a network access manager so that we can then retrieve a list of
-    // CellML models from the CellML Model Repository
+    // ontological terms models from the PMR
 
     mNetworkAccessManager = new QNetworkAccessManager(this);
 
@@ -949,7 +949,7 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::termLookedUp(QNetworkReply *
     QString errorMessage = QString();
 
     if (pNetworkReply->error() == QNetworkReply::NoError) {
-        // Parse the JSON code
+        // Parse the JSON data
 
         QJsonParseError jsonParseError;
         QJsonDocument jsonDocument = QJsonDocument::fromJson(pNetworkReply->readAll(), &jsonParseError);
