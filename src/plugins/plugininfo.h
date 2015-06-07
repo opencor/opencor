@@ -79,7 +79,8 @@ public:
     explicit PluginInfo(const Category &pCategory, const bool &pSelectable,
                         const bool &pCliSupport,
                         const QStringList &pDependencies,
-                        const Descriptions &pDescriptions);
+                        const Descriptions &pDescriptions,
+                        const QStringList &pLoadBefore = QStringList());
 
     Category category() const;
 
@@ -93,6 +94,8 @@ public:
     QString description(const QString &pLocale = "en") const;
     Descriptions descriptions() const;
 
+    QStringList loadBefore() const;
+
 private:
     Category mCategory;
 
@@ -103,6 +106,8 @@ private:
     QStringList mFullDependencies;
 
     Descriptions mDescriptions;
+
+    QStringList mLoadBefore;
 };
 
 //==============================================================================
