@@ -64,14 +64,17 @@ CliApplication::~CliApplication()
 void CliApplication::loadPlugins()
 {
     // Load all the plugins by creating our plugin manager
+qDebug("01");
 
     mPluginManager = new PluginManager(mApp, false);
+qDebug("02");
 
     // Keep track of our loaded CLI plugins
 
     foreach (Plugin *plugin, mPluginManager->loadedPlugins())
         if (qobject_cast<CliInterface *>(plugin->instance()))
             mLoadedCliPlugins << plugin;
+qDebug("03");
 }
 
 //==============================================================================

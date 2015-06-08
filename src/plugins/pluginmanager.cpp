@@ -40,18 +40,22 @@ PluginManager::PluginManager(QCoreApplication *pApp, const bool &pGuiMode) :
 {
     // Retrieve OpenCOR's plugins directory
     // Note: the plugin's directory is set in main()...
+qDebug("01a");
 
     mPluginsDir = QCoreApplication::libraryPaths().first()+QDir::separator()+pApp->applicationName();
+qDebug("01b");
 
     // Retrieve the list of plugins available for loading
 
     QFileInfoList fileInfoList = QDir(mPluginsDir).entryInfoList(QStringList("*"+PluginExtension),
                                                                  QDir::Files);
+qDebug("01c");
 
     QStringList fileNames = QStringList();
 
     foreach (const QFileInfo &file, fileInfoList)
         fileNames << QDir::toNativeSeparators(file.canonicalFilePath());
+qDebug("01d");
 
     // Determine in which order the pluging files should be analysed (i.e. take
     // into account the result of a plugin's loadBefore() function)
@@ -60,14 +64,18 @@ PluginManager::PluginManager(QCoreApplication *pApp, const bool &pGuiMode) :
 
     QMap<QString, PluginInfo *> pluginsInfo = QMap<QString, PluginInfo *>();
     QMap<QString, QString> pluginsError = QMap<QString, QString>();
+qDebug("01e");
 
     foreach (const QString &fileName, fileNames) {
+qDebug("01e1");
         QString pluginError;
         PluginInfo *pluginInfo = Plugin::info(fileName, &pluginError);
         // Note: if there is some plugin information, then it will get owned by
         //       the plugin itself. So, it's the plugin's responsibility to
         //       delete it (see Plugin::~Plugin())...
+qDebug("01e2");
         QString pluginName = Plugin::name(fileName);
+qDebug("01e3");
 
         pluginsInfo.insert(pluginName, pluginInfo);
         pluginsError.insert(pluginName, pluginError);
@@ -85,6 +93,7 @@ PluginManager::PluginManager(QCoreApplication *pApp, const bool &pGuiMode) :
 
         sortedFileNames.insert(index, fileName);
     }
+qDebug("01f");
 
     // Determine which plugins, if any, are needed by others and which, if any,
     // are selectable
@@ -93,8 +102,11 @@ PluginManager::PluginManager(QCoreApplication *pApp, const bool &pGuiMode) :
     QStringList wantedPlugins = QStringList();
 
     foreach (const QString &fileName, sortedFileNames) {
+qDebug("01f1");
         QString pluginName = Plugin::name(fileName);
+qDebug("01f2");
         PluginInfo *pluginInfo = pluginsInfo.value(pluginName);
+qDebug("01f3");
 
         if (pluginInfo) {
             // Keep track of the plugin's full dependencies
@@ -119,10 +131,7 @@ PluginManager::PluginManager(QCoreApplication *pApp, const bool &pGuiMode) :
             }
         }
     }
-
-    // Remove possible duplicates in our list of needed plugins
-
-    neededPlugins.removeDuplicates();
+qDebug("01g");
 
     // We now have all our needed and wanted plugins with our needed plugins
     // nicely sorted based on their dependencies with one another. So, retrieve
@@ -137,9 +146,11 @@ PluginManager::PluginManager(QCoreApplication *pApp, const bool &pGuiMode) :
     //       be safe than sorry since a selectable plugin (i.e. listed in
     //       wantedPlugins) might be (wrongly) needed by another plugin (i.e.
     //       listed in neededPlugins)...
+qDebug("01h");
 
     foreach (const QString &plugin, plugins)
         pluginFileNames << Plugin::fileName(mPluginsDir, plugin);
+qDebug("01i");
 
     // If we are in GUI mode, then we want to know about all the plugins,
     // including the ones that are not to be loaded (so that we can refer to
@@ -152,14 +163,18 @@ PluginManager::PluginManager(QCoreApplication *pApp, const bool &pGuiMode) :
     }
 
     // Deal with all the plugins we need and want
+qDebug("01j");
 
     foreach (const QString &pluginFileName, pluginFileNames) {
+qDebug("01j1");
         QString pluginName = Plugin::name(pluginFileName);
+qDebug("01j2");
 
         Plugin *plugin = new Plugin(pluginFileName,
                                     pluginsInfo.value(pluginName),
                                     pluginsError.value(pluginName),
                                     plugins.contains(pluginName), this);
+qDebug("01j3");
 
         // Keep track of the plugin and of the Core plugin, in particular, if it
         // is loaded
@@ -172,7 +187,9 @@ PluginManager::PluginManager(QCoreApplication *pApp, const bool &pGuiMode) :
             if (!pluginName.compare(CorePluginName))
                 mCorePlugin = plugin;
         }
+qDebug("01j4");
     }
+qDebug("01k");
 }
 
 //==============================================================================
