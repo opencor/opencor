@@ -49,8 +49,7 @@ PLUGININFO_FUNC PhysiomeModelRepositoryWindowPluginInfo()
     return new PluginInfo(PluginInfo::Organisation, true, false,
                           QStringList() << "Core" << "libgit2",
                           descriptions,
-//                          QStringList() << "FileBrowserWindow" << "FileOrganiserWindow");
-                          QStringList() << "CellMLAPI" << "Core" << "FileBrowserWindow" << "FileOrganiserWindow");
+                          QStringList() << "FileBrowserWindow" << "FileOrganiserWindow");
 }
 
 //==============================================================================
