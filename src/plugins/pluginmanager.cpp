@@ -130,6 +130,7 @@ PluginManager::PluginManager(QCoreApplication *pApp, const bool &pGuiMode) :
 
     foreach (const QString &pluginFileName, pluginFileNames) {
         QString pluginName = Plugin::name(pluginFileName);
+qDebug("- %s", qPrintable(pluginName));
 
         Plugin *plugin = new Plugin(pluginFileName,
                                     pluginsInfo.value(pluginName),
