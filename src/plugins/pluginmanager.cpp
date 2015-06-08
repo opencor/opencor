@@ -81,14 +81,24 @@ qDebug("01e3");
         pluginsError.insert(pluginName, pluginError);
 
         // Determine where, in sortedFileNames, fileName should be inserted
+qDebug("01e4");
 
         int index = sortedFileNames.count();
+qDebug("01e5");
+qDebug(">>> pluginInfo->loadBefore() for %s: %s", qPrintable(pluginName), qPrintable(pluginInfo->loadBefore().join(" | ")));
 
         foreach (const QString &loadBefore, pluginInfo->loadBefore()) {
+qDebug("01e5a");
             int loadBeforeIndex = sortedFileNames.indexOf(Plugin::fileName(mPluginsDir, loadBefore));
+qDebug("01e5b");
 
             if (loadBeforeIndex < index)
+{
+qDebug("01e5b1");
                 index = loadBeforeIndex;
+qDebug("01e5b2");
+}
+qDebug("01e5c");
         }
 
         sortedFileNames.insert(index, fileName);
