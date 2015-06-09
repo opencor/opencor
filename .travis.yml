@@ -48,8 +48,6 @@ script:
          && lsb_release -a
          && build/bin/OpenCOR -p
          && build/bin/OpenCOR -s
-         && build/bin/OpenCOR -c CellMLTools::help
-         && build/bin/OpenCOR -c CellMLTools::export src/plugins/tool/CellMLTools/tests/data/noble_model_1962.cellml export.out cellml_1_0
          && build/bin/runtests
          ;
        else

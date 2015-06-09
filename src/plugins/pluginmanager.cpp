@@ -72,6 +72,12 @@ PluginManager::PluginManager(QCoreApplication *pApp, const bool &pGuiMode) :
         pluginsInfo.insert(pluginName, pluginInfo);
         pluginsError.insert(pluginName, pluginError);
 
+        // Keep track of the plugin's full dependencies
+
+        QStringList pluginFullDependencies = Plugin::fullDependencies(mPluginsDir, pluginName);
+
+        pluginInfo->setFullDependencies(pluginFullDependencies);
+
         // Determine where, in sortedFileNames, fileName should be inserted
 
         int index = sortedFileNames.count();
@@ -97,12 +103,6 @@ PluginManager::PluginManager(QCoreApplication *pApp, const bool &pGuiMode) :
         PluginInfo *pluginInfo = pluginsInfo.value(pluginName);
 
         if (pluginInfo) {
-            // Keep track of the plugin's full dependencies
-
-            QStringList pluginFullDependencies = Plugin::fullDependencies(mPluginsDir, pluginName);
-
-            pluginInfo->setFullDependencies(pluginFullDependencies);
-
             // Keep track of the plugin itself, should it be selectable and
             // requested by the user (if we are in GUI mode) or have CLI support
             // (if we are in CLI mode)
