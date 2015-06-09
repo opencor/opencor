@@ -97,10 +97,6 @@ PluginManager::PluginManager(QCoreApplication *pApp, const bool &pGuiMode) :
         }
     }
 
-    // Remove possible duplicates in our list of needed plugins
-
-    neededPlugins.removeDuplicates();
-
     // We now have all our needed and wanted plugins with our needed plugins
     // nicely sorted based on their dependencies with one another. So, retrieve
     // their file name
@@ -109,9 +105,11 @@ PluginManager::PluginManager(QCoreApplication *pApp, const bool &pGuiMode) :
     QStringList pluginFileNames = QStringList();
 
     plugins.removeDuplicates();
-    // Note: we shouldn't have to remove duplicates, but better be safe than
-    //       sorry (indeed, a selectable plugin may be (wrongly) needed by
-    //       another plugin)...
+    // Note: if anything, there should only be duplicates in neededPlugins, and
+    //       not between neededPlugins and wantedPlugins. Then again, we better
+    //       be safe than sorry since a selectable plugin (i.e. listed in
+    //       wantedPlugins) might be (wrongly) needed by another plugin (i.e.
+    //       listed in neededPlugins)...
 
     foreach (const QString &plugin, plugins)
         pluginFileNames << Plugin::fileName(mPluginsDir, plugin);
