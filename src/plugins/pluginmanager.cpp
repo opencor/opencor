@@ -103,7 +103,7 @@ PluginManager::PluginManager(QCoreApplication *pApp, const bool &pGuiMode) :
     QStringList neededPlugins = QStringList();
     QStringList wantedPlugins = QStringList();
 
-    foreach (const QString &fileName, sortedFileNames) {
+    foreach (const QString &fileName, fileNames) {
         QString pluginName = Plugin::name(fileName);
         PluginInfo *pluginInfo = pluginsInfo.value(pluginName);
 
