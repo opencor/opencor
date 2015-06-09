@@ -53,14 +53,10 @@ PluginManager::PluginManager(QCoreApplication *pApp, const bool &pGuiMode) :
     foreach (const QFileInfo &file, fileInfoList)
         fileNames << QDir::toNativeSeparators(file.canonicalFilePath());
 
-    // Determine which plugins, if any, are needed by others and which, if any,
-    // are selectable
+    // Retrieve and initialise some information about the plugins
 
     QMap<QString, PluginInfo *> pluginsInfo = QMap<QString, PluginInfo *>();
     QMap<QString, QString> pluginsError = QMap<QString, QString>();
-
-    QStringList neededPlugins = QStringList();
-    QStringList wantedPlugins = QStringList();
 
     foreach (const QString &fileName, fileNames) {
         QString pluginError;
@@ -73,13 +69,23 @@ PluginManager::PluginManager(QCoreApplication *pApp, const bool &pGuiMode) :
         pluginsInfo.insert(pluginName, pluginInfo);
         pluginsError.insert(pluginName, pluginError);
 
+        // Keep track of the plugin's full dependencies, if possible
+
+        if (pluginInfo)
+            pluginInfo->setFullDependencies(Plugin::fullDependencies(mPluginsDir, pluginName));
+    }
+
+    // Determine which plugins, if any, are needed by others and which, if any,
+    // are selectable
+
+    QStringList neededPlugins = QStringList();
+    QStringList wantedPlugins = QStringList();
+
+    foreach (const QString &fileName, sortedFileNames) {
+        QString pluginName = Plugin::name(fileName);
+        PluginInfo *pluginInfo = pluginsInfo.value(pluginName);
+
         if (pluginInfo) {
-            // Keep track of the plugin's full dependencies
-
-            QStringList pluginFullDependencies = Plugin::fullDependencies(mPluginsDir, pluginName);
-
-            pluginInfo->setFullDependencies(pluginFullDependencies);
-
             // Keep track of the plugin itself, should it be selectable and
             // requested by the user (if we are in GUI mode) or have CLI support
             // (if we are in CLI mode)
