@@ -75,7 +75,7 @@ PluginManager::PluginManager(QCoreApplication *pApp, const bool &pGuiMode) :
             pluginInfo->setFullDependencies(Plugin::fullDependencies(mPluginsDir, pluginName));
     }
 
-    // Determine in which order the pluging files should be analysed (i.e. take
+    // Determine in which order the plugins files should be analysed (i.e. take
     // into account the result of a plugin's loadBefore() function)
 
     QStringList sortedFileNames = QStringList();
