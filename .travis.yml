@@ -2,10 +2,10 @@ language: cpp
 
 os:
   - linux
-  - osx
+#  - osx
 
 env:
-  - CONFIG=Release
+#  - CONFIG=Release
   - CONFIG=Debug
 
 install:
@@ -45,7 +45,9 @@ script:
     && make -j 3
     && cd ..
     && if [ "${TRAVIS_OS_NAME}" = "linux" ]; then
-         build/bin/runtests
+            build/bin/OpenCOR -p
+         && build/bin/OpenCOR -s
+         && build/bin/runtests
          ;
        else
          build/OpenCOR.app/Contents/MacOS/runtests
