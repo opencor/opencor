@@ -41,8 +41,7 @@ script:
     && make -j 3
     && cd ..
     && if [ "${TRAVIS_OS_NAME}" = "linux" ]; then
-            lsb_release -a
-         && build/bin/runtests
+         build/bin/runtests
          ;
        else
          build/OpenCOR.app/Contents/MacOS/runtests
