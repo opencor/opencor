@@ -75,13 +75,35 @@ PluginManager::PluginManager(QCoreApplication *pApp, const bool &pGuiMode) :
             pluginInfo->setFullDependencies(Plugin::fullDependencies(mPluginsDir, pluginName));
     }
 
+    // Determine in which order the plugins files should be analysed (i.e. take
+    // into account the result of a plugin's loadBefore() function)
+
+    QStringList sortedFileNames = QStringList();
+
+    foreach (const QString &fileName, fileNames) {
+        PluginInfo *pluginInfo = pluginsInfo.value(Plugin::name(fileName));
+
+        if (pluginInfo) {
+            int index = sortedFileNames.count();
+
+            foreach (const QString &loadBefore, pluginInfo->loadBefore()) {
+                int loadBeforeIndex = sortedFileNames.indexOf(Plugin::fileName(mPluginsDir, loadBefore));
+
+                if (loadBeforeIndex < index)
+                    index = loadBeforeIndex;
+            }
+
+            sortedFileNames.insert(index, fileName);
+        }
+    }
+
     // Determine which plugins, if any, are needed by others and which, if any,
     // are selectable
 
     QStringList neededPlugins = QStringList();
     QStringList wantedPlugins = QStringList();
 
-    foreach (const QString &fileName, fileNames) {
+    foreach (const QString &fileName, sortedFileNames) {
         QString pluginName = Plugin::name(fileName);
         PluginInfo *pluginInfo = pluginsInfo.value(pluginName);
 
