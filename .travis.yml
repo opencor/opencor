@@ -45,6 +45,7 @@ script:
          && build/bin/OpenCOR -a
          && build/bin/OpenCOR -h
          && ldd build/plugins/OpenCOR/*
+         && lsb_release -a
          && build/bin/OpenCOR -p
          && build/bin/OpenCOR -s
          && build/bin/OpenCOR -c CellMLTools::help
