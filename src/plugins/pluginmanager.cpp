@@ -53,10 +53,7 @@ PluginManager::PluginManager(QCoreApplication *pApp, const bool &pGuiMode) :
     foreach (const QFileInfo &file, fileInfoList)
         fileNames << QDir::toNativeSeparators(file.canonicalFilePath());
 
-    // Determine in which order the pluging files should be analysed (i.e. take
-    // into account the result of a plugin's loadBefore() function)
-
-    QStringList sortedFileNames = QStringList();
+    // Retrieve and initialise some information about the plugins
 
     QMap<QString, PluginInfo *> pluginsInfo = QMap<QString, PluginInfo *>();
     QMap<QString, QString> pluginsError = QMap<QString, QString>();
@@ -72,24 +69,32 @@ PluginManager::PluginManager(QCoreApplication *pApp, const bool &pGuiMode) :
         pluginsInfo.insert(pluginName, pluginInfo);
         pluginsError.insert(pluginName, pluginError);
 
-        // Keep track of the plugin's full dependencies
+        // Keep track of the plugin's full dependencies, if possible
 
-        QStringList pluginFullDependencies = Plugin::fullDependencies(mPluginsDir, pluginName);
+        if (pluginInfo)
+            pluginInfo->setFullDependencies(Plugin::fullDependencies(mPluginsDir, pluginName));
+    }
 
-        pluginInfo->setFullDependencies(pluginFullDependencies);
+    // Determine in which order the pluging files should be analysed (i.e. take
+    // into account the result of a plugin's loadBefore() function)
 
-        // Determine where, in sortedFileNames, fileName should be inserted
+    QStringList sortedFileNames = QStringList();
 
-        int index = sortedFileNames.count();
+    foreach (const QString &fileName, fileNames) {
+        PluginInfo *pluginInfo = pluginsInfo.value(Plugin::name(fileName));
 
-        foreach (const QString &loadBefore, pluginInfo->loadBefore()) {
-            int loadBeforeIndex = sortedFileNames.indexOf(Plugin::fileName(mPluginsDir, loadBefore));
+        if (pluginInfo) {
+            int index = sortedFileNames.count();
 
-            if (loadBeforeIndex < index)
-                index = loadBeforeIndex;
+            foreach (const QString &loadBefore, pluginInfo->loadBefore()) {
+                int loadBeforeIndex = sortedFileNames.indexOf(Plugin::fileName(mPluginsDir, loadBefore));
+
+                if (loadBeforeIndex < index)
+                    index = loadBeforeIndex;
+            }
+
+            sortedFileNames.insert(index, fileName);
         }
-
-        sortedFileNames.insert(index, fileName);
     }
 
     // Determine which plugins, if any, are needed by others and which, if any,
