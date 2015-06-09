@@ -73,6 +73,7 @@ PluginManager::PluginManager(QCoreApplication *pApp, const bool &pGuiMode) :
 
         if (pluginInfo)
             pluginInfo->setFullDependencies(Plugin::fullDependencies(mPluginsDir, pluginName));
+else qDebug(">>> Null pluginInfo object for %s", qPrintable(pluginName));
     }
 
     // Determine in which order the plugins files should be analysed (i.e. take
@@ -95,6 +96,7 @@ PluginManager::PluginManager(QCoreApplication *pApp, const bool &pGuiMode) :
 
             sortedFileNames.insert(index, fileName);
         }
+else qDebug(">>> Null pluginInfo object for %s", qPrintable(pluginName));
     }
 
     // Determine which plugins, if any, are needed by others and which, if any,
@@ -123,6 +125,7 @@ PluginManager::PluginManager(QCoreApplication *pApp, const bool &pGuiMode) :
                 wantedPlugins << pluginName;
             }
         }
+else qDebug(">>> Null pluginInfo object for %s", qPrintable(pluginName));
     }
 
     // We now have all our needed and wanted plugins with our needed plugins
