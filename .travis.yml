@@ -45,7 +45,8 @@ script:
     && make -j 3
     && cd ..
     && if [ "${TRAVIS_OS_NAME}" = "linux" ]; then
-            build/bin/OpenCOR -p
+            build/bin/OpenCOR -v
+         && build/bin/OpenCOR -p
          && build/bin/OpenCOR -s
          && build/bin/runtests
          ;
