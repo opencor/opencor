@@ -30,13 +30,15 @@ namespace OpenCOR {
 PluginInfo::PluginInfo(const Category &pCategory, const bool &pSelectable,
                        const bool &pCliSupport,
                        const QStringList &pDependencies,
-                       const Descriptions &pDescriptions) :
+                       const Descriptions &pDescriptions,
+                       const QStringList &pLoadBefore) :
     mCategory(pCategory),
     mSelectable(pSelectable),
     mCliSupport(pCliSupport),
     mDependencies(pDependencies),
     mFullDependencies(QStringList()),
-    mDescriptions(pDescriptions)
+    mDescriptions(pDescriptions),
+    mLoadBefore(pLoadBefore)
 {
 }
 
@@ -120,6 +122,15 @@ Descriptions PluginInfo::descriptions() const
     // Return the plugin's descriptions
 
     return mDescriptions;
+}
+
+//==============================================================================
+
+QStringList PluginInfo::loadBefore() const
+{
+    // Return the plugin before which we must load
+
+    return mLoadBefore;
 }
 
 //==============================================================================

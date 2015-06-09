@@ -30,9 +30,13 @@ install:
     fi
 
 script:
+  # Note: Travis CI uses Ubuntu 12.04 LTS while we use Ubuntu 14.04 LTS, and
+  #       this causes problems when we try to use our prebuilt version of
+  #       libgit2 (because of its need of libc). So, to 'fix' this, we ask for
+  #       libgit2 to be built on Linux...
   -    cd build
     && if [ "${TRAVIS_OS_NAME}" = "linux" ]; then
-         cmake -DCMAKE_BUILD_TYPE=$CONFIG -DCMAKE_PREFIX_PATH=/opt/qt54/lib/cmake -DENABLE_TESTS=ON -DENABLE_SAMPLES=ON ..
+         cmake -DCMAKE_BUILD_TYPE=$CONFIG -DCMAKE_PREFIX_PATH=/opt/qt54/lib/cmake -DUSE_PREBUILT_LIBGIT2_PLUGIN=OFF -DENABLE_TESTS=ON -DENABLE_SAMPLES=ON ..
          ;
        else
          cmake -DCMAKE_BUILD_TYPE=$CONFIG -DCMAKE_PREFIX_PATH=/usr/local/opt/qt5/lib/cmake -DENABLE_TESTS=ON -DENABLE_SAMPLES=ON ..
