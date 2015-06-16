@@ -27,7 +27,7 @@
                 <strong>Maximum step:</strong> the maximum step used by the solver (default: <code>0</code>).
 
                 <p class="nomargins note">
-                    the default value of <code>0</code> means that <a href="http://computation.llnl.gov/casc/sundials/description/description.html#descr_cvode">CVODE</a> will try to use as big a step as possible. However, this setting may not work with some models. This is the case with cardiac cellular electrophysiological models that need a stimulus protocol to generate an action potential. Such a protocol is likely to be ignored by <a href="http://computation.llnl.gov/casc/sundials/description/description.html#descr_cvode">CVODE</a>, if a maximum step value of <code>0</code> is used. To address this issue, simply set the maximum step value to the length of the stimulus protocol.
+                    the default value of <code>0</code> means that <a href="http://computation.llnl.gov/casc/sundials/description/description.html#descr_cvode">CVODE</a> will try to use as big a step as possible.
                 </p>
             </li>
         </ul>
@@ -46,8 +46,11 @@
             <li>
                 <strong>Integration method:</strong> the integration method used by the solver (default: <code>BDF</code>)
 
-                <p class="nomargins note">
-                    <code>BDF</code> should be used with stiff models and <code>Adams-Moulton</code> with non-stiff models.
+                <p class="nomargins note note1">
+                    <code>BDF</code> and <code>Adams-Moulton</code> can be used.
+                </p>
+                <p class="nomargins note note2">
+                    <code>BDF</code> can be used with either stiff or non-stiff models while <code>Adams-Moulton</code> should only be used with non-stiff models.
                 </p>
             </li>
         </ul>
@@ -57,9 +60,12 @@
                 <strong>Iteration type:</strong> the type of iteration used by the solver (default: <code>Newton</code>).
 
                 <p class="nomargins note note1">
-                    <code>Newton</code> can be used with either stiff or non-stiff models while <code>Functional</code> should only be used with non-stiff models.
+                    <code>Newton</code> and <code>Functional</code> can be used.
                 </p>
                 <p class="nomargins note note2">
+                    <code>Newton</code> can be used with either stiff or non-stiff models while <code>Functional</code> should only be used with non-stiff models.
+                </p>
+                <p class="nomargins note note3">
                     to use a <code>Newton</code> iteration requires solving a system of linear equations and therefore requires specifying a linear solver.
                 </p>
             </li>
@@ -70,7 +76,7 @@
                 <strong>Linear solver:</strong> the linear solver used by the solver during a <code>Newton</code> iteration (default: <code>Dense</code>).
 
                 <p class="nomargins note note1">
-                    <code>Dense</code>, <code>Banded</code>, <code>Diagonal</code>, <code>GMRES</code>, <code>BiCGStab</code> or <code>TFQMR</code> can be used.
+                    <code>Dense</code>, <code>Banded</code>, <code>Diagonal</code>, <code>GMRES</code>, <code>BiCGStab</code> and <code>TFQMR</code> can be used.
                 </p>
                 <p class="nomargins note note2">
                     <code>Banded</code> requires specifying both an upper and a lower half-bandwidth value.
@@ -86,7 +92,7 @@
                 <strong>Preconditioner:</strong> the preconditioner, if any, used by the solver when using a <code>GMRES</code>, <code>BiCGStab</code> or <code>TFQMR</code> linear solver during a <code>Newton</code> iteration (default: <code>Banded</code>).
 
                 <p class="nomargins note note1">
-                    <code>Banded</code> or <code>None</code> can be used.
+                    <code>Banded</code> and <code>None</code> can be used.
                 </p>
                 <p class="nomargins note note2">
                     <code>Banded</code> requires specifying both an upper and a lower half-bandwidth value.
@@ -129,12 +135,12 @@
         <ul>
             <li>
                 <strong>Interpolate solution:</strong> whether the solver returns an interpolated solution (default: <code>True</code>).
-
-                <p class="nomargins note">
-                    to interpolate the solution will yield (slightly) less accurate results, but they will be obtained (much) faster.
-                </p>
             </li>
         </ul>
+
+        <p>
+            The default settings should work with most models. However, some models may require some minor adjustments. This is the case with cardiac cellular electrophysiological models that need a stimulus protocol to generate an action potential. Such a protocol is likely to be ignored by <a href="http://computation.llnl.gov/casc/sundials/description/description.html#descr_cvode">CVODE</a>, if <strong>Maximum step</strong> and <strong>Interpolate solution</strong> are set to their default values of <code>0</code> and <code>True</code>, respectively. To address this issue, you can either set <strong>Maximum step</strong> to the length of the stimulus protocol or set <strong>Interpolate solution</strong> to <code>False</code>. The former approach will yield (slightly) less accurate results, but they will be obtained (much) faster.
+        </p>
 
         <script type="text/javascript">
             copyright("../../..");
