@@ -46,8 +46,11 @@
             <li>
                 <strong>Integration method:</strong> the integration method used by the solver (default: <code>BDF</code>)
 
-                <p class="nomargins note">
-                    <code>BDF</code> should be used with stiff models and <code>Adams-Moulton</code> with non-stiff models.
+                <p class="nomargins note note1">
+                    <code>BDF</code> and <code>Adams-Moulton</code> can be used.
+                </p>
+                <p class="nomargins note note2">
+                    <code>BDF</code> can be used with either stiff or non-stiff models while <code>Adams-Moulton</code> should only be used with non-stiff models.
                 </p>
             </li>
         </ul>
@@ -57,9 +60,12 @@
                 <strong>Iteration type:</strong> the type of iteration used by the solver (default: <code>Newton</code>).
 
                 <p class="nomargins note note1">
-                    <code>Newton</code> can be used with either stiff or non-stiff models while <code>Functional</code> should only be used with non-stiff models.
+                    <code>Newton</code> and <code>Functional</code> can be used.
                 </p>
                 <p class="nomargins note note2">
+                    <code>Newton</code> can be used with either stiff or non-stiff models while <code>Functional</code> should only be used with non-stiff models.
+                </p>
+                <p class="nomargins note note3">
                     to use a <code>Newton</code> iteration requires solving a system of linear equations and therefore requires specifying a linear solver.
                 </p>
             </li>
@@ -70,7 +76,7 @@
                 <strong>Linear solver:</strong> the linear solver used by the solver during a <code>Newton</code> iteration (default: <code>Dense</code>).
 
                 <p class="nomargins note note1">
-                    <code>Dense</code>, <code>Banded</code>, <code>Diagonal</code>, <code>GMRES</code>, <code>BiCGStab</code> or <code>TFQMR</code> can be used.
+                    <code>Dense</code>, <code>Banded</code>, <code>Diagonal</code>, <code>GMRES</code>, <code>BiCGStab</code> and <code>TFQMR</code> can be used.
                 </p>
                 <p class="nomargins note note2">
                     <code>Banded</code> requires specifying both an upper and a lower half-bandwidth value.
@@ -86,7 +92,7 @@
                 <strong>Preconditioner:</strong> the preconditioner, if any, used by the solver when using a <code>GMRES</code>, <code>BiCGStab</code> or <code>TFQMR</code> linear solver during a <code>Newton</code> iteration (default: <code>Banded</code>).
 
                 <p class="nomargins note note1">
-                    <code>Banded</code> or <code>None</code> can be used.
+                    <code>Banded</code> and <code>None</code> can be used.
                 </p>
                 <p class="nomargins note note2">
                     <code>Banded</code> requires specifying both an upper and a lower half-bandwidth value.
