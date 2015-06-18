@@ -43,6 +43,15 @@ var jsonData = { "versions": [
                              ]
                            }
                          ]
+                       },
+                       { "name": "Tool",
+                         "entries": [
+                           { "type": "subCategory", "name": "CellML tools",
+                             "entries": [
+                               { "type": "Improved", "description": "Export of a CellML file." }
+                             ]
+                           }
+                         ]
                        }
                      ]
                    },

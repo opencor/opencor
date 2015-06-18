@@ -1109,7 +1109,14 @@ bool CellmlFile::exportTo(const QString &pFileName,
             return false;
         }
 
-        Core::writeTextToFile(pFileName, QString::fromStdWString(codeExporter->generateCode(mModel)));
+        // Save the export
+
+        if (!Core::writeTextToFile(pFileName, QString::fromStdWString(codeExporter->generateCode(mModel)))) {
+            mIssues << CellmlFileIssue(CellmlFileIssue::Error,
+                                       QObject::tr("the output file could not be saved"));
+
+            return false;
+        }
 
         return true;
     } else {
