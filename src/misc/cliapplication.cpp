@@ -371,9 +371,14 @@ bool CliApplication::run(int *pRes)
     bool statusOption = false;
     bool versionOption = false;
 
+    QStringList appArguments = mApp->arguments();
     QStringList commandArguments = QStringList();
 
-    foreach (const QString &argument, mApp->arguments()) {
+    appArguments.removeFirst();
+    // Note: we remove the first argument since it corresponds to the full path
+    //       to our executable, which we are not interested in...
+
+    foreach (const QString &argument, appArguments) {
         if (!argument.compare("-a") || !argument.compare("--about")) {
             aboutOption = true;
         } else if (!argument.compare("-c") || !argument.compare("--command")) {
