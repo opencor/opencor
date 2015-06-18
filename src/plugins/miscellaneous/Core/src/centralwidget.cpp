@@ -844,17 +844,17 @@ void CentralWidget::openRemoteFile(const QString &pUrl,
             // We were able to retrieve the contents of the remote file, so ask
             // our file manager to create a new remote file
 
-            Core::FileManager *fileManagerInstance = Core::FileManager::instance();
+            FileManager *fileManagerInstance = FileManager::instance();
 
 #ifdef QT_DEBUG
-            Core::FileManager::Status createStatus =
+            FileManager::Status createStatus =
 #endif
             fileManagerInstance->create(fileNameOrUrl, fileContents);
 
 #ifdef QT_DEBUG
             // Make sure that the file has indeed been created
 
-            if (createStatus != Core::FileManager::Created)
+            if (createStatus != FileManager::Created)
                 qFatal("FATAL ERROR | %s:%d: the remote file was not created.", __FILE__, __LINE__);
 #endif
         } else {
@@ -863,7 +863,7 @@ void CentralWidget::openRemoteFile(const QString &pUrl,
 
             if (pShowWarning) {
                 QMessageBox::warning(this, tr("Open Remote File"),
-                                     tr("<strong>%1</strong> could not be opened (%2).").arg(fileNameOrUrl, Core::formatMessage(errorMessage)));
+                                     tr("<strong>%1</strong> could not be opened (%2).").arg(fileNameOrUrl, formatMessage(errorMessage)));
             }
         }
     } else {
@@ -942,12 +942,12 @@ void CentralWidget::reloadFile(const int &pIndex, const bool &pForce)
                     QString errorMessage;
 
                     if (readTextFromUrl(url, fileContents, &errorMessage)) {
-                        Core::writeTextToFile(fileName, fileContents);
+                        writeTextToFile(fileName, fileContents);
 
                         fileManagerInstance->reload(fileName);
                     } else {
                         QMessageBox::warning(this, tr("Reload Remote File"),
-                                             tr("<strong>%1</strong> could not be reloaded (%2).").arg(url, Core::formatMessage(errorMessage)));
+                                             tr("<strong>%1</strong> could not be reloaded (%2).").arg(url, formatMessage(errorMessage)));
                     }
                 } else {
                     fileManagerInstance->reload(fileName);
@@ -1065,9 +1065,9 @@ bool CentralWidget::saveFile(const int &pIndex, const bool &pNeedNewFileName)
                              +" (*."+supportedFileType->fileExtension()+")";
             }
 
-        newFileName = Core::getSaveFileName(tr("Save File"),
-                                            fileIsNew?mFileTabs->tabToolTip(pIndex):newFileName,
-                                            fileTypes);
+        newFileName = getSaveFileName(tr("Save File"),
+                                      fileIsNew?mFileTabs->tabToolTip(pIndex):newFileName,
+                                      fileTypes);
 
         // Make sure that a new file name was retrieved
 

@@ -59,7 +59,7 @@ void BusySupportWidget::showBusyWidget(QWidget *pParent,
 
     delete mBusyWidget;
 
-    mBusyWidget = new Core::BusyWidget(pParent, pProgress);
+    mBusyWidget = new BusyWidget(pParent, pProgress);
 
     centerBusyWidget();
 }

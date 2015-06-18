@@ -77,8 +77,8 @@ FileManager * FileManager::instance()
 
     static FileManager instance;
 
-    return static_cast<FileManager *>(Core::globalInstance("OpenCOR::Core::FileManager::instance()",
-                                                           &instance));
+    return static_cast<FileManager *>(globalInstance("OpenCOR::Core::FileManager::instance()",
+                                                     &instance));
 }
 
 //==============================================================================
@@ -435,11 +435,11 @@ bool FileManager::newFile(const QString &pContents, QString &pFileName)
 {
     // Retrieve a temporary file name for our new file
 
-    QString newFileName = Core::temporaryFileName();
+    QString newFileName = temporaryFileName();
 
     // Create a new file with the given contents
 
-    if (Core::writeTextToFile(newFileName, pContents)) {
+    if (writeTextToFile(newFileName, pContents)) {
         pFileName = newFileName;
 
         return true;
@@ -513,7 +513,7 @@ FileManager::Status FileManager::duplicate(const QString &pFileName)
 
         QString fileContents;
 
-        if (Core::readTextFromFile(pFileName, fileContents)) {
+        if (readTextFromFile(pFileName, fileContents)) {
             // Now, we can create a new file, which contents will be that of our
             // given file
 
