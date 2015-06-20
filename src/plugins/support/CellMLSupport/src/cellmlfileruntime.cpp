@@ -514,15 +514,16 @@ void CellmlFileRuntime::checkCodeInformation(iface::cellml_services::CodeInforma
 
         iface::cellml_services::ModelConstraintLevel constraintLevel = pCodeInformation->constraintLevel();
 
-        if (constraintLevel == iface::cellml_services::UNDERCONSTRAINED)
+        if (constraintLevel == iface::cellml_services::UNDERCONSTRAINED) {
             mIssues << CellmlFileIssue(CellmlFileIssue::Error,
                                        QObject::tr("the model is underconstrained (i.e. some variables need to be initialised or computed)"));
-        else if (constraintLevel == iface::cellml_services::UNSUITABLY_CONSTRAINED)
+        } else if (constraintLevel == iface::cellml_services::UNSUITABLY_CONSTRAINED) {
             mIssues << CellmlFileIssue(CellmlFileIssue::Error,
                                        QObject::tr("the model is unsuitably constrained (i.e. some variables could not be found and/or some equations could not be used)"));
-        else if (constraintLevel == iface::cellml_services::OVERCONSTRAINED)
+        } else if (constraintLevel == iface::cellml_services::OVERCONSTRAINED) {
             mIssues << CellmlFileIssue(CellmlFileIssue::Error,
                                        QObject::tr("the model is overconstrained (i.e. some variables are either both initialised and computed or computed more than once)"));
+        }
     } else {
         mIssues << CellmlFileIssue(CellmlFileIssue::Error,
                                    QObject::tr("a problem occurred during the generation of the model code"));
