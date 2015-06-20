@@ -1748,12 +1748,14 @@ void SingleCellViewWidget::graphsUpdated(SingleCellViewGraphPanelPlotWidget *pPl
 
     // Update and replot our various plots, if allowed
 
-    if (mCanUpdatePlotsForUpdatedGraphs)
-        foreach (SingleCellViewGraphPanelPlotWidget *plot, plots)
+    if (mCanUpdatePlotsForUpdatedGraphs) {
+        foreach (SingleCellViewGraphPanelPlotWidget *plot, plots) {
             updatePlot(plot, true);
             // Note: even if the axes' values of the plot haven't changed, we
             //       still want to replot the plot since at least one of its
             //       graphs has been updated...
+        }
+    }
 }
 
 //==============================================================================
@@ -2099,11 +2101,9 @@ void SingleCellViewWidget::checkResults(SingleCellViewSimulation *pSimulation)
     if (!mSimulations.values().contains(pSimulation))
         return;
 
-    // Update our simulation results size
+    // Update our results, but only if needed
 
     qulonglong simulationResultsSize = pSimulation->results()->size();
-
-    // Update our results, but only if needed
 
     if (simulationResultsSize != mOldSimulationResultsSizes.value(pSimulation)) {
         mOldSimulationResultsSizes.insert(pSimulation, simulationResultsSize);
