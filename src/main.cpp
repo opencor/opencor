@@ -114,10 +114,11 @@ int main(int pArgC, char *pArgV[])
 
         delete cliApp;
 
-        if (runCliApplication)
+        if (runCliApplication) {
             // OpenCOR was run as a CLI application, so leave
 
             return res;
+        }
 
         // Note: at this stage, we tried the CLI version of OpenCOR, but in the
         //       end we need to go for its GUI version, so start over but with
@@ -336,12 +337,13 @@ int main(int pArgC, char *pArgV[])
         // We want to restart, so the question is whether we want a normal
         // restart or a clean one
 
-        if (res == OpenCOR::CleanRestart)
+        if (res == OpenCOR::CleanRestart) {
             // We want a clean restart, so clear all the user settings (indeed,
             // this will ensure that the various windows are, for instance,
             // properly reset with regards to their dimensions)
 
             settings.clear();
+        }
 
         // Restart OpenCOR, but without providing any of the arguments that were
         // originally passed to us since we want to reset everything

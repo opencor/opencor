@@ -393,7 +393,7 @@ void SingleCellViewSimulationWorker::started()
 
         QMutex pausedMutex;
 
-        while ((mCurrentPoint != endingPoint) && !mStopped) {
+        forever {
             // Determine our next point and compute our model up to it
 
             ++pointCounter;
@@ -418,6 +418,11 @@ void SingleCellViewSimulationWorker::started()
             mSimulation->data()->recomputeVariables(mCurrentPoint);
 
             mSimulation->results()->addPoint(mCurrentPoint);
+
+            // Check whether we are done or whether we have been asked to stop
+
+            if ((mCurrentPoint == endingPoint) || mStopped)
+                break;
 
             // Delay things a bit, if (really) needed
 

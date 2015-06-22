@@ -1365,18 +1365,12 @@ bool SingleCellViewGraphPanelPlotWidget::removeGraph(SingleCellViewGraphPanelPlo
 
 //==============================================================================
 
-void SingleCellViewGraphPanelPlotWidget::drawGraphSegment(SingleCellViewGraphPanelPlotGraph *pGraph,
-                                                          const qulonglong &pFrom,
-                                                          const qulonglong &pTo)
+void SingleCellViewGraphPanelPlotWidget::drawGraphFrom(SingleCellViewGraphPanelPlotGraph *pGraph,
+                                                       const qulonglong &pFrom)
 {
-    // Make sure that we have a graph segment to draw
+    // Draw our graph from the given point
 
-    if (pFrom == pTo)
-        return;
-
-    // Draw our new graph segment
-
-    mDirectPainter->drawSeries(pGraph, pFrom, pTo);
+    mDirectPainter->drawSeries(pGraph, pFrom, -1);
 }
 
 //==============================================================================

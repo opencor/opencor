@@ -139,7 +139,7 @@ QString File::sha1() const
 
     QString fileContents;
 
-    if (Core::readTextFromFile(mFileName, fileContents))
+    if (readTextFromFile(mFileName, fileContents))
         return Core::sha1(fileContents);
     else
         return QString();

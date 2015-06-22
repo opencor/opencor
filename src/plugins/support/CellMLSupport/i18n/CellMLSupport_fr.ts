@@ -74,5 +74,9 @@
         <source>CeVAS error: %1</source>
         <translation>Erreur CeVAS : %1</translation>
     </message>
+    <message>
+        <source>the output file could not be saved</source>
+        <translation>le fichier de sortie n&apos;a pas pu être sauvegardé</translation>
+    </message>
 </context>
 </TS>

@@ -1667,11 +1667,15 @@ void SingleCellViewWidget::graphAdded(SingleCellViewGraphPanelPlotWidget *pPlot,
                                       SingleCellViewGraphPanelPlotGraph *pGraph)
 {
     // A new graph has been added, so keep track of it and update its plot
+    // Note: updating the plot will, if needed, update the plot's axes and, as
+    //       a result, replot the graphs including our new one. On the other
+    //       hand, if the plot's axes don't get updated, we need to draw our new
+    //       graph...
 
     updateGraphData(pGraph, mSimulations.value(pGraph->fileName())->results()->size());
-    updatePlot(pPlot);
 
-    pPlot->drawGraphSegment(pGraph, 0, -1);
+    if (!updatePlot(pPlot))
+        pPlot->drawGraphFrom(pGraph, 0);
 
     // Keep track of the plot itself, if needed
 
@@ -1744,12 +1748,14 @@ void SingleCellViewWidget::graphsUpdated(SingleCellViewGraphPanelPlotWidget *pPl
 
     // Update and replot our various plots, if allowed
 
-    if (mCanUpdatePlotsForUpdatedGraphs)
-        foreach (SingleCellViewGraphPanelPlotWidget *plot, plots)
+    if (mCanUpdatePlotsForUpdatedGraphs) {
+        foreach (SingleCellViewGraphPanelPlotWidget *plot, plots) {
             updatePlot(plot, true);
             // Note: even if the axes' values of the plot haven't changed, we
             //       still want to replot the plot since at least one of its
             //       graphs has been updated...
+        }
+    }
 }
 
 //==============================================================================
@@ -2015,7 +2021,7 @@ void SingleCellViewWidget::updateResults(SingleCellViewSimulation *pSimulation,
                     }
 
                     if (!needUpdatePlot)
-                        plot->drawGraphSegment(graph, oldDataSize-1, pSize-1);
+                        plot->drawGraphFrom(graph, oldDataSize-1);
                 }
             }
         }
@@ -2095,11 +2101,9 @@ void SingleCellViewWidget::checkResults(SingleCellViewSimulation *pSimulation)
     if (!mSimulations.values().contains(pSimulation))
         return;
 
-    // Update our simulation results size
+    // Update our results, but only if needed
 
     qulonglong simulationResultsSize = pSimulation->results()->size();
-
-    // Update our results, but only if needed
 
     if (simulationResultsSize != mOldSimulationResultsSizes.value(pSimulation)) {
         mOldSimulationResultsSizes.insert(pSimulation, simulationResultsSize);

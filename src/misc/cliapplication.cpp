@@ -371,22 +371,27 @@ bool CliApplication::run(int *pRes)
     bool statusOption = false;
     bool versionOption = false;
 
+    QStringList appArguments = mApp->arguments();
     QStringList commandArguments = QStringList();
 
-    foreach (const QString &argument, mApp->arguments()) {
-        if (!argument.compare("-a") || !argument.compare("--about")) {
+    appArguments.removeFirst();
+    // Note: we remove the first argument since it corresponds to the full path
+    //       to our executable, which we are not interested in...
+
+    foreach (const QString &appArgument, appArguments) {
+        if (!appArgument.compare("-a") || !appArgument.compare("--about")) {
             aboutOption = true;
-        } else if (!argument.compare("-c") || !argument.compare("--command")) {
+        } else if (!appArgument.compare("-c") || !appArgument.compare("--command")) {
             commandOption = true;
-        } else if (!argument.compare("-h") || !argument.compare("--help")) {
+        } else if (!appArgument.compare("-h") || !appArgument.compare("--help")) {
             helpOption = true;
-        } else if (!argument.compare("-p") || !argument.compare("--plugins")) {
+        } else if (!appArgument.compare("-p") || !appArgument.compare("--plugins")) {
             pluginsOption = true;
-        } else if (!argument.compare("-s") || !argument.compare("--status")) {
+        } else if (!appArgument.compare("-s") || !appArgument.compare("--status")) {
             statusOption = true;
-        } else if (!argument.compare("-v") || !argument.compare("--version")) {
+        } else if (!appArgument.compare("-v") || !appArgument.compare("--version")) {
             versionOption = true;
-        } else if (argument.startsWith("-")) {
+        } else if (appArgument.startsWith("-")) {
             // The user provided at least one unknown option
 
             help();
@@ -397,7 +402,7 @@ bool CliApplication::run(int *pRes)
         } else if (commandOption) {
             // Not an option, so we consider it to be part of a command
 
-            commandArguments << argument;
+            commandArguments << appArgument;
         }
     }
 
