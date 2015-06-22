@@ -1134,13 +1134,14 @@ void SingleCellViewWidget::on_actionRunPauseResumeSimulation_triggered()
                 // Effectively run our simulation in case we were able to
                 // allocate all the memory we need to run the simulation
 
-                if (runSimulation)
+                if (runSimulation) {
                     // Now, we really run our simulation
 
                     mSimulation->run();
-                else
+                } else {
                     QMessageBox::warning(qApp->activeWindow(), tr("Run Simulation"),
                                          tr("We could not allocate the %1 of memory required for the simulation.").arg(Core::sizeAsString(requiredMemory)));
+                }
             }
 
             handlingAction = false;

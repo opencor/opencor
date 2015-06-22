@@ -921,7 +921,7 @@ double SingleCellViewSimulation::requiredMemory()
     //          in case a simulation requires an insane amount of memory...
     // Note #2: the 1.0 is for mPoints in SingleCellViewSimulationResults...
 
-    if (mRuntime)
+    if (mRuntime) {
         return  size()
                *( 1
                  +mRuntime->constantsCount()
@@ -929,8 +929,9 @@ double SingleCellViewSimulation::requiredMemory()
                  +mRuntime->statesCount()
                  +mRuntime->algebraicCount())
                *CoreSolver::SizeOfDouble;
-    else
+    } else {
         return 0.0;
+    }
 }
 
 //==============================================================================
