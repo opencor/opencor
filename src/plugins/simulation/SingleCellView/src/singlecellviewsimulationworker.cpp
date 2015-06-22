@@ -99,7 +99,7 @@ bool SingleCellViewSimulationWorker::isPaused() const
 
 double SingleCellViewSimulationWorker::currentPoint() const
 {
-    // Return our progress
+    // Return our current point
 
     return mThread->isRunning()?
                mCurrentPoint:
