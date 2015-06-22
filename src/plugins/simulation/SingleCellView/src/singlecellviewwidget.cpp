@@ -648,7 +648,7 @@ void SingleCellViewWidget::initialize(const QString &pFileName,
 
     resetFileTabIcon(pFileName);
 
-    mProgressBarWidget->setValue(mSimulation->progress());
+    mProgressBarWidget->setValue(mOldSimulationResultsSizes.value(mSimulation)/mSimulation->size());
 
     // Determine whether the CellML file has a valid runtime
 
@@ -1134,13 +1134,14 @@ void SingleCellViewWidget::on_actionRunPauseResumeSimulation_triggered()
                 // Effectively run our simulation in case we were able to
                 // allocate all the memory we need to run the simulation
 
-                if (runSimulation)
+                if (runSimulation) {
                     // Now, we really run our simulation
 
                     mSimulation->run();
-                else
+                } else {
                     QMessageBox::warning(qApp->activeWindow(), tr("Run Simulation"),
                                          tr("We could not allocate the %1 of memory required for the simulation.").arg(Core::sizeAsString(requiredMemory)));
+                }
             }
 
             handlingAction = false;
@@ -2061,8 +2062,10 @@ void SingleCellViewWidget::updateResults(SingleCellViewSimulation *pSimulation,
     //       that cannot be handled by us, meaning that our central widget would
     //       show a message rather than us...
 
+    double simulationProgress = mOldSimulationResultsSizes.value(pSimulation)/pSimulation->size();
+
     if (isVisible() && (pSimulation == mSimulation)) {
-        mProgressBarWidget->setValue(mSimulation->progress());
+        mProgressBarWidget->setValue(simulationProgress);
     } else {
         // We are not dealing with the active simulation, so create an icon that
         // shows the simulation's progress and let people know about it
@@ -2073,7 +2076,7 @@ void SingleCellViewWidget::updateResults(SingleCellViewSimulation *pSimulation,
         //       simulation the update is...
 
         int oldProgress = mProgresses.value(pSimulation->fileName(), -1);
-        int newProgress = (tabBarPixmapSize()-2)*pSimulation->progress();
+        int newProgress = (tabBarPixmapSize()-2)*simulationProgress;
         // Note: tabBarPixmapSize()-2 because we want a one-pixel wide border...
 
         if (newProgress != oldProgress) {

@@ -224,8 +224,6 @@ public:
 
     double currentPoint() const;
 
-    double progress() const;
-
     int delay() const;
     void setDelay(const int &pDelay);
 
