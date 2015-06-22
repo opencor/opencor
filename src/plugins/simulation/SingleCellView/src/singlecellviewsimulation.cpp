@@ -885,15 +885,6 @@ double SingleCellViewSimulation::currentPoint() const
 
 //==============================================================================
 
-double SingleCellViewSimulation::progress() const
-{
-    // Return our progress
-
-    return mWorker?mWorker->progress():0.0;
-}
-
-//==============================================================================
-
 int SingleCellViewSimulation::delay() const
 {
     // Return our delay

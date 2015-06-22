@@ -66,8 +66,6 @@ public:
 
     double currentPoint() const;
 
-    double progress() const;
-
     bool run();
     bool pause();
     bool resume();
@@ -85,8 +83,6 @@ private:
     SingleCellViewSimulation *mSimulation;
 
     double mCurrentPoint;
-
-    double mProgress;
 
     bool mPaused;
     bool mStopped;

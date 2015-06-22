@@ -648,7 +648,7 @@ void SingleCellViewWidget::initialize(const QString &pFileName,
 
     resetFileTabIcon(pFileName);
 
-    mProgressBarWidget->setValue(mSimulation->progress());
+    mProgressBarWidget->setValue(mOldSimulationResultsSizes.value(mSimulation)/mSimulation->size());
 
     // Determine whether the CellML file has a valid runtime
 
@@ -2062,8 +2062,10 @@ void SingleCellViewWidget::updateResults(SingleCellViewSimulation *pSimulation,
     //       that cannot be handled by us, meaning that our central widget would
     //       show a message rather than us...
 
+    double simulationProgress = mOldSimulationResultsSizes.value(pSimulation)/pSimulation->size();
+
     if (isVisible() && (pSimulation == mSimulation)) {
-        mProgressBarWidget->setValue(mSimulation->progress());
+        mProgressBarWidget->setValue(simulationProgress);
     } else {
         // We are not dealing with the active simulation, so create an icon that
         // shows the simulation's progress and let people know about it
@@ -2074,7 +2076,7 @@ void SingleCellViewWidget::updateResults(SingleCellViewSimulation *pSimulation,
         //       simulation the update is...
 
         int oldProgress = mProgresses.value(pSimulation->fileName(), -1);
-        int newProgress = (tabBarPixmapSize()-2)*pSimulation->progress();
+        int newProgress = (tabBarPixmapSize()-2)*simulationProgress;
         // Note: tabBarPixmapSize()-2 because we want a one-pixel wide border...
 
         if (newProgress != oldProgress) {
