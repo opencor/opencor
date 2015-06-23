@@ -230,7 +230,7 @@ void SingleCellViewInformationParametersWidget::updateParameters(const double &p
     foreach (Core::Property *property, mPropertyEditor->properties()) {
         CellMLSupport::CellmlFileRuntimeParameter *parameter = mParameters.value(property);
 
-        if (parameter)
+        if (parameter) {
             switch (parameter->type()) {
             case CellMLSupport::CellmlFileRuntimeParameter::Constant:
             case CellMLSupport::CellmlFileRuntimeParameter::ComputedConstant:
@@ -254,6 +254,7 @@ void SingleCellViewInformationParametersWidget::updateParameters(const double &p
 
                 property->setDoubleValue(pCurrentPoint, false);
             }
+        }
     }
 
     // Check whether any of our properties has actually been modified

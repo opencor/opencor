@@ -728,10 +728,11 @@ void Property::setDoubleValue(const double &pDoubleValue,
 {
     // Set our value, should it be of double type
 
-    if (mType == Double)
+    if (mType == Double) {
         setValue(QString::number(pDoubleValue, 'g', 15), false, pEmitSignal);
         // Note: we want as much precision as possible, hence we use 15 (see
         //       http://en.wikipedia.org/wiki/Double_precision)...
+    }
 }
 
 //==============================================================================
