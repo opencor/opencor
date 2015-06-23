@@ -729,7 +729,12 @@ void SingleCellViewSimulationResults::addPoint(const double &pPoint)
 {
     // Add the data to our data store
 
-    mDataStore->setValues(mSize++, pPoint);
+    mDataStore->setValues(mSize, pPoint);
+
+    ++mSize;
+    // Note: we want to do this after the call to CoreDataStore::setValues()
+    //       since it may otherwise mess up our plotting of simulation data (see
+    //       https://github.com/opencor/opencor/issues/636)...
 }
 
 //==============================================================================
