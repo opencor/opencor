@@ -467,8 +467,9 @@ void SingleCellViewInformationParametersWidget::populateModel(CellMLSupport::Cel
     //       Property::setExtraInfo() (through our call to updateExtraInfos())
     //       by asking them not to update the tool tip (since its time
     //       consuming). Now, this is fine to do with all the model parameters
-    //       (since their value gets updated later on), but not the VOI hence we
-    //       'manually' do it here...
+    //       (since their value and, therefore, their tool tip get updated later
+    //       on), but not with the VOI hence we 'manually' update its tool tip
+    //       here...
 
     if (voiProperty)
         voiProperty->updateToolTip();
