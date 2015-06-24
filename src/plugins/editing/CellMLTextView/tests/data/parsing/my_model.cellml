@@ -140,7 +140,7 @@
                 </piecewise>
             </apply>
             <!-- In between comment #34...-->
-            <apply cmeta:id="my_equation_cmeta_id">
+            <apply id="my_equation_cmeta_id">
                 <eq/>
                 <ci>a</ci>
                 <ci>b</ci>
