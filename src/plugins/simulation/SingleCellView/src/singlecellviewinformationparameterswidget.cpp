@@ -332,6 +332,7 @@ void SingleCellViewInformationParametersWidget::populateModel(CellMLSupport::Cel
 
     // Populate our property editor with the parameters
 
+    Core::Property *voiProperty = 0;
     QString componentHierarchy = QString();
     Core::Property *sectionProperty = 0;
 
@@ -449,11 +450,28 @@ void SingleCellViewInformationParametersWidget::populateModel(CellMLSupport::Cel
         // Keep track of the link between our property value and parameter
 
         mParameters.insert(property, parameter);
+
+        // Keep track of our VOI property, if it is the one
+
+        if (parameter->type() == CellMLSupport::CellmlFileRuntimeParameter::Voi)
+            voiProperty = property;
     }
 
     // Update (well, set here) the extra info of all our parameters
 
     updateExtraInfos(false);
+
+    // Make sure that the VOI property has its tool tip properly initialised
+    // Note: indeed, to speed the process of populating our model, we call
+    //       Property::setName(), Property::setUnit() and
+    //       Property::setExtraInfo() (through our call to updateExtraInfos())
+    //       by asking them not to update the tool tip (since its time
+    //       consuming). Now, this is fine to do with all the model parameters
+    //       (since their value gets updated later on), but not the VOI hence we
+    //       'manually' do it here...
+
+    if (voiProperty)
+        voiProperty->updateToolTip();
 
     // Expand all our properties
 
