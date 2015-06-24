@@ -60,6 +60,12 @@ void CollapsibleHeaderTitleWidget::mouseDoubleClickEvent(QMouseEvent *pEvent)
 
 //==============================================================================
 
+static const QIcon NoIcon    = QIcon();
+static const QIcon DownIcon  = QIcon(":/oxygen/actions/arrow-down.png");
+static const QIcon RightIcon = QIcon(":/oxygen/actions/arrow-right.png");
+
+//==============================================================================
+
 CollapsibleHeaderWidget::CollapsibleHeaderWidget(const QColor &pSeparatorColor,
                                                  const bool &pCollapsible,
                                                  QWidget *pParent) :
@@ -95,9 +101,6 @@ CollapsibleHeaderWidget::CollapsibleHeaderWidget(const QColor &pSeparatorColor,
                                    QString::number(winColor.blue())));
 
     // Create and customise our button and title
-
-    static const QIcon NoIcon   = QIcon();
-    static const QIcon DownIcon = QIcon(":/oxygen/actions/arrow-down.png");
 
     mButton = new QToolButton(subWidget);
     mTitle  = new CollapsibleHeaderTitleWidget(subWidget);
@@ -231,9 +234,6 @@ void CollapsibleHeaderWidget::toggleCollapsedState()
     mCollapsed = !mCollapsed;
 
     // Update our button's icon to reflect our new collapsed state
-
-    static const QIcon RightIcon = QIcon(":/oxygen/actions/arrow-right.png");
-    static const QIcon DownIcon  = QIcon(":/oxygen/actions/arrow-down.png");
 
     mButton->setIcon(mCollapsed?RightIcon:DownIcon);
 

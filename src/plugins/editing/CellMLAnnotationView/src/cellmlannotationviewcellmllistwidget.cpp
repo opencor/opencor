@@ -231,57 +231,69 @@ void CellmlAnnotationViewCellmlElementItem::setIcon(const Type &pType)
 {
     // Determine the icon to be used for the item
 
+    static const QIcon ErrorIcon        = QIcon(":CellMLSupport_errorNode");
+    static const QIcon WarningIcon      = QIcon(":CellMLSupport_warningNode");
+    static const QIcon ModelIcon        = QIcon(":CellMLSupport_modelNode");
+    static const QIcon ImportIcon       = QIcon(":CellMLSupport_importNode");
+    static const QIcon UnitIcon         = QIcon(":CellMLSupport_unitNode");
+    static const QIcon UnitElementIcon  = QIcon(":CellMLSupport_unitElementNode");
+    static const QIcon ComponentIcon    = QIcon(":CellMLSupport_componentNode");
+    static const QIcon VariableIcon     = QIcon(":CellMLSupport_variableNode");
+    static const QIcon GroupIcon        = QIcon(":CellMLSupport_groupNode");
+    static const QIcon RelationshipIcon = QIcon(":CellMLSupport_relationshipNode");
+    static const QIcon ConnectionIcon   = QIcon(":CellMLSupport_connectionNode");
+
     switch (pType) {
     case Error:
-        QStandardItem::setIcon(QIcon(":CellMLSupport_errorNode"));
+        QStandardItem::setIcon(ErrorIcon);
 
         break;
     case Warning:
-        QStandardItem::setIcon(QIcon(":CellMLSupport_warningNode"));
+        QStandardItem::setIcon(WarningIcon);
 
         break;
     case Model:
-        QStandardItem::setIcon(QIcon(":CellMLSupport_modelNode"));
+        QStandardItem::setIcon(ModelIcon);
 
         break;
     case Import:
-        QStandardItem::setIcon(QIcon(":CellMLSupport_importNode"));
+        QStandardItem::setIcon(ImportIcon);
 
         break;
     case ImportUnit:
     case Unit:
-        QStandardItem::setIcon(QIcon(":CellMLSupport_unitNode"));
+        QStandardItem::setIcon(UnitIcon);
 
         break;
     case UnitElement:
-        QStandardItem::setIcon(QIcon(":CellMLSupport_unitElementNode"));
+        QStandardItem::setIcon(UnitElementIcon);
 
         break;
     case ImportComponent:
     case Component:
     case ComponentMapping:
-        QStandardItem::setIcon(QIcon(":CellMLSupport_componentNode"));
+        QStandardItem::setIcon(ComponentIcon);
 
         break;
     case Variable:
     case VariableMapping:
-        QStandardItem::setIcon(QIcon(":CellMLSupport_variableNode"));
+        QStandardItem::setIcon(VariableIcon);
 
         break;
     case Group:
-        QStandardItem::setIcon(QIcon(":CellMLSupport_groupNode"));
+        QStandardItem::setIcon(GroupIcon);
 
         break;
     case RelationshipReference:
-        QStandardItem::setIcon(QIcon(":CellMLSupport_relationshipNode"));
+        QStandardItem::setIcon(RelationshipIcon);
 
         break;
     case ComponentReference:
-        QStandardItem::setIcon(QIcon(":CellMLSupport_componentNode"));
+        QStandardItem::setIcon(ComponentIcon);
 
         break;
     case Connection:
-        QStandardItem::setIcon(QIcon(":CellMLSupport_connectionNode"));
+        QStandardItem::setIcon(ConnectionIcon);
 
         break;
     default:

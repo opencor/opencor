@@ -39,10 +39,10 @@ namespace FileOrganiserWindow {
 
 //==============================================================================
 
-static const auto CollapsedFolderIcon = QStringLiteral(":oxygen/places/folder.png");
-static const auto ExpandedFolderIcon  = QStringLiteral(":oxygen/actions/document-open-folder.png");
-static const auto FileIcon            = QStringLiteral(":oxygen/mimetypes/application-x-zerosize.png");
-static const auto DeletedFileIcon     = QStringLiteral(":oxygen/status/image-missing.png");
+static const QIcon CollapsedFolderIcon = QIcon(":oxygen/places/folder.png");
+static const QIcon ExpandedFolderIcon  = QIcon(":oxygen/actions/document-open-folder.png");
+static const QIcon FileIcon            = QIcon(":oxygen/mimetypes/application-x-zerosize.png");
+static const QIcon DeletedFileIcon     = QIcon(":oxygen/status/image-missing.png");
 
 //==============================================================================
 
@@ -142,7 +142,7 @@ void FileOrganiserWindowWidget::loadItemSettings(QSettings *pSettings,
             if (childItemsCount >= 0) {
                 // We are dealing with a folder item
 
-                QStandardItem *folderItem = new QStandardItem(QIcon(CollapsedFolderIcon),
+                QStandardItem *folderItem = new QStandardItem(CollapsedFolderIcon,
                                                               textOrPath);
 
                 folderItem->setData(true, Item::Folder);
@@ -163,9 +163,7 @@ void FileOrganiserWindowWidget::loadItemSettings(QSettings *pSettings,
 
                 QFileInfo fileInfo = textOrPath;
 
-                QStandardItem *fileItem = new QStandardItem(QIcon(fileInfo.exists()?
-                                                                      FileIcon:
-                                                                      DeletedFileIcon),
+                QStandardItem *fileItem = new QStandardItem(fileInfo.exists()?FileIcon:DeletedFileIcon,
                                                             fileInfo.fileName());
 
                 fileItem->setData(textOrPath, Item::Path);
@@ -729,7 +727,7 @@ void FileOrganiserWindowWidget::newFolder()
     QStandardItem *crtItem = !selectedIndexesCount?
                                 mModel->invisibleRootItem():
                                 mModel->itemFromIndex(selectedIndexes.first());
-    QStandardItem *newFolderItem = new QStandardItem(QIcon(CollapsedFolderIcon),
+    QStandardItem *newFolderItem = new QStandardItem(CollapsedFolderIcon,
                                                      newFolderName(crtItem));
 
     newFolderItem->setData(true, Item::Folder);
@@ -874,7 +872,7 @@ void FileOrganiserWindowWidget::addFile(const QString &pFileName,
         // pDropPosition
 
         if (!ownedBy(fileName, newParentItem)) {
-            QStandardItem *newFileItem = new QStandardItem(QIcon(FileIcon),
+            QStandardItem *newFileItem = new QStandardItem(FileIcon,
                                                            QFileInfo(fileName).fileName());
 
             newFileItem->setData(fileName, Item::Path);
@@ -1078,7 +1076,7 @@ void FileOrganiserWindowWidget::expandedFolder(const QModelIndex &pFolderIndex)
 {
     // The folder is being expanded, so update its icon to reflect its new state
 
-    mModel->itemFromIndex(pFolderIndex)->setIcon(QIcon(ExpandedFolderIcon));
+    mModel->itemFromIndex(pFolderIndex)->setIcon(ExpandedFolderIcon);
 
     // Resize the widget, just to be on the safe side
 
@@ -1091,7 +1089,7 @@ void FileOrganiserWindowWidget::collapsedFolder(const QModelIndex &pFolderIndex)
 {
     // The folder is being expanded, so update its icon to reflect its new state
 
-    mModel->itemFromIndex(pFolderIndex)->setIcon(QIcon(CollapsedFolderIcon));
+    mModel->itemFromIndex(pFolderIndex)->setIcon(CollapsedFolderIcon);
 
     // Resize the widget, just to be on the safe side
 
@@ -1143,9 +1141,7 @@ void FileOrganiserWindowWidget::updateFileItems(QStandardItem *pItem,
         // The current item is a file item and it refers to pFileName, so update
         // its icon based on the value of pStatus
 
-        pItem->setIcon(QIcon((pStatus == Core::File::Deleted)?
-                                 DeletedFileIcon:
-                                 FileIcon));
+        pItem->setIcon((pStatus == Core::File::Deleted)?DeletedFileIcon:FileIcon);
     }
 
     // Update our child file items, if any
