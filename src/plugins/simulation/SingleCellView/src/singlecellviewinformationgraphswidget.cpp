@@ -741,9 +741,10 @@ bool SingleCellViewInformationGraphsWidget::checkParameter(CellMLSupport::Cellml
     // Update our parameter property based on whether it corresponds to an
     // existing parameter in our runtime
 
-    pParameterProperty->setIcon(res?
-                                    QIcon(":/blank.png"):
-                                    QIcon(":/oxygen/status/task-attention.png"));
+    static const QIcon BlankIcon   = QIcon(":/blank.png");
+    static const QIcon WarningIcon = QIcon(":/oxygen/status/task-attention.png");
+
+    pParameterProperty->setIcon(res?BlankIcon:WarningIcon);
     pParameterProperty->setExtraInfo(res?
                                          QString():
                                          pRuntime?
@@ -782,17 +783,20 @@ void SingleCellViewInformationGraphsWidget::updateGraphInfo(Core::Property *pPro
     // the model property, and determine the file name from which we will have
     // to check our X and Y properties
 
+    static const QIcon LockedIcon   = QIcon(":/oxygen/status/object-locked.png");
+    static const QIcon UnlockedIcon = QIcon(":/oxygen/status/object-unlocked.png");
+
     SingleCellViewGraphPanelPlotGraph *graph = mGraphs.value(pProperty);
     QString fileName = mFileName;
     QPen oldPen = graph->pen();
     QPen newPen = oldPen;
 
     if (!pFileName.compare(tr("Current"))) {
-        pProperty->properties()[0]->setIcon(QIcon(":/oxygen/status/object-unlocked.png"));
+        pProperty->properties()[0]->setIcon(UnlockedIcon);
 
         newPen.setColor(Qt::darkBlue);
     } else {
-        pProperty->properties()[0]->setIcon(QIcon(":/oxygen/status/object-locked.png"));
+        pProperty->properties()[0]->setIcon(LockedIcon);
 
         newPen.setColor(Qt::darkRed);
 

@@ -495,11 +495,14 @@ void SingleCellViewWidget::updateSimulationMode()
 
 void SingleCellViewWidget::updateRunPauseAction(const bool &pRunActionEnabled)
 {
+    // Update our various actions
+
+    static const QIcon StartIcon = QIcon(":/oxygen/actions/media-playback-start.png");
+    static const QIcon PauseIcon = QIcon(":/oxygen/actions/media-playback-pause.png");
+
     mRunActionEnabled = pRunActionEnabled;
 
-    mGui->actionRunPauseResumeSimulation->setIcon(pRunActionEnabled?
-                                                      QIcon(":/oxygen/actions/media-playback-start.png"):
-                                                      QIcon(":/oxygen/actions/media-playback-pause.png"));
+    mGui->actionRunPauseResumeSimulation->setIcon(pRunActionEnabled?StartIcon:PauseIcon);
 
     bool simulationPaused = mSimulation && mSimulation->isPaused();
 
@@ -2151,24 +2154,32 @@ QIcon SingleCellViewWidget::parameterIcon(const CellMLSupport::CellmlFileRuntime
 {
     // Return an icon that illustrates the type of a parameter
 
+    static const QIcon VoiIcon              = QIcon(":/voi.png");
+    static const QIcon ConstantIcon         = QIcon(":/constant.png");
+    static const QIcon ComputedConstantIcon = QIcon(":/computedConstant.png");
+    static const QIcon RateIcon             = QIcon(":/rate.png");
+    static const QIcon StateIcon            = QIcon(":/state.png");
+    static const QIcon AlgebraicIcon        = QIcon(":/algebraic.png");
+    static const QIcon ErrorNodeIcon        = QIcon(":CellMLSupport_errorNode");
+
     switch (pParameterType) {
     case CellMLSupport::CellmlFileRuntimeParameter::Voi:
-        return QIcon(":/voi.png");
+        return VoiIcon;
     case CellMLSupport::CellmlFileRuntimeParameter::Constant:
-        return QIcon(":/constant.png");
+        return ConstantIcon;
     case CellMLSupport::CellmlFileRuntimeParameter::ComputedConstant:
-        return QIcon(":/computedConstant.png");
+        return ComputedConstantIcon;
     case CellMLSupport::CellmlFileRuntimeParameter::Rate:
-        return QIcon(":/rate.png");
+        return RateIcon;
     case CellMLSupport::CellmlFileRuntimeParameter::State:
-        return QIcon(":/state.png");
+        return StateIcon;
     case CellMLSupport::CellmlFileRuntimeParameter::Algebraic:
-        return QIcon(":/algebraic.png");
+        return AlgebraicIcon;
     default:
         // We are dealing with a type of parameter which is of no interest to us
         // Note: we should never reach this point...
 
-        return QIcon(":CellMLSupport_errorNode");
+        return ErrorNodeIcon;
     }
 }
 
