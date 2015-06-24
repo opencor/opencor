@@ -498,8 +498,8 @@ void EditorFindReplaceWidget::searchOptionChanged()
         static QIcon wholeWordsOnlyIcon = QIcon(":/qtCreator/src/plugins/coreplugin/find/images/wholewords.png");
         static QIcon regularExpressionIcon = QIcon(":/qtCreator/src/plugins/coreplugin/find/images/regexp.png");
 
-        static int IconSize = 16;
-        static int IconWidth = 6;
+        static const int IconSize = 16;
+        static const int IconWidth = 6;
 
         QPixmap dropDownPixmap = QPixmap(nbOfOptions*IconWidth-mRegularExpressionAction->isChecked(),
                                          IconSize);
