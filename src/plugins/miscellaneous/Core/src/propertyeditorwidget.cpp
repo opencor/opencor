@@ -658,14 +658,15 @@ QString Property::name() const
 
 //==============================================================================
 
-void Property::setName(const QString &pName)
+void Property::setName(const QString &pName, const bool &pUpdateToolTip)
 {
     // Set our name
 
     if (pName.compare(mName->text())) {
         mName->setText(pName);
 
-        updateToolTip();
+        if (pUpdateToolTip)
+            updateToolTip();
     }
 }
 
@@ -928,14 +929,15 @@ QString Property::unit() const
 
 //==============================================================================
 
-void Property::setUnit(const QString &pUnit)
+void Property::setUnit(const QString &pUnit, const bool &pUpdateToolTip)
 {
     // Set our unit, if it's not of section type
 
     if (mHasUnit && (mType != Section) && pUnit.compare(mUnit->text())) {
         mUnit->setText(pUnit);
 
-        updateToolTip();
+        if (pUpdateToolTip)
+            updateToolTip();
     }
 }
 
@@ -950,14 +952,16 @@ QString Property::extraInfo() const
 
 //==============================================================================
 
-void Property::setExtraInfo(const QString &pExtraInfo)
+void Property::setExtraInfo(const QString &pExtraInfo,
+                            const bool &pUpdateToolTip)
 {
     // Set our extra info
 
     if (pExtraInfo.compare(mExtraInfo)) {
         mExtraInfo = pExtraInfo;
 
-        updateToolTip();
+        if (pUpdateToolTip)
+            updateToolTip();
     }
 }
 

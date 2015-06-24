@@ -443,8 +443,8 @@ void SingleCellViewInformationParametersWidget::populateModel(CellMLSupport::Cel
 
         property->setIcon(SingleCellViewWidget::parameterIcon(parameter->type()));
 
-        property->setName(parameter->formattedName());
-        property->setUnit(parameter->formattedUnit(pRuntime->variableOfIntegration()->unit()));
+        property->setName(parameter->formattedName(), false);
+        property->setUnit(parameter->formattedUnit(pRuntime->variableOfIntegration()->unit()), false);
 
         // Keep track of the link between our property value and parameter
 
@@ -453,7 +453,7 @@ void SingleCellViewInformationParametersWidget::populateModel(CellMLSupport::Cel
 
     // Update (well, set here) the extra info of all our parameters
 
-    updateExtraInfos();
+    updateExtraInfos(false);
 
     // Expand all our properties
 
@@ -570,7 +570,7 @@ void SingleCellViewInformationParametersWidget::populateContextMenu(QMenu *pCont
 
 //==============================================================================
 
-void SingleCellViewInformationParametersWidget::updateExtraInfos()
+void SingleCellViewInformationParametersWidget::updateExtraInfos(const bool &pUpdateToolTips)
 {
     // Make sure that we have a property editor
 
@@ -612,7 +612,7 @@ void SingleCellViewInformationParametersWidget::updateExtraInfos()
                 parameterType = tr("variable of integration");
             }
 
-            property->setExtraInfo(parameterType);
+            property->setExtraInfo(parameterType, pUpdateToolTips);
         }
     }
 }
