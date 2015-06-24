@@ -39,13 +39,6 @@ namespace FileOrganiserWindow {
 
 //==============================================================================
 
-static const QIcon CollapsedFolderIcon = QIcon(":oxygen/places/folder.png");
-static const QIcon ExpandedFolderIcon  = QIcon(":oxygen/actions/document-open-folder.png");
-static const QIcon FileIcon            = QIcon(":oxygen/mimetypes/application-x-zerosize.png");
-static const QIcon DeletedFileIcon     = QIcon(":oxygen/status/image-missing.png");
-
-//==============================================================================
-
 FileOrganiserWindowWidget::FileOrganiserWindowWidget(QWidget *pParent) :
     TreeViewWidget(pParent)
 {
@@ -142,6 +135,8 @@ void FileOrganiserWindowWidget::loadItemSettings(QSettings *pSettings,
             if (childItemsCount >= 0) {
                 // We are dealing with a folder item
 
+                static const QIcon CollapsedFolderIcon = QIcon(":oxygen/places/folder.png");
+
                 QStandardItem *folderItem = new QStandardItem(CollapsedFolderIcon,
                                                               textOrPath);
 
@@ -160,6 +155,9 @@ void FileOrganiserWindowWidget::loadItemSettings(QSettings *pSettings,
                 childParentItem = folderItem;
             } else {
                 // We are dealing with a file item
+
+                static const QIcon FileIcon        = QIcon(":oxygen/mimetypes/application-x-zerosize.png");
+                static const QIcon DeletedFileIcon = QIcon(":oxygen/status/image-missing.png");
 
                 QFileInfo fileInfo = textOrPath;
 
@@ -722,6 +720,8 @@ void FileOrganiserWindowWidget::newFolder()
     // Either create a folder item below the current folder item or below the
     // root item, depending on the situation
 
+    static const QIcon CollapsedFolderIcon = QIcon(":oxygen/places/folder.png");
+
     QModelIndexList selectedIndexes = selectionModel()->selectedIndexes();
     int selectedIndexesCount = selectedIndexes.count();
     QStandardItem *crtItem = !selectedIndexesCount?
@@ -872,6 +872,8 @@ void FileOrganiserWindowWidget::addFile(const QString &pFileName,
         // pDropPosition
 
         if (!ownedBy(fileName, newParentItem)) {
+            static const QIcon FileIcon = QIcon(":oxygen/mimetypes/application-x-zerosize.png");
+
             QStandardItem *newFileItem = new QStandardItem(FileIcon,
                                                            QFileInfo(fileName).fileName());
 
@@ -1076,6 +1078,8 @@ void FileOrganiserWindowWidget::expandedFolder(const QModelIndex &pFolderIndex)
 {
     // The folder is being expanded, so update its icon to reflect its new state
 
+    static const QIcon ExpandedFolderIcon = QIcon(":oxygen/actions/document-open-folder.png");
+
     mModel->itemFromIndex(pFolderIndex)->setIcon(ExpandedFolderIcon);
 
     // Resize the widget, just to be on the safe side
@@ -1088,6 +1092,8 @@ void FileOrganiserWindowWidget::expandedFolder(const QModelIndex &pFolderIndex)
 void FileOrganiserWindowWidget::collapsedFolder(const QModelIndex &pFolderIndex)
 {
     // The folder is being expanded, so update its icon to reflect its new state
+
+    static const QIcon CollapsedFolderIcon = QIcon(":oxygen/places/folder.png");
 
     mModel->itemFromIndex(pFolderIndex)->setIcon(CollapsedFolderIcon);
 
@@ -1140,6 +1146,9 @@ void FileOrganiserWindowWidget::updateFileItems(QStandardItem *pItem,
         && !pItem->data(Item::Path).toString().compare(pFileName)) {
         // The current item is a file item and it refers to pFileName, so update
         // its icon based on the value of pStatus
+
+        static const QIcon FileIcon        = QIcon(":oxygen/mimetypes/application-x-zerosize.png");
+        static const QIcon DeletedFileIcon = QIcon(":oxygen/status/image-missing.png");
 
         pItem->setIcon((pStatus == Core::File::Deleted)?DeletedFileIcon:FileIcon);
     }

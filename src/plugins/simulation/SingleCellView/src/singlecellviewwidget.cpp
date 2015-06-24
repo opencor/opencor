@@ -956,10 +956,6 @@ int SingleCellViewWidget::tabBarPixmapSize() const
 
 //==============================================================================
 
-static const QIcon NoIcon = QIcon();
-
-//==============================================================================
-
 QIcon SingleCellViewWidget::fileTabIcon(const QString &pFileName) const
 {
     // Return a file tab icon that shows the given file's simulation progress
@@ -985,6 +981,8 @@ QIcon SingleCellViewWidget::fileTabIcon(const QString &pFileName) const
     } else {
         // No simulation object currently exists for the model, so return a null
         // icon
+
+        static const QIcon NoIcon = QIcon();
 
         return NoIcon;
     }
@@ -1467,6 +1465,8 @@ void SingleCellViewWidget::resetFileTabIcon(const QString &pFileName,
 {
     // Stop tracking our simulation progress and let people know that our file
     // tab icon should be reset
+
+    static const QIcon NoIcon = QIcon();
 
     if (pRemoveProgress)
         mProgresses.remove(pFileName);
