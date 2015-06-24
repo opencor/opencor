@@ -177,12 +177,13 @@ PluginsWindow::PluginsWindow(PluginManager *pPluginManager,
 
     // Populate the data model with our different plugins
 
+    static const QIcon LoadedIcon    = QIcon(":/oxygen/actions/dialog-ok-apply.png");
+    static const QIcon NotLoadedIcon = QIcon(":/oxygen/actions/edit-delete.png");
+
     foreach (Plugin *plugin, plugins) {
         // Create the item corresponding to the current plugin
 
-        QStandardItem *pluginItem = new QStandardItem((plugin->status() == Plugin::Loaded)?
-                                                          QIcon(":/oxygen/actions/dialog-ok-apply.png"):
-                                                          QIcon(":/oxygen/actions/edit-delete.png"),
+        QStandardItem *pluginItem = new QStandardItem((plugin->status() == Plugin::Loaded)?LoadedIcon:NotLoadedIcon,
                                                       plugin->name());
 
         // Only selectable plugins and plugins that are of the right type are

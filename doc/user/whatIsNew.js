@@ -39,7 +39,8 @@ var jsonData = { "versions": [
                            },
                            { "type": "subCategory", "name": "Single cell (simulation) view",
                              "entries": [
-                               { "type": "Improved", "description": "GUI rendering on <a href=\"http://en.wikipedia.org/wiki/OS_X\">OS X</a>." }
+                               { "type": "Improved", "description": "GUI rendering." },
+                               { "type": "Improved", "description": "Plotting of simulation data." }
                              ]
                            }
                          ]

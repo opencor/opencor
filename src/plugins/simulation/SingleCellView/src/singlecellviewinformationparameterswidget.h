@@ -108,7 +108,7 @@ private:
     void populateContextMenu(QMenu *pContextMenu,
                              CellMLSupport::CellmlFileRuntime *pRuntime);
 
-    void updateExtraInfos();
+    void updateExtraInfos(const bool &pUpdateToolTips = true);
 
     void retranslateContextMenu(QMenu *pContextMenu);
 

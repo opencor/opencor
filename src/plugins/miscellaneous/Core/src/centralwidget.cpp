@@ -663,6 +663,10 @@ void CentralWidget::updateFileTab(const int &pIndex)
 {
     // Update the text, tool tip and icon to be used for the given file tab
 
+    static const QIcon NoIcon       = QIcon();
+    static const QIcon InternetIcon = QIcon(":/oxygen/categories/applications-internet.png");
+    static const QIcon LockedIcon   = QIcon(":/oxygen/status/object-locked.png");
+
     FileManager *fileManagerInstance = FileManager::instance();
     QString fileName = mFileNames[pIndex];
     bool fileIsNew = fileManagerInstance->isNew(fileName);
@@ -681,10 +685,10 @@ void CentralWidget::updateFileTab(const int &pIndex)
                                              url:
                                              fileName);
     mFileTabs->setTabIcon(pIndex, fileIsRemote?
-                                      QIcon(":/oxygen/categories/applications-internet.png"):
+                                      InternetIcon:
                                       fileManagerInstance->isReadableAndWritable(fileName)?
-                                          QIcon():
-                                          QIcon(":/oxygen/status/object-locked.png"));
+                                          NoIcon:
+                                          LockedIcon);
     // Note: we really want to call isReadableAndWritable() rather than
     //       isLocked() since no icon should be shown only if the file can be
     //       both readable and writable (see

@@ -60,6 +60,12 @@ void CollapsibleHeaderTitleWidget::mouseDoubleClickEvent(QMouseEvent *pEvent)
 
 //==============================================================================
 
+static const QIcon NoIcon    = QIcon();
+static const QIcon DownIcon  = QIcon(":/oxygen/actions/arrow-down.png");
+static const QIcon RightIcon = QIcon(":/oxygen/actions/arrow-right.png");
+
+//==============================================================================
+
 CollapsibleHeaderWidget::CollapsibleHeaderWidget(const QColor &pSeparatorColor,
                                                  const bool &pCollapsible,
                                                  QWidget *pParent) :
@@ -101,7 +107,7 @@ CollapsibleHeaderWidget::CollapsibleHeaderWidget(const QColor &pSeparatorColor,
 
     int iconSize = 0.4*mTitle->height();
 
-    mButton->setIcon(pCollapsible?QIcon(":/oxygen/actions/arrow-down.png"):QIcon());
+    mButton->setIcon(pCollapsible?DownIcon:NoIcon);
     mButton->setIconSize(QSize(iconSize, iconSize));
     mButton->setStyleSheet("QToolButton {"
                            "    border: 0px;"
@@ -229,10 +235,7 @@ void CollapsibleHeaderWidget::toggleCollapsedState()
 
     // Update our button's icon to reflect our new collapsed state
 
-    if (mCollapsed)
-        mButton->setIcon(QIcon(":/oxygen/actions/arrow-right.png"));
-    else
-        mButton->setIcon(QIcon(":/oxygen/actions/arrow-down.png"));
+    mButton->setIcon(mCollapsed?RightIcon:DownIcon);
 
     // Update our bottom separator visible status
 

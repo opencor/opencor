@@ -206,7 +206,7 @@ public:
     void setEditable(const bool &pEditable);
 
     QString name() const;
-    void setName(const QString &pName);
+    void setName(const QString &pName, const bool &pUpdateToolTip = true);
 
     QIcon icon() const;
     void setIcon(const QIcon &pIcon);
@@ -239,10 +239,11 @@ public:
     void setBooleanValue(const bool &pBooleanValue);
 
     QString unit() const;
-    void setUnit(const QString &pUnit);
+    void setUnit(const QString &pUnit, const bool &pUpdateToolTip = true);
 
     QString extraInfo() const;
-    void setExtraInfo(const QString &pExtraInfo);
+    void setExtraInfo(const QString &pExtraInfo,
+                      const bool &pUpdateToolTip = true);
 
     bool isVisible() const;
     void setVisible(const bool &pVisible);

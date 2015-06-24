@@ -489,17 +489,18 @@ void EditorFindReplaceWidget::searchOptionChanged()
 {
     // Update the icon used for the leading position of our find widget
 
+    static const QIcon DefaultIcon           = QIcon(":/qtCreator/src/plugins/coreplugin/images/magnifier.png");
+    static const QIcon CaseSensitiveIcon     = QIcon(":/qtCreator/src/plugins/coreplugin/find/images/casesensitively.png");
+    static const QIcon WholeWordsOnlyIcon    = QIcon(":/qtCreator/src/plugins/coreplugin/find/images/wholewords.png");
+    static const QIcon RegularExpressionIcon = QIcon(":/qtCreator/src/plugins/coreplugin/find/images/regexp.png");
+
     int nbOfOptions =  mCaseSensitiveAction->isChecked()
                       +mWholeWordsOnlyAction->isChecked()
                       +mRegularExpressionAction->isChecked();
 
     if (nbOfOptions) {
-        static QIcon caseSensitiveIcon = QIcon(":/qtCreator/src/plugins/coreplugin/find/images/casesensitively.png");
-        static QIcon wholeWordsOnlyIcon = QIcon(":/qtCreator/src/plugins/coreplugin/find/images/wholewords.png");
-        static QIcon regularExpressionIcon = QIcon(":/qtCreator/src/plugins/coreplugin/find/images/regexp.png");
-
-        static int IconSize = 16;
-        static int IconWidth = 6;
+        static const int IconSize = 16;
+        static const int IconWidth = 6;
 
         QPixmap dropDownPixmap = QPixmap(nbOfOptions*IconWidth-mRegularExpressionAction->isChecked(),
                                          IconSize);
@@ -514,27 +515,25 @@ void EditorFindReplaceWidget::searchOptionChanged()
         int left = -IconWidth;
 
         if (mCaseSensitiveAction->isChecked()) {
-            caseSensitiveIcon.paint(&dropDownPixmapPainter, left, 0, IconSize, IconSize);
+            CaseSensitiveIcon.paint(&dropDownPixmapPainter, left, 0, IconSize, IconSize);
 
             left += IconWidth;
         }
 
         if (mWholeWordsOnlyAction->isChecked()) {
-            wholeWordsOnlyIcon.paint(&dropDownPixmapPainter, left, 0, IconSize, IconSize);
+            WholeWordsOnlyIcon.paint(&dropDownPixmapPainter, left, 0, IconSize, IconSize);
 
             left += IconWidth;
         }
 
         if (mRegularExpressionAction->isChecked())
-            regularExpressionIcon.paint(&dropDownPixmapPainter, left-1, 0, IconSize, IconSize);
+            RegularExpressionIcon.paint(&dropDownPixmapPainter, left-1, 0, IconSize, IconSize);
 
         mDropDownAction->setIcon(dropDownPixmap);
     } else {
         // No options are set, so use our default icon
 
-        static QIcon defaultIcon = QIcon(":/qtCreator/src/plugins/coreplugin/images/magnifier.png");
-
-        mDropDownAction->setIcon(defaultIcon);
+        mDropDownAction->setIcon(DefaultIcon);
     }
 }
 
