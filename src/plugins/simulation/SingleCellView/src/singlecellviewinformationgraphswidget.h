@@ -174,7 +174,6 @@ private Q_SLOTS:
     void propertyEditorSectionResized(const int &pLogicalIndex,
                                       const int &pOldSize, const int &pNewSize);
 
-    void modelChanged(Core::Property *pProperty);
     void graphChanged(Core::Property *pProperty);
 
     void updateParameterValue();

@@ -298,11 +298,6 @@ void SingleCellViewInformationGraphsWidget::initialize(SingleCellViewGraphPanelW
         connect(mPropertyEditor->header(), SIGNAL(sectionResized(int, int, int)),
                 this, SLOT(propertyEditorSectionResized(const int &, const int &, const int &)));
 
-        // Keep track of changes to list properties
-
-        connect(mPropertyEditor, SIGNAL(propertyChanged(Core::Property *)),
-                this, SLOT(modelChanged(Core::Property *)));
-
         // Keep track of when the user changes a property value
 
         connect(mPropertyEditor, SIGNAL(propertyChanged(Core::Property *)),
@@ -379,15 +374,13 @@ void SingleCellViewInformationGraphsWidget::addGraph(SingleCellViewGraphPanelPlo
     mGraphProperties.insert(pGraph, graphProperty);
 
     // Create some properties for our graph
-    // Note: to add properties will result in some signals being emitted, but we
-    //       don't want to handle them (at least, not when creating a graph
-    //       since not everyting may be set yet so this might cause more
-    //       problems than anything), so we must disconnect ourselves from them,
-    //       before adding the properties (and then reconnect ourselves to
-    //       them)...
+    // Note: to add properties will result in the propertyChanged() signal being
+    //       emitted, but we don't want to handle that signal (at least, not
+    //       when creating a graph since not everyting may be set yet so this
+    //       might cause more problems than anything), so we must disconnect
+    //       ourselves from it before adding the properties (and then reconnect
+    //       ourselves to it once we are done)...
 
-    disconnect(mPropertyEditor, SIGNAL(propertyChanged(Core::Property *)),
-               this, SLOT(modelChanged(Core::Property *)));
     disconnect(mPropertyEditor, SIGNAL(propertyChanged(Core::Property *)),
                this, SLOT(graphChanged(Core::Property *)));
 
@@ -399,8 +392,6 @@ void SingleCellViewInformationGraphsWidget::addGraph(SingleCellViewGraphPanelPlo
     xProperty->setEditable(true);
     yProperty->setEditable(true);
 
-    connect(mPropertyEditor, SIGNAL(propertyChanged(Core::Property *)),
-            this, SLOT(modelChanged(Core::Property *)));
     connect(mPropertyEditor, SIGNAL(propertyChanged(Core::Property *)),
             this, SLOT(graphChanged(Core::Property *)));
 
@@ -852,16 +843,6 @@ void SingleCellViewInformationGraphsWidget::updateGraphInfo(Core::Property *pPro
         emit graphsUpdated(qobject_cast<SingleCellViewGraphPanelPlotWidget *>(graph->plot()),
                            QList<SingleCellViewGraphPanelPlotGraph *>() << graph);
     }
-}
-
-//==============================================================================
-
-void SingleCellViewInformationGraphsWidget::modelChanged(Core::Property *pProperty)
-{
-    // Update the graph information associated with the given property's
-    // corresponding section property and the given value
-
-    updateGraphInfo(pProperty->parentProperty(), pProperty->value());
 }
 
 //==============================================================================

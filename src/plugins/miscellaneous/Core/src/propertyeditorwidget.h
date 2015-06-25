@@ -252,6 +252,8 @@ public:
 
     void edit() const;
 
+    void updateToolTip();
+
 private:
     PropertyEditorWidget *mOwner;
 
@@ -274,8 +276,6 @@ private:
     QList<Property *> mProperties;
 
     QList<QStandardItem *> items() const;
-
-    void updateToolTip();
 
 Q_SIGNALS:
     void visibilityChanged(const bool &pVisible);

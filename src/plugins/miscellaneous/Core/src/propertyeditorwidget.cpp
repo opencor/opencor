@@ -1672,11 +1672,11 @@ void PropertyEditorWidget::keyPressEvent(QKeyEvent *pEvent)
                || (pEvent->key() == Qt::Key_Enter)) {
         // The user wants to start/stop editing the property
 
-        if (mPropertyEditor)
+        if (mPropertyEditor) {
             // We are currently editing a property, so stop editing it
 
             editProperty(0);
-        else
+        } else {
             // We are not currently editing a property, so start editing the
             // current one
             // Note: we could use mProperty, but if it was to be empty then we
@@ -1684,6 +1684,7 @@ void PropertyEditorWidget::keyPressEvent(QKeyEvent *pEvent)
             //       use the latter all the time...
 
             editProperty(property(currentIndex()));
+        }
 
         // Accept the event
 
