@@ -331,7 +331,7 @@ void PhysiomeModelRepositoryWindowWindow::finished(QNetworkReply *pNetworkReply)
             QMessageBox::information(qApp->activeWindow(),
                                      tr("Bookmark URLs"),
                                       tr("No bookmark URL could be found for <a href=\"%1\">%2</a>.").arg(url, pNetworkReply->property(ExtraProperty).toString())
-                                     +"<br/><br/>"+tr("<strong>Note:</strong> you might want to check with <a href=\"mailto: Tommy Yu <tommy.yu@auckland.ac.nz>\">Tommy Yu</a> (the person behind the <a href=\"https://models.physiomeproject.org/\">Physiome Model Repository</a>) why this is the case."),
+                                     +"<br/><br/>"+tr("<strong>Note:</strong> you might want to email <a href=\"mailto: help@physiomeproject.org\">help@physiomeproject.org</a> and ask why this is the case."),
                                      QMessageBox::Ok);
         } else {
             QString url = pNetworkReply->url().toString();
