@@ -705,19 +705,21 @@ void SingleCellViewWidget::initialize(const QString &pFileName,
 
         information += "<span"+OutputBad+">"+(cellmlFileRuntime?tr("invalid"):tr("none"))+"</span>."+OutputBrLn;
 
-        if (validCellmlFileRuntime)
+        if (validCellmlFileRuntime) {
             // We have a valid runtime, but no variable of integration, which
             // means that the model doesn't contain any ODE or DAE
 
             information += OutputTab+"<span"+OutputBad+"><strong>"+tr("Error:")+"</strong> "+tr("the model must have at least one ODE or DAE")+".</span>"+OutputBrLn;
-        else
+        } else {
             // We don't have a valid runtime, so either there are some problems
             // with the CellML file or its runtime
 
             foreach (const CellMLSupport::CellmlFileIssue &issue,
-                     cellmlFileRuntime?cellmlFileRuntime->issues():cellmlFile->issues())
+                     cellmlFileRuntime?cellmlFileRuntime->issues():cellmlFile->issues()) {
                 information += QString(OutputTab+"<span"+OutputBad+"><strong>%1</strong> %2</span>."+OutputBrLn).arg((issue.type() == CellMLSupport::CellmlFileIssue::Error)?tr("Error:"):tr("Warning:"),
                                                                                                                      issue.message());
+            }
+        }
     }
 
     output(information);
@@ -739,7 +741,7 @@ void SingleCellViewWidget::initialize(const QString &pFileName,
     if (variableOfIntegration) {
         // Show our contents widget in case it got previously hidden
         // Note: indeed, if it was to remain hidden then some initialisations
-        //       wouldn't work (e.g. the solvers widget has a property editor
+        //       wouldn't work (e.g. the solvers widget has a property editor,
         //       which all properties need to be removed and if the contents
         //       widget is not visible, then upon repopulating the property
         //       editor, scrollbars will be shown even though they are not
@@ -824,7 +826,7 @@ void SingleCellViewWidget::initialize(const QString &pFileName,
         // graph panels widgets
         // Note #1: this will also initialise some of our simulation data (i.e.
         //          our simulation's starting point and simulation's NLA
-        //          solver's properties) which is needed since we want to be
+        //          solver's properties), which is needed since we want to be
         //          able to reset our simulation below...
         // Note #2: to initialise our graphs widget will result in some graphs
         //          being shown/hidden and, therefore, in graphsUpdated() being
@@ -1029,8 +1031,8 @@ void SingleCellViewWidget::fileReloaded(const QString &pFileName)
 
     mNeedReloadViews << pFileName;
 
-    if (simulation)
-        if (simulation->stop())
+    if (simulation) {
+        if (simulation->stop()) {
             needReloadView = false;
             // Note: we don't need to reload ourselves since stopping the
             //       simulation will result in the stopped() signal being
@@ -1038,6 +1040,8 @@ void SingleCellViewWidget::fileReloaded(const QString &pFileName)
             //       called, which is where we should reload ourselves since we
             //       cannot tell how long the signal/slot mechanism is going to
             //       take...
+        }
+    }
 
     // Reload ourselves, if needed
 
@@ -1430,7 +1434,7 @@ void SingleCellViewWidget::simulationStopped(const qint64 &pElapsedTime)
     //          file that cannot be handled by us, meaning that our central
     //          widget would show a message rather than us...
     // Note #2: we can't directly pass simulation to resetFileTabIcon(), so
-    //          instead we use mStoppedSimulations which is a list of
+    //          instead we use mStoppedSimulations, which is a list of
     //          simulations in case several simulations were to stop at around
     //          the same time...
 
@@ -1548,9 +1552,10 @@ void SingleCellViewWidget::simulationPropertyChanged(Core::Property *pProperty)
 
     // Now, update our plots, if needed
 
-    if (needUpdatePlots)
+    if (needUpdatePlots) {
         foreach (SingleCellViewGraphPanelPlotWidget *plot, mPlots)
             updatePlot(plot);
+    }
 }
 
 //==============================================================================
@@ -1775,12 +1780,13 @@ void SingleCellViewWidget::checkAxisValue(double &pValue,
     // Check whether pOrigValue is equal to one of the values in pTestValues and
     // if so then update pValue with pOrigValue
 
-    foreach (const double &testValue, pTestValues)
+    foreach (const double &testValue, pTestValues) {
         if (pOrigValue == testValue) {
             pValue = pOrigValue;
 
             break;
         }
+    }
 }
 
 //==============================================================================
@@ -1872,8 +1878,6 @@ bool SingleCellViewWidget::updatePlot(SingleCellViewGraphPanelPlotWidget *pPlot,
         }
 
     // Optimise our axes' values, if possible
-    // Note: we first optimise our axes' values and then revert axis value which
-    //       is equal to a starting or an ending point value...
 
     double origMinX = minX;
     double origMaxX = maxX;
@@ -2128,7 +2132,7 @@ void SingleCellViewWidget::checkResults(SingleCellViewSimulation *pSimulation)
         || (simulationResultsSize != pSimulation->results()->size())) {
         // Note: we cannot ask QTimer::singleShot() to call checkResults() since
         //       it expects a pointer to a simulation as a parameter, so instead
-        //       we call a method with no arguments which will make use of our
+        //       we call a method with no arguments that will make use of our
         //       list to know which simulation should be passed as an argument
         //       to checkResults()...
 
@@ -2180,7 +2184,7 @@ QIcon SingleCellViewWidget::parameterIcon(const CellMLSupport::CellmlFileRuntime
     case CellMLSupport::CellmlFileRuntimeParameter::Algebraic:
         return AlgebraicIcon;
     default:
-        // We are dealing with a type of parameter which is of no interest to us
+        // We are dealing with a type of parameter that is of no interest to us
         // Note: we should never reach this point...
 
         return ErrorNodeIcon;
