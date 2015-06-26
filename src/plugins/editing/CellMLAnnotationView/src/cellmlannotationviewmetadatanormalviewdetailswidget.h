@@ -161,7 +161,7 @@ private Q_SLOTS:
 
     void linkClicked();
 
-    void showCustomContextMenu(const QPoint &pPosition);
+    void showCustomContextMenu();
 };
 
 //==============================================================================
