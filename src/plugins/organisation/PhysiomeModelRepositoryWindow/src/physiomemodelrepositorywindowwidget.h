@@ -117,6 +117,7 @@ private Q_SLOTS:
     void on_actionCopy_triggered();
 
     void linkClicked();
+    void linkHovered();
 
     void showCustomContextMenu();
 };

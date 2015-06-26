@@ -48,6 +48,8 @@ public:
     QWebElement retrieveLinkInformation(QString &pLink, QString &pTextContent);
 
 protected:
+    QString mToolTip;
+
     virtual bool event(QEvent *pEvent);
 
 private:
