@@ -124,6 +124,8 @@ CellmlAnnotationViewMetadataNormalViewDetailsWidget::CellmlAnnotationViewMetadat
 
     connect(mOutputOntologicalTerms->page(), SIGNAL(linkClicked(const QUrl &)),
             this, SLOT(linkClicked()));
+    connect(mOutputOntologicalTerms->page(), SIGNAL(linkHovered(const QString &, const QString &, const QString &)),
+            this, SLOT(linkHovered()));
 
     // Add our output message and output for ontological terms to our output
     // widget
@@ -583,6 +585,40 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::linkClicked()
                               Resource:
                               Id);
     }
+}
+
+//==============================================================================
+
+void CellmlAnnotationViewMetadataNormalViewDetailsWidget::linkHovered()
+{
+    // Retrieve some information about the link
+
+    QString link;
+    QString textContent;
+
+    mOutputOntologicalTerms->retrieveLinkInformation(link, textContent);
+
+    // Update our tool tip based on whether we are hovering a text or button
+    // link
+    // Note: this follows the approach used in linkClicked()...
+
+    QString linkToolTip = QString();
+
+    if (!link.isEmpty()) {
+        if (textContent.isEmpty()) {
+            linkToolTip = tr("Remove Term");
+        } else {
+            QStringList rdfTripleInformation = link.split("|");
+
+            linkToolTip = (!rdfTripleInformation[0].compare(textContent))?
+                              tr("Look Up Qualifier"):
+                              !rdfTripleInformation[1].compare(textContent)?
+                                  tr("Look Up Resource"):
+                                  tr("Look Up Id");
+        }
+    }
+
+    mOutputOntologicalTerms->setLinkToolTip(linkToolTip);
 }
 
 //==============================================================================

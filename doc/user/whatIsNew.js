@@ -18,6 +18,11 @@ var jsonData = { "versions": [
                        },
                        { "name": "Editing",
                          "entries": [
+                           { "type": "subCategory", "name": "CellML annotation view",
+                             "entries": [
+                               { "type": "Improved", "description": "GUI rendering." }
+                             ]
+                           },
                            { "type": "subCategory", "name": "CellML Text view",
                              "entries": [
                                { "type": "Improved", "description": "Comments support by allowing comments before a model definition." },

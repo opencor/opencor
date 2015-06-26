@@ -258,6 +258,12 @@ CellmlAnnotationViewMetadataEditDetailsWidget::CellmlAnnotationViewMetadataEditD
 
     mTermValue = new QLineEdit(termWidget);
 
+#ifdef Q_OS_MAC
+    mTermValue->setAttribute(Qt::WA_MacShowFocusRect, false);
+    // Note: the above removes the focus border since it messes up the look of
+    //       our term value widget...
+#endif
+
     connect(mTermValue, SIGNAL(textChanged(const QString &)),
             this, SLOT(termChanged(const QString &)));
 
@@ -343,6 +349,8 @@ CellmlAnnotationViewMetadataEditDetailsWidget::CellmlAnnotationViewMetadataEditD
 
     connect(mOutputOntologicalTerms->page(), SIGNAL(linkClicked(const QUrl &)),
             this, SLOT(linkClicked()));
+    connect(mOutputOntologicalTerms->page(), SIGNAL(linkHovered(const QString &, const QString &, const QString &)),
+            this, SLOT(linkHovered()));
 
     // Add our output message and output for ontological terms to our output
     // widget
@@ -859,6 +867,33 @@ void CellmlAnnotationViewMetadataEditDetailsWidget::linkClicked()
                           Resource:
                           Id);
     }
+}
+
+//==============================================================================
+
+void CellmlAnnotationViewMetadataEditDetailsWidget::linkHovered()
+{
+    // Retrieve some information about the link
+
+    QString link;
+    QString textContent;
+
+    mOutputOntologicalTerms->retrieveLinkInformation(link, textContent);
+
+    // Update our tool tip based on whether we are hovering a text or button
+    // link
+    // Note: this follows the approach used in linkClicked()...
+
+    QString linkToolTip = QString();
+
+    if (!link.isEmpty()) {
+        if (textContent.isEmpty())
+            linkToolTip = tr("Add Term");
+        else
+            linkToolTip = mUrls.contains(textContent)?tr("Look Up Resource"):tr("Look Up Id");
+    }
+
+    mOutputOntologicalTerms->setLinkToolTip(linkToolTip);
 }
 
 //==============================================================================

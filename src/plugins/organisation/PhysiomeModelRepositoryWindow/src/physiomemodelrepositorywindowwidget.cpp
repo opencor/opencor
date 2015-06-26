@@ -414,25 +414,27 @@ void PhysiomeModelRepositoryWindowWidget::linkHovered()
     // link
     // Note: this follows the approach used in linkClicked()...
 
-    mToolTip = QString();
+    QString linkToolTip = QString();
 
     if (textContent.isEmpty()) {
         QStringList linkList = link.split("|");
 
         if (!linkList[0].compare("cloneWorkspace")) {
-            mToolTip = tr("Clone Workspace");
+            linkToolTip = tr("Clone Workspace");
         } else if (linkList.count() == 3) {
             if (page()->mainFrame()->documentElement().findFirst(QString("ul[id=exposureFiles_%1]").arg(mExposureUrlId.value(linkList[1]))).firstChild().isNull())
-                mToolTip = tr("Show Exposure Files");
+                linkToolTip = tr("Show Exposure Files");
             else
-                mToolTip = tr("Hide Exposure Files");
+                linkToolTip = tr("Hide Exposure Files");
         }
     } else {
         if (element.parent().hasClass("exposureFile"))
-            mToolTip = tr("Open Exposure File");
+            linkToolTip = tr("Open Exposure File");
         else
-            mToolTip = tr("Browser Exposure");
+            linkToolTip = tr("Browser Exposure");
     }
+
+    setLinkToolTip(linkToolTip);
 }
 
 //==============================================================================
