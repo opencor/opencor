@@ -94,7 +94,7 @@
         <variable cmeta:id="my_variable2_cmeta_id" initial_value="my_variable1" name="my_variable2" units="my_unit"/>
         <math xmlns="http://www.w3.org/1998/Math/MathML">
             <!-- In between comment #9...-->
-            <apply cmeta:id="my_equation1_cmeta_id">
+            <apply id="my_equation1_cmeta_id">
                 <!-- In between comment #10...-->
                 <eq/>
                 <!-- In between comment #11...-->
@@ -104,7 +104,7 @@
                 <!-- In between comment #13...-->
             </apply>
             <!-- In between comment #14...-->
-            <apply cmeta:id="my_equation2_cmeta_id">
+            <apply id="my_equation2_cmeta_id">
                 <!-- In between comment #15...-->
                 <eq/>
                 <!-- In between comment #16...-->
@@ -114,7 +114,7 @@
                 <!-- In between comment #18...-->
             </apply>
             <!-- In between comment #19...-->
-            <apply cmeta:id="my_equation3_cmeta_id">
+            <apply id="my_equation3_cmeta_id">
                 <!-- In between comment #20...-->
                 <eq/>
                 <!-- In between comment #21...-->
@@ -142,7 +142,7 @@
                 <!-- In between comment #32...-->
             </apply>
             <!-- In between comment #33...-->
-            <apply cmeta:id="my_equation4_cmeta_id">
+            <apply id="my_equation4_cmeta_id">
                 <!-- In between comment #34...-->
                 <eq/>
                 <!-- In between comment #35...-->
@@ -152,7 +152,7 @@
                 <!-- In between comment #37...-->
             </apply>
             <!-- In between comment #38...-->
-            <apply cmeta:id="my_equation5_cmeta_id">
+            <apply id="my_equation5_cmeta_id">
                 <!-- In between comment #39...-->
                 <eq/>
                 <!-- In between comment #40...-->
@@ -162,7 +162,7 @@
                 <!-- In between comment #42...-->
             </apply>
             <!-- In between comment #43...-->
-            <apply cmeta:id="my_equation6_cmeta_id">
+            <apply id="my_equation6_cmeta_id">
                 <!-- In between comment #44...-->
                 <eq/>
                 <!-- In between comment #45...-->
