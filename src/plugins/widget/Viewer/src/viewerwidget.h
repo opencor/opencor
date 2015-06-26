@@ -112,7 +112,7 @@ private:
     QString processedContents() const;
 
 private Q_SLOTS:
-    void showCustomContextMenu(const QPoint &pPosition) const;
+    void showCustomContextMenu() const;
 
     void updateViewer();
 

@@ -73,7 +73,7 @@ EditorListWidget::EditorListWidget(QWidget *pParent) :
     setContextMenuPolicy(Qt::CustomContextMenu);
 
     connect(this, SIGNAL(customContextMenuRequested(const QPoint &)),
-            this, SLOT(showCustomContextMenu(const QPoint &)));
+            this, SLOT(showCustomContextMenu()));
 
     // Make sure that we are properly initialised
 
@@ -189,10 +189,8 @@ void EditorListWidget::keyPressEvent(QKeyEvent *pEvent)
 
 //==============================================================================
 
-void EditorListWidget::showCustomContextMenu(const QPoint &pPosition) const
+void EditorListWidget::showCustomContextMenu() const
 {
-    Q_UNUSED(pPosition);
-
     // Show our custom context menu
 
     mContextMenu->exec(QCursor::pos());

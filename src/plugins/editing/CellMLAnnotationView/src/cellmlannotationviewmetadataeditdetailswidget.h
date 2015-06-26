@@ -215,7 +215,7 @@ private Q_SLOTS:
 
     void addTerm();
 
-    void showCustomContextMenu(const QPoint &pPosition);
+    void showCustomContextMenu();
 
     void recenterBusyWidget();
 };

@@ -48,9 +48,11 @@ public:
     QWebElement retrieveLinkInformation(QString &pLink, QString &pTextContent);
 
 protected:
+    QString mToolTip;
+
     virtual bool event(QEvent *pEvent);
 
-protected:
+private:
     bool mResettingCursor;
 };
 

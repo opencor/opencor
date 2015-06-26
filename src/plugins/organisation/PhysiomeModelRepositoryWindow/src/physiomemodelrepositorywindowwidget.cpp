@@ -114,12 +114,14 @@ PhysiomeModelRepositoryWindowWidget::PhysiomeModelRepositoryWindowWidget(QWidget
 
     setAcceptDrops(false);
 
-    // Have links opened in the user's browser rather than in our list
+    // Some connections to handle the clicking and hovering of a link
 
     page()->setLinkDelegationPolicy(QWebPage::DelegateAllLinks);
 
     connect(page(), SIGNAL(linkClicked(const QUrl &)),
             this, SLOT(linkClicked()));
+    connect(page(), SIGNAL(linkHovered(const QString &, const QString &, const QString &)),
+            this, SLOT(linkHovered()));
 
     // Retrieve the output template
 
@@ -360,7 +362,7 @@ void PhysiomeModelRepositoryWindowWidget::linkClicked()
 
     QWebElement element = retrieveLinkInformation(link, textContent);
 
-    // Check whether we have clicked an exposure link or a button link
+    // Check whether we have clicked a text or button link
 
     if (textContent.isEmpty()) {
         // We have clicked on a button link, so let people know whether we want
@@ -394,6 +396,42 @@ void PhysiomeModelRepositoryWindowWidget::linkClicked()
             emit exposureFileOpenRequested(link);
         else
             QDesktopServices::openUrl(link);
+    }
+}
+
+//==============================================================================
+
+void PhysiomeModelRepositoryWindowWidget::linkHovered()
+{
+    // Retrieve some information about the link
+
+    QString link;
+    QString textContent;
+
+    QWebElement element = retrieveLinkInformation(link, textContent);
+
+    // Update our tool tip based on whether we are hovering a text or button
+    // link
+    // Note: this follows the approach used in linkClicked()...
+
+    mToolTip = QString();
+
+    if (textContent.isEmpty()) {
+        QStringList linkList = link.split("|");
+
+        if (!linkList[0].compare("cloneWorkspace")) {
+            mToolTip = tr("Clone Workspace");
+        } else if (linkList.count() == 3) {
+            if (page()->mainFrame()->documentElement().findFirst(QString("ul[id=exposureFiles_%1]").arg(mExposureUrlId.value(linkList[1]))).firstChild().isNull())
+                mToolTip = tr("Show Exposure Files");
+            else
+                mToolTip = tr("Hide Exposure Files");
+        }
+    } else {
+        if (element.parent().hasClass("exposureFile"))
+            mToolTip = tr("Open Exposure File");
+        else
+            mToolTip = tr("Browser Exposure");
     }
 }
 

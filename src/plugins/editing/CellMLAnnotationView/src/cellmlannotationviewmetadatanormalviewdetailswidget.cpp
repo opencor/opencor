@@ -118,7 +118,7 @@ CellmlAnnotationViewMetadataNormalViewDetailsWidget::CellmlAnnotationViewMetadat
     mOutputOntologicalTerms->setContextMenuPolicy(Qt::CustomContextMenu);
 
     connect(mOutputOntologicalTerms, SIGNAL(customContextMenuRequested(const QPoint &)),
-            this, SLOT(showCustomContextMenu(const QPoint &)));
+            this, SLOT(showCustomContextMenu()));
 
     mOutputOntologicalTerms->page()->setLinkDelegationPolicy(QWebPage::DelegateAllLinks);
 
@@ -587,10 +587,8 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::linkClicked()
 
 //==============================================================================
 
-void CellmlAnnotationViewMetadataNormalViewDetailsWidget::showCustomContextMenu(const QPoint &pPosition)
+void CellmlAnnotationViewMetadataNormalViewDetailsWidget::showCustomContextMenu()
 {
-    Q_UNUSED(pPosition);
-
     // Retrieve some information about the link
 
     mOutputOntologicalTerms->retrieveLinkInformation(mLink, mTextContent);

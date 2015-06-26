@@ -25,6 +25,8 @@ specific language governing permissions and limitations under the License.
 
 #include <QCursor>
 #include <QEvent>
+#include <QHelpEvent>
+#include <QToolTip>
 #include <QWebElement>
 #include <QWebHitTestResult>
 
@@ -37,6 +39,7 @@ namespace Core {
 
 WebViewWidget::WebViewWidget(QWidget *pParent) :
     QWebView(pParent),
+    mToolTip(QString()),
     mResettingCursor(false)
 {
     // Customise ourselves
@@ -50,18 +53,30 @@ WebViewWidget::WebViewWidget(QWidget *pParent) :
 
 bool WebViewWidget::event(QEvent *pEvent)
 {
-    // Override the change of the cursor when hovering some text
+    // Override the change of the cursor and tool tip when hovering a link
 
     if (mResettingCursor) {
         return true;
     } else if (    (pEvent->type() == QEvent::CursorChange)
-        &&  (cursor().shape() == Qt::IBeamCursor)
-        && !mResettingCursor) {
+               &&  (cursor().shape() == Qt::IBeamCursor)
+               && !mResettingCursor) {
         mResettingCursor = true;
 
         setCursor(Qt::ArrowCursor);
 
         mResettingCursor = false;
+
+        return true;
+    } else if (pEvent->type() == QEvent::ToolTip) {
+        QHelpEvent *helpEvent = static_cast<QHelpEvent *>(pEvent);
+
+        if (!mToolTip.isEmpty()) {
+            QToolTip::showText(helpEvent->globalPos(), mToolTip);
+        } else {
+            QToolTip::hideText();
+
+            pEvent->ignore();
+        }
 
         return true;
     } else {

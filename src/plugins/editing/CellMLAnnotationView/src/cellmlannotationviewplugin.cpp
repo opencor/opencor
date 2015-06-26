@@ -29,7 +29,6 @@ specific language governing permissions and limitations under the License.
 
 #include <QMainWindow>
 #include <QSettings>
-#include <QStatusBar>
 
 //==============================================================================
 

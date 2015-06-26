@@ -131,7 +131,7 @@ ViewerWidget::ViewerWidget(QWidget *pParent) :
     setContextMenuPolicy(Qt::CustomContextMenu);
 
     connect(this, SIGNAL(customContextMenuRequested(const QPoint &)),
-            this, SLOT(showCustomContextMenu(const QPoint &)));
+            this, SLOT(showCustomContextMenu()));
 
     // Retranslate ourselves, so that our actions are properly initialised
 
@@ -679,10 +679,8 @@ QString ViewerWidget::processedContents() const
 
 //==============================================================================
 
-void ViewerWidget::showCustomContextMenu(const QPoint &pPosition) const
+void ViewerWidget::showCustomContextMenu() const
 {
-    Q_UNUSED(pPosition);
-
     // Show our custom context menu
 
     mContextMenu->exec(QCursor::pos());
