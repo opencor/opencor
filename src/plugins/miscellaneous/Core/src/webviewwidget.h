@@ -50,7 +50,7 @@ public:
 protected:
     virtual bool event(QEvent *pEvent);
 
-protected:
+private:
     bool mResettingCursor;
 };
 
