@@ -55,8 +55,8 @@ bool WebViewWidget::event(QEvent *pEvent)
     if (mResettingCursor) {
         return true;
     } else if (    (pEvent->type() == QEvent::CursorChange)
-        &&  (cursor().shape() == Qt::IBeamCursor)
-        && !mResettingCursor) {
+               &&  (cursor().shape() == Qt::IBeamCursor)
+               && !mResettingCursor) {
         mResettingCursor = true;
 
         setCursor(Qt::ArrowCursor);
