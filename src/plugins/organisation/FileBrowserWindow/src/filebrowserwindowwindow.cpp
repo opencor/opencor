@@ -87,9 +87,9 @@ FileBrowserWindowWindow::FileBrowserWindowWindow(QWidget *pParent) :
     // Some connections
 
     connect(mFileBrowserWidget, SIGNAL(customContextMenuRequested(const QPoint &)),
-            this, SLOT(showCustomContextMenu(const QPoint &)));
+            this, SLOT(showCustomContextMenu()));
     connect(mFileBrowserWidget, SIGNAL(doubleClicked(const QModelIndex &)),
-            this, SLOT(itemDoubleClicked(const QModelIndex &)));
+            this, SLOT(itemDoubleClicked()));
     connect(mFileBrowserWidget, SIGNAL(filesOpenRequested(const QStringList &)),
             this, SLOT(openFiles(const QStringList &)));
 
@@ -189,10 +189,8 @@ void FileBrowserWindowWindow::on_actionNext_triggered()
 
 //==============================================================================
 
-void FileBrowserWindowWindow::showCustomContextMenu(const QPoint &pPosition) const
+void FileBrowserWindowWindow::showCustomContextMenu() const
 {
-    Q_UNUSED(pPosition);
-
     // Show our context menu which items match the contents of our tool bar
     // widget
 
@@ -201,10 +199,8 @@ void FileBrowserWindowWindow::showCustomContextMenu(const QPoint &pPosition) con
 
 //==============================================================================
 
-void FileBrowserWindowWindow::itemDoubleClicked(const QModelIndex &pIndex)
+void FileBrowserWindowWindow::itemDoubleClicked()
 {
-    Q_UNUSED(pIndex);
-
     // Check what kind of item has been double clicked and if it is a file, then
     // open it
 
