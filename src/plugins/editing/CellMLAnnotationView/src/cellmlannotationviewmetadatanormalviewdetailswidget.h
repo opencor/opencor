@@ -160,6 +160,7 @@ private Q_SLOTS:
     void showLastRdfTriple();
 
     void linkClicked();
+    void linkHovered();
 
     void showCustomContextMenu();
 };

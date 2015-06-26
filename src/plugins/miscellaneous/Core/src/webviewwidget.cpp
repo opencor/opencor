@@ -39,14 +39,23 @@ namespace Core {
 
 WebViewWidget::WebViewWidget(QWidget *pParent) :
     QWebView(pParent),
-    mToolTip(QString()),
-    mResettingCursor(false)
+    mResettingCursor(false),
+    mLinkToolTip(QString())
 {
     // Customise ourselves
 
     setAcceptDrops(false);
     setFocusPolicy(Qt::NoFocus);
     setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+}
+
+//==============================================================================
+
+void WebViewWidget::setLinkToolTip(const QString &pLinkToolTip)
+{
+    // Set our link tool tip
+
+    mLinkToolTip = pLinkToolTip;
 }
 
 //==============================================================================
@@ -70,8 +79,8 @@ bool WebViewWidget::event(QEvent *pEvent)
     } else if (pEvent->type() == QEvent::ToolTip) {
         QHelpEvent *helpEvent = static_cast<QHelpEvent *>(pEvent);
 
-        if (!mToolTip.isEmpty()) {
-            QToolTip::showText(helpEvent->globalPos(), mToolTip);
+        if (!mLinkToolTip.isEmpty()) {
+            QToolTip::showText(helpEvent->globalPos(), mLinkToolTip);
         } else {
             QToolTip::hideText();
 

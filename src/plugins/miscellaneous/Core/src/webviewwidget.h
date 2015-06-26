@@ -47,13 +47,15 @@ public:
 
     QWebElement retrieveLinkInformation(QString &pLink, QString &pTextContent);
 
-protected:
-    QString mToolTip;
+    void setLinkToolTip(const QString &pLinkToolTip);
 
+protected:
     virtual bool event(QEvent *pEvent);
 
 private:
     bool mResettingCursor;
+
+    QString mLinkToolTip;
 };
 
 //==============================================================================

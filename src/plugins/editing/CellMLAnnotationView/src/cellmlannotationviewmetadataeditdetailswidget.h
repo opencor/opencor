@@ -205,6 +205,7 @@ private Q_SLOTS:
     void lookUpQualifier();
 
     void linkClicked();
+    void linkHovered();
 
     void lookUpTerm();
 
