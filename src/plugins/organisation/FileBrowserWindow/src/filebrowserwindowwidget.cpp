@@ -23,7 +23,7 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-#include <QApplication>
+#include <QCoreApplication>
 #include <QDir>
 #include <QFile>
 #include <QFileInfo>
@@ -525,7 +525,7 @@ void FileBrowserWindowWidget::directoryLoaded(const QString &pPath)
         // Windows doesn't need this, Linux and OS X definitely do and it can't
         // harm having it for all three environments)
 
-        qApp->processEvents();
+        QCoreApplication::processEvents();
 
         QModelIndex initPathDirIndex = mModel->index(mInitPathDir);
 

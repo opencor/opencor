@@ -27,7 +27,7 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-#include <QApplication>
+#include <QCoreApplication>
 #include <QFile>
 #include <QTextStream>
 
@@ -79,11 +79,11 @@ void CsvDataStoreExporter::execute(CoreDataStore::CoreDataStore *pDataStore) con
 
             data += "\n";
 
-            qApp->processEvents();
-//---GRY--- THE CALL TO qApp->processEvents() SHOULD BE REMOVED AND THE EXPORTER
-//          BE SUCH THAT IT DOESN'T BLOCK THE MAIN THREAD (E.G. WHEN EXPORTING
-//          LONG SIMULATIONS). MAYBE THIS COULD BE DONE BY MAKING THE EXPORTER
-//          WORK IN ITS OWN THREAD?...
+            QCoreApplication::processEvents();
+//---GRY--- THE CALL TO QCoreApplication::processEvents() SHOULD BE REMOVED AND
+//          THE EXPORTER BE SUCH THAT IT DOESN'T BLOCK THE MAIN THREAD (E.G.
+//          WHEN EXPORTING LONG SIMULATIONS). MAYBE THIS COULD BE DONE BY MAKING
+//          THE EXPORTER WORK IN ITS OWN THREAD?...
         }
 
         // The data is ready, so write it to the file

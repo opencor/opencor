@@ -50,8 +50,8 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-#include <QApplication>
 #include <QBrush>
+#include <QCoreApplication>
 #include <QDesktopWidget>
 #include <QFileDialog>
 #include <QFrame>
@@ -813,7 +813,7 @@ void SingleCellViewWidget::initialize(const QString &pFileName,
     //       bit (if visible), resulting in the output being shifted a bit...
 
     if (prevValidSimulationEnvironment != validSimulationEnvironment) {
-        qApp->processEvents();
+        QCoreApplication::processEvents();
 
         mOutputWidget->ensureCursorVisible();
     }
