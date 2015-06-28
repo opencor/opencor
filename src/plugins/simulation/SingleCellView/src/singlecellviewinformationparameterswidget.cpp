@@ -31,6 +31,7 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#include <QCoreApplication>
 #include <QHeaderView>
 #include <QMenu>
 #include <QMetaType>
@@ -255,6 +256,13 @@ void SingleCellViewInformationParametersWidget::updateParameters(const double &p
                 property->setDoubleValue(pCurrentPoint, false);
             }
         }
+
+        // Make sure that we don't hang up the GUI unnecessarily
+        // Note: this is particularly useful when we run a model that has loads
+        //       of parameters since otherwise the simulation wouldn't finish
+        //       smoothly (see https://github.com/opencor/opencor/issues/656)...
+
+        QCoreApplication::processEvents();
     }
 
     // Check whether any of our properties has actually been modified
