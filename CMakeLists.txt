@@ -240,6 +240,7 @@ SET(PLUGINS
     # Plugins that have no dependencies
 
     api/CellMLAPI
+    api/libSBML
 
     dataStore/CoreDataStore
 
