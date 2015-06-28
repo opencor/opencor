@@ -1,7 +1,7 @@
 We build our own copy of the CellML API, which requires the following:
  - Doxygen (see http://www.doxygen.org/);
  - omniidl (see http://omniorb.sourceforge.net/; working Windows binaries can be found in http://sourceforge.net/projects/omniorb/files/omniORB/omniORB-4.1.5/); and
- - the CellML API source code (see https://github.com/opencor/cellml-api/).
+ - the CellML API source code (see https://github.com/cellmlapi/cellml-api/).
 
 On OS X, you will also need the Mac OS X 10.7 SDK or later (earlier SDKs don't support C++11).
 
