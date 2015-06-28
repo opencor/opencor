@@ -28,8 +28,8 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-#include <QApplication>
 #include <QClipboard>
+#include <QCoreApplication>
 #include <QCursor>
 #include <QDesktopWidget>
 #include <QLocale>
@@ -1322,7 +1322,7 @@ void SingleCellViewGraphPanelPlotWidget::replotNow()
     // Note: this is needed when running a simulation since, otherwise,
     //       replotting won't occur immediately (because of threading)...
 
-    qApp->processEvents();
+    QCoreApplication::processEvents();
 }
 
 //==============================================================================
