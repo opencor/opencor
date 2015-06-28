@@ -8,7 +8,7 @@ On OS X, you will also need the Mac OS X 10.7 SDK or later (earlier SDKs don't s
 From there, using cmake-gui on Windows or ccmake on Linux / OS X, you need to:
  - Disable testing:
     ===> BUILD_TESTING=OFF
- - Ask for a release build (or a debug build on Windows since both release and debug binaries are needed on that platform):
+ - Ask for a 'Release' build (or a 'Debug' build on Windows since both 'Release' and 'Debug' binaries are needed on that platform):
     ===> CMAKE_BUILD_TYPE=Release
  - Ask for C++11 compilation to be used on Linux / OS X (on Windows, MSVC uses C++11 by default) (this is part of the advanced settings):
     - Linux:
