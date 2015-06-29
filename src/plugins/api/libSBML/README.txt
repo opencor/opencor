@@ -1,4 +1,7 @@
-We build our own copy of libSBML. Using cmake-gui on Windows or ccmake on Linux / OS X, you want to:
+We build our own copy of libSBML, which requires the following:
+ - libSBML's source code (see http://sourceforge.net/projects/sbml/files/libsbml/).
+
+From there, using cmake-gui on Windows or ccmake on Linux / OS X, we want to:
  - Customise libSBML:
     ===> WITH_CPP_NAMESPACE=ON
     ===> WITH_SWIG=OFF
@@ -7,4 +10,4 @@ We build our own copy of libSBML. Using cmake-gui on Windows or ccmake on Linux 
  - Specify the deployment target (OS X only):
     ===> MACOSX_DEPLOYMENT_TARGET=10.7
 
-Once you have built and 'installed' libSBML, you can replace the OpenCOR version of the include and binary files, which are located in the 'installed' include and lib folders, respectively.
+Once we have built and 'installed' libSBML, we can replace the OpenCOR version of the include and binary files, which are located in the 'installed' include and lib folders, respectively.
