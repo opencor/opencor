@@ -1,10 +1,16 @@
 We build our own copy of libSBML, which requires the following:
+ - libSBML dependencies (Windows only):
+    - Windows 32-bit:
+       - Release: http://sourceforge.net/projects/sbml/files/libsbml/win-dependencies/libSBML_dependencies_vs12_release_x86.zip
+       - Debug:   http://sourceforge.net/projects/sbml/files/libsbml/win-dependencies/libSBML_dependencies_vs12_debug_x86.zip
+    - Windows 64-bit:
+       - Release: http://sourceforge.net/projects/sbml/files/libsbml/win-dependencies/libSBML_dependencies_vs12_release_x64.zip
+       - Debug:   http://sourceforge.net/projects/sbml/files/libsbml/win-dependencies/libSBML_dependencies_vs12_debug_x64.zip
  - libSBML's source code (see http://sourceforge.net/projects/sbml/files/libsbml/).
 
 From there, using cmake-gui on Windows or ccmake on Linux / OS X, we want to:
  - Customise libSBML:
     ===> WITH_CPP_NAMESPACE=ON
-    ===> WITH_SWIG=OFF
  - Ask for a 'Release' build (or a 'Debug' build on Windows since both 'Release' and 'Debug' binaries are needed on that platform):
     ===> CMAKE_BUILD_TYPE=Release
  - Specify the deployment target (OS X only):
