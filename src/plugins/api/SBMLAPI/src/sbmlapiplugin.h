@@ -16,11 +16,11 @@ specific language governing permissions and limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// libSBML plugin
+// SBML API plugin
 //==============================================================================
 
-#ifndef LIBSBMLPLUGIN_H
-#define LIBSBMLPLUGIN_H
+#ifndef SBMLAPIPLUGIN_H
+#define SBMLAPIPLUGIN_H
 
 //==============================================================================
 
@@ -29,24 +29,24 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 namespace OpenCOR {
-namespace libSBML {
+namespace SBMLAPI {
 
 //==============================================================================
 
-PLUGININFO_FUNC libSBMLPluginInfo();
+PLUGININFO_FUNC SBMLAPIPluginInfo();
 
 //==============================================================================
 
-class libSBMLPlugin : public QObject
+class SBMLAPIPlugin : public QObject
 {
     Q_OBJECT
 
-    Q_PLUGIN_METADATA(IID "OpenCOR.libSBMLPlugin" FILE "libsbmlplugin.json")
+    Q_PLUGIN_METADATA(IID "OpenCOR.SBMLAPIPlugin" FILE "sbmlapiplugin.json")
 };
 
 //==============================================================================
 
-}   // namespace libSBML
+}   // namespace SBMLAPI
 }   // namespace OpenCOR
 
 //==============================================================================

@@ -16,19 +16,19 @@ specific language governing permissions and limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// libSBML plugin
+// SBML API plugin
 //==============================================================================
 
-#include "libsbmlplugin.h"
+#include "sbmlapiplugin.h"
 
 //==============================================================================
 
 namespace OpenCOR {
-namespace libSBML {
+namespace SBMLAPI {
 
 //==============================================================================
 
-PLUGININFO_FUNC libSBMLPluginInfo()
+PLUGININFO_FUNC SBMLAPIPluginInfo()
 {
     Descriptions descriptions;
 
@@ -42,7 +42,7 @@ PLUGININFO_FUNC libSBMLPluginInfo()
 
 //==============================================================================
 
-}   // namespace libSBML
+}   // namespace SBMLAPI
 }   // namespace OpenCOR
 
 //==============================================================================
