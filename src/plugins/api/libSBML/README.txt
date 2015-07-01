@@ -13,6 +13,8 @@ From there, using cmake-gui on Windows or ccmake on Linux / OS X, we want to:
     ===> WITH_CPP_NAMESPACE=ON
  - Ask for a 'Release' build (or a 'Debug' build on Windows since both 'Release' and 'Debug' binaries are needed on that platform):
     ===> CMAKE_BUILD_TYPE=Release
+ - Update the installation destination so that, upon 'installation', we have a ready to use version of the libSBML binaries (this is particularly useful on OS X since the 'installation' will result in 'clean' binaries):
+    ===> CMAKE_INSTALL_PREFIX=<InstallationDestination>
  - Specify the deployment target (OS X only):
     ===> MACOSX_DEPLOYMENT_TARGET=10.7
 
