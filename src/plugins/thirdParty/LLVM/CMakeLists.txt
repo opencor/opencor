@@ -26,7 +26,7 @@ ENDMACRO()
 
 # Retrieve some header files that were generated on each of our target platforms
 
-SET(CONFIG_FILES
+RETRIEVE_CONFIG_FILES(
     include/llvm/Config/DISTRIB_DIR/config.h
     include/llvm/Config/DISTRIB_DIR/llvm-config.h
 
@@ -34,15 +34,6 @@ SET(CONFIG_FILES
 
     tools/clang/include/clang/Config/DISTRIB_DIR/config.h
 )
-
-FOREACH(CONFIG_FILE ${CONFIG_FILES})
-    STRING(REPLACE "DISTRIB_DIR/" "${DISTRIB_DIR}/" CONFIG_FILE_ORIG "${CONFIG_FILE}")
-    STRING(REPLACE "DISTRIB_DIR/" "" CONFIG_FILE_DEST "${CONFIG_FILE}")
-
-    CONFIGURE_FILE(${PROJECT_SOURCE_DIR}/${CONFIG_FILE_ORIG}
-                   ${PROJECT_SOURCE_DIR}/${CONFIG_FILE_DEST}
-                   COPYONLY)
-ENDFOREACH()
 
 # Use our pre-built version unless instructed otherwise
 
