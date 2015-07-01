@@ -4,12 +4,3 @@
 /distrib/windows/x86/
 
 /src/plugins/*/*/bin/
-
-/src/plugins/thirdParty/LLVM/include/llvm/Config/config.h
-/src/plugins/thirdParty/LLVM/include/llvm/Config/llvm-config.h
-
-/src/plugins/thirdParty/LLVM/include/llvm/Support/DataTypes.h
-
-/src/plugins/thirdParty/LLVM/lib/Target/X86/X86GenAsmMatcher.inc
-
-src/plugins/thirdParty/LLVM/tools/clang/include/clang/Config/config.h
