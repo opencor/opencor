@@ -41,10 +41,10 @@ void Tests::basicTests()
 
     // Check aginast which libraries libSBML has been compiled
 
+    QVERIFY( libsbml::isLibSBMLCompiledWith("bzip2"));
     QVERIFY(!libsbml::isLibSBMLCompiledWith("expat"));
     QVERIFY( libsbml::isLibSBMLCompiledWith("libxml"));
     QVERIFY(!libsbml::isLibSBMLCompiledWith("xerces-c"));
-    QVERIFY( libsbml::isLibSBMLCompiledWith("bzip2"));
     QVERIFY( libsbml::isLibSBMLCompiledWith("zip"));
 }
 

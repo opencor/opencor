@@ -10,7 +10,12 @@ We build our own copy of libSBML, which requires the following:
 
 From there, using cmake-gui on Windows or ccmake on Linux / OS X, we want to:
  - Customise libSBML:
+    ===> WITH_BZIP2=ON
     ===> WITH_CPP_NAMESPACE=ON
+    ===> WITH_EXPAT=OFF
+    ===> WITH_LIBXML=ON
+    ===> WITH_SWIG=OFF
+    ===> WITH_ZLIB=ON
  - Ask for a 'Release' build (or a 'Debug' build on Windows since both 'Release' and 'Debug' binaries are needed on that platform):
     ===> CMAKE_BUILD_TYPE=Release
  - Update the installation destination so that, upon 'installation', we have a ready to use version of the libSBML binaries (this is particularly useful on OS X since the 'installation' will result in 'clean' binaries):
