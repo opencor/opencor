@@ -32,7 +32,6 @@ specific language governing permissions and limitations under the License.
 
 #include <QApplication>
 #include <QDesktopWidget>
-#include <QFileInfo>
 #include <QListView>
 #include <QSettings>
 #include <QSplitter>

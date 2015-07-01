@@ -3,7 +3,7 @@ We build our own copy of the CellML API, which requires the following:
  - omniidl (see http://omniorb.sourceforge.net/; working Windows binaries can be found in http://sourceforge.net/projects/omniorb/files/omniORB/omniORB-4.1.5/); and
  - the CellML API source code (see https://github.com/cellmlapi/cellml-api/).
 
-From there, using cmake-gui on Windows or ccmake on Linux / OS X, you want to:
+From there, using cmake-gui on Windows or ccmake on Linux / OS X, we want to:
  - Customise the CellML API:
     ===> BUILD_TESTING=OFF
     ===> ENABLE_ANNOTOOLS=ON
@@ -27,7 +27,7 @@ From there, using cmake-gui on Windows or ccmake on Linux / OS X, you want to:
  - Specify the deployment target (OS X only):
     ===> MACOSX_DEPLOYMENT_TARGET=10.7
 
-Once you have built and 'installed' the CellML API, you can replace the OpenCOR version of the include and binary files, which are located in the 'installed' include and lib folders, respectively. Regarding the include files, there are a few things that need to be done:
+Once we have built and 'installed' the CellML API, we can replace the OpenCOR version of the include and binary files, which are located in the 'installed' include and lib folders, respectively. Regarding the include files, there are a few things that need to be done:
  - the cda_config.h, IfaceCellML_events.hxx and IfaceDOM_events.hxx files are to be discarded;
  - the cda_compiler_support.h file shouldn't include the cda_config.h file; and
  - the cellml-api-cxx-support.hpp file shouldn't include the windows.h file and it shouldn't define the CDAMutex, CDALock and CDA_RefCount classes, and the CDA_IMPL_REFCOUNT macro (all of these will otherwise cause various problems with LLVM on Windows).
