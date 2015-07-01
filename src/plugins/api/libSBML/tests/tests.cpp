@@ -27,9 +27,25 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#include "sbml/common/libsbml-version.h"
+
+//==============================================================================
+
 void Tests::basicTests()
 {
     // Some very basic tests to make sure that we have access to libSBML
+
+    // Check the version of libSBML
+
+    QCOMPARE(libsbml::getLibSBMLDottedVersion(), "5.11.4");
+
+    // Check aginast which libraries libSBML has been compiled
+
+    QVERIFY(!libsbml::isLibSBMLCompiledWith("expat"));
+    QVERIFY( libsbml::isLibSBMLCompiledWith("libxml"));
+    QVERIFY(!libsbml::isLibSBMLCompiledWith("xerces-c"));
+    QVERIFY( libsbml::isLibSBMLCompiledWith("bzip2"));
+    QVERIFY( libsbml::isLibSBMLCompiledWith("zip"));
 }
 
 //==============================================================================
