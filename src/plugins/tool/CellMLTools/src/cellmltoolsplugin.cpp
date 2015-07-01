@@ -30,7 +30,6 @@ specific language governing permissions and limitations under the License.
 
 #include <QApplication>
 #include <QFile>
-#include <QFileInfo>
 #include <QMainWindow>
 #include <QMenu>
 #include <QMessageBox>

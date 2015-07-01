@@ -199,6 +199,8 @@ ADD_PLUGIN(CellMLAPI
         ${CELLML_API_EXTERNAL_BINARIES_DIR}
     EXTERNAL_BINARIES
         ${CELLML_API_EXTERNAL_BINARIES}
+    TESTS
+        tests
 )
 
 # Deploy the plugin's external binaries
