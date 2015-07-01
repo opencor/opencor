@@ -15,6 +15,7 @@ From there, using cmake-gui on Windows or ccmake on Linux / OS X, we want to:
     ===> WITH_EXPAT=OFF
     ===> WITH_LIBXML=ON
     ===> WITH_SWIG=OFF
+    ===> WITH_XERCES=OFF
     ===> WITH_ZLIB=ON
  - Ask for a 'Release' build (or a 'Debug' build on Windows since both 'Release' and 'Debug' binaries are needed on that platform):
     ===> CMAKE_BUILD_TYPE=Release
