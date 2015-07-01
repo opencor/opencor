@@ -20,18 +20,9 @@ ENDMACRO()
 
 # Retrieve some header files that were generated on each of our target platforms
 
-SET(CONFIG_FILES
+RETRIEVE_CONFIG_FILES(
     include/sbml/common/DISTRIB_DIR/libsbml-config-common.h
 )
-
-FOREACH(CONFIG_FILE ${CONFIG_FILES})
-    STRING(REPLACE "DISTRIB_DIR/" "${DISTRIB_DIR}/" CONFIG_FILE_ORIG "${CONFIG_FILE}")
-    STRING(REPLACE "DISTRIB_DIR/" "" CONFIG_FILE_DEST "${CONFIG_FILE}")
-
-    CONFIGURE_FILE(${PROJECT_SOURCE_DIR}/${CONFIG_FILE_ORIG}
-                   ${PROJECT_SOURCE_DIR}/${CONFIG_FILE_DEST}
-                   COPYONLY)
-ENDFOREACH()
 
 # Retrieve the plugin's binary file(s)
 
