@@ -13,4 +13,6 @@ ADD_PLUGIN(libSBML
         Core
     QT_LIBRARIES
         QtCore
+    TESTS
+        tests
 )
