@@ -1,6 +1,6 @@
 We build our own copy of libSBML, which requires the following:
  - libSBML's source code (see http://sourceforge.net/projects/sbml/files/libsbml/).
- - libSBML dependencies (Windows only; to be located under [libSBML]/dependencies):
+ - libSBML dependencies (Windows only; the contents of which is to be located under [libSBML]/dependencies):
     - Windows 32-bit:
        - Release: http://sourceforge.net/projects/sbml/files/libsbml/win-dependencies/libSBML_dependencies_vs12_release_x86.zip
        - Debug:   http://sourceforge.net/projects/sbml/files/libsbml/win-dependencies/libSBML_dependencies_vs12_debug_x86.zip
