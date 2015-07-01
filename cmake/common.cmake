@@ -775,6 +775,19 @@ ENDMACRO()
 
 #===============================================================================
 
+MACRO(RETRIEVE_CONFIG_FILES)
+    FOREACH(CONFIG_FILE ${ARGN})
+        STRING(REPLACE "DISTRIB_DIR/" "${DISTRIB_DIR}/" CONFIG_FILE_ORIG "${CONFIG_FILE}")
+        STRING(REPLACE "DISTRIB_DIR/" "" CONFIG_FILE_DEST "${CONFIG_FILE}")
+
+        CONFIGURE_FILE(${PROJECT_SOURCE_DIR}/${CONFIG_FILE_ORIG}
+                       ${PROJECT_SOURCE_DIR}/${CONFIG_FILE_DEST}
+                       COPYONLY)
+    ENDFOREACH()
+ENDMACRO()
+
+#===============================================================================
+
 MACRO(COPY_FILE_TO_BUILD_DIR PROJECT_TARGET ORIG_DIRNAME DEST_DIRNAME FILENAME)
     # Copy the file (renaming it, if needed) to the destination folder
     # Note: DIRECT_COPY is used to copy a file that doesn't first need to be
