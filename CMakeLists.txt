@@ -406,18 +406,23 @@ IF(APPLE)
 
     # Clean up the OpenCOR executable
 
+    IF(APPLE)
+        SET(QT_MAC_EXTRAS QtMacExtras)
+    ELSE()
+        SET(QT_MAC_EXTRAS)
+    ENDIF()
+
     SET(QT_LIBRARIES
         QtCLucene
         QtConcurrent
         QtCore
         QtGui
         QtHelp
-        QtMacExtras
+        ${QT_MAC_EXTRAS}
         QtMultimedia
         QtMultimediaWidgets
         QtNetwork
         QtOpenGL
-        QtPositioning
         QtPrintSupport
         QtQml
         QtQuick
