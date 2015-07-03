@@ -430,6 +430,7 @@ IF(APPLE)
         QtMultimediaWidgets
         QtNetwork
         QtOpenGL
+        QtPositioning
         QtPrintSupport
         QtQml
         QtQuick
