@@ -1,5 +1,9 @@
 PROJECT(ViewerPlugin)
 
+# Retrieve some Qwt settings
+
+RETRIEVE_QWT_SETTINGS()
+
 # Add the plugin
 
 IF(USE_PREBUILT_QWT_PLUGIN)
@@ -21,7 +25,7 @@ ADD_PLUGIN(Viewer
     INCLUDE_DIRS
         src
     DEFINITIONS
-        QWT_DLL
+        ${QWT_DEFINITIONS}
     PLUGINS
         Core
         ${QWT_PLUGIN}

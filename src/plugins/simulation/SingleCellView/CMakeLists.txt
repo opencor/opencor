@@ -4,6 +4,7 @@ PROJECT(SingleCellViewPlugin)
 
 RETRIEVE_CELLML_API_SETTINGS()
 RETRIEVE_LLVM_SETTINGS()
+RETRIEVE_QWT_SETTINGS()
 
 # Add the plugin
 
@@ -54,7 +55,7 @@ ADD_PLUGIN(SingleCellView
         src
     DEFINITIONS
         ${LLVM_DEFINITIONS}
-        QWT_DLL
+        ${QWT_DEFINITIONS}
     PLUGINS
         CellMLAPI
         CellMLSupport
