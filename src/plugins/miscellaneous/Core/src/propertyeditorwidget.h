@@ -118,6 +118,8 @@ public:
 class Property;
 class PropertyEditorWidget;
 
+//==============================================================================
+
 class PropertyItemDelegate : public QStyledItemDelegate
 {
     Q_OBJECT
