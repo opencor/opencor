@@ -129,12 +129,8 @@ ELSE()
 
     IF(WIN32)
         SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /wd4133 /wd4244 /wd4267")
-        # Note: on Windows, some warnings get generated, but we have nothing to
-        #       do with them...
     ELSEIF(APPLE)
         SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wno-deprecated-declarations")
-        # Note: on OS X, some warnings get generated, but we have nothing to do
-        #       with them...
     ENDIF()
 
     # Determine which dependencies we must build
