@@ -2,7 +2,7 @@ language: cpp
 
 os:
   - linux
-  - osx
+#  - osx
 
 env:
   - CONFIG=Release
@@ -14,9 +14,9 @@ install:
       && tar -xzf cmake-3.2.3-Linux-i386.tar.gz
       && sudo cp -fR cmake-3.2.3-Linux-i386/* /usr
       && sudo apt-add-repository -y ppa:ubuntu-toolchain-r/test
-      && sudo apt-add-repository -y ppa:beineri/opt-qt541
+      && sudo apt-add-repository -y ppa:beineri/opt-qt55-beta-trusty
       && sudo apt-get -qq update
-      && sudo apt-get -qq install g++-4.8 libc6-i386 qt54tools qt54svg qt54webkit
+      && sudo apt-get -qq install g++-4.8 libc6-i386 qt55tools qt55svg qt55webkit
       && export CXX="g++-4.8"
       && export CC="gcc-4.8"
       ;
@@ -36,7 +36,7 @@ script:
   #       libgit2 to be built on Linux...
   -    cd build
     && if [ "${TRAVIS_OS_NAME}" = "linux" ]; then
-         cmake -DCMAKE_BUILD_TYPE=$CONFIG -DCMAKE_PREFIX_PATH=/opt/qt54/lib/cmake -DUSE_PREBUILT_LIBGIT2_PLUGIN=OFF -DENABLE_TESTS=ON -DENABLE_SAMPLES=ON ..
+         cmake -DCMAKE_BUILD_TYPE=$CONFIG -DCMAKE_PREFIX_PATH=/opt/qt55/lib/cmake -DUSE_PREBUILT_LIBGIT2_PLUGIN=OFF -DENABLE_TESTS=ON -DENABLE_SAMPLES=ON ..
          ;
        else
          cmake -DCMAKE_BUILD_TYPE=$CONFIG -DCMAKE_PREFIX_PATH=/usr/local/opt/qt5/lib/cmake -DENABLE_TESTS=ON -DENABLE_SAMPLES=ON ..
