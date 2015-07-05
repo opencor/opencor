@@ -4,6 +4,7 @@ PROJECT(CoreCellMLEditingPlugin)
 
 RETRIEVE_CELLML_API_SETTINGS()
 RETRIEVE_LLVM_SETTINGS()
+RETRIEVE_QWT_SETTINGS()
 
 # Add the plugin
 
@@ -33,6 +34,7 @@ ADD_PLUGIN(CoreCellMLEditing
         src
     DEFINITIONS
         ${LLVM_DEFINITIONS}
+        ${QWT_DEFINITIONS}
     PLUGINS
         CellMLAPI
         CellMLSupport

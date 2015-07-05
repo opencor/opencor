@@ -1,5 +1,23 @@
 PROJECT(QwtPlugin)
 
+MACRO(RETRIEVE_QWT_SETTINGS)
+    # Retrieve some Qwt settings
+
+    IF(WIN32)
+        SET(QWT_DEFINITIONS
+            _SCL_SECURE_NO_WARNINGS
+        )
+
+        IF(NOT "${ARGN}" STREQUAL "NO_QWT_DLL")
+            LIST(APPEND QWT_DEFINITIONS
+                QWT_DLL
+            )
+        ENDIF()
+    ELSE()
+        SET(QWT_DEFINITIONS)
+    ENDIF()
+ENDMACRO()
+
 # Use our pre-built version unless instructed otherwise
 
 IF(USE_PREBUILT_QWT_PLUGIN)
@@ -61,6 +79,10 @@ IF(USE_PREBUILT_QWT_PLUGIN)
             QtXml
     )
 ELSE()
+    # Retrieve some Qwt settings
+
+    RETRIEVE_QWT_SETTINGS(NO_QWT_DLL)
+
     # Add the plugin
 
     SET(QWT_PLUGIN Qwt PARENT_SCOPE)
@@ -204,6 +226,7 @@ ELSE()
             src
             textengines/mathml
         DEFINITIONS
+            ${QWT_DEFINITIONS}
             QWT_DLL
             QWT_MAKEDLL
         QT_MODULES

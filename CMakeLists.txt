@@ -406,13 +406,20 @@ IF(APPLE)
 
     # Clean up the OpenCOR executable
 
+    IF(APPLE)
+        SET(QT_MAC_EXTRAS QtMacExtras)
+    ELSE()
+        SET(QT_MAC_EXTRAS)
+    ENDIF()
+
     SET(QT_LIBRARIES
         QtCLucene
         QtConcurrent
         QtCore
+        QtDBus
         QtGui
         QtHelp
-        QtMacExtras
+        ${QT_MAC_EXTRAS}
         QtMultimedia
         QtMultimediaWidgets
         QtNetwork
@@ -535,6 +542,10 @@ ELSE()
     SET(CPACK_PACKAGE_VERSION_PATCH "${PROJECT_VERSION_PATCH}")
 ENDIF()
 
+MATH(EXPR ICU_MINOR_VERSION "${Qt5Widgets_VERSION_MINOR}-1")
+
+SET(ICU_VERSION "${Qt5Widgets_VERSION_MAJOR}${ICU_MINOR_VERSION}")
+
 IF(WIN32)
     # Select NSIS, if available, and ZIP as the packagers on Windows
 
@@ -578,7 +589,7 @@ IF(WIN32)
     # Qt libraries required by OpenCOR
 
     WINDOWS_DEPLOY_QT_LIBRARIES(Qt5CLucene Qt5Core Qt5Gui Qt5Help Qt5Multimedia Qt5MultimediaWidgets Qt5Network Qt5OpenGL Qt5Positioning Qt5PrintSupport Qt5Qml Qt5Quick Qt5Sensors Qt5Sql Qt5Svg Qt5WebChannel Qt5WebKit Qt5WebKitWidgets Qt5Widgets Qt5Xml Qt5XmlPatterns)
-    WINDOWS_DEPLOY_QT_LIBRARIES(icudt53 icuin53 icuuc53)
+    WINDOWS_DEPLOY_QT_LIBRARIES(icudt${ICU_VERSION} icuin${ICU_VERSION} icuuc${ICU_VERSION})
 
     IF(ENABLE_TESTS)
         WINDOWS_DEPLOY_QT_LIBRARIES(Qt5Test)
@@ -594,8 +605,8 @@ IF(WIN32)
     # Batch and VBScript files to run OpenCOR (useful when downloading a ZIPped
     # version of OpenCOR)
 
-    SET(BatFile ${CMAKE_BINARY_DIR}/${PROJECT_NAME}.bat)
-    SET(VbsFile ${CMAKE_BINARY_DIR}/${PROJECT_NAME}.vbs)
+    SET(BatFile "${CMAKE_BINARY_DIR}/${PROJECT_NAME}.bat")
+    SET(VbsFile "${CMAKE_BINARY_DIR}/${PROJECT_NAME}.vbs")
 
     CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/distrib/windows/application.bat.in ${BatFile})
     CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/distrib/windows/application.vbs.in ${VbsFile})
@@ -667,16 +678,14 @@ ELSE()
     #       its suffix, so unless making the macro unnecessarily cumbersome to
     #       use, it's better to do things ourselves...
 
-    FOREACH(QT_LIBRARY CLucene Core DBus Gui Help Network OpenGL Positioning PrintSupport Qml Quick Sensors Sql Svg WebChannel WebKit WebKitWidgets Widgets Xml XmlPatterns)
-        INSTALL(FILES ${QT_LIBRARY_DIR}/${CMAKE_SHARED_LIBRARY_PREFIX}Qt${QT_VERSION_MAJOR}${QT_LIBRARY}${CMAKE_SHARED_LIBRARY_SUFFIX}.${QT_VERSION_MAJOR}.${QT_VERSION_MINOR}.${QT_VERSION_PATCH}
-                DESTINATION lib
-                RENAME ${CMAKE_SHARED_LIBRARY_PREFIX}Qt${QT_VERSION_MAJOR}${QT_LIBRARY}${CMAKE_SHARED_LIBRARY_SUFFIX}.${QT_VERSION_MAJOR})
+    FOREACH(QT_LIBRARY CLucene Core DBus Gui Help MultimediaWidgets Network OpenGL Positioning PrintSupport Qml Quick Sensors Sql Svg WebChannel WebKit WebKitWidgets Widgets XcbQpa Xml XmlPatterns)
+        INSTALL(FILES ${QT_LIBRARY_DIR}/${CMAKE_SHARED_LIBRARY_PREFIX}Qt${QT_VERSION_MAJOR}${QT_LIBRARY}${CMAKE_SHARED_LIBRARY_SUFFIX}.${QT_VERSION_MAJOR}
+                DESTINATION lib)
     ENDFOREACH()
 
     FOREACH(QT_FILE icudata icui18n icuuc)
-        INSTALL(FILES ${QT_LIBRARY_DIR}/${CMAKE_SHARED_LIBRARY_PREFIX}${QT_FILE}${CMAKE_SHARED_LIBRARY_SUFFIX}.53.1
-                DESTINATION lib
-                RENAME ${CMAKE_SHARED_LIBRARY_PREFIX}${QT_FILE}${CMAKE_SHARED_LIBRARY_SUFFIX}.53)
+        INSTALL(FILES ${QT_LIBRARY_DIR}/${CMAKE_SHARED_LIBRARY_PREFIX}${QT_FILE}${CMAKE_SHARED_LIBRARY_SUFFIX}.${ICU_VERSION}
+                DESTINATION lib)
     ENDFOREACH()
 
     # Qt plugins required by OpenCOR
@@ -692,7 +701,8 @@ ELSE()
 
     CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/distrib/linux/application.sh.in ${ShellFile})
 
-    INSTALL(FILES ${ShellFile} RENAME ${PROJECT_NAME}
+    INSTALL(FILES ${ShellFile}
+            RENAME ${PROJECT_NAME}
             DESTINATION .
             PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
 ENDIF()

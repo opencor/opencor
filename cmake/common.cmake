@@ -31,8 +31,16 @@ MACRO(INITIALISE_PROJECT)
 
     IF(NOT ARCHITECTURE_COMPILE)
         MESSAGE(FATAL_ERROR "We could not determine your architecture. Please clean your OpenCOR environment and try again...")
-    ELSEIF(NOT ${ARCHITECTURE} EQUAL 32 AND NOT ${ARCHITECTURE} EQUAL 64)
-        MESSAGE(FATAL_ERROR "OpenCOR can only be built in 32-bit or 64-bit mode...")
+    ELSE()
+        IF(APPLE)
+            IF(NOT ${ARCHITECTURE} EQUAL 64)
+                MESSAGE(FATAL_ERROR "OpenCOR can only be built in 64-bit mode...")
+            ENDIF()
+        ELSE()
+            IF(NOT ${ARCHITECTURE} EQUAL 32 AND NOT ${ARCHITECTURE} EQUAL 64)
+                MESSAGE(FATAL_ERROR "OpenCOR can only be built in 32-bit or 64-bit mode...")
+            ENDIF()
+        ENDIF()
     ENDIF()
 
     # By default, we are building a release version of OpenCOR, unless we are

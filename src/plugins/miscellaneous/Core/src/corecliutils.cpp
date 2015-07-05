@@ -65,6 +65,49 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+bool qSameStringLists(const QStringList &pStringList1,
+                      const QStringList &pStringList2)
+{
+    // Note #1: normally, we would use QStringList::operator==(), but in debug
+    //          mode on Windows this generates a C4996 warning (because of
+    //          std::equal()), so instead we have this function to do the
+    //          comparison ourselves...
+    // Note #2: normally, we should be able to use QStringList::operator==()
+    //          after having temporarily disabled the C4996 warning, i.e.
+    //
+    //              #ifdef Q_OS_WIN
+    //                  #pragma warning(push)
+    //                  #pragma warning(disable: 4996)
+    //              #endif
+    //
+    //              if (stringList1 == stringList2) {
+    //                  ...
+    //              }
+    //
+    //              #ifdef Q_OS_WIN
+    //                  #pragma warning(pop)
+    //              #endif
+    //
+    //          but this doesn't work... (!?)
+
+    // Check whether the two lists have the same size
+
+    int stringList1Count = pStringList1.count();
+
+    if (stringList1Count != pStringList2.count())
+        return false;
+
+    // Check whether the contents of the two lists is exactly the same
+
+    for (int i = 0; i < stringList1Count; ++i)
+        if (pStringList1[i].compare(pStringList2[i]))
+            return false;
+
+    return true;
+}
+
+//==============================================================================
+
 QIntList qVariantListToIntList(const QVariantList &pVariantList)
 {
     // Convert the given list of variants to a list of integers

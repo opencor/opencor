@@ -19,6 +19,7 @@ specific language governing permissions and limitations under the License.
 // Property editor widget
 //==============================================================================
 
+#include "corecliutils.h"
 #include "propertyeditorwidget.h"
 
 //==============================================================================
@@ -820,7 +821,7 @@ void Property::setListValues(const QStringList &pListValues,
 
     // Set our list values, if appropriate
 
-    if (listValues != mListValues) {
+    if (!qSameStringLists(listValues, mListValues)) {
         mListValues = listValues;
 
         // Update our value using the requested item from our new list, if it
