@@ -678,7 +678,7 @@ ELSE()
     #       its suffix, so unless making the macro unnecessarily cumbersome to
     #       use, it's better to do things ourselves...
 
-    FOREACH(QT_LIBRARY CLucene Core DBus Gui Help MultimediaWidgets Network OpenGL Positioning PrintSupport Qml Quick Sensors Sql Svg WebChannel WebKit WebKitWidgets Widgets XcbQpa Xml XmlPatterns)
+    FOREACH(QT_LIBRARY CLucene Core DBus Gui Help Multimedia MultimediaWidgets Network OpenGL Positioning PrintSupport Qml Quick Sensors Sql Svg WebChannel WebKit WebKitWidgets Widgets XcbQpa Xml XmlPatterns)
         INSTALL(FILES ${QT_LIBRARY_DIR}/${CMAKE_SHARED_LIBRARY_PREFIX}Qt${QT_VERSION_MAJOR}${QT_LIBRARY}${CMAKE_SHARED_LIBRARY_SUFFIX}.${QT_VERSION_MAJOR}
                 DESTINATION lib)
     ENDFOREACH()
