@@ -371,11 +371,12 @@ void CentralWidget::loadSettings(QSettings *pSettings)
 
     QStringList fileNamesOrUrls = pSettings->value(SettingsFileNamesOrUrls).toStringList();
 
-    foreach (const QString &fileNameOrUrl, fileNamesOrUrls)
+    foreach (const QString &fileNameOrUrl, fileNamesOrUrls) {
         if (pSettings->value(SettingsFileIsRemote.arg(fileNameOrUrl)).toBool())
             openRemoteFile(fileNameOrUrl, false);
         else
             openFile(fileNameOrUrl);
+    }
 
     // Make sure that our busy widget is hidden
     // Note: indeed, if we opened some remote files, then it will have been
@@ -404,12 +405,13 @@ void CentralWidget::loadSettings(QSettings *pSettings)
             QString viewPluginName = pSettings->value(SettingsFileModeView.arg(fileNameOrUrl, ViewInterface::viewModeAsString(fileMode))).toString();
             CentralWidgetViewPlugins *viewPlugins = mModes.value(fileMode)->viewPlugins();
 
-            for (int j = 0, jMax = viewPlugins->count(); j < jMax; ++j)
+            for (int j = 0, jMax = viewPlugins->count(); j < jMax; ++j) {
                 if (!viewPluginName.compare(viewPlugins->value(j)->name())) {
                     modeViewTabIndexes.insert(i, j);
 
                     break;
                 }
+            }
         }
 
         mFileModeViewTabIndexes.insert(fileName, modeViewTabIndexes);
@@ -423,13 +425,14 @@ void CentralWidget::loadSettings(QSettings *pSettings)
                               mRemoteLocalFileNames.value(crtFileNameOrUrl):
                               crtFileNameOrUrl;
 
-    if (mFileNames.contains(crtFileName))
+    if (mFileNames.contains(crtFileName)) {
         openFile(crtFileName);
-    else
+    } else {
         // The previously selected file doesn't exist anymore, so select the
         // first file (otherwise the last file will be selected)
 
         mFileTabs->setCurrentIndex(0);
+    }
 
     // Retrieve the seleted modes and views, in case there are no files
 
@@ -446,12 +449,13 @@ void CentralWidget::loadSettings(QSettings *pSettings)
             QString viewPluginName = pSettings->value(SettingsFileModeView.arg(QString(), ViewInterface::viewModeAsString(fileMode))).toString();
             CentralWidgetViewPlugins *viewPlugins = mode->viewPlugins();
 
-            for (int j = 0, jMax = viewPlugins->count(); j < jMax; ++j)
+            for (int j = 0, jMax = viewPlugins->count(); j < jMax; ++j) {
                 if (!viewPluginName.compare(viewPlugins->value(j)->name())) {
                     mode->viewTabs()->setCurrentIndex(j);
 
                     break;
                 }
+            }
         }
     }
 
@@ -471,11 +475,13 @@ void CentralWidget::saveSettings(QSettings *pSettings) const
     static const QString settingsFileMode = SettingsFileMode.arg(QString());
     static const QString settingsFileModeView = SettingsFileModeView.arg(QString(), QString());
 
-    foreach (const QString &key, pSettings->allKeys())
+    foreach (const QString &key, pSettings->allKeys()) {
         if (   key.startsWith(settingsFileIsRemote)
             || key.startsWith(settingsFileMode)
-            || key.startsWith(settingsFileModeView))
+            || key.startsWith(settingsFileModeView)) {
             pSettings->remove(key);
+        }
+    }
 
     // Keep track of the files that are opened, skipping new files
 
@@ -531,10 +537,11 @@ void CentralWidget::saveSettings(QSettings *pSettings) const
     if (fileNames.count()) {
         QString crtFileName = mFileNames[mFileTabs->currentIndex()];
 
-        if (fileNames.contains(crtFileName))
+        if (fileNames.contains(crtFileName)) {
             crtFileNameOrUrl = fileManagerInstance->isRemote(crtFileName)?
                                    fileManagerInstance->url(crtFileName):
                                    crtFileName;
+        }
     }
 
     pSettings->setValue(SettingsCurrentFileNameOrUrl, crtFileNameOrUrl);
@@ -922,7 +929,7 @@ void CentralWidget::reloadFile(const int &pIndex, const bool &pForce)
         if (!fileManagerInstance->isNew(fileName)) {
             bool doReloadFile = true;
 
-            if (!pForce && fileManagerInstance->isModified(fileName))
+            if (!pForce && fileManagerInstance->isModified(fileName)) {
                 // The current file is modified, so ask the user whether s/he
                 // still wants to reload it
 
@@ -930,6 +937,7 @@ void CentralWidget::reloadFile(const int &pIndex, const bool &pForce)
                                                      tr("<strong>%1</strong> has been modified. Do you still want to reload it?").arg(fileName),
                                                      QMessageBox::Yes|QMessageBox::No,
                                                      QMessageBox::Yes) == QMessageBox::Yes;
+            }
 
             // Reload the file, if needed, and consider it as non-modified
             // anymore (in case it was before)
@@ -1006,9 +1014,10 @@ void CentralWidget::toggleLockedFile()
 
     bool fileLocked = fileManagerInstance->isLocked(fileName);
 
-    if (fileManagerInstance->setLocked(fileName, !fileLocked) == FileManager::LockedNotSet)
+    if (fileManagerInstance->setLocked(fileName, !fileLocked) == FileManager::LockedNotSet) {
         QMessageBox::warning(mMainWindow, fileLocked?tr("Unlock File"):tr("Lock File"),
                              tr("<strong>%1</strong> could not be %2.").arg(fileName, fileLocked?tr("unlocked"):tr("locked")));
+    }
 }
 
 //==============================================================================
@@ -1060,7 +1069,7 @@ bool CentralWidget::saveFile(const int &pIndex, const bool &pNeedNewFileName)
 
         QString fileTypes = QString();
 
-        foreach (FileType *supportedFileType, mSupportedFileTypes)
+        foreach (FileType *supportedFileType, mSupportedFileTypes) {
             if (mimeTypes.contains(supportedFileType->mimeType())) {
                 if (!fileTypes.isEmpty())
                     fileTypes += ";;";
@@ -1068,6 +1077,7 @@ bool CentralWidget::saveFile(const int &pIndex, const bool &pNeedNewFileName)
                 fileTypes +=  supportedFileType->description()
                              +" (*."+supportedFileType->fileExtension()+")";
             }
+        }
 
         newFileName = getSaveFileName(tr("Save File"),
                                       fileIsNew?mFileTabs->tabToolTip(pIndex):newFileName,
@@ -1555,12 +1565,13 @@ void CentralWidget::updateGui()
     bool changedModes = sender() == mModeTabs;
     bool changedViews = false;
 
-    foreach (CentralWidgetMode *mode, mModes)
+    foreach (CentralWidgetMode *mode, mModes) {
         if (sender() == mode->viewTabs()) {
             changedViews = true;
 
             break;
         }
+    }
 
     bool directCall = !changedFiles && !changedModes && !changedViews;
 
@@ -1711,18 +1722,19 @@ void CentralWidget::updateGui()
     // Give the focus to the new view after first checking that it has a focused
     // widget
 
-    if (newView->focusWidget())
+    if (newView->focusWidget()) {
         // The new view has a focused widget, so just focus it (indeed, say that
         // we are using the CellML Annotation view and that we are editing some
         // metadata, then we don't want the CellML element list to get the focus
         // back)
 
         newView->focusWidget()->setFocus();
-    else
+    } else {
         // The new view doesn't have a focused widget, so simply give the focus
         // to our new view
 
         newView->setFocus();
+    }
 
     // Update our modified settings
 
@@ -1848,7 +1860,7 @@ void CentralWidget::fileDeleted(const QString &pFileName)
                               QMessageBox::Yes) == QMessageBox::Yes) {
         // The user wants to close the file
 
-        for (int i = 0, iMax = mFileNames.count(); i < iMax; ++i)
+        for (int i = 0, iMax = mFileNames.count(); i < iMax; ++i) {
             if (!mFileNames[i].compare(pFileName)) {
                 // We have found the file to close
 
@@ -1856,6 +1868,7 @@ void CentralWidget::fileDeleted(const QString &pFileName)
 
                 break;
             }
+        }
     } else {
         // The user wants to keep the file, so consider it as new now
 
@@ -1921,12 +1934,13 @@ void CentralWidget::filePermissionsChanged(const QString &pFileName)
 {
     // Update the tab text for the given file
 
-    for (int i = 0, iMax = mFileNames.count(); i < iMax; ++i)
+    for (int i = 0, iMax = mFileNames.count(); i < iMax; ++i) {
         if (!pFileName.compare(mFileNames[i])) {
             updateFileTab(i);
 
             break;
         }
+    }
 
     // Let our plugins know about the file having had its permissions changed
 
@@ -1959,17 +1973,19 @@ void CentralWidget::fileReloaded(const QString &pFileName)
     FileManager *fileManagerInstance = FileManager::instance();
     Plugin *fileViewPlugin = viewPlugin(pFileName);
 
-    foreach (Plugin *plugin, mLoadedFileHandlingPlugins)
+    foreach (Plugin *plugin, mLoadedFileHandlingPlugins) {
         if (fileManagerInstance->canCheckFiles() || (plugin != fileViewPlugin))
             qobject_cast<FileHandlingInterface *>(plugin->instance())->fileReloaded(pFileName);
+    }
 
     // Now, because of the way some of our views may reload a file (see, for
     // example, CoreEditingPlugin::fileReloaded()), we need to tell them to
     // update their GUI
 
-    foreach (Plugin *plugin, mLoadedGuiPlugins)
+    foreach (Plugin *plugin, mLoadedGuiPlugins) {
         if (fileManagerInstance->canCheckFiles() || (plugin != fileViewPlugin))
             qobject_cast<GuiInterface *>(plugin->instance())->updateGui(fileViewPlugin, pFileName);
+    }
 
     // Update our modified settings
 
@@ -2002,7 +2018,7 @@ void CentralWidget::fileRenamed(const QString &pOldFileName,
 {
     // A file has been renamed, so update various things
 
-    for (int i = 0, iMax = mFileNames.count(); i < iMax; ++i)
+    for (int i = 0, iMax = mFileNames.count(); i < iMax; ++i) {
         if (!mFileNames[i].compare(pOldFileName)) {
             // Update our internal copy of the file name
 
@@ -2028,6 +2044,7 @@ void CentralWidget::fileRenamed(const QString &pOldFileName,
 
             break;
         }
+    }
 }
 
 //==============================================================================
@@ -2041,12 +2058,13 @@ void CentralWidget::fileSaved(const QString &pFileName)
 
     Plugin *fileViewPlugin = viewPlugin(pFileName);
 
-    foreach (Plugin *plugin, mLoadedFileHandlingPlugins)
+    foreach (Plugin *plugin, mLoadedFileHandlingPlugins) {
         if (plugin == fileViewPlugin) {
             qobject_cast<FileHandlingInterface *>(plugin->instance())->fileSaved(pFileName);
 
             break;
         }
+    }
 }
 
 //==============================================================================
@@ -2058,11 +2076,11 @@ void CentralWidget::updateFileTabIcon(const QString &pViewName,
     // Update the requested file tab icon, but only if the view plugin (from
     // which the signal was emitted) is the one currently active
 
-    if (!pViewName.compare(qobject_cast<ViewInterface *>(viewPlugin(pFileName)->instance())->viewName()))
+    if (!pViewName.compare(qobject_cast<ViewInterface *>(viewPlugin(pFileName)->instance())->viewName())) {
         // The view from which the signal was emitted is the currently active
         // one, so we can try to handle its signal
 
-        for (int i = 0, iMax = mFileTabs->count(); i < iMax; ++i)
+        for (int i = 0, iMax = mFileTabs->count(); i < iMax; ++i) {
             if (!pFileName.compare(mFileNames[i])) {
                 // This is the file tab for which we want to update the icon, so
                 // do it and leave
@@ -2074,6 +2092,8 @@ void CentralWidget::updateFileTabIcon(const QString &pViewName,
 
                 return;
             }
+        }
+    }
 }
 
 //==============================================================================

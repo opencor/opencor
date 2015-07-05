@@ -111,7 +111,7 @@ void FileOrganiserWindowWidget::loadItemSettings(QSettings *pSettings,
 
     itemInfo = pSettings->value(QString::number(++crtItemIndex)).toStringList();
 
-    if (itemInfo != QStringList()) {
+    if (!itemInfo.isEmpty()) {
         QString textOrPath  = itemInfo[0];
         int parentItemIndex = itemInfo[1].toInt();
         int childItemsCount = itemInfo[2].toInt();

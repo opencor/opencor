@@ -4,6 +4,7 @@ PROJECT(CellMLTextViewPlugin)
 
 RETRIEVE_CELLML_API_SETTINGS()
 RETRIEVE_LLVM_SETTINGS()
+RETRIEVE_QWT_SETTINGS()
 
 # Add the plugin
 
@@ -30,6 +31,7 @@ ADD_PLUGIN(CellMLTextView
         src/cellmltextviewwidget.h
     DEFINITIONS
         ${LLVM_DEFINITIONS}
+        ${QWT_DEFINITIONS}
     INCLUDE_DIRS
         src
     PLUGINS
