@@ -23,6 +23,7 @@ specific language governing permissions and limitations under the License.
 #include "cliinterface.h"
 #include "cliutils.h"
 #include "pluginmanager.h"
+#include "settings.h"
 
 //==============================================================================
 
@@ -35,6 +36,7 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include <QCoreApplication>
+#include <QSettings>
 #include <QXmlStreamReader>
 
 //==============================================================================
@@ -200,7 +202,7 @@ void CliApplication::help() const
     // Output some help
 
     std::cout << "Usage: " << mApp->applicationName().toStdString()
-              << " [-a|--about] [-c|--command [<plugin>::]<command> <options>] [-h|--help] [-p|--plugins] [-s|--status] [-v|--version] [<files>]"
+              << " [-a|--about] [-c|--command [<plugin>::]<command> <options>] [-h|--help] [-p|--plugins] [-r|--reset] [-s|--status] [-v|--version] [<files>]"
               << std::endl;
     std::cout << " -a, --about     Display some information about OpenCOR"
               << std::endl;
@@ -209,6 +211,8 @@ void CliApplication::help() const
     std::cout << " -h, --help      Display this help information"
               << std::endl;
     std::cout << " -p, --plugins   Display all the CLI plugins"
+              << std::endl;
+    std::cout << " -r, --reset     Reset all your settings"
               << std::endl;
     std::cout << " -s, --status    Display the status of all the plugins"
               << std::endl;
@@ -258,6 +262,17 @@ void CliApplication::plugins() const
 
     foreach (const QString &pluginInfo, pluginsInfo)
         std::cout << " - " << pluginInfo.toStdString() << std::endl;
+}
+
+//==============================================================================
+
+void CliApplication::reset() const
+{
+    QSettings settings(OpenCOR::SettingsOrganization, OpenCOR::SettingsApplication);
+
+    settings.clear();
+
+    std::cout << "All your settings have been reset." << std::endl;
 }
 
 //==============================================================================
@@ -371,6 +386,7 @@ bool CliApplication::run(int *pRes)
         CommandOption,
         HelpOption,
         PluginsOption,
+        ResetOption,
         StatusOption,
         VersionOption
     };
@@ -406,6 +422,12 @@ bool CliApplication::run(int *pRes)
         } else if (!appArgument.compare("-p") || !appArgument.compare("--plugins")) {
             if (option == NoOption) {
                 option = PluginsOption;
+            } else {
+                *pRes = -1;
+            }
+        } else if (!appArgument.compare("-r") || !appArgument.compare("--reset")) {
+            if (option == NoOption) {
+                option = ResetOption;
             } else {
                 *pRes = -1;
             }
@@ -470,6 +492,10 @@ bool CliApplication::run(int *pRes)
             loadPlugins();
 
             plugins();
+
+            break;
+        case ResetOption:
+            reset();
 
             break;
         case StatusOption:
