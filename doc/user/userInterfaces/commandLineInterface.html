@@ -25,11 +25,12 @@
 
         <pre class="prettyprint">$ ./OpenCOR -h
 
-<span class="nocode">Usage: OpenCOR [-a|--about] [-c|--command [&lt;plugin&gt;::]&lt;command&gt; &lt;options&gt;] [-h|--help] [-p|--plugins] [-s|--status] [-v|--version] [&lt;files&gt;]
+<span class="nocode">Usage: OpenCOR [-a|--about] [-c|--command [&lt;plugin&gt;::]&lt;command&gt; &lt;options&gt;] [-h|--help] [-p|--plugins] [-r|--reset] [-s|--status] [-v|--version] [&lt;files&gt;]
  -a, --about     Display some information about OpenCOR
  -c, --command   Send a command to one or all the <a href="http://en.wikipedia.org/wiki/Command-line_interface">CLI</a> plugins
  -h, --help      Display this help information
  -p, --plugins   Display all the <a href="http://en.wikipedia.org/wiki/Command-line_interface">CLI</a> plugins
+ -r, --reset     Reset all your settings
  -s, --status    Display the status of all the plugins
  -v, --version   Display the version of OpenCOR</span></pre>
 
@@ -82,7 +83,6 @@ OpenCOR is a cross-platform CellML-based modelling environment, which can be use
         </div>
 
         <pre class="prettyprint">$ ./OpenCOR -c help
-
 <span class="nocode">Commands supported by <a href="../plugins/miscellaneous/CellMLTools.html">CellMLTools</a>:
  * Display the commands supported by <a href="../plugins/miscellaneous/CellMLTools.html">CellMLTools</a>:
       help
@@ -92,6 +92,14 @@ OpenCOR is a cross-platform CellML-based modelling environment, which can be use
       cellml_1_0: to export a CellML 1.1 file to CellML 1.0</span>
 $ ./OpenCOR -c CellMLTools::export <span class="nocode">in.cellml out.cellml cellml_1_0</span>
 $ ./OpenCOR -c CellMLTools::export <span class="nocode">http://mydomain.com/in.cellml out.txt format.xml</span></pre>
+
+        <div class="section">
+            Reset
+        </div>
+
+        <pre class="prettyprint">$ ./OpenCOR -r
+
+<span class="nocode">All your settings have been reset.</span></pre>
 
         <script type="text/javascript">
             copyright("../..");

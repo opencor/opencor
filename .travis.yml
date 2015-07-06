@@ -1,7 +1,12 @@
+# Note #1: Travis CI still (!!) uses Ubuntu 12.04 LTS, for which we only have
+#          a Qt 5.4.1 ppa, so we currently disable Linux altogether...
+# Note #2: brew doesn't yet support Qt 5.5, so we disable testing on OS X...
+#          (see https://github.com/Homebrew/homebrew/blob/master/Library/Formula/qt5.rb)
+
 language: cpp
 
 os:
-  - linux
+#  - linux
   - osx
 
 env:
@@ -43,14 +48,14 @@ script:
          ;
        fi
     && make -j 3
-    && cd ..
-    && if [ "${TRAVIS_OS_NAME}" = "linux" ]; then
-         build/bin/runtests
-         ;
-       else
-         build/OpenCOR.app/Contents/MacOS/runtests
-         ;
-       fi
+#    && cd ..
+#    && if [ "${TRAVIS_OS_NAME}" = "linux" ]; then
+#         build/bin/runtests
+#         ;
+#       else
+#         build/OpenCOR.app/Contents/MacOS/runtests
+#         ;
+#       fi
 
 notifications:
   email:

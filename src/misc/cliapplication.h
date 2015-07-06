@@ -66,6 +66,7 @@ private:
     bool command(const QStringList &pArguments, int *pRes) const;
     void help() const;
     void plugins() const;
+    void reset() const;
     void status() const;
     void version() const;
 };

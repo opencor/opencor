@@ -3,7 +3,8 @@ var jsonData = { "versions": [
                      "categories": [
                        { "name": "General",
                          "entries": [
-                           { "type": "Added", "description": "<a href=\"http://git-scm.com/\">Git</a> support." }
+                           { "type": "Added", "description": "<a href=\"http://git-scm.com/\">Git</a> support." },
+                           { "type": "Added", "description": "Resetting all your settings from the command line." }
                          ]
                        },
                        { "name": "Organisation",
