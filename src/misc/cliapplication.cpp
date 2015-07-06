@@ -176,7 +176,7 @@ bool CliApplication::command(const QStringList &pArguments, int *pRes) const
 
     // Send the command to the plugin(s)
 
-    foreach (Plugin *plugin, mLoadedCliPlugins)
+    foreach (Plugin *plugin, mLoadedCliPlugins) {
         if (    commandPlugin.isEmpty()
             || !commandPlugin.compare(plugin->name())) {
             QStringList arguments = pArguments;
@@ -188,6 +188,7 @@ bool CliApplication::command(const QStringList &pArguments, int *pRes) const
             if (qobject_cast<CliInterface *>(plugin->instance())->executeCommand(commandName, arguments))
                 *pRes = -1;
         }
+    }
 
     return true;
 }
@@ -364,12 +365,17 @@ bool CliApplication::run(int *pRes)
 
     *pRes = 0;   // By default, everything is fine
 
-    bool aboutOption = false;
-    bool commandOption = false;
-    bool helpOption = false;
-    bool pluginsOption = false;
-    bool statusOption = false;
-    bool versionOption = false;
+    enum Option {
+        NoOption,
+        AboutOption,
+        CommandOption,
+        HelpOption,
+        PluginsOption,
+        StatusOption,
+        VersionOption
+    };
+
+    Option option = NoOption;
 
     QStringList appArguments = mApp->arguments();
     QStringList commandArguments = QStringList();
@@ -380,26 +386,48 @@ bool CliApplication::run(int *pRes)
 
     foreach (const QString &appArgument, appArguments) {
         if (!appArgument.compare("-a") || !appArgument.compare("--about")) {
-            aboutOption = true;
+            if (option == NoOption) {
+                option = AboutOption;
+            } else {
+                *pRes = -1;
+            }
         } else if (!appArgument.compare("-c") || !appArgument.compare("--command")) {
-            commandOption = true;
+            if (option == NoOption) {
+                option = CommandOption;
+            } else {
+                *pRes = -1;
+            }
         } else if (!appArgument.compare("-h") || !appArgument.compare("--help")) {
-            helpOption = true;
+            if (option == NoOption) {
+                option = HelpOption;
+            } else {
+                *pRes = -1;
+            }
         } else if (!appArgument.compare("-p") || !appArgument.compare("--plugins")) {
-            pluginsOption = true;
+            if (option == NoOption) {
+                option = PluginsOption;
+            } else {
+                *pRes = -1;
+            }
         } else if (!appArgument.compare("-s") || !appArgument.compare("--status")) {
-            statusOption = true;
+            if (option == NoOption) {
+                option = StatusOption;
+            } else {
+                *pRes = -1;
+            }
         } else if (!appArgument.compare("-v") || !appArgument.compare("--version")) {
-            versionOption = true;
+            if (option == NoOption) {
+                option = VersionOption;
+            } else {
+                *pRes = -1;
+            }
         } else if (appArgument.startsWith("-")) {
             // The user provided at least one unknown option
-
-            help();
 
             *pRes = -1;
 
             break;
-        } else if (commandOption) {
+        } else if (option == CommandOption) {
             // Not an option, so we consider it to be part of a command
 
             commandArguments << appArgument;
@@ -409,39 +437,59 @@ bool CliApplication::run(int *pRes)
     // Handle the option the user requested, if any
 
     if (!*pRes) {
-        if (aboutOption) {
+        switch (option) {
+        case AboutOption:
             about();
-        } else if (commandOption) {
+
+            break;
+        case CommandOption:
             // Make sure that we have at least one argument (which would be the
             // command itself) before loading the plugins and then sending the
             // command to the plugin(s)
 
             if (commandArguments.isEmpty()) {
+                *pRes = -1;
+
                 help();
             } else {
                 loadPlugins();
 
-                if (!command(commandArguments, pRes))
+                if (!command(commandArguments, pRes)) {
+                    *pRes = -1;
+
                     help();
+                }
             }
-        } else if (helpOption) {
+
+            break;
+        case HelpOption:
             help();
-        } else if (pluginsOption) {
+
+            break;
+        case PluginsOption:
             loadPlugins();
 
             plugins();
-        } else if (statusOption) {
+
+            break;
+        case StatusOption:
             loadPlugins();
 
             status();
-        } else if (versionOption) {
+
+            break;
+        case VersionOption:
             version();
-        } else {
+
+            break;
+        default:
             // The user didn't provide any option that requires running OpenCOR
             // as a CLI application
 
             return false;
         }
+    } else {
+        help();
     }
 
     return true;
