@@ -898,7 +898,7 @@ MACRO(WINDOWS_DEPLOY_LIBRARY DIRNAME FILENAME)
     COPY_FILE_TO_BUILD_DIR(DIRECT_COPY ${DIRNAME} . ${FILENAME})
     COPY_FILE_TO_BUILD_DIR(DIRECT_COPY ${DIRNAME} bin ${FILENAME})
 
-    # Install the library file
+    # Deploy the library file
 
     INSTALL(FILES ${DIRNAME}/${FILENAME}
             DESTINATION bin)
@@ -925,7 +925,7 @@ MACRO(LINUX_DEPLOY_QT_PLUGIN PLUGIN_CATEGORY)
 
         # Deploy the Qt plugin
 
-        INSTALL(FILES ${PLUGIN_ORIG_DIRNAME}/${PLUGIN_FILENAME}
+        INSTALL(FILES ${PLUGIN_DEST_DIRNAME}/${PLUGIN_FILENAME}
                 DESTINATION ${PLUGIN_DEST_DIRNAME})
     ENDFOREACH()
 ENDMACRO()
@@ -940,7 +940,7 @@ MACRO(LINUX_DEPLOY_LIBRARY DIRNAME FILENAME)
                            COMMAND strip -x ${DIRNAME}/${FILENAME})
     ENDIF()
 
-    # Install the library file
+    # Deploy the library file
 
     INSTALL(FILES ${DIRNAME}/${FILENAME}
             DESTINATION lib)
