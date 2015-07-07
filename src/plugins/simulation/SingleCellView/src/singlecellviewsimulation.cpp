@@ -510,6 +510,16 @@ void SingleCellViewSimulationData::recomputeComputedConstantsAndVariables(const 
         if (!pFullComputeComputedConstants)
             delete[] realStates;
 
+        // Recompute some 'constant' algebraic variables
+
+        if (mRuntime->modelType() == CellMLSupport::CellmlFileRuntime::Ode) {
+            double *dummyRates = new double[mRuntime->ratesCount()];
+
+            mRuntime->computeOdeRates()(pCurrentPoint, mConstants, dummyRates, mStates, mAlgebraic);
+
+            delete[] dummyRates;
+        }
+
         // Recompute our 'variables'
 
         recomputeVariables(pCurrentPoint);
