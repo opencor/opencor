@@ -169,6 +169,8 @@ private:
     QMap<SingleCellViewSimulation *, qulonglong> mOldSimulationResultsSizes;
     QList<SingleCellViewSimulation *> mCheckResultsSimulations;
 
+    QList<SingleCellViewSimulation *> mResetSimulations;
+
     QMap<SingleCellViewGraphPanelWidget *, SingleCellViewGraphPanelPlotWidget *> mGraphPanelsPlots;
     QList<SingleCellViewGraphPanelPlotWidget *> mPlots;
     QMap<SingleCellViewGraphPanelPlotWidget *, QRectF> mPlotsViewports;
@@ -236,7 +238,7 @@ private Q_SLOTS:
     void simulationPaused();
     void simulationStopped(const qint64 &pElapsedTime);
 
-    void resetProgressBar();
+    void resetProgressBar(SingleCellViewSimulation *pSimulation = 0);
     void resetFileTabIcon();
 
     void simulationError(const QString &pMessage,
