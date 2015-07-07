@@ -101,6 +101,7 @@ SingleCellViewWidget::SingleCellViewWidget(SingleCellViewPlugin *pPluginParent,
     mRunActionEnabled(true),
     mOldSimulationResultsSizes(QMap<SingleCellViewSimulation *, qulonglong>()),
     mCheckResultsSimulations(QList<SingleCellViewSimulation *>()),
+    mResetSimulations(QList<SingleCellViewSimulation *>()),
     mGraphPanelsPlots(QMap<SingleCellViewGraphPanelWidget *, SingleCellViewGraphPanelPlotWidget *>()),
     mPlots(QList<SingleCellViewGraphPanelPlotWidget *>()),
     mPlotsViewports(QMap<SingleCellViewGraphPanelPlotWidget *, QRectF>()),
@@ -1412,10 +1413,13 @@ void SingleCellViewWidget::simulationStopped(const qint64 &pElapsedTime)
             output(QString(OutputTab+"<strong>"+tr("Simulation time:")+"</strong> <span"+OutputInfo+">"+tr("%1 s using %2").arg(QString::number(0.001*pElapsedTime, 'g', 3), solversInformation)+"</span>."+OutputBrLn));
         }
 
-        if (needReloadView)
-            resetProgressBar();
-        else
+        if (needReloadView) {
+            resetProgressBar(simulation);
+        } else {
+            mResetSimulations << simulation;
+
             QTimer::singleShot(ResetDelay, this, SLOT(resetProgressBar()));
+        }
 
         // Update our parameters and simulation mode
 
@@ -1455,9 +1459,28 @@ void SingleCellViewWidget::simulationStopped(const qint64 &pElapsedTime)
 
 //==============================================================================
 
-void SingleCellViewWidget::resetProgressBar()
+void SingleCellViewWidget::resetProgressBar(SingleCellViewSimulation *pSimulation)
 {
+    // Retrieve the oldest simulation to reset, if none was provided
+
+    SingleCellViewSimulation *simulation = pSimulation;
+
+    if (!simulation) {
+        simulation = mResetSimulations.first();
+
+        if (!simulation) {
+            // There should have been simulation to reset, but somehow there
+            // isn't one, so leave
+
+            return;
+        }
+
+        mResetSimulations.removeFirst();
+    }
+
     // Reset our progress bar
+
+    mOldSimulationResultsSizes.insert(simulation, 0);
 
     mProgressBarWidget->setValue(0.0);
 }

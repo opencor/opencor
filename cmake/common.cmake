@@ -898,10 +898,33 @@ MACRO(WINDOWS_DEPLOY_LIBRARY DIRNAME FILENAME)
     COPY_FILE_TO_BUILD_DIR(DIRECT_COPY ${DIRNAME} . ${FILENAME})
     COPY_FILE_TO_BUILD_DIR(DIRECT_COPY ${DIRNAME} bin ${FILENAME})
 
-    # Install the library file
+    # Deploy the library file
 
     INSTALL(FILES ${DIRNAME}/${FILENAME}
             DESTINATION bin)
+ENDMACRO()
+
+#===============================================================================
+
+MACRO(LINUX_DEPLOY_QT_LIBRARY DIRNAME ORIG_FILENAME DEST_FILENAME)
+    # Copy the Qt library to the build/lib folder, so we can test things without
+    # first having to deploy OpenCOR
+    # Note: this is particularly useful when the Linux machine has different
+    #       versions of Qt...
+
+    COPY_FILE_TO_BUILD_DIR(DIRECT_COPY ${DIRNAME} lib ${ORIG_FILENAME} ${DEST_FILENAME})
+
+    # Strip the library of all its local symbols
+
+    IF(RELEASE_MODE)
+        ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
+                           COMMAND strip -x lib/${DEST_FILENAME})
+    ENDIF()
+
+    # Deploy the Qt library
+
+    INSTALL(FILES build/lib/${DEST_FILENAME}
+            DESTINATION lib)
 ENDMACRO()
 
 #===============================================================================
@@ -925,7 +948,7 @@ MACRO(LINUX_DEPLOY_QT_PLUGIN PLUGIN_CATEGORY)
 
         # Deploy the Qt plugin
 
-        INSTALL(FILES ${PLUGIN_ORIG_DIRNAME}/${PLUGIN_FILENAME}
+        INSTALL(FILES build/${PLUGIN_DEST_DIRNAME}/${PLUGIN_FILENAME}
                 DESTINATION ${PLUGIN_DEST_DIRNAME})
     ENDFOREACH()
 ENDMACRO()
@@ -940,7 +963,7 @@ MACRO(LINUX_DEPLOY_LIBRARY DIRNAME FILENAME)
                            COMMAND strip -x ${DIRNAME}/${FILENAME})
     ENDIF()
 
-    # Install the library file
+    # Deploy the library file
 
     INSTALL(FILES ${DIRNAME}/${FILENAME}
             DESTINATION lib)

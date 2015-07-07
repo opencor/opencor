@@ -47,7 +47,8 @@ var jsonData = { "versions": [
                            { "type": "subCategory", "name": "Single cell (simulation) view",
                              "entries": [
                                { "type": "Improved", "description": "GUI rendering." },
-                               { "type": "Improved", "description": "Plotting of simulation data." }
+                               { "type": "Improved", "description": "Plotting of simulation data." },
+                               { "type": "Improved", "description": "Support for CellML models." }
                              ]
                            }
                          ]

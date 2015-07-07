@@ -495,9 +495,11 @@ void SingleCellViewSimulationData::recomputeComputedConstantsAndVariables(const 
     if (!mRuntime)
         return;
 
-    // Recompute our 'computed constants' and 'variables', if possible
+    // Make sure that our runtime is valid
 
     if (mRuntime->isValid()) {
+        // Recompute our 'computed constants'
+
         double *realStates = mStates;
 
         if (!pFullComputeComputedConstants)
@@ -508,10 +510,19 @@ void SingleCellViewSimulationData::recomputeComputedConstantsAndVariables(const 
         if (!pFullComputeComputedConstants)
             delete[] realStates;
 
-        if (mRuntime->modelType() == CellMLSupport::CellmlFileRuntime::Ode)
-            mRuntime->computeOdeVariables()(pCurrentPoint, mConstants, mRates, mStates, mAlgebraic);
-        else
-            mRuntime->computeDaeVariables()(pCurrentPoint, mConstants, mRates, mStates, mAlgebraic, mCondVar);
+        // Recompute some 'constant' algebraic variables
+
+        if (mRuntime->modelType() == CellMLSupport::CellmlFileRuntime::Ode) {
+            double *dummyRates = new double[mRuntime->ratesCount()];
+
+            mRuntime->computeOdeRates()(pCurrentPoint, mConstants, dummyRates, mStates, mAlgebraic);
+
+            delete[] dummyRates;
+        }
+
+        // Recompute our 'variables'
+
+        recomputeVariables(pCurrentPoint);
 
         // Let people know that our data has been updated
 

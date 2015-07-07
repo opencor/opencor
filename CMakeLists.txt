@@ -658,8 +658,8 @@ ELSEIF(APPLE)
     CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/distrib/osx/application.sh.in ${SHELL_FILENAME})
 
     INSTALL(FILES ${SHELL_FILENAME}
-            RENAME ${PROJECT_NAME}
             DESTINATION .
+            RENAME ${PROJECT_NAME}
             PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
 ELSE()
     # Select TGZ as the packager on Linux
@@ -673,21 +673,27 @@ ELSE()
     INSTALL(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION bin)
 
     # Qt libraries required by OpenCOR
-    # Note: unlike for Windows and OS X, we don't have a macro for deploying our
-    #       Qt libraries. Indeed, on Linux, the version of a file is appended to
-    #       its suffix, so unless making the macro unnecessarily cumbersome to
-    #       use, it's better to do things ourselves...
+    # Note: unlike for Windows and OS X, we don't have a macro for deploying all
+    #       of our Qt libraries at once. Indeed, on Linux, the version of a file
+    #       is appended to its suffix, so unless making the macro unnecessarily
+    #       cumbersome to use, it's better deploy one Qt library at once...
 
-    FOREACH(QT_LIBRARY CLucene Core DBus Gui Help Multimedia MultimediaWidgets Network OpenGL Positioning PrintSupport Qml Quick Sensors Sql Svg WebChannel WebKit WebKitWidgets Widgets XcbQpa Xml XmlPatterns)
-        INSTALL(FILES ${QT_LIBRARY_DIR}/${CMAKE_SHARED_LIBRARY_PREFIX}Qt${QT_VERSION_MAJOR}${QT_LIBRARY}${CMAKE_SHARED_LIBRARY_SUFFIX}.${QT_VERSION_MAJOR}.${QT_VERSION_MINOR}.${QT_VERSION_PATCH}
-                DESTINATION lib
-                RENAME ${CMAKE_SHARED_LIBRARY_PREFIX}Qt${QT_VERSION_MAJOR}${QT_LIBRARY}${CMAKE_SHARED_LIBRARY_SUFFIX}.${QT_VERSION_MAJOR})
+    IF(ENABLE_TESTS)
+        SET(TEST Test)
+    ELSE()
+        SET(TEST)
+    ENDIF()
+
+    FOREACH(QT_LIBRARY CLucene Core DBus Gui Help Multimedia MultimediaWidgets Network OpenGL Positioning PrintSupport Qml Quick Sensors Sql Svg ${TEST} WebChannel WebKit WebKitWidgets Widgets XcbQpa Xml XmlPatterns)
+        LINUX_DEPLOY_QT_LIBRARY(${QT_LIBRARY_DIR}
+                                ${CMAKE_SHARED_LIBRARY_PREFIX}Qt${QT_VERSION_MAJOR}${QT_LIBRARY}${CMAKE_SHARED_LIBRARY_SUFFIX}.${QT_VERSION_MAJOR}.${QT_VERSION_MINOR}.${QT_VERSION_PATCH}
+                                ${CMAKE_SHARED_LIBRARY_PREFIX}Qt${QT_VERSION_MAJOR}${QT_LIBRARY}${CMAKE_SHARED_LIBRARY_SUFFIX}.${QT_VERSION_MAJOR})
     ENDFOREACH()
 
     FOREACH(QT_FILE icudata icui18n icuuc)
-        INSTALL(FILES ${QT_LIBRARY_DIR}/${CMAKE_SHARED_LIBRARY_PREFIX}${QT_FILE}${CMAKE_SHARED_LIBRARY_SUFFIX}.${ICU_VERSION}.1
-                DESTINATION lib
-                RENAME ${CMAKE_SHARED_LIBRARY_PREFIX}${QT_FILE}${CMAKE_SHARED_LIBRARY_SUFFIX}.${ICU_VERSION})
+        LINUX_DEPLOY_QT_LIBRARY(${QT_LIBRARY_DIR}
+                                ${CMAKE_SHARED_LIBRARY_PREFIX}${QT_FILE}${CMAKE_SHARED_LIBRARY_SUFFIX}.${ICU_VERSION}.1
+                                ${CMAKE_SHARED_LIBRARY_PREFIX}${QT_FILE}${CMAKE_SHARED_LIBRARY_SUFFIX}.${ICU_VERSION})
     ENDFOREACH()
 
     # Qt plugins required by OpenCOR
@@ -704,8 +710,8 @@ ELSE()
     CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/distrib/linux/application.sh.in ${ShellFile})
 
     INSTALL(FILES ${ShellFile}
-            RENAME ${PROJECT_NAME}
             DESTINATION .
+            RENAME ${PROJECT_NAME}
             PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
 ENDIF()
 

@@ -169,6 +169,8 @@ private:
     QMap<SingleCellViewSimulation *, qulonglong> mOldSimulationResultsSizes;
     QList<SingleCellViewSimulation *> mCheckResultsSimulations;
 
+    QList<SingleCellViewSimulation *> mResetSimulations;
+
     QMap<SingleCellViewGraphPanelWidget *, SingleCellViewGraphPanelPlotWidget *> mGraphPanelsPlots;
     QList<SingleCellViewGraphPanelPlotWidget *> mPlots;
     QMap<SingleCellViewGraphPanelPlotWidget *, QRectF> mPlotsViewports;
@@ -210,6 +212,9 @@ private:
 
     QVariant value(Core::Property *pProperty) const;
 
+    void initializeSolversProperties(SingleCellViewInformationSolversWidgetData *pSolverData = 0);
+    void updateSolversPropertiesVisibility(SingleCellViewInformationSolversWidgetData *pSolverData);
+
 private Q_SLOTS:
     void on_actionRunPauseResumeSimulation_triggered();
     void on_actionStopSimulation_triggered();
@@ -225,9 +230,6 @@ private Q_SLOTS:
     void on_actionRemoveCurrentGraphPanel_triggered();
     void on_actionRemoveAllGraphPanels_triggered();
 
-    void initializeSolversProperties(SingleCellViewInformationSolversWidgetData *pSolverData = 0);
-    void updateSolversPropertiesVisibility(SingleCellViewInformationSolversWidgetData *pSolverData);
-
     void simulationDataExport();
 
     void updateDelayValue(const double &pDelayValue);
@@ -236,7 +238,7 @@ private Q_SLOTS:
     void simulationPaused();
     void simulationStopped(const qint64 &pElapsedTime);
 
-    void resetProgressBar();
+    void resetProgressBar(SingleCellViewSimulation *pSimulation = 0);
     void resetFileTabIcon();
 
     void simulationError(const QString &pMessage,
