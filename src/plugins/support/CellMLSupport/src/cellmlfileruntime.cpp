@@ -668,11 +668,12 @@ QStringList CellmlFileRuntime::componentHierarchy(iface::cellml_api::CellMLEleme
     ObjRef<iface::cellml_api::CellMLElement> parent = pElement->parentElement();
     ObjRef<iface::cellml_api::CellMLComponent> parentComponent = QueryInterface(parent);
 
-    if (!component && !parentComponent)
+    if (!component && !parentComponent) {
         // The element isn't a component and neither is its parent, so it
         // doesn't have a hierarchy
 
         return QStringList();
+    }
 
     // Check whether this is an imported component and, if so, retrieve its
     // imported name
@@ -692,7 +693,7 @@ QStringList CellmlFileRuntime::componentHierarchy(iface::cellml_api::CellMLEleme
         ObjRef<iface::cellml_api::ImportComponentIterator> importComponentsIter = importComponents->iterateImportComponents();
 
         for (ObjRef<iface::cellml_api::ImportComponent> importComponent = importComponentsIter->nextImportComponent();
-             importComponent; importComponent = importComponentsIter->nextImportComponent())
+             importComponent; importComponent = importComponentsIter->nextImportComponent()) {
             if (!componentName.compare(QString::fromStdWString(importComponent->componentRef()))) {
                 // This is the imported component we are after, so retrieve its
                 // imported name
@@ -701,6 +702,7 @@ QStringList CellmlFileRuntime::componentHierarchy(iface::cellml_api::CellMLEleme
 
                 break;
             }
+        }
     }
 
     // Recursively retrieve the component hierarchy of the given element's
@@ -1017,12 +1019,13 @@ void CellmlFileRuntime::update()
     // Check whether the model code contains a definite integral, otherwise
     // compute it and check that everything went fine
 
-    if (modelCode.contains("defint(func"))
+    if (modelCode.contains("defint(func")) {
         mIssues << CellmlFileIssue(CellmlFileIssue::Error,
                                    QObject::tr("definite integrals are not yet supported"));
-    else if (!mCompilerEngine->compileCode(modelCode))
+    } else if (!mCompilerEngine->compileCode(modelCode)) {
         mIssues << CellmlFileIssue(CellmlFileIssue::Error,
                                    QString("%1").arg(mCompilerEngine->error()));
+    }
 
     // Keep track of the ODE/DAE functions, but only if no issues were reported
 
@@ -1057,17 +1060,18 @@ void CellmlFileRuntime::update()
         bool functionsOk =    mInitializeConstants
                            && mComputeComputedConstants;
 
-        if (mModelType == CellmlFileRuntime::Ode)
+        if (mModelType == CellmlFileRuntime::Ode) {
             functionsOk =    functionsOk
                           && mComputeOdeRates
                           && mComputeOdeVariables;
-        else
+        } else {
             functionsOk =    functionsOk
                           && mComputeDaeEssentialVariables
                           && mComputeDaeResiduals
                           && mComputeDaeRootInformation
                           && mComputeDaeStateInformation
                           && mComputeDaeVariables;
+        }
 
         if (!functionsOk) {
             mIssues << CellmlFileIssue(CellmlFileIssue::Error,
