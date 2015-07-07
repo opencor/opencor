@@ -212,6 +212,9 @@ private:
 
     QVariant value(Core::Property *pProperty) const;
 
+    void initializeSolversProperties(SingleCellViewInformationSolversWidgetData *pSolverData = 0);
+    void updateSolversPropertiesVisibility(SingleCellViewInformationSolversWidgetData *pSolverData);
+
 private Q_SLOTS:
     void on_actionRunPauseResumeSimulation_triggered();
     void on_actionStopSimulation_triggered();
@@ -226,9 +229,6 @@ private Q_SLOTS:
     void on_actionRemoveGraphPanel_triggered();
     void on_actionRemoveCurrentGraphPanel_triggered();
     void on_actionRemoveAllGraphPanels_triggered();
-
-    void initializeSolversProperties(SingleCellViewInformationSolversWidgetData *pSolverData = 0);
-    void updateSolversPropertiesVisibility(SingleCellViewInformationSolversWidgetData *pSolverData);
 
     void simulationDataExport();
 
