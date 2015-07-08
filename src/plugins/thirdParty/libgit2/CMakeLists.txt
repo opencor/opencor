@@ -17,11 +17,11 @@ MACRO(RETRIEVE_LIBGIT2_SETTINGS)
     ELSEIF(APPLE)
         SET(LIBGIT2_DEFINITIONS
             GIT_COMMON_CRYPTO
-            GIT_SSL
+            GIT_OPENSSL
         )
     ELSE()
         SET(LIBGIT2_DEFINITIONS
-            GIT_SSL
+            GIT_OPENSSL
             OPENSSL_SHA1
         )
     ENDIF()
