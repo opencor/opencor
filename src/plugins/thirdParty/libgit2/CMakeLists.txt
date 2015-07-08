@@ -162,6 +162,7 @@ ELSE()
         SET(ADDITIONAL_SOURCES
             src/hash/hash_win32.c
 
+            src/win32/bufffer.c
             src/win32/dir.c
             src/win32/error.c
             src/win32/findfile.c
@@ -212,6 +213,7 @@ ELSE()
             src/config_cache.c
             src/config_file.c
             src/crlf.c
+            src/curl_stream.c
             src/date.c
             src/delta-apply.c
             src/delta.c
@@ -283,11 +285,13 @@ ELSE()
             src/sortedcache.c
             src/stash.c
             src/status.c
+            src/stransport_stream.c
             src/strmap.c
             src/submodule.c
             src/sysdir.c
             src/tag.c
             src/thread-utils.c
+            src/tls_stream.c
             src/trace.c
             src/transaction.c
             src/transport.c

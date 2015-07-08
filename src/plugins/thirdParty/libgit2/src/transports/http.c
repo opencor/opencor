@@ -10,11 +10,13 @@
 #include "http_parser.h"
 #include "buffer.h"
 #include "netops.h"
+#include "remote.h"
 #include "smart.h"
 #include "auth.h"
 #include "auth_negotiate.h"
-#include "openssl_stream.h"
+#include "tls_stream.h"
 #include "socket_stream.h"
+#include "curl_stream.h"
 
 git_http_auth_scheme auth_schemes[] = {
 	{ GIT_AUTHTYPE_NEGOTIATE, "Negotiate", GIT_CREDTYPE_DEFAULT, git_http_auth_negotiate },
@@ -70,7 +72,7 @@ typedef struct {
 	gitno_buffer parse_buffer;
 	git_buf parse_header_name;
 	git_buf parse_header_value;
-	char parse_buffer_data[2048];
+	char parse_buffer_data[NETIO_BUFSIZE];
 	char *content_type;
 	char *location;
 	git_vector www_authenticate;
@@ -334,8 +336,11 @@ static int on_headers_complete(http_parser *parser)
 		if (!t->owner->cred_acquire_cb) {
 			no_callback = 1;
 		} else {
-			if (allowed_auth_types &&
-			    (!t->cred || 0 == (t->cred->credtype & allowed_auth_types))) {
+			if (allowed_auth_types) {
+				if (t->cred) {
+					t->cred->free(t->cred);
+					t->cred = NULL;
+				}
 
 				error = t->owner->cred_acquire_cb(&t->cred,
 								  t->owner->url,
@@ -532,6 +537,7 @@ static int write_chunk(git_stream *io, const char *buffer, size_t len)
 static int http_connect(http_subtransport *t)
 {
 	int error;
+	char *proxy_url;
 
 	if (t->connected &&
 		http_should_keep_alive(&t->parser) &&
@@ -545,9 +551,13 @@ static int http_connect(http_subtransport *t)
 	}
 
 	if (t->connection_data.use_ssl) {
-		error = git_openssl_stream_new(&t->io, t->connection_data.host, t->connection_data.port);
+		error = git_tls_stream_new(&t->io, t->connection_data.host, t->connection_data.port);
 	} else {
+#ifdef GIT_CURL
+		error = git_curl_stream_new(&t->io, t->connection_data.host, t->connection_data.port);
+#else
 		error = git_socket_stream_new(&t->io,  t->connection_data.host, t->connection_data.port);
+#endif
 	}
 
 	if (error < 0)
@@ -555,9 +565,18 @@ static int http_connect(http_subtransport *t)
 
 	GITERR_CHECK_VERSION(t->io, GIT_STREAM_VERSION, "git_stream");
 
+	if (git_stream_supports_proxy(t->io) &&
+	    !git_remote__get_http_proxy(t->owner->owner, !!t->connection_data.use_ssl, &proxy_url)) {
+		error = git_stream_set_proxy(t->io, proxy_url);
+		git__free(proxy_url);
+
+		if (error < 0)
+			return error;
+	}
+
 	error = git_stream_connect(t->io);
 
-#ifdef GIT_SSL
+#if defined(GIT_OPENSSL) || defined(GIT_SECURE_TRANSPORT) || defined(GIT_CURL)
 	if ((!error || error == GIT_ECERTIFICATE) && t->owner->certificate_check_cb != NULL &&
 	    git_stream_is_encrypted(t->io)) {
 		git_cert *cert;
@@ -1008,9 +1027,11 @@ static void http_free(git_smart_subtransport *subtransport)
 	git__free(t);
 }
 
-int git_smart_subtransport_http(git_smart_subtransport **out, git_transport *owner)
+int git_smart_subtransport_http(git_smart_subtransport **out, git_transport *owner, void *param)
 {
 	http_subtransport *t;
+
+	GIT_UNUSED(param);
 
 	if (!out)
 		return -1;

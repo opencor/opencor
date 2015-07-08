@@ -17,7 +17,7 @@ git_mutex git__mwindow_mutex;
 
 #define MAX_SHUTDOWN_CB 8
 
-#ifdef GIT_SSL
+#ifdef GIT_OPENSSL
 # include <openssl/ssl.h>
 SSL_CTX *git__ssl_ctx;
 # ifdef GIT_THREADS
@@ -36,19 +36,28 @@ void git__on_shutdown(git_global_shutdown_fn callback)
 	git__shutdown_callbacks[count - 1] = callback;
 }
 
+static void git__global_state_cleanup(git_global_st *st)
+{
+	if (!st)
+		return;
+
+	git__free(st->error_t.message);
+	st->error_t.message = NULL;
+}
+
 static void git__shutdown(void)
 {
 	int pos;
 
+	/* Shutdown subsystems that have registered */
 	for (pos = git_atomic_get(&git__n_shutdown_callbacks); pos > 0; pos = git_atomic_dec(&git__n_shutdown_callbacks)) {
 		git_global_shutdown_fn cb = git__swap(git__shutdown_callbacks[pos - 1], NULL);
 		if (cb != NULL)
 			cb();
 	}
-
 }
 
-#if defined(GIT_THREADS) && defined(GIT_SSL)
+#if defined(GIT_THREADS) && defined(GIT_OPENSSL)
 void openssl_locking_function(int mode, int n, const char *file, int line)
 {
 	int lock;
@@ -80,7 +89,7 @@ static void shutdown_ssl_locking(void)
 
 static void init_ssl(void)
 {
-#ifdef GIT_SSL
+#ifdef GIT_OPENSSL
 	long ssl_opts = SSL_OP_NO_SSLv2 | SSL_OP_NO_SSLv3;
 
 	/* Older OpenSSL and MacOS OpenSSL doesn't have this */
@@ -107,9 +116,23 @@ static void init_ssl(void)
 #endif
 }
 
+/**
+ * This function aims to clean-up the SSL context which
+ * we allocated.
+ */
+static void uninit_ssl(void)
+{
+#ifdef GIT_OPENSSL
+	if (git__ssl_ctx) {
+		SSL_CTX_free(git__ssl_ctx);
+		git__ssl_ctx = NULL;
+	}
+#endif
+}
+
 int git_openssl_set_locking(void)
 {
-#ifdef GIT_SSL
+#ifdef GIT_OPENSSL
 # ifdef GIT_THREADS
 	int num_locks, i;
 
@@ -216,6 +239,9 @@ static void synchronized_threads_shutdown(void)
 {
 	/* Shut down any subsystems that have global state */
 	git__shutdown();
+
+	git__free_tls_data();
+
 	TlsFree(_tls_index);
 	git_mutex_free(&git__mwindow_mutex);
 }
@@ -255,6 +281,22 @@ git_global_st *git__global_state(void)
 	return ptr;
 }
 
+/**
+ * Free the TLS data associated with this thread.
+ * This should only be used by the thread as it
+ * is exiting.
+ */
+void git__free_tls_data(void)
+{
+	void *ptr = TlsGetValue(_tls_index);
+	if (!ptr)
+		return;
+
+	git__global_state_cleanup(ptr);
+	git__free(ptr);
+	TlsSetValue(_tls_index, NULL);
+}
+
 #elif defined(GIT_THREADS) && defined(_POSIX_THREADS)
 
 static pthread_key_t _tls_key;
@@ -263,9 +305,7 @@ int init_error = 0;
 
 static void cb__free_status(void *st)
 {
-	git_global_st *state = (git_global_st *) st;
-	git__free(state->error_t.message);
-
+	git__global_state_cleanup(st);
 	git__free(st);
 }
 
@@ -302,21 +342,24 @@ int git_libgit2_shutdown(void)
 	pthread_once_t new_once = PTHREAD_ONCE_INIT;
 	int ret;
 
-	if ((ret = git_atomic_dec(&git__n_inits)) > 0)
+	if ((ret = git_atomic_dec(&git__n_inits)) != 0)
 		return ret;
 
 	/* Shut down any subsystems that have global state */
 	git__shutdown();
+	uninit_ssl();
 
 	ptr = pthread_getspecific(_tls_key);
 	pthread_setspecific(_tls_key, NULL);
+
+	git__global_state_cleanup(ptr);
 	git__free(ptr);
 
 	pthread_key_delete(_tls_key);
 	git_mutex_free(&git__mwindow_mutex);
 	_once_init = new_once;
 
-	return ret;
+	return 0;
 }
 
 git_global_st *git__global_state(void)
@@ -358,10 +401,14 @@ int git_libgit2_shutdown(void)
 	int ret;
 
 	/* Shut down any subsystems that have global state */
-	if (ret = git_atomic_dec(&git__n_inits))
-		git__shutdown();
+	if ((ret = git_atomic_dec(&git__n_inits)) != 0)
+		return ret;
 
-	return ret;
+	git__shutdown();
+	git__global_state_cleanup(&__state);
+	uninit_ssl();
+
+	return 0;
 }
 
 git_global_st *git__global_state(void)
