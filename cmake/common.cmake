@@ -496,11 +496,9 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
                 SET(FULL_EXTERNAL_BINARY "${EXTERNAL_BINARIES_DIR}/${EXTERNAL_BINARY}")
             ENDIF()
 
-            IF(EXISTS ${FULL_EXTERNAL_BINARY})
-                TARGET_LINK_LIBRARIES(${PROJECT_NAME}
-                    ${FULL_EXTERNAL_BINARY}
-                )
-            ENDIF()
+            TARGET_LINK_LIBRARIES(${PROJECT_NAME}
+                ${FULL_EXTERNAL_BINARY}
+            )
         ENDFOREACH()
     ENDIF()
 
@@ -651,11 +649,9 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
                             SET(FULL_EXTERNAL_BINARY "${EXTERNAL_BINARIES_DIR}/${EXTERNAL_BINARY}")
                         ENDIF()
 
-                        IF(EXISTS ${FULL_EXTERNAL_BINARY})
-                            TARGET_LINK_LIBRARIES(${TEST_NAME}
-                                ${FULL_EXTERNAL_BINARY}
-                            )
-                        ENDIF()
+                        TARGET_LINK_LIBRARIES(${TEST_NAME}
+                            ${FULL_EXTERNAL_BINARY}
+                        )
                     ENDFOREACH()
                 ENDIF()
 

@@ -52,7 +52,15 @@ IF(NOT WIN32)
     FIND_PACKAGE(OpenSSL REQUIRED QUIET)
 ENDIF()
 
-# Determine to which dependencies we must have access
+# Determine to which external binaries we need access
+
+IF(WIN32)
+    SET(EXTERNAL_BINARIES winhttp rpcrt4 crypt32)
+ELSE()
+    SET(EXTERNAL_BINARIES ${OPENSSL_LIBRARIES})
+ENDIF()
+
+# Determine to which dependencies we need access
 
 SET(DEPENDENCIES_INCLUDE_DIRS
     deps/http-parser
@@ -313,10 +321,7 @@ ELSE()
             src/transports/smart_protocol.c
             src/transports/smart.c
             src/transports/ssh.c
-#            src/transports/winhttp.c
-# Note: we don't need the above (it's only needed when building libgit2 with
-#       MinGW), but we leave it so we know about it next time we update
-#       libgit2...
+            src/transports/winhttp.c
 
             src/xdiff/xdiffi.c
             src/xdiff/xemit.c
@@ -341,6 +346,6 @@ ELSE()
         QT_LIBRARIES
             QtCore
         EXTERNAL_BINARIES
-            ${OPENSSL_LIBRARIES}
+            ${EXTERNAL_BINARIES}
     )
 ENDIF()
