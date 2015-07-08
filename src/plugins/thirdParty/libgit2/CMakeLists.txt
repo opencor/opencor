@@ -55,9 +55,9 @@ ENDIF()
 # Determine to which external binaries we need access
 
 IF(WIN32)
-    SET(EXTERNAL_BINARIES winhttp rpcrt4 crypt32)
+    LINK_LIBRARIES(winhttp rpcrt4 crypt32)
 ELSE()
-    SET(EXTERNAL_BINARIES ${OPENSSL_LIBRARIES})
+    LINK_LIBRARIES(${OPENSSL_LIBRARIES})
 ENDIF()
 
 # Determine to which dependencies we need access
@@ -345,7 +345,5 @@ ELSE()
             Core
         QT_LIBRARIES
             QtCore
-        EXTERNAL_BINARIES
-            ${EXTERNAL_BINARIES}
     )
 ENDIF()
