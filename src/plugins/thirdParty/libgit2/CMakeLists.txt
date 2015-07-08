@@ -313,7 +313,10 @@ ELSE()
             src/transports/smart_protocol.c
             src/transports/smart.c
             src/transports/ssh.c
-            src/transports/winhttp.c
+#            src/transports/winhttp.c
+# Note: we don't need the above (it's only needed when building libgit2 with
+#       MinGW), but we leave it so we know about it next time we update
+#       libgit2...
 
             src/xdiff/xdiffi.c
             src/xdiff/xemit.c
