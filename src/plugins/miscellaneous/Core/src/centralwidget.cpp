@@ -26,6 +26,7 @@ specific language governing permissions and limitations under the License.
 #include "filehandlinginterface.h"
 #include "filemanager.h"
 #include "guiinterface.h"
+#include "tabbarwidget.h"
 #include "usermessagewidget.h"
 #include "viewinterface.h"
 #include "viewwidget.h"
@@ -71,7 +72,7 @@ CentralWidgetMode::CentralWidgetMode(CentralWidget *pOwner) :
 {
     // Initialise a few internal objects
 
-    mViewTabs = pOwner->newTabBar(QTabBar::RoundedEast);
+    mViewTabs = pOwner->newTabBarWidget(QTabBar::RoundedEast);
     mViewPlugins = new CentralWidgetViewPlugins();
 }
 
@@ -105,7 +106,7 @@ void CentralWidgetMode::setEnabled(const bool &pEnabled)
 
 //==============================================================================
 
-QTabBar * CentralWidgetMode::viewTabs() const
+TabBarWidget * CentralWidgetMode::viewTabs() const
 {
     // Return the mode's view tabs
 
@@ -155,7 +156,7 @@ CentralWidget::CentralWidget(QMainWindow *pMainWindow) :
 
     // Create our modes tab bar with no tabs by default
 
-    mModeTabs = newTabBar(QTabBar::RoundedWest);
+    mModeTabs = newTabBarWidget(QTabBar::RoundedWest);
 
     // Create our modes
 
@@ -169,7 +170,7 @@ CentralWidget::CentralWidget(QMainWindow *pMainWindow) :
 
     // Create our files tab bar widget
 
-    mFileTabs = newTabBar(QTabBar::RoundedNorth, true, true);
+    mFileTabs = newTabBarWidget(QTabBar::RoundedNorth, true, true);
 
     // Create our contents widget
 
@@ -621,7 +622,7 @@ void CentralWidget::retranslateUi()
     // Retranslate our mode views tab bar
 
     foreach (CentralWidgetMode *mode, mModes) {
-        QTabBar *viewTabs = mode->viewTabs();
+        TabBarWidget *viewTabs = mode->viewTabs();
 
         for (int i = 0, iMax = viewTabs->count(); i < iMax; ++i)
             viewTabs->setTabText(i, qobject_cast<ViewInterface *>(mode->viewPlugins()->value(i)->instance())->viewName());
@@ -1757,13 +1758,13 @@ void CentralWidget::updateGui()
 
 //==============================================================================
 
-QTabBar * CentralWidget::newTabBar(const QTabBar::Shape &pShape,
-                                   const bool &pMovable,
-                                   const bool &pTabsClosable)
+TabBarWidget *CentralWidget::newTabBarWidget(const QTabBar::Shape &pShape,
+                                             const bool &pMovable,
+                                             const bool &pTabsClosable)
 {
     // Create and return a tab bar
 
-    QTabBar *res = new QTabBar(this);
+    TabBarWidget *res = new TabBarWidget(this);
 
     res->setExpanding(false);
     // Note: if the above property is not enabled and many files are opened,
@@ -1776,7 +1777,7 @@ QTabBar * CentralWidget::newTabBar(const QTabBar::Shape &pShape,
     res->setUsesScrollButtons(true);
     // Note: the above property is style dependent and it happens that it's not
     //       enabled on OS X, so set it in all cases, even though it's already
-    //       set on Windows and Linux, but better be safe than sorry...
+    //       set on Windows and Linux (but better be safe than sorry)...
 
     return res;
 }
@@ -1899,7 +1900,7 @@ void CentralWidget::updateModifiedSettings()
     // Reset the enabled state and tool tip of all our View tabs
 
     foreach (CentralWidgetMode *mode, mModes) {
-        QTabBar *viewTabs = mode->viewTabs();
+        TabBarWidget *viewTabs = mode->viewTabs();
 
         viewTabs->setEnabled(true);
         viewTabs->setToolTip(QString());
@@ -1914,7 +1915,7 @@ void CentralWidget::updateModifiedSettings()
     bool fileIsNewOrModified = fileManagerInstance->isNewOrModified(fileName);
 
     if (fileIsNewOrModified) {
-        QTabBar *viewTabs = mModes.value(mModeTabIndexModes.value(mModeTabs->currentIndex()))->viewTabs();
+        TabBarWidget *viewTabs = mModes.value(mModeTabIndexModes.value(mModeTabs->currentIndex()))->viewTabs();
 
         viewTabs->setEnabled(false);
         viewTabs->setToolTip(fileManagerInstance->isNew(fileName)?
