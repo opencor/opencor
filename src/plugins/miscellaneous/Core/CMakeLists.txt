@@ -41,6 +41,7 @@ ADD_PLUGIN(Core
         src/organisationwidget.cpp
         src/progressbarwidget.cpp
         src/propertyeditorwidget.cpp
+        src/tabbarwidget.cpp
         src/toolbarwidget.cpp
         src/treeviewwidget.cpp
         src/usermessagewidget.cpp
@@ -66,6 +67,7 @@ ADD_PLUGIN(Core
         src/organisationwidget.h
         src/progressbarwidget.h
         src/propertyeditorwidget.h
+        src/tabbarwidget.h
         src/toolbarwidget.h
         src/treeviewwidget.h
         src/usermessagewidget.h
