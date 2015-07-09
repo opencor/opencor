@@ -1370,7 +1370,8 @@ void SingleCellViewGraphPanelPlotWidget::drawGraphFrom(SingleCellViewGraphPanelP
 {
     // Draw our graph from the given point
 
-    mDirectPainter->drawSeries(pGraph, pFrom, -1);
+    if (pGraph->dataSize()-pFrom > 1)
+        mDirectPainter->drawSeries(pGraph, pFrom, -1);
 }
 
 //==============================================================================
