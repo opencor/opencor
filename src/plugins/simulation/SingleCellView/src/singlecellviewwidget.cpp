@@ -1852,7 +1852,7 @@ bool SingleCellViewWidget::updatePlot(SingleCellViewGraphPanelPlotWidget *pPlot,
     QList<double> startingPoints = QList<double>();
     QList<double> endingPoints = QList<double>();
 
-    foreach (SingleCellViewGraphPanelPlotGraph *graph, pPlot->graphs())
+    foreach (SingleCellViewGraphPanelPlotGraph *graph, pPlot->graphs()) {
         if (graph->isValid() && graph->isSelected()) {
             SingleCellViewSimulation *simulation = mSimulations.value(graph->fileName());
 
@@ -1899,6 +1899,7 @@ bool SingleCellViewWidget::updatePlot(SingleCellViewGraphPanelPlotWidget *pPlot,
                 canOptimiseAxisY = false;
             }
         }
+    }
 
     // Optimise our axes' values, if possible
 
