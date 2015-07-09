@@ -26,7 +26,7 @@
 #include <git2/sys/refs.h>
 #include <git2/sys/reflog.h>
 
-GIT__USE_STRMAP;
+GIT__USE_STRMAP
 
 #define DEFAULT_NESTING_LEVEL	5
 #define MAX_NESTING_LEVEL		10
@@ -1324,7 +1324,7 @@ static int refdb_fs_backend__rename(
 	/* Try to rename the refog; it's ok if the old doesn't exist */
 	error = refdb_reflog_fs__rename(_backend, old_name, new_name);
 	if (((error == 0) || (error == GIT_ENOTFOUND)) &&
-	    ((error = reflog_append(backend, new, NULL, NULL, who, message)) < 0)) {
+	    ((error = reflog_append(backend, new, git_reference_target(new), NULL, who, message)) < 0)) {
 		git_reference_free(new);
 		git_filebuf_cleanup(&file);
 		return error;

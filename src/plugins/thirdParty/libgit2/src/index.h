@@ -22,6 +22,7 @@ struct git_index {
 
 	char *index_file_path;
 	git_futils_filestamp stamp;
+	git_oid checksum;   /* checksum at the end of the file */
 
 	git_vector entries;
 
@@ -80,7 +81,7 @@ GIT_INLINE(const git_futils_filestamp *) git_index__filestamp(git_index *index)
    return &index->stamp;
 }
 
-extern int git_index__changed_relative_to(git_index *index, const git_futils_filestamp *fs);
+extern int git_index__changed_relative_to(git_index *index, const git_oid *checksum);
 
 /* Copy the current entries vector *and* increment the index refcount.
  * Call `git_index__release_snapshot` when done.
@@ -93,5 +94,36 @@ extern int git_index_snapshot_find(
 	size_t *at_pos, git_vector *snap, git_vector_cmp entry_srch,
 	const char *path, size_t path_len, int stage);
 
+/* Replace an index with a new index */
+int git_index_read_index(git_index *index, const git_index *new_index);
+
+typedef struct {
+	git_index *index;
+	git_filebuf file;
+	unsigned int should_write:1;
+} git_indexwriter;
+
+#define GIT_INDEXWRITER_INIT { NULL, GIT_FILEBUF_INIT }
+
+/* Lock the index for eventual writing. */
+extern int git_indexwriter_init(git_indexwriter *writer, git_index *index);
+
+/* Lock the index for eventual writing by a repository operation: a merge,
+ * revert, cherry-pick or a rebase.  Note that the given checkout strategy
+ * will be updated for the operation's use so that checkout will not write
+ * the index.
+ */
+extern int git_indexwriter_init_for_operation(
+	git_indexwriter *writer,
+	git_repository *repo,
+	unsigned int *checkout_strategy);
+
+/* Write the index and unlock it. */
+extern int git_indexwriter_commit(git_indexwriter *writer);
+
+/* Cleanup an index writing session, unlocking the file (if it is still
+ * locked and freeing any data structures.
+ */
+extern void git_indexwriter_cleanup(git_indexwriter *writer);
 
 #endif

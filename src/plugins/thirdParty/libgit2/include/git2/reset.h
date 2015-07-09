@@ -10,6 +10,7 @@
 #include "common.h"
 #include "types.h"
 #include "strarray.h"
+#include "checkout.h"
 
 /**
  * @file git2/reset.h
@@ -56,22 +57,31 @@ typedef enum {
  * The checkout_strategy field will be overridden (based on reset_type).
  * This parameter can be used to propagate notify and progress callbacks.
  *
- * @param signature The identity that will used to populate the reflog entry
- *
- * @param log_message The one line long message to be appended to the reflog.
- * The reflog is only updated if the affected direct reference is actually
- * changing. If NULL, the default is "reset: moving"; if you want something more
- * useful, provide a message.
- *
  * @return 0 on success or an error code
  */
 GIT_EXTERN(int) git_reset(
 	git_repository *repo,
 	git_object *target,
 	git_reset_t reset_type,
-	git_checkout_options *checkout_opts,
-	const git_signature *signature,
-	const char *log_message);
+	const git_checkout_options *checkout_opts);
+
+/**
+ * Sets the current head to the specified commit oid and optionally
+ * resets the index and working tree to match.
+ *
+ * This behaves like `git_reset()` but takes an annotated commit,
+ * which lets you specify which extended sha syntax string was
+ * specified by a user, allowing for more exact reflog messages.
+ *
+ * See the documentation for `git_reset()`.
+ *
+ * @see git_reset
+ */
+GIT_EXTERN(int) git_reset_from_annotated(
+	git_repository *repo,
+	git_annotated_commit *commit,
+	git_reset_t reset_type,
+	const git_checkout_options *checkout_opts);
 
 /**
  * Updates some entries in the index from the target commit tree.
