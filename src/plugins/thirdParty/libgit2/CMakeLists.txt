@@ -17,11 +17,11 @@ MACRO(RETRIEVE_LIBGIT2_SETTINGS)
     ELSEIF(APPLE)
         SET(LIBGIT2_DEFINITIONS
             GIT_COMMON_CRYPTO
-            GIT_SSL
+            GIT_OPENSSL
         )
     ELSE()
         SET(LIBGIT2_DEFINITIONS
-            GIT_SSL
+            GIT_OPENSSL
             OPENSSL_SHA1
         )
     ENDIF()
@@ -52,7 +52,15 @@ IF(NOT WIN32)
     FIND_PACKAGE(OpenSSL REQUIRED QUIET)
 ENDIF()
 
-# Determine to which dependencies we must have access
+# Determine to which external binaries we need access
+
+IF(WIN32)
+    LINK_LIBRARIES(winhttp rpcrt4 crypt32)
+ELSE()
+    LINK_LIBRARIES(${OPENSSL_LIBRARIES})
+ENDIF()
+
+# Determine to which dependencies we need access
 
 SET(DEPENDENCIES_INCLUDE_DIRS
     deps/http-parser
@@ -75,28 +83,28 @@ IF(USE_PREBUILT_LIBGIT2_PLUGIN)
     IF(WIN32)
         IF(${ARCHITECTURE} EQUAL 32)
             IF(RELEASE_MODE)
-                RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} libgit2.dll 7c087f9c4fac60a028497dcb2fb4f8b637b9b3af)
-                RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} libgit2.lib 68af04a2215f708d5ac5ead390ef24d97c4308e8)
+                RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} libgit2.dll 05c2c0378189c6108d6e20f23a27d5ef80419511)
+                RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} libgit2.lib 0892edc0254f38efb91e95ddf3159c9b1279d624)
             ELSE()
-                RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} libgit2.dll 09d9ee569e896ec0af31333e78ab493a0da7fac9)
-                RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} libgit2.lib 0c94f65f98384770962255040dd061e5a4ed186d)
+                RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} libgit2.dll 6f49f8f8ae90bf8b8a900016ab2d98bd047717f8)
+                RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} libgit2.lib 0672ce4ab7a786c65c612361de0b2e8774a77fba)
             ENDIF()
         ELSE()
             IF(RELEASE_MODE)
-                RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} libgit2.dll ee89dc7fd4aaec0a11409f23825c26793b99c965)
-                RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} libgit2.lib 9bfb2e0bd51b64484425a3d4621b907f3ca1c1d5)
+                RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} libgit2.dll 19023563a73872306d658d4a700dbbc0b50ef111)
+                RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} libgit2.lib 616c561bbf2fac8a145a75a7b72fd59a76a3074b)
             ELSE()
-                RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} libgit2.dll 8fb4661a1eb3adb4b443baa976e57c491f9b0603)
-                RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} libgit2.lib 4c759dafb5a920107394d35647562b3d93ad0d93)
+                RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} libgit2.dll 8d745f9f5fda50b0f8b3df09464b9a49dfa5b844)
+                RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} libgit2.lib 9f9aaf66a7f899c100532923a817a3c0723707f8)
             ENDIF()
         ENDIF()
     ELSEIF(APPLE)
-        RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} liblibgit2.dylib 5dae30da0889383ad2dad053ce685433567a1eed)
+        RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} liblibgit2.dylib 843c21901ca9f4c62962aab3b614b8dc4db9830a)
     ELSE()
         IF(${ARCHITECTURE} EQUAL 32)
-            RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} liblibgit2.so ceaee6bab4958067b6f337f76392f0332317afcf)
+            RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} liblibgit2.so 9e9c5ae97d1dc71c1f9b0eeef99d33ba8e2f3668)
         ELSE()
-            RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} liblibgit2.so 75143bfc5768f295547f470d751f5ee5b0d50474)
+            RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} liblibgit2.so 3e272212453863daefe7975fec690f693b1362ce)
         ENDIF()
     ENDIF()
 
@@ -162,6 +170,7 @@ ELSE()
         SET(ADDITIONAL_SOURCES
             src/hash/hash_win32.c
 
+            src/win32/buffer.c
             src/win32/dir.c
             src/win32/error.c
             src/win32/findfile.c
@@ -212,6 +221,7 @@ ELSE()
             src/config_cache.c
             src/config_file.c
             src/crlf.c
+            src/curl_stream.c
             src/date.c
             src/delta-apply.c
             src/delta.c
@@ -283,11 +293,13 @@ ELSE()
             src/sortedcache.c
             src/stash.c
             src/status.c
+            src/stransport_stream.c
             src/strmap.c
             src/submodule.c
             src/sysdir.c
             src/tag.c
             src/thread-utils.c
+            src/tls_stream.c
             src/trace.c
             src/transaction.c
             src/transport.c
@@ -333,7 +345,5 @@ ELSE()
             Core
         QT_LIBRARIES
             QtCore
-        EXTERNAL_BINARIES
-            ${OPENSSL_LIBRARIES}
     )
 ENDIF()

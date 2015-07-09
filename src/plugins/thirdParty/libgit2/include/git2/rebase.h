@@ -30,19 +30,32 @@ typedef struct {
 	unsigned int version;
 
 	/**
-	 * Provide a quiet rebase experience; unused by libgit2 but provided for
-	 * interoperability with other clients.
+	 * Used by `git_rebase_init`, this will instruct other clients working
+	 * on this rebase that you want a quiet rebase experience, which they
+	 * may choose to provide in an application-specific manner.  This has no
+	 * effect upon libgit2 directly, but is provided for interoperability
+	 * between Git tools.
 	 */
 	int quiet;
 
 	/**
-	 * Canonical name of the notes reference used to rewrite notes for
-	 * rebased commits when finishing the rebase; if NULL, the contents of
-	 * the coniguration option `notes.rewriteRef` is examined, unless the
-	 * configuration option `notes.rewrite.rebase` is set to false.  If
-	 * `notes.rewriteRef` is NULL, notes will not be rewritten.
+	 * Used by `git_rebase_finish`, this is the name of the notes reference
+	 * used to rewrite notes for rebased commits when finishing the rebase;
+	 * if NULL, the contents of the coniguration option `notes.rewriteRef`
+	 * is examined, unless the configuration option `notes.rewrite.rebase`
+	 * is set to false.  If `notes.rewriteRef` is also NULL, notes will
+	 * not be rewritten.
 	 */
 	const char *rewrite_notes_ref;
+
+	/**
+	 * Options to control how files are written during `git_rebase_init`,
+	 * `git_checkout_next` and `git_checkout_abort`.  Note that a minimum
+	 * strategy of `GIT_CHECKOUT_SAFE` is defaulted in `init` and `next`,
+	 * and a minimum strategy of `GIT_CHECKOUT_FORCE` is defaulted in
+	 * `abort` to match git semantics.
+	 */
+	git_checkout_options checkout_options;
 } git_rebase_options;
 
 /**
@@ -87,7 +100,11 @@ typedef enum {
 } git_rebase_operation_t;
 
 #define GIT_REBASE_OPTIONS_VERSION 1
-#define GIT_REBASE_OPTIONS_INIT {GIT_REBASE_OPTIONS_VERSION}
+#define GIT_REBASE_OPTIONS_INIT \
+	{GIT_REBASE_OPTIONS_VERSION, 0, NULL, GIT_CHECKOUT_OPTIONS_INIT}
+
+/** Indicates that a rebase operation is not (yet) in progress. */
+#define GIT_REBASE_NO_OPERATION SIZE_MAX
 
 /**
  * A rebase operation
@@ -133,13 +150,13 @@ GIT_EXTERN(int) git_rebase_init_options(
  *
  * @param out Pointer to store the rebase object
  * @param repo The repository to perform the rebase
- * @param branch The terminal commit to rebase
+ * @param branch The terminal commit to rebase, or NULL to rebase the
+ *               current branch
  * @param upstream The commit to begin rebasing from, or NULL to rebase all
  *                 reachable commits
  * @param onto The branch to rebase onto, or NULL to rebase onto the given
  *             upstream
- * @param signature The signature of the rebaser (optional)
- * @param opts Options to specify how rebase is performed
+ * @param opts Options to specify how rebase is performed, or NULL
  * @return Zero on success; -1 on failure.
  */
 GIT_EXTERN(int) git_rebase_init(
@@ -148,7 +165,6 @@ GIT_EXTERN(int) git_rebase_init(
 	const git_annotated_commit *branch,
 	const git_annotated_commit *upstream,
 	const git_annotated_commit *onto,
-	const git_signature *signature,
 	const git_rebase_options *opts);
 
 /**
@@ -156,10 +172,14 @@ GIT_EXTERN(int) git_rebase_init(
  * invocation of `git_rebase_init` or by another client.
  *
  * @param out Pointer to store the rebase object
- * @param reop The repository that has a rebase in-progress
+ * @param repo The repository that has a rebase in-progress
+ * @param opts Options to specify how rebase is performed
  * @return Zero on success; -1 on failure.
  */
-GIT_EXTERN(int) git_rebase_open(git_rebase **out, git_repository *repo);
+GIT_EXTERN(int) git_rebase_open(
+	git_rebase **out,
+	git_repository *repo,
+	const git_rebase_options *opts);
 
 /**
  * Gets the count of rebase operations that are to be applied.
@@ -171,6 +191,9 @@ GIT_EXTERN(size_t) git_rebase_operation_entrycount(git_rebase *rebase);
 
 /**
  * Gets the index of the rebase operation that is currently being applied.
+ * If the first operation has not yet been applied (because you have
+ * called `init` but not yet `next`) then this returns
+ * `GIT_REBASE_NO_OPERATION`.
  *
  * @param rebase The in-progress rebase
  * @return The index of the rebase operation currently being applied.
@@ -195,15 +218,13 @@ GIT_EXTERN(git_rebase_operation *) git_rebase_operation_byindex(
  * working directory will be updated with the changes.  If there are conflicts,
  * you will need to address those before committing the changes.
  *
- * @param out Pointer to store the rebase operation that is to be performed next
- * @param repo The rebase in progress
- * @param checkout_opts Options to specify how the patch should be checked out
+ * @param operation Pointer to store the rebase operation that is to be performed next
+ * @param rebase The rebase in progress
  * @return Zero on success; -1 on failure.
  */
 GIT_EXTERN(int) git_rebase_next(
 	git_rebase_operation **operation,
-	git_rebase *rebase,
-	git_checkout_options *checkout_opts);
+	git_rebase *rebase);
 
 /**
  * Commits the current patch.  You must have resolved any conflicts that
@@ -211,7 +232,7 @@ GIT_EXTERN(int) git_rebase_next(
  * invocation.
  *
  * @param id Pointer in which to store the OID of the newly created commit
- * @param repo The rebase that is in-progress
+ * @param rebase The rebase that is in-progress
  * @param author The author of the updated commit, or NULL to keep the
  *        author from the original commit
  * @param committer The committer of the rebase
@@ -240,13 +261,10 @@ GIT_EXTERN(int) git_rebase_commit(
  * and working directory to their state before rebase began.
  *
  * @param rebase The rebase that is in-progress
- * @param signature The identity that is aborting the rebase
  * @return Zero on success; GIT_ENOTFOUND if a rebase is not in progress,
  *         -1 on other errors.
  */
-GIT_EXTERN(int) git_rebase_abort(
-	git_rebase *rebase,
-	const git_signature *signature);
+GIT_EXTERN(int) git_rebase_abort(git_rebase *rebase);
 
 /**
  * Finishes a rebase that is currently in progress once all patches have
@@ -254,13 +272,11 @@ GIT_EXTERN(int) git_rebase_abort(
  *
  * @param rebase The rebase that is in-progress
  * @param signature The identity that is finishing the rebase (optional)
- * @param opts Options to specify how rebase is finished
- * @param Zero on success; -1 on error
+ * @return Zero on success; -1 on error
  */
 GIT_EXTERN(int) git_rebase_finish(
 	git_rebase *rebase,
-	const git_signature *signature,
-	const git_rebase_options *opts);
+	const git_signature *signature);
 
 /**
  * Frees the `git_rebase` object.

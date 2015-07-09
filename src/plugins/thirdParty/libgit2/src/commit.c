@@ -104,7 +104,7 @@ int git_commit_create_from_callback(
 
 	if (update_ref != NULL) {
 		error = git_reference__update_for_commit(
-			repo, ref, update_ref, id, committer, "commit");
+			repo, ref, update_ref, id, "commit");
 		git_reference_free(ref);
 		return error;
 	}
@@ -295,7 +295,7 @@ int git_commit_amend(
 
 	if (!error && update_ref) {
 		error = git_reference__update_for_commit(
-			repo, ref, NULL, id, committer, "commit");
+			repo, ref, NULL, id, "commit");
 		git_reference_free(ref);
 	}
 
@@ -309,6 +309,7 @@ int git_commit__parse(void *_commit, git_odb_object *odb_obj)
 	const char *buffer_end = buffer_start + git_odb_object_size(odb_obj);
 	git_oid parent_id;
 	size_t header_len;
+	git_signature dummy_sig;
 
 	buffer = buffer_start;
 
@@ -336,6 +337,15 @@ int git_commit__parse(void *_commit, git_odb_object *odb_obj)
 
 	if (git_signature__parse(commit->author, &buffer, buffer_end, "author ", '\n') < 0)
 		return -1;
+
+	/* Some tools create multiple author fields, ignore the extra ones */
+	while ((size_t)(buffer_end - buffer) >= strlen("author ") && !git__prefixcmp(buffer, "author ")) {
+		if (git_signature__parse(&dummy_sig, &buffer, buffer_end, "author ", '\n') < 0)
+			return -1;
+
+		git__free(dummy_sig.name);
+		git__free(dummy_sig.email);
+	}
 
 	/* Always parse the committer; we need the commit time */
 	commit->committer = git__malloc(sizeof(git_signature));
@@ -400,7 +410,7 @@ GIT_COMMIT_GETTER(const char *, raw_header, commit->raw_header)
 GIT_COMMIT_GETTER(git_time_t, time, commit->committer->when.time)
 GIT_COMMIT_GETTER(int, time_offset, commit->committer->when.offset)
 GIT_COMMIT_GETTER(unsigned int, parentcount, (unsigned int)git_array_size(commit->parent_ids))
-GIT_COMMIT_GETTER(const git_oid *, tree_id, &commit->tree_id);
+GIT_COMMIT_GETTER(const git_oid *, tree_id, &commit->tree_id)
 
 const char *git_commit_message(const git_commit *commit)
 {
@@ -507,4 +517,59 @@ int git_commit_nth_gen_ancestor(
 
 	*ancestor = parent;
 	return 0;
+}
+
+int git_commit_header_field(git_buf *out, const git_commit *commit, const char *field)
+{
+	const char *buf = commit->raw_header;
+	const char *h, *eol;
+
+	git_buf_sanitize(out);
+	while ((h = strchr(buf, '\n')) && h[1] != '\0' && h[1] != '\n') {
+		h++;
+		if (git__prefixcmp(h, field)) {
+			buf = h;
+			continue;
+		}
+
+		h += strlen(field);
+		eol = strchr(h, '\n');
+		if (h[0] != ' ') {
+			buf = h;
+			continue;
+		}
+		if (!eol)
+			goto malformed;
+
+		h++; /* skip the SP */
+
+		git_buf_put(out, h, eol - h);
+		if (git_buf_oom(out))
+			goto oom;
+
+		/* If the next line starts with SP, it's multi-line, we must continue */
+		while (eol[1] == ' ') {
+			git_buf_putc(out, '\n');
+			h = eol + 2;
+			eol = strchr(h, '\n');
+			if (!eol)
+				goto malformed;
+
+			git_buf_put(out, h, eol - h);
+		}
+
+		if (git_buf_oom(out))
+			goto oom;
+
+		return 0;
+	}
+
+	return GIT_ENOTFOUND;
+
+malformed:
+	giterr_set(GITERR_OBJECT, "malformed header");
+	return -1;
+oom:
+	giterr_set_oom();
+	return -1;
 }

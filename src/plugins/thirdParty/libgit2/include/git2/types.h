@@ -224,6 +224,12 @@ typedef struct git_refspec git_refspec;
 typedef struct git_remote git_remote;
 
 /**
+ * Interface which represents a transport to communicate with a
+ * remote.
+ */
+typedef struct git_transport git_transport;
+
+/**
  * Preparation for a push operation. Can be used to configure what to
  * push and the level of parallelism of the packfile builder.
  */
@@ -273,10 +279,16 @@ typedef int (*git_transfer_progress_cb)(const git_transfer_progress *stats, void
  */
 typedef int (*git_transport_message_cb)(const char *str, int len, void *payload);
 
+
 /**
  * Type of host certificate structure that is passed to the check callback
  */
 typedef enum git_cert_t {
+	/**
+	 * No information about the certificate is available. This may
+	 * happen when using curl.
+	 */
+	GIT_CERT_NONE,
         /**
          * The `data` argument to the callback will be a pointer to
          * the DER-encoded data.
@@ -287,6 +299,13 @@ typedef enum git_cert_t {
          * `git_cert_hostkey` structure.
          */
 	GIT_CERT_HOSTKEY_LIBSSH2,
+	/**
+	 * The `data` argument to the callback will be a pointer to a
+	 * `git_strarray` with `name:content` strings containing
+	 * information about the certificate. This is used when using
+	 * curl.
+	 */
+	GIT_CERT_STRARRAY,
 } git_cert_t;
 
 /**
@@ -302,9 +321,7 @@ typedef struct {
 /**
  * Callback for the user's custom certificate checks.
  *
- * @param type The type of certificate or host info, SSH or X.509
- * @param data The data for the certificate or host info
- * @param len The size of the certificate or host info
+ * @param cert The host certificate
  * @param valid Whether the libgit2 checks (OpenSSL or WinHTTP) think
  * this certificate is valid
  * @param host Hostname of the host libgit2 connected to
@@ -332,7 +349,6 @@ typedef struct git_submodule git_submodule;
  *
  * The values are:
  *
- * - GIT_SUBMODULE_UPDATE_RESET: reset to the on-disk value.
  * - GIT_SUBMODULE_UPDATE_CHECKOUT: the default; when a submodule is
  *   updated, checkout the new detached HEAD to the submodule directory.
  * - GIT_SUBMODULE_UPDATE_REBASE: update by rebasing the current checked
@@ -345,8 +361,6 @@ typedef struct git_submodule git_submodule;
  *   when we don't want any particular update rule to be specified.
  */
 typedef enum {
-	GIT_SUBMODULE_UPDATE_RESET    = -1,
-
 	GIT_SUBMODULE_UPDATE_CHECKOUT = 1,
 	GIT_SUBMODULE_UPDATE_REBASE   = 2,
 	GIT_SUBMODULE_UPDATE_MERGE    = 3,
@@ -369,7 +383,7 @@ typedef enum {
  *
  * The values are:
  *
- * - GIT_SUBMODULE_IGNORE_RESET: reset to the on-disk value.
+ * - GIT_SUBMODULE_IGNORE_UNSPECIFIED: use the submodule's configuration
  * - GIT_SUBMODULE_IGNORE_NONE: don't ignore any change - i.e. even an
  *   untracked file, will mark the submodule as dirty.  Ignored files are
  *   still ignored, of course.
@@ -383,14 +397,12 @@ typedef enum {
  *   when we don't want any particular ignore rule to be specified.
  */
 typedef enum {
-	GIT_SUBMODULE_IGNORE_RESET     = -1, /**< reset to on-disk value */
+	GIT_SUBMODULE_IGNORE_UNSPECIFIED  = -1, /**< use the submodule's configuration */
 
 	GIT_SUBMODULE_IGNORE_NONE      = 1,  /**< any change or untracked == dirty */
 	GIT_SUBMODULE_IGNORE_UNTRACKED = 2,  /**< dirty if tracked files change */
 	GIT_SUBMODULE_IGNORE_DIRTY     = 3,  /**< only dirty if HEAD moved */
 	GIT_SUBMODULE_IGNORE_ALL       = 4,  /**< never dirty */
-
-	GIT_SUBMODULE_IGNORE_DEFAULT   = 0
 } git_submodule_ignore_t;
 
 /**
@@ -398,19 +410,25 @@ typedef enum {
  *
  * Represent the value of `submodule.$name.fetchRecurseSubmodules`
  *
- * * GIT_SUBMODULE_RECURSE_RESET - reset to the on-disk value
  * * GIT_SUBMODULE_RECURSE_NO    - do no recurse into submodules
  * * GIT_SUBMODULE_RECURSE_YES   - recurse into submodules
  * * GIT_SUBMODULE_RECURSE_ONDEMAND - recurse into submodules only when
  *                                    commit not already in local clone
  */
 typedef enum {
-	GIT_SUBMODULE_RECURSE_RESET = -1,
-
 	GIT_SUBMODULE_RECURSE_NO = 0,
 	GIT_SUBMODULE_RECURSE_YES = 1,
 	GIT_SUBMODULE_RECURSE_ONDEMAND = 2,
 } git_submodule_recurse_t;
+
+/** A type to write in a streaming fashion, for example, for filters. */
+typedef struct git_writestream git_writestream;
+
+struct git_writestream {
+	int (*write)(git_writestream *stream, const char *buffer, size_t len);
+	int (*close)(git_writestream *stream);
+	void (*free)(git_writestream *stream);
+};
 
 /** @} */
 GIT_END_DECL

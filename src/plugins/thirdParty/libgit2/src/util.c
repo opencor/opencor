@@ -171,9 +171,9 @@ int git__strcmp(const char *a, const char *b)
 
 int git__strcasecmp(const char *a, const char *b)
 {
-	while (*a && *b && tolower(*a) == tolower(*b))
+	while (*a && *b && git__tolower(*a) == git__tolower(*b))
 		++a, ++b;
-	return (tolower(*a) - tolower(*b));
+	return ((unsigned char)git__tolower(*a) - (unsigned char)git__tolower(*b));
 }
 
 int git__strcasesort_cmp(const char *a, const char *b)
@@ -182,7 +182,7 @@ int git__strcasesort_cmp(const char *a, const char *b)
 
 	while (*a && *b) {
 		if (*a != *b) {
-			if (tolower(*a) != tolower(*b))
+			if (git__tolower(*a) != git__tolower(*b))
 				break;
 			/* use case in sort order even if not in equivalence */
 			if (!cmp)
@@ -193,7 +193,7 @@ int git__strcasesort_cmp(const char *a, const char *b)
 	}
 
 	if (*a || *b)
-		return tolower(*a) - tolower(*b);
+		return (unsigned char)git__tolower(*a) - (unsigned char)git__tolower(*b);
 
 	return cmp;
 }
@@ -212,8 +212,8 @@ int git__strncasecmp(const char *a, const char *b, size_t sz)
 	int al, bl;
 
 	do {
-		al = (unsigned char)tolower(*a);
-		bl = (unsigned char)tolower(*b);
+		al = (unsigned char)git__tolower(*a);
+		bl = (unsigned char)git__tolower(*b);
 		++a, ++b;
 	} while (--sz && al && al == bl);
 
@@ -225,7 +225,7 @@ void git__strntolower(char *str, size_t len)
 	size_t i;
 
 	for (i = 0; i < len; ++i) {
-		str[i] = (char) tolower(str[i]);
+		str[i] = (char)git__tolower(str[i]);
 	}
 }
 
@@ -255,8 +255,8 @@ int git__prefixncmp_icase(const char *str, size_t str_n, const char *prefix)
 	int s, p;
 
 	while(str_n--) {
-		s = (unsigned char)tolower(*str++);
-		p = (unsigned char)tolower(*prefix++);
+		s = (unsigned char)git__tolower(*str++);
+		p = (unsigned char)git__tolower(*prefix++);
 
 		if (s != p)
 			return s - p;
@@ -664,6 +664,31 @@ void git__insertsort_r(
 	if (freeswap)
 		git__free(swapel);
 }
+
+/*
+ * git__utf8_iterate is taken from the utf8proc project,
+ * http://www.public-software-group.org/utf8proc
+ *
+ * Copyright (c) 2009 Public Software Group e. V., Berlin, Germany
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a
+ * copy of this software and associated documentation files (the ""Software""),
+ * to deal in the Software without restriction, including without limitation
+ * the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ * and/or sell copies of the Software, and to permit persons to whom the
+ * Software is furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+ * DEALINGS IN THE SOFTWARE.
+ */
 
 static const int8_t utf8proc_utf8class[256] = {
 	1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,

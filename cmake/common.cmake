@@ -652,7 +652,7 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
                         ENDIF()
 
                         IF(EXISTS ${FULL_EXTERNAL_BINARY})
-                            TARGET_LINK_LIBRARIES(${TEST_NAME}
+                            TARGET_LINK_LIBRARIES(${PROJECT_NAME}
                                 ${FULL_EXTERNAL_BINARY}
                             )
                         ENDIF()

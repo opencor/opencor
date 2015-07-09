@@ -124,6 +124,11 @@ typedef enum {
 	/** Use case insensitive filename comparisons */
 	GIT_DIFF_IGNORE_CASE = (1u << 10),
 
+	/** May be combined with `GIT_DIFF_IGNORE_CASE` to specify that a file
+	 *  that has changed case will be returned as an add/delete pair.
+	 */
+	GIT_DIFF_INCLUDE_CASECHANGE = (1u << 11),
+
 	/** If the pathspec is set in the diff options, this flags means to
 	 *  apply it as an exact match instead of as an fnmatch pattern.
 	 */
@@ -220,7 +225,8 @@ typedef struct git_diff git_diff;
 typedef enum {
 	GIT_DIFF_FLAG_BINARY     = (1u << 0), /**< file(s) treated as binary data */
 	GIT_DIFF_FLAG_NOT_BINARY = (1u << 1), /**< file(s) treated as text data */
-	GIT_DIFF_FLAG_VALID_ID  = (1u << 2), /**< `id` value is known correct */
+	GIT_DIFF_FLAG_VALID_ID   = (1u << 2), /**< `id` value is known correct */
+	GIT_DIFF_FLAG_EXISTS     = (1u << 3), /**< file exists at this side of the delta */
 } git_diff_flag_t;
 
 /**
@@ -234,16 +240,17 @@ typedef enum {
  * DELETED pairs).
  */
 typedef enum {
-	GIT_DELTA_UNMODIFIED = 0, /**< no changes */
-	GIT_DELTA_ADDED = 1,	  /**< entry does not exist in old version */
-	GIT_DELTA_DELETED = 2,	  /**< entry does not exist in new version */
-	GIT_DELTA_MODIFIED = 3,   /**< entry content changed between old and new */
-	GIT_DELTA_RENAMED = 4,    /**< entry was renamed between old and new */
-	GIT_DELTA_COPIED = 5,     /**< entry was copied from another old entry */
-	GIT_DELTA_IGNORED = 6,    /**< entry is ignored item in workdir */
-	GIT_DELTA_UNTRACKED = 7,  /**< entry is untracked item in workdir */
-	GIT_DELTA_TYPECHANGE = 8, /**< type of entry changed between old and new */
-	GIT_DELTA_UNREADABLE = 9, /**< entry is unreadable */
+	GIT_DELTA_UNMODIFIED = 0,  /**< no changes */
+	GIT_DELTA_ADDED = 1,	   /**< entry does not exist in old version */
+	GIT_DELTA_DELETED = 2,	   /**< entry does not exist in new version */
+	GIT_DELTA_MODIFIED = 3,    /**< entry content changed between old and new */
+	GIT_DELTA_RENAMED = 4,     /**< entry was renamed between old and new */
+	GIT_DELTA_COPIED = 5,      /**< entry was copied from another old entry */
+	GIT_DELTA_IGNORED = 6,     /**< entry is ignored item in workdir */
+	GIT_DELTA_UNTRACKED = 7,   /**< entry is untracked item in workdir */
+	GIT_DELTA_TYPECHANGE = 8,  /**< type of entry changed between old and new */
+	GIT_DELTA_UNREADABLE = 9,  /**< entry is unreadable */
+	GIT_DELTA_CONFLICTED = 10, /**< entry in the index is conflicted */
 } git_delta_t;
 
 /**
@@ -392,7 +399,7 @@ typedef struct {
  * `git_diff_options_init` programmatic initialization.
  */
 #define GIT_DIFF_OPTIONS_INIT \
-	{GIT_DIFF_OPTIONS_VERSION, 0, GIT_SUBMODULE_IGNORE_DEFAULT, {NULL,0}, NULL, NULL, 3}
+	{GIT_DIFF_OPTIONS_VERSION, 0, GIT_SUBMODULE_IGNORE_UNSPECIFIED, {NULL,0}, NULL, NULL, 3}
 
 /**
  * Initializes a `git_diff_options` with default values. Equivalent to
@@ -416,6 +423,53 @@ GIT_EXTERN(int) git_diff_init_options(
 typedef int (*git_diff_file_cb)(
 	const git_diff_delta *delta,
 	float progress,
+	void *payload);
+
+/**
+ * When producing a binary diff, the binary data returned will be
+ * either the deflated full ("literal") contents of the file, or
+ * the deflated binary delta between the two sides (whichever is
+ * smaller).
+ */
+typedef enum {
+	/** There is no binary delta. */
+	GIT_DIFF_BINARY_NONE,
+
+	/** The binary data is the literal contents of the file. */
+	GIT_DIFF_BINARY_LITERAL,
+
+	/** The binary data is the delta from one side to the other. */
+	GIT_DIFF_BINARY_DELTA,
+} git_diff_binary_t;
+
+/** The contents of one of the files in a binary diff. */
+typedef struct {
+	/** The type of binary data for this file. */
+	git_diff_binary_t type;
+
+	/** The binary data, deflated. */
+	const char *data;
+
+	/** The length of the binary data. */
+	size_t datalen;
+
+	/** The length of the binary data after inflation. */
+	size_t inflatedlen;
+} git_diff_binary_file;
+
+/** Structure describing the binary contents of a diff. */
+typedef struct {
+	git_diff_binary_file old_file; /**< The contents of the old file. */
+	git_diff_binary_file new_file; /**< The contents of the new file. */
+} git_diff_binary;
+
+/**
+* When iterating over a diff, callback that will be made for
+* binary content within the diff.
+*/
+typedef int(*git_diff_binary_cb)(
+	const git_diff_delta *delta,
+	const git_diff_binary *binary,
 	void *payload);
 
 /**
@@ -849,9 +903,9 @@ GIT_EXTERN(size_t) git_diff_num_deltas_of_type(
 /**
  * Return the diff delta for an entry in the diff list.
  *
- * The `git_delta` pointer points to internal data and you do not have
- * to release it when you are done with it.  It will go away when the
- * `git_diff` (or any associated `git_patch`) goes away.
+ * The `git_diff_delta` pointer points to internal data and you do not
+ * have to release it when you are done with it.  It will go away when
+ * the * `git_diff` (or any associated `git_patch`) goes away.
  *
  * Note that the flags on the delta related to whether it has binary
  * content or not may not be set if there are no attributes set for the
@@ -890,6 +944,7 @@ GIT_EXTERN(int) git_diff_is_sorted_icase(const git_diff *diff);
  *
  * @param diff A git_diff generated by one of the above functions.
  * @param file_cb Callback function to make per file in the diff.
+ * @param binary_cb Optional callback to make for binary files.
  * @param hunk_cb Optional callback to make per hunk of text diff.  This
  *                callback is called to describe a range of lines in the
  *                diff.  It will not be issued for binary files.
@@ -902,6 +957,7 @@ GIT_EXTERN(int) git_diff_is_sorted_icase(const git_diff *diff);
 GIT_EXTERN(int) git_diff_foreach(
 	git_diff *diff,
 	git_diff_file_cb file_cb,
+	git_diff_binary_cb binary_cb,
 	git_diff_hunk_cb hunk_cb,
 	git_diff_line_cb line_cb,
 	void *payload);
@@ -977,6 +1033,7 @@ GIT_EXTERN(int) git_diff_print(
  * @param new_as_path Treat new blob as if it had this filename; can be NULL
  * @param options Options for diff, or NULL for default options
  * @param file_cb Callback for "file"; made once if there is a diff; can be NULL
+ * @param binary_cb Callback for binary files; can be NULL
  * @param hunk_cb Callback for each hunk in diff; can be NULL
  * @param line_cb Callback for each line in diff; can be NULL
  * @param payload Payload passed to each callback function
@@ -989,6 +1046,7 @@ GIT_EXTERN(int) git_diff_blobs(
 	const char *new_as_path,
 	const git_diff_options *options,
 	git_diff_file_cb file_cb,
+	git_diff_binary_cb binary_cb,
 	git_diff_hunk_cb hunk_cb,
 	git_diff_line_cb line_cb,
 	void *payload);
@@ -1012,6 +1070,7 @@ GIT_EXTERN(int) git_diff_blobs(
  * @param buffer_as_path Treat buffer as if it had this filename; can be NULL
  * @param options Options for diff, or NULL for default options
  * @param file_cb Callback for "file"; made once if there is a diff; can be NULL
+ * @param binary_cb Callback for binary files; can be NULL
  * @param hunk_cb Callback for each hunk in diff; can be NULL
  * @param line_cb Callback for each line in diff; can be NULL
  * @param payload Payload passed to each callback function
@@ -1025,6 +1084,7 @@ GIT_EXTERN(int) git_diff_blob_to_buffer(
 	const char *buffer_as_path,
 	const git_diff_options *options,
 	git_diff_file_cb file_cb,
+	git_diff_binary_cb binary_cb,
 	git_diff_hunk_cb hunk_cb,
 	git_diff_line_cb line_cb,
 	void *payload);
@@ -1044,6 +1104,7 @@ GIT_EXTERN(int) git_diff_blob_to_buffer(
  * @param new_as_path Treat buffer as if it had this filename; can be NULL
  * @param options Options for diff, or NULL for default options
  * @param file_cb Callback for "file"; made once if there is a diff; can be NULL
+ * @param binary_cb Callback for binary files; can be NULL
  * @param hunk_cb Callback for each hunk in diff; can be NULL
  * @param line_cb Callback for each line in diff; can be NULL
  * @param payload Payload passed to each callback function
@@ -1058,6 +1119,7 @@ GIT_EXTERN(int) git_diff_buffers(
 	const char *new_as_path,
 	const git_diff_options *options,
 	git_diff_file_cb file_cb,
+	git_diff_binary_cb binary_cb,
 	git_diff_hunk_cb hunk_cb,
 	git_diff_line_cb line_cb,
 	void *payload);

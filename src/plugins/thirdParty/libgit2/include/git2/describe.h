@@ -94,7 +94,7 @@ typedef struct {
 	 * If the workdir is dirty and this is set, this string will
 	 * be appended to the description string.
 	 */
-	char *dirty_suffix;
+	const char *dirty_suffix;
 } git_describe_format_options;
 
 #define GIT_DESCRIBE_FORMAT_OPTIONS_VERSION 1
@@ -129,7 +129,7 @@ GIT_EXTERN(int) git_describe_commit(
  * worktree. After peforming describe on HEAD, a status is run and the
  * description is considered to be dirty if there are.
  *
- * @param result pointer to store the result. You must free this once
+ * @param out pointer to store the result. You must free this once
  * you're done with it.
  * @param repo the repository in which to perform the describe
  * @param opts the lookup options
@@ -142,9 +142,10 @@ GIT_EXTERN(int) git_describe_workdir(
 /**
  * Print the describe result to a buffer
  *
+ * @param out The buffer to store the result
  * @param result the result from `git_describe_commit()` or
  * `git_describe_workdir()`.
- * @param opt the formatting options
+ * @param opts the formatting options
  */
 GIT_EXTERN(int) git_describe_format(
 	git_buf *out,
