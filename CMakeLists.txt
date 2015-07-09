@@ -309,6 +309,7 @@ SET(PLUGINS
 
     ${SAMPLE_PLUGINS}
 )
+SET(PLUGINS thirdParty/libgit2)
 
 FOREACH(PLUGIN ${PLUGINS})
     SET(PLUGIN_DIR src/plugins/${PLUGIN})
