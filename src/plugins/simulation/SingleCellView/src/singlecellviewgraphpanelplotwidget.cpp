@@ -489,9 +489,12 @@ SingleCellViewGraphPanelPlotWidget::SingleCellViewGraphPanelPlotWidget(QWidget *
 
     mGui->setupUi(this);
 
-    // Get ourselves a direct painter
+    // Get ourselves a direct painter and make sure that direct painting occurs
+    // immediately
 
     mDirectPainter = new QwtPlotDirectPainter(this);
+
+    mDirectPainter->setAttribute(QwtPlotDirectPainter::FullRepaint, true);
 
     // Speedup painting on X11 systems
     // Note: this can only be done on X11 systems...
@@ -1370,8 +1373,7 @@ void SingleCellViewGraphPanelPlotWidget::drawGraphFrom(SingleCellViewGraphPanelP
 {
     // Draw our graph from the given point
 
-    if (pGraph->dataSize()-pFrom > 1)
-        mDirectPainter->drawSeries(pGraph, pFrom, -1);
+    mDirectPainter->drawSeries(pGraph, pFrom, -1);
 }
 
 //==============================================================================
