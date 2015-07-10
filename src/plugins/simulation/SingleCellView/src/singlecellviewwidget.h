@@ -205,7 +205,8 @@ private:
 
     void updateResults(SingleCellViewSimulation *pSimulation,
                        const qulonglong &pSize);
-    void checkResults(SingleCellViewSimulation *pSimulation);
+    void checkResults(SingleCellViewSimulation *pSimulation,
+                      const bool &pForceUpdateResults = false);
 
     void resetFileTabIcon(const QString &pFileName,
                           const bool &pRemoveProgress = true);
