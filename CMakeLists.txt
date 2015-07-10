@@ -241,6 +241,7 @@ SET(PLUGINS
 
     api/CellMLAPI
     api/SBMLAPI
+    api/SEDMLAPI
 
     dataStore/CoreDataStore
 
