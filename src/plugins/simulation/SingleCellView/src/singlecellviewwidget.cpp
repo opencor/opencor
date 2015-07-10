@@ -1138,7 +1138,7 @@ void SingleCellViewWidget::on_actionRunPauseResumeSimulation_triggered()
 
                 runSimulation = mSimulation->results()->reset();
 
-                checkResults(mSimulation);
+                checkResults(mSimulation, true);
                 // Note: this will, among other things, clear our plots...
 
                 // Effectively run our simulation in case we were able to
@@ -1193,7 +1193,7 @@ void SingleCellViewWidget::on_actionClearSimulationData_triggered()
 
     updateSimulationMode();
 
-    checkResults(mSimulation);
+    checkResults(mSimulation, true);
 }
 
 //==============================================================================
@@ -1852,7 +1852,7 @@ bool SingleCellViewWidget::updatePlot(SingleCellViewGraphPanelPlotWidget *pPlot,
     QList<double> startingPoints = QList<double>();
     QList<double> endingPoints = QList<double>();
 
-    foreach (SingleCellViewGraphPanelPlotGraph *graph, pPlot->graphs())
+    foreach (SingleCellViewGraphPanelPlotGraph *graph, pPlot->graphs()) {
         if (graph->isValid() && graph->isSelected()) {
             SingleCellViewSimulation *simulation = mSimulations.value(graph->fileName());
 
@@ -1899,6 +1899,7 @@ bool SingleCellViewWidget::updatePlot(SingleCellViewGraphPanelPlotWidget *pPlot,
                 canOptimiseAxisY = false;
             }
         }
+    }
 
     // Optimise our axes' values, if possible
 
@@ -2130,7 +2131,8 @@ void SingleCellViewWidget::updateResults(SingleCellViewSimulation *pSimulation,
 
 //==============================================================================
 
-void SingleCellViewWidget::checkResults(SingleCellViewSimulation *pSimulation)
+void SingleCellViewWidget::checkResults(SingleCellViewSimulation *pSimulation,
+                                        const bool &pForceUpdateResults)
 {
     // Make sure that we can still check results (i.e. we are not closing down
     // with some simulations still running)
@@ -2142,7 +2144,8 @@ void SingleCellViewWidget::checkResults(SingleCellViewSimulation *pSimulation)
 
     qulonglong simulationResultsSize = pSimulation->results()->size();
 
-    if (simulationResultsSize != mOldSimulationResultsSizes.value(pSimulation)) {
+    if (    pForceUpdateResults
+        || (simulationResultsSize != mOldSimulationResultsSizes.value(pSimulation))) {
         mOldSimulationResultsSizes.insert(pSimulation, simulationResultsSize);
 
         updateResults(pSimulation, simulationResultsSize);
