@@ -5,12 +5,12 @@
 language: cpp
 
 os:
-  - linux
-#  - osx
+#  - linux
+  - osx
 
 env:
   - CONFIG=Release
-#  - CONFIG=Debug
+  - CONFIG=Debug
 
 install:
   - if [ "${TRAVIS_OS_NAME}" = "linux" ]; then
