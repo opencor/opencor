@@ -23,7 +23,9 @@ install:
       && sudo apt-get -qq install g++-4.8 libc6-i386 qt55tools qt55svg qt55webkit
       && export CXX="g++-4.8"
       && export CC="gcc-4.8"
-      && ls /opt
+      && echo "---------"
+      && ls /opt/qt55
+      && echo "---------"
       ;
     else
          brew update
