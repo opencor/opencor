@@ -71,12 +71,12 @@ public:
   /** @cond doxygen-libsbml-internal */
 
   /* constructor */
-  SedConstructorException (std::string errmsg = "");
-  SedConstructorException (std::string errmsg, std::string sbmlErrMsg);
-  SedConstructorException (std::string elementName, SedNamespaces* xmlns);
-  virtual ~SedConstructorException () throw();
+  SedConstructorException(std::string errmsg = "");
+  SedConstructorException(std::string errmsg, std::string sbmlErrMsg);
+  SedConstructorException(std::string elementName, SedNamespaces* xmlns);
+  virtual ~SedConstructorException() throw();
 
- /** @endcond */
+  /** @endcond */
 
   /**
    * Returns the message associated with this Sed exception.

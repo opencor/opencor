@@ -54,6 +54,8 @@
 #include <sedml/SedSimulation.h>
 
 
+
+
 LIBSEDML_CPP_NAMESPACE_BEGIN
 
 
@@ -66,192 +68,192 @@ protected:
 
 public:
 
-	/**
-	 * Creates a new SedSteadyState with the given level, version, and package version.
-	 *
-	 * @param level an unsigned int, the SEDML Level to assign to this SedSteadyState
-	 *
-	 * @param version an unsigned int, the SEDML Version to assign to this SedSteadyState
-	 *
-	 * @param pkgVersion an unsigned int, the SEDML Sed Version to assign to this SedSteadyState
-	 */
-	SedSteadyState(unsigned int level      = SEDML_DEFAULT_LEVEL,
-	               unsigned int version    = SEDML_DEFAULT_VERSION);
+  /**
+   * Creates a new SedSteadyState with the given level, version, and package version.
+   *
+   * @param level an unsigned int, the SEDML Level to assign to this SedSteadyState
+   *
+   * @param version an unsigned int, the SEDML Version to assign to this SedSteadyState
+   *
+   * @param pkgVersion an unsigned int, the SEDML Sed Version to assign to this SedSteadyState
+   */
+  SedSteadyState(unsigned int level      = SEDML_DEFAULT_LEVEL,
+                 unsigned int version    = SEDML_DEFAULT_VERSION);
 
 
-	/**
-	 * Creates a new SedSteadyState with the given SedNamespaces object.
-	 *
-	 * @param sedns the SedNamespaces object
-	 */
-	SedSteadyState(SedNamespaces* sedns);
+  /**
+   * Creates a new SedSteadyState with the given SedNamespaces object.
+   *
+   * @param sedns the SedNamespaces object
+   */
+  SedSteadyState(SedNamespaces* sedns);
 
 
- 	/**
-	 * Copy constructor for SedSteadyState.
-	 *
-	 * @param orig; the SedSteadyState instance to copy.
-	 */
-	SedSteadyState(const SedSteadyState& orig);
+  /**
+   * Copy constructor for SedSteadyState.
+   *
+   * @param orig; the SedSteadyState instance to copy.
+   */
+  SedSteadyState(const SedSteadyState& orig);
 
 
- 	/**
-	 * Assignment operator for SedSteadyState.
-	 *
-	 * @param rhs; the object whose values are used as the basis
-	 * of the assignment
-	 */
-	SedSteadyState& operator=(const SedSteadyState& rhs);
+  /**
+   * Assignment operator for SedSteadyState.
+   *
+   * @param rhs; the object whose values are used as the basis
+   * of the assignment
+   */
+  SedSteadyState& operator=(const SedSteadyState& rhs);
 
 
- 	/**
-	 * Creates and returns a deep copy of this SedSteadyState object.
-	 *
-	 * @return a (deep) copy of this SedSteadyState object.
-	 */
-	virtual SedSteadyState* clone () const;
+  /**
+   * Creates and returns a deep copy of this SedSteadyState object.
+   *
+   * @return a (deep) copy of this SedSteadyState object.
+   */
+  virtual SedSteadyState* clone() const;
 
 
- 	/**
-	 * Destructor for SedSteadyState.
-	 */
-	virtual ~SedSteadyState();
+  /**
+   * Destructor for SedSteadyState.
+   */
+  virtual ~SedSteadyState();
 
 
- 	/**
-	 * Returns the XML element name of this object, which for SedSteadyState, is
-	 * always @c "sedSteadyState".
-	 *
-	 * @return the name of this element, i.e. @c "sedSteadyState".
-	 */
-	virtual const std::string& getElementName () const;
+  /**
+   * Returns the XML element name of this object, which for SedSteadyState, is
+   * always @c "sedSteadyState".
+   *
+   * @return the name of this element, i.e. @c "sedSteadyState".
+   */
+  virtual const std::string& getElementName() const;
 
 
-	/**
-	 * Returns the libSEDML type code for this SEDML object.
-	 *
-	 * @if clike LibSEDML attaches an identifying code to every kind of SEDML
-	 * object.  These are known as <em>SEDML type codes</em>.  The set of
-	 * possible type codes is defined in the enumeration #SEDMLTypeCode_t.
-	 * The names of the type codes all begin with the characters @c
-	 * SEDML_. @endif@if java LibSEDML attaches an identifying code to every
-	 * kind of SEDML object.  These are known as <em>SEDML type codes</em>.  In
-	 * other languages, the set of type codes is stored in an enumeration; in
-	 * the Java language interface for libSEDML, the type codes are defined as
-	 * static integer constants in the interface class {@link
-	 * libsedmlConstants}.  The names of the type codes all begin with the
-	 * characters @c SEDML_. @endif@if python LibSEDML attaches an identifying
-	 * code to every kind of SEDML object.  These are known as <em>SEDML type
-	 * codes</em>.  In the Python language interface for libSEDML, the type
-	 * codes are defined as static integer constants in the interface class
-	 * @link libsedml@endlink.  The names of the type codes all begin with the
-	 * characters @c SEDML_. @endif@if csharp LibSEDML attaches an identifying
-	 * code to every kind of SEDML object.  These are known as <em>SEDML type
-	 * codes</em>.  In the C# language interface for libSEDML, the type codes
-	 * are defined as static integer constants in the interface class @link
-	 * libsedmlcs.libsedml@endlink.  The names of the type codes all begin with
-	 * the characters @c SEDML_. @endif
-	 *
-	 * @return the SEDML type code for this object, or
-	 * @link SEDMLTypeCode_t#SEDML_UNKNOWN SEDML_UNKNOWN@endlink (default).
-	 *
-	 * @see getElementName()
-	 */
-	virtual int getTypeCode () const;
+  /**
+   * Returns the libSEDML type code for this SEDML object.
+   *
+   * @if clike LibSEDML attaches an identifying code to every kind of SEDML
+   * object.  These are known as <em>SEDML type codes</em>.  The set of
+   * possible type codes is defined in the enumeration #SEDMLTypeCode_t.
+   * The names of the type codes all begin with the characters @c
+   * SEDML_. @endif@if java LibSEDML attaches an identifying code to every
+   * kind of SEDML object.  These are known as <em>SEDML type codes</em>.  In
+   * other languages, the set of type codes is stored in an enumeration; in
+   * the Java language interface for libSEDML, the type codes are defined as
+   * static integer constants in the interface class {@link
+   * libsedmlConstants}.  The names of the type codes all begin with the
+   * characters @c SEDML_. @endif@if python LibSEDML attaches an identifying
+   * code to every kind of SEDML object.  These are known as <em>SEDML type
+   * codes</em>.  In the Python language interface for libSEDML, the type
+   * codes are defined as static integer constants in the interface class
+   * @link libsedml@endlink.  The names of the type codes all begin with the
+   * characters @c SEDML_. @endif@if csharp LibSEDML attaches an identifying
+   * code to every kind of SEDML object.  These are known as <em>SEDML type
+   * codes</em>.  In the C# language interface for libSEDML, the type codes
+   * are defined as static integer constants in the interface class @link
+   * libsedmlcs.libsedml@endlink.  The names of the type codes all begin with
+   * the characters @c SEDML_. @endif
+   *
+   * @return the SEDML type code for this object, or
+   * @link SEDMLTypeCode_t#SEDML_UNKNOWN SEDML_UNKNOWN@endlink (default).
+   *
+   * @see getElementName()
+   */
+  virtual int getTypeCode() const;
 
 
-	/**
-	 * Predicate returning @c true if all the required attributes
-	 * for this SedSteadyState object have been set.
-	 *
-	 * @note The required attributes for a SedSteadyState object are:
-	 *
-	 * @return a boolean value indicating whether all the required
-	 * attributes for this object have been defined.
-	 */
-	virtual bool hasRequiredAttributes() const;
+  /**
+   * Predicate returning @c true if all the required attributes
+   * for this SedSteadyState object have been set.
+   *
+   * @note The required attributes for a SedSteadyState object are:
+   *
+   * @return a boolean value indicating whether all the required
+   * attributes for this object have been defined.
+   */
+  virtual bool hasRequiredAttributes() const;
 
 
-/** @cond doxygen-libsedml-internal */
+  /** @cond doxygen-libsedml-internal */
 
-	/**
-	 * Subclasses should override this method to write out their contained
-	 * SEDML objects as XML elements.  Be sure to call your parents
-	 * implementation of this method as well.
-	 */
-	virtual void writeElements (XMLOutputStream& stream) const;
-
-
-/** @endcond doxygen-libsedml-internal */
+  /**
+   * Subclasses should override this method to write out their contained
+   * SEDML objects as XML elements.  Be sure to call your parents
+   * implementation of this method as well.
+   */
+  virtual void writeElements(XMLOutputStream& stream) const;
 
 
-/** @cond doxygen-libsedml-internal */
-
-	/**
-	 * Accepts the given SedVisitor.
-	 */
-	virtual bool accept (SedVisitor& v) const;
+  /** @endcond doxygen-libsedml-internal */
 
 
-/** @endcond doxygen-libsedml-internal */
+  /** @cond doxygen-libsedml-internal */
+
+  /**
+   * Accepts the given SedVisitor.
+   */
+  virtual bool accept(SedVisitor& v) const;
 
 
-/** @cond doxygen-libsedml-internal */
-
-	/**
-	 * Sets the parent SedDocument.
-	 */
-	virtual void setSedDocument (SedDocument* d);
+  /** @endcond doxygen-libsedml-internal */
 
 
-/** @endcond doxygen-libsedml-internal */
+  /** @cond doxygen-libsedml-internal */
+
+  /**
+   * Sets the parent SedDocument.
+   */
+  virtual void setSedDocument(SedDocument* d);
+
+
+  /** @endcond doxygen-libsedml-internal */
 
 
 protected:
 
-/** @cond doxygen-libsedml-internal */
+  /** @cond doxygen-libsedml-internal */
 
-	/**
-	 * return the SEDML object corresponding to next XMLToken.
-	 */
-	virtual SedBase* createObject(XMLInputStream& stream);
-
-
-/** @endcond doxygen-libsedml-internal */
+  /**
+   * return the SEDML object corresponding to next XMLToken.
+   */
+  virtual SedBase* createObject(XMLInputStream& stream);
 
 
-/** @cond doxygen-libsedml-internal */
-
-	/**
-	 * Get the list of expected attributes for this element.
-	 */
-	virtual void addExpectedAttributes(ExpectedAttributes& attributes);
+  /** @endcond doxygen-libsedml-internal */
 
 
-/** @endcond doxygen-libsedml-internal */
+  /** @cond doxygen-libsedml-internal */
+
+  /**
+   * Get the list of expected attributes for this element.
+   */
+  virtual void addExpectedAttributes(ExpectedAttributes& attributes);
 
 
-/** @cond doxygen-libsedml-internal */
-
-	/**
-	 * Read values from the given XMLAttributes set into their specific fields.
-	 */
-	virtual void readAttributes (const XMLAttributes& attributes,
-	                             const ExpectedAttributes& expectedAttributes);
+  /** @endcond doxygen-libsedml-internal */
 
 
-/** @endcond doxygen-libsedml-internal */
+  /** @cond doxygen-libsedml-internal */
+
+  /**
+   * Read values from the given XMLAttributes set into their specific fields.
+   */
+  virtual void readAttributes(const XMLAttributes& attributes,
+                              const ExpectedAttributes& expectedAttributes);
 
 
-/** @cond doxygen-libsedml-internal */
-
-	/**
-	 * Write values of XMLAttributes to the output stream.
-	 */
-	virtual void writeAttributes (XMLOutputStream& stream) const;
+  /** @endcond doxygen-libsedml-internal */
 
 
-/** @endcond doxygen-libsedml-internal */
+  /** @cond doxygen-libsedml-internal */
+
+  /**
+   * Write values of XMLAttributes to the output stream.
+   */
+  virtual void writeAttributes(XMLOutputStream& stream) const;
+
+
+  /** @endcond doxygen-libsedml-internal */
 
 
 

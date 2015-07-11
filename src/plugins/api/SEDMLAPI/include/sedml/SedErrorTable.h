@@ -46,12 +46,14 @@
 LIBSEDML_CPP_NAMESPACE_BEGIN
 
 /** @cond doxygen-libsbml-internal */
-typedef struct {
+typedef struct
+{
   const char * ref_l1;
 } referenceEntry;
 
 
-typedef struct {
+typedef struct
+{
   unsigned int code;
   const char*  shortMessage;
   unsigned int category;
@@ -64,11 +66,13 @@ typedef struct {
 static const sbmlErrorTableEntry errorTable[] =
 {
   // 10000
-  { SedUnknownError,
+  {
+    SedUnknownError,
     "Encountered unknown internal libSed error",
     LIBSEDML_CAT_INTERNAL,
     LIBSEDML_SEV_FATAL,
-    "Unrecognized error encountered by libSed" },
+    "Unrecognized error encountered by libSed"
+  },
 
   //10101
   {
@@ -844,7 +848,7 @@ static const sbmlErrorTableEntry errorTable[] =
     "The syntax of 'id' attribute values must conform to the syntax of the Sed "
     "type 'SId'.",
     {""}
-},
+  },
 //
 //  //10311
 //  {
@@ -2083,16 +2087,16 @@ static const sbmlErrorTableEntry errorTable[] =
 //     "L3V1 Section 3.2"}
 //  },
 //
- //20101
- {
-   SedInvalidNamespaceOnSed,
-   "Invalid XML namespace for the SED-ML container element",
-   LIBSEDML_CAT_SEDML,
-   LIBSEDML_SEV_ERROR,
-   "The <sedML> container element must declare the XML Namespace for Sed, "
-   "and this declaration must be consistent with the values of the 'level' "
-   "and 'version' attributes on the <sedML> element. ",
-   {""}
+//20101
+  {
+    SedInvalidNamespaceOnSed,
+    "Invalid XML namespace for the SED-ML container element",
+    LIBSEDML_CAT_SEDML,
+    LIBSEDML_SEV_ERROR,
+    "The <sedML> container element must declare the XML Namespace for Sed, "
+    "and this declaration must be consistent with the values of the 'level' "
+    "and 'version' attributes on the <sedML> element. ",
+    {""}
   },
 //
 //  //20102
@@ -9123,7 +9127,7 @@ static const sbmlErrorTableEntry errorTable[] =
     LIBSEDML_SEV_NOT_APPLICABLE,
     "Application-specific codes should begin at 100000.",
     {""}
-    }
+  }
 };
 
 LIBSEDML_CPP_NAMESPACE_END

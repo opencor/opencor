@@ -102,40 +102,40 @@ BEGIN_C_DECLS
  */
 typedef enum
 {
-      SEDML_UNKNOWN                        =  0
-    , SEDML_DOCUMENT                       =  1
-    , SEDML_MODEL                          =  20
-    , SEDML_CHANGE                         =  21
-    , SEDML_CHANGE_ATTRIBUTE               =  22
-    , SEDML_CHANGE_REMOVEXML               =  23
-    , SEDML_CHANGE_COMPUTECHANGE           =  24
-    , SEDML_CHANGE_ADDXML                  =  25
-    , SEDML_CHANGE_CHANGEXML               =  26
-    , SEDML_DATAGENERATOR                  =  30
-    , SEDML_VARIABLE                       =  31
-    , SEDML_PARAMETER                      =  32
-    , SEDML_TASK                           =  40
-    , SEDML_TASK_SUBTASK                   =  41
-    , SEDML_TASK_SETVALUE                  =  42
-    , SEDML_TASK_REPEATEDTASK              =  43
-    , SEDML_OUTPUT                         =  50
-    , SEDML_OUTPUT_DATASET                 =  51
-    , SEDML_OUTPUT_CURVE                   =  52
-    , SEDML_OUTPUT_SURFACE                 =  53
-    , SEDML_OUTPUT_REPORT                  =  54
-    , SEDML_OUTPUT_PLOT2D                  =  55
-    , SEDML_OUTPUT_PLOT3D                  =  56
-    , SEDML_SIMULATION                     =  60
-    , SEDML_SIMULATION_ALGORITHM           =  61
-    , SEDML_SIMULATION_UNIFORMTIMECOURSE   =  62
-    , SEDML_SIMULATION_ALGORITHM_PARAMETER = 63
-    , SEDML_SIMULATION_ONESTEP             =  64
-    , SEDML_SIMULATION_STEADYSTATE         =  65
-    , SEDML_RANGE                          = 70
-    , SEDML_RANGE_UNIFORMRANGE             = 71
-    , SEDML_RANGE_VECTORRANGE              = 72
-    , SEDML_RANGE_FUNCTIONALRANGE          = 73
-    , SEDML_LIST_OF                        =  100
+  SEDML_UNKNOWN                        =  0
+  , SEDML_DOCUMENT                       =  1
+  , SEDML_MODEL                          =  20
+  , SEDML_CHANGE                         =  21
+  , SEDML_CHANGE_ATTRIBUTE               =  22
+  , SEDML_CHANGE_REMOVEXML               =  23
+  , SEDML_CHANGE_COMPUTECHANGE           =  24
+  , SEDML_CHANGE_ADDXML                  =  25
+  , SEDML_CHANGE_CHANGEXML               =  26
+  , SEDML_DATAGENERATOR                  =  30
+  , SEDML_VARIABLE                       =  31
+  , SEDML_PARAMETER                      =  32
+  , SEDML_TASK                           =  40
+  , SEDML_TASK_SUBTASK                   =  41
+  , SEDML_TASK_SETVALUE                  =  42
+  , SEDML_TASK_REPEATEDTASK              =  43
+  , SEDML_OUTPUT                         =  50
+  , SEDML_OUTPUT_DATASET                 =  51
+  , SEDML_OUTPUT_CURVE                   =  52
+  , SEDML_OUTPUT_SURFACE                 =  53
+  , SEDML_OUTPUT_REPORT                  =  54
+  , SEDML_OUTPUT_PLOT2D                  =  55
+  , SEDML_OUTPUT_PLOT3D                  =  56
+  , SEDML_SIMULATION                     =  60
+  , SEDML_SIMULATION_ALGORITHM           =  61
+  , SEDML_SIMULATION_UNIFORMTIMECOURSE   =  62
+  , SEDML_SIMULATION_ALGORITHM_PARAMETER = 63
+  , SEDML_SIMULATION_ONESTEP             =  64
+  , SEDML_SIMULATION_STEADYSTATE         =  65
+  , SEDML_RANGE                          = 70
+  , SEDML_RANGE_UNIFORMRANGE             = 71
+  , SEDML_RANGE_VECTORRANGE              = 72
+  , SEDML_RANGE_FUNCTIONALRANGE          = 73
+  , SEDML_LIST_OF                        =  100
 
 } SedTypeCode_t;
 
@@ -175,7 +175,7 @@ typedef enum
  */
 LIBSEDML_EXTERN
 const char *
-SedTypeCode_toString (int tc);
+SedTypeCode_toString(int tc);
 
 
 END_C_DECLS

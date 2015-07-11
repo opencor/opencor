@@ -49,10 +49,12 @@
 
 
 #include <sedml/SedBase.h>
-#include <sedml/SedCurve.h>
 #include <sedml/SedListOf.h>
 #include <sedml/SedNamespaces.h>
 #include <sedml/SedOutput.h>
+#include <sedml/SedCurve.h>
+
+
 
 
 LIBSEDML_CPP_NAMESPACE_BEGIN
@@ -63,351 +65,351 @@ class LIBSEDML_EXTERN SedPlot2D : public SedOutput
 
 protected:
 
-	SedListOfCurves   mCurves;
+  SedListOfCurves   mCurves;
 
 
 public:
 
-	/**
-	 * Creates a new SedPlot2D with the given level, version, and package version.
-	 *
-	 * @param level an unsigned int, the SEDML Level to assign to this SedPlot2D
-	 *
-	 * @param version an unsigned int, the SEDML Version to assign to this SedPlot2D
-	 *
-	 * @param pkgVersion an unsigned int, the SEDML Sed Version to assign to this SedPlot2D
-	 */
-	SedPlot2D(unsigned int level      = SEDML_DEFAULT_LEVEL,
-	          unsigned int version    = SEDML_DEFAULT_VERSION);
+  /**
+   * Creates a new SedPlot2D with the given level, version, and package version.
+   *
+   * @param level an unsigned int, the SEDML Level to assign to this SedPlot2D
+   *
+   * @param version an unsigned int, the SEDML Version to assign to this SedPlot2D
+   *
+   * @param pkgVersion an unsigned int, the SEDML Sed Version to assign to this SedPlot2D
+   */
+  SedPlot2D(unsigned int level      = SEDML_DEFAULT_LEVEL,
+            unsigned int version    = SEDML_DEFAULT_VERSION);
 
 
-	/**
-	 * Creates a new SedPlot2D with the given SedNamespaces object.
-	 *
-	 * @param sedns the SedNamespaces object
-	 */
-	SedPlot2D(SedNamespaces* sedns);
+  /**
+   * Creates a new SedPlot2D with the given SedNamespaces object.
+   *
+   * @param sedns the SedNamespaces object
+   */
+  SedPlot2D(SedNamespaces* sedns);
 
 
- 	/**
-	 * Copy constructor for SedPlot2D.
-	 *
-	 * @param orig; the SedPlot2D instance to copy.
-	 */
-	SedPlot2D(const SedPlot2D& orig);
+  /**
+   * Copy constructor for SedPlot2D.
+   *
+   * @param orig; the SedPlot2D instance to copy.
+   */
+  SedPlot2D(const SedPlot2D& orig);
 
 
- 	/**
-	 * Assignment operator for SedPlot2D.
-	 *
-	 * @param rhs; the object whose values are used as the basis
-	 * of the assignment
-	 */
-	SedPlot2D& operator=(const SedPlot2D& rhs);
+  /**
+   * Assignment operator for SedPlot2D.
+   *
+   * @param rhs; the object whose values are used as the basis
+   * of the assignment
+   */
+  SedPlot2D& operator=(const SedPlot2D& rhs);
 
 
- 	/**
-	 * Creates and returns a deep copy of this SedPlot2D object.
-	 *
-	 * @return a (deep) copy of this SedPlot2D object.
-	 */
-	virtual SedPlot2D* clone () const;
+  /**
+   * Creates and returns a deep copy of this SedPlot2D object.
+   *
+   * @return a (deep) copy of this SedPlot2D object.
+   */
+  virtual SedPlot2D* clone() const;
 
 
- 	/**
-	 * Destructor for SedPlot2D.
-	 */
-	virtual ~SedPlot2D();
+  /**
+   * Destructor for SedPlot2D.
+   */
+  virtual ~SedPlot2D();
 
 
- 	/**
-	 * Returns the  "SedListOfCurves" in this SedPlot2D object.
-	 *
-	 * @return the "SedListOfCurves" attribute of this SedPlot2D.
-	 */
-	const SedListOfCurves* getListOfCurves() const;
+  /**
+   * Returns the  "SedListOfCurves" in this SedPlot2D object.
+   *
+   * @return the "SedListOfCurves" attribute of this SedPlot2D.
+   */
+  const SedListOfCurves* getListOfCurves() const;
 
 
-	/**
-	 * Get a Curve from the SedListOfCurves.
-	 *
-	 * @param n the index number of the Curve to get.
-	 *
-	 * @return the nth Curve in the SedListOfCurves within this SedPlot2D.
-	 *
-	 * @see getNumCurves()
-	 */
-	SedCurve* getCurve(unsigned int n);
+  /**
+   * Get a Curve from the SedListOfCurves.
+   *
+   * @param n the index number of the Curve to get.
+   *
+   * @return the nth Curve in the SedListOfCurves within this SedPlot2D.
+   *
+   * @see getNumCurves()
+   */
+  SedCurve* getCurve(unsigned int n);
 
 
-	/**
-	 * Get a Curve from the SedListOfCurves.
-	 *
-	 * @param n the index number of the Curve to get.
-	 *
-	 * @return the nth Curve in the SedListOfCurves within this SedPlot2D.
-	 *
-	 * @see getNumCurves()
-	 */
-	const SedCurve* getCurve(unsigned int n) const;
+  /**
+   * Get a Curve from the SedListOfCurves.
+   *
+   * @param n the index number of the Curve to get.
+   *
+   * @return the nth Curve in the SedListOfCurves within this SedPlot2D.
+   *
+   * @see getNumCurves()
+   */
+  const SedCurve* getCurve(unsigned int n) const;
 
 
-	/**
-	 * Get a Curve from the SedListOfCurves
-	 * based on its identifier.
-	 *
-	 * @param sid a string representing the identifier
-	 * of the Curve to get.
-	 *
-	 * @return the Curve in the SedListOfCurves
-	 * with the given id or NULL if no such
-	 * Curve exists.
-	 *
-	 * @see getCurve(unsigned int n)
-	 *
-	 * @see getNumCurves()
-	 */
-	SedCurve* getCurve(const std::string& sid);
+  /**
+   * Get a Curve from the SedListOfCurves
+   * based on its identifier.
+   *
+   * @param sid a string representing the identifier
+   * of the Curve to get.
+   *
+   * @return the Curve in the SedListOfCurves
+   * with the given id or NULL if no such
+   * Curve exists.
+   *
+   * @see getCurve(unsigned int n)
+   *
+   * @see getNumCurves()
+   */
+  SedCurve* getCurve(const std::string& sid);
 
 
-	/**
-	 * Get a Curve from the SedListOfCurves
-	 * based on its identifier.
-	 *
-	 * @param sid a string representing the identifier
-	 * of the Curve to get.
-	 *
-	 * @return the Curve in the SedListOfCurves
-	 * with the given id or NULL if no such
-	 * Curve exists.
-	 *
-	 * @see getCurve(unsigned int n)
-	 *
-	 * @see getNumCurves()
-	 */
-	const SedCurve* getCurve(const std::string& sid) const;
+  /**
+   * Get a Curve from the SedListOfCurves
+   * based on its identifier.
+   *
+   * @param sid a string representing the identifier
+   * of the Curve to get.
+   *
+   * @return the Curve in the SedListOfCurves
+   * with the given id or NULL if no such
+   * Curve exists.
+   *
+   * @see getCurve(unsigned int n)
+   *
+   * @see getNumCurves()
+   */
+  const SedCurve* getCurve(const std::string& sid) const;
 
 
-	/**
-	 * Adds a copy the given "SedCurve" to this SedPlot2D.
-	 *
-	 * @param sc; the SedCurve object to add
-	 *
-	 * @return integer value indicating success/failure of the
-	 * function.  @if clike The value is drawn from the
-	 * enumeration #OperationReturnValues_t. @endif The possible values
-	 * returned by this function are:
-	 * @li LIBSEDML_OPERATION_SUCCESS
-	 * @li LIBSEDML_INVALID_ATTRIBUTE_VALUE
-	 */
-	int addCurve(const SedCurve* sc);
+  /**
+   * Adds a copy the given "SedCurve" to this SedPlot2D.
+   *
+   * @param sc; the SedCurve object to add
+   *
+   * @return integer value indicating success/failure of the
+   * function.  @if clike The value is drawn from the
+   * enumeration #OperationReturnValues_t. @endif The possible values
+   * returned by this function are:
+   * @li LIBSEDML_OPERATION_SUCCESS
+   * @li LIBSEDML_INVALID_ATTRIBUTE_VALUE
+   */
+  int addCurve(const SedCurve* sc);
 
 
-	/**
-	 * Get the number of SedCurve objects in this SedPlot2D.
-	 *
-	 * @return the number of SedCurve objects in this SedPlot2D
-	 */
-	unsigned int getNumCurves() const;
+  /**
+   * Get the number of SedCurve objects in this SedPlot2D.
+   *
+   * @return the number of SedCurve objects in this SedPlot2D
+   */
+  unsigned int getNumCurves() const;
 
 
-	/**
-	 * Creates a new SedCurve object, adds it to this SedPlot2Ds
-	 * SedListOfCurves and returns the SedCurve object created.
-	 *
-	 * @return a new SedCurve object instance
-	 *
-	 * @see addCurve(const SedCurve* sc)
-	 */
-	SedCurve* createCurve();
+  /**
+   * Creates a new SedCurve object, adds it to this SedPlot2Ds
+   * SedListOfCurves and returns the SedCurve object created.
+   *
+   * @return a new SedCurve object instance
+   *
+   * @see addCurve(const SedCurve* sc)
+   */
+  SedCurve* createCurve();
 
 
-	/**
-	 * Removes the nth Curve from the SedListOfCurves within this SedPlot2D.
-	 * and returns a pointer to it.
-	 *
-	 * The caller owns the returned item and is responsible for deleting it.
-	 *
-	 * @param n the index of the Curve to remove.
-	 *
-	 * @see getNumCurves()
-	 */
-	SedCurve* removeCurve(unsigned int n);
+  /**
+   * Removes the nth Curve from the SedListOfCurves within this SedPlot2D.
+   * and returns a pointer to it.
+   *
+   * The caller owns the returned item and is responsible for deleting it.
+   *
+   * @param n the index of the Curve to remove.
+   *
+   * @see getNumCurves()
+   */
+  SedCurve* removeCurve(unsigned int n);
 
 
-	/**
-	 * Removes the Curve with the given identifier from the SedListOfCurves within this SedPlot2D
-	 * and returns a pointer to it.
-	 *
-	 * The caller owns the returned item and is responsible for deleting it.
-	 * If none of the items in this list have the identifier @p sid, then
-	 * @c NULL is returned.
-	 *
-	 * @param sid the identifier of the Curve to remove.
-	 *
-	 * @return the Curve removed. As mentioned above, the caller owns the
-	 * returned item.
-	 */
-	SedCurve* removeCurve(const std::string& sid);
+  /**
+   * Removes the Curve with the given identifier from the SedListOfCurves within this SedPlot2D
+   * and returns a pointer to it.
+   *
+   * The caller owns the returned item and is responsible for deleting it.
+   * If none of the items in this list have the identifier @p sid, then
+   * @c NULL is returned.
+   *
+   * @param sid the identifier of the Curve to remove.
+   *
+   * @return the Curve removed. As mentioned above, the caller owns the
+   * returned item.
+   */
+  SedCurve* removeCurve(const std::string& sid);
 
 
-	/**
-	 * Returns the XML element name of this object, which for SedPlot2D, is
-	 * always @c "sedPlot2D".
-	 *
-	 * @return the name of this element, i.e. @c "sedPlot2D".
-	 */
-	virtual const std::string& getElementName () const;
+  /**
+   * Returns the XML element name of this object, which for SedPlot2D, is
+   * always @c "sedPlot2D".
+   *
+   * @return the name of this element, i.e. @c "sedPlot2D".
+   */
+  virtual const std::string& getElementName() const;
 
 
-	/**
-	 * Returns the libSEDML type code for this SEDML object.
-	 *
-	 * @if clike LibSEDML attaches an identifying code to every kind of SEDML
-	 * object.  These are known as <em>SEDML type codes</em>.  The set of
-	 * possible type codes is defined in the enumeration #SEDMLTypeCode_t.
-	 * The names of the type codes all begin with the characters @c
-	 * SEDML_. @endif@if java LibSEDML attaches an identifying code to every
-	 * kind of SEDML object.  These are known as <em>SEDML type codes</em>.  In
-	 * other languages, the set of type codes is stored in an enumeration; in
-	 * the Java language interface for libSEDML, the type codes are defined as
-	 * static integer constants in the interface class {@link
-	 * libsedmlConstants}.  The names of the type codes all begin with the
-	 * characters @c SEDML_. @endif@if python LibSEDML attaches an identifying
-	 * code to every kind of SEDML object.  These are known as <em>SEDML type
-	 * codes</em>.  In the Python language interface for libSEDML, the type
-	 * codes are defined as static integer constants in the interface class
-	 * @link libsedml@endlink.  The names of the type codes all begin with the
-	 * characters @c SEDML_. @endif@if csharp LibSEDML attaches an identifying
-	 * code to every kind of SEDML object.  These are known as <em>SEDML type
-	 * codes</em>.  In the C# language interface for libSEDML, the type codes
-	 * are defined as static integer constants in the interface class @link
-	 * libsedmlcs.libsedml@endlink.  The names of the type codes all begin with
-	 * the characters @c SEDML_. @endif
-	 *
-	 * @return the SEDML type code for this object, or
-	 * @link SEDMLTypeCode_t#SEDML_UNKNOWN SEDML_UNKNOWN@endlink (default).
-	 *
-	 * @see getElementName()
-	 */
-	virtual int getTypeCode () const;
+  /**
+   * Returns the libSEDML type code for this SEDML object.
+   *
+   * @if clike LibSEDML attaches an identifying code to every kind of SEDML
+   * object.  These are known as <em>SEDML type codes</em>.  The set of
+   * possible type codes is defined in the enumeration #SEDMLTypeCode_t.
+   * The names of the type codes all begin with the characters @c
+   * SEDML_. @endif@if java LibSEDML attaches an identifying code to every
+   * kind of SEDML object.  These are known as <em>SEDML type codes</em>.  In
+   * other languages, the set of type codes is stored in an enumeration; in
+   * the Java language interface for libSEDML, the type codes are defined as
+   * static integer constants in the interface class {@link
+   * libsedmlConstants}.  The names of the type codes all begin with the
+   * characters @c SEDML_. @endif@if python LibSEDML attaches an identifying
+   * code to every kind of SEDML object.  These are known as <em>SEDML type
+   * codes</em>.  In the Python language interface for libSEDML, the type
+   * codes are defined as static integer constants in the interface class
+   * @link libsedml@endlink.  The names of the type codes all begin with the
+   * characters @c SEDML_. @endif@if csharp LibSEDML attaches an identifying
+   * code to every kind of SEDML object.  These are known as <em>SEDML type
+   * codes</em>.  In the C# language interface for libSEDML, the type codes
+   * are defined as static integer constants in the interface class @link
+   * libsedmlcs.libsedml@endlink.  The names of the type codes all begin with
+   * the characters @c SEDML_. @endif
+   *
+   * @return the SEDML type code for this object, or
+   * @link SEDMLTypeCode_t#SEDML_UNKNOWN SEDML_UNKNOWN@endlink (default).
+   *
+   * @see getElementName()
+   */
+  virtual int getTypeCode() const;
 
 
-	/**
-	 * Predicate returning @c true if all the required attributes
-	 * for this SedPlot2D object have been set.
-	 *
-	 * @note The required attributes for a SedPlot2D object are:
-	 *
-	 * @return a boolean value indicating whether all the required
-	 * attributes for this object have been defined.
-	 */
-	virtual bool hasRequiredAttributes() const;
+  /**
+   * Predicate returning @c true if all the required attributes
+   * for this SedPlot2D object have been set.
+   *
+   * @note The required attributes for a SedPlot2D object are:
+   *
+   * @return a boolean value indicating whether all the required
+   * attributes for this object have been defined.
+   */
+  virtual bool hasRequiredAttributes() const;
 
 
-	/**
-	 * Predicate returning @c true if all the required elements
-	 * for this SedPlot2D object have been set.
-	 *
-	 * @note The required elements for a SedPlot2D object are:
-	 *
-	 * @return a boolean value indicating whether all the required
-	 * elements for this object have been defined.
-	 */
-	virtual bool hasRequiredElements() const;
+  /**
+   * Predicate returning @c true if all the required elements
+   * for this SedPlot2D object have been set.
+   *
+   * @note The required elements for a SedPlot2D object are:
+   *
+   * @return a boolean value indicating whether all the required
+   * elements for this object have been defined.
+   */
+  virtual bool hasRequiredElements() const;
 
 
-/** @cond doxygen-libsedml-internal */
+  /** @cond doxygen-libsedml-internal */
 
-	/**
-	 * Subclasses should override this method to write out their contained
-	 * SEDML objects as XML elements.  Be sure to call your parents
-	 * implementation of this method as well.
-	 */
-	virtual void writeElements (XMLOutputStream& stream) const;
-
-
-/** @endcond doxygen-libsedml-internal */
+  /**
+   * Subclasses should override this method to write out their contained
+   * SEDML objects as XML elements.  Be sure to call your parents
+   * implementation of this method as well.
+   */
+  virtual void writeElements(XMLOutputStream& stream) const;
 
 
-/** @cond doxygen-libsedml-internal */
-
-	/**
-	 * Accepts the given SedVisitor.
-	 */
-	virtual bool accept (SedVisitor& v) const;
+  /** @endcond doxygen-libsedml-internal */
 
 
-/** @endcond doxygen-libsedml-internal */
+  /** @cond doxygen-libsedml-internal */
+
+  /**
+   * Accepts the given SedVisitor.
+   */
+  virtual bool accept(SedVisitor& v) const;
 
 
-/** @cond doxygen-libsedml-internal */
-
-	/**
-	 * Sets the parent SedDocument.
-	 */
-	virtual void setSedDocument (SedDocument* d);
+  /** @endcond doxygen-libsedml-internal */
 
 
-/** @endcond doxygen-libsedml-internal */
+  /** @cond doxygen-libsedml-internal */
+
+  /**
+   * Sets the parent SedDocument.
+   */
+  virtual void setSedDocument(SedDocument* d);
 
 
-/** @cond doxygen-libsedml-internal */
-
-	/**
-	 * Connects to child elements.
-	 */
-	virtual void connectToChild ();
+  /** @endcond doxygen-libsedml-internal */
 
 
-/** @endcond doxygen-libsedml-internal */
+  /** @cond doxygen-libsedml-internal */
+
+  /**
+   * Connects to child elements.
+   */
+  virtual void connectToChild();
+
+
+  /** @endcond doxygen-libsedml-internal */
 
 
 protected:
 
-/** @cond doxygen-libsedml-internal */
+  /** @cond doxygen-libsedml-internal */
 
-	/**
-	 * return the SEDML object corresponding to next XMLToken.
-	 */
-	virtual SedBase* createObject(XMLInputStream& stream);
-
-
-/** @endcond doxygen-libsedml-internal */
+  /**
+   * return the SEDML object corresponding to next XMLToken.
+   */
+  virtual SedBase* createObject(XMLInputStream& stream);
 
 
-/** @cond doxygen-libsedml-internal */
-
-	/**
-	 * Get the list of expected attributes for this element.
-	 */
-	virtual void addExpectedAttributes(ExpectedAttributes& attributes);
+  /** @endcond doxygen-libsedml-internal */
 
 
-/** @endcond doxygen-libsedml-internal */
+  /** @cond doxygen-libsedml-internal */
+
+  /**
+   * Get the list of expected attributes for this element.
+   */
+  virtual void addExpectedAttributes(ExpectedAttributes& attributes);
 
 
-/** @cond doxygen-libsedml-internal */
-
-	/**
-	 * Read values from the given XMLAttributes set into their specific fields.
-	 */
-	virtual void readAttributes (const XMLAttributes& attributes,
-	                             const ExpectedAttributes& expectedAttributes);
+  /** @endcond doxygen-libsedml-internal */
 
 
-/** @endcond doxygen-libsedml-internal */
+  /** @cond doxygen-libsedml-internal */
+
+  /**
+   * Read values from the given XMLAttributes set into their specific fields.
+   */
+  virtual void readAttributes(const XMLAttributes& attributes,
+                              const ExpectedAttributes& expectedAttributes);
 
 
-/** @cond doxygen-libsedml-internal */
-
-	/**
-	 * Write values of XMLAttributes to the output stream.
-	 */
-	virtual void writeAttributes (XMLOutputStream& stream) const;
+  /** @endcond doxygen-libsedml-internal */
 
 
-/** @endcond doxygen-libsedml-internal */
+  /** @cond doxygen-libsedml-internal */
+
+  /**
+   * Write values of XMLAttributes to the output stream.
+   */
+  virtual void writeAttributes(XMLOutputStream& stream) const;
+
+
+  /** @endcond doxygen-libsedml-internal */
 
 
 

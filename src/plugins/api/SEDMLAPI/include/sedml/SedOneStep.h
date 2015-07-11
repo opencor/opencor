@@ -54,6 +54,8 @@
 #include <sedml/SedSimulation.h>
 
 
+
+
 LIBSEDML_CPP_NAMESPACE_BEGIN
 
 
@@ -62,245 +64,245 @@ class LIBSEDML_EXTERN SedOneStep : public SedSimulation
 
 protected:
 
-	double        mStep;
-	bool          mIsSetStep;
+  double        mStep;
+  bool          mIsSetStep;
 
 
 public:
 
-	/**
-	 * Creates a new SedOneStep with the given level, version, and package version.
-	 *
-	 * @param level an unsigned int, the SEDML Level to assign to this SedOneStep
-	 *
-	 * @param version an unsigned int, the SEDML Version to assign to this SedOneStep
-	 *
-	 * @param pkgVersion an unsigned int, the SEDML Sed Version to assign to this SedOneStep
-	 */
-	SedOneStep(unsigned int level      = SEDML_DEFAULT_LEVEL,
-	           unsigned int version    = SEDML_DEFAULT_VERSION);
+  /**
+   * Creates a new SedOneStep with the given level, version, and package version.
+   *
+   * @param level an unsigned int, the SEDML Level to assign to this SedOneStep
+   *
+   * @param version an unsigned int, the SEDML Version to assign to this SedOneStep
+   *
+   * @param pkgVersion an unsigned int, the SEDML Sed Version to assign to this SedOneStep
+   */
+  SedOneStep(unsigned int level      = SEDML_DEFAULT_LEVEL,
+             unsigned int version    = SEDML_DEFAULT_VERSION);
 
 
-	/**
-	 * Creates a new SedOneStep with the given SedNamespaces object.
-	 *
-	 * @param sedns the SedNamespaces object
-	 */
-	SedOneStep(SedNamespaces* sedns);
+  /**
+   * Creates a new SedOneStep with the given SedNamespaces object.
+   *
+   * @param sedns the SedNamespaces object
+   */
+  SedOneStep(SedNamespaces* sedns);
 
 
- 	/**
-	 * Copy constructor for SedOneStep.
-	 *
-	 * @param orig; the SedOneStep instance to copy.
-	 */
-	SedOneStep(const SedOneStep& orig);
+  /**
+   * Copy constructor for SedOneStep.
+   *
+   * @param orig; the SedOneStep instance to copy.
+   */
+  SedOneStep(const SedOneStep& orig);
 
 
- 	/**
-	 * Assignment operator for SedOneStep.
-	 *
-	 * @param rhs; the object whose values are used as the basis
-	 * of the assignment
-	 */
-	SedOneStep& operator=(const SedOneStep& rhs);
+  /**
+   * Assignment operator for SedOneStep.
+   *
+   * @param rhs; the object whose values are used as the basis
+   * of the assignment
+   */
+  SedOneStep& operator=(const SedOneStep& rhs);
 
 
- 	/**
-	 * Creates and returns a deep copy of this SedOneStep object.
-	 *
-	 * @return a (deep) copy of this SedOneStep object.
-	 */
-	virtual SedOneStep* clone () const;
+  /**
+   * Creates and returns a deep copy of this SedOneStep object.
+   *
+   * @return a (deep) copy of this SedOneStep object.
+   */
+  virtual SedOneStep* clone() const;
 
 
- 	/**
-	 * Destructor for SedOneStep.
-	 */
-	virtual ~SedOneStep();
+  /**
+   * Destructor for SedOneStep.
+   */
+  virtual ~SedOneStep();
 
 
- 	/**
-	 * Returns the value of the "step" attribute of this SedOneStep.
-	 *
-	 * @return the value of the "step" attribute of this SedOneStep as a double.
-	 */
-	virtual const double getStep() const;
+  /**
+   * Returns the value of the "step" attribute of this SedOneStep.
+   *
+   * @return the value of the "step" attribute of this SedOneStep as a double.
+   */
+  virtual const double getStep() const;
 
 
-	/**
-	 * Predicate returning @c true or @c false depending on whether this
-	 * SedOneStep's "step" attribute has been set.
-	 *
-	 * @return @c true if this SedOneStep's "step" attribute has been set,
-	 * otherwise @c false is returned.
-	 */
-	virtual bool isSetStep() const;
+  /**
+   * Predicate returning @c true or @c false depending on whether this
+   * SedOneStep's "step" attribute has been set.
+   *
+   * @return @c true if this SedOneStep's "step" attribute has been set,
+   * otherwise @c false is returned.
+   */
+  virtual bool isSetStep() const;
 
 
-	/**
-	 * Sets the value of the "step" attribute of this SedOneStep.
-	 *
-	 * @param step; double value of the "step" attribute to be set
-	 *
-	 * @return integer value indicating success/failure of the
-	 * function.  @if clike The value is drawn from the
-	 * enumeration #OperationReturnValues_t. @endif The possible values
-	 * returned by this function are:
-	 * @li LIBSEDML_OPERATION_SUCCESS
-	 * @li LIBSEDML_INVALID_ATTRIBUTE_VALUE
-	 */
-	virtual int setStep(double step);
+  /**
+   * Sets the value of the "step" attribute of this SedOneStep.
+   *
+   * @param step; double value of the "step" attribute to be set
+   *
+   * @return integer value indicating success/failure of the
+   * function.  @if clike The value is drawn from the
+   * enumeration #OperationReturnValues_t. @endif The possible values
+   * returned by this function are:
+   * @li LIBSEDML_OPERATION_SUCCESS
+   * @li LIBSEDML_INVALID_ATTRIBUTE_VALUE
+   */
+  virtual int setStep(double step);
 
 
-	/**
-	 * Unsets the value of the "step" attribute of this SedOneStep.
-	 *
-	 * @return integer value indicating success/failure of the
-	 * function.  @if clike The value is drawn from the
-	 * enumeration #OperationReturnValues_t. @endif The possible values
-	 * returned by this function are:
-	 * @li LIBSEDML_OPERATION_SUCCESS
-	 * @li LIBSEDML_OPERATION_FAILED
-	 */
-	virtual int unsetStep();
+  /**
+   * Unsets the value of the "step" attribute of this SedOneStep.
+   *
+   * @return integer value indicating success/failure of the
+   * function.  @if clike The value is drawn from the
+   * enumeration #OperationReturnValues_t. @endif The possible values
+   * returned by this function are:
+   * @li LIBSEDML_OPERATION_SUCCESS
+   * @li LIBSEDML_OPERATION_FAILED
+   */
+  virtual int unsetStep();
 
 
-	/**
-	 * Returns the XML element name of this object, which for SedOneStep, is
-	 * always @c "sedOneStep".
-	 *
-	 * @return the name of this element, i.e. @c "sedOneStep".
-	 */
-	virtual const std::string& getElementName () const;
+  /**
+   * Returns the XML element name of this object, which for SedOneStep, is
+   * always @c "sedOneStep".
+   *
+   * @return the name of this element, i.e. @c "sedOneStep".
+   */
+  virtual const std::string& getElementName() const;
 
 
-	/**
-	 * Returns the libSEDML type code for this SEDML object.
-	 *
-	 * @if clike LibSEDML attaches an identifying code to every kind of SEDML
-	 * object.  These are known as <em>SEDML type codes</em>.  The set of
-	 * possible type codes is defined in the enumeration #SEDMLTypeCode_t.
-	 * The names of the type codes all begin with the characters @c
-	 * SEDML_. @endif@if java LibSEDML attaches an identifying code to every
-	 * kind of SEDML object.  These are known as <em>SEDML type codes</em>.  In
-	 * other languages, the set of type codes is stored in an enumeration; in
-	 * the Java language interface for libSEDML, the type codes are defined as
-	 * static integer constants in the interface class {@link
-	 * libsedmlConstants}.  The names of the type codes all begin with the
-	 * characters @c SEDML_. @endif@if python LibSEDML attaches an identifying
-	 * code to every kind of SEDML object.  These are known as <em>SEDML type
-	 * codes</em>.  In the Python language interface for libSEDML, the type
-	 * codes are defined as static integer constants in the interface class
-	 * @link libsedml@endlink.  The names of the type codes all begin with the
-	 * characters @c SEDML_. @endif@if csharp LibSEDML attaches an identifying
-	 * code to every kind of SEDML object.  These are known as <em>SEDML type
-	 * codes</em>.  In the C# language interface for libSEDML, the type codes
-	 * are defined as static integer constants in the interface class @link
-	 * libsedmlcs.libsedml@endlink.  The names of the type codes all begin with
-	 * the characters @c SEDML_. @endif
-	 *
-	 * @return the SEDML type code for this object, or
-	 * @link SEDMLTypeCode_t#SEDML_UNKNOWN SEDML_UNKNOWN@endlink (default).
-	 *
-	 * @see getElementName()
-	 */
-	virtual int getTypeCode () const;
+  /**
+   * Returns the libSEDML type code for this SEDML object.
+   *
+   * @if clike LibSEDML attaches an identifying code to every kind of SEDML
+   * object.  These are known as <em>SEDML type codes</em>.  The set of
+   * possible type codes is defined in the enumeration #SEDMLTypeCode_t.
+   * The names of the type codes all begin with the characters @c
+   * SEDML_. @endif@if java LibSEDML attaches an identifying code to every
+   * kind of SEDML object.  These are known as <em>SEDML type codes</em>.  In
+   * other languages, the set of type codes is stored in an enumeration; in
+   * the Java language interface for libSEDML, the type codes are defined as
+   * static integer constants in the interface class {@link
+   * libsedmlConstants}.  The names of the type codes all begin with the
+   * characters @c SEDML_. @endif@if python LibSEDML attaches an identifying
+   * code to every kind of SEDML object.  These are known as <em>SEDML type
+   * codes</em>.  In the Python language interface for libSEDML, the type
+   * codes are defined as static integer constants in the interface class
+   * @link libsedml@endlink.  The names of the type codes all begin with the
+   * characters @c SEDML_. @endif@if csharp LibSEDML attaches an identifying
+   * code to every kind of SEDML object.  These are known as <em>SEDML type
+   * codes</em>.  In the C# language interface for libSEDML, the type codes
+   * are defined as static integer constants in the interface class @link
+   * libsedmlcs.libsedml@endlink.  The names of the type codes all begin with
+   * the characters @c SEDML_. @endif
+   *
+   * @return the SEDML type code for this object, or
+   * @link SEDMLTypeCode_t#SEDML_UNKNOWN SEDML_UNKNOWN@endlink (default).
+   *
+   * @see getElementName()
+   */
+  virtual int getTypeCode() const;
 
 
-	/**
-	 * Predicate returning @c true if all the required attributes
-	 * for this SedOneStep object have been set.
-	 *
-	 * @note The required attributes for a SedOneStep object are:
-	 * @li "step"
-	 *
-	 * @return a boolean value indicating whether all the required
-	 * attributes for this object have been defined.
-	 */
-	virtual bool hasRequiredAttributes() const;
+  /**
+   * Predicate returning @c true if all the required attributes
+   * for this SedOneStep object have been set.
+   *
+   * @note The required attributes for a SedOneStep object are:
+   * @li "step"
+   *
+   * @return a boolean value indicating whether all the required
+   * attributes for this object have been defined.
+   */
+  virtual bool hasRequiredAttributes() const;
 
 
-/** @cond doxygen-libsedml-internal */
+  /** @cond doxygen-libsedml-internal */
 
-	/**
-	 * Subclasses should override this method to write out their contained
-	 * SEDML objects as XML elements.  Be sure to call your parents
-	 * implementation of this method as well.
-	 */
-	virtual void writeElements (XMLOutputStream& stream) const;
-
-
-/** @endcond doxygen-libsedml-internal */
+  /**
+   * Subclasses should override this method to write out their contained
+   * SEDML objects as XML elements.  Be sure to call your parents
+   * implementation of this method as well.
+   */
+  virtual void writeElements(XMLOutputStream& stream) const;
 
 
-/** @cond doxygen-libsedml-internal */
-
-	/**
-	 * Accepts the given SedVisitor.
-	 */
-	virtual bool accept (SedVisitor& v) const;
+  /** @endcond doxygen-libsedml-internal */
 
 
-/** @endcond doxygen-libsedml-internal */
+  /** @cond doxygen-libsedml-internal */
+
+  /**
+   * Accepts the given SedVisitor.
+   */
+  virtual bool accept(SedVisitor& v) const;
 
 
-/** @cond doxygen-libsedml-internal */
-
-	/**
-	 * Sets the parent SedDocument.
-	 */
-	virtual void setSedDocument (SedDocument* d);
+  /** @endcond doxygen-libsedml-internal */
 
 
-/** @endcond doxygen-libsedml-internal */
+  /** @cond doxygen-libsedml-internal */
+
+  /**
+   * Sets the parent SedDocument.
+   */
+  virtual void setSedDocument(SedDocument* d);
+
+
+  /** @endcond doxygen-libsedml-internal */
 
 
 protected:
 
-/** @cond doxygen-libsedml-internal */
+  /** @cond doxygen-libsedml-internal */
 
-	/**
-	 * return the SEDML object corresponding to next XMLToken.
-	 */
-	virtual SedBase* createObject(XMLInputStream& stream);
-
-
-/** @endcond doxygen-libsedml-internal */
+  /**
+   * return the SEDML object corresponding to next XMLToken.
+   */
+  virtual SedBase* createObject(XMLInputStream& stream);
 
 
-/** @cond doxygen-libsedml-internal */
-
-	/**
-	 * Get the list of expected attributes for this element.
-	 */
-	virtual void addExpectedAttributes(ExpectedAttributes& attributes);
+  /** @endcond doxygen-libsedml-internal */
 
 
-/** @endcond doxygen-libsedml-internal */
+  /** @cond doxygen-libsedml-internal */
+
+  /**
+   * Get the list of expected attributes for this element.
+   */
+  virtual void addExpectedAttributes(ExpectedAttributes& attributes);
 
 
-/** @cond doxygen-libsedml-internal */
-
-	/**
-	 * Read values from the given XMLAttributes set into their specific fields.
-	 */
-	virtual void readAttributes (const XMLAttributes& attributes,
-	                             const ExpectedAttributes& expectedAttributes);
+  /** @endcond doxygen-libsedml-internal */
 
 
-/** @endcond doxygen-libsedml-internal */
+  /** @cond doxygen-libsedml-internal */
+
+  /**
+   * Read values from the given XMLAttributes set into their specific fields.
+   */
+  virtual void readAttributes(const XMLAttributes& attributes,
+                              const ExpectedAttributes& expectedAttributes);
 
 
-/** @cond doxygen-libsedml-internal */
-
-	/**
-	 * Write values of XMLAttributes to the output stream.
-	 */
-	virtual void writeAttributes (XMLOutputStream& stream) const;
+  /** @endcond doxygen-libsedml-internal */
 
 
-/** @endcond doxygen-libsedml-internal */
+  /** @cond doxygen-libsedml-internal */
+
+  /**
+   * Write values of XMLAttributes to the output stream.
+   */
+  virtual void writeAttributes(XMLOutputStream& stream) const;
+
+
+  /** @endcond doxygen-libsedml-internal */
 
 
 

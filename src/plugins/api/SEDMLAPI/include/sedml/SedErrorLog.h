@@ -111,7 +111,7 @@ public:
    *
    * @see getNumErrors()
    */
-  const SedError* getError (unsigned int n) const;
+  const SedError* getError(unsigned int n) const;
 
 
   /**
@@ -142,32 +142,32 @@ public:
    */
   unsigned int getNumFailsWithSeverity(unsigned int severity);
 
-   /**
-   * Returns the number of errors that have been logged with the given
-   * severity code.
-   *
-   * LibSed associates severity levels with every SedError object to
-   * provide an indication of how serious the problem is.  Severities range
-   * from informational diagnostics to fatal (irrecoverable) errors.  Given
-   * an SedError object instance, a caller can interrogate it for its
-   * severity level using methods such as SedError::getSeverity(),
-   * SedError::isFatal(), and so on.  The present method encapsulates
-   * iteration and interrogation of all objects in an SedErrorLog, making
-   * it easy to check for the presence of error objects with specific
-   * severity levels.
-   *
-   * @if clike @param severity a value from
-   * #SedErrorSeverity_t @endif@if java @param severity a
-   * value from the set of <code>LIBSEDML_SEV_</code> constants defined by
-   * the interface class <code><a
-   * href="libsbmlConstants.html">libsbmlConstants</a></code> @endif@if python @param severity a
-   * value from the set of <code>LIBSEDML_SEV_</code> constants defined by
-   * the interface class @link libsbml libsbml@endlink. @endif@~
-   *
-   * @return a count of the number of errors with the given severity code.
-   *
-   * @see getNumErrors()
-   */
+  /**
+  * Returns the number of errors that have been logged with the given
+  * severity code.
+  *
+  * LibSed associates severity levels with every SedError object to
+  * provide an indication of how serious the problem is.  Severities range
+  * from informational diagnostics to fatal (irrecoverable) errors.  Given
+  * an SedError object instance, a caller can interrogate it for its
+  * severity level using methods such as SedError::getSeverity(),
+  * SedError::isFatal(), and so on.  The present method encapsulates
+  * iteration and interrogation of all objects in an SedErrorLog, making
+  * it easy to check for the presence of error objects with specific
+  * severity levels.
+  *
+  * @if clike @param severity a value from
+  * #SedErrorSeverity_t @endif@if java @param severity a
+  * value from the set of <code>LIBSEDML_SEV_</code> constants defined by
+  * the interface class <code><a
+  * href="libsbmlConstants.html">libsbmlConstants</a></code> @endif@if python @param severity a
+  * value from the set of <code>LIBSEDML_SEV_</code> constants defined by
+  * the interface class @link libsbml libsbml@endlink. @endif@~
+  *
+  * @return a count of the number of errors with the given severity code.
+  *
+  * @see getNumErrors()
+  */
   unsigned int getNumFailsWithSeverity(unsigned int severity) const;
 
 
@@ -176,13 +176,13 @@ public:
   /**
    * Creates a new, empty SedErrorLog.
    */
-  SedErrorLog ();
+  SedErrorLog();
 
 
   /**
    * Destroys this SedErrorLog.
    */
-  virtual ~SedErrorLog ();
+  virtual ~SedErrorLog();
 
 
   /**
@@ -214,29 +214,29 @@ public:
    */
   void logError
   (
-      const unsigned int errorId  = 0
-    , const unsigned int level    =SEDML_DEFAULT_LEVEL
-    , const unsigned int version  =SEDML_DEFAULT_VERSION
-    , const std::string& details  = ""
-    , const unsigned int line     = 0
-    , const unsigned int column   = 0
-    , const unsigned int severity = LIBSEDML_SEV_ERROR
-    , const unsigned int category = LIBSEDML_CAT_SEDML
+    const unsigned int errorId  = 0
+                                  , const unsigned int level    = SEDML_DEFAULT_LEVEL
+                                      , const unsigned int version  = SEDML_DEFAULT_VERSION
+                                          , const std::string& details  = ""
+                                              , const unsigned int line     = 0
+                                                  , const unsigned int column   = 0
+                                                      , const unsigned int severity = LIBSEDML_SEV_ERROR
+                                                          , const unsigned int category = LIBSEDML_CAT_SEDML
   );
 
 
   void logPackageError
   (
-      const std::string& package    = "core"
-    , const unsigned int errorId    = 0
-    , const unsigned int pkgVersion = 1
-    , const unsigned int level      =SEDML_DEFAULT_LEVEL
-    , const unsigned int version    =SEDML_DEFAULT_VERSION
-    , const std::string& details    = ""
-    , const unsigned int line       = 0
-    , const unsigned int column     = 0
-    , const unsigned int severity   = LIBSEDML_SEV_ERROR
-    , const unsigned int category   = LIBSEDML_CAT_SEDML
+    const std::string& package    = "core"
+                                    , const unsigned int errorId    = 0
+                                        , const unsigned int pkgVersion = 1
+                                            , const unsigned int level      = SEDML_DEFAULT_LEVEL
+                                                , const unsigned int version    = SEDML_DEFAULT_VERSION
+                                                    , const std::string& details    = ""
+                                                        , const unsigned int line       = 0
+                                                            , const unsigned int column     = 0
+                                                                , const unsigned int severity   = LIBSEDML_SEV_ERROR
+                                                                    , const unsigned int category   = LIBSEDML_CAT_SEDML
   );
 
 
@@ -245,7 +245,7 @@ public:
    *
    * @param error SedError, the error to be logged.
    */
-  void add (const SedError& error);
+  void add(const SedError& error);
 
 
   /** @cond doxygen-cpp-only */
@@ -256,7 +256,7 @@ public:
    *
    * @param errors list, a list of SedError to be added to the log.
    */
-  void add (const std::list<SedError>& errors);
+  void add(const std::list<SedError>& errors);
 
 
   /**
@@ -265,7 +265,7 @@ public:
    *
    * @param errors vector, a vector of SedError to be added to the log.
    */
-  void add (const std::vector<SedError>& errors);
+  void add(const std::vector<SedError>& errors);
 
   /** @endcond */
 
@@ -278,7 +278,7 @@ public:
    *
    * @param errorId the error identifier of the error to be removed.
    */
-  void remove (const unsigned int errorId);
+  void remove(const unsigned int errorId);
 
 
   /**
@@ -286,7 +286,7 @@ public:
    *
    * @param errorId the error identifier of the error to be found.
    */
-  bool contains (const unsigned int errorId);
+  bool contains(const unsigned int errorId);
 
 
   /** @endcond */

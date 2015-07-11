@@ -83,7 +83,7 @@ public:
   /**
    * Destructor method.
    */
-  virtual ~SedVisitor ();
+  virtual ~SedVisitor();
 
   /**
    * Interface method for using the <a target="_blank"
@@ -92,7 +92,7 @@ public:
    *
    * @param x the SedDocument object to visit.
    */
-  virtual void visit (const SedDocument &x);
+  virtual void visit(const SedDocument &x);
 
   /**
    * Interface method for using the <a target="_blank"
@@ -103,7 +103,7 @@ public:
    *
    * @param type the object type code.
    */
-  virtual void visit (const SedListOf       &x, int type);
+  virtual void visit(const SedListOf       &x, int type);
 
 
   /**
@@ -113,7 +113,7 @@ public:
    *
    * @param x the SedBase object to visit.
    */
-  virtual bool visit (const SedBase                    &x);
+  virtual bool visit(const SedBase                    &x);
 
   /**
    * Interface method for using the <a target="_blank"
@@ -122,7 +122,7 @@ public:
    *
    * @param x the SedDocument object to visit.
    */
-  virtual void leave (const SedDocument &x);
+  virtual void leave(const SedDocument &x);
 
   /**
    * Interface method for using the <a target="_blank"
@@ -131,7 +131,7 @@ public:
    *
    * @param x the Reaction object to visit.
    */
-  virtual void leave (const SedBase     &x);
+  virtual void leave(const SedBase     &x);
 
 
   /**
@@ -144,7 +144,7 @@ public:
    * @param type the object type code.
    *
    */
-  virtual void leave (const SedListOf &x, int type);
+  virtual void leave(const SedListOf &x, int type);
 };
 
 LIBSEDML_CPP_NAMESPACE_END

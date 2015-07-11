@@ -186,7 +186,7 @@ public:
   /**
    * Destroys this object.
    */
-  virtual ~SedBase ();
+  virtual ~SedBase();
 
 
   /**
@@ -208,7 +208,7 @@ public:
    *
    * @return the result of calling <code>v.visit()</code>.
    */
-  virtual bool accept (SedVisitor& v) const = 0;
+  virtual bool accept(SedVisitor& v) const = 0;
 
 
   /**
@@ -216,7 +216,7 @@ public:
    *
    * @return a (deep) copy of this SedBase object.
    */
-  virtual SedBase* clone () const = 0;
+  virtual SedBase* clone() const = 0;
 
 
   /**
@@ -275,7 +275,7 @@ public:
    * @see isSetMetaId()
    * @see setMetaId(const std::string& metaid)
    */
-  const std::string& getMetaId () const;
+  const std::string& getMetaId() const;
 
 
   /**
@@ -301,7 +301,7 @@ public:
    * @see isSetMetaId()
    * @see setMetaId(const std::string& metaid)
    */
-  std::string& getMetaId ();
+  std::string& getMetaId();
 
 
   /** @cond doxygen-libsbml-internal */
@@ -347,7 +347,7 @@ public:
    * @see isSetId()
    * @see unsetId()
    */
-  virtual const std::string& getId () const;
+  virtual const std::string& getId() const;
   /** @endcond */
 
 
@@ -407,7 +407,7 @@ public:
    * @see setName(const std::string& name)
    * @see unsetName()
    */
-  virtual const std::string& getName () const;
+  virtual const std::string& getName() const;
   /** @endcond */
 
 
@@ -544,7 +544,7 @@ public:
    * @see unsetNotes()
    * @see SyntaxChecker::hasExpectedXHTMLSyntax(@if java XMLNode xhtml@endif)
    */
-  std::string getNotesString ();
+  std::string getNotesString();
 
 
   /**
@@ -588,7 +588,7 @@ public:
    * @see unsetNotes()
    * @see SyntaxChecker::hasExpectedXHTMLSyntax(@if java XMLNode xhtml@endif)
    */
-  std::string getNotesString () const;
+  std::string getNotesString() const;
 
 
   /**
@@ -625,7 +625,7 @@ public:
    * @see appendAnnotation(const std::string& annotation)
    * @see unsetAnnotation()
    */
-  XMLNode* getAnnotation ();
+  XMLNode* getAnnotation();
 
 
   /**
@@ -662,7 +662,7 @@ public:
    * @see appendAnnotation(const std::string& annotation)
    * @see unsetAnnotation()
    */
-  XMLNode* getAnnotation () const;
+  XMLNode* getAnnotation() const;
 
 
   /**
@@ -695,7 +695,7 @@ public:
    * @see appendAnnotation(const std::string& annotation)
    * @see unsetAnnotation()
    */
-  std::string getAnnotationString ();
+  std::string getAnnotationString();
 
 
   /**
@@ -728,7 +728,7 @@ public:
    * @see appendAnnotation(const std::string& annotation)
    * @see unsetAnnotation()
    */
-  std::string getAnnotationString () const;
+  std::string getAnnotationString() const;
 
 
   /**
@@ -767,7 +767,7 @@ public:
    * @see getParentSedObject()
    * @see getModel()
    */
-  const SedDocument* getSedDocument () const;
+  const SedDocument* getSedDocument() const;
 
 
   /**
@@ -790,7 +790,7 @@ public:
    * @see getParentSedObject()
    * @see getModel()
    */
-  SedDocument* getSedDocument ();
+  SedDocument* getSedDocument();
 
 
   /**
@@ -934,7 +934,7 @@ public:
    *
    * @see getColumn()
    */
-  unsigned int getLine () const;
+  unsigned int getLine() const;
 
 
   /**
@@ -960,7 +960,7 @@ public:
    *
    * @see getLine()
    */
-  unsigned int getColumn () const;
+  unsigned int getColumn() const;
 
   /**
    * Predicate returning @c true if this object's "metaid" attribute is set.
@@ -986,7 +986,7 @@ public:
    * @see getMetaId()
    * @see setMetaId(const std::string& metaid)
    */
-  bool isSetMetaId () const;
+  bool isSetMetaId() const;
 
 
   /** @cond doxygen-libsbml-internal */
@@ -1003,11 +1003,11 @@ public:
    * <code>UnitSId</code>, depending on the object in question.  Both
    * data types are defined as follows:
    * @verbatim
- letter ::= 'a'..'z','A'..'Z'
- digit  ::= '0'..'9'
- idChar ::= letter | digit | '_'
- SId    ::= ( letter | '_' ) idChar*
- @endverbatim
+  letter ::= 'a'..'z','A'..'Z'
+  digit  ::= '0'..'9'
+  idChar ::= letter | digit | '_'
+  SId    ::= ( letter | '_' ) idChar*
+  @endverbatim
    *
    * The equality of <code>SId</code> and <code>UnitSId</code> type values
    * in Sed is determined by an exact character sequence match; i.e.,
@@ -1033,7 +1033,7 @@ public:
    * @see setId(const std::string& sid)
    * @see unsetId()
    */
-  virtual bool isSetId () const;
+  virtual bool isSetId() const;
   /** @endcond */
 
 
@@ -1094,7 +1094,7 @@ public:
    * @see setName(const std::string& name)
    * @see unsetName()
    */
-  virtual bool isSetName () const;
+  virtual bool isSetName() const;
   /** @endcond */
 
 
@@ -1133,7 +1133,7 @@ public:
    * @see unsetNotes()
    * @see SyntaxChecker::hasExpectedXHTMLSyntax(@if java XMLNode xhtml@endif)
    */
-  bool isSetNotes () const;
+  bool isSetNotes() const;
 
 
   /**
@@ -1165,7 +1165,7 @@ public:
    * @see appendAnnotation(const std::string& annotation)
    * @see unsetAnnotation()
    */
-  bool isSetAnnotation () const;
+  bool isSetAnnotation() const;
 
   /**
    * Sets the value of the "metaid" attribute of this object.
@@ -1193,7 +1193,7 @@ public:
    * @see getMetaId()
    * @see isSetMetaId()
    */
-  int setMetaId (const std::string& metaid);
+  int setMetaId(const std::string& metaid);
 
 
   /** @cond doxygen-libsbml-internal */
@@ -1213,7 +1213,7 @@ public:
    * @li @link OperationReturnValues_t#LIBSEDML_OPERATION_SUCCESS LIBSEDML_OPERATION_SUCCESS @endlink
    * @li @link OperationReturnValues_t#LIBSEDML_INVALID_ATTRIBUTE_VALUE LIBSEDML_INVALID_ATTRIBUTE_VALUE @endlink
    */
-   virtual int setId (const std::string& sid);
+  virtual int setId(const std::string& sid);
   /** @endcond */
 
 
@@ -1278,7 +1278,7 @@ public:
    * @see isSetName()
    * @see unsetName()
    */
-  virtual int setName (const std::string& name);
+  virtual int setName(const std::string& name);
   /** @endcond */
 
 
@@ -1325,7 +1325,7 @@ public:
    * @see appendAnnotation(const std::string& annotation)
    * @see unsetAnnotation()
    */
-  virtual int setAnnotation (const XMLNode* annotation);
+  virtual int setAnnotation(const XMLNode* annotation);
 
 
   /**
@@ -1372,7 +1372,7 @@ public:
    * @see appendAnnotation(const std::string& annotation)
    * @see unsetAnnotation()
    */
-  virtual int setAnnotation (const std::string& annotation);
+  virtual int setAnnotation(const std::string& annotation);
 
 
   /**
@@ -1413,7 +1413,7 @@ public:
    * @see appendAnnotation(const std::string& annotation)
    * @see unsetAnnotation()
    */
-  virtual int appendAnnotation (const XMLNode* annotation);
+  virtual int appendAnnotation(const XMLNode* annotation);
 
 
   /**
@@ -1454,7 +1454,7 @@ public:
    * @see appendAnnotation(const XMLNode* annotation)
    * @see unsetAnnotation()
    */
-  virtual int appendAnnotation (const std::string& annotation);
+  virtual int appendAnnotation(const std::string& annotation);
 
 
   /**
@@ -1485,7 +1485,7 @@ public:
    * @see replaceTopLevelAnnotationElement(const std::string&)
    */
   int removeTopLevelAnnotationElement(const std::string elementName,
-    const std::string elementURI = "");
+                                      const std::string elementURI = "");
 
 
   /**
@@ -1623,20 +1623,20 @@ public:
    * document, but that is for illustration purposes only; you could of
    * course use this same approach to annotate any other Sed component.
    * @if clike
-@verbatim
-SedDocument* s = new SedDocument(3, 1);
-s->setNotes("<body xmlns='http://www.w3.org/1999/xhtml'><p>here is my note</p></body>");
-@endverbatim
+  @verbatim
+  SedDocument* s = new SedDocument(3, 1);
+  s->setNotes("<body xmlns='http://www.w3.org/1999/xhtml'><p>here is my note</p></body>");
+  @endverbatim
    * @endif@if java
-@verbatim
-SedDocument s = new SedDocument(3, 1);
-s.setNotes("<body xmlns='http://www.w3.org/1999/xhtml'><p>here is my note</p></body>");
-@endverbatim
+  @verbatim
+  SedDocument s = new SedDocument(3, 1);
+  s.setNotes("<body xmlns='http://www.w3.org/1999/xhtml'><p>here is my note</p></body>");
+  @endverbatim
    * @endif@if csharp
-@verbatim
-SedDocument s = new SedDocument(3, 1);
-s.setNotes("<body xmlns='http://www.w3.org/1999/xhtml'><p>here is my note</p></body>");
-@endverbatim
+  @verbatim
+  SedDocument s = new SedDocument(3, 1);
+  s.setNotes("<body xmlns='http://www.w3.org/1999/xhtml'><p>here is my note</p></body>");
+  @endverbatim
    * @endif@~
    *
    * @param notes an XML string that is to be used as the content of the
@@ -1765,7 +1765,7 @@ s.setNotes("<body xmlns='http://www.w3.org/1999/xhtml'><p>here is my note</p></b
    * @see enablePackageInternal()
    * @endif@~
    */
-  virtual void setSedDocument (SedDocument* d);
+  virtual void setSedDocument(SedDocument* d);
   /** @endcond */
 
 
@@ -1780,7 +1780,7 @@ s.setNotes("<body xmlns='http://www.w3.org/1999/xhtml'><p>here is my note</p></b
    *
    * @param parent the Sed object to use
    */
-  virtual void connectToParent (SedBase* parent);
+  virtual void connectToParent(SedBase* parent);
 
 
   /**
@@ -1797,7 +1797,7 @@ s.setNotes("<body xmlns='http://www.w3.org/1999/xhtml'><p>here is my note</p></b
    * @see enablePackageInternal()
    * @endif@~
    */
-  virtual void connectToChild ();
+  virtual void connectToChild();
 
   /** @endcond */
 
@@ -1845,7 +1845,7 @@ s.setNotes("<body xmlns='http://www.w3.org/1999/xhtml'><p>here is my note</p></b
    * @li @link OperationReturnValues_t#LIBSEDML_UNEXPECTED_ATTRIBUTE LIBSEDML_UNEXPECTED_ATTRIBUTE @endlink
    * @li @link OperationReturnValues_t#LIBSEDML_OPERATION_FAILED LIBSEDML_OPERATION_FAILED @endlink
    */
-  int unsetMetaId ();
+  int unsetMetaId();
 
 
   /**
@@ -1876,7 +1876,7 @@ s.setNotes("<body xmlns='http://www.w3.org/1999/xhtml'><p>here is my note</p></b
    * @li @link OperationReturnValues_t#LIBSEDML_OPERATION_SUCCESS LIBSEDML_OPERATION_SUCCESS @endlink
    * @li @link OperationReturnValues_t#LIBSEDML_OPERATION_FAILED LIBSEDML_OPERATION_FAILED @endlink
    */
-  virtual int unsetId ();
+  virtual int unsetId();
 
 
   /**
@@ -1920,7 +1920,7 @@ s.setNotes("<body xmlns='http://www.w3.org/1999/xhtml'><p>here is my note</p></b
    * @li @link OperationReturnValues_t#LIBSEDML_OPERATION_SUCCESS LIBSEDML_OPERATION_SUCCESS @endlink
    * @li @link OperationReturnValues_t#LIBSEDML_OPERATION_FAILED LIBSEDML_OPERATION_FAILED @endlink
    */
-  virtual int unsetName ();
+  virtual int unsetName();
 
 
   /**
@@ -1958,7 +1958,7 @@ s.setNotes("<body xmlns='http://www.w3.org/1999/xhtml'><p>here is my note</p></b
    * @see appendNotes(const std::string& notes)
    * @see SyntaxChecker::hasExpectedXHTMLSyntax(@if java XMLNode xhtml@endif)
    */
-  int unsetNotes ();
+  int unsetNotes();
 
 
   /**
@@ -1990,7 +1990,7 @@ s.setNotes("<body xmlns='http://www.w3.org/1999/xhtml'><p>here is my note</p></b
    * @see appendAnnotation(const XMLNode* annotation)
    * @see appendAnnotation(const std::string& annotation)
    */
-  int unsetAnnotation ();
+  int unsetAnnotation();
 
 
   /**
@@ -2003,7 +2003,7 @@ s.setNotes("<body xmlns='http://www.w3.org/1999/xhtml'><p>here is my note</p></b
    * @see getNamespaces()
    * @see getPackageVersion()
    */
-  virtual const int getLevel () const;
+  virtual const int getLevel() const;
 
 
   /**
@@ -2015,7 +2015,7 @@ s.setNotes("<body xmlns='http://www.w3.org/1999/xhtml'><p>here is my note</p></b
    * @see getLevel()
    * @see getNamespaces()
    */
-  virtual const int getVersion () const;
+  virtual const int getVersion() const;
 
 
   /**
@@ -2035,7 +2035,7 @@ s.setNotes("<body xmlns='http://www.w3.org/1999/xhtml'><p>here is my note</p></b
    * @see getElementName()
    * @see getPackageName()
    */
-  virtual int getTypeCode () const;
+  virtual int getTypeCode() const;
 
 
   /**
@@ -2057,7 +2057,7 @@ s.setNotes("<body xmlns='http://www.w3.org/1999/xhtml'><p>here is my note</p></b
    * "model", CompartmentType defines it as returning @c "compartmentType",
    * and so on.
    */
-  virtual const std::string& getElementName () const = 0;
+  virtual const std::string& getElementName() const = 0;
 
 
   /**
@@ -2069,14 +2069,14 @@ s.setNotes("<body xmlns='http://www.w3.org/1999/xhtml'><p>here is my note</p></b
    * @warning This is primarily provided for testing and debugging
    * purposes.  It may be removed in a future version of libSed.
    */
-  char* toSed ();
+  char* toSed();
 
 
   /** @cond doxygen-libsbml-internal */
   /**
    * Reads (initializes) this Sed object by reading from XMLInputStream.
    */
-  void read (XMLInputStream& stream);
+  void read(XMLInputStream& stream);
   /** @endcond */
 
 
@@ -2084,7 +2084,7 @@ s.setNotes("<body xmlns='http://www.w3.org/1999/xhtml'><p>here is my note</p></b
   /**
    * Writes (serializes) this Sed object by writing it to XMLOutputStream.
    */
-  void write (XMLOutputStream& stream) const;
+  void write(XMLOutputStream& stream) const;
   /** @endcond */
 
 
@@ -2100,7 +2100,7 @@ s.setNotes("<body xmlns='http://www.w3.org/1999/xhtml'><p>here is my note</p></b
    *   ...
    * </pre>@endif@~
    */
-  virtual void writeElements (XMLOutputStream& stream) const;
+  virtual void writeElements(XMLOutputStream& stream) const;
   /** @endcond */
 
 
@@ -2249,7 +2249,7 @@ s.setNotes("<body xmlns='http://www.w3.org/1999/xhtml'><p>here is my note</p></b
    * @return the SedErrorLog used to log errors during while reading and
    * validating Sed.
    */
-  virtual SedErrorLog* getErrorLog ();
+  virtual SedErrorLog* getErrorLog();
 
 
 protected:
@@ -2273,14 +2273,14 @@ protected:
   /**
    * Creates a new SedBase object with the given Sed level, version.
    */
-  SedBase (unsigned int level, unsigned int version);
+  SedBase(unsigned int level, unsigned int version);
 
 
   /**
    * Creates a new SedBase object with the given SedNamespaces.
    * Only subclasses may create SedBase objects.
    */
-  SedBase (SedNamespaces* sbmlns);
+  SedBase(SedNamespaces* sbmlns);
 
 
   /**
@@ -2302,7 +2302,7 @@ protected:
    * @return the Sed object corresponding to next XMLToken in the
    * XMLInputStream or @c NULL if the token was not recognized.
    */
-  virtual SedBase* createObject (XMLInputStream& stream);
+  virtual SedBase* createObject(XMLInputStream& stream);
 
 
   /**
@@ -2328,7 +2328,7 @@ protected:
    *
    * @return true if the subclass read from the stream, false otherwise.
    */
-  virtual bool readOtherXML (XMLInputStream& stream);
+  virtual bool readOtherXML(XMLInputStream& stream);
 
 
   /**
@@ -2342,7 +2342,7 @@ protected:
    * siblings or @c -1 (the default) to indicate the position is not
    * significant.
    */
-  virtual int getElementPosition () const;
+  virtual int getElementPosition() const;
 
 
 
@@ -2354,37 +2354,37 @@ protected:
    *
    * @if notcpp @htmlinclude warn-default-args-in-docs.html @endif@~
    */
-  void logError (  unsigned int       id
-                 , const unsigned int level   = 2
-                 , const unsigned int version = 3
-                 , const std::string& details = "" );
+  void logError(unsigned int       id
+                , const unsigned int level   = 2
+                    , const unsigned int version = 3
+                        , const std::string& details = "");
 
 
   /**
    * Helper to log a common type of error.
    */
-  void logUnknownAttribute( const std::string& attribute,
-			    const unsigned int level,
-			    const unsigned int version,
-			    const std::string& element,
-          const std::string& prefix="");
+  void logUnknownAttribute(const std::string& attribute,
+                           const unsigned int level,
+                           const unsigned int version,
+                           const std::string& element,
+                           const std::string& prefix = "");
 
 
   /**
    * Helper to log a common type of error.
    */
-  void logUnknownElement( const std::string& element,
-			  const unsigned int level,
-			  const unsigned int version );
+  void logUnknownElement(const std::string& element,
+                         const unsigned int level,
+                         const unsigned int version);
 
 
   /**
    * Helper to log a common type of error.
    */
-  void logEmptyString( const std::string& attribute,
-                       const unsigned int level,
-                       const unsigned int version,
-                       const std::string& element);
+  void logEmptyString(const std::string& attribute,
+                      const unsigned int level,
+                      const unsigned int version,
+                      const std::string& element);
 
 
   /**
@@ -2399,8 +2399,8 @@ protected:
    * XMLAttributes set into their specific fields.  Be sure to call your
    * parents implementation of this method as well.
    */
-  virtual void readAttributes (const XMLAttributes& attributes,
-                               const ExpectedAttributes& expectedAttributes);
+  virtual void readAttributes(const XMLAttributes& attributes,
+                              const ExpectedAttributes& expectedAttributes);
 
 
   /**
@@ -2417,7 +2417,7 @@ protected:
    * Be sure to implement wirteXMLNS() function to write xmlns attributes.
    *
    */
-  virtual void writeAttributes (XMLOutputStream& stream) const;
+  virtual void writeAttributes(XMLOutputStream& stream) const;
 
 
   /**
@@ -2426,7 +2426,7 @@ protected:
    * (if any) to the XMLOutputStream.
    *
    */
-  virtual void writeXMLNS (XMLOutputStream& stream) const;
+  virtual void writeXMLNS(XMLOutputStream& stream) const;
 
 
   /**
@@ -2445,7 +2445,7 @@ protected:
    *
    * If @p object is not in the expected position, an error is logged.
    */
-  void checkOrderAndLogError (SedBase* object, int expected);
+  void checkOrderAndLogError(SedBase* object, int expected);
 
 
   /**
@@ -2460,7 +2460,7 @@ protected:
    * If the given default namespace is not valid, an error is logged.
    */
   void checkDefaultNamespace(const XMLNamespaces* xmlns,
-    const std::string& elementName, const std::string& prefix = "");
+                             const std::string& elementName, const std::string& prefix = "");
 
   /**
    * Checks the annotation does not declare an sbml namespace.
@@ -2593,19 +2593,19 @@ private:
    * Stores the location (line and column) and any XML namespaces (for
    * roundtripping) declared on this Sed (XML) element.
    */
-  void setSedBaseFields (const XMLToken& element);
+  void setSedBaseFields(const XMLToken& element);
 
 
   /**
    * @return true if read an <annotation> element from the stream
    */
-  bool readAnnotation (XMLInputStream& stream);
+  bool readAnnotation(XMLInputStream& stream);
 
 
   /**
    * @return true if read a <notes> element from the stream
    */
-  bool readNotes (XMLInputStream& stream);
+  bool readNotes(XMLInputStream& stream);
 
 
   /** @endcond */
@@ -2629,192 +2629,192 @@ BEGIN_C_DECLS
 
 LIBSEDML_EXTERN
 const char *
-SedBase_getMetaId (SedBase_t *sb);
+SedBase_getMetaId(SedBase_t *sb);
 
 
 
 
 LIBSEDML_EXTERN
 const SedDocument_t *
-SedBase_getSedDocument (SedBase_t *sb);
+SedBase_getSedDocument(SedBase_t *sb);
 
 
 LIBSEDML_EXTERN
 const SedBase_t *
-SedBase_getParentSedObject (SedBase_t *sb);
+SedBase_getParentSedObject(SedBase_t *sb);
 
 
 LIBSEDML_EXTERN
 const SedBase_t *
-SedBase_getAncestorOfType (SedBase_t *sb, int type, const char* pkgName);
+SedBase_getAncestorOfType(SedBase_t *sb, int type, const char* pkgName);
 
 
 LIBSEDML_EXTERN
 unsigned int
-SedBase_getLine (const SedBase_t *sb);
+SedBase_getLine(const SedBase_t *sb);
 
 
 LIBSEDML_EXTERN
 unsigned int
-SedBase_getColumn (const SedBase_t *sb);
+SedBase_getColumn(const SedBase_t *sb);
 
 
 LIBSEDML_EXTERN
 XMLNode_t *
-SedBase_getNotes (SedBase_t *sb);
+SedBase_getNotes(SedBase_t *sb);
 
 
 LIBSEDML_EXTERN
 char*
-SedBase_getNotesString (SedBase_t *sb);
+SedBase_getNotesString(SedBase_t *sb);
 
 
 LIBSEDML_EXTERN
 XMLNode_t *
-SedBase_getAnnotation (SedBase_t *sb);
+SedBase_getAnnotation(SedBase_t *sb);
 
 
 LIBSEDML_EXTERN
 char*
-SedBase_getAnnotationString (SedBase_t *sb);
+SedBase_getAnnotationString(SedBase_t *sb);
 
 
 LIBSEDML_EXTERN
 int
-SedBase_isSetMetaId (const SedBase_t *sb);
+SedBase_isSetMetaId(const SedBase_t *sb);
 
 
 
 
 LIBSEDML_EXTERN
 int
-SedBase_isSetNotes (const SedBase_t *sb);
+SedBase_isSetNotes(const SedBase_t *sb);
 
 
 LIBSEDML_EXTERN
 int
-SedBase_isSetAnnotation (const SedBase_t *sb);
+SedBase_isSetAnnotation(const SedBase_t *sb);
 
 
 LIBSEDML_EXTERN
 int
-SedBase_setMetaId (SedBase_t *sb, const char *metaid);
+SedBase_setMetaId(SedBase_t *sb, const char *metaid);
 
 
 LIBSEDML_EXTERN
 int
-SedBase_setNamespaces (SedBase_t *sb, XMLNamespaces_t *xmlns);
+SedBase_setNamespaces(SedBase_t *sb, XMLNamespaces_t *xmlns);
 
 
 LIBSEDML_EXTERN
 int
-SedBase_setNotes (SedBase_t *sb, XMLNode_t *notes);
+SedBase_setNotes(SedBase_t *sb, XMLNode_t *notes);
 
 
 LIBSEDML_EXTERN
 int
-SedBase_setNotesString (SedBase_t *sb, char *notes);
+SedBase_setNotesString(SedBase_t *sb, char *notes);
 
 
 LIBSEDML_EXTERN
 int
-SedBase_setNotesStringAddMarkup (SedBase_t *sb, char *notes);
+SedBase_setNotesStringAddMarkup(SedBase_t *sb, char *notes);
 
 
 LIBSEDML_EXTERN
 int
-SedBase_appendNotes (SedBase_t *sb, XMLNode_t *notes);
+SedBase_appendNotes(SedBase_t *sb, XMLNode_t *notes);
 
 
 LIBSEDML_EXTERN
 int
-SedBase_appendNotesString (SedBase_t *sb, char *notes);
+SedBase_appendNotesString(SedBase_t *sb, char *notes);
 
 
 LIBSEDML_EXTERN
 int
-SedBase_setAnnotation (SedBase_t *sb, XMLNode_t *annotation);
+SedBase_setAnnotation(SedBase_t *sb, XMLNode_t *annotation);
 
 
 LIBSEDML_EXTERN
 int
-SedBase_setAnnotationString (SedBase_t *sb, char *annotation);
+SedBase_setAnnotationString(SedBase_t *sb, char *annotation);
 
 
 LIBSEDML_EXTERN
 int
-SedBase_appendAnnotation (SedBase_t *sb, XMLNode_t *annotation);
+SedBase_appendAnnotation(SedBase_t *sb, XMLNode_t *annotation);
 
 
 LIBSEDML_EXTERN
 int
-SedBase_appendAnnotationString (SedBase_t *sb, char *annotation);
+SedBase_appendAnnotationString(SedBase_t *sb, char *annotation);
 
 
 LIBSEDML_EXTERN
 int
-SedBase_appendAnnotationString (SedBase_t *sb, char *annotation);
+SedBase_appendAnnotationString(SedBase_t *sb, char *annotation);
 
 
 LIBSEDML_EXTERN
 int
-SedBase_removeTopLevelAnnotationElement (SedBase_t *sb, char *name);
+SedBase_removeTopLevelAnnotationElement(SedBase_t *sb, char *name);
 
 
 LIBSEDML_EXTERN
 int
-SedBase_removeTopLevelAnnotationElementWithURI (SedBase_t *sb, const char *name,
-                                              const char *uri);
+SedBase_removeTopLevelAnnotationElementWithURI(SedBase_t *sb, const char *name,
+    const char *uri);
 
 
 LIBSEDML_EXTERN
 int
-SedBase_replaceTopLevelAnnotationElement (SedBase_t *sb, XMLNode_t *annotation);
+SedBase_replaceTopLevelAnnotationElement(SedBase_t *sb, XMLNode_t *annotation);
 
 
 LIBSEDML_EXTERN
 int
-SedBase_replaceTopLevelAnnotationElementString (SedBase_t *sb, char *annotation);
+SedBase_replaceTopLevelAnnotationElementString(SedBase_t *sb, char *annotation);
 
 
 LIBSEDML_EXTERN
 int
-SedBase_unsetMetaId (SedBase_t *sb);
+SedBase_unsetMetaId(SedBase_t *sb);
 
 
 LIBSEDML_EXTERN
 int
-SedBase_unsetNotes (SedBase_t *sb);
+SedBase_unsetNotes(SedBase_t *sb);
 
 
 LIBSEDML_EXTERN
 int
-SedBase_unsetAnnotation (SedBase_t *sb);
+SedBase_unsetAnnotation(SedBase_t *sb);
 
 
 LIBSEDML_EXTERN
 const Model_t *
-SedBase_getModel (const SedBase_t *sb);
+SedBase_getModel(const SedBase_t *sb);
 
 
 LIBSEDML_EXTERN
 unsigned int
-SedBase_getLevel (const SedBase_t *sb);
+SedBase_getLevel(const SedBase_t *sb);
 
 
 LIBSEDML_EXTERN
 unsigned int
-SedBase_getVersion (const SedBase_t *sb);
+SedBase_getVersion(const SedBase_t *sb);
 
 
 LIBSEDML_EXTERN
 int
-SedBase_getTypeCode (const SedBase_t *sb);
+SedBase_getTypeCode(const SedBase_t *sb);
 
 
 LIBSEDML_EXTERN
 const char *
-SedBase_getElementName (const SedBase_t *sb);
+SedBase_getElementName(const SedBase_t *sb);
 
 
 LIBSEDML_EXTERN

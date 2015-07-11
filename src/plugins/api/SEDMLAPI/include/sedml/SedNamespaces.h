@@ -75,12 +75,13 @@
 #include <sedml/common/sedmlfwd.h>
 
 #ifdef __cplusplus
-namespace LIBSEDML_CPP_NAMESPACE {
-  const unsigned int SEDML_DEFAULT_LEVEL   = 1;
-  const unsigned int SEDML_DEFAULT_VERSION = 2;
-  const char* const SEDML_XMLNS_L1   = "http://sed-ml.org/";
-  const char* const SEDML_XMLNS_L1V1   = "http://sed-ml.org/";
-  const char* const SEDML_XMLNS_L1V2   = "http://sed-ml.org/sed-ml/level1/version2";
+namespace LIBSEDML_CPP_NAMESPACE
+{
+const unsigned int SEDML_DEFAULT_LEVEL   = 1;
+const unsigned int SEDML_DEFAULT_VERSION = 2;
+const char* const SEDML_XMLNS_L1   = "http://sed-ml.org/";
+const char* const SEDML_XMLNS_L1V1   = "http://sed-ml.org/";
+const char* const SEDML_XMLNS_L1V2   = "http://sed-ml.org/sed-ml/level1/version2";
 }
 #else
 static const unsigned int SEDML_DEFAULT_LEVEL   = 1;
@@ -131,7 +132,7 @@ public:
    * @if notcpp @htmlinclude warn-default-args-in-docs.html @endif@~
    */
   SedNamespaces(unsigned int level = SEDML_DEFAULT_LEVEL,
-                 unsigned int version = SEDML_DEFAULT_VERSION);
+                unsigned int version = SEDML_DEFAULT_VERSION);
 
   /**
    * Destroys this SedNamespaces object.
@@ -164,7 +165,7 @@ public:
    *
    * @return a (deep) copy of this SedNamespaces.
    */
-  virtual SedNamespaces* clone () const;
+  virtual SedNamespaces* clone() const;
 
 
   /**
@@ -185,7 +186,7 @@ public:
    * identical. @endif@~
    */
   static std::string getSedNamespaceURI(unsigned int level,
-                                         unsigned int version);
+                                        unsigned int version);
 
   /**
    * Returns a list of all supported SedNamespaces in this version of
@@ -286,98 +287,98 @@ public:
    * <code>&lt;sbml&gt;</code> element of a model.  It gives the new
    * namespace a prefix of <code>html</code>.  @if clike
    * @verbatim
-SedDocument *sd;
-try
-{
+  SedDocument *sd;
+  try
+  {
     sd = new SedDocument(3, 1);
-}
-catch (SedConstructorException e)
-{
+  }
+  catch (SedConstructorException e)
+  {
     // Here, have code to handle a truly exceptional situation. Candidate
     // causes include invalid combinations of Sed Level and Version
     // (impossible if hardwired as given here), running out of memory, and
     // unknown system exceptions.
-}
+  }
 
-SedNamespaces sn = sd->getNamespaces();
-if (sn != NULL)
-{
+  SedNamespaces sn = sd->getNamespaces();
+  if (sn != NULL)
+  {
     sn->add("http://www.w3.org/1999/xhtml", "html");
-}
-else
-{
+  }
+  else
+  {
     // Handle another truly exceptional situation.
-}
-@endverbatim
+  }
+  @endverbatim
    * @endif@if java
-@verbatim
-SedDocument sd;
-try
-{
+  @verbatim
+  SedDocument sd;
+  try
+  {
     sd = new SedDocument(3, 1);
-}
-catch (SedConstructorException e)
-{
+  }
+  catch (SedConstructorException e)
+  {
     // Here, have code to handle a truly exceptional situation. Candidate
     // causes include invalid combinations of Sed Level and Version
     // (impossible if hardwired as given here), running out of memory, and
     // unknown system exceptions.
-}
+  }
 
-SedNamespaces sn = sd.getNamespaces();
-if (sn != null)
-{
+  SedNamespaces sn = sd.getNamespaces();
+  if (sn != null)
+  {
     sn.add("http://www.w3.org/1999/xhtml", "html");
-}
-else
-{
+  }
+  else
+  {
     // Handle another truly exceptional situation.
- }
-@endverbatim
+  }
+  @endverbatim
    * @endif@if python
-@verbatim
-sbmlDoc = None
-try:
+  @verbatim
+  sbmlDoc = None
+  try:
   sbmlDoc = SedDocument(3, 1)
-except ValueError:
+  except ValueError:
   # Do something to handle exceptional situation.  Candidate
   # causes include invalid combinations of Sed Level and Version
   # (impossible if hardwired as given here), running out of memory, and
   # unknown system exceptions.
 
-namespaces = sbmlDoc.getNamespaces()
-if namespaces == None:
+  namespaces = sbmlDoc.getNamespaces()
+  if namespaces == None:
   # Do something to handle case of no namespaces.
 
-status = namespaces.add("http://www.w3.org/1999/xhtml", "html")
-if status != LIBSEDML_OPERATION_SUCCESS:
+  status = namespaces.add("http://www.w3.org/1999/xhtml", "html")
+  if status != LIBSEDML_OPERATION_SUCCESS:
   # Do something to handle failure.
-@endverbatim
+  @endverbatim
    * @endif@if csharp
-@verbatim
-SedDocument sd = null;
-try
-{
+  @verbatim
+  SedDocument sd = null;
+  try
+  {
     sd = new SedDocument(3, 1);
-}
-catch (SedConstructorException e)
-{
+  }
+  catch (SedConstructorException e)
+  {
     // Here, have code to handle a truly exceptional situation.
     // Candidate causes include invalid combinations of Sed
     // Level and Version (impossible if hardwired as given here),
     // running out of memory, and unknown system exceptions.
-}
+  }
 
-XMLNamespaces sn = sd.getNamespaces();
-if (sn != null)
-{
+  XMLNamespaces sn = sd.getNamespaces();
+  if (sn != null)
+  {
     sn.add("http://www.w3.org/1999/xhtml", "html");
-}
-else
-{
+  }
+  else
+  {
     // Handle another truly exceptional situation.
-}
-@endverbatim
+  }
+  @endverbatim
    * @endif@~
    *
    * @param xmlns the XML namespaces to be added.
@@ -519,7 +520,7 @@ SedNamespaces_getSedNamespaceURI(unsigned int level, unsigned int version);
 LIBSEDML_EXTERN
 int
 SedNamespaces_addNamespaces(SedNamespaces_t *sbmlns,
-                             const XMLNamespaces_t * xmlns);
+                            const XMLNamespaces_t * xmlns);
 
 
 LIBSEDML_EXTERN

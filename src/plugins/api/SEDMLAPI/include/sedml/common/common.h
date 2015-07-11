@@ -62,7 +62,7 @@
 #endif
 
 #ifndef errno
-  extern int errno;
+extern int errno;
 #endif
 
 
@@ -107,8 +107,8 @@ static const int SEDML_INT_MIN = -2147483647 - 1;
  * number could be provided by the parser.
  */
 
-#define LIBSEDML_UNKNOWN_LINE	SEDML_INT_MAX
-#define LIBSEDML_UNKNOWN_COLUMN	SEDML_INT_MAX
+#define LIBSEDML_UNKNOWN_LINE SEDML_INT_MAX
+#define LIBSEDML_UNKNOWN_COLUMN SEDML_INT_MAX
 
 
 #include <sedml/common/extern.h>

@@ -53,9 +53,9 @@
 #include <sedml/SedNamespaces.h>
 
 
+
+
 LIBSEDML_CPP_NAMESPACE_BEGIN
-
-
 
 
 class LIBSEDML_EXTERN SedSubTask : public SedBase
@@ -63,282 +63,282 @@ class LIBSEDML_EXTERN SedSubTask : public SedBase
 
 protected:
 
-	int           mOrder;
-	bool          mIsSetOrder;
-	std::string   mTask;
+  int           mOrder;
+  bool          mIsSetOrder;
+  std::string   mTask;
 
 
 public:
 
-	/**
-	 * Creates a new SedSubTask with the given level, version, and package version.
-	 *
-	 * @param level an unsigned int, the SEDML Level to assign to this SedSubTask
-	 *
-	 * @param version an unsigned int, the SEDML Version to assign to this SedSubTask
-	 *
-	 * @param pkgVersion an unsigned int, the SEDML Sed Version to assign to this SedSubTask
-	 */
-	SedSubTask(unsigned int level      = SEDML_DEFAULT_LEVEL,
-	           unsigned int version    = SEDML_DEFAULT_VERSION);
+  /**
+   * Creates a new SedSubTask with the given level, version, and package version.
+   *
+   * @param level an unsigned int, the SEDML Level to assign to this SedSubTask
+   *
+   * @param version an unsigned int, the SEDML Version to assign to this SedSubTask
+   *
+   * @param pkgVersion an unsigned int, the SEDML Sed Version to assign to this SedSubTask
+   */
+  SedSubTask(unsigned int level      = SEDML_DEFAULT_LEVEL,
+             unsigned int version    = SEDML_DEFAULT_VERSION);
 
 
-	/**
-	 * Creates a new SedSubTask with the given SedNamespaces object.
-	 *
-	 * @param sedns the SedNamespaces object
-	 */
-	SedSubTask(SedNamespaces* sedns);
+  /**
+   * Creates a new SedSubTask with the given SedNamespaces object.
+   *
+   * @param sedns the SedNamespaces object
+   */
+  SedSubTask(SedNamespaces* sedns);
 
 
- 	/**
-	 * Copy constructor for SedSubTask.
-	 *
-	 * @param orig; the SedSubTask instance to copy.
-	 */
-	SedSubTask(const SedSubTask& orig);
+  /**
+   * Copy constructor for SedSubTask.
+   *
+   * @param orig; the SedSubTask instance to copy.
+   */
+  SedSubTask(const SedSubTask& orig);
 
 
- 	/**
-	 * Assignment operator for SedSubTask.
-	 *
-	 * @param rhs; the object whose values are used as the basis
-	 * of the assignment
-	 */
-	SedSubTask& operator=(const SedSubTask& rhs);
+  /**
+   * Assignment operator for SedSubTask.
+   *
+   * @param rhs; the object whose values are used as the basis
+   * of the assignment
+   */
+  SedSubTask& operator=(const SedSubTask& rhs);
 
 
- 	/**
-	 * Creates and returns a deep copy of this SedSubTask object.
-	 *
-	 * @return a (deep) copy of this SedSubTask object.
-	 */
-	virtual SedSubTask* clone () const;
+  /**
+   * Creates and returns a deep copy of this SedSubTask object.
+   *
+   * @return a (deep) copy of this SedSubTask object.
+   */
+  virtual SedSubTask* clone() const;
 
 
- 	/**
-	 * Destructor for SedSubTask.
-	 */
-	virtual ~SedSubTask();
+  /**
+   * Destructor for SedSubTask.
+   */
+  virtual ~SedSubTask();
 
 
- 	/**
-	 * Returns the value of the "order" attribute of this SedSubTask.
-	 *
-	 * @return the value of the "order" attribute of this SedSubTask as a integer.
-	 */
-	virtual const int getOrder() const;
+  /**
+   * Returns the value of the "order" attribute of this SedSubTask.
+   *
+   * @return the value of the "order" attribute of this SedSubTask as a integer.
+   */
+  virtual const int getOrder() const;
 
 
-	/**
-	 * Predicate returning @c true or @c false depending on whether this
-	 * SedSubTask's "order" attribute has been set.
-	 *
-	 * @return @c true if this SedSubTask's "order" attribute has been set,
-	 * otherwise @c false is returned.
-	 */
-	virtual bool isSetOrder() const;
+  /**
+   * Predicate returning @c true or @c false depending on whether this
+   * SedSubTask's "order" attribute has been set.
+   *
+   * @return @c true if this SedSubTask's "order" attribute has been set,
+   * otherwise @c false is returned.
+   */
+  virtual bool isSetOrder() const;
 
 
-	/**
-	 * Sets the value of the "order" attribute of this SedSubTask.
-	 *
-	 * @param order; int value of the "order" attribute to be set
-	 *
-	 * @return integer value indicating success/failure of the
-	 * function.  @if clike The value is drawn from the
-	 * enumeration #OperationReturnValues_t. @endif The possible values
-	 * returned by this function are:
-	 * @li LIBSEDML_OPERATION_SUCCESS
-	 * @li LIBSEDML_INVALID_ATTRIBUTE_VALUE
-	 */
-	virtual int setOrder(int order);
+  /**
+   * Sets the value of the "order" attribute of this SedSubTask.
+   *
+   * @param order; int value of the "order" attribute to be set
+   *
+   * @return integer value indicating success/failure of the
+   * function.  @if clike The value is drawn from the
+   * enumeration #OperationReturnValues_t. @endif The possible values
+   * returned by this function are:
+   * @li LIBSEDML_OPERATION_SUCCESS
+   * @li LIBSEDML_INVALID_ATTRIBUTE_VALUE
+   */
+  virtual int setOrder(int order);
 
 
-	/**
-	 * Unsets the value of the "order" attribute of this SedSubTask.
-	 *
-	 * @return integer value indicating success/failure of the
-	 * function.  @if clike The value is drawn from the
-	 * enumeration #OperationReturnValues_t. @endif The possible values
-	 * returned by this function are:
-	 * @li LIBSEDML_OPERATION_SUCCESS
-	 * @li LIBSEDML_OPERATION_FAILED
-	 */
-	virtual int unsetOrder();
+  /**
+   * Unsets the value of the "order" attribute of this SedSubTask.
+   *
+   * @return integer value indicating success/failure of the
+   * function.  @if clike The value is drawn from the
+   * enumeration #OperationReturnValues_t. @endif The possible values
+   * returned by this function are:
+   * @li LIBSEDML_OPERATION_SUCCESS
+   * @li LIBSEDML_OPERATION_FAILED
+   */
+  virtual int unsetOrder();
 
 
-	/**
-	 * Returns the value of the "task" attribute of this SedSubTask.
-	 *
-	 * @return the value of the "task" attribute of this SedSubTask as a string.
-	 */
-	virtual const std::string& getTask() const;
+  /**
+   * Returns the value of the "task" attribute of this SedSubTask.
+   *
+   * @return the value of the "task" attribute of this SedSubTask as a string.
+   */
+  virtual const std::string& getTask() const;
 
 
-	/**
-	 * Predicate returning @c true or @c false depending on whether this
-	 * SedSubTask's "task" attribute has been set.
-	 *
-	 * @return @c true if this SedSubTask's "task" attribute has been set,
-	 * otherwise @c false is returned.
-	 */
-	virtual bool isSetTask() const;
+  /**
+   * Predicate returning @c true or @c false depending on whether this
+   * SedSubTask's "task" attribute has been set.
+   *
+   * @return @c true if this SedSubTask's "task" attribute has been set,
+   * otherwise @c false is returned.
+   */
+  virtual bool isSetTask() const;
 
 
-	/**
-	 * Sets the value of the "task" attribute of this SedSubTask.
-	 *
-	 * @param task; const std::string& value of the "task" attribute to be set
-	 *
-	 * @return integer value indicating success/failure of the
-	 * function.  @if clike The value is drawn from the
-	 * enumeration #OperationReturnValues_t. @endif The possible values
-	 * returned by this function are:
-	 * @li LIBSEDML_OPERATION_SUCCESS
-	 * @li LIBSEDML_INVALID_ATTRIBUTE_VALUE
-	 */
-	virtual int setTask(const std::string& task);
+  /**
+   * Sets the value of the "task" attribute of this SedSubTask.
+   *
+   * @param task; const std::string& value of the "task" attribute to be set
+   *
+   * @return integer value indicating success/failure of the
+   * function.  @if clike The value is drawn from the
+   * enumeration #OperationReturnValues_t. @endif The possible values
+   * returned by this function are:
+   * @li LIBSEDML_OPERATION_SUCCESS
+   * @li LIBSEDML_INVALID_ATTRIBUTE_VALUE
+   */
+  virtual int setTask(const std::string& task);
 
 
-	/**
-	 * Unsets the value of the "task" attribute of this SedSubTask.
-	 *
-	 * @return integer value indicating success/failure of the
-	 * function.  @if clike The value is drawn from the
-	 * enumeration #OperationReturnValues_t. @endif The possible values
-	 * returned by this function are:
-	 * @li LIBSEDML_OPERATION_SUCCESS
-	 * @li LIBSEDML_OPERATION_FAILED
-	 */
-	virtual int unsetTask();
+  /**
+   * Unsets the value of the "task" attribute of this SedSubTask.
+   *
+   * @return integer value indicating success/failure of the
+   * function.  @if clike The value is drawn from the
+   * enumeration #OperationReturnValues_t. @endif The possible values
+   * returned by this function are:
+   * @li LIBSEDML_OPERATION_SUCCESS
+   * @li LIBSEDML_OPERATION_FAILED
+   */
+  virtual int unsetTask();
 
 
-	/**
-	 * Returns the XML element name of this object, which for SedSubTask, is
-	 * always @c "sedSubTask".
-	 *
-	 * @return the name of this element, i.e. @c "sedSubTask".
-	 */
-	virtual const std::string& getElementName () const;
+  /**
+   * Returns the XML element name of this object, which for SedSubTask, is
+   * always @c "sedSubTask".
+   *
+   * @return the name of this element, i.e. @c "sedSubTask".
+   */
+  virtual const std::string& getElementName() const;
 
 
-	/**
-	 * Returns the libSEDML type code for this SEDML object.
-	 *
-	 * @if clike LibSEDML attaches an identifying code to every kind of SEDML
-	 * object.  These are known as <em>SEDML type codes</em>.  The set of
-	 * possible type codes is defined in the enumeration #SEDMLTypeCode_t.
-	 * The names of the type codes all begin with the characters @c
-	 * SEDML_. @endif@if java LibSEDML attaches an identifying code to every
-	 * kind of SEDML object.  These are known as <em>SEDML type codes</em>.  In
-	 * other languages, the set of type codes is stored in an enumeration; in
-	 * the Java language interface for libSEDML, the type codes are defined as
-	 * static integer constants in the interface class {@link
-	 * libsedmlConstants}.  The names of the type codes all begin with the
-	 * characters @c SEDML_. @endif@if python LibSEDML attaches an identifying
-	 * code to every kind of SEDML object.  These are known as <em>SEDML type
-	 * codes</em>.  In the Python language interface for libSEDML, the type
-	 * codes are defined as static integer constants in the interface class
-	 * @link libsedml@endlink.  The names of the type codes all begin with the
-	 * characters @c SEDML_. @endif@if csharp LibSEDML attaches an identifying
-	 * code to every kind of SEDML object.  These are known as <em>SEDML type
-	 * codes</em>.  In the C# language interface for libSEDML, the type codes
-	 * are defined as static integer constants in the interface class @link
-	 * libsedmlcs.libsedml@endlink.  The names of the type codes all begin with
-	 * the characters @c SEDML_. @endif
-	 *
-	 * @return the SEDML type code for this object, or
-	 * @link SEDMLTypeCode_t#SEDML_UNKNOWN SEDML_UNKNOWN@endlink (default).
-	 *
-	 * @see getElementName()
-	 */
-	virtual int getTypeCode () const;
+  /**
+   * Returns the libSEDML type code for this SEDML object.
+   *
+   * @if clike LibSEDML attaches an identifying code to every kind of SEDML
+   * object.  These are known as <em>SEDML type codes</em>.  The set of
+   * possible type codes is defined in the enumeration #SEDMLTypeCode_t.
+   * The names of the type codes all begin with the characters @c
+   * SEDML_. @endif@if java LibSEDML attaches an identifying code to every
+   * kind of SEDML object.  These are known as <em>SEDML type codes</em>.  In
+   * other languages, the set of type codes is stored in an enumeration; in
+   * the Java language interface for libSEDML, the type codes are defined as
+   * static integer constants in the interface class {@link
+   * libsedmlConstants}.  The names of the type codes all begin with the
+   * characters @c SEDML_. @endif@if python LibSEDML attaches an identifying
+   * code to every kind of SEDML object.  These are known as <em>SEDML type
+   * codes</em>.  In the Python language interface for libSEDML, the type
+   * codes are defined as static integer constants in the interface class
+   * @link libsedml@endlink.  The names of the type codes all begin with the
+   * characters @c SEDML_. @endif@if csharp LibSEDML attaches an identifying
+   * code to every kind of SEDML object.  These are known as <em>SEDML type
+   * codes</em>.  In the C# language interface for libSEDML, the type codes
+   * are defined as static integer constants in the interface class @link
+   * libsedmlcs.libsedml@endlink.  The names of the type codes all begin with
+   * the characters @c SEDML_. @endif
+   *
+   * @return the SEDML type code for this object, or
+   * @link SEDMLTypeCode_t#SEDML_UNKNOWN SEDML_UNKNOWN@endlink (default).
+   *
+   * @see getElementName()
+   */
+  virtual int getTypeCode() const;
 
 
-	/**
-	 * Predicate returning @c true if all the required attributes
-	 * for this SedSubTask object have been set.
-	 *
-	 * @note The required attributes for a SedSubTask object are:
-	 * @li "order"
-	 * @li "task"
-	 *
-	 * @return a boolean value indicating whether all the required
-	 * attributes for this object have been defined.
-	 */
-	virtual bool hasRequiredAttributes() const;
+  /**
+   * Predicate returning @c true if all the required attributes
+   * for this SedSubTask object have been set.
+   *
+   * @note The required attributes for a SedSubTask object are:
+   * @li "order"
+   * @li "task"
+   *
+   * @return a boolean value indicating whether all the required
+   * attributes for this object have been defined.
+   */
+  virtual bool hasRequiredAttributes() const;
 
 
-/** @cond doxygen-libsedml-internal */
+  /** @cond doxygen-libsedml-internal */
 
-	/**
-	 * Subclasses should override this method to write out their contained
-	 * SEDML objects as XML elements.  Be sure to call your parents
-	 * implementation of this method as well.
-	 */
-	virtual void writeElements (XMLOutputStream& stream) const;
-
-
-/** @endcond doxygen-libsedml-internal */
+  /**
+   * Subclasses should override this method to write out their contained
+   * SEDML objects as XML elements.  Be sure to call your parents
+   * implementation of this method as well.
+   */
+  virtual void writeElements(XMLOutputStream& stream) const;
 
 
-/** @cond doxygen-libsedml-internal */
-
-	/**
-	 * Accepts the given SedVisitor.
-	 */
-	virtual bool accept (SedVisitor& v) const;
+  /** @endcond doxygen-libsedml-internal */
 
 
-/** @endcond doxygen-libsedml-internal */
+  /** @cond doxygen-libsedml-internal */
+
+  /**
+   * Accepts the given SedVisitor.
+   */
+  virtual bool accept(SedVisitor& v) const;
 
 
-/** @cond doxygen-libsedml-internal */
-
-	/**
-	 * Sets the parent SedDocument.
-	 */
-	virtual void setSedDocument (SedDocument* d);
+  /** @endcond doxygen-libsedml-internal */
 
 
-/** @endcond doxygen-libsedml-internal */
+  /** @cond doxygen-libsedml-internal */
+
+  /**
+   * Sets the parent SedDocument.
+   */
+  virtual void setSedDocument(SedDocument* d);
+
+
+  /** @endcond doxygen-libsedml-internal */
 
 
 protected:
 
-/** @cond doxygen-libsedml-internal */
+  /** @cond doxygen-libsedml-internal */
 
-	/**
-	 * Get the list of expected attributes for this element.
-	 */
-	virtual void addExpectedAttributes(ExpectedAttributes& attributes);
-
-
-/** @endcond doxygen-libsedml-internal */
+  /**
+   * Get the list of expected attributes for this element.
+   */
+  virtual void addExpectedAttributes(ExpectedAttributes& attributes);
 
 
-/** @cond doxygen-libsedml-internal */
-
-	/**
-	 * Read values from the given XMLAttributes set into their specific fields.
-	 */
-	virtual void readAttributes (const XMLAttributes& attributes,
-	                             const ExpectedAttributes& expectedAttributes);
+  /** @endcond doxygen-libsedml-internal */
 
 
-/** @endcond doxygen-libsedml-internal */
+  /** @cond doxygen-libsedml-internal */
+
+  /**
+   * Read values from the given XMLAttributes set into their specific fields.
+   */
+  virtual void readAttributes(const XMLAttributes& attributes,
+                              const ExpectedAttributes& expectedAttributes);
 
 
-/** @cond doxygen-libsedml-internal */
-
-	/**
-	 * Write values of XMLAttributes to the output stream.
-	 */
-	virtual void writeAttributes (XMLOutputStream& stream) const;
+  /** @endcond doxygen-libsedml-internal */
 
 
-/** @endcond doxygen-libsedml-internal */
+  /** @cond doxygen-libsedml-internal */
+
+  /**
+   * Write values of XMLAttributes to the output stream.
+   */
+  virtual void writeAttributes(XMLOutputStream& stream) const;
+
+
+  /** @endcond doxygen-libsedml-internal */
 
 
 
@@ -349,255 +349,255 @@ class LIBSEDML_EXTERN SedListOfSubTasks : public SedListOf
 
 public:
 
-	/**
-	 * Creates a new SedListOfSubTasks with the given level, version, and package version.
-	 *
-	 * @param level an unsigned int, the SEDML Level to assign to this SedListOfSubTasks
-	 *
-	 * @param version an unsigned int, the SEDML Version to assign to this SedListOfSubTasks
-	 *
-	 * @param pkgVersion an unsigned int, the SEDML Sed Version to assign to this SedListOfSubTasks
-	 */
-	SedListOfSubTasks(unsigned int level      = SEDML_DEFAULT_LEVEL,
-	                  unsigned int version    = SEDML_DEFAULT_VERSION
-);
+  /**
+   * Creates a new SedListOfSubTasks with the given level, version, and package version.
+   *
+   * @param level an unsigned int, the SEDML Level to assign to this SedListOfSubTasks
+   *
+   * @param version an unsigned int, the SEDML Version to assign to this SedListOfSubTasks
+   *
+   * @param pkgVersion an unsigned int, the SEDML Sed Version to assign to this SedListOfSubTasks
+   */
+  SedListOfSubTasks(unsigned int level      = SEDML_DEFAULT_LEVEL,
+                    unsigned int version    = SEDML_DEFAULT_VERSION
+                   );
 
 
-	/**
-	 * Creates a new SedListOfSubTasks with the given SedNamespaces object.
-	 *
-	 * @param sedns the SedNamespaces object
-	 */
-	SedListOfSubTasks(SedNamespaces* sedns);
+  /**
+   * Creates a new SedListOfSubTasks with the given SedNamespaces object.
+   *
+   * @param sedns the SedNamespaces object
+   */
+  SedListOfSubTasks(SedNamespaces* sedns);
 
 
- 	/**
-	 * Creates and returns a deep copy of this SedListOfSubTasks object.
-	 *
-	 * @return a (deep) copy of this SedListOfSubTasks object.
-	 */
-	virtual SedListOfSubTasks* clone () const;
+  /**
+   * Creates and returns a deep copy of this SedListOfSubTasks object.
+   *
+   * @return a (deep) copy of this SedListOfSubTasks object.
+   */
+  virtual SedListOfSubTasks* clone() const;
 
 
- 	/**
-	 * Get a SubTask from the SedListOfSubTasks.
-	 *
-	 * @param n the index number of the SubTask to get.
-	 *
-	 * @return the nth SubTask in this SedListOfSubTasks.
-	 *
-	 * @see size()
-	 */
-	virtual SedSubTask* get(unsigned int n);
+  /**
+   * Get a SubTask from the SedListOfSubTasks.
+   *
+   * @param n the index number of the SubTask to get.
+   *
+   * @return the nth SubTask in this SedListOfSubTasks.
+   *
+   * @see size()
+   */
+  virtual SedSubTask* get(unsigned int n);
 
 
-	/**
-	 * Get a SubTask from the SedListOfSubTasks.
-	 *
-	 * @param n the index number of the SubTask to get.
-	 *
-	 * @return the nth SubTask in this SedListOfSubTasks.
-	 *
-	 * @see size()
-	 */
-	virtual const SedSubTask* get(unsigned int n) const;
+  /**
+   * Get a SubTask from the SedListOfSubTasks.
+   *
+   * @param n the index number of the SubTask to get.
+   *
+   * @return the nth SubTask in this SedListOfSubTasks.
+   *
+   * @see size()
+   */
+  virtual const SedSubTask* get(unsigned int n) const;
 
 
-	/**
-	 * Get a SubTask from the SedListOfSubTasks
-	 * based on its identifier.
-	 *
-	 * @param sid a string representing the identifier
-	 * of the SubTask to get.
-	 *
-	 * @return SubTask in this SedListOfSubTasks
-	 * with the given id or NULL if no such
-	 * SubTask exists.
-	 *
-	 * @see get(unsigned int n)	 *
-	 * @see size()
-	 */
-	virtual SedSubTask* get(const std::string& sid);
+  /**
+   * Get a SubTask from the SedListOfSubTasks
+   * based on its identifier.
+   *
+   * @param sid a string representing the identifier
+   * of the SubTask to get.
+   *
+   * @return SubTask in this SedListOfSubTasks
+   * with the given id or NULL if no such
+   * SubTask exists.
+   *
+   * @see get(unsigned int n)  *
+   * @see size()
+   */
+  virtual SedSubTask* get(const std::string& sid);
 
 
-	/**
-	 * Get a SubTask from the SedListOfSubTasks
-	 * based on its identifier.
-	 *
-	 * @param sid a string representing the identifier
-	 * of the SubTask to get.
-	 *
-	 * @return SubTask in this SedListOfSubTasks
-	 * with the given id or NULL if no such
-	 * SubTask exists.
-	 *
-	 * @see get(unsigned int n)	 *
-	 * @see size()
-	 */
-	virtual const SedSubTask* get(const std::string& sid) const;
+  /**
+   * Get a SubTask from the SedListOfSubTasks
+   * based on its identifier.
+   *
+   * @param sid a string representing the identifier
+   * of the SubTask to get.
+   *
+   * @return SubTask in this SedListOfSubTasks
+   * with the given id or NULL if no such
+   * SubTask exists.
+   *
+   * @see get(unsigned int n)  *
+   * @see size()
+   */
+  virtual const SedSubTask* get(const std::string& sid) const;
 
 
-	/**
-	 * Adds a copy the given "SubTask" to this SedListOfSubTasks.
-	 *
-	 * @param st; the SubTask object to add
-	 *
-	 * @return integer value indicating success/failure of the
-	 * function.  @if clike The value is drawn from the
-	 * enumeration #OperationReturnValues_t. @endif The possible values
-	 * returned by this function are:
-	 * @li LIBSEDML_OPERATION_SUCCESS
-	 * @li LIBSEDML_INVALID_ATTRIBUTE_VALUE
-	 */
-	int addSubTask(const SedSubTask* st);
+  /**
+   * Adds a copy the given "SubTask" to this SedListOfSubTasks.
+   *
+   * @param st; the SubTask object to add
+   *
+   * @return integer value indicating success/failure of the
+   * function.  @if clike The value is drawn from the
+   * enumeration #OperationReturnValues_t. @endif The possible values
+   * returned by this function are:
+   * @li LIBSEDML_OPERATION_SUCCESS
+   * @li LIBSEDML_INVALID_ATTRIBUTE_VALUE
+   */
+  int addSubTask(const SedSubTask* st);
 
 
-	/**
-	 * Get the number of SubTask objects in this SedListOfSubTasks.
-	 *
-	 * @return the number of SubTask objects in this SedListOfSubTasks
-	 */
-	unsigned int getNumSubTasks() const;
+  /**
+   * Get the number of SubTask objects in this SedListOfSubTasks.
+   *
+   * @return the number of SubTask objects in this SedListOfSubTasks
+   */
+  unsigned int getNumSubTasks() const;
 
 
-	/**
-	 * Creates a new SubTask object, adds it to the
-	 * SedListOfSubTasks and returns the SubTask object created.
-	 *
-	 * @return a new SubTask object instance
-	 *
-	 * @see addSubTask(const SedSubTask* st)
-	 */
-	SedSubTask* createSubTask();
+  /**
+   * Creates a new SubTask object, adds it to the
+   * SedListOfSubTasks and returns the SubTask object created.
+   *
+   * @return a new SubTask object instance
+   *
+   * @see addSubTask(const SedSubTask* st)
+   */
+  SedSubTask* createSubTask();
 
 
-	/**
-	 * Removes the nth SubTask from this SedListOfSubTasks
-	 * and returns a pointer to it.
-	 *
-	 * The caller owns the returned item and is responsible for deleting it.
-	 *
-	 * @param n the index of the SubTask to remove.
-	 *
-	 * @see size()
-	 */
-	virtual SedSubTask* remove(unsigned int n);
+  /**
+   * Removes the nth SubTask from this SedListOfSubTasks
+   * and returns a pointer to it.
+   *
+   * The caller owns the returned item and is responsible for deleting it.
+   *
+   * @param n the index of the SubTask to remove.
+   *
+   * @see size()
+   */
+  virtual SedSubTask* remove(unsigned int n);
 
 
-	/**
-	 * Removes the SubTask from this SedListOfSubTasks with the given identifier
-	 * and returns a pointer to it.
-	 *
-	 * The caller owns the returned item and is responsible for deleting it.
-	 * If none of the items in this list have the identifier @p sid, then
-	 * @c NULL is returned.
-	 *
-	 * @param sid the identifier of the SubTask to remove.
-	 *
-	 * @return the SubTask removed. As mentioned above, the caller owns the
-	 * returned item.
-	 */
-	virtual SedSubTask* remove(const std::string& sid);
+  /**
+   * Removes the SubTask from this SedListOfSubTasks with the given identifier
+   * and returns a pointer to it.
+   *
+   * The caller owns the returned item and is responsible for deleting it.
+   * If none of the items in this list have the identifier @p sid, then
+   * @c NULL is returned.
+   *
+   * @param sid the identifier of the SubTask to remove.
+   *
+   * @return the SubTask removed. As mentioned above, the caller owns the
+   * returned item.
+   */
+  virtual SedSubTask* remove(const std::string& sid);
 
 
-	/**
-	 * Returns the XML element name of this object, which for SedListOfSubTasks, is
-	 * always @c "sedListOfSubTasks".
-	 *
-	 * @return the name of this element, i.e. @c "sedListOfSubTasks".
-	 */
-	virtual const std::string& getElementName () const;
+  /**
+   * Returns the XML element name of this object, which for SedListOfSubTasks, is
+   * always @c "sedListOfSubTasks".
+   *
+   * @return the name of this element, i.e. @c "sedListOfSubTasks".
+   */
+  virtual const std::string& getElementName() const;
 
 
-	/**
-	 * Returns the libSEDML type code for this SEDML object.
-	 *
-	 * @if clike LibSEDML attaches an identifying code to every kind of SEDML
-	 * object.  These are known as <em>SEDML type codes</em>.  The set of
-	 * possible type codes is defined in the enumeration #SEDMLTypeCode_t.
-	 * The names of the type codes all begin with the characters @c
-	 * SEDML_. @endif@if java LibSEDML attaches an identifying code to every
-	 * kind of SEDML object.  These are known as <em>SEDML type codes</em>.  In
-	 * other languages, the set of type codes is stored in an enumeration; in
-	 * the Java language interface for libSEDML, the type codes are defined as
-	 * static integer constants in the interface class {@link
-	 * libsedmlConstants}.  The names of the type codes all begin with the
-	 * characters @c SEDML_. @endif@if python LibSEDML attaches an identifying
-	 * code to every kind of SEDML object.  These are known as <em>SEDML type
-	 * codes</em>.  In the Python language interface for libSEDML, the type
-	 * codes are defined as static integer constants in the interface class
-	 * @link libsedml@endlink.  The names of the type codes all begin with the
-	 * characters @c SEDML_. @endif@if csharp LibSEDML attaches an identifying
-	 * code to every kind of SEDML object.  These are known as <em>SEDML type
-	 * codes</em>.  In the C# language interface for libSEDML, the type codes
-	 * are defined as static integer constants in the interface class @link
-	 * libsedmlcs.libsedml@endlink.  The names of the type codes all begin with
-	 * the characters @c SEDML_. @endif
-	 *
-	 * @return the SEDML type code for this object, or
-	 * @link SEDMLTypeCode_t#SEDML_UNKNOWN SEDML_UNKNOWN@endlink (default).
-	 *
-	 * @see getElementName()
-	 */
-	virtual int getTypeCode () const;
+  /**
+   * Returns the libSEDML type code for this SEDML object.
+   *
+   * @if clike LibSEDML attaches an identifying code to every kind of SEDML
+   * object.  These are known as <em>SEDML type codes</em>.  The set of
+   * possible type codes is defined in the enumeration #SEDMLTypeCode_t.
+   * The names of the type codes all begin with the characters @c
+   * SEDML_. @endif@if java LibSEDML attaches an identifying code to every
+   * kind of SEDML object.  These are known as <em>SEDML type codes</em>.  In
+   * other languages, the set of type codes is stored in an enumeration; in
+   * the Java language interface for libSEDML, the type codes are defined as
+   * static integer constants in the interface class {@link
+   * libsedmlConstants}.  The names of the type codes all begin with the
+   * characters @c SEDML_. @endif@if python LibSEDML attaches an identifying
+   * code to every kind of SEDML object.  These are known as <em>SEDML type
+   * codes</em>.  In the Python language interface for libSEDML, the type
+   * codes are defined as static integer constants in the interface class
+   * @link libsedml@endlink.  The names of the type codes all begin with the
+   * characters @c SEDML_. @endif@if csharp LibSEDML attaches an identifying
+   * code to every kind of SEDML object.  These are known as <em>SEDML type
+   * codes</em>.  In the C# language interface for libSEDML, the type codes
+   * are defined as static integer constants in the interface class @link
+   * libsedmlcs.libsedml@endlink.  The names of the type codes all begin with
+   * the characters @c SEDML_. @endif
+   *
+   * @return the SEDML type code for this object, or
+   * @link SEDMLTypeCode_t#SEDML_UNKNOWN SEDML_UNKNOWN@endlink (default).
+   *
+   * @see getElementName()
+   */
+  virtual int getTypeCode() const;
 
 
-	/**
-	 * Returns the libSEDML type code for the SEDML objects
-	 * contained in this SedListOf object
-	 *
-	 * @if clike LibSEDML attaches an identifying code to every kind of SEDML
-	 * object.  These are known as <em>SEDML type codes</em>.  The set of
-	 * possible type codes is defined in the enumeration #SEDMLTypeCode_t.
-	 * The names of the type codes all begin with the characters @c
-	 * SEDML_. @endif@if java LibSEDML attaches an identifying code to every
-	 * kind of SEDML object.  These are known as <em>SEDML type codes</em>.  In
-	 * other languages, the set of type codes is stored in an enumeration; in
-	 * the Java language interface for libSEDML, the type codes are defined as
-	 * static integer constants in the interface class {@link
-	 * libsedmlConstants}.  The names of the type codes all begin with the
-	 * characters @c SEDML_. @endif@if python LibSEDML attaches an identifying
-	 * code to every kind of SEDML object.  These are known as <em>SEDML type
-	 * codes</em>.  In the Python language interface for libSEDML, the type
-	 * codes are defined as static integer constants in the interface class
-	 * @link libsedml@endlink.  The names of the type codes all begin with the
-	 * characters @c SEDML_. @endif@if csharp LibSEDML attaches an identifying
-	 * code to every kind of SEDML object.  These are known as <em>SEDML type
-	 * codes</em>.  In the C# language interface for libSEDML, the type codes
-	 * are defined as static integer constants in the interface class @link
-	 * libsedmlcs.libsedml@endlink.  The names of the type codes all begin with
-	 * the characters @c SEDML_. @endif
-	 *
-	 * @return the SEDML type code for the objects in this SedListOf instance, or
-	 * @link SEDMLTypeCode_t#SEDML_UNKNOWN SEDML_UNKNOWN@endlink (default).
-	 *
-	 * @see getElementName()
-	 */
-	virtual int getItemTypeCode () const;
+  /**
+   * Returns the libSEDML type code for the SEDML objects
+   * contained in this SedListOf object
+   *
+   * @if clike LibSEDML attaches an identifying code to every kind of SEDML
+   * object.  These are known as <em>SEDML type codes</em>.  The set of
+   * possible type codes is defined in the enumeration #SEDMLTypeCode_t.
+   * The names of the type codes all begin with the characters @c
+   * SEDML_. @endif@if java LibSEDML attaches an identifying code to every
+   * kind of SEDML object.  These are known as <em>SEDML type codes</em>.  In
+   * other languages, the set of type codes is stored in an enumeration; in
+   * the Java language interface for libSEDML, the type codes are defined as
+   * static integer constants in the interface class {@link
+   * libsedmlConstants}.  The names of the type codes all begin with the
+   * characters @c SEDML_. @endif@if python LibSEDML attaches an identifying
+   * code to every kind of SEDML object.  These are known as <em>SEDML type
+   * codes</em>.  In the Python language interface for libSEDML, the type
+   * codes are defined as static integer constants in the interface class
+   * @link libsedml@endlink.  The names of the type codes all begin with the
+   * characters @c SEDML_. @endif@if csharp LibSEDML attaches an identifying
+   * code to every kind of SEDML object.  These are known as <em>SEDML type
+   * codes</em>.  In the C# language interface for libSEDML, the type codes
+   * are defined as static integer constants in the interface class @link
+   * libsedmlcs.libsedml@endlink.  The names of the type codes all begin with
+   * the characters @c SEDML_. @endif
+   *
+   * @return the SEDML type code for the objects in this SedListOf instance, or
+   * @link SEDMLTypeCode_t#SEDML_UNKNOWN SEDML_UNKNOWN@endlink (default).
+   *
+   * @see getElementName()
+   */
+  virtual int getItemTypeCode() const;
 
 
 protected:
 
-	/** @cond doxygen-libsedml-internal */
+  /** @cond doxygen-libsedml-internal */
 
-	/**
-	 * Creates a new SubTask in this SedListOfSubTasks
-	 */
-	virtual SedBase* createObject(XMLInputStream& stream);
-
-
-	/** @endcond doxygen-libsedml-internal */
+  /**
+   * Creates a new SubTask in this SedListOfSubTasks
+   */
+  virtual SedBase* createObject(XMLInputStream& stream);
 
 
-	/** @cond doxygen-libsedml-internal */
-
-	/**
-	 * Write the namespace for the Sed package.
-	 */
-	virtual void writeXMLNS(XMLOutputStream& stream) const;
+  /** @endcond doxygen-libsedml-internal */
 
 
-	/** @endcond doxygen-libsedml-internal */
+  /** @cond doxygen-libsedml-internal */
+
+  /**
+   * Write the namespace for the Sed package.
+   */
+  virtual void writeXMLNS(XMLOutputStream& stream) const;
+
+
+  /** @endcond doxygen-libsedml-internal */
 
 
 

@@ -107,13 +107,13 @@ public:
    * The libSed SedWriter objects offer methods for writing Sed in
    * XML form to files and text strings.
    */
-  SedWriter  ();
+  SedWriter();
 
 
   /**
    * Destroys this SedWriter.
    */
-  ~SedWriter ();
+  ~SedWriter();
 
 
   /**
@@ -125,9 +125,9 @@ public:
    * following XML comment, intended for human consumption, will be written
    * at the beginning of the XML document:
    * @verbatim
- <!-- Created by <program name> version <program version>
- on yyyy-MM-dd HH:mm with libSed version <libsbml version>. -->
- @endverbatim
+  <!-- Created by <program name> version <program version>
+  on yyyy-MM-dd HH:mm with libSed version <libsbml version>. -->
+  @endverbatim
    *
    * If the program name and version are not set at some point before
    * calling the writeSedML() methods, no such comment is written out.
@@ -142,7 +142,7 @@ public:
    *
    * @see setProgramVersion(const std::string& version)
    */
-  int setProgramName (const std::string& name);
+  int setProgramName(const std::string& name);
 
 
   /**
@@ -154,9 +154,9 @@ public:
    * following XML comment, intended for human consumption, will be written
    * at the beginning of the document:
    * @verbatim
- <!-- Created by <program name> version <program version>
- on yyyy-MM-dd HH:mm with libSed version <libsbml version>. -->
- @endverbatim
+  <!-- Created by <program name> version <program version>
+  on yyyy-MM-dd HH:mm with libSed version <libsbml version>. -->
+  @endverbatim
    *
    * If the program version and name are not set at some point before
    * calling the writeSedML() methods, no such comment is written out.
@@ -171,7 +171,7 @@ public:
    *
    * @see setProgramName(const std::string& name)
    */
-  int setProgramVersion (const std::string& version);
+  int setProgramVersion(const std::string& version);
 
 
   /**
@@ -192,7 +192,7 @@ public:
    * @see setProgramVersion(const std::string& version)
    * @see setProgramName(const std::string& name)
    */
-  bool writeSedML (const SedDocument* d, const std::string& filename);
+  bool writeSedML(const SedDocument* d, const std::string& filename);
 
 
   /**
@@ -208,7 +208,7 @@ public:
    * @see setProgramVersion(const std::string& version)
    * @see setProgramName(const std::string& name)
    */
-  bool writeSedML (const SedDocument* d, std::ostream& stream);
+  bool writeSedML(const SedDocument* d, std::ostream& stream);
 
 
   /** @cond doxygen-libsbml-internal */
@@ -228,7 +228,7 @@ public:
    * @see setProgramVersion(const std::string& version)
    * @see setProgramName(const std::string& name)
    */
-  char* writeToString (const SedDocument* d);
+  char* writeToString(const SedDocument* d);
 
   /** @endcond */
 
@@ -250,7 +250,7 @@ public:
    * @see setProgramVersion(const std::string& version)
    * @see setProgramName(const std::string& name)
    */
-  bool writeSedMLToFile (const SedDocument* d, const std::string& filename);
+  bool writeSedMLToFile(const SedDocument* d, const std::string& filename);
 
 
   /**
@@ -268,7 +268,7 @@ public:
    * @see setProgramVersion(const std::string& version)
    * @see setProgramName(const std::string& name)
    */
-  char* writeSedMLToString (const SedDocument* d);
+  char* writeSedMLToString(const SedDocument* d);
 
 
   /**
@@ -317,7 +317,7 @@ public:
   static bool hasBzip2();
 
 
- protected:
+protected:
   /** @cond doxygen-libsbml-internal */
 
   std::string mProgramName;
@@ -343,14 +343,14 @@ BEGIN_C_DECLS
  */
 LIBSEDML_EXTERN
 SedWriter_t *
-SedWriter_create (void);
+SedWriter_create(void);
 
 /**
  * Frees the given SedWriter.
  */
 LIBSEDML_EXTERN
 void
-SedWriter_free (SedWriter_t *sw);
+SedWriter_free(SedWriter_t *sw);
 
 /**
  * Sets the name of this program. i.\ e.\ the one about to write out the
@@ -363,7 +363,7 @@ SedWriter_free (SedWriter_t *sw);
  */
 LIBSEDML_EXTERN
 int
-SedWriter_setProgramName (SedWriter_t *sw, const char *name);
+SedWriter_setProgramName(SedWriter_t *sw, const char *name);
 
 /**
  * Sets the version of this program. i.\ e.\ the one about to write out the
@@ -376,7 +376,7 @@ SedWriter_setProgramName (SedWriter_t *sw, const char *name);
  */
 LIBSEDML_EXTERN
 int
-SedWriter_setProgramVersion (SedWriter_t *sw, const char *version);
+SedWriter_setProgramVersion(SedWriter_t *sw, const char *version);
 
 /**
  * Writes the given Sed document to filename.
@@ -400,15 +400,15 @@ SedWriter_setProgramVersion (SedWriter_t *sw, const char *version);
  */
 LIBSEDML_EXTERN
 int
-SedWriter_writeSedML ( SedWriter_t         *sw,
-                       const SedDocument_t *d,
-                       const char           *filename );
+SedWriter_writeSedML(SedWriter_t         *sw,
+                     const SedDocument_t *d,
+                     const char           *filename);
 
 LIBSEDML_EXTERN
 int
-SedWriter_writeSedMLToFile ( SedWriter_t         *sw,
-                       const SedDocument_t *d,
-                       const char           *filename );
+SedWriter_writeSedMLToFile(SedWriter_t         *sw,
+                           const SedDocument_t *d,
+                           const char           *filename);
 
 
 /**
@@ -421,7 +421,7 @@ SedWriter_writeSedMLToFile ( SedWriter_t         *sw,
  */
 LIBSEDML_EXTERN
 char *
-SedWriter_writeSedMLToString (SedWriter_t *sw, const SedDocument_t *d);
+SedWriter_writeSedMLToString(SedWriter_t *sw, const SedDocument_t *d);
 
 
 /**
@@ -432,7 +432,7 @@ SedWriter_writeSedMLToString (SedWriter_t *sw, const SedDocument_t *d);
  */
 LIBSEDML_EXTERN
 int
-SedWriter_hasZlib ();
+SedWriter_hasZlib();
 
 
 /**
@@ -443,7 +443,7 @@ SedWriter_hasZlib ();
  */
 LIBSEDML_EXTERN
 int
-SedWriter_hasBzip2 ();
+SedWriter_hasBzip2();
 
 #endif  /* !SWIG */
 
@@ -476,7 +476,7 @@ SedWriter_hasBzip2 ();
  */
 LIBSEDML_EXTERN
 int
-writeSedML (const SedDocument_t *d, const char *filename);
+writeSedML(const SedDocument_t *d, const char *filename);
 
 
 /**
@@ -498,7 +498,7 @@ writeSedML (const SedDocument_t *d, const char *filename);
  */
 LIBSEDML_EXTERN
 char *
-writeSedMLToString (const SedDocument_t *d);
+writeSedMLToString(const SedDocument_t *d);
 
 
 /**
@@ -532,7 +532,7 @@ writeSedMLToString (const SedDocument_t *d);
  */
 LIBSEDML_EXTERN
 int
-writeSedMLToFile (const SedDocument_t *d, const char *filename);
+writeSedMLToFile(const SedDocument_t *d, const char *filename);
 
 
 END_C_DECLS

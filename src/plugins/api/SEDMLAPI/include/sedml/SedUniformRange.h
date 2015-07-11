@@ -54,6 +54,8 @@
 #include <sedml/SedRange.h>
 
 
+
+
 LIBSEDML_CPP_NAMESPACE_BEGIN
 
 
@@ -62,391 +64,391 @@ class LIBSEDML_EXTERN SedUniformRange : public SedRange
 
 protected:
 
-	double        mStart;
-	bool          mIsSetStart;
-	double        mEnd;
-	bool          mIsSetEnd;
-	int           mNumberOfPoints;
-	bool          mIsSetNumberOfPoints;
-	std::string   mType;
+  double        mStart;
+  bool          mIsSetStart;
+  double        mEnd;
+  bool          mIsSetEnd;
+  int           mNumberOfPoints;
+  bool          mIsSetNumberOfPoints;
+  std::string   mType;
 
 
 public:
 
-	/**
-	 * Creates a new SedUniformRange with the given level, version, and package version.
-	 *
-	 * @param level an unsigned int, the SEDML Level to assign to this SedUniformRange
-	 *
-	 * @param version an unsigned int, the SEDML Version to assign to this SedUniformRange
-	 *
-	 * @param pkgVersion an unsigned int, the SEDML Sed Version to assign to this SedUniformRange
-	 */
-	SedUniformRange(unsigned int level      = SEDML_DEFAULT_LEVEL,
-	                unsigned int version    = SEDML_DEFAULT_VERSION);
+  /**
+   * Creates a new SedUniformRange with the given level, version, and package version.
+   *
+   * @param level an unsigned int, the SEDML Level to assign to this SedUniformRange
+   *
+   * @param version an unsigned int, the SEDML Version to assign to this SedUniformRange
+   *
+   * @param pkgVersion an unsigned int, the SEDML Sed Version to assign to this SedUniformRange
+   */
+  SedUniformRange(unsigned int level      = SEDML_DEFAULT_LEVEL,
+                  unsigned int version    = SEDML_DEFAULT_VERSION);
 
 
-	/**
-	 * Creates a new SedUniformRange with the given SedNamespaces object.
-	 *
-	 * @param sedns the SedNamespaces object
-	 */
-	SedUniformRange(SedNamespaces* sedns);
+  /**
+   * Creates a new SedUniformRange with the given SedNamespaces object.
+   *
+   * @param sedns the SedNamespaces object
+   */
+  SedUniformRange(SedNamespaces* sedns);
 
 
- 	/**
-	 * Copy constructor for SedUniformRange.
-	 *
-	 * @param orig; the SedUniformRange instance to copy.
-	 */
-	SedUniformRange(const SedUniformRange& orig);
+  /**
+   * Copy constructor for SedUniformRange.
+   *
+   * @param orig; the SedUniformRange instance to copy.
+   */
+  SedUniformRange(const SedUniformRange& orig);
 
 
- 	/**
-	 * Assignment operator for SedUniformRange.
-	 *
-	 * @param rhs; the object whose values are used as the basis
-	 * of the assignment
-	 */
-	SedUniformRange& operator=(const SedUniformRange& rhs);
+  /**
+   * Assignment operator for SedUniformRange.
+   *
+   * @param rhs; the object whose values are used as the basis
+   * of the assignment
+   */
+  SedUniformRange& operator=(const SedUniformRange& rhs);
 
 
- 	/**
-	 * Creates and returns a deep copy of this SedUniformRange object.
-	 *
-	 * @return a (deep) copy of this SedUniformRange object.
-	 */
-	virtual SedUniformRange* clone () const;
+  /**
+   * Creates and returns a deep copy of this SedUniformRange object.
+   *
+   * @return a (deep) copy of this SedUniformRange object.
+   */
+  virtual SedUniformRange* clone() const;
 
 
- 	/**
-	 * Destructor for SedUniformRange.
-	 */
-	virtual ~SedUniformRange();
+  /**
+   * Destructor for SedUniformRange.
+   */
+  virtual ~SedUniformRange();
 
 
- 	/**
-	 * Returns the value of the "start" attribute of this SedUniformRange.
-	 *
-	 * @return the value of the "start" attribute of this SedUniformRange as a double.
-	 */
-	virtual const double getStart() const;
+  /**
+   * Returns the value of the "start" attribute of this SedUniformRange.
+   *
+   * @return the value of the "start" attribute of this SedUniformRange as a double.
+   */
+  virtual const double getStart() const;
 
 
-	/**
-	 * Predicate returning @c true or @c false depending on whether this
-	 * SedUniformRange's "start" attribute has been set.
-	 *
-	 * @return @c true if this SedUniformRange's "start" attribute has been set,
-	 * otherwise @c false is returned.
-	 */
-	virtual bool isSetStart() const;
+  /**
+   * Predicate returning @c true or @c false depending on whether this
+   * SedUniformRange's "start" attribute has been set.
+   *
+   * @return @c true if this SedUniformRange's "start" attribute has been set,
+   * otherwise @c false is returned.
+   */
+  virtual bool isSetStart() const;
 
 
-	/**
-	 * Sets the value of the "start" attribute of this SedUniformRange.
-	 *
-	 * @param start; double value of the "start" attribute to be set
-	 *
-	 * @return integer value indicating success/failure of the
-	 * function.  @if clike The value is drawn from the
-	 * enumeration #OperationReturnValues_t. @endif The possible values
-	 * returned by this function are:
-	 * @li LIBSEDML_OPERATION_SUCCESS
-	 * @li LIBSEDML_INVALID_ATTRIBUTE_VALUE
-	 */
-	virtual int setStart(double start);
+  /**
+   * Sets the value of the "start" attribute of this SedUniformRange.
+   *
+   * @param start; double value of the "start" attribute to be set
+   *
+   * @return integer value indicating success/failure of the
+   * function.  @if clike The value is drawn from the
+   * enumeration #OperationReturnValues_t. @endif The possible values
+   * returned by this function are:
+   * @li LIBSEDML_OPERATION_SUCCESS
+   * @li LIBSEDML_INVALID_ATTRIBUTE_VALUE
+   */
+  virtual int setStart(double start);
 
 
-	/**
-	 * Unsets the value of the "start" attribute of this SedUniformRange.
-	 *
-	 * @return integer value indicating success/failure of the
-	 * function.  @if clike The value is drawn from the
-	 * enumeration #OperationReturnValues_t. @endif The possible values
-	 * returned by this function are:
-	 * @li LIBSEDML_OPERATION_SUCCESS
-	 * @li LIBSEDML_OPERATION_FAILED
-	 */
-	virtual int unsetStart();
+  /**
+   * Unsets the value of the "start" attribute of this SedUniformRange.
+   *
+   * @return integer value indicating success/failure of the
+   * function.  @if clike The value is drawn from the
+   * enumeration #OperationReturnValues_t. @endif The possible values
+   * returned by this function are:
+   * @li LIBSEDML_OPERATION_SUCCESS
+   * @li LIBSEDML_OPERATION_FAILED
+   */
+  virtual int unsetStart();
 
 
-	/**
-	 * Returns the value of the "end" attribute of this SedUniformRange.
-	 *
-	 * @return the value of the "end" attribute of this SedUniformRange as a double.
-	 */
-	virtual const double getEnd() const;
+  /**
+   * Returns the value of the "end" attribute of this SedUniformRange.
+   *
+   * @return the value of the "end" attribute of this SedUniformRange as a double.
+   */
+  virtual const double getEnd() const;
 
 
-	/**
-	 * Predicate returning @c true or @c false depending on whether this
-	 * SedUniformRange's "end" attribute has been set.
-	 *
-	 * @return @c true if this SedUniformRange's "end" attribute has been set,
-	 * otherwise @c false is returned.
-	 */
-	virtual bool isSetEnd() const;
+  /**
+   * Predicate returning @c true or @c false depending on whether this
+   * SedUniformRange's "end" attribute has been set.
+   *
+   * @return @c true if this SedUniformRange's "end" attribute has been set,
+   * otherwise @c false is returned.
+   */
+  virtual bool isSetEnd() const;
 
 
-	/**
-	 * Sets the value of the "end" attribute of this SedUniformRange.
-	 *
-	 * @param end; double value of the "end" attribute to be set
-	 *
-	 * @return integer value indicating success/failure of the
-	 * function.  @if clike The value is drawn from the
-	 * enumeration #OperationReturnValues_t. @endif The possible values
-	 * returned by this function are:
-	 * @li LIBSEDML_OPERATION_SUCCESS
-	 * @li LIBSEDML_INVALID_ATTRIBUTE_VALUE
-	 */
-	virtual int setEnd(double end);
+  /**
+   * Sets the value of the "end" attribute of this SedUniformRange.
+   *
+   * @param end; double value of the "end" attribute to be set
+   *
+   * @return integer value indicating success/failure of the
+   * function.  @if clike The value is drawn from the
+   * enumeration #OperationReturnValues_t. @endif The possible values
+   * returned by this function are:
+   * @li LIBSEDML_OPERATION_SUCCESS
+   * @li LIBSEDML_INVALID_ATTRIBUTE_VALUE
+   */
+  virtual int setEnd(double end);
 
 
-	/**
-	 * Unsets the value of the "end" attribute of this SedUniformRange.
-	 *
-	 * @return integer value indicating success/failure of the
-	 * function.  @if clike The value is drawn from the
-	 * enumeration #OperationReturnValues_t. @endif The possible values
-	 * returned by this function are:
-	 * @li LIBSEDML_OPERATION_SUCCESS
-	 * @li LIBSEDML_OPERATION_FAILED
-	 */
-	virtual int unsetEnd();
+  /**
+   * Unsets the value of the "end" attribute of this SedUniformRange.
+   *
+   * @return integer value indicating success/failure of the
+   * function.  @if clike The value is drawn from the
+   * enumeration #OperationReturnValues_t. @endif The possible values
+   * returned by this function are:
+   * @li LIBSEDML_OPERATION_SUCCESS
+   * @li LIBSEDML_OPERATION_FAILED
+   */
+  virtual int unsetEnd();
 
 
-	/**
-	 * Returns the value of the "numberOfPoints" attribute of this SedUniformRange.
-	 *
-	 * @return the value of the "numberOfPoints" attribute of this SedUniformRange as a integer.
-	 */
-	virtual const int getNumberOfPoints() const;
+  /**
+   * Returns the value of the "numberOfPoints" attribute of this SedUniformRange.
+   *
+   * @return the value of the "numberOfPoints" attribute of this SedUniformRange as a integer.
+   */
+  virtual const int getNumberOfPoints() const;
 
 
-	/**
-	 * Predicate returning @c true or @c false depending on whether this
-	 * SedUniformRange's "numberOfPoints" attribute has been set.
-	 *
-	 * @return @c true if this SedUniformRange's "numberOfPoints" attribute has been set,
-	 * otherwise @c false is returned.
-	 */
-	virtual bool isSetNumberOfPoints() const;
+  /**
+   * Predicate returning @c true or @c false depending on whether this
+   * SedUniformRange's "numberOfPoints" attribute has been set.
+   *
+   * @return @c true if this SedUniformRange's "numberOfPoints" attribute has been set,
+   * otherwise @c false is returned.
+   */
+  virtual bool isSetNumberOfPoints() const;
 
 
-	/**
-	 * Sets the value of the "numberOfPoints" attribute of this SedUniformRange.
-	 *
-	 * @param numberOfPoints; int value of the "numberOfPoints" attribute to be set
-	 *
-	 * @return integer value indicating success/failure of the
-	 * function.  @if clike The value is drawn from the
-	 * enumeration #OperationReturnValues_t. @endif The possible values
-	 * returned by this function are:
-	 * @li LIBSEDML_OPERATION_SUCCESS
-	 * @li LIBSEDML_INVALID_ATTRIBUTE_VALUE
-	 */
-	virtual int setNumberOfPoints(int numberOfPoints);
+  /**
+   * Sets the value of the "numberOfPoints" attribute of this SedUniformRange.
+   *
+   * @param numberOfPoints; int value of the "numberOfPoints" attribute to be set
+   *
+   * @return integer value indicating success/failure of the
+   * function.  @if clike The value is drawn from the
+   * enumeration #OperationReturnValues_t. @endif The possible values
+   * returned by this function are:
+   * @li LIBSEDML_OPERATION_SUCCESS
+   * @li LIBSEDML_INVALID_ATTRIBUTE_VALUE
+   */
+  virtual int setNumberOfPoints(int numberOfPoints);
 
 
-	/**
-	 * Unsets the value of the "numberOfPoints" attribute of this SedUniformRange.
-	 *
-	 * @return integer value indicating success/failure of the
-	 * function.  @if clike The value is drawn from the
-	 * enumeration #OperationReturnValues_t. @endif The possible values
-	 * returned by this function are:
-	 * @li LIBSEDML_OPERATION_SUCCESS
-	 * @li LIBSEDML_OPERATION_FAILED
-	 */
-	virtual int unsetNumberOfPoints();
+  /**
+   * Unsets the value of the "numberOfPoints" attribute of this SedUniformRange.
+   *
+   * @return integer value indicating success/failure of the
+   * function.  @if clike The value is drawn from the
+   * enumeration #OperationReturnValues_t. @endif The possible values
+   * returned by this function are:
+   * @li LIBSEDML_OPERATION_SUCCESS
+   * @li LIBSEDML_OPERATION_FAILED
+   */
+  virtual int unsetNumberOfPoints();
 
 
-	/**
-	 * Returns the value of the "type" attribute of this SedUniformRange.
-	 *
-	 * @return the value of the "type" attribute of this SedUniformRange as a string.
-	 */
-	virtual const std::string& getType() const;
+  /**
+   * Returns the value of the "type" attribute of this SedUniformRange.
+   *
+   * @return the value of the "type" attribute of this SedUniformRange as a string.
+   */
+  virtual const std::string& getType() const;
 
 
-	/**
-	 * Predicate returning @c true or @c false depending on whether this
-	 * SedUniformRange's "type" attribute has been set.
-	 *
-	 * @return @c true if this SedUniformRange's "type" attribute has been set,
-	 * otherwise @c false is returned.
-	 */
-	virtual bool isSetType() const;
+  /**
+   * Predicate returning @c true or @c false depending on whether this
+   * SedUniformRange's "type" attribute has been set.
+   *
+   * @return @c true if this SedUniformRange's "type" attribute has been set,
+   * otherwise @c false is returned.
+   */
+  virtual bool isSetType() const;
 
 
-	/**
-	 * Sets the value of the "type" attribute of this SedUniformRange.
-	 *
-	 * @param type; const std::string& value of the "type" attribute to be set
-	 *
-	 * @return integer value indicating success/failure of the
-	 * function.  @if clike The value is drawn from the
-	 * enumeration #OperationReturnValues_t. @endif The possible values
-	 * returned by this function are:
-	 * @li LIBSEDML_OPERATION_SUCCESS
-	 * @li LIBSEDML_INVALID_ATTRIBUTE_VALUE
-	 */
-	virtual int setType(const std::string& type);
+  /**
+   * Sets the value of the "type" attribute of this SedUniformRange.
+   *
+   * @param type; const std::string& value of the "type" attribute to be set
+   *
+   * @return integer value indicating success/failure of the
+   * function.  @if clike The value is drawn from the
+   * enumeration #OperationReturnValues_t. @endif The possible values
+   * returned by this function are:
+   * @li LIBSEDML_OPERATION_SUCCESS
+   * @li LIBSEDML_INVALID_ATTRIBUTE_VALUE
+   */
+  virtual int setType(const std::string& type);
 
 
-	/**
-	 * Unsets the value of the "type" attribute of this SedUniformRange.
-	 *
-	 * @return integer value indicating success/failure of the
-	 * function.  @if clike The value is drawn from the
-	 * enumeration #OperationReturnValues_t. @endif The possible values
-	 * returned by this function are:
-	 * @li LIBSEDML_OPERATION_SUCCESS
-	 * @li LIBSEDML_OPERATION_FAILED
-	 */
-	virtual int unsetType();
+  /**
+   * Unsets the value of the "type" attribute of this SedUniformRange.
+   *
+   * @return integer value indicating success/failure of the
+   * function.  @if clike The value is drawn from the
+   * enumeration #OperationReturnValues_t. @endif The possible values
+   * returned by this function are:
+   * @li LIBSEDML_OPERATION_SUCCESS
+   * @li LIBSEDML_OPERATION_FAILED
+   */
+  virtual int unsetType();
 
 
-	/**
-	 * Returns the XML element name of this object, which for SedUniformRange, is
-	 * always @c "sedUniformRange".
-	 *
-	 * @return the name of this element, i.e. @c "sedUniformRange".
-	 */
-	virtual const std::string& getElementName () const;
+  /**
+   * Returns the XML element name of this object, which for SedUniformRange, is
+   * always @c "sedUniformRange".
+   *
+   * @return the name of this element, i.e. @c "sedUniformRange".
+   */
+  virtual const std::string& getElementName() const;
 
 
-	/**
-	 * Returns the libSEDML type code for this SEDML object.
-	 *
-	 * @if clike LibSEDML attaches an identifying code to every kind of SEDML
-	 * object.  These are known as <em>SEDML type codes</em>.  The set of
-	 * possible type codes is defined in the enumeration #SEDMLTypeCode_t.
-	 * The names of the type codes all begin with the characters @c
-	 * SEDML_. @endif@if java LibSEDML attaches an identifying code to every
-	 * kind of SEDML object.  These are known as <em>SEDML type codes</em>.  In
-	 * other languages, the set of type codes is stored in an enumeration; in
-	 * the Java language interface for libSEDML, the type codes are defined as
-	 * static integer constants in the interface class {@link
-	 * libsedmlConstants}.  The names of the type codes all begin with the
-	 * characters @c SEDML_. @endif@if python LibSEDML attaches an identifying
-	 * code to every kind of SEDML object.  These are known as <em>SEDML type
-	 * codes</em>.  In the Python language interface for libSEDML, the type
-	 * codes are defined as static integer constants in the interface class
-	 * @link libsedml@endlink.  The names of the type codes all begin with the
-	 * characters @c SEDML_. @endif@if csharp LibSEDML attaches an identifying
-	 * code to every kind of SEDML object.  These are known as <em>SEDML type
-	 * codes</em>.  In the C# language interface for libSEDML, the type codes
-	 * are defined as static integer constants in the interface class @link
-	 * libsedmlcs.libsedml@endlink.  The names of the type codes all begin with
-	 * the characters @c SEDML_. @endif
-	 *
-	 * @return the SEDML type code for this object, or
-	 * @link SEDMLTypeCode_t#SEDML_UNKNOWN SEDML_UNKNOWN@endlink (default).
-	 *
-	 * @see getElementName()
-	 */
-	virtual int getTypeCode () const;
+  /**
+   * Returns the libSEDML type code for this SEDML object.
+   *
+   * @if clike LibSEDML attaches an identifying code to every kind of SEDML
+   * object.  These are known as <em>SEDML type codes</em>.  The set of
+   * possible type codes is defined in the enumeration #SEDMLTypeCode_t.
+   * The names of the type codes all begin with the characters @c
+   * SEDML_. @endif@if java LibSEDML attaches an identifying code to every
+   * kind of SEDML object.  These are known as <em>SEDML type codes</em>.  In
+   * other languages, the set of type codes is stored in an enumeration; in
+   * the Java language interface for libSEDML, the type codes are defined as
+   * static integer constants in the interface class {@link
+   * libsedmlConstants}.  The names of the type codes all begin with the
+   * characters @c SEDML_. @endif@if python LibSEDML attaches an identifying
+   * code to every kind of SEDML object.  These are known as <em>SEDML type
+   * codes</em>.  In the Python language interface for libSEDML, the type
+   * codes are defined as static integer constants in the interface class
+   * @link libsedml@endlink.  The names of the type codes all begin with the
+   * characters @c SEDML_. @endif@if csharp LibSEDML attaches an identifying
+   * code to every kind of SEDML object.  These are known as <em>SEDML type
+   * codes</em>.  In the C# language interface for libSEDML, the type codes
+   * are defined as static integer constants in the interface class @link
+   * libsedmlcs.libsedml@endlink.  The names of the type codes all begin with
+   * the characters @c SEDML_. @endif
+   *
+   * @return the SEDML type code for this object, or
+   * @link SEDMLTypeCode_t#SEDML_UNKNOWN SEDML_UNKNOWN@endlink (default).
+   *
+   * @see getElementName()
+   */
+  virtual int getTypeCode() const;
 
 
-	/**
-	 * Predicate returning @c true if all the required attributes
-	 * for this SedUniformRange object have been set.
-	 *
-	 * @note The required attributes for a SedUniformRange object are:
-	 * @li "start"
-	 * @li "end"
-	 * @li "numberOfPoints"
-	 * @li "type"
-	 *
-	 * @return a boolean value indicating whether all the required
-	 * attributes for this object have been defined.
-	 */
-	virtual bool hasRequiredAttributes() const;
+  /**
+   * Predicate returning @c true if all the required attributes
+   * for this SedUniformRange object have been set.
+   *
+   * @note The required attributes for a SedUniformRange object are:
+   * @li "start"
+   * @li "end"
+   * @li "numberOfPoints"
+   * @li "type"
+   *
+   * @return a boolean value indicating whether all the required
+   * attributes for this object have been defined.
+   */
+  virtual bool hasRequiredAttributes() const;
 
 
-/** @cond doxygen-libsedml-internal */
+  /** @cond doxygen-libsedml-internal */
 
-	/**
-	 * Subclasses should override this method to write out their contained
-	 * SEDML objects as XML elements.  Be sure to call your parents
-	 * implementation of this method as well.
-	 */
-	virtual void writeElements (XMLOutputStream& stream) const;
-
-
-/** @endcond doxygen-libsedml-internal */
+  /**
+   * Subclasses should override this method to write out their contained
+   * SEDML objects as XML elements.  Be sure to call your parents
+   * implementation of this method as well.
+   */
+  virtual void writeElements(XMLOutputStream& stream) const;
 
 
-/** @cond doxygen-libsedml-internal */
-
-	/**
-	 * Accepts the given SedVisitor.
-	 */
-	virtual bool accept (SedVisitor& v) const;
+  /** @endcond doxygen-libsedml-internal */
 
 
-/** @endcond doxygen-libsedml-internal */
+  /** @cond doxygen-libsedml-internal */
+
+  /**
+   * Accepts the given SedVisitor.
+   */
+  virtual bool accept(SedVisitor& v) const;
 
 
-/** @cond doxygen-libsedml-internal */
-
-	/**
-	 * Sets the parent SedDocument.
-	 */
-	virtual void setSedDocument (SedDocument* d);
+  /** @endcond doxygen-libsedml-internal */
 
 
-/** @endcond doxygen-libsedml-internal */
+  /** @cond doxygen-libsedml-internal */
+
+  /**
+   * Sets the parent SedDocument.
+   */
+  virtual void setSedDocument(SedDocument* d);
+
+
+  /** @endcond doxygen-libsedml-internal */
 
 
 protected:
 
-/** @cond doxygen-libsedml-internal */
+  /** @cond doxygen-libsedml-internal */
 
-	/**
-	 * return the SEDML object corresponding to next XMLToken.
-	 */
-	virtual SedBase* createObject(XMLInputStream& stream);
-
-
-/** @endcond doxygen-libsedml-internal */
+  /**
+   * return the SEDML object corresponding to next XMLToken.
+   */
+  virtual SedBase* createObject(XMLInputStream& stream);
 
 
-/** @cond doxygen-libsedml-internal */
-
-	/**
-	 * Get the list of expected attributes for this element.
-	 */
-	virtual void addExpectedAttributes(ExpectedAttributes& attributes);
+  /** @endcond doxygen-libsedml-internal */
 
 
-/** @endcond doxygen-libsedml-internal */
+  /** @cond doxygen-libsedml-internal */
+
+  /**
+   * Get the list of expected attributes for this element.
+   */
+  virtual void addExpectedAttributes(ExpectedAttributes& attributes);
 
 
-/** @cond doxygen-libsedml-internal */
-
-	/**
-	 * Read values from the given XMLAttributes set into their specific fields.
-	 */
-	virtual void readAttributes (const XMLAttributes& attributes,
-	                             const ExpectedAttributes& expectedAttributes);
+  /** @endcond doxygen-libsedml-internal */
 
 
-/** @endcond doxygen-libsedml-internal */
+  /** @cond doxygen-libsedml-internal */
+
+  /**
+   * Read values from the given XMLAttributes set into their specific fields.
+   */
+  virtual void readAttributes(const XMLAttributes& attributes,
+                              const ExpectedAttributes& expectedAttributes);
 
 
-/** @cond doxygen-libsedml-internal */
-
-	/**
-	 * Write values of XMLAttributes to the output stream.
-	 */
-	virtual void writeAttributes (XMLOutputStream& stream) const;
+  /** @endcond doxygen-libsedml-internal */
 
 
-/** @endcond doxygen-libsedml-internal */
+  /** @cond doxygen-libsedml-internal */
+
+  /**
+   * Write values of XMLAttributes to the output stream.
+   */
+  virtual void writeAttributes(XMLOutputStream& stream) const;
+
+
+  /** @endcond doxygen-libsedml-internal */
 
 
 
