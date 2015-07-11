@@ -20,7 +20,7 @@ install:
       && sudo apt-add-repository -y ppa:ubuntu-toolchain-r/test
       && sudo apt-add-repository -y ppa:beineri/opt-qt55
       && sudo apt-get -qq update
-      && sudo apt-get -qq install g++-4.8 libc6-i386 qt553d qt55base qt55canvas3d qt55connectivity qt55creator qt55declarative qt55doc qt55graphicaleffects qt55imageformats qt55qbs qt55quick1 qt55quickcontrols qt55script qt55serialport qt55translations qt55webchannel qt55webkit-examples qt55websockets qt55x11extras qt55xmlpatterns                 qt55location qt55multimedia qt55sensors qt55svg qt55tools qt55webkit
+      && sudo apt-get -qq install g++-4.8 libc6-i386 qt553d qt55base qt55canvas3d qt55connectivity qt55declarative qt55doc qt55graphicaleffects qt55imageformats qt55qbs qt55quick1 qt55quickcontrols qt55script qt55serialport qt55translations qt55webchannel qt55webkit-examples qt55websockets qt55x11extras qt55xmlpatterns                 qt55location qt55multimedia qt55sensors qt55svg qt55tools qt55webkit
       && export CXX="g++-4.8"
       && export CC="gcc-4.8"
       && echo "---[/opt/qt55]---"
