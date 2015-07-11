@@ -503,11 +503,11 @@ ELSE()
         ENDIF()
 
         IF(${ARCHITECTURE} EQUAL 32)
-            RETRIEVE_BINARY_FILE(distrib/${DISTRIB_DIR} libeay32.dll c6382c38a48231d73985183b4cdfc034c621ad4e)
-            RETRIEVE_BINARY_FILE(distrib/${DISTRIB_DIR} ssleay32.dll 9938cbf4b5e7cffa0d73825a6ef85b0d90a0ce0a)
+            RETRIEVE_BINARY_FILE(distrib/${DISTRIB_DIR} libeay32.dll abe57f749650fdebbaa6792e3676294c20db6abe)
+            RETRIEVE_BINARY_FILE(distrib/${DISTRIB_DIR} ssleay32.dll 4685df166f9a64d02c86d7966d4d3a7fa18b3106)
         ELSE()
-            RETRIEVE_BINARY_FILE(distrib/${DISTRIB_DIR} libeay32.dll deea6a8c64ac5b878b7e0017baff011a9880c6fe)
-            RETRIEVE_BINARY_FILE(distrib/${DISTRIB_DIR} ssleay32.dll 2d23faf5b26c3c50231d8f661fcc4e5f6ada4934)
+            RETRIEVE_BINARY_FILE(distrib/${DISTRIB_DIR} libeay32.dll a24a8310c9be2c477ac3a536eccf76d72a230d99)
+            RETRIEVE_BINARY_FILE(distrib/${DISTRIB_DIR} ssleay32.dll 193fcd969a66354fb3a095485e82e3edfd65e96e)
         ENDIF()
 
         LIST(APPEND ADDITIONAL_FILES
@@ -542,9 +542,28 @@ ELSE()
     SET(CPACK_PACKAGE_VERSION_PATCH "${PROJECT_VERSION_PATCH}")
 ENDIF()
 
-MATH(EXPR ICU_MINOR_VERSION "${Qt5Widgets_VERSION_MINOR}-1")
+IF(ENABLE_TRAVIS_CI)
+    # We are building OpenCOR on Travis CI, so use Travis CI's version of the
+    # ICU libraries
 
-SET(ICU_VERSION "${Qt5Widgets_VERSION_MAJOR}${ICU_MINOR_VERSION}")
+    SET(ICU_DIRNAME "/usr/lib")
+
+    SET(ORIG_ICU_VERSION ".48.1.1")
+    SET(DEST_ICU_VERSION ".48")
+ELSE()
+    # We are building OpenCOR locally, so use Qt's version of the ICU libraries
+
+    MATH(EXPR ICU_MINOR_VERSION "${Qt5Widgets_VERSION_MINOR}-1")
+
+    IF(WIN32)
+        SET(ICU_VERSION "${Qt5Widgets_VERSION_MAJOR}${ICU_MINOR_VERSION}")
+    ELSE()
+        SET(ICU_DIRNAME "${QT_LIBRARY_DIR}")
+
+        SET(ORIG_ICU_VERSION ".${Qt5Widgets_VERSION_MAJOR}${ICU_MINOR_VERSION}.1")
+        SET(DEST_ICU_VERSION ".${Qt5Widgets_VERSION_MAJOR}${ICU_MINOR_VERSION}")
+    ENDIF()
+ENDIF()
 
 IF(WIN32)
     # Select NSIS, if available, and ZIP as the packagers on Windows
@@ -691,9 +710,9 @@ ELSE()
     ENDFOREACH()
 
     FOREACH(QT_FILE icudata icui18n icuuc)
-        LINUX_DEPLOY_QT_LIBRARY(${QT_LIBRARY_DIR}
-                                ${CMAKE_SHARED_LIBRARY_PREFIX}${QT_FILE}${CMAKE_SHARED_LIBRARY_SUFFIX}.${ICU_VERSION}.1
-                                ${CMAKE_SHARED_LIBRARY_PREFIX}${QT_FILE}${CMAKE_SHARED_LIBRARY_SUFFIX}.${ICU_VERSION})
+        LINUX_DEPLOY_QT_LIBRARY(${ICU_DIRNAME}
+                                ${CMAKE_SHARED_LIBRARY_PREFIX}${QT_FILE}${CMAKE_SHARED_LIBRARY_SUFFIX}${ORIG_ICU_VERSION}
+                                ${CMAKE_SHARED_LIBRARY_PREFIX}${QT_FILE}${CMAKE_SHARED_LIBRARY_SUFFIX}${DEST_ICU_VERSION})
     ENDFOREACH()
 
     # Qt plugins required by OpenCOR
