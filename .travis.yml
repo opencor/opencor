@@ -24,8 +24,8 @@ install:
       && export CXX="g++-4.8"
       && export CC="gcc-4.8"
       && echo "---[/opt/qt55/lib]---"
-      && ls -al /opt/qt55/lib
-      && ls -al /opt/qt55/lib | wc -l
+      && find /opt/qt55/lib
+      && find /opt/qt55/lib | wc -l
       && echo "---------------------"
       ;
     else
