@@ -6,11 +6,11 @@ language: cpp
 
 os:
   - linux
-#  - osx
+  - osx
 
 env:
   - CONFIG=Release
-#  - CONFIG=Debug
+  - CONFIG=Debug
 
 install:
   - if [ "${TRAVIS_OS_NAME}" = "linux" ]; then
@@ -23,9 +23,6 @@ install:
       && sudo apt-get -qq install g++-4.8 libc6-i386 qt55location qt55multimedia qt55sensors qt55svg qt55tools qt55webkit
       && export CXX="g++-4.8"
       && export CC="gcc-4.8"
-      && ldd /opt/qt55/lib/libQt5Multimedia.so
-      && ls -l /usr/lib/libicu*
-      && hostname
       ;
     else
          brew update
@@ -37,10 +34,12 @@ install:
     fi
 
 script:
-  # Note: Travis CI uses Ubuntu 12.04 LTS while we use Ubuntu 14.04 LTS, and
-  #       this causes problems when we try to use our prebuilt version of
-  #       libgit2 (because of its need of libc). So, to 'fix' this, we ask for
-  #       libgit2 to be built on Linux...
+  # Note #1: the PPA that we use on Linux relies on Travis CI's version of the
+  #          ICU libraries, so we need to let CMake know about it...
+  # Note #2: Travis CI uses Ubuntu 12.04 LTS while we use Ubuntu 14.04 LTS, and
+  #          this causes problems when we try to use our prebuilt version of
+  #          libgit2 (because of its need of libc). So, to 'fix' this, we ask
+  #          for libgit2 to be built on Linux...
   -    cd build
     && if [ "${TRAVIS_OS_NAME}" = "linux" ]; then
          cmake -DCMAKE_BUILD_TYPE=$CONFIG -DENABLE_TRAVIS_CI=ON -DCMAKE_PREFIX_PATH=/opt/qt55/lib/cmake -DUSE_PREBUILT_LIBGIT2_PLUGIN=OFF -DENABLE_TESTS=ON -DENABLE_SAMPLES=ON ..
