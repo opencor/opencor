@@ -543,9 +543,28 @@ ELSE()
     SET(CPACK_PACKAGE_VERSION_PATCH "${PROJECT_VERSION_PATCH}")
 ENDIF()
 
-MATH(EXPR ICU_MINOR_VERSION "${Qt5Widgets_VERSION_MINOR}-1")
+IF(ENABLE_TRAVIS_CI)
+    # We are building OpenCOR on Travis CI, so use Travis CI's version of the
+    # ICU libraries
 
-SET(ICU_VERSION "${Qt5Widgets_VERSION_MAJOR}${ICU_MINOR_VERSION}")
+    SET(ICU_DIRNAME "/usr/lib")
+
+    SET(ORIG_ICU_VERSION ".48.1.1")
+    SET(DEST_ICU_VERSION ".48")
+ELSE()
+    # We are building OpenCOR locally, so use Qt's version of the ICU libraries
+
+    MATH(EXPR ICU_MINOR_VERSION "${Qt5Widgets_VERSION_MINOR}-1")
+
+    IF(WIN32)
+        SET(ICU_VERSION "${Qt5Widgets_VERSION_MAJOR}${ICU_MINOR_VERSION}")
+    ELSE()
+        SET(ICU_DIRNAME "${QT_LIBRARY_DIR}")
+
+        SET(ORIG_ICU_VERSION ".${Qt5Widgets_VERSION_MAJOR}${ICU_MINOR_VERSION}.1")
+        SET(DEST_ICU_VERSION ".${Qt5Widgets_VERSION_MAJOR}${ICU_MINOR_VERSION}")
+    ENDIF()
+ENDIF()
 
 IF(WIN32)
     # Select NSIS, if available, and ZIP as the packagers on Windows
@@ -692,9 +711,9 @@ ELSE()
     ENDFOREACH()
 
     FOREACH(QT_FILE icudata icui18n icuuc)
-        LINUX_DEPLOY_QT_LIBRARY(${QT_LIBRARY_DIR}
-                                ${CMAKE_SHARED_LIBRARY_PREFIX}${QT_FILE}${CMAKE_SHARED_LIBRARY_SUFFIX}.${ICU_VERSION}.1
-                                ${CMAKE_SHARED_LIBRARY_PREFIX}${QT_FILE}${CMAKE_SHARED_LIBRARY_SUFFIX}.${ICU_VERSION})
+        LINUX_DEPLOY_QT_LIBRARY(${ICU_DIRNAME}
+                                ${CMAKE_SHARED_LIBRARY_PREFIX}${QT_FILE}${CMAKE_SHARED_LIBRARY_SUFFIX}${ORIG_ICU_VERSION}
+                                ${CMAKE_SHARED_LIBRARY_PREFIX}${QT_FILE}${CMAKE_SHARED_LIBRARY_SUFFIX}${DEST_ICU_VERSION})
     ENDFOREACH()
 
     # Qt plugins required by OpenCOR
