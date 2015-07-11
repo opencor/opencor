@@ -25,6 +25,7 @@ install:
       && export CC="gcc-4.8"
       && ldd /opt/qt55/lib/libQt5Multimedia.so
       && ls -l /usr/lib/libicu*
+      && hostname
       ;
     else
          brew update
