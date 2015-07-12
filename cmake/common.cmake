@@ -1113,9 +1113,11 @@ ENDMACRO()
 MACRO(OS_X_DEPLOY_LIBRARY DIRNAME LIBRARY_NAME)
     # Strip the library of all its local symbols
 
+    SET(LIBRARY_FILEPATH ${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME}.app/Contents/Frameworks/${CMAKE_SHARED_LIBRARY_PREFIX}${LIBRARY_NAME}${CMAKE_SHARED_LIBRARY_SUFFIX})
+
     IF(RELEASE_MODE)
         ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
-                           COMMAND strip -x ${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME}.app/Contents/Frameworks/${CMAKE_SHARED_LIBRARY_PREFIX}${LIBRARY_NAME}${CMAKE_SHARED_LIBRARY_SUFFIX})
+                           COMMAND strip -x ${LIBRARY_FILEPATH})
     ENDIF()
 
     # Make sure that the library refers to our embedded version of the libraries
