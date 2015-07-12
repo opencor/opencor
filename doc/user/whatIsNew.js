@@ -7,6 +7,12 @@ var jsonData = { "versions": [
                            { "type": "Added", "description": "Resetting all your settings from the command line." }
                          ]
                        },
+                       { "name": "API",
+                         "entries": [
+                           { "type": "Added", "description": "<a href=\"http://sbml.org/\">SBML</a> API (via <a href=\"http://sbml.org/Software/libSBML/\">libSBML</a>)." },
+                           { "type": "Added", "description": "<a href=\"http://www.sed-ml.org/\">SED-ML</a> API (via <a href=\"https://github.com/fbergmann/libSEDML/\">libSEDML</a>)." }
+                         ]
+                       },
                        { "name": "Organisation",
                          "entries": [
                            { "type": "subCategory", "name": "Physiome Model Repository window (formerly known as the CellML Model Repository window)",
