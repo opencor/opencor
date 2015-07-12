@@ -833,8 +833,8 @@ ENDMACRO()
 
 MACRO(WINDOWS_DEPLOY_QT_LIBRARIES)
     FOREACH(LIBRARY ${ARGN})
-        # Copy the Qt library to both the build and build/bin folders, so we can
-        # test things without first having to deploy OpenCOR
+        # Copy the Qt library to the build/bin folder, so we can test things
+        # without first having to deploy OpenCOR
         # Note: this is particularly useful on 64-bit Windows where we might
         #       want to be able to test both the 32-bit and 64-bit versions of
         #       OpenCOR (since only the 32-bit or 64-bit Qt libraries are
@@ -851,10 +851,8 @@ MACRO(WINDOWS_DEPLOY_QT_LIBRARIES)
         ENDIF()
 
         IF(RELEASE_MODE)
-            COPY_FILE_TO_BUILD_DIR(DIRECT_COPY ${QT_BINARY_DIR} . ${LIBRARY_RELEASE_FILENAME})
             COPY_FILE_TO_BUILD_DIR(DIRECT_COPY ${QT_BINARY_DIR} bin ${LIBRARY_RELEASE_FILENAME})
         ELSE()
-            COPY_FILE_TO_BUILD_DIR(DIRECT_COPY ${QT_BINARY_DIR} . ${LIBRARY_DEBUG_FILENAME})
             COPY_FILE_TO_BUILD_DIR(DIRECT_COPY ${QT_BINARY_DIR} bin ${LIBRARY_DEBUG_FILENAME})
         ENDIF()
 
@@ -892,10 +890,9 @@ ENDMACRO()
 #===============================================================================
 
 MACRO(WINDOWS_DEPLOY_LIBRARY DIRNAME FILENAME)
-    # Copy the library file to both the build and build/bin folders, so we can
-    # test things without first having to deploy OpenCOR
+    # Copy the library file to the build/bin folder, so we can test things
+    # without first having to deploy OpenCOR
 
-    COPY_FILE_TO_BUILD_DIR(DIRECT_COPY ${DIRNAME} . ${FILENAME})
     COPY_FILE_TO_BUILD_DIR(DIRECT_COPY ${DIRNAME} bin ${FILENAME})
 
     # Deploy the library file
