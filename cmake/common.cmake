@@ -513,13 +513,28 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
             # Copy the external binary to its destination directory, so we can
             # test things without first having to deploy OpenCOR
 
-            COPY_FILE_TO_BUILD_DIR(DIRECT_COPY ${EXTERNAL_BINARIES_DIR} ${DEST_EXTERNAL_BINARIES_DIR} ${EXTERNAL_BINARY})
+            SET(REAL_EXTERNAL_BINARY ${EXTERNAL_BINARY})
+
+            IF(WIN32)
+                # On Windows, we need to replace the extension of the external
+                # library
+
+                STRING(REPLACE "${CMAKE_IMPORT_LIBRARY_SUFFIX}" "${CMAKE_SHARED_LIBRARY_SUFFIX}" REAL_EXTERNAL_BINARY "${REAL_EXTERNAL_BINARY}")
+            ENDIF()
+
+            COPY_FILE_TO_BUILD_DIR(DIRECT_COPY ${EXTERNAL_BINARIES_DIR} ${DEST_EXTERNAL_BINARIES_DIR} ${REAL_EXTERNAL_BINARY})
 
             # Link the plugin to the external library
 
-            TARGET_LINK_LIBRARIES(${PROJECT_NAME}
-                ${FULL_DEST_EXTERNAL_BINARIES_DIR}/${EXTERNAL_BINARY}
-            )
+            IF(WIN32)
+                TARGET_LINK_LIBRARIES(${PROJECT_NAME}
+                    ${FULL_EXTERNAL_BINARY}
+                )
+            ELSE()
+                TARGET_LINK_LIBRARIES(${PROJECT_NAME}
+                    ${FULL_DEST_EXTERNAL_BINARIES_DIR}/${EXTERNAL_BINARY}
+                )
+            ENDIF()
         ENDIF()
     ENDFOREACH()
 
@@ -662,19 +677,25 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
 
                 # External binaries
 
-                    FOREACH(EXTERNAL_BINARY ${EXTERNAL_BINARIES})
-                        IF("${EXTERNAL_BINARIES_DIR}" STREQUAL "")
-                            SET(FULL_EXTERNAL_BINARY ${EXTERNAL_BINARY})
-                        ELSE()
-                            SET(FULL_EXTERNAL_BINARY "${EXTERNAL_BINARIES_DIR}/${EXTERNAL_BINARY}")
-                        ENDIF()
+                FOREACH(EXTERNAL_BINARY ${EXTERNAL_BINARIES})
+                    IF("${EXTERNAL_BINARIES_DIR}" STREQUAL "")
+                        SET(FULL_EXTERNAL_BINARY ${EXTERNAL_BINARY})
+                    ELSE()
+                        SET(FULL_EXTERNAL_BINARY "${EXTERNAL_BINARIES_DIR}/${EXTERNAL_BINARY}")
+                    ENDIF()
 
-                        IF(EXISTS ${FULL_EXTERNAL_BINARY})
+                    IF(EXISTS ${FULL_EXTERNAL_BINARY})
+                        IF(WIN32)
+                            TARGET_LINK_LIBRARIES(${TEST_NAME}
+                                ${FULL_EXTERNAL_BINARY}
+                            )
+                        ELSE()
                             TARGET_LINK_LIBRARIES(${TEST_NAME}
                                 ${FULL_DEST_EXTERNAL_BINARIES_DIR}/${EXTERNAL_BINARY}
                             )
                         ENDIF()
-                    ENDFOREACH()
+                    ENDIF()
+                ENDFOREACH()
 
                 # Copy the test to our tests directory
                 # Note: DEST_TESTS_DIR is defined in our main CMake file...
