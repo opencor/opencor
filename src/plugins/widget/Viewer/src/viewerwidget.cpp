@@ -131,7 +131,7 @@ ViewerWidget::ViewerWidget(QWidget *pParent) :
     setContextMenuPolicy(Qt::CustomContextMenu);
 
     connect(this, SIGNAL(customContextMenuRequested(const QPoint &)),
-            this, SLOT(showCustomContextMenu(const QPoint &)));
+            this, SLOT(showCustomContextMenu()));
 
     // Retranslate ourselves, so that our actions are properly initialised
 
@@ -405,11 +405,13 @@ void ViewerWidget::paintEvent(QPaintEvent *pEvent)
         // We want to show that there is an error, so render a stretched warning
         // icon in our center
 
-        QIcon icon = QIcon(":/oxygen/status/task-attention.png");
-        QSize iconSize = icon.availableSizes().first();
+        static const QIcon WarningIcon = QIcon(":/oxygen/status/task-attention.png");
 
-        int painterRectWidth = iconSize.width();
-        int painterRectHeight = iconSize.height();
+        static const int WarningIconWidth  = WarningIcon.availableSizes().first().width();
+        static const int WarningIconHeight = WarningIcon.availableSizes().first().height();
+
+        int painterRectWidth = WarningIconWidth;
+        int painterRectHeight = WarningIconHeight;
 
         if (rect.width() < rect.height())
             painterRectHeight *= rect.height()/rect.width();
@@ -431,7 +433,7 @@ void ViewerWidget::paintEvent(QPaintEvent *pEvent)
 
         painter.setWindow(painterRect);
 
-        icon.paint(&painter, painterRect);
+        WarningIcon.paint(&painter, painterRect);
     } else {
         // Customise our MathML document
         // Note: to go for 100% of the 'optimal' font size might result in the
@@ -677,10 +679,8 @@ QString ViewerWidget::processedContents() const
 
 //==============================================================================
 
-void ViewerWidget::showCustomContextMenu(const QPoint &pPosition) const
+void ViewerWidget::showCustomContextMenu() const
 {
-    Q_UNUSED(pPosition);
-
     // Show our custom context menu
 
     mContextMenu->exec(QCursor::pos());

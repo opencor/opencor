@@ -4,6 +4,7 @@ PROJECT(RawCellMLViewPlugin)
 
 RETRIEVE_CELLML_API_SETTINGS()
 RETRIEVE_LLVM_SETTINGS()
+RETRIEVE_QWT_SETTINGS()
 
 # Add the plugin
 
@@ -24,10 +25,9 @@ ADD_PLUGIN(RawCellMLView
     HEADERS_MOC
         src/rawcellmlviewplugin.h
         src/rawcellmlviewwidget.h
-    UIS
-        src/rawcellmlviewwidget.ui
     DEFINITIONS
         ${LLVM_DEFINITIONS}
+        ${QWT_DEFINITIONS}
     INCLUDE_DIRS
         src
     PLUGINS
@@ -58,6 +58,8 @@ ADD_PLUGIN(RawCellMLView
         QtOpenGL
         QtPrintSupport
         QtSvg
+        QtWebKit
+        QtWebKitWidgets
         QtWidgets
         QtXml
         QtXmlPatterns

@@ -35,12 +35,6 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-namespace Ui {
-    class CellmlAnnotationViewEditingWidget;
-}
-
-//==============================================================================
-
 class QComboBox;
 class QLabel;
 class QLineEdit;
@@ -70,7 +64,6 @@ public:
     explicit CellmlAnnotationViewEditingWidget(CellMLAnnotationViewPlugin *pPluginParent,
                                                const QString &pFileName,
                                                CellmlAnnotationViewWidget *pParent);
-    ~CellmlAnnotationViewEditingWidget();
 
     virtual void retranslateUi();
 
@@ -93,8 +86,6 @@ public:
     void filePermissionsChanged();
 
 private:
-    Ui::CellmlAnnotationViewEditingWidget *mGui;
-
     CellMLAnnotationViewPlugin *mPluginParent;
     CellmlAnnotationViewWidget *mParent;
 

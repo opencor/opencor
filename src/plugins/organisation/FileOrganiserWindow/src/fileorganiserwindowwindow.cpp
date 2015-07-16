@@ -83,7 +83,7 @@ FileOrganiserWindowWindow::FileOrganiserWindowWindow(QWidget *pParent) :
     // Some connections
 
     connect(mFileOrganiserWidget, SIGNAL(customContextMenuRequested(const QPoint &)),
-            this, SLOT(showCustomContextMenu(const QPoint &)));
+            this, SLOT(showCustomContextMenu()));
     connect(mFileOrganiserWidget, SIGNAL(doubleClicked(const QModelIndex &)),
             this, SLOT(itemDoubleClicked(const QModelIndex &)));
     connect(mFileOrganiserWidget, SIGNAL(filesOpenRequested(const QStringList &)),
@@ -161,10 +161,8 @@ void FileOrganiserWindowWindow::on_actionDelete_triggered()
 
 //==============================================================================
 
-void FileOrganiserWindowWindow::showCustomContextMenu(const QPoint &pPosition) const
+void FileOrganiserWindowWindow::showCustomContextMenu() const
 {
-    Q_UNUSED(pPosition);
-
     // Show our context menu which items match the contents of our tool bar
     // widget
 

@@ -1,11 +1,39 @@
 var jsonData = { "versions": [
-                   { "anchor": "latest", "description": "Latest snapshot", "day": 0, "month": 0, "year": 0,
+                   { "anchor": "latest", "description": "Latest snapshot", "day": 13, "month": 7, "year": 2015,
                      "categories": [
+                       { "name": "General",
+                         "entries": [
+                           { "type": "Added", "description": "<a href=\"http://git-scm.com/\">Git</a> support." },
+                           { "type": "Added", "description": "Resetting all your settings from the command line." }
+                         ]
+                       },
+                       { "name": "API",
+                         "entries": [
+                           { "type": "Added", "description": "<a href=\"http://sbml.org/\">SBML</a> API (via <a href=\"http://sbml.org/Software/libSBML/\">libSBML</a>)." },
+                           { "type": "Added", "description": "<a href=\"http://www.sed-ml.org/\">SED-ML</a> API (via <a href=\"https://github.com/fbergmann/libSEDML/\">libSEDML</a>)." }
+                         ]
+                       },
+                       { "name": "Organisation",
+                         "entries": [
+                           { "type": "subCategory", "name": "Physiome Model Repository window (formerly known as the CellML Model Repository window)",
+                             "entries": [
+                               { "type": "Added", "description": "Cloning of a workspace." },
+                               { "type": "Added", "description": "Open a file from a published exposure." }
+                             ]
+                           }
+                         ]
+                       },
                        { "name": "Editing",
                          "entries": [
+                           { "type": "subCategory", "name": "CellML annotation view",
+                             "entries": [
+                               { "type": "Improved", "description": "GUI rendering." }
+                             ]
+                           },
                            { "type": "subCategory", "name": "CellML Text view",
                              "entries": [
-                               { "type": "Improved", "description": "Comments support by allowing comments before a model definition." }
+                               { "type": "Improved", "description": "Comments support by allowing comments before a model definition." },
+                               { "type": "Fixed", "description": "Serialisation of a mathematical equation with a <code>cmeta:id</code> value." }
                              ]
                            }
                          ]
@@ -24,7 +52,18 @@ var jsonData = { "versions": [
                            },
                            { "type": "subCategory", "name": "Single cell (simulation) view",
                              "entries": [
-                               { "type": "Improved", "description": "GUI rendering on <a href=\"http://en.wikipedia.org/wiki/OS_X\">OS X</a>." }
+                               { "type": "Improved", "description": "GUI rendering." },
+                               { "type": "Improved", "description": "Plotting of simulation data." },
+                               { "type": "Improved", "description": "Support for CellML models." }
+                             ]
+                           }
+                         ]
+                       },
+                       { "name": "Tool",
+                         "entries": [
+                           { "type": "subCategory", "name": "CellML tools",
+                             "entries": [
+                               { "type": "Improved", "description": "Export of a CellML file." }
                              ]
                            }
                          ]

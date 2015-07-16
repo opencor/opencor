@@ -31,8 +31,16 @@ MACRO(INITIALISE_PROJECT)
 
     IF(NOT ARCHITECTURE_COMPILE)
         MESSAGE(FATAL_ERROR "We could not determine your architecture. Please clean your OpenCOR environment and try again...")
-    ELSEIF(NOT ${ARCHITECTURE} EQUAL 32 AND NOT ${ARCHITECTURE} EQUAL 64)
-        MESSAGE(FATAL_ERROR "OpenCOR can only be built in 32-bit or 64-bit mode...")
+    ELSE()
+        IF(APPLE)
+            IF(NOT ${ARCHITECTURE} EQUAL 64)
+                MESSAGE(FATAL_ERROR "OpenCOR can only be built in 64-bit mode...")
+            ENDIF()
+        ELSE()
+            IF(NOT ${ARCHITECTURE} EQUAL 32 AND NOT ${ARCHITECTURE} EQUAL 64)
+                MESSAGE(FATAL_ERROR "OpenCOR can only be built in 32-bit or 64-bit mode...")
+            ENDIF()
+        ENDIF()
     ENDIF()
 
     # By default, we are building a release version of OpenCOR, unless we are
@@ -196,61 +204,15 @@ MACRO(INITIALISE_PROJECT)
         ADD_DEFINITIONS(-DENABLE_SAMPLES)
     ENDIF()
 
-    # On OS X, use the oldest SDK available, as long as it is for Mac OS X 10.7
-    # or later (i.e. a version that supports C++11)
+    # On OS X, make sure that we support 10.7 and later, unless a deployment
+    # target has been specified
 
     IF(APPLE)
-        EXECUTE_PROCESS(COMMAND xcodebuild -showsdks
-                        COMMAND grep --colour=never macosx
-                        COMMAND cut -f2
-                        COMMAND sed "s/ *$//"
-                        OUTPUT_VARIABLE OS_X_VERSIONS
-                        ERROR_QUIET)
-        EXECUTE_PROCESS(COMMAND echo ${OS_X_VERSIONS}
-                        COMMAND rev
-                        COMMAND cut -d " " -f1
-                        COMMAND rev
-                        COMMAND tr "\n" ";"
-                        OUTPUT_VARIABLE OS_X_VERSION_NUMBERS)
-
-        SET(VALID_OS_X_VERSION_NUMBER)
-        SET(INVALID_OS_X_VERSION_NUMBER)
-
-        FOREACH(OS_X_VERSION_NUMBER ${OS_X_VERSION_NUMBERS})
-            IF(${OS_X_VERSION_NUMBER} VERSION_LESS 10.7)
-                SET(INVALID_OS_X_VERSION_NUMBER ${OS_X_VERSION_NUMBER})
-            ELSE()
-                IF("${VALID_OS_X_VERSION_NUMBER}" STREQUAL "")
-                    SET(VALID_OS_X_VERSION_NUMBER ${OS_X_VERSION_NUMBER})
-                ENDIF()
-            ENDIF()
-        ENDFOREACH()
-
-        IF("${VALID_OS_X_VERSION_NUMBER}" STREQUAL "")
-            IF("${INVALID_OS_X_VERSION_NUMBER}" STREQUAL "")
-                MESSAGE(FATAL_ERROR "No SDK could be found...")
-            ELSE()
-                EXECUTE_PROCESS(COMMAND echo ${OS_X_VERSIONS}
-                                COMMAND grep --colour=never "${INVALID_OS_X_VERSION_NUMBER}"
-                                OUTPUT_VARIABLE INVALID_OS_X_VERSION
-                                OUTPUT_STRIP_TRAILING_WHITESPACE)
-
-                MESSAGE(FATAL_ERROR "The ${INVALID_OS_X_VERSION} SDK was found, but the Mac OS X 10.7 SDK or later is needed...")
-            ENDIF()
+        IF("${CMAKE_OSX_DEPLOYMENT_TARGET}" STREQUAL "")
+            SET(CMAKE_OSX_DEPLOYMENT_TARGET 10.7)
         ENDIF()
 
-        EXECUTE_PROCESS(COMMAND echo ${OS_X_VERSIONS}
-                        COMMAND grep --colour=never "${VALID_OS_X_VERSION_NUMBER}"
-                        OUTPUT_VARIABLE VALID_OS_X_VERSION
-                        OUTPUT_STRIP_TRAILING_WHITESPACE)
-        EXECUTE_PROCESS(COMMAND xcodebuild -version -sdk macosx${VALID_OS_X_VERSION_NUMBER} Path
-                        OUTPUT_VARIABLE VALID_SDK_PATH
-                        OUTPUT_STRIP_TRAILING_WHITESPACE)
-
-        MESSAGE("Building for ${VALID_OS_X_VERSION} and later...")
-
-        SET(CMAKE_OSX_DEPLOYMENT_TARGET ${VALID_OS_X_VERSION_NUMBER})
-        SET(CMAKE_OSX_SYSROOT ${VALID_SDK_PATH})
+        MESSAGE("Building for ${CMAKE_OSX_DEPLOYMENT_TARGET} and later...")
     ENDIF()
 
     # Location of our plugins so that we don't have to deploy OpenCOR on
@@ -526,21 +488,55 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
 
     # External binaries
 
-    IF(NOT "${EXTERNAL_BINARIES}" STREQUAL "")
-        FOREACH(EXTERNAL_BINARY ${EXTERNAL_BINARIES})
-            IF("${EXTERNAL_BINARIES_DIR}" STREQUAL "")
-                SET(FULL_EXTERNAL_BINARY ${EXTERNAL_BINARY})
-            ELSE()
-                SET(FULL_EXTERNAL_BINARY "${EXTERNAL_BINARIES_DIR}/${EXTERNAL_BINARY}")
+    IF(WIN32)
+        SET(DEST_EXTERNAL_BINARIES_DIR bin)
+    ELSEIF(APPLE)
+        SET(DEST_EXTERNAL_BINARIES_DIR ${CMAKE_PROJECT_NAME}.app/Contents/Frameworks)
+    ELSE()
+        SET(DEST_EXTERNAL_BINARIES_DIR lib)
+    ENDIF()
+
+    SET(FULL_DEST_EXTERNAL_BINARIES_DIR ${PROJECT_BUILD_DIR}/${DEST_EXTERNAL_BINARIES_DIR})
+
+    IF(NOT EXISTS ${FULL_DEST_EXTERNAL_BINARIES_DIR})
+        FILE(MAKE_DIRECTORY ${FULL_DEST_EXTERNAL_BINARIES_DIR})
+    ENDIF()
+
+    FOREACH(EXTERNAL_BINARY ${EXTERNAL_BINARIES})
+        IF("${EXTERNAL_BINARIES_DIR}" STREQUAL "")
+            SET(FULL_EXTERNAL_BINARY ${EXTERNAL_BINARY})
+        ELSE()
+            SET(FULL_EXTERNAL_BINARY "${EXTERNAL_BINARIES_DIR}/${EXTERNAL_BINARY}")
+        ENDIF()
+
+        IF(EXISTS ${FULL_EXTERNAL_BINARY})
+            # Copy the external binary to its destination directory, so we can
+            # test things without first having to deploy OpenCOR
+
+            SET(REAL_EXTERNAL_BINARY ${EXTERNAL_BINARY})
+
+            IF(WIN32)
+                # On Windows, we need to replace the extension of the external
+                # library
+
+                STRING(REPLACE "${CMAKE_IMPORT_LIBRARY_SUFFIX}" "${CMAKE_SHARED_LIBRARY_SUFFIX}" REAL_EXTERNAL_BINARY "${REAL_EXTERNAL_BINARY}")
             ENDIF()
 
-            IF(EXISTS ${FULL_EXTERNAL_BINARY})
+            COPY_FILE_TO_BUILD_DIR(DIRECT_COPY ${EXTERNAL_BINARIES_DIR} ${DEST_EXTERNAL_BINARIES_DIR} ${REAL_EXTERNAL_BINARY})
+
+            # Link the plugin to the external library
+
+            IF(WIN32)
                 TARGET_LINK_LIBRARIES(${PROJECT_NAME}
                     ${FULL_EXTERNAL_BINARY}
                 )
+            ELSE()
+                TARGET_LINK_LIBRARIES(${PROJECT_NAME}
+                    ${FULL_DEST_EXTERNAL_BINARIES_DIR}/${EXTERNAL_BINARY}
+                )
             ENDIF()
-        ENDFOREACH()
-    ENDIF()
+        ENDIF()
+    ENDFOREACH()
 
     # Location of our plugin
 
@@ -681,21 +677,25 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
 
                 # External binaries
 
-                IF(NOT "${EXTERNAL_BINARIES}" STREQUAL "")
-                    FOREACH(EXTERNAL_BINARY ${EXTERNAL_BINARIES})
-                        IF("${EXTERNAL_BINARIES_DIR}" STREQUAL "")
-                            SET(FULL_EXTERNAL_BINARY ${EXTERNAL_BINARY})
-                        ELSE()
-                            SET(FULL_EXTERNAL_BINARY "${EXTERNAL_BINARIES_DIR}/${EXTERNAL_BINARY}")
-                        ENDIF()
+                FOREACH(EXTERNAL_BINARY ${EXTERNAL_BINARIES})
+                    IF("${EXTERNAL_BINARIES_DIR}" STREQUAL "")
+                        SET(FULL_EXTERNAL_BINARY ${EXTERNAL_BINARY})
+                    ELSE()
+                        SET(FULL_EXTERNAL_BINARY "${EXTERNAL_BINARIES_DIR}/${EXTERNAL_BINARY}")
+                    ENDIF()
 
-                        IF(EXISTS ${FULL_EXTERNAL_BINARY})
+                    IF(EXISTS ${FULL_EXTERNAL_BINARY})
+                        IF(WIN32)
                             TARGET_LINK_LIBRARIES(${TEST_NAME}
                                 ${FULL_EXTERNAL_BINARY}
                             )
+                        ELSE()
+                            TARGET_LINK_LIBRARIES(${TEST_NAME}
+                                ${FULL_DEST_EXTERNAL_BINARIES_DIR}/${EXTERNAL_BINARY}
+                            )
                         ENDIF()
-                    ENDFOREACH()
-                ENDIF()
+                    ENDIF()
+                ENDFOREACH()
 
                 # Copy the test to our tests directory
                 # Note: DEST_TESTS_DIR is defined in our main CMake file...
@@ -821,6 +821,19 @@ ENDMACRO()
 
 #===============================================================================
 
+MACRO(RETRIEVE_CONFIG_FILES)
+    FOREACH(CONFIG_FILE ${ARGN})
+        STRING(REPLACE "DISTRIB_DIR/" "${DISTRIB_DIR}/" CONFIG_FILE_ORIG "${CONFIG_FILE}")
+        STRING(REPLACE "DISTRIB_DIR/" "" CONFIG_FILE_DEST "${CONFIG_FILE}")
+
+        CONFIGURE_FILE(${PROJECT_SOURCE_DIR}/${CONFIG_FILE_ORIG}
+                       ${PROJECT_SOURCE_DIR}/${CONFIG_FILE_DEST}
+                       COPYONLY)
+    ENDFOREACH()
+ENDMACRO()
+
+#===============================================================================
+
 MACRO(COPY_FILE_TO_BUILD_DIR PROJECT_TARGET ORIG_DIRNAME DEST_DIRNAME FILENAME)
     # Copy the file (renaming it, if needed) to the destination folder
     # Note: DIRECT_COPY is used to copy a file that doesn't first need to be
@@ -858,8 +871,8 @@ ENDMACRO()
 
 MACRO(WINDOWS_DEPLOY_QT_LIBRARIES)
     FOREACH(LIBRARY ${ARGN})
-        # Copy the Qt library to both the build and build/bin folders, so we can
-        # test things without first having to deploy OpenCOR
+        # Copy the Qt library to the build/bin folder, so we can test things
+        # without first having to deploy OpenCOR
         # Note: this is particularly useful on 64-bit Windows where we might
         #       want to be able to test both the 32-bit and 64-bit versions of
         #       OpenCOR (since only the 32-bit or 64-bit Qt libraries are
@@ -876,10 +889,8 @@ MACRO(WINDOWS_DEPLOY_QT_LIBRARIES)
         ENDIF()
 
         IF(RELEASE_MODE)
-            COPY_FILE_TO_BUILD_DIR(DIRECT_COPY ${QT_BINARY_DIR} . ${LIBRARY_RELEASE_FILENAME})
             COPY_FILE_TO_BUILD_DIR(DIRECT_COPY ${QT_BINARY_DIR} bin ${LIBRARY_RELEASE_FILENAME})
         ELSE()
-            COPY_FILE_TO_BUILD_DIR(DIRECT_COPY ${QT_BINARY_DIR} . ${LIBRARY_DEBUG_FILENAME})
             COPY_FILE_TO_BUILD_DIR(DIRECT_COPY ${QT_BINARY_DIR} bin ${LIBRARY_DEBUG_FILENAME})
         ENDIF()
 
@@ -917,16 +928,33 @@ ENDMACRO()
 #===============================================================================
 
 MACRO(WINDOWS_DEPLOY_LIBRARY DIRNAME FILENAME)
-    # Copy the library file to both the build and build/bin folders, so we can
-    # test things without first having to deploy OpenCOR
-
-    COPY_FILE_TO_BUILD_DIR(DIRECT_COPY ${DIRNAME} . ${FILENAME})
-    COPY_FILE_TO_BUILD_DIR(DIRECT_COPY ${DIRNAME} bin ${FILENAME})
-
-    # Install the library file
+    # Deploy the library file
 
     INSTALL(FILES ${DIRNAME}/${FILENAME}
             DESTINATION bin)
+ENDMACRO()
+
+#===============================================================================
+
+MACRO(LINUX_DEPLOY_QT_LIBRARY DIRNAME ORIG_FILENAME DEST_FILENAME)
+    # Copy the Qt library to the build/lib folder, so we can test things without
+    # first having to deploy OpenCOR
+    # Note: this is particularly useful when the Linux machine has different
+    #       versions of Qt...
+
+    COPY_FILE_TO_BUILD_DIR(DIRECT_COPY ${DIRNAME} lib ${ORIG_FILENAME} ${DEST_FILENAME})
+
+    # Strip the library of all its local symbols
+
+    IF(RELEASE_MODE)
+        ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
+                           COMMAND strip -x lib/${DEST_FILENAME})
+    ENDIF()
+
+    # Deploy the Qt library
+
+    INSTALL(FILES build/lib/${DEST_FILENAME}
+            DESTINATION lib)
 ENDMACRO()
 
 #===============================================================================
@@ -950,7 +978,7 @@ MACRO(LINUX_DEPLOY_QT_PLUGIN PLUGIN_CATEGORY)
 
         # Deploy the Qt plugin
 
-        INSTALL(FILES ${PLUGIN_ORIG_DIRNAME}/${PLUGIN_FILENAME}
+        INSTALL(FILES build/${PLUGIN_DEST_DIRNAME}/${PLUGIN_FILENAME}
                 DESTINATION ${PLUGIN_DEST_DIRNAME})
     ENDFOREACH()
 ENDMACRO()
@@ -965,7 +993,7 @@ MACRO(LINUX_DEPLOY_LIBRARY DIRNAME FILENAME)
                            COMMAND strip -x ${DIRNAME}/${FILENAME})
     ENDIF()
 
-    # Install the library file
+    # Deploy the library file
 
     INSTALL(FILES ${DIRNAME}/${FILENAME}
             DESTINATION lib)
@@ -1083,16 +1111,9 @@ ENDMACRO()
 #===============================================================================
 
 MACRO(OS_X_DEPLOY_LIBRARY DIRNAME LIBRARY_NAME)
-    # Copy the library
-
-    SET(LIBRARY_FILENAME ${CMAKE_SHARED_LIBRARY_PREFIX}${LIBRARY_NAME}${CMAKE_SHARED_LIBRARY_SUFFIX})
-    SET(LIBRARY_FILEPATH ${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME}.app/Contents/Frameworks/${LIBRARY_FILENAME})
-
-    ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
-                       COMMAND ${CMAKE_COMMAND} -E copy ${DIRNAME}/${LIBRARY_FILENAME}
-                                                        ${LIBRARY_FILEPATH})
-
     # Strip the library of all its local symbols
+
+    SET(LIBRARY_FILEPATH ${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME}.app/Contents/Frameworks/${CMAKE_SHARED_LIBRARY_PREFIX}${LIBRARY_NAME}${CMAKE_SHARED_LIBRARY_SUFFIX})
 
     IF(RELEASE_MODE)
         ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD

@@ -21,11 +21,11 @@ specific language governing permissions and limitations under the License.
 
 #include "cellmlannotationvieweditingwidget.h"
 #include "cellmlannotationviewmetadatanormalviewdetailswidget.h"
-#include "cellmlannotationviewmetadatawebviewwidget.h"
 #include "corecliutils.h"
 #include "coreguiutils.h"
 #include "filemanager.h"
 #include "usermessagewidget.h"
+#include "webviewwidget.h"
 
 //==============================================================================
 
@@ -90,9 +90,11 @@ CellmlAnnotationViewMetadataNormalViewDetailsWidget::CellmlAnnotationViewMetadat
 
     mOutput = new Core::Widget(this);
 
-    mOutput->setLayout(new QVBoxLayout(mOutput));
+    QVBoxLayout *outputLayout = new QVBoxLayout(mOutput);
 
-    mOutput->layout()->setMargin(0);
+    outputLayout->setMargin(0);
+
+    mOutput->setLayout(outputLayout);
 
     // Create our output message (within a scroll area, in case the label is too
     // wide)
@@ -111,23 +113,25 @@ CellmlAnnotationViewMetadataNormalViewDetailsWidget::CellmlAnnotationViewMetadat
 
     Core::readTextFromFile(":/ontologicalTerms.html", mOutputOntologicalTermsTemplate);
 
-    mOutputOntologicalTerms = new CellmlAnnotationViewMetadataWebViewWidget(mOutput);
+    mOutputOntologicalTerms = new Core::WebViewWidget(mOutput);
 
     mOutputOntologicalTerms->setContextMenuPolicy(Qt::CustomContextMenu);
 
     connect(mOutputOntologicalTerms, SIGNAL(customContextMenuRequested(const QPoint &)),
-            this, SLOT(showCustomContextMenu(const QPoint &)));
+            this, SLOT(showCustomContextMenu()));
 
     mOutputOntologicalTerms->page()->setLinkDelegationPolicy(QWebPage::DelegateAllLinks);
 
     connect(mOutputOntologicalTerms->page(), SIGNAL(linkClicked(const QUrl &)),
             this, SLOT(linkClicked()));
+    connect(mOutputOntologicalTerms->page(), SIGNAL(linkHovered(const QString &, const QString &, const QString &)),
+            this, SLOT(linkHovered()));
 
     // Add our output message and output for ontological terms to our output
     // widget
 
-    mOutput->layout()->addWidget(mOutputMessageScrollArea);
-    mOutput->layout()->addWidget(mOutputOntologicalTerms);
+    outputLayout->addWidget(mOutputMessageScrollArea);
+    outputLayout->addWidget(mOutputOntologicalTerms);
 
     // Add our output widget to our main layout
 
@@ -585,10 +589,42 @@ void CellmlAnnotationViewMetadataNormalViewDetailsWidget::linkClicked()
 
 //==============================================================================
 
-void CellmlAnnotationViewMetadataNormalViewDetailsWidget::showCustomContextMenu(const QPoint &pPosition)
+void CellmlAnnotationViewMetadataNormalViewDetailsWidget::linkHovered()
 {
-    Q_UNUSED(pPosition);
+    // Retrieve some information about the link
 
+    QString link;
+    QString textContent;
+
+    mOutputOntologicalTerms->retrieveLinkInformation(link, textContent);
+
+    // Update our tool tip based on whether we are hovering a text or button
+    // link
+    // Note: this follows the approach used in linkClicked()...
+
+    QString linkToolTip = QString();
+
+    if (!link.isEmpty()) {
+        if (textContent.isEmpty()) {
+            linkToolTip = tr("Remove Term");
+        } else {
+            QStringList rdfTripleInformation = link.split("|");
+
+            linkToolTip = (!rdfTripleInformation[0].compare(textContent))?
+                              tr("Look Up Qualifier"):
+                              !rdfTripleInformation[1].compare(textContent)?
+                                  tr("Look Up Resource"):
+                                  tr("Look Up Id");
+        }
+    }
+
+    mOutputOntologicalTerms->setLinkToolTip(linkToolTip);
+}
+
+//==============================================================================
+
+void CellmlAnnotationViewMetadataNormalViewDetailsWidget::showCustomContextMenu()
+{
     // Retrieve some information about the link
 
     mOutputOntologicalTerms->retrieveLinkInformation(mLink, mTextContent);

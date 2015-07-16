@@ -45,8 +45,12 @@ namespace CoreDataStore {
 class COREDATASTORE_EXPORT CoreDataStore
 {
 public:
-    explicit CoreDataStore(const qulonglong &pSize);
+    explicit CoreDataStore(const QString &pId, const QString &pUri,
+                           const qulonglong &pSize);
     virtual ~CoreDataStore();
+
+    QString id() const;
+    QString uri() const;
 
     qulonglong size() const;
 
@@ -59,19 +63,14 @@ public:
 
     void setValues(const qulonglong &pPosition, const double &pValue);
 
-    QString modelId() const;
-    void setModelId(const QString &pId);
-    QString modelUri() const;
-    void setModelUri(const QString &pUri);
-
 private:
+    QString mId;
+    QString mlUri;
+
     const qulonglong mSize;
 
     DataStoreVariable *mVoi;
     DataStoreVariables mVariables;
-
-    QString mModelId;
-    QString mModelUri;
 };
 
 //==============================================================================

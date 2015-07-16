@@ -106,20 +106,17 @@ typedef struct git_clone_options {
 	/**
 	 * These options are passed to the checkout step. To disable
 	 * checkout, set the `checkout_strategy` to
-	 * `GIT_CHECKOUT_NONE`. Generally you will want the use
-	 * GIT_CHECKOUT_SAFE_CREATE to create all files in the working
-	 * directory for the newly cloned repository.
+	 * `GIT_CHECKOUT_NONE`.
 	 */
 	git_checkout_options checkout_opts;
 
 	/**
-	 * Callbacks to use for reporting fetch progress, and for acquiring
-	 * credentials in the event they are needed. This parameter is ignored if
-	 * the remote_cb parameter is set; if you provide a remote creation
-	 * callback, then you have the opportunity to configure remote callbacks in
-	 * provided function.
+	 * Options which control the fetch, including callbacks.
+	 *
+	 * The callbacks are used for reporting fetch progress, and for acquiring
+	 * credentials in the event they are needed.
 	 */
-	git_remote_callbacks remote_callbacks;
+	git_fetch_options fetch_opts;
 
 	/**
 	 * Set to zero (false) to create a standard repo, or non-zero
@@ -137,12 +134,6 @@ typedef struct git_clone_options {
 	 * remote's default branch.
 	 */
 	const char* checkout_branch;
-
-	/**
-	 * The identity used when updating the reflog. NULL means to
-	 * use the default signature using the config.
-	 */
-	git_signature *signature;
 
 	/**
 	 * A callback used to create the new repository into which to
@@ -173,7 +164,9 @@ typedef struct git_clone_options {
 } git_clone_options;
 
 #define GIT_CLONE_OPTIONS_VERSION 1
-#define GIT_CLONE_OPTIONS_INIT {GIT_CLONE_OPTIONS_VERSION, {GIT_CHECKOUT_OPTIONS_VERSION, GIT_CHECKOUT_SAFE_CREATE}, GIT_REMOTE_CALLBACKS_INIT}
+#define GIT_CLONE_OPTIONS_INIT { GIT_CLONE_OPTIONS_VERSION, \
+	{ GIT_CHECKOUT_OPTIONS_VERSION, GIT_CHECKOUT_SAFE }, \
+	GIT_FETCH_OPTIONS_INIT }
 
 /**
  * Initializes a `git_clone_options` with default values. Equivalent to

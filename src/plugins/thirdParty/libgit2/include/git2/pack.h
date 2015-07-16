@@ -115,6 +115,31 @@ GIT_EXTERN(int) git_packbuilder_insert_tree(git_packbuilder *pb, const git_oid *
 GIT_EXTERN(int) git_packbuilder_insert_commit(git_packbuilder *pb, const git_oid *id);
 
 /**
+ * Insert objects as given by the walk
+ *
+ * Those commits and all objects they reference will be inserted into
+ * the packbuilder.
+ *
+ * @param pb the packbuilder
+ * @param walk the revwalk to use to fill the packbuilder
+ *
+ * @return 0 or an error code
+ */
+GIT_EXTERN(int) git_packbuilder_insert_walk(git_packbuilder *pb, git_revwalk *walk);
+
+/**
+ * Recursively insert an object and its referenced objects
+ *
+ * Insert the object as well as any object it references.
+ *
+ * @param pb the packbuilder
+ * @param id the id of the root object to insert
+ * @param name optional name for the object
+ * @return 0 or an error code
+ */
+GIT_EXTERN(int) git_packbuilder_insert_recur(git_packbuilder *pb, const git_oid *id, const char *name);
+
+/**
  * Write the contents of the packfile to an in-memory buffer
  *
  * The contents of the buffer will become a valid packfile, even though there

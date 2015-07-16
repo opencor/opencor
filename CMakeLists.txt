@@ -240,6 +240,8 @@ SET(PLUGINS
     # Plugins that have no dependencies
 
     api/CellMLAPI
+    api/SBMLAPI
+    api/SEDMLAPI
 
     dataStore/CoreDataStore
 
@@ -288,9 +290,9 @@ SET(PLUGINS
 
     miscellaneous/HelpWindow
 
-    organisation/CellMLModelRepositoryWindow
     organisation/FileBrowserWindow
     organisation/FileOrganiserWindow
+    organisation/PhysiomeModelRepositoryWindow
 
     simulation/SingleCellView
 
@@ -406,13 +408,20 @@ IF(APPLE)
 
     # Clean up the OpenCOR executable
 
+    IF(APPLE)
+        SET(QT_MAC_EXTRAS QtMacExtras)
+    ELSE()
+        SET(QT_MAC_EXTRAS)
+    ENDIF()
+
     SET(QT_LIBRARIES
         QtCLucene
         QtConcurrent
         QtCore
+        QtDBus
         QtGui
         QtHelp
-        QtMacExtras
+        ${QT_MAC_EXTRAS}
         QtMultimedia
         QtMultimediaWidgets
         QtNetwork
@@ -496,11 +505,11 @@ ELSE()
         ENDIF()
 
         IF(${ARCHITECTURE} EQUAL 32)
-            RETRIEVE_BINARY_FILE(distrib/${DISTRIB_DIR} libeay32.dll 84fe64c29404e73eb03a950fdc2a0b6314f05b32)
-            RETRIEVE_BINARY_FILE(distrib/${DISTRIB_DIR} ssleay32.dll 310275ff1a16404a0a5d15a8491a45bc88592830)
+            RETRIEVE_BINARY_FILE(distrib/${DISTRIB_DIR} libeay32.dll abe57f749650fdebbaa6792e3676294c20db6abe)
+            RETRIEVE_BINARY_FILE(distrib/${DISTRIB_DIR} ssleay32.dll 4685df166f9a64d02c86d7966d4d3a7fa18b3106)
         ELSE()
-            RETRIEVE_BINARY_FILE(distrib/${DISTRIB_DIR} libeay32.dll 2cf5db76a32190f7fe97efc4285419cab638c43b)
-            RETRIEVE_BINARY_FILE(distrib/${DISTRIB_DIR} ssleay32.dll 592fa12875358a93c14befc841c42c3c8568a400)
+            RETRIEVE_BINARY_FILE(distrib/${DISTRIB_DIR} libeay32.dll a24a8310c9be2c477ac3a536eccf76d72a230d99)
+            RETRIEVE_BINARY_FILE(distrib/${DISTRIB_DIR} ssleay32.dll 193fcd969a66354fb3a095485e82e3edfd65e96e)
         ENDIF()
 
         LIST(APPEND ADDITIONAL_FILES
@@ -512,7 +521,6 @@ ELSE()
             GET_FILENAME_COMPONENT(DIRNAME ${ADDITIONAL_FILE} DIRECTORY)
             GET_FILENAME_COMPONENT(FILENAME ${ADDITIONAL_FILE} NAME)
 
-            COPY_FILE_TO_BUILD_DIR(DIRECT_COPY ${DIRNAME} . ${FILENAME})
             COPY_FILE_TO_BUILD_DIR(DIRECT_COPY ${DIRNAME} bin ${FILENAME})
         ENDFOREACH()
     ENDIF()
@@ -533,6 +541,29 @@ IF(SNAPSHOT)
     SET(CPACK_PACKAGE_VERSION_PATCH "")
 ELSE()
     SET(CPACK_PACKAGE_VERSION_PATCH "${PROJECT_VERSION_PATCH}")
+ENDIF()
+
+IF(ENABLE_TRAVIS_CI)
+    # We are building OpenCOR on Travis CI, so use Travis CI's version of the
+    # ICU libraries
+
+    SET(ICU_DIRNAME "/usr/lib")
+
+    SET(ORIG_ICU_VERSION ".48.1.1")
+    SET(DEST_ICU_VERSION ".48")
+ELSE()
+    # We are building OpenCOR locally, so use Qt's version of the ICU libraries
+
+    MATH(EXPR ICU_MINOR_VERSION "${Qt5Widgets_VERSION_MINOR}-1")
+
+    IF(WIN32)
+        SET(ICU_VERSION "${Qt5Widgets_VERSION_MAJOR}${ICU_MINOR_VERSION}")
+    ELSE()
+        SET(ICU_DIRNAME "${QT_LIBRARY_DIR}")
+
+        SET(ORIG_ICU_VERSION ".${Qt5Widgets_VERSION_MAJOR}${ICU_MINOR_VERSION}.1")
+        SET(DEST_ICU_VERSION ".${Qt5Widgets_VERSION_MAJOR}${ICU_MINOR_VERSION}")
+    ENDIF()
 ENDIF()
 
 IF(WIN32)
@@ -578,7 +609,7 @@ IF(WIN32)
     # Qt libraries required by OpenCOR
 
     WINDOWS_DEPLOY_QT_LIBRARIES(Qt5CLucene Qt5Core Qt5Gui Qt5Help Qt5Multimedia Qt5MultimediaWidgets Qt5Network Qt5OpenGL Qt5Positioning Qt5PrintSupport Qt5Qml Qt5Quick Qt5Sensors Qt5Sql Qt5Svg Qt5WebChannel Qt5WebKit Qt5WebKitWidgets Qt5Widgets Qt5Xml Qt5XmlPatterns)
-    WINDOWS_DEPLOY_QT_LIBRARIES(icudt53 icuin53 icuuc53)
+    WINDOWS_DEPLOY_QT_LIBRARIES(icudt${ICU_VERSION} icuin${ICU_VERSION} icuuc${ICU_VERSION})
 
     IF(ENABLE_TESTS)
         WINDOWS_DEPLOY_QT_LIBRARIES(Qt5Test)
@@ -594,8 +625,8 @@ IF(WIN32)
     # Batch and VBScript files to run OpenCOR (useful when downloading a ZIPped
     # version of OpenCOR)
 
-    SET(BatFile ${CMAKE_BINARY_DIR}/${PROJECT_NAME}.bat)
-    SET(VbsFile ${CMAKE_BINARY_DIR}/${PROJECT_NAME}.vbs)
+    SET(BatFile "${CMAKE_BINARY_DIR}/${PROJECT_NAME}.bat")
+    SET(VbsFile "${CMAKE_BINARY_DIR}/${PROJECT_NAME}.vbs")
 
     CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/distrib/windows/application.bat.in ${BatFile})
     CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/distrib/windows/application.vbs.in ${VbsFile})
@@ -647,8 +678,8 @@ ELSEIF(APPLE)
     CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/distrib/osx/application.sh.in ${SHELL_FILENAME})
 
     INSTALL(FILES ${SHELL_FILENAME}
-            RENAME ${PROJECT_NAME}
             DESTINATION .
+            RENAME ${PROJECT_NAME}
             PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
 ELSE()
     # Select TGZ as the packager on Linux
@@ -662,21 +693,27 @@ ELSE()
     INSTALL(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION bin)
 
     # Qt libraries required by OpenCOR
-    # Note: unlike for Windows and OS X, we don't have a macro for deploying our
-    #       Qt libraries. Indeed, on Linux, the version of a file is appended to
-    #       its suffix, so unless making the macro unnecessarily cumbersome to
-    #       use, it's better to do things ourselves...
+    # Note: unlike for Windows and OS X, we don't have a macro for deploying all
+    #       of our Qt libraries at once. Indeed, on Linux, the version of a file
+    #       is appended to its suffix, so unless making the macro unnecessarily
+    #       cumbersome to use, it's better deploy one Qt library at once...
 
-    FOREACH(QT_LIBRARY CLucene Core DBus Gui Help Network OpenGL Positioning PrintSupport Qml Quick Sensors Sql Svg WebChannel WebKit WebKitWidgets Widgets Xml XmlPatterns)
-        INSTALL(FILES ${QT_LIBRARY_DIR}/${CMAKE_SHARED_LIBRARY_PREFIX}Qt${QT_VERSION_MAJOR}${QT_LIBRARY}${CMAKE_SHARED_LIBRARY_SUFFIX}.${QT_VERSION_MAJOR}.${QT_VERSION_MINOR}.${QT_VERSION_PATCH}
-                DESTINATION lib
-                RENAME ${CMAKE_SHARED_LIBRARY_PREFIX}Qt${QT_VERSION_MAJOR}${QT_LIBRARY}${CMAKE_SHARED_LIBRARY_SUFFIX}.${QT_VERSION_MAJOR})
+    IF(ENABLE_TESTS)
+        SET(TEST Test)
+    ELSE()
+        SET(TEST)
+    ENDIF()
+
+    FOREACH(QT_LIBRARY CLucene Core DBus Gui Help Multimedia MultimediaWidgets Network OpenGL Positioning PrintSupport Qml Quick Sensors Sql Svg ${TEST} WebChannel WebKit WebKitWidgets Widgets XcbQpa Xml XmlPatterns)
+        LINUX_DEPLOY_QT_LIBRARY(${QT_LIBRARY_DIR}
+                                ${CMAKE_SHARED_LIBRARY_PREFIX}Qt${QT_VERSION_MAJOR}${QT_LIBRARY}${CMAKE_SHARED_LIBRARY_SUFFIX}.${QT_VERSION_MAJOR}.${QT_VERSION_MINOR}.${QT_VERSION_PATCH}
+                                ${CMAKE_SHARED_LIBRARY_PREFIX}Qt${QT_VERSION_MAJOR}${QT_LIBRARY}${CMAKE_SHARED_LIBRARY_SUFFIX}.${QT_VERSION_MAJOR})
     ENDFOREACH()
 
     FOREACH(QT_FILE icudata icui18n icuuc)
-        INSTALL(FILES ${QT_LIBRARY_DIR}/${CMAKE_SHARED_LIBRARY_PREFIX}${QT_FILE}${CMAKE_SHARED_LIBRARY_SUFFIX}.53.1
-                DESTINATION lib
-                RENAME ${CMAKE_SHARED_LIBRARY_PREFIX}${QT_FILE}${CMAKE_SHARED_LIBRARY_SUFFIX}.53)
+        LINUX_DEPLOY_QT_LIBRARY(${ICU_DIRNAME}
+                                ${CMAKE_SHARED_LIBRARY_PREFIX}${QT_FILE}${CMAKE_SHARED_LIBRARY_SUFFIX}${ORIG_ICU_VERSION}
+                                ${CMAKE_SHARED_LIBRARY_PREFIX}${QT_FILE}${CMAKE_SHARED_LIBRARY_SUFFIX}${DEST_ICU_VERSION})
     ENDFOREACH()
 
     # Qt plugins required by OpenCOR
@@ -692,8 +729,9 @@ ELSE()
 
     CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/distrib/linux/application.sh.in ${ShellFile})
 
-    INSTALL(FILES ${ShellFile} RENAME ${PROJECT_NAME}
+    INSTALL(FILES ${ShellFile}
             DESTINATION .
+            RENAME ${PROJECT_NAME}
             PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
 ENDIF()
 

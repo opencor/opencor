@@ -48,7 +48,6 @@ SingleCellViewSimulationWorker::SingleCellViewSimulationWorker(const SolverInter
     mRuntime(pRuntime),
     mSimulation(pSimulation),
     mCurrentPoint(0.0),
-    mProgress(0.0),
     mPaused(false),
     mStopped(false),
     mReset(false),
@@ -99,20 +98,11 @@ bool SingleCellViewSimulationWorker::isPaused() const
 
 double SingleCellViewSimulationWorker::currentPoint() const
 {
-    // Return our progress
+    // Return our current point
 
     return mThread->isRunning()?
                mCurrentPoint:
                mSimulation->data()->startingPoint();
-}
-
-//==============================================================================
-
-double SingleCellViewSimulationWorker::progress() const
-{
-    // Return our progress
-
-    return mThread->isRunning()?mProgress:0.0;
 }
 
 //==============================================================================
@@ -215,10 +205,6 @@ void SingleCellViewSimulationWorker::started()
     // Let people know that we are running
 
     emit running(false);
-
-    // Reset our progress
-
-    mProgress = 0.0;
 
     // Set up our ODE/DAE solver
 
@@ -324,7 +310,6 @@ void SingleCellViewSimulationWorker::started()
     double pointInterval = mSimulation->data()->pointInterval();
 
     bool increasingPoints = endingPoint > startingPoint;
-    const double oneOverPointsRange = 1.0/(endingPoint-startingPoint);
     quint64 pointCounter = 0;
 
     mCurrentPoint = startingPoint;
@@ -393,7 +378,7 @@ void SingleCellViewSimulationWorker::started()
 
         QMutex pausedMutex;
 
-        while ((mCurrentPoint != endingPoint) && !mStopped) {
+        forever {
             // Determine our next point and compute our model up to it
 
             ++pointCounter;
@@ -408,16 +393,17 @@ void SingleCellViewSimulationWorker::started()
             if (mError)
                 break;
 
-            // Update our progress
-
-            mProgress = (mCurrentPoint-startingPoint)*oneOverPointsRange;
-
             // Add our new point after making sure that all the variables are up
             // to date
 
             mSimulation->data()->recomputeVariables(mCurrentPoint);
 
             mSimulation->results()->addPoint(mCurrentPoint);
+
+            // Check whether we are done or whether we have been asked to stop
+
+            if ((mCurrentPoint == endingPoint) || mStopped)
+                break;
 
             // Delay things a bit, if (really) needed
 

@@ -100,6 +100,15 @@ SingleCellViewInformationGraphsWidget::SingleCellViewInformationGraphsWidget(QWi
 
 //==============================================================================
 
+SingleCellViewInformationGraphsWidget::~SingleCellViewInformationGraphsWidget()
+{
+    // Delete the GUI
+
+    delete mGui;
+}
+
+//==============================================================================
+
 void SingleCellViewInformationGraphsWidget::retranslateUi()
 {
     // Retranslate our GUI
@@ -289,11 +298,6 @@ void SingleCellViewInformationGraphsWidget::initialize(SingleCellViewGraphPanelW
         connect(mPropertyEditor->header(), SIGNAL(sectionResized(int, int, int)),
                 this, SLOT(propertyEditorSectionResized(const int &, const int &, const int &)));
 
-        // Keep track of changes to list properties
-
-        connect(mPropertyEditor, SIGNAL(propertyChanged(Core::Property *)),
-                this, SLOT(modelChanged(Core::Property *)));
-
         // Keep track of when the user changes a property value
 
         connect(mPropertyEditor, SIGNAL(propertyChanged(Core::Property *)),
@@ -370,15 +374,13 @@ void SingleCellViewInformationGraphsWidget::addGraph(SingleCellViewGraphPanelPlo
     mGraphProperties.insert(pGraph, graphProperty);
 
     // Create some properties for our graph
-    // Note: to add properties will result in some signals being emitted, but we
-    //       don't want to handle them (at least, not when creating a graph
-    //       since not everyting may be set yet so this might cause more
-    //       problems than anything), so we must disconnect ourselves from them,
-    //       before adding the properties (and then reconnect ourselves to
-    //       them)...
+    // Note: to add properties will result in the propertyChanged() signal being
+    //       emitted, but we don't want to handle that signal (at least, not
+    //       when creating a graph since not everyting may be set yet so this
+    //       might cause more problems than anything), so we must disconnect
+    //       ourselves from it before adding the properties (and then reconnect
+    //       ourselves to it once we are done)...
 
-    disconnect(mPropertyEditor, SIGNAL(propertyChanged(Core::Property *)),
-               this, SLOT(modelChanged(Core::Property *)));
     disconnect(mPropertyEditor, SIGNAL(propertyChanged(Core::Property *)),
                this, SLOT(graphChanged(Core::Property *)));
 
@@ -390,8 +392,6 @@ void SingleCellViewInformationGraphsWidget::addGraph(SingleCellViewGraphPanelPlo
     xProperty->setEditable(true);
     yProperty->setEditable(true);
 
-    connect(mPropertyEditor, SIGNAL(propertyChanged(Core::Property *)),
-            this, SLOT(modelChanged(Core::Property *)));
     connect(mPropertyEditor, SIGNAL(propertyChanged(Core::Property *)),
             this, SLOT(graphChanged(Core::Property *)));
 
@@ -732,9 +732,10 @@ bool SingleCellViewInformationGraphsWidget::checkParameter(CellMLSupport::Cellml
     // Update our parameter property based on whether it corresponds to an
     // existing parameter in our runtime
 
-    pParameterProperty->setIcon(res?
-                                    QIcon(":/blank.png"):
-                                    QIcon(":/oxygen/status/task-attention.png"));
+    static const QIcon BlankIcon   = QIcon(":/blank.png");
+    static const QIcon WarningIcon = QIcon(":/oxygen/status/task-attention.png");
+
+    pParameterProperty->setIcon(res?BlankIcon:WarningIcon);
     pParameterProperty->setExtraInfo(res?
                                          QString():
                                          pRuntime?
@@ -773,17 +774,20 @@ void SingleCellViewInformationGraphsWidget::updateGraphInfo(Core::Property *pPro
     // the model property, and determine the file name from which we will have
     // to check our X and Y properties
 
+    static const QIcon LockedIcon   = QIcon(":/oxygen/status/object-locked.png");
+    static const QIcon UnlockedIcon = QIcon(":/oxygen/status/object-unlocked.png");
+
     SingleCellViewGraphPanelPlotGraph *graph = mGraphs.value(pProperty);
     QString fileName = mFileName;
     QPen oldPen = graph->pen();
     QPen newPen = oldPen;
 
     if (!pFileName.compare(tr("Current"))) {
-        pProperty->properties()[0]->setIcon(QIcon(":/oxygen/status/object-unlocked.png"));
+        pProperty->properties()[0]->setIcon(UnlockedIcon);
 
         newPen.setColor(Qt::darkBlue);
     } else {
-        pProperty->properties()[0]->setIcon(QIcon(":/oxygen/status/object-locked.png"));
+        pProperty->properties()[0]->setIcon(LockedIcon);
 
         newPen.setColor(Qt::darkRed);
 
@@ -821,9 +825,10 @@ void SingleCellViewInformationGraphsWidget::updateGraphInfo(Core::Property *pPro
 
     // Update the status (i.e. icon) of our (section) property
 
-    pProperty->setIcon(graphOk?
-                           QIcon(":/blank.png"):
-                           QIcon(":/oxygen/status/task-attention.png"));
+    static const QIcon BlankIcon   = QIcon(":/blank.png");
+    static const QIcon WarningIcon = QIcon(":/oxygen/status/task-attention.png");
+
+    pProperty->setIcon(graphOk?BlankIcon:WarningIcon);
 
     // Update the file name with which the graph is associated
 
@@ -838,16 +843,6 @@ void SingleCellViewInformationGraphsWidget::updateGraphInfo(Core::Property *pPro
         emit graphsUpdated(qobject_cast<SingleCellViewGraphPanelPlotWidget *>(graph->plot()),
                            QList<SingleCellViewGraphPanelPlotGraph *>() << graph);
     }
-}
-
-//==============================================================================
-
-void SingleCellViewInformationGraphsWidget::modelChanged(Core::Property *pProperty)
-{
-    // Update the graph information associated with the given property's
-    // corresponding section property and the given value
-
-    updateGraphInfo(pProperty->parentProperty(), pProperty->value());
 }
 
 //==============================================================================

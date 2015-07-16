@@ -38,9 +38,13 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+typedef QList<bool> QBoolList;
 typedef QList<int> QIntList;
 
 //==============================================================================
+
+bool CORE_EXPORT qSameStringLists(const QStringList &pStringList1,
+                                  const QStringList &pStringList2);
 
 QIntList CORE_EXPORT qVariantListToIntList(const QVariantList &pVariantList);
 QVariantList CORE_EXPORT qIntListToVariantList(const QIntList &pIntList);
@@ -49,8 +53,6 @@ QString CORE_EXPORT qDomDocumentToString(const QDomDocument &pDomDocument);
 
 //==============================================================================
 
-class QCoreApplication;
-class QNetworkAccessManager;
 class QNetworkReply;
 
 //==============================================================================

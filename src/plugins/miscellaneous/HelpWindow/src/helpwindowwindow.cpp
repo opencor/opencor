@@ -131,7 +131,7 @@ HelpWindowWindow::HelpWindowWindow(QWidget *pParent) :
     mHelpWidget->setContextMenuPolicy(Qt::CustomContextMenu);
 
     connect(mHelpWidget, SIGNAL(customContextMenuRequested(const QPoint &)),
-            this, SLOT(showCustomContextMenu(const QPoint &)));
+            this, SLOT(showCustomContextMenu()));
 
     // Some connections to update the enabled state of our various actions
 
@@ -289,10 +289,8 @@ void HelpWindowWindow::on_actionPrint_triggered()
 
 //==============================================================================
 
-void HelpWindowWindow::showCustomContextMenu(const QPoint &pPosition) const
+void HelpWindowWindow::showCustomContextMenu() const
 {
-    Q_UNUSED(pPosition);
-
     // Show our context menu which items match the contents of our tool bar
     // widget
 

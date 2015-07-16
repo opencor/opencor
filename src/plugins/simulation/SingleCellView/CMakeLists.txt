@@ -4,6 +4,7 @@ PROJECT(SingleCellViewPlugin)
 
 RETRIEVE_CELLML_API_SETTINGS()
 RETRIEVE_LLVM_SETTINGS()
+RETRIEVE_QWT_SETTINGS()
 
 # Add the plugin
 
@@ -48,15 +49,13 @@ ADD_PLUGIN(SingleCellView
         src/singlecellviewwidget.h
     UIS
         src/singlecellviewgraphpanelplotwidget.ui
-        src/singlecellviewgraphpanelwidget.ui
         src/singlecellviewinformationgraphswidget.ui
-        src/singlecellviewinformationwidget.ui
         src/singlecellviewwidget.ui
     INCLUDE_DIRS
         src
     DEFINITIONS
         ${LLVM_DEFINITIONS}
-        QWT_DLL
+        ${QWT_DEFINITIONS}
     PLUGINS
         CellMLAPI
         CellMLSupport
@@ -77,6 +76,8 @@ ADD_PLUGIN(SingleCellView
         QtOpenGL
         QtPrintSupport
         QtSvg
+        QtWebKit
+        QtWebKitWidgets
         QtWidgets
         QtXml
         QtXmlPatterns

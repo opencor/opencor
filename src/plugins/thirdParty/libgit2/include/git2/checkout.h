@@ -31,7 +31,7 @@ GIT_BEGIN_DECL
  * check out, the "baseline" tree of what was checked out previously, the
  * working directory for actual files, and the index for staged changes.
  *
- * You give checkout one of four strategies for update:
+ * You give checkout one of three strategies for update:
  *
  * - `GIT_CHECKOUT_NONE` is a dry-run strategy that checks for conflicts,
  *   etc., but doesn't make any actual changes.
@@ -40,8 +40,8 @@ GIT_BEGIN_DECL
  *   make the working directory match the target (including potentially
  *   discarding modified files).
  *
- * In between those are `GIT_CHECKOUT_SAFE` and `GIT_CHECKOUT_SAFE_CREATE`
- * both of which only make modifications that will not lose changes.
+ * - `GIT_CHECKOUT_SAFE` is between these two options, it will only make
+ *   modifications that will not lose changes.
  *
  *                         |  target == baseline   |  target != baseline  |
  *    ---------------------|-----------------------|----------------------|
@@ -51,27 +51,20 @@ GIT_BEGIN_DECL
  *     workdir exists and  |       no action       |   conflict (notify   |
  *       is != baseline    | notify dirty MODIFIED | and cancel checkout) |
  *    ---------------------|-----------------------|----------------------|
- *      workdir missing,   | create if SAFE_CREATE |     create file      |
- *      baseline present   | notify dirty DELETED  |                      |
+ *      workdir missing,   | notify dirty DELETED  |     create file      |
+ *      baseline present   |                       |                      |
  *    ---------------------|-----------------------|----------------------|
- *
- * The only difference between SAFE and SAFE_CREATE is that SAFE_CREATE
- * will cause a file to be checked out if it is missing from the working
- * directory even if it is not modified between the target and baseline.
- *
  *
  * To emulate `git checkout`, use `GIT_CHECKOUT_SAFE` with a checkout
  * notification callback (see below) that displays information about dirty
  * files.  The default behavior will cancel checkout on conflicts.
  *
- * To emulate `git checkout-index`, use `GIT_CHECKOUT_SAFE_CREATE` with a
+ * To emulate `git checkout-index`, use `GIT_CHECKOUT_SAFE` with a
  * notification callback that cancels the operation if a dirty-but-existing
  * file is found in the working directory.  This core git command isn't
  * quite "force" but is sensitive about some types of changes.
  *
  * To emulate `git checkout -f`, use `GIT_CHECKOUT_FORCE`.
- *
- * To emulate `git clone` use `GIT_CHECKOUT_SAFE_CREATE` in the options.
  *
  *
  * There are some additional flags to modified the behavior of checkout:
@@ -116,12 +109,12 @@ typedef enum {
 	/** Allow safe updates that cannot overwrite uncommitted data */
 	GIT_CHECKOUT_SAFE = (1u << 0),
 
-	/** Allow safe updates plus creation of missing files */
-	GIT_CHECKOUT_SAFE_CREATE = (1u << 1),
-
 	/** Allow all updates to force working directory to look like index */
-	GIT_CHECKOUT_FORCE = (1u << 2),
+	GIT_CHECKOUT_FORCE = (1u << 1),
 
+
+	/** Allow checkout to recreate missing files */
+	GIT_CHECKOUT_RECREATE_MISSING = (1u << 2),
 
 	/** Allow checkout to make safe updates even if conflicts are found */
 	GIT_CHECKOUT_ALLOW_CONFLICTS = (1u << 4),
@@ -135,7 +128,10 @@ typedef enum {
 	/** Only update existing files, don't create new ones */
 	GIT_CHECKOUT_UPDATE_ONLY = (1u << 7),
 
-	/** Normally checkout updates index entries as it goes; this stops that */
+	/**
+	 * Normally checkout updates index entries as it goes; this stops that.
+	 * Implies `GIT_CHECKOUT_DONT_WRITE_INDEX`.
+	 */
 	GIT_CHECKOUT_DONT_UPDATE_INDEX = (1u << 8),
 
 	/** Don't refresh index/config/etc before doing checkout */
@@ -165,6 +161,9 @@ typedef enum {
 
 	/** Don't overwrite existing files or folders */
 	GIT_CHECKOUT_DONT_REMOVE_EXISTING = (1u << 22),
+
+	/** Normally checkout writes the index upon completion; this prevents that. */
+	GIT_CHECKOUT_DONT_WRITE_INDEX = (1u << 23),
 
 	/**
 	 * THE FOLLOWING OPTIONS ARE NOT YET IMPLEMENTED
@@ -214,6 +213,12 @@ typedef enum {
 	GIT_CHECKOUT_NOTIFY_ALL       = 0x0FFFFu
 } git_checkout_notify_t;
 
+typedef struct {
+	size_t mkdir_calls;
+	size_t stat_calls;
+	size_t chmod_calls;
+} git_checkout_perfdata;
+
 /** Checkout notification callback function */
 typedef int (*git_checkout_notify_cb)(
 	git_checkout_notify_t why,
@@ -228,6 +233,11 @@ typedef void (*git_checkout_progress_cb)(
 	const char *path,
 	size_t completed_steps,
 	size_t total_steps,
+	void *payload);
+
+/** Checkout perfdata notification function */
+typedef void (*git_checkout_perfdata_cb)(
+	const git_checkout_perfdata *perfdata,
 	void *payload);
 
 /**
@@ -262,13 +272,26 @@ typedef struct git_checkout_options {
 	 */
 	git_strarray paths;
 
-	git_tree *baseline; /**< expected content of workdir, defaults to HEAD */
+	/** The expected content of the working directory; defaults to HEAD.
+	 *  If the working directory does not match this baseline information,
+	 *  that will produce a checkout conflict.
+	 */
+	git_tree *baseline;
+
+	/** Like `baseline` above, though expressed as an index.  This
+	 *  option overrides `baseline`.
+	 */
+	git_index *baseline_index; /**< expected content of workdir, expressed as an index. */
 
 	const char *target_directory; /**< alternative checkout path to workdir */
 
 	const char *ancestor_label; /**< the name of the common ancestor side of conflicts */
 	const char *our_label; /**< the name of the "our" side of conflicts */
 	const char *their_label; /**< the name of the "their" side of conflicts */
+
+	/** Optional callback to notify the consumer of performance data. */
+	git_checkout_perfdata_cb perfdata_cb;
+	void *perfdata_payload;
 } git_checkout_options;
 
 #define GIT_CHECKOUT_OPTIONS_VERSION 1

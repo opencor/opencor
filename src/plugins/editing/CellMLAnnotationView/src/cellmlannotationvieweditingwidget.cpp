@@ -34,10 +34,6 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-#include "ui_cellmlannotationvieweditingwidget.h"
-
-//==============================================================================
-
 #include <QComboBox>
 #include <QIODevice>
 #include <QLineEdit>
@@ -56,14 +52,9 @@ CellmlAnnotationViewEditingWidget::CellmlAnnotationViewEditingWidget(CellMLAnnot
                                                                      CellmlAnnotationViewWidget *pParent) :
     QSplitter(pParent),
     Core::CommonWidget(pParent),
-    mGui(new Ui::CellmlAnnotationViewEditingWidget),
     mPluginParent(pPluginParent),
     mParent(pParent)
 {
-    // Set up the GUI
-
-    mGui->setupUi(this);
-
     // Retrieve some SVG diagrams
 
     Core::readTextFromFile(":/modelQualifier.svg", mModelQualifierSvg);
@@ -119,15 +110,6 @@ CellmlAnnotationViewEditingWidget::CellmlAnnotationViewEditingWidget(CellMLAnnot
     //       item from our CellML list widget gets selected...
 
     mCellmlList->treeViewWidget()->selectFirstItem();
-}
-
-//==============================================================================
-
-CellmlAnnotationViewEditingWidget::~CellmlAnnotationViewEditingWidget()
-{
-    // Delete the GUI
-
-    delete mGui;
 }
 
 //==============================================================================

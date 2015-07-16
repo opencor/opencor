@@ -29,7 +29,6 @@ specific language governing permissions and limitations under the License.
 
 #include <QMainWindow>
 #include <QSettings>
-#include <QStatusBar>
 
 //==============================================================================
 
@@ -288,7 +287,9 @@ QIcon CellMLAnnotationViewPlugin::fileTabIcon(const QString &pFileName) const
 
     // We don't handle this interface...
 
-    return QIcon();
+    static const QIcon NoIcon = QIcon();
+
+    return NoIcon;
 }
 
 //==============================================================================

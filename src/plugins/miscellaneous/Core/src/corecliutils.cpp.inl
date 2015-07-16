@@ -32,7 +32,7 @@ bool SynchronousTextFileDownloader::readTextFromUrl(const QString &pUrl,
     // a website's certificate is invalid, e.g. it has expired)
 
     connect(&networkAccessManager, SIGNAL(sslErrors(QNetworkReply *, const QList<QSslError> &)),
-            this, SLOT(networkAccessManagerSslErrors(QNetworkReply *, const QList<QSslError> &)) );
+            this, SLOT(networkAccessManagerSslErrors(QNetworkReply *, const QList<QSslError> &)));
 
     // Download the contents of the remote file
 

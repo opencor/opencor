@@ -31,6 +31,7 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#include <QCoreApplication>
 #include <QHeaderView>
 #include <QMenu>
 #include <QMetaType>
@@ -230,7 +231,7 @@ void SingleCellViewInformationParametersWidget::updateParameters(const double &p
     foreach (Core::Property *property, mPropertyEditor->properties()) {
         CellMLSupport::CellmlFileRuntimeParameter *parameter = mParameters.value(property);
 
-        if (parameter)
+        if (parameter) {
             switch (parameter->type()) {
             case CellMLSupport::CellmlFileRuntimeParameter::Constant:
             case CellMLSupport::CellmlFileRuntimeParameter::ComputedConstant:
@@ -254,6 +255,14 @@ void SingleCellViewInformationParametersWidget::updateParameters(const double &p
 
                 property->setDoubleValue(pCurrentPoint, false);
             }
+        }
+
+        // Make sure that we don't hang up the GUI unnecessarily
+        // Note: this is particularly useful when we run a model that has loads
+        //       of parameters since otherwise the simulation wouldn't finish
+        //       smoothly (see https://github.com/opencor/opencor/issues/656)...
+
+        QCoreApplication::processEvents();
     }
 
     // Check whether any of our properties has actually been modified
@@ -269,7 +278,7 @@ void SingleCellViewInformationParametersWidget::propertyChanged(Core::Property *
 
     CellMLSupport::CellmlFileRuntimeParameter *parameter = mParameters.value(pProperty);
 
-    if (parameter)
+    if (parameter) {
         switch (parameter->type()) {
         case CellMLSupport::CellmlFileRuntimeParameter::Constant:
             mSimulation->data()->constants()[parameter->index()] = pProperty->doubleValue();
@@ -284,6 +293,7 @@ void SingleCellViewInformationParametersWidget::propertyChanged(Core::Property *
 
             ;
         }
+    }
 
     // Recompute our 'computed constants' and 'variables'
     // Note #1: we would normally call
@@ -330,6 +340,7 @@ void SingleCellViewInformationParametersWidget::populateModel(CellMLSupport::Cel
 
     // Populate our property editor with the parameters
 
+    Core::Property *voiProperty = 0;
     QString componentHierarchy = QString();
     Core::Property *sectionProperty = 0;
 
@@ -356,7 +367,7 @@ void SingleCellViewInformationParametersWidget::populateModel(CellMLSupport::Cel
 
                 QList<Core::Property *> subSections = QList<Core::Property *>();
 
-                if (section)
+                if (section) {
                     // We have a section, so go through its children and keep
                     // track of its propeties that are a section
 
@@ -368,7 +379,7 @@ void SingleCellViewInformationParametersWidget::populateModel(CellMLSupport::Cel
                             subSections << property;
                         }
                     }
-                else
+                } else {
                     // We don't have a section, so go through our property
                     // editor's properties and keep tack of those that are a
                     // section
@@ -376,6 +387,7 @@ void SingleCellViewInformationParametersWidget::populateModel(CellMLSupport::Cel
                     foreach (Core::Property *property, mPropertyEditor->properties())
                         if (property->type() == Core::Property::Section)
                             subSections << property;
+                }
 
                 // Go through the sub-sections and check if one of them is the
                 // one we are after
@@ -440,17 +452,35 @@ void SingleCellViewInformationParametersWidget::populateModel(CellMLSupport::Cel
 
         property->setIcon(SingleCellViewWidget::parameterIcon(parameter->type()));
 
-        property->setName(parameter->formattedName());
-        property->setUnit(parameter->formattedUnit(pRuntime->variableOfIntegration()->unit()));
+        property->setName(parameter->formattedName(), false);
+        property->setUnit(parameter->formattedUnit(pRuntime->variableOfIntegration()->unit()), false);
 
         // Keep track of the link between our property value and parameter
 
         mParameters.insert(property, parameter);
+
+        // Keep track of our VOI property, if it is the one
+
+        if (parameter->type() == CellMLSupport::CellmlFileRuntimeParameter::Voi)
+            voiProperty = property;
     }
 
     // Update (well, set here) the extra info of all our parameters
 
-    updateExtraInfos();
+    updateExtraInfos(false);
+
+    // Make sure that the VOI property has its tool tip properly initialised
+    // Note: indeed, to speed the process of populating our model, we call
+    //       Property::setName(), Property::setUnit() and
+    //       Property::setExtraInfo() (through our call to updateExtraInfos())
+    //       by asking them not to update the tool tip (since its time
+    //       consuming). Now, this is fine to do with all the model parameters
+    //       (since their value and, therefore, their tool tip get updated later
+    //       on), but not with the VOI hence we 'manually' update its tool tip
+    //       here...
+
+    if (voiProperty)
+        voiProperty->updateToolTip();
 
     // Expand all our properties
 
@@ -567,7 +597,7 @@ void SingleCellViewInformationParametersWidget::populateContextMenu(QMenu *pCont
 
 //==============================================================================
 
-void SingleCellViewInformationParametersWidget::updateExtraInfos()
+void SingleCellViewInformationParametersWidget::updateExtraInfos(const bool &pUpdateToolTips)
 {
     // Make sure that we have a property editor
 
@@ -609,7 +639,7 @@ void SingleCellViewInformationParametersWidget::updateExtraInfos()
                 parameterType = tr("variable of integration");
             }
 
-            property->setExtraInfo(parameterType);
+            property->setExtraInfo(parameterType, pUpdateToolTips);
         }
     }
 }

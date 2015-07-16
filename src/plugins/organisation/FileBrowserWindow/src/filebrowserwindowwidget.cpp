@@ -23,7 +23,7 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-#include <QApplication>
+#include <QCoreApplication>
 #include <QDir>
 #include <QFile>
 #include <QFileInfo>
@@ -52,10 +52,16 @@ FileBrowserWindowWidget::FileBrowserWindowWidget(QWidget *pParent) :
 
     mModel = new FileBrowserWindowModel(this);
 
-    // Set some properties for the file browser widget itself
+    // Set some properties
 
     setDragDropMode(QAbstractItemView::DragOnly);
+#if defined(Q_OS_WIN) || defined(Q_OS_LINUX)
     setFrameShape(QFrame::StyledPanel);
+#elif defined(Q_OS_MAC)
+    setFrameShape(QFrame::Panel);
+#else
+    #error Unsupported platform
+#endif
     setModel(mModel);
     setSortingEnabled(true);
 
@@ -434,11 +440,12 @@ void FileBrowserWindowWidget::keyPressEvent(QKeyEvent *pEvent)
     QStringList crtSelectedFiles = selectedFiles();
 
     if (   crtSelectedFiles.count()
-        && ((pEvent->key() == Qt::Key_Enter) || (pEvent->key() == Qt::Key_Return)))
+        && ((pEvent->key() == Qt::Key_Enter) || (pEvent->key() == Qt::Key_Return))) {
         // There are some files that are selected and we want to open them, so
         // let people know about it
 
         emit filesOpenRequested(crtSelectedFiles);
+    }
 }
 
 //==============================================================================
@@ -518,7 +525,7 @@ void FileBrowserWindowWidget::directoryLoaded(const QString &pPath)
         // Windows doesn't need this, Linux and OS X definitely do and it can't
         // harm having it for all three environments)
 
-        qApp->processEvents();
+        QCoreApplication::processEvents();
 
         QModelIndex initPathDirIndex = mModel->index(mInitPathDir);
 

@@ -39,9 +39,9 @@ typedef enum {
  * Filter option flags.
  */
 typedef enum {
-	GIT_FILTER_OPT_DEFAULT = 0u,
-	GIT_FILTER_OPT_ALLOW_UNSAFE = (1u << 0),
-} git_filter_opt_t;
+	GIT_FILTER_DEFAULT = 0u,
+	GIT_FILTER_ALLOW_UNSAFE = (1u << 0),
+} git_filter_flag_t;
 
 /**
  * A filter that can transform file data
@@ -83,7 +83,7 @@ typedef struct git_filter_list git_filter_list;
  * @param blob The blob to which the filter will be applied (if known)
  * @param path Relative path of the file to be filtered
  * @param mode Filtering direction (WT->ODB or ODB->WT)
- * @param options Combination of `git_filter_opt_t` flags
+ * @param flags Combination of `git_filter_flag_t` flags
  * @return 0 on success (which could still return NULL if no filters are
  *         needed for the requested file), <0 on error
  */
@@ -93,7 +93,23 @@ GIT_EXTERN(int) git_filter_list_load(
 	git_blob *blob, /* can be NULL */
 	const char *path,
 	git_filter_mode_t mode,
-	uint32_t options);
+	uint32_t flags);
+
+/**
+ * Query the filter list to see if a given filter (by name) will run.
+ * The built-in filters "crlf" and "ident" can be queried, otherwise this
+ * is the name of the filter specified by the filter attribute.
+ *
+ * This will return 0 if the given filter is not in the list, or 1 if
+ * the filter will be applied.
+ *
+ * @param filters A loaded git_filter_list (or NULL)
+ * @param name The name of the filter to query
+ * @return 1 if the filter is in the list, 0 otherwise
+ */
+GIT_EXTERN(int) git_filter_list_contains(
+	git_filter_list *filters,
+	const char *name);
 
 /**
  * Apply filter list to a data buffer.
@@ -121,7 +137,13 @@ GIT_EXTERN(int) git_filter_list_apply_to_data(
 	git_buf *in);
 
 /**
- * Apply filter list to the contents of a file on disk
+ * Apply a filter list to the contents of a file on disk
+ *
+ * @param out buffer into which to store the filtered file
+ * @param filters the list of filters to apply
+ * @param repo the repository in which to perform the filtering
+ * @param path the path of the file to filter, a relative path will be
+ * taken as relative to the workdir
  */
 GIT_EXTERN(int) git_filter_list_apply_to_file(
 	git_buf *out,
@@ -130,12 +152,55 @@ GIT_EXTERN(int) git_filter_list_apply_to_file(
 	const char *path);
 
 /**
- * Apply filter list to the contents of a blob
+ * Apply a filter list to the contents of a blob
+ *
+ * @param out buffer into which to store the filtered file
+ * @param filters the list of filters to apply
+ * @param blob the blob to filter
  */
 GIT_EXTERN(int) git_filter_list_apply_to_blob(
 	git_buf *out,
 	git_filter_list *filters,
 	git_blob *blob);
+
+/**
+ * Apply a filter list to an arbitrary buffer as a stream
+ *
+ * @param filters the list of filters to apply
+ * @param data the buffer to filter
+ * @param target the stream into which the data will be written
+ */
+GIT_EXTERN(int) git_filter_list_stream_data(
+	git_filter_list *filters,
+	git_buf *data,
+	git_writestream *target);
+
+/**
+ * Apply a filter list to a file as a stream
+ *
+ * @param filters the list of filters to apply
+ * @param repo the repository in which to perform the filtering
+ * @param path the path of the file to filter, a relative path will be
+ * taken as relative to the workdir
+ * @param target the stream into which the data will be written
+ */
+GIT_EXTERN(int) git_filter_list_stream_file(
+	git_filter_list *filters,
+	git_repository *repo,
+	const char *path,
+	git_writestream *target);
+
+/**
+ * Apply a filter list to a blob as a stream
+ *
+ * @param filters the list of filters to apply
+ * @param blob the blob to filter
+ * @param target the stream into which the data will be written
+ */
+GIT_EXTERN(int) git_filter_list_stream_blob(
+	git_filter_list *filters,
+	git_blob *blob,
+	git_writestream *target);
 
 /**
  * Free a git_filter_list

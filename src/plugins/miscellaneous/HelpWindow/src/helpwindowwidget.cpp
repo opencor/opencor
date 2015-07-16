@@ -205,16 +205,6 @@ HelpWindowWidget::HelpWindowWidget(QHelpEngine *pHelpEngine,
     mZoomLevel(-1)   // This will ensure that mZoomLevel gets initialised by our
                      // first call to setZoomLevel
 {
-    // Add a small margin to the widget, so that no visual trace of the border
-    // drawn by drawBorderIfDocked is left when scrolling
-
-    setStyleSheet("QWebView {"
-                  "    margin: 1px;"
-                  "}");
-    // Note: not sure why, but no matter how many pixels are specified for the
-    //       margin, no margin actually exists, but it addresses the issue with
-    //       the border drawn by drawBorderIfDocked...
-
     // Use our own help page and help network access manager classes
 
     setPage(new HelpWindowPage(this));
@@ -449,7 +439,7 @@ void HelpWindowWidget::paintEvent(QPaintEvent *pEvent)
 #if defined(Q_OS_WIN) || defined(Q_OS_LINUX)
                true, true, true, true,
 #elif defined(Q_OS_MAC)
-               true, false, true, false,
+               true, false, false, false,
 #else
     #error Unsupported platform
 #endif

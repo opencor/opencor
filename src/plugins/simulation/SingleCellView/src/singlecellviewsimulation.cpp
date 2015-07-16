@@ -19,8 +19,8 @@ specific language governing permissions and limitations under the License.
 // Single cell view simulation
 //==============================================================================
 
-#include "cellmlfileruntime.h"
 #include "cellmlfile.h"
+#include "cellmlfileruntime.h"
 #include "coredatastore.h"
 #include "corenlasolver.h"
 #include "singlecellviewcontentswidget.h"
@@ -495,9 +495,11 @@ void SingleCellViewSimulationData::recomputeComputedConstantsAndVariables(const 
     if (!mRuntime)
         return;
 
-    // Recompute our 'computed constants' and 'variables', if possible
+    // Make sure that our runtime is valid
 
     if (mRuntime->isValid()) {
+        // Recompute our 'computed constants'
+
         double *realStates = mStates;
 
         if (!pFullComputeComputedConstants)
@@ -508,10 +510,14 @@ void SingleCellViewSimulationData::recomputeComputedConstantsAndVariables(const 
         if (!pFullComputeComputedConstants)
             delete[] realStates;
 
+        // Recompute some 'constant' algebraic variables
+
         if (mRuntime->modelType() == CellMLSupport::CellmlFileRuntime::Ode)
-            mRuntime->computeOdeVariables()(pCurrentPoint, mConstants, mRates, mStates, mAlgebraic);
-        else
-            mRuntime->computeDaeVariables()(pCurrentPoint, mConstants, mRates, mStates, mAlgebraic, mCondVar);
+            mRuntime->computeOdeRates()(pCurrentPoint, mConstants, mRates, mStates, mAlgebraic);
+
+        // Recompute our 'variables'
+
+        recomputeVariables(pCurrentPoint);
 
         // Let people know that our data has been updated
 
@@ -631,9 +637,9 @@ bool SingleCellViewSimulationResults::createDataStore()
     // well as with constant, rate, state and algebraic variables
 
     try {
-        mDataStore = new CoreDataStore::CoreDataStore(simulationSize);
-        mDataStore->setModelId(mRuntime->cellmlfile()->cmetaId());
-        mDataStore->setModelUri(mRuntime->cellmlfile()->xmlBase());
+        mDataStore = new CoreDataStore::CoreDataStore(mRuntime->cellmlFile()->cmetaId(),
+                                                      mRuntime->cellmlFile()->xmlBase(),
+                                                      simulationSize);
 
         mPoints = mDataStore->addVoi();
         mConstants = mDataStore->addVariables(mRuntime->constantsCount(), mSimulation->data()->constants());
@@ -729,7 +735,12 @@ void SingleCellViewSimulationResults::addPoint(const double &pPoint)
 {
     // Add the data to our data store
 
-    mDataStore->setValues(mSize++, pPoint);
+    mDataStore->setValues(mSize, pPoint);
+
+    ++mSize;
+    // Note: we want to do this after the call to CoreDataStore::setValues()
+    //       since it may otherwise mess up our plotting of simulation data (see
+    //       https://github.com/opencor/opencor/issues/636)...
 }
 
 //==============================================================================
@@ -885,15 +896,6 @@ double SingleCellViewSimulation::currentPoint() const
 
 //==============================================================================
 
-double SingleCellViewSimulation::progress() const
-{
-    // Return our progress
-
-    return mWorker?mWorker->progress():0.0;
-}
-
-//==============================================================================
-
 int SingleCellViewSimulation::delay() const
 {
     // Return our delay
@@ -921,7 +923,7 @@ double SingleCellViewSimulation::requiredMemory()
     //          in case a simulation requires an insane amount of memory...
     // Note #2: the 1.0 is for mPoints in SingleCellViewSimulationResults...
 
-    if (mRuntime)
+    if (mRuntime) {
         return  size()
                *( 1
                  +mRuntime->constantsCount()
@@ -929,8 +931,9 @@ double SingleCellViewSimulation::requiredMemory()
                  +mRuntime->statesCount()
                  +mRuntime->algebraicCount())
                *CoreSolver::SizeOfDouble;
-    else
+    } else {
         return 0.0;
+    }
 }
 
 //==============================================================================

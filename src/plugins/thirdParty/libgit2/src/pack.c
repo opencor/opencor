@@ -16,6 +16,9 @@
 
 #include <zlib.h>
 
+GIT__USE_OFFMAP;
+GIT__USE_OIDMAP;
+
 static int packfile_open(struct git_pack_file *p);
 static git_off_t nth_packed_object_offset(const struct git_pack_file *p, uint32_t n);
 int packfile_unpack_compressed(
@@ -316,9 +319,9 @@ static int pack_index_check(const char *path, struct git_pack_file *p)
 
 static int pack_index_open(struct git_pack_file *p)
 {
-	char *idx_name;
 	int error = 0;
-	size_t name_len, base_len;
+	size_t name_len;
+	git_buf idx_name = GIT_BUF_INIT;
 
 	if (p->index_version > -1)
 		return 0;
@@ -326,22 +329,23 @@ static int pack_index_open(struct git_pack_file *p)
 	name_len = strlen(p->pack_name);
 	assert(name_len > strlen(".pack")); /* checked by git_pack_file alloc */
 
-	if ((idx_name = git__malloc(name_len)) == NULL)
+	git_buf_grow(&idx_name, name_len);
+	git_buf_put(&idx_name, p->pack_name, name_len - strlen(".pack"));
+	git_buf_puts(&idx_name, ".idx");
+	if (git_buf_oom(&idx_name)) {
+		giterr_set_oom();
 		return -1;
-
-	base_len = name_len - strlen(".pack");
-	memcpy(idx_name, p->pack_name, base_len);
-	memcpy(idx_name + base_len, ".idx", sizeof(".idx"));
+	}
 
 	if ((error = git_mutex_lock(&p->lock)) < 0) {
-		git__free(idx_name);
+		git_buf_free(&idx_name);
 		return error;
 	}
 
 	if (p->index_version == -1)
-		error = pack_index_check(idx_name, p);
+		error = pack_index_check(idx_name.ptr, p);
 
-	git__free(idx_name);
+	git_buf_free(&idx_name);
 
 	git_mutex_unlock(&p->lock);
 
@@ -631,7 +635,7 @@ int git_packfile_unpack(
 	struct pack_chain_elem *elem = NULL, *stack;
 	git_pack_cache_entry *cached = NULL;
 	struct pack_chain_elem small_stack[SMALL_STACK_SIZE];
-	size_t stack_size = 0, elem_pos;
+	size_t stack_size = 0, elem_pos, alloclen;
 	git_otype base_type;
 
 	/*
@@ -690,8 +694,11 @@ int git_packfile_unpack(
 	 */
 	if (cached && stack_size == 1) {
 		void *data = obj->data;
-		obj->data = git__malloc(obj->len + 1);
+
+		GITERR_CHECK_ALLOC_ADD(&alloclen, obj->len, 1);
+		obj->data = git__malloc(alloclen);
 		GITERR_CHECK_ALLOC(obj->data);
+
 		memcpy(obj->data, data, obj->len + 1);
 		git_atomic_dec(&cached->refcount);
 		goto cleanup;
@@ -844,16 +851,18 @@ int packfile_unpack_compressed(
 	size_t size,
 	git_otype type)
 {
+	size_t buf_size;
 	int st;
 	z_stream stream;
 	unsigned char *buffer, *in;
 
-	buffer = git__calloc(1, size + 1);
+	GITERR_CHECK_ALLOC_ADD(&buf_size, size, 1);
+	buffer = git__calloc(1, buf_size);
 	GITERR_CHECK_ALLOC(buffer);
 
 	memset(&stream, 0, sizeof(stream));
 	stream.next_out = buffer;
-	stream.avail_out = (uInt)size + 1;
+	stream.avail_out = (uInt)buf_size;
 	stream.zalloc = use_git_alloc;
 	stream.zfree = use_git_free;
 
@@ -951,8 +960,15 @@ git_off_t get_delta_base(
 			if (k != kh_end(p->idx_cache)) {
 				*curpos += 20;
 				return ((struct git_pack_entry *)kh_value(p->idx_cache, k))->offset;
+			} else {
+				/* If we're building an index, don't try to find the pack
+				 * entry; we just haven't seen it yet.  We'll make
+				 * progress again in the next loop.
+				 */
+				return GIT_PASSTHROUGH;
 			}
 		}
+
 		/* The base entry _must_ be in the same pack */
 		if (pack_entry_find_offset(&base_offset, &unused, p, (git_oid *)base_info, GIT_OID_HEXSZ) < 0)
 			return packfile_error("base entry delta is not in the same pack");
@@ -1092,14 +1108,17 @@ int git_packfile_alloc(struct git_pack_file **pack_out, const char *path)
 {
 	struct stat st;
 	struct git_pack_file *p;
-	size_t path_len = path ? strlen(path) : 0;
+	size_t path_len = path ? strlen(path) : 0, alloc_len;
 
 	*pack_out = NULL;
 
 	if (path_len < strlen(".idx"))
 		return git_odb__error_notfound("invalid packfile path", NULL);
 
-	p = git__calloc(1, sizeof(*p) + path_len + 2);
+	GITERR_CHECK_ALLOC_ADD(&alloc_len, sizeof(*p), path_len);
+	GITERR_CHECK_ALLOC_ADD(&alloc_len, alloc_len, 2);
+
+	p = git__calloc(1, alloc_len);
 	GITERR_CHECK_ALLOC(p);
 
 	memcpy(p->pack_name, path, path_len + 1);

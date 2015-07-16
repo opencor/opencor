@@ -44,7 +44,7 @@ TreeViewWidget::TreeViewWidget(QWidget *pParent) :
     QTreeView(pParent),
     CommonWidget(pParent)
 {
-    // Set some properties for our tree view widget
+    // Set some properties
 
     setAllColumnsShowFocus(true);
 #ifdef Q_OS_MAC

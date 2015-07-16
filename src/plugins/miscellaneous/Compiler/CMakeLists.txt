@@ -32,9 +32,11 @@ ADD_PLUGIN(Compiler
         QtCore
         QtGui
         QtNetwork
+        QtWebKit
+        QtWebKitWidgets
+        QtWidgets
         QtXml
         QtXmlPatterns
-        QtWidgets
     TESTS
         tests
 )

@@ -24,7 +24,7 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-#if defined(Q_OS_WIN)
+#ifdef Q_OS_WIN
     #pragma warning(push)
     #pragma warning(disable: 4091)
     #pragma warning(disable: 4290)

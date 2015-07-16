@@ -23,7 +23,6 @@ ADD_PLUGIN(Editor
         src/editorwidget.h
     UIS
         src/editorfindreplacewidget.ui
-        src/editorwidget.ui
     INCLUDE_DIRS
         src
     PLUGINS
@@ -37,6 +36,8 @@ ADD_PLUGIN(Editor
         QtGui
         ${QT_MAC_EXTRAS}
         QtNetwork
+        QtWebKit
+        QtWebKitWidgets
         QtWidgets
         QtXml
         QtXmlPatterns

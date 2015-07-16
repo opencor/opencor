@@ -179,8 +179,8 @@ public:
 
     bool resetAxes(const bool &pCanReplot = true);
 
-    void drawGraphSegment(SingleCellViewGraphPanelPlotGraph *pGraph,
-                          const qulonglong &pFrom, const qulonglong &pTo);
+    void drawGraphFrom(SingleCellViewGraphPanelPlotGraph *pGraph,
+                       const qulonglong &pFrom);
 
     void replotNow();
 

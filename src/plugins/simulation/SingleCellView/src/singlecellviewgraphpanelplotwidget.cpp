@@ -28,8 +28,8 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-#include <QApplication>
 #include <QClipboard>
+#include <QCoreApplication>
 #include <QCursor>
 #include <QDesktopWidget>
 #include <QLocale>
@@ -489,9 +489,12 @@ SingleCellViewGraphPanelPlotWidget::SingleCellViewGraphPanelPlotWidget(QWidget *
 
     mGui->setupUi(this);
 
-    // Get ourselves a direct painter
+    // Get ourselves a direct painter and make sure that direct painting occurs
+    // immediately
 
     mDirectPainter = new QwtPlotDirectPainter(this);
+
+    mDirectPainter->setAttribute(QwtPlotDirectPainter::FullRepaint, true);
 
     // Speedup painting on X11 systems
     // Note: this can only be done on X11 systems...
@@ -553,6 +556,10 @@ SingleCellViewGraphPanelPlotWidget::~SingleCellViewGraphPanelPlotWidget()
 
     foreach (SingleCellViewGraphPanelPlotGraph *graph, mGraphs)
         delete graph;
+
+    // Delete the GUI
+
+    delete mGui;
 }
 
 //==============================================================================
@@ -1318,7 +1325,7 @@ void SingleCellViewGraphPanelPlotWidget::replotNow()
     // Note: this is needed when running a simulation since, otherwise,
     //       replotting won't occur immediately (because of threading)...
 
-    qApp->processEvents();
+    QCoreApplication::processEvents();
 }
 
 //==============================================================================
@@ -1361,18 +1368,12 @@ bool SingleCellViewGraphPanelPlotWidget::removeGraph(SingleCellViewGraphPanelPlo
 
 //==============================================================================
 
-void SingleCellViewGraphPanelPlotWidget::drawGraphSegment(SingleCellViewGraphPanelPlotGraph *pGraph,
-                                                          const qulonglong &pFrom,
-                                                          const qulonglong &pTo)
+void SingleCellViewGraphPanelPlotWidget::drawGraphFrom(SingleCellViewGraphPanelPlotGraph *pGraph,
+                                                       const qulonglong &pFrom)
 {
-    // Make sure that we have a graph segment to draw
+    // Draw our graph from the given point
 
-    if (pFrom == pTo)
-        return;
-
-    // Draw our new graph segment
-
-    mDirectPainter->drawSeries(pGraph, pFrom, pTo);
+    mDirectPainter->drawSeries(pGraph, pFrom, -1);
 }
 
 //==============================================================================

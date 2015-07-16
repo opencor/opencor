@@ -43,12 +43,6 @@ GIT_BEGIN_DECL
  *
  * @param force Overwrite existing branch.
  *
- * @param signature The identity that will used to populate the reflog entry
- *
- * @param log_message The one line long message to be appended to the reflog.
- * If NULL, the default is "Branch: created"; if you want something more
- * useful, provide a message.
- *
  * @return 0, GIT_EINVALIDSPEC or an error code.
  * A proper reference is written in the refs/heads namespace
  * pointing to the provided target commit.
@@ -58,9 +52,25 @@ GIT_EXTERN(int) git_branch_create(
 	git_repository *repo,
 	const char *branch_name,
 	const git_commit *target,
-	int force,
-	const git_signature *signature,
-	const char *log_message);
+	int force);
+
+/**
+ * Create a new branch pointing at a target commit
+ *
+ * This behaves like `git_branch_create()` but takes an annotated
+ * commit, which lets you specify which extended sha syntax string was
+ * specified by a user, allowing for more exact reflog messages.
+ *
+ * See the documentation for `git_branch_create()`.
+ *
+ * @see git_branch_create
+ */
+GIT_EXTERN(int) git_branch_create_from_annotated(
+	git_reference **ref_out,
+	git_repository *repository,
+	const char *branch_name,
+	const git_annotated_commit *commit,
+	int force);
 
 /**
  * Delete an existing branch reference.
@@ -123,19 +133,13 @@ GIT_EXTERN(void) git_branch_iterator_free(git_branch_iterator *iter);
  *
  * @param force Overwrite existing branch.
  *
- * @param signature The identity that will used to populate the reflog entry
- *
- * @param log_message The one line long message to be appended to the reflog
- *
  * @return 0 on success, GIT_EINVALIDSPEC or an error code.
  */
 GIT_EXTERN(int) git_branch_move(
 	git_reference **out,
 	git_reference *branch,
 	const char *new_branch_name,
-	int force,
-	const git_signature *signature,
-	const char *log_message);
+	int force);
 
 /**
  * Lookup a branch by its name in a repository.

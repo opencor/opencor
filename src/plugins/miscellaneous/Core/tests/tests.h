@@ -39,6 +39,7 @@ private:
 private Q_SLOTS:
     void initTestCase();
 
+    void qSameStringListsTests();
     void sizeAsStringTests();
     void sha1Tests();
     void stringPositionAsLineColumnTests();

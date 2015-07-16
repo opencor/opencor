@@ -33,12 +33,6 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-namespace Ui {
-    class CellmlAnnotationViewWidget;
-}
-
-//==============================================================================
-
 class QStackedWidget;
 
 //==============================================================================
@@ -60,7 +54,6 @@ class CellmlAnnotationViewWidget : public Core::ViewWidget
 public:
     explicit CellmlAnnotationViewWidget(CellMLAnnotationViewPlugin *pPluginParent,
                                         QWidget *pParent);
-    ~CellmlAnnotationViewWidget();
 
     virtual void loadSettings(QSettings *pSettings);
     virtual void saveSettings(QSettings *pSettings) const;
@@ -79,8 +72,6 @@ public:
     CellmlAnnotationViewEditingWidget * editingWidget(const QString &pFileName) const;
 
 private:
-    Ui::CellmlAnnotationViewWidget *mGui;
-
     CellMLAnnotationViewPlugin *mPluginParent;
 
     QStackedWidget *mContents;

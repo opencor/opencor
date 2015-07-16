@@ -28,10 +28,10 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-#include <QLayout>
 #include <QSettings>
 #include <QToolButton>
 #include <QVariant>
+#include <QVBoxLayout>
 
 //==============================================================================
 
@@ -67,7 +67,7 @@ CollapsibleHeaderWidget::CollapsibleHeaderWidget(const QColor &pSeparatorColor,
     mCollapsed(false),
     mLastHeader(false)
 {
-    // Create our main (vertical) layout
+    // Create and set our vertical layout
 
     QVBoxLayout *layout = new QVBoxLayout(this);
 
@@ -86,22 +86,25 @@ CollapsibleHeaderWidget::CollapsibleHeaderWidget(const QColor &pSeparatorColor,
 
     subWidget->setLayout(subLayout);
 
-    QColor windowColor = Core::windowColor();
+    QColor winColor = windowColor();
 
     setStyleSheet(QString("QWidget {"
                           "    background: rgb(%1, %2, %3);"
-                          "}").arg(QString::number(windowColor.red()),
-                                   QString::number(windowColor.green()),
-                                   QString::number(windowColor.blue())));
+                          "}").arg(QString::number(winColor.red()),
+                                   QString::number(winColor.green()),
+                                   QString::number(winColor.blue())));
 
     // Create and customise our button and title
+
+    static const QIcon NoIcon   = QIcon();
+    static const QIcon DownIcon = QIcon(":/oxygen/actions/arrow-down.png");
 
     mButton = new QToolButton(subWidget);
     mTitle  = new CollapsibleHeaderTitleWidget(subWidget);
 
     int iconSize = 0.4*mTitle->height();
 
-    mButton->setIcon(pCollapsible?QIcon(":/oxygen/actions/arrow-down.png"):QIcon());
+    mButton->setIcon(pCollapsible?DownIcon:NoIcon);
     mButton->setIconSize(QSize(iconSize, iconSize));
     mButton->setStyleSheet("QToolButton {"
                            "    border: 0px;"
@@ -123,8 +126,8 @@ CollapsibleHeaderWidget::CollapsibleHeaderWidget(const QColor &pSeparatorColor,
     // Note: we keep track of our top and bottom separators since we may need
     //       to hide them in some cases/circumstances...
 
-    mTopSeparator    = Core::newLineWidget(pSeparatorColor, this);
-    mBottomSeparator = Core::newLineWidget(pSeparatorColor, this);
+    mTopSeparator    = newLineWidget(pSeparatorColor, this);
+    mBottomSeparator = newLineWidget(pSeparatorColor, this);
 
     layout->addWidget(mTopSeparator);
     layout->addWidget(subWidget);
@@ -229,10 +232,10 @@ void CollapsibleHeaderWidget::toggleCollapsedState()
 
     // Update our button's icon to reflect our new collapsed state
 
-    if (mCollapsed)
-        mButton->setIcon(QIcon(":/oxygen/actions/arrow-right.png"));
-    else
-        mButton->setIcon(QIcon(":/oxygen/actions/arrow-down.png"));
+    static const QIcon DownIcon  = QIcon(":/oxygen/actions/arrow-down.png");
+    static const QIcon RightIcon = QIcon(":/oxygen/actions/arrow-right.png");
+
+    mButton->setIcon(mCollapsed?RightIcon:DownIcon);
 
     // Update our bottom separator visible status
 

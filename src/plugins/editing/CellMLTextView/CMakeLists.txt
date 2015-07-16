@@ -4,6 +4,7 @@ PROJECT(CellMLTextViewPlugin)
 
 RETRIEVE_CELLML_API_SETTINGS()
 RETRIEVE_LLVM_SETTINGS()
+RETRIEVE_QWT_SETTINGS()
 
 # Add the plugin
 
@@ -28,10 +29,9 @@ ADD_PLUGIN(CellMLTextView
     HEADERS_MOC
         src/cellmltextviewplugin.h
         src/cellmltextviewwidget.h
-    UIS
-        src/cellmltextviewwidget.ui
     DEFINITIONS
         ${LLVM_DEFINITIONS}
+        ${QWT_DEFINITIONS}
     INCLUDE_DIRS
         src
     PLUGINS
@@ -62,6 +62,8 @@ ADD_PLUGIN(CellMLTextView
         QtOpenGL
         QtPrintSupport
         QtSvg
+        QtWebKit
+        QtWebKitWidgets
         QtWidgets
         QtXml
         QtXmlPatterns

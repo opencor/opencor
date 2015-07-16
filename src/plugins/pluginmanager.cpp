@@ -53,14 +53,10 @@ PluginManager::PluginManager(QCoreApplication *pApp, const bool &pGuiMode) :
     foreach (const QFileInfo &file, fileInfoList)
         fileNames << QDir::toNativeSeparators(file.canonicalFilePath());
 
-    // Determine which plugins, if any, are needed by others and which, if any,
-    // are selectable
+    // Retrieve and initialise some information about the plugins
 
     QMap<QString, PluginInfo *> pluginsInfo = QMap<QString, PluginInfo *>();
     QMap<QString, QString> pluginsError = QMap<QString, QString>();
-
-    QStringList neededPlugins = QStringList();
-    QStringList wantedPlugins = QStringList();
 
     foreach (const QString &fileName, fileNames) {
         QString pluginError;
@@ -73,13 +69,45 @@ PluginManager::PluginManager(QCoreApplication *pApp, const bool &pGuiMode) :
         pluginsInfo.insert(pluginName, pluginInfo);
         pluginsError.insert(pluginName, pluginError);
 
+        // Keep track of the plugin's full dependencies, if possible
+
+        if (pluginInfo)
+            pluginInfo->setFullDependencies(Plugin::fullDependencies(mPluginsDir, pluginName));
+    }
+
+    // Determine in which order the plugins files should be analysed (i.e. take
+    // into account the result of a plugin's loadBefore() function)
+
+    QStringList sortedFileNames = QStringList();
+
+    foreach (const QString &fileName, fileNames) {
+        PluginInfo *pluginInfo = pluginsInfo.value(Plugin::name(fileName));
+
         if (pluginInfo) {
-            // Keep track of the plugin's full dependencies
+            int index = sortedFileNames.count();
 
-            QStringList pluginFullDependencies = Plugin::fullDependencies(mPluginsDir, pluginName);
+            foreach (const QString &loadBefore, pluginInfo->loadBefore()) {
+                int loadBeforeIndex = sortedFileNames.indexOf(Plugin::fileName(mPluginsDir, loadBefore));
 
-            pluginInfo->setFullDependencies(pluginFullDependencies);
+                if (loadBeforeIndex < index)
+                    index = loadBeforeIndex;
+            }
 
+            sortedFileNames.insert(index, fileName);
+        }
+    }
+
+    // Determine which plugins, if any, are needed by others and which, if any,
+    // are selectable
+
+    QStringList neededPlugins = QStringList();
+    QStringList wantedPlugins = QStringList();
+
+    foreach (const QString &fileName, sortedFileNames) {
+        QString pluginName = Plugin::name(fileName);
+        PluginInfo *pluginInfo = pluginsInfo.value(pluginName);
+
+        if (pluginInfo) {
             // Keep track of the plugin itself, should it be selectable and
             // requested by the user (if we are in GUI mode) or have CLI support
             // (if we are in CLI mode)
@@ -97,10 +125,6 @@ PluginManager::PluginManager(QCoreApplication *pApp, const bool &pGuiMode) :
         }
     }
 
-    // Remove possible duplicates in our list of needed plugins
-
-    neededPlugins.removeDuplicates();
-
     // We now have all our needed and wanted plugins with our needed plugins
     // nicely sorted based on their dependencies with one another. So, retrieve
     // their file name
@@ -109,9 +133,11 @@ PluginManager::PluginManager(QCoreApplication *pApp, const bool &pGuiMode) :
     QStringList pluginFileNames = QStringList();
 
     plugins.removeDuplicates();
-    // Note: we shouldn't have to remove duplicates, but better be safe than
-    //       sorry (indeed, a selectable plugin may be (wrongly) needed by
-    //       another plugin)...
+    // Note: if anything, there should only be duplicates in neededPlugins, and
+    //       not between neededPlugins and wantedPlugins. Then again, we better
+    //       be safe than sorry since a selectable plugin (i.e. listed in
+    //       wantedPlugins) might be (wrongly) needed by another plugin (i.e.
+    //       listed in neededPlugins)...
 
     foreach (const QString &plugin, plugins)
         pluginFileNames << Plugin::fileName(mPluginsDir, plugin);

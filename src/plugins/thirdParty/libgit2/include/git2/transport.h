@@ -20,6 +20,9 @@
  */
 GIT_BEGIN_DECL
 
+/** Signature of a function which creates a transport */
+typedef int (*git_transport_cb)(git_transport **out, git_remote *owner, void *param);
+
 /**
  * Type of SSH host fingerprint
  */
@@ -105,6 +108,13 @@ typedef enum {
 	 * it will ask via this credential type.
 	 */
 	GIT_CREDTYPE_USERNAME = (1u << 5),
+
+	/**
+	 * Credentials read from memory.
+	 *
+	 * Only available for libssh2+OpenSSL for now.
+	 */
+	GIT_CREDTYPE_SSH_MEMORY = (1u << 6),
 } git_credtype_t;
 
 /* The base structure for all credential types */
@@ -288,11 +298,28 @@ GIT_EXTERN(int) git_cred_default_new(git_cred **out);
 GIT_EXTERN(int) git_cred_username_new(git_cred **cred, const char *username);
 
 /**
+ * Create a new ssh key credential object reading the keys from memory.
+ *
+ * @param out The newly created credential object.
+ * @param username username to use to authenticate.
+ * @param publickey The public key of the credential.
+ * @param privatekey The private key of the credential.
+ * @param passphrase The passphrase of the credential.
+ * @return 0 for success or an error code for failure
+ */
+GIT_EXTERN(int) git_cred_ssh_key_memory_new(
+	git_cred **out,
+	const char *username,
+	const char *publickey,
+	const char *privatekey,
+	const char *passphrase);
+
+/**
  * Signature of a function which acquires a credential object.
  *
  * - cred: The newly created credential object.
  * - url: The resource for which we are demanding a credential.
- * - username_from_url: The username that was embedded in a "user@host"
+ * - username_from_url: The username that was embedded in a "user\@host"
  *                          remote url, or NULL if not included.
  * - allowed_types: A bitmask stating which cred types are OK to return.
  * - payload: The payload provided when specifying this callback.

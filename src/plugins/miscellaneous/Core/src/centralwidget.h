@@ -39,12 +39,6 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-namespace Ui {
-    class CentralWidget;
-}
-
-//==============================================================================
-
 class QDialog;
 class QLabel;
 class QLineEdit;
@@ -71,6 +65,7 @@ typedef QMap<int, Plugin *> CentralWidgetViewPlugins;
 
 class CentralWidget;
 class UserMessageWidget;
+class TabBarWidget;
 
 //==============================================================================
 
@@ -83,13 +78,13 @@ public:
     bool isEnabled() const;
     void setEnabled(const bool &pEnabled);
 
-    QTabBar * viewTabs() const;
+    TabBarWidget * viewTabs() const;
     CentralWidgetViewPlugins * viewPlugins() const;
 
 private:
     bool mEnabled;
 
-    QTabBar *mViewTabs;
+    TabBarWidget *mViewTabs;
     CentralWidgetViewPlugins *mViewPlugins;
 };
 
@@ -114,9 +109,9 @@ public:
 
     void addView(Plugin *pPlugin);
 
-    QTabBar * newTabBar(const QTabBar::Shape &pShape,
-                        const bool &pMovable = false,
-                        const bool &pTabsClosable = false);
+    TabBarWidget * newTabBarWidget(const QTabBar::Shape &pShape,
+                                   const bool &pMovable = false,
+                                   const bool &pTabsClosable = false);
 
     QString currentFileName() const;
 
@@ -146,16 +141,14 @@ private:
 
     QMainWindow *mMainWindow;
 
-    Ui::CentralWidget *mGui;
-
     State mState;
 
     Plugins mLoadedFileHandlingPlugins;
     Plugins mLoadedGuiPlugins;
     Plugins mLoadedViewPlugins;
 
-    QTabBar *mModeTabs;
-    QTabBar *mFileTabs;
+    TabBarWidget *mModeTabs;
+    TabBarWidget *mFileTabs;
 
     QMap<int, ViewInterface::Mode> mModeTabIndexModes;
     QMap<ViewInterface::Mode, int> mModeModeTabIndexes;

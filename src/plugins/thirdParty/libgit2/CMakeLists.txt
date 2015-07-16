@@ -17,11 +17,11 @@ MACRO(RETRIEVE_LIBGIT2_SETTINGS)
     ELSEIF(APPLE)
         SET(LIBGIT2_DEFINITIONS
             GIT_COMMON_CRYPTO
-            GIT_SSL
+            GIT_OPENSSL
         )
     ELSE()
         SET(LIBGIT2_DEFINITIONS
-            GIT_SSL
+            GIT_OPENSSL
             OPENSSL_SHA1
         )
     ENDIF()
@@ -49,10 +49,18 @@ ENDMACRO()
 # Make sure that OpenSSL is available on Linux and OS X
 
 IF(NOT WIN32)
-    FIND_PACKAGE(OpenSSL REQUIRED)
+    FIND_PACKAGE(OpenSSL REQUIRED QUIET)
 ENDIF()
 
-# Determine to which dependencies we must have access
+# Determine to which external binaries we need access
+
+IF(WIN32)
+    LINK_LIBRARIES(winhttp rpcrt4 crypt32)
+ELSE()
+    LINK_LIBRARIES(${OPENSSL_LIBRARIES})
+ENDIF()
+
+# Determine to which dependencies we need access
 
 SET(DEPENDENCIES_INCLUDE_DIRS
     deps/http-parser
@@ -75,28 +83,28 @@ IF(USE_PREBUILT_LIBGIT2_PLUGIN)
     IF(WIN32)
         IF(${ARCHITECTURE} EQUAL 32)
             IF(RELEASE_MODE)
-                RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} libgit2.dll 7aeba54a9e760d52d1d5d3920ba0f6f4e3631c63)
-                RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} libgit2.lib 1fef5d5ec835e1bdb6f9c58f705d8e89859772af)
+                RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} libgit2.dll 05c2c0378189c6108d6e20f23a27d5ef80419511)
+                RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} libgit2.lib 0892edc0254f38efb91e95ddf3159c9b1279d624)
             ELSE()
-                RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} libgit2.dll 246f2f22168eb97c263eaf7c3bea381ef153b2ce)
-                RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} libgit2.lib f7c5c87392c7edc23e8e50566646a96ae33b3668)
+                RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} libgit2.dll 6f49f8f8ae90bf8b8a900016ab2d98bd047717f8)
+                RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} libgit2.lib 0672ce4ab7a786c65c612361de0b2e8774a77fba)
             ENDIF()
         ELSE()
             IF(RELEASE_MODE)
-                RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} libgit2.dll 77fa38abc5e03423b363f9e1191da5290c491383)
-                RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} libgit2.lib 4bca5ca45361922b4a313bbbad68006728d7bbf6)
+                RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} libgit2.dll 19023563a73872306d658d4a700dbbc0b50ef111)
+                RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} libgit2.lib 616c561bbf2fac8a145a75a7b72fd59a76a3074b)
             ELSE()
-                RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} libgit2.dll cd5602af3d68f10bd5c66a3fff590ab748cda7ea)
-                RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} libgit2.lib ecfd53ea0d2aa874def6d3e6e75f8437da98aa23)
+                RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} libgit2.dll 8d745f9f5fda50b0f8b3df09464b9a49dfa5b844)
+                RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} libgit2.lib 9f9aaf66a7f899c100532923a817a3c0723707f8)
             ENDIF()
         ENDIF()
     ELSEIF(APPLE)
-        RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} liblibgit2.dylib 63d61bbb10b91211edcb63cb75b1729fbd55f07d)
+        RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} liblibgit2.dylib 843c21901ca9f4c62962aab3b614b8dc4db9830a)
     ELSE()
         IF(${ARCHITECTURE} EQUAL 32)
-            RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} liblibgit2.so c19af3baeccb343e1ff940fb9382e763dc4a304b)
+            RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} liblibgit2.so 9e9c5ae97d1dc71c1f9b0eeef99d33ba8e2f3668)
         ELSE()
-            RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} liblibgit2.so ad2a9a4dd7491caa04981bea0d21ee2964bcfcbf)
+            RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} liblibgit2.so 3e272212453863daefe7975fec690f693b1362ce)
         ENDIF()
     ENDIF()
 
@@ -129,12 +137,8 @@ ELSE()
 
     IF(WIN32)
         SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /wd4133 /wd4244 /wd4267")
-        # Note: on Windows, some warnings get generated, but we have nothing to
-        #       do with them...
     ELSEIF(APPLE)
         SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wno-deprecated-declarations")
-        # Note: on OS X, some warnings get generated, but we have nothing to do
-        #       with them...
     ENDIF()
 
     # Determine which dependencies we must build
@@ -166,6 +170,7 @@ ELSE()
         SET(ADDITIONAL_SOURCES
             src/hash/hash_win32.c
 
+            src/win32/buffer.c
             src/win32/dir.c
             src/win32/error.c
             src/win32/findfile.c
@@ -216,6 +221,7 @@ ELSE()
             src/config_cache.c
             src/config_file.c
             src/crlf.c
+            src/curl_stream.c
             src/date.c
             src/delta-apply.c
             src/delta.c
@@ -287,11 +293,13 @@ ELSE()
             src/sortedcache.c
             src/stash.c
             src/status.c
+            src/stransport_stream.c
             src/strmap.c
             src/submodule.c
             src/sysdir.c
             src/tag.c
             src/thread-utils.c
+            src/tls_stream.c
             src/trace.c
             src/transaction.c
             src/transport.c
@@ -337,7 +345,5 @@ ELSE()
             Core
         QT_LIBRARIES
             QtCore
-        EXTERNAL_BINARIES
-            ${OPENSSL_LIBRARIES}
     )
 ENDIF()

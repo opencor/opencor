@@ -188,6 +188,43 @@ QString getSaveFileName(const QString &pCaption, const QString &pFileName,
 
 //==============================================================================
 
+QString getExistingDirectory(const QString &pCaption, const QString &pDirName,
+                             const bool &pEmptyDir)
+{
+    // Retrieve and return a save file name
+
+    QString res = QDir::toNativeSeparators(QFileDialog::getExistingDirectory(qApp->activeWindow(),
+                                                                             pCaption,
+                                                                             pDirName.isEmpty()?
+                                                                                 activeDirectory():
+                                                                                 pDirName));
+
+    // Make sure that we have got a directory
+
+    if (!res.isEmpty()) {
+        // Update our active directory
+
+        setActiveDirectory(res);
+
+        // Check whether the directory should be empty
+
+        if (pEmptyDir) {
+            if (QDir(res).entryInfoList(QDir::NoDotAndDotDot|QDir::AllEntries).count()) {
+                QMessageBox::warning(qApp->activeWindow(), pCaption,
+                                     QObject::tr("Please choose an empty directory."));
+
+                return QString();
+            }
+        }
+    }
+
+    // Everything went fine,so return the directory
+
+    return res;
+}
+
+//==============================================================================
+
 void setFocusTo(QWidget *pWidget)
 {
     // Give the focus to pWidget, but then revert the focus back to whoever had

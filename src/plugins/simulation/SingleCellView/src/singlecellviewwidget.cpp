@@ -50,8 +50,8 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-#include <QApplication>
 #include <QBrush>
+#include <QCoreApplication>
 #include <QDesktopWidget>
 #include <QFileDialog>
 #include <QFrame>
@@ -101,6 +101,7 @@ SingleCellViewWidget::SingleCellViewWidget(SingleCellViewPlugin *pPluginParent,
     mRunActionEnabled(true),
     mOldSimulationResultsSizes(QMap<SingleCellViewSimulation *, qulonglong>()),
     mCheckResultsSimulations(QList<SingleCellViewSimulation *>()),
+    mResetSimulations(QList<SingleCellViewSimulation *>()),
     mGraphPanelsPlots(QMap<SingleCellViewGraphPanelWidget *, SingleCellViewGraphPanelPlotWidget *>()),
     mPlots(QList<SingleCellViewGraphPanelPlotWidget *>()),
     mPlotsViewports(QMap<SingleCellViewGraphPanelPlotWidget *, QRectF>()),
@@ -495,11 +496,14 @@ void SingleCellViewWidget::updateSimulationMode()
 
 void SingleCellViewWidget::updateRunPauseAction(const bool &pRunActionEnabled)
 {
+    // Update our various actions
+
+    static const QIcon StartIcon = QIcon(":/oxygen/actions/media-playback-start.png");
+    static const QIcon PauseIcon = QIcon(":/oxygen/actions/media-playback-pause.png");
+
     mRunActionEnabled = pRunActionEnabled;
 
-    mGui->actionRunPauseResumeSimulation->setIcon(pRunActionEnabled?
-                                                      QIcon(":/oxygen/actions/media-playback-start.png"):
-                                                      QIcon(":/oxygen/actions/media-playback-pause.png"));
+    mGui->actionRunPauseResumeSimulation->setIcon(pRunActionEnabled?StartIcon:PauseIcon);
 
     bool simulationPaused = mSimulation && mSimulation->isPaused();
 
@@ -648,7 +652,7 @@ void SingleCellViewWidget::initialize(const QString &pFileName,
 
     resetFileTabIcon(pFileName);
 
-    mProgressBarWidget->setValue(mSimulation->progress());
+    mProgressBarWidget->setValue(mOldSimulationResultsSizes.value(mSimulation)/mSimulation->size());
 
     // Determine whether the CellML file has a valid runtime
 
@@ -702,19 +706,21 @@ void SingleCellViewWidget::initialize(const QString &pFileName,
 
         information += "<span"+OutputBad+">"+(cellmlFileRuntime?tr("invalid"):tr("none"))+"</span>."+OutputBrLn;
 
-        if (validCellmlFileRuntime)
+        if (validCellmlFileRuntime) {
             // We have a valid runtime, but no variable of integration, which
             // means that the model doesn't contain any ODE or DAE
 
             information += OutputTab+"<span"+OutputBad+"><strong>"+tr("Error:")+"</strong> "+tr("the model must have at least one ODE or DAE")+".</span>"+OutputBrLn;
-        else
+        } else {
             // We don't have a valid runtime, so either there are some problems
             // with the CellML file or its runtime
 
             foreach (const CellMLSupport::CellmlFileIssue &issue,
-                     cellmlFileRuntime?cellmlFileRuntime->issues():cellmlFile->issues())
+                     cellmlFileRuntime?cellmlFileRuntime->issues():cellmlFile->issues()) {
                 information += QString(OutputTab+"<span"+OutputBad+"><strong>%1</strong> %2</span>."+OutputBrLn).arg((issue.type() == CellMLSupport::CellmlFileIssue::Error)?tr("Error:"):tr("Warning:"),
                                                                                                                      issue.message());
+            }
+        }
     }
 
     output(information);
@@ -736,7 +742,7 @@ void SingleCellViewWidget::initialize(const QString &pFileName,
     if (variableOfIntegration) {
         // Show our contents widget in case it got previously hidden
         // Note: indeed, if it was to remain hidden then some initialisations
-        //       wouldn't work (e.g. the solvers widget has a property editor
+        //       wouldn't work (e.g. the solvers widget has a property editor,
         //       which all properties need to be removed and if the contents
         //       widget is not visible, then upon repopulating the property
         //       editor, scrollbars will be shown even though they are not
@@ -808,7 +814,7 @@ void SingleCellViewWidget::initialize(const QString &pFileName,
     //       bit (if visible), resulting in the output being shifted a bit...
 
     if (prevValidSimulationEnvironment != validSimulationEnvironment) {
-        qApp->processEvents();
+        QCoreApplication::processEvents();
 
         mOutputWidget->ensureCursorVisible();
     }
@@ -821,7 +827,7 @@ void SingleCellViewWidget::initialize(const QString &pFileName,
         // graph panels widgets
         // Note #1: this will also initialise some of our simulation data (i.e.
         //          our simulation's starting point and simulation's NLA
-        //          solver's properties) which is needed since we want to be
+        //          solver's properties), which is needed since we want to be
         //          able to reset our simulation below...
         // Note #2: to initialise our graphs widget will result in some graphs
         //          being shown/hidden and, therefore, in graphsUpdated() being
@@ -979,7 +985,9 @@ QIcon SingleCellViewWidget::fileTabIcon(const QString &pFileName) const
         // No simulation object currently exists for the model, so return a null
         // icon
 
-        return QIcon();
+        static const QIcon NoIcon = QIcon();
+
+        return NoIcon;
     }
 }
 
@@ -1024,8 +1032,8 @@ void SingleCellViewWidget::fileReloaded(const QString &pFileName)
 
     mNeedReloadViews << pFileName;
 
-    if (simulation)
-        if (simulation->stop())
+    if (simulation) {
+        if (simulation->stop()) {
             needReloadView = false;
             // Note: we don't need to reload ourselves since stopping the
             //       simulation will result in the stopped() signal being
@@ -1033,6 +1041,8 @@ void SingleCellViewWidget::fileReloaded(const QString &pFileName)
             //       called, which is where we should reload ourselves since we
             //       cannot tell how long the signal/slot mechanism is going to
             //       take...
+        }
+    }
 
     // Reload ourselves, if needed
 
@@ -1128,19 +1138,20 @@ void SingleCellViewWidget::on_actionRunPauseResumeSimulation_triggered()
 
                 runSimulation = mSimulation->results()->reset();
 
-                checkResults(mSimulation);
+                checkResults(mSimulation, true);
                 // Note: this will, among other things, clear our plots...
 
                 // Effectively run our simulation in case we were able to
                 // allocate all the memory we need to run the simulation
 
-                if (runSimulation)
+                if (runSimulation) {
                     // Now, we really run our simulation
 
                     mSimulation->run();
-                else
+                } else {
                     QMessageBox::warning(qApp->activeWindow(), tr("Run Simulation"),
                                          tr("We could not allocate the %1 of memory required for the simulation.").arg(Core::sizeAsString(requiredMemory)));
+                }
             }
 
             handlingAction = false;
@@ -1182,7 +1193,7 @@ void SingleCellViewWidget::on_actionClearSimulationData_triggered()
 
     updateSimulationMode();
 
-    checkResults(mSimulation);
+    checkResults(mSimulation, true);
 }
 
 //==============================================================================
@@ -1402,16 +1413,19 @@ void SingleCellViewWidget::simulationStopped(const qint64 &pElapsedTime)
             output(QString(OutputTab+"<strong>"+tr("Simulation time:")+"</strong> <span"+OutputInfo+">"+tr("%1 s using %2").arg(QString::number(0.001*pElapsedTime, 'g', 3), solversInformation)+"</span>."+OutputBrLn));
         }
 
-        if (needReloadView)
-            resetProgressBar();
-        else
+        if (needReloadView) {
+            resetProgressBar(simulation);
+        } else {
+            mResetSimulations << simulation;
+
             QTimer::singleShot(ResetDelay, this, SLOT(resetProgressBar()));
+        }
 
         // Update our parameters and simulation mode
 
         updateSimulationMode();
 
-        mContentsWidget->informationWidget()->parametersWidget()->updateParameters(mSimulation->currentPoint());
+        mContentsWidget->informationWidget()->parametersWidget()->updateParameters(simulation->currentPoint());
     }
 
     // Stop keeping track of our simulation progress
@@ -1424,7 +1438,7 @@ void SingleCellViewWidget::simulationStopped(const qint64 &pElapsedTime)
     //          file that cannot be handled by us, meaning that our central
     //          widget would show a message rather than us...
     // Note #2: we can't directly pass simulation to resetFileTabIcon(), so
-    //          instead we use mStoppedSimulations which is a list of
+    //          instead we use mStoppedSimulations, which is a list of
     //          simulations in case several simulations were to stop at around
     //          the same time...
 
@@ -1445,9 +1459,28 @@ void SingleCellViewWidget::simulationStopped(const qint64 &pElapsedTime)
 
 //==============================================================================
 
-void SingleCellViewWidget::resetProgressBar()
+void SingleCellViewWidget::resetProgressBar(SingleCellViewSimulation *pSimulation)
 {
+    // Retrieve the oldest simulation to reset, if none was provided
+
+    SingleCellViewSimulation *simulation = pSimulation;
+
+    if (!simulation) {
+        simulation = mResetSimulations.first();
+
+        if (!simulation) {
+            // There should have been simulation to reset, but somehow there
+            // isn't one, so leave
+
+            return;
+        }
+
+        mResetSimulations.removeFirst();
+    }
+
     // Reset our progress bar
+
+    mOldSimulationResultsSizes.insert(simulation, 0);
 
     mProgressBarWidget->setValue(0.0);
 }
@@ -1460,10 +1493,12 @@ void SingleCellViewWidget::resetFileTabIcon(const QString &pFileName,
     // Stop tracking our simulation progress and let people know that our file
     // tab icon should be reset
 
+    static const QIcon NoIcon = QIcon();
+
     if (pRemoveProgress)
         mProgresses.remove(pFileName);
 
-    emit updateFileTabIcon(mPluginParent->viewName(), pFileName, QIcon());
+    emit updateFileTabIcon(mPluginParent->viewName(), pFileName, NoIcon);
 }
 
 //==============================================================================
@@ -1540,9 +1575,10 @@ void SingleCellViewWidget::simulationPropertyChanged(Core::Property *pProperty)
 
     // Now, update our plots, if needed
 
-    if (needUpdatePlots)
+    if (needUpdatePlots) {
         foreach (SingleCellViewGraphPanelPlotWidget *plot, mPlots)
             updatePlot(plot);
+    }
 }
 
 //==============================================================================
@@ -1667,11 +1703,15 @@ void SingleCellViewWidget::graphAdded(SingleCellViewGraphPanelPlotWidget *pPlot,
                                       SingleCellViewGraphPanelPlotGraph *pGraph)
 {
     // A new graph has been added, so keep track of it and update its plot
+    // Note: updating the plot will, if needed, update the plot's axes and, as
+    //       a result, replot the graphs including our new one. On the other
+    //       hand, if the plot's axes don't get updated, we need to draw our new
+    //       graph...
 
     updateGraphData(pGraph, mSimulations.value(pGraph->fileName())->results()->size());
-    updatePlot(pPlot);
 
-    pPlot->drawGraphSegment(pGraph, 0, -1);
+    if (!updatePlot(pPlot))
+        pPlot->drawGraphFrom(pGraph, 0);
 
     // Keep track of the plot itself, if needed
 
@@ -1744,12 +1784,14 @@ void SingleCellViewWidget::graphsUpdated(SingleCellViewGraphPanelPlotWidget *pPl
 
     // Update and replot our various plots, if allowed
 
-    if (mCanUpdatePlotsForUpdatedGraphs)
-        foreach (SingleCellViewGraphPanelPlotWidget *plot, plots)
+    if (mCanUpdatePlotsForUpdatedGraphs) {
+        foreach (SingleCellViewGraphPanelPlotWidget *plot, plots) {
             updatePlot(plot, true);
             // Note: even if the axes' values of the plot haven't changed, we
             //       still want to replot the plot since at least one of its
             //       graphs has been updated...
+        }
+    }
 }
 
 //==============================================================================
@@ -1761,12 +1803,13 @@ void SingleCellViewWidget::checkAxisValue(double &pValue,
     // Check whether pOrigValue is equal to one of the values in pTestValues and
     // if so then update pValue with pOrigValue
 
-    foreach (const double &testValue, pTestValues)
+    foreach (const double &testValue, pTestValues) {
         if (pOrigValue == testValue) {
             pValue = pOrigValue;
 
             break;
         }
+    }
 }
 
 //==============================================================================
@@ -1809,7 +1852,7 @@ bool SingleCellViewWidget::updatePlot(SingleCellViewGraphPanelPlotWidget *pPlot,
     QList<double> startingPoints = QList<double>();
     QList<double> endingPoints = QList<double>();
 
-    foreach (SingleCellViewGraphPanelPlotGraph *graph, pPlot->graphs())
+    foreach (SingleCellViewGraphPanelPlotGraph *graph, pPlot->graphs()) {
         if (graph->isValid() && graph->isSelected()) {
             SingleCellViewSimulation *simulation = mSimulations.value(graph->fileName());
 
@@ -1856,10 +1899,9 @@ bool SingleCellViewWidget::updatePlot(SingleCellViewGraphPanelPlotWidget *pPlot,
                 canOptimiseAxisY = false;
             }
         }
+    }
 
     // Optimise our axes' values, if possible
-    // Note: we first optimise our axes' values and then revert axis value which
-    //       is equal to a starting or an ending point value...
 
     double origMinX = minX;
     double origMaxX = maxX;
@@ -2015,7 +2057,7 @@ void SingleCellViewWidget::updateResults(SingleCellViewSimulation *pSimulation,
                     }
 
                     if (!needUpdatePlot)
-                        plot->drawGraphSegment(graph, oldDataSize-1, pSize-1);
+                        plot->drawGraphFrom(graph, oldDataSize-1);
                 }
             }
         }
@@ -2055,8 +2097,10 @@ void SingleCellViewWidget::updateResults(SingleCellViewSimulation *pSimulation,
     //       that cannot be handled by us, meaning that our central widget would
     //       show a message rather than us...
 
+    double simulationProgress = mOldSimulationResultsSizes.value(pSimulation)/pSimulation->size();
+
     if (isVisible() && (pSimulation == mSimulation)) {
-        mProgressBarWidget->setValue(mSimulation->progress());
+        mProgressBarWidget->setValue(simulationProgress);
     } else {
         // We are not dealing with the active simulation, so create an icon that
         // shows the simulation's progress and let people know about it
@@ -2067,7 +2111,7 @@ void SingleCellViewWidget::updateResults(SingleCellViewSimulation *pSimulation,
         //       simulation the update is...
 
         int oldProgress = mProgresses.value(pSimulation->fileName(), -1);
-        int newProgress = (tabBarPixmapSize()-2)*pSimulation->progress();
+        int newProgress = (tabBarPixmapSize()-2)*simulationProgress;
         // Note: tabBarPixmapSize()-2 because we want a one-pixel wide border...
 
         if (newProgress != oldProgress) {
@@ -2087,7 +2131,8 @@ void SingleCellViewWidget::updateResults(SingleCellViewSimulation *pSimulation,
 
 //==============================================================================
 
-void SingleCellViewWidget::checkResults(SingleCellViewSimulation *pSimulation)
+void SingleCellViewWidget::checkResults(SingleCellViewSimulation *pSimulation,
+                                        const bool &pForceUpdateResults)
 {
     // Make sure that we can still check results (i.e. we are not closing down
     // with some simulations still running)
@@ -2095,13 +2140,12 @@ void SingleCellViewWidget::checkResults(SingleCellViewSimulation *pSimulation)
     if (!mSimulations.values().contains(pSimulation))
         return;
 
-    // Update our simulation results size
+    // Update our results, but only if needed
 
     qulonglong simulationResultsSize = pSimulation->results()->size();
 
-    // Update our results, but only if needed
-
-    if (simulationResultsSize != mOldSimulationResultsSizes.value(pSimulation)) {
+    if (    pForceUpdateResults
+        || (simulationResultsSize != mOldSimulationResultsSizes.value(pSimulation))) {
         mOldSimulationResultsSizes.insert(pSimulation, simulationResultsSize);
 
         updateResults(pSimulation, simulationResultsSize);
@@ -2114,7 +2158,7 @@ void SingleCellViewWidget::checkResults(SingleCellViewSimulation *pSimulation)
         || (simulationResultsSize != pSimulation->results()->size())) {
         // Note: we cannot ask QTimer::singleShot() to call checkResults() since
         //       it expects a pointer to a simulation as a parameter, so instead
-        //       we call a method with no arguments which will make use of our
+        //       we call a method with no arguments that will make use of our
         //       list to know which simulation should be passed as an argument
         //       to checkResults()...
 
@@ -2144,24 +2188,32 @@ QIcon SingleCellViewWidget::parameterIcon(const CellMLSupport::CellmlFileRuntime
 {
     // Return an icon that illustrates the type of a parameter
 
+    static const QIcon VoiIcon              = QIcon(":/voi.png");
+    static const QIcon ConstantIcon         = QIcon(":/constant.png");
+    static const QIcon ComputedConstantIcon = QIcon(":/computedConstant.png");
+    static const QIcon RateIcon             = QIcon(":/rate.png");
+    static const QIcon StateIcon            = QIcon(":/state.png");
+    static const QIcon AlgebraicIcon        = QIcon(":/algebraic.png");
+    static const QIcon ErrorNodeIcon        = QIcon(":CellMLSupport_errorNode");
+
     switch (pParameterType) {
     case CellMLSupport::CellmlFileRuntimeParameter::Voi:
-        return QIcon(":/voi.png");
+        return VoiIcon;
     case CellMLSupport::CellmlFileRuntimeParameter::Constant:
-        return QIcon(":/constant.png");
+        return ConstantIcon;
     case CellMLSupport::CellmlFileRuntimeParameter::ComputedConstant:
-        return QIcon(":/computedConstant.png");
+        return ComputedConstantIcon;
     case CellMLSupport::CellmlFileRuntimeParameter::Rate:
-        return QIcon(":/rate.png");
+        return RateIcon;
     case CellMLSupport::CellmlFileRuntimeParameter::State:
-        return QIcon(":/state.png");
+        return StateIcon;
     case CellMLSupport::CellmlFileRuntimeParameter::Algebraic:
-        return QIcon(":/algebraic.png");
+        return AlgebraicIcon;
     default:
-        // We are dealing with a type of parameter which is of no interest to us
+        // We are dealing with a type of parameter that is of no interest to us
         // Note: we should never reach this point...
 
-        return QIcon(":CellMLSupport_errorNode");
+        return ErrorNodeIcon;
     }
 }
 

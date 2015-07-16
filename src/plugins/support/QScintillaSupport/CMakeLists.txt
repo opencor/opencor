@@ -31,6 +31,8 @@ ADD_PLUGIN(QScintillaSupport
         QtGui
         ${QT_MAC_EXTRAS}
         QtNetwork
+        QtWebKit
+        QtWebKitWidgets
         QtWidgets
         QtXml
         QtXmlPatterns

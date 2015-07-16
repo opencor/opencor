@@ -19,6 +19,7 @@ specific language governing permissions and limitations under the License.
 // Property editor widget
 //==============================================================================
 
+#include "corecliutils.h"
 #include "propertyeditorwidget.h"
 
 //==============================================================================
@@ -658,14 +659,15 @@ QString Property::name() const
 
 //==============================================================================
 
-void Property::setName(const QString &pName)
+void Property::setName(const QString &pName, const bool &pUpdateToolTip)
 {
     // Set our name
 
     if (pName.compare(mName->text())) {
         mName->setText(pName);
 
-        updateToolTip();
+        if (pUpdateToolTip)
+            updateToolTip();
     }
 }
 
@@ -728,10 +730,11 @@ void Property::setDoubleValue(const double &pDoubleValue,
 {
     // Set our value, should it be of double type
 
-    if (mType == Double)
+    if (mType == Double) {
         setValue(QString::number(pDoubleValue, 'g', 15), false, pEmitSignal);
         // Note: we want as much precision as possible, hence we use 15 (see
         //       http://en.wikipedia.org/wiki/Double_precision)...
+    }
 }
 
 //==============================================================================
@@ -818,7 +821,7 @@ void Property::setListValues(const QStringList &pListValues,
 
     // Set our list values, if appropriate
 
-    if (listValues != mListValues) {
+    if (!qSameStringLists(listValues, mListValues)) {
         mListValues = listValues;
 
         // Update our value using the requested item from our new list, if it
@@ -927,14 +930,15 @@ QString Property::unit() const
 
 //==============================================================================
 
-void Property::setUnit(const QString &pUnit)
+void Property::setUnit(const QString &pUnit, const bool &pUpdateToolTip)
 {
     // Set our unit, if it's not of section type
 
     if (mHasUnit && (mType != Section) && pUnit.compare(mUnit->text())) {
         mUnit->setText(pUnit);
 
-        updateToolTip();
+        if (pUpdateToolTip)
+            updateToolTip();
     }
 }
 
@@ -949,14 +953,16 @@ QString Property::extraInfo() const
 
 //==============================================================================
 
-void Property::setExtraInfo(const QString &pExtraInfo)
+void Property::setExtraInfo(const QString &pExtraInfo,
+                            const bool &pUpdateToolTip)
 {
     // Set our extra info
 
     if (pExtraInfo.compare(mExtraInfo)) {
         mExtraInfo = pExtraInfo;
 
-        updateToolTip();
+        if (pUpdateToolTip)
+            updateToolTip();
     }
 }
 
@@ -1667,11 +1673,11 @@ void PropertyEditorWidget::keyPressEvent(QKeyEvent *pEvent)
                || (pEvent->key() == Qt::Key_Enter)) {
         // The user wants to start/stop editing the property
 
-        if (mPropertyEditor)
+        if (mPropertyEditor) {
             // We are currently editing a property, so stop editing it
 
             editProperty(0);
-        else
+        } else {
             // We are not currently editing a property, so start editing the
             // current one
             // Note: we could use mProperty, but if it was to be empty then we
@@ -1679,6 +1685,7 @@ void PropertyEditorWidget::keyPressEvent(QKeyEvent *pEvent)
             //       use the latter all the time...
 
             editProperty(property(currentIndex()));
+        }
 
         // Accept the event
 

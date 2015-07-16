@@ -41,10 +41,12 @@ ADD_PLUGIN(Core
         src/organisationwidget.cpp
         src/progressbarwidget.cpp
         src/propertyeditorwidget.cpp
+        src/tabbarwidget.cpp
         src/toolbarwidget.cpp
         src/treeviewwidget.cpp
         src/usermessagewidget.cpp
         src/viewwidget.cpp
+        src/webviewwidget.cpp
         src/widget.cpp
         src/windowwidget.cpp
         src/xsltransformer.cpp
@@ -65,19 +67,20 @@ ADD_PLUGIN(Core
         src/organisationwidget.h
         src/progressbarwidget.h
         src/propertyeditorwidget.h
+        src/tabbarwidget.h
         src/toolbarwidget.h
         src/treeviewwidget.h
         src/usermessagewidget.h
         src/viewwidget.h
+        src/webviewwidget.h
         src/widget.h
         src/windowwidget.h
         src/xsltransformer.h
-    UIS
-        src/centralwidget.ui
     INCLUDE_DIRS
         src
     QT_MODULES
         Network
+        WebKitWidgets
         Widgets
         Xml
         XmlPatterns
@@ -85,6 +88,8 @@ ADD_PLUGIN(Core
         QtCore
         QtGui
         QtNetwork
+        QtWebKit
+        QtWebKitWidgets
         QtWidgets
         QtXml
         QtXmlPatterns

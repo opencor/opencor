@@ -992,11 +992,33 @@ bool CellmlTextViewParser::parseCmetaId(QDomElement &pDomElement)
 
     mScanner.getNextToken();
 
-    // Set the cmeta:id of the current DOM element
+    // Set the cmeta:id of the current DOM element, which in the case of a
+    // MathML element must be done via the MathML id attribute (so we need to
+    // check whether the current DOM element is within the MathML namespace)
 
-    mNamespaces.insert("cmeta", CellMLSupport::CmetaIdNamespace);
+    bool withinMathmlNamespace = false;
+    QDomNode parentNode = pDomElement.parentNode();
 
-    pDomElement.setAttribute("cmeta:id", cmetaId);
+    while (!parentNode.isNull()) {
+        QDomNode xmlnsAttributeNode = parentNode.attributes().namedItem("xmlns");
+
+        if (   !xmlnsAttributeNode.isNull()
+            && !xmlnsAttributeNode.nodeValue().compare(CellMLSupport::MathmlNamespace)) {
+            withinMathmlNamespace = true;
+
+            break;
+        } else {
+            parentNode = parentNode.parentNode();
+        }
+    }
+
+    if (withinMathmlNamespace) {
+        pDomElement.setAttribute("id", cmetaId);
+    } else {
+        mNamespaces.insert("cmeta", CellMLSupport::CmetaIdNamespace);
+
+        pDomElement.setAttribute("cmeta:id", cmetaId);
+    }
 
     return true;
 }

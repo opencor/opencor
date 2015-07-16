@@ -338,7 +338,9 @@ QIcon CellMLTextViewPlugin::fileTabIcon(const QString &pFileName) const
 
     // We don't handle this interface...
 
-    return QIcon();
+    static const QIcon NoIcon = QIcon();
+
+    return NoIcon;
 }
 
 //==============================================================================
