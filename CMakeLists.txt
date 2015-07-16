@@ -263,6 +263,7 @@ SET(PLUGINS
 
     support/CellMLSupport
     support/QScintillaSupport
+    support/SEDMLSupport
 
     # Plugins that extend some libraries (incl. third-party ones)
 
