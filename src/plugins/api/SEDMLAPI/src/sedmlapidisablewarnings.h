@@ -16,17 +16,24 @@ specific language governing permissions and limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// CellML API disable warnings
+// SED-ML API disable warnings
 //==============================================================================
 
-#if !defined(CELLMLAPIENABLEWARNINGS_H) && !defined(CELLMLAPIDISABLEWARNINGS_H)
-#define CELLMLAPIDISABLEWARNINGS_H
+#if !defined(SEDMLAPIENABLEWARNINGS_H) && !defined(SEDMLAPIDISABLEWARNINGS_H)
+#define SEDMLAPIDISABLEWARNINGS_H
 
 //==============================================================================
 
-#ifdef Q_OS_MAC
+#if defined(Q_OS_WIN)
+    // Nothing to do...
+#elif defined(Q_OS_LINUX)
+    #pragma GCC diagnostic push
+    #pragma GCC diagnostic ignored "-Wignored-qualifiers"
+#elif defined(Q_OS_MAC)
     #pragma clang diagnostic push
     #pragma clang diagnostic ignored "-Wignored-qualifiers"
+#else
+    #error Unsupported platform
 #endif
 
 //==============================================================================

@@ -16,16 +16,22 @@ specific language governing permissions and limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// CellML API enable warnings
+// SED-ML API enable warnings
 //==============================================================================
 
-#if defined(CELLMLAPIENABLEWARNINGS_H) && !defined(CELLMLAPIDISABLEWARNINGS_H)
-#define CELLMLAPIENABLEWARNINGS_H
+#if defined(SEDMLAPIENABLEWARNINGS_H) && !defined(SEDMLAPIDISABLEWARNINGS_H)
+#define SEDMLAPIENABLEWARNINGS_H
 
 //==============================================================================
 
-#ifdef Q_OS_MAC
+#if defined(Q_OS_WIN)
+    // Nothing to do...
+#elif defined(Q_OS_LINUX)
+    #pragma GCC diagnostic pop
+#elif defined(Q_OS_MAC)
     #pragma clang diagnostic pop
+#else
+    #error Unsupported platform
 #endif
 
 //==============================================================================
