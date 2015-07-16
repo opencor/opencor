@@ -88,11 +88,12 @@ void CellmlFileManager::manageFile(const QString &pFileName)
 {
     QString nativeFileName = Core::nativeCanonicalFileName(pFileName);
 
-    if (!cellmlFile(nativeFileName) && isCellmlFile(nativeFileName))
+    if (!cellmlFile(nativeFileName) && isCellmlFile(nativeFileName)) {
         // We are dealing with a CellML file, which is not already managed, so
         // we can add it to our list of managed CellML files
 
         mCellmlFiles.insert(nativeFileName, new CellmlFile(nativeFileName));
+    }
 }
 
 //==============================================================================
