@@ -1,10 +1,10 @@
 var jsonData = { "versions": [
-                   { "anchor": "latest", "description": "Latest snapshot", "day": 13, "month": 7, "year": 2015,
+                   { "anchor": "latest", "description": "Latest snapshot", "day": 15, "month": 7, "year": 2015,
                      "categories": [
                        { "name": "General",
                          "entries": [
                            { "type": "Added", "description": "<a href=\"http://git-scm.com/\">Git</a> support." },
-                           { "type": "Added", "description": "Resetting all your settings from the command line." }
+                           { "type": "Added", "description": "Resetting all your settings from the <a href=\"http://en.wikipedia.org/wiki/Command-line_interface\">CLI</a>." }
                          ]
                        },
                        { "name": "API",
@@ -27,7 +27,7 @@ var jsonData = { "versions": [
                          "entries": [
                            { "type": "subCategory", "name": "CellML annotation view",
                              "entries": [
-                               { "type": "Improved", "description": "GUI rendering." }
+                               { "type": "Improved", "description": "<a href=\"http://en.wikipedia.org/wiki/Graphical_user_interface\">GUI</a> rendering." }
                              ]
                            },
                            { "type": "subCategory", "name": "CellML Text view",
@@ -52,7 +52,7 @@ var jsonData = { "versions": [
                            },
                            { "type": "subCategory", "name": "Single cell (simulation) view",
                              "entries": [
-                               { "type": "Improved", "description": "GUI rendering." },
+                               { "type": "Improved", "description": "<a href=\"http://en.wikipedia.org/wiki/Graphical_user_interface\">GUI</a> rendering." },
                                { "type": "Improved", "description": "Plotting of simulation data." },
                                { "type": "Improved", "description": "Support for CellML models." }
                              ]
@@ -124,8 +124,8 @@ var jsonData = { "versions": [
                            { "type": "subCategory", "name": "CellML annotation view",
                              "entries": [
                                { "type": "Added", "description": "Two new <a href=\"http://biomodels.net/qualifiers/\">BioModels.net qualifiers</a> (<code>model:isInstanceOf</code> and <code>model:hasInstance</code>)." },
-                               { "type": "Improved", "description": "GUI for locked CellML files." },
-                               { "type": "Improved", "description": "Responsiveness of the GUI." },
+                               { "type": "Improved", "description": "<a href=\"http://en.wikipedia.org/wiki/Graphical_user_interface\">GUI</a> for locked CellML files." },
+                               { "type": "Improved", "description": "Responsiveness of the <a href=\"http://en.wikipedia.org/wiki/Graphical_user_interface\">GUI</a>." },
                                { "type": "Improved", "description": "Listing of component variables." },
                                { "type": "Improved", "description": "Translation of views for inactive CellML files." },
                                { "type": "Improved", "description": "Setting of the modified state of the CellML file." },
@@ -179,7 +179,7 @@ var jsonData = { "versions": [
                            { "type": "subCategory", "name": "Single cell (simulation) view",
                              "entries": [
                                { "type": "Improved", "description": "Export to <a href=\"http://en.wikipedia.org/wiki/Comma-separated_values\">CSV</a>." },
-                               { "type": "Improved", "description": "GUI for the parameters section." },
+                               { "type": "Improved", "description": "<a href=\"http://en.wikipedia.org/wiki/Graphical_user_interface\">GUI</a> for the parameters section." },
                                { "type": "Fixed", "description": "Tracking of simulation properties." }
                              ]
                            }
