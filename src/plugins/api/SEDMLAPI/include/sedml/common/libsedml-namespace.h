@@ -54,7 +54,7 @@ LIBSBML_CPP_NAMESPACE_USE
  */
 
 /* Define to enable libSEDML C++ namespace */
-/* #undef LIBSEDML_USE_CPP_NAMESPACE */
+#define LIBSEDML_USE_CPP_NAMESPACE 1
 
 
 #if defined(__cplusplus) && defined(LIBSEDML_USE_CPP_NAMESPACE) && !defined(SWIG)
