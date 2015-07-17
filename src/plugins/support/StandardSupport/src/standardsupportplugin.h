@@ -16,74 +16,43 @@ specific language governing permissions and limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// API file class
+// StandardSupport plugin
 //==============================================================================
 
-#include "corecliutils.h"
-#include "apifile.h"
+#ifndef STANDARDSUPPORTPLUGIN_H
+#define STANDARDSUPPORTPLUGIN_H
+
+//==============================================================================
+
+#include "plugininfo.h"
+#include "standardsupportglobal.h"
 
 //==============================================================================
 
 namespace OpenCOR {
-namespace APISupport {
+namespace StandardSupport {
 
 //==============================================================================
 
-ApiFile::ApiFile(const QString &pFileName) :
-    mFileName(Core::nativeCanonicalFileName(pFileName))
+PLUGININFO_FUNC StandardSupportPluginInfo();
+
+//==============================================================================
+
+class StandardSupportPlugin : public QObject
 {
-}
+    Q_OBJECT
+
+    Q_PLUGIN_METADATA(IID "OpenCOR.StandardSupportPlugin" FILE "standardsupportplugin.json")
+};
 
 //==============================================================================
 
-void ApiFile::reset()
-{
-}
-
-//==============================================================================
-
-bool ApiFile::load()
-{
-    // Consider the file loaded
-
-    return true;
-}
-
-//==============================================================================
-
-bool ApiFile::reload()
-{
-    // We want to reload the file, so we must first reset everything
-
-    reset();
-
-    // Now, we can try to (re)load the file
-
-    return load();
-}
-
-//==============================================================================
-
-QString ApiFile::fileName() const
-{
-    // Return the API file's file name
-
-    return mFileName;
-}
-
-//==============================================================================
-
-void ApiFile::setFileName(const QString &pFileName)
-{
-    // Set the API file's file name
-
-    mFileName = pFileName;
-}
-
-//==============================================================================
-
-}   // namespace APISupport
+}   // namespace StandardSupport
 }   // namespace OpenCOR
+
+//==============================================================================
+
+#endif
 
 //==============================================================================
 // End of file

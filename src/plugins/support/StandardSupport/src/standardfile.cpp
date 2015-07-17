@@ -16,27 +16,74 @@ specific language governing permissions and limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// APISupport global
+// Standard file class
 //==============================================================================
 
-#ifndef APISUPPORTGLOBAL_H
-#define APISUPPORTGLOBAL_H
-
-//==============================================================================
-
-#ifdef _WIN32
-    #ifdef APISupport_PLUGIN
-        #define APISUPPORT_EXPORT __declspec(dllexport)
-    #else
-        #define APISUPPORT_EXPORT __declspec(dllimport)
-    #endif
-#else
-    #define APISUPPORT_EXPORT
-#endif
+#include "corecliutils.h"
+#include "standardfile.h"
 
 //==============================================================================
 
-#endif
+namespace OpenCOR {
+namespace StandardSupport {
+
+//==============================================================================
+
+StandardFile::StandardFile(const QString &pFileName) :
+    mFileName(Core::nativeCanonicalFileName(pFileName))
+{
+}
+
+//==============================================================================
+
+void StandardFile::reset()
+{
+}
+
+//==============================================================================
+
+bool StandardFile::load()
+{
+    // Consider the file loaded
+
+    return true;
+}
+
+//==============================================================================
+
+bool StandardFile::reload()
+{
+    // We want to reload the file, so we must first reset everything
+
+    reset();
+
+    // Now, we can try to (re)load the file
+
+    return load();
+}
+
+//==============================================================================
+
+QString StandardFile::fileName() const
+{
+    // Return the standard file's file name
+
+    return mFileName;
+}
+
+//==============================================================================
+
+void StandardFile::setFileName(const QString &pFileName)
+{
+    // Set the standard file's file name
+
+    mFileName = pFileName;
+}
+
+//==============================================================================
+
+}   // namespace StandardSupport
+}   // namespace OpenCOR
 
 //==============================================================================
 // End of file

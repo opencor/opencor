@@ -16,38 +16,27 @@ specific language governing permissions and limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// APISupport plugin
+// StandardSupport global
 //==============================================================================
 
-#include "apisupportplugin.h"
-
-//==============================================================================
-
-#include <QMainWindow>
+#ifndef STANDARDSUPPORTGLOBAL_H
+#define STANDARDSUPPORTGLOBAL_H
 
 //==============================================================================
 
-namespace OpenCOR {
-namespace APISupport {
+#ifdef _WIN32
+    #ifdef StandardSupport_PLUGIN
+        #define STANDARDSUPPORT_EXPORT __declspec(dllexport)
+    #else
+        #define STANDARDSUPPORT_EXPORT __declspec(dllimport)
+    #endif
+#else
+    #define STANDARDSUPPORT_EXPORT
+#endif
 
 //==============================================================================
 
-PLUGININFO_FUNC APISupportPluginInfo()
-{
-    Descriptions descriptions;
-
-    descriptions.insert("en", QString::fromUtf8("a plugin to support various APIs."));
-    descriptions.insert("fr", QString::fromUtf8("une extension pour supporter différentes APIs."));
-
-    return new PluginInfo(PluginInfo::Support, false, false,
-                          QStringList(),
-                          descriptions);
-}
-
-//==============================================================================
-
-}   // namespace APISupport
-}   // namespace OpenCOR
+#endif
 
 //==============================================================================
 // End of file

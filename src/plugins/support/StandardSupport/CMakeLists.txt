@@ -1,17 +1,17 @@
-PROJECT(APISupportPlugin)
+PROJECT(StandardSupportPlugin)
 
 # Add the plugin
 
-ADD_PLUGIN(APISupport
+ADD_PLUGIN(StandardSupport
     SOURCES
         ../../plugininfo.cpp
 
-        src/apifile.cpp
-        src/apifilemanager.cpp
-        src/apisupportplugin.cpp
+        src/standardfile.cpp
+        src/standardfilemanager.cpp
+        src/standardsupportplugin.cpp
     HEADERS_MOC
-        src/apifilemanager.h
-        src/apisupportplugin.h
+        src/standardfilemanager.h
+        src/standardsupportplugin.h
     INCLUDE_DIRS
         src
     PLUGINS

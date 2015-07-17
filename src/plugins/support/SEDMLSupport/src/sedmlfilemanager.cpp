@@ -77,7 +77,7 @@ SedmlFileManager * SedmlFileManager::instance()
 
 SedmlFile * SedmlFileManager::sedmlFile(const QString &pFileName)
 {
-    // Return the SedmlFile object, if any, associated with our given file
+    // Return the SedmlFile object, if any, associated with the given file
 
     return mSedmlFiles.value(Core::nativeCanonicalFileName(pFileName));
 }

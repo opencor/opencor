@@ -16,65 +16,38 @@ specific language governing permissions and limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// API file manager
+// StandardSupport plugin
 //==============================================================================
 
-#ifndef APIFILEMANAGER_H
-#define APIFILEMANAGER_H
-
-//==============================================================================
-
-#include "apifile.h"
-#include "apisupportglobal.h"
+#include "standardsupportplugin.h"
 
 //==============================================================================
 
-#include <QMap>
-#include <QObject>
+#include <QMainWindow>
 
 //==============================================================================
 
 namespace OpenCOR {
-namespace APISupport {
+namespace StandardSupport {
 
 //==============================================================================
 
-typedef QMap<QString, ApiFile *> ApiFiles;
-
-//==============================================================================
-
-class APISUPPORT_EXPORT ApiFileManager : public QObject
+PLUGININFO_FUNC StandardSupportPluginInfo()
 {
-    Q_OBJECT
+    Descriptions descriptions;
 
-public:
-    ApiFile * apiFile(const QString &pFileName);
+    descriptions.insert("en", QString::fromUtf8("a plugin to support various standards."));
+    descriptions.insert("fr", QString::fromUtf8("une extension pour supporter différentes standards."));
 
-    virtual bool isApiFile(const QString &pFileName) const = 0;
-
-private:
-    ApiFiles mApiFiles;
-
-    explicit ApiFileManager();
-    ~ApiFileManager();
-
-private Q_SLOTS:
-    void manageFile(const QString &pFileName);
-    void unmanageFile(const QString &pFileName);
-
-    void reloadFile(const QString &pFileName);
-
-    void renameFile(const QString &pOldFileName, const QString &pNewFileName);
-};
+    return new PluginInfo(PluginInfo::Support, false, false,
+                          QStringList(),
+                          descriptions);
+}
 
 //==============================================================================
 
-}   // namespace APISupport
+}   // namespace StandardSupport
 }   // namespace OpenCOR
-
-//==============================================================================
-
-#endif
 
 //==============================================================================
 // End of file

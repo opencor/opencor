@@ -16,15 +16,15 @@ specific language governing permissions and limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// API file class
+// Standard file class
 //==============================================================================
 
-#ifndef APIFILE_H
-#define APIFILE_H
+#ifndef STANDARDFILE_H
+#define STANDARDFILE_H
 
 //==============================================================================
 
-#include "apisupportglobal.h"
+#include "standardsupportglobal.h"
 
 //==============================================================================
 
@@ -33,14 +33,14 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 namespace OpenCOR {
-namespace APISupport {
+namespace StandardSupport {
 
 //==============================================================================
 
-class APISUPPORT_EXPORT ApiFile
+class STANDARDSUPPORT_EXPORT StandardFile
 {
 public:
-    explicit ApiFile(const QString &pFileName);
+    explicit StandardFile(const QString &pFileName);
 
     bool load();
     bool reload();
@@ -56,7 +56,7 @@ private:
 
 //==============================================================================
 
-}   // namespace APISupport
+}   // namespace StandardSupport
 }   // namespace OpenCOR
 
 //==============================================================================

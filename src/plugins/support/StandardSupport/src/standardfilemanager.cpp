@@ -16,23 +16,23 @@ specific language governing permissions and limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// API file manager
+// Standard file manager
 //==============================================================================
 
-#include "apifilemanager.h"
-#include "apisupportplugin.h"
 #include "corecliutils.h"
 #include "filemanager.h"
+#include "standardfilemanager.h"
+#include "standardsupportplugin.h"
 
 //==============================================================================
 
 namespace OpenCOR {
-namespace APISupport {
+namespace StandardSupport {
 
 //==============================================================================
 
-ApiFileManager::ApiFileManager() :
-    mApiFiles(ApiFiles())
+StandardFileManager::StandardFileManager() :
+    mStandardFiles(StandardFiles())
 {
     // Create some connections to keep track of some events related to our
     // 'global' file manager
@@ -53,110 +53,111 @@ ApiFileManager::ApiFileManager() :
 
 //==============================================================================
 
-ApiFileManager::~ApiFileManager()
+StandardFileManager::~StandardFileManager()
 {
     // Remove all the managed files
 
-    foreach (ApiFile *apiFile, mApiFiles)
-        delete apiFile;
+    foreach (StandardFile *standardFile, mStandardFiles)
+        delete standardFile;
 }
 
 //==============================================================================
 
-ApiFile * ApiFileManager::apiFile(const QString &pFileName)
+StandardFile * StandardFileManager::standardFile(const QString &pFileName)
 {
-    // Return the ApiFile object, if any, associated with our given file
+    // Return the StandardFile object, if any, associated with the given file
 
-    return mApiFiles.value(Core::nativeCanonicalFileName(pFileName));
+    return mStandardFiles.value(Core::nativeCanonicalFileName(pFileName));
 }
 
 //==============================================================================
 
-void ApiFileManager::manageFile(const QString &pFileName)
+void StandardFileManager::manageFile(const QString &pFileName)
 {
     QString nativeFileName = Core::nativeCanonicalFileName(pFileName);
 
-    if (!apiFile(nativeFileName) && isApiFile(nativeFileName)) {
-        // We are dealing with an API file, which is not already managed, so we
-        // can add it to our list of managed API files
+    if (!standardFile(nativeFileName) && isStandardFile(nativeFileName)) {
+        // We are dealing with a standard file, which is not already managed, so
+        // we can add it to our list of managed standard files
 
-        mApiFiles.insert(nativeFileName, new ApiFile(nativeFileName));
+        mStandardFiles.insert(nativeFileName, new StandardFile(nativeFileName));
     }
 }
 
 //==============================================================================
 
-void ApiFileManager::unmanageFile(const QString &pFileName)
+void StandardFileManager::unmanageFile(const QString &pFileName)
 {
-    ApiFile *crtApiFile = apiFile(pFileName);
+    StandardFile *crtStandardFile = standardFile(pFileName);
 
-    if (crtApiFile) {
-        // We are dealing with a API file, so we can remove it from our list of
-        // managed API files after having deleted it
+    if (crtStandardFile) {
+        // We are dealing with a standard file, so we can remove it from our
+        // list of managed standard files after having deleted it
 
-        delete crtApiFile;
+        delete crtStandardFile;
 
-        mApiFiles.remove(Core::nativeCanonicalFileName(pFileName));
+        mStandardFiles.remove(Core::nativeCanonicalFileName(pFileName));
     }
 }
 
 //==============================================================================
 
-void ApiFileManager::reloadFile(const QString &pFileName)
+void StandardFileManager::reloadFile(const QString &pFileName)
 {
     // The file is to be reloaded, so reload it
-    // Note: to reload a file here ensures that our different API-based views
-    //       won't each do it, thus saving time and ensuring that an API-based
-    //       view doesn't forget to do it...
+    // Note: to reload a file here ensures that our different standard-based
+    //       views won't each do it, thus saving time and ensuring that a
+    //       standard-based view doesn't forget to do it...
 
-    ApiFile *crtApiFile = apiFile(pFileName);
+    StandardFile *crtStandardFile = standardFile(pFileName);
 
-    if (crtApiFile) {
+    if (crtStandardFile) {
         // The file is managed, but should it still be (i.e. can it still be
-        // considered as being an API file)?
+        // considered as being a standard file)?
 
-        if (isApiFile(pFileName))
-            crtApiFile->reload();
+        if (isStandardFile(pFileName))
+            crtStandardFile->reload();
         else
             unmanageFile(pFileName);
     } else {
         // The file is not managed, which means that previously it wasn't
-        // considered as being an API file, but things may be different now, so
-        // try to remanage it and load it, if possible
+        // considered as being a standard file, but things may be different now,
+        // so try to remanage it and load it, if possible
 
         manageFile(pFileName);
 
-        crtApiFile = apiFile(pFileName);
+        crtStandardFile = standardFile(pFileName);
 
-        if (crtApiFile)
-            crtApiFile->load();
+        if (crtStandardFile)
+            crtStandardFile->load();
     }
 }
 
 //==============================================================================
 
-void ApiFileManager::renameFile(const QString &pOldFileName,
-                                const QString &pNewFileName)
+void StandardFileManager::renameFile(const QString &pOldFileName,
+                                     const QString &pNewFileName)
 {
-    // The file has been renamed, so we need to update our API files mapping, if
-    // needed
+    // The file has been renamed, so we need to update our standard files
+    // mapping, if needed
 
-    ApiFile *crtApiFile = apiFile(pOldFileName);
+    StandardFile *crtStandardFile = standardFile(pOldFileName);
 
-    if (!crtApiFile)
+    if (!crtStandardFile)
         return;
 
-    mApiFiles.insert(pNewFileName, crtApiFile);
-    mApiFiles.remove(pOldFileName);
+    mStandardFiles.insert(pNewFileName, crtStandardFile);
+    mStandardFiles.remove(pOldFileName);
 
-    // We also need to ensure that our API file object has its file name updated
+    // We also need to ensure that our standard file object has its file name
+    // updated
 
-    crtApiFile->setFileName(pNewFileName);
+    crtStandardFile->setFileName(pNewFileName);
 }
 
 //==============================================================================
 
-}   // namespace APISupport
+}   // namespace StandardSupport
 }   // namespace OpenCOR
 
 //==============================================================================

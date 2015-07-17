@@ -16,38 +16,60 @@ specific language governing permissions and limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// APISupport plugin
+// Standard file manager
 //==============================================================================
 
-#ifndef APISUPPORTPLUGIN_H
-#define APISUPPORTPLUGIN_H
+#ifndef STANDARDFILEMANAGER_H
+#define STANDARDFILEMANAGER_H
 
 //==============================================================================
 
-#include "apisupportglobal.h"
-#include "plugininfo.h"
+#include "standardfile.h"
+#include "standardsupportglobal.h"
+
+//==============================================================================
+
+#include <QMap>
+#include <QObject>
 
 //==============================================================================
 
 namespace OpenCOR {
-namespace APISupport {
+namespace StandardSupport {
 
 //==============================================================================
 
-PLUGININFO_FUNC APISupportPluginInfo();
+typedef QMap<QString, StandardFile *> StandardFiles;
 
 //==============================================================================
 
-class APISupportPlugin : public QObject
+class STANDARDSUPPORT_EXPORT StandardFileManager : public QObject
 {
     Q_OBJECT
 
-    Q_PLUGIN_METADATA(IID "OpenCOR.APISupportPlugin" FILE "apisupportplugin.json")
+public:
+    StandardFile * standardFile(const QString &pFileName);
+
+    virtual bool isStandardFile(const QString &pFileName) const = 0;
+
+private:
+    StandardFiles mStandardFiles;
+
+    explicit StandardFileManager();
+    ~StandardFileManager();
+
+private Q_SLOTS:
+    void manageFile(const QString &pFileName);
+    void unmanageFile(const QString &pFileName);
+
+    void reloadFile(const QString &pFileName);
+
+    void renameFile(const QString &pOldFileName, const QString &pNewFileName);
 };
 
 //==============================================================================
 
-}   // namespace APISupport
+}   // namespace StandardSupport
 }   // namespace OpenCOR
 
 //==============================================================================
