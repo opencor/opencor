@@ -50,8 +50,6 @@ IF(USE_PREBUILT_SUNDIALS_PLUGIN)
         INCLUDE_DIRS
             include
             src
-        QT_LIBRARIES
-            QtCore
     )
 ELSE()
     # Ignore some warnings on Windows
@@ -128,7 +126,5 @@ ELSE()
             NO_FPRINTF_OUTPUT
         QT_MODULES
             Core
-        QT_LIBRARIES
-            QtCore
     )
 ENDIF()

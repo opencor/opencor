@@ -84,15 +84,6 @@ ADD_PLUGIN(Core
         Widgets
         Xml
         XmlPatterns
-    QT_LIBRARIES
-        QtCore
-        QtGui
-        QtNetwork
-        QtWebKit
-        QtWebKitWidgets
-        QtWidgets
-        QtXml
-        QtXmlPatterns
     TESTS
         tests
 )

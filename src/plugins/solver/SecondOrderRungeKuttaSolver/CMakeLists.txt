@@ -18,8 +18,4 @@ ADD_PLUGIN(SecondOrderRungeKuttaSolver
         CoreSolver
     QT_MODULES
         Widgets
-    QT_LIBRARIES
-        QtCore
-        QtGui
-        QtWidgets
 )
