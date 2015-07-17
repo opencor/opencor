@@ -28,6 +28,7 @@ specific language governing permissions and limitations under the License.
 #include "cellmlfilerdftriple.h"
 #include "cellmlfileruntime.h"
 #include "cellmlsupportglobal.h"
+#include "standardfile.h"
 
 //==============================================================================
 
@@ -50,7 +51,7 @@ static const auto XlinkNamespace       = QStringLiteral("http://www.w3.org/1999/
 
 //==============================================================================
 
-class CELLMLSUPPORT_EXPORT CellmlFile
+class CELLMLSUPPORT_EXPORT CellmlFile : public StandardSupport::StandardFile
 {
 public:
     enum Version {
@@ -66,8 +67,7 @@ public:
 
     iface::rdf_api::DataSource * rdfDataSource();
 
-    bool load();
-    bool reload();
+    virtual bool load();
 
     bool save(const QString &pNewFileName = QString());
 
@@ -81,9 +81,6 @@ public:
     CellmlFileIssues issues() const;
 
     CellmlFileRuntime * runtime();
-
-    QString fileName() const;
-    void setFileName(const QString &pFileName);
 
     CellmlFileRdfTriples & rdfTriples();
     CellmlFileRdfTriples rdfTriples(iface::cellml_api::CellMLElement *pElement) const;
@@ -126,8 +123,6 @@ public:
     static QString versionAsString(const Version &pVersion);
 
 private:
-    QString mFileName;
-
     ObjRef<iface::cellml_api::Model> mModel;
 
     ObjRef<iface::rdf_api::RDFAPIRepresentation> mRdfApiRepresentation;

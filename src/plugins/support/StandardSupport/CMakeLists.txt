@@ -10,6 +10,7 @@ ADD_PLUGIN(StandardSupport
         src/standardfilemanager.cpp
         src/standardsupportplugin.cpp
     HEADERS_MOC
+        src/standardfile.h
         src/standardfilemanager.h
         src/standardsupportplugin.h
     INCLUDE_DIRS

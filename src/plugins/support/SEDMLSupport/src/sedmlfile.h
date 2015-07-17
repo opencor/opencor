@@ -25,6 +25,7 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include "sedmlsupportglobal.h"
+#include "standardfile.h"
 
 //==============================================================================
 
@@ -37,21 +38,12 @@ namespace SEDMLSupport {
 
 //==============================================================================
 
-class SEDMLSUPPORT_EXPORT SedmlFile
+class SEDMLSUPPORT_EXPORT SedmlFile : public StandardSupport::StandardFile
 {
 public:
     explicit SedmlFile(const QString &pFileName);
 
-    bool load();
-    bool reload();
-
-    QString fileName() const;
-    void setFileName(const QString &pFileName);
-
-private:
-    QString mFileName;
-
-    void reset();
+    virtual bool load();
 };
 
 //==============================================================================

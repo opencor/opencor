@@ -57,13 +57,13 @@ StandardFileManager::~StandardFileManager()
 {
     // Remove all the managed files
 
-    foreach (StandardFile *standardFile, mStandardFiles)
+    foreach (QObject *standardFile, mStandardFiles)
         delete standardFile;
 }
 
 //==============================================================================
 
-StandardFile * StandardFileManager::standardFile(const QString &pFileName)
+QObject * StandardFileManager::standardFile(const QString &pFileName)
 {
     // Return the StandardFile object, if any, associated with the given file
 
@@ -80,7 +80,7 @@ void StandardFileManager::manageFile(const QString &pFileName)
         // We are dealing with a standard file, which is not already managed, so
         // we can add it to our list of managed standard files
 
-        mStandardFiles.insert(nativeFileName, new StandardFile(nativeFileName));
+        mStandardFiles.insert(nativeFileName, newStandardFile(nativeFileName));
     }
 }
 
@@ -88,13 +88,13 @@ void StandardFileManager::manageFile(const QString &pFileName)
 
 void StandardFileManager::unmanageFile(const QString &pFileName)
 {
-    StandardFile *crtStandardFile = standardFile(pFileName);
+    QObject *crtStandardFile = standardFile(pFileName);
 
     if (crtStandardFile) {
         // We are dealing with a standard file, so we can remove it from our
         // list of managed standard files after having deleted it
 
-        delete crtStandardFile;
+        deleteStandardFile(crtStandardFile);
 
         mStandardFiles.remove(Core::nativeCanonicalFileName(pFileName));
     }
@@ -109,14 +109,14 @@ void StandardFileManager::reloadFile(const QString &pFileName)
     //       views won't each do it, thus saving time and ensuring that a
     //       standard-based view doesn't forget to do it...
 
-    StandardFile *crtStandardFile = standardFile(pFileName);
+    QObject *crtStandardFile = standardFile(pFileName);
 
     if (crtStandardFile) {
         // The file is managed, but should it still be (i.e. can it still be
         // considered as being a standard file)?
 
         if (isStandardFile(pFileName))
-            crtStandardFile->reload();
+            qobject_cast<StandardFile *>(crtStandardFile)->reload();
         else
             unmanageFile(pFileName);
     } else {
@@ -129,7 +129,7 @@ void StandardFileManager::reloadFile(const QString &pFileName)
         crtStandardFile = standardFile(pFileName);
 
         if (crtStandardFile)
-            crtStandardFile->load();
+            qobject_cast<StandardFile *>(crtStandardFile)->load();
     }
 }
 
@@ -141,7 +141,7 @@ void StandardFileManager::renameFile(const QString &pOldFileName,
     // The file has been renamed, so we need to update our standard files
     // mapping, if needed
 
-    StandardFile *crtStandardFile = standardFile(pOldFileName);
+    QObject *crtStandardFile = standardFile(pOldFileName);
 
     if (!crtStandardFile)
         return;
@@ -152,7 +152,7 @@ void StandardFileManager::renameFile(const QString &pOldFileName,
     // We also need to ensure that our standard file object has its file name
     // updated
 
-    crtStandardFile->setFileName(pNewFileName);
+    qobject_cast<StandardFile *>(crtStandardFile)->setFileName(pNewFileName);
 }
 
 //==============================================================================

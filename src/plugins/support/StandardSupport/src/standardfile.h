@@ -28,6 +28,7 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#include <QObject>
 #include <QString>
 
 //==============================================================================
@@ -37,21 +38,23 @@ namespace StandardSupport {
 
 //==============================================================================
 
-class STANDARDSUPPORT_EXPORT StandardFile
+class STANDARDSUPPORT_EXPORT StandardFile : public QObject
 {
+    Q_OBJECT
+
 public:
     explicit StandardFile(const QString &pFileName);
 
-    bool load();
+    virtual bool load() = 0;
     bool reload();
 
     QString fileName() const;
     void setFileName(const QString &pFileName);
 
-private:
+protected:
     QString mFileName;
 
-    void reset();
+    virtual void reset();
 };
 
 //==============================================================================

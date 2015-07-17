@@ -30,6 +30,7 @@ namespace StandardSupport {
 //==============================================================================
 
 StandardFile::StandardFile(const QString &pFileName) :
+    QObject(),
     mFileName(Core::nativeCanonicalFileName(pFileName))
 {
 }
@@ -38,15 +39,7 @@ StandardFile::StandardFile(const QString &pFileName) :
 
 void StandardFile::reset()
 {
-}
-
-//==============================================================================
-
-bool StandardFile::load()
-{
-    // Consider the file loaded
-
-    return true;
+    // Nothing to do by default...
 }
 
 //==============================================================================

@@ -21,6 +21,7 @@ ADD_PLUGIN(SEDMLSupport
     PLUGINS
         Core
         SEDMLAPI
+        StandardSupport
     EXTERNAL_BINARIES
         ${SEDML_API_EXTERNAL_BINARIES}
 )

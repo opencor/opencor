@@ -30,13 +30,7 @@ namespace SEDMLSupport {
 //==============================================================================
 
 SedmlFile::SedmlFile(const QString &pFileName) :
-    mFileName(Core::nativeCanonicalFileName(pFileName))
-{
-}
-
-//==============================================================================
-
-void SedmlFile::reset()
+    StandardSupport::StandardFile(pFileName)
 {
 }
 
@@ -47,37 +41,6 @@ bool SedmlFile::load()
     // Consider the file loaded
 
     return true;
-}
-
-//==============================================================================
-
-bool SedmlFile::reload()
-{
-    // We want to reload the file, so we must first reset everything
-
-    reset();
-
-    // Now, we can try to (re)load the file
-
-    return load();
-}
-
-//==============================================================================
-
-QString SedmlFile::fileName() const
-{
-    // Return the SED-ML file's file name
-
-    return mFileName;
-}
-
-//==============================================================================
-
-void SedmlFile::setFileName(const QString &pFileName)
-{
-    // Set the SED-ML file's file name
-
-    mFileName = pFileName;
 }
 
 //==============================================================================

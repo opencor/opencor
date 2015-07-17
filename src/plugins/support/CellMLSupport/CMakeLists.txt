@@ -37,6 +37,7 @@ ADD_PLUGIN(CellMLSupport
         Core
         CoreSolver
         ${LLVM_PLUGIN}
+        StandardSupport
     PLUGIN_BINARIES
         ${LLVM_PLUGIN_BINARY}
     QT_MODULES
