@@ -1,6 +1,6 @@
 PROJECT(SEDMLSupportPlugin)
 
-# Retrieve some SED-ML API
+# Retrieve some SED-ML API settings
 
 RETRIEVE_SEDML_API_SETTINGS()
 
