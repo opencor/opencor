@@ -162,7 +162,7 @@ ELSE()
     ENDIF()
 ENDIF()
 
-# Retrieve some CellML API libraries settings
+# Retrieve some CellML API settings
 
 RETRIEVE_CELLML_API_SETTINGS()
 

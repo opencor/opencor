@@ -56,7 +56,7 @@ ELSE()
     ENDIF()
 ENDIF()
 
-# Retrieve some SED-ML API libraries
+# Retrieve some SED-ML API settings
 
 RETRIEVE_SEDML_API_SETTINGS()
 
