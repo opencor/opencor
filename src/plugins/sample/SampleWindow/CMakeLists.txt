@@ -21,13 +21,4 @@ ADD_PLUGIN(SampleWindow
         Sample
     QT_MODULES
         Widgets
-    QT_LIBRARIES
-        QtCore
-        QtGui
-        QtNetwork
-        QtWebKit
-        QtWebKitWidgets
-        QtWidgets
-        QtXml
-        QtXmlPatterns
 )

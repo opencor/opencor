@@ -68,15 +68,6 @@ IF(USE_PREBUILT_QWT_PLUGIN)
         INCLUDE_DIRS
             src
             textengines/mathml
-        QT_LIBRARIES
-            QtConcurrent
-            QtCore
-            QtGui
-            QtOpenGL
-            QtPrintSupport
-            QtSvg
-            QtWidgets
-            QtXml
     )
 ELSE()
     # Retrieve some Qwt settings
@@ -236,14 +227,5 @@ ELSE()
             Svg
             Widgets
             Xml
-        QT_LIBRARIES
-            QtConcurrent
-            QtCore
-            QtGui
-            QtOpenGL
-            QtPrintSupport
-            QtSvg
-            QtWidgets
-            QtXml
     )
 ENDIF()

@@ -87,8 +87,6 @@ IF(USE_PREBUILT_LLVM_PLUGIN)
             lib/Target/X86
             src
             tools/clang/include
-        QT_LIBRARIES
-            QtCore
     )
 ELSE()
     # Retrieve some include files that were generated on each of our target
@@ -1366,7 +1364,5 @@ ELSE()
             ${LLVM_DEFINITIONS}
         QT_MODULES
             Core
-        QT_LIBRARIES
-            QtCore
     )
 ENDIF()

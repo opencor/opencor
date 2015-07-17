@@ -14,6 +14,4 @@ ADD_PLUGIN(Sample
         src
     QT_MODULES
         Core
-    QT_LIBRARIES
-        QtCore
 )

@@ -307,7 +307,6 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
     SET(PLUGINS)
     SET(PLUGIN_BINARIES)
     SET(QT_MODULES)
-    SET(QT_LIBRARIES)
     SET(EXTERNAL_BINARIES_DIR)
     SET(EXTERNAL_BINARIES)
     SET(TESTS)
@@ -353,14 +352,12 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
             SET(TYPE_OF_PARAMETER 7)
         ELSEIF("${PARAMETER}" STREQUAL "QT_MODULES")
             SET(TYPE_OF_PARAMETER 8)
-        ELSEIF("${PARAMETER}" STREQUAL "QT_LIBRARIES")
-            SET(TYPE_OF_PARAMETER 9)
         ELSEIF("${PARAMETER}" STREQUAL "EXTERNAL_BINARIES_DIR")
-            SET(TYPE_OF_PARAMETER 10)
+            SET(TYPE_OF_PARAMETER 9)
         ELSEIF("${PARAMETER}" STREQUAL "EXTERNAL_BINARIES")
-            SET(TYPE_OF_PARAMETER 11)
+            SET(TYPE_OF_PARAMETER 10)
         ELSEIF("${PARAMETER}" STREQUAL "TESTS")
-            SET(TYPE_OF_PARAMETER 12)
+            SET(TYPE_OF_PARAMETER 11)
         ELSE()
             # Not one of the headers, so add the parameter to the corresponding
             # set
@@ -382,12 +379,10 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
             ELSEIF(${TYPE_OF_PARAMETER} EQUAL 8)
                 LIST(APPEND QT_MODULES ${PARAMETER})
             ELSEIF(${TYPE_OF_PARAMETER} EQUAL 9)
-                LIST(APPEND QT_LIBRARIES ${PARAMETER})
-            ELSEIF(${TYPE_OF_PARAMETER} EQUAL 10)
                 SET(EXTERNAL_BINARIES_DIR ${PARAMETER})
-            ELSEIF(${TYPE_OF_PARAMETER} EQUAL 11)
+            ELSEIF(${TYPE_OF_PARAMETER} EQUAL 10)
                 LIST(APPEND EXTERNAL_BINARIES ${PARAMETER})
-            ELSEIF(${TYPE_OF_PARAMETER} EQUAL 12)
+            ELSEIF(${TYPE_OF_PARAMETER} EQUAL 11)
                 LIST(APPEND TESTS ${PARAMETER})
             ENDIF()
         ENDIF()
@@ -562,7 +557,7 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
     IF(APPLE)
         # Clean up our plugin
 
-        OS_X_CLEAN_UP_FILE_WITH_QT_LIBRARIES(${PROJECT_NAME} ${DEST_PLUGINS_DIR} ${PLUGIN_FILENAME} ${QT_LIBRARIES})
+        OS_X_CLEAN_UP_FILE_WITH_QT_LIBRARIES(${PROJECT_NAME} ${DEST_PLUGINS_DIR} ${PLUGIN_FILENAME})
 
         # Make sure that the plugin refers to our embedded version of the
         # binary plugins on which it depends
@@ -711,9 +706,7 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
                 IF(APPLE)
                     # Clean up our plugin's tests
 
-                    LIST(APPEND QT_LIBRARIES QtTest)
-
-                    OS_X_CLEAN_UP_FILE_WITH_QT_LIBRARIES(${TEST_NAME} ${DEST_TESTS_DIR} ${TEST_FILENAME} ${QT_LIBRARIES})
+                    OS_X_CLEAN_UP_FILE_WITH_QT_LIBRARIES(${TEST_NAME} ${DEST_TESTS_DIR} ${TEST_FILENAME})
 
                     # Make sure that the plugin's tests refer to our embedded version of the
                     # binary plugins on which they depend
@@ -752,7 +745,6 @@ MACRO(ADD_PLUGIN_BINARY PLUGIN_NAME)
     SET(PLUGIN_NAME ${PLUGIN_NAME})
 
     SET(INCLUDE_DIRS)
-    SET(QT_LIBRARIES)
 
     # Analyse the extra parameters
 
@@ -761,16 +753,12 @@ MACRO(ADD_PLUGIN_BINARY PLUGIN_NAME)
     FOREACH(PARAMETER ${ARGN})
         IF("${PARAMETER}" STREQUAL "INCLUDE_DIRS")
             SET(TYPE_OF_PARAMETER 1)
-        ELSEIF("${PARAMETER}" STREQUAL "QT_LIBRARIES")
-            SET(TYPE_OF_PARAMETER 2)
         ELSE()
             # Not one of the headers, so add the parameter to the corresponding
             # set
 
             IF(${TYPE_OF_PARAMETER} EQUAL 1)
                 LIST(APPEND INCLUDE_DIRS ${PARAMETER})
-            ELSEIF(${TYPE_OF_PARAMETER} EQUAL 2)
-                LIST(APPEND QT_LIBRARIES ${PARAMETER})
             ENDIF()
         ENDIF()
     ENDFOREACH()
@@ -1001,34 +989,6 @@ ENDMACRO()
 
 #===============================================================================
 
-MACRO(OS_X_QT_LIBRARIES FILENAME QT_LIBRARIES)
-    # Retrieve the file's full-path Qt libraries as a list
-
-    SET(QT_LIBRARY_DIR_FOR_GREP "\t${QT_LIBRARY_DIR}/")
-    SET(REAL_QT_LIBRARY_DIR_FOR_GREP "\t${REAL_QT_LIBRARY_DIR}/")
-
-    EXECUTE_PROCESS(COMMAND otool -L ${FILENAME}
-                    COMMAND grep --colour=never -e "${QT_LIBRARY_DIR_FOR_GREP}"
-                                                -e "${REAL_QT_LIBRARY_DIR_FOR_GREP}"
-                    OUTPUT_VARIABLE RAW_QT_LIBRARIES)
-
-    STRING(REPLACE "\n" ";" RAW_QT_LIBRARIES "${RAW_QT_LIBRARIES}")
-
-    # Extract and return the Qt depencies as a list
-
-    SET(${QT_LIBRARIES})
-
-    FOREACH(RAW_QT_LIBRARY ${RAW_QT_LIBRARIES})
-        STRING(REPLACE ${QT_LIBRARY_DIR_FOR_GREP} "" RAW_QT_LIBRARY "${RAW_QT_LIBRARY}")
-        STRING(REPLACE ${REAL_QT_LIBRARY_DIR_FOR_GREP} "" RAW_QT_LIBRARY "${RAW_QT_LIBRARY}")
-        STRING(REGEX REPLACE "\\.framework.*$" "" QT_LIBRARY "${RAW_QT_LIBRARY}")
-
-        LIST(APPEND ${QT_LIBRARIES} ${QT_LIBRARY})
-    ENDFOREACH()
-ENDMACRO()
-
-#===============================================================================
-
 MACRO(OS_X_CLEAN_UP_FILE_WITH_QT_LIBRARIES PROJECT_TARGET DIRNAME FILENAME)
     # Strip the Qt file of all its local symbols
 
@@ -1044,22 +1004,6 @@ MACRO(OS_X_CLEAN_UP_FILE_WITH_QT_LIBRARIES PROJECT_TARGET DIRNAME FILENAME)
     ADD_CUSTOM_COMMAND(TARGET ${PROJECT_TARGET} POST_BUILD
                        COMMAND install_name_tool -id ${FILENAME}
                                                      ${FULL_FILENAME})
-
-    # Make sure that the Qt file refers to our embedded version of its Qt
-    # dependencies
-
-    FOREACH(DEPENDENCY ${ARGN})
-        SET(DEPENDENCY_FILENAME ${DEPENDENCY}.framework/Versions/${QT_VERSION_MAJOR}/${DEPENDENCY})
-
-        ADD_CUSTOM_COMMAND(TARGET ${PROJECT_TARGET} POST_BUILD
-                           COMMAND install_name_tool -change ${QT_LIBRARY_DIR}/${DEPENDENCY_FILENAME}
-                                                             @rpath/${DEPENDENCY_FILENAME}
-                                                             ${FULL_FILENAME})
-        ADD_CUSTOM_COMMAND(TARGET ${PROJECT_TARGET} POST_BUILD
-                           COMMAND install_name_tool -change ${REAL_QT_LIBRARY_DIR}/${DEPENDENCY_FILENAME}
-                                                             @rpath/${DEPENDENCY_FILENAME}
-                                                             ${FULL_FILENAME})
-    ENDFOREACH()
 ENDMACRO()
 
 #===============================================================================
@@ -1067,19 +1011,13 @@ ENDMACRO()
 MACRO(OS_X_DEPLOY_QT_FILE ORIG_DIRNAME DEST_DIRNAME FILENAME)
     # Copy the Qt file
 
-    SET(ORIG_FILENAME ${ORIG_DIRNAME}/${FILENAME})
-
     ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
-                       COMMAND ${CMAKE_COMMAND} -E copy ${ORIG_FILENAME}
+                       COMMAND ${CMAKE_COMMAND} -E copy ${ORIG_DIRNAME}/${FILENAME}
                                                         ${DEST_DIRNAME}/${FILENAME})
-
-    # Retrieve the Qt file's Qt dependencies
-
-    OS_X_QT_LIBRARIES(${ORIG_FILENAME} DEPENDENCIES)
 
     # Clean up the Qt file
 
-    OS_X_CLEAN_UP_FILE_WITH_QT_LIBRARIES(${PROJECT_NAME} ${DEST_DIRNAME} ${FILENAME} ${DEPENDENCIES})
+    OS_X_CLEAN_UP_FILE_WITH_QT_LIBRARIES(${PROJECT_NAME} ${DEST_DIRNAME} ${FILENAME})
 ENDMACRO()
 
 #===============================================================================
