@@ -261,6 +261,7 @@ SET(PLUGINS
 
     # Plugins that provide support for some third-party libraries
 
+    support/APISupport
     support/CellMLSupport
     support/QScintillaSupport
     support/SEDMLSupport
