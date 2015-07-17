@@ -76,7 +76,7 @@ public:
 
     virtual void retranslateUi();
 
-    void initialize(const PhysiomeModelRepositoryWindowExposures &pModels,
+    void initialize(const PhysiomeModelRepositoryWindowExposures &pExposures,
                     const QString &pErrorMessage);
 
     void filter(const QString &pFilter);

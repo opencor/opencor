@@ -199,7 +199,7 @@ void PhysiomeModelRepositoryWindowWidget::paintEvent(QPaintEvent *pEvent)
 
 //==============================================================================
 
-void PhysiomeModelRepositoryWindowWidget::initialize(const PhysiomeModelRepositoryWindowExposures &pModels,
+void PhysiomeModelRepositoryWindowWidget::initialize(const PhysiomeModelRepositoryWindowExposures &pExposures,
                                                      const QString &pErrorMessage)
 {
     // Initialise / keep track of some properties
@@ -216,9 +216,9 @@ void PhysiomeModelRepositoryWindowWidget::initialize(const PhysiomeModelReposito
 
     tbodyElement.removeAllChildren();
 
-    for (int i = 0, iMax = pModels.count(); i < iMax; ++i) {
-        QString exposureUrl = pModels[i].url();
-        QString exposureName = pModels[i].name();
+    for (int i = 0, iMax = pExposures.count(); i < iMax; ++i) {
+        QString exposureUrl = pExposures[i].url();
+        QString exposureName = pExposures[i].name();
 
         tbodyElement.appendInside( "<tr id=\"exposure_"+QString::number(i)+"\">\n"
                                   +"    <td class=\"exposure\">\n"
@@ -308,10 +308,10 @@ void PhysiomeModelRepositoryWindowWidget::addExposureFiles(const QString &pUrl,
 
     QWebElement ulElement = page()->mainFrame()->documentElement().findFirst(QString("ul[id=exposureFiles_%1]").arg(mExposureUrlId.value(pUrl)));
 
-    foreach (const QString &sourceFile, pExposureFiles) {
+    foreach (const QString &exposureFile, pExposureFiles) {
         ulElement.appendInside(QString("<li class=\"exposureFile\">"
                                        "    <a href=\"%1\">%2</a>"
-                                       "</li>").arg(sourceFile, QString(sourceFile).remove(QRegularExpression(".*/"))));
+                                       "</li>").arg(exposureFile, QString(exposureFile).remove(QRegularExpression(".*/"))));
     }
 }
 
