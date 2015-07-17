@@ -258,6 +258,17 @@ void PhysiomeModelRepositoryWindowWindow::on_refreshButton_clicked()
 
 //==============================================================================
 
+bool sortExposureFiles(const QString &pExposureFile1,
+                       const QString &pExposureFile2)
+{
+    // Determine which of the two exposure files should be first (without
+    // worrying about casing)
+
+    return pExposureFile1.compare(pExposureFile2, Qt::CaseInsensitive) < 0;
+}
+
+//==============================================================================
+
 void PhysiomeModelRepositoryWindowWindow::finished(QNetworkReply *pNetworkReply)
 {
     // Check whether our PMR request was successful
@@ -366,9 +377,12 @@ void PhysiomeModelRepositoryWindowWindow::finished(QNetworkReply *pNetworkReply)
         //       the first and last exposure file...
 
         if (!mNumberOfExposureFilesLeft) {
-            mWorkspaces.insert(url, exposureFile.remove(QRegularExpression("/rawfile/.*$")));
+            QStringList exposureFiles = mExposureFiles.values(url);
 
-            mPhysiomeModelRepositoryWidget->addExposureFiles(url, mExposureFiles.values(url));
+            std::sort(exposureFiles.begin(), exposureFiles.end(), sortExposureFiles);
+
+            mWorkspaces.insert(url, exposureFile.remove(QRegularExpression("/rawfile/.*$")));
+            mPhysiomeModelRepositoryWidget->addExposureFiles(url, exposureFiles);
 
             if (pmrRequest == ExposureFileForExposureFiles)
                 mPhysiomeModelRepositoryWidget->showExposureFiles(url);
@@ -388,6 +402,10 @@ void PhysiomeModelRepositoryWindowWindow::finished(QNetworkReply *pNetworkReply)
         break;
     }
     default:   // ExposuresList
+        // Make sure that our exposures are sorted alphabetically
+
+        std::sort(exposures.begin(), exposures.end());
+
         // Ask our PMR widget to initialise itself and filter its output
 
         mPhysiomeModelRepositoryWidget->initialize(exposures, errorMessage);

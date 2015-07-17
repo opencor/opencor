@@ -53,6 +53,16 @@ PhysiomeModelRepositoryWindowExposure::PhysiomeModelRepositoryWindowExposure(con
 
 //==============================================================================
 
+bool PhysiomeModelRepositoryWindowExposure::operator<(const PhysiomeModelRepositoryWindowExposure &pExposure) const
+{
+    // Return whether the current exposure is lower than the given one (without
+    // worrying about casing)
+
+    return mName.compare(pExposure.name(), Qt::CaseInsensitive) < 0;
+}
+
+//==============================================================================
+
 QString PhysiomeModelRepositoryWindowExposure::url() const
 {
     // Return our URL
