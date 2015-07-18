@@ -8,7 +8,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <source>BioSignalML File</source>
+        <source>BioSignalML</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
