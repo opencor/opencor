@@ -50,9 +50,10 @@ void BioSignalMLExporter::execute(CoreDataStore::CoreDataStore *pDataStore) cons
 {
     // Export the given data store to a BioSignalML file
 
+    QString bsmlFiles = QObject::tr("BioSignalML")+" (*.bsml)";
     QString fileName = Core::getSaveFileName(QObject::tr("Export to a BioSignalML file"),
                                              QString(),
-                                             QObject::tr("BioSignalML")+" (*.h5)");
+                                             bsmlFiles, &bsmlFiles);
 
 // Repository v's file -- user input
 // ***** Also capture URI, comments, etc...
@@ -74,7 +75,7 @@ void BioSignalMLExporter::execute(CoreDataStore::CoreDataStore *pDataStore) cons
         try {
             recording = new bsml::HDF5::Recording(rec_uri, fileName.toStdString(), true);
 
-            recording->add_namespace(rdf::Namespace("units", base_units)) ;
+            recording->add_prefix(rdf::Namespace("units", base_units)) ;
 //            recording->set_description("testing 123...") ;
 
             CoreDataStore::DataStoreVariable *voi = pDataStore->voi();
