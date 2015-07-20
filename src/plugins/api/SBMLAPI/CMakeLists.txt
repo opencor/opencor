@@ -56,7 +56,7 @@ ELSE()
     ENDIF()
 ENDIF()
 
-# Retrieve some SBML API libraries
+# Retrieve some SBML API settings
 
 RETRIEVE_SBML_API_SETTINGS()
 
@@ -75,8 +75,6 @@ ADD_PLUGIN(SBMLAPI
         include
     QT_MODULES
         Core
-    QT_LIBRARIES
-        QtCore
     EXTERNAL_BINARIES_DIR
         ${SBML_API_EXTERNAL_BINARIES_DIR}
     EXTERNAL_BINARIES

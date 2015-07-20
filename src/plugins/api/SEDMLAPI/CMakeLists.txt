@@ -56,7 +56,7 @@ ELSE()
     ENDIF()
 ENDIF()
 
-# Retrieve some SED-ML API libraries
+# Retrieve some SED-ML API settings
 
 RETRIEVE_SEDML_API_SETTINGS()
 
@@ -73,10 +73,9 @@ ADD_PLUGIN(SEDMLAPI
         src/sedmlapiplugin.h
     INCLUDE_DIRS
         include
+        src
     QT_MODULES
         Core
-    QT_LIBRARIES
-        QtCore
     EXTERNAL_BINARIES_DIR
         ${SEDML_API_EXTERNAL_BINARIES_DIR}
     EXTERNAL_BINARIES

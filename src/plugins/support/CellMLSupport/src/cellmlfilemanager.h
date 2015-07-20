@@ -26,11 +26,7 @@ specific language governing permissions and limitations under the License.
 
 #include "cellmlfile.h"
 #include "cellmlsupportglobal.h"
-
-//==============================================================================
-
-#include <QMap>
-#include <QObject>
+#include "standardfilemanager.h"
 
 //==============================================================================
 
@@ -43,28 +39,21 @@ typedef QMap<QString, CellmlFile *> CellmlFiles;
 
 //==============================================================================
 
-class CELLMLSUPPORT_EXPORT CellmlFileManager : public QObject
+class CELLMLSUPPORT_EXPORT CellmlFileManager : public StandardSupport::StandardFileManager
 {
     Q_OBJECT
 
 public:
     static CellmlFileManager * instance();
 
+    bool isCellmlFile(const QString &pFileName) const;
+
     CellmlFile * cellmlFile(const QString &pFileName);
 
-private:
-    CellmlFiles mCellmlFiles;
+protected:
+    virtual bool canLoadFileContents(const QString &pFileContents) const;
 
-    explicit CellmlFileManager();
-    ~CellmlFileManager();
-
-private Q_SLOTS:
-    void manageFile(const QString &pFileName);
-    void unmanageFile(const QString &pFileName);
-
-    void reloadFile(const QString &pFileName);
-
-    void renameFile(const QString &pOldFileName, const QString &pNewFileName);
+    virtual QObject * newFile(const QString &pFileName) const;
 };
 
 //==============================================================================

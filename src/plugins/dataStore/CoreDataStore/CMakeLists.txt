@@ -16,6 +16,4 @@ ADD_PLUGIN(CoreDataStore
         src
     QT_MODULES
         Core
-    QT_LIBRARIES
-        QtCore
 )

@@ -25,6 +25,7 @@ ADD_PLUGIN(CellMLSupport
         src/cellmlfileruntime.cpp
         src/cellmlsupportplugin.cpp
     HEADERS_MOC
+        src/cellmlfile.h
         src/cellmlfilemanager.h
         src/cellmlsupportplugin.h
     INCLUDE_DIRS
@@ -37,19 +38,11 @@ ADD_PLUGIN(CellMLSupport
         Core
         CoreSolver
         ${LLVM_PLUGIN}
+        StandardSupport
     PLUGIN_BINARIES
         ${LLVM_PLUGIN_BINARY}
     QT_MODULES
         Xml
-    QT_LIBRARIES
-        QtCore
-        QtGui
-        QtNetwork
-        QtWebKit
-        QtWebKitWidgets
-        QtWidgets
-        QtXml
-        QtXmlPatterns
     EXTERNAL_BINARIES
         ${CELLML_API_EXTERNAL_BINARIES}
 )

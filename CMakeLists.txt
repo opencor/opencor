@@ -213,12 +213,6 @@ IF(ENABLE_TESTS)
     ADD_CUSTOM_COMMAND(TARGET ${RUNTESTS_NAME} POST_BUILD
                        COMMAND ${CMAKE_COMMAND} -E copy ${PROJECT_BINARY_DIR}/${MAIN_TEST_FILENAME}
                                                         ${DEST_TESTS_DIR}/${MAIN_TEST_FILENAME})
-
-    # Clean up our test program, but only if we are on OS X
-
-    IF(APPLE)
-        OS_X_CLEAN_UP_FILE_WITH_QT_LIBRARIES(${RUNTESTS_NAME} ${DEST_TESTS_DIR} ${MAIN_TEST_FILENAME} QtCore)
-    ENDIF()
 ENDIF()
 
 # Build the OpenCOR plugins
@@ -249,6 +243,8 @@ SET(PLUGINS
 
     solver/CoreSolver
 
+    support/StandardSupport
+
     thirdParty/libgit2
     thirdParty/LLVM
     thirdParty/QScintilla
@@ -263,6 +259,7 @@ SET(PLUGINS
 
     support/CellMLSupport
     support/QScintillaSupport
+    support/SEDMLSupport
 
     # Plugins that extend some libraries (incl. third-party ones)
 
@@ -405,46 +402,9 @@ IF(APPLE)
     #       regularly been causing us problems, so instead we have decided to do
     #       everything ourselves...
 
-    # Clean up the OpenCOR executable
-
-    IF(APPLE)
-        SET(QT_MAC_EXTRAS QtMacExtras)
-    ELSE()
-        SET(QT_MAC_EXTRAS)
-    ENDIF()
-
-    SET(QT_LIBRARIES
-        QtCLucene
-        QtConcurrent
-        QtCore
-        QtDBus
-        QtGui
-        QtHelp
-        ${QT_MAC_EXTRAS}
-        QtMultimedia
-        QtMultimediaWidgets
-        QtNetwork
-        QtOpenGL
-        QtPositioning
-        QtPrintSupport
-        QtQml
-        QtQuick
-        QtSensors
-        QtSql
-        QtSvg
-        QtWebChannel
-        QtWebKit
-        QtWebKitWidgets
-        QtWidgets
-        QtXml
-        QtXmlPatterns
-    )
-
-    OS_X_CLEAN_UP_FILE_WITH_QT_LIBRARIES(${PROJECT_NAME} ${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME}.app/Contents/MacOS ${PROJECT_NAME} ${QT_LIBRARIES})
-
     # Deploy our Qt libraries
 
-    OS_X_DEPLOY_QT_LIBRARIES(${QT_LIBRARIES})
+    OS_X_DEPLOY_QT_LIBRARIES(QtCLucene QtConcurrent QtCore QtDBus QtGui QtHelp QtMacExtras QtMultimedia QtMultimediaWidgets QtNetwork QtOpenGL QtPositioning QtPrintSupport QtQml QtQuick QtSensors QtSql QtSvg QtWebChannel QtWebKit QtWebKitWidgets QtWidgets QtXml QtXmlPatterns)
 
     IF(ENABLE_TESTS)
         OS_X_DEPLOY_QT_LIBRARIES(QtTest)

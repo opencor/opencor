@@ -22,13 +22,4 @@ ADD_PLUGIN(FileBrowserWindow
         src
     PLUGINS
         Core
-    QT_LIBRARIES
-        QtCore
-        QtGui
-        QtNetwork
-        QtWebKit
-        QtWebKitWidgets
-        QtWidgets
-        QtXml
-        QtXmlPatterns
 )

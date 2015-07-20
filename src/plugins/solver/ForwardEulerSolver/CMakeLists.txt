@@ -18,8 +18,4 @@ ADD_PLUGIN(ForwardEulerSolver
         CoreSolver
     QT_MODULES
         Widgets
-    QT_LIBRARIES
-        QtCore
-        QtGui
-        QtWidgets
 )

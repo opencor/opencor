@@ -21,8 +21,4 @@ ADD_PLUGIN(CVODESolver
         ${SUNDIALS_PLUGIN_BINARY}
     QT_MODULES
         Widgets
-    QT_LIBRARIES
-        QtCore
-        QtGui
-        QtWidgets
 )

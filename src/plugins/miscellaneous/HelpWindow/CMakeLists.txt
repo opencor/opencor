@@ -29,15 +29,4 @@ ADD_PLUGIN(HelpWindow
         Help
         PrintSupport
         WebKitWidgets
-    QT_LIBRARIES
-        QtCore
-        QtGui
-        QtHelp
-        QtNetwork
-        QtPrintSupport
-        QtWebKit
-        QtWebKitWidgets
-        QtWidgets
-        QtXml
-        QtXmlPatterns
 )

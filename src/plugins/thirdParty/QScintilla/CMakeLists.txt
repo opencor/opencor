@@ -2,12 +2,6 @@ PROJECT(QScintillaPlugin)
 
 # Use our pre-built version unless instructed otherwise
 
-IF(APPLE)
-    SET(QT_MAC_EXTRAS QtMacExtras)
-ELSE()
-    SET(QT_MAC_EXTRAS)
-ENDIF()
-
 IF(USE_PREBUILT_QSCINTILLA_PLUGIN)
     # Retrieve the plugin's binary file(s)
 
@@ -58,11 +52,6 @@ IF(USE_PREBUILT_QSCINTILLA_PLUGIN)
             lexlib
             Qt4Qt5
             src
-        QT_LIBRARIES
-            QtCore
-            QtGui
-            ${QT_MAC_EXTRAS}
-            QtWidgets
     )
 ELSE()
     # Add the plugin
@@ -173,10 +162,5 @@ ELSE()
         QT_MODULES
             ${MAC_EXTRAS}
             Widgets
-        QT_LIBRARIES
-            QtCore
-            QtGui
-            ${QT_MAC_EXTRAS}
-            QtWidgets
     )
 ENDIF()

@@ -117,7 +117,6 @@
             <li><code>PLUGINS</code>: plugins needed by the plugin.</li>
             <li><code>PLUGIN_BINARIES</code>: the binary version of plugins needed by the plugin.</li>
             <li><code>QT_MODULES</code>: <a href="http://www.qt.io/">Qt</a> modules needed by the plugin.</li>
-            <li><code>QT_LIBRARIES</code>: <a href="http://www.qt.io/">Qt</a> libraries needed by the plugin.</li>
             <li><code>EXTERNAL_BINARIES_DIR</code>: location where external binaries needed by the plugin can be found.</li>
             <li><code>EXTERNAL_BINARIES</code>: external binaries needed by the plugin.</li>
             <li><code>TESTS</code>: <a href="../tests.html">tests</a> for the plugin.</li>
@@ -125,10 +124,6 @@
 
         <p>
             Following those keywords are the parameters themselves, as can be seen in <a href="https://github.com/opencor/opencor/blob/master/src/plugins/miscellaneous/Core/CMakeLists.txt"><code>[OpenCOR]/src/plugins/miscellaneous/Core/CMakeLists.txt</code></a> for the <strong>Core</strong> plugin.
-        </p>
-
-        <p class="note">
-            due to the intrinsic nature of OS X binaries, it is critical that you list <em>all</em> the <a href="http://www.qt.io/">Qt</a> libraries needed by a plugin. Failure to do so may result in OpenCOR not behaving as expected.
         </p>
 
         <span class="anchor" id="Plugin information"></span>

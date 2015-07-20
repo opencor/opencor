@@ -125,8 +125,6 @@ IF(USE_PREBUILT_LIBGIT2_PLUGIN)
 
             include
             src
-        QT_LIBRARIES
-            QtCore
     )
 ELSE()
     # Retrieve some libgit2 settings
@@ -343,7 +341,5 @@ ELSE()
             ${LIBGIT2_DEFINITIONS}
         QT_MODULES
             Core
-        QT_LIBRARIES
-            QtCore
     )
 ENDIF()

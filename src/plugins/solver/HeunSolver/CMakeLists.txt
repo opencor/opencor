@@ -18,8 +18,4 @@ ADD_PLUGIN(HeunSolver
         CoreSolver
     QT_MODULES
         Widgets
-    QT_LIBRARIES
-        QtCore
-        QtGui
-        QtWidgets
 )

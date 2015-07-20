@@ -17,13 +17,4 @@ ADD_PLUGIN(EditorList
         src
     PLUGINS
         Core
-    QT_LIBRARIES
-        QtCore
-        QtGui
-        QtNetwork
-        QtWebKit
-        QtWebKitWidgets
-        QtWidgets
-        QtXml
-        QtXmlPatterns
 )

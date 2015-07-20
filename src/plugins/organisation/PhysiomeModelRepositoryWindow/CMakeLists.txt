@@ -32,13 +32,4 @@ ADD_PLUGIN(PhysiomeModelRepositoryWindow
         ${LIBGIT2_PLUGIN_BINARY}
     QT_MODULES
         WebKitWidgets
-    QT_LIBRARIES
-        QtCore
-        QtGui
-        QtNetwork
-        QtWebKit
-        QtWebKitWidgets
-        QtWidgets
-        QtXml
-        QtXmlPatterns
 )
