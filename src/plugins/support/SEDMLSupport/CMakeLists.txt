@@ -14,6 +14,7 @@ ADD_PLUGIN(SEDMLSupport
         src/sedmlfilemanager.cpp
         src/sedmlsupportplugin.cpp
     HEADERS_MOC
+        src/sedmlfile.h
         src/sedmlfilemanager.h
         src/sedmlsupportplugin.h
     INCLUDE_DIRS

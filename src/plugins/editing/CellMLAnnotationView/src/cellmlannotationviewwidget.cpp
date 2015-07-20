@@ -24,7 +24,7 @@ specific language governing permissions and limitations under the License.
 #include "cellmlannotationviewmetadatadetailswidget.h"
 #include "cellmlannotationviewplugin.h"
 #include "cellmlannotationviewwidget.h"
-#include "cellmlsupportplugin.h"
+#include "cellmlfilemanager.h"
 
 //==============================================================================
 
@@ -219,7 +219,7 @@ void CellmlAnnotationViewWidget::fileReloaded(const QString &pFileName)
     if (contains(pFileName)) {
         finalize(pFileName);
 
-        if (CellMLSupport::isCellmlFile(pFileName))
+        if (CellMLSupport::CellmlFileManager::instance()->isCellmlFile(pFileName))
             initialize(pFileName);
     }
 }

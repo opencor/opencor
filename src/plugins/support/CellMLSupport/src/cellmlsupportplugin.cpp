@@ -26,17 +26,6 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-#include <QIODevice>
-#include <QXmlStreamReader>
-
-//==============================================================================
-
-#include "cellmlapidisablewarnings.h"
-    #include "CellMLBootstrap.hpp"
-#include "cellmlapienablewarnings.h"
-
-//==============================================================================
-
 namespace OpenCOR {
 namespace CellMLSupport {
 
@@ -171,54 +160,6 @@ void CellMLSupportPlugin::handleAction(const QUrl &pUrl)
     Q_UNUSED(pUrl);
 
     // We don't handle this interface...
-}
-
-//==============================================================================
-// Plugin specific
-//==============================================================================
-
-bool isCellmlFile(const QString &pFileName)
-{
-    // If the given file is already managed by our CellML file manager, then we
-    // consider that it's still a CellML file (even though it may not be a
-    // CellML file anymore after having been edited and saved, but in this case
-    // it's good to keep considering the file as a CellML file, so that the user
-    // can continue editing it for example)
-
-    QString nativeFileName = Core::nativeCanonicalFileName(pFileName);
-
-    if (CellMLSupport::CellmlFileManager::instance()->cellmlFile(nativeFileName))
-        return true;
-
-    // The given file is not managed by our CellML file manager, so check
-    // whether it's a new file and, if so, consider it as a CellML file
-
-    if (Core::FileManager::instance()->isNew(nativeFileName))
-        return true;
-
-    // Check whether we are dealing with an empty file or a file that contains
-    // spaces of sorts and, if not, whether we can load it using the CellML API
-
-    QString fileContents;
-
-    if (Core::readTextFromFile(nativeFileName, fileContents)) {
-        if (fileContents.trimmed().isEmpty())
-            return true;
-
-        ObjRef<iface::cellml_api::CellMLBootstrap> cellmlBootstrap = CreateCellMLBootstrap();
-        ObjRef<iface::cellml_api::DOMModelLoader> modelLoader = cellmlBootstrap->modelLoader();
-        ObjRef<iface::cellml_api::Model> model;
-
-        try {
-            model = modelLoader->createFromText(fileContents.toStdWString());
-
-            return true;
-        } catch (iface::cellml_api::CellMLException &) {
-            return false;
-        }
-    } else {
-        return false;
-    }
 }
 
 //==============================================================================

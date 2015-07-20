@@ -23,7 +23,6 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include "cellmlfilemanager.h"
-#include "cellmlsupportplugin.h"
 #include "cellmltextviewconverter.h"
 #include "cellmltextviewlexer.h"
 #include "cellmltextviewparser.h"
@@ -409,7 +408,7 @@ void CellmlTextViewWidget::fileReloaded(const QString &pFileName)
 
         finalize(pFileName);
 
-        if (CellMLSupport::isCellmlFile(pFileName))
+        if (CellMLSupport::CellmlFileManager::instance()->isCellmlFile(pFileName))
             initialize(pFileName, update);
     }
 }

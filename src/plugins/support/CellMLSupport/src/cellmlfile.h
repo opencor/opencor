@@ -53,6 +53,8 @@ static const auto XlinkNamespace       = QStringLiteral("http://www.w3.org/1999/
 
 class CELLMLSUPPORT_EXPORT CellmlFile : public StandardSupport::StandardFile
 {
+    Q_OBJECT
+
 public:
     enum Version {
         Unknown,

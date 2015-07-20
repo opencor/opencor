@@ -50,6 +50,24 @@ SedmlFileManager * SedmlFileManager::instance()
 
 //==============================================================================
 
+bool SedmlFileManager::isSedmlFile(const QString &pFileName) const
+{
+    // Return whether the given file is a SED-ML file
+
+    return instance()->isFile(pFileName);
+}
+
+//==============================================================================
+
+SedmlFile * SedmlFileManager::sedmlFile(const QString &pFileName)
+{
+    // Return the SedmlFile object, if any, associated with the given file
+
+    return qobject_cast<SEDMLSupport::SedmlFile *>(instance()->file(pFileName));
+}
+
+//==============================================================================
+
 bool SedmlFileManager::canLoadFileContents(const QString &pFileContents) const
 {
     // Try to load the SED-ML file contents

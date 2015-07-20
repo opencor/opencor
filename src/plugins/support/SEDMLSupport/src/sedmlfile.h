@@ -40,6 +40,8 @@ namespace SEDMLSupport {
 
 class SEDMLSUPPORT_EXPORT SedmlFile : public StandardSupport::StandardFile
 {
+    Q_OBJECT
+
 public:
     explicit SedmlFile(const QString &pFileName);
 
