@@ -32,7 +32,7 @@ namespace StandardSupport {
 //==============================================================================
 
 StandardFileManager::StandardFileManager() :
-    mStandardFiles(StandardFiles())
+    mFiles(Files())
 {
     // Create some connections to keep track of some events related to our
     // 'global' file manager
@@ -57,17 +57,53 @@ StandardFileManager::~StandardFileManager()
 {
     // Remove all the managed files
 
-    foreach (QObject *standardFile, mStandardFiles)
-        delete standardFile;
+    foreach (QObject *file, mFiles)
+        delete file;
 }
 
 //==============================================================================
 
-QObject * StandardFileManager::standardFile(const QString &pFileName)
+bool StandardFileManager::isFile(const QString &pFileName)
 {
-    // Return the StandardFile object, if any, associated with the given file
+    // If the given file is already managed, then we consider that it's a SED-ML
+    // file (even though it may not be a SED-ML file anymore after having been
+    // edited and saved, but in this case it's good to keep considering the file
+    // as a SED-ML file, so that the user can continue editing it for example)
 
-    return mStandardFiles.value(Core::nativeCanonicalFileName(pFileName));
+    QString nativeFileName = Core::nativeCanonicalFileName(pFileName);
+
+    if (file(nativeFileName))
+        return true;
+
+    // The given file is not managed, so check whether it's a new file and, if
+    // so, consider it as a SED-ML file
+
+    if (Core::FileManager::instance()->isNew(nativeFileName))
+        return true;
+
+    // Check whether we are dealing with an empty file or a file that contains
+    // spaces of sorts and, if not, whether we can load the file contents using
+    // the standard
+
+    QString fileContents;
+
+    if (Core::readTextFromFile(nativeFileName, fileContents)) {
+        if (fileContents.trimmed().isEmpty())
+            return true;
+
+        return canLoadFileContents(fileContents);
+    } else {
+        return false;
+    }
+}
+
+//==============================================================================
+
+QObject * StandardFileManager::file(const QString &pFileName)
+{
+    // Return the File object, if any, associated with the given file
+
+    return mFiles.value(Core::nativeCanonicalFileName(pFileName));
 }
 
 //==============================================================================
@@ -76,11 +112,11 @@ void StandardFileManager::manageFile(const QString &pFileName)
 {
     QString nativeFileName = Core::nativeCanonicalFileName(pFileName);
 
-    if (!standardFile(nativeFileName) && isStandardFile(nativeFileName)) {
-        // We are dealing with a standard file, which is not already managed, so
-        // we can add it to our list of managed standard files
+    if (!file(nativeFileName) && isFile(nativeFileName)) {
+        // We are dealing with a file, which is not already managed, so we can
+        // add it to our list of managed files
 
-        mStandardFiles.insert(nativeFileName, newStandardFile(nativeFileName));
+        mFiles.insert(nativeFileName, newFile(nativeFileName));
     }
 }
 
@@ -88,15 +124,15 @@ void StandardFileManager::manageFile(const QString &pFileName)
 
 void StandardFileManager::unmanageFile(const QString &pFileName)
 {
-    QObject *crtStandardFile = standardFile(pFileName);
+    QObject *crtFile = file(pFileName);
 
-    if (crtStandardFile) {
-        // We are dealing with a standard file, so we can remove it from our
-        // list of managed standard files after having deleted it
+    if (crtFile) {
+        // We are dealing with a file, so we can remove it from our list of
+        // managed files after having deleted it
 
-        deleteStandardFile(crtStandardFile);
+        delete crtFile;
 
-        mStandardFiles.remove(Core::nativeCanonicalFileName(pFileName));
+        mFiles.remove(Core::nativeCanonicalFileName(pFileName));
     }
 }
 
@@ -109,27 +145,27 @@ void StandardFileManager::reloadFile(const QString &pFileName)
     //       views won't each do it, thus saving time and ensuring that a
     //       standard-based view doesn't forget to do it...
 
-    QObject *crtStandardFile = standardFile(pFileName);
+    QObject *crtFile = file(pFileName);
 
-    if (crtStandardFile) {
+    if (crtFile) {
         // The file is managed, but should it still be (i.e. can it still be
-        // considered as being a standard file)?
+        // considered as being a file)?
 
-        if (isStandardFile(pFileName))
-            qobject_cast<StandardFile *>(crtStandardFile)->reload();
+        if (isFile(pFileName))
+            qobject_cast<StandardFile *>(crtFile)->reload();
         else
             unmanageFile(pFileName);
     } else {
         // The file is not managed, which means that previously it wasn't
-        // considered as being a standard file, but things may be different now,
-        // so try to remanage it and load it, if possible
+        // considered as being a file, but things may be different now, so try
+        // to remanage it and load it, if possible
 
         manageFile(pFileName);
 
-        crtStandardFile = standardFile(pFileName);
+        crtFile = file(pFileName);
 
-        if (crtStandardFile)
-            qobject_cast<StandardFile *>(crtStandardFile)->load();
+        if (crtFile)
+            qobject_cast<StandardFile *>(crtFile)->load();
     }
 }
 
@@ -138,21 +174,20 @@ void StandardFileManager::reloadFile(const QString &pFileName)
 void StandardFileManager::renameFile(const QString &pOldFileName,
                                      const QString &pNewFileName)
 {
-    // The file has been renamed, so we need to update our standard files
-    // mapping, if needed
+    // The file has been renamed, so we need to update our files mapping, if
+    // needed
 
-    QObject *crtStandardFile = standardFile(pOldFileName);
+    QObject *crtFile = file(pOldFileName);
 
-    if (!crtStandardFile)
+    if (!crtFile)
         return;
 
-    mStandardFiles.insert(pNewFileName, crtStandardFile);
-    mStandardFiles.remove(pOldFileName);
+    mFiles.insert(pNewFileName, crtFile);
+    mFiles.remove(pOldFileName);
 
-    // We also need to ensure that our standard file object has its file name
-    // updated
+    // We also need to ensure that our file object has its file name updated
 
-    qobject_cast<StandardFile *>(crtStandardFile)->setFileName(pNewFileName);
+    qobject_cast<StandardFile *>(crtFile)->setFileName(pNewFileName);
 }
 
 //==============================================================================

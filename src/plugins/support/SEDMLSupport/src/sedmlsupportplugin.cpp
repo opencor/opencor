@@ -30,13 +30,6 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-#include "sedmlapidisablewarnings.h"
-    #include "sedml/SedDocument.h"
-    #include "sedml/SedReader.h"
-#include "sedmlapienablewarnings.h"
-
-//==============================================================================
-
 namespace OpenCOR {
 namespace SEDMLSupport {
 
@@ -113,48 +106,6 @@ void SEDMLSupportPlugin::handleAction(const QUrl &pUrl)
     Q_UNUSED(pUrl);
 
     // We don't handle this interface...
-}
-
-//==============================================================================
-// Plugin specific
-//==============================================================================
-
-bool isSedmlFile(const QString &pFileName)
-{
-    // If the given file is already managed by our SED-ML file manager, then we
-    // consider that it's still a SED-ML file (even though it may not be a
-    // SED-ML file anymore after having been edited and saved, but in this case
-    // it's good to keep considering the file as a SED-ML file, so that the user
-    // can continue editing it for example)
-
-    QString nativeFileName = Core::nativeCanonicalFileName(pFileName);
-
-    if (SEDMLSupport::SedmlFileManager::instance()->sedmlFile(nativeFileName))
-        return true;
-
-    // The given file is not managed by our SED-ML file manager, so check
-    // whether it's a new file and, if so, consider it as a SED-ML file
-
-    if (Core::FileManager::instance()->isNew(nativeFileName))
-        return true;
-
-    // Check whether we are dealing with an empty file or a file that contains
-    // spaces of sorts and, if not, whether we can load it using the SED-ML API
-
-    QString fileContents;
-
-    if (Core::readTextFromFile(nativeFileName, fileContents)) {
-        if (fileContents.trimmed().isEmpty())
-            return true;
-
-        QByteArray fileContentsByteArray = fileContents.toUtf8();
-
-        libsedml::SedDocument *sedmlDocument = libsedml::readSedML(fileContentsByteArray.constData());
-
-        return sedmlDocument->getNumErrors(libsedml::LIBSEDML_SEV_ERROR) == 0;
-    } else {
-        return false;
-    }
 }
 
 //==============================================================================

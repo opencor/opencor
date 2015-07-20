@@ -53,10 +53,6 @@ public:
 
 //==============================================================================
 
-bool SEDMLSUPPORT_EXPORT isSedmlFile(const QString &pFileName);
-
-//==============================================================================
-
 }   // namespace SEDMLSupport
 }   // namespace OpenCOR
 

@@ -39,7 +39,7 @@ namespace StandardSupport {
 
 //==============================================================================
 
-typedef QMap<QString, QObject *> StandardFiles;
+typedef QMap<QString, QObject *> Files;
 
 //==============================================================================
 
@@ -48,19 +48,19 @@ class STANDARDSUPPORT_EXPORT StandardFileManager : public QObject
     Q_OBJECT
 
 public:
-    QObject *standardFile(const QString &pFileName);
+    bool isFile(const QString &pFileName);
 
-    virtual bool isStandardFile(const QString &pFileName) const = 0;
+    QObject * file(const QString &pFileName);
 
 protected:
-    virtual QObject * newStandardFile(const QString &pFileName) const = 0;
-    virtual void deleteStandardFile(QObject *pStandardFile) const = 0;
-
-private:
-    StandardFiles mStandardFiles;
+    Files mFiles;
 
     explicit StandardFileManager();
     ~StandardFileManager();
+
+    virtual bool canLoadFileContents(const QString &pFileContents) const = 0;
+
+    virtual QObject * newFile(const QString &pFileName) const = 0;
 
 private Q_SLOTS:
     void manageFile(const QString &pFileName);

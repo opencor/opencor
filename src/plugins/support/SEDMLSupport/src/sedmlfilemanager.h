@@ -26,11 +26,7 @@ specific language governing permissions and limitations under the License.
 
 #include "sedmlfile.h"
 #include "sedmlsupportglobal.h"
-
-//==============================================================================
-
-#include <QMap>
-#include <QObject>
+#include "standardfilemanager.h"
 
 //==============================================================================
 
@@ -39,32 +35,17 @@ namespace SEDMLSupport {
 
 //==============================================================================
 
-typedef QMap<QString, SedmlFile *> SedmlFiles;
-
-//==============================================================================
-
-class SEDMLSUPPORT_EXPORT SedmlFileManager : public QObject
+class SEDMLSUPPORT_EXPORT SedmlFileManager : public StandardSupport::StandardFileManager
 {
     Q_OBJECT
 
 public:
     static SedmlFileManager * instance();
 
-    SedmlFile * sedmlFile(const QString &pFileName);
+protected:
+    virtual bool canLoadFileContents(const QString &pFileContents) const;
 
-private:
-    SedmlFiles mSedmlFiles;
-
-    explicit SedmlFileManager();
-    ~SedmlFileManager();
-
-private Q_SLOTS:
-    void manageFile(const QString &pFileName);
-    void unmanageFile(const QString &pFileName);
-
-    void reloadFile(const QString &pFileName);
-
-    void renameFile(const QString &pOldFileName, const QString &pNewFileName);
+    virtual QObject * newFile(const QString &pFileName) const;
 };
 
 //==============================================================================

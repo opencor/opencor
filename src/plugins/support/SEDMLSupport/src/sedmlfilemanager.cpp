@@ -26,40 +26,15 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#include "sedmlapidisablewarnings.h"
+    #include "sedml/SedDocument.h"
+    #include "sedml/SedReader.h"
+#include "sedmlapienablewarnings.h"
+
+//==============================================================================
+
 namespace OpenCOR {
 namespace SEDMLSupport {
-
-//==============================================================================
-
-SedmlFileManager::SedmlFileManager() :
-    mSedmlFiles(SedmlFiles())
-{
-    // Create some connections to keep track of some events related to our
-    // 'global' file manager
-
-    Core::FileManager *fileManagerInstance = Core::FileManager::instance();
-
-    connect(fileManagerInstance, SIGNAL(fileManaged(const QString &)),
-            this, SLOT(manageFile(const QString &)));
-    connect(fileManagerInstance, SIGNAL(fileUnmanaged(const QString &)),
-            this, SLOT(unmanageFile(const QString &)));
-
-    connect(fileManagerInstance, SIGNAL(fileReloaded(const QString &)),
-            this, SLOT(reloadFile(const QString &)));
-
-    connect(fileManagerInstance, SIGNAL(fileRenamed(const QString &, const QString &)),
-            this, SLOT(renameFile(const QString &, const QString &)));
-}
-
-//==============================================================================
-
-SedmlFileManager::~SedmlFileManager()
-{
-    // Remove all the managed files
-
-    foreach (SedmlFile *sedmlFile, mSedmlFiles)
-        delete sedmlFile;
-}
 
 //==============================================================================
 
@@ -75,96 +50,24 @@ SedmlFileManager * SedmlFileManager::instance()
 
 //==============================================================================
 
-SedmlFile * SedmlFileManager::sedmlFile(const QString &pFileName)
+bool SedmlFileManager::canLoadFileContents(const QString &pFileContents) const
 {
-    // Return the SedmlFile object, if any, associated with the given file
+    // Try to load the SED-ML file contents
 
-    return mSedmlFiles.value(Core::nativeCanonicalFileName(pFileName));
+    QByteArray fileContentsByteArray = pFileContents.toUtf8();
+
+    libsedml::SedDocument *sedmlDocument = libsedml::readSedML(fileContentsByteArray.constData());
+
+    return sedmlDocument->getNumErrors(libsedml::LIBSEDML_SEV_ERROR) == 0;
 }
 
 //==============================================================================
 
-void SedmlFileManager::manageFile(const QString &pFileName)
+QObject * SedmlFileManager::newFile(const QString &pFileName) const
 {
-    QString nativeFileName = Core::nativeCanonicalFileName(pFileName);
+    // Create and return a new SED-ML file
 
-    if (!sedmlFile(nativeFileName) && isSedmlFile(nativeFileName)) {
-        // We are dealing with a SED-ML file, which is not already managed, so
-        // we can add it to our list of managed SED-ML files
-
-        mSedmlFiles.insert(nativeFileName, new SedmlFile(nativeFileName));
-    }
-}
-
-//==============================================================================
-
-void SedmlFileManager::unmanageFile(const QString &pFileName)
-{
-    SedmlFile *crtSedmlFile = sedmlFile(pFileName);
-
-    if (crtSedmlFile) {
-        // We are dealing with a SED-ML file, so we can remove it from our list
-        // of managed SED-ML files after having deleted it
-
-        delete crtSedmlFile;
-
-        mSedmlFiles.remove(Core::nativeCanonicalFileName(pFileName));
-    }
-}
-
-//==============================================================================
-
-void SedmlFileManager::reloadFile(const QString &pFileName)
-{
-    // The file is to be reloaded, so reload it
-    // Note: to reload a file here ensures that our different SED-ML based views
-    //       won't each do it, thus saving time and ensuring that a SED-ML based
-    //       view doesn't forget to do it...
-
-    SedmlFile *crtSedmlFile = sedmlFile(pFileName);
-
-    if (crtSedmlFile) {
-        // The file is managed, but should it still be (i.e. can it still be
-        // considered as being a SED-ML file)?
-
-        if (isSedmlFile(pFileName))
-            crtSedmlFile->reload();
-        else
-            unmanageFile(pFileName);
-    } else {
-        // The file is not managed, which means that previously it wasn't
-        // considered as being a SED-ML file, but things may be different now,
-        // so try to remanage it and load it, if possible
-
-        manageFile(pFileName);
-
-        crtSedmlFile = sedmlFile(pFileName);
-
-        if (crtSedmlFile)
-            crtSedmlFile->load();
-    }
-}
-
-//==============================================================================
-
-void SedmlFileManager::renameFile(const QString &pOldFileName,
-                                  const QString &pNewFileName)
-{
-    // The file has been renamed, so we need to update our SED-ML files mapping,
-    // if needed
-
-    SedmlFile *crtSedmlFile = sedmlFile(pOldFileName);
-
-    if (!crtSedmlFile)
-        return;
-
-    mSedmlFiles.insert(pNewFileName, crtSedmlFile);
-    mSedmlFiles.remove(pOldFileName);
-
-    // We also need to ensure that our SED-ML file object has its file name
-    // updated
-
-    crtSedmlFile->setFileName(pNewFileName);
+    return new SedmlFile(Core::nativeCanonicalFileName(pFileName));
 }
 
 //==============================================================================
