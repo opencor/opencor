@@ -16,54 +16,67 @@ specific language governing permissions and limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// CellML file manager
+// Standard file class
 //==============================================================================
 
-#ifndef CELLMLFILEMANAGER_H
-#define CELLMLFILEMANAGER_H
-
-//==============================================================================
-
-#include "cellmlfile.h"
-#include "cellmlsupportglobal.h"
-#include "standardfilemanager.h"
+#include "corecliutils.h"
+#include "standardfile.h"
 
 //==============================================================================
 
 namespace OpenCOR {
-namespace CellMLSupport {
+namespace StandardSupport {
 
 //==============================================================================
 
-typedef QMap<QString, CellmlFile *> CellmlFiles;
-
-//==============================================================================
-
-class CELLMLSUPPORT_EXPORT CellmlFileManager : public StandardSupport::StandardFileManager
+StandardFile::StandardFile(const QString &pFileName) :
+    QObject(),
+    mFileName(Core::nativeCanonicalFileName(pFileName))
 {
-    Q_OBJECT
-
-public:
-    static CellmlFileManager * instance();
-
-    bool isCellmlFile(const QString &pFileName) const;
-
-    CellmlFile * cellmlFile(const QString &pFileName);
-
-protected:
-    virtual bool canLoadFileContents(const QString &pFileContents) const;
-
-    virtual QObject * newFile(const QString &pFileName) const;
-};
+}
 
 //==============================================================================
 
-}   // namespace CellMLSupport
+void StandardFile::reset()
+{
+    // Nothing to do by default...
+}
+
+//==============================================================================
+
+bool StandardFile::reload()
+{
+    // We want to reload the file, so we must first reset everything
+
+    reset();
+
+    // Now, we can try to (re)load the file
+
+    return load();
+}
+
+//==============================================================================
+
+QString StandardFile::fileName() const
+{
+    // Return the standard file's file name
+
+    return mFileName;
+}
+
+//==============================================================================
+
+void StandardFile::setFileName(const QString &pFileName)
+{
+    // Set the standard file's file name
+
+    mFileName = pFileName;
+}
+
+//==============================================================================
+
+}   // namespace StandardSupport
 }   // namespace OpenCOR
-
-//==============================================================================
-
-#endif
 
 //==============================================================================
 // End of file

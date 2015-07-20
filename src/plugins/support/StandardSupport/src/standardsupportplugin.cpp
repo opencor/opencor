@@ -16,54 +16,38 @@ specific language governing permissions and limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// CellML file manager
+// StandardSupport plugin
 //==============================================================================
 
-#ifndef CELLMLFILEMANAGER_H
-#define CELLMLFILEMANAGER_H
+#include "standardsupportplugin.h"
 
 //==============================================================================
 
-#include "cellmlfile.h"
-#include "cellmlsupportglobal.h"
-#include "standardfilemanager.h"
+#include <QMainWindow>
 
 //==============================================================================
 
 namespace OpenCOR {
-namespace CellMLSupport {
+namespace StandardSupport {
 
 //==============================================================================
 
-typedef QMap<QString, CellmlFile *> CellmlFiles;
-
-//==============================================================================
-
-class CELLMLSUPPORT_EXPORT CellmlFileManager : public StandardSupport::StandardFileManager
+PLUGININFO_FUNC StandardSupportPluginInfo()
 {
-    Q_OBJECT
+    Descriptions descriptions;
 
-public:
-    static CellmlFileManager * instance();
+    descriptions.insert("en", QString::fromUtf8("a plugin to support various standards."));
+    descriptions.insert("fr", QString::fromUtf8("une extension pour supporter différentes standards."));
 
-    bool isCellmlFile(const QString &pFileName) const;
-
-    CellmlFile * cellmlFile(const QString &pFileName);
-
-protected:
-    virtual bool canLoadFileContents(const QString &pFileContents) const;
-
-    virtual QObject * newFile(const QString &pFileName) const;
-};
+    return new PluginInfo(PluginInfo::Support, false, false,
+                          QStringList(),
+                          descriptions);
+}
 
 //==============================================================================
 
-}   // namespace CellMLSupport
+}   // namespace StandardSupport
 }   // namespace OpenCOR
-
-//==============================================================================
-
-#endif
 
 //==============================================================================
 // End of file

@@ -16,39 +16,35 @@ specific language governing permissions and limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// CellML file manager
+// SED-ML file manager
 //==============================================================================
 
-#ifndef CELLMLFILEMANAGER_H
-#define CELLMLFILEMANAGER_H
+#ifndef SEDMLFILEMANAGER_H
+#define SEDMLFILEMANAGER_H
 
 //==============================================================================
 
-#include "cellmlfile.h"
-#include "cellmlsupportglobal.h"
+#include "sedmlfile.h"
+#include "sedmlsupportglobal.h"
 #include "standardfilemanager.h"
 
 //==============================================================================
 
 namespace OpenCOR {
-namespace CellMLSupport {
+namespace SEDMLSupport {
 
 //==============================================================================
 
-typedef QMap<QString, CellmlFile *> CellmlFiles;
-
-//==============================================================================
-
-class CELLMLSUPPORT_EXPORT CellmlFileManager : public StandardSupport::StandardFileManager
+class SEDMLSUPPORT_EXPORT SedmlFileManager : public StandardSupport::StandardFileManager
 {
     Q_OBJECT
 
 public:
-    static CellmlFileManager * instance();
+    static SedmlFileManager * instance();
 
-    bool isCellmlFile(const QString &pFileName) const;
+    bool isSedmlFile(const QString &pFileName) const;
 
-    CellmlFile * cellmlFile(const QString &pFileName);
+    SedmlFile * sedmlFile(const QString &pFileName);
 
 protected:
     virtual bool canLoadFileContents(const QString &pFileContents) const;
@@ -58,7 +54,7 @@ protected:
 
 //==============================================================================
 
-}   // namespace CellMLSupport
+}   // namespace SEDMLSupport
 }   // namespace OpenCOR
 
 //==============================================================================

@@ -16,50 +16,23 @@ specific language governing permissions and limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// CellML file manager
+// StandardSupport global
 //==============================================================================
 
-#ifndef CELLMLFILEMANAGER_H
-#define CELLMLFILEMANAGER_H
-
-//==============================================================================
-
-#include "cellmlfile.h"
-#include "cellmlsupportglobal.h"
-#include "standardfilemanager.h"
+#ifndef STANDARDSUPPORTGLOBAL_H
+#define STANDARDSUPPORTGLOBAL_H
 
 //==============================================================================
 
-namespace OpenCOR {
-namespace CellMLSupport {
-
-//==============================================================================
-
-typedef QMap<QString, CellmlFile *> CellmlFiles;
-
-//==============================================================================
-
-class CELLMLSUPPORT_EXPORT CellmlFileManager : public StandardSupport::StandardFileManager
-{
-    Q_OBJECT
-
-public:
-    static CellmlFileManager * instance();
-
-    bool isCellmlFile(const QString &pFileName) const;
-
-    CellmlFile * cellmlFile(const QString &pFileName);
-
-protected:
-    virtual bool canLoadFileContents(const QString &pFileContents) const;
-
-    virtual QObject * newFile(const QString &pFileName) const;
-};
-
-//==============================================================================
-
-}   // namespace CellMLSupport
-}   // namespace OpenCOR
+#ifdef _WIN32
+    #ifdef StandardSupport_PLUGIN
+        #define STANDARDSUPPORT_EXPORT __declspec(dllexport)
+    #else
+        #define STANDARDSUPPORT_EXPORT __declspec(dllimport)
+    #endif
+#else
+    #define STANDARDSUPPORT_EXPORT
+#endif
 
 //==============================================================================
 

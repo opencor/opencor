@@ -73,6 +73,7 @@ ADD_PLUGIN(SEDMLAPI
         src/sedmlapiplugin.h
     INCLUDE_DIRS
         include
+        src
     QT_MODULES
         Core
     EXTERNAL_BINARIES_DIR

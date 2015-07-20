@@ -16,54 +16,37 @@ specific language governing permissions and limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// CellML file manager
+// SED-ML file class
 //==============================================================================
 
-#ifndef CELLMLFILEMANAGER_H
-#define CELLMLFILEMANAGER_H
-
-//==============================================================================
-
-#include "cellmlfile.h"
-#include "cellmlsupportglobal.h"
-#include "standardfilemanager.h"
+#include "corecliutils.h"
+#include "sedmlfile.h"
 
 //==============================================================================
 
 namespace OpenCOR {
-namespace CellMLSupport {
+namespace SEDMLSupport {
 
 //==============================================================================
 
-typedef QMap<QString, CellmlFile *> CellmlFiles;
-
-//==============================================================================
-
-class CELLMLSUPPORT_EXPORT CellmlFileManager : public StandardSupport::StandardFileManager
+SedmlFile::SedmlFile(const QString &pFileName) :
+    StandardSupport::StandardFile(pFileName)
 {
-    Q_OBJECT
-
-public:
-    static CellmlFileManager * instance();
-
-    bool isCellmlFile(const QString &pFileName) const;
-
-    CellmlFile * cellmlFile(const QString &pFileName);
-
-protected:
-    virtual bool canLoadFileContents(const QString &pFileContents) const;
-
-    virtual QObject * newFile(const QString &pFileName) const;
-};
+}
 
 //==============================================================================
 
-}   // namespace CellMLSupport
+bool SedmlFile::load()
+{
+    // Consider the file loaded
+
+    return true;
+}
+
+//==============================================================================
+
+}   // namespace SEDMLSupport
 }   // namespace OpenCOR
-
-//==============================================================================
-
-#endif
 
 //==============================================================================
 // End of file

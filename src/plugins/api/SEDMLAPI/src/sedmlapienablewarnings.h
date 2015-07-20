@@ -16,50 +16,23 @@ specific language governing permissions and limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// CellML file manager
+// SED-ML API enable warnings
 //==============================================================================
 
-#ifndef CELLMLFILEMANAGER_H
-#define CELLMLFILEMANAGER_H
-
-//==============================================================================
-
-#include "cellmlfile.h"
-#include "cellmlsupportglobal.h"
-#include "standardfilemanager.h"
+#if defined(SEDMLAPIENABLEWARNINGS_H) && !defined(SEDMLAPIDISABLEWARNINGS_H)
+#define SEDMLAPIENABLEWARNINGS_H
 
 //==============================================================================
 
-namespace OpenCOR {
-namespace CellMLSupport {
-
-//==============================================================================
-
-typedef QMap<QString, CellmlFile *> CellmlFiles;
-
-//==============================================================================
-
-class CELLMLSUPPORT_EXPORT CellmlFileManager : public StandardSupport::StandardFileManager
-{
-    Q_OBJECT
-
-public:
-    static CellmlFileManager * instance();
-
-    bool isCellmlFile(const QString &pFileName) const;
-
-    CellmlFile * cellmlFile(const QString &pFileName);
-
-protected:
-    virtual bool canLoadFileContents(const QString &pFileContents) const;
-
-    virtual QObject * newFile(const QString &pFileName) const;
-};
-
-//==============================================================================
-
-}   // namespace CellMLSupport
-}   // namespace OpenCOR
+#if defined(Q_OS_WIN)
+    // Nothing to do...
+#elif defined(Q_OS_LINUX)
+    #pragma GCC diagnostic pop
+#elif defined(Q_OS_MAC)
+    #pragma clang diagnostic pop
+#else
+    #error Unsupported platform
+#endif
 
 //==============================================================================
 

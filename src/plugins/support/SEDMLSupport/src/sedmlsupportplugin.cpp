@@ -16,96 +16,42 @@ specific language governing permissions and limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// CellMLSupport plugin
+// SEDMLSupport plugin
 //==============================================================================
 
-#include "cellmlfilemanager.h"
-#include "cellmlsupportplugin.h"
 #include "corecliutils.h"
 #include "filemanager.h"
+#include "sedmlfilemanager.h"
+#include "sedmlsupportplugin.h"
+
+//==============================================================================
+
+#include <QMainWindow>
 
 //==============================================================================
 
 namespace OpenCOR {
-namespace CellMLSupport {
+namespace SEDMLSupport {
 
 //==============================================================================
 
-PLUGININFO_FUNC CellMLSupportPluginInfo()
+PLUGININFO_FUNC SEDMLSupportPluginInfo()
 {
     Descriptions descriptions;
 
-    descriptions.insert("en", QString::fromUtf8("a plugin to support <a href=\"http://www.cellml.org/\">CellML</a>."));
-    descriptions.insert("fr", QString::fromUtf8("une extension pour supporter <a href=\"http://www.cellml.org/\">CellML</a>."));
+    descriptions.insert("en", QString::fromUtf8("a plugin to support <a href=\"http://www.sed-ml.org/\">SED-ML</a>."));
+    descriptions.insert("fr", QString::fromUtf8("une extension pour supporter <a href=\"http://www.sed-ml.org/\">SED-ML</a>."));
 
     return new PluginInfo(PluginInfo::Support, false, false,
-                          QStringList() << "Core" << "CellMLAPI" << "Compiler" << "CoreSolver" << "StandardSupport",
+                          QStringList() << "Core" << "SEDMLAPI" << "StandardSupport",
                           descriptions);
-}
-
-//==============================================================================
-
-CellMLSupportPlugin::CellMLSupportPlugin()
-{
-    // The file types that we support
-
-    mFileTypes = FileTypes() << new FileType(qobject_cast<FileTypeInterface *>(this),
-                                             CellmlMimeType, CellmlFileExtension);
-}
-
-//==============================================================================
-
-CellMLSupportPlugin::~CellMLSupportPlugin()
-{
-    // Delete some internal objects
-
-    foreach (FileType *fileType, mFileTypes)
-        delete fileType;
-}
-
-//==============================================================================
-// File interface
-//==============================================================================
-
-FileTypes CellMLSupportPlugin::fileTypes() const
-{
-    // Return the file types that we support
-
-    return mFileTypes;
-}
-
-//==============================================================================
-
-QString CellMLSupportPlugin::fileTypeDescription(const QString &pMimeType) const
-{
-    // Return the description for the requested MIME type, that is as long as it
-    // is for the MIME type that we support
-
-    if (!pMimeType.compare(CellmlMimeType))
-        return tr("CellML File");
-    else
-        // Not a MIME type that we can recognise
-
-        return QString();
-}
-
-//==============================================================================
-// I18n interface
-//==============================================================================
-
-void CellMLSupportPlugin::retranslateUi()
-{
-    // We don't handle this interface...
-    // Note: even though we don't handle this interface, we still want to
-    //       support it since some other aspects of our plugin are
-    //       multilingual...
 }
 
 //==============================================================================
 // Plugin interface
 //==============================================================================
 
-void CellMLSupportPlugin::initializePlugin(QMainWindow *pMainWindow)
+void SEDMLSupportPlugin::initializePlugin(QMainWindow *pMainWindow)
 {
     Q_UNUSED(pMainWindow);
 
@@ -114,30 +60,30 @@ void CellMLSupportPlugin::initializePlugin(QMainWindow *pMainWindow)
 
 //==============================================================================
 
-void CellMLSupportPlugin::finalizePlugin()
+void SEDMLSupportPlugin::finalizePlugin()
 {
     // We don't handle this interface...
 }
 
 //==============================================================================
 
-void CellMLSupportPlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
+void SEDMLSupportPlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
 {
     Q_UNUSED(pLoadedPlugins);
 
-    // Make a call to the instance of the CellML file manager so that it gets
-    // properly set up (and therefore can start managing CellML files) before it
+    // Make a call to the instance of the SED-ML file manager so that it gets
+    // properly set up (and therefore can start managing SED-ML files) before it
     // actually gets used by other plugins
     // Note: we do it here rather than in initialize() since we need the Core
     //       plugin to be initialised (so we can get access to our 'global' file
     //       manager)...
 
-    CellmlFileManager::instance();
+    SedmlFileManager::instance();
 }
 
 //==============================================================================
 
-void CellMLSupportPlugin::loadSettings(QSettings *pSettings)
+void SEDMLSupportPlugin::loadSettings(QSettings *pSettings)
 {
     Q_UNUSED(pSettings);
 
@@ -146,7 +92,7 @@ void CellMLSupportPlugin::loadSettings(QSettings *pSettings)
 
 //==============================================================================
 
-void CellMLSupportPlugin::saveSettings(QSettings *pSettings) const
+void SEDMLSupportPlugin::saveSettings(QSettings *pSettings) const
 {
     Q_UNUSED(pSettings);
 
@@ -155,7 +101,7 @@ void CellMLSupportPlugin::saveSettings(QSettings *pSettings) const
 
 //==============================================================================
 
-void CellMLSupportPlugin::handleAction(const QUrl &pUrl)
+void SEDMLSupportPlugin::handleAction(const QUrl &pUrl)
 {
     Q_UNUSED(pUrl);
 
@@ -164,7 +110,7 @@ void CellMLSupportPlugin::handleAction(const QUrl &pUrl)
 
 //==============================================================================
 
-}   // namespace CellMLSupport
+}   // namespace SEDMLSupport
 }   // namespace OpenCOR
 
 //==============================================================================

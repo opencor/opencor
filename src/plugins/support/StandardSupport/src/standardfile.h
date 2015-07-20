@@ -16,49 +16,50 @@ specific language governing permissions and limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// CellML file manager
+// Standard file class
 //==============================================================================
 
-#ifndef CELLMLFILEMANAGER_H
-#define CELLMLFILEMANAGER_H
+#ifndef STANDARDFILE_H
+#define STANDARDFILE_H
 
 //==============================================================================
 
-#include "cellmlfile.h"
-#include "cellmlsupportglobal.h"
-#include "standardfilemanager.h"
+#include "standardsupportglobal.h"
+
+//==============================================================================
+
+#include <QObject>
+#include <QString>
 
 //==============================================================================
 
 namespace OpenCOR {
-namespace CellMLSupport {
+namespace StandardSupport {
 
 //==============================================================================
 
-typedef QMap<QString, CellmlFile *> CellmlFiles;
-
-//==============================================================================
-
-class CELLMLSUPPORT_EXPORT CellmlFileManager : public StandardSupport::StandardFileManager
+class STANDARDSUPPORT_EXPORT StandardFile : public QObject
 {
     Q_OBJECT
 
 public:
-    static CellmlFileManager * instance();
+    explicit StandardFile(const QString &pFileName);
 
-    bool isCellmlFile(const QString &pFileName) const;
+    virtual bool load() = 0;
+    bool reload();
 
-    CellmlFile * cellmlFile(const QString &pFileName);
+    QString fileName() const;
+    void setFileName(const QString &pFileName);
 
 protected:
-    virtual bool canLoadFileContents(const QString &pFileContents) const;
+    QString mFileName;
 
-    virtual QObject * newFile(const QString &pFileName) const;
+    virtual void reset();
 };
 
 //==============================================================================
 
-}   // namespace CellMLSupport
+}   // namespace StandardSupport
 }   // namespace OpenCOR
 
 //==============================================================================

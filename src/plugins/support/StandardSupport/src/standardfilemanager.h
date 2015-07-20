@@ -16,49 +16,64 @@ specific language governing permissions and limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// CellML file manager
+// Standard file manager
 //==============================================================================
 
-#ifndef CELLMLFILEMANAGER_H
-#define CELLMLFILEMANAGER_H
+#ifndef STANDARDFILEMANAGER_H
+#define STANDARDFILEMANAGER_H
 
 //==============================================================================
 
-#include "cellmlfile.h"
-#include "cellmlsupportglobal.h"
-#include "standardfilemanager.h"
+#include "standardfile.h"
+#include "standardsupportglobal.h"
+
+//==============================================================================
+
+#include <QMap>
+#include <QObject>
 
 //==============================================================================
 
 namespace OpenCOR {
-namespace CellMLSupport {
+namespace StandardSupport {
 
 //==============================================================================
 
-typedef QMap<QString, CellmlFile *> CellmlFiles;
+typedef QMap<QString, QObject *> Files;
 
 //==============================================================================
 
-class CELLMLSUPPORT_EXPORT CellmlFileManager : public StandardSupport::StandardFileManager
+class STANDARDSUPPORT_EXPORT StandardFileManager : public QObject
 {
     Q_OBJECT
 
 public:
-    static CellmlFileManager * instance();
+    bool isFile(const QString &pFileName);
 
-    bool isCellmlFile(const QString &pFileName) const;
-
-    CellmlFile * cellmlFile(const QString &pFileName);
+    QObject * file(const QString &pFileName);
 
 protected:
-    virtual bool canLoadFileContents(const QString &pFileContents) const;
+    Files mFiles;
 
-    virtual QObject * newFile(const QString &pFileName) const;
+    explicit StandardFileManager();
+    ~StandardFileManager();
+
+    virtual bool canLoadFileContents(const QString &pFileContents) const = 0;
+
+    virtual QObject * newFile(const QString &pFileName) const = 0;
+
+private Q_SLOTS:
+    void manageFile(const QString &pFileName);
+    void unmanageFile(const QString &pFileName);
+
+    void reloadFile(const QString &pFileName);
+
+    void renameFile(const QString &pOldFileName, const QString &pNewFileName);
 };
 
 //==============================================================================
 
-}   // namespace CellMLSupport
+}   // namespace StandardSupport
 }   // namespace OpenCOR
 
 //==============================================================================

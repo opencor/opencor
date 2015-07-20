@@ -16,85 +16,81 @@ specific language governing permissions and limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// CellML file manager
+// SED-ML file manager
 //==============================================================================
 
-#include "cellmlfilemanager.h"
 #include "corecliutils.h"
 #include "filemanager.h"
+#include "sedmlfilemanager.h"
+#include "sedmlsupportplugin.h"
 
 //==============================================================================
 
-#include "cellmlapidisablewarnings.h"
-    #include "CellMLBootstrap.hpp"
-#include "cellmlapienablewarnings.h"
+#include "sedmlapidisablewarnings.h"
+    #include "sedml/SedDocument.h"
+    #include "sedml/SedReader.h"
+#include "sedmlapienablewarnings.h"
 
 //==============================================================================
 
 namespace OpenCOR {
-namespace CellMLSupport {
+namespace SEDMLSupport {
 
 //==============================================================================
 
-CellmlFileManager * CellmlFileManager::instance()
+SedmlFileManager * SedmlFileManager::instance()
 {
-    // Return the 'global' instance of our CellML file manager class
+    // Return the 'global' instance of our SED-ML file manager class
 
-    static CellmlFileManager instance;
+    static SedmlFileManager instance;
 
-    return static_cast<CellmlFileManager *>(Core::globalInstance("OpenCOR::CellMLSupport::CellmlFileManager",
-                                                                 &instance));
+    return static_cast<SedmlFileManager *>(Core::globalInstance("OpenCOR::SEDMLSupport::SedmlFileManager",
+                                                                &instance));
 }
 
 //==============================================================================
 
-bool CellmlFileManager::isCellmlFile(const QString &pFileName) const
+bool SedmlFileManager::isSedmlFile(const QString &pFileName) const
 {
-    // Return whether the given file is a CellML file
+    // Return whether the given file is a SED-ML file
 
     return instance()->isFile(pFileName);
 }
 
 //==============================================================================
 
-CellmlFile * CellmlFileManager::cellmlFile(const QString &pFileName)
+SedmlFile * SedmlFileManager::sedmlFile(const QString &pFileName)
 {
-    // Return the CellmlFile object, if any, associated with the given file
+    // Return the SedmlFile object, if any, associated with the given file
 
-    return qobject_cast<CellMLSupport::CellmlFile *>(instance()->file(pFileName));
+    return qobject_cast<SEDMLSupport::SedmlFile *>(instance()->file(pFileName));
 }
 
 //==============================================================================
 
-bool CellmlFileManager::canLoadFileContents(const QString &pFileContents) const
+bool SedmlFileManager::canLoadFileContents(const QString &pFileContents) const
 {
-    // Try to load the CellML file contents
+    // Try to load the SED-ML file contents
 
-    ObjRef<iface::cellml_api::CellMLBootstrap> cellmlBootstrap = CreateCellMLBootstrap();
-    ObjRef<iface::cellml_api::DOMModelLoader> modelLoader = cellmlBootstrap->modelLoader();
-    ObjRef<iface::cellml_api::Model> model;
+    QByteArray fileContentsByteArray = pFileContents.toUtf8();
 
-    try {
-        model = modelLoader->createFromText(pFileContents.toStdWString());
+    libsedml::SedDocument *sedmlDocument = libsedml::readSedML(fileContentsByteArray.constData());
 
-        return true;
-    } catch (iface::cellml_api::CellMLException &) {
-        return false;
-    }
+    return sedmlDocument->getNumErrors(libsedml::LIBSEDML_SEV_ERROR) == 0;
 }
 
 //==============================================================================
 
-QObject * CellmlFileManager::newFile(const QString &pFileName) const
+QObject * SedmlFileManager::newFile(const QString &pFileName) const
 {
     // Create and return a new SED-ML file
 
-    return new CellmlFile(Core::nativeCanonicalFileName(pFileName));
+    return new SedmlFile(Core::nativeCanonicalFileName(pFileName));
 }
 
 //==============================================================================
 
-}   // namespace CellMLSupport
+}   // namespace SEDMLSupport
 }   // namespace OpenCOR
 
 //==============================================================================

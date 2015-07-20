@@ -71,10 +71,6 @@ private:
 
 //==============================================================================
 
-bool CELLMLSUPPORT_EXPORT isCellmlFile(const QString &pFileName);
-
-//==============================================================================
-
 }   // namespace CellMLSupport
 }   // namespace OpenCOR
 

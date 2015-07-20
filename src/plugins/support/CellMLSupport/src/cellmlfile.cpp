@@ -71,7 +71,7 @@ namespace CellMLSupport {
 //==============================================================================
 
 CellmlFile::CellmlFile(const QString &pFileName) :
-    mFileName(Core::nativeCanonicalFileName(pFileName)),
+    StandardSupport::StandardFile(pFileName),
     mModel(0),
     mRdfApiRepresentation(0),
     mRdfDataSource(0),
@@ -449,19 +449,6 @@ bool CellmlFile::load()
 
 //==============================================================================
 
-bool CellmlFile::reload()
-{
-    // We want to reload the file, so we must first reset everything
-
-    reset();
-
-    // Now, we can try to (re)load the file
-
-    return load();
-}
-
-//==============================================================================
-
 bool CellmlFile::save(const QString &pNewFileName)
 {
     // Check whether the file needs loading or contains issues
@@ -785,24 +772,6 @@ CellmlFileRuntime * CellmlFile::runtime()
     } else {
         return 0;
     }
-}
-
-//==============================================================================
-
-QString CellmlFile::fileName() const
-{
-    // Return the CellML file's file name
-
-    return mFileName;
-}
-
-//==============================================================================
-
-void CellmlFile::setFileName(const QString &pFileName)
-{
-    // Set the CellML file's file name
-
-    mFileName = pFileName;
 }
 
 //==============================================================================

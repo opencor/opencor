@@ -16,50 +16,25 @@ specific language governing permissions and limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// CellML file manager
+// SED-ML API disable warnings
 //==============================================================================
 
-#ifndef CELLMLFILEMANAGER_H
-#define CELLMLFILEMANAGER_H
-
-//==============================================================================
-
-#include "cellmlfile.h"
-#include "cellmlsupportglobal.h"
-#include "standardfilemanager.h"
+#if !defined(SEDMLAPIENABLEWARNINGS_H) && !defined(SEDMLAPIDISABLEWARNINGS_H)
+#define SEDMLAPIDISABLEWARNINGS_H
 
 //==============================================================================
 
-namespace OpenCOR {
-namespace CellMLSupport {
-
-//==============================================================================
-
-typedef QMap<QString, CellmlFile *> CellmlFiles;
-
-//==============================================================================
-
-class CELLMLSUPPORT_EXPORT CellmlFileManager : public StandardSupport::StandardFileManager
-{
-    Q_OBJECT
-
-public:
-    static CellmlFileManager * instance();
-
-    bool isCellmlFile(const QString &pFileName) const;
-
-    CellmlFile * cellmlFile(const QString &pFileName);
-
-protected:
-    virtual bool canLoadFileContents(const QString &pFileContents) const;
-
-    virtual QObject * newFile(const QString &pFileName) const;
-};
-
-//==============================================================================
-
-}   // namespace CellMLSupport
-}   // namespace OpenCOR
+#if defined(Q_OS_WIN)
+    // Nothing to do...
+#elif defined(Q_OS_LINUX)
+    #pragma GCC diagnostic push
+    #pragma GCC diagnostic ignored "-Wignored-qualifiers"
+#elif defined(Q_OS_MAC)
+    #pragma clang diagnostic push
+    #pragma clang diagnostic ignored "-Wignored-qualifiers"
+#else
+    #error Unsupported platform
+#endif
 
 //==============================================================================
 

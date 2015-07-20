@@ -16,49 +16,38 @@ specific language governing permissions and limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// CellML file manager
+// StandardSupport plugin
 //==============================================================================
 
-#ifndef CELLMLFILEMANAGER_H
-#define CELLMLFILEMANAGER_H
+#ifndef STANDARDSUPPORTPLUGIN_H
+#define STANDARDSUPPORTPLUGIN_H
 
 //==============================================================================
 
-#include "cellmlfile.h"
-#include "cellmlsupportglobal.h"
-#include "standardfilemanager.h"
+#include "plugininfo.h"
+#include "standardsupportglobal.h"
 
 //==============================================================================
 
 namespace OpenCOR {
-namespace CellMLSupport {
+namespace StandardSupport {
 
 //==============================================================================
 
-typedef QMap<QString, CellmlFile *> CellmlFiles;
+PLUGININFO_FUNC StandardSupportPluginInfo();
 
 //==============================================================================
 
-class CELLMLSUPPORT_EXPORT CellmlFileManager : public StandardSupport::StandardFileManager
+class StandardSupportPlugin : public QObject
 {
     Q_OBJECT
 
-public:
-    static CellmlFileManager * instance();
-
-    bool isCellmlFile(const QString &pFileName) const;
-
-    CellmlFile * cellmlFile(const QString &pFileName);
-
-protected:
-    virtual bool canLoadFileContents(const QString &pFileContents) const;
-
-    virtual QObject * newFile(const QString &pFileName) const;
+    Q_PLUGIN_METADATA(IID "OpenCOR.StandardSupportPlugin" FILE "standardsupportplugin.json")
 };
 
 //==============================================================================
 
-}   // namespace CellMLSupport
+}   // namespace StandardSupport
 }   // namespace OpenCOR
 
 //==============================================================================

@@ -16,49 +16,44 @@ specific language governing permissions and limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// CellML file manager
+// SEDMLSupport plugin
 //==============================================================================
 
-#ifndef CELLMLFILEMANAGER_H
-#define CELLMLFILEMANAGER_H
+#ifndef SEDMLSUPPORTPLUGIN_H
+#define SEDMLSUPPORTPLUGIN_H
 
 //==============================================================================
 
-#include "cellmlfile.h"
-#include "cellmlsupportglobal.h"
-#include "standardfilemanager.h"
+#include "sedmlsupportglobal.h"
+#include "plugininfo.h"
+#include "plugininterface.h"
 
 //==============================================================================
 
 namespace OpenCOR {
-namespace CellMLSupport {
+namespace SEDMLSupport {
 
 //==============================================================================
 
-typedef QMap<QString, CellmlFile *> CellmlFiles;
+PLUGININFO_FUNC SEDMLSupportPluginInfo();
 
 //==============================================================================
 
-class CELLMLSUPPORT_EXPORT CellmlFileManager : public StandardSupport::StandardFileManager
+class SEDMLSupportPlugin : public QObject, public PluginInterface
 {
     Q_OBJECT
 
+    Q_PLUGIN_METADATA(IID "OpenCOR.SEDMLSupportPlugin" FILE "sedmlsupportplugin.json")
+
+    Q_INTERFACES(OpenCOR::PluginInterface)
+
 public:
-    static CellmlFileManager * instance();
-
-    bool isCellmlFile(const QString &pFileName) const;
-
-    CellmlFile * cellmlFile(const QString &pFileName);
-
-protected:
-    virtual bool canLoadFileContents(const QString &pFileContents) const;
-
-    virtual QObject * newFile(const QString &pFileName) const;
+#include "plugininterface.inl"
 };
 
 //==============================================================================
 
-}   // namespace CellMLSupport
+}   // namespace SEDMLSupport
 }   // namespace OpenCOR
 
 //==============================================================================

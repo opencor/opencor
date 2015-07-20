@@ -16,49 +16,41 @@ specific language governing permissions and limitations under the License.
 *******************************************************************************/
 
 //==============================================================================
-// CellML file manager
+// SED-ML file class
 //==============================================================================
 
-#ifndef CELLMLFILEMANAGER_H
-#define CELLMLFILEMANAGER_H
+#ifndef SEDMLFILE_H
+#define SEDMLFILE_H
 
 //==============================================================================
 
-#include "cellmlfile.h"
-#include "cellmlsupportglobal.h"
-#include "standardfilemanager.h"
+#include "sedmlsupportglobal.h"
+#include "standardfile.h"
+
+//==============================================================================
+
+#include <QString>
 
 //==============================================================================
 
 namespace OpenCOR {
-namespace CellMLSupport {
+namespace SEDMLSupport {
 
 //==============================================================================
 
-typedef QMap<QString, CellmlFile *> CellmlFiles;
-
-//==============================================================================
-
-class CELLMLSUPPORT_EXPORT CellmlFileManager : public StandardSupport::StandardFileManager
+class SEDMLSUPPORT_EXPORT SedmlFile : public StandardSupport::StandardFile
 {
     Q_OBJECT
 
 public:
-    static CellmlFileManager * instance();
+    explicit SedmlFile(const QString &pFileName);
 
-    bool isCellmlFile(const QString &pFileName) const;
-
-    CellmlFile * cellmlFile(const QString &pFileName);
-
-protected:
-    virtual bool canLoadFileContents(const QString &pFileContents) const;
-
-    virtual QObject * newFile(const QString &pFileName) const;
+    virtual bool load();
 };
 
 //==============================================================================
 
-}   // namespace CellMLSupport
+}   // namespace SEDMLSupport
 }   // namespace OpenCOR
 
 //==============================================================================

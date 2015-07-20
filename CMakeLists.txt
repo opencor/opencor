@@ -243,6 +243,8 @@ SET(PLUGINS
 
     solver/CoreSolver
 
+    support/StandardSupport
+
     thirdParty/libgit2
     thirdParty/LLVM
     thirdParty/QScintilla
@@ -257,6 +259,7 @@ SET(PLUGINS
 
     support/CellMLSupport
     support/QScintillaSupport
+    support/SEDMLSupport
 
     # Plugins that extend some libraries (incl. third-party ones)
 
