@@ -27,7 +27,9 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-#include "sedml/common/libsedml-version.h"
+#include "sedmlapidisablewarnings.h"
+    #include "sedml/common/libsedml-version.h"
+#include "sedmlapienablewarnings.h"
 
 //==============================================================================
 
