@@ -483,5 +483,13 @@
         <source>Clear the simulation data</source>
         <translation>Supprimer les données de la simulation</translation>
     </message>
+    <message>
+        <source>SED-ML Export</source>
+        <translation>Exporter Vers SED-ML</translation>
+    </message>
+    <message>
+        <source>Export the simulation to SED-ML</source>
+        <translation>Exporter la simulation vers SED-ML</translation>
+    </message>
 </context>
 </TS>

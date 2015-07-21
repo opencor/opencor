@@ -178,6 +178,8 @@ SingleCellViewWidget::SingleCellViewWidget(SingleCellViewPlugin *pPluginParent,
     mToolBarWidget->addWidget(removeGraphPanelToolButton);
     mToolBarWidget->addSeparator();
     mToolBarWidget->addWidget(simulationDataExportToolButton);
+    mToolBarWidget->addSeparator();
+    mToolBarWidget->addAction(mGui->actionSedmlExport);
 
     mTopSeparator = Core::newLineWidget(this);
 

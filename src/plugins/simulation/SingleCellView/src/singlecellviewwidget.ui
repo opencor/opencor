@@ -139,9 +139,22 @@
     <string>Export the simulation data</string>
    </property>
   </action>
+  <action name="actionSedmlExport">
+   <property name="icon">
+    <iconset resource="../../../support/SEDMLSupport/res/SEDMLSupport.qrc">
+     <normaloff>:/sedmlLogo.png</normaloff>:/sedmlLogo.png</iconset>
+   </property>
+   <property name="text">
+    <string>SED-ML Export</string>
+   </property>
+   <property name="statusTip">
+    <string>Export the simulation to SED-ML</string>
+   </property>
+  </action>
  </widget>
  <resources>
   <include location="../res/SingleCellView.qrc"/>
+  <include location="../../../support/SEDMLSupport/res/SEDMLSupport.qrc"/>
  </resources>
  <connections/>
 </ui>

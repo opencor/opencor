@@ -1,10 +1,11 @@
 PROJECT(SingleCellViewPlugin)
 
-# Retrieve some CellML API and LLVM settings
+# Retrieve some CellML API, LLVM, Qwt and SED-ML API settings
 
 RETRIEVE_CELLML_API_SETTINGS()
 RETRIEVE_LLVM_SETTINGS()
 RETRIEVE_QWT_SETTINGS()
+RETRIEVE_SEDML_API_SETTINGS()
 
 # Add the plugin
 
@@ -65,9 +66,12 @@ ADD_PLUGIN(SingleCellView
         CoreSolver
         ${LLVM_PLUGIN}
         ${QWT_PLUGIN}
+        SEDMLAPI
+        SEDMLSupport
     PLUGIN_BINARIES
         ${LLVM_PLUGIN_BINARY}
         ${QWT_PLUGIN_BINARY}
     EXTERNAL_BINARIES
         ${CELLML_API_EXTERNAL_BINARIES}
+        ${SEDML_API_EXTERNAL_BINARIES}
 )
