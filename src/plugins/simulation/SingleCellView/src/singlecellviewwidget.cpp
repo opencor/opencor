@@ -1243,6 +1243,23 @@ void SingleCellViewWidget::on_actionRemoveAllGraphPanels_triggered()
 
 //==============================================================================
 
+void SingleCellViewWidget::on_actionSedmlExport_triggered()
+{
+    // Export ourselves to SED-ML
+
+    QString fileName = Core::getSaveFileName(QObject::tr("Export to a SED-ML file"),
+                                             QString(),
+                                             QObject::tr("SED-ML File")+" (*.xml)");
+
+    if (!fileName.isEmpty()) {
+        // The data is ready, so write it to the file
+
+        Core::writeTextToFile(fileName, QString());
+    }
+}
+
+//==============================================================================
+
 void SingleCellViewWidget::initializeSolversProperties(SingleCellViewInformationSolversWidgetData *pSolverData)
 {
     // Make sure that we have a simulation object

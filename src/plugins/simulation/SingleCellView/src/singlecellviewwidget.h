@@ -231,6 +231,8 @@ private Q_SLOTS:
     void on_actionRemoveCurrentGraphPanel_triggered();
     void on_actionRemoveAllGraphPanels_triggered();
 
+    void on_actionSedmlExport_triggered();
+
     void simulationDataExport();
 
     void updateDelayValue(const double &pDelayValue);
