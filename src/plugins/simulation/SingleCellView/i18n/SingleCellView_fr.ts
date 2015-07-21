@@ -316,6 +316,17 @@
     </message>
 </context>
 <context>
+    <name>QObject</name>
+    <message>
+        <source>Export to a SED-ML file</source>
+        <translation>Exporter vers un fichier SED-ML</translation>
+    </message>
+    <message>
+        <source>SED-ML File</source>
+        <translation>Fichier SED-ML</translation>
+    </message>
+</context>
+<context>
     <name>SingleCellViewGraphPanelPlotWidget</name>
     <message>
         <source>Copy To Clipboard</source>
