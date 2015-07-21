@@ -276,11 +276,9 @@ void PhysiomeModelRepositoryWindowWindow::finished(QNetworkReply *pNetworkReply)
     PmrRequest pmrRequest = PmrRequest(pNetworkReply->property(PmrRequestProperty).toInt());
 
     PhysiomeModelRepositoryWindowExposures exposures = PhysiomeModelRepositoryWindowExposures();
-    QString errorMessage = QString();
-
-    QStringList bookmarkUrls = QStringList();
-
     QString exposureFile = QString();
+    QString errorMessage = QString();
+    QStringList bookmarkUrls = QStringList();
 
     if (pNetworkReply->error() == QNetworkReply::NoError) {
         // Parse the JSON data
@@ -394,10 +392,8 @@ void PhysiomeModelRepositoryWindowWindow::finished(QNetworkReply *pNetworkReply)
 
         // Clone the workspace, if possible and requested
 
-        if (    !mNumberOfExposureFilesLeft
-            && (pmrRequest == ExposureFileForCloning)) {
-                cloneWorkspace(mWorkspaces.value(url));
-        }
+        if (!mNumberOfExposureFilesLeft && (pmrRequest == ExposureFileForCloning))
+            cloneWorkspace(mWorkspaces.value(url));
 
         break;
     }
