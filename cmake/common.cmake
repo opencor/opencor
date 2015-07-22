@@ -56,14 +56,6 @@ MACRO(INITIALISE_PROJECT)
         SET(RELEASE_MODE TRUE)
     ENDIF()
 
-    # Determine the effective build directory
-
-    SET(PROJECT_BUILD_DIR ${CMAKE_BINARY_DIR})
-
-    IF(NOT "${CMAKE_CFG_INTDIR}" STREQUAL ".")
-        SET(PROJECT_BUILD_DIR ${PROJECT_BUILD_DIR}/${CMAKE_CFG_INTDIR})
-    ENDIF()
-
     # Required packages
 
     IF(APPLE)
@@ -253,9 +245,9 @@ MACRO(INITIALISE_PROJECT)
     # Windows and Linux before being able to test it
 
     IF(APPLE)
-        SET(DEST_PLUGINS_DIR ${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME}.app/Contents/PlugIns/${CMAKE_PROJECT_NAME})
+        SET(DEST_PLUGINS_DIR ${CMAKE_BINARY_DIR}/${CMAKE_PROJECT_NAME}.app/Contents/PlugIns/${CMAKE_PROJECT_NAME})
     ELSE()
-        SET(DEST_PLUGINS_DIR ${PROJECT_BUILD_DIR}/plugins/${CMAKE_PROJECT_NAME})
+        SET(DEST_PLUGINS_DIR ${CMAKE_BINARY_DIR}/plugins/${CMAKE_PROJECT_NAME})
     ENDIF()
 
     # Default location of external dependencies
@@ -525,7 +517,7 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
         SET(DEST_EXTERNAL_BINARIES_DIR lib)
     ENDIF()
 
-    SET(FULL_DEST_EXTERNAL_BINARIES_DIR ${PROJECT_BUILD_DIR}/${DEST_EXTERNAL_BINARIES_DIR})
+    SET(FULL_DEST_EXTERNAL_BINARIES_DIR ${CMAKE_BINARY_DIR}/${DEST_EXTERNAL_BINARIES_DIR})
 
     IF(NOT EXISTS ${FULL_DEST_EXTERNAL_BINARIES_DIR})
         FILE(MAKE_DIRECTORY ${FULL_DEST_EXTERNAL_BINARIES_DIR})
@@ -571,10 +563,6 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
 
     STRING(REPLACE "${${CMAKE_PROJECT_NAME}_SOURCE_DIR}/" "" PLUGIN_BUILD_DIR ${PROJECT_SOURCE_DIR})
     SET(PLUGIN_BUILD_DIR ${CMAKE_BINARY_DIR}/${PLUGIN_BUILD_DIR})
-
-    IF(NOT "${CMAKE_CFG_INTDIR}" STREQUAL ".")
-        SET(PLUGIN_BUILD_DIR ${PLUGIN_BUILD_DIR}/${CMAKE_CFG_INTDIR})
-    ENDIF()
 
     # Copy the plugin to our plugins directory
     # Note: this is done so that we can, on Windows and Linux, test the use of
@@ -868,11 +856,11 @@ MACRO(COPY_FILE_TO_BUILD_DIR PROJECT_TARGET ORIG_DIRNAME DEST_DIRNAME FILENAME)
     IF("${ARGN}" STREQUAL "")
         IF("${PROJECT_TARGET}" STREQUAL "DIRECT_COPY")
             EXECUTE_PROCESS(COMMAND ${CMAKE_COMMAND} -E copy ${ORIG_DIRNAME}/${FILENAME}
-                                                             ${PROJECT_BUILD_DIR}/${DEST_DIRNAME}/${FILENAME})
+                                                             ${CMAKE_BINARY_DIR}/${DEST_DIRNAME}/${FILENAME})
         ELSE()
             ADD_CUSTOM_COMMAND(TARGET ${PROJECT_TARGET} POST_BUILD
                                COMMAND ${CMAKE_COMMAND} -E copy ${ORIG_DIRNAME}/${FILENAME}
-                                                                ${PROJECT_BUILD_DIR}/${DEST_DIRNAME}/${FILENAME})
+                                                                ${CMAKE_BINARY_DIR}/${DEST_DIRNAME}/${FILENAME})
         ENDIF()
     ELSE()
         # An argument was passed so use it to rename the file, which is to be
@@ -880,11 +868,11 @@ MACRO(COPY_FILE_TO_BUILD_DIR PROJECT_TARGET ORIG_DIRNAME DEST_DIRNAME FILENAME)
 
         IF("${PROJECT_TARGET}" STREQUAL "DIRECT_COPY")
             EXECUTE_PROCESS(COMMAND ${CMAKE_COMMAND} -E copy ${ORIG_DIRNAME}/${FILENAME}
-                                                             ${PROJECT_BUILD_DIR}/${DEST_DIRNAME}/${ARGN})
+                                                             ${CMAKE_BINARY_DIR}/${DEST_DIRNAME}/${ARGN})
         ELSE()
             ADD_CUSTOM_COMMAND(TARGET ${PROJECT_TARGET} POST_BUILD
                                COMMAND ${CMAKE_COMMAND} -E copy ${ORIG_DIRNAME}/${FILENAME}
-                                                                ${PROJECT_BUILD_DIR}/${DEST_DIRNAME}/${ARGN})
+                                                                ${CMAKE_BINARY_DIR}/${DEST_DIRNAME}/${ARGN})
         ENDIF()
     ENDIF()
 ENDMACRO()
@@ -1092,7 +1080,7 @@ MACRO(OS_X_DEPLOY_QT_LIBRARIES)
         SET(QT_FRAMEWORK_DIR ${LIBRARY_NAME}.framework/Versions/${QT_VERSION_MAJOR})
 
         OS_X_DEPLOY_QT_FILE(${QT_LIBRARY_DIR}/${QT_FRAMEWORK_DIR}
-                            ${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME}.app/Contents/Frameworks/${QT_FRAMEWORK_DIR}
+                            ${CMAKE_BINARY_DIR}/${CMAKE_PROJECT_NAME}.app/Contents/Frameworks/${QT_FRAMEWORK_DIR}
                             ${LIBRARY_NAME})
     ENDFOREACH()
 ENDMACRO()
@@ -1104,7 +1092,7 @@ MACRO(OS_X_DEPLOY_QT_PLUGIN PLUGIN_CATEGORY)
         # Deploy the Qt plugin
 
         OS_X_DEPLOY_QT_FILE(${QT_PLUGINS_DIR}/${PLUGIN_CATEGORY}
-                            ${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME}.app/Contents/PlugIns/${PLUGIN_CATEGORY}
+                            ${CMAKE_BINARY_DIR}/${CMAKE_PROJECT_NAME}.app/Contents/PlugIns/${PLUGIN_CATEGORY}
                             ${CMAKE_SHARED_LIBRARY_PREFIX}${PLUGIN_NAME}${CMAKE_SHARED_LIBRARY_SUFFIX})
     ENDFOREACH()
 ENDMACRO()
@@ -1114,7 +1102,7 @@ ENDMACRO()
 MACRO(OS_X_DEPLOY_LIBRARY DIRNAME LIBRARY_NAME)
     # Strip the library of all its local symbols
 
-    SET(LIBRARY_FILEPATH ${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME}.app/Contents/Frameworks/${CMAKE_SHARED_LIBRARY_PREFIX}${LIBRARY_NAME}${CMAKE_SHARED_LIBRARY_SUFFIX})
+    SET(LIBRARY_FILEPATH ${CMAKE_BINARY_DIR}/${CMAKE_PROJECT_NAME}.app/Contents/Frameworks/${CMAKE_SHARED_LIBRARY_PREFIX}${LIBRARY_NAME}${CMAKE_SHARED_LIBRARY_SUFFIX})
 
     IF(RELEASE_MODE)
         ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD

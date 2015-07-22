@@ -172,7 +172,7 @@ ENDIF()
 IF(ENABLE_TESTS)
     # 'Reset' our list of tests
 
-    SET(TESTS_LIST_FILENAME ${PROJECT_BUILD_DIR}/tests.txt)
+    SET(TESTS_LIST_FILENAME ${CMAKE_BINARY_DIR}/tests.txt)
 
     FILE(WRITE ${TESTS_LIST_FILENAME})
 
@@ -181,9 +181,9 @@ IF(ENABLE_TESTS)
     #       macro...
 
     IF(APPLE)
-        SET(DEST_TESTS_DIR ${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME}.app/Contents/MacOS)
+        SET(DEST_TESTS_DIR ${CMAKE_BINARY_DIR}/${CMAKE_PROJECT_NAME}.app/Contents/MacOS)
     ELSE()
-        SET(DEST_TESTS_DIR ${PROJECT_BUILD_DIR}/bin)
+        SET(DEST_TESTS_DIR ${CMAKE_BINARY_DIR}/bin)
     ENDIF()
 
     # Build our main test program
@@ -406,7 +406,7 @@ IF(APPLE)
 
     # Clean up the OpenCOR executable
 
-    OS_X_CLEAN_UP_FILE_WITH_QT_LIBRARIES(${PROJECT_NAME} ${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME}.app/Contents/MacOS ${PROJECT_NAME})
+    OS_X_CLEAN_UP_FILE_WITH_QT_LIBRARIES(${PROJECT_NAME} ${CMAKE_BINARY_DIR}/${CMAKE_PROJECT_NAME}.app/Contents/MacOS ${PROJECT_NAME})
 
     # Deploy our Qt libraries
 
@@ -421,7 +421,7 @@ IF(APPLE)
 ELSE()
     # Copy the GUI version of the OpenCOR executable to the build/bin folder
 
-    COPY_FILE_TO_BUILD_DIR(${PROJECT_NAME} ${PROJECT_BUILD_DIR} bin
+    COPY_FILE_TO_BUILD_DIR(${PROJECT_NAME} ${CMAKE_BINARY_DIR} bin
                            ${PROJECT_NAME}${CMAKE_EXECUTABLE_SUFFIX})
 
     IF(WIN32)
@@ -430,9 +430,9 @@ ELSE()
         # Note: the idea is that, on Windows, we can test both the CLI and the
         #       GUI versions of OpenCOR from either build or build/bin...
 
-        COPY_FILE_TO_BUILD_DIR(${WINDOWS_CLI_PROJECT_NAME} ${PROJECT_BUILD_DIR} .
+        COPY_FILE_TO_BUILD_DIR(${WINDOWS_CLI_PROJECT_NAME} ${CMAKE_BINARY_DIR} .
                                ${WINDOWS_CLI_PROJECT_NAME}${CMAKE_EXECUTABLE_SUFFIX} ${PROJECT_NAME}.com)
-        COPY_FILE_TO_BUILD_DIR(${WINDOWS_CLI_PROJECT_NAME} ${PROJECT_BUILD_DIR} bin
+        COPY_FILE_TO_BUILD_DIR(${WINDOWS_CLI_PROJECT_NAME} ${CMAKE_BINARY_DIR} bin
                                ${WINDOWS_CLI_PROJECT_NAME}${CMAKE_EXECUTABLE_SUFFIX} ${PROJECT_NAME}.com)
 
         # Additional files required by OpenCOR
@@ -559,7 +559,7 @@ IF(WIN32)
     # Install both the GUI and CLI versions of OpenCOR
 
     INSTALL(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION bin)
-    INSTALL(FILES ${PROJECT_BUILD_DIR}/bin/${PROJECT_NAME}.com
+    INSTALL(FILES ${CMAKE_BINARY_DIR}/bin/${PROJECT_NAME}.com
             DESTINATION bin)
 
     # Additional files required by OpenCOR
