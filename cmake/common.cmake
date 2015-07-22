@@ -1063,7 +1063,7 @@ MESSAGE("     ${REAL_QT_LIBRARY_DIR}/${REAL_QT_LIBRARY_FILENAME} ---> @rpath/${R
                                                                  ${FULL_FILENAME})
             ADD_CUSTOM_COMMAND(TARGET ${PROJECT_TARGET} POST_BUILD
                                COMMAND install_name_tool -change ${REAL_QT_LIBRARY_DIR}/${REAL_QT_LIBRARY_FILENAME}
-                                                                 @rpath/${REAL_QT_LIBRARY_FILENAME}
+                                                                 @rpath/${QT_LIBRARY_FILENAME}
                                                                  ${FULL_FILENAME})
         ENDFOREACH()
     ENDIF()
