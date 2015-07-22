@@ -412,10 +412,6 @@ IF(APPLE)
 
     OS_X_DEPLOY_QT_LIBRARIES(${OS_X_QT_LIBRARIES})
 
-    IF(ENABLE_TESTS)
-        OS_X_DEPLOY_QT_LIBRARIES(QtTest)
-    ENDIF()
-
     # Deploy some plugins
 
     OS_X_DEPLOY_QT_PLUGIN(imageformats qjpeg)

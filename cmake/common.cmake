@@ -110,6 +110,12 @@ MACRO(INITIALISE_PROJECT)
     #       (see OS_X_CLEAN_UP_FILE_WITH_QT_LIBRARIES())...
 
     IF(APPLE)
+        IF(ENABLE_TESTS)
+            SET(QT_TEST QtTest)
+        ELSE()
+            SET(QT_TEST)
+        ENDIF()
+
         SET(OS_X_QT_LIBRARIES
             QtCLucene
             QtConcurrent
@@ -129,6 +135,7 @@ MACRO(INITIALISE_PROJECT)
             QtSensors
             QtSql
             QtSvg
+            ${QT_TEST}
             QtWebChannel
             QtWebKit
             QtWebKitWidgets
@@ -1045,17 +1052,18 @@ MESSAGE("---------[${PROJECT_TARGET}]---------")
 
         FOREACH(QT_LIBRARY ${OS_X_QT_LIBRARIES})
             SET(QT_LIBRARY_FILENAME ${QT_LIBRARY}.framework/Versions/${QT_VERSION_MAJOR}/${QT_LIBRARY})
+            SET(REAL_QT_LIBRARY_FILENAME ${QT_LIBRARY}.framework/${QT_LIBRARY})
 MESSAGE("===> ${QT_LIBRARY}")
 MESSAGE("     ${QT_LIBRARY_DIR}/${QT_LIBRARY_FILENAME} ---> @rpath/${QT_LIBRARY_FILENAME}")
-MESSAGE("     ${REAL_QT_LIBRARY_DIR}/${QT_LIBRARY_FILENAME} ---> @rpath/${QT_LIBRARY_FILENAME}")
+MESSAGE("     ${REAL_QT_LIBRARY_DIR}/${REAL_QT_LIBRARY_FILENAME} ---> @rpath/${REAL_QT_LIBRARY_FILENAME}")
 
             ADD_CUSTOM_COMMAND(TARGET ${PROJECT_TARGET} POST_BUILD
                                COMMAND install_name_tool -change ${QT_LIBRARY_DIR}/${QT_LIBRARY_FILENAME}
                                                                  @rpath/${QT_LIBRARY_FILENAME}
                                                                  ${FULL_FILENAME})
             ADD_CUSTOM_COMMAND(TARGET ${PROJECT_TARGET} POST_BUILD
-                               COMMAND install_name_tool -change ${REAL_QT_LIBRARY_DIR}/${QT_LIBRARY_FILENAME}
-                                                                 @rpath/${QT_LIBRARY_FILENAME}
+                               COMMAND install_name_tool -change ${REAL_QT_LIBRARY_DIR}/${REAL_QT_LIBRARY_FILENAME}
+                                                                 @rpath/${REAL_QT_LIBRARY_FILENAME}
                                                                  ${FULL_FILENAME})
         ENDFOREACH()
     ENDIF()
