@@ -39,7 +39,7 @@ void Tests::basicTests()
 
     QCOMPARE(libsbml::getLibSBMLDottedVersion(), "5.11.4");
 
-    // Check aginast which libraries libSBML has been compiled
+    // Check against which libraries libSBML has been compiled
 
     QVERIFY( libsbml::isLibSBMLCompiledWith("bzip2"));
     QVERIFY(!libsbml::isLibSBMLCompiledWith("expat"));
