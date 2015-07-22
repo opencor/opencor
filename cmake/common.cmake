@@ -604,7 +604,7 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
         ENDFOREACH()
     ENDIF()
 
-    # Package the plugin, but only if we are not on OS X since it will  have
+    # Package the plugin, but only if we are not on OS X since it will have
     # already been copied
 
     IF(NOT APPLE)
