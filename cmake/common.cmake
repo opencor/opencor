@@ -104,12 +104,39 @@ MACRO(INITIALISE_PROJECT)
     SET(QT_VERSION_MINOR ${Qt5Widgets_VERSION_MINOR})
     SET(QT_VERSION_PATCH ${Qt5Widgets_VERSION_PATCH})
 
-    # Retrieve the real path of the Qt library directory
-    # Note: on Travis CI, QT_LIBRARY_DIR points to a symbolic path. That
-    #       symbolic path is used by some libraries while others use the real
-    #       path instead. So, we need to know about both...
+    # On OS X, keep track of the Qt libraries against which we need to link
+    # Note: this is needed, among other things, to make sure that any Qt-based
+    #       file can properly refer to our embedded copy of the Qt libraries
+    #       (see OS_X_CLEAN_UP_FILE_WITH_QT_LIBRARIES())...
 
-    GET_FILENAME_COMPONENT(REAL_QT_LIBRARY_DIR ${QT_LIBRARY_DIR} REALPATH)
+    IF(APPLE)
+        SET(OS_X_QT_LIBRARIES
+            QtCLucene
+            QtConcurrent
+            QtCore
+            QtDBus
+            QtGui
+            QtHelp
+            QtMacExtras
+            QtMultimedia
+            QtMultimediaWidgets
+            QtNetwork
+            QtOpenGL
+            QtPositioning
+            QtPrintSupport
+            QtQml
+            QtQuick
+            QtSensors
+            QtSql
+            QtSvg
+            QtWebChannel
+            QtWebKit
+            QtWebKitWidgets
+            QtWidgets
+            QtXml
+            QtXmlPatterns
+        )
+    ENDIF()
 
     # Some general build settings
     # Note: MSVC enables C++11 support by default, so we just need to enable it
@@ -1004,6 +1031,30 @@ MACRO(OS_X_CLEAN_UP_FILE_WITH_QT_LIBRARIES PROJECT_TARGET DIRNAME FILENAME)
     ADD_CUSTOM_COMMAND(TARGET ${PROJECT_TARGET} POST_BUILD
                        COMMAND install_name_tool -id ${FILENAME}
                                                      ${FULL_FILENAME})
+
+    # Make sure that the file refers to our embedded copy of the Qt libraries
+
+    IF(ENABLE_TRAVIS_CI)
+        # Retrieve the real path of the Qt library directory
+        # Note: on Travis CI, QT_LIBRARY_DIR points to a symbolic path. That
+        #       symbolic path is used by some libraries while others use the
+        #       real path instead. So, we need to use both...
+
+        GET_FILENAME_COMPONENT(REAL_QT_LIBRARY_DIR ${QT_LIBRARY_DIR} REALPATH)
+
+        FOREACH(QT_LIBRARY ${OS_X_QT_LIBRARIES})
+            SET(QT_LIBRARY_FILENAME ${QT_LIBRARY}.framework/Versions/${QT_VERSION_MAJOR}/${QT_LIBRARY})
+
+            ADD_CUSTOM_COMMAND(TARGET ${PROJECT_TARGET} POST_BUILD
+                               COMMAND install_name_tool -change ${QT_LIBRARY_DIR}/${QT_LIBRARY_FILENAME}
+                                                                 @rpath/${QT_LIBRARY_FILENAME}
+                                                                 ${FULL_FILENAME})
+            ADD_CUSTOM_COMMAND(TARGET ${PROJECT_TARGET} POST_BUILD
+                               COMMAND install_name_tool -change ${REAL_QT_LIBRARY_DIR}/${QT_LIBRARY_FILENAME}
+                                                                 @rpath/${QT_LIBRARY_FILENAME}
+                                                                 ${FULL_FILENAME})
+        ENDFOREACH()
+    ENDIF()
 ENDMACRO()
 
 #===============================================================================
