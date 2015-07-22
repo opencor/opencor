@@ -167,7 +167,7 @@ ELSEIF(APPLE)
 ENDIF()
 
 # Check whether tests are required and, if so, 'reset' our list of tests and set
-# the destination tests directory
+# the destination tests directory and build our main test program
 
 IF(ENABLE_TESTS)
     # 'Reset' our list of tests
@@ -185,11 +185,7 @@ IF(ENABLE_TESTS)
     ELSE()
         SET(DEST_TESTS_DIR ${PROJECT_BUILD_DIR}/bin)
     ENDIF()
-ENDIF()
 
-# Check whether tests are required and, if so, build our main test program
-
-IF(ENABLE_TESTS)
     # Build our main test program
 
     SET(RUNTESTS_NAME runtests)
