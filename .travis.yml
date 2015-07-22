@@ -5,11 +5,11 @@
 language: cpp
 
 os:
-#  - linux
+  - linux
   - osx
 
 env:
-#  - CONFIG=Release
+  - CONFIG=Release
   - CONFIG=Debug
 
 install:
@@ -48,8 +48,6 @@ script:
        fi
     && make -j 3
     && cd ..
-    && for i in `find build/OpenCOR.app/Contents -type f`; do otool -L $i; done | grep -v "is not an object file"
-    && ./run -c CellMLTools::help
     && if [ "${TRAVIS_OS_NAME}" = "linux" ]; then
          build/bin/runtests
          ;
