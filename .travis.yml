@@ -1,7 +1,3 @@
-# Note: brew doesn't yet support Qt 5.5, so we disable testing on OS X for
-#       now...
-#       (see https://github.com/Homebrew/homebrew/blob/master/Library/Formula/qt5.rb)
-
 language: cpp
 
 os:
