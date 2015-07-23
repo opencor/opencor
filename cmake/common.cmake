@@ -810,29 +810,14 @@ MACRO(ADD_PLUGIN_BINARY PLUGIN_NAME)
     SET(PLUGIN_BINARY_DIR ${PROJECT_SOURCE_DIR}/bin/${DISTRIB_BINARY_DIR})
 
     # Copy the plugin to our plugins directory
-    # Note #1: this is done so that we can, on Windows and Linux, test the use
-    #          of plugins in OpenCOR without first having to package and deploy
-    #          everything...
-    # Note #2: EXECUTE_PROCESS() doesn't work with Xcode, so we use
-    #          ADD_CUSTOM_COMMAND() instead, but only when building with Xcode
-    #          (since ADD_CUSTOM_COMMAND() doesn't work in all other cases)...
+    # Note: this is done so that we can, on Windows and Linux, test the use of
+    #       plugins in OpenCOR without first having to package and deploy
+    #       everything...
 
     SET(PLUGIN_FILENAME ${CMAKE_SHARED_LIBRARY_PREFIX}${PLUGIN_NAME}${CMAKE_SHARED_LIBRARY_SUFFIX})
 
-    IF("${CMAKE_GENERATOR}" STREQUAL "Xcode")
-        ADD_CUSTOM_COMMAND(OUTPUT ${DEST_PLUGINS_DIR}/${PLUGIN_FILENAME}
-                           COMMAND ${CMAKE_COMMAND} -E copy ${PLUGIN_BINARY_DIR}/${PLUGIN_FILENAME}
-                                                            ${DEST_PLUGINS_DIR}/${PLUGIN_FILENAME})
-
-        ADD_CUSTOM_TARGET(${PLUGIN_NAME}_${QT_LIBRARY}_UPDATE_OS_X_QT_REFERENCE_IN_BUNDLE ALL
-                          DEPENDS ${DEST_PLUGINS_DIR}/${PLUGIN_FILENAME}
-                          COMMAND echo "Copying '${PLUGIN_BINARY_DIR}/${PLUGIN_FILENAME}' over to '${DEST_PLUGINS_DIR}/${PLUGIN_FILENAME}'...")
-        # Note: this call to ADD_CUSTOM_TARGET() is only so that Xcode doesn't
-        #       ignore the ADD_CUSTOM_COMMAND() call (!!)...
-    ELSE()
-        EXECUTE_PROCESS(COMMAND ${CMAKE_COMMAND} -E copy ${PLUGIN_BINARY_DIR}/${PLUGIN_FILENAME}
-                                                         ${DEST_PLUGINS_DIR}/${PLUGIN_FILENAME})
-    ENDIF()
+    EXECUTE_PROCESS(COMMAND ${CMAKE_COMMAND} -E copy ${PLUGIN_BINARY_DIR}/${PLUGIN_FILENAME}
+                                                     ${DEST_PLUGINS_DIR}/${PLUGIN_FILENAME})
 
     # Package the plugin, but only if we are not on OS X since it will have
     # already been copied
