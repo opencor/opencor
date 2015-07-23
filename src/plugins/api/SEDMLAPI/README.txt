@@ -10,6 +10,11 @@ From there, using cmake-gui on Windows or ccmake on Linux / OS X, we want to:
     ===> WITH_ZLIB=ON
  - Ask for a 'Release' build (or a 'Debug' build on Windows since both 'Release' and 'Debug' binaries are needed on that platform):
     ===> CMAKE_BUILD_TYPE=Release
+ - Ask for C++11 compilation to be used on Linux / OS X (on Windows, MSVC uses C++11 by default) (this is part of the advanced settings):
+    - Linux:
+       ===> CMAKE_CXX_FLAGS=-std=c++0x
+    - OS X:
+       ===> CMAKE_CXX_FLAGS=-std=c++0x -stdlib=libc++
  - Update the installation destination so that, upon 'installation', we have a ready to use version of the libSBML binaries (this is particularly useful on OS X since the 'installation' will result in 'clean' binaries):
     ===> CMAKE_INSTALL_PREFIX=<InstallationDestination>
  - Specify the deployment target (OS X only):

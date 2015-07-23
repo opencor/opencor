@@ -28,6 +28,7 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include "sbml/common/libsbml-version.h"
+#include "sbml/SBMLDocument.h"
 
 //==============================================================================
 
@@ -46,6 +47,20 @@ void Tests::basicTests()
     QVERIFY( libsbml::isLibSBMLCompiledWith("libxml"));
     QVERIFY(!libsbml::isLibSBMLCompiledWith("xerces-c"));
     QVERIFY( libsbml::isLibSBMLCompiledWith("zip"));
+
+    // Create an SBML document with a model inside it, then set the name of the
+    // model and check that it has been properly set
+
+    libsbml::SBMLDocument *sbmlDocument = new libsbml::SBMLDocument();
+    libsbml::Model *sbmlModel = sbmlDocument->createModel();
+
+    static const std::string modelName = "myModel";
+
+    sbmlModel->setName(modelName);
+
+    QCOMPARE(sbmlModel->getName(), modelName);
+
+    delete sbmlDocument;
 }
 
 //==============================================================================
