@@ -39,7 +39,7 @@ ELSE()
     SET(VERSION ${PROJECT_VERSION})
 ENDIF()
 
-FILE(WRITE ${CMAKE_BINARY_DIR}/versiondate.txt "${VERSION}\n${DATE}")
+FILE(WRITE ${PROJECT_BUILD_DIR}/versiondate.txt "${VERSION}\n${DATE}")
 
 # Files that make up the GUI version of OpenCOR
 
@@ -151,7 +151,7 @@ ENDIF()
 STRING(TIMESTAMP YEAR "%Y")
 
 IF(WIN32)
-    SET(RcFile ${CMAKE_BINARY_DIR}/${PROJECT_NAME}.rc)
+    SET(RcFile ${PROJECT_BUILD_DIR}/${PROJECT_NAME}.rc)
 
     CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/res/${PROJECT_NAME}.rc.in ${RcFile})
 
@@ -172,7 +172,7 @@ ENDIF()
 IF(ENABLE_TESTS)
     # 'Reset' our list of tests
 
-    SET(TESTS_LIST_FILENAME ${CMAKE_BINARY_DIR}/tests.txt)
+    SET(TESTS_LIST_FILENAME ${PROJECT_BUILD_DIR}/tests.txt)
 
     FILE(WRITE ${TESTS_LIST_FILENAME})
 
@@ -181,9 +181,9 @@ IF(ENABLE_TESTS)
     #       macro...
 
     IF(APPLE)
-        SET(DEST_TESTS_DIR ${CMAKE_BINARY_DIR}/${CMAKE_PROJECT_NAME}.app/Contents/MacOS)
+        SET(DEST_TESTS_DIR ${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME}.app/Contents/MacOS)
     ELSE()
-        SET(DEST_TESTS_DIR ${CMAKE_BINARY_DIR}/bin)
+        SET(DEST_TESTS_DIR ${PROJECT_BUILD_DIR}/bin)
     ENDIF()
 
     # Build our main test program
@@ -207,7 +207,7 @@ IF(ENABLE_TESTS)
     SET(MAIN_TEST_FILENAME ${RUNTESTS_NAME}${CMAKE_EXECUTABLE_SUFFIX})
 
     ADD_CUSTOM_COMMAND(TARGET ${RUNTESTS_NAME} POST_BUILD
-                       COMMAND ${CMAKE_COMMAND} -E copy ${PROJECT_BINARY_DIR}/${MAIN_TEST_FILENAME}
+                       COMMAND ${CMAKE_COMMAND} -E copy ${PROJECT_BUILD_DIR}/${MAIN_TEST_FILENAME}
                                                         ${DEST_TESTS_DIR}/${MAIN_TEST_FILENAME})
 
     # Clean up our test program, but only if we are on OS X
@@ -392,7 +392,7 @@ IF(APPLE)
     #       some information about associating .cellml files to OpenCOR,
     #       something that can't be done using CMake (or so it seems)...
 
-    SET(InfoPlistFile ${CMAKE_BINARY_DIR}/Info.plist)
+    SET(InfoPlistFile ${PROJECT_BUILD_DIR}/Info.plist)
 
     CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/distrib/osx/Info.plist.in ${InfoPlistFile})
 
@@ -406,7 +406,7 @@ IF(APPLE)
 
     # Clean up the OpenCOR executable
 
-    OS_X_CLEAN_UP_FILE_WITH_QT_LIBRARIES(${PROJECT_NAME} ${CMAKE_BINARY_DIR}/${CMAKE_PROJECT_NAME}.app/Contents/MacOS ${PROJECT_NAME})
+    OS_X_CLEAN_UP_FILE_WITH_QT_LIBRARIES(${PROJECT_NAME} ${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME}.app/Contents/MacOS ${PROJECT_NAME})
 
     # Deploy our Qt libraries
 
@@ -421,7 +421,7 @@ IF(APPLE)
 ELSE()
     # Copy the GUI version of the OpenCOR executable to the build/bin folder
 
-    COPY_FILE_TO_BUILD_DIR(${PROJECT_NAME} ${CMAKE_BINARY_DIR} bin
+    COPY_FILE_TO_BUILD_DIR(${PROJECT_NAME} ${PROJECT_BUILD_DIR} bin
                            ${PROJECT_NAME}${CMAKE_EXECUTABLE_SUFFIX})
 
     IF(WIN32)
@@ -430,9 +430,9 @@ ELSE()
         # Note: the idea is that, on Windows, we can test both the CLI and the
         #       GUI versions of OpenCOR from either build or build/bin...
 
-        COPY_FILE_TO_BUILD_DIR(${WINDOWS_CLI_PROJECT_NAME} ${CMAKE_BINARY_DIR} .
+        COPY_FILE_TO_BUILD_DIR(${WINDOWS_CLI_PROJECT_NAME} ${PROJECT_BUILD_DIR} .
                                ${WINDOWS_CLI_PROJECT_NAME}${CMAKE_EXECUTABLE_SUFFIX} ${PROJECT_NAME}.com)
-        COPY_FILE_TO_BUILD_DIR(${WINDOWS_CLI_PROJECT_NAME} ${CMAKE_BINARY_DIR} bin
+        COPY_FILE_TO_BUILD_DIR(${WINDOWS_CLI_PROJECT_NAME} ${PROJECT_BUILD_DIR} bin
                                ${WINDOWS_CLI_PROJECT_NAME}${CMAKE_EXECUTABLE_SUFFIX} ${PROJECT_NAME}.com)
 
         # Additional files required by OpenCOR
@@ -559,7 +559,7 @@ IF(WIN32)
     # Install both the GUI and CLI versions of OpenCOR
 
     INSTALL(TARGETS ${PROJECT_NAME} RUNTIME DESTINATION bin)
-    INSTALL(FILES ${CMAKE_BINARY_DIR}/bin/${PROJECT_NAME}.com
+    INSTALL(FILES ${PROJECT_BUILD_DIR}/bin/${PROJECT_NAME}.com
             DESTINATION bin)
 
     # Additional files required by OpenCOR
@@ -586,8 +586,8 @@ IF(WIN32)
     # Batch and VBScript files to run OpenCOR (useful when downloading a ZIPped
     # version of OpenCOR)
 
-    SET(BatFile "${CMAKE_BINARY_DIR}/${PROJECT_NAME}.bat")
-    SET(VbsFile "${CMAKE_BINARY_DIR}/${PROJECT_NAME}.vbs")
+    SET(BatFile "${PROJECT_BUILD_DIR}/${PROJECT_NAME}.bat")
+    SET(VbsFile "${PROJECT_BUILD_DIR}/${PROJECT_NAME}.vbs")
 
     CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/distrib/windows/application.bat.in ${BatFile})
     CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/distrib/windows/application.vbs.in ${VbsFile})
@@ -634,7 +634,7 @@ ELSEIF(APPLE)
     # Shell script to run OpenCOR (useful when downloading a ZIPped version of
     # OpenCOR)
 
-    SET(SHELL_FILENAME ${CMAKE_BINARY_DIR}/${PROJECT_NAME}.sh)
+    SET(SHELL_FILENAME ${PROJECT_BUILD_DIR}/${PROJECT_NAME}.sh)
 
     CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/distrib/osx/application.sh.in ${SHELL_FILENAME})
 
@@ -686,7 +686,7 @@ ELSE()
 
     # Shell script to run OpenCOR
 
-    SET(ShellFile ${CMAKE_BINARY_DIR}/${PROJECT_NAME}.sh)
+    SET(ShellFile ${PROJECT_BUILD_DIR}/${PROJECT_NAME}.sh)
 
     CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/distrib/linux/application.sh.in ${ShellFile})
 
