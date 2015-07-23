@@ -78,6 +78,12 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#include "sedmlapidisablewarnings.h"
+    #include "sedml/SedTypes.h"
+#include "sedmlapienablewarnings.h"
+
+//==============================================================================
+
 namespace OpenCOR {
 namespace SingleCellView {
 
@@ -1252,9 +1258,20 @@ void SingleCellViewWidget::on_actionSedmlExport_triggered()
                                              QObject::tr("SED-ML File")+" (*.xml)");
 
     if (!fileName.isEmpty()) {
+        // Create our SED-ML document and add the current CellML model to it
+
+        libsedml::SedDocument *sedmlDocument = new libsedml::SedDocument();
+        libsedml::SedModel *sedmlModel = sedmlDocument->createModel();
+
+        sedmlModel->setId("myModel");
+        sedmlModel->setSource("myModel.cellml");
+        sedmlModel->setLanguage("urn:sedml:language:cellml");
+
         // The data is ready, so write it to the file
 
-        Core::writeTextToFile(fileName, QString());
+        Core::writeTextToFile(fileName, sedmlDocument->toSed());
+
+        delete sedmlDocument;
     }
 }
 
