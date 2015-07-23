@@ -493,6 +493,11 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
         ${SOURCES_RCS}
     )
 
+    SET_TARGET_PROPERTIES(${PROJECT_NAME} PROPERTIES
+        OUTPUT_NAME ${PLUGIN_NAME}
+        LINK_FLAGS "${LINK_FLAGS_PROPERTIES}"
+    )
+
     # OpenCOR plugins
 
     FOREACH(PLUGIN ${PLUGINS})
@@ -518,13 +523,6 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
             Qt5::${QT_MODULE}
         )
     ENDFOREACH()
-
-    # Linker settings
-
-    SET_TARGET_PROPERTIES(${PROJECT_NAME} PROPERTIES
-        OUTPUT_NAME ${PLUGIN_NAME}
-        LINK_FLAGS "${LINK_FLAGS_PROPERTIES}"
-    )
 
     # External binaries
 
@@ -675,6 +673,11 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
                     ${TEST_SOURCES_MOC}
                 )
 
+                SET_TARGET_PROPERTIES(${TEST_NAME} PROPERTIES
+                    OUTPUT_NAME ${TEST_NAME}
+                    LINK_FLAGS "${LINK_FLAGS_PROPERTIES}"
+                )
+
                 # Plugins
 
                 FOREACH(PLUGIN ${PLUGINS} ${PLUGIN_NAME})
@@ -698,13 +701,6 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
                         Qt5::${QT_MODULE}
                     )
                 ENDFOREACH()
-
-                # Linker settings
-
-                SET_TARGET_PROPERTIES(${TEST_NAME} PROPERTIES
-                    OUTPUT_NAME ${TEST_NAME}
-                    LINK_FLAGS "${LINK_FLAGS_PROPERTIES}"
-                )
 
                 # External binaries
 
