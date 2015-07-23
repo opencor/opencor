@@ -25,7 +25,8 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #if defined(Q_OS_WIN)
-    // Nothing to do...
+    #pragma warning(push)
+    #pragma warning(disable: 4005)
 #elif defined(Q_OS_LINUX)
     #pragma GCC diagnostic push
     #pragma GCC diagnostic ignored "-Wignored-qualifiers"

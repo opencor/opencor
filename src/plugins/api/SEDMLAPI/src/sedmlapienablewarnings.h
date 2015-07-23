@@ -25,7 +25,7 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #if defined(Q_OS_WIN)
-    // Nothing to do...
+    #pragma warning(pop)
 #elif defined(Q_OS_LINUX)
     #pragma GCC diagnostic pop
 #elif defined(Q_OS_MAC)
