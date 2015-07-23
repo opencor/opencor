@@ -39,7 +39,7 @@ ELSE()
     SET(VERSION ${PROJECT_VERSION})
 ENDIF()
 
-FILE(WRITE ${CMAKE_BINARY_DIR}/versiondate.txt "${VERSION}\n${DATE}")
+FILE(WRITE ${PROJECT_BUILD_DIR}/versiondate.txt "${VERSION}\n${DATE}")
 
 # Files that make up the GUI version of OpenCOR
 
@@ -151,7 +151,7 @@ ENDIF()
 STRING(TIMESTAMP YEAR "%Y")
 
 IF(WIN32)
-    SET(RcFile ${CMAKE_BINARY_DIR}/${PROJECT_NAME}.rc)
+    SET(RcFile ${PROJECT_BUILD_DIR}/${PROJECT_NAME}.rc)
 
     CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/res/${PROJECT_NAME}.rc.in ${RcFile})
 
@@ -167,7 +167,7 @@ ELSEIF(APPLE)
 ENDIF()
 
 # Check whether tests are required and, if so, 'reset' our list of tests and set
-# the destination tests directory
+# the destination tests directory and build our main test program
 
 IF(ENABLE_TESTS)
     # 'Reset' our list of tests
@@ -185,11 +185,7 @@ IF(ENABLE_TESTS)
     ELSE()
         SET(DEST_TESTS_DIR ${PROJECT_BUILD_DIR}/bin)
     ENDIF()
-ENDIF()
 
-# Check whether tests are required and, if so, build our main test program
-
-IF(ENABLE_TESTS)
     # Build our main test program
 
     SET(RUNTESTS_NAME runtests)
@@ -211,8 +207,14 @@ IF(ENABLE_TESTS)
     SET(MAIN_TEST_FILENAME ${RUNTESTS_NAME}${CMAKE_EXECUTABLE_SUFFIX})
 
     ADD_CUSTOM_COMMAND(TARGET ${RUNTESTS_NAME} POST_BUILD
-                       COMMAND ${CMAKE_COMMAND} -E copy ${PROJECT_BINARY_DIR}/${MAIN_TEST_FILENAME}
+                       COMMAND ${CMAKE_COMMAND} -E copy ${PROJECT_BUILD_DIR}/${MAIN_TEST_FILENAME}
                                                         ${DEST_TESTS_DIR}/${MAIN_TEST_FILENAME})
+
+    # Clean up our test program, but only if we are on OS X
+
+    IF(APPLE)
+        OS_X_CLEAN_UP_FILE_WITH_QT_LIBRARIES(${RUNTESTS_NAME} ${DEST_TESTS_DIR} ${MAIN_TEST_FILENAME})
+    ENDIF()
 ENDIF()
 
 # Build the OpenCOR plugins
@@ -390,7 +392,7 @@ IF(APPLE)
     #       some information about associating .cellml files to OpenCOR,
     #       something that can't be done using CMake (or so it seems)...
 
-    SET(InfoPlistFile ${CMAKE_BINARY_DIR}/Info.plist)
+    SET(InfoPlistFile ${PROJECT_BUILD_DIR}/Info.plist)
 
     CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/distrib/osx/Info.plist.in ${InfoPlistFile})
 
@@ -402,13 +404,13 @@ IF(APPLE)
     #       regularly been causing us problems, so instead we have decided to do
     #       everything ourselves...
 
+    # Clean up the OpenCOR executable
+
+    OS_X_CLEAN_UP_FILE_WITH_QT_LIBRARIES(${PROJECT_NAME} ${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME}.app/Contents/MacOS ${PROJECT_NAME})
+
     # Deploy our Qt libraries
 
-    OS_X_DEPLOY_QT_LIBRARIES(QtCLucene QtConcurrent QtCore QtDBus QtGui QtHelp QtMacExtras QtMultimedia QtMultimediaWidgets QtNetwork QtOpenGL QtPositioning QtPrintSupport QtQml QtQuick QtSensors QtSql QtSvg QtWebChannel QtWebKit QtWebKitWidgets QtWidgets QtXml QtXmlPatterns)
-
-    IF(ENABLE_TESTS)
-        OS_X_DEPLOY_QT_LIBRARIES(QtTest)
-    ENDIF()
+    OS_X_DEPLOY_QT_LIBRARIES(${OS_X_QT_LIBRARIES})
 
     # Deploy some plugins
 
@@ -584,8 +586,8 @@ IF(WIN32)
     # Batch and VBScript files to run OpenCOR (useful when downloading a ZIPped
     # version of OpenCOR)
 
-    SET(BatFile "${CMAKE_BINARY_DIR}/${PROJECT_NAME}.bat")
-    SET(VbsFile "${CMAKE_BINARY_DIR}/${PROJECT_NAME}.vbs")
+    SET(BatFile "${PROJECT_BUILD_DIR}/${PROJECT_NAME}.bat")
+    SET(VbsFile "${PROJECT_BUILD_DIR}/${PROJECT_NAME}.vbs")
 
     CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/distrib/windows/application.bat.in ${BatFile})
     CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/distrib/windows/application.vbs.in ${VbsFile})
@@ -632,7 +634,7 @@ ELSEIF(APPLE)
     # Shell script to run OpenCOR (useful when downloading a ZIPped version of
     # OpenCOR)
 
-    SET(SHELL_FILENAME ${CMAKE_BINARY_DIR}/${PROJECT_NAME}.sh)
+    SET(SHELL_FILENAME ${PROJECT_BUILD_DIR}/${PROJECT_NAME}.sh)
 
     CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/distrib/osx/application.sh.in ${SHELL_FILENAME})
 
@@ -684,7 +686,7 @@ ELSE()
 
     # Shell script to run OpenCOR
 
-    SET(ShellFile ${CMAKE_BINARY_DIR}/${PROJECT_NAME}.sh)
+    SET(ShellFile ${PROJECT_BUILD_DIR}/${PROJECT_NAME}.sh)
 
     CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/distrib/linux/application.sh.in ${ShellFile})
 
