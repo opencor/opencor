@@ -4,13 +4,9 @@ MACRO(RETRIEVE_ZLIB_SETTINGS)
     # Retrieve some zlib settings
 
     IF(WIN32)
-        IF(NOT "${ARGN}" STREQUAL "NO_ZLIB_DLL")
-            SET(ZLIB_DEFINITIONS
-                ZLIB_DLL
-            )
-        ELSE()
-            SET(ZLIB_DEFINITIONS)
-        ENDIF()
+        SET(ZLIB_DEFINITIONS
+            ZLIB_DLL
+        )
     ELSE()
         SET(ZLIB_DEFINITIONS)
     ENDIF()
@@ -75,7 +71,7 @@ IF(USE_PREBUILT_ZLIB_PLUGIN)
 ELSE()
     # Retrieve some zlib settings
 
-    RETRIEVE_ZLIB_SETTINGS(NO_ZLIB_DLL)
+    RETRIEVE_ZLIB_SETTINGS()
 
     # Add the plugin
 
@@ -106,6 +102,9 @@ ELSE()
             src/zlibplugin.h
         INCLUDE_DIRS
             src
+        DEFINITIONS
+            ${ZLIB_DEFINITIONS}
+            ZLIB_INTERNAL
         QT_MODULES
             Core
     )
