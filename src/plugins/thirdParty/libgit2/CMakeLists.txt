@@ -30,7 +30,6 @@ MACRO(RETRIEVE_LIBGIT2_SETTINGS)
         _FILE_OFFSET_BITS=64
 
         GIT_THREADS
-        NO_GZIP
         STDC
     )
 

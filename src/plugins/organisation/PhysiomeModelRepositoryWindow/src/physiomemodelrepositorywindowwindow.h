@@ -91,6 +91,8 @@ private:
 
     void cloneWorkspace(const QString &pWorkspace);
 
+    QByteArray gunzip(const QByteArray &pData);
+
 private Q_SLOTS:
     void on_filterValue_textChanged(const QString &pText);
     void on_refreshButton_clicked();
