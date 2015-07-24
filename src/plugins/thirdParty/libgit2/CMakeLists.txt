@@ -31,7 +31,6 @@ MACRO(RETRIEVE_LIBGIT2_SETTINGS)
 
         GIT_THREADS
         NO_GZIP
-        NO_VIZ
         STDC
     )
 
