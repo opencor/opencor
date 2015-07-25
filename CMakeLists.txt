@@ -12,8 +12,6 @@ INCLUDE(${CMAKE_SOURCE_DIR}/cmake/common.cmake)
 
 OPTION(ENABLE_SAMPLES "Enable the sample plugins to be built" OFF)
 OPTION(ENABLE_TESTS "Enable the tests to be built" OFF)
-SET(ENABLE_SAMPLES ON)
-SET(ENABLE_TESTS ON)
 
 OPTION(USE_PREBUILT_LIBGIT2_PLUGIN "Use the pre-built version of the libgit2 plugin" ON)
 OPTION(USE_PREBUILT_LLVM_PLUGIN "Use the pre-built version of the LLVM plugin" ON)
@@ -322,6 +320,14 @@ SET(PLUGINS
     # Sample plugins
 
     ${SAMPLE_PLUGINS}
+)
+SET(PLUGINS
+    thirdParty/libgit2
+    thirdParty/LLVM
+    thirdParty/QScintilla
+    thirdParty/Qwt
+    thirdParty/SUNDIALS
+    thirdParty/zlib
 )
 
 FOREACH(PLUGIN ${PLUGINS})
