@@ -1,6 +1,6 @@
 PROJECT(SingleCellViewPlugin)
 
-# Retrieve some CellML API, LLVM, Qwt, SBML and SED-ML API settings
+# Retrieve some CellML API, LLVM, Qwt, SBML API and SED-ML API settings
 
 RETRIEVE_CELLML_API_SETTINGS()
 RETRIEVE_LLVM_SETTINGS()
