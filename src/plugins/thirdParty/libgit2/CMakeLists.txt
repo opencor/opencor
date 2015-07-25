@@ -58,7 +58,11 @@ ELSE()
     LINK_LIBRARIES(${OPENSSL_LIBRARIES})
 ENDIF()
 
-# Determine to which dependencies we need access
+# Include the directories of the dependencies that we need access
+# Note: we don't want them to be included as part of ADD_PLUGIN() or
+#       ADD_PLUGIN_BINARY() since they would then be available to the rest of
+#       the proejct, which could be a problem with the zlib plugin, for example,
+#       since it is one of our dependencies...
 
 SET(DEPENDENCIES_INCLUDE_DIRS
     deps/http-parser
@@ -70,6 +74,8 @@ IF(WIN32)
         deps/regex
     )
 ENDIF()
+
+INCLUDE_DIRECTORIES(${DEPENDENCIES_INCLUDE_DIRS})
 
 # Use our pre-built version unless instructed otherwise
 
@@ -119,8 +125,6 @@ IF(USE_PREBUILT_LIBGIT2_PLUGIN)
 
     ADD_PLUGIN_BINARY(libgit2
         INCLUDE_DIRS
-            ${DEPENDENCIES_INCLUDE_DIRS}
-
             include
             src
     )
@@ -331,8 +335,6 @@ ELSE()
         HEADERS_MOC
             src/libgit2plugin.h
         INCLUDE_DIRS
-            ${DEPENDENCIES_INCLUDE_DIRS}
-
             include
             src
         DEFINITIONS
