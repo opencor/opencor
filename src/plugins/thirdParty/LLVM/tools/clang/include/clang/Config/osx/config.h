@@ -27,9 +27,9 @@
 #define CLANG_HAVE_LIBXML 1
 
 /* The LLVM product name and version */
-#define BACKEND_PACKAGE_STRING "LLVM 3.6.1"
+#define BACKEND_PACKAGE_STRING "LLVM 3.6.2"
 
 /* Linker version detected at compile time. */
-#define HOST_LINK_VERSION "242"
+#define HOST_LINK_VERSION "242.2"
 
 #endif
