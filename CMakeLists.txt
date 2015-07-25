@@ -12,6 +12,8 @@ INCLUDE(${CMAKE_SOURCE_DIR}/cmake/common.cmake)
 
 OPTION(ENABLE_SAMPLES "Enable the sample plugins to be built" OFF)
 OPTION(ENABLE_TESTS "Enable the tests to be built" OFF)
+SET(ENABLE_SAMPLES ON)
+SET(ENABLE_TESTS ON)
 
 OPTION(USE_PREBUILT_LIBGIT2_PLUGIN "Use the pre-built version of the libgit2 plugin" ON)
 OPTION(USE_PREBUILT_LLVM_PLUGIN "Use the pre-built version of the LLVM plugin" ON)
@@ -19,6 +21,12 @@ OPTION(USE_PREBUILT_QSCINTILLA_PLUGIN "Use the pre-built version of the QScintil
 OPTION(USE_PREBUILT_QWT_PLUGIN "Use the pre-built version of the Qwt plugin" ON)
 OPTION(USE_PREBUILT_SUNDIALS_PLUGIN "Use the pre-built version of the SUNDIALS plugin" ON)
 OPTION(USE_PREBUILT_ZLIB_PLUGIN "Use the pre-built version of the zlib plugin" ON)
+SET(USE_PREBUILT_LIBGIT2_PLUGIN OFF)
+SET(USE_PREBUILT_LLVM_PLUGIN OFF)
+SET(USE_PREBUILT_QSCINTILLA_PLUGIN OFF)
+SET(USE_PREBUILT_QWT_PLUGIN OFF)
+SET(USE_PREBUILT_SUNDIALS_PLUGIN OFF)
+SET(USE_PREBUILT_ZLIB_PLUGIN OFF)
 
 # Initialise the project
 
