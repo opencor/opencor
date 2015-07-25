@@ -73,6 +73,12 @@ ELSE()
 
     RETRIEVE_ZLIB_SETTINGS()
 
+    # Ignore some warnings on Windows and OS X
+
+    IF(WIN32)
+        SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /wd4996")
+    ENDIF()
+
     # Add the plugin
 
     SET(ZLIB_PLUGIN zlib PARENT_SCOPE)
@@ -104,7 +110,6 @@ ELSE()
             src
         DEFINITIONS
             ${ZLIB_DEFINITIONS}
-            ZLIB_INTERNAL
         QT_MODULES
             Core
     )
