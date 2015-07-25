@@ -47,7 +47,7 @@ PLUGININFO_FUNC PhysiomeModelRepositoryWindowPluginInfo()
     descriptions.insert("fr", QString::fromUtf8("une extension pour accéder au <a href=\"https://models.physiomeproject.org/\">Répertoire de Modèles Physiome</a>."));
 
     return new PluginInfo(PluginInfo::Organisation, true, false,
-                          QStringList() << "Core" << "libgit2",
+                          QStringList() << "Core" << "libgit2" << "zlib",
                           descriptions,
                           QStringList() << "FileBrowserWindow" << "FileOrganiserWindow");
 }
