@@ -283,7 +283,7 @@ void PhysiomeModelRepositoryWindowWindow::finished(QNetworkReply *pNetworkReply)
     QStringList bookmarkUrls = QStringList();
 
     if (pNetworkReply->error() == QNetworkReply::NoError) {
-        // Retrieve an uncompress the JSON data
+        // Retrieve an uncompress our JSON data
 
         QByteArray compressedData = pNetworkReply->readAll();
         QByteArray uncompressedData = QByteArray();
@@ -314,13 +314,13 @@ void PhysiomeModelRepositoryWindowWindow::finished(QNetworkReply *pNetworkReply)
             inflateEnd(&stream);
         }
 
-        // Parse the uncompressed JSON data
+        // Parse our uncompressed JSON data
 
         QJsonParseError jsonParseError;
         QJsonDocument jsonDocument = QJsonDocument::fromJson(uncompressedData, &jsonParseError);
 
         if (jsonParseError.error == QJsonParseError::NoError) {
-            // Check the PMR request to determine what we should do with the
+            // Check our PMR request to determine what we should do with the
             // data
 
             QVariantMap collectionMap = jsonDocument.object().toVariantMap()["collection"].toMap();
