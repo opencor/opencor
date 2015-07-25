@@ -18,6 +18,7 @@ OPTION(USE_PREBUILT_LLVM_PLUGIN "Use the pre-built version of the LLVM plugin" O
 OPTION(USE_PREBUILT_QSCINTILLA_PLUGIN "Use the pre-built version of the QScintilla plugin" ON)
 OPTION(USE_PREBUILT_QWT_PLUGIN "Use the pre-built version of the Qwt plugin" ON)
 OPTION(USE_PREBUILT_SUNDIALS_PLUGIN "Use the pre-built version of the SUNDIALS plugin" ON)
+OPTION(USE_PREBUILT_ZLIB_PLUGIN "Use the pre-built version of the zlib plugin" ON)
 
 # Initialise the project
 
@@ -257,6 +258,7 @@ SET(PLUGINS
     thirdParty/QScintilla
     thirdParty/Qwt
     thirdParty/SUNDIALS
+    thirdParty/zlib
 
     # Plugins that build on top of some third-party libraries
 
