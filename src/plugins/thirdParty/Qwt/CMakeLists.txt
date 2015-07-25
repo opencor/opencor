@@ -6,13 +6,9 @@ MACRO(RETRIEVE_QWT_SETTINGS)
     IF(WIN32)
         SET(QWT_DEFINITIONS
             _SCL_SECURE_NO_WARNINGS
-        )
 
-        IF(NOT "${ARGN}" STREQUAL "NO_QWT_DLL")
-            LIST(APPEND QWT_DEFINITIONS
-                QWT_DLL
-            )
-        ENDIF()
+            QWT_DLL
+        )
     ELSE()
         SET(QWT_DEFINITIONS)
     ENDIF()
@@ -72,7 +68,7 @@ IF(USE_PREBUILT_QWT_PLUGIN)
 ELSE()
     # Retrieve some Qwt settings
 
-    RETRIEVE_QWT_SETTINGS(NO_QWT_DLL)
+    RETRIEVE_QWT_SETTINGS()
 
     # Add the plugin
 
@@ -218,7 +214,6 @@ ELSE()
             textengines/mathml
         DEFINITIONS
             ${QWT_DEFINITIONS}
-            QWT_DLL
             QWT_MAKEDLL
         QT_MODULES
             Concurrent
