@@ -44,6 +44,7 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include "git2.h"
+#include "zlib.h"
 
 //==============================================================================
 
@@ -170,11 +171,12 @@ void PhysiomeModelRepositoryWindowWindow::sendPmrRequest(const PmrRequest &pPmrR
 
     busy(true);
 
-    // Send our request to the PMR
+    // Send our request to the PMR, asking for the response to be compressed
 
     QNetworkRequest networkRequest;
 
     networkRequest.setRawHeader("Accept", "application/vnd.physiome.pmr2.json.1");
+    networkRequest.setRawHeader("Accept-Encoding", "gzip");
 
     switch (pPmrRequest) {
     case BookmarkUrlsForCloning:
@@ -281,13 +283,44 @@ void PhysiomeModelRepositoryWindowWindow::finished(QNetworkReply *pNetworkReply)
     QStringList bookmarkUrls = QStringList();
 
     if (pNetworkReply->error() == QNetworkReply::NoError) {
-        // Parse the JSON data
+        // Retrieve an uncompress our JSON data
+
+        QByteArray compressedData = pNetworkReply->readAll();
+        QByteArray uncompressedData = QByteArray();
+        z_stream stream;
+
+        memset(&stream, 0, sizeof(z_stream));
+
+        if (inflateInit2(&stream, MAX_WBITS+16) == Z_OK) {
+            static const int BufferSize = 32768;
+
+            Bytef buffer[BufferSize];
+
+            stream.next_in = (Bytef *) compressedData.data();
+            stream.avail_in = compressedData.size();
+
+            do {
+                stream.next_out = buffer;
+                stream.avail_out = BufferSize;
+
+                inflate(&stream, Z_NO_FLUSH);
+
+                if (!stream.msg)
+                    uncompressedData += QByteArray::fromRawData((char *) buffer, BufferSize-stream.avail_out);
+                else
+                    uncompressedData = QByteArray();
+            } while (!stream.avail_out);
+
+            inflateEnd(&stream);
+        }
+
+        // Parse our uncompressed JSON data
 
         QJsonParseError jsonParseError;
-        QJsonDocument jsonDocument = QJsonDocument::fromJson(pNetworkReply->readAll(), &jsonParseError);
+        QJsonDocument jsonDocument = QJsonDocument::fromJson(uncompressedData, &jsonParseError);
 
         if (jsonParseError.error == QJsonParseError::NoError) {
-            // Check the PMR request to determine what we should do with the
+            // Check our PMR request to determine what we should do with the
             // data
 
             QVariantMap collectionMap = jsonDocument.object().toVariantMap()["collection"].toMap();
