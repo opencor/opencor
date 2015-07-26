@@ -23,8 +23,8 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include "cellmlfilemanager.h"
-#include "cliutils.h"
 #include "corecellmleditingwidget.h"
+#include "corecliutils.h"
 #include "editorlistwidget.h"
 #include "editorwidget.h"
 #include "filemanager.h"
