@@ -93,10 +93,10 @@
 #define LLVM_VERSION_MINOR 6
 
 /* Patch version of the LLVM API */
-#define LLVM_VERSION_PATCH 1
+#define LLVM_VERSION_PATCH 2
 
 /* LLVM version string */
-#define LLVM_VERSION_STRING "3.6.1"
+#define LLVM_VERSION_STRING "3.6.2"
 
 /* Define if we link Polly to the tools */
 /* #undef LINK_POLLY_INTO_TOOLS */

@@ -47,7 +47,7 @@ PLUGININFO_FUNC SampleToolsPluginInfo()
     descriptions.insert("en", QString::fromUtf8("a plugin that provides an addition tool."));
     descriptions.insert("fr", QString::fromUtf8("une extension qui fournit un outil d'addition."));
 
-    return new PluginInfo(PluginInfo::Sample, true, true,
+    return new PluginInfo("Sample", true, true,
                           QStringList() << "Sample",
                           descriptions);
 }
