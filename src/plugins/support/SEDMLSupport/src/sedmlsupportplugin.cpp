@@ -42,7 +42,7 @@ PLUGININFO_FUNC SEDMLSupportPluginInfo()
     descriptions.insert("en", QString::fromUtf8("a plugin to support <a href=\"http://www.sed-ml.org/\">SED-ML</a>."));
     descriptions.insert("fr", QString::fromUtf8("une extension pour supporter <a href=\"http://www.sed-ml.org/\">SED-ML</a>."));
 
-    return new PluginInfo(PluginInfo::Support, false, false,
+    return new PluginInfo("Support", false, false,
                           QStringList() << "Core" << "SEDMLAPI" << "StandardSupport",
                           descriptions);
 }

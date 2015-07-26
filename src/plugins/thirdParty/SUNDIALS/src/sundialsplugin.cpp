@@ -35,7 +35,7 @@ PLUGININFO_FUNC SUNDIALSPluginInfo()
     descriptions.insert("en", QString::fromUtf8("a plugin to access <a href=\"http://computation.llnl.gov/casc/sundials/description/description.html#descr_cvode\">CVODE</a>, <a href=\"http://computation.llnl.gov/casc/sundials/description/description.html#descr_ida\">IDA</a> and <a href=\"http://computation.llnl.gov/casc/sundials/description/description.html#descr_kinsol\">KINSOL</a> solvers from the <a href=\"http://computation.llnl.gov/casc/sundials/description/description.html\">SUNDIALS</a> library."));
     descriptions.insert("fr", QString::fromUtf8("une extension pour accéder aux solveurs <a href=\"http://computation.llnl.gov/casc/sundials/description/description.html#descr_cvode\">CVODE</a>, <a href=\"http://computation.llnl.gov/casc/sundials/description/description.html#descr_ida\">IDA</a> et <a href=\"http://computation.llnl.gov/casc/sundials/description/description.html#descr_kinsol\">KINSOL</a> de la librairie <a href=\"http://computation.llnl.gov/casc/sundials/description/description.html\">SUNDIALS</a>."));
 
-    return new PluginInfo(PluginInfo::ThirdParty, false, false,
+    return new PluginInfo("Third-party", false, false,
                           QStringList(),
                           descriptions);
 }
