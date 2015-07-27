@@ -85,10 +85,11 @@ Plugin::Plugin(const QString &pFileName, PluginInfo *pInfo,
                 }
             }
 
-            if (statusErrorsCount() == 1)
+            if (statusErrorsCount() == 1) {
                 // There is only one error, so remove the leading " - "
 
                 mStatusErrors = mStatusErrors.remove(0, 3);
+            }
 
             // Check whether all of the plugin's dependencies, if any, were
             // loaded, and if so then try to load the plugin itself
