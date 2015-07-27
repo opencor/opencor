@@ -491,6 +491,8 @@ void SingleCellViewWidget::updateSimulationMode()
     mGui->actionSimulationDataExport->setEnabled(    mSimulationDataExportDropDownMenu->actions().count()
                                                  &&  mSimulation->results()->size()
                                                  && !simulationModeEnabled);
+    mGui->actionSedmlExport->setEnabled(    mSimulation->results()->size()
+                                        && !simulationModeEnabled);
 
     // Give the focus to our focus proxy, in case we leave our simulation mode
     // (so that the user can modify simulation data, etc.)
