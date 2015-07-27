@@ -42,7 +42,7 @@ void CsvDataStoreExporter::execute(CoreDataStore::CoreDataStore *pDataStore) con
 {
     // Export the given data store to a CSV file
 
-    QString fileName = Core::getSaveFileName(QObject::tr("Export To CSV File"),
+    QString fileName = Core::getSaveFileName(QObject::tr("Export to a CSV file"),
                                              QString(),
                                              QObject::tr("CSV File")+" (*.csv)");
 

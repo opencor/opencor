@@ -81,12 +81,13 @@ QString CellMLSupportPlugin::fileTypeDescription(const QString &pMimeType) const
     // Return the description for the requested MIME type, that is as long as it
     // is for the MIME type that we support
 
-    if (!pMimeType.compare(CellmlMimeType))
+    if (!pMimeType.compare(CellmlMimeType)) {
         return tr("CellML File");
-    else
+    } else {
         // Not a MIME type that we can recognise
 
         return QString();
+    }
 }
 
 //==============================================================================
