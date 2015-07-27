@@ -68,9 +68,15 @@ typedef QList<FileType *> FileTypes;
 class FileTypeInterface
 {
 public:
+    explicit FileTypeInterface();
+    ~FileTypeInterface();
+
 #define INTERFACE_DEFINITION
     #include "filetypeinterface.inl"
 #undef INTERFACE_DEFINITION
+
+protected:
+    FileTypes mFileTypes;
 };
 
 //==============================================================================

@@ -48,19 +48,10 @@ PLUGININFO_FUNC CellMLSupportPluginInfo()
 CellMLSupportPlugin::CellMLSupportPlugin()
 {
     // The file types that we support
+    // Note: they will get deleted by FileTypeInterface...
 
     mFileTypes = FileTypes() << new FileType(qobject_cast<FileTypeInterface *>(this),
                                              CellmlMimeType, CellmlFileExtension);
-}
-
-//==============================================================================
-
-CellMLSupportPlugin::~CellMLSupportPlugin()
-{
-    // Delete some internal objects
-
-    foreach (FileType *fileType, mFileTypes)
-        delete fileType;
 }
 
 //==============================================================================

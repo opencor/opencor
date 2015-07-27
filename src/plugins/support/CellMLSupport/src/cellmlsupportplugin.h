@@ -59,14 +59,10 @@ class CellMLSupportPlugin : public QObject, public FileTypeInterface,
 
 public:
     explicit CellMLSupportPlugin();
-    ~CellMLSupportPlugin();
 
 #include "filetypeinterface.inl"
 #include "i18ninterface.inl"
 #include "plugininterface.inl"
-
-private:
-    FileTypes mFileTypes;
 };
 
 //==============================================================================

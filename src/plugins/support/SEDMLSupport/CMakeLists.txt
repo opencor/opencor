@@ -8,6 +8,8 @@ RETRIEVE_SEDML_API_SETTINGS()
 
 ADD_PLUGIN(SEDMLSupport
     SOURCES
+        ../../filetypeinterface.cpp
+        ../../i18ninterface.cpp
         ../../plugininfo.cpp
 
         src/sedmlfile.cpp
