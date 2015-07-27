@@ -48,19 +48,10 @@ PLUGININFO_FUNC CellMLSupportPluginInfo()
 CellMLSupportPlugin::CellMLSupportPlugin()
 {
     // The file types that we support
+    // Note: they will get deleted by FileTypeInterface...
 
     mFileTypes = FileTypes() << new FileType(qobject_cast<FileTypeInterface *>(this),
                                              CellmlMimeType, CellmlFileExtension);
-}
-
-//==============================================================================
-
-CellMLSupportPlugin::~CellMLSupportPlugin()
-{
-    // Delete some internal objects
-
-    foreach (FileType *fileType, mFileTypes)
-        delete fileType;
 }
 
 //==============================================================================
@@ -81,12 +72,13 @@ QString CellMLSupportPlugin::fileTypeDescription(const QString &pMimeType) const
     // Return the description for the requested MIME type, that is as long as it
     // is for the MIME type that we support
 
-    if (!pMimeType.compare(CellmlMimeType))
+    if (!pMimeType.compare(CellmlMimeType)) {
         return tr("CellML File");
-    else
+    } else {
         // Not a MIME type that we can recognise
 
         return QString();
+    }
 }
 
 //==============================================================================

@@ -24,9 +24,11 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-#include "sedmlsupportglobal.h"
+#include "filetypeinterface.h"
+#include "i18ninterface.h"
 #include "plugininfo.h"
 #include "plugininterface.h"
+#include "sedmlsupportglobal.h"
 
 //==============================================================================
 
@@ -39,15 +41,27 @@ PLUGININFO_FUNC SEDMLSupportPluginInfo();
 
 //==============================================================================
 
-class SEDMLSupportPlugin : public QObject, public PluginInterface
+static const auto SedmlMimeType      = QStringLiteral("application/sedml+xml");
+static const auto SedmlFileExtension = QStringLiteral("sedml");
+
+//==============================================================================
+
+class SEDMLSupportPlugin : public QObject, public FileTypeInterface,
+                           public I18nInterface, public PluginInterface
 {
     Q_OBJECT
 
     Q_PLUGIN_METADATA(IID "OpenCOR.SEDMLSupportPlugin" FILE "sedmlsupportplugin.json")
 
+    Q_INTERFACES(OpenCOR::FileTypeInterface)
+    Q_INTERFACES(OpenCOR::I18nInterface)
     Q_INTERFACES(OpenCOR::PluginInterface)
 
 public:
+    explicit SEDMLSupportPlugin();
+
+#include "filetypeinterface.inl"
+#include "i18ninterface.inl"
 #include "plugininterface.inl"
 };
 

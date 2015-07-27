@@ -48,6 +48,56 @@ PLUGININFO_FUNC SEDMLSupportPluginInfo()
 }
 
 //==============================================================================
+
+SEDMLSupportPlugin::SEDMLSupportPlugin()
+{
+    // The file types that we support
+    // Note: they will get deleted by FileTypeInterface...
+
+    mFileTypes = FileTypes() << new FileType(qobject_cast<FileTypeInterface *>(this),
+                                             SedmlMimeType, SedmlFileExtension);
+}
+
+//==============================================================================
+// File interface
+//==============================================================================
+
+FileTypes SEDMLSupportPlugin::fileTypes() const
+{
+    // Return the file types that we support
+
+    return mFileTypes;
+}
+
+//==============================================================================
+
+QString SEDMLSupportPlugin::fileTypeDescription(const QString &pMimeType) const
+{
+    // Return the description for the requested MIME type, that is as long as it
+    // is for the MIME type that we support
+
+    if (!pMimeType.compare(SedmlMimeType)) {
+        return tr("SED-ML File");
+    } else {
+        // Not a MIME type that we can recognise
+
+        return QString();
+    }
+}
+
+//==============================================================================
+// I18n interface
+//==============================================================================
+
+void SEDMLSupportPlugin::retranslateUi()
+{
+    // We don't handle this interface...
+    // Note: even though we don't handle this interface, we still want to
+    //       support it since some other aspects of our plugin are
+    //       multilingual...
+}
+
+//==============================================================================
 // Plugin interface
 //==============================================================================
 
