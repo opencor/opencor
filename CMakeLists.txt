@@ -1,4 +1,4 @@
-CMAKE_MINIMUM_REQUIRED(VERSION 3.1)
+CMAKE_MINIMUM_REQUIRED(VERSION 3.2)
 
 # Project definition
 
@@ -40,7 +40,11 @@ ELSE()
     SET(VERSION ${PROJECT_VERSION})
 ENDIF()
 
-FILE(WRITE ${PROJECT_BUILD_DIR}/versiondate.txt "${VERSION}\n${DATE}")
+SET(VERSION_DATE_FILENAME ${PROJECT_BUILD_DIR}/versiondate.txt)
+
+FILE(WRITE ${VERSION_DATE_FILENAME} "${VERSION}\n${DATE}")
+
+KEEP_TRACK_OF_FILE(${VERSION_DATE_FILENAME})
 
 # Files that make up the GUI version of OpenCOR
 
@@ -176,6 +180,8 @@ IF(ENABLE_TESTS)
     SET(TESTS_LIST_FILENAME ${PROJECT_BUILD_DIR}/tests.txt)
 
     FILE(WRITE ${TESTS_LIST_FILENAME})
+
+    KEEP_TRACK_OF_FILE(${TESTS_LIST_FILENAME})
 
     # Destination tests directory
     # Note: DEST_TESTS_DIR isn't only used here, but also in our ADD_PLUGIN()

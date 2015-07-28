@@ -5,6 +5,9 @@ PROJECT(HelpWindowPlugin)
 EXECUTE_PROCESS(COMMAND ${QT_BINARY_DIR}/qcollectiongenerator ${CMAKE_SOURCE_DIR}/doc/${CMAKE_PROJECT_NAME}.qhcp
                                                            -o ${CMAKE_BINARY_DIR}/${CMAKE_PROJECT_NAME}.qhc)
 
+KEEP_TRACK_OF_FILE(${CMAKE_BINARY_DIR}/${CMAKE_PROJECT_NAME}.qch)
+KEEP_TRACK_OF_FILE(${CMAKE_BINARY_DIR}/${CMAKE_PROJECT_NAME}.qhc)
+
 # Add the plugin
 
 ADD_PLUGIN(HelpWindow

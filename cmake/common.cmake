@@ -322,6 +322,22 @@ ENDMACRO()
 
 #===============================================================================
 
+MACRO(KEEP_TRACK_OF_FILE FILE_NAME)
+    # Keep track of the given file
+    # Note: indeed, some files (e.g. versiondate.txt) are 'manually' generated
+    #       and then used to build other files. Now, the 'problem' is that
+    #       Ninja needs to know about those files (see CMake policy CMP0058),
+    #       which we do through the below...
+
+    STRING(SHA1 SHA1_VALUE ${FILE_NAME})
+
+    ADD_CUSTOM_TARGET(KEEP_TRACK_OF_FILE_${SHA1_VALUE}
+                      COMMAND ${CMAKE_COMMAND} -E touch ${FILE_NAME}
+                      BYPRODUCTS ${FILE_NAME})
+ENDMACRO()
+
+#===============================================================================
+
 MACRO(UPDATE_LANGUAGE_FILES TARGET_NAME)
     # Update the translation (.ts) files (if they exist) and generate the
     # language (.qm) files, which will later on be embedded in the project
@@ -336,13 +352,16 @@ MACRO(UPDATE_LANGUAGE_FILES TARGET_NAME)
     FOREACH(LANGUAGE ${LANGUAGES})
         SET(LANGUAGE_FILE ${TARGET_NAME}_${LANGUAGE})
         SET(TS_FILE i18n/${LANGUAGE_FILE}.ts)
+        SET(QM_FILE ${PROJECT_BUILD_DIR}/${LANGUAGE_FILE}.qm)
 
         IF(EXISTS ${PROJECT_SOURCE_DIR}/${TS_FILE})
             EXECUTE_PROCESS(COMMAND ${QT_BINARY_DIR}/lupdate -no-obsolete ${INPUT_FILES}
                                                              -ts ${TS_FILE}
                             WORKING_DIRECTORY ${PROJECT_SOURCE_DIR})
             EXECUTE_PROCESS(COMMAND ${QT_BINARY_DIR}/lrelease ${PROJECT_SOURCE_DIR}/${TS_FILE}
-                                                          -qm ${PROJECT_BUILD_DIR}/${LANGUAGE_FILE}.qm)
+                                                          -qm ${QM_FILE})
+
+            KEEP_TRACK_OF_FILE(${QM_FILE})
         ENDIF()
     ENDFOREACH()
 ENDMACRO()
