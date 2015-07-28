@@ -2,6 +2,14 @@ MACRO(INITIALISE_PROJECT)
 #    SET(CMAKE_VERBOSE_MAKEFILE ON)
     SET(CMAKE_INCLUDE_CURRENT_DIR ON)
 
+    # Check whether we want EXECUTE_PROCESS to be OUTPUT_QUIET
+
+    IF(SHOW_INFORMATION_MESSAGE)
+        SET(OUTPUT_QUIET)
+    ELSE()
+        SET(OUTPUT_QUIET OUTPUT_QUIET)
+    ENDIF()
+
     # Make sure that we are using the compiler we support
 
     IF(WIN32)
@@ -357,9 +365,11 @@ MACRO(UPDATE_LANGUAGE_FILES TARGET_NAME)
         IF(EXISTS ${PROJECT_SOURCE_DIR}/${TS_FILE})
             EXECUTE_PROCESS(COMMAND ${QT_BINARY_DIR}/lupdate -no-obsolete ${INPUT_FILES}
                                                              -ts ${TS_FILE}
-                            WORKING_DIRECTORY ${PROJECT_SOURCE_DIR})
+                            WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
+                            ${OUTPUT_QUIET})
             EXECUTE_PROCESS(COMMAND ${QT_BINARY_DIR}/lrelease ${PROJECT_SOURCE_DIR}/${TS_FILE}
-                                                          -qm ${QM_FILE})
+                                                          -qm ${QM_FILE}
+                            ${OUTPUT_QUIET})
 
             KEEP_TRACK_OF_FILE(${QM_FILE})
         ENDIF()
