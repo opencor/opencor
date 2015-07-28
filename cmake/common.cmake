@@ -313,22 +313,20 @@ ENDMACRO()
 MACRO(UPDATE_LANGUAGE_FILES TARGET_NAME)
     # Update the translation (.ts) files (if they exist) and generate the
     # language (.qm) files, which will later on be embedded in the project
-    # Note: this requires SOURCES, HEADERS_MOC and UIS to be defined for the
-    #       current CMake project, even if that means that these variables are
-    #       to be empty (the case with some plugins for example). Indeed, since
-    #       otherwise the value of these variables, as defined in a previous
-    #       project, may be used...
 
-    SET(LANGUAGE_FILES
-        ${TARGET_NAME}_fr
-    )
+    SET(LANGUAGES fr)
+    SET(INPUT_FILES)
 
-    FOREACH(LANGUAGE_FILE ${LANGUAGE_FILES})
+    FOREACH(INPUT_FILE ${ARGN})
+        LIST(APPEND INPUT_FILES ${INPUT_FILE})
+    ENDFOREACH()
+
+    FOREACH(LANGUAGE ${LANGUAGES})
+        SET(LANGUAGE_FILE ${TARGET_NAME}_${LANGUAGE})
         SET(TS_FILE i18n/${LANGUAGE_FILE}.ts)
 
         IF(EXISTS ${PROJECT_SOURCE_DIR}/${TS_FILE})
-            EXECUTE_PROCESS(COMMAND ${QT_BINARY_DIR}/lupdate -no-obsolete
-                                                             ${SOURCES} ${HEADERS_MOC} ${UIS}
+            EXECUTE_PROCESS(COMMAND ${QT_BINARY_DIR}/lupdate -no-obsolete ${INPUT_FILES}
                                                          -ts ${TS_FILE}
                             WORKING_DIRECTORY ${PROJECT_SOURCE_DIR})
             EXECUTE_PROCESS(COMMAND ${QT_BINARY_DIR}/lrelease ${PROJECT_SOURCE_DIR}/${TS_FILE}
@@ -453,7 +451,7 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
     # which will later on be embedded in the plugin
 
     IF(NOT "${RESOURCES}" STREQUAL "")
-        UPDATE_LANGUAGE_FILES(${PLUGIN_NAME})
+        UPDATE_LANGUAGE_FILES(${PLUGIN_NAME} ${SOURCES} ${HEADERS_MOC} ${UIS})
     ENDIF()
 
     # Definition to make sure that the plugin can be used by other plugins

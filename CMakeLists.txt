@@ -126,7 +126,7 @@ INCLUDE_DIRECTORIES(
 # Update the translation (.ts) files and generate the language (.qm) files
 # that will later on be embedded in the OpenCOR executable as resources
 
-UPDATE_LANGUAGE_FILES(${PROJECT_NAME} FALSE)
+UPDATE_LANGUAGE_FILES(${PROJECT_NAME} ${SOURCES} ${HEADERS_MOC} ${UIS})
 
 # Third-party library that must be directly embedded in the GUI version of
 # OpenCOR
