@@ -85,13 +85,17 @@ MACRO(INITIALISE_PROJECT)
 
     SET(REQUIRED_QT_MODULES
         Concurrent
+        Core
+        Gui
         Help
         ${MAC_EXTRAS}
         Network
         OpenGL
         PrintSupport
         Svg
+        UiPlugin
         UiTools
+        WebKit
         WebKitWidgets
         Widgets
         Xml
@@ -100,6 +104,8 @@ MACRO(INITIALISE_PROJECT)
 
     FOREACH(REQUIRED_QT_MODULE ${REQUIRED_QT_MODULES})
         FIND_PACKAGE(Qt5${REQUIRED_QT_MODULE} REQUIRED)
+
+        SET(Qt5${REQUIRED_QT_MODULE}_DIR ${Qt5${REQUIRED_QT_MODULE}_DIR} CACHE INTERNAL "${Qt5${REQUIRED_QT_MODULE}_DIR}" FORCE)
     ENDFOREACH()
 
     IF(ENABLE_TESTS)
