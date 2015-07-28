@@ -327,7 +327,7 @@ MACRO(UPDATE_LANGUAGE_FILES TARGET_NAME)
 
         IF(EXISTS ${PROJECT_SOURCE_DIR}/${TS_FILE})
             EXECUTE_PROCESS(COMMAND ${QT_BINARY_DIR}/lupdate -no-obsolete ${INPUT_FILES}
-                                                         -ts ${TS_FILE}
+                                                             -ts ${TS_FILE}
                             WORKING_DIRECTORY ${PROJECT_SOURCE_DIR})
             EXECUTE_PROCESS(COMMAND ${QT_BINARY_DIR}/lrelease ${PROJECT_SOURCE_DIR}/${TS_FILE}
                                                           -qm ${PROJECT_BUILD_DIR}/${LANGUAGE_FILE}.qm)
