@@ -66,11 +66,15 @@ MACRO(INITIALISE_PROJECT)
     # explicitly asked for a debug version
 
     IF("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
-        MESSAGE("Building a ${ARCHITECTURE}-bit debug version...")
+        IF(SHOW_INFORMATION_MESSAGE)
+            MESSAGE("Building a ${ARCHITECTURE}-bit debug version...")
+        ENDIF()
 
         SET(RELEASE_MODE FALSE)
     ELSE()
-        MESSAGE("Building a ${ARCHITECTURE}-bit release version...")
+        IF(SHOW_INFORMATION_MESSAGE)
+            MESSAGE("Building a ${ARCHITECTURE}-bit release version...")
+        ENDIF()
 
         SET(RELEASE_MODE TRUE)
     ENDIF()
@@ -263,7 +267,9 @@ MACRO(INITIALISE_PROJECT)
             SET(CMAKE_OSX_DEPLOYMENT_TARGET 10.7)
         ENDIF()
 
-        MESSAGE("Building for ${CMAKE_OSX_DEPLOYMENT_TARGET} and later...")
+        IF(SHOW_INFORMATION_MESSAGE)
+            MESSAGE("Building for ${CMAKE_OSX_DEPLOYMENT_TARGET} and later...")
+        ENDIF()
     ENDIF()
 
     # Location of our plugins so that we don't have to deploy OpenCOR on
@@ -1151,7 +1157,9 @@ MACRO(RETRIEVE_BINARY_FILE DIRNAME FILENAME SHA1_VALUE)
     #       so we handle everything ourselves...
 
     IF(NOT EXISTS ${REAL_FILENAME})
-        MESSAGE("Retrieving '${DIRNAME}/${FILENAME}'...")
+        IF(SHOW_INFORMATION_MESSAGE)
+            MESSAGE("Retrieving '${DIRNAME}/${FILENAME}'...")
+        ENDIF()
 
         # We retrieve the compressed version of the file
 
