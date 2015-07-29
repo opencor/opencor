@@ -308,12 +308,13 @@ bool CellmlFile::doLoad(const QString &pFileName, const QString &pFileContents,
     } catch (iface::cellml_api::CellMLException &exception) {
         // Something went wrong with the loading of the model
 
-        if (pFileContents.isEmpty())
+        if (pFileContents.isEmpty()) {
             pIssues << CellmlFileIssue(CellmlFileIssue::Error,
                                        QObject::tr("the model could not be loaded (%1)").arg(Core::formatMessage(QString::fromStdWString(exception.explanation))));
-        else
+        } else {
             pIssues << CellmlFileIssue(CellmlFileIssue::Error,
                                        QObject::tr("the model could not be created (%1)").arg(Core::formatMessage(QString::fromStdWString(exception.explanation))));
+        }
 
         return false;
     }
