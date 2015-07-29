@@ -844,8 +844,10 @@ void CentralWidget::openRemoteFile(const QString &pUrl,
     if (fileName.isEmpty()) {
         // The remote file isn't already opened, so download its contents and
         // show our busy widget during that process
-        // Note: our busy widget gets hidden either by loadSettings() or by
-        //       updateGui()...
+        // Note: if the opening is successful, our busy widget will be hidden
+        //       either by loadSettings() or by updateGui(), so we have nothing
+        //       to do about it here. On the other hand, if the opening fails,
+        //       we have to hide our busy widget...
 
         showBusyWidget(this);
 
@@ -877,6 +879,8 @@ void CentralWidget::openRemoteFile(const QString &pUrl,
                 QMessageBox::warning(this, tr("Open Remote File"),
                                      tr("<strong>%1</strong> could not be opened (%2).").arg(fileNameOrUrl, formatMessage(errorMessage)));
             }
+
+            hideBusyWidget();
         }
     } else {
         openFile(fileName);
