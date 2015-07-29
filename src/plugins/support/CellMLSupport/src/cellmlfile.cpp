@@ -362,7 +362,7 @@ void CellmlFile::retrieveCmetaIdsFromCellmlElement(iface::cellml_api::CellMLElem
         }
     } catch (...) {
         // Note: we should never reach this point, but it may still happen if a
-        //       CellML file contains an child element that is not known to the
+        //       CellML file contains a child element that is not known to the
         //       CellML API. We are taking the view that this is a limitation of
         //       the CellML API and shouldn't therefore generate an error for
         //       something that should have been working fine in the first
@@ -811,7 +811,7 @@ CellmlFileRdfTriple * CellmlFile::rdfTriple(iface::cellml_api::CellMLElement *pE
     // Go through the RDF triples associated with the given CellML element and
     // check whether it is the one we are after
 
-    foreach (CellmlFileRdfTriple *rdfTriple, rdfTriples(pElement))
+    foreach (CellmlFileRdfTriple *rdfTriple, rdfTriples(pElement)) {
         if (   !pQualifier.compare(rdfTriple->qualifierAsString())
             && !pResource.compare(rdfTriple->resource())
             && !pId.compare(rdfTriple->id())) {
@@ -819,6 +819,7 @@ CellmlFileRdfTriple * CellmlFile::rdfTriple(iface::cellml_api::CellMLElement *pE
 
             return rdfTriple;
         }
+    }
 
     // We couldn't find the RDF triple
 
