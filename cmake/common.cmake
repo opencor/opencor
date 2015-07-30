@@ -2,6 +2,14 @@ MACRO(INITIALISE_PROJECT)
 #    SET(CMAKE_VERBOSE_MAKEFILE ON)
     SET(CMAKE_INCLUDE_CURRENT_DIR ON)
 
+    # Check whether we want EXECUTE_PROCESS to be OUTPUT_QUIET
+
+    IF(SHOW_INFORMATION_MESSAGE)
+        SET(OUTPUT_QUIET)
+    ELSE()
+        SET(OUTPUT_QUIET OUTPUT_QUIET)
+    ENDIF()
+
     # Make sure that we are using the compiler we support
 
     IF(WIN32)
@@ -66,11 +74,15 @@ MACRO(INITIALISE_PROJECT)
     # explicitly asked for a debug version
 
     IF("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
-        MESSAGE("Building a ${ARCHITECTURE}-bit debug version...")
+        IF(SHOW_INFORMATION_MESSAGE)
+            MESSAGE("Building a ${ARCHITECTURE}-bit debug version...")
+        ENDIF()
 
         SET(RELEASE_MODE FALSE)
     ELSE()
-        MESSAGE("Building a ${ARCHITECTURE}-bit release version...")
+        IF(SHOW_INFORMATION_MESSAGE)
+            MESSAGE("Building a ${ARCHITECTURE}-bit release version...")
+        ENDIF()
 
         SET(RELEASE_MODE TRUE)
     ENDIF()
@@ -85,13 +97,17 @@ MACRO(INITIALISE_PROJECT)
 
     SET(REQUIRED_QT_MODULES
         Concurrent
+        Core
+        Gui
         Help
         ${MAC_EXTRAS}
         Network
         OpenGL
         PrintSupport
         Svg
+        UiPlugin
         UiTools
+        WebKit
         WebKitWidgets
         Widgets
         Xml
@@ -100,6 +116,8 @@ MACRO(INITIALISE_PROJECT)
 
     FOREACH(REQUIRED_QT_MODULE ${REQUIRED_QT_MODULES})
         FIND_PACKAGE(Qt5${REQUIRED_QT_MODULE} REQUIRED)
+
+        SET(Qt5${REQUIRED_QT_MODULE}_DIR ${Qt5${REQUIRED_QT_MODULE}_DIR} CACHE INTERNAL "${Qt5${REQUIRED_QT_MODULE}_DIR}" FORCE)
     ENDFOREACH()
 
     IF(ENABLE_TESTS)
@@ -257,7 +275,9 @@ MACRO(INITIALISE_PROJECT)
             SET(CMAKE_OSX_DEPLOYMENT_TARGET 10.7)
         ENDIF()
 
-        MESSAGE("Building for ${CMAKE_OSX_DEPLOYMENT_TARGET} and later...")
+        IF(SHOW_INFORMATION_MESSAGE)
+            MESSAGE("Building for ${CMAKE_OSX_DEPLOYMENT_TARGET} and later...")
+        ENDIF()
     ENDIF()
 
     # Location of our plugins so that we don't have to deploy OpenCOR on
@@ -310,29 +330,45 @@ ENDMACRO()
 
 #===============================================================================
 
+MACRO(KEEP_TRACK_OF_FILE FILE_NAME)
+    # Keep track of the given file
+    # Note: indeed, some files (e.g. versiondate.txt) are 'manually' generated
+    #       and then used to build other files. Now, the 'problem' is that
+    #       Ninja needs to know about those files (see CMake policy CMP0058),
+    #       which we do through the below...
+
+    ADD_CUSTOM_COMMAND(OUTPUT ${FILE_NAME}
+                       COMMAND ${CMAKE_COMMAND} -E sleep 0)
+ENDMACRO()
+
+#===============================================================================
+
 MACRO(UPDATE_LANGUAGE_FILES TARGET_NAME)
     # Update the translation (.ts) files (if they exist) and generate the
     # language (.qm) files, which will later on be embedded in the project
-    # Note: this requires SOURCES, HEADERS_MOC and UIS to be defined for the
-    #       current CMake project, even if that means that these variables are
-    #       to be empty (the case with some plugins for example). Indeed, since
-    #       otherwise the value of these variables, as defined in a previous
-    #       project, may be used...
 
-    SET(LANGUAGE_FILES
-        ${TARGET_NAME}_fr
-    )
+    SET(LANGUAGES fr)
+    SET(INPUT_FILES)
 
-    FOREACH(LANGUAGE_FILE ${LANGUAGE_FILES})
+    FOREACH(INPUT_FILE ${ARGN})
+        LIST(APPEND INPUT_FILES ${INPUT_FILE})
+    ENDFOREACH()
+
+    FOREACH(LANGUAGE ${LANGUAGES})
+        SET(LANGUAGE_FILE ${TARGET_NAME}_${LANGUAGE})
         SET(TS_FILE i18n/${LANGUAGE_FILE}.ts)
+        SET(QM_FILE ${PROJECT_BUILD_DIR}/${LANGUAGE_FILE}.qm)
 
         IF(EXISTS ${PROJECT_SOURCE_DIR}/${TS_FILE})
-            EXECUTE_PROCESS(COMMAND ${QT_BINARY_DIR}/lupdate -no-obsolete
-                                                             ${SOURCES} ${HEADERS_MOC} ${UIS}
-                                                         -ts ${TS_FILE}
-                            WORKING_DIRECTORY ${PROJECT_SOURCE_DIR})
+            EXECUTE_PROCESS(COMMAND ${QT_BINARY_DIR}/lupdate -no-obsolete ${INPUT_FILES}
+                                                             -ts ${TS_FILE}
+                            WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
+                            ${OUTPUT_QUIET})
             EXECUTE_PROCESS(COMMAND ${QT_BINARY_DIR}/lrelease ${PROJECT_SOURCE_DIR}/${TS_FILE}
-                                                          -qm ${PROJECT_BUILD_DIR}/${LANGUAGE_FILE}.qm)
+                                                          -qm ${QM_FILE}
+                            ${OUTPUT_QUIET})
+
+            KEEP_TRACK_OF_FILE(${QM_FILE})
         ENDIF()
     ENDFOREACH()
 ENDMACRO()
@@ -453,7 +489,7 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
     # which will later on be embedded in the plugin
 
     IF(NOT "${RESOURCES}" STREQUAL "")
-        UPDATE_LANGUAGE_FILES(${PLUGIN_NAME})
+        UPDATE_LANGUAGE_FILES(${PLUGIN_NAME} ${SOURCES} ${HEADERS_MOC} ${UIS})
     ENDIF()
 
     # Definition to make sure that the plugin can be used by other plugins
@@ -1147,7 +1183,9 @@ MACRO(RETRIEVE_BINARY_FILE DIRNAME FILENAME SHA1_VALUE)
     #       so we handle everything ourselves...
 
     IF(NOT EXISTS ${REAL_FILENAME})
-        MESSAGE("Retrieving '${DIRNAME}/${FILENAME}'...")
+        IF(SHOW_INFORMATION_MESSAGE)
+            MESSAGE("Retrieving '${DIRNAME}/${FILENAME}'...")
+        ENDIF()
 
         # We retrieve the compressed version of the file
 
