@@ -337,11 +337,8 @@ MACRO(KEEP_TRACK_OF_FILE FILE_NAME)
     #       Ninja needs to know about those files (see CMake policy CMP0058),
     #       which we do through the below...
 
-    STRING(SHA1 SHA1_VALUE ${FILE_NAME})
-
-    ADD_CUSTOM_TARGET(KEEP_TRACK_OF_FILE_${SHA1_VALUE}
-                      COMMAND ${CMAKE_COMMAND} -E touch ${FILE_NAME}
-                      BYPRODUCTS ${FILE_NAME})
+    ADD_CUSTOM_COMMAND(OUTPUT ${FILE_NAME}
+                       COMMAND ${CMAKE_COMMAND} -E sleep 0)
 ENDMACRO()
 
 #===============================================================================

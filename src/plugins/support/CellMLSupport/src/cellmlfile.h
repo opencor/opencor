@@ -139,6 +139,7 @@ private:
     CellmlFileRuntime *mRuntime;
 
     bool mLoadingNeeded;
+    bool mFullInstantiationNeeded;
     bool mValidNeeded;
     bool mRuntimeUpdateNeeded;
 

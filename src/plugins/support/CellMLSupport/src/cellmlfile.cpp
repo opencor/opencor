@@ -118,6 +118,7 @@ void CellmlFile::reset()
     mIssues.clear();
 
     mLoadingNeeded = true;
+    mFullInstantiationNeeded = true;
     mValidNeeded = true;
     mRuntimeUpdateNeeded = true;
 
@@ -177,11 +178,13 @@ bool CellmlFile::fullyInstantiateImports(iface::cellml_api::Model *pModel,
                                          CellmlFileIssues &pIssues)
 {
     // Fully instantiate all the imports, but only if we are dealing with a non
-    // CellML 1.0 model
+    // CellML 1.0 model, and then keep track of that fact (so we don't fully
+    // instantiate everytime we come here)
 
     Version cellmlVersion = version(pModel);
 
-    if ((cellmlVersion != Unknown) && (cellmlVersion != Cellml_1_0)) {
+    if (   mFullInstantiationNeeded
+        && (cellmlVersion != Unknown) && (cellmlVersion != Cellml_1_0)) {
         try {
             // Note: the below is based on CDA_Model::fullyInstantiateImports().
             //       Indeed, CDA_Model::fullyInstantiateImports() doesn't work
@@ -270,6 +273,8 @@ bool CellmlFile::fullyInstantiateImports(iface::cellml_api::Model *pModel,
                                         fileNameOrUrl);
                 }
             }
+
+            mFullInstantiationNeeded = false;
         } catch (...) {
             // Something went wrong with the full instantiation of the imports
 
@@ -308,12 +313,13 @@ bool CellmlFile::doLoad(const QString &pFileName, const QString &pFileContents,
     } catch (iface::cellml_api::CellMLException &exception) {
         // Something went wrong with the loading of the model
 
-        if (pFileContents.isEmpty())
+        if (pFileContents.isEmpty()) {
             pIssues << CellmlFileIssue(CellmlFileIssue::Error,
                                        QObject::tr("the model could not be loaded (%1)").arg(Core::formatMessage(QString::fromStdWString(exception.explanation))));
-        else
+        } else {
             pIssues << CellmlFileIssue(CellmlFileIssue::Error,
                                        QObject::tr("the model could not be created (%1)").arg(Core::formatMessage(QString::fromStdWString(exception.explanation))));
+        }
 
         return false;
     }
@@ -362,7 +368,7 @@ void CellmlFile::retrieveCmetaIdsFromCellmlElement(iface::cellml_api::CellMLElem
         }
     } catch (...) {
         // Note: we should never reach this point, but it may still happen if a
-        //       CellML file contains an child element that is not known to the
+        //       CellML file contains a child element that is not known to the
         //       CellML API. We are taking the view that this is a limitation of
         //       the CellML API and shouldn't therefore generate an error for
         //       something that should have been working fine in the first
@@ -811,7 +817,7 @@ CellmlFileRdfTriple * CellmlFile::rdfTriple(iface::cellml_api::CellMLElement *pE
     // Go through the RDF triples associated with the given CellML element and
     // check whether it is the one we are after
 
-    foreach (CellmlFileRdfTriple *rdfTriple, rdfTriples(pElement))
+    foreach (CellmlFileRdfTriple *rdfTriple, rdfTriples(pElement)) {
         if (   !pQualifier.compare(rdfTriple->qualifierAsString())
             && !pResource.compare(rdfTriple->resource())
             && !pId.compare(rdfTriple->id())) {
@@ -819,6 +825,7 @@ CellmlFileRdfTriple * CellmlFile::rdfTriple(iface::cellml_api::CellMLElement *pE
 
             return rdfTriple;
         }
+    }
 
     // We couldn't find the RDF triple
 
