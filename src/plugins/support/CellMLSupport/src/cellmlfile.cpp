@@ -118,6 +118,7 @@ void CellmlFile::reset()
     mIssues.clear();
 
     mLoadingNeeded = true;
+    mFullInstantiationNeeded = true;
     mValidNeeded = true;
     mRuntimeUpdateNeeded = true;
 
@@ -177,11 +178,13 @@ bool CellmlFile::fullyInstantiateImports(iface::cellml_api::Model *pModel,
                                          CellmlFileIssues &pIssues)
 {
     // Fully instantiate all the imports, but only if we are dealing with a non
-    // CellML 1.0 model
+    // CellML 1.0 model, and then keep track of that fact (so we don't fully
+    // instantiate everytime we come here)
 
     Version cellmlVersion = version(pModel);
 
-    if ((cellmlVersion != Unknown) && (cellmlVersion != Cellml_1_0)) {
+    if (   mFullInstantiationNeeded
+        && (cellmlVersion != Unknown) && (cellmlVersion != Cellml_1_0)) {
         try {
             // Note: the below is based on CDA_Model::fullyInstantiateImports().
             //       Indeed, CDA_Model::fullyInstantiateImports() doesn't work
@@ -270,6 +273,8 @@ bool CellmlFile::fullyInstantiateImports(iface::cellml_api::Model *pModel,
                                         fileNameOrUrl);
                 }
             }
+
+            mFullInstantiationNeeded = false;
         } catch (...) {
             // Something went wrong with the full instantiation of the imports
 
