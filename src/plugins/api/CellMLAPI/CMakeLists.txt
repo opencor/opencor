@@ -162,7 +162,7 @@ ELSE()
     ENDIF()
 ENDIF()
 
-# Retrieve some CellML API libraries settings
+# Retrieve some CellML API settings
 
 RETRIEVE_CELLML_API_SETTINGS()
 
@@ -190,8 +190,6 @@ ADD_PLUGIN(CellMLAPI
         src
     QT_MODULES
         Core
-    QT_LIBRARIES
-        QtCore
     EXTERNAL_BINARIES_DIR
         ${CELLML_API_EXTERNAL_BINARIES_DIR}
     EXTERNAL_BINARIES

@@ -27,7 +27,10 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
-#include "sedml/common/libsedml-version.h"
+#include "sedmlapidisablewarnings.h"
+    #include "sedml/common/libsedml-version.h"
+    #include "sedml/SedDocument.h"
+#include "sedmlapienablewarnings.h"
 
 //==============================================================================
 
@@ -36,10 +39,22 @@ void Tests::basicTests()
     // Some very basic tests to make sure that we have access to libSEDML
 
     // Check the version of libSEDML
-//---GRY--- THERE IS CURRENTLY A PROBLEM WITH libSEDML IN THAT IT DOESN'T MAKE
-//          PROPER USE OF ITS NAMESPACE...
 
-    QCOMPARE(/*libsedml::*/getLibSEDMLDottedVersion(), "0.3.0");
+    QCOMPARE(libsedml::getLibSEDMLDottedVersion(), "0.3.0");
+
+    // Create a SED-ML document with a model inside it, then set the name of the
+    // model and check that it has been properly set
+
+    libsedml::SedDocument *sedmlDocument = new libsedml::SedDocument();
+    libsedml::SedModel *sedmlModel = sedmlDocument->createModel();
+
+    static const std::string modelName = "myModel";
+
+    sedmlModel->setName(modelName);
+
+    QCOMPARE(sedmlModel->getName(), modelName);
+
+    delete sedmlDocument;
 }
 
 //==============================================================================

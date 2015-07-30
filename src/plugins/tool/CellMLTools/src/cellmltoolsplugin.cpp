@@ -20,7 +20,6 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include "cellmlfilemanager.h"
-#include "cellmlsupportplugin.h"
 #include "cellmltoolsplugin.h"
 #include "corecliutils.h"
 #include "coreguiutils.h"
@@ -52,7 +51,7 @@ PLUGININFO_FUNC CellMLToolsPluginInfo()
     descriptions.insert("en", QString::fromUtf8("a plugin to access various <a href=\"http://www.cellml.org/\">CellML</a>-related tools."));
     descriptions.insert("fr", QString::fromUtf8("une extension pour accéder à divers outils en rapport avec <a href=\"http://www.cellml.org/\">CellML</a>."));
 
-    return new PluginInfo(PluginInfo::Tool, true, true,
+    return new PluginInfo("Tool", true, true,
                           QStringList() << "CellMLSupport",
                           descriptions);
 }
@@ -376,7 +375,7 @@ int CellMLToolsPlugin::runExportCommand(const QStringList &pArguments)
 
         if (!QFile::exists(inFileName)) {
             errorMessage = "The input file could not be found.";
-        } else if (!CellMLSupport::isCellmlFile(inFileName)) {
+        } else if (!CellMLSupport::CellmlFileManager::instance()->isCellmlFile(inFileName)) {
             errorMessage = "The input file is not a CellML file.";
         } else {
             if (Core::FileManager::instance()->manage(inFileName,

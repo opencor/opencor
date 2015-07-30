@@ -17,8 +17,4 @@ ADD_PLUGIN(SampleTools
         Sample
     QT_MODULES
         Widgets
-    QT_LIBRARIES
-        QtCore
-        QtGui
-        QtWidgets
 )

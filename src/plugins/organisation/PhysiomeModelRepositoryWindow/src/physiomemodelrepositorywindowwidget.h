@@ -51,6 +51,8 @@ public:
     explicit PhysiomeModelRepositoryWindowExposure(const QString &pUrl,
                                                    const QString &pName);
 
+    bool operator<(const PhysiomeModelRepositoryWindowExposure &pExposure) const;
+
     QString url() const;
     QString name() const;
 
@@ -76,7 +78,7 @@ public:
 
     virtual void retranslateUi();
 
-    void initialize(const PhysiomeModelRepositoryWindowExposures &pModels,
+    void initialize(const PhysiomeModelRepositoryWindowExposures &pExposures,
                     const QString &pErrorMessage);
 
     void filter(const QString &pFilter);

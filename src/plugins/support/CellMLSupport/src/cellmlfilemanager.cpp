@@ -20,46 +20,19 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include "cellmlfilemanager.h"
-#include "cellmlsupportplugin.h"
 #include "corecliutils.h"
 #include "filemanager.h"
 
 //==============================================================================
 
+#include "cellmlapidisablewarnings.h"
+    #include "CellMLBootstrap.hpp"
+#include "cellmlapienablewarnings.h"
+
+//==============================================================================
+
 namespace OpenCOR {
 namespace CellMLSupport {
-
-//==============================================================================
-
-CellmlFileManager::CellmlFileManager() :
-    mCellmlFiles(CellmlFiles())
-{
-    // Create some connections to keep track of some events related to our
-    // 'global' file manager
-
-    Core::FileManager *fileManagerInstance = Core::FileManager::instance();
-
-    connect(fileManagerInstance, SIGNAL(fileManaged(const QString &)),
-            this, SLOT(manageFile(const QString &)));
-    connect(fileManagerInstance, SIGNAL(fileUnmanaged(const QString &)),
-            this, SLOT(unmanageFile(const QString &)));
-
-    connect(fileManagerInstance, SIGNAL(fileReloaded(const QString &)),
-            this, SLOT(reloadFile(const QString &)));
-
-    connect(fileManagerInstance, SIGNAL(fileRenamed(const QString &, const QString &)),
-            this, SLOT(renameFile(const QString &, const QString &)));
-}
-
-//==============================================================================
-
-CellmlFileManager::~CellmlFileManager()
-{
-    // Remove all the managed files
-
-    foreach (CellmlFile *cellmlFile, mCellmlFiles)
-        delete cellmlFile;
-}
 
 //==============================================================================
 
@@ -75,95 +48,48 @@ CellmlFileManager * CellmlFileManager::instance()
 
 //==============================================================================
 
+bool CellmlFileManager::isCellmlFile(const QString &pFileName) const
+{
+    // Return whether the given file is a CellML file
+
+    return instance()->isFile(pFileName);
+}
+
+//==============================================================================
+
 CellmlFile * CellmlFileManager::cellmlFile(const QString &pFileName)
 {
-    // Return the CellmlFile object, if any, associated with our given file
+    // Return the CellmlFile object, if any, associated with the given file
 
-    return mCellmlFiles.value(Core::nativeCanonicalFileName(pFileName));
+    return qobject_cast<CellMLSupport::CellmlFile *>(instance()->file(pFileName));
 }
 
 //==============================================================================
 
-void CellmlFileManager::manageFile(const QString &pFileName)
+bool CellmlFileManager::canLoadFileContents(const QString &pFileContents) const
 {
-    QString nativeFileName = Core::nativeCanonicalFileName(pFileName);
+    // Try to load the CellML file contents
 
-    if (!cellmlFile(nativeFileName) && isCellmlFile(nativeFileName))
-        // We are dealing with a CellML file, which is not already managed, so
-        // we can add it to our list of managed CellML files
+    ObjRef<iface::cellml_api::CellMLBootstrap> cellmlBootstrap = CreateCellMLBootstrap();
+    ObjRef<iface::cellml_api::DOMModelLoader> modelLoader = cellmlBootstrap->modelLoader();
+    ObjRef<iface::cellml_api::Model> model;
 
-        mCellmlFiles.insert(nativeFileName, new CellmlFile(nativeFileName));
-}
+    try {
+        model = modelLoader->createFromText(pFileContents.toStdWString());
 
-//==============================================================================
-
-void CellmlFileManager::unmanageFile(const QString &pFileName)
-{
-    CellmlFile *crtCellmlFile = cellmlFile(pFileName);
-
-    if (crtCellmlFile) {
-        // We are dealing with a CellML file, so we can remove it from our list
-        // of managed CellML files after having deleted it
-
-        delete crtCellmlFile;
-
-        mCellmlFiles.remove(Core::nativeCanonicalFileName(pFileName));
+        return true;
+    } catch (iface::cellml_api::CellMLException &) {
+        return false;
     }
 }
 
 //==============================================================================
 
-void CellmlFileManager::reloadFile(const QString &pFileName)
+QObject * CellmlFileManager::newFile(const QString &pFileName) const
 {
-    // The file is to be reloaded, so reload it
-    // Note: to reload a file here ensures that our different CellML-based views
-    //       won't each do it, thus saving time and ensuring that a CellML-based
-    //       view doesn't forget to do it...
+    // Create and return a new SED-ML file
 
-    CellmlFile *crtCellmlFile = cellmlFile(pFileName);
-
-    if (crtCellmlFile) {
-        // The file is managed, but should it still be (i.e. can it still be
-        // considered as being a CellML file)?
-
-        if (isCellmlFile(pFileName))
-            crtCellmlFile->reload();
-        else
-            unmanageFile(pFileName);
-    } else {
-        // The file is not managed, which means that previously it wasn't
-        // considered as being a CellML file, but things may be different now,
-        // so try to remanage it and load it, if possible
-
-        manageFile(pFileName);
-
-        crtCellmlFile = cellmlFile(pFileName);
-
-        if (crtCellmlFile)
-            crtCellmlFile->load();
-    }
-}
-
-//==============================================================================
-
-void CellmlFileManager::renameFile(const QString &pOldFileName,
-                                   const QString &pNewFileName)
-{
-    // The file has been renamed, so we need to update our CellML files mapping,
-    // if needed
-
-    CellmlFile *crtCellmlFile = cellmlFile(pOldFileName);
-
-    if (!crtCellmlFile)
-        return;
-
-    mCellmlFiles.insert(pNewFileName, crtCellmlFile);
-    mCellmlFiles.remove(pOldFileName);
-
-    // We also need to ensure that our CellML file object has its file name
-    // updated
-
-    crtCellmlFile->setFileName(pNewFileName);
+    return new CellmlFile(Core::nativeCanonicalFileName(pFileName));
 }
 
 //==============================================================================

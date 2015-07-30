@@ -25,7 +25,7 @@ From there, using cmake-gui on Windows or ccmake on Linux / OS X, we want to:
  - Update the installation destination so that, upon 'installation', we have a ready to use version of the CellML API binaries (this is particularly useful on OS X since the 'installation' will result in 'clean' binaries):
     ===> CMAKE_INSTALL_PREFIX=<InstallationDestination>
  - Specify the deployment target (OS X only):
-    ===> MACOSX_DEPLOYMENT_TARGET=10.7
+    ===> CMAKE_OSX_DEPLOYMENT_TARGET=10.7
 
 Once we have built and 'installed' the CellML API, we can replace the OpenCOR version of the include and binary files, which are located in the 'installed' include and lib folders, respectively. Regarding the include files, there are a few things that need to be done:
  - the cda_config.h, IfaceCellML_events.hxx and IfaceDOM_events.hxx files are to be discarded;

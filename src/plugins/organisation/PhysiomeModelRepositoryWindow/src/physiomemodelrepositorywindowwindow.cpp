@@ -44,6 +44,7 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include "git2.h"
+#include "zlib.h"
 
 //==============================================================================
 
@@ -170,11 +171,12 @@ void PhysiomeModelRepositoryWindowWindow::sendPmrRequest(const PmrRequest &pPmrR
 
     busy(true);
 
-    // Send our request to the PMR
+    // Send our request to the PMR, asking for the response to be compressed
 
     QNetworkRequest networkRequest;
 
     networkRequest.setRawHeader("Accept", "application/vnd.physiome.pmr2.json.1");
+    networkRequest.setRawHeader("Accept-Encoding", "gzip");
 
     switch (pPmrRequest) {
     case BookmarkUrlsForCloning:
@@ -258,6 +260,17 @@ void PhysiomeModelRepositoryWindowWindow::on_refreshButton_clicked()
 
 //==============================================================================
 
+bool sortExposureFiles(const QString &pExposureFile1,
+                       const QString &pExposureFile2)
+{
+    // Determine which of the two exposure files should be first (without
+    // worrying about casing)
+
+    return pExposureFile1.compare(pExposureFile2, Qt::CaseInsensitive) < 0;
+}
+
+//==============================================================================
+
 void PhysiomeModelRepositoryWindowWindow::finished(QNetworkReply *pNetworkReply)
 {
     // Check whether our PMR request was successful
@@ -265,20 +278,49 @@ void PhysiomeModelRepositoryWindowWindow::finished(QNetworkReply *pNetworkReply)
     PmrRequest pmrRequest = PmrRequest(pNetworkReply->property(PmrRequestProperty).toInt());
 
     PhysiomeModelRepositoryWindowExposures exposures = PhysiomeModelRepositoryWindowExposures();
+    QString exposureFile = QString();
     QString errorMessage = QString();
-
     QStringList bookmarkUrls = QStringList();
 
-    QString exposureFile = QString();
-
     if (pNetworkReply->error() == QNetworkReply::NoError) {
-        // Parse the JSON data
+        // Retrieve an uncompress our JSON data
+
+        QByteArray compressedData = pNetworkReply->readAll();
+        QByteArray uncompressedData = QByteArray();
+        z_stream stream;
+
+        memset(&stream, 0, sizeof(z_stream));
+
+        if (inflateInit2(&stream, MAX_WBITS+16) == Z_OK) {
+            static const int BufferSize = 32768;
+
+            Bytef buffer[BufferSize];
+
+            stream.next_in = (Bytef *) compressedData.data();
+            stream.avail_in = compressedData.size();
+
+            do {
+                stream.next_out = buffer;
+                stream.avail_out = BufferSize;
+
+                inflate(&stream, Z_NO_FLUSH);
+
+                if (!stream.msg)
+                    uncompressedData += QByteArray::fromRawData((char *) buffer, BufferSize-stream.avail_out);
+                else
+                    uncompressedData = QByteArray();
+            } while (!stream.avail_out);
+
+            inflateEnd(&stream);
+        }
+
+        // Parse our uncompressed JSON data
 
         QJsonParseError jsonParseError;
-        QJsonDocument jsonDocument = QJsonDocument::fromJson(pNetworkReply->readAll(), &jsonParseError);
+        QJsonDocument jsonDocument = QJsonDocument::fromJson(uncompressedData, &jsonParseError);
 
         if (jsonParseError.error == QJsonParseError::NoError) {
-            // Check the PMR request to determine what we should do with the
+            // Check our PMR request to determine what we should do with the
             // data
 
             QVariantMap collectionMap = jsonDocument.object().toVariantMap()["collection"].toMap();
@@ -307,7 +349,12 @@ void PhysiomeModelRepositoryWindowWindow::finished(QNetworkReply *pNetworkReply)
                     QVariantMap linkMap = linkVariant.toMap();
 
                     exposures << PhysiomeModelRepositoryWindowExposure(linkMap["href"].toString().trimmed(),
-                                                                       linkMap["prompt"].toString().trimmed());
+                                                                       linkMap["prompt"].toString().trimmed().replace("\n", " ").replace("  ", " "));
+                    // Note: the prompt may contain some '\n', so we want to
+                    //       remove them, which in turn may mean that it will
+                    //       contain two consecutive spaces (should we have had
+                    //       something like "xxx \nyyy"), which we want to
+                    //       replace with only one of them...
                 }
             }
         } else {
@@ -361,9 +408,12 @@ void PhysiomeModelRepositoryWindowWindow::finished(QNetworkReply *pNetworkReply)
         //       the first and last exposure file...
 
         if (!mNumberOfExposureFilesLeft) {
-            mWorkspaces.insert(url, exposureFile.remove(QRegularExpression("/rawfile/.*$")));
+            QStringList exposureFiles = mExposureFiles.values(url);
 
-            mPhysiomeModelRepositoryWidget->addExposureFiles(url, mExposureFiles.values(url));
+            std::sort(exposureFiles.begin(), exposureFiles.end(), sortExposureFiles);
+
+            mWorkspaces.insert(url, exposureFile.remove(QRegularExpression("/rawfile/.*$")));
+            mPhysiomeModelRepositoryWidget->addExposureFiles(url, exposureFiles);
 
             if (pmrRequest == ExposureFileForExposureFiles)
                 mPhysiomeModelRepositoryWidget->showExposureFiles(url);
@@ -375,14 +425,16 @@ void PhysiomeModelRepositoryWindowWindow::finished(QNetworkReply *pNetworkReply)
 
         // Clone the workspace, if possible and requested
 
-        if (    !mNumberOfExposureFilesLeft
-            && (pmrRequest == ExposureFileForCloning)) {
-                cloneWorkspace(mWorkspaces.value(url));
-        }
+        if (!mNumberOfExposureFilesLeft && (pmrRequest == ExposureFileForCloning))
+            cloneWorkspace(mWorkspaces.value(url));
 
         break;
     }
     default:   // ExposuresList
+        // Make sure that our exposures are sorted alphabetically
+
+        std::sort(exposures.begin(), exposures.end());
+
         // Ask our PMR widget to initialise itself and filter its output
 
         mPhysiomeModelRepositoryWidget->initialize(exposures, errorMessage);

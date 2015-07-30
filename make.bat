@@ -34,7 +34,7 @@ IF DEFINED NinjaFound (
     SET CMakeGenerator=NMake Makefiles JOM
 )
 
-cmake -G "!CMakeGenerator!" -DCMAKE_BUILD_TYPE=Release ..
+cmake -G "!CMakeGenerator!" -DSHOW_INFORMATION_MESSAGE=ON -DCMAKE_BUILD_TYPE=Release ..
 
 SET ExitCode=!ERRORLEVEL!
 

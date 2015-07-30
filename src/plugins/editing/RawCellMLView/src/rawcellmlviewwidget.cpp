@@ -23,9 +23,8 @@ specific language governing permissions and limitations under the License.
 //==============================================================================
 
 #include "cellmlfilemanager.h"
-#include "cellmlsupportplugin.h"
-#include "cliutils.h"
 #include "corecellmleditingwidget.h"
+#include "corecliutils.h"
 #include "editorlistwidget.h"
 #include "editorwidget.h"
 #include "filemanager.h"
@@ -265,7 +264,7 @@ void RawCellmlViewWidget::fileReloaded(const QString &pFileName)
 
         finalize(pFileName);
 
-        if (CellMLSupport::isCellmlFile(pFileName))
+        if (CellMLSupport::CellmlFileManager::instance()->isCellmlFile(pFileName))
             initialize(pFileName, update);
     }
 }

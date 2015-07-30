@@ -6,13 +6,9 @@ MACRO(RETRIEVE_QWT_SETTINGS)
     IF(WIN32)
         SET(QWT_DEFINITIONS
             _SCL_SECURE_NO_WARNINGS
-        )
 
-        IF(NOT "${ARGN}" STREQUAL "NO_QWT_DLL")
-            LIST(APPEND QWT_DEFINITIONS
-                QWT_DLL
-            )
-        ENDIF()
+            QWT_DLL
+        )
     ELSE()
         SET(QWT_DEFINITIONS)
     ENDIF()
@@ -28,28 +24,28 @@ IF(USE_PREBUILT_QWT_PLUGIN)
     IF(WIN32)
         IF(${ARCHITECTURE} EQUAL 32)
             IF(RELEASE_MODE)
-                RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} Qwt.dll f5f861feefbd37861292135567ad4eb30b0d9d22)
-                RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} Qwt.lib 819d169852d9a95c12170b3c049859fdf4f68399)
+                RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} Qwt.dll 801d57c81fa012bf5f9c06a466c4d147a2d7c18b)
+                RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} Qwt.lib 5daef66bec7fa13f89f2a29583eb5791406a350e)
             ELSE()
-                RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} Qwt.dll 54a28fcc966c29f1a60d590d7db964070708221c)
-                RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} Qwt.lib 39ef240962e45b74facb3a073bb571108acb7578)
+                RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} Qwt.dll 84c22dd5a865df073a741137238b224f44f06d26)
+                RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} Qwt.lib 409042b532372be5a8bb33a2b70f87c1047f643b)
             ENDIF()
         ELSE()
             IF(RELEASE_MODE)
-                RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} Qwt.dll 65df3a00ef6ec20ec203ab3057f0fd1b59b26973)
-                RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} Qwt.lib 84cc17fae149316a7e2b529149c83f35209a5309)
+                RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} Qwt.dll 5b0f72a6a04c3a1f8cfdc47834cfdd224c67067d)
+                RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} Qwt.lib 0e82c115b8c3ca0b1e1a2d4fa6bc766ae4566b8d)
             ELSE()
-                RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} Qwt.dll 1156224a81d53cdf2115b6ebbfadb7c41b23f895)
-                RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} Qwt.lib 4cd4524f6d334b3d9d430b59f2f6b597cbe8bd1c)
+                RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} Qwt.dll 1bc3b0a6cda03b0d763f623c8fd71c2582086ad9)
+                RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} Qwt.lib d908402e7091465384cdf641ef5b61de8d443299)
             ENDIF()
         ENDIF()
     ELSEIF(APPLE)
-        RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} libQwt.dylib 0ca79088e6ab889b82454643ce6f6ffb50f6bca9)
+        RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} libQwt.dylib 8c9322c2d340a91449d1323a490913329d4f6a7c)
     ELSE()
         IF(${ARCHITECTURE} EQUAL 32)
-            RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} libQwt.so f3a36040ad0e4061855a428b2c05f90099908f89)
+            RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} libQwt.so e63de7eebaba803389aa114868cb3f3555a05b3b)
         ELSE()
-            RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} libQwt.so 57d7bbf574a0bcff10325ab121d0697fdb0e0cb5)
+            RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} libQwt.so 494caf07320780b53d132280460337061bb03210)
         ENDIF()
     ENDIF()
 
@@ -68,20 +64,11 @@ IF(USE_PREBUILT_QWT_PLUGIN)
         INCLUDE_DIRS
             src
             textengines/mathml
-        QT_LIBRARIES
-            QtConcurrent
-            QtCore
-            QtGui
-            QtOpenGL
-            QtPrintSupport
-            QtSvg
-            QtWidgets
-            QtXml
     )
 ELSE()
     # Retrieve some Qwt settings
 
-    RETRIEVE_QWT_SETTINGS(NO_QWT_DLL)
+    RETRIEVE_QWT_SETTINGS()
 
     # Add the plugin
 
@@ -227,7 +214,6 @@ ELSE()
             textengines/mathml
         DEFINITIONS
             ${QWT_DEFINITIONS}
-            QWT_DLL
             QWT_MAKEDLL
         QT_MODULES
             Concurrent
@@ -236,14 +222,5 @@ ELSE()
             Svg
             Widgets
             Xml
-        QT_LIBRARIES
-            QtConcurrent
-            QtCore
-            QtGui
-            QtOpenGL
-            QtPrintSupport
-            QtSvg
-            QtWidgets
-            QtXml
     )
 ENDIF()

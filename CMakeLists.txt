@@ -1,4 +1,4 @@
-CMAKE_MINIMUM_REQUIRED(VERSION 3.1)
+CMAKE_MINIMUM_REQUIRED(VERSION 3.2)
 
 # Project definition
 
@@ -18,6 +18,7 @@ OPTION(USE_PREBUILT_LLVM_PLUGIN "Use the pre-built version of the LLVM plugin" O
 OPTION(USE_PREBUILT_QSCINTILLA_PLUGIN "Use the pre-built version of the QScintilla plugin" ON)
 OPTION(USE_PREBUILT_QWT_PLUGIN "Use the pre-built version of the Qwt plugin" ON)
 OPTION(USE_PREBUILT_SUNDIALS_PLUGIN "Use the pre-built version of the SUNDIALS plugin" ON)
+OPTION(USE_PREBUILT_ZLIB_PLUGIN "Use the pre-built version of the zlib plugin" ON)
 
 # Initialise the project
 
@@ -39,7 +40,11 @@ ELSE()
     SET(VERSION ${PROJECT_VERSION})
 ENDIF()
 
-FILE(WRITE ${CMAKE_BINARY_DIR}/versiondate.txt "${VERSION}\n${DATE}")
+SET(VERSION_DATE_FILENAME ${PROJECT_BUILD_DIR}/versiondate.txt)
+
+FILE(WRITE ${VERSION_DATE_FILENAME} "${VERSION}\n${DATE}")
+
+KEEP_TRACK_OF_FILE(${VERSION_DATE_FILENAME})
 
 # Files that make up the GUI version of OpenCOR
 
@@ -125,7 +130,7 @@ INCLUDE_DIRECTORIES(
 # Update the translation (.ts) files and generate the language (.qm) files
 # that will later on be embedded in the OpenCOR executable as resources
 
-UPDATE_LANGUAGE_FILES(${PROJECT_NAME} FALSE)
+UPDATE_LANGUAGE_FILES(${PROJECT_NAME} ${SOURCES} ${HEADERS_MOC} ${UIS})
 
 # Third-party library that must be directly embedded in the GUI version of
 # OpenCOR
@@ -151,7 +156,7 @@ ENDIF()
 STRING(TIMESTAMP YEAR "%Y")
 
 IF(WIN32)
-    SET(RcFile ${CMAKE_BINARY_DIR}/${PROJECT_NAME}.rc)
+    SET(RcFile ${PROJECT_BUILD_DIR}/${PROJECT_NAME}.rc)
 
     CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/res/${PROJECT_NAME}.rc.in ${RcFile})
 
@@ -167,7 +172,7 @@ ELSEIF(APPLE)
 ENDIF()
 
 # Check whether tests are required and, if so, 'reset' our list of tests and set
-# the destination tests directory
+# the destination tests directory and build our main test program
 
 IF(ENABLE_TESTS)
     # 'Reset' our list of tests
@@ -175,6 +180,8 @@ IF(ENABLE_TESTS)
     SET(TESTS_LIST_FILENAME ${PROJECT_BUILD_DIR}/tests.txt)
 
     FILE(WRITE ${TESTS_LIST_FILENAME})
+
+    KEEP_TRACK_OF_FILE(${TESTS_LIST_FILENAME})
 
     # Destination tests directory
     # Note: DEST_TESTS_DIR isn't only used here, but also in our ADD_PLUGIN()
@@ -185,11 +192,7 @@ IF(ENABLE_TESTS)
     ELSE()
         SET(DEST_TESTS_DIR ${PROJECT_BUILD_DIR}/bin)
     ENDIF()
-ENDIF()
 
-# Check whether tests are required and, if so, build our main test program
-
-IF(ENABLE_TESTS)
     # Build our main test program
 
     SET(RUNTESTS_NAME runtests)
@@ -202,6 +205,11 @@ IF(ENABLE_TESTS)
         ${RUNTESTS_SOURCES_RCS}
     )
 
+    SET_TARGET_PROPERTIES(${RUNTESTS_NAME} PROPERTIES
+        OUTPUT_NAME ${RUNTESTS_NAME}
+        LINK_FLAGS "${LINK_FLAGS_PROPERTIES}"
+    )
+
     TARGET_LINK_LIBRARIES(${RUNTESTS_NAME}
         Qt5::Core
     )
@@ -211,13 +219,13 @@ IF(ENABLE_TESTS)
     SET(MAIN_TEST_FILENAME ${RUNTESTS_NAME}${CMAKE_EXECUTABLE_SUFFIX})
 
     ADD_CUSTOM_COMMAND(TARGET ${RUNTESTS_NAME} POST_BUILD
-                       COMMAND ${CMAKE_COMMAND} -E copy ${PROJECT_BINARY_DIR}/${MAIN_TEST_FILENAME}
+                       COMMAND ${CMAKE_COMMAND} -E copy ${PROJECT_BUILD_DIR}/${MAIN_TEST_FILENAME}
                                                         ${DEST_TESTS_DIR}/${MAIN_TEST_FILENAME})
 
     # Clean up our test program, but only if we are on OS X
 
     IF(APPLE)
-        OS_X_CLEAN_UP_FILE_WITH_QT_LIBRARIES(${RUNTESTS_NAME} ${DEST_TESTS_DIR} ${MAIN_TEST_FILENAME} QtCore)
+        OS_X_CLEAN_UP_FILE_WITH_QT_LIBRARIES(${RUNTESTS_NAME} ${DEST_TESTS_DIR} ${MAIN_TEST_FILENAME})
     ENDIF()
 ENDIF()
 
@@ -249,11 +257,14 @@ SET(PLUGINS
 
     solver/CoreSolver
 
+    support/StandardSupport
+
     thirdParty/libgit2
     thirdParty/LLVM
     thirdParty/QScintilla
     thirdParty/Qwt
     thirdParty/SUNDIALS
+    thirdParty/zlib
 
     # Plugins that build on top of some third-party libraries
 
@@ -263,6 +274,7 @@ SET(PLUGINS
 
     support/CellMLSupport
     support/QScintillaSupport
+    support/SEDMLSupport
 
     # Plugins that extend some libraries (incl. third-party ones)
 
@@ -339,6 +351,11 @@ ADD_EXECUTABLE(${PROJECT_NAME} WIN32 MACOSX_BUNDLE
     ${SOURCES_RCS}
 )
 
+SET_TARGET_PROPERTIES(${PROJECT_NAME} PROPERTIES
+    OUTPUT_NAME ${PROJECT_NAME}
+    LINK_FLAGS "${LINK_FLAGS_PROPERTIES}"
+)
+
 IF(WIN32)
     TARGET_LINK_LIBRARIES(${PROJECT_NAME}
         ${Qt5Core_QTMAIN_LIBRARIES}
@@ -363,6 +380,11 @@ IF(WIN32)
         ${WINDOWS_CLI_SOURCES}
         ${WINDOWS_CLI_SOURCES_MOC}
         ${WINDOWS_CLI_SOURCES_RCS}
+    )
+
+    SET_TARGET_PROPERTIES(${WINDOWS_CLI_PROJECT_NAME} PROPERTIES
+        OUTPUT_NAME ${WINDOWS_CLI_PROJECT_NAME}
+        LINK_FLAGS "${LINK_FLAGS_PROPERTIES}"
     )
 
     TARGET_LINK_LIBRARIES(${WINDOWS_CLI_PROJECT_NAME}
@@ -394,7 +416,7 @@ IF(APPLE)
     #       some information about associating .cellml files to OpenCOR,
     #       something that can't be done using CMake (or so it seems)...
 
-    SET(InfoPlistFile ${CMAKE_BINARY_DIR}/Info.plist)
+    SET(InfoPlistFile ${PROJECT_BUILD_DIR}/Info.plist)
 
     CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/distrib/osx/Info.plist.in ${InfoPlistFile})
 
@@ -408,48 +430,11 @@ IF(APPLE)
 
     # Clean up the OpenCOR executable
 
-    IF(APPLE)
-        SET(QT_MAC_EXTRAS QtMacExtras)
-    ELSE()
-        SET(QT_MAC_EXTRAS)
-    ENDIF()
-
-    SET(QT_LIBRARIES
-        QtCLucene
-        QtConcurrent
-        QtCore
-        QtDBus
-        QtGui
-        QtHelp
-        ${QT_MAC_EXTRAS}
-        QtMultimedia
-        QtMultimediaWidgets
-        QtNetwork
-        QtOpenGL
-        QtPositioning
-        QtPrintSupport
-        QtQml
-        QtQuick
-        QtSensors
-        QtSql
-        QtSvg
-        QtWebChannel
-        QtWebKit
-        QtWebKitWidgets
-        QtWidgets
-        QtXml
-        QtXmlPatterns
-    )
-
-    OS_X_CLEAN_UP_FILE_WITH_QT_LIBRARIES(${PROJECT_NAME} ${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME}.app/Contents/MacOS ${PROJECT_NAME} ${QT_LIBRARIES})
+    OS_X_CLEAN_UP_FILE_WITH_QT_LIBRARIES(${PROJECT_NAME} ${PROJECT_BUILD_DIR}/${CMAKE_PROJECT_NAME}.app/Contents/MacOS ${PROJECT_NAME})
 
     # Deploy our Qt libraries
 
-    OS_X_DEPLOY_QT_LIBRARIES(${QT_LIBRARIES})
-
-    IF(ENABLE_TESTS)
-        OS_X_DEPLOY_QT_LIBRARIES(QtTest)
-    ENDIF()
+    OS_X_DEPLOY_QT_LIBRARIES(${OS_X_QT_LIBRARIES})
 
     # Deploy some plugins
 
@@ -625,8 +610,8 @@ IF(WIN32)
     # Batch and VBScript files to run OpenCOR (useful when downloading a ZIPped
     # version of OpenCOR)
 
-    SET(BatFile "${CMAKE_BINARY_DIR}/${PROJECT_NAME}.bat")
-    SET(VbsFile "${CMAKE_BINARY_DIR}/${PROJECT_NAME}.vbs")
+    SET(BatFile "${PROJECT_BUILD_DIR}/${PROJECT_NAME}.bat")
+    SET(VbsFile "${PROJECT_BUILD_DIR}/${PROJECT_NAME}.vbs")
 
     CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/distrib/windows/application.bat.in ${BatFile})
     CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/distrib/windows/application.vbs.in ${VbsFile})
@@ -673,7 +658,7 @@ ELSEIF(APPLE)
     # Shell script to run OpenCOR (useful when downloading a ZIPped version of
     # OpenCOR)
 
-    SET(SHELL_FILENAME ${CMAKE_BINARY_DIR}/${PROJECT_NAME}.sh)
+    SET(SHELL_FILENAME ${PROJECT_BUILD_DIR}/${PROJECT_NAME}.sh)
 
     CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/distrib/osx/application.sh.in ${SHELL_FILENAME})
 
@@ -725,7 +710,7 @@ ELSE()
 
     # Shell script to run OpenCOR
 
-    SET(ShellFile ${CMAKE_BINARY_DIR}/${PROJECT_NAME}.sh)
+    SET(ShellFile ${PROJECT_BUILD_DIR}/${PROJECT_NAME}.sh)
 
     CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/distrib/linux/application.sh.in ${ShellFile})
 

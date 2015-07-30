@@ -2,6 +2,14 @@ MACRO(INITIALISE_PROJECT)
 #    SET(CMAKE_VERBOSE_MAKEFILE ON)
     SET(CMAKE_INCLUDE_CURRENT_DIR ON)
 
+    # Check whether we want EXECUTE_PROCESS to be OUTPUT_QUIET
+
+    IF(SHOW_INFORMATION_MESSAGE)
+        SET(OUTPUT_QUIET)
+    ELSE()
+        SET(OUTPUT_QUIET OUTPUT_QUIET)
+    ENDIF()
+
     # Make sure that we are using the compiler we support
 
     IF(WIN32)
@@ -20,13 +28,32 @@ MACRO(INITIALISE_PROJECT)
         ENDIF()
     ENDIF()
 
+    # Make sure that all the binaries we generate end up in our build folder
+    # Note: this is particularly useful with MSVC and Xcode since otherwise the
+    #       binaries will end up in a folder, which name is related to the type
+    #       of the build...
+
+    SET(PROJECT_BUILD_DIR ${CMAKE_BINARY_DIR})
+
+    SET(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BUILD_DIR})
+    SET(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BUILD_DIR})
+    SET(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_BUILD_DIR})
+
+    SET(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE ${PROJECT_BUILD_DIR})
+    SET(CMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE ${PROJECT_BUILD_DIR})
+    SET(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELEASE ${PROJECT_BUILD_DIR})
+
+    SET(CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG ${PROJECT_BUILD_DIR})
+    SET(CMAKE_LIBRARY_OUTPUT_DIRECTORY_DEBUG ${PROJECT_BUILD_DIR})
+    SET(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_DEBUG ${PROJECT_BUILD_DIR})
+
     # Make sure that we are building on a supported architecture
     # Note: normally, we would check the value of CMAKE_SIZEOF_VOID_P, but in
     #       some cases it may not be set (e.g. when generating an Xcode project
     #       file), so we determine and retrieve that value ourselves...
 
     TRY_RUN(ARCHITECTURE_RUN ARCHITECTURE_COMPILE
-            ${CMAKE_BINARY_DIR} ${CMAKE_SOURCE_DIR}/cmake/architecture.c
+            ${PROJECT_BUILD_DIR} ${CMAKE_SOURCE_DIR}/cmake/architecture.c
             RUN_OUTPUT_VARIABLE ARCHITECTURE)
 
     IF(NOT ARCHITECTURE_COMPILE)
@@ -47,21 +74,17 @@ MACRO(INITIALISE_PROJECT)
     # explicitly asked for a debug version
 
     IF("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
-        MESSAGE("Building a ${ARCHITECTURE}-bit debug version...")
+        IF(SHOW_INFORMATION_MESSAGE)
+            MESSAGE("Building a ${ARCHITECTURE}-bit debug version...")
+        ENDIF()
 
         SET(RELEASE_MODE FALSE)
     ELSE()
-        MESSAGE("Building a ${ARCHITECTURE}-bit release version...")
+        IF(SHOW_INFORMATION_MESSAGE)
+            MESSAGE("Building a ${ARCHITECTURE}-bit release version...")
+        ENDIF()
 
         SET(RELEASE_MODE TRUE)
-    ENDIF()
-
-    # Determine the effective build directory
-
-    SET(PROJECT_BUILD_DIR ${CMAKE_BINARY_DIR})
-
-    IF(NOT "${CMAKE_CFG_INTDIR}" STREQUAL ".")
-        SET(PROJECT_BUILD_DIR ${PROJECT_BUILD_DIR}/${CMAKE_CFG_INTDIR})
     ENDIF()
 
     # Required packages
@@ -74,13 +97,17 @@ MACRO(INITIALISE_PROJECT)
 
     SET(REQUIRED_QT_MODULES
         Concurrent
+        Core
+        Gui
         Help
         ${MAC_EXTRAS}
         Network
         OpenGL
         PrintSupport
         Svg
+        UiPlugin
         UiTools
+        WebKit
         WebKitWidgets
         Widgets
         Xml
@@ -89,6 +116,8 @@ MACRO(INITIALISE_PROJECT)
 
     FOREACH(REQUIRED_QT_MODULE ${REQUIRED_QT_MODULES})
         FIND_PACKAGE(Qt5${REQUIRED_QT_MODULE} REQUIRED)
+
+        SET(Qt5${REQUIRED_QT_MODULE}_DIR ${Qt5${REQUIRED_QT_MODULE}_DIR} CACHE INTERNAL "${Qt5${REQUIRED_QT_MODULE}_DIR}" FORCE)
     ENDFOREACH()
 
     IF(ENABLE_TESTS)
@@ -104,12 +133,46 @@ MACRO(INITIALISE_PROJECT)
     SET(QT_VERSION_MINOR ${Qt5Widgets_VERSION_MINOR})
     SET(QT_VERSION_PATCH ${Qt5Widgets_VERSION_PATCH})
 
-    # Retrieve the real path of the Qt library directory
-    # Note: on Travis CI, QT_LIBRARY_DIR points to a symbolic path. That
-    #       symbolic path is used by some libraries while others use the real
-    #       path instead. So, we need to know about both...
+    # On OS X, keep track of the Qt libraries against which we need to link
+    # Note: this is needed, among other things, to make sure that any Qt-based
+    #       file can properly refer to our embedded copy of the Qt libraries
+    #       (see OS_X_CLEAN_UP_FILE_WITH_QT_LIBRARIES())...
 
-    GET_FILENAME_COMPONENT(REAL_QT_LIBRARY_DIR ${QT_LIBRARY_DIR} REALPATH)
+    IF(APPLE)
+        IF(ENABLE_TESTS)
+            SET(QT_TEST QtTest)
+        ELSE()
+            SET(QT_TEST)
+        ENDIF()
+
+        SET(OS_X_QT_LIBRARIES
+            QtCLucene
+            QtConcurrent
+            QtCore
+            QtDBus
+            QtGui
+            QtHelp
+            QtMacExtras
+            QtMultimedia
+            QtMultimediaWidgets
+            QtNetwork
+            QtOpenGL
+            QtPositioning
+            QtPrintSupport
+            QtQml
+            QtQuick
+            QtSensors
+            QtSql
+            QtSvg
+            ${QT_TEST}
+            QtWebChannel
+            QtWebKit
+            QtWebKitWidgets
+            QtWidgets
+            QtXml
+            QtXmlPatterns
+        )
+    ENDIF()
 
     # Some general build settings
     # Note: MSVC enables C++11 support by default, so we just need to enable it
@@ -204,15 +267,17 @@ MACRO(INITIALISE_PROJECT)
         ADD_DEFINITIONS(-DENABLE_SAMPLES)
     ENDIF()
 
-    # On OS X, make sure that we support 10.7 and later, unless a deployment
-    # target has been specified
+    # On OS X, make sure that we support 10.7 and later, unless a specific
+    # deployment target has been specified
 
     IF(APPLE)
         IF("${CMAKE_OSX_DEPLOYMENT_TARGET}" STREQUAL "")
             SET(CMAKE_OSX_DEPLOYMENT_TARGET 10.7)
         ENDIF()
 
-        MESSAGE("Building for ${CMAKE_OSX_DEPLOYMENT_TARGET} and later...")
+        IF(SHOW_INFORMATION_MESSAGE)
+            MESSAGE("Building for ${CMAKE_OSX_DEPLOYMENT_TARGET} and later...")
+        ENDIF()
     ENDIF()
 
     # Location of our plugins so that we don't have to deploy OpenCOR on
@@ -265,29 +330,45 @@ ENDMACRO()
 
 #===============================================================================
 
+MACRO(KEEP_TRACK_OF_FILE FILE_NAME)
+    # Keep track of the given file
+    # Note: indeed, some files (e.g. versiondate.txt) are 'manually' generated
+    #       and then used to build other files. Now, the 'problem' is that
+    #       Ninja needs to know about those files (see CMake policy CMP0058),
+    #       which we do through the below...
+
+    ADD_CUSTOM_COMMAND(OUTPUT ${FILE_NAME}
+                       COMMAND ${CMAKE_COMMAND} -E sleep 0)
+ENDMACRO()
+
+#===============================================================================
+
 MACRO(UPDATE_LANGUAGE_FILES TARGET_NAME)
     # Update the translation (.ts) files (if they exist) and generate the
     # language (.qm) files, which will later on be embedded in the project
-    # Note: this requires SOURCES, HEADERS_MOC and UIS to be defined for the
-    #       current CMake project, even if that means that these variables are
-    #       to be empty (the case with some plugins for example). Indeed, since
-    #       otherwise the value of these variables, as defined in a previous
-    #       project, may be used...
 
-    SET(LANGUAGE_FILES
-        ${TARGET_NAME}_fr
-    )
+    SET(LANGUAGES fr)
+    SET(INPUT_FILES)
 
-    FOREACH(LANGUAGE_FILE ${LANGUAGE_FILES})
+    FOREACH(INPUT_FILE ${ARGN})
+        LIST(APPEND INPUT_FILES ${INPUT_FILE})
+    ENDFOREACH()
+
+    FOREACH(LANGUAGE ${LANGUAGES})
+        SET(LANGUAGE_FILE ${TARGET_NAME}_${LANGUAGE})
         SET(TS_FILE i18n/${LANGUAGE_FILE}.ts)
+        SET(QM_FILE ${PROJECT_BUILD_DIR}/${LANGUAGE_FILE}.qm)
 
         IF(EXISTS ${PROJECT_SOURCE_DIR}/${TS_FILE})
-            EXECUTE_PROCESS(COMMAND ${QT_BINARY_DIR}/lupdate -no-obsolete
-                                                             ${SOURCES} ${HEADERS_MOC} ${UIS}
-                                                         -ts ${TS_FILE}
-                            WORKING_DIRECTORY ${PROJECT_SOURCE_DIR})
+            EXECUTE_PROCESS(COMMAND ${QT_BINARY_DIR}/lupdate -no-obsolete ${INPUT_FILES}
+                                                             -ts ${TS_FILE}
+                            WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
+                            ${OUTPUT_QUIET})
             EXECUTE_PROCESS(COMMAND ${QT_BINARY_DIR}/lrelease ${PROJECT_SOURCE_DIR}/${TS_FILE}
-                                                          -qm ${CMAKE_BINARY_DIR}/${LANGUAGE_FILE}.qm)
+                                                          -qm ${QM_FILE}
+                            ${OUTPUT_QUIET})
+
+            KEEP_TRACK_OF_FILE(${QM_FILE})
         ENDIF()
     ENDFOREACH()
 ENDMACRO()
@@ -307,7 +388,6 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
     SET(PLUGINS)
     SET(PLUGIN_BINARIES)
     SET(QT_MODULES)
-    SET(QT_LIBRARIES)
     SET(EXTERNAL_BINARIES_DIR)
     SET(EXTERNAL_BINARIES)
     SET(TESTS)
@@ -353,14 +433,12 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
             SET(TYPE_OF_PARAMETER 7)
         ELSEIF("${PARAMETER}" STREQUAL "QT_MODULES")
             SET(TYPE_OF_PARAMETER 8)
-        ELSEIF("${PARAMETER}" STREQUAL "QT_LIBRARIES")
-            SET(TYPE_OF_PARAMETER 9)
         ELSEIF("${PARAMETER}" STREQUAL "EXTERNAL_BINARIES_DIR")
-            SET(TYPE_OF_PARAMETER 10)
+            SET(TYPE_OF_PARAMETER 9)
         ELSEIF("${PARAMETER}" STREQUAL "EXTERNAL_BINARIES")
-            SET(TYPE_OF_PARAMETER 11)
+            SET(TYPE_OF_PARAMETER 10)
         ELSEIF("${PARAMETER}" STREQUAL "TESTS")
-            SET(TYPE_OF_PARAMETER 12)
+            SET(TYPE_OF_PARAMETER 11)
         ELSE()
             # Not one of the headers, so add the parameter to the corresponding
             # set
@@ -382,12 +460,10 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
             ELSEIF(${TYPE_OF_PARAMETER} EQUAL 8)
                 LIST(APPEND QT_MODULES ${PARAMETER})
             ELSEIF(${TYPE_OF_PARAMETER} EQUAL 9)
-                LIST(APPEND QT_LIBRARIES ${PARAMETER})
-            ELSEIF(${TYPE_OF_PARAMETER} EQUAL 10)
                 SET(EXTERNAL_BINARIES_DIR ${PARAMETER})
-            ELSEIF(${TYPE_OF_PARAMETER} EQUAL 11)
+            ELSEIF(${TYPE_OF_PARAMETER} EQUAL 10)
                 LIST(APPEND EXTERNAL_BINARIES ${PARAMETER})
-            ELSEIF(${TYPE_OF_PARAMETER} EQUAL 12)
+            ELSEIF(${TYPE_OF_PARAMETER} EQUAL 11)
                 LIST(APPEND TESTS ${PARAMETER})
             ENDIF()
         ENDIF()
@@ -413,7 +489,7 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
     # which will later on be embedded in the plugin
 
     IF(NOT "${RESOURCES}" STREQUAL "")
-        UPDATE_LANGUAGE_FILES(${PLUGIN_NAME})
+        UPDATE_LANGUAGE_FILES(${PLUGIN_NAME} ${SOURCES} ${HEADERS_MOC} ${UIS})
     ENDIF()
 
     # Definition to make sure that the plugin can be used by other plugins
@@ -453,6 +529,11 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
         ${SOURCES_RCS}
     )
 
+    SET_TARGET_PROPERTIES(${PROJECT_NAME} PROPERTIES
+        OUTPUT_NAME ${PLUGIN_NAME}
+        LINK_FLAGS "${LINK_FLAGS_PROPERTIES}"
+    )
+
     # OpenCOR plugins
 
     FOREACH(PLUGIN ${PLUGINS})
@@ -478,13 +559,6 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
             Qt5::${QT_MODULE}
         )
     ENDFOREACH()
-
-    # Linker settings
-
-    SET_TARGET_PROPERTIES(${PROJECT_NAME} PROPERTIES
-        OUTPUT_NAME ${PLUGIN_NAME}
-        LINK_FLAGS "${LINK_FLAGS_PROPERTIES}"
-    )
 
     # External binaries
 
@@ -538,15 +612,6 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
         ENDIF()
     ENDFOREACH()
 
-    # Location of our plugin
-
-    STRING(REPLACE "${${CMAKE_PROJECT_NAME}_SOURCE_DIR}/" "" PLUGIN_BUILD_DIR ${PROJECT_SOURCE_DIR})
-    SET(PLUGIN_BUILD_DIR ${CMAKE_BINARY_DIR}/${PLUGIN_BUILD_DIR})
-
-    IF(NOT "${CMAKE_CFG_INTDIR}" STREQUAL ".")
-        SET(PLUGIN_BUILD_DIR ${PLUGIN_BUILD_DIR}/${CMAKE_CFG_INTDIR})
-    ENDIF()
-
     # Copy the plugin to our plugins directory
     # Note: this is done so that we can, on Windows and Linux, test the use of
     #       plugins in OpenCOR without first having to package OpenCOR...
@@ -554,7 +619,7 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
     SET(PLUGIN_FILENAME ${CMAKE_SHARED_LIBRARY_PREFIX}${PLUGIN_NAME}${CMAKE_SHARED_LIBRARY_SUFFIX})
 
     ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
-                       COMMAND ${CMAKE_COMMAND} -E copy ${PLUGIN_BUILD_DIR}/${PLUGIN_FILENAME}
+                       COMMAND ${CMAKE_COMMAND} -E copy ${PROJECT_BUILD_DIR}/${PLUGIN_FILENAME}
                                                         ${DEST_PLUGINS_DIR}/${PLUGIN_FILENAME})
 
     # A few OS X specific things
@@ -562,7 +627,7 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
     IF(APPLE)
         # Clean up our plugin
 
-        OS_X_CLEAN_UP_FILE_WITH_QT_LIBRARIES(${PROJECT_NAME} ${DEST_PLUGINS_DIR} ${PLUGIN_FILENAME} ${QT_LIBRARIES})
+        OS_X_CLEAN_UP_FILE_WITH_QT_LIBRARIES(${PROJECT_NAME} ${DEST_PLUGINS_DIR} ${PLUGIN_FILENAME})
 
         # Make sure that the plugin refers to our embedded version of the
         # binary plugins on which it depends
@@ -587,11 +652,11 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
         ENDFOREACH()
     ENDIF()
 
-    # Package the plugin, but only if we are not on OS X since it will  have
+    # Package the plugin, but only if we are not on OS X since it will have
     # already been copied
 
     IF(NOT APPLE)
-        INSTALL(FILES ${PLUGIN_BUILD_DIR}/${PLUGIN_FILENAME}
+        INSTALL(FILES ${PROJECT_BUILD_DIR}/${PLUGIN_FILENAME}
                 DESTINATION plugins/${CMAKE_PROJECT_NAME})
     ENDIF()
 
@@ -644,6 +709,11 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
                     ${TEST_SOURCES_MOC}
                 )
 
+                SET_TARGET_PROPERTIES(${TEST_NAME} PROPERTIES
+                    OUTPUT_NAME ${TEST_NAME}
+                    LINK_FLAGS "${LINK_FLAGS_PROPERTIES}"
+                )
+
                 # Plugins
 
                 FOREACH(PLUGIN ${PLUGINS} ${PLUGIN_NAME})
@@ -667,13 +737,6 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
                         Qt5::${QT_MODULE}
                     )
                 ENDFOREACH()
-
-                # Linker settings
-
-                SET_TARGET_PROPERTIES(${TEST_NAME} PROPERTIES
-                    OUTPUT_NAME ${TEST_NAME}
-                    LINK_FLAGS "${LINK_FLAGS_PROPERTIES}"
-                )
 
                 # External binaries
 
@@ -703,7 +766,7 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
                 SET(TEST_FILENAME ${TEST_NAME}${CMAKE_EXECUTABLE_SUFFIX})
 
                 ADD_CUSTOM_COMMAND(TARGET ${TEST_NAME} POST_BUILD
-                                   COMMAND ${CMAKE_COMMAND} -E copy ${PROJECT_BINARY_DIR}/${TEST_FILENAME}
+                                   COMMAND ${CMAKE_COMMAND} -E copy ${PROJECT_BUILD_DIR}/${TEST_FILENAME}
                                                                     ${DEST_TESTS_DIR}/${TEST_FILENAME})
 
                 # A few OS X specific things
@@ -711,9 +774,7 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
                 IF(APPLE)
                     # Clean up our plugin's tests
 
-                    LIST(APPEND QT_LIBRARIES QtTest)
-
-                    OS_X_CLEAN_UP_FILE_WITH_QT_LIBRARIES(${TEST_NAME} ${DEST_TESTS_DIR} ${TEST_FILENAME} ${QT_LIBRARIES})
+                    OS_X_CLEAN_UP_FILE_WITH_QT_LIBRARIES(${TEST_NAME} ${DEST_TESTS_DIR} ${TEST_FILENAME})
 
                     # Make sure that the plugin's tests refer to our embedded version of the
                     # binary plugins on which they depend
@@ -752,7 +813,6 @@ MACRO(ADD_PLUGIN_BINARY PLUGIN_NAME)
     SET(PLUGIN_NAME ${PLUGIN_NAME})
 
     SET(INCLUDE_DIRS)
-    SET(QT_LIBRARIES)
 
     # Analyse the extra parameters
 
@@ -761,16 +821,12 @@ MACRO(ADD_PLUGIN_BINARY PLUGIN_NAME)
     FOREACH(PARAMETER ${ARGN})
         IF("${PARAMETER}" STREQUAL "INCLUDE_DIRS")
             SET(TYPE_OF_PARAMETER 1)
-        ELSEIF("${PARAMETER}" STREQUAL "QT_LIBRARIES")
-            SET(TYPE_OF_PARAMETER 2)
         ELSE()
             # Not one of the headers, so add the parameter to the corresponding
             # set
 
             IF(${TYPE_OF_PARAMETER} EQUAL 1)
                 LIST(APPEND INCLUDE_DIRS ${PARAMETER})
-            ELSEIF(${TYPE_OF_PARAMETER} EQUAL 2)
-                LIST(APPEND QT_LIBRARIES ${PARAMETER})
             ENDIF()
         ENDIF()
     ENDFOREACH()
@@ -786,29 +842,14 @@ MACRO(ADD_PLUGIN_BINARY PLUGIN_NAME)
     SET(PLUGIN_BINARY_DIR ${PROJECT_SOURCE_DIR}/bin/${DISTRIB_BINARY_DIR})
 
     # Copy the plugin to our plugins directory
-    # Note #1: this is done so that we can, on Windows and Linux, test the use
-    #          of plugins in OpenCOR without first having to package and deploy
-    #          everything...
-    # Note #2: EXECUTE_PROCESS() doesn't work with Xcode, so we use
-    #          ADD_CUSTOM_COMMAND() instead, but only when building with Xcode
-    #          (since ADD_CUSTOM_COMMAND() doesn't work in all other cases)...
+    # Note: this is done so that we can, on Windows and Linux, test the use of
+    #       plugins in OpenCOR without first having to package and deploy
+    #       everything...
 
     SET(PLUGIN_FILENAME ${CMAKE_SHARED_LIBRARY_PREFIX}${PLUGIN_NAME}${CMAKE_SHARED_LIBRARY_SUFFIX})
 
-    IF("${CMAKE_GENERATOR}" STREQUAL "Xcode")
-        ADD_CUSTOM_COMMAND(OUTPUT ${DEST_PLUGINS_DIR}/${PLUGIN_FILENAME}
-                           COMMAND ${CMAKE_COMMAND} -E copy ${PLUGIN_BINARY_DIR}/${PLUGIN_FILENAME}
-                                                            ${DEST_PLUGINS_DIR}/${PLUGIN_FILENAME})
-
-        ADD_CUSTOM_TARGET(${PLUGIN_NAME}_${QT_LIBRARY}_UPDATE_OS_X_QT_REFERENCE_IN_BUNDLE ALL
-                          DEPENDS ${DEST_PLUGINS_DIR}/${PLUGIN_FILENAME}
-                          COMMAND echo "Copying '${PLUGIN_BINARY_DIR}/${PLUGIN_FILENAME}' over to '${DEST_PLUGINS_DIR}/${PLUGIN_FILENAME}'...")
-        # Note: this call to ADD_CUSTOM_TARGET() is only so that Xcode doesn't
-        #       ignore the ADD_CUSTOM_COMMAND() call (!!)...
-    ELSE()
-        EXECUTE_PROCESS(COMMAND ${CMAKE_COMMAND} -E copy ${PLUGIN_BINARY_DIR}/${PLUGIN_FILENAME}
-                                                         ${DEST_PLUGINS_DIR}/${PLUGIN_FILENAME})
-    ENDIF()
+    EXECUTE_PROCESS(COMMAND ${CMAKE_COMMAND} -E copy ${PLUGIN_BINARY_DIR}/${PLUGIN_FILENAME}
+                                                     ${DEST_PLUGINS_DIR}/${PLUGIN_FILENAME})
 
     # Package the plugin, but only if we are not on OS X since it will have
     # already been copied
@@ -1001,34 +1042,6 @@ ENDMACRO()
 
 #===============================================================================
 
-MACRO(OS_X_QT_LIBRARIES FILENAME QT_LIBRARIES)
-    # Retrieve the file's full-path Qt libraries as a list
-
-    SET(QT_LIBRARY_DIR_FOR_GREP "\t${QT_LIBRARY_DIR}/")
-    SET(REAL_QT_LIBRARY_DIR_FOR_GREP "\t${REAL_QT_LIBRARY_DIR}/")
-
-    EXECUTE_PROCESS(COMMAND otool -L ${FILENAME}
-                    COMMAND grep --colour=never -e "${QT_LIBRARY_DIR_FOR_GREP}"
-                                                -e "${REAL_QT_LIBRARY_DIR_FOR_GREP}"
-                    OUTPUT_VARIABLE RAW_QT_LIBRARIES)
-
-    STRING(REPLACE "\n" ";" RAW_QT_LIBRARIES "${RAW_QT_LIBRARIES}")
-
-    # Extract and return the Qt depencies as a list
-
-    SET(${QT_LIBRARIES})
-
-    FOREACH(RAW_QT_LIBRARY ${RAW_QT_LIBRARIES})
-        STRING(REPLACE ${QT_LIBRARY_DIR_FOR_GREP} "" RAW_QT_LIBRARY "${RAW_QT_LIBRARY}")
-        STRING(REPLACE ${REAL_QT_LIBRARY_DIR_FOR_GREP} "" RAW_QT_LIBRARY "${RAW_QT_LIBRARY}")
-        STRING(REGEX REPLACE "\\.framework.*$" "" QT_LIBRARY "${RAW_QT_LIBRARY}")
-
-        LIST(APPEND ${QT_LIBRARIES} ${QT_LIBRARY})
-    ENDFOREACH()
-ENDMACRO()
-
-#===============================================================================
-
 MACRO(OS_X_CLEAN_UP_FILE_WITH_QT_LIBRARIES PROJECT_TARGET DIRNAME FILENAME)
     # Strip the Qt file of all its local symbols
 
@@ -1045,21 +1058,30 @@ MACRO(OS_X_CLEAN_UP_FILE_WITH_QT_LIBRARIES PROJECT_TARGET DIRNAME FILENAME)
                        COMMAND install_name_tool -id ${FILENAME}
                                                      ${FULL_FILENAME})
 
-    # Make sure that the Qt file refers to our embedded version of its Qt
-    # dependencies
+    # Make sure that the file refers to our embedded copy of the Qt libraries
 
-    FOREACH(DEPENDENCY ${ARGN})
-        SET(DEPENDENCY_FILENAME ${DEPENDENCY}.framework/Versions/${QT_VERSION_MAJOR}/${DEPENDENCY})
+    IF(ENABLE_TRAVIS_CI)
+        # Retrieve the real path of the Qt library directory
+        # Note: on Travis CI, QT_LIBRARY_DIR points to a symbolic path. That
+        #       symbolic path is used by some libraries while others use the
+        #       real path instead. So, we need to use both...
 
-        ADD_CUSTOM_COMMAND(TARGET ${PROJECT_TARGET} POST_BUILD
-                           COMMAND install_name_tool -change ${QT_LIBRARY_DIR}/${DEPENDENCY_FILENAME}
-                                                             @rpath/${DEPENDENCY_FILENAME}
-                                                             ${FULL_FILENAME})
-        ADD_CUSTOM_COMMAND(TARGET ${PROJECT_TARGET} POST_BUILD
-                           COMMAND install_name_tool -change ${REAL_QT_LIBRARY_DIR}/${DEPENDENCY_FILENAME}
-                                                             @rpath/${DEPENDENCY_FILENAME}
-                                                             ${FULL_FILENAME})
-    ENDFOREACH()
+        GET_FILENAME_COMPONENT(REAL_QT_LIBRARY_DIR ${QT_LIBRARY_DIR} REALPATH)
+
+        FOREACH(QT_LIBRARY ${OS_X_QT_LIBRARIES})
+            SET(QT_LIBRARY_FILENAME ${QT_LIBRARY}.framework/Versions/${QT_VERSION_MAJOR}/${QT_LIBRARY})
+            SET(REAL_QT_LIBRARY_FILENAME ${QT_LIBRARY}.framework/${QT_LIBRARY})
+
+            ADD_CUSTOM_COMMAND(TARGET ${PROJECT_TARGET} POST_BUILD
+                               COMMAND install_name_tool -change ${QT_LIBRARY_DIR}/${QT_LIBRARY_FILENAME}
+                                                                 @rpath/${QT_LIBRARY_FILENAME}
+                                                                 ${FULL_FILENAME})
+            ADD_CUSTOM_COMMAND(TARGET ${PROJECT_TARGET} POST_BUILD
+                               COMMAND install_name_tool -change ${REAL_QT_LIBRARY_DIR}/${REAL_QT_LIBRARY_FILENAME}
+                                                                 @rpath/${QT_LIBRARY_FILENAME}
+                                                                 ${FULL_FILENAME})
+        ENDFOREACH()
+    ENDIF()
 ENDMACRO()
 
 #===============================================================================
@@ -1067,19 +1089,13 @@ ENDMACRO()
 MACRO(OS_X_DEPLOY_QT_FILE ORIG_DIRNAME DEST_DIRNAME FILENAME)
     # Copy the Qt file
 
-    SET(ORIG_FILENAME ${ORIG_DIRNAME}/${FILENAME})
-
     ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
-                       COMMAND ${CMAKE_COMMAND} -E copy ${ORIG_FILENAME}
+                       COMMAND ${CMAKE_COMMAND} -E copy ${ORIG_DIRNAME}/${FILENAME}
                                                         ${DEST_DIRNAME}/${FILENAME})
-
-    # Retrieve the Qt file's Qt dependencies
-
-    OS_X_QT_LIBRARIES(${ORIG_FILENAME} DEPENDENCIES)
 
     # Clean up the Qt file
 
-    OS_X_CLEAN_UP_FILE_WITH_QT_LIBRARIES(${PROJECT_NAME} ${DEST_DIRNAME} ${FILENAME} ${DEPENDENCIES})
+    OS_X_CLEAN_UP_FILE_WITH_QT_LIBRARIES(${PROJECT_NAME} ${DEST_DIRNAME} ${FILENAME})
 ENDMACRO()
 
 #===============================================================================
@@ -1167,7 +1183,9 @@ MACRO(RETRIEVE_BINARY_FILE DIRNAME FILENAME SHA1_VALUE)
     #       so we handle everything ourselves...
 
     IF(NOT EXISTS ${REAL_FILENAME})
-        MESSAGE("Retrieving '${DIRNAME}/${FILENAME}'...")
+        IF(SHOW_INFORMATION_MESSAGE)
+            MESSAGE("Retrieving '${DIRNAME}/${FILENAME}'...")
+        ENDIF()
 
         # We retrieve the compressed version of the file
 

@@ -30,8 +30,6 @@ MACRO(RETRIEVE_LIBGIT2_SETTINGS)
         _FILE_OFFSET_BITS=64
 
         GIT_THREADS
-        NO_GZIP
-        NO_VIZ
         STDC
     )
 
@@ -60,7 +58,11 @@ ELSE()
     LINK_LIBRARIES(${OPENSSL_LIBRARIES})
 ENDIF()
 
-# Determine to which dependencies we need access
+# Include the directories of the dependencies that we need access
+# Note: we don't want them to be included as part of ADD_PLUGIN() or
+#       ADD_PLUGIN_BINARY() since they would then be available to the rest of
+#       the proejct, which could be a problem with the zlib plugin, for example,
+#       since it is one of our dependencies...
 
 SET(DEPENDENCIES_INCLUDE_DIRS
     deps/http-parser
@@ -73,6 +75,8 @@ IF(WIN32)
     )
 ENDIF()
 
+INCLUDE_DIRECTORIES(${DEPENDENCIES_INCLUDE_DIRS})
+
 # Use our pre-built version unless instructed otherwise
 
 IF(USE_PREBUILT_LIBGIT2_PLUGIN)
@@ -83,28 +87,28 @@ IF(USE_PREBUILT_LIBGIT2_PLUGIN)
     IF(WIN32)
         IF(${ARCHITECTURE} EQUAL 32)
             IF(RELEASE_MODE)
-                RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} libgit2.dll 05c2c0378189c6108d6e20f23a27d5ef80419511)
-                RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} libgit2.lib 0892edc0254f38efb91e95ddf3159c9b1279d624)
+                RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} libgit2.dll d229b79ceab39e6c59ac45c696594a8422b6953e)
+                RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} libgit2.lib b4f29985e8f48ffb667f523cb4f979f948927966)
             ELSE()
-                RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} libgit2.dll 6f49f8f8ae90bf8b8a900016ab2d98bd047717f8)
-                RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} libgit2.lib 0672ce4ab7a786c65c612361de0b2e8774a77fba)
+                RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} libgit2.dll 533e082b6f1e3989777956022bfc5d27db0067f0)
+                RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} libgit2.lib 48ccd0221e60d6591992d1abe11c476e35069d67)
             ENDIF()
         ELSE()
             IF(RELEASE_MODE)
-                RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} libgit2.dll 19023563a73872306d658d4a700dbbc0b50ef111)
-                RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} libgit2.lib 616c561bbf2fac8a145a75a7b72fd59a76a3074b)
+                RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} libgit2.dll 6fe35def0df3019df91f766f1069856468e04415)
+                RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} libgit2.lib d6d4a94ab323502962df8e513f8e93af2918ef83)
             ELSE()
-                RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} libgit2.dll 8d745f9f5fda50b0f8b3df09464b9a49dfa5b844)
-                RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} libgit2.lib 9f9aaf66a7f899c100532923a817a3c0723707f8)
+                RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} libgit2.dll d5b943d1aa251c71d15ffced237f3cd936c0dae8)
+                RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} libgit2.lib eed79650459069bc831b9a5b681f185bfda5babf)
             ENDIF()
         ENDIF()
     ELSEIF(APPLE)
-        RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} liblibgit2.dylib 843c21901ca9f4c62962aab3b614b8dc4db9830a)
+        RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} liblibgit2.dylib d91be4e2f42a9b3fa7ab777ba33190d59f543777)
     ELSE()
         IF(${ARCHITECTURE} EQUAL 32)
-            RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} liblibgit2.so 9e9c5ae97d1dc71c1f9b0eeef99d33ba8e2f3668)
+            RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} liblibgit2.so bd671a594ef7fbc12a111d01bf3dc6b89e5d9a19)
         ELSE()
-            RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} liblibgit2.so 3e272212453863daefe7975fec690f693b1362ce)
+            RETRIEVE_BINARY_FILE(${RELATIVE_PROJECT_SOURCE_DIR} liblibgit2.so dcc7574b49f9cc8ea745252a151fcfbecb060e79)
         ENDIF()
     ENDIF()
 
@@ -121,12 +125,8 @@ IF(USE_PREBUILT_LIBGIT2_PLUGIN)
 
     ADD_PLUGIN_BINARY(libgit2
         INCLUDE_DIRS
-            ${DEPENDENCIES_INCLUDE_DIRS}
-
             include
             src
-        QT_LIBRARIES
-            QtCore
     )
 ELSE()
     # Retrieve some libgit2 settings
@@ -335,15 +335,11 @@ ELSE()
         HEADERS_MOC
             src/libgit2plugin.h
         INCLUDE_DIRS
-            ${DEPENDENCIES_INCLUDE_DIRS}
-
             include
             src
         DEFINITIONS
             ${LIBGIT2_DEFINITIONS}
         QT_MODULES
             Core
-        QT_LIBRARIES
-            QtCore
     )
 ENDIF()

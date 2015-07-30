@@ -71,7 +71,7 @@ namespace CellMLSupport {
 //==============================================================================
 
 CellmlFile::CellmlFile(const QString &pFileName) :
-    mFileName(Core::nativeCanonicalFileName(pFileName)),
+    StandardSupport::StandardFile(pFileName),
     mModel(0),
     mRdfApiRepresentation(0),
     mRdfDataSource(0),
@@ -308,12 +308,13 @@ bool CellmlFile::doLoad(const QString &pFileName, const QString &pFileContents,
     } catch (iface::cellml_api::CellMLException &exception) {
         // Something went wrong with the loading of the model
 
-        if (pFileContents.isEmpty())
+        if (pFileContents.isEmpty()) {
             pIssues << CellmlFileIssue(CellmlFileIssue::Error,
                                        QObject::tr("the model could not be loaded (%1)").arg(Core::formatMessage(QString::fromStdWString(exception.explanation))));
-        else
+        } else {
             pIssues << CellmlFileIssue(CellmlFileIssue::Error,
                                        QObject::tr("the model could not be created (%1)").arg(Core::formatMessage(QString::fromStdWString(exception.explanation))));
+        }
 
         return false;
     }
@@ -362,7 +363,7 @@ void CellmlFile::retrieveCmetaIdsFromCellmlElement(iface::cellml_api::CellMLElem
         }
     } catch (...) {
         // Note: we should never reach this point, but it may still happen if a
-        //       CellML file contains an child element that is not known to the
+        //       CellML file contains a child element that is not known to the
         //       CellML API. We are taking the view that this is a limitation of
         //       the CellML API and shouldn't therefore generate an error for
         //       something that should have been working fine in the first
@@ -445,19 +446,6 @@ bool CellmlFile::load()
     mUsedCmetaIds.removeDuplicates();
 
     return true;
-}
-
-//==============================================================================
-
-bool CellmlFile::reload()
-{
-    // We want to reload the file, so we must first reset everything
-
-    reset();
-
-    // Now, we can try to (re)load the file
-
-    return load();
 }
 
 //==============================================================================
@@ -789,24 +777,6 @@ CellmlFileRuntime * CellmlFile::runtime()
 
 //==============================================================================
 
-QString CellmlFile::fileName() const
-{
-    // Return the CellML file's file name
-
-    return mFileName;
-}
-
-//==============================================================================
-
-void CellmlFile::setFileName(const QString &pFileName)
-{
-    // Set the CellML file's file name
-
-    mFileName = pFileName;
-}
-
-//==============================================================================
-
 CellmlFileRdfTriples & CellmlFile::rdfTriples()
 {
     // Return all the RDF triples associated with the CellML file
@@ -842,7 +812,7 @@ CellmlFileRdfTriple * CellmlFile::rdfTriple(iface::cellml_api::CellMLElement *pE
     // Go through the RDF triples associated with the given CellML element and
     // check whether it is the one we are after
 
-    foreach (CellmlFileRdfTriple *rdfTriple, rdfTriples(pElement))
+    foreach (CellmlFileRdfTriple *rdfTriple, rdfTriples(pElement)) {
         if (   !pQualifier.compare(rdfTriple->qualifierAsString())
             && !pResource.compare(rdfTriple->resource())
             && !pId.compare(rdfTriple->id())) {
@@ -850,6 +820,7 @@ CellmlFileRdfTriple * CellmlFile::rdfTriple(iface::cellml_api::CellMLElement *pE
 
             return rdfTriple;
         }
+    }
 
     // We couldn't find the RDF triple
 

@@ -22,13 +22,4 @@ ADD_PLUGIN(SampleView
     QT_MODULES
         Widgets
         XmlPatterns
-    QT_LIBRARIES
-        QtCore
-        QtGui
-        QtNetwork
-        QtWebKit
-        QtWebKitWidgets
-        QtWidgets
-        QtXml
-        QtXmlPatterns
 )

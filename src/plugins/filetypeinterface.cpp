@@ -74,6 +74,23 @@ QString FileType::description() const
 
 //==============================================================================
 
+FileTypeInterface::FileTypeInterface() :
+    mFileTypes(FileTypes())
+{
+}
+
+//==============================================================================
+
+FileTypeInterface::~FileTypeInterface()
+{
+    // Delete some internal objects
+
+    foreach (FileType *fileType, mFileTypes)
+        delete fileType;
+}
+
+//==============================================================================
+
 }   // namespace OpenCOR
 
 //==============================================================================

@@ -14,7 +14,7 @@ echo "\033[44;37;1mMaking OpenCOR (using $generator)...\033[0m"
 
 cd build
 
-cmake -G "$cmakeGenerator" -DCMAKE_BUILD_TYPE=Release ..
+cmake -G "$cmakeGenerator" -DSHOW_INFORMATION_MESSAGE=ON -DCMAKE_BUILD_TYPE=Release ..
 
 exitCode=$?
 
