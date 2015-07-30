@@ -35,11 +35,4 @@ ADD_PLUGIN(BSMLDataStore
         CoreDataStore
     QT_MODULES
         Widgets
-    QT_LIBRARIES
-        QtCore
-        QtGui
-        QtNetwork
-        QtWidgets
-        QtXml
-        QtXmlPatterns
 )
