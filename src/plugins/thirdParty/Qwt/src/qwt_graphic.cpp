@@ -954,7 +954,7 @@ void QwtGraphic::updateBoundingRect( const QRectF &rect )
     if ( painter && painter->hasClipping() )
     {
         QRectF cr = painter->clipRegion().boundingRect();
-        cr = painter->transform().mapRect( br );
+        cr = painter->transform().mapRect( cr );
 
         br &= cr;
     }

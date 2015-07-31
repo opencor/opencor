@@ -573,8 +573,8 @@ static QwtScaleDiv qwtDivideToMonths(
                 minStepDays = 5;
             else if ( maxMinSteps >= 3 )
                 minStepDays = 10;
-
-            minStepDays = 15;
+            else
+                minStepDays = 15;
         }
         else
         {

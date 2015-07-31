@@ -103,7 +103,6 @@ public:
     double minScaleArc;
     double maxScaleArc;
 
-    double scalePenWidth;
     QwtDialNeedle *needle;
 
     double arcOffset;
