@@ -7,11 +7,11 @@ language: cpp
 
 os:
   - linux
-  - osx
+#  - osx
 
 env:
   - CONFIG=Release
-  - CONFIG=Debug
+#  - CONFIG=Debug
 
 install:
   - if [ "${TRAVIS_OS_NAME}" = "linux" ]; then
@@ -24,6 +24,7 @@ install:
       && sudo apt-get -qq install g++-4.8 libc6-i386 qt54location qt54multimedia qt54sensors qt54svg qt54tools qt54webkit
       && export CXX="g++-4.8"
       && export CC="gcc-4.8"
+      && ls -al /opt/qt54/lib/
       ;
     else
          brew update
