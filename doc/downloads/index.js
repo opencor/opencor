@@ -39,7 +39,8 @@ var jsonData = { "versions": [
                            { "extension": ".dmg" }, { "extension": ".zip" }
                          ]
                        }
-                     ]
+                     ],
+                     "information": "<strong>Note:</strong> this snapshot is for those who want/need access to OpenCOR's latest features, meaning that it may be unstable."
                    },
                    { "major": 0, "minor": 4, "patch": 0, "day": 29, "month": 4, "year": 2015, "type": 0,
                      "platforms": [
