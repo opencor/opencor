@@ -49,6 +49,10 @@ script:
        fi
     && make -j 3
     && cd ..
+    && if [ "${TRAVIS_OS_NAME}" = "linux" ]; then
+         build/bin/runtests
+         ;
+       fi
 #    && if [ "${TRAVIS_OS_NAME}" = "linux" ]; then
 #         build/bin/runtests
 #         ;
@@ -56,10 +60,6 @@ script:
 #         build/OpenCOR.app/Contents/MacOS/runtests
 #         ;
 #       fi
-    && if [ "${TRAVIS_OS_NAME}" = "linux" ]; then
-         build/bin/runtests
-         ;
-       fi
 
 notifications:
   email:
