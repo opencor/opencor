@@ -105,7 +105,6 @@ MACRO(INITIALISE_PROJECT)
         OpenGL
         PrintSupport
         Svg
-        UiPlugin
         UiTools
         WebKit
         WebKitWidgets
