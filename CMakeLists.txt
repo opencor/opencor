@@ -451,7 +451,10 @@ ELSE()
         # Copy the CLI version of the OpenCOR executable to both the build and
         # build/bin folders
         # Note: the idea is that, on Windows, we can test both the CLI and the
-        #       GUI versions of OpenCOR from either build or build/bin...
+        #       GUI versions of OpenCOR from either build (the case when running
+        #       OpenCOR from within Qt Creator) or build/bin (the case if we
+        #       want to test OpenCOR as if it was deployed on someone's
+        #       computer)...
 
         COPY_FILE_TO_BUILD_DIR(${WINDOWS_CLI_PROJECT_NAME} ${PROJECT_BUILD_DIR} .
                                ${WINDOWS_CLI_PROJECT_NAME}${CMAKE_EXECUTABLE_SUFFIX} ${PROJECT_NAME}.com)
@@ -505,6 +508,7 @@ ELSE()
             GET_FILENAME_COMPONENT(DIRNAME ${ADDITIONAL_FILE} DIRECTORY)
             GET_FILENAME_COMPONENT(FILENAME ${ADDITIONAL_FILE} NAME)
 
+            COPY_FILE_TO_BUILD_DIR(DIRECT_COPY ${DIRNAME} . ${FILENAME})
             COPY_FILE_TO_BUILD_DIR(DIRECT_COPY ${DIRNAME} bin ${FILENAME})
         ENDFOREACH()
     ENDIF()

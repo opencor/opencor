@@ -585,6 +585,8 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
         IF(EXISTS ${FULL_EXTERNAL_BINARY})
             # Copy the external binary to its destination directory, so we can
             # test things without first having to deploy OpenCOR
+            # Note: on Windows, we also need to copy the build directory so that
+            #       we can test things from within Qt Creator...
 
             SET(REAL_EXTERNAL_BINARY ${EXTERNAL_BINARY})
 
@@ -593,6 +595,8 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
                 # library
 
                 STRING(REPLACE "${CMAKE_IMPORT_LIBRARY_SUFFIX}" "${CMAKE_SHARED_LIBRARY_SUFFIX}" REAL_EXTERNAL_BINARY "${REAL_EXTERNAL_BINARY}")
+
+                COPY_FILE_TO_BUILD_DIR(DIRECT_COPY ${EXTERNAL_BINARIES_DIR} . ${REAL_EXTERNAL_BINARY})
             ENDIF()
 
             COPY_FILE_TO_BUILD_DIR(DIRECT_COPY ${EXTERNAL_BINARIES_DIR} ${DEST_EXTERNAL_BINARIES_DIR} ${REAL_EXTERNAL_BINARY})
@@ -911,8 +915,9 @@ ENDMACRO()
 
 MACRO(WINDOWS_DEPLOY_QT_LIBRARIES)
     FOREACH(LIBRARY ${ARGN})
-        # Copy the Qt library to the build/bin folder, so we can test things
-        # without first having to deploy OpenCOR
+        # Copy the Qt library to both the build and build/bin folders, so we can
+        # test things both from within Qt Creator and without first having to
+        # deploy OpenCOR
         # Note: this is particularly useful on 64-bit Windows where we might
         #       want to be able to test both the 32-bit and 64-bit versions of
         #       OpenCOR (since only the 32-bit or 64-bit Qt libraries are
@@ -929,10 +934,13 @@ MACRO(WINDOWS_DEPLOY_QT_LIBRARIES)
         ENDIF()
 
         IF(RELEASE_MODE)
-            COPY_FILE_TO_BUILD_DIR(DIRECT_COPY ${QT_BINARY_DIR} bin ${LIBRARY_RELEASE_FILENAME})
+            SET(LIBRARY_FILENAME ${LIBRARY_RELEASE_FILENAME})
         ELSE()
-            COPY_FILE_TO_BUILD_DIR(DIRECT_COPY ${QT_BINARY_DIR} bin ${LIBRARY_DEBUG_FILENAME})
+            SET(LIBRARY_FILENAME ${LIBRARY_DEBUG_FILENAME})
         ENDIF()
+
+        COPY_FILE_TO_BUILD_DIR(DIRECT_COPY ${QT_BINARY_DIR} . ${LIBRARY_FILENAME})
+        COPY_FILE_TO_BUILD_DIR(DIRECT_COPY ${QT_BINARY_DIR} bin ${LIBRARY_FILENAME})
 
         # Deploy the Qt library
 
