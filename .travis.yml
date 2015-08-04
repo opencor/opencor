@@ -7,17 +7,13 @@ language: cpp
 
 os:
   - linux
-#  - osx
+  - osx
 
 env:
   - CONFIG=Release
-#  - CONFIG=Debug
+  - CONFIG=Debug
 
 install:
-  # Note: we should be using ppa:beineri/opt-qt542 on Linux, but Qt's WebChannel
-  #       library (/opt/qt54/lib/libQt5WebChannel.so.5.4.2) is missing, so we
-  #       use ppa:beineri/opt-qt55 instead since it allows us both to build and
-  #       test OpenCOR...
   - if [ "${TRAVIS_OS_NAME}" = "linux" ]; then
          wget http://www.cmake.org/files/v3.3/cmake-3.3.0-Linux-i386.tar.gz
       && tar -xzf cmake-3.3.0-Linux-i386.tar.gz
@@ -28,7 +24,6 @@ install:
       && sudo apt-get -qq install g++-4.8 libc6-i386 qt54location qt54multimedia qt54sensors qt54svg qt54tools qt54webchannel qt54webkit
       && export CXX="g++-4.8"
       && export CC="gcc-4.8"
-      && ls -al /opt/qt54/lib
       ;
     else
          brew update
