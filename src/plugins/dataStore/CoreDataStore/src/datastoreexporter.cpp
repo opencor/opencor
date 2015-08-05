@@ -34,6 +34,12 @@ DataStoreExporter::DataStoreExporter()
 
 //==============================================================================
 
+DataStoreExporter::~DataStoreExporter()
+{
+}
+
+//==============================================================================
+
 }   // namespace CoreDataStore
 }   // namespace OpenCOR
 
