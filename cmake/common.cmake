@@ -28,24 +28,38 @@ MACRO(INITIALISE_PROJECT)
         ENDIF()
     ENDIF()
 
-    # Make sure that all the binaries we generate end up in our build folder
-    # Note: this is particularly useful with MSVC and Xcode since otherwise the
-    #       binaries will end up in a folder, which name is related to the type
-    #       of the build...
+    # Determine the effective build directory
 
     SET(PROJECT_BUILD_DIR ${CMAKE_BINARY_DIR})
 
-    SET(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BUILD_DIR})
-    SET(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BUILD_DIR})
-    SET(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_BUILD_DIR})
+    IF(APPLE AND "${CMAKE_GENERATOR}" STREQUAL "Xcode")
+        # With Xcode, we have a configuration directory, but it messes up our
+        # build system, so ask for all the binaries to be generated in our build
+        # folder
 
-    SET(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE ${PROJECT_BUILD_DIR})
-    SET(CMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE ${PROJECT_BUILD_DIR})
-    SET(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELEASE ${PROJECT_BUILD_DIR})
+        SET(XCODE TRUE)
 
-    SET(CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG ${PROJECT_BUILD_DIR})
-    SET(CMAKE_LIBRARY_OUTPUT_DIRECTORY_DEBUG ${PROJECT_BUILD_DIR})
-    SET(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_DEBUG ${PROJECT_BUILD_DIR})
+        SET(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BUILD_DIR})
+        SET(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BUILD_DIR})
+        SET(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_BUILD_DIR})
+
+        SET(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE ${PROJECT_BUILD_DIR})
+        SET(CMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE ${PROJECT_BUILD_DIR})
+        SET(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELEASE ${PROJECT_BUILD_DIR})
+
+        SET(CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG ${PROJECT_BUILD_DIR})
+        SET(CMAKE_LIBRARY_OUTPUT_DIRECTORY_DEBUG ${PROJECT_BUILD_DIR})
+        SET(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_DEBUG ${PROJECT_BUILD_DIR})
+    ELSE()
+        # Check whether there is a configuration directory (the case with MSVC)
+        # and, if so, make use of it
+
+        SET(XCODE FALSE)
+
+        IF(NOT "${CMAKE_CFG_INTDIR}" STREQUAL ".")
+            SET(PROJECT_BUILD_DIR ${PROJECT_BUILD_DIR}/${CMAKE_CFG_INTDIR})
+        ENDIF()
+    ENDIF()
 
     # Make sure that we are building on a supported architecture
     # Note: normally, we would check the value of CMAKE_SIZEOF_VOID_P, but in
@@ -279,7 +293,7 @@ MACRO(INITIALISE_PROJECT)
         ENDIF()
     ENDIF()
 
-    # Location of our plugins so that we don't have to deploy OpenCOR on
+    # Destination of our plugins so that we don't have to deploy OpenCOR on
     # Windows and Linux before being able to test it
 
     IF(APPLE)
@@ -615,7 +629,20 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
         ENDIF()
     ENDFOREACH()
 
-    # Move the plugin to our plugins directory
+    # Location of our plugin
+
+    IF(XCODE)
+        SET(PLUGIN_BUILD_DIR ${PROJECT_BUILD_DIR})
+    ELSE()
+        STRING(REPLACE "${${CMAKE_PROJECT_NAME}_SOURCE_DIR}/" "" PLUGIN_BUILD_DIR ${PROJECT_SOURCE_DIR})
+        SET(PLUGIN_BUILD_DIR ${CMAKE_BINARY_DIR}/${PLUGIN_BUILD_DIR})
+
+        IF(NOT "${CMAKE_CFG_INTDIR}" STREQUAL ".")
+            SET(PLUGIN_BUILD_DIR ${PLUGIN_BUILD_DIR}/${CMAKE_CFG_INTDIR})
+        ENDIF()
+    ENDIF()
+
+    # Copy the plugin to our plugins directory
     # Note: this is done so that we can, on Windows and Linux, test the use of
     #       plugins in OpenCOR without first having to package OpenCOR, as well
     #       as, on Windows, test things from within Qt Creator...
@@ -623,8 +650,8 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
     SET(PLUGIN_FILENAME ${CMAKE_SHARED_LIBRARY_PREFIX}${PLUGIN_NAME}${CMAKE_SHARED_LIBRARY_SUFFIX})
 
     ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
-                       COMMAND ${CMAKE_COMMAND} -E rename ${PROJECT_BUILD_DIR}/${PLUGIN_FILENAME}
-                                                          ${DEST_PLUGINS_DIR}/${PLUGIN_FILENAME})
+                       COMMAND ${CMAKE_COMMAND} -E copy ${PLUGIN_BUILD_DIR}/${PLUGIN_FILENAME}
+                                                        ${DEST_PLUGINS_DIR}/${PLUGIN_FILENAME})
 
     # A few OS X specific things
 
@@ -660,7 +687,7 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
     # already been copied
 
     IF(NOT APPLE)
-        INSTALL(FILES ${PROJECT_BUILD_DIR}/${PLUGIN_FILENAME}
+        INSTALL(FILES ${PLUGIN_BUILD_DIR}/${PLUGIN_FILENAME}
                 DESTINATION plugins/${CMAKE_PROJECT_NAME})
     ENDIF()
 
@@ -769,8 +796,14 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
 
                 SET(TEST_FILENAME ${TEST_NAME}${CMAKE_EXECUTABLE_SUFFIX})
 
+                IF(WIN32)
+                    ADD_CUSTOM_COMMAND(TARGET ${TEST_NAME} POST_BUILD
+                                       COMMAND ${CMAKE_COMMAND} -E copy ${PLUGIN_BUILD_DIR}/${TEST_FILENAME}
+                                                                        ${PROJECT_BUILD_DIR}/${TEST_FILENAME})
+                ENDIF()
+
                 ADD_CUSTOM_COMMAND(TARGET ${TEST_NAME} POST_BUILD
-                                   COMMAND ${CMAKE_COMMAND} -E copy ${PROJECT_BUILD_DIR}/${TEST_FILENAME}
+                                   COMMAND ${CMAKE_COMMAND} -E copy ${PLUGIN_BUILD_DIR}/${TEST_FILENAME}
                                                                     ${DEST_TESTS_DIR}/${TEST_FILENAME})
 
                 # A few OS X specific things
