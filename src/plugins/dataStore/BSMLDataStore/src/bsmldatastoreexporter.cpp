@@ -65,10 +65,10 @@ void BioSignalMLExporter::execute(CoreDataStore::CoreDataStore *pDataStore) cons
 
         // To come from user dialog... (And restrict to http: scheme ??)
         // Or use URI in repository??
-        std::string rec_uri = pDataStore->modelUri().toStdString();
+        std::string rec_uri = pDataStore->uri().toStdString();
 
         std::string base_units = "http://www.cellml.org/units/"
-                                + pDataStore->modelId().toStdString()
+                                + pDataStore->id().toStdString()
                                 + "#";
 
         bsml::HDF5::Recording *recording = nullptr;
