@@ -615,15 +615,16 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
         ENDIF()
     ENDFOREACH()
 
-    # Copy the plugin to our plugins directory
+    # Move the plugin to our plugins directory
     # Note: this is done so that we can, on Windows and Linux, test the use of
-    #       plugins in OpenCOR without first having to package OpenCOR...
+    #       plugins in OpenCOR without first having to package OpenCOR, as well
+    #       as, on Windows, test things from within Qt Creator...
 
     SET(PLUGIN_FILENAME ${CMAKE_SHARED_LIBRARY_PREFIX}${PLUGIN_NAME}${CMAKE_SHARED_LIBRARY_SUFFIX})
 
     ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
-                       COMMAND ${CMAKE_COMMAND} -E copy ${PROJECT_BUILD_DIR}/${PLUGIN_FILENAME}
-                                                        ${DEST_PLUGINS_DIR}/${PLUGIN_FILENAME})
+                       COMMAND ${CMAKE_COMMAND} -E rename ${PROJECT_BUILD_DIR}/${PLUGIN_FILENAME}
+                                                          ${DEST_PLUGINS_DIR}/${PLUGIN_FILENAME})
 
     # A few OS X specific things
 
