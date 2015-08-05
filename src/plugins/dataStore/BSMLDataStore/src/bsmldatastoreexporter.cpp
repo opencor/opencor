@@ -19,16 +19,16 @@ specific language governing permissions and limitations under the License.
 // BioSignalML data store exporter class
 //==============================================================================
 
-#include "corecliutils.h"
-#include "coreguiutils.h"
 #include "coredatastore.h"
 #include "bsmldatastoreexporter.h"
+#include "bsmldatastoresavedialog.h"
 #include "datastorevariable.h"
 
 //==============================================================================
 
 #include <biosignalml.h>
 #include <data/hdf5.h>              // ****
+//#include <biosignalml/biosignalml.h>
 //#include <biosignalml/data/hdf5.h>
 
 //==============================================================================
@@ -50,18 +50,11 @@ void BioSignalMLExporter::execute(CoreDataStore::CoreDataStore *pDataStore) cons
 {
     // Export the given data store to a BioSignalML file
 
-    QString bsmlFiles = QObject::tr("BioSignalML")+" (*.bsml)";
-    QString fileName = Core::getSaveFileName(QObject::tr("Export to a BioSignalML file"),
-                                             QString(),
-                                             bsmlFiles, &bsmlFiles);
-
-// Repository v's file -- user input
-// ***** Also capture URI, comments, etc...
-
-
+    BioSignalMLSaveDialog saveDialog(0);
+    saveDialog.exec() ;
+    QString fileName = saveDialog.fileName();
 
     if (!fileName.isEmpty()) {
-
 
         // To come from user dialog... (And restrict to http: scheme ??)
         // Or use URI in repository??
@@ -76,7 +69,7 @@ void BioSignalMLExporter::execute(CoreDataStore::CoreDataStore *pDataStore) cons
             recording = new bsml::HDF5::Recording(rec_uri, fileName.toStdString(), true);
 
             recording->add_prefix(rdf::Namespace("units", base_units)) ;
-//            recording->set_description("testing 123...") ;
+            recording->set_description(saveDialog.description().toStdString()) ;
 
             CoreDataStore::DataStoreVariable *voi = pDataStore->voi();
             auto clock = recording->new_clock(voi->uri().toStdString(),

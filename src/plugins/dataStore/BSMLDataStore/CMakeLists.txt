@@ -13,9 +13,13 @@ ADD_PLUGIN(BSMLDataStore
         ../../plugininfo.cpp
 
         src/bsmldatastoreexporter.cpp
+        src/bsmldatastoresavedialog.cpp
         src/bsmldatastoreplugin.cpp
     HEADERS_MOC
         src/bsmldatastoreplugin.h
+        src/bsmldatastoresavedialog.h
+    UIS
+        src/bsmldatastoresavedialog.ui
     INCLUDE_DIRS
         src
         ${biosignalml_INCLUDE_DIR}
