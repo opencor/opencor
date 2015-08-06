@@ -1100,29 +1100,31 @@ MACRO(OS_X_CLEAN_UP_FILE_WITH_QT_LIBRARIES PROJECT_TARGET DIRNAME FILENAME)
                                                      ${FULL_FILENAME})
 
     # Make sure that the file refers to our embedded copy of the Qt libraries
+    # Note: on Travis CI, QT_LIBRARY_DIR points to a symbolic path. That
+    #       symbolic path is used by some libraries while others use the
+    #       real path instead. So, we need to use both...
 
     IF(ENABLE_TRAVIS_CI)
-        # Retrieve the real path of the Qt library directory
-        # Note: on Travis CI, QT_LIBRARY_DIR points to a symbolic path. That
-        #       symbolic path is used by some libraries while others use the
-        #       real path instead. So, we need to use both...
-
         GET_FILENAME_COMPONENT(REAL_QT_LIBRARY_DIR ${QT_LIBRARY_DIR} REALPATH)
+    ENDIF()
 
-        FOREACH(QT_LIBRARY ${OS_X_QT_LIBRARIES})
-            SET(QT_LIBRARY_FILENAME ${QT_LIBRARY}.framework/Versions/${QT_VERSION_MAJOR}/${QT_LIBRARY})
+    FOREACH(QT_LIBRARY ${OS_X_QT_LIBRARIES})
+        SET(QT_LIBRARY_FILENAME ${QT_LIBRARY}.framework/Versions/${QT_VERSION_MAJOR}/${QT_LIBRARY})
+
+        IF(ENABLE_TRAVIS_CI)
             SET(REAL_QT_LIBRARY_FILENAME ${QT_LIBRARY}.framework/${QT_LIBRARY})
 
-            ADD_CUSTOM_COMMAND(TARGET ${PROJECT_TARGET} POST_BUILD
-                               COMMAND install_name_tool -change ${QT_LIBRARY_DIR}/${QT_LIBRARY_FILENAME}
-                                                                 @rpath/${QT_LIBRARY_FILENAME}
-                                                                 ${FULL_FILENAME})
             ADD_CUSTOM_COMMAND(TARGET ${PROJECT_TARGET} POST_BUILD
                                COMMAND install_name_tool -change ${REAL_QT_LIBRARY_DIR}/${REAL_QT_LIBRARY_FILENAME}
                                                                  @rpath/${QT_LIBRARY_FILENAME}
                                                                  ${FULL_FILENAME})
-        ENDFOREACH()
-    ENDIF()
+        ENDIF()
+
+        ADD_CUSTOM_COMMAND(TARGET ${PROJECT_TARGET} POST_BUILD
+                           COMMAND install_name_tool -change ${QT_LIBRARY_DIR}/${QT_LIBRARY_FILENAME}
+                                                             @rpath/${QT_LIBRARY_FILENAME}
+                                                             ${FULL_FILENAME})
+    ENDFOREACH()
 ENDMACRO()
 
 #===============================================================================
