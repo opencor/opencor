@@ -28,46 +28,13 @@ MACRO(INITIALISE_PROJECT)
         ENDIF()
     ENDIF()
 
-    # Determine the effective build directory
-
-    SET(PROJECT_BUILD_DIR ${CMAKE_BINARY_DIR})
-
-    IF(APPLE AND "${CMAKE_GENERATOR}" STREQUAL "Xcode")
-        # With Xcode, we have a configuration directory, but it messes up our
-        # build system, so ask for all the binaries to be generated in our build
-        # folder
-
-        SET(XCODE TRUE)
-
-        SET(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BUILD_DIR})
-        SET(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BUILD_DIR})
-        SET(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_BUILD_DIR})
-
-        SET(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE ${PROJECT_BUILD_DIR})
-        SET(CMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE ${PROJECT_BUILD_DIR})
-        SET(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELEASE ${PROJECT_BUILD_DIR})
-
-        SET(CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG ${PROJECT_BUILD_DIR})
-        SET(CMAKE_LIBRARY_OUTPUT_DIRECTORY_DEBUG ${PROJECT_BUILD_DIR})
-        SET(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_DEBUG ${PROJECT_BUILD_DIR})
-    ELSE()
-        # Check whether there is a configuration directory (the case with MSVC)
-        # and, if so, make use of it
-
-        SET(XCODE FALSE)
-
-        IF(NOT "${CMAKE_CFG_INTDIR}" STREQUAL ".")
-            SET(PROJECT_BUILD_DIR ${PROJECT_BUILD_DIR}/${CMAKE_CFG_INTDIR})
-        ENDIF()
-    ENDIF()
-
     # Make sure that we are building on a supported architecture
     # Note: normally, we would check the value of CMAKE_SIZEOF_VOID_P, but in
     #       some cases it may not be set (e.g. when generating an Xcode project
     #       file), so we determine and retrieve that value ourselves...
 
     TRY_RUN(ARCHITECTURE_RUN ARCHITECTURE_COMPILE
-            ${PROJECT_BUILD_DIR} ${CMAKE_SOURCE_DIR}/cmake/architecture.c
+            ${CMAKE_BINARY_DIR} ${CMAKE_SOURCE_DIR}/cmake/architecture.c
             RUN_OUTPUT_VARIABLE ARCHITECTURE)
 
     IF(NOT ARCHITECTURE_COMPILE)
@@ -185,6 +152,39 @@ MACRO(INITIALISE_PROJECT)
             QtXml
             QtXmlPatterns
         )
+    ENDIF()
+
+    # Determine the effective build directory
+
+    SET(PROJECT_BUILD_DIR ${CMAKE_BINARY_DIR})
+
+    IF(APPLE AND "${CMAKE_GENERATOR}" STREQUAL "Xcode")
+        # With Xcode, we have a configuration directory, but it messes up our
+        # build system, so ask for all the binaries to be generated in our build
+        # folder
+
+        SET(XCODE TRUE)
+
+        SET(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BUILD_DIR})
+        SET(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BUILD_DIR})
+        SET(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_BUILD_DIR})
+
+        SET(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE ${PROJECT_BUILD_DIR})
+        SET(CMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE ${PROJECT_BUILD_DIR})
+        SET(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELEASE ${PROJECT_BUILD_DIR})
+
+        SET(CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG ${PROJECT_BUILD_DIR})
+        SET(CMAKE_LIBRARY_OUTPUT_DIRECTORY_DEBUG ${PROJECT_BUILD_DIR})
+        SET(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_DEBUG ${PROJECT_BUILD_DIR})
+    ELSE()
+        # Check whether there is a configuration directory (the case with MSVC)
+        # and, if so, make use of it
+
+        SET(XCODE FALSE)
+
+        IF(NOT "${CMAKE_CFG_INTDIR}" STREQUAL ".")
+            SET(PROJECT_BUILD_DIR ${PROJECT_BUILD_DIR}/${CMAKE_CFG_INTDIR})
+        ENDIF()
     ENDIF()
 
     # Some general build settings
