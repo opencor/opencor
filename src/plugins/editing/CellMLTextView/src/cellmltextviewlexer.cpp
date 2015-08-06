@@ -306,7 +306,7 @@ void CellmlTextViewLexer::doStyleTextCurrent(const int &pBytesStart,
         //          doStyleTextPreviousMultilineComment())...
 
         doStyleText(pBytesStart+multilineCommentStartBytesPosition, pBytesEnd,
-                    pText.right(fullTextLength(pBytesStart, pBytesEnd)-multilineCommentStartPosition),
+                    pText.right(fullTextLength(pBytesStart+multilineCommentStartBytesPosition, pBytesEnd)),
                     parameterBlockStartPosition < multilineCommentStartPosition);
     } else if (   (parameterBlockStartPosition != INT_MAX)
                && (parameterBlockStartPosition < stringPosition)
@@ -327,7 +327,7 @@ void CellmlTextViewLexer::doStyleTextCurrent(const int &pBytesStart,
         //       the 'new' given text...
 
         doStyleText(pBytesStart+parameterBlockStartBytesPosition, pBytesEnd,
-                    pText.right(fullTextLength(pBytesStart, pBytesEnd)-parameterBlockStartPosition),
+                    pText.right(fullTextLength(pBytesStart+parameterBlockStartBytesPosition, pBytesEnd)),
                     pParameterBlock);
     } else {
         // Style the given text as a parameter block, if needed
