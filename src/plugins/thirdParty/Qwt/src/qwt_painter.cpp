@@ -1264,7 +1264,11 @@ QPixmap QwtPainter::backingStore( QWidget *widget, const QSize &size )
 
     if ( widget && widget->windowHandle() )
     {
+#if QT_VERSION < 0x050100
         pixelRatio = widget->windowHandle()->devicePixelRatio();
+#else
+        pixelRatio = widget->devicePixelRatio();
+#endif
     }
     else
     {

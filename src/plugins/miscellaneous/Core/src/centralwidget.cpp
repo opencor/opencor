@@ -1553,11 +1553,12 @@ QString CentralWidget::viewKey(const int &pMode, const int &pView,
 
 void CentralWidget::updateGui()
 {
-    if (mState != Idling)
+    if (mState != Idling) {
         // We are doing something, so too risky to update the GUI during that
         // time (e.g. things may not be fully initialised)
 
         return;
+    }
 
     // Update our state to reflect the fact that we are updating the GUI
 

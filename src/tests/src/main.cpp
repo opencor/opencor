@@ -93,7 +93,17 @@ int main(int pArgC, char *pArgV[])
             // load them without any problem
 
 #ifdef Q_OS_WIN
-            QDir::setCurrent(exePath+"/../plugins/OpenCOR");
+            QString pluginsDir = exePath+QDir::separator()+QString("..")+QDir::separator()+"plugins/OpenCOR";
+
+            if (!QDir(pluginsDir).exists()) {
+                // The plugins directory doesn't exist, which should only happen
+                // if we are trying to run the tests from the build folder (as
+                // opposed to the build/bin folder), so skip the "../" bit...
+
+                pluginsDir = exePath+QDir::separator()+"plugins/OpenCOR";
+            }
+
+            QDir::setCurrent(pluginsDir);
 #endif
 
             // Execute the test itself

@@ -1,9 +1,11 @@
 var jsonData = { "versions": [
-                   { "anchor": "latest", "description": "Latest snapshot", "day": 15, "month": 7, "year": 2015,
+                   { "anchor": "latest", "description": "Latest snapshot", "day": 31, "month": 7, "year": 2015,
                      "categories": [
                        { "name": "General",
                          "entries": [
                            { "type": "Added", "description": "<a href=\"http://git-scm.com/\">Git</a> support." },
+                           { "type": "Added", "description": "Support for <a href=\"https://en.wikipedia.org/wiki/Windows_10\">Windows 10</a>." },
+                           { "type": "Added", "description": "<a href=\"https://groups.google.com/forum/#!forum/opencor-users\">Users</a> and <a href=\"https://groups.google.com/forum/#!forum/opencor-developers\">developers</a> mailing lists." },
                            { "type": "Added", "description": "Resetting all your settings from the <a href=\"http://en.wikipedia.org/wiki/Command-line_interface\">CLI</a>." }
                          ]
                        },

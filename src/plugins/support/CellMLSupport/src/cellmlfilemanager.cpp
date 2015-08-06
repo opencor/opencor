@@ -87,7 +87,7 @@ bool CellmlFileManager::canLoadFileContents(const QString &pFileContents) const
 
 QObject * CellmlFileManager::newFile(const QString &pFileName) const
 {
-    // Create and return a new SED-ML file
+    // Create and return a new CellML file
 
     return new CellmlFile(Core::nativeCanonicalFileName(pFileName));
 }
