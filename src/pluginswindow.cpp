@@ -212,9 +212,15 @@ PluginsWindow::PluginsWindow(PluginManager *pPluginManager,
                 mUnselectablePluginItems << pluginItem;
             }
 
-            // Add the plugin to the right category
+            // Add the plugin to the right category or the Miscellaneous
+            // category, if we don't know about its category
 
-            mPluginCategories.value(pluginInfo->category())->appendRow(pluginItem);
+            QStandardItem *category = mPluginCategories.value(pluginInfo->category());
+
+            if (!category)
+                category = mPluginCategories.value(MiscellaneousCategory);
+
+            category->appendRow(pluginItem);
         } else {
             // We are not actually dealing with a plugin, so add it to the
             // Miscellaneous category
