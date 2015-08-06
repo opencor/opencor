@@ -531,15 +531,27 @@ ELSE()
     SET(CPACK_PACKAGE_VERSION_PATCH "${PROJECT_VERSION_PATCH}")
 ENDIF()
 
-MATH(EXPR ICU_MINOR_VERSION "${Qt5Widgets_VERSION_MINOR}-1")
+IF(ENABLE_TRAVIS_CI)
+    # We are building OpenCOR on Travis CI, so use Travis CI's version of the
+    # ICU libraries (since they are not included in the PPA we use)
 
-IF(WIN32)
-    SET(ICU_VERSION "${Qt5Widgets_VERSION_MAJOR}${ICU_MINOR_VERSION}")
+    SET(ICU_DIRNAME "/usr/lib")
+
+    SET(ORIG_ICU_VERSION ".48.1.1")
+    SET(DEST_ICU_VERSION ".48")
 ELSE()
-    SET(ICU_DIRNAME "${QT_LIBRARY_DIR}")
+    # We are building OpenCOR locally, so use Qt's version of the ICU libraries
 
-    SET(ORIG_ICU_VERSION ".${Qt5Widgets_VERSION_MAJOR}${ICU_MINOR_VERSION}.1")
-    SET(DEST_ICU_VERSION ".${Qt5Widgets_VERSION_MAJOR}${ICU_MINOR_VERSION}")
+    MATH(EXPR ICU_MINOR_VERSION "${Qt5Widgets_VERSION_MINOR}-1")
+
+    IF(WIN32)
+        SET(ICU_VERSION "${Qt5Widgets_VERSION_MAJOR}${ICU_MINOR_VERSION}")
+    ELSE()
+        SET(ICU_DIRNAME "${QT_LIBRARY_DIR}")
+
+        SET(ORIG_ICU_VERSION ".${Qt5Widgets_VERSION_MAJOR}${ICU_MINOR_VERSION}.1")
+        SET(DEST_ICU_VERSION ".${Qt5Widgets_VERSION_MAJOR}${ICU_MINOR_VERSION}")
+    ENDIF()
 ENDIF()
 
 IF(WIN32)
