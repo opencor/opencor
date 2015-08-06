@@ -4,6 +4,7 @@ PROJECT(CSVDataStorePlugin)
 
 ADD_PLUGIN(CSVDataStore
     SOURCES
+        ../../i18ninterface.cpp
         ../../plugininfo.cpp
 
         src/csvdatastoreexporter.cpp
