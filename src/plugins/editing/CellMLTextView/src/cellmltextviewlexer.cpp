@@ -332,19 +332,19 @@ qDebug(">>> doStyleTextCurrent(%d, %d, \"%s\", %s)", pBytesStart, pBytesEnd, qPr
         //          we need to finish styling it (which is effectively done in
         //          doStyleTextPreviousMultilineComment())...
 
-        int parameterBlockEndPosition = findString(EndParameterBlockString, parameterBlockStartPosition, ParameterBlock);
+        int start = fullTextPosition(pBytesStart);
+        int multilineCommentParameterBlockStartPosition = findString(StartParameterBlockString, start+multilineCommentStartPosition, ParameterBlock, false);
+        int multilineCommentParameterBlockEndPosition = findString(EndParameterBlockString, multilineCommentParameterBlockStartPosition, ParameterBlock);
 
-        if ((parameterBlockStartPosition < multilineCommentStartPosition) && (multilineCommentStartPosition < parameterBlockEndPosition)) {
-            int parameterBlockEndBytesPosition = fullTextBytesPosition(fullTextPosition(pBytesStart)+parameterBlockEndPosition);
+        multilineCommentParameterBlockStartPosition = (multilineCommentParameterBlockStartPosition == -1)?INT_MAX:multilineCommentParameterBlockStartPosition;
+        multilineCommentParameterBlockEndPosition = (multilineCommentParameterBlockEndPosition == -1)?INT_MAX:multilineCommentParameterBlockEndPosition;
 
-            doStyleText(multilineCommentStartBytesPosition, parameterBlockEndBytesPosition,
-                        pText.right(fullTextLength(multilineCommentStartBytesPosition, parameterBlockEndBytesPosition)),
-                        true);
-        } else {
-            doStyleText(multilineCommentStartBytesPosition, pBytesEnd,
-                        pText.right(fullTextLength(multilineCommentStartBytesPosition, pBytesEnd)),
-                        pParameterBlock);
-        }
+        int absoluteMultilineCommentStartPosition = start+multilineCommentStartPosition;
+
+        doStyleText(multilineCommentStartBytesPosition, pBytesEnd,
+                    pText.right(fullTextLength(multilineCommentStartBytesPosition, pBytesEnd)),
+                       (multilineCommentParameterBlockStartPosition < absoluteMultilineCommentStartPosition)
+                    && (absoluteMultilineCommentStartPosition < multilineCommentParameterBlockEndPosition));
     } else if (   (parameterBlockStartPosition != INT_MAX)
                && (parameterBlockStartPosition < stringPosition)
                && (parameterBlockStartPosition < singleLineCommentPosition)
@@ -682,7 +682,7 @@ void CellmlTextViewLexer::doStyleTextRegEx(const int &pBytesStart,
                                            const QRegularExpression &pRegEx,
                                            const int &pRegExStyle)
 {
-qDebug(">>> doStyleTextRegEx(%d, \"%s\", pRegEx, %d)", pBytesStart, qPrintable(pText), pRegExStyle);
+//qDebug(">>> doStyleTextRegEx(%d, \"%s\", pRegEx, %d)", pBytesStart, qPrintable(pText), pRegExStyle);
     // Style the given text using the given regular expression
 
     QRegularExpressionMatchIterator regExMatchIter = pRegEx.globalMatch(pText);
@@ -707,7 +707,7 @@ void CellmlTextViewLexer::doStyleTextNumberRegEx(const int &pBytesStart,
                                                  const QString &pText,
                                                  const int &pRegExStyle)
 {
-qDebug(">>> doStyleTextNumberRegEx(%d, \"%s\", %d)", pBytesStart, qPrintable(pText), pRegExStyle);
+//qDebug(">>> doStyleTextNumberRegEx(%d, \"%s\", %d)", pBytesStart, qPrintable(pText), pRegExStyle);
     // Style the given text using the number regular expression
 
     static const QRegularExpression NumberRegEx = QRegularExpression("(\\d+(\\.\\d*)?|\\.\\d+)([eE][+-]?\\d*)?");
