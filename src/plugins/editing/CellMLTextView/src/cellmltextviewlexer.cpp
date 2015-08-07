@@ -466,7 +466,7 @@ void CellmlTextViewLexer::doStyleTextCurrent(const int &pBytesStart,
         //       QsciLexerCustom::handleStyleNeeded()). Now, depending on
         //       whether keywords and/or numbers have been styled, the end
         //       position may or not be pBytesEnd. So, here, we make sure that
-        //       it is pBytesEnd, so that QScintilla can work optimally...
+        //       it is, so that QScintilla can work as it should...
 
         startStyling(pBytesEnd);
     }
@@ -558,7 +558,7 @@ void CellmlTextViewLexer::doStyleTextPreviousParameterBlock(const int &pPosition
                         && !mFullText.mid(pPosition, StartParameterBlockLength).compare(StartParameterBlockString);
         bool hasEnd = bytesEnd == realBytesEnd;
 
-        // If possible, style the start of the parameter block
+        // If needed, style the start of the parameter block
 
         if (hasStart) {
             startStyling(pBytesStart);
@@ -567,15 +567,15 @@ void CellmlTextViewLexer::doStyleTextPreviousParameterBlock(const int &pPosition
 
         // Now style the contents of the parameter block itself
 
-        int newStart = pBytesStart+(hasStart?StartParameterBlockLength:0);
-        int newEnd = bytesEnd-(hasEnd?EndParameterBlockLength:0);
+        int newBytesStart = pBytesStart+(hasStart?StartParameterBlockLength:0);
+        int newBytesEnd = bytesEnd-(hasEnd?EndParameterBlockLength:0);
 
-        doStyleTextCurrent(newStart, newEnd,
-                           pText.mid(fullTextLength(pBytesStart, newStart),
-                                     fullTextLength(newStart, newEnd)),
+        doStyleTextCurrent(newBytesStart, newBytesEnd,
+                           pText.mid(fullTextLength(pBytesStart, newBytesStart),
+                                     fullTextLength(newBytesStart, newBytesEnd)),
                            true);
 
-        // If possible, style the end of the parameter block, as well as what is
+        // If needed, style the end of the parameter block, as well as what is
         // behind it
 
         if (hasEnd) {
