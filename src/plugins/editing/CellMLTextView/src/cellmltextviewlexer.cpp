@@ -151,6 +151,10 @@ void CellmlTextViewLexer::styleText(int pBytesStart, int pBytesEnd)
                             pBytesStart, pBytesEnd, data);
 
     QString text = QString(data);
+qDebug("=======================================");
+qDebug("Text to style:");
+qDebug("--------------");
+qDebug("%s", qPrintable(text));
 
     delete[] data;
 
@@ -211,6 +215,7 @@ void CellmlTextViewLexer::doStyleText(const int &pBytesStart,
                                       const QString &pText,
                                       const bool &pParameterBlock)
 {
+qDebug(">>> doStyleText(%d, %d, \"%s\", %s)", pBytesStart, pBytesEnd, qPrintable(pText), pParameterBlock?"true":"false");
     // Make sure that we are given some text to style
 
     if (pBytesStart == pBytesEnd)
@@ -252,6 +257,7 @@ void CellmlTextViewLexer::doStyleTextCurrent(const int &pBytesStart,
                                              const QString &pText,
                                              const bool &pParameterBlock)
 {
+qDebug(">>> doStyleTextCurrent(%d, %d, \"%s\", %s)", pBytesStart, pBytesEnd, qPrintable(pText), pParameterBlock?"true":"false");
     // Make sure that we are given some text to style
 
     if (pBytesStart == pBytesEnd)
@@ -280,10 +286,31 @@ void CellmlTextViewLexer::doStyleTextCurrent(const int &pBytesStart,
     } else if (   (singleLineCommentPosition != INT_MAX)
                && (singleLineCommentPosition < stringPosition)
                && (singleLineCommentPosition < multilineCommentStartPosition)) {
-        // There is a // comment to style
+        // There is a // comment to style, so first style everything that is
+        // before it
 
-        doStyleTextSingleLineComment(singleLineCommentPosition, pBytesStart, pBytesEnd,
-                                     pText, pParameterBlock);
+        int singleLineCommentBytesPosition = fullTextBytesPosition(fullTextPosition(pBytesStart)+singleLineCommentPosition);
+
+        doStyleTextCurrent(pBytesStart, singleLineCommentBytesPosition,
+                           pText.left(singleLineCommentPosition), pParameterBlock);
+
+        // Style the // comment itself, after having looked for the end of the
+        // line, if any
+
+        int eolPosition = pText.indexOf(mEolString, singleLineCommentPosition+SingleLineCommentLength);
+        int eolBytesPosition = (eolPosition == -1)?-1:textBytesPosition(pText, eolPosition);
+        int end = (eolBytesPosition == -1)?pBytesEnd:pBytesStart+eolBytesPosition+mEolString.length();
+
+        startStyling(singleLineCommentBytesPosition);
+        setStyling(end-singleLineCommentBytesPosition, SingleLineComment);
+
+        // Now, style everything that is after the // comment, if anything
+
+        if (eolBytesPosition != -1) {
+            doStyleText(end, pBytesEnd,
+                        pText.right(fullTextLength(end, pBytesEnd)),
+                        pParameterBlock);
+        }
     } else if (   (multilineCommentStartPosition != INT_MAX)
                && (multilineCommentStartPosition < stringPosition)
                && (multilineCommentStartPosition < singleLineCommentPosition)) {
@@ -443,48 +470,13 @@ void CellmlTextViewLexer::doStyleTextCurrent(const int &pBytesStart,
 
 //==============================================================================
 
-void CellmlTextViewLexer::doStyleTextSingleLineComment(const int &pPosition,
-                                                       const int &pBytesStart,
-                                                       const int &pBytesEnd,
-                                                       const QString &pText,
-                                                       const bool &pParameterBlock)
-{
-    // There is a // comment to style, so first style everything that is before
-    // it
-
-    int bytesPosition = fullTextBytesPosition(pPosition);
-
-    doStyleTextCurrent(pBytesStart, pBytesStart+bytesPosition,
-                       pText.left(pPosition), pParameterBlock);
-
-    // Style the // comment itself, after having looked for the end of the line,
-    // if any
-
-    int eolPosition = pText.indexOf(mEolString, pPosition+SingleLineCommentLength);
-    int eolBytesPosition = (eolPosition == -1)?-1:textBytesPosition(pText, eolPosition);
-    int start = pBytesStart+bytesPosition;
-    int end = (eolBytesPosition == -1)?pBytesEnd:pBytesStart+eolBytesPosition+mEolString.length();
-
-    startStyling(start);
-    setStyling(end-start, SingleLineComment);
-
-    // Now, style everything that is after the // comment, if anything
-
-    if (eolBytesPosition != -1) {
-        doStyleText(end, pBytesEnd,
-                    pText.right(fullTextLength(end, pBytesEnd)),
-                    pParameterBlock);
-    }
-}
-
-//==============================================================================
-
 void CellmlTextViewLexer::doStyleTextPreviousMultilineComment(const int &pPosition,
                                                               const int &pBytesStart,
                                                               const int &pBytesEnd,
                                                               const QString &pText,
                                                               const bool &pParameterBlock)
 {
+qDebug(">>> doStyleTextPreviousMultilineComment(%d, %d, %d, \"%s\", %s)", pPosition, pBytesStart, pBytesEnd, qPrintable(pText), pParameterBlock?"true":"false");
     // A /* XXX */ comment started before or at the beginning of the given text,
     // so now look for where it ends
 
@@ -541,6 +533,7 @@ void CellmlTextViewLexer::doStyleTextPreviousParameterBlock(const int &pPosition
                                                             const QString &pText,
                                                             const bool &pParameterBlock)
 {
+qDebug(">>> doStyleTextPreviousParameterBlock(%d, %d, %d, \"%s\", %s)", pPosition, pBytesStart, pBytesEnd, qPrintable(pText), pParameterBlock?"true":"false");
     // A parameter block started before or at the beginning of the given text,
     // so now look for where it ends
 
@@ -607,11 +600,12 @@ void CellmlTextViewLexer::doStyleTextString(const int &pPosition,
                                             const QString &pText,
                                             const bool &pParameterBlock)
 {
+qDebug(">>> doStyleTextString(%d, %d, %d, \"%s\", %s)", pPosition, pBytesStart, pBytesEnd, qPrintable(pText), pParameterBlock?"true":"false");
     // There is a string to style, so first style everything that is before it
 
-    int bytesPosition = fullTextBytesPosition(pPosition);
+    int bytesPosition = fullTextBytesPosition(fullTextPosition(pBytesStart)+pPosition);
 
-    doStyleTextCurrent(pBytesStart, pBytesStart+bytesPosition,
+    doStyleTextCurrent(pBytesStart, bytesPosition,
                        pText.left(pPosition), pParameterBlock);
 
     // Now, check where the string ends, if anywhere
@@ -627,7 +621,7 @@ void CellmlTextViewLexer::doStyleTextString(const int &pPosition,
         int stringEndLineNumber, stringEndColumnNumber;
         int stringEndBytesPosition = textBytesPosition(pText, stringEndPosition);
 
-        editor()->lineIndexFromPosition(pBytesStart+bytesPosition,
+        editor()->lineIndexFromPosition(bytesPosition,
                                         &stringStartLineNumber, &stringStartColumnNumber);
         editor()->lineIndexFromPosition(pBytesStart+stringEndBytesPosition,
                                         &stringEndLineNumber, &stringEndColumnNumber);
@@ -659,10 +653,8 @@ void CellmlTextViewLexer::doStyleTextString(const int &pPosition,
 
     // Style the string itself
 
-    int bytesStart = pBytesStart+bytesPosition;
-
-    startStyling(bytesStart);
-    setStyling(((nextBytesStart == -1)?pBytesEnd:nextBytesStart)-bytesStart,
+    startStyling(bytesPosition);
+    setStyling(((nextBytesStart == -1)?pBytesEnd:nextBytesStart)-bytesPosition,
                pParameterBlock?ParameterString:String);
 
     // Style whatever is after the string
@@ -681,6 +673,7 @@ void CellmlTextViewLexer::doStyleTextRegEx(const int &pBytesStart,
                                            const QRegularExpression &pRegEx,
                                            const int &pRegExStyle)
 {
+qDebug(">>> doStyleTextRegEx(%d, \"%s\", pRegEx, %d)", pBytesStart, qPrintable(pText), pRegExStyle);
     // Style the given text using the given regular expression
 
     QRegularExpressionMatchIterator regExMatchIter = pRegEx.globalMatch(pText);
@@ -704,6 +697,7 @@ void CellmlTextViewLexer::doStyleTextNumberRegEx(const int &pBytesStart,
                                                  const QString &pText,
                                                  const int &pRegExStyle)
 {
+qDebug(">>> doStyleTextNumberRegEx(%d, \"%s\", %d)", pBytesStart, qPrintable(pText), pRegExStyle);
     // Style the given text using the number regular expression
 
     static const QRegularExpression NumberRegEx = QRegularExpression("(\\d+(\\.\\d*)?|\\.\\d+)([eE][+-]?\\d*)?");
