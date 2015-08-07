@@ -343,9 +343,9 @@ qDebug(">>> doStyleTextCurrent(%d, %d, \"%s\", %s)", pBytesStart, pBytesEnd, qPr
         // There is a parameter block, so first style everything that is before
         // it
 
-        int parameterBlockStartBytesPosition = textBytesPosition(pText, parameterBlockStartPosition);
+        int parameterBlockStartBytesPosition = fullTextBytesPosition(fullTextPosition(pBytesStart)+parameterBlockStartPosition);
 
-        doStyleTextCurrent(pBytesStart, pBytesStart+parameterBlockStartBytesPosition,
+        doStyleTextCurrent(pBytesStart, parameterBlockStartBytesPosition,
                            pText.left(parameterBlockStartPosition),
                            pParameterBlock);
 
@@ -354,8 +354,8 @@ qDebug(">>> doStyleTextCurrent(%d, %d, \"%s\", %s)", pBytesStart, pBytesEnd, qPr
         //       we will find that a parameter block starts at the beginning of
         //       the 'new' given text...
 
-        doStyleText(pBytesStart+parameterBlockStartBytesPosition, pBytesEnd,
-                    pText.right(fullTextLength(pBytesStart+parameterBlockStartBytesPosition, pBytesEnd)),
+        doStyleText(parameterBlockStartBytesPosition, pBytesEnd,
+                    pText.right(fullTextLength(parameterBlockStartBytesPosition, pBytesEnd)),
                     pParameterBlock);
     } else {
         // Style the given text as a parameter block, if needed
@@ -685,9 +685,10 @@ qDebug(">>> doStyleTextRegEx(%d, \"%s\", pRegEx, %d)", pBytesStart, qPrintable(p
 
         // We have a match, so style it
 
-        startStyling(pBytesStart+textBytesPosition(pText, regExMatch.capturedStart()));
-        setStyling(textBytesLength(pText, regExMatch.capturedStart(),
-                                   regExMatch.capturedStart()+regExMatch.capturedLength()),
+        int matchBytesStart = textBytesPosition(pText, regExMatch.capturedStart());
+
+        startStyling(pBytesStart+matchBytesStart);
+        setStyling(textBytesPosition(pText, regExMatch.capturedStart()+regExMatch.capturedLength())-matchBytesStart,
                    pRegExStyle);
     }
 }
@@ -730,9 +731,10 @@ qDebug(">>> doStyleTextNumberRegEx(%d, \"%s\", %d)", pBytesStart, qPrintable(pTe
             && (    (nextChar  <  46) || ((nextChar  >  46) && (nextChar <  65))
                 || ((nextChar  >  90) &&  (nextChar  <  95))
                 ||  (nextChar ==  96) || ((nextChar  > 122) && (nextChar < 128)))) {
-            startStyling(pBytesStart+textBytesPosition(pText, regExMatch.capturedStart()));
-            setStyling(textBytesLength(pText, regExMatch.capturedStart(),
-                                       regExMatch.capturedStart()+regExMatch.capturedLength()),
+            int matchBytesStart = textBytesPosition(pText, regExMatch.capturedStart());
+
+            startStyling(pBytesStart+matchBytesStart);
+            setStyling(textBytesPosition(pText, regExMatch.capturedStart()+regExMatch.capturedLength())-matchBytesStart,
                        pRegExStyle);
         }
     }
@@ -816,17 +818,6 @@ int CellmlTextViewLexer::textBytesPosition(const QString &pText,
     // Return the byte-based value of the given position within the given text
 
     return pText.left(pPosition).toUtf8().length();
-}
-
-//==============================================================================
-
-int CellmlTextViewLexer::textBytesLength(const QString &pText,
-                                         const int &pStart,
-                                         const int &pEnd) const
-{
-    // Return the byte-based length of a substring within the given text
-
-    return textBytesPosition(pText, pEnd)-textBytesPosition(pText, pStart);
 }
 
 //==============================================================================
