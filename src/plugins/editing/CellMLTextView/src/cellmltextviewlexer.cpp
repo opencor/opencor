@@ -332,9 +332,19 @@ qDebug(">>> doStyleTextCurrent(%d, %d, \"%s\", %s)", pBytesStart, pBytesEnd, qPr
         //          we need to finish styling it (which is effectively done in
         //          doStyleTextPreviousMultilineComment())...
 
-        doStyleText(multilineCommentStartBytesPosition, pBytesEnd,
-                    pText.right(fullTextLength(multilineCommentStartBytesPosition, pBytesEnd)),
-                    parameterBlockStartPosition < multilineCommentStartPosition);
+        int parameterBlockEndPosition = findString(EndParameterBlockString, parameterBlockStartPosition, ParameterBlock);
+
+        if ((parameterBlockStartPosition < multilineCommentStartPosition) && (multilineCommentStartPosition < parameterBlockEndPosition)) {
+            int parameterBlockEndBytesPosition = fullTextBytesPosition(fullTextPosition(pBytesStart)+parameterBlockEndPosition);
+
+            doStyleText(multilineCommentStartBytesPosition, parameterBlockEndBytesPosition,
+                        pText.right(fullTextLength(multilineCommentStartBytesPosition, parameterBlockEndBytesPosition)),
+                        true);
+        } else {
+            doStyleText(multilineCommentStartBytesPosition, pBytesEnd,
+                        pText.right(fullTextLength(multilineCommentStartBytesPosition, pBytesEnd)),
+                        pParameterBlock);
+        }
     } else if (   (parameterBlockStartPosition != INT_MAX)
                && (parameterBlockStartPosition < stringPosition)
                && (parameterBlockStartPosition < singleLineCommentPosition)
