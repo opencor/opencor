@@ -306,7 +306,7 @@ void CellmlTextViewLexer::doStyleTextCurrent(const int &pBytesStart,
         //          doStyleTextPreviousMultilineComment())...
 
         doStyleText(pBytesStart+multilineCommentStartBytesPosition, pBytesEnd,
-                    pText.right(fullTextLength(pBytesStart, pBytesEnd-pBytesStart)-multilineCommentStartPosition),
+                    pText.right(fullTextLength(pBytesStart+multilineCommentStartBytesPosition, pBytesEnd)),
                     parameterBlockStartPosition < multilineCommentStartPosition);
     } else if (   (parameterBlockStartPosition != INT_MAX)
                && (parameterBlockStartPosition < stringPosition)
@@ -327,7 +327,7 @@ void CellmlTextViewLexer::doStyleTextCurrent(const int &pBytesStart,
         //       the 'new' given text...
 
         doStyleText(pBytesStart+parameterBlockStartBytesPosition, pBytesEnd,
-                    pText.right(fullTextLength(pBytesStart, pBytesEnd-pBytesStart)-parameterBlockStartPosition),
+                    pText.right(fullTextLength(pBytesStart+parameterBlockStartBytesPosition, pBytesEnd)),
                     pParameterBlock);
     } else {
         // Style the given text as a parameter block, if needed
@@ -472,7 +472,7 @@ void CellmlTextViewLexer::doStyleTextSingleLineComment(const int &pPosition,
 
     if (eolBytesPosition != -1) {
         doStyleText(end, pBytesEnd,
-                    pText.right(fullTextLength(end, pBytesEnd-end)),
+                    pText.right(fullTextLength(end, pBytesEnd)),
                     pParameterBlock);
     }
 }
@@ -517,11 +517,11 @@ void CellmlTextViewLexer::doStyleTextPreviousMultilineComment(const int &pPositi
                 // styling our parameter block
 
                 doStyleTextPreviousParameterBlock(fullTextPosition(bytesEnd), bytesEnd, pBytesEnd,
-                                                  pText.right(fullTextLength(bytesEnd, pBytesEnd-bytesEnd)),
+                                                  pText.right(fullTextLength(bytesEnd, pBytesEnd)),
                                                   false);
             } else {
                 doStyleText(bytesEnd, pBytesEnd,
-                            pText.right(fullTextLength(bytesEnd, pBytesEnd-bytesEnd)),
+                            pText.right(fullTextLength(bytesEnd, pBytesEnd)),
                             pParameterBlock);
             }
         }
@@ -576,8 +576,8 @@ void CellmlTextViewLexer::doStyleTextPreviousParameterBlock(const int &pPosition
         int newEnd = bytesEnd-(hasEnd?EndParameterBlockLength:0);
 
         doStyleTextCurrent(newStart, newEnd,
-                           pText.mid(fullTextLength(pBytesStart, newStart-pBytesStart),
-                                     fullTextLength(newStart, newEnd-newStart)),
+                           pText.mid(fullTextLength(pBytesStart, newStart),
+                                     fullTextLength(newStart, newEnd)),
                            true);
 
         // If possible, style the end of the parameter block, as well as what is
@@ -588,7 +588,7 @@ void CellmlTextViewLexer::doStyleTextPreviousParameterBlock(const int &pPosition
             setStyling(EndParameterBlockLength, ParameterBlock);
 
             doStyleText(bytesEnd, pBytesEnd,
-                        pText.right(fullTextLength(bytesEnd, pBytesEnd-bytesEnd)),
+                        pText.right(fullTextLength(bytesEnd, pBytesEnd)),
                         pParameterBlock);
         }
     } else {
@@ -669,7 +669,7 @@ void CellmlTextViewLexer::doStyleTextString(const int &pPosition,
 
     if (nextBytesStart != -1) {
         doStyleText(nextBytesStart, pBytesEnd,
-                    pText.right(fullTextLength(nextBytesStart, pBytesEnd-nextBytesStart)),
+                    pText.right(fullTextLength(nextBytesStart, pBytesEnd)),
                     pParameterBlock);
     }
 }
@@ -791,13 +791,13 @@ int CellmlTextViewLexer::fullTextPosition(const int &pBytesPosition) const
 
 //==============================================================================
 
-int CellmlTextViewLexer::fullTextLength(const int &pBytesFrom,
-                                        const int &pBytesLength) const
+int CellmlTextViewLexer::fullTextLength(const int &pBytesStart,
+                                        const int &pBytesEnd) const
 {
     // Return the corresponding length within mFullText of the given byte-based
     // length of a substring within mFullTextUtf8
 
-    return QString(mFullTextUtf8.mid(pBytesFrom, pBytesLength)).length();
+    return fullTextPosition(pBytesEnd)-fullTextPosition(pBytesStart);
 }
 
 //==============================================================================

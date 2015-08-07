@@ -42,14 +42,37 @@ PLUGININFO_FUNC CSVDataStorePluginInfo()
 }
 
 //==============================================================================
+// I18n interface
+//==============================================================================
+
+void CSVDataStorePlugin::retranslateUi()
+{
+    // We don't handle this interface...
+    // Note: even though we don't handle this interface, we still want to
+    //       support it since some other aspects of our plugin are
+    //       multilingual...
+}
+
+//==============================================================================
 // Data store interface
 //==============================================================================
 
-void * CSVDataStorePlugin::dataStoreExporterInstance() const
+void * CSVDataStorePlugin::newDataStoreExporterInstance(const QString &pId) const
 {
-    // Create and return an instance of the data store exporter
+    Q_UNUSED(pId);
 
-    return new CsvDataStoreExporter();
+    // Return the instance of our CSV data store exporter
+
+    return mCsvDataStoreExporter;
+}
+
+//==============================================================================
+
+void CSVDataStorePlugin::deleteDataStoreExporterInstance(const QString &pId) const
+{
+    Q_UNUSED(pId);
+
+    // We don't handle this interface...
 }
 
 //==============================================================================
@@ -62,15 +85,61 @@ QString CSVDataStorePlugin::dataStoreName() const
 }
 
 //==============================================================================
-// I18n interface
+// Plugin interface
 //==============================================================================
 
-void CSVDataStorePlugin::retranslateUi()
+void CSVDataStorePlugin::initializePlugin(QMainWindow *pMainWindow)
 {
+    Q_UNUSED(pMainWindow);
+
+    // Create our CSV data store explorer instance
+
+    mCsvDataStoreExporter = new CsvDataStoreExporter();
+}
+
+//==============================================================================
+
+void CSVDataStorePlugin::finalizePlugin()
+{
+    // Create our CSV data store explorer instance
+
+    delete mCsvDataStoreExporter;
+}
+
+//==============================================================================
+
+void CSVDataStorePlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
+{
+    Q_UNUSED(pLoadedPlugins);
+
     // We don't handle this interface...
-    // Note: even though we don't handle this interface, we still want to
-    //       support it since some other aspects of our plugin are
-    //       multilingual...
+}
+
+//==============================================================================
+
+void CSVDataStorePlugin::loadSettings(QSettings *pSettings)
+{
+    Q_UNUSED(pSettings);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void CSVDataStorePlugin::saveSettings(QSettings *pSettings) const
+{
+    Q_UNUSED(pSettings);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void CSVDataStorePlugin::handleAction(const QUrl &pUrl)
+{
+    Q_UNUSED(pUrl);
+
+    // We don't handle this interface...
 }
 
 //==============================================================================
