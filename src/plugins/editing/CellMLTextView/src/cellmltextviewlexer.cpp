@@ -281,8 +281,7 @@ qDebug(">>> doStyleTextCurrent(%d, %d, \"%s\", %s)", pBytesStart, pBytesEnd, qPr
         && (stringPosition < multilineCommentStartPosition)) {
         // There is a string to style
 
-        doStyleTextString(stringPosition, pBytesStart, pBytesEnd, pText,
-                          pParameterBlock);
+        doStyleTextString(stringPosition, pBytesStart, pBytesEnd, pText, pParameterBlock);
     } else if (   (singleLineCommentPosition != INT_MAX)
                && (singleLineCommentPosition < stringPosition)
                && (singleLineCommentPosition < multilineCommentStartPosition)) {
@@ -606,8 +605,7 @@ qDebug(">>> doStyleTextString(%d, %d, %d, \"%s\", %s)", pPosition, pBytesStart, 
 
     int bytesPosition = fullTextBytesPosition(fullTextPosition(pBytesStart)+pPosition);
 
-    doStyleTextCurrent(pBytesStart, bytesPosition,
-                       pText.left(pPosition), pParameterBlock);
+    doStyleTextCurrent(pBytesStart, bytesPosition, pText.left(pPosition), pParameterBlock);
 
     // Now, check where the string ends, if anywhere
 
