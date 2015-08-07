@@ -76,11 +76,6 @@ private:
                      const QString &pText, const bool &pParameterBlock);
     void doStyleTextCurrent(const int &pBytesStart, const int &pBytesEnd,
                             const QString &pText, const bool &pParameterBlock);
-    void doStyleTextSingleLineComment(const int &pPosition,
-                                      const int &pBytesStart,
-                                      const int &pBytesEnd,
-                                      const QString &pText,
-                                      const bool &pParameterBlock);
     void doStyleTextPreviousMultilineComment(const int &pPosition,
                                              const int &pBytesStart,
                                              const int &pBytesEnd,

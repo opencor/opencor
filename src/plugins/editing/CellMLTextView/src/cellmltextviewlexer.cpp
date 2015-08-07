@@ -292,7 +292,8 @@ qDebug(">>> doStyleTextCurrent(%d, %d, \"%s\", %s)", pBytesStart, pBytesEnd, qPr
         int singleLineCommentBytesPosition = fullTextBytesPosition(fullTextPosition(pBytesStart)+singleLineCommentPosition);
 
         doStyleTextCurrent(pBytesStart, singleLineCommentBytesPosition,
-                           pText.left(singleLineCommentPosition), pParameterBlock);
+                           pText.left(singleLineCommentPosition),
+                           pParameterBlock);
 
         // Style the // comment itself, after having looked for the end of the
         // line, if any
@@ -317,9 +318,9 @@ qDebug(">>> doStyleTextCurrent(%d, %d, \"%s\", %s)", pBytesStart, pBytesEnd, qPr
         // There is a /* XXX */ comment to style, so first style everything that
         // is before it
 
-        int multilineCommentStartBytesPosition = textBytesPosition(pText, multilineCommentStartPosition);
+        int multilineCommentStartBytesPosition = fullTextBytesPosition(fullTextPosition(pBytesStart)+multilineCommentStartPosition);
 
-        doStyleTextCurrent(pBytesStart, pBytesStart+multilineCommentStartBytesPosition,
+        doStyleTextCurrent(pBytesStart, multilineCommentStartBytesPosition,
                            pText.left(multilineCommentStartPosition),
                            pParameterBlock);
 
@@ -332,8 +333,8 @@ qDebug(">>> doStyleTextCurrent(%d, %d, \"%s\", %s)", pBytesStart, pBytesEnd, qPr
         //          we need to finish styling it (which is effectively done in
         //          doStyleTextPreviousMultilineComment())...
 
-        doStyleText(pBytesStart+multilineCommentStartBytesPosition, pBytesEnd,
-                    pText.right(fullTextLength(pBytesStart+multilineCommentStartBytesPosition, pBytesEnd)),
+        doStyleText(multilineCommentStartBytesPosition, pBytesEnd,
+                    pText.right(fullTextLength(multilineCommentStartBytesPosition, pBytesEnd)),
                     parameterBlockStartPosition < multilineCommentStartPosition);
     } else if (   (parameterBlockStartPosition != INT_MAX)
                && (parameterBlockStartPosition < stringPosition)
