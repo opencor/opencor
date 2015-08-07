@@ -151,10 +151,6 @@ void CellmlTextViewLexer::styleText(int pBytesStart, int pBytesEnd)
                             pBytesStart, pBytesEnd, data);
 
     QString text = QString(data);
-qDebug("=======================================");
-qDebug("Text to style:");
-qDebug("--------------");
-qDebug("%s", qPrintable(text));
 
     delete[] data;
 
@@ -215,7 +211,6 @@ void CellmlTextViewLexer::doStyleText(const int &pBytesStart,
                                       const QString &pText,
                                       const bool &pParameterBlock)
 {
-qDebug(">>> doStyleText(%d, %d, \"%s\", %s)", pBytesStart, pBytesEnd, qPrintable(pText), pParameterBlock?"true":"false");
     // Make sure that we are given some text to style
 
     if (pBytesStart == pBytesEnd)
@@ -257,7 +252,6 @@ void CellmlTextViewLexer::doStyleTextCurrent(const int &pBytesStart,
                                              const QString &pText,
                                              const bool &pParameterBlock)
 {
-qDebug(">>> doStyleTextCurrent(%d, %d, \"%s\", %s)", pBytesStart, pBytesEnd, qPrintable(pText), pParameterBlock?"true":"false");
     // Make sure that we are given some text to style
 
     if (pBytesStart == pBytesEnd)
@@ -486,7 +480,6 @@ void CellmlTextViewLexer::doStyleTextPreviousMultilineComment(const int &pPositi
                                                               const QString &pText,
                                                               const bool &pParameterBlock)
 {
-qDebug(">>> doStyleTextPreviousMultilineComment(%d, %d, %d, \"%s\", %s)", pPosition, pBytesStart, pBytesEnd, qPrintable(pText), pParameterBlock?"true":"false");
     // A /* XXX */ comment started before or at the beginning of the given text,
     // so now look for where it ends
 
@@ -543,7 +536,6 @@ void CellmlTextViewLexer::doStyleTextPreviousParameterBlock(const int &pPosition
                                                             const QString &pText,
                                                             const bool &pParameterBlock)
 {
-qDebug(">>> doStyleTextPreviousParameterBlock(%d, %d, %d, \"%s\", %s)", pPosition, pBytesStart, pBytesEnd, qPrintable(pText), pParameterBlock?"true":"false");
     // A parameter block started before or at the beginning of the given text,
     // so now look for where it ends
 
@@ -610,7 +602,6 @@ void CellmlTextViewLexer::doStyleTextString(const int &pPosition,
                                             const QString &pText,
                                             const bool &pParameterBlock)
 {
-qDebug(">>> doStyleTextString(%d, %d, %d, \"%s\", %s)", pPosition, pBytesStart, pBytesEnd, qPrintable(pText), pParameterBlock?"true":"false");
     // There is a string to style, so first style everything that is before it
 
     int bytesPosition = fullTextBytesPosition(fullTextPosition(pBytesStart)+pPosition);
@@ -682,7 +673,6 @@ void CellmlTextViewLexer::doStyleTextRegEx(const int &pBytesStart,
                                            const QRegularExpression &pRegEx,
                                            const int &pRegExStyle)
 {
-//qDebug(">>> doStyleTextRegEx(%d, \"%s\", pRegEx, %d)", pBytesStart, qPrintable(pText), pRegExStyle);
     // Style the given text using the given regular expression
 
     QRegularExpressionMatchIterator regExMatchIter = pRegEx.globalMatch(pText);
@@ -707,7 +697,6 @@ void CellmlTextViewLexer::doStyleTextNumberRegEx(const int &pBytesStart,
                                                  const QString &pText,
                                                  const int &pRegExStyle)
 {
-//qDebug(">>> doStyleTextNumberRegEx(%d, \"%s\", %d)", pBytesStart, qPrintable(pText), pRegExStyle);
     // Style the given text using the number regular expression
 
     static const QRegularExpression NumberRegEx = QRegularExpression("(\\d+(\\.\\d*)?|\\.\\d+)([eE][+-]?\\d*)?");
