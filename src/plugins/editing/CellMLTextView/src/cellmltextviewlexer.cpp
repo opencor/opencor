@@ -692,7 +692,9 @@ void CellmlTextViewLexer::doStyleTextRegEx(const int &pBytesStart,
         // We have a match, so style it
 
         startStyling(pBytesStart+textBytesPosition(pText, regExMatch.capturedStart()));
-        setStyling(textBytesLength(pText, regExMatch.capturedStart(), regExMatch.capturedLength()), pRegExStyle);
+        setStyling(textBytesLength(pText, regExMatch.capturedStart(),
+                                   regExMatch.capturedStart()+regExMatch.capturedLength()),
+                   pRegExStyle);
     }
 }
 
@@ -734,7 +736,9 @@ void CellmlTextViewLexer::doStyleTextNumberRegEx(const int &pBytesStart,
                 || ((nextChar  >  90) &&  (nextChar  <  95))
                 ||  (nextChar ==  96) || ((nextChar  > 122) && (nextChar < 128)))) {
             startStyling(pBytesStart+textBytesPosition(pText, regExMatch.capturedStart()));
-            setStyling(textBytesLength(pText, regExMatch.capturedStart(), regExMatch.capturedLength()), pRegExStyle);
+            setStyling(textBytesLength(pText, regExMatch.capturedStart(),
+                                       regExMatch.capturedStart()+regExMatch.capturedLength()),
+                       pRegExStyle);
         }
     }
 }
@@ -821,12 +825,13 @@ int CellmlTextViewLexer::textBytesPosition(const QString &pText,
 
 //==============================================================================
 
-int CellmlTextViewLexer::textBytesLength(const QString &pText, const int &pFrom,
-                                         const int &pLength) const
+int CellmlTextViewLexer::textBytesLength(const QString &pText,
+                                         const int &pStart,
+                                         const int &pEnd) const
 {
     // Return the byte-based length of a substring within the given text
 
-    return pText.mid(pFrom, pLength).toUtf8().length();
+    return textBytesPosition(pText, pEnd)-textBytesPosition(pText, pStart);
 }
 
 //==============================================================================

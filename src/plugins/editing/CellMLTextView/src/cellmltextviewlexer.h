@@ -109,8 +109,8 @@ private:
 
     int fullTextBytesPosition(const int &pPosition) const;
     int textBytesPosition(const QString &pText, const int &pPosition) const;
-    int textBytesLength(const QString &pText, const int &pFrom,
-                        const int &pLength) const;
+    int textBytesLength(const QString &pText, const int &pStart,
+                        const int &pEnd) const;
 };
 
 //==============================================================================
