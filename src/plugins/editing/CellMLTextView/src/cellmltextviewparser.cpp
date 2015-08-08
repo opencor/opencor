@@ -21,6 +21,7 @@ specific language governing permissions and limitations under the License.
 
 #include "cellmltextviewparser.h"
 #include "corecliutils.h"
+#include "qscintillawidget.h"
 
 //==============================================================================
 
@@ -530,7 +531,7 @@ bool CellmlTextViewParser::tokenType(QDomNode &pDomNode,
         QString foundString = mScanner.tokenString();
 
         if (mScanner.tokenType() != CellmlTextViewScanner::EofToken)
-            foundString = QString("'%1'").arg(foundString);
+            foundString = QString("'%1'").arg(QScintillaSupport::QScintillaWidget::checkString(foundString));
 
         addUnexpectedTokenErrorMessage(pExpectedString, foundString);
 

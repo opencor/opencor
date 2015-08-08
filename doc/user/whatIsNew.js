@@ -62,6 +62,15 @@ var jsonData = { "versions": [
                            }
                          ]
                        },
+                       { "name": "Support",
+                         "entries": [
+                           { "type": "subCategory", "name": "QScintilla support",
+                             "entries": [
+                               { "type": "Improved", "description": "Unicode support." }
+                             ]
+                           }
+                         ]
+                       },
                        { "name": "Tool",
                          "entries": [
                            { "type": "subCategory", "name": "CellML tools",

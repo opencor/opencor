@@ -104,6 +104,8 @@ public:
 
     int zoomLevel() const;
 
+    static QString checkString(const QString &pString);
+
 protected:
     virtual void changeEvent(QEvent *pEvent);
     virtual void contextMenuEvent(QContextMenuEvent *pEvent);

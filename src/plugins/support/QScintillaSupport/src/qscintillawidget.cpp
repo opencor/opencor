@@ -109,6 +109,17 @@ QScintillaWidget::QScintillaWidget(QsciLexer *pLexer, QWidget *pParent) :
     SendScintilla(SCI_CLEARCMDKEY, (SCMOD_CTRL << 16)+'R');
     SendScintilla(SCI_CLEARCMDKEY, (SCMOD_CTRL << 16)+'T');
 
+    // Add support for Specials (Unicode block)
+    // Note #1: see https://github.com/opencor/opencor/issues/709 for more
+    //          information...
+    // Note #2: make sure that we checkString() supports the below
+    //          representations...
+
+    SendScintilla(SCI_SETREPRESENTATION, "\xef\xbf\xb9", "IAA");
+    SendScintilla(SCI_SETREPRESENTATION, "\xef\xbf\xba", "IAS");
+    SendScintilla(SCI_SETREPRESENTATION, "\xef\xbf\xbb", "IAT");
+    SendScintilla(SCI_SETREPRESENTATION, "\xef\xbf\xbc", "OBJ");
+
     // Empty context menu by default
 
     mContextMenu = new QMenu(this);
@@ -454,6 +465,26 @@ int QScintillaWidget::zoomLevel() const
     // Return our zoom level
 
     return SendScintilla(SCI_GETZOOM);
+}
+
+//==============================================================================
+
+QString QScintillaWidget::checkString(const QString &pString)
+{
+    // Check whether the given string is one of the Specials (Unicode block)
+    // Note: see the customised representation of the Specials (Unicode block)
+    //       in the constructor...
+
+    if (!pString.compare("\xef\xbf\xb9"))
+        return "IAA";
+    else if (!pString.compare("\xef\xbf\xba"))
+        return "IAS";
+    else if (!pString.compare("\xef\xbf\xbb"))
+        return "IAT";
+    else if (!pString.compare("\xef\xbf\xbc"))
+        return "OBJ";
+    else
+        return pString;
 }
 
 //==============================================================================
