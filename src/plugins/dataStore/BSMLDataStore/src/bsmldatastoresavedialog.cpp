@@ -38,44 +38,17 @@ namespace BSMLDataStore {
 BioSignalMLSaveDialog::BioSignalMLSaveDialog(QWidget *pParent) :
     QDialog(pParent),
     mGui(new Ui::BioSignalMLSaveDialog),
-    mFileName(QString())
+    mAccepted(false)
 {
     // Set up the GUI
 
     mGui->setupUi(this);
     QObject::connect(mGui->setFileName, SIGNAL(clicked(bool)),
                      this, SLOT(setFileName(bool)));
-    QObject::connect(mGui->descriptionValue, SIGNAL(textChanged()),
-                     this, SLOT(setDescription()));
-
-    mGui->cancel_ok->button(QDialogButtonBox::Ok)->setEnabled(false) ;
-
-    mGui->fileNameList->setFocus(Qt::TabFocusReason);
-    mGui->setFileName->setDefault(true);
+    QObject::connect(mGui->cancel_ok, SIGNAL(accepted()),
+                     this, SLOT(accepted()));
+    this->setVisible(false);
 }
-
-
-/**
-
-static const auto SettingsGraphPanelSizes = QStringLiteral("GraphPanelSizes");
-
-//==============================================================================
-
-void SingleCellViewGraphPanelsWidget::loadSettings(QSettings *pSettings)
-{
-    QIntList splitterSizes = qVariantListToIntList(pSettings->value(SettingsGraphPanelSizes).toList());
-}
-
-//==============================================================================
-
-void SingleCellViewGraphPanelsWidget::saveSettings(QSettings *pSettings) const
-{
-    // Keep track of the size of each graph panel
-
-    pSettings->setValue(SettingsGraphPanelSizes, qIntListToVariantList(mSplitterSizes));
-}
-
-**/
 
 //==============================================================================
 
@@ -98,46 +71,85 @@ void BioSignalMLSaveDialog::retranslateUi()
 
 //==============================================================================
 
+void BioSignalMLSaveDialog::accepted(void)
+{
+    mAccepted = true;
+}
+
+//==============================================================================
+
+bool BioSignalMLSaveDialog::run(void)
+{
+    mAccepted = false;
+    mGui->fileNameValue->clear();
+    mGui->cancel_ok->button(QDialogButtonBox::Ok)->setEnabled(false) ;
+    this->setVisible(true);
+
+    this->open() ;
+    QEventLoop loop;
+    connect(this, SIGNAL(finished(int)), & loop, SLOT(quit()));
+    mGui->setFileName->clicked(true);
+    loop.exec();
+
+    this->setVisible(false);
+    return mAccepted;
+}
+
+//==============================================================================
+
 void BioSignalMLSaveDialog::setFileName(bool checked)
 {
     Q_UNUSED(checked)
 
     QString bsmlFiles = QObject::tr("BioSignalML")+" (*.bsml)";
-
     QString name = Core::getSaveFileName(QObject::tr("Enter BioSignalML file name"),
                                          QString(),
                                          bsmlFiles, &bsmlFiles);
-    if (name != "") {
-      mFileName = name ;
-      mGui->fileNameList->insertItem(0, mFileName);
-      mGui->fileNameList->setCurrentIndex(0);
-      mGui->setFileName->setDefault(false);
-      mGui->cancel_ok->button(QDialogButtonBox::Ok)->setEnabled(true) ;
-      mGui->cancel_ok->button(QDialogButtonBox::Ok)->setDefault(true) ;
-      mGui->shortNameValue->setFocus(Qt::TabFocusReason);
-      }
+    if (!name.isEmpty()) {
+        mGui->fileNameValue->setText(name);
+        mGui->setFileName->setDefault(false);
+        mGui->shortNameValue->setFocus(Qt::TabFocusReason);
+        mGui->cancel_ok->button(QDialogButtonBox::Ok)->setEnabled(true) ;
+        mGui->cancel_ok->button(QDialogButtonBox::Ok)->setDefault(true) ;
+    }
 }
 
 //==============================================================================
 
 QString BioSignalMLSaveDialog::fileName(void) const
 {
-    return mFileName;
+    return mGui->fileNameValue->text();
 }
 
 //==============================================================================
 
-void BioSignalMLSaveDialog::setDescription()
+QString BioSignalMLSaveDialog::shortName(void) const
 {
-   mDescription = mGui->descriptionValue->toPlainText();
+    return mGui->shortNameValue->text();
 }
 
 //==============================================================================
 
 QString BioSignalMLSaveDialog::description(void) const
 {
-    return mDescription;
+    return mGui->descriptionValue->toPlainText();
 }
+
+//==============================================================================
+
+QString BioSignalMLSaveDialog::author(void) const
+{
+    return mGui->authorValue->text();
+}
+
+//==============================================================================
+
+void BioSignalMLSaveDialog::setComment(const QString & pComment)
+{
+   mGui->commentValue->setText(pComment);
+}
+
+//==============================================================================
 
 }   // namespace BSMLDataStore
 }   // namespace OpenCOR

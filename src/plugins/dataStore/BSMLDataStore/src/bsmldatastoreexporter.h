@@ -26,6 +26,11 @@ specific language governing permissions and limitations under the License.
 
 #include "bsmldatastoreglobal.h"
 #include "datastoreexporter.h"
+#include "bsmldatastoresavedialog.h"
+
+//==============================================================================
+
+#include <QMainWindow>
 
 //==============================================================================
 
@@ -46,7 +51,11 @@ namespace BSMLDataStore {
 class BSMLDATASTORE_EXPORT BioSignalMLExporter : public CoreDataStore::DataStoreExporter
 {
 public:
+    BioSignalMLExporter(QMainWindow *pMainWindow);
     virtual void execute(CoreDataStore::CoreDataStore *pDataStore) const;
+
+private:
+    BioSignalMLSaveDialog *mSaveDialog;
 };
 
 //==============================================================================

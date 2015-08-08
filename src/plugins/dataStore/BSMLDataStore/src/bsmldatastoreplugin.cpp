@@ -24,6 +24,11 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#include <QMainWindow>
+#include <QSettings>
+
+//==============================================================================
+
 namespace OpenCOR {
 namespace BSMLDataStore {
 
@@ -42,14 +47,35 @@ PLUGININFO_FUNC BSMLDataStorePluginInfo()
 }
 
 //==============================================================================
+// I18n interface
+//==============================================================================
+
+void BSMLDataStorePlugin::retranslateUi()
+{
+    // We don't handle this interface...
+    // Note: even though we don't handle this interface, we still want to
+    //       support it since some other aspects of our plugin are
+    //       multilingual...
+}
+
+//==============================================================================
 // Data store interface
 //==============================================================================
 
-void * BSMLDataStorePlugin::dataStoreExporterInstance() const
+void * BSMLDataStorePlugin::newDataStoreExporterInstance(const QString &pId) const
 {
-    // Create and return an instance of the data store exporter
+    Q_UNUSED(pId);
 
-    return new BioSignalMLExporter();
+    return mExporter;
+}
+
+//==============================================================================
+
+void BSMLDataStorePlugin::deleteDataStoreExporterInstance(const QString &pId) const
+{
+    Q_UNUSED(pId);
+
+    // We don't handle this interface...
 }
 
 //==============================================================================
@@ -62,15 +88,61 @@ QString BSMLDataStorePlugin::dataStoreName() const
 }
 
 //==============================================================================
-// I18n interface
+// Plugin interface
 //==============================================================================
 
-void BSMLDataStorePlugin::retranslateUi()
+void BSMLDataStorePlugin::initializePlugin(QMainWindow *pMainWindow)
 {
+    // Create our BSML data store exporter
+
+    mExporter = new BioSignalMLExporter(pMainWindow);
+}
+
+//==============================================================================
+
+void BSMLDataStorePlugin::finalizePlugin()
+{
+    // Delete our BSML data store exporter
+
+    delete mExporter;
+}
+
+//==============================================================================
+
+void BSMLDataStorePlugin::pluginsInitialized(const Plugins &pLoadedPlugins)
+{
+    Q_UNUSED(pLoadedPlugins)
+
     // We don't handle this interface...
-    // Note: even though we don't handle this interface, we still want to
-    //       support it since some other aspects of our plugin are
-    //       multilingual...
+}
+
+//==============================================================================
+
+//==============================================================================
+
+void BSMLDataStorePlugin::loadSettings(QSettings *pSettings)
+{
+    Q_UNUSED(pSettings);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void BSMLDataStorePlugin::saveSettings(QSettings *pSettings) const
+{
+    Q_UNUSED(pSettings);
+
+    // We don't handle this interface...
+}
+
+//==============================================================================
+
+void BSMLDataStorePlugin::handleAction(const QUrl &pUrl)
+{
+    Q_UNUSED(pUrl);
+
+    // We don't handle this interface...
 }
 
 //==============================================================================

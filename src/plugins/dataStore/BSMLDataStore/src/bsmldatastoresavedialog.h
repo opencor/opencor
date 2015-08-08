@@ -48,23 +48,27 @@ class BSMLDATASTORE_EXPORT BioSignalMLSaveDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit BioSignalMLSaveDialog(QWidget *pParent);
+    explicit BioSignalMLSaveDialog(QWidget * pParent);
     ~BioSignalMLSaveDialog();
 
     virtual void retranslateUi();
 
+    bool run(void);
+
     QString fileName(void) const;
+    QString shortName(void) const;
     QString description(void) const;
+    QString author(void) const;
+    void setComment(const QString & pComment);
 
 private slots:
+    void accepted(void);
     void setFileName(bool checked = false);
-    void setDescription();
 
 private:
     Ui::BioSignalMLSaveDialog *mGui;
 
-    QString mFileName;
-    QString mDescription;
+    bool mAccepted;
 };
 
 //==============================================================================

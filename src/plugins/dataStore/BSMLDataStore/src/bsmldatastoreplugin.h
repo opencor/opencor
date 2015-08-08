@@ -24,9 +24,14 @@ specific language governing permissions and limitations under the License.
 
 //==============================================================================
 
+#include "bsmldatastoreexporter.h"
+
+//==============================================================================
+
 #include "datastoreinterface.h"
 #include "i18ninterface.h"
 #include "plugininfo.h"
+#include "plugininterface.h"
 
 //==============================================================================
 
@@ -40,18 +45,23 @@ PLUGININFO_FUNC BSMLDataStorePluginInfo();
 //==============================================================================
 
 class BSMLDataStorePlugin : public QObject, public I18nInterface,
-                            public DataStoreInterface
+                            public PluginInterface, public DataStoreInterface
 {
     Q_OBJECT
 
     Q_PLUGIN_METADATA(IID "OpenCOR.BSMLDataStorePlugin" FILE "bsmldatastoreplugin.json")
 
     Q_INTERFACES(OpenCOR::I18nInterface)
+    Q_INTERFACES(OpenCOR::PluginInterface)
     Q_INTERFACES(OpenCOR::DataStoreInterface)
 
 public:
 #include "i18ninterface.inl"
+#include "plugininterface.inl"
 #include "datastoreinterface.inl"
+
+private:
+    BioSignalMLExporter *mExporter;
 };
 
 //==============================================================================
