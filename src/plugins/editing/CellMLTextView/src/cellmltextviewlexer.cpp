@@ -226,22 +226,31 @@ void CellmlTextViewLexer::doStyleText(const int &pBytesStart,
     multilineCommentStartPosition = (multilineCommentStartPosition == -1)?INT_MAX:multilineCommentStartPosition;
     parameterBlockStartPosition = (parameterBlockStartPosition == -1)?INT_MAX:parameterBlockStartPosition;
 
+    int multilineCommentEndPosition = (multilineCommentStartPosition == INT_MAX)?INT_MAX:findString(EndMultilineCommentString, multilineCommentStartPosition, MultilineComment);
+    int parameterBlockEndPosition = (parameterBlockStartPosition == INT_MAX)?INT_MAX:findString(EndParameterBlockString, parameterBlockStartPosition, ParameterBlock);
+
+    multilineCommentEndPosition = (multilineCommentEndPosition == -1)?INT_MAX:multilineCommentEndPosition;
+    parameterBlockEndPosition = (parameterBlockEndPosition == -1)?INT_MAX:parameterBlockEndPosition;
+
     if (   (multilineCommentStartPosition != INT_MAX)
         && (   (parameterBlockStartPosition == INT_MAX)
-            || (multilineCommentStartPosition > parameterBlockStartPosition))) {
+            || (   (multilineCommentStartPosition > parameterBlockStartPosition)
+                && (multilineCommentEndPosition > start)))) {
         // There is a previous /* XXX */ comment to style
 
         doStyleTextPreviousMultilineComment(multilineCommentStartPosition, pBytesStart, pBytesEnd, pText, pParameterBlock);
     } else if (   (parameterBlockStartPosition != INT_MAX)
                && (   (multilineCommentStartPosition == INT_MAX)
-                   || (parameterBlockStartPosition > multilineCommentStartPosition))) {
+                   || (   (parameterBlockStartPosition > multilineCommentStartPosition)
+                       && (parameterBlockEndPosition > start)))) {
         // There is a previous parameter block to style
 
         doStyleTextPreviousParameterBlock(parameterBlockStartPosition, pBytesStart, pBytesEnd, pText, pParameterBlock);
     } else {
         // Style the current text
 
-        doStyleTextCurrent(pBytesStart, pBytesEnd, pText, pParameterBlock);
+        doStyleTextCurrent(pBytesStart, pBytesEnd, pText,
+                           (parameterBlockStartPosition < start) && (parameterBlockEndPosition > start));
     }
 }
 
