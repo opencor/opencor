@@ -638,7 +638,7 @@ void SingleCellViewInformationGraphsWidget::populateContextMenu(QMenu *pContextM
                 componentMenu = 0;
 
                 foreach (QObject *object, menu->children()) {
-                    QMenu *subMenu = dynamic_cast<QMenu *>(object);
+                    QMenu *subMenu = qobject_cast<QMenu *>(object);
 
                     if (    subMenu
                         && !subMenu->menuAction()->text().compare(component)) {
