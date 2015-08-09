@@ -117,13 +117,14 @@ QString osName()
 #elif defined(Q_OS_LINUX)
     QString os = exec("uname", QStringList() << "-o");
 
-    if (os.isEmpty())
+    if (os.isEmpty()) {
         // We couldn't find uname or something went wrong, so simply return
         // "Linux" as the OS name
 
         return "Linux";
-    else
+    } else {
         return os+" "+exec("uname", QStringList() << "-r");
+    }
 #elif defined(Q_OS_MAC)
     switch (QSysInfo::MacintoshVersion) {
     case QSysInfo::MV_9:
@@ -212,16 +213,17 @@ QByteArray resourceAsByteArray(const QString &pResource)
     QResource resource(pResource);
 
     if (resource.isValid()) {
-        if (resource.isCompressed())
+        if (resource.isCompressed()) {
             // The resource is compressed, so uncompress it before returning it
 
             return qUncompress(resource.data(), resource.size());
-        else
+        } else {
             // The resource is not compressed, so just return it after doing the
             // right conversion
 
             return QByteArray(reinterpret_cast<const char *>(resource.data()),
                               resource.size());
+        }
     }
     else {
         return QByteArray();
@@ -288,12 +290,13 @@ bool writeByteArrayToFile(const QString &pFileName,
 
 bool writeResourceToFile(const QString &pFileName, const QString &pResource)
 {
-    if (QResource(pResource).isValid())
+    if (QResource(pResource).isValid()) {
         // The resource exists, so write it to the given file
 
         return writeByteArrayToFile(pFileName, resourceAsByteArray(pResource));
-    else
+    } else {
         return false;
+    }
 }
 
 //==============================================================================
