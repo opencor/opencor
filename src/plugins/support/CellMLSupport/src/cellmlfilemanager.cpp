@@ -61,7 +61,7 @@ CellmlFile * CellmlFileManager::cellmlFile(const QString &pFileName)
 {
     // Return the CellmlFile object, if any, associated with the given file
 
-    return qobject_cast<CellMLSupport::CellmlFile *>(instance()->file(pFileName));
+    return static_cast<CellMLSupport::CellmlFile *>(instance()->file(pFileName));
 }
 
 //==============================================================================
