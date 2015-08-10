@@ -372,7 +372,7 @@ void SingleCellViewInformationParametersWidget::populateModel(CellMLSupport::Cel
                     // track of its propeties that are a section
 
                     foreach (QObject *object, section->children()) {
-                        Core::Property *property = dynamic_cast<Core::Property *>(object);
+                        Core::Property *property = qobject_cast<Core::Property *>(object);
 
                         if (   property
                             && (property->type() == Core::Property::Section)) {
@@ -542,7 +542,7 @@ void SingleCellViewInformationParametersWidget::populateContextMenu(QMenu *pCont
                 componentMenu = 0;
 
                 foreach (QObject *object, menu->children()) {
-                    QMenu *subMenu = dynamic_cast<QMenu *>(object);
+                    QMenu *subMenu = qobject_cast<QMenu *>(object);
 
                     if (    subMenu
                         && !subMenu->menuAction()->text().compare(component)) {

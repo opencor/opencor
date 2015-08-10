@@ -495,9 +495,10 @@ void SingleCellViewInformationGraphsWidget::selectAllGraphs(const bool &pSelect)
     foreach (SingleCellViewGraphPanelPlotGraph *graph, mGraphs)
         graph->setSelected(pSelect);
 
-    if (mGraphs.count())
+    if (mGraphs.count()) {
         emit graphsUpdated(qobject_cast<SingleCellViewGraphPanelPlotWidget *>(mGraphs.values().first()->plot()),
                            mGraphs.values());
+    }
 
     connect(mPropertyEditor, SIGNAL(propertyChanged(Core::Property *)),
             this, SLOT(graphChanged(Core::Property *)));
@@ -637,7 +638,7 @@ void SingleCellViewInformationGraphsWidget::populateContextMenu(QMenu *pContextM
                 componentMenu = 0;
 
                 foreach (QObject *object, menu->children()) {
-                    QMenu *subMenu = dynamic_cast<QMenu *>(object);
+                    QMenu *subMenu = qobject_cast<QMenu *>(object);
 
                     if (    subMenu
                         && !subMenu->menuAction()->text().compare(component)) {
@@ -719,7 +720,7 @@ bool SingleCellViewInformationGraphsWidget::checkParameter(CellMLSupport::Cellml
 
         // Check whether we can find our property among our runtime's parameters
 
-        foreach (CellMLSupport::CellmlFileRuntimeParameter *parameter, pRuntime->parameters())
+        foreach (CellMLSupport::CellmlFileRuntimeParameter *parameter, pRuntime->parameters()) {
             if (   (parameter->componentHierarchy() == componentHierarchy)
                 && !parameter->name().compare(parameterName)
                 && (parameter->degree() == parameterDegree)) {
@@ -727,6 +728,7 @@ bool SingleCellViewInformationGraphsWidget::checkParameter(CellMLSupport::Cellml
 
                 break;
             }
+        }
     }
 
     // Update our parameter property based on whether it corresponds to an
@@ -818,10 +820,11 @@ void SingleCellViewInformationGraphsWidget::updateGraphInfo(Core::Property *pPro
     //       (through graphChanged()), yet we don't want to (and can't) do what
     //       follows if not all the properties are available...
 
-    if (pProperty->properties().count() == 3)
+    if (pProperty->properties().count() == 3) {
         pProperty->setName( pProperty->properties()[1]->value()
                            +PropertySeparator
                            +pProperty->properties()[2]->value());
+    }
 
     // Update the status (i.e. icon) of our (section) property
 
@@ -957,15 +960,16 @@ void SingleCellViewInformationGraphsWidget::updateGraphsInfo(Core::Property *pSe
             // (and the locale got changed) or the current file got renamed, so
             // we use that instead
 
-            if (oldModelValue.contains(PropertySeparator))
+            if (oldModelValue.contains(PropertySeparator)) {
                 // The current file got renamed
 
                 newModelValue = QFileInfo(mFileName).fileName()+PropertySeparator+mFileName;
-            else
+            } else {
                 // The value of the model property was "Current" (and the locale
                 // got changed)
 
                 newModelValue = tr("Current");
+            }
         }
 
         // Set the value of our model property to newModelValue (which will
@@ -993,9 +997,10 @@ void SingleCellViewInformationGraphsWidget::updateGraphsInfo(Core::Property *pSe
         foreach (Core::Property *graphProperty, graphProperties)
             graphs << mGraphs.value(graphProperty);
 
-        if (graphs.count())
+        if (graphs.count()) {
             emit graphsUpdated(qobject_cast<SingleCellViewGraphPanelPlotWidget *>(graphs.first()->plot()),
                                graphs);
+        }
     }
 }
 

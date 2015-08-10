@@ -153,7 +153,7 @@ void StandardFileManager::reloadFile(const QString &pFileName)
         // considered as being a file)?
 
         if (isFile(pFileName))
-            qobject_cast<StandardFile *>(crtFile)->reload();
+            static_cast<StandardFile *>(crtFile)->reload();
         else
             unmanageFile(pFileName);
     } else {
@@ -166,7 +166,7 @@ void StandardFileManager::reloadFile(const QString &pFileName)
         crtFile = file(pFileName);
 
         if (crtFile)
-            qobject_cast<StandardFile *>(crtFile)->load();
+            static_cast<StandardFile *>(crtFile)->load();
     }
 }
 
@@ -188,7 +188,7 @@ void StandardFileManager::renameFile(const QString &pOldFileName,
 
     // We also need to ensure that our file object has its file name updated
 
-    qobject_cast<StandardFile *>(crtFile)->setFileName(pNewFileName);
+    static_cast<StandardFile *>(crtFile)->setFileName(pNewFileName);
 }
 
 //==============================================================================

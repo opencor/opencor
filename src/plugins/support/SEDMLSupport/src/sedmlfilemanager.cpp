@@ -63,7 +63,7 @@ SedmlFile * SedmlFileManager::sedmlFile(const QString &pFileName)
 {
     // Return the SedmlFile object, if any, associated with the given file
 
-    return qobject_cast<SEDMLSupport::SedmlFile *>(instance()->file(pFileName));
+    return static_cast<SEDMLSupport::SedmlFile *>(instance()->file(pFileName));
 }
 
 //==============================================================================

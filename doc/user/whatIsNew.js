@@ -1,5 +1,5 @@
 var jsonData = { "versions": [
-                   { "anchor": "latest", "description": "Latest snapshot", "day": 31, "month": 7, "year": 2015,
+                   { "anchor": "latest", "description": "Latest snapshot", "day": 9, "month": 8, "year": 2015,
                      "categories": [
                        { "name": "General",
                          "entries": [
@@ -34,6 +34,7 @@ var jsonData = { "versions": [
                            },
                            { "type": "subCategory", "name": "CellML Text view",
                              "entries": [
+                               { "type": "Improved", "description": "Syntax highlighting." },
                                { "type": "Improved", "description": "Comments support by allowing comments before a model definition." },
                                { "type": "Fixed", "description": "Serialisation of a mathematical equation with a <code>cmeta:id</code> value." }
                              ]
@@ -57,6 +58,15 @@ var jsonData = { "versions": [
                                { "type": "Improved", "description": "<a href=\"http://en.wikipedia.org/wiki/Graphical_user_interface\">GUI</a> rendering." },
                                { "type": "Improved", "description": "Plotting of simulation data." },
                                { "type": "Improved", "description": "Support for CellML models." }
+                             ]
+                           }
+                         ]
+                       },
+                       { "name": "Support",
+                         "entries": [
+                           { "type": "subCategory", "name": "QScintilla support",
+                             "entries": [
+                               { "type": "Improved", "description": "Unicode support." }
                              ]
                            }
                          ]
