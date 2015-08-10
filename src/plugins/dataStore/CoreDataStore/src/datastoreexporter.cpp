@@ -28,7 +28,8 @@ namespace CoreDataStore {
 
 //==============================================================================
 
-DataStoreExporter::DataStoreExporter()
+DataStoreExporter::DataStoreExporter(const QString &pId) :
+    mId(pId)
 {
 }
 
@@ -36,6 +37,15 @@ DataStoreExporter::DataStoreExporter()
 
 DataStoreExporter::~DataStoreExporter()
 {
+}
+
+//==============================================================================
+
+QString DataStoreExporter::id() const
+{
+    // Return our id
+
+    return mId;
 }
 
 //==============================================================================

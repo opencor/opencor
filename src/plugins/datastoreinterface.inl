@@ -5,7 +5,7 @@
 #endif
 
     virtual void * newDataStoreExporterInstance(const QString &pId = QString()) const PURE;
-    virtual void deleteDataStoreExporterInstance(const QString &pId = QString()) const PURE;
+    virtual void deleteDataStoreExporterInstance(void *pDataStoreExporterInstance) const PURE;
 
     virtual QString dataStoreName() const PURE;
 
