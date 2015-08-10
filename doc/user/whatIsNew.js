@@ -15,16 +15,6 @@ var jsonData = { "versions": [
                            { "type": "Added", "description": "<a href=\"http://www.sed-ml.org/\">SED-ML</a> API (via <a href=\"https://github.com/fbergmann/libSEDML/\">libSEDML</a>)." }
                          ]
                        },
-                       { "name": "Organisation",
-                         "entries": [
-                           { "type": "subCategory", "name": "Physiome Model Repository window (formerly known as the CellML Model Repository window)",
-                             "entries": [
-                               { "type": "Added", "description": "Cloning of a workspace." },
-                               { "type": "Added", "description": "Open a file from a published exposure." }
-                             ]
-                           }
-                         ]
-                       },
                        { "name": "Data store",
                          "entries": [
                            { "type": "Improved", "description": "Interface." }
@@ -42,6 +32,16 @@ var jsonData = { "versions": [
                                { "type": "Improved", "description": "Syntax highlighting." },
                                { "type": "Improved", "description": "Comments support by allowing comments before a model definition." },
                                { "type": "Fixed", "description": "Serialisation of a mathematical equation with a <code>cmeta:id</code> value." }
+                             ]
+                           }
+                         ]
+                       },
+                       { "name": "Organisation",
+                         "entries": [
+                           { "type": "subCategory", "name": "Physiome Model Repository window (formerly known as the CellML Model Repository window)",
+                             "entries": [
+                               { "type": "Added", "description": "Cloning of a workspace." },
+                               { "type": "Added", "description": "Open a file from a published exposure." }
                              ]
                            }
                          ]
