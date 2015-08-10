@@ -1,3 +1,8 @@
+# Note : Qt 5.5 has been released, but it has been causing us more problems than
+#       anything (see https://github.com/opencor/opencor/issues/710), so we are
+#       now back to Qt 5.4.2. However, homebrew only provides Qt 5.5, hence we
+#       can only build OpenCOR on OS X...
+
 language: cpp
 
 os:
@@ -14,9 +19,9 @@ install:
       && tar -xzf cmake-3.3.0-Linux-i386.tar.gz
       && sudo cp -fR cmake-3.3.0-Linux-i386/* /usr
       && sudo apt-add-repository -y ppa:ubuntu-toolchain-r/test
-      && sudo apt-add-repository -y ppa:beineri/opt-qt55
+      && sudo apt-add-repository -y ppa:beineri/opt-qt542
       && sudo apt-get -qq update
-      && sudo apt-get -qq install g++-4.8 libc6-i386 qt55location qt55multimedia qt55sensors qt55svg qt55tools qt55webkit
+      && sudo apt-get -qq install g++-4.8 libc6-i386 qt54location qt54multimedia qt54sensors qt54svg qt54tools qt54webchannel qt54webkit
       && export CXX="g++-4.8"
       && export CC="gcc-4.8"
       ;
@@ -36,7 +41,7 @@ script:
   #       libgit2 to be built on Linux...
   -    cd build
     && if [ "${TRAVIS_OS_NAME}" = "linux" ]; then
-         cmake -DCMAKE_BUILD_TYPE=$CONFIG -DENABLE_TRAVIS_CI=ON -DCMAKE_PREFIX_PATH=/opt/qt55/lib/cmake -DUSE_PREBUILT_LIBGIT2_PLUGIN=OFF -DENABLE_TESTS=ON -DENABLE_SAMPLES=ON ..
+         cmake -DCMAKE_BUILD_TYPE=$CONFIG -DENABLE_TRAVIS_CI=ON -DCMAKE_PREFIX_PATH=/opt/qt54/lib/cmake -DUSE_PREBUILT_LIBGIT2_PLUGIN=OFF -DENABLE_TESTS=ON -DENABLE_SAMPLES=ON ..
          ;
        else
          cmake -DCMAKE_BUILD_TYPE=$CONFIG -DENABLE_TRAVIS_CI=ON -DCMAKE_PREFIX_PATH=/usr/local/opt/qt5/lib/cmake -DENABLE_TESTS=ON -DENABLE_SAMPLES=ON ..
@@ -47,10 +52,14 @@ script:
     && if [ "${TRAVIS_OS_NAME}" = "linux" ]; then
          build/bin/runtests
          ;
-       else
-         build/OpenCOR.app/Contents/MacOS/runtests
-         ;
        fi
+#    && if [ "${TRAVIS_OS_NAME}" = "linux" ]; then
+#         build/bin/runtests
+#         ;
+#       else
+#         build/OpenCOR.app/Contents/MacOS/runtests
+#         ;
+#       fi
 
 notifications:
   email:

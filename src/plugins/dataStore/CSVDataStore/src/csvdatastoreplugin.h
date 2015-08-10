@@ -27,6 +27,7 @@ specific language governing permissions and limitations under the License.
 #include "datastoreinterface.h"
 #include "i18ninterface.h"
 #include "plugininfo.h"
+#include "plugininterface.h"
 
 //==============================================================================
 
@@ -39,8 +40,12 @@ PLUGININFO_FUNC CSVDataStorePluginInfo();
 
 //==============================================================================
 
+class CsvDataStoreExporter;
+
+//==============================================================================
+
 class CSVDataStorePlugin : public QObject, public I18nInterface,
-                           public DataStoreInterface
+                           public DataStoreInterface, public PluginInterface
 {
     Q_OBJECT
 
@@ -48,10 +53,15 @@ class CSVDataStorePlugin : public QObject, public I18nInterface,
 
     Q_INTERFACES(OpenCOR::I18nInterface)
     Q_INTERFACES(OpenCOR::DataStoreInterface)
+    Q_INTERFACES(OpenCOR::PluginInterface)
 
 public:
 #include "i18ninterface.inl"
 #include "datastoreinterface.inl"
+#include "plugininterface.inl"
+
+private:
+    CsvDataStoreExporter *mCsvDataStoreExporter;
 };
 
 //==============================================================================

@@ -1,9 +1,11 @@
 var jsonData = { "versions": [
-                   { "anchor": "latest", "description": "Latest snapshot", "day": 31, "month": 7, "year": 2015,
+                   { "anchor": "latest", "description": "Latest snapshot", "day": 9, "month": 8, "year": 2015,
                      "categories": [
                        { "name": "General",
                          "entries": [
                            { "type": "Added", "description": "<a href=\"http://git-scm.com/\">Git</a> support." },
+                           { "type": "Added", "description": "Support for <a href=\"https://en.wikipedia.org/wiki/Windows_10\">Windows 10</a>." },
+                           { "type": "Added", "description": "<a href=\"https://groups.google.com/forum/#!forum/opencor-users\">Users</a> and <a href=\"https://groups.google.com/forum/#!forum/opencor-developers\">developers</a> mailing lists." },
                            { "type": "Added", "description": "Resetting all your settings from the <a href=\"http://en.wikipedia.org/wiki/Command-line_interface\">CLI</a>." }
                          ]
                        },
@@ -32,6 +34,7 @@ var jsonData = { "versions": [
                            },
                            { "type": "subCategory", "name": "CellML Text view",
                              "entries": [
+                               { "type": "Improved", "description": "Syntax highlighting." },
                                { "type": "Improved", "description": "Comments support by allowing comments before a model definition." },
                                { "type": "Fixed", "description": "Serialisation of a mathematical equation with a <code>cmeta:id</code> value." }
                              ]
@@ -55,6 +58,15 @@ var jsonData = { "versions": [
                                { "type": "Improved", "description": "<a href=\"http://en.wikipedia.org/wiki/Graphical_user_interface\">GUI</a> rendering." },
                                { "type": "Improved", "description": "Plotting of simulation data." },
                                { "type": "Improved", "description": "Support for CellML models." }
+                             ]
+                           }
+                         ]
+                       },
+                       { "name": "Support",
+                         "entries": [
+                           { "type": "subCategory", "name": "QScintilla support",
+                             "entries": [
+                               { "type": "Improved", "description": "Unicode support." }
                              ]
                            }
                          ]

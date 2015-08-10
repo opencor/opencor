@@ -213,7 +213,7 @@ void SingleCellViewSimulationWorker::started()
     CoreSolver::CoreDaeSolver *daeSolver = 0;
 
     if (mRuntime->needOdeSolver()) {
-        foreach (SolverInterface *solverInterface, mSolverInterfaces)
+        foreach (SolverInterface *solverInterface, mSolverInterfaces) {
             if (!solverInterface->solverName().compare(mSimulation->data()->odeSolverName())) {
                 // The requested ODE solver was found, so retrieve an instance
                 // of it
@@ -222,8 +222,9 @@ void SingleCellViewSimulationWorker::started()
 
                 break;
             }
+        }
     } else {
-        foreach (SolverInterface *solverInterface, mSolverInterfaces)
+        foreach (SolverInterface *solverInterface, mSolverInterfaces) {
             if (!solverInterface->solverName().compare("IDA")) {
                 // The requested DAE solver was found, so retrieve an instance
                 // of it
@@ -232,6 +233,7 @@ void SingleCellViewSimulationWorker::started()
 
                 break;
             }
+        }
     }
 
     // Make sure that we have found our ODE/DAE solver
@@ -255,7 +257,7 @@ void SingleCellViewSimulationWorker::started()
     CoreSolver::CoreNlaSolver *nlaSolver = 0;
 
     if (mRuntime->needNlaSolver()) {
-        foreach (SolverInterface *solverInterface, mSolverInterfaces)
+        foreach (SolverInterface *solverInterface, mSolverInterfaces) {
             if (!solverInterface->solverName().compare(mSimulation->data()->nlaSolverName())) {
                 // The requested NLA solver was found, so retrieve an instance
                 // of it
@@ -269,6 +271,7 @@ void SingleCellViewSimulationWorker::started()
 
                 break;
             }
+        }
 
         // Make sure that we have found our NLA solver
         // Note #1: this should never happen, but we never know...
@@ -443,7 +446,7 @@ void SingleCellViewSimulationWorker::started()
             // Reinitialise our solver, if (really) needed
 
             if (mReset && !mStopped) {
-                if (odeSolver)
+                if (odeSolver) {
                     odeSolver->initialize(mCurrentPoint,
                                           mRuntime->statesCount(),
                                           mSimulation->data()->constants(),
@@ -451,7 +454,7 @@ void SingleCellViewSimulationWorker::started()
                                           mSimulation->data()->states(),
                                           mSimulation->data()->algebraic(),
                                           mRuntime->computeOdeRates());
-                else
+                } else {
                     daeSolver->initialize(mCurrentPoint, endingPoint,
                                           mRuntime->statesCount(),
                                           mRuntime->condVarCount(),
@@ -464,6 +467,7 @@ void SingleCellViewSimulationWorker::started()
                                           mRuntime->computeDaeResiduals(),
                                           mRuntime->computeDaeRootInformation(),
                                           mRuntime->computeDaeStateInformation());
+                }
 
                 mReset = false;
             }

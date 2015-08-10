@@ -489,12 +489,9 @@ SingleCellViewGraphPanelPlotWidget::SingleCellViewGraphPanelPlotWidget(QWidget *
 
     mGui->setupUi(this);
 
-    // Get ourselves a direct painter and make sure that direct painting occurs
-    // immediately
+    // Get ourselves a direct painter
 
     mDirectPainter = new QwtPlotDirectPainter(this);
-
-    mDirectPainter->setAttribute(QwtPlotDirectPainter::FullRepaint, true);
 
     // Speedup painting on X11 systems
     // Note: this can only be done on X11 systems...

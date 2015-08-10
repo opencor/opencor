@@ -65,10 +65,11 @@ StandardFileManager::~StandardFileManager()
 
 bool StandardFileManager::isFile(const QString &pFileName)
 {
-    // If the given file is already managed, then we consider that it's a SED-ML
-    // file (even though it may not be a SED-ML file anymore after having been
-    // edited and saved, but in this case it's good to keep considering the file
-    // as a SED-ML file, so that the user can continue editing it for example)
+    // If the given file is already managed, then we consider that it's of the
+    // right type (e.g. CellML file), even though it may not be of the right
+    // anymore after having been edited and saved, but in this case it's good to
+    // keep considering the file as of the right type, so that the user can
+    // continue editing it without any problem, for example
 
     QString nativeFileName = Core::nativeCanonicalFileName(pFileName);
 
@@ -76,14 +77,14 @@ bool StandardFileManager::isFile(const QString &pFileName)
         return true;
 
     // The given file is not managed, so check whether it's a new file and, if
-    // so, consider it as a SED-ML file
+    // so, consider it as of the right type
 
     if (Core::FileManager::instance()->isNew(nativeFileName))
         return true;
 
     // Check whether we are dealing with an empty file or a file that contains
     // spaces of sorts and, if not, whether we can load the file contents using
-    // the standard
+    // the standard and thus determine whether it is of the right type
 
     QString fileContents;
 
@@ -152,7 +153,7 @@ void StandardFileManager::reloadFile(const QString &pFileName)
         // considered as being a file)?
 
         if (isFile(pFileName))
-            qobject_cast<StandardFile *>(crtFile)->reload();
+            static_cast<StandardFile *>(crtFile)->reload();
         else
             unmanageFile(pFileName);
     } else {
@@ -165,7 +166,7 @@ void StandardFileManager::reloadFile(const QString &pFileName)
         crtFile = file(pFileName);
 
         if (crtFile)
-            qobject_cast<StandardFile *>(crtFile)->load();
+            static_cast<StandardFile *>(crtFile)->load();
     }
 }
 
@@ -187,7 +188,7 @@ void StandardFileManager::renameFile(const QString &pOldFileName,
 
     // We also need to ensure that our file object has its file name updated
 
-    qobject_cast<StandardFile *>(crtFile)->setFileName(pNewFileName);
+    static_cast<StandardFile *>(crtFile)->setFileName(pNewFileName);
 }
 
 //==============================================================================

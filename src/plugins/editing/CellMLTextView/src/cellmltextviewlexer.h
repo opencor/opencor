@@ -76,11 +76,6 @@ private:
                      const QString &pText, const bool &pParameterBlock);
     void doStyleTextCurrent(const int &pBytesStart, const int &pBytesEnd,
                             const QString &pText, const bool &pParameterBlock);
-    void doStyleTextSingleLineComment(const int &pPosition,
-                                      const int &pBytesStart,
-                                      const int &pBytesEnd,
-                                      const QString &pText,
-                                      const bool &pParameterBlock);
     void doStyleTextPreviousMultilineComment(const int &pPosition,
                                              const int &pBytesStart,
                                              const int &pBytesEnd,
@@ -105,12 +100,10 @@ private:
                    const bool &pForward = true);
 
     int fullTextPosition(const int &pBytesPosition) const;
-    int fullTextLength(const int &pBytesFrom, const int &pBytesLength) const;
+    int fullTextLength(const int &pBytesStart, const int &pBytesEnd) const;
 
     int fullTextBytesPosition(const int &pPosition) const;
     int textBytesPosition(const QString &pText, const int &pPosition) const;
-    int textBytesLength(const QString &pText, const int &pFrom,
-                        const int &pLength) const;
 };
 
 //==============================================================================

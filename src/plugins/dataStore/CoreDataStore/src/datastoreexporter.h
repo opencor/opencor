@@ -38,6 +38,7 @@ class COREDATASTORE_EXPORT DataStoreExporter
 {
 public:
     explicit DataStoreExporter();
+    virtual ~DataStoreExporter();
 
     virtual void execute(CoreDataStore *pDataStore) const = 0;
 };

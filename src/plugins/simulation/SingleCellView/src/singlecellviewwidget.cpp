@@ -1337,7 +1337,12 @@ void SingleCellViewWidget::simulationDataExport()
     setEnabled(false);
     showBusyWidget(this);
 
-    static_cast<CoreDataStore::DataStoreExporter *>(mDataStoreInterfaces.value(sender())->dataStoreExporterInstance())->execute(mSimulation->results()->dataStore());
+    DataStoreInterface *dataStoreInterface = mDataStoreInterfaces.value(sender());
+    CoreDataStore::DataStoreExporter *dataStoreExporterInstance = static_cast<CoreDataStore::DataStoreExporter *>(dataStoreInterface->newDataStoreExporterInstance());
+
+    dataStoreExporterInstance->execute(mSimulation->results()->dataStore());
+
+    dataStoreInterface->deleteDataStoreExporterInstance();
 
     hideBusyWidget();
     setEnabled(true);

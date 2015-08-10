@@ -63,7 +63,7 @@ Plugin::Plugin(const QString &pFileName, PluginInfo *pInfo,
 
             bool pluginDependenciesLoaded = true;
 
-            mStatusErrors = "";
+            mStatusErrors = QString();
 
             foreach (const QString &dependency, pInfo->dependencies()) {
                 Plugin *pluginDependency = pPluginManager->plugin(dependency);

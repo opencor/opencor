@@ -61,7 +61,7 @@ CellmlFile * CellmlFileManager::cellmlFile(const QString &pFileName)
 {
     // Return the CellmlFile object, if any, associated with the given file
 
-    return qobject_cast<CellMLSupport::CellmlFile *>(instance()->file(pFileName));
+    return static_cast<CellMLSupport::CellmlFile *>(instance()->file(pFileName));
 }
 
 //==============================================================================
@@ -87,7 +87,7 @@ bool CellmlFileManager::canLoadFileContents(const QString &pFileContents) const
 
 QObject * CellmlFileManager::newFile(const QString &pFileName) const
 {
-    // Create and return a new SED-ML file
+    // Create and return a new CellML file
 
     return new CellmlFile(Core::nativeCanonicalFileName(pFileName));
 }

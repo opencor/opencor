@@ -2,7 +2,7 @@ MACRO(INITIALISE_PROJECT)
 #    SET(CMAKE_VERBOSE_MAKEFILE ON)
     SET(CMAKE_INCLUDE_CURRENT_DIR ON)
 
-    # Check whether we want EXECUTE_PROCESS to be OUTPUT_QUIET
+    # Check whether we want some EXECUTE_PROCESS() calls to be OUTPUT_QUIET
 
     IF(SHOW_INFORMATION_MESSAGE)
         SET(OUTPUT_QUIET)
@@ -28,32 +28,13 @@ MACRO(INITIALISE_PROJECT)
         ENDIF()
     ENDIF()
 
-    # Make sure that all the binaries we generate end up in our build folder
-    # Note: this is particularly useful with MSVC and Xcode since otherwise the
-    #       binaries will end up in a folder, which name is related to the type
-    #       of the build...
-
-    SET(PROJECT_BUILD_DIR ${CMAKE_BINARY_DIR})
-
-    SET(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BUILD_DIR})
-    SET(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BUILD_DIR})
-    SET(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_BUILD_DIR})
-
-    SET(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE ${PROJECT_BUILD_DIR})
-    SET(CMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE ${PROJECT_BUILD_DIR})
-    SET(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELEASE ${PROJECT_BUILD_DIR})
-
-    SET(CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG ${PROJECT_BUILD_DIR})
-    SET(CMAKE_LIBRARY_OUTPUT_DIRECTORY_DEBUG ${PROJECT_BUILD_DIR})
-    SET(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_DEBUG ${PROJECT_BUILD_DIR})
-
     # Make sure that we are building on a supported architecture
     # Note: normally, we would check the value of CMAKE_SIZEOF_VOID_P, but in
     #       some cases it may not be set (e.g. when generating an Xcode project
     #       file), so we determine and retrieve that value ourselves...
 
     TRY_RUN(ARCHITECTURE_RUN ARCHITECTURE_COMPILE
-            ${PROJECT_BUILD_DIR} ${CMAKE_SOURCE_DIR}/cmake/architecture.c
+            ${CMAKE_BINARY_DIR} ${CMAKE_SOURCE_DIR}/cmake/architecture.c
             RUN_OUTPUT_VARIABLE ARCHITECTURE)
 
     IF(NOT ARCHITECTURE_COMPILE)
@@ -105,7 +86,6 @@ MACRO(INITIALISE_PROJECT)
         OpenGL
         PrintSupport
         Svg
-        UiPlugin
         UiTools
         WebKit
         WebKitWidgets
@@ -172,6 +152,39 @@ MACRO(INITIALISE_PROJECT)
             QtXml
             QtXmlPatterns
         )
+    ENDIF()
+
+    # Determine the effective build directory
+
+    SET(PROJECT_BUILD_DIR ${CMAKE_BINARY_DIR})
+
+    IF(APPLE AND "${CMAKE_GENERATOR}" STREQUAL "Xcode")
+        # With Xcode, we have a configuration directory, but it messes up our
+        # build system, so ask for all the binaries to be generated in our build
+        # folder
+
+        SET(XCODE TRUE)
+
+        SET(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BUILD_DIR})
+        SET(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BUILD_DIR})
+        SET(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_BUILD_DIR})
+
+        SET(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE ${PROJECT_BUILD_DIR})
+        SET(CMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE ${PROJECT_BUILD_DIR})
+        SET(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELEASE ${PROJECT_BUILD_DIR})
+
+        SET(CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG ${PROJECT_BUILD_DIR})
+        SET(CMAKE_LIBRARY_OUTPUT_DIRECTORY_DEBUG ${PROJECT_BUILD_DIR})
+        SET(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_DEBUG ${PROJECT_BUILD_DIR})
+    ELSE()
+        # Check whether there is a configuration directory (the case with MSVC)
+        # and, if so, make use of it
+
+        SET(XCODE FALSE)
+
+        IF(NOT "${CMAKE_CFG_INTDIR}" STREQUAL ".")
+            SET(PROJECT_BUILD_DIR ${PROJECT_BUILD_DIR}/${CMAKE_CFG_INTDIR})
+        ENDIF()
     ENDIF()
 
     # Some general build settings
@@ -280,7 +293,7 @@ MACRO(INITIALISE_PROJECT)
         ENDIF()
     ENDIF()
 
-    # Location of our plugins so that we don't have to deploy OpenCOR on
+    # Destination of our plugins so that we don't have to deploy OpenCOR on
     # Windows and Linux before being able to test it
 
     IF(APPLE)
@@ -586,6 +599,8 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
         IF(EXISTS ${FULL_EXTERNAL_BINARY})
             # Copy the external binary to its destination directory, so we can
             # test things without first having to deploy OpenCOR
+            # Note: on Windows, we also need to copy the build directory so that
+            #       we can test things from within Qt Creator...
 
             SET(REAL_EXTERNAL_BINARY ${EXTERNAL_BINARY})
 
@@ -594,6 +609,8 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
                 # library
 
                 STRING(REPLACE "${CMAKE_IMPORT_LIBRARY_SUFFIX}" "${CMAKE_SHARED_LIBRARY_SUFFIX}" REAL_EXTERNAL_BINARY "${REAL_EXTERNAL_BINARY}")
+
+                COPY_FILE_TO_BUILD_DIR(DIRECT_COPY ${EXTERNAL_BINARIES_DIR} . ${REAL_EXTERNAL_BINARY})
             ENDIF()
 
             COPY_FILE_TO_BUILD_DIR(DIRECT_COPY ${EXTERNAL_BINARIES_DIR} ${DEST_EXTERNAL_BINARIES_DIR} ${REAL_EXTERNAL_BINARY})
@@ -612,14 +629,28 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
         ENDIF()
     ENDFOREACH()
 
+    # Location of our plugin
+
+    IF(XCODE)
+        SET(PLUGIN_BUILD_DIR ${PROJECT_BUILD_DIR})
+    ELSE()
+        STRING(REPLACE "${${CMAKE_PROJECT_NAME}_SOURCE_DIR}/" "" PLUGIN_BUILD_DIR ${PROJECT_SOURCE_DIR})
+        SET(PLUGIN_BUILD_DIR ${CMAKE_BINARY_DIR}/${PLUGIN_BUILD_DIR})
+
+        IF(NOT "${CMAKE_CFG_INTDIR}" STREQUAL ".")
+            SET(PLUGIN_BUILD_DIR ${PLUGIN_BUILD_DIR}/${CMAKE_CFG_INTDIR})
+        ENDIF()
+    ENDIF()
+
     # Copy the plugin to our plugins directory
     # Note: this is done so that we can, on Windows and Linux, test the use of
-    #       plugins in OpenCOR without first having to package OpenCOR...
+    #       plugins in OpenCOR without first having to package OpenCOR, as well
+    #       as, on Windows, test things from within Qt Creator...
 
     SET(PLUGIN_FILENAME ${CMAKE_SHARED_LIBRARY_PREFIX}${PLUGIN_NAME}${CMAKE_SHARED_LIBRARY_SUFFIX})
 
     ADD_CUSTOM_COMMAND(TARGET ${PROJECT_NAME} POST_BUILD
-                       COMMAND ${CMAKE_COMMAND} -E copy ${PROJECT_BUILD_DIR}/${PLUGIN_FILENAME}
+                       COMMAND ${CMAKE_COMMAND} -E copy ${PLUGIN_BUILD_DIR}/${PLUGIN_FILENAME}
                                                         ${DEST_PLUGINS_DIR}/${PLUGIN_FILENAME})
 
     # A few OS X specific things
@@ -656,7 +687,7 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
     # already been copied
 
     IF(NOT APPLE)
-        INSTALL(FILES ${PROJECT_BUILD_DIR}/${PLUGIN_FILENAME}
+        INSTALL(FILES ${PLUGIN_BUILD_DIR}/${PLUGIN_FILENAME}
                 DESTINATION plugins/${CMAKE_PROJECT_NAME})
     ENDIF()
 
@@ -765,8 +796,14 @@ MACRO(ADD_PLUGIN PLUGIN_NAME)
 
                 SET(TEST_FILENAME ${TEST_NAME}${CMAKE_EXECUTABLE_SUFFIX})
 
+                IF(WIN32)
+                    ADD_CUSTOM_COMMAND(TARGET ${TEST_NAME} POST_BUILD
+                                       COMMAND ${CMAKE_COMMAND} -E copy ${PLUGIN_BUILD_DIR}/${TEST_FILENAME}
+                                                                        ${PROJECT_BUILD_DIR}/${TEST_FILENAME})
+                ENDIF()
+
                 ADD_CUSTOM_COMMAND(TARGET ${TEST_NAME} POST_BUILD
-                                   COMMAND ${CMAKE_COMMAND} -E copy ${PROJECT_BUILD_DIR}/${TEST_FILENAME}
+                                   COMMAND ${CMAKE_COMMAND} -E copy ${PLUGIN_BUILD_DIR}/${TEST_FILENAME}
                                                                     ${DEST_TESTS_DIR}/${TEST_FILENAME})
 
                 # A few OS X specific things
@@ -912,8 +949,9 @@ ENDMACRO()
 
 MACRO(WINDOWS_DEPLOY_QT_LIBRARIES)
     FOREACH(LIBRARY ${ARGN})
-        # Copy the Qt library to the build/bin folder, so we can test things
-        # without first having to deploy OpenCOR
+        # Copy the Qt library to both the build and build/bin folders, so we can
+        # test things both from within Qt Creator and without first having to
+        # deploy OpenCOR
         # Note: this is particularly useful on 64-bit Windows where we might
         #       want to be able to test both the 32-bit and 64-bit versions of
         #       OpenCOR (since only the 32-bit or 64-bit Qt libraries are
@@ -930,10 +968,13 @@ MACRO(WINDOWS_DEPLOY_QT_LIBRARIES)
         ENDIF()
 
         IF(RELEASE_MODE)
-            COPY_FILE_TO_BUILD_DIR(DIRECT_COPY ${QT_BINARY_DIR} bin ${LIBRARY_RELEASE_FILENAME})
+            SET(LIBRARY_FILENAME ${LIBRARY_RELEASE_FILENAME})
         ELSE()
-            COPY_FILE_TO_BUILD_DIR(DIRECT_COPY ${QT_BINARY_DIR} bin ${LIBRARY_DEBUG_FILENAME})
+            SET(LIBRARY_FILENAME ${LIBRARY_DEBUG_FILENAME})
         ENDIF()
+
+        COPY_FILE_TO_BUILD_DIR(DIRECT_COPY ${QT_BINARY_DIR} . ${LIBRARY_FILENAME})
+        COPY_FILE_TO_BUILD_DIR(DIRECT_COPY ${QT_BINARY_DIR} bin ${LIBRARY_FILENAME})
 
         # Deploy the Qt library
 
@@ -1059,29 +1100,31 @@ MACRO(OS_X_CLEAN_UP_FILE_WITH_QT_LIBRARIES PROJECT_TARGET DIRNAME FILENAME)
                                                      ${FULL_FILENAME})
 
     # Make sure that the file refers to our embedded copy of the Qt libraries
+    # Note: on Travis CI, QT_LIBRARY_DIR points to a symbolic path. That
+    #       symbolic path is used by some libraries while others use the
+    #       real path instead. So, we need to use both...
 
     IF(ENABLE_TRAVIS_CI)
-        # Retrieve the real path of the Qt library directory
-        # Note: on Travis CI, QT_LIBRARY_DIR points to a symbolic path. That
-        #       symbolic path is used by some libraries while others use the
-        #       real path instead. So, we need to use both...
-
         GET_FILENAME_COMPONENT(REAL_QT_LIBRARY_DIR ${QT_LIBRARY_DIR} REALPATH)
+    ENDIF()
 
-        FOREACH(QT_LIBRARY ${OS_X_QT_LIBRARIES})
-            SET(QT_LIBRARY_FILENAME ${QT_LIBRARY}.framework/Versions/${QT_VERSION_MAJOR}/${QT_LIBRARY})
+    FOREACH(QT_LIBRARY ${OS_X_QT_LIBRARIES})
+        SET(QT_LIBRARY_FILENAME ${QT_LIBRARY}.framework/Versions/${QT_VERSION_MAJOR}/${QT_LIBRARY})
+
+        IF(ENABLE_TRAVIS_CI)
             SET(REAL_QT_LIBRARY_FILENAME ${QT_LIBRARY}.framework/${QT_LIBRARY})
 
-            ADD_CUSTOM_COMMAND(TARGET ${PROJECT_TARGET} POST_BUILD
-                               COMMAND install_name_tool -change ${QT_LIBRARY_DIR}/${QT_LIBRARY_FILENAME}
-                                                                 @rpath/${QT_LIBRARY_FILENAME}
-                                                                 ${FULL_FILENAME})
             ADD_CUSTOM_COMMAND(TARGET ${PROJECT_TARGET} POST_BUILD
                                COMMAND install_name_tool -change ${REAL_QT_LIBRARY_DIR}/${REAL_QT_LIBRARY_FILENAME}
                                                                  @rpath/${QT_LIBRARY_FILENAME}
                                                                  ${FULL_FILENAME})
-        ENDFOREACH()
-    ENDIF()
+        ENDIF()
+
+        ADD_CUSTOM_COMMAND(TARGET ${PROJECT_TARGET} POST_BUILD
+                           COMMAND install_name_tool -change ${QT_LIBRARY_DIR}/${QT_LIBRARY_FILENAME}
+                                                             @rpath/${QT_LIBRARY_FILENAME}
+                                                             ${FULL_FILENAME})
+    ENDFOREACH()
 ENDMACRO()
 
 #===============================================================================

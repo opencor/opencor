@@ -22,7 +22,7 @@ IF EXIST "C:\Program Files (x86)\" (
     SET ProgFilesDir=C:\Program Files
 )
 
-SET PATH=C:\Qt\5.5\msvc2013\bin;!PATH!
+SET PATH=C:\Qt\5.4\msvc2013\bin;!PATH!
 
 CALL "!ProgFilesDir!\Microsoft Visual Studio 12.0\VC\bin\vcvars32.bat"
 

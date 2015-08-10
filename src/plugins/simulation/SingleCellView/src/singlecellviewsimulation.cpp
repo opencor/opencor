@@ -407,7 +407,7 @@ void SingleCellViewSimulationData::reset(const bool &pInitialize)
     if (mRuntime->needNlaSolver()) {
         // Retrieve an instance of our NLA solver
 
-        foreach (SolverInterface *solverInterface, mSolverInterfaces)
+        foreach (SolverInterface *solverInterface, mSolverInterfaces) {
             if (!solverInterface->solverName().compare(mNlaSolverName)) {
                 // The requested NLA solver was found, so retrieve an instance
                 // of it
@@ -421,6 +421,7 @@ void SingleCellViewSimulationData::reset(const bool &pInitialize)
 
                 break;
             }
+        }
 
         // Make sure that we have found our NLA solver
         // Note: this should never happen, but we never know...
