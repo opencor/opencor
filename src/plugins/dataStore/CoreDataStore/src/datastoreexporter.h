@@ -37,10 +37,15 @@ namespace CoreDataStore {
 class COREDATASTORE_EXPORT DataStoreExporter
 {
 public:
-    explicit DataStoreExporter();
+    explicit DataStoreExporter(const QString &pId = QString());
     virtual ~DataStoreExporter();
 
     virtual void execute(CoreDataStore *pDataStore) const = 0;
+
+    QString id() const;
+
+private:
+    QString mId;
 };
 
 //==============================================================================

@@ -25,6 +25,11 @@ var jsonData = { "versions": [
                            }
                          ]
                        },
+                       { "name": "Data store",
+                         "entries": [
+                           { "type": "Improved", "description": "Interface." }
+                         ]
+                       },
                        { "name": "Editing",
                          "entries": [
                            { "type": "subCategory", "name": "CellML annotation view",
